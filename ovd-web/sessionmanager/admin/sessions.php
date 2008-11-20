@@ -1,0 +1,126 @@
+<?php
+/**
+ * Copyright (C) 2008 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ **/
+require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+if (isset($_POST['join'])) {
+	$session = new Session($_POST['join']);
+
+	$token = $session->create_token('invite');
+
+	redirect('http://'.$session->server.'/index.php?token='.$token);
+} elseif (isset($_POST['mass_action']) && $_POST['mass_action'] == 'kill') {
+	if (isset($_POST['kill_sessions']) && is_array($_POST['kill_sessions'])) {
+		foreach ($_POST['kill_sessions'] as $session) {
+			$session = new Session($session);
+
+			$buf = query_url('http://'.$session->server.'/webservices/kill_session.php?session='.$session->session);
+		}
+	}
+
+	redirect($_SERVER['HTTP_REFERER']);
+} elseif (isset($_POST['action']) && $_POST['action'] == 'kill') {
+	$session = new Session($_POST['session']);
+
+	$buf = query_url('http://'.$session->server.'/webservices/kill_session.php?session='.$session->session);
+
+	redirect($_SERVER['HTTP_REFERER']);
+} elseif (isset($_GET['info'])) {
+	$session = new Session($_GET['info']);
+	if (!$session->is_valid())
+		redirect('sessions.php');
+
+	require_once('header.php');
+
+	echo '<h1>'._('Sessions').'</h1>';
+
+	echo '<h2>'._('Info').'</h2>';
+
+	echo '<ul>';
+	echo '<li><strong>User:</strong> '.$session->getSetting('user_displayname').'</li>';
+	echo '<li><strong>Started:</strong> '.date('d/m/Y H:i:s', filemtime($session->folder.'/used')).'</li>';
+	echo '</ul>';
+
+	echo '<form id="joinsession" action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
+	echo '	<input type="hidden" id="desktop_size" value="auto" />';
+	echo '	<input type="hidden" id="session_debug_true" value="0" />';
+	echo '	<input type="hidden" name="join" value="'.$session->session.'" />';
+	echo '	<input type="submit" value="'._('Join this session').'" />';
+	echo '</form>';
+	echo '<br />';
+	echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+	echo '	<input type="hidden" name="action" value="kill" />';
+	echo '	<input type="hidden" name="session" value="'.$session->session.'" />';
+	echo '	<input type="submit" value="'._('Kill this session').'" />';
+	echo '</form>';
+
+	require_once('footer.php');
+}
+
+else {
+	require_once('header.php');
+
+	echo '<h1>'._('Sessions').'</h1>';
+
+	$sessions = new Sessions();
+	$session_folders = $sessions->getActives();
+	if (count($session_folders) > 0) {
+		echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\');">';
+		echo '	<input type="hidden" name="mass_action" value="kill" />';
+		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
+		echo '	<tr class="title">';
+		echo '		<th class="unsortable"></th>';
+		echo '		<th>'._('Session').'</th>';
+		echo '		<th>'._('Server').'</th>';
+		echo '		<th>'._('User').'</th>';
+		echo '	</tr>';
+
+		$i = 0;
+		foreach ($session_folders as $session) {
+			$css_class = 'content'.(($i++%2==0)?1:2);
+
+			echo '	<tr class="'.$css_class.'">';
+			echo '		<td><input type="checkbox" name="kill_sessions[]" value="'.$session->session.'" /></td><form></form>';
+			echo '		<td><a href="sessions.php?info='.$session->session.'">'.$session->session.'</td>';
+			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
+			echo '		<td><a href="users.php?action=manage&id='.$session->getSetting('user_login').'">'.$session->getSetting('user_displayname').'</td>';
+			echo '		<td>';
+			echo '		<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+			echo '			<input type="hidden" name="action" value="kill" />';
+			echo '			<input type="hidden" name="session" value="'.$session->session.'" />';
+			echo '			<input type="submit" value="'._('Kill').'" />';
+			echo '		</form>';
+			echo '		</td>';
+			echo '	</tr>';
+		}
+		$css_class = 'content'.(($i++%2==0)?1:2);
+		echo '<tfoot>';
+		echo '	<tr class="'.$css_class.'">';
+		echo '		<td colspan="4"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
+		echo '<td><input type="submit" name="kill" value="'._('Kill').'" /></td>';
+		echo '	</tr>';
+		echo '</tfoot>';
+		echo '</table>';
+		echo '</form>';
+	} else
+		echo _('No active session');
+
+	require_once('footer.php');
+}

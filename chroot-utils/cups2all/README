@@ -1,0 +1,24 @@
+
+Cups2all : convert a ps file from cups in ps or pdf
+
+
+
+
+== For Packager ==
+
+mkdir cupsys:lp /var/spool/cups2all
+mkdir cupsys:lp /var/spool/cups2all/SPOOL
+
+
+cups2all => /usr/lib/cups/backend/cups2all
+extra/PostscriptColor.ppd.gz => /usr/share/cups/model/PostscriptColor.ppd.gz
+extra/cups2all.conf => /etc/cups/cups2all.conf
+
+
+=== Depends ===
+
+  * ghoscript : gs-esp 
+  * cupsys 
+  * python
+
+  * syslog

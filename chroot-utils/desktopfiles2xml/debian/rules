@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+install/desktop-files2xml::
+	install -m0755 desktop-files2xml.py \
+		debian/desktop-files2xml/usr/bin/desktop-files2xml
+
+binary-install/desktop-files2xml::
+	dh_pycentral

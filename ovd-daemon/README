@@ -1,0 +1,4 @@
+
+connectme-deamon : the application
+connectme-deamon.conf.default : the default configuration file, must be into /etc/connectme-deamon.conf
+connectme-deamon.init : the init script

@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+#  xfce4
+#
+#  Copyright (C) 1996-2003 Olivier Fourdan (fourdan@xfce.org)
+#
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+if test "x$XDG_CONFIG_HOME" = "x"
+then
+  BASEDIR="$HOME/.config/xfce4/"
+else
+  BASEDIR="$XDG_CONFIG_HOME/xfce4"
+fi
+
+if test "x$XDG_DATA_DIRS" = "x"
+then
+  XDG_DATA_DIRS="/etc/xdg/xubuntu:/usr/local/share:/usr/share:/usr/share"
+else
+  XDG_DATA_DIRS="/etc/xdg/xubuntu:$XDG_DATA_DIRS:/usr/share"
+fi
+export XDG_DATA_DIRS
+
+if test "x$DISPLAY" = "x"
+then
+  echo "$0: Starting X server"
+  prog=xinit
+else
+  echo "$0: X server already running on display $DISPLAY"
+  prog=/bin/sh
+fi
+
+if test ! "x$*" = "x"
+then
+  OPT=$*
+  if test "x${OPT#*--}" = "x${OPT}"
+  then
+    CLIENTRC=${OPT}
+  else
+    SERVERRC=${OPT#*-- }
+    CLIENTRC=${OPT% --*}
+  fi
+fi
+
+if [ -f "$HOME/.xserverrc" ]; then
+  SERVERRC="$HOME/.xserverrc $SERVERRC"
+elif [ -f /etc/X11/xinit/xserverrc ]; then
+  SERVERRC="/etc/X11/xinit/xserverrc $SERVERRC"
+fi
+
+if test ! "x$SERVERRC" = "x"
+then
+  SERVERRC="-- $SERVERRC"
+fi
+
+exec $prog /etc/xdg/ulteo/xinitrc $CLIENTRC $SERVERRC
+

@@ -1,0 +1,29 @@
+=== Ulteo Open Virtual Desktop 1.0 beta1 ===
+
+  * AD support
+    * Is using LDAP (only ou=Users group)
+    * CIFS mounts are using login/password
+
+  * Java applet
+    * Java version: needs Java Runtime Environment 1.5.x and above
+
+  * Invitation system
+    * Is using a smtp server on the session manager server
+
+  * Webservices between Sessionmanager and ApplicationServer:
+    * Authentication checking is using IP address and reverse DNS
+
+  * When installed on a Red Hat system, the printing feature does not work yet
+    due to an unknown issue with cups2all. Works fine on Ubuntu 8.04 servers.
+
+  * Remote APT
+    * /var/apt/sources.list file is static, ie it can't be managed from the
+      administrator console yet.
+
+  * LDAP support: works fine, but still a bit rough to enable! In order to
+    enable, replace the false by true on function "enable" in
+    /.../sessionmanager/admin/modules/UserDB/ldap.php
+
+  * NFS support works fine but still a bit rough to configure
+
+  * Homedir module_fs: variable names are hardcoded in the server code

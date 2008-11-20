@@ -1,0 +1,36 @@
+ulteo-ovd-web (1.0~beta1.5) ovd-polaris; urgency=low
+
+  * More bugfixes
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 19 Nov 2008 11:04:13 +0100
+
+ulteo-ovd-web (1.0~beta1.4) ovd-polaris; urgency=low
+
+  * New snapshot including bug fixes
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 18:51:41 +0100
+
+ulteo-ovd-web (1.0~beta1.3) ovd-polaris; urgency=low
+
+  * Fix authentication related bug
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 12:12:38 +0100
+
+ulteo-ovd-web (1.0~beta1.2) ovd-polaris; urgency=low
+
+  * Update applet display name
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 11:39:38 +0100
+
+ulteo-ovd-web (1.0~beta1.1) ovd-polaris; urgency=low
+
+  * Fix .po files to make gettext actually work
+  * Don't re download the chroot tarball if it's already installed
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 10:53:36 +0100
+
+ulteo-ovd-web (1.0~beta1) ovd-polaris; urgency=low
+
+  * Initial release.
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 06:32:46 +0100

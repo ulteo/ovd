@@ -1,0 +1,243 @@
+#! /usr/bin/env python
+
+## cups2all transform a ps file from cups to pdf or ps in a specific directory. This code has inspired by cups-pdf.
+## Copyright (C) 2007  Julien LANGLOIS <julien@ulteo.com>
+
+## This program is free software; you can redistribute it and/or
+## modify it under the terms of the GNU General Public License
+## as published by the Free Software Foundation; either version 2
+## of the License, or (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software
+## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import sys
+import re
+import os
+import pwd
+import grp
+import syslog
+import shutil
+import time
+from syslog import LOG_DEBUG, LOG_ERR, LOG_INFO, LOG_WARNING
+
+debug_mode=False
+
+if debug_mode:
+    buf = file("/tmp/cups-pdf.out.log","a")
+    sys.stderr.close()
+    sys.stderr = buf
+    sys.stdout.close()
+    sys.stdout = buf
+    print "#################################################"
+    print "##"
+
+CONF = {"ghostscript" : "/usr/bin/gs",
+        "spool_dir" : "/var/spool/cups2all/SPOOL",
+        "our_spool_file" : False,
+
+        "out_dir" : "/var/spool/cups2all/${USER}",
+        "out_file" : "%(title)s.%(type)s",
+        
+        "user" : pwd.getpwuid(os.getuid())[0],
+        "group" : grp.getgrgid(os.getgid())[0],
+        "umask"   : "077",
+        "type"    : "ps",
+        "ps2pdf_ver" : "2.4",
+        "ps2pdf_cmd" : '%(ghostscript)s -q -dCompatibilityLevel=%(ps2pdf_ver)s -dNOPAUSE -dBATCH -dSAFER -sDEVICE=pdfwrite -sOutputFile="%(tmp_file)s" -dAutoRotatePages=/PageByPage -dAutoFilterColorImages=false -dColorImageFilter=/FlateEncode -dPDFSETTINGS=/prepress -c .setpdfwrite -f "%(spool_file)s"'
+        }
+
+FILEKEYS = {"User" : "user",
+            "Group" : "group",
+            "Umask" : "umask",
+            "OutDir" : "out_dir",
+            "OutFile" : "out_file",
+            "Type" : "type"}
+
+CONFIGFILE = "/etc/cups/cups2all.conf"
+
+class Transform:
+    def __init__(self, psFile):
+        self.psFile = psFile
+
+    def ps2ps(self, conf):
+        shutil.copyfile(self.psFile, conf["tmp_file"])
+        
+        return True
+
+    def ps2pdf(self, conf):
+        cmd = conf["ps2pdf_cmd"]%(conf)
+        print cmd
+        system(cmd)
+
+        return  True
+
+def init():
+    syslog.openlog("cups2all")
+
+def end(ret):
+    if CONF["our_spool_file"]:
+        if os.path.isfile(CONF["spool_file"]):
+            os.remove(CONF["spool_file"])
+    syslog.closelog()  
+
+    return ret
+
+def log(logType, message):
+    syslog.syslog(logType, message)
+           
+def load_config():
+    try:
+        f = file(CONFIGFILE, "r")
+    except IOError:
+        log(LOG_ERR, "Unable to open %s file"%(CONFIGFILE))
+        return False
+        
+    lines = f.readlines()
+    f.close()
+
+    for l in lines:
+        buf = l.strip()
+        if buf.startswith("#") or not len(buf):
+            continue
+        
+        (key, value) = buf.split(" ", 1)
+        if not FILEKEYS.has_key(key):
+            log(LOG_WARNING, "Unknown key named %s"%(key))
+            continue
+
+        CONF[FILEKEYS[key]] = value
+    return True
+
+def getPrettyTitle():
+    if not len(CONF["title"]):
+        return "Untitlet-Document"
+
+    title = CONF["title"].replace("\\","-").replace(" ","-").replace("(","").replace(")","").replace("/","")
+    if not len(title):
+        return "Untitlet-Document"
+
+    return title
+
+def getFileFromStdin(filename):
+    content = sys.stdin.read()
+
+    t = ""
+    titles = re.findall("%%Title: (.*)", content)
+    if len(titles) > 0:
+        t = titles[0]
+
+    f = file(filename,"w")
+    f.write(content)
+    f.close()
+    
+    return t
+
+def makedirs(directory):
+    if os.path.isdir(directory):
+        return
+    
+    dir1 = directory
+    while(not os.path.isdir(dir1)):
+        (dir1, dir2) = os.path.split(directory)
+ 
+    os.chdir(dir1)
+    os.makedirs(directory)
+
+def replaceUserGroup():
+    CONF["user"] = CONF["user"].replace("{USER}", CONF["jobuser"]) 
+
+    CONF["out_dir"] = CONF["out_dir"]%(CONF)
+    CONF["out_file"] = CONF["out_file"]%(CONF)
+
+    CONF["out_dir"] = CONF["out_dir"].replace("${USER}", CONF["jobuser"])
+
+    CONF["out_file"] = CONF["out_file"].replace("${USER}", CONF["jobuser"])
+    CONF["out_file"] = CONF["out_file"].replace("${EXT}", CONF["type"])
+    CONF["out_file"] = CONF["out_file"].replace("${TIME}", str(int(time.time())))
+    CONF["out_file"] = CONF["out_file"].replace("${TITLE}", "%(title)s")
+
+def system(cmd):
+    ret = os.system(cmd)
+    if debug_mode:
+        print "result of cmd '%s' => %d"%(cmd, ret)
+
+    return ret==0
+
+def main():
+    init()
+  
+    argc = len(sys.argv)
+    if argc==1:
+        print 'file cups2all cups virtual printer'
+        return end(0)
+
+    if not (6 <= len(sys.argv) <= 7):
+        print "Usage: %s job-id user title copies options [file]"%(sys.argv[0])
+        return end(0)
+
+    CONF["job"] = sys.argv[1]
+    CONF["jobuser"] = sys.argv[2]
+    CONF["title"] = sys.argv[3]
+      
+    try:
+        info = pwd.getpwnam(CONF["user"])
+    except:
+        print "unknown user %s"%(CONF["user"])
+        return end(0)
+
+    load_config()
+    
+    if argc == 7:
+        CONF["spool_file"] = sys.argv[6]
+    else:
+        CONF["spool_file"] = "%(spool_dir)s/job-%(job)s.ps"%(CONF)
+        CONF["our_spool_file"] = True
+        title = getFileFromStdin(CONF["spool_file"])
+        if not len(CONF["title"]) and len(title):
+            CONF["title"] = title
+
+    CONF["title"] = getPrettyTitle()
+    replaceUserGroup()
+
+    try:
+        infogrp = grp.getgrnam(CONF["group"])
+    except:
+        log(LOG_ERR, "Unable to get group %s"%(CONF["group"]))
+        infogrp = None
+
+    os.umask(int(CONF["umask"]))
+    makedirs(CONF["out_dir"])
+    system("chmod %d %s"%(777-int(CONF["umask"]), CONF["out_dir"]))
+    system("chgrp %s %s"%(CONF["group"],CONF["out_dir"]))
+  
+   
+    CONF["tmp_file"] = "%s.%s"%(CONF["spool_file"], CONF["type"])
+
+    t = Transform(CONF["spool_file"])
+    if CONF["type"] == "ps":
+         t.ps2ps(CONF)
+    elif CONF["type"] == "pdf":
+        t.ps2pdf(CONF)
+    else:
+        log(LOG_ERR, "Unknown type %s"%(CONF["type"]))
+        return end(0)
+
+    system("chmod %d %s"%(777-int(CONF["umask"]), CONF["tmp_file"]))
+    system("chgrp %s %s"%(CONF["group"],CONF["tmp_file"]))
+
+    CONF["out_file"] = "%s/%s"%(CONF["out_dir"]%(CONF), CONF["out_file"]%(CONF))
+    os.rename(CONF["tmp_file"], CONF["out_file"])
+    
+    return end(0)
+  
+if __name__ == "__main__":
+    main()
+
+    

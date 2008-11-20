@@ -1,0 +1,505 @@
+#!/bin/bash 
+# Copyright (C) 2006-2008 Ulteo SAS
+# http://www.ulteo.com
+# Author Gaël DUVAL <gduval@ulteo.com>
+# Author Gauvain POCENTEK <gauvain@ulteo.com>
+# Author Julien LANGLOIS <julien@ulteo.com>
+# Author Jonathan LESTRELIN <jonathan@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License 
+# as published by the Free Software Foundation, version 2
+# of the License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+
+system_clean() {
+    system_is_broken && return 1
+    local fail=0
+
+    for user in $(get_real_user); do
+	log_INFO "system_clean: existing user '$user': deluser him"
+	deluser $user
+	if [ $? !=  0 ]; then
+	    log_ERROR "system_clean: unable to remove user '$user'"
+	    local fail=1
+	fi
+    done
+    [ $fail = 0 ] || return $fail
+    
+    # Last, to ensure no user homes are left :
+    do_clean
+}
+
+system_is_broken() {
+    [ -f $SPOOL/broken ]
+}
+
+system_set_broken() {
+    log_ERROR "Put the system in broken mode."
+    touch $SPOOL/broken
+    webservices_server_broken
+    exit 1
+}
+
+check_cpulimit() {
+    CPULIMITPS=`cache_ps_display | grep "cpulimit"  |awk '{ print $13 }'`
+    FIREFOXPS=`cache_ps_display  | grep "firefox"   |awk '{ print $2 }'`
+    JAVAPS=`cache_ps_display     | grep "java_vm"   |awk '{ print $2 }'`
+    KONQPS=`cache_ps_display     | grep "konqueror" |awk '{ print $2 }'`
+    GIMPPS=`cache_ps_display     | grep "gimp"      |awk '{ print $2 }'`
+    ALLPS=$FIREFOXPS" "$JAVAPS" "$KONQPS" "$GIMPPS
+    for j in $ALLPS; do
+	if echo "$CPULIMITPS" | grep -q "$j" ; then
+	    log_DEBUG "process $j already cpulimited" 
+	else
+	    cpulimit -p $j -l 25 -z& 
+	    log_INFO "limiting process $j"
+	fi
+    done
+}
+
+session_check_status() {
+    SESSID=$1
+    SESSID_DIR=$SPOOL/sessions/$SESSID
+    i=`cat $SESSID_DIR/id`
+
+    RFB_PORT=$((5900+$i))
+    VNC_USER="VNC$i"
+    SSH_USER="SSH$i"
+
+    if [ ! -d $SESSID_DIR ]; then
+	log_ERROR "session_check_status: no such directory '$SESSID_DIR'"
+	return 1
+    fi
+
+    RUNASAP=`cat ${SESSID_DIR}/runasap`
+    if [ $RUNASAP -lt 1 ] || [ $RUNASAP -gt 3 ]; then 
+	return 0
+    fi
+
+    EXPIRE=`cat ${SESSID_DIR}/ex`
+    # LUCK=`cat ${SESSID_DIR}/luck` <-- not created by default
+    NICK=`cat ${SESSID_DIR}/nick`
+    USER_ID=`cat ${SESSID_DIR}/uu`
+    USER_LOGIN=`cat ${SESSID_DIR}/user_login`
+
+    # check if a KDE desktop connexion is alive for this session
+    DESKTOP_SESSION=`cache_ps_display | grep VNC$i | grep "Xtightvnc" | wc -l`
+    log_DEBUG "Desktop session for VNC$i: $DESKTOP_SESSION"
+
+    SSH_SESSION=`cache_net_display | grep "127.0.0.1\:$RFB_PORT" | grep "ESTABLISHED" | wc -l`
+    log_DEBUG "Alive SSH tunelling connexion for $RFB_PORT: $SSH_SESSION"
+
+    if [ $DESKTOP_SESSION -gt 0 ] || [ $SSH_SESSION -gt 0 ]; then
+	log_DEBUG "Session $i  DS: $DESKTOP_SESSION SSHS: $SSH_SESSION"
+    fi
+
+    # if desktop session alive and running, check timeout
+    if [ $DESKTOP_SESSION -gt 0 ]; then
+	if [ "$EXPIRE" = "" ]; then
+	    EXPIRE="0"
+	    log_INFO "Missing EXPIRE : force to 0"
+	fi
+
+	let ct=$(( `date +%s` ))
+	let diff=$(( $ct - $EXPIRE ))
+
+	if [ $diff -gt 0 ]; then
+	    log_INFO "Session expired => Timeout:$ct, EXPIRE:$EXPIRE, diff:$diff"
+	    export i SESSID_DIR
+	    export USER_LOGIN USER_ID
+	    timeout.sh &
+	fi
+    fi
+
+    # if session owner has vanished, kill session (useful for shared sessions)
+    KMA=${SESSID_DIR}/keepmealive
+    if [ -e $KMA ]; then
+	let ctg2=$(( `date +%s` ))
+	let candidate2=$(( `stat -c "%Z" $KMA` ))
+	let diffg2=$(( $ctg2 - $candidate2 ))
+
+	if [ $diffg2 -gt 20 ]; then
+	    log_WARN "KMA expired diff:$diffg2"
+	    session_switch_status $SESSID 3
+	    RUNASAP=3
+	fi
+    fi
+
+	   
+    # if desktop session without alive ssh connection 
+    # and no luck, kill the whole session
+    if [ $DESKTOP_SESSION -gt 0 ] && [ $SSH_SESSION -eq 0 ] ;then
+	if [ ! -f ${SESSID_DIR}/luck ]; then
+	    log_INFO "LUCK does not exist, creating it"
+	    echo $MAXLUCK > ${SESSID_DIR}/luck
+	fi
+	LUCK=`cat ${SESSID_DIR}/luck`
+
+	if [ $LUCK -gt 0 ]; then
+	    local newluck=$(($LUCK-1))
+	    log_INFO "Decreasing luck $LUCK to $newluck";
+	    LUCK=$newluck
+	    echo $LUCK > ${SESSID_DIR}/luck
+	fi
+
+	if [ $LUCK -lt 1 ]; then
+	    log_INFO "STAT - NOLUCK - CLOSING"
+	    session_switch_status $SESSID 3
+	    RUNASAP=3
+	fi
+    fi
+
+
+    #
+    # SWITCH CASE runasap
+    #
+ 
+    # session to launch? launch it! (runasap == 1)
+    if [ $RUNASAP -eq 1 ]; then
+	webservices_session_request $SESSID 1
+	log_INFO "RUNASAP 1 for $SESSID..."
+
+	if [ "$NICK" = "" ]; then
+	    log_ERROR "NULL nickname 2 "$NICK
+	    return 1
+	fi
+
+        # remove wipeout stamp is still there
+	rm -f /tmp/wipeout/$NICK
+
+	USER_HOME=/home/$NICK
+	echo $NICK > /tmp/VNC$i
+
+	log_INFO "ulteo-ovd runasap1, nickname: '$NICK', USER_HOME:'$USER_HOME'"
+
+	#Erase VNC logs from previous sessions
+	/bin/rm -rf /tmp/sessionlog
+
+	session_switch_status $SESSID 22
+	RUNASAP=22
+
+	export i SESSID SESSID_DIR RFB_PORT
+	export VNC_USER
+ 	export NICK
+	export USER_LOGIN USER_ID USER_HOME
+	prestart.sh &
+	unset SESSID SESSID_DIR RFB_PORT
+	unset VNC_USER
+ 	unset NICK
+	unset USER_LOGIN USER_ID USER_HOME
+	return
+
+    elif [ $RUNASAP -eq 2 ]; then
+        # if the ssh tunnel is up then the session is likely to start, 
+        # so we can set the "luck" to a little number, 
+        # so the session can regenerate more quickly after its end
+	LUCK=`cat ${SESSID_DIR}/luck`
+	if [ $DESKTOP_SESSION -gt 0 ] && [ $SSH_SESSION -gt 0 ]; then
+	    if [ "$LUCK" != "$MINLUCK" ]; then
+                log_INFO "Session started: set LUCK to MINLUCK to terminate session quickly"
+                echo $MINLUCK > ${SESSID_DIR}/luck
+            fi
+	fi
+
+        # if past session (runasap == 2)
+        # without desktop session => kill session (Xvnc), kill possible ssh connexion
+        # or if session required to start (timeout, other session...)
+	if [ $DESKTOP_SESSION -eq 0 ] && [ -e /tmp/wipeout/$NICK ]; then
+	    let ctg=$(( `date +%s` / 60 ))
+	    candidate=$(( `stat -c "%Z" /tmp/wipeout/$NICK` / 60 ))
+	    let diffg=$(( $ctg - $candidate ))
+
+	    if [ $diffg -gt 1 ]; then
+		log_INFO "Wipeout session $diffg"
+		session_switch_status $SESSID 3
+		RUNASAP=3
+	    fi
+	fi
+    fi
+	
+    # if a session is required to stop asap
+    if [ $RUNASAP -eq 3 ]; then # iff5
+	log_INFO "Killing Session $SESSID"
+	session_purge ${SESSID}
+	return 1
+    fi
+}
+
+## Garbage Collector
+# clean possibly remaining user dirs, only if they are umounted
+#
+garbage_collector() {
+
+## No use anymore, replace by module_fs
+#    let ctg=$(( `date +%s` / 60 ))
+#
+#    for j in `ls /tmp/wipeout/`; do	
+#	log_INFO "Garbage Collector --> Trying: "$j
+#	
+#	candidate=$(( `stat -c "%Z" /tmp/wipeout/$j` / 60 ))
+#	let diffg=$(( $ctg - $candidate ))
+#
+#	if [ $diffg -gt 1 ]; then
+#	    log_INFO "Garbage collector --> diff more than 1 min for $j ($diffg)"
+#	    rmdir /home/$j
+#
+#	    if [ ! -e /home/$j ]; then
+#		jdated=$j
+#		rm -f /tmp/wipeout/$j 
+#	    fi
+#	fi
+#    done
+
+    #
+    # Clean active session non-used 
+    # (runasap=0) since 60 second
+    #
+    for SESSID in $(sessions_get_active); do
+	local SESSID_DIR=$SPOOL/sessions/$SESSID
+	local RUNASAP=`cat ${SESSID_DIR}/runasap`
+	[ $RUNASAP -ne 0 ] && continue
+
+	local now=`date +%s`
+	local runasap=`stat -c "%Z" ${SESSID_DIR}/runasap`
+	local diff=$(( $now - $runasap ))
+
+	if [ $diff -gt 60 ]; then
+	    log_WARN "garbage_collector: found non-used session '$SESSID' -> remove it"
+	    session_remove $SESSID
+	fi
+    done
+}
+
+spool_init() {
+    [ -d $SPOOL ] || mkdir -p $SPOOL
+    [ -d $SPOOL/apt ] || mkdir $SPOOL/apt
+    [ -d $SPOOL/files ] || mkdir $SPOOL/files
+    [ -d $SPOOL/id ] || mkdir $SPOOL/id
+    [ -d $SPOOL/sessions ] || mkdir $SPOOL/sessions
+    [ -d $SPOOL/sessions2create ] || mkdir $SPOOL/sessions2create
+
+    chgrp www-data $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
+    chmod g+w $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
+}
+
+loop() {
+    # check if the system is clean before to start
+    system_clean
+    if [ $? -ne 0 ]; then
+	log_ERROR "Remaining garbage in home dirs, cannot start."
+	webservices_server_broken
+	exit 1
+    fi
+
+    trap 'stop' KILL EXIT
+    spool_init
+
+    if ! rsbac_is_active; then
+	if [ ! -d /tmpdir/tmp ]; then
+	    mkdir /tmpdir/tmp
+	fi
+	chmod 777 /tmpdir/tmp
+	
+	if [ ! -d /tmp/.X11-unix ]; then
+            mkdir /tmp/.X11-unix
+	fi
+	chmod a+rwxt /tmp/.X11-unix
+	
+	if [ ! -d /tmp/.ICE-unix ]; then
+	    mkdir /tmp/.ICE-unix
+	fi
+	chmod a+rwxt /tmp/.ICE-unix
+    fi
+
+    # this dir is used to have the script remember
+    # about nicknames whose connection is normally closed
+    if [ ! -e /tmp/wipeout ]; then
+	mkdir /tmp/wipeout
+    fi
+
+    # Give availables application to the sessionmanager
+    # webservices_available_application || exit 1
+    webservices_server_ready || exit 1
+    apt_daemon &
+    PID_WATCH=$!
+
+    local t0=`date +%s`
+    while [ 1 ]; do
+	log_DEBUG "Rebuilding net and ps cache"	
+	cache_build
+
+	local t1=`date +%s`
+	local diff=$(( $t1 - $t0 ))
+	if [ $diff -gt 60 ]; then
+	    webservices_system_monitoring
+	    log_INFO "monitoring send result: $?"
+	    local t0=`date +%s`
+	fi
+
+	local active=$(sessions_get_active)
+	local tocreate=$(sessions_get_to_create)
+	local nb_active=$(echo $active | wc -w)
+	local nb_tocreate=$(echo $tocreate | wc -w)
+	if [ $nb_active -gt 0 ] || [ $nb_tocreate -gt 0 ]; then
+            log_INFO "loop active session: ${nb_active}, to create: ${nb_tocreate}"
+	fi
+
+
+	check_cpulimit
+
+        # Check session to create
+	for SESSID in $(sessions_get_to_create); do
+	    log_INFO "creating session $SESSID"
+	    session_init $SESSID
+	    rm $SPOOL/sessions2create/$SESSID
+	done
+
+        # For each session ...
+	for SESSID in $(sessions_get_active); do
+	    log_DEBUG "Ses"$SESSID
+	    session_check_status $SESSID
+	    ret=$?
+	
+	    [ $ret -eq 1 ] && session_remove $SESSID
+	done
+
+	garbage_collector
+	sleep 1
+    done
+}
+
+stop() {
+    system_is_broken || webservices_server_down
+
+    [ $PID_WATCH ] && kill $PID_WATCH && wait $PID_WATCH
+    killall -q Xtightvnc
+    killall -q gam_server
+    killall -q startovd
+
+    killall -q -9 Xtightvnc
+    killall -q -9 gam_server
+    killall -q -9 startovd
+    killall -q -9 kblankscrn.kss
+
+    for SESSID in $(sessions_get_active); do
+	local SESSID_DIR=$SPOOL/sessions/$SESSID
+	local RUNASAP=`cat ${SESSID_DIR}/runasap`
+	if [ $RUNASAP -ne 0 ]; then
+	    session_purge $SESSID
+	fi
+
+	session_remove $SESSID
+    done
+    
+    system_clean
+    # if not 0 => broken !
+
+    # Remove the old sessions from the local server
+    rm -rf $SPOOL/apt/*
+    rm -rf $SPOOL/files/*
+    rm -rf $SPOOL/id/*
+    rm -rf $SPOOL/sessions/*
+    rm -rf $SPOOL/sessions2create/*
+
+    if [ -f "$PID_FILE" ]; then
+       local mpid=`cat $PID_FILE`
+       if [ $mpid == $$ ]; then
+           rm $PID_FILE
+       fi
+    fi
+
+    exit 0
+}
+
+usage() {
+    echo "$0 [-d|--daemonize] [-p|--pid filename]" >&2
+    echo "    -d|--daemonize : detash from the main process" >&2
+    echo "    -p|--pid filename : write the pid into 'filename'" >&2
+}
+
+
+# Define the default configuration
+CONF_FILE=/etc/ulteo-ovd.conf
+DAEMON=0
+
+LOG_FILE=/var/log/ulteo-ovd.log
+LOG_FLAGS="info warn error"
+BIN_DIR=/usr/share/ulteo-ovd
+SPOOL=/var/spool/ulteo-ovd
+SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"
+SERVERNAME=localhost
+MAXLUCK=20
+MINLUCK=1
+# end of default configuration
+
+
+# Load/overwrite configution from config file
+if [ ! -f $CONF_FILE ]; then
+    echo "Missing configuration file '$CONF_FILE'" >&2
+    exit 2
+fi
+. $CONF_FILE
+
+
+# Load/overwrite configuration from command-line args
+ARGS=`getopt --unquoted -o dp: --long daemonize,no-daemonize,pid: -n $0 -- "$@"`
+if [ $? != 0 ]; then 
+    echo "Error usage" >&2
+    usage
+    exit 1
+fi
+
+eval set -- "$ARGS"
+while true ; do
+    case "$1" in
+	-d|--daemonize)
+	    DAEMON=1
+	    shift;;
+	-p|--pid)
+	    PID_FILE=$2
+	    shift 2 ;;
+	--)
+	    shift ; break ;;
+	*)
+	    echo "Internal error!" 
+	    exit 1 ;;
+    esac
+done
+
+
+# Finally export the loaded configuration into env
+export BIN_DIR SPOOL
+export LOG_FILE LOG_FLAGS
+export SESSION_MANAGER_URL SERVERNAME
+export MAXLUCK MINLUCK
+export CONF_FILE
+
+# Set PATH to BIN_DIR in priority
+export PATH=$BIN_DIR:$PATH
+
+if [ $DAEMON -eq 1 ]; then
+    ARGS=`echo $ARGS | sed -e s/--daemonize//g -e s/-d//g`
+    $0 $ARGS &
+    exit 0
+fi
+
+if [ $PID_FILE ]; then
+    PID=$$
+    echo -n $PID >$PID_FILE
+fi
+
+. functions.sh
+. log.sh
+. modules_fs.sh
+
+loop >>$LOG_FILE 2>&1

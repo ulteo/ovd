@@ -1,0 +1,36 @@
+table.admin_table {
+	width: 100%;
+}
+
+table.admin_table td {
+	vertical-align: top;
+}
+
+table.admin_table td.menu {
+	width: 150px;
+}
+
+table.admin_table td.submenu {
+	width: 50px;
+}
+
+table.admin_table td.content {
+	padding-left: 15px;
+}
+
+div.menu {
+	border: none;
+	padding: 10px;
+}
+
+div.menu:hover {
+	border: none;
+	background: #666;
+	color: #fff;
+}
+
+div.menu.in {
+	border: none;
+	background: #004985;
+	color: #fff;
+}

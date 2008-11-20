@@ -1,0 +1,22 @@
+Source: ulteo-ovd
+Section: net
+Priority: optional
+Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 5)
+Standards-Version: 3.8.0
+
+Package: ulteo-ovd
+Architecture: all
+Pre-Depends: wget
+Depends: debconf (>= 0.2.26), ulteo-ovd-application-server
+Recommends: ulteo-ovd-rsbac
+Description: Ulteo Open Virtual Desktop - metapackage
+ This metapackage installs and configure an Ulteo Open Virtual Desktop
+ applications server.
+
+Package: ulteo-ovd-rsbac
+Architecture: all
+Depends: ulteo-ovd (= ${binary:Version}), m-privacy-ulteo (>= 2.3), klogd (>= 1.5-1ulteo1.1), sysklogd (>= 1.5-1ulteo1.1), apache2 (>= 2.2.8-1ulteo0.2.1)
+Description: Ulteo Open Virtual Desktop - RSBAC package
+ This metapackage installs and configure an Ulteo Open Virtual Desktop
+ application server. It also enables the RSBAC security option.

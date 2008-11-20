@@ -1,0 +1,5 @@
+== Init script ==
+
+Links to /etc/rc?.d will not be created. This package is supposed to be
+installed in a chroot, and an init script on the host machine will be
+responsible to start the ulteo-ovd daemon.

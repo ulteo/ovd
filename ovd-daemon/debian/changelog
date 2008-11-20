@@ -1,0 +1,11 @@
+ulteo-ovd-daemon (1.0~beta1.1) ovd-chroot-polaris; urgency=low
+
+  * Don't require a specific version of desktopfiles2xml
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 07:02:26 +0100
+
+ulteo-ovd-daemon (1.0~beta1) ovd-chroot-polaris; urgency=low
+
+  * Initial release.
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 18 Nov 2008 06:44:29 +0100

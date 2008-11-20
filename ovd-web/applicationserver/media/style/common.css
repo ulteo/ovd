@@ -1,0 +1,138 @@
+body {
+	background: #fff;
+	font-family: Arial;
+}
+
+img {
+	border: none;
+}
+
+#menuContainer {
+	background: #0f2d47;
+
+	width: 100%;
+	height: 18px;
+
+	position: absolute;
+	top: 0px;
+	right: 0px;
+
+	text-align: right;
+	vertical-align: middle;
+}
+
+#printerContainer {
+	width: 1px;
+	height: 1px;
+}
+
+#splashContainer {
+	border: 0px;
+
+	position: absolute;
+
+	width: 406px;
+	height: 255px;
+}
+
+#endContainer {
+	border: 0px;
+
+	position: absolute;
+
+	width: 400px;
+	height: 150px;
+
+	text-align: center;
+	vertical-align: middle;
+}
+
+#appletContainer {
+	position: absolute;
+
+	top: 0px;
+	left: 0px;
+
+	background: #0f2d47;
+}
+
+#debugContainer {
+	position: absolute;
+
+	left: 0px;
+	bottom: 0px;
+
+	width: 85%;
+	height: 149px;
+
+	overflow: auto;
+
+	display: inline;
+}
+
+#debugLevels {
+	position: absolute;
+
+	right: 0px;
+	bottom: 0px;
+
+	width: 15%;
+	height: 149px;
+
+	display: inline;
+}
+
+.debug {
+	color: grey;
+	display: block;
+}
+
+.info {
+	color: green;
+	display: block;
+}
+
+.warning {
+	color: orange;
+	display: block;
+}
+
+.error {
+	color: red;
+	display: block;
+}
+
+#debugContainer.no_debug .debug {
+	display: none;
+}
+
+#debugContainer.no_info .info {
+	display: none;
+}
+
+#debugContainer.no_warning .warning {
+	display: none;
+}
+
+#debugContainer.no_error .error {
+	display: none;
+}
+
+#menuShare {
+	background: #0f2d47;
+	margin-left: auto;
+	margin-right: 0px;
+}
+
+#menuShareFrame {
+	margin: none;
+	padding: none;
+}
+
+#menuShareClose {
+	background: #eee;
+	width: 30%;
+	padding-top: 10px;
+	margin-left: auto;
+	margin-right: 0px;
+}

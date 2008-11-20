@@ -1,0 +1,79 @@
+#!/bin/sh
+# Copyright (C) 2006-2008 Ulteo SAS
+# http://www.ulteo.com
+# Author Gaël DUVAL <gduval@ulteo.com>
+# Author Gauvain POCENTEK <gauvain@ulteo.com>
+# Author Julien LANGLOIS <julien@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, version 2
+# of the License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+. functions.sh
+. log.sh
+
+if rsbac_is_active; then
+    USER_TMP=/tmpdir/tmp${USER_ID}/
+    VNC_TMP=/tmpdir/tmp${VNC_USER_ID}/
+else
+    USER_TMP=/tmp/.tmp${USER_ID}
+    VNC_TMP=/tmp/.tmp${VNC_USER_ID}
+fi
+
+i=$(( $i + 5900 ))
+
+# Install the MIT_MAGIC_COOKIE
+/bin/su -s "/bin/bash" $VNC_USER -c "xauth -f ${VNC_TMP}.Xauthority add :$i . `/usr/bin/mcookie`"
+
+# Install the MIT_MAGIC_COOKIE into the real user env
+cp ${VNC_TMP}.Xauthority ${USER_TMP}.Xauthority
+chown ${USER_LOGIN} ${USER_TMP}.Xauthority
+
+# Install the rfbauth file into a directory readable by the VNC user
+cp ${SESSID_DIR}/encvncpasswd ${VNC_TMP}encvncpasswd
+chown $VNC_USER:$VNC_USER ${VNC_TMP}encvncpasswd
+
+out=/dev/null
+
+# Start the VNC server
+/bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/Xtightvnc :$i -desktop X$i -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry $GEOMETRY -depth 24 -rfbwait 240000 -rfbauth ${VNC_TMP}encvncpasswd -rfbport $RFB_PORT -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${VNC_TMP}.Xauthority" &> $out &
+
+# give some time to Xtightvnc to start
+sleep 2
+
+log_INFO "startsession : session state 2"
+session_switch_status $SESSID 2
+
+# Xvnc accept connexion only from MIT_MAGIC_COOKIEs
+su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/xhost -";
+
+export APP DOC
+export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC 
+export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
+
+# Start autocutsel
+su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/autocutsel" &> $out &
+
+if [ "$AJAX" = "TRUE" ]; then
+    # Start DCOP/etc services
+    su -s "/bin/bash" ${USER_LOGIN} -c "LD_BIND_NOW=true /usr/bin/kdeinit" &> $out &
+
+    # Start ulteowm
+    su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/ulteowm $((6900+$i))" &> $out
+else
+    # Start the KDE session
+    su -s "/bin/bash" ${USER_LOGIN} -c "startovd" &> $out
+fi
+
+# force session to end
+session_switch_status $SESSID 3

@@ -1,0 +1,32 @@
+cups2all (0.5) sirius; urgency=low
+
+  * Uncompress and install the ppd file in /usr/share/ppd
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 14 Oct 2008 10:19:20 +0200
+
+cups2all (0.4) sirius; urgency=low
+
+  * Restore correct owners of var/ dirs
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed,  1 Oct 2008 08:02:22 +0200
+
+cups2all (0.3) sirius; urgency=low
+
+  * Update for polaris:
+    * use dh_pycentral
+    * depends on python-central
+    * set spool permissions to root:lpadmin
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Thu, 25 Sep 2008 10:54:18 +0200
+
+cups2all (0.2) sirius; urgency=low
+
+  * Fix default config
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Thu,  6 Dec 2007 17:20:56 +0000
+
+cups2all (0.1) sirius; urgency=low
+
+  * Initial release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Mon, 26 Nov 2007 12:58:16 +0100

@@ -1,0 +1,4 @@
+panel-plugin/main.c
+panel-plugin/s-menu.c
+panel-plugin/restricted-menu.desktop.in.in
+

@@ -1,0 +1,12 @@
+Source: ulteo-ovd-daemon
+Section: net
+Priority: optional
+Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-daemon
+Architecture: all
+Depends: openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), m-privacy-ulteo-chroot (>= 1.1), cpulimit, inotify-tools, xdg-utils, curl, desktop-files2xml, ulteo-ovd-start
+Description: Ulteo Open Virtual Desktop daemon
+ This daemon handles the users' sessions in an application chroot.

@@ -1,0 +1,8 @@
+[Xfce Panel]
+Type=X-XFCE-PanelPlugin
+Encoding=UTF-8
+_Name=Restricted Menu
+_Comment=Restricted menu for the Xfce panel
+Icon=
+X-XFCE-Exec=@libexecdir@/xfce4/panel-plugins/xfce4-restricted-menu-plugin
+X-XFCE-Unique=true

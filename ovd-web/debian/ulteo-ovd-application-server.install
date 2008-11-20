@@ -1,0 +1,2 @@
+applicationserver usr/share/ulteo/
+debian/conf.d/application-server etc/apache2/sites-available/

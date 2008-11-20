@@ -1,0 +1,49 @@
+###########################################
+###                                     ###
+### Connectme Server Configuration File ###
+###                                     ###
+###########################################
+
+### Server Name
+#
+# the FQDN of this machine
+#
+SERVERNAME=cm.ulteo.com
+
+### Session manager webservice
+#
+# the url of the webservice use for declare or remove sessions
+#
+SESSION_MANAGER_URL=http://sm.ulteo.com/sessionmanager
+
+### Log file
+#
+LOG_FILE=/var/log/ulteo-ovd.log
+
+### Log flags
+#
+# can be debug, error, info, warn (space separated)
+LOG_FLAGS="info warn error"
+
+### Bin directory
+#
+# the directory that contain all ulteo-ovd scripts
+#
+BIN_DIR=/usr/share/ulteo-ovd
+
+### Spool directory
+#
+# the directory that contains sessions files
+#
+SPOOL=/var/spool/ulteo-ovd
+
+### Luck system
+#
+# luck is initialized to MAXLUCK when a session is initialise (runasap=2)
+# LUCK is decreased each time there is no SSH connection
+# When there is SSH connection, LUCK is set to MINLUCK
+# When LUCK < MINLUCK the session is destroyed
+#
+MAXLUCK=20
+MINLUCK=1
+

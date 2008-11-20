@@ -1,0 +1,118 @@
+#!/bin/bash
+# Copyright (C) 2008 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gauvain@ulteo.com>
+# Author Julien LANGLOIS <julien@ulteo.com>
+#
+# All rights reserved.
+
+# do we have an active RSBAC server?
+rsbac_is_active () {
+    [ -d /proc/rsbac-info ] && return 0
+    return 1
+}
+
+waitpid() {
+    local pid=$1
+    local timeout=$2
+    local t0=`date +"%s"`
+    
+    while [ -d /proc/$1 ]; do
+	sleep 0.5
+
+	if [ $timeout ]; then
+	    local t1=`date +"%s"`
+	    [ $(($t1-$t0)) -gt $2 ] && return 1
+	fi
+    done
+}
+
+CONF_FILE=/etc/ulteo-ovd.conf
+BIN_DIR=/usr/share/ulteo-ovd
+
+. /lib/lsb/init-functions
+
+PIDFILE="/var/run/ulteo-ovdd.pid"
+PROGRAM=$BIN_DIR/ulteo-ovdd
+
+# If we have rsbac, setup the jails
+if rsbac_is_active ; then
+    SSHJAIL="/sbin/run-jail ssh"
+    PORTMAPJAIL="/sbin/run-jail portmap"
+    DBUSJAIL="/sbin/run-jail dbus"
+fi
+
+    # Start the services
+do_start () {
+    log_begin_msg "Starting ulteo-ovd daemon..."
+    # Mount /proc if not done
+    if [ ! -f /proc/mounts ]; then
+        mount -t proc none /proc
+    fi
+
+    if [ -f $PIDFILE ]; then
+        if ps $(cat $PIDFILE); then
+            echo "ulteo-ovdd is already running"
+            return
+        else
+            rm $PIDFILE
+        fi
+    fi
+
+    # TODO: check if the services are already running
+    $SSHJAIL /etc/init.d/ssh start || true
+    $PORTMAPJAIL /etc/init.d/portmap start || true
+    $DBUSJAIL /etc/init.d/dbus start || true
+    /etc/init.d/cron start || true
+    /etc/init.d/cupsys start || true
+
+    for service in $EXTRA_SERVICES; do # from the config file
+        /etc/init.d/$service start || true
+    done
+    
+    # Start the daemon (well, not exactly a daemon...)
+    $PROGRAM --daemonize --pid "$PIDFILE"
+
+    log_end_msg 0
+}
+
+do_stop () {
+    log_begin_msg "Stopping ulteo-ovd daemon..."
+
+    # Kill apps
+    if [ -f $PIDFILE ]; then
+	local pid=$(cat $PIDFILE)
+	kill $pid
+	waitpid $pid 5 && rm $PIDFILE || true
+    fi
+
+    # Stop services
+    $SSHJAIL /etc/init.d/ssh stop || true
+    $PORTMAPJAIL /etc/init.d/portmap stop || true
+    $DBUSJAIL /etc/init.d/dbus stop || true
+    /etc/init.d/cron stop || true
+    /etc/init.d/cupsys stop || true
+
+    for service in $EXTRA_SERVICES; do # from the config file
+        /etc/init.d/$service stop || true
+    done
+
+    umount /proc
+
+    log_end_msg 0
+}
+
+case $1 in
+    start)
+        do_start;;
+
+    stop)
+        do_stop;;
+
+    restart|force-reload)
+        do_stop
+        do_start
+        ;;
+    *)
+        log_success_msg "Usage: /etc/init.d/ulteo-ovd {start|stop|force-reload|restart}";;
+esac

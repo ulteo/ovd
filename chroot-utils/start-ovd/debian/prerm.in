@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+if [ "$1" = "remove" ] || [ "$1" = "debconfigure" ]; then
+    for alt in @ALTERNATIVES@; do
+        update-alternatives --remove startovd /usr/bin/$alt
+    done
+fi
+
+#DEBHELPER#
+
+exit 0

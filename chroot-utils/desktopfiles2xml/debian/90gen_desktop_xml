@@ -1,0 +1,1 @@
+DPkg::Post-Invoke {"if [ -x /usr/bin/desktop-files2xml ]; then /usr/bin/desktop-files2xml >/var/lib/ulteo/available-apps.xml 2>/dev/null; fi";};

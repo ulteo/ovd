@@ -1,0 +1,100 @@
+<?php
+/**
+ * Copyright (C) 2008 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ **/
+require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+
+function adminAuthenticate($login_, $password_) {
+  return defined('SESSIONMANAGER_ADMIN_LOGIN') and
+    defined('SESSIONMANAGER_ADMIN_PASSWORD') and
+    SESSIONMANAGER_ADMIN_LOGIN == $login_ and
+    SESSIONMANAGER_ADMIN_PASSWORD == md5($password_);
+}
+
+if (isset($_POST['admin_login']) && $_POST['admin_login'] != ''
+    && isset($_POST['admin_password']) && $_POST['admin_password'] != '') {
+	$login = $_POST['admin_login'];
+	$password = $_POST['admin_password'];
+
+	if (adminAuthenticate($login, $password))
+		$_SESSION['admin_login'] = $login;
+}
+
+if (isset($_SESSION['admin_login']))
+  redirect('index.php'); // <-- referer
+
+$prefs = Preferences::getInstance();
+if (! $prefs)
+	$main_title = DEFAULT_PAGE_TITLE;
+else
+	$main_title = $prefs->get('general', 'main_title');
+
+header_static($main_title.' - '._('Administration'));
+?>
+
+<h2 class="centered"><?php echo _('Login');?></h2>
+
+<div id="login_box" class="centered">
+	<div id="login_status"></div>
+<?php
+  if (isset($_POST['admin_login']))
+      echo '<p class="msg_error">'._('There was an error with your authentication').'</p>';
+?>
+</div>
+
+	<form id="login" action="" method="post">
+		<fieldset class="hidden">
+			<table class="centered" border="0" cellspacing="1" cellpadding="5">
+				<tr>
+					<td>
+						<img src="../media/image/password.png" width="64" height="64" alt="" title="" />
+					</td>
+					<td>
+						<table class="main_login centered" border="0" cellspacing="1" cellpadding="5">
+							<tr>
+								<td style="text-align: left;" class="title">
+									<span style="color: #fff; font-weight: bold; font-size: 1.5em;"><?php echo _('Login'); ?></span>
+								</td>
+								<td>
+									<input class="input_text" type="text" name="admin_login" value="" />
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: left;" class="title">
+									<span style="color: #fff; font-weight: bold; font-size: 1.5em;"><?php echo _('Password'); ?></span>
+								</td>
+								<td>
+									<input class="input_text" type="password" name="admin_password" value="" />
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align: right" class="centered" colspan="2">
+									<input type="submit" id="login_submit" value="<?php echo _('Log in'); ?>" />
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</fieldset>
+	</form>
+
+<?php
+footer_static();

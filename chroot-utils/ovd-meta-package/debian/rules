@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+DEB_UPDATE_RCD_PARAMS := "start 99 S ."
+
+binary-install/ulteo-ovd::
+	mkdir -p debian/ulteo-ovd/usr/share/lintian/overrides
+	install -m0644 debian/lintian.overrides \
+		debian/ulteo-ovd/usr/share/lintian/overrides/ulteo-ovd

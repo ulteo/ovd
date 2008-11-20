@@ -1,0 +1,15 @@
+Source: desktop-files2xml
+Section: text
+Priority: extra
+Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 5), python-central
+Standards-Version: 3.7.3
+XS-Python-Version: all
+
+Package: desktop-files2xml
+Architecture: all
+Depends: ${python:Depends}
+XB-Python-Version: all
+Description: generate xml data from .desktop files
+ desktop-files2xml generates xml data used by the Ulteo OD Session Manager
+ adminstration tools.

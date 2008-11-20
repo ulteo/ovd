@@ -1,0 +1,999 @@
+# Copyright (c) 2008 Ulteo SAS
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+#
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Servers"
+msgstr "Serveurs"
+
+msgid "Sessions"
+msgstr "Sessions"
+
+msgid "Users"
+msgstr "Utilisateurs"
+
+msgid "Applications"
+msgstr "Applications"
+
+msgid "Publications"
+msgstr "Publications"
+
+msgid "Configuration"
+msgstr "Configuration"
+
+msgid "Logout"
+msgstr "Déconnexion"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Join this session"
+msgstr "Se connecter à cette session"
+
+msgid "Are you sure you want to kill this session?"
+msgstr "Êtes-vous sûr de vouloir tuer cette session ?"
+
+msgid "Kill this session"
+msgstr "Tuer cette session"
+
+msgid "Session"
+msgstr "Session"
+
+msgid "Server"
+msgstr "Serveur"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "Kill"
+msgstr "Tuer"
+
+msgid "Mark all"
+msgstr "Sélectionner tous"
+
+msgid "Unmark all"
+msgstr "Déselectionner tous"
+
+msgid "No active session"
+msgstr "Pas de session active"
+
+msgid "List of user application"
+msgstr "Liste des applications utilisateur"
+
+msgid "Module UserDB must be enabled"
+msgstr "Le module UserDB doit être activé"
+
+msgid "login"
+msgstr "connexion"
+
+msgid "name"
+msgstr "nom"
+
+msgid "in this user group"
+msgstr "dans ce groupe utilisateur"
+
+msgid "in this app group"
+msgstr "dans ce groupe d'applications"
+
+msgid "access to this applications"
+msgstr "accés à ces applications"
+
+msgid "Desktop File"
+msgstr "Fichier Desktop"
+
+msgid "Server available"
+msgstr "Serveur disponible"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "No"
+msgstr "Non"
+
+msgid "No servers available"
+msgstr "Aucun serveur disponible"
+
+msgid "FQDN"
+msgstr "FQDN"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Administration"
+msgstr "Administration"
+
+msgid "Login"
+msgstr "Connexion"
+
+msgid "There was an error with your authentication"
+msgstr "Authentification échouée"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Log in"
+msgstr "Connexion"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Block"
+msgstr "Bloquer"
+
+msgid "Blocked"
+msgstr "Bloqué"
+
+msgid "Enable"
+msgstr "Activé"
+
+msgid "User groups management"
+msgstr "Gestion des groupes d'utilisateurs"
+
+msgid "Description"
+msgstr "Description"
+
+msgid "Status"
+msgstr "Etat"
+
+msgid "Settings"
+msgstr "Paramètres"
+
+msgid "Are you sure you want to delete this group ?"
+msgstr "Etes-vous certain de vouloir supprimer ce groupe ?"
+
+msgid "Delete this group"
+msgstr "Supprimer ce groupe"
+
+msgid "Update the description"
+msgstr "Mettre à jour la description"
+
+msgid "List of users in this group"
+msgstr "Liste des utilisateurs de ce groupe"
+
+msgid "No users in this group"
+msgstr "Pas d'utilisateurs dans ce groupe"
+
+msgid "Are you sure you want to delete this user ?"
+msgstr "Etes-vous certain de vouloir supprimer cet utilisateur ?"
+
+msgid "Delete from this group"
+msgstr "Supprimer du groupe"
+
+msgid "Not any available user to add"
+msgstr "Aucun utilisateur disponible pour un ajout"
+
+msgid "Add to this group"
+msgstr "Ajouter à ce groupe"
+
+msgid "List of publications with this group"
+msgstr "Liste des publications de ce groupe"
+
+msgid "No publications with this group"
+msgstr "Pas de publication pour ce groupe"
+
+msgid "Are you sure you want to delete this publication ?"
+msgstr "Etes-vous certain de vouloir supprimer cette publication ?"
+
+msgid "Delete this publication"
+msgstr "Supprimer cette publication"
+
+msgid "Not any publication to add"
+msgstr "Aucune publication à ajouter"
+
+msgid "Add this publication"
+msgstr "Ajouter cette publication"
+
+msgid "User groups list"
+msgstr "Liste des groupes d'utilisateurs"
+
+msgid "No user groups available"
+msgstr "Aucun groupe d'utilisateurs disponible"
+
+msgid "Are you sure you want to delete these groups ?"
+msgstr "Etes-vous certain de vouloir supprimer ces groupes ?"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Manage"
+msgstr "Gérer"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Create a new group"
+msgstr "Créer un nouveau groupe"
+
+msgid "Add"
+msgstr "Ajouter"
+
+msgid "Module ApplicationDB must be enabled"
+msgstr "Le module ApplicationDB doit être activé"
+
+msgid "Unregistered servers"
+msgstr "Serveurs non enregistrés"
+
+msgid "Version"
+msgstr "Version"
+
+msgid "Details"
+msgstr "Détails"
+
+msgid "CPU"
+msgstr "CPU"
+
+msgid "cores"
+msgstr "coeurs"
+
+msgid "core"
+msgstr "coeur"
+
+msgid "RAM"
+msgstr "RAM"
+
+msgid "Register"
+msgstr "Enregistrer"
+
+msgid "Monitoring"
+msgstr "Monitoring"
+
+msgid "Applications(physical)"
+msgstr "Applications (physiques)"
+
+msgid "MB"
+msgstr "MO"
+
+msgid "CPU usage"
+msgstr "Utilisation CPU"
+
+msgid "RAM usage"
+msgstr "utilisation RAM"
+
+msgid "Switch to production"
+msgstr "Passer en production"
+
+msgid "Switch to maintenance"
+msgstr "Passer en maintenance"
+
+msgid "Warning: Server is offline"
+msgstr "Attention : le serveur est hors-ligne"
+
+msgid "Warning: Server is broken"
+msgstr "Attention : le serveur est hors-service"
+
+msgid "maintenance"
+msgstr "maintenance"
+
+msgid "change"
+msgstr "changer"
+
+msgid "delete"
+msgstr "supprimer"
+
+msgid "Install an application from a package name"
+msgstr "Installer une application depuis le nom du paquet"
+
+msgid "Install"
+msgstr "Installer"
+
+msgid "Applications available on this server"
+msgstr "Applications disponibles sur ce server"
+
+msgid "Cannot list available applications"
+msgstr "Impossible de lister les applications disponibles"
+
+msgid "No application on this server"
+msgstr "Aucune application sur ce serveur"
+
+msgid "Are you sure you want to remove this application from this server ?"
+msgstr "Etes-vous certain de vouloir supprimer cette application du serveur ?"
+
+msgid "Remove from this server"
+msgstr "Supprimer sur ce serveur"
+
+msgid "No available application"
+msgstr "Pas d'application disponible"
+
+msgid "Install on this server"
+msgstr "Installer sur ce serveur"
+
+msgid "Replication"
+msgstr "Réplication"
+
+msgid "Replicate on those servers"
+msgstr "Répliquer sur ces serveurs"
+
+msgid "Active tasks on this server"
+msgstr "Tâches actives sur ce serveur"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Error"
+msgstr "Erreur"
+
+msgid "Active sessions"
+msgstr "Sessions actives"
+
+msgid "No active sessions"
+msgstr "Aucune session active"
+
+msgid "Informations about this session"
+msgstr "Informations sur cette session"
+
+msgid "Tasks managment"
+msgstr "Gestion des tâches"
+
+msgid "Creation time"
+msgstr "Heure de création"
+
+msgid "Job id"
+msgstr "Id du job"
+
+msgid "Finished"
+msgstr "Terminé"
+
+msgid "Tasks"
+msgstr "Tâches"
+
+msgid "List of Tasks"
+msgstr "Liste des tâches"
+
+msgid "Install a package from line"
+msgstr "Installer un packages depuis la ligne de commande"
+
+msgid "No available servers"
+msgstr "Aucun serveur disponible"
+
+msgid "Available"
+msgstr "Disponible"
+
+msgid "Unblock"
+msgstr "Débloquer"
+
+msgid "Package"
+msgstr "Package"
+
+msgid "Servers with this application"
+msgstr "Serveurs avec cette application"
+
+msgid "Are you sure you want remove this application from this server ?"
+msgstr "Etes-vous certain de vouloir supprimer cette application du serveur ?"
+
+msgid "Not any server to install"
+msgstr "Aucun serveur à installer"
+
+msgid "Active tasks on this application"
+msgstr "Tâches actives pour cette application"
+
+msgid "Groups with this application"
+msgstr "Groupes contenant cette application"
+
+msgid "Are you sure you want to delete this application from this group ?"
+msgstr "Etes-vous certain de vouloir supprimer cette application du groupe ?"
+
+msgid "Not any group to add"
+msgstr "Aucun groupe à ajouter"
+
+msgid "Application groups management"
+msgstr "Gestion des groupes d'applications"
+
+msgid "List of applications"
+msgstr "Liste des applications"
+
+msgid "No available applications"
+msgstr "Aucune application disponible"
+
+msgid "Save"
+msgstr "Sauvegarder"
+
+msgid "Preferences not loaded"
+msgstr "Préférences non chargées"
+
+msgid "No usergroup selected"
+msgstr "Aucun groupe d'utilisateurs sélectionné"
+
+msgid "No user selected"
+msgstr "Aucun utilisateur sélectionné"
+
+msgid "No group name"
+msgstr "Pas de nom de groupe"
+
+msgid "No application group selected"
+msgstr "Aucun groupe d'application sélectionné"
+
+msgid "No application selected"
+msgstr "Aucune application sélectionnée"
+
+msgid "Publication Wizard"
+msgstr "Assistant de publication"
+
+msgid "No available users"
+msgstr "Pas d'utilisateurs disponibles"
+
+msgid "Users/group selection"
+msgstr "Sélection utilisateurs/groupes"
+
+msgid "Create a group with users"
+msgstr "Créer un groupe d'utilisateurs"
+
+msgid "Use usergroups"
+msgstr "Utiliser un groupe d'utilisateurs"
+
+msgid "Next"
+msgstr "Prochain"
+
+msgid "Create usergroup"
+msgstr "Créer un groupe d'utilisateurs"
+
+msgid "Previous"
+msgstr "Précédent"
+
+msgid "Applications/group selection"
+msgstr "Sélection Applications/groupes"
+
+msgid "Create a group with applications"
+msgstr "Créer un groupe d'applications"
+
+msgid "Use appgroups"
+msgstr "Utiliser un groupe d'applications"
+
+msgid "Create appgroup"
+msgstr "Créer un groupe d'applications"
+
+msgid "Confirmation"
+msgstr "Confirmation"
+
+msgid "Are you sure that you want to create this publication ?"
+msgstr "Etes-vous certain de vouloir créer cette publication ?"
+
+msgid "Confirm"
+msgstr "Confirmer"
+
+msgid "Cannot create usergroup"
+msgstr "Impossible de créer le groupe d'utilisateurs"
+
+msgid "Cannot create appgroup"
+msgstr "Impossible de créer le groupe d'applications"
+
+msgid "Del"
+msgstr "Suppr"
+
+msgid "List of applications in this group"
+msgstr "Liste des applications de ce groupe"
+
+msgid "No application in this group"
+msgstr "Pas d'application dans ce groupe"
+
+msgid "Are you sure you want to delete this application ?"
+msgstr "Etes-vous certain de vouloir supprimer cette application ?"
+
+msgid "Not any available application to add"
+msgstr "Aucun application disponible pour ajout"
+
+msgid "Application group list"
+msgstr "Liste du groupe d'applications"
+
+msgid "No application groups available"
+msgstr "Pas d'applications disponibles"
+
+msgid "Publication wizard"
+msgstr "Assistant de publication"
+
+msgid "Users group"
+msgstr "Groupe d'utilisateurs"
+
+msgid "Application group"
+msgstr "Groupe d'applications"
+
+msgid "No publications"
+msgstr "Pas de publications"
+
+msgid "No available user groups to use"
+msgstr "Aucun groupe d'utilisateurs ne peut être utilisé"
+
+msgid "No available application groups to use"
+msgstr "Aucun groupe d'applications disponible"
+
+msgid "Error while requesting usergroups"
+msgstr "Erreur lors de la requête groupe d'utilisateurs"
+
+msgid "Uid"
+msgstr "Uid"
+
+msgid "Delete this user"
+msgstr "Supprimer cet utilisateur"
+
+msgid "Display name"
+msgstr "Nom à afficher"
+
+msgid "New password"
+msgstr "Nouveau mot de passe"
+
+msgid "Save the modifications"
+msgstr "Sauvegarder les modifications"
+
+msgid "User groups with this user"
+msgstr "Groupes d'utilisateurs contenant cet utilisateur"
+
+msgid "No user in this group"
+msgstr "Aucun utilisateur dans ce groupe"
+
+msgid "List of Users"
+msgstr "List des utilisateurs"
+
+msgid "Displayname"
+msgstr "Nom d'affichage"
+
+msgid "General configuration"
+msgstr "Configuration générale"
+
+msgid "Heading title"
+msgstr "Grand titre"
+
+msgid "You can customize the Heading/title here."
+msgstr "Vous pouvez modifier le grand titre ici"
+
+msgid "Logo URL"
+msgstr "URL du logo affiché"
+
+msgid "You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png"
+msgstr "Vous pouvez customiser le logo en saisissant un nouveau chemin ou en remplaçant l'image correspondante sur le serveur. Utilisez une image de 90px de hauteur en format png ou jpeg. Par exemple: media/image/header.png"
+
+msgid "Authorized network domain"
+msgstr "Domaine réseau autorisé"
+
+msgid "Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com"
+msgstr "Entre la liste des domaines réseau autorisés qui peuvent se déclarer comme Serveur d'Applications auprès de la console d'administration. Par exemple : *.office.mycorporation.com"
+
+msgid "Name/IP Address association (name &lt;-&gt; ip)"
+msgstr "Association Nom/Adresse IP (nom &lt;-&gt; ip)"
+
+msgid "Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgstr "Saisissez les noms de machines (FQDN) que vous souhaitez associer à une IP privée en cas de problème avec la configuration DNS ou pour forcer un résultat de \"reverse DNS\". Exemple : pong.office.ulteo.com (field 1) 192.168.0.113 (champs 2)"
+
+msgid "Disable reverse FQDN checking"
+msgstr "Désactivation de la vérification par reverse FQDN"
+
+msgid "Enable this option if you don't want to check that the result of the reverse FQDN address fits the one that was registered."
+msgstr "Activez cette option si vous ne souhaitez pas vérifier que le résultat du nom FQDN correspond à l'adresse enregistrée."
+
+msgid "no"
+msgstr "non"
+
+msgid "yes"
+msgstr "oui"
+
+msgid "Debug options list"
+msgstr "Liste des options de debug"
+
+msgid "Select debug options you want to enable."
+msgstr "Sélectionnez les options de debug que vous souhaitez activer"
+
+msgid "debug"
+msgstr "debug"
+
+msgid "info"
+msgstr "info"
+
+msgid "warning"
+msgstr "attention"
+
+msgid "error"
+msgstr "erreur"
+
+msgid "critical"
+msgstr "critique"
+
+msgid "Display user list"
+msgstr "Afficher la liste des utilisateurs"
+
+msgid "Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name."
+msgstr "Affiche la liste des utilisateurs depuis le répertoire d'entreprise dans la boite de login. Si la liste n'est pas affichée, l'utilisateur doit saisir manuellement son identifiant."
+
+msgid "Advanced settings options"
+msgstr "Options avancées"
+
+msgid "Choose Advanced Settings options you want to make available to users before they launch a session."
+msgstr "Sélectionnez les options avancées que vous souhaitez mettre à disposition des utilisateurs avant qu'ils lancent leur session."
+
+msgid "language"
+msgstr "langue"
+
+msgid "server"
+msgstr "serveur"
+
+msgid "size"
+msgstr "taille"
+
+msgid "quality"
+msgstr "qualité"
+
+msgid "timeout"
+msgstr "timeout"
+
+msgid "application"
+msgstr "application"
+
+msgid "ssh/ping applet test"
+msgstr "test ssh/ping pour applet client"
+
+msgid "MySQL configuration"
+msgstr "configuration MySQL"
+
+msgid "Database host address"
+msgstr "Adresse du serveur de base de données"
+
+msgid "The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com."
+msgstr "L'adresse FQDN de votre serveur de base de données. Cette base contient les informations relatives à la console d'administration. Exemple : localhost or db.mycorporate.com"
+
+msgid "Database username"
+msgstr "Nom d'utilisateur (identifiant) pour la base de données"
+
+msgid "The username that must be used to access the database."
+msgstr "Un nom d'utilisateur (identifiant) qui doit être utilisé pour accéder à la base de données."
+
+msgid "The user name that must be used to access the database."
+msgstr "Le nom d'utilisateur (identifiant) qui doit être utilisé pour accéder à la base de données."
+
+msgid "Database password"
+msgstr "Mot de passe pour la base de données"
+
+msgid "The user password that must be used to access the database."
+msgstr "Le mot de passe qui doit être utilisé pour accéder la base de données."
+
+msgid "Database name"
+msgstr "Nom de la base de données"
+
+msgid "The name of the database."
+msgstr "Le nom de la base de données."
+
+msgid "Table prefix"
+msgstr "Préfixe pour les tables de la base"
+
+msgid "The table prefix for the database."
+msgstr "Le préfixe à utiliser pour les tables de la base de données."
+
+msgid "Modules activation"
+msgstr "Activation des modules"
+
+msgid "Choose the modules you want to enable."
+msgstr "Choisissez les modules que vous souhaitez activer."
+
+msgid "Plugins configuration"
+msgstr "Configuration des plugins"
+
+msgid "Modules options"
+msgstr "Options des modules"
+
+msgid "SQL configuration not valid(2)"
+msgstr "Configuration SQL non valide(2)"
+
+msgid "SQL configuration not valid"
+msgstr "Configuration SQL non valide"
+
+msgid "Initialization failed"
+msgstr "L'initialisation a échoué"
+
+msgid "prefs is not valid for plugin"
+msgstr "prefs n'est pas valide pour le plugin"
+
+msgid "prefs is not valid for FS plugin"
+msgstr "prefs n'est pas valide pour le plugin FS"
+
+msgid "Plugins configuration not valid"
+msgstr "Configuration des plugins non valide"
+
+msgid "prefs is not valid for module"
+msgstr "prefs n'est pas valide pour le module"
+
+msgid "Modules configuration not valid"
+msgstr "Configuration de module invalide"
+
+msgid "Server host address"
+msgstr "Adresse du serveur hôte"
+
+msgid "The address of your LDAP server."
+msgstr "L'adresse de votre serveur LDAP."
+
+msgid "Server port"
+msgstr "Port du serveur"
+
+msgid "The port use by your LDAP server."
+msgstr "Le port utilisé par votre serveur LDAP."
+
+msgid "User login"
+msgstr "Identifiant utilisateur"
+
+msgid "The user login that must be used to access the database (to list users account)."
+msgstr "L'identifiant utilisateur qui doit être utilisé pour accéder à la base (permettant de lister les comptes utilisateurs)."
+
+msgid "User password"
+msgstr "Mot de passe utilisateur"
+
+msgid "The user password that must be used to access the database (to list users account)."
+msgstr "Le mot de passe qui doit être utilisé pour accéder à la base (afin de lister les comptes utilisateurs)."
+
+msgid "Protocol version"
+msgstr "Version du protocole"
+
+msgid "The protocol version used by your LDAP server."
+msgstr "La version de protocole utilisé par votre serveur LDAP."
+
+msgid "Matching"
+msgstr "Correspondance"
+
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+msgid "local"
+msgstr "local"
+
+msgid "fake"
+msgstr "fake"
+
+msgid "MySQL"
+msgstr "MySQL"
+
+msgid "The address of your AD."
+msgstr "L'adresse de votre serveur Active Directory"
+
+msgid "Domain name"
+msgstr "Nom de domaine"
+
+msgid "Domain name use by AD"
+msgstr "Nom de domaine utilisé par Active Directory"
+
+msgid "Active Directory"
+msgstr "Active Directory"
+
+msgid "No available server"
+msgstr "Pas de serveur disponible"
+
+msgid "Please login with your username and password"
+msgstr "Merci de vous authentifier avec votre identifiant et mot de passe"
+
+msgid "Please login with your username"
+msgstr "Merci de vous authentifier avec votre identifiant"
+
+msgid "Loading"
+msgstr "Chargement"
+
+msgid "YOU ALREADY HAVE A SESSION ACTIVE"
+msgstr "VOUS AVEZ DEJA UNE SESSION ACTIVE"
+
+msgid "WARNING, START ANYWAY"
+msgstr "PROBLEME - FORCER LE DEMARRAGE"
+
+msgid "ERROR"
+msgstr "ERREUR"
+
+msgid "SESSION IS STARTED"
+msgstr "LA SESSION EST DEMARREE"
+
+msgid "Advanced settings"
+msgstr "Réglages avancés"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Quality"
+msgstr "Qualité"
+
+msgid "Timeout"
+msgstr "Timeout"
+
+msgid "Application"
+msgstr "Application"
+
+msgid "Full desktop"
+msgstr "Bureau complet"
+
+msgid "Debug"
+msgstr "Debug"
+
+msgid "Proxy type"
+msgstr "Type de proxy"
+
+msgid "Proxy host"
+msgstr "Serveur proxy"
+
+msgid "Proxy port"
+msgstr "Port du proxy"
+
+msgid "Proxy username"
+msgstr "Identifiant proxy"
+
+msgid "optional"
+msgstr "optionnel"
+
+msgid "Proxy password"
+msgstr "Mot de passe proxy"
+
+msgid "Remember proxy"
+msgstr "Sauvegarder les infos de proxy"
+
+msgid "User importation failed"
+msgstr "L'import des utilisateurs a échoué"
+
+msgid "You already have a session active"
+msgstr "Vous avez déjà une session active"
+
+msgid "No available session"
+msgstr "Aucune session n'est disponible"
+
+msgid "No available filesystem"
+msgstr "Aucun système de fichier disponible"
+
+msgid "powered by"
+msgstr "powered by"
+
+msgid "Open Virtual Desktop"
+msgstr "Open Virtual Desktop"
+
+msgid "Maximum"
+msgstr "Maximum"
+
+msgid "Lowest"
+msgstr "Minimal"
+
+msgid "Medium"
+msgstr "Moyen"
+
+msgid "High"
+msgstr "Haut"
+
+msgid "Highest"
+msgstr "Maximum"
+
+msgid "1 minute"
+msgstr "1 minute"
+
+msgid "2 minutes"
+msgstr "2 minutes"
+
+msgid "5 minutes"
+msgstr "5 minutes"
+
+msgid "10 minutes"
+msgstr "10 minutes"
+
+msgid "15 minutes"
+msgstr "15 minutes"
+
+msgid "30 minutes"
+msgstr "30 minutes"
+
+msgid "1 hour"
+msgstr "1 heure"
+
+msgid "2 hours"
+msgstr "2 heures"
+
+msgid "5 hours"
+msgstr "5 heures"
+
+msgid "10 hours"
+msgstr "10 heures"
+
+msgid "1 day"
+msgstr "1 journée"
+
+msgid "Configuration file missing"
+msgstr "Le fichier de configuration est manquant"
+
+msgid "Configuration not valid"
+msgstr "Configuration invalide"
+
+msgid "The service is not available, please try again later"
+msgstr "Le service n'est pas disponible, merci de réessayer plus tard"
+
+msgid "Start"
+msgstr "Démarrer"
+
+msgid "SESSIONMANAGER_SPOOL is not defined"
+msgstr "SESSIONMANAGER_SPOOL n'est pas définie"
+
+msgid "SESSIONMANAGER_LOGS is not defined"
+msgstr "SESSIONMANAGER_LOGS n'est pas définie"
+
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED n'est pas définie"
+
+msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
+msgstr "SESSIONMANAGER_ADMIN_LOGIN n'est pas définie"
+
+msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
+msgstr "SESSIONMANAGER_ADMIN_PASSWORD n'est pas définie"
+
+msgid "SESSIONMANAGER_SPOOL is not writable"
+msgstr "SESSIONMANAGER_SPOOL n'est pas accessible en écriture"
+
+msgid "SESSIONMANAGER_LOGS is not writable"
+msgstr "SESSIONMANAGER_LOGS n'est pas accessible en écriture"
+
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED n'est pas accessible en écriture"
+
+msgid "Invitation"
+msgstr "Invitation"
+
+msgid "You received an invitation from"
+msgstr "Vous avez reçu une invitation de"
+
+msgid "please click on the link below to join the online session"
+msgstr "cliquez sur le lien ci-dessous pour vous connecter au service en ligne"
+
+msgid "Sharing"
+msgstr "Partage"
+
+msgid "Your invitation to "
+msgstr "Votre invitation à"
+
+msgid "Common Internet File System (CIFS) without services for unix"
+msgstr "Common Internet File System (CIFS) sans les services pour unix"
+
+msgid "Common Internet File System (CIFS)"
+msgstr "Common Internet File System (CIFS)"
+
+msgid "Network File System (NFS)"
+msgstr "Network File System (NFS)"
+
+msgid "proxy"
+msgstr "proxy"
+
+msgid "Unknown"
+msgstr "Inconnu"
+
+msgid "Under maintenance"
+msgstr "En maintenance"
+
+msgid "Online"
+msgstr "En ligne"
+
+msgid "Offline"
+msgstr "Hors ligne"
+
+msgid "Broken"
+msgstr "Hors service"
+
+msgid "You are now logged in"
+msgstr "Vous êtes maintenant connecté"
+
+msgid "Unknown error"
+msgstr "Erreur inconnue"
+
+msgid "Desktop sharing"
+msgstr "Partage du bureau"
+
+msgid "Invite the following people to share this session"
+msgstr "Inviter des personnes à partager cette session"
+
+msgid "Email address"
+msgstr "Adresse e-mail"
+
+msgid "check twice"
+msgstr "vérifiez"
+
+msgid "Invite"
+msgstr "Inviter"
