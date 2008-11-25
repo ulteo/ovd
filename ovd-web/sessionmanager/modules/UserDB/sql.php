@@ -94,7 +94,7 @@ class UserDB_sql {
 	}
 	
 	public function authenticate($user_,$password_){
-		if ($user_->hasAttribute('login'))
+		if (!($user_->hasAttribute('login')))
 			return false;
 
 		$login = $user_->getAttribute('login');
