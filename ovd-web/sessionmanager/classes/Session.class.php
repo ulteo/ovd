@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Session {
-	public $îd = NULL;
+	public $id = NULL;
 	public $session = NULL;
 	public $server = NULL;
 	public $folder = NULL;
