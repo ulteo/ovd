@@ -46,7 +46,7 @@ textdomain($domain);
 
 require_once(dirname(__FILE__).'/defaults.inc.php');
 
-
+$desktop_locale = $language;
 
 if (!file_exists(SESSIONMANAGER_CONF_FILE))
 	die_error(_('Configuration file missing'),__FILE__,__LINE__);
