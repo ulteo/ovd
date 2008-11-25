@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -21,6 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Session {
+	public $îd = NULL;
 	public $session = NULL;
 	public $server = NULL;
 	public $folder = NULL;
@@ -30,6 +31,7 @@ class Session {
 		Logger::debug('main', 'Starting SESSION::__construct for session '.$session_);
 
 		$this->session = $session_;
+		$this->id = $this->session;
 		$this->server = $server_;
 
 		if ($server_ == '*') {
