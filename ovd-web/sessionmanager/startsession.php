@@ -136,4 +136,7 @@ $token = $session->create_token('start', $data);
 
 $redir = 'http://'.$session->server.'/index.php?token='.$token;
 
+$report = new Reporting($session->id);
+$report->session_begin($token, $user);
+
 redirect($redir);
