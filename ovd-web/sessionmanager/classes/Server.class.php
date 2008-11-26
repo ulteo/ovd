@@ -97,6 +97,7 @@ class Server {
 		$admin = new Server_admin($this->fqdn);
 		$admin->updateApplications();
 
+		$this->getStatus();
 		$this->getType();
 		$this->getVersion();
 
