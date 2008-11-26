@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
- require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 require_once(dirname(__FILE__).'/webservices/check.php');
 
@@ -32,6 +32,16 @@ if (!in_array('UserDB', $mods_enable))
 
 $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 $userDB = new $mod_user_name();
+
+$use_sso = $prefs->get('general', 'user_authenticate_sso');
+if ($use_sso) {
+	$user_authenticate_trust = $prefs->get('general', 'user_authenticate_trust');
+
+	$user = $userDB->import($_SERVER[$user_authenticate_trust]);
+	if (is_object($user)) {
+		redirect('startsession.php?desktop_locale='.$desktop_locale.'&desktop_quality='.$desktop_quality.'&desktop_timeout='.$desktop_timeout.'&start_app='.$start_app.'&debug='.$debug);
+	}
+}
 
 if ($userDB->canShowList())
 	$list_users = $userDB->getList();

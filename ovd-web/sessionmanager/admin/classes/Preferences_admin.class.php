@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -31,37 +31,37 @@ class Preferences_admin extends Preferences {
 			if (file_exists($this->conf_file)) {
 				if ( $element_form_ == array())
 					$this->constructFromFile();
-				else 
+				else
 					$this->prefs = $element_form_;
 			}
 			else
 				$this->prefs = $element_form_;
 		}
 		$this->constructFromArray();
-		
+
 	}
-	
-	
-	
+
+
+
 	public function initialize(){
 		Logger::debug('admin','ADMIN_PREFERENCES::initialize');
 		$this->elements = array();
-		
-		
+
+
 		$this->addPrettyName('general',_('General configuration'));
 		$c = new config_element('main_title', _('Heading title'), _('You can customize the Heading/title here.'), _('You can customize the Heading/title here.'), DEFAULT_PAGE_TITLE, NULL, 1);
 		$this->add($c,'general');
-		
+
 		$c = new config_element('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,1);
 		$this->add($c,'general');
 
 		$c = new config_element('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.office.ulteo.com','*.ulteo.com'), NULL, 5);
 		$this->add($c,'general');
-		
+
 		//fqdn_private_address : array('dns' => ip);
 		$c = new config_element('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, 4);
 		$this->add($c,'general');
-		
+
 
 		$c = new config_element('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general');
@@ -71,14 +71,19 @@ class Preferences_admin extends Preferences {
 
 // 		$c = new config_element('locale','locale','locale_des','fr_FR.UTF8@euro',NULL,1);
 // 		$this->add('general',$c);
-// 
+//
 // 		$c = new config_element('start_app','start_app','start_app_des','',NULL,1);
 // 		$this->add('general',$c);
-		
+
 		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
 		$this->add($c,'general');
 
 		$c = new config_element('advanced_settings_startsession', _('Advanced settings options'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'debug' => _('debug'), 'testapplet' => _('ssh/ping applet test')),3);
+		$this->add($c,'general');
+
+		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general');
+		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
@@ -92,7 +97,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','mysql');
 		$c = new config_element('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',1);
 		$this->add($c,'general','mysql');
-		
+
 		$this->getPrefsModule();
 		$this->getPrefsPlugins();
 	}
@@ -155,7 +160,7 @@ class Preferences_admin extends Preferences {
 					$plugin_enable2 = eval('return Plugin_'.$plugin_name2.'::enable();');
 				else
 					$plugin_enable2 = eval('return '.$plugin_dir2.'_'.$plugin_name2.'::enable();');
-				
+
 				if ($plugin_enable2 !== true)
 					unset($p2[$plugin_dir2][$plugin_name2]);
 			}
@@ -167,12 +172,12 @@ class Preferences_admin extends Preferences {
 				$plugin_prettyname = $plugin_name;
 			$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 		}
-		
+
 		$c = new config_element('plugin_enable', _('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array(), $plugins_prettyname, 3);
 		$this->addPrettyName('plugins',_('Plugins configuration'));
 		$this->add($c,'plugins');
 		unset($p2['plugins']);
-		
+
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
 			foreach ($value1 as $plugin_name => $plu6) {
@@ -193,15 +198,15 @@ class Preferences_admin extends Preferences {
 			foreach ($sub_mod2 as $sub_mod_name2 => $sub_mod_pretty2){
 				$enable1 = 'return '.'admin_'.$mod2.'_'.$sub_mod_name2.'::enable();';
 				$enable =  eval($enable1);
-				if ($enable !== true) 
+				if ($enable !== true)
 					unset ($avalaible_module[$mod2][$sub_mod_name2]);
 			}
-		
+
 		}
 		$modules_prettyname = array();
 		foreach ($avalaible_module as $module_name => $sub_module)
 			$modules_prettyname[$module_name] = $module_name;
-		
+
 		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB','ApplicationDB'), $modules_prettyname, 3);
 		$this->add($c,'general');
 		foreach ($avalaible_module as $mod => $sub_mod){
@@ -262,7 +267,7 @@ class Preferences_admin extends Preferences {
 		}
 		return $ret;
 	}
-	
+
 	public function isValid() {
 		Logger::debug('admin','PREFERENCESADMIN::isValid');
 		$mysql_conf = $this->get('general', 'mysql');
@@ -282,7 +287,7 @@ class Preferences_admin extends Preferences {
 			Logger::error('admin','init_db failed');
 			return _('Initialization failed');
 		}
-		
+
 		$plugins_ok = true;
 		$plugins_enable = $this->get('plugins', 'plugin_enable');
 		foreach ($plugins_enable as $plugin_name) {
@@ -309,7 +314,7 @@ class Preferences_admin extends Preferences {
 			Logger::error('admin','PREFERENCESADMIN::isValid plugins false');
 			return _('Plugins configuration not valid');
 		}
-		
+
 		$modules_ok = true;
 		$modules_enable = $this->get('general', 'module_enable');
 		foreach ($modules_enable as $module_name) {
@@ -321,18 +326,18 @@ class Preferences_admin extends Preferences {
 				return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
 			}
 		}
-		
+
 		if ( $modules_ok === false) {
 			Logger::error('admin','PREFERENCESADMIN::isValid modules false');
 			return _('Modules configuration not valid');
 		}
 		return true;
 	}
-	
+
 	public function addPrettyName($key_,$prettyName_) {
 		$this->prettyName[$key_] = $prettyName_;
 	}
-	
+
 	protected function constructFromArray(){
 		Logger::debug('admin','ADMIN_PREFERENCES::constructFromArray');
 		$prefs =& $this->prefs;
