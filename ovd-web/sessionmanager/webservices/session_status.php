@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -64,6 +64,9 @@ if ($_GET['status'] == 3) {
 		'fqdn'	=>	$session->server,
 		'session'	=>	$session->session
 	));
+
+	$report = new Reporting($session->id);
+	$report->session_end();
 
 	$session->remove_session(0);
 }
