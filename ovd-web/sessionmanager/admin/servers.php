@@ -49,7 +49,6 @@ if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'maintenance') {
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
-
 	$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
 
 	$tm = new Tasks_Manager();
@@ -389,9 +388,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'manage' && isset($_GET['fq
 	</tr>
 </table>
 
-<?php
-if ($buf_online) {
-?>
 <fieldset>
 	<h2><?php echo _('Configuration');?></h2>
 
@@ -427,8 +423,7 @@ if ($buf_online) {
 			</form>
 			<?php
 		}
-
-
+if ($buf_online) {
 echo '<h3>'._('Install an application from a package name').'</h3>';
 echo '<form>';
 echo '<input type="hidden" name="action" value="install_line">';

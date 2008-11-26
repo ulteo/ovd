@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or
+ * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -32,8 +32,6 @@ define('SESSIONS_DIR', SESSIONMANAGER_SPOOL.'/sessions');
 define('TOKENS_DIR', SESSIONMANAGER_SPOOL.'/tokens');
 define('LOCKS_DIR', SESSIONMANAGER_SPOOL.'/locks');
 define('TASKS_DIR', SESSIONMANAGER_SPOOL.'/tasks');
-define('REPORT_DIR', SESSIONMANAGER_SPOOL.'/reporting');
-define('TMP_DIR', SESSIONMANAGER_SPOOL.'/tmp');
 
 if (!check_folder(SESSIONS_DIR)) {
 	Logger::critical('main', SESSIONS_DIR.' does not exist and cannot be created !');
@@ -53,16 +51,6 @@ if (!check_folder(LOCKS_DIR)) {
 if (!check_folder(TASKS_DIR)) {
 	Logger::critical('main', TASKS_DIR.' does not exist and cannot be created !');
 	die_error(TASKS_DIR.' does not exist and cannot be created !',__FILE__,__LINE__);
-}
-
-if (!check_folder(REPORT_DIR)) {
-	Logger::critical('main', REPORT_DIR.' does not exist and cannot be created !');
-	die_error(REPORT_DIR.' does not exist and cannot be created !',__FILE__,__LINE__);
-}
-
-if (!check_folder(TMP_DIR)) {
-	Logger::critical('main', TMP_DIR.' does not exist and cannot be created !');
-	die_error(TMP_DIR.' does not exist and cannot be created !',__FILE__,__LINE__);
 }
 
 $prefs = Preferences::getInstance();
