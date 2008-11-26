@@ -58,22 +58,22 @@ if (isset($_REQUEST['action'])) {
 show_default($userDB);
 
 function add_user($userDB) {
-  if (!isset($_REQUEST['login']) or !isset($_REQUEST['displayName']) or !isset($_REQUEST['password']))
+  $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
+  if (!isset($_REQUEST['login']) or !isset($_REQUEST['displayname']) or !isset($_REQUEST['password']))
     return false;
 
-  if (!isset($_REQUEST['uid']) || ($_REQUEST['uid'] == ''))
-    $uid = str2num($_REQUEST['login']);
-  else
-    $uid = $_REQUEST['uid'];
   $u = new User();
-  $u->setAttribute('login',$_REQUEST['login']);
-  $u->setAttribute('displayname',$_REQUEST['displayName']);
-  $u->setAttribute('uid',$uid);
-  $u->setAttribute('password',$_REQUEST['password']);
+  foreach ($minimun_attributes as $attributes) {
+    $u->setAttribute($attributes ,$_REQUEST[$attributes]);
+  }
+  if (!isset($_REQUEST['uid']) || ($_REQUEST['uid'] == ''))
+    $u->setAttribute('uid', str2num($_REQUEST['login']));
+  else
+    $u->setAttribute('uid', $_REQUEST['uid']);
 
   $res = $userDB->add($u);
   if (! $res)
-    die_error('Unable to create user '.$res,__FILE__,__LINE__);
+    die_error('Unable to create user '.$res, __FILE__, __LINE__);
 
   return true;
 }
@@ -350,27 +350,17 @@ function show_default($userDB) {
 
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
-    echo '<tr class="content1">';
-    echo '<th>'._('Login').'</th>';
-    echo '<td><input type="text" name="login" value="" maxlength="20" /></td>';
-    echo '</tr>';
+    $content_color = 1;
+    $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
+    foreach ($minimun_attributes as $minimun_attribute) {
+      echo '<tr class="content'.$content_color.'">';
+      echo '<th>'._($minimun_attribute).'</th>';
+      echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" maxlength="50" /></td>';
+      echo '</tr>';
+      $content_color = (($content_color++)%2)+1;
+    }
 
-    echo '<tr class="content2">';
-    echo '<th><strong>'._('Displayname').'</th>';
-    echo '<td><input type="text" name="displayName" value=""  maxlength="50" /></td>';
-    echo '</tr>';
-
-    echo '<tr class="content2">';
-    echo '<th>'._('Uid').'</th>';
-    echo '<td><input type="text" name="uid" value="" maxlength="20" /></td>';
-    echo '</tr>';
-
-    echo '<tr class="content1">';
-    echo '<th>'._('Password').'</th>';
-    echo '<td><input type="password" name="password" value="" maxlength="50" /></td>';
-    echo '</tr>';
-
-    echo '<tr class="content2">';
+    echo '<tr class="content'.$content_color.'">';
     echo '<td colspan="2">';
     echo '<input type="submit" name="add" value="'._('Add').'" />';
     echo '</td>';

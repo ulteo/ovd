@@ -74,7 +74,6 @@ class admin_UserDB_sql extends UserDB_sql {
 			}
 			$query = substr($query, 0, -2); // del the last ,
 			$query .= ' WHERE `login` = \''.$user_->getAttribute('login').'\'';
-			$query_values = substr($query_values, 0, -1); // del the last ,
 			$SQL = MySQL::getInstance();
 			return $SQL->DoQuery($query);
 		}
@@ -103,6 +102,7 @@ class admin_UserDB_sql extends UserDB_sql {
 		@define('USER_TABLE', $mysql_conf['prefix'].'user');
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 		
+		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$ret = $sql2->DoQuery(
 			'CREATE TABLE IF NOT EXISTS @1 (
 			@2 int(8) NOT NULL,
