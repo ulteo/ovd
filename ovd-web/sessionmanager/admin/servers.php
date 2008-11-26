@@ -49,7 +49,6 @@ if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'maintenance') {
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
-
 	$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
 
 	$tm = new Tasks_Manager();
@@ -256,10 +255,7 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 				echo '">';
 				echo '<td><input type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
 				echo '<td>';
-				if ($s->isOnline())
-					echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
-				else
-					echo $s->fqdn;
+				echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
 				echo '</td>';
 				echo '<td>'.$s->stringType().'</td>';
 				//echo '<td>'.$s->stringVersion().'</td>';
@@ -283,17 +279,11 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 				//echo '<td>'.$apps_name.'</td>';
 				?>
 				<td>
-					<?php
-						if ($s->isOnline()) {
-					?>
 					<form action="servers.php" method="get">
 						<input type="submit" value="<?php echo _('Manage');?>"/>
 						<input type="hidden" name="action" value="manage" />
 						<input type="hidden" name="fqdn" value="<?php echo $s->fqdn;?>" />
 					</form>
-					<?php
-						}
-					?>
 				</td>
 				<td>
 					<form action="servers.php" method="get">
@@ -398,9 +388,6 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'manage' && isset($_GET['fq
 	</tr>
 </table>
 
-<?php
-if ($buf_online) {
-?>
 <fieldset>
 	<h2><?php echo _('Configuration');?></h2>
 
@@ -436,8 +423,7 @@ if ($buf_online) {
 			</form>
 			<?php
 		}
-
-
+if ($buf_online) {
 echo '<h3>'._('Install an application from a package name').'</h3>';
 echo '<form>';
 echo '<input type="hidden" name="action" value="install_line">';

@@ -34,6 +34,12 @@ class Server {
 
 		if (!file_exists($this->folder) && check_ip($fqdn_))
 			$this->create();
+
+		if (!$this->hasAttribute('type') || $this->getAttribute('type') ===  '')
+			$this->getType();
+
+		if (!$this->hasAttribute('version') || $this->getAttribute('version') === '')
+			$this->getVersion();
 	}
 
 	public function create($die_=true) {
@@ -67,9 +73,6 @@ class Server {
 		}
 		Logger::info('main', 'Server "unregistered" file created : '.$this->folder.'/unregistered');
 
-		$this->setAttribute('type', query_url('http://'.$this->fqdn.'/webservices/server_type.php'));
-		$this->setAttribute('version', query_url('http://'.$this->fqdn.'/webservices/server_version.php'));
-
 		return true;
 	}
 
@@ -90,6 +93,13 @@ class Server {
 
 		$this->setAttribute('nb_sessions', 10);
 		$this->setAttribute('locked', 1);
+
+		$admin = new Server_admin($this->fqdn);
+		$admin->updateApplications();
+
+		$this->getStatus();
+		$this->getType();
+		$this->getVersion();
 
 		return true;
 	}
@@ -437,6 +447,28 @@ class Server {
 				$apps_roups []= $ag;
 		}
 		return $apps_roups;
+	}
+
+	public function getType() {
+		$buf = query_url('http://'.$this->fqdn.'/webservices/server_type.php');
+
+		if ($buf === false)
+			return false;
+
+		$this->setAttribute('type', $buf);
+
+		return true;
+	}
+
+	public function getVersion() {
+		$buf = query_url('http://'.$this->fqdn.'/webservices/server_version.php');
+
+		if ($buf === false)
+			return false;
+
+		$this->setAttribute('version', $buf);
+
+		return true;
 	}
 
 	// ?

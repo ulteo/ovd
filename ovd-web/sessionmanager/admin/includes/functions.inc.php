@@ -268,7 +268,6 @@ function get_publications($usersgroup_id_=NULL,$appsgroup_id_=NULL) {
 	
 }
 
-
 function init_db($prefs_) {
 	// prefs must be valid
 	Logger::debug('admin','init_db');

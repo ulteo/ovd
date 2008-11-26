@@ -1,3 +1,11 @@
+ulteo-ovd-web (1.0~beta1.6) ovd-polaris; urgency=low
+
+  * New snapshot:
+    - fix use of mysql for users (bug #203)
+    - fix language selection
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 25 Nov 2008 12:08:12 +0100
+
 ulteo-ovd-web (1.0~beta1.5) ovd-polaris; urgency=low
 
   * More bugfixes
