@@ -45,6 +45,8 @@ if ($session_node->hasAttribute('mode'))
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
 
 $settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'start_app');
+if ($_SESSION['mode'] == 'invite')
+	$settings[] = 'view_only';
 foreach ($settings as $setting) {
 	$item = $session_node->getElementsByTagname($setting)->item(0);
 	if (is_null($item))
@@ -52,6 +54,10 @@ foreach ($settings as $setting) {
 
 	$_SESSION[$setting] = $item->getAttribute('value');
 }
+
+$_SESSION['share_desktop'] = 'true';
+if ($_SESSION['mode'] == 'start')
+	$_SESSION['view_only'] = 'No';
 
 $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
 if (is_null($item))

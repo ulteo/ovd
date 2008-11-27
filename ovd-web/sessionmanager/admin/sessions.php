@@ -23,7 +23,11 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 if (isset($_POST['join'])) {
 	$session = new Session($_POST['join']);
 
-	$token = $session->create_token('invite');
+	$view_only = 'Yes';
+	if (isset($_POST['active_mode']))
+		$view_only = 'No';
+
+	$token = $session->create_token('invite', array('view_only' => $view_only));
 
 	redirect('http://'.$session->server.'/index.php?token='.$token);
 } elseif (isset($_POST['mass_action']) && $_POST['mass_action'] == 'kill') {
@@ -62,6 +66,7 @@ if (isset($_POST['join'])) {
 	echo '	<input type="hidden" id="desktop_size" value="auto" />';
 	echo '	<input type="hidden" id="session_debug_true" value="0" />';
 	echo '	<input type="hidden" name="join" value="'.$session->session.'" />';
+ 	echo '	<input type="checkbox" name="active_mode" /> '._('active mode').' ';
 	echo '	<input type="submit" value="'._('Join this session').'" />';
 	echo '</form>';
 	echo '<br />';

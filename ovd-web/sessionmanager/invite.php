@@ -23,7 +23,11 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	$session = new Session($_POST['session']);
 
-	$token = $session->create_token('invite');
+	$view_only = 'Yes';
+	if (isset($_POST['active_mode']))
+		$view_only = 'No';
+
+	$token = $session->create_token('invite', array('view_only' => $view_only));
 
 	$redir = 'http://'.$session->server.'/index.php?token='.$token;
 
@@ -98,7 +102,7 @@ html,body {
 
 			<input type="hidden" name="session" value="<?php echo $session->session; ?>" />
 
-			<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> (<?php echo _('check twice'); ?>!)</p>
+			<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> <input type="checkbox" name="active_mode" /> <?php echo _('active mode'); ?></p>
 
 			<input type="submit" value="<?php echo _('Invite'); ?>" />
 		</form>

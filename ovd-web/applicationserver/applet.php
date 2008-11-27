@@ -23,11 +23,11 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 $server = $_SERVER['SERVER_NAME'];
 $session = $_SESSION['session'];
 
-$_SESSION['width'] = $_POST['width'];
-$_SESSION['height'] = $_POST['height'];
-
 if (!isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
+
+$_SESSION['width'] = $_POST['width'];
+$_SESSION['height'] = $_POST['height'];
 
 $vncpass = get_from_file(SESSION_PATH.'/'.$session.'/hexavncpasswd');
 $sshuser = get_from_file(SESSION_PATH.'/'.$session.'/sshuser');

@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -46,6 +46,7 @@ $buf = trim(@file_get_contents(TOKENS_DIR.'/'.$token));
 $buf = explode(':', $buf);
 
 $session = new Session($buf[1], $_GET['fqdn']);
+$session->use_token($token);
 
 if (!is_readable(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings')) {
 	Logger::error('main', 'No such session token file : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings');
@@ -61,7 +62,6 @@ $session_node->setAttribute('mode', $buf[0]);
 $dom->appendChild($session_node);
 
 $settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings'));
-
 foreach ($settings as $k => $v) {
 	if ($k == 'home_dir_type' || $k == 'module_fs')
 		continue;
@@ -69,6 +69,16 @@ foreach ($settings as $k => $v) {
 	$item = $dom->createElement($k);
 	$item->setAttribute('value', $v);
 	$session_node->appendChild($item);
+}
+
+if ($buf[0] == 'invite') {
+	$invite_settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/'.$token));
+
+	foreach ($invite_settings as $k => $v) {
+		$item = $dom->createElement($k);
+		$item->setAttribute('value', $v);
+		$session_node->appendChild($item);
+	}
 }
 
 $module_fs_node = $dom->createElement('module_fs');
@@ -114,5 +124,3 @@ if (!is_null($user)) {
 $xml = $dom->saveXML();
 
 echo $xml;
-
-$session->use_token($token);

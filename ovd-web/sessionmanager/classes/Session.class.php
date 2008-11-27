@@ -267,9 +267,16 @@ class Session {
 					$data = serialize($content_);
 
 					if (@file_put_contents($this->folder.'/settings', $data))
-						Logger::info('main', 'Session token created : '.$this->folder.'/settings');
+						Logger::info('main', 'Session "start" token created : '.$this->folder.'/settings');
 					else
-						Logger::error('main', 'Session token NOT created : '.$this->folder.'/settings');
+						Logger::error('main', 'Session "start" token NOT created : '.$this->folder.'/settings');
+				} elseif ($mode_ == 'invite') {
+					$data = serialize($content_);
+
+					if (@file_put_contents($this->folder.'/'.$token, $data))
+						Logger::info('main', 'Session "invite" token created : '.$this->folder.'/'.$token);
+					else
+						Logger::error('main', 'Session "invite" token NOT created : '.$this->folder.'/'.$token);
 				}
 
 				return $token;

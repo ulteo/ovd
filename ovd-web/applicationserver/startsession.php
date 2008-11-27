@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -33,9 +33,6 @@ if (!isset($session) || $session == '')
 
 $_SESSION['width'] = $_GET['width'];
 $_SESSION['height'] = $_GET['height'];
-
-$_SESSION['share_desktop'] = 'true';
-$_SESSION['view_only'] = 'false';
 
 if (isset($_GET['lead']) && $_GET['lead'] == 1 && get_from_file(SESSION_PATH.'/'.$session.'/runasap') == 0) {
 	put_to_file(SESSION_PATH.'/'.$session.'/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
