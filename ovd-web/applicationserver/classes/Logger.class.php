@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -27,11 +27,8 @@ class Logger {
 
 		$level_flags = array($level_);
 
-		if (in_array($level_, $level_flags)) {
-			$logfile = @fopen(CONNECTME_LOGS.'/'.strtolower($module_).'.log', 'a');
-			@fputs($logfile, @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n");
-			@fclose($logfile);
-		}
+		if (in_array($level_, $level_flags))
+			@file_put_contents(CONNECTME_LOGS.'/'.strtolower($module_).'-'.date('Ymd').'.log',@date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
 	}
 
 	public static function debug($module_='main', $data_='') {
