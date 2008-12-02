@@ -41,27 +41,12 @@ test -r "$HOME/.Xresources" && XRESOURCES="$XRESOURCES $HOME/.Xresources"
 # load all X resources (adds /dev/null to avoid an empty list that would hang the process)
 cat /dev/null $XRESOURCES | xrdb -nocpp -merge -
 
-# load local modmap
-test -r $HOME/.Xmodmap && xmodmap $HOME/.Xmodmap
-
 # Use dbus-launch if installed.
 if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
         dbuslaunch=`which dbus-launch`
         if test x"$dbuslaunch" != x"" -a x"$dbuslaunch" != x"no"; then
                 eval `$dbuslaunch --sh-syntax --exit-with-session`
         fi
-fi
-
-# Sleep so that to ensure we avoid dead-locking in xcblib. (lp bug #232364)
-sleep 1
-
-# Launch xscreensaver (if available), but only as non-root user
-if test $UID -gt 0 -a -z "$VNCSESSION"; then
-    if test x"`which xscreensaver 2>/dev/null`" != x""; then
-        xscreensaver -no-splash &
-    elif test x"`which gnome-screensaver 2>/dev/null`" != x""; then
-        gnome-screensaver &
-    fi
 fi
 
 # gtk config
@@ -89,10 +74,6 @@ if [ "$DOC" != "" ] || [ "$APP" != "" ]; then
 fi
 
 xfce4-session
-
-if test $kill_sshagent -eq 1; then
-    eval `$sshagent -k`
-fi
 
 exit 0
 
