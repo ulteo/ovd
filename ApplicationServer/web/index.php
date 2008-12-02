@@ -48,11 +48,10 @@ $settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'qualit
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
 foreach ($settings as $setting) {
-	$item = $session_node->getElementsByTagname($setting)->item(0);
-	if (is_null($item))
-		die('Missing parameter \''.$setting.'\'');
+	$item = @$session_node->getElementsByTagname($setting)->item(0);
 
-	$_SESSION[$setting] = $item->getAttribute('value');
+	if (!is_null($item))
+		$_SESSION[$setting] = $item->getAttribute('value');
 }
 
 $_SESSION['share_desktop'] = 'true';
