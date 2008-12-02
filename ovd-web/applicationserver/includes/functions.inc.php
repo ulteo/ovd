@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -112,7 +112,13 @@ function isSessionManagerRequest() {
   $name = getSessionManagerHost();
 
   $reverse = @gethostbyaddr($address);
-  return $reverse == $name;
+
+  if ($reverse == $name)
+    return true;
+
+  Logger::error('main', 'isSessionManagerRequest() - IP: '.$address.' / Name: '.$name.' / Reverse: '.$reverse);
+
+  return false;
 }
 
 function is_writable2($filename) {

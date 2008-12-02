@@ -45,6 +45,15 @@ class Server {
 	public function create($die_=true) {
 		Logger::debug('main', 'Starting SERVER::create for server '.$this->fqdn);
 
+		if (!$this->getStatus(0)) {
+			Logger::error('main', 'Server NOT "online" : '.$this->folder);
+			if ($die_ == true)
+				die('Server NOT "online" : '.$this->folder);
+			else
+				return false;
+		}
+		Logger::info('main', 'Server "online" : '.$this->folder);
+
 		if (file_exists($this->folder)) {
 			Logger::error('main', 'Server already exists  : '.$this->folder);
 			if ($die_ == true)
@@ -52,7 +61,6 @@ class Server {
 			else
 				return false;
 		}
-
 		Logger::info('main', 'Server folder does not exist : '.$this->folder);
 
 		if (! @mkdir($this->folder, 0750)) {
@@ -218,18 +226,20 @@ class Server {
 		return false;
 	}
 
-	public function getStatus() {
+	public function getStatus($write_=true) {
 		Logger::debug('main', 'Starting SERVER::getStatus for server '.$this->fqdn);
 
 		$ret = query_url('http://'.$this->fqdn.'/webservices/server_status.php');
 
 		if ($ret == false) {
 			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');
-			$this->setStatus('broken');
+			if ($write_ == true)
+				$this->setStatus('broken');
 			return false;
 		}
 
-		$this->setStatus($ret);
+		if ($write_ == true)
+			$this->setStatus($ret);
 
 		return true;
 	}

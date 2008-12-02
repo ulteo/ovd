@@ -44,7 +44,7 @@ if ($session_node->hasAttribute('id'))
 if ($session_node->hasAttribute('mode'))
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
 
-$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'start_app');
+$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
 foreach ($settings as $setting) {
