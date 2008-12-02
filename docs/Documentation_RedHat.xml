@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Installation documentation for Ulteo Virtual Open Desktop on Red Hat systems</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <holder>Ulteo SAS - http://www.ulteo.com</holder>
+    </copyright>
+  </articleinfo>
+
+  <section>
+    <title>Prerequisites</title>
+    <para>
+      At least two machines are needed to install Ulteo Virtual Open Desktop:
+    </para>
+    <itemizedlist>
+      <listitem>
+	<para>a LAMP (Linux Apache MySQL PHP) server for the Session Manager (here we are using <emphasis>sm.ulteo.com</emphasis> for that server, but you need to set your own domain name)</para>
+      </listitem>
+      <listitem>
+	<para>another server for the Application Server. (here we are using <emphasis>cm.ulteo.com</emphasis> for that server, but you need to set it according to your own domain name)</para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      Both servers need to be installed with Red Hat RHEL 5 32-bit or Fedora Core 9. 
+      All operations need to be done as <emphasis>superuser</emphasis> (root).
+    </para>
+  </section>
+
+  <section>
+    <title>Session Manager (sm.ulteo.com)</title>
+    <para>
+      The Session Manager is the main server for your <emphasis>Ulteo Virtual Open Desktop infrastructure</emphasis>.
+      It will manage all your application servers through an administration web interface.
+    </para>
+
+  <section>
+    <title>Installation</title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Disable or adapt the SELinux support:
+	</para>
+        <screen>
+	  <![CDATA[
+# yum remove selinux-policy]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>
+	  MySQL
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		Install the packages:
+	      </para>
+	      <screen>
+		<![CDATA[
+# yum install mysql  mysql-server]]>
+	      </screen>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		To start automatically MySQL when the system boots up
+	      </para>
+	      <screen>
+		<![CDATA[
+# chkconfig --levels 235 mysqld on]]>
+	      </screen>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		Start the service
+	      </para>
+	      <screen>
+		<![CDATA[
+# /etc/init.d/mysqld start]]>
+	      </screen>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		Set the MySQL root password:
+	      </para>
+	      <screen>
+		<![CDATA[
+# mysqladmin -u root password 'mysql_root_password'
+# mysql -u root -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 52
+Server version: 5.0.45 Source distribution
+
+Type 'help;' or '\h' for help. Type '\c' to clear the buffer.
+
+mysql> create database sm;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> exit
+Bye]]>
+	      </screen>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Apache and PHP
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		Install the packages:
+	      </para>
+	      <screen>
+		<![CDATA[
+# yum install php php-ldap php-mysql php-xml php-mbstring curl httpd]]>
+	      </screen>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		update DirectoryIndex in /etc/httpd/conf/httpd.conf : add index.php
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		Start the service
+	      </para>
+	      <screen>
+		<![CDATA[
+# /etc/init.d/httpd start]]>
+	      </screen>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </listitem>
+
+     <listitem>
+	<para>
+	  Download Ulteo Open Virtual Desktop from <ulink url="http://ulteo.com" />, uncompress it to /tmp (at this time  ovd-1.0beta1.tar.bz2)
+	</para>
+     </listitem>
+
+     <listitem>
+	<para>
+	  Install the sesionmanager into /var/www/html
+	</para>
+       <screen>
+	  <![CDATA[
+# cp -rf /tmp/ovd-1.0beta1/ovd-web/sessionmanager /var/www/html/]]>
+	</screen>
+     </listitem>
+
+     <listitem>
+       <para>
+	 Download the application system archive
+       </para>
+       <screen>
+	  <![CDATA[
+# wget http://www.ulteo.com/main/downloads/ulteo-ovd.php \
+--output-document=/var/www/html/sessionmanager/base.tar.gz]]>
+       </screen>
+     </listitem>
+
+     <listitem>
+       <para>Create the configuration directory</para>
+       <screen>
+	 <![CDATA[
+# mkdir -p /etc/ulteo/sessionmanager]]>
+       </screen>
+       <para>And install the default configuration file</para>
+       <screen>
+	 <![CDATA[
+# cp /var/www/html/sessionmanager/documentation/config.inc.php.default \
+/etc/ulteo/sessionmanager/config.inc.php]]>
+       </screen>
+       <para>
+	 In this file, the default value are user : 'admin' and password 'admin'.
+       </para>
+     </listitem>
+
+
+     <listitem>
+       <para>Create the spool, logs directories</para>
+       <screen>
+	 <![CDATA[
+# mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager]]>
+       </screen>
+       <para>Change permissions and owners</para>
+       <screen>
+	 <![CDATA[
+# chown root:apache /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+# chmod 755 /var/spool/ulteo /var/log/ulteo
+# chmod 770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+# chmod g+s /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager]]>
+       </screen>
+     </listitem>
+
+    </itemizedlist>
+
+    <para>
+      The server is now installed but not configured yet. You have to open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser.It should display this page:
+    </para>
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_www_service_not_available.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager into a web browser</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+  </section>
+
+   <section>
+      <title>Configuration</title>
+
+      <para>
+	The first step is to go to <ulink url="http://sm.ulteo.com/sessionmanager/admin" /> and autenticate yourself with the login and password you provided during the installation.
+      </para>
+      <para>The password in the default config is <emphasis>admin</emphasis>.</para>
+      <para>
+	<inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_www_admin_login.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager admin login</phrase>
+	  </textobject>
+	</inlinemediaobject>
+      </para>
+
+      <para>
+	<inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_install_admin_config_init.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager admin init configuration</phrase>
+	  </textobject>
+	</inlinemediaobject>
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    <emphasis role="strong">Authorized network domain:</emphasis> replace by the domain name of your network.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis role="strong">Disable reverse FQDN checking:</emphasis>
+	    if you don't have a valid domain name service for your machines, you have to select <emphasis>yes</emphasis> but it may be a security risk.
+	    Ideally, you should configure your DNS server correclty and keep this option to <emphasis>No</emphasis>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis role="strong">Advanced settings options:</emphasis>
+	    You can allow the user to force some options. For instance, to force the application server to want to use, or to enable the debug mode.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <emphasis role="strong">MySQL configuration:</emphasis>
+	    you have to provide some MySQL configuration data to get the system work.
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <emphasis role="strong">Module ApplicationDB:</emphasis>
+	    select MySQL. The "fake" module is a hard-coded application list used when there are problems with the automatic application detection.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis role="strong">Module UserDB:</emphasis>
+	    there are several ways to plug users into the system:
+	  </para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		<emphasis>fake</emphasis>: it's a hard-coded user list to quickly test the system. 
+		For instance, you can begin with this module if you have never tested it earlier.
+	      </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<emphasis>LDAP</emphasis>: if you are using LDAP to manage your users, you can select this module and configure how to match your users with the directory (LDAP tree, DN ...).
+	      </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		<emphasis>Active Directory</emphasis>: if you want to plug the system into your Active Directoy server, select this module and provide you AD server name and domain.
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    <emphasis role="strong">Plugin configuration FS</emphasis>:
+	    You can choose how to manage the home directory for your users:
+	  </para>
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		if you select Active Directory as UserDB, 
+		you certainly want to use the Windows share directory from your CIFS servers. In that case, select the CIFS module.
+	      </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+		if your are using NFS servers for your users home dirs and you know how to setup the matching between the local DB and your LDAP configuration, then you can select NFS.
+	      </para>
+	    </listitem>
+	    <listitem>
+	      <para>
+	      If you don't have any networked filesystem available, select local. It will store files on the application server.
+	      </para>
+	    </listitem>
+	  </itemizedlist>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	The session manager has no application server plugged yet.
+	You now have to install one or more application servers.
+      </para>
+      <beginpage />
+    </section>
+  </section>
+
+  <section>
+    <title>
+      Application Server installation (cm.ulteo.com)
+    </title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Remove the seLinux support:
+	</para>
+        <screen>
+	  <![CDATA[
+# yum remove selinux-policy]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Apache and PHP
+
+	  <itemizedlist>
+	    <listitem>
+	      <para>
+		Install the packages:
+	      </para>
+	      <screen>
+		<![CDATA[
+# yum install php php-ldap php-mysql php-xml php-mbstring curl httpd]]>
+	      </screen>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		change in /etc/httpd/conf/httpd.conf the DirectoryIndex to add index.php
+	      </para>
+	    </listitem>
+
+	    <listitem>
+	      <para>
+		Start the service
+	      </para>
+	      <screen>
+		<![CDATA[
+# /etc/init.d/httpd start]]>
+	      </screen>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </listitem>
+
+     <listitem>
+	<para>Download the from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-sources.php" />, uncompress it to /tmp (at this time  ovd-1.0beta1.tar.bz2
+)</para>
+     </listitem>
+
+     <listitem>
+	<para>
+	  Install the Application Server in /var/www/html
+	</para>
+       <screen>
+	  <![CDATA[
+# cp -rf /tmp/ovd-1.0beta1/ovd-web/applicationserver/* /var/www/html/]]>
+	</screen>
+     </listitem>
+
+     <listitem>
+       <para>
+	 Download the application system archive and install it
+       </para>
+       <screen>
+	  <![CDATA[
+# mkdir /opt/applicationsystem
+# cd /tmp
+# wget http://sm.ulteo.com/sessionmanager/base.tar.gz
+# tar pxfz base.tar.gz -C /opt/applicationsystem/
+# rm -f  base.tar.gz]]>
+	</screen>
+	<para>
+	  Application system DNS configuration
+	</para>
+	<screen>
+	  <![CDATA[
+# cp /etc/hosts /opt/applicationsystem/etc/hosts
+# cp /etc/resolv.conf /opt/applicationsystem/etc/resolv.conf]]>
+	</screen>
+     </listitem>
+
+<listitem>
+	<para>Create the log directory</para>
+        <screen>
+	  <![CDATA[
+# mkdir -p /var/log/ulteo/applicationserver]]>
+	</screen>
+	<para>Change permissions and owners</para>
+        <screen>
+	  <![CDATA[
+# chown root:apache /var/log/ulteo/applicationserver
+# chmod 770 /var/log/ulteo/applicationserver
+# chmod g+s /var/log/ulteo/applicationserver]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>Install the configuration file</para>
+        <screen>
+	  <![CDATA[
+# echo "CHROOT=/opt/applicationsystem" > /etc/ulteo-ovd.conf
+# echo "LOG_WWW=/var/log/ulteo/applicationserver" >> /etc/ulteo-ovd.conf]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>Setup the configuration file inside the chroot : <emphasis>/opt/applicationsystem/etc/ulteo-ovd.conf</emphasis></para>
+	<para>Specify SERVERNAME et SESSION_MANAGER_URL</para>
+      </listitem>
+
+<listitem>
+	<para>Change the apache and www-group</para>
+	<para>In <emphasis>/opt/applicationsystem/etc/group</emphasis> change the group of www-data, from 33 (debian's www-data group) to 48 (redhat's apache group)</para>
+	<para>Change the owner on spool directory</para>
+        <screen>
+	  <![CDATA[
+# chgrp -R apache  /opt/applicationsystem/var/spool/ulteo-ovd]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>Restart the service</para>
+	<screen>
+	  <![CDATA[
+# chroot /opt/applicationsystem /etc/init.d/ulteo-ovdd restart]]>
+	</screen>
+      </listitem>
+    </itemizedlist>
+
+    <beginpage />
+  </section>
+
+
+  <section>
+    <title>Register the server and perform a "Publication"</title>
+    <para>
+      An Application server has been installed and is now ready. First, we have to register it, and switch from "maintenance" to "production" mode.
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  You should see your server showing up as "unregistered" in the server page:
+	</para>
+
+	<screenshot>
+	  <screeninfo>Session Manager - server page</screeninfo>
+	  <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
+	</screenshot>
+      </listitem>
+
+      <listitem>
+	<para>
+	  If you want to use this server on your network, 
+	  you have to click on <emphasis>register</emphasis>
+	  to switch your server to maintenance mode.
+	</para>
+      </listitem>
+      <listitem>
+	<para>Now, click on <emphasis>Switch to production</emphasis> to switch it to Production mode.</para>
+      </listitem>
+    </itemizedlist>
+    </para>
+
+    <para>
+      The next step is to perform a "publication" to authorize a group of users to use a group of applications.
+    <screenshot>
+      <screeninfo>Session manager - publication page</screeninfo>
+      <graphic fileref="img/sm_admin_publication.png"></graphic>
+    </screenshot>
+
+      Go to the Publications page, select and follow the <emphasis>wizard</emphasis> steps.
+    </para>
+
+    <beginpage />
+  </section>
+
+  
+  <section>
+    <title>Launch a session</title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Back to <ulink url="http://sm.ulteo.com/sessionmanager/" /> with your browser, you should see a login page:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/sm_login.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session Manager login</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+
+	<beginpage />
+      </listitem>
+ 
+      <listitem>
+	<para>
+	  Once logged in, the session is launching:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session_launching.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launching</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+
+	<beginpage />
+      </listitem>
+
+      <listitem>
+	<para>
+	  The session is launched and is ready to use:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launched</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist> 
+  </section>
+</article>

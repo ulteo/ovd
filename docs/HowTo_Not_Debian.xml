@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Installation documentation of Ulteo Virtual Open Desktop on a non Debian based system</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <holder>Ulteo SAS - http://www.ulteo.com</holder>
+    </copyright>
+  </articleinfo>
+    <para>
+      This documentation is not complete and there is no warranty it'll work.
+    </para>
+
+  <section>
+    <title>Prerequisites</title>
+    <para>
+      We still need 2 machines with a Linux system.
+    </para>
+  </section>
+
+  <section>
+    <title>Session Manager installation (sm.ulteo.com)</title>
+    <para>
+      Dependencies:
+    </para>
+    <itemizedlist>
+      <listitem><para>Apache 2</para></listitem>
+      <listitem><para>PHP 5 with curl, ldap, mysqlk modules</para></listitem>
+      <listitem><para>MySQL</para></listitem>
+    </itemizedlist>	  
+
+
+    <itemizedlist>
+      <listitem>
+	<para>Download the software from <ulink url="ulteo-od.tar.gz" /></para>
+      </listitem>
+      <listitem>
+	<para>Uncompress it in /tmp</para>
+      </listitem>
+      <listitem>
+	<para>place the sessionmanager directory in /var/www/sessionmanager</para>
+      </listitem>
+      <listitem>
+	<para>Donwload the application system archive from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd.php" /></para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      The server is now install but not configured. You can go to <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser and you should see that page:
+    </para>
+  </section>
+
+
+  <section>
+    <title>Application server installation (cm.ulteo.com)</title>
+    <para>
+      Dependencies:
+    </para>
+    <itemizedlist>
+      <listitem><para>Apache 2</para></listitem>
+      <listitem><para>PHP 5 with curl support</para></listitem>
+    </itemizedlist>	  
+
+
+    <itemizedlist>
+      <listitem>
+	<para>Download the software from <ulink url="ulteo-od.tar.gz" /></para>
+      </listitem>
+     <listitem>
+	<para>Uncompress it in /tmp</para>
+      </listitem>
+      <listitem>
+	<para>place the connectme directory in /var/www/connectme</para>
+      </listitem>
+      <listitem>
+	<para>Donwload the application system archive from your sessionmanager/base.tar.gz</para>
+      </listitem>
+      <listitem>
+	<para>Uncompress the base.tar.gz in /opt/connectme</para>
+      </listitem>
+      <listitem>
+	<para>Create a /etc/connectme.conf  and put "CHROOT=/opt/connectme"</para>
+      </listitem>
+      <listitem>
+	<para>Edit the /opt/connecme/etc/connectme.conf and specify SERVERNAME and SESSION_MANAGER_URL</para>
+      </listitem>
+      <listitem>
+	<para>chroot /opt/connectme /etc/init.d/connectmed</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</article>

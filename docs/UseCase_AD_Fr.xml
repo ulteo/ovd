@@ -1,0 +1,209 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//Norman Walsh//DTD DocBk XML V4.0//EN"
+          "http://www.oasis-open.org/docbook/xml/4.0/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Branchement de Ulteo SBC sur un domaine Active Directory</title>
+  </articleinfo>
+
+  <para>
+    Nous admettons que vous avez un système qui fonctionne et que vous avez suivi la procédure générale : <ulink url="UseCase_Fr.html">Description de l'installation d'Ulteo Online Desktop</ulink>.
+  </para>
+
+  <section>
+      <title>Paramétrage du gestionnaure de sessions (fire.ulteo.com)</title>
+      <para>
+	Il faut paramétrer le gestionnaire de sessions afin qu'il se branche au serveur active directory (en utilisant LDAP) et qu'il lance les sessions en permettant un montage CIFS.
+      </para>
+      <para>
+	Dans le fichier de configuration <emphasis>/etc/ulteo/sessionmanager/config.inc.php</emphasis>:
+      </para>
+      
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    changez les valeurs de <emphasis>module_main</emphasis> et <emphasis>module_user</emphasis> par:
+	  </para>
+          <screen>
+	    <![CDATA[
+$config['module_main'] = 'Main_appad';
+$config['module_user'] = 'User_activedirectory';]]>
+	  </screen>
+	</listitem>
+	<listitem>
+	  <para>
+	    changez la valeur de <emphasis>module_fs</emphasis> par:
+	  </para>
+	  <screen>
+	    <![CDATA[
+$config['module_fs'] = 'cifs';]]>
+	  </screen>
+	</listitem>
+
+	
+
+	<listitem>
+	  <para>
+	    décommentez et paramétrez la partie Active directory:
+	  </para>
+          <screen>
+	    <![CDATA[
+$config['ad'] = array(
+	'host'		=>	'nom.du.serveur.ad',
+	'domain'	=>	'NOM.DU.DOMAINE.AD',
+	'login'		=>	'un login sur le AD',
+	'password'	=>	'le mot de passe du login',
+);]]>
+	  </screen>
+	</listitem>
+      </itemizedlist>
+
+      <section>
+	<title>Test de connexion au serveur Active directory</title>
+
+	<para>
+	  Dans un navigateur, rendez-vous sur votre gestionnaire de session : <ulink url="http://fire.ulteo.com/sessionmanager" />. Vous devriez avoir une page d'authentification avec les comptes présents dans le serveur Active Directory.
+	</para>
+
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/sm_auth_ad.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session manager authentication on AD</phrase>
+            </textobject>
+          </inlinemediaobject>
+	</para>
+
+	<para>
+	  Si cela ne marche pas, vous devriez avoir une erreur. Voir la partie <emphasis>lire le journal système</emphasis> dans la documentation générale.
+	</para>
+	<para>
+	  Si rien ne s'affiche, ajoutez l'argument <emphasis>?debug=yes</emphasis> à l'url devrait vous aider à comprendre le problème.
+	</para>
+	
+	<para>
+	  Nous utilisons des requètes LDAP pour récupérer les informations utilisateurs sur le serveur AD. Si vous voulez l'interroger vous même pour tester le lien, vous pouvez essayer la commande:
+	</para>
+	    
+    <screen>
+	    <![CDATA[
+ldapsearch -LLL -x -D cn=LeLogin,cn=Users,dc=w03,dc=samba
+  -W -b cn=Users,dc=w03,dc=samba -h w2003.w03.samba cn=*]]>
+    </screen>
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Remplacez le login par le compte active directory que vous souhaitez utiliser
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Remplacez <emphasis>dc=w03,dc=samba</emphasis> par le domaine Active Directory en minuscule en remplaçant les <emphasis>.</emphasis> par des <emphasis>dc=</emphasis>.
+	</para>
+      </listitem>
+    </itemizedlist>
+      </section>
+  </section>
+
+  <section>
+    <title>
+	Paramétrage du serveur applicatif (connectme.ulteo.com)
+    </title>
+    <para>
+      Maintenant que le gestionnaire de session est paramétré pour accéder au serveur Active Directory, il va falloir préparer le le serveur applicatif à recevoir des session demandant un montage CIFS (partage réseau Windows).
+    </para>
+    <para>
+      Les opérations suivantes sont à faire dans le système applicatif (chroot):
+    </para>
+    <screen>
+      <![CDATA[
+# chroot /opt/connectme]]>
+    </screen>
+
+
+    <itemizedlist>
+      <listitem>
+        <para>
+	    Installer les paquets <emphasis>aufs-tools</emphasis> et <emphasis>smbfs</emphasis>:
+        </para>
+        <screen>
+	  <![CDATA[
+# apt-get install aufs-tools smbfs]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+        <para>
+	    Dans le fichier de configuration <emphasis>/etc/connectme.conf</emphasis>,
+	</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      remplacez la valeur de <emphasis>HOME_DIR_TYPE</emphasis> par <emphasis>cifs_no_sfu</emphasis>:
+            </para>
+            <screen>
+	      <![CDATA[
+HOME_DIR_TYPE=cifs_no_sfu]]>
+	    </screen>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      renseigner un login et mot de passe sur le serveur Active Directory ayant assez de droit pour pouvoir monter les repértoires utilisateurs:
+            </para>
+            <screen>
+	      <![CDATA[
+CIFS_LOGIN="login active directory"
+CIFS_PASSWORD="mot de passe"]]>
+	    </screen>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Vérifier que vous utilisez votre serveur Active Directory pour résoudre les noms de domaine.
+	</para>
+	<screen>
+<![CDATA[
+# cat /etc/resolv.conf]]>
+	</screen>
+	<para>
+	  Il faut aussi que votre système sache résoudre <emphasis>localhost</emphasis> en tant que <emphasis>127.0.0.1</emphasis>, pour cela vérifier que votre fichier <emphasis>/etc/hosts</emphasis> contient en première ligne:
+	</para>
+	<screen>
+<![CDATA[
+127.0.0.1       localhost]]>
+	</screen>
+      </listitem>
+
+    </itemizedlist>
+  </section>
+
+
+  <section>
+    <title>Tests de lancement de session en utilisant Active Directory</title>
+
+    <para>
+      Redémarrer votre serveur applicatif (en dehors du chroot):
+    </para>
+
+    <screen>
+<![CDATA[
+# /etc/init.d/ulteo-od restart]]>
+    </screen>
+
+
+    <para>
+      Vous pouvez à présent essayer de lancer une session avec un de vos utilisateur Active Directory. Si tout fonctionne correctement, vous devriez accéder aux fichiers de votre dossier personnel Active Directory.
+    </para>
+
+    <para>
+      Si vous avez une erreur, reportez-vous à page <emphasis>lire le journal système</emphasis> dans la <ulink url="UseCase_Fr.html">documentation générale</ulink>.
+    </para>
+
+
+  </section>
+</article>

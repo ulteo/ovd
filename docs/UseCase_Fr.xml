@@ -1,0 +1,808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Description de l'installation d'Ulteo Online Desktop</title>
+  </articleinfo>
+  <section>
+    <title>Description du projet</title>
+    <para>
+      Nous voulons proposer OpenOffice en ligne. Nous avons 2 serveurs à disposition :
+    </para>
+    <itemizedlist>
+      <listitem>
+	<para><emphasis role="strong">fire.ulteo.com</emphasis> sera le gestionnaire de sessions (<emphasis>session manager</emphasis>)</para>
+      </listitem>
+      <listitem>
+	<para><emphasis role="strong">connectme.ulteo.com</emphasis>sera le serveur applicatif</para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      Les systèmes doivent être des <emphasis role="strong">Ubuntu hardy</emphasis>. Les opéraions nécessitent d'être <emphasis>root</emphasis>.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>Pour activer le compte root :
+	  <screen>
+	    <![CDATA[
+$ sudo passwd
+$ su]]>
+	  </screen>
+	</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Installation du serveur de sessions (fire.ulteo.com)</title>
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Ajouter le dépôt Ulteo au <emphasis>sources.list</emphasis> et mettre à jour le système :
+	</para>
+        <screen>
+	  <![CDATA[
+# echo "deb http://mathurine.ulteo.com/~gauvain/archive/ulteo od hardy" >> /etc/apt/sources.list
+# echo "deb http://mathurine.ulteo.com/~gauvain/archive/ulteo od hardy-dev" >> /etc/apt/sources.list
+# apt-get update
+# apt-get upgrade]]>
+	</screen>
+      </listitem>
+      <listitem>
+	<para>Installer le paquet ulteo-od-session-manager :</para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-od-session-manager]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Une liste de serveurs autorisés à se connecter à notre session manager va être demandée. Dans notre cas nous devons indiquer <emphasis>connectme.ulteo.com</emphasis>:
+	</para>
+	<para>
+	  <inlinemediaobject>
+	    <imageobject>
+              <imagedata fileref="img/fqdns.png"/>
+	    </imageobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <section>
+      <title>Test de fonctionnement</title>
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    A l'aide d'un navigateur, rendez-vous sur votre gestionnaire de session (<ulink url="http://fire.ulteo.com/sessionmanager" />), la page devrait afficher une interface d'authentification:
+	  </para>
+	  <para>
+            <inlinemediaobject>
+	      <imageobject>
+		<imagedata fileref="img/sessionstarter.png"/>
+	      </imageobject>
+	      <textobject>
+		<phrase>Session starter</phrase>
+	      </textobject>
+            </inlinemediaobject>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Pour les utilisateurs de démonstrations, il n'y a pas de mot de passe, donc choississez un utilisateurs et cliquez sur <emphasis>Log in</emphasis>.
+	  </para>
+	  <para>
+	    Vous devriez être redirigé sur une page de lancement de sessions:
+	  </para>
+	  <para>
+            <inlinemediaobject>
+	      <imageobject>
+		<imagedata fileref="img/sm-nocm.png"/>
+	      </imageobject>
+	      <textobject>
+		<phrase>Session Manager no available session</phrase>
+	      </textobject>
+            </inlinemediaobject>
+	  </para>
+	</listitem>
+      </itemizedlist>
+      
+      <para>
+	Le gestionnaire de session nous indique qu'il n'a aucune session disponible. Il est maintenant temps d'installer un serveur de session.
+      </para>
+    </section>
+  </section>
+
+  <section>
+    <title>
+      Installation du serveur applicatif (connectme.ulteo.com)
+    </title>
+    <itemizedlist>
+      <listitem>
+        <para>
+	  Ajouter le dépôt Ulteo au <emphasis>sources.list</emphasis> et mettre à jour le système :
+        </para>
+        <screen>
+	  <![CDATA[
+# echo "deb http://mathurine.ulteo.com/~gauvain/archive/ulteo od hardy" >> /etc/apt/sources.list
+# echo "deb http://mathurine.ulteo.com/~gauvain/archive/ulteo od hardy-dev" >> /etc/apt/sources.list
+# apt-get update
+# apt-get upgrade]]>
+        </screen>
+      </listitem>
+      <listitem>
+        <para>
+	  Installer le paquet <emphasis>ulteo-od</emphasis> qui demandera des informations et configurera le serveur: 
+        </para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-od]]>
+	</screen>
+      </listitem>
+      <listitem>
+        <para>
+	  La première question concerne l'url de téléchargement de l'archive du système d'application (chroot).
+	  Il y a actuellement deux systèmes disponibles:
+	</para>
+        <itemizedlist>
+          <listitem>
+            <para>
+	      <emphasis>Polaris</emphasis>, un système récent en version test: 
+	      <ulink url="http://firex.ulteo.com/~gauvain/base-polaris-kde.tgz" />
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+	      <emphasis>Sirius</emphasis>, un système stable mais les applications ne sont pas récentes: 
+	      <ulink url="http://firex.ulteo.com/~gauvain/base-sirius.tgz" />
+            </para>
+          </listitem>
+        </itemizedlist>
+        <para>
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/dl.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>question Debconf chroot</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+	  La question suivante doit etre renseignée si une authentification HTTP est nécessaire pour le téléchargement.
+	  Ce n'est pas notre cas, nous laissons la réponse vide. 
+	  Si un username est saisi, un mot de passe sera alors demandé également.
+	</para>
+      </listitem>
+      <listitem>
+        <para>
+	  La question suivante concerne l'endroit où sera installé le chroot sur le système.
+	  Nous choisissons <emphasis>/opt/connectme</emphasis>:
+	</para>
+	<para>
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/chrootpath.png"/>
+            </imageobject>
+            <textobject>
+              <phrase>Debconf chroot installation question</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+	  La question suivante concerne le nom complet du serveur (nom d'hote et nom de domaine).
+	  Ce <emphasis>fqdn</emphasis> est utilisé par le session manager pour valider les requetes faites depuis le serveur applicatif. 
+	  Si le fqdn n'est pas listé dans la configuration du session manager, les requètes n'aboutiront pas. 
+	  Notre serveur s'appelle ''connectme.ulteo.com'' :
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/fqdn.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>debconf fqdn question</phrase>
+            </textobject>
+	  </inlinemediaobject>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+	  La question suivante permet d'indiquer quel session manager utiliser. 
+	  Saisissez l'url à laquelle nous avons testé le serveur de session précédemment:
+	</para>
+	<para>
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/smurl.png"/>
+            </imageobject>
+            <textobject>
+              <phrase>debconf session manager base url question</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+      <listitem>
+	<para>
+	  Le serveur applicatif a besoin de savoir comment gérer les dossiers utilisateur (contenant les fichiers personnels). 
+	  3 possibilités:
+	</para>
+        <itemizedlist>
+          <listitem>
+            <para>
+	      <emphasis role="strong">local</emphasis>: les dossiers seront présents sur le serveur applicatif (c'est notre cas); 
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+	      <emphasis role="strong">nfs</emphasis>: un serveur NFS sera utilisé; 
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+	      <emphasis role="strong">cifs</emphasis>: un serveur cifs/samba sera utilisé. 
+            </para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+      <listitem>
+	<para>
+	  Nous choisissons donc 'local': 
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/filetype.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>question debconf système de fichier</phrase>
+	    </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  Le serveur applicatif doit aussi connaitre l'endroit où sont stockés les dossiers utilisateur.
+	  Dans notre exemple ce sera <emphasis>/users</emphasis> (à l'intèrieur du chroot).
+	  Si les dossiers n'existent pas déjà, ils seront créés à la première utilisation d'un compte utilisateur
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/home.png"/>
+            </imageobject>
+            <textobject>
+              <phrase>question debconf home base</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      L'étape de configuration est terminée.
+      Le chroot va maintenant être téléchargé et décompressé, et les options de configuration appliquées dans le chroot.
+      Le système applicatif que vous venez de télécharger n'est peut-être pas à jour, vous devez donc le mettre à jour et rédémarrer le service:
+    </para>
+    <screen>
+      <![CDATA[
+# chroot /opt/connectme
+# apt-get update
+# apt-get dist-upgrade
+# exit
+# /etc/init.d/ulteo-od restart]]>
+    </screen>
+    <para>
+      Quand le paquet <emphasis>connectme-daemon</emphasis> se met à jour, il est possible qu'il écrase le fichier <emphasis>/etc/connectme.conf</emphasis> dans le chroot.
+      Ce sera fixé dans les prochaines version mais en attendant, vous devez aller éditer ce fichier à la main.
+    </para>
+  </section>
+  
+  <section>
+    <title>Lancement d'un session</title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Retournez sur <ulink url="http://fire.ulteo.com/sessionmanager/" />, la page devrait maintenant proposer de lancer une session:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/sm-launch.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session starter</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  Cliquez sur le bouton vert <emphasis>Launch Session now</emphasis>, un popup devrait s'ouvrir et la session devrait se charger:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session_launching.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launching</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  Finalement, la session est lancé et prête à être utilisé:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session_kde.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launched</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist> 
+  </section>
+
+  <section>
+    <title>Installer une nouvelle application sur le système applicatif</title>
+    <para>
+      Dans notre exemple, nous souhaitons installer le logiciel de messagerie <emphasis>Thunderbird</emphasis>.
+    </para>
+    <para>
+      Pour le moment, il n'est pas possible de lancer une session avec n'importe quelle application. Donc, pour utiliser Thunderbird, vous devrez lancer une session avec un bureau complet. Cela veut donc dire que vous avez un système applicatif où il est possible de lander un bureau complet (chroot-douane).
+    </para>
+
+    <para>
+      Les opérations se font sur le système applicatif.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Installer le paquet Thunderbird
+	</para>
+	<screen>
+	  <![CDATA[
+# chroot /opt/connectme
+# apt-get install thunderbird]]>
+	</screen>
+      </listitem>
+      <listitem>
+	<para>
+	  Lancer une session en bureau complet et :
+	</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>clic droit sur la barre de tâches</para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      Ajouter une application au tableau de bord
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>Internet</para>
+	  </listitem>
+	  <listitem>
+	    <para>Messagerie Thunderbird</para>
+	  </listitem>
+	</itemizedlist>
+	
+	<para>
+	  <inlinemediaobject>
+	    <imageobject>
+              <imagedata fileref="img/install-thunderbird.png"/>
+	    </imageobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      Vous devriez maintenant pouvoir lancer Thunderbird en cliquant sur l'icône.
+      It'll be possible soon to do it via a administration interface and launch a sesion with any available application (Thunderbird to keep our example).
+    </para>
+  </section>
+
+  <section>
+    <title>Garder le système à jour</title>
+    <para>
+      Nous sommes en train d'améliorer et de debugger ce système donc, pour le moment, il y a beaucoup de changement entre les mises à jour. Pour être sûr d'avoir la dernière version ou qu'un bug que vous avez reporté a été résolu, vous devez être sûr que vos systèmes soient à jour.
+    </para>
+    <itemizedlist>
+      <listitem>
+	<para>
+	  sur le serveur de sessions:
+	</para>
+	<screen>
+	  <![CDATA[
+# apt-get update
+# apt-get upgrade]]>
+	</screen>
+      </listitem>
+      <listitem>
+	<para>
+	  sur le serveur applicatif:
+	</para>
+	<screen>
+	  <![CDATA[
+# apt-get update
+# apt-get upgrade]]>
+	</screen>
+      </listitem>
+      <listitem>
+	<para>
+	  Vous devez aussi mettre à jour le système applicatif (le chroot): 
+	</para>
+	<screen>
+	  <![CDATA[
+# chroot /opt/connectme
+# apt-get update
+# apt-get dist-upgrade]]>
+	</screen>
+      </listitem>
+      <listitem>
+	<para>
+	  Enfin, si le paquet <emphasis>connectme-daemon</emphasis> a été mis à jour, vous devez redémarrer le service
+	</para>
+	<screen>
+	  <![CDATA[
+# /etc/init.d/ulteo-od restart]]>
+	</screen>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Informations et protocoles</title>
+    <section>
+      <title>Gestionnaire de sessions</title>
+      <section>
+        <title>Configuration</title>
+	<para>
+	  Le fichier de configuration du gestionnaire de session est <emphasis role="strong">/etc/ulteo/sessionmanager/config.inc.php</emphasis>.
+        </para>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              <emphasis>$config['authorized_fqdn']</emphasis>: tableau des serveurs autorisés à utiliser ce session manager ('*' autorisé)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <emphasis>$config['fqdn_private_addresse']</emphasis>: table de hashage désignant des paires nom/ip si besoin (pas de serveur DNS, ...)
+            </para>
+            <screen>
+              <![CDATA[
+$config['fqdn_private_address'] = array(
+  'connectme.ulteo.com' => '192.168.1.3'
+);]]>
+            </screen>
+          </listitem>
+          <listitem>
+            <para>
+              <emphasis>$config['disable_fqdn_check']</emphasis>: désactiver la vérification du "reverse" auprès du serveur DNS (Attention: tout serveur passant le filtre du "authorized_fqdn" pourra ajouter/supprimer des sessions, sans aucune autre vérification, à n'utiliser que si vous savez ce que vous faites)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <emphasis>$config['locale']</emphasis>: langue par défaut du système
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <emphasis>$config['start_app']</emphasis>: application à démarrer par défaut (vide = bureau complet)
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              <emphasis>$config['use_plugins']</emphasis>: tableau des plugins activés dans le sessionmanager (ex: applications permettant à l'utilisateur de choisir quel logiciel il veut démarrer avec sa session, proxy permettant d'utiliser le système à travers des proxys...)
+            </para>
+            <screen>
+  	      <![CDATA[
+$config['use_plugins'] = array(
+  'applications',
+  'proxy'
+);]]>
+            </screen>
+          </listitem>
+          <listitem>
+            <para>
+              <emphasis>$config['module_fs']</emphasis>: module de système de fichier à utilise (ex: local, nfs, cifs, ...)
+            </para>
+          </listitem>
+        </itemizedlist>
+    
+  </section>
+  <section>
+    <title>Journaux système</title>
+    <itemizedlist>
+      <listitem>
+        <para>
+	  <emphasis role="strong">/var/log/ulteo/sessionmanager/main.log</emphasis>: log principal du session manager
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          <emphasis role="strong">/var/log/ulteo/sessionmanager/plugins.log</emphasis>: log des plugins
+        </para>
+      </listitem>
+    </itemizedlist>
+    <para>
+      Vous pouvez suivre le fonctionnement du session manager avec la commande suivante :
+      <screen>
+	<![CDATA[
+# tail -f /var/log/ulteo/sessionmanager/main.log]]>
+      </screen>
+    </para>
+    <para>
+      Vous pouvez visionner les requêtes HTTP sur le serveur de session lors du démarrage du service sur le serveur applicatif.
+    </para>
+    <para>
+      Vous verrez les requetes de mise à disponibilité de session effectuées depuis le serveur applicatif.
+    </para>
+    <para>
+      Si les logs du session manager n'affichent rien, vous pouvez toujours regarder le contenu des logs du serveur Apache2 (<emphasis>/var/log/apache2/acces.log</emphasis> par défaut), pour vérifier si les requêtes HTTP arrivent bien sur le serveur.
+    </para>
+  </section>
+</section>
+<section>
+  <title>Serveur applicatif</title>
+  <section>
+    <title>Fichiers de configurations</title>
+    <para>
+      Les fichiers de configurations:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+	  <emphasis role="strong">/etc/connectme.conf</emphasis>: 
+	  contient le chemin du système applicatif (chroot).
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+	  <emphasis role="strong">$CHROOT/etc/connectme.conf</emphasis>: configuration du daemon connectmed responsable du démarrage/arrêt des sessions (le fichier documente les options). 
+        </para>
+      </listitem>
+    </itemizedlist>
+
+	<para>
+	  Les clés de configurations:
+	</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      Définition du fichier de journal (log). 
+	      Par defaut, il s'agit de <emphasis>/var/log/connectme.log</emphasis>:
+	    </para>
+	    <screen>
+		<![CDATA[
+LOG_FILE=/var/log/connectme.log]]>
+            </screen>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Définition des informations devant figurer dans le fichier de journal).
+	    </para>
+	    <para>
+	      Drappeaux disponibles :
+	    </para>
+	    <itemizedlist>
+              <listitem>
+		<para>
+		  <emphasis>error</emphasis>: un evennement qui n'aurait pas dû est aparu, 
+		  le système va probablement s'arréter.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  <emphasis>warning</emphasis>: un problème important a été détecté mais devrait être résolu.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  <emphasis>info</emphasis>: un message d'information. 
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  <emphasis>debug</emphasis>: messages destinés à aider les developpeurs à tracker les bugs.
+		</para>
+              </listitem>
+	    </itemizedlist>
+
+	    <para>
+	      Par defaut, les drappeau <emphasis>info</emphasis>, <emphasis>warn</emphasis> et <emphasis>error</emphasis> sont activé:
+	    </para>
+	    <screen>
+	      <![CDATA[
+LOG_FLAGS="info warn error"]]>
+            </screen>
+	  </listitem>
+	  
+	  <listitem>
+	    <para>
+	      Définition du fichier de journal (log). 
+	      Par defaut, il s'agit de <emphasis>/var/log/connectme.log</emphasis>:
+	    </para>
+	    <screen>
+	      <![CDATA[
+LOG_FILE=/var/log/connectme.log]]>
+            </screen>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Choix du gestionnaire de session
+	    </para>
+	    <screen>
+	      <![CDATA[
+SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"]]>
+            </screen>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Nom pleinement qualifié du serveur:
+	    </para>
+	    <screen>
+		<![CDATA[
+SERVERNAME=connectme.ulteo.com]]>
+            </screen>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Nombre de sessions à créer:
+	    </para>
+	    <screen>
+		<![CDATA[
+NB_SESSIONS=5]]>
+            </screen>
+	  </listitem>
+
+	  <listitem>
+	    <para>
+	      Gestion des répertoires utilisateurs:
+	    </para>
+	    <para>
+	      Modules disponibles :
+	    </para>
+	    <itemizedlist>
+              <listitem>
+		<para>
+		  <emphasis>local</emphasis>: Les répertoires seront gérés localement et stockés dans <emphasis>/users</emphasis>.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  <emphasis>nfs</emphasis>: les répertoires seront montés par un lien NFS précisé pour chaque session.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  <emphasis>cifs</emphasis>: les répertoires seront montés par un lien CIFS précisé pour chaque session.
+		</para>
+              </listitem>
+              <listitem>
+		<para>
+		  <emphasis>cifs_no_sfu</emphasis>: La même chose que <emphasis>cifs</emphasis> mais fonctionnant avec un serveur CIFS n'ayant pas activé <emphasis>Services For Unix</emphasis>.
+		</para>
+              </listitem>
+	    </itemizedlist>
+
+
+
+	    <screen>
+		<![CDATA[
+HOME_DIR_TYPE=local]]>
+            </screen>
+	  </listitem>
+	  
+	</itemizedlist>	
+      </section>
+
+
+
+      <section>
+	<title>Journaux système</title>
+	<para>
+          Vous pouvez surveillez l'activité de votre serveur grâce à la commande suivante:
+	</para>
+	<screen>
+	  <![CDATA[
+tail -f /opt/connectme/var/log/connectme.log]]>
+        </screen>
+	
+	<para>
+	  Quelques messages d'exemple : 
+	</para>
+	<itemizedlist>
+          <listitem>
+	    <para>
+	      Création d'une session :
+	    </para>
+	    <screen>
+	      <![CDATA[
+[INFO] useradd SSH17 with uid : 5034
+[INFO] groupadd -K GID_MAX=70000 VNC17
+[INFO] useradd VNC17 with uid : 5035
+[INFO] Session generating 17 => 2d4aebee0345a998fe68b6991ec35f18]]>
+            </screen>
+          </listitem>
+          <listitem>
+	    <para>
+              Destruction d'une session :
+	    </para>
+            <screen>
+	      <![CDATA[
+[INFO] Killing Session b515124f650af852baeeabdd45be6644
+[INFO] killall -u unfs2001
+[INFO] kill_session 12
+[INFO] userdel SSH12
+[INFO] local:Local fs in /users
+[INFO] userdel VNC12
+[INFO] erasing previous b515124f650af852baeeabdd45be6644]]>
+	    </screen>
+          </listitem>
+          <listitem>
+	    <para>
+              Déclaration d'une nouvelle session disponible sur le session manager
+	    </para>
+            <screen>
+	      <![CDATA[
+[INFO] Request action=HELLO&amp;fqdn=ooo.ac-guadeloupe.fr&amp;session=21015e1fb41d6db43371c66e257cb8c5]]>
+	    </screen>
+          </listitem>
+          <listitem>
+            <para>Une session se lance </para>
+            <screen>
+	      <![CDATA[
+[INFO] nickname: TweetyBird
+[INFO] USER_HOME: /home/TweetyBird
+[INFO] REMOTE_HOME: /home2/unfs2005
+[INFO] local:Local fs in /users
+[INFO] Prestart:Info: unknown.fileserver
+xauth:  creating new authority file /tmpdir/tmp5023/.Xauthority
+[INFO] LUCK does not exist, creating it
+[INFO] startsession : session state 2
+access control enabled, only authorized clients can connect]]>
+            </screen>
+          </listitem>
+	</itemizedlist>
+      </section>
+    </section>
+  </section>
+
+
+
+
+  <section>
+    <title>Dépannage</title>
+
+
+    <section>
+      <title>La session ne se lance pas lorsque vous utilisez un proxy</title>
+      <para>
+	Vérifier que votre serveur proxy connait le nom de votre serveur applicatif (problèmes de DNS).
+      </para>
+    </section>
+  </section>
+</article>

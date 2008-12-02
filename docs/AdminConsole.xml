@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - Administration Console</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    In order to make the configuration simple and at only one place, we have developped a Web tool to manage the <emphasis>Session manager</emphasis> and all <emphasis>Application servers</emphasis> plugged to it. 
+    This tool is called <emphasis>Administration Console</emphasis>.
+  </para>
+
+  <para>
+    This documentation will explain the features of the Administration Console.
+<!--    The first section of the documentation is going to explain features pages per pages.
+    The second section will explain each features in particular.
+-->
+  </para>
+<!--
+  <section>
+    <title>Administration pages</title>
+-->
+    <para>
+      At the moment, there are 6 main pages in the Administration Console.
+    </para>
+    <para>
+      When you log into the console, you are automaticaly redirected to the <emphasis>Server</emphasis> page so it's a good point to start.
+    </para>
+ 
+    <section>
+      <title>Server Management</title>
+      <para>
+	This page show the list of Application servers that registered to the Session Manager.
+      </para>
+      <para>
+	Each server is shown with some information:
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">FQDN (Fully Qualified Domain Name):</emphasis> it's the server name (and id)</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">Type:</emphasis> Linux or Windows</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">Satus:</emphasis> <emphasis>Online</emphasis>/<emphasis>Offline</emphasis>/<emphasis>Broken</emphasis>, the server can also be <emphasis>Under maintenance</emphasis></para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">Sessions:</emphasis> the number of sessions in use and the number of available sessions</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="strong">Details:</emphasis> some information about the server hardware</para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="strong">Monitoring:</emphasis> some informations about the load of the remote system</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	On Maintenance mode the server is not available to launch sessions even if it's online.
+	It's used to modify the server configuration (add an application, update the system ...) and be sure that there isn't any active session on the server.
+
+	You can switch a server to maintenance mode or pull back to production just by clicking on the <emphasis>Switch to maintenance</emphasis> or <emphasis>Switch to production</emphasis> buttons.
+      </para>
+      <para>
+	On this page, you also can see all unregistered Application servers.
+	An Application server is unregistered untill an admin registers it by clicking the <emphasis>register button</emphasis>.
+      </para>
+      <para>
+	You can have more information about an Application server either by clicking on the <emphasis>Manage</emphasis> button or by clicking on the server name hyperlink.
+      </para>
+
+      <section>
+	<title>Manage a server</title>
+	<para>
+	  At this page, we get the same information as on the general pages but you can also get more information, such as the list of applications installed on this server, the list of active sessions and you can modify the number of available sessions.
+	</para>
+	<para>
+	  The main difference between the manage page and the general page is that information is requested in real time from the concerned server.
+	</para>
+      </section>
+
+
+    </section>
+
+    <section>
+      <title>Session Management</title>
+      <para>
+	This page shows a list of active sessions with the following information:
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">Session:</emphasis> the session id</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">Server:</emphasis> the server where the session runs</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">User:</emphasis> the user which started the session</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	It's possible to end a session by clicking the <emphasis>Kill</emphasis> button.
+      </para>
+
+      <para>
+	You can have more information about a session by clicking on the session id.
+      </para>
+
+     <section>
+	<title>Manage a session</title>
+	<para>
+	  On the general page, there are two additional features:
+	  <itemizedlist>
+	    <listitem>
+	      <para>The date when the session started</para>
+	    </listitem>
+	    <listitem>
+	      <para>A button to join the session using the desktop sharing system</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+      </section>
+    </section>
+
+    <section>
+      <title>User Management</title>
+      <para>
+	This page displays the list of users from the User directory or database you choosed in the configuration.
+      </para>
+      <para>
+	Each user is shown with his login, his display name, his uid and all other extra fields from the user database.
+      </para>
+
+      <para>
+	You can get more information about a User either by clicking the <emphasis>Manage</emphasis> button or by clicking on the user login hyperlink.
+      </para>
+
+      <section>
+	<title>Manage a user</title>
+	<para>
+	  In this page, we can modify each user attribute if the user database is writable. 
+	  Actually, only MySQL module is writable.
+	</para>
+	<para>
+	  There is also the list of user groups that contain this user and the list of active sessions for this user.
+	</para>
+      </section>
+
+      <section>
+	<title>User Group Management</title>
+	<para>
+	  This page provides a list of user group with their name, their description and their status (Enabled or Block).
+	  You also can add and remove user groups.
+	</para>
+
+	<para>
+	  The Manage page of a specific group lets you change status and description.
+	  It's also possible to add or remove users from a specific group and view the list of publications for a specific group. 
+	</para>
+      </section>
+
+    </section>
+
+    <section>
+      <title>Applications Management</title>
+      <para>
+	This page shows the list of applications which are (physically) installed on the application servers.
+      </para>
+      <para>
+	Each application is shown with his name, his description and his type (Linux or Windows).
+      </para>
+
+      <para>
+	You can have more information about an application either by clicking the <emphasis>Manage</emphasis> button or by clicking on the application name hyperlink.
+      </para>
+
+      <section>
+	<title>Manage an application</title>
+	<para>
+	  When you manage an application, you can add or remove this application from online servers and from the application groups.
+	</para>
+      </section>
+
+      <section>
+	<title>Application group Management</title>
+	<para>
+	  This page provides a list of application groups with their name, their description and their status (Enabled or Blocked).
+	  You can also add and remove application groups.
+	</para>
+
+	<para>
+	  The manage page of a specific group lets you change the status and the description.
+	  It's also possible to add or remove users from a specific group and view the list of publications for a specific group. 
+	</para>
+      </section>
+
+    </section>
+
+
+    <section>
+      <title>Publication Management</title>
+      <para>
+	This page shows associations between user groups and application groups. A publication wizard is available to make the process simple.
+      </para>
+      <para>
+	This wizard is in 3 main steps:
+	<itemizedlist>
+	  <listitem>
+	    <para>selection of users</para>
+	  </listitem>
+	  <listitem>
+	    <para>selection of applications</para>
+	  </listitem>
+	  <listitem>
+	    <para>confirmations</para>
+	  </listitem>
+	</itemizedlist>
+      </para>
+      <para>
+	If you choose users from the user list instead of an existing user group, the system is going to ask you for a user group name and description. It's the same for application selection.
+      </para>
+    </section>
+
+    <section>
+      <title>Configuration</title>
+      <para>
+	At this page, you can configure your sesion manager.
+      </para>
+      <para>
+	Be careful when you change the config, it can break actives session depending on the kind of action.
+      </para>
+      <para>
+      The configuration is splitted into three boxes : general, modules and plugins.
+      </para>
+
+      <section>
+	<title>General Configuration</title>
+	<para>
+	  It's possible to allow user to force some session option like choose their language, change the size of the popup or force a display quality.
+	You also can add or remove some domain name which servers can be registered from.
+	</para>
+      </section>
+
+      <section>
+	<title>Module Configuration</title>
+	<para>
+	  Two modules are essential: ApplicationDB and UserDB.
+	  <itemizedlist>
+	    <listitem><para>
+	      <emphasis role="strong">ApplicationDB:</emphasis> 
+	      how the <emphasis>sessionmanager</emphasis> handles applications ie how it stores information about applications. For now, you have only one useful choice: use an sql server (only MySQL data base has been enabled).
+	    </para></listitem>
+
+	    <listitem><para>
+	      <emphasis role="strong">UsersDB:</emphasis> 
+	      how the <emphasis>sessionmanager</emphasis> handles users ie how it stores information about users. You have several choices like use a brand new database where all data will be stored. In this case choose <emphasis role="strong">MySQL</emphasis>. If you have already an users database you can choose LDAP or Active Directory. 
+	    </para></listitem>
+	  </itemizedlist>
+	</para>
+      </section>
+
+      <section>
+	<title>Plugin Configuration</title>
+	<para>
+	  In the plugin configuration you can activate available plugins (for example enable proxy support). An important plugin is the filesystem(FS) plugin that lets you select how the user data will be stored. You have several posibilites:
+	  <itemizedlist>
+	    <listitem>
+	      <para><emphasis role="strong">local:</emphasis> users' data will be stored locally on <emphasis>application servers</emphasis>. Beware if a user changes <emphasis>application server</emphasis>: he will not get his previous data.</para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis role="strong">CIFS:</emphasis> users' data will be stored on a samba server or a Microsoft Windows fileserver. <emphasis>Application server</emphasis> is run under linux so you can use symbolic link BUT on Windows file systems you do have this feature. To activate symbolic link support you need to install <emphasis>Services For Unix</emphasis>.If you can not, choose 'CIFS no SFU', it will do the job.</para>
+	    </listitem>
+	    <listitem>
+	      <para><emphasis role="strong">NFS:</emphasis> disabled for now</para>
+	    </listitem>
+	  </itemizedlist>
+	</para>
+     </section>
+
+  </section>
+
+</article>
