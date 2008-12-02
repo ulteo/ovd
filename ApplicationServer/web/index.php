@@ -44,14 +44,24 @@ if ($session_node->hasAttribute('id'))
 if ($session_node->hasAttribute('mode'))
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
 
-$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
+$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'start_app');
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
 foreach ($settings as $setting) {
-	$item = @$session_node->getElementsByTagname($setting)->item(0);
+	$item = $session_node->getElementsByTagname($setting)->item(0);
 
-	if (!is_null($item))
-		$_SESSION[$setting] = $item->getAttribute('value');
+	if (is_null($item))
+		die('Missing element \''.$setting.'\'');
+
+	$_SESSION[$setting] = $item->getAttribute('value');
+}
+
+$settings2 = array('proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
+foreach ($settings2 as $setting2) {
+	$item2 = @$session_node->getElementsByTagname($setting2)->item(0);
+
+	if (!is_null($item2))
+		$_SESSION[$setting2] = $item2->getAttribute('value');
 }
 
 $_SESSION['share_desktop'] = 'true';
