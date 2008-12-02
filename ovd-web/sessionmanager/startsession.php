@@ -25,9 +25,6 @@ $plugins->doLoad();
 
 $plugins->doInit();
 
-if (!isset($_SESSION['login']))
-	die_error('You must be authenticated to start a session',__FILE__,__LINE__);
-
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
@@ -38,7 +35,20 @@ if (!in_array('UserDB', $mods_enable))
 
 $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 $userDB = new $mod_user_name();
-$user = $userDB->import($_SESSION['login']);
+
+$use_sso = $prefs->get('general', 'user_authenticate_sso');
+if ($use_sso) {
+	$user_authenticate_trust = $prefs->get('general', 'user_authenticate_trust');
+
+	$user_login = $_SERVER[$user_authenticate_trust];
+} else {
+	if (!isset($_SESSION['login']))
+		die_error('You must be authenticated to start a session',__FILE__,__LINE__);
+
+	$user_login = $_SESSION['login'];
+}
+
+$user = $userDB->import($user_login);
 if (!is_object($user))
 	die_error(_('User importation failed'),__FILE__,__LINE__);
 
@@ -54,8 +64,8 @@ $advanced_settings = $prefs->get('general', 'advanced_settings_startsession');
 if (!is_array($advanced_settings))
 	$advanced_settings = array();
 
-if (in_array('server', $advanced_settings) && isset($_POST['force']) && $_POST['force'] != '')
-	$random_server = $_POST['force'];
+if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
+	$random_server = $_REQUEST['force'];
 else {
 	$serv_tmp = $user->getAvalaibleServer();
 	if (is_object($serv_tmp))
@@ -79,20 +89,20 @@ if ($ret === false)
 
 $lock->add_lock($session->session, $session->server);
 
-if (in_array('language', $advanced_settings) && isset($_POST['desktop_locale']) && $_POST['desktop_locale'] != '')
-	$desktop_locale = $_POST['desktop_locale'];
+if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
+	$desktop_locale = $_REQUEST['desktop_locale'];
 
-if (in_array('quality', $advanced_settings) && isset($_POST['desktop_quality']) && $_POST['desktop_quality'] != '')
-	$desktop_quality = $_POST['desktop_quality'];
+if (in_array('quality', $advanced_settings) && isset($_REQUEST['desktop_quality']) && $_REQUEST['desktop_quality'] != '')
+	$desktop_quality = $_REQUEST['desktop_quality'];
 
-if (in_array('timeout', $advanced_settings) && isset($_POST['desktop_timeout']) && $_POST['desktop_timeout'] != '')
-	$desktop_timeout = $_POST['desktop_timeout'];
+if (in_array('timeout', $advanced_settings) && isset($_REQUEST['desktop_timeout']) && $_REQUEST['desktop_timeout'] != '')
+	$desktop_timeout = $_REQUEST['desktop_timeout'];
 
-if (in_array('application', $advanced_settings) && isset($_POST['start_app']) && $_POST['start_app'] != '')
-	$start_app = $_POST['start_app'];
+if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app']) && $_REQUEST['start_app'] != '')
+	$start_app = $_REQUEST['start_app'];
 
-if (in_array('debug', $advanced_settings) && isset($_POST['debug']) && $_POST['debug'] != '')
-	$debug = $_POST['debug'];
+if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
+	$debug = $_REQUEST['debug'];
 
 $fs = $prefs->get('plugins', 'FS');
 // for now we can use one FS at the same time
