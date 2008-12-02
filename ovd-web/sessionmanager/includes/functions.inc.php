@@ -439,3 +439,15 @@ function get_needed_attributes_user_from_module_plugin() {
 	}
 	return $attributes;
 }
+
+function pathinfo_filename($path_) {
+	if(version_compare(phpversion(), "5.2.0", "<")) {
+		$temp = pathinfo($path_);
+		if($temp['extension'])
+			$temp['filename'] = substr($temp['basename'],0 ,strlen($temp['basename'])-strlen($temp['extension'])-1);
+		return $temp;
+	}
+	else {
+		return pathinfo($path_);
+	}
+}

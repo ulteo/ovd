@@ -241,7 +241,7 @@ class Preferences_admin extends Preferences {
 				$files2 = glob($path.'/*');
 				foreach ($files2 as $file2){
 					if (is_file($file2)) {
-						$pathinfo = pathinfo($file2);
+						$pathinfo = pathinfo_filename($file2);
 						if (!isset($ret[basename($pathinfo["dirname"])])){
 							$ret[basename($pathinfo["dirname"])] = array();
 						}
@@ -255,7 +255,7 @@ class Preferences_admin extends Preferences {
 				}
 			}
 			if (is_file($path)) {
-				$pathinfo = pathinfo($path);
+				$pathinfo = pathinfo_filename($path);
 				if (!isset($ret['module'])){
 					$ret['module'] = array();
 				}
