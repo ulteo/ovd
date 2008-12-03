@@ -45,7 +45,29 @@ class Server {
 	public function create($die_=true) {
 		Logger::debug('main', 'Starting SERVER::create for server '.$this->fqdn);
 
+		if ($this->fqdn !== @gethostbyaddr(@gethostbyname($this->fqdn))) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'" reverse DNS seems invalid !';
+
+			Logger::error('main', '"'.$this->fqdn.'" reverse DNS seems invalid !');
+			if ($die_ == true)
+				die('"'.$this->fqdn.'" reverse DNS seems invalid !');
+			else
+				return false;
+		}
+
 		if (!$this->getStatus(0)) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'" does not accept requests from me !';
+
+			Logger::error('main', '"'.$this->fqdn.'" does not accept requests from me !');
+			if ($die_ == true)
+				die('"'.$this->fqdn.'" does not accept requests from me !');
+			else
+				return false;
+		}
+
+		if (!$this->isOnline()) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'" is NOT "online"';
+
 			Logger::error('main', 'Server NOT "online" : '.$this->folder);
 			if ($die_ == true)
 				die('Server NOT "online" : '.$this->folder);
@@ -89,6 +111,37 @@ class Server {
 
 		if (!$this->hasAttribute('unregistered'))
 			return false;
+
+		if ($this->fqdn !== @gethostbyaddr(@gethostbyname($this->fqdn))) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'" reverse DNS seems invalid !';
+
+			Logger::error('main', '"'.$this->fqdn.'" reverse DNS seems invalid !');
+			if ($die_ == true)
+				die('"'.$this->fqdn.'" reverse DNS seems invalid !');
+			else
+				return false;
+		}
+
+		if (!$this->getStatus(0)) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'" does not accept requests from me !';
+
+			Logger::error('main', '"'.$this->fqdn.'" does not accept requests from me !');
+			if ($die_ == true)
+				die('"'.$this->fqdn.'" does not accept requests from me !');
+			else
+				return false;
+		}
+
+		if (!$this->isOnline()) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'" is NOT "online"';
+
+			Logger::error('main', 'Server NOT "online" : '.$this->folder);
+			if ($die_ == true)
+				die('Server NOT "online" : '.$this->folder);
+			else
+				return false;
+		}
+		Logger::info('main', 'Server "online" : '.$this->folder);
 
 		if (! @unlink($this->folder.'/unregistered')) {
 			Logger::error('main', 'Server NOT registered : '.$this->folder);
@@ -219,6 +272,8 @@ class Server {
 
 	public function isOnline() {
 		Logger::debug('main', 'Starting SERVER::isOnline for server '.$this->fqdn);
+
+		$this->getStatus(0);
 
 		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
 			return true;

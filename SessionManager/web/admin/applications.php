@@ -404,6 +404,9 @@ function show_default($applicationDB) {
     echo '</table>';
 //     echo '</form>';
     echo '</div>';
+
+  include_once('footer.php');
+  die();
   }
 }
 

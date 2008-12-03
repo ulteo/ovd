@@ -34,3 +34,9 @@ div.menu.in {
 	background: #004985;
 	color: #fff;
 }
+
+div#adminError {
+	background: #ffcccc;
+	border: 1px solid #cc0000;
+	padding: 10px;
+}

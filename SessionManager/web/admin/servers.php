@@ -26,7 +26,7 @@ if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'register') {
 	if (isset($_GET['register_servers']) && is_array($_GET['register_servers'])) {
 		foreach ($_GET['register_servers'] as $server) {
 			$server = new Server_admin($server);
-			$server->register();
+			$server->register(0);
 			$server->updateApplications();
 		}
 	}
@@ -104,7 +104,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset(
 
 if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn'])) {
 	$server = new Server_admin($_GET['fqdn']);
-	$server->register();
+	$server->register(0);
 	$server->updateApplications();
 
 	redirect('servers.php?action=list');

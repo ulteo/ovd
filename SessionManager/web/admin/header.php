@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -55,3 +55,13 @@ header_static($main_title.' - '._('Administration'));
 		</td>
 		<td class="content">
 			<div id="adminContent">
+				<?php
+					if (isset($_SESSION['errormsg']) && $_SESSION['errormsg'] != '') {
+						?>
+						<div id="adminError">
+							<span class="msg_error"><?php echo $_SESSION['errormsg']; ?></span>
+						</div>
+						<?php
+						unset($_SESSION['errormsg']);
+					}
+				?>
