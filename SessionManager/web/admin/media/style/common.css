@@ -40,3 +40,23 @@ div#adminError {
 	border: 1px solid #cc0000;
 	padding: 10px;
 }
+
+.debug {
+	color: grey;
+	display: block;
+}
+
+.info {
+	color: green;
+	display: block;
+}
+
+.warning {
+	color: orange;
+	display: block;
+}
+
+.error {
+	color: red;
+	display: block;
+}

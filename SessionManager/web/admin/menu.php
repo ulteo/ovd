@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -26,6 +26,7 @@ $items = array(
 	'publications.php'	=>	_('Publications'),
 	//'wizard.php'		=>	_('Publication Wizard'),
 	'configuration.php'	=>	_('Configuration'),
+	'logs.php'		=>	_('Logs'),
 	'logout.php'		=>	_('Logout')
 );
 
