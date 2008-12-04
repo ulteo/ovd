@@ -23,8 +23,7 @@ define('SESSIONMANAGER_CONF_FILE', '/etc/ulteo/sessionmanager/config.inc.php');
 
 define('DEFAULT_PAGE_TITLE', _('Open Virtual Desktop'));
 
-$base_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')?'https://':'http://';
-$base_url.= $_SERVER['SERVER_NAME'].str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
+$base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 
 define('DEFAULT_LOGO_URL', $base_url.'media/image/header.png');
 
