@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+binary-install/ulteo-ovd-session-manager::
+	rm debian/ulteo-ovd-session-manager/usr/share/ulteo/sessionmanager/documentation/config.inc.php.default
+	rmdir --ignore-fail-on-non-empty \
+		debian/ulteo-ovd-session-manager/usr/share/ulteo/sessionmanager/documentation

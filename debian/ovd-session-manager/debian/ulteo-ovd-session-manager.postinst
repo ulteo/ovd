@@ -1,0 +1,64 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+if [ "$1" != "configure" ]; then
+    exit 0
+fi
+
+WGETARGS="--tries=3 --timeout=60"
+CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
+
+CONFFILE="/usr/share/doc/ulteo-ovd-session-manager/examples/config.inc.php.default"
+CONFFILEDEST="/etc/ulteo/sessionmanager/config.inc.php"
+
+apache_reload()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
+gen_conf()
+{
+    db_get od/sessionmanager/admin_login || true
+    LOGIN="$RET"
+    db_get od/sessionmanager/admin_password || true
+    PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1)
+    # clear the password
+    unset RET
+    db_set od/sessionmanager/admin_password ""
+
+    cp $CONFFILE $CONFFILEDEST
+
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILEDEST
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILEDEST
+}
+
+# set the fqdns if the conffile doesn't exist already
+if [ ! -e $CONFFILEDEST ]; then
+    gen_conf
+
+    # set permissions
+    mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+    chown root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+    chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+    chown root:www-data $CONFFILEDEST
+    chmod 0640 $CONFFILEDEST
+fi
+
+if [ ! -e $CHROOT_TARGET ]; then
+    db_get od/sessionmanager/download_tarball || true
+    URL="$RET"
+    if [ x"$URL" != x"" ]; then
+        wget $WGETARGS $URL -O $CHROOT_TARGET || echo "Unable to retrieve the chroot archive. You need to download it manually as $CHROOT_TARGET"
+    fi
+fi
+
+apache_reload
+
+#DEBHELPER#
+
+exit 0
