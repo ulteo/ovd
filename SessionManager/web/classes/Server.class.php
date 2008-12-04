@@ -65,16 +65,16 @@ class Server {
 				return false;
 		}
 
-		if (!$this->isOnline()) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'" is NOT "online"';
-
-			Logger::error('main', 'Server NOT "online" : '.$this->folder);
-			if ($die_ == true)
-				die('Server NOT "online" : '.$this->folder);
-			else
-				return false;
-		}
-		Logger::info('main', 'Server "online" : '.$this->folder);
+// 		if (!$this->isOnline()) {
+// 			$_SESSION['errormsg'] = '"'.$this->fqdn.'" is NOT "online"';
+//
+// 			Logger::error('main', 'Server NOT "online" : '.$this->folder);
+// 			if ($die_ == true)
+// 				die('Server NOT "online" : '.$this->folder);
+// 			else
+// 				return false;
+// 		}
+// 		Logger::info('main', 'Server "online" : '.$this->folder);
 
 		if (file_exists($this->folder)) {
 			Logger::error('main', 'Server already exists  : '.$this->folder);
@@ -122,7 +122,7 @@ class Server {
 				return false;
 		}
 
-		if (!$this->getStatus(0)) {
+		if (!$this->getStatus(1)) {
 			$_SESSION['errormsg'] = '"'.$this->fqdn.'" does not accept requests from me !';
 
 			Logger::error('main', '"'.$this->fqdn.'" does not accept requests from me !');
