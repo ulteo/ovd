@@ -61,7 +61,6 @@ web/admin/usersgroup.php
 web/admin/classes/UsersGroup.class.php
 web/admin/classes/UsersGroupLiaison.class.php
 web/admin/classes/ApplicationServerLiaison.class.php
-web/admin/classes/UsersGroupApplicationsGroupLiaison.class.php
 web/admin/classes/AppsGroup.class.php
 web/admin/classes/Liaison.class.php
 web/admin/classes/Preferences_admin.class.php

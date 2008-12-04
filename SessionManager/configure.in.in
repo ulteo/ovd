@@ -1,0 +1,22 @@
+m4_define([uovdsm_version_major], [1])
+m4_define([uovdsm_version_minor], [0])
+m4_define([uovdsm_version_build], [~beta2~svn@REVISION@])
+m4_define([uovdsm_version], [uovdsm_version_major().uovdsm_version_minor()uovdsm_version_build()])
+
+AC_INIT([ovd-session-manager], [uovdsm_version], [http://bugs.ulteo.com])
+AC_PREREQ(2.61)
+
+# Init automake
+AM_INIT_AUTOMAKE([AC_PACKAGE_TARNAME()], [AC_PACKAGE_VERSION()])
+
+# Checks for programs.
+AC_PROG_INSTALL
+
+# i18n magic
+IT_PROG_INTLTOOL
+GETTEXT_PACKAGE=uovdsm
+AC_SUBST(GETTEXT_PACKAGE)
+AM_GLIB_GNU_GETTEXT()
+
+AC_CONFIG_FILES([Makefile po/Makefile.in])
+AC_OUTPUT
