@@ -22,7 +22,7 @@ webservices_session_request() {
     local request="${SESSION_MANAGER_URL}/webservices/session_status.php?${args}"
 
     log_INFO "webservices_session_request: doing $request"
-    wget --retry-connrefused $request -O /dev/null -o /dev/null
+    wget --no-check-certificate --retry-connrefused $request -O /dev/null -o /dev/null
 }
 
 webservices_server_request() {
@@ -30,7 +30,7 @@ webservices_server_request() {
     local request="${SESSION_MANAGER_URL}/webservices/server_status.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    wget --retry-connrefused $request -O /dev/null -o /dev/null
+    wget --no-check-certificate --retry-connrefused $request -O /dev/null -o /dev/null
 }
 
 webservices_server_ready() {
@@ -63,11 +63,11 @@ webservices_available_application() {
 
     curl --form xml=@$file --form action=register \
         --form fqdn=${SERVERNAME} --form type=linux \
-        --form version="$version" $url >/dev/null 2>/dev/null 
+        --form version="$version" --insecure $url >/dev/null 2>/dev/null 
 }
 
 webservices_system_monitoring() {
     local url="${SESSION_MANAGER_URL}/webservices/server_monitoring.php"
     cache_set_monitoring /tmp/monitoring.xml || return 1
-    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} $url >/dev/null 2>/dev/null 
+    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>/dev/null 
 }
