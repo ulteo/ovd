@@ -1,0 +1,66 @@
+m4_define([chrootutils_version_major], [1])
+m4_define([chrootutils_version_minor], [0])
+m4_define([chrootutils_version_build], [~beta2~svn@REVISION@])
+m4_define([chrootutils_version], [chrootutils_version_major().chrootutils_version_minor()chrootutils_version_build()])
+
+AC_PREREQ(2.61)
+AC_INIT([ovd-chroot-utils], [chrootutils_version], [http://bugs.ulteo.com])
+
+AM_INIT_AUTOMAKE([AC_PACKAGE_TARNAME()], [AC_PACKAGE_VERSION()])
+
+# Checks for programs.
+AC_PROG_INSTALL
+
+# Check for python (needed by cups2all and d-f2xml)
+AM_PATH_PYTHON
+
+# cups2all conditional
+AC_ARG_ENABLE(
+    cups2all,
+    AC_HELP_STRING([--enable-cups2all], [Install cups2all (default=yes)]),
+    ,
+    [enable_cups2all=yes])
+
+if test x"$enable_cups2all" != xno; then
+    AC_PATH_PROG(CUPS_CONFIG, cups-config)
+    if test "x$CUPS_CONFIG" = x; then
+        AC_MSG_ERROR(You need to install cups-config or disable cups2all with --disable-cups2all.)
+    fi
+    CUPSSERVERBIN=`$CUPS_CONFIG --serverbin`
+    CUPSSERVERROOT=`$CUPS_CONFIG --serverroot`
+    CUPSDATADIR=`$CUPS_CONFIG --datadir`
+    AC_SUBST(CUPSSERVERBIN)
+    AC_SUBST(CUPSSERVERROOT)
+    AC_SUBST(CUPSDATADIR)
+fi
+AM_CONDITIONAL(CUPS2ALL, true)
+
+# startovd
+AC_ARG_WITH(
+    startovd,
+    AC_HELP_STRING([--with-startovd=xfce|kde], [select which startup script will be used (default=xfce)]),
+    [ case "$withval" in
+        xfce|kde)
+            startovd="startovd-$withval";;
+        *)
+            AC_MSG_ERROR(Wrong value $withval, use ./configure --help to find valid options);;
+      esac
+      STARTOVD=$startovd
+    ],
+    [STARTOVD=startovd-xfce]
+)
+AC_SUBST(STARTOVD)
+
+AC_CONFIG_FILES([
+Makefile
+cups2all/Makefile
+desktopfiles2xml/Makefile
+start-ovd/Makefile
+])
+AC_OUTPUT
+
+echo
+echo "Configuration:"
+echo "* cups2all: $enable_cups2all"
+echo "* startovd: $STARTOVD"
+

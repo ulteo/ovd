@@ -65,5 +65,5 @@ then
   SERVERRC="-- $SERVERRC"
 fi
 
-exec $prog /etc/xdg/ulteo/xinitrc $CLIENTRC $SERVERRC
+exec $prog @SYSCONFDIR@/xdg/ulteo/xinitrc $CLIENTRC $SERVERRC
 
