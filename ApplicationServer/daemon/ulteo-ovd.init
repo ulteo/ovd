@@ -49,6 +49,8 @@ do_start () {
     if [ ! -f /proc/mounts ]; then
         mount -t proc none /proc
     fi
+    mkdir -p /dev/pts
+    mount -t devpts none /dev/pts
 
     if [ -f $PIDFILE ]; then
         if ps $(cat $PIDFILE); then
@@ -98,6 +100,7 @@ do_stop () {
     done
 
     umount /proc
+    umount /dev/pts
 
     log_end_msg 0
 }
