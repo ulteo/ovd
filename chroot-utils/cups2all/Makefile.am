@@ -4,7 +4,7 @@ cups2alldir = $(CUPSSERVERBIN)/backend
 conf_DATA = cups2all.conf
 confdir = $(CUPSSERVERROOT)
 
-ppd_DATA = PostscriptColor.ppd.gz
+ppd_DATA = PostscriptColor.ppd
 ppddir = $(CUPSDATADIR)
 
 EXTRA_DIST = $(cups2all_DATA) $(conf_DATA) $(ppd_DATA) README
