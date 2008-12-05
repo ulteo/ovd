@@ -13,4 +13,3 @@ install-data-local:
 uninstall-local:
 	rm -rf $(WEB_INSTALL_DIR)
 
-ACLOCAL_AMFLAGS = -I m4
