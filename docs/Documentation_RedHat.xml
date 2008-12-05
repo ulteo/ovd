@@ -469,6 +469,7 @@ Bye]]>
 	<para>Change the owner on spool directory</para>
         <screen>
 	  <![CDATA[
+# mkdir /opt/applicationsystem/var/spool/ulteo-ovd
 # chgrp -R apache  /opt/applicationsystem/var/spool/ulteo-ovd]]>
 	</screen>
       </listitem>

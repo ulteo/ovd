@@ -61,7 +61,7 @@ apt_daemon() {
 	local files=`find $directory -maxdepth 1 -mindepth 1 -type f`
 
 	if [ "$files" = "" ]; then
-	    inotifywait -t 10 -q -e create $directory
+	    inotifywait -t 10 -q -e close_write $directory
 	else
 	    for file in $files; do
 		[ -f $SPOOL/files/sources.list ] && mv $SPOOL/files/sources.list /etc/apt/sources.list
