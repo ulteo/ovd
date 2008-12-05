@@ -55,7 +55,7 @@ if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['passwor
 		if ($lock->have_lock()) {
 			$session = new Session($lock->session);
 
-			if (!$session->session_alive()) {
+			if (!$session->session_exists()) {
 				$lock->remove_lock();
 				$already_online = 0;
 			} else

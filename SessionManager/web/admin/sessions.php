@@ -36,6 +36,9 @@ if (isset($_POST['join'])) {
 			$session = new Session($session);
 
 			$buf = query_url('http://'.$session->server.'/webservices/kill_session.php?session='.$session->session);
+
+			if ($buf == false)
+				$session->remove_session(0);
 		}
 	}
 
@@ -44,6 +47,9 @@ if (isset($_POST['join'])) {
 	$session = new Session($_POST['session']);
 
 	$buf = query_url('http://'.$session->server.'/webservices/kill_session.php?session='.$session->session);
+
+	if ($buf == false)
+		$session->remove_session(0);
 
 	redirect($_SERVER['HTTP_REFERER']);
 } elseif (isset($_GET['info'])) {

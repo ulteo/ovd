@@ -20,10 +20,10 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-/*if ($_SESSION['ajax']==true) {
-	require_once('ajax/index.php');
-	die();
-}*/
+// if ($_SESSION['ajax']==true) {
+// 	require_once('ajax/index.php');
+// 	die();
+// }
 
 $server = $_SERVER['SERVER_NAME'];
 $session = $_SESSION['session'];
@@ -31,10 +31,10 @@ $session = $_SESSION['session'];
 if (!isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
 
-$_SESSION['width'] = $_GET['width'];
-$_SESSION['height'] = $_GET['height'];
+$_SESSION['width'] = @$_REQUEST['width'];
+$_SESSION['height'] = @$_REQUEST['height'];
 
-if (isset($_GET['lead']) && $_GET['lead'] == 1 && get_from_file(SESSION_PATH.'/'.$session.'/runasap') == 0) {
+if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/runasap') == 0) {
 	put_to_file(SESSION_PATH.'/'.$session.'/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
 
 	put_to_file(SESSION_PATH.'/'.$session.'/u_uid', $_SESSION['user_id']);
@@ -74,7 +74,7 @@ if (isset($_GET['lead']) && $_GET['lead'] == 1 && get_from_file(SESSION_PATH.'/'
 		put_to_file(SESSION_PATH.'/'.$session.'/homebase', $_SESSION['module_fs']['homebase']);
 	}
 
-	if ($timeout < 2400)
+	if ($_SESSION['timeout'] < 2400)
 		@touch(SESSION_PATH.'/'.$session.'/FREE');
 
 	@touch(SESSION_PATH.'/'.$session.'/keepmealive');

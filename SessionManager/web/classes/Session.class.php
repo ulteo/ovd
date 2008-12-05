@@ -218,9 +218,9 @@ class Session {
 		$ret = $this->session_status();
 
 		if ($ret != 3 && $ret != false) {
-			if ($ret != 0)
+			if ($ret == 2)
 				return 2; // session used
-			elseif ($ret == 0)
+			else
 				return 1; // session available
 		}
 
@@ -232,10 +232,10 @@ class Session {
 	public function session_alive() {
 		$ret = $this->session_status();
 
-		if ($ret != 3 && $ret != false) {
-			if ($ret == 2)
+// 		if ($ret != 3 && $ret != false) {
+			if ($ret > -1)
 				return true; // session alive
-		}
+// 		}
 
 		return false;
 	}

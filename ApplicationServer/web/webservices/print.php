@@ -5,7 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -75,7 +75,7 @@ if (!(isset($_SESSION['session']))) {
 }
 
 // add-on for "session owner keep-alive" feature
-if (isset($_GET["lead"]) && $_GET["lead"] == 1) {
+if (isset($_SESSION["mode"]) && $_SESSION["mode"] == "start") {
  $mg = $_SESSION['session'];
  if (file_exists(SESSION_PATH.'/'.$mg.'/keepmealive')) {
 	@touch(SESSION_PATH.'/'.$mg.'/keepmealive');
