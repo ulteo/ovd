@@ -1,0 +1,23 @@
+
+Launch a session using Ulteo Open Virtual DEsktopn protocol
+
+== Depends ==
+
+ * vncviewer
+ * Python ;)
+
+
+== Compatibility ==
+
+  * SVN revision 46 
+
+=== Feature ===
+
+ * Authenticate on SM
+ * redirect to a CM
+ * interact with the CM to launch the session
+
+
+=== ToDo ===
+
+ * add priting support
