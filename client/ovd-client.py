@@ -108,7 +108,12 @@ def launch_ssh(host, user, password, extra):
         s = os.read(fd,1 )
         while s:
             res += s
-            s = os.read(fd, 1)
+            try:
+                s = os.read(fd, 1)
+            except:
+                # if we can't read the fd the subprocess ended,
+                # and the session is likely to be ended
+                break
         sys.exit(0)
 
     return pid,pid2
