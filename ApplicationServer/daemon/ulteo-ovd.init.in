@@ -27,8 +27,8 @@ waitpid() {
     done
 }
 
-CONF_FILE=/etc/ulteo-ovd.conf
-BIN_DIR=/usr/share/ulteo-ovd
+CONF_FILE=@SYSCONFDIR@/ulteo-ovd.conf
+BIN_DIR=@DATADIR@/ulteo-ovd
 
 . /lib/lsb/init-functions
 

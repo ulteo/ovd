@@ -1,4 +1,6 @@
-EXTRA_DIST = web daemon
+SUBDIRS = daemon
+
+EXTRA_DIST = web
 
 WEB_INSTALL_DIR = $(DESTDIR)/$(datadir)/ulteo/applicationserver
 install-data-local:
