@@ -1,0 +1,14 @@
+/home/gauvain/dev/ulteo/svn/ovd/trunk/ApplicationServer/ovd-application-server-1.0~beta2~svn0#!/bin/sh -e
+
+INSTALLDIR=/usr/share/ulteo-ovd
+
+if [ "$1" = "purge" ]; then
+    if dpkg-statoverride --list $INSTALLDIR >/dev/null 2>&1; then
+        dpkg-statoverride --remove $INSTALLDIR
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0
+
