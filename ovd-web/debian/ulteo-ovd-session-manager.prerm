@@ -1,9 +1,0 @@
-#!/bin/sh
-
-if [ "$1" = "purge" ]; then
-    rm -f /usr/share/ulteo/sessionmanager/base.tar.gz
-fi
-
-#DEBHELPER#
-
-exit 0
