@@ -5,7 +5,7 @@ EXTRA_DIST = web
 
 WEB_INSTALL_DIR = $(DESTDIR)/$(datadir)/ulteo/sessionmanager
 install-data-local:
-	$(MKDIR_P) $(WEB_INSTALL_DIR)
+	mkdir -p $(WEB_INSTALL_DIR)
 	cp -R $(srcdir)/web/* $(WEB_INSTALL_DIR)
 	find $(WEB_INSTALL_DIR) -type d -exec chmod 775 {} \;
 	find $(WEB_INSTALL_DIR) -type f -exec chmod 644 {} \;
