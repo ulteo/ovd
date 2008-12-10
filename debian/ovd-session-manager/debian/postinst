@@ -9,15 +9,19 @@ fi
 WGETARGS="--tries=3 --timeout=60"
 CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
 
-CONFFILE="/usr/share/doc/ulteo-ovd-session-manager/examples/config.inc.php.default"
-CONFFILEDEST="/etc/ulteo/sessionmanager/config.inc.php"
+CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
 
-apache_reload()
+apache_config()
 {
-    if apache2ctl configtest 2>/dev/null; then
-        invoke-rc.d apache2 reload || true
-    else
-        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    if [ ! -e /etc/apache2/conf.d/session-manager ]; then
+        ln -s /etc/ulteo/sessionmanager/apache2.conf \
+            /etc/apache2/conf.d/sessionmanager
+
+        if apache2ctl configtest 2>/dev/null; then
+            invoke-rc.d apache2 reload || true
+        else
+            echo "Your apache2 configuration is broken, so we're not restarting it for you."
+        fi
     fi
 }
 
@@ -31,22 +35,20 @@ gen_conf()
     unset RET
     db_set od/sessionmanager/admin_password ""
 
-    cp $CONFFILE $CONFFILEDEST
-
-    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILEDEST
-    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILEDEST
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
 }
 
 # set the fqdns if the conffile doesn't exist already
-if [ ! -e $CONFFILEDEST ]; then
+if [ ! -e $CONFFILE ]; then
     gen_conf
 
     # set permissions
     mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
     chown root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
     chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-    chown root:www-data $CONFFILEDEST
-    chmod 0640 $CONFFILEDEST
+    chown root:www-data $CONFFILE
+    chmod 0640 $CONFFILE
 fi
 
 if [ ! -e $CHROOT_TARGET ]; then
@@ -57,7 +59,7 @@ if [ ! -e $CHROOT_TARGET ]; then
     fi
 fi
 
-apache_reload
+apache_config
 
 #DEBHELPER#
 

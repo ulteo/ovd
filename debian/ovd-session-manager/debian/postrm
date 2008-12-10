@@ -2,8 +2,8 @@
 
 CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
 if [ "$1" = "purge" ]; then
-    rm -f /etc/ulteo/sessionmanager/config.inc.php
     rm -rf /var/spool/ulteo/sessionmanager
+    rm -rf /var/log/ulteo/sessionmanager
 fi
 
 #DEBHELPER#
