@@ -1,4 +1,4 @@
-SUBDIRS = po config
+SUBDIRS = po config scripts
 
 EXTRA_DIST = web
 

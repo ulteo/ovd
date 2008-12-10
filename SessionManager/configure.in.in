@@ -20,6 +20,7 @@ AM_GLIB_GNU_GETTEXT()
 AC_CONFIG_FILES([
 Makefile
 config/Makefile
+scripts/Makefile
 po/Makefile.in
 ])
 AC_OUTPUT
