@@ -82,6 +82,11 @@ session_check_status() {
     fi
 
     RUNASAP=`cat ${SESSID_DIR}/runasap`
+    if [ $RUNASAP -eq 11 ]; then 
+	session_restore $SESSID
+	[ $? -ne 0 ] && return 1
+    fi
+
     if [ $RUNASAP -lt 1 ] || [ $RUNASAP -gt 3 ]; then 
 	return 0
     fi
@@ -130,6 +135,11 @@ session_check_status() {
 
 	if [ $diffg2 -gt 20 ]; then
 	    log_WARN "KMA expired diff:$diffg2"
+	    # Suspend the session if the sesion was running and it's setup to suspend
+	    if [ -f ${SESSID_DIR}/running ] && [ -f ${SESSID_DIR}/persistent ]; then
+		session_suspend $SESSID
+		[ $? -eq 0 ] && return 0
+	    fi
 	    session_switch_status $SESSID 3
 	    RUNASAP=3
 	fi
@@ -153,6 +163,11 @@ session_check_status() {
 	fi
 
 	if [ $LUCK -lt 1 ]; then
+	    # Suspend the session if the sesion was running and it's setup to suspend
+	    if [ -f ${SESSID_DIR}/running ] && [ -f ${SESSID_DIR}/persistent ]; then
+		session_suspend $SESSID
+		[ $? -eq 0 ] && return 0
+	    fi
 	    log_INFO "STAT - NOLUCK - CLOSING"
 	    session_switch_status $SESSID 3
 	    RUNASAP=3
@@ -208,6 +223,7 @@ session_check_status() {
 	    if [ "$LUCK" != "$MINLUCK" ]; then
                 log_INFO "Session started: set LUCK to MINLUCK to terminate session quickly"
                 echo $MINLUCK > ${SESSID_DIR}/luck
+		touch ${SESSID_DIR}/running
             fi
 	fi
 

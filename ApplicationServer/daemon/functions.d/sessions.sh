@@ -269,3 +269,72 @@ session_unload() {
     unset VNC_UID
     unset SSH_UID
 }
+
+session_suspend() {
+    local SESSID=$1
+    local SESSID_DIR=$SPOOL/sessions/$SESSID
+    local i=`cat $SESSID_DIR/id`
+
+    session_switch_status $SESSID 9
+
+    local SSH_USER="SSH$i"
+    
+    log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
+    if [ ! `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
+	log_ERROR "No ssh user in /etc/passwd"
+	return 1
+    fi
+
+    # Kill all ssh process about this session
+    killall -u SSH$i
+    sleep 0.5
+    killall -9 -u SSH$i
+
+    userdel $SSH_USER
+    rm $SESSID_DIR/hexasshpasswd
+    rm ${SESSID_DIR}/luck
+    rm ${SESSID_DIR}/keepmealive
+
+    log_INFO "session_suspend: $i"
+    session_switch_status $SESSID 10
+}
+
+session_restore() {
+    local SESSID=$1
+    local SESSID_DIR=$SPOOL/sessions/$SESSID
+    local i=`cat $SESSID_DIR/id`
+
+    local SSH_USER="SSH$i"
+    session_switch_status $SESSID 11
+
+    log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
+    if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
+	log_ERROR "session_restore: user '$SSH_USER' already in /etc/passwd"
+	return 1
+    fi
+    local uid=$(( 2000 + $i ))
+
+    useradd --shell /bin/false -u $uid $SSH_USER 
+    if [ $? -ne 0 ]; then
+	log_ERROR "session_restore: unable to useradd ssh user"
+	return 1
+    fi
+
+    ## SSH password
+    #
+    # Seems the applet doesn't like too long password ...
+    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | awk '{ print substr($1, 0, 9) }'`
+    # we set new shadow pass for this session
+    # just be paranoid by default
+    echo "$SSH_USER:$SSH_PASS" | chpasswd
+
+    #
+    # we encode the encrypted pass in hexa because the sshvnc 
+    # applet wants it
+    HEXA_SSH_PASS=`echo $SSH_PASS | str2hex`
+    echo $HEXA_SSH_PASS > $SESSID_DIR/hexasshpasswd
+
+
+    log_INFO "session_restore: $i"
+    session_switch_status $SESSID 2
+}
