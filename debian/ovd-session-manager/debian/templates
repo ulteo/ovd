@@ -1,28 +1,28 @@
 Template: od/sessionmanager/admin_login
 Type: string
 Default: admin
-Description: Administrator login:
+_Description: Administrator login:
  Ulteo Session Manager needs to register an administrator. You can define the
  login of this user here.
 
 Template: od/sessionmanager/admin_password
 Type: password
-Description: Administrator password:
+_Description: Administrator password:
  Password of the session manager administrator.
 
 Template: od/sessionmanager/admin_password_again
 Type: password
-Description: Repeat password for the administrator:
+_Description: Repeat password for the administrator:
 
 Template: od/sessionmanager/password_mismatch
 Type: error
-Description: Password input error
+_Description: Password input error
  The two passwords you entered were not the same. Please try again.
 
 Template: od/sessionmanager/download_tarball
 Type: string
 Default: http://www.ulteo.com/main/downloads/ulteo-ovd.php
-Description: Applications chroot URL:
+_Description: Applications chroot URL:
  Application servers will need to retrieve an applications tarball, hosted on
  this session manager. A default tarball can be downloaded and stocked for you.
  .

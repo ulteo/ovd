@@ -1,0 +1,86 @@
+# Ulteo OVD SM french translation
+# Copyright (C) 2008
+# This file is distributed under the same license as the ovd-session-manager package.
+# Gauvain Pocentek <gauvain@ulteo.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
+"POT-Creation-Date: 2008-12-10 17:16+0100\n"
+"PO-Revision-Date: 2008-12-10 17:17+0100\n"
+"Last-Translator: Gauvain Pocentek <gauvain@ulteo.com>\n"
+"Language-Team: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "Administrator login:"
+msgstr "Login de l'administrateur :"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid ""
+"Ulteo Session Manager needs to register an administrator. You can define the "
+"login of this user here."
+msgstr ""
+"Ulteo Session Manager nécessite d'enregistrer un administrateur. Vous pouvez"
+"définir son login ici."
+
+#. Type: password
+#. Description
+#: ../templates:2001
+msgid "Administrator password:"
+msgstr "Mot de passe de l'administrateur :"
+
+#. Type: password
+#. Description
+#: ../templates:2001
+msgid "Password of the session manager administrator."
+msgstr "Mot de passe de l'administrateur du session manager."
+
+#. Type: password
+#. Description
+#: ../templates:3001
+msgid "Repeat password for the administrator:"
+msgstr "Répétez le mot de passe de l'administrateur :"
+
+#. Type: error
+#. Description
+#: ../templates:4001
+msgid "Password input error"
+msgstr "Erreur de mot de passe"
+
+#. Type: error
+#. Description
+#: ../templates:4001
+msgid "The two passwords you entered were not the same. Please try again."
+msgstr "Les deux mots de passe saisis ne sont pas les mêmes. Essayez de nouveau."
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Applications chroot URL:"
+msgstr "URL du chroot d'applications :"
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid ""
+"Application servers will need to retrieve an applications tarball, hosted on "
+"this session manager. A default tarball can be downloaded and stocked for "
+"you."
+msgstr ""
+"Les serveurs d'applications nécessite d'obtenir une archive d'applications, hébergé sur "
+"ce session manager. Une archive par défaut peut être téléchargée et stockée pour "
+"vous."
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Leave this field empty if you don't want to download the archive now."
+msgstr "Laissez ce champ vide si vous ne voulez pas télécharger cette archive maintenant."

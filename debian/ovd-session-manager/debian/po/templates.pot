@@ -1,0 +1,82 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
+"POT-Creation-Date: 2008-12-10 17:16+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid "Administrator login:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:1001
+msgid ""
+"Ulteo Session Manager needs to register an administrator. You can define the "
+"login of this user here."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../templates:2001
+msgid "Administrator password:"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../templates:2001
+msgid "Password of the session manager administrator."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../templates:3001
+msgid "Repeat password for the administrator:"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../templates:4001
+msgid "Password input error"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../templates:4001
+msgid "The two passwords you entered were not the same. Please try again."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Applications chroot URL:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid ""
+"Application servers will need to retrieve an applications tarball, hosted on "
+"this session manager. A default tarball can be downloaded and stocked for "
+"you."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../templates:5001
+msgid "Leave this field empty if you don't want to download the archive now."
+msgstr ""
