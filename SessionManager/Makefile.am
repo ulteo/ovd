@@ -1,5 +1,4 @@
-SUBDIRS = po
-DIST_SUBDIRS = po
+SUBDIRS = po config
 
 EXTRA_DIST = web
 

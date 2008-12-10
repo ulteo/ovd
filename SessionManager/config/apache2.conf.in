@@ -1,0 +1,9 @@
+# Ulteo session manager alias
+
+Alias /sessionmanager @DATADIR@/ulteo/sessionmanager
+<Directory @DATADIR@/ulteo/sessionmanager>
+    Options FollowSymLinks
+    AllowOverride Limit Options FileInfo
+    DirectoryIndex index.php
+</Directory>
+

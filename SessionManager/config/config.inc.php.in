@@ -1,6 +1,6 @@
 <?php
-define('SESSIONMANAGER_SPOOL', '/var/spool/ulteo/sessionmanager');
-define('SESSIONMANAGER_LOGS', '/var/log/ulteo/sessionmanager');
+define('SESSIONMANAGER_SPOOL', '@LOCALSTATEDIR@/spool/ulteo/sessionmanager');
+define('SESSIONMANAGER_LOGS', '@LOCALSTATEDIR@/log/ulteo/sessionmanager');
 
 define('SESSIONMANAGER_CONFFILE_SERIALIZED', SESSIONMANAGER_SPOOL.'/config');
 
