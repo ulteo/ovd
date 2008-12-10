@@ -1,7 +1,11 @@
-SUBDIRS = daemon
+if DAEMON
+daemon_dir = daemon
+endif
+SUBDIRS = $(daemon_dir)
 
 EXTRA_DIST = web
 
+if WEB
 WEB_INSTALL_DIR = $(DESTDIR)/$(datadir)/ulteo/applicationserver
 install-data-local:
 	mkdir -p $(WEB_INSTALL_DIR)
@@ -11,4 +15,4 @@ install-data-local:
 
 uninstall-local:
 	rm -rf $(WEB_INSTALL_DIR)
-
+endif
