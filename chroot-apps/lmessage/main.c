@@ -21,13 +21,6 @@
 
 #include <gtk/gtk.h>
 
-enum {
-    TYPE_INFO = 0,
-    TYPE_WARN,
-    TYPE_ERR,
-    TYPE_NOT_GOOD
-};
-
 int type = GTK_MESSAGE_INFO;
 gchar *title = NULL;
 
@@ -57,7 +50,7 @@ gboolean retval = TRUE;
     else if (!strncmp("error", value, sizeof(value)))
         type = GTK_MESSAGE_ERROR;
     else {
-        type = TYPE_NOT_GOOD;
+        type = -1;
         retval = FALSE;
     }
     return retval;
@@ -116,7 +109,7 @@ int main(int argc, gchar ** argv)
 
     gtk_init_with_args(&argc, &argv, "", entries, "lmessage", NULL);
 
-    if (type == TYPE_NOT_GOOD)
+    if (type == -1)
         return 1;
 
     if (argc == 1) {
@@ -145,6 +138,7 @@ int main(int argc, gchar ** argv)
     gtk_widget_destroy (d);
 
     g_free (message);
+    g_free (title);
 
     return 0;
 }
