@@ -1,10 +1,10 @@
-m4_define([restrictedmenu_version_major], [1])
-m4_define([restrictedmenu_version_minor], [0])
-m4_define([restrictedmenu_version_build], [~beta2~svn@REVISION@])
-m4_define([restrictedmenu_version], [restrictedmenu_version_major().restrictedmenu_version_minor()restrictedmenu_version_build()])
+m4_define([chrootapps_version_major], [1])
+m4_define([chrootapps_version_minor], [0])
+m4_define([chrootapps_version_build], [~beta2~svn@REVISION@])
+m4_define([chrootapps_version], [chrootapps_version_major().chrootapps_version_minor()chrootapps_version_build()])
 
 AC_COPYRIGHT([Copyright (c) Gauvain Pocentek])
-AC_INIT([xfce4-restricted-menu-plugin], [restrictedmenu_version], [http://bugs.ulteo.com])
+AC_INIT([ovd-chroot-apps], [chrootapps_version], [http://bugs.ulteo.com])
 AC_PREREQ([2.50])
 
 AM_INIT_AUTOMAKE([1.8])
@@ -46,7 +46,8 @@ AC_SUBST([PLATFORM_LDFLAGS])
 
 AC_OUTPUT([
 Makefile
-panel-plugin/Makefile
+restricted-menu/Makefile
+lmessage/Makefile
 po/Makefile.in
 ])
 
