@@ -25,6 +25,26 @@ sessions_get_to_create() {
 }
 
 
+#
+#  0: session created
+#  1: session to initialize
+# 22: session intializing
+#  2: session ready
+#  3: session to destroy
+#
+#  9: session to suspend
+# 10: session suspend
+# 11: session to restore
+#
+session_valid_runasap() {
+    local i=0
+    for i in 0 1 22 2 3 9 10 11; do
+	[ $i -eq $1 ] && return 0
+    done
+
+    return 1
+}
+
 ## Session Initialise
 # - create session directory and content
 # - add SSH and VNC users and group

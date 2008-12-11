@@ -82,12 +82,14 @@ session_check_status() {
     fi
 
     RUNASAP=`cat ${SESSID_DIR}/runasap`
-    if [ $RUNASAP -eq 11 ]; then 
-	session_restore $SESSID
-	[ $? -ne 0 ] && return 1
+    if ! session_valid_runasap $RUNASAP; then
+	log_WARN "Unsupported runasap value for session $SESSID"
+	session_switch_status $SESSID 3
+	RUNASAP=3
     fi
 
-    if [ $RUNASAP -lt 1 ] || [ $RUNASAP -gt 3 ]; then 
+    # If sesion is not initialize yet
+    if [ $RUNASAP -eq 0 ]; then 
 	return 0
     fi
 
@@ -108,8 +110,14 @@ session_check_status() {
 	log_DEBUG "Session $i  DS: $DESKTOP_SESSION SSHS: $SSH_SESSION"
     fi
 
-    # if desktop session alive and running, check timeout
-    if [ $DESKTOP_SESSION -gt 0 ]; then
+    # If sesion need to be restore ...
+    if [ $RUNASAP -eq 11 ]; then 
+	session_restore $SESSID
+	[ $? -ne 0 ] && return 1
+    fi
+
+    # if desktop session running, check timeout
+    if [ -f ${SESSID_DIR}/running ]; then
 	if [ "$EXPIRE" = "" ]; then
 	    EXPIRE="0"
 	    log_INFO "Missing EXPIRE : force to 0"
@@ -118,12 +126,24 @@ session_check_status() {
 	let ct=$(( `date +%s` ))
 	let diff=$(( $ct - $EXPIRE ))
 
-	if [ $diff -gt 0 ]; then
-	    log_INFO "Session expired => Timeout:$ct, EXPIRE:$EXPIRE, diff:$diff"
+	if [ ! -f ${SESSID_DIR}/timeouted  ] && [ $diff -gt -180 ] && [ $DESKTOP_SESSION -gt 0 ]; then
+	   log_INFO "Session is going to expire in 3 minutes"
 	    export i SESSID_DIR
 	    export USER_LOGIN USER_ID
 	    timeout.sh &
+	    touch ${SESSID_DIR}/timeouted 
 	fi
+
+	if [ $diff -gt 0 ]; then
+	    log_INFO "Session expired => Timeout:$ct, EXPIRE:$EXPIRE, diff:$diff"
+	    session_switch_status $SESSID 3
+	    RUNASAP=3
+	fi
+    fi
+
+    # If sesion is in suspend mode ... Nothing to do
+    if [ $RUNASAP -eq 9 ] || [ $RUNASAP -eq 10 ]; then 
+	return 0
     fi
 
     # if session owner has vanished, kill session (useful for shared sessions)
