@@ -38,10 +38,12 @@ if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'maintenance') {
 	if (isset($_GET['manage_servers']) && is_array($_GET['manage_servers'])) {
 		foreach ($_GET['manage_servers'] as $server) {
 			$server = new Server_admin($server);
-			if (isset($_GET['to_maintenance']))
-				$server->setAttribute('locked', '1');
-			else
-				$server->setAttribute('locked', NULL);
+			if ($server->isOnline()) {
+				if (isset($_GET['to_maintenance']))
+					$server->setAttribute('locked', '1');
+				else
+					$server->setAttribute('locked', NULL);
+			}
 		}
 	}
 
@@ -112,10 +114,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn
 
 if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['fqdn'])) {
 	$server = new Server_admin($_GET['fqdn']);
-	if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
-		$server->setAttribute('locked', '1');
-	else
-		$server->setAttribute('locked', NULL);
+	if ($server->isOnline()) {
+		if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
+			$server->setAttribute('locked', '1');
+		else
+			$server->setAttribute('locked', NULL);
+	}
 
 	redirect('servers.php?action=list');
 }
@@ -286,6 +290,9 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 					</form>
 				</td>
 				<td>
+					<?php
+						if ($s->isOnline()) {
+					?>
 					<form action="servers.php" method="get">
 						<input type="submit" value="<?php
 							if ($s->hasAttribute('locked'))
@@ -302,6 +309,9 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 						?>" />
 						<input type="hidden" name="fqdn" value="<?php echo $s->fqdn;?>" />
 					</form>
+					<?php
+						}
+					?>
 				</td>
 			</tr>
 				<?php
@@ -402,12 +412,16 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'manage' && isset($_GET['fq
 		<input value="+" onclick="field_increase('number', 1);" type="button">
 		<br />
 		<?php
+			if ($server->isOnline()) {
 			$buf_lock = $server->hasAttribute('locked');
 		?>
 		<input type="checkbox" name="maintenance" value="1"<?php
 			if ($buf_lock)
 				echo ' checked="checked"';
-		?>/> <?php echo _('maintenance');?>
+		?>/> <?php
+			echo _('maintenance');
+			}
+		?>
 		<br />
 		<input type="submit" value="<?php echo _('change'); ?>" />
 	</form>

@@ -296,6 +296,9 @@ class Server {
 		if ($write_ == true)
 			$this->setStatus($ret);
 
+		if ($ret !== 'ready')
+			$this->setAttribute('locked', 1);
+
 		return true;
 	}
 

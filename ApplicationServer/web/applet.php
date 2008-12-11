@@ -63,6 +63,8 @@ switch ($_SESSION['quality']) {
 		$jpeg_quality = 9;
 		break;
 }
+
+if (isset($_REQUEST['html'])) {
 ?>
 <applet width="<?php echo $_SESSION['width']; ?>" height="<?php echo $_SESSION['height']; ?>">
 	<param name="name" value="ulteoapplet" />
@@ -102,3 +104,36 @@ switch ($_SESSION['quality']) {
 	<param name="Share desktop" value="<?php echo $_SESSION['share_desktop']; ?>" />
 	<param name="View only" value="<?php echo $_SESSION['view_only']; ?>" />
 </applet>
+<?php
+} else {
+	header('Content-Type: text/xml; charset=utf-8');
+
+	$dom = new DomDocument();
+	$session_node = $dom->createElement('session');
+	$dom->appendChild($session_node);
+
+	$ssh_node = $dom->createElement('ssh');
+	$ssh_node->setAttribute('host', $server);
+	$ssh_node->setAttribute('user', $sshuser);
+	$ssh_node->setAttribute('passwd', $sshpass);
+	$ports = array(443, 993, 995, 110, 40001);
+	foreach ($ports as $port) {
+		$port_node = $dom->createElement('port');
+		$port_text_node = $dom->createTextNode($port);
+		$port_node->appendChild($port_text_node);
+		$ssh_node->appendChild($port_node);
+	}
+	$session_node->appendChild($ssh_node);
+
+	$vnc_node = $dom->createElement('vnc');
+	$vnc_node->setAttribute('host', $server);
+	$vnc_node->setAttribute('port', $rfbport);
+	$vnc_node->setAttribute('passwd', $vncpass);
+	$session_node->appendChild($vnc_node);
+
+	$xml = $dom->saveXML();
+
+	echo $xml;
+
+	die();
+}

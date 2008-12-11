@@ -78,18 +78,6 @@ $logo_url = $prefs->get('general', 'logo_url');
 				</table>
 			</div>
 
-			<!--<div class="spacer"></div>
-
-			<div id="menuWrap">
-				<?php
-					/*if (isset($_SESSION['login'])) {
-				?>
-				<!--<a href="index.php">Start</a> - --><!--<a href="status.php">Status</a> - --><a href="logout.php"><?php echo _('Logout'); ?> [<?php echo $user_displayname; ?>]</a>
-				<?php
-					}*/
-				?>
-			</div>-->
-
 			<div class="spacer"></div>
 
 			<div id="pageWrap">

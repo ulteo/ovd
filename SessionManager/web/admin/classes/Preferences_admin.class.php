@@ -86,6 +86,9 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
 
+		$c = new config_element('persistent_session', _('Use persistent session'), _('Use persistent session'), _('Use persistent session'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general');
+
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);
 		$this->add($c,'general','mysql');

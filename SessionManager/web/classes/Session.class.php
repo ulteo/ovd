@@ -233,8 +233,19 @@ class Session {
 		$ret = $this->session_status();
 
 // 		if ($ret != 3 && $ret != false) {
-			if ($ret > -1)
+			if ($ret == 1 || $ret == 22 || $ret == 2)
 				return true; // session alive
+// 		}
+
+		return false;
+	}
+
+	public function session_suspended() {
+		$ret = $this->session_status();
+
+// 		if ($ret != 3 && $ret != false) {
+			if ($ret == 10)
+				return true; // session suspended
 // 		}
 
 		return false;

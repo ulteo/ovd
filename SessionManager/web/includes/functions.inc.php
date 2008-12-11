@@ -331,31 +331,6 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 
 			<div class="spacer"></div>
 
-			<div id="menuWrap">';
-				if (isset($_SESSION['login']) && !in_admin()) {
-					if (! $prefs)
-						$user_displayname = $_SESSION['login'];
-					else {
-						$mods_enable = $prefs->get('general', 'module_enable');
-						if (!in_array('UserDB', $mods_enable))
-							die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-
-						$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-						$userDB = new $mod_user_name();
-						$user = $userDB->import($_SESSION['login']);
-
-						if (is_object($user))
-							$user_displayname = $user->getAttribute('displayname');
-						else
-							$user_displayname = $_SESSION['login'];
-					}
-
-					echo '<!--<a href="index.php">'._('Start').'</a> - --><!--<a href="status.php">'._('Status').'</a> - --><a href="logout.php">'._('Logout').' ['.$user_displayname.']</a>';
-				}
-			echo '</div>
-
-			<div class="spacer"></div>
-
 			<div id="pageWrap">';
 					if (isset($_GET['error']) && $_GET['error'] != '')
 						echo '<p class="msg_error">'.$_GET['error'].'</p><br /><br  />';

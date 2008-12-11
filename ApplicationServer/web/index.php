@@ -43,8 +43,11 @@ if ($session_node->hasAttribute('id'))
 	$_SESSION['session'] = $session_node->getAttribute('id');
 if ($session_node->hasAttribute('mode'))
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
+$_SESSION['owner'] = false;
+if ($_SESSION['mode'] == 'start' || $_SESSION['mode'] == 'resume')
+	$_SESSION['owner'] = true;
 
-$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'start_app');
+$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'persistent', 'start_app');
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
 foreach ($settings as $setting) {
@@ -65,7 +68,7 @@ foreach ($settings2 as $setting2) {
 }
 
 $_SESSION['share_desktop'] = 'true';
-if ($_SESSION['mode'] == 'start')
+if ($_SESSION['owner'])
 	$_SESSION['view_only'] = 'No';
 
 $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
@@ -103,14 +106,14 @@ if ($_SESSION['mode'] == 'start')
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				daemon_init('<?php echo $_SERVER['SERVER_NAME']; ?>', '<?php echo $_SESSION['session']; ?>', <?php echo time(); ?>, <?php echo ($_SESSION['mode'] == 'start')?'1':'0'; ?>, <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon_init('<?php echo $_SERVER['SERVER_NAME']; ?>', '<?php echo $_SESSION['session']; ?>', <?php echo time(); ?>, <?php echo ($_SESSION['owner'])?'1':'0'; ?>, <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>
 
 	<body>
 <?php
-if ($_SESSION['mode'] == 'start') {
+if ($_SESSION['owner']) {
 ?>
 		<div id="menuContainer" style="display: none;">
 			<a href="javascript:;" onclick="clicMenu('menuShare')"><img src="media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" /></a>
@@ -153,7 +156,7 @@ if ($_SESSION['mode'] == 'start') {
 			<span class="info"><input type="checkbox" id="level_info" onClick="switchDebug('info')" value="20" checked="checked" /> Info</span>
 			<span class="warning"><input type="checkbox" id="level_warning" onClick="switchDebug('warning')" value="30" checked="checked" /> Warning</span>
 			<span class="error"><input type="checkbox" id="level_error" onClick="switchDebug('error')" value="40" checked="checked" /> Error</span><br />
-			<input type="button" onClick="clearDebug()" value="Clear" />
+			<input type="button" onclick="clearDebug(); return false;" value="Clear" />
 		</div>
 
 		<div id="endContainer" style="display: none;">
@@ -167,7 +170,7 @@ if ($_SESSION['mode'] == 'start') {
 		</div>
 
 		<div id="appletContainer" style="<?php
-if ($_SESSION['mode'] == 'start')
+if ($_SESSION['owner'])
 	echo 'top: 18px; ';
 ?>display: none;">
 		</div>

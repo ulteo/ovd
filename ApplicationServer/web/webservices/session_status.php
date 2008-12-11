@@ -58,4 +58,8 @@ $runasap = get_from_file(SESSION_PATH.'/'.$session.'/runasap');
 if ($runasap === false)
 	$runasap = -2;
 
+if (isset($_SESSION['owner']) && $_SESSION['owner'])
+	if (file_exists(SESSION_PATH.'/'.$session.'/keepmealive'))
+		@touch(SESSION_PATH.'/'.$session.'/keepmealive');
+
 die($runasap);

@@ -52,12 +52,19 @@ $user = $userDB->import($user_login);
 if (!is_object($user))
 	die_error(_('User importation failed'),__FILE__,__LINE__);
 
+Logger::debug('main', 'startsession.php: Now checking for old session');
+
+$have_suspended = false;
 $lock = new Lock($user->getAttribute('login'));
 if ($lock->have_lock()) {
 	$session = new Session($lock->session);
 
 	if ($session->session_alive())
 		die_error(_('You already have a session active'),__FILE__,__LINE__);
+	elseif ($session->session_suspended() && $prefs->get('general', 'persistent_session')) {
+		$old_session_id = $session->id;
+		$old_session_server = $session->server;
+	}
 }
 
 $advanced_settings = $prefs->get('general', 'advanced_settings_startsession');
@@ -81,8 +88,24 @@ else {
 	}
 }
 
-$session = new Session(md5(rand()), $random_server);
-$ret = $session->add_session(0);
+if (isset($old_session_id) && isset($old_session_server)) {
+	$session = new Session($old_session_id, $old_session_server);
+
+	$ret = true;
+
+	$session_mode = 'resume';
+
+	Logger::debug('main', 'startsession.php: Resuming session ('.$old_session_id.' => '.$old_session_server.')');
+} else {
+	$random_session = md5(rand());
+
+	$session = new Session($random_session, $random_server);
+	$ret = $session->add_session(0);
+
+	$session_mode = 'start';
+
+	Logger::debug('main', 'startsession.php: Creating new session ('.$random_session.' => '.$random_server.')');
+}
 
 if ($ret === false)
 	die_error(_('No available session'),__FILE__,__LINE__);
@@ -120,6 +143,7 @@ $default_args = array(
 	'quality'			=>	$desktop_quality,
 	'timeout'			=>	$desktop_timeout,
 	'debug'			=>	$debug,
+	'persistent'		=>	($prefs->get('general', 'persistent_session'))?1:0,
 	'start_app'		=>	$start_app,
 	'home_dir_type'	=>	$module_fs
 );
@@ -142,7 +166,7 @@ foreach ($default_args as $k => $v)
 foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;
 
-$token = $session->create_token('start', $data);
+$token = $session->create_token($session_mode, $data);
 
 $redir = 'http://'.$session->server.'/index.php?token='.$token;
 

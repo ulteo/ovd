@@ -74,15 +74,6 @@ if (!(isset($_SESSION['session']))) {
   return ret400("no magic arg");
 }
 
-// add-on for "session owner keep-alive" feature
-if (isset($_SESSION["mode"]) && $_SESSION["mode"] == "start") {
- $mg = $_SESSION['session'];
- if (file_exists(SESSION_PATH.'/'.$mg.'/keepmealive')) {
-	@touch(SESSION_PATH.'/'.$mg.'/keepmealive');
- }
-}
-// add-on end
-
 if (!isset($_GET["timestamp"]))
   return ret400("pas de time");
 

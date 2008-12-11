@@ -57,7 +57,9 @@ function daemon_init(server_, session_, timestamp_, lead_, debug_) {
 function daemon_loop() {
 		push_log('[daemon] loop()', 'debug');
 
-		if (session_state == 0) {
+		session_check();
+
+		if (session_state == 0 || session_state == 10) {
 			new Ajax.Request(
 				'startsession.php',
 				{
@@ -71,13 +73,12 @@ function daemon_loop() {
 			);
 		} if (session_state == 2 && $('splashContainer').visible()) {
 			switch_splash_to_applet();
-		} else if (session_state == 3) {
+		} else if (old_session_state == 2 && session_state != 2) {
 			window_alive = false;
 			switch_applet_to_end();
 			return;
 		}
 
-		session_check();
 		print_check();
 
 		setTimeout(function() {
@@ -91,12 +92,13 @@ function switch_splash_to_applet() {
 		{
 			method: 'post',
 			parameters: {
+				html: 1,
 				width: parseInt(my_width),
 				height: parseInt(my_height)
 			},
 			onSuccess: function(transport) {
 				$('splashContainer').hide();
-				if (lead == 1)
+				if (lead)
 					$('menuContainer').show();
 				$('appletContainer').show();
 
@@ -108,7 +110,7 @@ function switch_splash_to_applet() {
 
 function switch_applet_to_end() {
 	$('splashContainer').hide();
-	if (lead == 1)
+	if (lead)
 		$('menuContainer').hide();
 	$('appletContainer').hide();
 	$('endContainer').show();
@@ -138,7 +140,7 @@ function switchDebug(level_) {
 }
 
 function push_log(data_, level_) {
-	if (! debug)
+	if (!debug)
 		return;
 
 	//if (! $('level_'+level_).checked)
@@ -167,20 +169,16 @@ function onSuccessSession(transport) {
 	if (!window_alive)
 		return;
 
+	old_session_state = session_state;
 	session_state = transport.responseText;
 
-	if (session_state !=  old_session_state)
-		if (debug)
-			push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
+	if (session_state != old_session_state)
+		push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
 
-	old_session_state = session_state;
-
-	if (debug) {
-		if (session_state != 2)
-			push_log('[session] Status: '+session_state, 'warning');
-		else
-			push_log('[session] Status: '+session_state, 'debug');
-	}
+	if (session_state != 2)
+		push_log('[session] Status: '+session_state, 'warning');
+	else
+		push_log('[session] Status: '+session_state, 'debug');
 }
 
 function onPrint(transport) {
@@ -199,12 +197,9 @@ function onPrint(transport) {
 
 		$('printerContainer').show();
 
-		if (debug)
-			push_log('[print] Applet: starting', 'warning');
-	} else {
-		if (debug)
-			push_log('[print] PDF: no', 'debug');
-	}
+		push_log('[print] Applet: starting', 'warning');
+	} else
+		push_log('[print] PDF: no', 'debug');
 }
 
 function session_check() {
@@ -217,6 +212,7 @@ function session_check() {
 			parameters: {
 				session: session
 			},
+			asynchronous: false,
 			onSuccess: onSuccessSession
 		}
 	);

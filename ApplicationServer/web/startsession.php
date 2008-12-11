@@ -74,12 +74,16 @@ if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SE
 		put_to_file(SESSION_PATH.'/'.$session.'/homebase', $_SESSION['module_fs']['homebase']);
 	}
 
-	if ($_SESSION['timeout'] < 2400)
-		@touch(SESSION_PATH.'/'.$session.'/FREE');
-
 	@touch(SESSION_PATH.'/'.$session.'/keepmealive');
 
+	if ($_SESSION['persistent'] == 1)
+		@touch(SESSION_PATH.'/'.$session.'/persistent');
+
 	put_to_file(SESSION_PATH.'/'.$session.'/runasap', 1);
+} elseif (isset($_SESSION['mode']) && $_SESSION['mode'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/runasap') == 10) {
+	@touch(SESSION_PATH.'/'.$session.'/keepmealive');
+
+	put_to_file(SESSION_PATH.'/'.$session.'/runasap', 11);
 }
 
 Logger::info('main', 'Session starting');
