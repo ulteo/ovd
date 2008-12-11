@@ -1,0 +1,2 @@
+SUBDIRS =  image script style
+
