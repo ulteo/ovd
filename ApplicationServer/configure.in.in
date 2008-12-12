@@ -37,6 +37,21 @@ daemon/Makefile
 daemon/log.d/Makefile
 daemon/modules_fs.d/Makefile
 daemon/functions.d/Makefile
+web/webservices/Makefile
+web/media/image/Makefile
+web/media/script/Makefile
+web/media/script/lib/prototype/Makefile
+web/media/script/lib/scriptaculous/Makefile
+web/media/script/lib/Makefile
+web/media/style/Makefile
+web/media/Makefile
+web/applet/Makefile
+web/run/ajax/Makefile
+web/run/img/Makefile
+web/run/Makefile
+web/includes/Makefile
+web/classes/Makefile
+web/Makefile
 ])
 AC_OUTPUT
 

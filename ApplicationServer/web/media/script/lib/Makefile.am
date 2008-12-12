@@ -1,0 +1,1 @@
+SUBDIRS = prototype scriptaculous
