@@ -44,9 +44,9 @@ set_conf () {
 
 get_chroot () {
     mkdir -p $CHROOT_PATH || die Unable to create $CHROOT_PATH. Aborting.
-    wget --spider $WGETARGS "$URL/base.tar.gz" || die Unable to reach the chroot tarball. Aborting.
+    wget --spider $WGETARGS "$SM_URL/base.tar.gz" || die Unable to reach the chroot tarball. Aborting.
     DOWNLOAD_OK="yes"
-    wget $WGETARGS "$URL" -O - | tar zx -C "$CHROOT_PATH" -f - || DOWNLOAD_OK="no"
+    wget $WGETARGS "$SM_URL/base.tar.gz" -O - | tar zx -C "$CHROOT_PATH" -f - || DOWNLOAD_OK="no"
     [ "$DOWNLOAD_OK" != "yes" ] && die An error occured while downloading the chroot. Aborting.
 }
 
@@ -149,7 +149,7 @@ CHROOT_CONFFILE="$CHROOT_PATH/etc/ulteo-ovd.conf"
 set_conf $MAIN_CONFFILE "CHROOT" "$CHROOT_PATH"
 set_conf $MAIN_CONFFILE "LOG_WWW" "@LOCALSTATEDIR@/log/ulteo/applicationserver"
 
-[ -n "$NODOWNLOAD" ] && get_chroot
+[ -z "$NODOWNLOAD" ] && get_chroot
 
 # set the chroot conf
 set_conf "$CHROOT_CONFFILE" "SERVERNAME" "$FQDN"
