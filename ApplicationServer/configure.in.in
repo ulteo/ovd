@@ -10,6 +10,8 @@ AM_INIT_AUTOMAKE([AC_PACKAGE_TARNAME()], [AC_PACKAGE_VERSION()])
 
 # Checks for programs.
 AC_PROG_INSTALL
+AC_PROG_SED
+AC_PROG_GREP
 
 AC_ARG_ENABLE(
     web,
@@ -37,6 +39,8 @@ daemon/Makefile
 daemon/log.d/Makefile
 daemon/modules_fs.d/Makefile
 daemon/functions.d/Makefile
+scripts/Makefile
+config/Makefile
 web/webservices/Makefile
 web/media/image/Makefile
 web/media/script/Makefile

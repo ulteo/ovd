@@ -1,0 +1,183 @@
+#!/bin/sh
+
+WGETARGS="--tries=3 --timeout=60"
+
+# helper functions
+die () {
+    echo $@
+    exit 1
+}
+
+usage ()
+{
+    echo "$0: Configure an Ulteo Application Server (Open Virtual Desktop)"
+    echo
+    echo "$0 [--no-download] [--no-cups] [--fqdn fqdn] [--sm-url url] [--chroot-path path] [--help|-h]"
+    echo
+    echo " --no-download"
+    echo "    Don't download the chroot, assume it is already installed"
+    echo " --no-cups"
+    echo "    Don't configure cups in the chroot"
+    echo " --fqdn fqdn"
+    echo "    Set the full qualified domain name to 'fqdn'"
+    echo " --sm-url url"
+    echo "    Set the session manager url to 'url'"
+    echo " --chroot-path path"
+    echo "    Set the chroot path to 'path'"
+    echo " --apache-group group"
+    echo "    Set the apache group to 'group'"
+    echo " --help|-h"
+    echo "    Show this message"
+}
+
+set_conf () {
+    # $1: configfile
+    # $2: field
+    # $3: value
+    if grep -q "^$2=" $1 2>/dev/null; then
+        sed -i "s#^$2=.*#$2=$3#" $1
+    else
+        echo "$2=$3" >> $1
+    fi
+}
+
+
+get_chroot () {
+    mkdir -p $CHROOT_PATH || die Unable to create $CHROOT_PATH. Aborting.
+    wget --spider $WGETARGS "$URL/base.tar.gz" || die Unable to reach the chroot tarball. Aborting.
+    DOWNLOAD_OK="yes"
+    wget $WGETARGS "$URL" -O - | tar zx -C "$CHROOT_PATH" -f - || DOWNLOAD_OK="no"
+    [ "$DOWNLOAD_OK" != "yes" ] && die An error occured while downloading the chroot. Aborting.
+}
+
+# parse the command line
+unset NODOWNLOAD
+unset NOCUPS
+unset FQDN
+unset SM_URL
+unset CHROOT_PATH
+unset APACHE_GROUP
+while [ "$1" != "" ]; do
+    case $1 in
+        --no-download)
+            NODOWNLOAD=1;;
+        --no-cups)
+            NOCUPS=1;;
+        --fqdn)
+            FQDN="$2"
+            shift;;
+        --sm-url)
+            SM_URL="$2"
+            shift;;
+        --chroot-path)
+            CHROOT_PATH="$2"
+            shift;;
+        --apache-group)
+            APACHE_GROUP="$2"
+            shift;;
+        --help|-h)
+            usage
+            exit 0;;
+        *)
+            usage
+            exit 1;;
+    esac
+    shift
+done
+
+# let's request the informations
+# fqdn first
+HOSTNAME=$(hostname 2>/dev/null)
+if which dnsdomainname >/dev/null 2>&1; then
+    DOMAINNAME=$(dnsdomainname 2>/dev/null)
+fi
+FQDNPROPOSAL="$HOSTNAME"
+if [ "$DOMAINNAME" != "" ]; then
+    FQDNPROPOSAL="$FQDN.$DOMAINNAME"
+fi
+
+while [ -z "$FQDN" ]; do
+    echo -n "Full Qualified Domain Name [$FQDNPROPOSAL]: "
+    read FQDN
+    if [ -z "$FQDN" ]; then FQDN=$FQDNPROPOSAL; fi
+done
+
+# SM URL
+while [ -z "$SM_URL" ]; do
+    echo -n "Session Manager URL: "
+    read SM_URL
+done
+
+# where to uncompress the chroot
+while [ -z "$CHROOT_PATH" ]; do
+    echo -n "Chroot installation path: "
+    read CHROOT_PATH
+done
+
+# try to guess the apache group, if we can't, ask if to the admin
+while [ -z "$APACHE_GROUP" ]; do
+    if grep ^apache: /etc/group >/dev/null 2>&1; then
+        APACHE_GROUP="apache"
+    elif grep ^www-data: /etc/group >/dev/null 2>&1; then
+        APACHE_GROUP="www-data"
+    fi
+    if [ -z "$APACHE_GROUP" ]; then
+        echo -n "Apache group: "
+        read APACHE_GROUP
+    fi
+done
+
+echo
+echo "Options:"
+echo "* FQDN: $FQDN"
+echo "* SM URL: $SM_URL"
+echo "* chroot path: $CHROOT_PATH"
+echo -n "* chroot download: "
+if [ -z "$NODOWNLOAD" ]; then
+    echo "yes"
+else
+    echo "no"
+fi
+echo "* apache group: $APACHE_GROUP"
+
+MAIN_CONFFILE=@SYSCONFDIR@/ulteo-ovd.conf
+# we assume here that a default chroot is used, thus we know where the conffile
+# is installed
+CHROOT_CONFFILE="$CHROOT_PATH/etc/ulteo-ovd.conf"
+
+# set the host conf
+set_conf $MAIN_CONFFILE "CHROOT" "$CHROOT_PATH"
+set_conf $MAIN_CONFFILE "LOG_WWW" "@LOCALSTATEDIR@/log/ulteo/applicationserver"
+
+[ -n "$NODOWNLOAD" ] && get_chroot
+
+# set the chroot conf
+set_conf "$CHROOT_CONFFILE" "SERVERNAME" "$FQDN"
+set_conf "$CHROOT_CONFFILE" "SESSION_MANAGER_URL" "$SM_URL"
+[ -f /etc/resolv.conf ] && cp /etc/resolv.conf \
+    $CHROOT_PATH/etc/resolv.conf
+[ -f /etc/hosts ] && cp /etc/hosts \
+    $CHROOT_PATH/etc/hosts
+chgrp $APACHE_GROUP "$CHROOT_CONFFILE"
+
+# set owner on spool and log files
+chown root:$APACHE_GROUP @LOCALSTATEDIR@/log/ulteo/applicationserver
+chmod 2770 @LOCALSTATEDIR@/log/ulteo/applicationserver
+
+# set cups
+if [ -f $CHROOT_PATH/etc/init.d/cupsys -a -z "$NOCUPS" ]; then
+    mount -t proc none $CHROOT_PATH/proc >/dev/null 2>&1 || true
+    chroot $CHROOT_PATH /etc/init.d/cupsys start >/dev/null 2>&1
+    sleep 5 # cups needs time to start
+    chroot $CHROOT_PATH lpadmin -p UlteoPrinter -E -v cups2all:/ -m lsb/usr/PostscriptColor.ppd
+    chroot $CHROOT_PATH lpadmin -d UlteoPrinter
+    chroot $CHROOT_PATH /etc/init.d/cupsys stop >/dev/null 2>&1
+    umount $CHROOT_PATH/proc || true
+    chroot $CHROOT_PATH chown -R lp /var/spool/cups2all
+    # set the group on /var/spool/cups2all from *outside* the chroot; apache
+    # will access this dir from the host system
+    chgrp -R $APACHE_GROUP $CHROOT_PATH/var/spool/cups2all
+    chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
+fi
+
+exit 0

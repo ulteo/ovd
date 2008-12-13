@@ -1,0 +1,17 @@
+NameVirtualHost *
+<VirtualHost *>
+        ServerAdmin webmaster@localhost
+
+        DocumentRoot @DATADIR@/ulteo/applicationserver/
+        <Directory />
+                Options FollowSymLinks
+                AllowOverride None
+        </Directory>
+        <Directory @DATADIR@/ulteo/applicationserver/>
+                Options FollowSymLinks MultiViews
+                AllowOverride None
+                Order allow,deny
+                allow from all
+        </Directory>
+</VirtualHost>
+
