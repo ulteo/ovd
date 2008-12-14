@@ -4,25 +4,25 @@
 sm-admin \- manual page for sm-admin 1.0~svn00087
 .SH SYNOPSIS
 .B sm-admin
-[\fI--help|-h\fR] [\fI--version|-v\fR] \fIcommand \fR[\fIoptions\fR]
+\fIcommand \fR[\fIoptions\fR]
 .SH DESCRIPTION
-\&./sm\-admin: configure Ulteo OpenVirtual Desktop Session Manager
+\&sm\-admin: configure Ulteo OpenVirtual Desktop Session Manager
 .SS "command can be:"
 .TP
 \fBset\-admin\fR
 set login and password for the SM admin
 .TP
-\fBget\-chroot\fR [path] download a default chroot and stores it as path/base.tar.gz if specified
-(default: /usr/local/share/ulteo/sessionmanager/base.tar.gz)
+\fBget\-chroot [path]\fR
+download a default chroot and stores it as path/base.tar.gz if specified
+(default: @WEBDIR@/base.tar.gz)
 .TP
 \fBconfig\fR
 display some SM configuration paths
-.SS "Other options:"
 .TP
-\fB\-\-help\fR, \fB\-h\fR
+\fBhelp\fR
 display this help
 .TP
-\fB\-\-version\fR, \fB\-v\fR
+\fBversion\fR
 display version informations
 .SH "SEE ALSO"
 The full documentation for

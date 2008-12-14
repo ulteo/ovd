@@ -1,4 +1,4 @@
-EXTRA_DIST = sm-admin.in
+EXTRA_DIST = sm-admin.in sm-admin.8.in
 
 bin_SCRIPTS = sm-admin
 dist_man_MANS = sm-admin.8
@@ -9,6 +9,10 @@ sm-admin:
 		-e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
 			< $(srcdir)/sm-admin.in > $@
+
+sm-admin.8:
+	sed -e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
+		< $(srcdir)/sm-admin.8.in > $@
 
 clean-local:
 	rm -f $(bin_SCRIPTS)
