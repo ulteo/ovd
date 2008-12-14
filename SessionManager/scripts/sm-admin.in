@@ -1,4 +1,24 @@
 #!/bin/sh
+# Copyright (C) 2008 Ulteo SAS
+# Author: Gauvain Pocentek <gauvain@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, version 2
+# of the License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+if [ $UID != 0 ]; then
+    echo "You need to be root. Aborting."
+fi
 
 set_admin () {
     LOGIN=
@@ -74,19 +94,16 @@ get_chroot () {
 }
 
 usage () {
+    echo "Usage: $0 command [options]"
     echo "$0: configure Ulteo OpenVirtual Desktop Session Manager"
-    echo "$0 command [options]"
     echo
     echo "command can be:"
-    echo "set-admin:"
-    echo "    set login and password for the SM admin"
-    echo "get-chroot [path]:"
-    echo "    download a default chroot and stores it as path/base.tar.gz if specified"
-    echo "    (default: @WEBDIR@/base.tar.gz)"
-    echo "config:"
-    echo "    display some SM configuration paths"
-    echo "help:"
-    echo "    display this help"
+    echo "  set-admin         set login and password for the SM admin"
+    echo "  get-chroot [path] download a default chroot and stores it as path/base.tar.gz if specified"
+    echo "                    (default: @WEBDIR@/base.tar.gz)"
+    echo "  config            display some SM configuration paths"
+    echo "  help              display this help"
+    echo "  version           display version informations"
 }
 
 case $1 in
@@ -98,6 +115,9 @@ case $1 in
         get_chroot;;
     help)
         usage
+        exit 0;;
+    version)
+        echo $(basename $0) @PKG_VERSION@
         exit 0;;
     *)
         usage
