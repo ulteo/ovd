@@ -16,9 +16,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-if [ $UID != 0 ]; then
-    echo "You need to be root. Aborting."
-fi
+PROGRAM=$(basename $0)
 
 set_admin () {
     LOGIN=
@@ -94,8 +92,8 @@ get_chroot () {
 }
 
 usage () {
-    echo "Usage: $0 command [options]"
-    echo "$0: configure Ulteo OpenVirtual Desktop Session Manager"
+    echo "Usage: $PROGRAM command [options]"
+    echo "Configure an Ulteo Session Manager (Open Virtual Desktop)"
     echo
     echo "command can be:"
     echo "  set-admin         set login and password for the SM admin"
@@ -117,7 +115,7 @@ case $1 in
         usage
         exit 0;;
     version)
-        echo $(basename $0) @PKG_VERSION@
+        echo $PROGRAM @PKG_VERSION@
         exit 0;;
     *)
         usage
