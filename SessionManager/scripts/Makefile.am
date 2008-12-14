@@ -1,7 +1,7 @@
 EXTRA_DIST = sm-admin.in sm-admin.1.in
 
 bin_SCRIPTS = sm-admin
-dist_man_MANS = sm-admin.1
+man_MANS = sm-admin.1
 
 sm-admin:
 	sed -e "s,@CONFFILE@,$(sysconfdir)/ulteo/sessionmanager/config.inc.php," \
