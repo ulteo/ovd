@@ -1,2 +1,4 @@
-debian/conf.d/application-server etc/apache2/sites-available/
 debian/tmp/usr/share/ulteo
+debian/tmp/usr/bin/as-chroot-install
+debian/tmp/usr/share/man
+debian/tmp/etc/ulteo

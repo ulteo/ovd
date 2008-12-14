@@ -1,5 +1,6 @@
 #!/bin/sh
 
+PROGRAM=$(basename $0)
 WGETARGS="--tries=3 --timeout=60"
 
 # helper functions
@@ -10,24 +11,17 @@ die () {
 
 usage ()
 {
-    echo "$0: Configure an Ulteo Application Server (Open Virtual Desktop)"
+    echo "Usage: $PROGRAM [--no-download] [--no-cups] [--fqdn fqdn] [--sm-url url] [--chroot-path path] [--help|-h]"
+    echo "Configure an Ulteo Application Server (Open Virtual Desktop)"
     echo
-    echo "$0 [--no-download] [--no-cups] [--fqdn fqdn] [--sm-url url] [--chroot-path path] [--help|-h]"
-    echo
-    echo " --no-download"
-    echo "    Don't download the chroot, assume it is already installed"
-    echo " --no-cups"
-    echo "    Don't configure cups in the chroot"
-    echo " --fqdn fqdn"
-    echo "    Set the full qualified domain name to 'fqdn'"
-    echo " --sm-url url"
-    echo "    Set the session manager url to 'url'"
-    echo " --chroot-path path"
-    echo "    Set the chroot path to 'path'"
-    echo " --apache-group group"
-    echo "    Set the apache group to 'group'"
-    echo " --help|-h"
-    echo "    Show this message"
+    echo "  --no-download        don't download the chroot, assume it is already installed"
+    echo "  --no-cups            don't configure cups in the chroot"
+    echo "  --fqdn fqdn          set the full qualified domain name to 'fqdn'"
+    echo "  --sm-url url         set the session manager url to 'url'"
+    echo "  --chroot-path path   set the chroot path to 'path'"
+    echo "  --apache-group group set the apache group to 'group'"
+    echo "  --help|-h            display this help"
+    echo "  --version|-v         display version informations"
 }
 
 set_conf () {
@@ -77,6 +71,9 @@ while [ "$1" != "" ]; do
             shift;;
         --help|-h)
             usage
+            exit 0;;
+        --version|-h)
+            echo $PROGRAM @PKG_VERSION@
             exit 0;;
         *)
             usage
