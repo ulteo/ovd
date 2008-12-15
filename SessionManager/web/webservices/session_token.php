@@ -46,7 +46,7 @@ $buf = trim(@file_get_contents(TOKENS_DIR.'/'.$token));
 $buf = explode(':', $buf);
 
 $session = new Session($buf[1], $_GET['fqdn']);
-$session->use_token($token);
+// $session->use_token($token);
 
 if (!is_readable(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings')) {
 	Logger::error('main', 'No such session token file : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings');

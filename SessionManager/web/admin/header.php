@@ -29,7 +29,7 @@ else
 
 header_static($main_title.' - '._('Administration'));
 ?>
-<script type="text/javascript" src="media/script/ajax/common.js" charset="utf-8"></script>
+<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/ajax/appsgroup.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/ajax/user.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/ajax/application.js" charset="utf-8"></script>

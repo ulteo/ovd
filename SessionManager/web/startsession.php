@@ -124,6 +124,9 @@ if (in_array('timeout', $advanced_settings) && isset($_REQUEST['desktop_timeout'
 if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app']) && $_REQUEST['start_app'] != '')
 	$start_app = $_REQUEST['start_app'];
 
+if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
+	$persistent = $_REQUEST['persistent'];
+
 if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
 	$debug = $_REQUEST['debug'];
 
@@ -141,12 +144,20 @@ $default_args = array(
 	'user_displayname'	=>	str_replace(' ', '', $user->getAttribute('displayname')),
 	'locale'			=>	$desktop_locale,
 	'quality'			=>	$desktop_quality,
-	'timeout'			=>	$desktop_timeout,
-	'debug'			=>	$debug,
-	'persistent'		=>	($prefs->get('general', 'persistent_session'))?1:0,
-	'start_app'		=>	$start_app,
 	'home_dir_type'	=>	$module_fs
 );
+
+$optional_args = array();
+if (isset($desktop_timeout) && $desktop_timeout != -1) {
+	$optional_args['timeout'] = (time()+$desktop_timeout);
+	$optional_args['timeout_message'] = $prefs->get('general', 'session_timeout_msg');
+}
+if (isset($start_app) && $start_app != '')
+	$optional_args['start_app'] = $start_app;
+if (isset($debug) && $debug != '0')
+	$optional_args['debug'] = 1;
+if (isset($persistent) && $persistent != '0')
+	$optional_args['persistent'] = 1;
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
@@ -162,6 +173,8 @@ foreach ($plugins->plugins as $plugin) {
 
 $data = array();
 foreach ($default_args as $k => $v)
+	$data[$k] = $v;
+foreach ($optional_args as $k => $v)
 	$data[$k] = $v;
 foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;

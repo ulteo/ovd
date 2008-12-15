@@ -1,10 +1,10 @@
 function changeNames(row, index) {
 	var re = /(_{3})([0-9+])(_{3})(.+)$/;
 	var rt = '$1'+index+'$3$4';
-	
+
 	function update(type) {
 		var elements = row.getElementsByTagName('input');
-		for (var i = 0, n = elements.length; i < n; i++) {
+		for (var i = 0; n = elements.length; i < n; i++) {
 			var newname = elements[i].name.replace(re, rt );
 			elements[i].setAttribute('name', newname);
 			elements[i].setAttribute('id', newname);
@@ -26,7 +26,7 @@ function configuration4_mod(js) {
 
 		for (var i = 0; i < oelements.length; i++)
 			nelements[i].value = '';
-		
+
 		if (oelements.length > 0) {
 			if (!oelements[0].value){
 				return false;
@@ -39,13 +39,13 @@ function configuration4_mod(js) {
 		}
 		return true;
 	}
-	
+
 	var div,td,tr,table;
 	div = js.parentNode;
 	td = div.parentNode;
 	tr = td.parentNode;
 	table = tr.parentNode;
-	
+
 	if ((tr.sectionRowIndex +1 )== table.rows.length) { // last one ?
 		// last -> add
 		if ((new_row = tr.cloneNode(true)) && new_row.getElementsByTagName) {
@@ -107,7 +107,7 @@ function configuration_switch(object_,contener,contener_sub,id_element) {
 			}
 		}
 	}
-	
+
 	if (object_.type == "checkbox" ) {
 		if (element_exists(object_.value)) {
 			if (object_.checked) {
@@ -117,7 +117,7 @@ function configuration_switch(object_,contener,contener_sub,id_element) {
 				$(object_.value).hide();
 			}
 		}
-	
+
 	}
 	return false;
 }
@@ -142,5 +142,5 @@ function configuration_switch_init2() {
 		}
 	}
 
-	
+
 }

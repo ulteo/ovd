@@ -20,11 +20,6 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-// if ($_SESSION['ajax']==true) {
-// 	require_once('ajax/index.php');
-// 	die();
-// }
-
 $server = $_SERVER['SERVER_NAME'];
 $session = $_SESSION['session'];
 
@@ -34,56 +29,29 @@ if (!isset($session) || $session == '')
 $_SESSION['width'] = @$_REQUEST['width'];
 $_SESSION['height'] = @$_REQUEST['height'];
 
-if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/runasap') == 0) {
-	put_to_file(SESSION_PATH.'/'.$session.'/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
+if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
+	put_to_file(SESSION_PATH.'/'.$session.'/parameters/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
 
-	put_to_file(SESSION_PATH.'/'.$session.'/u_uid', $_SESSION['user_id']);
-	//strange?
-	put_to_file(SESSION_PATH.'/'.$session.'/uu', $_SESSION['user_id']+70000);
-	put_to_file(SESSION_PATH.'/'.$session.'/user_login', $_SESSION['user_login']);
-	put_to_file(SESSION_PATH.'/'.$session.'/nick', $_SESSION['user_displayname']);
-	put_to_file(SESSION_PATH.'/'.$session.'/locale', $_SESSION['locale']);
-	put_to_file(SESSION_PATH.'/'.$session.'/ex', time()+$_SESSION['timeout']);
-	put_to_file(SESSION_PATH.'/'.$session.'/app', $_SESSION['start_app']);
-	put_to_file(SESSION_PATH.'/'.$session.'/module_fs', $_SESSION['module_fs']['type']);
+	foreach ($_SESSION['parameters'] as $k => $v)
+		put_to_file(SESSION_PATH.'/'.$session.'/parameters/'.$k, $v);
+
+	@unlink(SESSION_PATH.'/'.$session.'/parameters/module_fs');
+	@mkdir(SESSION_PATH.'/'.$session.'/parameters/module_fs', 0750);
+	foreach ($_SESSION['parameters']['module_fs'] as $k => $v)
+		put_to_file(SESSION_PATH.'/'.$session.'/parameters/module_fs/'.$k, $v);
 
 	$buf = '';
-	foreach ($_SESSION['desktopfile'] as $desktopfile)
+	foreach ($_SESSION['parameters']['desktopfiles'] as $desktopfile)
 		$buf .= $desktopfile."\n";
-	put_to_file(SESSION_PATH.'/'.$session.'/menu', $buf);
+	put_to_file(SESSION_PATH.'/'.$session.'/parameters/menu', $buf);
 
-	if ($_SESSION['module_fs']['type'] == 'cifs' || $_SESSION['module_fs']['type'] == 'cifs_no_sfu') {
- 		put_to_file(SESSION_PATH.'/'.$session.'/fileserver', $_SESSION['module_fs']['user_fileserver']);
- 		put_to_file(SESSION_PATH.'/'.$session.'/uu', $_SESSION['module_fs']['fileserver_uid']);
-		put_to_file(SESSION_PATH.'/'.$session.'/cifs_homebase', dirname($_SESSION['module_fs']['user_homedir']));
-		put_to_file(SESSION_PATH.'/'.$session.'/cifs_homedir', basename($_SESSION['module_fs']['user_homedir']));
-		put_to_file(SESSION_PATH.'/'.$session.'/cifs_login', $_SESSION['module_fs']['cifs_login']);
-		put_to_file(SESSION_PATH.'/'.$session.'/cifs_password', $_SESSION['module_fs']['cifs_password']);
-	}
+	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-	if ($_SESSION['module_fs']['type'] == 'httpsave') {
-		put_to_file(SESSION_PATH.'/'.$session.'/doc', $_SESSION['module_fs']['document_name']);
-		put_to_file(SESSION_PATH.'/'.$session.'/doc_from', $_SESSION['module_fs']['document_from']);
-		put_to_file(SESSION_PATH.'/'.$session.'/doc_to', $_SESSION['module_fs']['document_to']);
-	}
+	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 1);
+} elseif (isset($_SESSION['mode']) && $_SESSION['mode'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
+	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-	if ($_SESSION['module_fs']['type'] == 'nfs' || $_SESSION['module_fs']['type'] == 'ulteo_nfs') {
-		put_to_file(SESSION_PATH.'/'.$session.'/fileserver', $_SESSION['module_fs']['user_fileserver']);
-		put_to_file(SESSION_PATH.'/'.$session.'/uu', $_SESSION['module_fs']['fileserver_uid']);
-		put_to_file(SESSION_PATH.'/'.$session.'/remote_home', $_SESSION['module_fs']['user_homedir']);
-		put_to_file(SESSION_PATH.'/'.$session.'/homebase', $_SESSION['module_fs']['homebase']);
-	}
-
-	@touch(SESSION_PATH.'/'.$session.'/keepmealive');
-
-	if ($_SESSION['persistent'] == 1)
-		@touch(SESSION_PATH.'/'.$session.'/persistent');
-
-	put_to_file(SESSION_PATH.'/'.$session.'/runasap', 1);
-} elseif (isset($_SESSION['mode']) && $_SESSION['mode'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/runasap') == 10) {
-	@touch(SESSION_PATH.'/'.$session.'/keepmealive');
-
-	put_to_file(SESSION_PATH.'/'.$session.'/runasap', 11);
+	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 11);
 }
 
 Logger::info('main', 'Session starting');

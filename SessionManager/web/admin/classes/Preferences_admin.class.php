@@ -62,7 +62,6 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, 4);
 		$this->add($c,'general');
 
-
 		$c = new config_element('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general');
 
@@ -78,15 +77,22 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
 		$this->add($c,'general');
 
-		$c = new config_element('advanced_settings_startsession', _('Advanced settings options'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'debug' => _('debug'), 'testapplet' => _('ssh/ping applet test')),3);
+		$c = new config_element('advanced_settings_startsession', _('Advanced settings options'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'debug' => _('debug'), 'testapplet' => _('ssh/ping applet test')),3);
 		$this->add($c,'general');
 
 		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
+
 		$this->add($c,'general');
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
 
 		$c = new config_element('persistent_session', _('Use persistent session'), _('Use persistent session'), _('Use persistent session'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general');
+
+		$c = new config_element('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), 'Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !', NULL, 1);
+		$this->add($c,'general');
+
+		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
 		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));

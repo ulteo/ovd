@@ -31,17 +31,17 @@ if (!isset($_SESSION['width']) || !isset($_SESSION['height'])) {
 	$_SESSION['height'] = @$_REQUEST['height'];
 }
 
-$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/hexavncpasswd');
-$sshuser = get_from_file(SESSION_PATH.'/'.$session.'/sshuser');
-$sshpass = get_from_file(SESSION_PATH.'/'.$session.'/hexasshpasswd');
-$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/rfbport');
+$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
+$sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
+$sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
+$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/clients/rfbport');
 
-if ($_SESSION['quality'] == 2)
+if ($_SESSION['parameters']['quality'] == 2)
 	$eight_bits = 'yes';
 else
 	$eight_bits = 'no';
 
-switch ($_SESSION['quality']) {
+switch ($_SESSION['parameters']['quality']) {
 	case '2':
 		$compress_level = 9;
 		$jpeg_quality = 3;
@@ -92,11 +92,11 @@ if (isset($_REQUEST['html'])) {
 	<?php
 		//if (isset($_SESSION['enable_proxy']) && $_SESSION['enable_proxy'] == 1)  {
 	?>
-	<param name="proxyType" value="<?php if (isset($_SESSION['proxy_type'])) echo $_SESSION['proxy_type']; ?>" />
-	<param name="proxyHost" value="<?php if (isset($_SESSION['proxy_host'])) echo $_SESSION['proxy_host']; ?>" />
-	<param name="proxyPort" value="<?php if (isset($_SESSION['proxy_port'])) echo $_SESSION['proxy_port']; ?>" />
-	<param name="proxyUsername" value="<?php if (isset($_SESSION['proxy_username'])) echo $_SESSION['proxy_username']; ?>" />
-	<param name="proxyPassword" value="<?php if (isset($_SESSION['proxy_password'])) echo $_SESSION['proxy_password']; ?>" />
+	<param name="proxyType" value="<?php if (isset($_SESSION['parameters']['proxy_type'])) echo $_SESSION['parameters']['proxy_type']; ?>" />
+	<param name="proxyHost" value="<?php if (isset($_SESSION['parameters']['proxy_host'])) echo $_SESSION['parameters']['proxy_host']; ?>" />
+	<param name="proxyPort" value="<?php if (isset($_SESSION['parameters']['proxy_port'])) echo $_SESSION['parameters']['proxy_port']; ?>" />
+	<param name="proxyUsername" value="<?php if (isset($_SESSION['parameters']['proxy_username'])) echo $_SESSION['parameters']['proxy_username']; ?>" />
+	<param name="proxyPassword" value="<?php if (isset($_SESSION['parameters']['proxy_password'])) echo $_SESSION['parameters']['proxy_password']; ?>" />
 	<?php
 		//}
 	?>

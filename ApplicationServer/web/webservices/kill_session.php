@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -41,10 +41,10 @@ if (!is_readable(SESSION_PATH.'/'.$session)) {
 	die('No such session : '.$session);
 }
 
-if (!is_writable(SESSION_PATH.'/'.$session.'/runasap')) {
+if (!is_writable(SESSION_PATH.'/'.$session.'/infos/status')) {
 	Logger::error('main', 'Unable to kill session : '.$session);
  	header('HTTP/1.1 400 Bad Request');
 	die('Unable to kill session : '.$session);
 }
 
-@file_put_contents(SESSION_PATH.'/'.$session.'/runasap', '3');
+@file_put_contents(SESSION_PATH.'/'.$session.'/infos/status', '3');

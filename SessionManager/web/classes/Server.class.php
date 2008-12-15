@@ -296,8 +296,16 @@ class Server {
 		if ($write_ == true)
 			$this->setStatus($ret);
 
-		if ($ret !== 'ready')
-			$this->setAttribute('locked', 1);
+		if ($ret !== 'ready') {
+			$prefs = Preferences::getInstance();
+			if (! $prefs)
+				die_error('get Preferences failed',__FILE__,__LINE__);
+
+			$what_to_do = $prefs->get('general', 'action_when_as_not_ready');
+
+			if ($what_to_do == 1)
+				$this->setAttribute('locked', 1);
+		}
 
 		return true;
 	}

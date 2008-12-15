@@ -44,22 +44,22 @@ if (file_exists(SESSION2CREATE_PATH.'/'.$session)) {
 	die('-1');
 }
 
-if (!is_readable(SESSION_PATH.'/'.$session)) {
+if (!is_readable(SESSION_PATH.'/'.$session.'/infos/status')) {
 	Logger::error('main', 'No such session : '.$session);
 	die('3');
 }
 
-$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/hexavncpasswd');
-$sshuser = get_from_file(SESSION_PATH.'/'.$session.'/sshuser');
-$sshpass = get_from_file(SESSION_PATH.'/'.$session.'/hexasshpasswd');
-$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/rfbport');
-$runasap = get_from_file(SESSION_PATH.'/'.$session.'/runasap');
+$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
+$sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/sshuser');
+$sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
+$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/clients/rfbport');
+$status = get_from_file(SESSION_PATH.'/'.$session.'/infos/status');
 
-if ($runasap === false)
-	$runasap = -2;
+if ($status === false)
+	$status = -2;
 
 if (isset($_SESSION['owner']) && $_SESSION['owner'])
-	if (file_exists(SESSION_PATH.'/'.$session.'/keepmealive'))
-		@touch(SESSION_PATH.'/'.$session.'/keepmealive');
+	if (file_exists(SESSION_PATH.'/'.$session.'/infos/keepmealive'))
+		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-die($runasap);
+die($status);

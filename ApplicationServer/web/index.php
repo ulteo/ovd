@@ -47,25 +47,29 @@ $_SESSION['owner'] = false;
 if ($_SESSION['mode'] == 'start' || $_SESSION['mode'] == 'resume')
 	$_SESSION['owner'] = true;
 
-$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality', 'timeout', 'debug', 'persistent', 'start_app');
+$_SESSION['parameters'] = array();
+$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality');
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
+
 foreach ($settings as $setting) {
 	$item = $session_node->getElementsByTagname($setting)->item(0);
 
 	if (is_null($item))
 		die('Missing element \''.$setting.'\'');
 
-	$_SESSION[$setting] = $item->getAttribute('value');
+	$_SESSION['parameters'][$setting] = $item->getAttribute('value');
 }
 
-$settings2 = array('proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
+$settings2 = array('timeout', 'timeout_message', 'persistent', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
 foreach ($settings2 as $setting2) {
 	$item2 = @$session_node->getElementsByTagname($setting2)->item(0);
 
 	if (!is_null($item2))
-		$_SESSION[$setting2] = $item2->getAttribute('value');
+		$_SESSION['parameters'][$setting2] = $item2->getAttribute('value');
 }
+
+$_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
 
 $_SESSION['share_desktop'] = 'true';
 if ($_SESSION['owner'])
@@ -75,18 +79,20 @@ $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
 if (is_null($item))
 	die('Missing element \'module_fs\'');
 
-$_SESSION['module_fs']['type'] = $module_fs_node->getAttribute('type');
+$_SESSION['parameters']['module_fs'] = array();
+$_SESSION['parameters']['module_fs']['type'] = $module_fs_node->getAttribute('type');
 
 $param_nodes = $module_fs_node->getElementsByTagname('param');
 foreach ($param_nodes as $param_node)
 	if ($param_node->hasAttribute('key') && $param_node->hasAttribute('value'))
-		$_SESSION['module_fs'][$param_node->getAttribute('key')] = $param_node->getAttribute('value');
+		$_SESSION['parameters']['module_fs'][$param_node->getAttribute('key')] = $param_node->getAttribute('value');
 
 $menu_node = $session_node->getElementsByTagname('menu')->item(0);
 $application_nodes = $menu_node->getElementsByTagname('application');
+$_SESSION['parameters']['desktopfiles'] = array();
 foreach ($application_nodes as $application_node)
 	if ($application_node->hasAttribute('desktopfile'))
-		$_SESSION['desktopfile'][md5($application_node->getAttribute('desktopfile'))] = $application_node->getAttribute('desktopfile');
+		$_SESSION['parameters']['desktopfiles'][md5($application_node->getAttribute('desktopfile'))] = $application_node->getAttribute('desktopfile');
 
 if ($_SESSION['mode'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);

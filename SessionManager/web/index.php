@@ -222,7 +222,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -372,9 +372,23 @@ require_once('header.php');
 					<?php
 						}
 
-						if (in_array('debug', $advanced_settings)) {
+						if (in_array('persistent', $advanced_settings)) {
 					?>
 					<tr class="content1">
+						<td class="title">
+							<?php echo _('Persistent session'); ?>
+						</td>
+						<td>
+							<input class="input_radio" type="radio" name="persistent" value="1" /> <?php echo _('Yes'); ?>
+							<input class="input_radio" type="radio" name="persistent" value="0" checked="checked" /> <?php echo _('No'); ?>
+						</td>
+					</tr>
+					<?php
+						}
+
+						if (in_array('debug', $advanced_settings)) {
+					?>
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Debug'); ?>
 						</td>
