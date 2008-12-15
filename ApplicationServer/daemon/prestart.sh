@@ -31,15 +31,14 @@ close_session() {
 NFSSTATUS=0
 COUNTER=0
 
-LOC=`cat ${SESSID_DIR}/locale`
-GEOMETRY=`cat ${SESSID_DIR}/geometry`
+LOC=`cat ${SESSID_DIR}/parameters/locale`
+GEOMETRY=`cat ${SESSID_DIR}/parameters/geometry`
 check_variables USER_LOGIN USER_HOME USER_ID LOC GEOMETRY RFB_PORT || close_session
 
-HOME_DIR_TYPE=`cat ${SESSID_DIR}/module_fs`
+HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
 . modules_fs.sh || close_session
 
-[ -f ${SESSID_DIR}/ajax ] && export AJAX=`cat ${SESSID_DIR}/ajax 2>/dev/null`
-[ -f ${SESSID_DIR}/app ] && export APP=`cat ${SESSID_DIR}/app  2>/dev/null`
+[ -f ${SESSID_DIR}/app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app  2>/dev/null`
 
 groupadd -g ${USER_ID} ${USER_LOGIN} 
 useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -u ${USER_ID} -g ${USER_LOGIN} ${USER_LOGIN}

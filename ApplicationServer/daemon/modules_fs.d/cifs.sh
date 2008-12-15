@@ -29,10 +29,10 @@
 cifs_set_fs() {
     log_DEBUG "cifs_set_fs"
     
-    CIFS_HOME_BASE=`cat ${SESSID_DIR}/cifs_homebase`
-    CIFS_HOME_DIR=`cat ${SESSID_DIR}/cifs_homedir`
-    CIFS_LOGIN=`cat ${SESSID_DIR}/cifs_login`
-    CIFS_PASSWORD=`cat ${SESSID_DIR}/cifs_password`
+    CIFS_HOME_BASE=`cat ${SESSID_DIR}/parameters/module_fs/homebase`
+    CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/homedir`
+    CIFS_LOGIN=`cat ${SESSID_DIR}/parameters/module_fs/login`
+    CIFS_PASSWORD=`cat ${SESSID_DIR}/parameters/module_fs/password`
 
     check_variables CIFS_LOGIN CIFS_PASSWORD CIFS_HOME_BASE CIFS_HOME_DIR || return 1
 

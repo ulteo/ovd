@@ -109,15 +109,16 @@ session_init() {
     fi
 
     # create new session dir
-    mkdir $SESSID_DIR
-    chgrp www-data $SESSID_DIR
-    chmod 770 $SESSID_DIR
-    # install -d -g www-data -m 770 $SESSID_DIR
+    install -d -g www-data -m 750 $SESSID_DIR
+    install -d -g www-data -m 770 $SESSID_DIR/parameters
+    install -d -g www-data -m 770 $SESSID_DIR/infos
+    install -d             -m 700 $SESSID_DIR/private
+    install -d -g www-data -m 750 $SESSID_DIR/clients
 
-    echo "0" > $SESSID_DIR/runasap
-#    touch $SESSID_DIR/runasap
-    chgrp www-data $SESSID_DIR/runasap
-    chmod 660 $SESSID_DIR/runasap
+    # Initialize status file
+    echo "0" >     $SESSID_DIR/infos/status
+    chgrp www-data $SESSID_DIR/infos/status
+    chmod 660      $SESSID_DIR/infos/status
 
     ## VNC password
     #
@@ -130,8 +131,8 @@ session_init() {
     fi
     # have to cut the pass to 8 characters
     # for realvncpasswd
-    echo $VNC_PASS | $TIGHTVNCPASSWD -f > $SESSID_DIR/encvncpasswd
-    HEXA_VNC_PASS=`cat $SESSID_DIR/encvncpasswd | str2hex`
+    echo $VNC_PASS | $TIGHTVNCPASSWD -f > $SESSID_DIR/private/encvncpasswd
+    HEXA_VNC_PASS=`cat $SESSID_DIR/private/encvncpasswd | str2hex`
 
     ## SSH password
     #
@@ -147,11 +148,12 @@ session_init() {
     HEXA_SSH_PASS=`echo $SSH_PASS | str2hex`
    
     ##echo $SSH_PASS >$SESSID_DIR/sshpasswd # <- just for test !!! remove it in production !!!
-    echo $i > $SESSID_DIR/id
-    echo $HEXA_VNC_PASS > $SESSID_DIR/hexavncpasswd
-    echo $HEXA_SSH_PASS > $SESSID_DIR/hexasshpasswd
-    echo $RFB_PORT > $SESSID_DIR/rfbport
-    echo $SSH_USER > $SESSID_DIR/sshuser
+    echo $i > $SESSID_DIR/private/id
+    echo $HEXA_VNC_PASS > $SESSID_DIR/private/hexavncpasswd
+    echo $HEXA_SSH_PASS > $SESSID_DIR/private/hexasshpasswd
+    echo $RFB_PORT > $SESSID_DIR/private/rfbport
+    echo $SSH_USER > $SESSID_DIR/private/ssh_user
+    echo $VNC_USER > $SESSID_DIR/private/vnc_user
 
     session_switch_status $SESSID 0
 }
@@ -164,16 +166,16 @@ session_init() {
 # $1 : session id
 #
 session_remove() {
-    log_INFO "SESSION REMOVE "
+    log_INFO "SESSION REMOVE"
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/id`
+    local i=`cat $SESSID_DIR/private/id`
 
     session_switch_status $SESSID 3
 
-    local rfb_port=$((5900+$i))
-    local SSH_USER="SSH$i"
-    local VNC_USER="VNC$i"
+    local rfb_port=`cat $SESSID_DIR/private/rfbport`
+    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
+    local VNC_USER=`cat $SESSID_DIR/private/vnc_user`
     
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
     if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
@@ -215,13 +217,13 @@ session_purge() {
     log_INFO "SESSION PURGE "
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/id`
+    local i=`cat $SESSID_DIR/private/id`
 
     log_INFO "Purging ${SESSID}"
-    local NICK=`cat ${SESSID_DIR}/nick`
-    local USER_LOGIN=`cat ${SESSID_DIR}/user_login`
+    local NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
+    local USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
     local USER_UID=$(id -u $USER_LOGIN)
-    local HOME_DIR_TYPE=`cat ${SESSID_DIR}/module_fs`
+    local HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
 
     killall -u $USER_LOGIN
     sleep 0.5
@@ -254,22 +256,40 @@ session_switch_status() {
     local SESSID_DIR=$SPOOL/sessions/$SESSID
 
     log_INFO "session_switch_status: ${SESSID} => $RUNASAP"
-    echo $RUNASAP> ${SESSID_DIR}/runasap
+    echo $RUNASAP> ${SESSID_DIR}/infos/status
     webservices_session_request $SESSID $RUNASAP
+}
+
+
+session_install_client() {
+    local SESSID=$1
+    local SESSID_DIR=$SPOOL/sessions/$SESSID
+
+    # create new session dir
+    install -o www-data $SESSID_DIR/private/hexavncpasswd $SESSID_DIR/clients/
+    install -o www-data $SESSID_DIR/private/hexasshpasswd $SESSID_DIR/clients/
+    install -o www-data $SESSID_DIR/private/ssh_user      $SESSID_DIR/clients/
+    install -o www-data $SESSID_DIR/private/rfbport       $SESSID_DIR/clients/
 }
 
 session_load() {
     SESSID=$1
     SESSID_DIR=$SPOOL/sessions/$SESSID
 
-    i=`cat $SESSID_DIR/id` || return 1
-    NICK=`cat ${SESSID_DIR}/nick`  || return 1
-    USER_ID=`cat ${SESSID_DIR}/uu` || return 1
-    USER_LOGIN=`cat ${SESSID_DIR}/user_login` || return 1
-    
-    VNC_USER="VNC$i"
-    SSH_USER="SSH$i"
+    RUNASAP=`cat ${SESSID_DIR}/infos/status`
 
+    # Private informations
+    i=`cat $SESSID_DIR/private/id` || return 1
+    RFB_PORT=`cat $SESSID_DIR/private/rfbport` || return 1
+    SSH_USER=`cat $SESSID_DIR/private/ssh_user` || return 1
+    VNC_USER=`cat $SESSID_DIR/private/vnc_user` || return 1
+
+    # Parameters informations
+    NICK=`cat ${SESSID_DIR}/parameters/user_displayname`  || return 1
+    USER_ID=`cat ${SESSID_DIR}/parameters/user_id` || return 1
+    USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login` || return 1
+
+    # Autodetection informations
     VNC_UID=`id -u $VNC_USER` || return 1
     SSH_UID=`id -u $SSH_USER` || return 1
 }
@@ -278,14 +298,20 @@ session_unload() {
     unset SESSID
     unset SESSID_DIR
 
+    unset RUNASAP
+
+    # Private informations
     unset i
+    unset RFB_PORT
+    unset SSH_USER
+    unset VNC_USER
+
+    # Parameters informations
     unset NICK
     unset USER_ID
     unset USER_LOGIN
-    
-    unset VNC_USER
-    unset SSH_USER
 
+    # Autodetection informations
     unset VNC_UID
     unset SSH_UID
 }
@@ -293,11 +319,11 @@ session_unload() {
 session_suspend() {
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/id`
+    local i=`cat $SESSID_DIR/private/id`
 
     session_switch_status $SESSID 9
 
-    local SSH_USER="SSH$i"
+    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
     
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
     if [ ! `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
@@ -306,14 +332,14 @@ session_suspend() {
     fi
 
     # Kill all ssh process about this session
-    killall -u SSH$i
+    killall -u $SSH_USER
     sleep 0.5
-    killall -9 -u SSH$i
+    killall -9 -u $SSH_USER
 
     userdel $SSH_USER
-    rm $SESSID_DIR/hexasshpasswd
-    rm ${SESSID_DIR}/luck
-    rm ${SESSID_DIR}/keepmealive
+    rm $SESSID_DIR/clients/*
+    rm ${SESSID_DIR}/private/luck
+    rm ${SESSID_DIR}/infos/keepmealive
 
     log_INFO "session_suspend: $i"
     session_switch_status $SESSID 10
@@ -322,9 +348,9 @@ session_suspend() {
 session_restore() {
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/id`
+    local i=`cat $SESSID_DIR/private/id`
 
-    local SSH_USER="SSH$i"
+    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
     session_switch_status $SESSID 11
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
@@ -352,9 +378,9 @@ session_restore() {
     # we encode the encrypted pass in hexa because the sshvnc 
     # applet wants it
     HEXA_SSH_PASS=`echo $SSH_PASS | str2hex`
-    echo $HEXA_SSH_PASS > $SESSID_DIR/hexasshpasswd
+    echo $HEXA_SSH_PASS > $SESSID_DIR/private/hexasshpasswd
 
-
+    session_install_client $SESSID
     log_INFO "session_restore: $i"
     session_switch_status $SESSID 2
 }

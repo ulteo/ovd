@@ -40,7 +40,7 @@ cp ${VNC_TMP}.Xauthority ${USER_TMP}.Xauthority
 chown ${USER_LOGIN} ${USER_TMP}.Xauthority
 
 # Install the rfbauth file into a directory readable by the VNC user
-cp ${SESSID_DIR}/encvncpasswd ${VNC_TMP}encvncpasswd
+cp ${SESSID_DIR}/private/encvncpasswd ${VNC_TMP}encvncpasswd
 chown $VNC_USER:$VNC_USER ${VNC_TMP}encvncpasswd
 
 out=/dev/null
@@ -48,8 +48,10 @@ out=/dev/null
 # Start the VNC server
 /bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/Xtightvnc :$i -desktop X$i -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry $GEOMETRY -depth 24 -rfbwait 240000 -rfbauth ${VNC_TMP}encvncpasswd -rfbport $RFB_PORT -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${VNC_TMP}.Xauthority" &> $out &
 
+session_install_client $SESSID
+
 # give some time to Xtightvnc to start
-sleep 2
+sleep 1
 
 log_INFO "startsession : session state 2"
 session_switch_status $SESSID 2

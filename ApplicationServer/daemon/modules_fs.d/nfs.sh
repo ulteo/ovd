@@ -25,8 +25,8 @@
 . $MODULES_FSD/local.sh
 
 nfs_set_fs() {
-    NFS_SERVER=`cat ${SESSID_DIR}/fileserver`
-    NFS_ROOT=`cat ${SESSID_DIR}/nfs_base`
+    NFS_SERVER=`cat ${SESSID_DIR}/parameters/module_fs/fileserver`
+    NFS_ROOT=`cat ${SESSID_DIR}/parameters/module_fs/base`
     check_variables NFS_SERVER NFS_ROOT || return 1
 
     local default_opts="nfsvers=3,nolock,tcp,soft,timeo=80,retry=5,intr,rsize=8192,wsize=8192,noexec"

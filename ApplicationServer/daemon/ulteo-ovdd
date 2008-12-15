@@ -70,9 +70,9 @@ check_cpulimit() {
 session_check_status() {
     SESSID=$1
     SESSID_DIR=$SPOOL/sessions/$SESSID
-    i=`cat $SESSID_DIR/id`
+    i=`cat $SESSID_DIR/private/id`
 
-    RFB_PORT=$((5900+$i))
+    RFB_PORT=`cat $SESSID_DIR/private/rfbport`
     VNC_USER="VNC$i"
     SSH_USER="SSH$i"
 
@@ -81,7 +81,7 @@ session_check_status() {
 	return 1
     fi
 
-    RUNASAP=`cat ${SESSID_DIR}/runasap`
+    RUNASAP=`cat ${SESSID_DIR}/infos/status`
     if ! session_valid_runasap $RUNASAP; then
 	log_WARN "Unsupported runasap value for session $SESSID"
 	session_switch_status $SESSID 3
@@ -93,11 +93,10 @@ session_check_status() {
 	return 0
     fi
 
-    EXPIRE=`cat ${SESSID_DIR}/ex`
     # LUCK=`cat ${SESSID_DIR}/luck` <-- not created by default
-    NICK=`cat ${SESSID_DIR}/nick`
-    USER_ID=`cat ${SESSID_DIR}/uu`
-    USER_LOGIN=`cat ${SESSID_DIR}/user_login`
+    NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
+    USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
+    USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
 
     # check if a KDE desktop connexion is alive for this session
     DESKTOP_SESSION=`cache_ps_display | grep VNC$i | grep "Xtightvnc" | wc -l`
@@ -116,22 +115,19 @@ session_check_status() {
 	[ $? -ne 0 ] && return 1
     fi
 
-    # if desktop session running, check timeout
-    if [ -f ${SESSID_DIR}/running ]; then
-	if [ "$EXPIRE" = "" ]; then
-	    EXPIRE="0"
-	    log_INFO "Missing EXPIRE : force to 0"
-	fi
+    # Check the timeout if the session is timetouted
+    if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/timeout ]; then
+	EXPIRE=`cat ${SESSID_DIR}/parameters/timeout`
 
 	let ct=$(( `date +%s` ))
 	let diff=$(( $ct - $EXPIRE ))
 
-	if [ ! -f ${SESSID_DIR}/timeouted  ] && [ $diff -gt -180 ] && [ $DESKTOP_SESSION -gt 0 ]; then
+	if [ ! -f ${SESSID_DIR}/private/timeouted  ] && [ $diff -gt -180 ] && [ $DESKTOP_SESSION -gt 0 ]; then
 	   log_INFO "Session is going to expire in 3 minutes"
 	    export i SESSID_DIR
 	    export USER_LOGIN USER_ID
 	    timeout.sh &
-	    touch ${SESSID_DIR}/timeouted 
+	    touch ${SESSID_DIR}/private/timeouted 
 	fi
 
 	if [ $diff -gt 0 ]; then
@@ -147,7 +143,7 @@ session_check_status() {
     fi
 
     # if session owner has vanished, kill session (useful for shared sessions)
-    KMA=${SESSID_DIR}/keepmealive
+    KMA=${SESSID_DIR}/infos/keepmealive
     if [ -e $KMA ]; then
 	let ctg2=$(( `date +%s` ))
 	let candidate2=$(( `stat -c "%Z" $KMA` ))
@@ -156,7 +152,7 @@ session_check_status() {
 	if [ $diffg2 -gt 20 ]; then
 	    log_WARN "KMA expired diff:$diffg2"
 	    # Suspend the session if the sesion was running and it's setup to suspend
-	    if [ -f ${SESSID_DIR}/running ] && [ -f ${SESSID_DIR}/persistent ]; then
+	    if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
 		session_suspend $SESSID
 		[ $? -eq 0 ] && return 0
 	    fi
@@ -169,22 +165,22 @@ session_check_status() {
     # if desktop session without alive ssh connection 
     # and no luck, kill the whole session
     if [ $DESKTOP_SESSION -gt 0 ] && [ $SSH_SESSION -eq 0 ] ;then
-	if [ ! -f ${SESSID_DIR}/luck ]; then
+	if [ ! -f ${SESSID_DIR}/private/luck ]; then
 	    log_INFO "LUCK does not exist, creating it"
-	    echo $MAXLUCK > ${SESSID_DIR}/luck
+	    echo $MAXLUCK > ${SESSID_DIR}/private/luck
 	fi
-	LUCK=`cat ${SESSID_DIR}/luck`
+	LUCK=`cat ${SESSID_DIR}/private/luck`
 
 	if [ $LUCK -gt 0 ]; then
 	    local newluck=$(($LUCK-1))
 	    log_INFO "Decreasing luck $LUCK to $newluck";
 	    LUCK=$newluck
-	    echo $LUCK > ${SESSID_DIR}/luck
+	    echo $LUCK > ${SESSID_DIR}/private/luck
 	fi
 
 	if [ $LUCK -lt 1 ]; then
 	    # Suspend the session if the sesion was running and it's setup to suspend
-	    if [ -f ${SESSID_DIR}/running ] && [ -f ${SESSID_DIR}/persistent ]; then
+	    if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
 		session_suspend $SESSID
 		[ $? -eq 0 ] && return 0
 	    fi
@@ -217,9 +213,6 @@ session_check_status() {
 
 	log_INFO "ulteo-ovd runasap1, nickname: '$NICK', USER_HOME:'$USER_HOME'"
 
-	#Erase VNC logs from previous sessions
-	/bin/rm -rf /tmp/sessionlog
-
 	session_switch_status $SESSID 22
 	RUNASAP=22
 
@@ -238,12 +231,12 @@ session_check_status() {
         # if the ssh tunnel is up then the session is likely to start, 
         # so we can set the "luck" to a little number, 
         # so the session can regenerate more quickly after its end
-	LUCK=`cat ${SESSID_DIR}/luck`
+	LUCK=`cat ${SESSID_DIR}/private/luck`
 	if [ $DESKTOP_SESSION -gt 0 ] && [ $SSH_SESSION -gt 0 ]; then
 	    if [ "$LUCK" != "$MINLUCK" ]; then
                 log_INFO "Session started: set LUCK to MINLUCK to terminate session quickly"
-                echo $MINLUCK > ${SESSID_DIR}/luck
-		touch ${SESSID_DIR}/running
+                echo $MINLUCK > ${SESSID_DIR}/private/luck
+		touch ${SESSID_DIR}/private/running
             fi
 	fi
 
@@ -302,11 +295,11 @@ garbage_collector() {
     #
     for SESSID in $(sessions_get_active); do
 	local SESSID_DIR=$SPOOL/sessions/$SESSID
-	local RUNASAP=`cat ${SESSID_DIR}/runasap`
+	local RUNASAP=`cat ${SESSID_DIR}/infos/status`
 	[ $RUNASAP -ne 0 ] && continue
 
 	local now=`date +%s`
-	local runasap=`stat -c "%Z" ${SESSID_DIR}/runasap`
+	local runasap=`stat -c "%Z" ${SESSID_DIR}/infos/status`
 	local diff=$(( $now - $runasap ))
 
 	if [ $diff -gt 60 ]; then
@@ -429,7 +422,7 @@ stop() {
 
     for SESSID in $(sessions_get_active); do
 	local SESSID_DIR=$SPOOL/sessions/$SESSID
-	local RUNASAP=`cat ${SESSID_DIR}/runasap`
+	local RUNASAP=`cat ${SESSID_DIR}/infos/status`
 	if [ $RUNASAP -ne 0 ]; then
 	    session_purge $SESSID
 	fi

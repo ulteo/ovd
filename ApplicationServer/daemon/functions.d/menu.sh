@@ -21,12 +21,12 @@ menu_spool() {
     local sessid_dir=$2
     local menu_dir=/var/spool/menus/$user_id
 
-    [ -f $sessid_dir/menu ] || return 1
+    [ -f $sessid_dir/parameters/menu ] || return 1
 
     [ -d $menu_dir ] && menu_clean $user_id
     mkdir -p $menu_dir
 
-    for app in `cat $sessid_dir/menu`; do
+    for app in `cat $sessid_dir/parameters/menu`; do
 	menu_put $app $menu_dir
     done
 }

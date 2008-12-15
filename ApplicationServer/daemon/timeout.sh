@@ -27,10 +27,10 @@ else
     USER_TMP=/tmp/.tmp${USER_ID}
 fi
 
-[ ! -f ${SESSID_DIR}/timeout_message ] && exit 1
+[ ! -f ${SESSID_DIR}/parameters/timeout_message ] && exit 1
 
 i=$(( $i + 5900 ))
-MESSAGE=`cat ${SESSID_DIR}/timeout_message`
+MESSAGE=`cat ${SESSID_DIR}/parameters/timeout_message`
 
 # CMD="kdialog --sorry \"$message\" --caption \"Session is about to end\""
 CMD='Xdialog -title "Session is about to end" -msgbox "'$MESSAGE'" 20 80'
