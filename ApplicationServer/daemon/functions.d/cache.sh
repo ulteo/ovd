@@ -45,10 +45,10 @@ cache_set_monitoring() {
 #    local cpu_load=`top -n 1 |head -n 3 |tail -n 1| sed -e 's/.*://' -e 's/%.*//' -e 's/ //g'` || return 1
     local cpu_load=`uptime | sed -e 's/.*: //' -e 's/,.*//'`
 
-    local ram=`head -n 1 /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
-    local ram_used=`free | head -n 2 |tail -n 1|awk '{ print $3 }'` || return 1
-    local ram_cache=`free | head -n 3 |tail -n 1|awk '{ print $3 }'` || return 1
-    local ram_used=$(( $ram_used - $ram_cache )) 
+    local ram=`grep MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
+    local ram_Buffers=`grep Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
+    local ram_Cached=`grep Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
+    local ram_used=$(( $ram - $ram_Buffers - $ram_Cached ))
 
     echo '<?xml version="1.0" encoding="utf-8"?>'         > $file || return 1
     echo '<monitoring>'                                   >>$file

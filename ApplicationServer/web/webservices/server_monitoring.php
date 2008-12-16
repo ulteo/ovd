@@ -31,10 +31,11 @@ if (! isSessionManagerRequest()) {
 $cpu_model = trim(`grep "model name" /proc/cpuinfo |head -n 1 |sed -e 's/.*: //'`);
 $cpu_nb = trim(`grep processor /proc/cpuinfo |tail -n 1 |awk '{ print $3 }'`)+1;
 $cpu_load = trim(`uptime |sed -e 's/.*: //' -e 's/,.*//'`);
-$ram = trim(`head -n 1 /proc/meminfo |tr -s ' ' |cut -d ' ' -f2`);
-$ram_used = trim(`free |head -n 2 |tail -n 1 |awk '{ print $3 }'`);
-$ram_cache = trim(`free |head -n 3 |tail -n 1 |awk  '{ print $3 }'`);
-$ram_used = ($ram_used-$ram_cache);
+$ram=trim(`grep MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
+$ram_Buffers=trim(`grep Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
+$ram_Cached=trim(`grep Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
+$ram_used = $ram - $ram_Buffers - $ram_Cached;
+
 
 $dom = new DomDocument();
 $monitoring_node = $dom->createElement('monitoring');
