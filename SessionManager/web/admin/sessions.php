@@ -24,7 +24,7 @@ if (isset($_POST['join'])) {
 	$session = new Session($_POST['join']);
 
 	$view_only = 'Yes';
-	if (isset($_POST['active_mode']))
+	if (isset($_POST['active']))
 		$view_only = 'No';
 
 	$token = $session->create_token('invite', array('view_only' => $view_only));
@@ -61,21 +61,24 @@ if (isset($_POST['join'])) {
 
 	echo '<h1>'._('Sessions').'</h1>';
 
-	echo '<h2>'._('Info').'</h2>';
+	echo '<h2>'._('Informations').'</h2>';
 
 	echo '<ul>';
 	echo '<li><strong>User:</strong> '.$session->getSetting('user_displayname').'</li>';
 	echo '<li><strong>Started:</strong> '.date('d/m/Y H:i:s', filemtime($session->folder.'/used')).'</li>';
+	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
+
+	echo '<h2>'._('Connect to or observe this session').'</h2>';
 
 	echo '<form id="joinsession" action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 	echo '	<input type="hidden" id="desktop_size" value="auto" />';
 	echo '	<input type="hidden" id="session_debug_true" value="0" />';
 	echo '	<input type="hidden" name="join" value="'.$session->session.'" />';
- 	echo '	<input type="checkbox" name="active_mode" /> '._('active mode').' ';
-	echo '	<input type="submit" value="'._('Join this session').'" />';
+	echo '	<input type="submit" name="passive" value="'._('Observe this session').'" />';
+	echo '	<input type="submit" name="active" value="'._('Join this session').'" />';
 	echo '</form>';
-	echo '<br />';
+	echo '<h2>'._('Kill this session').'</h2>';
 	echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
 	echo '	<input type="hidden" name="action" value="kill" />';
 	echo '	<input type="hidden" name="session" value="'.$session->session.'" />';
@@ -101,6 +104,7 @@ else {
 		echo '		<th>'._('Session').'</th>';
 		echo '		<th>'._('Server').'</th>';
 		echo '		<th>'._('User').'</th>';
+		echo '		<th>'._('Status').'</th>';
 		echo '	</tr>';
 
 		$i = 0;
@@ -112,6 +116,7 @@ else {
 			echo '		<td><a href="sessions.php?info='.$session->session.'">'.$session->session.'</td>';
 			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getSetting('user_login').'">'.$session->getSetting('user_displayname').'</td>';
+			echo '		<td>'.$session->stringStatus().'</td>';
 			echo '		<td>';
 			echo '		<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
 			echo '			<input type="hidden" name="action" value="kill" />';
@@ -124,7 +129,7 @@ else {
 		$css_class = 'content'.(($i++%2==0)?1:2);
 		echo '<tfoot>';
 		echo '	<tr class="'.$css_class.'">';
-		echo '		<td colspan="4"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
+		echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
 		echo '<td><input type="submit" name="kill" value="'._('Kill').'" /></td>';
 		echo '	</tr>';
 		echo '</tfoot>';

@@ -20,11 +20,56 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+$list_languages = array(
+	'en_GB.UTF-8'	=>	'English',
+	'fr_FR.UTF-8'	=>	'Français'
+);
+
+$list_desktop_sizes = array(
+	'auto'	=>	_('Maximum')
+);
+
+$list_desktop_qualitys = array(
+	//0	=>	'Auto',
+	2	=>	_('Lowest'),
+	5	=>	_('Medium'),
+	8	=>	_('High'),
+	9	=>	_('Highest')
+);
+
+$list_desktop_timeouts = array(
+	60		=>	_('1 minute'),
+	120		=>	_('2 minutes'),
+	300		=>	_('5 minutes'),
+	600		=>	_('10 minutes'),
+	900		=>	_('15 minutes'),
+	1800		=>	_('30 minutes'),
+	3600		=>	_('1 hour'),
+	7200		=>	_('2 hours'),
+	18000	=>	_('5 hours'),
+	43200	=>	_('12 hours'),
+	86400	=>	_('1 day'),
+	172800	=>	_('2 days'),
+	604800	=>	_('1 week'),
+	2764800	=>	_('1 month'),
+	-1		=>	_('Never')
+);
+
 require_once(dirname(__FILE__).'/webservices/check.php');
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error(_('get Preferences failed'),__FILE__,__LINE__);
+
+$default_settings = $prefs->get('general', 'session_settings_defaults');
+$desktop_locale = $default_settings['language'];
+$desktop_size = 'auto';
+$desktop_quality = $default_settings['quality'];
+$desktop_timeout = $default_settings['timeout'];
+$start_app = '';
+$persistent = $default_settings['persistent'];
+$desktop_icons = $default_settings['desktop_icons'];
+$debug = 0;
 
 $mods_enable = $prefs->get('general', 'module_enable');
 if (!in_array('UserDB', $mods_enable))
@@ -32,7 +77,6 @@ if (!in_array('UserDB', $mods_enable))
 
 $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 $userDB = new $mod_user_name();
-
 $use_sso = $prefs->get('general', 'user_authenticate_sso');
 if ($use_sso) {
 	$user_authenticate_trust = $prefs->get('general', 'user_authenticate_trust');
@@ -48,7 +92,9 @@ if ($userDB->canShowList())
 
 $password_field = $userDB->needPassword();
 
-$show_list_users = $prefs->get('general', 'show_list_users');
+$buf = $prefs->get('general', 'web_interface_settings');
+$show_list_users = $buf['show_list_users'];
+$testapplet = $buf['testapplet'];
 
 // $mods_enable = $prefs->get('general', 'module_enable');
 // if (!in_array('UserDB', $mods_enable))
@@ -70,7 +116,8 @@ $show_list_users = $prefs->get('general', 'show_list_users');
 // $user_id = $user->getAttribute('uid');
 // $user_displayname = $user->getAttribute('displayname');
 
-$advanced_settings = $prefs->get('general', 'advanced_settings_startsession');
+$advanced_settings = $prefs->get('general', 'session_settings_defaults');
+$advanced_settings = $advanced_settings['advanced_settings_startsession'];
 if (!is_array($advanced_settings))
 	$advanced_settings = array();
 
@@ -125,7 +172,7 @@ require_once('header.php');
 		?>
 
 		<?php
-			if (!in_array('testapplet', $advanced_settings)) {
+			if (!$testapplet) {
 				echo 'appletLoaded();';
 				echo 'testDone = true;';
 			}
@@ -222,7 +269,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -379,8 +426,22 @@ require_once('header.php');
 							<?php echo _('Persistent session'); ?>
 						</td>
 						<td>
-							<input class="input_radio" type="radio" name="persistent" value="1" /> <?php echo _('Yes'); ?>
-							<input class="input_radio" type="radio" name="persistent" value="0" checked="checked" /> <?php echo _('No'); ?>
+							<input class="input_radio" type="radio" name="persistent" value="1"<?php if ($persistent == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+							<input class="input_radio" type="radio" name="persistent" value="0"<?php if ($persistent != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+						</td>
+					</tr>
+					<?php
+						}
+
+						if (in_array('desktop_icons', $advanced_settings)) {
+					?>
+					<tr class="content2">
+						<td class="title">
+							<?php echo _('Show icons on desktop'); ?>
+						</td>
+						<td>
+							<input class="input_radio" type="radio" name="desktop_icons" value="1"<?php if ($desktop_icons == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+							<input class="input_radio" type="radio" name="desktop_icons" value="0"<?php if ($desktop_icons != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
 						</td>
 					</tr>
 					<?php
@@ -388,7 +449,7 @@ require_once('header.php');
 
 						if (in_array('debug', $advanced_settings)) {
 					?>
-					<tr class="content2">
+					<tr class="content1">
 						<td class="title">
 							<?php echo _('Debug'); ?>
 						</td>
@@ -469,7 +530,7 @@ require_once('header.php');
 	</form>
 </div>
 <?php
-if (in_array('testapplet', $advanced_settings)) {
+if ($testapplet) {
 ?>
 	<applet width="1" height="1">
 		<param name="name" value="ulteoapplet" />

@@ -26,13 +26,13 @@ class Server {
 	public $folder = NULL;
 	public $status = NULL;
 
-	public function __construct($fqdn_) {
+	public function __construct($fqdn_, $create_=true) {
 		Logger::debug('main', 'Starting SERVER::_construct for server '.$fqdn_);
 
 		$this->fqdn = $fqdn_;
 		$this->folder = SESSIONS_DIR.'/'.$this->fqdn;
 
-		if (!file_exists($this->folder) && check_ip($fqdn_))
+		if (!file_exists($this->folder) && check_ip($fqdn_) && $create_)
 			$this->create();
 
 		if (!$this->hasAttribute('type') || $this->getAttribute('type') ===  '')
@@ -40,6 +40,15 @@ class Server {
 
 		if (!$this->hasAttribute('version') || $this->getAttribute('version') === '')
 			$this->getVersion();
+	}
+
+	public static function load($fqdn_) {
+		Logger::debug('main', 'Starting SERVER::load for server '.$fqdn_);
+
+		if (!file_exists(SESSIONS_DIR.'/'.$fqdn_))
+			return false;
+
+		return new Server($fqdn_, false);
 	}
 
 	public function create($die_=true) {

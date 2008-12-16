@@ -61,7 +61,7 @@ foreach ($settings as $setting) {
 	$_SESSION['parameters'][$setting] = $item->getAttribute('value');
 }
 
-$settings2 = array('timeout', 'timeout_message', 'persistent', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
+$settings2 = array('timeout', 'timeout_message', 'persistent', 'desktop_icons', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
 foreach ($settings2 as $setting2) {
 	$item2 = @$session_node->getElementsByTagname($setting2)->item(0);
 

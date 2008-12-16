@@ -34,6 +34,7 @@ define('LOCKS_DIR', SESSIONMANAGER_SPOOL.'/locks');
 define('TASKS_DIR', SESSIONMANAGER_SPOOL.'/tasks');
 define('REPORT_DIR', SESSIONMANAGER_SPOOL.'/reporting');
 define('TMP_DIR', SESSIONMANAGER_SPOOL.'/tmp');
+define('CACHE_DIR', SESSIONMANAGER_SPOOL.'/cache');
 
 if (!check_folder(SESSIONS_DIR)) {
 	Logger::critical('main', SESSIONS_DIR.' does not exist and cannot be created !');
@@ -63,6 +64,11 @@ if (!check_folder(REPORT_DIR)) {
 if (!check_folder(TMP_DIR)) {
 	Logger::critical('main', TMP_DIR.' does not exist and cannot be created !');
 	die_error(TMP_DIR.' does not exist and cannot be created !',__FILE__,__LINE__);
+}
+
+if (!check_folder(CACHE_DIR)) {
+	Logger::critical('main', CACHE_DIR.' does not exist and cannot be created !');
+	die_error(CACHE_DIR.' does not exist and cannot be created !',__FILE__,__LINE__);
 }
 
 $prefs = Preferences::getInstance();

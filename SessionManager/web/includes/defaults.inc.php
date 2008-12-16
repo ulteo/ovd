@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -18,25 +19,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-$items = array(
-	'servers.php'		=>	_('Servers'),
-	'sessions.php'		=>	_('Sessions'),
-	'users.php'		=>	_('Users'),
-	'applications.php'	=>	_('Applications'),
-	'publications.php'	=>	_('Publications'),
-	//'wizard.php'		=>	_('Publication Wizard'),
-	'configuration.php'	=>	_('Configuration'),
-	'logs.php'		=>	_('Logs'),
-	'logout.php'		=>	_('Logout')
-);
+define('SESSIONMANAGER_CONF_FILE', '/etc/ulteo/sessionmanager/config.inc.php');
 
-$in_menu = basename('http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
+define('DEFAULT_PAGE_TITLE', _('Open Virtual Desktop'));
 
-$i = 0;
-foreach($items as $k => $v) {
-	$css_classes = 'menu';
-	$css_classes .= ' content'.(($i++%2==0)?1:2);
-	$css_classes .= (($in_menu == $k)?' in':'');
+$base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 
-	echo '<a href="'.$k.'"><div style="width: 150px;" class="'.$css_classes.'"><img src="media/image/menu/'.$k.'.png" width="32" height="32" alt="'.$v.'" title="'.$v.'" /> &nbsp; '.$v.'</div></a>'."\n";
-}
+define('DEFAULT_LOGO_URL', $base_url.'media/image/header.png');
+
+define('DEFAULT_REQUEST_TIMEOUT', 10);

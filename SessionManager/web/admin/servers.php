@@ -185,7 +185,7 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 				echo '">';
 				echo '<td><input type="checkbox" name="register_servers[]" value="'.$s->fqdn.'" /><form></form>';
 				echo '<td>'.$s->fqdn.'</td>';
-				echo '<td>'.$s->stringType().'</td>';
+				echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
 				//echo '<td>'.$s->stringVersion().'</td>';
 				echo '<td>';
 				echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb').' ';
@@ -261,7 +261,7 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 				echo '<td>';
 				echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
 				echo '</td>';
-				echo '<td>'.$s->stringType().'</td>';
+				echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
 				//echo '<td>'.$s->stringVersion().'</td>';
 				echo '<td>'.$s->stringStatus().'</td>';
 				echo '<td>';
@@ -373,7 +373,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'manage' && isset($_GET['fq
 		<th><?php echo _('Type');?></th><th><?php echo _('Version');?></th><th><?php echo _('Status');?></th><?php if ($server->isOnline()) { ?><th><?php echo _('Sessions');?></th><?php } ?><th><?php echo _('Details');?></th><?php if ($server->isOnline()) { ?><th><?php echo _('Monitoring');?></th><?php } ?>
 	</tr>
 	<tr class="content1">
-		<td><?php echo $server->stringType(); ?></td>
+		<td style="text-align: center;"><img src="media/image/server-<?php echo $server->stringType(); ?>.png" alt="<?php echo $server->stringType(); ?>" title="<?php echo $server->stringType(); ?>" /><br /><?php echo $server->stringType(); ?></td>
 		<td><?php echo $server->stringVersion(); ?></td>
 		<td><?php echo $server->stringStatus(); ?></td>
 		<?php
@@ -427,7 +427,7 @@ elseif (isset($_GET['action']) && $_GET['action'] == 'manage' && isset($_GET['fq
 	</form>
 
 	<?php
-		if ($buf_lock) {
+		if (isset($buf_lock) && $buf_lock) {
 			?>
 			<form action="servers.php" method="get">
 				<input type="hidden" name="action" value="delete" />
@@ -516,8 +516,11 @@ else {
 			$content = 'content'.(($count++%2==0)?1:2);
 			$remove_in_progress = in_array($app, $apps_in_remove);
 
+			$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
+
 			echo '<tr class="'.$content.'">';
 			echo '<td>';
+			echo '<img src="../cache/image/application/'.$icon_id.'.png" alt="'.$app->getAttribute('name').'" title="'.$app->getAttribute('name').'" /> ';
 			echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 			echo $app->getAttribute('name').'</a>';
 			echo '</td>';

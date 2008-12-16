@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -223,8 +223,9 @@ function show_manage($id) {
     echo '<tr><td colspan="2">'._('No application in this group').'</td></tr>';
   else {
     foreach($applications as $application) {
+      $icon_id = ($application->haveIcon())?$application->getAttribute('id'):0;
       echo '<tr>';
-      echo '<td><a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
+      echo '<td><img src="../cache/image/application/'.$icon_id.'.png" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
       echo '</td>';
       echo '<td>';
       echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application ?').'\');">';

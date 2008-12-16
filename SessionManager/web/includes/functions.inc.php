@@ -64,7 +64,7 @@ function query_url_no_error($url_) {
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
 	$string = curl_exec($socket);
 // 	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	curl_close($socket);
@@ -76,7 +76,7 @@ function query_url($url_) {
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_TIMEOUT);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
 	$string = curl_exec($socket);
 	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	curl_close($socket);

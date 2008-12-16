@@ -74,26 +74,38 @@ class Preferences_admin extends Preferences {
 // 		$c = new config_element('start_app','start_app','start_app_des','',NULL,1);
 // 		$this->add('general',$c);
 
-		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
-		$this->add($c,'general');
-
-		$c = new config_element('advanced_settings_startsession', _('Advanced settings options'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'debug' => _('debug'), 'testapplet' => _('ssh/ping applet test')),3);
-		$this->add($c,'general');
-
 		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
 
 		$this->add($c,'general');
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
 
-		$c = new config_element('persistent_session', _('Use persistent session'), _('Use persistent session'), _('Use persistent session'), 0, array(0=>_('no'),1=>_('yes')), 2);
-		$this->add($c,'general');
-
-		$c = new config_element('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), 'Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !', NULL, 1);
-		$this->add($c,'general');
-
 		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
 		$this->add($c,'general');
+
+		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
+		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
+		$this->add($c,'general','web_interface_settings');
+		$c = new config_element('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general','web_interface_settings');
+
+		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
+		$c = new config_element('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8', array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'), 2);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 9, array(2=>_('Lowest'),5=>_('Medium'),8=>_('High'),9=>_('Highest')), 2);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400, array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')), 2);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), 'Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !', NULL, 1);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),3);
+		$this->add($c,'general','session_settings_defaults');
+
+		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);

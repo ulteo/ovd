@@ -265,6 +265,51 @@ class Session {
 		return false;
 	}
 
+	public function stringStatus() {
+		$sess_states = array(
+			-1	=>	array(
+						'color'	=>	'warn',
+						'message'	=>	_('To create'),
+					),
+			0	=>	array(
+						'color'	=>	'warn',
+						'message'	=>	_('Created'),
+					),
+			1	=>	array(
+						'color'	=>	'warn',
+						'message'	=>	_('To start'),
+					),
+			22	=>	array(
+						'color'	=>	'warn',
+						'message'	=>	_('Initializing'),
+					),
+			2	=>	array(
+						'color'	=>	'ok',
+						'message'	=>	_('Active'),
+					),
+			9	=>	array(
+						'color'	=>	'warn',
+						'message'	=>	_('Suspending'),
+					),
+			10	=>	array(
+						'color'	=>	'ok',
+						'message'	=>	_('Suspended'),
+					),
+			11	=>	array(
+						'color'	=>	'warn',
+						'message'	=>	_('Resuming'),
+					),
+			3	=>	array(
+						'color'	=>	'error',
+						'message'	=>	_('To destroy'),
+					),
+		);
+
+		$buf = $this->session_status();
+
+		return '<span class="msg_'.$sess_states[$buf]['color'].'">'.$sess_states[$buf]['message'].'</span>';
+	}
+
 	public function create_token($mode_, $content_=array()) {
 		Logger::debug('main', 'Starting SESSION::create_token for session '.$this->session.' on server '.$this->server);
 

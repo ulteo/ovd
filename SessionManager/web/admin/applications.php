@@ -158,8 +158,9 @@ function show_manage($id, $applicationDB) {
 
 
   include_once('header.php');
+	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
   echo '<div>';
-  echo '<h1>'.$app->getAttribute('name').'</h1>';
+  echo '<h1><img src="../cache/image/application/'.$icon_id.'.png" alt="'.$app->getAttribute('name').'" title="'.$app->getAttribute('name').'" /> '.$app->getAttribute('name').'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
@@ -171,7 +172,7 @@ function show_manage($id, $applicationDB) {
 
   echo '<tr class="content1">';
   echo '<td>'.$app->getAttribute('package').'</td>';
-  echo '<td>'.$app->getAttribute('type').'</td>';
+  echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //   echo '<td>'.$status.'</td>';
   echo '<td>'.$app->getAttribute('description').'</td>';
   echo '</tr>';
@@ -357,12 +358,14 @@ function show_default($applicationDB) {
 	$status_change_value = 1;
       }
 
+	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
+
       echo '<tr class="'.$content.'">';
       if ($is_rw)
 // 	echo '<td><input type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
-      echo '<td><a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
+      echo '<td><img src="../cache/image/application/'.$icon_id.'.png" alt="'.$app->getAttribute('name').'" title="'.$app->getAttribute('name').'" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
       echo '<td>'.$app->getAttribute('description').'</td>';
-      echo '<td>'.$app->getAttribute('type').'</td>';
+      echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //       echo '<td>'.$status.'</td>';
 
       echo '<td><form action="">';

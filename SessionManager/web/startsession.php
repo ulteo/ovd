@@ -29,6 +29,17 @@ $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
 
+$default_settings = $prefs->get('general', 'session_settings_defaults');
+$desktop_locale = $default_settings['language'];
+$desktop_size = 'auto';
+$desktop_quality = $default_settings['quality'];
+$desktop_timeout = $default_settings['timeout'];
+$timeout_message = $default_settings['session_timeout_msg'];
+$start_app = '';
+$persistent = $default_settings['persistent'];
+$desktop_icons = $default_settings['desktop_icons'];
+$debug = 0;
+
 $mods_enable = $prefs->get('general', 'module_enable');
 if (!in_array('UserDB', $mods_enable))
 	die_error('Module UserDB must be enabled',__FILE__,__LINE__);
@@ -67,7 +78,8 @@ if ($lock->have_lock()) {
 	}
 }
 
-$advanced_settings = $prefs->get('general', 'advanced_settings_startsession');
+$advanced_settings = $prefs->get('general', 'session_settings_defaults');
+$advanced_settings = $advanced_settings['advanced_settings_startsession'];
 if (!is_array($advanced_settings))
 	$advanced_settings = array();
 
@@ -127,6 +139,9 @@ if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app'])
 if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
 	$persistent = $_REQUEST['persistent'];
 
+if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_icons']) && $_REQUEST['desktop_icons'] != '')
+	$desktop_icons = $_REQUEST['desktop_icons'];
+
 if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
 	$debug = $_REQUEST['debug'];
 
@@ -150,7 +165,7 @@ $default_args = array(
 $optional_args = array();
 if (isset($desktop_timeout) && $desktop_timeout != -1) {
 	$optional_args['timeout'] = (time()+$desktop_timeout);
-	$optional_args['timeout_message'] = $prefs->get('general', 'session_timeout_msg');
+	$optional_args['timeout_message'] = $timeout_message;
 }
 if (isset($start_app) && $start_app != '')
 	$optional_args['start_app'] = $start_app;
@@ -158,6 +173,8 @@ if (isset($debug) && $debug != '0')
 	$optional_args['debug'] = 1;
 if (isset($persistent) && $persistent != '0')
 	$optional_args['persistent'] = 1;
+if (isset($desktop_icons) && $desktop_icons != '0')
+	$optional_args['desktop_icons'] = 1;
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
