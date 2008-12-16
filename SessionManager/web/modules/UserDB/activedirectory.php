@@ -79,10 +79,12 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	}
 
 	protected function makeLDAPconfig() {
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error(_('get Preferences failed'),__FILE__,__LINE__);
-		$conf_AD = $prefs->get('UserDB','activedirectory');
+		if (is_NULL($prefs_)) {
+			$prefs_ = Preferences::getInstance();
+			if (! $prefs_)
+				die_error(_('get Preferences failed'),__FILE__,__LINE__);
+		}
+		$conf_AD = $prefs_->get('UserDB','activedirectory');
 
 		if (is_null($conf_AD))
 			die_error('Active Directory configuration missing2',__FILE__,__LINE__);
@@ -91,24 +93,34 @@ class UserDB_activedirectory  extends UserDB_ldap{
 // 		if (is_null($conf_ldap))
 // 			die_error('Active Directory configuration missing3',__FILE__,__LINE__);
 
-		$minimum_keys = array ('host','domain','login','password','domain');
+		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');
 		foreach ($minimum_keys as $m_key){
 			if (!isset($this->config[$m_key]))
 				die_error('Active Directory configuration not valid (missing \''.$m_key.'\' key)2',__FILE__,__LINE__);
 		}
-		$ldap_suffix = $this->domain2suffix($this->config['domain']);
+		$ldap_suffix = self::domain2suffix($this->config['domain']);
 		if (! $ldap_suffix)
 			die_error('Active Directory configuration not valid (domain2suffix error)2',__FILE__,__LINE__);
+
+		if (strtolower(substr($this->config['ou'], 0, 3)) == 'ou=')
+			$user_branch = $this->config['ou'];
+		else
+			$user_branch ='OU='.$this->config['ou'];
+		
+		if (strtolower(substr($this->config['login'], 0, 3)) == 'cn=')
+			$login = $this->config['login'];
+		else
+			$login ='cn='.$this->config['login'].','.$user_branch;
 
 		$config_ldap = array(
 			'host' =>  $this->config['host'],
 			'suffix' => $ldap_suffix,
 
-			'login' => $this->config['login'],
+			'login' => $login,
 			'password' => $this->config['password'],
 
 			'port'	=> '389',
-			'userbranch'	=> 'cn=Users',
+			'userbranch'	=> $user_branch,
 			'uidprefix' => 'cn',
 			'protocol_version' => 3,
 			'match' => array(
@@ -154,36 +166,18 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ret []= $c;
 		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'), NULL, NULL, 1);
 		$ret []= $c;
+		$c = new config_element('ou', _('(OU)'), _('OU'), _('OU'), NULL, NULL, 1);
+		$ret []= $c;
 		return $ret;
 	}
 
 	public function prefsIsValid($prefs_) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
-
-		$domain_ = strtolower($config_AD['domain']);
-		$buf = explode('.', $config_AD['domain']);
-		if (! count($buf)) {
-			Logger::error('main','USERDB_AD::prefsIsValid "domain2suffix" error');
-			return false;
-		}
-		$ldap_suffix='';
-		foreach($buf as $d)
-			$ldap_suffix.='dc='.$d.',';
-		$ldap_suffix = substr($ldap_suffix, 0,-1);
-		$config_ldap = array(
-			'host' =>  $config_AD['host'],
-			'suffix' => $ldap_suffix,
-			'login' => $config_AD['login'],
-			'password' => $config_AD['password'],
-			'port'	=> '389',
-			'userbranch'	=> 'cn=Users',
-			'uidprefix' => 'cn',
-			'protocol_version' => 3
-			);
+		$config_ldap = self::makeLDAPconfig($prefs_);
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect();
 		$LDAP2->disconnect();
-
+		
 		return ($ret === true);
 	}
 

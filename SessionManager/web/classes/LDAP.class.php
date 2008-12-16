@@ -85,7 +85,7 @@ class LDAP {
 		if (!is_null($this->port))
 			@ldap_set_option($this->link, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
 
-		$dn = $this->uidprefix.'='.$this->login.",".$this->userbranch.",".$this->suffix;
+		$dn = $this->login.",".$this->suffix;
 		$buf_bind = $this->bind($dn, $this->password);
 		return $buf_bind;
 	}
@@ -103,7 +103,7 @@ class LDAP {
 
 		if (!$buf) {
 			Logger::error('main', 'LDAP - bind failed : ('.$this->errno().') ');
-			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -w '.$pwd_.' -D '.$dn_.' -LLL -b'.$dn_;
+			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -w '.$pwd_.' -D '.$dn_.' -LLL -b '.$dn_;
 			Logger::debug('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
