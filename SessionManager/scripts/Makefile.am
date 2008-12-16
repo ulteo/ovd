@@ -10,9 +10,9 @@ sm-admin:
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
 			< $(srcdir)/sm-admin.in > $@
 
-sm-admin.8:
+sm-admin.1:
 	sed -e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		< $(srcdir)/sm-admin.1.in > $@
 
 clean-local:
-	rm -f $(bin_SCRIPTS)
+	rm -f $(bin_SCRIPTS) $(man_MANS)

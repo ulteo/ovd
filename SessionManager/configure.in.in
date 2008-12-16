@@ -41,6 +41,8 @@ web/modules/Makefile
 web/admin/media/script/ajax/Makefile
 web/admin/media/script/Makefile
 web/admin/media/style/Makefile
+web/admin/media/image/menu/Makefile
+web/admin/media/image/Makefile
 web/admin/media/Makefile
 web/admin/modules/UserDB/Makefile
 web/admin/modules/ApplicationDB/Makefile
