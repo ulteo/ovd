@@ -25,6 +25,7 @@ require_once(dirname(__FILE__).'/core.inc.php');
 function get_from_file($file_) {
 	if (!is_readable($file_)) {
 		Logger::error('main', 'Unable to read from : '.$file_);
+		return false;
 		//die('Unable to read from : '.$file_);
 	}
 
@@ -32,6 +33,7 @@ function get_from_file($file_) {
 
 	if ($buf == '') {
 		Logger::error('main', 'File is empty : '.$file_);
+		return false;
 		//die('File is empty : '.$file_);
 	}
 
@@ -43,10 +45,12 @@ function get_from_file($file_) {
 function put_to_file($file_, $data_) {
 	if ($data_ == '') {
 		Logger::warning('main', 'Empty string for : '.$file_);
+		return false;
 		//die('Empty string for : '.$file_);
 	} else {
 		if (! @file_put_contents($file_, $data_)) {
 			Logger::error('main', 'Unable to write to : '.$file_);
+			return false;
 			//die('Unable to write to : '.$file_);
 		}
 	}
