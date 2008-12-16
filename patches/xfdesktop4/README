@@ -1,0 +1,5 @@
+* 02_show_context_menu.patch:
+  patch from ubuntu, modified to hide some entries on the contextual menu
+
+* 12_restricted_menu_on_desktop.patch
+  use the restricted menu directory to display application icons on the menu

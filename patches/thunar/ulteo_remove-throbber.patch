@@ -1,0 +1,46 @@
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-window.c thunar-0.9.0.new/thunar/thunar-window.c
+--- thunar-0.9.0/thunar/thunar-window.c	2008-11-05 16:40:01.000000000 +0100
++++ thunar-0.9.0.new/thunar/thunar-window.c	2008-11-05 16:44:12.000000000 +0100
+@@ -48,7 +48,7 @@
+ #include <thunar/thunar-private.h>
+ #include <thunar/thunar-statusbar.h>
+ #include <thunar/thunar-stock.h>
+-#include <thunar/thunar-throbber.h>
++/* #include <thunar/thunar-throbber.h> */
+ #include <thunar/thunar-trash-action.h>
+ #include <thunar/thunar-tree-pane.h>
+ #include <thunar/thunar-window.h>
+@@ -225,7 +225,7 @@
+   GClosure               *menu_item_deselected_closure;
+ 
+   GtkWidget              *table;
+-  GtkWidget              *throbber;
++/*  GtkWidget              *throbber;*/
+   GtkWidget              *paned;
+   GtkWidget              *sidepane;
+   GtkWidget              *view_box;
+@@ -703,6 +703,7 @@
+   gtk_table_attach (GTK_TABLE (window->table), menubar, 0, 1, 0, 1, GTK_EXPAND | GTK_FILL, GTK_FILL, 0, 0);
+   gtk_widget_show (menubar);
+ 
++#if 0
+   /* append the menu item for the throbber */
+   item = gtk_menu_item_new ();
+   gtk_widget_set_sensitive (GTK_WIDGET (item), FALSE);
+@@ -714,6 +715,7 @@
+   window->throbber = thunar_throbber_new ();
+   gtk_container_add (GTK_CONTAINER (item), window->throbber);
+   gtk_widget_show (window->throbber);
++#endif
+ 
+   /* check if we need to add the root warning */
+   if (G_UNLIKELY (geteuid () == 0))
+@@ -1694,7 +1696,7 @@
+       g_signal_connect_swapped (G_OBJECT (window->view), "change-directory", G_CALLBACK (thunar_window_set_current_directory), window);
+       exo_binding_new (G_OBJECT (window), "current-directory", G_OBJECT (window->view), "current-directory");
+       exo_binding_new (G_OBJECT (window), "show-hidden", G_OBJECT (window->view), "show-hidden");
+-      exo_binding_new (G_OBJECT (window->view), "loading", G_OBJECT (window->throbber), "animated");
++/*      exo_binding_new (G_OBJECT (window->view), "loading", G_OBJECT (window->throbber), "animated"); */
+       exo_binding_new (G_OBJECT (window->view), "selected-files", G_OBJECT (window->launcher), "selected-files");
+       exo_mutual_binding_new (G_OBJECT (window->view), "zoom-level", G_OBJECT (window), "zoom-level");
+       gtk_box_pack_end (GTK_BOX (window->view_box), window->view, TRUE, TRUE, 0);

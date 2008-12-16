@@ -1,0 +1,6 @@
+* ulteo_remove-file-system-shortcut.patch
+  all in the patch name...
+
+* ulteo_remove-throbber.patch
+  remove the progress gif icon which doesn't work and defaults to the gnome
+  icon

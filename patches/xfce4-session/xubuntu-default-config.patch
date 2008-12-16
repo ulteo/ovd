@@ -1,0 +1,22 @@
+--- a/xfce4-session.rc
++++ b/xfce4-session.rc
+@@ -26,6 +26,7 @@
+ SessionName=Default
+ SessionName[de]=Standard
+ SessionName[ja]=標準
++PromptOnLogout=false
+ 
+ # Disable management of remote clients by default. The user
+ # has to explicitly enable this for security reasons.
+@@ -46,6 +47,10 @@
+ Client3_PerScreen=False
+ 
+ 
++[Compatibility]
++LaunchGnome=true
++LaunchKDE=true
++
+ # Default splash screen selection.
+ [Splash Screen]
+-Engine=mice
++Engine=

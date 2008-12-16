@@ -1,0 +1,33 @@
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-shortcuts-model.c thunar-0.9.0.new/thunar/thunar-shortcuts-model.c
+--- thunar-0.9.0/thunar/thunar-shortcuts-model.c	2008-11-05 16:40:01.000000000 +0100
++++ thunar-0.9.0.new/thunar/thunar-shortcuts-model.c	2008-11-05 16:56:27.000000000 +0100
+@@ -255,7 +255,7 @@
+ {
+   ThunarVfsVolume *volume;
+   ThunarShortcut  *shortcut;
+-  ThunarVfsPath   *system_path_list[4];
++  ThunarVfsPath   *system_path_list[3];
+   ThunarVfsPath   *fhome;
+   ThunarVfsPath   *fpath;
+   GtkTreePath     *path;
+@@ -277,7 +277,7 @@
+   system_path_list[0] = thunar_vfs_path_get_for_home ();
+   system_path_list[1] = thunar_vfs_path_get_for_trash ();
+   system_path_list[2] = thunar_vfs_path_relative (system_path_list[0], "Desktop");
+-  system_path_list[3] = thunar_vfs_path_get_for_root ();
++  /*system_path_list[3] = thunar_vfs_path_get_for_root ();*/
+ 
+   /* will be used to append the shortcuts to the list */
+   path = gtk_tree_path_new_from_indices (0, -1);
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-tree-model.c thunar-0.9.0.new/thunar/thunar-tree-model.c
+--- thunar-0.9.0/thunar/thunar-tree-model.c	2008-11-05 16:40:01.000000000 +0100
++++ thunar-0.9.0.new/thunar/thunar-tree-model.c	2008-11-05 16:57:51.000000000 +0100
+@@ -294,7 +294,7 @@
+ thunar_tree_model_init (ThunarTreeModel *model)
+ {
+   ThunarTreeModelItem *item;
+-  ThunarVfsPath       *system_path_list[3] = { thunar_vfs_path_get_for_home (), thunar_vfs_path_get_for_trash (), thunar_vfs_path_get_for_root () };
++  ThunarVfsPath       *system_path_list[3] = { thunar_vfs_path_get_for_home (), thunar_vfs_path_get_for_trash ()/*, thunar_vfs_path_get_for_root () */};
+   ThunarFile          *file;
+   GList               *volumes;
+   GNode               *node;

@@ -1,0 +1,6 @@
+* 00_logout_dialog.patch
+  show a simple confirmation dialog when leaving the session
+
+* xubuntu-default-config.patch
+  modified patch to set PromptOnLogout to false by default (and thus always
+  call our logout dialog)
