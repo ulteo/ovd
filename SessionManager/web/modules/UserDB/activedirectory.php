@@ -78,7 +78,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $u;
 	}
 
-	protected function makeLDAPconfig() {
+	protected function makeLDAPconfig($prefs_=NULL) {
 		if (is_NULL($prefs_)) {
 			$prefs_ = Preferences::getInstance();
 			if (! $prefs_)
@@ -111,6 +111,9 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			$login = $this->config['login'];
 		else
 			$login ='cn='.$this->config['login'].','.$user_branch;
+		
+		if (substr($login, -1*strlen($ldap_suffix)) != $ldap_suffix)
+			$login .= ','.$ldap_suffix;
 
 		$config_ldap = array(
 			'host' =>  $this->config['host'],

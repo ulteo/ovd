@@ -84,8 +84,12 @@ class LDAP {
 		$this->link = $buf;
 		if (!is_null($this->port))
 			@ldap_set_option($this->link, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
-
-		$dn = $this->login.",".$this->suffix;
+		
+		if (substr($this->login, -1*strlen($this->suffix)) == $this->suffix)
+			$dn = $this->login;
+		else
+			$dn = $this->login.",".$this->suffix;
+		
 		$buf_bind = $this->bind($dn, $this->password);
 		return $buf_bind;
 	}
@@ -98,12 +102,12 @@ class LDAP {
 
 	private function bind($dn_=NULL, $pwd_=NULL){
 		Logger::debug('main', "LDAP - bind('".$dn_."')");
-
 		$buf = @ldap_bind($this->link, $dn_, $pwd_);
 
 		if (!$buf) {
 			Logger::error('main', 'LDAP - bind failed : ('.$this->errno().') ');
-			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -w '.$pwd_.' -D '.$dn_.' -LLL -b '.$dn_;
+			$searchbase =$this->userbranch.','.$this->suffix;
+			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -w '.$pwd_.' -D '.$dn_.' -LLL -b '.$searchbase;
 			Logger::debug('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
