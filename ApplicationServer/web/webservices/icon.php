@@ -24,7 +24,7 @@ Logger::debug('main', 'Starting webservices/icon.php');
 
 $path = $_REQUEST['path'];
 
-$bloblo = shell_exec('find /usr/share/pixmaps /usr/share/icons -iname \'*'.$path.'*\'');
+$bloblo = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
 $bloblo = explode("\n", $bloblo);
 
 foreach ($bloblo as $k => $v)
