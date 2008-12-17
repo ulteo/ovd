@@ -48,7 +48,7 @@ cache_set_monitoring() {
     local ram=`grep MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
     local ram_Buffers=`grep Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
     local ram_Cached=`grep Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
-    local ram_used=$(( $ram - $ram_Buffers - $ram_Cached ))
+    let ram_used=$ram-$ram_Buffers-$ram_Cached
 
     echo '<?xml version="1.0" encoding="utf-8"?>'         > $file || return 1
     echo '<monitoring>'                                   >>$file
