@@ -471,6 +471,13 @@ MAXLUCK=20
 MINLUCK=1
 # end of default configuration
 
+# unset some env vars
+unset LANG
+unset USERNAME
+
+# If the admin restarts the daemon using sudo, its env is used, and
+# if SESSION_MANAGER is set then xfce4-session will not want to start
+unset SESSION_MANAGER
 
 # Load/overwrite configution from config file
 if [ ! -f $CONF_FILE ]; then
