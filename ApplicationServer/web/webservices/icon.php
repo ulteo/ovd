@@ -42,7 +42,10 @@ foreach ($bloblo as $image) {
 	if (!is_file($image) || !is_readable($image))
 		continue;
 
-	$buf = @getimagesize($image);
+	$buf_img = new Imagick($image);
+	$buf = array();
+// 	$buf[0] = $buf_img->getImageWidth();
+	$buf[1] = $buf_img->getImageHeight();
 
 	if ($buf[1] >= 32)
 		$tab1[$buf[1]] = $image;
@@ -61,23 +64,13 @@ if (count($tab1 > 0)) {
 	die();
 }
 
+$buf = new Imagick($image);
+if (!$buf) {
+	header('HTTP/1.1 404 Not Found');
+	die();
+}
+$buf->setImageFormat('png');
+$buf->scaleImage(0, 32);
+
 header('Content-Type: image/png');
-
-$img = imagecreatetruecolor(32, 32);
-imagesavealpha($img, true);
-
-$img_width = imagesx($img);
-$img_height = imagesy($img);
-
-$background_color = imagecolorallocate($img, 255, 255, 255);
-imagefill($img, 0, 0, $background_color);
-
-$icon = imagecreatefrompng($image);
-
-$icon_width = imagesx($icon);
-$icon_height = imagesy($icon);
-
-imagecopyresampled($img, $icon, 0, 0, 0, 0, $img_width, $img_height, $icon_width, $icon_height);
-
-imagepng($img);
-imagedestroy($img);
+echo $buf;
