@@ -70,9 +70,11 @@ $lock = new Lock($user->getAttribute('login'));
 if ($lock->have_lock()) {
 	$session = new Session($lock->session);
 
+	$buf = $prefs->get('general', 'session_settings_defaults');
+
 	if ($session->session_alive())
 		die_error(_('You already have a session active'),__FILE__,__LINE__);
-	elseif ($session->session_suspended() && $prefs->get('general', 'persistent_session')) {
+	elseif ($session->session_suspended() && $buf['advanced_settings_startsession']) {
 		$old_session_id = $session->id;
 		$old_session_server = $session->server;
 	}

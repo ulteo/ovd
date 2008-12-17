@@ -56,7 +56,9 @@ if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['passwor
 			$session = new Session($lock->session);
 
 			if (!$session->session_alive()) {
-				if (!$prefs->get('general', 'persistent_session'))
+				$default_settings = $prefs->get('general', 'session_settings_defaults');
+				$persistent = $default_settings['persistent'];
+				if (!$persistent)
 					$lock->remove_lock();
 
 				$already_online = 0;
