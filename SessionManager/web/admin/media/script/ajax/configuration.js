@@ -4,7 +4,7 @@ function changeNames(row, index) {
 
 	function update(type) {
 		var elements = row.getElementsByTagName('input');
-		for (var i = 0; n = elements.length; i < n; i++) {
+		for (var i = 0, n = elements.length; i < n; i++) {
 			var newname = elements[i].name.replace(re, rt );
 			elements[i].setAttribute('name', newname);
 			elements[i].setAttribute('id', newname);
