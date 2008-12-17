@@ -146,7 +146,8 @@ if ((!isset($random_server)) || !is_object($random_server))
 	die_error(_('No available server'),__FILE__,__LINE__);
 
 if (@gethostbyname($random_server->fqdn) == $random_server->fqdn) {
-	$fqdn_private_address = $prefs->get('general', 'fqdn_private_address');
+	$buf = $prefs->get('general', 'application_server_settings');
+	$fqdn_private_address = $buf['fqdn_private_address'];
 	if (isset($fqdn_private_address[$random_server->fqdn]))
 		$random_server->fqdn = $fqdn_private_address[$random_server->fqdn];
 }

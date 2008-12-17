@@ -55,16 +55,6 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,1);
 		$this->add($c,'general');
 
-		$c = new config_element('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.office.ulteo.com','*.ulteo.com'), NULL, 5);
-		$this->add($c,'general');
-
-		//fqdn_private_address : array('dns' => ip);
-		$c = new config_element('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, 4);
-		$this->add($c,'general');
-
-		$c = new config_element('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), 2);
-		$this->add($c,'general');
-
 		$c = new config_element('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), 3);
 		$this->add($c,'general');
 
@@ -80,8 +70,16 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
 
+		$this->addPrettyName('application_server_settings',_('Application Server settings'));
+		$c = new config_element('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.office.ulteo.com','*.ulteo.com'), NULL, 5);
+		$this->add($c,'general', 'application_server_settings');
+		//fqdn_private_address : array('dns' => ip);
+		$c = new config_element('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, 4);
+		$this->add($c,'general', 'application_server_settings');
+		$c = new config_element('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general', 'application_server_settings');
 		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
-		$this->add($c,'general');
+		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
 		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);

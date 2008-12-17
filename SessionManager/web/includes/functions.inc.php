@@ -102,9 +102,10 @@ function check_ip($fqdn_) {
 		die();
 	}
 
-	$authorized_fqdn = $prefs->get('general', 'authorized_fqdn');
-	$fqdn_private_address = $prefs->get('general', 'fqdn_private_address');
-	$disable_fqdn_check = $prefs->get('general', 'disable_fqdn_check');
+	$buf = $prefs->get('general', 'application_server_settings');
+	$authorized_fqdn = $buf['authorized_fqdn'];
+	$fqdn_private_address = $buf['fqdn_private_address'];
+	$disable_fqdn_check = $buf['disable_fqdn_check'];
 
 	$address = $_SERVER['REMOTE_ADDR'];
 	$name = $fqdn_;

@@ -310,7 +310,8 @@ class Server {
 			if (! $prefs)
 				die_error('get Preferences failed',__FILE__,__LINE__);
 
-			$what_to_do = $prefs->get('general', 'action_when_as_not_ready');
+			$buf = $what_to_do = $prefs->get('general', 'application_server_settings');
+			$what_to_do = $buf['action_when_as_not_ready'];
 
 			if ($what_to_do == 1)
 				$this->setAttribute('locked', 1);

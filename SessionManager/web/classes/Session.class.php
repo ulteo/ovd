@@ -46,17 +46,6 @@ class Session {
 
 		$this->folder = SESSIONS_DIR.'/'.$this->server.'/'.$this->session;
 
-		/*
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			return false;
-
-		$fqdn_private_address = $prefs->get('general', 'fqdn_private_address');
-		if (is_array($fqdn_private_address))
-			if (isset($fqdn_private_address[$this->server]))
-				$this->server = $fqdn_private_address[$this->server];
-		*/
-
 		if (file_exists($this->folder.'/settings'))
 			$this->settings = unserialize(@file_get_contents($this->folder.'/settings'));
 	}
