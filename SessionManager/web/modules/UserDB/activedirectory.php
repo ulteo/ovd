@@ -167,7 +167,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ret []= $c;
 		$c = new config_element('login', _('User login'), _('The user login that must be used to access the database (to list users account).'), _('The user login that must be used to access the database (to list users account).'), NULL, NULL, 1);
 		$ret []= $c;
-		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'), NULL, NULL, 1);
+		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'), NULL, NULL, 7);
 		$ret []= $c;
 		$c = new config_element('ou', _('(OU)'), _('OU'), _('OU'), NULL, NULL, 1);
 		$ret []= $c;

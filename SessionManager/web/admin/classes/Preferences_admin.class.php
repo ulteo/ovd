@@ -110,7 +110,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','mysql');
 		$c = new config_element('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,1);
 		$this->add($c,'general','mysql');
-		$c = new config_element('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'',NULL,1);
+		$c = new config_element('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'), '', NULL, 7);
 		$this->add($c,'general','mysql');
 		$c = new config_element('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,1);
 		$this->add($c,'general','mysql');

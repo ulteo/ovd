@@ -36,6 +36,9 @@ function print_element($key_name,$contener,$element_key,$element) {
 		case 1: //	1 : input text (rw)
 			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
+		case 7: //	7 : input password (rw)
+			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
+			break;
 		case 2: //	2 : list of text (r) (fixed length) (only one can be selected)
 				if (is_array($element->content_avalaible)) {
 					echo '<select id="'.$label2.'"  name="'.$label2.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');">';
