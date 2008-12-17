@@ -277,10 +277,10 @@ class Preferences_admin extends Preferences {
 			}
 			if (is_file($path)) {
 				$pathinfo = pathinfo_filename($path);
-				if (!isset($ret['module'])){
-					$ret['module'] = array();
-				}
 				if ($pathinfo['extension'] == 'php') {
+					if (!isset($ret['module'])){
+						$ret['module'] = array();
+					}
 					// TODO : prettyname
 					$ret['module'][$pathinfo["filename"]] = $pathinfo["filename"];
 				}
