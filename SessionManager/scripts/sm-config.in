@@ -170,7 +170,7 @@ done
 while [ -z "$APACHE_DIR" ]; do
     if [ -d "/etc/httpd/conf.d" ]; then
         APACHE_DIR=/etc/httpd/conf.d
-    elif [ -d "/etc/apache2/conf.d" ]; htne
+    elif [ -d "/etc/apache2/conf.d" ]; then
         APACHE_DIR="/etc/apache2/conf.d"
     fi
     if [ -z "APACHE_DIR" ]; then
@@ -190,7 +190,7 @@ if [ -z "$NODOWNLOAD" ]; then
         fi
     fi
     if [ -z "$TARGET" ]; then
-        echo -n "Chroot destination [$PROPOSED_TARGET]: "
+        echo -n "Chroot destination [$PROPOSED_TARGET/]: "
         read TARGET
         if [ -z "$TARGET" ]; then
             TARGET=$PROPOSED_TARGET
@@ -210,7 +210,6 @@ else
 fi
 echo "* apache group: $APACHE_GROUP"
 
-exit 0
 [ -z "$NODOWNLOAD" ] && get_chroot
 set_admin_credentials
 set_apache
