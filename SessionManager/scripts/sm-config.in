@@ -200,15 +200,18 @@ fi
 
 echo
 echo "Options:"
-echo -n "* chroot download: "
+echo -n "* chroot download:  "
 if [ -z "$NODOWNLOAD" ]; then
     echo "yes"
-    echo "* chroot URL: $URL"
+    echo "* chroot URL:       $URL"
     echo "* chroot directory: $TARGET"
 else
     echo "no"
 fi
-echo "* apache group: $APACHE_GROUP"
+echo "* apache group:     $APACHE_GROUP"
+echo "* apache dir:       $APACHE_DIR"
+
+[ -n "$OVDDEBUG" ] && exit 0
 
 [ -z "$NODOWNLOAD" ] && get_chroot
 set_admin_credentials
