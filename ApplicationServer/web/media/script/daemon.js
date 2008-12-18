@@ -41,15 +41,15 @@ function daemon_init(server_, session_, timestamp_, lead_, debug_) {
 		my_height = document.body.clientHeight;
 	}
 
-	my_height = parseInt(my_height)-18;
+	if ($('menuShareFrame')) {
+		$('menuShareFrame').style.width = my_width+'px';
+		$('menuShareFrame').style.height = my_height+'px';
+
+		my_height = parseInt(my_height)-18;
+	}
 
 	if (debug)
 		my_height = parseInt(my_height)-150;
-
-	if (lead) {
-		$('menuShareFrame').style.width = my_width+'px';
-		$('menuShareFrame').style.height = my_height+'px';
-	}
 
 	daemon_loop();
 }
@@ -98,7 +98,7 @@ function switch_splash_to_applet() {
 			},
 			onSuccess: function(transport) {
 				$('splashContainer').hide();
-				if (lead)
+				if ($('menuContainer'))
 					$('menuContainer').show();
 				$('appletContainer').show();
 
@@ -110,7 +110,7 @@ function switch_splash_to_applet() {
 
 function switch_applet_to_end() {
 	$('splashContainer').hide();
-	if (lead)
+	if ($('menuContainer'))
 		$('menuContainer').hide();
 	$('appletContainer').hide();
 	$('endContainer').show();

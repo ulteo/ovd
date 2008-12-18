@@ -120,7 +120,14 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','session_settings_defaults');
 		$c = new config_element('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new config_element('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),3);
+
+		# Sessions can be shared ? yes/no
+		$c = new config_element('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general','session_settings_defaults');
+
+		$c = new config_element('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),
+			'shareable' => _('shareable'),
+			'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),3);
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));

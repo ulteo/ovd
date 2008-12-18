@@ -37,6 +37,7 @@ $desktop_timeout = $default_settings['timeout'];
 $timeout_message = $default_settings['session_timeout_msg'];
 $start_app = '';
 $persistent = $default_settings['persistent'];
+$shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $debug = 0;
 
@@ -142,6 +143,9 @@ if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app'])
 if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
 	$persistent = $_REQUEST['persistent'];
 
+if (in_array('shareable', $advanced_settings) && isset($_REQUEST['shareable']) && $_REQUEST['shareable'] != '')
+	$shareable = $_REQUEST['shareable'];
+
 if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_icons']) && $_REQUEST['desktop_icons'] != '')
 	$desktop_icons = $_REQUEST['desktop_icons'];
 
@@ -176,6 +180,8 @@ if (isset($debug) && $debug != '0')
 	$optional_args['debug'] = 1;
 if (isset($persistent) && $persistent != '0')
 	$optional_args['persistent'] = 1;
+if (isset($shareable) && $shareable != '0')
+	$optional_args['shareable'] = 1;
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 

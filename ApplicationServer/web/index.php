@@ -61,7 +61,7 @@ foreach ($settings as $setting) {
 	$_SESSION['parameters'][$setting] = $item->getAttribute('value');
 }
 
-$settings2 = array('timeout', 'timeout_message', 'persistent', 'desktop_icons', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
+$settings2 = array('timeout', 'timeout_message', 'persistent', 'shareable', 'desktop_icons', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
 foreach ($settings2 as $setting2) {
 	$item2 = @$session_node->getElementsByTagname($setting2)->item(0);
 
@@ -119,7 +119,7 @@ if ($_SESSION['mode'] == 'start')
 
 	<body>
 <?php
-if ($_SESSION['owner']) {
+if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 ?>
 		<div id="menuContainer" style="display: none;">
 			<a href="javascript:;" onclick="clicMenu('menuShare')"><img src="media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" /></a>
@@ -176,7 +176,7 @@ if ($_SESSION['owner']) {
 		</div>
 
 		<div id="appletContainer" style="<?php
-if ($_SESSION['owner'])
+if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
 	echo 'top: 18px; ';
 ?>display: none;">
 		</div>

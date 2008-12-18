@@ -68,6 +68,7 @@ $desktop_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
 $start_app = '';
 $persistent = $default_settings['persistent'];
+$shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $debug = 0;
 
@@ -270,7 +271,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -429,6 +430,20 @@ require_once('header.php');
 						<td>
 							<input class="input_radio" type="radio" name="persistent" value="1"<?php if ($persistent == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
 							<input class="input_radio" type="radio" name="persistent" value="0"<?php if ($persistent != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+						</td>
+					</tr>
+					<?php
+						}
+
+						if (in_array('shareable', $advanced_settings)) {
+					?>
+					<tr class="content1">
+						<td class="title">
+							<?php echo _('Shareable session'); ?>
+						</td>
+						<td>
+							<input class="input_radio" type="radio" name="shareable" value="1"<?php if ($shareable == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+							<input class="input_radio" type="radio" name="shareable" value="0"<?php if ($shareable != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
 						</td>
 					</tr>
 					<?php
