@@ -186,7 +186,7 @@ sed -i "s/^www-data:x:33:/www-data:x:$APACHE_GID:/" $CHROOT_PATH/etc/group
 
 # set the main vhost
 ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
-ln -sf $ALIASFILE $APACHE_DIR/application-server
+ln -sf $ALIASFILE $APACHE_DIR/application-server.conf
 
 # set cups
 if [ -f $CHROOT_PATH/etc/init.d/cupsys -a -z "$NOCUPS" ]; then
