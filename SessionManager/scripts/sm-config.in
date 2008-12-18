@@ -18,7 +18,9 @@
 
 PROGRAM=$(basename $0)
 
-CONFFILE=@CONFFILE@
+CONFDIR=@CONFDIR@
+CONFFILE=$CONFDIR/config.inc.php
+ALIASFILE=$CONFDIR/apache2.conf
 LOGDIR=@LOCALSTATEDIR@/log/ulteo
 SPOOLDIR=@LOCALSTATEDIR@/spool/ulteo
 WEBDIR=@WEBDIR@
@@ -35,7 +37,7 @@ usage ()
 {
     echo -n "Usage: $PROGRAM [--no-download] [--chroot-url url] [--chroot-dir dir]"
     echo -n " [--admin-login login] [--admin-pwd pwd] [--apache-group group]"
-    echo " [--version|-v] [--help|-h]"
+    echo " [--apache-dir dir] [--version|-v] [--help|-h]"
     echo "Configure an Ulteo Session Manager (Open Virtual Desktop)"
     echo
     echo "  --no-download        don't download the chroot, assume it is already installed"
@@ -46,13 +48,18 @@ usage ()
     echo "  --admin-login login  set the admin login to 'login'"
     echo "  --admin-pwd pwd      set the admin password to 'pwd'"
     echo "  --apache-group group set the apache group to 'group'"
+    echo "                       (default: guess from /etc/group)"
+    echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
+    echo "                       (default: guess from /etc/{httpd,apache2})"
     echo "  --help|-h            display this help"
     echo "  --version|-v         display version informations"
 }
 
-set_apache_rights () {
+set_apache () {
     chgrp $APACHE_GROUP $LOGDIR/sessionmanager $SPOOLDIR/sessiomanager
     chmod 2770 $SPOOLDIR
+
+    ln -sf $ALIASFILE $APACHE_DIR/session-manager
 }
 
 set_admin_credentials () {
@@ -78,6 +85,7 @@ get_chroot () {
 
 unset NODOWNLOAD
 unset APACHE_GROUP
+unset APACHE_DIR
 unset LOGIN
 unset PASS1
 unset PASS2
@@ -102,6 +110,9 @@ while [ "$1" != "" ]; do
             shift;;
         --apache-group)
             APACHE_GROUP="$2"
+            shift;;
+        --apache-dir)
+            APACHE_DIR="$2"
             shift;;
         --help|-h)
             usage
@@ -156,6 +167,18 @@ while [ -z "$APACHE_GROUP" ]; do
     fi
 done
 
+while [ -z "$APACHE_DIR" ]; do
+    if [ -d "/etc/httpd/conf.d" ]; then
+        APACHE_DIR=/etc/httpd/conf.d
+    elif [ -d "/etc/apache2/conf.d" ]; htne
+        APACHE_DIR="/etc/apache2/conf.d"
+    fi
+    if [ -z "APACHE_DIR" ]; then
+        echo -n "Apache configuration directory: "
+        read APACHE_DIR
+    fi
+done
+
 if [ -z "$NODOWNLOAD" ]; then
     PROPOSED_URL=http://www.ulteo.com/main/downloads/ulteo-ovd.php
     PROPOSED_TARGET=$WEBDIR
@@ -190,6 +213,6 @@ echo "* apache group: $APACHE_GROUP"
 exit 0
 [ -z "$NODOWNLOAD" ] && get_chroot
 set_admin_credentials
-set_apache_rights
+set_apache
 
 exit 0

@@ -4,7 +4,7 @@ bin_SCRIPTS = sm-config
 man_MANS = sm-config.1
 
 sm-config:
-	sed -e "s,@CONFFILE@,$(sysconfdir)/ulteo/sessionmanager/config.inc.php," \
+	sed -e "s,@CONFDIR@,$(sysconfdir)/ulteo/sessionmanager," \
 		-e "s,@LOCALSTATEDIR@,$(localstatedir)," \
 		-e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
@@ -12,6 +12,7 @@ sm-config:
 
 sm-config.1:
 	sed -e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
+		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
 		< $(srcdir)/sm-config.1.in > $@
 
 clean-local:
