@@ -1,20 +1,20 @@
-EXTRA_DIST = sm-admin.in sm-admin.1.in
+EXTRA_DIST = sm-config.in sm-config.1.in
 
-bin_SCRIPTS = sm-admin
-man_MANS = sm-admin.1
+bin_SCRIPTS = sm-config
+man_MANS = sm-config.1
 
-sm-admin:
+sm-config:
 	sed -e "s,@CONFFILE@,$(sysconfdir)/ulteo/sessionmanager/config.inc.php," \
-	    -e "s,@CONFDIR@,$(sysconfdir)/ulteo/sessionmanager," \
+		-e "s,@LOCALSTATEDIR@,$(localstatedir)," \
 		-e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
-			< $(srcdir)/sm-admin.in > $@
+			< $(srcdir)/sm-config.in > $@
 
-sm-admin.1:
+sm-config.1:
 	sed -e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
-		< $(srcdir)/sm-admin.1.in > $@
+		< $(srcdir)/sm-config.1.in > $@
 
 clean-local:
 	rm -f $(bin_SCRIPTS) $(man_MANS)
 
-.PHONY: sm-admin.1 sm-admin
+.PHONY: sm-config.1 sm-config

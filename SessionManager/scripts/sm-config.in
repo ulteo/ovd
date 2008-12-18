@@ -1,0 +1,195 @@
+#!/bin/sh
+# Copyright (C) 2008 Ulteo SAS
+# Author: Gauvain Pocentek <gauvain@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, version 2
+# of the License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+PROGRAM=$(basename $0)
+
+CONFFILE=@CONFFILE@
+LOGDIR=@LOCALSTATEDIR@/log/ulteo
+SPOOLDIR=@LOCALSTATEDIR@/spool/ulteo
+WEBDIR=@WEBDIR@
+
+WGETARGS="--tries=3 --timeout=60"
+
+# helper functions
+die () {
+    echo $@
+    exit 1
+}
+
+usage ()
+{
+    echo -n "Usage: $PROGRAM [--no-download] [--chroot-url url] [--chroot-dir dir]"
+    echo -n " [--admin-login login] [--admin-pwd pwd] [--apache-group group]"
+    echo " [--version|-v] [--help|-h]"
+    echo "Configure an Ulteo Session Manager (Open Virtual Desktop)"
+    echo
+    echo "  --no-download        don't download the chroot, assume it is already installed"
+    echo "  --chroot-url url     download the chroot from 'url'"
+    echo "                       (default: http://www.ulteo.com/main/downloads/ulteo-ovd.php)"
+    echo "  --chroot-dir dir     downlod the chroot as dir/base.tar.gz"
+    echo "                       (default: $WEBDIR/base.tar.gz)"
+    echo "  --admin-login login  set the admin login to 'login'"
+    echo "  --admin-pwd pwd      set the admin password to 'pwd'"
+    echo "  --apache-group group set the apache group to 'group'"
+    echo "  --help|-h            display this help"
+    echo "  --version|-v         display version informations"
+}
+
+set_apache_rights () {
+    chgrp $APACHE_GROUP $LOGDIR/sessionmanager $SPOOLDIR/sessiomanager
+    chmod 2770 $SPOOLDIR
+}
+
+set_admin_credentials () {
+    PASS=$(echo -n $PASS1 | md5sum | cut -d " " -f 1)
+    unset PASS1
+    unset PASS2
+
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASS\2," $CONFFILE
+}
+
+get_chroot () {
+    if [ $2 ]; then
+        mkdir -p $2 || die Unable to create the target directory $2. Aborting.
+        OUTPUT=$2/base.tar.gz
+    else
+        mkdir -p $WEBDIR || die Unable to create the target directory $WEBDIR. Something went really wrong. Aborting.
+        OUTPUT=$WEBDIR/base.tar.gz
+    fi
+    wget --spider $WGETARGS $URL || die Unable to reach the chroot tarball. Aborting.
+    wget $WGETARGS "$URL" -O $OUTPUT || die An error occured while downloading the chroot. Aborting.
+}
+
+unset NODOWNLOAD
+unset APACHE_GROUP
+unset LOGIN
+unset PASS1
+unset PASS2
+unset URL
+unset TARGET
+while [ "$1" != "" ]; do
+    case $1 in
+        --no-download)
+            NODOWNLOAD="ok";;
+        --chroot-url)
+            URL="$2"
+            shift;;
+        --chroot-dir)
+            TARGET="$2"
+            shift;;
+        --admin-login)
+            LOGIN="$2"
+            shift;;
+        --admin-pwd)
+            PASS1="$2"
+            PASS2="$2"
+            shift;;
+        --apache-group)
+            APACHE_GROUP="$2"
+            shift;;
+        --help|-h)
+            usage
+            exit 0;;
+        --version|-h)
+            echo $PROGRAM @PKG_VERSION@
+            exit 0;;
+        *)
+            usage
+            exit 1;;
+    esac
+    shift
+done
+
+while [ -z "$LOGIN" ]; do
+    echo -n "Admin login: "
+    read LOGIN
+done
+
+stty_orig=`stty -g`
+while [ -z $PASS1 -o $PASS1 != $PASS2 ]; do
+    echo -n "Password: "
+    while [ -z $PASS1 ]; do
+        stty -echo
+        read PASS1
+        stty $stty_orig
+        echo
+    done
+    echo -n "Retype password: "
+    while [ -z $PASS2 ]; do
+        stty -echo
+        read PASS2
+        stty $stty_orig
+        echo
+    done
+    if [ $PASS1 != $PASS2 ]; then
+        echo "Passwords don't match... try again."
+        unset PASS1
+        unset PASS2
+    fi
+done
+
+while [ -z "$APACHE_GROUP" ]; do
+    if grep ^apache: /etc/group >/dev/null 2>&1; then
+        APACHE_GROUP="apache"
+    elif grep ^www-data: /etc/group >/dev/null 2>&1; then
+        APACHE_GROUP="www-data"
+    fi
+    if [ -z "$APACHE_GROUP" ]; then
+        echo -n "Apache group: "
+        read APACHE_GROUP
+    fi
+done
+
+if [ -z "$NODOWNLOAD" ]; then
+    PROPOSED_URL=http://www.ulteo.com/main/downloads/ulteo-ovd.php
+    PROPOSED_TARGET=$WEBDIR
+    if [ -z "$URL" ]; then
+        echo -n "Chroot download url [$PROPOSED_URL]: "
+        read URL
+        if [ -z "$URL" ]; then
+            URL=$PROPOSED_URL
+        fi
+    fi
+    if [ -z "$TARGET" ]; then
+        echo -n "Chroot destination [$PROPOSED_TARGET]: "
+        read TARGET
+        if [ -z "$TARGET" ]; then
+            TARGET=$PROPOSED_TARGET
+        fi
+    fi
+fi
+
+echo
+echo "Options:"
+echo -n "* chroot download: "
+if [ -z "$NODOWNLOAD" ]; then
+    echo "yes"
+    echo "* chroot URL: $URL"
+    echo "* chroot directory: $TARGET"
+else
+    echo "no"
+fi
+echo "* apache group: $APACHE_GROUP"
+
+exit 0
+[ -z "$NODOWNLOAD" ] && get_chroot
+set_admin_credentials
+set_apache_rights
+
+exit 0
