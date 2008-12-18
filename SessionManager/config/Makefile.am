@@ -15,3 +15,5 @@ install-exec-hook:
 
 clean-local:
 	rm -f $(conf_DATA)
+
+.PHONY: apache2.conf config.inc.php

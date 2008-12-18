@@ -16,3 +16,5 @@ sm-admin.1:
 
 clean-local:
 	rm -f $(bin_SCRIPTS) $(man_MANS)
+
+.PHONY: sm-admin.1 sm-admin
