@@ -56,8 +56,9 @@ usage ()
 }
 
 set_apache () {
-    chgrp $APACHE_GROUP $LOGDIR/sessionmanager $SPOOLDIR/sessiomanager
-    chmod 2770 $SPOOLDIR
+    chgrp $APACHE_GROUP $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
+    chmod 755 $LOGDIR $SPOOLDIR
+    chmod 2770 $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
 
     ln -sf $ALIASFILE $APACHE_DIR/session-manager
 }
