@@ -70,8 +70,34 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
 
+		$this->addPrettyName('mysql',_('MySQL configuration'));
+		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);
+		$this->add($c,'general','mysql');
+		$c = new config_element('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,1);
+		$this->add($c,'general','mysql');
+		$c = new config_element('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'',NULL,1);
+		$this->add($c,'general','mysql');
+		$c = new config_element('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,1);
+		$this->add($c,'general','mysql');
+		$c = new config_element('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',1);
+		$this->add($c,'general','mysql');
+
+		$this->addPrettyName('mails_settings',_('Mails settings'));
+		$c = new config_element('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail',array('mail'=>_('Local'),'smtp'=>_('SMTP server')),2);
+		$this->add($c,'general','mails_settings');
+		$c = new config_element('send_from', _('From'), _('From'), _('From'),'no-reply@'.$_SERVER['SERVER_NAME'],NULL,1);
+		$this->add($c,'general','mails_settings');
+		$c = new config_element('send_host', _('Host'), _('Host'), _('Host'),'',NULL,1);
+		$this->add($c,'general','mails_settings');
+		$c = new config_element('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),1,array(0=>_('no'),1=>_('yes')),2);
+		$this->add($c,'general','mails_settings');
+		$c = new config_element('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'),'',NULL,1);
+		$this->add($c,'general','mails_settings');
+		$c = new config_element('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'),'',NULL,1);
+		$this->add($c,'general','mails_settings');
+
 		$this->addPrettyName('application_server_settings',_('Application Server settings'));
-		$c = new config_element('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.office.ulteo.com','*.ulteo.com'), NULL, 5);
+		$c = new config_element('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.ulteo.com'), NULL, 5);
 		$this->add($c,'general', 'application_server_settings');
 		//fqdn_private_address : array('dns' => ip);
 		$c = new config_element('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, 4);
@@ -80,12 +106,6 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general', 'application_server_settings');
 		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
 		$this->add($c,'general', 'application_server_settings');
-
-		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
-		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
-		$this->add($c,'general','web_interface_settings');
-		$c = new config_element('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), 2);
-		$this->add($c,'general','web_interface_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
 		$c = new config_element('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8', array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'), 2);
@@ -103,19 +123,13 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),3);
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
+		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
+		$this->add($c,'general','web_interface_settings');
+		$c = new config_element('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general','web_interface_settings');
 
-		$this->addPrettyName('mysql',_('MySQL configuration'));
-		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);
-		$this->add($c,'general','mysql');
-		$c = new config_element('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,1);
-		$this->add($c,'general','mysql');
-		$c = new config_element('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'), '', NULL, 7);
-		$this->add($c,'general','mysql');
-		$c = new config_element('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,1);
-		$this->add($c,'general','mysql');
-		$c = new config_element('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',1);
-		$this->add($c,'general','mysql');
+		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
 
 		$this->getPrefsModule();
 		$this->getPrefsPlugins();

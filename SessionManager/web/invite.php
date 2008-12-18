@@ -44,11 +44,9 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	$message =  _('You received an invitation from').' '.$main_title.', '._('please click on the link below to join the online session').'.'."\r\n\r\n";
 	$message .= $redir;
 
-	$headers = 'From: no-reply@'.$_SERVER['SERVER_NAME']."\r\n".'X-Mailer: PHP/'.phpversion();
-
 	Logger::info('main', 'Sending invitation mail to '.$email.' for token '.$token);
 
-	mail($email, $subject, wordwrap($message, 72), $headers);
+	sendamail($email, $subject, wordwrap($message, 72));
 
 	$session->addInvite($email);
 

@@ -126,6 +126,48 @@ function check_ip($fqdn_) {
 	return false;
 }
 
+function sendamail($to_, $subject_, $message_) {
+	require_once('Mail.php');
+
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+
+	$title = $prefs->get('general', 'main_title');
+	$buf = $prefs->get('general', 'mails_settings');
+
+	$method = $buf['send_type'];
+	$from = $buf['send_from'];
+	$host = $buf['send_host'];
+	$auth = false;
+	if ($buf['send_auth'] == '1')
+		$auth = true;
+	$username = $buf['send_username'];
+	$password = $buf['send_password'];
+
+	$to = $to_;
+	$subject = $subject_;
+	$message = wordwrap($message_, 72);
+	$headers = array(
+		'From'		=>	$title. '<'.$from.'>',
+		'To'			=>	$to,
+		'Subject'		=>	$subject,
+		'X-Mailer'	=>	'PHP/'.phpversion()
+	);
+
+	$api_mail = Mail::factory(
+		$method,
+		array (
+			'host' => $host,
+			'auth' => $auth,
+			'username' => $username,
+			'password' => $password
+		)
+	);
+
+	$mail = $api_mail->send($to, $headers, $message);
+}
+
 function str2num($str_) {
 	// hoho
 	$num = 0;
