@@ -171,7 +171,7 @@ session_remove() {
     local SESSID_DIR=$SPOOL/sessions/$SESSID
     local i=`cat $SESSID_DIR/private/id`
 
-    session_switch_status $SESSID 3
+    #session_switch_status $SESSID 3
 
     local rfb_port=`cat $SESSID_DIR/private/rfbport`
     local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
@@ -204,6 +204,8 @@ session_remove() {
 
     rm -rf $SESSID_DIR
     rm $SPOOL/id/$i
+
+    webservices_session_request $SESSID 4
 }
 
 
