@@ -54,14 +54,26 @@ class Server {
 	public function create($die_=true) {
 		Logger::debug('main', 'Starting SERVER::create for server '.$this->fqdn);
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::error('get Preferences failed');
+			return false;
+		}
+
+		$buf = $prefs->get('general', 'application_server_settings');
+		$disable_fqdn_check = $buf['disable_fqdn_check'];
+
 		if ($this->fqdn !== @gethostbyaddr(@gethostbyname($this->fqdn))) {
 			$_SESSION['errormsg'] = '"'.$this->fqdn.'" reverse DNS seems invalid !';
 
 			Logger::error('main', '"'.$this->fqdn.'" reverse DNS seems invalid !');
-			if ($die_ == true)
-				die('"'.$this->fqdn.'" reverse DNS seems invalid !');
-			else
-				return false;
+
+			if ($disable_fqdn_check == '0') {
+				if ($die_ == true)
+					die('"'.$this->fqdn.'" reverse DNS seems invalid !');
+				else
+					return false;
+			}
 		}
 
 		if (!$this->getStatus(0)) {
@@ -121,14 +133,26 @@ class Server {
 		if (!$this->hasAttribute('unregistered'))
 			return false;
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::error('get Preferences failed');
+			return false;
+		}
+
+		$buf = $prefs->get('general', 'application_server_settings');
+		$disable_fqdn_check = $buf['disable_fqdn_check'];
+
 		if ($this->fqdn !== @gethostbyaddr(@gethostbyname($this->fqdn))) {
 			$_SESSION['errormsg'] = '"'.$this->fqdn.'" reverse DNS seems invalid !';
 
 			Logger::error('main', '"'.$this->fqdn.'" reverse DNS seems invalid !');
-			if ($die_ == true)
-				die('"'.$this->fqdn.'" reverse DNS seems invalid !');
-			else
-				return false;
+
+			if ($disable_fqdn_check == '0') {
+				if ($die_ == true)
+					die('"'.$this->fqdn.'" reverse DNS seems invalid !');
+				else
+					return false;
+			}
 		}
 
 		if (!$this->getStatus(1)) {
