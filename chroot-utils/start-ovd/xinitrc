@@ -32,6 +32,9 @@ elif test -r "$XFCE4HOME/Xft.xrdb"; then
   XRESOURCES="$XRESOURCES $BASEDIR/Xft.xrdb"
 fi
 
+# start with a white background
+xsetroot -cursor_name watch -solid white
+
 # merge in X cursor settings
 test -r "$BASEDIR/Xcursor.xrdb" && XRESOURCES="$XRESOURCES $BASEDIR/Xcursor.xrdb"
 
