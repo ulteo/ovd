@@ -1,0 +1,62 @@
+== AUFS on redhat ==
+
+http://aufs.sourceforge.net/
+
+Install the build deps:
+ # yum install gcc make kernel-devel cvs
+
+Get the sources:
+ # cvs -d:pserver:anonymous@aufs.cvs.sourceforge.net:/cvsroot/aufs login # empty passwd
+ # cvs -z3 -d:pserver:anonymous@aufs.cvs.sourceforge.net:/cvsroot/aufs co aufs
+
+Configure AUFS:
+ make -f local.mk kconfig
+
+Patch aufs with this:
+
+Index: fs/aufs/cpup.h
+===================================================================
+RCS file: /cvsroot/aufs/aufs/fs/aufs/cpup.h,v
+retrieving revision 1.35
+diff -u -r1.35 cpup.h
+--- fs/aufs/cpup.h  20 Oct 2008 01:46:55 -0000  1.35
++++ fs/aufs/cpup.h  18 Dec 2008 15:35:22 -0000
+@@ -34,9 +34,11 @@
+ static inline
+ void au_cpup_attr_blksize(struct inode *inode, struct inode *h_inode)
+ {
++/*
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 19)
+    inode->i_blksize = h_inode->i_blksize;
+ #endif
++*/
+ }
+ 
+ void au_cpup_attr_timesizes(struct inode *inode);
+Index: fs/aufs/vfsub.h
+===================================================================
+RCS file: /cvsroot/aufs/aufs/fs/aufs/vfsub.h,v
+retrieving revision 1.43
+diff -u -r1.43 vfsub.h
+--- fs/aufs/vfsub.h 20 Oct 2008 01:47:20 -0000  1.43
++++ fs/aufs/vfsub.h 18 Dec 2008 15:35:23 -0000
+@@ -577,10 +577,12 @@
+ 
+ #if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 20)
+ /* introduced in linux-2.6.20 */
++/*
+ struct path {
+    struct vfsmount *mnt;
+    struct dentry *dentry;
+ };
++*/
+ #endif
+
+
+Build the module:
+ make -f local.mk
+
+Load it:
+ insmod aufs.ko
+
+Enjoy.
