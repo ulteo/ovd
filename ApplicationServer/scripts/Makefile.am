@@ -11,3 +11,5 @@ as-chroot-install:
 
 clean-local:
 	rm -f $(bin_SCRIPTS)
+
+.PHONY: as-chroot-install

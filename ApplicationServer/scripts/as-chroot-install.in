@@ -11,7 +11,8 @@ die () {
 
 usage ()
 {
-    echo "Usage: $PROGRAM [--no-download] [--no-cups] [--fqdn fqdn] [--sm-url url] [--chroot-path path] [--help|-h]"
+    echo -n "Usage: $PROGRAM [--no-download] [--no-cups] [--fqdn fqdn] [--sm-url url]"
+    echo " [--chroot-path path] [--apache-group group] [--apache-dir dir] [--help|-h]"
     echo "Configure an Ulteo Application Server (Open Virtual Desktop)"
     echo
     echo "  --no-download        don't download the chroot, assume it is already installed"
@@ -20,6 +21,7 @@ usage ()
     echo "  --sm-url url         set the session manager url to 'url'"
     echo "  --chroot-path path   set the chroot path to 'path'"
     echo "  --apache-group group set the apache group to 'group'"
+    echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
     echo "  --help|-h            display this help"
     echo "  --version|-v         display version informations"
 }
@@ -51,6 +53,7 @@ unset FQDN
 unset SM_URL
 unset CHROOT_PATH
 unset APACHE_GROUP
+unset APACHE_DIR
 while [ "$1" != "" ]; do
     case $1 in
         --no-download)
@@ -68,6 +71,9 @@ while [ "$1" != "" ]; do
             shift;;
         --apache-group)
             APACHE_GROUP="$2"
+            shift;;
+        --apache-dir)
+            APACHE_DIR="$2"
             shift;;
         --help|-h)
             usage
@@ -124,6 +130,18 @@ while [ -z "$APACHE_GROUP" ]; do
     fi
 done
 
+while [ -z "$APACHE_DIR" ]; do
+    if [ -d "/etc/httpd/conf.d" ]; then
+        APACHE_DIR=/etc/httpd/conf.d
+    elif [ -d "/etc/apache2/conf.d" ]; then
+        APACHE_DIR="/etc/apache2/conf.d"
+    fi
+    if [ -z "APACHE_DIR" ]; then
+        echo -n "Apache configuration directory: "
+        read APACHE_DIR
+    fi
+done
+
 echo
 echo "Options:"
 echo "* FQDN: $FQDN"
@@ -136,6 +154,7 @@ else
     echo "no"
 fi
 echo "* apache group: $APACHE_GROUP"
+echo "* apache dir: $APACHE_DIR"
 
 MAIN_CONFFILE=@SYSCONFDIR@/ulteo-ovd.conf
 # we assume here that a default chroot is used, thus we know where the conffile
@@ -160,6 +179,14 @@ chgrp $APACHE_GROUP "$CHROOT_CONFFILE"
 # set owner on spool and log files
 chown root:$APACHE_GROUP @LOCALSTATEDIR@/log/ulteo/applicationserver
 chmod 2770 @LOCALSTATEDIR@/log/ulteo/applicationserver
+
+# update the apache gid in the chroot
+APACHE_GID=$(getent group $APACHE_GROUP | cut -d ":" -f "3")
+sed -i "s/^www-data:x:33:/www-data:x:$APACHE_GID:/" $CHROOT_PATH/etc/group
+
+# set the main vhost
+ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
+ln -sf $ALIASFILE $APACHE_DIR/application-server
 
 # set cups
 if [ -f $CHROOT_PATH/etc/init.d/cupsys -a -z "$NOCUPS" ]; then

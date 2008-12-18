@@ -4,7 +4,7 @@
 as-chroot-install
 .SH SYNOPSIS
 .B as-chroot-install
-[\fI--no-download\fR] [\fI--no-cups\fR] [\fI--fqdn fqdn\fR] [\fI--sm-url url\fR] [\fI--chroot-path path\fR] [\fI--help|-h\fR]
+[\fI--no-download\fR] [\fI--no-cups\fR] [\fI--fqdn fqdn\fR] [\fI--sm-url url\fR] [\fI--chroot-path path\fR] [\fI--chroot-group group\fR] [\fI--apache-dir dir\fR] [\fI--help|-h\fR]
 .SH DESCRIPTION
 Configure an Ulteo Application Server (Open Virtual Desktop)
 .TP
@@ -23,7 +23,11 @@ set the session manager url to 'url'
 \fB\-\-chroot\-path\fR path
 set the chroot path to 'path'
 .HP
-\fB\-\-apache\-group\fR group set the apache group to 'group'
+\fB\-\-apache\-group\fR group
+set the apache group to 'group'
+.HP
+\fB\-\-apache\-dir\fR dir
+set the apache configuration directory to 'dir'
 .TP
 \fB\-\-help\fR|\-h
 display this help
