@@ -46,7 +46,7 @@ if (file_exists(SESSION2CREATE_PATH.'/'.$session)) {
 
 if (!is_readable(SESSION_PATH.'/'.$session.'/infos/status')) {
 	Logger::error('main', 'No such session : '.$session);
-	die('3');
+	die('4');
 }
 
 $vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');

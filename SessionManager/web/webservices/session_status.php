@@ -54,7 +54,7 @@ if ($_GET['status'] == 1) {
 	$session->use_session(0);
 }
 
-if ($_GET['status'] == 3) {
+if ($_GET['status'] == 4) {
 	Logger::info('main', 'Session end : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
 
 	$plugins = new Plugins();

@@ -206,8 +206,8 @@ class Session {
 	public function session_exists() {
 		$ret = $this->session_status();
 
-		if ($ret != 3 && $ret != false) {
-			if ($ret == 2)
+		if ($ret != 4 && $ret != false) {
+			if ($ret == 2 || $ret == 3)
 				return 2; // session used
 			else
 				return 1; // session available
@@ -221,8 +221,8 @@ class Session {
 	public function session_alive() {
 		$ret = $this->session_status();
 
-// 		if ($ret != 3 && $ret != false) {
-			if ($ret == 1 || $ret == 22 || $ret == 2)
+// 		if ($ret != 4 && $ret != false) {
+			if ($ret == 1 || $ret == 22 || $ret == 2 || $ret == 3)
 				return true; // session alive
 // 		}
 
@@ -232,7 +232,7 @@ class Session {
 	public function session_suspended() {
 		$ret = $this->session_status();
 
-// 		if ($ret != 3 && $ret != false) {
+// 		if ($ret != 4 && $ret != false) {
 			if ($ret == 10)
 				return true; // session suspended
 // 		}
