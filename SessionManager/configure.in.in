@@ -23,6 +23,8 @@ config/Makefile
 scripts/Makefile
 po/Makefile.in
 web/Makefile
+web/Mail/Makefile
+web/Net/Makefile
 web/ajax/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile

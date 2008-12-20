@@ -68,7 +68,6 @@ web/admin/classes/Server_admin.class.php
 web/admin/classes/AppsGroupLiaison.class.php
 web/admin/index.php
 web/admin/logout.php
-web/includes/defaults.inc.php
 web/includes/functions.inc.php
 web/includes/core.inc.php
 web/includes/core-minimal.inc.php
