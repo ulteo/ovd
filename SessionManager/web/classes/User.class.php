@@ -92,7 +92,7 @@ class User {
 			foreach($available_servers as $server){
 				$l = new ApplicationServerLiaison(NULL,$server->fqdn);
 				if ( count(array_diff($apps_id,$l->elements())) == 0 ){
-					$servers []= $server;
+					$servers[$server->fqdn]= $server;
 				}
 			}
 		}
@@ -102,13 +102,38 @@ class User {
 	public function getAvalaibleServer(){
 		// get a server who the user can launch his applications
 		Logger::debug('main','USER::getAvalaibleServer');
-		// TODO algo from prefs
 		$list_servers = $this->getAvalaibleServers();
+		
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::error('main', 'get Preferences failed');
+			return NULL;
+		}
+		$application_server_settings = $prefs->get('general', 'application_server_settings');
+		if (!isset($application_server_settings['load_balancing'])) {
+			Logger::error('main' , 'USER::getAvalaibleServer $application_server_settings[\'load_balancing\'] not set');
+			return NULL;
+		}
+		$criterions = $application_server_settings['load_balancing'];
+		if (is_null($criterions))
+			return NULL;
+		
+		$server_val = array();
+		foreach($list_servers as $server) {
+			$val = 0;
+			foreach ($criterions as $criterion_name  => $criterion_value ) {
+				$name_class1 = 'DecisionCriterion_'.$criterion_name;
+				$d1 = new $name_class1($server);
+				$r1 = $d1->get();
+				$val += $r1* $criterion_value;
+			}
+			$server_val[$server->fqdn] = $val;
+		}
+		arsort($server_val);
 		if (is_array($list_servers)) {
 			while (count($list_servers)>0) {
-				$buf_key = array_rand($list_servers); // TODO : make an better algo
+				$buf_key = array_shift(array_keys($server_val));
 				$buf = $list_servers[$buf_key];
-				unset($list_servers[$buf_key]);
 				$buf->getStatus();
 				if ($buf->isOnline())
 					return $buf;
@@ -122,7 +147,7 @@ class User {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('get Preferences failed');
+			Logger::error('main', 'get Preferences failed');
 			return NULL;
 		}
 

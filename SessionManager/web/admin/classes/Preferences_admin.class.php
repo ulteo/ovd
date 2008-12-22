@@ -106,6 +106,8 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general', 'application_server_settings');
 		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
 		$this->add($c,'general', 'application_server_settings');
+		$c = new config_element('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), array('cpu' => 50, 'session' => 90 , 'ram' => 30, 'random' => 10), NULL, 4);
+		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
 		$c = new config_element('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8', array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'), 2);
