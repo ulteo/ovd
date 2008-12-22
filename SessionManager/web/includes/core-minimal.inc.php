@@ -32,6 +32,7 @@ define('ADMIN_MODULES_DIR', SESSIONMANAGER_ROOT.'/admin/modules');
 define('PLUGINS_DIR', SESSIONMANAGER_ROOT.'/plugins');
 
 require_once(dirname(__FILE__).'/functions.inc.php');
+require_once(dirname(__FILE__).'/load_balancing.inc.php');
 
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = split('[,;]', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
