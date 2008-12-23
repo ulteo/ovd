@@ -36,8 +36,14 @@ class UserDB_sql {
 				$u = $this->generateUserFromRow($row);
 				if ($this->isOK($u))
 					return $u;
+				else
+					Logger::error('main', 'USERDB::MYSQL::import \''.$login_.'\' failed (user not ok)');
 			}
+			else
+				Logger::error('main', 'USERDB::MYSQL::import \''.$login_.'\' failed (user not found)');
 		}
+		else
+			Logger::error('main', 'USERDB::MYSQL::import \''.$login_.'\' failed (sql query failed)');
 		return NULL;
 	}
 	
@@ -64,11 +70,18 @@ class UserDB_sql {
 				$u = $this->generateUserFromRow($row);
 				if ($this->isOK($u))
 					$result []= $u;
+				else {
+					if (isset($row['login']))
+						Logger::info('main', 'USERDB::MYSQL::getList user \''.$row['login'].'\' not ok');
+					else
+						Logger::info('main', 'USERDB::MYSQL::getList user does not have login');
+				}
 			}
 			
 			return $result;
 		}
 		else {
+			Logger::error('main', 'USERDB::MYSQL::getList failed (sql query failed)');
 			// not the right argument
 			return NULL;
 		}
@@ -102,9 +115,10 @@ class UserDB_sql {
 		// TODO very very ugly
 		if ($user_->hasAttribute('password'))
 			return ($user_->getAttribute('password') == $hash);
-		else
+		else {
+			Logger::error('main', 'USERDB::MYSQL::authenticate failed for \''.$user_->getAttribute('login').'\'');
 			return false;
-		
+		}
 	}
 	
 	private function generateUserFromRow($row){
@@ -135,12 +149,12 @@ class UserDB_sql {
 				return true;
 			}
 			else {
-				Logger::error('main','APPLICATIONSDB_SQL table \''.USER_TABLE.'\' not exists');
+				Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.USER_TABLE.'\' not exists');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','APPLICATIONSDB_SQL table \''.USER_TABLE.'\' not exists(2)');
+			Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.USER_TABLE.'\' not exists(2)');
 			return false;
 		}
 	}

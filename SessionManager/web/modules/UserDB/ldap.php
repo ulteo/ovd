@@ -70,6 +70,12 @@ class UserDB_ldap {
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
 			if ($this->isOK($u))
 				$users []= $u;
+			else {
+				if ($u->getAttribute('login'))
+					Logger::info('main', 'UserDB::mysql::getList user \''.$u->getAttribute('login').'\' not ok');
+				else
+					Logger::info('main', 'UserDB::mysql::getList user does not have login');
+			}
 		}
 		return $users;
 	}
@@ -114,7 +120,10 @@ class UserDB_ldap {
 		$LDAP2 = new LDAP($conf_ldap2);
 		$a = $LDAP2->connect();
 		$LDAP2->disconnect();
-		Logger::debug('main','UserDB::ldap::authenticate '.$user_->getAttribute('login').' result '.$a);
+		if ( $a == false)
+			Logger::debug('main','USERDB::LDAP::authenticate \''.$user_->getAttribute('login').'\' is not authenticate');
+		else
+			Logger::debug('main','USERDB::LDAP::authenticate '.$user_->getAttribute('login').' result '.$a);
 		return $a;
 	}
 

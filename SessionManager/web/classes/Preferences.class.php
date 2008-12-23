@@ -27,7 +27,7 @@ class Preferences {
 	public $prettyName;
 
 	public function __construct(){
-		Logger::debug('admin','PREFERENCES::__construct');
+		Logger::debug('main', 'PREFERENCES::__construct');
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->constructFromFile();
 		$this->prettyName = array(
@@ -100,7 +100,6 @@ class Preferences {
 		if (isset($this->prettyName[$key_]))
 			return $this->prettyName[$key_];
 		else {
-			Logger::info('main','PREFERENCES_ADMIN::getPrettyName key \''.$key_.'\' not found');
 			return $key_;
 		}
 	}

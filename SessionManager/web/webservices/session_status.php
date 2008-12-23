@@ -23,39 +23,39 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 Logger::debug('main', 'Starting webservices/session_status.php');
 
 if (!isset($_GET['session'])) {
-	Logger::error('main', 'Missing parameter : session');
+	Logger::error('main', '(webservices/session_status) Missing parameter : session');
 	die('ERROR - NO $_GET[\'session\']');
 }
 
 if (!isset($_GET['status'])) {
-	Logger::error('main', 'Missing parameter : status');
+	Logger::error('main', '(webservices/session_status) Missing parameter : status');
 	die('ERROR - NO $_GET[\'status\']');
 }
 
 if (!isset($_GET['fqdn'])) {
-	Logger::error('main', 'Missing parameter : fqdn');
+	Logger::error('main', '(webservices/session_status) Missing parameter : fqdn');
 	die('ERROR - NO $_GET[\'fqdn\']');
 }
 
 if (!check_ip($_GET['fqdn'])) {
-	Logger::error('main', 'Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
+	Logger::error('main', '(webservices/session_status) Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
 	die('Server not authorized');
 }
 
-Logger::debug('main', 'Security check OK');
+Logger::debug('main', '(webservices/session_status) Security check OK');
 
 $session = new Session($_GET['session'], $_GET['fqdn']);
 
-Logger::debug('main', 'Session '.$session->session.' on server '.$session->server.' have status '.$_GET['status']);
+Logger::debug('main', '(webservices/session_status) Session '.$session->session.' on server '.$session->server.' have status '.$_GET['status']);
 
 if ($_GET['status'] == 1) {
-	Logger::info('main', 'Session start : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
+	Logger::info('main', '(webservices/session_status) Session start : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
 
 	$session->use_session(0);
 }
 
 if ($_GET['status'] == 4) {
-	Logger::info('main', 'Session end : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
+	Logger::info('main', '(webservices/session_status) Session end : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
 
 	$plugins = new Plugins();
 	$plugins->doLoad();

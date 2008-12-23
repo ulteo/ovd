@@ -21,17 +21,17 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', 'Starting webservices/server_monitoring.php');
+Logger::debug('main', '(webservices/server_monitoring) Starting webservices/server_monitoring.php');
 
 if (!check_ip($_POST['fqdn'])) {
 	Logger::error('main', 'Server not authorized : '.$_POST['fqdn'].' ? '.@gethostbyname($_POST['fqdn']));
 	die('Server not authorized');
 }
 
-Logger::debug('main', 'Security check OK');
+Logger::debug('main', '(webservices/server_monitoring) Security check OK');
 
 if (!$_FILES['xml']) {
-	Logger::error('main', 'No XML sent : '.$_POST['fqdn']);
+	Logger::error('main', '(webservices/server_monitoring) No XML sent : '.$_POST['fqdn']);
 	die('No XML sent');
 }
 
@@ -53,4 +53,4 @@ $keys['ram_used'] = $ram_node->getAttribute('used');
 
 $server = new Server($_POST['fqdn']);
 foreach ($keys as $k => $v)
-	$server->setAttribute($k, $v);
+	$server->setAttribute($k, trim($v));

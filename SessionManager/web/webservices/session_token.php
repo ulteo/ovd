@@ -27,17 +27,17 @@ if (!check_ip($_GET['fqdn'])) {
 	die('Server not authorized');
 }
 
-Logger::debug('main', 'Security check OK');
+Logger::debug('main', '(webservices/session_token) Security check OK');
 
 if (!isset($_GET['token']) || $_GET['token'] == '') {
-	Logger::error('main', 'Missing parameter : token');
+	Logger::error('main', '(webservices/session_token) Missing parameter : token');
 	die('ERROR - NO $_GET[\'token\']');
 }
 
 $token = $_GET['token'];
 
 if (!is_readable(TOKENS_DIR.'/'.$token)) {
-	Logger::error('main', 'No such token file : '.TOKENS_DIR.'/'.$token);
+	Logger::error('main', '(webservices/session_token) No such token file : '.TOKENS_DIR.'/'.$token);
 	die('No such token file');
 }
 
@@ -49,7 +49,7 @@ $session = new Session($buf[1], $_GET['fqdn']);
 $session->use_token($token);
 
 if (!is_readable(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings')) {
-	Logger::error('main', 'No such session token file : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings');
+	Logger::error('main', '(webservices/session_token) No such session token file : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings');
 	die('No such session token file');
 }
 

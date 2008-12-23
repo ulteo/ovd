@@ -239,7 +239,7 @@ class Server {
 	}
 
 	public function hasAttribute($attrib_) {
-		Logger::debug('main', 'Starting SERVER::hasAttribute for attribute '.$attrib_);
+		Logger::debug('main', 'Starting SERVER::hasAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
 
 		if (!is_readable($this->folder.'/'.$attrib_)) {
 			Logger::error('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
@@ -253,7 +253,7 @@ class Server {
 	}
 
 	public function getAttribute($attrib_) {
-		Logger::debug('main', 'Starting SERVER::getAttribute for attribute '.$attrib_);
+		Logger::debug('main', 'Starting SERVER::getAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
 
 		if (!$this->hasAttribute($attrib_)) {
 			Logger::warning('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);

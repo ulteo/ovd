@@ -65,6 +65,8 @@ class MySQL {
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
 		if (!$this->link) {
+			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --password="'.$this->sqlpass.'"  --database="'.$this->sqlbase.'"';
+			Logger::error('main', 'MySQL::CheckLink link to SQL server failed to validate the configuration please try this bash command : '.$mysqlcommand);
 			if ($die)
 				die_error('Link to SQL server failed');
 			else
