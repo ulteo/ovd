@@ -48,6 +48,21 @@ class User {
 	public function usersGroups(){
 		Logger::debug('main','USER::UsersGroups');
 		$result = array();
+		// add the default user group is enable
+		$prefs = Preferences::getInstance();
+		if ($prefs) {
+			$user_default_group = $prefs->get('general', 'user_default_group');
+			if ($user_default_group != -1) {
+				$ug = new UsersGroup();
+				$ug->fromDB($user_default_group);
+				if ($ug->isOK())
+					$result[] = $ug;
+				else {
+					Logger::error('main', 'USER::usersGroups default user group (\''.$user_default_group.'\') not ok');
+				}
+			}
+		}
+		
 		$l = new UsersGroupLiaison($this->attributes['login'],NULL);
 		$rows = $l->groups();
 		foreach ($rows as $row){
@@ -55,6 +70,9 @@ class User {
 			$g->fromDB($row['group']);
 			if ($g->isOK())
 				$result []= $g;
+			else {
+				Logger::error('main', 'USER::usersGroups user group (\''.$row['group'].'\') not ok');
+			}
 		}
 		return $result;
 	}

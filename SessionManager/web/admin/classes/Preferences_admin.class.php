@@ -69,6 +69,16 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general');
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
+		
+		$user_groups = array();
+		$ugs = get_all_usergroups();
+		foreach ($ugs as $ug) {
+			$user_groups[$ug->id] = $ug->name;
+		}
+		$user_groups[-1] = 'None';
+
+		$c = new config_element('user_default_group', _('user_default_group'), _('user_default_group'), _('user_default_group'), -1, $user_groups , 2);
+		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);

@@ -27,7 +27,6 @@ class Preferences {
 	public $prettyName;
 
 	public function __construct(){
-		Logger::debug('main', 'PREFERENCES::__construct');
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->constructFromFile();
 		$this->prettyName = array(

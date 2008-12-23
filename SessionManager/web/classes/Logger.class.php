@@ -25,11 +25,9 @@ class Logger {
 		if ($data_ === '')
 			return;
 
-		if (defined('HAS_PREFERENCES')) {
-			$prefs = Preferences::getInstance();
-			if (is_object($prefs))
-				$level_flags = $prefs->get('general', 'log_flags');
-		}
+		$prefs = Preferences::getInstance();
+		if (is_object($prefs))
+			$level_flags = $prefs->get('general', 'log_flags');
 
 		if (!isset($level_flags) || !is_array($level_flags))
 			$level_flags = array($level_);
