@@ -24,6 +24,7 @@ class admin_UserDB_sql extends UserDB_sql {
 // 	public function __construct(){
 // 	}
 	public function add($user_){
+		Logger::debug('UserDB::sql::add');
 		if ($this->isOK($user_)){
 			$query_keys = "";
 			$query_values = "";
@@ -43,21 +44,28 @@ class admin_UserDB_sql extends UserDB_sql {
 			$query = 'INSERT INTO `'.USER_TABLE.'` ( '.$query_keys.' ) VALUES ('.$query_values.' )';
 			return $SQL->DoQuery($query);
 		}
-		return false;
+		else {
+			if ($user_->hasAttribute('login'))
+				Logger::debug('UserDB::sql::add failed (user \''.$user_->getAttribute('login').'\' not ok)');
+			else
+				Logger::debug('UserDB::sql::add failed (user not ok)');
+			return false;
+		}
 	}
 	
 	public function remove($user_){
+		Logger::debug('UserDB::sql::remove');
 		if (is_object($user_) && $user_->hasAttribute('login')){
 			$SQL = MySQL::getInstance();
 			// first we delete all liaisons 
-			$query1 = "DELETE FROM `".LIAISON_USERS_GROUP_TABLE."` WHERE `element` = '".$user_->getAttribute('login')."'";
-			$SQL->DoQuery($query1);
+			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', LIAISON_USERS_GROUP_TABLE, 'element', $user_->getAttribute('login'));
 			// second we delete the user
-			$query2 = "DELETE FROM `".USER_TABLE."` WHERE `login` = '".$user_->getAttribute('login')."'";
-			return $SQL->DoQuery($query2);
+			return $SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', USER_TABLE, 'login', $user_->getAttribute('login'));
 		}
-		else
+		else {
+			Logger::debug('UserDB::sql::remove failed (user not ok)');
 			return false;
+		}
 	}
 	
 	public function update($user_){

@@ -347,7 +347,7 @@ function init_db($prefs_) {
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 varchar(50) NOT NULL,
 		@3 int(8) NOT NULL,
-		PRIMARY KEY  (`element`,`group`)
+		PRIMARY KEY  (@2, @3)
 		)',$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE,'element','group');
 	if ( $ret === false) {
 		Logger::error('admin','init_db table '.$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE.' fail to created');
@@ -375,7 +375,7 @@ function init_db($prefs_) {
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(50) NOT NULL,
 	@3 int(8) NOT NULL,
-	PRIMARY KEY  (`element`,`group`)
+	PRIMARY KEY  (@2, @3)
 	)',$LIAISON_USERS_GROUP_TABLE,'element','group');
 	if ( $ret === false) {
 		Logger::error('admin','init_db table '.$LIAISON_USERS_GROUP_TABLE.' fail to created');
