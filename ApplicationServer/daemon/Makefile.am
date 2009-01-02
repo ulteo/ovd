@@ -17,10 +17,10 @@ daemonlibdir = $(datadir)/ulteo-ovd
 
 sysconf_DATA = ulteo-ovd.conf
 
-init_DATA = ulteo-ovd.init
+init_DATA = ulteo-ovd
 initdir = $(sysconfdir)/init.d
 
-ulteo-ovd.init:
+ulteo-ovd:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir),g" \
 	    -e "s,@DATADIR@,$(datadir),g" \
 		< ulteo-ovd.init.in > $@
