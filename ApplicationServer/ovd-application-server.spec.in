@@ -1,6 +1,6 @@
 Summary: Ulteo OVD - Application Server
 Name: ovd-application-server
-Version: 1.0~beta2~svn00147
+Version: @PKG_VERSION@
 Release: 1
 License: GPL2
 Group: Applications/System
@@ -29,5 +29,5 @@ rm -rf $RPM_BUILD_ROOT
 /etc/*
 
 %changelog
-* Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> 1.0~beta2~svn00147-1
+* Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> @PKG_VERSION@-1
 - Initial release
