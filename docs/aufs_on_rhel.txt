@@ -10,6 +10,7 @@ Get the sources:
  # cvs -z3 -d:pserver:anonymous@aufs.cvs.sourceforge.net:/cvsroot/aufs co aufs
 
 Configure AUFS:
+ cd aufs/
  make -f local.mk kconfig
 
 Patch aufs with this:
@@ -56,7 +57,15 @@ diff -u -r1.43 vfsub.h
 Build the module:
  make -f local.mk
 
+Install it:
+ cp aufs.ko /lib/modules/$(uname -r)/extra
+ depmod -a
+
 Load it:
- insmod aufs.ko
+ modprobe aufs
+
+To autoload the module at boot time:
+ echo "modprobe aufs" >> /etc/rc.modules
+ chmod a+x /etc/rc.modules
 
 Enjoy.
