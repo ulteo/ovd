@@ -1,2 +1,0 @@
-# the chroot daemon is started by an init script outside the chroot
-ulteo-ovd-daemon: script-in-etc-init.d-not-registered-via-update-rc.d /etc/init.d/ulteo-ovdd
