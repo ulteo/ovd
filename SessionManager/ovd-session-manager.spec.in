@@ -1,0 +1,34 @@
+Summary: Ulteo OVD - Session Manager
+Name: ovd-session-manager
+Version: @PKG_VERSION@
+Release: 1
+License: GPL2
+Group: Applications/System
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: /home/gauvain/tmp/%{name}-root
+BuildArch: noarch
+
+%description
+Ulteo OVD Session Manager is Ulteo OVD portal.
+
+%prep
+%setup -q
+
+%build
+./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+make
+
+%install
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+/usr/*
+/etc/*
+
+%changelog
+* Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> 1.0~svn00130-1
+- Initial release
