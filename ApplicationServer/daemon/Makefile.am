@@ -1,4 +1,5 @@
 SUBDIRS = \
+	init \
 	functions.d \
 	log.d \
 	modules_fs.d
@@ -17,19 +18,6 @@ daemonlibdir = $(datadir)/ulteo-ovd
 
 sysconf_DATA = ulteo-ovd.conf
 
-init_DATA = ulteo-ovd
-initdir = $(sysconfdir)/init.d
-
-ulteo-ovd:
-	sed -e "s,@SYSCONFDIR@,$(sysconfdir),g" \
-	    -e "s,@DATADIR@,$(datadir),g" \
-		< ulteo-ovd.init.in > $@
-
-local-clean:
-	rm -f ulteo-ovd.init
-
-EXTRA_DIST = ulteo-ovd.init.in \
-             $(daemon_SCRIPTS) \
+EXTRA_DIST = $(daemon_SCRIPTS) \
 			 $(daemonlib_DATA) \
-			 $(sysconf_DATA) \
-			 $(init_DATA)
+			 $(sysconf_DATA)

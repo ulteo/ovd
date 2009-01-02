@@ -34,6 +34,7 @@ AM_CONDITIONAL([DAEMON], [test x"$enable_daemon" = x"yes"])
 AC_CONFIG_FILES([
 Makefile
 daemon/Makefile
+daemon/init/Makefile
 daemon/log.d/Makefile
 daemon/modules_fs.d/Makefile
 daemon/functions.d/Makefile
