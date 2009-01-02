@@ -40,6 +40,7 @@ daemon/modules_fs.d/Makefile
 daemon/functions.d/Makefile
 scripts/Makefile
 config/Makefile
+examples/Makefile
 web/webservices/Makefile
 web/media/image/Makefile
 web/media/script/Makefile
