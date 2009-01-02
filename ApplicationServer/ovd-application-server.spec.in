@@ -1,0 +1,34 @@
+Summary: Ulteo OVD - Application Server
+Name: ovd-application-server
+Version: 1.0~beta2~svn00147
+Release: 1
+License: GPL2
+Group: Applications/System
+Source0: %{name}-%{version}.tar.gz
+BuildRoot: /home/gauvain/tmp/%{name}-root
+BuildArch: noarch
+
+%description
+Ulteo OVD Application Server manages the sessions.
+
+%prep
+%setup -q
+
+%build
+./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --disable-daemon
+make
+
+%install
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+/usr/*
+/etc/*
+
+%changelog
+* Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> 1.0~beta2~svn00147-1
+- Initial release
