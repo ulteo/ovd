@@ -46,7 +46,7 @@ menu_clean() {
     local user_id=$1
     local menu_dir=/var/spool/menus/$user_id
 
-    [ ! -d $menu_dir ] || return 0
+    [ ! -d $menu_dir ] && return 0
 
     rm -f $menu_dir/*
     rmdir $menu_dir
