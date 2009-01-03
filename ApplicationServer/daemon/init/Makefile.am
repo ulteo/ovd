@@ -9,4 +9,6 @@ ulteo-ovdd:
 local-clean:
 	rm -f ulteo-ovdd
 
-EXTRA_DIST = $(init_SCRIPTS)
+EXTRA_DIST = ulteo-ovdd.in
+
+.PHONY: ulteo-ovdd
