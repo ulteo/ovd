@@ -34,10 +34,50 @@
      icon_class->get_allowed_drag_actions = xfdesktop_special_file_icon_get_allowed_drag_actions;
      icon_class->get_allowed_drop_actions = xfdesktop_special_file_icon_get_allowed_drop_actions;
      icon_class->do_drop_dest = xfdesktop_special_file_icon_do_drop_dest;
-@@ -260,6 +262,30 @@
+@@ -260,6 +262,73 @@
          return special_file_icon->priv->info->display_name;
  }
  
++void
++expand_percent_vars (gchar **cmd)
++{
++    /* we actually expand nothing but need to handle the percent vars */
++    GString *str = g_string_sized_new (strlen (*cmd) + 1);
++    gchar *p;
++
++    for (p=*cmd; *p; ++p)
++    {
++        if (*p == '%')
++        {
++            ++p;
++            switch (*p)
++            {
++                case 'f':
++                case 'F':
++                case 'u':
++                case 'U':
++                case 'i':
++                case 'c':
++                case 'k':
++                case 'd':
++                case 'D':
++                case 'n':
++                case 'N':
++                case 'v':
++                case 'm':
++                    break;
++                case '%':
++                    g_string_append_c (str, '%');
++            }
++        } else {
++            g_string_append_c(str, *p);
++        }
++    }
++    g_free (*cmd);
++    *cmd = str->str;
++    g_string_free (str, FALSE);
++}
++
 +static gboolean
 +xfdesktop_special_file_icon_activated(XfdesktopIcon *icon)
 +{
@@ -50,11 +90,14 @@
 +    {
 +        gboolean retval = FALSE;
 +        gchar *path = thunar_vfs_path_dup_string(special_icon->priv->info->path);
-+        gchar *exec_path = NULL;
++        gchar *cmd = NULL;
 +        XfceDesktopEntry *de = xfce_desktop_entry_new(path, categories, 1);
-+        if (de && xfce_desktop_entry_get_string(de, "Exec", FALSE, &exec_path))
-+            retval = xfce_exec(exec_path, FALSE, FALSE, NULL);
-+        g_free (exec_path);
++        if (de && xfce_desktop_entry_get_string(de, "Exec", FALSE, &cmd))
++        {
++            expand_percent_vars (&cmd);
++            retval = xfce_exec(cmd, FALSE, FALSE, NULL);
++        }
++        g_free (cmd);
 +        g_object_unref (de);
 +        return retval;
 +    }
@@ -65,7 +108,7 @@
  static GdkDragAction
  xfdesktop_special_file_icon_get_allowed_drag_actions(XfdesktopIcon *icon)
  {
-@@ -284,6 +310,10 @@
+@@ -284,6 +353,10 @@
               * us, anyway. */
              actions = 0;
              break;
@@ -76,7 +119,7 @@
      }
      
      return actions;
-@@ -315,6 +345,10 @@
+@@ -315,6 +388,10 @@
          case XFDESKTOP_SPECIAL_FILE_ICON_TRASH:
              actions = GDK_ACTION_MOVE;  /* anything else is just silly */
              break;
@@ -87,7 +130,7 @@
      }
      
      return actions;
-@@ -698,7 +732,8 @@
+@@ -698,7 +775,8 @@
  
  XfdesktopSpecialFileIcon *
  xfdesktop_special_file_icon_new(XfdesktopSpecialFileIconType type,
@@ -97,7 +140,7 @@
  {
      XfdesktopSpecialFileIcon *special_file_icon;
      ThunarVfsPath *path = NULL;
-@@ -716,6 +751,11 @@
+@@ -716,6 +794,11 @@
              path = thunar_vfs_path_get_for_trash();
              break;
          
@@ -109,7 +152,7 @@
          default:
              g_return_val_if_reached(NULL);
      }
-@@ -724,7 +764,8 @@
+@@ -724,7 +807,8 @@
      special_file_icon->priv->type = type;
      special_file_icon->priv->gscreen = screen;
      special_file_icon->priv->info = thunar_vfs_info_new_for_path(path, NULL);
