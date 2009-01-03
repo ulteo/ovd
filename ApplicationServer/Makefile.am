@@ -18,4 +18,4 @@ ovd-application-server.spec:
 clean-local:
 	rm -f ovd-application-server.spec
 
-EXTRA_DISTS = ovd-application-server.spec.in
+EXTRA_DIST = ovd-application-server.spec.in

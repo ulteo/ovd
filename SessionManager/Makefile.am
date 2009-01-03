@@ -10,4 +10,4 @@ ovd-session-manager.spec:
 clean-local:
 	rm -f ovd-session-manager.spec
 
-EXTRA_DISTS = ovd-session-manager.spec.in
+EXTRA_DIST = ovd-session-manager.spec.in
