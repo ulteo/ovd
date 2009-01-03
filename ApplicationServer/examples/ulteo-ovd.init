@@ -14,8 +14,6 @@
 # Description:       Start Ulteo OD daemon and needed services
 ### END INIT INFO
 
-. /lib/lsb/init-functions
-
 CNF=/etc/ulteo-ovd.conf
 
 if [ ! -f /etc/ulteo-ovd.conf ]; then
@@ -27,23 +25,20 @@ fi
 
 case $1 in
     start)
-        log_daemon_msg "Starting ulteo-ovdd daemon"
+        echo "Starting ulteo-ovdd daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
-        log_end_msg 0
         ;;
     stop)
-        log_daemon_msg "Stopping ulteo-ovdd daemon"
+        echo "Stopping ulteo-ovdd daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
-        log_end_msg 0
         ;;
     restart|reload|force-reload)
-        log_daemon_msg "Re-starting ulteo-ovdd daemon"
+        echo "Re-starting ulteo-ovdd daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
-        log_end_msg 0
         ;;
     *)
-        log_action_msg "Usage: /etc/init.d/ulteo-ovd {start|stop|reload|restart}"
+        echo "Usage: /etc/init.d/ulteo-ovd {start|stop|reload|restart}"
         exit 1
         ;;
 esac
