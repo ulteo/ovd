@@ -1,0 +1,6 @@
+ovd-chroot-apps (1.0~beta2~svn00155-0ulteo0) ovd-polaris; urgency=low
+
+  * Initial release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Sat, 03 Jan 2009 06:40:01 +0100
+
