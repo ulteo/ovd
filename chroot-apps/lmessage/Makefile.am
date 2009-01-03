@@ -5,7 +5,6 @@ lmessage_SOURCES = \
 
 lmessage_CFLAGS = \
 		-Wall \
-		-DPACKAGE_LOCALE_DIR=\"$(localedir)\" \
 		@GTK_CFLAGS@
 
 lmessage_LDADD = \

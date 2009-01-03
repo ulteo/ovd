@@ -16,6 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <string.h>
 
@@ -23,6 +27,7 @@
 
 int type = GTK_MESSAGE_INFO;
 gchar *title = NULL;
+gboolean version = FALSE;
 
 static gboolean get_type(const gchar * option_name, const gchar * value,
                          gpointer data, GError ** error);
@@ -34,6 +39,9 @@ static GOptionEntry entries[] = {
     {"title", 'T', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_STRING,
      &title,
      "Window title", NULL},
+    {"version", 'v', G_OPTION_FLAG_IN_MAIN, G_OPTION_ARG_NONE,
+     &version,
+     "Version information", NULL},
     {NULL}
 };
 
@@ -109,6 +117,12 @@ int main(int argc, gchar ** argv)
 
     gtk_init_with_args(&argc, &argv, "", entries, "lmessage", NULL);
 
+    if (version)
+    {
+        g_print("%s\n", PACKAGE_STRING);
+        return 0;
+    }
+
     if (type == -1)
         return 1;
 
@@ -142,5 +156,4 @@ int main(int argc, gchar ** argv)
 
     return 0;
 }
-
 
