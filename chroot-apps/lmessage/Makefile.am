@@ -15,7 +15,7 @@ if HAVE_HELP2MAN
 man_MANS = lmessage.1
 
 lmessage.1:
-	help2man --no-info --section=1 --manual="User Commands" --name "Display messages in a GTK dialog" $(srcdir)/lmessage >$@
+	help2man --no-info --section=1 --manual="User Commands" --name "Display messages in a GTK dialog" ./lmessage >$@
 
 clean-local:
 	rm -f $(man_MANS)
