@@ -33,7 +33,13 @@ i=$(( $i + 5900 ))
 MESSAGE=`cat ${SESSID_DIR}/parameters/timeout_message`
 
 # CMD="kdialog --sorry \"$message\" --caption \"Session is about to end\""
-CMD='Xdialog -title "Session is about to end" -msgbox "'$MESSAGE'" 20 80'
+if $(which lmessage > /dev/null); then
+    CMD='lmessage --title "Session is about to end" --type warn "'$MESSAGE'"'
+elif $(which Xdialog > /dev/null); then
+    CMD='Xdialog -title "Session is about to end" -msgbox "'$MESSAGE'" 20 80'
+fi
 
-export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
-su -s "/bin/bash" $USER_LOGIN -c "${CMD}" &
+if [ -n "$CMD" ]; then
+    export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
+    su -s "/bin/bash" $USER_LOGIN -c "${CMD}" &
+fi
