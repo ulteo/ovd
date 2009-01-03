@@ -119,7 +119,7 @@ int main(int argc, gchar ** argv)
 
     if (version)
     {
-        g_print("%s\n", PACKAGE_STRING);
+        g_print("%s %s\n", NAME, PACKAGE_VERSION);
         return 0;
     }
 
