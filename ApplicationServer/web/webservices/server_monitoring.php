@@ -30,7 +30,7 @@ if (! isSessionManagerRequest()) {
 
 $cpu_model = trim(`grep "model name" /proc/cpuinfo |head -n 1 |sed -e 's/.*: //'`);
 $cpu_nb = trim(`grep processor /proc/cpuinfo |tail -n 1 |awk '{ print $3 }'`)+1;
-$cpu_load = trim(`uptime |sed -e 's/.*: //' -e 's/,.*//'`);
+$cpu_load = trim(shell_exec('python '.CHROOT.'/usr/bin/cpu_load.py'));
 $ram=trim(`grep MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
 $ram_Buffers=trim(`grep Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
 $ram_Cached=trim(`grep Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
