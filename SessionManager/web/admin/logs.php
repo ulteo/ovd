@@ -12,7 +12,7 @@ $logfiles = array_reverse($logfiles);
 
 foreach ($logfiles as $logfile) {
 	$buf = shell_exec('tail -n 25 '.$logfile);
-	$buf = preg_replace_callback('/.*\ -\ .*\ -\ (.*)\ -\ .*/', 'my_own_callback', $buf);
+	$buf = preg_replace_callback('/[^-]*\ -\ [^-]*\ -\ ([^-]*)\ -\ .*/', 'my_own_callback', $buf);
 
 	echo '<h2>'.basename($logfile).'</h2>';
 

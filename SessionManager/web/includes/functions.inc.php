@@ -139,6 +139,7 @@ function sendamail($to_, $subject_, $message_) {
 	$method = $buf['send_type'];
 	$from = $buf['send_from'];
 	$host = $buf['send_host'];
+	$localhost = $_SERVER['SERVER_NAME'];
 	$auth = false;
 	if ($buf['send_auth'] == '1')
 		$auth = true;
@@ -158,14 +159,15 @@ function sendamail($to_, $subject_, $message_) {
 	$api_mail = Mail::factory(
 		$method,
 		array (
-			'host' => $host,
-			'auth' => $auth,
-			'username' => $username,
-			'password' => $password
+			'host'		=>	$host,
+			'localhost'	=>	$localhost,
+			'auth'		=>	$auth,
+			'username'	=>	$username,
+			'password'	=>	$password
 		)
 	);
 
-	$mail = $api_mail->send($to, $headers, $message);
+	return $api_mail->send($to, $headers, $message);
 }
 
 function str2num($str_) {

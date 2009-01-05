@@ -46,11 +46,15 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 
 	Logger::info('main', 'Sending invitation mail to '.$email.' for token '.$token);
 
-	sendamail($email, $subject, wordwrap($message, 72));
+	$buf = sendamail($email, $subject, wordwrap($message, 72));
+	if ($buf !== true) {
+		Logger::error('main', 'invite.php:49 - sendamail error : '.$buf->message);
+		redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email.'&error='.$buf->message);
+	}
 
 	$session->addInvite($email);
 
-	header('Location: invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email);
+	redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email);
 }
 
 $session = new Session($_GET['session']);
@@ -71,7 +75,9 @@ html,body {
 	<p><?php echo _('Invite the following people to share this session'); ?></p>
 
 	<?php
-	if (isset($_GET['invited']))
+	if (isset($_GET['error']))
+		echo '<p class="msg_error centered">'._('An error occured with your invitation, please try again !').'</p>';
+	elseif (isset($_GET['invited']))
 		echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent !').'</p>';
 	?>
 

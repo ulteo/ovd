@@ -105,7 +105,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','mails_settings');
 		$c = new config_element('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'),'',NULL,1);
 		$this->add($c,'general','mails_settings');
-		$c = new config_element('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'),'',NULL,1);
+		$c = new config_element('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'),'',NULL,7);
 		$this->add($c,'general','mails_settings');
 
 		$this->addPrettyName('application_server_settings',_('Application Server settings'));
