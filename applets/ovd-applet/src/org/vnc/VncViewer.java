@@ -58,6 +58,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.vnc.rfbcaching.IRfbCachingConstants;
+import org.vnc.rfbcaching.RfbCacheProperties;
+
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 
@@ -152,6 +155,8 @@ public class VncViewer extends java.applet.Applet
   String proxyType,proxyHost,proxyUsername,proxyPassword;
   int proxyPort;
   
+  // RFBCaching properties
+  RfbCacheProperties cacheProps = null;
 
   // Reference to this applet for inter-applet communication.
   public static VncViewer refApplet;
@@ -430,7 +435,6 @@ public class VncViewer extends java.applet.Applet
     vc = new VncCanvas2(this, getSize().width, getSize().height);
     vc.setFocusable(true);
     vc.setVisible(true);
-	setEncodings();
 
     //  Disable the local cursor (only soft cursor visible)
         try {
@@ -446,6 +450,8 @@ public class VncViewer extends java.applet.Applet
       }
      //this is where prepareCanvas() normally goes --> no splash;
       System.out.println("Starting RFB protocol");
+     setRfbCachingEncoding();
+	 setEncodings();
      processNormalProtocol();  
       
     } catch (NoRouteToHostException e) {
@@ -495,6 +501,22 @@ public class VncViewer extends java.applet.Applet
     }
     
   }
+
+ private void setRfbCachingEncoding() {
+   if (cacheProps != null){
+   rfb.setCacheProps(cacheProps);
+   int[] encodings = {RfbProto.EncodingRfbCaching};
+   try {
+       rfb.writeSetEncodings(encodings, 1);
+   } catch (Exception e) {
+       System.out.println("Could not set encodings");
+       System.out.println("Desktop size is " + rfb.framebufferWidth + " x " +
+              rfb.framebufferHeight);
+       showConnectionStatus(null);
+       return;
+   }
+   }
+ }
 
  public void prepareCanvas(){
 	   	  vncContainer.removeAll();  
@@ -612,7 +634,12 @@ public class VncViewer extends java.applet.Applet
       validate();
     }
 
-    rfb = new RfbProto(in, out, this);
+    if (isSSH){
+        rfb = new RfbProto(in, out, this);
+    }else{
+        rfb = new RfbProto(host, port, this);
+    }
+
     showConnectionStatus("Connected to server");
 
     rfb.readVersionMsg();
@@ -993,6 +1020,8 @@ public class VncViewer extends java.applet.Applet
     String str = readParameter("PORT", true);
     port = Integer.parseInt(str);
 
+    cacheProps = readCacheProperties();
+
 	// Added by Sandaruwan
 	isSSH = true;
 	str = readParameter("SSH",false);
@@ -1060,6 +1089,37 @@ public class VncViewer extends java.applet.Applet
     // SocketFactory.
     socketFactory = readParameter("SocketFactory", false);
   }
+
+  // Read cache parameters from html-applet properties
+  //
+  private RfbCacheProperties readCacheProperties(){
+      String isCacheOnS = readParameter("rfb.cache.enabled", false);
+      boolean isCacheOn = false;
+      if (isCacheOnS!=null){
+          if (isCacheOnS.equalsIgnoreCase("TRUE")){
+              isCacheOn = true;
+          }
+      }
+      if (!isCacheOn){
+          //System.out.println("Caching is switched off");
+          return null;
+      }
+      int cacheVerMajor = readIntParameter("rfb.cache.ver.major", IRfbCachingConstants.RFB_CACHE_DEFAULT_VER_MAJOR);
+      int cacheVerMinor = readIntParameter("rfb.cache.ver.minor", IRfbCachingConstants.RFB_CACHE_DEFAULT_VER_MINOR);
+      int cacheSize = readIntParameter("rfb.cache.size", IRfbCachingConstants.RFB_CACHE_DEFAULT_SIZE);
+      String cacheMaintAlgS = readParameter("rfb.cache.alg", false);
+      int cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_DEFAULT_MAINT_ALG;
+      if (cacheMaintAlgS!=null){
+          if (cacheMaintAlgS.equalsIgnoreCase("FIFO")){
+              cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_DEFAULT_MAINT_ALG;
+          }else if (!cacheMaintAlgS.equalsIgnoreCase("LRU")){
+              //System.out.println("Unknown cache algorithm specified, (LRU) will be used as default");
+          }
+      }
+      int cacheDataSize = readIntParameter("rfb.cache.datasize", IRfbCachingConstants.RFB_CACHE_DEFAULT_DATA_SIZE);
+      return new RfbCacheProperties(cacheMaintAlgI, cacheSize, cacheDataSize, cacheVerMajor, cacheVerMinor);
+  }
+  
 
   //
   // Read password parameters. If an "ENCPASSWORD" parameter is set,

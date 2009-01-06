@@ -46,7 +46,12 @@ import java.awt.image.MemoryImageSource;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
+
+import org.vnc.rfbcaching.IRfbCachingConstants;
+import org.vnc.rfbcaching.RfbCache;
+import org.vnc.rfbcaching.RfbCacheEntry;
 
 
 //
@@ -421,38 +426,72 @@ public class VncCanvas extends Canvas
 	    continue;
 	  }
 
-          rfb.startTiming();
-
+	  if (rfb.updateRectEncoding == RfbProto.EncodingRfbCaching){
+		  handleCacheHit(rx, ry, rw, rh);
+		  continue;		
+	  }
+      rfb.startTiming();
+	  
+      if (rfb.isServerSupportCaching){
+    	  rfb.startCaching();
+      }
+      
 	  switch (rfb.updateRectEncoding) {
 	  case RfbProto.EncodingRaw:
 	    handleRawRect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){
+	    	rfb.stopCaching(RfbProto.EncodingRaw);
+	    }
 	    break;
 	  case RfbProto.EncodingCopyRect:
 	    handleCopyRect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){
+	    	rfb.resetCaching();
+	    }
 	    break;
 	  case RfbProto.EncodingRRE:
 	    handleRRERect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){
+		rfb.stopCaching(RfbProto.EncodingRRE);
+	    }
 	    break;
 	  case RfbProto.EncodingCoRRE:
 	    handleCoRRERect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){
+	    	rfb.stopCaching(RfbProto.EncodingCoRRE);
+	    }
 	    break;
 	  case RfbProto.EncodingHextile:
 	    handleHextileRect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){	    		 
+	    	rfb.stopCaching(RfbProto.EncodingHextile);
+	    }	
 	    break;
 	  case RfbProto.EncodingZRLE:
 	    handleZRLERect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){
+	    	rfb.stopCaching(RfbProto.EncodingZRLE);
+	    }
 	    break;
-	  case RfbProto.EncodingZlib:
-            handleZlibRect(rx, ry, rw, rh);
+	  case RfbProto.EncodingZlib:	    
+        handleZlibRect(rx, ry, rw, rh);
+        if (rfb.isServerSupportCaching){
+        	rfb.stopCaching(RfbProto.EncodingZlib);
+        }
 	    break;
-	  case RfbProto.EncodingTight:
+	  case RfbProto.EncodingTight:	    
 	    handleTightRect(rx, ry, rw, rh);
+	    if (rfb.isServerSupportCaching){
+	    	rfb.stopCaching(RfbProto.EncodingTight);
+	    }
 	    break;
 	  default:
+		if (rfb.isServerSupportCaching){
+			rfb.resetCaching();
+		}  
 	    throw new Exception("Unknown RFB rectangle encoding " +
 				rfb.updateRectEncoding);
 	  }
-
           rfb.stopTiming();
 	}
 
@@ -504,7 +543,12 @@ public class VncCanvas extends Canvas
 	String s = rfb.readServerCutText();
 	viewer.clipboard.setCutText(s);
 	break;
-
+      case IRfbCachingConstants.RFB_CACHE_SERVER_INIT_MSG:	  
+    	rfb.readServerCacheInit();
+    	if (rfb.isServerSupportCaching){
+    	    rfb.writeClientCacheInit();
+    	}               	  
+      break;
       default:
 	throw new Exception("Unknown RFB message type " + msgType);
       }
@@ -512,12 +556,72 @@ public class VncCanvas extends Canvas
   }
 
 
-  //
-  // Handle a raw rectangle. The second form with paint==false is used
-  // by the Hextile decoder for raw-encoded tiles.
-  //
+//
+// Handle RFBCacheHit
+//
+void handleCacheHit(int rx, int ry, int rw, int rh) throws IOException{
+    try {
+        byte[] k = new byte[rfb.cacheKeySize];
+        rfb.readFully(k);
+        System.out.println("Cache hit");
+        RfbCacheEntry entry = rfb.cache.get(k);
+        if (entry!=null){
+            System.out.println("Cache contains key = {"+RfbCache.asHex(k)+"}");
+            DataInputStream cacheIs = new DataInputStream(new ByteArrayInputStream(entry.getRfbData()));
+            DataInputStream origIs = rfb.is;
+            rfb.is = cacheIs;
+            switch (entry.getRfbEncoding()){
+                case RfbProto.EncodingRaw:
+                    System.out.println("handle raw cache hit");
+                    handleRawRect(rx, ry, rw, rh);
+                    break;
+                case RfbProto.EncodingRRE:
+                    System.out.println("handle RRE cache hit");
+                    handleRRERect(rx, ry, rw, rh);
+                    break;
+                case RfbProto.EncodingCoRRE:
+                    System.out.println("handle RRE cache hit");
+                    handleCoRRERect(rx, ry, rw, rh);
+                    break;
+                case RfbProto.EncodingHextile:
+                    System.out.println("handle HEXTILE cache hit");
+                    handleHextileRect(rx, ry, rw, rh);
+                    break;
+                case RfbProto.EncodingZRLE:
+                    System.out.println("handle ZLRE cache hit");
+                    handleZRLERect(rx, ry, rw, rh);
+                    break;	
+                case RfbProto.EncodingZlib:
+                    System.out.println("handle ZLib cache hit");
+                    handleZlibRect(rx, ry, rw, rh);
+                    break;
+                case RfbProto.EncodingTight:
+                    System.out.println("handle Tight cache hit");
+                    handleTightRect(rx, ry, rw, rh);
+                    break;
+                default:
+                    System.out.println("Unknown encoding");
+                    break;
+            }
+            rfb.is = origIs;
+            cacheIs = null;
+        }else{
+            System.out.println("Bad cache hit: key {"+RfbCache.asHex(k)+"} not exists in hash");
+            return;
+        }
+        
+    } catch (IOException e) {
+        e.printStackTrace();
+    } catch (Exception e2) {
+        e2.printStackTrace();
+    }
+}
 
-  void handleRawRect(int x, int y, int w, int h) throws IOException {
+//
+// Handle a raw rectangle. The second form with paint==false is used
+// by the Hextile decoder for raw-encoded tiles.
+//
+void handleRawRect(int x, int y, int w, int h) throws IOException {
     handleRawRect(x, y, w, h, true);
   }
 
@@ -548,7 +652,7 @@ public class VncCanvas extends Canvas
 	}
       }
     }
-
+    rfb.numBytesCached+=w*h*bytesPixel;
     handleUpdatedPixels(x, y, w, h);
     if (paint)
       scheduleRepaint(x, y, w, h);
@@ -574,9 +678,10 @@ public class VncCanvas extends Canvas
   void handleRRERect(int x, int y, int w, int h) throws IOException {
 
     int nSubrects = rfb.is.readInt();
-
+    rfb.numBytesCached+=4;
     byte[] bg_buf = new byte[bytesPixel];
     rfb.readFully(bg_buf);
+    rfb.numBytesCached+=bg_buf.length;
     Color pixel;
     if (bytesPixel == 1) {
       pixel = colors[bg_buf[0] & 0xFF];
@@ -588,6 +693,7 @@ public class VncCanvas extends Canvas
 
     byte[] buf = new byte[nSubrects * (bytesPixel + 8)];
     rfb.readFully(buf);
+    rfb.numBytesCached+=buf.length;
     DataInputStream ds = new DataInputStream(new ByteArrayInputStream(buf));
 
     if (rfb.rec != null) {
@@ -625,9 +731,10 @@ public class VncCanvas extends Canvas
 
   void handleCoRRERect(int x, int y, int w, int h) throws IOException {
     int nSubrects = rfb.is.readInt();
-
+    rfb.numBytesCached+=4;
     byte[] bg_buf = new byte[bytesPixel];
     rfb.readFully(bg_buf);
+    rfb.numBytesCached+=bg_buf.length;
     Color pixel;
     if (bytesPixel == 1) {
       pixel = colors[bg_buf[0] & 0xFF];
@@ -639,7 +746,7 @@ public class VncCanvas extends Canvas
 
     byte[] buf = new byte[nSubrects * (bytesPixel + 4)];
     rfb.readFully(buf);
-
+    rfb.numBytesCached+=buf.length;
     if (rfb.rec != null) {
       rfb.rec.writeIntBE(nSubrects);
       rfb.rec.write(bg_buf);
@@ -706,6 +813,7 @@ public class VncCanvas extends Canvas
     throws IOException {
 
     int subencoding = rfb.is.readUnsignedByte();
+    rfb.numBytesCached++;
     if (rfb.rec != null) {
       rfb.rec.writeByte(subencoding);
     }
@@ -720,6 +828,7 @@ public class VncCanvas extends Canvas
     byte[] cbuf = new byte[bytesPixel];
     if ((subencoding & rfb.HextileBackgroundSpecified) != 0) {
       rfb.readFully(cbuf);
+      rfb.numBytesCached+=cbuf.length;
       if (bytesPixel == 1) {
 	hextile_bg = colors[cbuf[0] & 0xFF];
       } else {
@@ -735,6 +844,7 @@ public class VncCanvas extends Canvas
     // Read the foreground color if specified.
     if ((subencoding & rfb.HextileForegroundSpecified) != 0) {
       rfb.readFully(cbuf);
+      rfb.numBytesCached+=cbuf.length;
       if (bytesPixel == 1) {
 	hextile_fg = colors[cbuf[0] & 0xFF];
       } else {
@@ -750,12 +860,14 @@ public class VncCanvas extends Canvas
       return;
 
     int nSubrects = rfb.is.readUnsignedByte();
+    rfb.numBytesCached++;
     int bufsize = nSubrects * 2;
     if ((subencoding & rfb.HextileSubrectsColoured) != 0) {
       bufsize += nSubrects * bytesPixel;
     }
     byte[] buf = new byte[bufsize];
-    rfb.readFully(buf);
+    rfb.readFully(buf); 
+    rfb.numBytesCached+=buf.length;
     if (rfb.rec != null) {
       rfb.rec.writeByte(nSubrects);
       rfb.rec.write(buf);
@@ -825,6 +937,7 @@ public class VncCanvas extends Canvas
       zrleInStream = new ZlibInStream();
 
     int nBytes = rfb.is.readInt();
+    rfb.numBytesCached=4+nBytes; 
     if (nBytes > 64 * 1024 * 1024)
       throw new Exception("ZRLE decoder: illegal compressed data size");
 
@@ -1091,7 +1204,7 @@ public class VncCanvas extends Canvas
 	  rfb.rec.write(buf);
       }
     }
-
+    rfb.numBytesCached=nBytes+4;
     handleUpdatedPixels(x, y, w, h);
     scheduleRepaint(x, y, w, h);
   }
@@ -1103,6 +1216,7 @@ public class VncCanvas extends Canvas
   void handleTightRect(int x, int y, int w, int h) throws Exception {
 
     int comp_ctl = rfb.is.readUnsignedByte();
+    rfb.numBytesCached++;       
     if (rfb.rec != null) {
       if (rfb.recordFromBeginning ||
 	  comp_ctl == (rfb.TightFill << 4) ||
@@ -1133,6 +1247,7 @@ public class VncCanvas extends Canvas
 
       if (bytesPixel == 1) {
 	int idx = rfb.is.readUnsignedByte();
+	rfb.numBytesCached++;
 	memGraphics.setColor(colors[idx]);
 	if (rfb.rec != null) {
 	  rfb.rec.writeByte(idx);
@@ -1140,6 +1255,7 @@ public class VncCanvas extends Canvas
       } else {
 	byte[] buf = new byte[3];
 	rfb.readFully(buf);
+	rfb.numBytesCached+=buf.length;
 	if (rfb.rec != null) {
 	  rfb.rec.write(buf);
 	}
@@ -1158,6 +1274,7 @@ public class VncCanvas extends Canvas
       // Read JPEG data.
       byte[] jpegData = new byte[rfb.readCompactLen()];
       rfb.readFully(jpegData);
+      rfb.numBytesCached+=jpegData.length;
       if (rfb.rec != null) {
 	if (!rfb.recordFromBeginning) {
 	  rfb.recordCompactLen(jpegData.length);
@@ -1196,11 +1313,13 @@ public class VncCanvas extends Canvas
     boolean useGradient = false;
     if ((comp_ctl & rfb.TightExplicitFilter) != 0) {
       int filter_id = rfb.is.readUnsignedByte();
+      rfb.numBytesCached++;
       if (rfb.rec != null) {
 	rfb.rec.writeByte(filter_id);
       }
       if (filter_id == rfb.TightFilterPalette) {
 	numColors = rfb.is.readUnsignedByte() + 1;
+	  rfb.numBytesCached++;  
 	if (rfb.rec != null) {
 	  rfb.rec.writeByte(numColors - 1);
 	}
@@ -1209,12 +1328,14 @@ public class VncCanvas extends Canvas
 	    throw new Exception("Incorrect tight palette size: " + numColors);
 	  }
 	  rfb.readFully(palette8);
+	  rfb.numBytesCached+=palette8.length;
 	  if (rfb.rec != null) {
 	    rfb.rec.write(palette8);
 	  }
 	} else {
 	  byte[] buf = new byte[numColors * 3];
 	  rfb.readFully(buf);
+	  rfb.numBytesCached+=buf.length;
 	  if (rfb.rec != null) {
 	    rfb.rec.write(buf);
 	  }
@@ -1243,6 +1364,7 @@ public class VncCanvas extends Canvas
 	// Indexed colors.
 	byte[] indexedData = new byte[dataSize];
 	rfb.readFully(indexedData);
+	rfb.numBytesCached+=indexedData.length;
 	if (rfb.rec != null) {
 	  rfb.rec.write(indexedData);
 	}
@@ -1267,6 +1389,7 @@ public class VncCanvas extends Canvas
 	// "Gradient"-processed data
 	byte[] buf = new byte[w * h * 3];
 	rfb.readFully(buf);
+	rfb.numBytesCached+=buf.length;
 	if (rfb.rec != null) {
 	  rfb.rec.write(buf);
 	}
@@ -1276,6 +1399,7 @@ public class VncCanvas extends Canvas
 	if (bytesPixel == 1) {
 	  for (int dy = y; dy < y + h; dy++) {
 	    rfb.readFully(pixels8, dy * rfb.framebufferWidth + x, w);
+	    rfb.numBytesCached+=w;
 	    if (rfb.rec != null) {
 	      rfb.rec.write(pixels8, dy * rfb.framebufferWidth + x, w);
 	    }
@@ -1285,6 +1409,7 @@ public class VncCanvas extends Canvas
 	  int i, offset;
 	  for (int dy = y; dy < y + h; dy++) {
 	    rfb.readFully(buf);
+	    rfb.numBytesCached+=buf.length;	    
 	    if (rfb.rec != null) {
 	      rfb.rec.write(buf);
 	    }
@@ -1303,6 +1428,7 @@ public class VncCanvas extends Canvas
       int zlibDataLen = rfb.readCompactLen();
       byte[] zlibData = new byte[zlibDataLen];
       rfb.readFully(zlibData);
+      rfb.numBytesCached+= zlibData.length;           
       if (rfb.rec != null && rfb.recordFromBeginning) {
 	rfb.rec.write(zlibData);
       }

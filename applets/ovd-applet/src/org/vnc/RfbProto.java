@@ -39,6 +39,7 @@ import java.net.Socket;
 import java.util.Vector;
 import java.util.zip.Deflater;
 
+import org.vnc.rfbcaching.*;
 //import com.sshtools.sshvnc.SshVNCPanel;
 //import com.sshtools.sshvnc.SshVNCViewer;
 
@@ -117,7 +118,9 @@ class RfbProto {
     EncodingRichCursor     = 0xFFFFFF11,
     EncodingPointerPos     = 0xFFFFFF18,
     EncodingLastRect       = 0xFFFFFF20,
-    EncodingNewFBSize      = 0xFFFFFF21;
+    EncodingNewFBSize      = 0xFFFFFF21,
+    EncodingRfbCaching	   = IRfbCachingConstants.RFB_CACHE_ENCODING;
+  
   final static String
     SigEncodingRaw            = "RAW_____",
     SigEncodingCopyRect       = "COPYRECT",
@@ -133,8 +136,9 @@ class RfbProto {
     SigEncodingRichCursor     = "RCHCURSR",
     SigEncodingPointerPos     = "POINTPOS",
     SigEncodingLastRect       = "LASTRECT",
-    SigEncodingNewFBSize      = "NEWFBSIZ";
-
+    SigEncodingNewFBSize      = "NEWFBSIZ",
+  	SigEncodingRfbCaching	  = "RFBCACHE";
+  
   final static int MaxNormalEncoding = 255;
 
   // Contstants used in the Hextile decoder
@@ -165,7 +169,50 @@ class RfbProto {
   SessionRecorder rec;
   boolean inNormalProtocol = false;
   VncViewer viewer;
+  
+  // RFB Caching declaration section
+  // Cache object
+  IRfbCache cache;
+  // Cache key size in bytes
+  int cacheKeySize = 20;
+  // Minimum data size of frame buffer to be cached 
+  int cacheMinDataSize;
+  // Cache size
+  int cacheMaxEntries;
+  // Cache maintenance algorithm
+  int cacheMaintAlg;
+  // Cache version
+  int cacheMajor, cacheMinor;
+  // Reserved byte for RFB caching protocol extension
+  int cacheReserved; 
+  // RFB cache client preferred properties 
+  RfbCacheProperties clientProps = null;
+  
+  void setCacheProps(RfbCacheProperties cacheProps){
+	  clientProps = cacheProps;	  
+  }
+  // RFB session cache support indicator
+  boolean isServerSupportCaching;  
+  
+  // Number of bytes to be cached for single frame buffer update request 
+  int numBytesCached;
 
+//  // Getter
+//  public int getNumBytesCached() {
+//	return numBytesCached;
+//  }
+//  
+//  // Setter
+//  public void setNumBytesCached(int numBytesCached) {
+//	this.numBytesCached = numBytesCached;
+//  }
+//  
+  // The size of socket InputStream buffer to store bytes after mark() call
+  int rfbCacheMarkReadLimit = 4800000;   
+  
+  boolean isCaching = false;
+
+		  
   /*Ulteo changes by ArnauVP*/
   String OSName = "unknown";
   
@@ -539,6 +586,8 @@ class RfbProto {
 		     SigEncodingLastRect, "LastRect protocol extension");
     encodingCaps.add(EncodingNewFBSize, TightVncVendor,
 		     SigEncodingNewFBSize, "Framebuffer size change");
+    encodingCaps.add(EncodingRfbCaching, TightVncVendor,
+		     SigEncodingRfbCaching, "RFB Caching support");
   }
 
   //
@@ -617,6 +666,99 @@ class RfbProto {
     viewer.options.disableShareDesktop();
   }
 
+
+  //
+  // Write ClientCacheInit handshake message
+  //
+  void writeClientCacheInit() throws IOException {
+	  //System.out.println("RfbProto: WriteClientCacheInit");
+	  if (clientProps == null){
+	  	//System.out.println("RfbProto: WriteClientCacheInit, userCacheProperties null");
+	  	return;
+	  }
+	  byte[] b = new byte[8];
+	  b[0] = IRfbCachingConstants.RFB_CACHE_CLIENT_INIT_MSG;
+	  
+	  boolean isVerMatch = (clientProps.getCacheMajor() == cacheMajor && clientProps.getCacheMinor()<= cacheMinor); 
+	  
+	  if (isVerMatch){
+		  b[1] = (byte) ((byte)(clientProps.getCacheMajor() << 4)|(clientProps.getCacheMinor() & 0xf));
+	  }	  
+	  else
+		  b[1] = 0; // Caching not supported due to version mismatch	
+	  cacheMaxEntries = Math.min(clientProps.getCacheMaxEntries(),cacheMaxEntries); 	  	  
+	  b[2] = (byte) ((cacheMaxEntries >> 8) & 0xff);
+	  
+	  b[3] = (byte) ( cacheMaxEntries & 0xff);
+	  cacheMaintAlg = clientProps.getCacheMaintAlg();	  
+	  b[4] = (byte) ( cacheMaintAlg & 0xff);
+	  b[5] = 0; //reserved byte
+	  cacheMinDataSize = Math.min(clientProps.getCacheMinDataSize(),cacheMinDataSize);
+	  b[6] = (byte) ((cacheMinDataSize >> 8) & 0xff);
+	  b[7] = (byte) (cacheMinDataSize & 0xff);	    
+	  if (isVerMatch){
+		  try{
+			  // Possible usage:
+			  // IRfbCacheFactory factory; 
+			  // switch(b[1]){
+			  // 	case VER1: 
+			  //      factory = (IRfbCacheFactory)(Class.forName(Factory1_Name).newInstance();
+			  //      break;
+			  //    case VER2:
+			  //      factory = (IRfbCacheFactory)(Class.forName(Factory2_Name).newInstance();
+			  //      break;
+			  //    default:
+			  //	  factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance();			  
+			  // }
+			  //
+			  IRfbCacheFactory factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance(); 
+		      IRfbCache cache = factory.CreateRfbCache(
+		      						new RfbCacheProperties(cacheMaintAlg,
+		      											   cacheMaxEntries, 
+		      											   cacheMinDataSize, 
+		      											   clientProps.getCacheMajor(),
+		      											   clientProps.getCacheMajor()));
+		      											   
+		      if (cache!=null){
+		    	  this.cache = cache;
+		      }else{
+		    	  this.isServerSupportCaching = false;
+		    	  b[1] = 0;
+		      }
+//		      System.out.println("RFB Cache created:");
+//		      System.out.println("\tcacheVersion:"+b[1]);
+//		      System.out.println("\tcacheMaintAlg:"+cacheMaintAlg);
+//		      System.out.println("\tcacheMinDataSize:"+cacheMinDataSize);
+//		      System.out.println("\tcacheSize:"+cacheMaxEntries);		      
+		  }catch(Exception e){
+			  e.printStackTrace();
+			  this.isServerSupportCaching = false;
+			  b[1] = 0;
+		  }	  		  
+      }else{
+      	  this.isServerSupportCaching = false;
+//      	  System.out.println("Cache version mismatch");
+      }
+	  os.write(b);
+      
+  }
+
+  //
+  // Read ServerCacheInit handshake message
+  //
+  void readServerCacheInit() throws IOException {
+	  //System.out.println("RfbProto: ReadServerCacheInit");
+	  int ver = is.readUnsignedByte();
+	  cacheMajor =  (ver >> 4);
+	  cacheMinor =  ver & 0xf ;
+	  cacheMaxEntries = is.readUnsignedShort();
+	  cacheMaintAlg = is.readUnsignedByte();
+	  cacheReserved = is.readUnsignedByte();	  
+	  cacheMinDataSize =  is.readUnsignedShort();
+	  if ((clientProps!=null) && (clientProps.getCacheMajor() == cacheMajor) &&  (clientProps.getCacheMinor()<= cacheMinor)){
+		  isServerSupportCaching = true;
+	  }
+  }
 
   //
   // Read the server initialisation message
@@ -874,7 +1016,7 @@ class RfbProto {
     if (rec != null && recordFromBeginning)
       for (int i = 0; i < byteCount; i++)
 	rec.writeByte(portion[i]);
-
+    if (isCaching) numBytesCached+=byteCount;
     return len;
   }
 
@@ -1518,5 +1660,40 @@ class RfbProto {
       timedKbits += newKbits;
     }
   }
+  
+//
+// Start caching process 
+//  
+public void startCaching() throws IOException{
+	//mark the current position in the socket stream
+	this.is.mark(rfbCacheMarkReadLimit);
+	numBytesCached = 0;
+	isCaching = true;
+}
 
+
+//
+// Reset caching variables 
+//
+public void resetCaching() throws IOException{
+	numBytesCached = 0;
+	isCaching = false;
+}
+
+//
+// Stop caching process 
+//
+public void stopCaching(int encoding) throws IOException{
+	// check if buffer size is large enough to be cached 
+	if (numBytesCached >= cacheMinDataSize){
+		byte[] data = new byte[numBytesCached];
+		// move InputStream pointer to the marked position
+		is.reset();
+		// read data from the InputStream buffer
+		is.readFully(data, 0, data.length);
+		cache.put(cache.hash(data), new RfbCacheEntry (encoding, data));    	      
+	}
+	// reset cache variables
+	resetCaching();
+ }
 }
