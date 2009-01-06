@@ -392,7 +392,9 @@ class Server {
 		}
 
 		$dom = new DomDocument();
-		@$dom->loadXML($xml);
+		$ret = @$dom->loadXML($xml);
+		if ($ret == false)
+			return false;
 
 		$keys = array();
 
