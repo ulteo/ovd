@@ -74,7 +74,7 @@ import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 public class VncViewer extends java.applet.Applet
   implements java.lang.Runnable, WindowListener {
 
-  public static final String version = "0.2.3e";
+  public static final String version = "0.2.3f";
   
   boolean inAnApplet = true;
   boolean inSeparateFrame = false;

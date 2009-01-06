@@ -29,7 +29,7 @@ import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 
 public class ODTester implements Runnable {
 
-	 public static final String version = "0.2.3e";
+	 public static final String version = "0.2.3f";
 	 
 	 public VncViewer ulteoapplet;
 	 
