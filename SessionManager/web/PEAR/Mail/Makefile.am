@@ -1,4 +1,6 @@
-scripts_DATA = RFC822.php mail.php null.php sendmail.php smtp.php
-scriptsdir = $(datadir)/ulteo/sessionmanager/Mail
+scripts_DATA = mail.php Makefile.am null.php \
+               RFC822.php sendmail.php smtp.php
+
+scriptsdir = $(datadir)/ulteo/sessionmanager/PEAR/Mail
 
 EXTRA_DIST = $(scripts_DATA)

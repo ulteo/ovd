@@ -23,8 +23,6 @@ config/Makefile
 scripts/Makefile
 po/Makefile.in
 web/Makefile
-web/Mail/Makefile
-web/Net/Makefile
 web/ajax/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
@@ -55,5 +53,10 @@ web/admin/Makefile
 web/applet/Makefile
 web/includes/Makefile
 web/classes/Makefile
+web/PEAR/Makefile
+web/PEAR/Auth/Makefile
+web/PEAR/Auth/SASL/Makefile
+web/PEAR/Mail/Makefile
+web/PEAR/Net/Makefile
 ])
 AC_OUTPUT
