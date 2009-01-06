@@ -4,7 +4,8 @@ SUBDIRS = \
 	log.d \
 	modules_fs.d
 
-daemon_SCRIPTS = prestart.sh \
+daemon_SCRIPTS = cpu_load.py \
+                 prestart.sh \
                  startsession.sh \
 				 timeout.sh \
 				 uumount.sh \
