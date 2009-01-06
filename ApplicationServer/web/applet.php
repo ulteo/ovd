@@ -70,13 +70,21 @@ if (isset($_REQUEST['html'])) {
 	<param name="name" value="ulteoapplet" />
 	<param name="code" value="org.vnc.VncViewer" />
 	<param name="codebase" value="<?php echo SESSIONMANAGER_URL; ?>/applet/" />
-	<param name="archive" value="ulteo-applet-0.2.3e.jar" />
-	<param name="cache_archive" value="ulteo-applet-0.2.3e.jar" />
-	<param name="cache_archive_ex" value="ulteo-applet-0.2.3e.jar;preload" />
+	<param name="archive" value="ulteo-applet-0.2.3f.jar" />
+	<param name="cache_archive" value="ulteo-applet-0.2.3f.jar" />
+	<param name="cache_archive_ex" value="ulteo-applet-0.2.3f.jar;preload" />
 
 	<param name="HOST" value="<?php echo $server; ?>" />
 	<param name="PORT" value="<?php echo $rfbport; ?>" />
 	<param name="ENCPASSWORD" value="<?php echo $vncpass; ?>" />
+
+    <!-- Caching options -->
+    <param name="rfb.cache.enabled" value="true">
+    <param name="rfb.cache.ver.major" value="1">
+    <param name="rfb.cache.ver.minor" value="0">
+    <param name="rfb.cache.size" value="42336000">
+    <param name="rfb.cache.alg" value="LRU">
+    <param name="rfb.cache.datasize" value="2000000">
 
 	<param name="SSH" value="yes" />
 	<param name="ssh.host" value="<?php echo $server; ?>" />

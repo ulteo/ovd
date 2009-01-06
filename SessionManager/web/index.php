@@ -552,9 +552,9 @@ if ($testapplet) {
 		<param name="name" value="ulteoapplet" />
 		<param name="code" value="org.vnc.VncViewer" />
 		<param name="codebase" value="applet/" />
-		<param name="archive" value="ulteo-applet-0.2.3e.jar" />
-		<param name="cache_archive" value="ulteo-applet-0.2.3e.jar" />
-		<param name="cache_archive_ex" value="ulteo-applet-0.2.3e.jar;preload" />
+		<param name="archive" value="ulteo-applet-0.2.3f.jar" />
+		<param name="cache_archive" value="ulteo-applet-0.2.3f.jar" />
+		<param name="cache_archive_ex" value="ulteo-applet-0.2.3f.jar;preload" />
 		<param name="mayscript" value="true" />
 
 		<param name="HOST" value="<?php echo $random_server->fqdn; ?>" />
@@ -577,6 +577,14 @@ if ($testapplet) {
 		<param name="proxyPort" value="<?php echo $proxy_port; ?>" />
 		<param name="proxyUsername" value="<?php echo $proxy_username; ?>" />
 		<param name="proxyPassword" value="<?php echo $proxy_password; ?>" />-->
+
+        <!-- Caching options -->
+        <param name="rfb.cache.enabled" value="true">
+        <param name="rfb.cache.ver.major" value="1">
+        <param name="rfb.cache.ver.minor" value="0">
+        <param name="rfb.cache.size" value="42336000">
+        <param name="rfb.cache.alg" value="LRU">
+        <param name="rfb.cache.datasize" value="2000000">
 
 		<param name="Share desktop" value="true" />
 		<param name="View only" value="false" />
