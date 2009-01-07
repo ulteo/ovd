@@ -29,6 +29,11 @@ menu_spool() {
     for app in `cat $sessid_dir/parameters/menu`; do
 	menu_put $app $menu_dir
     done
+
+    if [ -f $sessid_dir/parameters/desktop_icons ]; then
+	touch $menu_dir/.show_on_desktop
+    fi
+
 }
 
 menu_put() {
@@ -49,6 +54,7 @@ menu_clean() {
     [ ! -d $menu_dir ] && return 0
 
     rm -f $menu_dir/*
+    [ -f $menu_dir/.show_on_desktop ] && rm $menu_dir/.show_on_desktop
     rmdir $menu_dir
 
 }
