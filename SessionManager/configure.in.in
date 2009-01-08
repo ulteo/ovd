@@ -58,5 +58,6 @@ web/PEAR/Auth/Makefile
 web/PEAR/Auth/SASL/Makefile
 web/PEAR/Mail/Makefile
 web/PEAR/Net/Makefile
+examples/Makefile
 ])
 AC_OUTPUT

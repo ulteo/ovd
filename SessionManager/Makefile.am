@@ -1,4 +1,4 @@
-SUBDIRS = web po config scripts
+SUBDIRS = web po config scripts examples
 
 AUTOMAKE_OPTIONS = filename-length-max=99
 
