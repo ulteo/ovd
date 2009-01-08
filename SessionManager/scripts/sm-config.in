@@ -133,23 +133,23 @@ while [ -z "$LOGIN" ]; do
     read LOGIN
 done
 
-stty_orig=`stty -g`
-while [ -z $PASS1 -o $PASS1 != $PASS2 ]; do
+stty_orig=$(stty -g)
+while [ -z "$PASS1" -o "$PASS1" -ne "$PASS2" ]; do
     echo -n "Password: "
-    while [ -z $PASS1 ]; do
+    while [ -z "$PASS1" ]; do
         stty -echo
         read PASS1
         stty $stty_orig
         echo
     done
     echo -n "Retype password: "
-    while [ -z $PASS2 ]; do
+    while [ -z "$PASS2" ]; do
         stty -echo
         read PASS2
         stty $stty_orig
         echo
     done
-    if [ $PASS1 != $PASS2 ]; then
+    if [ "$PASS1" != "$PASS2" ]; then
         echo "Passwords don't match... try again."
         unset PASS1
         unset PASS2
