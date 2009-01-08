@@ -2,7 +2,7 @@
 
 if [ "$1" = "purge" ]; then
     rm -f /usr/share/ulteo/sessionmanager/base.tar.gz
-    rm -f /etc/apache2/conf.d/session-manager
+    rm -f /etc/apache2/conf.d/sessionmanager
 fi
 
 #DEBHELPER#
