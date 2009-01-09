@@ -36,6 +36,9 @@ function print_element($key_name,$contener,$element_key,$element) {
 		case 1: //	1 : input text (rw)
 			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
+		case 6: // text area
+			echo '<textarea rows="7" cols="60" id="'.$label2.'" name="'.$label2.'">'.$element->content.'</textarea>';
+			break;
 		case 7: //	7 : input password (rw)
 			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
