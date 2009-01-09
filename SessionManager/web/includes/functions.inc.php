@@ -153,6 +153,7 @@ function sendamail($to_, $subject_, $message_) {
 		'From'		=>	$title. '<'.$from.'>',
 		'To'			=>	$to,
 		'Subject'		=>	$subject,
+		'Content-Type'		=>	'text/plain; charset=UTF-8',
 		'X-Mailer'	=>	'PHP/'.phpversion()
 	);
 
