@@ -4,6 +4,18 @@ Ulteo Open Virtual Desktop - Session Manager
 Installation
 ------------
 
+If you install from svn you'll need to have these packages installed:
+ - autogen
+ - autconf
+ - intltool
+ - make
+ - gcc
+ - libc6-dev (or glibc-devel)
+ - libglib2.0-dev (or glib2-devel)
+
+To prepare the sources run:
+$ ./autogen.sh
+
 The first step is to run:
 
 $ ./configure

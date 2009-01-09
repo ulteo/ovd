@@ -22,6 +22,7 @@ usage ()
     echo "  --chroot-path path   set the chroot path to 'path'"
     echo "  --apache-group group set the apache group to 'group'"
     echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
+    echo "  --assume-yes         don't ask confirmation"
     echo "  --help|-h            display this help"
     echo "  --version|-v         display version informations"
 }
@@ -54,6 +55,7 @@ unset SM_URL
 unset CHROOT_PATH
 unset APACHE_GROUP
 unset APACHE_DIR
+NOCONFIRM=0
 while [ "$1" != "" ]; do
     case $1 in
         --no-download)
@@ -75,6 +77,8 @@ while [ "$1" != "" ]; do
         --apache-dir)
             APACHE_DIR="$2"
             shift;;
+        --assume-yes)
+            NOCONFIRM=1;;
         --help|-h)
             usage
             exit 0;;
@@ -155,6 +159,21 @@ else
 fi
 echo "* apache group: $APACHE_GROUP"
 echo "* apache dir: $APACHE_DIR"
+
+if [ "$NOCONFIRM" -ne 1 ]; then
+    echo
+    echo -n "Is this correct? [Y/n] "
+    read GO
+    case $GO in
+        Y|y)
+            # continue
+            ;;
+        *)
+            echo "Aborting."
+            exit 0
+            ;;
+    esac
+fi
 
 MAIN_CONFFILE=@SYSCONFDIR@/ulteo-ovd.conf
 # we assume here that a default chroot is used, thus we know where the conffile

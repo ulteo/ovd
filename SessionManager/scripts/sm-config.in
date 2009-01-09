@@ -50,6 +50,7 @@ usage ()
     echo "  --apache-group group set the apache group to 'group'"
     echo "                       (default: guess from /etc/group)"
     echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
+    echo "  --assume-yes         don't ask confirmation"
     echo "                       (default: guess from /etc/{httpd,apache2})"
     echo "  --help|-h            display this help"
     echo "  --version|-v         display version informations"
@@ -92,6 +93,7 @@ unset PASS1
 unset PASS2
 unset URL
 unset TARGET
+NOCONFIRM=0
 while [ x"$1" != x"" ]; do
     case $1 in
         --no-download)
@@ -115,6 +117,8 @@ while [ x"$1" != x"" ]; do
         --apache-dir)
             APACHE_DIR="$2"
             shift;;
+        --assume-yes)
+            NOCONFIRM=1;;
         --help|-h)
             usage
             exit 0;;
@@ -212,8 +216,22 @@ fi
 echo "* apache group:     $APACHE_GROUP"
 echo "* apache dir:       $APACHE_DIR"
 
-[ -n "$OVDDEBUG" ] && exit 0
+if [ "$NOCONFIRM" -ne 1 ]; then
+    echo
+    echo -n "Is this correct? [Y/n] "
+    read GO
+    case $GO in
+        Y|y)
+            # continue
+            ;;
+        *)
+            echo "Aborting."
+            exit 0
+            ;;
+    esac
+fi
 
+[ -n "$OVDDEBUG" ] && exit 0
 [ -z "$NODOWNLOAD" ] && get_chroot
 set_admin_credentials
 set_apache
