@@ -110,7 +110,7 @@ if (isset($_REQUEST['html'])) {
 	?>
 
 	<param name="Share desktop" value="<?php echo $_SESSION['share_desktop']; ?>" />
-	<param name="View only" value="<?php echo $_SESSION['view_only']; ?>" />
+	<param name="View only" value="<?php echo $_SESSION[parameters]['view_only']; ?>" />
 </applet>
 <?php
 } else {
