@@ -170,13 +170,6 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 			$count = 0;
 			foreach($u_servs as $s){
 				$s->getMonitoring();
-				$applications = $s->getApplications();
-				$apps_name = '';
-				if (is_array($applications)){
-					foreach ($applications as $a){
-						$apps_name .= $a->getAttribute('name').'<br />';
-					}
-				}
 				echo '<tr class="content';
 				if ($count % 2 == 0)
 					echo '1';
@@ -247,13 +240,6 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 			<?php
 			$count = 0;
 			foreach($a_servs as $s){
-				$applications = $s->getApplications();
-				$apps_name = '';
-				if (is_array($applications)){
-					foreach ($applications as $a){
-						$apps_name .= $a->getAttribute('name').'<br />';
-					}
-				}
 				echo '<tr class="content';
 				echo ($count % 2 == 0)?'1':'2';
 				echo '">';
@@ -280,7 +266,6 @@ if (! isset($_GET['action']) || $_GET['action'] == 'list') {
 				echo _('RAM usage').': '.$s->getRamUsage();
 				}
 				echo '</td>';
-				//echo '<td>'.$apps_name.'</td>';
 				?>
 				<td>
 					<form action="servers.php" method="get">
