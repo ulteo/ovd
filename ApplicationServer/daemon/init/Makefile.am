@@ -4,9 +4,9 @@ initdir = $(sysconfdir)/init.d
 ulteo-ovdd:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir),g" \
 		-e "s,@DATADIR@,$(datadir),g" \
-		< ulteo-ovdd.in > $@
+		< $(srcdir)/ulteo-ovdd.in > $@
 
-local-clean:
+clean-local:
 	rm -f ulteo-ovdd
 
 EXTRA_DIST = ulteo-ovdd.in
