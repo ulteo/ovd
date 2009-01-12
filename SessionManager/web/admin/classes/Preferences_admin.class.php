@@ -69,7 +69,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general');
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
 		$this->add($c,'general');
-		
+
 		$user_groups = array();
 		$ugs = get_all_usergroups();
         if ($ugs){
@@ -133,6 +133,10 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0, array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general','session_settings_defaults');
 		$c = new config_element('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), 2);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('windows_server', _('Windows server'), _('Windows server'), _('Windows server'), '', NULL, 1);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new config_element('windows_exec', _('Windows exec'), _('Windows exec'), _('Windows exec'), NULL, NULL, 4);
 		$this->add($c,'general','session_settings_defaults');
 
 		# Sessions can be shared ? yes/no

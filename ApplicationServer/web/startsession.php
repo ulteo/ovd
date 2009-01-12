@@ -32,8 +32,18 @@ $_SESSION['height'] = @$_REQUEST['height'];
 if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
 	put_to_file(SESSION_PATH.'/'.$session.'/parameters/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
 
-	foreach ($_SESSION['parameters'] as $k => $v)
+	foreach ($_SESSION['parameters'] as $k => $v) {
+		if ($k == 'windows_menu')  {
+			$buf = unserialize($v);
+
+			foreach ($buf as $k2 => $v2)
+				@file_put_contents(SESSION_PATH.'/'.$session.'/parameters/'.$k, $k2.'|'.$v2."\n", FILE_APPEND);
+
+			continue;
+		}
+
 		put_to_file(SESSION_PATH.'/'.$session.'/parameters/'.$k, $v);
+	}
 
 	@unlink(SESSION_PATH.'/'.$session.'/parameters/module_fs');
 	@mkdir(SESSION_PATH.'/'.$session.'/parameters/module_fs', 0750);

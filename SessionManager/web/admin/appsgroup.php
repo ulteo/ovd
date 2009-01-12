@@ -225,7 +225,7 @@ function show_manage($id) {
     foreach($applications as $application) {
       $icon_id = ($application->haveIcon())?$application->getAttribute('id'):0;
       echo '<tr>';
-      echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
+      echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
       echo '</td>';
       echo '<td>';
       echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application ?').'\');">';

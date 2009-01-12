@@ -26,20 +26,56 @@ class Server {
 	public $folder = NULL;
 	public $status = NULL;
 
-	public function __construct($fqdn_, $create_=true) {
-		Logger::debug('main', 'Starting SERVER::_construct for server '.$fqdn_);
+	public function __construct($ip_) {
+		Logger::debug('main', 'Starting SERVER::_construct for server '.$ip_);
 
-		$this->fqdn = $fqdn_;
+		$this->fqdn = $ip_;
+		$buf = @gethostbyaddr($ip_);
+		if (@gethostbyname($buf) == $ip_)
+			$this->fqdn = $buf;
 		$this->folder = SESSIONS_DIR.'/'.$this->fqdn;
-
-		if (!file_exists($this->folder) && check_ip($fqdn_) && $create_)
-			$this->create();
 
 		if (!$this->hasAttribute('type') || $this->getAttribute('type') ===  '')
 			$this->getType();
 
 		if (!$this->hasAttribute('version') || $this->getAttribute('version') === '')
 			$this->getVersion();
+	}
+
+	public static function loadDB($ip_) {
+		$fqdn = $ip_;
+		$buf = @gethostbyaddr($ip_);
+		if (@gethostbyname($buf) == $ip_)
+			$fqdn = $buf;
+		$folder = SESSIONS_DIR.'/'.$fqdn;
+
+		if (!file_exists($folder))
+			return false;
+
+		$buf = new Server($ip_);
+		$buf->key = $buf->getAttribute('key');
+
+		return $buf;
+	}
+
+	public function authenticate($key_) {
+		if ($key_ === $this->key)
+			return true;
+
+		return false;
+	}
+
+	public function generateKey() {
+		$this->key = md5(time().rand());
+
+		return $this->key;
+	}
+
+	public function saveDB() {
+		if (!file_exists($this->folder))
+			$this->create();
+
+		$this->setAttribute('key', $this->key);
 	}
 
 	public static function load($fqdn_) {
@@ -306,10 +342,17 @@ class Server {
 	public function isOnline() {
 		Logger::debug('main', 'Starting SERVER::isOnline for server '.$this->fqdn);
 
-		$this->getStatus(0);
-
-		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
+		if ($this->getStatus(0) == 'ready')
 			return true;
+
+// 		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
+// 			return true;
+
+		return false;
+	}
+
+	public function isRegistered() {
+		Logger::debug('main', 'Starting SERVER::isOnline for server '.$this->fqdn);
 
 		return false;
 	}
@@ -341,7 +384,7 @@ class Server {
 				$this->setAttribute('locked', 1);
 		}
 
-		return true;
+		return $ret;
 	}
 
 	public function setStatus($status_) {

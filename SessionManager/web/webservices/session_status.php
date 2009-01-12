@@ -22,6 +22,19 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_status.php');
 
+if (!isset($_GET['key']) || $_GET['key'] == '') {
+	Logger::error('main', '(webservices/session_status) Missing parameter : key');
+	die('ERROR - NO $_GET[\'key\']');
+}
+
+$server = Server::loadDB($_SERVER['REMOTE_ADDR']);
+if (!$server->authenticate($_GET['key'])) {
+	Logger::error('main', 'Server not authorized : '.$server->fqdn.' ? '.$_SERVER['REMOTE_ADDR']);
+	die('Server not authorized');
+}
+
+Logger::debug('main', '(webservices/session_status) Security check OK');
+
 if (!isset($_GET['session'])) {
 	Logger::error('main', '(webservices/session_status) Missing parameter : session');
 	die('ERROR - NO $_GET[\'session\']');
@@ -32,19 +45,7 @@ if (!isset($_GET['status'])) {
 	die('ERROR - NO $_GET[\'status\']');
 }
 
-if (!isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/session_status) Missing parameter : fqdn');
-	die('ERROR - NO $_GET[\'fqdn\']');
-}
-
-if (!check_ip($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/session_status) Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
-	die('Server not authorized');
-}
-
-Logger::debug('main', '(webservices/session_status) Security check OK');
-
-$session = new Session($_GET['session'], $_GET['fqdn']);
+$session = new Session($_GET['session'], $server->fqdn);
 
 Logger::debug('main', '(webservices/session_status) Session '.$session->session.' on server '.$session->server.' have status '.$_GET['status']);
 

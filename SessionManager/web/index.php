@@ -570,7 +570,15 @@ if ($testapplet) {
 		<!--<param name="Compression level" value="7" />
 		<param name="Restricted colors" value="false" />
 		<param name="JPEG image quality" value="" />-->
-		<!--<param name="Encoding" value="Auto" />-->
+		<!--<param name="Encoding" value="Tight" />-->
+
+		<!-- Caching options -->
+		<param name="rfb.cache.enabled" value="true">
+		<param name="rfb.cache.ver.major" value="1">
+		<param name="rfb.cache.ver.minor" value="0">
+		<param name="rfb.cache.size" value="42336000">
+		<param name="rfb.cache.alg" value="LRU">
+		<param name="rfb.cache.datasize" value="2000000">
 
 		<!--<param name="proxyType" value="<?php echo $proxy_type; ?>" />
 		<param name="proxyHost" value="<?php echo $proxy_host; ?>" />
@@ -578,16 +586,8 @@ if ($testapplet) {
 		<param name="proxyUsername" value="<?php echo $proxy_username; ?>" />
 		<param name="proxyPassword" value="<?php echo $proxy_password; ?>" />-->
 
-        <!-- Caching options -->
-        <param name="rfb.cache.enabled" value="true">
-        <param name="rfb.cache.ver.major" value="1">
-        <param name="rfb.cache.ver.minor" value="0">
-        <param name="rfb.cache.size" value="42336000">
-        <param name="rfb.cache.alg" value="LRU">
-        <param name="rfb.cache.datasize" value="2000000">
-
 		<param name="Share desktop" value="true" />
-		<param name="View only" value="false" />
+		<param name="View only" value="No" />
 
 		<param name="agent" value="<?php echo $_SERVER['HTTP_USER_AGENT']; ?>" />
 		<param name="preload" value="true" />

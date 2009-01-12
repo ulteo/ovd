@@ -20,24 +20,30 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', '(webservices/server_status) Starting webservices/server_status.php');
+$ip = $_SERVER['REMOTE_ADDR'];
+$name = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
+$buf = @gethostbyname($name);
+$use = $ip;
+if ($buf == $ip)
+	$use = $name;
 
-if (!isset($_GET['key']) || $_GET['key'] == '') {
-	Logger::error('main', '(webservices/server_status) Missing parameter : key');
-	die('ERROR - NO $_GET[\'key\']');
+$buf = Server::loadDB($use);
+if ($buf) {
+	return_error('a');
+	die();
 }
 
-$server = Server::loadDB($_SERVER['REMOTE_ADDR']);
-if (!$server->authenticate($_GET['key'])) {
-	Logger::error('main', 'Server not authorized : '.$server->fqdn.' ? '.$_SERVER['REMOTE_ADDR']);
-	die('Server not authorized');
+$buf = new Server($use);
+// if (!$buf->isOnline()) {
+// 	return_error('b');
+// 	die();
+// }
+if ($buf->isRegistered()) {
+	return_error('c');
+	die();
 }
 
-Logger::debug('main', '(webservices/server_status) Security check OK');
-
-if (!isset($_GET['status'])) {
-	Logger::error('main', '(webservices/server_status) Missing parameter : status');
-	die('ERROR - NO $_GET[\'status\']');
-}
-
-$server->setStatus($_GET['status']);
+return_ok('d');
+echo $buf->generateKey();
+$buf->saveDB();
+die();

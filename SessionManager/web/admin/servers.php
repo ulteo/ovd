@@ -505,7 +505,7 @@ else {
 
 			echo '<tr class="'.$content.'">';
 			echo '<td>';
-			echo '<img src="media/image/cache.php?id='.$icon_id.'" alt="'.$app->getAttribute('name').'" title="'.$app->getAttribute('name').'" /> ';
+			echo '<img src="media/image/cache.php?id='.$icon_id.'" alt="" title="'.$app->getAttribute('name').'" /> ';
 			echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 			echo $app->getAttribute('name').'</a>';
 			echo '</td>';
