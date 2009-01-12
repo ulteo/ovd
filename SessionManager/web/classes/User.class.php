@@ -56,7 +56,7 @@ class User {
 				$ug = new UsersGroup();
 				$ug->fromDB($user_default_group);
 				if ($ug->isOK())
-					$result[] = $ug;
+					$result[$user_default_group] = $ug;
 				else {
 					Logger::error('main', 'USER::usersGroups default user group (\''.$user_default_group.'\') not ok');
 				}
@@ -65,13 +65,13 @@ class User {
 		
 		$l = new UsersGroupLiaison($this->attributes['login'],NULL);
 		$rows = $l->groups();
-		foreach ($rows as $row){
+		foreach ($rows as $group_id){
 			$g = new UsersGroup();
-			$g->fromDB($row['group']);
+			$g->fromDB($group_id);
 			if ($g->isOK())
-				$result []= $g;
+				$result[$group_id]= $g;
 			else {
-				Logger::error('main', 'USER::usersGroups user group (\''.$row['group'].'\') not ok');
+				Logger::error('main', 'USER::usersGroups user group (\''.$user_default_group.'\') not ok');
 			}
 		}
 		return $result;

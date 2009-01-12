@@ -27,7 +27,7 @@ class UsersGroup {
 	public $published; //(yes/no)
 
 	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $published_=false) {
-		Logger::debug('admin','USERSGROUP::contructor from_scratch');
+		Logger::debug('admin',"USERSGROUP::contructor from_scratch (id_=$id_, name_=$name_, description_=$description_, published_=$published_)");
 		$this->id = $id_;
 		$this->name = $name_;
 		$this->description = $description_;
@@ -35,7 +35,7 @@ class UsersGroup {
 	}
 
 	public function fromDB($id_) {
-		Logger::debug('admin','USERSGROUP::fromDB');
+		Logger::debug('admin',"USERSGROUP::fromDB (id = $id_)");
 		if (is_numeric($id_)){
 			$sql2 = MySQL::getInstance();
 			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1= %6', 'id', 'name', 'description',  'published', USERSGROUP_TABLE, $id_);
