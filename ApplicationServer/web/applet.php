@@ -78,14 +78,6 @@ if (isset($_REQUEST['html'])) {
 	<param name="PORT" value="<?php echo $rfbport; ?>" />
 	<param name="ENCPASSWORD" value="<?php echo $vncpass; ?>" />
 
-    <!-- Caching options -->
-    <param name="rfb.cache.enabled" value="true">
-    <param name="rfb.cache.ver.major" value="1">
-    <param name="rfb.cache.ver.minor" value="0">
-    <param name="rfb.cache.size" value="42336000">
-    <param name="rfb.cache.alg" value="LRU">
-    <param name="rfb.cache.datasize" value="2000000">
-
 	<param name="SSH" value="yes" />
 	<param name="ssh.host" value="<?php echo $server; ?>" />
 	<param name="ssh.port" value="443,993,995,110,40001" />
@@ -95,7 +87,15 @@ if (isset($_REQUEST['html'])) {
 	<param name="Compression level" value="<?php echo $compress_level; ?>" />
 	<param name="Restricted colors" value="<?php echo $eight_bits; ?>" />
 	<param name="JPEG image quality" value="<?php echo $jpeg_quality; ?>" />
-	<param name="Encoding" value="Auto" />
+	<param name="Encoding" value="Tight" />
+
+	<!-- Caching options -->
+	<param name="rfb.cache.enabled" value="true">
+	<param name="rfb.cache.ver.major" value="1">
+	<param name="rfb.cache.ver.minor" value="0">
+	<param name="rfb.cache.size" value="42336000">
+	<param name="rfb.cache.alg" value="LRU">
+	<param name="rfb.cache.datasize" value="2000000">
 
 	<?php
 		//if (isset($_SESSION['enable_proxy']) && $_SESSION['enable_proxy'] == 1)  {

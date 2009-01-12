@@ -55,42 +55,42 @@ function daemon_init(server_, session_, timestamp_, lead_, debug_) {
 }
 
 function daemon_loop() {
-		push_log('[daemon] loop()', 'debug');
+	push_log('[daemon] loop()', 'debug');
 
-		session_check();
+	session_check();
 
-		if (session_state == 0 || session_state == 10) {
-			new Ajax.Request(
-				'startsession.php',
-				{
-					method: 'get',
-					parameters: {
-						width: parseInt(my_width),
-						height: parseInt(my_height),
-						lead: lead
-					}
+	if (session_state == 0 || session_state == 10) {
+		new Ajax.Request(
+			'startsession.php',
+			{
+				method: 'get',
+				parameters: {
+					width: parseInt(my_width),
+					height: parseInt(my_height),
+					lead: lead
 				}
-			);
-		} if (session_state == 2 && $('splashContainer').visible()) {
-			switch_splash_to_applet();
-		} else if (old_session_state == 2 && session_state != 2) {
-			window_alive = false;
-			switch_applet_to_end();
-			return;
-		}
+			}
+		);
+	} if (session_state == 2 && $('splashContainer').visible()) {
+		switch_splash_to_applet();
+	} else if (old_session_state == 2 && session_state != 2) {
+		window_alive = false;
+		switch_applet_to_end();
+		return;
+	}
 
-		print_check();
+	print_check();
 
-		setTimeout(function() {
-			daemon_loop();
-		}, refresh);
+	setTimeout(function() {
+		daemon_loop();
+	}, refresh);
 }
 
 function switch_splash_to_applet() {
 	new Ajax.Request(
 		'applet.php',
 		{
-			method: 'post',
+			method: 'get',
 			parameters: {
 				html: 1,
 				width: parseInt(my_width),
