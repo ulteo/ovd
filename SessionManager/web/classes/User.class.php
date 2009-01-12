@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -62,7 +62,7 @@ class User {
 				}
 			}
 		}
-		
+
 		$l = new UsersGroupLiaison($this->attributes['login'],NULL);
 		$rows = $l->groups();
 		foreach ($rows as $group_id){
@@ -97,6 +97,13 @@ class User {
 	}
 
 	public function getAvalaibleServers(){
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+
+		$default_settings = $prefs->get('general', 'session_settings_defaults');
+		$launch_without_apps = (int)$default_settings['launch_without_apps'];
+
 		// get the list of server who the user can launch his applications
 		Logger::error('main','USER::getAvalaibleServers');
 		$servers = array();
@@ -105,7 +112,7 @@ class User {
 		foreach($apps as $app){
 			$apps_id[$app->getAttribute('id')] = $app->getAttribute('id');
 		}
-		if (count($apps_id)>0){
+		if (count($apps_id)>0 || $launch_without_apps == 1){
 			$available_servers = Servers::getAvailable(); // servers who can we user/session
 			foreach($available_servers as $server){
 				$l = new ApplicationServerLiaison(NULL,$server->fqdn);
@@ -121,7 +128,7 @@ class User {
 		// get a server who the user can launch his applications
 		Logger::debug('main','USER::getAvalaibleServer');
 		$list_servers = $this->getAvalaibleServers();
-		
+
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'get Preferences failed');
@@ -135,7 +142,7 @@ class User {
 		$criterions = $application_server_settings['load_balancing'];
 		if (is_null($criterions))
 			return NULL;
-		
+
 		$server_val = array();
 		foreach($list_servers as $server) {
 			$val = 0;
