@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or
+ * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -34,13 +34,13 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo $element->content;
 			break;
 		case 1: //	1 : input text (rw)
-			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" />';
+			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
 		case 6: // text area
 			echo '<textarea rows="7" cols="60" id="'.$label2.'" name="'.$label2.'">'.$element->content.'</textarea>';
 			break;
 		case 7: //	7 : input password (rw)
-			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" />';
+			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
 		case 2: //	2 : list of text (r) (fixed length) (only one can be selected)
 				if (is_array($element->content_avalaible)) {
@@ -79,16 +79,16 @@ function print_element($key_name,$contener,$element_key,$element) {
 					echo '<td>';
 					if ( $element->type == 4 ){
 							echo '<div id="'.$label2.$sep.$i.'_diva">';
-								echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" />';echo "\n";
+								echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
 							echo '</div>';
 						echo '</td>';echo "\n";
 						echo '<td>';echo "\n";
 					}
 					else {
-						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$i.'" size="40" />';echo "\n";
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$i.'" size="40" maxlength="100" />';echo "\n";
 					}
 					echo '<div id="'.$label2.$sep.$key1.'_divb">';
-						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" />';
+						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" maxlength="100"/>';
 						echo '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/hide.png"/></a>';
 					echo '</div>';echo "\n";
 					echo '</td>';echo "\n";
@@ -100,7 +100,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo '<td>';
 					if ( $element->type == 4 ){
 						echo '<div id="'.$label2.$sep.$i.'_divadda">';
-							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="" size="25" />';
+							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="" size="25" maxlength="100" />';
 						echo '</div>';
 					echo '</td>';
 					echo '<td>';
@@ -109,7 +109,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$i.'"  />';
 					}
 						echo '<div id="'.$label2.$sep.$i.'_divaddb">';
-							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="" size="25" />';
+							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="" size="25" maxlength="100" />';
 						echo '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/show.png"/></a>';
 
 						echo '</div>';

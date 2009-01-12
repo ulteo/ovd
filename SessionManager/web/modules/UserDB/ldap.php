@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or
+ * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -39,7 +39,6 @@ class UserDB_ldap {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
-// var_dump($infos);
 		if ( $infos["count"] == 1){
 			$info = $infos[0];
 			$u = new User();
@@ -95,7 +94,7 @@ class UserDB_ldap {
 
 
 	public function isOK($user_){
-		$minimun_attribute = array_unique(array_merge(array('login','displayname','uid','real_login'),get_needed_attributes_user_from_module_plugin()));
+		$minimun_attribute = array_unique(array_merge(array('login','displayname','uid'),get_needed_attributes_user_from_module_plugin()));
 		if (is_object($user_)){
 			foreach ($minimun_attribute as $attribute){
 				if ($user_->hasAttribute($attribute) == false)
@@ -146,20 +145,20 @@ class UserDB_ldap {
 		$ret []= $c;
 		$c = new config_element('protocol_version_label', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, 1);
 		$ret []= $c;
-		$c = new config_element('match',_('Matching'), _('Matching'), _('Matching'),array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'real_login' => 'sAMAccountName'),NULL,4);
+		$c = new config_element('match',_('Matching'), _('Matching'), _('Matching'),array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname'),NULL,4);
 		$ret []= $c;
 		return $ret;
 	}
-
+	
 	public function prefsIsValid($prefs_) {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect();
 		$LDAP2->disconnect();
-
+		
 		return ($ret === true);
 	}
-
+	
 	public static function prettyName() {
 		return _('Lightweight Directory Access Protocol (LDAP)');
 	}

@@ -39,8 +39,6 @@ $start_app = '';
 $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
-$windows_server = $default_settings['windows_server'];
-$windows_menu = $default_settings['windows_exec'];
 $debug = 0;
 
 $mods_enable = $prefs->get('general', 'module_enable');
@@ -186,11 +184,6 @@ if (isset($shareable) && $shareable != '0')
 	$optional_args['shareable'] = 1;
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
-
-$optional_args['windows_server'] = $windows_server;
-$optional_args['windows_login'] = $user->getAttribute('real_login');
-$optional_args['windows_password'] = $_SESSION['password'];
-$optional_args['windows_menu'] = serialize($windows_menu);
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,

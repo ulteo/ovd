@@ -22,14 +22,8 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_token.php');
 
-if (!isset($_GET['key']) || $_GET['key'] == '') {
-	Logger::error('main', '(webservices/session_token) Missing parameter : key');
-	die('ERROR - NO $_GET[\'key\']');
-}
-
-$server = Server::loadDB($_SERVER['REMOTE_ADDR']);
-if (!$server->authenticate($_GET['key'])) {
-	Logger::error('main', 'Server not authorized : '.$server->fqdn.' ? '.$_SERVER['REMOTE_ADDR']);
+if (!check_ip($_GET['fqdn'])) {
+	Logger::error('main', 'Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
 	die('Server not authorized');
 }
 
@@ -51,8 +45,8 @@ $buf = trim(@file_get_contents(TOKENS_DIR.'/'.$token));
 
 $buf = explode(':', $buf);
 
-$session = new Session($buf[1], $server->fqdn);
-// $session->use_token($token);
+$session = new Session($buf[1], $_GET['fqdn']);
+$session->use_token($token);
 
 if (!is_readable(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings')) {
 	Logger::error('main', '(webservices/session_token) No such session token file : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings');

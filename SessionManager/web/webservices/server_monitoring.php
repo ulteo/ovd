@@ -23,21 +23,15 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', '(webservices/server_monitoring) Starting webservices/server_monitoring.php');
 
-if (!isset($_POST['key']) || $_POST['key'] == '') {
-	Logger::error('main', '(webservices/server_monitoring) Missing parameter : key');
-	die('ERROR - NO $_GET[\'key\']');
-}
-
-$server = Server::loadDB($_SERVER['REMOTE_ADDR']);
-if (!$server->authenticate($_POST['key'])) {
-	Logger::error('main', 'Server not authorized : '.$server->fqdn.' ? '.$_SERVER['REMOTE_ADDR']);
+if (!check_ip($_POST['fqdn'])) {
+	Logger::error('main', 'Server not authorized : '.$_POST['fqdn'].' ? '.@gethostbyname($_POST['fqdn']));
 	die('Server not authorized');
 }
 
 Logger::debug('main', '(webservices/server_monitoring) Security check OK');
 
 if (!$_FILES['xml']) {
-	Logger::error('main', '(webservices/server_monitoring) No XML sent');
+	Logger::error('main', '(webservices/server_monitoring) No XML sent : '.$_POST['fqdn']);
 	die('No XML sent');
 }
 
@@ -57,5 +51,6 @@ $ram_node = $dom->getElementsByTagname('ram')->item(0);
 $keys['ram'] = $ram_node->getAttribute('total');
 $keys['ram_used'] = $ram_node->getAttribute('used');
 
+$server = new Server($_POST['fqdn']);
 foreach ($keys as $k => $v)
 	$server->setAttribute($k, trim($v));

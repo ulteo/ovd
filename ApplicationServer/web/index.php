@@ -30,7 +30,7 @@ if (!isset($_SESSION['current_token']) || $_SESSION['current_token'] != $token) 
 }
 $_SESSION['current_token'] = $token;
 
-$xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?token='.$token.'&key='.@file_get_contents(SESSION_PATH.'/../key'));
+$xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.$_SERVER['SERVER_NAME'].'&token='.$token);
 
 $dom = new DomDocument();
 @$dom->loadXML($xml);
@@ -61,7 +61,7 @@ foreach ($settings as $setting) {
 	$_SESSION['parameters'][$setting] = $item->getAttribute('value');
 }
 
-$settings2 = array('timeout', 'timeout_message', 'persistent', 'shareable', 'desktop_icons', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password','windows_server','windows_login','windows_password','windows_menu');
+$settings2 = array('timeout', 'timeout_message', 'persistent', 'shareable', 'desktop_icons', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
 foreach ($settings2 as $setting2) {
 	$item2 = @$session_node->getElementsByTagname($setting2)->item(0);
 

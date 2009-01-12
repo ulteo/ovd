@@ -160,7 +160,7 @@ function show_manage($id, $applicationDB) {
   include_once('header.php');
 	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
   echo '<div>';
-  echo '<h1><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="'.$app->getAttribute('name').'" /> '.$app->getAttribute('name').'</h1>';
+  echo '<h1><img src="media/image/cache.php?id='.$icon_id.'" alt="'.$app->getAttribute('name').'" title="'.$app->getAttribute('name').'" /> '.$app->getAttribute('name').'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
@@ -363,7 +363,7 @@ function show_default($applicationDB) {
       echo '<tr class="'.$content.'">';
       if ($is_rw)
 // 	echo '<td><input type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
-      echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="'.$app->getAttribute('name').'" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
+      echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="'.$app->getAttribute('name').'" title="'.$app->getAttribute('name').'" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
       echo '<td>'.$app->getAttribute('description').'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //       echo '<td>'.$status.'</td>';
