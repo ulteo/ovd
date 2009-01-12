@@ -2,11 +2,12 @@
 
 case "$1" in
     configure)
-    if [ ! -d /var/spool/cups2all/SPOOL ]; then
-          mkdir -p /var/spool/cups2all/SPOOL
-      chown -R cupsys:lp /var/spool/cups2all
-          chown -R cupsys:lp /var/spool/cups2all/SPOOL
+        if [ ! -d /var/spool/cups2all/SPOOL ]; then
+            mkdir -p /var/spool/cups2all/SPOOL
+            chown -R cupsys:lp /var/spool/cups2all
+            chown -R cupsys:lp /var/spool/cups2all/SPOOL
         fi
+        chmod a+x usr/lib/cups/backend/cups2all
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
