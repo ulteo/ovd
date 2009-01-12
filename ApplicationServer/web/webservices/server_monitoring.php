@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -29,55 +29,55 @@ if (! isSessionManagerRequest()) {
 }
 
 function get_cpu_load() {
-	$buf = file_get_contents('/proc/stat');
-	$buf = explode("\n", $buf, 2);
-	$buf = $buf[0];
-
-	$infos = explode(' ', $buf);
-	array_shift($infos);
-	array_shift($infos);
-	array_pop($infos);
-	$data_str_old = $infos;
+	$fd = @fopen('/proc/stat', 'r');
+	if (!$fd)
+		return false;
+	fscanf($fd, "%*s %Ld %Ld %Ld %Ld", $ab, $ac, $ad, $ae);
+	fclose($fd);
+	$load = $ab + $ac + $ad;        // cpu.user + cpu.sys
+	$total = $ab + $ac + $ad + $ae; // cpu.total
 
 	sleep(1);
 
-	$buf = file_get_contents('/proc/stat');
-	$buf = explode("\n", $buf, 2);
-	$buf = $buf[0];
+	$fd = @fopen('/proc/stat', 'r');
+	if (!$fd)
+		return false;
+	fscanf($fd, "%*s %Ld %Ld %Ld %Ld", $ab, $ac, $ad, $ae);
+	fclose($fd);
+	$load2 = $ab + $ac + $ad;        // cpu.user + cpu.sys
+	$total2 = $ab + $ac + $ad + $ae; // cpu.total
 
-	$infos = explode(' ', $buf);
-	array_shift($infos);
-	array_shift($infos);
-	array_pop($infos);
-	$data_str = $infos;
+	return (($load-$load2)/($total-$total2));
+}
 
-	$data = array();
-	foreach($data_str as $elem)
-		$data[]= intval($elem);
+function get_ram_load() {
+	$fd = @fopen('/proc/meminfo', 'r');
+	if (!$fd)
+		return false;
 
-	$data_old = array();
-	foreach($data_str_old as $elem)
-		$data_old[]= intval($elem);
+	while ($buf = fgets($fd, 4096)) {
+		if (preg_match('/^MemTotal:\s+(.*)\s*kB/i', $buf, $ar_buf))
+			$results['ram']['total'] = $ar_buf[1];
+		else if (preg_match('/^MemFree:\s+(.*)\s*kB/i', $buf, $ar_buf))
+			$results['ram']['t_free'] = $ar_buf[1];
+		else if (preg_match('/^Cached:\s+(.*)\s*kB/i', $buf, $ar_buf))
+			$results['ram']['cached'] = $ar_buf[1];
+		else if (preg_match('/^Buffers:\s+(.*)\s*kB/i', $buf, $ar_buf))
+			$results['ram']['buffers'] = $ar_buf[1];
+	}
+	fclose($fd);
 
-	$used = $data[0] + $data[1] + $data[2];  // user + nice + system
-	$total =  $used + $data[3]; // used + idle
-	$used_old = $data_old[0] + $data_old[1] + $data_old[2]; // user + nice + system
-	$total_old =  $used_old + $data_old[3]; // used + idle
+	$results['ram']['t_free'] = $results['ram']['t_free'] + ($results['ram']['buffers'] + $results['ram']['cached']);
+	$results['ram']['t_used'] = $results['ram']['total'] - $results['ram']['t_free'];
+	$results['ram']['percent'] = round(($results['ram']['t_used'] * 100) / $results['ram']['total']);
 
-	if ($total == $total_old)
-		return 0;
-
-	return ($used - $used_old)  / ($total - $total_old);
+	return $results['ram'];
 }
 
 $cpu_model = trim(`grep "model name" /proc/cpuinfo |head -n 1 |sed -e 's/.*: //'`);
 $cpu_nb = trim(`grep processor /proc/cpuinfo |tail -n 1 |awk '{ print $3 }'`)+1;
 $cpu_load = get_cpu_load();
-$ram=trim(`grep MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
-$ram_Buffers=trim(`grep Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
-$ram_Cached=trim(`grep Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2`);
-$ram_used = $ram - $ram_Buffers - $ram_Cached;
-
+$ram = get_ram_load();
 
 $dom = new DomDocument();
 $monitoring_node = $dom->createElement('monitoring');
@@ -91,8 +91,8 @@ $cpu_node->appendChild($cpu_textnode);
 $monitoring_node->appendChild($cpu_node);
 
 $ram_node = $dom->createElement('ram');
-$ram_node->setAttribute('total', $ram);
-$ram_node->setAttribute('used', $ram_used);
+$ram_node->setAttribute('total', $ram['total']);
+$ram_node->setAttribute('used', $ram['t_used']);
 $monitoring_node->appendChild($ram_node);
 
 $xml = $dom->saveXML();
