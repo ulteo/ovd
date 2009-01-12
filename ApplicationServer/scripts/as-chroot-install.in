@@ -208,17 +208,7 @@ ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
 ln -sf $ALIASFILE $APACHE_DIR/application-server.conf
 
 # set cups
-if [ -f $CHROOT_PATH/etc/init.d/cupsys -a -z "$NOCUPS" ]; then
-    mount -t proc none $CHROOT_PATH/proc >/dev/null 2>&1 || true
-    chroot $CHROOT_PATH /etc/init.d/cupsys start >/dev/null 2>&1
-    sleep 5 # cups needs time to start
-    chroot $CHROOT_PATH lpadmin -p UlteoPrinter -E -v cups2all:/ -m lsb/usr/PostscriptColor.ppd
-    chroot $CHROOT_PATH lpadmin -d UlteoPrinter
-    chroot $CHROOT_PATH /etc/init.d/cupsys stop >/dev/null 2>&1
-    umount $CHROOT_PATH/proc || true
-    chroot $CHROOT_PATH chown -R lp /var/spool/cups2all
-    # set the group on /var/spool/cups2all from *outside* the chroot; apache
-    # will access this dir from the host system
+if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
     chgrp -R $APACHE_GROUP $CHROOT_PATH/var/spool/cups2all
     chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
 fi

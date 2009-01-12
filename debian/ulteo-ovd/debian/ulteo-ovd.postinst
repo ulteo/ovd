@@ -45,14 +45,7 @@ set_chroot_conf () {
 }
 
 set_cups () {
-    if [ -f $CHROOTPATH/etc/init.d/cupsys ]; then
-        mount -t proc none $CHROOTPATH/proc >/dev/null 2>&1 || true
-        chroot $CHROOTPATH /etc/init.d/cupsys start >/dev/null 2>&1
-        sleep 5 # cups needs time to start
-        chroot $CHROOTPATH lpadmin -p UlteoPrinter -E -v cups2all:/ -m lsb/usr/PostscriptColor.ppd
-        chroot $CHROOTPATH lpadmin -d UlteoPrinter
-        chroot $CHROOTPATH /etc/init.d/cupsys stop >/dev/null 2>&1
-        umount $CHROOTPATH/proc || true
+    if [ -d $CHROOTPATH /var/spool/cups2all ]; then
         chroot $CHROOTPATH chown -R lp:www-data /var/spool/cups2all
         chroot $CHROOTPATH chmod -R 2770 /var/spool/cups2all
     fi
