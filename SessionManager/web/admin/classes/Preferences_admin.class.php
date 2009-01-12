@@ -243,13 +243,17 @@ class Preferences_admin extends Preferences {
 
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
+			$c = new config_element($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, 2);
 			foreach ($value1 as $plugin_name => $plu6) {
 				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
 				if (is_null($plugin_prettyname))
 					$plugin_prettyname = $plugin_name;
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
+				
+				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
+				if ($isdefault1 === true)
+					$c = new config_element($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, 2);
 			}
-			$c = new config_element($key1,$key1,'plugins '.$key1,'plugins '.$key1,array(),$plugins_prettyname,2);
 			$this->add($c,'plugins');
 		}
 	}
@@ -272,11 +276,16 @@ class Preferences_admin extends Preferences {
 
 		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB','ApplicationDB'), $modules_prettyname, 3);
 		$this->add($c,'general');
+		
 		foreach ($avalaible_module as $mod => $sub_mod){
-			if (in_array('sql',array_keys($sub_mod)))
-				$c = new config_element('enable',$mod,$mod,$mod,'sql',$sub_mod,2);
-			else
-				$c = new config_element('enable',$mod,$mod,$mod,NULL,$sub_mod,2);
+			$c = new config_element('enable', $mod, $mod, $mod, NULL, $sub_mod, 2);
+			foreach ($sub_mod as $k4 => $v4) {
+				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
+				$default1 =  eval($default2);
+				if ($default1 === true)
+					$c = new config_element('enable', $mod, $mod, $mod, $k4, $sub_mod, 2);
+			}
+			
 			//dirty hack (if this->elements[mod] will be empty)
 			if (!isset($this->elements[$mod]))
 				$this->elements[$mod] = array();

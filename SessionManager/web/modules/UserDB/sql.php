@@ -162,4 +162,8 @@ class UserDB_sql {
 	public static function prettyName() {
 		return _('MySQL');
 	}
+	
+	public static function isDefault() {
+		return false;
+	}
 }

@@ -162,4 +162,8 @@ class UserDB_ldap {
 	public static function prettyName() {
 		return _('Lightweight Directory Access Protocol (LDAP)');
 	}
+	
+	public static function isDefault() {
+		return false;
+	}
 }

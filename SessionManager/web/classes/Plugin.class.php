@@ -35,4 +35,8 @@ class Plugin {
 	public function prefsIsValid($prefs_) {
 		return true;
 	}
+	
+	public static function isDefault() {
+		return false;
+	}
 }

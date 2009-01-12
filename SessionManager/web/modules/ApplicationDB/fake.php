@@ -83,4 +83,8 @@ class ApplicationDB_fake {
 	public static function prettyName() {
 		return _('fake');
 	}
+	
+	public static function isDefault() {
+		return false;
+	}
 }

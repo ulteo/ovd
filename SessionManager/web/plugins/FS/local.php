@@ -34,4 +34,8 @@ class FS_local extends Plugin {
 	public static function enable() {
 		return true;
 	}
+	
+	public static function isDefault() {
+		return true;
+	}
 }

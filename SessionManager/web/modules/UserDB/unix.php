@@ -111,4 +111,8 @@ class UserDB_unix {
 	public static function prettyName() {
 		return _('local');
 	}
+	
+	public static function isDefault() {
+		return false;
+	}
 }
