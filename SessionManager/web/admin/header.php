@@ -42,7 +42,7 @@ header_static($main_title.' - '._('Administration'));
 
 <table class="admin_table" border="0" cellspacing="0" cellpadding="0">
 	<tr>
-		<td class="menu">
+		<td style="vertical-align: top;" class="menu">
 			<div id="adminMenu">
 			<?php
 				if (isset($_SESSION['admin_login'])) {
@@ -53,7 +53,7 @@ header_static($main_title.' - '._('Administration'));
 			?>
 			</div>
 		</td>
-		<td class="content">
+		<td style="vertical-align: top;" class="content">
 			<div id="adminContent">
 				<?php
 					if (isset($_SESSION['errormsg']) && $_SESSION['errormsg'] != '') {

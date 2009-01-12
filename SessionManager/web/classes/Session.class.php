@@ -292,6 +292,10 @@ class Session {
 						'color'	=>	'error',
 						'message'	=>	_('To destroy'),
 					),
+			4	=>	array(
+						'color'	=>	'error',
+						'message'	=>	_('Destroyed'),
+					),
 		);
 
 		$buf = $this->session_status();

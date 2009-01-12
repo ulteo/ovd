@@ -3,7 +3,7 @@ table.admin_table {
 }
 
 table.admin_table td {
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 table.admin_table td.menu {

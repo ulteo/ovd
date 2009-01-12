@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -37,8 +37,12 @@ if (isset($_POST['admin_login']) && $_POST['admin_login'] != ''
 		$_SESSION['admin_login'] = $login;
 }
 
-if (isset($_SESSION['admin_login']))
-  redirect('index.php'); // <-- referer
+if (isset($_SESSION['admin_login'])) {
+  if (isset($_POST['redirect']))
+    redirect(base64_decode($_POST['redirect']));
+  else
+    redirect('index.php');
+}
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -60,6 +64,7 @@ header_static($main_title.' - '._('Administration'));
 </div>
 
 	<form id="login" action="" method="post">
+		<input type="hidden" name="redirect" value="<?php echo $_GET['redirect']; ?>" />
 		<fieldset class="hidden">
 			<table class="centered" border="0" cellspacing="1" cellpadding="5">
 				<tr>

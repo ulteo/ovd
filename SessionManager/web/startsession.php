@@ -41,6 +41,35 @@ $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $debug = 0;
 
+$advanced_settings = $prefs->get('general', 'session_settings_defaults');
+$advanced_settings = $advanced_settings['advanced_settings_startsession'];
+if (!is_array($advanced_settings))
+	$advanced_settings = array();
+
+if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
+	$desktop_locale = $_REQUEST['desktop_locale'];
+
+if (in_array('quality', $advanced_settings) && isset($_REQUEST['desktop_quality']) && $_REQUEST['desktop_quality'] != '')
+	$desktop_quality = $_REQUEST['desktop_quality'];
+
+if (in_array('timeout', $advanced_settings) && isset($_REQUEST['desktop_timeout']) && $_REQUEST['desktop_timeout'] != '')
+	$desktop_timeout = $_REQUEST['desktop_timeout'];
+
+if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app']) && $_REQUEST['start_app'] != '')
+	$start_app = $_REQUEST['start_app'];
+
+if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
+	$persistent = $_REQUEST['persistent'];
+
+if (in_array('shareable', $advanced_settings) && isset($_REQUEST['shareable']) && $_REQUEST['shareable'] != '')
+	$shareable = $_REQUEST['shareable'];
+
+if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_icons']) && $_REQUEST['desktop_icons'] != '')
+	$desktop_icons = $_REQUEST['desktop_icons'];
+
+if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
+	$debug = $_REQUEST['debug'];
+
 $mods_enable = $prefs->get('general', 'module_enable');
 if (!in_array('UserDB', $mods_enable))
 	die_error('Module UserDB must be enabled',__FILE__,__LINE__);
@@ -66,25 +95,17 @@ if (!is_object($user))
 
 Logger::debug('main', 'startsession.php: Now checking for old session');
 
-$have_suspended = false;
 $lock = new Lock($user->getAttribute('login'));
 if ($lock->have_lock()) {
 	$session = new Session($lock->session);
 
-	$buf = $prefs->get('general', 'session_settings_defaults');
-
 	if ($session->session_alive())
 		die_error(_('You already have a session active'),__FILE__,__LINE__);
-	elseif ($session->session_suspended() && $buf['advanced_settings_startsession']) {
+	elseif ($session->session_suspended()) {
 		$old_session_id = $session->id;
 		$old_session_server = $session->server;
 	}
 }
-
-$advanced_settings = $prefs->get('general', 'session_settings_defaults');
-$advanced_settings = $advanced_settings['advanced_settings_startsession'];
-if (!is_array($advanced_settings))
-	$advanced_settings = array();
 
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
 	$random_server = $_REQUEST['force'];
@@ -127,30 +148,6 @@ if ($ret === false)
 	die_error(_('No available session'),__FILE__,__LINE__);
 
 $lock->add_lock($session->session, $session->server);
-
-if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
-	$desktop_locale = $_REQUEST['desktop_locale'];
-
-if (in_array('quality', $advanced_settings) && isset($_REQUEST['desktop_quality']) && $_REQUEST['desktop_quality'] != '')
-	$desktop_quality = $_REQUEST['desktop_quality'];
-
-if (in_array('timeout', $advanced_settings) && isset($_REQUEST['desktop_timeout']) && $_REQUEST['desktop_timeout'] != '')
-	$desktop_timeout = $_REQUEST['desktop_timeout'];
-
-if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app']) && $_REQUEST['start_app'] != '')
-	$start_app = $_REQUEST['start_app'];
-
-if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
-	$persistent = $_REQUEST['persistent'];
-
-if (in_array('shareable', $advanced_settings) && isset($_REQUEST['shareable']) && $_REQUEST['shareable'] != '')
-	$shareable = $_REQUEST['shareable'];
-
-if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_icons']) && $_REQUEST['desktop_icons'] != '')
-	$desktop_icons = $_REQUEST['desktop_icons'];
-
-if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
-	$debug = $_REQUEST['debug'];
 
 $fs = $prefs->get('plugins', 'FS');
 // for now we can use one FS at the same time

@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -26,4 +26,4 @@
 require_once(dirname(__FILE__).'/functions.inc.php');
 
 if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php')
-	redirect('login.php');
+	redirect('login.php?redirect='.base64_encode($_SERVER['REQUEST_URI']));
