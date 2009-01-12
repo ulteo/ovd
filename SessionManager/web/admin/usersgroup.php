@@ -206,87 +206,85 @@ function show_manage($id) {
   echo '</form>';
   echo '<br/>';
 
-  echo '<div>';
-  echo '<h2>'._('List of users in this group').'</h2>';
-  echo '<table border="0" cellspacing="1" cellpadding="3">';
+  // Users list
+  if (count($users_all) > 0) {
+    echo '<div>';
+    echo '<h2>'._('List of users in this group').'</h2>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
 
-  if (! $has_users)
-    echo '<tr><td colspan="2">'._('No users in this group').'</td></tr>';
-  else {
-    foreach($users as $user) {
-      echo '<tr>';
-      echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
+    if (count($users) > 0) {
+      foreach($users as $user) {
+	echo '<tr>';
+	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
+	echo '<td>';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user ?').'\');">';
+	echo '<input type="hidden" name="action" value="del" />';
+	echo '<input type="hidden" name="name" value="User_UserGroup" />';
+	echo '<input type="hidden" name="group" value="'.$id.'" />';
+	echo '<input type="hidden" name="element" value="'.$user.'" />';
+	echo '<input type="submit" value="'._('Delete from this group').'" />';
+	echo '</form>';
+	echo '</td>';
+	echo '</tr>';
+      }
+    }
 
-      echo '<td>';
-      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user ?').'\');">';
-      echo '<input type="hidden" name="action" value="del" />';
+    if (count ($users_available) >0) {
+      echo '<tr><form action="actions.php" method="post"><td>';
+      echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
       echo '<input type="hidden" name="group" value="'.$id.'" />';
-      echo '<input type="hidden" name="element" value="'.$user.'" />';
-      echo '<input type="submit" value="'._('Delete from this group').'" />';
-      echo '</form>';
-      echo '</td>';
-      echo '</tr>';
+      echo '<select name="element">';
+      foreach($users_available as $user)
+	echo '<option value="'.$user.'" >'.$user.'</option>';
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
+      echo '</form></tr>';
     }
+
+    echo '</table>';
+    echo '</div>';
+    echo '<br/>';
   }
 
-  if (count ($users_available) ==0)
-    echo '<tr><td colspan="2">'._('Not any available user to add').'</td></tr>';
-  else {
-    echo '<tr><form action="actions.php" method="post"><td>';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<input type="hidden" name="name" value="User_UserGroup" />';
-    echo '<input type="hidden" name="group" value="'.$id.'" />';
-    echo '<select name="element">';
-    foreach($users_available as $user)
-      echo '<option value="'.$user.'" >'.$user.'</option>';
-    echo '</select>';
-    echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
-    echo '</form></tr>';
-  }
-  echo '</table>';
-  echo '</div>';
+  // Publications part
+  if (count($groups_apps_all)>0) {
+    echo '<div>';
+    echo '<h2>'._('List of publications with this group').'</h1>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
 
-  echo '<br/>';
-  echo '<div>';
-  echo '<h2>'._('List of publications with this group').'</h1>';
-  echo '<table border="0" cellspacing="1" cellpadding="3">';
+    if (count($groups_apps)>0) {
+      foreach($groups_apps as $groups_app) {
+	echo '<tr>';
+	echo '<td><a href="appsgroup.php?action=manage&id='.$groups_app->id.'">'.$groups_app->name.'</td>';
+	echo '<td>';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication ?').'\');">';
+	echo '<input type="hidden" name="action" value="del" />';
+	echo '<input type="hidden" name="name" value="Publication" />';
+	echo '<input type="hidden" name="group_u" value="'.$id.'" />';
+	echo '<input type="hidden" name="group_a" value="'.$groups_app->id.'" />';
+	echo '<input type="submit" value="'._('Delete this publication').'" />';
+	echo '</form>';
+	echo '</td>';
+	echo '</tr>';
+      }
+    }
 
-  if (count($groups_apps)==0)
-    echo '<tr><td colspan="2">'._('No publications with this group').'</td></tr>';
-  else {
-    foreach($groups_apps as $groups_app) {
-      echo '<tr>';
-      echo '<td><a href="appsgroup.php?action=manage&id='.$groups_app->id.'">'.$groups_app->name.'</td>';
-
-      echo '<td>';
-      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication ?').'\');">';
-      echo '<input type="hidden" name="action" value="del" />';
+    if (count ($groups_apps_available) >0) {
+      echo '<tr><form action="actions.php" method="post"><td>';
+      echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="Publication" />';
       echo '<input type="hidden" name="group_u" value="'.$id.'" />';
-      echo '<input type="hidden" name="group_a" value="'.$groups_app->id.'" />';
-      echo '<input type="submit" value="'._('Delete this publication').'" />';
-      echo '</form>';
-      echo '</td>';
-      echo '</tr>';
+      echo '<select name="group_a">';
+      foreach($groups_apps_available as $group_apps)
+	echo '<option value="'.$group_apps->id.'" >'.$group_apps->name.'</option>';
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Add this publication').'" /></td>';
+      echo '</form></tr>';
     }
+    echo '</table>';
+    echo '</div>';
   }
-
-  if (count ($groups_apps_available) ==0)
-    echo '<tr><td colspan="2">'._('Not any publication to add').'</td></tr>';
-  else {
-    echo '<tr><form action="actions.php" method="post"><td>';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<input type="hidden" name="name" value="Publication" />';
-    echo '<input type="hidden" name="group_u" value="'.$id.'" />';
-    echo '<select name="group_a">';
-    foreach($groups_apps_available as $group_apps)
-      echo '<option value="'.$group_apps->id.'" >'.$group_apps->name.'</option>';
-    echo '</select>';
-    echo '</td><td><input type="submit" value="'._('Add this publication').'" /></td>';
-    echo '</form></tr>';
-  }
-  echo '</table>';
 
   include_once('footer.php');
   die();

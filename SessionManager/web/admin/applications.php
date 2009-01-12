@@ -189,60 +189,62 @@ function show_manage($id, $applicationDB) {
 //     echo '</form>';
 //   }
 
-  echo '<h2>'._('Servers with this application').'</h2>';
-  echo '<table border="0" cellspacing="1" cellpadding="3">';
-  foreach($servers as $server) {
-    $remove_in_progress = in_array($server->fqdn, $servers_in_remove);
+  // Server part
+  if (count($servers_all) > 0) {
+    echo '<div>';
+    echo '<h2>'._('Servers with this application').'</h2>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
+    foreach($servers as $server) {
+      $remove_in_progress = in_array($server->fqdn, $servers_in_remove);
 
-    echo '<tr><td>';
-    echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a>';
-    echo '</td>';
-    echo '<td>';
-    if ($remove_in_progress) {
-      echo 'remove in progress';
+      echo '<tr><td>';
+      echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a>';
+      echo '</td>';
+      echo '<td>';
+      if ($remove_in_progress) {
+	echo 'remove in progress';
+      }
+      elseif ($server->isOnline()) {
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application from this server ?').'\');">';
+	echo '<input type="hidden" name="action" value="del" />';
+	echo '<input type="hidden" name="name" value="Application_Server" />';
+	echo '<input type="hidden" name="application" value="'.$id.'" />';
+	echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+	echo '<input type="submit" value="'._('Remove from this server').'"/>';
+	echo '</form>';
+      }
+      echo '</td>';
+      echo '</tr>';
     }
-    elseif ($server->isOnline()) {
-      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application from this server ?').'\');">';
-      echo '<input type="hidden" name="action" value="del" />';
+
+    foreach($servers_in_install as $server) {
+      echo '<tr><td>';
+      echo '<a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a>';
+      echo '</td>';
+      echo '<td>install in progress</td>';
+      echo '</tr>';
+    }
+
+    if (count($servers_available) > 0) {
+      echo '<tr>';
+      echo '<form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="name" value="Application_Server" />';
+      echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="application" value="'.$id.'" />';
-      echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
-      echo '<input type="submit" value="'._('Remove from this server').'"/>';
+      echo '<select name="server">';
+      foreach ($servers_available as $server) {
+	if (!$server->isOnline())
+	  continue;
+	echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+      }
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Install on this server').'" /></td>';
       echo '</form>';
+      echo '</tr>';
     }
-    echo '</td>';
-    echo '</tr>';
+    echo '</table>';
+    echo "<div>\n";
   }
-
-  foreach($servers_in_install as $server) {
-    echo '<tr><td>';
-    echo '<a href="servers.php?action=manage&fqdn='.$server.'">'.$server.'</a>';
-    echo '</td>';
-    echo '<td>install in progress</td>';
-    echo '</tr>';
-  }
-
-  echo '<tr>';
-  if (count($servers_available) == 0)
-    echo '<td colspan="2">'._('Not any server to install').'</td>';
-  else {
-    echo '<form action="actions.php" method="post"><td>';
-    echo '<input type="hidden" name="name" value="Application_Server" />';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<input type="hidden" name="application" value="'.$id.'" />';
-    echo '<select name="server">';
-    foreach ($servers_available as $server) {
-      if (!$server->isOnline())
-        continue;
-      echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
-    }
-    echo '</select>';
-    echo '</td><td><input type="submit" value="'._('Install on this server').'" /></td>';
-    echo '</form>';
-  }
-  echo '</tr>';
-  echo '</table>';
-
 
   if (count($tasks) >0) {
     echo '<h2>'._('Active tasks on this application').'</h1>';
@@ -270,44 +272,47 @@ function show_manage($id, $applicationDB) {
       echo '</tr>';
     }
     echo '</table>';
+    echo "<div>\n";
   }
 
 
-  echo '<h2>'._('Groups with this application').'</h2>';
-  echo '<table border="0" cellspacing="1" cellpadding="3">';
-  foreach ($groups as $group) {
-    echo '<tr>';
-    echo '<td>';
-    echo '<a href="appsgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
-    echo '</td>';
-    echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application from this group ?').'\');">';
-    echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
-    echo '<input type="hidden" name="action" value="del" />';
-    echo '<input type="hidden" name="element" value="'.$id.'" />';
-    echo '<input type="hidden" name="group" value="'.$group->id.'" />';
-    echo '<input type="submit" value="'._('Delete from this group').'" />';
-    echo '</form></td>';
-    echo '</tr>';
-  }
+  if (count($appgroups) > 0) {
+    echo '<div>';
+    echo '<h2>'._('Groups with this application').'</h2>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
+    foreach ($groups as $group) {
+      echo '<tr>';
+      echo '<td>';
+      echo '<a href="appsgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
+      echo '</td>';
+      echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application from this group ?').'\');">';
+      echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
+      echo '<input type="hidden" name="action" value="del" />';
+      echo '<input type="hidden" name="element" value="'.$id.'" />';
+      echo '<input type="hidden" name="group" value="'.$group->id.'" />';
+      echo '<input type="submit" value="'._('Delete from this group').'" />';
+      echo '</form></td>';
+      echo '</tr>';
+    }
 
-  echo '<tr>';
-  if (count($groups_available) == 0)
-    echo '<td colspan="2">'._('Not any group to add').'</td>';
-  else {
-    echo '<form action="actions.php" method="post"><td>';
-    echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<input type="hidden" name="element" value="'.$id.'" />';
-    echo '<select name="group">';
-    foreach ($groups_available as $group)
-      echo '<option value="'.$group->id.'">'.$group->name.'</option>';
-    echo '</select>';
-    echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
-    echo '</form>';
+    if (count($groups_available) > 0) {
+      echo '<tr>';
+      echo '<form action="actions.php" method="post"><td>';
+      echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
+      echo '<input type="hidden" name="action" value="add" />';
+      echo '<input type="hidden" name="element" value="'.$id.'" />';
+      echo '<select name="group">';
+      foreach ($groups_available as $group)
+	echo '<option value="'.$group->id.'">'.$group->name.'</option>';
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
+      echo '</form>';
+      echo '</tr>';
+    }
+
+    echo '</table>';
+    echo "<div>\n";
   }
-  echo '</tr>';
-  echo '</table>';
-  echo '</div>';
 
   include_once('footer.php');
   die();

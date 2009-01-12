@@ -217,48 +217,44 @@ function show_manage($login, $userDB) {
     echo '</div>';
   }
 
-  echo '<h2>'._('User groups with this user').'</h1>';
+  // User groups part
+  if (count($groups_all)>0) {
+    echo '<div>';
+    echo '<h2>'._('User groups with this user').'</h1>';
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
 
-  echo '<table border="0" cellspacing="1" cellpadding="3">';
-  if (count($groups_mine)==0)
-    echo '<tr><td colspan="2">'._('No user in this group').'</td></tr>';
+    foreach ($groups_mine as $group) {
+      echo '<tr><td>';
+      echo '<a href="usersgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
+      echo '</td>';
+      echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group ?').'\');">';
+      echo '<input type="hidden" name="name" value="User_UserGroup" />';
+      echo '<input type="hidden" name="action" value="del" />';
+      echo '<input type="hidden" name="group" value="'.$group->id.'" />';
+      echo '<input type="hidden" name="element" value="'.$login.'" />';
+      echo '<input type="submit" value="'._('Delete from this group').'" />';
+      echo '</form></td>';
+      echo '</tr>';
+    }
 
-  foreach ($groups_mine as $group) {
-    echo '<tr><td>';
-    echo '<a href="usersgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
-    echo '</td>';
-    echo '<td><form action="actions.php" method="get">';
-    echo '<input type="hidden" name="name" value="User_UserGroup" />';
-    echo '<input type="hidden" name="action" value="del" />';
-    echo '<input type="hidden" name="group" value="'.$group->id.'" />';
-    echo '<input type="hidden" name="element" value="'.$login.'" />';
-    echo '<input type="submit" value="'._('Delete from this group').'" />';
-    echo '</form></td>';
-    echo '</tr>';
+    if (count ($groups_available) >0) {
+      echo '<tr><form action="actions.php" method="get"><td>';
+      echo '<input type="hidden" name="action" value="add" />';
+      echo '<input type="hidden" name="name" value="User_UserGroup" />';
+      echo '<input type="hidden" name="element" value="'.$login.'" />';
+      echo '<select name="group">';
+      foreach($groups_available as $group)
+	echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
+      echo '</select>';
+      echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
+      echo '</form></tr>';
+    }
+    echo '</table>';
+    echo "</div>\n";
   }
 
-  if (count ($groups_available) ==0)
-    echo '<tr><td colspan="2">'._('Not any available user to add').'</td></tr>';
-  else {
-    echo '<tr><form action="actions.php" method="get"><td>';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<input type="hidden" name="name" value="User_UserGroup" />';
-    echo '<input type="hidden" name="element" value="'.$login.'" />';
-    echo '<select name="group">';
-    foreach($groups_available as $group)
-      echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
-    echo '</select>';
-    echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
-    echo '</form></tr>';
-  }
-  echo '</table>';
-  echo '</div>';
 
-
-  echo '<h2>'._('Active sessions').'</h1>';
-  if (! $has_sessions)
-    echo _('No active sessions');
-  else {
+  if ($has_sessions) {
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($sessions as $session) {
       echo '<form action="sessions.php"><tr>';
