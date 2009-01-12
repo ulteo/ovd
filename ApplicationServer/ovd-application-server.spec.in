@@ -6,6 +6,7 @@ License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
+Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring
 
 %description
 Ulteo OVD Application Server manages the sessions.
@@ -19,14 +20,21 @@ make
 
 %install
 make DESTDIR=$RPM_BUILD_ROOT install
+# install the logrotate example
+mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
+install -m 0644 examples/ulteo-as.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/applicationserver
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-,root,root)
 /usr/*
-/etc/*
+/var/log
+/var/spool
+%config /etc/*
+%defattr(2770,-,apache)
+/var/log/ulteo/*
+/var/spool/ulteo/*
 
 %changelog
 * Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> @PKG_VERSION@-1
