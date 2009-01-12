@@ -7,7 +7,7 @@ function my_own_callback($matches) {
 	return '<span class="'.strtolower($matches[1]).'">'.trim($matches[0]).'</span>';
 }
 
-$logfiles = glob(SESSIONMANAGER_LOGS.'/*-'.date('Ymd').'.log');
+$logfiles = glob(SESSIONMANAGER_LOGS.'/*.log');
 $logfiles = array_reverse($logfiles);
 
 foreach ($logfiles as $logfile) {
