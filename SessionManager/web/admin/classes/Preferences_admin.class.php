@@ -47,7 +47,6 @@ class Preferences_admin extends Preferences {
 		Logger::debug('admin','ADMIN_PREFERENCES::initialize');
 		$this->elements = array();
 
-
 		$this->addPrettyName('general',_('General configuration'));
 		$c = new config_element('main_title', _('Heading title'), _('You can customize the Heading/title here.'), _('You can customize the Heading/title here.'), DEFAULT_PAGE_TITLE, NULL, 1);
 		$this->add($c,'general');
@@ -57,7 +56,7 @@ class Preferences_admin extends Preferences {
 
 		$c = new config_element('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), 3);
 		$this->add($c,'general');
-
+		
 // 		$c = new config_element('locale','locale','locale_des','fr_FR.UTF8@euro',NULL,1);
 // 		$this->add('general',$c);
 //
@@ -118,7 +117,14 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general', 'application_server_settings');
 		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
 		$this->add($c,'general', 'application_server_settings');
-		$c = new config_element('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), array('cpu' => 50, 'session' => 90 , 'ram' => 30, 'random' => 10), NULL, 4);
+		
+		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
+		$content_load_balancing = array();
+		foreach ($decisionCriterion as $criterion_class_name) {
+				$c = new $criterion_class_name(NULL); // ugly
+				$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
+		}
+		$c = new config_element('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing, NULL, 8);
 		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));

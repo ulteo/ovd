@@ -477,3 +477,13 @@ function pathinfo_filename($path_) {
 		return pathinfo($path_);
 	}
 }
+
+function get_classes_startwith($start_name) {
+	$ret = array();
+	$classes_name = get_declared_classes();
+	foreach ($classes_name as $name){
+		if (substr($name, 0, strlen($start_name)) == $start_name)
+			$ret[] = $name;
+	}
+	return $ret;
+}

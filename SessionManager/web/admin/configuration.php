@@ -22,12 +22,8 @@ require_once(dirname(__FILE__).'/includes/core-minimal.inc.php');
 
 function print_element($key_name,$contener,$element_key,$element) {
 	global $sep;
-// 	echo "'".$key_name."','".$contener."','".$element_key."'<br>";
-// 	if ($element->contener != '' && !is_null($element->contener))
-		$label2 = $key_name.$sep.$contener.$sep.$element->id;
-// 	else
-// 		$label2 = $key_name.$sep.$element->label;
-
+	$label2 = $key_name.$sep.$contener.$sep.$element->id;
+	
 	switch ($element->type) {
 		case 0: //	0 : text (readonly)
 			if (is_string($element->content))
@@ -68,6 +64,27 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo $myval;
 				echo '<br />';
 			}
+			break;
+		
+		case 8 : // list of input text (fixed length)
+			echo '<table border="0" cellspacing="1" cellpadding="3">';
+			$i = 0;
+			foreach ($element->content as $key1 => $value1){
+				echo '<tr>';
+					echo '<td>';
+						echo $key1;
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
+					echo '</td>';echo "\n";
+					echo '<td>';echo "\n";
+					echo '<div id="'.$label2.$sep.$key1.'_divb">';
+						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" maxlength="100"/>';
+					echo '</div>';echo "\n";
+					echo '</td>';echo "\n";
+				echo '</tr>';
+				$i += 1;
+				echo "\n";
+			}
+			echo '</table>';
 			break;
 	}
 	if ($element->type == 4 || $element->type == 5) {
@@ -250,8 +267,7 @@ if (isset($_POST['submit'])) {
 									$v9_keys = array_keys($v9);
 									if ($v9_keys == array('key','value') || $v9_keys == array('value','key')){
 										if ($v9['value'] != '') {
-											if ($v9['key'] != count($v9))
-												$new[$v9['key']] = $v9['value'];
+											$new[$v9['key']] = $v9['value'];
 										}
 									}
 								}

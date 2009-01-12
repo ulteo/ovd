@@ -24,6 +24,9 @@ class DecisionCriterion {
 		$this->server = $server_;
 	}
 	//public function get();
+	public function default_value() {
+		return 0;
+	}
 }
 
 class DecisionCriterion_ram extends DecisionCriterion {
@@ -60,10 +63,16 @@ class DecisionCriterion_session extends DecisionCriterion {
 		$nbsessions_used = $this->server->getNbAvailableSessions();
 		return (float)($nbsessions_used)/(float)($nbsessions_max);
 	}
+	public function default_value() {
+		return 100;
+	}
 }
 
 class DecisionCriterion_random extends DecisionCriterion {
 	public function get() {
 		return (float)(rand(0, 100)) / 100.0;
+	}
+	public function default_value() {
+		return 20;
 	}
 }
