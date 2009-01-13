@@ -373,23 +373,27 @@ function show_default() {
 function show_manage($fqdn) {
   $server = new Server_admin($fqdn);
 
-  $server_online = $server->isOnline();
+  $server_online = false;
+
+  $buf_status = $server->getStatus();
+  if ($buf_status == 'ready')
+    $server_online = true;
 
   if ($server_online) {
-    $server->getStatus();
     $server->getMonitoring();
   }
-  elseif ($server->status == 'down')
+  elseif ($buf_status == 'down')
     $status_error_msg = _('Warning: Server is offline');
-  elseif ($server->status == 'broken')
+  elseif ($buf_status == 'broken')
     $status_error_msg = _('Warning: Server is broken');
 
   $server_lock = $server->hasAttribute('locked');
 
-
-  $buf = $server->updateApplications();
-  if ($buf === false)
-    $_SESSION['errormsg'] = _('Cannot list available applications');
+  if ($server_online) {
+    $buf = $server->updateApplications();
+    if ($buf === false)
+      $_SESSION['errormsg'] = _('Cannot list available applications');
+  }
 
   $tm = new Tasks_Manager();
   $tm->load_from_server($server->fqdn);

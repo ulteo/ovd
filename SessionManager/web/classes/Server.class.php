@@ -377,8 +377,8 @@ class Server {
 	public function getMonitoring() {
 		Logger::debug('main', 'Starting SERVER::getMonitoring for server '.$this->fqdn);
 
-		if (!$this->isOnline())
-			return false;
+// 		if (!$this->isOnline())
+// 			return false;
 
 		$xml = query_url('http://'.$this->fqdn.'/webservices/server_monitoring.php');
 
@@ -418,9 +418,6 @@ class Server {
 
 	public function getApplications() {
 		Logger::debug('main', 'Starting SERVER::getApplications for server '.$this->fqdn);
-
-		if (!$this->isOnline())
-			return false;
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
