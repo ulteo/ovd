@@ -38,9 +38,12 @@ if (isset($_POST['admin_login']) && $_POST['admin_login'] != ''
 }
 
 if (isset($_SESSION['admin_login'])) {
-  if (isset($_POST['redirect']))
-    redirect(base64_decode($_POST['redirect']));
-  else
+  if (isset($_SESSION['redirect'])) {
+    $buf = base64_decode($_SESSION['redirect']);
+    unset($_SESSION['redirect']);
+
+    redirect($buf);
+  } else
     redirect('index.php');
 }
 

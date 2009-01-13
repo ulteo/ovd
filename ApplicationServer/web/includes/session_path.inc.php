@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -65,7 +65,16 @@ $buf = shell_exec('. '.CHROOT.'/etc/ulteo-ovd.conf && echo $SESSION_MANAGER_URL'
 $buf = trim($buf);
 
 if (!$buf || $buf == '')
-	die('Error parsing config file 3 : '.CHROOT.'/etc/ulteo-ovd.conf');
+	die('Error parsing config file 3a : '.CHROOT.'/etc/ulteo-ovd.conf');
 
 define('SESSIONMANAGER_URL', $buf);
+unset($buf);
+
+$buf = shell_exec('. '.CHROOT.'/etc/ulteo-ovd.conf && echo $SERVERNAME');
+$buf = trim($buf);
+
+if (!$buf || $buf == '')
+	die('Error parsing config file 3b : '.CHROOT.'/etc/ulteo-ovd.conf');
+
+define('SERVERNAME', $buf);
 unset($buf);

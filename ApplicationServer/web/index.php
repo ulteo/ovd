@@ -30,7 +30,7 @@ if (!isset($_SESSION['current_token']) || $_SESSION['current_token'] != $token) 
 }
 $_SESSION['current_token'] = $token;
 
-$xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.$_SERVER['SERVER_NAME'].'&token='.$token);
+$xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVERNAME.'&token='.$token);
 
 $dom = new DomDocument();
 @$dom->loadXML($xml);
@@ -73,7 +73,7 @@ $_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
 
 $_SESSION['share_desktop'] = 'true';
 if ($_SESSION['owner'])
-	$_SESSION['view_only'] = 'No';
+	$_SESSION['parameters']['view_only'] = 'No';
 
 $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
 if (is_null($item))
@@ -112,7 +112,7 @@ if ($_SESSION['mode'] == 'start')
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				daemon_init('<?php echo $_SERVER['SERVER_NAME']; ?>', '<?php echo $_SESSION['session']; ?>', <?php echo time(); ?>, <?php echo ($_SESSION['owner'])?'1':'0'; ?>, <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon_init('<?php echo SERVERNAME; ?>', '<?php echo $_SESSION['session']; ?>', <?php echo time(); ?>, <?php echo ($_SESSION['owner'])?'1':'0'; ?>, <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>

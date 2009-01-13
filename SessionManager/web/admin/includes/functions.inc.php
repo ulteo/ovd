@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -21,6 +21,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
  require_once(dirname(__FILE__).'/core.inc.php');
+
+function display_loadbar($percents_) {
+	$bar_width = 1.25;
+
+	if ($percents_ < 50)
+		$bar_color = '#05a305';
+	elseif ($percents_ >= 50 && $percents_ < 75)
+		$bar_color = '#c60';
+	elseif ($percents_ >= 75)
+		$bar_color = '#a30505';
+
+	$normal_bar = '<div style="width: '.(50+round(100*$bar_width)).'px; height: 10px; float: left;">';
+	$normal_bar.= '<div style="width: '.round($percents_*$bar_width).'px; height: 10px; background: '.$bar_color.'; float: left;"></div>';
+	$normal_bar.= '<div style="width: '.round((100*$bar_width)-round($percents_*$bar_width)).'px; height: 10px; background: #999; float: left;"></div>';
+	$normal_bar.= '</div>';
+	$normal_bar.= '<div style="clear: both;"></div>';
+
+	return $normal_bar;
+}
 
 function usersgroup_appsgroup_add($ug){
 	if (is_object($ug)){
@@ -246,7 +265,7 @@ function get_publications($usersgroup_id_=NULL,$appsgroup_id_=NULL) {
 				$ret[] = $r;
 			}
 		}
-	
+
 	}else {
 		echo "usersgroup_id_ $usersgroup_id_ appsgroup_id_ $appsgroup_id_<br>";
 		if ($l->onDB()) {
@@ -263,9 +282,9 @@ function get_publications($usersgroup_id_=NULL,$appsgroup_id_=NULL) {
 // 		else {
 // 		}
 	}
-	
+
 	return $ret;
-	
+
 }
 
 function init_db($prefs_) {
@@ -283,10 +302,10 @@ function init_db($prefs_) {
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $mysql_conf['prefix'].'ug_ag_link';
 	$LIAISON_APPLICATION_SERVER_TABLE = $mysql_conf['prefix'].'application_server_link';
 	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
-	
+
 	// we create the sql table
 	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-	
+
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 int(8) NOT NULL,
@@ -299,8 +318,8 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$LIAISON_APPLICATION_SERVER_TABLE.' created');
-	
-	
+
+
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 int(8) NOT NULL,
@@ -313,7 +332,7 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$LIAISON_APPS_GROUP_TABLE.' created');
-	
+
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 int(8) NOT NULL auto_increment,
@@ -328,7 +347,7 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$APPSGROUP_TABLE.' created');
-	
+
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@4 int(8) NOT NULL auto_increment,
@@ -342,7 +361,7 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$SOURCES_LIST_TABLE.' created');
-	
+
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 varchar(50) NOT NULL,
@@ -370,7 +389,7 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$USERSGROUP_TABLE.' created');
-	
+
 	$ret = $sql2->DoQuery(
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(50) NOT NULL,
@@ -395,8 +414,8 @@ function init_db($prefs_) {
 		}
 	}
 	Logger::debug('admin','init_db modules inited');
-	
+
 	//TODO : do the same for plugins
-	
-	return true;	
+
+	return true;
 }

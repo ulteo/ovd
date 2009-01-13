@@ -40,6 +40,9 @@ class Server {
 
 		if (!$this->hasAttribute('version') || $this->getAttribute('version') === '')
 			$this->getVersion();
+
+		if (!$this->hasAttribute('external_name'))
+			$this->setAttribute('external_name', $this->fqdn);
 	}
 
 	public static function load($fqdn_) {

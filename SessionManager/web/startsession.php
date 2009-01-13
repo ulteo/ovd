@@ -204,7 +204,9 @@ foreach ($plugins_args as $k => $v)
 
 $token = $session->create_token($session_mode, $data);
 
-$redir = 'http://'.$session->server.'/index.php?token='.$token;
+$buf = Server::load($session->server);
+
+$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token;
 
 $report = new Reporting($session->id);
 $report->session_begin($token, $user);

@@ -133,6 +133,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'available_sessions' && isset($
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
+if (isset($_GET['action']) && $_GET['action'] == 'external_name' && isset($_GET['fqdn'])) {
+	if (isset($_GET['external_name'])) {
+		$server = new Server_admin($_GET['fqdn']);
+		$server->setAttribute('external_name', $_GET['external_name']);
+	}
+
+	redirect($_SERVER['HTTP_REFERER']);
+}
+
 // Seems to be useless, to remove in few time
 if (isset($_GET['action']) && $_GET['action'] == 'change' && isset($_GET['fqdn'])) {
 	$server = new Server_admin($_GET['fqdn']);
@@ -199,7 +208,7 @@ function show_default() {
     foreach($u_servs as $s) {
       $content = 'content'.(($count++%2==0)?1:2);
       $s->getMonitoring();
-	
+
       echo '<tr class="'.$content.'">';
             if (count($u_servs) > 1)
 	echo '<td><input type="checkbox" name="register_servers[]" value="'.$s->fqdn.'" /><form></form>';
@@ -264,11 +273,11 @@ function show_default() {
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
     // echo '<th>'._('Version').'</th>';
-    echo '<th>'._('Status').'</th><th>'._('Sessions').'</th><th>'._('Details').'</th><th>'._('Monitoring').'</th>';
+    echo '<th>'._('Status').'</th><th>'._('Details').'</th><th>'._('Monitoring').'</th>';
     // echo '<th>'._('Applications(physical)'.</th>';
     echo '</tr>';
     echo '</thead>';
-    
+
     $count = 0;
     foreach($a_servs as $s) {
       $content = 'content'.(($count++%2==0)?1:2);
@@ -288,17 +297,13 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
       if (count($a_servs) > 1)
-	echo '<td><input type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
+        echo '<td><input type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
       echo '<td>';
       echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
       echo '</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
       // echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>'.$s->stringStatus().'</td>';
-      echo '<td>';
-      if ($server_online)
-	echo $s->stringSessions();
-      echo '</td>';
       echo '<td>';
       echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb').' ';
       echo ($s->getAttribute('cpu_nb') > 1)?_('cores'):_('core');
@@ -307,8 +312,13 @@ function show_default() {
       echo '</td>';
       echo '<td>';
       if ($server_online) {
-	echo _('CPU usage').': '.$s->getCpuUsage().'<br />';
-	echo _('RAM usage').': '.$s->getRamUsage();
+        $buf = round(($s->getNbUsedSessions()/$s->getNbAvailableSessions())*100);
+        echo _('CPU usage').': '.$s->getCpuUsage().'<br />';
+        echo display_loadbar($s->getCpuUsage());
+        echo _('RAM usage').': '.$s->getRamUsage().'<br />';
+        echo display_loadbar($s->getRamUsage());
+        echo _('Session usage').': '.$buf.'%<br />';
+        echo display_loadbar($buf);
       }
       echo '</td>';
 
@@ -337,7 +347,7 @@ function show_default() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="8">';
+      echo '<td colspan="7">';
       echo '<a href="javascript:;" onclick="markAllRows(\'available_servers_table\'); return false">'._('Mark all').'</a>';
       echo '/ <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
@@ -365,9 +375,9 @@ function show_manage($fqdn) {
 
   $server_online = $server->isOnline();
 
-  if ($server->status == 'ready') {
-    $buf_status = $server->getStatus();
-    $buf_monitoring = $server->getMonitoring();
+  if ($server_online) {
+    $server->getStatus();
+    $server->getMonitoring();
   }
   elseif ($server->status == 'down')
     $status_error_msg = _('Warning: Server is offline');
@@ -441,7 +451,7 @@ function show_manage($fqdn) {
 
   if (!$server_online && count($applications) == 0)
     $applications_all = array();
-  
+
 
   $servers_all = Servers::getOnline();
   foreach($servers_all as $k => $v) {
@@ -468,24 +478,22 @@ function show_manage($fqdn) {
     }
   }
 
-
+  $external_name = $server->getAttribute('external_name');
 
   include_once('header.php');
 
   echo '<div id="servers_div">';
   echo '<h1>'.$server->fqdn.'</h1>';
 
-  if ($server_online === false)
-    echo '<h2><p class="msg_error centered">'.$status_error_msg.'</p></h2>';
-  
+//   if ($server_online === false)
+//     echo '<h2><p class="msg_error centered">'.$status_error_msg.'</p></h2>';
+
   echo '<div>';
   echo '<h2>'._('Monitoring').'</h2>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
-  
+
   echo '<th>'._('Type').'</th><th>'._('Version').'</th><th>'._('Status').'</th>';
-  if ($server_online)
-    echo '<th>'._('Sessions').'</th>';
   echo '<th>'._('Details').'</th>';
   if ($server_online)
     echo '<th>'._('Monitoring').'</th>';
@@ -496,15 +504,17 @@ function show_manage($fqdn) {
 
   echo '<td>'.$server->stringVersion().'</td>';
   echo '<td>'.$server->stringStatus().'</td>';
-  if ($server_online)
-    echo '<td>'.$server->stringSessions().'</td>';
-
   echo '<td>'._('CPU').'; : '.$server->getAttribute('cpu_model').' (x'.$server->getAttribute('cpu_nb').')<br />'._('RAM').' : '.round($server->getAttribute('ram')/1024).' '._('MB').'</td>';
 
   if ($server_online) {
     echo '<td>';
-    echo _('CPU usage').': '.$server->getCpuUsage().'<br />';
-    echo _('RAM usage').': '.$server->getRamUsage();
+        $buf = round(($server->getNbUsedSessions()/$server->getNbAvailableSessions())*100);
+        echo _('CPU usage').': '.$server->getCpuUsage().'<br />';
+        echo display_loadbar($server->getCpuUsage());
+        echo _('RAM usage').': '.$server->getRamUsage().'<br />';
+        echo display_loadbar($server->getRamUsage());
+        echo _('Session usage').': '.$buf.'%<br />';
+        echo display_loadbar($buf);
     echo '</td>';
   }
 
@@ -515,7 +525,7 @@ function show_manage($fqdn) {
   echo '<div>';
   echo '<h2>'._('Configuration').'</h2>';
 
-  
+
 
   echo '<div>';
   echo '<form action="servers.php" method="GET">';
@@ -526,6 +536,18 @@ function show_manage($fqdn) {
   echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
   echo '<input type="text" id="number" name="nb_sessions" value="'.$server->getNbAvailableSessions().'" size="3" onchange="field_check_integer(this);" />';
   echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
+
+  echo ' <input type="submit" value="'._('change').'" />';
+  echo '</form>';
+  echo "</div>\n";
+
+  echo '<div>';
+  echo '<form action="servers.php" method="GET">';
+  echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+  echo '<input type="hidden" name="action" value="external_name" />';
+
+  echo _('Redirection name of this server').': ';
+  echo '<input type="text" name="external_name" value="'.$external_name.'" />';
 
   echo ' <input type="submit" value="'._('change').'" />';
   echo '</form>';
@@ -619,7 +641,7 @@ function show_manage($fqdn) {
       echo '<td>';
       echo '<select name="application">';
       foreach ($applications_available as $app)
-	echo '<option value="'.$app->getAttribute('id').'">'.$app->getAttribute('name').'</option>';
+        echo '<option value="'.$app->getAttribute('id').'">'.$app->getAttribute('name').'</option>';
       echo '</select>';
       echo '</td>';
       echo '<td><input type="submit" value="'._('Install on this server').'" /></td>';
@@ -649,7 +671,7 @@ function show_manage($fqdn) {
     echo "</div>\n";
   }
 
-  
+
   // Tasks part
   if (count($tasks) >0) {
     echo '<div>';

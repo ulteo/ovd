@@ -25,5 +25,7 @@
 // admin stuffs
 require_once(dirname(__FILE__).'/functions.inc.php');
 
-if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php')
-	redirect('login.php?redirect='.base64_encode($_SERVER['REQUEST_URI']));
+if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {
+	$_SESSION['redirect'] = base64_encode($_SERVER['REQUEST_URI']);
+	redirect('login.php');
+}

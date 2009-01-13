@@ -20,7 +20,6 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-$server = $_SERVER['SERVER_NAME'];
 $session = $_SESSION['session'];
 
 if (!isset($session) || $session == '')
