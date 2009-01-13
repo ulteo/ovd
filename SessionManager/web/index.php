@@ -557,12 +557,12 @@ if ($testapplet) {
 		<param name="cache_archive_ex" value="ulteo-applet-0.2.3f.jar;preload" />
 		<param name="mayscript" value="true" />
 
-		<param name="HOST" value="<?php echo $random_server->fqdn; ?>" />
+		<param name="HOST" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
 		<param name="PORT" value="5900" />
 		<!--<param name="ENCPASSWORD" value="ba0c8ea04ccc5697" />-->
 
 		<param name="SSH" value="yes" />
-		<param name="ssh.host" value="<?php echo $random_server->fqdn; ?>" />
+		<param name="ssh.host" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
 		<param name="ssh.port" value="443,993,995,110,40001" />
 		<!--<param name="ssh.user" value="dummy" />
 		<param name="ssh.password" value="3666623866373263" />-->
