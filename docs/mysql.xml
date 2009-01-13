@@ -22,7 +22,7 @@
 Enter password: 
 mysql> create database ulteo_sm;
  Query OK, 1 row affected (0.05 sec)
-mysql> GRANT ALL PRIVILEGES ON ulteo_sm.* TO 'ulteoadmin'@'localhost' IDENTIFIED BY 'secret' WITH GRANT OPTION;
+mysql> GRANT ALL PRIVILEGES ON ulteo_sm.* TO 'ulteoadmin'@'localhost' IDENTIFIED BY 'secret';
  Query OK, 0 rows affected (0.03 sec)
 mysql> quit]]>
           </screen>

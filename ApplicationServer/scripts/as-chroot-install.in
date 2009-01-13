@@ -164,6 +164,7 @@ if [ "$NOCONFIRM" -ne 1 ]; then
     echo
     echo -n "Is this correct? [Y/n] "
     read GO
+    [ -z "$GO" ] && GO=Y
     case $GO in
         Y|y)
             # continue

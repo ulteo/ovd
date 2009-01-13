@@ -83,6 +83,9 @@ get_chroot () {
     fi
     wget --spider $WGETARGS $URL || die Unable to reach the chroot tarball. Aborting.
     wget $WGETARGS "$URL" -O $OUTPUT || die An error occured while downloading the chroot. Aborting.
+
+    # Create a symlink to $WEBDIR/base.tar.gz if this file doesn't exist
+    [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$OUTPUT" "$WEBDIR/base.tar.gz"
 }
 
 unset NODOWNLOAD
@@ -220,6 +223,7 @@ if [ "$NOCONFIRM" -ne 1 ]; then
     echo
     echo -n "Is this correct? [Y/n] "
     read GO
+    [ -z "$GO" ] && GO=Y
     case $GO in
         Y|y)
             # continue
