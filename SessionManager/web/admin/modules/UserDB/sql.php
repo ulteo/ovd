@@ -42,7 +42,11 @@ class admin_UserDB_sql extends UserDB_sql {
 			$query_values = substr($query_values, 0, -1); // del the last ,
 			$SQL = MySQL::getInstance();
 			$query = 'INSERT INTO `'.USER_TABLE.'` ( '.$query_keys.' ) VALUES ('.$query_values.' )';
-			return $SQL->DoQuery($query);
+			$ret = $SQL->DoQuery($query);
+			$id = $SQL->InsertId();
+			$user_->setAttribute('id', $id);
+			return $ret;
+			
 		}
 		else {
 			if ($user_->hasAttribute('login'))

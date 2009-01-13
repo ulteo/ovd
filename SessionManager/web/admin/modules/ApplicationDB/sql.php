@@ -32,9 +32,10 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			}
 			$query_keys = substr($query_keys, 0, -1); // del the last ,
 			$query_values = substr($query_values, 0, -1); // del the last ,
-			
 			$sql2 = MySQL::getInstance();
-			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);;
+			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
+			$id = $sql2->InsertId();
+			$a->setAttribute('id', $id);
 			return ($res !== false);
 		}
 		return false;

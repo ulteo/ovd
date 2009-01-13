@@ -56,7 +56,7 @@ class Server_admin extends Server {
 		$root = $dom->documentElement;
 
 		// before adding application, we remove all previous applications
-		// TODO BETTER (must use liasion class)
+		// TODO BETTER (must use liaison class)
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', LIAISON_APPLICATION_SERVER_TABLE, 'group', $this->fqdn);
 
@@ -102,15 +102,6 @@ class Server_admin extends Server {
 					if ($applicationDB->add($a) == false){
 						//echo 'app '.$app_name." not insert<br>\n";
 						return false;
-					}
-					else{
-						$a = $applicationDB->search($app_name,$app_description,$this->getAttribute('type'),$app_path_exe);
-						if (is_object($a)) {
-							//echo "search result object\n";
-						}
-						else {
-							//echo "search result NULL\n";
-						}
 					}
 				}
 			}
