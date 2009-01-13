@@ -74,18 +74,11 @@ set_admin_credentials () {
 }
 
 get_chroot () {
-    if [ $2 ]; then
-        mkdir -p $2 || die Unable to create the target directory $2. Aborting.
-        OUTPUT=$2/base.tar.gz
-    else
-        mkdir -p $WEBDIR || die Unable to create the target directory $WEBDIR. Something went really wrong. Aborting.
-        OUTPUT=$WEBDIR/base.tar.gz
-    fi
     wget --spider $WGETARGS $URL || die Unable to reach the chroot tarball. Aborting.
-    wget $WGETARGS "$URL" -O $OUTPUT || die An error occured while downloading the chroot. Aborting.
+    wget $WGETARGS "$URL" -O $TARGET || die An error occured while downloading the chroot. Aborting.
 
     # Create a symlink to $WEBDIR/base.tar.gz if this file doesn't exist
-    [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$OUTPUT" "$WEBDIR/base.tar.gz"
+    [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$TARGET" "$WEBDIR/base.tar.gz"
 }
 
 unset NODOWNLOAD
@@ -189,7 +182,7 @@ done
 
 if [ -z "$NODOWNLOAD" ]; then
     PROPOSED_URL=http://www.ulteo.com/main/downloads/ulteo-ovd.php
-    PROPOSED_TARGET=$WEBDIR
+    PROPOSED_TARGET=$WEBDIR/base.tar.gz
     if [ -z "$URL" ]; then
         echo -n "Chroot download url [$PROPOSED_URL]: "
         read URL
@@ -198,10 +191,13 @@ if [ -z "$NODOWNLOAD" ]; then
         fi
     fi
     if [ -z "$TARGET" ]; then
-        echo -n "Chroot destination [$PROPOSED_TARGET/]: "
+        echo -n "Chroot destination [$PROPOSED_TARGET]: "
         read TARGET
         if [ -z "$TARGET" ]; then
             TARGET=$PROPOSED_TARGET
+        fi
+        if [ -d "$TARGET" ]; then
+            TARGET="$TARGET"/base.tar.gz
         fi
     fi
 fi
