@@ -36,7 +36,7 @@ function isTimestamp($str) {
 }
 
 function getPathFromMagic($magic) {
-  $buf = SESSION_PATH.'/'.$magic.'/user_login';
+  $buf = SESSION_PATH.'/'.$magic.'/parameters/user_login';
   if (!is_readable($buf))
     return;
   $login = trim(file_get_contents($buf));
