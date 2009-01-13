@@ -27,8 +27,8 @@ class Server_admin extends Server {
 		if (! $prefs)
 			return false;
 
-// 		if (!$this->isOnline())
-// 			return false;
+		if (!$this->isOnline())
+			return false;
 
 		$mods_enable = $prefs->get('general','module_enable');
 		if (!in_array('ApplicationDB',$mods_enable)){

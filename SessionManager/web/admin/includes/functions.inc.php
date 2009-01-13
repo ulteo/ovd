@@ -32,7 +32,7 @@ function display_loadbar($percents_) {
 	elseif ($percents_ >= 75)
 		$bar_color = '#a30505';
 
-	$normal_bar = '<div style="width: '.(50+round(100*$bar_width)).'px; height: 10px; float: left;">';
+	$normal_bar = '<div style="width: '.(round(100*$bar_width)).'px; height: 10px; float: left;">';
 	$normal_bar.= '<div style="width: '.round($percents_*$bar_width).'px; height: 10px; background: '.$bar_color.'; float: left;"></div>';
 	$normal_bar.= '<div style="width: '.round((100*$bar_width)-round($percents_*$bar_width)).'px; height: 10px; background: #999; float: left;"></div>';
 	$normal_bar.= '</div>';

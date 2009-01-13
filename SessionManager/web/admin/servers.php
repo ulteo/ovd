@@ -373,16 +373,14 @@ function show_default() {
 function show_manage($fqdn) {
   $server = new Server_admin($fqdn);
 
-  $server_online = false;
-
-  $buf_status = $server->getStatus();
-  if ($buf_status == 'ready')
-    $server_online = true;
+  $server_online = $server->isOnline();
 
   if ($server_online) {
     $server->getMonitoring();
   }
-  elseif ($buf_status == 'down')
+
+  $buf_status = $server->getAttribute('status');
+  if ($buf_status == 'down')
     $status_error_msg = _('Warning: Server is offline');
   elseif ($buf_status == 'broken')
     $status_error_msg = _('Warning: Server is broken');
@@ -567,7 +565,7 @@ function show_manage($fqdn) {
   }
 
 
-  if ($server_lock) {
+  if ($server_lock || !$server_online) {
     echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server ?').'\');">';
     echo '<input type="hidden" name="action" value="delete" />';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';

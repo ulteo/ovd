@@ -204,8 +204,8 @@ class Server {
 	public function delete($die_=true) {
 		Logger::debug('main', 'Starting SERVER::delete for server '.$this->fqdn);
 
-		if (!$this->hasAttribute('locked'))
-			return false;
+// 		if (!$this->hasAttribute('locked'))
+// 			return false;
 
 		if (!file_exists($this->folder)) {
 			Logger::error('main', 'Server does not exist : '.$this->folder);
@@ -251,6 +251,22 @@ class Server {
 
 		if (!is_writable2($this->folder.'/'.$attrib_))
 			Logger::warning('main', 'Attribute '.$attrib_.' NOT writable for server '.$this->fqdn);
+
+		return true;
+	}
+
+	public function uptodateAttribute($attrib_) {
+		Logger::debug('main', 'Starting SERVER::uptodateAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
+
+		if (!is_readable($this->folder.'/'.$attrib_)) {
+			Logger::error('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
+			return false;
+		}
+
+		if (@filemtime($this->folder.'/'.$attrib_) < (time()-30)) {
+			Logger::warning('main', 'Attribute '.$attrib_.' NOT up-to-date for server '.$this->fqdn);
+			return false;
+		}
 
 		return true;
 	}
@@ -309,7 +325,8 @@ class Server {
 	public function isOnline() {
 		Logger::debug('main', 'Starting SERVER::isOnline for server '.$this->fqdn);
 
-		$this->getStatus(0);
+		if (!$this->hasAttribute('status') || !$this->uptodateAttribute('status'))
+			$this->getStatus(1);
 
 		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
 			return true;
@@ -377,8 +394,8 @@ class Server {
 	public function getMonitoring() {
 		Logger::debug('main', 'Starting SERVER::getMonitoring for server '.$this->fqdn);
 
-// 		if (!$this->isOnline())
-// 			return false;
+		if (!$this->isOnline())
+			return false;
 
 		$xml = query_url('http://'.$this->fqdn.'/webservices/server_monitoring.php');
 
