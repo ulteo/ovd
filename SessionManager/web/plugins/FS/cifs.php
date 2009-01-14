@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -43,15 +43,16 @@ class FS_cifs extends Plugin {
 // 		}
 		//END temp hack
 
+		$buf = new UserDB_activedirectory();
+		$admin = $buf->importFromDN($cifs_login.','.$buf->config_ldap['suffix']);
+
 		$this->redir_args = array(
 			'module_fs' => array(
 				'user_fileserver'	=>	$user->getAttribute('fileserver'),
 				'fileserver_uid'	=>	$user->getAttribute('uid'),
 				'user_homedir'		=>	$user->getAttribute('homedir'),
-				//BEGIN temp hack related
-				'cifs_login'		=>	$cifs_login,
-				'cifs_password'	=>	$cifs_password
-				//END temp hack related
+				'login'		=>	$admin->getAttribute('real_login'),
+				'password'	=>	$cifs_password
 			)
 		);
 	}
@@ -65,7 +66,7 @@ class FS_cifs extends Plugin {
 	public function prettyName() {
 		return _('Common Internet File System (CIFS)');
 	}
-	
+
 	public static function enable() {
 		return true;
 	}

@@ -25,8 +25,8 @@ mb_internal_encoding('UTF-8');
 define('SESSIONMANAGER_ROOT', realpath(dirname(__FILE__).'/..'));
 define('SESSIONMANAGER_ROOT_ADMIN', SESSIONMANAGER_ROOT.'/admin');
 
-$buf = ini_get('include_path');
-ini_set('include_path', $buf.':'.SESSIONMANAGER_ROOT.'/PEAR');
+$buf = @ini_get('include_path');
+@ini_set('include_path', $buf.':'.SESSIONMANAGER_ROOT.'/PEAR');
 
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT.'/admin/classes');

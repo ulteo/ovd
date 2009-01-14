@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -23,23 +23,23 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class admin_UserDB_ldap extends UserDB_ldap {
 // 	public function __construct(){
 // 	}
-	
+
 	public function add($user_){
 		return false;
 	}
-	
+
 	public function remove($user_){
 		return false;
 	}
-	
+
 	public function modify($user_){
 		return false;
 	}
-	
+
 	public static function init($prefs_) {
 		return true;
 	}
-	
+
 	public static function enable() {
 		return false;
 	}

@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -35,7 +35,7 @@ class UserDB_ldap {
 		$ldap = new LDAP($this->config);
 		$sr = $ldap->search($this->config['match']['login'].'='.$login_, NULL);
 		if ($sr === false) {
-			Logger::error('main','UserDB_ldap::getList ldap failed (mostly timeout on server)');
+			Logger::error('main','UserDB_ldap::import ldap failed (mostly timeout on server)');
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
@@ -43,6 +43,31 @@ class UserDB_ldap {
 			$info = $infos[0];
 			$u = new User();
 			foreach ($this->config['match'] as $attribut => $match_ldap){
+				if (isset($info[$match_ldap][0]))
+					$u->setAttribute($attribut,$info[$match_ldap][0]);
+			}
+			if ($u->hasAttribute('uid') == false)
+				$u->setAttribute('uid',str2num($u->getAttribute('login')));
+			return $u;
+		}
+		return NULL;
+	}
+
+	public function importFromDN($dn_) {
+		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
+
+		$config = $this->config_ldap;
+		$ldap = new LDAP($config);
+		$sr = $ldap->searchDN($dn_, NULL);
+		if ($sr === false) {
+			Logger::error('main','UserDB_ldap::fromDN ldap failed (mostly timeout on server)');
+			return NULL;
+		}
+		$infos = $ldap->get_entries($sr);
+		if ( $infos["count"] == 1){
+			$info = $infos[0];
+			$u = new User();
+			foreach ($config['match'] as $attribut => $match_ldap){
 				if (isset($info[$match_ldap][0]))
 					$u->setAttribute($attribut,$info[$match_ldap][0]);
 			}
@@ -145,24 +170,22 @@ class UserDB_ldap {
 		$ret []= $c;
 		$c = new config_element('protocol_version_label', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, 1);
 		$ret []= $c;
-		$c = new config_element('match',_('Matching'), _('Matching'), _('Matching'),array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname'),NULL,4);
-		$ret []= $c;
 		return $ret;
 	}
-	
+
 	public function prefsIsValid($prefs_) {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect();
 		$LDAP2->disconnect();
-		
+
 		return ($ret === true);
 	}
-	
+
 	public static function prettyName() {
 		return _('Lightweight Directory Access Protocol (LDAP)');
 	}
-	
+
 	public static function isDefault() {
 		return false;
 	}

@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/includes/core-minimal.inc.php');
 function print_element($key_name,$contener,$element_key,$element) {
 	global $sep;
 	$label2 = $key_name.$sep.$contener.$sep.$element->id;
-	
+
 	switch ($element->type) {
 		case 0: //	0 : text (readonly)
 			if (is_string($element->content))
@@ -65,7 +65,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo '<br />';
 			}
 			break;
-		
+
 		case 8 : // list of input text (fixed length)
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			$i = 0;

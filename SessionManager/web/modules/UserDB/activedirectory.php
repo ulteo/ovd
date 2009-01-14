@@ -106,12 +106,12 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			$user_branch = $this->config['ou'];
 		else
 			$user_branch ='OU='.$this->config['ou'];
-		
+
 		if (strtolower(substr($this->config['login'], 0, 3)) == 'cn=')
 			$login = $this->config['login'];
 		else
 			$login ='cn='.$this->config['login'].','.$user_branch;
-		
+
 		if (substr($login, -1*strlen($ldap_suffix)) != $ldap_suffix)
 			$login .= ','.$ldap_suffix;
 
@@ -129,7 +129,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'match' => array(
 					'login'	=> 'cn',
 					'displayname'	=> 'displayname',
-					'homedir'	=> 'homedirectory'
+					'homedir'	=> 'homedirectory',
+ 					'real_login'    => 'samaccountname'
 				)
 			);
 		return $config_ldap;
@@ -180,7 +181,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect();
 		$LDAP2->disconnect();
-		
+
 		return ($ret === true);
 	}
 
@@ -191,7 +192,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	public static function init() {
 		return true;
 	}
-	
+
 	public static function isDefault() {
 		return false;
 	}
