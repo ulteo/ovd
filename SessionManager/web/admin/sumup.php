@@ -95,7 +95,7 @@ else{
 			echo '</td>';
 
 			echo '<td>'; // server
-			$serv_s = $u->getAvalaibleServers();
+			$serv_s = $u->getAvailableServers();
 			if (is_array($serv_s)){
 				foreach ($serv_s as $s){
 					echo $s->fqdn.'<br>';

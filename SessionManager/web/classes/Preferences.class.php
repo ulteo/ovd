@@ -111,7 +111,7 @@ class config_element{
 	public $description;
 	public $description_detailed;
 	public $content;
-	public $content_avalaible;
+	public $content_available;
 	public $type;
 	// type:
 	//	0 : text (readonly)
@@ -120,14 +120,14 @@ class config_element{
 	//  3 : list of text (r) (fixed length) (more than one can be selected)
 	//	4 : list of input text (w) (not fixed length)
 
-	public function __construct($id_, $label_, $description_, $description_detailed_, $content_, $content_avalaible_, $type_){
+	public function __construct($id_, $label_, $description_, $description_detailed_, $content_, $content_available_, $type_){
 		$this->id = $id_;
 		$this->label = $label_;
 		$this->description = $description_;
 		$this->description_detailed = $description_detailed_;
 		$this->content = $content_;
 // 		$this->content_default = $content_default_;
-		$this->content_avalaible = $content_avalaible_;
+		$this->content_available = $content_available_;
 		$this->type = $type_;
 	}
 
@@ -142,14 +142,14 @@ class config_element{
 		else
 			$str .= $this->content;
 		$str .=  "','";
-		if (is_array($this->content_avalaible)) {
+		if (is_array($this->content_available)) {
 			$str .= 'array(';
-			foreach($this->content_avalaible as $k => $v)
+			foreach($this->content_available as $k => $v)
 				$str .= '\''.$k.'\' => \''.$v.'\' , ';
 			$str .= ') ';
 		}
 		else
-			$str .= $this->content_avalaible;
+			$str .= $this->content_available;
 		$str .=  "','".$this->description."','".$this->description_detailed."','".$this->type."'";
 		return $str;
 	}

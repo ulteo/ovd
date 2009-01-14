@@ -24,7 +24,7 @@ class AppsGroup {
 	public $id;
 	public $name; // (ex: Officeapps)
 	public $description; // (ex: Office application)
-	public $published; //(yes/no) (the group is avalaible to user)
+	public $published; //(yes/no) (the group is available to user)
 
 	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $published_=false) {
 		Logger::debug('admin','APPSGROUP::contructor from_scratch');

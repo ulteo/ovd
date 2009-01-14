@@ -96,7 +96,7 @@ class User {
 		return array_unique($apps_group_list);
 	}
 
-	public function getAvalaibleServers(){
+	public function getAvailableServers(){
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -105,7 +105,7 @@ class User {
 		$launch_without_apps = (int)$default_settings['launch_without_apps'];
 
 		// get the list of server who the user can launch his applications
-		Logger::error('main','USER::getAvalaibleServers');
+		Logger::error('main','USER::getAvailableServers');
 		$servers = array();
 		$apps = $this->applications();
 		$apps_id = array();
@@ -124,10 +124,10 @@ class User {
 		return $servers;
 	}
 
-	public function getAvalaibleServer(){
+	public function getAvailableServer(){
 		// get a server who the user can launch his applications
-		Logger::debug('main','USER::getAvalaibleServer');
-		$list_servers = $this->getAvalaibleServers();
+		Logger::debug('main','USER::getAvailableServer');
+		$list_servers = $this->getAvailableServers();
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -136,7 +136,7 @@ class User {
 		}
 		$application_server_settings = $prefs->get('general', 'application_server_settings');
 		if (!isset($application_server_settings['load_balancing'])) {
-			Logger::error('main' , 'USER::getAvalaibleServer $application_server_settings[\'load_balancing\'] not set');
+			Logger::error('main' , 'USER::getAvailableServer $application_server_settings[\'load_balancing\'] not set');
 			return NULL;
 		}
 		$criterions = $application_server_settings['load_balancing'];

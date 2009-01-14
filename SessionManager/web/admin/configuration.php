@@ -39,10 +39,10 @@ function print_element($key_name,$contener,$element_key,$element) {
 			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
 		case 2: //	2 : list of text (r) (fixed length) (only one can be selected)
-				if (is_array($element->content_avalaible)) {
+				if (is_array($element->content_available)) {
 					echo '<select id="'.$label2.'"  name="'.$label2.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');">';
 
-					foreach ($element->content_avalaible as $mykey => $myval){
+					foreach ($element->content_available as $mykey => $myval){
 						if ( $mykey == $element->content)
 							echo '<option value="'.$mykey.'" selected="selected" >'.$myval.'</option>';
 						else
@@ -55,7 +55,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 				}
 			break;
 		case 3: //  3 : list of text (r) (fixed length) (more than one can be selected)
-			foreach ($element->content_avalaible as $mykey => $myval){
+			foreach ($element->content_available as $mykey => $myval){
 				if ( in_array($mykey,$element->content))
 					echo '<input class="input_checkbox" type="checkbox" name="'.$label2.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');"/>';
 				else

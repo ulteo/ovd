@@ -110,7 +110,7 @@ if ($lock->have_lock()) {
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
 	$random_server = $_REQUEST['force'];
 else {
-	$serv_tmp = $user->getAvalaibleServer();
+	$serv_tmp = $user->getAvailableServer();
 	if (is_object($serv_tmp))
 		$random_server = $serv_tmp->fqdn;
 

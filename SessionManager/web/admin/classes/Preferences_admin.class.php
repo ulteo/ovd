@@ -215,7 +215,7 @@ class Preferences_admin extends Preferences {
 
 	public function getPrefsPlugins(){
 		$plugs = new Plugins();
-		$p2 = $plugs->getAvalaiblePlugins();
+		$p2 = $plugs->getAvailablePlugins();
 		// we remove all diseable Plugins
 		foreach ($p2 as $plugin_dir2 => $plu2) {
 			foreach ($plu2 as $plugin_name2 => $plugin_name2_value){
@@ -259,25 +259,25 @@ class Preferences_admin extends Preferences {
 	}
 
 	public function getPrefsModule(){
-		$avalaible_module = $this->getAvalaibleModule();
+		$available_module = $this->getAvailableModule();
 		// we remove all diseable modules
-		foreach ($avalaible_module as $mod2 => $sub_mod2){
+		foreach ($available_module as $mod2 => $sub_mod2){
 			foreach ($sub_mod2 as $sub_mod_name2 => $sub_mod_pretty2){
 				$enable1 = 'return '.'admin_'.$mod2.'_'.$sub_mod_name2.'::enable();';
 				$enable =  eval($enable1);
 				if ($enable !== true)
-					unset ($avalaible_module[$mod2][$sub_mod_name2]);
+					unset ($available_module[$mod2][$sub_mod_name2]);
 			}
 
 		}
 		$modules_prettyname = array();
-		foreach ($avalaible_module as $module_name => $sub_module)
+		foreach ($available_module as $module_name => $sub_module)
 			$modules_prettyname[$module_name] = $module_name;
 
 		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB','ApplicationDB'), $modules_prettyname, 3);
 		$this->add($c,'general');
 		
-		foreach ($avalaible_module as $mod => $sub_mod){
+		foreach ($available_module as $mod => $sub_mod){
 			$c = new config_element('enable', $mod, $mod, $mod, NULL, $sub_mod, 2);
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
@@ -305,7 +305,7 @@ class Preferences_admin extends Preferences {
 		}
 	}
 
-	protected function getAvalaibleModule(){
+	protected function getAvailableModule(){
 		$ret = array();
 		$files = glob(MODULES_DIR.'/*');
 		foreach ($files as $path){

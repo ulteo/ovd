@@ -124,7 +124,7 @@ if (!is_array($advanced_settings))
 
 $list_servers = array();
 // if (in_array('server', $advanced_settings) && isset($_GET['force'])) {
-// 	$servers = $user->getAvalaibleServers();
+// 	$servers = $user->getAvailableServers();
 	$servers = Servers::getAvailable();
 	if (!is_array($servers) || count($servers) < 1)
 		die_error(_('No available server'),__FILE__,__LINE__);
@@ -136,7 +136,7 @@ $list_servers = array();
 // 	else
 		$random_server = $list_servers[array_rand($list_servers)];
 // } else {
-// 	$server = $user->getAvalaibleServer();
+// 	$server = $user->getAvailableServer();
 // 	if (is_object($server)) {
 // 		$random_server = $server;
 // 		$list_servers []= $random_server;

@@ -117,7 +117,7 @@ function statusJob(fqdn_,id_job_,app_,action_){
 								{
 									method: 'post',
 									parameters: {
-										action:'avalaibleapplication',
+										action:'availableapplication',
 										fqdn:fqdn_
 									}
 								}

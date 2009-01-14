@@ -95,7 +95,7 @@ class Plugins {
 		//restore_error_handler();
 	}
 
-	public function getAvalaiblePlugins() {
+	public function getAvailablePlugins() {
 		$ret = array();
 
 
