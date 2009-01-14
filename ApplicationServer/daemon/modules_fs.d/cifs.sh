@@ -29,12 +29,11 @@
 cifs_set_fs() {
     log_DEBUG "cifs_set_fs"
     
-    CIFS_HOME_BASE=`cat ${SESSID_DIR}/parameters/module_fs/homebase`
-    CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/homedir`
+    CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
     CIFS_LOGIN=`cat ${SESSID_DIR}/parameters/module_fs/login`
     CIFS_PASSWORD=`cat ${SESSID_DIR}/parameters/module_fs/password`
 
-    check_variables CIFS_LOGIN CIFS_PASSWORD CIFS_HOME_BASE CIFS_HOME_DIR || return 1
+    check_variables CIFS_LOGIN CIFS_PASSWORD CIFS_HOME_DIR || return 1
 
     CIFS_MOUNT_POINT=/mnt/cifs/$USER_LOGIN
 }
@@ -47,8 +46,8 @@ cifs_get_status() {
 cifs_do_mount() {
     # HACK: waiting for a working krb. sends plain-text credentials.
     # MOUNT_CMD="username=$KRB_PRINCIPAL,sec=krb5i,guest,sfu"
-    local default_opts="username=$CIFS_LOGIN,password=$CIFS_PASSWORD,uid=$USER_ID,prefixpath=$CIFS_HOME_DIR,umask=077"
-    local mount_cmd="mount -t cifs -o $default_opts $CIFS_HOME_BASE $CIFS_MOUNT_POINT"
+    local default_opts="username=$CIFS_LOGIN,password=$CIFS_PASSWORD,uid=$USER_ID,umask=077"
+    local mount_cmd="mount -t cifs -o $default_opts $CIFS_HOME_DIR $CIFS_MOUNT_POINT"
 
     mkdir -p $CIFS_MOUNT_POINT
 
