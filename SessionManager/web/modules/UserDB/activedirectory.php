@@ -21,26 +21,30 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class UserDB_activedirectory  extends UserDB_ldap{
-	public $config_ldap;
+	public $config_ad;
 	public function __construct(){
-		$this->config = array();
-		$this->config_ldap =  $this->makeLDAPconfig();
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		$this->config_ad = $prefs->get('UserDB','activedirectory');
+
+		if (is_null($this->config_ad))
+			die_error('Active Directory configuration missing2',__FILE__,__LINE__);
+
+
+		$this->config =  $this->makeLDAPconfig();
 	}
 
 	public function import($login_){
-		// dirty hack
-		$config2 = $this->config;
-		$this->config = $this->config_ldap;
 		$u = parent::import($login_);
-		$this->config = $config2;
 
 		return $this->cleanupUser($u);
 	}
 
 	public function getList(){
 		$users = array();
-		$ldap = new LDAP($this->config_ldap);
-		$sr = $ldap->search($this->config_ldap['match']['login'].'=*', NULL);
+		$ldap = new LDAP($this->config);
+		$sr = $ldap->search($this->config['match']['login'].'=*', NULL);
 		if ($sr === false) {
 			Logger::error('main','UserDB_activedirectory::getList ldap failed (mostly timeout on server)');
 			return NULL;
@@ -48,7 +52,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$infos = $ldap->get_entries($sr);
 		foreach ($infos as $info){
 			$u = new User();
-			foreach ($this->config_ldap['match'] as $attribut => $match_ldap){
+			foreach ($this->config['match'] as $attribut => $match_ldap){
 				if (isset($info[$match_ldap][0]))
 					$u->setAttribute($attribut,$info[$match_ldap][0]);
 			}
@@ -78,52 +82,28 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $u;
 	}
 
-	protected function makeLDAPconfig($prefs_=NULL) {
-		if (is_NULL($prefs_)) {
-			$prefs_ = Preferences::getInstance();
-			if (! $prefs_)
-				die_error(_('get Preferences failed'),__FILE__,__LINE__);
-		}
-		$conf_AD = $prefs_->get('UserDB','activedirectory');
+	protected function makeLDAPconfig($config_=NULL) {
+		if ($config_ != NULL)
+			$config = $config_;
+		else
+			$config = $this->config_ad;
 
-		if (is_null($conf_AD))
-			die_error('Active Directory configuration missing2',__FILE__,__LINE__);
-
-		$this->config = $conf_AD;
-// 		if (is_null($conf_ldap))
-// 			die_error('Active Directory configuration missing3',__FILE__,__LINE__);
-
-		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');
-		foreach ($minimum_keys as $m_key){
-			if (!isset($this->config[$m_key]))
-				die_error('Active Directory configuration not valid (missing \''.$m_key.'\' key)2',__FILE__,__LINE__);
-		}
-		$ldap_suffix = self::domain2suffix($this->config['domain']);
+		$ldap_suffix = self::domain2suffix($config['domain']);
 		if (! $ldap_suffix)
 			die_error('Active Directory configuration not valid (domain2suffix error)2',__FILE__,__LINE__);
 
-		if (strtolower(substr($this->config['ou'], 0, 3)) == 'ou=')
-			$user_branch = $this->config['ou'];
-		else
-			$user_branch ='OU='.$this->config['ou'];
-
-		if (strtolower(substr($this->config['login'], 0, 3)) == 'cn=')
-			$login = $this->config['login'];
-		else
-			$login ='cn='.$this->config['login'].','.$user_branch;
-
-		if (substr($login, -1*strlen($ldap_suffix)) != $ldap_suffix)
-			$login .= ','.$ldap_suffix;
+		if (! str_endwith($config['login'], $ldap_suffix))
+			$config['login'] .= ','.$ldap_suffix;
 
 		$config_ldap = array(
-			'host' =>  $this->config['host'],
+			'host' =>  $config['host'],
 			'suffix' => $ldap_suffix,
 
-			'login' => $login,
-			'password' => $this->config['password'],
+			'login' => $config['login'],
+			'password' => $config['password'],
 
 			'port'	=> '389',
-			'userbranch'	=> $user_branch,
+			'userbranch'	=> $config['ou'],
 			'uidprefix' => 'cn',
 			'protocol_version' => 3,
 			'match' => array(
@@ -152,11 +132,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public function authenticate($user_,$password_){
 		Logger::debug('main','UserDB::activedirectory::authenticate '.$user_->getAttribute('login'));
-		// dirty hack
-		$config2 = $this->config;
-		$this->config = $this->config_ldap;
 		$ret = parent::authenticate($user_,$password_);
-		$this->config = $config2;
 		return $ret;
 	}
 
@@ -166,18 +142,35 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ret []= $c;
 		$c = new config_element('domain', _('Domain name'), _('Domain name use by AD'), _('Domain name use by AD'), NULL, NULL, 1);
 		$ret []= $c;
-		$c = new config_element('login', _('User login'), _('The user login that must be used to access the database (to list users account).'), _('The user login that must be used to access the database (to list users account).'), NULL, NULL, 1);
+		$c = new config_element('login', _('Administrator DN'), _('The user login that must be used to access the database (to list users account).'), _('The user login that must be used to access the database (to list users account).'), NULL, NULL, 1);
 		$ret []= $c;
-		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'), NULL, NULL, 7);
+		$c = new config_element('password', _('Administrator password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'), NULL, NULL, 7);
 		$ret []= $c;
-		$c = new config_element('ou', _('(OU)'), _('OU'), _('OU'), NULL, NULL, 1);
+		$c = new config_element('ou', _('User branch DN'), _('User branch DN'), _('User branch DN'), 'cn=Users', NULL, 1);
 		$ret []= $c;
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_) {
+	public function prefsIsValid($prefs_=NULL) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
-		$config_ldap = self::makeLDAPconfig($prefs_);
+
+		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');
+		foreach ($minimum_keys as $m_key){
+			if (!isset($config_AD[$m_key]))
+				return false;
+		}
+
+		$ldap_suffix = self::domain2suffix($config_AD['domain']);
+		if (! $ldap_suffix)
+			return false;
+
+		if (! UserDB_ldap::isValidDN($ldap_suffix))
+			return false;
+
+		if (! UserDB_ldap::isValidDN($config_AD['login']))
+			return false;
+
+		$config_ldap = self::makeLDAPconfig($config_AD);
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect();
 		$LDAP2->disconnect();

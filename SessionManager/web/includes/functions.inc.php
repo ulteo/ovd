@@ -487,3 +487,7 @@ function get_classes_startwith($start_name) {
 	}
 	return $ret;
 }
+
+function str_endwith($string_, $search_) {
+	return (substr($string_, (strlen($search_)*-1)) == $search_);
+}

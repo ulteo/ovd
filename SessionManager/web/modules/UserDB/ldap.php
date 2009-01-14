@@ -56,7 +56,7 @@ class UserDB_ldap {
 	public function importFromDN($dn_) {
 		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
 
-		$config = $this->config_ldap;
+		$config = $this->config;
 		$ldap = new LDAP($config);
 		$sr = $ldap->searchDN($dn_, NULL);
 		if ($sr === false) {
@@ -180,6 +180,12 @@ class UserDB_ldap {
 		$LDAP2->disconnect();
 
 		return ($ret === true);
+	}
+
+	public static function isValidDN($dn_) {
+		$base_pattern = '[a-zA-Z]+=[^,=]+';
+
+		return (preg_match('/^'.$base_pattern.'(,'.$base_pattern.')*$/', $dn_) == 1);
 	}
 
 	public static function prettyName() {

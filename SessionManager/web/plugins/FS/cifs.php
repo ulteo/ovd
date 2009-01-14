@@ -44,7 +44,7 @@ class FS_cifs extends Plugin {
 		//END temp hack
 
 		$buf = new UserDB_activedirectory();
-		$admin = $buf->importFromDN($cifs_login.','.$buf->config_ldap['suffix']);
+		$admin = $buf->importFromDN($cifs_login.','.$buf->config['suffix']);
 
 		$this->redir_args = array(
 			'module_fs' => array(
