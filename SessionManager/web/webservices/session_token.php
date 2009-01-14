@@ -66,6 +66,9 @@ foreach ($settings as $k => $v) {
 	if ($k == 'home_dir_type' || $k == 'module_fs')
 		continue;
 
+	if ($k == 'user_login' || $k == 'user_displayname')
+		$v = str_replace(' ', '', $v);
+
 	$item = $dom->createElement($k);
 	$item->setAttribute('value', $v);
 	$session_node->appendChild($item);

@@ -159,8 +159,8 @@ $module_fs = $fs;
 
 $default_args = array(
 	'user_id'			=>	$user->getAttribute('uid'),
-	'user_login'		=>	str_replace(' ', '', $user->getAttribute('login')),
-	'user_displayname'	=>	str_replace(' ', '', $user->getAttribute('displayname')),
+	'user_login'		=>	$user->getAttribute('login'),
+	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	$desktop_locale,
 	'quality'			=>	$desktop_quality,
 	'home_dir_type'	=>	$module_fs
