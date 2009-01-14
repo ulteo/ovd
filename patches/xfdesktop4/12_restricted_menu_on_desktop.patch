@@ -190,27 +190,16 @@
      
      gboolean show_removable_media;
      gboolean show_special[XFDESKTOP_SPECIAL_FILE_ICON_TRASH+1];
-@@ -112,6 +117,8 @@
-     GtkTargetList *drop_targets;
-     
-     GList *active_trash_calls;
-+
-+    GList *launchers;
-     
- #ifdef HAVE_THUNARX
-     GList *thunarx_menu_providers;
-@@ -290,7 +297,9 @@
+@@ -290,7 +295,7 @@
      gtk_target_list_unref(fmanager->priv->drop_targets);
      
      thunar_vfs_path_unref(fmanager->priv->folder);
 -    
 +
-+    g_list_free (fmanager->priv->launchers);
-+
      G_OBJECT_CLASS(xfdesktop_file_icon_manager_parent_class)->finalize(obj);
  }
  
-@@ -413,7 +422,6 @@
+@@ -413,7 +418,6 @@
      return ret;
  }
  
@@ -218,7 +207,7 @@
  /* icon signal handlers */
  
  static void
-@@ -1676,6 +1684,7 @@
+@@ -1600,6 +1604,7 @@
      GList *selected, *mime_apps, *l, *mime_actions = NULL;
      GtkWidget *menu, *mi, *img, *menu2, *menu3;
      gboolean multi_sel, have_templates = FALSE, got_custom_menu = FALSE;
@@ -226,7 +215,7 @@
      gint w = 0, h = 0;
      GdkPixbuf *pix;
      ThunarVfsMimeInfo *minfo;
-@@ -1691,6 +1700,13 @@
+@@ -1615,6 +1620,13 @@
      
      gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &w, &h);
      
@@ -240,7 +229,7 @@
      if(!multi_sel) {
          menu = xfdesktop_icon_get_popup_menu(XFDESKTOP_ICON(selected->data));
          if(menu)
-@@ -1758,7 +1774,8 @@
+@@ -1682,7 +1694,8 @@
                      gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
                      
                      if(!g_ascii_strcasecmp("application/x-desktop",
@@ -250,7 +239,7 @@
                      {
                          ThunarVfsInfo *info1 = (ThunarVfsInfo *)info;  /* why? */
                          img = gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-@@ -2177,6 +2194,8 @@
+@@ -2101,6 +2114,8 @@
                           file_icon_hash_write_icons, rcfile);
      g_hash_table_foreach(fmanager->priv->special_icons,
                           file_icon_hash_write_icons, rcfile);
@@ -259,7 +248,7 @@
      
      xfce_rc_flush(rcfile);
      xfce_rc_close(rcfile);
-@@ -2350,12 +2369,13 @@
+@@ -2274,12 +2289,13 @@
  
  static XfdesktopFileIcon *
  xfdesktop_file_icon_manager_add_special_file_icon(XfdesktopFileIconManager *fmanager,
@@ -275,7 +264,23 @@
      if(!icon)
          return NULL;
      
-@@ -2420,6 +2440,13 @@
+@@ -2287,8 +2303,13 @@
+                                             XFDESKTOP_FILE_ICON(icon),
+                                             FALSE))
+     {
+-        g_hash_table_replace(fmanager->priv->special_icons,
+-                             GINT_TO_POINTER(type), icon);
++        if (type == XFDESKTOP_SPECIAL_FILE_ICON_LAUNCHER)
++            g_hash_table_replace(fmanager->priv->launcher_icons,
++                                 path, icon);
++        else
++            g_hash_table_replace(fmanager->priv->special_icons,
++                                 GINT_TO_POINTER(type), icon);
++
+         return XFDESKTOP_FILE_ICON(icon);
+     } else {
+         g_object_unref(G_OBJECT(icon));
+@@ -2344,6 +2365,13 @@
                                      fmanager->priv->icon_view);
      }
      
@@ -289,7 +294,7 @@
  #if defined(DEBUG) && DEBUG > 0
      g_assert(_xfdesktop_icon_view_n_items(fmanager->priv->icon_view) == 0);
      g_assert(g_list_length(_alive_icon_list) == 0);
-@@ -2431,9 +2458,10 @@
+@@ -2355,9 +2383,9 @@
      /* add back the special icons */
      for(i = 0; i <= XFDESKTOP_SPECIAL_FILE_ICON_TRASH; ++i) {
          if(fmanager->priv->show_special[i])
@@ -297,30 +302,27 @@
 +            xfdesktop_file_icon_manager_add_special_file_icon(fmanager, i, NULL);
      }
 -    
-+    /* FIXME: add launchers from restricted menu */
 +
      /* add back removable media */
      if(fmanager->priv->show_removable_media)
          xfdesktop_file_icon_manager_load_removable_media(fmanager);
-@@ -2891,6 +2919,82 @@
+@@ -2815,6 +2843,78 @@
      g_object_unref(G_OBJECT(thunar_volume_manager));
  }
  
-+const gchar *
++gchar *
 +build_ddir (const gchar *template)
 +{
-+    gchar *tmp;
-+    const gchar *ret;
-+    gchar uid_str[10];
++    gchar *tmp = NULL;
++    gchar *ret = NULL;
++    gchar uid_str[8];
 +
-+    tmp = exo_str_replace (template, "@USER@", g_get_user_name ());
-+    ret = g_strdup (tmp);
-+    g_free (tmp);
++    ret = exo_str_replace (template, "@USER@", g_get_user_name ());
 +
 +    g_sprintf (uid_str, "%d", getuid ());
 +    tmp = exo_str_replace (ret, "@UID@", uid_str);
-+    ret = g_strdup (tmp);
-+    g_free (tmp);
++    g_free (ret);
++    ret = tmp;
 +
 +    return ret;
 +}
@@ -336,12 +338,12 @@
 +    XfceRc *rc = xfce_rc_simple_open (cfgfile, TRUE);
 +    if (!rc)
 +    {
-+        launchers_dir = g_strdup (build_ddir (DEFAULT_TPL));
++        launchers_dir = build_ddir (DEFAULT_TPL);
 +        return;
 +    }
 +
 +    tmp = g_strdup (xfce_rc_read_entry (rc, "spool_tpl", DEFAULT_TPL));
-+    launchers_dir = g_strdup (build_ddir (tmp));
++    launchers_dir = build_ddir ((const gchar *) tmp);
 +    g_free (tmp);
 +    tmp = NULL;
 +    xfce_rc_close (rc);
@@ -370,8 +372,6 @@
 +            ThunarVfsPath *vfs_path = thunar_vfs_path_new(path, NULL);
 +            xfdesktop_file_icon_manager_add_special_file_icon(
 +                fmanager, XFDESKTOP_SPECIAL_FILE_ICON_LAUNCHER, vfs_path);
-+            thunar_vfs_path_unref(vfs_path);
-+            /* TODO: hashtable add */
 +
 +            g_free (path);
 +            g_free (tmp);
@@ -385,24 +385,15 @@
  
  /* virtual functions */
  
-@@ -2949,6 +3053,8 @@
-                      G_CALLBACK(xfdesktop_file_icon_manager_key_press),
-                      fmanager);
-     
-+    xfdesktop_file_icon_manager_set_launchers (fmanager);
-+
-     fmanager->priv->monitor = thunar_vfs_monitor_get_default();
-     
-     fmanager->priv->icons = g_hash_table_new_full(thunar_vfs_path_hash,
-@@ -2960,14 +3066,26 @@
+@@ -2884,18 +2984,24 @@
                                                            g_direct_equal,
                                                            NULL,
                                                            (GDestroyNotify)g_object_unref);
-+    fmanager->priv->launcher_icons = g_hash_table_new_full(g_direct_hash,
-+                                                           g_direct_equal,
-+                                                           NULL,
-+                                                           (GDestroyNotify)g_object_unref);
 +
++    fmanager->priv->launcher_icons = g_hash_table_new_full(thunar_vfs_path_hash,
++                                                           thunar_vfs_path_equal,
++                                                           (GDestroyNotify)thunar_vfs_path_unref,
++                                                           (GDestroyNotify)g_object_unref);
      
      if(!xfdesktop_file_utils_dbus_init())
          g_warning("Unable to initialise D-Bus.  Some xfdesktop features may be unavailable.");
@@ -412,17 +403,39 @@
 -            xfdesktop_file_icon_manager_add_special_file_icon(fmanager, i);
 +            xfdesktop_file_icon_manager_add_special_file_icon(fmanager, i, NULL);
      }
-+
-+/*
-+    ThunarVfsPath *tmp = thunar_vfs_path_new("/usr/share/applications/ristretto.desktop", NULL);
-+    xfdesktop_file_icon_manager_add_special_file_icon(fmanager, XFDESKTOP_SPECIAL_FILE_ICON_LAUNCHER, tmp);
-+    thunar_vfs_path_unref(tmp);
-+*/
-+
      if(fmanager->priv->show_removable_media)
          xfdesktop_file_icon_manager_load_removable_media(fmanager);
++    xfdesktop_file_icon_manager_set_launchers (fmanager);
      xfdesktop_file_icon_manager_load_desktop_folder(fmanager);
-@@ -3490,7 +3608,7 @@
+-    
++
+ #ifdef HAVE_THUNARX
+     thunarx_pfac = thunarx_provider_factory_get_default();
+     
+@@ -2995,6 +3101,12 @@
+                                     fmanager->priv->icon_view);
+     }
+     
++    if(fmanager->priv->launcher_icons) {
++        g_hash_table_foreach_remove(fmanager->priv->launcher_icons,
++                                    (GHRFunc)xfdesktop_remove_icons_ht,
++                                    fmanager->priv->icon_view);
++    }
++
+     if(fmanager->priv->deferred_icons) {
+         g_list_foreach(fmanager->priv->deferred_icons,
+                        (GFunc)thunar_vfs_info_unref, NULL);
+@@ -3030,6 +3142,9 @@
+     g_hash_table_destroy(fmanager->priv->icons);
+     fmanager->priv->icons = NULL;
+     
++    g_hash_table_destroy(fmanager->priv->launcher_icons);
++    fmanager->priv->launcher_icons = NULL;
++    
+     xfdesktop_file_utils_dbus_cleanup();
+     
+     g_signal_handlers_disconnect_by_func(G_OBJECT(xfdesktop_icon_view_get_window_widget(fmanager->priv->icon_view)),
+@@ -3414,7 +3529,7 @@
      if(show_special_file) {
          g_return_if_fail(!g_hash_table_lookup(manager->priv->special_icons,
                                                GINT_TO_POINTER(type)));

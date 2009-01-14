@@ -1,0 +1,116 @@
+--- a/src/xfdesktop-regular-file-icon.c
++++ b/src/xfdesktop-regular-file-icon.c
+@@ -477,6 +477,38 @@
+        return NULL;  /* FIXME: implement something here */
+     
+     if(!regular_file_icon->priv->tooltip) {
++        /*
++         * Ulteo: If the file is a desktop entry, show it's name and description.
++         * Otherwise only display the name of the file.
++         */
++        const gchar *categories[] = { "Comment" };
++        gchar *kind;
++        kind = xfdesktop_file_utils_get_file_kind (regular_file_icon->priv->info, NULL);
++
++        if (!strcmp (kind, "application/x-desktop"))
++        {
++            gchar *filename = g_strdup (
++                thunar_vfs_path_dup_string (regular_file_icon->priv->info->path));
++            XfceDesktopEntry *de = xfce_desktop_entry_new (filename, categories, 1);
++            g_free (filename);
++
++            if (!de)
++                return NULL;
++
++            gchar *comment = NULL;
++            if (xfce_desktop_entry_get_string (de, "Comment", TRUE, &comment))
++            {
++                regular_file_icon->priv->tooltip = g_strdup_printf ("%s\n%s",
++                    regular_file_icon->priv->info->display_name, comment);
++                g_free (comment);
++            }
++            g_object_unref (de);
++        } else {
++            regular_file_icon->priv->tooltip = g_strdup (regular_file_icon->priv->info->display_name);
++        }
++        g_free (kind);
++
++        /* Orig code
+         gchar mod[64], *kind, sizebuf[64], *size;
+         struct tm *tm = localtime(&regular_file_icon->priv->info->mtime);
+ 
+@@ -491,6 +523,7 @@
+         
+         g_free(kind);
+         g_free(size);
++        */
+     }
+     
+     return regular_file_icon->priv->tooltip;
+--- a/src/xfdesktop-special-file-icon.c
++++ b/src/xfdesktop-special-file-icon.c
+@@ -555,6 +555,38 @@
+     /* FIXME: implement trash stuff */
+     
+     if(!special_file_icon->priv->tooltip) {
++        /* Ulteo: use the same handling than regular icons */
++        const gchar *categories[] = { "Comment" };
++        gchar *kind;
++        kind = xfdesktop_file_utils_get_file_kind (special_file_icon->priv->info, NULL);
++
++        if (!strcmp (kind, "application/x-desktop"))
++        {
++            gchar *filename = g_strdup (
++                thunar_vfs_path_dup_string (special_file_icon->priv->info->path));
++            XfceDesktopEntry *de = xfce_desktop_entry_new (filename, categories, 1);
++            g_free (filename);
++
++            if (!de)
++                return NULL;
++
++            gchar *comment = NULL;
++            if (xfce_desktop_entry_get_string (de, "Comment", TRUE, &comment))
++            {
++                special_file_icon->priv->tooltip = g_strdup_printf ("%s\n%s",
++                    special_file_icon->priv->info->display_name, comment);
++                g_free (comment);
++            }
++            g_object_unref (de);
++        } else {
++            if(XFDESKTOP_SPECIAL_FILE_ICON_HOME == special_file_icon->priv->type)
++                special_file_icon->priv->tooltip = g_strdup (_("Home"));
++            else
++                special_file_icon->priv->tooltip = g_strdup (special_file_icon->priv->info->display_name);
++        }
++        g_free (kind);
++
++        /* Orig code
+         gchar mod[64], *kind, sizebuf[64], *size;
+         struct tm *tm = localtime(&special_file_icon->priv->info->mtime);
+ 
+@@ -569,6 +601,7 @@
+         
+         g_free(kind);
+         g_free(size);
++        */
+     }
+     
+     return special_file_icon->priv->tooltip;
+--- a/src/xfdesktop-file-utils.c
++++ b/src/xfdesktop-file-utils.c
+@@ -142,6 +142,15 @@
+                               thunar_vfs_mime_info_get_comment(info->mime_info));
+         if(is_link)
+             *is_link = TRUE;
++    } else if(!strcmp(thunar_vfs_mime_info_get_name(info->mime_info),
++                      "application/x-desktop")) {
++        /*
++         * Ulteo: this is used by our tooltips; we want to avoid translation
++         * issues with thunar_vfs_mime_info_get_comment
++         */
++        str = g_strdup ("application/x-desktop");
++        if(is_link)
++            *is_link = TRUE;
+     } else {
+         str = g_strdup(thunar_vfs_mime_info_get_comment(info->mime_info));
+         if(is_link)

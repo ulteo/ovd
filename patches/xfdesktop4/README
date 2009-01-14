@@ -3,3 +3,7 @@
 
 * 12_restricted_menu_on_desktop.patch
   use the restricted menu directory to display application icons on the menu
+
+* 14_less_scary_tooltips.patch
+  only show the file name in tooltip, or name + comment if the icon is a
+  launcher
