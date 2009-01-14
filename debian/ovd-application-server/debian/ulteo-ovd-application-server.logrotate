@@ -6,5 +6,5 @@
 	rotate 4
 	compress
 	notifempty
-	create 660 root root
+	create 660 www-data www-data
 }
