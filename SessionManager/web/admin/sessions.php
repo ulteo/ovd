@@ -69,15 +69,17 @@ if (isset($_POST['join'])) {
 	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
 
-	echo '<h2>'._('Connect to or observe this session').'</h2>';
+	if ($session->session_status() == 2) {
+		echo '<h2>'._('Connect to or observe this session').'</h2>';
+		echo '<form id="joinsession" action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
+		echo '	<input type="hidden" id="desktop_size" value="auto" />';
+		echo '	<input type="hidden" id="session_debug_true" value="0" />';
+		echo '	<input type="hidden" name="join" value="'.$session->session.'" />';
+		echo '	<input type="submit" name="passive" value="'._('Observe this session').'" />';
+		echo '	<input type="submit" name="active" value="'._('Join this session').'" />';
+		echo '</form>';
+	}
 
-	echo '<form id="joinsession" action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
-	echo '	<input type="hidden" id="desktop_size" value="auto" />';
-	echo '	<input type="hidden" id="session_debug_true" value="0" />';
-	echo '	<input type="hidden" name="join" value="'.$session->session.'" />';
-	echo '	<input type="submit" name="passive" value="'._('Observe this session').'" />';
-	echo '	<input type="submit" name="active" value="'._('Join this session').'" />';
-	echo '</form>';
 	echo '<h2>'._('Kill this session').'</h2>';
 	echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
 	echo '	<input type="hidden" name="action" value="kill" />';
