@@ -33,15 +33,20 @@ COUNTER=0
 
 LOC=`cat ${SESSID_DIR}/parameters/locale`
 GEOMETRY=`cat ${SESSID_DIR}/parameters/geometry`
-check_variables USER_LOGIN USER_HOME USER_ID LOC GEOMETRY RFB_PORT || close_session
+check_variables USER_LOGIN USER_HOME LOC GEOMETRY RFB_PORT || close_session
 
 HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
 . modules_fs.sh || close_session
 
-[ -f ${SESSID_DIR}/app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app  2>/dev/null`
-
-groupadd -g ${USER_ID} ${USER_LOGIN} 
-useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -u ${USER_ID} -g ${USER_LOGIN} ${USER_LOGIN}
+if [ -f ${SESSID_DIR}/parameters/user_id ]; then
+    export USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
+    groupadd -g ${USER_ID} ${USER_LOGIN} 
+    useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -u ${USER_ID} -g ${USER_LOGIN} ${USER_LOGIN}
+else
+    groupadd ${USER_LOGIN} 
+    useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -K UID_MIN=2000 -g ${USER_LOGIN} ${USER_LOGIN}
+    export USER_ID=$(id -u $USER_LOGIN)   
+fi
 
 # May return 1 if $HOME_DIR_TYPE doesn't exists.
 

@@ -95,7 +95,6 @@ session_check_status() {
 
     # LUCK=`cat ${SESSID_DIR}/luck` <-- not created by default
     NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
-    USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
     USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
 
     # check if a KDE desktop connexion is alive for this session
@@ -125,7 +124,7 @@ session_check_status() {
 	if [ ! -f ${SESSID_DIR}/private/timeouted  ] && [ $diff -gt -180 ] && [ $DESKTOP_SESSION -gt 0 ]; then
 	   log_INFO "Session is going to expire in 3 minutes"
 	    export i SESSID_DIR
-	    export USER_LOGIN USER_ID
+	    export USER_LOGIN 
 	    timeout.sh &
 	    touch ${SESSID_DIR}/private/timeouted 
 	fi
@@ -219,12 +218,12 @@ session_check_status() {
 	export i SESSID SESSID_DIR RFB_PORT
 	export VNC_USER
  	export NICK
-	export USER_LOGIN USER_ID USER_HOME
+	export USER_LOGIN USER_HOME
 	prestart.sh &
 	unset SESSID SESSID_DIR RFB_PORT
 	unset VNC_USER
  	unset NICK
-	unset USER_LOGIN USER_ID USER_HOME
+	unset USER_LOGIN USER_HOME
 	return
 
     elif [ $RUNASAP -eq 2 ]; then
@@ -380,7 +379,7 @@ loop() {
 	local nb_active=$(echo $active | wc -w)
 	local nb_tocreate=$(echo $tocreate | wc -w)
 	if [ $nb_active -gt 0 ] || [ $nb_tocreate -gt 0 ]; then
-            log_INFO "loop active session: ${nb_active}, to create: ${nb_tocreate}"
+            log_DEBUG "loop active session: ${nb_active}, to create: ${nb_tocreate}"
 	fi
 
 

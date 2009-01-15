@@ -74,9 +74,8 @@ session_init() {
 	rm $SPOOL/id/$i
 	return 1
     fi
-    local uid=$(( 2000 + $i ))
     log_INFO "useradd $SSH_USER with uid : $uid"
-    useradd --shell /bin/false -u $uid $SSH_USER 
+    useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
 
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
@@ -95,9 +94,8 @@ session_init() {
 	rm $SPOOL/id/$i
 	return 1
     fi
-    local uid=$(( 3000 + $i ))
     log_INFO "useradd $VNC_USER with uid : $uid"
-    useradd --shell /bin/false -u $uid -g $VNC_USER $VNC_USER
+    useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER
 
 
     UUID=`id -u $VNC_USER`
@@ -288,8 +286,12 @@ session_load() {
 
     # Parameters informations
     NICK=`cat ${SESSID_DIR}/parameters/user_displayname`  || return 1
-    USER_ID=`cat ${SESSID_DIR}/parameters/user_id` || return 1
     USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login` || return 1
+    if [ -f ${SESSID_DIR}/parameters/user_id ]; then
+	USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
+    else
+	USER_ID=`id -u $USER_LOGIN`
+    fi
 
     # Autodetection informations
     VNC_UID=`id -u $VNC_USER` || return 1
@@ -360,9 +362,8 @@ session_restore() {
 	log_ERROR "session_restore: user '$SSH_USER' already in /etc/passwd"
 	return 1
     fi
-    local uid=$(( 2000 + $i ))
 
-    useradd --shell /bin/false -u $uid $SSH_USER 
+    useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
     if [ $? -ne 0 ]; then
 	log_ERROR "session_restore: unable to useradd ssh user"
 	return 1

@@ -51,7 +51,7 @@ cifs_do_mount() {
 
     mkdir -p $CIFS_MOUNT_POINT
 
-    log_INFO "cifs: mounting $CIFS_MOUNT_POINT, share: $CIFS_HOME_BASE/$CIFS_HOME_DIR"
+    log_INFO "cifs: mounting $CIFS_MOUNT_POINT, share: $CIFS_HOME_DIR"
     retry "$mount_cmd" $MOUNT_RETRIES 2 2>> $MOUNT_LOG
     local ret=$?
     [ $ret = 0 ] || return $ret

@@ -45,6 +45,8 @@ local_do_mount() {
     if [ ! -d $LOCAL_HOME_BASE/$USER_LOGIN ]; then
 	mkdir $LOCAL_HOME_BASE/$USER_LOGIN
 	chown $USER_LOGIN:$USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
+    else
+	chown -R $USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
     fi
 #    [  $? -ne 0 ]  && return 1
     # Bind local user homedir to /home/nickname

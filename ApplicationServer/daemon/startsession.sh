@@ -62,6 +62,7 @@ su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /us
 export APP DOC
 export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC 
 export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
+[ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
 
 # Start autocutsel
 su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/autocutsel" &> $out &
