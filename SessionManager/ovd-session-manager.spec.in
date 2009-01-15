@@ -30,10 +30,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 /usr/*
-/var/log
-/var/spool
 %config /etc/*
-%defattr(2770,-,apache)
+%defattr(2770,root,apache)
 /var/log/ulteo/*
 /var/spool/ulteo/*
 

@@ -23,16 +23,20 @@ make DESTDIR=$RPM_BUILD_ROOT install
 # install the logrotate example
 mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
 install -m 0644 examples/ulteo-as.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/applicationserver
+# install the init script
+mkdir -p $RPM_BUILD_ROOT/etc/init.d
+install -m 0755 examples/ulteo-ovd.init $RPM_BUILD_ROOT/etc/init.d/ulteo-ovd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 /usr/*
-/var/log
-/var/spool
-%config /etc/*
-%defattr(2770,-,apache)
+%config /etc/logrotate.d/applicationserver
+%config /etc/ulteo/applicationserver/apache2.conf
+%defattr(0755,root,root)
+%config /etc/init.d/ulteo-ovd
+%defattr(2770,root,apache)
 /var/log/ulteo/*
 /var/spool/ulteo/*
 
