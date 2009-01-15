@@ -20,10 +20,13 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (!isset($_SERVER['HTTP_REFERER'])) {
+if (!isset($_SERVER['HTTP_REFERER']) && !isset($_GET['token'])) {
 	header('Location: '.SESSIONMANAGER_URL);
 	die();
 }
+
+if (!isset($_SERVER['HTTP_REFERER']) && isset($_GET['token']))
+	$_SERVER['HTTP_REFERER'] = SESSIONMANAGER_URL;
 
 $buf1 = @parse_url($_SERVER['HTTP_REFERER']);
 $buf2 = @parse_url(SESSIONMANAGER_URL);
