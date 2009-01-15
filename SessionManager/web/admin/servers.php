@@ -604,17 +604,19 @@ function show_manage($fqdn) {
 	echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 	echo $app->getAttribute('name').'</a>';
 	echo '</td>';
-	echo '<td>';
-	if ($remove_in_progress)
-	  echo 'remove in progress';
-	else {
-	  echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
-	  echo '<input type="hidden" name="action" value="del" />';
-	  echo '<input type="hidden" name="name" value="Application_Server" />';
-	  echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
-	  echo '<input type="hidden" name="application" value="'.$app->getAttribute('id').'" />';
-	  echo '<input type="submit" value="'._('Remove from this server').'" />';
-	  echo '</form>';
+	if ($server_online) {
+	  echo '<td>';
+	  if ($remove_in_progress)
+	    echo 'remove in progress';
+	  else {
+	    echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
+	    echo '<input type="hidden" name="action" value="del" />';
+	    echo '<input type="hidden" name="name" value="Application_Server" />';
+	    echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+	    echo '<input type="hidden" name="application" value="'.$app->getAttribute('id').'" />';
+	    echo '<input type="submit" value="'._('Remove from this server').'" />';
+	    echo '</form>';
+	  }
 	}
 
 	echo '</td>';
