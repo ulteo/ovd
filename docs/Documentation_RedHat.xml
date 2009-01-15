@@ -3,7 +3,7 @@
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Installation documentation for Ulteo Virtual Open Desktop on Red Hat systems</title>
+    <title>Installation documentation for Ulteo Open Virtual Desktop on Red Hat systems</title>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -15,7 +15,7 @@
   <section>
     <title>Prerequisites</title>
     <para>
-      At least two machines are needed to install Ulteo Virtual Open Desktop:
+      At least two machines are needed to install Ulteo Open Virtual Desktop:
     </para>
     <itemizedlist>
       <listitem>
@@ -26,15 +26,82 @@
       </listitem>
     </itemizedlist>
     <para>
-      Both servers need to be installed with Red Hat RHEL 5 32-bit or Fedora Core 9. 
-      All operations need to be done as <emphasis>superuser</emphasis> (root).
+      Both servers needs to be installed with Red Hat RHEL 5.2 32-bit, Fedora Core 9 or CentOS 5.2.
+      All operations needs to be done as <emphasis>superuser</emphasis> (root).
     </para>
+
+
+   <section>
+      <title>Installation of MySQL</title>
+      <para>
+	If you don't have any available MySQL database, you have to install MySQL on your Session Manager.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Install the <emphasis>mysql-server</emphasis> package:
+	  </para>
+          <screen>
+            <![CDATA[
+# yum install mysql mysql-server]]>
+          </screen>
+        </listitem>
+
+	<listitem>
+	  <para>
+	    To start automatically MySQL when the system boots up
+	  </para>
+	  <screen>
+	    <![CDATA[
+# chkconfig --levels 235 mysqld on]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Start the service
+	  </para>
+	  <screen>
+	    <![CDATA[
+# service mysqld start]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Define the root mysql password
+	  </para>
+	  <screen>
+	    <![CDATA[
+# mysqladmin -u root password 'mysql_root_password']]>
+	  </screen>
+	</listitem>
+
+
+        <listitem>
+          <para>Now log in mysql and create a database and an user who will have
+          rights on the databse:</para>
+
+	      <screen>
+		<![CDATA[
+# mysql -u root -p
+Enter password:
+mysql> create database sm;
+ Query OK, 1 row affected (0.02 sec)
+mysql> exit]]>
+	      </screen>
+
+        </listitem>
+      </itemizedlist>
+      <beginpage />
+    </section>
   </section>
 
   <section>
     <title>Session Manager (sm.ulteo.com)</title>
     <para>
-      The Session Manager is the main server for your <emphasis>Ulteo Virtual Open Desktop infrastructure</emphasis>.
+      The Session Manager is the main server for your <emphasis>Ulteo Open Virtual Desktop infrastructure</emphasis>.
       It will manage all your application servers through an administration web interface.
     </para>
 
@@ -42,176 +109,56 @@
     <title>Installation</title>
 
     <itemizedlist>
-      <listitem>
+     <listitem>
 	<para>
-	  Disable or adapt the SELinux support:
+	  Download the Ulteo Open Virtual Desktop rpm packages from <ulink url="http://firex.ulteo.com/~gauvain/oxylane/" />, (at this time <emphasis>ovd-session-manager-1.0~beta1.2-1.noarch.rpm</emphasis>)
 	</para>
+     </listitem>
+
+     <listitem>
+	<para>Intall the <emphasis>ovd-session-manager</emphasis> package:</para>
         <screen>
 	  <![CDATA[
-# yum remove selinux-policy]]>
+# yum install --nogpgcheck ovd-session-manager-1.0~beta1.2.1.noarch.rpm]]>
 	</screen>
       </listitem>
 
-      <listitem>
-	<para>
-	  MySQL
-
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		Install the packages:
-	      </para>
-	      <screen>
-		<![CDATA[
-# yum install mysql  mysql-server]]>
-	      </screen>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		To start automatically MySQL when the system boots up
-	      </para>
-	      <screen>
-		<![CDATA[
-# chkconfig --levels 235 mysqld on]]>
-	      </screen>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Start the service
-	      </para>
-	      <screen>
-		<![CDATA[
-# /etc/init.d/mysqld start]]>
-	      </screen>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Set the MySQL root password:
-	      </para>
-	      <screen>
-		<![CDATA[
-# mysqladmin -u root password 'mysql_root_password'
-# mysql -u root -p
-Enter password:
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 52
-Server version: 5.0.45 Source distribution
-
-Type 'help;' or '\h' for help. Type '\c' to clear the buffer.
-
-mysql> create database sm;
-Query OK, 1 row affected (0.02 sec)
-
-mysql> exit
-Bye]]>
-	      </screen>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-      </listitem>
-
-      <listitem>
-	<para>
-	  Apache and PHP
-
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		Install the packages:
-	      </para>
-	      <screen>
-		<![CDATA[
-# yum install php php-ldap php-mysql php-xml php-mbstring curl httpd]]>
-	      </screen>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		update DirectoryIndex in /etc/httpd/conf/httpd.conf : add index.php
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Start the service
-	      </para>
-	      <screen>
-		<![CDATA[
-# /etc/init.d/httpd start]]>
-	      </screen>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-      </listitem>
-
      <listitem>
-	<para>
-	  Download Ulteo Open Virtual Desktop from <ulink url="http://ulteo.com" />, uncompress it to /tmp (at this time  ovd-1.0beta1.tar.bz2)
-	</para>
-     </listitem>
-
-     <listitem>
-	<para>
-	  Install the sesionmanager into /var/www/html
-	</para>
+       <para>Launch the configuration tool</para>
        <screen>
-	  <![CDATA[
-# cp -rf /tmp/ovd-1.0beta1/ovd-web/sessionmanager /var/www/html/]]>
-	</screen>
-     </listitem>
+	 <![CDATA[
+# sm-config
+Admin login: admin
+Password: 
+Retype password: 
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php]: http://firex.ulteo.com/~gauvain/oxylane/chroot-20091501.tar.gz
+Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]: 
 
-     <listitem>
-       <para>
-	 Download the application system archive
-       </para>
-       <screen>
-	  <![CDATA[
-# wget http://www.ulteo.com/main/downloads/ulteo-ovd.php \
---output-document=/var/www/html/sessionmanager/base.tar.gz]]>
+Options:
+* chroot download:  yes
+* chroot URL:       http://firex.ulteo.com/~gauvain/oxylane/chroot-20091501.tar.gz
+* chroot directory: /usr/share/ulteo/sessionmanager/base.tar.gz
+* apache group:     apache
+* apache dir:       /etc/httpd/conf.d
+
+Is this correct? [Y/n] ]]>
        </screen>
      </listitem>
 
-     <listitem>
-       <para>Create the configuration directory</para>
-       <screen>
-	 <![CDATA[
-# mkdir -p /etc/ulteo/sessionmanager]]>
-       </screen>
-       <para>And install the default configuration file</para>
-       <screen>
-	 <![CDATA[
-# cp /var/www/html/sessionmanager/documentation/config.inc.php.default \
-/etc/ulteo/sessionmanager/config.inc.php]]>
-       </screen>
-       <para>
-	 In this file, the default value are user : 'admin' and password 'admin'.
-       </para>
-     </listitem>
-
 
      <listitem>
-       <para>Create the spool, logs directories</para>
+       <para>Configure and start apache service</para>
        <screen>
 	 <![CDATA[
-# mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager]]>
-       </screen>
-       <para>Change permissions and owners</para>
-       <screen>
-	 <![CDATA[
-# chown root:apache /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-# chmod 755 /var/spool/ulteo /var/log/ulteo
-# chmod 770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-# chmod g+s /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager]]>
+# chkconfig httpd on
+# service httpd restart]]>
        </screen>
      </listitem>
 
     </itemizedlist>
 
     <para>
-      The server is now installed but not configured yet. You have to open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser.It should display this page:
+      The server is now installed but not configured yet. You have to open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser. It should display this page:
     </para>
     <para>
       <inlinemediaobject>
@@ -231,7 +178,6 @@ Bye]]>
       <para>
 	The first step is to go to <ulink url="http://sm.ulteo.com/sessionmanager/admin" /> and autenticate yourself with the login and password you provided during the installation.
       </para>
-      <para>The password in the default config is <emphasis>admin</emphasis>.</para>
       <para>
 	<inlinemediaobject>
 	  <imageobject>
@@ -272,13 +218,13 @@ Bye]]>
 	<listitem>
 	  <para>
 	    <emphasis role="strong">Advanced settings options:</emphasis>
-	    You can allow the user to force some options. For instance, to force the application server to want to use, or to enable the debug mode.
+	    you can allow the user to force some options. For instance, to force the application server to use, or to enable the debug mode.
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
 	    <emphasis role="strong">MySQL configuration:</emphasis>
-	    you have to provide some MySQL configuration data to get the system work.
+	    you have to provide some MySQL configuration data for the system to work properly.
 	  </para>
 	</listitem>
 	<listitem>
@@ -307,7 +253,7 @@ Bye]]>
 	    </listitem>
 	    <listitem>
 	      <para>
-		<emphasis>Active Directory</emphasis>: if you want to plug the system into your Active Directoy server, select this module and provide you AD server name and domain.
+		<emphasis>Active Directory</emphasis>: if you want to plug the system into your Active Directory environment, select this module and provide you AD server name and domain.
 	      </para>
 	    </listitem>
 	  </itemizedlist>
@@ -322,17 +268,17 @@ Bye]]>
 	    <listitem>
 	      <para>
 		if you select Active Directory as UserDB, 
-		you certainly want to use the Windows share directory from your CIFS servers. In that case, select the CIFS module.
+		you certainly want to use the Windows share directory from your CIFS servers. In this case, select the CIFS module.
 	      </para>
 	    </listitem>
 	    <listitem>
 	      <para>
-		if your are using NFS servers for your users home dirs and you know how to setup the matching between the local DB and your LDAP configuration, then you can select NFS.
+		if your are using NFS servers for your users home directories and you know how to setup the matching between the local DB and your LDAP configuration, then you can select NFS.
 	      </para>
 	    </listitem>
 	    <listitem>
 	      <para>
-	      If you don't have any networked filesystem available, select local. It will store files on the application server.
+	        if you don't have any network filesystem available, select local. It will store files on the application server. (not recommended)
 	      </para>
 	    </listitem>
 	  </itemizedlist>
@@ -348,139 +294,62 @@ Bye]]>
   </section>
 
   <section>
-    <title>
-      Application Server installation (cm.ulteo.com)
-    </title>
+    <title>Application Server installation (cm.ulteo.com)</title>
 
     <itemizedlist>
-      <listitem>
-	<para>
-	  Remove the seLinux support:
-	</para>
-        <screen>
-	  <![CDATA[
-# yum remove selinux-policy]]>
-	</screen>
-      </listitem>
-
-      <listitem>
-	<para>
-	  Apache and PHP
-
-	  <itemizedlist>
-	    <listitem>
-	      <para>
-		Install the packages:
-	      </para>
-	      <screen>
-		<![CDATA[
-# yum install php php-ldap php-mysql php-xml php-mbstring curl httpd]]>
-	      </screen>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		change in /etc/httpd/conf/httpd.conf the DirectoryIndex to add index.php
-	      </para>
-	    </listitem>
-
-	    <listitem>
-	      <para>
-		Start the service
-	      </para>
-	      <screen>
-		<![CDATA[
-# /etc/init.d/httpd start]]>
-	      </screen>
-	    </listitem>
-	  </itemizedlist>
-	</para>
-      </listitem>
-
      <listitem>
-	<para>Download the from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-sources.php" />, uncompress it to /tmp (at this time  ovd-1.0beta1.tar.bz2
-)</para>
+	<para>
+	  Download the Ulteo Open Virtual Desktop rpm packages from <ulink url="http://firex.ulteo.com/~gauvain/oxylane/" />,  (at this time <emphasis>ovd-application-server-1.0~beta1.2.1.noarch.rpm</emphasis>)
+	</para>
      </listitem>
 
      <listitem>
-	<para>
-	  Install the Application Server in /var/www/html
-	</para>
+	<para>Intall the <emphasis>ovd-application-server</emphasis> package:</para>
+        <screen>
+	  <![CDATA[
+# yum install --nogpgcheck ovd-application-server-1.0~beta1.2.1.noarch.rpm]]>
+	</screen>
+     </listitem>
+
+     <listitem>
+       <para>Launch the configuration tool</para>
        <screen>
-	  <![CDATA[
-# cp -rf /tmp/ovd-1.0beta1/ovd-web/applicationserver/* /var/www/html/]]>
-	</screen>
+	 <![CDATA[
+# as-chroot-install 
+Full Qualified Domain Name [cm.ulteo.com]: cm.ulteo.com
+Session Manager URL: http://sm.ulteo.com/sessionmanager
+Chroot installation path: /opt/ulteo
+
+Options:
+* FQDN: cm.ulteo.com
+* SM URL: http://sm.ulteo.com/sessionmanager
+* chroot path: /opt/ulteo
+* chroot download: yes
+* apache group: apache
+* apache dir: /etc/httpd/conf.d
+
+Is this correct? [Y/n] ]]>
+       </screen>
      </listitem>
 
      <listitem>
-       <para>
-	 Download the application system archive and install it
-       </para>
+       <para>Configure and start apache service</para>
        <screen>
-	  <![CDATA[
-# mkdir /opt/applicationsystem
-# cd /tmp
-# wget http://sm.ulteo.com/sessionmanager/base.tar.gz
-# tar pxfz base.tar.gz -C /opt/applicationsystem/
-# rm -f  base.tar.gz]]>
-	</screen>
-	<para>
-	  Application system DNS configuration
-	</para>
-	<screen>
-	  <![CDATA[
-# cp /etc/hosts /opt/applicationsystem/etc/hosts
-# cp /etc/resolv.conf /opt/applicationsystem/etc/resolv.conf]]>
-	</screen>
+	 <![CDATA[
+# chkconfig httpd on
+# service httpd restart]]>
+       </screen>
      </listitem>
 
-<listitem>
-	<para>Create the log directory</para>
-        <screen>
-	  <![CDATA[
-# mkdir -p /var/log/ulteo/applicationserver]]>
-	</screen>
-	<para>Change permissions and owners</para>
-        <screen>
-	  <![CDATA[
-# chown root:apache /var/log/ulteo/applicationserver
-# chmod 770 /var/log/ulteo/applicationserver
-# chmod g+s /var/log/ulteo/applicationserver]]>
-	</screen>
-      </listitem>
+     <listitem>
+       <para>Configure and start Ulteo service</para>
+       <screen>
+	 <![CDATA[
+# chkconfig ulteo-ovd on
+# service ulteo-ovd restart]]>
+       </screen>
+     </listitem>
 
-      <listitem>
-	<para>Install the configuration file</para>
-        <screen>
-	  <![CDATA[
-# echo "CHROOT=/opt/applicationsystem" > /etc/ulteo-ovd.conf
-# echo "LOG_WWW=/var/log/ulteo/applicationserver" >> /etc/ulteo-ovd.conf]]>
-	</screen>
-      </listitem>
-
-      <listitem>
-	<para>Setup the configuration file inside the chroot : <emphasis>/opt/applicationsystem/etc/ulteo-ovd.conf</emphasis></para>
-	<para>Specify SERVERNAME et SESSION_MANAGER_URL</para>
-      </listitem>
-
-<listitem>
-	<para>Change the apache and www-group</para>
-	<para>In <emphasis>/opt/applicationsystem/etc/group</emphasis> change the group of www-data, from 33 (debian's www-data group) to 48 (redhat's apache group)</para>
-	<para>Change the owner on spool directory</para>
-        <screen>
-	  <![CDATA[
-# mkdir /opt/applicationsystem/var/spool/ulteo-ovd
-# chgrp -R apache  /opt/applicationsystem/var/spool/ulteo-ovd]]>
-	</screen>
-      </listitem>
-
-      <listitem>
-	<para>Restart the service</para>
-	<screen>
-	  <![CDATA[
-# chroot /opt/applicationsystem /etc/init.d/ulteo-ovdd restart]]>
-	</screen>
-      </listitem>
     </itemizedlist>
 
     <beginpage />
@@ -490,12 +359,12 @@ Bye]]>
   <section>
     <title>Register the server and perform a "Publication"</title>
     <para>
-      An Application server has been installed and is now ready. First, we have to register it, and switch from "maintenance" to "production" mode.
+      An Application server has been installed and is now ready. First, we have to register it, and switch it from "maintenance" to "production" mode.
 
     <itemizedlist>
       <listitem>
 	<para>
-	  You should see your server showing up as "unregistered" in the server page:
+	  You should see your server as "unregistered" in the server page:
 	</para>
 
 	<screenshot>
@@ -508,7 +377,7 @@ Bye]]>
 	<para>
 	  If you want to use this server on your network, 
 	  you have to click on <emphasis>register</emphasis>
-	  to switch your server to maintenance mode.
+	  to accept the server in your environment and switch it to maintenance mode.
 	</para>
       </listitem>
       <listitem>
@@ -518,7 +387,7 @@ Bye]]>
     </para>
 
     <para>
-      The next step is to perform a "publication" to authorize a group of users to use a group of applications.
+      The next step is to perform a "publication" to authorize a usergroup to use applications.
     <screenshot>
       <screeninfo>Session manager - publication page</screeninfo>
       <graphic fileref="img/sm_admin_publication.png"></graphic>
