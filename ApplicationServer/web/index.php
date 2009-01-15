@@ -20,8 +20,15 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (!isset($_GET['token']) || $_GET['token'] == '')
+if (!isset($_SERVER['HTTP_REFERER']))
 	header('Location: '.SESSIONMANAGER_URL);
+
+$buf1 = @parse_url($_SERVER['HTTP_REFERER']);
+$buf2 = @parse_url(SESSIONMANAGER_URL);
+$sessionmanager_url = $buf1['scheme'].'://'.$buf1['host'].$buf2['path'];
+
+if (!isset($_GET['token']) || $_GET['token'] == '')
+	header('Location: '.$sessionmanager_url);
 $token = $_GET['token'];
 
 if (!isset($_SESSION['current_token']) || $_SESSION['current_token'] != $token) {
@@ -29,6 +36,8 @@ if (!isset($_SESSION['current_token']) || $_SESSION['current_token'] != $token) 
 	session_start();
 }
 $_SESSION['current_token'] = $token;
+
+$_SESSION['sessionmanager_url'] = $sessionmanager_url;
 
 $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVERNAME.'&token='.$token);
 

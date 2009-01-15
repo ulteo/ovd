@@ -69,7 +69,7 @@ if (isset($_REQUEST['html'])) {
 <applet width="<?php echo $_SESSION['width']; ?>" height="<?php echo $_SESSION['height']; ?>">
 	<param name="name" value="ulteoapplet" />
 	<param name="code" value="org.vnc.VncViewer" />
-	<param name="codebase" value="<?php echo SESSIONMANAGER_URL; ?>/applet/" />
+	<param name="codebase" value="<?php echo $_SESSION['sessionmanager_url']; ?>/applet/" />
 	<param name="archive" value="ulteo-applet-0.2.3f.jar" />
 	<param name="cache_archive" value="ulteo-applet-0.2.3f.jar" />
 	<param name="cache_archive_ex" value="ulteo-applet-0.2.3f.jar;preload" />
