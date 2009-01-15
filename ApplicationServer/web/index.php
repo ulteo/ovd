@@ -57,7 +57,7 @@ if ($_SESSION['mode'] == 'start' || $_SESSION['mode'] == 'resume')
 	$_SESSION['owner'] = true;
 
 $_SESSION['parameters'] = array();
-$settings = array('user_id', 'user_login', 'user_displayname', 'locale', 'quality');
+$settings = array('user_login', 'user_displayname', 'locale', 'quality');//'user_id',
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
 

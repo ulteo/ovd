@@ -5,7 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -27,6 +27,7 @@ class FS_nfs extends Plugin {
 
 		$this->redir_args = array(
 			'module_fs' => array(
+				'user_id'			=>	$user->getAttribute('fileserver_uid'),
 				'fileserver_uid'	=>	$user->getAttribute('fileserver_uid'),
 				'user_fileserver'	=>	$user->getAttribute('fileserver'),
 				'user_homedir'		=>	$user->getAttribute('homedir'),
@@ -40,11 +41,11 @@ class FS_nfs extends Plugin {
 		$req['UserDB'] = array('fileserver_uid', 'fileserver', 'homedir');
 		return $req;
 	}
-	
+
 	public function prettyName() {
 		return _('Network File System (NFS)');
 	}
-	
+
 	public static function enable() {
 		return false;
 	}

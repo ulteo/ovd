@@ -158,7 +158,7 @@ if (is_null($fs))
 $module_fs = $fs;
 
 $default_args = array(
-	'user_id'			=>	$user->getAttribute('uid'),
+// 	'user_id'			=>	$user->getAttribute('uid'),
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	$desktop_locale,
