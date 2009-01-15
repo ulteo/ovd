@@ -20,8 +20,10 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (!isset($_SERVER['HTTP_REFERER']))
+if (!isset($_SERVER['HTTP_REFERER'])) {
 	header('Location: '.SESSIONMANAGER_URL);
+	die();
+}
 
 $buf1 = @parse_url($_SERVER['HTTP_REFERER']);
 $buf2 = @parse_url(SESSIONMANAGER_URL);
@@ -134,7 +136,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 			<a href="javascript:;" onclick="clicMenu('menuShare')"><img src="media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" /></a>
 			<div id="menuShare" style="display: none;">
 				<div id="menuShareClose"><a href="javascript:;" onclick="clicMenu('menuShare')"><img style="margin-right: 10px;" src="media/image/close.png" width="16" height="16" alt="" title="" /></a></div>
-				<iframe id="menuShareFrame" src="<?php echo SESSIONMANAGER_URL; ?>/invite.php?server=<?php echo $_SERVER['SERVER_NAME']; ?>&session=<?php echo $_SESSION['session']; ?>" frameborder="0"></iframe>
+				<iframe id="menuShareFrame" src="<?php echo $sessionmanager_url; ?>/invite.php?server=<?php echo $_SERVER['SERVER_NAME']; ?>&session=<?php echo $_SESSION['session']; ?>" frameborder="0"></iframe>
 			</div>
 		</div>
 <?php
