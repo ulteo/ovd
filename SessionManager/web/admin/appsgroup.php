@@ -192,7 +192,7 @@ function show_manage($id) {
 
   echo '<div>';
   echo '<h2>'._('Settings').'</h2>';
-  echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group ?').'\');">';
+  echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
   echo '<input type="submit" value="'._('Delete this group').'"/>';
   echo '<input type="hidden" name="action" value="del" />';
   echo '<input type="hidden" name="id" value="'.$id.'" />';
@@ -228,7 +228,7 @@ function show_manage($id) {
 	echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
 	echo '</td>';
 	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application ?').'\');">';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
 	echo '<input type="hidden" name="group" value="'.$id.'" />';
@@ -270,7 +270,7 @@ function show_manage($id) {
       echo '<td><a href="servers.php?action=manage&id='.$server->fqdn.'">'.$server->fqdn.'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group from this server ?').'\');">';
+      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group from this server?').'\');">';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="name" value="ApplicationGroup_Server" />';
       echo '<input type="hidden" name="group" value="'.$id.'" />';
@@ -304,7 +304,7 @@ function show_manage($id) {
   // Publication part
   if (count($groups_users_all) > 0) {
     echo '<div>';
-    echo '<h2>'._('List of publications with this group').'</h1>';
+    echo '<h2>'._('List of publications for this group').'</h1>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     if (count($groups_users) > 0) {
@@ -312,7 +312,7 @@ function show_manage($id) {
 	echo '<tr>';
 	echo '<td><a href="usersgroup.php?action=manage&id='.$group_users->id.'">'.$group_users->name.'</td>';
 	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication ?').'\');">';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Publication" />';
 	echo '<input type="hidden" name="group_a" value="'.$id.'" />';
@@ -358,7 +358,7 @@ function show_default() {
   if (! $has_group)
     echo _('No application groups available').'<br />';
   else {
-    echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups ?').'\');">';
+    echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
     echo '<input type="hidden" name="action" value="del" />';
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
@@ -388,7 +388,7 @@ function show_default() {
       echo '<input type="hidden" name="id" value="'.$group->id.'" />';
       echo '</form></td>';
 
-      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group ?').'\');">';
+      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
       echo '<input type="submit" value="'._('Delete').'"/>';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="id" value="'.$group->id.'" />';

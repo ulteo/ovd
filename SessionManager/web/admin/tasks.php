@@ -107,7 +107,7 @@ function show_default($tm) {
   echo '<div id="tasks_div">';
   echo '<h1>'._('Tasks').'</h1>';
   echo '<div id="tasks_list_div">';
-  echo '<h2>'._('List of Tasks').'</h2>';
+  echo '<h2>'._('List of tasks').'</h2>';
 
     echo '<table class="main_sub sortable" id="tasks_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
@@ -142,9 +142,9 @@ function show_default($tm) {
     echo '</div>';
     echo '</div>';
 
-    echo '<h2>'._('Install a package from line').'</h2>';
+    echo '<h2>'._('Install a package from command line').'</h2>';
     if (count($servers)==0)
-	    echo _('No available servers');
+	    echo _('No available server');
     else {
     	echo '<form action="" method="post">';
     	echo '<select name="server">';

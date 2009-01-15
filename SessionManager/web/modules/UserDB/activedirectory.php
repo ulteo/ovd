@@ -138,13 +138,13 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public function configuration(){
 		$ret = array();
-		$c = new config_element('host', _('Server host address'), _('The address of your AD.'), _('The address of your AD.'), NULL, NULL, 1);
+		$c = new config_element('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory.'), NULL, NULL, 1);
 		$ret []= $c;
-		$c = new config_element('domain', _('Domain name'), _('Domain name use by AD'), _('Domain name use by AD'), NULL, NULL, 1);
+		$c = new config_element('domain', _('Domain name'), _('Domain name used by Active Directory'), _('Domain name used by Active Directory'), NULL, NULL, 1);
 		$ret []= $c;
-		$c = new config_element('login', _('Administrator DN'), _('The user login that must be used to access the database (to list users account).'), _('The user login that must be used to access the database (to list users account).'), NULL, NULL, 1);
+		$c = new config_element('login', _('Administrator DN'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), NULL, NULL, 1);
 		$ret []= $c;
-		$c = new config_element('password', _('Administrator password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'), NULL, NULL, 7);
+		$c = new config_element('password', _('Administrator password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), NULL, NULL, 7);
 		$ret []= $c;
 		$c = new config_element('ou', _('User branch DN'), _('User branch DN'), _('User branch DN'), 'cn=Users', NULL, 1);
 		$ret []= $c;

@@ -159,7 +159,7 @@ function show_manage($login, $userDB) {
     echo '<h2>'._('Settings').'</h1>';
 
     echo '<div>';
-    echo '<form action="" onsubmit="return confirm(\''._('Are you sure you want to delete this user ?').'\');">';
+    echo '<form action="" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
     echo '<input type="submit" value="'._('Delete this user').'"/>';
     echo '<input type="hidden" name="action" value="del" />';
     echo '<input type="hidden" name="id" value="'.$login.'" />';
@@ -220,14 +220,14 @@ function show_manage($login, $userDB) {
   // User groups part
   if (count($groups_all)>0) {
     echo '<div>';
-    echo '<h2>'._('User groups with this user').'</h1>';
+    echo '<h2>'._('Users groups with this user').'</h1>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     foreach ($groups_mine as $group) {
       echo '<tr><td>';
       echo '<a href="usersgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
       echo '</td>';
-      echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group ?').'\');">';
+      echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="group" value="'.$group->id.'" />';
@@ -283,12 +283,12 @@ function show_default($userDB) {
 
   echo '<div id="users_div">';
   echo '<h1>'._('Users').'</h1>';
-  echo '<a href="usersgroup.php">'._('User groups management').'</a>';
+  echo '<a href="usersgroup.php">'._('Users groups management').'</a>';
   echo '<div id="users_list_div">';
-  echo '<h2>'._('List of Users').'</h2>';
+  echo '<h2>'._('List of users').'</h2>';
 
   if ($users_list_empty)
-    echo _('No available users').'<br />';
+    echo _('No available user').'<br />';
   else {
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
@@ -328,7 +328,7 @@ function show_default($userDB) {
       echo '</form></td>';
 
       if ($userdb_rw) {
-	echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user ?').'\');">';
+	echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 	echo '<input type="submit" value="'._('Delete').'"/>';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';

@@ -205,7 +205,7 @@ function show_manage($id, $applicationDB) {
 	echo 'remove in progress';
       }
       elseif ($server->isOnline()) {
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application from this server ?').'\');">';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application from this server?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_Server" />';
 	echo '<input type="hidden" name="application" value="'.$id.'" />';
@@ -285,7 +285,7 @@ function show_manage($id, $applicationDB) {
       echo '<td>';
       echo '<a href="appsgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
       echo '</td>';
-      echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application from this group ?').'\');">';
+      echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application from this group?').'\');">';
       echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="element" value="'.$id.'" />';
@@ -333,7 +333,7 @@ function show_default($applicationDB) {
   echo '<h2>'._('List of applications').'</h2>';
 
   if ($is_empty)
-    echo _('No available applications').'<br />';
+    echo _('No available application').'<br />';
   else {
     echo '<div id="apps_list">';
 //     echo '<form action="applications.php" method="get">';

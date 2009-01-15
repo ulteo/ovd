@@ -68,7 +68,7 @@ if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['passwor
 
 		if (isset($already_online) && $already_online == 1) {
 			return_error();
-			die(_('You already have a session active'));
+			die(_('You already have an active session'));
 		}
 
 		//Logger::info('main', 'Login : ('.$row['id'].')'.$row['login']);

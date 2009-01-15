@@ -167,7 +167,7 @@ function show_manage($id) {
 
   include_once('header.php');
   echo '<div id="users_div">';
-  echo '<h1><a href="?">'._('User groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('Users groups management').'</a> - '.$group->name.'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';
@@ -183,7 +183,7 @@ function show_manage($id) {
 
   echo '<div>';
   echo '<h2>'._('Settings').'</h1>';
-  echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group ?').'\');">';
+  echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
   echo '<input type="submit" value="'._('Delete this group').'"/>';
   echo '<input type="hidden" name="action" value="del" />';
   echo '<input type="hidden" name="id" value="'.$id.'" />';
@@ -217,7 +217,7 @@ function show_manage($id) {
 	echo '<tr>';
 	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
 	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user ?').'\');">';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="User_UserGroup" />';
 	echo '<input type="hidden" name="group" value="'.$id.'" />';
@@ -250,7 +250,7 @@ function show_manage($id) {
   // Publications part
   if (count($groups_apps_all)>0) {
     echo '<div>';
-    echo '<h2>'._('List of publications with this group').'</h1>';
+    echo '<h2>'._('List of publications for this group').'</h1>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     if (count($groups_apps)>0) {
@@ -258,7 +258,7 @@ function show_manage($id) {
 	echo '<tr>';
 	echo '<td><a href="appsgroup.php?action=manage&id='.$groups_app->id.'">'.$groups_app->name.'</td>';
 	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication ?').'\');">';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Publication" />';
 	echo '<input type="hidden" name="group_u" value="'.$id.'" />';
@@ -296,15 +296,15 @@ function show_default() {
 
   include_once('header.php');
   echo '<div id="usersgroup_div" >';
-  echo '<h1>'._('User groups management').'</h1>';
+  echo '<h1>'._('Users groups management').'</h1>';
 
   echo '<div id="usersgroup_list">';
-  echo '<h2>'._('User groups list').'</h2>';
+  echo '<h2>'._('Users groups list').'</h2>';
 
   if (! $has_group)
-    echo _('No user groups available').'<br />';
+    echo _('No users group available').'<br />';
   else {
-    echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups ?').'\');">';
+    echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
     echo '<input type="hidden" name="action" value="del" />';
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
@@ -334,7 +334,7 @@ function show_default() {
       echo '<input type="hidden" name="id" value="'.$group->id.'" />';
       echo '</form></td>';
 
-      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group ?').'\');">';
+      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
       echo '<input type="submit" value="'._('Delete').'"/>';
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="id" value="'.$group->id.'" />';

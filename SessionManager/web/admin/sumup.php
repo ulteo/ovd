@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-echo'<h2>'._('List of user application').'</h2>';
+echo'<h2>'._('List of user applications').'</h2>';
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -40,7 +40,7 @@ else{
 	if (count($us) > 0){
 		echo '<table border="2">';
 		echo '<tr>';
-		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this user group').'</th><th>'._('in this app group').'</th><th>'._('access to this applications').'</th><th>'._('Desktop File').'</th><th>'._('Server available').'</th>';
+		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this users group').'</th><th>'._('in this applications group').'</th><th>'._('access to these applications').'</th><th>'._('Desktop File').'</th><th>'._('Server available').'</th>';
 		echo '</tr>';
 
 		foreach($us as $u){
@@ -112,11 +112,11 @@ echo '<h2>List of server</h2>';
 
 $servs_all = Servers::getAll();
 if (is_null($servs_all)){
-	echo _('No servers available').'<br />';
+	echo _('No server available').'<br />';
 }
 else{
 	if (count($servs_all)==0){
-		echo _('No servers available').'<br />';
+		echo _('No server available').'<br />';
 	}
 	else {
 		?>

@@ -64,7 +64,7 @@ function show_default() {
 
   if (! $has_publish) {
     $content = 'content'.(($count++%2==0)?1:2);
-    echo '<tr class="'.$content.'"><td colspan="3">'._('No publications').'</td></tr>';
+    echo '<tr class="'.$content.'"><td colspan="3">'._('No publication').'</td></tr>';
   } else {
     foreach($publications as $publication){
       $content = 'content'.(($count++%2==0)?1:2);
@@ -75,7 +75,7 @@ function show_default() {
       echo '<td><a href="usersgroup.php?action=manage&id='.$group_u->id.'">'.$group_u->name.'</a></td>';
       echo '<td><a href="appsgroup.php?action=manage&id='.$group_a->id.'">'.$group_a->name.'</a></td>';
 
-      echo '<td><form action="actions.php" metthod="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication ?').'\');">';
+      echo '<td><form action="actions.php" metthod="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
 
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="name" value="Publication" />';
@@ -92,7 +92,7 @@ function show_default() {
   echo '<tr class="'.$content.'">';
 
   if (count($groups_users) == 0)
-    echo '<td colspan="3">'._('No available user groups to use').'</td>';
+    echo '<td colspan="3">'._('No available users group to use').'</td>';
   elseif (count($groups_apps) == 0)
     echo '<td colspan="3">'._('No available application groups to use').'</td>';
   else {

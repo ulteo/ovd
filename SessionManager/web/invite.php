@@ -76,9 +76,9 @@ html,body {
 
 	<?php
 	if (isset($_GET['error']))
-		echo '<p class="msg_error centered">'._('An error occured with your invitation, please try again !').'</p>';
+		echo '<p class="msg_error centered">'._('An error occured with your invitation, please try again!').'</p>';
 	elseif (isset($_GET['invited']))
-		echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent !').'</p>';
+		echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent!').'</p>';
 	?>
 
 	<?php

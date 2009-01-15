@@ -317,7 +317,7 @@ function show_default() {
         echo display_loadbar($s->getCpuUsage());
         echo _('RAM usage').': '.$s->getRamUsage().'<br />';
         echo display_loadbar($s->getRamUsage());
-        echo _('Session usage').': '.$buf.'%<br />';
+        echo _('Sessions usage').': '.$buf.'%<br />';
         echo display_loadbar($buf);
       }
       echo '</td>';
@@ -381,9 +381,9 @@ function show_manage($fqdn) {
 
   $buf_status = $server->getAttribute('status');
   if ($buf_status == 'down')
-    $status_error_msg = _('Warning: Server is offline');
+    $status_error_msg = _('Warning: server is offline');
   elseif ($buf_status == 'broken')
-    $status_error_msg = _('Warning: Server is broken');
+    $status_error_msg = _('Warning: server is broken');
 
   $server_lock = $server->hasAttribute('locked');
 
@@ -515,7 +515,7 @@ function show_manage($fqdn) {
         echo display_loadbar($server->getCpuUsage());
         echo _('RAM usage').': '.$server->getRamUsage().'<br />';
         echo display_loadbar($server->getRamUsage());
-        echo _('Session usage').': '.$buf.'%<br />';
+        echo _('Sessions usage').': '.$buf.'%<br />';
         echo display_loadbar($buf);
     echo '</td>';
   }
@@ -534,7 +534,7 @@ function show_manage($fqdn) {
   echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
   echo '<input type="hidden" name="action" value="available_sessions" />';
 
-  echo _('Number of available session of this server').': ';
+  echo _('Number of available sessions on this server').': ';
   echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
   echo '<input type="text" id="number" name="nb_sessions" value="'.$server->getNbAvailableSessions().'" size="3" onchange="field_check_integer(this);" />';
   echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
@@ -566,7 +566,7 @@ function show_manage($fqdn) {
 
 
   if ($server_lock || !$server_online) {
-    echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server ?').'\');">';
+    echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
     echo '<input type="hidden" name="action" value="delete" />';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
     echo '<input type="submit" value="'._('delete').'" />';
@@ -608,7 +608,7 @@ function show_manage($fqdn) {
 	if ($remove_in_progress)
 	  echo 'remove in progress';
 	else {
-	  echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server ?').'\');">';
+	  echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
 	  echo '<input type="hidden" name="action" value="del" />';
 	  echo '<input type="hidden" name="name" value="Application_Server" />';
 	  echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';

@@ -30,7 +30,7 @@ if (isset($_POST['from'])) {
 			$_SESSION['wizard']['use_users'] = 'usergroups';
 
 			if (!isset($_POST['usergroups']) || !is_array($_POST['usergroups']))
-				show_step1(_('No usergroup selected'));
+				show_step1(_('No users group selected'));
 			else {
 				$_SESSION['wizard']['usergroups'] = $_POST['usergroups'];
 				show_step3();
@@ -75,7 +75,7 @@ if (isset($_POST['from'])) {
 		} elseif (isset($_POST['submit_next'])) {
 			if ($_SESSION['wizard']['use_apps'] == 'appgroups')
 				if (!isset($_POST['appgroups']) || !is_array($_POST['appgroups']))
-					show_step3(_('No application group selected'));
+					show_step3(_('No applications group selected'));
 				else {
 					$_SESSION['wizard']['appgroups'] = $_POST['appgroups'];
 					show_step5();
@@ -159,13 +159,13 @@ function show_step1($error_=NULL) {
   $applications = $applicationDB->getList();
 
   if (!count($users))
-    show_error(_('No available users'));
+    show_error(_('No available user'));
   if (!count($applications))
-    show_error(_('No available applications'));
+    show_error(_('No available application'));
 
   include_once('header.php');
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Users/group selection').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Users/groups selection').'</h1>';
 
   if ($error_ != NULL)
     echo '<span class="msg_error">'.$error_.'</span>';
@@ -311,7 +311,7 @@ function show_step3($error_=NULL) {
 
   include_once('header.php');
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/group selection').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/groups selection').'</h1>';
 
   if ($error_ != NULL)
     echo '<span class="msg_error">'.$error_.'</span>';
@@ -445,7 +445,7 @@ function show_step5() {
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Confirmation').'</h1>';
 
-  echo '<p>'._('Are you sure that you want to create this publication ?').'</p>';
+  echo '<p>'._('Are you sure that you want to create this publication?').'</p>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step5" />';

@@ -48,7 +48,7 @@ class Preferences_admin extends Preferences {
 		$this->elements = array();
 
 		$this->addPrettyName('general',_('General configuration'));
-		$c = new config_element('main_title', _('Heading title'), _('You can customize the Heading/title here.'), _('You can customize the Heading/title here.'), DEFAULT_PAGE_TITLE, NULL, 1);
+		$c = new config_element('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, 1);
 		$this->add($c,'general');
 
 		$c = new config_element('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,1);
@@ -82,7 +82,7 @@ class Preferences_admin extends Preferences {
         }
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
-		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);
+		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);
 		$this->add($c,'general','mysql');
 		$c = new config_element('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,1);
 		$this->add($c,'general','mysql');
@@ -141,7 +141,7 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new config_element('launch_without_apps', _('User can launch a session with no applications'), _('User can launch a session with no applications'), _('User can launch a session with no applications'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new config_element('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0, array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general','session_settings_defaults');
 
 		# Sessions can be shared ? yes/no
@@ -154,7 +154,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
-		$c = new config_element('show_list_users', _('Display user list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
+		$c = new config_element('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
 		$this->add($c,'general','web_interface_settings');
 		$c = new config_element('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general','web_interface_settings');

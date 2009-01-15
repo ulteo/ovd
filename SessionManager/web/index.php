@@ -253,7 +253,7 @@ require_once('header.php');
 
 									<div id="launch_buttons">
 										<input type="submit" id="launch_button" value="<?php echo _('Log in'); ?>" />
-										<input type="button" id="lock_button" value="<?php echo _('YOU ALREADY HAVE A SESSION ACTIVE'); ?>" />
+										<input type="button" id="lock_button" value="<?php echo _('YOU ALREADY HAVE AN ACTIVE SESSION'); ?>" />
 										<input type="submit" id="warn_button" value="<?php echo _('WARNING, START ANYWAY'); ?>" />
 										<input type="button" id="failed_button" value="<?php echo _('ERROR'); ?>" />
 										<input type="button" id="started_button" value="<?php echo _('SESSION IS STARTED'); ?>" />

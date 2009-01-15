@@ -156,11 +156,11 @@ class UserDB_ldap {
 		$ret = array();
 		$c = new config_element('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com', NULL, 1);
 		$ret []= $c;
-		$c = new config_element('port', _('Server port'), _('The port use by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,1);
+		$c = new config_element('port', _('Server port'), _('The port used by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,1);
 		$ret []= $c;
-		$c = new config_element('login', _('User login'), _('The user login that must be used to access the database (to list users account).'), _('The user login that must be used to access the database (to list users account).'),'',NULL,1);
+		$c = new config_element('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,1);
 		$ret []= $c;
-		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users account).'), _('The user password that must be used to access the database (to list users account).'),'',NULL,1);
+		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,1);
 		$ret []= $c;
 		$c = new config_element('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com',NULL,1);
 		$ret []= $c;
