@@ -1,2 +1,3 @@
 Depends:
 	php5-curl
+	php5-pear
