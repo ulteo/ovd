@@ -211,6 +211,7 @@ ln -sf $ALIASFILE $APACHE_DIR/application-server.conf
 # set cups
 if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
     chgrp -R $APACHE_GROUP $CHROOT_PATH/var/spool/cups2all
+    chroot $CHROOT_PATH chown -R lp /var/spool/cups2all
     chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
 fi
 
