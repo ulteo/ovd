@@ -19,3 +19,5 @@ clean-local:
 	rm -f ovd-application-server.spec
 
 EXTRA_DIST = ovd-application-server.spec.in
+
+.PHONY: ovd-application-server.spec

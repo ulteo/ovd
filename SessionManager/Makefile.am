@@ -11,3 +11,5 @@ clean-local:
 	rm -f ovd-session-manager.spec
 
 EXTRA_DIST = ovd-session-manager.spec.in
+
+.PHONY: ovd-session-manager.spec
