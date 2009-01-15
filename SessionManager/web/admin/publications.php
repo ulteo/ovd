@@ -94,7 +94,7 @@ function show_default() {
   if (count($groups_users) == 0)
     echo '<td colspan="3">'._('No available users group to use').'</td>';
   elseif (count($groups_apps) == 0)
-    echo '<td colspan="3">'._('No available application groups to use').'</td>';
+    echo '<td colspan="3">'._('No available applications group to use').'</td>';
   else {
     echo '<form action="actions.php" method="post">';
     echo '<input type="hidden" name="action" value="add" />';

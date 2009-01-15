@@ -17,7 +17,7 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-15 05:32+0100\n"
+"POT-Creation-Date: 2009-01-15 06:45+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -32,9 +32,8 @@ msgid "There was an error with your authentication"
 msgstr "Authentification échouée"
 
 #: ../web/ajax/login.php:32 ../web/index.php:62
-#, fuzzy
 msgid "get Preferences failed"
-msgstr "Préférences non chargées"
+msgstr "Récupérations des préférences échouée"
 
 #: ../web/ajax/login.php:38 ../web/header.php:30 ../web/login.php:32
 #: ../web/admin/ajax.php:45 ../web/admin/ajax.php:63 ../web/admin/sumup.php:30
@@ -43,8 +42,8 @@ msgstr "Préférences non chargées"
 msgid "Module UserDB must be enabled"
 msgstr "Le module UserDB doit être activé"
 
-#: ../web/ajax/login.php:71 ../web/startsession.php:103
-msgid "You already have a session active"
+#: ../web/ajax/login.php:71
+msgid "You already have an active session"
 msgstr "Vous avez déjà une session active"
 
 #: ../web/ajax/login.php:77
@@ -76,7 +75,7 @@ msgid "Invite the following people to share this session"
 msgstr "Inviter des personnes à partager cette session"
 
 #: ../web/invite.php:79
-msgid "An error occured with your invitation, please try again !"
+msgid "An error occured with your invitation, please try again!"
 msgstr ""
 
 #: ../web/invite.php:81
@@ -84,9 +83,8 @@ msgid "Your invitation to "
 msgstr "Votre invitation à"
 
 #: ../web/invite.php:98
-#, fuzzy
 msgid "No invitation sent for the moment"
-msgstr "Votre invitation à"
+msgstr "Aucune invitation envoyée pour le moment"
 
 #: ../web/invite.php:109
 msgid "Email address"
@@ -151,6 +149,10 @@ msgid "Server port"
 msgstr "Port du serveur"
 
 #: ../web/modules/UserDB/ldap.php:159
+msgid "The port used by your LDAP server."
+msgstr "Le port utilisé par votre serveur LDAP."
+
+#: ../web/modules/UserDB/ldap.php:159
 msgid "The port use by your LDAP server."
 msgstr "Le port utilisé par votre serveur LDAP."
 
@@ -162,7 +164,7 @@ msgstr "Identifiant utilisateur"
 #: ../web/modules/UserDB/activedirectory.php:145
 msgid ""
 "The user login that must be used to access the database (to list users "
-"account)."
+"accounts)."
 msgstr ""
 "L'identifiant utilisateur qui doit être utilisé pour accéder à la base "
 "(permettant de lister les comptes utilisateurs)."
@@ -175,7 +177,7 @@ msgstr "Mot de passe utilisateur"
 #: ../web/modules/UserDB/activedirectory.php:147
 msgid ""
 "The user password that must be used to access the database (to list users "
-"account)."
+"accounts)."
 msgstr ""
 "Le mot de passe qui doit être utilisé pour accéder à la base (afin de lister "
 "les comptes utilisateurs)."
@@ -197,30 +199,28 @@ msgid "MySQL"
 msgstr "MySQL"
 
 #: ../web/modules/UserDB/activedirectory.php:141
-msgid "The address of your AD."
-msgstr "L'adresse de votre serveur Active Directory"
+msgid "The address of your Active Directory server."
+msgstr "L'adresse de votre serveur Active Directory."
 
 #: ../web/modules/UserDB/activedirectory.php:143
 msgid "Domain name"
 msgstr "Nom de domaine"
 
 #: ../web/modules/UserDB/activedirectory.php:143
-msgid "Domain name use by AD"
+msgid "Domain name used by Active Directory"
 msgstr "Nom de domaine utilisé par Active Directory"
 
 #: ../web/modules/UserDB/activedirectory.php:145
-#, fuzzy
 msgid "Administrator DN"
-msgstr "Administration"
+msgstr "DN de l'administrateur"
 
 #: ../web/modules/UserDB/activedirectory.php:147
-#, fuzzy
 msgid "Administrator password"
-msgstr "Administration"
+msgstr "Mot de passe de l'administrateur"
 
 #: ../web/modules/UserDB/activedirectory.php:149
 msgid "User branch DN"
-msgstr ""
+msgstr "DN de la branche utilisateurs"
 
 #: ../web/modules/UserDB/activedirectory.php:182
 msgid "Active Directory"
@@ -286,7 +286,7 @@ msgstr "Paramètres"
 
 #: ../web/admin/appsgroup.php:195 ../web/admin/appsgroup.php:391
 #: ../web/admin/usersgroup.php:186 ../web/admin/usersgroup.php:337
-msgid "Are you sure you want to delete this group ?"
+msgid "Are you sure you want to delete this group?"
 msgstr "Etes-vous certain de vouloir supprimer ce groupe ?"
 
 #: ../web/admin/appsgroup.php:196 ../web/admin/usersgroup.php:187
@@ -302,7 +302,7 @@ msgid "List of applications in this group"
 msgstr "Liste des applications de ce groupe"
 
 #: ../web/admin/appsgroup.php:231
-msgid "Are you sure you want to delete this application ?"
+msgid "Are you sure you want to delete this application?"
 msgstr "Etes-vous certain de vouloir supprimer cette application ?"
 
 #: ../web/admin/appsgroup.php:236 ../web/admin/applications.php:293
@@ -316,12 +316,12 @@ msgid "Add to this group"
 msgstr "Ajouter à ce groupe"
 
 #: ../web/admin/appsgroup.php:307 ../web/admin/usersgroup.php:253
-msgid "List of publications with this group"
+msgid "List of publications for this group"
 msgstr "Liste des publications de ce groupe"
 
 #: ../web/admin/appsgroup.php:315 ../web/admin/publications.php:78
 #: ../web/admin/usersgroup.php:261
-msgid "Are you sure you want to delete this publication ?"
+msgid "Are you sure you want to delete this publication?"
 msgstr "Etes-vous certain de vouloir supprimer cette publication ?"
 
 #: ../web/admin/appsgroup.php:320 ../web/admin/usersgroup.php:266
@@ -341,7 +341,7 @@ msgid "No application groups available"
 msgstr "Pas d'applications disponibles"
 
 #: ../web/admin/appsgroup.php:361 ../web/admin/usersgroup.php:307
-msgid "Are you sure you want to delete these groups ?"
+msgid "Are you sure you want to delete these groups?"
 msgstr "Etes-vous certain de vouloir supprimer ces groupes ?"
 
 #. if ($is_rw)
@@ -415,19 +415,16 @@ msgid "Sessions"
 msgstr "Sessions"
 
 #: ../web/admin/sessions.php:64
-#, fuzzy
 msgid "Informations"
-msgstr "Confirmation"
+msgstr "Informations"
 
 #: ../web/admin/sessions.php:72
-#, fuzzy
 msgid "Connect to or observe this session"
-msgstr "Inviter des personnes à partager cette session"
+msgstr "Se connecter ou observer cette session"
 
 #: ../web/admin/sessions.php:78
-#, fuzzy
 msgid "Observe this session"
-msgstr "Se connecter à cette session"
+msgstr "Observer cette session"
 
 #: ../web/admin/sessions.php:79
 msgid "Join this session"
@@ -442,9 +439,8 @@ msgid "Are you sure you want to kill this session?"
 msgstr "Êtes-vous sûr de vouloir tuer cette session ?"
 
 #: ../web/admin/sessions.php:99
-#, fuzzy
 msgid "Are you sure you want to kill selected sessions?"
-msgstr "Êtes-vous sûr de vouloir tuer cette session ?"
+msgstr "Etes-vous sûr de vouloir tuer cette session ?"
 
 #: ../web/admin/sessions.php:104
 msgid "Session"
@@ -515,7 +511,7 @@ msgid "Tasks"
 msgstr "Tâches"
 
 #: ../web/admin/tasks.php:110
-msgid "List of Tasks"
+msgid "List of tasks"
 msgstr "Liste des tâches"
 
 #: ../web/admin/tasks.php:114 ../web/admin/servers.php:683
@@ -524,12 +520,13 @@ msgid "ID"
 msgstr "ID"
 
 #: ../web/admin/tasks.php:145
-msgid "Install a package from line"
-msgstr "Installer un packages depuis la ligne de commande"
+msgid "Install a package from command line"
+msgstr "Installer un paquet depuis la ligne de commande"
 
-#: ../web/admin/tasks.php:147
-msgid "No available servers"
-msgstr "Aucun serveur disponible"
+#: ../web/admin/tasks.php:147 ../web/startsession.php:118 ../web/index.php:130
+#: ../web/index.php:147
+msgid "No available server"
+msgstr "Pas de serveur disponible"
 
 #: ../web/admin/tasks.php:155 ../web/admin/servers.php:582
 msgid "Install"
@@ -600,16 +597,15 @@ msgid "RAM usage"
 msgstr "utilisation RAM"
 
 #: ../web/admin/servers.php:320 ../web/admin/servers.php:518
-#, fuzzy
-msgid "Session usage"
+msgid "Sessions usage"
 msgstr "Sessions"
 
 #: ../web/admin/servers.php:384
-msgid "Warning: Server is offline"
+msgid "Warning: server is offline"
 msgstr "Attention : le serveur est hors-ligne"
 
 #: ../web/admin/servers.php:386
-msgid "Warning: Server is broken"
+msgid "Warning: server is broken"
 msgstr "Attention : le serveur est hors-service"
 
 #: ../web/admin/servers.php:393
@@ -621,23 +617,20 @@ msgid "Version"
 msgstr "Version"
 
 #: ../web/admin/servers.php:537
-#, fuzzy
-msgid "Number of available session of this server"
-msgstr "Applications disponibles sur ce server"
+msgid "Number of available sessions on this server"
+msgstr "Nombre d'applications disponibles sur ce serveur"
 
 #: ../web/admin/servers.php:542 ../web/admin/servers.php:554
 msgid "change"
 msgstr "changer"
 
 #: ../web/admin/servers.php:551
-#, fuzzy
 msgid "Redirection name of this server"
-msgstr "Applications disponibles sur ce server"
+msgstr "Nom de redirection de ce serveur"
 
 #: ../web/admin/servers.php:569
-#, fuzzy
-msgid "Are you sure you want to delete this server ?"
-msgstr "Etes-vous certain de vouloir supprimer cet utilisateur ?"
+msgid "Are you sure you want to delete this server?"
+msgstr "Etes-vous certain de vouloir supprimer ce serveur ?"
 
 #: ../web/admin/servers.php:572
 msgid "delete"
@@ -649,19 +642,19 @@ msgstr "Installer une application depuis le nom du paquet"
 
 #: ../web/admin/servers.php:592
 msgid "Applications available on this server"
-msgstr "Applications disponibles sur ce server"
+msgstr "Applications disponibles sur ce serveur"
 
 #: ../web/admin/servers.php:611
-msgid "Are you sure you want to remove this application from this server ?"
+msgid "Are you sure you want to remove this application from this server?"
 msgstr "Etes-vous certain de vouloir supprimer cette application du serveur ?"
 
 #: ../web/admin/servers.php:616 ../web/admin/applications.php:213
 msgid "Remove from this server"
-msgstr "Supprimer sur ce serveur"
+msgstr "Supprimer de ce serveur"
 
 #: ../web/admin/servers.php:633
 msgid "install in progress"
-msgstr ""
+msgstr "installation en cours"
 
 #: ../web/admin/servers.php:649 ../web/admin/applications.php:241
 msgid "Install on this server"
@@ -688,7 +681,7 @@ msgid "Informations about this session"
 msgstr "Informations sur cette session"
 
 #: ../web/admin/sumup.php:23
-msgid "List of user application"
+msgid "List of user applications"
 msgstr "Liste des applications utilisateur"
 
 #: ../web/admin/sumup.php:43
@@ -700,16 +693,16 @@ msgid "name"
 msgstr "nom"
 
 #: ../web/admin/sumup.php:43
-msgid "in this user group"
+msgid "in this users group"
 msgstr "dans ce groupe utilisateur"
 
 #: ../web/admin/sumup.php:43
-msgid "in this app group"
+msgid "in this applications group"
 msgstr "dans ce groupe d'applications"
 
 #: ../web/admin/sumup.php:43
-msgid "access to this applications"
-msgstr "accés à ces applications"
+msgid "access to these applications"
+msgstr "accès à ces applications"
 
 #: ../web/admin/sumup.php:43
 msgid "Desktop File"
@@ -730,7 +723,7 @@ msgid "No"
 msgstr "Non"
 
 #: ../web/admin/sumup.php:115 ../web/admin/sumup.php:119
-msgid "No servers available"
+msgid "No server available"
 msgstr "Aucun serveur disponible"
 
 #: ../web/admin/sumup.php:127 ../web/admin/menu.php:25
@@ -747,16 +740,15 @@ msgid "Publications"
 msgstr "Publications"
 
 #: ../web/admin/menu.php:29
-#, fuzzy
 msgid "Logs"
-msgstr "Connexion"
+msgstr "Logs"
 
 #: ../web/admin/menu.php:30
 msgid "Logout"
 msgstr "Déconnexion"
 
 #: ../web/admin/wizard.php:33
-msgid "No usergroup selected"
+msgid "No users group selected"
 msgstr "Aucun groupe d'utilisateurs sélectionné"
 
 #: ../web/admin/wizard.php:42
@@ -768,8 +760,8 @@ msgid "No group name"
 msgstr "Pas de nom de groupe"
 
 #: ../web/admin/wizard.php:78
-msgid "No application group selected"
-msgstr "Aucun groupe d'application sélectionné"
+msgid "No applications group selected"
+msgstr "Aucun groupe d'applications sélectionné"
 
 #: ../web/admin/wizard.php:85
 msgid "No application selected"
@@ -782,15 +774,15 @@ msgid "Publication Wizard"
 msgstr "Assistant de publication"
 
 #: ../web/admin/wizard.php:162 ../web/admin/users.php:291
-msgid "No available users"
-msgstr "Pas d'utilisateurs disponibles"
+msgid "No available user"
+msgstr "Pas d'utilisateur disponible"
 
 #: ../web/admin/wizard.php:164 ../web/admin/applications.php:336
-msgid "No available applications"
-msgstr "Aucune application disponible"
+msgid "No available application"
+msgstr "Pas d'application disponible"
 
 #: ../web/admin/wizard.php:168
-msgid "Users/group selection"
+msgid "Users/groups selection"
 msgstr "Sélection utilisateurs/groupes"
 
 #: ../web/admin/wizard.php:181
@@ -816,7 +808,7 @@ msgid "Previous"
 msgstr "Précédent"
 
 #: ../web/admin/wizard.php:314
-msgid "Applications/group selection"
+msgid "Applications/groups selection"
 msgstr "Sélection Applications/groupes"
 
 #: ../web/admin/wizard.php:327
@@ -836,7 +828,7 @@ msgid "Confirmation"
 msgstr "Confirmation"
 
 #: ../web/admin/wizard.php:448
-msgid "Are you sure that you want to create this publication ?"
+msgid "Are you sure that you want to create this publication?"
 msgstr "Etes-vous certain de vouloir créer cette publication ?"
 
 #: ../web/admin/wizard.php:461
@@ -864,15 +856,15 @@ msgid "Application group"
 msgstr "Groupe d'applications"
 
 #: ../web/admin/publications.php:67
-msgid "No publications"
-msgstr "Pas de publications"
+msgid "No publication"
+msgstr "Pas de publication"
 
 #: ../web/admin/publications.php:95
-msgid "No available user groups to use"
+msgid "No available users group to use"
 msgstr "Aucun groupe d'utilisateurs ne peut être utilisé"
 
 #: ../web/admin/publications.php:97
-msgid "No available application groups to use"
+msgid "No available applications group to use"
 msgstr "Aucun groupe d'applications disponible"
 
 #: ../web/admin/includes/functions.inc.php:84
@@ -898,7 +890,7 @@ msgid "Servers with this application"
 msgstr "Serveurs avec cette application"
 
 #: ../web/admin/applications.php:208
-msgid "Are you sure you want remove this application from this server ?"
+msgid "Are you sure you want remove this application from this server?"
 msgstr "Etes-vous certain de vouloir supprimer cette application du serveur ?"
 
 #: ../web/admin/applications.php:250
@@ -910,7 +902,7 @@ msgid "Groups with this application"
 msgstr "Groupes contenant cette application"
 
 #: ../web/admin/applications.php:288
-msgid "Are you sure you want to delete this application from this group ?"
+msgid "Are you sure you want to delete this application from this group?"
 msgstr "Etes-vous certain de vouloir supprimer cette application du groupe ?"
 
 #: ../web/admin/applications.php:333
@@ -928,7 +920,7 @@ msgstr "Uid"
 
 #: ../web/admin/users.php:162 ../web/admin/users.php:331
 #: ../web/admin/usersgroup.php:220
-msgid "Are you sure you want to delete this user ?"
+msgid "Are you sure you want to delete this user?"
 msgstr "Etes-vous certain de vouloir supprimer cet utilisateur ?"
 
 #: ../web/admin/users.php:163
@@ -948,33 +940,32 @@ msgid "Save the modifications"
 msgstr "Sauvegarder les modifications"
 
 #: ../web/admin/users.php:223
-msgid "User groups with this user"
+msgid "Users groups with this user"
 msgstr "Groupes d'utilisateurs contenant cet utilisateur"
 
 #: ../web/admin/users.php:230
-#, fuzzy
-msgid "Are you sure you want to delete this user from this group ?"
+msgid "Are you sure you want to delete this user from this group?"
 msgstr "Etes-vous certain de vouloir supprimer cette application du groupe ?"
 
 #: ../web/admin/users.php:286 ../web/admin/usersgroup.php:170
 #: ../web/admin/usersgroup.php:299
-msgid "User groups management"
+msgid "Users groups management"
 msgstr "Gestion des groupes d'utilisateurs"
 
 #: ../web/admin/users.php:288
-msgid "List of Users"
-msgstr "List des utilisateurs"
+msgid "List of users"
+msgstr "Liste des utilisateurs"
 
 #: ../web/admin/usersgroup.php:212
 msgid "List of users in this group"
 msgstr "Liste des utilisateurs de ce groupe"
 
 #: ../web/admin/usersgroup.php:302
-msgid "User groups list"
+msgid "Users groups list"
 msgstr "Liste des groupes d'utilisateurs"
 
 #: ../web/admin/usersgroup.php:305
-msgid "No user groups available"
+msgid "No users group available"
 msgstr "Aucun groupe d'utilisateurs disponible"
 
 #: ../web/admin/classes/Preferences_admin.class.php:50
@@ -987,7 +978,7 @@ msgid "Heading title"
 msgstr "Grand titre"
 
 #: ../web/admin/classes/Preferences_admin.class.php:51
-msgid "You can customize the Heading/title here."
+msgid "You can customize the heading title here."
 msgstr "Vous pouvez modifier le grand titre ici"
 
 #: ../web/admin/classes/Preferences_admin.class.php:54
@@ -1040,9 +1031,8 @@ msgstr "critique"
 #. $this->add('general',$c);
 #: ../web/admin/classes/Preferences_admin.class.php:66
 #: ../web/admin/classes/Preferences_admin.class.php:162
-#, fuzzy
-msgid "Use SSO for user authentification"
-msgstr "Authentification échouée"
+msgid "Use SSO for user authentication"
+msgstr "Utiliser SSO pour l'authentification utilisateur"
 
 #: ../web/admin/classes/Preferences_admin.class.php:66
 #: ../web/admin/classes/Preferences_admin.class.php:103
@@ -1086,6 +1076,15 @@ msgstr "configuration MySQL"
 #: ../web/admin/classes/Preferences_admin.class.php:85
 msgid "Database host address"
 msgstr "Adresse du serveur de base de données"
+
+#: ../web/admin/classes/Preferences_admin.class.php:85
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr ""
+"L'adresse FQDN de votre serveur de base de données. Cette base contient les "
+"informations relatives à la console d'administration. Exemple : localhost or "
+"db.mycorporate.com"
 
 #: ../web/admin/classes/Preferences_admin.class.php:85
 msgid ""
@@ -1137,52 +1136,44 @@ msgid "The table prefix for the database."
 msgstr "Le préfixe à utiliser pour les tables de la base de données."
 
 #: ../web/admin/classes/Preferences_admin.class.php:96
-#, fuzzy
 msgid "Mails settings"
-msgstr "Réglages avancés"
+msgstr "Réglages Mail"
 
 #: ../web/admin/classes/Preferences_admin.class.php:97
 msgid "Mail server type"
-msgstr ""
+msgstr "Type de serveur mail"
 
 #: ../web/admin/classes/Preferences_admin.class.php:97
-#, fuzzy
 msgid "Local"
 msgstr "local"
 
 #: ../web/admin/classes/Preferences_admin.class.php:97
-#, fuzzy
 msgid "SMTP server"
-msgstr "Serveur"
+msgstr "Serveur SMTP"
 
 #: ../web/admin/classes/Preferences_admin.class.php:99
 msgid "From"
-msgstr ""
+msgstr "De"
 
 #: ../web/admin/classes/Preferences_admin.class.php:101
-#, fuzzy
 msgid "Host"
-msgstr "Minimal"
+msgstr "Hôte"
 
 #: ../web/admin/classes/Preferences_admin.class.php:103
-#, fuzzy
 msgid "Authentication"
-msgstr "Réplication"
+msgstr "Authentification"
 
 #: ../web/admin/classes/Preferences_admin.class.php:105
-#, fuzzy
 msgid "SMTP username"
-msgstr "Identifiant proxy"
+msgstr "Nom d'utilisateur SMTP"
 
 #: ../web/admin/classes/Preferences_admin.class.php:107
-#, fuzzy
 msgid "SMTP password"
-msgstr "Mot de passe"
+msgstr "Mot de passe SMTP"
 
 #: ../web/admin/classes/Preferences_admin.class.php:110
-#, fuzzy
 msgid "Application Server settings"
-msgstr "Sélection Applications/groupes"
+msgstr "Configuration du serveur d'applications"
 
 #: ../web/admin/classes/Preferences_admin.class.php:111
 msgid "Authorized network domain"
@@ -1200,7 +1191,6 @@ msgstr ""
 
 #. fqdn_private_address : array('dns' => ip);
 #: ../web/admin/classes/Preferences_admin.class.php:114
-#, fuzzy
 msgid "Name/IP Address association (name <-> ip)"
 msgstr "Association Nom/Adresse IP (nom &lt;-&gt; ip)"
 
@@ -1212,8 +1202,8 @@ msgid ""
 msgstr ""
 "Saisissez les noms de machines (FQDN) que vous souhaitez associer à une IP "
 "privée en cas de problème avec la configuration DNS ou pour forcer un "
-"résultat de \"reverse DNS\". Exemple : pong.office.ulteo.com (field 1) "
-"192.168.0.113 (champs 2)"
+"résultat de \"reverse DNS\". Exemple : pong.office.ulteo.com (champ 1) "
+"192.168.0.113 (champ 2)"
 
 #: ../web/admin/classes/Preferences_admin.class.php:116
 msgid "Disable reverse FQDN checking"
@@ -1229,29 +1219,27 @@ msgstr ""
 
 #: ../web/admin/classes/Preferences_admin.class.php:118
 msgid "Action when an AS status is not ready anymore"
-msgstr ""
+msgstr "Action à exécuter lorsqu'un AS n'est plus prêt"
 
 #: ../web/admin/classes/Preferences_admin.class.php:118
-#, fuzzy
 msgid "Do nothing"
-msgstr "Monitoring"
+msgstr "Ne rien faire"
 
 #: ../web/admin/classes/Preferences_admin.class.php:127
 msgid "load_balancing"
-msgstr ""
+msgstr "load_balancing"
 
 #: ../web/admin/classes/Preferences_admin.class.php:130
-#, fuzzy
 msgid "Sessions settings"
-msgstr "Paramètres"
+msgstr "Paramètres de session"
 
 #: ../web/admin/classes/Preferences_admin.class.php:131
 msgid "Default language for session"
-msgstr ""
+msgstr "Langage de session par défaut"
 
 #: ../web/admin/classes/Preferences_admin.class.php:133
 msgid "Default quality for session"
-msgstr ""
+msgstr "Qualité de session par défaut"
 
 #. 0	=>	'Auto',
 #: ../web/admin/classes/Preferences_admin.class.php:133 ../web/index.php:34
@@ -1311,58 +1299,53 @@ msgid "5 hours"
 msgstr "5 heures"
 
 #: ../web/admin/classes/Preferences_admin.class.php:135 ../web/index.php:50
-#, fuzzy
 msgid "12 hours"
-msgstr "2 heures"
+msgstr "12 heures"
 
 #: ../web/admin/classes/Preferences_admin.class.php:135 ../web/index.php:51
 msgid "1 day"
 msgstr "1 journée"
 
 #: ../web/admin/classes/Preferences_admin.class.php:135 ../web/index.php:52
-#, fuzzy
 msgid "2 days"
-msgstr "1 journée"
+msgstr "2 jours"
 
 #: ../web/admin/classes/Preferences_admin.class.php:135 ../web/index.php:53
 msgid "1 week"
-msgstr ""
+msgstr "1 semaine"
 
 #: ../web/admin/classes/Preferences_admin.class.php:135 ../web/index.php:54
-#, fuzzy
 msgid "1 month"
-msgstr "1 minute"
+msgstr "1 mois"
 
 #: ../web/admin/classes/Preferences_admin.class.php:135 ../web/index.php:55
-#, fuzzy
 msgid "Never"
-msgstr "Serveur"
+msgstr "Jamais"
 
 #: ../web/admin/classes/Preferences_admin.class.php:137
 msgid "Session timeout message"
-msgstr ""
+msgstr "Message de timeout de session"
 
 #: ../web/admin/classes/Preferences_admin.class.php:139
 msgid "Sessions are persistent"
-msgstr ""
+msgstr "Sessions persistantes"
 
 #: ../web/admin/classes/Preferences_admin.class.php:141 ../web/index.php:456
 msgid "Show icons on desktop"
-msgstr ""
+msgstr "Afficher les icônes sur le bureau"
 
 #: ../web/admin/classes/Preferences_admin.class.php:144
-#, fuzzy
-msgid "User can launch a session with no applications"
-msgstr "Créer un groupe d'applications"
+msgid "User can launch a session with no application"
+msgstr "Les utilisateurs peuvent démarrer une session sans application"
 
 #. Sessions can be shared ? yes/no
 #: ../web/admin/classes/Preferences_admin.class.php:148
 msgid "Session owner can share his session"
-msgstr ""
+msgstr "L'utilisateur peut partager sa session"
 
 #: ../web/admin/classes/Preferences_admin.class.php:151
 msgid "Forceable paramaters by users"
-msgstr ""
+msgstr "Paramètres modifiables par les utilisateurs"
 
 #: ../web/admin/classes/Preferences_admin.class.php:151
 msgid ""
@@ -1398,24 +1381,22 @@ msgstr "application"
 
 #: ../web/admin/classes/Preferences_admin.class.php:151
 msgid "persistent"
-msgstr ""
+msgstr "persistante"
 
 #: ../web/admin/classes/Preferences_admin.class.php:152
 msgid "shareable"
-msgstr ""
+msgstr "partageable"
 
 #: ../web/admin/classes/Preferences_admin.class.php:153
-#, fuzzy
 msgid "desktop icons"
-msgstr "Partage du bureau"
+msgstr "icônes sur le bureau"
 
 #: ../web/admin/classes/Preferences_admin.class.php:156
-#, fuzzy
 msgid "Web interface settings"
-msgstr "Réglages avancés"
+msgstr "Paramètres de l'interface web"
 
 #: ../web/admin/classes/Preferences_admin.class.php:157
-msgid "Display user list"
+msgid "Display users list"
 msgstr "Afficher la liste des utilisateurs"
 
 #: ../web/admin/classes/Preferences_admin.class.php:157
@@ -1428,7 +1409,6 @@ msgstr ""
 "manuellement son identifiant."
 
 #: ../web/admin/classes/Preferences_admin.class.php:159
-#, fuzzy
 msgid "SSH/ping applet test"
 msgstr "test ssh/ping pour applet client"
 
@@ -1530,9 +1510,9 @@ msgstr "Configuration invalide"
 msgid "User importation failed"
 msgstr "L'import des utilisateurs a échoué"
 
-#: ../web/startsession.php:118 ../web/index.php:130 ../web/index.php:147
-msgid "No available server"
-msgstr "Pas de serveur disponible"
+#: ../web/startsession.php:103
+msgid "You already have a session active"
+msgstr "Vous avez déjà une session active"
 
 #: ../web/startsession.php:148
 msgid "No available session"
@@ -1568,43 +1548,40 @@ msgid "To create"
 msgstr ""
 
 #: ../web/classes/Session.class.php:265
-#, fuzzy
 msgid "Created"
-msgstr "Heure de création"
+msgstr "Créée"
 
 #: ../web/classes/Session.class.php:269
-#, fuzzy
 msgid "To start"
-msgstr "Démarrer"
+msgstr "A démarrer"
 
 #: ../web/classes/Session.class.php:273
-#, fuzzy
 msgid "Initializing"
-msgstr "L'initialisation a échoué"
+msgstr "Initialisation en cours"
 
 #: ../web/classes/Session.class.php:277
 msgid "Active"
-msgstr ""
+msgstr "Active"
 
 #: ../web/classes/Session.class.php:281
 msgid "Suspending"
-msgstr ""
+msgstr "Mise en veille"
 
 #: ../web/classes/Session.class.php:285
 msgid "Suspended"
-msgstr ""
+msgstr "En veille"
 
 #: ../web/classes/Session.class.php:289
 msgid "Resuming"
-msgstr ""
+msgstr "Réveil"
 
 #: ../web/classes/Session.class.php:293
 msgid "To destroy"
-msgstr ""
+msgstr "A détruire"
 
 #: ../web/classes/Session.class.php:297
 msgid "Destroyed"
-msgstr ""
+msgstr "Détruite"
 
 #: ../web/index.php:29
 msgid "Maximum"
@@ -1623,7 +1600,8 @@ msgid "Loading"
 msgstr "Chargement"
 
 #: ../web/index.php:256
-msgid "YOU ALREADY HAVE A SESSION ACTIVE"
+#, fuzzy
+msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
 msgstr "VOUS AVEZ DEJA UNE SESSION ACTIVE"
 
 #: ../web/index.php:257
@@ -1667,14 +1645,12 @@ msgid "Full desktop"
 msgstr "Bureau complet"
 
 #: ../web/index.php:428
-#, fuzzy
 msgid "Persistent session"
-msgstr "Se connecter à cette session"
+msgstr "Session persistante"
 
 #: ../web/index.php:442
-#, fuzzy
 msgid "Shareable session"
-msgstr "Aucune session n'est disponible"
+msgstr "Session partageable"
 
 #: ../web/index.php:470
 msgid "Debug"
@@ -1708,6 +1684,15 @@ msgstr "Mot de passe proxy"
 msgid "Remember proxy"
 msgstr "Sauvegarder les infos de proxy"
 
+#~ msgid "The address of your Active Directory."
+#~ msgstr "L'adresse de votre serveur Active Directory"
+
+#~ msgid "No available servers"
+#~ msgstr "Aucun serveur disponible"
+
+#~ msgid "No available applications"
+#~ msgstr "Aucune application disponible"
+
 #~ msgid "Matching"
 #~ msgstr "Correspondance"
 
@@ -1734,9 +1719,6 @@ msgstr "Sauvegarder les infos de proxy"
 
 #~ msgid "No application on this server"
 #~ msgstr "Aucune application sur ce serveur"
-
-#~ msgid "No available application"
-#~ msgstr "Pas d'application disponible"
 
 #~ msgid "No active sessions"
 #~ msgstr "Aucune session active"

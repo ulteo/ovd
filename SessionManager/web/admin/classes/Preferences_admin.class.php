@@ -63,7 +63,7 @@ class Preferences_admin extends Preferences {
 // 		$c = new config_element('start_app','start_app','start_app_des','',NULL,1);
 // 		$this->add('general',$c);
 
-		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), 2);
 
 		$this->add($c,'general');
 		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
@@ -159,7 +159,7 @@ class Preferences_admin extends Preferences {
 		$c = new config_element('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), 2);
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentification'), _('Use SSO for user authentification'), _('Use SSO for user authentification'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), 2);
 
 		$this->getPrefsModule();
 		$this->getPrefsPlugins();

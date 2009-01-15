@@ -138,7 +138,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public function configuration(){
 		$ret = array();
-		$c = new config_element('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory.'), NULL, NULL, 1);
+		$c = new config_element('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'), NULL, NULL, 1);
 		$ret []= $c;
 		$c = new config_element('domain', _('Domain name'), _('Domain name used by Active Directory'), _('Domain name used by Active Directory'), NULL, NULL, 1);
 		$ret []= $c;
