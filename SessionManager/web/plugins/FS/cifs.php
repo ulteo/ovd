@@ -46,6 +46,9 @@ class FS_cifs extends Plugin {
 		$buf = new UserDB_activedirectory();
 		$admin = $buf->importFromDN($cifs_login.','.$buf->config['suffix']);
 
+		if (!is_object($admin))
+			return false;
+
 		$this->redir_args = array(
 			'module_fs' => array(
 				'user_fileserver'	=>	$user->getAttribute('fileserver'),
