@@ -38,8 +38,8 @@ check_variables USER_LOGIN USER_HOME LOC GEOMETRY RFB_PORT || close_session
 HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
 . modules_fs.sh || close_session
 
-if [ -f ${SESSID_DIR}/parameters/user_id ]; then
-    export USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
+if [ -f ${SESSID_DIR}/parameters/module_fs/user_id ]; then
+    export USER_ID=`cat ${SESSID_DIR}/parameters/module_fs/user_id`
     groupadd -g ${USER_ID} ${USER_LOGIN} 
     useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -u ${USER_ID} -g ${USER_LOGIN} ${USER_LOGIN}
 else
