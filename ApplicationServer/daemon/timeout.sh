@@ -24,6 +24,7 @@
 if rsbac_is_active; then
     USER_TMP=/tmp/
 else
+    USER_ID=$(id -u $USER_LOGIN) 
     USER_TMP=/tmp/.tmp${USER_ID}
 fi
 
