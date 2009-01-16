@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+
+
+  <section>
+    <title>Prerequisites</title>
+    <para id="prerequisites">
+      At least two machines are needed to install Ulteo Open Virtual Desktop:
+
+      <itemizedlist>
+	<listitem>
+	  <para>a LAMP (Linux Apache MySQL PHP) server for the Session Manager (here we are using <emphasis>sm.ulteo.com</emphasis> for that server, but you need to set your own domain name)</para>
+	</listitem>
+	<listitem>
+	  <para>another server for the Application Server. (here we are using <emphasis>cm.ulteo.com</emphasis> for that server, but you need to set it according to your own domain name)</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+  </section>
+
+
+  <section id="sessionmanager_configuration">
+    <title>Configuration</title>
+
+    <para>
+      The first step is to go to <ulink url="http://sm.ulteo.com/sessionmanager/admin" /> and autenticate yourself with the login and password you provided during the installation.
+    </para>
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_www_admin_login.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin login</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+    
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_install_admin_config_init.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin init configuration</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  <emphasis role="strong">Authorized network domain:</emphasis> replace by the domain name of your network.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis role="strong">Disable reverse FQDN checking:</emphasis>
+	  if you don't have a valid domain name service for your machines, you have to select <emphasis>yes</emphasis> but it may be a security risk.
+	  Ideally, you should configure your DNS server correclty and keep this option to <emphasis>No</emphasis>.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis role="strong">Advanced settings options:</emphasis>
+	  you can allow the user to force some options. For instance, to force the application server to use, or to enable the debug mode.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  <emphasis role="strong">MySQL configuration:</emphasis>
+	  you have to provide some MySQL configuration data for the system to work properly.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  <emphasis role="strong">Module ApplicationDB:</emphasis>
+	  select MySQL. The "fake" module is a hard-coded application list used when there are problems with the automatic application detection.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis role="strong">Module UserDB:</emphasis>
+	  there are several ways to plug users into the system:
+	</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      <emphasis>fake</emphasis>: it's a hard-coded user list to quickly test the system. 
+	      For instance, you can begin with this module if you have never tested it earlier.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis>LDAP</emphasis>: if you are using LDAP to manage your users, you can select this module and configure how to match your users with the directory (LDAP tree, DN ...).
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      <emphasis>Active Directory</emphasis>: if you want to plug the system into your Active Directory environment, select this module and provide you AD server name and domain.
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis role="strong">Plugin configuration FS</emphasis>:
+	  You can choose how to manage the home directory for your users:
+	</para>
+	<itemizedlist>
+	  <listitem>
+	    <para>
+	      if you select Active Directory as UserDB, 
+	      you certainly want to use the Windows share directory from your CIFS servers. In this case, select the CIFS module.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      if your are using NFS servers for your users home directories and you know how to setup the matching between the local DB and your LDAP configuration, then you can select NFS.
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para>
+	      if you don't have any network filesystem available, select local. It will store files on the application server. (not recommended)
+	    </para>
+	  </listitem>
+	</itemizedlist>
+      </listitem>
+    </itemizedlist>
+
+    <para>
+      The session manager has no application server plugged yet.
+      You now have to install one or more application servers.
+    </para>
+    <beginpage />
+  </section>
+
+  <section id="launch_session">
+    <title>Launch a session</title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Back to <ulink url="http://sm.ulteo.com/sessionmanager/" /> with your browser, you should see a login page:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/sm_login.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session Manager login</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+	<para>&nbsp;</para>
+	<beginpage />
+      </listitem>
+
+
+      <listitem>
+	<para>
+	  Once logged in, the session is launching:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session_launching.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launching</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+	<beginpage />
+      </listitem>
+
+      <listitem>
+	<para>
+	  The session is launched and is ready to use with applications that have been published for the user:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launched</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist> 
+  </section>
+
+
+  <section id="publication">
+    <title>Register the server and perform a "Publication"</title>
+    <para>
+      An Application server has been installed and is now ready. First, we have to register it, and switch it from "maintenance" to "production" mode.
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  You should see your server as "unregistered" in the server page:
+	</para>
+
+	<screenshot>
+	  <screeninfo>Session Manager - server page</screeninfo>
+	  <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
+	</screenshot>
+      </listitem>
+
+      <listitem>
+	<para>
+	  If you want to use this server on your network, 
+	  you have to click on <emphasis>register</emphasis>
+	  to accept the server in your environment and switch it to maintenance mode.
+	</para>
+      </listitem>
+      <listitem>
+	<para>Now, click on <emphasis>Switch to production</emphasis> to switch it to Production mode.</para>
+      </listitem>
+    </itemizedlist>
+    </para>
+
+    <para>
+      The next step is to perform a "publication" to authorize a usergroup to use applications.
+    </para>
+    <screenshot>
+      <screeninfo>Session manager - publication page</screeninfo>
+      <graphic fileref="img/sm_admin_publication.png"></graphic>
+    </screenshot>
+
+    <para>
+      Go to the Publications page, select and follow the <emphasis>wizard</emphasis> steps.
+    </para>
+
+    <beginpage />
+  </section>
+
+</article>

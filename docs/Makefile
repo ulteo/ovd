@@ -3,11 +3,11 @@
 .SUFFIXES: .xml .html
 
 SRC=AdminConsole.xml \
-	RSBAC.xml \
-	mysql.xml \
-	HowTo_QuickInstall.xml \
-	HowTo_Not_Debian.xml \
-	Documentation_RedHat.xml
+	Documentation_Debian.xml \
+	Documentation_from_sources.xml \
+	Documentation_RedHat.xml \
+	RSBAC.xml
+
 
 DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
@@ -18,7 +18,7 @@ ANWIKI_REGEXP=-e 's/src=\"img/src=\"\/main\/images\/uovd\/doc\/img/g' -e 's/<img
 all: $(DST) $(PDF)
 
 .xml.html :
-	xsltproc xhtml.xsl $< >$@
+	xsltproc --xinclude xhtml.xsl $< >$@
 #	cp $@ buffer; cat buffer | sed $(ANWIKI_REGEXP)> $@
 
 #	xmlto xhtml -m config.xsl $<
