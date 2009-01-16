@@ -49,6 +49,15 @@ function show_default() {
   }
 
   $has_publish = count($publications);
+
+  $can_add_publish = true;
+  if (count($groups_users) == 0)
+    $can_add_publish = false;
+  elseif (count($groups_apps) == 0)
+    $can_add_publish = false;
+  elseif (count($groups_users) * count($groups_apps) <= count($publications))
+    $can_add_publish = false;
+
   $count = 0;
 
   include_once('header.php');
@@ -87,15 +96,12 @@ function show_default() {
     }
   }
 
-  $content = 'content'.(($count++%2==0)?1:2);
-  echo '<tfoot>';
-  echo '<tr class="'.$content.'">';
+  
+  if ($can_add_publish) {
+    $content = 'content'.(($count++%2==0)?1:2);
 
-  if (count($groups_users) == 0)
-    echo '<td colspan="3">'._('No available users group to use').'</td>';
-  elseif (count($groups_apps) == 0)
-    echo '<td colspan="3">'._('No available applications group to use').'</td>';
-  else {
+    echo '<tfoot>';
+    echo '<tr class="'.$content.'">';
     echo '<form action="actions.php" method="post">';
     echo '<input type="hidden" name="action" value="add" />';
     echo '<input type="hidden" name="name" value="Publication" />';
@@ -115,9 +121,10 @@ function show_default() {
     echo '</td>';
     echo '<td><input type="submit" value="'._('Add').'" /></td>';
     echo '</form>';
+    echo '</tr>';
+    echo '</tfoot>';
   }
-  echo '</tr>';
-  echo '</tfoot>';
+
   echo '</table>';
   echo '</div>';
 
