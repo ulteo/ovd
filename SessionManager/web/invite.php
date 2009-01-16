@@ -29,7 +29,9 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 
 	$token = $session->create_token('invite', array('view_only' => $view_only));
 
-	$redir = 'http://'.$session->server.'/index.php?token='.$token;
+	$buf = Server::load($session->server);
+
+	$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token;
 
 	$email = $_POST['email'];
 
@@ -52,7 +54,7 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 		redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email.'&error='.$buf->message);
 	}
 
-	$session->addInvite($email);
+	$session->addInvite($email, ($view_only == 'Yes')?1:0);
 
 	redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email);
 }

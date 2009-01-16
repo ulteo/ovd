@@ -375,10 +375,16 @@ class Session {
 		return date('d/m/Y H:i:s', filemtime($this->folder.'/used'));
 	}
 
-	public function addInvite($email_) {
+	public function addInvite($email_, $view_only_) {
 		Logger::debug('main', 'Starting SESSION::addInvite for session '.$this->session.' on server '.$this->server);
 
-		if (@file_put_contents($this->folder.'/invited', $email_."\n", FILE_APPEND)) {
+		$buf = $email_;
+		if ($view_only_ == true)
+			$buf .= ' (passive mode)';
+		else
+			$buf .= ' (active mode)';
+
+		if (@file_put_contents($this->folder.'/invited', $buf."\n", FILE_APPEND)) {
 			Logger::info('main', 'Session invited file created : '.$this->folder.'/invited');
 
 			return true;
