@@ -419,3 +419,16 @@ function init_db($prefs_) {
 
 	return true;
 }
+
+function popup_error($msg_) {
+	if (!isset($_SESSION['errormsg']))
+		$_SESSION['errormsg'] = array();
+
+	if (is_array($msg_))
+		foreach ($msg_ as $error_msg)
+			$_SESSION['errormsg'][] = $error_msg;
+	else
+		$_SESSION['errormsg'][] = $msg_;
+
+	return true;
+}

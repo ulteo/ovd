@@ -56,12 +56,23 @@ header_static($main_title.' - '._('Administration'));
 		<td style="vertical-align: top;" class="content">
 			<div id="adminContent">
 				<?php
-					if (isset($_SESSION['errormsg']) && $_SESSION['errormsg'] != '') {
+					if (isset($_SESSION['errormsg']) && is_array($_SESSION['errormsg'])) {
+						if (count($_SESSION['errormsg']) > 0) {
 						?>
 						<div id="adminError">
-							<span class="msg_error"><?php echo $_SESSION['errormsg']; ?></span>
+							<span class="msg_error"><?php
+								if (count($_SESSION['errormsg']) > 1) {
+									echo '<ul>';
+									foreach ($_SESSION['errormsg'] as $error_msg)
+										echo '<li>'.$error_msg.'</li>';
+									echo '</ul>';
+								} else
+									echo $_SESSION['errormsg'][0];
+							?></span>
 						</div>
 						<?php
+						}
+
 						unset($_SESSION['errormsg']);
 					}
 				?>
