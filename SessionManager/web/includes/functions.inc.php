@@ -491,3 +491,12 @@ function get_classes_startwith($start_name) {
 function str_endwith($string_, $search_) {
 	return (substr($string_, (strlen($search_)*-1)) == $search_);
 }
+
+function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+	$l = strlen($st)-1;
+	$r = '';
+
+	while ($nc-->0) $r .= $st{mt_rand(0, $l)};
+
+	return $r;
+}

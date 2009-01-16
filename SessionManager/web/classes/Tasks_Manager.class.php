@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -49,7 +49,7 @@ class Tasks_Manager {
 
 			if (! isset($task->applications))
 				continue;
-			
+
 			if (! is_array($task->applications))
  				continue;
 
@@ -65,15 +65,15 @@ class Tasks_Manager {
 		}
 		$this->tasks = $tasks;
 	}
-	
+
 	public function load_from_type($class_str) {
 		// TBD
 	}
 
 	public function add($task_) {
-		$task_->id = md5(time().rand());
+		$task_->id = gen_string(5);
 		$task_->init();
-		
+
 		$this->tasks []= $task_;
 		$this->save($task_);
 	}

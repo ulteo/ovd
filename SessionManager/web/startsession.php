@@ -134,7 +134,7 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	Logger::debug('main', 'startsession.php: Resuming session ('.$old_session_id.' => '.$old_session_server.')');
 } else {
-	$random_session = md5(rand());
+	$random_session = gen_string(5);
 
 	$session = new Session($random_session, $random_server);
 	$ret = $session->add_session(0);

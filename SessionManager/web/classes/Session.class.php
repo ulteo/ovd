@@ -306,7 +306,7 @@ class Session {
 	public function create_token($mode_, $content_=array()) {
 		Logger::debug('main', 'Starting SESSION::create_token for session '.$this->session.' on server '.$this->server);
 
-		$token = md5(rand().time().rand());
+		$token = gen_string(5);
 
 		if (!file_exists(TOKENS_DIR.'/'.$token)) {
 			if (@file_put_contents(TOKENS_DIR.'/'.$token, $mode_.':'.$this->session)) {
