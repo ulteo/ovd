@@ -125,6 +125,8 @@ if ($_REQUEST['name'] == 'Publication') {
 		$buf = new UsersGroupApplicationsGroupLiaison($_REQUEST['group_u'], $_REQUEST['group_a']);
 		if (!$buf->onDB())
 			$buf->insertDB();
+		else
+			popup_error(_('This publication already exist'));
 	}
 
 	if ($_REQUEST['action'] == 'del') {
@@ -132,6 +134,9 @@ if ($_REQUEST['name'] == 'Publication') {
 
 		if ($buf->onDB())
 			$buf->removeDB();
+		else
+			popup_error(_('This publication does not exist'));
+
 	}
 }
 
