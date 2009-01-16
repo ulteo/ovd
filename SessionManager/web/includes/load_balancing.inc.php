@@ -38,7 +38,10 @@ class DecisionCriterion_ram extends DecisionCriterion {
 		
 		$ram_max = $this->server->getAttribute('ram');
 		$ram_used = $this->server->getAttribute('ram_used');
-		return 1.0 - (float)($ram_used)/(float)($ram_max);
+		if ((float)($ram_max) == 0.0)
+			return 0;
+		else
+			return 1.0 - (float)($ram_used)/(float)($ram_max);
 	}
 }
 
@@ -61,7 +64,10 @@ class DecisionCriterion_session extends DecisionCriterion {
 		
 		$nbsessions_max = $this->server->getAttribute('nb_sessions');
 		$nbsessions_used = $this->server->getNbAvailableSessions();
-		return (float)($nbsessions_used)/(float)($nbsessions_max);
+		if ((float)($nbsessions_max) == 0.0)
+			return 0;
+		else
+			return (float)($nbsessions_used)/(float)($nbsessions_max);
 	}
 	public function default_value() {
 		return 100;
