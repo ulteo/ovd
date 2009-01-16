@@ -126,7 +126,7 @@ if ($_REQUEST['name'] == 'Publication') {
 		if (!$buf->onDB())
 			$buf->insertDB();
 		else
-			popup_error(_('This publication already exist'));
+			popup_error(_('This publication already exists'));
 	}
 
 	if ($_REQUEST['action'] == 'del') {
