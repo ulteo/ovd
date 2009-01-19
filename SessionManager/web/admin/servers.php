@@ -233,10 +233,18 @@ function show_default() {
       echo '</td>';
 
       echo '<td>';
-      echo '<form  method="get">';
-      echo '<input type="submit" value="'._('Register').'" />';
+      echo '<form action="servers.php" method="get">';
       echo '<input type="hidden" name="action" value="register" />';
       echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+      echo '<input type="submit" value="'._('Register').'" />';
+      echo '</form>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
+      echo '<input type="hidden" name="action" value="delete" />';
+      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+      echo '<input type="submit" value="'._('delete').'" />';
       echo '</form>';
       echo '</td>';
 
@@ -677,6 +685,7 @@ function show_manage($fqdn) {
     echo '</table>';
     echo "</div>\n";
   }
+
 
   // Server Replication part
   if (count($servers_all)>0) {

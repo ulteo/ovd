@@ -33,7 +33,6 @@ class Server {
 
 		$this->fqdn = $fqdn_;
 		$this->folder = SESSIONS_DIR.'/'.$this->fqdn;
-		$this->web_port = $this->getAttribute('web_port');
 
 		if (!file_exists($this->folder) && check_ip($fqdn_) && $create_)
 			$this->create();
@@ -254,7 +253,7 @@ class Server {
 		Logger::debug('main', 'Starting SERVER::hasAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
 
 		if (!is_readable($this->folder.'/'.$attrib_)) {
-			Logger::error('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
+			Logger::warning('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
 			return false;
 		}
 
@@ -268,7 +267,7 @@ class Server {
 		Logger::debug('main', 'Starting SERVER::uptodateAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
 
 		if (!is_readable($this->folder.'/'.$attrib_)) {
-			Logger::error('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
+			Logger::warning('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
 			return false;
 		}
 
@@ -284,7 +283,7 @@ class Server {
 		Logger::debug('main', 'Starting SERVER::getAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
 
 		if (!$this->hasAttribute($attrib_)) {
-			Logger::warning('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
+			Logger::error('main', 'Attribute '.$attrib_.' NOT readable for server '.$this->fqdn);
 			return false;
 		}
 
@@ -346,10 +345,10 @@ class Server {
 	public function getStatus($write_=true) {
 		Logger::debug('main', 'Starting SERVER::getStatus for server '.$this->fqdn);
 
-		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
+		$ret = query_url('http://'.$this->fqdn.'/webservices/server_status.php');
 
 		if ($ret == false) {
-			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
+			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');
 			if ($write_ == true)
 				$this->setStatus('broken');
 			return false;
@@ -406,10 +405,10 @@ class Server {
 		if (!$this->isOnline())
 			return false;
 
-		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_monitoring.php');
+		$xml = query_url('http://'.$this->fqdn.'/webservices/server_monitoring.php');
 
 		if ($xml == false) {
-			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
+			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');
 			$this->setAttribute('status', 'broken');
 			return false;
 		}
@@ -588,7 +587,7 @@ class Server {
 	}
 
 	public function getType() {
-		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_type.php');
+		$buf = query_url('http://'.$this->fqdn.'/webservices/server_type.php');
 
 		if ($buf === false)
 			return false;
@@ -599,7 +598,7 @@ class Server {
 	}
 
 	public function getVersion() {
-		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_version.php');
+		$buf = query_url('http://'.$this->fqdn.'/webservices/server_version.php');
 
 		if ($buf === false)
 			return false;
