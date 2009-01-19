@@ -24,6 +24,8 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Server {
 	public $fqdn = NULL;
 	public $folder = NULL;
+	public $external_name = NULL;
+	public $web_port = NULL;
 	public $status = NULL;
 
 	public function __construct($fqdn_, $create_=true) {
@@ -31,6 +33,7 @@ class Server {
 
 		$this->fqdn = $fqdn_;
 		$this->folder = SESSIONS_DIR.'/'.$this->fqdn;
+		$this->web_port = $this->getAttribute('web_port');
 
 		if (!file_exists($this->folder) && check_ip($fqdn_) && $create_)
 			$this->create();
@@ -43,6 +46,12 @@ class Server {
 
 		if (!$this->hasAttribute('external_name'))
 			$this->setAttribute('external_name', $this->fqdn);
+
+		if (!$this->hasAttribute('web_port'))
+			$this->setAttribute('web_port', 80);
+
+		$this->external_name = $this->getAttribute('external_name');
+		$this->web_port = $this->getAttribute('web_port');
 	}
 
 	public static function load($fqdn_) {
@@ -337,10 +346,10 @@ class Server {
 	public function getStatus($write_=true) {
 		Logger::debug('main', 'Starting SERVER::getStatus for server '.$this->fqdn);
 
-		$ret = query_url('http://'.$this->fqdn.'/webservices/server_status.php');
+		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
 
 		if ($ret == false) {
-			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');
+			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
 			if ($write_ == true)
 				$this->setStatus('broken');
 			return false;
@@ -397,10 +406,10 @@ class Server {
 		if (!$this->isOnline())
 			return false;
 
-		$xml = query_url('http://'.$this->fqdn.'/webservices/server_monitoring.php');
+		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_monitoring.php');
 
 		if ($xml == false) {
-			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');
+			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
 			$this->setAttribute('status', 'broken');
 			return false;
 		}
@@ -579,7 +588,7 @@ class Server {
 	}
 
 	public function getType() {
-		$buf = query_url('http://'.$this->fqdn.'/webservices/server_type.php');
+		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_type.php');
 
 		if ($buf === false)
 			return false;
@@ -590,7 +599,7 @@ class Server {
 	}
 
 	public function getVersion() {
-		$buf = query_url('http://'.$this->fqdn.'/webservices/server_version.php');
+		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_version.php');
 
 		if ($buf === false)
 			return false;

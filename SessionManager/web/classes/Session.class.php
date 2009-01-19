@@ -243,10 +243,12 @@ class Session {
 	public function session_status() {
 		Logger::debug('main', 'Starting SESSION::session_status for session '.$this->session.' on server '.$this->server);
 
-		$string = query_url('http://'.$this->server.'/webservices/session_status.php?session='.$this->session);
+		$server = Server::load($this->server);
+
+		$string = query_url('http://'.$this->server.':'.$server->web_port.'/webservices/session_status.php?session='.$this->session);
 
 		if (!isset($string) || $string == '')
-			$string = query_url('http://'.$this->server.'/webservices/session_status.php?session='.$this->session);
+			$string = query_url('http://'.$this->server.':'.$server->web_port.'/webservices/session_status.php?session='.$this->session);
 
 		if (is_numeric($string))
 			return $string;

@@ -37,7 +37,7 @@ class Server_admin extends Server {
 		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
 		$applicationDB = new $mod_app_name();
 
-		$xml = query_url('http://'.$this->fqdn.'/webservices/applications.php');
+		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/applications.php');
 
 		if ($xml == false) {
 			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');

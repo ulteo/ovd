@@ -75,7 +75,7 @@ class Application {
 
 		$random_server = $servers[array_rand($servers)];
 
-		$buf = query_url('http://'.$random_server->fqdn.'/webservices/icon.php?path='.$this->getAttribute('icon_path'));
+		$buf = query_url('http://'.$random_server->fqdn.':'.$random_server->web_port.'/webservices/icon.php?path='.$this->getAttribute('icon_path'));
 
 		if (!$buf)
 			return false;

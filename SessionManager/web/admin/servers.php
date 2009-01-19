@@ -142,6 +142,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'external_name' && isset($_GET[
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
+if (isset($_GET['action']) && $_GET['action'] == 'web_port' && isset($_GET['fqdn'])) {
+	if (isset($_GET['web_port'])) {
+		$server = new Server_admin($_GET['fqdn']);
+		$server->setAttribute('web_port', $_GET['web_port']);
+	}
+
+	redirect($_SERVER['HTTP_REFERER']);
+}
+
 // Seems to be useless, to remove in few time
 if (isset($_GET['action']) && $_GET['action'] == 'change' && isset($_GET['fqdn'])) {
 	$server = new Server_admin($_GET['fqdn']);
@@ -481,6 +490,7 @@ function show_manage($fqdn) {
   }
 
   $external_name = $server->getAttribute('external_name');
+  $web_port = $server->getAttribute('web_port');
 
   include_once('header.php');
 
@@ -550,6 +560,18 @@ function show_manage($fqdn) {
 
   echo _('Redirection name of this server').': ';
   echo '<input type="text" name="external_name" value="'.$external_name.'" />';
+
+  echo ' <input type="submit" value="'._('change').'" />';
+  echo '</form>';
+  echo "</div>\n";
+
+  echo '<div>';
+  echo '<form action="servers.php" method="GET">';
+  echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+  echo '<input type="hidden" name="action" value="web_port" />';
+
+  echo _('Web port of this server').': ';
+  echo '<input type="text" name="web_port" value="'.$web_port.'" />';
 
   echo ' <input type="submit" value="'._('change').'" />';
   echo '</form>';
