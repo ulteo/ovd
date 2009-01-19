@@ -243,6 +243,9 @@ class Session {
 	public function session_status() {
 		Logger::debug('main', 'Starting SESSION::session_status for session '.$this->session.' on server '.$this->server);
 
+		if ($this->server == '*')
+			return false;
+
 		$server = Server::load($this->server);
 
 		$string = query_url('http://'.$this->server.':'.$server->web_port.'/webservices/session_status.php?session='.$this->session);
