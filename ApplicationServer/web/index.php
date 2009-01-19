@@ -49,6 +49,9 @@ $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVE
 $dom = new DomDocument();
 @$dom->loadXML($xml);
 
+if (! $dom->hasChildNodes())
+	die('Invalid XML');
+
 $session_node = $dom->getElementsByTagname('session')->item(0);
 if (is_null($session_node))
 	die('Missing element \'session\'');
@@ -61,27 +64,24 @@ $_SESSION['owner'] = false;
 if ($_SESSION['mode'] == 'start' || $_SESSION['mode'] == 'resume')
 	$_SESSION['owner'] = true;
 
-$_SESSION['parameters'] = array();
-$settings = array('user_login', 'user_displayname', 'locale', 'quality');//'user_id',
 if ($_SESSION['mode'] == 'invite')
 	$settings[] = 'view_only';
 
-foreach ($settings as $setting) {
-	$item = $session_node->getElementsByTagname($setting)->item(0);
+$parameters = array();
+foreach ($session_node->childNodes as $node) {
+	if (!$node->hasAttribute('value'))
+		continue;
 
-	if (is_null($item))
-		die('Missing element \''.$setting.'\'');
-
-	$_SESSION['parameters'][$setting] = $item->getAttribute('value');
+	$parameters[$node->nodeName] = $node->getAttribute('value');
 }
 
-$settings2 = array('timeout', 'timeout_message', 'persistent', 'shareable', 'desktop_icons', 'debug', 'start_app', 'proxy_type', 'proxy_host', 'proxy_port', 'proxy_username', 'proxy_password');
-foreach ($settings2 as $setting2) {
-	$item2 = @$session_node->getElementsByTagname($setting2)->item(0);
+$settings = array('user_login', 'user_displayname', 'locale', 'quality'); //user_id
 
-	if (!is_null($item2))
-		$_SESSION['parameters'][$setting2] = $item2->getAttribute('value');
-}
+foreach ($settings as $setting)
+	if (!isset($parameters[$setting]))
+		die('Missing parameter \''.$setting.'\'');
+
+$_SESSION['parameters'] = $parameters;
 
 $_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
 
@@ -90,7 +90,7 @@ if ($_SESSION['owner'])
 	$_SESSION['parameters']['view_only'] = 'No';
 
 $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
-if (is_null($item))
+if (is_null($module_fs_node))
 	die('Missing element \'module_fs\'');
 
 $_SESSION['parameters']['module_fs'] = array();
@@ -102,6 +102,9 @@ foreach ($param_nodes as $param_node)
 		$_SESSION['parameters']['module_fs'][$param_node->getAttribute('key')] = $param_node->getAttribute('value');
 
 $menu_node = $session_node->getElementsByTagname('menu')->item(0);
+if (is_null($menu_node))
+	die('Missing element \'menu\'');
+
 $application_nodes = $menu_node->getElementsByTagname('application');
 $_SESSION['parameters']['desktopfiles'] = array();
 foreach ($application_nodes as $application_node)
