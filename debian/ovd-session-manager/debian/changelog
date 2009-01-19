@@ -1,5 +1,5 @@
 ovd-session-manager (1.0~beta2~svn00040-0ulteo0) ovd-polaris; urgency=low
 
-  * ovd-session-manager
+  * Initial release
 
  -- Gauvain Pocentek <gauvain@ulteo.com>  Thu, 04 Dec 2008 06:19:48 +0100
