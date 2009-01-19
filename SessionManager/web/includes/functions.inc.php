@@ -254,42 +254,6 @@ function get_unregistered_servers() {
 	return $buf->getUnregistered();
 }
 
-function get_param($server_, $session_, $param_name_) {
-	Logger::debug('main', 'Starting get_param for param '.$param_name_);
-
-	if (!file_exists(SESSIONS_DIR.'/'.$server_.'/'.$session_.'/'.$param_name_)) {
-		Logger::error('main', 'No '.$param_name.' parameter for this session : '.SESSIONS_DIR.'/'.$server_.'/'.$session_);
-	}
-
-	$buf = trim(@file_get_contents(SESSIONS_DIR.'/'.$server_.'/'.$session_.'/'.$param_name_));
-
-	if (isset($buf) && $buf != '') {
-		Logger::info('main', 'Param infos found for param '.$param_name_);
-
-		return $buf;
-	}
-	Logger::error('main', 'Param infos NOT found for param '.$param_name_);
-
-	return false;
-}
-
-function set_param($server_, $session_, $param_name_, $param_value_) {
-	Logger::debug('main', 'Starting set_param for param '.$param_name_.' with value '.$param_value_);
-
-	if (!file_exists(SESSIONS_DIR.'/'.$server_.'/'.$session_)) {
-		Logger::error('main', 'Session does not exist : '.SESSIONS_DIR.'/'.$server_.'/'.$session_);
-		die('Session does not exist : '.SESSIONS_DIR.'/'.$server_.'/'.$session_);
-	}
-
-	if (@file_put_contents(SESSIONS_DIR.'/'.$server_.'/'.$session_.'/'.$param_name_, $param_value_)) {
-		Logger::info('main', 'Param '.$param_name_.' set to '.$param_value_);
-		return true;
-	}
-	Logger::error('main', 'Unable to set param '.$param_name_.' to '.$param_value_);
-
-	return false;
-}
-
 function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
 	Logger::error('plugins', $errstr_.' in '.$errfile_.' line '.$errline_);
 }
@@ -467,24 +431,23 @@ function get_needed_attributes_user_from_module_plugin() {
 }
 
 function pathinfo_filename($path_) {
-	if(version_compare(phpversion(), "5.2.0", "<")) {
+	if (version_compare(phpversion(), '5.2.0', '<')) {
 		$temp = pathinfo($path_);
-		if($temp['extension'])
+		if ($temp['extension'])
 			$temp['filename'] = substr($temp['basename'],0 ,strlen($temp['basename'])-strlen($temp['extension'])-1);
 		return $temp;
 	}
-	else {
-		return pathinfo($path_);
-	}
+
+	return pathinfo($path_);
 }
 
 function get_classes_startwith($start_name) {
 	$ret = array();
 	$classes_name = get_declared_classes();
-	foreach ($classes_name as $name){
+	foreach ($classes_name as $name)
 		if (substr($name, 0, strlen($start_name)) == $start_name)
 			$ret[] = $name;
-	}
+
 	return $ret;
 }
 
@@ -493,10 +456,11 @@ function str_endwith($string_, $search_) {
 }
 
 function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
-	$l = strlen($st)-1;
-	$r = '';
+	$len = strlen($st)-1;
+	$ret = '';
 
-	while ($nc-->0) $r .= $st{mt_rand(0, $l)};
+	while ($nc-- > 0)
+		$ret .= $st{mt_rand(0, $len)};
 
-	return $r;
+	return $ret;
 }
