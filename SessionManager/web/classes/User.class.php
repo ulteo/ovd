@@ -154,15 +154,21 @@ class User {
 			}
 			$server_val[$server->fqdn] = $val;
 		}
-		arsort($server_val);
-		if (is_array($list_servers)) {
-			while (count($list_servers)>0) {
-				$buf_key = array_shift(array_keys($server_val));
-				$buf = $list_servers[$buf_key];
-				$buf->getStatus();
-				if ($buf->isOnline())
-					return $buf;
+		
+		while (count($server_val)>0) {
+			$max_value = -1;
+			$max_fqdn = 0;
+			foreach ($server_val as $fqdn1 => $val1) {
+				if ( $max_value < $val1) {
+					$max_value = $val1;
+					$max_fqdn = $fqdn1;
+				}
 			}
+			$buf = $list_servers[$max_fqdn];
+			unset($server_val[$max_fqdn]);
+			$buf->getStatus();
+			if ($buf->isOnline())
+				return $buf;
 		}
 		return NULL;
 	}
