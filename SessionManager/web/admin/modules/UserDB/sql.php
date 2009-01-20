@@ -36,7 +36,7 @@ class admin_UserDB_sql extends UserDB_sql {
 					$value = $user_->getAttribute($key);
 
 				$query_keys .= '`'.$key.'`,';
-				$query_values .= '\''.$value.'\',';
+				$query_values .= '"'.mysql_real_escape_string($value).'",';
 			}
 			$query_keys = substr($query_keys, 0, -1); // del the last ,
 			$query_values = substr($query_values, 0, -1); // del the last ,
