@@ -1,0 +1,32 @@
+###########################################
+###                                     ###
+### Connectme Server Configuration File ###
+###                                     ###
+###########################################
+
+### Server Name
+#
+# the FQDN of this machine
+#
+SERVERNAME=cm.ulteo.com
+
+### Web Port
+#
+# the bind port for webservices
+#
+WEBPORT=80
+
+### Session manager webservice
+#
+# the url of the webservice use for declare or remove sessions
+#
+SESSION_MANAGER_URL=http://sm.ulteo.com/sessionmanager
+
+### Log file
+#
+LOG_FILE=log/ulteo-ovd.log
+
+### Log flags
+#
+# can be debug, error, info, warn (space separated)
+LOG_FLAGS="info warn error"
