@@ -1,9 +1,9 @@
 Template: od/fqdn
 Type: string
-Description: Full qualified domain name of this server:
+_Description: Full qualified domain name of this server:
 
 Template: od/sessions/server_url
 Type: string
 Default: http://sm.ulteo.com/sessionmanager
-Description: Url used to access the session manager:
+_Description: Url used to access the session manager:
 
