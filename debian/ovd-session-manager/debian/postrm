@@ -1,11 +1,23 @@
 #!/bin/sh -e
 
-CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
+#DEBHELPER#
+
+reload_apache()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
 if [ "$1" = "purge" ]; then
     rm -rf /var/spool/ulteo/sessionmanager
     rm -rf /var/log/ulteo/sessionmanager
+else
+    # apache2 link
+    rm -f /etc/apache2/conf.d/sessionmanager
+    reload_apache
 fi
-
-#DEBHELPER#
 
 exit 0

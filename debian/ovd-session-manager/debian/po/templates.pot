@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
-"POT-Creation-Date: 2008-12-10 17:16+0100\n"
+"POT-Creation-Date: 2009-01-20 11:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -71,8 +71,7 @@ msgstr ""
 #: ../templates:5001
 msgid ""
 "Application servers will need to retrieve an applications tarball, hosted on "
-"this session manager. A default tarball can be downloaded and stocked for "
-"you."
+"this session manager. A default tarball can be downloaded and stored for you."
 msgstr ""
 
 #. Type: string
