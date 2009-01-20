@@ -187,6 +187,11 @@ function show_default() {
   if (! is_array($a_servs))
     $a_servs = array();
 
+  $nb_a_servs_online = 0;
+  foreach($a_servs as $s) {
+    if ($s->isOnline())
+      $nb_a_servs_online++;
+  }
 
   include_once('header.php');
 
@@ -279,18 +284,20 @@ function show_default() {
 
   if (count($a_servs) > 0) {
     echo '<div id="servers_list_div">';
-    if (count($a_servs) > 1) {
+    if ($nb_a_servs_online > 1) {
       echo '<form action="servers.php" method="get">';
       echo '<input type="hidden" name="mass_action" value="maintenance" />';
     }
     echo '<table id="available_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
     echo '<thead>';
     echo '<tr class="title">';
-    if (count($a_servs) > 1)
+    if ($nb_a_servs_online > 1)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
     // echo '<th>'._('Version').'</th>';
-    echo '<th>'._('Status').'</th><th>'._('Details').'</th><th>'._('Monitoring').'</th>';
+    echo '<th>'._('Status').'</th><th>'._('Details').'</th>';
+    if ($nb_a_servs_online>0)
+      echo '<th>'._('Monitoring').'</th>';
     // echo '<th>'._('Applications(physical)'.</th>';
     echo '</tr>';
     echo '</thead>';
@@ -303,17 +310,17 @@ function show_default() {
       if ($server_online) {
 	if ($s->hasAttribute('locked')) {
 	  $switch_msg = _('Switch to production');
-	  $swtich_value = 0;
+	  $switch_value = 0;
 	}
 	else {
 	  $switch_msg = _('Switch to maintenance');
-	  $swtich_value = 1;
+	  $switch_value = 1;
 	}
       }
 
 
       echo '<tr class="'.$content.'">';
-      if (count($a_servs) > 1)
+      if ($nb_a_servs_online > 1)
         echo '<td><input type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
       echo '<td>';
       echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
@@ -327,18 +334,20 @@ function show_default() {
       echo ')<br />';
       echo _('RAM').': '.round($s->getAttribute('ram')/1024).' '._('MB');
       echo '</td>';
-      echo '<td>';
-      if ($server_online) {
-        $buf = round(($s->getNbUsedSessions()/$s->getNbAvailableSessions())*100);
-        echo _('CPU usage').': '.$s->getCpuUsage().'<br />';
-        echo display_loadbar($s->getCpuUsage());
-        echo _('RAM usage').': '.$s->getRamUsage().'<br />';
-        echo display_loadbar($s->getRamUsage());
-        echo _('Sessions usage').': '.$buf.'%<br />';
-        echo display_loadbar($buf);
-      }
-      echo '</td>';
 
+      if ($nb_a_servs_online > 0) {
+	echo '<td>';
+	if ($server_online) {
+	  $buf = round(($s->getNbUsedSessions()/$s->getNbAvailableSessions())*100);
+	  echo _('CPU usage').': '.$s->getCpuUsage().'<br />';
+	  echo display_loadbar($s->getCpuUsage());
+	  echo _('RAM usage').': '.$s->getRamUsage().'<br />';
+	  echo display_loadbar($s->getRamUsage());
+	  echo _('Sessions usage').': '.$buf.'%<br />';
+	  echo display_loadbar($buf);
+	}
+	echo '</td>';
+      }
       echo '<td>';
       echo '<form action="servers.php" method="get">';
       echo '<input type="submit" value="'._('Manage').'"/>';
@@ -347,20 +356,22 @@ function show_default() {
       echo '</form>';
       echo '</td>';
 
-      echo '<td>';
-      if ($server_online) {
-	echo '<form action="servers.php" method="get">';
-	echo '<input type="submit" value="'.$switch_msg.'"/>';
-	echo '<input type="hidden" name="action" value="maintenance" />';
-	echo '<input type="hidden" name="maintenance" value="'.$swtich_value.'" />';
-	echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-	echo '</form>';
+      if ($nb_a_servs_online > 0) {
+	echo '<td>';
+	if ($server_online) {
+	  echo '<form action="servers.php" method="get">';
+	  echo '<input type="submit" value="'.$switch_msg.'"/>';
+	  echo '<input type="hidden" name="action" value="maintenance" />';
+	  echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
+	  echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+	  echo '</form>';
+	}
+	echo '</td>';
       }
-      echo '</td>';
       echo '</tr>';
     }
 
-    if (count($a_servs) > 1) {
+    if ($nb_a_servs_online > 1) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
