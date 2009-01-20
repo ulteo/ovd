@@ -17,10 +17,20 @@ mkdir -p /var/log/ulteo/applicationserver
 chown root:www-data /var/log/ulteo/applicationserver
 chmod 2770 /var/log/ulteo/applicationserver
 
-a2dissite default || true
-a2ensite application-server || true
+if [ ! -e /etc/apache2/sites-available/applicationserver ]; then
+    ln -s /etc/ulteo/applicationserver/apache2.conf \
+        /etc/apache2/sites-available/applicationserver
 
-reload_apache
+    a2dissite default 2>/dev/null || true
+    a2ensite applicationserver 2>/dev/null || true
+
+    # make sure that we don't have old configs enabled
+    if [ -e /etc/apache2/sites-available/application-server ]; then
+        a2dissite application-server 2>/dev/null
+    fi
+
+    reload_apache
+fi
 
 #DEBHELPER#
 
