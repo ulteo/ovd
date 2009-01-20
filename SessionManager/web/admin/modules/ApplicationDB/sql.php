@@ -28,7 +28,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			$attributes = $a->getAttributesList();
 			foreach ($attributes as $key){
 				$query_keys .= '`'.$key.'`,';
-				$query_values .= '"'.mysql_real_escape_string($a->getAttribute($key)).'",';
+				$query_values .= '"'.mysql_escape_string($a->getAttribute($key)).'",';
 			}
 			$query_keys = substr($query_keys, 0, -1); // del the last ,
 			$query_values = substr($query_values, 0, -1); // del the last ,
