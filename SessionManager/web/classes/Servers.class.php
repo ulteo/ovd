@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -21,18 +21,16 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Servers {
-	public function __construct() {
-	}
-
 	public function getAll() {
-		$all_servers = glob(SESSIONS_DIR.'/*', GLOB_ONLYDIR);
+// 		Logger::debug('main', 'Starting Servers::getAll');
+
+		$all_servers = glob(SERVERS_DIR.'/*', GLOB_ONLYDIR);
 
 		$buf = array();
 		foreach ($all_servers as $all_server) {
-			$server = new Server(basename($all_server));
+			$fqdn = basename($all_server);
 
-			if ($server->hasAttribute('unregistered'))
-				continue;
+			$server = Abstract_Server::load($fqdn);
 
 			$buf[] = $server;
 		}
@@ -41,32 +39,18 @@ class Servers {
 	}
 
 	public function getAvailable() {
-		$available_servers = glob(SESSIONS_DIR.'/*', GLOB_ONLYDIR);
+// 		Logger::debug('main', 'Starting Servers::getAvailable');
 
-		$buf = array();
-		foreach ($available_servers as $available_server) {
-			$server = new Server(basename($available_server));
-			$server->getStatus();
-
-			if ($server->hasAttribute('unregistered'))
-				continue;
-
-			if ($server->hasAttribute('locked'))
-				continue;
-
-			if (!$server->isOnline())
-				continue;
-
-			$buf[] = $server;
-		}
-
-		return $buf;
-	}
-
-	public static function getOnline() {
 		$servers = Servers::getAll();
 
 		foreach ($servers as $k => $server) {
+			if (! $server->getAttribute('registered'))
+				unset($servers[$k]);
+
+			if ($server->getAttribute('locked'))
+				unset($servers[$k]);
+
+			$server->getStatus();
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
@@ -74,26 +58,56 @@ class Servers {
 		return $servers;
 	}
 
-	public function getUnregistered() {
-		$unregistered_servers = glob(SESSIONS_DIR.'/*/unregistered');
+	public static function getOnline() {
+// 		Logger::debug('main', 'Starting Servers::getOnline');
 
-		$buf = array();
-		foreach ($unregistered_servers as $unregistered_server) {
-			$server = new Server(basename(dirname($unregistered_server)));
+		$servers = Servers::getAll();
 
-			$buf[] = $server;
+		foreach ($servers as $k => $server) {
+			$server->getStatus();
+			if (! $server->isOnline())
+				unset($servers[$k]);
 		}
 
-		return $buf;
+		return $servers;
 	}
-	
-	public function getAvailableType($type) {
-		$all = Servers::getAvailable();
-		$all2 = array();
-		foreach ($all as $s) {
-			if ($s->getAttribute('type') ===  $type)
-				$all2[] = $s;
+
+	public static function getRegistered() {
+// 		Logger::debug('main', 'Starting Servers::getRegistered');
+
+		$servers = Servers::getAll();
+
+		foreach ($servers as $k => $server) {
+			if (! $server->getAttribute('registered'))
+				unset($servers[$k]);
 		}
-		return $all2;
+
+		return $servers;
+	}
+
+	public static function getUnregistered() {
+// 		Logger::debug('main', 'Starting Servers::getUnregistered');
+
+		$servers = Servers::getAll();
+
+		foreach ($servers as $k => $server) {
+			if ($server->getAttribute('registered'))
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public function getAvailableType($type_) {
+// 		Logger::debug('main', 'Starting Servers::getAvailableType');
+
+		$servers = Servers::getAvailable();
+
+		foreach ($servers as $k => $server) {
+			if ($server->getAttribute('type') != $type_)
+				unset($servers[$k]);
+		}
+
+		return $servers;
 	}
 }

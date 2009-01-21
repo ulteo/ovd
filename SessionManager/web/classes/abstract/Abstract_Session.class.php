@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Server_admin extends Server {
+class Abstract_Session extends Abstract_DB {
 }

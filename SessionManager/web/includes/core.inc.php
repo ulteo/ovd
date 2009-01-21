@@ -28,6 +28,7 @@ mb_internal_encoding('UTF-8');
 
 require_once(dirname(__FILE__).'/core-minimal.inc.php');
 
+define('SERVERS_DIR', SESSIONMANAGER_SPOOL.'/servers');
 define('SESSIONS_DIR', SESSIONMANAGER_SPOOL.'/sessions');
 define('TOKENS_DIR', SESSIONMANAGER_SPOOL.'/tokens');
 define('LOCKS_DIR', SESSIONMANAGER_SPOOL.'/locks');
@@ -35,6 +36,11 @@ define('TASKS_DIR', SESSIONMANAGER_SPOOL.'/tasks');
 define('REPORT_DIR', SESSIONMANAGER_SPOOL.'/reporting');
 define('TMP_DIR', SESSIONMANAGER_SPOOL.'/tmp');
 define('CACHE_DIR', SESSIONMANAGER_SPOOL.'/cache');
+
+if (!check_folder(SERVERS_DIR)) {
+	Logger::critical('main', SERVERS_DIR.' does not exist and cannot be created !');
+	die_error(SESSIONS_DIR.' does not exist and cannot be created !',__FILE__,__LINE__);
+}
 
 if (!check_folder(SESSIONS_DIR)) {
 	Logger::critical('main', SESSIONS_DIR.' does not exist and cannot be created !');

@@ -35,7 +35,7 @@ if (isset($_POST['join'])) {
 		foreach ($_POST['kill_sessions'] as $session) {
 			$session = new Session($session);
 
-			$server = Server::load($session->server);
+			$server = Abstract_Server::load($session->server);
 
 			$buf = query_url('http://'.$session->server.':'.$server->web_port.'/webservices/kill_session.php?session='.$session->session);
 
@@ -48,7 +48,7 @@ if (isset($_POST['join'])) {
 } elseif (isset($_POST['action']) && $_POST['action'] == 'kill') {
 	$session = new Session($_POST['session']);
 
-	$server = Server::load($session->server);
+	$server = Abstract_Server::load($session->server);
 
 	$buf = query_url('http://'.$session->server.':'.$server->web_port.'/webservices/kill_session.php?session='.$session->session);
 
@@ -69,7 +69,7 @@ if (isset($_POST['join'])) {
 
 	echo '<ul>';
 	echo '<li><strong>User:</strong> '.$session->getSetting('user_displayname').'</li>';
-	echo '<li><strong>Started:</strong> '.date('d/m/Y H:i:s', filemtime($session->folder.'/used')).'</li>';
+	echo '<li><strong>Started:</strong> '.date('d/m/Y H:i:s', @filemtime($session->folder.'/used')).'</li>';
 	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
 

@@ -22,27 +22,30 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'register') {
-	if (isset($_GET['register_servers']) && is_array($_GET['register_servers'])) {
-		foreach ($_GET['register_servers'] as $server) {
-			$server = new Server_admin($server);
-			$server->register(0);
-			$server->updateApplications();
+if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'register') {
+	if (isset($_REQUEST['register_servers']) && is_array($_REQUEST['register_servers'])) {
+		foreach ($_REQUEST['register_servers'] as $server) {
+			$buf = Abstract_Server::load($server);
+			$buf->register();
+			$buf->updateApplications();
+			Abstract_Server::save($buf);
 		}
 	}
 
 	redirect('servers.php?action=list');
 }
 
-if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'maintenance') {
-	if (isset($_GET['manage_servers']) && is_array($_GET['manage_servers'])) {
-		foreach ($_GET['manage_servers'] as $server) {
-			$server = new Server_admin($server);
-			if ($server->isOnline()) {
-				if (isset($_GET['to_maintenance']))
-					$server->setAttribute('locked', '1');
+if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance') {
+	if (isset($_REQUEST['manage_servers']) && is_array($_REQUEST['manage_servers'])) {
+		foreach ($_REQUEST['manage_servers'] as $server) {
+			$buf = Abstract_Server::load($server);
+			if ($buf->isOnline()) {
+				if (isset($_REQUEST['to_maintenance']))
+					$buf->setAttribute('locked', true);
 				else
-					$server->setAttribute('locked', NULL);
+					$buf->setAttribute('locked', false);
+
+				Abstract_Server::save($buf);
 			}
 		}
 	}
@@ -51,6 +54,7 @@ if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'maintenance') {
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
+//FIX ME ?
 	$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
 
 	$tm = new Tasks_Manager();
@@ -61,12 +65,13 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset($_REQUEST['fqdn']) && isset($_REQUEST['servers'])) {
-	$server_from = new Server($_REQUEST['fqdn']);
+//FIX ME ?
+	$server_from = Abstract_Server::load($_REQUEST['fqdn']);
 	$applications_from = $server_from->getApplications();
 
 	$servers_fqdn = $_REQUEST['servers'];
 	foreach($servers_fqdn as $server_fqdn) {
-		$server_to = new Server($server_fqdn);
+		$server_to = Abstract_Server::load($server_fqdn);
 		$applications_to = $server_to->getApplications();
 
 		$to_delete = array();
@@ -89,6 +94,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset(
 		echo '<hr/>';
 		die();
 		*/
+//FIX ME ?
 		$tm = new Tasks_Manager();
 		if (count($to_delete) > 0) {
 			$t = new Task_remove(0, $server_fqdn, $to_delete);
@@ -99,91 +105,84 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset(
 			$tm->add($t);
 		}
 	}
+
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
-
-
 if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn'])) {
-	$server = new Server_admin($_GET['fqdn']);
-	$server->register(0);
-	$server->updateApplications();
+	$buf = Abstract_Server::load($_GET['fqdn']);
+	$buf->register();
+	$buf->updateApplications();
+	Abstract_Server::save($buf);
 
-	redirect('servers.php?action=list');
+	redirect($_SERVER['HTTP_REFERER']);
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['fqdn'])) {
-	$server = new Server_admin($_GET['fqdn']);
-	if ($server->isOnline()) {
+	$buf = Abstract_Server::load($_GET['fqdn']);
+	if ($buf->isOnline()) {
 		if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
-			$server->setAttribute('locked', '1');
+			$buf->setAttribute('locked', true);
 		else
-			$server->setAttribute('locked', NULL);
+			$buf->setAttribute('locked', false);
+
+		Abstract_Server::save($buf);
 	}
 
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'available_sessions' && isset($_GET['fqdn'])) {
-	if (isset($_GET['nb_sessions'])) {
-		$server = new Server_admin($_GET['fqdn']);
-		$server->setAttribute('nb_sessions', $_GET['nb_sessions']);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' && isset($_REQUEST['fqdn'])) {
+	if (isset($_REQUEST['max_sessions'])) {
+		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
+		Abstract_Server::save($server);
 	}
 
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'external_name' && isset($_GET['fqdn'])) {
-	if (isset($_GET['external_name'])) {
-		$server = new Server_admin($_GET['fqdn']);
-		$server->setAttribute('external_name', $_GET['external_name']);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isset($_REQUEST['fqdn'])) {
+	if (isset($_REQUEST['external_name'])) {
+		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		$server->setAttribute('external_name', $_REQUEST['external_name']);
+		Abstract_Server::save($server);
 	}
 
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'web_port' && isset($_GET['fqdn'])) {
-	if (isset($_GET['web_port'])) {
-		$server = new Server_admin($_GET['fqdn']);
-		$server->setAttribute('web_port', $_GET['web_port']);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_REQUEST['fqdn'])) {
+	if (isset($_REQUEST['web_port'])) {
+		$server = Abstract_Server::load($_REQUEST['fqdn']);
+		$server->setAttribute('web_port', $_REQUEST['web_port']);
+		Abstract_Server::save($server);
 	}
 
 	redirect($_SERVER['HTTP_REFERER']);
 }
 
-// Seems to be useless, to remove in few time
-if (isset($_GET['action']) && $_GET['action'] == 'change' && isset($_GET['fqdn'])) {
-	$server = new Server_admin($_GET['fqdn']);
-	$server->setAttribute('nb_sessions', $_GET['nb_sessions']);
-	if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
-		$server->setAttribute('locked', '1');
-	else
-		$server->setAttribute('locked', NULL);
-
-	redirect('servers.php?action=manage&fqdn='.$_GET['fqdn']);
-}
-
-if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['fqdn'])) {
-	$server = new Server_admin($_GET['fqdn']);
-	$server->delete();
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQUEST['fqdn'])) {
+	Abstract_Server::delete($_REQUEST['fqdn']);
 
 	redirect('servers.php?action=list');
 }
 
-if (isset($_GET['action']) && $_GET['action'] == 'manage' && isset($_GET['fqdn'])) {
-  show_manage($_GET['fqdn']);
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'manage' && isset($_REQUEST['fqdn'])) {
+  show_manage($_REQUEST['fqdn']);
 }
 
 show_default();
 
 
 function show_default() {
-  $servers = new Servers();
-  $u_servs = $servers->getUnregistered();
+//FIX ME ?
+  $u_servs = Servers::getUnregistered();
   if (! is_array($u_servs))
     $u_servs = array();
 
-  $a_servs = $servers->getAll();
+//FIX ME ?
+  $a_servs = Servers::getRegistered();
   if (! is_array($a_servs))
     $a_servs = array();
 
@@ -221,8 +220,6 @@ function show_default() {
     $count = 0;
     foreach($u_servs as $s) {
       $content = 'content'.(($count++%2==0)?1:2);
-      $s->getMonitoring();
-
       echo '<tr class="'.$content.'">';
             if (count($u_servs) > 1)
 	echo '<td><input type="checkbox" name="register_servers[]" value="'.$s->fqdn.'" /><form></form>';
@@ -231,10 +228,10 @@ function show_default() {
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
       //echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>';
-      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb').' ';
-      echo ($s->getAttribute('cpu_nb') > 1)?_('cores'):_('core');
+      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
+      echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
       echo ')<br />';
-      echo _('RAM').': '.round($s->getAttribute('ram')/1024).' MB';
+      echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' MB';
       echo '</td>';
 
       echo '<td>';
@@ -308,7 +305,7 @@ function show_default() {
       $server_online = $s->isOnline();
 
       if ($server_online) {
-	if ($s->hasAttribute('locked')) {
+	if ($s->getAttribute('locked')) {
 	  $switch_msg = _('Switch to production');
 	  $switch_value = 0;
 	}
@@ -329,22 +326,21 @@ function show_default() {
       // echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>'.$s->stringStatus().'</td>';
       echo '<td>';
-      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb').' ';
-      echo ($s->getAttribute('cpu_nb') > 1)?_('cores'):_('core');
+      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
+      echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
       echo ')<br />';
-      echo _('RAM').': '.round($s->getAttribute('ram')/1024).' '._('MB');
+      echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' '._('MB');
       echo '</td>';
 
       if ($nb_a_servs_online > 0) {
 	echo '<td>';
 	if ($server_online) {
-	  $buf = round(($s->getNbUsedSessions()/$s->getNbAvailableSessions())*100);
-	  echo _('CPU usage').': '.$s->getCpuUsage().'<br />';
+	  echo _('CPU usage').': '.$s->getCpuUsage().'%<br />';
 	  echo display_loadbar($s->getCpuUsage());
-	  echo _('RAM usage').': '.$s->getRamUsage().'<br />';
+	  echo _('RAM usage').': '.$s->getRamUsage().'%<br />';
 	  echo display_loadbar($s->getRamUsage());
-	  echo _('Sessions usage').': '.$buf.'%<br />';
-	  echo display_loadbar($buf);
+	  echo _('Sessions usage').': '.$s->getSessionUsage().'%<br />';
+	  echo display_loadbar($s->getSessionUsage());
 	}
 	echo '</td>';
       }
@@ -399,12 +395,15 @@ function show_default() {
 
 
 function show_manage($fqdn) {
-  $server = new Server_admin($fqdn);
+  $server = Abstract_Server::load($fqdn);
 
   $server_online = $server->isOnline();
 
   if ($server_online) {
-    $server->getMonitoring();
+    $buf = $server->getMonitoring();
+    if ($buf === false)
+      $_SESSION['errormsg'] = _('Cannot get server monitoring');
+    Abstract_Server::save($server);
   }
 
   $buf_status = $server->getAttribute('status');
@@ -413,7 +412,7 @@ function show_manage($fqdn) {
   elseif ($buf_status == 'broken')
     $status_error_msg = _('Warning: server is broken');
 
-  $server_lock = $server->hasAttribute('locked');
+  $server_lock = $server->getAttribute('locked');
 
   if ($server_online) {
     $buf = $server->updateApplications();
@@ -421,6 +420,7 @@ function show_manage($fqdn) {
       $_SESSION['errormsg'] = _('Cannot list available applications');
   }
 
+//FIX ME ?
   $tm = new Tasks_Manager();
   $tm->load_from_server($server->fqdn);
   $tm->refresh_all();
@@ -535,17 +535,18 @@ function show_manage($fqdn) {
 
   echo '<td>'.$server->stringVersion().'</td>';
   echo '<td>'.$server->stringStatus().'</td>';
-  echo '<td>'._('CPU').'; : '.$server->getAttribute('cpu_model').' (x'.$server->getAttribute('cpu_nb').')<br />'._('RAM').' : '.round($server->getAttribute('ram')/1024).' '._('MB').'</td>';
+  echo '<td>'._('CPU').'; : '.$server->getAttribute('cpu_model').'  ('.$server->getAttribute('cpu_nb_cores').' ';
+  echo ($server->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
+  echo ')<br />'._('RAM').' : '.round($server->getAttribute('ram_total')/1024).' '._('MB').'</td>';
 
   if ($server_online) {
     echo '<td>';
-        $buf = round(($server->getNbUsedSessions()/$server->getNbAvailableSessions())*100);
-        echo _('CPU usage').': '.$server->getCpuUsage().'<br />';
+        echo _('CPU usage').': '.$server->getCpuUsage().'%<br />';
         echo display_loadbar($server->getCpuUsage());
-        echo _('RAM usage').': '.$server->getRamUsage().'<br />';
+        echo _('RAM usage').': '.$server->getRamUsage().'%<br />';
         echo display_loadbar($server->getRamUsage());
-        echo _('Sessions usage').': '.$buf.'%<br />';
-        echo display_loadbar($buf);
+        echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
+        echo display_loadbar($server->getSessionUsage());
     echo '</td>';
   }
 
@@ -565,7 +566,7 @@ function show_manage($fqdn) {
 
   echo _('Number of available sessions on this server').': ';
   echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
-  echo '<input type="text" id="number" name="nb_sessions" value="'.$server->getNbAvailableSessions().'" size="3" onchange="field_check_integer(this);" />';
+  echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbAvailableSessions().'" size="3" onchange="field_check_integer(this);" />';
   echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
 
   echo ' <input type="submit" value="'._('change').'" />';
@@ -772,4 +773,3 @@ function show_manage($fqdn) {
   include_once('footer.php');
   die();
 }
-

@@ -60,8 +60,8 @@ class Session {
 	public function add_session($die_=true) {
 		Logger::debug('main', 'Starting SESSION::add_session for session '.$this->session.' on server '.$this->server);
 
-		$server = new Server($this->server);
-		if ($server->hasAttribute('locked')) {
+		$server = Abstract_Server::load($this->server);
+		if ($server->getAttribute('locked')) {
 			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
 			if ($die_ == true)
 				die('Server does not accept new sessions : '.$this->server);
@@ -246,7 +246,7 @@ class Session {
 		if ($this->server == '*')
 			return false;
 
-		$server = Server::load($this->server);
+		$server = Abstract_Server::load($this->server);
 
 		$string = query_url('http://'.$this->server.':'.$server->web_port.'/webservices/session_status.php?session='.$this->session);
 

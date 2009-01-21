@@ -212,7 +212,7 @@ foreach ($plugins_args as $k => $v)
 
 $token = $session->create_token($session_mode, $data);
 
-$buf = Server::load($session->server);
+$buf = Abstract_Server::load($session->server);
 
 $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token;
 

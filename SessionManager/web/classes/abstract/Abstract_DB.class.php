@@ -18,32 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-$ip = $_SERVER['REMOTE_ADDR'];
-$name = @gethostbyaddr($_SERVER['REMOTE_ADDR']);
-$buf = @gethostbyname($name);
-$use = $ip;
-if ($buf == $ip)
-	$use = $name;
-
-$buf = Server::loadDB($use);
-if ($buf) {
-	return_error('a');
-	die();
+class Abstract_DB {
 }
-
-$buf = new Server($use);
-// if (!$buf->isOnline()) {
-// 	return_error('b');
-// 	die();
-// }
-if ($buf->isRegistered()) {
-	return_error('c');
-	die();
-}
-
-return_ok('d');
-echo $buf->generateKey();
-$buf->saveDB();
-die();

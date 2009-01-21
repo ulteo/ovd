@@ -64,7 +64,7 @@ class Application {
 		$servers_id = $l->groups();
 		$servers = array();
 		foreach ($servers_id as $server_id) {
-			$buf = Server::load($server_id);
+			$buf = Abstract_Server::load($server_id);
 
 			if ($buf != false && $buf->isOnline())
 				$servers[] = $buf;

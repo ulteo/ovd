@@ -29,6 +29,7 @@ $buf = @ini_get('include_path');
 @ini_set('include_path', $buf.':'.SESSIONMANAGER_ROOT.'/PEAR');
 
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
+define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT.'/admin/classes');
 define('MODULES_DIR', SESSIONMANAGER_ROOT.'/modules');
 define('ADMIN_MODULES_DIR', SESSIONMANAGER_ROOT.'/admin/modules');
@@ -68,6 +69,7 @@ function __autoload($class_name) {
 
 	if (!class_exists($class_name)) {
 		$class_files []= CLASSES_DIR.'/'.$class_name.'.class.php';
+		$class_files []= ABSTRACT_CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= ADMIN_CLASSES_DIR.'/'.$class_name.'.class.php';
 
 		$class_files []= MODULES_DIR.'/'.preg_replace('/_/', '/', $class_name, 1).'.php';
@@ -75,7 +77,6 @@ function __autoload($class_name) {
 			$class_files []= ADMIN_MODULES_DIR.'/'.preg_replace('/_/', '/', substr($class_name, 6), 1).'.php';
 
 		$class_files []= PLUGINS_DIR.'/'.strtolower(substr($class_name, 7)).'.php';
-
 		if (substr($class_name, 0, 3) == 'FS_')
 			$class_files []= PLUGINS_DIR.'/FS/'.preg_replace('/FS_/', '', $class_name, 1).'.php';
 

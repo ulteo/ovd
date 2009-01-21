@@ -44,13 +44,14 @@ $keys = array();
 
 $cpu_node = $dom->getElementsByTagname('cpu')->item(0);
 $keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
-$keys['cpu_nb'] = $cpu_node->getAttribute('nb_cores');
+$keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
 $keys['cpu_load'] = $cpu_node->getAttribute('load');
 
 $ram_node = $dom->getElementsByTagname('ram')->item(0);
-$keys['ram'] = $ram_node->getAttribute('total');
+$keys['ram_total'] = $ram_node->getAttribute('total');
 $keys['ram_used'] = $ram_node->getAttribute('used');
 
-$server = new Server($_POST['fqdn']);
+$server = Abstract_Server::load($_POST['fqdn']);
 foreach ($keys as $k => $v)
 	$server->setAttribute($k, trim($v));
+Abstract_Server::save($server);

@@ -31,17 +31,17 @@ class DecisionCriterion {
 
 class DecisionCriterion_ram extends DecisionCriterion {
 	public function get() {
-		if (!($this->server->hasAttribute('ram_used') && $this->server->hasAttribute('ram'))) {
+		if (!($this->server->hasAttribute('ram_used') && $this->server->hasAttribute('ram_total'))) {
 			Logger::error('main','DecisionCriterion_ram::get error hasAttribute failed');
 			return 0;
 		}
-		
-		$ram_max = $this->server->getAttribute('ram');
+
+		$ram_total = $this->server->getAttribute('ram_total');
 		$ram_used = $this->server->getAttribute('ram_used');
-		if ((float)($ram_max) == 0.0)
+		if ((float)($ram_total) == 0.0)
 			return 0;
 		else
-			return 1.0 - (float)($ram_used)/(float)($ram_max);
+			return 1.0 - (float)($ram_used)/(float)($ram_total);
 	}
 }
 
@@ -57,12 +57,12 @@ class DecisionCriterion_cpu extends DecisionCriterion {
 
 class DecisionCriterion_session extends DecisionCriterion {
 	public function get() {
-		if (!($this->server->hasAttribute('ram_used') && $this->server->hasAttribute('nb_sessions'))) {
+		if (!($this->server->hasAttribute('ram_used') && $this->server->hasAttribute('max_sessions'))) {
 			Logger::error('main','DecisionCriterion_session::get error hasAttribute failed');
 			return 0;
 		}
-		
-		$nbsessions_max = $this->server->getAttribute('nb_sessions');
+
+		$nbsessions_max = $this->server->getAttribute('max_sessions');
 		$nbsessions_used = $this->server->getNbAvailableSessions();
 		if ((float)($nbsessions_max) == 0.0)
 			return 0;

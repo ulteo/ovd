@@ -22,28 +22,43 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', '(webservices/server_status) Starting webservices/server_status.php');
 
-if (!isset($_GET['status'])) {
+if (! isset($_GET['status'])) {
 	Logger::error('main', '(webservices/server_status) Missing parameter : status');
 	die('ERROR - NO $_GET[\'status\']');
 }
 
-if (!isset($_GET['fqdn'])) {
+if (! isset($_GET['fqdn'])) {
 	Logger::error('main', '(webservices/server_status) Missing parameter : fqdn');
 	die('ERROR - NO $_GET[\'fqdn\']');
 }
 
-if (!check_ip($_GET['fqdn'])) {
+if (! check_ip($_GET['fqdn'])) {
 	Logger::error('main', '(webservices/server_status) Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
 	die('Server not authorized');
 }
 
 Logger::debug('main', '(webservices/server_status) Security check OK');
 
-if (isset($_GET['web_port']))
-	$web_port = $_GET['web_port'];
-else
-	$web_port = 80;
+$buf = Abstract_Server::load($_GET['fqdn']);
 
-$server = new Server($_GET['fqdn'],true, $web_port);
-$server->setStatus($_GET['status']);
+if (! $buf) {
+	$buf = new Server($_GET['fqdn']);
 
+	$buf->registered = false;
+	$buf->locked = true;
+	$buf->external_name = $buf->fqdn;
+	if (isset($_GET['web_port']))
+		$web_port = $_GET['web_port'];
+	else
+		$web_port = 80;
+	$buf->web_port = $web_port;
+	$buf->max_sessions = 20;
+
+	$buf->getType();
+	$buf->getVersion();
+	$buf->getMonitoring();
+}
+
+$buf->setStatus($_GET['status']);
+
+Abstract_Server::save($buf);

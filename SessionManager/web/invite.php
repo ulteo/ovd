@@ -29,7 +29,7 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 
 	$token = $session->create_token('invite', array('view_only' => $view_only));
 
-	$buf = Server::load($session->server);
+	$buf = Abstract_Server::load($session->server);
 
 	$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token;
 
