@@ -306,11 +306,9 @@ function show_default($userDB) {
 	if (! in_array($attr, array('uid', 'login', 'displayname','password')))
 	  $keys[]= $attr;
 
-      $extra = '';
-      if (count($keys) != 0) {
-	foreach($keys as $key)
-	  $extra.= '<b>'.$key.':</b> '.$u->getAttribute($key).', ';
-      }
+      $extra = array();
+      foreach($keys as $key)
+	$extra[]= '<b>'.$key.':</b> '.$u->getAttribute($key);
 
       echo '<tr class="'.$content.'">';
       echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
@@ -318,8 +316,7 @@ function show_default($userDB) {
       echo '</a></td>';
       echo '<td>'.$u->getAttribute('displayname').'</td>';
       echo '<td>'.$u->getAttribute('uid').'</td>';
-      if (isset($extra))
-	echo '<td>'.$extra.'</td>';
+      echo '<td>'.implode(",", $extra).'</td>';
 
       echo '<td><form action="users.php">';
       echo '<input type="submit" value="'._('Manage').'"/>';
