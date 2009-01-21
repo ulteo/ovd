@@ -20,6 +20,8 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+include('header.php');
+
 echo'<h2>'._('List of user applications').'</h2>';
 
 $prefs = Preferences::getInstance();
@@ -38,13 +40,18 @@ if (is_null($us)){
 }
 else{
 	if (count($us) > 0){
-		echo '<table border="2">';
-		echo '<tr>';
+		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<tr class="title">';
 		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this users group').'</th><th>'._('in this applications group').'</th><th>'._('access to these applications').'</th><th>'._('Desktop File').'</th><th>'._('Server available').'</th>';
 		echo '</tr>';
-
+		$count = 0;
 		foreach($us as $u){
-			echo '<tr>';
+			echo '<tr class="content';
+			if ($count % 2 == 0)
+				echo '1';
+			else
+				echo '2';
+			echo '">';
 			echo '<td>'.$u->getAttribute('login').'</td>'; // login
 			echo '<td>'.$u->getAttribute('displayname').'</td>'; //nam
 
@@ -82,8 +89,11 @@ else{
 
 			echo '<td>'; // in app
 			$apps_s = $u->applications();
-			foreach ($apps_s as $aaa){
+			$apps_type = array();
+			foreach ($apps_s as $aaa) {
 				echo '('.$aaa->getAttribute('type').') '.'('.$aaa->getAttribute('id').')'.$aaa->getAttribute('name').'<br>';
+				if (in_array($aaa->getAttribute('type'), $apps_type) == false)
+					$apps_type []= $aaa->getAttribute('type');
 			}
 			echo '</td>';
 
@@ -95,14 +105,17 @@ else{
 			echo '</td>';
 
 			echo '<td>'; // server
-			$serv_s = $u->getAvailableServers();
-			if (is_array($serv_s)){
-				foreach ($serv_s as $s){
-					echo $s->fqdn.'<br>';
+			foreach ($apps_type as $a_type) {
+				$serv_s = $u->getAvailableServers($a_type);
+				if (is_array($serv_s)){
+					foreach ($serv_s as $s){
+						echo '<strong>('.$a_type.')</strong> '.$s->fqdn.'<br>';
+					}
 				}
 			}
 			echo '</td>';
 			echo '</tr>';
+			$count++;
 		}
 		echo '</table>';
 	}
@@ -120,7 +133,7 @@ else{
 	}
 	else {
 		?>
-		<table id="servers_table" class="main_sub sortable" border="1" cellspacing="1" cellpadding="3">
+		<table id="servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">
 		<tr class="title">
 			<th><?php echo _('FQDN');?></th>
 			<th><?php echo _('Type');?></th>
