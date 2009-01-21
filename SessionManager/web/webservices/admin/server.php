@@ -50,7 +50,7 @@ if (isset($_POST['action']) AND ($_POST['action'] == 'register') AND isset($_POS
 }
 
 if (isset($_POST['action']) AND ($_POST['action'] == 'availableapplication') AND isset($_POST['fqdn'])){
-	$apps_xml =  query_url('http://'.$_POST['fqdn'].'/webservices/get_available_applications.php');
+	$apps_xml =  query_url('http://'.$_POST['fqdn'].'/webservices/applications.php');
 	echo updateserverinfo($_POST['fqdn'],NULL,NULL,$apps_xml);
 	die();
 }

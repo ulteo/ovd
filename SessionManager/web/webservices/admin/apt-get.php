@@ -58,16 +58,16 @@ else if ( isset($_GET['fqdn_dest']) AND isset($_GET['fqdn_ori'])AND isset($_GET[
 		die();
 	}
 
-	echo '<br>-------- get app list ORI ---------------- '.'http://'.$_GET['fqdn_ori'].'/webservices/get_available_applications.php'.'<br>';
+	echo '<br>-------- get app list ORI ---------------- '.'http://'.$_GET['fqdn_ori'].'/webservices/applications.php'.'<br>';
 
 	// first we update the dest and ori
-	$apps_xml =  query_url('http://'.$_GET['fqdn_ori'].'/webservices/get_available_applications.php');
+	$apps_xml =  query_url('http://'.$_GET['fqdn_ori'].'/webservices/applications.php');
 	if (updateserverinfo($_GET['fqdn_ori'], NULL, NULL, $apps_xml) != 'OK'){
 		echo '(ERR#106) fail to get application from ori';
 		die();
 	}
-	echo '<br>-------- get app list DEST ---------------- '.'http://'.$_GET['fqdn_dest'].'/webservices/get_available_applications.php'.'<br>';
-	$apps_xml =  query_url('http://'.$_GET['fqdn_dest'].'/webservices/get_available_applications.php');
+	echo '<br>-------- get app list DEST ---------------- '.'http://'.$_GET['fqdn_dest'].'/webservices/applications.php'.'<br>';
+	$apps_xml =  query_url('http://'.$_GET['fqdn_dest'].'/webservices/applications.php');
 	echo $apps_xml;
 	echo '<br>';
 	if (updateserverinfo($_GET['fqdn_dest'], NULL, NULL, $apps_xml) != 'OK'){
