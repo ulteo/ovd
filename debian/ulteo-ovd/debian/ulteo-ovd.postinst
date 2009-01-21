@@ -45,7 +45,7 @@ set_chroot_conf () {
 }
 
 set_cups () {
-    if [ -d $CHROOTPATH /var/spool/cups2all ]; then
+    if [ -d $CHROOTPATH/var/spool/cups2all ]; then
         chroot $CHROOTPATH chown -R lp:www-data /var/spool/cups2all
         chroot $CHROOTPATH chmod -R 2770 /var/spool/cups2all
     fi
