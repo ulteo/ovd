@@ -58,60 +58,90 @@ else{
 			echo '<td>'; // in user group
 
 			$users_grps = $u->usersGroups();
-// 			var_dump($users_grps);
-			foreach ($users_grps as $ugrp){
-				echo '('.$ugrp->id.') \''.$ugrp->name.'\' ';
-				if ($ugrp->published)
-					echo '('._('Yes').')';
-				else
-					echo '('._('No').')';
-				echo '<br>';
+			if ( count($users_grps) > 0) {
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				foreach ($users_grps as $ugrp){
+					echo '<tr>';
+					echo '<td>'.$ugrp->id.'</td>';
+					echo '<td>'.$ugrp->name.'</td>';
+					if ($ugrp->published)
+						echo '<td>'._('Yes').'</td>';
+					else
+						echo '<td>'._('No').'</td>';
+					echo '</tr>';
+				}
+				echo '</table>';
 			}
 
 
 			echo '</td>';
 			echo '<td>'; // in app group
 			$apps_grps = $u->appsGroups();
-			foreach ($apps_grps as $agrp_id){
-				$agrp = new AppsGroup();
-				$agrp->fromDB($agrp_id);
-				if (is_object($agrp) && $agrp->isOK()) {
-					echo '('.$agrp->id.') ';
-					echo $agrp->name;
-					if ($agrp->published)
-						echo '('._('Yes').')';
-					else
-						echo '('._('No').')';
-					echo "<br>";
+			if ( count($apps_grps) > 0) {
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				foreach ($apps_grps as $agrp_id){
+					$agrp = new AppsGroup();
+					$agrp->fromDB($agrp_id);
+					if (is_object($agrp) && $agrp->isOK()) {
+						echo '<tr>';
+						echo '<td>'.$agrp->id.'</td>';
+						echo '<td>'.$agrp->name.'</td>';
+						if ($agrp->published)
+							echo '<td>'._('Yes').'</td>';
+						else
+							echo '<td>'._('No').'</td>';
+						echo '</tr>';
+					}
 				}
+				echo '</table>';
 			}
 			echo '</td>';
 
 			echo '<td>'; // in app
 			$apps_s = $u->applications();
 			$apps_type = array();
-			foreach ($apps_s as $aaa) {
-				echo '('.$aaa->getAttribute('type').') '.'('.$aaa->getAttribute('id').')'.$aaa->getAttribute('name').'<br>';
-				if (in_array($aaa->getAttribute('type'), $apps_type) == false)
-					$apps_type []= $aaa->getAttribute('type');
+			if (count($apps_s) > 0) {
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				foreach ($apps_s as $aaa) {
+					echo '<tr>';
+					echo '<td>'.$aaa->getAttribute('type').'</td>';
+					echo '<td>'.$aaa->getAttribute('id').'</td>';
+					echo '<td>'.$aaa->getAttribute('name').'</td>';
+					if (in_array($aaa->getAttribute('type'), $apps_type) == false)
+						$apps_type []= $aaa->getAttribute('type');
+					echo '</tr>';
+				}
+				echo '</table>';
 			}
 			echo '</td>';
 
 			echo '<td>'; // desktop file
 			$desktopfile_s = $u->desktopfiles();
-			foreach ($desktopfile_s as $file){
-				echo $file.'<br>';
+			echo '<table border="0">';
+			if (count($desktopfile_s) > 0) {
+				foreach ($desktopfile_s as $file){
+					echo '<tr>';
+					echo '<td>'.$file.'</td>';
+					echo '</tr>';
+				}
+				echo '</table>';
 			}
 			echo '</td>';
 
 			echo '<td>'; // server
-			foreach ($apps_type as $a_type) {
-				$serv_s = $u->getAvailableServers($a_type);
-				if (is_array($serv_s)){
-					foreach ($serv_s as $s){
-						echo '<strong>('.$a_type.')</strong> '.$s->fqdn.'<br>';
+			if (count($apps_type) > 0) {
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				foreach ($apps_type as $a_type) {
+					echo '<tr>';
+					$serv_s = $u->getAvailableServers($a_type);
+					if (is_array($serv_s)){
+						foreach ($serv_s as $s){
+							echo '<tr><td><strong>('.$a_type.')</strong></td><td>'.$s->fqdn.'</td></tr>';
+						}
 					}
+					echo '</tr>';
 				}
+				echo '</table>';
 			}
 			echo '</td>';
 			echo '</tr>';
@@ -147,12 +177,7 @@ else{
 		$count = 0;
 		foreach($servs_all as $server){
 			$applications = $server->getApplications();
-			$apps_name = '';
-			if (is_array($applications)){
-				foreach ($applications as $a){
-					$apps_name .= '('.$a->getAttribute('id').')'.$a->getAttribute('name').'<br />';
-				}
-			}
+// 			$apps_name = '';
 			echo '<tr class="content';
 			if ($count % 2 == 0)
 				echo '1';
@@ -161,7 +186,22 @@ else{
 			echo '">';
 			echo '<td>'.$server->fqdn.'</td>';
 			echo '<td>'.$server->stringType().'</td>';
-			echo '<td>'.$apps_name.'</td>';
+			echo '<td>';
+			if ((is_array($applications))&& (count($applications)>0) ){
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				foreach ($applications as $a){
+					echo '<tr>';
+					echo '<td>';
+					echo $a->getAttribute('id');
+					echo '</td>';
+					echo '<td>';
+					echo $a->getAttribute('name');
+					echo '</td>';
+					echo '</tr>';
+				}
+				echo '</table>';
+			}
+			echo '</td>';
 			echo '<td>'.$server->stringStatus().'</td>';
 			$count++;
 			echo '</tr>';
