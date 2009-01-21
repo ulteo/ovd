@@ -392,9 +392,17 @@ function conf_is_valid() {
 function get_all_usergroups(){
 	Logger::debug('main', 'get_all_usergroups');
 	$sql2 = MySQL::getInstance();
-    if (! $sql2){
-        return NULL;
-    }
+	if (! $sql2){
+		return NULL;
+	}
+	
+	$res1 = $sql2->DoQuery('SHOW TABLES LIKE %1',USERSGROUP_TABLE);
+	if ($res1 === false)
+		return NULL;
+	$numrows1 = $sql2->NumRows();
+	if ($numrows1 == 0)
+		return NULL;
+	
 	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5','id','name','description','published',USERSGROUP_TABLE);
 	if ($res !== false){
 		$result = array();

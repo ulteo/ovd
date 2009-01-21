@@ -117,8 +117,8 @@ else{
 
 			echo '<td>'; // desktop file
 			$desktopfile_s = $u->desktopfiles();
-			echo '<table border="0">';
 			if (count($desktopfile_s) > 0) {
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($desktopfile_s as $file){
 					echo '<tr>';
 					echo '<td>'.$file.'</td>';
@@ -132,14 +132,12 @@ else{
 			if (count($apps_type) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($apps_type as $a_type) {
-					echo '<tr>';
 					$serv_s = $u->getAvailableServers($a_type);
 					if (is_array($serv_s)){
 						foreach ($serv_s as $s){
 							echo '<tr><td><strong>('.$a_type.')</strong></td><td>'.$s->fqdn.'</td></tr>';
 						}
 					}
-					echo '</tr>';
 				}
 				echo '</table>';
 			}
