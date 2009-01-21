@@ -96,7 +96,7 @@ class User {
 		return array_unique($apps_group_list);
 	}
 
-	public function getAvailableServers(){
+	public function getAvailableServers($type){
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -105,15 +105,18 @@ class User {
 		$launch_without_apps = (int)$default_settings['launch_without_apps'];
 
 		// get the list of server who the user can launch his applications
-		Logger::error('main','USER::getAvailableServers');
+		Logger::error('main','USER::getAvailableServers (type='.$type.')');
 		$servers = array();
-		$apps = $this->applications();
+		$apps = $this->applications($type);
 		$apps_id = array();
+		$apps_type = array();
 		foreach($apps as $app){
 			$apps_id[$app->getAttribute('id')] = $app->getAttribute('id');
+			$apps_type[$app->getAttribute('id')] = $app->getAttribute('type');
 		}
+		
 		if (count($apps_id)>0 || $launch_without_apps == 1){
-			$available_servers = Servers::getAvailable(); // servers who can we user/session
+			$available_servers = Servers::getAvailableType($type);
 			foreach($available_servers as $server){
 				$l = new ApplicationServerLiaison(NULL,$server->fqdn);
 				if ( count(array_diff($apps_id,$l->elements())) == 0 ){
@@ -124,10 +127,10 @@ class User {
 		return $servers;
 	}
 
-	public function getAvailableServer(){
+	public function getAvailableServer($type){
 		// get a server who the user can launch his applications
 		Logger::debug('main','USER::getAvailableServer');
-		$list_servers = $this->getAvailableServers();
+		$list_servers = $this->getAvailableServers($type);
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -173,7 +176,7 @@ class User {
 		return NULL;
 	}
 
-	public function applications(){
+	public function applications($type=NULL){
 		Logger::debug('main','USER::applications');
 
 		$prefs = Preferences::getInstance();
@@ -205,8 +208,14 @@ class User {
 		$my_applications_id =  array_unique($my_applications_id);
 		foreach ($my_applications_id as $id){
 			$app = $applicationDB->import($id);
-			if (is_object($app))
-				$my_applications []= $app;
+			if (is_object($app)) {
+				if ( $type != NULL) {
+					if ( $app->getAttribute('type') == $type)
+						$my_applications []= $app;
+				}
+				else
+					$my_applications []= $app;
+			}
 		}
 		return $my_applications;
 	}

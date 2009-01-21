@@ -86,4 +86,14 @@ class Servers {
 
 		return $buf;
 	}
+	
+	public function getAvailableType($type) {
+		$all = Servers::getAvailable();
+		$all2 = array();
+		foreach ($all as $s) {
+			if ($s->getAttribute('type') ===  $type)
+				$all2[] = $s;
+		}
+		return $all2;
+	}
 }

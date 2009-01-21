@@ -50,6 +50,7 @@ if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['passwor
 
 	if ($ret == true) {
 		$_SESSION['login'] = $_POST['login'];
+		$_SESSION['password'] = $_POST['password'];
 
 		$lock = new Lock($_SESSION['login']);
 		if ($lock->have_lock()) {

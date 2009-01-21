@@ -83,7 +83,7 @@ else{
 			echo '<td>'; // in app
 			$apps_s = $u->applications();
 			foreach ($apps_s as $aaa){
-				echo '('.$aaa->getAttribute('type').') '.$aaa->getAttribute('name').'<br>';
+				echo '('.$aaa->getAttribute('type').') '.'('.$aaa->getAttribute('id').')'.$aaa->getAttribute('name').'<br>';
 			}
 			echo '</td>';
 
@@ -125,6 +125,7 @@ else{
 			<th><?php echo _('FQDN');?></th>
 			<th><?php echo _('Type');?></th>
 			<th><?php echo _('Applications');?></th>
+			<th><?php echo _('Status');?></th>
 		</tr>
 <!-- 		<table class="main_sub" border="1" cellspacing="1" cellpadding="5"> -->
 <!-- 			<th>FQDN</th><th>Type</th><th>Version</th><th>Status</th><th>Applications(physical)</th> -->
@@ -136,7 +137,7 @@ else{
 			$apps_name = '';
 			if (is_array($applications)){
 				foreach ($applications as $a){
-					$apps_name .= $a->getAttribute('name').'<br />';
+					$apps_name .= '('.$a->getAttribute('id').')'.$a->getAttribute('name').'<br />';
 				}
 			}
 			echo '<tr class="content';
@@ -148,7 +149,7 @@ else{
 			echo '<td>'.$server->fqdn.'</td>';
 			echo '<td>'.$server->stringType().'</td>';
 			echo '<td>'.$apps_name.'</td>';
-			echo '<td>';
+			echo '<td>'.$server->stringStatus().'</td>';
 			$count++;
 			echo '</tr>';
 		}

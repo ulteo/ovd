@@ -110,7 +110,7 @@ if ($lock->have_lock()) {
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
 	$random_server = $_REQUEST['force'];
 else {
-	$serv_tmp = $user->getAvailableServer();
+	$serv_tmp = $user->getAvailableServer('linux'); // FIXME : a session server  != linux server...
 	if (is_object($serv_tmp))
 		$random_server = $serv_tmp->fqdn;
 
@@ -181,6 +181,14 @@ if (isset($shareable) && $shareable != '0')
 	$optional_args['shareable'] = 1;
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
+
+// If AD mode, TODO BETTER
+$config_ad = $prefs->get('UserDB','activedirectory');
+$windows_server = $user->getAvailableServer('windows');
+if ( is_object($windows_server))
+	$optional_args['windows_server'] = $windows_server->fqdn;
+$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$config_ad['domain'];
+$optional_args['windows_password'] = $_SESSION['password'];
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,

@@ -39,5 +39,11 @@ if (!check_ip($_GET['fqdn'])) {
 
 Logger::debug('main', '(webservices/server_status) Security check OK');
 
-$server = new Server($_GET['fqdn']);
+if (isset($_GET['web_port']))
+	$web_port = $_GET['web_port'];
+else
+	$web_port = 80;
+
+$server = new Server($_GET['fqdn'],true, $web_port);
 $server->setStatus($_GET['status']);
+

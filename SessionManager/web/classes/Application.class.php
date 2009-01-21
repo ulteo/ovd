@@ -87,7 +87,6 @@ class Application {
 
 	public function groups(){
 		Logger::debug('main','APPLICATION::groups');
-		// TODO use liaison class
 		$result = array();
 		$l = new AppsGroupLiaison($this->attributes['id'],NULL);
 		$rows = $l->groups();
@@ -101,6 +100,30 @@ class Application {
 
 	public function getAttributesList() {
 		return array_keys($this->attributes);
+	}
+	
+	public function toXML() {
+		$list_attr = $this->getAttributesList();
+		foreach ($list_attr as $k => $v) {
+			if (in_array($v, array('executable_path', 'icon_path')))
+				unset($list_attr[$k]);
+		}
+		
+		$dom = new DomDocument();
+		$application_node = $dom->createElement('application');
+		$executable_node = $dom->createElement('executable');
+		
+		if ( $this->hasAttribute('executable_path'))
+			$executable_node->setAttribute('command', $this->attributes['executable_path']);
+		if ( $this->hasAttribute('icon_path'))
+			$executable_node->setAttribute('icon', $this->attributes['icon_path']);
+		
+		foreach ($list_attr as $attr_name) {
+			$application_node->setAttribute($attr_name, $this->attributes[$attr_name]);
+		}
+		$application_node->appendChild($executable_node);
+		$dom->appendChild($application_node);
+		return $dom->saveXML();
 	}
 
 	protected function delete(){
