@@ -119,7 +119,7 @@ function isSessionManagerRequest() {
 
   $reverse = @gethostbyaddr($address);
 
-  if ($reverse == $name)
+  if ($reverse == $name || $address == $name)
     return true;
 
   Logger::error('main', 'isSessionManagerRequest() - IP: '.$address.' / Name: '.$name.' / Reverse: '.$reverse);
