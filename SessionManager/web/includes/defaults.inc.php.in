@@ -28,3 +28,5 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 define('DEFAULT_LOGO_URL', $base_url.'media/image/header.png');
 
 define('DEFAULT_REQUEST_TIMEOUT', 10);
+
+define('LOCALE_DIR', '@LOCALE_DIR@');

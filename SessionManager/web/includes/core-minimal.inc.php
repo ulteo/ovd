@@ -38,6 +38,8 @@ define('PLUGINS_DIR', SESSIONMANAGER_ROOT.'/plugins');
 require_once(dirname(__FILE__).'/functions.inc.php');
 require_once(dirname(__FILE__).'/load_balancing.inc.php');
 
+require_once(dirname(__FILE__).'/defaults.inc.php');
+
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = split('[,;]', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 	$buf = $buf[0];
@@ -46,10 +48,8 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 $language = locale2unix($buf);
 setlocale(LC_ALL, $language);
 $domain = 'uovdsm';
-bindtextdomain($domain, '/usr/share/locale');
+bindtextdomain($domain, LOCALE_DIR);
 textdomain($domain);
-
-require_once(dirname(__FILE__).'/defaults.inc.php');
 
 $desktop_locale = $language;
 

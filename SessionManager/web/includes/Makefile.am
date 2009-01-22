@@ -14,6 +14,7 @@ EXTRA_DIST = defaults.inc.php.in \
 
 defaults.inc.php:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
+	    -e "s,@LOCALE_DIR@,$(datadir)/locale," \
 		< $(srcdir)/defaults.inc.php.in > $@
 
 clean-local:
