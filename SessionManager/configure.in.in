@@ -53,6 +53,7 @@ web/admin/Makefile
 web/applet/Makefile
 web/includes/Makefile
 web/classes/Makefile
+web/classes/abstract/Makefile
 web/PEAR/Makefile
 web/PEAR/Auth/Makefile
 web/PEAR/Auth/SASL/Makefile
