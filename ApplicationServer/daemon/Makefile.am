@@ -9,7 +9,8 @@ daemon_SCRIPTS = cpu_load.py \
                  startsession.sh \
 				 timeout.sh \
 				 uumount.sh \
-				 ulteo-ovdd
+				 ulteo-ovdd \
+				 xml2desktopfile
 daemondir = $(datadir)/ulteo-ovd
 
 daemonlib_DATA = functions.sh \

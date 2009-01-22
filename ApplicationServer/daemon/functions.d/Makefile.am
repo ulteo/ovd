@@ -4,7 +4,8 @@ scripts_DATA = apt.sh \
 		   sessions.sh \
 		   tmp.sh \
 		   utils.sh \
-		   webservices.sh
+		   webservices.sh \
+		   windows.sh
 
 scriptsdir = $(datadir)/ulteo-ovd/functions.d
 
