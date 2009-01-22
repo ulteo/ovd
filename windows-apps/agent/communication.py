@@ -26,8 +26,9 @@ import os
 import platform
 import base64
 from xml.dom.minidom import Document
-
+import wmi
 import utils
+import pythoncom
 if utils.myOS() == "windows":
 	from ctypes import *
 	from ctypes.wintypes import DWORD
@@ -108,14 +109,24 @@ class Web(SimpleHTTPRequestHandler):
 		doc = Document()
 		monitoring = doc.createElement('monitoring')
 		doc.appendChild(monitoring)
-		
 		cpu = doc.createElement('cpu')
-		if os.environ.has_key('NUMBER_OF_PROCESSORS'):
-			cpu.setAttribute('nb_cores', os.environ['NUMBER_OF_PROCESSORS'])
-		cpu.setAttribute('load', '1')
-		if os.environ.has_key('PROCESSOR_IDENTIFIER'):
-			text = doc.createTextNode(os.environ['PROCESSOR_IDENTIFIER'])
-			cpu.appendChild(text)
+		try:
+			pythoncom.CoInitialize()
+			wmi_obj = wmi.WMI()
+			cpus = wmi_obj.Win32_Processor()
+			if type(cpus) == type([]): # list
+				cpu.setAttribute('nb_cores', str(len(cpus)))
+				cpu_name = cpus[0].Name
+				text = doc.createTextNode(cpu_name)
+				cpu.appendChild(text)
+				
+				load = 0
+				for cpu_wmi in cpus:
+					load += cpu_wmi.LoadPercentage
+				load = load / float(len(cpus)*100)
+				cpu.setAttribute('load', str(load))
+		except Exception, err:
+			pass
 		
 		monitoring.appendChild(cpu)
 		
