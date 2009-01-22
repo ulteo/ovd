@@ -86,6 +86,54 @@ function print_element($key_name,$contener,$element_key,$element) {
 			}
 			echo '</table>';
 			break;
+
+		case 9 : // sliders (length fixed)
+			echo '<table border="0" cellspacing="1" cellpadding="3">';
+			$i = 0;
+			foreach ($element->content as $key1 => $value1){
+				echo '<tr>';
+					echo '<td>';
+						echo $key1;
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
+					echo '</td>';echo "\n";
+					echo '<td>';echo "\n";
+					echo '<div id="'.$label2.$sep.$key1.'_divb">';
+
+			// horizontal slider control
+echo '<script type="text/javascript">';
+echo '
+Event.observe(window, \'load\', function() {
+	new Control.Slider(\'handle'.$i.'\', \'track'.$i.'\', {
+		range: $R(0,100),
+		values: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100],
+		sliderValue: '.$value1.',
+		onSlide: function(v) {
+			$(\'slidetxt'.$i.'\').innerHTML = v;
+			$(\''.$label2.$sep.$i.$sep.'value\').value = v;
+		},
+		onChange: function(v) {
+			$(\'slidetxt'.$i.'\').innerHTML = v;
+			$(\''.$label2.$sep.$i.$sep.'value\').value = v;
+		}
+	});
+});
+';
+echo '</script>';
+
+			echo '<div id="track'.$i.'" style="width: 200px; background-color: rgb(204, 204, 204); height: 10px;"><div class="selected" id="handle'.$i.'" style="width: 10px; height: 15px; background-color: #004985; cursor: move; left: 190px; position: relative;"></div></div>';
+
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" maxlength="100"/>';
+					echo '</div>';echo "\n";
+					echo '</td>';echo "\n";
+					echo '<td>';echo "\n";
+					echo '<div id="slidetxt'.$i.'" style="float: right;">'.$value1.'</div>';
+					echo '</td>';echo "\n";
+				echo '</tr>';
+				$i += 1;
+				echo "\n";
+			}
+			echo '</table>';
+			break;
 	}
 	if ($element->type == 4 || $element->type == 5) {
 		echo '<div id="'.$label2.'">';

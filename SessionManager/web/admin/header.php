@@ -29,6 +29,9 @@ else
 
 header_static($main_title.' - '._('Administration'));
 ?>
+<script type="text/javascript" src="../media/script/lib/prototype/prototype.js" charset="utf-8"></script>
+<script type="text/javascript" src="../media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+<script type="text/javascript" src="../media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/ajax/appsgroup.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/ajax/user.js" charset="utf-8"></script>

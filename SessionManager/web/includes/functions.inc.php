@@ -310,6 +310,9 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />
 
 		<script type="text/javascript" src="'.$base_url.'media/script/lib/prototype/prototype.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
+
 		<script type="text/javascript" src="'.$base_url.'media/script/common.js" charset="utf-8"></script>
 
 		<script type="text/javascript" src="'.$base_url.'media/script/sortable.js" charset="utf-8"></script>
@@ -395,14 +398,14 @@ function get_all_usergroups(){
 	if (! $sql2){
 		return NULL;
 	}
-	
+
 	$res1 = $sql2->DoQuery('SHOW TABLES LIKE %1',USERSGROUP_TABLE);
 	if ($res1 === false)
 		return NULL;
 	$numrows1 = $sql2->NumRows();
 	if ($numrows1 == 0)
 		return NULL;
-	
+
 	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5','id','name','description','published',USERSGROUP_TABLE);
 	if ($res !== false){
 		$result = array();

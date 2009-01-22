@@ -56,7 +56,7 @@ class Preferences_admin extends Preferences {
 
 		$c = new config_element('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), 3);
 		$this->add($c,'general');
-		
+
 // 		$c = new config_element('locale','locale','locale_des','fr_FR.UTF8@euro',NULL,1);
 // 		$this->add('general',$c);
 //
@@ -117,14 +117,14 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general', 'application_server_settings');
 		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
 		$this->add($c,'general', 'application_server_settings');
-		
+
 		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
 		$content_load_balancing = array();
 		foreach ($decisionCriterion as $criterion_class_name) {
 				$c = new $criterion_class_name(NULL); // ugly
 				$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
 		}
-		$c = new config_element('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing, NULL, 8);
+		$c = new config_element('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing, NULL, 9);
 		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
@@ -249,7 +249,7 @@ class Preferences_admin extends Preferences {
 				if (is_null($plugin_prettyname))
 					$plugin_prettyname = $plugin_name;
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
-				
+
 				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
 				if ($isdefault1 === true)
 					$c = new config_element($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, 2);
@@ -276,7 +276,7 @@ class Preferences_admin extends Preferences {
 
 		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB','ApplicationDB'), $modules_prettyname, 3);
 		$this->add($c,'general');
-		
+
 		foreach ($available_module as $mod => $sub_mod){
 			$c = new config_element('enable', $mod, $mod, $mod, NULL, $sub_mod, 2);
 			foreach ($sub_mod as $k4 => $v4) {
@@ -285,7 +285,7 @@ class Preferences_admin extends Preferences {
 				if ($default1 === true)
 					$c = new config_element('enable', $mod, $mod, $mod, $k4, $sub_mod, 2);
 			}
-			
+
 			//dirty hack (if this->elements[mod] will be empty)
 			if (!isset($this->elements[$mod]))
 				$this->elements[$mod] = array();
