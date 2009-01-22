@@ -71,3 +71,14 @@ webservices_system_monitoring() {
     cache_set_monitoring /tmp/monitoring.xml || return 1
     curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>/dev/null 
 }
+
+webservices_get_application() {
+    local desktopfile="$1"
+    local output=$2
+
+    local args="fqdn=${SERVERNAME}&desktopfile=$desktopfile"
+    local request="${SESSION_MANAGER_URL}/webservices/app_desktopfile.php?${args}"
+
+    log_INFO "webservices_server_request: doing $request"
+    wget --no-check-certificate --retry-connrefused "$request" -O $output -o /dev/null
+}

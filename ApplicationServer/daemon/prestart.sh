@@ -62,8 +62,6 @@ if [  $? -gt 0 ]; then
     close_session
 fi
 
-menu_spool ${USER_ID} ${SESSID_DIR}
-
 # erase all previous session junk
 su -s "/bin/bash" ${USER_LOGIN} -c "/bin/rm -rf ${USER_HOME}/.DCOP* ${USER_HOME}/.ICE* ${USER_HOME}/.kde/cache* ${USER_HOME}/.kde/socket* ${USER_HOME}/.kde/tmp*";
 
