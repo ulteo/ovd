@@ -58,8 +58,10 @@ if (isset($_POST['join'])) {
 	redirect($_SERVER['HTTP_REFERER']);
 } elseif (isset($_GET['info'])) {
 	$session = new Session($_GET['info']);
-	if (!$session->is_valid())
-		redirect('sessions.php');
+
+	//FIX ME ?
+// 	if (!$session->is_valid())
+// 		redirect('sessions.php');
 
 	require_once('header.php');
 

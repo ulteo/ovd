@@ -30,26 +30,15 @@ class Abstract_Server extends Abstract_DB {
 		if (! is_readable($folder))
 			return false;
 
-		$status = @file_get_contents($folder.'/status');
-		$registered = @file_get_contents($folder.'/registered');
-		$locked = @file_get_contents($folder.'/locked');
-
-		$type = @file_get_contents($folder.'/type');
-		$version = @file_get_contents($folder.'/version');
-		$external_name = @file_get_contents($folder.'/external_name');
-		$web_port = @file_get_contents($folder.'/web_port');
-		$max_sessions = @file_get_contents($folder.'/max_sessions');
-		$cpu_model = @file_get_contents($folder.'/cpu_model');
-		$cpu_nb_cores = @file_get_contents($folder.'/cpu_nb_cores');
-		$cpu_load = @file_get_contents($folder.'/cpu_load');
-		$ram_total = @file_get_contents($folder.'/ram_total');
-		$ram_used = @file_get_contents($folder.'/ram_used');
+		$attributes = array('status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used');
+		foreach ($attributes as $attribute)
+			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
+				return false;
 
 		$buf = new Server($fqdn);
 		$buf->status = (string)$status;
 		$buf->registered = (bool)$registered;
 		$buf->locked = (bool)$locked;
-
 		$buf->type = (string)$type;
 		$buf->version = (string)$version;
 		$buf->external_name = (string)$external_name;
@@ -80,7 +69,6 @@ class Abstract_Server extends Abstract_DB {
 		@file_put_contents($folder.'/status', (string)$server_->status);
 		@file_put_contents($folder.'/registered', (int)$server_->registered);
 		@file_put_contents($folder.'/locked', (int)$server_->locked);
-
 		@file_put_contents($folder.'/type', (string)$server_->type);
 		@file_put_contents($folder.'/version', (string)$server_->version);
 		@file_put_contents($folder.'/external_name', (string)$server_->external_name);
@@ -104,7 +92,8 @@ class Abstract_Server extends Abstract_DB {
 		if (! is_writeable(SERVERS_DIR))
 			return false;
 
-		@mkdir($folder, 0750);
+		if (! @mkdir($folder, 0750))
+			return false;
 
 		return true;
 	}
@@ -120,12 +109,28 @@ class Abstract_Server extends Abstract_DB {
 
 		$remove_files = glob($folder.'/*');
 		foreach ($remove_files as $remove_file)
-			@unlink($remove_file);
+			if (! @unlink($remove_file))
+				return false;
+		unset($remove_file);
 		unset($remove_files);
 
 		if (! @rmdir($folder))
 			return false;
 
 		return true;
+	}
+
+	public function uptodate($server_) {
+// 		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
+
+		$fqdn = $server_->fqdn;
+		$folder = SERVERS_DIR.'/'.$fqdn;
+
+		$buf = @filemtime($folder.'/status');
+
+		if ($buf > (time()-30))
+			return true;
+
+		return false;
 	}
 }

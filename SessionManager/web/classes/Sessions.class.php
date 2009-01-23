@@ -21,46 +21,47 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Sessions {
-	public function __construct() {
-	}
+	public function getAll() {
+// 		Logger::debug('main', 'Starting Sessions::getAll');
 
-	public function getActives() {
-		$session_folders = glob(SESSIONS_DIR.'/*/*', GLOB_ONLYDIR);
+		//FIX ME ?
+		$all_sessions = glob(SESSIONS_DIR.'/*', GLOB_ONLYDIR);
 
-		$ret = array();
-		foreach ($session_folders as $session_folder) {
-			$session = new Session(basename($session_folder));
+		$buf = array();
+		foreach ($all_sessions as $all_session) {
+			$id = basename($all_session);
 
-			$ret[] = $session;
+			$session = Abstract_Session::load($id);
+
+			$buf[] = $session;
 		}
 
-		return $ret;
+		return $buf;
 	}
 
-	public function getActivesForUser($login_) {
-		$session_folders = glob(SESSIONS_DIR.'/*/*', GLOB_ONLYDIR);
+	public function getByServer($fqdn_) {
+// 		Logger::debug('main', 'Starting Sessions::getByServer');
 
-		$ret = array();
-		foreach ($session_folders as $session_folder) {
-			$session = new Session(basename($session_folder));
+		$sessions = Sessions::getAll();
 
-			if ($session->getSetting('user_login') == $login_)
-				$ret[] = $session;
+		foreach ($sessions as $k => $session) {
+			if ($session->getAttribute('server') != $fqdn_)
+				unset($sessions[$k]);
 		}
 
-		return $ret;
+		return $sessions;
 	}
 
-	public function getActivesForServer($fqdn_) {
-		$session_folders = glob(SESSIONS_DIR.'/'.$fqdn_.'/*', GLOB_ONLYDIR);
+	public function getByUser($user_login_) {
+// 		Logger::debug('main', 'Starting Sessions::getByUser');
 
-		$ret = array();
-		foreach ($session_folders as $session_folder) {
-			$session = new Session(basename($session_folder));
+		$sessions = Sessions::getAll();
 
-			$ret[] = $session;
+		foreach ($sessions as $k => $session) {
+			if ($session->getAttribute('user_login') != $user_login_)
+				unset($sessions[$k]);
 		}
 
-		return $ret;
+		return $sessions;
 	}
 }

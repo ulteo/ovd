@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Reporting {
 	public function __construct($session_id_) {
-		$this->session = new Session($session_id_);
+		$this->session = Abstract_Session::load($session_id_);
 	}
 
 	public function session_begin($token_, $user_) {
@@ -44,7 +44,7 @@ class Reporting {
 		@mkdir($buf);
 
 		@file_put_contents($buf.'/date_end', time());
-		@file_put_contents($buf.'/final_status', 3);
+		@file_put_contents($buf.'/final_status', 4);
 
 		$this->generateXML();
 
@@ -89,7 +89,7 @@ class Reporting {
 		$session_node->appendChild($users_node);
 
 		$settings_node = $dom->createElement('settings');
-		$settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$this->session->server.'/'.$this->session->id.'/settings'));
+		$settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$this->session->id.'/settings'));
 		foreach ($settings as $k => $v) {
 			if ($k == 'user_id' || $k == 'user_login' || $k == 'user_displayname' || $k == 'module_fs')
 				continue;
@@ -114,7 +114,7 @@ class Reporting {
 		$session_node->appendChild($applications_node);
 
 		$invitations_node = $dom->createElement('invitations');
-		$invitations = @file_get_contents(SESSIONS_DIR.'/'.$this->session->server.'/'.$this->session->id.'/invited');
+		$invitations = @file_get_contents(SESSIONS_DIR.'/'.$this->session->id.'/invited');
 		$invitations = explode("\n", $invitations);
 		foreach ($invitations as $invitation) {
 			if ($invitation === '') //for the last \n ...
@@ -133,7 +133,7 @@ class Reporting {
 
 		$xml = $dom->saveXML();
 
-		@file_put_contents(REPORT_DIR.'/'.$this->session->id.'_'.date('Ymd').'.xml', $xml);
+		@file_put_contents(REPORTING_DIR.'/'.$this->session->id.'_'.date('Ymd').'.xml', $xml);
 
 		return true;
 	}

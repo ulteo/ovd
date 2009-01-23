@@ -27,7 +27,6 @@ class Server {
 	public $status = NULL;
 	public $registered = NULL;
 	public $locked = NULL;
-
 	public $type = NULL;
 	public $version = NULL;
 	public $external_name = NULL;
@@ -75,96 +74,42 @@ class Server {
 		return true;
 	}
 
-	public function isOnline() {
-// 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
+	public function uptodateAttribute($attrib_) {
+// 		Logger::debug('main', 'Starting Server::uptodateAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
 
-		if (! $this->hasAttribute('status'))// || ! $this->uptodateAttribute('status'))
-			$this->getStatus();
+		$buf = Abstract_Server::uptodate($this);
 
-		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
-			return true;
-
-		return false;
+		return $buf;
 	}
 
-	public function getStatus() {
-// 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
+	public function isAuthorized() {
+// 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
-		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
-
-		if (! $ret) {
-			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
-			$this->setStatus('broken');
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
-		$this->setStatus($ret);
+		$buf = $prefs->get('general', 'application_server_settings');
+		$disable_fqdn_check = $buf['disable_fqdn_check'];
 
-		if ($ret !== 'ready') {
-			$prefs = Preferences::getInstance();
-			if (! $prefs) {
-				Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+		$buf = @gethostbyaddr(@gethostbyname($this->fqdn));
+
+		if ($this->fqdn !== $buf) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('reverse DNS seems invalid !').' ('.$buf.')';
+			Logger::warning('main', '"'.$this->fqdn.'": reverse DNS seems invalid ! ('.$buf.')');
+
+			if ($disable_fqdn_check == '0')
 				return false;
-			}
-
-			$buf = $prefs->get('general', 'application_server_settings');
-			if ($buf['action_when_as_not_ready'] == 1)
-				$this->setAttribute('locked', true);
 		}
 
-		return true;
-	}
+		if (! $this->getStatus()) {
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('does not accept requests from me !');
+			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me !');
 
-	public function setStatus($status_) {
-// 		Logger::debug('main', 'Starting Server::setStatus for \''.$this->fqdn.'\'');
-
-		switch ($status_) {
-			case 'ready':
-				Logger::info('main', 'Status set to "ready" for \''.$this->fqdn.'\'');
-				$this->setAttribute('status', 'ready');
-				break;
-			case 'down':
-				Logger::warning('main', 'Status set to "down" for \''.$this->fqdn.'\'');
-				$this->setAttribute('status', 'down');
-				break;
-			case 'broken':
-			default:
-				Logger::error('main', 'Status set to "broken" for \''.$this->fqdn.'\'');
-				$this->setAttribute('status', 'broken');
-				break;
+			return false;
 		}
-
-		return true;
-	}
-
-	public function getType() {
-// 		Logger::debug('main', 'Starting Server::getType for \''.$this->fqdn.'\'');
-
-		if (! $this->isOnline())
-			return false;
-
-		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_type.php');
-
-		if (! $buf)
-			return false;
-
-		$this->setAttribute('type', $buf);
-
-		return true;
-	}
-
-	public function getVersion() {
-// 		Logger::debug('main', 'Starting Server::getVersion for \''.$this->fqdn.'\'');
-
-		if (! $this->isOnline())
-			return false;
-
-		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_version.php');
-
-		if (! $buf)
-			return false;
-
-		$this->setAttribute('version', $buf);
 
 		return true;
 	}
@@ -191,8 +136,168 @@ class Server {
 		return true;
 	}
 
-	public function getNbAvailableSessions() {
-// 		Logger::debug('main', 'Starting Server::getNbAvailableSessions for \''.$this->fqdn.'\'');
+	public function isOnline() {
+// 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
+
+		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
+			$this->getStatus();
+
+		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
+			return true;
+
+		return false;
+	}
+
+	public function isUnreachable() {
+// 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
+
+		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
+		$this->setAttribute('status', 'broken');
+
+		return true;
+	}
+
+	public function returnedError() {
+// 		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
+
+		Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
+		$this->setAttribute('status', 'broken');
+
+		return true;
+	}
+
+	public function getStatus() {
+// 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
+
+		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
+
+		if (! $ret) {
+			$this->isUnreachable();
+			return false;
+		}
+
+		$this->setStatus($ret);
+
+		if ($ret !== 'ready') {
+			$prefs = Preferences::getInstance();
+			if (! $prefs) {
+				Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+				return false;
+			}
+
+			$buf = $prefs->get('general', 'application_server_settings');
+			if ($buf['action_when_as_not_ready'] == 1)
+				$this->setAttribute('locked', true);
+		}
+
+		Abstract_Server::save($this);
+
+		return true;
+	}
+
+	public function setStatus($status_) {
+// 		Logger::debug('main', 'Starting Server::setStatus for \''.$this->fqdn.'\'');
+
+		switch ($status_) {
+			case 'ready':
+				Logger::info('main', 'Status set to "ready" for \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'ready');
+				break;
+			case 'down':
+				Logger::warning('main', 'Status set to "down" for \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'down');
+				break;
+			case 'broken':
+			default:
+				Logger::error('main', 'Status set to "broken" for \''.$this->fqdn.'\'');
+				$this->setAttribute('status', 'broken');
+				break;
+		}
+
+		return true;
+	}
+
+	public function stringStatus() {
+// 		Logger::debug('main', 'Starting Server::stringStatus for \''.$this->fqdn.'\'');
+
+		$string = '';
+
+		if ($this->getAttribute('locked'))
+			$string .= '<span class="msg_unknown">'._('Under maintenance').'</span> ';
+
+		$buf = $this->getAttribute('status');
+		if ($buf == 'ready')
+			$string .= '<span class="msg_ok">'._('Online').'</span>';
+		elseif ($buf == 'down')
+			$string .= '<span class="msg_warn">'._('Offline').'</span>';
+		elseif ($buf == 'broken')
+			$string .= '<span class="msg_error">'._('Broken').'</span>';
+		else
+			$string .= '<span class="msg_other">'._('Unknown').'</span>';
+
+		return $string;
+	}
+
+	public function getType() {
+// 		Logger::debug('main', 'Starting Server::getType for \''.$this->fqdn.'\'');
+
+		if (! $this->isOnline())
+			return false;
+
+		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_type.php');
+
+		if (! $buf) {
+			$this->isUnreachable();
+			return false;
+		}
+
+		$this->setAttribute('type', $buf);
+
+		Abstract_Server::save($this);
+
+		return true;
+	}
+
+	public function stringType() {
+// 		Logger::debug('main', 'Starting Server::stringType for \''.$this->fqdn.'\'');
+
+		if ($this->hasAttribute('type'))
+			return $this->getAttribute('type');
+
+		return _('Unknown');
+	}
+
+	public function getVersion() {
+// 		Logger::debug('main', 'Starting Server::getVersion for \''.$this->fqdn.'\'');
+
+		if (! $this->isOnline())
+			return false;
+
+		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_version.php');
+
+		if (! $buf) {
+			$this->isUnreachable();
+			return false;
+		}
+
+		$this->setAttribute('version', $buf);
+
+		Abstract_Server::save($this);
+
+		return true;
+	}
+
+	public function stringVersion() {
+// 		Logger::debug('main', 'Starting Server::stringVersion for \''.$this->fqdn.'\'');
+
+		if ($this->hasAttribute('version'))
+			return $this->getAttribute('version');
+
+		return _('Unknown');
+	}
+
+	public function getNbMaxSessions() {
+// 		Logger::debug('main', 'Starting Server::getNbMaxSessions for \''.$this->fqdn.'\'');
 
 		return $this->getAttribute('max_sessions');
 	}
@@ -200,10 +305,18 @@ class Server {
 	public function getNbUsedSessions() {
 // 		Logger::debug('main', 'Starting Server::getNbUsedSessions for \''.$this->fqdn.'\'');
 
-		//FIX ME ?
-		$buf = glob(SESSIONS_DIR.'/'.$this->fqdn.'/*', GLOB_ONLYDIR);
+  		$buf = Sessions::getByServer($this->fqdn);
 
 		return count($buf);
+	}
+
+	public function getNbAvailableSessions() {
+// 		Logger::debug('main', 'Starting Server::getNbAvailableSessions for \''.$this->fqdn.'\'');
+
+		$max_sessions = $this->getNbMaxSessions();
+		$used_sessions = $this->getNbUsedSessions();
+
+		return ($max_sessions-$used_sessions);
 	}
 
 	public function getMonitoring() {
@@ -215,14 +328,12 @@ class Server {
 		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_monitoring.php');
 
 		if (! $xml) {
-			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
-			$this->setStatus('broken');
+			$this->isUnreachable();
 			return false;
 		}
 
 		if (substr($xml, 0, 5) == 'ERROR') {
-			Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
-			$this->setStatus('broken');
+			$this->returnedError();
 			return false;
 		}
 
@@ -245,46 +356,9 @@ class Server {
 		foreach ($keys as $k => $v)
 			$this->setAttribute($k, trim($v));
 
+		Abstract_Server::save($this);
+
 		return true;
-	}
-
-	public function stringType() {
-// 		Logger::debug('main', 'Starting Server::stringType for \''.$this->fqdn.'\'');
-
-		if ($this->hasAttribute('type'))
-			return $this->getAttribute('type');
-
-		return _('Unknown');
-	}
-
-	public function stringVersion() {
-// 		Logger::debug('main', 'Starting Server::stringVersion for \''.$this->fqdn.'\'');
-
-		if ($this->hasAttribute('version'))
-			return $this->getAttribute('version');
-
-		return _('Unknown');
-	}
-
-	public function stringStatus() {
-// 		Logger::debug('main', 'Starting Server::stringStatus for \''.$this->fqdn.'\'');
-
-		$string = '';
-
-		if ($this->getAttribute('locked'))
-			$string .= '<span class="msg_unknown">'._('Under maintenance').'</span> ';
-
-		$buf = $this->getAttribute('status');
-		if ($buf == 'ready')
-			$string .= '<span class="msg_ok">'._('Online').'</span>';
-		elseif ($buf == 'down')
-			$string .= '<span class="msg_warn">'._('Offline').'</span>';
-		elseif ($buf == 'broken')
-			$string .= '<span class="msg_error">'._('Broken').'</span>';
-		else
-			$string .= '<span class="msg_other">'._('Unknown').'</span>';
-
-		return $string;
 	}
 
 	public function getCpuUsage() {
@@ -314,7 +388,7 @@ class Server {
 	public function getSessionUsage() {
 // 		Logger::debug('main', 'Starting Server::getSessionUsage for \''.$this->fqdn.'\'');
 
-		$max_sessions = $this->getNbAvailableSessions();
+		$max_sessions = $this->getNbMaxSessions();
 		$used_sessions = $this->getNbUsedSessions();
 
 		if ($max_sessions == 0)
@@ -323,45 +397,7 @@ class Server {
 		return round(($used_sessions/$max_sessions)*100);
 	}
 
-	public function isAuthorized() {
-// 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
-
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$buf = $prefs->get('general', 'application_server_settings');
-		$disable_fqdn_check = $buf['disable_fqdn_check'];
-
-		if ($this->fqdn !== @gethostbyaddr(@gethostbyname($this->fqdn))) {
-			$_SESSION['errormsg'] = '"'.$server_->fqdn.'": '._('reverse DNS seems invalid !');
-			Logger::warning('main', '"'.$server_->fqdn.'": reverse DNS seems invalid !');
-
-			if ($disable_fqdn_check == '0')
-				return false;
-		}
-
-		if (! $this->getStatus()) {
-			$_SESSION['errormsg'] = '"'.$server_->fqdn.'": '._('does not accept requests from me !');
-			Logger::critical('main', '"'.$server_->fqdn.'": does not accept requests from me !');
-
-			return false;
-		}
-
-		return true;
-	}
-
 	// ? unclean?
-	public function isOK() {
-		return true;
-	}
-
-	public function onDB() {
-		return true;
-	}
-
 	public function getApplications() {
 		Logger::debug('main', 'Starting SERVER::getApplications for server '.$this->fqdn);
 
@@ -457,15 +493,13 @@ class Server {
 
 		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/applications.php');
 
-		if ($xml == false) {
-			Logger::error('main', 'Server '.$this->fqdn.' is unreachable, status switched to "broken"');
-			$this->setAttribute('status', 'broken');
+		if (! $xml) {
+			$this->isUnreachable();
 			return false;
 		}
 
 		if (substr($xml, 0, 5) == 'ERROR') {
-			Logger::error('main', 'Webservice returned an ERROR, status switched to "broken"');
-			$this->setAttribute('status', 'broken');
+			$this->returnedError();
 			return false;
 		}
 
@@ -546,6 +580,9 @@ class Server {
 				}
 			}
 		}
+
+		Abstract_Server::save($this);
+
 		return true;
 	}
 }

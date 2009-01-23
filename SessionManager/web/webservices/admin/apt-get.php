@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -30,10 +30,8 @@ else if ( isset($_POST['fqdn']) AND isset($_POST['action']) AND ($_POST['action'
 	die();
 }
 else if ( isset($_GET['fqdn_dest']) AND isset($_GET['fqdn_ori'])AND isset($_GET['action']) AND ($_GET['action'] == 'duplicate') AND isset($_GET['param']) ){
-	$serv_dest = new Server_admin();
-	$serv_dest->fromDB($_GET['fqdn_dest']);
-	$serv_ori = new Server_admin();
-	$serv_ori->fromDB($_GET['fqdn_ori']);
+	$serv_dest = Abstract_Server::load($_GET['fqdn_dest']);
+	$serv_ori = Abstract_Server::load($_GET['fqdn_ori']);
 	echo 'ori ';var_dump($serv_ori);echo '<br>';
 	echo 'dest ';var_dump($serv_dest);echo '<br>';
 

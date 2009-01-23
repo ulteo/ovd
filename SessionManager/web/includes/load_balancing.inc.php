@@ -62,8 +62,8 @@ class DecisionCriterion_session extends DecisionCriterion {
 			return 0;
 		}
 
-		$nbsessions_max = $this->server->getAttribute('max_sessions');
-		$nbsessions_used = $this->server->getNbAvailableSessions();
+		$nbsessions_max = $this->server->getNbMaxSessions();
+		$nbsessions_used = $this->server->getNbUsedSessions();
 		if ((float)($nbsessions_max) == 0.0)
 			return 0;
 		else

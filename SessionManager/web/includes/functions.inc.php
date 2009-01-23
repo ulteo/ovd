@@ -236,24 +236,6 @@ function locale2unix($locale_) {
 	return $locale_;
 }
 
-function get_all_servers() {
-	$buf = new Servers();
-
-	return $buf->getAll();
-}
-
-function get_available_servers() {
-	$buf = new Servers();
-
-	return $buf->getAvailable();
-}
-
-function get_unregistered_servers() {
-	$buf = new Servers();
-
-	return $buf->getUnregistered();
-}
-
 function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
 	Logger::error('plugins', $errstr_.' in '.$errfile_.' line '.$errline_);
 }

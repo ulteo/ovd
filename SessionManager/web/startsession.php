@@ -97,11 +97,11 @@ Logger::debug('main', 'startsession.php: Now checking for old session');
 
 $lock = new Lock($user->getAttribute('login'));
 if ($lock->have_lock()) {
-	$session = new Session($lock->session);
+	$session = Abstract_Session::load($lock->session);
 
-	if ($session->session_alive())
+	if ($session->isAlive())
 		die_error(_('You already have a session active'),__FILE__,__LINE__);
-	elseif ($session->session_suspended()) {
+	elseif ($session->isSuspended()) {
 		$old_session_id = $session->id;
 		$old_session_server = $session->server;
 	}
@@ -126,28 +126,31 @@ else {
 }
 
 if (isset($old_session_id) && isset($old_session_server)) {
-	$session = new Session($old_session_id, $old_session_server);
+	$session = Abstract_Session::load($old_session_id);
 
 	$ret = true;
 
 	$session_mode = 'resume';
 
-	Logger::debug('main', 'startsession.php: Resuming session ('.$old_session_id.' => '.$old_session_server.')');
+	Logger::debug('main', '(startsession) Resuming session ('.$old_session_id.' => '.$old_session_server.')');
 } else {
-	$random_session = gen_string(5);
+	$random_session_id = gen_string(5);
 
-	$session = new Session($random_session, $random_server);
-	$ret = $session->add_session(0);
+	$session = new Session($random_session_id);
+	$session->server = $random_server;
+	Abstract_Session::save($session);
 
 	$session_mode = 'start';
 
-	Logger::debug('main', 'startsession.php: Creating new session ('.$random_session.' => '.$random_server.')');
+	$ret = true;
+
+	Logger::debug('main', '(startsession) Creating new session ('.$random_session_id.' => '.$random_server.')');
 }
 
 if ($ret === false)
 	die_error(_('No available session'),__FILE__,__LINE__);
 
-$lock->add_lock($session->session, $session->server);
+$lock->add_lock($session->id, $session->server);
 
 $fs = $prefs->get('plugins', 'FS');
 // for now we can use one FS at the same time
@@ -192,7 +195,7 @@ $optional_args['windows_password'] = $_SESSION['password'];
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
-	'session'	=>	$session->session
+	'session'	=>	$session->id
 ));
 
 $plugins_args = array();

@@ -490,7 +490,7 @@ function show_manage($fqdn) {
   }
 
   $sessions = new Sessions();
-  $sessions = $sessions->getActivesForServer($_GET['fqdn']);
+  $sessions = $sessions->getByServer($_GET['fqdn']);
 
   if (count($sessions) > 0)
     $has_sessions = true;
@@ -566,7 +566,7 @@ function show_manage($fqdn) {
 
   echo _('Number of available sessions on this server').': ';
   echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
-  echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbAvailableSessions().'" size="3" onchange="field_check_integer(this);" />';
+  echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
   echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
 
   echo ' <input type="submit" value="'._('change').'" />';

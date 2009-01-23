@@ -45,11 +45,11 @@ $buf = trim(@file_get_contents(TOKENS_DIR.'/'.$token));
 
 $buf = explode(':', $buf);
 
-$session = new Session($buf[1], $_GET['fqdn']);
+$session = Abstract_Session::load($buf[1]);
 $session->use_token($token);
 
-if (!is_readable(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings')) {
-	Logger::error('main', '(webservices/session_token) No such session token file : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings');
+if (!is_readable(SESSIONS_DIR.'/'.$session->id.'/settings')) {
+	Logger::error('main', '(webservices/session_token) No such session token file : '.SESSIONS_DIR.'/'.$session->id.'/settings');
 	die('No such session token file');
 }
 
@@ -57,11 +57,11 @@ header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument();
 $session_node = $dom->createElement('session');
-$session_node->setAttribute('id', $session->session);
+$session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $buf[0]);
 $dom->appendChild($session_node);
 
-$settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/settings'));
+$settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->id.'/settings'));
 foreach ($settings as $k => $v) {
 	if ($k == 'home_dir_type' || $k == 'module_fs')
 		continue;

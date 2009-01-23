@@ -44,18 +44,16 @@ if (!check_ip($_GET['fqdn'])) {
 
 Logger::debug('main', '(webservices/session_status) Security check OK');
 
-$session = new Session($_GET['session'], $_GET['fqdn']);
+$session = Abstract_Session::load($_GET['session']);
 
-Logger::debug('main', '(webservices/session_status) Session '.$session->session.' on server '.$session->server.' have status '.$_GET['status']);
+Logger::debug('main', '(webservices/session_status) Session '.$session->id.' on server '.$session->server.' have status '.$_GET['status']);
 
 if ($_GET['status'] == 1) {
-	Logger::info('main', '(webservices/session_status) Session start : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
-
-	$session->use_session(0);
+	Logger::info('main', '(webservices/session_status) Session start : '.SESSIONS_DIR.'/'.$session->id);
 }
 
 if ($_GET['status'] == 4) {
-	Logger::info('main', '(webservices/session_status) Session end : '.SESSIONS_DIR.'/'.$session->server.'/'.$session->session);
+	Logger::info('main', '(webservices/session_status) Session end : '.SESSIONS_DIR.'/'.$session->id);
 
 	$plugins = new Plugins();
 	$plugins->doLoad();
@@ -68,5 +66,5 @@ if ($_GET['status'] == 4) {
 	$report = new Reporting($session->id);
 	$report->session_end();
 
-	$session->remove_session(0);
+	Abstract_Session::delete($_GET['session']);
 }

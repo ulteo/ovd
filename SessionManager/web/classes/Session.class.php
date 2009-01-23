@@ -20,301 +20,170 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
+// 	public $session = NULL;
+// 	public $server = NULL;
+// 	public $folder = NULL;
+// 	public $settings = array();
+
 class Session {
 	public $id = NULL;
-	public $session = NULL;
+
 	public $server = NULL;
-	public $folder = NULL;
-	public $settings = array();
+	public $user_login = NULL;
 
-	public function __construct($session_, $server_='*') {
-		Logger::debug('main', 'Starting SESSION::__construct for session '.$session_);
+	public function __construct($id_) {
+// 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
 
-		$this->session = $session_;
-		$this->id = $this->session;
-		$this->server = $server_;
-
-		if ($server_ == '*') {
-			$session_folders = glob(SESSIONS_DIR.'/'.$server_.'/'.$session_);
-
-			foreach ($session_folders as $session_folder) {
-				$buf = explode('/', $session_folder);
-				array_pop($buf);
-				$this->server = array_pop($buf);
-			}
-		}
-
-		$this->folder = SESSIONS_DIR.'/'.$this->server.'/'.$this->session;
-
-		if (file_exists($this->folder.'/settings'))
-			$this->settings = unserialize(@file_get_contents($this->folder.'/settings'));
+		$this->id = $id_;
 	}
 
-	public function is_valid() {
-		if (strpos($this->folder, '*') !== false)
+	public function __toString() {
+		return 'Session('.$this->id.')';
+	}
+
+	public function hasAttribute($attrib_) {
+// 		Logger::debug('main', 'Starting Session::hasAttribute for \''.$this->id.'\' attribute '.$attrib_);
+
+		if (! isset($this->$attrib_) || is_null($this->$attrib_))
 			return false;
 
 		return true;
 	}
 
-	public function add_session($die_=true) {
-		Logger::debug('main', 'Starting SESSION::add_session for session '.$this->session.' on server '.$this->server);
+	public function getAttribute($attrib_) {
+// 		Logger::debug('main', 'Starting Session::getAttribute for \''.$this->id.'\' attribute '.$attrib_);
 
-		$server = Abstract_Server::load($this->server);
-		if ($server->getAttribute('locked')) {
-			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
-			if ($die_ == true)
-				die('Server does not accept new sessions : '.$this->server);
+		if (! $this->hasAttribute($attrib_))
 			return false;
-		}
-		if (!$server->hasAttribute('status') || $server->getAttribute('status') != 'ready') {
-			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
-			if ($die_ == true)
-				die('Server does not accept new sessions : '.$this->server);
-			return false;
-		}
-		if ($server->getNbAvailableSessions() == 0) {
-			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
-			if ($die_ == true)
-				die('Server does not accept new sessions : '.$this->server);
-			return false;
-		}
 
-		if (file_exists($this->folder)) {
-			Logger::error('main', 'Session already exists : '.$this->folder);
-			if ($die_ == true)
-				die('Session already exists : '.$this->folder);
-			else
-				return false;
-		}
+		return $this->$attrib_;
+	}
 
-		if (!file_exists(SESSIONS_DIR.'/'.$this->server)) {
-			Logger::info('main', 'Server folder does not exist : '.SESSIONS_DIR.'/'.$this->server);
+	public function setAttribute($attrib_, $value_) {
+// 		Logger::debug('main', 'Starting Session::setAttribute for \''.$this->id.'\' attribute '.$attrib_.' value '.$value_);
 
-			if (! @mkdir(SESSIONS_DIR.'/'.$this->server, 0750)) {
-				Logger::error('main', 'Server folder NOT created : '.SESSIONS_DIR.'/'.$this->server);
-				if ($die_ == true)
-					die('Server folder NOT created : '.SESSIONS_DIR.'/'.$this->server);
-				else
-					return false;
-			}
-			Logger::info('main', 'Server folder created : '.SESSIONS_DIR.'/'.$this->server);
-		}
-
-		if (! @mkdir($this->folder, 0750)) {
-			Logger::error('main', 'Session folder NOT created : '.$this->folder);
-			if ($die_ == true)
-				die('Session folder NOT created : '.$this->folder);
-			else
-				return false;
-		}
-		Logger::info('main', 'Session folder created : '.$this->folder);
-
-		if (! @touch($this->folder.'/available')){
-			Logger::error('main', 'Session "available" file NOT created : '.$this->folder.'/available');
-			if ($die_ == true)
-				die('Session "available" file NOT created : '.$this->folder.'/available');
-			else
-				return false;
-		}
-		Logger::info('main', 'Session "available" file created : '.$this->folder.'/available');
+		$this->$attrib_ = $value_;
 
 		return true;
 	}
 
-	public function remove_session($die_=true) {
-		Logger::debug('main', 'Starting SESSION::remove_session for session '.$this->session.' on server '.$this->server);
-
-		if (!file_exists($this->folder)) {
-			Logger::error('main', 'Session does not exist : '.$this->folder);
-			if ($die_ == true)
-				die('Session does not exist : '.$this->folder);
-			else
-				return false;
-		}
-
-		$remove_files = glob($this->folder.'/*');
-		foreach ($remove_files as $remove_file)
-			@unlink($remove_file);
-		unset($remove_files);
-
-		if (! @rmdir($this->folder)) {
-			Logger::error('main', 'Session folder NOT removed : '.$this->folder);
-			if ($die_ == true)
-				die('Session folder NOT removed : '.$this->folder);
-			else
-				return false;
-		}
-		Logger::info('main', 'Session folder removed : '.$this->folder);
-
-		if (count(glob(SESSIONS_DIR.'/'.$this->server.'/*')) == 0) {
-			Logger::info('main', 'Server folder is empty : '.SESSIONS_DIR.'/'.$this->server);
-
-			if (! @rmdir(SESSIONS_DIR.'/'.$this->server)) {
-				Logger::error('main', 'Server folder NOT removed : '.SESSIONS_DIR.'/'.$this->server);
-				if ($die_ == true)
-					die('Server folder NOT removed : '.SESSIONS_DIR.'/'.$this->server);
-				else
-					return false;
-			}
-			Logger::info('main', 'Server folder removed : '.SESSIONS_DIR.'/'.$this->server);
-		}
-
-		return true;
-	}
-
-	public function use_session($die_=true) {
-		Logger::debug('main', 'Starting SESSION::use_session for session '.$this->session.' on server '.$this->server);
-
-		if (!file_exists($this->folder)) {
-			Logger::error('main', 'Session does not exist : '.$this->folder);
-			if ($die_ == true)
-				die('Session does not exist : '.$this->folder);
-			else
-				return false;
-		}
-
-		$this->switch_session('available', 'used');
-
-		return true;
-	}
-
-	public function switch_session($status_from_, $status_to_, $die_=true) {
-		Logger::debug('main', 'Starting SESSION::switch_session for session '.$this->session.' on server '.$this->server.' : from '.$status_from_.' to '.$status_to_);
-
-		if (! @unlink($this->folder.'/'.$status_from_)) {
-			Logger::error('main', 'Session "'.$status_from_.'" file NOT removed : '.$this->folder.'/'.$status_from_);
-			if ($die_ == true)
-				die('Session "'.$status_from_.'" file NOT removed : '.$this->folder.'/'.$status_from_);
-			else
-				return false;
-		}
-		Logger::info('main', 'Session "'.$status_from_.'" file removed : '.$this->folder.'/'.$status_from_);
-
-		if (! @touch($this->folder.'/'.$status_to_)) {
-			Logger::error('main', 'Session "'.$status_to_.'" file NOT created : '.$this->folder.'/'.$status_to_);
-			if ($die_ == true)
-				die('Session "'.$status_to_.'" file NOT created : '.$this->folder.'/'.$status_to_);
-			else
-				return false;
-		}
-		Logger::info('main', 'Session "'.$status_to_.'" file created : '.$this->folder.'/'.$status_to_);
-
-		return true;
-	}
-
-	public function session_exists() {
-		$ret = $this->session_status();
-
-		if ($ret != 4 && $ret != false) {
-			if ($ret == 2 || $ret == 3)
-				return 2; // session used
-			else
-				return 1; // session available
-		}
-
-		$this->remove_session(0);
-
-		return false;
-	}
-
-	public function session_alive() {
-		$ret = $this->session_status();
-
-// 		if ($ret != 4 && $ret != false) {
-			if ($ret == 1 || $ret == 22 || $ret == 2 || $ret == 3)
-				return true; // session alive
-// 		}
-
-		return false;
-	}
-
-	public function session_suspended() {
-		$ret = $this->session_status();
-
-// 		if ($ret != 4 && $ret != false) {
-			if ($ret == 10)
-				return true; // session suspended
-// 		}
-
-		return false;
-	}
-
-	public function session_status() {
-		Logger::debug('main', 'Starting SESSION::session_status for session '.$this->session.' on server '.$this->server);
-
-		if ($this->server == '*')
-			return false;
+	public function getStatus() {
+// 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
 
-		$string = query_url('http://'.$this->server.':'.$server->web_port.'/webservices/session_status.php?session='.$this->session);
+		$ret = query_url('http://'.$server->fqdn.':'.$server->web_port.'/webservices/session_status.php?session='.$this->id);
 
-		if (!isset($string) || $string == '')
-			$string = query_url('http://'.$this->server.':'.$server->web_port.'/webservices/session_status.php?session='.$this->session);
+		if (! $ret) {
+			$server->isUnreachable();
+			return false;
+		}
 
-		if (is_numeric($string))
-			return $string;
+		if (is_numeric($ret)) {
+			$this->setStatus($ret);
+
+			return $ret;
+		}
 
 		return false;
+	}
+
+	public function setStatus($status_) {
+// 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
+
+		switch ($status_) {
+			default:
+				Logger::warning('main', 'Status set to "'.$status_.'" for \''.$this->id.'\'');
+				$this->setAttribute('status', $status_);
+				break;
+		}
+
+		return true;
 	}
 
 	public function stringStatus() {
-		$sess_states = array(
+// 		Logger::debug('main', 'Starting Session::stringStatus for \''.$this->id.'\'');
+
+		$states = array(
 			-1	=>	array(
 						'color'	=>	'warn',
-						'message'	=>	_('To create'),
+						'message'	=>	_('To create')
 					),
 			0	=>	array(
 						'color'	=>	'warn',
-						'message'	=>	_('Created'),
+						'message'	=>	_('Created')
 					),
 			1	=>	array(
 						'color'	=>	'warn',
-						'message'	=>	_('To start'),
+						'message'	=>	_('To start')
 					),
 			22	=>	array(
 						'color'	=>	'warn',
-						'message'	=>	_('Initializing'),
+						'message'	=>	_('Initializing')
 					),
 			2	=>	array(
 						'color'	=>	'ok',
-						'message'	=>	_('Active'),
+						'message'	=>	_('Active')
 					),
 			9	=>	array(
 						'color'	=>	'warn',
-						'message'	=>	_('Suspending'),
+						'message'	=>	_('Suspending')
 					),
 			10	=>	array(
 						'color'	=>	'ok',
-						'message'	=>	_('Suspended'),
+						'message'	=>	_('Suspended')
 					),
 			11	=>	array(
 						'color'	=>	'warn',
-						'message'	=>	_('Resuming'),
+						'message'	=>	_('Resuming')
 					),
 			3	=>	array(
 						'color'	=>	'error',
-						'message'	=>	_('To destroy'),
+						'message'	=>	_('To destroy')
 					),
 			4	=>	array(
 						'color'	=>	'error',
-						'message'	=>	_('Destroyed'),
-					),
+						'message'	=>	_('Destroyed')
+					)
 		);
 
-		$buf = $this->session_status();
+		$buf = $this->getAttribute('status');
 
-		return '<span class="msg_'.$sess_states[$buf]['color'].'">'.$sess_states[$buf]['message'].'</span>';
+		return '<span class="msg_'.$states[$buf]['color'].'">'.$states[$buf]['message'].'</span>';
 	}
 
+	public function isAlive() {
+// 		Logger::debug('main', 'Starting Session::isAlive for \''.$this->id.'\'');
+
+		$ret = $this->getStatus();
+
+		if ($ret == 1 || $ret == 22 || $ret == 2 || $ret == 3)
+			return true;
+
+		return false;
+	}
+
+	public function isSuspended() {
+// 		Logger::debug('main', 'Starting Session::isSuspended for \''.$this->id.'\'');
+
+		$ret = $this->getStatus();
+
+		if ($ret == 10)
+			return true;
+
+		return false;
+	}
+
+	// ? unclean?
 	public function create_token($mode_, $content_=array()) {
-		Logger::debug('main', 'Starting SESSION::create_token for session '.$this->session.' on server '.$this->server);
+		Logger::debug('main', 'Starting SESSION::create_token for session '.$this->id.' on server '.$this->server);
+
+$this->folder = SESSIONS_DIR.'/'.$this->id;
 
 		$token = gen_string(5);
 
 		if (!file_exists(TOKENS_DIR.'/'.$token)) {
-			if (@file_put_contents(TOKENS_DIR.'/'.$token, $mode_.':'.$this->session)) {
+			if (@file_put_contents(TOKENS_DIR.'/'.$token, $mode_.':'.$this->id)) {
 				Logger::info('main', 'Token created : '.TOKENS_DIR.'/'.$token);
 
 				if ($mode_ == 'start') {
@@ -354,18 +223,6 @@ class Session {
 		Logger::info('main', 'Token removed : '.TOKENS_DIR.'/'.$token_);
 
 		return true;
-	}
-
-	public function getSetting($setting_) {
-		Logger::debug('main', 'Starting SESSION::getSetting for setting '.$setting_);
-
-		if (! isset($this->settings[$setting_])) {
-			Logger::error('main', 'Unable to get setting : '.$setting_);
-			return false;
-		}
-		Logger::info('main', 'Got setting : '.$setting_);
-
-		return $this->settings[$setting_];
 	}
 
 	public function getStartTime() {

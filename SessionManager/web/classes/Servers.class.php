@@ -24,6 +24,7 @@ class Servers {
 	public function getAll() {
 // 		Logger::debug('main', 'Starting Servers::getAll');
 
+		//FIX ME ?
 		$all_servers = glob(SERVERS_DIR.'/*', GLOB_ONLYDIR);
 
 		$buf = array();

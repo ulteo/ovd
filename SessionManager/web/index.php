@@ -318,7 +318,7 @@ require_once('header.php');
 											echo '<option value="'.$server->fqdn.'"';
 											if ($random_server->fqdn == $server->fqdn)
 												echo ' selected="selected"';
-											echo '>'.$server->fqdn.' ('.($server->getNbAvailableSessions()-$server->getNbUsedSessions()).')</option>'."\n";
+											echo '>'.$server->fqdn.' ('.$server->getNbAvailableSessions().')</option>'."\n";
 										}
 									}
 								?>
