@@ -14,7 +14,6 @@ reload_apache()
 if [ "$1" = "purge" ]; then
     rm -rf /var/spool/ulteo/sessionmanager
     rm -rf /var/log/ulteo/sessionmanager
-else
     # apache2 link
     rm -f /etc/apache2/conf.d/sessionmanager
     reload_apache
