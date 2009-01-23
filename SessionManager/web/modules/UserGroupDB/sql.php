@@ -110,26 +110,27 @@ class UserGroupDB_sql {
 		return array();
 	}
 	
-	public function prefsIsValid($prefs_) {
+	public static function prefsIsValid($prefs_) {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
 			
 			return false;
 		}
+		$table =  $mysql_conf['prefix'].'usergroup';
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $this->table);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {
 				return true;
 			}
 			else {
-				Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$this->table.'\' not exists');
+				Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' not exists');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$this->table.'\' not exists(2)');
+			Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' not exists(2)');
 			return false;
 		}
 	}
