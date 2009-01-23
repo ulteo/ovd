@@ -1,0 +1,20 @@
+#!/bin/sh -e
+
+[ "$1" != "purge" ] && exit 0
+
+reload_apache()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
+# apache2 link
+a2dissite applicationserver 2>/dev/null || true
+rm -f /etc/apache2/sites-available/applicationserver
+
+#DEBHELPER#
+
+exit 0
