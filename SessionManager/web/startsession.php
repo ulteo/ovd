@@ -138,6 +138,9 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	$session = new Session($random_session_id);
 	$session->server = $random_server;
+	$session->status = -1;
+	$session->user_login = $user->getAttribute('login');
+	$session->user_displayname = $user->getAttribute('displayname');
 	Abstract_Session::save($session);
 
 	$session_mode = 'start';

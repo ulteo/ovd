@@ -48,6 +48,10 @@ $session = Abstract_Session::load($_GET['session']);
 
 Logger::debug('main', '(webservices/session_status) Session '.$session->id.' on server '.$session->server.' have status '.$_GET['status']);
 
+$session->setStatus($_GET['status']);
+
+Abstract_Session::save($session);
+
 if ($_GET['status'] == 1) {
 	Logger::info('main', '(webservices/session_status) Session start : '.SESSIONS_DIR.'/'.$session->id);
 }
@@ -60,7 +64,7 @@ if ($_GET['status'] == 4) {
 
 	$plugins->doRemovesession(array(
 		'fqdn'	=>	$session->server,
-		'session'	=>	$session->session
+		'session'	=>	$session->id
 	));
 
 	$report = new Reporting($session->id);

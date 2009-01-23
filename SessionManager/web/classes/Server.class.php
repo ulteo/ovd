@@ -190,8 +190,6 @@ class Server {
 				$this->setAttribute('locked', true);
 		}
 
-		Abstract_Server::save($this);
-
 		return true;
 	}
 
@@ -213,6 +211,8 @@ class Server {
 				$this->setAttribute('status', 'broken');
 				break;
 		}
+
+		Abstract_Server::save($this);
 
 		return true;
 	}

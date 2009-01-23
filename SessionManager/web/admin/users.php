@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -127,8 +127,7 @@ function show_manage($login, $userDB) {
       $groups_available[]= $group;
 
   // Sessions
-  $buf = new Sessions();
-  $sessions = $buf->getActivesForUser($login);
+  $sessions = Sessions::getByUser($login);
   $has_sessions = count($sessions);
 
 
@@ -261,7 +260,7 @@ function show_manage($login, $userDB) {
       echo '<td>'.$session->getStartTime().'</td>';
       echo '<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
       echo '<td>';
-      echo '<input type="hidden" name="info" value="'.$session->session.'" />';
+      echo '<input type="hidden" name="info" value="'.$session->id.'" />';
       echo '</td><td><input type="submit" value="'._('Informations about this session').'" /></td>';
       echo '</td>';
       echo '</tr></form>';

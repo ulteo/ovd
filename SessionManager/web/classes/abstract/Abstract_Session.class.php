@@ -30,13 +30,16 @@ class Abstract_Session extends Abstract_DB {
 		if (! is_readable($folder))
 			return false;
 
-		$attributes = array('server');
+		$attributes = array('server', 'status', 'user_login', 'user_displayname');
 		foreach ($attributes as $attribute)
 			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
 				return false;
 
 		$buf = new Session($id);
 		$buf->server = (string)$server;
+		$buf->status = (int)$status;
+		$buf->user_login = (string)$user_login;
+		$buf->user_displayname = (string)$user_displayname;
 
 		return $buf;
 	}
@@ -55,6 +58,9 @@ class Abstract_Session extends Abstract_DB {
 			return false;
 
 		@file_put_contents($folder.'/server', (string)$session_->server);
+		@file_put_contents($folder.'/status', (int)$session_->status);
+		@file_put_contents($folder.'/user_login', (string)$session_->user_login);
+		@file_put_contents($folder.'/user_displayname', (string)$session_->user_displayname);
 
 		return true;
 	}

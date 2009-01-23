@@ -29,7 +29,9 @@ class Session {
 	public $id = NULL;
 
 	public $server = NULL;
+	public $status = NULL;
 	public $user_login = NULL;
+	public $user_displayname = NULL;
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
@@ -97,6 +99,8 @@ class Session {
 				$this->setAttribute('status', $status_);
 				break;
 		}
+
+		Abstract_Session::save($this);
 
 		return true;
 	}
@@ -174,6 +178,21 @@ class Session {
 		return false;
 	}
 
+	public function orderDeletion() {
+// 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
+
+		$server = Abstract_Server::load($this->server);
+
+		$buf = query_url('http://'.$server->fqdn.':'.$server->web_port.'/webservices/kill_session.php?session='.$this->id);
+
+		if (! $buf)
+			return false;
+
+		$this->setStatus(3);
+
+		return true;
+	}
+
 	// ? unclean?
 	public function create_token($mode_, $content_=array()) {
 		Logger::debug('main', 'Starting SESSION::create_token for session '.$this->id.' on server '.$this->server);
@@ -226,7 +245,9 @@ $this->folder = SESSIONS_DIR.'/'.$this->id;
 	}
 
 	public function getStartTime() {
-		Logger::debug('main', 'Starting SESSION::getStartTime for session '.$this->session);
+		Logger::debug('main', 'Starting SESSION::getStartTime for session '.$this->id);
+
+$this->folder = SESSIONS_DIR.'/'.$this->id;
 
 		if (! file_exists($this->folder.'/used')) {
 			Logger::error('main', 'Unable to get start time');

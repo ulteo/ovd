@@ -56,7 +56,7 @@ if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['passwor
 		if ($lock->have_lock()) {
 			$session = Abstract_Session::load($lock->session);
 
-			if (!$session->isAlive()) {
+			if (! $session || ! $session->isAlive()) {
 				$default_settings = $prefs->get('general', 'session_settings_defaults');
 				$persistent = $default_settings['persistent'];
 				if (!$persistent)
