@@ -60,3 +60,9 @@ div#adminError {
 	color: red;
 	display: block;
 }
+
+.critical {
+	color: red;
+	font-weight: bold;
+	display: block;
+}

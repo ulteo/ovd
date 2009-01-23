@@ -45,7 +45,7 @@ class Server {
 	}
 
 	public function __toString() {
-		return 'Server('.$this->fqdn.')';
+		return 'Server(\''.$this->fqdn.'\', \''.$this->status.'\', \''.$this->registered.'\', \''.$this->locked.'\', \''.$this->type.'\', \''.$this->version.'\', \''.$this->external_name.'\', \''.$this->web_port.'\', \''.$this->max_sessions.'\', \''.$this->cpu_model.'\', \''.$this->cpu_nb_cores.'\', \''.$this->cpu_load.'\', \''.$this->ram_total.'\', \''.$this->ram_used.'\')';
 	}
 
 	public function hasAttribute($attrib_) {
@@ -212,7 +212,7 @@ class Server {
 				break;
 		}
 
-		Abstract_Server::save($this);
+// 		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -253,7 +253,7 @@ class Server {
 
 		$this->setAttribute('type', $buf);
 
-		Abstract_Server::save($this);
+// 		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -282,7 +282,7 @@ class Server {
 
 		$this->setAttribute('version', $buf);
 
-		Abstract_Server::save($this);
+// 		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -356,7 +356,7 @@ class Server {
 		foreach ($keys as $k => $v)
 			$this->setAttribute($k, trim($v));
 
-		Abstract_Server::save($this);
+// 		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -581,7 +581,7 @@ class Server {
 			}
 		}
 
-		Abstract_Server::save($this);
+// 		Abstract_Server::save($this);
 
 		return true;
 	}

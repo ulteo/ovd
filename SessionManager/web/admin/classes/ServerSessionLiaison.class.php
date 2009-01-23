@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -25,7 +25,7 @@ class ServerSessionLiaison extends Liaison {
 		Logger::debug('admin','SERVERSESSIONLIAISON::contructor from_scratch');
 		$this->element = $server_;
 		$this->group = $session_;
-		$this->table = LIAISON_SERVERSESSION_TABLE;
+		$this->table = LIAISON_SERVER_SESSION_TABLE;
 	}
 }
 

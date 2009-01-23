@@ -34,6 +34,8 @@ class Abstract_Session extends Abstract_DB {
 		foreach ($attributes as $attribute)
 			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
 				return false;
+		unset($attribute);
+		unset($attributes);
 
 		$buf = new Session($id);
 		$buf->server = (string)$server;
@@ -74,75 +76,14 @@ class Abstract_Session extends Abstract_DB {
 		if (! is_writeable(SESSIONS_DIR))
 			return false;
 
+		$l = new ServerSessionLiaison($session_->server, $session_->id);
+		if (! $l->insertDB())
+			return false;
+
 		if (! @mkdir($folder, 0750))
 			return false;
-		
-		$l = new ServerSessionLiaison($session_->server, $session_->id);
-		$l->insertDB();
 
 		return true;
-/*
-		$server = Abstract_Server::load($this->server);
-		if ($server->getAttribute('locked')) {
-			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
-			if ($die_ == true)
-				die('Server does not accept new sessions : '.$this->server);
-			return false;
-		}
-		if (!$server->hasAttribute('status') || $server->getAttribute('status') != 'ready') {
-			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
-			if ($die_ == true)
-				die('Server does not accept new sessions : '.$this->server);
-			return false;
-		}
-		if ($server->getNbAvailableSessions() == 0) {
-			Logger::error('main', 'Server does not accept new sessions : '.$this->server);
-			if ($die_ == true)
-				die('Server does not accept new sessions : '.$this->server);
-			return false;
-		}
-
-		if (file_exists($this->folder)) {
-			Logger::error('main', 'Session already exists : '.$this->folder);
-			if ($die_ == true)
-				die('Session already exists : '.$this->folder);
-			else
-				return false;
-		}
-
-		if (!file_exists(SESSIONS_DIR.'/'.$this->server)) {
-			Logger::info('main', 'Server folder does not exist : '.SESSIONS_DIR.'/'.$this->server);
-
-			if (! @mkdir(SESSIONS_DIR.'/'.$this->server, 0750)) {
-				Logger::error('main', 'Server folder NOT created : '.SESSIONS_DIR.'/'.$this->server);
-				if ($die_ == true)
-					die('Server folder NOT created : '.SESSIONS_DIR.'/'.$this->server);
-				else
-					return false;
-			}
-			Logger::info('main', 'Server folder created : '.SESSIONS_DIR.'/'.$this->server);
-		}
-
-		if (! @mkdir($this->folder, 0750)) {
-			Logger::error('main', 'Session folder NOT created : '.$this->folder);
-			if ($die_ == true)
-				die('Session folder NOT created : '.$this->folder);
-			else
-				return false;
-		}
-		Logger::info('main', 'Session folder created : '.$this->folder);
-
-		if (! @touch($this->folder.'/available')){
-			Logger::error('main', 'Session "available" file NOT created : '.$this->folder.'/available');
-			if ($die_ == true)
-				die('Session "available" file NOT created : '.$this->folder.'/available');
-			else
-				return false;
-		}
-		Logger::info('main', 'Session "available" file created : '.$this->folder.'/available');
-
-		return true;
-*/
 	}
 
 	public function delete($id_) {
@@ -153,64 +94,59 @@ class Abstract_Session extends Abstract_DB {
 
 		if (! file_exists($folder))
 			return false;
-		
+
 		$session = Abstract_Session::load($id_);
-		if ( $session !== false) {
-			$l = new ServerSessionLiaison($session->server, $session->id);
-			$l->removeDB();
-		}
-		else {
-			Logger::error('main', "Abstract_Session::delete('$id_') failed to load session");
-		}
-		
+		if (! $session)
+			return false;
+
+		$l = new ServerSessionLiaison($session->server, $session->id);
+		if (! $l->removeDB())
+			return false;
+
 		$remove_files = glob($folder.'/*');
 		foreach ($remove_files as $remove_file)
 			@unlink($remove_file);
+		unset($remove_file);
 		unset($remove_files);
 
 		if (! @rmdir($folder))
 			return false;
 
 		return true;
-/*
-		Logger::debug('main', 'Starting SESSION::remove_session for session '.$this->session.' on server '.$this->server);
+	}
 
-		if (!file_exists($this->folder)) {
-			Logger::error('main', 'Session does not exist : '.$this->folder);
-			if ($die_ == true)
-				die('Session does not exist : '.$this->folder);
-			else
-				return false;
+	public function load_all() {
+// 		Logger::debug('main', 'Starting Abstract_Session::load_all');
+
+		$all_sessions = glob(SESSIONS_DIR.'/*', GLOB_ONLYDIR);
+
+		$sessions = array();
+		foreach ($all_sessions as $all_session) {
+			$id = basename($all_session);
+
+			$session = Abstract_Session::load($id);
+			if (! $session)
+				continue;
+
+			$sessions[] = $session;
 		}
+		unset($all_session);
+		unset($all_sessions);
 
-		$remove_files = glob($this->folder.'/*');
-		foreach ($remove_files as $remove_file)
-			@unlink($remove_file);
-		unset($remove_files);
+		return $sessions;
+	}
 
-		if (! @rmdir($this->folder)) {
-			Logger::error('main', 'Session folder NOT removed : '.$this->folder);
-			if ($die_ == true)
-				die('Session folder NOT removed : '.$this->folder);
-			else
-				return false;
-		}
-		Logger::info('main', 'Session folder removed : '.$this->folder);
+	public function uptodate($session_) {
+// 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 
-		if (count(glob(SESSIONS_DIR.'/'.$this->server.'/*')) == 0) {
-			Logger::info('main', 'Server folder is empty : '.SESSIONS_DIR.'/'.$this->server);
+		$id = $session_->id;
+		$folder = SESSIONS_DIR.'/'.$id;
 
-			if (! @rmdir(SESSIONS_DIR.'/'.$this->server)) {
-				Logger::error('main', 'Server folder NOT removed : '.SESSIONS_DIR.'/'.$this->server);
-				if ($die_ == true)
-					die('Server folder NOT removed : '.SESSIONS_DIR.'/'.$this->server);
-				else
-					return false;
-			}
-			Logger::info('main', 'Server folder removed : '.SESSIONS_DIR.'/'.$this->server);
-		}
+		$buf = @filemtime($folder.'/status');
 
-		return true;
-*/
+		if ($buf > (time()-30))
+			return true;
+
+		return false;
 	}
 }

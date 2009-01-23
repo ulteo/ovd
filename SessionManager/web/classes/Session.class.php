@@ -40,7 +40,7 @@ class Session {
 	}
 
 	public function __toString() {
-		return 'Session(\''.$this->id.'\',\''.$this->server.'\',\''.$this->status.'\',\''.$this->user_login.'\',\''.$this->user_displayname.'\')';
+		return 'Session(\''.$this->id.'\', \''.$this->server.'\', \''.$this->status.'\', \''.$this->user_login.'\', \''.$this->user_displayname.'\')';
 	}
 
 	public function hasAttribute($attrib_) {
@@ -100,7 +100,7 @@ class Session {
 				break;
 		}
 
-		Abstract_Session::save($this);
+// 		Abstract_Session::save($this);
 
 		return true;
 	}
@@ -159,9 +159,13 @@ class Session {
 	public function isAlive() {
 // 		Logger::debug('main', 'Starting Session::isAlive for \''.$this->id.'\'');
 
-		$ret = $this->getStatus();
+		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
+			$this->getStatus();
 
-		if ($ret == 1 || $ret == 22 || $ret == 2 || $ret == 3)
+		if (($buf = $this->getAttribute('status')) === false)
+			return false;
+
+		if ($buf == 1 || $buf == 22 || $buf == 2 || $buf == 3)
 			return true;
 
 		return false;
@@ -170,9 +174,13 @@ class Session {
 	public function isSuspended() {
 // 		Logger::debug('main', 'Starting Session::isSuspended for \''.$this->id.'\'');
 
-		$ret = $this->getStatus();
+		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
+			$this->getStatus();
 
-		if ($ret == 10)
+		if (($buf = $this->getAttribute('status')) === false)
+			return false;
+
+		if ($buf == 10)
 			return true;
 
 		return false;

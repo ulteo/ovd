@@ -34,6 +34,8 @@ class Abstract_Server extends Abstract_DB {
 		foreach ($attributes as $attribute)
 			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
 				return false;
+		unset($attribute);
+		unset($attributes);
 
 		$buf = new Server($fqdn);
 		$buf->status = (string)$status;
@@ -118,6 +120,27 @@ class Abstract_Server extends Abstract_DB {
 			return false;
 
 		return true;
+	}
+
+	public function load_all() {
+// 		Logger::debug('main', 'Starting Abstract_Server::load_all');
+
+		$all_servers = glob(SERVERS_DIR.'/*', GLOB_ONLYDIR);
+
+		$servers = array();
+		foreach ($all_servers as $all_server) {
+			$fqdn = basename($all_server);
+
+			$server = Abstract_Server::load($fqdn);
+			if (! $server)
+				continue;
+
+			$servers[] = $server;
+		}
+		unset($all_server);
+		unset($all_servers);
+
+		return $servers;
 	}
 
 	public function uptodate($server_) {

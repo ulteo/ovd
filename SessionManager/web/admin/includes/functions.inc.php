@@ -229,7 +229,7 @@ function init_db($prefs_) {
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $mysql_conf['prefix'].'ug_ag_link';
 	$LIAISON_APPLICATION_SERVER_TABLE = $mysql_conf['prefix'].'application_server_link';
 	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
-	$LIAISON_SERVERSESSION_TABLE = $mysql_conf['prefix'].'server_session_link';
+	$LIAISON_SERVER_SESSION_TABLE = $mysql_conf['prefix'].'server_session_link';
 
 	// we create the sql table
 	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
@@ -315,19 +315,19 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$LIAISON_USERS_GROUP_TABLE.' created');
-	
+
 	$ret = $sql2->DoQuery(
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(150) NOT NULL,
 	@3 varchar(150) NOT NULL,
 	PRIMARY KEY  (@2, @3)
-	)',$LIAISON_SERVERSESSION_TABLE,'element','group');
+	)',$LIAISON_SERVER_SESSION_TABLE,'element','group');
 	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$LIAISON_SERVERSESSION_TABLE.' fail to created');
+		Logger::error('admin','init_db table '.$LIAISON_SERVER_SESSION_TABLE.' fail to created');
 		return false;
 	}
 	else
-		Logger::debug('admin','init_db table '.$LIAISON_SERVERSESSION_TABLE.' created');
+		Logger::debug('admin','init_db table '.$LIAISON_SERVER_SESSION_TABLE.' created');
 
 	Logger::debug('admin','init_db all tables created');
 	$modules_enable = $prefs_->get('general', 'module_enable');

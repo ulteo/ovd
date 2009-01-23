@@ -24,17 +24,7 @@ class Servers {
 	public function getAll() {
 // 		Logger::debug('main', 'Starting Servers::getAll');
 
-		//FIX ME ?
-		$all_servers = glob(SERVERS_DIR.'/*', GLOB_ONLYDIR);
-
-		$buf = array();
-		foreach ($all_servers as $all_server) {
-			$fqdn = basename($all_server);
-
-			$server = Abstract_Server::load($fqdn);
-
-			$buf[] = $server;
-		}
+		$buf = Abstract_Server::load_all();
 
 		return $buf;
 	}
@@ -55,6 +45,7 @@ class Servers {
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
+		unset($server);
 
 		return $servers;
 	}
@@ -69,6 +60,7 @@ class Servers {
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
+		unset($server);
 
 		return $servers;
 	}
@@ -82,6 +74,7 @@ class Servers {
 			if (! $server->getAttribute('registered'))
 				unset($servers[$k]);
 		}
+		unset($server);
 
 		return $servers;
 	}
@@ -95,6 +88,7 @@ class Servers {
 			if ($server->getAttribute('registered'))
 				unset($servers[$k]);
 		}
+		unset($server);
 
 		return $servers;
 	}
@@ -108,6 +102,7 @@ class Servers {
 			if ($server->getAttribute('type') != $type_)
 				unset($servers[$k]);
 		}
+		unset($server);
 
 		return $servers;
 	}
