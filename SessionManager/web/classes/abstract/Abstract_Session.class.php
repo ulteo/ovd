@@ -76,6 +76,9 @@ class Abstract_Session extends Abstract_DB {
 
 		if (! @mkdir($folder, 0750))
 			return false;
+		
+		$l = new ServerSessionLiaison($session_->server, $session_->id);
+		$l->insertDB();
 
 		return true;
 /*
@@ -150,7 +153,16 @@ class Abstract_Session extends Abstract_DB {
 
 		if (! file_exists($folder))
 			return false;
-
+		
+		$session = Abstract_Session::load($id_);
+		if ( $session !== false) {
+			$l = new ServerSessionLiaison($session->server, $session->id);
+			$l->removeDB();
+		}
+		else {
+			Logger::error('main', "Abstract_Session::delete('$id_') failed to load session");
+		}
+		
 		$remove_files = glob($folder.'/*');
 		foreach ($remove_files as $remove_file)
 			@unlink($remove_file);

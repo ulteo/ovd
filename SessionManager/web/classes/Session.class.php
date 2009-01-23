@@ -40,7 +40,7 @@ class Session {
 	}
 
 	public function __toString() {
-		return 'Session('.$this->id.')';
+		return 'Session(\''.$this->id.'\',\''.$this->server.'\',\''.$this->status.'\',\''.$this->user_login.'\',\''.$this->user_displayname.'\')';
 	}
 
 	public function hasAttribute($attrib_) {

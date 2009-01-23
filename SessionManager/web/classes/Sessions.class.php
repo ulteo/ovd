@@ -24,16 +24,13 @@ class Sessions {
 	public function getAll() {
 // 		Logger::debug('main', 'Starting Sessions::getAll');
 
-		//FIX ME ?
-		$all_sessions = glob(SESSIONS_DIR.'/*', GLOB_ONLYDIR);
-
+		$l = new ServerSessionLiaison();
+		$all_sessions = $l->all();
 		$buf = array();
-		foreach ($all_sessions as $all_session) {
-			$id = basename($all_session);
-
-			$session = Abstract_Session::load($id);
-
-			$buf[] = $session;
+		foreach ($all_sessions as $liaison) {
+			$session = Abstract_Session::load($liaison['group']);
+			if ( $session !== false)
+				$buf[] = $session;
 		}
 
 		return $buf;
@@ -41,12 +38,15 @@ class Sessions {
 
 	public function getByServer($fqdn_) {
 // 		Logger::debug('main', 'Starting Sessions::getByServer');
-
-		$sessions = Sessions::getAll();
-
-		foreach ($sessions as $k => $session) {
-			if ($session->getAttribute('server') != $fqdn_)
-				unset($sessions[$k]);
+		$sessions = array();
+		$l = new ServerSessionLiaison($fqdn_,NULL);
+		$sessions_id = $l->groups();
+		
+		foreach ($sessions_id as $session_id) {
+			$session = Abstract_Session::load($session_id);
+			if ( $session !== false)
+				$sessions []= $session;
+			
 		}
 
 		return $sessions;

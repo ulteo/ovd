@@ -51,6 +51,7 @@ if (is_object($prefs)) {
 		define('USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE', $mysql_conf['prefix'].'ug_ag_link');
 		define('LIAISON_APPLICATION_SERVER_TABLE', $mysql_conf['prefix'].'application_server_link');
 		define('SOURCES_LIST_TABLE', $mysql_conf['prefix'].'sources_list');
+		define('LIAISON_SERVERSESSION_TABLE', $mysql_conf['prefix'].'server_session_link');
 		MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 	}
 }
