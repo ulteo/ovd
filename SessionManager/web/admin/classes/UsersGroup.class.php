@@ -119,14 +119,14 @@ class UsersGroup {
 
 	public function appsGroups(){
 		Logger::debug('admin','USERSGROUP::appsGroups');
-		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4','group', USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE, 'element', $this->id);
-		if ($res !== false){
+		
+		$l = new UsersGroupApplicationsGroupLiaison($this->id, NULL);
+		$groups = $l->groups();
+		if (is_array($groups)) {
 			$result = array();
-			$rows = $sql2->FetchAllResults($res);
-			foreach ($rows as $row){
+			foreach ($groups as $id_group){
 				$g = new AppsGroup();
-				$g->fromDB($row['group']);
+				$g->fromDB($id_group);
 				if ($g->isOK())
 					$result []= $g;
 			}
