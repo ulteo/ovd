@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -54,8 +54,22 @@ function action_add() {
   if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
     return false;
 
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  if (! $userGroupDB->isWriteable())
+      return false;
+  
   $g = new UsersGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
-  $res = $g->insertDB();
+  $res = $userGroupDB->add($g);
+  echo 'res ';var_dump2($res);
   if (!$res)
     die_error('Unable to create user group '.$res,__FILE__,__LINE__);
 
@@ -63,21 +77,45 @@ function action_add() {
 }
 
 function action_del($id) {
-  $group = new UsersGroup();
-  $group->fromDB($id);
-  if (! $group->isOK())
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  if (! $userGroupDB->isWriteable())
+      return false;
+  
+  $group = $userGroupDB->import($id);
+  if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
 
-  if (! $group->removeDB())
+  if (! $userGroupDB->remove($group))
     die_error('Unable to remove group "'.$id.'" is not OK',__FILE__,__LINE__);
 
   return true;
 }
 
 function action_modify($id) {
-  $group = new UsersGroup();
-  $group->fromDB($id);
-  if (! $group->isOK())
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  if (! $userGroupDB->isWriteable())
+      return false;
+  
+  $group = $userGroupDB->import($id);
+  if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
 
   $has_change = false;
@@ -95,17 +133,28 @@ function action_modify($id) {
   if (! $has_change)
     return false;
 
-  if (! $group->updateDB())
+  if (! $userGroupDB->update($group))
     die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 
   return true;
 }
 
-
 function show_manage($id) {
-  $group = new UsersGroup();
-  $group->fromDB($id);
-  if (! $group->isOK())
+  echo "show_manage($id)<br>";
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  
+  $group = $userGroupDB->import($id);
+
+  if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
 
   if ($group->published) {
@@ -350,21 +399,33 @@ function show_default() {
   }
   echo '</div>';
 
-  echo '<div>';
-  echo '<h2>'._('Create a new group').'</h2>';
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="add" />';
-  echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
 
-  echo '<tr class="content1">';
-  echo '<th>'._('Name').'</th>';
-  echo '<td><input type="text" name="name" value="" /></td>';
-  echo '</tr>';
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 
-  echo '<tr class="content2">';
-  echo '<th>'._('Description').'</th>';
-  echo '<td><input type="text" name="description" value="" /></td>';
-  echo '</tr>';
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  if ($userGroupDB->isWriteable()) {
+    echo '<div>';
+    echo '<h2>'._('Create a new group').'</h2>';
+    echo '<form action="" method="post">';
+    echo '<input type="hidden" name="action" value="add" />';
+    echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
+
+    echo '<tr class="content1">';
+    echo '<th>'._('Name').'</th>';
+    echo '<td><input type="text" name="name" value="" /></td>';
+    echo '</tr>';
+
+    echo '<tr class="content2">';
+    echo '<th>'._('Description').'</th>';
+    echo '<td><input type="text" name="description" value="" /></td>';
+    echo '</tr>';
+  }
   /*
   echo '<tr class="content2">';
   echo '<th>'._('Status').'</th>';

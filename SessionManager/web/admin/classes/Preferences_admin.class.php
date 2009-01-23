@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -274,7 +274,7 @@ class Preferences_admin extends Preferences {
 		foreach ($available_module as $module_name => $sub_module)
 			$modules_prettyname[$module_name] = $module_name;
 
-		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB','ApplicationDB'), $modules_prettyname, 3);
+		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB' 'UserGroupDB'), $modules_prettyname, 3);
 		$this->add($c,'general');
 
 		foreach ($available_module as $mod => $sub_mod){

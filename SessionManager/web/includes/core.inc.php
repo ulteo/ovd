@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -46,7 +46,6 @@ if (is_object($prefs)) {
 	if (is_array($mysql_conf)) {
 		define('APPSGROUP_TABLE', $mysql_conf['prefix'].'gapplication');
 		define('LIAISON_APPS_GROUP_TABLE', $mysql_conf['prefix'].'apps_group_link');
-		define('USERSGROUP_TABLE', $mysql_conf['prefix'].'usergroup');
 		define('LIAISON_USERS_GROUP_TABLE', $mysql_conf['prefix'].'users_group_link');
 		define('USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE', $mysql_conf['prefix'].'ug_ag_link');
 		define('LIAISON_APPLICATION_SERVER_TABLE', $mysql_conf['prefix'].'application_server_link');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -52,23 +52,21 @@ class User {
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
 			$user_default_group = $prefs->get('general', 'user_default_group');
-			if ($user_default_group != -1) {
-				$ug = new UsersGroup();
-				$ug->fromDB($user_default_group);
-				if ($ug->isOK())
-					$result[$user_default_group] = $ug;
-				else {
-					Logger::error('main', 'USER::usersGroups default user group (\''.$user_default_group.'\') not ok');
-				}
-			}
+			
+			$mods_enable = $prefs->get('general','module_enable');
+			if (! in_array('UserDB',$mods_enable))
+				die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+			
+			$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+			$userGroupDB = new $mod_usergroup_name();
 		}
 
 		$l = new UsersGroupLiaison($this->attributes['login'],NULL);
 		$rows = $l->groups();
+		$rows []= $user_default_group; // safe because even if  group = -1, the import failed safely
 		foreach ($rows as $group_id){
-			$g = new UsersGroup();
-			$g->fromDB($group_id);
-			if ($g->isOK())
+			$g =$userGroupDB->import($group_id);
+			if (is_object($g))
 				$result[$group_id]= $g;
 			else {
 				Logger::error('main', 'USER::usersGroups user group (\''.$user_default_group.'\') not ok');

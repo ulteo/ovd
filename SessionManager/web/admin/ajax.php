@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -21,16 +21,34 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 if (isset($_GET["usersgroup"]) && isset($_GET["visible"]) && $_GET["visible"] == "add" ){
-	$ug = new UsersGroup();
-	$ug->fromDB($_GET["usersgroup"]);
-	if ($ug->isOK()){
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+	$mods_enable = $prefs->get('general','module_enable');
+	if (! in_array('UserDB',$mods_enable))
+		die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+
+	$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+	$userGroupDB = new $mod_usergroup_name();
+
+	$ug = $userGroupDB->import($_GET["usersgroup"]);
+	if (is_object($ug)) {
 		echo usersgroup_appsgroup_add($ug);
 	}
 }
 if (isset($_GET["usersgroup"]) && isset($_GET["visible"]) && $_GET["visible"] == "del" ){
-	$ug = new UsersGroup();
-	$ug->fromDB($_GET["usersgroup"]);
-	if ($ug->isOK()){
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+	$mods_enable = $prefs->get('general','module_enable');
+	if (! in_array('UserDB',$mods_enable))
+		die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+
+	$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+	$userGroupDB = new $mod_usergroup_name();
+
+	$ug = $userGroupDB->import($_GET["usersgroup"]);
+	if (is_object($ug)) {
 		echo usersgroup_appsgroup_del($ug);
 	}
 }

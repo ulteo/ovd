@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -376,32 +376,22 @@ function conf_is_valid() {
 
 function get_all_usergroups(){
 	Logger::debug('main', 'get_all_usergroups');
-	$sql2 = MySQL::getInstance();
-	if (! $sql2){
+	
+	$prefs = Preferences::getInstance();
+	if (! $prefs) {
+		Logger::error('main', 'get_all_usergroups get Preferences failed');
+	}
+	
+	$mods_enable = $prefs->get('general','module_enable');
+	if (! in_array('UserGroupDB',$mods_enable)) {
+		Logger::error('main', 'get_all_usergroups Module UserGroupDB must be enabled');
 		return NULL;
 	}
-
-	$res1 = $sql2->DoQuery('SHOW TABLES LIKE %1',USERSGROUP_TABLE);
-	if ($res1 === false)
-		return NULL;
-	$numrows1 = $sql2->NumRows();
-	if ($numrows1 == 0)
-		return NULL;
-
-	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5','id','name','description','published',USERSGROUP_TABLE);
-	if ($res !== false){
-		$result = array();
-		$rows = $sql2->FetchAllResults($res);
-		foreach ($rows as $row){
-			$g = new UsersGroup($row['id'],$row['name'],$row['description'],$row['published']);
-			$result []= $g;
-		}
-		return $result;
-	}
-	else {
-		// not the right argument
-		return NULL;
-	}
+	
+	$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+	$UserGroupDB = new $mod_usergroup_name();
+	
+	return $UserGroupDB->getList();
 }
 
 function get_needed_attributes_user_from_module_plugin() {

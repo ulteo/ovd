@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -34,6 +34,8 @@ if (!in_array('UserDB',$mods_enable)){
 $mod_user_name = 'admin_'.'UserDB_'.$prefs->get('UserDB','enable');
 $userDB = new $mod_user_name();
 
+$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+$userGroupDB = new $mod_usergroup_name();
 
 $us = $userDB->getList();  // in admin, getList is always present (even if canShowList is false)
 if (is_null($us)){

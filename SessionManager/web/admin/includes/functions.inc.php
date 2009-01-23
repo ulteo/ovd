@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -215,78 +215,6 @@ function get_all_sourceslist_mirrors(){
 	}
 }
 
-function get_publications($usersgroup_id_=NULL,$appsgroup_id_=NULL) {
-	$ret = array();
-	$l = new UsersGroupApplicationsGroupLiaison($usersgroup_id_,$appsgroup_id_);
-	if (is_null($usersgroup_id_) && is_null($appsgroup_id_)) {
-		echo "usersgroup_id_ null appsgroup_id_  null<br>";
-		$l_all = $l->all();
-		foreach ($l_all as $element_group) {
-			if  (is_array($element_group)) {
-				$r = array();
-				$ug = new UsersGroup();
-				$ug->fromDB($element_group['element']);
-				$ag = new AppsGroup();
-				$ag->fromDB($element_group['group']);
-				if ( $ag->published && $ug->published) {
-					$r['appsgroup'] = $ag;
-					$r['usersgroup'] = $ug;
-					$ret[] = $r;
-				}
-			}
-		}
-	}else if (is_null($usersgroup_id_) && !is_null($appsgroup_id_)) {
-		echo "usersgroup_id_ null appsgroup_id_ $appsgroup_id_<br>";
-		$l_elements = $l->elements();
-		$ag = new AppsGroup();
-		$ag->fromDB($appsgroup_id_);
-		foreach ($l_elements as $ug_id) {
-			$r = array();
-			$ug = new UsersGroup();
-			$ug->fromDB($ug_id);
-			if ( $ag->published && $ug->published) {
-				$r['appsgroup'] = $ag;
-				$r['usersgroup'] = $ug;
-				$ret[] = $r;
-			}
-		}
-	}else if (!is_null($usersgroup_id_) && is_null($appsgroup_id_)) {
-		echo "usersgroup_id_ $usersgroup_id_ appsgroup_id_ null<br>";
-		$l_groups = $l->groups();
-		$ug = new UsersGroup();
-		$ug->fromDB($usersgroup_id_);
-		foreach ($l_groups as $ag_id) {
-			$r = array();
-			$ag = new AppsGroup();
-			$ag->fromDB($ag_id);
-			if ( $ag->published && $ug->published) {
-				$r['appsgroup'] = $ag;
-				$r['usersgroup'] = $ug;
-				$ret[] = $r;
-			}
-		}
-
-	}else {
-		echo "usersgroup_id_ $usersgroup_id_ appsgroup_id_ $appsgroup_id_<br>";
-		if ($l->onDB()) {
-			$ug = new UsersGroup();
-			$ug->fromDB($usersgroup_id_);
-			$ag = new AppsGroup();
-			$ag->fromDB($appsgroup_id_);
-			if ( $ag->published && $ug->published) {
-				$r['appsgroup'] = $ag;
-				$r['usersgroup'] = $ug;
-				$ret[] = $r;
-			}
-		}
-// 		else {
-// 		}
-	}
-
-	return $ret;
-
-}
-
 function init_db($prefs_) {
 	// prefs must be valid
 	Logger::debug('admin','init_db');
@@ -297,7 +225,6 @@ function init_db($prefs_) {
 	}
 	$APPSGROUP_TABLE = $mysql_conf['prefix'].'gapplication';
 	$LIAISON_APPS_GROUP_TABLE = $mysql_conf['prefix'].'apps_group_link';
-	$USERSGROUP_TABLE = $mysql_conf['prefix'].'usergroup';
 	$LIAISON_USERS_GROUP_TABLE = $mysql_conf['prefix'].'users_group_link';
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $mysql_conf['prefix'].'ug_ag_link';
 	$LIAISON_APPLICATION_SERVER_TABLE = $mysql_conf['prefix'].'application_server_link';
@@ -375,22 +302,7 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE.' created');
-
-	$ret = $sql2->DoQuery(
-	'CREATE TABLE IF NOT EXISTS `'.$USERSGROUP_TABLE.'` (
-	@2 int(8) NOT NULL auto_increment,
-	@3 varchar(150) NOT NULL,
-	@4 varchar(150) NOT NULL,
-	@5 tinyint(1) NOT NULL,
-	PRIMARY KEY  (@2)
-	)',$USERSGROUP_TABLE,'id','name','description','published');
-	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$USERSGROUP_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('admin','init_db table '.$USERSGROUP_TABLE.' created');
-
+	
 	$ret = $sql2->DoQuery(
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(50) NOT NULL,

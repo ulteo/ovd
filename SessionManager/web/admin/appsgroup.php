@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -128,6 +128,14 @@ function show_manage($id) {
     die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
+  
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
 
   $applications_all = $applicationDB->getList();
   $l = new AppsGroupLiaison(NULL, $id);
@@ -160,8 +168,7 @@ function show_manage($id) {
   $groups_users = array();
   $l = new UsersGroupApplicationsGroupLiaison(NULL, $id);
   foreach ($l->elements() as $group_u) {
-    $obj = new UsersGroup();
-    $obj->fromDB($group_u);
+    $obj = $userGroupDB->import($group_u);
 
     if (is_object($obj))
       $groups_users[]= $obj;
