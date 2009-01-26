@@ -54,13 +54,15 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	$buf = sendamail($email, $subject, wordwrap($message, 72));
 	if ($buf !== true) {
 		Logger::error('main', 'invite.php:49 - sendamail error : '.$buf->message);
-		redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email.'&error='.$buf->message);
+		redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email.'&error='.$buf->message);
 	}
 
 	$session->addInvite($email, ($view_only == 'Yes')?1:0);
 
 	redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email);
 }
+
+$session = Abstract_Session::load($_GET['session']);
 ?>
 <link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
@@ -92,19 +94,13 @@ html,body {
 	<div style="margin-left: auto; margin-right: 0px; text-align: left">
 		<ul>
 			<?php
-				$session = Abstract_Session::load($_GET['session']);
+				$invited_emails = $session->invitedEmails();
 
-				if ($session) {
-					$invited_emails = $session->invitedEmails();
-
-					if (is_array($invited_emails)) {
-						foreach ($invited_emails as $invited_email)
-							echo '<li>'.$invited_email.'</li>';
-					} else
-						echo '<li>'._('No invitation sent for the moment').'</li>';
+				if (is_array($invited_emails)) {
+					foreach ($invited_emails as $invited_email)
+						echo '<li>'.$invited_email.'</li>';
 				} else
-					echo '<li>'._('Error').'</li>';
-
+					echo '<li>'._('No invitation sent for the moment').'</li>';
 			?>
 		</ul>
 	</div>
