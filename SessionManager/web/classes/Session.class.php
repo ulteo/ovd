@@ -69,6 +69,14 @@ class Session {
 		return true;
 	}
 
+	public function uptodateAttribute($attrib_) {
+// 		Logger::debug('main', 'Starting Session::uptodateAttribute for \''.$this->id.'\' attribute '.$attrib_);
+
+		$buf = Abstract_Session::uptodate($this);
+
+		return $buf;
+	}
+
 	public function getStatus() {
 // 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 

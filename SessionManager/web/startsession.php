@@ -95,16 +95,15 @@ if (!is_object($user))
 
 Logger::debug('main', 'startsession.php: Now checking for old session');
 
-$lock = new Lock($user->getAttribute('login'));
-if ($lock->have_lock()) {
-	$session = Abstract_Session::load($lock->session);
-
-	if ($session->isAlive())
-		die_error(_('You already have a session active'),__FILE__,__LINE__);
-	elseif ($session->isSuspended()) {
-		$old_session_id = $session->id;
-		$old_session_server = $session->server;
-	}
+$already_online = 0;
+$sessions = Sessions::getByUser($user->getAttribute('login'));
+if ($sessions > 0) {
+	foreach ($sessions as $session)
+		if ($session->isSuspended()) {
+			$old_session_id = $session->id;
+			$old_session_server = $session->server;
+		} elseif ($session->isAlive())
+			$already_online = 1;
 }
 
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
@@ -152,8 +151,6 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 if ($ret === false)
 	die_error(_('No available session'),__FILE__,__LINE__);
-
-$lock->add_lock($session->id, $session->server);
 
 $fs = $prefs->get('plugins', 'FS');
 // for now we can use one FS at the same time

@@ -52,19 +52,12 @@ if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['passwor
 		$_SESSION['login'] = $_POST['login'];
 		$_SESSION['password'] = $_POST['password'];
 
-		$lock = new Lock($_SESSION['login']);
-		if ($lock->have_lock()) {
-			$session = Abstract_Session::load($lock->session);
-
-			if (! $session || ! $session->isAlive()) {
-				$default_settings = $prefs->get('general', 'session_settings_defaults');
-				$persistent = $default_settings['persistent'];
-				if (!$persistent)
-					$lock->remove_lock();
-
-				$already_online = 0;
-			} else
-				$already_online = 1;
+		$already_online = 0;
+		$sessions = Sessions::getByUser($_SESSION['login']);
+		if ($sessions > 0) {
+			foreach ($sessions as $session)
+				if ($session->isAlive())
+					$already_online = 1;
 		}
 
 		if (isset($already_online) && $already_online == 1) {
