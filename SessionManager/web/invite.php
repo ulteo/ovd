@@ -23,9 +23,6 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	$session = Abstract_Session::load($_POST['session']);
 
-	if (! $session)
-		redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email);
-
 	$view_only = 'Yes';
 	if (isset($_POST['active_mode']))
 		$view_only = 'No';
@@ -64,8 +61,6 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 
 	redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email);
 }
-
-$session = Abstract_Session::load($_GET['session']);
 ?>
 <link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
@@ -97,13 +92,19 @@ html,body {
 	<div style="margin-left: auto; margin-right: 0px; text-align: left">
 		<ul>
 			<?php
-				$invited_emails = $session->invitedEmails();
+				$session = Abstract_Session::load($_GET['session']);
 
-				if (is_array($invited_emails)) {
-					foreach ($invited_emails as $invited_email)
-						echo '<li>'.$invited_email.'</li>';
+				if ($session) {
+					$invited_emails = $session->invitedEmails();
+
+					if (is_array($invited_emails)) {
+						foreach ($invited_emails as $invited_email)
+							echo '<li>'.$invited_email.'</li>';
+					} else
+						echo '<li>'._('No invitation sent for the moment').'</li>';
 				} else
-					echo '<li>'._('No invitation sent for the moment').'</li>';
+					echo '<li>'._('Error').'</li>';
+
 			?>
 		</ul>
 	</div>
