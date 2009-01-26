@@ -357,7 +357,11 @@ loop() {
 
     # Give availables application to the sessionmanager
     # webservices_available_application || exit 1
-    webservices_server_ready || exit 1
+    webservices_server_ready
+    if [ $? -ne 0 ]; then
+	log_ERROR "The request send to the Session manager to say hello returned an error, exiting"
+	exit 1
+    fi
     apt_daemon &
     PID_WATCH=$!
 
