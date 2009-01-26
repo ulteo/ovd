@@ -21,17 +21,23 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 if (isset($_POST['invite']) && $_POST['invite'] == 1) {
-	$session = new Session($_POST['session']);
+	$session = Abstract_Session::load($_POST['session']);
+
+	if (! $session)
+		redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email);
 
 	$view_only = 'Yes';
 	if (isset($_POST['active_mode']))
 		$view_only = 'No';
 
-	$token = $session->create_token('invite', array('view_only' => $view_only));
+	$token = new Token(gen_string(5));
+	$token->type = 'invite';
+	$token->session = $session->id;
+	Abstract_Token::save($token);
 
 	$buf = Abstract_Server::load($session->server);
 
-	$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token;
+	$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
 
 	$email = $_POST['email'];
 
@@ -56,10 +62,10 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 
 	$session->addInvite($email, ($view_only == 'Yes')?1:0);
 
-	redirect('invite.php?server='.$session->server.'&session='.$session->session.'&invited='.$email);
+	redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email);
 }
 
-$session = new Session($_GET['session']);
+$session = Abstract_Session::load($_GET['session']);
 ?>
 <link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
@@ -106,7 +112,7 @@ html,body {
 		<form action="" method="post">
 			<input type="hidden" name="invite" value="1" />
 
-			<input type="hidden" name="session" value="<?php echo $session->session; ?>" />
+			<input type="hidden" name="session" value="<?php echo $session->id; ?>" />
 
 			<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> <input type="checkbox" name="active_mode" /> <?php echo _('active mode'); ?></p>
 

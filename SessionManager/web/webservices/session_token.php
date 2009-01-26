@@ -34,34 +34,29 @@ if (!isset($_GET['token']) || $_GET['token'] == '') {
 	die('ERROR - NO $_GET[\'token\']');
 }
 
-$token = $_GET['token'];
-
-if (!is_readable(TOKENS_DIR.'/'.$token)) {
+$token = Abstract_Token::load($_GET['token']);
+if (! $token) {
 	Logger::error('main', '(webservices/session_token) No such token file : '.TOKENS_DIR.'/'.$token);
 	die('No such token file');
 }
 
-$buf = trim(@file_get_contents(TOKENS_DIR.'/'.$token));
-
-$buf = explode(':', $buf);
-
-$session = Abstract_Session::load($buf[1]);
-$session->use_token($token);
-
-if (!is_readable(SESSIONS_DIR.'/'.$session->id.'/settings')) {
-	Logger::error('main', '(webservices/session_token) No such session token file : '.SESSIONS_DIR.'/'.$session->id.'/settings');
-	die('No such session token file');
+$session = Abstract_Session::load($token->getAttribute('session'));
+if (! $session->hasAttribute('settings')) {
+	Logger::error('main', '(webservices/session_token) Invalid session: '.$session->id);
+	die('Invalid session');
 }
+
+// Abstract_Token::delete($token->id);
 
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument();
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
-$session_node->setAttribute('mode', $buf[0]);
+$session_node->setAttribute('mode', $token->type);
 $dom->appendChild($session_node);
 
-$settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->id.'/settings'));
+$settings = $session->getAttribute('settings');
 foreach ($settings as $k => $v) {
 	if ($k == 'home_dir_type' || $k == 'module_fs')
 		continue;

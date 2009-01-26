@@ -759,9 +759,9 @@ function show_manage($fqdn) {
     foreach($sessions as $session) {
       echo '<form action="sessions.php"><tr>';
       echo '<td>'.$session->getStartTime().'</td>';
-      echo '<td><a href="users.php?action=manage&id='.$session->getSetting('user_login').'">'.$session->getSetting('user_displayname').'</td>';
+      echo '<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
       echo '<td>';
-      echo '<input type="hidden" name="info" value="'.$session->session.'" />';
+      echo '<input type="hidden" name="info" value="'.$session->id.'" />';
       echo '</td><td><input type="submit" value="'._('Informations about this session').'" /></td>';
       echo '</td>';
       echo '</tr></form>';

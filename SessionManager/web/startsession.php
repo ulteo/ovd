@@ -140,7 +140,6 @@ if (isset($old_session_id) && isset($old_session_server)) {
 	$session->status = -1;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
-	Abstract_Session::save($session);
 
 	$session_mode = 'start';
 
@@ -213,13 +212,19 @@ foreach ($optional_args as $k => $v)
 foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;
 
-$token = $session->create_token($session_mode, $data);
+$session->setAttribute('settings', $data);
+Abstract_Session::save($session);
+
+$token = new Token(gen_string(5));
+$token->type = 'start';
+$token->session = $session->id;
+Abstract_Token::save($token);
 
 $buf = Abstract_Server::load($session->server);
 
-$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token;
+$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
 
 $report = new Reporting($session->id);
-$report->session_begin($token, $user);
+$report->session_begin($token->id, $user);
 
 redirect($redir);

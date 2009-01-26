@@ -27,9 +27,12 @@ if (isset($_POST['join'])) {
 	if (isset($_POST['active']))
 		$view_only = 'No';
 
-	$token = $session->create_token('invite', array('view_only' => $view_only));
+	$token = new Token(gen_string(5));
+	$token->type = 'invite';
+	$token->session = $session->id;
+	Abstract_Token::save($token);
 
-	redirect('http://'.$session->server.'/index.php?token='.$token);
+	redirect('http://'.$session->server.'/index.php?token='.$token->id);
 } elseif (isset($_POST['mass_action']) && $_POST['mass_action'] == 'kill') {
 	if (isset($_POST['kill_sessions']) && is_array($_POST['kill_sessions'])) {
 		foreach ($_POST['kill_sessions'] as $session) {

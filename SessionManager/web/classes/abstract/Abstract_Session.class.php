@@ -30,7 +30,7 @@ class Abstract_Session extends Abstract_DB {
 		if (! is_readable($folder))
 			return false;
 
-		$attributes = array('server', 'status', 'user_login', 'user_displayname');
+		$attributes = array('server', 'status', 'settings', 'user_login', 'user_displayname');
 		foreach ($attributes as $attribute)
 			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
 				return false;
@@ -40,6 +40,7 @@ class Abstract_Session extends Abstract_DB {
 		$buf = new Session($id);
 		$buf->server = (string)$server;
 		$buf->status = (int)$status;
+		$buf->settings = unserialize($settings);
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
 
@@ -61,6 +62,7 @@ class Abstract_Session extends Abstract_DB {
 
 		@file_put_contents($folder.'/server', (string)$session_->server);
 		@file_put_contents($folder.'/status', (int)$session_->status);
+		@file_put_contents($folder.'/settings', serialize($session_->settings));
 		@file_put_contents($folder.'/user_login', (string)$session_->user_login);
 		@file_put_contents($folder.'/user_displayname', (string)$session_->user_displayname);
 

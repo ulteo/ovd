@@ -20,16 +20,12 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-// 	public $session = NULL;
-// 	public $server = NULL;
-// 	public $folder = NULL;
-// 	public $settings = array();
-
 class Session {
 	public $id = NULL;
 
 	public $server = NULL;
 	public $status = NULL;
+	public $settings = NULL;
 	public $user_login = NULL;
 	public $user_displayname = NULL;
 
@@ -173,7 +169,7 @@ class Session {
 		if (($buf = $this->getAttribute('status')) === false)
 			return false;
 
-		if ($buf == 1 || $buf == 22 || $buf == 2 || $buf == 3)
+		if ($buf == 0 || $buf == 1 || $buf == 22 || $buf == 2)
 			return true;
 
 		return false;
@@ -188,7 +184,7 @@ class Session {
 		if (($buf = $this->getAttribute('status')) === false)
 			return false;
 
-		if ($buf == 10)
+		if ($buf == 9 || $buf == 10)
 			return true;
 
 		return false;
@@ -210,72 +206,24 @@ class Session {
 	}
 
 	// ? unclean?
-	public function create_token($mode_, $content_=array()) {
-		Logger::debug('main', 'Starting SESSION::create_token for session '.$this->id.' on server '.$this->server);
-
-$this->folder = SESSIONS_DIR.'/'.$this->id;
-
-		$token = gen_string(5);
-
-		if (!file_exists(TOKENS_DIR.'/'.$token)) {
-			if (@file_put_contents(TOKENS_DIR.'/'.$token, $mode_.':'.$this->id)) {
-				Logger::info('main', 'Token created : '.TOKENS_DIR.'/'.$token);
-
-				if ($mode_ == 'start') {
-					$data = serialize($content_);
-
-					if (@file_put_contents($this->folder.'/settings', $data))
-						Logger::info('main', 'Session "start" token created : '.$this->folder.'/settings');
-					else
-						Logger::error('main', 'Session "start" token NOT created : '.$this->folder.'/settings');
-				} elseif ($mode_ == 'invite') {
-					$data = serialize($content_);
-
-					if (@file_put_contents($this->folder.'/'.$token, $data))
-						Logger::info('main', 'Session "invite" token created : '.$this->folder.'/'.$token);
-					else
-						Logger::error('main', 'Session "invite" token NOT created : '.$this->folder.'/'.$token);
-				}
-
-				return $token;
-			} else
-				Logger::error('main', 'Token NOT created : '.TOKENS_DIR.'/'.$token);
-		} else {
-			Logger::error('main', 'Token already exists : '.TOKENS_DIR.'/'.$token);
-			//$this->create_token($mode_, $data_);
-		}
-
-		return false;
-	}
-
-	public function use_token($token_) {
-		Logger::debug('main', 'Starting SESSION::use_token for token '.$token_);
-
-		if (! @unlink(TOKENS_DIR.'/'.$token_)) {
-			Logger::error('main', 'Unable to remove token : '.TOKENS_DIR.'/'.$token_);
-			return false;
-		}
-		Logger::info('main', 'Token removed : '.TOKENS_DIR.'/'.$token_);
-
-		return true;
-	}
-
 	public function getStartTime() {
 		Logger::debug('main', 'Starting SESSION::getStartTime for session '.$this->id);
 
-$this->folder = SESSIONS_DIR.'/'.$this->id;
+		$this->folder = SESSIONS_DIR.'/'.$this->id;
 
-		if (! file_exists($this->folder.'/used')) {
+		if (! file_exists($this->folder.'/status')) {
 			Logger::error('main', 'Unable to get start time');
 			return _('Unknown');
 		}
 		Logger::info('main', 'Got start time');
 
-		return date('d/m/Y H:i:s', filemtime($this->folder.'/used'));
+		return date('d/m/Y H:i:s', filemtime($this->folder.'/status'));
 	}
 
 	public function addInvite($email_, $view_only_) {
-		Logger::debug('main', 'Starting SESSION::addInvite for session '.$this->session.' on server '.$this->server);
+		Logger::debug('main', 'Starting SESSION::addInvite for session '.$this->id.' on server '.$this->server);
+
+		$this->folder = SESSIONS_DIR.'/'.$this->id;
 
 		$buf = $email_;
 		if ($view_only_ == true)
@@ -294,7 +242,9 @@ $this->folder = SESSIONS_DIR.'/'.$this->id;
 	}
 
 	public function invitedEmails() {
-		Logger::debug('main', 'Starting SESSION::invitedEmails for session '.$this->session.' on server '.$this->server);
+		Logger::debug('main', 'Starting SESSION::invitedEmails for session '.$this->id.' on server '.$this->server);
+
+		$this->folder = SESSIONS_DIR.'/'.$this->id;
 
 		if (!file_exists($this->folder.'/invited'))
 			return false;
