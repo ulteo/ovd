@@ -475,8 +475,20 @@ function show_step5() {
 
 function do_validate() {
 	if ($_SESSION['wizard']['use_users'] == 'users') {
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		$mods_enable = $prefs->get('general','module_enable');
+		if (! in_array('UserGroupDB',$mods_enable))
+			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+		
+		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+		$userGroupDB = new $mod_usergroup_name();
+		if (! $userGroupDB->isWriteable())
+			return false;
+		
 		$g = new UsersGroup(NULL, $_SESSION['wizard']['user_group_name'], $_SESSION['wizard']['user_group_description'], 1);
-		$res = $g->insertDB();
+		$res = $userGroupDB->add($g);
 
 		if (!$res || !is_object($g) || $g->id == NULL)
 			show_error(_('Cannot create usergroup'));

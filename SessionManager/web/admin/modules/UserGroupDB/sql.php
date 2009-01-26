@@ -26,8 +26,6 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)',$this->table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published);
 		if ($res !== false) {
-			var_dump2($sql2->InsertId());
-			var_dump2($this->import($sql2->InsertId()));
 			$usergroup_->id = $sql2->InsertId();
 			return is_object($this->import($sql2->InsertId()));
 		}

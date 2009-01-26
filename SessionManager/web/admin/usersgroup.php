@@ -69,7 +69,6 @@ function action_add() {
   
   $g = new UsersGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
   $res = $userGroupDB->add($g);
-  echo 'res ';var_dump2($res);
   if (!$res)
     die_error('Unable to create user group '.$res,__FILE__,__LINE__);
 
@@ -140,7 +139,6 @@ function action_modify($id) {
 }
 
 function show_manage($id) {
-  echo "show_manage($id)<br>";
   $prefs = Preferences::getInstance();
   if (! $prefs)
     die_error('get Preferences failed',__FILE__,__LINE__);
