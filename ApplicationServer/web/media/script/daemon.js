@@ -1,9 +1,6 @@
 var refresh = 2000;
 
 var server;
-var session;
-var timestamp;
-var lead;
 var debug;
 
 var my_width;
@@ -14,11 +11,8 @@ var old_session_state = -1;
 
 var window_alive = true;
 
-function daemon_init(server_, session_, timestamp_, lead_, debug_) {
+function daemon_init(server_, debug_) {
 	server = server_;
-	session = session_;
-	timestamp = timestamp_;
-	lead = lead_;
 	debug = debug_;
 
 	$('printerContainer').hide();
@@ -66,8 +60,7 @@ function daemon_loop() {
 				method: 'get',
 				parameters: {
 					width: parseInt(my_width),
-					height: parseInt(my_height),
-					lead: lead
+					height: parseInt(my_height)
 				}
 			}
 		);
@@ -78,8 +71,6 @@ function daemon_loop() {
 		switch_applet_to_end();
 		return;
 	}
-
-	print_check();
 
 	setTimeout(function() {
 		daemon_loop();
@@ -165,73 +156,63 @@ function push_log(data_, level_) {
 		$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
 }
 
-function onSuccessSession(transport) {
-	if (!window_alive)
-		return;
-
-	old_session_state = session_state;
-	session_state = transport.responseText;
-
-	if (session_state != old_session_state)
-		push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
-
-	if (session_state != 2)
-		push_log('[session] Status: '+session_state, 'warning');
-	else
-		push_log('[session] Status: '+session_state, 'debug');
-}
-
-function onPrint(transport) {
-	if (!window_alive)
-		return;
-
-	if (transport.status == 200) {
-		push_log('[print] PDF: yes', 'info');
-
-		next_timestamp = transport.getResponseHeader('UlteoPrintTime');
-		print_filename = transport.getResponseHeader('UlteoFileName');
-		print_url = 'http://'+server+'/webservices/print.php?session='+session+'&timestamp='+timestamp;
-		timestamp = next_timestamp;
-
-		$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+print_filename+'"></applet>';
-
-		$('printerContainer').show();
-
-		push_log('[print] Applet: starting', 'warning');
-	} else
-		push_log('[print] PDF: no', 'debug');
-}
 
 function session_check() {
 	push_log('[session] check()', 'debug');
-
 	new Ajax.Request(
-		'webservices/session_status.php',
+		'webservices/whatsup.php',
 		{
 			method: 'get',
-			parameters: {
-				session: session
-			},
 			asynchronous: false,
-			onSuccess: onSuccessSession
+			onSuccess: onUpdateInfos
 		}
 	);
 }
 
-function print_check() {
-	push_log('[print] check()', 'debug');
+function onUpdateInfos(transport) {
+  var xml = transport.responseXML;
 
-	new Ajax.Request(
-		'webservices/print.php',
-		{
-			method: 'get',
-			parameters: {
-				session: session,
-				timestamp: timestamp,
-				lead: lead
-			},
-			onSuccess: onPrint,
-			onFailure: onPrint
-		}
-	);
+  var buffer = xml.getElementsByTagName('session');
+
+  if (buffer.length !=1) {
+    push_log('[session] bad xml format', 'error');
+    return;
+  }
+
+  var sessionNode = buffer[0];
+  if (! sessionNode.hasAttribute('status')) {
+    push_log('[session] bad xml format', 'error');
+    return;
+  }
+
+  old_session_state = session_state;
+  session_state = sessionNode.getAttribute('status');
+
+  if (session_state != old_session_state)
+    push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
+
+  if (session_state != 2)
+    push_log('[session] Status: '+session_state, 'warning');
+  else
+    push_log('[session] Status: '+session_state, 'debug');
+
+  var print_Node = sessionNode.getElementsByTagName('print');
+  if (print_Node.length > 0) {
+    print_Node = print_Node[0];
+
+    var path = print_Node.getAttribute('path');
+    var timestamp = print_Node.getAttribute('time');
+    do_print(path, timestamp);
+  }
+}
+
+function do_print(path, timestamp) {
+  push_log('[print] PDF: yes', 'info');
+
+  var print_url = 'http://'+server+'/webservices/print.php?timestamp='+timestamp;
+
+  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
+
+  $('printerContainer').show();
+  push_log('[print] Applet: starting', 'warning');
 }

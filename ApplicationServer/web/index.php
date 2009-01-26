@@ -129,7 +129,7 @@ if ($_SESSION['mode'] == 'start')
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				daemon_init('<?php echo $_SERVER['SERVER_NAME']; ?>', '<?php echo $_SESSION['session']; ?>', <?php echo time(); ?>, <?php echo ($_SESSION['owner'])?'1':'0'; ?>, <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon_init('<?php echo $_SERVER['SERVER_NAME']; ?>', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>
