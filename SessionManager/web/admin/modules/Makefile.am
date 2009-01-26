@@ -1,2 +1,2 @@
-SUBDIRS =  UserDB ApplicationDB
+SUBDIRS =  UserDB ApplicationDB UserGroupDB
 

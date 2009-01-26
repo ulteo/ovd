@@ -36,9 +36,10 @@ web/media/style/Makefile
 web/media/Makefile
 web/plugins/Makefile
 web/plugins/FS/Makefile
+web/modules/Makefile
+web/modules/UserGroupDB/Makefile
 web/modules/UserDB/Makefile
 web/modules/ApplicationDB/Makefile
-web/modules/Makefile
 web/admin/media/script/ajax/Makefile
 web/admin/media/script/Makefile
 web/admin/media/style/Makefile
@@ -47,6 +48,7 @@ web/admin/media/image/Makefile
 web/admin/media/Makefile
 web/admin/modules/UserDB/Makefile
 web/admin/modules/ApplicationDB/Makefile
+web/admin/modules/UserGroupDB/Makefile
 web/admin/modules/Makefile
 web/admin/includes/Makefile
 web/admin/classes/Makefile
