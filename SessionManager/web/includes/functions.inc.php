@@ -385,8 +385,7 @@ function get_all_usergroups(){
 	$mods_enable = $prefs->get('general','module_enable');
 	if (! in_array('UserGroupDB',$mods_enable)) {
 		Logger::error('main', 'get_all_usergroups Module UserGroupDB must be enabled');
-		die_error('Module UserGroupDB must be enabled', __FILE__, __LINE__);
-		return NULL;
+		return array();
 	}
 	
 	$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
