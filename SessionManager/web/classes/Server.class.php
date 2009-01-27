@@ -152,7 +152,7 @@ class Server {
 // 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
 		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
-		$this->setAttribute('status', 'broken');
+		$this->setStatus('broken');
 
 		return true;
 	}
@@ -161,7 +161,7 @@ class Server {
 // 		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
 
 		Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
-		$this->setAttribute('status', 'broken');
+		$this->setStatus('broken');
 
 		return true;
 	}

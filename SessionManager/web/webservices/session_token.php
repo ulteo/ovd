@@ -36,7 +36,7 @@ if (!isset($_GET['token']) || $_GET['token'] == '') {
 
 $token = Abstract_Token::load($_GET['token']);
 if (! $token) {
-	Logger::error('main', '(webservices/session_token) No such token file : '.TOKENS_DIR.'/'.$token);
+	Logger::error('main', '(webservices/session_token) No such token : '.$token);
 	die('No such token file');
 }
 
@@ -46,7 +46,7 @@ if (! $session->hasAttribute('settings')) {
 	die('Invalid session');
 }
 
-// Abstract_Token::delete($token->id);
+Abstract_Token::delete($token->id);
 
 header('Content-Type: text/xml; charset=utf-8');
 
@@ -69,7 +69,7 @@ foreach ($settings as $k => $v) {
 	$session_node->appendChild($item);
 }
 
-if ($buf[0] == 'invite') {
+/*if ($buf[0] == 'invite') {
 	$invite_settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/'.$token));
 
 	foreach ($invite_settings as $k => $v) {
@@ -77,7 +77,7 @@ if ($buf[0] == 'invite') {
 		$item->setAttribute('value', $v);
 		$session_node->appendChild($item);
 	}
-}
+}*/
 
 $module_fs_node = $dom->createElement('module_fs');
 $module_fs_node->setAttribute('type', $settings['home_dir_type']);

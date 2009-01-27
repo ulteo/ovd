@@ -20,28 +20,34 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-define('SERVERS_DIR', SESSIONMANAGER_SPOOL.'/servers');
-if (! check_folder(SERVERS_DIR)) {
-	Logger::critical('main', SERVERS_DIR.' does not exist and cannot be created !');
-	die_error(SERVERS_DIR.' does not exist and cannot be created !', __FILE__, __LINE__);
-}
-
-class Abstract_Server extends Abstract_DB {
+class Abstract_Server {
 	public function load($fqdn_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 
-		$fqdn = $fqdn_;
-		$folder = SERVERS_DIR.'/'.$fqdn;
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
 
-		if (! is_readable($folder))
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$fqdn = $fqdn_;
+
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13 FROM @14 WHERE @15 = %16 LIMIT 1', 'status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
 			return false;
 
-		$attributes = array('status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used');
-		foreach ($attributes as $attribute)
-			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
-				return false;
-		unset($attribute);
-		unset($attributes);
+		$row = $SQL->FetchResult();
+
+		foreach ($row as $k => $v)
+			$$k = $v;
+		unset($v);
+		unset($k);
+		unset($row);
 
 		$buf = new Server($fqdn);
 		$buf->status = (string)$status;
@@ -64,29 +70,23 @@ class Abstract_Server extends Abstract_DB {
 	public function save($server_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::save for \''.$server_->fqdn.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$fqdn = $server_->fqdn;
-		$folder = SERVERS_DIR.'/'.$fqdn;
 
 		if (! Abstract_Server::load($fqdn))
 			if (! Abstract_Server::create($server_))
 				return false;
 
-		if (! is_writeable($folder))
-			return false;
-
-		@file_put_contents($folder.'/status', (string)$server_->status);
-		@file_put_contents($folder.'/registered', (int)$server_->registered);
-		@file_put_contents($folder.'/locked', (int)$server_->locked);
-		@file_put_contents($folder.'/type', (string)$server_->type);
-		@file_put_contents($folder.'/version', (string)$server_->version);
-		@file_put_contents($folder.'/external_name', (string)$server_->external_name);
-		@file_put_contents($folder.'/web_port', (int)$server_->web_port);
-		@file_put_contents($folder.'/max_sessions', (int)$server_->max_sessions);
-		@file_put_contents($folder.'/cpu_model', (string)$server_->cpu_model);
-		@file_put_contents($folder.'/cpu_nb_cores', (int)$server_->cpu_nb_cores);
-		@file_put_contents($folder.'/cpu_load', (string)$server_->cpu_load);
-		@file_put_contents($folder.'/ram_total', (int)$server_->ram_total);
-		@file_put_contents($folder.'/ram_used', (int)$server_->ram_used);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27 WHERE @28 = %29 LIMIT 1', $mysql_conf['prefix'].'servers', 'status', (string)$server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', (string)$server_->type, 'version', (string)$server_->version, 'external_name', (string)$server_->external_name, 'web_port', (int)$server_->web_port, 'max_sessions', (int)$server_->max_sessions, 'cpu_model', (string)$server_->cpu_model,
+		'cpu_nb_cores', (int)$server_->cpu_nb_cores, 'cpu_load', (string)$server_->cpu_load, 'ram_total', (int)$server_->ram_total, 'ram_used', (int)$server_->ram_used, 'fqdn', $fqdn);
 
 		return true;
 	}
@@ -94,14 +94,24 @@ class Abstract_Server extends Abstract_DB {
 	private function create($server_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$fqdn = $server_->fqdn;
-		$folder = SERVERS_DIR.'/'.$fqdn;
 
-		if (! is_writeable(SERVERS_DIR))
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'fqdn', $mysql_conf['prefix'].'servers', $fqdn);
+		$total = $SQL->NumRows();
+
+		if ($total != 0)
 			return false;
 
-		if (! @mkdir($folder, 0750))
-			return false;
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
 
 		return true;
 	}
@@ -109,21 +119,24 @@ class Abstract_Server extends Abstract_DB {
 	public function delete($fqdn_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$fqdn = $fqdn_;
-		$folder = SERVERS_DIR.'/'.$fqdn;
 
-		if (! file_exists($folder))
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'fqdn', $mysql_conf['prefix'].'servers', $fqdn);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
 			return false;
 
-		$remove_files = glob($folder.'/*');
-		foreach ($remove_files as $remove_file)
-			if (! @unlink($remove_file))
-				return false;
-		unset($remove_file);
-		unset($remove_files);
-
-		if (! @rmdir($folder))
-			return false;
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
 
 		return true;
 	}
@@ -131,11 +144,21 @@ class Abstract_Server extends Abstract_DB {
 	public function load_all() {
 // 		Logger::debug('main', 'Starting Abstract_Server::load_all');
 
-		$all_servers = glob(SERVERS_DIR.'/*', GLOB_ONLYDIR);
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$SQL->DoQuery('SELECT @1 FROM @2', 'fqdn', $mysql_conf['prefix'].'servers');
+		$rows = $SQL->FetchAllResults();
 
 		$servers = array();
-		foreach ($all_servers as $all_server) {
-			$fqdn = basename($all_server);
+		foreach ($rows as $row) {
+			$fqdn = $row['fqdn'];
 
 			$server = Abstract_Server::load($fqdn);
 			if (! $server)
@@ -143,8 +166,8 @@ class Abstract_Server extends Abstract_DB {
 
 			$servers[] = $server;
 		}
-		unset($all_server);
-		unset($all_servers);
+		unset($row);
+		unset($rows);
 
 		return $servers;
 	}
@@ -152,14 +175,6 @@ class Abstract_Server extends Abstract_DB {
 	public function uptodate($server_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
 
-		$fqdn = $server_->fqdn;
-		$folder = SERVERS_DIR.'/'.$fqdn;
-
-		$buf = @filemtime($folder.'/status');
-
-		if ($buf > (time()-30))
-			return true;
-
-		return false;
+		return true;
 	}
 }

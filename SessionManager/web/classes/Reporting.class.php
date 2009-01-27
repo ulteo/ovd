@@ -41,7 +41,7 @@ class Reporting {
 	public function session_end() {
 		$buf = TMP_DIR.'/reporting_'.$this->session->id.'_'.date('Ymd'); //and if the day changes ?
 
-		@mkdir($buf);
+		@mkdir($buf, 0755);
 
 		@file_put_contents($buf.'/date_end', time());
 		@file_put_contents($buf.'/final_status', 4);
@@ -89,7 +89,7 @@ class Reporting {
 		$session_node->appendChild($users_node);
 
 		$settings_node = $dom->createElement('settings');
-		$settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$this->session->id.'/settings'));
+		$settings = $this->session->getAttribute('settings');
 		foreach ($settings as $k => $v) {
 			if ($k == 'user_id' || $k == 'user_login' || $k == 'user_displayname' || $k == 'module_fs')
 				continue;
@@ -114,8 +114,7 @@ class Reporting {
 		$session_node->appendChild($applications_node);
 
 		$invitations_node = $dom->createElement('invitations');
-		$invitations = @file_get_contents(SESSIONS_DIR.'/'.$this->session->id.'/invited');
-		$invitations = explode("\n", $invitations);
+		$invitations = $this->session->getAttribute('invitations');
 		foreach ($invitations as $invitation) {
 			if ($invitation === '') //for the last \n ...
 				continue;

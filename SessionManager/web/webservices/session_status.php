@@ -53,11 +53,11 @@ $session->setStatus($_GET['status']);
 Abstract_Session::save($session);
 
 if ($_GET['status'] == 1) {
-	Logger::info('main', '(webservices/session_status) Session start : '.SESSIONS_DIR.'/'.$session->id);
+	Logger::info('main', '(webservices/session_status) Session start : '.$session->id);
 }
 
 if ($_GET['status'] == 4) {
-	Logger::info('main', '(webservices/session_status) Session end : '.SESSIONS_DIR.'/'.$session->id);
+	Logger::info('main', '(webservices/session_status) Session end : '.$session->id);
 
 	$plugins = new Plugins();
 	$plugins->doLoad();

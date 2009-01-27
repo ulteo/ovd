@@ -55,8 +55,6 @@ $list_desktop_timeouts = array(
 	-1		=>	_('Never')
 );
 
-require_once(dirname(__FILE__).'/webservices/check.php');
-
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error(_('get Preferences failed'),__FILE__,__LINE__);

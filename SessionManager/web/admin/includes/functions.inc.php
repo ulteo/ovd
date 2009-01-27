@@ -230,6 +230,9 @@ function init_db($prefs_) {
 	$LIAISON_APPLICATION_SERVER_TABLE = $mysql_conf['prefix'].'application_server_link';
 	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
 	$LIAISON_SERVER_SESSION_TABLE = $mysql_conf['prefix'].'server_session_link';
+	$SERVERS_TABLE = $mysql_conf['prefix'].'servers';
+	$SESSIONS_TABLE = $mysql_conf['prefix'].'sessions';
+	$TOKENS_TABLE = $mysql_conf['prefix'].'tokens';
 
 	// we create the sql table
 	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
@@ -246,7 +249,6 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$LIAISON_APPLICATION_SERVER_TABLE.' created');
-
 
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
@@ -302,7 +304,7 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE.' created');
-	
+
 	$ret = $sql2->DoQuery(
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(50) NOT NULL,
@@ -329,7 +331,66 @@ function init_db($prefs_) {
 	else
 		Logger::debug('admin','init_db table '.$LIAISON_SERVER_SESSION_TABLE.' created');
 
+	$ret = $sql2->DoQuery(
+	'CREATE TABLE IF NOT EXISTS @1 (
+	@2 varchar(255) NOT NULL,
+	@3 varchar(255) NOT NULL,
+	@4 varchar(255) NOT NULL,
+	@5 varchar(255) NOT NULL,
+	@6 varchar(255) NOT NULL,
+	@7 varchar(255) NOT NULL,
+	@8 varchar(255) NOT NULL,
+	@9 varchar(255) NOT NULL,
+	@10 varchar(255) NOT NULL,
+	@11 varchar(255) NOT NULL,
+	@12 varchar(255) NOT NULL,
+	@13 varchar(255) NOT NULL,
+	@14 varchar(255) NOT NULL,
+	@15 varchar(255) NOT NULL,
+	PRIMARY KEY  (@2)
+	)',$SERVERS_TABLE,'fqdn','status','registered','locked','type','version','external_name','web_port','max_sessions','cpu_model','cpu_nb_cores','cpu_load','ram_total','ram_used');
+	if ( $ret === false) {
+		Logger::error('admin','init_db table '.$SERVERS_TABLE.' fail to created');
+		return false;
+	}
+	else
+		Logger::debug('admin','init_db table '.$SERVERS_TABLE.' created');
+
+	$ret = $sql2->DoQuery(
+	'CREATE TABLE IF NOT EXISTS @1 (
+	@2 varchar(255) NOT NULL,
+	@3 varchar(255) NOT NULL,
+	@4 varchar(255) NOT NULL,
+	@5 text NOT NULL,
+	@6 varchar(255) NOT NULL,
+	@7 varchar(255) NOT NULL,
+	PRIMARY KEY  (@2)
+	)',$SESSIONS_TABLE,'id','server','status','settings','user_login','user_displayname');
+	if ( $ret === false) {
+		Logger::error('admin','init_db table '.$SESSIONS_TABLE.' fail to created');
+		return false;
+	}
+	else
+		Logger::debug('admin','init_db table '.$SESSIONS_TABLE.' created');
+
+	$ret = $sql2->DoQuery(
+	'CREATE TABLE IF NOT EXISTS @1 (
+	@2 varchar(255) NOT NULL,
+	@3 varchar(255) NOT NULL,
+	@4 varchar(255) NOT NULL,
+	PRIMARY KEY  (`id`)
+	)',$TOKENS_TABLE,'id','type','session');
+	if ( $ret === false) {
+		Logger::error('admin','init_db table '.$TOKENS_TABLE.' fail to created');
+		return false;
+	}
+	else
+		Logger::debug('admin','init_db table '.$TOKENS_TABLE.' created');
+
+
+
 	Logger::debug('admin','init_db all tables created');
+
 	$modules_enable = $prefs_->get('general', 'module_enable');
 	foreach ($modules_enable as $module_name) {
 		$mod_name = 'admin_'.$module_name.'_'.$prefs_->get($module_name,'enable');

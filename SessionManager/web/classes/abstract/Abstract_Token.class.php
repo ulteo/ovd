@@ -20,28 +20,34 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-define('TOKENS_DIR', SESSIONMANAGER_SPOOL.'/tokens');
-if (! check_folder(TOKENS_DIR)) {
-	Logger::critical('main', TOKENS_DIR.' does not exist and cannot be created !');
-	die_error(TOKENS_DIR.' does not exist and cannot be created !', __FILE__, __LINE__);
-}
-
-class Abstract_Token extends Abstract_DB {
+class Abstract_Token {
 	public function load($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
 
-		$id = $id_;
-		$folder = TOKENS_DIR.'/'.$id;
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
 
-		if (! is_readable($folder))
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$id = $id_;
+
+		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'type', 'session', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
 			return false;
 
-		$attributes = array('type', 'session');
-		foreach ($attributes as $attribute)
-			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
-				return false;
-		unset($attribute);
-		unset($attributes);
+		$row = $SQL->FetchResult();
+
+		foreach ($row as $k => $v)
+			$$k = $v;
+		unset($v);
+		unset($k);
+		unset($row);
 
 		$buf = new Token($id);
 		$buf->type = (string)$type;
@@ -53,18 +59,22 @@ class Abstract_Token extends Abstract_DB {
 	public function save($token_) {
 // 		Logger::debug('main', 'Starting Abstract_Token::save for \''.$token_->id.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$id = $token_->id;
-		$folder = TOKENS_DIR.'/'.$id;
 
 		if (! Abstract_Token::load($id))
 			if (! Abstract_Token::create($token_))
 				return false;
 
-		if (! is_writeable($folder))
-			return false;
-
-		@file_put_contents($folder.'/type', (string)$token_->type);
-		@file_put_contents($folder.'/session', (string)$token_->session);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5 WHERE @6 = %7 LIMIT 1', $mysql_conf['prefix'].'tokens', 'type', (string)$token_->type, 'session', (string)$token_->session, 'id', $id);
 
 		return true;
 	}
@@ -72,14 +82,24 @@ class Abstract_Token extends Abstract_DB {
 	private function create($token_) {
 // 		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$id = $token_->id;
-		$folder = TOKENS_DIR.'/'.$id;
 
-		if (! is_writeable(TOKENS_DIR))
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $mysql_conf['prefix'].'tokens', $id);
+		$total = $SQL->NumRows();
+
+		if ($total != 0)
 			return false;
 
-		if (! @mkdir($folder, 0750))
-			return false;
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'tokens', 'id', $id);
 
 		return true;
 	}
@@ -87,21 +107,24 @@ class Abstract_Token extends Abstract_DB {
 	public function delete($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Token::delete for \''.$id_.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$id = $id_;
-		$folder = TOKENS_DIR.'/'.$fqdn;
 
-		if (! file_exists($folder))
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $mysql_conf['prefix'].'tokens', $id);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
 			return false;
 
-		$remove_files = glob($folder.'/*');
-		foreach ($remove_files as $remove_file)
-			if (! @unlink($remove_file))
-				return false;
-		unset($remove_file);
-		unset($remove_files);
-
-		if (! @rmdir($folder))
-			return false;
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'tokens', 'id', $id);
 
 		return true;
 	}

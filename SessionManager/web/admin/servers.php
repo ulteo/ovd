@@ -397,6 +397,10 @@ function show_default() {
 function show_manage($fqdn) {
   $server = Abstract_Server::load($fqdn);
 
+//FIX ME?
+  if ($server->getAttribute('status') == 'ready')
+    $server->getStatus();
+
   $server_online = $server->isOnline();
 
   if ($server_online) {

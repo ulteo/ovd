@@ -20,28 +20,34 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-define('SESSIONS_DIR', SESSIONMANAGER_SPOOL.'/sessions');
-if (! check_folder(SESSIONS_DIR)) {
-	Logger::critical('main', SESSIONS_DIR.' does not exist and cannot be created !');
-	die_error(SESSIONS_DIR.' does not exist and cannot be created !', __FILE__, __LINE__);
-}
-
-class Abstract_Session extends Abstract_DB {
+class Abstract_Session {
 	public function load($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 
-		$id = $id_;
-		$folder = SESSIONS_DIR.'/'.$id;
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
 
-		if (! is_readable($folder))
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$id = $id_;
+
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @7 = %8 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
 			return false;
 
-		$attributes = array('server', 'status', 'settings', 'user_login', 'user_displayname');
-		foreach ($attributes as $attribute)
-			if (($$attribute = @file_get_contents($folder.'/'.$attribute)) === false)
-				return false;
-		unset($attribute);
-		unset($attributes);
+		$row = $SQL->FetchResult();
+
+		foreach ($row as $k => $v)
+			$$k = $v;
+		unset($v);
+		unset($k);
+		unset($row);
 
 		$buf = new Session($id);
 		$buf->server = (string)$server;
@@ -56,21 +62,22 @@ class Abstract_Session extends Abstract_DB {
 	public function save($session_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::save for \''.$session_->id.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$id = $session_->id;
-		$folder = SESSIONS_DIR.'/'.$id;
 
 		if (! Abstract_Session::load($id))
 			if (! Abstract_Session::create($session_))
 				return false;
 
-		if (! is_writeable($folder))
-			return false;
-
-		@file_put_contents($folder.'/server', (string)$session_->server);
-		@file_put_contents($folder.'/status', (int)$session_->status);
-		@file_put_contents($folder.'/settings', serialize($session_->settings));
-		@file_put_contents($folder.'/user_login', (string)$session_->user_login);
-		@file_put_contents($folder.'/user_displayname', (string)$session_->user_displayname);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11 WHERE @12 = %13 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', (string)$session_->server, 'status', (int)$session_->status, 'settings', serialize($session_->settings), 'user_login', (string)$session_->user_login, 'user_displayname', (string)$session_->user_displayname, 'id', $id);
 
 		return true;
 	}
@@ -78,18 +85,24 @@ class Abstract_Session extends Abstract_DB {
 	private function create($session_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$id = $session_->id;
-		$folder = SESSIONS_DIR.'/'.$id;
 
-		if (! is_writeable(SESSIONS_DIR))
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $mysql_conf['prefix'].'sessions', $id);
+		$total = $SQL->NumRows();
+
+		if ($total != 0)
 			return false;
 
-		$l = new ServerSessionLiaison($session_->server, $session_->id);
-		if (! $l->insertDB())
-			return false;
-
-		if (! @mkdir($folder, 0750))
-			return false;
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'sessions', 'id', $id);
 
 		return true;
 	}
@@ -97,28 +110,24 @@ class Abstract_Session extends Abstract_DB {
 	public function delete($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::delete for \''.$id_.'\'');
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
 		$id = $id_;
-		$folder = SESSIONS_DIR.'/'.$id;
 
-		if (! file_exists($folder))
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $mysql_conf['prefix'].'sessions', $id);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
 			return false;
 
-		$session = Abstract_Session::load($id_);
-		if (! $session)
-			return false;
-
-		$l = new ServerSessionLiaison($session->server, $session->id);
-		if (! $l->removeDB())
-			return false;
-
-		$remove_files = glob($folder.'/*');
-		foreach ($remove_files as $remove_file)
-			@unlink($remove_file);
-		unset($remove_file);
-		unset($remove_files);
-
-		if (! @rmdir($folder))
-			return false;
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
 
 		return true;
 	}
@@ -126,11 +135,21 @@ class Abstract_Session extends Abstract_DB {
 	public function load_all() {
 // 		Logger::debug('main', 'Starting Abstract_Session::load_all');
 
-		$all_sessions = glob(SESSIONS_DIR.'/*', GLOB_ONLYDIR);
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'sessions');
+		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
-		foreach ($all_sessions as $all_session) {
-			$id = basename($all_session);
+		foreach ($rows as $row) {
+			$id = $row['id'];
 
 			$session = Abstract_Session::load($id);
 			if (! $session)
@@ -138,8 +157,8 @@ class Abstract_Session extends Abstract_DB {
 
 			$sessions[] = $session;
 		}
-		unset($all_session);
-		unset($all_sessions);
+		unset($row);
+		unset($rows);
 
 		return $sessions;
 	}
@@ -147,14 +166,6 @@ class Abstract_Session extends Abstract_DB {
 	public function uptodate($session_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 
-		$id = $session_->id;
-		$folder = SESSIONS_DIR.'/'.$id;
-
-		$buf = @filemtime($folder.'/status');
-
-		if ($buf > (time()-30))
-			return true;
-
-		return false;
+		return true;
 	}
 }
