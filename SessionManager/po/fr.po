@@ -17,89 +17,92 @@
 msgid ""
 msgstr ""
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-01-16 17:16+0100\n"
+"POT-Creation-Date: 2009-01-27 08:03+0100\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../web/footer.php:28 ../web/includes/functions.inc.php:393
+#: ../web/footer.php:28 ../web/includes/functions.inc.php:342
 msgid "powered by"
 msgstr "powered by"
 
-#: ../web/ajax/login.php:26 ../web/ajax/login.php:46 ../web/ajax/login.php:81
+#: ../web/ajax/login.php:26 ../web/ajax/login.php:46 ../web/ajax/login.php:75
 #: ../web/admin/login.php:65
 msgid "There was an error with your authentication"
 msgstr "Authentification échouée"
 
-#: ../web/ajax/login.php:32 ../web/index.php:62
+#: ../web/ajax/login.php:32 ../web/webservices/userlist.php:27
+#: ../web/index.php:62
 msgid "get Preferences failed"
 msgstr "Récupérations des préférences échouée"
 
-#: ../web/ajax/login.php:38 ../web/header.php:30 ../web/login.php:32
-#: ../web/admin/ajax.php:45 ../web/admin/ajax.php:63 ../web/admin/sumup.php:30
-#: ../web/admin/wizard.php:149 ../web/admin/users.php:30
-#: ../web/admin/usersgroup.php:131 ../web/index.php:77
+#: ../web/ajax/login.php:38 ../web/webservices/userlist.php:31
+#: ../web/header.php:30 ../web/login.php:32 ../web/admin/ajax.php:29
+#: ../web/admin/ajax.php:45 ../web/admin/ajax.php:63 ../web/admin/ajax.php:81
+#: ../web/admin/sumup.php:32 ../web/admin/wizard.php:149
+#: ../web/admin/users.php:30 ../web/admin/usersgroup.php:178
+#: ../web/classes/User.class.php:58 ../web/index.php:77
 msgid "Module UserDB must be enabled"
 msgstr "Le module UserDB doit être activé"
 
-#: ../web/ajax/login.php:71
+#: ../web/ajax/login.php:65
 msgid "You already have an active session"
 msgstr "Vous avez déjà une session active"
 
-#: ../web/ajax/login.php:77
+#: ../web/ajax/login.php:71
 msgid "You are now logged in"
 msgstr "Vous êtes maintenant connecté"
 
-#: ../web/ajax/login.php:85
+#: ../web/ajax/login.php:79
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
-#: ../web/invite.php:44
+#: ../web/invite.php:47
 msgid "Invitation"
 msgstr "Invitation"
 
-#: ../web/invite.php:46
+#: ../web/invite.php:49
 msgid "You received an invitation from"
 msgstr "Vous avez reçu une invitation de"
 
-#: ../web/invite.php:46
+#: ../web/invite.php:49
 msgid "please click on the link below to join the online session"
 msgstr "cliquez sur le lien ci-dessous pour vous connecter au service en ligne"
 
-#: ../web/invite.php:75
+#: ../web/invite.php:78
 msgid "Desktop sharing"
 msgstr "Partage du bureau"
 
-#: ../web/invite.php:77
+#: ../web/invite.php:80
 msgid "Invite the following people to share this session"
 msgstr "Inviter des personnes à partager cette session"
 
-#: ../web/invite.php:81
+#: ../web/invite.php:84
 msgid "An error occured with your invitation, please try again!"
 msgstr "Une erreur s'est produite sur votre invitation, merci de réessayer !"
 
-#: ../web/invite.php:83
+#: ../web/invite.php:86
 msgid "Your invitation to "
 msgstr "Votre invitation à"
 
-#: ../web/invite.php:100
+#: ../web/invite.php:103
 msgid "No invitation sent for the moment"
 msgstr "Aucune invitation envoyée pour le moment"
 
-#: ../web/invite.php:111
+#: ../web/invite.php:114
 msgid "Email address"
 msgstr "Adresse e-mail"
 
-#: ../web/invite.php:111
+#: ../web/invite.php:114
 msgid "active mode"
 msgstr "mode actif"
 
-#: ../web/invite.php:113
+#: ../web/invite.php:116
 msgid "Invite"
 msgstr "Inviter"
 
 #: ../web/login.php:71 ../web/admin/login.php:59 ../web/admin/login.php:81
-#: ../web/admin/users.php:141 ../web/admin/users.php:295 ../web/index.php:213
+#: ../web/admin/users.php:140 ../web/admin/users.php:294 ../web/index.php:213
 msgid "Login"
 msgstr "Connexion"
 
@@ -130,6 +133,11 @@ msgstr "Common Internet File System (CIFS)"
 #: ../web/plugins/FS/nfs.php:46
 msgid "Network File System (NFS)"
 msgstr "Network File System (NFS)"
+
+#: ../web/modules/UserGroupDB/sql.php:139 ../web/modules/UserDB/sql.php:163
+#: ../web/modules/ApplicationDB/sql.php:154
+msgid "MySQL"
+msgstr "MySQL"
 
 #: ../web/modules/UserDB/fake.php:111 ../web/modules/ApplicationDB/fake.php:84
 msgid "fake"
@@ -194,10 +202,6 @@ msgstr "La version de protocole utilisé par votre serveur LDAP."
 msgid "Lightweight Directory Access Protocol (LDAP)"
 msgstr "Lightweight Directory Access Protocol (LDAP)"
 
-#: ../web/modules/UserDB/sql.php:163 ../web/modules/ApplicationDB/sql.php:154
-msgid "MySQL"
-msgstr "MySQL"
-
 #: ../web/modules/UserDB/activedirectory.php:141
 msgid "The address of your Active Directory server."
 msgstr "L'adresse de votre serveur Active Directory."
@@ -226,240 +230,246 @@ msgstr "DN de la branche utilisateurs"
 msgid "Active Directory"
 msgstr "Active Directory"
 
-#: ../web/admin/appsgroup.php:112 ../web/admin/appsgroup.php:375
-#: ../web/admin/usersgroup.php:112 ../web/admin/usersgroup.php:321
+#: ../web/admin/appsgroup.php:112 ../web/admin/appsgroup.php:382
+#: ../web/admin/usersgroup.php:159 ../web/admin/usersgroup.php:368
 msgid "Enabled"
 msgstr "Activé"
 
 #: ../web/admin/appsgroup.php:113 ../web/admin/applications.php:98
-#: ../web/admin/usersgroup.php:113
+#: ../web/admin/usersgroup.php:160
 msgid "Block"
 msgstr "Bloquer"
 
-#: ../web/admin/appsgroup.php:117 ../web/admin/appsgroup.php:377
-#: ../web/admin/applications.php:101 ../web/admin/usersgroup.php:117
-#: ../web/admin/usersgroup.php:323
+#: ../web/admin/appsgroup.php:117 ../web/admin/appsgroup.php:384
+#: ../web/admin/applications.php:101 ../web/admin/usersgroup.php:164
+#: ../web/admin/usersgroup.php:370
 msgid "Blocked"
 msgstr "Bloqué"
 
-#: ../web/admin/appsgroup.php:118 ../web/admin/usersgroup.php:118
+#: ../web/admin/appsgroup.php:118 ../web/admin/usersgroup.php:165
 msgid "Enable"
 msgstr "Activé"
 
-#: ../web/admin/appsgroup.php:128 ../web/admin/ajax.php:81
-#: ../web/admin/ajax.php:98 ../web/admin/servers.php:433
+#: ../web/admin/appsgroup.php:128 ../web/admin/ajax.php:99
+#: ../web/admin/ajax.php:116 ../web/admin/servers.php:461
 #: ../web/admin/actions.php:52 ../web/admin/wizard.php:156
 #: ../web/admin/wizard.php:307 ../web/admin/applications.php:31
-#: ../web/admin/classes/Server_admin.class.php:35
-#: ../web/classes/Server.class.php:544
+#: ../web/classes/Server.class.php:447 ../web/classes/Server.class.php:495
 msgid "Module ApplicationDB must be enabled"
 msgstr "Le module ApplicationDB doit être activé"
 
-#: ../web/admin/appsgroup.php:180 ../web/admin/appsgroup.php:354
+#: ../web/admin/appsgroup.php:135 ../web/admin/wizard.php:483
+#: ../web/admin/usersgroup.php:63 ../web/admin/usersgroup.php:85
+#: ../web/admin/usersgroup.php:109 ../web/admin/usersgroup.php:148
+#: ../web/admin/usersgroup.php:406
+msgid "Module UserGroupDB must be enabled"
+msgstr "Le module UserGroupDB doit être activé"
+
+#: ../web/admin/appsgroup.php:187 ../web/admin/appsgroup.php:361
 #: ../web/admin/applications.php:330
 msgid "Application groups management"
 msgstr "Gestion des groupes d'applications"
 
 #. echo '<th>'._('Status').'</th>';
-#: ../web/admin/appsgroup.php:183 ../web/admin/appsgroup.php:367
-#: ../web/admin/appsgroup.php:420 ../web/admin/wizard.php:265
+#: ../web/admin/appsgroup.php:190 ../web/admin/appsgroup.php:374
+#: ../web/admin/appsgroup.php:427 ../web/admin/wizard.php:265
 #: ../web/admin/wizard.php:416 ../web/admin/applications.php:172
-#: ../web/admin/applications.php:346 ../web/admin/usersgroup.php:174
-#: ../web/admin/usersgroup.php:313 ../web/admin/usersgroup.php:365
+#: ../web/admin/applications.php:346 ../web/admin/usersgroup.php:221
+#: ../web/admin/usersgroup.php:360 ../web/admin/usersgroup.php:423
 msgid "Description"
 msgstr "Description"
 
 #. echo '<th>'._('Version').'</th>';
-#: ../web/admin/appsgroup.php:184 ../web/admin/appsgroup.php:368
-#: ../web/admin/sessions.php:109 ../web/admin/tasks.php:67
-#: ../web/admin/tasks.php:118 ../web/admin/servers.php:276
-#: ../web/admin/servers.php:498 ../web/admin/servers.php:687
-#: ../web/admin/applications.php:254 ../web/admin/usersgroup.php:175
-#: ../web/admin/usersgroup.php:314
+#: ../web/admin/appsgroup.php:191 ../web/admin/appsgroup.php:375
+#: ../web/admin/sessions.php:105 ../web/admin/tasks.php:67
+#: ../web/admin/tasks.php:118 ../web/admin/servers.php:295
+#: ../web/admin/servers.php:527 ../web/admin/servers.php:730
+#: ../web/admin/sumup.php:171 ../web/admin/applications.php:254
+#: ../web/admin/usersgroup.php:222 ../web/admin/usersgroup.php:361
 msgid "Status"
 msgstr "Etat"
 
-#: ../web/admin/appsgroup.php:194 ../web/admin/users.php:159
-#: ../web/admin/usersgroup.php:185
+#: ../web/admin/appsgroup.php:201 ../web/admin/users.php:158
+#: ../web/admin/usersgroup.php:232
 msgid "Settings"
 msgstr "Paramètres"
 
-#: ../web/admin/appsgroup.php:195 ../web/admin/appsgroup.php:391
-#: ../web/admin/usersgroup.php:186 ../web/admin/usersgroup.php:337
+#: ../web/admin/appsgroup.php:202 ../web/admin/appsgroup.php:398
+#: ../web/admin/usersgroup.php:233 ../web/admin/usersgroup.php:384
 msgid "Are you sure you want to delete this group?"
 msgstr "Etes-vous certain de vouloir supprimer ce groupe ?"
 
-#: ../web/admin/appsgroup.php:196 ../web/admin/usersgroup.php:187
+#: ../web/admin/appsgroup.php:203 ../web/admin/usersgroup.php:234
 msgid "Delete this group"
 msgstr "Supprimer ce groupe"
 
-#: ../web/admin/appsgroup.php:214 ../web/admin/usersgroup.php:205
+#: ../web/admin/appsgroup.php:221 ../web/admin/usersgroup.php:252
 msgid "Update the description"
 msgstr "Mettre à jour la description"
 
-#: ../web/admin/appsgroup.php:221
+#: ../web/admin/appsgroup.php:228
 msgid "List of applications in this group"
 msgstr "Liste des applications de ce groupe"
 
-#: ../web/admin/appsgroup.php:231
+#: ../web/admin/appsgroup.php:238
 msgid "Are you sure you want to delete this application?"
 msgstr "Etes-vous certain de vouloir supprimer cette application ?"
 
-#: ../web/admin/appsgroup.php:236 ../web/admin/applications.php:292
-#: ../web/admin/users.php:235 ../web/admin/usersgroup.php:225
+#: ../web/admin/appsgroup.php:243 ../web/admin/applications.php:292
+#: ../web/admin/users.php:234 ../web/admin/usersgroup.php:272
 msgid "Delete from this group"
 msgstr "Supprimer du groupe"
 
-#: ../web/admin/appsgroup.php:252 ../web/admin/applications.php:307
-#: ../web/admin/users.php:249 ../web/admin/usersgroup.php:241
+#: ../web/admin/appsgroup.php:259 ../web/admin/applications.php:307
+#: ../web/admin/users.php:248 ../web/admin/usersgroup.php:288
 msgid "Add to this group"
 msgstr "Ajouter à ce groupe"
 
-#: ../web/admin/appsgroup.php:307 ../web/admin/usersgroup.php:253
+#: ../web/admin/appsgroup.php:314 ../web/admin/usersgroup.php:300
 msgid "List of publications for this group"
 msgstr "Liste des publications de ce groupe"
 
-#: ../web/admin/appsgroup.php:315 ../web/admin/publications.php:87
-#: ../web/admin/usersgroup.php:261
+#: ../web/admin/appsgroup.php:322 ../web/admin/publications.php:87
+#: ../web/admin/usersgroup.php:308
 msgid "Are you sure you want to delete this publication?"
 msgstr "Etes-vous certain de vouloir supprimer cette publication ?"
 
-#: ../web/admin/appsgroup.php:320 ../web/admin/usersgroup.php:266
+#: ../web/admin/appsgroup.php:327 ../web/admin/usersgroup.php:313
 msgid "Delete this publication"
 msgstr "Supprimer cette publication"
 
-#: ../web/admin/appsgroup.php:336 ../web/admin/usersgroup.php:282
+#: ../web/admin/appsgroup.php:343 ../web/admin/usersgroup.php:329
 msgid "Add this publication"
 msgstr "Ajouter cette publication"
 
-#: ../web/admin/appsgroup.php:357
+#: ../web/admin/appsgroup.php:364
 msgid "Application group list"
 msgstr "Liste du groupe d'applications"
 
-#: ../web/admin/appsgroup.php:359
+#: ../web/admin/appsgroup.php:366
 msgid "No application groups available"
 msgstr "Pas d'applications disponibles"
 
-#: ../web/admin/appsgroup.php:361 ../web/admin/usersgroup.php:307
+#: ../web/admin/appsgroup.php:368 ../web/admin/usersgroup.php:354
 msgid "Are you sure you want to delete these groups?"
 msgstr "Etes-vous certain de vouloir supprimer ces groupes ?"
 
 #. if ($is_rw)
 #. echo '<th class="unsortable"></th>';
-#: ../web/admin/appsgroup.php:366 ../web/admin/appsgroup.php:415
+#: ../web/admin/appsgroup.php:373 ../web/admin/appsgroup.php:422
 #: ../web/admin/wizard.php:260 ../web/admin/wizard.php:411
-#: ../web/admin/applications.php:345 ../web/admin/usersgroup.php:312
-#: ../web/admin/usersgroup.php:360
+#: ../web/admin/applications.php:345 ../web/admin/usersgroup.php:359
+#: ../web/admin/usersgroup.php:418
 msgid "Name"
 msgstr "Nom"
 
-#: ../web/admin/appsgroup.php:386 ../web/admin/servers.php:327
-#: ../web/admin/applications.php:378 ../web/admin/users.php:325
-#: ../web/admin/usersgroup.php:332
+#: ../web/admin/appsgroup.php:393 ../web/admin/servers.php:349
+#: ../web/admin/applications.php:378 ../web/admin/users.php:321
+#: ../web/admin/usersgroup.php:379
 msgid "Manage"
 msgstr "Gérer"
 
-#: ../web/admin/appsgroup.php:392 ../web/admin/appsgroup.php:401
-#: ../web/admin/publications.php:93 ../web/admin/users.php:332
-#: ../web/admin/usersgroup.php:338 ../web/admin/usersgroup.php:347
+#: ../web/admin/appsgroup.php:399 ../web/admin/appsgroup.php:408
+#: ../web/admin/publications.php:93 ../web/admin/users.php:328
+#: ../web/admin/usersgroup.php:385 ../web/admin/usersgroup.php:394
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../web/admin/appsgroup.php:400 ../web/admin/sessions.php:134
-#: ../web/admin/servers.php:243 ../web/admin/servers.php:351
+#: ../web/admin/appsgroup.php:407 ../web/admin/sessions.php:130
+#: ../web/admin/servers.php:262 ../web/admin/servers.php:375
 #: ../web/admin/wizard.php:210 ../web/admin/wizard.php:228
 #: ../web/admin/wizard.php:356 ../web/admin/wizard.php:374
-#: ../web/admin/usersgroup.php:346
+#: ../web/admin/usersgroup.php:393
 msgid "Mark all"
 msgstr "Sélectionner tous"
 
-#: ../web/admin/appsgroup.php:400 ../web/admin/sessions.php:134
-#: ../web/admin/servers.php:244 ../web/admin/servers.php:352
+#: ../web/admin/appsgroup.php:407 ../web/admin/sessions.php:130
+#: ../web/admin/servers.php:263 ../web/admin/servers.php:376
 #: ../web/admin/wizard.php:210 ../web/admin/wizard.php:228
 #: ../web/admin/wizard.php:356 ../web/admin/wizard.php:374
-#: ../web/admin/usersgroup.php:346
+#: ../web/admin/usersgroup.php:393
 msgid "Unmark all"
 msgstr "Déselectionner tous"
 
-#: ../web/admin/appsgroup.php:409 ../web/admin/usersgroup.php:354
+#: ../web/admin/appsgroup.php:416 ../web/admin/usersgroup.php:412
 msgid "Create a new group"
 msgstr "Créer un nouveau groupe"
 
-#: ../web/admin/appsgroup.php:433 ../web/admin/publications.php:122
+#: ../web/admin/appsgroup.php:440 ../web/admin/publications.php:122
 #: ../web/admin/includes/functions.inc.php:65
 #: ../web/admin/includes/functions.inc.php:112
-#: ../web/admin/includes/functions.inc.php:157 ../web/admin/users.php:342
-#: ../web/admin/users.php:361 ../web/admin/usersgroup.php:378
+#: ../web/admin/includes/functions.inc.php:157 ../web/admin/users.php:338
+#: ../web/admin/users.php:357 ../web/admin/usersgroup.php:437
 msgid "Add"
 msgstr "Ajouter"
 
 #. conf not valid
 #. 'wizard.php'		=>	_('Publication Wizard'),
-#: ../web/admin/configuration.php:209 ../web/admin/configuration.php:294
-#: ../web/admin/configuration.php:301 ../web/admin/configuration.php:315
-#: ../web/admin/servers.php:528 ../web/admin/menu.php:28
+#: ../web/admin/configuration.php:257 ../web/admin/configuration.php:342
+#: ../web/admin/configuration.php:349 ../web/admin/configuration.php:363
+#: ../web/admin/servers.php:558 ../web/admin/menu.php:28
 msgid "Configuration"
 msgstr "Configuration"
 
-#: ../web/admin/configuration.php:224
+#: ../web/admin/configuration.php:272
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: ../web/admin/configuration.php:331
+#: ../web/admin/configuration.php:379
 msgid "Preferences not loaded"
 msgstr "Préférences non chargées"
 
-#: ../web/admin/sessions.php:62 ../web/admin/sessions.php:96
+#: ../web/admin/sessions.php:59 ../web/admin/sessions.php:93
 #: ../web/admin/menu.php:23
 msgid "Sessions"
 msgstr "Sessions"
 
-#: ../web/admin/sessions.php:64
+#: ../web/admin/sessions.php:61
 msgid "Informations"
 msgstr "Informations"
 
-#: ../web/admin/sessions.php:73
+#: ../web/admin/sessions.php:70
 msgid "Connect to or observe this session"
 msgstr "Se connecter ou observer cette session"
 
-#: ../web/admin/sessions.php:78
+#: ../web/admin/sessions.php:75
 msgid "Observe this session"
 msgstr "Observer cette session"
 
-#: ../web/admin/sessions.php:79
+#: ../web/admin/sessions.php:76
 msgid "Join this session"
 msgstr "Se connecter à cette session"
 
-#: ../web/admin/sessions.php:83 ../web/admin/sessions.php:87
+#: ../web/admin/sessions.php:80 ../web/admin/sessions.php:84
 msgid "Kill this session"
 msgstr "Tuer cette session"
 
-#: ../web/admin/sessions.php:84 ../web/admin/sessions.php:123
+#: ../web/admin/sessions.php:81 ../web/admin/sessions.php:119
 msgid "Are you sure you want to kill this session?"
 msgstr "Êtes-vous sûr de vouloir tuer cette session ?"
 
-#: ../web/admin/sessions.php:101
+#: ../web/admin/sessions.php:97
 msgid "Are you sure you want to kill selected sessions?"
 msgstr "Etes-vous sûr de vouloir tuer cette session ?"
 
-#: ../web/admin/sessions.php:106
+#: ../web/admin/sessions.php:102
 msgid "Session"
 msgstr "Session"
 
-#: ../web/admin/sessions.php:107 ../web/admin/tasks.php:117
+#: ../web/admin/sessions.php:103 ../web/admin/tasks.php:117
 #: ../web/index.php:311
 msgid "Server"
 msgstr "Serveur"
 
-#: ../web/admin/sessions.php:108
+#: ../web/admin/sessions.php:104
 msgid "User"
 msgstr "Utilisateur"
 
-#: ../web/admin/sessions.php:126 ../web/admin/sessions.php:135
+#: ../web/admin/sessions.php:122 ../web/admin/sessions.php:131
 msgid "Kill"
 msgstr "Tuer"
 
-#: ../web/admin/sessions.php:141
+#: ../web/admin/sessions.php:137
 msgid "No active session"
 msgstr "Pas de session active"
 
@@ -472,22 +482,22 @@ msgid "Creation time"
 msgstr "Heure de création"
 
 #: ../web/admin/tasks.php:65 ../web/admin/tasks.php:116
-#: ../web/admin/servers.php:201 ../web/admin/servers.php:274
-#: ../web/admin/servers.php:498 ../web/admin/servers.php:686
-#: ../web/admin/sumup.php:126 ../web/admin/applications.php:170
+#: ../web/admin/servers.php:214 ../web/admin/servers.php:293
+#: ../web/admin/servers.php:527 ../web/admin/servers.php:729
+#: ../web/admin/sumup.php:169 ../web/admin/applications.php:170
 #: ../web/admin/applications.php:253 ../web/admin/applications.php:347
 msgid "Type"
 msgstr "Type"
 
-#: ../web/admin/tasks.php:66 ../web/admin/servers.php:185
+#: ../web/admin/tasks.php:66 ../web/admin/servers.php:198
 #: ../web/admin/menu.php:22
 msgid "Servers"
 msgstr "Serveurs"
 
 #. echo '<th>'._('Version').'</th>';
 #: ../web/admin/tasks.php:68 ../web/admin/tasks.php:119
-#: ../web/admin/servers.php:203 ../web/admin/servers.php:276
-#: ../web/admin/servers.php:499 ../web/admin/servers.php:688
+#: ../web/admin/servers.php:216 ../web/admin/servers.php:295
+#: ../web/admin/servers.php:528 ../web/admin/servers.php:731
 #: ../web/admin/applications.php:255
 msgid "Details"
 msgstr "Détails"
@@ -501,7 +511,7 @@ msgid "Finished"
 msgstr "Terminé"
 
 #: ../web/admin/tasks.php:75 ../web/admin/tasks.php:127
-#: ../web/admin/servers.php:695 ../web/admin/applications.php:262
+#: ../web/admin/servers.php:738 ../web/admin/applications.php:262
 #: ../web/includes/functions.inc.php:39 ../web/includes/functions.inc.php:44
 msgid "Error"
 msgstr "Erreur"
@@ -514,7 +524,7 @@ msgstr "Tâches"
 msgid "List of tasks"
 msgstr "Liste des tâches"
 
-#: ../web/admin/tasks.php:114 ../web/admin/servers.php:685
+#: ../web/admin/tasks.php:114 ../web/admin/servers.php:728
 #: ../web/admin/applications.php:252
 msgid "ID"
 msgstr "ID"
@@ -523,160 +533,171 @@ msgstr "ID"
 msgid "Install a package from command line"
 msgstr "Installer un paquet depuis la ligne de commande"
 
-#: ../web/admin/tasks.php:147 ../web/startsession.php:118 ../web/index.php:130
+#: ../web/admin/tasks.php:147 ../web/startsession.php:117 ../web/index.php:130
 #: ../web/index.php:147
 msgid "No available server"
 msgstr "Pas de serveur disponible"
 
-#: ../web/admin/tasks.php:155 ../web/admin/servers.php:582
+#: ../web/admin/tasks.php:155 ../web/admin/servers.php:624
 msgid "Install"
 msgstr "Installer"
 
 #: ../web/admin/header.php:30 ../web/admin/login.php:56
-#: ../web/includes/functions.inc.php:335 ../web/includes/functions.inc.php:369
+#: ../web/includes/functions.inc.php:281 ../web/includes/functions.inc.php:318
 msgid "Administration"
 msgstr "Administration"
 
-#: ../web/admin/servers.php:189
+#: ../web/admin/servers.php:202
 msgid "Unregistered servers"
 msgstr "Serveurs non enregistrés"
 
-#: ../web/admin/servers.php:201 ../web/admin/servers.php:274
-#: ../web/admin/sumup.php:125
+#: ../web/admin/servers.php:214 ../web/admin/servers.php:293
+#: ../web/admin/sumup.php:168
 msgid "FQDN"
 msgstr "FQDN"
 
-#: ../web/admin/servers.php:220 ../web/admin/servers.php:308
-#: ../web/admin/servers.php:509
+#: ../web/admin/servers.php:231 ../web/admin/servers.php:329
+#: ../web/admin/servers.php:538
 msgid "CPU"
 msgstr "CPU"
 
-#: ../web/admin/servers.php:221 ../web/admin/servers.php:309
+#: ../web/admin/servers.php:232 ../web/admin/servers.php:330
+#: ../web/admin/servers.php:539
 msgid "cores"
 msgstr "coeurs"
 
-#: ../web/admin/servers.php:221 ../web/admin/servers.php:309
+#: ../web/admin/servers.php:232 ../web/admin/servers.php:330
+#: ../web/admin/servers.php:539
 msgid "core"
 msgstr "coeur"
 
-#: ../web/admin/servers.php:223 ../web/admin/servers.php:311
-#: ../web/admin/servers.php:509
+#: ../web/admin/servers.php:234 ../web/admin/servers.php:332
+#: ../web/admin/servers.php:540
 msgid "RAM"
 msgstr "RAM"
 
-#: ../web/admin/servers.php:228 ../web/admin/servers.php:247
+#: ../web/admin/servers.php:241 ../web/admin/servers.php:266
 msgid "Register"
 msgstr "Enregistrer"
 
-#: ../web/admin/servers.php:276 ../web/admin/servers.php:494
-#: ../web/admin/servers.php:501
+#: ../web/admin/servers.php:246 ../web/admin/servers.php:611
+msgid "Are you sure you want to delete this server?"
+msgstr "Etes-vous certain de vouloir supprimer ce serveur ?"
+
+#: ../web/admin/servers.php:249 ../web/admin/servers.php:614
+msgid "delete"
+msgstr "supprimer"
+
+#: ../web/admin/servers.php:297 ../web/admin/servers.php:523
+#: ../web/admin/servers.php:530
 msgid "Monitoring"
 msgstr "Monitoring"
 
-#: ../web/admin/servers.php:288 ../web/admin/servers.php:355
-#: ../web/admin/servers.php:474
+#: ../web/admin/servers.php:309 ../web/admin/servers.php:379
+#: ../web/admin/servers.php:502
 msgid "Switch to production"
 msgstr "Passer en production"
 
-#: ../web/admin/servers.php:292 ../web/admin/servers.php:356
-#: ../web/admin/servers.php:478
+#: ../web/admin/servers.php:313 ../web/admin/servers.php:380
+#: ../web/admin/servers.php:506
 #: ../web/admin/classes/Preferences_admin.class.php:118
 msgid "Switch to maintenance"
 msgstr "Passer en maintenance"
 
-#: ../web/admin/servers.php:311 ../web/admin/servers.php:509
+#: ../web/admin/servers.php:332 ../web/admin/servers.php:540
 msgid "MB"
 msgstr "MO"
 
-#: ../web/admin/servers.php:316 ../web/admin/servers.php:514
+#: ../web/admin/servers.php:338 ../web/admin/servers.php:544
 msgid "CPU usage"
 msgstr "Utilisation CPU"
 
-#: ../web/admin/servers.php:318 ../web/admin/servers.php:516
+#: ../web/admin/servers.php:340 ../web/admin/servers.php:546
 msgid "RAM usage"
 msgstr "utilisation RAM"
 
-#: ../web/admin/servers.php:320 ../web/admin/servers.php:518
+#: ../web/admin/servers.php:342 ../web/admin/servers.php:548
 msgid "Sessions usage"
 msgstr "Sessions"
 
-#: ../web/admin/servers.php:384
+#: ../web/admin/servers.php:405
+msgid "Cannot get server monitoring"
+msgstr "Monitoring serveur impossible"
+
+#: ../web/admin/servers.php:411
 msgid "Warning: server is offline"
 msgstr "Attention : le serveur est hors-ligne"
 
-#: ../web/admin/servers.php:386
+#: ../web/admin/servers.php:413
 msgid "Warning: server is broken"
 msgstr "Attention : le serveur est hors-service"
 
-#: ../web/admin/servers.php:393
+#: ../web/admin/servers.php:420
 msgid "Cannot list available applications"
 msgstr "Impossible de lister les applications disponibles"
 
-#: ../web/admin/servers.php:498
+#: ../web/admin/servers.php:527
 msgid "Version"
 msgstr "Version"
 
-#: ../web/admin/servers.php:537
+#: ../web/admin/servers.php:567
 msgid "Number of available sessions on this server"
 msgstr "Nombre d'applications disponibles sur ce serveur"
 
-#: ../web/admin/servers.php:542 ../web/admin/servers.php:554
+#: ../web/admin/servers.php:572 ../web/admin/servers.php:584
+#: ../web/admin/servers.php:596
 msgid "change"
 msgstr "changer"
 
-#: ../web/admin/servers.php:551
+#: ../web/admin/servers.php:581
 msgid "Redirection name of this server"
 msgstr "Nom de redirection de ce serveur"
 
-#: ../web/admin/servers.php:569
-msgid "Are you sure you want to delete this server?"
-msgstr "Etes-vous certain de vouloir supprimer ce serveur ?"
+#: ../web/admin/servers.php:593
+msgid "Web port of this server"
+msgstr "Port web de ce serveur"
 
-#: ../web/admin/servers.php:572
-msgid "delete"
-msgstr "supprimer"
-
-#: ../web/admin/servers.php:577
+#: ../web/admin/servers.php:619
 msgid "Install an application from a package name"
 msgstr "Installer une application depuis le nom du paquet"
 
-#: ../web/admin/servers.php:592
+#: ../web/admin/servers.php:634
 msgid "Applications available on this server"
 msgstr "Applications disponibles sur ce serveur"
 
-#: ../web/admin/servers.php:612
+#: ../web/admin/servers.php:654
 msgid "Are you sure you want to remove this application from this server?"
 msgstr "Etes-vous certain de vouloir supprimer cette application du serveur ?"
 
-#: ../web/admin/servers.php:617 ../web/admin/applications.php:215
+#: ../web/admin/servers.php:659 ../web/admin/applications.php:215
 msgid "Remove from this server"
 msgstr "Supprimer de ce serveur"
 
-#: ../web/admin/servers.php:635
+#: ../web/admin/servers.php:677
 msgid "install in progress"
 msgstr "installation en cours"
 
-#: ../web/admin/servers.php:651 ../web/admin/applications.php:240
+#: ../web/admin/servers.php:693 ../web/admin/applications.php:240
 msgid "Install on this server"
 msgstr "Installer sur ce serveur"
 
-#: ../web/admin/servers.php:662
+#: ../web/admin/servers.php:705
 msgid "Replication"
 msgstr "Réplication"
 
-#: ../web/admin/servers.php:673
+#: ../web/admin/servers.php:716
 msgid "Replicate on those servers"
 msgstr "Répliquer sur ces serveurs"
 
-#: ../web/admin/servers.php:682
+#: ../web/admin/servers.php:725
 msgid "Active tasks on this server"
 msgstr "Tâches actives sur ce serveur"
 
-#: ../web/admin/servers.php:714
+#: ../web/admin/servers.php:757
 msgid "Active sessions"
 msgstr "Sessions actives"
 
-#: ../web/admin/servers.php:722 ../web/admin/users.php:265
+#: ../web/admin/servers.php:765 ../web/admin/users.php:264
 msgid "Informations about this session"
 msgstr "Informations sur cette session"
 
@@ -688,58 +709,58 @@ msgstr "Cette publication existe déjà"
 msgid "This publication does not exist"
 msgstr "Cette publication n'existe pas"
 
-#: ../web/admin/sumup.php:23
+#: ../web/admin/sumup.php:25
 msgid "List of user applications"
 msgstr "Liste des applications utilisateur"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "login"
 msgstr "connexion"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "name"
 msgstr "nom"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "in this users group"
 msgstr "dans ce groupe utilisateur"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "in this applications group"
 msgstr "dans ce groupe d'applications"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "access to these applications"
 msgstr "accès à ces applications"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "Desktop File"
 msgstr "Fichier Desktop"
 
-#: ../web/admin/sumup.php:43
+#: ../web/admin/sumup.php:47
 msgid "Server available"
 msgstr "Serveur disponible"
 
-#: ../web/admin/sumup.php:58 ../web/admin/sumup.php:75 ../web/index.php:431
+#: ../web/admin/sumup.php:70 ../web/admin/sumup.php:92 ../web/index.php:431
 #: ../web/index.php:445 ../web/index.php:459 ../web/index.php:473
 msgid "Yes"
 msgstr "Oui"
 
-#: ../web/admin/sumup.php:60 ../web/admin/sumup.php:77 ../web/index.php:432
+#: ../web/admin/sumup.php:72 ../web/admin/sumup.php:94 ../web/index.php:432
 #: ../web/index.php:446 ../web/index.php:460 ../web/index.php:474
 msgid "No"
 msgstr "Non"
 
-#: ../web/admin/sumup.php:115 ../web/admin/sumup.php:119
+#: ../web/admin/sumup.php:158 ../web/admin/sumup.php:162
 msgid "No server available"
 msgstr "Aucun serveur disponible"
 
-#: ../web/admin/sumup.php:127 ../web/admin/menu.php:25
+#: ../web/admin/sumup.php:170 ../web/admin/menu.php:25
 #: ../web/admin/applications.php:329
 msgid "Applications"
 msgstr "Applications"
 
-#: ../web/admin/menu.php:24 ../web/admin/users.php:285
+#: ../web/admin/menu.php:24 ../web/admin/users.php:284
 msgid "Users"
 msgstr "Utilisateurs"
 
@@ -781,7 +802,7 @@ msgstr "Aucune application sélectionnée"
 msgid "Publication Wizard"
 msgstr "Assistant de publication"
 
-#: ../web/admin/wizard.php:162 ../web/admin/users.php:291
+#: ../web/admin/wizard.php:162 ../web/admin/users.php:290
 msgid "No available user"
 msgstr "Pas d'utilisateur disponible"
 
@@ -843,11 +864,11 @@ msgstr "Etes-vous certain de vouloir créer cette publication ?"
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: ../web/admin/wizard.php:482
+#: ../web/admin/wizard.php:494
 msgid "Cannot create usergroup"
 msgstr "Impossible de créer le groupe d'utilisateurs"
 
-#: ../web/admin/wizard.php:501
+#: ../web/admin/wizard.php:513
 msgid "Cannot create appgroup"
 msgstr "Impossible de créer le groupe d'applications"
 
@@ -913,58 +934,58 @@ msgstr "Liste des applications"
 msgid "Error while requesting usergroups"
 msgstr "Erreur lors de la requête groupe d'utilisateurs"
 
-#: ../web/admin/users.php:142 ../web/admin/users.php:185
-#: ../web/admin/users.php:297
+#: ../web/admin/users.php:141 ../web/admin/users.php:184
+#: ../web/admin/users.php:296
 msgid "Uid"
 msgstr "Uid"
 
-#: ../web/admin/users.php:162 ../web/admin/users.php:331
-#: ../web/admin/usersgroup.php:220
+#: ../web/admin/users.php:161 ../web/admin/users.php:327
+#: ../web/admin/usersgroup.php:267
 msgid "Are you sure you want to delete this user?"
 msgstr "Etes-vous certain de vouloir supprimer cet utilisateur ?"
 
-#: ../web/admin/users.php:163
+#: ../web/admin/users.php:162
 msgid "Delete this user"
 msgstr "Supprimer cet utilisateur"
 
-#: ../web/admin/users.php:179 ../web/admin/users.php:296
+#: ../web/admin/users.php:178 ../web/admin/users.php:295
 msgid "Display name"
 msgstr "Nom à afficher"
 
-#: ../web/admin/users.php:192
+#: ../web/admin/users.php:191
 msgid "New password"
 msgstr "Nouveau mot de passe"
 
-#: ../web/admin/users.php:211
+#: ../web/admin/users.php:210
 msgid "Save the modifications"
 msgstr "Sauvegarder les modifications"
 
-#: ../web/admin/users.php:223
+#: ../web/admin/users.php:222
 msgid "Users groups with this user"
 msgstr "Groupes d'utilisateurs contenant cet utilisateur"
 
-#: ../web/admin/users.php:230
+#: ../web/admin/users.php:229
 msgid "Are you sure you want to delete this user from this group?"
 msgstr "Etes-vous certain de vouloir supprimer cette application du groupe ?"
 
-#: ../web/admin/users.php:286 ../web/admin/usersgroup.php:170
-#: ../web/admin/usersgroup.php:299
+#: ../web/admin/users.php:285 ../web/admin/usersgroup.php:217
+#: ../web/admin/usersgroup.php:346
 msgid "Users groups management"
 msgstr "Gestion des groupes d'utilisateurs"
 
-#: ../web/admin/users.php:288
+#: ../web/admin/users.php:287
 msgid "List of users"
 msgstr "Liste des utilisateurs"
 
-#: ../web/admin/usersgroup.php:212
+#: ../web/admin/usersgroup.php:259
 msgid "List of users in this group"
 msgstr "Liste des utilisateurs de ce groupe"
 
-#: ../web/admin/usersgroup.php:302
+#: ../web/admin/usersgroup.php:349
 msgid "Users groups list"
 msgstr "Liste des groupes d'utilisateurs"
 
-#: ../web/admin/usersgroup.php:305
+#: ../web/admin/usersgroup.php:352
 msgid "No users group available"
 msgstr "Aucun groupe d'utilisateurs disponible"
 
@@ -1466,43 +1487,43 @@ msgstr "Configuration de module invalide"
 msgid "The service is not available, please try again later"
 msgstr "Le service n'est pas disponible, merci de réessayer plus tard"
 
-#: ../web/includes/functions.inc.php:402
+#: ../web/includes/functions.inc.php:351
 msgid "SESSIONMANAGER_SPOOL is not defined"
 msgstr "SESSIONMANAGER_SPOOL n'est pas définie"
 
-#: ../web/includes/functions.inc.php:405
+#: ../web/includes/functions.inc.php:354
 msgid "SESSIONMANAGER_LOGS is not defined"
 msgstr "SESSIONMANAGER_LOGS n'est pas définie"
 
-#: ../web/includes/functions.inc.php:408
+#: ../web/includes/functions.inc.php:357
 msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
 msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED n'est pas définie"
 
-#: ../web/includes/functions.inc.php:411
+#: ../web/includes/functions.inc.php:360
 msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
 msgstr "SESSIONMANAGER_ADMIN_LOGIN n'est pas définie"
 
-#: ../web/includes/functions.inc.php:414
+#: ../web/includes/functions.inc.php:363
 msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
 msgstr "SESSIONMANAGER_ADMIN_PASSWORD n'est pas définie"
 
-#: ../web/includes/functions.inc.php:417
+#: ../web/includes/functions.inc.php:366
 msgid "SESSIONMANAGER_SPOOL is not writable"
 msgstr "SESSIONMANAGER_SPOOL n'est pas accessible en écriture"
 
-#: ../web/includes/functions.inc.php:420
+#: ../web/includes/functions.inc.php:369
 msgid "SESSIONMANAGER_LOGS is not writable"
 msgstr "SESSIONMANAGER_LOGS n'est pas accessible en écriture"
 
-#: ../web/includes/functions.inc.php:423
+#: ../web/includes/functions.inc.php:372
 msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
 msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED n'est pas accessible en écriture"
 
-#: ../web/includes/core-minimal.inc.php:56
+#: ../web/includes/core-minimal.inc.php:57
 msgid "Configuration file missing"
 msgstr "Le fichier de configuration est manquant"
 
-#: ../web/includes/core-minimal.inc.php:63
+#: ../web/includes/core-minimal.inc.php:64
 msgid "Configuration not valid"
 msgstr "Configuration invalide"
 
@@ -1510,76 +1531,84 @@ msgstr "Configuration invalide"
 msgid "User importation failed"
 msgstr "L'import des utilisateurs a échoué"
 
-#: ../web/startsession.php:103
-msgid "You already have a session active"
-msgstr "Vous avez déjà une session active"
-
-#: ../web/startsession.php:148
+#: ../web/startsession.php:152
 msgid "No available session"
 msgstr "Aucune session n'est disponible"
 
-#: ../web/startsession.php:156
+#: ../web/startsession.php:158
 msgid "No available filesystem"
 msgstr "Aucun système de fichier disponible"
 
-#: ../web/classes/Server.class.php:475 ../web/classes/Server.class.php:483
-#: ../web/classes/Server.class.php:503 ../web/classes/Session.class.php:371
-msgid "Unknown"
-msgstr "Inconnu"
+#: ../web/classes/Server.class.php:100
+msgid "reverse DNS seems invalid!"
+msgstr "le reverse DNS semble invalide !"
 
-#: ../web/classes/Server.class.php:492
+#: ../web/classes/Server.class.php:108
+msgid "does not accept requests from me!"
+msgstr "n'accepte pas de requêtes de ma part !"
+
+#: ../web/classes/Server.class.php:124
+msgid "is NOT online!"
+msgstr "n'est pas en ligne !"
+
+#: ../web/classes/Server.class.php:232
 msgid "Under maintenance"
 msgstr "En maintenance"
 
-#: ../web/classes/Server.class.php:497
+#: ../web/classes/Server.class.php:236
 msgid "Online"
 msgstr "En ligne"
 
-#: ../web/classes/Server.class.php:499
+#: ../web/classes/Server.class.php:238
 msgid "Offline"
 msgstr "Hors ligne"
 
-#: ../web/classes/Server.class.php:501
+#: ../web/classes/Server.class.php:240
 msgid "Broken"
 msgstr "Hors service"
 
-#: ../web/classes/Session.class.php:261
+#: ../web/classes/Server.class.php:242 ../web/classes/Server.class.php:273
+#: ../web/classes/Server.class.php:302 ../web/classes/Session.class.php:216
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: ../web/classes/Session.class.php:118
 msgid "To create"
 msgstr "A créer"
 
-#: ../web/classes/Session.class.php:265
+#: ../web/classes/Session.class.php:122
 msgid "Created"
 msgstr "Créée"
 
-#: ../web/classes/Session.class.php:269
+#: ../web/classes/Session.class.php:126
 msgid "To start"
 msgstr "A démarrer"
 
-#: ../web/classes/Session.class.php:273
+#: ../web/classes/Session.class.php:130
 msgid "Initializing"
 msgstr "Initialisation en cours"
 
-#: ../web/classes/Session.class.php:277
+#: ../web/classes/Session.class.php:134
 msgid "Active"
 msgstr "Active"
 
-#: ../web/classes/Session.class.php:281
+#: ../web/classes/Session.class.php:138
 msgid "Suspending"
 msgstr "Mise en veille"
 
-#: ../web/classes/Session.class.php:285
+#: ../web/classes/Session.class.php:142
 msgid "Suspended"
 msgstr "En veille"
 
-#: ../web/classes/Session.class.php:289
+#: ../web/classes/Session.class.php:146
 msgid "Resuming"
 msgstr "Réveil"
 
-#: ../web/classes/Session.class.php:293
+#: ../web/classes/Session.class.php:150
 msgid "To destroy"
 msgstr "A détruire"
 
-#: ../web/classes/Session.class.php:297
+#: ../web/classes/Session.class.php:154
 msgid "Destroyed"
 msgstr "Détruite"
 
@@ -1682,6 +1711,9 @@ msgstr "Mot de passe proxy"
 #: ../web/index.php:537
 msgid "Remember proxy"
 msgstr "Sauvegarder les infos de proxy"
+
+#~ msgid "You already have a session active"
+#~ msgstr "Vous avez déjà une session active"
 
 #~ msgid "No available users group to use"
 #~ msgstr "Aucun groupe d'utilisateurs ne peut être utilisé"

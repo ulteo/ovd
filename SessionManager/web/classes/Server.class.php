@@ -97,16 +97,16 @@ class Server {
 		$buf = @gethostbyaddr(@gethostbyname($this->fqdn));
 
 		if ($this->fqdn !== $buf) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('reverse DNS seems invalid !').' ('.$buf.')';
-			Logger::warning('main', '"'.$this->fqdn.'": reverse DNS seems invalid ! ('.$buf.')');
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('reverse DNS seems invalid!').' ('.$buf.')';
+			Logger::warning('main', '"'.$this->fqdn.'": reverse DNS seems invalid! ('.$buf.')');
 
 			if ($disable_fqdn_check == '0')
 				return false;
 		}
 
 		if (! $this->getStatus()) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('does not accept requests from me !');
-			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me !');
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('does not accept requests from me!');
+			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
 
 			return false;
 		}
@@ -121,8 +121,8 @@ class Server {
 			return false;
 
 		if (! $this->isOnline()) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('is NOT online !');
-			Logger::error('main', '"'.$this->fqdn.'": is NOT online !');
+			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('is NOT online!');
+			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
 
 			return false;
 		}
