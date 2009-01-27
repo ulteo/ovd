@@ -28,7 +28,7 @@ mb_internal_encoding('UTF-8');
 
 require_once(dirname(__FILE__).'/core-minimal.inc.php');
 
-$folders = array('servers', 'sessions', 'tokens', 'tasks', 'reporting', 'tmp', 'cache');
+$folders = array('tasks', 'reporting', 'tmp', 'cache');
 foreach ($folders as $folder) {
 	$buf = strtoupper($folder).'_DIR';
 	define($buf, SESSIONMANAGER_SPOOL.'/'.$folder);
