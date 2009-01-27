@@ -74,7 +74,7 @@ class Abstract_Token {
 			if (! Abstract_Token::create($token_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5 WHERE @6 = %7 LIMIT 1', $mysql_conf['prefix'].'tokens', 'type', (string)$token_->type, 'session', (string)$token_->session, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5 WHERE @6 = %7 LIMIT 1', $mysql_conf['prefix'].'tokens', 'type', $token_->type, 'session', $token_->session, 'id', $id);
 
 		return true;
 	}

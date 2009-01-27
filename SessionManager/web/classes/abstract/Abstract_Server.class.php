@@ -60,7 +60,7 @@ class Abstract_Server {
 		$buf->max_sessions = (int)$max_sessions;
 		$buf->cpu_model = (string)$cpu_model;
 		$buf->cpu_nb_cores = (int)$cpu_nb_cores;
-		$buf->cpu_load = (float)$cpu_load;
+		$buf->cpu_load = (float)($cpu_load/100);
 		$buf->ram_total = (int)$ram_total;
 		$buf->ram_used = (int)$ram_used;
 
@@ -85,8 +85,8 @@ class Abstract_Server {
 			if (! Abstract_Server::create($server_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27 WHERE @28 = %29 LIMIT 1', $mysql_conf['prefix'].'servers', 'status', (string)$server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', (string)$server_->type, 'version', (string)$server_->version, 'external_name', (string)$server_->external_name, 'web_port', (int)$server_->web_port, 'max_sessions', (int)$server_->max_sessions, 'cpu_model', (string)$server_->cpu_model,
-		'cpu_nb_cores', (int)$server_->cpu_nb_cores, 'cpu_load', (string)$server_->cpu_load, 'ram_total', (int)$server_->ram_total, 'ram_used', (int)$server_->ram_used, 'fqdn', $fqdn);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27 WHERE @28 = %29 LIMIT 1', $mysql_conf['prefix'].'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
+		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'fqdn', $fqdn);
 
 		return true;
 	}

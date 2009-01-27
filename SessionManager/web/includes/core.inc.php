@@ -34,8 +34,8 @@ foreach ($folders as $folder) {
 	define($buf, SESSIONMANAGER_SPOOL.'/'.$folder);
 
 	if (! check_folder(constant($buf))) {
-		Logger::critical('main', constant($buf).' does not exist and cannot be created !');
-		die_error(constant($buf).' does not exist and cannot be created !',__FILE__,__LINE__);
+		Logger::critical('main', constant($buf).' does not exist and cannot be created!');
+		die_error(constant($buf).' does not exist and cannot be created!',__FILE__,__LINE__);
 	}
 }
 

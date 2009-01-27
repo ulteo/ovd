@@ -335,18 +335,18 @@ function init_db($prefs_) {
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(255) NOT NULL,
 	@3 varchar(255) NOT NULL,
-	@4 varchar(255) NOT NULL,
-	@5 varchar(255) NOT NULL,
+	@4 int(8) NOT NULL,
+	@5 int(8) NOT NULL,
 	@6 varchar(255) NOT NULL,
 	@7 varchar(255) NOT NULL,
 	@8 varchar(255) NOT NULL,
-	@9 varchar(255) NOT NULL,
-	@10 varchar(255) NOT NULL,
+	@9 int(5) NOT NULL,
+	@10 int(8) NOT NULL,
 	@11 varchar(255) NOT NULL,
-	@12 varchar(255) NOT NULL,
-	@13 varchar(255) NOT NULL,
-	@14 varchar(255) NOT NULL,
-	@15 varchar(255) NOT NULL,
+	@12 int(8) NOT NULL,
+	@13 int(8) NOT NULL,
+	@14 int(16) NOT NULL,
+	@15 int(16) NOT NULL,
 	PRIMARY KEY  (@2)
 	)',$SERVERS_TABLE,'fqdn','status','registered','locked','type','version','external_name','web_port','max_sessions','cpu_model','cpu_nb_cores','cpu_load','ram_total','ram_used');
 	if ( $ret === false) {
@@ -360,7 +360,7 @@ function init_db($prefs_) {
 	'CREATE TABLE IF NOT EXISTS @1 (
 	@2 varchar(255) NOT NULL,
 	@3 varchar(255) NOT NULL,
-	@4 varchar(255) NOT NULL,
+	@4 int(8) NOT NULL,
 	@5 text NOT NULL,
 	@6 varchar(255) NOT NULL,
 	@7 varchar(255) NOT NULL,

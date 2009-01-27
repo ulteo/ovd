@@ -241,7 +241,7 @@ function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
 }
 
 function return_ok($msg_=false) {
-	Logger::debug('main', 'return_ok()');
+// 	Logger::debug('main', 'return_ok()');
 
 	if ($msg_ !== false)
 		Logger::info('main', $msg_);
@@ -251,7 +251,7 @@ function return_ok($msg_=false) {
 }
 
 function return_error($msg_=false) {
-	Logger::debug('main', 'return_error()');
+// 	Logger::debug('main', 'return_error()');
 
 	if ($msg_ !== false)
 		Logger::error('main', $msg_);
@@ -261,7 +261,6 @@ function return_error($msg_=false) {
 }
 
 function header_static($title_=false) {
-// 	$base_url = str_replace('/admin', '', dirname('http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'])).'/';
 	global $base_url;
 
 	$prefs = Preferences::getInstance();
@@ -332,7 +331,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 }
 
 function footer_static() {
-	$base_url = str_replace('/admin', '', dirname('http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'])).'/';
+	global $base_url;
 
 echo '		</div>
 
@@ -347,77 +346,38 @@ echo '		</div>
 }
 
 function conf_is_valid() {
-	if (!defined('SESSIONMANAGER_SPOOL'))
+	if (! defined('SESSIONMANAGER_SPOOL'))
 		return _('SESSIONMANAGER_SPOOL is not defined');
 
-	if (!defined('SESSIONMANAGER_LOGS'))
+	if (! defined('SESSIONMANAGER_LOGS'))
 		return _('SESSIONMANAGER_LOGS is not defined');
 
-	if (!defined('SESSIONMANAGER_CONFFILE_SERIALIZED'))
+	if (! defined('SESSIONMANAGER_CONFFILE_SERIALIZED'))
 		return _('SESSIONMANAGER_CONFFILE_SERIALIZED is not defined');
 
-	if (!defined('SESSIONMANAGER_ADMIN_LOGIN'))
+	if (! defined('SESSIONMANAGER_ADMIN_LOGIN'))
 		return _('SESSIONMANAGER_ADMIN_LOGIN is not defined');
 
-	if (!defined('SESSIONMANAGER_ADMIN_PASSWORD'))
+	if (! defined('SESSIONMANAGER_ADMIN_PASSWORD'))
 		return _('SESSIONMANAGER_ADMIN_PASSWORD is not defined');
 
-	if (!is_writable2(SESSIONMANAGER_SPOOL))
+	if (! is_writable2(SESSIONMANAGER_SPOOL))
 		return _('SESSIONMANAGER_SPOOL is not writable').' : '.SESSIONMANAGER_SPOOL;
 
-	if (!is_writable2(SESSIONMANAGER_LOGS))
+	if (! is_writable2(SESSIONMANAGER_LOGS))
 		return _('SESSIONMANAGER_LOGS is not writable').' : '.SESSIONMANAGER_LOGS;
 
-	if (!is_writable2(SESSIONMANAGER_CONFFILE_SERIALIZED))
+	if (! is_writable2(SESSIONMANAGER_CONFFILE_SERIALIZED))
 		return _('SESSIONMANAGER_CONFFILE_SERIALIZED is not writable').' : '.SESSIONMANAGER_CONFFILE_SERIALIZED;
 
 	return true;
-}
-
-function get_all_usergroups(){
-	Logger::debug('main', 'get_all_usergroups');
-	
-	$prefs = Preferences::getInstance();
-	if (! $prefs) {
-		Logger::error('main', 'get_all_usergroups get Preferences failed');
-	}
-	
-	$mods_enable = $prefs->get('general','module_enable');
-	if (! in_array('UserGroupDB',$mods_enable)) {
-		Logger::error('main', 'get_all_usergroups Module UserGroupDB must be enabled');
-		return array();
-	}
-	
-	$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-	$UserGroupDB = new $mod_usergroup_name();
-	
-	return $UserGroupDB->getList();
-}
-
-function get_needed_attributes_user_from_module_plugin() {
-	$prefs = Preferences::getInstance();
-	if (! $prefs)
-		die_error('get Preferences failed',__FILE__,__LINE__);
-	$plugs = new Plugins();
-	$plugins = $plugs->getAvailablePlugins();
-	$plugins['plugin_enable'] = $plugins['plugins'];
-	unset($plugins['plugins']);
-	$attributes = array();
-	foreach ($plugins as $k1 => $v1) {
-		$plugins_enable = $prefs->get('plugins', $k1);
-		foreach ($v1 as $k2 => $v2) {
-			if (isset($v2['UserDB']) && ($k2 == $plugins_enable))
-				$attributes = array_merge($attributes,$v2['UserDB']);
-		}
-	}
-	return $attributes;
 }
 
 function pathinfo_filename($path_) {
 	if (version_compare(phpversion(), '5.2.0', '<')) {
 		$temp = pathinfo($path_);
 		if ($temp['extension'])
-			$temp['filename'] = substr($temp['basename'],0 ,strlen($temp['basename'])-strlen($temp['extension'])-1);
+			$temp['filename'] = substr($temp['basename'], 0, (strlen($temp['basename'])-strlen($temp['extension'])-1));
 		return $temp;
 	}
 
@@ -446,4 +406,43 @@ function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 		$ret .= $st{mt_rand(0, $len)};
 
 	return $ret;
+}
+
+function get_all_usergroups(){
+	Logger::debug('main', 'get_all_usergroups');
+
+	$prefs = Preferences::getInstance();
+	if (! $prefs) {
+		Logger::error('main', 'get_all_usergroups get Preferences failed');
+	}
+
+	$mods_enable = $prefs->get('general','module_enable');
+	if (! is_array($mods_enable) || ! in_array('UserGroupDB', $mods_enable)) {
+		Logger::error('main', 'get_all_usergroups Module UserGroupDB must be enabled');
+		return NULL;
+	}
+
+	$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+	$UserGroupDB = new $mod_usergroup_name();
+
+	return $UserGroupDB->getList();
+}
+
+function get_needed_attributes_user_from_module_plugin() {
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+	$plugs = new Plugins();
+	$plugins = $plugs->getAvailablePlugins();
+	$plugins['plugin_enable'] = $plugins['plugins'];
+	unset($plugins['plugins']);
+	$attributes = array();
+	foreach ($plugins as $k1 => $v1) {
+		$plugins_enable = $prefs->get('plugins', $k1);
+		foreach ($v1 as $k2 => $v2) {
+			if (isset($v2['UserDB']) && ($k2 == $plugins_enable))
+				$attributes = array_merge($attributes,$v2['UserDB']);
+		}
+	}
+	return $attributes;
 }

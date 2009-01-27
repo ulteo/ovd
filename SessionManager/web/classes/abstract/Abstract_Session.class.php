@@ -77,7 +77,7 @@ class Abstract_Session {
 			if (! Abstract_Session::create($session_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11 WHERE @12 = %13 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', (string)$session_->server, 'status', (int)$session_->status, 'settings', serialize($session_->settings), 'user_login', (string)$session_->user_login, 'user_displayname', (string)$session_->user_displayname, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11 WHERE @12 = %13 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'id', $id);
 
 		return true;
 	}
