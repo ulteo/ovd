@@ -21,7 +21,10 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 if (isset($_POST['join'])) {
-	$session = new Session($_POST['join']);
+	$session = Abstract_Session::load($_POST['join']);
+
+	if (! $session)
+		redirect($_SERVER['HTTP_REFERER']);
 
 	$view_only = 'Yes';
 	if (isset($_POST['active']))
@@ -37,22 +40,25 @@ if (isset($_POST['join'])) {
 	if (isset($_POST['kill_sessions']) && is_array($_POST['kill_sessions'])) {
 		foreach ($_POST['kill_sessions'] as $session) {
 			$session = Abstract_Session::load($session);
-			$session->orderDeletion();
+
+			if (is_object($session))
+				$session->orderDeletion();
 		}
 	}
 
 	redirect($_SERVER['HTTP_REFERER']);
 } elseif (isset($_POST['action']) && $_POST['action'] == 'kill') {
 	$session = Abstract_Session::load($_POST['session']);
-	$session->orderDeletion();
+
+	if (is_object($session))
+		$session->orderDeletion();
 
 	redirect($_SERVER['HTTP_REFERER']);
 } elseif (isset($_GET['info'])) {
 	$session = Abstract_Session::load($_GET['info']);
 
-	//FIX ME ?
-// 	if (!$session->is_valid())
-// 		redirect('sessions.php');
+	if (! $session)
+		redirect('sessions.php');
 
 	require_once('header.php');
 
