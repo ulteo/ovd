@@ -23,37 +23,21 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_status.php');
 
-if (! isset($_SESSION['session']))
-  die2(400, 'ERROR - No $session');
+function getSessionStatus($session) {
+  if (file_exists(SESSION2CREATE_PATH.'/'.$session))
+    return -1;
 
-$session = $_SESSION['session'];
+  if (! is_readable(SESSION_PATH.'/'.$session.'/infos/status'))
+    return false;
 
-$dom = new DomDocument();
-$session_node = $dom->createElement('session');
-$dom->appendChild($session_node);
+  $status = get_from_file(SESSION_PATH.'/'.$session.'/infos/status');
+  if ($status === false)
+    return false;
 
-if (file_exists(SESSION2CREATE_PATH.'/'.$session)) {
-	Logger::info('main', 'Session is being created : '.$session);
-	die2(400, '-1');
-
+  return $status;
 }
 
-if (!is_readable(SESSION_PATH.'/'.$session.'/infos/status')) {
-	Logger::error('main', 'No such session : '.$session);
-	die2(400, '4');
-}
-
-$status = get_from_file(SESSION_PATH.'/'.$session.'/infos/status');
-if ($status === false)
-	$status = -2;
-$session_node->setAttribute('status', $status);
-
-if (isset($_SESSION['owner']) && $_SESSION['owner'])
-	if (file_exists(SESSION_PATH.'/'.$session.'/infos/keepmealive'))
-		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
-
-
-// Printing
+// Begin Printing functions
 function getPathFromMagic($magic) {
   $buf = SESSION_PATH.'/'.$magic.'/parameters/user_login';
   if (!is_readable($buf))
@@ -94,21 +78,10 @@ function getNextPrintFile($session, $time) {
     
   return $r;
 }
-
-if ($status == 2) {
-  $r = getNextPrintFile($session, $_SESSION['print_timestamp']);
-  if ($r !== false) {
-    $item = $dom->createElement('print');
-    $item->setAttribute('path', $r[2]);
-    $item->setAttribute('time', $r[1]);
-    $session_node->appendChild($item);
-      
-    $_SESSION['print_timestamp'] = $r[1] +1;
-  }
-}
+// End Printing functions
 
 
-// Sharing
+// Begin Sharing function
 function count_active_share($share_dir) {
   $p = glob($share_dir.'/*');
   foreach($p as $f) {
@@ -119,29 +92,71 @@ function count_active_share($share_dir) {
   $p = glob($share_dir.'/*');
   return count($p);
 }
+// End Sharing function
 
-$session_dir = SESSION_PATH.'/'.$session.'/infos';
-$share_dir = $session_dir.'/share';
-if (! is_dir($share_dir)) {
-  if (! mkdir($share_dir))
-    die2(400, 'ERROR - unable to create dir');
+
+
+if (! isset($_SESSION['session']))
+  die2(400, 'ERROR - No $session');
+
+$session = $_SESSION['session'];
+$session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
+
+
+$dom = new DomDocument();
+$session_node = $dom->createElement('session');
+$dom->appendChild($session_node);
+
+
+$status = getSessionStatus($session);
+if ($status === false)
+  die2(400, 'ERROR - Unknown session');
+
+$session_node->setAttribute('status', $status);
+
+// Only if session is running
+if ($status == 2) {
+  $session_dir = SESSION_PATH.'/'.$session;
+
+  // KMA
+  if ($session_owner)
+    if (file_exists($session_dir.'/infos/keepmealive'))
+      @touch($session_dir.'/infos/keepmealive');
+
+
+  // Check print file
+  $r = getNextPrintFile($session, $_SESSION['print_timestamp']);
+  if ($r !== false) {
+    $item = $dom->createElement('print');
+    $item->setAttribute('path', $r[2]);
+    $item->setAttribute('time', $r[1]);
+    $session_node->appendChild($item);
+      
+    $_SESSION['print_timestamp'] = $r[1] +1;
+  }
+
+  // Check Sharing
+  $share_dir = $session_dir.'/infos/share';
+  if (! is_dir($share_dir)) {
+    if (! mkdir($share_dir))
+      Logger::error('main', 'Unable to create direcotry '.$share_dir);
+  }
+
+  if ($session_owner) {
+    $e = count_active_share($share_dir);
+
+    $item = $dom->createElement('sharing');
+    $item->setAttribute('count', $e);
+    $session_node->appendChild($item);
+  }
+  else {
+    if (! isset($_SESSION['current_token']))
+      die2(400, 'ERROR - no current token');
+
+    $file = $share_dir.'/'.$_SESSION['current_token'];
+    @touch($file);
+  }
 }
-
-if (isset($_SESSION['owner']) && $_SESSION['owner']) {
-  $e = count_active_share($share_dir);
-
-  $item = $dom->createElement('sharing');
-  $item->setAttribute('count', $e);
-  $session_node->appendChild($item);
-}
-else {
-  if (! isset($_SESSION['current_token']))
-    die2(400, 'ERROR - no current token');
-
-  $file = $share_dir.'/'.$_SESSION['current_token'];
-  @touch($file);
-}
-
 
 $xml = $dom->saveXML();
 
