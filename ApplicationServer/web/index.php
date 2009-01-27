@@ -149,9 +149,6 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 }
 ?>
 
-		<div id="printerContainer">
-		</div>
-
 		<div id="splashContainer">
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -196,6 +193,9 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
 	echo 'top: 18px; ';
 ?>display: none;">
+		</div>
+
+		<div id="printerContainer">
 		</div>
 	</body>
 </html>

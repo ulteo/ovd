@@ -16,7 +16,8 @@ function daemon_init(server_, debug_) {
 	server = server_;
 	debug = debug_;
 
-	$('printerContainer').hide();
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
+	$('printerContainer').show();
 
 	push_log('[daemon] init()', 'info');
 
@@ -191,7 +192,6 @@ function onUpdateInfos(transport) {
 
   if (session_state != old_session_state)
     push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
-
   if (session_state != 2)
     push_log('[session] Status: '+session_state, 'warning');
   else
