@@ -74,6 +74,7 @@ public class OnlineDesktopPrinting extends JApplet {
 	// Parameters to be passed from the html page
 	String url; // url of the pdf
 	String fileName;//filename of the pdf
+	String preloadMode;
 
 	/********/
 	/**flag to output information for debugging the code*/
@@ -87,6 +88,20 @@ public class OnlineDesktopPrinting extends JApplet {
 	
 	public void init(){
 		readParameters();
+		if (preloadMode != null)
+		    return;
+
+		if (url == null) {
+		    System.err.println("Missing parameters url");
+		    return;
+		}
+
+		if (fileName == null) {
+		    System.err.println("Missing parameters filename");
+		    return;
+		}
+		
+
 		try {
 			UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 			//UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
@@ -110,6 +125,7 @@ public class OnlineDesktopPrinting extends JApplet {
 	public void readParameters(){
 		url = getParameter("url");
 		fileName = getParameter("filename");
+		preloadMode = getParameter("do_nothing");
 	}
 	
 	/**
