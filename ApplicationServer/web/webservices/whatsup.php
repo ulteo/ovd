@@ -107,6 +107,42 @@ if ($status == 2) {
   }
 }
 
+
+// Sharing
+function count_active_share($share_dir) {
+  $p = glob($share_dir.'/*');
+  foreach($p as $f) {
+    if (time() - filemtime($f) > 10)
+      @unlink($f);
+  }
+
+  $p = glob($share_dir.'/*');
+  return count($p);
+}
+
+$session_dir = SESSION_PATH.'/'.$session.'/infos';
+$share_dir = $session_dir.'/share';
+if (! is_dir($share_dir)) {
+  if (! mkdir($share_dir))
+    die2(400, 'ERROR - unable to create dir');
+}
+
+if (isset($_SESSION['owner']) && $_SESSION['owner']) {
+  $e = count_active_share($share_dir);
+
+  $item = $dom->createElement('sharing');
+  $item->setAttribute('count', $e);
+  $session_node->appendChild($item);
+}
+else {
+  if (! isset($_SESSION['current_token']))
+    die2(400, 'ERROR - no current token');
+
+  $file = $share_dir.'/'.$_SESSION['current_token'];
+  @touch($file);
+}
+
+
 $xml = $dom->saveXML();
 
 header('Content-Type: text/xml');

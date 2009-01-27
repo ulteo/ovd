@@ -8,6 +8,7 @@ var my_height;
 
 var session_state = -1;
 var old_session_state = -1;
+var nb_share = 0;
 
 var window_alive = true;
 
@@ -203,6 +204,21 @@ function onUpdateInfos(transport) {
     var path = print_Node.getAttribute('path');
     var timestamp = print_Node.getAttribute('time');
     do_print(path, timestamp);
+  }
+
+  var sharing_Node = sessionNode.getElementsByTagName('sharing');
+  if (sharing_Node.length > 0) {
+    sharing_Node = sharing_Node[0];
+    if (! sharing_Node.hasAttribute('count')) {
+      push_log('[session] bad xml format', 'error');
+      return;
+    }
+
+    var nb = sharing_Node.getAttribute('count');
+    if (nb_share != nb) {
+      nb_share = nb;
+      push_log('[session] nb share: '+nb_share, 'info');
+    }
   }
 }
 
