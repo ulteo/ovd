@@ -20,6 +20,12 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+define('SERVERS_DIR', SESSIONMANAGER_SPOOL.'/servers');
+if (! check_folder(SERVERS_DIR)) {
+	Logger::critical('main', SERVERS_DIR.' does not exist and cannot be created !');
+	die_error(SERVERS_DIR.' does not exist and cannot be created !', __FILE__, __LINE__);
+}
+
 class Abstract_Server extends Abstract_DB {
 	public function load($fqdn_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
@@ -61,7 +67,7 @@ class Abstract_Server extends Abstract_DB {
 		$fqdn = $server_->fqdn;
 		$folder = SERVERS_DIR.'/'.$fqdn;
 
-		if (! file_exists($folder))
+		if (! Abstract_Server::load($fqdn))
 			if (! Abstract_Server::create($server_))
 				return false;
 

@@ -20,6 +20,12 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+define('TOKENS_DIR', SESSIONMANAGER_SPOOL.'/tokens');
+if (! check_folder(TOKENS_DIR)) {
+	Logger::critical('main', TOKENS_DIR.' does not exist and cannot be created !');
+	die_error(TOKENS_DIR.' does not exist and cannot be created !', __FILE__, __LINE__);
+}
+
 class Abstract_Token extends Abstract_DB {
 	public function load($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
@@ -50,7 +56,7 @@ class Abstract_Token extends Abstract_DB {
 		$id = $token_->id;
 		$folder = TOKENS_DIR.'/'.$id;
 
-		if (! file_exists($folder))
+		if (! Abstract_Token::load($id))
 			if (! Abstract_Token::create($token_))
 				return false;
 

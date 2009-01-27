@@ -20,6 +20,12 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
+define('SESSIONS_DIR', SESSIONMANAGER_SPOOL.'/sessions');
+if (! check_folder(SESSIONS_DIR)) {
+	Logger::critical('main', SESSIONS_DIR.' does not exist and cannot be created !');
+	die_error(SESSIONS_DIR.' does not exist and cannot be created !', __FILE__, __LINE__);
+}
+
 class Abstract_Session extends Abstract_DB {
 	public function load($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
@@ -53,7 +59,7 @@ class Abstract_Session extends Abstract_DB {
 		$id = $session_->id;
 		$folder = SESSIONS_DIR.'/'.$id;
 
-		if (! file_exists($folder))
+		if (! Abstract_Session::load($id))
 			if (! Abstract_Session::create($session_))
 				return false;
 
