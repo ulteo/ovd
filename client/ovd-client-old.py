@@ -33,19 +33,25 @@ import threading
 import time
 import urllib
 import urllib2
-from xml.dom import minidom
 
 
 def str2hex(str_):
     return str_.encode('hex')
 
 def hex2str(hex_):
-    try:
-        return hex_.decode('hex')
-    except TypeError:
-        print "Cant decode this string", hex_
-        sys.exit(1)
+    return hex_.decode('hex')
 
+
+def getSessid(data):
+#    print data
+    r = """.*daemon_init\('.*',\ '([^']+)'.*"""
+    r = re.compile(r , re.M | re.S | re.X )
+    p = r.match(data)
+    if p == None:
+        print "failed"
+        return None
+
+    return p.groups()[0]
 
 def parse_applet_div(data):
     r = """.*name="HOST"\ value="(.*)".*name="PORT"\ value="(\d+)".*name="ENCPASSWORD"\ value="([^"]+)".*name="ssh.host"\ value="([^"]+)".*name="ssh.port"\ value="(.*)".*name="ssh.user"\ value="(.*)".*name="ssh.password"\ value="([^"]*)".*"""
@@ -57,7 +63,7 @@ def parse_applet_div(data):
         return None
 
     res = {}
-    res["ssh_host"] = p.groups()[0]
+    res["host"] = p.groups()[0]
     res["vnc_port"] = p.groups()[1]
     res["vnc_pass"] = p.groups()[2]
     res["ssh_port"] = p.groups()[4]
@@ -68,44 +74,6 @@ def parse_applet_div(data):
     res["ssh_pass"] = hex2str(res["ssh_pass"])
 
     return res
-
-def parse_applet_div2(data):
-    res = {}
-    dom = minidom.parseString(data)
-
-    node = dom.getElementsByTagName('ssh')
-    if len(node) != 1:
-        print "Bad xml result"
-        return False
-
-    node = node[0]
-    for (attr, m) in [('host','host'), ('user', 'login'), ('passwd', 'pass') ]:
-        if not node.hasAttribute(attr):
-            print "Bad xml result"
-            return False
-
-        res['ssh_'+m] = node.getAttribute(attr)
-
-
-    res['ssh_port'] = node.getElementsByTagName('port')[0].firstChild.data
-
-    node = dom.getElementsByTagName('vnc')
-    if len(node) != 1:
-        print "Bad xml result"
-        return False
-
-    node = node[0]
-    for (attr, m) in [('host','host'), ('passwd', 'pass'), ('port', 'port')]:
-        if not node.hasAttribute(attr):
-            print "Bad xml result"
-            return False
-
-        res['vnc_'+m] = node.getAttribute(attr)
-
-    res["vnc_pass"] = hex2str(res["vnc_pass"])
-    res["ssh_pass"] = hex2str(res["ssh_pass"])
-    return res
-
 
 def launch_ssh(host, user, password, extra):
     cmd_args = ["/usr/bin/ssh", "-l", user]
@@ -162,6 +130,7 @@ class Dialog:
 
     def doLogin(self):
         url = self.base_url+"/ajax/login.php"
+        #print "url: ",url
 
         values =  {'do_login': 1, 'login'  : self.conf['login'], 'password' : self.conf['password']}
         data = urllib.urlencode(values)
@@ -187,9 +156,7 @@ class Dialog:
 
     def doStartSession(self):
         url = self.base_url+"/startsession.php"
-        values = {}
- 
-        request = urllib2.Request(url, urllib.urlencode(values))
+        request = urllib2.Request(url)
               
         try:
             url = self.urlOpener.open(request)
@@ -197,7 +164,6 @@ class Dialog:
         except urllib2.HTTPError, exc:
             if exc.code == 500:
                 print "Le service n'est pas disponbile"
-                print exc.read()
                 return False
             
             print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
@@ -209,6 +175,11 @@ class Dialog:
             return False
 
         self.cm_url = os.path.dirname(url.geturl())
+        self.ssid = getSessid(url.read())
+        if self.ssid == None:
+            print "Can't get sessid"
+            return False
+
         return True
 
     def doStartSession_cm(self):
@@ -237,8 +208,10 @@ class Dialog:
         print url.read()
         return True
 
+
     def doSessionStatus(self):
-        url = "%s/webservices/whatsup.php"%(self.cm_url)
+        values =  {'session': self.ssid}
+        url = "%s/webservices/session_status.php?%s"%(self.cm_url, urllib.urlencode(values))
 
         request = urllib2.Request(url)
         
@@ -258,34 +231,10 @@ class Dialog:
             print "Echec. Cause:", exc.reason
             return False
 
-
-        data = url.read()
-        dom = minidom.parseString(data)
-
-        sessionNode = dom.getElementsByTagName('session')
-        if len(sessionNode) != 1:
-            print "Bad xml result"
-            return False
-
-        sessionNode = sessionNode[0]
-        if not sessionNode.hasAttribute('status'):
-            print "Bad xml result"
-            return False
-
-        status = sessionNode.getAttribute('status')
-
-        try:
-            status = int(status)
-        except exceptions.ValueError, err:
-            print "Bad xml result"
-            return False
-
-        return status
+        return int(url.read())
 
     def do_getAppletParameters(self):
-        #values =  {'html': 1}
-        url = "%s/applet.php"%(self.cm_url)
-#, urllib.urlencode(values))
+        url = self.cm_url+"/applet.php"
         request = urllib2.Request(url)
         
         try:
@@ -304,29 +253,40 @@ class Dialog:
             print "Echec. Cause:", exc.reason
             return False
 
-
-        self.infos = parse_applet_div2(url.read())
+        self.infos = parse_applet_div(url.read())
         if self.infos == None:
             return False
 
         return True
 
-    def check_whatsup(self):
+    def check_print(self):
         print "Begin check print"
 
-        old_status = 2
+        values =  {'timestamp'  : 0, 'lead': 1}
+        url = "%s/webservices/print.php?%s"%(self.cm_url, urllib.urlencode(values))
+
+        request = urllib2.Request(url)
+        
         while 1==1:
-            status = self.doSessionStatus()
-            if status != old_status:
-                print "Status changed: ",old_status," -> ",status
-                old_status = status
+            try:
+                url = self.urlOpener.open(request)
+            except urllib2.HTTPError, exc:
+                if exc.code != 404:
+                    print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
+                    print exc.read()
+                    return False
+                
+            except urllib2.URLError, exc:
+                print "Echec Cause:", exc.reason
+                
             time.sleep(2)
+
 
     def launch(self):
         self.infos["ssh_port"] = self.infos["ssh_port"].split(",")[0]
         local_port = random.randrange(1024, 65536)
 
-        pid,pid2 = launch_ssh(self.infos["ssh_host"], self.infos["ssh_login"], self.infos["ssh_pass"], 
+        pid,pid2 = launch_ssh(self.infos["host"], self.infos["ssh_login"], self.infos["ssh_pass"], 
                          ["-N", "-o", "StrictHostKeyChecking=no",
                           "-L", "%d:localhost:%s"%(local_port, self.infos["vnc_port"]),
                           '-p', self.infos["ssh_port"]])
@@ -337,7 +297,7 @@ class Dialog:
         print "sleeping to be sure ssh is ok"
         time.sleep(2)
 
-        t = threading.Thread(target=self.check_whatsup)
+        t = threading.Thread(target=self.check_print)
         t.start()
 
         # Vnc managment
@@ -368,7 +328,7 @@ class Dialog:
 
 
 def usage():
-    print "Usage: %s [-l|--login=username] [-p|--password=PASSWORD] [-h|--help] [-g|--geometry=WIDTHxHEIGHT] sm_url"%(sys.argv[0])
+    print "Usage: %s [-l|--login=username] [-h|--help] [-g|--geometry=WIDTHxHEIGHT] sm_url"%(sys.argv[0])
     print
 
 
@@ -377,7 +337,7 @@ conf["geometry"] = "800x600"
 conf["login"] = os.environ["USER"]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'l:p:g:h', ['login=', 'password=', 'geometry=','help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'l:g:h', ['login=', 'geometry=','help'])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -393,8 +353,6 @@ conf["url"] = args[0]
 for o, a in opts:
     if o in ("-l", "--login"):
         conf["login"] = a
-    elif o in ("-p", "--password"):
-        conf["password"] = a    
     if o in ("-g", "--geometry"):
         conf["geometry"] = a
     elif o in ("-h", "--help"):
@@ -408,30 +366,34 @@ if len(conf["geometry"])!=2:
     usage()
     sys.exit(2)
 
-if not conf.has_key("password"):
-    print "Connect to '%s' with user '%s'"%(conf["url"], conf["login"])
-    conf["password"] = getpass.getpass("Password please: ")
+print "Connect to '%s' with user '%s'"%(conf["url"], conf["login"])
+conf["password"] = getpass.getpass("Password please: ")
+
 
 d = Dialog(conf)
+
 if not d.doLogin():
     print "Unable to login"
     sys.exit(1)
+
 
 if not d.doStartSession():
     print "Unable to startsession"
     sys.exit(2)
 
+print "sessid '%s'"%(d.ssid)
+
 status = -1
-while status not in [0,10]:
+while status!=0:
     status = d.doSessionStatus()
     print "status ", status
 
-    if type(status) == type(False):
+    if type(0) == type(False):
         print "Error in get status"
         sys.exit(5)
     
     time.sleep(0.5)
-    if not status in [-1, 0, 10]:
+    if not status in [-1, 0]:
         print "Session not 0 or -1 (%d) => exit"%(status)
         sys.exit(4)
 

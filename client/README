@@ -1,15 +1,25 @@
 
-Launch a session using Ulteo Open Virtual DEsktopn protocol
+===== ovd-client.py =====
+
+Launch a session using Ulteo Open Virtual Desktop protocol
+
+== Usage ==
+
+ovd-client.py [-l|--login=username] [-p|--password=PASSWORD] [-h|--help] [-g|--geometry=WIDTHxHEIGHT] sm_url
+
+ * sm_url: http://sm.ulteo.com/sessionmanager ...
 
 == Depends ==
 
+ * Linux
+ * Python
  * vncviewer
- * Python ;)
+ * openssh
 
 
 == Compatibility ==
 
-  * SVN revision 46 
+  * 1.0-beta1.2
 
 === Feature ===
 
@@ -18,6 +28,27 @@ Launch a session using Ulteo Open Virtual DEsktopn protocol
  * interact with the CM to launch the session
 
 
-=== ToDo ===
 
- * add priting support
+==== launch_x_sessions.py ====
+
+Auto launch a defined number of sessions
+
+== Usage ==
+
+launch_x_sessions.py [-h|--help] sm_url Number
+
+ * sm_url: http://sm.ulteo.com/sessionmanager ...
+ * Number: number of session you want to launch
+
+
+== Depends ==
+
+ * Linux
+ * Python
+ * ovd-client.py
+ * xterm
+ * Session manager userlist.php webservices
+
+== userlist.php ==
+
+copy the userlist.php into /usr/share/ulteo/sessionmanager/webservices/
