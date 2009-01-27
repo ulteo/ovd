@@ -1,6 +1,9 @@
 SUBDIRS = abstract
 
 scripts_DATA =  Application.class.php \
+                Event.class.php \
+                Events.class.php \
+				EventCallback.class.php \
 				LDAP.class.php \
 				Logger.class.php \
 				MySQL.class.php \

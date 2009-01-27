@@ -224,6 +224,21 @@ $buf = Abstract_Server::load($session->server);
 
 $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
 
+/*
+ * This is a snippet to demonstrate events handling, it does nothing
+ * interesting. Note that manual call to register () should not happen, and
+ * should be automated (TODO!)
+ */
+Logger::debug('main', 'pre-signal creation');
+$ev = Events::getEvent ('SessionStartEvent');
+$ev->register ('Report');
+$ev->setAttributes (array ('token' => $token->id,
+                           'user' => $user,
+						   'sessid' => $session->id));
+$ev->emit ();
+Logger::debug('main', 'post-signal');
+/* end of snippet */
+
 $report = new Reporting($session->id);
 $report->session_begin($token->id, $user);
 

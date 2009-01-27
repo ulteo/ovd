@@ -34,6 +34,8 @@ define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT.'/admin/classes');
 define('MODULES_DIR', SESSIONMANAGER_ROOT.'/modules');
 define('ADMIN_MODULES_DIR', SESSIONMANAGER_ROOT.'/admin/modules');
 define('PLUGINS_DIR', SESSIONMANAGER_ROOT.'/plugins');
+define('EVENTS_DIR', SESSIONMANAGER_ROOT.'/events');
+define('CALLBACKS_DIR', SESSIONMANAGER_ROOT.'/events/callbacks');
 
 require_once(dirname(__FILE__).'/functions.inc.php');
 require_once(dirname(__FILE__).'/load_balancing.inc.php');
