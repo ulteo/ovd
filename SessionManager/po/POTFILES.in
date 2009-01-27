@@ -2,7 +2,6 @@ web/footer.php
 web/ajax/login.php
 web/webservices/userlist.php
 web/webservices/server_monitoring.php
-web/webservices/check.php
 web/webservices/session_token.php
 web/webservices/app_desktopfile.php
 web/webservices/session_status.php
@@ -111,7 +110,6 @@ web/classes/Token.class.php
 web/classes/Task_install.class.php
 web/classes/abstract/Abstract_Server.class.php
 web/classes/abstract/Abstract_Token.class.php
-web/classes/abstract/Abstract_DB.class.php
 web/classes/abstract/Abstract_Session.class.php
 web/classes/Tasks_Manager.class.php
 web/classes/Servers.class.php
