@@ -47,6 +47,10 @@ function daemon_init(server_, debug_) {
 	if (debug)
 		my_height = parseInt(my_height)-150;
 
+	Event.observe(window, 'unload', function() {
+		client_exit();
+	});
+
 	daemon_loop();
 }
 
@@ -110,6 +114,16 @@ function switch_applet_to_end() {
 
 // 	if (text_ != false)
 // 		$('errorContainer').innerHTML = text_;
+}
+
+function client_exit() {
+	new Ajax.Request(
+		'webservices/client_exit.php',
+		{
+			method: 'get',
+			asynchronous: true
+		}
+	);
 }
 
 function clearDebug() {
