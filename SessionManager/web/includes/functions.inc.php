@@ -414,6 +414,7 @@ function get_all_usergroups(){
 	$prefs = Preferences::getInstance();
 	if (! $prefs) {
 		Logger::error('main', 'get_all_usergroups get Preferences failed');
+		return NULL;
 	}
 
 	$mods_enable = $prefs->get('general','module_enable');
