@@ -62,7 +62,11 @@ class admin_UserDB_sql extends UserDB_sql {
 		if (is_object($user_) && $user_->hasAttribute('login')){
 			$SQL = MySQL::getInstance();
 			// first we delete all liaisons 
-			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', LIAISON_USERS_GROUP_TABLE, 'element', $user_->getAttribute('login'));
+			$liaisons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('login'), NULL);
+			foreach ($liaisons as $liaison) {
+				Abstract_Liaison::delete('UsersGroup', $liaison->element, $liaison->group);
+			}
+			
 			// second we delete the user
 			return $SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', USER_TABLE, 'login', $user_->getAttribute('login'));
 		}

@@ -531,9 +531,7 @@ class Server {
 		$root = $dom->documentElement;
 
 		// before adding application, we remove all previous applications
-		// TODO BETTER (must use liaison class)
-		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', LIAISON_APPLICATION_SERVER_TABLE, 'group', $this->fqdn);
+		$previous_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn); // see and of function
 
 		$application_node = $dom->getElementsByTagName("application");
 		foreach($application_node as $app_node){
@@ -609,7 +607,16 @@ class Server {
 		}
 
 // 		Abstract_Server::save($this);
-
+		
+		$current_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
+		$current_liaison_key = array_keys($current_liaison);
+		$previous_liaison_key = array_keys($previous_liaison);
+		foreach ($previous_liaison_key as $key){
+			if (in_array($key, $current_liaison_key) == false) {
+				$liaison = $previous_liaison_key[$key];
+				Abstract_Liaison::delete('ApplicationServer', $liaison->element, $liaison->group);
+			}
+		}
 		return true;
 	}
 }

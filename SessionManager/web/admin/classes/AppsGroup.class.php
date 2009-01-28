@@ -95,8 +95,15 @@ class AppsGroup {
 		if (is_numeric($this->id)){
 			// first we delete liaison
 			$sql2 = MySQL::getInstance();
-			$sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE, 'group', $this->id);
-			$sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', LIAISON_APPLICATION_SERVER_TABLE, 'group', $this->id);
+			$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $this->id);
+			foreach ($liaisons as $liaison) {
+				Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
+			}
+			$liaisons = Abstract_Liaison::load('ApplicationServer', NULL, $this->id);
+			foreach ($liaisons as $liaison) {
+				Abstract_Liaison::delete('ApplicationServer', $liaison->element, $liaison->group);
+			}
+			
 			// second we delete the group
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPSGROUP_TABLE, 'id', $this->id);
 			return ($res !== false);

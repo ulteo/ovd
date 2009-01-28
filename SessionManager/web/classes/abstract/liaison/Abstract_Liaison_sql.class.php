@@ -198,7 +198,7 @@ class Abstract_Liaison_sql {
 			return false;
 		}
 		else {
-			Logger::debug('admin','init_db table '.$LIAISON_APPLICATION_SERVER_TABLE.' created');
+			Logger::debug('admin','init_db table '.$LIAISON_TABLE.' created');
 			return true;
 		}
 	}

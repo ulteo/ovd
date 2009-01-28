@@ -45,12 +45,7 @@ if (is_object($prefs)) {
 	$mysql_conf = $prefs->get('general', 'mysql');
 	if (is_array($mysql_conf)) {
 		define('APPSGROUP_TABLE', $mysql_conf['prefix'].'gapplication');
-		define('LIAISON_APPS_GROUP_TABLE', $mysql_conf['prefix'].'apps_group_link');
-		define('LIAISON_USERS_GROUP_TABLE', $mysql_conf['prefix'].'users_group_link');
-		define('USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE', $mysql_conf['prefix'].'ug_ag_link');
-		define('LIAISON_APPLICATION_SERVER_TABLE', $mysql_conf['prefix'].'application_server_link');
 		define('SOURCES_LIST_TABLE', $mysql_conf['prefix'].'sources_list');
-		define('LIAISON_SERVER_SESSION_TABLE', $mysql_conf['prefix'].'server_session_link');
 		MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 	}
 }

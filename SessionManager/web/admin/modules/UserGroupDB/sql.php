@@ -37,9 +37,13 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		Logger::debug('admin','ADMIN_USERGROUPDB::remove');
 		// first we delete liaisons
 		$sql2 = MySQL::getInstance();
-		// FIX ME : use real liaison
-		$sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE, 'element', $usergroup_->id);
-		$sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', LIAISON_USERS_GROUP_TABLE, 'group', $usergroup_->id);
+		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
+		foreach ($liaisons as $liaison) {
+			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
+		}
+		foreach ($liaisons as $liaison) {
+			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->id);
+		}
 		// second we delete the group
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
 		return ($res !== false);

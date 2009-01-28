@@ -195,7 +195,7 @@ function show_manage($id) {
 
   // Publications
   $groups_apps = array();
-  foreach ( Abstract_Liaison::load('UsersGroupApplications',  $id, NULL) as $group_a) {
+  foreach ( Abstract_Liaison::load('UsersGroupApplicationsGroup',  $id, NULL) as $group_a) {
     $obj = new AppsGroup();
     $obj->fromDB($group_a);
 
