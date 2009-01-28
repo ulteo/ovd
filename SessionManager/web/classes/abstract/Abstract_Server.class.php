@@ -21,6 +21,46 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Server {
+	public function init() {
+// 		Logger::debug('main', 'Starting Abstract_Server::init');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$ret = $SQL->DoQuery(
+		'CREATE TABLE IF NOT EXISTS @1 (
+		@2 varchar(255) NOT NULL,
+		@3 varchar(255) NOT NULL,
+		@4 int(8) NOT NULL,
+		@5 int(8) NOT NULL,
+		@6 varchar(255) NOT NULL,
+		@7 varchar(255) NOT NULL,
+		@8 varchar(255) NOT NULL,
+		@9 int(5) NOT NULL,
+		@10 int(8) NOT NULL,
+		@11 varchar(255) NOT NULL,
+		@12 int(8) NOT NULL,
+		@13 int(8) NOT NULL,
+		@14 int(16) NOT NULL,
+		@15 int(16) NOT NULL,
+		PRIMARY KEY  (@2)
+		)', $mysql_conf['prefix'].'servers', 'fqdn', 'status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used');
+
+		if (! $ret) {
+			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers\'');
+			return false;
+		}
+
+		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers\' created');
+		return true;
+	}
+
 	public function load($fqdn_) {
 // 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 

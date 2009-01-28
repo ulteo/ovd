@@ -21,6 +21,38 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Session {
+	public function init() {
+// 		Logger::debug('main', 'Starting Abstract_Session::init');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$ret = $SQL->DoQuery(
+		'CREATE TABLE IF NOT EXISTS @1 (
+		@2 varchar(255) NOT NULL,
+		@3 varchar(255) NOT NULL,
+		@4 int(8) NOT NULL,
+		@5 text NOT NULL,
+		@6 varchar(255) NOT NULL,
+		@7 varchar(255) NOT NULL,
+		PRIMARY KEY  (@2)
+		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname');
+
+		if (! $ret) {
+			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions\'');
+			return false;
+		}
+
+		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'sessions\' created');
+		return true;
+	}
+
 	public function load($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 

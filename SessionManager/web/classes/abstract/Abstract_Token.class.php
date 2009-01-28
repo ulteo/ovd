@@ -21,6 +21,35 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Token {
+	public function init() {
+// 		Logger::debug('main', 'Starting Abstract_Token::init');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$ret = $SQL->DoQuery(
+		'CREATE TABLE IF NOT EXISTS @1 (
+		@2 varchar(255) NOT NULL,
+		@3 varchar(255) NOT NULL,
+		@4 varchar(255) NOT NULL,
+		PRIMARY KEY  (`id`)
+		)', $mysql_conf['prefix'].'tokens', 'id', 'type', 'session');
+
+		if (! $ret) {
+			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'tokens\'');
+			return false;
+		}
+
+		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'tokens\' created');
+		return true;
+	}
+
 	public function load($id_) {
 // 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
 
