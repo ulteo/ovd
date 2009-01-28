@@ -57,7 +57,7 @@ class Preferences {
 					$buf = $this->prefs[$container_][$container_sub_];
 					if (is_array($buf) && (count(array_keys($buf)) == 1)) {
 						$buf_keys = array_keys($buf);
-						if ($buf_keys[0] == $container_sub_) {
+						if ($buf_keys[0] === $container_sub_) {
 							return $buf[$container_sub_];
 						}
 						else
