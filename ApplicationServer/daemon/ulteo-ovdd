@@ -253,6 +253,22 @@ session_check_status() {
 		RUNASAP=3
 	    fi
 	fi
+
+        # if the owner_exit file exist, kill the session
+        if [ -f ${SESSID_DIR}/infos/owner_exit ]; then
+            log_WARN "Owner exit"
+            # Suspend the session if the sesion was running and it's setup to suspend
+            if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
+        	session_suspend $SESSID
+        	if [ $? -eq 0 ]; then
+                    session_switch_status $SESSID 3
+                    RUNASAP=3
+                fi
+            else
+                session_switch_status $SESSID 3
+                RUNASAP=3
+            fi
+        fi
     fi
 	
     # if a session is required to stop asap
