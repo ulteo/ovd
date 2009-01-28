@@ -32,17 +32,16 @@ if (! isset($_GET['fqdn'])) {
 	die('ERROR - NO $_GET[\'fqdn\']');
 }
 
-if (! check_ip($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/server_status) Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
-	die('Server not authorized');
-}
-
 Logger::debug('main', '(webservices/server_status) Security check OK');
 
 $buf = Abstract_Server::load($_GET['fqdn']);
 
 if (! $buf) {
 	$buf = new Server($_GET['fqdn']);
+	if (! $buf->isAuthorized()) {
+		Logger::error('main', '(webservices/server_status) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
+		die('Server not authorized');
+	}
 
 	$buf->registered = false;
 	$buf->locked = true;

@@ -23,14 +23,15 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', '(webservices/server_monitoring) Starting webservices/server_monitoring.php');
 
-if (!check_ip($_POST['fqdn'])) {
-	Logger::error('main', 'Server not authorized : '.$_POST['fqdn'].' ? '.@gethostbyname($_POST['fqdn']));
+$buf = Abstract_Server::load($_POST['fqdn']);
+if (! $buf || ! $buf->isAuthorized()) {
+	Logger::error('main', '(webservices/server_monitoring) Server not authorized : '.$_POST['fqdn'].' == '.@gethostbyname($_POST['fqdn']).' ?');
 	die('Server not authorized');
 }
 
 Logger::debug('main', '(webservices/server_monitoring) Security check OK');
 
-if (!$_FILES['xml']) {
+if (! $_FILES['xml']) {
 	Logger::error('main', '(webservices/server_monitoring) No XML sent : '.$_POST['fqdn']);
 	die('No XML sent');
 }

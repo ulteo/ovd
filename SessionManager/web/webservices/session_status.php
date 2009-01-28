@@ -22,23 +22,24 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_status.php');
 
-if (!isset($_GET['session'])) {
+if (! isset($_GET['session'])) {
 	Logger::error('main', '(webservices/session_status) Missing parameter : session');
 	die('ERROR - NO $_GET[\'session\']');
 }
 
-if (!isset($_GET['status'])) {
+if (! isset($_GET['status'])) {
 	Logger::error('main', '(webservices/session_status) Missing parameter : status');
 	die('ERROR - NO $_GET[\'status\']');
 }
 
-if (!isset($_GET['fqdn'])) {
+if (! isset($_GET['fqdn'])) {
 	Logger::error('main', '(webservices/session_status) Missing parameter : fqdn');
 	die('ERROR - NO $_GET[\'fqdn\']');
 }
 
-if (!check_ip($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/session_status) Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
+$buf = Abstract_Server::load($_GET['fqdn']);
+if (! $buf || ! $buf->isAuthorized()) {
+	Logger::error('main', '(webservices/session_status) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
 	die('Server not authorized');
 }
 

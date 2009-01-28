@@ -22,8 +22,14 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_token.php');
 
-if (!check_ip($_GET['fqdn'])) {
-	Logger::error('main', 'Server not authorized : '.$_GET['fqdn'].' ? '.@gethostbyname($_GET['fqdn']));
+if (! isset($_GET['fqdn'])) {
+	Logger::error('main', '(webservices/session_token) Missing parameter : fqdn');
+	die('ERROR - NO $_GET[\'fqdn\']');
+}
+
+$buf = Abstract_Server::load($_GET['fqdn']);
+if (! $buf || ! $buf->isAuthorized()) {
+	Logger::error('main', '(webservices/session_token) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
 	die('Server not authorized');
 }
 

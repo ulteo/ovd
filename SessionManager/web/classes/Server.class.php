@@ -85,6 +85,13 @@ class Server {
 	public function isAuthorized() {
 // 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
+		if (! $this->getStatus()) {
+			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
+			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
+
+			return false;
+		}
+
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
@@ -92,36 +99,48 @@ class Server {
 		}
 
 		$buf = $prefs->get('general', 'application_server_settings');
+		$authorized_fqdn = $buf['authorized_fqdn'];
+		$fqdn_private_address = $buf['fqdn_private_address'];
 		$disable_fqdn_check = $buf['disable_fqdn_check'];
 
+		$address = $_SERVER['REMOTE_ADDR'];
+		$name = $this->fqdn;
+
 		$buf = @gethostbyaddr(@gethostbyname($this->fqdn));
-
 		if ($this->fqdn !== $buf) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('reverse DNS seems invalid!').' ('.$buf.')';
+			popup_error('"'.$this->fqdn.'": '._('reverse DNS seems invalid!').' ('.$buf.')');
 			Logger::warning('main', '"'.$this->fqdn.'": reverse DNS seems invalid! ('.$buf.')');
-
-			if ($disable_fqdn_check == '0')
-				return false;
 		}
 
-		if (! $this->getStatus()) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('does not accept requests from me!');
-			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
+		$buf = false;
+		foreach ($authorized_fqdn as $fqdn) {
+			$fqdn = str_replace('*', '.*', str_replace('.', '\.', $fqdn));
 
+			if (preg_match('/'.$fqdn.'/', $name))
+				$buf = true;
+		}
+
+		if (! $buf)
 			return false;
-		}
 
-		return true;
+		if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name)) // if IP?
+			return ($name == $address);
+
+		if ($disable_fqdn_check == 1)
+			return true;
+
+		$reverse = @gethostbyaddr($address);
+		if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
+			return true;
+
+		return false;
 	}
 
 	public function register() {
 // 		Logger::debug('main', 'Starting Server::register for \''.$this->fqdn.'\'');
 
-		if (! $this->isAuthorized())
-			return false;
-
 		if (! $this->isOnline()) {
-			$_SESSION['errormsg'] = '"'.$this->fqdn.'": '._('is NOT online!');
+			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
 			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
 
 			return false;

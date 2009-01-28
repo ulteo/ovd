@@ -92,7 +92,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		if (! $ldap_suffix)
 			die_error('Active Directory configuration not valid (domain2suffix error)2',__FILE__,__LINE__);
 
-		if (! str_endwith($config['login'], $ldap_suffix))
+		if (! str_endswith($config['login'], $ldap_suffix))
 			$config['login'] .= ','.$ldap_suffix;
 
 		$config_ldap = array(

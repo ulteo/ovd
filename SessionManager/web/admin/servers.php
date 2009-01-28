@@ -163,6 +163,12 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_R
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQUEST['fqdn'])) {
+	$sessions = Sessions::getByServer($_REQUEST['fqdn']);
+	if (count($sessions) > 0) {
+		popup_error(_('Unable to delete a server when there are active sessions on it!'));
+		redirect($_SERVER['HTTP_REFERER']);
+	}
+
 	Abstract_Server::delete($_REQUEST['fqdn']);
 
 	redirect('servers.php?action=list');

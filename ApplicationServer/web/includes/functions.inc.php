@@ -117,9 +117,11 @@ function isSessionManagerRequest() {
   $address = $_SERVER['REMOTE_ADDR'];
   $name = getSessionManagerHost();
 
-  $reverse = @gethostbyaddr($address);
+  if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name))
+    return ($name == $address);
 
-  if ($reverse == $name || $address == $name)
+  $reverse = @gethostbyaddr($address);
+  if ($reverse == $name)
     return true;
 
   Logger::error('main', 'isSessionManagerRequest() - IP: '.$address.' / Name: '.$name.' / Reverse: '.$reverse);

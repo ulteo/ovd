@@ -95,7 +95,8 @@ function check_folder($folder_) {
 	return true;
 }
 
-function check_ip($fqdn_) {
+// Waiting for removal...
+/*function check_ip($fqdn_) {
 	$prefs = Preferences::getInstance();
 	if (! $prefs) {
 		return_error();
@@ -110,21 +111,29 @@ function check_ip($fqdn_) {
 	$address = $_SERVER['REMOTE_ADDR'];
 	$name = $fqdn_;
 
+	$buf = false;
 	foreach ($authorized_fqdn as $fqdn) {
 		$fqdn = str_replace('*', '.*', str_replace('.', '\.', $fqdn));
 
-		if (preg_match('/'.$fqdn.'/', $name)) {
-			if ($disable_fqdn_check == 1)
-				return true;
-
-			$reverse = @gethostbyaddr($address);
-			if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
-				return true;
-		}
+		if (preg_match('/'.$fqdn.'/', $name))
+			$buf = true;
 	}
 
+	if (! $buf)
+		return false;
+
+	if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name))
+		return ($name == $address);
+
+	if ($disable_fqdn_check == 1)
+		return true;
+
+	$reverse = @gethostbyaddr($address);
+	if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
+		return true;
+
 	return false;
-}
+}*/
 
 function sendamail($to_, $subject_, $message_) {
 	require_once('Mail.php');
@@ -385,8 +394,9 @@ function pathinfo_filename($path_) {
 }
 
 function get_classes_startwith($start_name) {
-	$ret = array();
 	$classes_name = get_declared_classes();
+
+	$ret = array();
 	foreach ($classes_name as $name)
 		if (substr($name, 0, strlen($start_name)) == $start_name)
 			$ret[] = $name;
@@ -394,14 +404,14 @@ function get_classes_startwith($start_name) {
 	return $ret;
 }
 
-function str_endwith($string_, $search_) {
+function str_endswith($string_, $search_) {
 	return (substr($string_, (strlen($search_)*-1)) == $search_);
 }
 
 function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
 	$len = strlen($st)-1;
-	$ret = '';
 
+	$ret = '';
 	while ($nc-- > 0)
 		$ret .= $st{mt_rand(0, $len)};
 
