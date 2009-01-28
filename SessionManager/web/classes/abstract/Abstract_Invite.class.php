@@ -20,9 +20,9 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Abstract_Token {
+class Abstract_Invite {
 	public function init() {
-// 		Logger::debug('main', 'Starting Abstract_Token::init');
+// 		Logger::debug('main', 'Starting Abstract_Invite::init');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -36,22 +36,20 @@ class Abstract_Token {
 		$ret = $SQL->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 varchar(255) NOT NULL,
-		@3 varchar(255) NOT NULL,
-		@4 varchar(255) NOT NULL,
 		PRIMARY KEY  (`id`)
-		)', $mysql_conf['prefix'].'tokens', 'id', 'type', 'session');
+		)', $mysql_conf['prefix'].'invites', 'id');
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'tokens\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'invites\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'tokens\' created');
+		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'invites\' created');
 		return true;
 	}
 
 	public function load($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
+// 		Logger::debug('main', 'Starting Abstract_Invite::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -64,7 +62,7 @@ class Abstract_Token {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'type', 'session', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -79,14 +77,12 @@ class Abstract_Token {
 		unset($row);
 
 		$buf = new Token($id);
-		$buf->type = (string)$type;
-		$buf->session = (string)$session;
 
 		return $buf;
 	}
 
-	public function save($token_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::save for \''.$token_->id.'\'');
+	public function save($invite_) {
+// 		Logger::debug('main', 'Starting Abstract_Invite::save for \''.$invite_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -97,19 +93,19 @@ class Abstract_Token {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$id = $token_->id;
+		$id = $invite_->id;
 
-		if (! Abstract_Token::load($id))
-			if (! Abstract_Token::create($token_))
+		if (! Abstract_Invite::load($id))
+			if (! Abstract_Invite::create($invite_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5 WHERE @6 = %7 LIMIT 1', $mysql_conf['prefix'].'tokens', 'type', $token_->type, 'session', $token_->session, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET 1=1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 
 		return true;
 	}
 
-	private function create($token_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
+	private function create($invite_) {
+// 		Logger::debug('main', 'Starting Abstract_Invite::create for \''.$invite_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -122,19 +118,19 @@ class Abstract_Token {
 
 		$id = $token_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0)
 			return false;
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'invites', 'id', $id);
 
 		return true;
 	}
 
 	public function delete($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::delete for \''.$id_.'\'');
+// 		Logger::debug('main', 'Starting Abstract_Invite::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -147,13 +143,13 @@ class Abstract_Token {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 
 		return true;
 	}

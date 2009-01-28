@@ -145,7 +145,7 @@ class Abstract_Server {
 
 		$fqdn = $server_->fqdn;
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'fqdn', $mysql_conf['prefix'].'servers', $fqdn);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0)
@@ -170,7 +170,7 @@ class Abstract_Server {
 
 		$fqdn = $fqdn_;
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'fqdn', $mysql_conf['prefix'].'servers', $fqdn);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)

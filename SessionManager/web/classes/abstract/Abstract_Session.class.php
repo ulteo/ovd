@@ -128,7 +128,7 @@ class Abstract_Session {
 
 		$id = $session_->id;
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $mysql_conf['prefix'].'sessions', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0)
@@ -153,7 +153,7 @@ class Abstract_Session {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $mysql_conf['prefix'].'sessions', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
