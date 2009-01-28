@@ -139,7 +139,7 @@ function sendamail($to_, $subject_, $message_) {
 	$method = $buf['send_type'];
 	$from = $buf['send_from'];
 	$host = $buf['send_host'];
-	$localhost = $_SERVER['SERVER_NAME'];
+	$localhost = '['.$_SERVER['SERVER_ADDR'].']';
 	$auth = false;
 	if ($buf['send_auth'] == '1')
 		$auth = true;
