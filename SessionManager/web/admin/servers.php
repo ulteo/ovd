@@ -22,14 +22,23 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'register') {
-	if (isset($_REQUEST['register_servers']) && is_array($_REQUEST['register_servers'])) {
-		foreach ($_REQUEST['register_servers'] as $server) {
+if (isset($_REQUEST['mass_register'])) {
+	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
+		foreach ($_REQUEST['checked_servers'] as $server) {
 			$buf = Abstract_Server::load($server);
 			$buf->register();
 			$buf->updateApplications();
 			Abstract_Server::save($buf);
 		}
+	}
+
+	redirect('servers.php?action=list');
+}
+
+if (isset($_REQUEST['mass_delete_unregistered'])) {
+	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
+		foreach ($_REQUEST['checked_servers'] as $server)
+			Abstract_Server::delete($server);
 	}
 
 	redirect('servers.php?action=list');
@@ -209,7 +218,6 @@ function show_default() {
 
     if (count($u_servs) > 1) {
       echo '<form action="servers.php" method="get">';
-      echo '<input type="hidden" name="mass_action" value="register" />';
     }
 
     echo '<table id="unregistered_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
@@ -228,7 +236,7 @@ function show_default() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tr class="'.$content.'">';
             if (count($u_servs) > 1)
-	echo '<td><input type="checkbox" name="register_servers[]" value="'.$s->fqdn.'" /><form></form>';
+	echo '<td><input type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
 
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
@@ -252,7 +260,7 @@ function show_default() {
       echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
       echo '<input type="hidden" name="action" value="delete" />';
       echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-      echo '<input type="submit" value="'._('delete').'" />';
+      echo '<input type="submit" value="'._('Delete').'" />';
       echo '</form>';
       echo '</td>';
 
@@ -266,10 +274,14 @@ function show_default() {
       echo '<tr class="'.$content.'">';
       echo '<td colspan="4">';
       echo '<a href="javascript:;" onclick="markAllRows(\'unregistered_servers_table\'); return false">'._('Mark all').'</a>';
-      echo '/ <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
+      echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<input type="submit" name="register" value="'._('Register').'"/><br />';
+      echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
+      echo '</form>';
+      echo '</td>';
+      echo '<td>';
+      echo '<input type="submit" name="mass_delete_unregistered" value="'._('Delete').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '</tr>';
