@@ -32,19 +32,16 @@ class Sessions {
 	public function getByServer($fqdn_) {
 // 		Logger::debug('main', 'Starting Sessions::getByServer');
 
-		$l = new ServerSessionLiaison($fqdn_, NULL);
-		$sessions_id = $l->groups();
+		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
 
 		$sessions = array();
-		foreach ($sessions_id as $session_id) {
-			$session = Abstract_Session::load($session_id);
+		foreach ($sessions_liaisons as $sessions_liaison) {
+			$session = Abstract_Session::load($sessions_liaison->group);
 			if (! $session)
 				continue;
 
 			$sessions[] = $session;
 		}
-		unset($session_id);
-		unset($sessions_id);
 
 		return $sessions;
 	}

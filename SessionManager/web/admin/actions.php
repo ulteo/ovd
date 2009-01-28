@@ -91,29 +91,21 @@ if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 
 if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if ($_REQUEST['action'] == 'add') {
-		$buf = new AppsGroupLiaison($_REQUEST['element'], $_REQUEST['group']);
-		if (!$buf->onDB())
-			$buf->insertDB();
+		Abstract_Liaison::save('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
 
 	if ($_REQUEST['action'] == 'del') {
-		$buf = new AppsGroupLiaison($_REQUEST['element'], $_REQUEST['group']);
-		if ($buf->onDB())
-			$buf->removeDB();
+		Abstract_Liaison::delete('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
 }
 
 if ($_REQUEST['name'] == 'User_UserGroup') {
 	if ($_REQUEST['action'] == 'add') {
-		$buf = new UsersGroupLiaison($_REQUEST['element'], $_REQUEST['group']);
-		if (!$buf->onDB())
-			$buf->insertDB();
+		Abstract_Liaison::save('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
 
 	if ($_REQUEST['action'] == 'del') {
-		$buf = new UsersGroupLiaison($_REQUEST['element'], $_REQUEST['group']);
-		if ($buf->onDB())
-			$buf->removeDB();
+		Abstract_Liaison::delete('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
 }
 
@@ -122,18 +114,17 @@ if ($_REQUEST['name'] == 'Publication') {
 		redirect($_SERVER['HTTP_REFERER']);
 
 	if ($_REQUEST['action'] == 'add') {
-		$buf = new UsersGroupApplicationsGroupLiaison($_REQUEST['group_u'], $_REQUEST['group_a']);
-		if (!$buf->onDB())
-			$buf->insertDB();
+		$l = Abstract_Liaison::load('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
+		if (is_null($l))
+			Abstract_Liaison::save('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
 		else
 			popup_error(_('This publication already exists'));
 	}
 
 	if ($_REQUEST['action'] == 'del') {
-		$buf = new UsersGroupApplicationsGroupLiaison($_REQUEST['group_u'], $_REQUEST['group_a']);
-
-		if ($buf->onDB())
-			$buf->removeDB();
+		$l = Abstract_Liaison::load('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
+		if (! is_null($l))
+			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
 		else
 			popup_error(_('This publication does not exist'));
 

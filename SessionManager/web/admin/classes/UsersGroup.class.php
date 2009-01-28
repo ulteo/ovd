@@ -45,15 +45,15 @@ class UsersGroup {
 	public function appsGroups(){
 		Logger::debug('admin','USERSGROUP::appsGroups');
 		
-		$l = new UsersGroupApplicationsGroupLiaison($this->id, NULL);
-		$groups = $l->groups();
+		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', $this->id, NULL);
 		if (is_array($groups)) {
 			$result = array();
-			foreach ($groups as $id_group){
+			foreach ($groups as $UGAG_liaison){
+// 				var_dump2($UGAG_liaison);
 				$g = new AppsGroup();
-				$g->fromDB($id_group);
+				$g->fromDB($UGAG_liaison->group);
 				if ($g->isOK())
-					$result []= $g;
+					$result[$UGAG_liaison->group]= $g;
 			}
 			return $result;
 		}
@@ -65,7 +65,11 @@ class UsersGroup {
 	
 	public function usersLogin(){
 		Logger::debug('admin','USERSGROUP::usersLogin');
-		$l = new UsersGroupLiaison(NULL,$this->id);
-		return $l->elements();
+		$ls = Abstract_Liaison::load('UsersGroup',NULL, $this->id);
+		$logins = array();
+		foreach ($ls as $l) {
+			$logins []= $l->element;
+		}
+		return $logins;
 	}
 }

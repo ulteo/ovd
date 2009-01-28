@@ -60,11 +60,10 @@ class Application {
 		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application'))
 			return false;
 
-		$l = new ApplicationServerLiaison($this->getAttribute('id'), NULL);
-		$servers_id = $l->groups();
+		$servers_liaisons = Abstract_Liaison::load('ApplicationServer', $this->getAttribute('id'), NULL);
 		$servers = array();
-		foreach ($servers_id as $server_id) {
-			$buf = Abstract_Server::load($server_id);
+		foreach ($servers_liaisons as $servers_liaison) {
+			$buf = Abstract_Server::load($servers_liaison->group);
 
 			if ($buf != false && $buf->isOnline())
 				$servers[] = $buf;
@@ -88,11 +87,10 @@ class Application {
 	public function groups(){
 		Logger::debug('main','APPLICATION::groups');
 		$result = array();
-		$l = new AppsGroupLiaison($this->attributes['id'],NULL);
-		$rows = $l->groups();
+		$rows = Abstract_Liaison::load('AppsGroup', $this->attributes['id'],NULL);
 		foreach ($rows as $row){
 			$g = new AppsGroup();
-			$g->fromDB($row['group']);
+			$g->fromDB($row->group);
 			$result []= $g;
 		}
 		return $result;

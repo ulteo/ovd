@@ -27,7 +27,7 @@ class AppsGroup {
 	public $published; //(yes/no) (the group is available to user)
 
 	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $published_=false) {
-		Logger::debug('admin','APPSGROUP::contructor from_scratch');
+		Logger::debug('admin',"APPSGROUP::contructor ($id_,$name_,$description_,$published_)");
 		$this->id = $id_;
 		$this->name = $name_;
 		$this->description = $description_;
@@ -35,12 +35,14 @@ class AppsGroup {
 	}
 	
 	public function fromDB($id_) {
-		Logger::debug('admin','APPSGROUP::fromDB');
+		Logger::debug('admin',"APPSGROUP::fromDB($id_)");
 		if (is_numeric($id_)){
 			$sql2 = MySQL::getInstance();
 			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1=%6', 'id', 'name', 'description', 'published', APPSGROUP_TABLE, $id_);
+// 			echo 'FetchAllResults ';print_array($sql2->FetchAllResults());echo '<br>';
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
+// 				echo '<b>row</b> ';print_r($row);echo '<br>';
 				$this->id = $row['id'];
 				$this->name = $row['name'];
 				$this->description = $row['description'];
@@ -52,6 +54,7 @@ class AppsGroup {
 		}
 		else {
 			// not the right argument
+			Logger::error('admin',"APPSGROUP::fromDB($id_) id is not correct");
 			$this->delete();
 		}
 	}

@@ -130,8 +130,10 @@ function show_manage($id, $applicationDB) {
 
   // Servers
   $servers_all = Servers::getAll();
-  $l = new ApplicationServerLiaison($app->getAttribute('id'), NULL);
-  $servers_id = $l->groups();
+  $liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
+  $servers_id = array();
+  foreach ($liaisons as $liaison)
+    $servers_id []= $liaison->group;
   $servers = array();
   $servers_available = array();
   foreach($servers_all as $server) {
@@ -147,8 +149,10 @@ function show_manage($id, $applicationDB) {
 
   // App groups
   $appgroups = getAllAppsGroups();
-  $l = new AppsGroupLiaison($app->getAttribute('id'), NULL);
-  $groups_id = $l->groups();
+  $groups_id = array();
+  $liaisons = Abstract_Liaison::load('AppsGroup', $app->getAttribute('id'), NULL);
+  foreach ($liaisons as $liaison)
+    $groups_id []= $liaison->group;
   $groups = array();
   $groups_available = array();
   foreach ($appgroups as $group) {

@@ -138,8 +138,10 @@ function show_manage($id) {
   $userGroupDB = new $mod_usergroup_name();
 
   $applications_all = $applicationDB->getList();
-  $l = new AppsGroupLiaison(NULL, $id);
-  $applications_id = $l->elements();
+  $applications_id = array();
+  $liaisons = Abstract_Liaison::load('AppsGroup', NULL, $id);
+  foreach ($liaisons as $liaison)
+    $applications_id []= $liaison->element;
 
   $applications = array();
   $applications_available = array();
@@ -166,9 +168,8 @@ function show_manage($id) {
 
   // Publications
   $groups_users = array();
-  $l = new UsersGroupApplicationsGroupLiaison(NULL, $id);
-  foreach ($l->elements() as $group_u) {
-    $obj = $userGroupDB->import($group_u);
+  foreach (Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $id) as $group_liaison) {
+    $obj = $userGroupDB->import($group_liaison->element);
 
     if (is_object($obj))
       $groups_users[]= $obj;

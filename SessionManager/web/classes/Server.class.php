@@ -441,12 +441,11 @@ class Server {
 		$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
 		$applicationDB = new $mod_app_name();
 
-		$sal = new ApplicationServerLiaison(NULL, $this->fqdn);
-		$ls = $sal->elements();
+		$ls = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
 		if (is_array($ls)) {
 			$res = array();
 			foreach ($ls as $l) {
-				$a = $applicationDB->import($l);
+				$a = $applicationDB->import($l->element);
 				if (is_object($a) && $applicationDB->isOK($a))
 					$res []= $a;
 			}
@@ -469,7 +468,7 @@ class Server {
 		$applicationDB = new $mod_app_name();
 
 		$apps = array();
-		$l = new ApplicationServerLiaison(NULL,$this->fqdn);
+		$l = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
 		$elements = $l->elements();
 		foreach ($elements as $app_id) {
 			$app = $applicationDB->import($app_id);
@@ -482,11 +481,10 @@ class Server {
 
 	public function appsGroups() {
 		$apps_roups_id = array();
-		$asl = new ApplicationServerLiaison(NULL,$this->fqdn);
-		$applications_on_server = $asl->elements();
+		$asl = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
+// 		$applications_on_server = $asl->elements();
 		foreach ($applications_on_server as $app_id) {
-			$agl = new AppsGroupLiaison($app_id, NULL);
-			$ag = $agl->groups();
+			$ag = Abstract_Liaison::load('AppsGroup', $app_id, NULL);
 			$apps_roups_id = array_merge($apps_roups_id, $ag);
 		}
 		$apps_roups_id = array_unique($apps_roups_id);
@@ -563,47 +561,51 @@ class Server {
 			}
 			if ($exe_node->hasAttribute("icon"))
 				$app_path_icon =  ($exe_node->getAttribute("icon"));
+			
+			Logger::debug('admin','0001');
 			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,$app_path_icon,true,$app_desktopfile);
+			Logger::debug('admin','0002');
 			$a_search = $applicationDB->search($app_name,$app_description,$this->getAttribute('type'),$app_path_exe);
+			Logger::debug('admin','0003');
 			if (is_object($a_search)){
+				Logger::debug('admin','0003-IF');
 				//already in DB
 				// echo $app_name." already in DB\n";
 				$a = $a_search;
 			}
 			else {
+				Logger::debug('admin','0003-ELSE');
 				// echo $app_name." NOT in DB\n";
 				if ($applicationDB->isWriteable() == false){
+					Logger::debug('admin','0003-ELSE-A');
 					Logger::debug('admin','applicationDB is not writeable');
 				}
 				else{
+					Logger::debug('admin','0003-ELSE-B');
 					if ($applicationDB->add($a) == false){
+						Logger::debug('admin','0003-ELSE-C');
 						//echo 'app '.$app_name." not insert<br>\n";
 						return false;
 					}
+					Logger::debug('admin','0003-ELSE-D');
 				}
+				Logger::debug('admin','0003-ELSE-end');
 			}
+			Logger::debug('admin','00020');
 			if ($applicationDB->isWriteable() == true){
 				if ($applicationDB->isOK($a) == true){
 					// we add the app to the server
-					$l = new ApplicationServerLiaison($a->getAttribute('id'),$this->fqdn);
-					if ($l->onDB() == false){
-						if ($l->insertDB()){
-							// insert ok
-							//echo "insert liaison OK (app )".$a->getAttribute('id')." fqdn ".$this->fqdn."<br>";
-						}
-						else {
-							//echo "insert liaison fail\n";
-							return false;
-						}
-					}
-					else {
-						//echo "ApplicationServerLiaison already on DB<br>\n";
+					$ret = Abstract_Liaison::save('ApplicationServer', $a->getAttribute('id'),$this->fqdn);
+					if ($ret === false) {
+						Logger::error('main', 'Server::updateApplications failed to save application');
+						return $ret;
 					}
 				}
 				else{
 					//echo "Application not ok<br>\n";
 				}
 			}
+			Logger::debug('admin','0020');
 		}
 
 // 		Abstract_Server::save($this);

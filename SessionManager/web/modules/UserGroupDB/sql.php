@@ -142,4 +142,8 @@ class UserGroupDB_sql {
 	public static function isDefault() {
 		return false;
 	}
+	
+	public static function liaisonType() {
+		return 'sql';
+	}
 }

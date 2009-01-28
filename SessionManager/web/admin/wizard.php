@@ -496,9 +496,7 @@ function do_validate() {
 		$users = $_SESSION['wizard']['users'];
 
 		foreach ($users as $user) {
-			$buf = new UsersGroupLiaison($user, $g->id);
-			if (!$buf->onDB())
-				$buf->insertDB();
+			Abstract_Liaison::save('UsersGroup', $user, $g->id);
 		}
 
 		$usergroups = array($g->id);
@@ -515,9 +513,7 @@ function do_validate() {
 		$apps = $_SESSION['wizard']['apps'];
 
 		foreach ($apps as $app) {
-			$buf = new AppsGroupLiaison($app, $g->id);
-			if (!$buf->onDB())
-				$buf->insertDB();
+			Abstract_Liaison::save('AppsGroup', $app, $g->id);
 		}
 
 		$appgroups = array($g->id);
@@ -526,9 +522,7 @@ function do_validate() {
 
 	foreach ($usergroups as $usergroup) {
 		foreach ($appgroups as $appgroup) {
-			$buf = new UsersGroupApplicationsGroupLiaison($usergroup, $appgroup);
-			if (!$buf->onDB())
-				$buf->insertDB();
+			Abstract_Liaison::save('UsersGroupApplicationsGroup',$usergroup, $appgroup);
 		}
 	}
 

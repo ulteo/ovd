@@ -224,42 +224,13 @@ function init_db($prefs_) {
 		return false;
 	}
 	$APPSGROUP_TABLE = $mysql_conf['prefix'].'gapplication';
-	$LIAISON_APPS_GROUP_TABLE = $mysql_conf['prefix'].'apps_group_link';
-	$LIAISON_USERS_GROUP_TABLE = $mysql_conf['prefix'].'users_group_link';
+	$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $mysql_conf['prefix'].'ug_ag_link';
-	$LIAISON_APPLICATION_SERVER_TABLE = $mysql_conf['prefix'].'application_server_link';
 	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
-	$LIAISON_SERVER_SESSION_TABLE = $mysql_conf['prefix'].'server_session_link';
 
 	// we create the sql table
 	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-	$ret = $sql2->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 int(8) NOT NULL,
-		@3 varchar(100) NOT NULL,
-		PRIMARY KEY  (@2,@3)
-		)',$LIAISON_APPLICATION_SERVER_TABLE,'element','group');
-	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$LIAISON_APPLICATION_SERVER_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('admin','init_db table '.$LIAISON_APPLICATION_SERVER_TABLE.' created');
-
-	$ret = $sql2->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 int(8) NOT NULL,
-		@3 int(8) NOT NULL,
-		PRIMARY KEY  (@2,@3)
-		)',$LIAISON_APPS_GROUP_TABLE,'element','group');
-	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$LIAISON_APPS_GROUP_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('admin','init_db table '.$LIAISON_APPS_GROUP_TABLE.' created');
-
+	
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 int(8) NOT NULL auto_increment,
@@ -288,48 +259,9 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$SOURCES_LIST_TABLE.' created');
-
-	$ret = $sql2->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 varchar(50) NOT NULL,
-		@3 int(8) NOT NULL,
-		PRIMARY KEY  (@2, @3)
-		)',$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE,'element','group');
-	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('admin','init_db table '.$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE.' created');
-
-	$ret = $sql2->DoQuery(
-	'CREATE TABLE IF NOT EXISTS @1 (
-	@2 varchar(50) NOT NULL,
-	@3 int(8) NOT NULL,
-	PRIMARY KEY  (@2, @3)
-	)',$LIAISON_USERS_GROUP_TABLE,'element','group');
-	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$LIAISON_USERS_GROUP_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('admin','init_db table '.$LIAISON_USERS_GROUP_TABLE.' created');
-
-	$ret = $sql2->DoQuery(
-	'CREATE TABLE IF NOT EXISTS @1 (
-	@2 varchar(150) NOT NULL,
-	@3 varchar(150) NOT NULL,
-	PRIMARY KEY  (@2, @3)
-	)',$LIAISON_SERVER_SESSION_TABLE,'element','group');
-	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$LIAISON_SERVER_SESSION_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('admin','init_db table '.$LIAISON_SERVER_SESSION_TABLE.' created');
-
+	
 	Logger::debug('admin','init_db all tables created');
-
+	
 	$modules_enable = $prefs_->get('general', 'module_enable');
 	foreach ($modules_enable as $module_name) {
 		$mod_name = 'admin_'.$module_name.'_'.$prefs_->get($module_name,'enable');
@@ -344,9 +276,10 @@ function init_db($prefs_) {
 	//TODO : do the same for plugins
 
 	// Init of Abstract
-	Abstract_Server::init();
-	Abstract_Session::init();
-	Abstract_Token::init();
+	Abstract_Server::init($prefs_);
+	Abstract_Session::init($prefs_);
+	Abstract_Token::init($prefs_);
+	Abstract_Liaison::init($prefs_);
 
 	return true;
 }

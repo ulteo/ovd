@@ -72,6 +72,7 @@ function __autoload($class_name) {
 	if (!class_exists($class_name)) {
 		$class_files []= CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= ABSTRACT_CLASSES_DIR.'/'.$class_name.'.class.php';
+		$class_files []= ABSTRACT_CLASSES_DIR.'/'.'liaison'.'/'.$class_name.'.class.php';
 		$class_files []= ADMIN_CLASSES_DIR.'/'.$class_name.'.class.php';
 
 		$class_files []= MODULES_DIR.'/'.preg_replace('/_/', '/', $class_name, 1).'.php';

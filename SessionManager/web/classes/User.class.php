@@ -60,18 +60,27 @@ class User {
 			$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 			$userGroupDB = new $mod_usergroup_name();
 		}
-
-		$l = new UsersGroupLiaison($this->attributes['login'],NULL);
-		$rows = $l->groups();
-		$rows []= $user_default_group; // safe because even if  group = -1, the import failed safely
-		foreach ($rows as $group_id){
-			$g =$userGroupDB->import($group_id);
+		
+		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
+		if (is_null($rows)) {
+			Logger::error('main', 'User::usersGroups load('.$this->attributes['login'].') is null');
+			return $result;
+		}
+		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
+		
+		$g =$userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
+		if (is_object($g))
+			$result[$user_default_group]= $g;
+		
+		foreach ($rows as $lug){
+			$g =$userGroupDB->import($lug->group);
 			if (is_object($g))
-				$result[$group_id]= $g;
+				$result[$lug->group]= $g;
 			else {
 				Logger::error('main', 'USER::usersGroups user group (\''.$user_default_group.'\') not ok');
 			}
 		}
+		
 		return $result;
 	}
 
@@ -116,8 +125,7 @@ class User {
 		if (count($apps_id)>0 || $launch_without_apps == 1){
 			$available_servers = Servers::getAvailableType($type);
 			foreach($available_servers as $server){
-				$l = new ApplicationServerLiaison(NULL,$server->fqdn);
-				if ( count(array_diff($apps_id,$l->elements())) == 0 ){
+				if ( count(array_diff($apps_id, Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn))) == 0 ){
 					$servers[$server->fqdn]= $server;
 				}
 			}
@@ -196,8 +204,7 @@ class User {
 		$my_applications = array();
 		$appgroups_id = $this->appsGroups();
 		foreach ($appgroups_id as $agrp_id){
-			$lagrp = new AppsGroupLiaison(NULL,$agrp_id);
-			$els = $lagrp->elements();
+			$els = Abstract_Liaison::load('AppsGroup', NULL,$agrp_id);
 			if (is_array($els))
 				foreach ($els as $e)
 					array_push($my_applications_id,$e);

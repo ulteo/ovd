@@ -21,14 +21,8 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Session {
-	public function init() {
+	public function init($prefs) {
 // 		Logger::debug('main', 'Starting Abstract_Session::init');
-
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
 
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
