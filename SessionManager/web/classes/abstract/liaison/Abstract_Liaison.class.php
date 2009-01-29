@@ -109,7 +109,7 @@ class Abstract_Liaison {
 		}
 	}
 	
-	public static function init($refs) {
+	public static function init($prefs) {
 		$mods_enable = $prefs->get('general','module_enable');
 		if (! in_array('UserGroupDB',$mods_enable)) {
 			Logger::error('main', 'Abstract_Liaison::load Module UserGroupDB must be enabled');
