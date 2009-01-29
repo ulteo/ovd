@@ -32,8 +32,9 @@ class Abstract_Token {
 		@2 varchar(255) NOT NULL,
 		@3 varchar(255) NOT NULL,
 		@4 varchar(255) NOT NULL,
+		@5 varchar(255) NOT NULL,
 		PRIMARY KEY  (`id`)
-		)', $mysql_conf['prefix'].'tokens', 'id', 'type', 'session');
+		)', $mysql_conf['prefix'].'tokens', 'id', 'type', 'link_to', 'valid_until');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'tokens\'');
@@ -58,7 +59,7 @@ class Abstract_Token {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'type', 'session', $mysql_conf['prefix'].'tokens', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3 FROM @4 WHERE @5 = %6 LIMIT 1', 'type', 'link_to', 'valid_until', $mysql_conf['prefix'].'tokens', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -71,7 +72,8 @@ class Abstract_Token {
 
 		$buf = new Token($id);
 		$buf->type = (string)$type;
-		$buf->session = (string)$session;
+		$buf->link_to = (string)$link_to;
+		$buf->valid_until = (int)$valid_until;
 
 		return $buf;
 	}
@@ -94,7 +96,7 @@ class Abstract_Token {
 			if (! Abstract_Token::create($token_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5 WHERE @6 = %7 LIMIT 1', $mysql_conf['prefix'].'tokens', 'type', $token_->type, 'session', $token_->session, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $mysql_conf['prefix'].'tokens', 'type', $token_->type, 'link_to', $token_->link_to, 'valid_until', $token_->valid_until, 'id', $id);
 
 		return true;
 	}

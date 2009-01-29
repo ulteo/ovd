@@ -52,32 +52,33 @@ class MySQL {
 	}
 
 	public static function getInstance() {
-		if (!isset(self::$instance))
+		if (! isset(self::$instance))
 			return false;
 
 		return self::$instance;
 	}
 
-	public function CheckLink($die=true) {
+	public function CheckLink($die_=true) {
 		if ($this->link)
 			return;
 
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
-		if (!$this->link) {
+		if (! $this->link) {
 			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --password="'.$this->sqlpass.'"  --database="'.$this->sqlbase.'"';
-			Logger::error('main', 'MySQL::CheckLink link to SQL server failed to validate the configuration please try this bash command : '.$mysqlcommand);
-			if ($die)
-				die_error('Link to SQL server failed');
-			else
-				return false;
+			Logger::error('main', '(MySQL::CheckLink) link to SQL server failed, to validate the configuration please try this bash command : '.$mysqlcommand);
+
+			if ($die_)
+				die_error('Link to SQL server failed.');
+
+			return false;
 		}
 
 		if ($this->SelectDB($this->sqlbase) === false) {
-			if ($die)
+			if ($die_)
 				die_error('Could not select database.');
-			else
-				return false;
+
+			return false;
 		}
 
 		$this->DoQuery('SET NAMES utf8');
@@ -87,7 +88,7 @@ class MySQL {
 	public function SelectDB($db) {
 		$this->CheckLink();
 
-		if (!mysqli_select_db($this->link, $db))
+		if (! mysqli_select_db($this->link, $db))
 			return false;
 
 		$this->db = $db;
@@ -109,8 +110,9 @@ class MySQL {
 			mysqli_free_result($this->result);
 			$this->result = false;
 		}
+
 		Logger::debug('main','MySQL::DoQuery '.$query);
-		$this->result = @mysqli_query($this->link, $query) or die('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query);
+		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query);
 
 		$this->total_queries += 1;
 
@@ -120,7 +122,7 @@ class MySQL {
 	public function FetchResult() {
 		$this->CheckLink();
 
-		if (!$this->result)
+		if (! $this->result)
 			return false;
 
 		return @mysqli_fetch_assoc($this->result);
@@ -129,7 +131,7 @@ class MySQL {
 	public function FetchAllResults() {
 		$this->CheckLink();
 
-		if (!$this->result)
+		if (! $this->result)
 			return false;
 
 		$res = array();
@@ -143,7 +145,7 @@ class MySQL {
 	public function NumRows() {
 		$this->CheckLink();
 
-		if (!$this->result)
+		if (! $this->result)
 			return false;
 
 		return @mysqli_num_rows($this->result);

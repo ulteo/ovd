@@ -24,7 +24,8 @@ class Token {
 	public $id = NULL;
 
 	public $type = NULL;
-	public $session = NULL;
+	public $link_to = NULL;
+	public $valid_until = NULL;
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Token::__construct for \''.$id_.'\'');
@@ -33,7 +34,7 @@ class Token {
 	}
 
 	public function __toString() {
-		return 'Token(\''.$this->id.'\', \''.$this->type.'\', \''.$this->session.'\')';
+		return 'Token(\''.$this->id.'\', \''.$this->type.'\', \''.$this->link_to.'\', \''.$this->valid_until.'\')';
 	}
 
 	public function hasAttribute($attrib_) {

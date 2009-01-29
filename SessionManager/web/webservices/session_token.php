@@ -46,8 +46,8 @@ if (! $token) {
 	die('No such token file');
 }
 
-$session = Abstract_Session::load($token->getAttribute('session'));
-if (! $session->hasAttribute('settings')) {
+$session = Abstract_Session::load($token->getAttribute('link_to'));
+if (! $session || ! $session->hasAttribute('settings')) {
 	Logger::error('main', '(webservices/session_token) Invalid session: '.$session->id);
 	die('Invalid session');
 }

@@ -35,8 +35,9 @@ class Abstract_Session {
 		@5 text NOT NULL,
 		@6 varchar(255) NOT NULL,
 		@7 varchar(255) NOT NULL,
+		@8 varchar(255) NOT NULL,
 		PRIMARY KEY  (@2)
-		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname');
+		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'start_time');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions\'');
@@ -61,7 +62,7 @@ class Abstract_Session {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @7 = %8 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6 FROM @7 WHERE @8 = %9 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'start_time', $mysql_conf['prefix'].'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -78,6 +79,7 @@ class Abstract_Session {
 		$buf->settings = unserialize($settings);
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
+		$buf->start_time = (string)$start_time;
 
 		return $buf;
 	}
@@ -100,7 +102,7 @@ class Abstract_Session {
 			if (! Abstract_Session::create($session_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11 WHERE @12 = %13 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13 WHERE @14 = %15 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'start_time', $session_->start_time, 'id', $id);
 
 		return true;
 	}

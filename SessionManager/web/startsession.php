@@ -93,7 +93,7 @@ $user = $userDB->import($user_login);
 if (!is_object($user))
 	die_error(_('User importation failed'),__FILE__,__LINE__);
 
-Logger::debug('main', 'startsession.php: Now checking for old session');
+Logger::debug('main', '(startsession) Now checking for old session');
 
 $already_online = 0;
 $sessions = Sessions::getByUser($user->getAttribute('login'));
@@ -127,11 +127,11 @@ else {
 if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
 
-	$ret = true;
-
 	$session_mode = 'resume';
 
-	Logger::debug('main', '(startsession) Resuming session ('.$old_session_id.' => '.$old_session_server.')');
+	$ret = true;
+
+	Logger::info('main', '(startsession) Resuming session ('.$old_session_id.' => '.$old_session_server.')');
 } else {
 	$random_session_id = gen_string(5);
 
@@ -145,7 +145,7 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	$ret = true;
 
-	Logger::debug('main', '(startsession) Creating new session ('.$random_session_id.' => '.$random_server.')');
+	Logger::info('main', '(startsession) Creating new session ('.$random_session_id.' => '.$random_server.')');
 }
 
 if ($ret === false)
@@ -184,17 +184,15 @@ if (isset($shareable) && $shareable != '0')
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 
-if ($prefs->get('UserDB','enable') == 'activedirectory') {
-	$config_ad = $prefs->get('UserDB','activedirectory');
+if ($prefs->get('UserDB', 'enable') == 'activedirectory') {
+	$config_ad = $prefs->get('UserDB', 'activedirectory');
 	$windows_server = $user->getAvailableServer('windows');
-	if ( is_object($windows_server)) {
+	if (is_object($windows_server)) {
 		$optional_args['windows_server'] = $windows_server->fqdn;
 		$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$config_ad['domain'];
 		$optional_args['windows_password'] = $_SESSION['password'];
-	}
-	else {
-		Logger::error('main', 'startsession not windows server available');
-	}
+	} else
+		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
 }
 
 $plugins->doStartsession(array(
@@ -221,8 +219,9 @@ $session->setAttribute('settings', $data);
 Abstract_Session::save($session);
 
 $token = new Token(gen_string(5));
-$token->type = 'start';
-$token->session = $session->id;
+$token->type = $session_mode;
+$token->link_to = $session->id;
+$token->valid_until = (time()+(60*5));
 Abstract_Token::save($token);
 
 $buf = Abstract_Server::load($session->server);
@@ -234,17 +233,20 @@ $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$toke
  * interesting. Note that manual call to register () should not happen, and
  * should be automated (TODO!)
  */
-Logger::debug('main', 'pre-signal creation');
-$ev = Events::getEvent ('SessionStartEvent');
-$ev->register ('Report');
-$ev->setAttributes (array ('token' => $token->id,
-                           'user' => $user,
-						   'sessid' => $session->id));
-$ev->emit ();
-Logger::debug('main', 'post-signal');
+Logger::debug('main', '(startsession) pre-signal creation');
+$ev = Events::getEvent('SessionStartEvent');
+$ev->register('Report');
+$ev->setAttributes(array(
+	'token'	=>	$token->id,
+	'user'	=>	$user,
+	'sessid'	=>	$session->id
+));
+$ev->emit();
+Logger::debug('main', '(startsession) post-signal creation');
 /* end of snippet */
 
-$report = new Reporting($session->id);
-$report->session_begin($token->id, $user);
+//Broken for now...
+// $report = new Reporting($session->id);
+// $report->session_begin($token->id, $user);
 
 redirect($redir);

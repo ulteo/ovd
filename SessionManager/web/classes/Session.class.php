@@ -28,6 +28,7 @@ class Session {
 	public $settings = NULL;
 	public $user_login = NULL;
 	public $user_displayname = NULL;
+	public $start_time = NULL;
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
@@ -36,7 +37,7 @@ class Session {
 	}
 
 	public function __toString() {
-		return 'Session(\''.$this->id.'\', \''.$this->server.'\', \''.$this->status.'\', \''.$this->user_login.'\', \''.$this->user_displayname.'\')';
+		return 'Session(\''.$this->id.'\', \''.$this->server.'\', \''.$this->status.'\', \''.$this->user_login.'\', \''.$this->user_displayname.'\', \''.$this->start_time.'\')';
 	}
 
 	public function hasAttribute($attrib_) {
@@ -74,7 +75,7 @@ class Session {
 	}
 
 	public function getStatus() {
-// 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
+		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
 
@@ -95,7 +96,7 @@ class Session {
 	}
 
 	public function setStatus($status_) {
-// 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
+		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
 		switch ($status_) {
 			default:
@@ -161,7 +162,7 @@ class Session {
 	}
 
 	public function isAlive() {
-// 		Logger::debug('main', 'Starting Session::isAlive for \''.$this->id.'\'');
+		Logger::debug('main', 'Starting Session::isAlive for \''.$this->id.'\'');
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
 			$this->getStatus();
@@ -176,7 +177,7 @@ class Session {
 	}
 
 	public function isSuspended() {
-// 		Logger::debug('main', 'Starting Session::isSuspended for \''.$this->id.'\'');
+		Logger::debug('main', 'Starting Session::isSuspended for \''.$this->id.'\'');
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
 			$this->getStatus();
@@ -191,7 +192,7 @@ class Session {
 	}
 
 	public function orderDeletion() {
-// 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
+		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
 
@@ -206,20 +207,6 @@ class Session {
 	}
 
 	// ? unclean?
-	public function getStartTime() {
-		Logger::debug('main', 'Starting SESSION::getStartTime for session '.$this->id);
-
-		$this->folder = SESSIONS_DIR.'/'.$this->id;
-
-		if (! file_exists($this->folder.'/status')) {
-			Logger::error('main', 'Unable to get start time');
-			return _('Unknown');
-		}
-		Logger::info('main', 'Got start time');
-
-		return date('d/m/Y H:i:s', filemtime($this->folder.'/status'));
-	}
-
 	public function addInvite($email_, $view_only_) {
 		Logger::debug('main', 'Starting SESSION::addInvite for session '.$this->id.' on server '.$this->server);
 

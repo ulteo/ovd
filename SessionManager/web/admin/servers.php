@@ -633,12 +633,12 @@ function show_manage($fqdn) {
     echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
     echo '<input type="hidden" name="action" value="delete" />';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-    echo '<input type="submit" value="'._('delete').'" />';
+    echo '<input type="submit" value="'._('Delete').'" />';
     echo '</form>';
   }
 
   if ($server_online) {
-    echo '<h3>'._('Install an application from a package name').'</h3>';
+    echo '<h2>'._('Install an application from a package name').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="install_line">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
@@ -744,7 +744,7 @@ function show_manage($fqdn) {
   // Tasks part
   if (count($tasks) >0) {
     echo '<div>';
-    echo '<h2>'._('Active tasks on this server').'</h1>';
+    echo '<h2>'._('Active tasks on this server').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     echo '<tr class="title">';
     echo '<th>'._('ID').'</th>';
@@ -776,11 +776,17 @@ function show_manage($fqdn) {
   // Sessions part
   if ($has_sessions) {
     echo '<div>';
-    echo '<h2>'._('Active sessions').'</h1>';
+    echo '<h2>'._('Active sessions').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($sessions as $session) {
       echo '<form action="sessions.php"><tr>';
-      echo '<td>'.$session->getStartTime().'</td>';
+      echo '<td>';
+      $buf = $session->getAttribute('start_time');
+      if (! $buf)
+        echo _('Not started yet');
+      else
+        echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
+      echo '</td>';
       echo '<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
       echo '<td>';
       echo '<input type="hidden" name="info" value="'.$session->id.'" />';

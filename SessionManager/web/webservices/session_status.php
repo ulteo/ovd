@@ -51,11 +51,13 @@ Logger::debug('main', '(webservices/session_status) Session '.$session->id.' on 
 
 $session->setStatus($_GET['status']);
 
-Abstract_Session::save($session);
-
 if ($_GET['status'] == 1) {
 	Logger::info('main', '(webservices/session_status) Session start : '.$session->id);
+
+	$session->setAttribute('start_time', time());
 }
+
+Abstract_Session::save($session);
 
 if ($_GET['status'] == 4) {
 	Logger::info('main', '(webservices/session_status) Session end : '.$session->id);
@@ -68,8 +70,9 @@ if ($_GET['status'] == 4) {
 		'session'	=>	$session->id
 	));
 
-	$report = new Reporting($session->id);
-	$report->session_end();
+	//Broken for now...
+// 	$report = new Reporting($session->id);
+// 	$report->session_end();
 
-	Abstract_Session::delete($_GET['session']);
+	Abstract_Session::delete($session->id);
 }

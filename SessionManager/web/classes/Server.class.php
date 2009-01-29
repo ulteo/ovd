@@ -83,7 +83,7 @@ class Server {
 	}
 
 	public function isAuthorized() {
-// 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
 		if (! $this->getStatus()) {
 			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
@@ -137,7 +137,7 @@ class Server {
 	}
 
 	public function register() {
-// 		Logger::debug('main', 'Starting Server::register for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::register for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline()) {
 			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
@@ -156,7 +156,7 @@ class Server {
 	}
 
 	public function isOnline() {
-// 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
 			$this->getStatus();
@@ -168,7 +168,7 @@ class Server {
 	}
 
 	public function isUnreachable() {
-// 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
 		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
 		$this->setStatus('broken');
@@ -177,7 +177,7 @@ class Server {
 	}
 
 	public function returnedError() {
-// 		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
 
 		Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
 		$this->setStatus('broken');
@@ -186,7 +186,7 @@ class Server {
 	}
 
 	public function getStatus() {
-// 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
 
 		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
 
@@ -213,7 +213,7 @@ class Server {
 	}
 
 	public function setStatus($status_) {
-// 		Logger::debug('main', 'Starting Server::setStatus for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::setStatus for \''.$this->fqdn.'\'');
 
 		switch ($status_) {
 			case 'ready':
@@ -264,7 +264,7 @@ class Server {
 	}
 
 	public function getType() {
-// 		Logger::debug('main', 'Starting Server::getType for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getType for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline())
 			return false;
@@ -293,7 +293,7 @@ class Server {
 	}
 
 	public function getVersion() {
-// 		Logger::debug('main', 'Starting Server::getVersion for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getVersion for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline())
 			return false;
@@ -322,13 +322,13 @@ class Server {
 	}
 
 	public function getNbMaxSessions() {
-// 		Logger::debug('main', 'Starting Server::getNbMaxSessions for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getNbMaxSessions for \''.$this->fqdn.'\'');
 
 		return $this->getAttribute('max_sessions');
 	}
 
 	public function getNbUsedSessions() {
-// 		Logger::debug('main', 'Starting Server::getNbUsedSessions for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getNbUsedSessions for \''.$this->fqdn.'\'');
 
   		$buf = Sessions::getByServer($this->fqdn);
 
@@ -336,7 +336,7 @@ class Server {
 	}
 
 	public function getNbAvailableSessions() {
-// 		Logger::debug('main', 'Starting Server::getNbAvailableSessions for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getNbAvailableSessions for \''.$this->fqdn.'\'');
 
 		$max_sessions = $this->getNbMaxSessions();
 		$used_sessions = $this->getNbUsedSessions();
@@ -345,7 +345,7 @@ class Server {
 	}
 
 	public function getMonitoring() {
-// 		Logger::debug('main', 'Starting Server::getMonitoring for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getMonitoring for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline())
 			return false;
@@ -387,7 +387,7 @@ class Server {
 	}
 
 	public function getCpuUsage() {
-// 		Logger::debug('main', 'Starting Server::getCpuUsage for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getCpuUsage for \''.$this->fqdn.'\'');
 
 		$cpu_load = $this->getAttribute('cpu_load');
 		$cpu_nb_cores = $this->getAttribute('cpu_nb_cores');
@@ -399,7 +399,7 @@ class Server {
 	}
 
 	public function getRamUsage() {
-// 		Logger::debug('main', 'Starting Server::getRamUsage for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getRamUsage for \''.$this->fqdn.'\'');
 
 		$ram_used = $this->getAttribute('ram_used');
 		$ram_total = $this->getAttribute('ram_total');
@@ -411,7 +411,7 @@ class Server {
 	}
 
 	public function getSessionUsage() {
-// 		Logger::debug('main', 'Starting Server::getSessionUsage for \''.$this->fqdn.'\'');
+		Logger::debug('main', 'Starting Server::getSessionUsage for \''.$this->fqdn.'\'');
 
 		$max_sessions = $this->getNbMaxSessions();
 		$used_sessions = $this->getNbUsedSessions();

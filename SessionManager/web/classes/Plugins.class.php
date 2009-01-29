@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Plugins {
 	public function doLoad() {
-		Logger::info('main', 'Plugins::doLoad()');
+		Logger::debug('main', 'Plugins::doLoad()');
 
 		//set_error_handler('plugin_error');
 
@@ -57,7 +57,7 @@ class Plugins {
 	}
 
 	public function doInit($params_=array()) {
-		Logger::info('main', 'Plugins::doInit()');
+		Logger::debug('main', 'Plugins::doInit()');
 
 		//set_error_handler('plugin_error');
 
@@ -70,7 +70,7 @@ class Plugins {
 	}
 
 	public function doStartsession($params_=array()) {
-		Logger::info('main', 'Plugins::doStartsession()');
+		Logger::debug('main', 'Plugins::doStartsession()');
 
 		//set_error_handler('plugin_error');
 
@@ -83,7 +83,7 @@ class Plugins {
 	}
 
 	public function doRemovesession($params_=array()) {
-		Logger::info('main', 'Plugins::doRemovesession()');
+		Logger::debug('main', 'Plugins::doRemovesession()');
 
 		//set_error_handler('plugin_error');
 
@@ -95,9 +95,9 @@ class Plugins {
 		//restore_error_handler();
 	}
 
+	// ? unclean?
 	public function getAvailablePlugins() {
 		$ret = array();
-
 
 		$files = glob(PLUGINS_DIR.'/*');
 		foreach ($files as $path) {

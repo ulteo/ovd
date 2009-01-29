@@ -61,18 +61,23 @@ function in_admin() {
 }
 
 function query_url_no_error($url_) {
+	Logger::debug('main', 'HTTP Query: "'.$url_.'"');
+
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
 	$string = curl_exec($socket);
-// 	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	curl_close($socket);
+
+	Logger::debug('main', 'HTTP returntext: "'.$string.'"');
 
 	return $string;
 }
 
 function query_url($url_) {
+	Logger::debug('main', 'HTTP query: "'.$url_.'"');
+
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
@@ -81,8 +86,12 @@ function query_url($url_) {
 	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	curl_close($socket);
 
-	if ($buf != 200)
+	if ($buf != 200) {
+		Logger::debug('main', 'HTTP returncode: "'.$buf.'"');
 		return false;
+	}
+
+	Logger::debug('main', 'HTTP returntext: "'.$string.'"');
 
 	return $string;
 }

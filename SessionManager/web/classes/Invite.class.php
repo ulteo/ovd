@@ -23,6 +23,10 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Invite {
 	public $id = NULL;
 
+	public $session = NULL;
+	public $email = NULL;
+	public $view_only = NULL;
+
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Invite::__construct for \''.$id_.'\'');
 
@@ -30,7 +34,7 @@ class Invite {
 	}
 
 	public function __toString() {
-		return 'Invite(\''.$this->id.'\')';
+		return 'Invite(\''.$this->id.'\', \''.$this->session.'\', \''.$this->email.'\', \''.$this->view_only.'\')';
 	}
 
 	public function hasAttribute($attrib_) {

@@ -155,7 +155,7 @@ function show_manage($login, $userDB) {
 
   if ($userdb_rw) {
     echo '<div>';
-    echo '<h2>'._('Settings').'</h1>';
+    echo '<h2>'._('Settings').'</h2>';
 
     echo '<div>';
     echo '<form action="" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
@@ -219,7 +219,7 @@ function show_manage($login, $userDB) {
   // User groups part
   if (count($groups_all)>0) {
     echo '<div>';
-    echo '<h2>'._('Users groups with this user').'</h1>';
+    echo '<h2>'._('Users groups with this user').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     foreach ($groups_mine as $group) {
@@ -254,10 +254,18 @@ function show_manage($login, $userDB) {
 
 
   if ($has_sessions) {
+    echo '<div>';
+    echo '<h2>'._('Active sessions').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($sessions as $session) {
       echo '<form action="sessions.php"><tr>';
-      echo '<td>'.$session->getStartTime().'</td>';
+      echo '<td>';
+      $buf = $session->getAttribute('start_time');
+      if (! $buf)
+        echo _('Not started yet');
+      else
+        echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
+      echo '</td>';
       echo '<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
       echo '<td>';
       echo '<input type="hidden" name="info" value="'.$session->id.'" />';
@@ -266,6 +274,7 @@ function show_manage($login, $userDB) {
       echo '</tr></form>';
     }
     echo '</table>';
+    echo '</div>';
   }
 
   include_once('footer.php');
