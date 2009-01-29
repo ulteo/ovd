@@ -58,6 +58,8 @@ web/includes/Makefile
 web/classes/Makefile
 web/classes/abstract/Makefile
 web/classes/abstract/liaison/Makefile
+web/classes/events/Makefile
+web/classes/tasks/Makefile
 web/PEAR/Makefile
 web/PEAR/Auth/Makefile
 web/PEAR/Auth/SASL/Makefile

@@ -16,4 +16,4 @@ EXTRA_DIST = ovd-session-manager.spec.in
 
 # maintainer rules
 update-potfiles-in:
-	find web -name "*.php" | grep -v 'config\.inc\.php' > po/POTFILES.in
+	find web -name "*.php" | grep -v 'defaults\.inc\.php' > po/POTFILES.in
