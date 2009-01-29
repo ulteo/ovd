@@ -111,16 +111,14 @@ class Abstract_Liaison {
 	
 	public static function init($prefs) {
 		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable)) {
-			Logger::error('main', 'Abstract_Liaison::load Module UserGroupDB must be enabled');
-			return NULL;
+		if (in_array('UserGroupDB', $mods_enable)) {
+			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+			$userGroupDB = new $mod_usergroup_name();
+			if ($userGroupDB->liaisonType() == 'ldap') {
+				Abstract_Liaison_ldap::init($prefs);
+			}
 		}
-		$userGroupDB = new $mod_usergroup_name();
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		if ($userGroupDB->liaisonType() == 'ldap') {
-			Abstract_Liaison_ldap::init();
-		}
-		Abstract_Liaison_sql::init();
+		Abstract_Liaison_sql::init($prefs);
 		return true;
 	}
 }
