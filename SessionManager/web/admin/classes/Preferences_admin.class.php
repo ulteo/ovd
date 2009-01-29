@@ -77,7 +77,7 @@ class Preferences_admin extends Preferences {
 	    	}
 		    $user_groups[-1] = 'None';
 			ksort($user_groups);
-		    $c = new config_element('user_default_group', _('user_default_group'), _('user_default_group'), _('user_default_group'), -1, $user_groups , 2);
+		    $c = new config_element('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), -1, $user_groups , 2);
 		    $this->add($c,'general');
         }
 
