@@ -418,6 +418,19 @@ function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 	return $ret;
 }
 
+function popup_error($msg_) {
+	if (! isset($_SESSION['errormsg']))
+		$_SESSION['errormsg'] = array();
+
+	if (is_array($msg_))
+		foreach ($msg_ as $errormsg)
+			$_SESSION['errormsg'][] = $errormsg;
+	else
+		$_SESSION['errormsg'][] = $msg_;
+
+	return true;
+}
+
 function get_all_usergroups(){
 	Logger::debug('main', 'get_all_usergroups');
 
