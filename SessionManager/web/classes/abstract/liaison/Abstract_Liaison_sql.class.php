@@ -177,7 +177,7 @@ class Abstract_Liaison_sql {
 			return NULL;
 	}
 	
-	public static function($prefs_) {
+	public static function init($prefs_) {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
 			Logger::error('admin','Abstract_Liaison::init mysql conf not valid');

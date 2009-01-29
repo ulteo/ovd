@@ -109,18 +109,14 @@ class Abstract_Liaison {
 		}
 	}
 	
-	public static function init() {
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison::save get Preferences failed');
-			return NULL;
-		}
+	public static function init($refs) {
 		$mods_enable = $prefs->get('general','module_enable');
 		if (! in_array('UserGroupDB',$mods_enable)) {
 			Logger::error('main', 'Abstract_Liaison::load Module UserGroupDB must be enabled');
 			return NULL;
 		}
 		$userGroupDB = new $mod_usergroup_name();
+		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 		if ($userGroupDB->liaisonType() == 'ldap') {
 			Abstract_Liaison_ldap::init();
 		}
