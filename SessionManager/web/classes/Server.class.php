@@ -429,6 +429,12 @@ class Server {
 		return round(($used_sessions/$max_sessions)*100);
 	}
 
+	public function orderDeletion() {
+		Logger::debug('main', 'Starting Server::orderDeletion for \''.$this->fqdn.'\'');
+
+		return true;
+	}
+
 	// ? unclean?
 	public function getApplications() {
 		Logger::debug('main', 'Starting SERVER::getApplications for server '.$this->fqdn);

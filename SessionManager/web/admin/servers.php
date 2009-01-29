@@ -37,8 +37,14 @@ if (isset($_REQUEST['mass_register'])) {
 
 if (isset($_REQUEST['mass_delete_unregistered'])) {
 	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
-		foreach ($_REQUEST['checked_servers'] as $server)
-			Abstract_Server::delete($server);
+		foreach ($_REQUEST['checked_servers'] as $server) {
+			$buf = Abstract_Server::load($server);
+			if (! $buf)
+				continue;
+
+			$buf->orderDeletion();
+			Abstract_Server::delete($buf->fqdn);
+		}
 	}
 
 	redirect('servers.php?action=list');
@@ -178,7 +184,11 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQ
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
-	Abstract_Server::delete($_REQUEST['fqdn']);
+	$buf = Abstract_Server::load($_REQUEST['fqdn']);
+	if (is_object($buf)) {
+		$buf->orderDeletion();
+		Abstract_Server::delete($buf->fqdn);
+	}
 
 	redirect('servers.php?action=list');
 }
