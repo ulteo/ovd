@@ -13,3 +13,7 @@ clean-local:
 EXTRA_DIST = ovd-session-manager.spec.in
 
 .PHONY: ovd-session-manager.spec
+
+# maintainer rules
+update-potfiles-in:
+	find web -name "*.php" | grep -v 'config\.inc\.php' > po/POTFILES.in
