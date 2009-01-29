@@ -1,4 +1,6 @@
-SUBDIRS = abstract
+SUBDIRS = abstract \
+          events \
+          tasks
 
 scripts_DATA = Application.class.php \
                Invite.class.php \
