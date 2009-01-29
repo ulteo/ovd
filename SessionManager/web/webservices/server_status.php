@@ -38,10 +38,6 @@ $buf = Abstract_Server::load($_GET['fqdn']);
 
 if (! $buf) {
 	$buf = new Server($_GET['fqdn']);
-	if (! $buf->isAuthorized()) {
-		Logger::error('main', '(webservices/server_status) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
-		die('Server not authorized');
-	}
 
 	$buf->registered = false;
 	$buf->locked = true;
@@ -52,6 +48,11 @@ if (! $buf) {
 		$web_port = 80;
 	$buf->web_port = $web_port;
 	$buf->max_sessions = 20;
+
+	if (! $buf->isAuthorized()) {
+		Logger::error('main', '(webservices/server_status) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
+		die('Server not authorized');
+	}
 
 	$buf->getType();
 	$buf->getVersion();
