@@ -184,13 +184,18 @@ if (isset($shareable) && $shareable != '0')
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 
-// If AD mode, TODO BETTER
-$config_ad = $prefs->get('UserDB','activedirectory');
-$windows_server = $user->getAvailableServer('windows');
-if ( is_object($windows_server))
-	$optional_args['windows_server'] = $windows_server->fqdn;
-$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$config_ad['domain'];
-$optional_args['windows_password'] = $_SESSION['password'];
+if ($prefs->get('UserDB','enable') == 'activedirectory') {
+	$config_ad = $prefs->get('UserDB','activedirectory');
+	$windows_server = $user->getAvailableServer('windows');
+	if ( is_object($windows_server)) {
+		$optional_args['windows_server'] = $windows_server->fqdn;
+		$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$config_ad['domain'];
+		$optional_args['windows_password'] = $_SESSION['password'];
+	}
+	else {
+		Logger::error('main', 'startsession not windows server available');
+	}
+}
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
