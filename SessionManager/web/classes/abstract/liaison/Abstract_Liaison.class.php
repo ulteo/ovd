@@ -46,6 +46,9 @@ class Abstract_Liaison {
 				case 'ldap':
 					return Abstract_Liaison_ldap::load($type_,  $element_, $group_);
 				break;
+				case 'activedirectory':
+					return Abstract_Liaison_activedirectory::load($type_,  $element_, $group_);
+				break;
 			}
 			return NULL;
 		}
@@ -75,6 +78,9 @@ class Abstract_Liaison {
 				case 'ldap':
 					return Abstract_Liaison_ldap::delete($type_,  $element_, $group_);
 				break;
+				case 'activedirectory':
+					return Abstract_Liaison_activedirectory::delete($type_,  $element_, $group_);
+				break;
 			}
 			return NULL;
 		}
@@ -103,6 +109,9 @@ class Abstract_Liaison {
 				break;
 				case 'ldap':
 					return Abstract_Liaison_ldap::save($type_,  $element_, $group_);
+				break;
+				case 'activedirectory':
+					return Abstract_Liaison_activedirectory::save($type_,  $element_, $group_);
 				break;
 			}
 			return NULL;

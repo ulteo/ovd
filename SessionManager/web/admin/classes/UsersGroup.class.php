@@ -67,8 +67,10 @@ class UsersGroup {
 		Logger::debug('admin','USERSGROUP::usersLogin');
 		$ls = Abstract_Liaison::load('UsersGroup',NULL, $this->id);
 		$logins = array();
-		foreach ($ls as $l) {
-			$logins []= $l->element;
+		if (is_array($ls)) {
+			foreach ($ls as $l) {
+				$logins []= $l->element;
+			}
 		}
 		return $logins;
 	}

@@ -53,8 +53,15 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		foreach ($infos as $info){
 			$u = new User();
 			foreach ($this->config['match'] as $attribut => $match_ldap){
-				if (isset($info[$match_ldap][0]))
-					$u->setAttribute($attribut,$info[$match_ldap][0]);
+				if (isset($info[$match_ldap])) {
+					unset($info[$match_ldap]['count']);
+					if (count($info[$match_ldap]) == 1) {
+						$u->setAttribute($attribut,$info[$match_ldap][0]);
+					}
+					else {
+						$u->setAttribute($attribut,$info[$match_ldap]);
+					}
+				}
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
@@ -82,7 +89,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $u;
 	}
 
-	protected function makeLDAPconfig($config_=NULL) {
+	public function makeLDAPconfig($config_=NULL) {
 		if ($config_ != NULL)
 			$config = $config_;
 		else
@@ -110,7 +117,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 					'login'	=> 'cn',
 					'displayname'	=> 'displayname',
 					'homedir'	=> 'homedirectory',
- 					'real_login'    => 'samaccountname'
+					'real_login'    => 'samaccountname',
+					 'memberof' => 'memberof'
 				)
 			);
 		return $config_ldap;

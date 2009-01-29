@@ -197,7 +197,7 @@ function show_manage($id) {
   $groups_apps = array();
   foreach ( Abstract_Liaison::load('UsersGroupApplicationsGroup',  $id, NULL) as $group_a) {
     $obj = new AppsGroup();
-    $obj->fromDB($group_a);
+    $obj->fromDB($group_a->group);
 
     if (is_object($obj))
 	$groups_apps[]= $obj;
@@ -422,22 +422,21 @@ function show_default() {
     echo '<th>'._('Description').'</th>';
     echo '<td><input type="text" name="description" value="" /></td>';
     echo '</tr>';
+    /*
+    echo '<tr class="content2">';
+    echo '<th>'._('Status').'</th>';
+    echo '<td>';
+    echo '<input type="radio" name="published" value="1" checked />'._('Enable');
+    echo '<input type="radio" name="published" value="0"  />'._('Block');
+    echo '</td>';
+    echo '</tr>';
+    */
+    echo '<tr class="content1">';
+    echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '</form>';
+    echo '</div>';
   }
-  /*
-  echo '<tr class="content2">';
-  echo '<th>'._('Status').'</th>';
-  echo '<td>';
-  echo '<input type="radio" name="published" value="1" checked />'._('Enable');
-  echo '<input type="radio" name="published" value="0"  />'._('Block');
-  echo '</td>';
-  echo '</tr>';
-  */
-  echo '<tr class="content1">';
-  echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
-  echo '</tr>';
-  echo '</table>';
-  echo '</form>';
-  echo '</div>';
-
   include_once('footer.php');
 }

@@ -168,7 +168,11 @@ class LDAP {
 
 	public function searchDN($filter_, $attribs_=NULL) {
 		$this->check_link();
-		$searchbase =$this->userbranch.','.$this->suffix;
+		if ($this->suffix != '')
+			$searchbase =$this->userbranch.','.$this->suffix;
+		else
+			$searchbase =$this->userbranch;
+		
 		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
 
 		if (is_null($attribs_))

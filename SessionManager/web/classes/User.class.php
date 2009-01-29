@@ -68,19 +68,18 @@ class User {
 		}
 		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
 		
-		$g =$userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
+		$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
 		if (is_object($g))
 			$result[$user_default_group]= $g;
 		
 		foreach ($rows as $lug){
-			$g =$userGroupDB->import($lug->group);
+			$g = $userGroupDB->import($lug->group);
 			if (is_object($g))
 				$result[$lug->group]= $g;
 			else {
-				Logger::error('main', 'USER::usersGroups user group (\''.$user_default_group.'\') not ok');
+				Logger::error('main', 'USER::usersGroups user group (\''.$lug->group.'\') not ok');
 			}
 		}
-		
 		return $result;
 	}
 
@@ -213,7 +212,7 @@ class User {
 			$els = Abstract_Liaison::load('AppsGroup', NULL,$agrp_id);
 			if (is_array($els))
 				foreach ($els as $e)
-					array_push($my_applications_id,$e);
+					array_push($my_applications_id,$e->element);
 		}
 
 		$my_applications_id =  array_unique($my_applications_id);

@@ -194,11 +194,11 @@ class Abstract_Liaison_sql {
 			@4 varchar(200) NOT NULL
 			)', $LIAISON_TABLE, 'type', 'element', 'group');
 		if ( $ret === false) {
-			Logger::error('admin','init_db table '.$LIAISON_TABLE.' fail to created');
+			Logger::error('admin','Abstract_Liaison::init table '.$LIAISON_TABLE.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('admin','init_db table '.$LIAISON_TABLE.' created');
+			Logger::debug('admin','Abstract_Liaison::init table '.$LIAISON_TABLE.' created');
 			return true;
 		}
 	}

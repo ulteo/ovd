@@ -43,8 +43,15 @@ class UserDB_ldap {
 			$info = $infos[0];
 			$u = new User();
 			foreach ($this->config['match'] as $attribut => $match_ldap){
-				if (isset($info[$match_ldap][0]))
-					$u->setAttribute($attribut,$info[$match_ldap][0]);
+				if (isset($info[$match_ldap])) {
+					unset($info[$match_ldap]['count']);
+					if (count($info[$match_ldap]) == 1) {
+						$u->setAttribute($attribut,$info[$match_ldap][0]);
+					}
+					else {
+						$u->setAttribute($attribut,$info[$match_ldap]);
+					}
+				}
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
