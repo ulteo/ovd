@@ -72,7 +72,7 @@ function daemon_loop() {
 		);
 	} if (session_state == 2 && $('splashContainer').visible()) {
 		switch_splash_to_applet();
-	} else if ((old_session_state == 2 && session_state != 2) || session_state == 4) {
+	} else if ((old_session_state == 2 && session_state != 2) || session_state >= 3) {
 		window_alive = false;
 		switch_applet_to_end();
 		return;
