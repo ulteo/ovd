@@ -559,37 +559,26 @@ class Server {
 			}
 			if ($exe_node->hasAttribute("icon"))
 				$app_path_icon =  ($exe_node->getAttribute("icon"));
-			
-			Logger::debug('admin','0001');
+
 			$a = new Application(NULL,$app_name,$app_description,$this->getAttribute('type'),$app_path_exe,$app_package,$app_path_icon,true,$app_desktopfile);
-			Logger::debug('admin','0002');
 			$a_search = $applicationDB->search($app_name,$app_description,$this->getAttribute('type'),$app_path_exe);
-			Logger::debug('admin','0003');
 			if (is_object($a_search)){
-				Logger::debug('admin','0003-IF');
 				//already in DB
 				// echo $app_name." already in DB\n";
 				$a = $a_search;
 			}
 			else {
-				Logger::debug('admin','0003-ELSE');
 				// echo $app_name." NOT in DB\n";
 				if ($applicationDB->isWriteable() == false){
-					Logger::debug('admin','0003-ELSE-A');
 					Logger::debug('admin','applicationDB is not writeable');
 				}
 				else{
-					Logger::debug('admin','0003-ELSE-B');
 					if ($applicationDB->add($a) == false){
-						Logger::debug('admin','0003-ELSE-C');
 						//echo 'app '.$app_name." not insert<br>\n";
 						return false;
 					}
-					Logger::debug('admin','0003-ELSE-D');
 				}
-				Logger::debug('admin','0003-ELSE-end');
 			}
-			Logger::debug('admin','00020');
 			if ($applicationDB->isWriteable() == true){
 				if ($applicationDB->isOK($a) == true){
 					// we add the app to the server
@@ -603,11 +592,10 @@ class Server {
 					//echo "Application not ok<br>\n";
 				}
 			}
-			Logger::debug('admin','0020');
 		}
 
 // 		Abstract_Server::save($this);
-		
+
 		$current_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
 		$current_liaison_key = array_keys($current_liaison);
 		$previous_liaison_key = array_keys($previous_liaison);
