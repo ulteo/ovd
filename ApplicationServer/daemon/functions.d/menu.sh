@@ -97,6 +97,5 @@ menu_windows_put() {
 	windows_catch_application "$desktop" || return 1
     fi
 
-    [ -f $buffer ] && rm $buffer
     menu_put "$uri" $menu_dir
 }

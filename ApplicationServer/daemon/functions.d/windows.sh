@@ -40,9 +40,9 @@ windows_init_connection() {
 	return 0
     fi
     # log_INFO "menu_windows_init_connection 0"
-    local server=`cat ${SESSID_DIR}/parameters/windows_server`
-    local login=`cat ${SESSID_DIR}/parameters/windows_login`
-    local password=`cat ${SESSID_DIR}/parameters/windows_password`
+    local server=`cat ${sessid_dir}/parameters/windows_server`
+    local login=`cat ${sessid_dir}/parameters/windows_login`
+    local password=`cat ${sessid_dir}/parameters/windows_password`
     # log_INFO "menu_windows_init_connection 1"
     local cmd='rdesktop -u "'$login'" -p "'$password'" -A -s "c:\seamlessrdp\seamlessrdpshell.exe c:\seamlessrdp\donothing.exe" '$server
     # log_INFO "menu_windows_init_connection 2 launch cmd '$cmd'"

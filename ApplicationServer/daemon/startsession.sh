@@ -65,7 +65,7 @@ export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
 [ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
 
 menu_spool ${USER_ID} ${SESSID_DIR}
-windows_init_connection $sessid_dir
+windows_init_connection ${SESSID_DIR}
 
 
 # Start autocutsel
