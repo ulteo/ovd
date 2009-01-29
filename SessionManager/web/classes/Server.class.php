@@ -276,6 +276,9 @@ class Server {
 			return false;
 		}
 
+		if (! is_string($buf))
+			return false;
+
 		$this->setAttribute('type', $buf);
 
 // 		Abstract_Server::save($this);
@@ -304,6 +307,9 @@ class Server {
 			$this->isUnreachable();
 			return false;
 		}
+
+		if (! is_string($buf))
+			return false;
 
 		$this->setAttribute('version', $buf);
 
@@ -356,6 +362,9 @@ class Server {
 			$this->isUnreachable();
 			return false;
 		}
+
+		if (! is_string($xml))
+			return false;
 
 		if (substr($xml, 0, 5) == 'ERROR') {
 			$this->returnedError();

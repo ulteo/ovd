@@ -55,17 +55,17 @@ if (! $buf) {
 	}
 
 	$buf_type = $buf->getType();
-	if (! $buf_type || ! is_string($buf_type)) {
+	if (! $buf_type) {
 		Logger::error('main', '(webservices/server_status) Server does not send a valid type');
 		die('Server does not send a valid type');
 	}
 	$buf_version = $buf->getVersion();
-	if (! $buf_type || ! is_string($buf_type)) {
+	if (! $buf_version) {
 		Logger::error('main', '(webservices/server_status) Server does not send a valid version');
 		die('Server does not send a valid version');
 	}
 	$buf_monitoring = $buf->getMonitoring();
-	if (! $buf_type || ! is_string($buf_type)) {
+	if (! $buf_monitoring) {
 		Logger::error('main', '(webservices/server_status) Server does not send a valid monitoring');
 		die('Server does not send a valid monitoring');
 	}
