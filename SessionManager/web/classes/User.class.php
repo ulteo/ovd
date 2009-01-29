@@ -125,7 +125,13 @@ class User {
 		if (count($apps_id)>0 || $launch_without_apps == 1){
 			$available_servers = Servers::getAvailableType($type);
 			foreach($available_servers as $server){
-				if ( count(array_diff($apps_id, Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn))) == 0 ){
+				$elements2 = array();
+				$buf2 = Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn);
+				foreach($buf2 as $buf_liaison) {
+					$elements2 []= $buf_liaison->element;
+				}
+				
+				if ( count(array_diff($apps_id, $elements2)) == 0 ){
 					$servers[$server->fqdn]= $server;
 				}
 			}
