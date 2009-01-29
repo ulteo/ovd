@@ -237,8 +237,6 @@ class Server {
 				break;
 		}
 
-		Abstract_Server::save($this);
-
 		return true;
 	}
 
