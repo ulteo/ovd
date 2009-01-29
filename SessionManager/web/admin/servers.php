@@ -401,7 +401,7 @@ function show_default() {
       echo '<tr class="'.$content.'">';
       echo '<td colspan="7">';
       echo '<a href="javascript:;" onclick="markAllRows(\'available_servers_table\'); return false">'._('Mark all').'</a>';
-      echo '/ <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
+      echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
       echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
