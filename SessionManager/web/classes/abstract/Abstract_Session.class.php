@@ -21,10 +21,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Session {
-	public function init($prefs) {
-// 		Logger::debug('main', 'Starting Abstract_Session::init');
+	public function init($prefs_) {
+		Logger::debug('main', 'Starting Abstract_Session::init');
 
-		$mysql_conf = $prefs->get('general', 'mysql');
+		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
 		$ret = $SQL->DoQuery(
@@ -48,7 +48,7 @@ class Abstract_Session {
 	}
 
 	public function load($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
+		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -71,9 +71,6 @@ class Abstract_Session {
 
 		foreach ($row as $k => $v)
 			$$k = $v;
-		unset($v);
-		unset($k);
-		unset($row);
 
 		$buf = new Session($id);
 		$buf->server = (string)$server;
@@ -86,7 +83,7 @@ class Abstract_Session {
 	}
 
 	public function save($session_) {
-// 		Logger::debug('main', 'Starting Abstract_Session::save for \''.$session_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Session::save for \''.$session_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -109,7 +106,7 @@ class Abstract_Session {
 	}
 
 	private function create($session_) {
-// 		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -134,7 +131,7 @@ class Abstract_Session {
 	}
 
 	public function delete($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Session::delete for \''.$id_.'\'');
+		Logger::debug('main', 'Starting Abstract_Session::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -159,7 +156,7 @@ class Abstract_Session {
 	}
 
 	public function load_all() {
-// 		Logger::debug('main', 'Starting Abstract_Session::load_all');
+		Logger::debug('main', 'Starting Abstract_Session::load_all');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -183,14 +180,12 @@ class Abstract_Session {
 
 			$sessions[] = $session;
 		}
-		unset($row);
-		unset($rows);
 
 		return $sessions;
 	}
 
 	public function uptodate($session_) {
-// 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 
 		return true;
 	}

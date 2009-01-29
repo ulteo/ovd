@@ -45,7 +45,6 @@ class Servers {
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
-		unset($server);
 
 		return $servers;
 	}
@@ -60,7 +59,6 @@ class Servers {
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
-		unset($server);
 
 		return $servers;
 	}
@@ -74,7 +72,6 @@ class Servers {
 			if (! $server->getAttribute('registered'))
 				unset($servers[$k]);
 		}
-		unset($server);
 
 		return $servers;
 	}
@@ -88,7 +85,6 @@ class Servers {
 			if ($server->getAttribute('registered'))
 				unset($servers[$k]);
 		}
-		unset($server);
 
 		return $servers;
 	}
@@ -102,7 +98,6 @@ class Servers {
 			if ($server->getAttribute('type') != $type_)
 				unset($servers[$k]);
 		}
-		unset($server);
 
 		return $servers;
 	}

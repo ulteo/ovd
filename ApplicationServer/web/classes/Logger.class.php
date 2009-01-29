@@ -28,7 +28,7 @@ class Logger {
 		$level_flags = array($level_);
 
 		if (in_array($level_, $level_flags))
-			@file_put_contents(CONNECTME_LOGS.'/'.strtolower($module_).'.log',@date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
+			@file_put_contents(CONNECTME_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
 	}
 
 	public static function debug($module_='main', $data_='') {

@@ -66,13 +66,15 @@ if ($buf !== true) {
 	die_error(_('Configuration not valid').' : '.$buf,__FILE__,__LINE__);
 }
 
-function __autoload($class_name) {
+function __autoload($class_name) { //what about NameSpaces ?
 	$class_files = array();
 
 	if (!class_exists($class_name)) {
 		$class_files []= CLASSES_DIR.'/'.$class_name.'.class.php';
+		$class_files []= CLASSES_DIR.'/events/'.$class_name.'.class.php';
+		$class_files []= CLASSES_DIR.'/tasks/'.$class_name.'.class.php';
 		$class_files []= ABSTRACT_CLASSES_DIR.'/'.$class_name.'.class.php';
-		$class_files []= ABSTRACT_CLASSES_DIR.'/'.'liaison'.'/'.$class_name.'.class.php';
+		$class_files []= ABSTRACT_CLASSES_DIR.'/liaison/'.$class_name.'.class.php';
 		$class_files []= ADMIN_CLASSES_DIR.'/'.$class_name.'.class.php';
 
 		$class_files []= MODULES_DIR.'/'.preg_replace('/_/', '/', $class_name, 1).'.php';

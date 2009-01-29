@@ -21,10 +21,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Token {
-	public function init($prefs) {
-// 		Logger::debug('main', 'Starting Abstract_Token::init');
+	public function init($prefs_) {
+		Logger::debug('main', 'Starting Abstract_Token::init');
 
-		$mysql_conf = $prefs->get('general', 'mysql');
+		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
 		$ret = $SQL->DoQuery(
@@ -45,7 +45,7 @@ class Abstract_Token {
 	}
 
 	public function load($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
+		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -68,9 +68,6 @@ class Abstract_Token {
 
 		foreach ($row as $k => $v)
 			$$k = $v;
-		unset($v);
-		unset($k);
-		unset($row);
 
 		$buf = new Token($id);
 		$buf->type = (string)$type;
@@ -80,7 +77,7 @@ class Abstract_Token {
 	}
 
 	public function save($token_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::save for \''.$token_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Token::save for \''.$token_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -103,7 +100,7 @@ class Abstract_Token {
 	}
 
 	private function create($token_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -128,7 +125,7 @@ class Abstract_Token {
 	}
 
 	public function delete($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Token::delete for \''.$id_.'\'');
+		Logger::debug('main', 'Starting Abstract_Token::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {

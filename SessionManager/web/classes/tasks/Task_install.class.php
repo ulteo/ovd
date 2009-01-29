@@ -18,18 +18,28 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Task_remove extends Task_install {
-	public $request = NULL;
+class Task_install extends Task_install_from_line {
+	public $applications = NULL;
+	public $packages = NULL;
 
 	public function __construct($task_id_, $server_, $applications_) {
 		Logger::debug('main', 'Starting TASK_remove::__construct for task '.$task_id_);
 
-		parent::__construct($task_id_, $server_, $applications_);
+		$this->applications = $applications_;
+		$packages = array();
+		foreach($applications_ as $app) {
+			if (! in_array($app->getAttribute('package'), $packages))
+				$packages[]= $app->getAttribute('package');
+		}
+		$apps_line = implode(' ', $packages);
+		
+		parent::__construct($task_id_, $server_, $apps_line);
+		$this->applications = $applications_;
+		$this->packages = $packages;
+		
 	}
+	
 
-	public function getRequest() {
-		return 'remove --purge '.$this->applications_line;
-	}
 }

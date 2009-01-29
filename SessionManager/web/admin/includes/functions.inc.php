@@ -230,7 +230,7 @@ function init_db($prefs_) {
 
 	// we create the sql table
 	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-	
+
 	$ret = $sql2->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 int(8) NOT NULL auto_increment,
@@ -259,9 +259,9 @@ function init_db($prefs_) {
 	}
 	else
 		Logger::debug('admin','init_db table '.$SOURCES_LIST_TABLE.' created');
-	
+
 	Logger::debug('admin','init_db all tables created');
-	
+
 	$modules_enable = $prefs_->get('general', 'module_enable');
 	foreach ($modules_enable as $module_name) {
 		$mod_name = 'admin_'.$module_name.'_'.$prefs_->get($module_name,'enable');
@@ -278,6 +278,7 @@ function init_db($prefs_) {
 	// Init of Abstract
 	Abstract_Server::init($prefs_);
 	Abstract_Session::init($prefs_);
+	Abstract_Invite::init($prefs_);
 	Abstract_Token::init($prefs_);
 	Abstract_Liaison::init($prefs_);
 

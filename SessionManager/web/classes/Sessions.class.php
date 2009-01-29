@@ -55,7 +55,6 @@ class Sessions {
 			if ($session->getAttribute('user_login') != $user_login_)
 				unset($sessions[$k]);
 		}
-		unset($session);
 
 		return $sessions;
 	}

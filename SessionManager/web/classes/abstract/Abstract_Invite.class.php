@@ -21,16 +21,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Invite {
-	public function init() {
-// 		Logger::debug('main', 'Starting Abstract_Invite::init');
+	public function init($prefs_) {
+		Logger::debug('main', 'Starting Abstract_Invite::init');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
+		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
 		$ret = $SQL->DoQuery(
@@ -49,7 +43,7 @@ class Abstract_Invite {
 	}
 
 	public function load($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Invite::load for \''.$id_.'\'');
+		Logger::debug('main', 'Starting Abstract_Invite::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -72,9 +66,6 @@ class Abstract_Invite {
 
 		foreach ($row as $k => $v)
 			$$k = $v;
-		unset($v);
-		unset($k);
-		unset($row);
 
 		$buf = new Token($id);
 
@@ -82,7 +73,7 @@ class Abstract_Invite {
 	}
 
 	public function save($invite_) {
-// 		Logger::debug('main', 'Starting Abstract_Invite::save for \''.$invite_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Invite::save for \''.$invite_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -105,7 +96,7 @@ class Abstract_Invite {
 	}
 
 	private function create($invite_) {
-// 		Logger::debug('main', 'Starting Abstract_Invite::create for \''.$invite_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_Invite::create for \''.$invite_->id.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -130,7 +121,7 @@ class Abstract_Invite {
 	}
 
 	public function delete($id_) {
-// 		Logger::debug('main', 'Starting Abstract_Invite::delete for \''.$id_.'\'');
+		Logger::debug('main', 'Starting Abstract_Invite::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {

@@ -21,10 +21,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Server {
-	public function init($prefs) {
-// 		Logger::debug('main', 'Starting Abstract_Server::init');
+	public function init($prefs_) {
+		Logger::debug('main', 'Starting Abstract_Server::init');
 
-		$mysql_conf = $prefs->get('general', 'mysql');
+		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
 		$ret = $SQL->DoQuery(
@@ -56,7 +56,7 @@ class Abstract_Server {
 	}
 
 	public function load($fqdn_) {
-// 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
+		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -79,9 +79,6 @@ class Abstract_Server {
 
 		foreach ($row as $k => $v)
 			$$k = $v;
-		unset($v);
-		unset($k);
-		unset($row);
 
 		$buf = new Server($fqdn);
 		$buf->status = (string)$status;
@@ -102,7 +99,7 @@ class Abstract_Server {
 	}
 
 	public function save($server_) {
-// 		Logger::debug('main', 'Starting Abstract_Server::save for \''.$server_->fqdn.'\'');
+		Logger::debug('main', 'Starting Abstract_Server::save for \''.$server_->fqdn.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -126,7 +123,7 @@ class Abstract_Server {
 	}
 
 	private function create($server_) {
-// 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
+		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -151,7 +148,7 @@ class Abstract_Server {
 	}
 
 	public function delete($fqdn_) {
-// 		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
+		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -176,7 +173,7 @@ class Abstract_Server {
 	}
 
 	public function load_all() {
-// 		Logger::debug('main', 'Starting Abstract_Server::load_all');
+		Logger::debug('main', 'Starting Abstract_Server::load_all');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -200,14 +197,12 @@ class Abstract_Server {
 
 			$servers[] = $server;
 		}
-		unset($row);
-		unset($rows);
 
 		return $servers;
 	}
 
 	public function uptodate($server_) {
-// 		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
+		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
 
 		return true;
 	}
