@@ -158,13 +158,21 @@ class Server {
 	public function isOnline() {
 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
 
+		$ret = false;
+		$ev = Events::getEvent('ServerStatusChanged',
+		                         array('server' => $server));
+
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
 			$this->getStatus();
 
-		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
-			return true;
+		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready') {
+			$ret = true;
+		}
 
-		return false;
+		$ev->setAttribute('status', $ret ? StatusServerChanged::ONLINE
+		                                 : StatusServerChanged::OFFLINE);
+		$ev->emit();
+		return $ret;
 	}
 
 	public function isUnreachable() {
@@ -172,6 +180,10 @@ class Server {
 
 		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
 		$this->setStatus('broken');
+		$ev = Events::getEvent('ServerStatusChanged',
+		                         array('server' => $server,
+		                               'status' => StatusServerChanged::UNREACHABLE));
+		$ev->emit();
 
 		return true;
 	}

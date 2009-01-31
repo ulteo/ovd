@@ -26,20 +26,20 @@ require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
   * Events shouldn't be created directly but use the getEvent method
   */
 class Events {
-	private static $list = array ();
+	private static $list = array();
 
-	public static function getEvent ($type_, $array_ = NULL) {
-		if (isset (self::$list[$type_]))
+	public static function getEvent($type_, $array_ = NULL) {
+		if (isset(self::$list[$type_]))
 			return self::$list[$type_];
 		else {
-			require_once (EVENTS_DIR.'/'.$type_.'.class.php');
-			$ev = new $type_ ($array_);
+			require_once(EVENTS_DIR.'/'.$type_.'.class.php');
+			$ev = new $type_($array_);
 			self::$list[$type_] = $ev;
 			return $ev;
 		}
 	}
 
-	public static function getEvents () {
+	public static function getEvents() {
 		return self::$list;
 	}
 }

@@ -1,6 +1,9 @@
 SUBDIRS = callbacks
 
-scripts_DATA = SessionStartEvent.class.php
+scripts_DATA = ServerStatusChanged.class.php \
+               SessionAddInvite.class.php \
+			   SessionStartEvent.class.php \
+			   SessionStatusChanged.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/events
 

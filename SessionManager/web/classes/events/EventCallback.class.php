@@ -22,9 +22,9 @@
 require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
 
 abstract class EventCallback {
-	abstract function run ();
+	abstract function run();
 
-	public final function __construct ($ev_) {
+	public final function __construct($ev_) {
 		$this->ev = $ev_;
     }
 }

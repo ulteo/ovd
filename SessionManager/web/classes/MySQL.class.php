@@ -62,6 +62,7 @@ class MySQL {
 		if ($this->link)
 			return;
 
+		$ev = Events::getEvent ('SqlFailure');
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
 		if (! $this->link) {
@@ -71,6 +72,7 @@ class MySQL {
 			if ($die_)
 				die_error('Link to SQL server failed.');
 
+			$ev->emit();
 			return false;
 		}
 
@@ -78,6 +80,7 @@ class MySQL {
 			if ($die_)
 				die_error('Could not select database.');
 
+			$ev->emit();
 			return false;
 		}
 
