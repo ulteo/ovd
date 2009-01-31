@@ -9,9 +9,6 @@ If you install from svn you'll need to have these packages installed:
  - autconf
  - intltool
  - make
- - gcc
- - libc6-dev (or glibc-devel)
- - libglib2.0-dev (or glib2-devel)
 
 To prepare the sources run:
 $ ./autogen.sh
@@ -22,20 +19,11 @@ $ ./configure
 $ make
 $ make install # you might need to be root
 
-Apache configuration
---------------------
+Configuration
+-------------
 
-A default configuration file for apache2 is installed in
-$(sysconfdir)/ulteo/sessionmanager/apache2.conf.
-This file needs to be linked in the apache2 conf.d/ directory to enable an
-alias pointing to /sessionmanager.
+To configure the session manager, run as root:
+$  sm-config
 
-The apache group needs to access the log and spool directories. If these
-directories are are installed in /var and the apache group is apache (this is
-the default redhat group), you'll need to run these commands:
-
-$ chown root:apache /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-$ chmod 755 /var/spool/ulteo /var/log/ulteo
-$ chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-
+See sm-config(1) or `sm-config --help for options.
 
