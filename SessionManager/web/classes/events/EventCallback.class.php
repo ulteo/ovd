@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 abstract class EventCallback {
 	abstract function run ();

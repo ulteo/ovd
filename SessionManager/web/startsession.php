@@ -230,19 +230,12 @@ $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$toke
 
 /*
  * This is a snippet to demonstrate events handling, it does nothing
- * interesting. Note that manual call to register () should not happen, and
- * should be automated (TODO!)
+ * interesting.
  */
-Logger::debug('main', '(startsession) pre-signal creation');
-$ev = Events::getEvent('SessionStartEvent');
-$ev->register('Report');
-$ev->setAttributes(array(
-	'token'	=>	$token->id,
-	'user'	=>	$user,
-	'sessid'	=>	$session->id
-));
-$ev->emit();
-Logger::debug('main', '(startsession) post-signal creation');
+$ev = Events::getEvent ('SessionStartEvent', array ('token' => $token->id,
+                                                    'user' => $user,
+                                                    'sessid' => $session->id));
+$ev->emit ();
 /* end of snippet */
 
 //Broken for now...

@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 /**
   * Static class holding references to existing events
@@ -28,17 +28,19 @@ require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
 class Events {
 	private static $list = array ();
 
-	public static function getEvent ($type_) {
+	public static function getEvent ($type_, $array_ = NULL) {
 		if (isset (self::$list[$type_]))
-		{
-			print "Event exists<br />";
 			return self::$list[$type_];
-		} else {
+		else {
 			require_once (EVENTS_DIR.'/'.$type_.'.class.php');
-			$ev = new $type_ ();
+			$ev = new $type_ ($array_);
 			self::$list[$type_] = $ev;
 			return $ev;
 		}
+	}
+
+	public static function getEvents () {
+		return self::$list;
 	}
 }
 

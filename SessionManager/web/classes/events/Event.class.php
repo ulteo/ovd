@@ -19,51 +19,62 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Event {
 	private $callbacks_dir;
-	protected $known_callbacks = array(); /* list of usable callbacks */
-	protected $callbacks = array();       /* callbacks actually used */
+	private $known_callbacks;     /* list of usable callbacks */
+	private $callbacks = array(); /* callbacks actually used */
 
 	/* common attributes */
 	public $time; /* when is the signal emitted */
 
-	public final function __construct () {
+	public final function __construct ($array_ = NULL) {
 		$this->callbacks_dir = CALLBACKS_DIR.'/'.get_class($this);
 
 		/* do not fail here, the event can exist but do nothing */
 		if (! is_dir ($this->callbacks_dir))
-			return
+			return;
 
-		Logger::debug('main', 'Event::__construct callbacks_dir = '.
-		              $this->callbacks_dir);
-		$list = glob($this->callbacks_dir . "/*.class.php");
-		Logger::debug('main', 'Event::__construct creating event '.get_class($this));
+		$this->known_callbacks = $this->getAvailableCallbacks ();
 
-		foreach ($list as $file) {
-			$this->known_callbacks[] = preg_replace (
-				'/\.class\.php$/', '', basename($file));
-			Logger::debug('main',
-			              'Event::__construct adding callback from file '.$file);
+		/* get the list of callbacks we'll handle */
+		$prefs = Preferences::getInstance();
+		$cb_list = $prefs->get ('events', get_class($this));
+		if (($cb_list != NULL) && is_array ($cb_list)) {
+			foreach ($cb_list as $cb) {
+				Logger::info('main', 'CALLBACK: '.$cb);
+				if (in_array ($cb, $this->known_callbacks))
+					$this->register ($cb);
+			}
 		}
+
+		/* set attributes if any */
+		if ($array != NULL && is_array ($array_))
+			$this->setAttributes ($array_);
 	}
 
-	/*
-	 * TODO: we should not register callbacks manually but define what is used
-	 * in a config item, and load them automatically
-	 */
-	public final function register ($callback_) {
-		if (! in_array ($callback_, $this->callbacks)
-			&& in_array ($callback_, $this->known_callbacks))
+	public final function getAvailableCallbacks () {
+		$ret = array ();
+		$fileslist = glob ($this->callbacks_dir . "/*.class.php");
+
+		foreach ($fileslist as $file)
+			$ret[] = preg_replace (
+				'/\.class\.php$/', '', basename($file));
+
+		return $ret;
+	}
+
+	private final function register ($callback_) {
+		if (! in_array ($callback_, $this->callbacks))
 		{
 			Logger::debug('main', 'Event::register registering callback '.$callback_);
 			$this->callbacks[] = $callback_;
 		}
 	}
 
-	public final function unregister ($callback_) {
-		/* is there a better way to do this in php ? */
+	protected final function unregister ($callback_) {
+		/* FIXME: is there a better way to do this in php ? */
 		foreach ($this->callbacks as $key => $value) {
 			if ($callback_ == $value)
 				array_slice ($this->callbacks, $key);
