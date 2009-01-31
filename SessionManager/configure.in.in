@@ -6,7 +6,7 @@ m4_define([uovdsm_version], [uovdsm_version_major().uovdsm_version_minor()uovdsm
 AC_INIT([ovd-session-manager], [uovdsm_version], [http://bugs.ulteo.com])
 
 # Init automake
-AM_INIT_AUTOMAKE([AC_PACKAGE_TARNAME()], [AC_PACKAGE_VERSION()])
+AM_INIT_AUTOMAKE([tar-pax])
 
 # Checks for programs.
 AC_PROG_INSTALL
