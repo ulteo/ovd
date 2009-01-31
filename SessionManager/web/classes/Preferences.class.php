@@ -45,11 +45,11 @@ class Preferences {
 		}
 		return self::$instance;
 	}
-	
+
 	public function getKeys(){
 		return array_keys($this->elements);
 	}
-	
+
 	public function get($container_,$container_sub_,$sub_sub_=NULL){
 		if (isset($this->prefs[$container_])) {
 			if (isset($this->prefs[$container_][$container_sub_])) {
@@ -62,7 +62,7 @@ class Preferences {
 						}
 						else
 							return $buf;
-						
+
 					}
 					else
 						return $buf;
@@ -105,7 +105,7 @@ class Preferences {
 
 }
 
-class config_element{
+class ConfigElement{
 	public $id;
 	public $label;
 	public $description;
@@ -113,12 +113,17 @@ class config_element{
 	public $content;
 	public $content_available;
 	public $type;
-	// type:
-	//	0 : text (readonly)
-	//	1 : input text (rw)
-	//	2 : list of text (r) (fixed length) (only one can be selected)
-	//  3 : list of text (r) (fixed length) (more than one can be selected)
-	//	4 : list of input text (w) (not fixed length)
+
+	static $TEXT = 0;
+	static $INPUT = 1;
+	static $SELECT = 2;
+	static $MULTISELECT = 3;
+	static $TEXTMAXLENGTH = 4;
+	static $HIDDEN = 5;
+	static $TEXTAREA = 6;
+	static $PASSWORD = 7;
+	static $INPUT_LIST = 8;
+	static $SLIDERS = 9;
 
 	public function __construct($id_, $label_, $description_, $description_detailed_, $content_, $content_available_, $type_){
 		$this->id = $id_;

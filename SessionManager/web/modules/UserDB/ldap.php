@@ -161,21 +161,21 @@ class UserDB_ldap {
 
 	public function configuration(){
 		$ret = array();
-		$c = new config_element('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com', NULL, 1);
+		$c = new ConfigElement('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('port', _('Server port'), _('The port used by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,1);
+		$c = new ConfigElement('port', _('Server port'), _('The port used by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,1);
+		$c = new ConfigElement('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,1);
+		$c = new ConfigElement('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com',NULL,1);
+		$c = new ConfigElement('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('userbranch_label','userbranch','userbranch','userbranch','ou=People',NULL,1);
+		$c = new ConfigElement('userbranch_label','userbranch','userbranch','userbranch','ou=People',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('uidprefix_label','uidprefix','uidprefix','uidprefix','uid',NULL,1);
+		$c = new ConfigElement('uidprefix_label','uidprefix','uidprefix','uidprefix','uid',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('protocol_version_label', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, 1);
+		$c = new ConfigElement('protocol_version_label', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
 		return $ret;
 	}

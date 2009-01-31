@@ -146,15 +146,15 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public function configuration(){
 		$ret = array();
-		$c = new config_element('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'), NULL, NULL, 1);
+		$c = new ConfigElement('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'), NULL, NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('domain', _('Domain name'), _('Domain name used by Active Directory'), _('Domain name used by Active Directory'), NULL, NULL, 1);
+		$c = new ConfigElement('domain', _('Domain name'), _('Domain name used by Active Directory'), _('Domain name used by Active Directory'), NULL, NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('login', _('Administrator DN'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), NULL, NULL, 1);
+		$c = new ConfigElement('login', _('Administrator DN'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), NULL, NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new config_element('password', _('Administrator password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), NULL, NULL, 7);
+		$c = new ConfigElement('password', _('Administrator password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), NULL, NULL, ConfigElement::$PASSWORD);
 		$ret []= $c;
-		$c = new config_element('ou', _('User branch DN'), _('User branch DN'), _('User branch DN'), 'cn=Users', NULL, 1);
+		$c = new ConfigElement('ou', _('User branch DN'), _('User branch DN'), _('User branch DN'), 'cn=Users', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
 		return $ret;
 	}

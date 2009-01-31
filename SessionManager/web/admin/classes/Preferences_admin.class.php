@@ -48,25 +48,25 @@ class Preferences_admin extends Preferences {
 		$this->elements = array();
 
 		$this->addPrettyName('general',_('General configuration'));
-		$c = new config_element('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, 1);
+		$c = new ConfigElement('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, ConfigElement::$INPUT);
 		$this->add($c,'general');
 
-		$c = new config_element('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,1);
+		$c = new ConfigElement('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,ConfigElement::$INPUT);
 		$this->add($c,'general');
 
-		$c = new config_element('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), 3);
+		$c = new ConfigElement('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), ConfigElement::$MULTISELECT);
 		$this->add($c,'general');
 
-// 		$c = new config_element('locale','locale','locale_des','fr_FR.UTF8@euro',NULL,1);
+// 		$c = new ConfigElement('locale','locale','locale_des','fr_FR.UTF8@euro',NULL,ConfigElement::$INPUT);
 // 		$this->add('general',$c);
 //
-// 		$c = new config_element('start_app','start_app','start_app_des','',NULL,1);
+// 		$c = new ConfigElement('start_app','start_app','start_app_des','',NULL,ConfigElement::$INPUT);
 // 		$this->add('general',$c);
 
-		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 
 		$this->add($c,'general');
-		$c = new config_element('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, 1);
+		$c = new ConfigElement('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, ConfigElement::$INPUT);
 		$this->add($c,'general');
 
 		$user_groups = array();
@@ -77,45 +77,45 @@ class Preferences_admin extends Preferences {
 	    	}
 		    $user_groups[-1] = 'None';
 			ksort($user_groups);
-		    $c = new config_element('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), -1, $user_groups , 2);
+		    $c = new ConfigElement('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), -1, $user_groups , ConfigElement::$SELECT);
 		    $this->add($c,'general');
         }
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
-		$c = new config_element('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,1);
+		$c = new ConfigElement('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mysql');
-		$c = new config_element('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,1);
+		$c = new ConfigElement('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mysql');
-		$c = new config_element('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'',NULL,7);
+		$c = new ConfigElement('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'',NULL,ConfigElement::$PASSWORD);
 		$this->add($c,'general','mysql');
-		$c = new config_element('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,1);
+		$c = new ConfigElement('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mysql');
-		$c = new config_element('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',1);
+		$c = new ConfigElement('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',ConfigElement::$INPUT);
 		$this->add($c,'general','mysql');
 
 		$this->addPrettyName('mails_settings',_('Mails settings'));
-		$c = new config_element('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail',array('mail'=>_('Local'),'smtp'=>_('SMTP server')),2);
+		$c = new ConfigElement('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail',array('mail'=>_('Local'),'smtp'=>_('SMTP server')),ConfigElement::$SELECT);
 		$this->add($c,'general','mails_settings');
-		$c = new config_element('send_from', _('From'), _('From'), _('From'),'no-reply@'.$_SERVER['SERVER_NAME'],NULL,1);
+		$c = new ConfigElement('send_from', _('From'), _('From'), _('From'),'no-reply@'.$_SERVER['SERVER_NAME'],NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mails_settings');
-		$c = new config_element('send_host', _('Host'), _('Host'), _('Host'),'',NULL,1);
+		$c = new ConfigElement('send_host', _('Host'), _('Host'), _('Host'),'',NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mails_settings');
-		$c = new config_element('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),1,array(0=>_('no'),1=>_('yes')),2);
+		$c = new ConfigElement('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),1,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','mails_settings');
-		$c = new config_element('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'),'',NULL,1);
+		$c = new ConfigElement('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'),'',NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mails_settings');
-		$c = new config_element('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'),'',NULL,7);
+		$c = new ConfigElement('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'),'',NULL,ConfigElement::$PASSWORD);
 		$this->add($c,'general','mails_settings');
 
 		$this->addPrettyName('application_server_settings',_('Application Server settings'));
-		$c = new config_element('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.ulteo.com'), NULL, 5);
+		$c = new ConfigElement('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*.ulteo.com'), NULL, ConfigElement::$HIDDEN);
 		$this->add($c,'general', 'application_server_settings');
 		//fqdn_private_address : array('dns' => ip);
-		$c = new config_element('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, 4);
+		$c = new ConfigElement('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, ConfigElement::$TEXTMAXLENGTH);
 		$this->add($c,'general', 'application_server_settings');
-		$c = new config_element('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general', 'application_server_settings');
-		$c = new config_element('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), 2);
+		$c = new ConfigElement('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), ConfigElement::$SELECT);
 		$this->add($c,'general', 'application_server_settings');
 
 		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
@@ -124,42 +124,42 @@ class Preferences_admin extends Preferences {
 				$c = new $criterion_class_name(NULL); // ugly
 				$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
 		}
-		$c = new config_element('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing, NULL, 9);
+		$c = new ConfigElement('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing, NULL, ConfigElement::$SLIDERS);
 		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
-		$c = new config_element('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8', array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'), 2);
+		$c = new ConfigElement('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8', array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new config_element('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 9, array(2=>_('Lowest'),5=>_('Medium'),8=>_('High'),9=>_('Highest')), 2);
+		$c = new ConfigElement('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 9, array(2=>_('Lowest'),5=>_('Medium'),8=>_('High'),9=>_('Highest')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new config_element('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400, array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')), 2);
+		$c = new ConfigElement('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400, array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new config_element('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), "Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !", NULL, 6);
+		$c = new ConfigElement('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), "Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !", NULL, ConfigElement::$TEXTAREA);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new config_element('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new config_element('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new config_element('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
 
 		# Sessions can be shared ? yes/no
-		$c = new config_element('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new config_element('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),
+		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),
 			'shareable' => _('shareable'),
-			'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),3);
+			'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),ConfigElement::$MULTISELECT);
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
-		$c = new config_element('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),2);
+		$c = new ConfigElement('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
-		$c = new config_element('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new config_element('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), 2);
+		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 
 		$this->getPrefsModule();
 		$this->getPrefsPlugins();
@@ -236,14 +236,14 @@ class Preferences_admin extends Preferences {
 			$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 		}
 
-		$c = new config_element('plugin_enable', _('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array(), $plugins_prettyname, 3);
+		$c = new ConfigElement('plugin_enable', _('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
 		$this->addPrettyName('plugins',_('Plugins configuration'));
 		$this->add($c,'plugins');
 		unset($p2['plugins']);
 
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
-			$c = new config_element($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, 2);
+			$c = new ConfigElement($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, ConfigElement::$SELECT);
 			foreach ($value1 as $plugin_name => $plu6) {
 				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
 				if (is_null($plugin_prettyname))
@@ -252,7 +252,7 @@ class Preferences_admin extends Preferences {
 
 				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
 				if ($isdefault1 === true)
-					$c = new config_element($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, 2);
+					$c = new ConfigElement($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, ConfigElement::$SELECT);
 			}
 			$this->add($c,'plugins');
 		}
@@ -274,16 +274,16 @@ class Preferences_admin extends Preferences {
 		foreach ($available_module as $module_name => $sub_module)
 			$modules_prettyname[$module_name] = $module_name;
 
-		$c = new config_element('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, 3);
+		$c = new ConfigElement('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, ConfigElement::$MULTISELECT);
 		$this->add($c,'general');
 
 		foreach ($available_module as $mod => $sub_mod){
-			$c = new config_element('enable', $mod, $mod, $mod, NULL, $sub_mod, 2);
+			$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
 				$default1 =  eval($default2);
 				if ($default1 === true)
-					$c = new config_element('enable', $mod, $mod, $mod, $k4, $sub_mod, 2);
+					$c = new ConfigElement('enable', $mod, $mod, $mod, $k4, $sub_mod, ConfigElement::$SELECT);
 			}
 
 			//dirty hack (if this->elements[mod] will be empty)

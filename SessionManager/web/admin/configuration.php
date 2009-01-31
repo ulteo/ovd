@@ -25,20 +25,20 @@ function print_element($key_name,$contener,$element_key,$element) {
 	$label2 = $key_name.$sep.$contener.$sep.$element->id;
 
 	switch ($element->type) {
-		case 0: //	0 : text (readonly)
+		case ConfigElement::$TEXT: // text (readonly)
 			if (is_string($element->content))
 				echo $element->content;
 			break;
-		case 1: //	1 : input text (rw)
+		case ConfigElement::$INPUT: // input text (rw)
 			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
-		case 6: // text area
+		case ConfigElement::$TEXTAREA: // text area
 			echo '<textarea rows="7" cols="60" id="'.$label2.'" name="'.$label2.'">'.$element->content.'</textarea>';
 			break;
-		case 7: //	7 : input password (rw)
+		case ConfigElement::$PASSWORD: // input password (rw)
 			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
 			break;
-		case 2: //	2 : list of text (r) (fixed length) (only one can be selected)
+		case ConfigElement::$SELECT: // list of text (r) (fixed length) (only one can be selected)
 				if (is_array($element->content_available)) {
 					echo '<select id="'.$label2.'"  name="'.$label2.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');">';
 
@@ -54,7 +54,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 // 					echo 'bug<br>';
 				}
 			break;
-		case 3: //  3 : list of text (r) (fixed length) (more than one can be selected)
+		case ConfigElement::$MULTISELECT: // list of text (r) (fixed length) (more than one can be selected)
 			foreach ($element->content_available as $mykey => $myval){
 				if ( in_array($mykey,$element->content))
 					echo '<input class="input_checkbox" type="checkbox" name="'.$label2.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');"/>';
@@ -66,7 +66,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 			}
 			break;
 
-		case 8 : // list of input text (fixed length)
+		case ConfigElement::$INPUT_LIST: // list of input text (fixed length)
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			$i = 0;
 			foreach ($element->content as $key1 => $value1){
@@ -87,7 +87,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 			echo '</table>';
 			break;
 
-		case 9 : // sliders (length fixed)
+		case ConfigElement::$SLIDERS: // sliders (length fixed)
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			$i = 0;
 			foreach ($element->content as $key1 => $value1){
@@ -135,14 +135,14 @@ echo '</script>';
 			echo '</table>';
 			break;
 	}
-	if ($element->type == 4 || $element->type == 5) {
+	if ($element->type == ConfigElement::$TEXTMAXLENGTH || $element->type == ConfigElement::$HIDDEN) {
 		echo '<div id="'.$label2.'">';
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			$i = 0;
 			foreach ($element->content as $key1 => $value1){
 				echo '<tr>';
 					echo '<td>';
-					if ( $element->type == 4 ){
+					if ( $element->type == ConfigElement::$TEXTMAXLENGTH ){
 							echo '<div id="'.$label2.$sep.$i.'_diva">';
 								echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
 							echo '</div>';
@@ -163,7 +163,7 @@ echo '</script>';
 			}
 				echo '<tr>';
 				echo '<td>';
-					if ( $element->type == 4 ){
+					if ( $element->type == ConfigElement::$TEXTMAXLENGTH ){
 						echo '<div id="'.$label2.$sep.$i.'_divadda">';
 							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="" size="25" maxlength="100" />';
 						echo '</div>';
