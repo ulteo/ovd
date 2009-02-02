@@ -181,7 +181,7 @@ class Server {
 		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
 		$this->setStatus('broken');
 		$ev = Events::getEvent('ServerStatusChanged',
-		                         array('server' => $server,
+		                         array('server' => $this->fqdn,
 		                               'status' => ServerStatusChanged::$UNREACHABLE));
 		$ev->emit();
 
