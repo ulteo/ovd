@@ -235,8 +235,7 @@ $ev = Events::getEvent('SessionStartEvent', array(
 ));
 $ev->emit();
 
-//Broken for now...
-// $report = new Reporting($session->id);
-// $report->session_begin($token->id, $user);
+$report = new Reporting($session->id);
+$report->session_begin($token->id, $user);
 
 redirect($redir);

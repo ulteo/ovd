@@ -70,9 +70,8 @@ if ($_GET['status'] == 4) {
 		'session'	=>	$session->id
 	));
 
-	//Broken for now...
-// 	$report = new Reporting($session->id);
-// 	$report->session_end();
+	$report = new Reporting($session->id);
+	$report->session_end();
 
 	Abstract_Session::delete($session->id);
 }
