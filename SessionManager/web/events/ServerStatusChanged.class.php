@@ -21,9 +21,9 @@
 
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-static const ONLINE = 0;
-static const OFFLINE = 1;
-static const UNREACHABLE = 2;
+static $ONLINE = 0;
+static $OFFLINE = 1;
+static $UNREACHABLE = 2;
 
 class ServerStatusChanged extends Event {
 }

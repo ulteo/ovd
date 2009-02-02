@@ -169,8 +169,8 @@ class Server {
 			$ret = true;
 		}
 
-		$ev->setAttribute('status', $ret ? StatusServerChanged::ONLINE
-		                                 : StatusServerChanged::OFFLINE);
+		$ev->setAttribute('status', $ret ? StatusServerChanged::$ONLINE
+		                                 : StatusServerChanged::$OFFLINE);
 		$ev->emit();
 		return $ret;
 	}
@@ -182,7 +182,7 @@ class Server {
 		$this->setStatus('broken');
 		$ev = Events::getEvent('ServerStatusChanged',
 		                         array('server' => $server,
-		                               'status' => StatusServerChanged::UNREACHABLE));
+		                               'status' => StatusServerChanged::$UNREACHABLE));
 		$ev->emit();
 
 		return true;
