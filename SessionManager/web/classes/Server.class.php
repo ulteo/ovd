@@ -159,18 +159,19 @@ class Server {
 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
 
 		$ret = false;
-		$ev = Events::getEvent('ServerStatusChanged',
-		                         array('server' => $this->fqdn));
+
+		$ev = Events::getEvent('ServerStatusChanged', array(
+			'server'	=>	$this->fqdn
+		));
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
 			$this->getStatus();
 
-		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready') {
+		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
 			$ret = true;
-		}
 
-		$ev->setAttribute('status', $ret ? ServerStatusChanged::$ONLINE
-		                                 : ServerStatusChanged::$OFFLINE);
+		$ev->setAttribute('status', ($ret)?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE);
+
 		$ev->emit();
 		return $ret;
 	}
@@ -178,13 +179,15 @@ class Server {
 	public function isUnreachable() {
 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
+		$ev = Events::getEvent('ServerStatusChanged', array(
+			'server'	=>	$this->fqdn,
+			'status'	=>	ServerStatusChanged::$UNREACHABLE
+		));
+
 		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
 		$this->setStatus('broken');
-		$ev = Events::getEvent('ServerStatusChanged',
-		                         array('server' => $this->fqdn,
-		                               'status' => ServerStatusChanged::$UNREACHABLE));
-		$ev->emit();
 
+		$ev->emit();
 		return true;
 	}
 

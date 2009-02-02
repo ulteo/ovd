@@ -102,8 +102,12 @@ class Session {
 			default:
 				Logger::warning('main', 'Status set to "'.$status_.'" for \''.$this->id.'\'');
 				$this->setAttribute('status', $status_);
-				$ev = Events::getEvent('SessionStatusChanged', array('id' => $this->id,
-		                                                             'status' => $status_));
+
+				$ev = Events::getEvent('SessionStatusChanged', array(
+					'id'		=>	$this->id,
+					'status'	=>	$status_
+				));
+
 				$ev->emit();
 				break;
 		}
@@ -212,8 +216,11 @@ class Session {
 		Logger::debug('main', 'Starting SESSION::addInvite for session '.$this->id.' on server '.$this->server);
 
 		$this->folder = SESSIONS_DIR.'/'.$this->id;
-		$ev = Events::getEvent('SessionAddInvite', array('session' => $this->id,
-		                                                 'viewonly' => $view_only_));
+
+		$ev = Events::getEvent('SessionAddInvite', array(
+			'session'		=>	$this->id,
+			'viewonly'	=>	$view_only_
+		));
 
 		$buf = $email_;
 		if ($view_only_ == true)
@@ -222,13 +229,15 @@ class Session {
 			$buf .= ' (active mode)';
 
 		if (@file_put_contents($this->folder.'/invited', $buf."\n", FILE_APPEND)) {
-			$ret = true;
 			Logger::info('main', 'Session invited file created : '.$this->folder.'/invited');
+			$ret = true;
 		} else {
-			$ret = false;
 			Logger::error('main', 'Session invited file NOT created : '.$this->folder.'/invited');
+			$ret = false;
 		}
-		$ev->setAttribute ('succeeded', $ret);
+
+		$ev->setAttribute('succeeded', $ret);
+
 		$ev->emit();
 		return $ret;
 	}

@@ -228,10 +228,12 @@ $buf = Abstract_Server::load($session->server);
 
 $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
 
-$ev = Events::getEvent ('SessionStartEvent', array ('token' => $token->id,
-                                                    'user' => $user,
-                                                    'sessid' => $session->id));
-$ev->emit ();
+$ev = Events::getEvent('SessionStartEvent', array(
+	'token'	=>	$token->id,
+	'user'	=>	$user,
+	'sessid'	=>	$session->id
+));
+$ev->emit();
 
 //Broken for now...
 // $report = new Reporting($session->id);
