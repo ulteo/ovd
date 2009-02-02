@@ -135,14 +135,14 @@ echo '</script>';
 			echo '</table>';
 			break;
 	}
-	if ($element->type == ConfigElement::$TEXTMAXLENGTH || $element->type == ConfigElement::$HIDDEN) {
+	if ($element->type == ConfigElement::$DICTIONARY || $element->type == ConfigElement::$LIST) {
 		echo '<div id="'.$label2.'">';
 			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			$i = 0;
 			foreach ($element->content as $key1 => $value1){
 				echo '<tr>';
 					echo '<td>';
-					if ( $element->type == ConfigElement::$TEXTMAXLENGTH ){
+					if ( $element->type == ConfigElement::$DICTIONARY ){
 							echo '<div id="'.$label2.$sep.$i.'_diva">';
 								echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
 							echo '</div>';
@@ -163,7 +163,7 @@ echo '</script>';
 			}
 				echo '<tr>';
 				echo '<td>';
-					if ( $element->type == ConfigElement::$TEXTMAXLENGTH ){
+					if ( $element->type == ConfigElement::$DICTIONARY ){
 						echo '<div id="'.$label2.$sep.$i.'_divadda">';
 							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="" size="25" maxlength="100" />';
 						echo '</div>';

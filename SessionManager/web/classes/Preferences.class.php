@@ -118,8 +118,8 @@ class ConfigElement{
 	static $INPUT = 1;
 	static $SELECT = 2;
 	static $MULTISELECT = 3;
-	static $TEXTMAXLENGTH = 4;
-	static $HIDDEN = 5;
+	static $DICTIONARY = 4;
+	static $LIST = 5;
 	static $TEXTAREA = 6;
 	static $PASSWORD = 7;
 	static $INPUT_LIST = 8;
