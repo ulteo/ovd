@@ -176,20 +176,20 @@ function show_manage($login, $userDB) {
     $content = 'content'.(($count++%2==0)?1:2);
     echo '<tr class="'.$content.'">';
     echo '<th>'._('Display name').'</th>';
-    echo '<td><input type="text" name="displayname" value="'.$u->getAttribute('displayname').'"  maxlength="50" /></td>';
+    echo '<td><input type="text" name="displayname" value="'.$u->getAttribute('displayname').'" /></td>';
     echo '</tr>';
 
     $content = 'content'.(($count++%2==0)?1:2);
     echo '<tr class="'.$content.'">';
     echo '<th>'._('Uid').'</th>';
-    echo '<td><input type="text" name="uid" value="'.$u->getAttribute('uid').'" maxlength="20" /></td>';
+    echo '<td><input type="text" name="uid" value="'.$u->getAttribute('uid').'" /></td>';
     echo '</tr>';
 
     if ($u->hasAttribute('password')) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tr class="'.$content.'">';
       echo '<th>'._('New password').'</th>';
-      echo '<td><input type="password" name="password" value="" maxlength="50" /></td>';
+      echo '<td><input type="password" name="password" value="" /></td>';
       echo '</tr>';
     }
 
@@ -200,7 +200,7 @@ function show_manage($login, $userDB) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tr class="'.$content.'">';
       echo '<th>'.$key.'</th>';
-      echo '<td><input type="text" name="'.$key.'" value="'.$u->getAttribute($key).'" maxlength="50" /></td>';
+      echo '<td><input type="text" name="'.$key.'" value="'.$u->getAttribute($key).'" /></td>';
       echo '</tr>';
     }
 
@@ -356,7 +356,7 @@ function show_default($userDB) {
     foreach ($minimun_attributes as $minimun_attribute) {
       echo '<tr class="content'.$content_color.'">';
       echo '<th>'._($minimun_attribute).'</th>';
-      echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" maxlength="50" /></td>';
+      echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" /></td>';
       echo '</tr>';
       $content_color = (($content_color++)%2)+1;
     }

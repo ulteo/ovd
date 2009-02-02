@@ -30,13 +30,13 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo $element->content;
 			break;
 		case ConfigElement::$INPUT: // input text (rw)
-			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
+			echo '<input type="text" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" />';
 			break;
 		case ConfigElement::$TEXTAREA: // text area
 			echo '<textarea rows="7" cols="60" id="'.$label2.'" name="'.$label2.'">'.$element->content.'</textarea>';
 			break;
 		case ConfigElement::$PASSWORD: // input password (rw)
-			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" maxlength="100" />';
+			echo '<input type="password" id="'.$label2.'" name="'.$label2.'" value="'.$element->content.'" size="25" />';
 			break;
 		case ConfigElement::$SELECT: // list of text (r) (fixed length) (only one can be selected)
 				if (is_array($element->content_available)) {
@@ -73,11 +73,11 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo '<tr>';
 					echo '<td>';
 						echo $key1;
-						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" />';echo "\n";
 					echo '</td>';echo "\n";
 					echo '<td>';echo "\n";
 					echo '<div id="'.$label2.$sep.$key1.'_divb">';
-						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" maxlength="100"/>';
+						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" />';
 					echo '</div>';echo "\n";
 					echo '</td>';echo "\n";
 				echo '</tr>';
@@ -94,7 +94,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 				echo '<tr>';
 					echo '<td>';
 						echo $key1;
-						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" />';echo "\n";
 					echo '</td>';echo "\n";
 					echo '<td>';echo "\n";
 					echo '<div id="'.$label2.$sep.$key1.'_divb">';
@@ -122,7 +122,7 @@ echo '</script>';
 
 			echo '<div id="track'.$i.'" style="width: 200px; background-color: rgb(204, 204, 204); height: 10px;"><div class="selected" id="handle'.$i.'" style="width: 10px; height: 15px; background-color: #004985; cursor: move; left: 190px; position: relative;"></div></div>';
 
-						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" maxlength="100"/>';
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" />';
 					echo '</div>';echo "\n";
 					echo '</td>';echo "\n";
 					echo '<td>';echo "\n";
@@ -144,16 +144,16 @@ echo '</script>';
 					echo '<td>';
 					if ( $element->type == ConfigElement::$DICTIONARY ){
 							echo '<div id="'.$label2.$sep.$i.'_diva">';
-								echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" maxlength="100" />';echo "\n";
+								echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$key1.'" size="25" />';echo "\n";
 							echo '</div>';
 						echo '</td>';echo "\n";
 						echo '<td>';echo "\n";
 					}
 					else {
-						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$i.'" size="40" maxlength="100" />';echo "\n";
+						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$i.'" size="40" />';echo "\n";
 					}
 					echo '<div id="'.$label2.$sep.$key1.'_divb">';
-						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" maxlength="100"/>';
+						echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="'.$value1.'" size="25" />';
 						echo '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/hide.png"/></a>';
 					echo '</div>';echo "\n";
 					echo '</td>';echo "\n";
@@ -165,7 +165,7 @@ echo '</script>';
 				echo '<td>';
 					if ( $element->type == ConfigElement::$DICTIONARY ){
 						echo '<div id="'.$label2.$sep.$i.'_divadda">';
-							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="" size="25" maxlength="100" />';
+							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="" size="25" />';
 						echo '</div>';
 					echo '</td>';
 					echo '<td>';
@@ -174,7 +174,7 @@ echo '</script>';
 						echo '<input type="hidden" id="'.$label2.$sep.$i.$sep.'key" name="'.$label2.$sep.$i.$sep.'key" value="'.$i.'"  />';
 					}
 						echo '<div id="'.$label2.$sep.$i.'_divaddb">';
-							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="" size="25" maxlength="100" />';
+							echo '<input type="text" id="'.$label2.$sep.$i.$sep.'value" name="'.$label2.$sep.$i.$sep.'value" value="" size="25" />';
 						echo '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/show.png"/></a>';
 
 						echo '</div>';
