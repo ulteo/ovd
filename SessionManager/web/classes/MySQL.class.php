@@ -62,12 +62,13 @@ class MySQL {
 		if ($this->link)
 			return;
 
-		$ev = Events::getEvent ('SqlFailure');
+		$ev = Events::getEvent('SqlFailure');
+
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
 		if (! $this->link) {
-			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --password="'.$this->sqlpass.'"  --database="'.$this->sqlbase.'"';
-			Logger::error('main', '(MySQL::CheckLink) link to SQL server failed, to validate the configuration please try this bash command : '.$mysqlcommand);
+			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --database="'.$this->sqlbase.'"';
+			Logger::error('main', '(MySQL::CheckLink) Link to SQL server failed, please try this bash command to validate the configuration : '.$mysqlcommand);
 
 			if ($die_)
 				die_error('Link to SQL server failed.');
