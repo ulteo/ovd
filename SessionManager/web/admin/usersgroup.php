@@ -149,6 +149,7 @@ function show_manage($id) {
 
   $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
   $userGroupDB = new $mod_usergroup_name();
+  $usergroupdb_rw = $userGroupDB->isWriteable();
   
   $group = $userGroupDB->import($id);
 
@@ -227,31 +228,33 @@ function show_manage($id) {
   echo '</tr>';
   echo '</table>';
 
-  echo '<div>';
-  echo '<h2>'._('Settings').'</h1>';
-  echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
-  echo '<input type="submit" value="'._('Delete this group').'"/>';
-  echo '<input type="hidden" name="action" value="del" />';
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '</form>';
-  echo '<br/>';
+  if ($usergroupdb_rw) {
+    echo '<div>';
+    echo '<h2>'._('Settings').'</h1>';
+    echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+    echo '<input type="submit" value="'._('Delete this group').'"/>';
+    echo '<input type="hidden" name="action" value="del" />';
+    echo '<input type="hidden" name="id" value="'.$id.'" />';
+    echo '</form>';
+    echo '<br/>';
 
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="modify" />';
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
-  echo '<input type="submit" value="'.$status_change.'"/>';
-  echo '</form>';
-  echo '<br/>';
+    echo '<form action="" method="post">';
+    echo '<input type="hidden" name="action" value="modify" />';
+    echo '<input type="hidden" name="id" value="'.$id.'" />';
+    echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
+    echo '<input type="submit" value="'.$status_change.'"/>';
+    echo '</form>';
+    echo '<br/>';
 
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="modify" />';
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
-  echo '<input type="submit" value="'._('Update the description').'"/>';
-  echo '</form>';
-  echo '<br/>';
-
+    echo '<form action="" method="post">';
+    echo '<input type="hidden" name="action" value="modify" />';
+    echo '<input type="hidden" name="id" value="'.$id.'" />';
+    echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
+    echo '<input type="submit" value="'._('Update the description').'"/>';
+    echo '</form>';
+    echo '</div>';
+    echo '<br/>';
+  }
   // Users list
   if (count($users_all) > 0) {
     echo '<div>';
@@ -263,19 +266,21 @@ function show_manage($id) {
 	echo '<tr>';
 	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
 	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="name" value="User_UserGroup" />';
-	echo '<input type="hidden" name="group" value="'.$id.'" />';
-	echo '<input type="hidden" name="element" value="'.$user.'" />';
-	echo '<input type="submit" value="'._('Delete from this group').'" />';
-	echo '</form>';
-	echo '</td>';
+	if ( $usergroupdb_rw) {
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="name" value="User_UserGroup" />';
+		echo '<input type="hidden" name="group" value="'.$id.'" />';
+		echo '<input type="hidden" name="element" value="'.$user.'" />';
+		echo '<input type="submit" value="'._('Delete from this group').'" />';
+		echo '</form>';
+		echo '</td>';
+	}
 	echo '</tr>';
       }
     }
 
-    if (count ($users_available) >0) {
+    if ((count ($users_available) >0) && $usergroupdb_rw) {
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';

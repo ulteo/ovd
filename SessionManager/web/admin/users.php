@@ -32,10 +32,14 @@ if (! in_array('UserDB',$mods_enable))
 $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
 $userDB = new $mod_user_name();
 
+$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+$userGroupDB = new $mod_usergroup_name();
+
+
 if (isset($_REQUEST['action'])) {
   if ($_REQUEST['action']=='manage') {
     if (isset($_REQUEST['id']))
-      show_manage($_REQUEST['id'], $userDB);
+      show_manage($_REQUEST['id'], $userDB, $userGroupDB);
   }
 
   if ($userDB->isWriteable()) {
@@ -49,7 +53,7 @@ if (isset($_REQUEST['action'])) {
     elseif ($_REQUEST['action']=='modify') {
       if (isset($_REQUEST['id'])) {
 	modify_user($userDB, $_REQUEST['id']);
-	show_manage($_REQUEST['id'], $userDB);
+	show_manage($_REQUEST['id'], $userDB, $userGroupDB);
       }
     }
   }
@@ -103,12 +107,13 @@ function modify_user($userDB, $login) {
   return true;
 }
 
-function show_manage($login, $userDB) {
+function show_manage($login, $userDB, $userGroupDB) {
   $u = $userDB->import($login);
   if (! is_object($u))
     die_error('Unable to import user "'.$login.'"',__FILE__,__LINE__);
 
   $userdb_rw = $userDB->isWriteable();
+  $usergroupdb_rw = $userGroupDB->isWriteable();
 
   $keys = array();
   foreach($u->getAttributesList() as $attr)
@@ -226,24 +231,26 @@ function show_manage($login, $userDB) {
       echo '<tr><td>';
       echo '<a href="usersgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
       echo '</td>';
-      echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
-      echo '<input type="hidden" name="name" value="User_UserGroup" />';
-      echo '<input type="hidden" name="action" value="del" />';
-      echo '<input type="hidden" name="group" value="'.$group->id.'" />';
-      echo '<input type="hidden" name="element" value="'.$login.'" />';
-      echo '<input type="submit" value="'._('Delete from this group').'" />';
-      echo '</form></td>';
+      if ($usergroupdb_rw) {
+        echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
+        echo '<input type="hidden" name="name" value="User_UserGroup" />';
+        echo '<input type="hidden" name="action" value="del" />';
+        echo '<input type="hidden" name="group" value="'.$group->id.'" />';
+        echo '<input type="hidden" name="element" value="'.$login.'" />';
+        echo '<input type="submit" value="'._('Delete from this group').'" />';
+        echo '</form></td>';
+      }
       echo '</tr>';
     }
 
-    if (count ($groups_available) >0) {
+    if ((count ($groups_available) >0) && $usergroupdb_rw) {
       echo '<tr><form action="actions.php" method="get"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
       echo '<input type="hidden" name="element" value="'.$login.'" />';
       echo '<select name="group">';
       foreach($groups_available as $group)
-	echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
+        echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
       echo '</select>';
       echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
       echo '</form></tr>';
