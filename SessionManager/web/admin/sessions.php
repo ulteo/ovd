@@ -72,7 +72,13 @@ if (isset($_POST['join'])) {
 
 	echo '<ul>';
 	echo '<li><strong>User:</strong> '.$session->getAttribute('user_displayname').'</li>';
-	echo '<li><strong>Started:</strong> '.@date('d/m/Y H:i:s', $session->getAttribute('start_time')).'</li>';
+	echo '<li><strong>Started:</strong> ';
+	$buf = $session->getAttribute('start_time');
+	if (! $buf)
+		echo _('Not started yet');
+	else
+		echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
+	echo '</li>';
 	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
 
