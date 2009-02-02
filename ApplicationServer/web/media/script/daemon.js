@@ -180,6 +180,9 @@ function session_check() {
 		{
 			method: 'get',
 			asynchronous: false,
+			parameters: {
+					differentiator: Math.floor(Math.random()*50000)
+			},
 			onSuccess: onUpdateInfos
 		}
 	);
@@ -197,13 +200,14 @@ function onUpdateInfos(transport) {
 
   var sessionNode = buffer[0];
 
-  if (! sessionNode.hasAttribute('status')) {
+  old_session_state = session_state;
+
+  try { // IE does not have hasAttribute in DOM API...
+    session_state = sessionNode.getAttribute('status');
+  } catch(e) {
     push_log('[session] bad xml format', 'error');
     return;
   }
-
-  old_session_state = session_state;
-  session_state = sessionNode.getAttribute('status');
 
   if (session_state != old_session_state)
     push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
@@ -225,12 +229,13 @@ function onUpdateInfos(transport) {
   if (sharingNode.length > 0) {
     sharingNode = sharingNode[0];
 
-    if (! sharingNode.hasAttribute('count')) {
+    try { // IE does not have hasAttribute in DOM API...
+      var nb = sharingNode.getAttribute('count');
+    } catch(e) {
       push_log('[session] bad xml format', 'error');
       return;
     }
 
-    var nb = sharingNode.getAttribute('count');
     if (nb_share != nb) {
       nb_share = nb;
       push_log('[session] nb share: '+nb_share, 'info');
