@@ -521,8 +521,7 @@ function show_manage($fqdn) {
       unset($servers_all[$k]);
   }
 
-  $sessions = new Sessions();
-  $sessions = $sessions->getByServer($_GET['fqdn']);
+  $sessions = Sessions::getByServer($_GET['fqdn']);
 
   if (count($sessions) > 0)
     $has_sessions = true;
