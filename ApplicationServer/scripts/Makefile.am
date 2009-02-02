@@ -1,15 +1,15 @@
-EXTRA_DIST = as-chroot-install.in
+EXTRA_DIST = aps-chroot-install.in
 
-bin_SCRIPTS = as-chroot-install
-dist_man_MANS = as-chroot-install.1
+bin_SCRIPTS = aps-chroot-install
+dist_man_MANS = aps-chroot-install.1
 
-as-chroot-install:
+aps-chroot-install:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
 	    -e "s,@LOCALSTATEDIR@,$(localstatedir)," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
-		< $(srcdir)/as-chroot-install.in > $@
+		< $(srcdir)/aps-chroot-install.in > $@
 
 clean-local:
 	rm -f $(bin_SCRIPTS)
 
-.PHONY: as-chroot-install
+.PHONY: aps-chroot-install
