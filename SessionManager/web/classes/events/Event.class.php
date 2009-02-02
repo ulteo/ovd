@@ -50,7 +50,7 @@ class Event {
 		}
 
 		/* set attributes if any */
-		if ($array != NULL && is_array($array_))
+		if ($array_ != NULL && is_array($array_))
 			$this->setAttributes($array_);
 	}
 
