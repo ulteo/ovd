@@ -22,13 +22,14 @@ class UserGroupDB_sql {
 	protected $table;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (is_array($mysql_conf)) {
-			$this->table =  $mysql_conf['prefix'].'usergroup';
+		if ($prefs) {
+			$mysql_conf = $prefs->get('general', 'mysql');
+			if (is_array($mysql_conf)) {
+				$this->table =  $mysql_conf['prefix'].'usergroup';
+			}
+			else
+				$this->table = NULL;
 		}
-		else
-			$this->table = NULL;
-		
 	}
 	
 	public function import($id_){
@@ -140,7 +141,7 @@ class UserGroupDB_sql {
 	}
 	
 	public static function isDefault() {
-		return false;
+		return true;
 	}
 	
 	public static function liaisonType() {
