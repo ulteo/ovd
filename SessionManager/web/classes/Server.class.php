@@ -160,7 +160,7 @@ class Server {
 
 		$ret = false;
 		$ev = Events::getEvent('ServerStatusChanged',
-		                         array('server' => $server));
+		                         array('server' => $this->fqdn));
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
 			$this->getStatus();
@@ -169,8 +169,8 @@ class Server {
 			$ret = true;
 		}
 
-		$ev->setAttribute('status', $ret ? StatusServerChanged::$ONLINE
-		                                 : StatusServerChanged::$OFFLINE);
+		$ev->setAttribute('status', $ret ? ServerStatusChanged::$ONLINE
+		                                 : ServerStatusChanged::$OFFLINE);
 		$ev->emit();
 		return $ret;
 	}
@@ -182,7 +182,7 @@ class Server {
 		$this->setStatus('broken');
 		$ev = Events::getEvent('ServerStatusChanged',
 		                         array('server' => $server,
-		                               'status' => StatusServerChanged::$UNREACHABLE));
+		                               'status' => ServerStatusChanged::$UNREACHABLE));
 		$ev->emit();
 
 		return true;
