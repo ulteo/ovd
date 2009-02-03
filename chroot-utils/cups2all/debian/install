@@ -1,4 +1,0 @@
-cups2all usr/lib/cups/backend/
-extra/PostscriptColor.ppd usr/share/ppd/
-extra/cups2all.conf etc/cups/
-
