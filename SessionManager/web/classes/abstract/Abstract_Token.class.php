@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
@@ -149,5 +149,34 @@ class Abstract_Token {
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'tokens', 'id', $id);
 
 		return true;
+	}
+
+	public function load_all() {
+		Logger::debug('main', 'Starting Abstract_Token::load_all');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'tokens');
+		$rows = $SQL->FetchAllResults();
+
+		$tokens = array();
+		foreach ($rows as $row) {
+			$id = $row['id'];
+
+			$token = Abstract_Token::load($id);
+			if (! $token)
+				continue;
+
+			$tokens[] = $token;
+		}
+
+		return $tokens;
 	}
 }

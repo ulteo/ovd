@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2009 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
@@ -20,42 +20,12 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-class Sessions {
+class Tokens {
 	public function getAll() {
-// 		Logger::debug('main', 'Starting Sessions::getAll');
+// 		Logger::debug('main', 'Starting Tokens::getAll');
 
-		$buf = Abstract_Session::load_all();
+		$buf = Abstract_Token::load_all();
 
 		return $buf;
-	}
-
-	public function getByServer($fqdn_) {
-// 		Logger::debug('main', 'Starting Sessions::getByServer');
-
-		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
-
-		$sessions = array();
-		foreach ($sessions_liaisons as $sessions_liaison) {
-			$session = Abstract_Session::load($sessions_liaison->group);
-			if (! $session)
-				continue;
-
-			$sessions[] = $session;
-		}
-
-		return $sessions;
-	}
-
-	public function getByUser($user_login_) {
-// 		Logger::debug('main', 'Starting Sessions::getByUser');
-
-		$sessions = Sessions::getAll();
-
-		foreach ($sessions as $k => $session) {
-			if ($session->getAttribute('user_login') != $user_login_)
-				unset($sessions[$k]);
-		}
-
-		return $sessions;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
@@ -61,5 +61,14 @@ class Token {
 		$this->$attrib_ = $value_;
 
 		return true;
+	}
+
+	public function isValid() {
+// 		Logger::debug('main', 'Starting Token::isValid for \''.$this->id.'\'');
+
+		if ($this->valid_until >= time())
+			return true;
+
+		return false;
 	}
 }
