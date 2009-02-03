@@ -72,6 +72,7 @@ function __autoload($class_name) { //what about NameSpaces ?
 	if (!class_exists($class_name)) {
 		$class_files []= CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= CLASSES_DIR.'/events/'.$class_name.'.class.php';
+		$class_files []= EVENTS_DIR.'/'.$class_name.'.class.php';
 		$class_files []= CLASSES_DIR.'/tasks/'.$class_name.'.class.php';
 		$class_files []= ABSTRACT_CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= ABSTRACT_CLASSES_DIR.'/liaison/'.$class_name.'.class.php';
