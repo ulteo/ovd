@@ -24,11 +24,24 @@ Logger::warning('main', '(check) Database purge start');
 
 $tokens = Tokens::getAll();
 foreach ($tokens as $token) {
-	if (! isValid()) {
+	if (! $token->isValid()) {
+		Logger::warning('main', '(check) Token \''.$token->id.'\' is no longer valid, deleting');
+
 		if ($token->type == 'start') //Token start Session
 			Abstract_Session::delete($token->link_to);
 
 		Abstract_Token::delete($token->id);
+	}
+}
+
+$sessions = Sessions::getAll();
+foreach ($sessions as $session) {
+	$buf = $session->getStatus();
+
+	if (! $buf || (int)$buf == 4) {
+		Logger::warning('main', '(check) Session \''.$session->id.'\' is no longer existing, deleting');
+
+		Abstract_Session::delete($session->id);
 	}
 }
 

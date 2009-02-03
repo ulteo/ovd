@@ -78,6 +78,8 @@ class Session {
 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
+		if (! $server)
+			return false;
 
 		$ret = query_url('http://'.$server->fqdn.':'.$server->web_port.'/webservices/session_status.php?session='.$this->id);
 
