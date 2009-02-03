@@ -33,10 +33,22 @@ $items = array(
 $in_menu = basename('http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']);
 
 $i = 0;
+echo '<table border="0" cellspacing="0" cellpadding="10">';
+echo '<tr>';
 foreach($items as $k => $v) {
-	$css_classes = 'menu';
-	$css_classes .= ' content'.(($i++%2==0)?1:2);
-	$css_classes .= (($in_menu == $k)?' in':'');
+	echo '<td style="min-width: 50px; height: 80px;text-align: center; vertical-align: middle;';
 
-	echo '<a href="'.$k.'"><div style="width: 150px;" class="'.$css_classes.'"><img src="media/image/menu/'.$k.'.png" width="32" height="32" alt="'.$v.'" title="'.$v.'" /> &nbsp; '.$v.'</div></a>'."\n";
+	if ($in_menu == $k) {
+		echo ' background: #eee;  border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
+	}
+
+	echo '" class="menu"><a href="'.$k.'"><img src="media/image/menu/'.$k.'.png" width="32" height="32" alt="'.$v.'" title="'.$v.'" /><br />';
+	echo '<span class="menulink';
+
+	if ($in_menu == $k)
+		echo '_active';
+
+	echo '">'.$v.'</span></a></td>'."\n";
 }
+echo '</tr>';
+echo '</table>';

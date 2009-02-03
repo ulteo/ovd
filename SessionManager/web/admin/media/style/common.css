@@ -18,27 +18,34 @@ table.admin_table td.content {
 	padding-left: 15px;
 }
 
-div.menu {
-	border: none;
-	padding: 10px;
+span.menulink {
+	color: #369;
+	font-weight: normal;
+	font-size: 0.9em;
 }
-
-div.menu:hover {
-	border: none;
-	background: #666;
-	color: #fff;
-}
-
-div.menu.in {
-	border: none;
-	background: #004985;
-	color: #fff;
+span.menulink_active {
+	color: #963;
+	font-weight: normal;
+	font-size: 0.9em;
 }
 
 div#adminError {
 	background: #ffcccc;
 	border: 1px solid #cc0000;
 	padding: 10px;
+}
+
+div#adminContent {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+div#headerWrap {
+	border-bottom: 1px #ccc solid;
+}
+
+div#pageWrap {
+	background: #eee;
 }
 
 .debug {
