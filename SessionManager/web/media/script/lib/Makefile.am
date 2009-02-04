@@ -1,2 +1,2 @@
-SUBDIRS =  prototype scriptaculous
+SUBDIRS =  prototype scriptaculous nifty
 
