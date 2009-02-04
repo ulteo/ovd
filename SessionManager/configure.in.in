@@ -65,6 +65,7 @@ web/webservices/Makefile
 web/media/image/Makefile
 web/media/script/ajax/Makefile
 web/media/script/Makefile
+web/media/script/lib/nifty/Makefile
 web/media/script/lib/prototype/Makefile
 web/media/script/lib/scriptaculous/Makefile
 web/media/script/lib/Makefile
