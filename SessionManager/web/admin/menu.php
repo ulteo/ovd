@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 $items = array(
+	'index.php'		=>	_('Index'),
 	'servers.php'		=>	_('Servers'),
 	'sessions.php'		=>	_('Sessions'),
 	'users.php'		=>	_('Users'),
@@ -41,7 +42,7 @@ foreach($items as $k => $v) {
 
 	if ($in_menu == $k) {
 		echo ' background: #eee; border-right: 1px solid #ccc;';
-		if ($k != 'servers.php')
+		if ($k != 'index.php')
 			echo ' border-left: 1px solid  #ccc;';
 	} else {
 		echo ' border-bottom: 1px solid #ccc;';
