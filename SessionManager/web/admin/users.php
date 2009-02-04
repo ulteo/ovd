@@ -137,6 +137,8 @@ function show_manage($login, $userDB, $userGroupDB) {
 
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div id="users_div">';
   echo '<h1>'.$u->getAttribute('displayname').'</h1>';
 
@@ -284,6 +286,8 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '</div>';
   }
 
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
 }
@@ -295,6 +299,7 @@ function show_default($userDB) {
   $userdb_rw = $userDB->isWriteable();
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
   echo '<div id="users_div">';
   echo '<h1>'._('Users').'</h1>';
@@ -380,6 +385,7 @@ function show_default($userDB) {
   }
 
 
+  echo '</div>';
   echo '</div>';
   echo '</div>';
   include_once('footer.php');

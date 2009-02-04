@@ -65,6 +65,7 @@ if (isset($_POST['join'])) {
 		redirect('sessions.php');
 
 	require_once('header.php');
+	echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
 	echo '<h1>'._('Sessions').'</h1>';
 
@@ -100,11 +101,13 @@ if (isset($_POST['join'])) {
 	echo '	<input type="submit" value="'._('Kill this session').'" />';
 	echo '</form>';
 
+	echo '</div>';
 	require_once('footer.php');
 }
 
 else {
 	require_once('header.php');
+	echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
 	echo '<h1>'._('Sessions').'</h1>';
 
@@ -152,5 +155,6 @@ else {
 	} else
 		echo _('No active session');
 
+	echo '</div>';
 	require_once('footer.php');
 }

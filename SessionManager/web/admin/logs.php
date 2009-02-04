@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 require_once('header.php');
+echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
 function my_own_callback($matches) {
 	return '<span class="'.strtolower($matches[1]).'">'.trim($matches[0]).'</span>';
@@ -23,4 +24,5 @@ foreach ($logfiles as $logfile) {
 	echo '</div>';
 }
 
+echo '</div>';
 require_once('footer.php');

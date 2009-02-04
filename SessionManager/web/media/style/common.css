@@ -58,8 +58,9 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	padding: 0;
 	padding-top: 5px;
-	padding-bottom: 5px;
+	padding-bottom: 10px;
 	text-align: left;
+	color: #666;
 }
 
 div#mainWrap {
@@ -97,7 +98,6 @@ div#footerWrap {
 	background: #fff;
 	width: 100%;
 	border-top: 1px solid #ccc;
-	margin-top: 10px;
 	padding-top: 10px;
 	padding-bottom: 10px;
 	position: relative;
@@ -398,4 +398,9 @@ table.main_sub2 td.status {
 #ulteoApplet {
 	width: 1px;
 	height: 1px;
+}
+
+div.container {
+	background: #fff;
+	padding: 10px;
 }

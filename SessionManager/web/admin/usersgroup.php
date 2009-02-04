@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -66,7 +66,7 @@ function action_add() {
   $userGroupDB = new $mod_usergroup_name();
   if (! $userGroupDB->isWriteable())
       return false;
-  
+
   $g = new UsersGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
   $res = $userGroupDB->add($g);
   if (!$res)
@@ -88,7 +88,7 @@ function action_del($id) {
   $userGroupDB = new $mod_usergroup_name();
   if (! $userGroupDB->isWriteable())
       return false;
-  
+
   $group = $userGroupDB->import($id);
   if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -112,7 +112,7 @@ function action_modify($id) {
   $userGroupDB = new $mod_usergroup_name();
   if (! $userGroupDB->isWriteable())
       return false;
-  
+
   $group = $userGroupDB->import($id);
   if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -150,7 +150,7 @@ function show_manage($id) {
   $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
   $userGroupDB = new $mod_usergroup_name();
   $usergroupdb_rw = $userGroupDB->isWriteable();
-  
+
   $group = $userGroupDB->import($id);
 
   if (! is_object($group))
@@ -213,6 +213,8 @@ function show_manage($id) {
 
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div id="users_div">';
   echo '<h1><a href="?">'._('Users groups management').'</a> - '.$group->name.'</h1>';
 
@@ -337,6 +339,8 @@ function show_manage($id) {
     echo '</div>';
   }
 
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
 }
@@ -346,6 +350,8 @@ function show_default() {
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div id="usersgroup_div" >';
   echo '<h1>'._('Users groups management').'</h1>';
 
@@ -443,5 +449,8 @@ function show_default() {
     echo '</form>';
     echo '</div>';
   }
+
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
 }

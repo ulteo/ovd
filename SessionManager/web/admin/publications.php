@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -61,6 +61,8 @@ function show_default() {
   $count = 0;
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1>'._('Publications').'</h1>';
   echo '<p><a href="wizard.php">'._('Publication wizard').'</a></p>';
@@ -96,7 +98,7 @@ function show_default() {
     }
   }
 
-  
+
   if ($can_add_publish) {
     $content = 'content'.(($count++%2==0)?1:2);
 
@@ -128,5 +130,6 @@ function show_default() {
   echo '</table>';
   echo '</div>';
 
+  echo '</div>';
   include_once('footer.php');
 }

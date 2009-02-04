@@ -218,6 +218,7 @@ function show_default() {
   }
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
   echo '<div id="servers_div">';
   echo '<h1>'._('Servers').'</h1>';
@@ -417,6 +418,8 @@ function show_default() {
   }
 
   echo '</div>';
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
 }
@@ -543,6 +546,7 @@ function show_manage($fqdn) {
   $web_port = $server->getAttribute('web_port');
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
   echo '<div id="servers_div">';
   echo '<h1>'.$server->fqdn.'</h1>';
@@ -807,6 +811,10 @@ function show_manage($fqdn) {
     echo '</div>';
   }
 
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
 }

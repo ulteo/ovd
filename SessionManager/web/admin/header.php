@@ -52,6 +52,14 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 		<link rel="stylesheet" type="text/css" href="<?php echo $base_url; ?>media/style/common.css" />
 		<link rel="stylesheet" type="text/css" href="<?php echo $base_url; ?>admin/media/style/common.css" />
 
+		<link rel="stylesheet" type="text/css" href="<?php echo $base_url; ?>media/script/lib/nifty/niftyCorners.css" />
+		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			NiftyLoad = function() {
+				Nifty('div.rounded');
+			}
+		</script>
+
 		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
 		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
@@ -101,6 +109,7 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 			<div class="spacer"></div>
 
 			<div id="pageWrap">
+				<br />
 					<?php
 					if (isset($_GET['error']) && $_GET['error'] != '')
 						echo '<p class="msg_error">'.$_GET['error'].'</p><br /><br  />';

@@ -20,6 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 ?>
+				<br />
 			</div>
 
 			<div class="spacer"></div>

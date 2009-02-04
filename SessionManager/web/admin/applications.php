@@ -164,7 +164,9 @@ function show_manage($id, $applicationDB) {
 
 
   include_once('header.php');
-	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  $icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
   echo '<div>';
   echo '<h1><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
 
@@ -317,6 +319,12 @@ function show_manage($id, $applicationDB) {
     echo "<div>\n";
   }
 
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
 }
@@ -328,6 +336,7 @@ function show_default($applicationDB) {
   $is_rw = $applicationDB->isWriteable();
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
   echo '<div>';
   echo '<h1>'._('Applications').'</h1>';
@@ -416,6 +425,9 @@ function show_default($applicationDB) {
 //     echo '</form>';
     echo '</div>';
 
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
   }

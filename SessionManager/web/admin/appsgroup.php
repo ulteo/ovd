@@ -128,7 +128,7 @@ function show_manage($id) {
     die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
-  
+
 
   $mods_enable = $prefs->get('general','module_enable');
   if (! in_array('UserGroupDB',$mods_enable))
@@ -184,6 +184,8 @@ function show_manage($id) {
 
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1><a href="?">'._('Application groups management').'</a> - '.$group->name.'</h1>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
@@ -349,6 +351,9 @@ function show_manage($id) {
     echo '</div>';
   }
 
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
   die();
 }
@@ -358,6 +363,8 @@ function show_default() {
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1>'._('Application groups management').'</h1>';
 
@@ -444,5 +451,7 @@ function show_default() {
   echo '</form>';
   echo '</div>';
 
+  echo '</div>';
+  echo '</div>';
   include_once('footer.php');
 }

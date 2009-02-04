@@ -5,7 +5,7 @@
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -122,9 +122,13 @@ function show_default() {
 
 function show_error($error_) {
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1>'._('Publication Wizard').'</h1>';
   echo '<span class="msg_error">'.$error_.'</span>';
+  echo '</div>';
+
   echo '</div>';
   include_once('footer.php');
   die();
@@ -164,6 +168,8 @@ function show_step1($error_=NULL) {
     show_error(_('No available application'));
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Users/groups selection').'</h1>';
 
@@ -238,6 +244,8 @@ function show_step1($error_=NULL) {
   echo '</table>';
   echo '</form>';
   echo '</div>';
+
+  echo '</div>';
   include_once('footer.php');
 
   die();
@@ -246,6 +254,8 @@ function show_step1($error_=NULL) {
 function show_step2($error_=NULL) {
   $count = 0;
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create usergroup').'</h1>';
 
@@ -284,6 +294,8 @@ function show_step2($error_=NULL) {
   echo '</form>';
 
   echo '</div>';
+
+  echo '</div>';
   include_once('footer.php');
 
   die();
@@ -310,6 +322,8 @@ function show_step3($error_=NULL) {
   $applications = $applicationDB->getList();
 
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/groups selection').'</h1>';
 
@@ -389,6 +403,8 @@ function show_step3($error_=NULL) {
   echo '</table>';
   echo '</form>';
   echo '</div>';
+
+  echo '</div>';
   include_once('footer.php');
 
   die();
@@ -397,6 +413,8 @@ function show_step3($error_=NULL) {
 function show_step4($error_=NULL) {
   $count = 0;
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create appgroup').'</h1>';
 
@@ -435,6 +453,8 @@ function show_step4($error_=NULL) {
   echo '</form>';
 
   echo '</div>';
+
+  echo '</div>';
   include_once('footer.php');
 
   die();
@@ -442,6 +462,8 @@ function show_step4($error_=NULL) {
 
 function show_step5() {
   include_once('header.php');
+  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Confirmation').'</h1>';
 
@@ -468,6 +490,8 @@ function show_step5() {
   echo '</form>';
 
   echo '</div>';
+
+  echo '</div>';
   include_once('footer.php');
 
   die();
@@ -481,12 +505,12 @@ function do_validate() {
 		$mods_enable = $prefs->get('general','module_enable');
 		if (! in_array('UserGroupDB',$mods_enable))
 			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-		
+
 		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 		$userGroupDB = new $mod_usergroup_name();
 		if (! $userGroupDB->isWriteable())
 			return false;
-		
+
 		$g = new UsersGroup(NULL, $_SESSION['wizard']['user_group_name'], $_SESSION['wizard']['user_group_description'], 1);
 		$res = $userGroupDB->add($g);
 

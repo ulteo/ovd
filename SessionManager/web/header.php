@@ -54,6 +54,14 @@ $logo_url = $prefs->get('general', 'logo_url');
 
 		<link rel="stylesheet" type="text/css" href="<?php echo $base_url; ?>media/style/common.css" />
 
+		<link rel="stylesheet" type="text/css" href="<?php echo $base_url; ?>media/script/lib/nifty/niftyCorners.css" />
+		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			NiftyLoad = function() {
+				Nifty('div.rounded');
+			}
+		</script>
+
 		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 		<script type="text/javascript" src="<?php echo $base_url; ?>media/script/common.js" charset="utf-8"></script>
 
