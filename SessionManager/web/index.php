@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-require_once(dirname(__FILE__).'/check.php');
+include_once(dirname(__FILE__).'/check.php');
 
 $list_languages = array(
 	'en_GB.UTF-8'	=>	'English',

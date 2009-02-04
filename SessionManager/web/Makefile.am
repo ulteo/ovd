@@ -3,7 +3,8 @@ SUBDIRS = ajax webservices media plugins modules \
 		  PEAR events
 
 scripts_DATA = footer.php header.php invite.php login.php \
-               startsession.php index.php logout.php
+               startsession.php index.php logout.php \
+               check.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager
 
