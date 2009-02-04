@@ -85,7 +85,7 @@ class Server {
 	public function isAuthorized() {
 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
-		if (! $this->getStatus()) {
+		if (! $this->isOnline()) {
 			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
 			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
 
