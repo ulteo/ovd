@@ -38,6 +38,7 @@ from win32com.shell import shell
 import pythoncom,os,socket,urllib2,urllib
 from xml.dom.minidom import Document
 import re
+import wmi
 
 import utils
 from sessionmanager import SessionManagerRequest
@@ -52,6 +53,11 @@ class UlteoSlave:
 		self.webserver = HTTPServer( ("", int(self.conf["web_port"])), communication.Web)
 		self.webserver.daemon = self
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
+		self.wmi = wmi.WMI()
+		try:
+			self.version_os = self.wmi.Win32_OperatingSystem ()[0].Name.split('|')[0]
+		except Exception, err:
+			self.version_os = platform.version()
 
 	def loop(self):
 		self.thread_web.start()
@@ -173,7 +179,6 @@ def main():
 	
 	try:
 		conf = load_shell_config_file(conf)
-		print conf
 	except Exception, err:
 		print >> sys.stderr, "invalid config file: "+str(err)
 		sys.exit(2)

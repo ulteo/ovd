@@ -81,14 +81,14 @@ class Web(SimpleHTTPRequestHandler):
 		
 		else:
 			self.send_response(404)
-			self.send_header('Content-type', 'text/html')
+			self.send_header('Content-Type', 'text/html')
 			self.end_headers()
 			self.wfile.write('')
 	
 	def do_POST(self):
 		print 'do_POST ',self.path
 		self.send_response(404)
-		self.send_header('Content-type', 'text/html')
+		self.send_header('Content-Type', 'text/html')
 		self.end_headers()
 		self.wfile.write('')
 		
@@ -100,7 +100,7 @@ class Web(SimpleHTTPRequestHandler):
 	def webservices_server_status(self):
 		print 'webservices_server_status'
 		self.send_response(200, 'OK')
-		self.send_header('Content-type', 'text/plain')
+		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.getStatusString())
 	
@@ -139,28 +139,28 @@ class Web(SimpleHTTPRequestHandler):
 		monitoring.appendChild(ram)
 		
 		self.send_response(200, 'OK')
-		self.send_header('Content-type', 'text/xml')
+		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(doc.toxml())
 	
 	def webservices_server_type(self):
 		print 'webservices_server_type'
 		self.send_response(200, 'OK')
-		self.send_header('Content-type', 'text/plain')
+		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write('windows')
 	
 	def webservices_server_version(self):
 		print 'webservices_server_version'
 		self.send_response(200, 'OK')
-		self.send_header('Content-type', 'text/plain')
+		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
-		self.wfile.write(platform.version())
+		self.wfile.write(self.server.daemon.version_os)
 	
 	def webservices_applications(self):
 		print 'webservices_applications'
 		self.send_response(200, 'OK')
-		self.send_header('Content-type', 'text/xml')
+		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.getApplicationsXML())
 	
