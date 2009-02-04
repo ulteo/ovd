@@ -22,9 +22,10 @@ $items = array(
 	'servers.php'		=>	_('Servers'),
 	'sessions.php'		=>	_('Sessions'),
 	'users.php'		=>	_('Users'),
+	'usersgroup.php'	=>	_('Usergroups'),
 	'applications.php'	=>	_('Applications'),
+	'appsgroup.php'	=>	_('Appgroups'),
 	'publications.php'	=>	_('Publications'),
-	//'wizard.php'		=>	_('Publication Wizard'),
 	'configuration.php'	=>	_('Configuration'),
 	'logs.php'		=>	_('Logs'),
 	'logout.php'		=>	_('Logout')
@@ -36,10 +37,14 @@ $i = 0;
 echo '<table border="0" cellspacing="0" cellpadding="10">';
 echo '<tr>';
 foreach($items as $k => $v) {
-	echo '<td style="min-width: 50px; height: 80px;text-align: center; vertical-align: middle;';
+	echo '<td style="min-width: 60px; height: 81px;text-align: center; vertical-align: middle;';
 
 	if ($in_menu == $k) {
-		echo ' background: #eee;  border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
+		echo ' background: #eee; border-right: 1px solid #ccc;';
+		if ($k != 'servers.php')
+			echo ' border-left: 1px solid  #ccc;';
+	} else {
+		echo ' border-bottom: 1px solid #ccc;';
 	}
 
 	echo '" class="menu"><a href="'.$k.'"><img src="media/image/menu/'.$k.'.png" width="32" height="32" alt="'.$v.'" title="'.$v.'" /><br />';

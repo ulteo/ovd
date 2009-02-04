@@ -89,6 +89,34 @@ class Servers {
 		return $servers;
 	}
 
+	public static function getOffline() {
+// 		Logger::debug('main', 'Starting Servers::getOffline');
+
+		$servers = Servers::getAll();
+
+		foreach ($servers as $k => $server) {
+			$server->getStatus();
+			if ($server->getAttribute('status') != 'down')
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public static function getBroken() {
+// 		Logger::debug('main', 'Starting Servers::getBroken');
+
+		$servers = Servers::getAll();
+
+		foreach ($servers as $k => $server) {
+			$server->getStatus();
+			if ($server->getAttribute('status') != 'broken')
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
 	public function getAvailableType($type_) {
 // 		Logger::debug('main', 'Starting Servers::getAvailableType');
 

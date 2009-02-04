@@ -72,7 +72,7 @@ div#mainWrap {
 div#headerWrap {
 	background: #fff;
 	color: #333;
-	border-bottom: 1px solid #ccc;
+	/*border-bottom: 1px solid #ccc;*/
 	position: relative;
 	top: 0px;
 	left: 0px;

@@ -77,7 +77,7 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 			<div id="headerWrap">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td style="width: 50%; text-align: right; padding-left: 10px;" class="menu">
+						<td style="width: 50%; text-align: right;" class="menu">
 						<?php
 							if (isset($_SESSION['admin_login'])) {
 								if (isset($prefs_)) {
@@ -96,7 +96,7 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 							?>
 							</h1>
 						</td>-->
-						<td style="text-align: right; padding-right: 10px;" class="logo">
+						<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">
 						<?php
 							if (isset($logo_url_) && $logo_url_ != '')
 								echo '<a href="index.php"><img src="'.$logo_url_.'" alt="'.$title_.'" title="'.$title_.'" /></a>';
