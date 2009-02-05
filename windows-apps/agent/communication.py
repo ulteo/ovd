@@ -165,23 +165,30 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write(self.server.daemon.getApplicationsXML())
 	
 	def webservices_icon(self):
-		print 'webservices_icon'
-		try :
-			args = {}
-			args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
-			for (k,v) in args2:
-				args[k] = base64.decodestring(v)
-		except Exception, err:
-			args = {}
-		print 'args ',args
-		if args.has_key('desktopfile'):
-			if args['desktopfile'] != '':
-				if os.path.exists(args['desktopfile']):
-					print 'desktopfile exist'
+		#print 'webservices_icon'
+		#try :
+			#args = {}
+			#args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
+			#for (k,v) in args2:
+				#args[k] = base64.decodestring(v)
+		#except Exception, err:
+			#args = {}
+		#print 'args ',args
+		#if args.has_key('desktopfile'):
+			#if args['desktopfile'] != '':
+				#if os.path.exists(args['desktopfile']):
+					#print 'desktopfile exist'
 		
-		if args.has_key('path'):
-			if args['path'] != '':
-				if os.path.exists(args['path']):
-					print 'path exist'
+		#if args.has_key('path'):
+			#if args['path'] != '':
+				#if os.path.exists(args['path']):
+					#print 'path exist'
+		path_png = 'icon.png'
+		f = open(path_png, 'rb')
+		self.send_response(200)
+		self.send_header('Content-Type', 'image/png')
+		self.end_headers()
+		self.wfile.write(f.read())
+		f.close()
 
 
