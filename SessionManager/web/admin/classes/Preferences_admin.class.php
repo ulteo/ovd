@@ -409,7 +409,17 @@ class Preferences_admin extends Preferences {
 	public function addPrettyName($key_,$prettyName_) {
 		$this->prettyName[$key_] = $prettyName_;
 	}
-
+	
+	public function set($value_, $key_, $contener_) {
+		if (!isset($this->prefs[$value_])) {
+			$this->prefs[$value_] = array();
+		}
+		if (is_string($key_))
+			$this->prefs[$value_][$key_] = $contener_;
+		else
+			Logger::error('admin','PREFERENCESADMIN::set $key_ is not a string');
+	}
+	
 	protected function constructFromArray(){
 		Logger::debug('admin','ADMIN_PREFERENCES::constructFromArray');
 		$prefs =& $this->prefs;
