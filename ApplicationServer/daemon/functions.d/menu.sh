@@ -34,7 +34,7 @@ menu_spool() {
 
     for i in `seq $nblines`; do
 	local app=`head -n $i $file | tail -n 1`
-	local type=`echo -n $app | cut -d '.' -f2`
+	local type=${app##*.}
 
 	case $type in
 	    'desktop')
