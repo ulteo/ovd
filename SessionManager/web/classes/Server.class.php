@@ -570,9 +570,9 @@ class Server {
 
 		$application_node = $dom->getElementsByTagName("application");
 		foreach($application_node as $app_node){
-			$app_name = NULL;
-			$app_description = NULL;
-			$app_path_exe = NULL;
+			$app_name = '';
+			$app_description = '';
+			$app_path_exe = '';
 			$app_path_args = NULL;
 			$app_path_icon = NULL;
 			$app_package = NULL;
