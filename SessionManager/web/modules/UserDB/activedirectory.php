@@ -102,6 +102,13 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		if (! str_endswith($config['login'], $ldap_suffix))
 			$config['login'] .= ','.$ldap_suffix;
 
+		
+		$match_minimal  = array(
+					'login'	=> 'cn',
+					'displayname'	=> 'displayname',
+					'real_login'    => 'samaccountname',
+		);
+
 		$config_ldap = array(
 			'host' =>  $config['host'],
 			'suffix' => $ldap_suffix,
@@ -113,13 +120,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'userbranch'	=> $config['ou'],
 			'uidprefix' => 'cn',
 			'protocol_version' => 3,
-			'match' => array(
-					'login'	=> 'cn',
-					'displayname'	=> 'displayname',
-					'homedir'	=> 'homedirectory',
-					'real_login'    => 'samaccountname',
-					 'memberof' => 'memberof'
-				)
+			'match' => array_merge($match_minimal, $config['match'])
 			);
 		return $config_ldap;
 	}
