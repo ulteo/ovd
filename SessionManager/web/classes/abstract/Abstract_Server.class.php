@@ -53,6 +53,33 @@ class Abstract_Server {
 		}
 
 		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers\' created');
+
+
+		/* create the reporting table for serveurs too */
+		$ret = $SQL->DoQuery(
+		'CREATE TABLE IF NOT EXISTS @1 (
+		@2 int(10) NOT NULL,
+		@3 varchar(255) NOT NULL,
+		@4 int(16) NOT NULL,
+		@5 int(16) NOT NULL,
+		@6 int(8) NOT NULL,
+		@7 int(8) NOT NULL,
+		@8 int(10) NOT NULL,
+		@9 int(4) NOT NULL,
+		@10 int(10) NOT NULL
+		)', $mysql_conf['prefix'].'servers_report',
+		  'date', 'fqdn', 'down_time', 'maintenance_time',
+		  'sessions_count',
+		  'max_connections', 'max_connections_when',
+		  'max_ram', 'max_ram_when');
+
+		if (! $ret) {
+			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers_report\'');
+			return false;
+		}
+
+		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers_report\' created');
+
 		return true;
 	}
 

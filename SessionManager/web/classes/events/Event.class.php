@@ -39,6 +39,7 @@ class Event {
 		$this->known_callbacks = $this->getAvailableCallbacks();
 
 		/* get the list of callbacks we'll handle */
+		$this->registerBuiltinCallbacks();
 		$prefs = Preferences::getInstance();
 		$cb_list = $prefs->get('events', get_class($this));
 		if (($cb_list != NULL) && is_array ($cb_list)) {
@@ -65,6 +66,19 @@ class Event {
 		return $ret;
 	}
 
+	protected final function registerBuiltinCallbacks() {
+		/* FIXME: we'll have to drop builtins callbacks from the options list
+		 * when it will be worked on */
+		if (isset($this->builtins))
+		{
+			foreach($this->builtins as $builtin) {
+				$this->register($builtin);
+			}
+			return true;
+		}
+		return false;
+	}
+
 	private final function register($callback_) {
 		if (! in_array($callback_, $this->callbacks))
 		{
@@ -75,7 +89,7 @@ class Event {
 
 	protected final function unregister($callback_) {
 		/* FIXME: is there a better way to do this in php ? */
-		foreach ($this->callbacks as $key => $value) {
+		foreach($this->callbacks as $key => $value) {
 			if ($callback_ == $value)
 				array_slice($this->callbacks, $key);
 		}

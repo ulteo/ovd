@@ -21,13 +21,18 @@
 
 /* This is an exemple for now, real implementation needs to be done */
 
-require_once(dirname(__FILE__).'/../../../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class ReportCallback extends EventCallback {
     public function run () {
-		Logger::debug('main', 'ReportCallback::run called at '.$this->ev->time);
+		/* don't register a new session if the user is resuming it */
+		if (isset($this->ev->suspended) && $this->ev->suspended)
+			return true;
 
-		/* don't stop processing the event */
+		$rep = ServerReport::load();
+		$rep->reportSessionStart($this->ev->server);
+		$rep->save();
+
 		return true;
     }
 }

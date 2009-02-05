@@ -10,9 +10,11 @@ scripts_DATA = Application.class.php \
                Plugin.class.php \
                Plugins.class.php \
                Preferences.class.php \
+               ReportItems.class.php \
                Reporting.class.php \
                Server.class.php \
                Servers.class.php \
+               ServerReport.class.php \
                Session.class.php \
                Sessions.class.php \
                Token.class.php \
