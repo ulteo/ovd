@@ -4,7 +4,9 @@ conf_DATA = apache2.conf
 confdir = $(sysconfdir)/ulteo/applicationserver
 
 apache2.conf:
-	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2.conf.in > $@
+	sed -e "s,@DATADIR@,$(datadir)," \
+	    -e "s,@LOCALSTATEDIR@,$(localstatedir)," \
+			< $(srcdir)/apache2.conf.in > $@
 
 install-exec-hook:
 	mkdir -p $(DESTDIR)$(localstatedir)/log/ulteo/applicationserver
@@ -12,3 +14,5 @@ install-exec-hook:
 
 clean-local:
 	rm -f $(conf_DATA)
+
+.PHONY: apache2.conf
