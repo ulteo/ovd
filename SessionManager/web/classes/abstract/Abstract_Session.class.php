@@ -36,8 +36,9 @@ class Abstract_Session {
 		@6 varchar(255) NOT NULL,
 		@7 varchar(255) NOT NULL,
 		@8 varchar(255) NOT NULL,
+		@9 int(10) NOT NULL,
 		PRIMARY KEY  (@2)
-		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'start_time');
+		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'start_time', 'timestamp');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions\'');
@@ -102,7 +103,7 @@ class Abstract_Session {
 			if (! Abstract_Session::create($session_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13 WHERE @14 = %15 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'start_time', $session_->start_time, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15 WHERE @16 = %17 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}
@@ -188,6 +189,26 @@ class Abstract_Session {
 
 	public function uptodate($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $mysql_conf['prefix'].'sessions', 'id', $session_->id);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
+			return false;
+
+		$row = $SQL->FetchResult();
+
+		if ((int)$row['timestamp'] < time()-60)
+			return false;
 
 		return true;
 	}

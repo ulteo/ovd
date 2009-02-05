@@ -55,7 +55,6 @@ class Servers {
 		$servers = Servers::getAll();
 
 		foreach ($servers as $k => $server) {
-			$server->getStatus();
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
@@ -95,7 +94,6 @@ class Servers {
 		$servers = Servers::getAll();
 
 		foreach ($servers as $k => $server) {
-			$server->getStatus();
 			if ($server->getAttribute('status') != 'down')
 				unset($servers[$k]);
 		}
@@ -109,7 +107,6 @@ class Servers {
 		$servers = Servers::getAll();
 
 		foreach ($servers as $k => $server) {
-			$server->getStatus();
 			if ($server->getAttribute('status') != 'broken')
 				unset($servers[$k]);
 		}
