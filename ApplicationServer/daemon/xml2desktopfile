@@ -38,7 +38,7 @@ class Application(dict):
 
         if (self.filename.endswith('.lnk')):
             self['Exec'] = 'rdesktop -l "%s"'%(self['Exec'])
-            self['Icon'] = 'xfce4_xicon.png'
+            self['Icon'] = 'windows-%s.png'%(doc.getAttribute("id"))
 
 
     def toDesktopFile(self, directory):

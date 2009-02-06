@@ -62,15 +62,25 @@ windows_catch_application() {
 	return 1
     fi
 
+    local app_id=`grep id $buffer | sed -e 's/.*id="//' -e 's/".*//'`
+    local pixmap="/usr/share/pixmaps/windows-"$app_id'.png'
+
+    webservices_get_application_icon $app_id $pixmap
+    if [ $? -ne 0 ]; then
+	log_WARN "Unable to catch application icon"
+	[ -f $buffer ] && rm $buffer
+	[ -f $pixmap ] && rm $pixmap
+	return 1
+    fi
+
     xml2desktopfile $buffer $windows_app_cache
     if [ $? -ne 0 ] || [ ! -f "$uri" ]; then
 	log_WARN "Catch of $basename failed"
 	[ -f $buffer ] && rm $buffer
+	[ -f $pixmap ] && rm $pixmap
 	return 1
     fi
 
-    echo "avant buffer '$buffer'"
     [ -f $buffer ] && rm $buffer
-    echo "apres buffer '$buffer'"
     return 0
 }

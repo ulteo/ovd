@@ -82,3 +82,14 @@ webservices_get_application() {
     log_INFO "webservices_server_request: doing $request"
     wget --no-check-certificate --retry-connrefused "$request" -O $output -o /dev/null
 }
+
+webservices_get_application_icon() {
+    local id=$1
+    local output=$2
+
+    local args="fqdn=${SERVERNAME}&id=$id"
+    local request="${SESSION_MANAGER_URL}/webservices/icon.php?${args}"
+
+    log_INFO "webservices_server_request: doing $request"
+    wget --no-check-certificate --retry-connrefused "$request" -O $output -o /dev/null
+}
