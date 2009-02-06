@@ -314,7 +314,6 @@ function show_default($userDB) {
     echo '<tr class="title">';
     echo '<th>'._('Login').'</th>';
     echo '<th>'._('Display name').'</th>';
-    echo '<th>'._('Uid').'</th>';
     echo '</tr>';
 
     $count = 0;
@@ -323,20 +322,26 @@ function show_default($userDB) {
 
       $keys = array();
       foreach($u->getAttributesList() as $attr)
-	if (! in_array($attr, array('uid', 'login', 'displayname','password')))
+	if (! in_array($attr, array('login', 'displayname','password')))
 	  $keys[]= $attr;
 
       $extra = array();
-      foreach($keys as $key)
-	$extra[]= '<b>'.$key.':</b> '.$u->getAttribute($key);
+      foreach($keys as $key) {
+	if (is_array($u->getAttribute($key)))
+	  $buf = implode(", ", $u->getAttribute($key));
+	else
+	  $buf = $u->getAttribute($key);
+
+	$extra[]= '<b>'.$key.':</b> '.$buf;
+      }
+      asort($extra);
 
       echo '<tr class="'.$content.'">';
       echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
       echo $u->getAttribute('login');
       echo '</a></td>';
       echo '<td>'.$u->getAttribute('displayname').'</td>';
-      echo '<td>'.$u->getAttribute('uid').'</td>';
-      echo '<td>'.implode(",", $extra).'</td>';
+      echo '<td>'.implode(", ", $extra).'</td>';
 
       echo '<td><form action="users.php">';
       echo '<input type="submit" value="'._('Manage').'"/>';

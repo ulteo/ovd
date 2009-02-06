@@ -591,64 +591,66 @@ function show_manage($fqdn) {
 
   echo '<div>';
   echo '<h2>'._('Configuration').'</h2>';
+  echo '<table>';
 
-
-
-  echo '<div>';
+  echo '<tr><td>';
+  echo _('Number of available sessions on this server').': ';
+  echo '</td><td>';
   echo '<form action="servers.php" method="GET">';
   echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
   echo '<input type="hidden" name="action" value="available_sessions" />';
-
-  echo _('Number of available sessions on this server').': ';
   echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
   echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
   echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
 
   echo ' <input type="submit" value="'._('change').'" />';
   echo '</form>';
-  echo "</div>\n";
+  echo '</td></tr>';
 
-  echo '<div>';
+  echo '<tr><td>';
+  echo _('Redirection name of this server').': ';
+  echo '</td><td>';
   echo '<form action="servers.php" method="GET">';
   echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
   echo '<input type="hidden" name="action" value="external_name" />';
-
-  echo _('Redirection name of this server').': ';
   echo '<input type="text" name="external_name" value="'.$external_name.'" />';
-
   echo ' <input type="submit" value="'._('change').'" />';
   echo '</form>';
-  echo "</div>\n";
+  echo "</td></tr>\n";
 
-  echo '<div>';
+  echo '<tr><td>';
+  echo _('Web port of this server').': ';
+  echo '</td><td>';
   echo '<form action="servers.php" method="GET">';
   echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
   echo '<input type="hidden" name="action" value="web_port" />';
-
-  echo _('Web port of this server').': ';
   echo '<input type="text" name="web_port" value="'.$web_port.'" />';
-
   echo ' <input type="submit" value="'._('change').'" />';
   echo '</form>';
-  echo "</div>\n";
+  echo "</td></tr>\n";
 
   if ($server_online) {
+    echo '<tr><td></td><td>';
     echo '<form action="servers.php" method="get">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
     echo '<input type="hidden" name="action" value="maintenance" />';
     echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
     echo '<input type="submit" value="'.$switch_button.'"/>';
     echo '</form>';
+    echo '</td></tr>';
   }
 
 
   if ($server_lock || !$server_online) {
+    echo '<tr><td></td><td>';
     echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
     echo '<input type="hidden" name="action" value="delete" />';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
     echo '<input type="submit" value="'._('Delete').'" />';
     echo '</form>';
+    echo '</td></tr>';
   }
+  echo '</table>';
 
   if ($server_online) {
     echo '<h2>'._('Install an application from a package name').'</h2>';
