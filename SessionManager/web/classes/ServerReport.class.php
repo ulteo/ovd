@@ -90,6 +90,9 @@ class ServerReport {
 
 		/* do we have the max sessions nb ever ? */
 		$server = Abstract_Server::load($fqdn_);
+		if ($server === false)
+			return;
+
 		$conn_nb = $server->getNbUsedSessions();
 		if (! isset($this->max_connections[$fqdn_]))
 			$this->max_connections[$fqdn_] = new ReportMaxItem($conn_nb +1 ); /* current sess */
