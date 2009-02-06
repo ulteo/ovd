@@ -70,7 +70,7 @@ $logo_url = $prefs->get('general', 'logo_url');
 
 	<body>
 		<div id="mainWrap">
-			<div id="headerWrap">
+			<div id="headerWrap" style="border-bottom: 1px solid #ccc;">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: left;" class="logo">

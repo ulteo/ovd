@@ -333,7 +333,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 
 	<body>
 		<div id="mainWrap">
-			<div id="headerWrap">
+			<div id="headerWrap" style="border-bottom: 1px solid #ccc;">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: left" class="logo">';
