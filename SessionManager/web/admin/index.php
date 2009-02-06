@@ -30,28 +30,42 @@ require_once('header.php');
 ?>
 <table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 	<tr>
-		<td style="width: 30%;">
+		<td style="width: 30%; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2>Users and Usergroups</h2>
+
+	<ul>
+		<li><a href="users.php"><?php echo _('Users list'); ?></li>
+		<li><a href="usersgroup.php"><?php echo ('Usergroups list'); ?></li>
+	</ul>
 </div>
 </div>
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="width: 30%;">
+		<td style="width: 30%; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Servers and Sessions</h2>
+	<h2>Servers</h2>
+
+	<ul>
+		<li><a href="servers.php"><?php echo _('Servers list'); ?></li>
+		<li><a href="servers.php?view=unregistered"><?php echo ('Unregistered servers list'); ?></li>
+	</ul>
 </div>
 </div>
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="padding-right: 20px;">
+		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2>Configuration</h2>
+
+	<ul>
+		<li><a href="configuration.php"><?php echo _('General configuration'); ?></li>
+	</ul>
 </div>
 </div>
 		</td>
@@ -61,16 +75,23 @@ require_once('header.php');
 		</td>
 	</tr>
 	<tr>
-		<td>
+		<td style="text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2>Applications and Appgroups</h2>
+
+	<ul>
+		<li><a href="applications.php"><?php echo _('Applications list'); ?></li>
+		<li><a href="appsgroup.php"><?php echo _('Application groups list'); ?><br /><br /></li>
+		<li><a href="publications.php"><?php echo _('Publications list'); ?></li>
+		<li><a href="wizard.php"><?php echo _('Publication wizard'); ?></li>
+	</ul>
 </div>
 </div>
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="padding-right: 20px;" colspan="3">
+		<td style="padding-right: 20px; text-align: left; vertical-align: top;" colspan="3">
 <div class="container rounded" style="background: #fff; width: 99%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2>Status</h2>

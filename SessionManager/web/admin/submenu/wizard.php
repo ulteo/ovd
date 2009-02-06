@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
@@ -18,19 +18,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/includes/core.inc.php');
-?>
-				</div>
 
-				<div class="spacer"></div>
-				<br />
-			</div>
-
-			<div class="spacer"></div>
-
-			<div id="footerWrap">
-				<?php echo _('powered by'); ?> <a href="http://www.ulteo.com"><img src="<?php echo $base_url; ?>media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
-			</div>
-		</div>
-	</body>
-</html>
+if (isset($_GET['view']) && $_GET['view'] == '') {
+} else {
+	echo '<div class="container">';
+	echo '<a href="applications.php">'._('Applications').'</a>';
+	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="appsgroup.php">'._('Application groups').'</a>';
+	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="publications.php">'._('Publications').'</a>';
+	echo '</div>';
+	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+	echo _('Publication wizard');
+	echo '</div>';
+}

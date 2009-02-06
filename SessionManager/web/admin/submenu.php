@@ -18,18 +18,42 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
+if (isset($_GET['page'])) {
+	switch ($_GET['page']) {
+		case 'servers':
+			echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-left: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+			echo 'List';
+			echo '</div>';
+			echo '<div class="container" style="background: #eee;">';
+			echo '<a href="javascript:;" onclick="return false;">click me (i do nothing)</a>';
+			echo '</div>';
+			echo '<div class="container" style="background: #eee;">';
+			echo '<a href="javascript:;" onclick="return false;">click me (i do nothing)</a>';
+			echo '</div>';
+			echo '<div class="container" style="background: #eee;">';
+			echo '<a href="javascript:;" onclick="return false;">click me (i do nothing)</a>';
+			echo '</div>';
+			echo '<div class="container" style="background: #eee;">';
+			echo '<a href="javascript:;" onclick="return false;">click me (i do nothing)</a>';
+			echo '</div>';
+			break;
+		default:
+			echo 'toto';
+			break;
+	}
+}
+/*
 $items = array(
 	'index.php'		=>	_('Index'),
 	'servers.php'		=>	_('Servers'),
-// 	'sessions.php'		=>	_('Sessions'),
+	'sessions.php'		=>	_('Sessions'),
 	'users.php'		=>	_('Users'),
-// 	'usersgroup.php'	=>	_('Usergroups'),
+	'usersgroup.php'	=>	_('Usergroups'),
 	'applications.php'	=>	_('Applications'),
-// 	'appsgroup.php'	=>	_('Appgroups'),
-// 	'publications.php'	=>	_('Publications'),
+	'appsgroup.php'	=>	_('Appgroups'),
+	'publications.php'	=>	_('Publications'),
 	'configuration.php'	=>	_('Configuration'),
-// 	'logs.php'		=>	_('Logs'),
-	'sessions.php'		=>	_('Status'),
+	'logs.php'		=>	_('Logs'),
 	'logout.php'		=>	_('Logout')
 );
 
@@ -41,7 +65,7 @@ echo '<tr>';
 foreach($items as $k => $v) {
 	echo '<td style="min-width: 60px; height: 81px;text-align: center; vertical-align: middle;';
 
-	if ($in_menu == $k || ($k == 'users.php' && $in_menu =='usersgroup.php') || ($k == 'applications.php' && ($in_menu =='appsgroup.php' || $in_menu == 'publications.php' || $in_menu == 'wizard.php')) || ($k == 'sessions.php' && $in_menu == 'logs.php')) {
+	if ($in_menu == $k) {
 		echo ' background: #eee; border-right: 1px solid #ccc;';
 		if ($k != 'index.php')
 			echo ' border-left: 1px solid  #ccc;';
@@ -59,3 +83,4 @@ foreach($items as $k => $v) {
 }
 echo '</tr>';
 echo '</table>';
+*/

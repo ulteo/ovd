@@ -101,6 +101,114 @@ function action_modify($id) {
   return true;
 }
 
+function show_default() {
+  $groups = getAllAppsGroups();
+  $has_group = ! (is_null($groups) or (count($groups) == 0));
+
+  include_once('header.php');
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/appsgroup.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+
+  echo '<div>';
+  echo '<h1>'._('Application groups').'</h1>';
+
+  echo '<div>';
+  if (! $has_group)
+    echo _('No application groups available').'<br />';
+  else {
+    echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
+    echo '<input type="hidden" name="action" value="del" />';
+    echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
+    echo '<tr class="title">';
+    echo '<th class="unsortable"></th>';
+    echo '<th>'._('Name').'</th>';
+    echo '<th>'._('Description').'</th>';
+    echo '<th>'._('Status').'</th>';
+    echo '</tr>';
+
+    $count = 0;
+    foreach($groups as $group){
+      $content = 'content'.(($count++%2==0)?1:2);
+      if ($group->published)
+	$publish = '<span class="msg_ok">'._('Enabled').'</span>';
+      else
+	$publish = '<span class="msg_error">'._('Blocked').'</span>';
+
+      echo '<tr class="'.$content.'">';
+      echo '<td><input type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
+      echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
+      echo '<td>'.$group->description.'</td>';
+      echo '<td class="centered">'.$publish.'</td>';
+
+      echo '<td><form action="">';
+      echo '<input type="submit" value="'._('Manage').'"/>';
+      echo '<input type="hidden" name="action" value="manage" />';
+      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+      echo '</form></td>';
+
+      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+      echo '<input type="submit" value="'._('Delete').'"/>';
+      echo '<input type="hidden" name="action" value="del" />';
+      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+      echo '</form></td>';
+      echo '</tr>';
+    }
+    $content = 'content'.(($count++%2==0)?1:2);
+    echo '<tr class="'.$content.'">';
+    echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
+    echo '<td><input type="submit" value="'._('Delete').'"/></td>';
+    echo '</table>';
+    echo '</form>';
+
+  }
+  echo '</div>';
+
+  echo '<div>';
+  echo '<h2>'._('Create a new group').'</h2>';
+  echo '<form action="" method="post">';
+  echo '<input type="hidden" name="action" value="add" />';
+  echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
+
+  echo '<tr class="content1">';
+  echo '<th>'._('Name').'</th>';
+  echo '<td><input type="text" name="name" value="" /></td>';
+  echo '</tr>';
+
+  echo '<tr class="content2">';
+  echo '<th>'._('Description').'</th>';
+  echo '<td><input type="text" name="description" value="" /></td>';
+  echo '</tr>';
+  /*
+  echo '<tr class="content2">';
+  echo '<th>'._('Status').'</th>';
+  echo '<td>';
+  echo '<input type="radio" name="published" value="1" checked />'._('Enable');
+  echo '<input type="radio" name="published" value="0"  />'._('Block');
+  echo '</td>';
+  echo '</tr>';
+  */
+  echo '<tr class="content1">';
+  echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
+  echo '</tr>';
+  echo '</table>';
+  echo '</form>';
+  echo '</div>';
+
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
+  include_once('footer.php');
+}
 
 function show_manage($id) {
   $group = new AppsGroup();
@@ -356,102 +464,4 @@ function show_manage($id) {
   echo '</div>';
   include_once('footer.php');
   die();
-}
-
-function show_default() {
-  $groups = getAllAppsGroups();
-  $has_group = ! (is_null($groups) or (count($groups) == 0));
-
-  include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
-
-  echo '<div>';
-  echo '<h1>'._('Application groups management').'</h1>';
-
-  echo '<div>';
-  echo '<h2>'._('Application group list').'</h2>';
-  if (! $has_group)
-    echo _('No application groups available').'<br />';
-  else {
-    echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
-    echo '<input type="hidden" name="action" value="del" />';
-    echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
-    echo '<tr class="title">';
-    echo '<th class="unsortable"></th>';
-    echo '<th>'._('Name').'</th>';
-    echo '<th>'._('Description').'</th>';
-    echo '<th>'._('Status').'</th>';
-    echo '</tr>';
-
-    $count = 0;
-    foreach($groups as $group){
-      $content = 'content'.(($count++%2==0)?1:2);
-      if ($group->published)
-	$publish = '<span class="msg_ok">'._('Enabled').'</span>';
-      else
-	$publish = '<span class="msg_error">'._('Blocked').'</span>';
-
-      echo '<tr class="'.$content.'">';
-      echo '<td><input type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
-      echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
-      echo '<td>'.$group->description.'</td>';
-      echo '<td class="centered">'.$publish.'</td>';
-
-      echo '<td><form action="">';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-      echo '</form></td>';
-
-      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
-      echo '<input type="submit" value="'._('Delete').'"/>';
-      echo '<input type="hidden" name="action" value="del" />';
-      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-      echo '</form></td>';
-      echo '</tr>';
-    }
-    $content = 'content'.(($count++%2==0)?1:2);
-    echo '<tr class="'.$content.'">';
-    echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
-    echo '<td><input type="submit" value="'._('Delete').'"/></td>';
-    echo '</table>';
-    echo '</form>';
-
-  }
-  echo '</div>';
-
-  echo '<div>';
-  echo '<h2>'._('Create a new group').'</h2>';
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="add" />';
-  echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
-
-  echo '<tr class="content1">';
-  echo '<th>'._('Name').'</th>';
-  echo '<td><input type="text" name="name" value="" /></td>';
-  echo '</tr>';
-
-  echo '<tr class="content2">';
-  echo '<th>'._('Description').'</th>';
-  echo '<td><input type="text" name="description" value="" /></td>';
-  echo '</tr>';
-  /*
-  echo '<tr class="content2">';
-  echo '<th>'._('Status').'</th>';
-  echo '<td>';
-  echo '<input type="radio" name="published" value="1" checked />'._('Enable');
-  echo '<input type="radio" name="published" value="0"  />'._('Block');
-  echo '</td>';
-  echo '</tr>';
-  */
-  echo '<tr class="content1">';
-  echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
-  echo '</tr>';
-  echo '</table>';
-  echo '</form>';
-  echo '</div>';
-
-  echo '</div>';
-  echo '</div>';
-  include_once('footer.php');
 }

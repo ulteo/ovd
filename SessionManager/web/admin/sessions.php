@@ -64,6 +64,9 @@ if (isset($_POST['join'])) {
 	if (! $session)
 		redirect('sessions.php');
 
+//FIX ME?
+	$session->getStatus();
+
 	require_once('header.php');
 	echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
@@ -107,7 +110,15 @@ if (isset($_POST['join'])) {
 
 else {
 	require_once('header.php');
-	echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+// 	echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+	echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+	echo '<tr>';
+	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+	include_once(dirname(__FILE__).'/submenu/sessions.php');
+	echo '</td>';
+	echo '<td style="text-align: center; vertical-align: top;">';
+	echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
 	echo '<h1>'._('Sessions').'</h1>';
 
@@ -152,9 +163,15 @@ else {
 		echo '</tfoot>';
 		echo '</table>';
 		echo '</form>';
-	} else
+	} else {
 		echo _('No active session');
+		echo '<br /><br />';
+	}
 
 	echo '</div>';
+	echo '</div>';
+	echo '</td>';
+	echo '</tr>';
+	echo '</table>';
 	require_once('footer.php');
 }

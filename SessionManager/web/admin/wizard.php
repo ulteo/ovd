@@ -122,7 +122,15 @@ function show_default() {
 
 function show_error($error_) {
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/wizard.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1>'._('Publication Wizard').'</h1>';
@@ -130,6 +138,10 @@ function show_error($error_) {
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
   die();
 }
@@ -168,7 +180,15 @@ function show_step1($error_=NULL) {
     show_error(_('No available application'));
 
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/wizard.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Users/groups selection').'</h1>';
@@ -246,6 +266,10 @@ function show_step1($error_=NULL) {
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
 
   die();
@@ -254,7 +278,15 @@ function show_step1($error_=NULL) {
 function show_step2($error_=NULL) {
   $count = 0;
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/wizard.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create usergroup').'</h1>';
@@ -296,6 +328,10 @@ function show_step2($error_=NULL) {
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
 
   die();
@@ -322,7 +358,15 @@ function show_step3($error_=NULL) {
   $applications = $applicationDB->getList();
 
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/wizard.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/groups selection').'</h1>';
@@ -405,6 +449,10 @@ function show_step3($error_=NULL) {
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
 
   die();
@@ -413,7 +461,15 @@ function show_step3($error_=NULL) {
 function show_step4($error_=NULL) {
   $count = 0;
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/wizard.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create appgroup').'</h1>';
@@ -455,6 +511,10 @@ function show_step4($error_=NULL) {
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
 
   die();
@@ -462,7 +522,15 @@ function show_step4($error_=NULL) {
 
 function show_step5() {
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/wizard.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Confirmation').'</h1>';
@@ -492,6 +560,10 @@ function show_step5() {
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
 
   die();

@@ -20,7 +20,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-function redirect($url_) {
+function redirect($url_=NULL) {
+	if (is_null($url_))
+		$url_ = $_SERVER['HTTP_REFERER'];
+
 	header('Location: '.$url_);
 	die();
 }

@@ -77,7 +77,7 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 			<div id="headerWrap">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td style="width: 50%; text-align: right;" class="menu">
+						<td style="min-width: 10%; text-align: right;" class="menu">
 						<?php
 							if (isset($_SESSION['admin_login'])) {
 								if (isset($prefs_)) {
@@ -110,53 +110,31 @@ $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 
 			<div id="pageWrap">
 				<br />
+				<div class="spacer"></div>
 					<?php
 					if (isset($_GET['error']) && $_GET['error'] != '')
 						echo '<p class="msg_error">'.$_GET['error'].'</p><br /><br  />';
 					?>
-<script type="text/javascript" src="../media/script/lib/prototype/prototype.js" charset="utf-8"></script>
-<script type="text/javascript" src="../media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
-<script type="text/javascript" src="../media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/ajax/appsgroup.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/ajax/user.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/ajax/application.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/ajax/usersgroup.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/ajax/server.js" charset="utf-8"></script>
-<script type="text/javascript" src="media/script/ajax/configuration.js" charset="utf-8"></script>
-<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
-<div id="adminHeader">
-<?php
-	if (isset($_SESSION['admin_login'])) {
-		if (isset($prefs_)) {
-			require_once(dirname(__FILE__).'/menu.php');
-		}
-	}
-?>
-</div>
+				<div id="adminContent">
+					<?php
+						if (isset($_SESSION['errormsg']) && is_array($_SESSION['errormsg'])) {
+							if (count($_SESSION['errormsg']) > 0) {
+							?>
+							<div id="adminError">
+								<span class="msg_error"><?php
+									if (count($_SESSION['errormsg']) > 1) {
+										echo '<ul>';
+										foreach ($_SESSION['errormsg'] as $error_msg)
+											echo '<li>'.$error_msg.'</li>';
+										echo '</ul>';
+									} else
+										echo $_SESSION['errormsg'][0];
+								?></span>
+							</div>
+							<?php
+							}
 
-<div style="clear: both;"></div>
-
-<div id="adminContent">
-	<?php
-		if (isset($_SESSION['errormsg']) && is_array($_SESSION['errormsg'])) {
-			if (count($_SESSION['errormsg']) > 0) {
-			?>
-			<div id="adminError">
-				<span class="msg_error"><?php
-					if (count($_SESSION['errormsg']) > 1) {
-						echo '<ul>';
-						foreach ($_SESSION['errormsg'] as $error_msg)
-							echo '<li>'.$error_msg.'</li>';
-						echo '</ul>';
-					} else
-						echo $_SESSION['errormsg'][0];
-				?></span>
-			</div>
-			<?php
-			}
-
-			unset($_SESSION['errormsg']);
-		}
-	?>
+							unset($_SESSION['errormsg']);
+						}
+					?>

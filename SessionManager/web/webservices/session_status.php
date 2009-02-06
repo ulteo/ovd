@@ -47,6 +47,9 @@ Logger::debug('main', '(webservices/session_status) Security check OK');
 
 $session = Abstract_Session::load($_GET['session']);
 
+if (! $session)
+	die('ERROR - No such session');
+
 Logger::debug('main', '(webservices/session_status) Session '.$session->id.' on server '.$session->server.' have status '.$_GET['status']);
 
 $session->setStatus($_GET['status']);

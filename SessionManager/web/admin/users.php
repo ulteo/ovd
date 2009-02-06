@@ -59,7 +59,11 @@ if (isset($_REQUEST['action'])) {
   }
 }
 
-show_default($userDB);
+if (! isset($_GET['view']))
+	$_GET['view'] = 'all';
+
+if ($_GET['view'] == 'all')
+	show_default($userDB);
 
 function add_user($userDB) {
   $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
@@ -105,6 +109,122 @@ function modify_user($userDB, $login) {
     die_error('Unable to modify user '.$res,__FILE__,__LINE__);
 
   return true;
+}
+
+function show_default($userDB) {
+  $us = $userDB->getList();  // in admin, getList is always present (even if canShowList is false)
+
+  $users_list_empty = (is_null($us) or count($us)==0);
+  $userdb_rw = $userDB->isWriteable();
+
+  include_once('header.php');
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/users.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+
+  echo '<div id="users_div">';
+  echo '<h1>'._('Users').'</h1>';
+
+  echo '<div id="users_list_div">';
+
+  if ($users_list_empty)
+    echo _('No available user').'<br />';
+  else {
+    echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
+    echo '<tr class="title">';
+    echo '<th>'._('Login').'</th>';
+    echo '<th>'._('Display name').'</th>';
+    echo '</tr>';
+
+    $count = 0;
+    foreach($us as $u){
+      $content = 'content'.(($count++%2==0)?1:2);
+
+      $keys = array();
+      foreach($u->getAttributesList() as $attr)
+	if (! in_array($attr, array('login', 'displayname','password')))
+	  $keys[]= $attr;
+
+      $extra = array();
+      foreach($keys as $key) {
+	if (is_array($u->getAttribute($key)))
+	  $buf = implode(", ", $u->getAttribute($key));
+	else
+	  $buf = $u->getAttribute($key);
+
+	$extra[]= '<b>'.$key.':</b> '.$buf;
+      }
+      asort($extra);
+
+      echo '<tr class="'.$content.'">';
+      echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
+      echo $u->getAttribute('login');
+      echo '</a></td>';
+      echo '<td>'.$u->getAttribute('displayname').'</td>';
+      echo '<td>'.implode(", ", $extra).'</td>';
+
+      echo '<td><form action="users.php">';
+      echo '<input type="submit" value="'._('Manage').'"/>';
+      echo '<input type="hidden" name="action" value="manage" />';
+      echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
+      echo '</form></td>';
+
+      if ($userdb_rw) {
+	echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
+	echo '<input type="submit" value="'._('Delete').'"/>';
+	echo '<input type="hidden" name="action" value="del" />';
+	echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
+	echo '</form></td>';
+      }
+    }
+    echo '</table>';
+  }
+
+  if ($userdb_rw) {
+    echo '<h2>'._('Add').'</h2>';
+    echo '<div id="user_add">';
+    echo '<form action="" method="post">';
+    echo '<input type="hidden" name="action" value="add" />';
+
+    echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
+
+    $content_color = 1;
+    $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
+    foreach ($minimun_attributes as $minimun_attribute) {
+      echo '<tr class="content'.$content_color.'">';
+      echo '<th>'._($minimun_attribute).'</th>';
+      echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" /></td>';
+      echo '</tr>';
+      $content_color = (($content_color++)%2)+1;
+    }
+
+    echo '<tr class="content'.$content_color.'">';
+    echo '<td colspan="2">';
+    echo '<input type="submit" name="add" value="'._('Add').'" />';
+    echo '</td>';
+    echo '</tr>';
+
+    echo '</table>';
+    echo '</form>';
+    echo '</div>';
+  }
+
+
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
+  include_once('footer.php');
+  die();
 }
 
 function show_manage($login, $userDB, $userGroupDB) {
@@ -286,111 +406,6 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '</div>';
   }
 
-  echo '</div>';
-  echo '</div>';
-  include_once('footer.php');
-  die();
-}
-
-function show_default($userDB) {
-  $us = $userDB->getList();  // in admin, getList is always present (even if canShowList is false)
-
-  $users_list_empty = (is_null($us) or count($us)==0);
-  $userdb_rw = $userDB->isWriteable();
-
-  include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
-
-  echo '<div id="users_div">';
-  echo '<h1>'._('Users').'</h1>';
-  echo '<a href="usersgroup.php">'._('Users groups management').'</a>';
-  echo '<div id="users_list_div">';
-  echo '<h2>'._('List of users').'</h2>';
-
-  if ($users_list_empty)
-    echo _('No available user').'<br />';
-  else {
-    echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
-    echo '<tr class="title">';
-    echo '<th>'._('Login').'</th>';
-    echo '<th>'._('Display name').'</th>';
-    echo '</tr>';
-
-    $count = 0;
-    foreach($us as $u){
-      $content = 'content'.(($count++%2==0)?1:2);
-
-      $keys = array();
-      foreach($u->getAttributesList() as $attr)
-	if (! in_array($attr, array('login', 'displayname','password')))
-	  $keys[]= $attr;
-
-      $extra = array();
-      foreach($keys as $key) {
-	if (is_array($u->getAttribute($key)))
-	  $buf = implode(", ", $u->getAttribute($key));
-	else
-	  $buf = $u->getAttribute($key);
-
-	$extra[]= '<b>'.$key.':</b> '.$buf;
-      }
-      asort($extra);
-
-      echo '<tr class="'.$content.'">';
-      echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
-      echo $u->getAttribute('login');
-      echo '</a></td>';
-      echo '<td>'.$u->getAttribute('displayname').'</td>';
-      echo '<td>'.implode(", ", $extra).'</td>';
-
-      echo '<td><form action="users.php">';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
-      echo '</form></td>';
-
-      if ($userdb_rw) {
-	echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
-	echo '<input type="submit" value="'._('Delete').'"/>';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
-	echo '</form></td>';
-      }
-    }
-    echo '</table>';
-  }
-
-  if ($userdb_rw) {
-    echo '<h2>'._('Add').'</h2>';
-    echo '<div id="user_add">';
-    echo '<form action="" method="post">';
-    echo '<input type="hidden" name="action" value="add" />';
-
-    echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
-
-    $content_color = 1;
-    $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
-    foreach ($minimun_attributes as $minimun_attribute) {
-      echo '<tr class="content'.$content_color.'">';
-      echo '<th>'._($minimun_attribute).'</th>';
-      echo '<td><input type="'.$minimun_attribute.'" name="'.$minimun_attribute.'" value="" /></td>';
-      echo '</tr>';
-      $content_color = (($content_color++)%2)+1;
-    }
-
-    echo '<tr class="content'.$content_color.'">';
-    echo '<td colspan="2">';
-    echo '<input type="submit" name="add" value="'._('Add').'" />';
-    echo '</td>';
-    echo '</tr>';
-
-    echo '</table>';
-    echo '</form>';
-    echo '</div>';
-  }
-
-
-  echo '</div>';
   echo '</div>';
   echo '</div>';
   include_once('footer.php');

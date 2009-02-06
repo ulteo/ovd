@@ -23,6 +23,11 @@ require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 Logger::debug('main', '(webservices/server_monitoring) Starting webservices/server_monitoring.php');
 
+if (! isset($_POST['fqdn'])) {
+	Logger::error('main', '(webservices/server_monitoring) Missing parameter : fqdn');
+	die('ERROR - NO $_POST[\'fqdn\']');
+}
+
 $buf = Abstract_Server::load($_POST['fqdn']);
 if (! $buf || ! $buf->isAuthorized()) {
 	Logger::error('main', '(webservices/server_monitoring) Server not authorized : '.$_POST['fqdn'].' == '.@gethostbyname($_POST['fqdn']).' ?');

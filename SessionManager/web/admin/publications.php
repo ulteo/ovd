@@ -61,11 +61,18 @@ function show_default() {
   $count = 0;
 
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/publications.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
   echo '<h1>'._('Publications').'</h1>';
-  echo '<p><a href="wizard.php">'._('Publication wizard').'</a></p>';
 
   echo '<table class="main_sub sortable" id="publications_list_table" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';
@@ -128,8 +135,13 @@ function show_default() {
   }
 
   echo '</table>';
+  echo '<br /><br /><br />';
   echo '</div>';
 
   echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
 }

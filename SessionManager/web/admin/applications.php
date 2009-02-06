@@ -66,8 +66,11 @@ if (isset($_REQUEST['action'])) {
   }
 }
 
-show_default($applicationDB);
+if (! isset($_GET['view']))
+  $_GET['view'] = 'all';
 
+if ($_GET['view'] == 'all')
+  show_default($applicationDB);
 
 function action_modify($applicationDB, $id) {
   $app = $applicationDB->import($id);
@@ -84,6 +87,120 @@ function action_modify($applicationDB, $id) {
     die_error('Unable to modify application '.$res,__FILE__,__LINE__);
 
   return true;
+}
+
+function show_default($applicationDB) {
+  $applications = $applicationDB->getList();
+  $is_empty = (is_null($applications) or count($applications)==0);
+
+  $is_rw = $applicationDB->isWriteable();
+
+  include_once('header.php');
+//   echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/applications.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+
+  echo '<div>';
+  echo '<h1>'._('Applications').'</h1>';
+  echo '<div id="apps_list_div">';
+
+  if ($is_empty)
+    echo _('No available application').'<br />';
+  else {
+    echo '<div id="apps_list">';
+//     echo '<form action="applications.php" method="get">';
+//     echo '	<input type="hidden" name="mass_action" value="block" />';
+    echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">';
+    echo '<thead>';
+    echo '<tr class="title">';
+//     if ($is_rw)
+//       echo '<th class="unsortable"></th>';
+    echo '<th>'._('Name').'</th>';
+    echo '<th>'._('Description').'</th>';
+    echo '<th>'._('Type').'</th>';
+    //echo '<th>'._('Status').'</th>';
+    echo '</tr>';
+    echo '</thead>';
+    $count = 0;
+    foreach($applications as $app) {
+      $content = 'content'.(($count++%2==0)?1:2);
+
+      if ($app->getAttribute('published')) {
+// 	$status = '<span class="msg_ok">'._('Available').'</span>';
+// 	$status_change = _('Block');
+	$status_change_value = 0;
+      } else {
+// 	$status = '<span class="msg_error">'._('Blocked').'</span>';
+// 	$status_change = _('Unblock');
+	$status_change_value = 1;
+      }
+
+	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
+
+      echo '<tr class="'.$content.'">';
+      if ($is_rw)
+// 	echo '<td><input type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
+      echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
+      echo '<td>'.$app->getAttribute('description').'</td>';
+      echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
+//       echo '<td>'.$status.'</td>';
+
+      echo '<td><form action="">';
+      echo '<input type="hidden" name="action" value="manage" />';
+      echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+      echo '<input type="submit" value="'._('Manage').'"/>';
+      echo '</form></td>';
+
+      /*if ($is_rw) {
+	echo '<td><form action="" method="post">';
+	echo '<input type="hidden" name="action" value="modify" />';
+	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+	echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
+	echo '<input type="submit" value="'.$status_change.'"/>';
+	echo '</form></td>';
+      }*/
+      echo '</tr>';
+    }
+
+    if ($is_rw) {
+//       echo '<tfoot>';
+      $content = 'content'.(($count++%2==0)?1:2);
+
+//       echo '<tr class="'.$content.'">';
+//       echo '<td colspan="6">';
+//       echo '<a href="javascript:;" onclick="markAllRows(\'applications_list_table\'); return false">'._('Mark all').'</a>';
+//       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
+//       echo '</td>';
+//       echo '<td>';
+
+      /*echo '<input type="submit" name="unblock" value="'._('Unblock').'" />';
+      echo '<br />';
+      echo '<input type="submit" name="block" value="'._('Block').'" />';*/
+//       echo '</td>';
+//       echo '</tr>';
+//       echo '</tfoot>';
+    }
+
+    echo '</table>';
+//     echo '</form>';
+    echo '</div>';
+
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
+  include_once('footer.php');
+  die();
+  }
 }
 
 function show_manage($id, $applicationDB) {
@@ -328,108 +445,3 @@ function show_manage($id, $applicationDB) {
   include_once('footer.php');
   die();
 }
-
-function show_default($applicationDB) {
-  $applications = $applicationDB->getList();
-  $is_empty = (is_null($applications) or count($applications)==0);
-
-  $is_rw = $applicationDB->isWriteable();
-
-  include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
-
-  echo '<div>';
-  echo '<h1>'._('Applications').'</h1>';
-  echo '<a href="appsgroup.php">'._('Application groups management').'</a>';
-  echo '<div id="users_list_div">';
-  echo '<h2>'._('List of applications').'</h2>';
-
-  if ($is_empty)
-    echo _('No available application').'<br />';
-  else {
-    echo '<div id="apps_list">';
-//     echo '<form action="applications.php" method="get">';
-//     echo '	<input type="hidden" name="mass_action" value="block" />';
-    echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">';
-    echo '<thead>';
-    echo '<tr class="title">';
-//     if ($is_rw)
-//       echo '<th class="unsortable"></th>';
-    echo '<th>'._('Name').'</th>';
-    echo '<th>'._('Description').'</th>';
-    echo '<th>'._('Type').'</th>';
-    //echo '<th>'._('Status').'</th>';
-    echo '</tr>';
-    echo '</thead>';
-    $count = 0;
-    foreach($applications as $app) {
-      $content = 'content'.(($count++%2==0)?1:2);
-
-      if ($app->getAttribute('published')) {
-// 	$status = '<span class="msg_ok">'._('Available').'</span>';
-// 	$status_change = _('Block');
-	$status_change_value = 0;
-      } else {
-// 	$status = '<span class="msg_error">'._('Blocked').'</span>';
-// 	$status_change = _('Unblock');
-	$status_change_value = 1;
-      }
-
-	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
-
-      echo '<tr class="'.$content.'">';
-      if ($is_rw)
-// 	echo '<td><input type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
-      echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
-      echo '<td>'.$app->getAttribute('description').'</td>';
-      echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
-//       echo '<td>'.$status.'</td>';
-
-      echo '<td><form action="">';
-      echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-      echo '<input type="submit" value="'._('Manage').'"/>';
-      echo '</form></td>';
-
-      /*if ($is_rw) {
-	echo '<td><form action="" method="post">';
-	echo '<input type="hidden" name="action" value="modify" />';
-	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-	echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
-	echo '<input type="submit" value="'.$status_change.'"/>';
-	echo '</form></td>';
-      }*/
-      echo '</tr>';
-    }
-
-    if ($is_rw) {
-//       echo '<tfoot>';
-      $content = 'content'.(($count++%2==0)?1:2);
-
-//       echo '<tr class="'.$content.'">';
-//       echo '<td colspan="6">';
-//       echo '<a href="javascript:;" onclick="markAllRows(\'applications_list_table\'); return false">'._('Mark all').'</a>';
-//       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
-//       echo '</td>';
-//       echo '<td>';
-
-      /*echo '<input type="submit" name="unblock" value="'._('Unblock').'" />';
-      echo '<br />';
-      echo '<input type="submit" name="block" value="'._('Block').'" />';*/
-//       echo '</td>';
-//       echo '</tr>';
-//       echo '</tfoot>';
-    }
-
-    echo '</table>';
-//     echo '</form>';
-    echo '</div>';
-
-  echo '</div>';
-  echo '</div>';
-  echo '</div>';
-  include_once('footer.php');
-  die();
-  }
-}
-

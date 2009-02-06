@@ -32,7 +32,7 @@ if (isset($_REQUEST['mass_register'])) {
 		}
 	}
 
-	redirect('servers.php?action=list');
+	redirect();
 }
 
 if (isset($_REQUEST['mass_delete_unregistered'])) {
@@ -47,7 +47,7 @@ if (isset($_REQUEST['mass_delete_unregistered'])) {
 		}
 	}
 
-	redirect('servers.php?action=list');
+	redirect();
 }
 
 if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance') {
@@ -65,7 +65,7 @@ if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance'
 		}
 	}
 
-	redirect('servers.php?action=list');
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
@@ -75,8 +75,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset
 	$tm = new Tasks_Manager();
 	$tm->add($t);
 
-	header('Location: servers.php?action=manage&fqdn='.$_REQUEST['fqdn']);
-	die();
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset($_REQUEST['fqdn']) && isset($_REQUEST['servers'])) {
@@ -121,7 +120,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset(
 		}
 	}
 
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn'])) {
@@ -130,7 +129,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn
 	$buf->updateApplications();
 	Abstract_Server::save($buf);
 
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['fqdn'])) {
@@ -144,7 +143,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['f
 		Abstract_Server::save($buf);
 	}
 
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' && isset($_REQUEST['fqdn'])) {
@@ -154,7 +153,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' &&
 		Abstract_Server::save($server);
 	}
 
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isset($_REQUEST['fqdn'])) {
@@ -164,7 +163,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isse
 		Abstract_Server::save($server);
 	}
 
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_REQUEST['fqdn'])) {
@@ -174,14 +173,14 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_R
 		Abstract_Server::save($server);
 	}
 
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQUEST['fqdn'])) {
 	$sessions = Sessions::getByServer($_REQUEST['fqdn']);
 	if (count($sessions) > 0) {
 		popup_error(_('Unable to delete a server when there are active sessions on it!'));
-		redirect($_SERVER['HTTP_REFERER']);
+		redirect();
 	}
 
 	$buf = Abstract_Server::load($_REQUEST['fqdn']);
@@ -190,22 +189,22 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQ
 		Abstract_Server::delete($buf->fqdn);
 	}
 
-	redirect('servers.php?action=list');
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'manage' && isset($_REQUEST['fqdn'])) {
   show_manage($_REQUEST['fqdn']);
 }
 
-show_default();
+if (! isset($_GET['view']))
+  $_GET['view'] = 'all';
 
+if ($_GET['view'] == 'all')
+  show_default();
+elseif ($_GET['view'] == 'unregistered')
+  show_unregistered();
 
 function show_default() {
-//FIX ME ?
-  $u_servs = Servers::getUnregistered();
-  if (! is_array($u_servs))
-    $u_servs = array();
-
 //FIX ME ?
   $a_servs = Servers::getRegistered();
   if (! is_array($a_servs))
@@ -218,95 +217,18 @@ function show_default() {
   }
 
   include_once('header.php');
-  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+//  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/servers.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div id="servers_div">';
   echo '<h1>'._('Servers').'</h1>';
-
-  if (count($u_servs) > 0){
-    echo '<div id="servers_list_div">';
-    echo '<h2>'._('Unregistered servers').'</h2>';
-
-    if (count($u_servs) > 1) {
-      echo '<form action="servers.php" method="get">';
-    }
-
-    echo '<table id="unregistered_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
-    echo '<thead>';
-    echo '<tr class="title">';
-    if (count($u_servs) > 1)
-      echo '<th class="unsortable"></th>';
-    echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
-    // echo '<th>'._('Version').'</th>';
-    echo '<th>'._('Details').'</th>';
-    echo '</tr>';
-    echo '</thead>';
-
-    $count = 0;
-    foreach($u_servs as $s) {
-      $content = 'content'.(($count++%2==0)?1:2);
-      echo '<tr class="'.$content.'">';
-            if (count($u_servs) > 1)
-	echo '<td><input type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
-
-      echo '<td>'.$s->fqdn.'</td>';
-      echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
-      //echo '<td>'.$s->stringVersion().'</td>';
-      echo '<td>';
-      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
-      echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
-      echo ')<br />';
-      echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' MB';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<form action="servers.php" method="get">';
-      echo '<input type="hidden" name="action" value="register" />';
-      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-      echo '<input type="submit" value="'._('Register').'" />';
-      echo '</form>';
-      echo '</td>';
-
-      echo '<td>';
-      echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
-      echo '<input type="hidden" name="action" value="delete" />';
-      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-      echo '<input type="submit" value="'._('Delete').'" />';
-      echo '</form>';
-      echo '</td>';
-
-      echo '</tr>';
-    }
-
-    // Mass actions
-    if (count($u_servs) > 1) {
-      $content = 'content'.(($count++%2==0)?1:2);
-      echo '<tfoot>';
-      echo '<tr class="'.$content.'">';
-      echo '<td colspan="4">';
-      echo '<a href="javascript:;" onclick="markAllRows(\'unregistered_servers_table\'); return false">'._('Mark all').'</a>';
-      echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
-      echo '</td>';
-      echo '<td>';
-      echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
-      echo '</form>';
-      echo '</td>';
-      echo '<td>';
-      echo '<input type="submit" name="mass_delete_unregistered" value="'._('Delete').'"/><br />';
-      echo '</form>';
-      echo '</td>';
-      echo '</tr>';
-      echo '</tfoot>';
-    }
-
-    echo '</table>';
-    if (count($u_servs) > 1) {
-      echo '</form>';
-    }
-    echo '</div>';
-    echo '<br />';
-  }
-
 
   if (count($a_servs) > 0) {
     echo '<div id="servers_list_div">';
@@ -420,10 +342,128 @@ function show_default() {
   echo '</div>';
   echo '</div>';
   echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
   include_once('footer.php');
   die();
 }
 
+function show_unregistered() {
+//FIX ME ?
+  $u_servs = Servers::getUnregistered();
+  if (! is_array($u_servs))
+    $u_servs = array();
+
+  include_once('header.php');
+//  echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
+
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/servers.php');
+  echo '</td>';
+  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+
+  echo '<div id="servers_div">';
+  echo '<h1>'._('Unregistered servers').'</h1>';
+
+  if (count($u_servs) > 0){
+    echo '<div id="servers_list_div">';
+
+    if (count($u_servs) > 1) {
+      echo '<form action="servers.php" method="get">';
+    }
+
+    echo '<table id="unregistered_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+    echo '<thead>';
+    echo '<tr class="title">';
+    if (count($u_servs) > 1)
+      echo '<th class="unsortable"></th>';
+    echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
+    // echo '<th>'._('Version').'</th>';
+    echo '<th>'._('Details').'</th>';
+    echo '</tr>';
+    echo '</thead>';
+
+    $count = 0;
+    foreach($u_servs as $s) {
+      $content = 'content'.(($count++%2==0)?1:2);
+      echo '<tr class="'.$content.'">';
+            if (count($u_servs) > 1)
+	echo '<td><input type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
+
+      echo '<td>'.$s->fqdn.'</td>';
+      echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
+      //echo '<td>'.$s->stringVersion().'</td>';
+      echo '<td>';
+      echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
+      echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
+      echo ')<br />';
+      echo _('RAM').': '.round($s->getAttribute('ram_total')/1024).' MB';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<form action="servers.php" method="get">';
+      echo '<input type="hidden" name="action" value="register" />';
+      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+      echo '<input type="submit" value="'._('Register').'" />';
+      echo '</form>';
+      echo '</td>';
+
+      echo '<td>';
+      echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
+      echo '<input type="hidden" name="action" value="delete" />';
+      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+      echo '<input type="submit" value="'._('Delete').'" />';
+      echo '</form>';
+      echo '</td>';
+
+      echo '</tr>';
+    }
+
+    // Mass actions
+    if (count($u_servs) > 1) {
+      $content = 'content'.(($count++%2==0)?1:2);
+      echo '<tfoot>';
+      echo '<tr class="'.$content.'">';
+      echo '<td colspan="4">';
+      echo '<a href="javascript:;" onclick="markAllRows(\'unregistered_servers_table\'); return false">'._('Mark all').'</a>';
+      echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
+      echo '</td>';
+      echo '<td>';
+      echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
+      echo '</form>';
+      echo '</td>';
+      echo '<td>';
+      echo '<input type="submit" name="mass_delete_unregistered" value="'._('Delete').'"/><br />';
+      echo '</form>';
+      echo '</td>';
+      echo '</tr>';
+      echo '</tfoot>';
+    }
+
+    echo '</table>';
+    if (count($u_servs) > 1) {
+      echo '</form>';
+    }
+    echo '</div>';
+    echo '<br />';
+  } else {
+    echo _('No unregistered server');
+    echo '<br /><br />';
+  }
+
+  echo '</div>';
+  echo '</div>';
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
+  include_once('footer.php');
+  die();
+}
 
 function show_manage($fqdn) {
   $server = Abstract_Server::load($fqdn);

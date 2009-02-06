@@ -203,10 +203,8 @@ class Server {
 	public function getStatus() {
 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
 
-		if ($this->getAttribute('status') == 'broken') {
-			Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is "broken", requesting admin action on it');
+		if ($this->getAttribute('status') == 'broken')
 			return false;
-		}
 
 		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
 
