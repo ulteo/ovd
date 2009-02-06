@@ -60,7 +60,7 @@ class ApplicationDB_sql {
 		return NULL;
 	}
 
-	public function getList(){
+	public function getList($sort_=false){
 		Logger::debug('main','ApplicationDB_sql::getList');
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1',APPLICATION_TABLE);
@@ -71,6 +71,10 @@ class ApplicationDB_sql {
 				$a = $this->generateApplicationFromRow($row);
 				if ($this->isOK($a))
 					$result []= $a;
+			}
+			// do we need to sort alphabetically ?
+			if ($sort_) {
+				usort($result, "application_cmp");
 			}
 			return $result;
 		}

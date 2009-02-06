@@ -487,3 +487,11 @@ function get_needed_attributes_user_from_module_plugin() {
 	}
 	return $attributes;
 }
+
+function user_cmp($o1, $o2) {
+	return strcmp($o1->getAttribute('login'), $o2->getAttribute('login'));
+}
+
+function application_cmp($o1, $o2) {
+	return strcmp($o1->getAttribute('name'), $o2->getAttribute('name'));
+}

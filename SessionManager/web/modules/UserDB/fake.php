@@ -46,9 +46,14 @@ class UserDB_fake {
 	}
 	
 
-	public function getList(){
+	public function getList($sort_=false) {
 		Logger::debug('main','UserDB::fake::getList');
-		return $this->users;
+		$users = $this->users;
+		// do we need to sort alphabetically ?
+		if ($sort_) {
+			usort($users, "user_cmp");
+		}
+		return $users;
 	}
 	
 	public function isOK($user_){

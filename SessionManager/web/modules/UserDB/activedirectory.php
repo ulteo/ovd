@@ -41,7 +41,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $this->cleanupUser($u);
 	}
 
-	public function getList(){
+	public function getList($sort_=false) {
 		$users = array();
 		$ldap = new LDAP($this->config);
 		$sr = $ldap->search($this->config['match']['login'].'=*', NULL);
@@ -68,6 +68,10 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			$u = $this->cleanupUser($u);
 			if ($this->isOK($u))
 				$users []= $u;
+		}
+		// do we need to sort alphabetically ?
+		if ($sort_) {
+			usort($users, "user_cmp");
 		}
 		return $users;
 	}

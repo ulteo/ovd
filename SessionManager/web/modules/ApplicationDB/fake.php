@@ -69,7 +69,12 @@ class ApplicationDB_fake {
 	}
 
 	public function getList(){
-		return $this->applications;
+		$apps =  $this->applications;
+		if ($sort_) {
+			usort($apps, "application_cmp");
+		}
+		return $apps;
+		
 	}
 
 	public function configuration(){

@@ -56,7 +56,7 @@ class UserDB_unix {
 		return true;
 	}
 	
-	public function getList(){
+	public function getList($sort_=false){
 		Logger::debug('main','UserDB::unix::getList');
 		$users = array();
 		$content = file_get_contents('/etc/passwd');
@@ -66,6 +66,10 @@ class UserDB_unix {
 			$u = $this->import($infos[0]);
 			if (!is_null($u) && $this->isOk($u))
 				$users []=$u;
+		}
+		// do we need to sort alphabetically ?
+		if ($sort_) {
+			usort($users, "user_cmp");
 		}
 		return $users;
 	}

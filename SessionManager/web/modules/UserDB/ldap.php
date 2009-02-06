@@ -85,7 +85,7 @@ class UserDB_ldap {
 		return NULL;
 	}
 
-	public function getList(){
+	public function getList($sort_=false) {
 		Logger::debug('main','UserDB::ldap::getList');
 		$users = array();
 
@@ -108,6 +108,10 @@ class UserDB_ldap {
 				else
 					Logger::info('main', 'UserDB::mysql::getList user does not have login');
 			}
+		}
+		// do we need to sort alphabetically ?
+		if ($sort_) {
+			usort($users, "user_cmp");
 		}
 		return $users;
 	}

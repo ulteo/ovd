@@ -59,7 +59,7 @@ class UserDB_sql {
 		return true;
 	}
 
-	public function getList(){
+	public function getList($sort_=false){
 		Logger::debug('main','ApplicationDB_sql::getList');
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1', USER_TABLE);
@@ -84,6 +84,10 @@ class UserDB_sql {
 			Logger::error('main', 'USERDB::MYSQL::getList failed (sql query failed)');
 			// not the right argument
 			return NULL;
+		}
+		// do we need to sort alphabetically ?
+		if ($sort_) {
+			usort($users, "user_cmp");
 		}
 		return $users;
 	}
