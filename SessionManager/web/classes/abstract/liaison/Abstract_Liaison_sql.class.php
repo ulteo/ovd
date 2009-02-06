@@ -33,17 +33,16 @@ class Abstract_Liaison_sql {
 	}
 	public function save($type_, $element_, $group_) {
 		Logger::debug('admin', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
-		$result = array();
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::create get Preferences failed');
-			return NULL;
+			Logger::error('main', 'Abstract_Liaison_sql::save get Preferences failed');
+			return false;
 		}
 		$mysql_conf = $prefs->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::create mysql conf not valid');
-			return $result;
+			Logger::error('main', 'Abstract_Liaison_sql::save mysql conf not valid');
+			return false;
 		}
 		$table = $mysql_conf['prefix'].'liaison';
 		$res = $sql2->DoQuery('INSERT INTO @1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', $table, 'type', 'element', 'group', $type_, $element_, $group_);
@@ -51,17 +50,16 @@ class Abstract_Liaison_sql {
 	}
 	public function delete($type_, $element_, $group_) {
 		Logger::debug('admin', "Abstract_Liaison_sql::delete ($type_,$element_,$group_)");
-		$result = array();
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::delete get Preferences failed');
-			return NULL;
+			return false;
 		}
 		$mysql_conf = $prefs->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
 			Logger::error('main', 'Abstract_Liaison_sql::delete mysql conf not valid');
-			return $result;
+			return false;
 		}
 		$table = $mysql_conf['prefix'].'liaison';;
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4 =%5 AND @6=%7', $table, 'type', $type_, 'element', $element_, 'group', $group_);
