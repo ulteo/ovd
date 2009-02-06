@@ -37,6 +37,14 @@ class Application {
 		$this->attributes['desktopfile'] = $desktopfile_;
 
 	}
+	
+	public function __toString() {
+		$ret = 'Application(';
+		foreach ($this->attributes as $k=>$attr)
+				$ret .= "'$k':'$attr', ";
+		$ret .= ')';
+		return $ret;
+	}
 
 	public function setAttribute($myAttribute_,$value_){
 		$this->attributes[$myAttribute_] = $value_;

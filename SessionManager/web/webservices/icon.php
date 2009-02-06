@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -20,26 +20,26 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', 'Starting webservices/app_desktopfile.php');
+Logger::debug('main', 'Starting webservices/icon.php');
 
-if (! isset($_GET['desktopfile'])) {
-	Logger::error('main', '(webservices/app_desktopfile) Missing parameter : desktopfile');
+if (! isset($_GET['id'])) {
+	Logger::error('main', '(webservices/icon) Missing parameter : id');
 	header('HTTP/1.1 400 Bad Request');
-	die('ERROR - NO $_GET[\'desktopfile\']');
+	die('ERROR - NO $_GET[\'id\']');
 }
 
 if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/app_desktopfile) Missing parameter : fqdn');
+	Logger::error('main', '(webservices/icon) Missing parameter : fqdn');
 	die('ERROR - NO $_GET[\'fqdn\']');
 }
 
 $buf = Abstract_Server::load($_GET['fqdn']);
 if (! $buf || ! $buf->isAuthorized()) {
-	Logger::error('main', '(webservices/session_token) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
+	Logger::error('main', '(webservices/icon) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
 	die('Server not authorized');
 }
 
-Logger::debug('main', '(webservices/app_desktopfile) Security check OK');
+Logger::debug('main', '(webservices/icon) Security check OK');
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -47,7 +47,7 @@ if (! $prefs)
 
 $mods_enable = $prefs->get('general', 'module_enable');
 if (! in_array('ApplicationDB', $mods_enable)) {
-	Logger::error('main', '(webservices/app_desktopfile) Module ApplicationDB must be enabled');
+	Logger::error('main', '(webservices/icon) Module ApplicationDB must be enabled');
 	header('HTTP/1.1 400 Bad Request');
 	die();
 }
@@ -55,21 +55,18 @@ if (! in_array('ApplicationDB', $mods_enable)) {
 $mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
 $applicationDB = new $mod_app_name();
 
-$apps = $applicationDB->getList();
+$app = $applicationDB->import($_GET['id']);
 
-if (! is_array($apps)) {
-	Logger::error('main', '(webservices/app_desktopfile) error getList failed');
+if (! is_object($app)) {
+	Logger::error('main', '(webservices/icon) error import app failed for \''.$_GET['id'].'\'');
 	header('HTTP/1.1 400 Bad Request');
 }
 
-foreach ($apps as $app) {
-	if ($app->hasAttribute('desktopfile')) {
-		if (mysql_escape_string($app->getAttribute('desktopfile')) == $_GET['desktopfile']) {
-			header('Content-Type: text/xml; charset=utf-8');
-			echo $app->toXML();
-			die();
-		}
-	}
+
+$path = CACHE_DIR.'/image/application/'.$app->getAttribute('id').'.png';
+if (file_exists($path)) {
+	header('Content-Type: image/png');
+	echo @file_get_contents($path);
 }
 
 header('HTTP/1.1 404 Not Found');
