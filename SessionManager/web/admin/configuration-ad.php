@@ -22,15 +22,64 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 if (isset($_POST['config']) && $_POST['config'] == 'ad') {
-  $r = form2obj($_POST);
-  if ($r===false)
-    echo 'error';
-
-  $_SESSION['save_succed'] = true;
+  $r = save($_POST);
+  if ($r===true)
+    $_SESSION['save_succed'] = true;
   redirect($_SERVER["PHP_SELF"]);
 }
 
 display();
+
+
+function auto_clean_db($new_prefs) {
+  $prefs = Preferences::getInstance();
+
+  $old_u = $prefs->get('UserDB', 'enable');
+  $old_ugrp = $prefs->get('UserGroupDB', 'enable');
+  $new_ugrp = $new_prefs->get('UserGroupDB', 'enable');
+
+  // If we already have and use a valid AD config
+  if ($old_u == 'activedirectory') {
+    $old = $prefs->get('UserDB', 'activedirectory');
+    $new = $new_prefs->get('UserDB', 'activedirectory');
+
+    $change = false;
+    foreach(array('host', 'domain', 'ou') as $key) {
+      if ($old[$key] != $new[$key]) {
+	$change = true;
+	break;
+      }
+    }
+
+    // If change in DOMAIN, host or  OU and UserGroup is sql
+    if ($change  && $old_ugrp == 'sql') {
+      // Remove Users from user groups
+      Abstract_Liaison::delete('UsersGroup', NULL, NULL) or
+	popup_error('Unable to remove Users from UserGroups');
+    }
+
+    // If UserGroup managment change
+    if ($old_ugrp != $new_ugrp ||  ($change && $new_ugrp == 'activedirectory') ) {
+      // Remove Publications
+      Abstract_Liaison::delete('UsersGroupApplicationsGroup', NULL, NULL) or
+	popup_error('Unable to remove Publications');
+    }
+  }
+  // from other managment to AD
+  else {
+    // Remove Users from user groups
+    Abstract_Liaison::delete('UsersGroup', NULL, NULL) or
+      popup_error('Unable to remove Users from UserGroups');
+
+    if ($old_ugrp == 'sql' && $old_ugrp == $new_ugrp) {
+      // keep user group
+    } else {
+      // Remove Publications
+      Abstract_Liaison::delete('UsersGroupApplicationsGroup', NULL, NULL) or
+	popup_error('Unable to remove Publications');
+    }
+  }
+}
 
 
 function valid_form($form) {
@@ -60,7 +109,7 @@ function valid_form($form) {
   return True;
 }
 
-function form2obj($form) {
+function save($form) {
   if ($form['user_branch'] == 'default')
     $ou = 'cn=Users';
   else
@@ -123,6 +172,24 @@ function form2obj($form) {
   $prefs->set('plugins', 'FS',
 	      array('FS' => $plugin_fs));
 
+
+  $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
+  $userDB = new $mod_user_name();
+  if (! $userDB->prefsIsValid($prefs)) {
+    // error
+    popup_error('Active Directory configuration is invalid');
+    return False;
+  }
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  if (! $userGroupDB->prefsIsValid($prefs)) {
+    // error
+    popup_error('Active Directory configuration is invalid for UserGroups');
+    return False;
+  }
+
+  auto_clean_db($prefs);
 
   // Save
   if (! $prefs->backup()) {
