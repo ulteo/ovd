@@ -49,7 +49,7 @@ class Abstract_Liaison_sql {
 		return ($res !== false);
 	}
 	public function delete($type_, $element_, $group_) {
-		Logger::debug('admin', "Abstract_Liaison_sql::delete ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_sql::delete ($type_,$element_,$group_)");
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -61,8 +61,18 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::delete mysql conf not valid');
 			return false;
 		}
-		$table = $mysql_conf['prefix'].'liaison';;
-		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4 =%5 AND @6=%7', $table, 'type', $type_, 'element', $element_, 'group', $group_);
+		$table = $mysql_conf['prefix'].'liaison';
+		
+		$res = false;
+		if (is_null($element_) && is_null($group_)) {
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3', $table, 'type', $type_);
+		}
+		else if (is_null($element_)) {
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $table, 'type', $type_, 'group', $group_);
+		}
+		else if (is_null($group_)) {
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $table, 'type', $type_, 'element', $element_);
+		}
 		return ($res !== false);
 	}
 	public function loadElements($type_, $group_) {

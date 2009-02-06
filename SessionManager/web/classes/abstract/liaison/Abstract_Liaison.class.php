@@ -61,12 +61,12 @@ class Abstract_Liaison {
 			$prefs = Preferences::getInstance();
 			if (! $prefs) {
 				Logger::error('main', 'Abstract_Liaison::delete get Preferences failed');
-				return NULL;
+				return false;
 			}
 			$mods_enable = $prefs->get('general','module_enable');
 			if (! in_array('UserGroupDB',$mods_enable)) {
 				Logger::error('main', 'Abstract_Liaison::delete Module UserGroupDB must be enabled');
-				return NULL;
+				return false;
 			}
 			
 			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
@@ -82,7 +82,7 @@ class Abstract_Liaison {
 					return Abstract_Liaison_activedirectory::delete($type_,  $element_, $group_);
 				break;
 			}
-			return NULL;
+			return false;
 		}
 	}
 	public function save($type_, $element_, $group_) {

@@ -161,6 +161,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$ret []= $c;
 		$c = new ConfigElement('ou', _('User branch DN'), _('User branch DN'), _('User branch DN'), 'cn=Users', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
+		$c = new ConfigElement('match', _('match'), _('match'), _('match'), array(), array(), ConfigElement::$DICTIONARY);
+		$ret []= $c;
 		return $ret;
 	}
 

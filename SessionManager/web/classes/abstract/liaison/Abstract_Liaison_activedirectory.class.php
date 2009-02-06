@@ -45,7 +45,7 @@ class Abstract_Liaison_activedirectory {
 		return false;
 	}
 	public function delete($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_activedirectory::save");
+		Logger::debug('admin',"Abstract_Liaison_activedirectory::delete");
 		return false;
 	}
 	public function loadElements($type_, $group_) {
