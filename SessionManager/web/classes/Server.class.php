@@ -297,6 +297,9 @@ class Server {
 		if (! is_string($buf))
 			return false;
 
+		if ($buf === '')
+			return false;
+
 		$this->setAttribute('type', $buf);
 
 // 		Abstract_Server::save($this);
@@ -327,6 +330,9 @@ class Server {
 		}
 
 		if (! is_string($buf))
+			return false;
+
+		if ($buf === '')
 			return false;
 
 		$this->setAttribute('version', $buf);
@@ -388,6 +394,9 @@ class Server {
 			$this->returnedError();
 			return false;
 		}
+
+		if ($buf === '')
+			return false;
 
 		$dom = new DomDocument();
 		$ret = @$dom->loadXML($xml);
