@@ -93,11 +93,16 @@ class ReportIntervalItem {
 	public $end;
 	public $elapsed;
 
-	public function __construct($start_) {
+	public function __construct($start_ = NULL) {
+		if ($start_ == NULL)
+			$start_ = time();
 		$this->start = $start_;
 	}
 
-	public function end($end_) {
+	public function end($end_ = NULL) {
+		if ($end_ == NULL)
+			$end_ = time();
+
 		if ($end_ < $this->start)
 			return false;
 

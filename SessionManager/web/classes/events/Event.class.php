@@ -99,7 +99,7 @@ class Event {
 		$this->time = time();
 		foreach ($this->callbacks as $callback) {
 			require_once($this->callbacks_dir."/".$callback.".class.php");
-			$callback_name = $callback.'Callback';
+			$callback_name = get_class($this).$callback;
 
 			try {
 				$c = new $callback_name($this);
