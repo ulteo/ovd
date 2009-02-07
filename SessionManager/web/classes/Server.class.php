@@ -160,7 +160,7 @@ class Server {
 
 		$ret = false;
 
-		$ev = Events::getEvent('ServerStatusChanged', array(
+		$ev = new ServerStatusChanged(array(
 			'server'	=>	$this->fqdn
 		));
 
@@ -179,7 +179,7 @@ class Server {
 	public function isUnreachable() {
 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
-		$ev = Events::getEvent('ServerStatusChanged', array(
+		$ev = new ServerStatusChanged(array(
 			'server'	=>	$this->fqdn,
 			'status'	=>	ServerStatusChanged::$UNREACHABLE
 		));

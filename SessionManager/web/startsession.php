@@ -228,7 +228,7 @@ $buf = Abstract_Server::load($session->server);
 
 $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
 
-$ev = Events::getEvent('SessionStartEvent', array(
+$ev = new SessionStartEvent(array(
 	'server'	=>	$session->server,
 	'resume'	=>	$session->isSuspended(),
 	'token'	=>	$token->id,

@@ -62,7 +62,7 @@ class MySQL {
 		if ($this->link)
 			return;
 
-		$ev = Events::getEvent('SqlFailure');
+		$ev = new SqlFailure();
 
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 

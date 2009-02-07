@@ -105,7 +105,7 @@ class Session {
 				Logger::warning('main', 'Status set to "'.$status_.'" for \''.$this->id.'\'');
 				$this->setAttribute('status', $status_);
 
-				$ev = Events::getEvent('SessionStatusChanged', array(
+				$ev = new SessionStatusChanged(array(
 					'id'		=>	$this->id,
 					'status'	=>	$status_
 				));
@@ -221,7 +221,7 @@ class Session {
 
 		$this->folder = SESSIONS_DIR.'/'.$this->id;
 
-		$ev = Events::getEvent('SessionAddInvite', array(
+		$ev = new SessionAddInvite(array(
 			'session'		=>	$this->id,
 			'viewonly'	=>	$view_only_
 		));
