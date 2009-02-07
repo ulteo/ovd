@@ -172,10 +172,10 @@ class ServerReport {
 		$max_ram_when = 0;
 
 		if (isset($obj->down_periods[$fqdn_]))
-			$downtime = self::_intervalsToDuration($obj->down_periods[$fqdn_], $day_);
+			$down_time = self::_intervalsToDuration($obj->down_periods[$fqdn_], $day_);
 
 		if (isset($obj->maintenance_periods[$fqdn_]))
-			$maintenancetime =
+			$maintenance_time =
 				self::_intervalsToDuration($obj->maintenance_periods[$fqdn_], $day_);
 
 		if (isset($obj->sessions_count[$fqdn_]))
@@ -212,6 +212,7 @@ class ServerReport {
 
 
 	public function dump() {
+		/* for debug */
 		var_dump($this);
 	}
 }
