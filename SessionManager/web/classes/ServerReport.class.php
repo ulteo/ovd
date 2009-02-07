@@ -27,7 +27,6 @@ class ServerReport {
 	private static $instance;
 
 	private $datadir;
-	private $file; /* serialized data per day */
 
 	private $down_periods;
 	private $maintenance_periods;
@@ -62,10 +61,12 @@ class ServerReport {
 	}
 
 	public static function load() {
-		if ((! isset(self::$file)) || (! is_file(self::getFile())))
+		$file = self::getFile();
+
+		if (! is_file($file))
 			self::$instance = new ServerReport();
 		else
-			self::$instance = unserialize(file_get_contents($this->file));
+			self::$instance = unserialize(file_get_contents($file));
 
 		return self::$instance;
 	}
@@ -208,4 +209,9 @@ class ServerReport {
 	}
 
 	/* TODO: weekly, monthly and yearly computing */
+
+
+	public function dump() {
+		var_dump($this);
+	}
 }
