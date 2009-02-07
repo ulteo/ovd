@@ -19,12 +19,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+/* This is an exemple for now, real implementation needs to be done */
 
-class ServerStatusChanged extends Event {
-	static $ONLINE = 0;
-	static $OFFLINE = 1;
-	static $UNREACHABLE = 2;
+require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
-	public $builtins = array('Report');
+class ServerStatusChangedReport extends EventCallback {
+    public function run () {
+		$rep = ServerReport::load();
+
+		if ($this->ev->status == ServerStatusChanged::$ONLINE)
+			$rep->reportIsUp($this->ev->server);
+		else {
+			/*
+			 * FIXME: we don't handle difference between downtime and uptime
+			 * for the moment
+			 */
+			 $rep->reportIsDown($this->ev->server);
+		}
+
+		$rep->save();
+
+		return true;
+    }
 }
+

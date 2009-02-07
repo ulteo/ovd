@@ -109,25 +109,25 @@ class ServerReport {
 	}
 
 	public function reportIsDown($fqdn_) {
-		if (isset($this->down_periods[$fqdn]))
+		if (isset($this->down_periods[$fqdn_]))
 		{
-			foreach ($this->down_periods[$fqdn] as $period)
+			foreach ($this->down_periods[$fqdn_] as $period)
 			{
 				/* if we have an inProgress period we already know that the
 				 * serveur is down */
-				if ($period->isInProgress())
+				if (! is_null($period) &&  $period->isDone())
 					return;
 			}
 		} else
-			$this->down_periods[$fqdn] = new ReportIntervalItem();
+			$this->down_periods[$fqdn_][] = new ReportIntervalItem();
 	}
 
 	public function reportIsUp($fqdn_) {
-		if (! isset($this->down_periods[$fqdn]))
+		if (! isset($this->down_periods[$fqdn_]))
 			return;
 
-		foreach ($this->down_periods[$fqdn] as $period) {
-			if ($period->isInProgress())
+		foreach ($this->down_periods[$fqdn_] as $period) {
+			if (! $period->isDone())
 				$period->end();
 		}
 	}

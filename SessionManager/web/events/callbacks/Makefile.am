@@ -1,1 +1,2 @@
-SUBDIRS = SessionStartEvent
+SUBDIRS = ServerStatusChanged \
+          SessionStartEvent
