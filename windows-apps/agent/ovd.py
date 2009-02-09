@@ -50,6 +50,7 @@ class UlteoSlave:
 		self.log.info("init")
 		self.smr = SessionManagerRequest(self.conf, self.log)
 		self.broken = False
+		self.applicationsXML = None
 		self.webserver = HTTPServer( ("", int(self.conf["web_port"])), communication.Web)
 		self.webserver.daemon = self
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
@@ -97,6 +98,18 @@ class UlteoSlave:
 		return 'ready'
 	
 	def getApplicationsXML(self):
+		if self.applicationsXML == None:
+			buf = self.getApplicationsXML_nocache()
+			if buf != None and buf != '':
+				self.applicationsXML = buf
+				return buf
+			else:
+				return ''
+		else:
+			return self.applicationsXML
+	
+	def getApplicationsXML_nocache(self):
+		print "getApplicationsXML_nocache"
 		def find_lnk(base_):
 			ret = []
 			for root, dirs, files in os.walk(base_):

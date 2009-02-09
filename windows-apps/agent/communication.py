@@ -91,7 +91,6 @@ class Web(SimpleHTTPRequestHandler):
 		self.send_header('Content-Type', 'text/html')
 		self.end_headers()
 		self.wfile.write('')
-		
 	
 	def log_request(self,l):
 		#print 'log_request ',l
