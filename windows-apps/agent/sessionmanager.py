@@ -33,7 +33,7 @@ class SessionManagerRequest:
 				'fqdn' : self.fqdn,
 				'web_port' : self.web_port}
 		url = "%s/webservices/server_status.php?%s"%(self.url, urllib.urlencode(values))
-		print 'SessionManagerRequest::server_status url ',url
+		self.log.debug('SessionManagerRequest::server_status url '+url)
 		
 		req = urllib2.Request(url)
 		try:
@@ -46,9 +46,8 @@ class SessionManagerRequest:
 		return True
 	
 	def ready(self):
-		print "SessionManagerRequest::ready"
+		self.log.debug("SessionManagerRequest::ready")
 		ret = self.server_status("ready")
-		print 'ret ',ret
 		return ret
 	
 	def down(self):

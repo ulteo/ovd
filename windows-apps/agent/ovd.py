@@ -53,6 +53,7 @@ class UlteoSlave:
 		self.applicationsXML = None
 		self.webserver = HTTPServer( ("", int(self.conf["web_port"])), communication.Web)
 		self.webserver.daemon = self
+		self.webserver.log = self.log
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
 		self.wmi = wmi.WMI()
 		try:
@@ -109,7 +110,7 @@ class UlteoSlave:
 			return self.applicationsXML
 	
 	def getApplicationsXML_nocache(self):
-		print "getApplicationsXML_nocache"
+		self.log.debug("getApplicationsXML_nocache")
 		def find_lnk(base_):
 			ret = []
 			for root, dirs, files in os.walk(base_):
@@ -131,7 +132,11 @@ class UlteoSlave:
 		server = doc.createElement("applications")
 		doc.appendChild(server)
 		
-		shortcut_list = find_lnk( os.path.join('c:\\', 'Documents and Settings', 'All Users'))
+		if os.environ.has_key('ALLUSERSPROFILE'):
+			shortcut_list = find_lnk( os.environ['ALLUSERSPROFILE'])
+		else:
+			self.log.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
+			shortcut_list = find_lnk( os.path.join('c:\\', 'Documents and Settings', 'All Users'))
 		
 		for filename in shortcut_list:
 			shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
@@ -156,28 +161,32 @@ class UlteoSlave:
 		return doc.toxml(output_encoding)
 
 def usage():
-	print "Usage: %s [-c|--config-file= filename] [-h|--help] [-d|--daemonize] [-p|--pid-file= filename]"%(sys.argv[0])
+	print "Usage: %s [-c|--config-file= filename] [-h|--help] [-d|--daemonize]"%(sys.argv[0])
 	print "\t-c|--config-file filename: load filename as configuration file instead default one"
 	print "\t-h|--help: print this help"
 	print "\t-d|--daemonize: detash the process once launch, run in background"
-	print "\t-p|--pid-file filename: write the pid into filename"
 	print
 
 def main():
+	if os.environ.has_key('APPDATA'):
+		appdata =  os.environ['APPDATA']
+	else:
+		print "ERROR: main no APPDATA key in environnement"
+		appdata = "c:\\"
+	
 	name = "ulteo-ovd"
 
 	conf = {}
 	conf["daemonize"] = False
-	conf["conf_file"] = os.path.join('c:\\', "%s.conf"%(name))
-	conf["pid"] = None
+	conf["conf_file"] = os.path.abspath(os.path.join(appdata, 'ulteo', 'ovd', '%s.conf'%(name)))
+	conf["log_file"] = os.path.abspath(os.path.join(appdata, 'ulteo', 'ovd', 'log', '%s.log'%(name)))
 	
-	conf["log_file"] = os.path.abspath(os.path.join(os.path.curdir, 'log', '%s.log'%(name)))
 	conf["log_flags"] = ["info", "warn", "error"]
 	conf["hostname"] = None
 	conf["web_port"] = None
 	
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], 'c:dhp:', ['config-file=', 'daemonize', 'help', 'pid-file='])
+		opts, args = getopt.getopt(sys.argv[1:], 'c:dh:', ['config-file=', 'daemonize', 'help'])
 
 	except getopt.GetoptError, err:
 		print >> sys.stderr, str(err)
@@ -187,9 +196,7 @@ def main():
 	conf_cmdline = {}
 	
 	for o, a in opts:
-		if o in ("-c", "--config-file"):
-			conf_cmdline["conf_file"] = a
-		elif o in ("-h", "--help"):
+		if o in ("-h", "--help"):
 			usage()
 			sys.exit()
 		elif o in ("-d", "--daemonize"):

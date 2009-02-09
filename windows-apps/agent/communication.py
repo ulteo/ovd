@@ -93,18 +93,17 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write('')
 	
 	def log_request(self,l):
-		#print 'log_request ',l
 		pass
 	
 	def webservices_server_status(self):
-		print 'webservices_server_status'
+		self.server.log.debug('webservices_server_status')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.getStatusString())
 	
 	def webservices_server_monitoring(self):
-		print 'webservices_server_monitoring'
+		self.server.log.debug('webservices_server_monitoring')
 		doc = Document()
 		monitoring = doc.createElement('monitoring')
 		doc.appendChild(monitoring)
@@ -143,21 +142,21 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write(doc.toxml())
 	
 	def webservices_server_type(self):
-		print 'webservices_server_type'
+		self.server.log.debug('webservices_server_type')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write('windows')
 	
 	def webservices_server_version(self):
-		print 'webservices_server_version'
+		self.server.log.debug('webservices_server_version')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.version_os)
 	
 	def webservices_applications(self):
-		print 'webservices_applications'
+		self.server.log.debug('webservices_applications')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
