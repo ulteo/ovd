@@ -1,5 +1,5 @@
 scripts_DATA = ulteo-printing-0.5.1.jar \
-               ulteo-applet-0.2.3f.jar
+               ulteo-applet-0.2.3g.jar
 
 scriptsdir = $(datadir)/ulteo/applicationserver/applet
 

@@ -29,27 +29,27 @@ import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 
 public class ODTester implements Runnable {
 
-	 public static final String version = "0.2.3f";
-	 
+	 public static final String version = "0.2.3g";
+
 	 public VncViewer ulteoapplet;
-	 
+
 	 // Results
 	 int testResult = -1;
 	 long avgPing = -1;
-	 
+
 	 // Java properties
 	 String javaVendor;
 	 String javaVersion;
-	 
+
 	 // System properties
 	 String operativeSystem;
 	 String OSVersion;
-	 
+
 	 // Browser properties
 	 String browser;
 	 String browserVersion;
 	 String userAgent;
-	 
+
 	 // Connection properties
 	 String passwordParam;
 	 InputStream in;
@@ -63,9 +63,9 @@ public class ODTester implements Runnable {
 	 //	Proxy parameters
 	 String proxyType,proxyHost,proxyUsername,proxyPassword;
 	 int proxyPort;
-	 
-	 
-	
+
+
+
 	public ODTester(VncViewer creator) {
 		this.ulteoapplet = creator;
 	}
@@ -120,20 +120,20 @@ public class ODTester implements Runnable {
 		testResult = startTest();
 		ulteoapplet.testFinished(testResult, avgPing);
 	}
-	
+
 	public int startTest(){
 		int result = -1;
 		readParameters();
-		
+
 		result = javaTest();
-		
+
 		if(result < 0){
 			System.err.println("\n***TEST FAILED***\n");
 			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
 //			JOptionPane.showMessageDialog(null, "Your Java Virtual Machine is not supported\nYou will probably not be able to run OnlineDesktop in the best conditions\n Please check the minimum requirements.", "Warning", JOptionPane.ERROR_MESSAGE);
 			return -1;
 		}
-		
+
 		if (operativeSystem.toLowerCase().contains("windows")) {
 			if (!operativeSystem.toLowerCase().contains("vista")) {
 				avgPing = pingTestWindows(ulteoapplet.getHostToPing(), 4);
@@ -145,20 +145,20 @@ public class ODTester implements Runnable {
 				avgPing = pingTestUnix(ulteoapplet.getHostToPing(), 4) - 1000;
 			}
 		}else{
-			avgPing = pingTestUnix(ulteoapplet.getHostToPing(), 4);			
+			avgPing = pingTestUnix(ulteoapplet.getHostToPing(), 4);
 		}
 
 		result = browserTest();
-		
+
 		if(result < 0){
 			System.err.println("\n***TEST FAILED***\n");
 			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
 //			JOptionPane.showMessageDialog(null, "Your browser is not supported\nYou will probably not be able to run OnlineDesktop in the best conditions\n Please check the minimum requirements.", "Warning", JOptionPane.ERROR_MESSAGE);
 			return -2;
 		}
-		
+
 		result = connectionTest();
-		
+
 		if(result < 0){
 			System.err.println("\n***TEST FAILED***\n");
 			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
@@ -171,10 +171,10 @@ public class ODTester implements Runnable {
 		System.out.println("End of Test");
 		return result;
 	}
-	
+
 	/**
 	 * Check JVM version: accept only Sun/Apple JVM version 1.5 or higher.
-	 * 
+	 *
 	 */
 	public int javaTest(){
 		javaVersion = System.getProperty("java.version");
@@ -191,15 +191,15 @@ public class ODTester implements Runnable {
 			System.err.println("Please, update your Java Virtual Machine");
 			return -1;
 		}
-		
+
 		if(!(javaVendor.startsWith("Sun Microsystems") || javaVendor.startsWith("Apple"))){
 			System.err.println("Please get Java JRE from Sun or Apple in order to run OD");
 			return -1;
 		}
 		return 1;
 	}
-	
-	
+
+
 	/**
 	 * Make a 'ping' to the echo port of a certain connectme server and give the result back.
 	 * The Unix version uses isReachable() java function, which in fact executes a real ping.
@@ -210,7 +210,7 @@ public class ODTester implements Runnable {
 		long time1, time2, dif, cumulate = 0;
 		try {
 			InetAddress address = InetAddress.getByName(server);
-			
+
 			for (int j=0; j<averages; j++){
 				time1 = System.currentTimeMillis();
 				address.isReachable(3000);
@@ -234,14 +234,14 @@ public class ODTester implements Runnable {
 		System.out.println("Ping result: "+pingResult);
 		return pingResult;
 	}
-	
-	
+
+
 	/**
 	 * Make a 'ping' to the echo port of a certain connectme server and give the result back.
 	 * The Windows version uses Runtime.exec() to call the "ping" program directly, because isReachable() takes too long.
 	 * @return the average value of a ping to the given connectme server
 	 */
-	
+
 	public long pingTestWindows(String server, int averages){
 		long pingResult = -1;
 		long cumulate = 0;
@@ -264,7 +264,7 @@ public class ODTester implements Runnable {
 					if (start > 0) {
 						end = tmpString.indexOf("ms", start);
 						if (end < 0) {
-							/*French ping separes "ms" from the number, 
+							/*French ping separes "ms" from the number,
 							so we don't get it in the StringTokenizer*/
 							end = tmpString.length();
 						}
@@ -281,28 +281,28 @@ public class ODTester implements Runnable {
 		System.out.println("Average ping result: "+pingResult);
 		return pingResult;
 	}
-	
-	
+
+
 	/**
 	 * Accepted browsers:
 	 * IE6, IE7,
 	 * Firefox,
 	 * Opera,
 	 * Safari Mac;
-	 * 
+	 *
 	 * Problematic browsers:
 	 * Camino,
 	 * Firefox Mac,
 	 * Konqueror,
 	 * Safari windows;
-	 * 
+	 *
 	 * @return 0 if supported, -1 otherwise
 	 *
 	 */
 	public int browserTest(){
 		System.out.println("User agent: "+userAgent);
 		boolean kjasSM = false; // Konqueror's Security Manager not working well
-		
+
 		if((System.getSecurityManager() != null) && (System.getSecurityManager().toString().startsWith("org.kde.kjas"))) {
 			kjasSM = true;
 		}
@@ -316,9 +316,9 @@ public class ODTester implements Runnable {
 		}
 		return 1;
 	}
-	
+
 	/**
-	 * Open 
+	 * Open
 	 * @return 0 if successful, -1 otherwise
 	 */
 	public int connectionTest(){
@@ -327,7 +327,7 @@ public class ODTester implements Runnable {
 	    // Create SSH properties
 	    SshConnectionProperties properties = new SshConnectionProperties();
 	    properties.setHost(sshHost);
-	    
+
 	    String[] sTemp = portList.split(",");
 		int[] arrayPorts = new int[sTemp.length];
 		for(int i=0; i<sTemp.length; i++){
@@ -354,17 +354,17 @@ public class ODTester implements Runnable {
 	    	pwd.setPassword("dummy");
 	    	ssh.authenticate(pwd);
 	    	// We know it failed, but we hope it didn't produce any exception.
-	    	
+
 	    	return 1;
 	    }catch(Exception ex){
 	    	ex.printStackTrace();
 	    	return -1;
 	    }
 	}
-	
-	
+
+
 	public void stop() {
-	   
+
 	    if(in != null && out != null){
 	    	try{
 	    	in.close();
@@ -377,7 +377,7 @@ public class ODTester implements Runnable {
 	    if(ssh != null)   ssh.disconnect();
 
 	  }
-	
+
 	/**
 	 * Get various parameters passed to the applet:
 	 * User agent, from PHP detection
@@ -388,7 +388,7 @@ public class ODTester implements Runnable {
 		sshHost = readParameter("ssh.host");
 		portList = readParameter("ssh.port");
 	}
-	
+
 	private int readIntParameter(String name, int defaultValue) {
 		String s = readParameter(name);
 	    int result = defaultValue;
@@ -401,23 +401,23 @@ public class ODTester implements Runnable {
 	    }
 	    return result;
 	  }
-	
+
 	private String readParameter(String name){
 		String s = ulteoapplet.readParameter(name, true);
 		return s;
 	}
-	
+
 	private String[] DetectProxy(){
 		String proxy_param[] = new String[5];
 		int result = -1;
 		result = javaTest();
 		if(result < 0)
 			return null;
-		
+
 		try {
 			System.setProperty("java.net.useSystemProxies","true");
 			List l = ProxySelector.getDefault().select(new URI("http://www.ulteo.com"));
-			
+
 			for (Iterator iter = l.iterator(); iter.hasNext(); ) {
 				Proxy proxy = (Proxy) iter.next();
 				InetSocketAddress addr = (InetSocketAddress) proxy.address();
@@ -436,7 +436,7 @@ public class ODTester implements Runnable {
 					proxy_param[2] = new String(new Integer(addr.getPort()).toString());
 					proxy_param[3] = new String("");
 					proxy_param[4] = new String("");
-					
+
 					return proxy_param;
 				}
 			}

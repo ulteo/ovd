@@ -74,8 +74,8 @@ import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 public class VncViewer extends java.applet.Applet
   implements java.lang.Runnable, WindowListener {
 
-  public static final String version = "0.2.3f";
-  
+  public static final String version = "0.2.3g";
+
   boolean inAnApplet = true;
   boolean inSeparateFrame = false;
   boolean rfbConnected = false;
@@ -122,7 +122,7 @@ public class VncViewer extends java.applet.Applet
   boolean recordingStatusChanged;
   String cursorUpdatesDef;
   String eightBitColorsDef;
-  
+
   // Applet preload and testing
   boolean connectImmediately;
   boolean startupPreload = false;
@@ -150,17 +150,17 @@ public class VncViewer extends java.applet.Applet
   String afterLoad,afterSSH, afterConnected, sshError;
   ForwardingIOChannel channel;
   protected static Runtime rt = Runtime.getRuntime();
-  
+
   //Proxy parameters
   String proxyType,proxyHost,proxyUsername,proxyPassword;
   int proxyPort;
-  
+
   // RFBCaching properties
   RfbCacheProperties cacheProps = null;
 
   // Reference to this applet for inter-applet communication.
   public static VncViewer refApplet;
-  
+
   // test result
   String infoString = "Performing test...";
   public int testResult = 0;
@@ -171,10 +171,10 @@ public class VncViewer extends java.applet.Applet
 	  getAppletContext().showDocument
 	  (new URL(url));
   }
-  
+
   /**
    * Sets the value of the given Javascript variable
-   * 
+   *
    * @param varName
    * @param value
    */
@@ -182,20 +182,20 @@ public class VncViewer extends java.applet.Applet
 	  JSObject window = (JSObject) JSObject.getWindow(this);
 	  window.setMember("testResult", value);
   }
-  
+
   /**
    * Sets the value of the given Javascript variable
-   * 
+   *
    * @param varName
    * @param value
    */
   public void setJavaScriptVariable(String varName, int value){
 	  this.setJavaScriptVariable(varName, ""+value);
   }
-  
+
   /**
    * Calls the given Javascript method with its parameters
-   * 
+   *
    * @param methodName
    * @param value
    */
@@ -212,21 +212,21 @@ public class VncViewer extends java.applet.Applet
 	  }
   }
 
-  
+
   /**
    * testFinished()
    * According to the value of testResult, call one of the three
    * URLs from the parameters: urlOnPass, urlOnFail, urlLowPing
    */
   public void testFinished(int testResult, long avgPing){
-	  
+
 	  //1. if fails --> red
 	  //2. if high ping --> yellow
 	  //3. else --> green
 	  System.out.println("Test result: "+testResult);
 	  String methodName = null;
 	  Object[] methodArgs = null;
-	  
+
 	  try{
 		  if (testResult < 0){
 			  testResult = -testResult;
@@ -239,16 +239,16 @@ public class VncViewer extends java.applet.Applet
 			  openUrl("javascript:"+startuponBadPing);
 		  } else {
 			  methodName = startuponLoad;
-			  openUrl("javascript:"+startuponLoad);  
+			  openUrl("javascript:"+startuponLoad);
 		  }
 	  }catch(Exception e){
 		  System.err.println("Couldn't execute javascript "+e.getMessage());
 
 		  callJavaScriptMethod(methodName, methodArgs);
 	  }
-	 
+
   }
-  
+
 
   //
   // init()
@@ -256,14 +256,14 @@ public class VncViewer extends java.applet.Applet
 
   public void init() {
 	 System.out.println("Starting UlteoVNC version "+version);
-	 
+
 	 String tmp;
 	 tmp = getParameter("preLoad");
 	 if(tmp != null && tmp.equalsIgnoreCase("true")){
-		 
+
 		 startupPreload = tmp.equalsIgnoreCase("true");
 		 tmp = null;
-		 
+
 		 // Get the Javascript URLs to show the results
 		 tmp = readParameter("onLoad", false);
 		 if(tmp != null){
@@ -279,14 +279,14 @@ public class VncViewer extends java.applet.Applet
 		 if(tmp != null){
 			 startuponBadPing = tmp;
 			 tmp = null;
-		 }	 
-		 
-		 
+		 }
+
+
 		 // Start the test!
 		 ODTester odtest = new ODTester(this);
 		 Thread t = new Thread(odtest);
 		 t.start();
-	 }	
+	 }
 
 	if(rt.totalMemory() == rt.maxMemory() && rt.freeMemory() < 11000000){
 			System.err.println("Not enough memory to start the applet");
@@ -296,7 +296,7 @@ public class VncViewer extends java.applet.Applet
 		return;
 	}else{
 		readParameters();
-    
+
     if (inSeparateFrame) {
         vncFrame = new Frame("TightVNC");
         if (!inAnApplet) {
@@ -306,7 +306,7 @@ public class VncViewer extends java.applet.Applet
       } else {
         vncContainer = this;
       }
-	
+
     refApplet = this;
 
 
@@ -337,7 +337,7 @@ public class VncViewer extends java.applet.Applet
 				properties.setProxyUsername(proxyUsername);
 				properties.setProxyPassword(proxyPassword);
 			}
-		    
+
 	   		ssh.connect(properties,new ConsoleKnownHostsKeyVerification());
 	    	PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
     		pwd.setUsername(sshUser);
@@ -350,7 +350,7 @@ public class VncViewer extends java.applet.Applet
 			}
 			int vncServerPort = port;
 			int vncLocalPort = vncServerPort+10;
-			
+
 			channel = new ForwardingIOChannel(ForwardingIOChannel.LOCAL_FORWARDING_CHANNEL,
 					"VNC","localhost",vncServerPort,"0.0.0.0",vncLocalPort);
 			if(ssh.openChannel(channel)){
@@ -393,7 +393,7 @@ public class VncViewer extends java.applet.Applet
 //	  g.clearRect(0, 0, this.getHeight(), this.getWidth());
 //	  paint(g);
   }
-  
+
   public void paint(Graphics g){
 //	  if(isTesting){
 //		  Color chosenColor;
@@ -452,8 +452,8 @@ public class VncViewer extends java.applet.Applet
       System.out.println("Starting RFB protocol");
      setRfbCachingEncoding();
 	 setEncodings();
-     processNormalProtocol();  
-      
+     processNormalProtocol();
+
     } catch (NoRouteToHostException e) {
       fatalError("Network error: no route to server: " + host, e);
     } catch (UnknownHostException e) {
@@ -499,7 +499,7 @@ public class VncViewer extends java.applet.Applet
 	fatalError(e.toString(), e);
       }
     }
-    
+
   }
 
  private void setRfbCachingEncoding() {
@@ -519,7 +519,7 @@ public class VncViewer extends java.applet.Applet
  }
 
  public void prepareCanvas(){
-	   	  vncContainer.removeAll();  
+	   	  vncContainer.removeAll();
 	      gridbag = new GridBagLayout();
 	      vncContainer.setLayout(gridbag);
 
@@ -528,7 +528,7 @@ public class VncViewer extends java.applet.Applet
 	      gbc.anchor = GridBagConstraints.CENTER;
 	      gbc.weightx = 1.0;
 	      gbc.weighty = 1.0;
-	      
+
 	      if (showControls) {
 	        buttonPanel = new ButtonPanel(this);
 	        gridbag.setConstraints(buttonPanel, gbc);
@@ -541,7 +541,7 @@ public class VncViewer extends java.applet.Applet
 		Panel canvasPanel = new Panel();
 		canvasPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		canvasPanel.add(vc);
-		
+
 		// Create a ScrollPane which will hold a panel with VncCanvas
 		// inside.
 		desktopScrollPane = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
@@ -563,13 +563,13 @@ public class VncViewer extends java.applet.Applet
 		validate();
 
 	      }
-	     
+
 	      if (showControls)
 		buttonPanel.enableButtons();
 	     moveFocusToDesktop();
   }
-  
-  
+
+
   //
   // Create a VncCanvas instance.
   //
@@ -605,7 +605,7 @@ public class VncViewer extends java.applet.Applet
   // If the rfbThread is being stopped, ignore any exceptions,
   // otherwise rethrow the exception so it can be handled.
   //
- 
+
   void processNormalProtocol() throws Exception {
     try {
       vc.processNormalProtocol();
@@ -795,13 +795,13 @@ public class VncViewer extends java.applet.Applet
     }
     int preferredEncoding = options.preferredEncoding;
     if (preferredEncoding == -1) {
-    	preferredEncoding = RfbProto.EncodingTight;	
+    	preferredEncoding = RfbProto.EncodingTight;
       //long kbitsPerSecond = rfb.kbitsPerSecond();
       /*if (nEncodingsSaved < 1) {
-        
- 
+
+
          System.out.println("Using Tight encoding");
-         preferredEncoding = RfbProto.EncodingTight;	  
+         preferredEncoding = RfbProto.EncodingTight;
         //Ulteo: don't change automatically the encoding
        /*} else if (kbitsPerSecond > 2000 &&
                  encodingsSaved[0] != RfbProto.EncodingHextile) {
@@ -809,7 +809,7 @@ public class VncViewer extends java.applet.Applet
         System.out.println("Throughput " + kbitsPerSecond +
                            " kbit/s - changing to Hextile encoding");
         preferredEncoding = RfbProto.EncodingHextile;
-        
+
       } else if (kbitsPerSecond < 1000 &&
                  encodingsSaved[0] != RfbProto.EncodingTight) {
         // Switch to Tight/ZRLE if the connection speed is below 1Mbps.
@@ -897,7 +897,7 @@ public class VncViewer extends java.applet.Applet
       }
       encodingsSaved = encodings;
       nEncodingsSaved = nEncodings;
-    }    
+    }
   }
 
 
@@ -1016,7 +1016,7 @@ public class VncViewer extends java.applet.Applet
 	fatalError("HOST parameter not specified");
       }
     }
-   
+
     String str = readParameter("PORT", true);
     port = Integer.parseInt(str);
 
@@ -1054,9 +1054,9 @@ public class VncViewer extends java.applet.Applet
 	afterSSH = readParameter("afterSSH", false);
 	afterConnected = readParameter("afterConnected", false);
 	sshError = readParameter("sshError", false);
-	
+
 	// End - Sandaruwan
-	 
+
 	//Read proxy parameters, if any -- by ArnauVP
 	proxyType = readParameter("proxyType", false);
 	proxyHost = readParameter("proxyHost", false);
@@ -1078,8 +1078,8 @@ public class VncViewer extends java.applet.Applet
     str = readParameter("Show Offline Desktop", false);
     if (str != null && str.equalsIgnoreCase("Yes"))
       showOfflineDesktop = true;
-    
-    
+
+
 
     // Fine tuning options.
     deferScreenUpdates = readIntParameter("Defer screen updates", 20);
@@ -1119,7 +1119,7 @@ public class VncViewer extends java.applet.Applet
       int cacheDataSize = readIntParameter("rfb.cache.datasize", IRfbCachingConstants.RFB_CACHE_DEFAULT_DATA_SIZE);
       return new RfbCacheProperties(cacheMaintAlgI, cacheSize, cacheDataSize, cacheVerMajor, cacheVerMinor);
   }
-  
+
 
   //
   // Read password parameters. If an "ENCPASSWORD" parameter is set,
@@ -1148,7 +1148,7 @@ public class VncViewer extends java.applet.Applet
       DesCipher des = new DesCipher(key);
       des.decrypt(pw, 0, pw, 0);
       passwordParam = new String(pw);
-      
+
       // Same with SSH password
       byte[] c = {
     	        0, 0, 0, 0, 0, 0, 0, 0};
@@ -1159,7 +1159,7 @@ public class VncViewer extends java.applet.Applet
     	  c[i] = x.byteValue();
       }
       sshPassword = new String(c);
-      
+
     }
   }
 
@@ -1213,7 +1213,7 @@ public class VncViewer extends java.applet.Applet
       }
     }
   }
-  
+
   public ClipboardFrame getClipboard() {
 	return clipboard;
   }
@@ -1256,9 +1256,9 @@ public class VncViewer extends java.applet.Applet
     }
   }
 
-    
+
   synchronized public void fatalError(String str, Exception e) {
- 
+
     if (rfb != null && rfb.closed()) {
       // Not necessary to show error message if the error was caused
       // by I/O problems after the rfb.close() method call.
@@ -1365,11 +1365,11 @@ public class VncViewer extends java.applet.Applet
   public String getAppletInfo() {
 		return "UlteoVNC";
 	}
-  
+
   public String getHostToPing(){
 	  return getParameter("hostToPing");
   }
-  
+
   //
   // Ignore window events we're not interested in.
   //
@@ -1377,7 +1377,7 @@ public class VncViewer extends java.applet.Applet
   public void windowActivated(WindowEvent evt) {
 //	  System.out.println("Window activated");
   }
-  
+
   public void windowDeactivated (WindowEvent evt) {}
   public void windowOpened(WindowEvent evt) {}
   public void windowClosed(WindowEvent evt) {}

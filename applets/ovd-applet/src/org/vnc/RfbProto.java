@@ -120,7 +120,7 @@ class RfbProto {
     EncodingLastRect       = 0xFFFFFF20,
     EncodingNewFBSize      = 0xFFFFFF21,
     EncodingRfbCaching	   = IRfbCachingConstants.RFB_CACHE_ENCODING;
-  
+
   final static String
     SigEncodingRaw            = "RAW_____",
     SigEncodingCopyRect       = "COPYRECT",
@@ -138,7 +138,7 @@ class RfbProto {
     SigEncodingLastRect       = "LASTRECT",
     SigEncodingNewFBSize      = "NEWFBSIZ",
   	SigEncodingRfbCaching	  = "RFBCACHE";
-  
+
   final static int MaxNormalEncoding = 255;
 
   // Contstants used in the Hextile decoder
@@ -169,13 +169,13 @@ class RfbProto {
   SessionRecorder rec;
   boolean inNormalProtocol = false;
   VncViewer viewer;
-  
+
   // RFB Caching declaration section
   // Cache object
   IRfbCache cache;
   // Cache key size in bytes
   int cacheKeySize = 20;
-  // Minimum data size of frame buffer to be cached 
+  // Minimum data size of frame buffer to be cached
   int cacheMinDataSize;
   // Cache size
   int cacheMaxEntries;
@@ -184,38 +184,38 @@ class RfbProto {
   // Cache version
   int cacheMajor, cacheMinor;
   // Reserved byte for RFB caching protocol extension
-  int cacheReserved; 
-  // RFB cache client preferred properties 
+  int cacheReserved;
+  // RFB cache client preferred properties
   RfbCacheProperties clientProps = null;
-  
+
   void setCacheProps(RfbCacheProperties cacheProps){
-	  clientProps = cacheProps;	  
+	  clientProps = cacheProps;
   }
   // RFB session cache support indicator
-  boolean isServerSupportCaching;  
-  
-  // Number of bytes to be cached for single frame buffer update request 
+  boolean isServerSupportCaching;
+
+  // Number of bytes to be cached for single frame buffer update request
   int numBytesCached;
 
 //  // Getter
 //  public int getNumBytesCached() {
 //	return numBytesCached;
 //  }
-//  
+//
 //  // Setter
 //  public void setNumBytesCached(int numBytesCached) {
 //	this.numBytesCached = numBytesCached;
 //  }
-//  
+//
   // The size of socket InputStream buffer to store bytes after mark() call
-  int rfbCacheMarkReadLimit = 4800000;   
-  
+  int rfbCacheMarkReadLimit = 4800000;
+
   boolean isCaching = false;
 
-		  
+
   /*Ulteo changes by ArnauVP*/
   String OSName = "unknown";
-  
+
   //Support for dead keys: the dead code is recorded, then the next
   // key pressed is modified to send the correct X keysym. Original
   // support for Spanish, may need slight modification for other keyboards
@@ -223,10 +223,10 @@ class RfbProto {
   boolean deadKeyPressed = false;
   boolean deadKeyDown = false;
   int deadKeyChar = 0;
-  
+
   // mustFake forces the fake of a key press when we only get a release
   boolean mustFake = false;
-  
+
 
   // This will be set to true on the first framebuffer update
   // containing Zlib-, ZRLE- or Tight-encoded data.
@@ -244,7 +244,7 @@ class RfbProto {
 
   // Before starting to record each saved session, we set this field
   // to 0, and increment on each framebuffer update. We don't flush
-  // the SessionRecorder data into the file before the second update. 
+  // the SessionRecorder data into the file before the second update.
   // This allows us to write initial framebuffer update with zero
   // timestamp, to let the player show initial desktop before
   // playback.
@@ -304,12 +304,12 @@ class RfbProto {
 	viewer = v;
 	is = new DataInputStream(new BufferedInputStream(in, 16384));
 	os = out;
-	
+
 	//
 	//OS detection --> better keyboard handling
 	// Ulteo fix by ArnauVP
 	//
-	
+
 	String OS = System.getProperty("os.name");
 //	System.out.println("******OS: "+OS);
 	if(OS.equalsIgnoreCase("Linux")){
@@ -327,7 +327,7 @@ class RfbProto {
     try {
       is.close();
       os.close();
-      if(sock != null){	
+      if(sock != null){
     	 sock.close();
     	 sock=null;
       }
@@ -678,47 +678,47 @@ class RfbProto {
 	  }
 	  byte[] b = new byte[8];
 	  b[0] = IRfbCachingConstants.RFB_CACHE_CLIENT_INIT_MSG;
-	  
-	  boolean isVerMatch = (clientProps.getCacheMajor() == cacheMajor && clientProps.getCacheMinor()<= cacheMinor); 
-	  
+
+	  boolean isVerMatch = (clientProps.getCacheMajor() == cacheMajor && clientProps.getCacheMinor()<= cacheMinor);
+
 	  if (isVerMatch){
 		  b[1] = (byte) ((byte)(clientProps.getCacheMajor() << 4)|(clientProps.getCacheMinor() & 0xf));
-	  }	  
+	  }
 	  else
-		  b[1] = 0; // Caching not supported due to version mismatch	
-	  cacheMaxEntries = Math.min(clientProps.getCacheMaxEntries(),cacheMaxEntries); 	  	  
+		  b[1] = 0; // Caching not supported due to version mismatch
+	  cacheMaxEntries = Math.min(clientProps.getCacheMaxEntries(),cacheMaxEntries);
 	  b[2] = (byte) ((cacheMaxEntries >> 8) & 0xff);
-	  
+
 	  b[3] = (byte) ( cacheMaxEntries & 0xff);
-	  cacheMaintAlg = clientProps.getCacheMaintAlg();	  
+	  cacheMaintAlg = clientProps.getCacheMaintAlg();
 	  b[4] = (byte) ( cacheMaintAlg & 0xff);
 	  b[5] = 0; //reserved byte
-	  cacheMinDataSize = Math.min(clientProps.getCacheMinDataSize(),cacheMinDataSize);
+	  cacheMinDataSize = (clientProps.getCacheMinDataSize()>0)?clientProps.getCacheMinDataSize():cacheMinDataSize;
 	  b[6] = (byte) ((cacheMinDataSize >> 8) & 0xff);
-	  b[7] = (byte) (cacheMinDataSize & 0xff);	    
+	  b[7] = (byte) (cacheMinDataSize & 0xff);
 	  if (isVerMatch){
 		  try{
 			  // Possible usage:
-			  // IRfbCacheFactory factory; 
+			  // IRfbCacheFactory factory;
 			  // switch(b[1]){
-			  // 	case VER1: 
+			  // 	case VER1:
 			  //      factory = (IRfbCacheFactory)(Class.forName(Factory1_Name).newInstance();
 			  //      break;
 			  //    case VER2:
 			  //      factory = (IRfbCacheFactory)(Class.forName(Factory2_Name).newInstance();
 			  //      break;
 			  //    default:
-			  //	  factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance();			  
+			  //	  factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance();
 			  // }
 			  //
-			  IRfbCacheFactory factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance(); 
+			  IRfbCacheFactory factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance();
 		      IRfbCache cache = factory.CreateRfbCache(
 		      						new RfbCacheProperties(cacheMaintAlg,
-		      											   cacheMaxEntries, 
-		      											   cacheMinDataSize, 
+		      											   cacheMaxEntries,
+		      											   cacheMinDataSize,
 		      											   clientProps.getCacheMajor(),
 		      											   clientProps.getCacheMajor()));
-		      											   
+
 		      if (cache!=null){
 		    	  this.cache = cache;
 		      }else{
@@ -729,18 +729,18 @@ class RfbProto {
 //		      System.out.println("\tcacheVersion:"+b[1]);
 //		      System.out.println("\tcacheMaintAlg:"+cacheMaintAlg);
 //		      System.out.println("\tcacheMinDataSize:"+cacheMinDataSize);
-//		      System.out.println("\tcacheSize:"+cacheMaxEntries);		      
+//		      System.out.println("\tcacheSize:"+cacheMaxEntries);
 		  }catch(Exception e){
 			  e.printStackTrace();
 			  this.isServerSupportCaching = false;
 			  b[1] = 0;
-		  }	  		  
+		  }
       }else{
       	  this.isServerSupportCaching = false;
 //      	  System.out.println("Cache version mismatch");
       }
 	  os.write(b);
-      
+
   }
 
   //
@@ -753,7 +753,7 @@ class RfbProto {
 	  cacheMinor =  ver & 0xf ;
 	  cacheMaxEntries = is.readUnsignedShort();
 	  cacheMaintAlg = is.readUnsignedByte();
-	  cacheReserved = is.readUnsignedByte();	  
+	  cacheReserved = is.readUnsignedByte();
 	  cacheMinDataSize =  is.readUnsignedShort();
 	  if ((clientProps!=null) && (clientProps.getCacheMajor() == cacheMajor) &&  (clientProps.getCacheMinor()<= cacheMinor)){
 		  isServerSupportCaching = true;
@@ -971,15 +971,15 @@ class RfbProto {
   //
 
   String readServerCutText() throws IOException {
-    
+
     StringBuffer buffer = new StringBuffer();
-    
+
     int j=0;
     is.skipBytes(3);
     int len = is.readInt();
 //    System.out.println("readCut, len: "+len);
     while (j<len){
-    int ch = is.read(); 
+    int ch = is.read();
 //    System.out.println("readCut, readInt: "+ ch);
 //    System.out.println("readCut, translation: "+UnicodeToKeysym.inverseTranslate(ch));
     buffer.append((char)UnicodeToKeysym.inverseTranslate(ch));
@@ -1102,7 +1102,7 @@ class RfbProto {
       b[6 + i * 6 + 4] = (byte) ((blue[i] >> 8) & 0xff);
       b[6 + i * 6 + 5] = (byte) (blue[i] & 0xff);
     }
- 
+
     os.write(b);
   }
 
@@ -1133,7 +1133,7 @@ class RfbProto {
 	   char keyChar;
 	   char translated;
 	   Vector processedBytes = new Vector();
-	   
+
 	   for (int i=0; i<len; i++) {
 		   keyChar = text.charAt(i);
 //		   System.out.println("writeCut, keyChar: "+keyChar+" ("+new Integer(keyChar).intValue()+")");
@@ -1147,7 +1147,7 @@ class RfbProto {
 			   //Send a '?' until we solve the issue server-side
 			   byte tmp = (byte) (63 & 0xff);
 			   processedBytes.add(new Byte(tmp));
-			   
+
 			   /*This is how it should work if the server accepted UTF bytes*/
 //			   String tmpString = new String(""+translated);
 //			   byte[] tmpArray = tmpString.getBytes("UTF-8");
@@ -1156,13 +1156,13 @@ class RfbProto {
 //			   }
 		   }
 	   }
-	   
+
 	   int byteLen = processedBytes.size();
 	   byte[] b = new byte[8 + byteLen];
 	   for(int k=0; k<processedBytes.size();k++){
 		   b[8+k] = ((Byte) processedBytes.get(k)).byteValue();
 	   }
-	   
+
 
 	   // once we have the number of bytes, allocate space and send it
 //	   System.out.println("writeCut, byteLen: "+byteLen);
@@ -1173,14 +1173,14 @@ class RfbProto {
 	   b[6] = (byte) ((byteLen >> 8) & 0xff);
 	   b[7] = (byte) (byteLen & 0xff);
 	   os.write(b);
-   
+
 
  }
 
 
   //
   // A buffer for putting pointer and keyboard events before being sent.  This
-  // is to ensure that multiple RFB events generated from a single Java Event 
+  // is to ensure that multiple RFB events generated from a single Java Event
   // will all be sent in a single network packet.  The maximum possible
   // length is 4 modifier down events, a single key event followed by 4
   // modifier up events i.e. 9 key events or 72 bytes.
@@ -1205,9 +1205,9 @@ class RfbProto {
 
   int pointerMask = 0;
 
-  
+
   //Modified for Ulteo by ArnauVP
-  
+
   synchronized void writePointerEvent(MouseEvent evt) throws IOException {
 	   int modifiers = evt.getModifiersEx();
 
@@ -1241,7 +1241,7 @@ class RfbProto {
 	     modifiers &= ~KeyEvent.ALT_DOWN_MASK;
 	     modifiers &= ~KeyEvent.META_DOWN_MASK;
 	   }
-	  
+
 	   eventBufLen = 0;
 	   writeModifierKeyEvents(modifiers);
 	   int x = evt.getX();
@@ -1335,9 +1335,9 @@ class RfbProto {
   // around it to set the correct modifier state.  Also we need to translate
   // from the Java key values to the X keysym values used by the RFB protocol.
   //
-  
+
   void writeKeyEvent(KeyEvent evt) throws IOException{
-		 
+
 		 int keyCode, keysym, keyChar, modifiersMask;
 
 		    keysym = 0;
@@ -1347,15 +1347,15 @@ class RfbProto {
 		    boolean down = (evt.getID() == KeyEvent.KEY_PRESSED);
 		    boolean typed = (evt.getID() == KeyEvent.KEY_TYPED);
 //		    System.out.println("WriteKeyEvent: keyCode: "+keyCode+" and keyChar: "+keyChar+"\n");
-		    
+
 		    if(OSName.equals("windows")){
 
 		    	// Two dead keys in a row get typed as the symbol alone
-		    	if(deadKeyPressed && down && (keyChar == deadKeyChar)){	
+		    	if(deadKeyPressed && down && (keyChar == deadKeyChar)){
 		    		typed = true;
 		    	}
-		    	
-		    	if(typed) {	
+
+		    	if(typed) {
 		    		if(keyChar == 9){
 		    			keysym = Keysyms.Tab;
 		    		}else if(keyChar != 10 && keyChar != 8){
@@ -1373,11 +1373,11 @@ class RfbProto {
 		    		if(!evt.isActionKey() && evt.isControlDown() && keyChar < 0x20){ //control+letter
 		    			keysym = keyChar + 0x60;
 		    		}
-		    		
+
 		    	} else if (evt.isActionKey()) {
 		    		keysym = translateActionKey(keyCode);
 		    		if(keysym < 0) return;
-		    	} else if (keyCode == 127) { 
+		    	} else if (keyCode == 127) {
 		    		keysym = Keysyms.Delete;
 		    	} else if (keyCode == 8) {
 		    		keysym = Keysyms.BackSpace;
@@ -1397,18 +1397,18 @@ class RfbProto {
 		    		}
 		    		return;
 		    	}
-		      	
+
 		    	//Write AltGr for Control+Alt -- (always?)
 		    	if(modifiersMask == 640){
 		    		modifiersMask = 8192;
 		    	}
 		    }
-		     
+
 		    if(OSName.equals("linux")){
-		    	
+
 		    	// return key pressed and key released events if we already
 		    	// have the key typed one.
-		    	if(typed) {	
+		    	if(typed) {
 		    		if(keyChar != 10 && keyChar != 9 && keyChar != 8){
 		    			keysym = UnicodeToKeysym.translate(keyChar);
 		    		} else {
@@ -1421,7 +1421,7 @@ class RfbProto {
 		    	} else if (evt.isActionKey()) {
 		    		keysym = translateActionKey(keyCode);
 		    		if(keysym < 0) return;
-		    	} else if (keyCode == 127) { 
+		    	} else if (keyCode == 127) {
 		    		keysym = Keysyms.Delete;
 		    	} else if (keyCode == 8) {
 		    		keysym = Keysyms.BackSpace;
@@ -1436,11 +1436,11 @@ class RfbProto {
 		    		return;
 		    	}
 		    }
-		    
+
 		    if(OSName.equals("mac")){
-		    	
+
 		    	//Mostly same as linux: use key typed events
-		      	if(typed) {	
+		      	if(typed) {
 		    		if(keyChar != 10 && keyChar != 9){
 		    			keysym = UnicodeToKeysym.translate(keyChar);
 		    		} else {
@@ -1450,47 +1450,47 @@ class RfbProto {
 		    			keysym = keyChar + 0x60;
 				        if (keysym == 104) keysym = Keysyms.BackSpace;
 		    		}
-		    		
+
 		    	} else if (evt.isActionKey()) {
 		    		keysym = translateActionKey(keyCode);
 		    		if(keysym < 0) return;
-		    	} else if (keyCode == 127) { 
+		    	} else if (keyCode == 127) {
 		    		keysym = Keysyms.Delete;
 		    	} else if (keyCode == 10) {
 		    		keysym = Keysyms.Return;
 		    	} else if (keyCode == 9) {
-		    		keysym = Keysyms.Tab;	
+		    		keysym = Keysyms.Tab;
 		    	} else {
 		    		return;
 		    	}
-		 	
+
 		      	//Control + arrows doesn't work, we need press & release.
 		      	if((keysym > 65360) && (keysym < 65365) && modifiersMask == 128)
 		      		mustFake = true;
-		      	
+
 		    	//Write AltGr for Mac symbols made with Alt or Alt+shift
 		    	if((modifiersMask == 512 || modifiersMask == 576) &&
 		    	 (keysym < 97 || keysym > 122 )){
 		    		modifiersMask = 8192;
 		    	}
 		    }
-		  
-			
+
+
 			// Fake press and release for key typed events
 		    if(typed || mustFake){
 		    	eventBufLen = 0;
 //			    System.out.println("Writing key typed press "+keysym+ " with modifiers "+modifiersMask);
-			    writeModifierKeyEvents(modifiersMask); 
+			    writeModifierKeyEvents(modifiersMask);
 			    writeKeyEvent(keysym, true);
 //			    System.out.println("Writing key typed release "+keysym+ " with modifiers 0");
 			    writeKeyEvent(keysym, false);
 			    writeModifierKeyEvents(0);
 			    os.write(eventBuf, 0, eventBufLen);
 			    if(mustFake)	mustFake = false;
-		    }else{    
+		    }else{
 		    eventBufLen = 0;
 //		    System.out.println("Writing "+keysym+ " with modifiers "+modifiersMask);
-		    writeModifierKeyEvents(modifiersMask); 
+		    writeModifierKeyEvents(modifiersMask);
 		    writeKeyEvent(keysym, down);
 		    if(!down)	writeModifierKeyEvents(0);
 		    os.write(eventBuf, 0, eventBufLen);
@@ -1506,7 +1506,7 @@ class RfbProto {
 	     case KeyEvent.VK_UP:           return Keysyms.Up;
 	     case KeyEvent.VK_DOWN:         return Keysyms.Down;
 	     case KeyEvent.VK_LEFT:         return Keysyms.Left;
-	     case KeyEvent.VK_RIGHT:        return Keysyms.Right; 
+	     case KeyEvent.VK_RIGHT:        return Keysyms.Right;
 	     case KeyEvent.VK_F1:           return Keysyms.F1;
 	     case KeyEvent.VK_F2:           return Keysyms.F2;
 	     case KeyEvent.VK_F3:           return Keysyms.F3;
@@ -1519,13 +1519,13 @@ class RfbProto {
 	     case KeyEvent.VK_F10:          return Keysyms.F10;
 	     case KeyEvent.VK_F11:          return Keysyms.F11;
 	     case KeyEvent.VK_F12:          return Keysyms.F12;
-	     case KeyEvent.VK_PRINTSCREEN:  return Keysyms.Print; 
+	     case KeyEvent.VK_PRINTSCREEN:  return Keysyms.Print;
 	     case KeyEvent.VK_PAUSE:        return Keysyms.Pause;
 	     case KeyEvent.VK_INSERT:       return Keysyms.Insert;
 	     default: return -1;
 	     }
 	 }
-	 
+
 
   //
   // Add a raw key event with the given X keysym to eventBuf.
@@ -1622,7 +1622,7 @@ class RfbProto {
   }
 
   public void stopTiming() {
-    timing = false; 
+    timing = false;
     if (timeWaitedIn100us < timedKbits/2)
       timeWaitedIn100us = timedKbits/2; // upper limit 20Mbit/s
   }
@@ -1660,10 +1660,10 @@ class RfbProto {
       timedKbits += newKbits;
     }
   }
-  
+
 //
-// Start caching process 
-//  
+// Start caching process
+//
 public void startCaching() throws IOException{
 	//mark the current position in the socket stream
 	this.is.mark(rfbCacheMarkReadLimit);
@@ -1673,7 +1673,7 @@ public void startCaching() throws IOException{
 
 
 //
-// Reset caching variables 
+// Reset caching variables
 //
 public void resetCaching() throws IOException{
 	numBytesCached = 0;
@@ -1681,17 +1681,17 @@ public void resetCaching() throws IOException{
 }
 
 //
-// Stop caching process 
+// Stop caching process
 //
 public void stopCaching(int encoding) throws IOException{
-	// check if buffer size is large enough to be cached 
+	// check if buffer size is large enough to be cached
 	if (numBytesCached >= cacheMinDataSize){
 		byte[] data = new byte[numBytesCached];
 		// move InputStream pointer to the marked position
 		is.reset();
 		// read data from the InputStream buffer
 		is.readFully(data, 0, data.length);
-		cache.put(cache.hash(data), new RfbCacheEntry (encoding, data));    	      
+		cache.put(cache.hash(data), new RfbCacheEntry (encoding, data));
 	}
 	// reset cache variables
 	resetCaching();

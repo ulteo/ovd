@@ -58,7 +58,7 @@ if [ "$1" = "configure" ]; then
     CHROOTCONF=$CHROOTPATH/etc/ulteo-ovd.conf
     HOSTCONF=/etc/ulteo-ovd.conf
 
-    if [ -z "$2" ]; then
+    if [ -z "$2" ] || [ ! -e "$CHROOTCONF" ]; then
         db_get od/sessions/server_url || true
         SM="$RET"
         URL="$SM/base.tar.gz"

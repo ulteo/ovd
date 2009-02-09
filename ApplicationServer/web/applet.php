@@ -70,9 +70,9 @@ if (isset($_REQUEST['html'])) {
 	<param name="name" value="ulteoapplet" />
 	<param name="code" value="org.vnc.VncViewer" />
 	<param name="codebase" value="applet/" />
-	<param name="archive" value="ulteo-applet-0.2.3f.jar" />
-	<param name="cache_archive" value="ulteo-applet-0.2.3f.jar" />
-	<param name="cache_archive_ex" value="ulteo-applet-0.2.3f.jar;preload" />
+	<param name="archive" value="ulteo-applet-0.2.3g.jar" />
+	<param name="cache_archive" value="ulteo-applet-0.2.3g.jar" />
+	<param name="cache_archive_ex" value="ulteo-applet-0.2.3g.jar;preload" />
 
 	<param name="HOST" value="<?php echo $server; ?>" />
 	<param name="PORT" value="<?php echo $rfbport; ?>" />
