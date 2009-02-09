@@ -11,3 +11,5 @@ aclocal
 autoconf
 automake --add-missing --gnu --copy
 
+
+./configure $@
