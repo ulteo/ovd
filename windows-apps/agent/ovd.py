@@ -118,6 +118,13 @@ class UlteoSlave:
 					if os.path.isfile(l) and l[-3:] == "lnk":
 						ret.append(l)
 			return ret
+		def isBan(name_):
+			name = name_.lower()
+			for ban in ['uninstall', 'update']:
+				if ban in name:
+					return True
+			return False
+		
 		pythoncom.CoInitialize()
 		language, output_encoding = locale.getdefaultlocale()
 		doc = Document()
@@ -130,19 +137,21 @@ class UlteoSlave:
 			shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 			shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
 			if ( shortcut.GetPath(0)[0][-3:] == "exe"):
-				app = doc.createElement("application")
-				app.setAttribute("name", unicode(os.path.basename(filename)[:-4], output_encoding))
-				if unicode(shortcut.GetDescription(), output_encoding) != '':
-					app.setAttribute("description", unicode(shortcut.GetDescription(), output_encoding))
-				server.appendChild(app)
-				exe = doc.createElement("executable")
-				app.setAttribute("desktopfile", unicode(filename, output_encoding))
-				
-				if unicode(shortcut.GetIconLocation()[0], output_encoding) != '':
-					exe.setAttribute("icon", unicode(shortcut.GetIconLocation()[0], output_encoding))
-				exe.setAttribute("command", unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding))
-				
-				app.appendChild(exe)
+				application_name = os.path.basename(filename)[:-4]
+				if isBan(application_name) == False:
+					app = doc.createElement("application")
+					app.setAttribute("name", unicode(os.path.basename(filename)[:-4], output_encoding))
+					if unicode(shortcut.GetDescription(), output_encoding) != '':
+						app.setAttribute("description", unicode(shortcut.GetDescription(), output_encoding))
+					server.appendChild(app)
+					exe = doc.createElement("executable")
+					app.setAttribute("desktopfile", unicode(filename, output_encoding))
+					
+					if unicode(shortcut.GetIconLocation()[0], output_encoding) != '':
+						exe.setAttribute("icon", unicode(shortcut.GetIconLocation()[0], output_encoding))
+					exe.setAttribute("command", unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding))
+					
+					app.appendChild(exe)
 		
 		return doc.toxml(output_encoding)
 
