@@ -106,12 +106,6 @@ class Server {
 		$address = $_SERVER['REMOTE_ADDR'];
 		$name = $this->fqdn;
 
-		$buf = @gethostbyaddr(@gethostbyname($this->fqdn));
-		if ($this->fqdn !== $buf) {
-			popup_error('"'.$this->fqdn.'": '._('reverse DNS seems invalid!').' ('.$buf.')');
-			Logger::warning('main', '"'.$this->fqdn.'": reverse DNS seems invalid! ('.$buf.')');
-		}
-
 		$buf = false;
 		foreach ($authorized_fqdn as $fqdn) {
 			$fqdn = str_replace('*', '.*', str_replace('.', '\.', $fqdn));
@@ -120,8 +114,10 @@ class Server {
 				$buf = true;
 		}
 
-		if (! $buf)
+		if (! $buf) {
+			Logger::warning('main', '"'.$this->fqdn.'": server is NOT authorized! ('.$buf.')');
 			return false;
+		}
 
 		if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name)) // if IP?
 			return ($name == $address);
@@ -132,6 +128,8 @@ class Server {
 		$reverse = @gethostbyaddr($address);
 		if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
 			return true;
+
+		Logger::warning('main', '"'.$this->fqdn.'": reverse DNS is invalid! ('.$buf.')');
 
 		return false;
 	}
