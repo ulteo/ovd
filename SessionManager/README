@@ -25,5 +25,5 @@ Configuration
 To configure the session manager, run as root:
 $  sm-config
 
-See sm-config(1) or `sm-config --help for options.
+See sm-config(1) or `sm-config --help` for options.
 
