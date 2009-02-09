@@ -49,8 +49,12 @@ do_start () {
     if [ ! -f /proc/mounts ]; then
         mount -t proc none /proc
     fi
-    mkdir -p /dev/pts
-    mount -t devpts none /dev/pts
+
+    grep -q /dev/pts /etc/mtab 
+    if [ $? -ne 0 ]; then
+	mkdir -p /dev/pts
+	mount -t devpts none /dev/pts
+    fi
 
     if [ -f $PIDFILE ]; then
         if ps $(cat $PIDFILE); then
@@ -99,8 +103,14 @@ do_stop () {
         /etc/init.d/$service stop || true
     done
 
-    umount /proc
-    umount /dev/pts
+    grep -q /dev/pts /etc/mtab 
+    if [ $? -eq 0 ]; then
+	umount /dev/pts
+    fi
+
+    if [ -f /proc/mounts ]; then
+	umount /proc
+    fi
 
     log_end_msg 0
 }
