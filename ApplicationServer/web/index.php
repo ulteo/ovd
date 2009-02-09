@@ -64,9 +64,6 @@ $_SESSION['owner'] = false;
 if ($_SESSION['mode'] == 'start' || $_SESSION['mode'] == 'resume')
 	$_SESSION['owner'] = true;
 
-if ($_SESSION['mode'] == 'invite')
-	$settings[] = 'view_only';
-
 $parameters = array();
 foreach ($session_node->childNodes as $node) {
 	if (!$node->hasAttribute('value'))

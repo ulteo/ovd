@@ -30,9 +30,9 @@ class Abstract_Token {
 		$ret = $SQL->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 varchar(255) NOT NULL,
-		@3 varchar(255) NOT NULL,
+		@3 varchar(32) NOT NULL,
 		@4 varchar(255) NOT NULL,
-		@5 varchar(255) NOT NULL,
+		@5 int(10) NOT NULL,
 		PRIMARY KEY  (`id`)
 		)', $mysql_conf['prefix'].'tokens', 'id', 'type', 'link_to', 'valid_until');
 

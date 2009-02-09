@@ -27,9 +27,19 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	if (isset($_POST['active_mode']))
 		$view_only = 'No';
 
+	$invite = new Invite(gen_string(5));
+	$invite->session = $session->id;
+	$invite->settings = array(
+		'view_only'	=>	($view_only == 'Yes')?1:0
+	);
+	$invite->email = $_POST['email'];
+	$invite->valid_until = (time()+(60*30));
+	Abstract_Invite::save($invite);
+
 	$token = new Token(gen_string(5));
 	$token->type = 'invite';
-	$token->session = $session->id;
+	$token->link_to = $invite->id;
+	$token->valid_until = (time()+(60*30));
 	Abstract_Token::save($token);
 
 	$buf = Abstract_Server::load($session->server);
@@ -57,7 +67,7 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 		redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email.'&error='.$buf->message);
 	}
 
-	$session->addInvite($email, ($view_only == 'Yes')?1:0);
+	//$session->addInvite($email, ($view_only == 'Yes')?1:0);
 
 	redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email);
 }
@@ -94,9 +104,9 @@ html,body {
 	<div style="margin-left: auto; margin-right: 0px; text-align: left">
 		<ul>
 			<?php
-				$invited_emails = $session->invitedEmails();
+				//$invited_emails = $session->invitedEmails();
 
-				if (is_array($invited_emails)) {
+				if (isset($invited_emails) && is_array($invited_emails)) {
 					foreach ($invited_emails as $invited_email)
 						echo '<li>'.$invited_email.'</li>';
 				} else

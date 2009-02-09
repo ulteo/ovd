@@ -46,7 +46,15 @@ if (! $token) {
 	die('No such token file');
 }
 
-$session = Abstract_Session::load($token->getAttribute('link_to'));
+if ($token->getAttribute('type') == 'start' || $token->getAttribute('type') == 'resume') {
+	$session_id = $token->getAttribute('link_to');
+} elseif ($token->getAttribute('type') == 'invite') {
+	$invite = Abstract_Invite::load($token->getAttribute('link_to'));
+
+	$session_id = $invite->getAttribute('session');
+}
+
+$session = Abstract_Session::load($session_id);
 if (! $session || ! $session->hasAttribute('settings')) {
 	Logger::error('main', '(webservices/session_token) Invalid session: '.$session->id);
 	die('Invalid session');
@@ -63,12 +71,21 @@ $session_node->setAttribute('mode', $token->type);
 $dom->appendChild($session_node);
 
 $settings = $session->getAttribute('settings');
+if ($token->type == 'invite')
+	$settings = array_merge($settings, $invite->getAttribute('settings'));
 foreach ($settings as $k => $v) {
 	if ($k == 'home_dir_type' || $k == 'module_fs')
 		continue;
 
 	if ($k == 'user_login' || $k == 'user_displayname')
 		$v = str_replace(' ', '', $v);
+
+	if ($k == 'view_only') {
+		if ($v == true)
+			$v = 'Yes';
+		elseif ($v == false)
+			$v = 'No';
+	}
 
 	$item = $dom->createElement($k);
 	$item->setAttribute('value', $v);

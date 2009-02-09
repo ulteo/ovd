@@ -30,8 +30,12 @@ class Abstract_Invite {
 		$ret = $SQL->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 varchar(255) NOT NULL,
+		@3 varchar(255) NOT NULL,
+		@4 text NOT NULL,
+		@5 varchar(255) NOT NULL,
+		@6 int(10) NOT NULL,
 		PRIMARY KEY  (`id`)
-		)', $mysql_conf['prefix'].'invites', 'id');
+		)', $mysql_conf['prefix'].'invites', 'id', 'session', 'settings', 'email', 'valid_until');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'invites\'');
@@ -56,7 +60,7 @@ class Abstract_Invite {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'session', 'settings', 'email', 'valid_until', $mysql_conf['prefix'].'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -67,7 +71,11 @@ class Abstract_Invite {
 		foreach ($row as $k => $v)
 			$$k = $v;
 
-		$buf = new Token($id);
+		$buf = new Invite($id);
+		$buf->session = (string)$session;
+		$buf->settings = unserialize($settings);
+		$buf->email = (string)$email;
+		$buf->valid_until = (int)$valid_until;
 
 		return $buf;
 	}
@@ -90,7 +98,7 @@ class Abstract_Invite {
 			if (! Abstract_Invite::create($invite_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET 1=1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $mysql_conf['prefix'].'invites', 'session', $invite_->session, 'settings', serialize($invite_->settings), 'email', $invite_->email, 'valid_until', $invite_->valid_until, 'id', $id);
 
 		return true;
 	}
@@ -107,7 +115,7 @@ class Abstract_Invite {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$id = $token_->id;
+		$id = $invite_->id;
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 		$total = $SQL->NumRows();
@@ -143,5 +151,34 @@ class Abstract_Invite {
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
 
 		return true;
+	}
+
+	public function load_all() {
+		Logger::debug('main', 'Starting Abstract_Invite::load_all');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'invites');
+		$rows = $SQL->FetchAllResults();
+
+		$invites = array();
+		foreach ($rows as $row) {
+			$id = $row['id'];
+
+			$invite = Abstract_Invite::load($id);
+			if (! $invite)
+				continue;
+
+			$invites[] = $invite;
+		}
+
+		return $invites;
 	}
 }
