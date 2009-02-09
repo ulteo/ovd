@@ -297,7 +297,7 @@ class Server {
 		if (! is_string($buf))
 			return false;
 
-		if ($buf === '')
+		if ($buf == '')
 			return false;
 
 		$this->setAttribute('type', $buf);
@@ -332,7 +332,7 @@ class Server {
 		if (! is_string($buf))
 			return false;
 
-		if ($buf === '')
+		if ($buf == '')
 			return false;
 
 		$this->setAttribute('version', $buf);
@@ -395,7 +395,7 @@ class Server {
 			return false;
 		}
 
-		if ($buf === '')
+		if ($xml == '')
 			return false;
 
 		$dom = new DomDocument();
@@ -563,10 +563,16 @@ class Server {
 			return false;
 		}
 
+		if (! is_string($xml))
+			return false;
+
 		if (substr($xml, 0, 5) == 'ERROR') {
 			$this->returnedError();
 			return false;
 		}
+
+		if ($xml == '')
+			return false;
 
 		$dom = new DomDocument();
 		@$dom->loadXML($xml);
