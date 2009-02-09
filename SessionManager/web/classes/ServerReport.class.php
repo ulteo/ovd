@@ -193,7 +193,7 @@ class ServerReport {
 
 		$sql = MySQL::getInstance();
 		$sql->DoQuery('SELECT * FROM @1 WHERE date=%2 AND fqdn=%3',
-		              SERVERS_REPORT_TABLE, $day_, $fqdn);
+		              SERVERS_REPORT_TABLE, $day_, $fqdn_);
 		if ($sql->NumRows() != 0)
 			return;
 
