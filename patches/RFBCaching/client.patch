@@ -1,0 +1,1131 @@
+Index: src/org/vnc/rfbcaching/RfbCacheEntry.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbCacheEntry.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbCacheEntry.java	(revision 28)
+@@ -0,0 +1,26 @@
++package org.vnc.rfbcaching;
++
++public class RfbCacheEntry {
++	private int rfbEncoding;
++	private byte[] rfbData;
++
++	public RfbCacheEntry(int rfbEncoding,byte[] rfbData) {
++		this.rfbData = rfbData;
++		this.setRfbEncoding(rfbEncoding);
++	}
++
++	public void setRfbData(byte[] rfbData) {
++		this.rfbData = rfbData;
++	}
++	public byte[] getRfbData() {
++		return rfbData;
++	}
++
++	public void setRfbEncoding(int rfbEncoding) {
++		this.rfbEncoding = rfbEncoding;
++	}
++
++	public int getRfbEncoding() {
++		return rfbEncoding;
++	}
++}
+Index: src/org/vnc/rfbcaching/RfbCacheCreateException.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbCacheCreateException.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbCacheCreateException.java	(revision 28)
+@@ -0,0 +1,5 @@
++package org.vnc.rfbcaching;
++
++public class RfbCacheCreateException extends Exception {
++	private static final long serialVersionUID = 1L; 
++}
+Index: src/org/vnc/rfbcaching/RfbShaHashProvider.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbShaHashProvider.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbShaHashProvider.java	(revision 28)
+@@ -0,0 +1,16 @@
++package org.vnc.rfbcaching;
++
++import java.security.MessageDigest;
++import java.security.NoSuchAlgorithmException;
++
++public class RfbShaHashProvider extends RfbHashProvider {
++	private MessageDigest md;
++	
++	public RfbShaHashProvider() throws NoSuchAlgorithmException{	  
++	      md = MessageDigest.getInstance("SHA-1");
++	}
++		
++	byte[] getHash(byte[] data){			
++		return md.digest(data);
++	}
++}
+Index: src/org/vnc/rfbcaching/RfbCacheFactory.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbCacheFactory.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbCacheFactory.java	(revision 28)
+@@ -0,0 +1,17 @@
++package org.vnc.rfbcaching;
++
++
++// Factory class to create RFBcaches of different type
++public class RfbCacheFactory implements IRfbCacheFactory {
++
++	public IRfbCache CreateRfbCache(RfbCacheProperties p)
++	{	
++		try{
++			return new RfbCache(p);
++		}catch(RfbCacheCreateException e){
++			System.out.println("Could not create Cache");
++			return null;
++		}
++	}
++
++}
+Index: src/org/vnc/rfbcaching/IRfbCache.java
+===================================================================
+--- src/org/vnc/rfbcaching/IRfbCache.java	(revision 0)
++++ src/org/vnc/rfbcaching/IRfbCache.java	(revision 28)
+@@ -0,0 +1,37 @@
++package org.vnc.rfbcaching;
++ 
++
++public interface IRfbCache {
++			
++	//
++	// Put (key, value) pair into cache
++	//
++	public Object  put(byte[] key, RfbCacheEntry value);
++	
++	//
++	// Get cache entry value corresponding to specified key
++	// Returns null if value not found 
++	//
++	public RfbCacheEntry get(byte[] key);
++	
++	//
++	// Get Hash value of binary data
++	//
++	public byte[] hash(byte[] data);
++	
++	
++	//
++	// Returns true if Cache contains key
++	//
++	public boolean containsKey(byte[] key);
++	
++	//
++	// Set hash calculator class 
++	//
++	public void setHashProvider(RfbHashProvider hashProvider);
++	
++	//
++	// Return size of cache
++	//
++	public int size();
++}
+Index: src/org/vnc/rfbcaching/RfbCacheKey.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbCacheKey.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbCacheKey.java	(revision 28)
+@@ -0,0 +1,50 @@
++package org.vnc.rfbcaching;
++
++/**
++ * This class is wrapper for key byte array. 
++ * It is necessary for using byte array
++ * as key with standard Java hash-aware containers 
++ */
++
++public class RfbCacheKey {
++	public byte[] k = null;
++
++	/**
++	 * Constructor
++	 * @param k
++	 */
++	public RfbCacheKey(byte[] k){
++		this.k = k;
++	} 
++	
++	/**
++	 * Override equals method 
++	 */
++	public boolean equals(Object o){
++		if (!(o instanceof RfbCacheKey))
++			return false;
++		if (((RfbCacheKey)o).k.length != this.k.length )
++			return false;
++		for (int i=0;i<k.length; i++){
++			if (k[i]!= ((RfbCacheKey)o).k[i]) return false;
++		}	
++		return true;
++	}
++	
++	/**
++	 * Override hashCode method
++	 * "One-A-Time" hash function. 
++	 */
++	public int hashCode(){
++		int hash = 0;
++		for (int i = 0; i < k.length; i++) {
++	        hash += (k[i] & 0xff);
++	        hash += (hash << 10);
++	        hash ^= (hash >> 6);
++	    }
++	    hash += (hash << 3);
++	    hash ^= (hash >> 11);
++	    hash += (hash << 15);		
++		return hash;
++	}
++}
+Index: src/org/vnc/rfbcaching/RfbHashProvider.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbHashProvider.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbHashProvider.java	(revision 28)
+@@ -0,0 +1,5 @@
++package org.vnc.rfbcaching;
++
++public abstract class RfbHashProvider {	
++	abstract byte[] getHash(byte[] data); 
++}
+Index: src/org/vnc/rfbcaching/RfbCacheProperties.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbCacheProperties.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbCacheProperties.java	(revision 28)
+@@ -0,0 +1,39 @@
++package org.vnc.rfbcaching;
++
++public class RfbCacheProperties {
++
++	private int cacheMajor;
++	private int cacheMinor;	
++	private int cacheMaxEntries;	
++	private int cacheMinDataSize; 
++	private int cacheMaintAlg;
++	
++	public RfbCacheProperties(int cacheMaintAlg, int cacheMaxEntries,
++			int cacheMinDataSize, int cacheMajor, int cacheMinor) {		
++		this.cacheMaintAlg = cacheMaintAlg;
++		this.cacheMaxEntries = cacheMaxEntries;
++		this.cacheMinDataSize = cacheMinDataSize;		
++		this.cacheMajor = cacheMajor;
++		this.cacheMinor = cacheMinor;
++	}
++
++	public int getCacheMaxEntries() {
++		return cacheMaxEntries;
++	}
++
++	public int getCacheMinDataSize() {
++		return cacheMinDataSize;
++	}
++
++	public int getCacheMaintAlg() {
++		return cacheMaintAlg;
++	}
++
++	public int getCacheMajor() {
++		return cacheMajor;
++	}
++
++	public int getCacheMinor() {
++		return cacheMinor;
++	}
++}
+Index: src/org/vnc/rfbcaching/IRfbCachingConstants.java
+===================================================================
+--- src/org/vnc/rfbcaching/IRfbCachingConstants.java	(revision 0)
++++ src/org/vnc/rfbcaching/IRfbCachingConstants.java	(revision 28)
+@@ -0,0 +1,23 @@
++package org.vnc.rfbcaching;
++
++/**
++ * RFB Caching constants
++ */
++public interface IRfbCachingConstants {
++	// RFB protocol specific constant 
++	public static final int RFB_CACHE_MAINT_ALG_LRU = 1;
++	public static final int RFB_CACHE_MAINT_ALG_FIFO = 2;
++	
++	public static final int RFB_CACHE_SERVER_INIT_MSG = 4;
++	public static final int RFB_CACHE_CLIENT_INIT_MSG = 7;
++	public static final int RFB_CACHE_ENCODING = 64;
++	
++	// Default values
++	public static final int RFB_CACHE_DEFAULT_SIZE = 64;
++	public static final int RFB_CACHE_DEFAULT_DATA_SIZE = 128;
++	public static final int RFB_CACHE_DEFAULT_MAINT_ALG = RFB_CACHE_MAINT_ALG_LRU;
++	public static final int RFB_CACHE_DEFAULT_VER_MAJOR = 1;
++	public static final int RFB_CACHE_DEFAULT_VER_MINOR = 0;
++	
++	public static final String RFB_CACHE_DEFAULT_FACTORY = "org.vnc.rfbcaching.RfbCacheFactory";
++}
+Index: src/org/vnc/rfbcaching/RfbCache.java
+===================================================================
+--- src/org/vnc/rfbcaching/RfbCache.java	(revision 0)
++++ src/org/vnc/rfbcaching/RfbCache.java	(revision 28)
+@@ -0,0 +1,66 @@
++package org.vnc.rfbcaching;
++
++import java.security.NoSuchAlgorithmException;
++import java.util.Map;
++import java.util.LinkedHashMap;
++
++public class RfbCache implements IRfbCache {
++
++	private RfbHashProvider hasher;
++		
++	private final static int DEFAULT_CACHE_SIZE = 64;
++	
++	private int cacheSize = DEFAULT_CACHE_SIZE;
++	private float cacheLoadFactor = 0.75f;
++	
++	LinkedHashMap/*<Object, RfbCacheEntry>*/ cacheTable; 	
++	
++	public RfbCache(RfbCacheProperties p) throws RfbCacheCreateException{		 			
++		this.cacheSize = p.getCacheMaxEntries();
++		try{
++			this.hasher = new RfbShaHashProvider();
++		}catch(NoSuchAlgorithmException e){
++			throw new RfbCacheCreateException();
++		}
++		int maxCacheNum = (int)Math.ceil( cacheSize / cacheLoadFactor ) + 1;
++		boolean isLRU = (p.getCacheMaintAlg() != IRfbCachingConstants.RFB_CACHE_MAINT_ALG_FIFO);
++		this.cacheTable = new LinkedHashMap/*<Object, RfbCacheEntry>*/(maxCacheNum,cacheLoadFactor, isLRU /* access order storage */){
++			static final long serialVersionUID = 1;
++			
++			protected boolean removeEldestEntry (Map.Entry/*<Object, RfbCacheEntry>*/ eldest) {
++				 boolean result = size() > RfbCache.this.cacheSize;
++		         return result;
++		    }
++		};		
++	}		
++			
++	public RfbCacheEntry get(byte[] key){
++		return (RfbCacheEntry)cacheTable.get(new RfbCacheKey(key));
++	}
++	
++	public Object put(byte[] key, RfbCacheEntry value){
++		return cacheTable.put(new RfbCacheKey(key), value);
++	}
++
++	public byte[] hash(byte[] data) {		
++		return hasher.getHash(data);
++	}
++
++	public void setHashProvider(RfbHashProvider hashProvider) {
++		hasher = hashProvider;
++	}
++
++	public boolean containsKey(byte[] key) {
++		return cacheTable.containsKey(new RfbCacheKey(key));
++	}
++	
++	public int size(){return cacheTable.size();}
++	
++	public static String asHex(byte buf[])
++    	{
++	    StringBuffer strbuf = new StringBuffer(buf.length * 2);     
++	    for(int i=0; i< buf.length; i++)
++	    	strbuf.append(Integer.toString( ( buf[i] & 0xff ) + 0x100, 16).substring( 1 ));	    
++	    return strbuf.toString();
++    	}
++}
+Index: src/org/vnc/rfbcaching/IRfbCacheFactory.java
+===================================================================
+--- src/org/vnc/rfbcaching/IRfbCacheFactory.java	(revision 0)
++++ src/org/vnc/rfbcaching/IRfbCacheFactory.java	(revision 28)
+@@ -0,0 +1,17 @@
++package org.vnc.rfbcaching;
++
++/**
++ * 
++ * Cache Factory interface. 
++ * Due to possible RFBCaching protocol 
++ * extensions client may use 
++ * different cache implementations.
++ * Cache implementation is chosen according to
++ * cache version specified in the Server 
++ * RfbServerCacheInit message.
++ *    
++ */
++
++public interface IRfbCacheFactory {
++	public IRfbCache CreateRfbCache(RfbCacheProperties p);	
++}
+Index: src/org/vnc/VncViewer.java
+===================================================================
+--- src/org/vnc/VncViewer.java	(revision 6)
++++ src/org/vnc/VncViewer.java	(revision 28)
+@@ -58,6 +58,9 @@
+ import javax.swing.JOptionPane;
+ import javax.swing.JPanel;
+ 
++import org.vnc.rfbcaching.IRfbCachingConstants;
++import org.vnc.rfbcaching.RfbCacheProperties;
++
+ import netscape.javascript.JSException;
+ import netscape.javascript.JSObject;
+ 
+@@ -152,7 +155,9 @@
+   String proxyType,proxyHost,proxyUsername,proxyPassword;
+   int proxyPort;
+   
+-
++  // RFBCaching properties
++  RfbCacheProperties cacheProps = null;
++  
+   // Reference to this applet for inter-applet communication.
+   public static VncViewer refApplet;
+   
+@@ -430,8 +435,7 @@
+     vc = new VncCanvas2(this, getSize().width, getSize().height);
+     vc.setFocusable(true);
+     vc.setVisible(true);
+-	setEncodings();
+-
++    
+     //  Disable the local cursor (only soft cursor visible)
+         try {
+         Image img = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
+@@ -446,6 +450,8 @@
+       }
+      //this is where prepareCanvas() normally goes --> no splash;
+       System.out.println("Starting RFB protocol");
++     setRfbCachingEncoding();
++     setEncodings();
+      processNormalProtocol();  
+       
+     } catch (NoRouteToHostException e) {
+@@ -496,7 +502,23 @@
+     
+   }
+ 
+- public void prepareCanvas(){
++ private void setRfbCachingEncoding() {
++   if (cacheProps != null){
++   rfb.setCacheProps(cacheProps);
++   int[] encodings = {RfbProto.EncodingRfbCaching};
++   try {
++       rfb.writeSetEncodings(encodings, 1);
++   } catch (Exception e) {
++       System.out.println("Could not set encodings");
++       System.out.println("Desktop size is " + rfb.framebufferWidth + " x " +
++              rfb.framebufferHeight);
++       showConnectionStatus(null);
++       return;
++   }
++   }
++}
++
++public void prepareCanvas(){
+ 	   	  vncContainer.removeAll();  
+ 	      gridbag = new GridBagLayout();
+ 	      vncContainer.setLayout(gridbag);
+@@ -612,7 +634,12 @@
+       validate();
+     }
+ 
+-    rfb = new RfbProto(in, out, this);
++    if (isSSH){
++        rfb = new RfbProto(in, out, this);    	
++    }else{
++    	rfb = new RfbProto(host, port, this);
++    }
++    
+     showConnectionStatus("Connected to server");
+ 
+     rfb.readVersionMsg();
+@@ -992,6 +1019,8 @@
+    
+     String str = readParameter("PORT", true);
+     port = Integer.parseInt(str);
++    
++    cacheProps = readCacheProperties();
+ 
+ 	// Added by Sandaruwan
+ 	isSSH = true;
+@@ -1061,7 +1090,39 @@
+     socketFactory = readParameter("SocketFactory", false);
+   }
+ 
++  
+   //
++  // Read cache parameters from html-applet properties
++  //
++  private RfbCacheProperties readCacheProperties(){
++      String isCacheOnS = readParameter("rfb.cache.enabled", false);
++      boolean isCacheOn = false;
++      if (isCacheOnS!=null){
++          if (isCacheOnS.equalsIgnoreCase("TRUE")){
++              isCacheOn = true;
++          }
++      }
++      if (!isCacheOn){
++          //System.out.println("Caching is switched off");
++          return null;
++      }
++      int cacheVerMajor = readIntParameter("rfb.cache.ver.major", IRfbCachingConstants.RFB_CACHE_DEFAULT_VER_MAJOR);
++      int cacheVerMinor = readIntParameter("rfb.cache.ver.minor", IRfbCachingConstants.RFB_CACHE_DEFAULT_VER_MINOR);
++      int cacheSize = readIntParameter("rfb.cache.size", IRfbCachingConstants.RFB_CACHE_DEFAULT_SIZE);
++      String cacheMaintAlgS = readParameter("rfb.cache.alg", false);
++      int cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_DEFAULT_MAINT_ALG;
++      if (cacheMaintAlgS!=null){
++          if (cacheMaintAlgS.equalsIgnoreCase("FIFO")){
++              cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_DEFAULT_MAINT_ALG;
++          }else if (!cacheMaintAlgS.equalsIgnoreCase("LRU")){
++              //System.out.println("Unknown cache algorithm specified, (LRU) will be used as default");
++          }
++      }
++      int cacheDataSize = readIntParameter("rfb.cache.datasize", IRfbCachingConstants.RFB_CACHE_DEFAULT_DATA_SIZE);
++      return new RfbCacheProperties(cacheMaintAlgI, cacheSize, cacheDataSize, cacheVerMajor, cacheVerMinor);
++  }
++  
++  //
+   // Read password parameters. If an "ENCPASSWORD" parameter is set,
+   // then decrypt the password into the passwordParam string. Otherwise,
+   // try to read the "PASSWORD" parameter directly to passwordParam.
+Index: src/org/vnc/VncCanvas.java
+===================================================================
+--- src/org/vnc/VncCanvas.java	(revision 6)
++++ src/org/vnc/VncCanvas.java	(revision 28)
+@@ -46,9 +46,14 @@
+ import java.io.ByteArrayInputStream;
+ import java.io.DataInputStream;
+ import java.io.IOException;
++import java.util.zip.DataFormatException;
+ import java.util.zip.Inflater;
+ 
++import org.vnc.rfbcaching.IRfbCachingConstants;
++import org.vnc.rfbcaching.RfbCache;
++import org.vnc.rfbcaching.RfbCacheEntry;
+ 
++
+ //
+ // VncCanvas is a subclass of Canvas which draws a VNC desktop on it.
+ //
+@@ -421,38 +426,72 @@
+ 	    continue;
+ 	  }
+ 
+-          rfb.startTiming();
+-
++	  if (rfb.updateRectEncoding == RfbProto.EncodingRfbCaching){
++		  handleCacheHit(rx, ry, rw, rh);
++		  continue;		
++	  }
++      rfb.startTiming();
++	  
++      if (rfb.isServerSupportCaching){
++    	  rfb.startCaching();
++      }
++      
+ 	  switch (rfb.updateRectEncoding) {
+ 	  case RfbProto.EncodingRaw:
+ 	    handleRawRect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){
++	    	rfb.stopCaching(RfbProto.EncodingRaw);
++	    }
+ 	    break;
+ 	  case RfbProto.EncodingCopyRect:
+ 	    handleCopyRect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){
++	    	rfb.resetCaching();
++	    }
+ 	    break;
+ 	  case RfbProto.EncodingRRE:
+ 	    handleRRERect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){
++		rfb.stopCaching(RfbProto.EncodingRRE);
++	    }
+ 	    break;
+ 	  case RfbProto.EncodingCoRRE:
+ 	    handleCoRRERect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){
++	    	rfb.stopCaching(RfbProto.EncodingCoRRE);
++	    }
+ 	    break;
+ 	  case RfbProto.EncodingHextile:
+ 	    handleHextileRect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){	    		 
++	    	rfb.stopCaching(RfbProto.EncodingHextile);
++	    }	
+ 	    break;
+ 	  case RfbProto.EncodingZRLE:
+ 	    handleZRLERect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){
++	    	rfb.stopCaching(RfbProto.EncodingZRLE);
++	    }
+ 	    break;
+-	  case RfbProto.EncodingZlib:
+-            handleZlibRect(rx, ry, rw, rh);
++	  case RfbProto.EncodingZlib:	    
++        handleZlibRect(rx, ry, rw, rh);
++        if (rfb.isServerSupportCaching){
++        	rfb.stopCaching(RfbProto.EncodingZlib);
++        }
+ 	    break;
+-	  case RfbProto.EncodingTight:
++	  case RfbProto.EncodingTight:	    
+ 	    handleTightRect(rx, ry, rw, rh);
++	    if (rfb.isServerSupportCaching){
++	    	rfb.stopCaching(RfbProto.EncodingTight);
++	    }
+ 	    break;
+ 	  default:
++		if (rfb.isServerSupportCaching){
++			rfb.resetCaching();
++		}  
+ 	    throw new Exception("Unknown RFB rectangle encoding " +
+ 				rfb.updateRectEncoding);
+ 	  }
+-
+           rfb.stopTiming();
+ 	}
+ 
+@@ -504,7 +543,12 @@
+ 	String s = rfb.readServerCutText();
+ 	viewer.clipboard.setCutText(s);
+ 	break;
+-
++      case IRfbCachingConstants.RFB_CACHE_SERVER_INIT_MSG:	  
++    	rfb.readServerCacheInit();
++    	if (rfb.isServerSupportCaching){
++    	    rfb.writeClientCacheInit();
++    	}               	  
++      break;
+       default:
+ 	throw new Exception("Unknown RFB message type " + msgType);
+       }
+@@ -512,12 +556,72 @@
+   }
+ 
+ 
+-  //
+-  // Handle a raw rectangle. The second form with paint==false is used
+-  // by the Hextile decoder for raw-encoded tiles.
+-  //
++//
++// Handle RFBCacheHit
++//
++void handleCacheHit(int rx, int ry, int rw, int rh) throws IOException{
++    try {
++        byte[] k = new byte[rfb.cacheKeySize];
++        rfb.readFully(k);
++        System.out.println("Cache hit");
++        RfbCacheEntry entry = rfb.cache.get(k);
++        if (entry!=null){
++            System.out.println("Cache contains key = {"+RfbCache.asHex(k)+"}");
++            DataInputStream cacheIs = new DataInputStream(new ByteArrayInputStream(entry.getRfbData()));
++            DataInputStream origIs = rfb.is;
++            rfb.is = cacheIs;
++            switch (entry.getRfbEncoding()){
++                case RfbProto.EncodingRaw:
++                    System.out.println("handle raw cache hit");
++                    handleRawRect(rx, ry, rw, rh);
++                    break;
++                case RfbProto.EncodingRRE:
++                    System.out.println("handle RRE cache hit");
++                    handleRRERect(rx, ry, rw, rh);
++                    break;
++                case RfbProto.EncodingCoRRE:
++                    System.out.println("handle RRE cache hit");
++                    handleCoRRERect(rx, ry, rw, rh);
++                    break;
++                case RfbProto.EncodingHextile:
++                    System.out.println("handle HEXTILE cache hit");
++                    handleHextileRect(rx, ry, rw, rh);
++                    break;
++                case RfbProto.EncodingZRLE:
++                    System.out.println("handle ZLRE cache hit");
++                    handleZRLERect(rx, ry, rw, rh);
++                    break;	
++                case RfbProto.EncodingZlib:
++                    System.out.println("handle ZLib cache hit");
++                    handleZlibRect(rx, ry, rw, rh);
++                    break;
++                case RfbProto.EncodingTight:
++                    System.out.println("handle Tight cache hit");
++                    handleTightRect(rx, ry, rw, rh);
++                    break;
++                default:
++                    System.out.println("Unknown encoding");
++                    break;
++            }
++            rfb.is = origIs;
++            cacheIs = null;
++        }else{
++            System.out.println("Bad cache hit: key {"+RfbCache.asHex(k)+"} not exists in hash");
++            return;
++        }
++        
++    } catch (IOException e) {
++        e.printStackTrace();
++    } catch (Exception e2) {
++        e2.printStackTrace();
++    }
++}
+ 
+-  void handleRawRect(int x, int y, int w, int h) throws IOException {
++//
++// Handle a raw rectangle. The second form with paint==false is used
++// by the Hextile decoder for raw-encoded tiles.
++//
++void handleRawRect(int x, int y, int w, int h) throws IOException {
+     handleRawRect(x, y, w, h, true);
+   }
+ 
+@@ -548,7 +652,7 @@
+ 	}
+       }
+     }
+-
++    rfb.numBytesCached+=w*h*bytesPixel;
+     handleUpdatedPixels(x, y, w, h);
+     if (paint)
+       scheduleRepaint(x, y, w, h);
+@@ -574,9 +678,10 @@
+   void handleRRERect(int x, int y, int w, int h) throws IOException {
+ 
+     int nSubrects = rfb.is.readInt();
+-
++    rfb.numBytesCached+=4;
+     byte[] bg_buf = new byte[bytesPixel];
+     rfb.readFully(bg_buf);
++    rfb.numBytesCached+=bg_buf.length;
+     Color pixel;
+     if (bytesPixel == 1) {
+       pixel = colors[bg_buf[0] & 0xFF];
+@@ -588,6 +693,7 @@
+ 
+     byte[] buf = new byte[nSubrects * (bytesPixel + 8)];
+     rfb.readFully(buf);
++    rfb.numBytesCached+=buf.length;
+     DataInputStream ds = new DataInputStream(new ByteArrayInputStream(buf));
+ 
+     if (rfb.rec != null) {
+@@ -625,9 +731,10 @@
+ 
+   void handleCoRRERect(int x, int y, int w, int h) throws IOException {
+     int nSubrects = rfb.is.readInt();
+-
++    rfb.numBytesCached+=4;
+     byte[] bg_buf = new byte[bytesPixel];
+     rfb.readFully(bg_buf);
++    rfb.numBytesCached+=bg_buf.length;
+     Color pixel;
+     if (bytesPixel == 1) {
+       pixel = colors[bg_buf[0] & 0xFF];
+@@ -639,7 +746,7 @@
+ 
+     byte[] buf = new byte[nSubrects * (bytesPixel + 4)];
+     rfb.readFully(buf);
+-
++    rfb.numBytesCached+=buf.length;
+     if (rfb.rec != null) {
+       rfb.rec.writeIntBE(nSubrects);
+       rfb.rec.write(bg_buf);
+@@ -706,6 +813,7 @@
+     throws IOException {
+ 
+     int subencoding = rfb.is.readUnsignedByte();
++    rfb.numBytesCached++;
+     if (rfb.rec != null) {
+       rfb.rec.writeByte(subencoding);
+     }
+@@ -720,6 +828,7 @@
+     byte[] cbuf = new byte[bytesPixel];
+     if ((subencoding & rfb.HextileBackgroundSpecified) != 0) {
+       rfb.readFully(cbuf);
++      rfb.numBytesCached+=cbuf.length;
+       if (bytesPixel == 1) {
+ 	hextile_bg = colors[cbuf[0] & 0xFF];
+       } else {
+@@ -735,6 +844,7 @@
+     // Read the foreground color if specified.
+     if ((subencoding & rfb.HextileForegroundSpecified) != 0) {
+       rfb.readFully(cbuf);
++      rfb.numBytesCached+=cbuf.length;
+       if (bytesPixel == 1) {
+ 	hextile_fg = colors[cbuf[0] & 0xFF];
+       } else {
+@@ -750,12 +860,14 @@
+       return;
+ 
+     int nSubrects = rfb.is.readUnsignedByte();
++    rfb.numBytesCached++;
+     int bufsize = nSubrects * 2;
+     if ((subencoding & rfb.HextileSubrectsColoured) != 0) {
+       bufsize += nSubrects * bytesPixel;
+     }
+     byte[] buf = new byte[bufsize];
+-    rfb.readFully(buf);
++    rfb.readFully(buf); 
++    rfb.numBytesCached+=buf.length;
+     if (rfb.rec != null) {
+       rfb.rec.writeByte(nSubrects);
+       rfb.rec.write(buf);
+@@ -825,6 +937,7 @@
+       zrleInStream = new ZlibInStream();
+ 
+     int nBytes = rfb.is.readInt();
++    rfb.numBytesCached=4+nBytes; 
+     if (nBytes > 64 * 1024 * 1024)
+       throw new Exception("ZRLE decoder: illegal compressed data size");
+ 
+@@ -1091,7 +1204,7 @@
+ 	  rfb.rec.write(buf);
+       }
+     }
+-
++    rfb.numBytesCached=nBytes+4;
+     handleUpdatedPixels(x, y, w, h);
+     scheduleRepaint(x, y, w, h);
+   }
+@@ -1103,6 +1216,7 @@
+   void handleTightRect(int x, int y, int w, int h) throws Exception {
+ 
+     int comp_ctl = rfb.is.readUnsignedByte();
++    rfb.numBytesCached++;       
+     if (rfb.rec != null) {
+       if (rfb.recordFromBeginning ||
+ 	  comp_ctl == (rfb.TightFill << 4) ||
+@@ -1133,6 +1247,7 @@
+ 
+       if (bytesPixel == 1) {
+ 	int idx = rfb.is.readUnsignedByte();
++	rfb.numBytesCached++;
+ 	memGraphics.setColor(colors[idx]);
+ 	if (rfb.rec != null) {
+ 	  rfb.rec.writeByte(idx);
+@@ -1140,6 +1255,7 @@
+       } else {
+ 	byte[] buf = new byte[3];
+ 	rfb.readFully(buf);
++	rfb.numBytesCached+=buf.length;
+ 	if (rfb.rec != null) {
+ 	  rfb.rec.write(buf);
+ 	}
+@@ -1158,6 +1274,7 @@
+       // Read JPEG data.
+       byte[] jpegData = new byte[rfb.readCompactLen()];
+       rfb.readFully(jpegData);
++      rfb.numBytesCached+=jpegData.length;
+       if (rfb.rec != null) {
+ 	if (!rfb.recordFromBeginning) {
+ 	  rfb.recordCompactLen(jpegData.length);
+@@ -1196,11 +1313,13 @@
+     boolean useGradient = false;
+     if ((comp_ctl & rfb.TightExplicitFilter) != 0) {
+       int filter_id = rfb.is.readUnsignedByte();
++      rfb.numBytesCached++;
+       if (rfb.rec != null) {
+ 	rfb.rec.writeByte(filter_id);
+       }
+       if (filter_id == rfb.TightFilterPalette) {
+ 	numColors = rfb.is.readUnsignedByte() + 1;
++	  rfb.numBytesCached++;  
+ 	if (rfb.rec != null) {
+ 	  rfb.rec.writeByte(numColors - 1);
+ 	}
+@@ -1209,12 +1328,14 @@
+ 	    throw new Exception("Incorrect tight palette size: " + numColors);
+ 	  }
+ 	  rfb.readFully(palette8);
++	  rfb.numBytesCached+=palette8.length;
+ 	  if (rfb.rec != null) {
+ 	    rfb.rec.write(palette8);
+ 	  }
+ 	} else {
+ 	  byte[] buf = new byte[numColors * 3];
+ 	  rfb.readFully(buf);
++	  rfb.numBytesCached+=buf.length;
+ 	  if (rfb.rec != null) {
+ 	    rfb.rec.write(buf);
+ 	  }
+@@ -1243,6 +1364,7 @@
+ 	// Indexed colors.
+ 	byte[] indexedData = new byte[dataSize];
+ 	rfb.readFully(indexedData);
++	rfb.numBytesCached+=indexedData.length;
+ 	if (rfb.rec != null) {
+ 	  rfb.rec.write(indexedData);
+ 	}
+@@ -1267,6 +1389,7 @@
+ 	// "Gradient"-processed data
+ 	byte[] buf = new byte[w * h * 3];
+ 	rfb.readFully(buf);
++	rfb.numBytesCached+=buf.length;
+ 	if (rfb.rec != null) {
+ 	  rfb.rec.write(buf);
+ 	}
+@@ -1276,6 +1399,7 @@
+ 	if (bytesPixel == 1) {
+ 	  for (int dy = y; dy < y + h; dy++) {
+ 	    rfb.readFully(pixels8, dy * rfb.framebufferWidth + x, w);
++	    rfb.numBytesCached+=w;
+ 	    if (rfb.rec != null) {
+ 	      rfb.rec.write(pixels8, dy * rfb.framebufferWidth + x, w);
+ 	    }
+@@ -1285,6 +1409,7 @@
+ 	  int i, offset;
+ 	  for (int dy = y; dy < y + h; dy++) {
+ 	    rfb.readFully(buf);
++	    rfb.numBytesCached+=buf.length;	    
+ 	    if (rfb.rec != null) {
+ 	      rfb.rec.write(buf);
+ 	    }
+@@ -1303,6 +1428,7 @@
+       int zlibDataLen = rfb.readCompactLen();
+       byte[] zlibData = new byte[zlibDataLen];
+       rfb.readFully(zlibData);
++      rfb.numBytesCached+= zlibData.length;           
+       if (rfb.rec != null && rfb.recordFromBeginning) {
+ 	rfb.rec.write(zlibData);
+       }
+Index: src/org/vnc/RfbProto.java
+===================================================================
+--- src/org/vnc/RfbProto.java	(revision 6)
++++ src/org/vnc/RfbProto.java	(revision 28)
+@@ -39,6 +39,7 @@
+ import java.util.Vector;
+ import java.util.zip.Deflater;
+ 
++import org.vnc.rfbcaching.*;
+ //import com.sshtools.sshvnc.SshVNCPanel;
+ //import com.sshtools.sshvnc.SshVNCViewer;
+ 
+@@ -117,7 +118,9 @@
+     EncodingRichCursor     = 0xFFFFFF11,
+     EncodingPointerPos     = 0xFFFFFF18,
+     EncodingLastRect       = 0xFFFFFF20,
+-    EncodingNewFBSize      = 0xFFFFFF21;
++    EncodingNewFBSize      = 0xFFFFFF21,
++    EncodingRfbCaching	   = IRfbCachingConstants.RFB_CACHE_ENCODING;
++  
+   final static String
+     SigEncodingRaw            = "RAW_____",
+     SigEncodingCopyRect       = "COPYRECT",
+@@ -133,8 +136,9 @@
+     SigEncodingRichCursor     = "RCHCURSR",
+     SigEncodingPointerPos     = "POINTPOS",
+     SigEncodingLastRect       = "LASTRECT",
+-    SigEncodingNewFBSize      = "NEWFBSIZ";
+-
++    SigEncodingNewFBSize      = "NEWFBSIZ",
++  	SigEncodingRfbCaching	  = "RFBCACHE";
++  
+   final static int MaxNormalEncoding = 255;
+ 
+   // Contstants used in the Hextile decoder
+@@ -165,7 +169,50 @@
+   SessionRecorder rec;
+   boolean inNormalProtocol = false;
+   VncViewer viewer;
++  
++  // RFB Caching declaration section
++  // Cache object
++  IRfbCache cache;
++  // Cache key size in bytes
++  int cacheKeySize = 20;
++  // Minimum data size of frame buffer to be cached 
++  int cacheMinDataSize;
++  // Cache size
++  int cacheMaxEntries;
++  // Cache maintenance algorithm
++  int cacheMaintAlg;
++  // Cache version
++  int cacheMajor, cacheMinor;
++  // Reserved byte for RFB caching protocol extension
++  int cacheReserved; 
++  // RFB cache client preferred properties 
++  RfbCacheProperties clientProps = null;
++  
++  void setCacheProps(RfbCacheProperties cacheProps){
++	  clientProps = cacheProps;	  
++  }
++  // RFB session cache support indicator
++  boolean isServerSupportCaching;  
++  
++  // Number of bytes to be cached for single frame buffer update request 
++  int numBytesCached;
+ 
++//  // Getter
++//  public int getNumBytesCached() {
++//	return numBytesCached;
++//  }
++//  
++//  // Setter
++//  public void setNumBytesCached(int numBytesCached) {
++//	this.numBytesCached = numBytesCached;
++//  }
++//  
++  // The size of socket InputStream buffer to store bytes after mark() call
++  int rfbCacheMarkReadLimit = 4800000;   
++  
++  boolean isCaching = false;
++
++		  
+   /*Ulteo changes by ArnauVP*/
+   String OSName = "unknown";
+   
+@@ -539,6 +586,8 @@
+ 		     SigEncodingLastRect, "LastRect protocol extension");
+     encodingCaps.add(EncodingNewFBSize, TightVncVendor,
+ 		     SigEncodingNewFBSize, "Framebuffer size change");
++    encodingCaps.add(EncodingRfbCaching, TightVncVendor,
++		     SigEncodingRfbCaching, "RFB Caching support");
+   }
+ 
+   //
+@@ -619,6 +668,99 @@
+ 
+ 
+   //
++  // Write ClientCacheInit handshake message
++  //
++  void writeClientCacheInit() throws IOException {
++	  //System.out.println("RfbProto: WriteClientCacheInit");
++	  if (clientProps == null){
++	  	//System.out.println("RfbProto: WriteClientCacheInit, userCacheProperties null");
++	  	return;
++	  }
++	  byte[] b = new byte[8];
++	  b[0] = IRfbCachingConstants.RFB_CACHE_CLIENT_INIT_MSG;
++	  
++	  boolean isVerMatch = (clientProps.getCacheMajor() == cacheMajor && clientProps.getCacheMinor()<= cacheMinor); 
++	  
++	  if (isVerMatch){
++		  b[1] = (byte) ((byte)(clientProps.getCacheMajor() << 4)|(clientProps.getCacheMinor() & 0xf));
++	  }	  
++	  else
++		  b[1] = 0; // Caching not supported due to version mismatch	
++	  cacheMaxEntries = Math.min(clientProps.getCacheMaxEntries(),cacheMaxEntries); 	  	  
++	  b[2] = (byte) ((cacheMaxEntries >> 8) & 0xff);
++	  
++	  b[3] = (byte) ( cacheMaxEntries & 0xff);
++	  cacheMaintAlg = clientProps.getCacheMaintAlg();	  
++	  b[4] = (byte) ( cacheMaintAlg & 0xff);
++	  b[5] = 0; //reserved byte
++	  cacheMinDataSize = Math.min(clientProps.getCacheMinDataSize(),cacheMinDataSize);
++	  b[6] = (byte) ((cacheMinDataSize >> 8) & 0xff);
++	  b[7] = (byte) (cacheMinDataSize & 0xff);	    
++	  if (isVerMatch){
++		  try{
++			  // Possible usage:
++			  // IRfbCacheFactory factory; 
++			  // switch(b[1]){
++			  // 	case VER1: 
++			  //      factory = (IRfbCacheFactory)(Class.forName(Factory1_Name).newInstance();
++			  //      break;
++			  //    case VER2:
++			  //      factory = (IRfbCacheFactory)(Class.forName(Factory2_Name).newInstance();
++			  //      break;
++			  //    default:
++			  //	  factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance();			  
++			  // }
++			  //
++			  IRfbCacheFactory factory = (IRfbCacheFactory)(Class.forName(IRfbCachingConstants.RFB_CACHE_DEFAULT_FACTORY)).newInstance(); 
++		      IRfbCache cache = factory.CreateRfbCache(
++		      						new RfbCacheProperties(cacheMaintAlg,
++		      											   cacheMaxEntries, 
++		      											   cacheMinDataSize, 
++		      											   clientProps.getCacheMajor(),
++		      											   clientProps.getCacheMajor()));
++		      											   
++		      if (cache!=null){
++		    	  this.cache = cache;
++		      }else{
++		    	  this.isServerSupportCaching = false;
++		    	  b[1] = 0;
++		      }
++//		      System.out.println("RFB Cache created:");
++//		      System.out.println("\tcacheVersion:"+b[1]);
++//		      System.out.println("\tcacheMaintAlg:"+cacheMaintAlg);
++//		      System.out.println("\tcacheMinDataSize:"+cacheMinDataSize);
++//		      System.out.println("\tcacheSize:"+cacheMaxEntries);		      
++		  }catch(Exception e){
++			  e.printStackTrace();
++			  this.isServerSupportCaching = false;
++			  b[1] = 0;
++		  }	  		  
++      }else{
++      	  this.isServerSupportCaching = false;
++//      	  System.out.println("Cache version mismatch");
++      }
++	  os.write(b);
++      
++  }
++
++  //
++  // Read ServerCacheInit handshake message
++  //
++  void readServerCacheInit() throws IOException {
++	  //System.out.println("RfbProto: ReadServerCacheInit");
++	  int ver = is.readUnsignedByte();
++	  cacheMajor =  (ver >> 4);
++	  cacheMinor =  ver & 0xf ;
++	  cacheMaxEntries = is.readUnsignedShort();
++	  cacheMaintAlg = is.readUnsignedByte();
++	  cacheReserved = is.readUnsignedByte();	  
++	  cacheMinDataSize =  is.readUnsignedShort();
++	  if ((clientProps!=null) && (clientProps.getCacheMajor() == cacheMajor) &&  (clientProps.getCacheMinor()<= cacheMinor)){
++		  isServerSupportCaching = true;
++	  }
++  }
++
++  //
+   // Read the server initialisation message
+   //
+ 
+@@ -874,7 +1016,7 @@
+     if (rec != null && recordFromBeginning)
+       for (int i = 0; i < byteCount; i++)
+ 	rec.writeByte(portion[i]);
+-
++    if (isCaching) numBytesCached+=byteCount;
+     return len;
+   }
+ 
+@@ -1518,5 +1660,40 @@
+       timedKbits += newKbits;
+     }
+   }
++  
++//
++// Start caching process 
++//  
++public void startCaching() throws IOException{
++	//mark the current position in the socket stream
++	this.is.mark(rfbCacheMarkReadLimit);
++	numBytesCached = 0;
++	isCaching = true;
++}
+ 
++
++//
++// Reset caching variables 
++//
++public void resetCaching() throws IOException{
++	numBytesCached = 0;
++	isCaching = false;
+ }
++
++//
++// Stop caching process 
++//
++public void stopCaching(int encoding) throws IOException{
++	// check if buffer size is large enough to be cached 
++	if (numBytesCached >= cacheMinDataSize){
++		byte[] data = new byte[numBytesCached];
++		// move InputStream pointer to the marked position
++		is.reset();
++		// read data from the InputStream buffer
++		is.readFully(data, 0, data.length);
++		cache.put(cache.hash(data), new RfbCacheEntry (encoding, data));    	      
++	}
++	// reset cache variables
++	resetCaching();
++ }
++}

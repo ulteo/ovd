@@ -1,0 +1,13 @@
+Index: src/org/vnc/RfbProto.java
+===================================================================
+--- src/org/vnc/RfbProto.java	(revision 30)
++++ src/org/vnc/RfbProto.java	(working copy)
+@@ -693,7 +693,7 @@
+ 	  cacheMaintAlg = clientProps.getCacheMaintAlg();	  
+ 	  b[4] = (byte) ( cacheMaintAlg & 0xff);
+ 	  b[5] = 0; //reserved byte
+-	  cacheMinDataSize = Math.min(clientProps.getCacheMinDataSize(),cacheMinDataSize);
++	  cacheMinDataSize = (clientProps.getCacheMinDataSize()>0)?clientProps.getCacheMinDataSize():cacheMinDataSize;
+ 	  b[6] = (byte) ((cacheMinDataSize >> 8) & 0xff);
+ 	  b[7] = (byte) (cacheMinDataSize & 0xff);	    
+ 	  if (isVerMatch){

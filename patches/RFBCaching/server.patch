@@ -1,0 +1,2152 @@
+Index: include/rfbproto.h
+===================================================================
+--- include/rfbproto.h	(revision 7)
++++ include/rfbproto.h	(revision 30)
+@@ -332,7 +332,19 @@
+ 
+ #define sz_rfbServerInitMsg (8 + sz_rfbPixelFormat)
+ 
++typedef struct _rfbCacheInitMsg{
++    CARD8 messageType;
++    CARD8 cacheType;
++    CARD16 maximumEntries;
++    CARD8 maintenanceAlgorithm;
++    CARD8 reserved;
++    CARD16 minimumCacheDataSize;    
++} rfbCacheInitMsg;
+ 
++#define sz_rfbCacheInitMsg (8)
++
++
++
+ /*-----------------------------------------------------------------------------
+  * Server Interaction Capabilities Message (protocol versions 3.7t, 3.8t)
+  *
+@@ -386,6 +398,8 @@
+ #define rfbBell 2
+ #define rfbServerCutText 3
+ 
++#define rfbServerCacheInit 4;
++
+ #define rfbFileListData 130
+ #define rfbFileDownloadData 131
+ #define rfbFileUploadCancel 132
+@@ -408,6 +422,8 @@
+ #define rfbPointerEvent 5
+ #define rfbClientCutText 6
+ 
++#define rfbClientCacheInit 7
++
+ #define rfbFileListRequest 130
+ #define rfbFileDownloadRequest 131
+ #define rfbFileUploadRequest 132
+@@ -440,6 +456,7 @@
+ #define rfbEncodingTight     7
+ #define rfbEncodingZlibHex   8
+ #define rfbEncodingZRLE     16
++#define rfbEncodingCache    64
+ 
+ /* signatures for basic encoding types */
+ #define sig_rfbEncodingRaw       "RAW_____"
+@@ -1249,3 +1266,9 @@
+     rfbFileUploadFailedMsg fuf;
+     rfbFileCreateDirRequestMsg fcdr;
+ } rfbClientToServerMsg;
++
++/*-----------------------------------------------------------------------------
++ * Caching stuff
++ */
++#define rfbFIFO 0x02
++#define rfbLRU  0x01
+Index: vncserver
+===================================================================
+--- vncserver	(revision 7)
++++ vncserver	(revision 30)
+@@ -54,12 +54,30 @@
+ # Here is another example of setting the font path:
+ # $fontPath = "/usr/lib/X11/fonts/misc/,/usr/lib/X11/fonts/75dpi/";
+ 
++$fontPath .= "/usr/share/X11/fonts/misc,";
++$fontPath .= "/usr/share/X11/fonts/cyrillic,";
++$fontPath .= "/usr/share/X11/fonts/100dpi/:unscaled,";
++$fontPath .= "/usr/share/X11/fonts/75dpi/:unscaled,";
++$fontPath .= "/usr/share/X11/fonts/Type1,";
++$fontPath .= "/usr/share/X11/fonts/CID,";
++$fontPath .= "/usr/share/X11/fonts/100dpi,";
++$fontPath .= "/usr/share/X11/fonts/75dpi,";
++# paths to defoma fonts
++$fontPath .= "/var/lib/defoma/x-ttcidfont-conf.d/dirs/TrueType,";
++$fontPath .= "/var/lib/defoma/x-ttcidfont-conf.d/dirs/CID";
++
++$caching_enable = "true";
++$caching_maximum_entries = "1500";
++$caching_maintenance_algorithm = "LRU"; # can be FIFO or LRU
++$caching_minimum_cache_datasize = "20";  # minimal number of bytes that should be cached
++
++
+ # X colors database path is optional, uncomment and edit to use:
+ # $colorPath = "/usr/lib/X11/rgb";
+ 
+ # You might wish to make your vnc directory under /tmp, to make sure
+ # passwords are always kept on the local filesystem. To do that, just
+-# uncomment the line below. Note that in this case Xtightvnc's .Xauthority
++# uncomment the line below. Note that in this case Xvnc's .Xauthority
+ # file will be searched in the same $vncUserDir directory by default,
+ # and $ENV{HOME}/.vncstartup will be executed instead of usual
+ # $vncUserDir/xstartup.
+@@ -243,8 +261,10 @@
+ 
+ # Now start the X VNC Server
+ 
+-$cmd = "Xtightvnc :$displayNumber";
++$cmd = "Xvnc :$displayNumber";
+ $cmd .= " -desktop " . &quotedString($desktopName);
++
++
+ if ($useClasses) {
+   $cmd .= " -httpd $vncClasses";
+   print ("Found $vncClasses for http connections.\n");
+@@ -270,6 +290,12 @@
+ $cmd .= " -alwaysshared" if ($opt{'-alwaysshared'});
+ $cmd .= " -nevershared" if ($opt{'-nevershared'});
+ 
++$cmd .= " -caching" if ($caching_enable);
++$cmd .= " -caching_ent $caching_maximum_entries" if ($caching_maximum_entries);
++$cmd .= " -caching_malg $caching_maintenance_algorithm" if ($caching_maintenance_algorithm);
++$cmd .= " -caching_minsize $caching_minimum_cache_datasize" if ($caching_minimum_cache_datasize);
++
++
+ foreach $arg (@ARGV) {
+     $cmd .= " " . &quotedString($arg);
+ }
+@@ -280,18 +306,18 @@
+ $pidFile = "$vncUserDir/$host:$displayNumber.pid";
+ system("$cmd & echo \$! >$pidFile");
+ 
+-# Give Xtightvnc a chance to start up
++# Give Xvnc a chance to start up
+ 
+ sleep(1);
+ unless (kill 0, `cat $pidFile`) {
+-    warn "Couldn't start Xtightvnc; trying default font path.\n";
++    warn "Couldn't start Xvnc; trying default font path.\n";
+     warn "Please set correct fontPath in the $prog script.\n";
+     $cmd =~ s@-fp [^ ]+@@;
+     system("$cmd & echo \$! >$pidFile");
+     sleep(1);
+ }
+ unless (kill 0, `cat $pidFile`) {
+-    warn "Couldn't start Xtightvnc process.\n\n";
++    warn "Couldn't start Xvnc process.\n\n";
+     open(LOG, "<$desktopLog");
+     while (<LOG>) { print; }
+     close(LOG);
+@@ -599,7 +625,7 @@
+ 	"Usage: $prog [<OPTIONS>] [:<DISPLAY#>]\n".
+ 	"       $prog -kill :<DISPLAY#>\n".
+ 	"\n".
+-	"<OPTIONS> are Xtightvnc options, or:\n".
++	"<OPTIONS> are Xvnc options, or:\n".
+ 	"\n".
+ 	"        -name <DESKTOP-NAME>\n".
+ 	"        -depth <DEPTH>\n".
+@@ -611,7 +637,7 @@
+ 	"        -pixelformat rgb<NNN>\n".
+ 	"        -pixelformat bgr<NNN>\n".
+ 	"\n".
+-	"See vncserver and Xtightvnc manual pages for more information.\n");
++	"See vncserver and Xvnc manual pages for more information.\n");
+ }
+ 
+ 
+@@ -635,12 +661,12 @@
+ 
+     unless (-r $pidFile) {
+ 	die "\nCan't find file $pidFile\n".
+-	    "You'll have to kill the Xtightvnc process manually\n\n";
++	    "You'll have to kill the Xvnc process manually\n\n";
+     }
+ 
+     $SIG{'HUP'} = 'IGNORE';
+     chop($pid = `cat $pidFile`);
+-    warn "Killing Xtightvnc process ID $pid\n";
++    warn "Killing Xvnc process ID $pid\n";
+     system("kill $pid");
+     unlink $pidFile;
+ 
+@@ -714,7 +740,7 @@
+     #
+ 
+  cmd:
+-    foreach $cmd ("uname","xauth","Xtightvnc","vncpasswd") {
++    foreach $cmd ("uname","xauth","Xvnc","vncpasswd") {
+ 	for (split(/:/,$ENV{PATH})) {
+ 	    if (-x "$_/$cmd") {
+ 		next cmd;
+Index: Xvnc/programs/Xserver/hw/vnc/stats.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/stats.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/stats.c	(revision 30)
+@@ -76,9 +76,9 @@
+ 		       cl->rfbCursorPosBytesSent +
+ 		       cl->rfbLastRectBytesSent);
+ 
+-    rfbLog("  framebuffer updates %d, rectangles %d, bytes %d\n",
+-	    cl->rfbFramebufferUpdateMessagesSent, totalRectanglesSent,
+-	    totalBytesSent);
++    rfbLog("  framebuffer updates %d, total rectangles %d, total bytes %d\n",
++	    cl->rfbFramebufferUpdateMessagesSent, totalRectanglesSent+ cl->cachedRectsSent,
++	    totalBytesSent + cl->cachedBytesSent);
+ 
+     if (cl->rfbLastRectMarkersSent != 0)
+ 	rfbLog("    LastRect markers %d, bytes %d\n",
+@@ -97,15 +97,29 @@
+ 	    rfbLog("    %s rectangles %d, bytes %d\n",
+ 		   encNames[i], cl->rfbRectanglesSent[i], cl->rfbBytesSent[i]);
+     }
++    
++    /* Cache statistics */
++    if (cl->enableCacheMode){
++    rfbLog("    cached rectangles sent: %d, bytes %d\n", 
++           cl->cachedRectsSent, cl->cachedBytesSent);
++    if (totalBytesSent ==0) totalBytesSent = 1;
++    rfbLog("    spared bytes by cache: %d bytes (%f %%)\n", 
++           cl->sparedBytesByCache,
++           ((double)(100*cl->sparedBytesByCache)/(double)(totalBytesSent + cl->cachedBytesSent +cl->sparedBytesByCache))
++           );
++    }
+ 
+     if ((totalBytesSent - cl->rfbBytesSent[rfbEncodingCopyRect]) != 0) {
+ 	rfbLog("  raw bytes equivalent %d, compression ratio %f\n",
+ 		cl->rfbRawBytesEquivalent,
+ 		(double)cl->rfbRawBytesEquivalent
+-		/ (double)(totalBytesSent -
++		/ (double)(totalBytesSent + cl->cachedBytesSent -
+ 			   cl->rfbBytesSent[rfbEncodingCopyRect] -
+ 			   cl->rfbCursorShapeBytesSent -
+ 			   cl->rfbCursorPosBytesSent -
+ 			   cl->rfbLastRectBytesSent));
+     }
++    
++    
++    
+ }
+Index: Xvnc/programs/Xserver/hw/vnc/rfbserver.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/rfbserver.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/rfbserver.c	(revision 30)
+@@ -28,6 +28,9 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
++
++#include<math.h>  
++
+ #include <pwd.h>
+ #include <sys/types.h>
+ #include <sys/socket.h>
+@@ -153,6 +156,14 @@
+     cl->preferredEncoding = rfbEncodingRaw;
+     cl->correMaxWidth = 48;
+     cl->correMaxHeight = 48;
++    
++    
++    cl->enableCacheMode = FALSE;
++    cl -> n_rawCacheBuffers = 0;    
++    cl -> cachedBytesSent = 0;
++    cl -> cachedRectsSent =0;
++    cl -> sparedBytesByCache=0;
++    
+ 
+     REGION_INIT(pScreen,&cl->copyRegion,NullBox,0);
+     cl->copyDX = 0;
+@@ -217,7 +228,7 @@
+     int sock;
+ {
+     rfbClientPtr cl, prev;
+-    int i;
++    int i,j;
+ 
+     for (prev = NULL, cl = rfbClientHead; cl; prev = cl, cl = cl->next) {
+ 	if (sock == cl->sock)
+@@ -236,6 +247,21 @@
+ 	rfbLog("Client %s gone\n", cl->host);
+     }
+     free(cl->host);
++    
++    /* clear cache */
++    if (cl->enableCacheMode){
++        for (i=0; i<256; i++)
++        for (j=0; j<256; j++)
++        if (cl->cache[i][j] != NULL)
++            free(cl->cache[i][j]);
++        if (cl->catchRawOutput){
++            cl->catchRawOutput = FALSE;
++            for (i=0; i<cl->n_rawCacheBuffers; i++)
++                free(cl->rawCacheBuffers[i]);
++        }
++        free(cl->cache_queue);
++    }
++    
+ 
+     /* Release the compression state structures if any. */
+     if ( cl->compStreamInited == TRUE ) {
+@@ -381,6 +407,27 @@
+     rfbAuthNewClient(cl);
+ }
+ 
++/*
++ * rfbSendCacheInitMessage sends Cache Init message to client
++ */
++static void 
++rfbSendCacheInitMessage(cl)
++    rfbClientPtr cl;
++{    
++    char buf[256];
++    rfbCacheInitMsg  *ci = (rfbServerInitMsg *) &buf[0];
++    ci -> messageType = rfbServerCacheInit;    
++    ci -> cacheType = rfbCachingVersion_default;
++    ci -> maximumEntries = Swap16IfLE(rfbCachingMaximumEntries_default);
++    ci -> maintenanceAlgorithm = rfbCachingMaintenanceAlgorithm_default;
++    ci -> minimumCacheDataSize = Swap16IfLE(rfbCachingMinimumCacheDatasize_default);
++    if (WriteExact(cl->sock, &buf, sz_rfbCacheInitMsg) < 0) {
++	rfbLogPerror("rfbSendCacheInitMessage: write");
++	rfbCloseSock(cl->sock);
++	return;
++    }
++    
++}
+ 
+ /*
+  * rfbProcessClientInitMessage is called when the client sends its
+@@ -579,6 +626,65 @@
+     }
+ 
+     switch (msg.type) {
++        
++    case rfbClientCacheInit:
++    /* Receive client's cache init message */
++    {
++    char buf[256];
++    rfbCacheInitMsg * ci = buf;
++    if ((n = ReadExact(cl->sock, &buf[1], sz_rfbCacheInitMsg-1)) <= 0) {
++	if (n != 0)
++	    rfbLogPerror("rfbProcessClientNormalMessage: cache init read");
++	rfbCloseSock(cl->sock);
++	return;
++    }
++    if (rfbCaching_default){
++        int i,j;
++        /* Cache section initialization */
++        cl->enableCacheMode = TRUE;
++        if ((ci->cacheType & 0xF0) != (rfbCachingVersion_default & 0xF0)){
++            cl->enableCacheMode = FALSE;
++            return;
++        }
++        
++        cl->cachingVersion = min(rfbCachingVersion_default, ci->cacheType);
++        cl->cachingMaximumEntries = min(rfbCachingMaximumEntries_default, Swap16IfLE(ci->maximumEntries));
++        cl->cachingMaintenanceAlgorithm = ci->maintenanceAlgorithm;
++        cl->cachingMinimumCacheDatasize = min(rfbCachingMinimumCacheDatasize_default, Swap16IfLE(ci->minimumCacheDataSize));
++        rfbLog("Caching is on:\n");
++        rfbLog("  version: %d.%d\n", cl->cachingVersion>>4, cl->cachingVersion & 0x0F);
++        rfbLog("  maximum entries: %d\n", cl->cachingMaximumEntries);
++        if (cl->cachingMaintenanceAlgorithm == rfbFIFO)
++        rfbLog("  mainenance algorithm: fifo\n");
++        else
++        rfbLog("  mainenance algorithm: lru\n");
++        rfbLog("  minimum cache datasize: %d\n", cl->cachingMinimumCacheDatasize);
++    
++        cl -> n_rawCacheBuffers = 0;    
++        cl -> cachedBytesSent = 0;
++        cl -> cachedRectsSent =0;
++        cl -> sparedBytesByCache=0;
++    
++        if (cl->enableCacheMode){
++        cl -> catchRawOutput = FALSE;
++    
++        for (i=0; i<256; i++){
++        int j;
++        for (j=0; j<256; j++)
++            cl->cache[i][j] = NULL;
++        }
++        cl->cache_queue = (char *)malloc(3*cl->cachingMaximumEntries*sizeof(char *));
++        cl->cache_queue_oldest = NULL;
++        cl->cache_queue_newest = NULL;    
++        cl->cache_queue_freeplace = cl->cache_queue;
++        cl->cache_size = 0;
++        }
++    }
++    
++    
++        
++    return;
++    }
+ 
+     case rfbSetPixelFormat:
+ 
+@@ -745,7 +851,12 @@
+ 		    cl->tightQualityLevel = enc & 0x0F;
+ 		    rfbLog("Using image quality level %d for client %s\n",
+ 			   cl->tightQualityLevel, cl->host);
+-		} else {
++		} else if (enc == 64){ /* Caching support: send server cache init*/
++            /* Send cache init message */
++            if (rfbCaching_default)
++            rfbSendCacheInitMessage(cl);   
++        }
++		else{
+ 		    rfbLog("rfbProcessClientNormalMessage: ignoring unknown "
+ 			   "encoding %d\n", (int)enc);
+ 		}
+@@ -1156,7 +1267,15 @@
+ 		return FALSE;
+ 	    }
+ 	    break;
+-	}
++	}	
++	
++    if (!rfbSendUpdateBuf(cl))
++	return FALSE;
++	
++    
++     
++     
++    
+     }
+ 
+     REGION_UNINIT(pScreen,&updateRegion);
+@@ -1282,6 +1401,11 @@
+     int bytesPerLine = w * (cl->format.bitsPerPixel / 8);
+     char *fbptr = (rfbScreen.pfbMemory + (rfbScreen.paddedWidthInBytes * y)
+ 		   + (x * (rfbScreen.bitsPerPixel / 8)));
++		   
++    /* Caching stuff */
++    if (!rfbCachingStuff_start(cl))
++        return FALSE;
++		   
+ 
+     /* Flush the buffer to guarantee correct alignment for translateFn(). */
+     if (ublen > 0) {
+@@ -1303,7 +1427,12 @@
+ 	+= sz_rfbFramebufferUpdateRectHeader + bytesPerLine * h;
+ 
+     nlines = (UPDATE_BUF_SIZE - ublen) / bytesPerLine;
+-
++    if (!rfbSendUpdateBuf(cl))
++	    return FALSE;
++    
++    
++    /* Headers were sent: now one is going to send content */
++    rfbCachingStuff_headersWereSent(cl, rfbEncodingRaw);
+     while (TRUE) {
+ 	if (nlines > h)
+ 	    nlines = h;
+@@ -1314,19 +1443,25 @@
+ 
+ 	ublen += nlines * bytesPerLine;
+ 	h -= nlines;
+-
+-	if (h == 0)	/* rect fitted in buffer, do next one */
+-	    return TRUE;
+-
++	
+ 	/* buffer full - flush partial rect and do another nlines */
+ 
+ 	if (!rfbSendUpdateBuf(cl))
+ 	    return FALSE;
++    
+ 
++	if (h == 0){	/* rect fitted in buffer, do next one */
++	    
++	    /* Caching stuff */
++        return rfbCachingStuff_stop(cl);
++            
++    }
++
+ 	fbptr += (rfbScreen.paddedWidthInBytes * nlines);
+ 
+ 	nlines = (UPDATE_BUF_SIZE - ublen) / bytesPerLine;
+ 	if (nlines == 0) {
++	    rfbCachingStuff_stop(cl);
+ 	    rfbLog("rfbSendRectEncodingRaw: send buffer too small for %d "
+ 		   "bytes per line\n", bytesPerLine);
+ 	    rfbCloseSock(cl->sock);
+@@ -1386,7 +1521,49 @@
+     }
+     fprintf(stderr,"\n");
+     */
+-
++    
++    /* Caching on: write to buffer instead of socket */
++            
++    if (ublen == 0) return TRUE;
++            
++    if (cl->catchRawOutput){
++        
++    /* Catch output and put it to cl->rawCacheBuffers */
++    char *p;
++    uint32_t * len;
++    
++    if ((cl->n_rawCacheBuffers+1) == RAW_CACHE_BUFFERS){
++        rfbLogPerror("rfbSendUpdateBuf: raw content catch error: too many cache buffers\n");
++        return FALSE;
++    }
++    
++    cl->rawCacheBuffers[cl->n_rawCacheBuffers] = (char *)malloc(4+ublen);
++    
++    if (cl->rawCacheBuffers[cl->n_rawCacheBuffers] == NULL){
++        rfbLogPerror("rfbSendUpdateBuf: raw content catch error: can't allocate memory for next cache buffer\n");
++        return FALSE;
++    }
++    
++    p = cl->rawCacheBuffers[cl->n_rawCacheBuffers];
++    cl->n_rawCacheBuffers++;
++    
++    /* Put ublen to the first 4 bytes of p */
++    len = (uint32_t *)p;
++    * len = ublen;
++    
++    /* Copy content to the last [4, ublen+3] bytes */
++    memcpy(p+4, &updateBuf[0], ublen);
++    if (cl->increase_headers)
++        cl->headers_size += ublen;
++    else
++        cl->content_size += ublen;
++    
++    ublen = 0;
++    return TRUE;
++    
++    }            
++    
++    
+     if (ublen > 0 && WriteExact(cl->sock, updateBuf, ublen) < 0) {
+ 	rfbLogPerror("rfbSendUpdateBuf: write");
+ 	rfbCloseSock(cl->sock);
+Index: Xvnc/programs/Xserver/hw/vnc/zlib.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/zlib.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/zlib.c	(revision 30)
+@@ -179,12 +179,13 @@
+     cl->rfbBytesSent[rfbEncodingZlib] += (sz_rfbFramebufferUpdateRectHeader
+ 					 + sz_rfbZlibHeader + zlibAfterBufLen);
+ 
+-    if (ublen + sz_rfbFramebufferUpdateRectHeader + sz_rfbZlibHeader
+-	> UPDATE_BUF_SIZE)
+-    {
+ 	if (!rfbSendUpdateBuf(cl))
+ 	    return FALSE;
+-    }
++    
++    
++    /* Caching stuff */
++    if (!rfbCachingStuff_start(cl))
++        return FALSE;
+ 
+     rect.r.x = Swap16IfLE(x);
+     rect.r.y = Swap16IfLE(y);
+@@ -195,6 +196,12 @@
+     memcpy(&updateBuf[ublen], (char *)&rect,
+ 	   sz_rfbFramebufferUpdateRectHeader);
+     ublen += sz_rfbFramebufferUpdateRectHeader;
++    
++    if (!rfbSendUpdateBuf(cl))
++	    return FALSE;
++    
++    /* Headers were sent: now one is going to send content */
++    rfbCachingStuff_headersWereSent(cl, rfbEncodingZlib);
+ 
+     hdr.nBytes = Swap32IfLE(zlibAfterBufLen);
+ 
+@@ -216,11 +223,11 @@
+ 
+ 	if (ublen == UPDATE_BUF_SIZE) {
+ 	    if (!rfbSendUpdateBuf(cl))
+-		return FALSE;
++		return FALSE;    
+ 	}
+     }
+ 
+-    return TRUE;
++    return rfbCachingStuff_stop(cl);
+ 
+ }
+ 
+Index: Xvnc/programs/Xserver/hw/vnc/sha1.h
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/sha1.h	(revision 0)
++++ Xvnc/programs/Xserver/hw/vnc/sha1.h	(revision 30)
+@@ -0,0 +1,74 @@
++/*
++ *  sha1.h
++ *
++ *  Description:
++ *      This is the header file for code which implements the Secure
++ *      Hashing Algorithm 1 as defined in FIPS PUB 180-1 published
++ *      April 17, 1995.
++ *
++ *      Many of the variable names in this code, especially the
++ *      single character names, were used because those were the names
++ *      used in the publication.
++ *
++ *      Please read the file sha1.c for more information.
++ *
++ */
++
++
++#ifndef _SHA1_H_
++#define _SHA1_H_
++
++#include <stdint.h>
++/*
++ * If you do not have the ISO standard stdint.h header file, then you
++ * must typdef the following:
++ *    name              meaning
++ *  uint32_t         unsigned 32 bit integer
++ *  uint8_t          unsigned 8 bit integer (i.e., unsigned char)
++ *  int_least16_t    integer of >= 16 bits
++ *
++ */
++
++#ifndef _SHA_enum_
++#define _SHA_enum_
++enum
++{
++    shaSuccess = 0,
++    shaNull,            /* Null pointer parameter */
++    shaInputTooLong,    /* input data too long */
++    shaStateError       /* called Input after Result */
++};
++#endif
++#define SHA1HashSize 20
++
++/*
++ *  This structure will hold context information for the SHA-1
++ *  hashing operation
++ */
++typedef struct SHA1Context
++{
++    uint32_t Intermediate_Hash[SHA1HashSize/4]; /* Message Digest  */
++
++    uint32_t Length_Low;            /* Message length in bits      */
++    uint32_t Length_High;           /* Message length in bits      */
++
++                               /* Index into message block array   */
++    int_least16_t Message_Block_Index;
++    uint8_t Message_Block[64];      /* 512-bit message blocks      */
++
++    int Computed;               /* Is the digest computed?         */
++    int Corrupted;             /* Is the message digest corrupted? */
++} SHA1Context;
++
++/*
++ *  Function Prototypes
++ */
++
++int SHA1Reset(  SHA1Context *);
++int SHA1Input(  SHA1Context *,
++                const uint8_t *,
++                unsigned int);
++int SHA1Result( SHA1Context *,
++                uint8_t Message_Digest[SHA1HashSize]);
++
++#endif
+Index: Xvnc/programs/Xserver/hw/vnc/hextile.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/hextile.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/hextile.c	(revision 30)
+@@ -41,12 +41,11 @@
+     int x, y, w, h;
+ {
+     rfbFramebufferUpdateRectHeader rect;
++    
++    /* Caching stuff */
++    if (!rfbCachingStuff_start(cl))
++        return FALSE;
+ 
+-    if (ublen + sz_rfbFramebufferUpdateRectHeader > UPDATE_BUF_SIZE) {
+-	if (!rfbSendUpdateBuf(cl))
+-	    return FALSE;
+-    }
+-
+     rect.r.x = Swap16IfLE(x);
+     rect.r.y = Swap16IfLE(y);
+     rect.r.w = Swap16IfLE(w);
+@@ -56,20 +55,28 @@
+     memcpy(&updateBuf[ublen], (char *)&rect,
+ 	   sz_rfbFramebufferUpdateRectHeader);
+     ublen += sz_rfbFramebufferUpdateRectHeader;
++    
++    if (!rfbSendUpdateBuf(cl))
++	return FALSE;	
++	
++	/* Headers were sent: now one is going to send content */
++    rfbCachingStuff_headersWereSent(cl, rfbEncodingHextile);
+ 
+     cl->rfbRectanglesSent[rfbEncodingHextile]++;
+     cl->rfbBytesSent[rfbEncodingHextile] += sz_rfbFramebufferUpdateRectHeader;
+ 
+     switch (cl->format.bitsPerPixel) {
+     case 8:
+-	return sendHextiles8(cl, x, y, w, h);
++	return sendHextiles8(cl, x, y, w, h) && rfbCachingStuff_stop(cl);
+     case 16:
+-	return sendHextiles16(cl, x, y, w, h);
++	return sendHextiles16(cl, x, y, w, h) && rfbCachingStuff_stop(cl);
+     case 32:
+-	return sendHextiles32(cl, x, y, w, h);
++	return sendHextiles32(cl, x, y, w, h) && rfbCachingStuff_stop(cl);
+     }
+ 
+     rfbLog("rfbSendRectEncodingHextile: bpp %d?\n", cl->format.bitsPerPixel);
++    /* Caching stuff */
++    rfbCachingStuff_stop(cl);
+     return FALSE;
+ }
+ 
+Index: Xvnc/programs/Xserver/hw/vnc/init.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/init.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/init.c	(revision 30)
+@@ -129,8 +129,15 @@
+     rfbCrossScreen,
+     miPointerWarpCursor
+ };
++/* caching default settings */
++Bool rfbCaching_default = FALSE;
++uint32_t rfbCachingMaximumEntries_default = 50;
++Bool rfbCachingMaintenanceAlgorithm_default = rfbLRU;
++int rfbCachingMinimumCacheDatasize_default = 20;
+ 
++int rfbCachingVersion_default = 0x10;
+ 
++
+ int inetdSock = -1;
+ static char inetdDisplayNumStr[10];
+ 
+@@ -377,6 +384,39 @@
+ 	ErrorF("Xvnc version %s\n", XVNCRELEASE);
+ 	exit(0);
+     }
++    
++    /* caching */
++    if (strcmp(argv[i], "-caching") == 0){
++    rfbCaching_default = TRUE;
++    return 1;
++    }
++    
++    if (strcmp(argv[i], "-caching_ent") == 0){
++    if (i + 1 >= argc) UseMsg(); 
++    if (sscanf(argv[i+1], "%d", &rfbCachingMaximumEntries_default) != 1)
++        UseMsg ();
++    return 2;
++    }
++    
++    if (strcmp(argv[i], "-caching_minsize") == 0){
++    if (i + 1 >= argc) UseMsg(); 
++    if (sscanf(argv[i+1], "%d", &rfbCachingMinimumCacheDatasize_default) != 1)
++        UseMsg ();
++    return 2;
++    }
++    
++    if (strcmp(argv[i], "-caching_malg") == 0){
++    if (i + 1 >= argc) UseMsg(); 
++    if (strcmp(argv[i+1], "FIFO") == 0){
++        rfbCachingMaintenanceAlgorithm_default = rfbFIFO;
++        return 2;
++    }
++    if (strcmp(argv[i+1], "LRU") == 0){
++        rfbCachingMaintenanceAlgorithm_default = rfbLRU;
++        return 2;
++    }
++    UseMsg();
++    }
+ 
+     if (inetdSock != -1 && argv[i][0] == ':') {
+ 	FatalError("can't specify both -inetd and :displaynumber");
+@@ -926,6 +966,11 @@
+     ErrorF("-compatiblekbd         set META key = ALT key as in the original "
+ 								"VNC\n");
+     ErrorF("-version               report Xvnc version on stderr\n");
++    ErrorF("-caching               turns caching mechanism ON\n");
++    ErrorF("-caching_ent E         maximum number of cache entities\n");
++    ErrorF("-caching_malg FIFO/LRU cache maintenance algorithm\n");
++    ErrorF("-caching_minsize S     minimal size of raw data block to cache\n");
++    
+     exit(1);
+ }
+ 
+Index: Xvnc/programs/Xserver/hw/vnc/Imakefile
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/Imakefile	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/Imakefile	(revision 30)
+@@ -2,12 +2,12 @@
+ #include <Server.tmpl>
+ 
+ SRCS = init.c sockets.c kbdptr.c cmap.c draw.c cutpaste.c \
+-       dispcur.c sprite.c rfbserver.c translate.c httpd.c auth.c \
+-       rre.c corre.c stats.c hextile.c zlib.c tight.c cursor.c
++       dispcur.c sprite.c rfbserver.c sha1.c rfbservercache.c translate.c httpd.c auth.c \
++       rre.c corre.c stats.c hextile.c zlib.c tight.c cursor.c 
+ 
+ OBJS = init.o sockets.o kbdptr.o cmap.o draw.o cutpaste.o \
+-       dispcur.o sprite.o rfbserver.o translate.o httpd.o auth.o \
+-       rre.o corre.o stats.o hextile.o zlib.o tight.o cursor.o
++       dispcur.o sprite.o rfbserver.o sha1.o rfbservercache.o translate.o httpd.o auth.o \
++       rre.o corre.o stats.o hextile.o zlib.o tight.o cursor.o 
+ 
+ #include <vnclibs.def>
+ INCLUDES = -I. -I$(XBUILDINCDIR) -I$(FONTINCSRC) -I$(XINCLUDESRC) \
+Index: Xvnc/programs/Xserver/hw/vnc/corre.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/corre.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/corre.c	(revision 30)
+@@ -95,6 +95,10 @@
+ 
+     int maxRawSize = (rfbScreen.width * rfbScreen.height
+ 		      * (cl->format.bitsPerPixel / 8));
++		      
++    /* Caching stuff */
++    if (!rfbCachingStuff_start(cl))
++        return FALSE;
+ 
+     if (rreBeforeBufSize < maxRawSize) {
+ 	rreBeforeBufSize = maxRawSize;
+@@ -135,19 +139,16 @@
+ 
+ 	/* RRE encoding was too large, use raw */
+ 
+-	return rfbSendRectEncodingRaw(cl, x, y, w, h);
++	return rfbCachingStuff_stop(cl) && rfbSendRectEncodingRaw(cl, x, y, w, h);
+     }
+ 
+     cl->rfbRectanglesSent[rfbEncodingCoRRE]++;
+     cl->rfbBytesSent[rfbEncodingCoRRE] += (sz_rfbFramebufferUpdateRectHeader
+ 					   + sz_rfbRREHeader + rreAfterBufLen);
+ 
+-    if (ublen + sz_rfbFramebufferUpdateRectHeader + sz_rfbRREHeader
+-	> UPDATE_BUF_SIZE)
+-    {
++    
+ 	if (!rfbSendUpdateBuf(cl))
+ 	    return FALSE;
+-    }
+ 
+     rect.r.x = Swap16IfLE(x);
+     rect.r.y = Swap16IfLE(y);
+@@ -158,7 +159,14 @@
+     memcpy(&updateBuf[ublen], (char *)&rect,
+ 	   sz_rfbFramebufferUpdateRectHeader);
+     ublen += sz_rfbFramebufferUpdateRectHeader;
++    
++    if (!rfbSendUpdateBuf(cl))
++        return FALSE;
+ 
++    
++    /* headers were sent: now send content */
++    rfbCachingStuff_headersWereSent(cl, rfbEncodingCoRRE);
++
+     hdr.nSubrects = Swap32IfLE(nSubrects);
+ 
+     memcpy(&updateBuf[ublen], (char *)&hdr, sz_rfbRREHeader);
+@@ -179,11 +187,13 @@
+ 
+ 	if (ublen == UPDATE_BUF_SIZE) {
+ 	    if (!rfbSendUpdateBuf(cl))
+-		return FALSE;
++		    return FALSE;        
+ 	}
+     }
+-
+-    return TRUE;
++    
++    /* Caching stuff */
++    return rfbCachingStuff_stop(cl);
++        
+ }
+ 
+ 
+Index: Xvnc/programs/Xserver/hw/vnc/rfb.h
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/rfb.h	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/rfb.h	(revision 30)
+@@ -30,7 +30,9 @@
+ #include <rfbproto.h>
+ #include <vncauth.h>
+ #include <zlib.h>
++#include <stdio.h>
+ #include <stdarg.h>
++#include <stdint.h>
+ 
+ /* It's a good idea to keep these values a bit greater than required. */
+ #define MAX_ENCODINGS 10
+@@ -123,7 +125,14 @@
+ 				   int bytesBetweenInputLines,
+ 				   int width, int height);
+ 
++/*
++ * RAW_CACHE_BUFFERS - number of raw cache buffers
++ */
+ 
++#define RAW_CACHE_BUFFERS (1024*256)
++
++
++
+ /*
+  * Per-client structure.
+  */
+@@ -273,7 +282,66 @@
+     int cursorX, cursorY;          /* client's cursor position */
+ 
+     struct rfbClientRec *next;
++    
++    /* Cache settings */
++    
++    Bool            enableCacheMode;
++    unsigned int    cachingVersion;
++    uint32_t        cachingMaximumEntries;
++    Bool            cachingMaintenanceAlgorithm;
++    int             cachingMinimumCacheDatasize;
++    
++    uint32_t        cachedBytesSent;
++    uint32_t        cachedRectsSent;
++    uint32_t        sparedBytesByCache;
+ 
++        
++        
++    /* Cache: catch raw data mode */
++    Bool catchRawOutput;                             /* when TRUE then rfbSendUpdateBuf() sends data to cl->rawCacheBuffers instead of socket */
++    char * rawCacheBuffers[RAW_CACHE_BUFFERS];       /* each CacheBuffer contains it's length (first 4 bytes) and content itself */
++    int  n_rawCacheBuffers;                          /* size of rawCacheBuffers array */
++    int n_rawCacheBuffers_firstContent;              /* stores first index of rawCacheBuffer that contains content (not header) */
++    unsigned int rawCacheBuffers_encoding;                           /* encoding of the content that is in rawCacheBuffers */
++    
++    unsigned int headers_size;                    /* length of headers, in bytes */
++    unsigned int content_size;                    /* length of content, in bytes */
++    
++    Bool increase_headers;               /* when catchRawOutput mode is on, then one increase
++                                          *  headers_size if increase_headers == TRUE or
++                                          *  content_size otherwise
++                                          * each time rfbSendUpdateBuf() is called.
++                                          */
++    
++    /* Cache itself */
++    char * cache[256][256];              /*
++                                          * Cache storage organized in the next way:
++                                          * cache - is a big list of 20+sizeof(char *) byte blocks,
++                                          * first 20 bytes are sha1 itself, last sizeof(char*) byte block is a pointer
++                                          * to the item in cache_queue. This list is split onto 256*256 pieces by
++                                          * first two bytes. So, cache[a1][a2] is pointed to the area in memory
++                                          * that stores all cache items that starts with [a1, a2 ...].
++                                          * 
++                                          * cache[a1][a2] list is organized in the next way:
++                                          * first 4 bytes are number of items in list;
++                                          * last bytes are content of the cache items (sha1+pointer on the cache_queue item), one by one.
++                                          * 
++                                          * [size - 4 bytes, a1, a2, ....p1,p2..p8, a1, a2, ....]
++                                          */
++    
++    char * cache_queue;                  /* 
++                                          * Queue defines order of cache items.
++                                          * Each queue item consists of sizeof(char *)*3 bytes, 
++                                          * where first sizeof(char *) bytes block is a pointer to the next (older) block in queue,
++                                          * second sizeof(char *) bytes block is a pointer to the last (younger) block in queue,
++                                          * third sizeof(char *) bytes block is a pointer to the item in cache
++                                          */
++    char * cache_queue_oldest;           
++    char * cache_queue_newest;
++    
++    char * cache_queue_freeplace;        
++    unsigned int cache_size;
++
+ } rfbClientRec, *rfbClientPtr;
+ 
+ 
+@@ -372,7 +440,16 @@
+ extern void rfbLog(char *format, ...);
+ extern void rfbLogPerror(char *str);
+ 
++    /* Caching */
++extern Bool rfbCaching_default;
++extern uint32_t rfbCachingMaximumEntries_default;
++extern int rfbCachingMaintenanceAlgorithm_default;
++extern int rfbCachingMinimumCacheDatasize_default;
+ 
++extern int rfbCachingVersion_default;
++
++
++
+ /* sockets.c */
+ 
+ extern int rfbMaxClientWait;
+Index: Xvnc/programs/Xserver/hw/vnc/tight.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/tight.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/tight.c	(revision 30)
+@@ -301,11 +301,17 @@
+                      !rfbSendRectEncodingTight(cl, x, y_best,
+                                                x_best-x, h_best) )
+                     return FALSE;
++                    
++                /* Caching stuff */
++                if (!rfbCachingStuff_start(cl))
++                    return FALSE;
+ 
+                 /* Send solid-color rectangle. */
+ 
+-                if (!SendTightHeader(cl, x_best, y_best, w_best, h_best))
++                if (!SendTightHeader(cl, x_best, y_best, w_best, h_best)){
++                    rfbCachingStuff_stop(cl);
+                     return FALSE;
++                }
+ 
+                 fbptr = (rfbScreen.pfbMemory +
+                          (rfbScreen.paddedWidthInBytes * y_best) +
+@@ -315,22 +321,28 @@
+                                    &cl->format, fbptr, tightBeforeBuf,
+                                    rfbScreen.paddedWidthInBytes, 1, 1);
+ 
+-                if (!SendSolidRect(cl))
++                if (!SendSolidRect(cl)){
++                    rfbCachingStuff_stop(cl);
+                     return FALSE;
++                }
+ 
+                 /* Send remaining rectangles (at right and bottom). */
+ 
+                 if ( x_best + w_best != x + w &&
+                      !rfbSendRectEncodingTight(cl, x_best+w_best, y_best,
+-                                               w-(x_best-x)-w_best, h_best) )
++                                               w-(x_best-x)-w_best, h_best) ){
++                    rfbCachingStuff_stop(cl);
+                     return FALSE;
++                }
+                 if ( y_best + h_best != y + h &&
+                      !rfbSendRectEncodingTight(cl, x, y_best+h_best,
+-                                               w, h-(y_best-y)-h_best) )
++                                               w, h-(y_best-y)-h_best) ){
++                    rfbCachingStuff_stop(cl);
+                     return FALSE;
++                }
+ 
+                 /* Return after all recursive calls are done. */
+-
++                rfbCachingStuff_stop(cl);
+                 return TRUE;
+             }
+ 
+@@ -542,14 +554,21 @@
+     char *fbptr;
+     Bool success = FALSE;
+ 
+-    /* Send pending data if there is more than 128 bytes. */
+-    if (ublen > 128) {
+-        if (!rfbSendUpdateBuf(cl))
+-            return FALSE;
+-    }
++    /* Send pending data */    
++    if (!rfbSendUpdateBuf(cl))
++        return FALSE;
++        
++    if (!rfbCachingStuff_stop(cl))
++        return FALSE;
++    
++    /* Caching stuff */
++    if (!rfbCachingStuff_start(cl))
++        return FALSE;
+ 
+-    if (!SendTightHeader(cl, x, y, w, h))
++    if (!SendTightHeader(cl, x, y, w, h)){
++        rfbCachingStuff_stop(cl);
+         return FALSE;
++    }
+ 
+     fbptr = (rfbScreen.pfbMemory + (rfbScreen.paddedWidthInBytes * y)
+              + (x * (rfbScreen.bitsPerPixel / 8)));
+@@ -607,6 +626,7 @@
+             success = SendIndexedRect(cl, w, h);
+         }
+     }
++    if (!rfbCachingStuff_stop(cl)) return FALSE;
+     return success;
+ }
+ 
+@@ -617,10 +637,10 @@
+ {
+     rfbFramebufferUpdateRectHeader rect;
+ 
+-    if (ublen + sz_rfbFramebufferUpdateRectHeader > UPDATE_BUF_SIZE) {
+-        if (!rfbSendUpdateBuf(cl))
+-            return FALSE;
+-    }
++    
++    if (!rfbSendUpdateBuf(cl))
++        return FALSE;
++    
+ 
+     rect.r.x = Swap16IfLE(x);
+     rect.r.y = Swap16IfLE(y);
+@@ -631,10 +651,16 @@
+     memcpy(&updateBuf[ublen], (char *)&rect,
+            sz_rfbFramebufferUpdateRectHeader);
+     ublen += sz_rfbFramebufferUpdateRectHeader;
++    
++    if (!rfbSendUpdateBuf(cl))
++        return FALSE;
+ 
+     cl->rfbRectanglesSent[rfbEncodingTight]++;
+     cl->rfbBytesSent[rfbEncodingTight] += sz_rfbFramebufferUpdateRectHeader;
+-
++    
++    /* Headers were sent: now one is going to send content */
++    rfbCachingStuff_headersWereSent(cl, rfbEncodingTight);
++    
+     return TRUE;
+ }
+ 
+Index: Xvnc/programs/Xserver/hw/vnc/rfbservercache.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/rfbservercache.c	(revision 0)
++++ Xvnc/programs/Xserver/hw/vnc/rfbservercache.c	(revision 30)
+@@ -0,0 +1,572 @@
++/*
++ * rfbservercache.c - deal with server-side caching for the RFB protocol.
++ */
++
++#include <arpa/inet.h>
++#include "rfb.h"
++
++
++/*
++ * Generates SHA1 hash for given string
++ */
++
++#include "sha1.h"
++  
++Bool 
++SHA1(const char * str1, const uint32_t size, char * output)  
++    
++{  
++    SHA1Context sha;    
++    SHA1Reset(&sha);
++   	SHA1Input(&sha, (const unsigned char *) str1, size);
++	SHA1Result(&sha, (unsigned char *)output);
++	return TRUE;
++}  
++
++
++/* 
++ * Adds str to cache
++ * 
++ * str's length must contain 20 bytes  (sha1 hash);
++ * cl->cache_queue_freeplace must point to the place where one should insert new cache queue item.
++ */
++Bool
++addToCache(rfbClientPtr cl, const char * str)
++{
++                
++    unsigned char size_of_pointer = sizeof(char *);
++    char **p;
++    unsigned char c1 = (unsigned char) str[0];
++    unsigned char c2 = (unsigned char) str[1];    
++    uint32_t * len;    
++        
++    if (cl->cache_queue_freeplace == NULL) return;    
++    
++    if (cl->cache[c1][c2] == NULL){
++        /* first 4 bytes - list's size, next 20 bytes - sha1, last 8 bytes - pointer to item in queue */
++        cl->cache[c1][c2] = malloc(24 + size_of_pointer);
++        
++        if (cl->cache[c1][c2] == NULL){
++            rfbLogPerror("addToCache: malloc error \n");
++            return FALSE;
++        }
++        memcpy(cl->cache[c1][c2]+4, str, 20);
++        len = (uint32_t *)cl->cache[c1][c2];
++        *len = 1;
++    } else{
++        char * buf;
++                
++        len = (uint32_t *)cl->cache[c1][c2];    
++        *len += 1;                
++        buf = (char *)realloc(cl->cache[c1][c2], 4 + (*len)*(20 + size_of_pointer));
++        if (buf == NULL){
++            rfbLogPerror("addToCache: realloc error \n");
++            return FALSE;
++        }
++        if (buf != cl->cache[c1][c2]){
++            /* Realloc moves our block: need to refresh queue items */
++            int i, j;
++            char *q;
++            char *u;
++            cl->cache[c1][c2] = buf;
++            len = (uint32_t *)cl->cache[c1][c2];
++            
++            for (i=0; i<((*len)-1); i++){
++                
++                q = buf + 4 + i*(20+size_of_pointer);
++                p = (char **)(q + 20);
++                u = *p; /* points to the queue's item */
++                p = (char **)(u + size_of_pointer*2);
++                *p = q;                    
++            }
++        }
++        /* put new sha1 to the end of cache[c1][c2] */
++        memcpy(cl->cache[c1][c2] + (((*len)-1)*(20 + size_of_pointer)) +4, str, 20);
++    }
++    
++    /* Cache item: set up pointer to the queue item */
++    p = (char **)(cl->cache[c1][c2] + ((*len)*(20 + size_of_pointer)) +4 - size_of_pointer);
++    *p = cl->cache_queue_freeplace;    
++    
++    /* Cache queue: set up older (next) item */
++    p = (char **)cl->cache_queue_freeplace;
++    *p = cl->cache_queue_newest;
++    if (cl->cache_queue_newest != NULL){
++        /* Cache queue: set up younger (previous) item  for the following */
++        p = (char **)(cl->cache_queue_newest +size_of_pointer);    
++        *p = cl->cache_queue_freeplace;
++    }
++    
++    /* Cache queue: set up younger (previous) item */
++    p = (char **)(cl->cache_queue_freeplace + size_of_pointer); 
++    *p = NULL;
++    
++    /* Cache queue: pointer to the item in cache */
++    p = (char **)(cl->cache_queue_freeplace + size_of_pointer*2);
++    *p = cl->cache[c1][c2] + (((*len) -1)*(20 + size_of_pointer)) +4;
++    
++    cl->cache_queue_newest = cl->cache_queue_freeplace;
++    p = (char **)(cl->cache_queue_freeplace + size_of_pointer); 
++    
++    p = (char **)(cl->cache_queue_newest + size_of_pointer); 
++    if (cl->cache_queue_oldest == NULL){
++        cl->cache_queue_oldest = cl->cache_queue_newest;
++        p = (char **)(cl->cache_queue_freeplace + size_of_pointer); 
++    }
++    cl->cache_queue_freeplace = NULL;
++    
++    
++    cl->cache_size += 1;
++    
++                /*ff = fopen("/tmp/debug_header_length", "ab+");
++                fprintf(ff, "\n---\n");
++                fclose(ff);
++                char *q;
++                q = cl->cache_queue_newest;
++                while (q != NULL){
++                    ff = fopen("/tmp/debug_header_length", "ab+");
++                    p = q;
++                    fprintf(ff, "next: %d ", *p);
++                    
++                    p = q+ size_of_pointer;
++                    fprintf(ff, "prev: %d ", *p);
++                    
++                    fprintf(ff, "curr: %d \n", q);
++                    
++                    p = q;
++                    q = *p;
++                    fclose(ff); 
++                }
++                ff = fopen("/tmp/debug_header_length", "ab+");
++                p = (char **)(cl->cache[c1][c2] + ((*len)*(20 + size_of_pointer)) +4 - size_of_pointer);
++                fprintf(ff, "\n---%d\n", *p);
++                
++                fclose(ff);*/
++          
++
++    return TRUE;
++}
++
++/*
++ * Removes oldest item from cache
++ */
++Bool
++removeOldestFromCache(cl)
++rfbClientPtr cl;
++{
++    char * itemInCache_toRemove;
++    uint32_t pos;
++    uint32_t *len;
++    char * buf;
++    char **p;
++    unsigned char size_of_pointer = sizeof(char *);
++    int i;
++    unsigned char c1;
++    unsigned char c2;    
++    
++    p = (char **)(cl->cache_queue_oldest + size_of_pointer*2);
++    /* Define item in cache to remove */        
++    itemInCache_toRemove = *p;
++                       
++    /* Remove it from cache_queue first */
++    p = (char **)(cl->cache_queue_oldest + size_of_pointer);
++    cl->cache_queue_freeplace = cl->cache_queue_oldest;
++            
++            
++    cl->cache_queue_oldest = *p;
++    p = (char **)(cl->cache_queue_oldest);
++    *p = NULL;
++            
++    c1 = (unsigned char) itemInCache_toRemove[0];
++    c2 = (unsigned char) itemInCache_toRemove[1];
++            
++    len = (uint32_t *)cl->cache[c1][c2];
++            
++    pos = (itemInCache_toRemove - cl->cache[c1][c2]-4) / (20+size_of_pointer);
++            
++    /* Remove item from cache[c1][c2] list that is on the pos place */
++    for (i=pos+1; i<(*len); i++){
++    /* Move blocks in cl->cache[c1][c2] and refresh queue items as well */
++    memcpy(cl->cache[c1][c2]+4+(i-1)*(20+size_of_pointer), cl->cache[c1][c2]+4+i*(20+size_of_pointer), 20+size_of_pointer);
++    p = (char **)(cl->cache[c1][c2]+4+i*(20+size_of_pointer)+20);
++    buf = *p; /* queue item */                
++    p = (char **)(buf + size_of_pointer*2);
++    *p = cl->cache[c1][c2]+4+(i-1)*(20+size_of_pointer);
++    }
++    
++    cl->cache_size --;
++    (*len)--;
++    if ((*len) == 0){
++    /* No items left in cl->cache[c1][c2] */
++    free(cl->cache[c1][c2]);
++    cl->cache[c1][c2] = NULL;                
++    } else {
++    /* There are still some items in cl->cache[c1][c2] */
++    buf = (char *)realloc(cl->cache[c1][c2], 4+(*len)*(20+size_of_pointer));
++    if (buf == NULL){
++        rfbLogPerror("rfbCachingStuff_stop: realloc error while removing item in cache \n");
++        return FALSE;
++    }
++    if (buf != cl->cache[c1][c2]){
++        /* Realloc moves cl->cache[c1][c2]: need to refresh queue items */
++        char *q;
++        char *u;                
++        len = (uint32_t *)cl->cache[c1][c2];
++        cl->cache[c1][c2] = buf;
++        for (i=0; i< (*len); i++){
++            q = buf + 4 + i*(20+size_of_pointer);
++            p = (char **)(q + 20);
++            u = *p; /* points to the queue's item */
++            p = (char **)(u + size_of_pointer*2);
++            *p = q;                    
++        }
++                                
++    }
++    }
++    return TRUE;
++}
++
++
++/*
++ * Checks if str is in cache.
++ * 
++ * str's length must be equal to 20 bytes.
++ */
++Bool 
++isInCache(rfbClientPtr cl, const char * str)
++
++{
++    int i=0;
++    int j=0;
++    unsigned char c1 = (unsigned char)str[0];
++    unsigned char c2 = (unsigned char)str[1];
++    
++    uint32_t * tmp = (uint32_t *)cl->cache[c1][c2];
++    unsigned char size_of_pointer = sizeof(char *);
++    
++    if (cl->cache[c1][c2] == NULL) return FALSE;
++    
++    for (i=0; i< *tmp; i++){
++        Bool check = TRUE;
++        for (j=0; j<20; j++){            
++            if ( *(cl->cache[c1][c2] + i*(20+size_of_pointer) + j+4) != str[j]){
++                check = FALSE;
++                break;
++            }                
++        }
++        if (check){
++            if ((cl->cachingMaintenanceAlgorithm) == rfbLRU){
++
++                /* LRU algorithm: put queue item to the head */
++                unsigned char size_of_pointer = sizeof(char *);
++                char **p;
++                char *q;
++                char *prev;
++                char *next;
++                
++                p = (char **)(cl->cache[c1][c2] + 4 + i*(20+size_of_pointer) + 20);
++                q = *p; /* points to the queue item */
++                p = (char **)q;
++                next = *p;
++                p = (char **)(q+size_of_pointer);
++                prev = *p;
++                
++                if (prev == NULL){
++                    /* q is already in the head */
++                    
++                    return TRUE; /* already the youngest */
++                }
++                if (next != NULL){
++                    /* q is in the middle of a queue*/
++                    p = (char **)prev;
++                    *p = next;
++                    p = (char **)(next+size_of_pointer);
++                    *p = prev;
++                } else{
++                    /* q is the oldest */                    
++                    cl->cache_queue_oldest = prev;
++                    p = (char **)prev;
++                    *p = NULL;
++                }
++                /* Put q queue_item to the head of the queue */
++                p = (char **)q;
++                *p = cl->cache_queue_newest;
++                p = (char **)(q+size_of_pointer);
++                *p = NULL;
++                
++                p = (char **)(cl->cache_queue_newest +size_of_pointer);
++                *p = q;
++                
++                cl->cache_queue_newest = q;                
++               
++            }
++            
++           
++            return TRUE;
++        }
++    }
++        
++    return FALSE;
++}
++
++
++/* 
++ * After this function is called one redirects output from rfbSendUpdateBuf(cl) 
++ * to cl->rawCacheBuffers.
++ */
++
++Bool 
++rfbStartCatchRawOutput(cl)
++    rfbClientPtr cl;
++{
++    FILE * ff;
++        
++    cl->n_rawCacheBuffers = 0;
++    cl->catchRawOutput = TRUE;
++    cl->increase_headers = TRUE;
++    
++    return TRUE;
++}
++
++/*
++ * Flushes cl->rawCacheBuffers and returns rfbSendUpdateBuf(cl) to
++ * it's normal state.
++ */
++
++Bool 
++rfbStopCatchRawOutput_flush(cl)
++    rfbClientPtr cl;
++{
++    int i, j;    
++    char *p;
++    uint32_t * len;
++    Bool ret = TRUE;
++    FILE * ff;
++
++    cl ->catchRawOutput = FALSE;
++    for (i=0; i<cl->n_rawCacheBuffers; i++){
++        /* Get cl->rawCacheBuffers[i] content's length */
++        p = cl->rawCacheBuffers[i];
++        len = (uint32_t *)p;
++        ublen = *len;
++               
++        /* Send content to client and free memory */
++        memcpy(&updateBuf[0], p+4, ublen);
++        ret &= rfbSendUpdateBuf(cl);
++        free(cl->rawCacheBuffers[i]);
++    }
++    cl->n_rawCacheBuffers = 0;
++    cl->headers_size = 0;
++    cl->content_size = 0;
++    cl->increase_headers = TRUE;
++
++    return ret;
++}
++/*
++ * Turns catch mode off without flushing catched data (no rawCacheBuffers flush to socket)
++ */
++Bool 
++rfbStopCatchRawOutput_drop(cl)
++    rfbClientPtr cl;
++{
++    int i=0;
++    
++    cl ->catchRawOutput = FALSE;
++    for (i=0; i<cl->n_rawCacheBuffers; i++){
++        free(cl->rawCacheBuffers[i]);
++    }
++    cl->n_rawCacheBuffers = 0;
++    cl->headers_size = 0;
++    cl->content_size = 0;
++    cl->increase_headers = TRUE;
++    return TRUE;
++}
++
++
++/*
++ * Function MUST be called when one starts sending of a single
++ * rectangle
++ * (in the beginning of rfbSendRectEncodingRaw, rfbSendRectEncodingRRC etc)
++ */
++Bool 
++rfbCachingStuff_start(cl)
++    rfbClientPtr cl;
++{
++    FILE * ff;
++    if (!cl->enableCacheMode) return TRUE; /* Cache mode off? quit */
++    
++    if (!rfbSendUpdateBuf(cl))
++	return FALSE;		
++	
++    if (cl->catchRawOutput)
++        if (!rfbCachingStuff_stop(cl)) /* In catch mode now? stop it first */
++            return FALSE;
++	
++	/* Catch everything that is going to be sent to client to cl->rawCacheBuffers */
++    rfbStartCatchRawOutput(cl);		 
++    
++    return TRUE;
++}
++
++/*
++ * Function MUST be called after one sends headers while sending update rectangle
++ * message but before one starts sending rectangle's content
++ * (in the middle of rfbSendRectEncodingRaw, rfbSendRectEncodingRRC etc)
++ */
++Bool 
++rfbCachingStuff_headersWereSent(cl, encoding)
++    rfbClientPtr cl;
++    unsigned int encoding;
++{
++    FILE *ff;
++    if (!cl->enableCacheMode) return TRUE; /* Cache mode off? quit */
++    cl -> rawCacheBuffers_encoding = encoding;    
++    cl->n_rawCacheBuffers_firstContent = cl->n_rawCacheBuffers;
++    
++    cl->increase_headers = FALSE;
++    return TRUE;
++}
++
++/*
++ * Function MUST be called when one stops single rectangle sending
++ * (just before all "return"s in rfbSendRectEncodingRaw, rfbSendRectEncodingRRC etc)
++ */
++Bool 
++rfbCachingStuff_stop(cl)
++    rfbClientPtr cl;
++{
++    
++    int header_length = 0;
++    int i, pos;    
++    char * headers;
++    char * content;
++    unsigned char size_of_pointer = sizeof(char *);
++    char output[20];
++
++    
++    if (!cl->enableCacheMode) return TRUE; /* Cache mode off? quit */
++    
++    if (!rfbSendUpdateBuf(cl))
++    return FALSE;
++    
++    
++    
++    if (!cl->catchRawOutput) return TRUE; /* Not in catch-all mode? quit */
++    
++    if ((cl->n_rawCacheBuffers_firstContent >= cl->n_rawCacheBuffers) 
++        || (cl->headers_size != sz_rfbFramebufferUpdateRectHeader))
++        /* Header wasn't found, it could be not FrameBufferUpdateRect message */
++        return rfbStopCatchRawOutput_flush(cl);
++        
++    /* 
++     * So, we catch the content that should be sent to client, it is in cl->rawCacheBuffers.
++     * 
++     * [0, n_rawCacheBuffers_firstContent) buffers contain header
++     * [n_rawCacheBuffers_firstContent, n_rawCacheBuffers) contain content
++     */
++    
++    /* Too small: no need to use cache */
++    if (cl->content_size < cl->cachingMinimumCacheDatasize) return rfbStopCatchRawOutput_flush(cl);
++    
++    
++    headers  = (char *)malloc(sz_rfbFramebufferUpdateRectHeader);
++    if (headers == NULL){
++        rfbLogPerror("rfbCachingStuff_stop: malloc for headers error \n");
++        return FALSE;
++    }
++    content = (char *) malloc(cl->content_size);
++    if (content == NULL){
++        rfbLogPerror("rfbCachingStuff_stop: malloc for content error \n");
++        free(headers);
++        return FALSE;
++    }
++    
++    
++    /* Fill (char *)headers first */
++    pos = 0;
++    for (i=0; i < cl->n_rawCacheBuffers_firstContent; i++){
++        char *p = cl->rawCacheBuffers[i];
++        uint32_t  * tmplen = (uint32_t *)p;        
++        memcpy(headers+pos, p+4, * tmplen);
++        pos += * tmplen;
++    }
++    
++    /* Then (char *)content */
++    pos = 0;
++    for (i= cl->n_rawCacheBuffers_firstContent; i< cl->n_rawCacheBuffers; i++){
++        char *p = cl->rawCacheBuffers[i];
++        uint32_t * tmplen = (uint32_t *)p;        
++        memcpy(content+pos, p+4, * tmplen);
++        pos += * tmplen;
++    }
++    
++    
++    /* Check if content's hash is in cache */    
++    if (!SHA1(content, cl->content_size, &output[0])){
++        rfbStopCatchRawOutput_flush(cl);
++        free(headers);
++        free(content);
++        return FALSE;
++    }
++    
++    
++    if (isInCache(cl, &output[0])){
++        /* SHA1 already in cache: send CacheHit to client */
++        uint32_t * encoding;
++                
++        
++        cl->cachedBytesSent += sz_rfbFramebufferUpdateRectHeader + 20;
++        cl->cachedRectsSent += 1;
++        cl->sparedBytesByCache += (cl->content_size - 20);
++        
++        cl->rfbRectanglesSent[cl->rawCacheBuffers_encoding] --;
++        cl->rfbBytesSent[cl->rawCacheBuffers_encoding] -= sz_rfbFramebufferUpdateRectHeader + cl->content_size;
++                       
++        /* DEBUG */
++        /*rfbStopCatchRawOutput_flush(cl);
++        free(headers);
++        free(content);
++        return TRUE;*/
++        
++        rfbStopCatchRawOutput_drop(cl);
++        encoding = (headers + sz_rfbFramebufferUpdateRectHeader-4);
++        
++        *encoding = Swap32IfLE(rfbEncodingCache); /* Turn catched header into CacheHit header */
++        ublen = sz_rfbFramebufferUpdateRectHeader + 20;
++        memcpy(&updateBuf[0], headers, sz_rfbFramebufferUpdateRectHeader);
++        memcpy(&updateBuf[sz_rfbFramebufferUpdateRectHeader], &output[0], 20);
++    
++        free(headers);
++        free(content);
++        return rfbSendUpdateBuf(cl);
++
++    }
++    else {
++        /* There's no SHA1 in cache: add it */
++        if (cl->cache_size == cl->cachingMaximumEntries){            
++            /* So, cache is full: remove oldest item from it */
++            if (!removeOldestFromCache(cl)){
++                rfbStopCatchRawOutput_flush(cl);
++                free(headers);
++                free(content);
++                return FALSE;
++            }
++        
++        }
++        else cl->cache_queue_freeplace  = cl->cache_queue + cl->cache_size * 3 * size_of_pointer;
++        
++        if (!addToCache(cl, &output[0])){
++            rfbStopCatchRawOutput_flush(cl);
++            free(headers);
++            free(content); 
++            return FALSE;
++        }
++                
++        
++    }
++    free(headers);
++    free(content);    
++        
++    return rfbStopCatchRawOutput_flush(cl);
++        
++}
+Index: Xvnc/programs/Xserver/hw/vnc/rre.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/rre.c	(revision 7)
++++ Xvnc/programs/Xserver/hw/vnc/rre.c	(revision 30)
+@@ -65,6 +65,10 @@
+ 
+     int maxRawSize = (rfbScreen.width * rfbScreen.height
+ 		      * (cl->format.bitsPerPixel / 8));
++		      
++    /* Caching stuff */
++    if (!rfbCachingStuff_start(cl))
++        return FALSE;
+ 
+     if (rreBeforeBufSize < maxRawSize) {
+ 	rreBeforeBufSize = maxRawSize;
+@@ -105,30 +109,39 @@
+ 
+ 	/* RRE encoding was too large, use raw */
+ 
+-	return rfbSendRectEncodingRaw(cl, x, y, w, h);
++	return rfbCachingStuff_stop(cl) && rfbSendRectEncodingRaw(cl, x, y, w, h);
+     }
+ 
+     cl->rfbRectanglesSent[rfbEncodingRRE]++;
+     cl->rfbBytesSent[rfbEncodingRRE] += (sz_rfbFramebufferUpdateRectHeader
+ 					 + sz_rfbRREHeader + rreAfterBufLen);
+-
+-    if (ublen + sz_rfbFramebufferUpdateRectHeader + sz_rfbRREHeader
+-	> UPDATE_BUF_SIZE)
+-    {
++					 
+ 	if (!rfbSendUpdateBuf(cl))
+ 	    return FALSE;
+-    }
++    
++    
+ 
+     rect.r.x = Swap16IfLE(x);
+     rect.r.y = Swap16IfLE(y);
+     rect.r.w = Swap16IfLE(w);
+     rect.r.h = Swap16IfLE(h);
+     rect.encoding = Swap32IfLE(rfbEncodingRRE);
++    
++    if (!rfbSendUpdateBuf(cl))
++        return FALSE;
+ 
++
+     memcpy(&updateBuf[ublen], (char *)&rect,
+ 	   sz_rfbFramebufferUpdateRectHeader);
+     ublen += sz_rfbFramebufferUpdateRectHeader;
++    
++    if (!rfbSendUpdateBuf(cl))
++        return FALSE;
+ 
++    
++    /* headers were sent: now send content */
++    rfbCachingStuff_headersWereSent(cl, rfbEncodingRRE);
++
+     hdr.nSubrects = Swap32IfLE(nSubrects);
+ 
+     memcpy(&updateBuf[ublen], (char *)&hdr, sz_rfbRREHeader);
+@@ -149,11 +162,14 @@
+ 
+ 	if (ublen == UPDATE_BUF_SIZE) {
+ 	    if (!rfbSendUpdateBuf(cl))
+-		return FALSE;
++		    return FALSE;
+ 	}
+     }
+-
+-    return TRUE;
++    
++    
++    /* Caching stuff */
++    return rfbCachingStuff_stop(cl);
++        
+ }
+ 
+ 
+Index: Xvnc/programs/Xserver/hw/vnc/sha1.c
+===================================================================
+--- Xvnc/programs/Xserver/hw/vnc/sha1.c	(revision 0)
++++ Xvnc/programs/Xserver/hw/vnc/sha1.c	(revision 30)
+@@ -0,0 +1,385 @@
++/*
++ *  sha1.c
++ *
++ *  Description:
++ *      This file implements the Secure Hashing Algorithm 1 as
++ *      defined in FIPS PUB 180-1 published April 17, 1995.
++ *
++ *      The SHA-1, produces a 160-bit message digest for a given
++ *      data stream.  It should take about 2**n steps to find a
++ *      message with the same digest as a given message and
++ *      2**(n/2) to find any two messages with the same digest,
++ *      when n is the digest size in bits.  Therefore, this
++ *      algorithm can serve as a means of providing a
++ *      "fingerprint" for a message.
++ *
++ *  Portability Issues:
++ *      SHA-1 is defined in terms of 32-bit "words".  This code
++ *      uses <stdint.h> (included via "sha1.h" to define 32 and 8
++ *      bit unsigned integer types.  If your C compiler does not
++ *      support 32 bit unsigned integers, this code is not
++ *      appropriate.
++ *
++ *  Caveats:
++ *      SHA-1 is designed to work with messages less than 2^64 bits
++ *      long.  Although SHA-1 allows a message digest to be generated
++ *      for messages of any number of bits less than 2^64, this
++ *      implementation only works with messages with a length that is
++ *      a multiple of the size of an 8-bit character.
++ *
++ */
++#include "sha1.h"
++
++/*
++ *  Define the SHA1 circular left shift macro
++ */
++#define SHA1CircularShift(bits,word) \
++                (((word) << (bits)) | ((word) >> (32-(bits))))
++
++/* Local Function Prototyptes */
++void SHA1PadMessage(SHA1Context *);
++void SHA1ProcessMessageBlock(SHA1Context *);
++
++/*
++ *  SHA1Reset
++ *
++ *  Description:
++ *      This function will initialize the SHA1Context in preparation
++ *      for computing a new SHA1 message digest.
++ *
++ *  Parameters:
++ *      context: [in/out]
++ *          The context to reset.
++ *
++ *  Returns:
++ *      sha Error Code.
++ *
++ */
++int SHA1Reset(SHA1Context *context)
++{
++    if (!context)
++    {
++        return shaNull;
++    }
++
++    context->Length_Low             = 0;
++    context->Length_High            = 0;
++    context->Message_Block_Index    = 0;
++
++    context->Intermediate_Hash[0]   = 0x67452301;
++    context->Intermediate_Hash[1]   = 0xEFCDAB89;
++    context->Intermediate_Hash[2]   = 0x98BADCFE;
++    context->Intermediate_Hash[3]   = 0x10325476;
++    context->Intermediate_Hash[4]   = 0xC3D2E1F0;
++
++    context->Computed   = 0;
++    context->Corrupted  = 0;
++ return shaSuccess;
++}
++
++/*
++ *  SHA1Result
++ *
++ *  Description:
++ *      This function will return the 160-bit message digest into the
++ *      Message_Digest array  provided by the caller.
++ *      NOTE: The first octet of hash is stored in the 0th element,
++ *            the last octet of hash in the 19th element.
++ *
++ *  Parameters:
++ *      context: [in/out]
++ *          The context to use to calculate the SHA-1 hash.
++ *      Message_Digest: [out]
++ *          Where the digest is returned.
++ *
++ *  Returns:
++ *      sha Error Code.
++ *
++ */
++int SHA1Result( SHA1Context *context,
++                uint8_t Message_Digest[SHA1HashSize])
++{
++    int i;
++
++    if (!context || !Message_Digest)
++    {
++        return shaNull;
++    }
++
++    if (context->Corrupted)
++    {
++        return context->Corrupted;
++    }
++
++    if (!context->Computed)
++    {
++        SHA1PadMessage(context);
++        for(i=0; i<64; ++i)
++        {
++            /* message may be sensitive, clear it out */
++            context->Message_Block[i] = 0;
++        }
++        context->Length_Low = 0;    /* and clear length */
++        context->Length_High = 0;
++        context->Computed = 1;
++}
++
++    for(i = 0; i < SHA1HashSize; ++i)
++    {
++        Message_Digest[i] = context->Intermediate_Hash[i>>2]
++                            >> 8 * ( 3 - ( i & 0x03 ) );
++    }
++
++    return shaSuccess;
++}
++
++/*
++ *  SHA1Input
++ *
++ *  Description:
++ *      This function accepts an array of octets as the next portion
++ *      of the message.
++ *
++ *  Parameters:
++ *      context: [in/out]
++ *          The SHA context to update
++ *      message_array: [in]
++ *          An array of characters representing the next portion of
++ *          the message.
++ *      length: [in]
++ *          The length of the message in message_array
++ *
++ *  Returns:
++ *      sha Error Code.
++ *
++ */
++int SHA1Input(    SHA1Context    *context,
++                  const uint8_t  *message_array,
++                  unsigned       length)
++{
++    if (!length)
++    {
++        return shaSuccess;
++    }
++
++    if (!context || !message_array)
++    {
++        return shaNull;
++    }
++
++    if (context->Computed)
++    {
++        context->Corrupted = shaStateError;
++        return shaStateError;
++    }
++
++    if (context->Corrupted)
++    {
++         return context->Corrupted;
++    }
++    while(length-- && !context->Corrupted)
++    {
++    context->Message_Block[context->Message_Block_Index++] =
++                    (*message_array & 0xFF);
++
++    context->Length_Low += 8;
++    if (context->Length_Low == 0)
++    {
++        context->Length_High++;
++        if (context->Length_High == 0)
++        {
++            /* Message is too long */
++            context->Corrupted = 1;
++        }
++    }
++
++    if (context->Message_Block_Index == 64)
++    {
++        SHA1ProcessMessageBlock(context);
++    }
++
++    message_array++;
++    }
++
++    return shaSuccess;
++}
++
++/*
++ *  SHA1ProcessMessageBlock
++ *
++ *  Description:
++ *      This function will process the next 512 bits of the message
++ *      stored in the Message_Block array.
++ *
++ *  Parameters:
++ *      None.
++ *
++ *  Returns:
++ *      Nothing.
++ *
++ *  Comments:
++
++ *      Many of the variable names in this code, especially the
++ *      single character names, were used because those were the
++ *      names used in the publication.
++ *
++ *
++ */
++void SHA1ProcessMessageBlock(SHA1Context *context)
++{
++    const uint32_t K[] =    {       /* Constants defined in SHA-1   */
++                            0x5A827999,
++                            0x6ED9EBA1,
++                            0x8F1BBCDC,
++                            0xCA62C1D6
++                            };
++    int           t;                 /* Loop counter                */
++    uint32_t      temp;              /* Temporary word value        */
++    uint32_t      W[80];             /* Word sequence               */
++    uint32_t      A, B, C, D, E;     /* Word buffers                */
++
++    /*
++     *  Initialize the first 16 words in the array W
++     */
++    for(t = 0; t < 16; t++)
++    {
++        W[t] = context->Message_Block[t * 4] << 24;
++        W[t] |= context->Message_Block[t * 4 + 1] << 16;
++        W[t] |= context->Message_Block[t * 4 + 2] << 8;
++        W[t] |= context->Message_Block[t * 4 + 3];
++    }
++
++    for(t = 16; t < 80; t++)
++    {
++       W[t] = SHA1CircularShift(1,W[t-3] ^ W[t-8] ^ W[t-14] ^ W[t-16]);
++    }
++
++    A = context->Intermediate_Hash[0];
++    B = context->Intermediate_Hash[1];
++    C = context->Intermediate_Hash[2];
++    D = context->Intermediate_Hash[3];
++    E = context->Intermediate_Hash[4];
++
++    for(t = 0; t < 20; t++)
++    {
++        temp =  SHA1CircularShift(5,A) +
++                ((B & C) | ((~B) & D)) + E + W[t] + K[0];
++        E = D;
++        D = C;
++        C = SHA1CircularShift(30,B);
++B = A;
++        A = temp;
++    }
++
++    for(t = 20; t < 40; t++)
++    {
++        temp = SHA1CircularShift(5,A) + (B ^ C ^ D) + E + W[t] + K[1];
++        E = D;
++        D = C;
++        C = SHA1CircularShift(30,B);
++        B = A;
++        A = temp;
++    }
++
++    for(t = 40; t < 60; t++)
++    {
++        temp = SHA1CircularShift(5,A) +
++               ((B & C) | (B & D) | (C & D)) + E + W[t] + K[2];
++        E = D;
++        D = C;
++        C = SHA1CircularShift(30,B);
++        B = A;
++        A = temp;
++    }
++
++    for(t = 60; t < 80; t++)
++    {
++        temp = SHA1CircularShift(5,A) + (B ^ C ^ D) + E + W[t] + K[3];
++        E = D;
++        D = C;
++        C = SHA1CircularShift(30,B);
++        B = A;
++        A = temp;
++    }
++
++    context->Intermediate_Hash[0] += A;
++    context->Intermediate_Hash[1] += B;
++    context->Intermediate_Hash[2] += C;
++    context->Intermediate_Hash[3] += D;
++    context->Intermediate_Hash[4] += E;
++
++    context->Message_Block_Index = 0;
++}
++
++
++/*
++ *  SHA1PadMessage
++ *
++
++ *  Description:
++ *      According to the standard, the message must be padded to an even
++ *      512 bits.  The first padding bit must be a '1'.  The last 64
++ *      bits represent the length of the original message.  All bits in
++ *      between should be 0.  This function will pad the message
++ *      according to those rules by filling the Message_Block array
++ *      accordingly.  It will also call the ProcessMessageBlock function
++ *      provided appropriately.  When it returns, it can be assumed that
++ *      the message digest has been computed.
++ *
++ *  Parameters:
++ *      context: [in/out]
++ *          The context to pad
++ *      ProcessMessageBlock: [in]
++ *          The appropriate SHA*ProcessMessageBlock function
++ *  Returns:
++ *      Nothing.
++ *
++ */
++
++void SHA1PadMessage(SHA1Context *context)
++{
++    /*
++     *  Check to see if the current message block is too small to hold
++     *  the initial padding bits and length.  If so, we will pad the
++     *  block, process it, and then continue padding into a second
++     *  block.
++     */
++    if (context->Message_Block_Index > 55)
++    {
++        context->Message_Block[context->Message_Block_Index++] = 0x80;
++        while(context->Message_Block_Index < 64)
++        {
++            context->Message_Block[context->Message_Block_Index++] = 0;
++        }
++
++        SHA1ProcessMessageBlock(context);
++
++        while(context->Message_Block_Index < 56)
++        {
++            context->Message_Block[context->Message_Block_Index++] = 0;
++        }
++    }
++    else
++    {
++        context->Message_Block[context->Message_Block_Index++] = 0x80;
++        while(context->Message_Block_Index < 56)
++        {
++
++            context->Message_Block[context->Message_Block_Index++] = 0;
++        }
++    }
++
++    /*
++     *  Store the message length as the last 8 octets
++     */
++    context->Message_Block[56] = context->Length_High >> 24;
++    context->Message_Block[57] = context->Length_High >> 16;
++    context->Message_Block[58] = context->Length_High >> 8;
++    context->Message_Block[59] = context->Length_High;
++    context->Message_Block[60] = context->Length_Low >> 24;
++    context->Message_Block[61] = context->Length_Low >> 16;
++    context->Message_Block[62] = context->Length_Low >> 8;
++    context->Message_Block[63] = context->Length_Low;
++
++    SHA1ProcessMessageBlock(context);
++}
