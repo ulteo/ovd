@@ -9,12 +9,12 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation, version 2
 # of the License.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -29,6 +29,8 @@ else
     USER_TMP=/tmp/.tmp${USER_ID}
     VNC_TMP=/tmp/.tmp${VNC_USER_ID}
 fi
+
+VNCCACHINGOPTS="-caching -caching_ent 1500 -caching_malg LRU -caching_minsize 5000000"
 
 i=$(( $i + 5900 ))
 
@@ -46,7 +48,7 @@ chown $VNC_USER:$VNC_USER ${VNC_TMP}encvncpasswd
 out=/dev/null
 
 # Start the VNC server
-/bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/Xtightvnc :$i -desktop X$i -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry $GEOMETRY -depth 24 -rfbwait 240000 -rfbauth ${VNC_TMP}encvncpasswd -rfbport $RFB_PORT -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${VNC_TMP}.Xauthority" &> $out &
+/bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/Xtightvnc $VNCCACHINGOPTS :$i -desktop X$i -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry $GEOMETRY -depth 24 -rfbwait 240000 -rfbauth ${VNC_TMP}encvncpasswd -rfbport $RFB_PORT -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${VNC_TMP}.Xauthority" &> $out &
 
 session_install_client $SESSID
 
@@ -60,7 +62,7 @@ session_switch_status $SESSID 2
 su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/xhost -";
 
 export APP DOC
-export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC 
+export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC
 export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
 [ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
 
