@@ -1,2 +1,0 @@
-* Ask confirmation after showing the config in the config script (but add a -y
-  option to avoid this, for automated installations)
