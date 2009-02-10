@@ -62,8 +62,7 @@ class Configuration_mode_ad extends Configuration_mode {
     if (! in_array($form['admin_branch'], array('default', 'same')))
       return False;
 
-    if ($fields['user_branch'] == 'specific' &&
-	! isset($form['user_branch_ou'])){
+    if ($form['user_branch'] == 'specific' && ! isset($form['user_branch_ou'])){
       // Error
       return False;
     }
@@ -143,9 +142,12 @@ class Configuration_mode_ad extends Configuration_mode {
     // Admin infos
     $admin_branch = (str_endswith($form['login'], $form['ou']));
 
-    $buf = explode('=', $form['login'], 2);
-    $buf = explode(',', $buf[1], 2);
-    $admin_login = $buf[0];
+    if (isset($form['login']) && $form['login'] != '') {
+      $buf = explode('=', $form['login'], 2);
+      $buf = explode(',', $buf[1], 2);
+      $admin_login = $buf[0];
+    } else
+      $admin_login = '';
 
 
     // User groups

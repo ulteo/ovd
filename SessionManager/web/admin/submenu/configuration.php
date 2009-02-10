@@ -24,7 +24,7 @@ if (isset($_GET['view']) && $_GET['view'] == '') {
 	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
 	echo _('General configuration');
 	echo '</div>';
-	/*echo '<div class="container">';
-	echo '<a href="servers.php?view=unregistered">'._('Unregistered servers').'</a>';
-	echo '</div>';*/
+	echo '<div class="container">';
+	echo '<a href="configuration-profile.php">'._('Profile configuration').'</a>';
+	echo '</div>';
 }
