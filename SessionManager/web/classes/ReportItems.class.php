@@ -149,7 +149,7 @@ class ReportRunningItem {
 	public function getMaxResources() {
 		return array(
 			'cpu' => $this->cpu->get(),
-			'ram' => his->ram->get()
+			'ram' => $this->ram->get()
 		);
 	}
 }
