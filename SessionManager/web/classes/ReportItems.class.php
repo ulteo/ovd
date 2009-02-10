@@ -119,3 +119,38 @@ class ReportIntervalItem {
 	}
 }
 
+class ReportRunningItem {
+	public $running;
+	public $start;
+
+	public function __construct() {
+		$this->running = true;
+		$this->start = time();
+	}
+
+	public function stop() {
+		$this->running = false;
+		$this->end = time();
+		$this->elapsed = $this->end - $this->start;
+	}
+
+	public function setMaxResources($cpu_, $ram_) {
+		if (! isset($this->cpu))
+			$this->cpu = new ReportMaxItem($cpu_);
+		else
+			$this->cpu->set($cpu_);
+
+		if (! isset($this->ram))
+			$this->ram = new ReportMaxItem($ram_);
+		else
+			$this->ram->set($ram_);
+	}
+
+	public function getMaxResources() {
+		return array(
+			'cpu' => $this->cpu->get(),
+			'ram' => his->ram->get()
+		);
+	}
+}
+

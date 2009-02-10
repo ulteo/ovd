@@ -191,13 +191,13 @@ class ServerReport {
 			$max_ram_when = $obj->max_ram[$fqdn_]->getLastUpdate();
 		}
 
-		$sql = MySQL::getInstance();
-		$sql->DoQuery('SELECT * FROM @1 WHERE date=%2 AND fqdn=%3',
+		$SQL = MySQL::getInstance();
+		$SQL->DoQuery('SELECT * FROM @1 WHERE date=%2 AND fqdn=%3',
 		              SERVERS_REPORT_TABLE, $day_, $fqdn_);
-		if ($sql->NumRows() != 0)
+		if ($SQL->NumRows() != 0)
 			return;
 
-		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5,@6,@7,@8,@9,@10) VALUES '.
+		$res = $SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5,@6,@7,@8,@9,@10) VALUES '.
 		                     '(%11,%12,%13,%14,%15,%16,%17,%18,%19)',
 							 SERVERS_REPORT_TABLE,
 							 'date', 'fqdn', 'down_time', 'maintenance_time', 'sessions_count',
