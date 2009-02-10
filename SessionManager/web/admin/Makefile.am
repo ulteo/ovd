@@ -5,8 +5,7 @@ scripts_DATA = actions.php \
                applications.php \
                appsgroup.php \
                configuration.php \
-               configuration-ad.php \
-               configuration-ldap.php \
+               configuration-profile.php \
                footer.php \
                header.php \
                index.php \
