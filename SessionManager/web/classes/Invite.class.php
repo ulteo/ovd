@@ -63,4 +63,13 @@ class Invite {
 
 		return true;
 	}
+
+	public function isValid() {
+// 		Logger::debug('main', 'Starting Invite::isValid for \''.$this->id.'\'');
+
+		if ($this->valid_until >= time())
+			return true;
+
+		return false;
+	}
 }

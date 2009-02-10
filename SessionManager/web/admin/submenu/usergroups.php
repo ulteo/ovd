@@ -19,7 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-if (isset($_GET['view']) && $_GET['view'] == '') {
+if (isset($_GET['action']) && $_GET['action'] == 'manage') {
+	echo '<div class="container">';
+	echo '<a href="users.php">'._('Users').'</a>';
+	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="usersgroup.php">'._('Usergroups').'</a>';
+	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="publications.php">'._('Publications').'</a>';
+	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="wizard.php">'._('Publication wizard').'</a>';
+	echo '</div>';
 } else {
 	echo '<div class="container">';
 	echo '<a href="users.php">'._('Users').'</a>';

@@ -26,6 +26,13 @@ if (isset($_GET['view']) && $_GET['view'] == 'unregistered') {
 	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
 	echo _('Unregistered servers');
 	echo '</div>';
+} elseif (isset($_GET['action']) && $_GET['action'] == 'manage') {
+	echo '<div class="container">';
+	echo '<a href="servers.php">'._('Servers').'</a>';
+	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="servers.php?view=unregistered">'._('Unregistered servers').'</a>';
+	echo '</div>';
 } else {
 	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
 	echo _('Servers');

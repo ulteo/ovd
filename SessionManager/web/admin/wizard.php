@@ -129,7 +129,7 @@ function show_error($error_) {
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
   include_once(dirname(__FILE__).'/submenu/wizard.php');
   echo '</td>';
-  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<td style="text-align: left; vertical-align: top;">';
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
@@ -187,7 +187,7 @@ function show_step1($error_=NULL) {
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
   include_once(dirname(__FILE__).'/submenu/wizard.php');
   echo '</td>';
-  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<td style="text-align: left; vertical-align: top;">';
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
@@ -285,7 +285,7 @@ function show_step2($error_=NULL) {
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
   include_once(dirname(__FILE__).'/submenu/wizard.php');
   echo '</td>';
-  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<td style="text-align: left; vertical-align: top;">';
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
@@ -365,7 +365,7 @@ function show_step3($error_=NULL) {
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
   include_once(dirname(__FILE__).'/submenu/wizard.php');
   echo '</td>';
-  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<td style="text-align: left; vertical-align: top;">';
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
@@ -468,7 +468,7 @@ function show_step4($error_=NULL) {
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
   include_once(dirname(__FILE__).'/submenu/wizard.php');
   echo '</td>';
-  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<td style="text-align: left; vertical-align: top;">';
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
@@ -529,7 +529,7 @@ function show_step5() {
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
   include_once(dirname(__FILE__).'/submenu/wizard.php');
   echo '</td>';
-  echo '<td style="text-align: center; vertical-align: top;">';
+  echo '<td style="text-align: left; vertical-align: top;">';
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';

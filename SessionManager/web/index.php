@@ -181,7 +181,7 @@ require_once('header.php');
 		?>
 	});
 </script>
-
+&nbsp;
 <div id="login_box">
 	<div id="login_status" class="centered"></div>
 

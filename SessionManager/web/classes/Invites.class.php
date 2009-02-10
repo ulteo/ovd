@@ -18,19 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
+require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-if (isset($_GET['info']) && $_GET['info'] != '') {
-	echo '<div class="container">';
-	echo '<a href="sessions.php">'._('Sessions').'</a>';
-	echo '</div>';
-	echo '<div class="container">';
-	echo '<a href="logs.php">'._('Logs').'</a>';
-	echo '</div>';
-} else {
-	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
-	echo _('Sessions');
-	echo '</div>';
-	echo '<div class="container">';
-	echo '<a href="logs.php">'._('Logs').'</a>';
-	echo '</div>';
+class Invites {
+	public function getAll() {
+// 		Logger::debug('main', 'Starting Invites::getAll');
+
+		$buf = Abstract_Invite::load_all();
+
+		return $buf;
+	}
 }

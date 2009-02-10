@@ -45,9 +45,10 @@ function die_error($error_=false, $file_=NULL, $line_=NULL) {
 
 	if (in_admin()) {
 		echo '<h2 class="centered">'._('Error').'</h2>';
-		echo '<p class="msg_error centered">'.$error_.'</p>';
+		echo '&nbsp;<p class="msg_error centered">'.$error_.'</p>&nbsp;';
 	} else
-		echo '<p class="msg_error centered">'._('The service is not available, please try again later').'</p>';
+		echo '&nbsp;<p class="msg_error centered">'.$error_.'</p>&nbsp;';
+		//echo '<p class="msg_error centered">'._('The service is not available, please try again later').'</p>';
 
 	footer_static();
 
@@ -367,7 +368,7 @@ echo '		</div>
 			<div class="spacer"></div>
 
 			<div id="footerWrap">
-				'._('powered by').' <a href="http://www.ulteo.com"><img src="'.$base_url.'media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>
+				'._('powered by').' <a href="http://www.ulteo.com"><img src="'.$base_url.'media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
 			</div>
 		</div>
 	</body>

@@ -29,8 +29,19 @@ foreach ($tokens as $token) {
 
 		if ($token->type == 'start') //Token start Session
 			Abstract_Session::delete($token->link_to);
+		if ($token->type == 'invite') //Token invite Session
+			Abstract_Invite::delete($token->link_to);
 
 		Abstract_Token::delete($token->id);
+	}
+}
+
+$invites = Invites::getAll();
+foreach ($invites as $invite) {
+	if (! $invite->isValid()) {
+		Logger::warning('main', '(check) Invite \''.$invite->id.'\' is no longer valid, deleting');
+
+		Abstract_Invite::delete($invite->id);
 	}
 }
 

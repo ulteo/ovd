@@ -377,7 +377,7 @@ else {
 			echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
 			include_once(dirname(__FILE__).'/submenu/configuration.php');
 			echo '</td>';
-			echo '<td style="text-align: center; vertical-align: top;">';
+			echo '<td style="text-align: left; vertical-align: top;">';
 			echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
 			print_prefs($prefs);
