@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Session {
-	public function init($prefs_) {
+	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Session::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
@@ -49,7 +49,7 @@ class Abstract_Session {
 		return true;
 	}
 
-	public function load($id_) {
+	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -85,7 +85,7 @@ class Abstract_Session {
 		return $buf;
 	}
 
-	public function save($session_) {
+	public static function save($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::save for \''.$session_->id.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -108,7 +108,7 @@ class Abstract_Session {
 		return true;
 	}
 
-	private function create($session_) {
+	private static function create($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -133,7 +133,7 @@ class Abstract_Session {
 		return true;
 	}
 
-	public function delete($id_) {
+	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -158,7 +158,7 @@ class Abstract_Session {
 		return true;
 	}
 
-	public function load_all() {
+	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Session::load_all');
 
 		$prefs = Preferences::getInstance();
@@ -187,7 +187,7 @@ class Abstract_Session {
 		return $sessions;
 	}
 
-	public function uptodate($session_) {
+	public static function uptodate($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 
 		$prefs = Preferences::getInstance();

@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Tokens {
-	public function getAll() {
+	public static function getAll() {
 // 		Logger::debug('main', 'Starting Tokens::getAll');
 
 		$buf = Abstract_Token::load_all();

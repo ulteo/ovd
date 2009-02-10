@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Server {
-	public function init($prefs_) {
+	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Server::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
@@ -54,8 +54,6 @@ class Abstract_Server {
 
 		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers\' created');
 
-
-		/* create the reporting table for serveurs too */
 		$ret = $SQL->DoQuery(
 		'CREATE TABLE IF NOT EXISTS @1 (
 		@2 int(10) NOT NULL,
@@ -67,11 +65,7 @@ class Abstract_Server {
 		@8 int(10) NOT NULL,
 		@9 int(4) NOT NULL,
 		@10 int(10) NOT NULL
-		)', $mysql_conf['prefix'].'servers_report',
-		  'date', 'fqdn', 'down_time', 'maintenance_time',
-		  'sessions_count',
-		  'max_connections', 'max_connections_when',
-		  'max_ram', 'max_ram_when');
+		)', $mysql_conf['prefix'].'servers_report', 'date', 'fqdn', 'down_time', 'maintenance_time', 'sessions_count', 'max_connections', 'max_connections_when', 'max_ram', 'max_ram_when');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers_report\'');
@@ -83,7 +77,7 @@ class Abstract_Server {
 		return true;
 	}
 
-	public function load($fqdn_) {
+	public static function load($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -126,7 +120,7 @@ class Abstract_Server {
 		return $buf;
 	}
 
-	public function save($server_) {
+	public static function save($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::save for \''.$server_->fqdn.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -150,7 +144,7 @@ class Abstract_Server {
 		return true;
 	}
 
-	private function create($server_) {
+	private static function create($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -175,7 +169,7 @@ class Abstract_Server {
 		return true;
 	}
 
-	public function delete($fqdn_) {
+	public static function delete($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -200,7 +194,7 @@ class Abstract_Server {
 		return true;
 	}
 
-	public function load_all() {
+	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Server::load_all');
 
 		$prefs = Preferences::getInstance();
@@ -229,7 +223,7 @@ class Abstract_Server {
 		return $servers;
 	}
 
-	public function uptodate($server_) {
+	public static function uptodate($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
 
 		$prefs = Preferences::getInstance();

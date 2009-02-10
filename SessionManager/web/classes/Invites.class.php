@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Invites {
-	public function getAll() {
+	public static function getAll() {
 // 		Logger::debug('main', 'Starting Invites::getAll');
 
 		$buf = Abstract_Invite::load_all();

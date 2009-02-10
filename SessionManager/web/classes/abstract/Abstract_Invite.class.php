@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Invite {
-	public function init($prefs_) {
+	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Invite::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
@@ -46,7 +46,7 @@ class Abstract_Invite {
 		return true;
 	}
 
-	public function load($id_) {
+	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Invite::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -80,7 +80,7 @@ class Abstract_Invite {
 		return $buf;
 	}
 
-	public function save($invite_) {
+	public static function save($invite_) {
 		Logger::debug('main', 'Starting Abstract_Invite::save for \''.$invite_->id.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -103,7 +103,7 @@ class Abstract_Invite {
 		return true;
 	}
 
-	private function create($invite_) {
+	private static function create($invite_) {
 		Logger::debug('main', 'Starting Abstract_Invite::create for \''.$invite_->id.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -128,7 +128,7 @@ class Abstract_Invite {
 		return true;
 	}
 
-	public function delete($id_) {
+	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Invite::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -153,7 +153,7 @@ class Abstract_Invite {
 		return true;
 	}
 
-	public function load_all() {
+	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Invite::load_all');
 
 		$prefs = Preferences::getInstance();

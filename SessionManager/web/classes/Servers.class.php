@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Servers {
-	public function getAll() {
+	public static function getAll() {
 // 		Logger::debug('main', 'Starting Servers::getAll');
 
 		$buf = Abstract_Server::load_all();
@@ -29,7 +29,7 @@ class Servers {
 		return $buf;
 	}
 
-	public function getAvailable() {
+	public static function getAvailable() {
 // 		Logger::debug('main', 'Starting Servers::getAvailable');
 
 		$servers = Servers::getAll();
@@ -114,7 +114,7 @@ class Servers {
 		return $servers;
 	}
 
-	public function getAvailableType($type_) {
+	public static function getAvailableType($type_) {
 // 		Logger::debug('main', 'Starting Servers::getAvailableType');
 
 		$servers = Servers::getAvailable();

@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Sessions {
-	public function getAll() {
+	public static function getAll() {
 // 		Logger::debug('main', 'Starting Sessions::getAll');
 
 		$buf = Abstract_Session::load_all();
@@ -29,7 +29,7 @@ class Sessions {
 		return $buf;
 	}
 
-	public function getByServer($fqdn_) {
+	public static function getByServer($fqdn_) {
 // 		Logger::debug('main', 'Starting Sessions::getByServer');
 
 		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
@@ -46,7 +46,7 @@ class Sessions {
 		return $sessions;
 	}
 
-	public function getByUser($user_login_) {
+	public static function getByUser($user_login_) {
 // 		Logger::debug('main', 'Starting Sessions::getByUser');
 
 		$sessions = Sessions::getAll();

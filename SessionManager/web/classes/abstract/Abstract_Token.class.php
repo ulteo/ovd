@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Token {
-	public function init($prefs_) {
+	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Token::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
@@ -45,7 +45,7 @@ class Abstract_Token {
 		return true;
 	}
 
-	public function load($id_) {
+	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -78,7 +78,7 @@ class Abstract_Token {
 		return $buf;
 	}
 
-	public function save($token_) {
+	public static function save($token_) {
 		Logger::debug('main', 'Starting Abstract_Token::save for \''.$token_->id.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -101,7 +101,7 @@ class Abstract_Token {
 		return true;
 	}
 
-	private function create($token_) {
+	private static function create($token_) {
 		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -126,7 +126,7 @@ class Abstract_Token {
 		return true;
 	}
 
-	public function delete($id_) {
+	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Token::delete for \''.$id_.'\'');
 
 		$prefs = Preferences::getInstance();
@@ -151,7 +151,7 @@ class Abstract_Token {
 		return true;
 	}
 
-	public function load_all() {
+	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Token::load_all');
 
 		$prefs = Preferences::getInstance();
