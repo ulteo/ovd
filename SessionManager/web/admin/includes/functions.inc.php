@@ -284,3 +284,15 @@ function init_db($prefs_) {
 
 	return true;
 }
+
+function array_merge2( $a1, $a2) {
+	foreach ($a2 as $k2 => $v2) {
+		if ( is_array($v2)) {
+			$a1[$k2] = array_merge2($a1[$k2], $v2);
+		}
+		else /*if (is_string($v2))*/ {
+			$a1[$k2] = $v2;
+		}
+	}
+	return $a1;
+}

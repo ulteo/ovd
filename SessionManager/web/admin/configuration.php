@@ -282,15 +282,13 @@ function print_prefs($prefs_) {
 	echo '</form>';
 }
 
-// core of the page
-$sep = '___';
-
-if (isset($_POST['submit'])) {
-	// saving preferences
-	unset($_POST['submit']);
-
+function formToArray($form_) {
+	global $sep;
+	if (! is_array($form_)) {
+		return array();
+	}
 	$elements_form = array();
-	foreach ($_POST as $key1 => $value1){
+	foreach ($form_ as $key1 => $value1){
 		$expl = split($sep, $key1);
 		$expl = array_reverse ($expl);
 		$element2 = &$elements_form;
@@ -339,6 +337,17 @@ if (isset($_POST['submit'])) {
 			}
 		}
 	}
+	return $elements_form;
+}
+
+// core of the page
+$sep = '___';
+
+if (isset($_POST['submit'])) {
+	// saving preferences
+	unset($_POST['submit']);
+
+	$elements_form = formToArray($_POST);
 	$prefs = new Preferences_admin($elements_form);
 	$ret = $prefs->isValid();
 	if ( $ret === true) {

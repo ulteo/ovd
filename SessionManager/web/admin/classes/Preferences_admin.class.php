@@ -38,10 +38,8 @@ class Preferences_admin extends Preferences {
 				$this->prefs = $element_form_;
 		}
 		$this->constructFromArray();
-
+		$this->prefs = array_merge2($this->prefs ,$element_form_);
 	}
-
-
 
 	public function initialize(){
 		Logger::debug('admin','ADMIN_PREFERENCES::initialize');
