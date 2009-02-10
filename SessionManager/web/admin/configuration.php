@@ -185,6 +185,31 @@ echo '</script>';
 	}
 }
 
+function print_prefs5($prefs,$key_name, $contener) {
+	if (! isset($prefs->elements[$key_name][$contener]))
+		return;
+	
+	$elements2 = $prefs->elements[$key_name][$contener];
+	$color=0;
+	echo '<table style="width: 100%" class="main_sub" border="0" cellspacing="1" cellpadding="0">'; // TODO
+	echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($contener).'</th></tr>';
+	foreach ( $elements2 as $element_key => $element) {
+		// we print element
+		echo '<tr class="content'.($color % 2 +1).'">';
+		echo '<td style="width: 200px;" title="'.$element->description.'">';
+		echo $element->label;
+		echo '</td>';
+		echo '<td style="padding: 3px;">';
+		echo "\n";
+		print_element($key_name,$contener,$element_key,$element);
+		echo "\n";
+		echo '</td>';
+		echo '</tr>';
+		$color++;
+	}
+	echo '</table>';
+}
+
 function print_prefs4($prefs,$key_name) {
 	global $sep;
 // 	echo "print_prefs4 '".$key_name."'<br>";
@@ -225,24 +250,8 @@ function print_prefs4($prefs,$key_name) {
 			else {
 				echo '<tr id="'.$key_name.$sep.$contener.'">';
 				echo '<td colspan="2">';
-				echo '<table style="width: 100%" class="main_sub" border="0" cellspacing="1" cellpadding="0">'; // TODO
-				echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($contener).'</th></tr>';
-				foreach ( $elements2 as $element_key => $element) {
-					// we print element
-					echo '<tr class="content'.($color % 2 +1).'">';
-					echo '<td style="width: 200px;" title="'.$element->description.'">';
-					echo $element->label;
-					echo '</td>';
-					echo '<td style="padding: 3px;">';
-					echo "\n";
-					print_element($key_name,$contener,$element_key,$element);
-					echo "\n";
-					echo '</td>';
-					echo '</tr>';
-					$color++;
-				}
+				print_prefs5($prefs, $key_name,$contener);
 				echo '</td>';
-				echo '</table>';
 			}
 		}
 	}
