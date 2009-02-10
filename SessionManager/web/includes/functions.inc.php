@@ -425,6 +425,10 @@ function get_classes_startwith($start_name) {
 	return $ret;
 }
 
+function str_startswith($string_, $search_) {
+	return (substr($string, 0, strlen($search)) == $search);
+}
+
 function str_endswith($string_, $search_) {
 	return (substr($string_, (strlen($search_)*-1)) == $search_);
 }
