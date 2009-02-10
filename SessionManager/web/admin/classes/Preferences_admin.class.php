@@ -436,8 +436,14 @@ class Preferences_admin extends Preferences {
 					if (is_object($value2)) {
 						if (isset($prefs[$key1][$key2])) {
 							if (isset($prefs[$key1][$key2][$value2->id])) {
-								$buf =& $this->elements[$key1][$key2];
-								$buf->content = $prefs[$key1][$key2][$value2->id];
+								if (is_array($prefs[$key1][$key2][$value2->id]) ) {
+									$buf =& $this->elements[$key1][$key2];
+									$buf->content = $prefs[$key1][$key2][$value2->id];
+								}
+								else if (is_string($prefs[$key1][$key2][$value2->id])) {
+									$buf =& $this->elements[$key1][$key2];
+									$buf->content = $prefs[$key1][$key2][$value2->id];
+								}
 							}
 						}
 						else {
