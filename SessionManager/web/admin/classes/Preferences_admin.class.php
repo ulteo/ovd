@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(dirname(__FILE__).'/../../includes/defaults.inc.php');
 
 class Preferences_admin extends Preferences {
-	public function __construct($element_form_=array()){
+	public function __construct($element_form_=array(), $partial=false){
 		Logger::debug('admin','ADMIN_PREFERENCES::construct');
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->prettyName = array();
@@ -37,8 +37,14 @@ class Preferences_admin extends Preferences {
 			else
 				$this->prefs = $element_form_;
 		}
-		$this->constructFromArray();
-		$this->prefs = array_merge2($this->prefs ,$element_form_);
+		if ($partial == true) {
+			$this->prefs = array();
+			$this->constructFromArray();
+			$this->prefs = array_merge2($this->prefs ,$element_form_);
+		}
+		else {
+			$this->constructFromArray();
+		}
 	}
 
 	public function initialize(){
