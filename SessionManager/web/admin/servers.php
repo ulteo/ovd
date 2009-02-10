@@ -32,6 +32,10 @@ if (isset($_REQUEST['mass_register'])) {
 		}
 	}
 
+	$buf = count(Servers::getUnregistered());
+	if ($buf == 0)
+		redirect('servers.php');
+
 	redirect();
 }
 
@@ -47,7 +51,11 @@ if (isset($_REQUEST['mass_delete_unregistered'])) {
 		}
 	}
 
-	redirect('servers.php');
+	$buf = count(Servers::getUnregistered());
+	if ($buf == 0)
+		redirect('servers.php');
+
+	redirect();
 }
 
 if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance') {
@@ -127,6 +135,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn
 	$buf->register();
 	$buf->updateApplications();
 	Abstract_Server::save($buf);
+
+	$buf = count(Servers::getUnregistered());
+	if ($buf == 0)
+		redirect('servers.php');
 
 	redirect();
 }
@@ -243,7 +255,7 @@ function show_default() {
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
     // echo '<th>'._('Version').'</th>';
     echo '<th>'._('Status').'</th><th>'._('Details').'</th>';
-    if ($nb_a_servs_online>0)
+    if ($nb_a_servs_online > 0)
       echo '<th>'._('Monitoring').'</th>';
     // echo '<th>'._('Applications(physical)'.</th>';
     echo '</tr>';
