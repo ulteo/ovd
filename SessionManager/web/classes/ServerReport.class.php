@@ -138,10 +138,10 @@ class ServerReport {
 			if ($p->isDone())
 				$ret += $p->elapsed;
 			else {
-				$y = int(substr($day_, 0, 4));
-				$m = int(substr($day_, 4, 2));
-				$d = int(substr($day, 6, 2)) + 1;
-				$ret += mktime(0, 0, 0, $m, $d, $y) - $p->$start;
+				$y = (int)(substr($day_, 0, 4));
+				$m = (int)(substr($day_, 4, 2));
+				$d = (int)(substr($day_, 6, 2)) + 1;
+				$ret += mktime(0, 0, 0, $m, $d, $y) - $p->start;
 			}
 		}
 
