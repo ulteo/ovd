@@ -73,6 +73,9 @@ class Abstract_Liaison_sql {
 		else if (is_null($group_)) {
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5', $table, 'type', $type_, 'element', $element_);
 		}
+		else {
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2=%3 AND @4=%5 AND @6=%7', $table, 'type', $type_, 'element', $element_, 'group', $group_);
+		}
 		return ($res !== false);
 	}
 	public function loadElements($type_, $group_) {
