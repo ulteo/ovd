@@ -42,7 +42,20 @@ class Configuration_mode_ldap extends Configuration_mode {
     return True;
   }
 
-  public function display($prefs) {
+  public function config2form($prefs) {
+    $form = array();
+
+    $form['host'] = '';
+    $form['domain'] = '';
+    $form['admin_login'] = '';
+    $form['password'] = '';
+    $form['user_group'] = '';
+    $form['homedir'] = '';
+
+    return $form;
+  }
+
+  public function display($form) {
     $str= '<h1>'._('Lightweight Directory Access Protocol (LDAP)').'</h1>';
 
     $str.= '<div>';
@@ -72,7 +85,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $str.= '<input type="checkbox" name="user_branch_recursive"/> Anonymous bind';
     $str.= '<table>';
-    $str.= '<tr><td>'._('login (complete DN without base dn):').'</td><td><input type="text" name="admin_login" value="'.$admin_login.'" /></td></tr>';
+    $str.= '<tr><td>'._('login (complete DN without base dn):').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
     $str.= '<tr><td>'._('bind password:').'</td><td><input type="password" name="admin_password" value="'.$form['password'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
@@ -81,31 +94,37 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('User Groups').'</h3>';
-    $str.= '<input type="radio" name="user_group" value="activedirectory" '.$checked[$user_group_ad].' />'._('Use LDAP User Groups using the MemberOf field');
+    $str.= '<input type="radio" name="user_group" value="activedirectory"';
+    if ($form['user_group'] == 'activedirectory')
+      $str.= ' checked="checked"';
+    $str.= ' />'._('Use LDAP User Groups using the MemberOf field');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="user_group" value="sql" '.$checked[!$user_group_ad].'/>'._('Use Internal User Groups');
+    $str.= '<input type="radio" name="user_group" value="sql"';
+    if ($form['user_group'] == 'sql')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
 
     $str.= '<div>';
     $str.= '<h3>'._('Home Directory').'</h3>';
-    $str.= '<input type="radio" name="homedir" value="local" '.$checked[$home[0]].'/>';
+    $str.= '<input type="radio" name="homedir" value="local"';
+    if ($form['homedir'] == 'local')
+      $str.= ' checked="checked"';
+    $str.= '/>';
     $str.= _('Use Internal home directory (no server replication)');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="homedir" value="ad_profile" '.$checked[$home[1]].'/>';
+    $str.= '<input type="radio" name="homedir" value="ad_profile"';
+    if ($form['homedir'] == 'ad_profile')
+      $str.= ' checked="checked"';
+    $str.= '/>';
     $str.= _('Use CIFS link using the LDAP field :').' <input type="text" name="homedir" value=""/>';
     $str.= '<br/>';
-    $str.= '<input type="radio" name="homedir" value="ad_homedir" '.$checked[$home[2]].'/>';
+    $str.= '<input type="radio" name="homedir" value="ad_homedir"';
+    if ($form['homedir'] == 'ad_homedir')
+      $str.= ' checked="checked"';
+    $str.= '/>';
     $str.= _('Use NFS link using the LDAP field :').' <input type="text" name="homedir" value=""/>';
-    $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
-
-    $str.= '<div style="display:none">';
-    $str.= '<h3>'._('Windows Applications').'</h3>';
-    $str.= _('Allow Windows Application link thanks to TS and AD:');
-    $str.= '<input type="radio" name="ts_link" value="yes" checked="checked"/>';
-    $str.= _('yes');
-    $str.= '<input type="radio" name="ts_link" value="no" />'._('no');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
 

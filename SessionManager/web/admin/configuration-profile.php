@@ -53,8 +53,8 @@ function getProfileMode($prefs) {
 function do_auto_clean_db($new_prefs) {
   $prefs = Preferences::getInstance();
 
-  $old_profile = $prefs->get('Profile', 'mode');
-  $new_profile = $new_prefs->get('Profile', 'mode');
+  $old_profile = getProfileMode($prefs);
+  $new_profile = getProfileMode($new_prefs);
 
   $old_u = $prefs->get('UserDB', 'enable');
   $new_u = $new_prefs->get('UserDB', 'enable');
@@ -86,7 +86,6 @@ function do_auto_clean_db($new_prefs) {
 }
 
 function do_save($prefs, $name) {
-  $prefs->set('Profile', 'mode', $name);
   $obj = new $name();
 
   if (! $obj->form_valid($_POST)) {
@@ -125,7 +124,6 @@ function do_save($prefs, $name) {
     return False;
   }
 
-  $_SESSION['save_succed'] = true;
   return True;
 }
 
@@ -142,19 +140,20 @@ if (isset($_POST['config'])) {
   $previous = $_POST['config_previous'];
 
   if ($name == $previous) {
-    do_save($prefs, $name);
+    $_SESSION['config_profile'] = $name;
+    $_SESSION[$name] = $_POST;
+
+    if (do_save($prefs, $name) === True) {
+      $_SESSION['config_profile_saved'] = true;
+      unset($_SESSION['config_profile']);
+      unset($_SESSION[$name]);
+    }
+
     redirect($_SERVER["PHP_SELF"]);
     die();
   }
 
   $has_previous = $name;
-}
-
-$mode = $prefs->get('Profile', 'mode');
-if (isset($has_previous))
-  $mode = $has_previous;
-elseif ($mode == NULL) {
-  $mode = 'Configuration_mode_internal';
 }
 
 $classes = get_classes_startwith_2('Configuration_mode_');
@@ -164,11 +163,25 @@ foreach($classes as $c) {
   $profiles[$c] = $b->getPrettyName();
 }
 
+$mode = getProfileMode($prefs);
+
+if (isset($has_previous))
+  $mode = $has_previous;
+elseif (isset($_SESSION['config_profile']))
+  $mode = $_SESSION['config_profile'];
+else
+  $mode = getProfileMode($prefs);
+
+
 $c = new $mode();
+if (isset($_SESSION[$mode]))
+  $form = $_SESSION[$mode];
+else
+  $form = $c->config2form($prefs);
 
 $green = false;
-if (isset($_SESSION['save_succed'])) {
-  unset($_SESSION['save_succed']);
+if (isset($_SESSION['config_profile_saved'])) {
+  unset($_SESSION['config_profile_saved']);
   $green = true;
 }
 
@@ -189,7 +202,7 @@ if ($green)
   echo ' <span style="color:green; font-weight: bold;">'._('Save succefully').'</span>';
 echo '<br/>';
 
-  echo $c->display($prefs);
+  echo $c->display($form);
 
 echo '<input type="submit" value="Save"/>';
 echo '</form>';

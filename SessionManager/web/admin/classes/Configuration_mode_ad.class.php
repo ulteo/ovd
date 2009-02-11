@@ -132,43 +132,47 @@ class Configuration_mode_ad extends Configuration_mode {
     return True;
   }
 
-  public function display($prefs) {
-    $form = $prefs->get('UserDB', 'activedirectory');
+  public function config2form($prefs) {
+    $form = array();
+    $config = $prefs->get('UserDB', 'activedirectory');
 
-    // Users
-    $user_branch_default = ($form['ou'] == 'cn=Users');
-    $user_branch = '';
-    if (! $user_branch_default) {
-      $buf = explode('=', $form['ou'], 2);
-      $user_branch = $buf[1];
-    }
+    $form['host'] = $config['host'];
+    $form['domain'] = $config['domain'];
 
-    // Admin infos
-    $admin_branch = (str_endswith($form['login'], $form['ou']));
+    $form['user_branch'] = ($config['ou'] == 'cn=Users')?'default':'specific';
+    $form['user_branch_ou'] = ($form['user_branch'] == 'specific')?$config['ou']:'';
 
-    if (isset($form['login']) && $form['login'] != '') {
-      $buf = explode('=', $form['login'], 2);
+
+    // Admin login - Todo: replace by a regexp
+    if ($config['login'] != '') {
+      $buf = explode('=', $config['login'], 2);
       $buf = explode(',', $buf[1], 2);
       $admin_login = $buf[0];
     } else
       $admin_login = '';
 
+    $form['admin_login'] = $admin_login;
+    $form['admin_password'] = $config['password'];
+    $form['admin_branch'] = (str_endswith($config['login'], $config['ou']))?'same':'default';
 
-    // User groups
     $buf = $prefs->get('UserGroupDB', 'enable');
-    $user_group_ad = ($buf == 'activedirectory');
+    $form['user_group'] = ($buf == 'activedirectory')?'ad':'sql';
 
     // plugins fs ... 
     $buf = $prefs->get('plugins', 'FS');
-    if ($buf == 'local')
-      $home = array(true, false, false);
-    elseif ($form['match']['homedir'] == 'profilepath')
-      $home = array(false, true, false);
+    if ($buf == 'cifs_no_sfu') {
+      if ($config['match']['homedir'] == 'profilepath')
+	$form['homedir'] = 'ad_profile';
+      else
+	$form['homedir'] = 'ad_homedir';
+    }
     else
-      $home = array(false, false, true);      
+      $form['homedir'] = 'local';
 
-    $checked = array(true => 'checked="checked"', false => '');
+    return $form;
+  }
 
+  public function display($form) {
     $str= '<h1>'._('Active Directory integration').'</h1>';
 
     $str.= '<div>';
@@ -182,20 +186,32 @@ class Configuration_mode_ad extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('Users').'</h3>';
-    $str.= '<input type="radio" name="user_branch" value="default" '.$checked[$user_branch_default].'/>'._('Default user branch (Users)');
-    $str.= '<br/>';
-    $str.= '<input type="radio" name="user_branch" value="specific" '.$checked[!$user_branch_default].'/>'._('Specific Organization Unit:');
-    $str.= '<input type="text" name="user_branch_ou" value="'.$user_branch.'" />';
+    $str.= '<input type="radio" name="user_branch" value="default"';
+    if ($form['user_branch'] == 'default')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Default user branch (Users)').'<br/>';
+
+    $str.= '<input type="radio" name="user_branch" value="specific"';
+    if ($form['user_branch'] == 'specific')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Specific Organization Unit:');
+    $str.= '<input type="text" name="user_branch_ou" value="'.$form['user_branch_ou'].'" />';
      
     $str.= '<div>';
     $str.= '<h4>'._('Administrator account').'</h4>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('login:').'</td><td><input type="text" name="admin_login" value="'.$admin_login.'" /></td></tr>';
-    $str.= '<tr><td>'._('password:').'</td><td><input type="password" name="admin_password" value="'.$form['password'].'" /></td></tr>';
-    $str.= '<tr><td colspan="2">';
+    $str.= '<tr><td>'._('login:').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
+    $str.= '<tr><td>'._('password:').'</td><td><input type="password" name="admin_password" value="'.$form['admin_password'].'" /></td></tr>';
 
-    $str.= '<input type="radio" name="admin_branch" value="same" '.$checked[$admin_branch].'/>'._('Same as Users, ');
-    $str.= '<input type="radio" name="admin_branch" value="default" '.$checked[!$admin_branch].'/>'._('Default user branch');
+    $str.= '<tr><td colspan="2">';
+    $str.= '<input type="radio" name="admin_branch" value="same"';
+    if ($form['admin_branch'] == 'same')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Same as Users, ');
+    $str.= '<input type="radio" name="admin_branch" value="default"';
+    if ($form['admin_branch'] == 'default')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Default user branch');
     $str.= '</td></tr>';
     $str.= '</table>';
     $str.= '</div>';
@@ -204,25 +220,42 @@ class Configuration_mode_ad extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('User Groups').'</h3>';
-    $str.= '<input type="radio" name="user_group" value="activedirectory" '.$checked[$user_group_ad].' />'._('Use Active Directory User Groups');
-    $str.= '<br/>';
-    $str.= '<input type="radio" name="user_group" value="sql" '.$checked[!$user_group_ad].'/>'._('Use Internal User Groups');
+    $str.= '<input type="radio" name="user_group" value="activedirectory"';
+    if ($form['user_group'] == 'activedirectory')
+      $str.= ' checked="checked"';
+    $str.= ' />'._('Use Active Directory User Groups').'<br/>';
+
+    $str.= '<input type="radio" name="user_group" value="sql"';
+    if ($form['user_group'] == 'sql')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
 
     $str.= '<div>';
     $str.= '<h3>'._('Home Directory').'</h3>';
-    $str.= '<input type="radio" name="homedir" value="local" '.$checked[$home[0]].'/>';
+    $str.= '<input type="radio" name="homedir" value="local"';
+    if ($form['homedir'] == 'local')
+      $str.= ' checked="checked"';
+    $str.= '/>';
     $str.= _('Use Internal home directory (no server replication)');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="homedir" value="ad_profile" '.$checked[$home[1]].'/>';
+
+    $str.= '<input type="radio" name="homedir" value="ad_profile" ';
+    if ($form['homedir'] == 'ad_profile')
+      $str.= ' checked="checked"';
+    $str.= '/>';
     $str.= _('Use Active Directory Users profiles as Home directory');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="homedir" value="ad_homedir" '.$checked[$home[2]].'/>';
+    $str.= '<input type="radio" name="homedir" value="ad_homedir"';
+    if ($form['homedir'] == 'ad_homedir')
+      $str.= ' checked="checked"';
+    $str.= '/>';
     $str.= _('Use Active Directory Home dir');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
 
+    /*
     $str.= '<div style="display:none">';
     $str.= '<h3>'._('Windows Applications').'</h3>';
     $str.= _('Allow Windows Application link thanks to TS and AD:');
@@ -231,6 +264,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '<input type="radio" name="ts_link" value="no" />'._('no');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
+    */
 
     return $str;
   }

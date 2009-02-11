@@ -65,12 +65,16 @@ class Configuration_mode_internal extends Configuration_mode {
     return True;
   }
 
-  public function display($prefs) {
-    $i = $prefs->get('UserDB','enable');
-    $user_default = $i == 'fake';
-    $checked = array(true => 'checked="checked"', false => '');
 
+  public function config2form($prefs) {
+    $form = array();
+    $config = $prefs->get('UserDB', 'enable');
 
+    $form['user'] = ($config == 'sql')?'sql':'fake';
+    return $form;
+  }
+
+  public function display($form) {
     $str= '<h1>'._('Internal Database Profiles').'</h1>';
 
     $str.= '<div>';
@@ -80,9 +84,15 @@ class Configuration_mode_internal extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('Users').'</h3>';
-    $str.= '<input type="radio" name="user" value="fake" '.$checked[$user_default].'/>'._('Use a static user list (usefull for test)');
+    $str.= '<input type="radio" name="user" value="fake"';
+    if ($form['user'] == 'fake')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Use a static user list (usefull for test)');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="user" value="sql" '.$checked[!$user_default].'/>'._('I want create my own users');
+    $str.= '<input type="radio" name="user" value="sql"';
+    if ($form['user'] == 'sql')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('I want create my own users');
     $str.= '</div>';
 
     return $str;
