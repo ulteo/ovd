@@ -26,6 +26,10 @@ class Configuration_mode_ad extends Configuration_mode {
     return _('Active Directory');
   }
 
+  public function careAbout($userDB) {
+    return 'activedirectory' == $userDB;
+  }
+
   public function has_change($oldprefs, $newprefs) {
     $old = $oldprefs->get('UserDB', 'activedirectory');
     $new = $newprefs->get('UserDB', 'activedirectory');

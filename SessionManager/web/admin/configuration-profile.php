@@ -34,6 +34,21 @@ function get_classes_startwith_2($start_name) {
 	return $ret;
 }
 
+function getProfileMode($prefs) {
+  $userDB_mode = $prefs->get('UserDB', 'enable');
+
+  $classes = get_classes_startwith_2('Configuration_mode_');
+  foreach($classes as $c) {
+    $b = new $c();
+    
+    if ($b->careAbout($userDB_mode))
+      return $c;
+  }
+
+  // Should never be called !!!
+  return 'Configuration_mode_internal';
+}
+
 
 function do_auto_clean_db($new_prefs) {
   $prefs = Preferences::getInstance();

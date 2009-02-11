@@ -26,6 +26,10 @@ class Configuration_mode_internal extends Configuration_mode {
     return _('Internal');
   }
 
+  public function careAbout($userDB) {
+    return in_array($userDB, array('fake', 'sql'));
+  }
+
   public function has_change($oldprefs, $newprefs) {
     $old = $oldprefs->get('UserDB', 'enable');
     $new = $newprefs->get('UserDB', 'enable');

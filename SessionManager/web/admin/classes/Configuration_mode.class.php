@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 abstract class Configuration_mode {
   abstract public function getPrettyName();
   abstract public function has_change($oldprefs, $newprefs);
+  abstract public function careAbout($userDB);
 
   abstract public function form_valid($form);
   abstract public function form_read($form, $prefs);
