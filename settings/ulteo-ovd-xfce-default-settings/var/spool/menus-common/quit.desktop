@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Logout
+Name[fr]=Quitter
+GenericName=Logout
+GenericName[fr]=Quitter
+Comment=Logout from the session
+Comment[fr]=Quitter la session
+Exec=xfce4-session-logout
+Icon=system-log-out
+

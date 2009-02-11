@@ -1,0 +1,14 @@
+Source: ulteo-ovd-xfce-default-settings
+Section: x11
+Priority: extra
+Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 5)
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-xfce-default-settings
+Architecture: all
+Depends: gnome-icon-theme, gnome-icon-theme-crystal, xfce4-icon-theme, gtk2-engines-mythbuntu, gtk2-engines-xfce
+Conflicts: xubuntu-default-settings, thunar-data (<< 0.9.0-4ulteo2)
+Description: Default settings for the Ulteo Open Virtual Desktop
+ This package provides default settings for the Xfce desktop on an Ulteo Open
+ Virtual Desktop.

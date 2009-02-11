@@ -1,0 +1,15 @@
+[xfce4-session]
+CustomizeChooser=%admin
+CustomizeLogout=%admin
+CustomizeCompatibility=%admin
+Shutdown=%admin
+
+[xfce4-panel]
+CustomizePanel=%admin
+
+[xfdesktop]
+UserMenu=%admin
+CustomizeDesktopMenu=%admin
+CustomizeWindowlist=%admin
+CustomizeDesktopIcons=%admin
+
