@@ -1,4 +1,4 @@
-ovd-session-manager (1.0~beta2-0ulteo1) ovd-polaris; urgency=low
+ovd-session-manager (1.0~beta2+svn510) ovd-polaris-testing; urgency=low
 
   * Added debconf template entries to configure mysql database
   * Added postinst commands to create mysql database and user
