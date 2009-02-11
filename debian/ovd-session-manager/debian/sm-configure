@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if dpkg-reconfigure mysql-server-5.0; then
+	if dpkg-reconfigure ulteo-ovd-session-manager; then
+		rm -f /etc/init.d/K98sessionmanager_first
+	fi
+fi
