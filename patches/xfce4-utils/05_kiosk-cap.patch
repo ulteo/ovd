@@ -1,0 +1,40 @@
+diff -Nur -x '*.orig' -x '*~' xfce4-utils-4.4.2/xfrun/xfrun.c xfce4-utils-4.4.2.new/xfrun/xfrun.c
+--- xfce4-utils-4.4.2/xfrun/xfrun.c	2007-11-17 20:31:32.000000000 +0100
++++ xfce4-utils-4.4.2.new/xfrun/xfrun.c	2008-08-22 13:15:01.000000000 +0200
+@@ -37,6 +37,16 @@
+ main(int argc,
+      char **argv)
+ {
++    XfceKiosk *kiosk;
++    gboolean   b;
++
++    kiosk = xfce_kiosk_new ("xfrun");
++    b = xfce_kiosk_query(kiosk, "AllowRun");
++    xfce_kiosk_free (kiosk);
++
++    if (!b)
++        return 0;
++
+     GtkWidget *dialog;
+     const gchar *run_argument = NULL;
+     
+diff -Nur -x '*.orig' -x '*~' xfce4-utils-4.4.2/xfrun/xfrun-dbus.c xfce4-utils-4.4.2.new/xfrun/xfrun-dbus.c
+--- xfce4-utils-4.4.2/xfrun/xfrun-dbus.c	2007-11-17 20:31:32.000000000 +0100
++++ xfce4-utils-4.4.2.new/xfrun/xfrun-dbus.c	2008-08-22 13:15:36.000000000 +0200
+@@ -324,6 +324,16 @@
+ main(int argc,
+      char **argv)
+ {
++    XfceKiosk *kiosk;
++    gboolean   b;
++
++    kiosk = xfce_kiosk_new ("xfrun");
++    b = xfce_kiosk_query(kiosk, "AllowRun");
++    xfce_kiosk_free (kiosk);
++
++    if (!b)
++        return 0;
++
+     gboolean have_gtk = gtk_init_check(&argc, &argv);
+     
+     if(argc > 1 && !strcmp(argv[1], "--quit"))
