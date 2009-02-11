@@ -440,9 +440,9 @@ class Preferences_admin extends Preferences {
 									$buf =& $this->elements[$key1][$key2];
 									$buf->content = $prefs[$key1][$key2][$value2->id];
 								}
-								else if (is_string($prefs[$key1][$key2][$value2->id])) {
+								else if (is_string($prefs[$key1][$key2])) {
 									$buf =& $this->elements[$key1][$key2];
-									$buf->content = $prefs[$key1][$key2][$value2->id];
+									$buf->content = $prefs[$key1][$key2];
 								}
 							}
 						}
