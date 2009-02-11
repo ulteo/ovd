@@ -1,3 +1,10 @@
+ulteo-ovd-xfce-default-settings (0.2) ovd-polaris-testing; urgency=low
+
+  * kioskrc: running xfrun4 is only allowed for admins (needs our patched
+    xfce4-utils)
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 11 Feb 2009 11:09:47 +0100
+
 ulteo-ovd-xfce-default-settings (0.1) ovd-chroot-polaris; urgency=low
 
   * Initial release
