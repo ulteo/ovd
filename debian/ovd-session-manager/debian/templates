@@ -1,9 +1,55 @@
+Template: od/sessionmanager/mysql/configure
+Type: boolean
+Default: true
+_Description: Configure MySQL?
+ Please confirm whether MySQL should be configured automatically.
+ .
+ If you do not choose this option, please see the instructions in
+ /usr/share/doc/ulteo-ovd-session-manager/README.Debian.
+
 Template: od/sessionmanager/admin_login
 Type: string
 Default: admin
 _Description: Administrator login:
  Ulteo Session Manager needs to register an administrator. You can define the
  login of this user here.
+
+Template: od/sessionmanager/mysql/dbserver
+Type: string
+Default: localhost
+_Description: MySQL host:
+ Please enter the name or IP address of the MySQL database server
+ that will store the Ulteo Session Manager database.
+
+Template: od/sessionmanager/mysql/dbname
+Type: string
+Default: ulteo_sm
+_Description: Ulteo Session Manager database name:
+ Please enter the name of the database that will host data for Ulteo Session Manager.
+
+Template: od/sessionmanager/mysql/dbadmpass
+Type: password
+_Description: Database server administrator password:
+
+Template: od/sessionmanager/mysql/dbuser
+Type: string
+Default: ulteoadmin
+_Description: Database user for Ulteo Session Manager:
+ Please choose the MySQL account that will be used to access the
+ database hosting Ulteo Session Manager data.
+
+Template: od/sessionmanager/mysql/dbpass
+Type: password
+_Description: Database user password:
+ Please choose the password for the account that will be used to
+ access the database hosting Ulteo Session Manager data.
+
+Template: od/sessionmanager/mysql/dbadmin
+Type: string
+Default: root
+_Description: Database server administrator username:
+ Please enter the username of the database server administrator. This
+ account must have database creation privileges.
 
 Template: od/sessionmanager/admin_password
 Type: password

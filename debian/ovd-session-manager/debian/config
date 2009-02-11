@@ -5,9 +5,25 @@
 db_version 2.0
 
 if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]; then
+
+	db_set od/sessionmanager/mysql/configure true
+		db_input medium od/sessionmanager/mysql/configure || true
+	db_go || true
+
+	db_get od/sessionmanager/mysql/configure || true
+	  if [ "$RET" = "true" ]; then
+	    db_input critical od/sessionmanager/mysql/dbserver || true
+   		db_input critical od/sessionmanager/mysql/dbadmin || true
+   		db_input critical od/sessionmanager/mysql/dbadmpass || true
+   		db_input critical od/sessionmanager/mysql/dbuser || true
+   		db_input critical od/sessionmanager/mysql/dbpass || true
+   		db_input medium od/sessionmanager/mysql/dbname || true
+   		db_go || true
+   	  fi
+
+
   db_input critical od/sessionmanager/admin_login || true
   db_go
-
   while :; do
     db_input critical od/sessionmanager/admin_password || true
     db_go
