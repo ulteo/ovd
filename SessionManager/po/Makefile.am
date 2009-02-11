@@ -1,6 +1,6 @@
 EXTRA_DIST = LINGUAS POTFILES.in
 
-itlocaledir = $(prefix)/$(DATADIRNAME)/locale
+itlocaledir = $(datadir)/locale
 
 MSGMERGE = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --dist
 GENPOT   = INTLTOOL_EXTRACT=$(INTLTOOL_EXTRACT) srcdir=$(srcdir) $(INTLTOOL_UPDATE) --gettext-package $(GETTEXT_PACKAGE) --pot
