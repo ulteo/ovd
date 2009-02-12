@@ -27,7 +27,6 @@ if (!isset($session) || $session == '')
 
 $_SESSION['width'] = @$_REQUEST['width'];
 $_SESSION['height'] = @$_REQUEST['height'];
-$_SESSION['print_timestamp'] = time(); 
 
 if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
 	put_to_file(SESSION_PATH.'/'.$session.'/parameters/geometry', $_SESSION['width'].'x'.$_SESSION['height']);

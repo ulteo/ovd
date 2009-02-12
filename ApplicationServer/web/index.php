@@ -108,6 +108,8 @@ foreach ($application_nodes as $application_node)
 	if ($application_node->hasAttribute('desktopfile'))
 		$_SESSION['parameters']['desktopfiles'][md5($application_node->getAttribute('desktopfile'))] = $application_node->getAttribute('desktopfile');
 
+$_SESSION['print_timestamp'] = time();
+
 if ($_SESSION['mode'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
 ?>
