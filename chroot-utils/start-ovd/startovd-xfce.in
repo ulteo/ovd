@@ -25,14 +25,6 @@ else
   BASEDIR="$XDG_CONFIG_HOME/xfce4"
 fi
 
-if test "x$XDG_DATA_DIRS" = "x"
-then
-  XDG_DATA_DIRS="/etc/xdg/xubuntu:/usr/local/share:/usr/share:/usr/share"
-else
-  XDG_DATA_DIRS="/etc/xdg/xubuntu:$XDG_DATA_DIRS:/usr/share"
-fi
-export XDG_DATA_DIRS
-
 if test "x$DISPLAY" = "x"
 then
   echo "$0: Starting X server"

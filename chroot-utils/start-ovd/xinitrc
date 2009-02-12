@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# $XDG_CONFIG_HOME defines the base directory relative to which user specific 
-# configuration files should be stored. If $XDG_CONFIG_HOME is either not set 
+# $XDG_CONFIG_HOME defines the base directory relative to which user specific
+# configuration files should be stored. If $XDG_CONFIG_HOME is either not set
 # or empty, a default equal to $HOME/.config should be used.
 if test "x$XDG_CONFIG_HOME" = "x" ; then
   XDG_CONFIG_HOME=$HOME/.config
 fi
 [ -d "$XDG_CONFIG_HOME" ] || mkdir "$XDG_CONFIG_HOME"
 
-# $XDG_CACHE_HOME defines the base directory relative to which user specific 
-# non-essential data files should be stored. If $XDG_CACHE_HOME is either not 
+# $XDG_CACHE_HOME defines the base directory relative to which user specific
+# non-essential data files should be stored. If $XDG_CACHE_HOME is either not
 # set or empty, a default equal to $HOME/.cache should be used.
 if test "x$XDG_CACHE_HOME" = "x" ; then
   XDG_CACHE_HOME=$HOME/.cache
@@ -46,21 +46,10 @@ cat /dev/null $XRESOURCES | xrdb -nocpp -merge -
 
 # Use dbus-launch if installed.
 if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
-        dbuslaunch=`which dbus-launch`
-        if test x"$dbuslaunch" != x"" -a x"$dbuslaunch" != x"no"; then
-                eval `$dbuslaunch --sh-syntax --exit-with-session`
-        fi
-fi
-
-# gtk config
-if [ ! -e $HOME/.gtk_qt_engine_rc ] && [ -e /usr/share/ulteo-kde-default-settings/.gtk_qt_engine_rc ]
-then
- cp -f /usr/share/ulteo-kde-default-settings/.gtk_qt_engine_rc $HOME
-fi
-
-if [ ! -e $HOME/.gtkrc-2.0 ] && [ -e /usr/share/ulteo-kde-default-settings/.gtkrc-2.0 ]
-then
- cp -f /usr/share/ulteo-kde-default-settings/.gtkrc-2.0 $HOME
+  dbuslaunch=`which dbus-launch`
+  if test x"$dbuslaunch" != x"" -a x"$dbuslaunch" != x"no"; then
+    eval `$dbuslaunch --sh-syntax --exit-with-session`
+  fi
 fi
 
 # automatically open an application if needed
