@@ -465,7 +465,7 @@ echo '</script>';
 function print_prefs5($prefs,$key_name, $contener) {
 	if (! isset($prefs->elements[$key_name][$contener]))
 		return;
-	
+
 	$elements2 = $prefs->elements[$key_name][$contener];
 	$color=0;
 	echo '<table style="width: 100%" class="main_sub" border="0" cellspacing="1" cellpadding="0">'; // TODO
@@ -487,7 +487,7 @@ function print_prefs5($prefs,$key_name, $contener) {
 	echo '</table>';
 }
 
-function print_prefs4($prefs,$key_name) {
+function print_prefs4($prefs,$key_name,$recursive=true) {
 	global $sep;
 // 	echo "print_prefs4 '".$key_name."'<br>";
 	$color = 0;
@@ -525,10 +525,12 @@ function print_prefs4($prefs,$key_name) {
 				$color++;
 			}
 			else {
-				echo '<tr id="'.$key_name.$sep.$contener.'">';
-				echo '<td colspan="2">';
-				print_prefs5($prefs, $key_name,$contener);
-				echo '</td>';
+				if ($recursive === true) {
+					echo '<tr id="'.$key_name.$sep.$contener.'">';
+					echo '<td colspan="2">';
+					print_prefs5($prefs, $key_name,$contener);
+					echo '</td>';
+				}
 			}
 		}
 	}
@@ -585,7 +587,7 @@ function formToArray($form_) {
 			}
 		}
 	}
-	
+
 	foreach ($elements_form as $key1 => $value1) {
 		if (is_array($value1)){
 			foreach ($value1 as $key2 => $value2) {
