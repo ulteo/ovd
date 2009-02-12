@@ -17,12 +17,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+webservices_wget='wget --no-check-certificate retry-connrefused --timeout=5'
+
 webservices_session_request() {
     local args="session=$1&status=$2&fqdn=${SERVERNAME}"
     local request="${SESSION_MANAGER_URL}/webservices/session_status.php?${args}"
 
     log_INFO "webservices_session_request: doing $request"
-    wget --no-check-certificate --retry-connrefused $request -O /dev/null -o /dev/null
+    $webservices_wget $request -O /dev/null -o /dev/null
 }
 
 webservices_server_request() {
@@ -30,7 +32,7 @@ webservices_server_request() {
     local request="${SESSION_MANAGER_URL}/webservices/server_status.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    wget --no-check-certificate --retry-connrefused $request -O /dev/null -o /dev/null
+    $webservices_wget $request -O /dev/null -o /dev/null
 }
 
 webservices_server_ready() {
@@ -80,7 +82,7 @@ webservices_get_application() {
     local request="${SESSION_MANAGER_URL}/webservices/app_desktopfile.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    wget --no-check-certificate --retry-connrefused "$request" -O $output -o /dev/null
+    $webservices_wget "$request" -O $output -o /dev/null
 }
 
 webservices_get_application_icon() {
@@ -91,5 +93,5 @@ webservices_get_application_icon() {
     local request="${SESSION_MANAGER_URL}/webservices/icon.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    wget --no-check-certificate --retry-connrefused "$request" -O $output -o /dev/null
+    $webservices_wget "$request" -O $output -o /dev/null
 }
