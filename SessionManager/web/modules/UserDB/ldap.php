@@ -175,11 +175,13 @@ class UserDB_ldap {
 		$ret []= $c;
 		$c = new ConfigElement('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('userbranch_label','userbranch','userbranch','userbranch','ou=People',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement('userbranch','userbranch','userbranch','userbranch','ou=People',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('uidprefix_label','uidprefix','uidprefix','uidprefix','uid',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement('uidprefix','uidprefix','uidprefix','uidprefix','uid',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('protocol_version_label', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement('protocol_versionl', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, ConfigElement::$INPUT);
+		$ret []= $c;
+		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname'), NULL, ConfigElement::$DICTIONARY);
 		$ret []= $c;
 		return $ret;
 	}
