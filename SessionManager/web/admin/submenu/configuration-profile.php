@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-if (isset($_GET['view']) && $_GET['view'] == '') {
+if (isset($_GET['mode']) && $_GET['mode'] == '') {
 } else {
 	echo '<div class="container">';
 	echo '<a href="configuration-partial.php?mode=mysql">'._('Database settings').'</a>';
@@ -30,8 +30,8 @@ if (isset($_GET['view']) && $_GET['view'] == '') {
 	echo '<div class="container">';
 	echo '<a href="configuration-partial.php?mode=application_server_settings">'._('Server settings').'</a>';
 	echo '</div>';
-	echo '<div class="container">';
-	echo '<a href="configuration-profile.php">'._('Profile settings').'</a>';
+	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+	echo _('Profile settings');
 	echo '</div>';
 	echo '<div class="container">';
 	echo '<a href="configuration-partial.php?mode=session_settings_defaults">'._('Session settings').'</a>';

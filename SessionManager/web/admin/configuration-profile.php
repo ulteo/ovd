@@ -40,7 +40,7 @@ function getProfileMode($prefs) {
   $classes = get_classes_startwith_2('Configuration_mode_');
   foreach($classes as $c) {
     $b = new $c();
-    
+
     if ($b->careAbout($userDB_mode))
       return $c;
   }
@@ -64,12 +64,12 @@ function do_auto_clean_db($new_prefs) {
 
   $has_changed_u = False;
   $has_changed_ug = False;
-  
+
   if ($old_profile == $new_profile) {
     $p = new $new_profile();
     list($has_changed_u, $has_changed_ug) = $p->has_change($prefs, $new_prefs);
   }
-  
+
   // If UserDB module change
   if ($old_u != $new_u || $has_changed_u) {
     // Remove Users from user groups
@@ -149,8 +149,7 @@ if (isset($_POST['config'])) {
       unset($_SESSION[$name]);
     }
 
-    redirect($_SERVER["PHP_SELF"]);
-    die();
+    redirect();
   }
 
   $has_previous = $name;
@@ -188,6 +187,14 @@ if (isset($_SESSION['config_profile_saved'])) {
 
 require_once('header.php');
 
+  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+  echo '<tr>';
+  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+  include_once(dirname(__FILE__).'/submenu/configuration-profile.php');
+  echo '</td>';
+  echo '<td style="text-align: left; vertical-align: top;">';
+  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+
 echo '<form method="post">';
 echo '<input type="hidden" name="config_previous" value="'.$mode.'" />';
 echo '<select name="config" onChange="this.form.submit();">';
@@ -206,6 +213,11 @@ echo '<br/>';
 
 echo '<input type="submit" value="Save"/>';
 echo '</form>';
+
+  echo '</div>';
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
 
 require_once('footer.php');
 die();
