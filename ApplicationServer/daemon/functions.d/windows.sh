@@ -81,3 +81,12 @@ windows_catch_application() {
     [ -f $buffer ] && rm $buffer
     return 0
 }
+
+windows_logoff() {
+    local sessid_dir=$1
+    local user_login=$2
+
+    windows_use_seamlessrdp $sessid_dir || return 0
+
+    su -s "/bin/bash" $user_login -c "rdesktop -l logoff"
+}

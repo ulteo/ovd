@@ -228,6 +228,8 @@ session_purge() {
     local USER_UID=$(id -u $USER_LOGIN)
     local HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
 
+    windows_logoff $SESSID_DIR $USER_LOGIN
+
     killall -u $USER_LOGIN
     sleep 0.5
     killall -9 -u $USER_LOGIN
