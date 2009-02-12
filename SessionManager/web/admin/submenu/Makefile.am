@@ -1,6 +1,8 @@
 scripts_DATA = applications.php \
                appsgroup.php \
                configuration.php \
+               configuration-partial.php \
+               configuration-profile.php \
                logs.php \
                publications.php \
                servers.php \
