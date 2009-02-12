@@ -140,7 +140,8 @@ class Configuration_mode_ad extends Configuration_mode {
     $form['domain'] = $config['domain'];
 
     $form['user_branch'] = ($config['ou'] == 'cn=Users')?'default':'specific';
-    $form['user_branch_ou'] = ($form['user_branch'] == 'specific')?$config['ou']:'';
+    $b = explode('=', $config['ou'], 2);
+    $form['user_branch_ou'] = ($form['user_branch'] == 'specific')?$b[1]:'';
 
 
     // Admin login - Todo: replace by a regexp
