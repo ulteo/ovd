@@ -47,6 +47,8 @@ else
     useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -K UID_MIN=2000 -g ${USER_LOGIN} ${USER_LOGIN}
     export USER_ID=$(id -u $USER_LOGIN)   
 fi
+chown ${USER_ID} $SPOOL_USERS/$SESSID
+chmod 770        $SPOOL_USERS/$SESSID
 
 # May return 1 if $HOME_DIR_TYPE doesn't exists.
 

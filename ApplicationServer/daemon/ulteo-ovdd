@@ -332,6 +332,8 @@ spool_init() {
     [ -d $SPOOL/sessions ] || mkdir $SPOOL/sessions
     [ -d $SPOOL/sessions2create ] || mkdir $SPOOL/sessions2create
 
+    [ -d $SPOOL_USERS ] || mkdir -p $SPOOL_USERS
+
     chgrp www-data $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
     chmod g+w $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
 }
@@ -484,6 +486,7 @@ LOG_FILE=/var/log/ulteo-ovd.log
 LOG_FLAGS="info warn error"
 BIN_DIR=/usr/share/ulteo-ovd
 SPOOL=/var/spool/ulteo-ovd
+SPOOL_USERS=/var/spool/sessions
 SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"
 SERVERNAME=localhost
 MAXLUCK=20
@@ -534,6 +537,7 @@ done
 
 # Finally export the loaded configuration into env
 export BIN_DIR SPOOL
+export SPOOL_USERS
 export LOG_FILE LOG_FLAGS
 export SESSION_MANAGER_URL SERVERNAME
 export MAXLUCK MINLUCK

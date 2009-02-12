@@ -38,8 +38,8 @@ i=$(( $i + 5900 ))
 /bin/su -s "/bin/bash" $VNC_USER -c "xauth -f ${VNC_TMP}.Xauthority add :$i . `/usr/bin/mcookie`"
 
 # Install the MIT_MAGIC_COOKIE into the real user env
-cp ${VNC_TMP}.Xauthority ${USER_TMP}.Xauthority
-chown ${USER_LOGIN} ${USER_TMP}.Xauthority
+cp ${VNC_TMP}.Xauthority $SPOOL_USERS/$SESSID/.Xauthority
+chown ${USER_LOGIN}      $SPOOL_USERS/$SESSID/.Xauthority
 
 # Install the rfbauth file into a directory readable by the VNC user
 cp ${SESSID_DIR}/private/encvncpasswd ${VNC_TMP}encvncpasswd
@@ -63,7 +63,7 @@ su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /us
 
 export APP DOC
 export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC
-export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
+export DISPLAY=:$i XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
 [ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
 
 menu_spool ${USER_ID} ${SESSID_DIR}

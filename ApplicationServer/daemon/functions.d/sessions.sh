@@ -113,6 +113,8 @@ session_init() {
     install -d             -m 700 $SESSID_DIR/private
     install -d -g www-data -m 750 $SESSID_DIR/clients
 
+    install -d -m 700 $SPOOL_USERS/$SESSID
+
     # Initialize status file
     echo "0" >     $SESSID_DIR/infos/status
     chgrp www-data $SESSID_DIR/infos/status
@@ -200,6 +202,7 @@ session_remove() {
 
     log_INFO "session_remove: removing '$SESSID_DIR' ($i)"
 
+    rm -rf $SPOOL_USERS/$SESSID
     rm -rf $SESSID_DIR
     rm $SPOOL/id/$i
 
