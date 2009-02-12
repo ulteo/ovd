@@ -84,26 +84,31 @@ class LDAP {
 		if (!is_null($this->port))
 			@ldap_set_option($this->link, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
 
-		if (substr($this->login, 0, strlen($this->uidprefix)) != $this->uidprefix) {
-			$dn = $this->uidprefix.'=';
+		if ($this->login == '') {
+			$buf_bind = $this->bind();
 		}
 		else {
-			$dn = '';
-		}
-
-		if (substr($this->login, -1*strlen($this->suffix)) == $this->suffix) {
-			$dn .= $this->login;
-		}
-		else {
-			if ( $this->userbranch != '') {
-				$dn .= $this->login.','.$this->userbranch.','.$this->suffix;
+			if (substr($this->login, 0, strlen($this->uidprefix)) != $this->uidprefix) {
+				$dn = $this->uidprefix.'=';
 			}
 			else {
-				$dn .= $this->login.','.$this->suffix;
+				$dn = '';
 			}
+			
+			if (substr($this->login, -1*strlen($this->suffix)) == $this->suffix) {
+				$dn .= $this->login;
+			}
+			else {
+				if ( $this->userbranch != '') {
+					$dn .= $this->login.','.$this->userbranch.','.$this->suffix;
+				}
+				else {
+					$dn .= $this->login.','.$this->suffix;
+				}
+			}
+	
+			$buf_bind = $this->bind($dn, $this->password);
 		}
-
-		$buf_bind = $this->bind($dn, $this->password);
 		return $buf_bind;
 	}
 
