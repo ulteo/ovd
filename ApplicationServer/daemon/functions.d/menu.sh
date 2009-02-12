@@ -16,15 +16,23 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+menu_init() {
+    local menu_dir=$1
+    [ -d $menu_dir ] && rm -rf $menu_dir
+
+    mkdir -p                  $menu_dir/applications
+    ln -sf /usr/share/icons   $menu_dir/icons
+    ln -sf /usr/share/pixmaps $menu_dir/pixmaps
+}
+
 menu_spool() {
     local user_id=$1
     local sessid_dir=$2
     local menu_dir=/var/spool/menus/$user_id
 
-    [ -f $sessid_dir/parameters/menu ] || return 1
+    menu_init $menu_dir
 
-    [ -d $menu_dir ] && menu_clean $user_id
-    mkdir -p $menu_dir
+    [ -f $sessid_dir/parameters/menu ] || return 1
 
     local file=$sessid_dir'/parameters/menu'
     local nblines=`wc -l $file |cut -d ' ' -f1`
@@ -51,7 +59,7 @@ menu_spool() {
     done
 
     if [ -f $sessid_dir/parameters/desktop_icons ]; then
-	touch $menu_dir/.show_on_desktop
+	touch $menu_dir/applications/.show_on_desktop
     fi
 }
 
@@ -61,7 +69,7 @@ menu_put() {
 
     [ -f "$desktop" ] || return 1
     local basename=$(basename "$desktop")
-    local dest=$menu_dir/$basename
+    local dest=$menu_dir/applications/$basename
 
     ln -sf "$desktop" "$dest"
 }
@@ -70,12 +78,7 @@ menu_clean() {
     local user_id=$1
     local menu_dir=/var/spool/menus/$user_id
 
-    [ ! -d $menu_dir ] && return 0
-
-    rm -f $menu_dir/*
-    [ -f $menu_dir/.show_on_desktop ] && rm $menu_dir/.show_on_desktop
-    rmdir $menu_dir
-
+    [ -d $menu_dir ] && rm -rf $menu_dir
 }
 
 

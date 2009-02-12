@@ -64,6 +64,8 @@ su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /us
 export APP DOC
 export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC
 export DISPLAY=:$i XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
+export XDG_DATA_DIRS=/var/spool/menus/$USER_DIR
+export OVD_APPS_DIR=$XDG_DATA_DIRS
 [ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
 
 menu_spool ${USER_ID} ${SESSID_DIR}
