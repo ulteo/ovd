@@ -27,12 +27,22 @@ if (isset($_POST['join'])) {
 		redirect($_SERVER['HTTP_REFERER']);
 
 	$view_only = 'Yes';
-	if (isset($_POST['active']))
+	if (isset($_POST['active_mode']))
 		$view_only = 'No';
+
+	$invite = new Invite(gen_string(5));
+	$invite->session = $session->id;
+	$invite->settings = array(
+		'view_only'	=>	($view_only == 'Yes')?1:0
+	);
+	$invite->email = 'none';
+	$invite->valid_until = (time()+(60*30));
+	Abstract_Invite::save($invite);
 
 	$token = new Token(gen_string(5));
 	$token->type = 'invite';
-	$token->session = $session->id;
+	$token->link_to = $invite->id;
+	$token->valid_until = (time()+(60*30));
 	Abstract_Token::save($token);
 
 	redirect('http://'.$session->server.'/index.php?token='.$token->id);

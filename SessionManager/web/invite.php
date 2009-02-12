@@ -59,15 +59,13 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	$message =  _('You received an invitation from').' '.$main_title.', '._('please click on the link below to join the online session').'.'."\r\n\r\n";
 	$message .= $redir;
 
-	Logger::info('main', 'Sending invitation mail to '.$email.' for token '.$token);
+	Logger::info('main', 'Sending invitation mail to '.$email.' for token '.$token->id);
 
 	$buf = sendamail($email, $subject, wordwrap($message, 72));
 	if ($buf !== true) {
 		Logger::error('main', 'invite.php:49 - sendamail error : '.$buf->message);
 		redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email.'&error='.$buf->message);
 	}
-
-	//$session->addInvite($email, ($view_only == 'Yes')?1:0);
 
 	redirect('invite.php?server='.$session->server.'&session='.$session->id.'&invited='.$email);
 }
@@ -96,19 +94,21 @@ html,body {
 		echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent!').'</p>';
 	?>
 
-	<?php
-// 		if (file_exists($session->folder.'/used'))
-// 			echo 'Session started: '.date('d/m/Y H:i:s', filemtime($session->folder.'/used'));
-	?>
-
 	<div style="margin-left: auto; margin-right: 0px; text-align: left">
 		<ul>
 			<?php
-				//$invited_emails = $session->invitedEmails();
+				$invites = Invites::getBySession($_GET['session']);
+				$inviteds = array();
+				if (count($invites) > 0) {
+					foreach ($invites as $invite) {
+						$buf = $invite->getAttribute('settings');
+						$inviteds[] = array($invite->getAttribute('email'), ($buf['view_only'] == 0)?_('active mode'):_('passive mode'));
+					}
+				}
 
-				if (isset($invited_emails) && is_array($invited_emails)) {
-					foreach ($invited_emails as $invited_email)
-						echo '<li>'.$invited_email.'</li>';
+				if (isset($inviteds) && is_array($inviteds) && count($inviteds) > 0) {
+					foreach ($inviteds as $invited)
+						echo '<li>'.$invited[0].' ('.$invited[1].')</li>';
 				} else
 					echo '<li>'._('No invitation sent for the moment').'</li>';
 			?>

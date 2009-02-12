@@ -191,6 +191,12 @@ class Abstract_Server {
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
 
+		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
+		foreach ($sessions_liaisons as $sessions_liaison) {
+			Abstract_Session::delete($sessions_liaison->group);
+		}
+		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
+
 		return true;
 	}
 

@@ -28,4 +28,21 @@ class Invites {
 
 		return $buf;
 	}
+
+	public static function getBySession($id_) {
+// 		Logger::debug('main', 'Starting Invites::getBySession');
+
+		$invites_liaisons = Abstract_Liaison::load('SessionInvite', $id_, NULL);
+
+		$invites = array();
+		foreach ($invites_liaisons as $invites_liaison) {
+			$invite = Abstract_Invite::load($invites_liaison->group);
+			if (! $invite)
+				continue;
+
+			$invites[] = $invite;
+		}
+
+		return $invites;
+	}
 }

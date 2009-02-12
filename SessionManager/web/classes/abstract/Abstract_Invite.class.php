@@ -125,6 +125,8 @@ class Abstract_Invite {
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'invites', 'id', $id);
 
+		Abstract_Liaison::save('SessionInvite', $invite_->session, $invite_->id);
+
 		return true;
 	}
 
@@ -149,6 +151,8 @@ class Abstract_Invite {
 			return false;
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
+
+		Abstract_Liaison::delete('SessionInvite', NULL, $id_);
 
 		return true;
 	}

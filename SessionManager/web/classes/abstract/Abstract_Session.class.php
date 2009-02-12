@@ -130,6 +130,8 @@ class Abstract_Session {
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'sessions', 'id', $id);
 
+		Abstract_Liaison::save('ServerSession', $session_->server, $session_->id);
+
 		return true;
 	}
 
@@ -154,6 +156,14 @@ class Abstract_Session {
 			return false;
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
+
+		$invites_liaisons = Abstract_Liaison::load('SessionInvite', $id_, NULL);
+		foreach ($invites_liaisons as $invites_liaison) {
+			Abstract_Invite::delete($invites_liaison->group);
+		}
+		Abstract_Liaison::delete('SessionInvite', $fqdn_, NULL);
+
+		Abstract_Liaison::delete('ServerSession', NULL, $id_);
 
 		return true;
 	}
