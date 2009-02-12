@@ -34,11 +34,8 @@ windows_use_seamlessrdp() {
 windows_init_connection() {
     local sessid_dir=$1
 
-    windows_use_seamlessrdp $sessid_dir
-    if [ $? -ne 0 ]; then
-	log_INFO "No Windows parameters for this session"
-	return 0
-    fi
+    windows_use_seamlessrdp $sessid_dir || return 0
+    log_INFO "There are Windows applications parameters for this session"
     # log_INFO "menu_windows_init_connection 0"
     local server=`cat ${sessid_dir}/parameters/windows_server`
     local login=`cat ${sessid_dir}/parameters/windows_login`
