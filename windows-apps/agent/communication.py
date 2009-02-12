@@ -65,7 +65,6 @@ if utils.myOS() == "windows":
 
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
-		print 'do_GET ',self.path
 		if self.path == "/webservices/server_status.php":
 			self.webservices_server_status()
 		elif self.path == "/webservices/server_monitoring.php":
@@ -85,25 +84,16 @@ class Web(SimpleHTTPRequestHandler):
 			self.end_headers()
 			self.wfile.write('')
 	
-	def do_POST(self):
-		print 'do_POST ',self.path
-		self.send_response(404)
-		self.send_header('Content-Type', 'text/html')
-		self.end_headers()
-		self.wfile.write('')
-	
 	def log_request(self,l):
 		pass
 	
 	def webservices_server_status(self):
-		self.server.log.debug('webservices_server_status')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.getStatusString())
 	
 	def webservices_server_monitoring(self):
-		self.server.log.debug('webservices_server_monitoring')
 		doc = Document()
 		monitoring = doc.createElement('monitoring')
 		doc.appendChild(monitoring)
@@ -142,21 +132,18 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write(doc.toxml())
 	
 	def webservices_server_type(self):
-		self.server.log.debug('webservices_server_type')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write('windows')
 	
 	def webservices_server_version(self):
-		self.server.log.debug('webservices_server_version')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.version_os)
 	
 	def webservices_applications(self):
-		self.server.log.debug('webservices_applications')
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()

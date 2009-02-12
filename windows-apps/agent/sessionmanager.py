@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Laurent CLOUET <laurent@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -51,6 +52,7 @@ class SessionManagerRequest:
 		return ret
 	
 	def down(self):
+		self.log.debug("SessionManagerRequest::down")
 		return self.server_status("down")
 	
 	def broken(self):
