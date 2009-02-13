@@ -44,7 +44,7 @@ else{
 	if (count($us) > 0){
 		echo '<table id="users_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
 		echo '<tr class="title">';
-		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this users group').'</th><th>'._('in this applications group').'</th><th>'._('access to these applications').'</th><th>'._('Desktop File').'</th><th>'._('Server available').'</th>';
+		echo '<th>'._('login').'</th><td>'._('name').'</th><th>'._('in this users group').'</th><th>'._('in this applications group').'</th><th>'._('access to these applications').'</th><th>'._('Desktop File').'</th><th>'._('Servers available').'</th>';
 		echo '</tr>';
 		$count = 0;
 		foreach($us as $u){
