@@ -105,7 +105,7 @@ function do_save($prefs, $name) {
   $userDB = new $mod_user_name();
   if (! $userDB->prefsIsValid($prefs)) {
     // error
-    popup_error('Active Directory configuration is invalid for Users');
+    popup_error('Configuration is invalid for Users');
     return False;
   }
 
@@ -113,7 +113,7 @@ function do_save($prefs, $name) {
   $userGroupDB = new $mod_usergroup_name();
   if (! $userGroupDB->prefsIsValid($prefs)) {
     // error
-    popup_error('Active Directory configuration is invalid for UserGroups');
+    popup_error('Configuration is invalid for UserGroups');
     return False;
   }
 

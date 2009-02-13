@@ -31,27 +31,119 @@ class Configuration_mode_ldap extends Configuration_mode {
   }
 
   public function has_change($oldprefs, $newprefs) {
-    return array(True, True);
+    $old = $oldprefs->get('UserDB', 'ldap');
+    $new = $newprefs->get('UserDB', 'ldap');
+
+    $changed = False;
+    foreach(array('host', 'suffix', 'userbranch') as $key) {
+      if ($old[$key] != $new[$key]) {
+	$changed = True;
+	break;
+      }
+    }
+
+    $old = $oldprefs->get('UserGroupDB', 'enable');
+    $new = $newprefs->get('UserGroupDB', 'enable');
+    $g = !($old == 'sql' && $new == 'sql');
+
+    return array($changed, $changed && $g);
   }
 
   public function form_valid($form) {
+    $fields =  array('host', 'suffix', 'user_branch',
+		     'port', 'proto',
+		     'bind_dn', 'bind_password',
+		     'field_rdn', 'field_displayname',
+		     'user_group');
+
+    foreach($fields as $field) {
+      if (! isset($form[$field])) {
+	return False;
+      }
+    }
+
+    if (! in_array($form['user_group'], array('ldap', 'sql')))
+      return False;
+
     return True;
   }
 
   public function form_read($form, $prefs) {
+    $config = array();
+    $config['host'] = $form['host'];
+    $config['suffix'] = $form['suffix'];
+    $config['port'] = $form['port'];
+    $config['protocol_version'] = $form['proto'];
+
+
+    if (isset($form['bind_anonymous'])) {
+      $config['login'] = '';
+      $config['password'] = '';
+    } else {
+      $config['login'] = $form['bind_dn'];
+      $config['password'] = $form['bind_password'];
+
+      if (! str_endswith($config['login'], ','.$config['suffix']))
+	$config['login'].= ','.$config['suffix'];
+    }
+
+    $config['userbranch'] = $form['user_branch'];
+    $config['uidprefix'] = $form['field_rdn'];
+    $config['match'] = array();
+    $config['match']['login'] = $form['field_rdn'];
+    $config['match']['displayname'] = $form['field_displayname'];
+
+
+    // Select LDAP as UserDB
+    $prefs->set('UserDB', 'enable', 
+		array('enable' => 'ldap'));
+
+    // Push LDAP conf
+    $prefs->set('UserDB', 'ldap', $config);
+
+    // Select Module for UserGroupDB
+    $prefs->set('UserGroupDB', 'enable',
+		array('enable' => 'sql'));
+
+    // Set the FS type
+    $prefs->set('plugins', 'FS',
+		array('FS' => 'local'));
+
     return True;
   }
 
   public function config2form($prefs) {
     $form = array();
+    $config = $prefs->get('UserDB', 'ldap');
 
-    $form['host'] = '';
-    $form['domain'] = '';
-    $form['admin_login'] = '';
-    $form['password'] = '';
-    $form['user_group'] = '';
-    $form['homedir'] = '';
+    $form['host'] = $config['host'];
+    $form['suffix'] = $config['suffix'];
+    $form['port'] = ($config['port']=='')?'389':$config['port'];
+    $form['proto'] = ($config['protocol_version']=='')?'3':$config['protocol_version'];
 
+    if ($config['login'] == '')
+      $form['bind_anonymous'] = 1;
+    $form['bind_dn'] = $config['login'];
+    $form['bind_password'] = $config['password'];
+    $buf = ','.$form['suffix'];
+    if (str_endswith($form['bind_dn'], $buf))
+      $form['bind_dn'] = substr($form['bind_dn'], 0, strlen($form['bind_dn']) - strlen($buf));
+
+    $form['user_branch'] = $config['userbranch'];
+    //$form['user_branch_recursive'] = No Yet Implementd
+
+
+    $form['field_rdn'] = $config['uidprefix'];
+    $form['field_displayname'] = $config['match']['displayname'];
+
+    $config2 = $prefs->get('UserGroupDB', 'enable');
+    if ($config2 == 'ldap')
+      $form['user_group'] = 'ldap';
+    else
+      $form['user_group'] = 'sql';
+
+
+    // $form['homedir'] = '';
     return $form;
   }
 
@@ -62,10 +154,9 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<h3>Server</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Server Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="389" /></td></tr>';
-    $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="protocol" value="3" /></td></tr>';
-    $str.= '<tr><td>'._('Server Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="basedn" value="'.$form['domain'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="proto" value="'.$form['proto'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
     $str.= '<br/><!-- useless => css padding bottom-->'."\n";
@@ -73,20 +164,27 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<div>';
     $str.= '<h3>'._('Users').'</h3>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('User branch :').'</td><td><input type="text" name="user_branch" value="" /></td></tr>';
-    $str.= '<tr><td style="text-align: right;"><input type="checkbox" name="user_branch_recursive"/></td>';
-    $str.= '<td>'._('Recursive Mode').'</td></tr>';
-    $str.= '<tr><td>'._('Distinguished name field: ').'</td><td><input type="text" name="uidprefix" value="uid" /></td></tr>';
-    $str.= '<tr><td>'._('Display name field: ').'</td><td><input type="text" name="uidprefix" value="cn" /></td></tr>';
+    $str.= '<tr><td>'._('User branch :').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
+
+    // Not yet Implemented
+    // $str.= '<tr><td style="text-align: right;"><input type="checkbox" name="user_branch_recursive"/></td>';
+    // $str.= '<td>'._('Recursive Mode').'</td></tr>';
+
+    $str.= '<tr><td>'._('Distinguished name field: ').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Display name field: ').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
     $str.= '</table>';
 
     $str.= '<div>';
     $str.= '<h4>'._('Administrator account').'</h4>';
-
-    $str.= '<input type="checkbox" name="user_branch_recursive"/> Anonymous bind';
     $str.= '<table>';
-    $str.= '<tr><td>'._('login (complete DN without base dn):').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
-    $str.= '<tr><td>'._('bind password:').'</td><td><input type="password" name="admin_password" value="'.$form['password'].'" /></td></tr>';
+    $str.= '<tr><td style="text-align: right;">';
+    $str.= '<input type="checkbox" name="bind_anonymous"';
+    if (isset($form['bind_anonymous']))
+      $str.= ' checked="checked"';
+    $str.= '/></td><td>Anonymous bind';
+    $str.= '</td></tr>';
+    $str.= '<tr><td>'._('Bind DN (without suffix):').'</td><td><input type="text" name="bind_dn" value="'.$form['bind_dn'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Bind password:').'</td><td><input type="password" name="bind_password" value="'.$form['bind_password'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
     $str.= '</div>';
@@ -94,7 +192,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('User Groups').'</h3>';
-    $str.= '<input type="radio" name="user_group" value="activedirectory"';
+    $str.= '<input type="radio" name="user_group" value="ldap"';
     if ($form['user_group'] == 'activedirectory')
       $str.= ' checked="checked"';
     $str.= ' />'._('Use LDAP User Groups using the MemberOf field');
@@ -106,6 +204,8 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
 
+    // Not yet Implemented
+    /*
     $str.= '<div>';
     $str.= '<h3>'._('Home Directory').'</h3>';
     $str.= '<input type="radio" name="homedir" value="local"';
@@ -127,6 +227,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= _('Use NFS link using the LDAP field :').' <input type="text" name="homedir" value=""/>';
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
+    */
 
     return $str;
   }
