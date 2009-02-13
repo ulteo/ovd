@@ -171,7 +171,7 @@ class UserDB_ldap {
 		$ret []= $c;
 		$c = new ConfigElement('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$PASSWORD);
 		$ret []= $c;
 		$c = new ConfigElement('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
