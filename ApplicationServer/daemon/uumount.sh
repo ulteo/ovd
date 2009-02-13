@@ -46,7 +46,7 @@ userdel $USER_LOGIN
 groupdel $USER_LOGIN
 
 # Clean the menu
-menu_clean $USER_UID
+menu_clean $SPOOL_USERS/$SESSID'/xdg'
 
 # HERE remove CUPS stuff
 rm -rf /var/spool/cups2all/$USER_LOGIN

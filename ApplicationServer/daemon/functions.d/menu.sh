@@ -26,9 +26,8 @@ menu_init() {
 }
 
 menu_spool() {
-    local user_id=$1
+    local menu_dir=$1
     local sessid_dir=$2
-    local menu_dir=/var/spool/menus/$user_id
 
     menu_init $menu_dir
 
@@ -75,8 +74,7 @@ menu_put() {
 }
 
 menu_clean() {
-    local user_id=$1
-    local menu_dir=/var/spool/menus/$user_id
+    local menu_dir=$1
 
     [ -d $menu_dir ] && rm -rf $menu_dir
 }
