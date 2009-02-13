@@ -81,7 +81,7 @@ class Task {
 		$this->status = 'finished';
 		$this->t_end = time();
 
-		$server = new Server_admin($this->server);
+		$server = Abstract_Server::load($this->server);
 		$server->updateApplications();
 		return true;
 	}

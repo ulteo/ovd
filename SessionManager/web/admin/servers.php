@@ -521,15 +521,15 @@ function show_manage($fqdn) {
   if ($server_online) {
     foreach($tm->tasks as $task) {
       if (! $task->succeed())
-	$tasks[]= $task;
+        $tasks[]= $task;
     }
 
     foreach($tasks as $task) {
       if (get_class($task) == 'Task_install') {
-	foreach($task->applications as $app) {
-	  if (! in_array($app, $apps_in_install))
-	    $apps_in_install[]= $app;
-	}
+    foreach($task->applications as $app) {
+      if (! in_array($app, $apps_in_install))
+        $apps_in_install[]= $app;
+    }
       }
       if (get_class($task) == 'Task_remove') {
 	foreach($task->applications as $app) {
@@ -560,9 +560,11 @@ function show_manage($fqdn) {
   if ($server_online) {
     foreach($applications_all as $app) {
       if (in_array($app, $applications))
-	continue;
+        continue;
       if (in_array($app, $apps_in_install))
-	continue;
+        continue;
+      if ($app->getAttribute('type') != $server->type)
+        continue;
 
       $applications_available[]= $app;
     }
@@ -576,6 +578,17 @@ function show_manage($fqdn) {
   foreach($servers_all as $k => $v) {
     if ($v->fqdn == $server->fqdn)
       unset($servers_all[$k]);
+  }
+  
+  $servers_replication = Servers::getOnline();
+  foreach($servers_replication as $k => $v) {
+    if ($v->fqdn == $server->fqdn)
+      unset($servers_replication[$k]);
+    else {
+       if ( $v->type != $server->type) {
+         unset($servers_replication[$k]);
+       }
+    }
   }
 
   $sessions = Sessions::getByServer($_GET['fqdn']);
@@ -799,7 +812,7 @@ function show_manage($fqdn) {
 
 
   // Server Replication part
-  if (count($servers_all)>0) {
+  if (count($servers_replication)>0) {
     echo '<div>';
     echo '<h3>'._('Replication').'</h3>';
     echo '<form action="" method="post">';
@@ -807,7 +820,7 @@ function show_manage($fqdn) {
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
 
     echo '<table border="0" cellspacing="1" cellpadding="3">';
-    foreach($servers_all as $server_) {
+    foreach($servers_replication as $server_) {
       echo '<tr>';
       echo '<td><input type="checkbox" name="servers[]" value="'.$server_->fqdn.'" /></td>';
       echo '<td><a href="servers.php?action=manage&fqdn='.$server_->fqdn.'">'.$server_->fqdn.'</a></td></tr>';

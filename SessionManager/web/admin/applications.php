@@ -260,6 +260,8 @@ function show_manage($id, $applicationDB) {
       continue;
     elseif (! $server->isOnline())
       continue;
+    elseif ( $server->type != $app->getAttribute('type'))
+      continue;
     else
       $servers_available[]= $server;
   }
@@ -366,7 +368,7 @@ function show_manage($id, $applicationDB) {
       echo '<input type="hidden" name="application" value="'.$id.'" />';
       echo '<select name="server">';
       foreach ($servers_available as $server)
-	echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+        echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
       echo '</select>';
       echo '</td><td><input type="submit" value="'._('Install on this server').'" /></td>';
       echo '</form>';
