@@ -1,5 +1,5 @@
 #!/bin/sh
 
 if dpkg-reconfigure ulteo-ovd; then
-	rm -f /etc/init.d/K99applicationserver_first
+	rm -f /etc/init.d/S99applicationserver_first
 fi
