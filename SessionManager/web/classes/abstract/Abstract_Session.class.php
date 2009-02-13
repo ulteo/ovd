@@ -161,7 +161,7 @@ class Abstract_Session {
 		foreach ($invites_liaisons as $invites_liaison) {
 			Abstract_Invite::delete($invites_liaison->group);
 		}
-		Abstract_Liaison::delete('SessionInvite', $fqdn_, NULL);
+		Abstract_Liaison::delete('SessionInvite', $id_, NULL);
 
 		Abstract_Liaison::delete('ServerSession', NULL, $id_);
 
