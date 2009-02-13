@@ -306,7 +306,7 @@
      /* add back removable media */
      if(fmanager->priv->show_removable_media)
          xfdesktop_file_icon_manager_load_removable_media(fmanager);
-@@ -2815,6 +2843,78 @@
+@@ -2815,6 +2843,86 @@
      g_object_unref(G_OBJECT(thunar_volume_manager));
  }
  
@@ -342,10 +342,18 @@
 +        return;
 +    }
 +
-+    tmp = g_strdup (xfce_rc_read_entry (rc, "spool_tpl", DEFAULT_TPL));
-+    launchers_dir = build_ddir ((const gchar *) tmp);
++    tmp = g_strdup (xfce_rc_read_entry (rc, "from_env", NULL));
++    if (tmp)
++    {
++        launchers_dir = g_strdup (g_getenv (tmp));
++    } else {
++        g_free (tmp); tmp = NULL;
++        tmp = g_strdup (xfce_rc_read_entry (rc, "spool_tpl", DEFAULT_TPL));
++        launchers_dir = build_ddir ((const gchar *) tmp);
++    }
 +    g_free (tmp);
 +    tmp = NULL;
++
 +    xfce_rc_close (rc);
 +
 +    tmp = g_strconcat (launchers_dir, "/", ".show_on_desktop", NULL);
@@ -385,7 +393,7 @@
  
  /* virtual functions */
  
-@@ -2884,18 +2984,24 @@
+@@ -2884,18 +2992,24 @@
                                                            g_direct_equal,
                                                            NULL,
                                                            (GDestroyNotify)g_object_unref);
@@ -412,7 +420,7 @@
  #ifdef HAVE_THUNARX
      thunarx_pfac = thunarx_provider_factory_get_default();
      
-@@ -2995,6 +3101,12 @@
+@@ -2995,6 +3109,12 @@
                                      fmanager->priv->icon_view);
      }
      
@@ -425,7 +433,7 @@
      if(fmanager->priv->deferred_icons) {
          g_list_foreach(fmanager->priv->deferred_icons,
                         (GFunc)thunar_vfs_info_unref, NULL);
-@@ -3030,6 +3142,9 @@
+@@ -3030,6 +3150,9 @@
      g_hash_table_destroy(fmanager->priv->icons);
      fmanager->priv->icons = NULL;
      
@@ -435,7 +443,7 @@
      xfdesktop_file_utils_dbus_cleanup();
      
      g_signal_handlers_disconnect_by_func(G_OBJECT(xfdesktop_icon_view_get_window_widget(fmanager->priv->icon_view)),
-@@ -3414,7 +3529,7 @@
+@@ -3414,7 +3537,7 @@
      if(show_special_file) {
          g_return_if_fail(!g_hash_table_lookup(manager->priv->special_icons,
                                                GINT_TO_POINTER(type)));
