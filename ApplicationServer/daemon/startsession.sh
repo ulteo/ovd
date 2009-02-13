@@ -22,6 +22,12 @@
 . functions.sh
 . log.sh
 
+unexport i CONF_FILE FS GEOMETRY LOG_FILE \
+    LOG_FLAGS MAXLUCK MINLUCK MODULES_FSD \
+    MOUNT_LOG NICK RFB_PORT SERVERNAME SESSID \
+    SESSID_DIR SPOOL SPOOL_USERS USER_HOME USER_ID \
+    USER_LOGIN VNC_USER VNC_USER_ID
+
 if rsbac_is_active; then
     USER_TMP=/tmpdir/tmp${USER_ID}/
     VNC_TMP=/tmpdir/tmp${VNC_USER_ID}/
@@ -61,7 +67,6 @@ session_switch_status $SESSID 2
 # Xvnc accept connexion only from MIT_MAGIC_COOKIEs
 su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/xhost -";
 
-export APP DOC
 export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC
 export DISPLAY=:$i XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
 export XDG_DATA_DIRS=/var/spool/menus/$USER_ID
