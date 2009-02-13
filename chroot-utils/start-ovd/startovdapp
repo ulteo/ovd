@@ -1,0 +1,16 @@
+#!/bin/sh
+
+MYPID=$$
+D=${SPOOL_USERS}/${SESSID}
+
+# notify application start
+echo "$MYPID $1" >> ${D}/apps
+shift
+
+# run the appli
+$@
+
+# notify end
+sed -i "/^$MYPID /d" ${D}/apps
+
+exit 0
