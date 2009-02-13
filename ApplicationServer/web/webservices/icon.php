@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 Logger::debug('main', 'Starting webservices/icon.php');
 
-$path = $_REQUEST['path'];
+$path = base64_decode($_REQUEST['path']);
 
 $bloblo = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
 $bloblo = explode("\n", $bloblo);

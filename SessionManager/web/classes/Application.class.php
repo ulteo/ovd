@@ -37,7 +37,7 @@ class Application {
 		$this->attributes['desktopfile'] = $desktopfile_;
 
 	}
-	
+
 	public function __toString() {
 		$ret = 'Application(';
 		foreach ($this->attributes as $k=>$attr)
@@ -82,7 +82,7 @@ class Application {
 
 		$random_server = $servers[array_rand($servers)];
 
-		$buf = query_url('http://'.$random_server->fqdn.':'.$random_server->web_port.'/webservices/icon.php?path='.$this->getAttribute('icon_path'));
+		$buf = query_url('http://'.$random_server->fqdn.':'.$random_server->web_port.'/webservices/icon.php?path='.base64_encode($this->getAttribute('icon_path')).'&desktopfile='.base64_encode($this->getAttribute('desktopfile')));
 
 		if (!$buf)
 			return false;
@@ -107,23 +107,23 @@ class Application {
 	public function getAttributesList() {
 		return array_keys($this->attributes);
 	}
-	
+
 	public function toXML() {
 		$list_attr = $this->getAttributesList();
 		foreach ($list_attr as $k => $v) {
 			if (in_array($v, array('executable_path', 'icon_path')))
 				unset($list_attr[$k]);
 		}
-		
+
 		$dom = new DomDocument();
 		$application_node = $dom->createElement('application');
 		$executable_node = $dom->createElement('executable');
-		
+
 		if ( $this->hasAttribute('executable_path'))
 			$executable_node->setAttribute('command', $this->attributes['executable_path']);
 		if ( $this->hasAttribute('icon_path'))
 			$executable_node->setAttribute('icon', $this->attributes['icon_path']);
-		
+
 		foreach ($list_attr as $attr_name) {
 			$application_node->setAttribute($attr_name, $this->attributes[$attr_name]);
 		}
