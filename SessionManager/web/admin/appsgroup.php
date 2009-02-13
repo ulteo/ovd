@@ -373,7 +373,7 @@ function show_manage($id) {
       echo '<input type="hidden" name="group" value="'.$id.'" />';
       echo '<select name="element">';
       foreach($applications_available as $application)
-	echo '<option value="'.$application->getAttribute('id').'" >'.$application->getAttribute('name').'</option>';
+	echo '<option value="'.$application->getAttribute('id').'" >'.$application->getAttribute('name').' ('.$application->getAttribute('type').')</option>';
       echo '</select>';
       echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
       echo '</form></tr>';
