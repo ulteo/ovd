@@ -33,14 +33,11 @@ menu_spool() {
 
     [ -f $sessid_dir/parameters/menu ] || return 1
 
-    local file=$sessid_dir'/parameters/menu'
-    local nblines=`wc -l $file |cut -d ' ' -f1`
-
     windows_use_seamlessrdp $sessid_dir
     local put_windows_app=$?
 
-    for i in `seq $nblines`; do
-	local app=`head -n $i $file | tail -n 1`
+    sed -e 's/\\/\\\\/g' $sessid_dir'/parameters/menu' | \
+    while read app; do
 	local type=${app##*.}
 
 	case $type in
