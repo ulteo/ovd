@@ -110,34 +110,42 @@ require_once('header.php');
 
 	echo '<li>';
 	echo $count_active_sessions.' ';
+	echo '<a href="sessions.php">';
 	if ($count_active_sessions > 1)
 		echo _('active sessions');
 	else
 		echo _('active session');
+	echo '</a>';
 	echo '</li>';
 
 	echo '<li>';
 	echo $count_online_servers.' ';
+	echo '<a href="servers.php">';
 	if ($count_online_servers > 1)
 		echo _('online servers');
 	else
 		echo _('online server');
+	echo '</a>';
 	echo '</li>';
 
 	echo '<li>';
 	echo $count_offline_servers.' ';
+	echo '<a href="servers.php">';
 	if ($count_offline_servers > 1)
 		echo _('offline servers');
 	else
 		echo _('offline server');
+	echo '</a>';
 	echo '</li>';
 
 	echo '<li>';
 	echo $count_broken_servers.' ';
+	echo '<a href="servers.php">';
 	if ($count_broken_servers > 1)
 		echo _('broken servers');
 	else
 		echo _('broken server');
+	echo '</a>';
 	echo '</li>';
 ?>
 	</ul>
