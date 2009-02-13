@@ -74,9 +74,10 @@ cache_set_monitoring() {
 	echo '</ssh>'                                      >>$file
 
 	echo '<user login="'$USER_LOGIN'">'                >>$file
-	for pid in $(cache_ps_pid_for_user $USER_LOGIN); do
-	    echo '<pid id="'$pid'" />'                     >>$file
-	done
+    while read pid desktop; do
+        [ -z "$desktop" ] && continue
+        echo '<pid id="'$pid'" desktop="'$desktop'" />' >>$file
+    done < $SPOOL_USERS/$SESSID/apps
 	echo '</user>'                                     >>$file
 	echo '</session>'                                  >>$file
 	session_unload
