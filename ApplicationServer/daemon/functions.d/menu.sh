@@ -70,7 +70,7 @@ menu_put() {
     local basename=$(basename "$desktop")
     local dest=$menu_dir/applications/$basename
 
-    ln -sf "$desktop" "$dest"
+    sed -r "s#^Exec=(.*)#Exec=startovdapp '$desktop' \1#" <"$desktop" >"$dest"
 }
 
 menu_clean() {
