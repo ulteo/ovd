@@ -135,9 +135,6 @@ if (isset($_POST['join'])) {
 		}
 	}
 
-	/* DISPLAY APPLICATIONS */
-
-
 	if ($session->getAttribute('status') == 2) {
 		echo '<h2>'._('Connect to or observe this session').'</h2>';
 		echo '<form id="joinsession" action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
