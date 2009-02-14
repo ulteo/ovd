@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -70,7 +70,7 @@ class ApplicationDB_sql {
 			foreach ($rows as $row){
 				$a = $this->generateApplicationFromRow($row);
 				if ($this->isOK($a))
-					$result []= $a;
+					$result [$a->getAttribute('id')]= $a;
 			}
 			// do we need to sort alphabetically ?
 			if ($sort_) {
@@ -127,13 +127,13 @@ class ApplicationDB_sql {
 	public function configuration(){
 		return array();
 	}
-	
+
 	public function prefsIsValid($prefs_) {
 		if (!defined('APPLICATION_TABLE'))
 			return false;
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			
+
 			return false;
 		}
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
@@ -153,11 +153,11 @@ class ApplicationDB_sql {
 			return false;
 		}
 	}
-	
+
 	public static function prettyName() {
 		return _('MySQL');
 	}
-	
+
 	public static function isDefault() {
 		return true;
 	}

@@ -74,6 +74,20 @@ if (isset($_POST['join'])) {
 	if (! $session)
 		redirect('sessions.php');
 
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+	$mods_enable = $prefs->get('general','module_enable');
+	if (! in_array('ApplicationDB',$mods_enable))
+		$show_apps = false;
+	else
+	{
+		$show_apps = true;
+		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+		$applicationDB = new $mod_app_name();
+		$apps = $applicationDB->getList();
+	}
+
 //FIX ME?
 	$session->getStatus();
 
@@ -103,6 +117,26 @@ if (isset($_POST['join'])) {
 	echo '</li>';
 	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
+
+	if ($show_apps && isset($session->applications)) {
+		echo '<h2>'._('Running applications').'</h2>';
+
+		if (count($session->applications) == 0) {
+			echo _('No application running');
+		} else {
+			echo '<ul>';
+			foreach ($session->applications as $id) {
+				$myapp = $apps[$id];
+				echo '<li><a href="applications.php?action=manage&id='.
+					$myapp->getAttribute('id').'">'.
+					$myapp->getAttribute('name').'</a></li>';
+			}
+			echo '</ul>';
+		}
+	}
+
+	/* DISPLAY APPLICATIONS */
+
 
 	if ($session->getAttribute('status') == 2) {
 		echo '<h2>'._('Connect to or observe this session').'</h2>';

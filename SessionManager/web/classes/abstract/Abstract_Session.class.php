@@ -36,9 +36,10 @@ class Abstract_Session {
 		@6 varchar(255) NOT NULL,
 		@7 varchar(255) NOT NULL,
 		@8 varchar(255) NOT NULL,
-		@9 int(10) NOT NULL,
+		@9 varchar(255) NOT NULL,
+		@10 int(10) NOT NULL,
 		PRIMARY KEY  (@2)
-		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'start_time', 'timestamp');
+		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', 'timestamp');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions\'');
@@ -63,7 +64,7 @@ class Abstract_Session {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6 FROM @7 WHERE @8 = %9 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'start_time', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7 FROM @8 WHERE @9 = %10 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $mysql_conf['prefix'].'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -81,6 +82,7 @@ class Abstract_Session {
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
 		$buf->start_time = (string)$start_time;
+		$buf->applications = unserialize($applications);
 
 		return $buf;
 	}
@@ -103,7 +105,7 @@ class Abstract_Session {
 			if (! Abstract_Session::create($session_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15 WHERE @16 = %17 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}

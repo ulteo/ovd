@@ -29,6 +29,7 @@ class Session {
 	public $user_login = NULL;
 	public $user_displayname = NULL;
 	public $start_time = NULL;
+	public $applications = array();
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting Session::__construct for \''.$id_.'\'');
@@ -37,6 +38,7 @@ class Session {
 	}
 
 	public function __toString() {
+		/* print array of apps? */
 		return 'Session(\''.$this->id.'\', \''.$this->server.'\', \''.$this->status.'\', \''.$this->user_login.'\', \''.$this->user_displayname.'\', \''.$this->start_time.'\')';
 	}
 
