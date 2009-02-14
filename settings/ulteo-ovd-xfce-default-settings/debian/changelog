@@ -1,3 +1,9 @@
+ulteo-ovd-xfce-default-settings (0.4) ovd-polaris-testing; urgency=low
+
+  * restricted menu: use an envvar instead of a static path
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Sat, 14 Feb 2009 11:26:53 +0100
+
 ulteo-ovd-xfce-default-settings (0.3) ovd-polaris-testing; urgency=low
 
   * Update the restricted menu configuration
