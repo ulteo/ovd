@@ -37,32 +37,61 @@ if (! isset($_REQUEST['type']))
 else
 	$type = $_REQUEST['type'];
 
-$select_array = array('applications', 'servers');
+$types_array = array('applications', 'servers');
+$types_html = '';
+foreach ($types_array as $k) {
+	if ($type == $k)
+		$selected = ' selected="selected"';
+	else
+		$selected = '';
+	$types_html .= "  <option value=\"$k\"$selected>$k</option>\n";
+}
 ?>
 
 <form action="report.php" method="get">
   Report type:
   <select name="type">
-  <?php
-  foreach ($select_array as $k) {
-	if ($type == $k)
-		$selected = ' selected="selected"';
-	else
-		$selected = '';
-	echo '  <option value="'.$k.'"'.$selected.'>'.$k.'</option>';
-  }
-  ?>
+  <?php echo $types_html; ?>
   </select>
   <br />
   From:  <input type="text" name="start" maxlength="8" value="<?php echo $start ?>" />
   To: <input type="text" name="end" maxlength="8" value="<?php echo $end ?>" />
   (YYYYMMDD)
+
+<?php
+if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
+	/* this is the computing part */
+	include_once('report-'.$_REQUEST['type'].'.php');
+
+	/* list available templates */
+	print '  <br />';
+	print '  Template: ';
+	print '  <select name="template">';
+	foreach (glob('templates/'.$type.'/*.php') as $file) {
+		$item = preg_replace ('/\.php$/', '', basename($file));
+		if (isset($_REQUEST['template']) && ($_REQUEST['template'] == $item))
+			$s = ' selected="selected"';
+		else
+			$s = '';
+		print "    <option value=\"$item\"$s>$item</option>\n";
+	}
+	print '  </select>';
+	print '  <br />';
+
+
+	$tpl = 'templates/'.$type.'/default.php';
+	if (isset($_REQUEST['template']) &&
+	  is_file('templates/'.$type.'/'.$_REQUEST['template'].'.php'))
+		$tpl = 'templates/'.$type.'/'.$_REQUEST['template'].'.php';
+}
+?>
+
   <input type="submit" value="Report" />
 </form>
 <hr />
 
 <?php
-if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php'))
-	include_once('report-'.$_REQUEST['type'].'.php');
+if (isset($tpl))
+	include_once($tpl);
 
 require_once('footer.php');

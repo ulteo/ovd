@@ -1,4 +1,4 @@
-SUBDIRS =  media modules includes classes submenu
+SUBDIRS = media modules includes classes submenu templates
 
 scripts_DATA = actions.php \
                ajax.php \

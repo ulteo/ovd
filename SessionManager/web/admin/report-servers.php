@@ -39,35 +39,25 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	                     SERVERS_REPORT_TABLE,
 	                     'date', $_REQUEST['start'], $_REQUEST['end']);
 
-
 	$data = array();
 	$days_nb = 0;
 	while ($res = $sql->FetchResult()) {
 		$days_nb++;
-		if (! isset($data[$res['fqdn']]))
-			$data[$res['fqdn']] = init_fqdn($res['fqdn']);
+		$fqdn = $res['fqdn'];
+		if (! isset($data[$fqdn]))
+			$data[$fqdn] = init_fqdn($fqdn);
 
-		$data[$res['fqdn']]['down_time'] += $res['down_time'];
-		$data[$res['fqdn']]['maintenance_time'] += $res['maintenance_time'];
-		$data[$res['fqdn']]['sessions_count'] += $res['sessions_count'];
-		if ($res['max_connections'] >= $data[$res['fqdn']]['max_connections']) {
-			$data[$res['fqdn']]['max_connections'] = $res['max_connections'];
-			$data[$res['fqdn']]['max_connections_when'] = $res['max_connections_when'];
+		$data[$fqdn]['down_time'] += $res['down_time'];
+		$data[$fqdn]['maintenance_time'] += $res['maintenance_time'];
+		$data[$fqdn]['sessions_count'] += $res['sessions_count'];
+		if ($res['max_connections'] >= $data[$fqdn]['max_connections']) {
+			$data[$fqdn]['max_connections'] = $res['max_connections'];
+			$data[$fqdn]['max_connections_when'] = $res['max_connections_when'];
 		}
-		if ($res['max_ram'] >= $data[$res['fqdn']]['max_ram']) {
-			$data[$res['fqdn']]['max_ram'] = $res['max_ram'];
-			$data[$res['fqdn']]['max_ram_when'] = $res['max_ram_when'];
+		if ($res['max_ram'] >= $data[$fqdn]['max_ram']) {
+			$data[$fqdn]['max_ram'] = $res['max_ram'];
+			$data[$fqdn]['max_ram_when'] = $res['max_ram_when'];
 		}
-	}
-
-	/* TODO: output should be handled by templates */
-	foreach ($data as $server) {
-		print "<b>Server: ".$server['fqdn']."</b>\n";
-		print "<ul>\n";
-		foreach ($server as $key => $value) {
-			print "  <li>$key => $value <br /></li>\n";
-		}
-		print "</ul>";
 	}
 }
 
