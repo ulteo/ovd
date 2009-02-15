@@ -3,6 +3,7 @@ SUBDIRS =  media modules includes classes submenu
 scripts_DATA = actions.php \
                ajax.php \
                applications.php \
+               applications-report.php \
                appsgroup.php \
                configuration.php \
                configuration-partial.php \

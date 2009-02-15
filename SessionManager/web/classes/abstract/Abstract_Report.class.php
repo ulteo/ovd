@@ -58,9 +58,10 @@ class Abstract_Report {
 		@3 varchar(255) NOT NULL,
 		@4 int(8) NOT NULL,
 		@5 int(8),
-		@6 int(8)
+		@6 int(8),
+		@7 int(10)
 		)', $mysql_conf['prefix'].'applications_report', 'date', 'fqdn', 'app_id',
-		    'use_count', 'max_use');
+		    'use_count', 'max_use', 'max_use_when');
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'applications_report\'');

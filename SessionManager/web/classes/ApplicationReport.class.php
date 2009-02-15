@@ -192,6 +192,7 @@ class ApplicationReport {
 
 			$count = array();
 			$max_count = array();
+			$max_count_when = array();
 			foreach ($obj->record[$fqdn] as $app_data) {
 				$app_id = $app_data->app_id;
 				if (! array_key_exists($app_id, $count))
@@ -202,9 +203,12 @@ class ApplicationReport {
 				/* this should always be verified */
 				if (isset ($obj->max_use[$fqdn][$app_id])) {
 					$max_count[$app_id] = $obj->max_use[$fqdn][$app_id]->get();
+					$max_count_when[$app_id] =
+						$obj->max_use[$fqdn][$app_id]->getLastUpdate();
 				} else {
 					/* just in case */
 					$max_count[$app_id] = 0;
+					$max_count_when[$app_id] = 0;
 				}
 			}
 
@@ -221,11 +225,13 @@ class ApplicationReport {
 				if ($SQL->NumRows() != 0)
 					continue;
 
-				$res = $SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5,@6) VALUES '.
-				                     '(%7,%8,%9,%10,%11)',
+				$res = $SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5,@6,@7) VALUES '.
+				                     '(%8,%9,%10,%11,%12,%13)',
 				                     APPLICATIONS_REPORT_TABLE,
-				                     'date', 'fqdn', 'app_id', 'use_count', 'max_use',
-				                     $day_, $fqdn, $app_id, $use_count, $max_use);
+				                     'date', 'fqdn', 'app_id', 'use_count',
+									 'max_use', 'max_use_when',
+				                     $day_, $fqdn, $app_id, $use_count,
+									 $max_use, $max_count_when[$app_id]);
 			}
 		}
 		unset ($obj);
