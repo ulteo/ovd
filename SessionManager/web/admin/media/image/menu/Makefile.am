@@ -5,6 +5,7 @@ scripts_DATA = applications.php.png \
                logout.php.png \
 			   logs.php.png \
 			   publications.php.png \
+			   report.php.png \
 			   servers.php.png \
                sessions.php.png \
 			   users.php.png \
