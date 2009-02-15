@@ -22,10 +22,31 @@
 require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
 
 abstract class EventCallback {
+	private $is_active = false;
+
+	/* action the callbacks does when the signal is emitted */
 	abstract function run();
+	abstract function getDescription();
+
+	/* if isInternal returns true, there will not be an option to
+	 * active/deactivate it */
+	abstract function isInternal();
+
+	/* returns an array of configuration items to display in the admin console */
+	public function getConfigItems() {
+		return NULL;
+	}
 
 	public final function __construct($ev_) {
 		$this->ev = $ev_;
     }
+
+	public function getIsActive() {
+		return $this->is_active;
+	}
+
+	public function setIsActive($bool_) {
+		$this->is_active = $bool_;
+	}
 }
 

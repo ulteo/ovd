@@ -24,7 +24,7 @@
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class ServerStatusChangedReport extends EventCallback {
-    public function run () {
+    public function run() {
 		$rep = ServerReport::load();
 
 		if ($this->ev->status == ServerStatusChanged::$ONLINE)
@@ -41,5 +41,17 @@ class ServerStatusChangedReport extends EventCallback {
 
 		return true;
     }
+
+	public function getDescription() {
+		return false;
+	}
+
+	public function isInternal() {
+		return true;
+	}
+
+	public function showSettings() {
+		return false;
+	}
 }
 

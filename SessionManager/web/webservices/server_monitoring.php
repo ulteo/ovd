@@ -48,8 +48,9 @@ $dom->loadXML($xml);
 
 $server_keys = array();
 
-/* how many times each application is currently used */
-$applications_count = array();
+/* store application information per server; this will be given to the
+ * AppReport class */
+$per_server = array();
 
 $cpu_node = $dom->getElementsByTagname('cpu')->item(0);
 $server_keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
@@ -72,16 +73,18 @@ $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
 $applicationDB = new $mod_app_name();
 $all_applications = $applicationDB->getList();
 
+/* get a db of desktopfilename -> app_id */
+/* TODO: store this in a cache file? */
 $applications = array();
 foreach ($all_applications as $app) {
-	$applications[$app->getAttribute('desktopfile')] = $app->getAttribute('id');
+	$applications[$app->getAttribute('desktopfile')] = (int)$app->getAttribute('id');
 }
 
 /* get running apps per session */
 $sessions_node = $dom->getElementsByTagName('session');
 foreach ($sessions_node as $session_node) {
-	$id = $session_node->getAttribute('id');
-	$session = Abstract_Session::load($id);
+	$sessid = $session_node->getAttribute('id');
+	$session = Abstract_Session::load($sessid);
 
 	if (($session === false) || (! $session->isAlive()))
 		continue;
@@ -89,6 +92,9 @@ foreach ($sessions_node as $session_node) {
 	/* reset the applications infos for this session */
 	unset($session->applications);
 	$session->applications = array();
+
+	if (! isset($per_server[$session->server]))
+		$per_server[$session->server] = array();
 
 	foreach ($session_node->childNodes as $user_node) {
 		if ($user_node->nodeType != XML_ELEMENT_NODE ||
@@ -100,12 +106,14 @@ foreach ($sessions_node as $session_node) {
 				$pid_node->tagName != 'pid')
 					continue;
 
-			$pid = $pid_node->getAttribute('id');
-			$desktop = $pid_node->getAttribute('desktop');
+			$pid = (int)$pid_node->getAttribute('id');
+			$app_id = $applications[$pid_node->getAttribute('desktop')];
 
-			$app_id = $applications[$desktop];
 			if (! in_array($app_id, $session->applications)) {
 				$session->applications[] = $app_id;
+
+				/* store everything for apps reporting */
+				$per_server[$session->server][$pid] = $app_id;
 
 				if (! isset($applications_count[$app_id]))
 					$applications_count[$app_id] = 0;
@@ -120,3 +128,8 @@ foreach ($sessions_node as $session_node) {
 foreach ($server_keys as $k => $v)
 	$server->setAttribute($k, trim($v));
 Abstract_Server::save($server);
+
+$report = ApplicationReport::load();
+$report->update($per_server);
+$report->save();
+

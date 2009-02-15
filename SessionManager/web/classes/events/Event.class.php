@@ -23,7 +23,6 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Event {
 	private $callbacks_dir;
-	private $known_callbacks;     /* list of usable callbacks */
 	private $callbacks = array(); /* callbacks actually used */
 
 	/* common attributes */
@@ -36,63 +35,15 @@ class Event {
 		if (! is_dir($this->callbacks_dir))
 			return;
 
-		$this->known_callbacks = $this->getAvailableCallbacks();
-
-		/* get the list of callbacks we'll handle */
-		$this->registerBuiltinCallbacks();
-		$prefs = Preferences::getInstance();
-		$cb_list = $prefs->get('events', get_class($this));
-		if (($cb_list != NULL) && is_array ($cb_list)) {
-			foreach ($cb_list as $cb) {
-				Logger::info('main', 'CALLBACK: '.$cb);
-				if (in_array($cb, $this->known_callbacks))
-					$this->register($cb);
-			}
+		$fileslist = glob($this->callbacks_dir . "/*.class.php");
+		foreach ($fileslist as $file) {
+			$cb = preg_replace ('/\.class\.php$/', '', basename($file));
+			$this->callbacks[] = $cb;
 		}
 
 		/* set attributes if any */
 		if ($array_ != NULL && is_array($array_))
 			$this->setAttributes($array_);
-	}
-
-	public final function getAvailableCallbacks() {
-		$ret = array();
-		$fileslist = glob($this->callbacks_dir . "/*.class.php");
-
-		foreach ($fileslist as $file)
-			$ret[] = preg_replace (
-				'/\.class\.php$/', '', basename($file));
-
-		return $ret;
-	}
-
-	protected final function registerBuiltinCallbacks() {
-		/* FIXME: we'll have to drop builtins callbacks from the options list
-		 * when it will be worked on */
-		if (isset($this->builtins))
-		{
-			foreach($this->builtins as $builtin) {
-				$this->register($builtin);
-			}
-			return true;
-		}
-		return false;
-	}
-
-	private final function register($callback_) {
-		if (! in_array($callback_, $this->callbacks))
-		{
-			Logger::debug('main', 'Event::register registering callback '.$callback_);
-			$this->callbacks[] = $callback_;
-		}
-	}
-
-	protected final function unregister($callback_) {
-		/* FIXME: is there a better way to do this in php ? */
-		foreach($this->callbacks as $key => $value) {
-			if ($callback_ == $value)
-				array_slice($this->callbacks, $key);
-		}
 	}
 
 	public final function emit() {
@@ -102,9 +53,15 @@ class Event {
 			$callback_name = get_class($this).$callback;
 
 			try {
-				$c = new $callback_name($this);
+				$cb = new $callback_name($this);
 				Logger::debug('main', 'Event::emit Running callback '.$callback_name);
-				if ($c->run($this) === false) {
+
+				/* run the callback only if it is mandatory or if it is
+				 * activated in the prefs */
+				if (! $cb->isInternal() && ! $cb->getIsActive())
+					continue;
+
+				if ($cb->run($this) === false) {
 					break;
 				}
 			} catch(Exception $e) {
@@ -120,7 +77,7 @@ class Event {
 
 	public final function setAttributes($array_) {
 		foreach ($array_ as $key => $value) {
-			$this->setAttribute ($key, $value);
+			$this->setAttribute($key, $value);
 		}
 	}
 }

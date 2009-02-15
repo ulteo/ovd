@@ -208,7 +208,7 @@ class ServerReport {
 							 $max_ram, $max_ram_when);
 	}
 
-	/* TODO: weekly, monthly and yearly computing */
+	/* TODO: monthly and yearly computing */
 
 
 	public function dump() {

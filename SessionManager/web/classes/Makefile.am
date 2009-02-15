@@ -3,6 +3,7 @@ SUBDIRS = abstract \
           tasks
 
 scripts_DATA = Application.class.php \
+               ApplicationReport.class.php \
                Invite.class.php \
                Invites.class.php \
                LDAP.class.php \

@@ -122,6 +122,7 @@ class ReportIntervalItem {
 class ReportRunningItem {
 	public $running;
 	public $start;
+	public $elapsed;
 
 	public function __construct() {
 		$this->running = true;
@@ -134,23 +135,10 @@ class ReportRunningItem {
 		$this->elapsed = $this->end - $this->start;
 	}
 
-	public function setMaxResources($cpu_, $ram_) {
-		if (! isset($this->cpu))
-			$this->cpu = new ReportMaxItem($cpu_);
-		else
-			$this->cpu->set($cpu_);
-
-		if (! isset($this->ram))
-			$this->ram = new ReportMaxItem($ram_);
-		else
-			$this->ram->set($ram_);
-	}
-
-	public function getMaxResources() {
-		return array(
-			'cpu' => $this->cpu->get(),
-			'ram' => $this->ram->get()
-		);
+	public function isDone() {
+		if (isset ($this->elapsed) && $this->elapsed >= 0)
+			return $this->elapsed;
+		return false;
 	}
 }
 

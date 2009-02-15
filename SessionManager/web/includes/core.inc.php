@@ -47,6 +47,7 @@ if (is_object($prefs)) {
 		define('APPSGROUP_TABLE', $mysql_conf['prefix'].'gapplication');
 		define('SOURCES_LIST_TABLE', $mysql_conf['prefix'].'sources_list');
 		define('SERVERS_REPORT_TABLE', $mysql_conf['prefix'].'servers_report');
+		define('APPLICATIONS_REPORT_TABLE', $mysql_conf['prefix'].'applications_report');
 		MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 	}
 }

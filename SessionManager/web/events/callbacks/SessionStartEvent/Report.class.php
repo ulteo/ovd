@@ -35,5 +35,17 @@ class SessionStartEventReport extends EventCallback {
 
 		return true;
     }
+
+	public function getDescription() {
+		return false;
+	}
+
+	public function showSettings() {
+		return false;
+	}
+
+	public function isInternal() {
+		return true;
+	}
 }
 
