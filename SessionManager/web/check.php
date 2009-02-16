@@ -23,36 +23,42 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 Logger::warning('main', '(check) Database purge start');
 
 $tokens = Tokens::getAll();
-foreach ($tokens as $token) {
-	if (! $token->isValid()) {
-		Logger::warning('main', '(check) Token \''.$token->id.'\' is no longer valid, deleting');
+if ($tokens) {
+	foreach ($tokens as $token) {
+		if (! $token->isValid()) {
+			Logger::warning('main', '(check) Token \''.$token->id.'\' is no longer valid, deleting');
 
-		if ($token->type == 'start') //Token start Session
-			Abstract_Session::delete($token->link_to);
-		if ($token->type == 'invite') //Token invite Session
-			Abstract_Invite::delete($token->link_to);
+			if ($token->type == 'start') //Token start Session
+				Abstract_Session::delete($token->link_to);
+			if ($token->type == 'invite') //Token invite Session
+				Abstract_Invite::delete($token->link_to);
 
-		Abstract_Token::delete($token->id);
+			Abstract_Token::delete($token->id);
+		}
 	}
 }
 
 $invites = Invites::getAll();
-foreach ($invites as $invite) {
-	if (! $invite->isValid()) {
-		Logger::warning('main', '(check) Invite \''.$invite->id.'\' is no longer valid, deleting');
+if ($invites) {
+	foreach ($invites as $invite) {
+		if (! $invite->isValid()) {
+			Logger::warning('main', '(check) Invite \''.$invite->id.'\' is no longer valid, deleting');
 
-		Abstract_Invite::delete($invite->id);
+			Abstract_Invite::delete($invite->id);
+		}
 	}
 }
 
 $sessions = Sessions::getAll();
-foreach ($sessions as $session) {
-	$buf = $session->getStatus();
+if ($sessions) {
+	foreach ($sessions as $session) {
+		$buf = $session->getStatus();
 
-	if (! $buf || (int)$buf == 4) {
-		Logger::warning('main', '(check) Session \''.$session->id.'\' is no longer existing, deleting');
+		if (! $buf || (int)$buf == 4) {
+			Logger::warning('main', '(check) Session \''.$session->id.'\' is no longer existing, deleting');
 
-		Abstract_Session::delete($session->id);
+			Abstract_Session::delete($session->id);
+		}
 	}
 }
 
