@@ -166,31 +166,58 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_=NULL) {
+	public function prefsIsValid($prefs_=NULL , $log=array()) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
 
 		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');
 		foreach ($minimum_keys as $m_key){
-			if (!isset($config_AD[$m_key]))
+			if (!isset($config_AD[$m_key])) {
+				$log['config_AD has key '.$m_key] = false;
 				return false;
+			}
+// 			else {
+// 				$log['config_AD has key '.$m_key] = true;
+// 			}
 		}
 
 		$ldap_suffix = self::domain2suffix($config_AD['domain']);
-		if (! $ldap_suffix)
+		if (! $ldap_suffix) {
+			$log ['domain2suffix for \''.$config_AD['domain'].'\''] = false;
 			return false;
+		}
+		$log ['domain2suffix for \''.$config_AD['domain'].'\''] = true;
 
-		if (! UserDB_ldap::isValidDN($ldap_suffix))
+		if (! UserDB_ldap::isValidDN($ldap_suffix)) {
+			$log['isValidDN for \''.$ldap_suffix.'\''] = false;
 			return false;
+		}
+		$log['isValidDN for \''.$ldap_suffix.'\''] = true;
 
-		if (! UserDB_ldap::isValidDN($config_AD['login']))
+		if (! UserDB_ldap::isValidDN($config_AD['login'])) {
+			$log['isValidDN for \''.$config_AD['login'].'\''] = false;
 			return false;
+		}
+		$log['isValidDN for \''.$config_AD['login'].'\''] = true;
 
 		$config_ldap = self::makeLDAPconfig($config_AD);
 		$LDAP2 = new LDAP($config_ldap);
-		$ret = $LDAP2->connect();
-		$LDAP2->disconnect();
+		$ret = $LDAP2->connect(&$log);
+		if ( $ret === false) {
+// 			$log['LDAP connect to \''.$config_ldap['host'].'\''] = false;
+			return false;
+		}
 
-		return ($ret === true);
+// 		$log['Connect to AD'] = true;
+		
+		$ret = $LDAP2->branch_exists($config_AD['ou']);
+		if ( $ret == false) {
+			$log['LDAP user branch'] = false;
+		}
+		else {
+			$log['LDAP user branch'] = true;
+		}
+		$LDAP2->disconnect();
+		return true;
 	}
 
 	public static function prettyName() {

@@ -108,7 +108,7 @@ class UserDB_unix {
 		return array();
 	}
 	
-	public function prefsIsValid($prefs_) {
+	public function prefsIsValid($prefs_, $log=array()) {
 		return true;
 	}
 	

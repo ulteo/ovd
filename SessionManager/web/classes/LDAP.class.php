@@ -72,13 +72,15 @@ class LDAP {
 		}
 	}
 
-	public function connect() {
+	public function connect($log=array()) {
 		Logger::debug('main', 'LDAP - connect(\''.$this->host.'\', \''.$this->port.'\')');
 		$buf = @ldap_connect($this->host, $this->port);
 		if (!$buf) {
 			Logger::error('main', 'Link to LDAP server failed. Please try again later.');
+			$log['LDAP connect'] = false;
 			return false;
 		}
+		$log['LDAP connect'] = true;
 
 		$this->link = $buf;
 		if (!is_null($this->port))
@@ -86,14 +88,13 @@ class LDAP {
 
 		if ($this->login == '') {
 			$buf_bind = $this->bind();
+			if ($buf_bind === false)
+				$log['LDAP anonymous bind'] = false;
+			else
+				$log['LDAP anonymous bind'] = true;
 		}
 		else {
-			if (substr($this->login, 0, strlen($this->uidprefix)) != $this->uidprefix) {
-				$dn = $this->uidprefix.'=';
-			}
-			else {
-				$dn = '';
-			}
+			$dn = '';
 			
 			if (substr($this->login, -1*strlen($this->suffix)) == $this->suffix) {
 				$dn .= $this->login;
@@ -106,8 +107,11 @@ class LDAP {
 					$dn .= $this->login.','.$this->suffix;
 				}
 			}
-	
 			$buf_bind = $this->bind($dn, $this->password);
+			if ($buf_bind === false)
+				$log['LDAP bind'] = false;
+			else
+				$log['LDAP bind'] = true;
 		}
 		return $buf_bind;
 	}
@@ -221,6 +225,14 @@ class LDAP {
 		if (is_numeric($ret))
 			return $ret;
 
+		return false;
+	}
+	
+	public function branch_exists($branch) {
+		$this->check_link();
+		$ret = @ldap_read($this->link, $branch.','.$this->suffix,"(objectclass=*)");
+		if (is_resource($ret))
+			return true;
 		return false;
 	}
 }

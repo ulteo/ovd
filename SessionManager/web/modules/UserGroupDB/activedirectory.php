@@ -126,7 +126,7 @@ class UserGroupDB_activedirectory {
 		return array();
 	}
 	
-	public static function prefsIsValid($prefs_) {
+	public static function prefsIsValid($prefs_, $log=array()) {
 		// FIXME : liaison to ad
 		return true;
 	}

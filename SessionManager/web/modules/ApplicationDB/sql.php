@@ -128,7 +128,7 @@ class ApplicationDB_sql {
 		return array();
 	}
 
-	public function prefsIsValid($prefs_) {
+	public function prefsIsValid($prefs_, $log=array()) {
 		if (!defined('APPLICATION_TABLE'))
 			return false;
 		$mysql_conf = $prefs_->get('general', 'mysql');

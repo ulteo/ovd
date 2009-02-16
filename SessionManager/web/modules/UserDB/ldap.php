@@ -186,13 +186,24 @@ class UserDB_ldap {
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_) {
+	public function prefsIsValid($prefs_, $log=array()) {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
-		$ret = $LDAP2->connect();
-		$LDAP2->disconnect();
-
-		return ($ret === true);
+		$ret = $LDAP2->connect(&$log);
+		if ($ret === false) {
+			return false;
+		}
+		$ret = $LDAP2->branch_exists($config_ldap['userbranch']);
+		if ( $ret == false) {
+			$log['LDAP user branch'] = false;
+			$LDAP2->disconnect();
+			return false;
+		}
+		else {
+			$log['LDAP user branch'] = true;
+			
+		}
+		return true;
 	}
 
 	public static function isValidDN($dn_) {
