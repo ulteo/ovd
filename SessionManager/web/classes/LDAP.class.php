@@ -94,7 +94,19 @@ class LDAP {
 				$log['LDAP anonymous bind'] = true;
 		}
 		else {
-			$dn = '';
+			$pos1 = strpos($this->login, ',');
+			$pos2 = strpos($this->login, '=');
+			if ( $pos2 === false && $pos1 === false) {
+				$dn = $this->uidprefix.'=';
+			}
+			else {
+				if ( $pos2 > $pos1) {
+					$dn = $this->uidprefix.'=';
+				}
+				else {
+					$dn = '';
+				}
+			}
 			
 			if (substr($this->login, -1*strlen($this->suffix)) == $this->suffix) {
 				$dn .= $this->login;
@@ -130,7 +142,7 @@ class LDAP {
 			Logger::error('main', 'LDAP - bind failed : ('.$this->errno().') ');
 			$searchbase =$this->userbranch.','.$this->suffix;
 			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -W -D '.$dn_.' -LLL -b '.$searchbase;
-			Logger::debug('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
+			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
 			return false;
 		}
 
