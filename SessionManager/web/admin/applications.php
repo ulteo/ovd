@@ -303,6 +303,7 @@ function show_manage($id, $applicationDB) {
   echo '<th>'._('Type').'</th>';
 //   echo '<th>'._('Status').'</th>';
   echo '<th>'._('Description').'</th>';
+  echo '<th>'._('Executable').'</th>';
   echo '</tr>';
 
   echo '<tr class="content1">';
@@ -310,6 +311,7 @@ function show_manage($id, $applicationDB) {
   echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 //   echo '<td>'.$status.'</td>';
   echo '<td>'.$app->getAttribute('description').'</td>';
+  echo '<td>'.$app->getAttribute('executable_path').'</td>';
   echo '</tr>';
   echo '</table>';
 
