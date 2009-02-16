@@ -6,6 +6,7 @@ SRC=AdminConsole.xml \
 	Documentation_Debian.xml \
 	Documentation_from_sources.xml \
 	Documentation_RedHat.xml \
+	Protocol.xml \
 	RSBAC.xml
 
 

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - Protocol Description</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008 - 2009</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    The purpose of this documentation is to describe the protocols used by <emphasis>Ulteo Open Virtual Desktop</emphasis>.
+  </para>
+
+  <section>
+    <title>List of Protocols used</title>
+    
+    <section>
+      <title>Hyper Text Transfert Protocol (HTTP)</title>
+
+      <para>
+	The base communication protocol used is HTTP because of the Web based solution.
+	But we also use HTTP for the communication between servers: Session Manager to Application Server and vice versa.
+	This protocol run over TCP on the port 80. 
+	We are not using HTTPS (443) at the moment.
+      </para>
+
+      <para>
+	The Administration Console is a Web site too.
+      </para>
+
+      <para><ulink url="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP on Wikipedia</ulink></para>
+    </section>
+
+    <section>
+      <title>Remote Frame Buffer (RFB)</title>
+
+      <para>
+	RFB is the protocol used to display the remote desktop and application inside the Web broswer. 
+	This protocol is used by VNC.
+	VNC run over TCP too.
+	A VNC server run one instance by desktop so one port for each display.
+	The classic port used by VNC is 5900.
+      </para>
+
+      <para>
+	For Ulteo Open Virtual Desktop, we are using port between 5900 and 6000. 
+      </para>
+
+      <para><ulink url="http://en.wikipedia.org/wiki/RFB_protocol">RFB on Wikipedia</ulink></para>
+
+    </section>
+
+    <section>
+      <title>Secure Shell (SSH)</title>
+
+      <para>
+	SSH is a protocol to access to a machine over a network.
+	SSH use encryption to make sure that no one on the network can decrypt what the user do.
+      </para>
+
+      <para>
+	We are using SSH to tunnelize the RFB stream because RFB is not encprypted.
+      </para>
+
+
+      <para><ulink url="http://en.wikipedia.org/wiki/Secure_Shell">RFB on Wikipedia</ulink></para>
+    </section>
+
+
+  </section>
+
+
+  <section>
+   <title>Servers Communication</title>
+   <para>
+     The Session Manager is a full web application while the Application server is composed by two things: a daemon and a web pages. 
+   The servers communicates by HTTP.
+   </para>
+
+   <para>
+     The Session Manager send orders to Application servers. 
+     To know which address own which server, the Session Manager store the Fully Qualified Domain Name (FQDN) that the server gave as his first request (server registration). This name is different as the <emphasis>external name</emphasis> that is only used for session launchs.
+   </para>
+
+
+   <para>
+     The Applications servers send status to their Session Manager.
+     Their Session Manager location is store in the deamon configuration file (<emphasis>SESSION_MANAGER_URL</emphasis>)
+   </para>
+  </section>
+
+  <section>
+   <title>Desktop Session</title>
+   <para>
+     startsession.php: HTTP 302 -> redirection on the APS external name with a token.
+   </para>
+   <para>
+     ApS connect to the SM and use the token.
+   </para>
+   <para>
+     Client have to call /startsession.php to init the session then the session is initialize and start (a call to applet.php give the applet configuration).
+   </para>
+  
+   <para>
+     <inlinemediaobject>
+       <imageobject>
+	 <imagedata fileref="media/session.png"/>
+       </imageobject>
+     </inlinemediaobject>
+   </para>
+
+
+
+  </section>
+
+
+</article>
