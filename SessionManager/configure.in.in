@@ -77,6 +77,9 @@ web/modules/Makefile
 web/modules/UserGroupDB/Makefile
 web/modules/UserDB/Makefile
 web/modules/ApplicationDB/Makefile
+web/admin/templates/Makefile
+web/admin/templates/servers/Makefile
+web/admin/templates/applications/Makefile
 web/admin/media/script/ajax/Makefile
 web/admin/media/script/Makefile
 web/admin/media/style/Makefile
