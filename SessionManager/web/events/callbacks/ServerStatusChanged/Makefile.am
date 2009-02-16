@@ -1,5 +1,4 @@
-scripts_DATA = Dummy.class.php \
-               Report.class.php
+scripts_DATA = Report.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/events/callbacks/ServerStatusChanged
 
