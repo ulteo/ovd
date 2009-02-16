@@ -12,9 +12,10 @@ reload_apache()
 }
 
 # apache2 link
-a2dissite applicationserver 2>/dev/null || true
 rm -f /etc/apache2/sites-available/applicationserver
 rm -f /etc/apache2/sites-enabled/applicationserver
+
+reload_apache
 
 #DEBHELPER#
 
