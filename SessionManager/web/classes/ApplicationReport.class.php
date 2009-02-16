@@ -74,10 +74,8 @@ class ApplicationReport {
 
 		/* first read the current state to find items that ended */
 		foreach ($this->state as $server => $server_data) {
+			$this->data_init($server);
 			$perappcount[$server] = array();
-
-			if (! array_key_exists($server, $this->record))
-				$this->record[$server] = array();
 
 			/* no session on $server, means that all registred apps ended */
 			if (! array_key_exists($server, $data_)) {
@@ -121,9 +119,8 @@ class ApplicationReport {
 
 		/* now read the remaining data to deal with new process */
 		foreach ($data_ as $server => $app_data_) {
+			$this->data_init($server);
 			foreach ($app_data_ as $pid => $app_id) {
-				if (! isset($this->state[$server]))
-					$this->state[$server] = array();
 				$this->state[$server][$pid] = new RunningApp();
 				$this->state[$server][$pid]->app_id = $app_id;
 
@@ -134,15 +131,15 @@ class ApplicationReport {
 			}
 		}
 
-		if (! array_key_exists($server, $this->max_use))
-			$this->max_use[$server] = array();
+		foreach ($perappcount as $server => $server_data) {
+			foreach ($server_data as $app_id => $count) {
+				$this->data_init($server);
+				if (! array_key_exists($app_id, $this->max_use[$server]))
+					$this->max_use[$server][$app_id] = new ReportMaxItem();
 
-		foreach ($perappcount[$server] as $app_id => $count) {
-			if (! array_key_exists($app_id, $this->max_use[$server]))
-				$this->max_use[$server][$app_id] = new ReportMaxItem();
-
-			$tmp = $perappcount[$server][$app_id]->get();
-			$this->max_use[$server][$app_id]->set($tmp);
+				$tmp = $perappcount[$server][$app_id]->get();
+				$this->max_use[$server][$app_id]->set($tmp);
+			}
 		}
 	}
 
@@ -156,6 +153,17 @@ class ApplicationReport {
 
 		Logger::debug('main', "ApplicationReport::save");
 		return file_put_contents($this->file,serialize($this));
+	}
+
+	private function data_init($server) {
+		if (! array_key_exists($server, $this->max_use))
+			$this->max_use[$server] = array();
+
+		if (! array_key_exists($server, $this->state))
+			$this->state[$server] = array();
+
+		if (! array_key_exists($server, $this->record))
+			$this->record[$server] = array();
 	}
 
 	static public function computeDay($day_, $current_) {
