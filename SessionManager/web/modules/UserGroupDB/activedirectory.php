@@ -132,7 +132,7 @@ class UserGroupDB_activedirectory {
 	}
 	
 	public static function prettyName() {
-		return _('activedirectory');
+		return _('Active Directory');
 	}
 	
 	public static function isDefault() {

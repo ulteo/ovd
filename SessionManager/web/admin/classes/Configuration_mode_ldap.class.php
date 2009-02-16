@@ -164,14 +164,14 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<div>';
     $str.= '<h3>'._('Users').'</h3>';
     $str.= '<table>';
-    $str.= '<tr><td>'._('User branch :').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
+    $str.= '<tr><td>'._('User branch:').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
 
     // Not yet Implemented
     // $str.= '<tr><td style="text-align: right;"><input type="checkbox" name="user_branch_recursive"/></td>';
     // $str.= '<td>'._('Recursive Mode').'</td></tr>';
 
-    $str.= '<tr><td>'._('Distinguished name field: ').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Display name field: ').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Display name field:').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
     $str.= '</table>';
 
     $str.= '<div>';

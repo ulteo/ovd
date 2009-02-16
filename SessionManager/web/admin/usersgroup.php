@@ -158,7 +158,7 @@ function show_default() {
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div id="usersgroup_div" >';
-  echo '<h1>'._('Usergroups').'</h1>';
+  echo '<h1>'._('Users groups').'</h1>';
 
   echo '<div id="usersgroup_list">';
 

@@ -24,7 +24,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'manage') {
 	echo '<a href="users.php">'._('Users').'</a>';
 	echo '</div>';
 	echo '<div class="container">';
-	echo '<a href="usersgroup.php">'._('Usergroups').'</a>';
+	echo '<a href="usersgroup.php">'._('Users groups').'</a>';
 	echo '</div>';
 	echo '<div class="container">';
 	echo '<a href="publications.php">'._('Publications').'</a>';
@@ -37,7 +37,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'manage') {
 	echo _('Users');
 	echo '</div>';
 	echo '<div class="container">';
-	echo '<a href="usersgroup.php">'._('Usergroups').'</a>';
+	echo '<a href="usersgroup.php">'._('Users groups').'</a>';
 	echo '</div>';
 	echo '<div class="container">';
 	echo '<a href="publications.php">'._('Publications').'</a>';

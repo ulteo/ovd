@@ -33,11 +33,11 @@ require_once('header.php');
 		<td style="width: 30%; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Users and Usergroups</h2>
+	<h2>Users and Users groups</h2>
 
 	<ul>
 		<li><a href="users.php"><?php echo _('Users list'); ?></li>
-		<li><a href="usersgroup.php"><?php echo ('Usergroups list'); ?></li>
+		<li><a href="usersgroup.php"><?php echo ('Users groups list'); ?></li>
 	</ul>
 </div>
 </div>
@@ -82,7 +82,7 @@ require_once('header.php');
 
 	<ul>
 		<li><a href="applications.php"><?php echo _('Applications list'); ?></li>
-		<li><a href="appsgroup.php"><?php echo _('Application groups list'); ?><br /><br /></li>
+		<li><a href="appsgroup.php"><?php echo _('Applications groups list'); ?><br /><br /></li>
 		<li><a href="publications.php"><?php echo _('Publications list'); ?></li>
 		<li><a href="wizard.php"><?php echo _('Publication wizard'); ?></li>
 	</ul>

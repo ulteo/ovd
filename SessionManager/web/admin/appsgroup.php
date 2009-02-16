@@ -117,7 +117,7 @@ function show_default() {
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
-  echo '<h1>'._('Application groups').'</h1>';
+  echo '<h1>'._('Applications groups').'</h1>';
 
   echo '<div>';
   if (! $has_group)
@@ -303,7 +303,7 @@ function show_manage($id) {
   echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
 
   echo '<div>';
-  echo '<h1><a href="?">'._('Application groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('Applications groups management').'</a> - '.$group->name.'</h1>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
   echo '<th>'._('Description').'</th>';
