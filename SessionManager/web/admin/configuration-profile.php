@@ -127,6 +127,35 @@ function do_save($prefs, $name) {
   return True;
 }
 
+function do_preview($prefs, $name) {
+  $obj = new $name();
+  $log = array();
+
+  if (! $obj->form_valid($_POST)) {
+    $log['Invalid Form'] = false;
+    return $res;
+  }
+
+  $flag = $obj->form_read($_POST, $prefs);
+  if ($flag===False) {
+    $log['form_read return an error'] = false;
+    return $log;
+  }
+  
+  $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
+  $userDB = new $mod_user_name();
+  if (! $userDB->prefsIsValid($prefs, &$log)) {
+    return $log;
+  }
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+  if (! $userGroupDB->prefsIsValid($prefs, &$log)) {
+    return $log;
+  }
+
+  return $log;
+}
 
 try {
   $prefs = new Preferences_admin();
@@ -143,13 +172,18 @@ if (isset($_POST['config'])) {
     $_SESSION['config_profile'] = $name;
     $_SESSION[$name] = $_POST;
 
-    if (do_save($prefs, $name) === True) {
-      $_SESSION['config_profile_saved'] = true;
-      unset($_SESSION['config_profile']);
-      unset($_SESSION[$name]);
+    if (isset($_POST['submit_preview'])) {
+      $preview = do_preview($prefs, $name);
     }
-
-    redirect();
+    else {
+      if (do_save($prefs, $name) === True) {
+	$_SESSION['config_profile_saved'] = true;
+	unset($_SESSION['config_profile']);
+	unset($_SESSION[$name]);
+      }
+       redirect();
+    }
+  
   }
 
   $has_previous = $name;
@@ -199,10 +233,10 @@ echo '<form method="post">';
 echo '<input type="hidden" name="config_previous" value="'.$mode.'" />';
 echo '<select name="config" onChange="this.form.submit();">';
 foreach($profiles as $profile => $name) {
-  $s = ($profile == $mode)?'selected="selected"':'';
-  var_dump($s);
-
-  echo '<option value="'.$profile.'" '.$s.'>'.$name.'</option>';
+  echo '<option value="'.$profile.'"';
+  if ($profile == $mode)
+    echo ' selected="selected"';
+  echo '>'.$name.'</option>';
 }
 echo '</select>';
 if ($green)
@@ -212,10 +246,25 @@ echo '<br/>';
   echo $c->display($form);
 
 echo '<input type="submit" value="Save"/>';
+echo ' <input type="submit" name="submit_preview" value="Preview Mode"/>';
 echo '</form>';
 
   echo '</div>';
   echo '</td>';
+if (isset($preview)) {
+  echo '<td style="width: 30%; vertical-align: top;"><ul>';
+  foreach($preview as $msg => $status) {
+    $c = ($status)?'green':'red';
+    $m = ($status)?_('OK'):_('Error');
+
+    echo '<li style="color:'.$c.';">'.$msg.': <strong>'.$m.'</strong></li>';
+  }
+
+  if (count($preview) > 0 && $status)
+    echo '<li style="color:'.$c.';">'._('SUCCESS').'</li>';
+  echo '</ul>';
+  echo '</td>';
+ }
   echo '</tr>';
   echo '</table>';
 
