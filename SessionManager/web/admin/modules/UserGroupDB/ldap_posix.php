@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class admin_UserGroupDB_ldap_memberof extends UserGroupDB_ldap_memberof {
+class admin_UserGroupDB_ldap_posix extends UserGroupDB_ldap_posix {
 	public function add($usergroup_){
 		return false;
 	}
@@ -40,6 +40,4 @@ class admin_UserGroupDB_ldap_memberof extends UserGroupDB_ldap_memberof {
 	public static function enable() {
 		return true;
 	}
-	
 }
-

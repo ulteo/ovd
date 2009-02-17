@@ -62,7 +62,7 @@ class Configuration_mode_ldap extends Configuration_mode {
       }
     }
 
-    if (! in_array($form['user_group'], array('ldap', 'sql')))
+    if (! in_array($form['user_group'], array('ldap_memberof', 'ldap_posix', 'sql')))
       return False;
 
     return True;
@@ -83,8 +83,8 @@ class Configuration_mode_ldap extends Configuration_mode {
       $config['login'] = $form['bind_dn'];
       $config['password'] = $form['bind_password'];
 
-      if (! str_endswith($config['login'], ','.$config['suffix']))
-	$config['login'].= ','.$config['suffix'];
+    if (! str_endswith($config['login'], ','.$config['suffix']))
+      $config['login'].= ','.$config['suffix'];
     }
 
     $config['userbranch'] = $form['user_branch'];
@@ -92,22 +92,23 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
-
+    
+    if ($form['user_group'] == 'ldap_memberof')
+      $config['match']['memberof'] = 'memberof';
 
     // Select LDAP as UserDB
     $prefs->set('UserDB', 'enable', 
-		array('enable' => 'ldap'));
+        array('enable' => 'ldap'));
 
     // Push LDAP conf
     $prefs->set('UserDB', 'ldap', $config);
 
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable',
-		array('enable' => 'sql'));
-
+        array('enable' => $form['user_group']));
     // Set the FS type
     $prefs->set('plugins', 'FS',
-		array('FS' => 'local'));
+        array('FS' => 'local'));
 
     return True;
   }
@@ -137,8 +138,10 @@ class Configuration_mode_ldap extends Configuration_mode {
     $form['field_displayname'] = $config['match']['displayname'];
 
     $config2 = $prefs->get('UserGroupDB', 'enable');
-    if ($config2 == 'ldap')
-      $form['user_group'] = 'ldap';
+    if ($config2 == 'ldap_memberof')
+      $form['user_group'] = 'ldap_memberof';
+     elseif($config2 == 'ldap_posix')
+       $form['user_group'] = 'ldap_posix';
     else
       $form['user_group'] = 'sql';
 
@@ -192,10 +195,15 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('User Groups').'</h3>';
-    $str.= '<input type="radio" name="user_group" value="ldap"';
-    if ($form['user_group'] == 'activedirectory')
+    $str.= '<input type="radio" name="user_group" value="ldap_memberof"';
+    if ($form['user_group'] == 'ldap_memberof')
       $str.= ' checked="checked"';
     $str.= ' />'._('Use LDAP User Groups using the MemberOf field');
+    $str.= '<br/>';
+        $str.= '<input type="radio" name="user_group" value="ldap_posix"';
+    if ($form['user_group'] == 'ldap_posix')
+      $str.= ' checked="checked"';
+    $str.= ' />'._('Use LDAP User Groups using Posix group');
     $str.= '<br/>';
     $str.= '<input type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')

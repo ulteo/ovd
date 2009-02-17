@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison {
 	public function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('main', "<u>Abstract_Liaison::load ('$type_', '$element_', '$group_')</u>");
+		Logger::debug('main', "Abstract_Liaison::load ('$type_', '$element_', '$group_')");
 		if ($type_ != 'UsersGroup')
 			return Abstract_Liaison_sql::load($type_,  $element_, $group_);
 		else {
@@ -45,6 +45,9 @@ class Abstract_Liaison {
 				break;
 				case 'ldap_memberOf':
 					return Abstract_Liaison_ldap_memberof::load($type_,  $element_, $group_);
+				break;
+				case 'ldap_posix':
+					return Abstract_Liaison_ldap_posix::load($type_,  $element_, $group_);
 				break;
 				case 'activedirectory':
 					return Abstract_Liaison_activedirectory::load($type_,  $element_, $group_);
@@ -75,8 +78,11 @@ class Abstract_Liaison {
 				case 'sql':
 					return Abstract_Liaison_sql::delete($type_,  $element_, $group_);
 				break;
-				case 'ldap':
-					return Abstract_Liaison_ldap::delete($type_,  $element_, $group_);
+				case 'ldap_memberOf':
+					return Abstract_Liaison_ldap_memberof::delete($type_,  $element_, $group_);
+				break;
+				case 'ldap_posix':
+					return Abstract_Liaison_ldap_posix::delete($type_,  $element_, $group_);
 				break;
 				case 'activedirectory':
 					return Abstract_Liaison_activedirectory::delete($type_,  $element_, $group_);
@@ -107,8 +113,11 @@ class Abstract_Liaison {
 				case 'sql':
 					return Abstract_Liaison_sql::save($type_,  $element_, $group_);
 				break;
-				case 'ldap':
-					return Abstract_Liaison_ldap::save($type_,  $element_, $group_);
+				case 'ldap_memberOf':
+					return Abstract_Liaison_ldap_memberof::save($type_,  $element_, $group_);
+				break;
+				case 'ldap_posix':
+					return Abstract_Liaison_ldap_posix::save($type_,  $element_, $group_);
 				break;
 				case 'activedirectory':
 					return Abstract_Liaison_activedirectory::save($type_,  $element_, $group_);
