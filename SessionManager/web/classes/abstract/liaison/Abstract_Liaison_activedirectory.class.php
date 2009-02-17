@@ -58,7 +58,7 @@ class Abstract_Liaison_activedirectory {
 		if (! in_array('UserGroupDB',$mods_enable))
 			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
-		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 		$userGroupDB = new $mod_usergroup_name();
 		
 		$group = $userGroupDB->import($group_);
@@ -89,7 +89,7 @@ class Abstract_Liaison_activedirectory {
 		$ldap = new LDAP($config_ldap);
 		$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
 		if ($sr === false) {
-			Logger::error('main',"UserGroupDB::activedirectory::import search failed for ($id_)");
+			Logger::error('main',"Abstract_Liaison_activedirectory::loadElements search failed for ($id_)");
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);

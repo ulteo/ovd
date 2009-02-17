@@ -110,10 +110,10 @@ class UserDB_ldap {
 			if ($this->isOK($u))
 				$users []= $u;
 			else {
-				if ($u->getAttribute('login'))
-					Logger::info('main', 'UserDB::mysql::getList user \''.$u->getAttribute('login').'\' not ok');
+				if ($u->hasAttribute('login'))
+					Logger::info('main', 'UserDB::ldap::getList user \''.$u->getAttribute('login').'\' not ok');
 				else
-					Logger::info('main', 'UserDB::mysql::getList user does not have login');
+					Logger::info('main', 'UserDB::ldap::getList user does not have login');
 			}
 		}
 		// do we need to sort alphabetically ?

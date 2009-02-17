@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison {
 	public function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('main', "Abstract_Liaison::load ('$type_', '$element_', '$group_')");
+		Logger::debug('main', "<u>Abstract_Liaison::load ('$type_', '$element_', '$group_')</u>");
 		if ($type_ != 'UsersGroup')
 			return Abstract_Liaison_sql::load($type_,  $element_, $group_);
 		else {
@@ -43,8 +43,8 @@ class Abstract_Liaison {
 				case 'sql':
 					return Abstract_Liaison_sql::load($type_,  $element_, $group_);
 				break;
-				case 'ldap':
-					return Abstract_Liaison_ldap::load($type_,  $element_, $group_);
+				case 'ldap_memberOf':
+					return Abstract_Liaison_ldap_memberof::load($type_,  $element_, $group_);
 				break;
 				case 'activedirectory':
 					return Abstract_Liaison_activedirectory::load($type_,  $element_, $group_);

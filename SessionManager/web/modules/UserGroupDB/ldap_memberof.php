@@ -18,24 +18,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
+class UserGroupDB_ldap_memberof {
 
 	public function import($id_) {
-		Logger::debug('main',"UserGroupDB::activedirectory::import (id = $id_)");
+		Logger::debug('main',"UserGroupDB::ldap_memberof::import (id = $id_)");
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-		
-		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		$userGroupDB = new $mod_usergroup_name();
-		
-		$userDBAD = new UserDB_activedirectory();
-		$config_ldap = $userDBAD->makeLDAPconfig();
+		$config_ldap = $prefs->get('UserDB','ldap');
 		
 		$config_ldap['match'] =  array('description' => 'description','name' => 'name');
 		if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
@@ -56,7 +48,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		$ldap = new LDAP($config_ldap);
 		$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
 		if ($sr === false) {
-			Logger::error('main',"UserGroupDB::activedirectory::import search failed for ($id_)");
+			Logger::error('main',"UserGroupDB::ldap_memberof::import search failed for ($id_)");
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
@@ -70,8 +62,67 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		return $ug;
 	}
 	
+	public function isWriteable(){
+		return false;
+	}
+	
+	public function canShowList(){
+		return true;
+	}
+	
+	public function getList() {
+		Logger::debug('main','UserGroupDB::ldap_memberof::getList');
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$mods_enable = $prefs->get('general','module_enable');
+		if (! in_array('UserGroupDB',$mods_enable))
+			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+		
+		$mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
+		$userDB = new $mod_user_name();
+		
+		$users = $userDB->getList();
+
+		$groups = array();
+		foreach ($users as $u) {
+			if ($u->hasAttribute('memberof')) {
+				$memberof = $u->getAttribute('memberof');
+				if (! is_array($memberof))
+					$memberof = array($memberof);
+				foreach ($memberof as $group_name) {
+					$ug = $this->import($group_name);
+					if (is_object($ug))
+						$groups[$group_name] = $ug;
+				}
+			}
+		}
+		return $groups;
+	}
+	
+	public function isOK($usergroup_){
+		if (is_object($usergroup_)) {
+			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || (!isset($usergroup_->published)))
+				return false;
+			else
+				return true;
+		}
+		else
+			return false;
+	}
+	
+	public function configuration(){
+		return array();
+	}
+	
+	public static function prefsIsValid($prefs_, $log=array()) {
+		// FIXME : liaison to ad
+		return true;
+	}
+	
 	public static function prettyName() {
-		return _('Active Directory');
+		return _('LDAP using memberOf');
 	}
 	
 	public static function isDefault() {
@@ -79,6 +130,6 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 	}
 	
 	public static function liaisonType() {
-		return 'activedirectory';
+		return 'ldap_memberOf';
 	}
 }
