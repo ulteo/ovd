@@ -29,21 +29,21 @@ class Preferences_admin extends Preferences {
 		$this->initialize();
 		if (is_writable2($this->conf_file)) {
 			if (file_exists($this->conf_file)) {
-				if ( $element_form_ == array())
+				if ( $element_form_ == array()  || $partial == true) {
 					$this->constructFromFile();
-				else
+				}
+				else {
 					$this->prefs = $element_form_;
+				}
 			}
-			else
+			else {
 				$this->prefs = $element_form_;
+			}
 		}
+		
+		$this->constructFromArray();
 		if ($partial == true) {
-			$this->prefs = array();
-			$this->constructFromArray();
 			$this->prefs = array_merge2($this->prefs ,$element_form_);
-		}
-		else {
-			$this->constructFromArray();
 		}
 	}
 
@@ -448,6 +448,10 @@ class Preferences_admin extends Preferences {
 									$buf =& $this->elements[$key1][$key2];
 									$buf->content = $prefs[$key1][$key2][$value2->id];
 								}
+							}
+							else {
+								$buf =& $this->elements[$key1][$key2];
+								$buf->content = $prefs[$key1][$key2];
 							}
 						}
 						else {

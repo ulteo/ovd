@@ -138,6 +138,7 @@ class ConfigElement{
 
 	public function __toString(){
 		$str =  "'".$this->id."','".$this->label."','";
+		$str .=  '<strong>';
 		if (is_array($this->content)) {
 			$str .= 'array(';
 			foreach($this->content as $k => $v)
@@ -146,6 +147,7 @@ class ConfigElement{
 		}
 		else
 			$str .= $this->content;
+		$str .=  '</strong>';
 		$str .=  "','";
 		if (is_array($this->content_available)) {
 			$str .= 'array(';
