@@ -247,4 +247,12 @@ class User {
 	public function getAttributesList(){
 		return array_keys($this->attributes);
 	}
+	
+	public function __toString() {
+		$ret = 'User(';
+		foreach ($this->attributes as $k=>$attr)
+				$ret .= "'$k':'$attr', ";
+		$ret .= ')';
+		return $ret;
+	}
 }

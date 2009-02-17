@@ -283,8 +283,13 @@ function show_manage($login, $userDB, $userGroupDB) {
    echo '<td>'.$u->getAttribute('login').'</td>';
   echo '<td>'.$u->getAttribute('uid').'</td>';
   foreach($keys as $key)
-    if ($key != 'password')
-      echo '<td>'.$u->getAttribute($key).'</td>';
+    if ($key != 'password') {
+      if (is_array($u->getAttribute($key)))
+        $buf = implode(", ", $u->getAttribute($key));
+      else
+        $buf = $u->getAttribute($key);
+      echo '<td>'.$buf.'</td>';
+    }
 
   echo '</table>';
 
