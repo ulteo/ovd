@@ -91,7 +91,12 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 <hr />
 
 <?php
-if (isset($tpl))
-	include_once($tpl);
+if (isset($tpl)) {
+	$my_function = $type.'_per_server_data';
+	foreach ($data as $fqdn => $server_data) {
+		$server_data = call_user_func($my_function, $data, $fqdn);
+		include_once($tpl);
+	}
+}
 
 require_once('footer.php');

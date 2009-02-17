@@ -28,6 +28,18 @@ function init_app_id() {
 	return $ret;
 }
 
+function applications_per_server_data($data_, $fqdn_) {
+	$ret = array();
+	foreach ($data_[$fqdn_] as $app_id => $app_data) {
+	    $ret[$app_id] = array(
+			'use_count' => $app_data['use_count'],
+			'max_use' => $app_data['max_use'],
+			'max_use_when' => $app_data['max_use_when']
+	    );
+	}
+    return $ret;
+}
+
 if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$sql = MySQL::getInstance();
 	$ret = $sql->DoQuery('SELECT * FROM @1 WHERE @2 >= %3 and @2 <= %4',
