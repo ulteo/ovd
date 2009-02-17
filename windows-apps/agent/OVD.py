@@ -149,9 +149,6 @@ class OVD(win32serviceutil.ServiceFramework):
 		conf["web_port"] = None
 		log_debug("main 004 log_file "+conf["log_file"])
 		
-		if conf_cmdline.has_key("conf_file"):
-			conf["conf_file"] = conf_cmdline["conf_file"]
-		
 		try:
 			conf = load_shell_config_file(conf)
 		except Exception, err:
@@ -159,10 +156,6 @@ class OVD(win32serviceutil.ServiceFramework):
 			log_debug("invalid config file: "+str(err))
 			log_debug("exit 22")
 			sys.exit(2)
-		# Overwrite option set by command line
-		for key in conf_cmdline.keys():
-			if conf.has_key(key):
-				conf[key] = conf_cmdline[key]
 		
 		if not is_conf_valid(conf):
 			print >> sys.stderr, "invalid configuration"

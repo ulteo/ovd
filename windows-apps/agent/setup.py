@@ -40,7 +40,7 @@ sys.argv.append("py2exe")
 class Target:
 	def __init__(self, **kw):
 		self.__dict__.update(kw)
-		self.version = "1.0"
+		self.version = "1.0beta"
 		self.company_name = "Ulteo"
 		self.copyright = "GPL"
 		self.name = "OVD Agent"
@@ -69,6 +69,6 @@ setup(
 	zipfile = "lib/shared.zip",
 
 	service = [myservice],
-	data_files=[(".", ["icon.png", "ulteo-ovd.conf"])],
-	scripts = ['communication.py', 'sessionmanager.py', 'utils.py', 'wmi.py', 'aservice.py'],
+	data_files=[(".", ["icon.png"])],
+	scripts = ['communication.py', 'sessionmanager.py', 'utils.py', 'wmi.py', 'OVD.py']
 	)
