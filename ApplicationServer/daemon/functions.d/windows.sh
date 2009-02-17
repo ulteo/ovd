@@ -36,12 +36,12 @@ windows_init_connection() {
 
     windows_use_seamlessrdp $sessid_dir || return 0
     log_INFO "There are Windows applications parameters for this session"
-    # log_INFO "menu_windows_init_connection 0"
+
     local server=`cat ${sessid_dir}/parameters/windows_server`
     local login=`cat ${sessid_dir}/parameters/windows_login`
     local password=`cat ${sessid_dir}/parameters/windows_password`
-    # log_INFO "menu_windows_init_connection 1"
-    local cmd='rdesktop -u "'$login'" -p "'$password'" -A -s "c:\seamlessrdp\seamlessrdpshell.exe c:\seamlessrdp\donothing.exe" '$server
+
+    local cmd='rdesktop -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe donothing.exe" '$server
     # log_INFO "menu_windows_init_connection 2 launch cmd '$cmd'"
     su -s "/bin/bash" ${USER_LOGIN} -c "$cmd &" 
     # log_INFO "==============================="
