@@ -97,7 +97,7 @@ if (isset($tpl)) {
 
 	$my_function = $type.'_per_server_data';
 	foreach ($data as $fqdn => $server_data) {
-		$server_data = call_user_func($my_function, $data, $fqdn);
+		$server_data = $my_function($data, $fqdn);
 		include_once($tpl.'/body.php');
 	}
 
