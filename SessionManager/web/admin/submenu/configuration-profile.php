@@ -36,4 +36,7 @@ if (isset($_GET['mode']) && $_GET['mode'] == '') {
 	echo '<div class="container">';
 	echo '<a href="configuration-partial.php?mode=session_settings_defaults">'._('Session settings').'</a>';
 	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="configuration-partial.php?mode=web_interface_settings">'._('Web interface settings').'</a>';
+	echo '</div>';
 }
