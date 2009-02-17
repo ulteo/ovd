@@ -1,5 +1,2 @@
-scripts_DATA = default.php
+SUBDIRS = default
 
-scriptsdir = $(datadir)/ulteo/sessionmanager/admin/templates/servers
-
-EXTRA_DIST = $(scripts_DATA)

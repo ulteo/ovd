@@ -67,8 +67,8 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 	print '  <br />';
 	print '  Template: ';
 	print '  <select name="template">';
-	foreach (glob('templates/'.$type.'/*.php') as $file) {
-		$item = preg_replace ('/\.php$/', '', basename($file));
+	foreach (glob('templates/'.$type.'/*', GLOB_ONLYDIR) as $dir) {
+		$item = basename($dir);
 		if (isset($_REQUEST['template']) && ($_REQUEST['template'] == $item))
 			$s = ' selected="selected"';
 		else
@@ -79,10 +79,10 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 	print '  <br />';
 
 
-	$tpl = 'templates/'.$type.'/default.php';
+	$tpl = 'templates/'.$type.'/default';
 	if (isset($_REQUEST['template']) &&
-	  is_file('templates/'.$type.'/'.$_REQUEST['template'].'.php'))
-		$tpl = 'templates/'.$type.'/'.$_REQUEST['template'].'.php';
+	  is_dir('templates/'.$type.'/'.$_REQUEST['template']))
+		$tpl = 'templates/'.$type.'/'.$_REQUEST['template'];
 }
 ?>
 
@@ -92,11 +92,17 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 
 <?php
 if (isset($tpl)) {
+	if (is_file($tpl.'/header.php'))
+		include_once($tpl.'/header.php');
+
 	$my_function = $type.'_per_server_data';
 	foreach ($data as $fqdn => $server_data) {
 		$server_data = call_user_func($my_function, $data, $fqdn);
-		include_once($tpl);
+		include_once($tpl.'/body.php');
 	}
+
+	if (is_file($tpl.'/footer.php'))
+		include_once($tpl.'/footer.php');
 }
 
 require_once('footer.php');
