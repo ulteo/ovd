@@ -286,6 +286,23 @@ function init_db($prefs_) {
 	return true;
 }
 
+function init($host_, $database_, $prefix_, $user_, $password_) {
+	$p = new Preferences_admin();
+	$mysql_conf = array();
+	$mysql_conf['host'] = $host_;
+	$mysql_conf['database'] = $database_;
+	$mysql_conf['user'] = $user_;
+	$mysql_conf['password'] = $password_;
+	$mysql_conf['prefix'] = $prefix_;
+	$p->set('general','mysql', $mysql_conf);
+	$ret = $p->isValid();
+	if ($ret !== true) {
+		echo 'error isValid : '.$ret.'<br>';
+	}
+	$p->backup();
+	return true;
+}
+
 function array_merge2( $a1, $a2) {
 	foreach ($a2 as $k2 => $v2) {
 		if ( is_array($v2) && ($v2 != array())) {
