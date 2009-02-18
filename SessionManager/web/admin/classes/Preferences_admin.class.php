@@ -319,7 +319,6 @@ class Preferences_admin extends Preferences {
 			_('On system alerts, mails will be sent to these addresses'), NULL,
 			array(''), NULL, ConfigElement::$LIST);
 		$this->add($c,'events');
-		//$this->addPrettyName('global_settings', _('Global settings'));
 
 		$events = Events::loadAll();
 		foreach ($events as $event) {
