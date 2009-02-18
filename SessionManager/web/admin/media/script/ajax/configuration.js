@@ -92,11 +92,11 @@ function printConfigurationModule(id_select){
 	}
 }
 
-function configuration_switch(object_,contener,contener_sub,id_element) {
+function configuration_switch(object_,container,container_sub,id_element) {
 	if (object_.type == "select-one" ) {
 		var option = object_.options[object_.selectedIndex];
 		for (var i = 0 ; i<object_.options.length;i++) {
-			var id_div = contener+"___"+object_.options[i].value;
+			var id_div = container+"___"+object_.options[i].value;
 			if (element_exists(id_div)) {
 				if ( i == object_.selectedIndex ) {
 					$(id_div).show();

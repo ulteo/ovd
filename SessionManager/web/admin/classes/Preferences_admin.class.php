@@ -174,8 +174,8 @@ class Preferences_admin extends Preferences {
 		return file_put_contents($this->conf_file,serialize($this->prefs));
 	}
 
-	public function add($value_,$key_,$contener_=NULL){
-		if (!is_null($contener_)) {
+	public function add($value_,$key_,$container_=NULL){
+		if (!is_null($container_)) {
 			if (!isset($this->elements[$key_])) {
 				$this->elements[$key_] = array();
 			}
@@ -186,17 +186,17 @@ class Preferences_admin extends Preferences {
 					$this->elements[$key_][$val->id]= $val;
 				}
 			}
-			if (!isset($this->elements[$key_][$contener_])) {
-				$this->elements[$key_][$contener_] = array();
+			if (!isset($this->elements[$key_][$container_])) {
+				$this->elements[$key_][$container_] = array();
 			}
-			// already something on [$key_][$contener_]
-			if (is_array($this->elements[$key_][$contener_]))
-				$this->elements[$key_][$contener_][$value_->id]= $value_;
+			// already something on [$key_][$container_]
+			if (is_array($this->elements[$key_][$container_]))
+				$this->elements[$key_][$container_][$value_->id]= $value_;
 			else {
-				$val = $this->elements[$key_][$contener_];
-				$this->elements[$key_][$contener_] = array();
-				$this->elements[$key_][$contener_][$val->id]= $val;
-				$this->elements[$key_][$contener_][$value_->id]= $value_;
+				$val = $this->elements[$key_][$container_];
+				$this->elements[$key_][$container_] = array();
+				$this->elements[$key_][$container_][$val->id]= $val;
+				$this->elements[$key_][$container_][$value_->id]= $value_;
 			}
 		}
 		else {
@@ -414,12 +414,12 @@ class Preferences_admin extends Preferences {
 		$this->prettyName[$key_] = $prettyName_;
 	}
 	
-	public function set($value_, $key_, $contener_) {
+	public function set($value_, $key_, $container_) {
 		if (!isset($this->prefs[$value_])) {
 			$this->prefs[$value_] = array();
 		}
 		if (is_string($key_))
-			$this->prefs[$value_][$key_] = $contener_;
+			$this->prefs[$value_][$key_] = $container_;
 		else
 			Logger::error('admin','PREFERENCESADMIN::set $key_ is not a string');
 	}

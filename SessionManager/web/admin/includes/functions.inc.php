@@ -298,9 +298,9 @@ function array_merge2( $a1, $a2) {
 	return $a1;
 }
 
-function print_element($key_name,$contener,$element_key,$element) {
+function print_element($key_name,$container,$element_key,$element) {
 	global $sep;
-	$label2 = $key_name.$sep.$contener.$sep.$element->id;
+	$label2 = $key_name.$sep.$container.$sep.$element->id;
 
 	switch ($element->type) {
 		case ConfigElement::$TEXT: // text (readonly)
@@ -318,7 +318,7 @@ function print_element($key_name,$contener,$element_key,$element) {
 			break;
 		case ConfigElement::$SELECT: // list of text (r) (fixed length) (only one can be selected)
 				if (is_array($element->content_available)) {
-					echo '<select id="'.$label2.'"  name="'.$label2.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');">';
+					echo '<select id="'.$label2.'"  name="'.$label2.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$container.'\',\''.$element->id.'\');">';
 
 					foreach ($element->content_available as $mykey => $myval){
 						if ( $mykey == $element->content)
@@ -335,9 +335,9 @@ function print_element($key_name,$contener,$element_key,$element) {
 		case ConfigElement::$MULTISELECT: // list of text (r) (fixed length) (more than one can be selected)
 			foreach ($element->content_available as $mykey => $myval){
 				if ( in_array($mykey,$element->content))
-					echo '<input class="input_checkbox" type="checkbox" name="'.$label2.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');"/>';
+					echo '<input class="input_checkbox" type="checkbox" name="'.$label2.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$container.'\',\''.$element->id.'\');"/>';
 				else
-					echo '<input class="input_checkbox" type="checkbox" name="'.$label2.'[]" value="'.$mykey.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$contener.'\',\''.$element->id.'\');"/>';
+					echo '<input class="input_checkbox" type="checkbox" name="'.$label2.'[]" value="'.$mykey.'" onchange="configuration_switch(this,\''.$key_name.'\',\''.$container.'\',\''.$element->id.'\');"/>';
 				// TODO targetid
 				echo $myval;
 				echo '<br />';
@@ -463,14 +463,14 @@ echo '</script>';
 	}
 }
 
-function print_prefs5($prefs,$key_name, $contener) {
-	if (! isset($prefs->elements[$key_name][$contener]))
+function print_prefs5($prefs,$key_name, $container) {
+	if (! isset($prefs->elements[$key_name][$container]))
 		return;
 
-	$elements2 = $prefs->elements[$key_name][$contener];
+	$elements2 = $prefs->elements[$key_name][$container];
 	$color=0;
 	echo '<table style="width: 100%" class="main_sub" border="0" cellspacing="1" cellpadding="0">'; // TODO
-	echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($contener).'</th></tr>';
+	echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($container).'</th></tr>';
 	foreach ( $elements2 as $element_key => $element) {
 		// we print element
 		echo '<tr class="content'.($color % 2 +1).'">';
@@ -479,7 +479,7 @@ function print_prefs5($prefs,$key_name, $contener) {
 		echo '</td>';
 		echo '<td style="padding: 3px;">';
 		echo "\n";
-		print_element($key_name,$contener,$element_key,$element);
+		print_element($key_name,$container,$element_key,$element);
 		echo "\n";
 		echo '</td>';
 		echo '</tr>';
@@ -511,7 +511,7 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 		$color++;
 	}
 	else {
-		foreach ($elements as $contener => $elements2){
+		foreach ($elements as $container => $elements2){
 			if (is_object($elements2)) {
 				echo '<tr class="content'.($color % 2 +1).'">';
 				echo '<td style="width: 200px;" title="'.$elements2->description.'">';
@@ -519,7 +519,7 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 				echo '</td>';
 				echo '<td>';
 				echo "\n";
-				print_element($key_name,$contener,'',$elements2);
+				print_element($key_name,$container,'',$elements2);
 				echo "\n";
 				echo '</td>';
 				echo '</tr>';
@@ -527,9 +527,9 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 			}
 			else {
 				if ($recursive === true) {
-					echo '<tr id="'.$key_name.$sep.$contener.'">';
+					echo '<tr id="'.$key_name.$sep.$container.'">';
 					echo '<td colspan="2">';
-					print_prefs5($prefs, $key_name,$contener);
+					print_prefs5($prefs, $key_name,$container);
 					echo '</td>';
 				}
 			}
