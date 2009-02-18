@@ -60,7 +60,7 @@ else {
 	if (is_object($prefs)) {
 		if (!isset($_GET['mode']))
 			redirect('configuration.php');
-		
+
 		require_once(dirname(__FILE__).'/header.php');
 		echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
 		echo '<tr>';
@@ -80,7 +80,7 @@ else {
 				break;
 			case 'events':
 				if (array_key_exists('events',$prefs->elements))
-					print_prefs4($prefs, 'events', false);
+					print_prefs4($prefs, 'events');
 				break;
 			default:
 				print_prefs5($prefs, 'general', $_GET['mode']);

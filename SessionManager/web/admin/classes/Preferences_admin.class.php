@@ -166,41 +166,9 @@ class Preferences_admin extends Preferences {
 		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 
 
-		/* Events settings */
-		$c = new ConfigElement('mail_to', _('Mail addresses to send alerts to'),
-			_('On system alerts, mails will be sent to these addresses'), NULL,
-			array(''), NULL, ConfigElement::$LIST);
-		$this->add($c,'events');
-
-		$this->addPrettyName('events', _("Events settings"));
-		$events = Events::loadAll();
-		foreach ($events as $event) {
-			$list = array();
-			$pretty_list = array();
-			foreach ($event->getCallbacks() as $cb) {
-				if (! $cb['is_internal']) {
-					$list[] = $cb['name'];
-					$pretty_list[$cb['name']] = $cb['description'];
-				}
-			}
-			if (count($list) == 0)
-				continue;
-
-			$event_name = $event->getPrettyName();
-			/* FIXME: descriptions */
-			$c = new ConfigElement(get_class($event), $event_name,
-			                       "When $event_name is emitted",
-			                       "When $event_name is emitted",
-			                       array(), $pretty_list,
-			                       ConfigElement::$MULTISELECT);
-			$this->add($c, 'events');
-		}
-		unset($events);
-
-
-
-		$this->getPrefsModule();
+		$this->getPrefsModules();
 		$this->getPrefsPlugins();
+		$this->getPrefsEvents();
 	}
 
 	public function backup(){
@@ -296,7 +264,7 @@ class Preferences_admin extends Preferences {
 		}
 	}
 
-	public function getPrefsModule(){
+	public function getPrefsModules(){
 		$available_module = $this->getAvailableModule();
 		// we remove all diseable modules
 		foreach ($available_module as $mod2 => $sub_mod2){
@@ -341,6 +309,43 @@ class Preferences_admin extends Preferences {
 				}
 			}
 		}
+	}
+
+	public function getPrefsEvents() {
+		/* Events settings */
+		/* TODO: use a method to handle this, like modules and plugins */
+		$this->addPrettyName('events', _("Events settings"));
+
+		$c = new ConfigElement('mail_to', _('Mail addresses to send alerts to'),
+			_('On system alerts, mails will be sent to these addresses'), NULL,
+			array(''), NULL, ConfigElement::$LIST);
+		$this->add($c,'events', 'global_settings');
+		$this->addPrettyName('global_settings', _('Global settings'));
+
+		$events = Events::loadAll();
+		foreach ($events as $event) {
+			$list = array();
+			$pretty_list = array();
+			foreach ($event->getCallbacks() as $cb) {
+				if (! $cb['is_internal']) {
+					$list[] = $cb['name'];
+					$pretty_list[$cb['name']] = $cb['description'];
+				}
+			}
+			if (count($list) == 0)
+				continue;
+
+			$event_name = $event->getPrettyName();
+			/* FIXME: descriptions */
+			$c = new ConfigElement(get_class($event), $event_name,
+			                       "When $event_name is emitted",
+			                       "When $event_name is emitted",
+			                       array(), $pretty_list,
+			                       ConfigElement::$MULTISELECT);
+			$this->add($c, 'events', 'active_callbacks');
+		}
+		$this->addPrettyName('active_callbacks', _('Activated callbacks'));
+		unset($events);
 	}
 
 	protected function getAvailableModule(){
