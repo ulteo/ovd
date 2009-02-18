@@ -58,6 +58,9 @@ else {
 	catch (Exception $e) {
 	}
 	if (is_object($prefs)) {
+		if (!isset($_GET['mode']))
+			redirect('configuration.php');
+		
 		require_once(dirname(__FILE__).'/header.php');
 		echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
 		echo '<tr>';
