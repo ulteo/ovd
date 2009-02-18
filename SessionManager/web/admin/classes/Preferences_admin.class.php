@@ -313,7 +313,6 @@ class Preferences_admin extends Preferences {
 
 	public function getPrefsEvents() {
 		/* Events settings */
-		/* TODO: use a method to handle this, like modules and plugins */
 		$this->addPrettyName('events', _("Events settings"));
 
 		$c = new ConfigElement('mail_to', _('Mail addresses to send alerts to'),
