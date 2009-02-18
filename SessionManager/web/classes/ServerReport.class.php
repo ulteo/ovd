@@ -35,7 +35,7 @@ class ServerReport {
 	private $max_ram; /* in percents */
 
 	public function __construct() {
-		$this->datadir = SESSIONMANAGER_SPOOL.'/serverreport';
+		$this->datadir = SESSIONMANAGER_SPOOL.'/serversreport';
 		$today = date('Ymd', time());
 		$this->file = $this->datadir.'/'.$today;
 
@@ -72,7 +72,7 @@ class ServerReport {
 	}
 
 	public static function getFile() {
-		return SESSIONMANAGER_SPOOL.'/serverreport/'.date('Ymd', time());
+		return SESSIONMANAGER_SPOOL.'/serversreport/'.date('Ymd', time());
 	}
 
 	public function save() {
@@ -156,7 +156,7 @@ class ServerReport {
 	}
 
 	static public function computeFqdnDay($day_, $fqdn_) {
-		$file = SESSIONMANAGER_SPOOL.'/serverreport/'.$day_;
+		$file = SESSIONMANAGER_SPOOL.'/serversreport/'.$day_;
 		$ret = array();
 		if (! is_readable($file))
 			return true;
