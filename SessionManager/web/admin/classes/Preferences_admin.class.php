@@ -186,7 +186,7 @@ class Preferences_admin extends Preferences {
 			$c = new ConfigElement(get_class($event), $event_name,
 			                       "When $event_name is emitted",
 			                       "When $event_name is emitted",
-			                       $list, $pretty_list,
+			                       array(), $pretty_list,
 			                       ConfigElement::$MULTISELECT);
 			$this->add($c, 'events');
 		}
