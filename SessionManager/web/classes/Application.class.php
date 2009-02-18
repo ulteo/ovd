@@ -84,7 +84,7 @@ class Application {
 
 		$buf = query_url('http://'.$random_server->fqdn.':'.$random_server->web_port.'/webservices/icon.php?path='.base64_encode($this->getAttribute('icon_path')).'&desktopfile='.base64_encode($this->getAttribute('desktopfile')));
 
-		if (!$buf)
+		if ($buf == false || $buf == '')
 			return false;
 
 		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf);

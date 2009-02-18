@@ -30,13 +30,14 @@ if (isset($_GET['info']) && $_GET['info'] != '') {
 	echo '<a href="sumup.php">'._('Summary').'</a>';
 	echo '</div>';
 } else {
-	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
-	echo _('Sessions');
+	echo '<div class="container">';
+	echo '<a href="sessions.php">'._('Sessions').'</a>';
+	echo '</div>';
 	echo '</div>';
 	echo '<div class="container">';
 	echo '<a href="logs.php">'._('Logs').'</a>';
 	echo '</div>';
-	echo '<div class="container">';
+	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
 	echo '<a href="sumup.php">'._('Summary').'</a>';
 	echo '</div>';
 }

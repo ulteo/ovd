@@ -7,6 +7,7 @@ scripts_DATA = applications.php \
                publications.php \
                servers.php \
                sessions.php \
+               sumup.php \
                usergroups.php \
                users.php \
                wizard.php

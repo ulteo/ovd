@@ -27,4 +27,7 @@ if (isset($_GET['view']) && $_GET['view'] == '') {
 	echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
 	echo _('Logs');
 	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="sumup.php">'._('Summary').'</a>';
+	echo '</div>';
 }

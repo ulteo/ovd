@@ -20,9 +20,28 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-include('header.php');
+require_once('header.php');
+// echo '<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">';
 
-echo'<h2>'._('List of user applications').'</h2>';
+	echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+	echo '<tr>';
+	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+	include_once(dirname(__FILE__).'/submenu/sumup.php');
+	echo '</td>';
+	echo '<td style="text-align: left; vertical-align: top;">';
+	echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+
+	echo '<h1>'._('Sumary').'</h1>';
+
+	echo '<div>';
+
+function my_own_callback($matches) {
+	return '<span class="'.strtolower($matches[1]).'">'.trim($matches[0]).'</span>';
+}
+
+
+
+echo'<h2>'._('List of users').'</h2>';
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -54,8 +73,8 @@ else{
 			else
 				echo '2';
 			echo '">';
-			echo '<td>'.$u->getAttribute('login').'</td>'; // login
-			echo '<td>'.$u->getAttribute('displayname').'</td>'; //nam
+			echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">'.$u->getAttribute('login').'</a></td>'; // login
+			echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">'.$u->getAttribute('displayname').'</a></td>'; //nam
 
 			echo '<td>'; // in user group
 
@@ -64,12 +83,13 @@ else{
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $ugrp){
 					echo '<tr>';
-					echo '<td>'.$ugrp->id.'</td>';
-					echo '<td>'.$ugrp->name.'</td>';
+					echo '<td>('.$ugrp->id.')</td>';
+					echo '<td>
+					<a href="usersgroup.php?action=manage&id='.$ugrp->id.'">'.$ugrp->name.'</a></td>';
 					if ($ugrp->published)
-						echo '<td>'._('Yes').'</td>';
+						echo '<td>('._('Yes').')</td>';
 					else
-						echo '<td>'._('No').'</td>';
+						echo '<td>('._('No').')</td>';
 					echo '</tr>';
 				}
 				echo '</table>';
@@ -86,12 +106,16 @@ else{
 					$agrp->fromDB($agrp_id);
 					if (is_object($agrp) && $agrp->isOK()) {
 						echo '<tr>';
-						echo '<td>'.$agrp->id.'</td>';
-						echo '<td>'.$agrp->name.'</td>';
+						echo '<td>('.$agrp->id.')</td>';
+						echo '<td><a href="appsgroup.php?action=manage&id='.$agrp->id.'">'.$agrp->name.'</a></td>';
+						
+						
+						
+						
 						if ($agrp->published)
-							echo '<td>'._('Yes').'</td>';
+							echo '<td>('._('Yes').')</td>';
 						else
-							echo '<td>'._('No').'</td>';
+							echo '<td>('._('No').')</td>';
 						echo '</tr>';
 					}
 				}
@@ -107,8 +131,9 @@ else{
 				foreach ($apps_s as $aaa) {
 					echo '<tr>';
 					echo '<td>'.$aaa->getAttribute('type').'</td>';
-					echo '<td>'.$aaa->getAttribute('id').'</td>';
-					echo '<td>'.$aaa->getAttribute('name').'</td>';
+					echo '<td>('.$aaa->getAttribute('id').')</td>';
+					echo '<td><a href="applications.php?action=manage&id='.$aaa->getAttribute('id').'">'.$aaa->getAttribute('name').'</a></td>';
+					
 					if (in_array($aaa->getAttribute('type'), $apps_type) == false)
 						$apps_type []= $aaa->getAttribute('type');
 					echo '</tr>';
@@ -137,7 +162,7 @@ else{
 					$serv_s = $u->getAvailableServers($a_type);
 					if (is_array($serv_s)){
 						foreach ($serv_s as $s){
-							echo '<tr><td><strong>('.$a_type.')</strong></td><td>'.$s->fqdn.'</td></tr>';
+							echo '<tr><td><strong>('.$a_type.')</strong></td><td><a href=servers.php?action=manage&fqdn="'.$s->fqdn.'">'.$s->fqdn.'</a></td></tr>';
 						}
 					}
 				}
@@ -151,7 +176,7 @@ else{
 	}
 }
 
-echo '<h2>List of server</h2>';
+echo '<h2>'._('List of servers').'</h2>';
 
 $servs_all = Servers::getAll();
 if (is_null($servs_all)){
@@ -170,32 +195,28 @@ else{
 			<th><?php echo _('Applications');?></th>
 			<th><?php echo _('Status');?></th>
 		</tr>
-<!-- 		<table class="main_sub" border="1" cellspacing="1" cellpadding="5"> -->
-<!-- 			<th>FQDN</th><th>Type</th><th>Version</th><th>Status</th><th>Applications(physical)</th> -->
-<!-- 		</tr> -->
 		<?php
 		$count = 0;
 		foreach($servs_all as $server){
 			$applications = $server->getApplications();
-// 			$apps_name = '';
 			echo '<tr class="content';
 			if ($count % 2 == 0)
 				echo '1';
 			else
 				echo '2';
 			echo '">';
-			echo '<td>'.$server->fqdn.'</td>';
+			
+			echo '<td><a href=servers.php?action=manage&fqdn="'.$server->fqdn.'">'.$server->fqdn.'</a></td>';
 			echo '<td>'.$server->stringType().'</td>';
 			echo '<td>';
 			if ((is_array($applications))&& (count($applications)>0) ){
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($applications as $a){
 					echo '<tr>';
+					echo '<td>('.$a->getAttribute('id').')</td>';
 					echo '<td>';
-					echo $a->getAttribute('id');
-					echo '</td>';
-					echo '<td>';
-					echo $a->getAttribute('name');
+					echo '<a href="applications.php?action=manage&id='.$a->getAttribute('id').'">'.$a->getAttribute('name').'</a>';
+					
 					echo '</td>';
 					echo '</tr>';
 				}
