@@ -119,7 +119,10 @@ class ApplicationReport {
 
 		/* now read the remaining data to deal with new process */
 		foreach ($data_ as $server => $app_data_) {
+			if (! array_key_exists($server, $perappcount))
+				$perappcount[$server] = array();
 			$this->data_init($server);
+
 			foreach ($app_data_ as $pid => $app_id) {
 				$this->state[$server][$pid] = new RunningApp();
 				$this->state[$server][$pid]->app_id = $app_id;
