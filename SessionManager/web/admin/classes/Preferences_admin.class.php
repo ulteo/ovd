@@ -167,6 +167,11 @@ class Preferences_admin extends Preferences {
 
 
 		/* Events settings */
+		$c = new ConfigElement('mail_to', _('Mail addresses to send alerts to'),
+			_('On system alerts, mails will be sent to these addresses'), NULL,
+			array(''), NULL, ConfigElement::$LIST);
+		$this->add($c,'events');
+
 		$this->addPrettyName('events', _("Events settings"));
 		$events = Events::loadAll();
 		foreach ($events as $event) {

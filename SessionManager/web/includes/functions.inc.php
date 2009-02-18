@@ -195,6 +195,17 @@ function sendamail($to_, $subject_, $message_) {
 	return $api_mail->send($to, $headers, $message);
 }
 
+function send_alert_mail($subject_, $message_) {
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+
+	$tos = $prefs->get('events', 'mail_to');
+	foreach ($tos as $to) {
+		sendamail($to, $subject_, $message_);
+	}
+}
+
 function str2num($str_) {
 	// hoho
 	$num = 0;
