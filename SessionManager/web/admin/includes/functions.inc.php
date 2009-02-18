@@ -288,11 +288,11 @@ function init_db($prefs_) {
 
 function array_merge2( $a1, $a2) {
 	foreach ($a2 as $k2 => $v2) {
-		if ( is_array($v2)) {
-			$a1[$k2] = array_merge2($a1[$k2], $v2);
+		if ( is_array($v2) && ($v2 != array())) {
+			$a1[$k2] = array_merge2($a1[$k2], $a2[$k2]);
 		}
 		else {
-			$a1[$k2] = $v2;
+			$a1[$k2] = $a2[$k2];
 		}
 	}
 	return $a1;
@@ -342,6 +342,7 @@ function print_element($key_name,$container,$element_key,$element) {
 				echo $myval;
 				echo '<br />';
 			}
+			echo '<input class="input_checkbox" type="hidden" name="'.$label2.'[]" "/>'; // dirty hack for []
 			break;
 
 		case ConfigElement::$INPUT_LIST: // list of input text (fixed length)
@@ -617,6 +618,24 @@ function formToArray($form_) {
 			}
 		}
 	}
+	
+	formToArray_cleanup(&$elements_form);
 	return $elements_form;
+}
+
+function formToArray_cleanup($buf) {
+	if (is_array($buf)) {
+		$buf_keys = array_keys($buf);
+		if ( count($buf) > 0) {
+			if (  $buf[$buf_keys[count($buf)-1]] == '') {
+				unset($buf[$buf_keys[count($buf)-1]]);
+			}
+			else {
+				foreach ( $buf as $k=> $v) {
+					formToArray_cleanup(&$buf[$k]);
+				}
+			}
+		}
+	}
 }
 

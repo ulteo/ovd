@@ -137,7 +137,7 @@ class ConfigElement{
 	}
 
 	public function __toString(){
-		$str =  "'".$this->id."','".$this->label."','";
+		$str =  "<strong>ConfigElement</strong>( '".$this->id."','".$this->label."','";
 		$str .=  '<strong>';
 		if (is_array($this->content)) {
 			$str .= 'array(';
@@ -158,6 +158,7 @@ class ConfigElement{
 		else
 			$str .= $this->content_available;
 		$str .=  "','".$this->description."','".$this->description_detailed."','".$this->type."'";
+		$str .= ')';
 		return $str;
 	}
 

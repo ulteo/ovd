@@ -170,4 +170,7 @@ if (isset($_GET['mode']) && $_GET['mode'] == 'mysql') {
 	echo '<div class="container">';
 	echo '<a href="configuration-partial.php?mode=web_interface_settings">'._('Web interface settings').'</a>';
 	echo '</div>';
+	echo '<div class="container">';
+	echo '<a href="configuration-partial.php?mode=events">'._('Events settings').'</a>';
+	echo '</div>';
 }
