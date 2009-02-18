@@ -41,12 +41,17 @@ abstract class EventCallback {
 		$this->ev = $ev_;
     }
 
-	public function getIsActive() {
-		return $this->is_active;
-	}
+	public final function getIsActive() {
+		try {
+			$prefs = Preferences::getInstance();
+		} catch (Exception $e) {
+			return false;
+		}
 
-	public function setIsActive($bool_) {
-		$this->is_active = $bool_;
+		$buf = $prefs->get('events', get_class($this->ev));
+		if (in_array(get_class($this),$buf))
+			return true;
+		return false;
 	}
 }
 

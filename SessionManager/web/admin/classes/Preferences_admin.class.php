@@ -40,7 +40,7 @@ class Preferences_admin extends Preferences {
 				$this->prefs = $element_form_;
 			}
 		}
-		
+
 		$this->constructFromArray();
 		if ($partial == true) {
 			$this->prefs = array_merge2($this->prefs ,$element_form_);
@@ -165,6 +165,35 @@ class Preferences_admin extends Preferences {
 
 		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 
+
+		/* Events settings */
+		$this->addPrettyName('events', _("Events settings"));
+		$events = Events::loadAll();
+		foreach ($events as $event) {
+			$list = array();
+			$pretty_list = array();
+			foreach ($event->getCallbacks() as $cb) {
+				if (! $cb['is_internal']) {
+					$list[] = $cb['name'];
+					$pretty_list[$cb['name']] = $cb['description'];
+				}
+			}
+			if (count($list) == 0)
+				continue;
+
+			$event_name = $event->getPrettyName();
+			/* FIXME: descriptions */
+			$c = new ConfigElement(get_class($event), $event_name,
+			                       "When $event_name is emitted",
+			                       "When $event_name is emitted",
+			                       $list, $pretty_list,
+			                       ConfigElement::$MULTISELECT);
+			$this->add($c, 'events');
+		}
+		unset($events);
+
+
+
 		$this->getPrefsModule();
 		$this->getPrefsPlugins();
 	}
@@ -220,7 +249,7 @@ class Preferences_admin extends Preferences {
 	public function getPrefsPlugins(){
 		$plugs = new Plugins();
 		$p2 = $plugs->getAvailablePlugins();
-		// we remove all diseable Plugins
+		// we remove all disabled Plugins
 		foreach ($p2 as $plugin_dir2 => $plu2) {
 			foreach ($plu2 as $plugin_name2 => $plugin_name2_value){
 				if ($plugin_dir2 == 'plugins')
@@ -413,7 +442,7 @@ class Preferences_admin extends Preferences {
 	public function addPrettyName($key_,$prettyName_) {
 		$this->prettyName[$key_] = $prettyName_;
 	}
-	
+
 	public function set($value_, $key_, $container_) {
 		if (!isset($this->prefs[$value_])) {
 			$this->prefs[$value_] = array();
@@ -423,7 +452,7 @@ class Preferences_admin extends Preferences {
 		else
 			Logger::error('admin','PREFERENCESADMIN::set $key_ is not a string');
 	}
-	
+
 	protected function constructFromArray(){
 		Logger::debug('admin','ADMIN_PREFERENCES::constructFromArray');
 		$prefs =& $this->prefs;

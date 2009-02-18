@@ -26,5 +26,7 @@ class ServerStatusChanged extends Event {
 	static $OFFLINE = 1;
 	static $UNREACHABLE = 2;
 
-	public $builtins = array('Report');
+	public function getPrettyName() {
+		return _("Server status changed");
+	}
 }

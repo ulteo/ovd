@@ -22,4 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 class SqlFailure extends Event {
+    public function getPrettyName() {
+        return _("Sql failure");
+    }
 }

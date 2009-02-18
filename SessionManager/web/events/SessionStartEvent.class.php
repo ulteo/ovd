@@ -22,5 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 class SessionStartEvent extends Event {
-	public $builtins = array('Report');
+    public function getPrettyName() {
+        return _("Session startup");
+    }
 }

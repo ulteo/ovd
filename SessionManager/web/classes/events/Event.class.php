@@ -71,6 +71,26 @@ class Event {
 		}
 	}
 
+	public final function getCallbacks() {
+		$ret = array();
+		foreach ($this->callbacks as $callback) {
+			require_once($this->callbacks_dir."/".$callback.".class.php");
+			$callback_name = get_class($this).$callback;
+			$cb = new $callback_name($this);
+			$ret[$callback_name] = array(
+				'name' => $callback_name,
+				'is_internal' => $cb->isInternal(),
+				'description' => $cb->getDescription()
+				);
+			unset($cb);
+		}
+		return $ret;
+	}
+
+	public function getPrettyName() {
+		return get_class($this);
+	}
+
 	public final function setAttribute($attrib_, $value_) {
 		$this->$attrib_ = $value_;
 	}
