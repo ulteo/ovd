@@ -76,7 +76,8 @@ else {
 				print_prefs4($prefs, 'general', false);
 				break;
 			case 'events':
-				print_prefs4($prefs, 'events', false);
+				if (array_key_exists('events',$prefs->elements))
+					print_prefs4($prefs, 'events', false);
 				break;
 			default:
 				print_prefs5($prefs, 'general', $_GET['mode']);
