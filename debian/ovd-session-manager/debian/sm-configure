@@ -2,6 +2,6 @@
 
 if dpkg-reconfigure mysql-server-5.0; then
 	if dpkg-reconfigure ulteo-ovd-session-manager; then
-		rm -f /etc/init.d/S98sessionmanager_first
+		rm -f /etc/rc2.d/S98sessionmanager_first
 	fi
 fi
