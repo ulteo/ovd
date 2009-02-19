@@ -30,7 +30,6 @@ from xml.dom.minidom import Document
 import wmi
 import utils
 import pythoncom
-import Image
 import tempfile
 import servicemanager
 from win32com.shell import shell
@@ -196,8 +195,11 @@ class Web(SimpleHTTPRequestHandler):
 						
 						if os.path.exists(path_bmp):
 							path_png = tempfile.mktemp()+'.png'
-							im = Image.open(path_bmp)
-							im.save(path_png)
+							
+							command = """"%s" -Q -O "%s" "%s" """%(os.path.join(self.server.daemon.install_dir, 'bmp2png.exe'), path_png, path_bmp)
+							p = utils.Process()
+							status = p.run(command)
+							self.server.daemon.log.debug("status of bmp2png %s (command %s)"%(status, command))
 							
 							f = open(path_png, 'rb')
 							self.send_response(200)
