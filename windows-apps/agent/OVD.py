@@ -128,8 +128,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		#log_debug("init 00")
 		win32serviceutil.ServiceFramework.__init__(self,args)
 		
-		install_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-		#log_debug("main 001 install dir "+install_dir)
+		self.install_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 		if os.environ.has_key('ALLUSERSPROFILE'):
 			log_debug("main 001-A os.environ.has_key('ALLUSERSPROFILE')")
 			all_users_dir = os.environ['ALLUSERSPROFILE']
@@ -141,7 +140,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		name = "ulteo-ovd"
 		#log_debug("main 003")
 		conf = {}
-		conf["conf_file"] = os.path.join(install_dir, '%s.conf'%(name))
+		conf["conf_file"] = os.path.join(self.install_dir, '%s.conf'%(name))
 		conf["log_file"] = os.path.abspath(os.path.join(all_users_dir, 'Application Data', 'ulteo', 'ovd', 'main.log'))
 		
 		conf["log_flags"] = ["info", "warn", "error"]
@@ -162,8 +161,9 @@ class OVD(win32serviceutil.ServiceFramework):
 			log_debug("exit 23")
 			sys.exit(2)
 	
-		log_debug("init 01")
+		log_debug("init 01 "+str(conf))
 		self.conf = conf
+		
 		self.init_log()
 		self.log.info("init")
 		self.smr = sessionmanager.SessionManagerRequest(self.conf, self.log)

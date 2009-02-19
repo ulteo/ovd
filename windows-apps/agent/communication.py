@@ -23,12 +23,23 @@
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 import cgi
 import os
+import sys
 import platform
 import base64
 from xml.dom.minidom import Document
 import wmi
 import utils
 import pythoncom
+import Image
+import tempfile
+import servicemanager
+from win32com.shell import shell
+import pythoncom
+import traceback
+
+def log_debug(msg_):
+	servicemanager.LogInfoMsg(str(msg_))
+
 if utils.myOS() == "windows":
 	from ctypes import *
 	from ctypes.wintypes import DWORD
@@ -65,24 +76,34 @@ if utils.myOS() == "windows":
 
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
-		if self.path == "/webservices/server_status.php":
-			self.webservices_server_status()
-		elif self.path == "/webservices/server_monitoring.php":
-			self.webservices_server_monitoring()
-		elif self.path == "/webservices/server_type.php":
-			self.webservices_server_type()
-		elif self.path == "/webservices/server_version.php":
-			self.webservices_server_version()
-		elif self.path == "/webservices/applications.php":
-			self.webservices_applications()
-		elif self.path.startswith("/webservices/icon.php"):
-			self.webservices_icon()
-		
-		else:
-			self.send_response(404)
-			self.send_header('Content-Type', 'text/html')
-			self.end_headers()
-			self.wfile.write('')
+		try:
+			self.server.daemon.log.debug("do_GET "+self.path)
+			if self.path == "/webservices/server_status.php":
+				self.webservices_server_status()
+			elif self.path == "/webservices/server_monitoring.php":
+				self.webservices_server_monitoring()
+			elif self.path == "/webservices/server_type.php":
+				self.webservices_server_type()
+			elif self.path == "/webservices/server_version.php":
+				self.webservices_server_version()
+			elif self.path == "/webservices/applications.php":
+				self.webservices_applications()
+			elif self.path.startswith("/webservices/icon.php"):
+				self.webservices_icon()
+			elif self.path == "/webservices/test.php":
+				t = 5/0
+				
+			else:
+				self.send_response(404)
+				self.send_header('Content-Type', 'text/html')
+				self.end_headers()
+				self.wfile.write('')
+			
+		except Exception, err:
+			exception_type, exception_string, tb = sys.exc_info()
+			trace_exc = "".join(traceback.format_tb(tb))
+			self.server.daemon.log.debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
+			log_debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
 	
 	def log_request(self,l):
 		pass
@@ -150,30 +171,59 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write(self.server.daemon.getApplicationsXML())
 	
 	def webservices_icon(self):
-		#print 'webservices_icon'
-		#try :
-			#args = {}
-			#args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
-			#for (k,v) in args2:
-				#args[k] = base64.decodestring(v)
-		#except Exception, err:
-			#args = {}
-		#print 'args ',args
-		#if args.has_key('desktopfile'):
-			#if args['desktopfile'] != '':
-				#if os.path.exists(args['desktopfile']):
-					#print 'desktopfile exist'
+		try :
+			args = {}
+			args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
+			for (k,v) in args2:
+				args[k] = base64.decodestring(v)
+		except Exception, err:
+			args = {}
 		
-		#if args.has_key('path'):
-			#if args['path'] != '':
-				#if os.path.exists(args['path']):
-					#print 'path exist'
-		path_png = 'icon.png'
-		f = open(path_png, 'rb')
-		self.send_response(200)
-		self.send_header('Content-Type', 'image/png')
-		self.end_headers()
-		self.wfile.write(f.read())
-		f.close()
+		if args.has_key('desktopfile'):
+			if args['desktopfile'] != '':
+				if os.path.exists(args['desktopfile']):
+					pythoncom.CoInitialize()
+					shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+					shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(args['desktopfile'])
+					if ( shortcut.GetPath(0)[0][-3:] == "exe"):
+						exe_file = shortcut.GetPath(0)[0]
+						path_bmp = tempfile.mktemp()+'.bmp'
+						
+						command = """"%s" "%s" "%s" """%(os.path.join(self.server.daemon.install_dir, 'extract_icon.exe'), exe_file, path_bmp)
+						p = utils.Process()
+						status = p.run(command)
+						self.server.daemon.log.debug("status of extract_icon %s (command %s)"%(status, command))
+						
+						if os.path.exists(path_bmp):
+							path_png = tempfile.mktemp()+'.png'
+							im = Image.open(path_bmp)
+							im.save(path_png)
+							
+							f = open(path_png, 'rb')
+							self.send_response(200)
+							self.send_header('Content-Type', 'image/png')
+							self.end_headers()
+							self.wfile.write(f.read())
+							f.close()
+							os.remove(path_bmp)
+							os.remove(path_png)
+						else :
+							self.server.daemon.log.debug("webservices_icon error 500")
+							self.send_response(500)
+					else :
+						self.server.daemon.log.debug("webservices_icon send default icon")
+						f = open('icon.png', 'rb')
+						self.send_response(200)
+						self.send_header('Content-Type', 'image/png')
+						self.end_headers()
+						self.wfile.write(f.read())
+						f.close()
+				else:
+					self.server.daemon.log.debug("webservices_icon no right argument1")
+			else:
+				self.server.daemon.log.debug("webservices_icon no right argument2" )
+		else:
+			self.server.daemon.log.debug("webservices_icon no right argument3" )
+			
 
 
