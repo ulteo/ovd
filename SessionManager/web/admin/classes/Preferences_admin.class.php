@@ -249,7 +249,6 @@ class Preferences_admin extends Preferences {
 
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
-			$c = new ConfigElement($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, ConfigElement::$SELECT);
 			foreach ($value1 as $plugin_name => $plu6) {
 				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
 				if (is_null($plugin_prettyname))
@@ -260,6 +259,7 @@ class Preferences_admin extends Preferences {
 				if ($isdefault1 === true)
 					$c = new ConfigElement($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, ConfigElement::$SELECT);
 			}
+			$c = new ConfigElement($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, ConfigElement::$SELECT);
 			$this->add($c,'plugins');
 		}
 	}
@@ -284,7 +284,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general');
 
 		foreach ($available_module as $mod => $sub_mod){
-			$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
+			
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
 				$default1 =  eval($default2);
@@ -295,6 +295,8 @@ class Preferences_admin extends Preferences {
 			//dirty hack (if this->elements[mod] will be empty)
 			if (!isset($this->elements[$mod]))
 				$this->elements[$mod] = array();
+			
+			$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
 			$this->add($c,$mod);
 			$this->addPrettyName($mod,'Module '.$mod);
 
