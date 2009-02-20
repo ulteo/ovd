@@ -39,8 +39,13 @@ class UserDB_fake {
 	
 	public function import($login_){
 		Logger::debug('main','UserDB::fake::import('.$login_.')');
-		if (isset($this->users[$login_]))
-			return $this->users[$login_];
+		if (isset($this->users[$login_])) {
+			if ($this->isOK($this->users[$login_]) == true) {
+				return $this->users[$login_];
+			}
+			else
+				return NULL;
+		}
 		else
 			return NULL;
 	}
@@ -49,6 +54,11 @@ class UserDB_fake {
 	public function getList($sort_=false) {
 		Logger::debug('main','UserDB::fake::getList');
 		$users = $this->users;
+		foreach ($users as $k => $u) {
+			if ($this->isOK($u) == false) {
+				unset($users[$k]);
+			}
+		}
 		// do we need to sort alphabetically ?
 		if ($sort_) {
 			usort($users, "user_cmp");
