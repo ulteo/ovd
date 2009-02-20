@@ -439,7 +439,7 @@ function get_classes_startwith($start_name) {
 }
 
 function str_startswith($string_, $search_) {
-	return (substr($string, 0, strlen($search)) == $search);
+	return (substr($string_, 0, strlen($search_)) == $search_);
 }
 
 function str_endswith($string_, $search_) {

@@ -133,7 +133,7 @@ function do_preview($prefs, $name) {
 
   if (! $obj->form_valid($_POST)) {
     $log['Invalid Form'] = false;
-    return $res;
+    return $log;
   }
 
   $flag = $obj->form_read($_POST, $prefs);
