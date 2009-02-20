@@ -75,10 +75,12 @@ cache_set_monitoring() {
 	echo '</ssh>'                                      >>$file
 
 	echo '<user login="'$USER_LOGIN'">'                >>$file
-    while read pid desktop; do
-        [ -z "$desktop" ] && continue
-        echo '<pid id="'$pid'" desktop="'$desktop'" />' >>$file
-    done < $SPOOL_USERS/$SESSID/apps
+    if [ -f $SPOOL_USERS/$SESSID/apps ]; then
+        while read pid desktop; do
+            [ -z "$desktop" ] && continue
+            echo '<pid id="'$pid'" desktop="'$desktop'" />' >>$file
+        done < $SPOOL_USERS/$SESSID/apps
+    fi
 	echo '</user>'                                     >>$file
 	echo '</session>'                                  >>$file
 	session_unload
