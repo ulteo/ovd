@@ -19,9 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-function init_fqdn_data($fqdn_) {
+function data_init() {
 	$ret = array(
-		'fqdn' => $fqdn_,
 		'down_time' => 0,
 		'maintenance_time' => 0,
 		'sessions_count' => 0,
@@ -33,16 +32,15 @@ function init_fqdn_data($fqdn_) {
 	return $ret;
 }
 
-function servers_per_server_data($data_, $fqdn_) {
+function data_init_from_row($res) {
 	$ret = array(
-		'fqdn' => $fqdn_,
-		'down_time' => $data_[$fqdn_]['data']['down_time'],
-		'maintenance_time' => $data_[$fqdn_]['data']['maintenance_time'],
-		'sessions_count' => $data_[$fqdn_]['data']['sessions_count'],
-		'max_connections' => $data_[$fqdn_]['data']['max_connections'],
-		'max_connections_when' => $data_[$fqdn_]['data']['max_connections_when'],
-		'max_ram' => $data_[$fqdn_]['data']['max_ram'],
-		'max_ram_when' => $data_[$fqdn_]['data']['max_ram_when']
+		'down_time' => $res['down_time'],
+		'maintenance_time' => $res['maintenance_time'],
+		'sessions_count' => $res['sessions_count'],
+		'max_connections' => $res['max_connections'],
+		'max_connections_when' => $res['max_connections_when'],
+		'max_ram' => $res['max_ram'],
+		'max_ram_when' => $res['max_ram_when']
 	);
 	return $ret;
 }
@@ -53,26 +51,39 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	                     SERVERS_REPORT_TABLE,
 	                     'date', $_REQUEST['start'], $_REQUEST['end']);
 
-	$data = array();
+	$global = data_init();
+	$unit = array();
 	$days_nb = 0;
 	while ($res = $sql->FetchResult()) {
 		$days_nb++;
+		$date = (int)$res['date'];
 		$fqdn = $res['fqdn'];
-		if (! isset($data[$fqdn])) {
-			$data[$fqdn] = array();
-			$data[$fqdn]['data'] = init_fqdn_data($fqdn);
-		}
 
-		$data[$fqdn]['data']['down_time'] += $res['down_time'];
-		$data[$fqdn]['data']['maintenance_time'] += $res['maintenance_time'];
-		$data[$fqdn]['data']['sessions_count'] += $res['sessions_count'];
-		if ($res['max_connections'] >= $data[$fqdn]['data']['max_connections']) {
-			$data[$fqdn]['data']['max_connections'] = $res['max_connections'];
-			$data[$fqdn]['data']['max_connections_when'] = $res['max_connections_when'];
+		if (! isset($per_server[$fqdn]))
+			$per_server[$fqdn] = data_init();
+
+		if (! isset($day[$date]))
+			$per_day[$date] = array('sessions_count' => 0);
+
+		if (! isset($unit[$fqdn]))
+			$unit[$fqdn] = array();
+		$unit[$fqdn][$date] = data_init_from_row($res);
+
+		$per_server[$fqdn]['down_time'] += $res['down_time'];
+
+		$per_server[$fqdn]['maintenance_time'] += $res['maintenance_time'];
+
+		$per_server[$fqdn]['sessions_count'] += $res['sessions_count'];
+		$per_day[$date]['sessions_count'] += $res['sessions_count'];
+		$global['sessions_count'] += $res['sessions_count'];
+
+		if ($res['max_connections'] >= $per_server[$fqdn]['max_connections']) {
+			$per_server[$fqdn]['max_connections'] = $res['max_connections'];
+			$per_server[$fqdn]['max_connections_when'] = $res['max_connections_when'];
 		}
-		if ($res['max_ram'] >= $data[$fqdn]['data']['max_ram']) {
-			$data[$fqdn]['data']['max_ram'] = $res['max_ram'];
-			$data[$fqdn]['data']['max_ram_when'] = $res['max_ram_when'];
+		if ($res['max_ram'] >= $per_server[$fqdn]['max_ram']) {
+			$per_server[$fqdn]['max_ram'] = $res['max_ram'];
+			$per_server[$fqdn]['max_ram_when'] = $res['max_ram_when'];
 		}
 	}
 }

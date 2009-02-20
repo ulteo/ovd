@@ -28,18 +28,6 @@ function init_app_id() {
 	return $ret;
 }
 
-function applications_per_server_data($data_, $fqdn_) {
-	$ret = array();
-	foreach ($data_[$fqdn_] as $app_id => $app_data) {
-	    $ret[$app_id] = array(
-			'use_count' => $app_data['use_count'],
-			'max_use' => $app_data['max_use'],
-			'max_use_when' => $app_data['max_use_when']
-	    );
-	}
-    return $ret;
-}
-
 if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$sql = MySQL::getInstance();
 	$ret = $sql->DoQuery('SELECT * FROM @1 WHERE @2 >= %3 and @2 <= %4',
@@ -47,22 +35,36 @@ if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	                     'date', $_REQUEST['start'], $_REQUEST['end']);
 
 
-	$data = array();
+	$per_server = array();
+	$per_day = array();
+	$per_app = array();
+
 	$days_nb = 0;
 	while ($res = $sql->FetchResult()) {
 		$days_nb++;
+		$date = (int)$res['date'];
 		$fqdn = $res['fqdn'];
 		$app_id = $res['app_id'];
-		if (! isset($data[$fqdn]))
-			$data[$fqdn] = array();
 
-		if (! isset($data[$fqdn][$app_id]))
-			$data[$fqdn][$app_id] = init_app_id();
+		if (! isset($per_server[$fqdn]))
+			$per_server[$fqdn] = array();
+		if (! isset($per_day[$date]))
+			$per_day[$date] = array();
+		if (! isset($per_app[$app_id]))
+			$per_app[$app_id] = array('use_count' => 0);
 
-		$data[$fqdn][$app_id]['use_count'] += $res['use_count'];
-		if ($res['max_use'] >= $data[$fqdn][$app_id]['max_use']) {
-			$data[$fqdn][$app_id]['max_use'] = $res['max_use'];
-			$data[$fqdn][$app_id]['max_use_when'] = $res['max_use_when'];
+		if (! array_key_exists($app_id,$per_server[$fqdn]))
+			$per_server[$fqdn][$app_id] = init_app_id();
+		if (! array_key_exists($app_id,$per_day[$date]))
+			$per_day[$date][$app_id] = array('use_count' => 0);
+
+		$per_server[$fqdn][$app_id]['use_count'] += $res['use_count'];
+		$per_day[$date][$app_id]['use_count'] += $res['use_count'];
+		$per_app[$app_id]['use_count'] += $res['use_count'];
+
+		if ($res['max_use'] >= $per_server[$fqdn][$app_id]['max_use']) {
+			$per_server[$fqdn][$app_id]['max_use'] = $res['max_use'];
+			$per_server[$fqdn][$app_id]['max_use_when'] = $res['max_use_when'];
 		}
 	}
 }
