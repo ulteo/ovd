@@ -20,6 +20,7 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/includes/page_template.php');
 
 function get_classes_startwith_2($start_name) {
 	$files = glob('classes/'.$start_name.'*.class.php');
@@ -219,15 +220,9 @@ if (isset($_SESSION['config_profile_saved'])) {
 }
 
 
-require_once('header.php');
-
-  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
-  echo '<tr>';
-  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
-  include_once(dirname(__FILE__).'/submenu/configuration-profile.php');
-  echo '</td>';
-  echo '<td style="text-align: left; vertical-align: top;">';
-  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+page_header();
+if (isset($preview)) 
+  echo '<table><tr><td>';
 
 echo '<form method="post">';
 echo '<input type="hidden" name="config_previous" value="'.$mode.'" />';
@@ -249,10 +244,8 @@ echo '<input type="submit" value="Save"/>';
 echo ' <input type="submit" name="submit_preview" value="Preview Mode"/>';
 echo '</form>';
 
-  echo '</div>';
-  echo '</td>';
 if (isset($preview)) {
-  echo '<td style="width: 30%; vertical-align: top;"><ul>';
+  echo '</td><td style="width: 30%; vertical-align: top;"><ul>';
   foreach($preview as $msg => $status) {
     $c = ($status)?'green':'red';
     $m = ($status)?_('OK'):_('Error');
@@ -264,9 +257,10 @@ if (isset($preview)) {
     echo '<li style="color:'.$c.';">'._('SUCCESS').'</li>';
   echo '</ul>';
   echo '</td>';
- }
   echo '</tr>';
   echo '</table>';
+ }
 
-require_once('footer.php');
+
+page_footer();
 die();

@@ -20,13 +20,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/includes/page_template.php');
 
 if (!file_exists(SESSIONMANAGER_CONFFILE_SERIALIZED)) {
 	// TODO installation
 	redirect('configuration.php?action=init');
 }
 
-require_once('header.php');
+page_header();
 ?>
 <table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 	<tr>
@@ -155,4 +156,4 @@ require_once('header.php');
 	</tr>
 </table>
 <?php
-require_once('footer.php');
+page_footer();

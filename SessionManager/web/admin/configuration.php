@@ -69,26 +69,15 @@ else {
 		catch (Exception $e) {
 		}
 		if (is_object($prefs)) {
-			require_once(dirname(__FILE__).'/header.php');
-			echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
-			echo '<tr>';
-			echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
-			include_once(dirname(__FILE__).'/submenu/configuration.php');
-			echo '</td>';
-			echo '<td style="text-align: left; vertical-align: top;">';
-			echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+			require_once(dirname(__FILE__).'/includes/page_template.php');
+			page_header();
 
 			print_prefs($prefs);
 
-			echo '</div>';
-			echo '</td>';
-			echo '</tr>';
-			echo '</table>';
-			include_once('footer.php');
+			page_footer();
 		}
 		else {
 			die_error(_('Preferences not loaded'));
 		}
 	}
 }
-

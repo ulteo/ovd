@@ -20,7 +20,8 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-require_once('header.php');
+require_once(dirname(__FILE__).'/includes/page_template.php');
+page_header();
 
 if (! isset($_REQUEST['start']))
 	$start = "";
@@ -93,4 +94,4 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 <?php
 include($tpl);
 
-require_once('footer.php');
+page_footer();

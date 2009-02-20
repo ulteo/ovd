@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/includes/page_template.php');
 
 $tm = new Tasks_Manager();
 $tm->load_all();
@@ -54,7 +55,7 @@ function show_manage($id, $tm) {
 	
 	$infos = $task->get_AllInfos();
 
-	include_once('header.php');
+	page_header();
 
 	echo '<div id="tasks_div">';
 	echo '<h1><a href="?">'._('Tasks managment').'</a> - '.$id.'</h1>';
@@ -95,14 +96,14 @@ function show_manage($id, $tm) {
 	echo '</div>';
 
 
-	include_once('footer.php');
+	page_footer();
 	die();
 }
 
 function show_default($tm) {
   $servers = Servers::getOnline();
 
-  include_once('header.php');
+  page_header();
 
   echo '<div id="tasks_div">';
   echo '<h1>'._('Tasks').'</h1>';
@@ -156,6 +157,6 @@ function show_default($tm) {
     	echo '</form>';
     }
 
-    include_once('footer.php');
+    page_footer();
     die();
 }
