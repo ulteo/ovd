@@ -49,7 +49,7 @@ abstract class EventCallback {
 		}
 
 		$buf = $prefs->get('events', get_class($this->ev));
-		if (in_array(get_class($this),$buf))
+		if ($buf && in_array(get_class($this),$buf))
 			return true;
 		return false;
 	}
