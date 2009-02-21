@@ -215,4 +215,10 @@ if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
     chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
 fi
 
+echo "Installation done."
+echo "To activate the service you now need to:"
+echo " * restart the web server"
+echo " * run the following command: "
+echo "   chroot $CHROOT_PATH /etc/init.d/ulteo-ovdd start"
+
 exit 0

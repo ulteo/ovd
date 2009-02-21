@@ -236,4 +236,7 @@ fi
 set_admin_credentials
 set_apache
 
+echo "Configuration done."
+echo "Please reload the web server configuration to enable the service."
+
 exit 0
