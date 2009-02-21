@@ -92,6 +92,7 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 <hr />
 
 <?php
-include($tpl);
+if (isset($tpl))
+	include($tpl);
 
 page_footer();
