@@ -200,8 +200,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$log['isValidDN for \''.$config_AD['login'].'\''] = true;
 
 		$config_ldap = self::makeLDAPconfig($config_AD);
-		$LDAP2 = new LDAP($config_ldap);
-		$ret = $LDAP2->connect(&$log);
+		$ldap2 = new LDAP($config_ldap);
+		$ret = $ldap2->connect($log);
 		if ( $ret === false) {
 // 			$log['LDAP connect to \''.$config_ldap['host'].'\''] = false;
 			return false;
@@ -209,14 +209,14 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 // 		$log['Connect to AD'] = true;
 		
-		$ret = $LDAP2->branch_exists($config_AD['ou']);
+		$ret = $ldap2->branch_exists($config_AD['ou']);
 		if ( $ret == false) {
 			$log['LDAP user branch'] = false;
 		}
 		else {
 			$log['LDAP user branch'] = true;
 		}
-		$LDAP2->disconnect();
+		$ldap2->disconnect();
 		return true;
 	}
 

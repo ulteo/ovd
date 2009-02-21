@@ -72,7 +72,7 @@ class LDAP {
 		}
 	}
 
-	public function connect($log=array()) {
+	public function connect(&$log=array()) {
 		Logger::debug('main', 'LDAP - connect(\''.$this->host.'\', \''.$this->port.'\')');
 		$buf = @ldap_connect($this->host, $this->port);
 		if (!$buf) {

@@ -498,11 +498,11 @@ function formToArray($form_) {
 		}
 	}
 	
-	formToArray_cleanup(&$elements_form);
+	formToArray_cleanup($elements_form);
 	return $elements_form;
 }
 
-function formToArray_cleanup($buf) {
+function formToArray_cleanup(&$buf) {
 	if (is_array($buf)) {
 		$buf_keys = array_keys($buf);
 		if ( count($buf) > 0) {
@@ -511,7 +511,7 @@ function formToArray_cleanup($buf) {
 			}
 			else {
 				foreach ( $buf as $k=> $v) {
-					formToArray_cleanup(&$buf[$k]);
+					formToArray_cleanup($buf[$k]);
 				}
 			}
 		}
