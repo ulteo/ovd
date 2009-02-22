@@ -43,8 +43,10 @@ if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]; then
     db_go
   done
 
-  db_input critical od/sessionmanager/download_tarball || true
-  db_go
+  if [ ! -e /usr/share/ulteo/sessionmanager/base.tar.gz ]; then
+    db_input critical od/sessionmanager/download_tarball || true
+    db_go
+  fi
 fi
 
 db_stop
