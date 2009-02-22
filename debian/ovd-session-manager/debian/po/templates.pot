@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: gauvain@ulteo.com\n"
-"POT-Creation-Date: 2009-02-11 12:33+0000\n"
+"Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
+"POT-Creation-Date: 2009-02-22 18:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,14 +26,6 @@ msgstr ""
 #. Description
 #: ../templates:1001
 msgid "Please confirm whether MySQL should be configured automatically."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../templates:1001
-msgid ""
-"If you do not choose this option, please see the instructions in /usr/share/"
-"doc/ulteo-ovd-session-manager/README.Debian."
 msgstr ""
 
 #. Type: string

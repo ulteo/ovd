@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: gauvain@ulteo.com\n"
-"POT-Creation-Date: 2009-02-11 12:33+0000\n"
+"Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
+"POT-Creation-Date: 2009-02-22 18:01+0100\n"
 "PO-Revision-Date: 2008-12-10 17:17+0100\n"
 "Last-Translator: Gauvain Pocentek <gauvain@ulteo.com>\n"
 "Language-Team: fr\n"
@@ -19,21 +19,13 @@ msgstr ""
 #. Description
 #: ../templates:1001
 msgid "Configure MySQL?"
-msgstr ""
+msgstr "Configurer MySQL ?"
 
 #. Type: boolean
 #. Description
 #: ../templates:1001
 msgid "Please confirm whether MySQL should be configured automatically."
-msgstr ""
-
-#. Type: boolean
-#. Description
-#: ../templates:1001
-msgid ""
-"If you do not choose this option, please see the instructions in /usr/share/"
-"doc/ulteo-ovd-session-manager/README.Debian."
-msgstr ""
+msgstr "Veuillez confirmer que MySQL doit être reconfiguré automatiquement."
 
 #. Type: string
 #. Description
@@ -55,7 +47,7 @@ msgstr ""
 #. Description
 #: ../templates:3001
 msgid "MySQL host:"
-msgstr ""
+msgstr "Hôte MySQL :"
 
 #. Type: string
 #. Description
@@ -64,12 +56,14 @@ msgid ""
 "Please enter the name or IP address of the MySQL database server that will "
 "store the Ulteo Session Manager database."
 msgstr ""
+"Veuillez indiquer le nom ou l'adresse IP du serveur de bases de données "
+"MySQL qui accueille la base de données d'Ulteo Session Manager."
 
 #. Type: string
 #. Description
 #: ../templates:4001
 msgid "Ulteo Session Manager database name:"
-msgstr ""
+msgstr "Nom de la base de données d'Ulteo Session Manager :"
 
 #. Type: string
 #. Description
@@ -78,19 +72,19 @@ msgid ""
 "Please enter the name of the database that will host data for Ulteo Session "
 "Manager."
 msgstr ""
+"Veuillez indiquer le nom de la base de données pour Ulteo Session Manager."
 
 #. Type: password
 #. Description
 #: ../templates:5001
-#, fuzzy
 msgid "Database server administrator password:"
-msgstr "Mot de passe de l'administrateur :"
+msgstr "Mot de passe de l'administrateur du serveur de bases de données :"
 
 #. Type: string
 #. Description
 #: ../templates:6001
 msgid "Database user for Ulteo Session Manager:"
-msgstr ""
+msgstr "Utilisateur de la base de données pour Ulteo Session Manager :"
 
 #. Type: string
 #. Description
@@ -99,12 +93,14 @@ msgid ""
 "Please choose the MySQL account that will be used to access the database "
 "hosting Ulteo Session Manager data."
 msgstr ""
+"Veuillez indiquer l'identifiant MySQL qui sera utilisé pour accéder à la "
+"base de données d'Ulteo Session Manager."
 
 #. Type: password
 #. Description
 #: ../templates:7001
 msgid "Database user password:"
-msgstr ""
+msgstr "Mot de passe de l'utilisateur du serveur de bases de données :"
 
 #. Type: password
 #. Description
@@ -113,12 +109,14 @@ msgid ""
 "Please choose the password for the account that will be used to access the "
 "database hosting Ulteo Session Manager data."
 msgstr ""
+"Veuillez indiquer le mot de passe de l'utilisateur de la base de données "
+"d'Ulteo Session Manager."
 
 #. Type: string
 #. Description
 #: ../templates:8001
 msgid "Database server administrator username:"
-msgstr ""
+msgstr "Mot de passe de l'administrateur du serveur de bases de données :"
 
 #. Type: string
 #. Description
@@ -127,6 +125,9 @@ msgid ""
 "Please enter the username of the database server administrator. This account "
 "must have database creation privileges."
 msgstr ""
+"Veuillez indiquez l'identifiant de l'administrateur du serveur de bases de "
+"données. Ce compte doit posséder les privilèges de création de bases de "
+"données."
 
 #. Type: password
 #. Description

@@ -3,9 +3,6 @@ Type: boolean
 Default: true
 _Description: Configure MySQL?
  Please confirm whether MySQL should be configured automatically.
- .
- If you do not choose this option, please see the instructions in
- /usr/share/doc/ulteo-ovd-session-manager/README.Debian.
 
 Template: od/sessionmanager/admin_login
 Type: string
