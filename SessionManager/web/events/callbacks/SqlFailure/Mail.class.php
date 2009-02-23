@@ -23,31 +23,33 @@
 
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
-class ServerStatusChangedMail extends EventCallback {
+class SqlFailureMail extends EventCallback {
     public function run () {
 		$needs_alert = false;
 
-		$data=get_from_cache('events','ServerStatusChanged');
+		$data=get_from_cache('events','SqlFailure');
 
 		if ($data == NULL) {
-			$data[$this->ev->fqdn] = $this->ev->status;
-			if ($this->ev->status == ServerStatusChanged::$OFFLINE)
+			$data[$this->ev->host] = $this->ev->status;
+			if ($this->ev->status < 0)
 				$needs_alert = true;
 		} else {
-			if (isset($data[$this->ev->fqdn]) &&
-			  ($data[$this->ev->fqdn] != $this->ev->status)) {
-				$data[$this->ev->fqdn] = $this->ev->status;
+			if (isset($data[$this->ev->host]) &&
+			  ($data[$this->ev->host] != $this->ev->status)) {
+				$data[$this->ev->host] = $this->ev->status;
 				$needs_alert = true;
 			}
 		}
 
 		if ($needs_alert) {
-			Logger::debug('main', 'ServerStatusChangedMail: alert needed needed');
-			set_cache($data, 'events', 'ServerStatusChanged');
-			if ($this->ev->status == ServerStatusChanged::$OFFLINE)
-				$subject = sprintf(_('OVD Alert: %s is offline'), $this->ev->fqdn);
+			set_cache($data, 'events', 'SqlFailure');
+			Logger::debug('main', 'SqlFailureMail: alert needed needed');
+			if ($this->ev->status < 0)
+				$subject = sprintf(_('OVD Alert: MySQL %s is offline'),
+				                   $this->ev->host);
 			else
-				$subject = sprintf(_('OVD End Alert: %s is up again'), $this->ev->fqdn);
+				$subject = sprintf(_('OVD End Alert: MySQL %s is up again'),
+				                   $this->ev->host);
 
 			send_alert_mail($subject, '');
 		}

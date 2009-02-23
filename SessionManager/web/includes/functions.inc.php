@@ -535,5 +535,6 @@ function set_cache($data_, $subdir_, $id_) {
 		mkdir(CACHE_DIR.'/'.$subdir_, 0775);
 
 	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;
-	return @file_put_contents($file, serialize($data_));
+	$tmp = serialize($data_);
+	return file_put_contents($file, $tmp);
 }

@@ -110,6 +110,7 @@ web/events/Makefile
 web/events/callbacks/Makefile
 web/events/callbacks/SessionStartEvent/Makefile
 web/events/callbacks/ServerStatusChanged/Makefile
+web/events/callbacks/SqlFailure/Makefile
 examples/Makefile
 ])
 AC_OUTPUT

@@ -62,7 +62,7 @@ class MySQL {
 		if ($this->link)
 			return;
 
-		$ev = new SqlFailure();
+		$ev = new SqlFailure(array('host' => $this->sqlhost));
 
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
@@ -70,22 +70,28 @@ class MySQL {
 			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --database="'.$this->sqlbase.'"';
 			Logger::error('main', '(MySQL::CheckLink) Link to SQL server failed, please try this bash command to validate the configuration : '.$mysqlcommand);
 
-			if ($die_)
+			if ($die_) {
+				$ev->setAttribute('status', -1);
+				$ev->emit();
 				die_error('Link to SQL server failed.');
+			}
 
-			$ev->emit();
 			return false;
 		}
 
 		if ($this->SelectDB($this->sqlbase) === false) {
-			if ($die_)
+			if ($die_) {
+				$ev->setAttribute('status', -1);
+				$ev->emit();
 				die_error('Could not select database.');
+			}
 
-			$ev->emit();
 			return false;
 		}
 
 		$this->DoQuery('SET NAMES utf8');
+		$ev->setAttribute('status', 1);
+		$ev->emit();
 		return true;
 	}
 
