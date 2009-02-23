@@ -3,6 +3,7 @@ ulteo-ovd-xfce-default-settings (0.5) ovd-polaris-testing; urgency=low
   * Use the DMZ cursor theme:
     - add an Xcursor configuration file in the xfce xdg dir
     - depends on dmz-cursor-theme
+  * Don't use system fonts size for desktop icons labels; use a fixed 10 size
 
  -- Gauvain Pocentek <gauvain@ulteo.com>  Mon, 23 Feb 2009 06:47:58 +0100
 
