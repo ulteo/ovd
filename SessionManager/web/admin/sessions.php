@@ -118,7 +118,13 @@ if (isset($_POST['join'])) {
 		} else {
 			echo '<ul>';
 			foreach ($session->applications as $id) {
+				if (is_null($id))
+					continue;
+
 				$myapp = $apps[$id];
+				if (! is_object($myapp))
+					continue;
+
 				echo '<li><a href="applications.php?action=manage&id='.
 					$myapp->getAttribute('id').'">'.
 					$myapp->getAttribute('name').'</a></li>';
@@ -150,7 +156,7 @@ if (isset($_POST['join'])) {
 }
 
 else {
-	page_header(); 
+	page_header();
 
 	echo '<h1>'._('Sessions').'</h1>';
 
