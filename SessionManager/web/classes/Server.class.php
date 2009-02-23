@@ -144,10 +144,28 @@ class Server {
 			return false;
 		}
 
+		$buf_type = $this->getType();
+		if (! $buf_type) {
+			Logger::error('main', 'Server does not send a valid type');
+			popup_error('Server does not send a valid type');
+			return false;
+		}
+		$buf_version = $this->getVersion();
+		if (! $buf_version) {
+			Logger::error('main', 'Server does not send a valid version');
+			popup_error('Server does not send a valid version');
+			return false;
+		}
+		$buf_monitoring = $this->getMonitoring();
+		if (! $buf_monitoring) {
+			Logger::error('main', 'Server does not send a valid monitoring');
+			popup_error('Server does not send a valid monitoring');
+			return false;
+		}
+
 		$this->setAttribute('locked', true);
 		$this->setAttribute('registered', true);
 
-		$this->getMonitoring();
 		$this->updateApplications();
 
 		return true;
