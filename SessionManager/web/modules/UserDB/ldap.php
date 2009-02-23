@@ -55,6 +55,8 @@ class UserDB_ldap {
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
+			
+			$u = $this->cleanupUser($u);
 			return $u;
 		}
 		return NULL;
@@ -80,6 +82,8 @@ class UserDB_ldap {
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
+			
+			$u = $this->cleanupUser($u);
 			return $u;
 		}
 		return NULL;
@@ -107,6 +111,9 @@ class UserDB_ldap {
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
+			
+			$u = $this->cleanupUser($u);
+			
 			if ($this->isOK($u))
 				$users []= $u;
 			else {
@@ -121,6 +128,23 @@ class UserDB_ldap {
 			usort($users, "user_cmp");
 		}
 		return $users;
+	}
+	
+	protected function cleanupUser($u){
+		if (is_object($u)){
+			if ($u->hasAttribute('homedir')){
+				// replace \ by / in homedir
+				$u->setAttribute('homedir',str_replace('\\','/',$u->getAttribute('homedir')));
+
+				// create  fileserver from homedir
+				// Matchs on "//myserveur.mydomain.net/path/to/home"
+				$r = '`\/\/([\w-_\.]+)(\/.+)`';
+				if (preg_match($r, $u->getAttribute('homedir'), $matches)) {
+					$u->setAttribute('fileserver',$matches[1]);
+				}
+			}
+		}
+		return $u;
 	}
 
 	public function isWriteable(){
@@ -196,7 +220,7 @@ class UserDB_ldap {
 	public function prefsIsValid($prefs_, $log=array()) {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
-		$ret = $LDAP2->connect($log);
+		$ret = $LDAP2->connect(&$log);
 		if ($ret === false) {
 			return false;
 		}

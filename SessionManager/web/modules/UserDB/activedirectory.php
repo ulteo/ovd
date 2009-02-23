@@ -37,8 +37,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	public function import($login_){
 		$u = parent::import($login_);
-
-		return $this->cleanupUser($u);
 	}
 
 	public function getList($sort_=false) {
@@ -74,23 +72,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			usort($users, "user_cmp");
 		}
 		return $users;
-	}
-
-	private function cleanupUser($u){
-		if (is_object($u)){
-			if ($u->hasAttribute('homedir')){
-				// replace \ by / in homedir
-				$u->setAttribute('homedir',str_replace('\\','/',$u->getAttribute('homedir')));
-
-				// create  fileserver from homedir
-				// Matchs on "//myserveur.mydomain.net/path/to/home"
-				$r = '`\/\/([\w-_\.]+)(\/.+)`';
-				if (preg_match($r, $u->getAttribute('homedir'), $matches)) {
-					$u->setAttribute('fileserver',$matches[1]);
-				}
-			}
-		}
-		return $u;
 	}
 
 	public function makeLDAPconfig($config_=NULL) {
@@ -200,8 +181,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$log['isValidDN for \''.$config_AD['login'].'\''] = true;
 
 		$config_ldap = self::makeLDAPconfig($config_AD);
-		$ldap2 = new LDAP($config_ldap);
-		$ret = $ldap2->connect($log);
+		$LDAP2 = new LDAP($config_ldap);
+		$ret = $LDAP2->connect(&$log);
 		if ( $ret === false) {
 // 			$log['LDAP connect to \''.$config_ldap['host'].'\''] = false;
 			return false;
@@ -209,14 +190,14 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 // 		$log['Connect to AD'] = true;
 		
-		$ret = $ldap2->branch_exists($config_AD['ou']);
+		$ret = $LDAP2->branch_exists($config_AD['ou']);
 		if ( $ret == false) {
 			$log['LDAP user branch'] = false;
 		}
 		else {
 			$log['LDAP user branch'] = true;
 		}
-		$ldap2->disconnect();
+		$LDAP2->disconnect();
 		return true;
 	}
 
