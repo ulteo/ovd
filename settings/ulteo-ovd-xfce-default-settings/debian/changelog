@@ -1,3 +1,11 @@
+ulteo-ovd-xfce-default-settings (0.5) ovd-polaris-testing; urgency=low
+
+  * Use the DMZ cursor theme:
+    - add an Xcursor configuration file in the xfce xdg dir
+    - depends on dmz-cursor-theme
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Mon, 23 Feb 2009 06:47:58 +0100
+
 ulteo-ovd-xfce-default-settings (0.4) ovd-polaris-testing; urgency=low
 
   * restricted menu: use an envvar instead of a static path
