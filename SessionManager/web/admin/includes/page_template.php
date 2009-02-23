@@ -37,12 +37,12 @@ $items = array('index.php'		=>	_('Index'),
 		 'logout.php'		=>	_('Logout')
 	       );
 
-$sub_items = 
-  array('servers.php'		=>	
+$sub_items =
+  array('servers.php'		=>
 	array('servers.php' => _('Servers'),
 	      'servers.php?view=unregistered' => _('Unregistered servers')),
 
-	'users.php'		=>	
+	'users.php'		=>
 	array('users.php' => _('Users'),
 	      'usersgroup.php' => _('Users Groups'),
 	      'publications.php' => _('Publications'),
@@ -52,10 +52,10 @@ $sub_items =
 	array('applications.php' => _('Applications'),
 	      'appsgroup.php' => _('Applications Groups'),
 	      'publications.php' => _('Publications'),
-	      'wizard.php' => _('Publication wizard')),	
+	      'wizard.php' => _('Publication wizard')),
 
 
-	'configuration.php'	=>	
+	'configuration.php'	=>
 	array('configuration-partial.php?mode=mysql'		=> _('Database settings'),
 	      'configuration-partial.php?mode=general'		=> _('System settings'),
 	      'configuration-partial.php?mode=application_server_settings' => _('Server settings'),
@@ -92,7 +92,7 @@ function page_header() {
   echo '<link rel="shortcut icon" type="image/png" href="'.$base_url.'media/image/favicon.ico" />';
   echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'media/style/common.css" />';
   echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />';
- 
+
   echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'media/script/lib/nifty/niftyCorners.css" />';
   echo '<script type="text/javascript" src="'.$base_url.'media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" charset="utf-8">';
@@ -127,13 +127,13 @@ function page_header() {
   echo '<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
   echo '<a href="index.php"><img src="'.$base_url.'/media/image/header.png" alt="logo" title="'.$title.'" /></a>';
   echo '</td>';
- 
+
   echo '</tr>';
   echo '</table>';
   echo '</div>';
-		
+
   echo '<div class="spacer"></div>';
- 
+
   echo '<div id="pageWrap">';
   echo '<br />';
   echo '<div class="spacer"></div>';
@@ -161,10 +161,12 @@ function page_header() {
   page_sub_menu();
 }
 
-
-
 function page_footer() {
   $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
+
+  echo '</td>';
+  echo '</tr>';
+  echo '</table>';
 
   echo '</div>';
 
@@ -182,11 +184,6 @@ function page_footer() {
   echo '</html>';
 }
 
-
-
-
-
-
 function get_menu_entry() {
   return basename($_SERVER['REQUEST_URI']);
 }
@@ -200,7 +197,7 @@ function get_parent_menu_entry() {
   $len = 0;
   $parent = NULL;
   $son = NULL;
-    
+
   foreach($sub_items as $k => $v) {
     foreach($v as $kk => $vv) {
       if (str_startswith($in_menu, $kk) &&
@@ -213,7 +210,6 @@ function get_parent_menu_entry() {
 
   return array($parent, $son);
 }
-
 
 function page_menu(){
   global $items;
@@ -268,7 +264,7 @@ function page_sub_menu() {
   echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
   echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
- 
+
   foreach($sub_items[$root] as $key => $value) {
     if ($son == $key) {
 echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
