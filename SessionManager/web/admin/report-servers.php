@@ -45,6 +45,10 @@ function data_init_from_row($res) {
 	return $ret;
 }
 
+$per_server = array();
+$per_day = array();
+$global = NULL;
+
 if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
 	$sql = MySQL::getInstance();
 	$ret = $sql->DoQuery('SELECT * FROM @1 WHERE @2 >= %3 and @2 <= %4',
