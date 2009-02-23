@@ -35,7 +35,7 @@ class Abstract_Session {
 		@5 text NOT NULL,
 		@6 varchar(255) NOT NULL,
 		@7 varchar(255) NOT NULL,
-		@8 varchar(255) NOT NULL,
+		@8 text NOT NULL,
 		@9 varchar(255) NOT NULL,
 		@10 int(10) NOT NULL,
 		PRIMARY KEY  (@2)
@@ -81,8 +81,8 @@ class Abstract_Session {
 		$buf->settings = unserialize($settings);
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
-		$buf->start_time = (string)$start_time;
 		$buf->applications = unserialize($applications);
+		$buf->start_time = (string)$start_time;
 
 		return $buf;
 	}
