@@ -1,0 +1,96 @@
+--- a/settings/appearance-settings.c
++++ b/settings/appearance-settings.c
+@@ -964,11 +964,17 @@
+     gint i, j, nscreens, nmonitors = 0;
+     XfceKiosk *kiosk;
+     gboolean allow_custom_backdrop = TRUE;
++    gboolean allow_custom_behavior = TRUE;
+     Window xid;
+ 
+     bd = g_new0(BackdropDialog, 1);
+     bd->plugin = mcs_plugin;
+ 
++    kiosk = xfce_kiosk_new("xfdesktop");
++    allow_custom_backdrop = xfce_kiosk_query(kiosk, "CustomizeBackdrop");
++    allow_custom_behavior = xfce_kiosk_query(kiosk, "CustomizeBehavior");
++    xfce_kiosk_free(kiosk);
++
+     /* the dialog */
+     bd->dialog = xfce_titled_dialog_new_with_buttons (_("Desktop Preferences"), NULL,
+                           GTK_DIALOG_NO_SEPARATOR,
+@@ -985,22 +991,30 @@
+     
+     mainvbox = GTK_DIALOG (bd->dialog)->vbox;
+ 
+-    add_spacer(GTK_BOX(mainvbox));
+-    
+-    chk = gtk_check_button_new_with_mnemonic(_("Allow _Xfce to manage the desktop"));
+-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chk),
+-            xfdesktop_check_is_running(&xid));
+-    gtk_widget_show(chk);
+-    gtk_box_pack_start(GTK_BOX(mainvbox), chk, FALSE, FALSE, 0);
+-    g_signal_connect(G_OBJECT(chk), "toggled",
+-            G_CALLBACK(manage_desktop_chk_toggled_cb), bd);
++    if (allow_custom_behavior)
++    {
++        add_spacer(GTK_BOX(mainvbox));
++    
++        chk = gtk_check_button_new_with_mnemonic(_("Allow _Xfce to manage the desktop"));
++        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(chk),
++                xfdesktop_check_is_running(&xid));
++        gtk_widget_show(chk);
++        gtk_box_pack_start(GTK_BOX(mainvbox), chk, FALSE, FALSE, 0);
++        g_signal_connect(G_OBJECT(chk), "toggled",
++                G_CALLBACK(manage_desktop_chk_toggled_cb), bd);
++    }
+     
+     add_spacer(GTK_BOX(mainvbox));
+     
+     /* main notebook */
+     bd->top_notebook = gtk_notebook_new();
+-    gtk_widget_set_sensitive(bd->top_notebook,
++    if (!allow_custom_behavior)
++    {
++        gtk_widget_set_sensitive(bd->top_notebook, TRUE);
++    } else {
++        gtk_widget_set_sensitive(bd->top_notebook,
+             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(chk)));
++    }
+     gtk_widget_show(bd->top_notebook);
+     gtk_box_pack_start(GTK_BOX(mainvbox), bd->top_notebook, TRUE, TRUE, 0);
+     gtk_container_set_border_width (GTK_CONTAINER (bd->top_notebook), 6);
+@@ -1009,10 +1023,6 @@
+     if(nscreens == 1)
+         nmonitors = gdk_screen_get_n_monitors(gdk_display_get_default_screen(gdk_display_get_default()));
+     
+-    kiosk = xfce_kiosk_new("xfdesktop");
+-    allow_custom_backdrop = xfce_kiosk_query(kiosk, "CustomizeBackdrop");
+-    xfce_kiosk_free(kiosk);
+-    
+     if(nscreens > 1 || nmonitors > 1) {
+         /* only use a noteboook if we have more than one screen */
+         vbox = gtk_vbox_new(FALSE, 0);
+@@ -1255,15 +1265,16 @@
+     }
+     
+     /* menu page */
++    if (allow_custom_behavior) {
++        vbox = behavior_page_create(bd);
++        gtk_widget_show(vbox);
+     
+-    vbox = behavior_page_create(bd);
+-    gtk_widget_show(vbox);
+-    
+-    label = gtk_label_new_with_mnemonic(_("_Behavior"));
+-    gtk_widget_show(label);
+-    gtk_notebook_append_page(GTK_NOTEBOOK(bd->top_notebook), vbox, label);
++        label = gtk_label_new_with_mnemonic(_("_Behavior"));
++        gtk_widget_show(label);
++        gtk_notebook_append_page(GTK_NOTEBOOK(bd->top_notebook), vbox, label);
+     
+-    add_spacer(GTK_BOX(mainvbox));
++        add_spacer(GTK_BOX(mainvbox));
++    }
+ 
+     return bd;
+ }

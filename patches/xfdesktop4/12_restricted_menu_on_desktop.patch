@@ -95,7 +95,7 @@
 +        if (de && xfce_desktop_entry_get_string(de, "Exec", FALSE, &cmd))
 +        {
 +            expand_percent_vars (&cmd);
-+            retval = xfce_exec(cmd, FALSE, FALSE, NULL);
++            retval = xfce_exec(cmd, FALSE, TRUE, NULL);
 +        }
 +        g_free (cmd);
 +        g_object_unref (de);

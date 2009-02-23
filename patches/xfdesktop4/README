@@ -7,3 +7,7 @@
 * 14_less_scary_tooltips.patch
   only show the file name in tooltip, or name + comment if the icon is a
   launcher
+
+* 15_simpler_settings.patch
+  when CustomizeBehavior is not allowed, hide the main checkbox and the
+  behavior tab in the settings dialog
