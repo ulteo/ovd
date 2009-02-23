@@ -116,7 +116,7 @@ class UserGroupDB_ldap_memberof {
 		return array();
 	}
 	
-	public static function prefsIsValid($prefs_, $log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		// FIXME : liaison to ad
 		return true;
 	}

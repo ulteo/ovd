@@ -145,13 +145,13 @@ function do_preview($prefs, $name) {
   
   $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
   $userDB = new $mod_user_name();
-  if (! $userDB->prefsIsValid($prefs, &$log)) {
+  if (! $userDB->prefsIsValid($prefs, $log)) {
     return $log;
   }
 
   $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
   $userGroupDB = new $mod_usergroup_name();
-  if (! $userGroupDB->prefsIsValid($prefs, &$log)) {
+  if (! $userGroupDB->prefsIsValid($prefs, $log)) {
     return $log;
   }
 

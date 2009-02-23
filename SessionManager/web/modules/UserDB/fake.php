@@ -118,7 +118,7 @@ class UserDB_fake {
 		return array();
 	}
 	
-	public function prefsIsValid($prefs_, $log=array()) {
+	public function prefsIsValid($prefs_, &$log=array()) {
 		return true;
 	}
 	

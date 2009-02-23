@@ -182,7 +182,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 		$config_ldap = self::makeLDAPconfig($config_AD);
 		$LDAP2 = new LDAP($config_ldap);
-		$ret = $LDAP2->connect(&$log);
+		$ret = $LDAP2->connect($log);
 		if ( $ret === false) {
 // 			$log['LDAP connect to \''.$config_ldap['host'].'\''] = false;
 			return false;

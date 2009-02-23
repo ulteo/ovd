@@ -217,10 +217,10 @@ class UserDB_ldap {
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_, $log=array()) {
+	public function prefsIsValid($prefs_, &$log=array()) {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
-		$ret = $LDAP2->connect(&$log);
+		$ret = $LDAP2->connect($log);
 		if ($ret === false) {
 			return false;
 		}

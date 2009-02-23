@@ -111,7 +111,7 @@ class UserGroupDB_sql {
 		return array();
 	}
 	
-	public static function prefsIsValid($prefs_, $log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
 			
