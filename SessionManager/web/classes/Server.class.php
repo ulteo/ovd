@@ -82,6 +82,34 @@ class Server {
 		return $buf;
 	}
 
+	public function isOK() {
+		Logger::debug('main', 'Starting Server::isOK for \''.$this->fqdn.'\'');
+
+		$buf_type = $this->getType();
+		if (! $buf_type) {
+			Logger::error('main', 'Server does not send a valid type');
+			popup_error('Server does not send a valid type');
+
+			return false;
+		}
+		$buf_version = $this->getVersion();
+		if (! $buf_version) {
+			Logger::error('main', 'Server does not send a valid version');
+			popup_error('Server does not send a valid version');
+
+			return false;
+		}
+		$buf_monitoring = $this->getMonitoring();
+		if (! $buf_monitoring) {
+			Logger::error('main', 'Server does not send a valid monitoring');
+			popup_error('Server does not send a valid monitoring');
+
+			return false;
+		}
+
+		return true;
+	}
+
 	public function isAuthorized() {
 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
@@ -137,31 +165,11 @@ class Server {
 	public function register() {
 		Logger::debug('main', 'Starting Server::register for \''.$this->fqdn.'\'');
 
-		if (! $this->isOnline()) {
-			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
-			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
+		if (! $this->isOnline())
+			return false;
 
+		if (! $this->isOK())
 			return false;
-		}
-
-		$buf_type = $this->getType();
-		if (! $buf_type) {
-			Logger::error('main', 'Server does not send a valid type');
-			popup_error('Server does not send a valid type');
-			return false;
-		}
-		$buf_version = $this->getVersion();
-		if (! $buf_version) {
-			Logger::error('main', 'Server does not send a valid version');
-			popup_error('Server does not send a valid version');
-			return false;
-		}
-		$buf_monitoring = $this->getMonitoring();
-		if (! $buf_monitoring) {
-			Logger::error('main', 'Server does not send a valid monitoring');
-			popup_error('Server does not send a valid monitoring');
-			return false;
-		}
 
 		$this->setAttribute('locked', true);
 		$this->setAttribute('registered', true);
@@ -189,6 +197,12 @@ class Server {
 		$ev->setAttribute('status', ($ret)?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE);
 
 		$ev->emit();
+
+		if ($ret === false) {
+			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
+			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
+		}
+
 		return $ret;
 	}
 

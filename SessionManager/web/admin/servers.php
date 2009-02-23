@@ -395,11 +395,13 @@ function show_unregistered() {
       echo '</td>';
 
       echo '<td>';
-      echo '<form action="servers.php" method="get">';
-      echo '<input type="hidden" name="action" value="register" />';
-      echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-      echo '<input type="submit" value="'._('Register').'" />';
-      echo '</form>';
+      if ($s->isOK()) {
+        echo '<form action="servers.php" method="get">';
+        echo '<input type="hidden" name="action" value="register" />';
+        echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+        echo '<input type="submit" value="'._('Register').'" />';
+        echo '</form>';
+      }
       echo '</td>';
 
       echo '<td>';
