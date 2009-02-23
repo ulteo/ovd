@@ -284,7 +284,7 @@ require_once('header.php');
 					<?php
 						if (in_array('language', $advanced_settings)) {
 					?>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Language'); ?>
 						</td>
@@ -330,7 +330,7 @@ require_once('header.php');
 
 						if (in_array('size', $advanced_settings)) {
 					?>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Size'); ?>
 						</td>
@@ -375,7 +375,7 @@ require_once('header.php');
 
 						if (in_array('timeout', $advanced_settings)) {
 					?>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Timeout'); ?>
 						</td>
@@ -423,7 +423,7 @@ require_once('header.php');
 
 						if (in_array('persistent', $advanced_settings)) {
 					?>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Persistent session'); ?>
 						</td>
@@ -437,7 +437,7 @@ require_once('header.php');
 
 						if (in_array('shareable', $advanced_settings)) {
 					?>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Shareable session'); ?>
 						</td>
@@ -465,7 +465,7 @@ require_once('header.php');
 
 						if (in_array('debug', $advanced_settings)) {
 					?>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Debug'); ?>
 						</td>
@@ -489,7 +489,7 @@ require_once('header.php');
 			<input type="hidden" id="enable_proxy" name="enable_proxy" value="0" />
 			<div id="proxy_settings" style="display: none">
 				<table class="main_sub" border="0" cellspacing="1" cellpadding="5">
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Proxy type'); ?>
 						</td>
@@ -508,7 +508,7 @@ require_once('header.php');
 							<input type="text" id="proxy_host" name="proxy_host" value="" />
 						</td>
 					</tr>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Proxy port'); ?>
 						</td>
@@ -524,7 +524,7 @@ require_once('header.php');
 							<input type="text" id="proxy_username" name="proxy_username" value="" />
 						</td>
 					</tr>
-					<tr class="content1">
+					<tr class="content2">
 						<td class="title">
 							<?php echo _('Proxy password'); ?> (<?php echo _('optional'); ?>)
 						</td>
