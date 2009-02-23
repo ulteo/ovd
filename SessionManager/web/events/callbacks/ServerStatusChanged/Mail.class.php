@@ -23,34 +23,42 @@
 
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
-class ServerStatusChangedReport extends EventCallback {
-    public function run() {
-		$rep = ServerReport::load();
+class ServerStatusChangedMail extends EventCallback {
+    public function run () {
+		$needs_alert = false;
 
-		if ($this->ev->status == ServerStatusChanged::$ONLINE)
-			$rep->reportIsUp($this->ev->fqdn);
-		else {
-			/*
-			 * FIXME: we don't handle difference between downtime and uptime
-			 * for the moment
-			 */
-			 $rep->reportIsDown($this->ev->fqdn);
+		$data=get_from_cache('events','ServerStatusChanged');
+
+		if ($data == NULL) {
+			$data[$this->ev->fqdn] = $this->ev->status;
+			if ($this->ev->status == ServerStatusChanged::$OFFLINE)
+				$needs_alert = true;
+		} else {
+			if (isset($data[$this->ev->fqdn]) &&
+			  ($data[$this->ev->fqdn] != $this->ev->status)) {
+				$data[$this->ev->fqdn] = $this->ev->status;
+				$needs_alert = true;
+			}
 		}
 
-		$rep->save();
+		if ($needs_alert) {
+			set_cache($data, 'events', 'ServerStatusChanged');
+			if ($this->ev->status == ServerStatusChanged::$OFFLINE)
+				$subject = sprintf(_('OVD Alert: %s is offline'), $this->ev->fqdn);
+			else
+				$subject = sprintf(_('OVD End Alert: %s is up again'), $this->ev->fqdn);
+
+			send_alert_mail($subject, '');
+		}
 
 		return true;
     }
 
 	public function getDescription() {
-		return false;
+		return "Send a mail";
 	}
 
 	public function isInternal() {
-		return true;
-	}
-
-	public function showSettings() {
 		return false;
 	}
 }

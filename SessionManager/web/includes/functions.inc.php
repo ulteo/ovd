@@ -516,3 +516,24 @@ function user_cmp($o1, $o2) {
 function application_cmp($o1, $o2) {
 	return strcmp($o1->getAttribute('name'), $o2->getAttribute('name'));
 }
+
+/* caching helpers */
+function get_from_cache($subdir_, $id_) {
+	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;
+
+	if (is_readable($file))
+		$ret = unserialize(file_get_contents($file));
+	else
+		$ret = NULL;
+
+	Logger::debug('main', 'get_from_cache '.$subdir_.'/'.$id_.': '.$ret);
+	return $ret;
+}
+
+function set_cache($data_, $subdir_, $id_) {
+	if (! is_dir(CACHE_DIR.'/'.$subdir_))
+		mkdir(CACHE_DIR.'/'.$subdir_, 0775);
+
+	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;
+	return @file_put_contents($file, serialize($data_));
+}

@@ -48,9 +48,16 @@ abstract class EventCallback {
 			return false;
 		}
 
-		$buf = $prefs->get('events', get_class($this->ev));
-		if ($buf && in_array(get_class($this),$buf))
-			return true;
+		if (! is_object($prefs))
+			return false;
+
+		$buf = $prefs->get('events', 'active_callbacks');
+		if ($buf && array_key_exists(get_class($this->ev), $buf)) {
+			$tmp = $buf[get_class($this->ev)];
+			if (in_array(get_class($this), $tmp)) {
+				return true;
+			}
+		}
 		return false;
 	}
 }

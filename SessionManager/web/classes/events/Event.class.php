@@ -54,13 +54,13 @@ class Event {
 
 			try {
 				$cb = new $callback_name($this);
-				Logger::debug('main', 'Event::emit Running callback '.$callback_name);
 
 				/* run the callback only if it is mandatory or if it is
 				 * activated in the prefs */
 				if (! $cb->isInternal() && ! $cb->getIsActive())
 					continue;
 
+				Logger::debug('main', 'Event::emit Running callback '.$callback_name);
 				if ($cb->run($this) === false) {
 					break;
 				}

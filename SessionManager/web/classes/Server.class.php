@@ -185,7 +185,7 @@ class Server {
 		$ret = false;
 
 		$ev = new ServerStatusChanged(array(
-			'server'	=>	$this->fqdn
+			'fqdn'	=>	$this->fqdn
 		));
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
