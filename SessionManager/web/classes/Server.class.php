@@ -87,22 +87,22 @@ class Server {
 
 		$buf_type = $this->getType();
 		if (! $buf_type) {
-			Logger::error('main', 'Server does not send a valid type');
-			popup_error('Server does not send a valid type');
+			Logger::error('main', '"'.$this->fqdn.'": does not send a valid type');
+			popup_error('"'.$this->fqdn.'": '._('does not send a valid type'));
 
 			return false;
 		}
 		$buf_version = $this->getVersion();
 		if (! $buf_version) {
-			Logger::error('main', 'Server does not send a valid version');
-			popup_error('Server does not send a valid version');
+			Logger::error('main', '"'.$this->fqdn.'": does not send a valid version');
+			popup_error('"'.$this->fqdn.'": '._('does not send a valid version'));
 
 			return false;
 		}
 		$buf_monitoring = $this->getMonitoring();
 		if (! $buf_monitoring) {
-			Logger::error('main', 'Server does not send a valid monitoring');
-			popup_error('Server does not send a valid monitoring');
+			Logger::error('main', '"'.$this->fqdn.'": does not send a valid monitoring');
+			popup_error('"'.$this->fqdn.'": '._('does not send a valid monitoring'));
 
 			return false;
 		}
@@ -114,8 +114,8 @@ class Server {
 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline()) {
-			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
 			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
+			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
 
 			return false;
 		}
