@@ -210,7 +210,7 @@ class Server {
 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
 		$ev = new ServerStatusChanged(array(
-			'server'	=>	$this->fqdn,
+			'fqdn'	=>	$this->fqdn,
 			'status'	=>	ServerStatusChanged::$UNREACHABLE
 		));
 
