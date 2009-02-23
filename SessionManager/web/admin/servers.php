@@ -466,7 +466,7 @@ function show_manage($fqdn) {
   if ($server_online) {
     $buf = $server->getMonitoring();
     if ($buf === false)
-      $_SESSION['errormsg'] = _('Cannot get server monitoring');
+      popup_error(_('Cannot get server monitoring'));
     Abstract_Server::save($server);
   }
 
@@ -481,7 +481,7 @@ function show_manage($fqdn) {
   if ($server_online) {
     $buf = $server->updateApplications();
     if ($buf === false)
-      $_SESSION['errormsg'] = _('Cannot list available applications');
+      popup_error(_('Cannot list available applications'));
   }
 
 //FIX ME ?
@@ -554,7 +554,7 @@ function show_manage($fqdn) {
     if ($v->fqdn == $server->fqdn)
       unset($servers_all[$k]);
   }
-  
+
   $servers_replication = Servers::getOnline();
   foreach($servers_replication as $k => $v) {
     if ($v->fqdn == $server->fqdn)
