@@ -1,16 +1,51 @@
-#!/bin/sh
+#! /usr/bin/env python
 
-MYPID=$$
-D=${SPOOL_USERS}/${SESSID}
+# Copyright (C) 2009 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gauvain@ulteo.com>
+# Author Julien LANGLOIS <julien@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import os
+import subprocess
+import sys
+
+MYPID = os.getpid()
+
+if not len(sys.argv) > 2:
+    print 'eeerer'
+    sys.exit(1)
+
+for key in ['SPOOL_USERS', 'SESSID']:
+    if not os.environ.has_key(key):
+        sys.exit(1)
+
+D = '%s/%s'%(os.environ['SPOOL_USERS'],
+             os.environ['SESSID'])
 
 # notify application start
-echo "$MYPID $1" >> ${D}/apps
-shift
+f = file(D+'/apps', 'a')
+f.write("%d %s\n"%(MYPID, sys.argv[1]))
+f.close()
 
 # run the appli
-$@
+cmd_line = subprocess.list2cmdline(sys.argv[2:])
+os.system(cmd_line)
 
 # notify end
-sed -i "/^$MYPID /d" ${D}/apps
+os.system('sed -i "/^%d /d" %s/apps'%(MYPID, D))
 
-exit 0
+sys.exit(0)
