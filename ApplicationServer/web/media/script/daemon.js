@@ -239,6 +239,15 @@ function onUpdateInfos(transport) {
     if (nb_share != nb) {
       nb_share = nb;
       push_log('[session] nb share: '+nb_share, 'info');
+
+      if (nb_share != 0) {
+        var buf_html = nb_share+' invited user';
+        if (nb_share > 1)
+          buf_html = buf_html+'s';
+        buf_html = buf_html+' on the session';
+        $('menuShareWarning').innerHTML = buf_html;
+      } else
+        $('menuShareWarning').innerHTML = '';
     }
   }
 }

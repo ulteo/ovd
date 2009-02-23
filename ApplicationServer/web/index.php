@@ -138,7 +138,8 @@ if ($_SESSION['mode'] == 'start')
 if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 ?>
 		<div id="menuContainer" style="display: none;">
-			<a href="javascript:;" onclick="clicMenu('menuShare')"><img src="media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" /></a>
+			<div id="menuShareWarning"></div>
+			<a href="javascript:;" onclick="clicMenu('menuShare'); return false;"><img src="media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" /></a>
 			<div id="menuShare" style="display: none;">
 				<div id="menuShareClose"><a href="javascript:;" onclick="clicMenu('menuShare')"><img style="margin-right: 10px;" src="media/image/close.png" width="16" height="16" alt="" title="" /></a></div>
 				<iframe id="menuShareFrame" src="<?php echo $sessionmanager_url; ?>/invite.php?server=<?php echo $_SERVER['SERVER_NAME']; ?>&session=<?php echo $_SESSION['session']; ?>" frameborder="0"></iframe>

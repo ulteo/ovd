@@ -124,6 +124,14 @@ img {
 	margin-right: 0px;
 }
 
+#menuShareWarning {
+	float: left;
+	text-align: left;
+	color: white;
+	width: 50%;
+	height: 18px;
+}
+
 #menuShareFrame {
 	margin: none;
 	padding: none;
