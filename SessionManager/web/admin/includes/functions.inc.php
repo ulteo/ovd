@@ -221,7 +221,7 @@ function print_element($key_name,$container,$element_key,$element) {
 				echo $myval;
 				echo '<br />';
 			}
-			echo '<input class="input_checkbox" type="hidden" name="'.$label2.'[]" "/>'; // dirty hack for []
+			echo '<input class="input_checkbox" type="hidden" name="'.$label2.'[]" />'; // dirty hack for []
 			break;
 
 		case ConfigElement::$INPUT_LIST: // list of input text (fixed length)
@@ -415,7 +415,6 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 			}
 		}
 	}
-	echo '</tr>';
 	echo '</table>';
 }
 
