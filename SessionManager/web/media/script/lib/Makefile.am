@@ -14,6 +14,8 @@ else
 HOOKS += scriptaculous-hook
 endif
 
+install-exec-hook: $(HOOKS)
+
 prototype-hook:
 	$(MKDIR_P) $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
 	ln -sf $(PROTOTYPEDIR) \
