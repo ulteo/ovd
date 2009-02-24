@@ -23,7 +23,7 @@
 
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
-class SessionStartEventReport extends EventCallback {
+class SessionStartReport extends EventCallback {
     public function run () {
 		/* don't register a new session if the user is resuming it */
 		if (isset($this->ev->suspended) && $this->ev->suspended)

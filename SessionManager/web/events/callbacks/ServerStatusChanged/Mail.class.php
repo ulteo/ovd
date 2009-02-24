@@ -27,7 +27,7 @@ class ServerStatusChangedMail extends EventCallback {
     public function run () {
 		$needs_alert = false;
 
-		$data=get_from_cache('events','ServerStatusChanged');
+		$data = get_from_cache('events', 'ServerStatusChanged');
 
 		if ($data == NULL) {
 			$data[$this->ev->fqdn] = $this->ev->status;
@@ -42,7 +42,7 @@ class ServerStatusChangedMail extends EventCallback {
 		}
 
 		if ($needs_alert) {
-			Logger::debug('main', 'ServerStatusChangedMail: alert needed needed');
+			Logger::debug('main', 'ServerStatusChangedMail: sending alert');
 			set_cache($data, 'events', 'ServerStatusChanged');
 			if ($this->ev->status == ServerStatusChanged::$OFFLINE)
 				$subject = sprintf(_('OVD Alert: %s is offline'), $this->ev->fqdn);

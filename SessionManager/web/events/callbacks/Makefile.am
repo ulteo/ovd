@@ -1,3 +1,3 @@
 SUBDIRS = ServerStatusChanged \
-          SessionStartEvent \
+          SessionStart \
           SqlFailure

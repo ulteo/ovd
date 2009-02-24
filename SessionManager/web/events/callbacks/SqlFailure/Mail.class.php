@@ -27,7 +27,7 @@ class SqlFailureMail extends EventCallback {
     public function run () {
 		$needs_alert = false;
 
-		$data=get_from_cache('events','SqlFailure');
+		$data = get_from_cache('events', 'SqlFailure');
 
 		if ($data == NULL) {
 			$data[$this->ev->host] = $this->ev->status;
@@ -43,7 +43,7 @@ class SqlFailureMail extends EventCallback {
 
 		if ($needs_alert) {
 			set_cache($data, 'events', 'SqlFailure');
-			Logger::debug('main', 'SqlFailureMail: alert needed needed');
+			Logger::debug('main', 'SqlFailureMail: sending alert');
 			if ($this->ev->status < 0)
 				$subject = sprintf(_('OVD Alert: MySQL %s is offline'),
 				                   $this->ev->host);
