@@ -17,10 +17,6 @@
     used by <emphasis>Ulteo Open Virtual Desktop</emphasis>.
   </para>
 
-  <para>
-    Numerical session status 
-  </para>
-
   <section>
     <title>List of Protocols used</title>
     
@@ -78,32 +74,24 @@
 
       <para><ulink url="http://en.wikipedia.org/wiki/Secure_Shell">SSH on Wikipedia</ulink></para>
     </section>
-
-
   </section>
 
 
   <section>
     <title>Servers Communication</title>
     <para>
-      The Session Manager is a full web application while the
-      Application server is composed by two things: a daemon and a web
-      pages.  The servers communicates by HTTP.
+      The servers communicates by HTTP with webservices.
     </para>
 
     <para>
-      The Session Manager send orders to Application servers.  To know
-      which address own which server, the Session Manager store the
-      Fully Qualified Domain Name (FQDN) that the server gave as his
-      first request (server registration). This name is different as
-      the <emphasis>external name</emphasis> that is only used for
-      session launchs.
+      The Session Manager identify an Application servers with his
+      Fully Qualified Domain Name (FQDN).
     </para>
 
     <para>
-      The Applications servers send status to their Session Manager.
-      Their Session Manager location is store in the deamon
-      configuration file (<emphasis>SESSION_MANAGER_URL</emphasis>)
+      The Applications servers only answer to his Session Manager wich
+      the address is store in a configuration file
+      (<emphasis>SESSION_MANAGER_URL</emphasis>).
     </para>
 
     <section>
@@ -140,6 +128,38 @@
       </para>
     </section>
 
+    <section>
+      <title>HTTP return codes</title>
+      <para>
+	Webservices are using the HTTP return code to know if the
+	request succeed.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para><emphasis role="strong">200 OK :</emphasis>
+	  request succeed</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">400 Bad Request :</emphasis>
+	  request argument no valid</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">401 Unauthorized :</emphasis>
+	  From SM to ApS, ApS detect that remote address is not his
+	  SM, From ApS to SM, ApS is not register yet or invalid
+	  authentication.</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">500 Internal Server Error :</emphasis>
+	  Either a bug was detected or the system or the system is
+	  broken.</para>
+	</listitem>
+      </itemizedlist>
+    </section>
 
     <section>
       <title>Session Manager webservices</title>
@@ -150,141 +170,211 @@
 
       </para>
 
-      <itemizedlist>
-	<listitem>
-	  <para><emphasis role="strong">server_status.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+      <simplesect>
+	<title>server_status.php</title>
+
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
+	      <listitem><para>fqdn
+	      </para></listitem>
 	      <listitem><para>
-		<emphasis>status</emphasis> ready/down/broken
+		status: ready/down/broken
 	      </para></listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para>
-	    An application server send his status at start, stop or
-	    when an important error occured.  That's the way the system
-	    use to know when a offline server is online again or when
-	    there is a server to register.
-	  </para>
-	</listitem>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> GET</para>
+	  </listitem>
+	</itemizedlist>	  
 
-	<listitem>
-	  <para><emphasis role="strong">server_monitoring.php</emphasis></para>
-	  <para>POST request</para>
-	  <para>
-	    Arguments:
+	<para>
+	  An application server send his status at start, stop or
+	  when an important error occured.  That's the way the system
+	  use to know when a offline server is online again or when
+	  there is a server to register.
+	</para>
+      </simplesect>
+
+      <simplesect>
+	<title>server_monitoring.php</title>
+
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> POST</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
+	      <listitem><para>fqdn
+	      </para></listitem>
 	      <listitem><para>
-		<emphasis>xml</emphasis> the monitoring XML file
+		xml: the monitoring XML file
 	      </para></listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para>
-	    Applications servers send periodically their system
-	    information in order to know the status of each
-	    server. This is used for the session load balancing for
-	    instance.
-	  </para>
-	  <para>
-	    The monitoring contain the CPU and RAM load. But also the
-	    running applications for each sessions.
-	  </para>
-	</listitem>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	  </listitem>
+	</itemizedlist>	  
 
-	<listitem>
-	  <para><emphasis role="strong">session_status.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+	<para>
+	  Applications servers send periodically their system
+	  information in order to know the status of each
+	  server. This is used for the session load balancing for
+	  instance.
+	</para>
+	<para>
+	  The monitoring contain the CPU and RAM load. But also the
+	  running applications for each sessions.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>session_status.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>session</emphasis> session id
-	      </para></listitem>
-	      <listitem><para>
-		<emphasis>status</emphasis> numerical status
-	      </para></listitem>
+	      <listitem>
+		<para>fqdn</para>
+	      </listitem>
+	      <listitem>
+		<para>session: session id</para>
+	      </listitem>
+	      <listitem>
+		<para>status: numerical status</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para>
-	    Applications servers send, for each session, the status
-	    each time it changes.
-	  </para>
-	</listitem>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Applications servers send, for each session, the status
+	  each time it changes.
+	</para>
+      </simplesect>
 
 
-	<listitem>
-	  <para><emphasis role="strong">session_token.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+
+
+      <simplesect>
+	<title>session_token.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>token</emphasis> a random string
-	      </para></listitem>
+	      <listitem>
+		<para>fqdn</para>
+	      </listitem>
+	      <listitem>
+		<para>token: a random string</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para>
-	    When a user is redirect launch a session, he is redirect
-	    with a token to an application server. To verify the user
-	    identity and get the session informations, application
-	    server use this token on his Session Manager and if valid,
-	    get informations into a XML content.
-	  </para>
-	</listitem>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> session informations in XML content</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  When a user is redirect launch a session, he is redirect
+	  with a token to an application server. To verify the user
+	  identity and get the session informations, application
+	  server use this token on his Session Manager and if valid,
+	  get informations into a XML content.
+	</para>
+      </simplesect>
 
 
 
-	<listitem>
-	  <para><emphasis role="strong">icons.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+
+      <simplesect>
+	<title>icons.php</title>
+
+	<para><emphasis role="strong">Used for Windows applications</emphasis></para>	
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>id</emphasis> an application id
-	      </para></listitem>
+	      <listitem>
+		<para>fqdn</para>
+	      </listitem>
+	      <listitem>
+		<para>id: an application id</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para><emphasis role="strong">Used for Windows applications</emphasis></para>	 
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> icon image in PNG</para>
+	  </listitem>
+	</itemizedlist>
 
-	  <para>
-	    Get the icon refered to an application in order to display
-	    in the user desktop. The application server use a cache
-	    system so, an application icon is ask only one time by a server.
-	  </para>
-	</listitem>
+	<para>
+	  Get the icon refered to an application in order to display
+	  in the user desktop. The application server use a cache
+	  system so, an application icon is ask only one time by a server.
+	</para>
+      </simplesect>
 
-	<listitem>
-	  <para><emphasis role="strong">app_desktopfile.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+      <simplesect>
+	<title>app_desktopfile.php</title>
+
+	<para><emphasis role="strong">Used for Windows applications</emphasis></para>	
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>desktopfile</emphasis> a file path
-	      </para></listitem>
+	      <listitem>
+		<para>fqdn</para>
+	      </listitem>
+	      <listitem>
+		<para>desktopfile: a file path</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para><emphasis role="strong">Used for Windows applications</emphasis></para>	 
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> application informations in XML content</para>
+	  </listitem>
+	</itemizedlist>
 
-	  <para>
-	    Get the application informations from the desktopfile
-	    argument in order to make the application shortcut and put
-	    it on the user desktop.
-	  </para>
-	</listitem>
+	<para>
+	  Get the application informations from the desktopfile
+	  argument in order to make the application shortcut and put
+	  it on the user desktop.
+	</para>
+      </simplesect>
 
-
-
-      </itemizedlist>
     </section>
 
 
@@ -294,166 +384,227 @@
       <para>
 	The webservices used for the servers communication are into
 	<emphasis>/webservices</emphasis>.
-	
       </para>
 
-      <itemizedlist>
-	<listitem>
-	  <para><emphasis role="strong">server_status.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    No Arguments
-	  </para>
+      <simplesect>
+	<title>server_status.php</title>
 
-	  <para>Return: <emphasis>ready/down/broken</emphasis></para>
-	  
-	  <para>
-	    Session Manager ask for the server status periodically to
-	    update the status if needed and auto detect servers down
-	    or borken.
-	  </para>
-	</listitem>
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> No</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> ready/down/broken</para>
+	  </listitem>
+	</itemizedlist>	  
 
-	<listitem>
-	  <para><emphasis role="strong">session_status.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+	<para>
+	  Session Manager ask for the server status periodically to
+	  update the status if needed and auto detect servers down
+	  or borken.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>session_status.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>session</emphasis> a session id
-	      </para></listitem>
+	      <listitem>
+		<para>session: a session id</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> numerical session status</para>
+	  </listitem>
+	</itemizedlist>
 
-	  <para>Return: <emphasis>numerical status</emphasis></para>
-	  
-	  <para>
-	    Session Manager ask for each session status periodically
-	    to auto detect servers/sessions crachs.
-	  </para>
-	</listitem>
+	<para>
+	  Session Manager ask for each session status periodically
+	  to auto detect servers/sessions crachs.
+	</para>
 
-	<listitem>
-	  <para><emphasis role="strong">server_monotoring.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    No Arguments
-	  </para>
-
-	  <para>Return: <emphasis>monitoring XML content</emphasis></para>
-	  
-	  <para>
-	    Session Manager ask for the server monitoring when it
-	    detect a too old cache informations.
-	  </para>
-	</listitem>
+      </simplesect>
 
 
-	<listitem>
-	  <para><emphasis role="strong">appplications.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    No Arguments
-	  </para>
+      <simplesect>
+	<title>server_monotoring.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> No</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> monitoring XML content</para>
+	  </listitem>
+	</itemizedlist>
+	<para>
+	  Session Manager ask for the server monitoring when it
+	  detect a too old cache informations.
+	</para>
+      </simplesect>
 
-	  <para>Return: <emphasis>applications list XML content</emphasis></para>
-	  
-	  <para>
-	    Get the installed applications on the system.
-	  </para>
-	</listitem>
 
-	<listitem>
-	  <para><emphasis role="strong">kill_session.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+      <simplesect>
+	<title>appplications.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> No</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> applications list XML content</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Get the installed applications on the system.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>kill_session.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>session</emphasis> a session id
-	      </para></listitem>
+	      <listitem>
+		<para>session: a session id</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	  </listitem>
+	</itemizedlist>
 
-	  <para>Return: nothing if success</para>
-	  
-	  <para>
-	    Force a specific session to exit without notify the user.
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">server_version.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>No Arguments</para>
-
-	  <para>Return: version in plain/text contain</para>
-	  
-	  <para>
-	    Get the server version. On Windows, get the Windows long
-	    version. On Linux, get the content of <emphasis>/etc/issue</emphasis>.
-	  </para>
-	</listitem>
-
-	<listitem>
-	  <para><emphasis role="strong">server_type.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>No Arguments</para>
-
-	  <para>Return: <emphasis>windows/linux</emphasis></para>
-	  
-	  <para>
-	    Get the server type.
-	  </para>
-	</listitem>
+	<para>
+	  Force a specific session to exit without notify the user.
+	</para>
+      </simplesect>
 
 
-	<listitem>
-	  <para><emphasis role="strong">icon.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+      <simplesect>
+	<title>server_version.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> No</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> version in plain/text contain</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Get the server version. On Windows, get the Windows long
+	  version. On Linux, get the content of <emphasis>/etc/issue</emphasis>.
+	</para>
+
+      </simplesect>
+
+
+      <simplesect>
+	<title>server_type.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> No</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> windows/linux</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Get the server type.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>icon.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>path</emphasis> a file path
-	      </para></listitem>
+	      <listitem>
+		<para>path: a file path</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> PNG image</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Extract the icon associated to an application.
+	</para>
+      </simplesect>
 
 
-	  <para>Return: a png image</para>
-	  
-	  <para>
-	    Extract the icon associated to an application.
-	  </para>
-	</listitem>
-
-
-	<listitem>
-	  <para><emphasis role="strong">apt-get.php</emphasis></para>
-	  <para>GET request</para>
-	  <para>
-	    Arguments:
+      <simplesect>
+	<title>apt-get.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
 	    <itemizedlist>
-	      <listitem><para>
-		<emphasis>action</emphasis> request/status/show
-	      </para></listitem>
-
-	      <listitem><para>
-		<emphasis>request</emphasis> a apt-get request
-	      </para></listitem>
-	      <listitem><para>
-		<emphasis>job</emphasis> a job id
-	      </para></listitem>
-	      <listitem><para>
-		<emphasis>show</emphasis> status/stderr/stdout
-	      </para></listitem>
+	      <listitem>
+		<para>path: request/status/show</para>
+	      </listitem>
+	      <listitem>
+		<para>request: a apt-get request</para>
+	      </listitem>
+	      <listitem>
+		<para>job: a job id</para>
+	      </listitem>
+	      <listitem>
+		<para>show: status/stderr/stdout</para>
+	      </listitem>
 	    </itemizedlist>
-	  </para>
-
-	  <para>
-	    Return depends on action type
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> depends on action type
 	    <itemizedlist>
 	      <listitem><para>
 		<emphasis>request: </emphasis> job id
@@ -469,36 +620,36 @@
 		<emphasis>status: </emphasis> -3/-2/-1/0/1/2
 	      </para></listitem>
 	    </itemizedlist>
-	  </para>
-	  
-	  <para>
-	    Use to install/remove applications.
 	    </para>
-	    <para>
-	      Get job id from action request.
-	  </para>
-	</listitem>
+	  </listitem>
+	</itemizedlist>
 
-      </itemizedlist>
+	<para>
+	  Use to install/remove applications.
+	</para>
+	<para>
+	  Get job id from action request.
+	</para>
+      </simplesect>
+
     </section>
-
-
-
   </section>
+
 
   <section>
     <title>Desktop Session</title>
+    <!--
+    <para> startsession.php: HTTP 302 -> redirection on the APS
+    external name with a token.  </para> <para> ApS connect to the SM
+    and use the token.  </para> <para> Client have to call
+    /startsession.php to init the session then the session is
+    initialize and start (a call to applet.php give the applet
+    configuration).  </para>
+    -->
+
+    <para>Here is the session launching process:</para>
     <para>
-      startsession.php: HTTP 302 -> redirection on the APS external name with a token.
-    </para>
-    <para>
-      ApS connect to the SM and use the token.
-    </para>
-    <para>
-      Client have to call /startsession.php to init the session then the session is initialize and start (a call to applet.php give the applet configuration).
-    </para>
-    
-    <para>
+      
       <inlinemediaobject>
 	<imageobject>
 	  <imagedata fileref="media/session.png"/>
@@ -507,8 +658,249 @@
     </para>
 
 
+    <section>
+      <title>Client/Servers communication</title>
 
+      <para>
+	Once the client is redirect to the ApS , he only request the
+	ApS (excpet for session sharing as described bellow).
+      </para>
+
+      <para>
+	The session display is encapsulate in a SSH tunnel but
+	webservices are also used to communicate. For instance, for
+	printing.
+      </para>
+
+
+      <simplesect>
+	<title>startsession.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> ANY</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> 
+	    <itemizedlist>
+	      <listitem>
+		<para>height: the desired height of the session</para>
+	      </listitem>
+	      <listitem>
+		<para>width: the desired width of the session</para>
+	      </listitem>
+	    </itemizedlist>
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  This webservice is called when <emphasis>whatsup</emphasis>
+	  returned 0 as session status. startsession put the session
+	  status to 1.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>whatsup.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> ANY</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> NO</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> session
+	    informations in XML content</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  The webservice has serveral use. First of all, it's used to
+	  know that the user is still connected (a kind of ping
+	  timeout process).  Secondly, it allow the client to know
+	  session status changes. And finally, it used to know when a
+	  new pdf file is ready to download.
+	</para>
+
+	<para>
+	  The client has to call this webservice every 10 seconds
+	  maximum or there is a risk that the session timeout is
+	  triggered.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>client_exit.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> ANY</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> NO</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> bye</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  This webservice can be call when the user close the session
+	  Windows to force the session to exit instead of wait the
+	  timeout trigger.
+	</para>
+
+	<para>
+	  This is usefull on session sharing for instance to be sure
+	  that when the client exit, all share users cannot still
+	  access to the session.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>print.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> 
+	    <itemizedlist>
+	      <listitem>
+		<para>timestamp: a time refered to the pdf file time to download</para>
+	      </listitem>
+	    </itemizedlist>
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="strong">return:</emphasis> a PDF file</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  This webserice is the way to transport the print jobs from
+	  the session to the client.
+	</para>
+
+	<para>
+	  On the ApS, there is a PDF printer that spool file in the
+	  session directory. When there is a new file,
+	  <emphasis>whatsup</emphasis> detect it, extract the
+	  timestamp and alert the client. The client just has to
+	  request print with the timestamp to get the print job and
+	  use a mean to print localy (print applet).
+	</para>
+      </simplesect>
+    </section>
   </section>
 
+
+  <section>
+    <title>Numerical ID matching</title>
+
+    <section>
+      <title>Session status</title>
+      
+      <para>
+	The status send by webservices and use by both system (Session
+	Manager and Application server) are integer.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para><emphasis role="strong">-1:</emphasis> session to create</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">0:</emphasis> session created</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">1:</emphasis> session to start</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">22:</emphasis> session is starting</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">2:</emphasis> session ready</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">3:</emphasis> session to destroy</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">4:</emphasis> unkown
+	  session/session destroyed</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">9:</emphasis> session to suspend</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">10:</emphasis> session suspended</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">11:</emphasis> session to restore</para>
+	</listitem>
+      </itemizedlist>
+    </section>
+
+
+    <section>
+      <title>Jobs status</title>
+      
+      <para>
+	When install/remove application using the
+	<emphasis>apt-get</emphasis> webservice, the Administration
+	console request the ApS to know the status of the job.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para><emphasis role="strong">-3:</emphasis> server error</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">-2:</emphasis> job made an
+	  error, system can switch in broken mode</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">-1:</emphasis> job id not exist</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">0:</emphasis> job is spooling</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">1:</emphasis> job in progress</para>
+	</listitem>
+
+	<listitem>
+	  <para><emphasis role="strong">2:</emphasis> job finished</para>
+	</listitem>
+
+
+      </itemizedlist>
+    </section>
+  </section>
 
 </article>
