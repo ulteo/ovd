@@ -84,7 +84,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 		
 		$match_minimal  = array(
-					'login'	=> 'cn',
+					'login'	=> 'samaccountname',
 					'displayname'	=> 'displayname',
 					'real_login'    => 'samaccountname',
 					'distinguishedname' => 'distinguishedname'
