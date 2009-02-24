@@ -416,7 +416,7 @@ loop() {
 
         # For each session ...
 	for SESSID in $(sessions_get_active); do
-	    log_DEBUG "Ses"$SESSID
+	    log_DEBUG "Ses "$SESSID
 	    session_check_status $SESSID
 	    ret=$?
 	
