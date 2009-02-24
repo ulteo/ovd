@@ -92,6 +92,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
+    $config['match']['distinguishedname'] = 'distinguishedname';
 
     if ($form['user_group'] == 'ldap_memberof')
       $config['match']['memberof'] = 'memberof';

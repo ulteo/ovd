@@ -181,7 +181,10 @@ class UserDB_ldap {
 	public function authenticate($user_,$password_){
 		Logger::debug('main','UserDB::ldap::authenticate '.$user_->getAttribute('login'));
 		$conf_ldap2 = $this->config;
-		$conf_ldap2['login'] = $user_->getAttribute('login');
+		if (($user_->hasAttribute('distinguishedname')) && ($user_->getAttribute('distinguishedname') !== ''))
+			$conf_ldap2['login'] = $user_->getAttribute('distinguishedname');
+		else
+			$conf_ldap2['login'] = $user_->getAttribute('login');
 		$conf_ldap2['password'] = $password_;
 
 		$LDAP2 = new LDAP($conf_ldap2);
@@ -212,7 +215,7 @@ class UserDB_ldap {
 		$ret []= $c;
 		$c = new ConfigElement('protocol_version', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname'), NULL, ConfigElement::$DICTIONARY);
+		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'), NULL, ConfigElement::$DICTIONARY);
 		$ret []= $c;
 		return $ret;
 	}

@@ -108,7 +108,7 @@ class LDAP {
 				}
 			}
 			
-			if (substr($this->login, -1*strlen($this->suffix)) == $this->suffix) {
+			if (strtolower(substr($this->login, -1*strlen($this->suffix))) == strtolower($this->suffix)) {
 				$dn .= $this->login;
 			}
 			else {

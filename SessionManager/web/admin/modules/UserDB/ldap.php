@@ -41,6 +41,6 @@ class admin_UserDB_ldap extends UserDB_ldap {
 	}
 
 	public static function enable() {
-		return false;
+		return true;
 	}
 }

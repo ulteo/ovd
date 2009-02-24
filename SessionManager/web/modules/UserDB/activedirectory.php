@@ -87,6 +87,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 					'login'	=> 'cn',
 					'displayname'	=> 'displayname',
 					'real_login'    => 'samaccountname',
+					'distinguishedname' => 'distinguishedname'
 		);
 
 		$config_ldap = array(
