@@ -71,6 +71,7 @@ else {
 		switch ($_GET['mode']) {
 			case 'general':
 				print_prefs4($prefs, 'general', false);
+				print_prefs5($prefs, 'general', 'mails_settings');
 				break;
 			case 'events':
 				if (array_key_exists('events',$prefs->elements))
