@@ -28,7 +28,7 @@ if (isset($_POST['join'])) {
 		redirect($_SERVER['HTTP_REFERER']);
 
 	$view_only = 'Yes';
-	if (isset($_POST['active_mode']))
+	if (isset($_POST['active']))
 		$view_only = 'No';
 
 	$invite = new Invite(gen_string(5));
