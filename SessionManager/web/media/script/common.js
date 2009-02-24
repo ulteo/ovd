@@ -79,6 +79,9 @@ function setAvailableSize(select_id) {
 			buf.innerHTML = res[i];
 			$(select_id).appendChild(buf);
 		}
+
+		if (r == null)
+			return;
 	}
 }
 
@@ -180,11 +183,10 @@ function sessionStop() {
 	$('started_button').style.display = 'none';
 }
 
-function buildFullyQualifiedLogin() {
+/*function buildFullyQualifiedLogin() {
 	login = $('login_part').value;
 	domain = $('domain_part').value;
 
 	name = login+'@'+domain;
 	$('user_login').value = name;
-	alert($('user_login').value);
-}
+}*/

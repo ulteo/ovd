@@ -71,7 +71,8 @@ function daemon_loop() {
 				}
 			}
 		);
-	} if (session_state == 2 && $('splashContainer').visible()) {
+	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
+		$('appletContainer').show();
 		switch_splash_to_applet();
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
 		window_alive = false;
@@ -98,7 +99,6 @@ function switch_splash_to_applet() {
 				$('splashContainer').hide();
 				if ($('menuContainer'))
 					$('menuContainer').show();
-				$('appletContainer').show();
 
 				$('appletContainer').innerHTML = transport.responseText;
 			}
