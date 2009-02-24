@@ -64,7 +64,7 @@ if (! is_array($apps)) {
 
 foreach ($apps as $app) {
 	if ($app->hasAttribute('desktopfile')) {
-		if (mysql_escape_string($app->getAttribute('desktopfile')) == $_GET['desktopfile']) {
+		if ($app->getAttribute('desktopfile') == $_GET['desktopfile']) {
 			header('Content-Type: text/xml; charset=utf-8');
 			echo $app->toXML();
 			die();
