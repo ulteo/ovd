@@ -26,7 +26,6 @@ import sys
 MYPID = os.getpid()
 
 if not len(sys.argv) > 2:
-    print 'eeerer'
     sys.exit(1)
 
 for key in ['SPOOL_USERS', 'SESSID']:
@@ -42,7 +41,8 @@ f.write("%d %s\n"%(MYPID, sys.argv[1]))
 f.close()
 
 # run the appli
-cmd_line = subprocess.list2cmdline(sys.argv[2:])
+myargs = [x.replace("\\", "\\\\") for x in sys.argv[2:]]
+cmd_line = subprocess.list2cmdline(myargs)
 os.system(cmd_line)
 
 # notify end
