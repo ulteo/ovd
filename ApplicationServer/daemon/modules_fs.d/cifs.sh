@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Jocelyn DELALANDE <jocelyn.delalande@no-log.org>
 # Author Julien LANGLOIS <julien@ulteo.com>
@@ -30,10 +30,17 @@ cifs_set_fs() {
     log_DEBUG "cifs_set_fs"
     
     CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
-    CIFS_LOGIN=`cat ${SESSID_DIR}/parameters/module_fs/login`
-    CIFS_PASSWORD=`cat ${SESSID_DIR}/parameters/module_fs/password`
+    check_variables CIFS_HOME_DIR || return 1
 
-    check_variables CIFS_LOGIN CIFS_PASSWORD CIFS_HOME_DIR || return 1
+    if [ -f ${SESSID_DIR}/parameters/module_fs/login ]; then
+	CIFS_AUTH=1
+	CIFS_LOGIN=`cat ${SESSID_DIR}/parameters/module_fs/login`
+	CIFS_PASSWORD=`cat ${SESSID_DIR}/parameters/module_fs/password`
+
+	check_variables CIFS_LOGIN CIFS_PASSWORD || return 1
+    else
+	CIFS_AUTH=0
+    fi
 
     CIFS_MOUNT_POINT=/mnt/cifs/$USER_LOGIN
 }
@@ -46,7 +53,13 @@ cifs_get_status() {
 cifs_do_mount() {
     # HACK: waiting for a working krb. sends plain-text credentials.
     # MOUNT_CMD="username=$KRB_PRINCIPAL,sec=krb5i,guest,sfu"
-    local default_opts="username=$CIFS_LOGIN,password=$CIFS_PASSWORD,uid=$USER_ID,umask=077"
+    local default_opts="uid=$USER_ID,umask=077"
+    if [ $CIFS_AUTH -eq 1 ]; then
+	local default_opts=$default_opts",username=$CIFS_LOGIN,password=$CIFS_PASSWORD"
+    else
+	local default_opts=$default_opts",guest"
+    fi
+
     local mount_cmd="mount -t cifs -o $default_opts $CIFS_HOME_DIR $CIFS_MOUNT_POINT"
 
     mkdir -p $CIFS_MOUNT_POINT
