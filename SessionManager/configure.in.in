@@ -53,6 +53,42 @@ AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS=$(sed -r -e "/^#/d" -e "s/#.*//" "po/LINGUAS")
 AC_SUBST(ALL_LINGUAS)
 
+# Allow use of already installed javascript libraries
+AC_ARG_WITH([prototypedir],
+    [AC_HELP_STRING([--with-prototypedir],
+        [use a local installation of the Prototype javascript library])],
+    ,
+    [with_prototypedir=no])
+if test x"$with_prototypedir" != xno; then
+    if test -f "$with_prototypedir/prototype.js"; then
+        PROTOTYPEDIR="$with_prototypedir"
+        AC_SUBST(PROTOTYPEDIR)
+        echo "Using $PROTOTYPEDIR for Prototype library."
+    else
+        AC_MSG_WARN([$with_prototypedir/prototype.js doesn't exist; using builtin Prototype library.])
+        PROTOTYPEDIR=
+    fi
+fi
+AM_CONDITIONAL(PROTOTYPE, [test -n "$PROTOTYPEDIR"])
+
+AC_ARG_WITH([scriptaculousdir],
+    [AC_HELP_STRING([--with-scriptaculousdir],
+        [use a local installation of the Scriptaculous javascript library])],
+    ,
+    [with_scriptaculousdir=no])
+if test x"$with_scriptaculousdir" != xno; then
+    if test -f "$with_scriptaculousdir/scriptaculous.js"; then
+        SCRIPTACULOUSDIR="$with_scriptaculousdir"
+        AC_SUBST(SCRIPTACULOUSDIR)
+        echo "Using $SCRIPTACULOUSDIR for Scriptaculous library."
+    else
+        AC_MSG_WARN([$with_scriptaculousdir/scriptaculous.js doesn't exist; using builtin Prototype library.])
+        SCRIPTACULOUSDIR=
+    fi
+fi
+AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
+
+
 AC_CONFIG_FILES([
 Makefile
 po/Makefile

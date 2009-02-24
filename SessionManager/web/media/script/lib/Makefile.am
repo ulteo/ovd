@@ -1,2 +1,29 @@
-SUBDIRS =  prototype scriptaculous nifty
+SUBDIRS = nifty
 
+HOOKS =
+
+if !PROTOTYPE
+SUBDIRS += prototype
+else
+HOOKS += prototype-hook
+endif
+
+if !SCRIPTACULOUS
+SUBDIRS += scriptaculous
+else
+HOOKS += scriptaculous-hook
+endif
+
+install-exec-hook: $(HOOKS)
+	$(MKDIR_P) $(DESTDIR)$(bindir)
+	ln -sf $(STARTOVD) $(DESTDIR)$(bindir)/startovd
+
+prototype-hook:
+	$(MKDIR_P) $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
+	ln -sf $(PROTOTYPEDIR) \
+		$(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib/prototype
+
+scriptaculous-hook:
+	$(MKDIR_P) $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
+	ln -sf $(SCRIPTACULOUSDIR) \
+		$(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib/scriptaculous
