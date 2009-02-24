@@ -178,7 +178,7 @@ else {
 			$css_class = 'content'.(($i++%2==0)?1:2);
 
 			echo '	<tr class="'.$css_class.'">';
-			echo '		<td><input type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td><form></form>';
+			echo '		<td><input class="input_checkbox" type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td><form></form>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';

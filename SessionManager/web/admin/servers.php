@@ -272,7 +272,7 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
       if ($nb_a_servs_online > 1)
-        echo '<td><input type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
+        echo '<td><input class="input_checkbox" type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
       echo '<td>';
       echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
       echo '</td>';
@@ -382,7 +382,7 @@ function show_unregistered() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tr class="'.$content.'">';
             if (count($u_servs) > 1)
-	echo '<td><input type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
+	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
 
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
@@ -790,7 +790,7 @@ function show_manage($fqdn) {
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($servers_replication as $server_) {
       echo '<tr>';
-      echo '<td><input type="checkbox" name="servers[]" value="'.$server_->fqdn.'" /></td>';
+      echo '<td><input class="input_checkbox" type="checkbox" name="servers[]" value="'.$server_->fqdn.'" /></td>';
       echo '<td><a href="servers.php?action=manage&fqdn='.$server_->fqdn.'">'.$server_->fqdn.'</a></td></tr>';
     }
     echo '<tr><td></td><td><input type="submit" value="'._('Replicate on those servers').'" /></td></tr>';

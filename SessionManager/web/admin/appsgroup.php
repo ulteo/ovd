@@ -134,7 +134,7 @@ function show_default() {
 	$publish = '<span class="msg_error">'._('Blocked').'</span>';
 
       echo '<tr class="'.$content.'">';
-      echo '<td><input type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
+      echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
       echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
@@ -181,8 +181,8 @@ function show_default() {
   echo '<tr class="content2">';
   echo '<th>'._('Status').'</th>';
   echo '<td>';
-  echo '<input type="radio" name="published" value="1" checked />'._('Enable');
-  echo '<input type="radio" name="published" value="0"  />'._('Block');
+  echo '<input class="input_radio" type="radio" name="published" value="1" checked />'._('Enable');
+  echo '<input class="input_radio" type="radio" name="published" value="0"  />'._('Block');
   echo '</td>';
   echo '</tr>';
   */

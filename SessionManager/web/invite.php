@@ -121,7 +121,7 @@ html,body {
 
 			<input type="hidden" name="session" value="<?php echo $session->id; ?>" />
 
-			<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> <input type="checkbox" name="active_mode" /> <?php echo _('active mode'); ?></p>
+			<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> <input class="input_checkbox" type="checkbox" name="active_mode" /> <?php echo _('active mode'); ?></p>
 
 			<input type="submit" value="<?php echo _('Invite'); ?>" />
 		</form>

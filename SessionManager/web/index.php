@@ -537,7 +537,7 @@ require_once('header.php');
 							<?php echo _('Remember proxy'); ?>
 						</td>
 						<td>
-							<input type="checkbox" id="remember_proxy" name="remember_proxy" value="0" />
+							<input class="input_checkbox" type="checkbox" id="remember_proxy" name="remember_proxy" value="0" />
 						</td>
 					</tr>
 				</table>

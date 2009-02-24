@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -49,10 +49,10 @@ class Configuration_mode_internal extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     // Select Module as UserDB
-    $prefs->set('UserDB', 'enable', 
+    $prefs->set('UserDB', 'enable',
 		array('enable' => $form['user']));
 
-    
+
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable',
 		array('enable' => 'sql'));
@@ -84,12 +84,12 @@ class Configuration_mode_internal extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('Users').'</h3>';
-    $str.= '<input type="radio" name="user" value="fake"';
+    $str.= '<input class="input_radio" type="radio" name="user" value="fake"';
     if ($form['user'] == 'fake')
       $str.= ' checked="checked"';
     $str.= '/>'._('Use a static user list (usefull for test)');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="user" value="sql"';
+    $str.= '<input class="input_radio" type="radio" name="user" value="sql"';
     if ($form['user'] == 'sql')
       $str.= ' checked="checked"';
     $str.= '/>'._('I want create my own users');

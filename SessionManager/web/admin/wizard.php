@@ -177,11 +177,11 @@ function show_step1($error_=NULL) {
   echo '<table class="" id="wizard_list_table" border="0" cellspacing="1" cellpadding="5">';
   if ($has_usergroups) {
 	echo '<tr class="title">';
-	echo '<th><input type="radio" name="use" value="users" onclick="$(\'wizard_usergroups_list_table\').hide(); $(\'wizard_users_list_table\').show()"';
+	echo '<th><input class="input_radio" type="radio" name="use" value="users" onclick="$(\'wizard_usergroups_list_table\').hide(); $(\'wizard_users_list_table\').show()"';
 	if (!$usergroup_selected)
 		echo ' checked="checked"';
 	echo '/>'._('Create a group with users').'</th>';
-	echo '<th><input type="radio" name="use" value="usergroups" onclick="$(\'wizard_users_list_table\').hide(); $(\'wizard_usergroups_list_table\').show()"';
+	echo '<th><input class="input_radio" type="radio" name="use" value="usergroups" onclick="$(\'wizard_users_list_table\').hide(); $(\'wizard_usergroups_list_table\').show()"';
 	if ($usergroup_selected)
 		echo ' checked="checked"';
 	echo '/> '._('Use usergroups').'</th>';
@@ -202,7 +202,7 @@ function show_step1($error_=NULL) {
     $content = 'content'.(($count++%2==0)?1:2);
 
     echo '<tr class="'.$content.'">';
-    echo '<td colspan="2"><input type="checkbox" name="users[]" value="'.$user->getAttribute('login').'"';
+    echo '<td colspan="2"><input class="input_checkbox" type="checkbox" name="users[]" value="'.$user->getAttribute('login').'"';
     if (isset($_SESSION['wizard']['users']) && in_array($user->getAttribute('login'), $_SESSION['wizard']['users']))
       echo ' checked="checked"';
     echo '/> <a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a></td>';
@@ -223,7 +223,7 @@ function show_step1($error_=NULL) {
 		$content = 'content'.(($count++%2==0)?1:2);
 
 		echo '<tr class="'.$content.'">';
-		echo '<td><input type="checkbox" name="usergroups[]" value="'.$usergroup->id.'" /> <a href="usersgroup.php?action=manage&id='.$usergroup->id.'">'.$usergroup->name.'</a></td>';
+		echo '<td><input class="input_checkbox" type="checkbox" name="usergroups[]" value="'.$usergroup->id.'" /> <a href="usersgroup.php?action=manage&id='.$usergroup->id.'">'.$usergroup->name.'</a></td>';
 		echo '</tr>';
 	}
 	$content = 'content'.(($count++%2==0)?1:2);
@@ -324,11 +324,11 @@ function show_step3($error_=NULL) {
   echo '<table class="" id="wizard_list_table" border="0" cellspacing="1" cellpadding="5">';
   if ($has_appgroups) {
 	echo '<tr class="title">';
-	echo '<th><input type="radio" name="use" value="apps" onclick="$(\'wizard_appgroups_list_table\').hide(); $(\'wizard_apps_list_table\').show()"';
+	echo '<th><input class="input_radio" type="radio" name="use" value="apps" onclick="$(\'wizard_appgroups_list_table\').hide(); $(\'wizard_apps_list_table\').show()"';
 	if (!$appgroup_selected)
 		echo ' checked="checked"';
 	echo '/>'._('Create a group with applications').'</th>';
-	echo '<th><input type="radio" name="use" value="appgroups" onclick="$(\'wizard_apps_list_table\').hide(); $(\'wizard_appgroups_list_table\').show()"';
+	echo '<th><input class="input_radio" type="radio" name="use" value="appgroups" onclick="$(\'wizard_apps_list_table\').hide(); $(\'wizard_appgroups_list_table\').show()"';
 	if ($appgroup_selected)
 		echo ' checked="checked"';
 	echo '/> '._('Use appgroups').'</th>';
@@ -349,7 +349,7 @@ function show_step3($error_=NULL) {
     $content = 'content'.(($count++%2==0)?1:2);
 
     echo '<tr class="'.$content.'">';
-    echo '<td colspan="2"><input type="checkbox" name="apps[]" value="'.$application->getAttribute('id').'"';
+    echo '<td colspan="2"><input class="input_checkbox" type="checkbox" name="apps[]" value="'.$application->getAttribute('id').'"';
     if (isset($_SESSION['wizard']['apps']) && in_array($application->getAttribute('id'), $_SESSION['wizard']['apps']))
       echo ' checked="checked"';
     echo '/> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'" title="'.$application->getAttribute('description').'">'.$application->getAttribute('name').'</a></td>';
@@ -370,7 +370,7 @@ function show_step3($error_=NULL) {
 		$content = 'content'.(($count++%2==0)?1:2);
 
 		echo '<tr class="'.$content.'">';
-		echo '<td><input type="checkbox" name="appgroups[]" value="'.$appgroup->id.'" /> <a href="appsgroups.php?action=manage&id='.$appgroup->id.'">'.$appgroup->name.'</a></td>';
+		echo '<td><input class="input_checkbox" type="checkbox" name="appgroups[]" value="'.$appgroup->id.'" /> <a href="appsgroups.php?action=manage&id='.$appgroup->id.'">'.$appgroup->name.'</a></td>';
 		echo '</tr>';
 	}
 	$content = 'content'.(($count++%2==0)?1:2);

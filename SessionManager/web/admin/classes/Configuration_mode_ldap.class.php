@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -92,12 +92,12 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
-    
+
     if ($form['user_group'] == 'ldap_memberof')
       $config['match']['memberof'] = 'memberof';
 
     // Select LDAP as UserDB
-    $prefs->set('UserDB', 'enable', 
+    $prefs->set('UserDB', 'enable',
         array('enable' => 'ldap'));
 
     // Push LDAP conf
@@ -170,7 +170,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<tr><td>'._('User branch:').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
 
     // Not yet Implemented
-    // $str.= '<tr><td style="text-align: right;"><input type="checkbox" name="user_branch_recursive"/></td>';
+    // $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
     // $str.= '<td>'._('Recursive Mode').'</td></tr>';
 
     $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
@@ -181,7 +181,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<h4>'._('Administrator account').'</h4>';
     $str.= '<table>';
     $str.= '<tr><td style="text-align: right;">';
-    $str.= '<input type="checkbox" name="bind_anonymous"';
+    $str.= '<input class="input_checkbox" type="checkbox" name="bind_anonymous"';
     if (isset($form['bind_anonymous']))
       $str.= ' checked="checked"';
     $str.= '/></td><td>Anonymous bind';
@@ -195,17 +195,17 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $str.= '<div>';
     $str.= '<h3>'._('User Groups').'</h3>';
-    $str.= '<input type="radio" name="user_group" value="ldap_memberof"';
+    $str.= '<input class="input_radio" type="radio" name="user_group" value="ldap_memberof"';
     if ($form['user_group'] == 'ldap_memberof')
       $str.= ' checked="checked"';
     $str.= ' />'._('Use LDAP User Groups using the MemberOf field');
     $str.= '<br/>';
-        $str.= '<input type="radio" name="user_group" value="ldap_posix"';
+        $str.= '<input class="input_radio" type="radio" name="user_group" value="ldap_posix"';
     if ($form['user_group'] == 'ldap_posix')
       $str.= ' checked="checked"';
     $str.= ' />'._('Use LDAP User Groups using Posix group');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="user_group" value="sql"';
+    $str.= '<input class="input_radio" type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')
       $str.= ' checked="checked"';
     $str.= '/>'._('Use Internal User Groups');
@@ -216,19 +216,19 @@ class Configuration_mode_ldap extends Configuration_mode {
     /*
     $str.= '<div>';
     $str.= '<h3>'._('Home Directory').'</h3>';
-    $str.= '<input type="radio" name="homedir" value="local"';
+    $str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
     if ($form['homedir'] == 'local')
       $str.= ' checked="checked"';
     $str.= '/>';
     $str.= _('Use Internal home directory (no server replication)');
     $str.= '<br/>';
-    $str.= '<input type="radio" name="homedir" value="ad_profile"';
+    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_profile"';
     if ($form['homedir'] == 'ad_profile')
       $str.= ' checked="checked"';
     $str.= '/>';
     $str.= _('Use CIFS link using the LDAP field :').' <input type="text" name="homedir" value=""/>';
     $str.= '<br/>';
-    $str.= '<input type="radio" name="homedir" value="ad_homedir"';
+    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_homedir"';
     if ($form['homedir'] == 'ad_homedir')
       $str.= ' checked="checked"';
     $str.= '/>';

@@ -137,7 +137,7 @@ function show_default($applicationDB) {
 
       echo '<tr class="'.$content.'">';
       if ($is_rw)
-// 	echo '<td><input type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
+// 	echo '<td><input class="input_checkbox" type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
       echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
       echo '<td>'.$app->getAttribute('description').'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
