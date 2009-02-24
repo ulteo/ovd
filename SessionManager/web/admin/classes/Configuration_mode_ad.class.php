@@ -114,7 +114,7 @@ class Configuration_mode_ad extends Configuration_mode {
 
     // Select AD as UserDB
     $prefs->set('UserDB', 'enable',
-		array('enable' => 'activedirectory'));
+        array('enable' => 'activedirectory'));
 
     // Push AD conf
     $prefs->set('UserDB', 'activedirectory', $ad_ar);
@@ -122,12 +122,16 @@ class Configuration_mode_ad extends Configuration_mode {
 
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable',
-		array('enable' => $form['user_group']));
+        array('enable' => $form['user_group']));
 
 
     // Set the FS type
     $prefs->set('plugins', 'FS',
-		array('FS' => $plugin_fs));
+        array('FS' => $plugin_fs));
+    if ( $plugin_fs == 'cifs_no_sfu') {
+        $data = array('authentication_method' => 'global', 'global_user_login' => $form['admin_login'], 'global_user_password' => $ad_ar['password']);
+        $prefs->set('plugins', 'FS_cifs_no_sfu', $data);
+    }
 
     return True;
   }
