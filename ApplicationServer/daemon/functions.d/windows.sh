@@ -65,9 +65,6 @@ windows_catch_application() {
     webservices_get_application_icon $app_id $pixmap
     if [ $? -ne 0 ]; then
 	log_WARN "Unable to catch application icon"
-	[ -f $buffer ] && rm $buffer
-	[ -f $pixmap ] && rm $pixmap
-	return 1
     fi
 
     xml2desktopfile $buffer $windows_app_cache
