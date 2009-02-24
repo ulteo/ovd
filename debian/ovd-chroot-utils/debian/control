@@ -26,7 +26,7 @@ Description: Ulteo Open Virtual Desktop - cups2all
 
 Package: ulteo-ovd-start
 Architecture: all
-Depends:
+Depends: python
 Description: Ulteo Open Virtual Desktop - startup scripts
  This package is a collection of various scripts that can be used to start an X
  session on an Open Virtual Desktop application server.
