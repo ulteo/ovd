@@ -24,16 +24,27 @@ require_once(dirname(__FILE__).'/includes/page_template.php');
 
 page_header();
 
-if (! isset($_REQUEST['start']))
-	/* yesterday */
-	$start = date('Ymd', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
-else
-	$start = $_REQUEST['start'];
+$last_report = get_from_cache('reports', 'last_report');
+if ($last_report == NULL)
+	$last_report = array();
 
-if (! isset($_REQUEST['end']))
-	$end = date('Ymd');
-else
+if (! isset($_REQUEST['start'])) {
+	if (isset($last_report['start']))
+		$start = $last_report['start'];
+	else
+		$start = date('Ymd', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
+} else {
+	$start = $_REQUEST['start'];
+}
+
+if (! isset($_REQUEST['end'])) {
+	if (isset($last_report['end']))
+		$end = $last_report['end'];
+	else
+		$end = date('Ymd');
+} else {
 	$end = $_REQUEST['end'];
+}
 
 if ($end < $start) {
 	$tmp = $end;
@@ -41,15 +52,29 @@ if ($end < $start) {
 	$start = $tmp;
 }
 
-if (! isset($_REQUEST['type']))
-	$type = 'servers';
-else
+if (! isset($_REQUEST['type'])) {
+	if (isset($last_report['type']))
+		$type = $last_report['type'];
+	else
+		$type = 'servers';
+} else {
 	$type = $_REQUEST['type'];
+}
 
-if (! isset($_REQUEST['template']))
-	$template = 'default';
-else
+if (! isset($_REQUEST['template'])) {
+	if (isset($last_report['template']))
+		$template = $last_report['template'];
+	else
+		$template = 'default';
+} else {
 	$template = $_REQUEST['template'];
+}
+
+$last_report['start'] = $start;
+$last_report['end'] = $end;
+$last_report['type'] = $type;
+$last_report['template'] = $template;
+set_cache($last_report, 'reports', 'last_report');
 
 $types_array = array('applications', 'servers');
 $types_html = '';
