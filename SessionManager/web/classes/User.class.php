@@ -68,9 +68,11 @@ class User {
 		}
 		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
 		
-		$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
-		if (is_object($g))
-			$result[$user_default_group]= $g;
+		if ($user_default_group !== -1) {
+			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
+			if (is_object($g))
+				$result[$user_default_group]= $g;
+		}
 		
 		foreach ($rows as $lug){
 			$g = $userGroupDB->import($lug->group);
