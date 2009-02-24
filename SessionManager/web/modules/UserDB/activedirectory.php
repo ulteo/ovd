@@ -31,12 +31,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		if (is_null($this->config_ad))
 			die_error('Active Directory configuration missing2',__FILE__,__LINE__);
 
-
 		$this->config =  $this->makeLDAPconfig();
-	}
-
-	public function import($login_){
-		$u = parent::import($login_);
 	}
 
 	public function getList($sort_=false) {
