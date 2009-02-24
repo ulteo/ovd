@@ -64,7 +64,7 @@
       <para>
 	SSH is a protocol to access to a machine over a network.  SSH
 	use encryption to make sure that no one on the network can
-	decrypt what the user do.
+	decrypt what the user does.
       </para>
 
       <para>
@@ -90,7 +90,7 @@
 
     <para>
       The Applications servers only answer to his Session Manager wich
-      the address is store in a configuration file
+      the address is stored in a configuration file
       (<emphasis>SESSION_MANAGER_URL</emphasis>).
     </para>
 
@@ -115,7 +115,7 @@
 	  <listitem><para><emphasis role="strong">reverse
 	  resoltuion:</emphasis> resolve the server ip address and try
 	  to mach with the the fqdn argument. Authentication directly
-	  depends on match. This test can be disable in the
+	  depends on match. This tested can be disable in the
 	  administration console by <emphasis>Disable fqdn
 	  check</emphasis></para></listitem>
 
@@ -149,7 +149,7 @@
 	<listitem>
 	  <para><emphasis role="strong">401 Unauthorized :</emphasis>
 	  From SM to ApS, ApS detect that remote address is not his
-	  SM, From ApS to SM, ApS is not register yet or invalid
+	  SM, From ApS to SM, ApS is not registered yet or invalid
 	  authentication.</para>
 	</listitem>
 
@@ -298,7 +298,7 @@
 	</itemizedlist>
 
 	<para>
-	  When a user is redirect launch a session, he is redirect
+	  When a user is redirected launch a session, he is redirected
 	  with a token to an application server. To verify the user
 	  identity and get the session informations, application
 	  server use this token on his Session Manager and if valid,
@@ -338,7 +338,7 @@
 	<para>
 	  Get the icon refered to an application in order to display
 	  in the user desktop. The application server use a cache
-	  system so, an application icon is ask only one time by a server.
+	  system so, an application icon is asked only one time by a server.
 	</para>
       </simplesect>
 
@@ -662,12 +662,12 @@
       <title>Client/Servers communication</title>
 
       <para>
-	Once the client is redirect to the ApS , he only request the
+	Once the client is redirected to the ApS , he only request the
 	ApS (excpet for session sharing as described bellow).
       </para>
 
       <para>
-	The session display is encapsulate in a SSH tunnel but
+	The session display is encapsulated in a SSH tunnel but
 	webservices are also used to communicate. For instance, for
 	printing.
       </para>
