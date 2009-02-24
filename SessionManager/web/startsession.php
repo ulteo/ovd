@@ -95,6 +95,8 @@ if (!is_object($user))
 
 Logger::debug('main', '(startsession) Now checking for old session');
 
+$ev = new SessionStart(array('user' => $user));
+
 $already_online = 0;
 $sessions = Sessions::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
@@ -113,8 +115,12 @@ else {
 	if (is_object($serv_tmp))
 		$random_server = $serv_tmp->fqdn;
 
-	if ((!isset($random_server)) || is_null($random_server) || $random_server == '')
+	if ((!isset($random_server)) || is_null($random_server) || $random_server == '') {
+		$ev->setAttribute('ok', false);
+		$ev->setAttribute('error', _('No available server'));
+		$ev->emit();
 		die_error(_('No available server'),__FILE__,__LINE__);
+	}
 
 	if (@gethostbyname($random_server) == $random_server) {
 		$buf = $prefs->get('general', 'application_server_settings');
@@ -228,11 +234,11 @@ $buf = Abstract_Server::load($session->server);
 
 $redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
 
-$ev = new SessionStartEvent(array(
+$ev->setAttributes(array(
+	'ok'	=> true,
 	'server'	=>	$session->server,
 	'resume'	=>	$session->isSuspended(),
 	'token'	=>	$token->id,
-	'user'	=>	$user,
 	'sessid'	=>	$session->id
 ));
 $ev->emit();
