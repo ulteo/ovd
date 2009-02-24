@@ -27,7 +27,7 @@
 	The base communication protocol used is HTTP because of the
 	Web based solution.  But we also use HTTP for the
 	communication between servers: Session Manager to Application
-	Server and vice versa.  This protocol run over TCP on the port
+	Server and vice versa.  This protocol runs over TCP on the port
 	80.  We are not using HTTPS (443) at the moment.
       </para>
 
@@ -43,8 +43,8 @@
 
       <para>
 	RFB is the protocol used to display the remote desktop and
-	application inside the Web broswer.  This protocol is used by
-	VNC.  VNC run over TCP too.  A VNC server run one instance by
+	applications inside the Web broswer.  This protocol is used by
+	VNC.  VNC runs over TCP too.  A VNC server runs one instance by
 	desktop so one port for each display.  The classic port used
 	by VNC is 5900.
       </para>
@@ -62,8 +62,8 @@
       <title>Secure Shell (SSH)</title>
 
       <para>
-	SSH is a protocol to access to a machine over a network.  SSH
-	use encryption to make sure that no one on the network can
+	SSH is a protocol used to access to a machine over a network.  SSH
+	uses encryption to make sure that no one on the network can
 	decrypt what the user does.
       </para>
 
@@ -80,47 +80,47 @@
   <section>
     <title>Servers Communication</title>
     <para>
-      The servers communicates by HTTP with webservices.
+      The servers communicate by HTTP using webservices.
     </para>
 
     <para>
-      The Session Manager identify an Application servers with his
+      The Session Manager identifies an Application servers using its
       Fully Qualified Domain Name (FQDN).
     </para>
 
     <para>
-      The Applications servers only answer to his Session Manager wich
-      the address is stored in a configuration file
+      The Applications servers only answer to the Session Manager for which
+      the address is stored in a configuration file.
       (<emphasis>SESSION_MANAGER_URL</emphasis>).
     </para>
 
     <section>
       <title>Security</title>
       <para>
-	At the moment, the server are authenticate using the DNS resolution system.
+	At the moment, the server are authenticated using the DNS resolution system.
       </para>
 
       <para>
-	When an Application server send a status, he send an extra
+	When an Application server sends a status, it sends an extra
 	argument named <emphasis>fqdn</emphasis>.  The Session Manager
-	make 2 authentications test and 1 authorization.
+	makes 2 authentications test and 1 authorization.
 
 	<itemizedlist>
 	  <listitem><para><emphasis role="strong">fqdn
-	  resoltuion:</emphasis> resolve the fqdn to have ip address
-	  and try to match with the remove server ip
+	  resoltuion:</emphasis> resolves the fqdn to get an ip address
+	  and tests if it matches with the remove server ip
 	  ($SERVER['REMOTE_ADDR'] in php).  Authentication directly
-	  depends on match</para></listitem>
+	  depends on this match</para></listitem>
 
 	  <listitem><para><emphasis role="strong">reverse
-	  resoltuion:</emphasis> resolve the server ip address and try
-	  to mach with the the fqdn argument. Authentication directly
-	  depends on match. This tested can be disable in the
-	  administration console by <emphasis>Disable fqdn
+	  resoltuion:</emphasis> resolves the server ip address and tests
+	  if it matches the fqdn argument. Authentication directly
+	  depends on this match. This test can be disabled in the
+	  administration console using the <emphasis>Disable fqdn
 	  check</emphasis></para></listitem>
 
 	  <listitem><para><emphasis
-			      role="strong">authorisation:</emphasis> try to match the fqdn
+			      role="strong">authorisation:</emphasis> tests the match of the fqdn
 	  with one of the <emphasis>Authorized fqdn</emphasis> defined
 	  in the admin console.</para></listitem>
 
@@ -132,13 +132,13 @@
       <title>HTTP return codes</title>
       <para>
 	Webservices are using the HTTP return code to know if the
-	request succeed.
+	request succeeded.
       </para>
 
       <itemizedlist>
 	<listitem>
 	  <para><emphasis role="strong">200 OK :</emphasis>
-	  request succeed</para>
+	  request succeeded</para>
 	</listitem>
 
 	<listitem>
@@ -148,14 +148,14 @@
 
 	<listitem>
 	  <para><emphasis role="strong">401 Unauthorized :</emphasis>
-	  From SM to ApS, ApS detect that remote address is not his
-	  SM, From ApS to SM, ApS is not registered yet or invalid
+	  From SM to ApS, ApS detects that remote address is not its
+	  SM. From ApS to SM, ApS is not registered yet or has invalid
 	  authentication.</para>
 	</listitem>
 
 	<listitem>
 	  <para><emphasis role="strong">500 Internal Server Error :</emphasis>
-	  Either a bug was detected or the system or the system is
+	  Either a bug was detected on the system or the system is
 	  broken.</para>
 	</listitem>
       </itemizedlist>
@@ -165,7 +165,7 @@
       <title>Session Manager webservices</title>
 
       <para>
-	The webservices used for the servers communication are into
+	The webservices used for the servers communication are in
 	<emphasis>/webservices</emphasis>.
 
       </para>
@@ -189,15 +189,15 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> GET</para>
+	    <para><emphasis role="strong">returns:</emphasis> GET</para>
 	  </listitem>
 	</itemizedlist>	  
 
 	<para>
-	  An application server send his status at start, stop or
+	  An application server sends his status at startup, when it stops or
 	  when an important error occured.  That's the way the system
-	  use to know when a offline server is online again or when
-	  there is a server to register.
+	  can know when an offline server is online again or when
+	  a server needs to be registred.
 	</para>
       </simplesect>
 
@@ -220,7 +220,7 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
 	  </listitem>
 	</itemizedlist>	  
 
@@ -231,7 +231,7 @@
 	  instance.
 	</para>
 	<para>
-	  The monitoring contain the CPU and RAM load. But also the
+	  The monitoring contains the CPU and RAM load. But also the
 	  running applications for each sessions.
 	</para>
       </simplesect>
@@ -260,7 +260,7 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
 	  </listitem>
 	</itemizedlist>
 
@@ -293,16 +293,16 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> session informations in XML content</para>
+	    <para><emphasis role="strong">returns:</emphasis> session informations as XML</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  When a user is redirected launch a session, he is redirected
+	  When an user is launches a session, he is redirected
 	  with a token to an application server. To verify the user
-	  identity and get the session informations, application
-	  server use this token on his Session Manager and if valid,
-	  get informations into a XML content.
+	  identity and get the session informations, the application
+	  server uses this token on its Session Manager and if valid,
+	  get informations as XML content.
 	</para>
       </simplesect>
 
@@ -331,14 +331,14 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> icon image in PNG</para>
+	    <para><emphasis role="strong">returns:</emphasis> icon image in PNG</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  Get the icon refered to an application in order to display
-	  in the user desktop. The application server use a cache
-	  system so, an application icon is asked only one time by a server.
+	  Get the icon for an application in order to display it
+	  in the user desktop. The application server uses a cache
+	  system so an application icon is only asked one time by a server.
 	</para>
       </simplesect>
 
@@ -364,14 +364,14 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> application informations in XML content</para>
+	    <para><emphasis role="strong">returns:</emphasis> application informations as XML content</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
 	  Get the application informations from the desktopfile
-	  argument in order to make the application shortcut and put
-	  it on the user desktop.
+	  argument in order to create the application shortcut
+	  on the user's desktop.
 	</para>
       </simplesect>
 
@@ -382,7 +382,7 @@
       <title>Application Server webservices</title>
       
       <para>
-	The webservices used for the servers communication are into
+	The webservices used for the servers communication are in
 	<emphasis>/webservices</emphasis>.
       </para>
 
@@ -397,14 +397,14 @@
 	    <para><emphasis role="strong">arguments:</emphasis> No</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> ready/down/broken</para>
+	    <para><emphasis role="strong">returns:</emphasis> ready/down/broken</para>
 	  </listitem>
 	</itemizedlist>	  
 
 	<para>
-	  Session Manager ask for the server status periodically to
-	  update the status if needed and auto detect servers down
-	  or borken.
+	  Session Manager asks for the server status periodically to
+	  update the status if needed and auto detect down or broken
+      servers.
 	</para>
       </simplesect>
 
@@ -426,13 +426,13 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> numerical session status</para>
+	    <para><emphasis role="strong">returns:</emphasis> numerical session status</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  Session Manager ask for each session status periodically
-	  to auto detect servers/sessions crachs.
+	  Session Manager asks for each session status periodically
+	  to auto detect servers/sessions craches.
 	</para>
 
       </simplesect>
@@ -449,12 +449,12 @@
 	    <para><emphasis role="strong">arguments:</emphasis> No</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> monitoring XML content</para>
+	    <para><emphasis role="strong">returns:</emphasis> monitoring as XML content</para>
 	  </listitem>
 	</itemizedlist>
 	<para>
-	  Session Manager ask for the server monitoring when it
-	  detect a too old cache informations.
+	  Session Manager asks for the server monitoring when it
+	  detects too old cache informations.
 	</para>
       </simplesect>
 
@@ -470,7 +470,7 @@
 	    <para><emphasis role="strong">arguments:</emphasis> No</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> applications list XML content</para>
+	    <para><emphasis role="strong">returns:</emphasis> applications list as XML content</para>
 	  </listitem>
 	</itemizedlist>
 
@@ -497,12 +497,12 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  Force a specific session to exit without notify the user.
+	  Force a specific session to exit without notifying the user.
 	</para>
       </simplesect>
 
@@ -518,7 +518,7 @@
 	    <para><emphasis role="strong">arguments:</emphasis> No</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> version in plain/text contain</para>
+	    <para><emphasis role="strong">returns:</emphasis> version as plain/text content</para>
 	  </listitem>
 	</itemizedlist>
 
@@ -541,7 +541,7 @@
 	    <para><emphasis role="strong">arguments:</emphasis> No</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> windows/linux</para>
+	    <para><emphasis role="strong">returns:</emphasis> windows/linux</para>
 	  </listitem>
 	</itemizedlist>
 
@@ -568,12 +568,12 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> PNG image</para>
+	    <para><emphasis role="strong">returns:</emphasis> a PNG image</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  Extract the icon associated to an application.
+	  Extracts the icon associated to an application.
 	</para>
       </simplesect>
 
@@ -592,26 +592,26 @@
 		<para>path: request/status/show</para>
 	      </listitem>
 	      <listitem>
-		<para>request: a apt-get request</para>
+		<para>request: an apt-get request</para>
 	      </listitem>
 	      <listitem>
 		<para>job: a job id</para>
 	      </listitem>
 	      <listitem>
-		<para>show: status/stderr/stdout</para>
+		<para>shows: status/stderr/stdout</para>
 	      </listitem>
 	    </itemizedlist>
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> depends on action type
+	    <para><emphasis role="strong">returns:</emphasis> depends on action type
 	    <itemizedlist>
 	      <listitem><para>
 		<emphasis>request: </emphasis> job id
 	      </para></listitem>
 
 	      <listitem><para>
-		<emphasis>show: </emphasis> plain text content
+		<emphasis>show: </emphasis> plain/text content
 	      </para></listitem>
 	      <listitem><para>
 		<emphasis>job: </emphasis> a job id
@@ -625,7 +625,7 @@
 	</itemizedlist>
 
 	<para>
-	  Use to install/remove applications.
+	  Used to install/remove applications.
 	</para>
 	<para>
 	  Get job id from action request.
@@ -662,12 +662,12 @@
       <title>Client/Servers communication</title>
 
       <para>
-	Once the client is redirected to the ApS , he only request the
-	ApS (excpet for session sharing as described bellow).
+	Once the client is redirected to the ApS, he only requests this
+	server, not the SM (except for session sharing as described bellow).
       </para>
 
       <para>
-	The session display is encapsulated in a SSH tunnel but
+	The session displayed is encapsulated in a SSH tunnel but
 	webservices are also used to communicate. For instance, for
 	printing.
       </para>
@@ -694,13 +694,13 @@
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> nothing</para>
+	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
 	  This webservice is called when <emphasis>whatsup</emphasis>
-	  returned 0 as session status. startsession put the session
+	  returned 0 as session status. startsession sets the session
 	  status to 1.
 	</para>
       </simplesect>
@@ -717,17 +717,17 @@
 	    <para><emphasis role="strong">arguments:</emphasis> NO</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> session
-	    informations in XML content</para>
+	    <para><emphasis role="strong">returns:</emphasis> session
+	    informations as XML content</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  The webservice has serveral use. First of all, it's used to
+	  The webservice has serveral uses. First of all, it's used to
 	  know that the user is still connected (a kind of ping
-	  timeout process).  Secondly, it allow the client to know
-	  session status changes. And finally, it used to know when a
-	  new pdf file is ready to download.
+	  timeout process).  Secondly, it allows the client to know
+	  session status changes. And finally, it is used to know when a
+	  new pdf file is ready for download.
 	</para>
 
 	<para>
@@ -749,20 +749,20 @@
 	    <para><emphasis role="strong">arguments:</emphasis> NO</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> bye</para>
+	    <para><emphasis role="strong">returns:</emphasis> bye</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  This webservice can be call when the user close the session
-	  Windows to force the session to exit instead of wait the
+	  This webservice can be called when the users close the session
+	  window to force the session to exit instead of waiting the
 	  timeout trigger.
 	</para>
 
 	<para>
 	  This is usefull on session sharing for instance to be sure
-	  that when the client exit, all share users cannot still
-	  access to the session.
+	  that when the client exits, all users sharing the session cannot
+      still access it.
 	</para>
       </simplesect>
 
@@ -785,7 +785,7 @@
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="strong">return:</emphasis> a PDF file</para>
+	    <para><emphasis role="strong">returns:</emphasis> a PDF file</para>
 	  </listitem>
 	</itemizedlist>
 
@@ -795,11 +795,11 @@
 	</para>
 
 	<para>
-	  On the ApS, there is a PDF printer that spool file in the
+	  On the ApS, there is a PDF printer that spools file in the
 	  session directory. When there is a new file,
-	  <emphasis>whatsup</emphasis> detect it, extract the
-	  timestamp and alert the client. The client just has to
-	  request print with the timestamp to get the print job and
+	  <emphasis>whatsup</emphasis> detects it, extracts the
+	  timestamp and alerts the client. The client just has to
+	  request a print with the timestamp to get the print job and
 	  use a mean to print localy (print applet).
 	</para>
       </simplesect>
@@ -814,7 +814,7 @@
       <title>Session status</title>
       
       <para>
-	The status send by webservices and use by both system (Session
+	The status sent by webservices and used by both systems (Session
 	Manager and Application server) are integer.
       </para>
 
@@ -844,7 +844,7 @@
 	</listitem>
 
 	<listitem>
-	  <para><emphasis role="strong">4:</emphasis> unkown
+	  <para><emphasis role="strong">4:</emphasis> unknown
 	  session/session destroyed</para>
 	</listitem>
 
@@ -867,9 +867,9 @@
       <title>Jobs status</title>
       
       <para>
-	When install/remove application using the
+	When installing/removing applications using the
 	<emphasis>apt-get</emphasis> webservice, the Administration
-	console request the ApS to know the status of the job.
+	console requests the ApS to know the status of the job.
       </para>
 
       <itemizedlist>
