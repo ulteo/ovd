@@ -39,4 +39,8 @@ class Plugin {
 	public static function isDefault() {
 		return false;
 	}
+	
+	public function configuration(){
+		return array();
+	}
 }

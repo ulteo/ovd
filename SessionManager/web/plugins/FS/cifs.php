@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -24,45 +24,65 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class FS_cifs extends Plugin {
 	public function start_session($params_) {
 		global $user;
-
-		//BEGIN temp hack
+		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
-
-		$mods_enable = $prefs->get('general', 'module_enable');
-		if (!in_array('UserDB', $mods_enable))
-			die_error('Module UserDB must be enabled',__FILE__,__LINE__);
-
-		$cifs_login = '';
-		$cifs_password = '';
-// 		if ($prefs->get('UserDB', 'enable') == 'activedirectory') {
-			$cifs_config = $prefs->get('UserDB', 'activedirectory');
-			$cifs_login = $cifs_config['login'];
-			$cifs_password = $cifs_config['password'];
-// 		}
-		//END temp hack
-
-		$buf = new UserDB_activedirectory();
-		$admin = $buf->importFromDN($cifs_login.','.$buf->config['suffix']);
-
-		if (!is_object($admin))
-			return false;
-
-		$this->redir_args = array(
-			'module_fs' => array(
-				'user_fileserver'	=>	$user->getAttribute('fileserver'),
-				'fileserver_uid'	=>	$user->getAttribute('uid'),
-				'user_homedir'		=>	$user->getAttribute('homedir'),
-				'login'		=>	$admin->getAttribute('real_login'),
-				'password'	=>	$cifs_password
-			)
-		);
+		
+		$conf = $prefs->get('plugins', 'FS_cifs');
+		
+		if (is_array($conf)) {
+			if (isset($conf['authentication_method'])) {
+				Logger::debug('main', 'FS_cifs plugin authentication_method \''.$conf['authentication_method'].'\'');
+				$this->redir_args = array(
+						'module_fs' => array(
+						'user_homedir' => $user->getAttribute('homedir')
+						)
+					);
+				
+				if ( $conf['authentication_method'] == 'anonymous') {
+					Logger::debug('main', 'FS_cifs plugin authentication_method  => anonymous, we do nothing');
+					// we do nothing (no set login)
+				}
+				else if ( $conf['authentication_method'] == 'user') {
+					if ($user->hasAttribute('real_login')) {
+						Logger::debug('main', 'FS_cifs plugin authentication_method  => user (login=\''.$user->getAttribute('real_login').'\')(password=\''.$_SESSION['password'].'\')');
+						$this->redir_args['module_fs']['login'] = $user->getAttribute('real_login');
+						// dirty hack for password
+						$this->redir_args['module_fs']['password'] = $_SESSION['password'];
+					}
+					else {
+						Logger::error('main', 'FS_cifs plugin authentication_method  => user, user has not attribute \'real_login\'');
+					}
+				}
+				else if ( $conf['authentication_method'] == 'global_user') {
+					
+					if ( isset($conf['global_user_login']) && isset($conf['global_user_password'])) {
+						Logger::debug('main', 'FS_cifs plugin authentication_method  => global_user (login=\''.$conf['global_user_login'].'\')(password=\''.$conf['global_user_password'].'\')');
+						$this->redir_args['module_fs']['login'] = $conf['global_user_login'];
+						$this->redir_args['module_fs']['password'] = $conf['global_user_password'];
+					}
+					else {
+						Logger::error('main', 'FS_cifs plugin authentication_method global_user, global_user_login or global_user_password not set');
+					}
+				}
+				else {
+					// bug
+					Logger::error('main', 'FS_cifs plugin authentication_method \''.$conf['authentication_method'].'\' unknow');
+				}
+			}
+			else {
+				Logger::error('main', 'FS_cifs plugin no authentication method founded');
+			}
+		}
+		else {
+			Logger::error('main', 'FS_cifs plugin configuration not valid (not array)');
+		}
 	}
 
 	public function requirements() {
 		$req = array();
-		$req['UserDB'] = array('fileserver', 'uid', 'homedir');
+		$req['UserDB'] = array('homedir');
 		return $req;
 	}
 
@@ -72,5 +92,16 @@ class FS_cifs extends Plugin {
 
 	public static function enable() {
 		return true;
+	}
+	
+	public function configuration() {
+		$ret = array();
+		$c = new ConfigElement('authentication_method', 'authentication_method', 'authentication_method', 'authentication_method', NULL, array('anonymous' => 'anonymous', 'user' => 'user','global_user' => 'global_user'), ConfigElement::$SELECT);
+		$ret []= $c;
+		$c = new ConfigElement('global_user_login', _('login'), _('login'), _('login'), '', NULL, ConfigElement::$INPUT);
+		$ret []= $c;
+		$c = new ConfigElement('global_user_password', _('password'), _('password'), _('password'), 'servldap.example.com', NULL, ConfigElement::$PASSWORD);
+		$ret []= $c;
+		return $ret;
 	}
 }

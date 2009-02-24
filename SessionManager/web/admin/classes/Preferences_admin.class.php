@@ -249,6 +249,7 @@ class Preferences_admin extends Preferences {
 
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
+			$c = new ConfigElement($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, ConfigElement::$SELECT);
 			foreach ($value1 as $plugin_name => $plu6) {
 				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
 				if (is_null($plugin_prettyname))
@@ -256,10 +257,17 @@ class Preferences_admin extends Preferences {
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 
 				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
-				if ($isdefault1 === true)
+				if ($isdefault1 === true) // replace the default value
 					$c = new ConfigElement($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, ConfigElement::$SELECT);
+				
+				$plugin_conf = 'return '.$key1.'_'.$plugin_name.'::configuration();';
+				$list_conf = eval($plugin_conf);
+				if (is_array($list_conf)) {
+					foreach ($list_conf as $l_conf){
+						$this->add($l_conf,'plugins', $key1.'_'.$plugin_name);
+					}
+				}
 			}
-			$c = new ConfigElement($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, ConfigElement::$SELECT);
 			$this->add($c,'plugins');
 		}
 	}
