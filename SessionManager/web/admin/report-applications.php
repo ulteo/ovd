@@ -28,11 +28,11 @@ function init_app_id() {
 	return $ret;
 }
 
-if (isset($_REQUEST['start']) && isset($_REQUEST['end'])) {
+if (isset($start) && isset($end)) {
 	$sql = MySQL::getInstance();
 	$ret = $sql->DoQuery('SELECT * FROM @1 WHERE @2 >= %3 and @2 <= %4',
 	                     APPLICATIONS_REPORT_TABLE,
-	                     'date', $_REQUEST['start'], $_REQUEST['end']);
+	                     'date', $start, $end);
 
 
 	$per_server = array();

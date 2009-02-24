@@ -21,22 +21,35 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
+
 page_header();
 
 if (! isset($_REQUEST['start']))
-	$start = "";
+	/* yesterday */
+	$start = date('Ymd', mktime(0, 0, 0, date('m'), date('d')-1, date('Y')));
 else
 	$start = $_REQUEST['start'];
 
 if (! isset($_REQUEST['end']))
-	$end = "";
+	$end = date('Ymd');
 else
 	$end = $_REQUEST['end'];
 
+if ($end < $start) {
+	$tmp = $end;
+	$end = $start;
+	$start = $tmp;
+}
+
 if (! isset($_REQUEST['type']))
-	$type = "";
+	$type = 'servers';
 else
 	$type = $_REQUEST['type'];
+
+if (! isset($_REQUEST['template']))
+	$template = 'default';
+else
+	$template = $_REQUEST['template'];
 
 $types_array = array('applications', 'servers');
 $types_html = '';
@@ -60,9 +73,9 @@ foreach ($types_array as $k) {
   (YYYYMMDD)
 
 <?php
-if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
+if (isset($type) && is_file('report-'.$type.'.php')) {
 	/* this is the computing part */
-	include_once('report-'.$_REQUEST['type'].'.php');
+	include_once('report-'.$type.'.php');
 
 	/* list available templates */
 	print '  <br />';
@@ -70,7 +83,7 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 	print '  <select name="template">';
 	foreach (glob('templates/'.$type.'/*.php') as $file) {
 		$item = preg_replace ('/\.php$/', '', basename($file));
-		if (isset($_REQUEST['template']) && ($_REQUEST['template'] == $item))
+		if (isset($template) && ($template == $item))
 			$s = ' selected="selected"';
 		else
 			$s = '';
@@ -81,9 +94,10 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 
 
 	$tpl = 'templates/'.$type.'/default.php';
-	if (isset($_REQUEST['template']) &&
-	  is_file('templates/'.$type.'/'.$_REQUEST['template'].'.php'))
-		$tpl = 'templates/'.$type.'/'.$_REQUEST['template'].'.php';
+	if (isset($template) &&
+	  is_file('templates/'.$type.'/'.$template.'.php')) {
+		$tpl = 'templates/'.$type.'/'.$template.'.php';
+	}
 }
 ?>
 
@@ -92,7 +106,8 @@ if (isset($_REQUEST['type']) && is_file('report-'.$_REQUEST['type'].'.php')) {
 <hr />
 
 <?php
-if (isset($tpl))
+if (isset($tpl)) {
 	include($tpl);
+}
 
 page_footer();
