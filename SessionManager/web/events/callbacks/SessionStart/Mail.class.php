@@ -53,7 +53,7 @@ class SessionStartMail extends EventCallback {
 			                   $user, $user_id);
 
 			if (isset($this->ev->error))
-				$message = _('The following error happened:\n').$this->ev->error;
+				$message = _("The following error happened:\n").$this->ev->error;
 			else
 				$message = _('No error given');
 

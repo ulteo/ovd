@@ -94,6 +94,9 @@ class ServerReport {
 		if ($server === false)
 			return;
 
+		/* FIXME: getNbUsedSessions returns a count of existing sessions,
+		 * including the ones that are destroyed, or are bing destroyed; it
+		 * happens that a session is stuck and gives us a wrong count here */
 		$conn_nb = $server->getNbUsedSessions();
 		if (! isset($this->max_connections[$fqdn_]))
 			$this->max_connections[$fqdn_] = new ReportMaxItem($conn_nb +1 ); /* current sess */
