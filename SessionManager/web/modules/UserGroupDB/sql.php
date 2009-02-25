@@ -112,6 +112,15 @@ class UserGroupDB_sql {
 	}
 	
 	public static function prefsIsValid($prefs_, &$log=array()) {
+		// dirty
+		$ret = self::prefsIsValid2($prefs_, $log);
+		if ( $ret != true) {
+			$ret = admin_UserGroupDB_sql::init($prefs_);
+		}
+		return $ret;
+	}
+	
+	public static function prefsIsValid2($prefs_, &$log=array()) {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
 			

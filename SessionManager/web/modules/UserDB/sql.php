@@ -137,7 +137,16 @@ class UserDB_sql {
 		return array();
 	}
 	
-	public function prefsIsValid($prefs_, &$log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
+		// dirty
+		$ret = self::prefsIsValid2($prefs_, $log);
+		if ( $ret != true) {
+			$ret = admin_UserDB_sql::init($prefs_);
+		}
+		return $ret;
+	}
+	
+	public function prefsIsValid2($prefs_, &$log=array()) {
 		if (!defined('USER_TABLE'))
 			return false;
 		$mysql_conf = $prefs_->get('general', 'mysql');
