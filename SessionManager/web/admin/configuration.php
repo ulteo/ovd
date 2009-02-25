@@ -27,8 +27,22 @@ if (isset($_POST['submit'])) {
 	// saving preferences
 	unset($_POST['submit']);
 
-	$elements_form = formToArray($_POST);
-	$prefs = new Preferences_admin($elements_form);
+	if (isset($_POST['setup'])) {
+		unset($_POST['setup']);
+		$elements_form = formToArray($_POST);
+		try {
+			$prefs = new Preferences_admin();
+		}
+		catch (Exception $e) {
+		}
+		$prefs->initialize();
+		$prefs->set('general','mysql', $elements_form['general']['mysql']);
+	}
+	else {
+		$elements_form = formToArray($_POST);
+		$prefs = new Preferences_admin($elements_form);
+	}
+	
 	$ret = $prefs->isValid();
 	if ( $ret === true) {
 		$ret = $prefs->backup();
@@ -58,9 +72,19 @@ else {
 		catch (Exception $e) {
 		}
 		$prefs->initialize();
-		header_static(_('Configuration'));
-		print_prefs($prefs);
-		include_once('footer.php');
+		
+		require_once(dirname(__FILE__).'/includes/page_template.php');
+		page_header();
+		
+		// printing of preferences
+		echo '<form method="post" action="configuration.php">';
+		echo '<input type="hidden" name="setup" value="setup" />';
+		print_prefs5($prefs, 'general', 'mysql');
+		echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
+		echo '</form>';
+
+		page_footer();
+		
 	}
 	else {
 		try {

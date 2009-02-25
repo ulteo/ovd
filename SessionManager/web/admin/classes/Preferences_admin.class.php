@@ -288,11 +288,11 @@ class Preferences_admin extends Preferences {
 		foreach ($available_module as $module_name => $sub_module)
 			$modules_prettyname[$module_name] = $module_name;
 
-		$c = new ConfigElement('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, ConfigElement::$MULTISELECT);
-		$this->add($c,'general');
+		$c2 = new ConfigElement('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, ConfigElement::$MULTISELECT);
+		$this->add($c2,'general');
 
 		foreach ($available_module as $mod => $sub_mod){
-			
+			$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
 				$default1 =  eval($default2);
@@ -304,7 +304,6 @@ class Preferences_admin extends Preferences {
 			if (!isset($this->elements[$mod]))
 				$this->elements[$mod] = array();
 			
-			$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
 			$this->add($c,$mod);
 			$this->addPrettyName($mod,'Module '.$mod);
 
