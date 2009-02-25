@@ -126,11 +126,13 @@ function init_db($prefs_) {
 
 	$modules_enable = $prefs_->get('general', 'module_enable');
 	foreach ($modules_enable as $module_name) {
-		$mod_name = 'admin_'.$module_name.'_'.$prefs_->get($module_name,'enable');
-		$ret_eval = eval('return '.$mod_name.'::init($prefs_);');
-		if ($ret_eval !== true) {
-			Logger::error('admin','init_db init module \''.$mod_name.'\' failed');
-			return false;
+		if (! is_null($prefs_->get($module_name,'enable'))) {
+			$mod_name = 'admin_'.$module_name.'_'.$prefs_->get($module_name,'enable');
+			$ret_eval = eval('return '.$mod_name.'::init($prefs_);');
+			if ($ret_eval !== true) {
+				Logger::error('admin','init_db init module \''.$mod_name.'\' failed');
+				return false;
+			}
 		}
 	}
 	Logger::debug('admin','init_db modules inited');

@@ -441,12 +441,17 @@ class Preferences_admin extends Preferences {
 		$modules_ok = true;
 		$modules_enable = $this->get('general', 'module_enable');
 		foreach ($modules_enable as $module_name) {
-			$mod_name = $module_name.'_'.$this->get($module_name,'enable');
-			$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
-			if ($ret_eval !== true) {
-				Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
-				$modules_ok = false;
-				return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
+			if (! is_null($this->get($module_name,'enable'))) {
+				$mod_name = $module_name.'_'.$this->get($module_name,'enable');
+				$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
+				if ($ret_eval !== true) {
+					Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
+					$modules_ok = false;
+					return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
+				}
+			}
+			else {
+				Logger::info('admin', 'preferences::isvalid module \''.$module_name.'\' not enable');
 			}
 		}
 
