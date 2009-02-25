@@ -100,7 +100,7 @@ class FS_cifs extends Plugin {
 		$ret []= $c;
 		$c = new ConfigElement('global_user_login', _('login'), _('login'), _('login'), '', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('global_user_password', _('password'), _('password'), _('password'), 'servldap.example.com', NULL, ConfigElement::$PASSWORD);
+		$c = new ConfigElement('global_user_password', _('password'), _('password'), _('password'), '', NULL, ConfigElement::$PASSWORD);
 		$ret []= $c;
 		return $ret;
 	}
