@@ -72,16 +72,31 @@ function setAvailableSize(select_id) {
 	for (i in res) {
 		var r = string2resol(res[i]);
 
-		//if (r != null && r['x'] < screen.width && r['y'] < screen.height) {
-		if (r != null && r['width'] <= screen.availWidth && r['height'] <= screen.availHeight) {
-			var buf = document.createElement('option');
-			buf.setAttribute('value', res[i]);
-			buf.innerHTML = res[i];
-			$(select_id).appendChild(buf);
-		}
-
 		if (r == null)
 			return;
+
+		if (typeof(res[i]) != 'string')
+			return;
+
+		if (typeof(r['width']) != 'string')
+			return;
+
+		if (typeof(r['height']) != 'string')
+			return;
+
+		//if (r != null && r['x'] < screen.width && r['y'] < screen.height) {
+		if (r != null && r['width'] <= screen.availWidth && r['height'] <= screen.availHeight) {
+			if ($(select_id)) {
+				try {
+					var buf = document.createElement('option');
+					buf.setAttribute('value', res[i]);
+					buf.innerHTML = res[i];
+					$(select_id).appendChild(buf);
+				} catch(e) {
+					$(select_id).innerHTML += '<option value="'+res[i]+'">'+res[i]+'</option>';
+				}
+			}
+		}
 	}
 }
 
