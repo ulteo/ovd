@@ -31,7 +31,7 @@ if (isset($_POST['from'])) {
 			$_SESSION['wizard']['use_users'] = 'usergroups';
 
 			if (!isset($_POST['usergroups']) || !is_array($_POST['usergroups']))
-				show_step1(_('No users group selected'));
+				show_step1(_('No selected user group'));
 			else {
 				$_SESSION['wizard']['usergroups'] = $_POST['usergroups'];
 				show_step3();
@@ -76,7 +76,7 @@ if (isset($_POST['from'])) {
 		} elseif (isset($_POST['submit_next'])) {
 			if ($_SESSION['wizard']['use_apps'] == 'appgroups')
 				if (!isset($_POST['appgroups']) || !is_array($_POST['appgroups']))
-					show_step3(_('No applications group selected'));
+					show_step3(_('No application group selected'));
 				else {
 					$_SESSION['wizard']['appgroups'] = $_POST['appgroups'];
 					show_step5();
@@ -167,7 +167,7 @@ function show_step1($error_=NULL) {
 
   page_header();
   echo '<div>';
-  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Users/groups selection').'</h1>';
+  echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('User/group selection').'</h1>';
 
   if ($error_ != NULL)
     echo '<span class="msg_error">'.$error_.'</span>';

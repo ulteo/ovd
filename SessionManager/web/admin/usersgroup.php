@@ -150,12 +150,12 @@ function show_default() {
   page_header();
 
   echo '<div id="usersgroup_div" >';
-  echo '<h1>'._('Users groups').'</h1>';
+  echo '<h1>'._('User groups').'</h1>';
 
   echo '<div id="usersgroup_list">';
 
   if (! $has_group)
-    echo _('No users group available').'<br />';
+    echo _('No available user group').'<br />';
   else {
     echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
     echo '<input type="hidden" name="action" value="del" />';
@@ -326,7 +326,7 @@ function show_manage($id) {
 
   page_header();
   echo '<div id="users_div">';
-  echo '<h1><a href="?">'._('Users groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('User groups management').'</a> - '.$group->name.'</h1>';
 
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';

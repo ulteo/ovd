@@ -201,7 +201,7 @@ class UserDB_ldap {
 		$ret = array();
 		$c = new ConfigElement('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
-		$c = new ConfigElement('port', _('Server port'), _('The port used by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement('port', _('Server port'), _('The port number used by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,ConfigElement::$INPUT);
 		$ret []= $c;
 		$c = new ConfigElement('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
 		$ret []= $c;

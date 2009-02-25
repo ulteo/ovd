@@ -250,7 +250,7 @@ class Configuration_mode_ad extends Configuration_mode {
     if ($form['homedir'] == 'ad_profile')
       $str.= ' checked="checked"';
     $str.= '/>';
-    $str.= _('Use Active Directory Users profiles as Home directory');
+    $str.= _('Use Active Directory User profiles as Home directory');
     $str.= '<br/>';
     $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_homedir"';
     if ($form['homedir'] == 'ad_homedir')

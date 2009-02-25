@@ -336,7 +336,7 @@ function show_manage($login, $userDB, $userGroupDB) {
   // User groups part
   if (count($groups_all)>0) {
     echo '<div>';
-    echo '<h2>'._('Users groups with this user').'</h2>';
+    echo '<h2>'._('User groups with this user').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
     foreach ($groups_mine as $group) {

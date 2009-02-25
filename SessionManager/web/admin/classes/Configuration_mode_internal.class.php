@@ -92,7 +92,7 @@ class Configuration_mode_internal extends Configuration_mode {
     $str.= '<input class="input_radio" type="radio" name="user" value="sql"';
     if ($form['user'] == 'sql')
       $str.= ' checked="checked"';
-    $str.= '/>'._('I want create my own users');
+    $str.= '/>'._('I want to create my own users');
     $str.= '</div>';
 
     return $str;

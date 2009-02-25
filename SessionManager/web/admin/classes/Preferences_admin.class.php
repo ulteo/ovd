@@ -97,7 +97,7 @@ class Preferences_admin extends Preferences {
 		$c = new ConfigElement('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',ConfigElement::$INPUT);
 		$this->add($c,'general','mysql');
 
-		$this->addPrettyName('mails_settings',_('Mails settings'));
+		$this->addPrettyName('mails_settings',_('Email settings'));
 		$c = new ConfigElement('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail',array('mail'=>_('Local'),'smtp'=>_('SMTP server')),ConfigElement::$SELECT);
 		$this->add($c,'general','mails_settings');
 		$c = new ConfigElement('send_from', _('From'), _('From'), _('From'),'no-reply@'.$_SERVER['SERVER_NAME'],NULL,ConfigElement::$INPUT);
@@ -119,7 +119,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general', 'application_server_settings');
 		$c = new ConfigElement('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general', 'application_server_settings');
-		$c = new ConfigElement('action_when_as_not_ready', _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), _('Action when an AS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), ConfigElement::$SELECT);
+		$c = new ConfigElement('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), ConfigElement::$SELECT);
 		$this->add($c,'general', 'application_server_settings');
 
 		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
@@ -142,7 +142,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('desktop_icons', _('Show icons on desktop'), _('Show icons on desktop'), _('Show icons on desktop'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);

@@ -109,7 +109,7 @@ function show_default() {
   page_header();
 
   echo '<div>';
-  echo '<h1>'._('Applications groups').'</h1>';
+  echo '<h1>'._('Application groups').'</h1>';
 
   echo '<div>';
   if (! $has_group)
@@ -282,7 +282,7 @@ function show_manage($id) {
   page_header();
 
   echo '<div>';
-  echo '<h1><a href="?">'._('Applications groups management').'</a> - '.$group->name.'</h1>';
+  echo '<h1><a href="?">'._('Application groups management').'</a> - '.$group->name.'</h1>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
   echo '<th>'._('Description').'</th>';

@@ -96,7 +96,7 @@ if (isset($_POST['join'])) {
 
 	echo '<h1>'._('Sessions').'</h1>';
 
-	echo '<h2>'._('Informations').'</h2>';
+	echo '<h2>'._('Information').'</h2>';
 
 	echo '<ul>';
 	echo '<li><strong>User:</strong> '.$session->getAttribute('user_displayname').'</li>';

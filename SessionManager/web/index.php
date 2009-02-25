@@ -453,7 +453,7 @@ require_once('header.php');
 					?>
 					<tr class="content2">
 						<td class="title">
-							<?php echo _('Show icons on desktop'); ?>
+							<?php echo _('Show icons on user desktop'); ?>
 						</td>
 						<td>
 							<input class="input_radio" type="radio" name="desktop_icons" value="1"<?php if ($desktop_icons == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>

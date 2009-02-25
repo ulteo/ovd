@@ -37,7 +37,7 @@ page_header();
 	<h2>Users and Users groups</h2>
 
 	<ul>
-		<li><a href="users.php"><?php echo _('Users list'); ?></li>
+		<li><a href="users.php"><?php echo _('User list'); ?></li>
 		<li><a href="usersgroup.php"><?php echo ('Users groups list'); ?></li>
 	</ul>
 </div>
@@ -82,9 +82,9 @@ page_header();
 	<h2>Applications and Appgroups</h2>
 
 	<ul>
-		<li><a href="applications.php"><?php echo _('Applications list'); ?></li>
-		<li><a href="appsgroup.php"><?php echo _('Applications groups list'); ?><br /><br /></li>
-		<li><a href="publications.php"><?php echo _('Publications list'); ?></li>
+		<li><a href="applications.php"><?php echo _('Application list'); ?></li>
+		<li><a href="appsgroup.php"><?php echo _('Application groups list'); ?><br /><br /></li>
+		<li><a href="publications.php"><?php echo _('Publication list'); ?></li>
 		<li><a href="wizard.php"><?php echo _('Publication wizard'); ?></li>
 	</ul>
 </div>

@@ -110,7 +110,7 @@ html,body {
 					foreach ($inviteds as $invited)
 						echo '<li>'.$invited[0].' ('.$invited[1].')</li>';
 				} else
-					echo '<li>'._('No invitation sent for the moment').'</li>';
+					echo '<li>'._('No invitation sent for now').'</li>';
 			?>
 		</ul>
 	</div>
