@@ -40,7 +40,8 @@ $items = array('index.php'		=>	_('Index'),
 $sub_items =
   array('servers.php'		=>
 	array('servers.php' => _('Servers'),
-	      'servers.php?view=unregistered' => _('Unregistered servers')),
+	      'servers.php?view=unregistered' => _('Unregistered servers'),
+		'tasks.php' => _('Tasks')),
 
 	'users.php'		=>
 	array('users.php' => _('Users'),
