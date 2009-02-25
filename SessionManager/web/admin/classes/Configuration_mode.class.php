@@ -28,4 +28,5 @@ abstract class Configuration_mode {
   abstract public function form_valid($form);
   abstract public function form_read($form, $prefs);
   abstract public function display($prefs);
+  abstract public function display_sumup($prefs);
 }

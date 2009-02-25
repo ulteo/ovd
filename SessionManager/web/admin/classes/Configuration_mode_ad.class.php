@@ -274,4 +274,44 @@ class Configuration_mode_ad extends Configuration_mode {
     return $str;
   }
 
+  public function display_sumup($prefs) {
+    $form = $this->config2form($prefs);
+
+    $str= '';
+    $str.= '<ul>';
+    $str.= '<li><strong>'._('Domain:').'</strong> '.$form['domain'].'</li>';
+
+    // User
+    $str.= '<li><strong>'._('Users branch:').'</strong> ';
+    if ($form['user_branch'] == 'default')
+      $str.= _('Default user branch (Users)').'<br/>';
+    elseif ($form['user_branch'] == 'specific') {
+      $str.=_('Specific Organization Unit');
+      $str.= ' ('.$form['user_branch_ou'].')';
+    }
+    $str.= '</li>';
+
+    $str.= '<li><strong>'._('Administrator account:').'</strong> '.$form['admin_login'].'</li>';
+    
+    $str.= '<li><strong>'._('User Groups:').'</strong> ';
+    if ($form['user_group'] == 'activedirectory')
+      $str.= _('Active Directory User Groups');
+    else
+      $str.= _('Use Internal User Groups');
+    $str.= '</li>';
+  
+    $str.= '<li><strong>'._('Home Directory:').'</strong> ';
+    if ($form['homedir'] == 'local')
+      $str.= _('Use Internal home directory (no server replication)');
+    elseif ($form['homedir'] == 'ad_profile')
+      $str.= _('Use Active Directory User profiles as Home directory');
+    elseif ($form['homedir'] == 'ad_homedir')
+      $str.= _('Use Active Directory Home dir');
+    $str.= '</li>';
+
+    $str.= '</ul>';
+
+    return $str;
+  }
+
 }

@@ -185,6 +185,8 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $buf = $prefs->get('plugins', 'FS_cifs_no_sfu');
     $form['cifs_auth'] = $buf['authentication_method'];
+    if ($form['cifs_auth'] == '')
+      $form['cifs_auth'] = 'anonymous';
     $form['global_user_login'] = $buf['global_user_login'];
     $form['global_user_password'] = $buf['global_user_password'];
 
@@ -305,4 +307,46 @@ class Configuration_mode_ldap extends Configuration_mode {
     return $str;
   }
 
+  public function display_sumup($prefs) {
+    $form = $this->config2form($prefs);
+    $str = '';
+    
+    $ldap_url = 'ldap://'.$form['host'];
+    if ($form['port'] != 389)
+      $ldap_url.= ':'.$form['port'];
+    $ldap_url.= '/'.$form['suffix'];
+
+    $str.= '<ul>';
+    $str.= '<li><strong>'._('Server:').'</strong> '.$ldap_url.'</li>';;
+    $str.= '<li><strong>'._('Administrator account').'</strong> '.$form['bind_dn'].'</li>';
+    $str.= '<li><strong>'._('User branch:').'</strong> '.$form['user_branch'].'</li>';;
+
+    $str.= '<li><strong>'._('User Groups:').'</strong> ';
+    if ($form['user_group'] == 'ldap_memberof')
+      $str.= _('Use LDAP User Groups using the MemberOf field');
+    elseif ($form['user_group'] == 'ldap_posix')
+      $str.= _('Use LDAP User Groups using Posix group');
+    elseif ($form['user_group'] == 'sql')
+      $str.= _('Use Internal User Groups');
+    $str.= '</li>';
+
+    $str.= '<li><strong>'._('Home Directory:').'</strong> ';
+    if ($form['homedir'] == 'local')
+      $str.= _('Use Internal home directory (no server replication)');
+    elseif ($form['homedir'] == 'cifs') {
+      $str.= _('Use CIFS link using the LDAP field').' ';
+      
+      if ($form['cifs_auth'] == 'anonymous')
+	$str.= _('In guest mode');
+      elseif ($form['cifs_auth'] == 'user')
+	$str.= _('Using user login/password to authenticate');
+      elseif ($form['cifs_auth'] == 'global_user')
+	$str.= _('Using global login/password to authenticate');
+      $str.= ')';
+    }
+    $str.= '</li>';
+    $str.= '</ul>';
+
+    return $str;
+  }
 }

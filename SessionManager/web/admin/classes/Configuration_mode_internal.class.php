@@ -98,4 +98,16 @@ class Configuration_mode_internal extends Configuration_mode {
     return $str;
   }
 
+  public function display_sumup($prefs) {
+    $config = $prefs->get('UserDB', 'enable');
+
+    $str = '<h1>'._('Internal Database Profiles').'</h1>';
+    if ($config == 'sql')
+      $str.= _('Use the static user list');
+    else
+      $str.= _('Use a dynamic internal user list');
+    
+    return $str;
+  }
+
 }
