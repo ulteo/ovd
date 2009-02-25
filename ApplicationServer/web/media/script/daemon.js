@@ -17,8 +17,8 @@ function daemon_init(server_, debug_) {
 	server = server_;
 	debug = debug_;
 
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
 	$('printerContainer').show();
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server_+'/applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
 
 	push_log('[daemon] init()', 'info');
 
@@ -72,7 +72,6 @@ function daemon_loop() {
 			}
 		);
 	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
-		$('appletContainer').show();
 		switch_splash_to_applet();
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
 		window_alive = false;
@@ -100,6 +99,7 @@ function switch_splash_to_applet() {
 				if ($('menuContainer'))
 					$('menuContainer').show();
 
+				$('appletContainer').show();
 				$('appletContainer').innerHTML = transport.responseText;
 			}
 		}
@@ -257,8 +257,8 @@ function do_print(path, timestamp) {
 
   var print_url = 'http://'+server+'/webservices/print.php?timestamp='+timestamp;
 
-  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
   $('printerContainer').show();
+  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server_+'/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
 
   push_log('[print] Applet: starting', 'warning');
 }
