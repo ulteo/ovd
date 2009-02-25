@@ -7,8 +7,6 @@ scripts_DATA = actions.php \
                configuration-partial.php \
                configuration-profile.php \
                configuration-sumup.php \
-               footer.php \
-               header.php \
                index.php \
                login.php \
                logout.php \
