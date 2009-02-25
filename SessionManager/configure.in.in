@@ -146,7 +146,6 @@ web/admin/modules/UserGroupDB/Makefile
 web/admin/modules/Makefile
 web/admin/includes/Makefile
 web/admin/classes/Makefile
-web/admin/submenu/Makefile
 web/admin/Makefile
 web/applet/Makefile
 web/includes/Makefile

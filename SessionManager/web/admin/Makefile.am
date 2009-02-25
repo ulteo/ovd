@@ -1,4 +1,4 @@
-SUBDIRS = media modules includes classes submenu templates
+SUBDIRS = media modules includes classes templates
 
 scripts_DATA = actions.php \
                applications.php \
@@ -20,7 +20,6 @@ scripts_DATA = actions.php \
 			   report-servers.php \
                servers.php \
                sessions.php \
-               submenu.php \
                sumup.php \
                tasks.php \
                users.php \
