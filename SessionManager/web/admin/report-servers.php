@@ -66,7 +66,7 @@ if (isset($start) && isset($end)) {
 		if (! isset($per_server[$fqdn]))
 			$per_server[$fqdn] = data_init();
 
-		if (! isset($day[$date]))
+		if (! isset($per_day[$date]))
 			$per_day[$date] = array('sessions_count' => 0);
 
 		if (! isset($unit[$fqdn]))

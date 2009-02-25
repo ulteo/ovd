@@ -3,7 +3,7 @@
 <table>
   <tr>
     <th>Servers status</th>
-	<th>Session per day</th>
+	<th>Sessions per day</th>
   </tr>
 
   <tr>
