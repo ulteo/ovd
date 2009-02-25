@@ -6,6 +6,7 @@ scripts_DATA = actions.php \
                configuration.php \
                configuration-partial.php \
                configuration-profile.php \
+               configuration-sumup.php \
                footer.php \
                header.php \
                index.php \

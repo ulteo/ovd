@@ -1,6 +1,6 @@
 scripts_DATA = applications.php.png \
 			   appsgroup.php.png \
-			   configuration.php.png \
+			   configuration-sumup.php.png \
 			   index.php.png \
                logout.php.png \
 			   logs.php.png \

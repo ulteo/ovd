@@ -1,0 +1,128 @@
+<?php
+/**
+ * Copyright (C) 2009 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ **/
+
+require_once(dirname(__FILE__).'/includes/core.inc.php');
+require_once(dirname(__FILE__).'/includes/page_template.php');
+
+page_header();
+
+$prefs = Preferences::getInstance();
+if (! $prefs) {
+	Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+	die_error(_('get Preferences failed'));
+}
+?>
+
+<table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
+  <tr>
+
+  <td style="padding: 20px; vertical-align: top;">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+  <h2>Last save</h2>
+<?php
+echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONF_FILE));
+?>
+  </div>
+  </div>
+  </td>
+
+  <td style="padding: 20px; vertical-align: top;">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+  <h2>Database</h2>
+<?php
+$mysql_conf = $prefs->get('general', 'mysql');
+?>
+  <ul>
+  <li><strong>Host</strong>: <?php echo $mysql_conf['host']; ?></li>
+  <li><strong>User</strong>: <?php echo $mysql_conf['user']; ?></li>
+  <li><strong>Database</strong>: <?php echo $mysql_conf['database']; ?></li>
+  <li><strong>Prefix</strong>: <?php echo $mysql_conf['prefix']; ?></li>
+  </ul>
+  </div>
+  </div>
+  </td>
+
+  </tr>
+
+  <tr>
+
+  <td style="padding: 20px; vertical-align: top;">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+  <h2>Logs</h2>
+<?php
+$log_flags = $prefs->get('general', 'log_flags');
+?>
+  <ul>
+<?php
+if (is_array($log_flags) && count($log_flags) > 0)
+	foreach ($log_flags as $log_flag)
+		echo '<li>'.$log_flag.'</li>';
+?>
+  </ul>
+  </div>
+  </div>
+  </td>
+
+  <td style="padding: 20px; vertical-align: top;">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+  <h2>Application Server</h2>
+  <ul>
+<?php
+$application_server_settings = $prefs->get('general', 'application_server_settings');
+?>
+    <li><strong>Authorized FQDN</strong>:<ul>
+<?php
+if (is_array($application_server_settings['authorized_fqdn']) && count($application_server_settings['authorized_fqdn']) > 0)
+	foreach ($application_server_settings['authorized_fqdn'] as $authorized_fqdn)
+		echo '<li>'.$authorized_fqdn.'</li>';
+?>
+    </ul></li>
+
+    <li><strong>FQDN private address</strong>:<ul>
+<?php
+if (is_array($application_server_settings['fqdn_private_address']) && count($application_server_settings['fqdn_private_address']) > 0)
+	foreach ($application_server_settings['fqdn_private_address'] as $name => $ip)
+		echo '<li>'.$name.' => '.$ip.'</li>';
+?>
+    </ul></li>
+
+	<li><strong>FQDN check</strong>:
+<?php
+if ($application_server_settings['disable_fqdn_check'] == 1)
+	echo 'disabled';
+else
+	echo 'enabled';
+?>
+  </ul>
+  </div>
+  </div>
+  </td>
+
+  </tr>
+</table>
+<?php
+page_footer();
+die();

@@ -30,7 +30,7 @@ $items = array('index.php'		=>	_('Index'),
 	       'applications.php'	=>	_('Applications'),
 	       // 	'appsgroup.php'	=>	_('Appgroups'),
 	       // 	'publications.php'	=>	_('Publications'),
-	       'configuration.php'	=>	_('Configuration'),
+	       'configuration-sumup.php'	=>	_('Configuration'),
 	       // 	'logs.php'		=>	_('Logs'),
 	       'sessions.php'		=>	_('Status'),
 		 'report.php'		=>	_('Reports'),
@@ -55,14 +55,15 @@ $sub_items =
 	      'wizard.php' => _('Publication wizard')),
 
 
-	'configuration.php'	=>
+	'configuration-sumup.php'	=>
 	array('configuration-partial.php?mode=mysql'		=> _('Database settings'),
 	      'configuration-partial.php?mode=general'		=> _('System settings'),
 	      'configuration-partial.php?mode=application_server_settings' => _('Server settings'),
 	      'configuration-profile.php' => _('Profile settings'),
 	      'configuration-partial.php?mode=session_settings_defaults' => _('Session settings'),
 	      'configuration-partial.php?mode=events' => _('Events settings'),
-	      'configuration-partial.php?mode=web_interface_settings' => _('Web interface settings')),
+	      'configuration-partial.php?mode=web_interface_settings' => _('Web interface settings'),
+	      'configuration-sumup.php' => _('Sum up')),
 
 	'sessions.php'		=>
 	array('sessions.php' => _('Sessions'),
