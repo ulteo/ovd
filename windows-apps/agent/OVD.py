@@ -123,6 +123,7 @@ def load_shell_config_file(conf):
 class OVD(win32serviceutil.ServiceFramework):
 	_svc_name_ = "OVD"
 	_svc_display_name_ = "Ulteo OVD agent"
+	_svc_description_ = "OVD agent providing monitoring capacities"
 	
 	def __init__(self,args):
 		#log_debug("init 00")
