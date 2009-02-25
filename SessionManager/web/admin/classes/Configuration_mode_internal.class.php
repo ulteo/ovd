@@ -103,9 +103,9 @@ class Configuration_mode_internal extends Configuration_mode {
 
     $str = '';
     if ($config == 'sql')
-      $str.= _('Use the static user list');
-    else
       $str.= _('Use a dynamic internal user list');
+    else
+      $str.= _('Use the static user list');
 
     return $str;
   }
