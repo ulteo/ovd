@@ -33,7 +33,6 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 		
 		$configLDAP = $prefs->get('UserDB','ldap');
 		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
-		var_dump2($conf);
 		if (! is_array($conf)) {
 			Logger::error('main', "UserGroupDB_ldap_posix::import UserGroupDB::$mod_usergroup_name have not configuration");
 			die_error("UserGroupDB::$mod_usergroup_name have not configuration",__FILE__,__LINE__);
