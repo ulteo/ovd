@@ -6,7 +6,7 @@ License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, php-pear
+Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, php-pear, php-gd
 
 %description
 Ulteo OVD Session Manager is Ulteo OVD portal.
