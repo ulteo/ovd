@@ -183,13 +183,16 @@ class Server {
 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
 
 		$ret = false;
+		$warn = false;
 
 		$ev = new ServerStatusChanged(array(
 			'fqdn'	=>	$this->fqdn
 		));
 
-		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status'))
+		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status')) {
+			$warn = true;
 			$this->getStatus();
+		}
 
 		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
 			$ret = true;
@@ -198,7 +201,7 @@ class Server {
 
 		$ev->emit();
 
-		if ($ret === false) {
+		if ($ret === false && $warn === true) {
 			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
 			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
 		}
