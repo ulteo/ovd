@@ -262,7 +262,7 @@ class Preferences_admin extends Preferences {
 				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
 				if ($isdefault1 === true) // replace the default value
 					$c = new ConfigElement($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, ConfigElement::$SELECT);
-				
+
 				$plugin_conf = 'return '.$key1.'_'.$plugin_name.'::configuration();';
 				$list_conf = eval($plugin_conf);
 				if (is_array($list_conf)) {
@@ -306,7 +306,7 @@ class Preferences_admin extends Preferences {
 			//dirty hack (if this->elements[mod] will be empty)
 			if (!isset($this->elements[$mod]))
 				$this->elements[$mod] = array();
-			
+
 			$this->add($c,$mod);
 			$this->addPrettyName($mod,'Module '.$mod);
 
@@ -395,6 +395,10 @@ class Preferences_admin extends Preferences {
 
 	public function isValid() {
 		Logger::debug('admin','PREFERENCESADMIN::isValid');
+
+		if (!function_exists('curl_init'))
+			return _('Please install CURL support for PHP');
+
 		$mysql_conf = $this->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
 			Logger::error('admin','PREFERENCESADMIN::isValid db conf failed');
