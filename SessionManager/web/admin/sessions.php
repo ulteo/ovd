@@ -161,7 +161,7 @@ else {
 	echo '<h1>'._('Sessions').'</h1>';
 
 	$sessions = Sessions::getAll();
-	if (count($sessions) > 0) {
+	if (is_array($sessions) && count($sessions) > 0) {
 		echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\');">';
 		echo '	<input type="hidden" name="mass_action" value="kill" />';
 		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
