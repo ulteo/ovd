@@ -17,11 +17,11 @@ endif
 install-exec-hook: $(HOOKS)
 
 prototype-hook:
-	$(MKDIR_P) $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
+	$(INSTALL) -d $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
 	ln -sf $(PROTOTYPEDIR) \
 		$(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib/prototype
 
 scriptaculous-hook:
-	$(MKDIR_P) $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
+	$(INSTALL) -d $(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib
 	ln -sf $(SCRIPTACULOUSDIR) \
 		$(DESTDIR)$(datadir)/ulteo/sessionmanager/media/script/lib/scriptaculous
