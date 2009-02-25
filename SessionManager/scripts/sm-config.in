@@ -61,6 +61,7 @@ set_apache () {
     chmod 755 $LOGDIR $SPOOLDIR
     chmod 2770 $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
 
+    mkdir -p $APACHE_DIR
     ln -sf $ALIASFILE $APACHE_DIR/session-manager.conf
 }
 
@@ -174,7 +175,7 @@ while [ -z "$APACHE_DIR" ]; do
     elif [ -d "/etc/apache2/conf.d" ]; then
         APACHE_DIR="/etc/apache2/conf.d"
     fi
-    if [ -z "APACHE_DIR" ]; then
+    if [ -z "£APACHE_DIR" ]; then
         echo -n "Apache configuration directory: "
         read APACHE_DIR
     fi
