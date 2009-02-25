@@ -206,6 +206,9 @@ class Server {
 			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
 		}
 
+		if ($ret !== true)
+			$this->isNotReady();
+
 		return $ret;
 	}
 
@@ -221,6 +224,8 @@ class Server {
 		$this->setStatus('broken');
 
 		$ev->emit();
+
+		$this->isNotReady();
 		return true;
 	}
 
@@ -235,7 +240,8 @@ class Server {
 
 		$buf = $prefs->get('general', 'application_server_settings');
 		if ($buf['action_when_as_not_ready'] == 1)
-			$this->setAttribute('locked', true);
+			if ($this->getAttribute('locked') === false)
+				$this->setAttribute('locked', true);
 
 		return true;
 	}
@@ -246,6 +252,7 @@ class Server {
 		Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
 		$this->setStatus('broken');
 
+		$this->isNotReady();
 		return true;
 	}
 
