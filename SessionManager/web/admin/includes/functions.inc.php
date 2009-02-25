@@ -519,3 +519,30 @@ function formToArray_cleanup(&$buf) {
 	}
 }
 
+function get_classes_startwith_2($start_name) {
+	$files = glob('classes/'.$start_name.'*.class.php');
+
+	$ret = array();
+	foreach ($files as $file) {
+	  $classname = basename($file);
+	  $classname = substr($classname, 0, strlen($classname) - strlen('.class.php'));
+
+	  $ret[] = $classname;
+	}
+	return $ret;
+}
+
+function getProfileMode($prefs) {
+  $userDB_mode = $prefs->get('UserDB', 'enable');
+
+  $classes = get_classes_startwith_2('Configuration_mode_');
+  foreach($classes as $c) {
+    $b = new $c();
+
+    if ($b->careAbout($userDB_mode))
+      return $c;
+  }
+
+  // Should never be called !!!
+  return 'Configuration_mode_internal';
+}

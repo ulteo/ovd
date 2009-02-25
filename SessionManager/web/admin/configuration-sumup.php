@@ -49,7 +49,7 @@ echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONF_FILE));
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2>Database</h2>
+  <h2><a href="configuration-partial.php?mode=mysql">Database</a></h2>
 <?php
 $mysql_conf = $prefs->get('general', 'mysql');
 ?>
@@ -63,14 +63,10 @@ $mysql_conf = $prefs->get('general', 'mysql');
   </div>
   </td>
 
-  </tr>
-
-  <tr>
-
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2>Logs</h2>
+  <h2><a href="configuration-partial.php?mode=general">Logs</a></h2>
 <?php
 $log_flags = $prefs->get('general', 'log_flags');
 ?>
@@ -85,10 +81,14 @@ if (is_array($log_flags) && count($log_flags) > 0)
   </div>
   </td>
 
+  </tr>
+
+  <tr>
+
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2>Application Server</h2>
+  <h2><a href="configuration-partial.php?mode=application_server_settings">Application Server</a></h2>
   <ul>
 <?php
 $application_server_settings = $prefs->get('general', 'application_server_settings');
@@ -117,6 +117,22 @@ else
 	echo 'enabled';
 ?>
   </ul>
+  </div>
+  </div>
+  </td>
+
+  <td style="padding: 20px; vertical-align: top;" colspan="2">
+  <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
+  <div>
+<?php
+$buf = getProfileMode($prefs);
+$buf = new $buf();
+?>
+  <h2><a href="configuration-profile.php">Profile - <?php echo $buf->getPrettyName(); ?></a></h2>
+<?php
+$buf = $buf->display_sumup($prefs);
+echo $buf;
+?>
   </div>
   </div>
   </td>

@@ -22,35 +22,6 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-function get_classes_startwith_2($start_name) {
-	$files = glob('classes/'.$start_name.'*.class.php');
-
-	$ret = array();
-	foreach ($files as $file) {
-	  $classname = basename($file);
-	  $classname = substr($classname, 0, strlen($classname) - strlen('.class.php'));
-
-	  $ret[] = $classname;
-	}
-	return $ret;
-}
-
-function getProfileMode($prefs) {
-  $userDB_mode = $prefs->get('UserDB', 'enable');
-
-  $classes = get_classes_startwith_2('Configuration_mode_');
-  foreach($classes as $c) {
-    $b = new $c();
-
-    if ($b->careAbout($userDB_mode))
-      return $c;
-  }
-
-  // Should never be called !!!
-  return 'Configuration_mode_internal';
-}
-
-
 function do_auto_clean_db($new_prefs) {
   $prefs = Preferences::getInstance();
 
@@ -142,7 +113,7 @@ function do_preview($prefs, $name) {
     $log['form_read return an error'] = false;
     return $log;
   }
-  
+
   $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
   $userDB = new $mod_user_name();
   if (! $userDB->prefsIsValid($prefs, $log)) {
@@ -184,7 +155,7 @@ if (isset($_POST['config'])) {
       }
        redirect();
     }
-  
+
   }
 
   $has_previous = $name;
@@ -221,7 +192,7 @@ if (isset($_SESSION['config_profile_saved'])) {
 
 
 page_header();
-if (isset($preview)) 
+if (isset($preview))
   echo '<table><tr><td>';
 
 echo '<form method="post">';
