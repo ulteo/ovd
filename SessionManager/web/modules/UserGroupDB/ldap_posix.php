@@ -32,7 +32,20 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
 		$configLDAP = $prefs->get('UserDB','ldap');
-		$configLDAP['userbranch'] = 'ou=Group'; // TODO : put it in a pref
+		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
+		var_dump2($conf);
+		if (! is_array($conf)) {
+			Logger::error('main', "UserGroupDB_ldap_posix::import UserGroupDB::$mod_usergroup_name have not configuration");
+			die_error("UserGroupDB::$mod_usergroup_name have not configuration",__FILE__,__LINE__);
+		}
+		
+		if (isset($conf['group_dn'])) {
+			$configLDAP['userbranch'] = $conf['group_dn'];
+		}
+		else {
+			Logger::error('main', "UserGroupDB_ldap_posix::import  UserGroupDB::$mod_usergroup_name have not correct configuration");
+			die_error("UserGroupDB::$mod_usergroup_name have not correct configuration",__FILE__,__LINE__);
+		}
 		
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search('cn='.$id_, NULL);
@@ -67,12 +80,27 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
 		$configLDAP = $prefs->get('UserDB','ldap');
-		$configLDAP['userbranch'] = 'ou=Group'; // TODO : put it in a pref
+		
+		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
+		if (! is_array($conf)) {
+			Logger::error('main', "UserGroupDB_ldap_posix::getList  UserGroupDB::$mod_usergroup_name have not configuration");
+			die_error("UserGroupDB_ldap_posix::getList UserGroupDB::$mod_usergroup_name have not configuration",__FILE__,__LINE__);
+		}
+		
+		if (isset($conf['group_dn'])) {
+			$configLDAP['userbranch'] = $conf['group_dn'];
+		}
+		else {
+			Logger::error('main', "UserGroupDB_ldap_posix::getList  UserGroupDB::$mod_usergroup_name have not correct configuration");
+			die_error("UserGroupDB_ldap_posix::getList UserGroupDB::$mod_usergroup_name have not correct configuration",__FILE__,__LINE__);
+		}
 		
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search('cn=*', NULL);
 		$infos = $ldap->get_entries($sr);
 		$groups = array();
+		if (! is_array($infos))
+			return $groups;
 		foreach ($infos as $info){
 			if ( isset($info['dn']) && $info['cn']) {
 				if (is_string($info['dn']) && isset($info['cn']) && is_array($info['cn']) && isset($info['cn'][0]) ) {
@@ -88,11 +116,9 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 		return $groups;
 	}
 	
-	
-	
 	public function configuration(){
-		// TODO
-		return array();
+		$c = new ConfigElement('group_dn', _('Group Branch DN'), _('Use LDAP User Groups using Posix group, Group Branch DN:'), _('Use LDAP User Groups using Posix group, Group Branch DN:'), NULL, NULL, ConfigElement::$INPUT);
+		return array($c);
 	}
 	
 	public static function prettyName() {

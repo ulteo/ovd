@@ -42,15 +42,15 @@ class Abstract_Liaison_ldap_posix {
 		
 	}
 	public function save($type_, $element_, $group_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_posix::save</b>");
-		return false;
+		Logger::debug('admin',"Abstract_Liaison_ldap_posix::save");
+		return true;
 	}
 	public function delete($type_, $element_, $group_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_posix::delete</b>");
-		return false;
+		Logger::debug('admin',"Abstract_Liaison_ldap_posix::delete");
+		return true;
 	}
 	public function loadElements($type_, $group_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_posix::loadElements ($type_,$group_)</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_posix::loadElements ($type_,$group_)");
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -68,7 +68,20 @@ class Abstract_Liaison_ldap_posix {
 		$userDB = new $mod_user_name();
 		
 		$configLDAP = $prefs->get('UserDB','ldap');
-		$configLDAP['userbranch'] = 'ou=Group';
+		
+		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
+		if (! is_array($conf)) {
+			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements  UserGroupDB::$mod_usergroup_name have not configuration");
+			die_error("Abstract_Liaison_ldap_posix::loadElements UserGroupDB::$mod_usergroup_name have not configuration",__FILE__,__LINE__);
+		}
+		
+		if (isset($conf['group_dn'])) {
+			$configLDAP['userbranch'] = $conf['group_dn'];
+		}
+		else {
+			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements  UserGroupDB::$mod_usergroup_name have not correct configuration");
+			die_error("Abstract_Liaison_ldap_posix::loadElements UserGroupDB::$mod_usergroup_name have not correct configuration",__FILE__,__LINE__);
+		}
 		
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search('cn='.$group_, NULL);
@@ -99,7 +112,7 @@ class Abstract_Liaison_ldap_posix {
 	}
 	
 	public function loadGroups($type_, $element_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_posix::loadGroups ($type_,$element_)</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_posix::loadGroups ($type_,$element_)");
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -131,12 +144,12 @@ class Abstract_Liaison_ldap_posix {
 	}
 	
 	public function loadAll($type_) {
-		Logger::debug('main',"<b>Abstract_Liaison_ldap_posix::loadAll ($type_)</b>");
+		Logger::debug('main',"Abstract_Liaison_ldap_posix::loadAll ($type_)");
 		echo "Abstract_Liaison_ldap_posix::loadAll($type_)<br>";
 		return NULL;
 	}
 	public function loadUnique($type_, $element_, $group_) {
-		Logger::debug('main',"<b>Abstract_Liaison_ldap_posix::loadUnique ($type_,$element_,$group_)</b>");
+		Logger::debug('main',"Abstract_Liaison_ldap_posix::loadUnique ($type_,$element_,$group_)");
 		echo "Abstract_Liaison_ldap_posix::loadUnique($type_,$element_,$group_)<br>";
 		return NULL;
 	}

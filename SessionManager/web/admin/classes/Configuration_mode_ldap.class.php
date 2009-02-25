@@ -54,6 +54,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 		     'port', 'proto',
 		     'bind_dn', 'bind_password',
 		     'field_rdn', 'field_displayname',
+		     'group_branch_dn',
 		     'homedir', 'homedir_field',
 		     'cifs_auth', 'global_user_login',
 		     'global_user_password',
@@ -124,6 +125,11 @@ class Configuration_mode_ldap extends Configuration_mode {
     $prefs->set('UserGroupDB', 'enable',
         array('enable' => $form['user_group']));
 
+    if ($form['user_group'] == 'ldap_posix') {
+      $prefs->set('UserGroupDB', 'ldap_posix', 
+		  array('group_dn' => $form['group_branch_dn']));
+    }
+
     // Set the FS type
     $prefs->set('plugins', 'FS',
         array('FS' => $plugin_fs));
@@ -173,6 +179,10 @@ class Configuration_mode_ldap extends Configuration_mode {
     else
       $form['user_group'] = 'sql';
 
+    $form['group_branch_dn'] = '';
+    $buf = $prefs->get('UserGroupDB', 'ldap_posix');
+    if (isset($buf['group_dn']))
+      $form['group_branch_dn'] = $buf['group_dn'];
 
     $plugin_fs = $prefs->get('plugins', 'FS');
     if ($plugin_fs == 'cifs_no_sfu') {
@@ -247,7 +257,10 @@ class Configuration_mode_ldap extends Configuration_mode {
     if ($form['user_group'] == 'ldap_posix')
       $str.= ' checked="checked"';
     $str.= ' />'._('Use LDAP User Groups using Posix group');
-    $str.= '<br/>';
+    $str.= '<br/><div style="padding-left: 3%;">';
+    $str.= _('Group Branch DN:').' <input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/>';
+    $str.= '</div>';
+    
     $str.= '<input class="input_radio" type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')
       $str.= ' checked="checked"';
