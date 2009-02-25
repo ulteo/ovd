@@ -49,6 +49,16 @@ $per_server = array();
 $per_day = array();
 $global = NULL;
 
+$pretty_keys = array(
+	'down_time' => _('Down time'),
+	'maintenance_time' => _('Maintenance time'),
+	'sessions_count' => _('Number of sessions'),
+	'max_connections' => _('Maximum simultaneous sessions'),
+	'max_ram' => _('Maximum ram usage'),
+	'max_connections_when' => false,
+	'max_ram_when' => false
+);
+
 if (isset($start) && isset($end)) {
 	$sql = MySQL::getInstance();
 	$ret = $sql->DoQuery('SELECT * FROM @1 WHERE @2 >= %3 and @2 <= %4',

@@ -85,38 +85,59 @@ foreach ($types_array as $k) {
 		$selected = '';
 	$types_html .= "  <option value=\"$k\"$selected>$k</option>\n";
 }
+
+/* load servers and applications informations */
+$s = Abstract_Server::load_all();
+foreach ($s as $s_obj) {
+	$servers_info[$s_obj->getAttribute('fqdn')] = $s_obj;
+}
+
 ?>
 
+<table>
 <form action="report.php" method="get">
-  Report type:
-  <select name="type">
-  <?php echo $types_html; ?>
-  </select>
-  <br />
-  From:  <input type="text" name="start" maxlength="8" value="<?php echo $start ?>" />
-  To: <input type="text" name="end" maxlength="8" value="<?php echo $end ?>" />
-  (YYYYMMDD)
-
+  <tr>
+    <td>Report type:</td>
+    <td>
+	  <select name="type">
+      <?php echo $types_html; ?>
+      </select>
+	</td>
+  </tr>
+  <tr>
+    <td>From:</td>
+	<td>
+	  <input type="text" name="start" maxlength="8" value="<?php echo $start ?>" />
+	  (YYYYMMDD)
+	</td>
+  </tr>
+  <tr>
+    <td>To:</td>
+	<td>
+	  <input type="text" name="end" maxlength="8" value="<?php echo $end ?>" />
+      (YYYYMMDD)
+	</td>
+  </tr>
+  <tr>
 <?php
-if (isset($type) && is_file('report-'.$type.'.php')) {
+if (is_file('report-'.$type.'.php')) {
 	/* this is the computing part */
 	include_once('report-'.$type.'.php');
 
 	/* list available templates */
-	print '  <br />';
-	print '  Template: ';
-	print '  <select name="template">';
+	echo '    <td>Template:</td>';
+	echo '    <td>';
+	echo '      <select name="template">';
 	foreach (glob('templates/'.$type.'/*.php') as $file) {
 		$item = preg_replace ('/\.php$/', '', basename($file));
 		if (isset($template) && ($template == $item))
 			$s = ' selected="selected"';
 		else
 			$s = '';
-		print "    <option value=\"$item\"$s>$item</option>\n";
+		print "      <option value=\"$item\"$s>$item</option>\n";
 	}
-	print '  </select>';
-	print '  <br />';
-
+	echo '    </select>';
+	echo '  </td>';
 
 	$tpl = 'templates/'.$type.'/default.php';
 	if (isset($template) &&
@@ -125,9 +146,13 @@ if (isset($type) && is_file('report-'.$type.'.php')) {
 	}
 }
 ?>
-
-  <input type="submit" value="Report" />
+  </tr>
+  <tr>
+    <td></td>
+    <td style="align: right;"><input type="submit" value="Report" /></td>
+  </tr>
 </form>
+</table>
 <hr />
 
 <?php

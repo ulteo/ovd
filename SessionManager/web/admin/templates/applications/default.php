@@ -13,10 +13,13 @@
 foreach ($per_server as $fqdn => $server_data) {
 	echo "      <h4>Server: $fqdn</h4>\n";
 	foreach ($server_data as $app_id => $app_data) {
-		echo "      <h5>$app_id</h5>\n";
+		$app_id_string = $app_id;
+		if (isset($applications_info[$app_id]))
+			$app_id_string = $applications_info[$app_id]->getAttribute('name');
+		echo "      <h5>$app_id_string</h5>\n";
 		echo "      <ul>\n";
 		echo "        <li>Used {$app_data['use_count']} time(s)</li>\n";
-		echo "        <li>Max simultaneous use {$app_data['max_use']}</li>\n";
+		echo "        <li>Maximum simultaneous use: {$app_data['max_use']}</li>\n";
 		echo "      </ul>\n";
 	}
 }
@@ -28,7 +31,10 @@ foreach ($per_server as $fqdn => $server_data) {
 foreach ($per_day as $day => $day_data) {
 	echo "      <h4>Day: $day</h4>\n";
 	foreach ($day_data as $app_id => $app_data) {
-		echo "      <h5>$app_id</h5>\n";
+		$app_id_string = $app_id;
+		if (isset($applications_info[$app_id]))
+			$app_id_string = $applications_info[$app_id]->getAttribute('name');
+		echo "      <h5>$app_id_string</h5>\n";
 		echo "      <ul>\n";
 		echo "        <li>Used {$app_data['use_count']} time(s)</li>\n";
 		echo "      </ul>\n";
@@ -40,8 +46,11 @@ foreach ($per_day as $day => $day_data) {
 	<td>
 <?php
 echo "      <ul>\n";
-foreach ($per_app as $app => $data) {
-	echo "        <li>$app used {$data['use_count']} time(s)</li>\n";
+foreach ($per_app as $app_id => $data) {
+	$app_id_string = $app_id;
+	if (isset($applications_info[$app_id]))
+		$app_id_string = $applications_info[$app_id]->getAttribute('name');
+	echo "        <li>$app_id_string used {$data['use_count']} time(s)</li>\n";
 }
 ?>
     </td>
