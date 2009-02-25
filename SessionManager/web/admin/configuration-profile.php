@@ -240,8 +240,8 @@ echo '<br/>';
 
   echo $c->display($form);
 
-echo '<input type="submit" value="Save"/>';
-echo ' <input type="submit" name="submit_preview" value="Preview Mode"/>';
+echo '<input type="submit" value="'._('Save').'"/>';
+echo ' <input type="submit" name="submit_preview" value="'._('Test').'"/>';
 echo '</form>';
 
 if (isset($preview)) {
@@ -254,7 +254,7 @@ if (isset($preview)) {
   }
 
   if (count($preview) > 0 && $status)
-    echo '<li style="color:'.$c.';">'._('SUCCESS').'</li>';
+    echo '<li style="color:'.$c.';">'.strtoupper(_('Success')).'</li>';
   echo '</ul>';
   echo '</td>';
   echo '</tr>';

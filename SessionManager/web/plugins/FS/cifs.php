@@ -29,7 +29,7 @@ class FS_cifs extends Plugin {
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
-		$conf = $prefs->get('plugins', 'FS_cifs');
+		$conf = $prefs->get('plugins', get_class($this));
 		
 		if (is_array($conf)) {
 			if (isset($conf['authentication_method'])) {

@@ -35,7 +35,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $new = $newprefs->get('UserDB', 'ldap');
 
     $changed = False;
-    foreach(array('host', 'suffix', 'userbranch') as $key) {
+    foreach(array('host', 'suffix', 'userbranch', 'uidprefix') as $key) {
       if ($old[$key] != $new[$key]) {
 	$changed = True;
 	break;
@@ -54,6 +54,9 @@ class Configuration_mode_ldap extends Configuration_mode {
 		     'port', 'proto',
 		     'bind_dn', 'bind_password',
 		     'field_rdn', 'field_displayname',
+		     'homedir', 'homedir_field',
+		     'cifs_auth', 'global_user_login',
+		     'global_user_password',
 		     'user_group');
 
     foreach($fields as $field) {
@@ -63,6 +66,12 @@ class Configuration_mode_ldap extends Configuration_mode {
     }
 
     if (! in_array($form['user_group'], array('ldap_memberof', 'ldap_posix', 'sql')))
+      return False;
+
+    if (! in_array($form['homedir'], array('local', 'cifs')))
+      return False;
+
+    if (! in_array($form['cifs_auth'], array('anonymous', 'user', 'global_user')))
       return False;
 
     return True;
@@ -94,6 +103,13 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['match']['displayname'] = $form['field_displayname'];
     $config['match']['distinguishedname'] = 'distinguishedname';
 
+    // plugins fs ... 
+    if ($form['homedir'] == 'cifs') {
+      $plugin_fs = 'cifs_no_sfu';
+      $config['match']['homedir'] = $form['homedir_field'];
+    } else
+	$plugin_fs = 'local';
+
     if ($form['user_group'] == 'ldap_memberof')
       $config['match']['memberof'] = 'memberof';
 
@@ -107,9 +123,17 @@ class Configuration_mode_ldap extends Configuration_mode {
     // Select Module for UserGroupDB
     $prefs->set('UserGroupDB', 'enable',
         array('enable' => $form['user_group']));
+
     // Set the FS type
     $prefs->set('plugins', 'FS',
-        array('FS' => 'local'));
+        array('FS' => $plugin_fs));
+
+    if ($form['homedir'] == 'cifs') {
+      $data = array('authentication_method' => $form['cifs_auth'],
+		    'global_user_login' => $form['global_user_login'],
+		    'global_user_password' => $form['global_user_password']);
+      $prefs->set('plugins', 'FS_cifs_no_sfu', $data);
+    }
 
     return True;
   }
@@ -136,7 +160,10 @@ class Configuration_mode_ldap extends Configuration_mode {
 
 
     $form['field_rdn'] = $config['uidprefix'];
-    $form['field_displayname'] = $config['match']['displayname'];
+    if (isset($config['match']['displayname']))
+      $form['field_displayname'] = $config['match']['displayname'];
+    else
+      $form['field_displayname'] = '';
 
     $config2 = $prefs->get('UserGroupDB', 'enable');
     if ($config2 == 'ldap_memberof')
@@ -147,7 +174,20 @@ class Configuration_mode_ldap extends Configuration_mode {
       $form['user_group'] = 'sql';
 
 
-    // $form['homedir'] = '';
+    $plugin_fs = $prefs->get('plugins', 'FS');
+    if ($plugin_fs == 'cifs_no_sfu') {
+      $form['homedir'] = 'cifs';
+      $form['homedir_field'] = $config['match']['homedir'];
+    } else {
+      $form['homedir'] = 'local';
+      $form['homedir_field'] = '';
+    }
+
+    $buf = $prefs->get('plugins', 'FS_cifs_no_sfu');
+    $form['cifs_auth'] = $buf['authentication_method'];
+    $form['global_user_login'] = $buf['global_user_login'];
+    $form['global_user_password'] = $buf['global_user_password'];
+
     return $form;
   }
 
@@ -212,9 +252,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
-
-    // Not yet Implemented
-    /*
+    
     $str.= '<div>';
     $str.= '<h3>'._('Home Directory').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
@@ -223,13 +261,39 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '/>';
     $str.= _('Use Internal home directory (no server replication)');
     $str.= '<br/>';
-    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_profile"';
-    if ($form['homedir'] == 'ad_profile')
+    $str.= '<input class="input_radio" type="radio" name="homedir" value="cifs"';
+    if ($form['homedir'] == 'cifs')
       $str.= ' checked="checked"';
     $str.= '/>';
-    $str.= _('Use CIFS link using the LDAP field :').' <input type="text" name="homedir" value=""/>';
-    $str.= '<br/>';
-    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_homedir"';
+    $str.= _('Use CIFS link using the LDAP field :').' <input type="text" name="homedir_field" value="'.$form['homedir_field'].'"/>';
+    $str.= '<br/><div style="padding-left: 3%;">';
+    $str.= '<input type="radio" name="cifs_auth" value="anonymous"';
+    if ($form['cifs_auth'] == 'anonymous')
+      $str.= ' checked="checked"';
+    $str.= '/> '._('In guest mode').'<br/>';
+
+    $str.= '<input type="radio" name="cifs_auth" value="user"';
+    if ($form['cifs_auth'] == 'user')
+      $str.= ' checked="checked"';
+    $str.= '/> '._('Using user login/password to authenticate').'<br/>';
+
+    $str.= '<input type="radio" name="cifs_auth" value="global_user"';
+    if ($form['cifs_auth'] == 'global_user')
+      $str.= ' checked="checked"';
+    $str.= '/> '._('Using global login/password to authenticate').'<br/>';
+
+    $str.= '<table style="padding-left: 3%;">';
+    $str.= '<tr><td>'._('Login: ').'</td><td>';
+    $str.= '<input type="text" name="global_user_login" value="'.$form['global_user_login'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Password: ').'</td>';
+    $str.= '<td><input type="password" name="global_user_password" value="'.$form['global_user_password'].'" /></td></tr>';
+    $str.= '</table>';
+    $str.= '</div>';
+
+
+    // Not yet Implemented    
+    /*
+    $str.= '<input type="radio" name="homedir" value="ad_homedir"';
     if ($form['homedir'] == 'ad_homedir')
       $str.= ' checked="checked"';
     $str.= '/>';
