@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - Frequently asked question</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <year>2009</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    The purpose of this documentation is to describe the protocols
+    used by <emphasis>Ulteo Open Virtual Desktop</emphasis>.
+  </para>
+
+
+  <anchor id="treport-bug"/>
+  <section>
+    <title>How can I report a bug ?</title>
+    <para>
+      Send an email to <email>bugmaster@ulteo.com</email> with a
+      description of your bug.
+    </para>
+    <para>
+      Please attach those files :
+      <itemizedlist>
+	<listitem><para>
+	  Session Manager : <emphasis>/var/log/ulteo/sessionmanager/main.log and admin.log</emphasis>
+	</para></listitem>
+	<listitem><para>
+	  Application server :
+	  <itemizedlist>
+	    <listitem><para>
+	      <emphasis>/opt/ulteo/var/log/ulteo-ovd.log</emphasis>
+	    </para></listitem>
+	    <listitem><para>
+	      <emphasis>/var/log/ulteo/applicationserver/main.log</emphasis>
+	    </para></listitem>
+	  </itemizedlist>
+	</para></listitem>
+	<listitem><para>
+	  config file :
+	  <itemizedlist>
+	    <listitem><para>
+	      session manager : <emphasis>/var/spool/ulteo/sessionmanager/config</emphasis>
+	    </para></listitem>
+	    <listitem><para>
+	      application server : <emphasis>/opt/ulteo/etc/ulteo-ovd.conf</emphasis>
+	    </para></listitem>
+	  </itemizedlist>
+	</para></listitem>
+      </itemizedlist>
+    </para>
+  </section>
+
+  <!--
+  <section>
+    <title>How can I add a language ?</title>
+    <para>
+      You have to modify a file
+      <emphasis>includes/defaults.inc.php</emphasis> on the Session
+      Manager code.
+    </para>
+    <para>
+      In a classic install, the Session Manager files are stored into
+      <emphasis>/use/share/ulteo/sessionmanager</emphasis>.
+    </para>
+    <para>
+      The default file:
+      <programlisting><![CDATA[
+      $list_languages = array(
+      'en_GB.UTF-8'	=>	'English',
+      'fr_FR.UTF-8'	=>	'Français'
+      );
+      $desktop_locale = 'en_GB.UTF-8';]]>
+      </programlisting>
+    </para>
+
+    <para>
+      Add your lang to the array. For instance, Nederlands:
+
+      <programlisting><![CDATA[
+      $list_languages = array(
+      'en_GB.UTF-8'	=>	'English',
+      'nl_NL.UTF-8'	=>	'Nederlands'
+      'fr_FR.UTF-8'	=>	'Français'
+      );
+      $desktop_locale = 'en_GB.UTF-8';]]>
+      </programlisting>
+    </para>
+
+    <para>
+      You can also change the desktop_locale.
+      <programlisting><![CDATA[
+      $desktop_locale = 'nl_NL.UTF-8';]]>
+      </programlisting>
+    </para>
+
+
+    <para>
+      You also have to add install NL lang pack on application server
+
+      To do it, go manage your server, type **** on field "install"
+    </para>
+
+  </section>
+  -->
+
+  <section>
+    <title>Where is the upload button on OVD ?</title>
+    <para>
+      The feature <emphasis>upload file</emphasis> is not available in
+      OVD. But you can use a network mount system (CIFS,NFS...).
+    </para>
+
+    <simplesect>
+      <title>
+	I'd like to understand better your need to have a
+	filetransfert button in the OVD.
+      </title>
+      <para>
+	I see there are three typical use cases with the OVD regarding
+	user's data:
+	<itemizedlist>
+	  <listitem><para> 
+	    either you are using CIFS or NFS so user
+	    homes are mounted from the CIFS or NFS servers
+	  </para></listitem>
+	  <listitem><para>
+	    or you are using the "local filesystem" on
+	    ApS servers, which is intended only for testing purpose
+	    since if you have several ApS servers user homes won't even
+	  been synchronized </para></listitem>
+	</itemizedlist>
+      </para>
+
+      <para>
+	As a result, if you are using CIFS or NFS, the user is likely
+	to already have access to his directory to store his own files
+	on the NFS or CIFS server, so in that case having a transfert
+	button is quite useless since you can retrieve your user data
+	on the OVD through the mounted directory.
+      </para>
+
+      <para>
+	If you are using the local ApS filesystem, it makes more
+	sense, but again it shouldn't really be used since it's
+	available for quick testing purpose.
+      </para>
+
+      <para>
+	Please explain me your case and what you want to do so I can
+	understand better the need to include the download/upload
+	button on the OVD.
+      </para>
+    </simplesect>
+
+  </section>
+
+  <section>
+    <title>
+      What I got a 'No available server' message when i want to launch
+      session ?
+    </title>
+    <para>
+      You have to check 2 points:
+      <itemizedlist>
+	<listitem><para>
+	  Do you have at least one Application server online AND in
+	  production ?
+	</para></listitem>
+	<listitem><para>
+	  Did you perform a publication ? (check the summary :
+	  <ulink url="http://myserver/sessionmanager/admin/sumup.php"/>)
+	</para></listitem>
+      </itemizedlist>
+    </para>
+  </section>
+
+  <section>
+    <title>
+      Why my Application server does not appear in the Session Manager
+      server list ?
+    </title>
+    <itemizedlist>
+      <listitem><para>
+	check the DNS
+      </para></listitem>
+      <listitem><para>
+	check if the server is authorized, do you set the right
+	"Authorized network domain"
+      </para></listitem>
+    </itemizedlist>
+  </section>
+
+
+  <section>
+    <title>How to check the DNS configuration ?</title>
+    <para>
+      Can you check your DNS with these commands:
+      <itemizedlist>
+	<listitem><para>
+	  On application server:
+	  <screen><![CDATA[
+	  $ getent hosts sm.ulteo.com]]>
+	  </screen>
+
+	  <screen><![CDATA[
+	  $ getent hosts the_ip_gets_from_the_previous_command]]>
+	  </screen>
+	</para></listitem>
+
+	<listitem><para>
+	  On Session Manager:
+
+	  <screen><![CDATA[
+	  $ getent hosts my_application_server]]>
+	  </screen>
+
+	  <screen><![CDATA[
+	  $ getent hosts the_ip_gets_from_the_previous_command]]>
+	  </screen>
+	</para></listitem>
+      </itemizedlist>
+    </para>
+
+    <para>
+      The reverse DNS must be the same between the two set of commands
+      as you can see in this example:
+      <programlisting><![CDATA[
+      $ getent hosts sm3.office.ulteo.com
+      192.168.0.19    sm3.office.ulteo.com
+      $ getent hosts 192.168.0.19
+      192.168.0.19    sm3.office.ulteo.com
+      ]]>
+      </programlisting>
+    </para>
+  </section>
+
+  <!--
+      <section>
+      /etc/init.d/ulteo-ovd restart
+      Error:
+      chroot: cannot run command '/etc/init.d/ulteo-ovdd': no such file or directory 
+
+
+solution :
+etc/init.d/ulteo-ovdd is in chroot
+These commands work ?
+[code]chroot /opt/ulteo
+/etc/init.d/ulteo-ovdd restart[/code]
+</section>
+  -->
+
+  <section>
+    <title>
+      Why does I have <emphasis>Err03</emphasis> when I want launch a
+      session ?
+    </title>
+    <para>
+      It seems to be a firewall issue.
+    </para>
+
+    <para>
+      To launch a session, you need to access to port tcp/80 and tcp/443 of an
+      Application server.
+    </para>
+    <para>
+      Port 80 is HTTP traffic and 443 for SSH.
+      APACHE must not listen on 443 TCP.
+    </para>
+  </section>
+
+  <section>
+    <title>Why does I get "Class XXXX not found" ?</title>
+    <para>
+      If you are sure of your configuration,  it seems to be a bug,
+      <link linkend="treport-bug">please report it to us</link>.
+      
+
+    </para>
+  </section>
+
+  <section>
+    <title>
+      Why does i have this error after install an Application
+      server ?
+    </title>
+
+     <programlisting><![CDATA[
+  * Starting ulteo-ovdd daemon
+chroot: cannot change root directory to /etc/init.d/ulteo-ovdd: No
+such file or directory]]>
+     </programlisting>
+
+     <para>
+       Check if you have a correct installation :  if the Ulteo's
+       chroot exists (by default it is /opt/ulteo)
+     </para>
+</section>
+
+
+</article>
