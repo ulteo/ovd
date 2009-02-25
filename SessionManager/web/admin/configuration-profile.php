@@ -206,7 +206,7 @@ foreach($profiles as $profile => $name) {
 }
 echo '</select>';
 if ($green)
-  echo ' <span style="color:green; font-weight: bold;">'._('Save succefully').'</span>';
+  echo ' <span style="color:green; font-weight: bold;">'._('Saved successfully').'</span>';
 echo '<br/>';
 
   echo $c->display($form);
