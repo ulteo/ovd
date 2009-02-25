@@ -143,7 +143,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_=NULL , $log=array()) {
+	public function prefsIsValid($prefs_=NULL , &$log=array()) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
 
 		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');
