@@ -175,7 +175,7 @@ while [ -z "$APACHE_DIR" ]; do
     elif [ -d "/etc/apache2/conf.d" ]; then
         APACHE_DIR="/etc/apache2/conf.d"
     fi
-    if [ -z "£APACHE_DIR" ]; then
+    if [ -z "$APACHE_DIR" ]; then
         echo -n "Apache configuration directory: "
         read APACHE_DIR
     fi
