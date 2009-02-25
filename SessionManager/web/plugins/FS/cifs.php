@@ -96,7 +96,7 @@ class FS_cifs extends Plugin {
 	
 	public function configuration() {
 		$ret = array();
-		$c = new ConfigElement('authentication_method', 'authentication_method', 'authentication_method', 'authentication_method', NULL, array('anonymous' => 'anonymous', 'user' => 'user','global_user' => 'global_user'), ConfigElement::$SELECT);
+		$c = new ConfigElement('authentication_method', 'authentication_method', 'authentication_method', 'authentication_method', 'anonymous', array('anonymous' => 'anonymous', 'user' => 'user','global_user' => 'global_user'), ConfigElement::$SELECT);
 		$ret []= $c;
 		$c = new ConfigElement('global_user_login', _('login'), _('login'), _('login'), '', NULL, ConfigElement::$INPUT);
 		$ret []= $c;
