@@ -1,3 +1,9 @@
+ovd-session-manager (1.0~rc1-0ulteo0) ovd-polaris-testing; urgency=low
+
+  * New development release (RC 1)
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 25 Feb 2009 09:04:51 +0100
+
 ovd-session-manager (1.0~beta2+svn510) ovd-polaris-testing; urgency=low
 
   * Added debconf template entries to configure mysql database

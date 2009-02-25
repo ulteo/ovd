@@ -1,8 +1,8 @@
-ulteo-ovd (1.0~beta2+svn512) ovd-polaris-testing; urgency=low
+ulteo-ovd (1.0~rc1-0ulteo0) ovd-polaris-testing; urgency=low
 
-  * New snapshot
+  * New development release (RC 1)
 
- -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 11 Feb 2009 16:52:48 +0100
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 25 Feb 2009 09:05:09 +0100
 
 ulteo-ovd (1.0~beta1) ovd-polaris; urgency=low
 
