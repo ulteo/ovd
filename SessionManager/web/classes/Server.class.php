@@ -224,6 +224,22 @@ class Server {
 		return true;
 	}
 
+	public function isNotReady() {
+		Logger::debug('main', 'Starting Server::isNotReady for \''.$this->fqdn.'\'');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$buf = $prefs->get('general', 'application_server_settings');
+		if ($buf['action_when_as_not_ready'] == 1)
+			$this->setAttribute('locked', true);
+
+		return true;
+	}
+
 	public function returnedError() {
 		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
 
@@ -236,8 +252,10 @@ class Server {
 	public function getStatus() {
 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
 
-		if ($this->getAttribute('registered') === true && ($this->getAttribute('status') == 'offline' || $this->getAttribute('status') == 'broken'))
+		if ($this->getAttribute('registered') === true && ($this->getAttribute('status') == 'offline' || $this->getAttribute('status') == 'broken')) {
+			$this->isNotReady();
 			return false;
+		}
 
 		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
 
@@ -248,17 +266,8 @@ class Server {
 
 		$this->setStatus($ret);
 
-		if ($ret !== 'ready') {
-			$prefs = Preferences::getInstance();
-			if (! $prefs) {
-				Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
-				return false;
-			}
-
-			$buf = $prefs->get('general', 'application_server_settings');
-			if ($buf['action_when_as_not_ready'] == 1)
-				$this->setAttribute('locked', true);
-		}
+		if ($ret !== 'ready')
+			$this->isNotReady();
 
 		return true;
 	}
