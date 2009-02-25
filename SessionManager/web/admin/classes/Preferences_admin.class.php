@@ -171,8 +171,11 @@ class Preferences_admin extends Preferences {
 		$this->getPrefsEvents();
 	}
 
-	public function backup(){
+	public function deleteConfFile() {
 		@unlink($this->conf_file);
+	}
+	public function backup(){
+		$this->deleteConfFile();
 		return file_put_contents($this->conf_file,serialize($this->prefs));
 	}
 

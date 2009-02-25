@@ -32,6 +32,8 @@ if (isset($_POST['submit'])) {
 		$elements_form = formToArray($_POST);
 		try {
 			$prefs = new Preferences_admin();
+			$prefs->deleteConfFile();
+			$prefs = new Preferences_admin();
 		}
 		catch (Exception $e) {
 		}
