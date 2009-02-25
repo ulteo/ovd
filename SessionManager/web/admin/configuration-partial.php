@@ -59,7 +59,7 @@ else {
 	}
 	if (is_object($prefs)) {
 		if (!isset($_GET['mode']))
-			redirect('configuration.php');
+			redirect('configuration-sumup.php');
 
 		require_once(dirname(__FILE__).'/includes/page_template.php');
 		page_header();
