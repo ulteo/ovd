@@ -76,7 +76,8 @@ if ($_GET['view'] == 'all')
 function action_modify($applicationDB, $id) {
   $app = $applicationDB->import($id);
   if (!is_object($app))
-    die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
+    return false;
+//     die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
 
   if (isset($_REQUEST['published']))
       return false;
@@ -194,7 +195,8 @@ function show_default($applicationDB) {
 function show_manage($id, $applicationDB) {
   $app = $applicationDB->import($id);
   if (!is_object($app))
-    die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
+    return false;
+//     die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
 
   $is_rw = $applicationDB->isWriteable();
 
