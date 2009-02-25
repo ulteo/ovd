@@ -500,7 +500,33 @@ function formToArray($form_) {
 	}
 
 	formToArray_cleanup($elements_form);
+	formToArray_cleanup2($elements_form);
 	return $elements_form;
+}
+
+function formToArray_cleanup2(&$buf, $key=NULL) {
+	if (is_array($buf)) {
+		$buf_keys = array_keys($buf);
+		if ( count($buf) > 0) {
+			$first_key =  $buf_keys[0];
+			if ( is_null($key) == false) {
+				if ($key == $first_key) {
+					$buf3 = $buf[$first_key];
+					$buf = $buf3;
+				}
+				if (is_array($buf)) {
+					foreach ( $buf as $k=> $v) {
+						formToArray_cleanup2($buf[$k], $k);
+					}
+				}
+			}
+			else {
+				foreach ( $buf as $k=> $v) {
+					formToArray_cleanup2($buf[$k], $k);
+				}
+			}
+		}
+	}
 }
 
 function formToArray_cleanup(&$buf) {
