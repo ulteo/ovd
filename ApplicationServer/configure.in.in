@@ -7,7 +7,7 @@ m4_define([uovdas_version], [uovdas_version_major().uovdas_version_minor()uovdas
 AC_INIT([ovd-application-server], [uovdas_version], [http://bugs.ulteo.com])
 
 # Init automake
-AM_INIT_AUTOMAKE([AC_PACKAGE_TARNAME()], [AC_PACKAGE_VERSION()])
+AM_INIT_AUTOMAKE([1.9 tar-pax])
 
 # Checks for programs.
 AC_PROG_INSTALL
