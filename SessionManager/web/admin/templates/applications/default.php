@@ -1,14 +1,13 @@
 <h2>Applications report</h2>
-<!-- ugly! -->
-<table border="1">
+<table cellspacing="10">
   <tr>
-    <th>Per server</th>
-	<th>Per day</th>
-	<th>Per application</th>
+    <th><?php print _('Per server'); ?></th>
+	<th><?php print _('Per day'); ?></th>
+	<th><?php print _('Per application'); ?></th>
   </tr>
 
   <tr>
-    <td>
+    <td style="vertical-align: top">
 <?php
 foreach ($per_server as $fqdn => $server_data) {
 	echo "      <h4>Server: $fqdn</h4>\n";
@@ -26,7 +25,7 @@ foreach ($per_server as $fqdn => $server_data) {
 ?>
     </td>
 
-    <td>
+    <td style="vertical-align: top">
 <?php
 foreach ($per_day as $day => $day_data) {
 	echo "      <h4>Day: $day</h4>\n";
@@ -43,7 +42,7 @@ foreach ($per_day as $day => $day_data) {
 ?>
     </td>
 
-	<td>
+	<td style="vertical-align: top">
 <?php
 echo "      <ul>\n";
 foreach ($per_app as $app_id => $data) {

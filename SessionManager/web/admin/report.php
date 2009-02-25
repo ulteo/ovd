@@ -24,6 +24,17 @@ require_once(dirname(__FILE__).'/includes/page_template.php');
 
 page_header();
 
+/* utils */
+function init_libchart() {
+	$f = SESSIONMANAGER_ROOT_ADMIN.'/templates/libchart/classes/libchart.php';
+	if (is_file($f)) {
+		include_once($f);
+		return true;
+	}
+	return false;
+}
+
+
 $last_report = get_from_cache('reports', 'last_report');
 if ($last_report == NULL)
 	$last_report = array();
