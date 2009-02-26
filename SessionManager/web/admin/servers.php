@@ -547,7 +547,7 @@ function show_manage($fqdn) {
         continue;
       if (in_array($app, $apps_in_install))
         continue;
-      if ($app->getAttribute('type') != $server->type)
+      if ($app->getAttribute('type') != $server->getAttribute('type'))
         continue;
 
       $applications_available[]= $app;
@@ -569,7 +569,7 @@ function show_manage($fqdn) {
     if ($v->fqdn == $server->fqdn)
       unset($servers_replication[$k]);
     else {
-       if ( $v->type != $server->type) {
+       if ( $v->type != $server->getAttribute('type')) {
          unset($servers_replication[$k]);
        }
     }
@@ -702,7 +702,7 @@ function show_manage($fqdn) {
   }
   echo '</table>';
 
-  if ($server_online && $server->type == 'linux') {
+  if ($server_online && $server->getAttribute('type') == 'linux') {
     echo '<h2>'._('Install an application from a package name').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="install_line">';
