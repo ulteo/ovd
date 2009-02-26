@@ -113,7 +113,7 @@ function page_header() {
 
   echo '</head>';
   echo '<body>';
-  echo '<div id="infoBulle" style="position: absolute; border: 1px solid black; background: #fec; padding: 5px; display: none; margin-right: 11px; max-width: 600px;"></div>';
+  echo '<div id="infoBulle" style="position: absolute; border: 1px solid black; background: #fec; padding: 5px; display: none; margin-right: 11px; max-width: 600px; z-index: 5000;"></div>';
   echo '<div id="mainWrap">';
   echo '<div id="headerWrap">';
 
