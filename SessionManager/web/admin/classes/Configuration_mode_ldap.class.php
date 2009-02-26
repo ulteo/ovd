@@ -104,7 +104,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['match']['displayname'] = $form['field_displayname'];
     $config['match']['distinguishedname'] = 'distinguishedname';
 
-    // plugins fs ... 
+    // plugins fs ...
     if ($form['homedir'] == 'cifs') {
       $plugin_fs = 'cifs_no_sfu';
       $config['match']['homedir'] = $form['homedir_field'];
@@ -126,7 +126,7 @@ class Configuration_mode_ldap extends Configuration_mode {
         array('enable' => $form['user_group']));
 
     if ($form['user_group'] == 'ldap_posix') {
-      $prefs->set('UserGroupDB', 'ldap_posix', 
+      $prefs->set('UserGroupDB', 'ldap_posix',
 		  array('group_dn' => $form['group_branch_dn']));
     }
 
@@ -260,14 +260,14 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<br/><div style="padding-left: 3%;">';
     $str.= _('Group Branch DN:').' <input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/>';
     $str.= '</div>';
-    
+
     $str.= '<input class="input_radio" type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')
       $str.= ' checked="checked"';
     $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
     $str.= '<br/><!-- useless => css-->'."\n";
-    
+
     $str.= '<div>';
     $str.= '<h3>'._('Home Directory').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
@@ -281,18 +281,18 @@ class Configuration_mode_ldap extends Configuration_mode {
       $str.= ' checked="checked"';
     $str.= '/>';
     $str.= _('Use CIFS link using the LDAP field :').' <input type="text" name="homedir_field" value="'.$form['homedir_field'].'"/>';
-    $str.= '<br/><div style="padding-left: 3%;">';
-    $str.= '<input type="radio" name="cifs_auth" value="anonymous"';
+    $str.= '<br/><div style="padding-left: 20px;">';
+    $str.= '<input class="input_radio" type="radio" name="cifs_auth" value="anonymous"';
     if ($form['cifs_auth'] == 'anonymous')
       $str.= ' checked="checked"';
     $str.= '/> '._('In guest mode').'<br/>';
 
-    $str.= '<input type="radio" name="cifs_auth" value="user"';
+    $str.= '<input class="input_radio" type="radio" name="cifs_auth" value="user"';
     if ($form['cifs_auth'] == 'user')
       $str.= ' checked="checked"';
     $str.= '/> '._('Using user login/password to authenticate').'<br/>';
 
-    $str.= '<input type="radio" name="cifs_auth" value="global_user"';
+    $str.= '<input class="input_radio" type="radio" name="cifs_auth" value="global_user"';
     if ($form['cifs_auth'] == 'global_user')
       $str.= ' checked="checked"';
     $str.= '/> '._('Using global login/password to authenticate').'<br/>';
@@ -306,9 +306,9 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '</div>';
 
 
-    // Not yet Implemented    
+    // Not yet Implemented
     /*
-    $str.= '<input type="radio" name="homedir" value="ad_homedir"';
+    $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_homedir"';
     if ($form['homedir'] == 'ad_homedir')
       $str.= ' checked="checked"';
     $str.= '/>';
@@ -323,7 +323,7 @@ class Configuration_mode_ldap extends Configuration_mode {
   public function display_sumup($prefs) {
     $form = $this->config2form($prefs);
     $str = '';
-    
+
     $ldap_url = 'ldap://'.$form['host'];
     if ($form['port'] != 389)
       $ldap_url.= ':'.$form['port'];
@@ -348,7 +348,7 @@ class Configuration_mode_ldap extends Configuration_mode {
       $str.= _('Use Internal home directory (no server replication)');
     elseif ($form['homedir'] == 'cifs') {
       $str.= _('Use CIFS link using the LDAP field').' ';
-      
+
       if ($form['cifs_auth'] == 'anonymous')
 	$str.= _('In guest mode');
       elseif ($form['cifs_auth'] == 'user')
