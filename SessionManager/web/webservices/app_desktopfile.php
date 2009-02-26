@@ -64,12 +64,12 @@ if (! is_array($apps)) {
 
 foreach ($apps as $app) {
 	if ($app->hasAttribute('desktopfile')) {
-		if ($app->getAttribute('desktopfile') == $_GET['desktopfile']) {
+		if ($app->getAttribute('desktopfile') == stripslashes($_GET['desktopfile'])) {
 			header('Content-Type: text/xml; charset=utf-8');
 			echo $app->toXML();
 			die();
 		}
 	}
 }
-
+Logger::error('main', '(webservices/app_desktopfile) error final');
 header('HTTP/1.1 404 Not Found');
