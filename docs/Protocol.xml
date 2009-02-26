@@ -75,6 +75,24 @@
 
       <para><ulink url="http://en.wikipedia.org/wiki/Secure_Shell">SSH on Wikipedia</ulink></para>
     </section>
+
+    <section>
+      <title>Remote Desktop Protocol (RDP)</title>
+
+      <para>
+	RDP is the protocol used by <trademark
+	class="registered">Microsoft</trademark> to display the remote
+	desktop for their <trademark>Terminal Services</trademark>
+	software.
+      </para>
+
+      <para>
+	RDP is uning by Ulteo Open Virtual Desktop to display
+	<trademark>Windows</trademark> applications.
+      </para>
+
+      <para><ulink url="http://en.wikipedia.org/wiki/Remote_Desktop_Protocol">RDP on Wikipedia</ulink></para>
+    </section>
   </section>
 
 
@@ -127,6 +145,23 @@
 
 	</itemizedlist>
       </para>
+    </section>
+
+    <section>
+      <title>Windows servers</title>
+      <para>
+	The Windows agent use an embeded HTTP server instead of using
+	Apache (as Linux servers) or <trademark>IIS</trademark> which is often installed by
+	default on <trademark>Windows Server 2003</trademark>.
+      </para>
+
+      <para>
+	Because of <trademark>IIS</trademark> is often installed, the
+	Windows agent doesn't use the standart HTTP port but the
+	<emphasis role="strong">8082</emphasis>. Another port may be
+	used by set it in the agent configuration file.
+      </para>
+
     </section>
 
     <section>

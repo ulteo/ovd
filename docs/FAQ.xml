@@ -30,10 +30,18 @@
       Please attach those files :
       <itemizedlist>
 	<listitem><para>
-	  Session Manager : <emphasis>/var/log/ulteo/sessionmanager/main.log and admin.log</emphasis>
+	  Session Manager : 
+	  <itemizedlist>
+	    <listitem><para>
+	      <emphasis>/var/log/ulteo/sessionmanager/main.log</emphasis>
+	    </para></listitem>
+	    <listitem><para>
+	      <emphasis>/var/log/ulteo/sessionmanager/admin.log</emphasis>
+	    </para></listitem>
+	  </itemizedlist>
 	</para></listitem>
 	<listitem><para>
-	  Application server :
+	  Linux Application server :
 	  <itemizedlist>
 	    <listitem><para>
 	      <emphasis>/opt/ulteo/var/log/ulteo-ovd.log</emphasis>
@@ -43,6 +51,16 @@
 	    </para></listitem>
 	  </itemizedlist>
 	</para></listitem>
+
+	<listitem><para>
+	  Windows Application server :
+	  <itemizedlist>
+	    <listitem><para>
+	      <emphasis>C:\Documents and Settings\All Users\Application Data\Ulteo\ovd\main.log</emphasis>
+	    </para></listitem>
+	  </itemizedlist>
+	</para></listitem>
+
 	<listitem><para>
 	  config file :
 	  <itemizedlist>
