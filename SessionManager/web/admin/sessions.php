@@ -46,7 +46,9 @@ if (isset($_POST['join'])) {
 	$token->valid_until = (time()+(60*30));
 	Abstract_Token::save($token);
 
-	redirect('http://'.$session->server.'/index.php?token='.$token->id);
+	$server = Abstract_Server::load($session->server);
+
+	redirect('http://'.$server->getAttribute('external_name').'/index.php?token='.$token->id);
 } elseif (isset($_POST['mass_action']) && $_POST['mass_action'] == 'kill') {
 	if (isset($_POST['kill_sessions']) && is_array($_POST['kill_sessions'])) {
 		foreach ($_POST['kill_sessions'] as $session) {
