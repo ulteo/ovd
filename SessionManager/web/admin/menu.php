@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 $items = array(
-	'index.php'		=>	_('Index'),
+	'index.php'		=>	_('Home'),
 	'servers.php'		=>	_('Servers'),
 // 	'sessions.php'		=>	_('Sessions'),
 	'users.php'		=>	_('Users'),
