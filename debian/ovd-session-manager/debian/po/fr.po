@@ -173,8 +173,8 @@ msgid ""
 "Application servers will need to retrieve an applications tarball, hosted on "
 "this session manager. A default tarball can be downloaded and stored for you."
 msgstr ""
-"Les serveurs d'applications nécessite d'obtenir une archive d'applications, "
-"hébergé sur ce session manager. Une archive par défaut peut être téléchargée "
+"Les serveurs d'application nécessitent d'obtenir une archive d'applications, "
+"hébergée sur ce session manager. Une archive par défaut peut être téléchargée "
 "et stockée pour vous."
 
 #. Type: string
