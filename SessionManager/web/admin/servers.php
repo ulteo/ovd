@@ -372,7 +372,7 @@ function show_unregistered() {
     if (count($u_servs) > 1)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
-    // echo '<th>'._('Version').'</th>';
+//     echo '<th>'._('Version').'</th>';
     echo '<th>'._('Details').'</th>';
     echo '</tr>';
     echo '</thead>';
@@ -384,9 +384,13 @@ function show_unregistered() {
             if (count($u_servs) > 1)
 	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
 
+	$s->getType();
+	$s->getVersion();
+	$s->getMonitoring();
+
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
-      //echo '<td>'.$s->stringVersion().'</td>';
+//       echo '<td>'.$s->stringVersion().'</td>';
       echo '<td>';
       echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
       echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
