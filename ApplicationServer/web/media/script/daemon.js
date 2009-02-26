@@ -241,10 +241,10 @@ function onUpdateInfos(transport) {
       push_log('[session] nb share: '+nb_share, 'info');
 
       if (nb_share != 0) {
-        var buf_html = nb_share+' invited user';
+        var buf_html = '<img style="margin-left: 5px;" src="media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share+' user';
         if (nb_share > 1)
-          buf_html = buf_html+'s';
-        buf_html = buf_html+' on the session';
+          buf_html += 's';
+        buf_html += '</span>';
         $('menuShareWarning').innerHTML = buf_html;
       } else
         $('menuShareWarning').innerHTML = '';
