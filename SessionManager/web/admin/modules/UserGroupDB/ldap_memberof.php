@@ -26,11 +26,11 @@ class admin_UserGroupDB_ldap_memberof extends UserGroupDB_ldap_memberof {
 	}
 	
 	public function remove($usergroup_){
-		return false;
+		return true;
 	}
 	
 	public function update($usergroup_){
-		return false;
+		return true;
 	}
 	
 	public static function init($prefs_) {
