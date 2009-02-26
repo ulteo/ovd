@@ -733,7 +733,7 @@ function show_manage($fqdn) {
 	echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 	echo $app->getAttribute('name').'</a>';
 	echo '</td>';
-	if ($server_online) {
+	if ($server_online && $server->type == 'linux') {
 	  echo '<td>';
 	  if ($remove_in_progress)
 	    echo 'remove in progress';
