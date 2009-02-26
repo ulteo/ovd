@@ -11,7 +11,7 @@
     <copyright>
       <year>2008</year>
       <year>2009</year>
-      <holder>Ulteo SAS - http://www.ulteo.com</holder>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
 
@@ -21,7 +21,7 @@
     <xi:include href="sub/generic.xml" xpointer="prerequisites" />
 
     <para>
-      Both servers needs to be installed with Red Hat RHEL 5.2 32-bit, Fedora Core 9 or CentOS 5.2.
+      Both servers needs to be installed with <emphasis role="strong">Red Hat RHEL 5.2 32-bit</emphasis>, <emphasis role="strong">Fedora Core 9</emphasis> or <emphasis role="strong">CentOS 5.2</emphasis>.
       All operations needs to be done as <emphasis>superuser</emphasis> (root).
     </para>
 
@@ -76,17 +76,15 @@
 
         <listitem>
           <para>Now log in mysql and create a database and an user who will have
-          rights on the databse:</para>
-
-	      <screen>
-		<![CDATA[
+          rights on the database:</para>
+	  <screen>
+	    <![CDATA[
 # mysql -u root -p
 Enter password:
-mysql> create database sm;
+mysql> create database ulteo_sm;
  Query OK, 1 row affected (0.02 sec)
 mysql> exit]]>
-	      </screen>
-
+	  </screen>
         </listitem>
       </itemizedlist>
       <beginpage />

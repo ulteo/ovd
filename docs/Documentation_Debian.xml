@@ -9,11 +9,8 @@
     <copyright>
       <year>2008</year>
       <year>2009</year>
-      <holder>Ulteo SAS - http://www.ulteo.com</holder>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
-
-    <productname>Ulteo Open Virtual Desktop</productname>
-    <productnumber>1.0-beta</productnumber>
   </articleinfo>
 
   <section>
@@ -22,7 +19,7 @@
     <xi:include href="sub/generic.xml" xpointer="prerequisites" />
 
     <para>
-      Both servers need to be installed with <emphasis role="strong">Ubuntu 8.04.1 (Hardy Heron) Server for x86/32 bits</emphasis> (it can be downloaded from <ulink url="http://releases.ubuntu.com/8.04/ubuntu-8.04.1-server-i386.iso" />)
+      Both servers need to be installed with <emphasis role="strong">Ubuntu 8.04.1 (Hardy Heron) Server for x86/32 bits</emphasis> (it can be downloaded from <ulink url="http://releases.ubuntu.com/8.04/ubuntu-8.04.1-server-i386.iso" />).
       All operations need to be done as <emphasis>super user</emphasis>.
     </para>
 
@@ -51,15 +48,13 @@ $ su]]>
         </listitem>
         <listitem>
           <para>Now log in mysql, create a database and a user that will have
-          rights on this databse:</para>
+          rights on this database:</para>
           <screen><![CDATA[
 # mysql -u root -p
-Enter password: 
+Enter password:
 mysql> create database ulteo_sm;
- Query OK, 1 row affected (0.05 sec)
-mysql> GRANT ALL PRIVILEGES ON ulteo_sm.* TO 'ulteoadmin'@'localhost' IDENTIFIED BY 'secret' WITH GRANT OPTION;
- Query OK, 0 rows affected (0.03 sec)
-mysql> quit]]>
+ Query OK, 1 row affected (0.02 sec)
+mysql> exit]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -204,7 +199,7 @@ mysql> quit]]>
 
   <section>
     <title>
-      Application Server installation (cm.ulteo.com)
+      Application Server installation (aps.ulteo.com)
     </title>
     <itemizedlist>
       <listitem>
