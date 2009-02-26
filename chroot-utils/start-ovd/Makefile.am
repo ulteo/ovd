@@ -4,7 +4,7 @@ scriptsdir = $(bindir)
 sysconfig_DATA = xinitrc
 sysconfigdir = $(sysconfdir)/xdg/ulteo
 
-EXTRA_DIST = startovd-xfce.in startovd-kde xinitrc
+EXTRA_DIST = startovd-xfce.in startovd-kde startovdapp xinitrc
 
 startovd-xfce: Makefile
 	sed "s,@SYSCONFDIR@,$(sysconfdir)," $(srcdir)/startovd-xfce.in >$@
