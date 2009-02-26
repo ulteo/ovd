@@ -68,7 +68,7 @@ class User {
 		}
 		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
 		
-		if ($user_default_group !== -1) {
+		if ($user_default_group !== -1 && $user_default_group !== '') {
 			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
 			if (is_object($g))
 				$result[$user_default_group]= $g;
@@ -113,7 +113,7 @@ class User {
 		$launch_without_apps = (int)$default_settings['launch_without_apps'];
 
 		// get the list of server who the user can launch his applications
-		Logger::error('main','USER::getAvailableServers (type='.$type.')');
+		Logger::debug('main','USER::getAvailableServers (type='.$type.')');
 		$servers = array();
 		$apps = $this->applications($type);
 		$apps_id = array();
