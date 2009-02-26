@@ -302,7 +302,30 @@ such file or directory]]>
        Check if you have a correct installation :  if the Ulteo's
        chroot exists (by default it is /opt/ulteo)
      </para>
-</section>
+  </section>
+
+
+  <section>
+    <title>Why GNU/Linux Debian 5.0 is not supported ?</title>
+
+    <para>
+      GNU/Linux Debian 5.0 is not supported because one kernel module
+      is missing on Debian system: <emphasis role="strong">aufs</emphasis>.
+    </para>
+
+    <para>
+      We are using the aufs module for CIFS mounts.
+    </para>
+
+
+    <para>
+      To test if your Linux kernel has the aufs module:
+      <screen><![CDATA[
+$ find /lib/modules/`uname -r` -name aufs]]>
+      </screen>
+    </para>
+  </section>
+
 
 
 </article>

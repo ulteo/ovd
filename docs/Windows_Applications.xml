@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+"/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd">
+
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - Windows Applications
+    question</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+    <!--
+    <authorgroup>
+      <author>
+	<firstname>Julien</firstname>
+	<surname>Langlois</surname>
+	<affiliation>
+	  <jobtitle>Ulteo developer</jobtitle>
+	  <address><email>julien@ulteo.com</email></address>
+	</affiliation>
+      </author>
+    </authorgroup>
+    -->
+
+    <copyright>
+      <year>2009</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    This documentation describe how to use Windows applications on an
+    existing and running <emphasis>Ulteo Open Virtual
+    Desktop</emphasis>.
+  </para>
+  <para>
+    This documention <emphasis role="strong">does not
+    describe</emphasis> the Open Virtual Desktop. For this, please see
+    the <emphasis role="strong">Installation
+    documentations</emphasis>.
+  </para>
+
+
+  <section>
+    <title>Prerequisites</title>
+    <para>
+      To use Windows applications, you need to plug your Session
+      Manager on an Microsoft Domain Controler (Active Directory).
+    </para>
+
+    <para>
+      You also need to have at least one <emphasis
+      role="strong">Microsoft Windows Server 2003</emphasis> system
+      with <emphasis role="strong">Terminal services</emphasis>
+      installed and configured.
+    </para>
+
+    <para>
+      The Windows Server machines have to be plug in the same domain
+      controler as the Session Manager. To plug a Session Manager to a
+      Microsoft Active Directory, please refer to
+      <emphasis>Administration Console</emphasis> documentation.
+    </para>
+  </section>
+
+  <section>
+    <title>Installation of the Windows agent</title>
+
+    <para>
+      Download the Ulteo Open Virtual Desktop Windows agent setup from
+      <ulink url="http://www.ulteo.com" /> on your Windows machine and
+      execture it.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - server page</screeninfo>
+      <graphic fileref="img/aps_win_install_1.png"></graphic>
+    </screenshot>
+
+    <para>
+      In the configuration frame, you have to set the Windows server
+      name. To get the Windows FQDN, go to <emphasis>Start</emphasis>,
+      then right-click on <emphasis>My Computer</emphasis>:
+      <emphasis>Properties</emphasis>.
+      In the <emphasis>Computer Name</emphasis> tab, the FQDN is
+      display as <emphasis role="strong">Full computer name</emphasis>.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - server page</screeninfo>
+      <graphic fileref="img/aps_win_install_config.png"></graphic>
+    </screenshot>
+
+    <para>
+      Finish the installation. The Windows agent should be configured
+      and running.
+    </para>
+
+    <simplesect>
+      <title>Session Manager side</title>
+      <para>
+	Your Windows server should appear in the
+	<emphasis>Unregistered servers</emphasis>.
+      </para>
+
+      <screenshot>
+	<screeninfo>Session Manager - server page</screeninfo>
+	<graphic fileref="img/sm_admin_server_unregistered_win.png"></graphic>
+      </screenshot>
+
+      <para>
+	If your server does not appear in the list, you might have
+	a DNS configuration issue, or ths Windows agent have a
+	bug. Refert to <xref linkend="s_issue"/>.
+      </para>
+    </simplesect>
+  </section>
+
+  <section>
+    <title>Register the server and publish some application</title>
+    <para>
+      First, register your Windows server and switch it from
+      "maintenance" to "production" mode.
+    </para>
+
+    <para>
+      You should be able to list the application from your Windows server
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - server page</screeninfo>
+      <graphic fileref="img/sm_admin_server_win.png"></graphic>
+    </screenshot>
+
+    <para>
+      The next step is to add some Windows applications into an
+      applications groups in order to authorized a user group to run
+      your Windows applicaitions.
+    </para>
+
+    <para>
+      So perform a publication as you did previously did it but by
+      select some Windows applications.  To have a global view of
+      which user have access to which applications, you can browse the
+      <emphasis role="strong">Summary</emphasis> page from the
+      <emphasis>Status</emphasis> menu.
+    </para>
+  </section>
+
+
+  <section>
+    <title>Lauch a session</title>
+    <para>
+      If you launch a session, your should access to your Windows applications.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - server page</screeninfo>
+      <graphic fileref="img/aps-session-win-appps.png"></graphic>
+    </screenshot>
+
+  </section>
+
+
+
+  <section id="s_issue">
+    <title>Internal System</title>
+
+    <simplesect>
+      <title>Consult the Windows agent log</title>
+
+      <para>
+	In a default Windows installation, the log file is at
+	<emphasis>C:\Documents and Settings\All Users\Application
+	Data\Ulteo\ovd\main.log</emphasis>.
+      </para>
+
+      <para>
+	It's also possible to see some debug messages in the <emphasis
+	role="strong">Windows Event Viewer</emphasis> (in Appplication section).
+      </para>
+
+      <screenshot>
+	<screeninfo>Windows - events</screeninfo>
+	<graphic fileref="img/aps_win_event.png"></graphic>
+      </screenshot>
+
+    </simplesect>
+
+    <simplesect>
+      <title>Automaticaly start the service at boot</title>
+      <para>
+	At the moment, the Windows service is not configured to be
+	started automaticaly at boot.
+      </para>
+
+      <para>
+	To set it up, go to <emphasis>Administrative Tools</emphasis>,
+	<emphasis>Services</emphasis> and find the <emphasis>Ulteo
+	Open Virtual Desktop</emphasis> service.
+      </para>
+
+      <screenshot>
+	<screeninfo>Windows - services managment</screeninfo>
+	<graphic fileref="img/aps_win_services.png"></graphic>
+      </screenshot>
+
+      <para>
+	Edit the <emphasis>Properties</emphasis> of the services, set
+	the <emphasis role="strong">Startup type</emphasis> to
+	<emphasis>Automatic</emphasis>, and apply.
+      </para>
+
+      <screenshot>
+	<screeninfo>Windows - services set to start as boot</screeninfo>
+	<graphic fileref="img/aps_win_services_set_boot.png"></graphic>
+      </screenshot>
+    </simplesect>
+
+
+  </section>
+
+
+</article>

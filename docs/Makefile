@@ -8,32 +8,31 @@ SRC=AdminConsole.xml \
 	Documentation_RedHat.xml \
 	FAQ.xml \
 	Protocol.xml \
-	RSBAC.xml
+	Windows_Applications.xml
 
 
 DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
+ANW=$(SRC:.xml=.anw)
 
 ANWIKI_REGEXP=-e 's/src=\"img/src=\"\/main\/images\/uovd\/doc\/img/g' -e 's/<img/<br\/><br\/><img/' -e 's/.*<body[^>]*>//' -e 's/<\/body>.*//' -e 's/<\/a>/\n<\/a>/g'
 
 
 all: $(DST) $(PDF)
 
-.xml.html :
+%.html: %.xml
 	xsltproc --xinclude xhtml.xsl $< >$@
-#	cp $@ buffer; cat buffer | sed $(ANWIKI_REGEXP)> $@
-
-#	xmlto xhtml -m config.xsl $<
-#	cat index.html | sed -e 's/index\.html//g' > $@	
-#	rm index.html
-
 
 %.pdf:  %.xml 
 	dblatex -T db2latex $<
 
+%.anw: %.html
+	sed $(ANWIKI_REGEXP) $< > $@
+
 clean:
 	$(RM) $(DST)
 	$(RM) $(PDF)
+	$(RM) $(ANW)
 	$(RM) *~
 
 #install:
@@ -48,3 +47,7 @@ clean:
 #  ou
 #
 # fop -xsl /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl -xml HowTo_QuickInstall.xml -pdf test.pdf
+
+#      xmlto xhtml -m config.xsl $<
+#      cat index.html | sed -e 's/index\.html//g' > $@ 
+#      rm index.html
