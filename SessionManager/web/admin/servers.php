@@ -702,7 +702,7 @@ function show_manage($fqdn) {
   }
   echo '</table>';
 
-  if ($server_online) {
+  if ($server_online && $server->type == 'linux') {
     echo '<h2>'._('Install an application from a package name').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="install_line">';
