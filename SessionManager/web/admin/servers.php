@@ -384,9 +384,12 @@ function show_unregistered() {
             if (count($u_servs) > 1)
 	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
 
-	$s->getType();
-	$s->getVersion();
-	$s->getMonitoring();
+	if ($s->getAttribute('type') == '')
+		$s->getType();
+// 	if ($s->getAttribute('version') == '')
+// 		$s->getVersion();
+	if ($s->getAttribute('cpu_model') == '')
+		$s->getMonitoring();
 
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
