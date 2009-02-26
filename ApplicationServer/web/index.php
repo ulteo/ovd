@@ -158,7 +158,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.5em; font-weight: bold; color: #686868">Loading Open Virtual Desktop</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Open Virtual Desktop</span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
