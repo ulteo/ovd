@@ -77,7 +77,7 @@ function page_header() {
   $title = 'Open Virtual Desktop - '._('Administration');
 
   if (isset($_SESSION['errormsg'])) {
-    $errors = $_SESSION['errormsg'];
+    $errors = array_unique($_SESSION['errormsg']);
     unset($_SESSION['errormsg']);
   }
   else
