@@ -26,8 +26,9 @@ $sep = '___';
 if (isset($_POST['submit'])) {
 	// saving preferences
 	unset($_POST['submit']);
-
+	$setup = false;
 	if (isset($_POST['setup'])) {
+		$setup = true;
 		unset($_POST['setup']);
 		$elements_form = formToArray($_POST);
 		try {
@@ -60,10 +61,16 @@ if (isset($_POST['submit'])) {
 	}
 	else {
 		// conf not valid
-		header_static(_('Configuration'));
-		echo '<p class="msg_error centered">'.$ret.'</p>';
-		print_prefs($prefs);
-		footer_static();
+		if ( $setup) {
+			popup_error('Error : '.$ret);
+			redirect('configuration.php?action=init');
+		}
+		else {
+			header_static(_('Configuration'));
+			echo '<p class="msg_error centered">'.$ret.'</p>';
+			print_prefs($prefs);
+			footer_static();
+		}
 	}
 }
 else {
