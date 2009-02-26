@@ -125,7 +125,7 @@ if (!is_array($advanced_settings))
 $list_servers = array();
 // if (in_array('server', $advanced_settings) && isset($_GET['force'])) {
 // 	$servers = $user->getAvailableServers();
-	$servers = Servers::getAvailable();
+	$servers = Servers::getAvailableType('linux');
 	if (!is_array($servers) || count($servers) < 1)
 		die_error(_('No available server'),__FILE__,__LINE__);
 
