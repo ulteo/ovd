@@ -221,7 +221,7 @@ class Server {
 		));
 
 		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
-		$this->setStatus('broken');
+		$this->setAttribute('status', 'broken');
 
 		$ev->emit();
 
@@ -250,7 +250,7 @@ class Server {
 		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
 
 		Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
-		$this->setStatus('broken');
+		$this->setAttribute('status', 'broken');
 
 		$this->isNotReady();
 		return true;
@@ -304,8 +304,6 @@ class Server {
 				break;
 		}
 
-		Abstract_Server::save($this);
-
 		return true;
 	}
 
@@ -351,8 +349,6 @@ class Server {
 
 		$this->setAttribute('type', $buf);
 
-// 		Abstract_Server::save($this);
-
 		return true;
 	}
 
@@ -385,8 +381,6 @@ class Server {
 			return false;
 
 		$this->setAttribute('version', $buf);
-
-// 		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -465,8 +459,6 @@ class Server {
 
 		foreach ($keys as $k => $v)
 			$this->setAttribute($k, trim($v));
-
-// 		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -690,8 +682,6 @@ class Server {
 				}
 			}
 		}
-
-// 		Abstract_Server::save($this);
 
 		$current_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
 		$current_liaison_key = array_keys($current_liaison);

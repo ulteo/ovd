@@ -116,8 +116,6 @@ class Session {
 				break;
 		}
 
-		Abstract_Session::save($this);
-
 		return true;
 	}
 
