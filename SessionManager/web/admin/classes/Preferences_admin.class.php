@@ -104,7 +104,7 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','mails_settings');
 		$c = new ConfigElement('send_host', _('Host'), _('Host'), _('Host'),'',NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),1,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
+		$c = new ConfigElement('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','mails_settings');
 		$c = new ConfigElement('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'),'',NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','mails_settings');
