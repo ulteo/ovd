@@ -510,7 +510,7 @@ function formToArray_cleanup2(&$buf, $key=NULL) {
 		if ( count($buf) > 0) {
 			$first_key =  $buf_keys[0];
 			if ( is_null($key) == false) {
-				if ($key == $first_key) {
+				if ($key === $first_key) {
 					$buf3 = $buf[$first_key];
 					$buf = $buf3;
 				}
