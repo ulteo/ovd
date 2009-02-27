@@ -310,7 +310,10 @@ function show_default() {
 	echo '<td>';
 	if ($server_online) {
 	  echo '<form action="servers.php" method="get">';
-	  echo '<input type="submit" value="'.$switch_msg.'"/>';
+	  echo '<input';
+       if ($switch_value == 0)
+         echo ' style="background: #44e139;"';
+       echo ' type="submit" value="'.$switch_msg.'"/>';
 	  echo '<input type="hidden" name="action" value="maintenance" />';
 	  echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
 	  echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
@@ -330,7 +333,7 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
+      echo '<input style="background: #44e139;" type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
       echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
       echo '</form>';
       echo '</td>';
@@ -406,7 +409,7 @@ function show_unregistered() {
         echo '<form action="servers.php" method="get">';
         echo '<input type="hidden" name="action" value="register" />';
         echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
-        echo '<input type="submit" value="'._('Register').'" />';
+        echo '<input style="background: #44e139;" type="submit" value="'._('Register').'" />';
         echo '</form>';
       }
       echo '</td>';
@@ -432,7 +435,7 @@ function show_unregistered() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
+      echo '<input style="background: #44e139;" type="submit" name="mass_register" value="'._('Register').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '<td>';
@@ -685,7 +688,10 @@ function show_manage($fqdn) {
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
     echo '<input type="hidden" name="action" value="maintenance" />';
     echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
-    echo '<input type="submit" value="'.$switch_button.'"/>';
+    echo '<input';
+    if ($switch_value == 0)
+      echo ' style="background: #44e139;"';
+    echo ' type="submit" value="'.$switch_button.'"/>';
     echo '</form>';
     echo '</td></tr>';
   }
