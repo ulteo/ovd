@@ -21,7 +21,9 @@ ANWIKI_REGEXP=-e 's/src=\"img/src=\"\/main\/images\/uovd\/doc\/img/g' -e 's/<img
 all: $(DST) $(PDF)
 
 %.html: %.xml
-	xsltproc --xinclude xhtml.xsl $< >$@
+	xsltproc --stringparam admon.graphics.path img/ \
+	--xinclude xhtml.xsl \
+	$< >$@
 
 %.pdf:  %.xml 
 	dblatex -T db2latex $<

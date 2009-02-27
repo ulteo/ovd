@@ -112,7 +112,7 @@ mysql> exit]]>
      </listitem>
 
      <listitem>
-	<para>Intall the <emphasis>ovd-session-manager</emphasis> package:</para>
+	<para>Install the <emphasis>ovd-session-manager</emphasis> package:</para>
         <screen>
 	  <![CDATA[
 # yum install --nogpgcheck ovd-session-manager-1.0~beta1.2.1.noarch.rpm]]>
@@ -173,7 +173,7 @@ Is this correct? [Y/n] ]]>
   </section>
 
   <section>
-    <title>Application Server installation (cm.ulteo.com)</title>
+    <title>Application Server installation (aps.ulteo.com)</title>
 
     <itemizedlist>
      <listitem>
@@ -192,15 +192,31 @@ Is this correct? [Y/n] ]]>
 
      <listitem>
        <para>Launch the configuration tool</para>
+
+       <important>
+	 <para>
+	   If you are going to install an Application server on the
+	   same machine as your Session Manager, it's adviced to use:
+	   <itemizedlist>
+	     <listitem>
+	       <para>FQDN: 127.0.0.1</para>
+	     </listitem>
+	     <listitem>
+	       <para>SM URL: <ulink url="http://127.0.0.1/sessionmanager" /></para>
+	     </listitem>
+	   </itemizedlist>
+	 </para>
+       </important>
+
        <screen>
 	 <![CDATA[
 # as-chroot-install 
-Full Qualified Domain Name [cm.ulteo.com]: cm.ulteo.com
+Full Qualified Domain Name [aps.ulteo.com]: aps.ulteo.com
 Session Manager URL: http://sm.ulteo.com/sessionmanager
 Chroot installation path: /opt/ulteo
 
 Options:
-* FQDN: cm.ulteo.com
+* FQDN: aps.ulteo.com
 * SM URL: http://sm.ulteo.com/sessionmanager
 * chroot path: /opt/ulteo
 * chroot download: yes
@@ -231,6 +247,7 @@ Is this correct? [Y/n] ]]>
 
     </itemizedlist>
 
+    <xi:include href="sub/generic.xml" xpointer="aps_manage_sm" />
     <beginpage />
   </section>
 

@@ -227,8 +227,17 @@ mysql> exit]]>
 	  The first question is about the FQDN (Fully Qualified Domain Name) hostname of the machine you are using as an application server.
 	  This <emphasis>FQDN</emphasis> is used by the session manager server to manage application servers.
 	  If the FQDN is not defined well, this application server will never register on the Main server. 
-	  Here we are using <emphasis>cm.ulteo.com</emphasis>:
+	  Here we are using <emphasis>aps.ulteo.com</emphasis>:
 	</para>
+
+	<important>
+	  <para>
+	    If you are going to install an Application server on the
+	    same machine as your Session Manager, it's adviced to use
+	    <emphasis role="strong">127.0.0.1</emphasis> as FQDN.
+	  </para>
+	</important>
+
 	<para>
 	  <inlinemediaobject>
             <imageobject>
@@ -247,6 +256,17 @@ mysql> exit]]>
 	  The next question is about the URL/path where the session manager can be accessed.
 	  Provide the URL that was used previously (we use <ulink url="http://sm.ulteo.com/sessionmanager" /> here for the example, but of course, you have to set your own domain name).
 	</para>
+
+	<important>
+	  <para>
+	    If you are going to install an Application server on the
+	    same machine as your Session Manager, it's adviced to use
+	    <emphasis role="strong"><ulink
+	    url="http://127.0.0.1/sessionmanager" /></emphasis> as
+	    URL.
+	  </para>
+	</important>
+
 	<para>
           <inlinemediaobject>
             <imageobject>
@@ -274,6 +294,8 @@ mysql> exit]]>
       <![CDATA[
 # /etc/init.d/ulteo-ovd restart]]>
     </screen>
+
+    <xi:include href="sub/generic.xml" xpointer="aps_manage_sm" />
     <beginpage />
   </section>
 

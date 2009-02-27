@@ -15,7 +15,7 @@
 	  <para>a LAMP (Linux Apache MySQL PHP) server for the Session Manager (here we are using <emphasis>sm.ulteo.com</emphasis> for that server, but you need to set your own domain name)</para>
 	</listitem>
 	<listitem>
-	  <para>another server for the Application Server. (here we are using <emphasis>cm.ulteo.com</emphasis> for that server, but you need to set it according to your own domain name)</para>
+	  <para>another server for the Application Server. (here we are using <emphasis>aps.ulteo.com</emphasis> for that server, but you need to set it according to your own domain name)</para>
 	</listitem>
       </itemizedlist>
     </para>
@@ -75,7 +75,7 @@
       </inlinemediaobject>
     </para>
 
-
+    <!--
     <simplesect>
       <title>Applications server settings</title>
 
@@ -105,7 +105,7 @@
 	</inlinemediaobject>
       </para>
     </simplesect>
-
+    -->
     <para>
      For other specific configuration, please refer to the
      <emphasis role="strong">Administration Console documentation</emphasis>.
@@ -177,9 +177,11 @@
   </section>
 
 
-  <section id="publication">
-    <title>Register the server and perform a "Publication"</title>
-    <para>
+  <section id="aps_manage_sm">
+    <title>Configuration</title>
+    <simplesect>
+      <title>Register the server</title>
+      <para>
       An Application server has been installed and is now ready. First, we have to register it, and switch it from "maintenance" to "production" mode.
 
     <itemizedlist>
@@ -213,10 +215,49 @@
       </listitem>
     </itemizedlist>
     </para>
+    </simplesect>
 
     <simplesect>
-      <title>Publication</title>
+      <title>Set an external name</title>
 
+      <para>
+	The server <emphasis role="strong">external name</emphasis> is
+	an option. If all your machines are in the same network, you
+	don't have to change it.
+      </para>
+
+      <important>
+	<para>
+	  If you installed your Application server on the same machine
+	  as your Session Manager and you follow our advices, you
+	  setup <emphasis role="strong">127.0.0.1</emphasis> as server
+	  name so you <emphasis role="strong">must</emphasis> define
+	  an external name.
+	</para>
+      </important>
+
+      <para>
+	The <emphasis role="strong">external name</emphasis> is used
+	to launch session. When you launch a session, you are
+	redirected to an Application server using the external name as
+	redirection. In some cases the default external name (the
+	FQDN you gave at the ApS installation) is not valid. For
+	instance, if you setup an private IP address and you want to
+	connect from Internet.
+      </para>
+
+      <screenshot>
+	<screeninfo>Session Manager - server external name</screeninfo>
+	<graphic fileref="img/sm_admin_external_name.png"></graphic>
+      </screenshot>
+    </simplesect>
+
+  </section>
+
+
+  <section id="publication">
+    <title>Perform a "Publication"</title>
+ 
       <para>
 	A publication is an association between a users group and an
 	applications group. It's an authorization for a users group to
@@ -244,8 +285,6 @@
     <para>
       Go to the Publications page, select and follow the <emphasis>wizard</emphasis> steps.
     </para>
-    </simplesect>
-
     <beginpage />
   </section>
 
