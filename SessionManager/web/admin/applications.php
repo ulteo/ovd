@@ -92,7 +92,7 @@ function action_modify($applicationDB, $id) {
 }
 
 function show_default($applicationDB) {
-  $applications = $applicationDB->getList();
+  $applications = $applicationDB->getList(true);
   $is_empty = (is_null($applications) or count($applications)==0);
 
   $is_rw = $applicationDB->isWriteable();

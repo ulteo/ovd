@@ -310,7 +310,7 @@ function show_step3($error_=NULL) {
     die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
-  $applications = $applicationDB->getList();
+  $applications = $applicationDB->getList(true);
 
   page_header();
   echo '<div>';
@@ -349,10 +349,12 @@ function show_step3($error_=NULL) {
     $content = 'content'.(($count++%2==0)?1:2);
 
     echo '<tr class="'.$content.'">';
-    echo '<td colspan="2"><input class="input_checkbox" type="checkbox" name="apps[]" value="'.$application->getAttribute('id').'"';
+    echo '<td colspan="2" onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $application->getAttribute('description')).'\'); return false;" onmouseout="hideInfoBulle(); return false;"><input class="input_checkbox" type="checkbox" name="apps[]" value="'.$application->getAttribute('id').'"';
     if (isset($_SESSION['wizard']['apps']) && in_array($application->getAttribute('id'), $_SESSION['wizard']['apps']))
       echo ' checked="checked"';
-    echo '/> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'" title="'.$application->getAttribute('description').'">'.$application->getAttribute('name').'</a></td>';
+    echo '/>';
+    $icon_id = ($application->haveIcon())?$application->getAttribute('id'):0;
+    echo '&nbsp; <img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
     echo '</tr>';
   }
   $content = 'content'.(($count++%2==0)?1:2);
