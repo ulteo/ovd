@@ -72,6 +72,16 @@ else {
 			case 'general':
 				print_prefs4($prefs, 'general', false);
 				print_prefs5($prefs, 'general', 'mails_settings');
+				if (is_array($prefs->prefs['plugins'])) {
+					foreach (array_keys($prefs->prefs['plugins']) as $k){
+						if (str_startswith($k,'FS')) {
+	// 						unset($prefs->prefs['plugins'][$k]);
+							unset($prefs->elements['plugins'][$k]);
+						}
+					}
+				}
+				echo '<br />';
+				print_prefs4($prefs, 'plugins', true);
 				break;
 			case 'events':
 				if (array_key_exists('events',$prefs->elements))

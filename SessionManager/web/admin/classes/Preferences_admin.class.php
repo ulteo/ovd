@@ -245,7 +245,7 @@ class Preferences_admin extends Preferences {
 			$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 		}
 
-		$c = new ConfigElement('plugin_enable', _('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
+		$c = new ConfigElement('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
 		$this->addPrettyName('plugins',_('Plugins configuration'));
 		$this->add($c,'plugins');
 		unset($p2['plugins']);
@@ -291,7 +291,7 @@ class Preferences_admin extends Preferences {
 		foreach ($available_module as $module_name => $sub_module)
 			$modules_prettyname[$module_name] = $module_name;
 
-		$c2 = new ConfigElement('module_enable',_('Modules options'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, ConfigElement::$MULTISELECT);
+		$c2 = new ConfigElement('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, ConfigElement::$MULTISELECT);
 		$this->add($c2,'general');
 
 		foreach ($available_module as $mod => $sub_mod){
