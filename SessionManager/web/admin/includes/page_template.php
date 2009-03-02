@@ -280,6 +280,6 @@ echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc
   }
 
   echo '</td>';
-  echo '<td style="text-align: left; vertical-align: top;">';
-  echo '<div class="container" style="background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+  echo '<td style="text-align: left; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+  echo '<div class="container">';
 }
