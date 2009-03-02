@@ -19,7 +19,7 @@
     <xi:include href="sub/generic.xml" xpointer="prerequisites" />
 
     <para>
-      Both servers need to be installed with <emphasis role="strong">Ubuntu 8.04.1 (Hardy Heron) Server for x86/32 bits</emphasis> (it can be downloaded from <ulink url="http://releases.ubuntu.com/8.04/ubuntu-8.04.1-server-i386.iso" />).
+      Both servers need to be installed with <emphasis role="strong">Ubuntu 8.04.2 (Hardy Heron) Server for x86/32 bits</emphasis> (it can be downloaded from <ulink url="http://releases.ubuntu.com/8.04/ubuntu-8.04.2-server-i386.iso" />).
       All operations need to be done as <emphasis>super user</emphasis>.
     </para>
 
