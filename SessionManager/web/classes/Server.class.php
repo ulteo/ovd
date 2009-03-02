@@ -182,12 +182,7 @@ class Server {
 	public function isOnline() {
 		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
 
-		$ret = false;
 		$warn = false;
-
-		$ev = new ServerStatusChanged(array(
-			'fqdn'	=>	$this->fqdn
-		));
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status')) {
 			$warn = true;
@@ -195,21 +190,16 @@ class Server {
 		}
 
 		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
-			$ret = true;
+			return true;
 
-		$ev->setAttribute('status', ($ret)?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE);
-
-		$ev->emit();
-
-		if ($ret === false && $warn === true) {
+		if ($warn === true) {
 			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
 			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
 		}
 
-		if ($ret !== true)
-			$this->isNotReady();
+		$this->isNotReady();
 
-		return $ret;
+		return false;
 	}
 
 	public function isUnreachable() {
@@ -271,7 +261,14 @@ class Server {
 			return false;
 		}
 
+		$ev = new ServerStatusChanged(array(
+			'fqdn'	=>	$this->fqdn,
+			'status'	=>	($ret == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
+		));
+
 		$this->setStatus($ret);
+
+		$ev->emit();
 
 		if ($ret !== 'ready')
 			$this->isNotReady();
