@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - Accounts Integration</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2009</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    The default configuration of the Session manager gives a static
+    user list in order to simplify the installations steps.
+    But, of course, it is possible to manage users from MySQL or
+    integrate user accounts from an external database.
+  </para>
+
+  <para>
+    For now, only <emphasis role="strong">LDAP</emphasis> and
+    <emphasis role="strong">Active Directory</emphasis> are supported.
+  </para>
+
+  <para>
+    With the internal system, it is possible to create, remove and
+    customize users.
+  </para>
+
+  <para>
+    This configuration is available in the Administration console at <emphasis role="strong">Configuration</emphasis> ->
+    <emphasis role="strong">Profiles Settings</emphasis>.
+  </para>
+
+  <para>
+    The <emphasis>Profile</emphasis> setting is composed by :
+    <itemizedlist>
+      <listitem>
+	<para>the database access (host, login ...)</para>
+      </listitem>
+
+      <listitem>
+	<para>the users managment configuration</para>
+      </listitem>
+
+      <listitem>
+	<para>the usergroups managment configuration.</para>
+      </listitem>
+    </itemizedlist>
+
+    <note>
+      <para>
+	Use usergroups from a remote database is only an
+	option. By default, usergroups are managed by the
+	internal system.
+      </para>
+    </note>
+  </para>
+
+  <section>
+    <title>Internal accounts</title>
+
+    <para>
+      The internal accounts managment is activated by default.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - main page</screeninfo>
+      <graphic fileref="img/profile-internal.png"></graphic>
+    </screenshot>
+
+    <para>
+      This module give two options:
+      <itemizedlist>
+	<listitem>
+	  <para><emphasis role="strong">Static list: </emphasis> This
+	  is the default option. It's using a static hardcoded user
+	  list. You will not customize the users. Those users does not have a password.</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="strong">Dynmaic list: </emphasis> if
+	  you select this options, you will be able to create your own
+	  users from the <ulink url="users.php">Users page</ulink>.</para>
+	</listitem>
+      </itemizedlist>
+    </para>
+
+    <note>
+      <para>
+	The Dynamic list is the only User module that allow you to
+	create/delete or modify users. The other modules have a
+	<emphasis role="strong">read only</emphasis> mode on the
+	database.
+      </para>
+    </note>
+  </section>
+
+
+  <section>
+    <title>LDAP integration</title>
+
+    <para>
+      Here is a classic LDAP configuration. You have to give the LDAP
+      host and suffix, the branch where are stored the users.
+    </para>
+
+    <para>
+      An administrator account is needed to be able to list the
+      directory if your LDAP does not allow anonymous bind.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - main page</screeninfo>
+      <graphic fileref="img/profile-ldap.png"></graphic>
+    </screenshot>
+
+    <simplesect>
+      <title>Users groups</title>
+
+      <para>
+	There is two ways for using LDAP users groups:
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">Member of:</emphasis> find
+	    users group with the memberof field of users attributes</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">Posix group:</emphasis>
+	    giving a search scope, each item is a users group and match
+	    user association with the <emphasis>memberuid</emphasis>
+	    field.</para>
+
+	  </listitem>
+	</itemizedlist>
+
+      </para>
+
+      <screenshot>
+	<screeninfo>Session Manager - LDAP integration users groups</screeninfo>
+	<graphic fileref="img/profile-ldap-ug.png"></graphic>
+      </screenshot>
+    </simplesect>
+
+    <simplesect>
+      <title>Home directory</title>
+
+      <para>
+	It's possible to configure your integration in order to get
+	<emphasis role="strong">CIFS</emphasis> directories for your users
+	so they can use them as system home directory.
+      </para>
+
+      <screenshot>
+	<screeninfo>Session Manager - LDAP integration home dir</screeninfo>
+	<graphic fileref="img/profile-ldap-home.png"></graphic>
+      </screenshot>
+
+      <para>
+	To configure the CIFS homedir, the first step is to give the
+	name of the LDAP field that contain this information.
+      </para>
+
+      <para>
+	Then you have to select the authentication method. In most
+	cases, the <emphasis role="strong">user
+	login/password</emphasis> is the good one.
+      </para>
+    </simplesect>
+  </section>
+
+
+  <section>
+    <title>Active Directory integration</title>
+
+    <para>
+      The AD mdoule extends from the LDAP one but allow an easier
+      configuration.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - Profile ad</screeninfo>
+      <graphic fileref="img/profile-ad.png"></graphic>
+    </screenshot>
+
+    <important>
+      <para>
+	At the moment, if you don't want to specify your own branch
+	for user, you can only specify a <emphasis
+	role="strong">Organization Unit</emphasis> (OU).
+      </para>
+    </important>
+
+
+    <simplesect>
+      <title>Users groups</title>
+
+      <para>
+	The AD users groups integration use the LDAP memberof.
+      </para>
+    </simplesect>
+
+    <simplesect>
+      <title>Home Directory</title>
+
+      <para>
+	At the moment, the CIFS parameter give an asynchronisous mode
+	with the <emphasis role="strong">roaming profile</emphasis>.
+	It will be fixed in the next version by redirect directories
+      </para>
+    </simplesect>
+  </section>
+</article>

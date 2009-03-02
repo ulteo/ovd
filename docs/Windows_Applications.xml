@@ -4,8 +4,7 @@
 
 <article>
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop - Windows Applications
-    question</title>
+    <title>Ulteo Open Virtual Desktop - <trademark>Windows</trademark> Applications</title>
     <graphic fileref="img/ovd.png" align="center"/>
     <!--
     <authorgroup>
@@ -27,7 +26,7 @@
   </articleinfo>
 
   <para>
-    This documentation describe how to use Windows applications on an
+    This documentation describe how to use <trademark>Windows</trademark> applications on an
     existing and running <emphasis>Ulteo Open Virtual
     Desktop</emphasis>.
   </para>
@@ -42,32 +41,37 @@
   <section>
     <title>Prerequisites</title>
     <para>
-      To use Windows applications, you need to plug your Session
-      Manager on an Microsoft Domain Controler (Active Directory).
+      To use <trademark>Windows</trademark> applications, you need to plug your Session
+      Manager on an <trademark
+      class="registered">Microsoft</trademark> Domain Controler
+      (Active Directory).
     </para>
 
     <para>
       You also need to have at least one <emphasis
-      role="strong">Microsoft Windows Server 2003</emphasis> system
-      with <emphasis role="strong">Terminal services</emphasis>
-      installed and configured.
+      role="strong"><trademark
+      class="registered">Microsoft</trademark> <trademark><trademark>Windows</trademark>
+      Server 2003</trademark></emphasis> system with <emphasis
+      role="strong"><trademark>Terminal services</trademark></emphasis> installed and
+      configured.
     </para>
 
     <para>
-      The Windows Server machines have to be plug in the same domain
+      The <trademark>Windows</trademark> Server machines have to be plug in the same domain
       controler as the Session Manager. To plug a Session Manager to a
-      Microsoft Active Directory, please refer to
-      <emphasis>Administration Console</emphasis> documentation.
+      <trademark class="registered">Microsoft Active</trademark>
+      Directory, please refer to <emphasis>Administration
+      Console</emphasis> documentation.
     </para>
   </section>
 
   <section>
-    <title>Installation of the Windows agent</title>
+    <title>Installation of the <trademark>Windows</trademark> agent</title>
 
     <para>
-      Download the Ulteo Open Virtual Desktop Windows agent setup from
+      Download the Ulteo Open Virtual Desktop <trademark>Windows</trademark> agent setup from
       <ulink url="http://www.ulteo.com">this place at
-      www.ulteo.com</ulink> on your Windows machine and execute it.
+      www.ulteo.com</ulink> on your <trademark>Windows</trademark> machine and execute it.
     </para>
 
     <screenshot>
@@ -76,8 +80,8 @@
     </screenshot>
 
     <para>
-      In the configuration frame, you have to set the Windows server
-      name. To get the Windows FQDN, go to <emphasis>Start</emphasis>,
+      In the configuration frame, you have to set the <trademark>Windows</trademark> server
+      name. To get the <trademark>Windows</trademark> FQDN, go to <emphasis>Start</emphasis>,
       then right-click on <emphasis>My Computer</emphasis>:
       <emphasis>Properties</emphasis>.
       In the <emphasis>Computer Name</emphasis> tab, the FQDN is
@@ -90,14 +94,14 @@
     </screenshot>
 
     <para>
-      Finish the installation. The Windows agent should be configured
+      Finish the installation. The <trademark>Windows</trademark> agent should be configured
       and running.
     </para>
 
     <simplesect>
       <title>Session Manager side</title>
       <para>
-	Your Windows server should appear in the
+	Your <trademark>Windows</trademark> server should appear in the
 	<emphasis>Unregistered servers</emphasis>.
       </para>
 
@@ -108,7 +112,7 @@
 
       <para>
 	If your server does not appear in the list, you might have
-	a DNS configuration issue, or ths Windows agent have a
+	a DNS configuration issue, or ths <trademark>Windows</trademark> agent have a
 	bug. Refert to <xref linkend="s_issue"/>.
       </para>
     </simplesect>
@@ -117,12 +121,12 @@
   <section>
     <title>Register the server and publish some application</title>
     <para>
-      First, register your Windows server and switch it from
+      First, register your <trademark>Windows</trademark> server and switch it from
       "maintenance" to "production" mode.
     </para>
 
     <para>
-      You should be able to list the application from your Windows server
+      You should be able to list the application from your <trademark>Windows</trademark> server
     </para>
 
     <screenshot>
@@ -131,14 +135,14 @@
     </screenshot>
 
     <para>
-      The next step is to add some Windows applications into an
+      The next step is to add some <trademark>Windows</trademark> applications into an
       applications groups in order to authorized a user group to run
-      your Windows applicaitions.
+      your <trademark>Windows</trademark> applicaitions.
     </para>
 
     <para>
       So perform a publication as you did previously did it but by
-      select some Windows applications.  To have a global view of
+      select some <trademark>Windows</trademark> applications.  To have a global view of
       which user have access to which applications, you can browse the
       <emphasis role="strong">Summary</emphasis> page from the
       <emphasis>Status</emphasis> menu.
@@ -149,7 +153,7 @@
   <section>
     <title>Lauch a session</title>
     <para>
-      If you launch a session, your should access to your Windows applications.
+      If you launch a session, your should access to your <trademark>Windows</trademark> applications.
     </para>
 
     <screenshot>
@@ -165,21 +169,21 @@
     <title>Internal System</title>
 
     <simplesect>
-      <title>Consult the Windows agent log</title>
+      <title>Consult the <trademark>Windows</trademark> agent log</title>
 
       <para>
-	In a default Windows installation, the log file is at
+	In a default <trademark>Windows</trademark> installation, the log file is at
 	<emphasis>C:\Documents and Settings\All Users\Application
 	Data\Ulteo\ovd\main.log</emphasis>.
       </para>
 
       <para>
 	It's also possible to see some debug messages in the <emphasis
-	role="strong">Windows Event Viewer</emphasis> (in Appplication section).
+	role="strong"><trademark>Windows</trademark> Event Viewer</emphasis> (in Appplication section).
       </para>
 
       <screenshot>
-	<screeninfo>Windows - events</screeninfo>
+	<screeninfo><trademark>Windows</trademark> - events</screeninfo>
 	<graphic fileref="img/aps_win_event.png"></graphic>
       </screenshot>
 
@@ -188,7 +192,7 @@
     <simplesect>
       <title>Automaticaly start the service at boot</title>
       <para>
-	At the moment, the Windows service is not configured to be
+	At the moment, the <trademark>Windows</trademark> service is not configured to be
 	started automaticaly at boot.
       </para>
 
@@ -199,7 +203,7 @@
       </para>
 
       <screenshot>
-	<screeninfo>Windows - services managment</screeninfo>
+	<screeninfo><trademark>Windows</trademark> - services managment</screeninfo>
 	<graphic fileref="img/aps_win_services.png"></graphic>
       </screenshot>
 
@@ -210,7 +214,7 @@
       </para>
 
       <screenshot>
-	<screeninfo>Windows - services set to start as boot</screeninfo>
+	<screeninfo><trademark>Windows</trademark> - services set to start as boot</screeninfo>
 	<graphic fileref="img/aps_win_services_set_boot.png"></graphic>
       </screenshot>
     </simplesect>

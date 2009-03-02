@@ -25,13 +25,11 @@ h2 {
 h3 {
     font-size: 1.66em;
     border-bottom: 2px solid #8cacbb;
-    margin-left: 2%;
 }
 
 h4 {
     font-size: 1.33em;
     border-bottom: 1px solid #8cacbb;
-    margin-left: 4%;
 }
 
 li p {
@@ -58,6 +56,13 @@ pre {
 	border: 1px solid #8cacbb;
 
 	padding: 0.5em;
+}
+
+.section .section {
+	padding-left: 3%;
+}
+.section .simplesect {
+	padding-left: 3%;
 }
 
 hr {
