@@ -4,7 +4,8 @@ var rand_ = Math.round(Math.random()*100);
 
 function doLogin(this_) {
 	form_ = this_;
-	window_ = popupOpen(rand_);
+	if ($('use_popup_true') && $('use_popup_true').checked)
+		window_ = popupOpen(rand_);
 
 	$('launch_button').disabled = true;
 
@@ -33,7 +34,8 @@ function doLogin(this_) {
 function onLoginSuccess(transport) {
 	$('login_status').innerHTML = '<p class="msg_ok">'+transport.responseText+'</p>';
 
-	$('startsession').target = 'Ulteo'+rand_;
+	if ($('use_popup_true') && $('use_popup_true').checked)
+		$('startsession').target = 'Ulteo'+rand_;
 	$('startsession').submit();
 
 	return true;

@@ -154,13 +154,17 @@ class Preferences_admin extends Preferences {
 
 		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),
 			'shareable' => _('shareable'),
-			'desktop_icons' => _('desktop icons'), 'debug' => _('debug')),ConfigElement::$MULTISELECT);
+			'desktop_icons' => _('desktop icons')),ConfigElement::$MULTISELECT);
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
 		$c = new ConfigElement('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$this->add($c,'general','web_interface_settings');
+		$c = new ConfigElement('use_popup', _('Use pop-up'), _('Use pop-up'), _('Use pop-up'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$this->add($c,'general','web_interface_settings');
+		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array(),array('popup' => _('popup'), 'debug' => _('debug')),ConfigElement::$MULTISELECT);
 		$this->add($c,'general','web_interface_settings');
 
 		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);

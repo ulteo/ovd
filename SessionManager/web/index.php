@@ -72,6 +72,9 @@ $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $debug = 0;
 
+$default_settings = $prefs->get('general', 'web_interface_settings');
+$use_popup = $default_settings['use_popup'];
+
 $mods_enable = $prefs->get('general', 'module_enable');
 if (!in_array('UserDB', $mods_enable))
 	die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
@@ -117,10 +120,17 @@ $testapplet = $buf['testapplet'];
 // $user_id = $user->getAttribute('uid');
 // $user_displayname = $user->getAttribute('displayname');
 
-$advanced_settings = $prefs->get('general', 'session_settings_defaults');
-$advanced_settings = $advanced_settings['advanced_settings_startsession'];
-if (!is_array($advanced_settings))
-	$advanced_settings = array();
+$advanced_settings_session = $prefs->get('general', 'session_settings_defaults');
+$advanced_settings_session = $advanced_settings_session['advanced_settings_startsession'];
+if (!is_array($advanced_settings_session))
+	$advanced_settings_session = array();
+
+$advanced_settings_webinterface = $prefs->get('general', 'web_interface_settings');
+$advanced_settings_webinterface = $advanced_settings_webinterface['advanced_settings_startsession'];
+if (!is_array($advanced_settings_webinterface))
+	$advanced_settings_webinterface = array();
+
+$advanced_settings = array_merge($advanced_settings_session, $advanced_settings_webinterface);
 
 $list_servers = array();
 // if (in_array('server', $advanced_settings) && isset($_GET['force'])) {
@@ -271,7 +281,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -463,6 +473,23 @@ require_once('header.php');
 					<?php
 						}
 
+						if (in_array('popup', $advanced_settings)) {
+					?>
+					<tr class="content2">
+						<td class="title">
+							<?php echo _('Use pop-up'); ?>
+						</td>
+						<td>
+							<input class="input_radio" id="use_popup_true" type="radio" name="use_popup" value="1"<?php if ($use_popup == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+							<input class="input_radio" id="use_popup_false" type="radio" name="use_popup" value="0"<?php if ($use_popup != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+						</td>
+					</tr>
+					<?php
+						} else {
+							$buf_use_popup = ($use_popup == 1)?'use_popup_true':'use_popup_false';
+							echo '<input type="hidden" id="'.$buf_use_popup.'" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+						}
+
 						if (in_array('debug', $advanced_settings)) {
 					?>
 					<tr class="content2">
@@ -483,6 +510,8 @@ require_once('header.php');
 			<?php
 				} else {
 					echo '<input type="hidden" id="desktop_size" name="desktop_size" value="auto" />';
+					$buf_use_popup = ($use_popup == 1)?'use_popup_true':'use_popup_false';
+					echo '<input type="hidden" id="'.$buf_use_popup.'" name="use_popup" value="'.$use_popup.'" checked="checked" />';
 					echo '<input type="hidden" id="session_debug_false" name="debug" value="0" checked="checked" />';
 				}
 			?>
