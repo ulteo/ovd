@@ -52,6 +52,10 @@ class Preferences_admin extends Preferences {
 		$this->elements = array();
 
 		$this->addPrettyName('general',_('General configuration'));
+
+		$c = new ConfigElement('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'en_GB', array('en_GB'=>'English','fr_FR'=>'Français'), ConfigElement::$SELECT);
+		$this->add($c,'general');
+
 		$c = new ConfigElement('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, ConfigElement::$INPUT);
 		$this->add($c,'general');
 

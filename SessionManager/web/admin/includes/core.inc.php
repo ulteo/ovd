@@ -20,9 +20,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
- require_once(dirname(__FILE__).'/../../includes/core.inc.php'); // general core
+require_once(dirname(__FILE__).'/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-// admin stuffs
 require_once(dirname(__FILE__).'/functions.inc.php');
 
 if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {

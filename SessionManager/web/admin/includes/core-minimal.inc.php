@@ -6,7 +6,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -20,5 +20,19 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-	require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
-	require_once(dirname(__FILE__).'/functions.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
+
+$buf = 'en_GB';
+try {
+	$prefs = new Preferences();
+	$buf = $prefs->get('general', 'admin_language');
+}
+catch (Exception $e) {
+}
+$language = locale2unix($buf);
+setlocale(LC_ALL, $language);
+$domain = 'uovdsm';
+bindtextdomain($domain, LOCALE_DIR);
+textdomain($domain);
+
+require_once(dirname(__FILE__).'/functions.inc.php');
