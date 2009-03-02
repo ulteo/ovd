@@ -56,12 +56,6 @@ class Preferences_admin extends Preferences {
 		$c = new ConfigElement('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'en_GB', array('en_GB'=>'English','fr_FR'=>'Français'), ConfigElement::$SELECT);
 		$this->add($c,'general');
 
-		$c = new ConfigElement('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, ConfigElement::$INPUT);
-		$this->add($c,'general');
-
-		$c = new ConfigElement('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,ConfigElement::$INPUT);
-		$this->add($c,'general');
-
 		$c = new ConfigElement('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), ConfigElement::$MULTISELECT);
 		$this->add($c,'general');
 
@@ -162,6 +156,13 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
+
+		$c = new ConfigElement('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, ConfigElement::$INPUT);
+		$this->add($c,'general','web_interface_settings');
+
+		$c = new ConfigElement('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,ConfigElement::$INPUT);
+		$this->add($c,'general','web_interface_settings');
+
 		$c = new ConfigElement('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);

@@ -52,7 +52,8 @@ if (isset($_POST['invite']) && $_POST['invite'] == 1) {
 	if (! $prefs)
 		die_error('get Preferences failed',__FILE__,__LINE__);
 
-	$main_title = $prefs->get('general', 'main_title');
+	$web_interface_settings = $prefs->get('general', 'web_interface_settings');
+	$main_title = $web_interface_settings['main_title'];
 
 	$subject = _('Invitation').' from '.$main_title;
 

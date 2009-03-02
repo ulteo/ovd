@@ -50,8 +50,10 @@ if (isset($_SESSION['admin_login'])) {
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	$main_title = DEFAULT_PAGE_TITLE;
-else
-	$main_title = $prefs->get('general', 'main_title');
+else {
+	$web_interface_settings = $prefs->get('general', 'web_interface_settings');
+	$main_title = $web_interface_settings['main_title'];
+}
 
 header_static($main_title.' - '._('Administration'));
 ?>

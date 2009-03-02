@@ -156,7 +156,9 @@ function sendamail($to_, $subject_, $message_) {
 	if (! $prefs)
 		die_error('get Preferences failed',__FILE__,__LINE__);
 
-	$title = $prefs->get('general', 'main_title');
+	$web_interface_settings = $prefs->get('general', 'web_interface_settings');
+	$title = $web_interface_settings['main_title'];
+
 	$buf = $prefs->get('general', 'mails_settings');
 
 	$method = $buf['send_type'];
@@ -302,8 +304,9 @@ function header_static($title_=false) {
 		$title_ = DEFAULT_PAGE_TITLE;
 		$logo_url = DEFAULT_LOGO_URL;
 	} else {
-		$title_ = $prefs->get('general', 'main_title');
-		$logo_url = $prefs->get('general', 'logo_url');
+		$web_interface_settings = $prefs->get('general', 'web_interface_settings');
+		$title_ = $web_interface_settings['main_title'];
+		$logo_url = $web_interface_settings['logo_url'];
 	}
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
