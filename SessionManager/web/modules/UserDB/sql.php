@@ -61,10 +61,10 @@ class UserDB_sql {
 
 	public function getList($sort_=false){
 		Logger::debug('main','ApplicationDB_sql::getList');
+		$result = array();
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1', USER_TABLE);
 		if ($res !== false){
-			$result = array();
 			$rows = $sql2->FetchAllResults($res);
 			foreach ($rows as $row){
 				$u = $this->generateUserFromRow($row);
@@ -77,8 +77,6 @@ class UserDB_sql {
 						Logger::info('main', 'USERDB::MYSQL::getList user does not have login');
 				}
 			}
-			
-			return $result;
 		}
 		else {
 			Logger::error('main', 'USERDB::MYSQL::getList failed (sql query failed)');
@@ -87,9 +85,9 @@ class UserDB_sql {
 		}
 		// do we need to sort alphabetically ?
 		if ($sort_) {
-			usort($users, "user_cmp");
+			usort($result, "user_cmp");
 		}
-		return $users;
+		return $result;
 	}
 	
 	public function isOK($user_){
