@@ -207,8 +207,10 @@ class Session {
 
 		$buf = query_url('http://'.$server->fqdn.':'.$server->web_port.'/webservices/kill_session.php?session='.$this->id);
 
-		if (! $buf)
+		if (! $buf) {
+			Abstract_Session::delete($this->id);
 			return false;
+		}
 
 		$this->setStatus(3);
 
