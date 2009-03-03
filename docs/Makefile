@@ -2,14 +2,13 @@
 
 .SUFFIXES: .xml .html
 
-SRC=AdminConsole.xml \
-	Documentation_Debian.xml \
-	Documentation_from_sources.xml \
-	Documentation_RedHat.xml \
+SRC=AccountsIntegration.xml \
 	FAQ.xml \
+	Installation.xml \
+	Installation_RedHat.xml \
+	Installation_Sources.xml \
 	Protocol.xml \
 	Windows_Applications.xml
-
 
 DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
@@ -35,9 +34,19 @@ clean:
 	$(RM) $(ANW)
 	$(RM) *~
 
-#install:
-#	cp $(DST) ...
-#	cp -R img ...
+install: all
+	install -d 		dist
+	install default.css	dist
+	install $(DST) 		dist
+	install $(PDF) 		dist
+
+	install -d 		dist/img
+	install img/*.png 	dist/img
+
+
+uninstall:
+	rm -rf dist
+
 
 # Generer pdf avec fop
 #
