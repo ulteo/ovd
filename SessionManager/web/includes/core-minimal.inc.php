@@ -30,9 +30,9 @@ $buf = @ini_get('include_path');
 
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
-define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT.'/admin/classes');
+define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/classes');
 define('MODULES_DIR', SESSIONMANAGER_ROOT.'/modules');
-define('ADMIN_MODULES_DIR', SESSIONMANAGER_ROOT.'/admin/modules');
+define('ADMIN_MODULES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/modules');
 define('PLUGINS_DIR', SESSIONMANAGER_ROOT.'/plugins');
 define('EVENTS_DIR', SESSIONMANAGER_ROOT.'/events');
 define('CALLBACKS_DIR', SESSIONMANAGER_ROOT.'/events/callbacks');
