@@ -22,15 +22,25 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(dirname(__FILE__).'/../../includes/defaults.inc.php');
 
 class Preferences_admin extends Preferences {
-	public function __construct($element_form_=array(), $partial=false){
-		Logger::debug('admin','ADMIN_PREFERENCES::construct');
+	public function __construct($element_form_=array(), $partial=false, $init_=false){
+		Logger::debug('admin','ADMIN_PREFERENCES::construct(partial='.$partial.',init_='.$init_.')');
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->prettyName = array();
 		$this->initialize();
+		if ( $init_ == false) {
+			$init = ($this->prefs == array());
+		}
+		else {
+			$init = true;
+		}
+		$this->constructFromArray($init);
+		
 		if (is_writable2($this->conf_file)) {
 			if (file_exists($this->conf_file)) {
 				if ( $element_form_ == array()  || $partial == true) {
+					$prefs2 = $this->prefs;
 					$this->constructFromFile();
+					$this->prefs = array_merge2($prefs2, $this->prefs);
 				}
 				else {
 					$this->prefs = $element_form_;
@@ -39,11 +49,6 @@ class Preferences_admin extends Preferences {
 			else {
 				$this->prefs = $element_form_;
 			}
-		}
-
-		$this->constructFromArray();
-		if ($partial == true) {
-			$this->prefs = array_merge2($this->prefs ,$element_form_);
 		}
 	}
 
@@ -71,17 +76,19 @@ class Preferences_admin extends Preferences {
 		$c = new ConfigElement('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, ConfigElement::$INPUT);
 		$this->add($c,'general');
 
-		$user_groups = array();
-		$ugs = get_all_usergroups();
-        if ($ugs){
-    		foreach ($ugs as $ug) {
-    			$user_groups[$ug->id] = $ug->name;
-	    	}
-		    $user_groups[-1] = 'None';
-			ksort($user_groups);
-		    $c = new ConfigElement('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), -1, $user_groups , ConfigElement::$SELECT);
-		    $this->add($c,'general');
-        }
+		if (Preferences::hasInstance()) {
+			$user_groups = array();
+			$ugs = get_all_usergroups($this);
+			if ($ugs){
+				foreach ($ugs as $ug) {
+					$user_groups[$ug->id] = $ug->name;
+				}
+				$user_groups[-1] = 'None';
+				ksort($user_groups);
+				$c = new ConfigElement('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), -1, $user_groups , ConfigElement::$SELECT);
+				$this->add($c,'general');
+			}
+		}
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new ConfigElement('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,ConfigElement::$INPUT);
@@ -490,10 +497,9 @@ class Preferences_admin extends Preferences {
 			Logger::error('admin','PREFERENCESADMIN::set $key_ is not a string');
 	}
 
-	protected function constructFromArray(){
-		Logger::debug('admin','ADMIN_PREFERENCES::constructFromArray');
+	protected function constructFromArray($init){
+		Logger::debug('admin','ADMIN_PREFERENCES::constructFromArray('.$init.')');
 		$prefs =& $this->prefs;
-		$init = ($prefs == array());
 		foreach ($this->elements as $key1 => $value1) {
 			if (is_object($value1)) {
 			}

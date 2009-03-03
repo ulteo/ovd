@@ -167,18 +167,6 @@ function init($host_, $database_, $prefix_, $user_, $password_) {
 	return true;
 }
 
-function array_merge2( $a1, $a2) {
-	foreach ($a2 as $k2 => $v2) {
-		if ( is_array($v2) && ($v2 != array())) {
-			$a1[$k2] = array_merge2($a1[$k2], $a2[$k2]);
-		}
-		else {
-			$a1[$k2] = $a2[$k2];
-		}
-	}
-	return $a1;
-}
-
 function print_element($key_name,$container,$element_key,$element) {
 	global $sep;
 	$label2 = $key_name.$sep.$container.$sep.$element->id;

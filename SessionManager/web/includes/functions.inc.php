@@ -245,6 +245,18 @@ function print_array($data_, $n_=0) {
 	}
 }
 
+function array_merge2( $a1, $a2) {
+	foreach ($a2 as $k2 => $v2) {
+		if ( is_array($v2) && ($v2 != array())) {
+			$a1[$k2] = array_merge2($a1[$k2], $a2[$k2]);
+		}
+		else {
+			$a1[$k2] = $a2[$k2];
+		}
+	}
+	return $a1;
+}
+
 function is_writable2($filename) {
 	return ((is_file($filename) && is_writable($filename)) || (is_dir($filename) && is_writable($filename)) || is_writable(dirname($filename)));
 }

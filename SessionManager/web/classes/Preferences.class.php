@@ -19,6 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../admin/includes/core.inc.php');
 
 class Preferences {
 	public $prefs;
@@ -27,14 +28,17 @@ class Preferences {
 	public $prettyName;
 
 	public function __construct(){
+		Logger::debug('main','PREFERENCES::__construct');
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->constructFromFile();
-		$this->prettyName = array(
-			'general' => _('General configuration'),
-			'mysql' => _('MySQL configuration'),
-			'plugins' => _('Plugins configuration'));
+		$p = new Preferences_admin(array(), false, true);
+		$this->prefs = array_merge2($this->prefs, $p->prefs);
 	}
-
+	
+	public static function hasInstance() {
+		return isset(self::$instance);
+	}
+	
 	public static function getInstance() {
 		if (!isset(self::$instance)) {
 			try {
