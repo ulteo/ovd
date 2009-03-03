@@ -160,20 +160,19 @@ class Preferences_admin extends Preferences {
 		$c = new ConfigElement('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, ConfigElement::$INPUT);
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new ConfigElement('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: media/image/header.png'),DEFAULT_LOGO_URL ,NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),DEFAULT_LOGO_URL ,NULL,ConfigElement::$INPUT);
 		$this->add($c,'general','web_interface_settings');
 
 		$c = new ConfigElement('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement('use_popup', _('Use pop-up'), _('Use pop-up'), _('Use pop-up'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement('use_popup', _('Launch session in a popup'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array(),array('popup' => _('popup'), 'debug' => _('debug')),ConfigElement::$MULTISELECT);
 		$this->add($c,'general','web_interface_settings');
 
 		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
-
 
 		$this->getPrefsModules();
 		$this->getPrefsPlugins();
