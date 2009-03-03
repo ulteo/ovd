@@ -189,9 +189,8 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.thread_web.start()
 		if not self.smr.ready():
 			self.broken = True
-			self.stop()
+			self.SvcStop()
 		while self.isAlive:
-			#servicemanager.LogInfoMsg("aservice - is alive and well")
 			time.sleep(1)
 		servicemanager.LogInfoMsg("SvcDoRun 04 Stopped")
 	
