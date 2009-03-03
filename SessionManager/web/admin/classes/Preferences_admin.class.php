@@ -37,17 +37,13 @@ class Preferences_admin extends Preferences {
 		
 		if (is_writable2($this->conf_file)) {
 			if (file_exists($this->conf_file)) {
-				if ( $element_form_ == array()  || $partial == true) {
-					$prefs2 = $this->prefs;
-					$this->constructFromFile();
-					$this->prefs = array_merge2($prefs2, $this->prefs);
-				}
-				else {
-					$this->prefs = $element_form_;
-				}
+				$this->constructFromFile();
+				$this->prefs = array_merge2($this->prefs, $element_form_);
+				$this->constructFromArray(true);
 			}
 			else {
 				$this->prefs = $element_form_;
+				$this->constructFromArray(true);
 			}
 		}
 	}
