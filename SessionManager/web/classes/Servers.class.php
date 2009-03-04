@@ -26,6 +26,9 @@ class Servers {
 
 		$buf = Abstract_Server::load_all();
 
+		if (! is_array($buf))
+			return array();
+
 		return $buf;
 	}
 
