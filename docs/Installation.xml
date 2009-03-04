@@ -47,8 +47,7 @@ $ su]]>
           <para>A password for <literal>root</literal> will be asked.</para>
         </listitem>
         <listitem>
-          <para>Now log in mysql, create a database and a user that will have
-          rights on this database:</para>
+          <para>Now log in mysql and create a database:</para>
           <screen><![CDATA[
 # mysql -u root -p
 Enter password:

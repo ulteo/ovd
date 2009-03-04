@@ -79,8 +79,7 @@
 
 
         <listitem>
-          <para>Now log in mysql and create a database and n user who will have
-          rights on the database:</para>
+          <para>Now log in mysql and create a database:</para>
 	  <screen>
 	    <![CDATA[
 # mysql -u root -p

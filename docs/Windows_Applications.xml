@@ -26,15 +26,14 @@
   </articleinfo>
 
   <para>
-    This documentation describe how to use <trademark>Windows</trademark> applications on an
-    existing and running <emphasis>Ulteo Open Virtual
-    Desktop</emphasis>.
+    This documentation describes how to use <trademark>Windows</trademark> applications on an
+    existing and running <emphasis>Ulteo Open Virtual Desktop</emphasis>.
   </para>
   <para>
     This documention <emphasis role="strong">does not
-    describe</emphasis> the Open Virtual Desktop. For this, please see
-    the <emphasis role="strong">Installation
-    documentations</emphasis>.
+    describe</emphasis> the Open Virtual Desktop installation or
+    configuration. For that, please read the <emphasis
+    role="strong">Installation documentation</emphasis>.
   </para>
 
 
@@ -42,7 +41,7 @@
     <title>Prerequisites</title>
     <para>
       To use <trademark>Windows</trademark> applications, you need to plug your Session
-      Manager on an <trademark
+      Manager to a <trademark
       class="registered">Microsoft</trademark> Domain Controler
       (Active Directory).
     </para>
@@ -57,10 +56,10 @@
     </para>
 
     <para>
-      The <trademark>Windows</trademark> Server machines have to be plug in the same domain
+      The <trademark>Windows</trademark> Server machines have to be plugged to the same domain
       controler as the Session Manager. To plug a Session Manager to a
       <trademark class="registered">Microsoft Active</trademark>
-      Directory, please refer to <emphasis>Administration
+      Directory, please refer to the <emphasis>Administration
       Console</emphasis> documentation.
     </para>
   </section>
@@ -69,7 +68,7 @@
     <title>Installation of the <trademark>Windows</trademark> agent</title>
 
     <para>
-      Download the Ulteo Open Virtual Desktop <trademark>Windows</trademark> agent setup from
+      Download the Ulteo Open Virtual Desktop <trademark>Windows</trademark> agent setup software from
       <ulink url="http://www.ulteo.com">this place at
       www.ulteo.com</ulink> on your <trademark>Windows</trademark> machine and execute it.
     </para>
@@ -85,7 +84,7 @@
       then right-click on <emphasis>My Computer</emphasis>:
       <emphasis>Properties</emphasis>.
       In the <emphasis>Computer Name</emphasis> tab, the FQDN is
-      display as <emphasis role="strong">Full computer name</emphasis>.
+      displayed as <emphasis role="strong">Full computer name</emphasis>.
     </para>
 
     <screenshot>
@@ -101,7 +100,7 @@
     <simplesect>
       <title>Session Manager side</title>
       <para>
-	Your <trademark>Windows</trademark> server should appear in the
+	Your <trademark>Windows</trademark> server should appear among the
 	<emphasis>Unregistered servers</emphasis>.
       </para>
 
@@ -111,22 +110,23 @@
       </screenshot>
 
       <para>
-	If your server does not appear in the list, you might have
-	a DNS configuration issue, or ths <trademark>Windows</trademark> agent have a
-	bug. Refert to <xref linkend="s_issue"/>.
+	If your server does not show up in the list, you might have
+	a DNS configuration issue, or the <trademark>Windows</trademark> agent has a
+	bug. Please refer to <xref linkend="s_issue"/>.
       </para>
     </simplesect>
   </section>
 
   <section>
-    <title>Register the server and publish some application</title>
+    <title>Register the server and publish some applications</title>
     <para>
       First, register your <trademark>Windows</trademark> server and switch it from
       "maintenance" to "production" mode.
     </para>
 
     <para>
-      You should be able to list the application from your <trademark>Windows</trademark> server
+      You should be able to list applications that are installed on
+      your <trademark>Windows</trademark> server.
     </para>
 
     <screenshot>
@@ -135,16 +135,20 @@
     </screenshot>
 
     <para>
-      The next step is to add some <trademark>Windows</trademark> applications into an
-      applications groups in order to authorized a user group to run
-      your <trademark>Windows</trademark> applicaitions.
+      The next step is to add some <trademark>Windows</trademark>
+      applications to an existing Application Group so that users get
+      authorized to run those your <trademark>Windows</trademark>
+      applications. If you don't have an existing application group
+      please refer to the Ulteo Open Virtual Desktop <emphasis
+      role="strong">Installation documentation</emphasis> first.
     </para>
 
     <para>
-      So perform a publication as you did previously did it but by
-      select some <trademark>Windows</trademark> applications.  To have a global view of
-      which user have access to which applications, you can browse the
-      <emphasis role="strong">Summary</emphasis> page from the
+      Now you just have to perform a <trademark>Windows</trademark>
+      application publication as you probably did previously with
+      Linux applications.  To have a global view of which user has
+      access to which applications, you can browse the <emphasis
+      role="strong">Summary</emphasis> page from the
       <emphasis>Status</emphasis> menu.
     </para>
   </section>
@@ -153,7 +157,10 @@
   <section>
     <title>Lauch a session</title>
     <para>
-      If you launch a session, your should access to your <trademark>Windows</trademark> applications.
+      If you launch a session, you should be able to access to your
+      <trademark>Windows</trademark> applications from the application
+      menu and from desktop icons if you enabled that option in the
+      administration console.
     </para>
 
     <screenshot>
@@ -169,17 +176,17 @@
     <title>Internal System</title>
 
     <simplesect>
-      <title>Consult the <trademark>Windows</trademark> agent log</title>
+      <title>Have a look at the <trademark>Windows</trademark> agent log</title>
 
       <para>
-	In a default <trademark>Windows</trademark> installation, the log file is at
+	In a default <trademark>Windows</trademark> installation, the log file can be found at
 	<emphasis>C:\Documents and Settings\All Users\Application
 	Data\Ulteo\ovd\main.log</emphasis>.
       </para>
 
       <para>
-	It's also possible to see some debug messages in the <emphasis
-	role="strong"><trademark>Windows</trademark> Event Viewer</emphasis> (in Appplication section).
+	It's also possible to read some debug messages in the <emphasis
+	role="strong"><trademark>Windows</trademark> Event Viewer</emphasis> (on the Appplication section).
       </para>
 
       <screenshot>
@@ -208,7 +215,7 @@
       </screenshot>
 
       <para>
-	Edit the <emphasis>Properties</emphasis> of the services, set
+	Edit the <emphasis>Properties</emphasis> of services, set
 	the <emphasis role="strong">Startup type</emphasis> to
 	<emphasis>Automatic</emphasis>, and apply.
       </para>
