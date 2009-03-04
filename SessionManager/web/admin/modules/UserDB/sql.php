@@ -97,15 +97,7 @@ class admin_UserDB_sql extends UserDB_sql {
 	}
 	
 	public function configuration(){
-		$c = new ConfigElement('mysql','host','host_des(mysql)','un host',NULL,ConfigElement::$INPUT);
-		$this->add('general',$c);
-		$c = new ConfigElement('mysql','port','port_des(mysql)','un port',NULL,ConfigElement::$TEXT);
-		$this->add('general',$c);
-		$c = new ConfigElement('mysql','login','login_des(mysql)','un login',NULL,ConfigElement::$INPUT);
-		$this->add('general',$c);
-		$c = new ConfigElement('mysql','pass','pass_des(mysql)','un password',NULL,ConfigElement::$INPUT);
-		$this->add('general',$c);
-		$p = new Preferences_admin();
+		return array();
 	}
 	
 	public static function init($prefs_) {
