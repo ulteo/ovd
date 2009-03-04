@@ -34,7 +34,7 @@ class Preferences_admin extends Preferences {
 			$init = true;
 		}
 		$this->constructFromArray($init);
-		
+
 		if (is_writable2($this->conf_file)) {
 			if (file_exists($this->conf_file)) {
 				$this->constructFromFile();
@@ -169,6 +169,8 @@ class Preferences_admin extends Preferences {
 		$c = new ConfigElement('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$this->add($c,'general','web_interface_settings');
+		$c = new ConfigElement('allow_proxy', _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement('use_popup', _('Launch session in a popup'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','web_interface_settings');
