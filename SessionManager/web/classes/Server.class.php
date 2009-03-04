@@ -450,19 +450,27 @@ class Server {
 
 		$dom = new DomDocument();
 		$ret = @$dom->loadXML($xml);
-		if (! $ret)
+		if (! $ret || ! is_object($ret))
 			return false;
 
 		$keys = array();
 
 		$cpu_node = $dom->getElementsByTagname('cpu')->item(0);
-		$keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
-		$keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
-		$keys['cpu_load'] = $cpu_node->getAttribute('load');
+		if (is_array($cpu_node) && count($cpu_node) > 0) {
+			$keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
+			if ($cpu_node->hasAttribute('nb_cores'))
+				$keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
+			if ($cpu_node->hasAttribute('load'))
+				$keys['cpu_load'] = $cpu_node->getAttribute('load');
+		}
 
 		$ram_node = $dom->getElementsByTagname('ram')->item(0);
-		$keys['ram_total'] = $ram_node->getAttribute('total');
-		$keys['ram_used'] = $ram_node->getAttribute('used');
+		if (is_array($ram_node) && count($ram_node) > 0) {
+			if ($ram_node->hasAttribute('total'))
+				$keys['ram_total'] = $ram_node->getAttribute('total');
+			if ($ram_node->hasAttribute('used'))
+				$keys['ram_used'] = $ram_node->getAttribute('used');
+		}
 
 		foreach ($keys as $k => $v)
 			$this->setAttribute($k, trim($v));
