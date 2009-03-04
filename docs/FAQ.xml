@@ -21,7 +21,7 @@
 
   <anchor id="treport-bug"/>
   <section>
-    <title>How can I report a bug ?</title>
+    <title>How can I report a bug?</title>
     <para>
       Send an email to <email>bugmaster@ulteo.com</email> with a
       description of your bug.
@@ -30,7 +30,7 @@
       Please attach those files :
       <itemizedlist>
 	<listitem><para>
-	  Session Manager : 
+	  Session Manager: 
 	  <itemizedlist>
 	    <listitem><para>
 	      <emphasis>/var/log/ulteo/sessionmanager/main.log</emphasis>
@@ -41,7 +41,7 @@
 	  </itemizedlist>
 	</para></listitem>
 	<listitem><para>
-	  Linux Application server :
+	  Linux Application server:
 	  <itemizedlist>
 	    <listitem><para>
 	      <emphasis>/opt/ulteo/var/log/ulteo-ovd.log</emphasis>
@@ -53,7 +53,7 @@
 	</para></listitem>
 
 	<listitem><para>
-	  Windows Application server :
+	  Windows Application server:
 	  <itemizedlist>
 	    <listitem><para>
 	      <emphasis>C:\Documents and Settings\All Users\Application Data\Ulteo\ovd\main.log</emphasis>
@@ -62,13 +62,13 @@
 	</para></listitem>
 
 	<listitem><para>
-	  config file :
+	  config file:
 	  <itemizedlist>
 	    <listitem><para>
-	      session manager : <emphasis>/var/spool/ulteo/sessionmanager/config</emphasis>
+	      session manager: <emphasis>/var/spool/ulteo/sessionmanager/config</emphasis>
 	    </para></listitem>
 	    <listitem><para>
-	      application server : <emphasis>/opt/ulteo/etc/ulteo-ovd.conf</emphasis>
+	      application server: <emphasis>/opt/ulteo/etc/ulteo-ovd.conf</emphasis>
 	    </para></listitem>
 	  </itemizedlist>
 	</para></listitem>
@@ -130,20 +130,20 @@
   -->
 
   <section>
-    <title>Where is the upload button on OVD ?</title>
+    <title>Where is the file upload button on OVD ?</title>
     <para>
-      The feature <emphasis>upload file</emphasis> is not available in
-      OVD. But you can use a network mount system (CIFS,NFS...).
+      The <emphasis>upload file</emphasis> feature is not available in
+      OVD. But you can mount a network filesystem (CIFS, NFS...).
     </para>
 
     <simplesect>
       <title>
-	I'd like to understand better your need to have a
+	We are interested in understanding better your needs to have a
 	filetransfert button in the OVD.
       </title>
       <para>
-	I see there are three typical use cases with the OVD regarding
-	user's data:
+	We see there are three typical use cases with the OVD regarding
+	users data:
 	<itemizedlist>
 	  <listitem><para> 
 	    either you are using CIFS or NFS so user
@@ -160,7 +160,7 @@
       <para>
 	As a result, if you are using CIFS or NFS, the user is likely
 	to already have access to his directory to store his own files
-	on the NFS or CIFS server, so in that case having a transfert
+	on a NFS or CIFS server. So in that case, having a file transfert
 	button is quite useless since you can retrieve your user data
 	on the OVD through the mounted directory.
       </para>
@@ -171,29 +171,32 @@
 	available for quick testing purpose.
       </para>
 
+<!--
       <para>
 	Please explain me your case and what you want to do so I can
 	understand better the need to include the download/upload
 	button on the OVD.
       </para>
+
+-->
     </simplesect>
 
   </section>
 
   <section>
     <title>
-      What I got a 'No available server' message when i want to launch
-      session ?
+      Why did I got a 'No available server' message when i wanted to launch
+      a session?
     </title>
     <para>
       You have to check 2 points:
       <itemizedlist>
 	<listitem><para>
-	  Do you have at least one Application server online AND in
-	  production ?
+	  Do you have at least one Application Server online AND set in
+	  production mode?
 	</para></listitem>
 	<listitem><para>
-	  Did you perform a publication ? (check the summary :
+	  Did you publish at least one application? (check the summary:
 	  <ulink url="http://myserver/sessionmanager/admin/sumup.php"/>)
 	</para></listitem>
       </itemizedlist>
@@ -203,14 +206,14 @@
   <section>
     <title>
       Why my Application server does not appear in the Session Manager
-      server list ?
+      server list?
     </title>
     <itemizedlist>
       <listitem><para>
 	check the DNS
       </para></listitem>
       <listitem><para>
-	check if the server is authorized, do you set the right
+	check if the server is authorized, did you set the right
 	"Authorized network domain"
       </para></listitem>
     </itemizedlist>
@@ -218,12 +221,12 @@
 
 
   <section>
-    <title>How to check the DNS configuration ?</title>
+    <title>How to check the DNS configuration?</title>
     <para>
-      Can you check your DNS with these commands:
+      Check your DNS with these commands:
       <itemizedlist>
 	<listitem><para>
-	  On application server:
+	  On an application server:
 	  <screen><![CDATA[
 	  $ getent hosts sm.ulteo.com]]>
 	  </screen>
@@ -234,7 +237,7 @@
 	</para></listitem>
 
 	<listitem><para>
-	  On Session Manager:
+	  On a Session Manager:
 
 	  <screen><![CDATA[
 	  $ getent hosts my_application_server]]>
@@ -248,8 +251,8 @@
     </para>
 
     <para>
-      The reverse DNS must be the same between the two set of commands
-      as you can see in this example:
+      The reverse DNS must be the same between the two sets of commands
+      as you can see in that example:
       <programlisting><![CDATA[
       $ getent hosts sm3.office.ulteo.com
       192.168.0.19    sm3.office.ulteo.com
@@ -277,27 +280,27 @@ These commands work ?
 
   <section>
     <title>
-      Why does I have <emphasis>Err03</emphasis> when I want launch a
-      session ?
+      Why do I get an <emphasis>Err03</emphasis> when I want to launch a
+      session?
     </title>
     <para>
-      It seems to be a firewall issue.
+      It's likely that you have a firewall setting that prevents the session to initiate correctly.
     </para>
 
     <para>
-      To launch a session, you need to access to port tcp/80 and tcp/443 of an
+      To launch a session, you need access to port tcp/80 and tcp/443 for an
       Application server.
     </para>
     <para>
-      Port 80 is HTTP traffic and 443 for SSH.
-      APACHE must not listen on 443 TCP.
+      Port 80 is HTTP traffic and 443 is used for SSH.
+      Apache must NOT listen on the 443 TCP port on Application Servers.
     </para>
   </section>
 
   <section>
-    <title>Why does I get "Class XXXX not found" ?</title>
+    <title>Why do I get a "Class XXXX not found"?</title>
     <para>
-      If you are sure of your configuration,  it seems to be a bug,
+      If you are sure of your configuration,  it's possibly a bug,
       <link linkend="treport-bug">please report it to us</link>.
       
 
@@ -306,8 +309,8 @@ These commands work ?
 
   <section>
     <title>
-      Why does i have this error after install an Application
-      server ?
+      Why do I get this error after installing an Application
+      Server?
     </title>
 
      <programlisting><![CDATA[
@@ -317,14 +320,14 @@ such file or directory]]>
      </programlisting>
 
      <para>
-       Check if you have a correct installation :  if the Ulteo's
-       chroot exists (by default it is /opt/ulteo)
+       Check if you have a correct installation:  does the Ulteo's
+       chroot exist? (by default it is /opt/ulteo)
      </para>
   </section>
 
 
   <section>
-    <title>Why GNU/Linux Debian 5.0 is not supported ?</title>
+    <title>Why GNU/Linux Debian 5.0 is not supported?</title>
 
     <para>
       GNU/Linux Debian 5.0 is not supported because one kernel module
@@ -337,7 +340,7 @@ such file or directory]]>
 
 
     <para>
-      To test if your Linux kernel has the aufs module:
+      To test if your Linux kernel provides the aufs module:
       <screen><![CDATA[
 $ find /lib/modules/`uname -r` -name aufs]]>
       </screen>

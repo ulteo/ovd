@@ -5,7 +5,7 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <articleinfo>
-    <title>Installation documentation for Ulteo Open Virtual Desktop on Red Hat systems</title>
+    <title>Installation documentation for the Ulteo Open Virtual Desktop on Red Hat systems</title>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -21,15 +21,19 @@
     <xi:include href="sub/generic.xml" xpointer="prerequisites" />
 
     <para>
-      Both servers needs to be installed with <emphasis role="strong">Red Hat RHEL 5.2 32-bit</emphasis>, <emphasis role="strong">Fedora Core 9</emphasis> or <emphasis role="strong">CentOS 5.2</emphasis>.
-      All operations needs to be done as <emphasis>superuser</emphasis> (root).
+      Both servers need to be installed with <emphasis
+      role="strong">Red Hat RHEL 5.2 32-bit</emphasis>, <emphasis
+      role="strong">Fedora Core 9</emphasis> or <emphasis
+      role="strong">CentOS 5.2</emphasis>.  All operations need to be
+      done as <emphasis>superuser</emphasis> (root).
     </para>
 
 
    <section>
       <title>Installation of MySQL</title>
       <para>
-	If you don't have any available MySQL database, you have to install MySQL on your Session Manager.
+	If you don't have any available MySQL database, you have to
+	install MySQL on your Session Manager server.
       </para>
 
       <itemizedlist>
@@ -75,7 +79,7 @@
 
 
         <listitem>
-          <para>Now log in mysql and create a database and an user who will have
+          <para>Now log in mysql and create a database and n user who will have
           rights on the database:</para>
 	  <screen>
 	    <![CDATA[
@@ -196,7 +200,7 @@ Is this correct? [Y/n] ]]>
        <important>
 	 <para>
 	   If you are going to install an Application server on the
-	   same machine as your Session Manager, it's adviced to use:
+	   same machine as your Session Manager, it's recommended to use:
 	   <itemizedlist>
 	     <listitem>
 	       <para>FQDN: 127.0.0.1</para>
@@ -210,7 +214,7 @@ Is this correct? [Y/n] ]]>
 
        <screen>
 	 <![CDATA[
-# as-chroot-install 
+# aps-chroot-install 
 Full Qualified Domain Name [aps.ulteo.com]: aps.ulteo.com
 Session Manager URL: http://sm.ulteo.com/sessionmanager
 Chroot installation path: /opt/ulteo

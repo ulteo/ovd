@@ -25,7 +25,7 @@
       <title>Hyper Text Transfert Protocol (HTTP)</title>
 
       <para>
-	The base communication protocol used is HTTP because of the
+	The base communication protocol used is HTTP because Ulteo is a 
 	Web based solution.  But we also use HTTP for the
 	communication between servers: Session Manager to Application
 	Server and vice versa.  This protocol runs over TCP on the port
@@ -33,7 +33,7 @@
       </para>
 
       <para>
-	The Administration Console is a Web site too.
+	The Administration Console is web-based too.
       </para>
 
       <para><ulink url="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP on Wikipedia</ulink></para>
@@ -44,14 +44,14 @@
 
       <para>
 	RFB is the protocol used to display the remote desktop and
-	applications inside the Web broswer.  This protocol is used by
+	applications within the Web broswer.  This protocol is used by
 	VNC.  VNC runs over TCP too.  A VNC server runs one instance by
 	desktop so one port for each display.  The classic port used
 	by VNC is 5900.
       </para>
 
       <para>
-	For Ulteo Open Virtual Desktop, we are using port between 5900
+	For Ulteo Open Virtual Desktop, we are using ports between 5900
 	and 6000.
       </para>
 
@@ -63,13 +63,13 @@
       <title>Secure Shell (SSH)</title>
 
       <para>
-	SSH is a protocol used to access to a machine over a network.  SSH
+	SSH is a protocol used to access a machine securely over a network.  SSH
 	uses encryption to make sure that no one on the network can
 	decrypt what the user does.
       </para>
 
       <para>
-	We are using SSH to tunnelize the RFB stream because RFB is not encprypted.
+	We are using SSH to tunnel the RFB stream because RFB is not encprypted.
       </para>
 
 
@@ -81,13 +81,13 @@
 
       <para>
 	RDP is the protocol used by <trademark
-	class="registered">Microsoft</trademark> to display the remote
+	class="registered">Microsoft Corp.</trademark> to display the remote
 	desktop for their <trademark>Terminal Services</trademark>
 	software.
       </para>
 
       <para>
-	RDP is uning by Ulteo Open Virtual Desktop to display
+	RDP is used by Ulteo Open Virtual Desktop to display
 	<trademark>Windows</trademark> applications.
       </para>
 
@@ -97,18 +97,18 @@
 
 
   <section>
-    <title>Servers Communication</title>
+    <title>Server Communication</title>
     <para>
-      The servers communicate by HTTP using webservices.
+      Servers communicate by using HTTP webservices.
     </para>
 
     <para>
-      The Session Manager identifies an Application servers using its
+      The Session Manager identifies an Application server using its
       Fully Qualified Domain Name (FQDN).
     </para>
 
     <para>
-      The Applications servers only answer to the Session Manager for which
+      Applications Servers only answer to the Session Manager for which
       the address is stored in a configuration file.
       (<emphasis>SESSION_MANAGER_URL</emphasis>).
     </para>
@@ -122,20 +122,20 @@
       <para>
 	When an Application server sends a status, it sends an extra
 	argument named <emphasis>fqdn</emphasis>.  The Session Manager
-	makes 2 authentications test and 1 authorization.
+	performs 2 authentication tests and 1 authorization.
 
 	<itemizedlist>
 	  <listitem><para><emphasis role="strong">fqdn
 	  resoltuion:</emphasis> resolves the fqdn to get an ip address
-	  and tests if it matches with the remove server ip
+	  and tests if it matches the remote server ip
 	  ($SERVER['REMOTE_ADDR'] in php).  Authentication directly
-	  depends on this match</para></listitem>
+	  depends on that match</para></listitem>
 
 	  <listitem><para><emphasis role="strong">reverse
-	  resoltuion:</emphasis> resolves the server ip address and tests
+	  resolution:</emphasis> resolves the server ip address and tests
 	  if it matches the fqdn argument. Authentication directly
-	  depends on this match. This test can be disabled in the
-	  administration console using the <emphasis>Disable fqdn
+	  depends on that match. This test can be disabled in the
+	  administration console using <emphasis>Disable fqdn
 	  check</emphasis></para></listitem>
 
 	  <listitem><para><emphasis
@@ -150,16 +150,16 @@
     <section>
       <title>Windows servers</title>
       <para>
-	The Windows agent use an embeded HTTP server instead of using
-	Apache (as Linux servers) or <trademark>IIS</trademark> which is often installed by
+	The Windows agent is using an embeded HTTP server instead of using
+	Apache (as on Linux servers) or <trademark>IIS</trademark> which is often installed by
 	default on <trademark>Windows Server 2003</trademark>.
       </para>
 
       <para>
-	Because of <trademark>IIS</trademark> is often installed, the
+	As <trademark>IIS</trademark> is often installed, the
 	Windows agent doesn't use the standart HTTP port but the
-	<emphasis role="strong">8082</emphasis>. Another port may be
-	used by set it in the agent configuration file.
+	<emphasis role="strong">8082</emphasis> port. Another port can be
+	set in the agent configuration file.
       </para>
 
     </section>
@@ -167,7 +167,7 @@
     <section>
       <title>HTTP return codes</title>
       <para>
-	Webservices are using the HTTP return code to know if the
+	Webservices are using the standard HTTP return codes to know if the
 	request succeeded.
       </para>
 
@@ -184,8 +184,8 @@
 
 	<listitem>
 	  <para><emphasis role="strong">401 Unauthorized :</emphasis>
-	  From SM to ApS, ApS detects that remote address is not its
-	  SM. From ApS to SM, ApS is not registered yet or has invalid
+	  From SM to ApS: ApS detects that the remote address is not its
+	  SM. From ApS to SM: ApS is not registered yet or has invalid
 	  authentication.</para>
 	</listitem>
 
@@ -261,13 +261,13 @@
 	</itemizedlist>	  
 
 	<para>
-	  Applications servers send periodically their system
-	  information in order to know the status of each
-	  server. This is used for the session load balancing for
+	  Application servers send periodically their system
+	  information to that the status of each
+	  server is known. This is used for the session load balancing for
 	  instance.
 	</para>
 	<para>
-	  The monitoring contains the CPU and RAM load. But also the
+	  The monitoring contains the CPU and RAM load. But also
 	  running applications for each sessions.
 	</para>
       </simplesect>
@@ -301,7 +301,7 @@
 	</itemizedlist>
 
 	<para>
-	  Applications servers send, for each session, the status
+	  Application servers send, for each session, their status
 	  each time it changes.
 	</para>
       </simplesect>
@@ -329,16 +329,16 @@
 	    </para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> session informations as XML</para>
+	    <para><emphasis role="strong">returns:</emphasis> session information as XML</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  When an user is launches a session, he is redirected
-	  with a token to an application server. To verify the user
-	  identity and get the session informations, the application
-	  server uses this token on its Session Manager and if valid,
-	  get informations as XML content.
+	  When a user is launching a session, he is redirected
+	  with a token to an Application Server. To verify the user
+	  identity and get the session information, the Application
+	  Server sending this token to to the Session Manager. If it's valid,
+	  it gets information as XML content.
 	</para>
       </simplesect>
 
@@ -372,9 +372,9 @@
 	</itemizedlist>
 
 	<para>
-	  Get the icon for an application in order to display it
-	  in the user desktop. The application server uses a cache
-	  system so an application icon is only asked one time by a server.
+	  Gets the icon for an application so it can display it
+	  on the user desktop. The application server uses a cache
+	  system so an application icon is only asked once by a server.
 	</para>
       </simplesect>
 
@@ -405,8 +405,8 @@
 	</itemizedlist>
 
 	<para>
-	  Get the application informations from the desktopfile
-	  argument in order to create the application shortcut
+	  Gets the application information from the desktopfile
+	  argument to create the application shortcut
 	  on the user's desktop.
 	</para>
       </simplesect>
@@ -418,7 +418,7 @@
       <title>Application Server webservices</title>
       
       <para>
-	The webservices used for the servers communication are in
+	The webservices used for servers communication are in
 	<emphasis>/webservices</emphasis>.
       </para>
 
@@ -438,9 +438,8 @@
 	</itemizedlist>	  
 
 	<para>
-	  Session Manager asks for the server status periodically to
-	  update the status if needed and auto detect down or broken
-      servers.
+	  The Session Manager asks for the server status periodically to
+	  update its status, and detect down or broken states.
 	</para>
       </simplesect>
 
@@ -467,8 +466,8 @@
 	</itemizedlist>
 
 	<para>
-	  Session Manager asks for each session status periodically
-	  to auto detect servers/sessions craches.
+	  The Session Manager asks for each session status periodically
+	  to detect servers/sessions craches.
 	</para>
 
       </simplesect>
@@ -490,7 +489,7 @@
 	</itemizedlist>
 	<para>
 	  Session Manager asks for the server monitoring when it
-	  detects too old cache informations.
+	  detects too old cache information.
 	</para>
       </simplesect>
 
@@ -511,7 +510,7 @@
 	</itemizedlist>
 
 	<para>
-	  Get the installed applications on the system.
+	  Gets installed applications on the system.
 	</para>
       </simplesect>
 
@@ -559,7 +558,7 @@
 	</itemizedlist>
 
 	<para>
-	  Get the server version. On Windows, get the Windows long
+	  Get the server version. On Windows, gets the Windows long
 	  version. On Linux, get the content of <emphasis>/etc/issue</emphasis>.
 	</para>
 
@@ -582,7 +581,7 @@
 	</itemizedlist>
 
 	<para>
-	  Get the server type.
+	  Gets the server type.
 	</para>
       </simplesect>
 
@@ -609,7 +608,7 @@
 	</itemizedlist>
 
 	<para>
-	  Extracts the icon associated to an application.
+	  Extracts the icon associated with an application.
 	</para>
       </simplesect>
 
@@ -664,7 +663,7 @@
 	  Used to install/remove applications.
 	</para>
 	<para>
-	  Get job id from action request.
+	  Gets job id from action request.
 	</para>
       </simplesect>
 
@@ -695,15 +694,15 @@
 
 
     <section>
-      <title>Client/Servers communication</title>
+      <title>Client/Server communication</title>
 
       <para>
-	Once the client is redirected to the ApS, he only requests this
-	server, not the SM (except for session sharing as described bellow).
+	Once the client is redirected to the ApS, it only requires this
+	server, not the SM, excepted for session sharing as described below.
       </para>
 
       <para>
-	The session displayed is encapsulated in a SSH tunnel but
+	The session display is encapsulated in a SSH tunnel but
 	webservices are also used to communicate. For instance, for
 	printing.
       </para>
@@ -736,7 +735,7 @@
 
 	<para>
 	  This webservice is called when <emphasis>whatsup</emphasis>
-	  returned 0 as session status. startsession sets the session
+	  returned 0 as session status. Startsession sets the session
 	  status to 1.
 	</para>
       </simplesect>
@@ -759,17 +758,16 @@
 	</itemizedlist>
 
 	<para>
-	  The webservice has serveral uses. First of all, it's used to
+	  The webservice has several uses. First of all, it's used to
 	  know that the user is still connected (a kind of ping
 	  timeout process).  Secondly, it allows the client to know
-	  session status changes. And finally, it is used to know when a
-	  new pdf file is ready for download.
+	  session status changes. Finally, it is used to know when a
+	  new pdf file is ready for download and print.
 	</para>
 
 	<para>
-	  The client has to call this webservice every 10 seconds
-	  maximum or there is a risk that the session timeout is
-	  triggered.
+	  The client calls this webservice every 10 seconds
+	  maximum.
 	</para>
       </simplesect>
 
@@ -790,13 +788,13 @@
 	</itemizedlist>
 
 	<para>
-	  This webservice can be called when the users close the session
+	  This webservice can be called when users close the session
 	  window to force the session to exit instead of waiting the
 	  timeout trigger.
 	</para>
 
 	<para>
-	  This is usefull on session sharing for instance to be sure
+	  This is useful on session sharing for instance to be sure
 	  that when the client exits, all users sharing the session cannot
       still access it.
 	</para>
@@ -831,12 +829,12 @@
 	</para>
 
 	<para>
-	  On the ApS, there is a PDF printer that spools file in the
+	  On ApS servers, there is a PDF printer that spools files in the
 	  session directory. When there is a new file,
 	  <emphasis>whatsup</emphasis> detects it, extracts the
-	  timestamp and alerts the client. The client just has to
+	  timestamp and alerts the client. Then the client has just to
 	  request a print with the timestamp to get the print job and
-	  use a mean to print localy (print applet).
+	  use a mean to print localy (printing applet).
 	</para>
       </simplesect>
     </section>
@@ -851,7 +849,7 @@
       
       <para>
 	The status sent by webservices and used by both systems (Session
-	Manager and Application server) are integer.
+	Manager and Application server) are integer figures.
       </para>
 
       <itemizedlist>
@@ -905,7 +903,7 @@
       <para>
 	When installing/removing applications using the
 	<emphasis>apt-get</emphasis> webservice, the Administration
-	console requests the ApS to know the status of the job.
+	console requests the ApS server to return the status of the job.
       </para>
 
       <itemizedlist>
