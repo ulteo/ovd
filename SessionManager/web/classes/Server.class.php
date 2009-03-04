@@ -222,6 +222,16 @@ class Server {
 	public function isNotReady() {
 		Logger::debug('main', 'Starting Server::isNotReady for \''.$this->fqdn.'\'');
 
+		$sessions = Sessions::getByServer($this->fqdn);
+		foreach ($sessions as $session) {
+			if (! is_object($session))
+				continue;
+
+			$session->setStatus(3);
+
+			Abstract_Session::save($session);
+		}
+
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
