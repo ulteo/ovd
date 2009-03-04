@@ -60,7 +60,7 @@ class UserDB_sql {
 	}
 
 	public function getList($sort_=false){
-		Logger::debug('main','ApplicationDB_sql::getList');
+		Logger::debug('main','USERDB::MYSQL::getList');
 		$result = array();
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1', USER_TABLE);
