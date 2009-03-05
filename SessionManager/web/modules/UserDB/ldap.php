@@ -55,7 +55,7 @@ class UserDB_ldap {
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-			
+
 			$u = $this->cleanupUser($u);
 			return $u;
 		}
@@ -82,7 +82,7 @@ class UserDB_ldap {
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-			
+
 			$u = $this->cleanupUser($u);
 			return $u;
 		}
@@ -111,9 +111,9 @@ class UserDB_ldap {
 			}
 			if ($u->hasAttribute('uid') == false)
 				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-			
+
 			$u = $this->cleanupUser($u);
-			
+
 			if ($this->isOK($u))
 				$users []= $u;
 			else {
@@ -129,7 +129,7 @@ class UserDB_ldap {
 		}
 		return $users;
 	}
-	
+
 	protected function cleanupUser($u){
 		if (is_object($u)){
 			if ($u->hasAttribute('homedir')){
@@ -217,6 +217,10 @@ class UserDB_ldap {
 		$ret []= $c;
 		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'), NULL, ConfigElement::$DICTIONARY);
 		$ret []= $c;
+
+		$c = new ConfigElement('ad',_('Use as an Active Directory server ?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0', array(0=>_('No'),1=>_('Yes')), ConfigElement::$SELECT);
+		$ret []= $c;
+
 		return $ret;
 	}
 
@@ -235,7 +239,7 @@ class UserDB_ldap {
 		}
 		else {
 			$log['LDAP user branch'] = true;
-			
+
 		}
 		return true;
 	}

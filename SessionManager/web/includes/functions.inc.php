@@ -552,3 +552,34 @@ function set_cache($data_, $subdir_, $id_) {
 	$tmp = serialize($data_);
 	return file_put_contents($file, $tmp);
 }
+
+function domain2suffix($domain_) {
+		$domain_ = strtolower($domain_);
+		$buf = explode('.', $domain_);
+		if (! count($buf))
+			return;
+
+		$str='';
+		foreach($buf as $d)
+			$str.='dc='.$d.',';
+
+		$str = substr($str, 0,-1);
+		return $str;
+}
+
+function suffix2domain($suffix_) {
+	$buf = explode(',', $suffix_);
+	if (! count($buf))
+		return;
+
+	$build = array();
+	foreach($buf as $s) {
+		if (! str_startswith($s, 'dc='))
+			return;
+
+		$build[] = strtoupper(substr($s, 3));
+	}
+
+	$str = implode('.', $build);
+	return $str;
+}

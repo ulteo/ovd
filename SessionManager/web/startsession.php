@@ -197,12 +197,30 @@ if (isset($allow_proxy) && $allow_proxy != '0') {
 	$optional_args['proxy_password'] = $_REQUEST['proxy_password'];
 }
 
-if ($prefs->get('UserDB', 'enable') == 'activedirectory') {
-	$config_ad = $prefs->get('UserDB', 'activedirectory');
+switch ($prefs->get('UserDB', 'enable')) {
+	case 'activedirectory':
+		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
+		$windows_login = $user->getAttribute('real_login').'@'.$prefs_ad['domain'];
+		break;
+	case 'ldap':
+		$prefs_ldap = $prefs->get('UserDB', 'ldap');
+		if ($prefs_ldap['ad'] == 1) {
+			$buf = $prefs_ldap['suffix'];
+			$suffix = suffix2domain($buf);
+			if (! is_string($suffix)) {
+				Logger::error('main', 'LDAP suffix is invalid for AD usage : '.$buf);
+				break;
+			}
+			$windows_login = $user->getAttribute('login').'@'.$suffix;
+		}
+		break;
+}
+
+if (isset($windows_login) && $windows_login != '') {
 	$windows_server = $user->getAvailableServer('windows');
 	if (is_object($windows_server)) {
 		$optional_args['windows_server'] = $windows_server->fqdn;
-		$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$config_ad['domain'];
+		$optional_args['windows_login'] = $windows_login;
 		$optional_args['windows_password'] = $_SESSION['password'];
 	} else
 		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');

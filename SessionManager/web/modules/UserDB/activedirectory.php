@@ -82,7 +82,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		if (! str_endswith($config['login'], $ldap_suffix))
 			$config['login'] .= ','.$ldap_suffix;
 
-		
+
 		$match_minimal  = array(
 					'login'	=> 'samaccountname',
 					'displayname'	=> 'displayname',
@@ -107,17 +107,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	}
 
 	protected function domain2suffix($domain_) {
-		$domain_ = strtolower($domain_);
-		$buf = explode('.', $domain_);
-		if (! count($buf))
-			return;
-
-		$str='';
-		foreach($buf as $d)
-			$str.='dc='.$d.',';
-
-		$str = substr($str, 0,-1);
-		return $str;
+		return domain2suffix($domain_);
 	}
 
 	public function authenticate($user_,$password_){
@@ -185,7 +175,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		}
 
 // 		$log['Connect to AD'] = true;
-		
+
 		$ret = $LDAP2->branch_exists($config_AD['ou']);
 		if ( $ret == false) {
 			$log['LDAP user branch'] = false;
