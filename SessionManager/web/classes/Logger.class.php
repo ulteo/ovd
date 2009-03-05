@@ -32,14 +32,16 @@ class Logger {
 	
 			if (!isset($level_flags) || !is_array($level_flags))
 				$level_flags = array($level_);
+				
+			if (in_array($level_, $level_flags))
+				@file_put_contents(SESSIONMANAGER_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
 		}
 		else {
 			// we log anyway
-			$level_flags = array($level_);
+			@file_put_contents(SESSIONMANAGER_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - NOPREFS - '.$data_."\r\n", FILE_APPEND);
 		}
 
-		if (in_array($level_, $level_flags))
-			@file_put_contents(SESSIONMANAGER_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
+		
 	}
 
 	public static function debug($module_='main', $data_='') {

@@ -23,7 +23,6 @@ require_once(dirname(__FILE__).'/../../includes/defaults.inc.php');
 
 class Preferences_admin extends Preferences {
 	public function __construct($element_form_=array(), $partial=false, $init_=false){
-		Logger::debug('admin','ADMIN_PREFERENCES::construct(partial='.$partial.',init_='.$init_.')');
 		$this->conf_file = SESSIONMANAGER_CONFFILE_SERIALIZED;
 		$this->prettyName = array();
 		$this->initialize();
@@ -49,7 +48,6 @@ class Preferences_admin extends Preferences {
 	}
 
 	public function initialize(){
-		Logger::debug('admin','ADMIN_PREFERENCES::initialize');
 		$this->elements = array();
 
 		$this->addPrettyName('general',_('General configuration'));
@@ -496,7 +494,6 @@ class Preferences_admin extends Preferences {
 	}
 
 	protected function constructFromArray($init){
-		Logger::debug('admin','ADMIN_PREFERENCES::constructFromArray('.$init.')');
 		$prefs =& $this->prefs;
 		foreach ($this->elements as $key1 => $value1) {
 			if (is_object($value1)) {
