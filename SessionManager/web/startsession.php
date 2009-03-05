@@ -115,7 +115,7 @@ if ($sessions > 0) {
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
 	$random_server = $_REQUEST['force'];
 else {
-	$serv_tmp = $user->getAvailableServer('linux'); // FIXME : a session server  != linux server...
+	$serv_tmp = $user->getAvailableServer('linux'); // FIXME : session server != linux server...
 	if (is_object($serv_tmp))
 		$random_server = $serv_tmp->fqdn;
 
@@ -124,13 +124,6 @@ else {
 		$ev->setAttribute('error', _('No available server'));
 		$ev->emit();
 		die_error(_('No available server'),__FILE__,__LINE__);
-	}
-
-	if (@gethostbyname($random_server) == $random_server) {
-		$buf = $prefs->get('general', 'application_server_settings');
-		$fqdn_private_address = $buf['fqdn_private_address'];
-		if (isset($fqdn_private_address[$random_server]))
-			$random_server = $fqdn_private_address[$random_server];
 	}
 }
 
