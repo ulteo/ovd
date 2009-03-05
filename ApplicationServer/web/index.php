@@ -113,9 +113,15 @@ $_SESSION['print_timestamp'] = time();
 if ($_SESSION['mode'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
 ?>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Ulteo Open Virtual Desktop</title>
+
+		<?php //<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" /> ?>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
