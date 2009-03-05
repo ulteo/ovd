@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2006-2008 Ulteo SAS
+# Copyright (C) 2006-2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Gaël DUVAL <gduval@ulteo.com>
 # Author Gauvain POCENTEK <gauvain@ulteo.com>
@@ -38,15 +38,25 @@ check_variables USER_LOGIN USER_HOME LOC GEOMETRY RFB_PORT || close_session
 HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
 . modules_fs.sh || close_session
 
-if [ -f ${SESSID_DIR}/parameters/module_fs/user_id ]; then
-    export USER_ID=`cat ${SESSID_DIR}/parameters/module_fs/user_id`
-    groupadd -g ${USER_ID} ${USER_LOGIN} 
-    useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -u ${USER_ID} -g ${USER_LOGIN} ${USER_LOGIN}
+
+if [ -f ${SESSID_DIR}/parameters/allow_shell ]; then
+    USER_SHELL=/bin/bash
 else
-    groupadd ${USER_LOGIN} 
-    useradd --shell /bin/false --home $USER_HOME -m -k /dev/null -K UID_MIN=2000 -g ${USER_LOGIN} ${USER_LOGIN}
-    export USER_ID=$(id -u $USER_LOGIN)   
+    USER_SHELL=/bin/false
 fi
+
+if [ -f ${SESSID_DIR}/parameters/module_fs/user_id ]; then
+    USER_ID=`cat ${SESSID_DIR}/parameters/module_fs/user_id`
+    #GROUPADD_ARG="-g ${USER_ID}"
+    USERADD_ARG='-u '${USER_ID}
+else
+    USERADD_ARG='-K UID_MIN=2000'
+fi
+
+groupadd ${USER_LOGIN} 
+useradd --shell ${USER_SHELL} --home $USER_HOME -m -k /dev/null $USERADD_ARG} -g ${USER_LOGIN} ${USER_LOGIN}
+export USER_ID=$(id -u $USER_LOGIN)
+
 chown ${USER_ID} $SPOOL_USERS/$SESSID
 chmod 770        $SPOOL_USERS/$SESSID
 
