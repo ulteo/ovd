@@ -450,7 +450,7 @@ class Server {
 
 		$dom = new DomDocument();
 		$ret = @$dom->loadXML($xml);
-		if (! $ret || ! is_object($ret))
+		if (! $ret)
 			return false;
 
 		$keys = array();
