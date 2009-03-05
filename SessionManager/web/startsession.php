@@ -39,6 +39,7 @@ $start_app = '';
 $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
+$allow_shell = $default_settings['allow_shell'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
@@ -192,6 +193,8 @@ if (isset($shareable) && $shareable != '0')
 	$optional_args['shareable'] = 1;
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
+if (isset($allow_shell) && $allow_shell != '0')
+	$optional_args['allow_shell'] = 1;
 if (isset($allow_proxy) && $allow_proxy != '0') {
 	$optional_args['enable_proxy'] = 1;
 	$optional_args['proxy_type'] = $_REQUEST['proxy_type'];
@@ -200,8 +203,6 @@ if (isset($allow_proxy) && $allow_proxy != '0') {
 	$optional_args['proxy_username'] = $_REQUEST['proxy_username'];
 	$optional_args['proxy_password'] = $_REQUEST['proxy_password'];
 }
-
-var_dump($optional_args);
 
 if ($prefs->get('UserDB', 'enable') == 'activedirectory') {
 	$config_ad = $prefs->get('UserDB', 'activedirectory');

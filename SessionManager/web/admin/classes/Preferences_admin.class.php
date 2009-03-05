@@ -143,12 +143,11 @@ class Preferences_admin extends Preferences {
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-
 		$c = new ConfigElement('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
-
-		# Sessions can be shared ? yes/no
 		$c = new ConfigElement('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),

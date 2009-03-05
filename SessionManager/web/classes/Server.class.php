@@ -100,6 +100,7 @@ class Server {
 			return false;
 		}
 		$buf_monitoring = $this->getMonitoring();
+return true;
 		if (! $buf_monitoring) {
 			Logger::error('main', '"'.$this->fqdn.'": does not send a valid monitoring');
 			popup_error('"'.$this->fqdn.'": '._('does not send a valid monitoring'));
