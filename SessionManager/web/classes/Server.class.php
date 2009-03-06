@@ -114,9 +114,9 @@ class Server {
 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline()) {
-			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
-			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
-
+// 			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
+// 			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
+			Logger::warning('main', '"'.$this->fqdn.'": server is NOT online!');
 			return false;
 		}
 
