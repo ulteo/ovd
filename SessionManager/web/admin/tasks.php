@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -26,9 +26,18 @@ $tm = new Tasks_Manager();
 $tm->load_all();
 $tm->refresh_all();
 
-if (isset($_POST['submit'])) {
-	$task = new Task_install_from_line(0, $_POST['server'], $_POST['request']);
-	$tm->add($task);
+if (isset($_POST['action'])) {
+	if ($_POST['action']=='create') {
+		$task = new Task_install_from_line(0, $_POST['server'], $_POST['request']);
+		$tm->add($task);
+	}
+	elseif ($_POST['action']=='remove') {
+		if (isset($_POST['task']))
+			if (do_remove($tm, $_POST['task']))
+				redirect('tasks.php');
+	}
+
+	redirect();
 }
 
 if (isset($_REQUEST['action'])) {
@@ -40,6 +49,29 @@ if (isset($_REQUEST['action'])) {
 
 show_default($tm);
 
+
+function do_remove($tm, $id) {
+	$task = false;
+	foreach($tm->tasks as $t) {
+		if ($t->id == $id) {
+			$task = $t;
+			break;
+		}
+	}
+
+	if ($task === false) {
+		popup_error('Unable to find task id '.$id);
+		return false;
+	}
+
+	if (! ($task->succeed() || $task->failed())) {
+		popup_error('Task '.$id.' not removable');
+		return false;
+	}
+
+	$tm->remove($id);
+	return true;
+}
 
 function show_manage($id, $tm) {
 	$task = false;
@@ -54,6 +86,7 @@ function show_manage($id, $tm) {
 		die_error('Unable to find task '.$id, __FILE__,__LINE__);
 	
 	$infos = $task->get_AllInfos();
+	$can_remove = ($task->succeed() || $task->failed());
 
 	page_header();
 
@@ -68,6 +101,8 @@ function show_manage($id, $tm) {
 	echo '<th>'._('Status').'</th>';
 	echo '<th>'._('Details').'</th>';
 	echo '<th>'._('Job id').'</th>';
+	if ($can_remove)
+    		echo '<th></th>';
 	echo '</tr>';
 	
 	if ($task->succeed())
@@ -84,6 +119,15 @@ function show_manage($id, $tm) {
 	echo '<td>'.$status.'</td>';
 	echo '<td>'.$task->getRequest().'</td>';
 	echo '<td>'.$task->job_id.'</td>';
+	if ($can_remove) {
+		echo '<td>';
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="remove" />';
+		echo '<input type="hidden" name="task" value="'.$task->id.'" />';
+		echo '<input type="submit" value="'._('Delete').'" />';
+		echo '</form>';
+		echo '</td>';
+	}
 	echo '</tr>';
 	echo '</table>';
 	
@@ -124,6 +168,8 @@ function show_default($tm) {
     $count = 0;
     foreach($tm->tasks as $task) {
       $content = 'content'.(($count++%2==0)?1:2);
+      $can_remove = ($task->succeed() || $task->failed());
+
       if ($task->succeed())
 	      $status = '<span class="msg_ok">'._('Finished').'</span>';
       elseif ($task->failed())
@@ -137,7 +183,16 @@ function show_default($tm) {
       echo '<td>'.get_class($task).'</td>';
       echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$task->server.'</a></td>';
       echo '<td>'.$status.'</td>';
-      echo '<td>'.$task->getRequest().' ('.$task->job_id.')</td>';
+      echo '<td>'.$task->getRequest().'</td>';
+      echo '<td>';
+      if ($can_remove) {
+    	echo '<form action="" method="post">';
+	echo '<input type="hidden" name="action" value="remove" />';
+	echo '<input type="hidden" name="task" value="'.$task->id.'" />';
+	echo '<input type="submit" value="'._('Delete').'" />';
+    	echo '</form>';
+      }
+      echo '</td>';
       echo '</tr>';
     }
     echo '</table>';
@@ -148,6 +203,7 @@ function show_default($tm) {
     	echo '<h2>'._('Install a package from command line').'</h2>';
 
     	echo '<form action="" method="post">';
+	echo '<input type="hidden" name="action" value="create" />';
     	echo '<select name="server">';
     	foreach ($servers as $server)
 		echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
