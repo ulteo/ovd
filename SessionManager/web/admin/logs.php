@@ -22,8 +22,6 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-define('NBLINES', 25);
-
 function parse($str_) {
 	$buf = preg_match('/[^-]*\ -\ [^-]*\ -\ ([^-]*)\ -\ .*/', $str_, $matches);
 	if (! $buf)
@@ -31,6 +29,34 @@ function parse($str_) {
 
 	return strtolower($matches[1]);
 }
+
+function get_lines_from_file($file_, $nb_lines, $allowed_types) {
+	$spec_lines = array();
+	// Add false to the array to get mismatch log lines
+	// $allowed_types[]= false;
+	$max_lines = shell_exec('wc -l '.$file_.'|cut -d " " -f1');
+
+	for($pos=0; count($spec_lines)<$nb_lines && $pos<$max_lines; $pos+=$nb_lines) {
+		$cmd = 'tail -n '.($nb_lines+$pos).' '.$file_.' |head -n '.$nb_lines;
+		$buf = shell_exec($cmd);
+		$lines = explode("\n", $buf);
+
+		array_reverse($lines);
+		foreach($lines as $line) {
+			$type = parse($line);
+			if (! in_array($type, $allowed_types))
+				continue;
+
+			$spec_lines[]= '<span class="'.$type.'">'.trim($line).'</span>';
+			if (count($spec_lines)>=$nb_lines)
+				break;
+		}
+	}
+	array_reverse($spec_lines);
+	return $spec_lines;
+}
+
+
 
 $prefs = Preferences::getInstance();
 if (is_object($prefs))
@@ -43,29 +69,8 @@ $logfiles = array_reverse($logfiles);
 
 $display = array();
 foreach ($logfiles as $logfile) {
-	$spec_lines = array();
-
-	for($pos=0, $eof=false; count($spec_lines)<NBLINES && !$eof; $pos+=NBLINES) {
-		$cmd = 'tail -n '.(NBLINES+$pos).' '.$logfile.' |head -n '.NBLINES;
-		
-		$buf = shell_exec($cmd);
-		$lines = explode("\n", $buf);
-		if (count($lines)<NBLINES)
-			$eof = true;
-    
-		array_reverse($lines);
-		foreach($lines as $line) {
-			$type = parse($line);
-			if (! in_array($type, $log_flags))
-				continue;
-
-			$spec_lines[]= '<span class="'.$type.'">'.trim($line).'</span>';
-			if (count($spec_lines)>=NBLINES)
-				break;
-		}
-	}
-	array_reverse($spec_lines);
-	$display[basename($logfile)] = $spec_lines;
+	$lines = get_lines_from_file($logfile, 100, $log_flags);
+	$display[basename($logfile)] = $lines;
 }
 
 
