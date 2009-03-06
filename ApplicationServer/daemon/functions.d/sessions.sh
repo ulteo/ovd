@@ -389,6 +389,8 @@ session_restore() {
     echo $HEXA_SSH_PASS > $SESSID_DIR/private/hexasshpasswd
 
     session_install_client $SESSID
+    [ -f ${SESSID_DIR}/infos/owner_exit ] && \
+	rm ${SESSID_DIR}/infos/owner_exit
     log_INFO "session_restore: $i"
     session_switch_status $SESSID 2
 }
