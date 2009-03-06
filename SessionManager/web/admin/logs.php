@@ -56,7 +56,54 @@ function get_lines_from_file($file_, $nb_lines, $allowed_types) {
 	return $spec_lines;
 }
 
+function show_all($flags_) {
+	$logfiles = glob(SESSIONMANAGER_LOGS.'/*.log');
+	$logfiles = array_reverse($logfiles);
 
+	$display = array();
+	foreach ($logfiles as $logfile) {
+		$lines = get_lines_from_file($logfile, 20, $flags_);
+		$display[basename($logfile)] = $lines;
+	}
+
+
+	page_header();
+	echo '<h1>'._('Logs').'</h1>';
+	echo '<div>';
+
+	foreach ($display as $name => $lines) {
+		echo '<h2><a href="?show='.$name.'">'.$name.'</a></h2>';
+		echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;">';
+		echo implode("\n", $lines);
+		echo '</div>';
+	}
+
+	echo '</div>';
+	page_footer();
+	die();
+}
+
+function show_specific($name_, $flags_) {
+	$file = SESSIONMANAGER_LOGS.'/'.$name_;
+	if (! file_exists($file)) {
+	  popup_error(_('Log file does not exist').' ('.$name_.')');
+	  redirect('logs.php');
+	}
+
+	$display = array();
+	$lines = get_lines_from_file($file, 100, $flags_);
+
+	page_header();
+	echo '<h1><a href="?">'._('Logs').'</a> - '.$name_.'</h1>';
+	echo '<div>';
+	echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;">';
+	echo implode("\n", $lines);
+	echo '</div>';
+
+	echo '</div>';
+	page_footer();
+	die();
+}
 
 $prefs = Preferences::getInstance();
 if (is_object($prefs))
@@ -64,26 +111,7 @@ if (is_object($prefs))
 else
 	$log_flags = array();
 
-$logfiles = glob(SESSIONMANAGER_LOGS.'/*.log');
-$logfiles = array_reverse($logfiles);
+if (isset($_GET['show']))
+  show_specific($_GET['show'], $log_flags);
 
-$display = array();
-foreach ($logfiles as $logfile) {
-	$lines = get_lines_from_file($logfile, 100, $log_flags);
-	$display[basename($logfile)] = $lines;
-}
-
-
-page_header();
-echo '<h1>'._('Logs').'</h1>';
-echo '<div>';
-
-foreach ($display as $name => $lines) {
-	echo '<h2>'.$name.'</h2>';
-	echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;">';
-	echo implode("\n", $lines);
-	echo '</div>';
-}
-
-echo '</div>';
-page_footer();
+show_all($log_flags);
