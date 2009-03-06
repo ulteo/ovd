@@ -635,7 +635,8 @@ class Server {
 		$root = $dom->documentElement;
 
 		// before adding application, we remove all previous applications
-		$previous_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn); // see and of function
+		$previous_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn); // see end of function
+		$current_liaison_key = array();
 
 		$application_node = $dom->getElementsByTagName("application");
 		foreach($application_node as $app_node){
@@ -686,11 +687,14 @@ class Server {
 			if ($applicationDB->isWriteable() == true){
 				if ($applicationDB->isOK($a) == true){
 					// we add the app to the server
-					$ret = Abstract_Liaison::save('ApplicationServer', $a->getAttribute('id'),$this->fqdn);
-					if ($ret === false) {
-						Logger::error('main', 'Server::updateApplications failed to save application');
-						return $ret;
+					if (!is_object(Abstract_Liaison::load('ApplicationServer', $a->getAttribute('id'),$this->fqdn))) {
+						$ret = Abstract_Liaison::save('ApplicationServer', $a->getAttribute('id'),$this->fqdn);
+						if ($ret === false) {
+							Logger::error('main', 'Server::updateApplications failed to save application');
+							return $ret;
+						}
 					}
+					$current_liaison_key[] = $a->getAttribute('id');
 				}
 				else{
 					//echo "Application not ok<br>\n";
@@ -698,13 +702,10 @@ class Server {
 			}
 		}
 
-		$current_liaison = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
-		$current_liaison_key = array_keys($current_liaison);
 		$previous_liaison_key = array_keys($previous_liaison);
 		foreach ($previous_liaison_key as $key){
 			if (in_array($key, $current_liaison_key) == false) {
-				$liaison = $previous_liaison_key[$key];
-				Abstract_Liaison::delete('ApplicationServer', $liaison->element, $liaison->group);
+				Abstract_Liaison::delete('ApplicationServer', $key, $this->fqdn);
 			}
 		}
 		return true;
