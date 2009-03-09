@@ -65,7 +65,7 @@ page_header();
 	<h2>Configuration</h2>
 
 	<ul>
-		<li><a href="configuration.php"><?php echo _('General configuration'); ?></li>
+		<li><a href="configuration-sumup.php"><?php echo _('General configuration'); ?></li>
 	</ul>
 </div>
 </div>
