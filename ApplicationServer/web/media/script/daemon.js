@@ -65,7 +65,7 @@ function daemon_loop() {
 
 	if (session_state == 0 || session_state == 10) {
 		new Ajax.Request(
-			'startsession.php',
+			'start.php',
 			{
 				method: 'get',
 				parameters: {
@@ -89,7 +89,7 @@ function daemon_loop() {
 
 function switch_splash_to_applet() {
 	new Ajax.Request(
-		'applet.php',
+		'access.php',
 		{
 			method: 'get',
 			parameters: {
@@ -122,7 +122,7 @@ function switch_applet_to_end() {
 
 function client_exit() {
 	new Ajax.Request(
-		'webservices/client_exit.php',
+		'client_exit.php',
 		{
 			method: 'get'
 		}
@@ -179,7 +179,7 @@ function push_log(data_, level_) {
 function session_check() {
 	push_log('[session] check()', 'debug');
 	new Ajax.Request(
-		'webservices/whatsup.php',
+		'whatsup.php',
 		{
 			method: 'get',
 			asynchronous: false,
@@ -258,7 +258,7 @@ function onUpdateInfos(transport) {
 function do_print(path, timestamp) {
   push_log('[print] PDF: yes', 'info');
 
-  var print_url = 'http://'+server+'/webservices/print.php?timestamp='+timestamp;
+  var print_url = 'http://'+server+'/print.php?timestamp='+timestamp;
 
   $('printerContainer').show();
   $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server_+'/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';

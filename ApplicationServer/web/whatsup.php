@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_status.php');
 
@@ -75,7 +75,7 @@ function getNextPrintFile($session, $time) {
   $r = getNextFile($time, $dir);
   if ($r === false || ! is_readable($r[0]))
     return false;
-    
+
   return $r;
 }
 // End Printing functions
@@ -131,7 +131,7 @@ if ($status == 2) {
     $item->setAttribute('path', $r[2]);
     $item->setAttribute('time', $r[1]);
     $session_node->appendChild($item);
-      
+
     $_SESSION['print_timestamp'] = $r[1] +1;
   }
 
