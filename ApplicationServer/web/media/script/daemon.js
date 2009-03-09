@@ -38,9 +38,12 @@ function daemon_init(server_, debug_) {
 		my_height = document.body.clientHeight;
 	}
 
-	if ($('menuShareFrame')) {
-		$('menuShareFrame').style.width = my_width+'px';
-		$('menuShareFrame').style.height = my_height+'px';
+	if ($('menuShare')) {
+		$('menuShare').style.width = my_width+'px';
+		var new_height = parseInt(my_height)-18;
+		if (debug)
+			new_height = parseInt(new_height)-149;
+		$('menuShare').style.height = new_height+'px';
 
 		my_height = parseInt(my_height)-18;
 	}

@@ -69,7 +69,7 @@ function getAvailableResol() {
 function setAvailableSize(select_id) {
 	var res = getAvailableResol();
 
-	for (i in res) {
+	for (var i = 0; i < res.length; i++) {
 		var r = string2resol(res[i]);
 
 		if (r == null)

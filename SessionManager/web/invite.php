@@ -75,56 +75,46 @@ $session = Abstract_Session::load($_GET['session']);
 ?>
 <link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
-<style>
-html,body {
-	background: #0f2d47;
-	margin: none;
-	padding: none;
-}
-</style>
+<h1 class="centered"><?php echo _('Desktop sharing'); ?></h2>
 
-<div style="background: #eee; width: 30%; margin-left: auto; margin-right: 0px; text-align: center; position: absolute; top: 0px; right: 0px;">
-	<h1 class="centered"><?php echo _('Desktop sharing'); ?></h2>
+<p><?php echo _('Invite the following people to share this session'); ?></p>
 
-	<p><?php echo _('Invite the following people to share this session'); ?></p>
+<?php
+if (isset($_GET['error']))
+	echo '<p class="msg_error centered">'._('An error occured with your invitation, please try again!').'</p>';
+elseif (isset($_GET['invited']))
+	echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent!').'</p>';
+?>
 
-	<?php
-	if (isset($_GET['error']))
-		echo '<p class="msg_error centered">'._('An error occured with your invitation, please try again!').'</p>';
-	elseif (isset($_GET['invited']))
-		echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent!').'</p>';
-	?>
-
-	<div style="margin-left: auto; margin-right: 0px; text-align: left">
-		<ul>
-			<?php
-				$invites = Invites::getBySession($_GET['session']);
-				$inviteds = array();
-				if (count($invites) > 0) {
-					foreach ($invites as $invite) {
-						$buf = $invite->getAttribute('settings');
-						$inviteds[] = array($invite->getAttribute('email'), ($buf['view_only'] == 0)?_('active mode'):_('passive mode'));
-					}
+<div style="margin-left: 0px; margin-right: 0px; text-align: left">
+	<ul>
+		<?php
+			$invites = Invites::getBySession($_GET['session']);
+			$inviteds = array();
+			if (count($invites) > 0) {
+				foreach ($invites as $invite) {
+					$buf = $invite->getAttribute('settings');
+					$inviteds[] = array($invite->getAttribute('email'), ($buf['view_only'] == 0)?_('active mode'):_('passive mode'));
 				}
+			}
 
-				if (isset($inviteds) && is_array($inviteds) && count($inviteds) > 0) {
-					foreach ($inviteds as $invited)
-						echo '<li>'.$invited[0].' ('.$invited[1].')</li>';
-				} else
-					echo '<li>'._('No invitation sent for now').'</li>';
-			?>
-		</ul>
-	</div>
-
-	<fieldset class="hidden centered">
-		<form action="" method="post">
-			<input type="hidden" name="invite" value="1" />
-
-			<input type="hidden" name="session" value="<?php echo $session->id; ?>" />
-
-			<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> <input class="input_checkbox" type="checkbox" name="active_mode" /> <?php echo _('active mode'); ?></p>
-
-			<input type="submit" value="<?php echo _('Invite'); ?>" />
-		</form>
-	</fieldset>
+			if (isset($inviteds) && is_array($inviteds) && count($inviteds) > 0) {
+				foreach ($inviteds as $invited)
+					echo '<li>'.$invited[0].' ('.$invited[1].')</li>';
+			} else
+				echo '<li>'._('No invitation sent for now').'</li>';
+		?>
+	</ul>
 </div>
+
+<fieldset class="hidden center">
+	<form action="" method="post">
+		<input type="hidden" name="invite" value="1" />
+
+		<input type="hidden" name="session" value="<?php echo $session->id; ?>" />
+
+		<p><?php echo _('Email address'); ?>: <input type="text" name="email" value="" /> <input class="input_checkbox" type="checkbox" name="active_mode" /> <?php echo _('active mode'); ?></p>
+
+		<input type="submit" value="<?php echo _('Invite'); ?>" />
+	</form>
+</fieldset>

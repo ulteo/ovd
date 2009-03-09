@@ -45,8 +45,15 @@ $debug = 0;
 $default_settings = $prefs->get('general', 'web_interface_settings');
 $allow_proxy = $default_settings['allow_proxy'];
 
-$advanced_settings = $prefs->get('general', 'session_settings_defaults');
-$advanced_settings = $advanced_settings['advanced_settings_startsession'];
+$advanced_settings = array();
+$buf = $prefs->get('general', 'session_settings_defaults');
+foreach ($buf['advanced_settings_startsession'] as $v)
+	$advanced_settings[] = $v;
+
+$buf = $prefs->get('general', 'web_interface_settings');
+foreach ($buf['advanced_settings_startsession'] as $v)
+	$advanced_settings[] = $v;
+
 if (!is_array($advanced_settings))
 	$advanced_settings = array();
 

@@ -1,6 +1,8 @@
 body {
 	background: #fff;
 	font-family: Arial;
+	margin: 0;
+	padding: 0;
 }
 
 img {
@@ -24,6 +26,8 @@ img {
 #printerContainer {
 	width: 1px;
 	height: 1px;
+	background: #0f2d47;
+	border: 0px;
 }
 
 #splashContainer {
@@ -52,8 +56,6 @@ img {
 
 	top: 0px;
 	left: 0px;
-
-	background: #0f2d47;
 }
 
 #debugContainer {
@@ -120,8 +122,10 @@ img {
 
 #menuShare {
 	background: #0f2d47;
-	margin-left: auto;
+	width: 100%;
+	margin-left: 0px;
 	margin-right: 0px;
+	padding: 10px;
 }
 
 #menuShareWarning {
@@ -133,14 +137,9 @@ img {
 }
 
 #menuShareFrame {
-	margin: none;
-	padding: none;
-}
-
-#menuShareClose {
-	background: #eee;
-	width: 30%;
-	padding-top: 10px;
-	margin-left: auto;
+	margin-left: 0px;
 	margin-right: 0px;
+	padding: 10px;
+	width: 30%;
+	background: #fff;
 }

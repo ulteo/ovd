@@ -47,7 +47,7 @@ function die_error($error_=false, $file_=NULL, $line_=NULL) {
 		echo '<h2 class="centered">'._('Error').'</h2>';
 		echo '&nbsp;<p class="msg_error centered">'.$error_.'</p>&nbsp;';
 	} else
-		echo '<p class="msg_error centered">'._('The service is not available, please try again later').'</p>';
+		echo '&nbsp;<p class="msg_error centered">'._('The service is not available, please try again later').'</p>&nbsp;';
 
 	footer_static();
 
