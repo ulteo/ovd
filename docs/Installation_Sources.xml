@@ -1,96 +1,280 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
-<article>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+
   <articleinfo>
-    <title>Installation documentation of Ulteo Virtual Open Desktop on a non Debian based system</title>
+    <title>Installation documentation for the Ulteo Open Virtual Desktop from the sources</title>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
-      <year>2008</year>
-      <holder>Ulteo SAS - http://www.ulteo.com</holder>
+      <year>2009</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
-    <para>
-      This documentation is not complete and there is no warranty it'll work.
-    </para>
+
 
   <section>
     <title>Prerequisites</title>
-    <para>
-      We still need 2 machines with a Linux system.
-    </para>
-  </section>
 
-  <section>
-    <title>Session Manager installation (sm.ulteo.com)</title>
-    <para>
-      Dependencies:
-    </para>
-    <itemizedlist>
-      <listitem><para>Apache 2</para></listitem>
-      <listitem><para>PHP 5 with curl, ldap, mysqlk modules</para></listitem>
-      <listitem><para>MySQL</para></listitem>
-    </itemizedlist>	  
+    <xi:include href="sub/generic.xml" xpointer="prerequisites" />
 
+   <section>
+      <title>Installation of MySQL</title>
+      <para>
+	If you don't have any available MySQL database, you have to
+	install MySQL on your Session Manager server.
+      </para>
 
-    <itemizedlist>
-      <listitem>
-	<para>Download the software from <ulink url="ulteo-od.tar.gz" /></para>
-      </listitem>
-      <listitem>
-	<para>Uncompress it in /tmp</para>
-      </listitem>
-      <listitem>
-	<para>place the sessionmanager directory in /var/www/sessionmanager</para>
-      </listitem>
-      <listitem>
-	<para>Donwload the application system archive from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd.php" /></para>
-      </listitem>
-    </itemizedlist>
+          <para>Now log in mysql and create a database:</para>
+	  <screen>
+	    <![CDATA[
+# mysql -u root -p
+Enter password:
+mysql> create database ulteo_sm;
+ Query OK, 1 row affected (0.02 sec)
+mysql> exit]]>
+	  </screen>
 
-    <para>
-      The server is now install but not configured. You can go to <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser and you should see that page:
-    </para>
+      <beginpage />
+    </section>
   </section>
 
 
   <section>
-    <title>Application server installation (cm.ulteo.com)</title>
+    <title>Session Manager (sm.ulteo.com)</title>
     <para>
-      Dependencies:
+      The Session Manager is the main server for your <emphasis>Ulteo Open Virtual Desktop infrastructure</emphasis>.
+      It will manage all your application servers through an administration web interface.
     </para>
-    <itemizedlist>
-      <listitem><para>Apache 2</para></listitem>
-      <listitem><para>PHP 5 with curl support</para></listitem>
-    </itemizedlist>	  
+
+       <para>
+	 All operations need to be done as
+	 <emphasis>superuser</emphasis> (root).
+    </para>
 
 
+   <section>
+      <title>Dependencies</title>
+
+      <itemizedlist>
+        <listitem>
+	  <para>
+	    <emphasis role="strong">Autotools: </emphasis>autoconf
+	    intltool make
+	  </para>
+        </listitem>
+        <listitem>
+	  <para>
+	    <emphasis role="strong">PHP 5</emphasis> with modules curl
+	    ldap mysql.
+	  </para>
+        </listitem>
+       <listitem>
+	  <para>
+	    <emphasis role="strong">Apache 2</emphasis> with php
+	    module enable.
+	  </para>
+        </listitem>
+
+      </itemizedlist>
+      <beginpage />
+    </section>
+
+   <section>
+      <title>Installation</title>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Download the Ulteo Open Virtual Desktop tarball from
+	    <ulink url="http://www.ulteo.com" />
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Uncompress the tarball and enter into the Session Manager
+	    directory
+	    <ulink url="http://www.ulteo.com" />
+	  </para>
+	  <screen>
+	    <![CDATA[
+$ tar xzf ulteo-ovd.tar.gz
+$ cd ulteo-ovd
+$ tar xzf sessionmanager.tar.gz
+$ cd sessionmanager]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Install the system
+	  </para>
+	  <screen>
+	    <![CDATA[
+./configure && make && make install]]>
+	  </screen>
+	</listitem>
+        <listitem>
+	  <para>
+	    Launch the configuration tool
+	  </para>
+	  <screen>
+	    <![CDATA[
+# sm-config 
+Admin login: admin
+Password: 
+Retype password: 
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php]: http://firex.ulteo.com/~gauvain/1.0rc1/base.tar.gz
+Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]: 
+
+Options:
+* chroot download:  yes
+* chroot URL:       http://firex.ulteo.com/~gauvain/1.0rc1/base.tar.gz
+* chroot directory: /usr/share/ulteo/sessionmanager/base.tar.gz
+* apache group:     www-data
+* apache dir:       /etc/apache2/conf.d
+
+Is this correct? [Y/n] y]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Restart apache
+	  </para>
+	  <screen>
+	    <![CDATA[
+apache2ctl restart]]>
+	  </screen>
+        </listitem>
+      </itemizedlist>
+
+    <para>
+      The server is now installed but not configured yet. You have to open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser. It should display this page:
+    </para>
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_www_service_not_available.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager into a web browser</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    </section>
+
+  <xi:include href="sub/generic.xml" xpointer="sessionmanager_configuration" />
+</section>
+
+<section>
+  <title>Application Server (aps.ulteo.com)</title>
+
+  <para>
+    All operations need to be done as <emphasis>superuser</emphasis>
+    (root).
+  </para>
+
+  <section>
+    <title>Dependencies</title>
+
     <itemizedlist>
       <listitem>
-	<para>Download the software from <ulink url="ulteo-od.tar.gz" /></para>
-      </listitem>
-     <listitem>
-	<para>Uncompress it in /tmp</para>
-      </listitem>
-      <listitem>
-	<para>place the connectme directory in /var/www/connectme</para>
+	<para>
+	  <emphasis role="strong">Autotools: </emphasis>autoconf
+	  intltool make
+	</para>
       </listitem>
       <listitem>
-	<para>Donwload the application system archive from your sessionmanager/base.tar.gz</para>
+	<para>
+	  <emphasis role="strong">PHP 5</emphasis> with modules curl
+	  imagick.
+	</para>
       </listitem>
       <listitem>
-	<para>Uncompress the base.tar.gz in /opt/connectme</para>
-      </listitem>
-      <listitem>
-	<para>Create a /etc/connectme.conf  and put "CHROOT=/opt/connectme"</para>
-      </listitem>
-      <listitem>
-	<para>Edit the /opt/connecme/etc/connectme.conf and specify SERVERNAME and SESSION_MANAGER_URL</para>
-      </listitem>
-      <listitem>
-	<para>chroot /opt/connectme /etc/init.d/connectmed</para>
+	<para>
+	  <emphasis role="strong">Apache 2</emphasis> with php
+	  module enable.
+	</para>
       </listitem>
     </itemizedlist>
   </section>
+
+  <section>
+    <title>Installation</title>
+
+    <itemizedlist>
+      <listitem>
+	  <para>
+	    Download the Ulteo Open Virtual Desktop tarball from
+	    <ulink url="http://www.ulteo.com" />
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    Uncompress the tarball and enter into the Application
+	    server directory
+	    <ulink url="http://www.ulteo.com" />
+	  </para>
+	  <screen>
+	    <![CDATA[
+$ tar xzf ulteo-ovd.tar.gz
+$ cd ulteo-ovd
+$ tar xzf applciationserver.tar.gz
+$ cd applicationserver]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Install the system
+	  </para>
+	  <screen>
+	    <![CDATA[
+# ./configure && make && make install]]>
+	  </screen>
+	</listitem>
+	<listitem>
+          <para>
+	    Then run aps-chroot-install :
+	  </para>
+	  <screen>
+	    <![CDATA[
+# aps-chroot-install 
+Full Qualified Domain Name [.office.ulteo.com]: aps.office.ulteo.com 
+Session Manager URL: http://sm.office.ulteo.com/sessionmanager
+Chroot installation path: /opt
+
+Options:
+* FQDN: toto.office.ulteo.com
+* SM URL: toto.office.ulteo.com/sessionmanager
+* chroot path: /opt
+* chroot download: yes
+* apache group: www-data
+* apache dir: /etc/apache2/conf.d
+
+Is this correct? [Y/n] y]]>
+	  </screen>
+	</listitem>
+	<listitem>
+	  <para>
+	    Then start the OVD daemon in the chroot:
+	  </para>
+	  <screen>
+	    <![CDATA[
+chroot /opt /etc/init.d/ulteo-ovdd start]]>
+	  </screen>
+        </listitem>
+      </itemizedlist>
+      <beginpage />
+    </section>
+    <xi:include href="sub/generic.xml" xpointer="aps_manage_sm" />
+</section>
+
+<xi:include href="sub/generic.xml" xpointer="publication" />
+<xi:include href="sub/generic.xml" xpointer="launch_session" />
+
 </article>
