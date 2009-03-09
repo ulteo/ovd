@@ -153,7 +153,18 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 
 		<div id="menuShare" style="display: none;">
 			<div style="width: 500px; height: 300px; float: right;">
-				<iframe style="width: 500px; height: 300px;" id="menuShareFrame" src="<?php echo $sessionmanager_url; ?>/invite.php?server=<?php echo $_SERVER['SERVER_NAME']; ?>&session=<?php echo $_SESSION['session']; ?>" frameborder="0"></iframe>
+				<div style="background: #fff; width: 500px; height: 300px;" id="menuShareFrame">
+					<h2 class="centered"><?php echo _('Desktop sharing'); ?></h2>
+					<span id="menuShareContent"></span>
+					<fieldset style="border: 0;">
+						<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">
+							<p><?php echo _('Email address'); ?>: <input type="text" id="invite_email" name="email" value="" />
+							<input class="input_checkbox" type="checkbox" id="invite_mode" name="mode" /> <?php echo _('active mode'); ?></p>
+
+							<input type="submit" id="invite_submit" value="<?php echo _('Invite'); ?>" />
+						</form>
+					</fieldset>
+				</div>
 			</div>
 		</div>
 <?php

@@ -239,8 +239,29 @@ function onUpdateInfos(transport) {
       return;
     }
 
-    if (nb_share != nb) {
-      nb_share = nb;
+    if (nb > 0) {
+        var totoNodes = sharingNode.getElementsByTagName('share');
+
+        var html = '<div style="margin-left: 0px; margin-right: 0px; text-align: left"><ul>';
+
+        for (var i = 0; i < totoNodes.length; i++) {
+            var nb_share = 0;
+            var buf = totoNodes[i];
+
+            var email = buf.getAttribute('email');
+            var mode = buf.getAttribute('mode');
+            var alive = buf.getAttribute('alive');
+            if (alive == 1)
+              nb_share += 1;
+            var joined = buf.getAttribute('joined');
+
+            html += '<li>'+email+' ('+mode+')</li>';
+        }
+
+        html += '</ul></div>';
+
+        $('menuShareContent').innerHTML = html;
+
       push_log('[session] nb share: '+nb_share, 'info');
 
       if (nb_share != 0) {
@@ -264,4 +285,31 @@ function do_print(path, timestamp) {
   $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server_+'/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
 
   push_log('[print] Applet: starting', 'warning');
+}
+
+function do_invite() {
+	var email = $('invite_email').value;
+	var mode = 'passive';
+	if ($('invite_mode').checked)
+		mode = 'active';
+	$('invite_submit').disabled = true;
+
+	new Ajax.Request(
+		'invite.php',
+		{
+			method: 'post',
+			parameters: {
+				'email': email,
+				'mode': mode
+			},
+			onSuccess: function(transport) {
+				if (transport.responseText != 'OK')
+					alert(transport.responseText);
+			}
+		}
+	);
+
+	$('invite_email').value = '';
+	$('invite_mode').checked = false;
+	$('invite_submit').disabled = false;
 }

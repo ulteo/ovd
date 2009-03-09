@@ -82,15 +82,32 @@ function getNextPrintFile($session, $time) {
 
 
 // Begin Sharing function
-function count_active_share($share_dir) {
-  $p = glob($share_dir.'/*');
-  foreach($p as $f) {
-    if (time() - filemtime($f) > 10)
-      @unlink($f);
-  }
+function share_parse_actives($dir_) {
+  $p = glob($dir_.'/*');
+  $shares = array();
 
-  $p = glob($share_dir.'/*');
-  return count($p);
+  foreach($p as $d) {
+    if (! is_dir($d))
+      continue;
+
+    $info = array();
+    $info['token'] = basename($d);
+    $info['email'] = file_get_contents($d.'/email');
+    $info['mode']  = file_get_contents($d.'/mode');
+    $info['joined'] = (is_file($d.'/alive'))?1:0;
+    $info['alive'] = (file_exists($d.'/alive') && (time() - filemtime($d.'/alive')) < 15)?1:0;
+
+    $shares[] = $info;
+  }
+  return $shares;
+}
+
+function share_refresh_alive($dir_) {
+  if (! is_dir($dir_))
+    return false;
+
+  @touch($dir_.'/alive');
+  return true;
 }
 // End Sharing function
 
@@ -143,10 +160,20 @@ if ($status == 2) {
   }
 
   if ($session_owner) {
-    $e = count_active_share($share_dir);
+    $shares = share_parse_actives($share_dir);
 
     $item = $dom->createElement('sharing');
-    $item->setAttribute('count', $e);
+    $item->setAttribute('count', count($shares));
+
+    foreach($shares as $share) {
+      $t = $dom->createElement('share');
+      $t->setAttribute('email',  $share['email']);
+      $t->setAttribute('mode',   $share['mode']);
+      $t->setAttribute('joined', $share['joined']);
+      $t->setAttribute('alive',  $share['alive']);
+      $item->appendChild($t);
+    }
+
     $session_node->appendChild($item);
   }
   else {
@@ -154,7 +181,7 @@ if ($status == 2) {
       die2(400, 'ERROR - no current token');
 
     $file = $share_dir.'/'.$_SESSION['current_token'];
-    @touch($file);
+    share_refresh_alive($file);
   }
 }
 
