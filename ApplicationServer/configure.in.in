@@ -87,9 +87,6 @@ web/media/script/lib/Makefile
 web/media/style/Makefile
 web/media/Makefile
 web/applet/Makefile
-web/run/ajax/Makefile
-web/run/img/Makefile
-web/run/Makefile
 web/includes/Makefile
 web/classes/Makefile
 web/Makefile
