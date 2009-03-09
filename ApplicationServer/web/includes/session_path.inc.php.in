@@ -22,23 +22,25 @@
  **/
 require_once(dirname(__FILE__).'/core.inc.php');
 
-if (!is_readable('/etc/ulteo-ovd.conf'))
-	die('Error reading config file 1a : /etc/ulteo-ovd.conf');
+$config_file = '@SYSCONFDIR@/ulteo-ovd.conf';
 
-$buf = shell_exec('. /etc/ulteo-ovd.conf && echo $CHROOT');
+if (!is_readable($config_file))
+	die('Error reading config file 1a: '.$config_file);
+
+$buf = shell_exec('. '.$config_file.' && echo $CHROOT');
 $buf = trim($buf);
 
 if (!$buf || $buf == '')
-	die('Error parsing config file 1b : /etc/ulteo-ovd.conf');
+	die('Error parsing config file 1b: '.$config_file);
 
 define('CHROOT', $buf);
 unset($buf);
 
-$buf = shell_exec('. /etc/ulteo-ovd.conf && echo $LOG_WWW');
+$buf = shell_exec('. '.$config_file.' && echo $LOG_WWW');
 $buf = trim($buf);
 
 if (!$buf || $buf == '')
-	die('Error parsing config file 1c : /etc/ulteo-ovd.conf');
+	die('Error parsing config file 1c: '.$config_file);
 
 define('CONNECTME_LOGS', $buf);
 unset($buf);
