@@ -197,11 +197,16 @@ if (isset($allow_shell) && $allow_shell != '0')
 	$optional_args['allow_shell'] = 1;
 if (isset($allow_proxy) && $allow_proxy != '0') {
 	$optional_args['enable_proxy'] = 1;
-	$optional_args['proxy_type'] = $_REQUEST['proxy_type'];
-	$optional_args['proxy_host'] = $_REQUEST['proxy_host'];
-	$optional_args['proxy_port'] = $_REQUEST['proxy_port'];
-	$optional_args['proxy_username'] = $_REQUEST['proxy_username'];
-	$optional_args['proxy_password'] = $_REQUEST['proxy_password'];
+	if (isset($_REQUEST['proxy_type']))
+		$optional_args['proxy_type'] = $_REQUEST['proxy_type'];
+	if (isset($_REQUEST['proxy_host']))
+		$optional_args['proxy_host'] = $_REQUEST['proxy_host'];
+	if (isset($_REQUEST['proxy_port']))
+		$optional_args['proxy_port'] = $_REQUEST['proxy_port'];
+	if (isset($_REQUEST['proxy_username']))
+		$optional_args['proxy_username'] = $_REQUEST['proxy_username'];
+	if (isset($_REQUEST['proxy_password']))
+		$optional_args['proxy_password'] = $_REQUEST['proxy_password'];
 }
 
 switch ($prefs->get('UserDB', 'enable')) {
