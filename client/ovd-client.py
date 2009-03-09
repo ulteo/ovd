@@ -214,7 +214,7 @@ class Dialog:
     def doStartSession_cm(self):
         values =  {'width': self.conf["geometry"][0],'height': self.conf["geometry"][1], "lead": 1}
         # url = self.cm_url+"/startsession.php"
-        url = "%s/startsession.php?%s"%(self.cm_url, urllib.urlencode(values))
+        url = "%s/start.php?%s"%(self.cm_url, urllib.urlencode(values))
         request = urllib2.Request(url, urllib.urlencode(values))
 
         try:
@@ -238,7 +238,7 @@ class Dialog:
         return True
 
     def doSessionStatus(self):
-        url = "%s/webservices/whatsup.php"%(self.cm_url)
+        url = "%s/whatsup.php"%(self.cm_url)
 
         request = urllib2.Request(url)
         
@@ -284,7 +284,7 @@ class Dialog:
 
     def do_getAppletParameters(self):
         #values =  {'html': 1}
-        url = "%s/applet.php"%(self.cm_url)
+        url = "%s/access.php"%(self.cm_url)
 #, urllib.urlencode(values))
         request = urllib2.Request(url)
         

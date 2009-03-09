@@ -702,6 +702,11 @@
       </para>
 
       <para>
+	The webservices used in the root directory
+	(<emphasis>/</emphasis>) of the application server.
+      </para>
+
+      <para>
 	The session display is encapsulated in a SSH tunnel but
 	webservices are also used to communicate. For instance, for
 	printing.
@@ -709,7 +714,7 @@
 
 
       <simplesect>
-	<title>startsession.php</title>
+	<title>start.php</title>
 	
 	<itemizedlist>
 	  <listitem>
@@ -773,7 +778,7 @@
 
 
       <simplesect>
-	<title>client_exit.php</title>
+	<title>exit.php</title>
 	
 	<itemizedlist>
 	  <listitem>
