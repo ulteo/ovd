@@ -206,7 +206,7 @@ class Server {
 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
 		$ev = new ServerStatusChanged(array(
-			'fqdn'	=>	$this->fqdn,
+			'fqdn'		=>	$this->fqdn,
 			'status'	=>	ServerStatusChanged::$UNREACHABLE
 		));
 
@@ -216,6 +216,9 @@ class Server {
 		$ev->emit();
 
 		$this->isNotReady();
+
+		Abstract_Server::save($this);
+
 		return true;
 	}
 
@@ -242,6 +245,8 @@ class Server {
 		if ($buf['action_when_as_not_ready'] == 1)
 			if ($this->getAttribute('locked') === false)
 				$this->setAttribute('locked', true);
+
+		Abstract_Server::save($this);
 
 		return true;
 	}
@@ -272,7 +277,7 @@ class Server {
 		}
 
 		$ev = new ServerStatusChanged(array(
-			'fqdn'	=>	$this->fqdn,
+			'fqdn'		=>	$this->fqdn,
 			'status'	=>	($ret == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
 		));
 
