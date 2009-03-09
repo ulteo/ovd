@@ -43,31 +43,33 @@ gen_conf()
 }
 
 # Configure Mysql Database
-#db_get od/sessionmanager/mysql/configure
-#    if [ "$RET" = true ]; then
+db_get od/sessionmanager/oem
+if [ "$RET" = true ];then
+db_get od/sessionmanager/mysql/configure
+    if [ "$RET" = true ]; then
 
 	# get the answers to our questions
-#	db_get od/sessionmanager/mysql/dbserver
-#	dbserver=$RET
-#	db_get od/sessionmanager/mysql/dbadmin
-#	dbadmin=$RET
-#	db_get od/sessionmanager/mysql/dbadmpass
-#	dbadmpass=$RET
-#	db_reset od/sessionmanager/mysql/dbadmpass
-#	db_get od/sessionmanager/mysql/dbname
-#	dbname=$RET
-#	db_get od/sessionmanager/mysql/dbuser
-#	dbuser=$RET
-#	db_get od/sessionmanager/mysql/dbpass
-#	dbpass=$RET
-#	db_reset od/sessionmanager/mysql/dbpass
+	db_get od/sessionmanager/mysql/dbserver
+	dbserver=$RET
+	db_get od/sessionmanager/mysql/dbadmin
+	dbadmin=$RET
+	db_get od/sessionmanager/mysql/dbadmpass
+	dbadmpass=$RET
+	db_reset od/sessionmanager/mysql/dbadmpass
+	db_get od/sessionmanager/mysql/dbname
+	dbname=$RET
+	db_get od/sessionmanager/mysql/dbuser
+	dbuser=$RET
+	db_get od/sessionmanager/mysql/dbpass
+	dbpass=$RET
+	db_reset od/sessionmanager/mysql/dbpass
 
 	# create the database
-#	. /usr/share/wwwconfig-common/mysql-createdb.sh
+	. /usr/share/wwwconfig-common/mysql-createdb.sh
 	# create user
-#	. /usr/share/wwwconfig-common/mysql-createuser.sh
-#   fi
-
+	. /usr/share/wwwconfig-common/mysql-createuser.sh
+   fi
+fi
 
 
 

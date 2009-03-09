@@ -1,3 +1,8 @@
+Template: od/sessionmanager/oem
+Type: boolean
+Default: false
+_Description: Are we on the install CD?
+
 Template: od/sessionmanager/mysql/configure
 Type: boolean
 Default: true

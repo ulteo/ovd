@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
-"POT-Creation-Date: 2009-02-22 18:01+0100\n"
+"Report-Msgid-Bugs-To: gauvain@ulteo.com\n"
+"POT-Creation-Date: 2009-03-04 08:21+0000\n"
 "PO-Revision-Date: 2008-12-10 17:17+0100\n"
 "Last-Translator: Gauvain Pocentek <gauvain@ulteo.com>\n"
 "Language-Team: fr\n"
@@ -18,24 +18,30 @@ msgstr ""
 #. Type: boolean
 #. Description
 #: ../templates:1001
+msgid "Are we on the install CD?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../templates:2001
 msgid "Configure MySQL?"
 msgstr "Configurer MySQL ?"
 
 #. Type: boolean
 #. Description
-#: ../templates:1001
+#: ../templates:2001
 msgid "Please confirm whether MySQL should be configured automatically."
 msgstr "Veuillez confirmer que MySQL doit être reconfiguré automatiquement."
 
 #. Type: string
 #. Description
-#: ../templates:2001
+#: ../templates:3001
 msgid "Administrator login:"
 msgstr "Login de l'administrateur :"
 
 #. Type: string
 #. Description
-#: ../templates:2001
+#: ../templates:3001
 msgid ""
 "Ulteo Session Manager needs to register an administrator. You can define the "
 "login of this user here."
@@ -45,13 +51,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:3001
+#: ../templates:4001
 msgid "MySQL host:"
 msgstr "Hôte MySQL :"
 
 #. Type: string
 #. Description
-#: ../templates:3001
+#: ../templates:4001
 msgid ""
 "Please enter the name or IP address of the MySQL database server that will "
 "store the Ulteo Session Manager database."
@@ -61,13 +67,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:4001
+#: ../templates:5001
 msgid "Ulteo Session Manager database name:"
 msgstr "Nom de la base de données d'Ulteo Session Manager :"
 
 #. Type: string
 #. Description
-#: ../templates:4001
+#: ../templates:5001
 msgid ""
 "Please enter the name of the database that will host data for Ulteo Session "
 "Manager."
@@ -76,19 +82,19 @@ msgstr ""
 
 #. Type: password
 #. Description
-#: ../templates:5001
+#: ../templates:6001
 msgid "Database server administrator password:"
 msgstr "Mot de passe de l'administrateur du serveur de bases de données :"
 
 #. Type: string
 #. Description
-#: ../templates:6001
+#: ../templates:7001
 msgid "Database user for Ulteo Session Manager:"
 msgstr "Utilisateur de la base de données pour Ulteo Session Manager :"
 
 #. Type: string
 #. Description
-#: ../templates:6001
+#: ../templates:7001
 msgid ""
 "Please choose the MySQL account that will be used to access the database "
 "hosting Ulteo Session Manager data."
@@ -98,13 +104,13 @@ msgstr ""
 
 #. Type: password
 #. Description
-#: ../templates:7001
+#: ../templates:8001
 msgid "Database user password:"
 msgstr "Mot de passe de l'utilisateur du serveur de bases de données :"
 
 #. Type: password
 #. Description
-#: ../templates:7001
+#: ../templates:8001
 msgid ""
 "Please choose the password for the account that will be used to access the "
 "database hosting Ulteo Session Manager data."
@@ -114,13 +120,13 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../templates:8001
+#: ../templates:9001
 msgid "Database server administrator username:"
 msgstr "Mot de passe de l'administrateur du serveur de bases de données :"
 
 #. Type: string
 #. Description
-#: ../templates:8001
+#: ../templates:9001
 msgid ""
 "Please enter the username of the database server administrator. This account "
 "must have database creation privileges."
@@ -131,55 +137,55 @@ msgstr ""
 
 #. Type: password
 #. Description
-#: ../templates:9001
+#: ../templates:10001
 msgid "Administrator password:"
 msgstr "Mot de passe de l'administrateur :"
 
 #. Type: password
 #. Description
-#: ../templates:9001
+#: ../templates:10001
 msgid "Password of the session manager administrator."
 msgstr "Mot de passe de l'administrateur du session manager."
 
 #. Type: password
 #. Description
-#: ../templates:10001
+#: ../templates:11001
 msgid "Repeat password for the administrator:"
 msgstr "Répétez le mot de passe de l'administrateur :"
 
 #. Type: error
 #. Description
-#: ../templates:11001
+#: ../templates:12001
 msgid "Password input error"
 msgstr "Erreur de mot de passe"
 
 #. Type: error
 #. Description
-#: ../templates:11001
+#: ../templates:12001
 msgid "The two passwords you entered were not the same. Please try again."
 msgstr ""
 "Les deux mots de passe saisis ne sont pas les mêmes. Essayez de nouveau."
 
 #. Type: string
 #. Description
-#: ../templates:12001
+#: ../templates:13001
 msgid "Applications chroot URL:"
 msgstr "URL du chroot d'applications :"
 
 #. Type: string
 #. Description
-#: ../templates:12001
+#: ../templates:13001
 msgid ""
 "Application servers will need to retrieve an applications tarball, hosted on "
 "this session manager. A default tarball can be downloaded and stored for you."
 msgstr ""
 "Les serveurs d'application nécessitent d'obtenir une archive d'applications, "
-"hébergée sur ce session manager. Une archive par défaut peut être téléchargée "
-"et stockée pour vous."
+"hébergée sur ce session manager. Une archive par défaut peut être "
+"téléchargée et stockée pour vous."
 
 #. Type: string
 #. Description
-#: ../templates:12001
+#: ../templates:13001
 msgid "Leave this field empty if you don't want to download the archive now."
 msgstr ""
 "Laissez ce champ vide si vous ne voulez pas télécharger cette archive "

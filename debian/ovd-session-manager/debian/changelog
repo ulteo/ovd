@@ -1,3 +1,16 @@
+ovd-session-manager (1.0~rc1+svn763-0ulteo2) ovd-polaris-testing; urgency=low
+
+  * 
+
+ -- Daniele Favara <nomed@stable-i386>  Wed,  4 Mar 2009 15:49:15 +0000
+
+ovd-session-manager (1.0~rc1-0ulteo1) ovd-polaris-testing; urgency=low
+
+  * add od/sessionmanager/oem in debconf, default value is false, if true
+    create the mysql db
+
+ -- Daniele Favara <dfavara@ulteo.com>  Wed,  4 Mar 2009 08:12:12 +0000
+
 ovd-session-manager (1.0~rc1-0ulteo0) ovd-polaris-testing; urgency=low
 
   * New development release (RC 1)
