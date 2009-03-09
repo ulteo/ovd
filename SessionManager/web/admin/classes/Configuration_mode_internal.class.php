@@ -49,18 +49,15 @@ class Configuration_mode_internal extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     // Select Module as UserDB
-    $prefs->set('UserDB', 'enable',
-		array('enable' => $form['user']));
+    $prefs->set('UserDB', 'enable', $form['user']);
 
 
     // Select Module for UserGroupDB
-    $prefs->set('UserGroupDB', 'enable',
-		array('enable' => 'sql'));
+    $prefs->set('UserGroupDB', 'enable', 'sql');
 
 
     // Set the FS type
-    $prefs->set('plugins', 'FS',
-		array('FS' => 'local'));
+    $prefs->set('plugins', 'FS', 'local');
 
     return True;
   }

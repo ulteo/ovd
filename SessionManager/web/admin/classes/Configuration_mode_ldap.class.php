@@ -116,15 +116,13 @@ class Configuration_mode_ldap extends Configuration_mode {
       $config['match']['memberof'] = 'memberof';
 
     // Select LDAP as UserDB
-    $prefs->set('UserDB', 'enable',
-        array('enable' => 'ldap'));
+    $prefs->set('UserDB', 'enable', 'ldap');
 
     // Push LDAP conf
     $prefs->set('UserDB', 'ldap', $config);
 
     // Select Module for UserGroupDB
-    $prefs->set('UserGroupDB', 'enable',
-        array('enable' => $form['user_group']));
+    $prefs->set('UserGroupDB', 'enable', $form['user_group']);
 
     if ($form['user_group'] == 'ldap_posix') {
       $prefs->set('UserGroupDB', 'ldap_posix',
@@ -132,8 +130,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     }
 
     // Set the FS type
-    $prefs->set('plugins', 'FS',
-        array('FS' => $plugin_fs));
+    $prefs->set('plugins', 'FS', $plugin_fs);
 
     if ($form['homedir'] == 'cifs') {
       $data = array('authentication_method' => $form['cifs_auth'],
