@@ -218,10 +218,10 @@
     </simplesect>
 
     <simplesect>
-      <title>Set an external name</title>
+      <title>Set an redirection name</title>
 
       <para>
-	The server <emphasis role="strong">external name</emphasis> is
+	The server <emphasis role="strong">redirection name</emphasis> is
 	an option. If all your machines are in the same network, you
 	don't have to change it.
       </para>
@@ -232,22 +232,22 @@
 	  as your Session Manager and you follow our advices, you
 	  setup <emphasis role="strong">127.0.0.1</emphasis> as server
 	  name so you <emphasis role="strong">must</emphasis> define
-	  an external name.
+	  an redirection name.
 	</para>
       </important>
 
       <para>
-	The <emphasis role="strong">external name</emphasis> is used
+	The <emphasis role="strong">redirection name</emphasis> is used
 	to launch session. When you launch a session, you are
-	redirected to an Application server using the external name as
-	redirection. In some cases the default external name (the
+	redirected to an Application server using the redirection name as
+	redirection. In some cases the default redirection name (the
 	FQDN you gave at the ApS installation) is not valid. For
 	instance, if you setup an private IP address and you want to
 	connect from Internet.
       </para>
 
       <screenshot>
-	<screeninfo>Session Manager - server external name</screeninfo>
+	<screeninfo>Session Manager - server redirection name</screeninfo>
 	<graphic fileref="img/sm_admin_external_name.png"></graphic>
       </screenshot>
     </simplesect>
