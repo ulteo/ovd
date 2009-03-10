@@ -24,8 +24,6 @@
 //else
 	header('Content-Type: text/html; charset=utf-8');
 
-mb_internal_encoding('UTF-8');
-
 require_once(dirname(__FILE__).'/core-minimal.inc.php');
 
 $folders = array('tasks', 'reporting', 'tmp', 'cache');

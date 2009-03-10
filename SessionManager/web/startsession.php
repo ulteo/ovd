@@ -118,8 +118,35 @@ if ($sessions > 0) {
 		if ($session->isSuspended()) {
 			$old_session_id = $session->id;
 			$old_session_server = $session->server;
-		} elseif ($session->isAlive())
+		} elseif ($session->isAlive()) {
 			$already_online = 1;
+
+			$buf = $prefs->get('general', 'session_settings_defaults');
+			$buf = $buf['action_when_active_session'];
+
+			if ($buf == 0)
+				die(_('You already have an active session'));
+			elseif ($buf == 1) {
+				$invite = new Invite(gen_string(5));
+				$invite->session = $session->id;
+				$invite->settings = array(
+					'view_only'	=>	0
+				);
+				$invite->email = 'none';
+				$invite->valid_until = (time()+(60*30));
+				Abstract_Invite::save($invite);
+
+				$token = new Token(gen_string(5));
+				$token->type = 'invite';
+				$token->link_to = $invite->id;
+				$token->valid_until = (time()+(60*30));
+				Abstract_Token::save($token);
+
+				$server = Abstract_Server::load($session->server);
+
+				redirect('http://'.$server->getAttribute('external_name').'/index.php?token='.$token->id);
+			}
+		}
 }
 
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')

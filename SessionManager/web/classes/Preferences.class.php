@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -39,11 +39,11 @@ class Preferences {
 			$this->mergeWithConfFile($filecontents);
 		}
 	}
-	
+
 	public static function hasInstance() {
 		return isset(self::$instance);
 	}
-	
+
 	public static function getInstance() {
 		if (!isset(self::$instance)) {
 			try {
@@ -111,7 +111,7 @@ class Preferences {
 			return $key_;
 		}
 	}
-	
+
 	public function mergeWithConfFile($filecontents) {
 		if (is_array($filecontents)) {
 			foreach($filecontents as $key1 => $value1) {
@@ -155,7 +155,7 @@ class Preferences {
 			}
 		}
 	}
-	
+
 	public function initialize(){
 
 		$this->addPrettyName('general',_('General configuration'));
@@ -258,6 +258,9 @@ class Preferences {
 		$c = new ConfigElement('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
 		$this->add($c,'general','session_settings_defaults');
 
+		$c = new ConfigElement('action_when_active_session', _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), 0, array(0=>_('Forbid access'),1=>_('Invite into the session')), ConfigElement::$SELECT);
+		$this->add($c,'general','session_settings_defaults');
+
 		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),
 			'shareable' => _('shareable'),
 			'desktop_icons' => _('desktop icons')),ConfigElement::$MULTISELECT);
@@ -288,8 +291,8 @@ class Preferences {
 		$this->getPrefsPlugins();
 		$this->getPrefsEvents();
 	}
-	
-	
+
+
 	public function getPrefsPlugins(){
 		$plugs = new Plugins();
 		$p2 = $plugs->getAvailablePlugins();
@@ -462,7 +465,7 @@ class Preferences {
 		}
 		return $ret;
 	}
-	
+
 	public function add($value_,$key_,$container_=NULL){
 		if (!is_null($container_)) {
 			if (!isset($this->elements[$key_])) {
@@ -505,7 +508,7 @@ class Preferences {
 			}
 		}
 	}
-	
+
 	public function addPrettyName($key_,$prettyName_) {
 		$this->prettyName[$key_] = $prettyName_;
 	}

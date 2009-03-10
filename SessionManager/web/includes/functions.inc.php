@@ -622,18 +622,24 @@ function do_login($login_, $password_) {
        $_SESSION['login'] = $login_;
        $_SESSION['password'] = $password_;
 
-       $already_online = 0;
-       $sessions = Sessions::getByUser($_SESSION['login']);
-       if ($sessions > 0) {
-               foreach ($sessions as $session)
-                       if ($session->isAlive())
-                               $already_online = 1;
-       }
+		$buf = $prefs->get('general', 'session_settings_defaults');
+		$buf = $buf['action_when_active_session'];
 
-       if (isset($already_online) && $already_online == 1) {
-               return_error();
-               die(_('You already have an active session'));
-       }
+		if ($buf == 0) {
+			$already_online = 0;
+			$sessions = Sessions::getByUser($_SESSION['login']);
+			if ($sessions > 0) {
+				foreach ($sessions as $session)
+					if ($session->isAlive())
+						$already_online = 1;
+			}
+
+			if (isset($already_online) && $already_online == 1) {
+				return_error();
+				die(_('You already have an active session'));
+			}
+		} elseif ($buf == 1) {
+		}
 
        //Logger::info('main', 'Login : ('.$row['id'].')'.$row['login'])
        return true;
