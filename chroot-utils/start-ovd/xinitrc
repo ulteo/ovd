@@ -36,7 +36,11 @@ fi
 xsetroot -cursor_name watch -solid white
 
 # merge in X cursor settings
-test -r "$BASEDIR/Xcursor.xrdb" && XRESOURCES="$XRESOURCES $BASEDIR/Xcursor.xrdb"
+if test -r "$BASEDIR/Xcursor.xrdb"; then
+  XRESOURCES="$XRESOURCES $BASEDIR/Xcursor.xrdb"
+elif test -r "/etc/xdg/xfce4/Xcursor.xrdb"; then
+  XRESOURCES="$XRESOURCES /etc/xdg/xfce4/Xcursor.xrdb"
+fi
 
 # ~/.Xresources contains overrides to the above
 test -r "$HOME/.Xresources" && XRESOURCES="$XRESOURCES $HOME/.Xresources"
