@@ -106,12 +106,14 @@ class Preferences_admin extends Preferences {
 
 		$plugins_ok = true;
 		$plugins_enable = $this->get('plugins', 'plugin_enable');
-		foreach ($plugins_enable as $plugin_name) {
-			$ret_eval = eval('return Plugin_'.strtolower($plugin_name).'::prefsIsValid($this);');
-			if ($ret_eval !== true) {
-				Logger::error('admin','prefs is not valid for plugin \''.$plugin_name.'\'');
-				$plugins_ok = false;
-				return _('prefs is not valid for plugin').' ('.$plugin_name.')'; // TODO
+		if (!is_null($plugins_enable)) {
+			foreach ($plugins_enable as $plugin_name) {
+				$ret_eval = eval('return Plugin_'.strtolower($plugin_name).'::prefsIsValid($this);');
+				if ($ret_eval !== true) {
+					Logger::error('admin','prefs is not valid for plugin \''.$plugin_name.'\'');
+					$plugins_ok = false;
+					return _('prefs is not valid for plugin').' ('.$plugin_name.')'; // TODO
+				}
 			}
 		}
 		$plugins_FS = $this->get('plugins', 'FS');

@@ -510,8 +510,10 @@ function get_needed_attributes_user_from_module_plugin() {
 		die_error('get Preferences failed',__FILE__,__LINE__);
 	$plugs = new Plugins();
 	$plugins = $plugs->getAvailablePlugins();
-	$plugins['plugin_enable'] = $plugins['plugins'];
-	unset($plugins['plugins']);
+	if (array_key_exists('plugins', $plugins)) {
+		$plugins['plugin_enable'] = $plugins['plugins'];
+		unset($plugins['plugins']);
+	}
 	$attributes = array();
 	foreach ($plugins as $k1 => $v1) {
 		$plugins_enable = $prefs->get('plugins', $k1);

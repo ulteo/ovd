@@ -25,8 +25,8 @@ class UserGroupDB_sql_external {
 			$this->config = $prefs->get('UserGroupDB', 'sql_external');
 		}
 		else {
-			Logger::error('main', 'USERGROUPDB::MYSQL::construct get Prefs failed');
-			die_error('USERGROUPDB::MYSQL::construct get Prefs failed');
+			Logger::error('main', 'USERGROUPDB::MYSQL_external::construct get Prefs failed');
+			die_error('USERGROUPDB::MYSQL_external::construct get Prefs failed');
 		}
 	}
 	
@@ -146,7 +146,7 @@ class UserGroupDB_sql_external {
 	}
 	
 	public static function isDefault() {
-		return true;
+		return false;
 	}
 	
 	public static function liaisonType() {

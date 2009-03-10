@@ -306,17 +306,19 @@ class Preferences {
 			}
 		}
 		$plugins_prettyname = array();
-		foreach ($p2['plugins'] as $plugin_name => $plu6) {
-			$plugin_prettyname = eval('return '.'Plugin_'.$plugin_name.'::prettyName();');
-			if (is_null($plugin_prettyname))
-				$plugin_prettyname = $plugin_name;
-			$plugins_prettyname[$plugin_name] = $plugin_prettyname;
+		if (array_key_exists('plugins', $p2)) {
+			foreach ($p2['plugins'] as $plugin_name => $plu6) {
+				$plugin_prettyname = eval('return '.'Plugin_'.$plugin_name.'::prettyName();');
+				if (is_null($plugin_prettyname))
+					$plugin_prettyname = $plugin_name;
+				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
+			}
+			
+			$c = new ConfigElement('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
+			$this->addPrettyName('plugins',_('Plugins configuration'));
+			$this->add($c,'plugins');
+			unset($p2['plugins']);
 		}
-
-		$c = new ConfigElement('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
-		$this->addPrettyName('plugins',_('Plugins configuration'));
-		$this->add($c,'plugins');
-		unset($p2['plugins']);
 
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
