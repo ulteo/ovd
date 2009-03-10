@@ -68,7 +68,7 @@ mysql> exit]]>
         <listitem>
 	  <para>
 	    <emphasis role="strong">PHP 5</emphasis> with modules curl
-	    ldap mysql.
+	    ldap mysql and gettext.
 	  </para>
         </listitem>
        <listitem>
@@ -122,7 +122,7 @@ $ cd sessionmanager]]>
 	  </para>
 	  <screen>
 	    <![CDATA[
-# sm-config 
+# /usr/local/bin/sm-config 
 Admin login: admin
 Password: 
 Retype password: 
@@ -162,9 +162,16 @@ apache2ctl restart]]>
 	<textobject>
 	  <phrase>Session Manager into a web browser</phrase>
 	</textobject>
+
       </inlinemediaobject>
     </para>
-
+	<para>
+	If you get an empty page and see an error about mb_internal_encoding() in the Apache log,
+comment line:<screen>
+	    <![CDATA[
+mb_internal_encoding('UTF-8');]]></screen>
+in /usr/local/share/ulteo/sessionmanager/includes/core.inc.php and /usr/local/share/ulteo/sessionmanager/includes/core-minimal.inc.php.
+	</para>
     </section>
 
   <xi:include href="sub/generic.xml" xpointer="sessionmanager_configuration" />
@@ -243,7 +250,7 @@ $ cd applicationserver]]>
 	  </para>
 	  <screen>
 	    <![CDATA[
-# aps-chroot-install 
+# /usr/local/bin/aps-chroot-install 
 Full Qualified Domain Name [.office.ulteo.com]: aps.office.ulteo.com 
 Session Manager URL: http://sm.office.ulteo.com/sessionmanager
 Chroot installation path: /opt
