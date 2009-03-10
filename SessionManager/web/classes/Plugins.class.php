@@ -31,6 +31,8 @@ class Plugins {
 			return false;
 
 		$plugins_enable = $prefs->get('plugins', 'plugin_enable');
+		if (is_null($plugins_enable))
+			$plugins_enable = array();
 		$fs = $prefs->get('plugins', 'FS');
 		// for now we can use one FS at the same time
 		//if (!is_array($fs) || count($fs) == 0)
