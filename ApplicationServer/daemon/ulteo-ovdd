@@ -385,7 +385,6 @@ loop() {
 
     local t0=`date +%s`
     while [ 1 ]; do
-	log_DEBUG "Rebuilding net and ps cache"	
 	cache_build
 
 	local t1=`date +%s`
