@@ -61,7 +61,8 @@ else
 $invite = new Invite(gen_string(5));
 $invite->session = $session->id;
 $invite->settings = array(
-	'view_only'	=>	($view_only == 'Yes')?1:0
+	'invite_email'	=>	$_REQUEST['email'],
+	'view_only'		=>	($view_only == 'Yes')?1:0
 );
 $invite->email = $_REQUEST['email'];
 $invite->valid_until = (time()+(60*30));

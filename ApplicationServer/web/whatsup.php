@@ -92,14 +92,28 @@ function share_parse_actives($dir_) {
 
     $info = array();
     $info['token'] = basename($d);
+    $info['created'] = filemtime($d);
     $info['email'] = file_get_contents($d.'/email');
     $info['mode']  = file_get_contents($d.'/mode');
     $info['joined'] = (is_file($d.'/alive'))?1:0;
-    $info['alive'] = (file_exists($d.'/alive') && (time() - filemtime($d.'/alive')) < 15)?1:0;
+    $info['alive'] = 0;
+    if (! file_exists($d.'/left')
+     && file_exists($d.'/alive')
+     && (time() - filemtime($d.'/alive')) < 15)
+      $info['alive'] = 1;
 
     $shares[] = $info;
   }
+  usort($shares, "share_cmp");
   return $shares;
+}
+
+function share_cmp($o1, $o2) {
+	if ($o1['created'] < $o2['created'])
+		return -1;
+	if ($o1['created'] > $o2['created'])
+		return 1;
+	return 0;
 }
 
 function share_refresh_alive($dir_) {

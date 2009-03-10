@@ -42,9 +42,9 @@ if ($session_owner) {
 }
 else {
   $share_dir = $session_dir.'/infos/share';
-  $file = $share_dir.'/'.$token;
-  if (is_file($file))
-    @unlink($file);
+  $file = $share_dir.'/'.$token.'/left';
+  if (! is_file($file))
+    @touch($file);
 }
 
 unset($_SESSION);

@@ -110,6 +110,15 @@ foreach ($application_nodes as $application_node)
 
 $_SESSION['print_timestamp'] = time();
 
+if ($_SESSION['mode'] == 'invite') {
+	$session_dir = SESSION_PATH.'/'.$_SESSION['session'];
+
+	$buf = $session_dir.'/infos/share/'.$token;
+	@mkdir($buf);
+	@file_put_contents($buf.'/email', $_SESSION['parameters']['invite_email']);
+	@file_put_contents($buf.'/mode', ($_SESSION['parameters']['view_only'] == 'No')?'active':'passive');
+}
+
 if ($_SESSION['mode'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
 ?>
@@ -153,7 +162,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 
 		<div id="menuShare" style="display: none;">
 			<div style="width: 500px; height: 300px; float: right;">
-				<div style="background: #fff; width: 500px; height: 300px;" id="menuShareFrame">
+				<div style="background: #eee; width: 500px; height: 300px;" id="menuShareFrame">
 					<h2 style="text-align: center;"><?php echo _('Desktop sharing'); ?></h2>
 					<span id="menuShareContent"></span>
 					<fieldset style="border: 0;">

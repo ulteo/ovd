@@ -130,7 +130,8 @@ if ($sessions > 0) {
 				$invite = new Invite(gen_string(5));
 				$invite->session = $session->id;
 				$invite->settings = array(
-					'view_only'	=>	0
+					'invite_email'	=>	$user->getAttribute('displayname'),
+					'view_only'		=>	0
 				);
 				$invite->email = 'none';
 				$invite->valid_until = (time()+(60*30));
