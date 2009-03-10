@@ -880,6 +880,112 @@
 	</para>
       </simplesect>
     </section>
+
+    <section>
+      <title>Startsession</title>
+
+      <para>
+	The main page of the Session Manager is not a needed step to
+	launch a session, it's just an interface to call <emphasis
+	role="strong">startsession.php</emphasis>.
+      </para>
+
+      <para>
+	The goal of this section is to desbribe the API of
+	startsession.php in order to call it using an external HTML
+	file.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para><emphasis role="strong">method:</emphasis> POST</para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="strong">needed arguments:</emphasis> 
+	  <itemizedlist>
+	    <listitem>
+	      <para>login</para>
+	    </listitem>
+	    <listitem>
+	      <para>password</para>
+	    </listitem>
+	  </itemizedlist>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para><emphasis role="strong">optionnal arguments:</emphasis> 
+	  <itemizedlist>
+	    <listitem>
+	      <para>desktop_quality: [1-9]</para>
+	    </listitem>
+	    <listitem>
+	      <para>desktop_locale:
+	      fr_FR.UTF-8|en_GB.UTF-8|en_US.UTF-8... Desired locale
+	      for the session (in Unix format)</para>
+	    </listitem>
+	    <listitem>
+	      <para>desktop_timeout: a number of second</para>
+	    </listitem>
+	    <listitem>
+	      <para>start_app:
+	      /usr/bin/soffice-writer|/usr/bin/firefox... An
+	      application path to launch at session start</para>
+	    </listitem>
+	    <listitem>
+	      <para>debug: 0|1</para>
+	    </listitem>
+	  </itemizedlist>
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    <emphasis role="strong">return:</emphasis>
+	    <itemizedlist>
+	    <listitem>
+	      <para>if fails: a HTML message</para>
+	    </listitem>
+	    <listitem>
+	      <para>if success: a HTTP redirection (302) to an
+	      application server</para>
+	    </listitem>
+	  </itemizedlist>
+	  </para>
+	</listitem>
+      </itemizedlist>
+
+      <para>
+	Here is a example of a basic HTML page which start a
+	session:
+	<screen>
+	  <![CDATA[
+<html>
+  <body>
+<form action="http://sm.ulteo.com/sessionmanager" method="post">
+ Login: 
+ <input type="text" name="login" value="" />
+ <br/>
+
+ Password: 
+ <input type="password" name="password" value="" />
+ <br/>
+
+ Language: 
+ <select name="desktop_locale">
+  <option value="en_GB.UTF-8">English</option>
+  <option value="fr_FR.UTF-8">French</option>
+ </select>
+ <br/>
+
+ <input type="submit" value="Launch" />
+
+</form>
+ </body>
+</html>]]>
+	</screen>
+      </para>
+
+
+    </section>
   </section>
 
 
