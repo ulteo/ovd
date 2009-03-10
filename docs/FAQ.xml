@@ -228,11 +228,11 @@
 	<listitem><para>
 	  On an application server:
 	  <screen><![CDATA[
-	  $ getent hosts sm.ulteo.com]]>
+$ getent hosts sm.ulteo.com]]>
 	  </screen>
 
 	  <screen><![CDATA[
-	  $ getent hosts the_ip_gets_from_the_previous_command]]>
+$ getent hosts the_ip_gets_from_the_previous_command]]>
 	  </screen>
 	</para></listitem>
 
@@ -240,11 +240,11 @@
 	  On a Session Manager:
 
 	  <screen><![CDATA[
-	  $ getent hosts my_application_server]]>
+$ getent hosts my_application_server]]>
 	  </screen>
 
 	  <screen><![CDATA[
-	  $ getent hosts the_ip_gets_from_the_previous_command]]>
+$ getent hosts the_ip_gets_from_the_previous_command]]>
 	  </screen>
 	</para></listitem>
       </itemizedlist>
@@ -254,11 +254,10 @@
       The reverse DNS must be the same between the two sets of commands
       as you can see in that example:
       <programlisting><![CDATA[
-      $ getent hosts sm3.office.ulteo.com
-      192.168.0.19    sm3.office.ulteo.com
-      $ getent hosts 192.168.0.19
-      192.168.0.19    sm3.office.ulteo.com
-      ]]>
+$ getent hosts sm3.office.ulteo.com
+192.168.0.19    sm3.office.ulteo.com
+$ getent hosts 192.168.0.19
+192.168.0.19    sm3.office.ulteo.com]]>
       </programlisting>
     </para>
   </section>
