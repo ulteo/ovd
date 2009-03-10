@@ -154,7 +154,7 @@ else{
 					$serv_s = $u->getAvailableServers($a_type);
 					if (is_array($serv_s)){
 						foreach ($serv_s as $s){
-							echo '<tr><td><strong>('.$a_type.')</strong></td><td><a href=servers.php?action=manage&fqdn="'.$s->fqdn.'">'.$s->fqdn.'</a></td></tr>';
+							echo '<tr><td><strong>('.$a_type.')</strong></td><td><a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a></td></tr>';
 						}
 					}
 				}
@@ -198,7 +198,7 @@ else{
 				echo '2';
 			echo '">';
 			
-			echo '<td><a href=servers.php?action=manage&fqdn="'.$server->fqdn.'">'.$server->fqdn.'</a></td>';
+			echo '<td><a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a></td>';
 			echo '<td>'.$server->stringType().'</td>';
 			echo '<td>';
 			if ((is_array($applications))&& (count($applications)>0) ){
