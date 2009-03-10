@@ -408,15 +408,6 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 	echo '</table>';
 }
 
-function print_menu($dynamic_){
-	if ($dynamic_)
-		include_once('header.php');
-	else {
-		header_static(_('Configuration'));
-	}
-	echo '<div id="configuration_div">';
-}
-
 function print_prefs($prefs_) {
 	echo '<script type="text/javascript"> configuration_switch_init();</script>';
 	// printing of preferences
