@@ -154,7 +154,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		<div id="menuShare" style="display: none;">
 			<div style="width: 500px; height: 300px; float: right;">
 				<div style="background: #fff; width: 500px; height: 300px;" id="menuShareFrame">
-					<h2 class="centered"><?php echo _('Desktop sharing'); ?></h2>
+					<h2 style="text-align: center;"><?php echo _('Desktop sharing'); ?></h2>
 					<span id="menuShareContent"></span>
 					<fieldset style="border: 0;">
 						<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">

@@ -122,7 +122,7 @@ function switch_applet_to_end() {
 
 function client_exit() {
 	new Ajax.Request(
-		'client_exit.php',
+		'exit.php',
 		{
 			method: 'get'
 		}
@@ -245,28 +245,42 @@ function onUpdateInfos(transport) {
         var html = '<div style="margin-left: 0px; margin-right: 0px; text-align: left"><ul>';
 
         for (var i = 0; i < totoNodes.length; i++) {
-            var nb_share = 0;
+            var nb_share_active = 0;
             var buf = totoNodes[i];
 
             var email = buf.getAttribute('email');
             var mode = buf.getAttribute('mode');
             var alive = buf.getAttribute('alive');
             if (alive == 1)
-              nb_share += 1;
+              nb_share_active += 1;
             var joined = buf.getAttribute('joined');
 
-            html += '<li>'+email+' ('+mode+')</li>';
+            html += '<li>';
+
+            html += '<span style="';
+            if (alive != 1 && joined != 1)
+              html += 'color: orange;';
+            if (alive == 1 && joined == 1)
+              html += 'color: green;';
+            if (alive != 1 && joined == 1)
+              html += 'color: blue; text-decoration: line-through;';
+            html += '">'+email+'</span>';
+
+            html += ' ('+mode+')</li>';
         }
 
         html += '</ul></div>';
 
         $('menuShareContent').innerHTML = html;
 
-      push_log('[session] nb share: '+nb_share, 'info');
+      if (nb_share != nb_share_active) {
+        push_log('[session] Watching desktop: '+nb_share_active+' users', 'info');
+        nb_share = nb_share_active;
+      }
 
-      if (nb_share != 0) {
-        var buf_html = '<img style="margin-left: 5px;" src="media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share+' user';
-        if (nb_share > 1)
+      if (nb_share_active != 0) {
+        var buf_html = '<img style="margin-left: 5px;" src="media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share_active+' user';
+        if (nb_share_active > 1)
           buf_html += 's';
         buf_html += '</span>';
         $('menuShareWarning').innerHTML = buf_html;
