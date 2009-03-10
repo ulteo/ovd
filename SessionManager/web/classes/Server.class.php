@@ -527,7 +527,7 @@ class Server {
 
 	// ? unclean?
 	public function getApplications() {
-		Logger::debug('main', 'Starting SERVER::getApplications for server '.$this->fqdn);
+		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -549,7 +549,7 @@ class Server {
 			$res = array();
 			foreach ($ls as $l) {
 				$a = $applicationDB->import($l->element);
-				if (is_object($a) && $applicationDB->isOK($a))
+				if (is_object($a)) // if it's an object is an application OK 
 					$res []= $a;
 			}
 			return $res;
@@ -557,29 +557,6 @@ class Server {
 			Logger::error('main', 'SERVER::getApplications elements is not array');
 			return NULL;
 		}
-	}
-
-	public function applications() {
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		$mods_enable = $prefs->get('general','module_enable');
-		if (!in_array('ApplicationDB',$mods_enable)){
-			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-		}
-		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-		$applicationDB = new $mod_app_name();
-
-		$apps = array();
-		$l = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
-		$elements = $l->elements();
-		foreach ($elements as $app_id) {
-			$app = $applicationDB->import($app_id);
-			if (is_object($app)) {
-				$apps []= $app;
-			}
-		}
-		return $apps;
 	}
 
 	public function appsGroups() {
