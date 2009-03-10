@@ -274,6 +274,43 @@
 
 
       <simplesect>
+	<title>session_invite.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis>
+	    <itemizedlist>
+	      <listitem>
+		<para>fqdn</para>
+	      </listitem>
+	      <listitem>
+		<para>session: session id</para>
+	      </listitem>
+	      <listitem>
+		<para>email: the email address to send the invitation</para>
+	      </listitem>
+	      <listitem>
+		<para>mode: active|passive</para>
+	      </listitem>
+	    </itemizedlist>
+	    </para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">returns:</emphasis> the token of this share in XML content</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  Application servers send a request when a user want create
+	  invite someone.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
 	<title>session_status.php</title>
 	
 	<itemizedlist>
