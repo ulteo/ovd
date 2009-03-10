@@ -22,8 +22,19 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 Logger::debug('main', 'Starting webservices/icon.php');
 
-$path = base64_decode($_REQUEST['path']);
+if (! isSessionManagerRequest()) {
+	Logger::error('main', 'Request not coming from Session Manager');
+	header('HTTP/1.1 400 Bad Request');
+	die('ERROR - Request not coming from Session Manager');
+}
 
+if (!isset($_GET['path'])) {
+	Logger::error('main', 'Missing parameter : path');
+	header('HTTP/1.1 400 Bad Request');
+	die('ERROR - NO $_GET[\'path\']');
+}
+
+$path = base64_decode($_GET['path']);
 $bloblo = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
 $bloblo = explode("\n", $bloblo);
 

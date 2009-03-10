@@ -22,22 +22,18 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 Logger::debug('main', 'Starting webservices/session_status.php');
 
-if (isset($_SESSION['session']))
-	$session = $_SESSION['session'];
-elseif (isset($_REQUEST['session'])) {
-	if (! isSessionManagerRequest()) {
-		Logger::error('main', 'Request not coming from Session Manager or Application Server');
-		header('HTTP/1.1 400 Bad Request');
-		die('ERROR - Request not coming from Session Manager or Application Server');
-	}
-
-	$session = $_REQUEST['session'];
+if (! isSessionManagerRequest()) {
+	Logger::error('main', 'Request not coming from Session Manager or Application Server');
+	header('HTTP/1.1 400 Bad Request');
+	die('ERROR - Request not coming from Session Manager or Application Server');
 }
 
-if (!isset($session)) {
-// 	Logger::error('main', 'No $session');
-	die('ERROR - No $session');
+if (! isset($_REQUEST['session'])) {
+	Logger::error('main', 'Missing argument "session"');
+	header('HTTP/1.1 400 Bad Request');
+	die('ERROR - Missing argument "session"');
 }
+$session = $_REQUEST['session'];
 
 if (file_exists(SESSION2CREATE_PATH.'/'.$session)) {
 	Logger::info('main', 'Session is being created : '.$session);
@@ -57,9 +53,5 @@ $status = get_from_file(SESSION_PATH.'/'.$session.'/infos/status');
 
 if ($status === false)
 	$status = -2;
-
-if (isset($_SESSION['owner']) && $_SESSION['owner'])
-	if (file_exists(SESSION_PATH.'/'.$session.'/infos/keepmealive'))
-		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
 die($status);
