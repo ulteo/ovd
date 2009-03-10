@@ -41,9 +41,6 @@ class Server {
 	public function __construct($fqdn_) {
 // 		Logger::debug('main', 'Starting Server::__construct for \''.$fqdn_.'\'');
 
-		if (substr($fqdn_, -1) == '.')
-			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
-
 		$this->fqdn = $fqdn_;
 	}
 

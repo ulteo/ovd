@@ -60,6 +60,9 @@ class Abstract_Server {
 	public static function load($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 
+		if (substr($fqdn_, -1) == '.')
+			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
+
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
@@ -151,6 +154,9 @@ class Abstract_Server {
 
 	public static function delete($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::delete for \''.$fqdn_.'\'');
+
+		if (substr($fqdn_, -1) == '.')
+			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
