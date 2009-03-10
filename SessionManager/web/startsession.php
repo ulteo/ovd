@@ -94,6 +94,9 @@ if ($use_sso) {
 
 	$user_login = $_SERVER[$user_authenticate_trust];
 } else {
+	if (isset($_POST['login']) && isset($_POST['password']))
+		do_login($_POST['login'], $_POST['password']);
+
 	if (!isset($_SESSION['login']))
 		die_error('You must be authenticated to start a session',__FILE__,__LINE__);
 

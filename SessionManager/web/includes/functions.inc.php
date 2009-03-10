@@ -583,3 +583,56 @@ function suffix2domain($suffix_) {
 	$str = implode('.', $build);
 	return $str;
 }
+
+function do_login($login_, $password_) {
+       if ($login_ == '') {
+               return_error();
+               die(_('There was an error with your authentication'));
+       }
+
+       $prefs = Preferences::getInstance();
+       if (! $prefs) {
+               return_error();
+               die(_('get Preferences failed'));
+       }
+
+       $mods_enable = $prefs->get('general', 'module_enable');
+       if (!in_array('UserDB', $mods_enable)) {
+               return_error();
+               die(_('Module UserDB must be enabled'));
+       }
+
+       $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
+       $userDB = new $mod_user_name();
+       $user = $userDB->import($login_);
+       if (!is_object($user)) {
+               return_error();
+               die(_('There was an error with your authentication'));
+       }
+
+       $ret = $userDB->authenticate($user, $password_);
+
+       if ($ret == false) {
+               return_error();
+               die(_('There was an error with your authentication'));
+       }
+
+       $_SESSION['login'] = $login_;
+       $_SESSION['password'] = $password_;
+
+       $already_online = 0;
+       $sessions = Sessions::getByUser($_SESSION['login']);
+       if ($sessions > 0) {
+               foreach ($sessions as $session)
+                       if ($session->isAlive())
+                               $already_online = 1;
+       }
+
+       if (isset($already_online) && $already_online == 1) {
+               return_error();
+               die(_('You already have an active session'));
+       }
+
+       //Logger::info('main', 'Login : ('.$row['id'].')'.$row['login'])
+       return true;
+}

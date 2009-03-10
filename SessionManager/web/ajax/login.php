@@ -21,58 +21,12 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 if (isset($_POST['do_login']) && isset($_POST['login']) && isset($_POST['password'])) {
-	if ($_POST['login'] == '') {
-		return_error();
-		die(_('There was an error with your authentication'));
-	}
+	$buf = do_login($_POST['login'], $_POST['password']);
 
-	$prefs = Preferences::getInstance();
-	if (! $prefs) {
-		return_error();
-		die(_('get Preferences failed'));
-	}
-
-	$mods_enable = $prefs->get('general', 'module_enable');
-	if (!in_array('UserDB', $mods_enable)) {
-		return_error();
-		die(_('Module UserDB must be enabled'));
-	}
-
-	$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-	$userDB = new $mod_user_name();
-	$user = $userDB->import($_POST['login']);
-	if (!is_object($user)) {
-		return_error();
-		die(_('There was an error with your authentication'));
-	}
-
-	$ret = $userDB->authenticate($user, $_POST['password']);
-
-	if ($ret == true) {
-		$_SESSION['login'] = $_POST['login'];
-		$_SESSION['password'] = $_POST['password'];
-
-		$already_online = 0;
-		$sessions = Sessions::getByUser($_SESSION['login']);
-		if ($sessions > 0) {
-			foreach ($sessions as $session)
-				if ($session->isAlive())
-					$already_online = 1;
-		}
-
-		if (isset($already_online) && $already_online == 1) {
-			return_error();
-			die(_('You already have an active session'));
-		}
-
-		//Logger::info('main', 'Login : ('.$row['id'].')'.$row['login']);
-
+	if ($buf === true) {
 		return_ok();
 		die(_('You are now logged in'));
-	} else
-		return_error();
-
-	die(_('There was an error with your authentication'));
+	}
 }
 
 return_error();
