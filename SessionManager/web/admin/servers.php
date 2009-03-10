@@ -394,6 +394,8 @@ function show_unregistered() {
 	if ($s->getAttribute('cpu_model') == '')
 		$s->getMonitoring();
 
+      Abstract_Server::save($s);
+
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
 //       echo '<td>'.$s->stringVersion().'</td>';
