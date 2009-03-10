@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -64,16 +64,6 @@ function getNextFile($basetime, $dir) {
   return false;
 }
 
-$isaget = false;
-
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-     $isaget = true;
-}
-
-if (!(isset($_SESSION['session']))) {
-  return ret400("no magic arg");
-}
-
 if (!isset($_GET["timestamp"]))
   return ret400("pas de time");
 
@@ -102,19 +92,13 @@ if (!is_readable($path)) {
   return ret404("access err");
 }
 
-if ($isaget) {
-  $file = fopen($path, 'r');
-  if (! $file)
-    return ret404("can't open file in read mode");
+$file = fopen($path, 'r');
+if (! $file)
+  return ret404("can't open file in read mode");
 
-  $buffer = '';
-  while (!feof($file))
-    $buffer .= fgets($file, 4096);
-  fclose($file);
+$buffer = file_get_contents($file);
 
-  //header('HTTP/1.1 200 OK');
-  header('Content-Type: application/pdf');
-  header('Content-Disposition: attachment; filename='.$filename);
-
-  echo $buffer;
-}
+//header('HTTP/1.1 200 OK');
+header('Content-Type: application/pdf');
+header('Content-Disposition: attachment; filename='.$filename);
+echo $buffer;
