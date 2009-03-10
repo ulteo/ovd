@@ -9,6 +9,9 @@ function doLogin(this_) {
 
 	$('launch_button').disabled = true;
 
+	var user_passwd = $('login_password').value;
+	$('login_password').value = '';
+
 	new Ajax.Request(
 		'ajax/login.php',
 		{
@@ -16,7 +19,7 @@ function doLogin(this_) {
 			parameters: {
 				do_login: 1,
 				login: $('login_login').value,
-				password: $('login_password').value
+				password: user_passwd
 			},
 			asynchronous: false,
 			onSuccess: onLoginSuccess,
@@ -27,6 +30,10 @@ function doLogin(this_) {
 	setTimeout(function() {
 		$('launch_button').disabled = false;
 	}, 1000);
+
+	setTimeout(function() {
+		$('login_status').innerHTML = '';
+	}, 30000);
 
 	return false;
 }
