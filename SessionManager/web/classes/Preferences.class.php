@@ -219,7 +219,7 @@ class Preferences {
 		$this->add($c,'general','mails_settings');
 
 		$this->addPrettyName('application_server_settings',_('Application Server settings'));
-		$c = new ConfigElement('authorized_fqdn', _('Authorized network domain'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), _('Enter the list of authorized network domains that can self-declare an Application Server to the administration console. Example: *.office.mycorporation.com'), array('*'), NULL, ConfigElement::$LIST);
+		$c = new ConfigElement('authorized_fqdn', _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), array('*'), NULL, ConfigElement::$LIST);
 		$this->add($c,'general', 'application_server_settings');
 		//fqdn_private_address : array('dns' => ip);
 		$c = new ConfigElement('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, ConfigElement::$DICTIONARY);
@@ -316,7 +316,7 @@ class Preferences {
 					$plugin_prettyname = $plugin_name;
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 			}
-			
+
 			$c = new ConfigElement('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
 			$this->addPrettyName('plugins',_('Plugins configuration'));
 			$this->add($c,'plugins');
