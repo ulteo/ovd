@@ -18,9 +18,7 @@
     used by <emphasis>Ulteo Open Virtual Desktop</emphasis>.
   </para>
 
-
-  <anchor id="treport-bug"/>
-  <section>
+  <section id="treport-bug">
     <title>How can I report a bug?</title>
     <para>
       Send an email to <email>bugmaster@ulteo.com</email> with a

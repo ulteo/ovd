@@ -16,9 +16,8 @@
   </articleinfo>
 
   <section>
-    <title>Prerequisites</title>
-
-    <xi:include href="sub/generic.xml" xpointer="prerequisites" />
+    <xi:include href="Installation.xml" xpointer="pre_title" />
+    <xi:include href="Installation.xml" xpointer="prerequisites" />
 
     <para>
       Both servers need to be installed with <emphasis
@@ -30,11 +29,8 @@
 
 
    <section>
-      <title>Installation of MySQL</title>
-      <para>
-	If you don't have any available MySQL database, you have to
-	install MySQL on your Session Manager server.
-      </para>
+      <xi:include href="Installation.xml" xpointer="sql_title" />
+      <xi:include href="Installation.xml" xpointer="mysql_install" />
 
       <itemizedlist>
 	<listitem>
@@ -77,17 +73,8 @@
 	  </screen>
 	</listitem>
 
-
         <listitem>
-          <para>Now log in mysql and create a database:</para>
-	  <screen>
-	    <![CDATA[
-# mysql -u root -p
-Enter password:
-mysql> create database ulteo_sm;
- Query OK, 1 row affected (0.02 sec)
-mysql> exit]]>
-	  </screen>
+	  <xi:include href="Installation.xml" xpointer="mysql_db_create" />
         </listitem>
       </itemizedlist>
       <beginpage />
@@ -98,11 +85,8 @@ mysql> exit]]>
 
 
   <section>
-    <title>Session Manager (sm.ulteo.com)</title>
-    <para>
-      The Session Manager is the main server for your <emphasis>Ulteo Open Virtual Desktop infrastructure</emphasis>.
-      It will manage all your application servers through an administration web interface.
-    </para>
+    <xi:include href="Installation.xml" xpointer="sm_title" />
+    <xi:include href="Installation.xml" xpointer="sm_definition" />
 
   <section>
     <title>Installation</title>
@@ -122,7 +106,7 @@ mysql> exit]]>
 	</screen>
       </listitem>
 
-     <listitem>
+     <listitem id="sm_install_sm_config">
        <para>Launch the configuration tool</para>
        <screen>
 	 <![CDATA[
@@ -156,27 +140,15 @@ Is this correct? [Y/n] ]]>
 
     </itemizedlist>
 
-    <para>
-      The server is now installed but not configured yet. You have to open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser. It should display this page:
-    </para>
-    <para>
-      <inlinemediaobject>
-	<imageobject>
-	  <imagedata fileref="img/sm_www_service_not_available.png"/>
-	</imageobject>
-	<textobject>
-	  <phrase>Session Manager into a web browser</phrase>
-	</textobject>
-      </inlinemediaobject>
-    </para>
+    <xi:include href="Installation.xml" xpointer="sm_install_browse" />
+    <xi:include href="Installation.xml" xpointer="sm_install_browse_pic" />
   </section>
 
-
-  <xi:include href="sub/generic.xml" xpointer="sessionmanager_configuration" />
+  <xi:include href="Installation.xml" xpointer="sessionmanager_configuration" />
   </section>
 
   <section>
-    <title>Application Server installation (aps.ulteo.com)</title>
+    <xi:include href="Installation.xml" xpointer="aps_title" />
 
     <itemizedlist>
      <listitem>
@@ -193,7 +165,7 @@ Is this correct? [Y/n] ]]>
 	</screen>
      </listitem>
 
-     <listitem>
+     <listitem id="aps_install_aps_chroot_install">
        <para>Launch the configuration tool</para>
 
        <important>
@@ -250,11 +222,11 @@ Is this correct? [Y/n] ]]>
 
     </itemizedlist>
 
-    <xi:include href="sub/generic.xml" xpointer="aps_manage_sm" />
+    <xi:include href="Installation.xml" xpointer="aps_manage_sm" />
     <beginpage />
   </section>
 
-  <xi:include href="sub/generic.xml" xpointer="publication" />
-  <xi:include href="sub/generic.xml" xpointer="launch_session" />
+  <xi:include href="Installation.xml" xpointer="publication" />
+  <xi:include href="Installation.xml" xpointer="launch_session" />
 
 </article>

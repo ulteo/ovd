@@ -2,14 +2,11 @@
 
 .SUFFIXES: .xml .html
 
-SRC_INSTALL=Installation.xml \
-	Installation_RedHat.xml \
-	Installation_Sources.xml
-
-
 SRC=AccountsIntegration.xml \
 	FAQ.xml \
-	$(SRC_INSTALL) \
+	Installation.xml \
+	Installation_RedHat.xml \
+	Installation_Sources.xml \
 	Protocol.xml \
 	Windows_Applications.xml
 
@@ -22,10 +19,13 @@ ANWIKI_REGEXP=-e 's/src=\"img/src=\"\/main\/images\/uovd\/doc\/img/g' -e 's/<img
 
 all: $(DST) $(PDF)
 
-# Add the depends to generic.xml
-$(SRC_INSTALL:.xml=.html) \
- $(SRC_INSTALL:.xml=.pdf) \
- $(SRC_INSTALL:.xml=.anw): sub/generic.xml
+# Add the depends between sources
+Installation_RedHat.html: Installation.xml
+Installation_RedHat.anw:  Installation.xml
+Installation_RedHat.pdf:  Installation.xml
+Installation_Sources.html: Installation_RedHat.xml Installation.xml
+Installation_Sources.anw:  Installation_RedHat.xml Installation.xml
+Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
 
 
 %.html: %.xml

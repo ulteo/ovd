@@ -14,9 +14,29 @@
   </articleinfo>
 
   <section>
-    <title>Prerequisites</title>
+    <title id="pre_title">Prerequisites</title>
 
-    <xi:include href="sub/generic.xml" xpointer="prerequisites" />
+    <para id="prerequisites">
+      At least two machines are needed to install Ulteo Open Virtual Desktop:
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    a LAMP (Linux Apache MySQL PHP) server for the Session
+	    Manager (here we are using
+	    <emphasis>sm.ulteo.com</emphasis> for that server, but you
+	    need to set your own domain name)
+	  </para>
+	</listitem>
+	<listitem>
+	  <para>
+	    another server for the Application Server. (here we are
+	    using <emphasis>aps.ulteo.com</emphasis> for that server,
+	    but you need to set it according to your own domain name)
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </para>
 
     <para>
       Both servers need to be installed with <emphasis role="strong">Ubuntu 8.04.2 (Hardy Heron) Server for x86/32 bits</emphasis> (it can be downloaded from <ulink url="http://releases.ubuntu.com/8.04/ubuntu-8.04.2-server-i386.iso" />).
@@ -36,9 +56,10 @@ $ su]]>
     </itemizedlist>
 
     <section>
-      <title>Installation of MySQL</title>
-      <para>
-	If you don't have any available MySQL database, you have to install MySQL on your Session Manager.
+      <title id="sql_title">Installation of MySQL</title>
+      <para id="mysql_install">
+	If you don't have any available MySQL database, you have to
+	install MySQL on your Session Manager.
       </para>
       <itemizedlist>
 	<listitem>
@@ -47,14 +68,16 @@ $ su]]>
           <para>A password for <literal>root</literal> will be asked.</para>
         </listitem>
         <listitem>
-          <para>Now log in mysql and create a database:</para>
-          <screen><![CDATA[
+	  <para id="mysql_db_create">
+	    Now log in mysql and create a database:
+	  <screen><![CDATA[
 # mysql -u root -p
 Enter password:
 mysql> create database ulteo_sm;
  Query OK, 1 row affected (0.02 sec)
 mysql> exit]]>
           </screen>
+	</para>
         </listitem>
       </itemizedlist>
       <beginpage />
@@ -62,10 +85,12 @@ mysql> exit]]>
   </section>
 
   <section>
-    <title>Session Manager (sm.ulteo.com)</title>
-    <para>
-      The Session Manager is the main server for your <emphasis>Ulteo Open Virtual Desktop infrastructure</emphasis>.
-      It will manage all your application servers through an administration web interface.
+    <title id="sm_title">Session Manager (sm.ulteo.com)</title>
+    <para id="sm_definition">
+      The Session Manager is the main server for your <emphasis>Ulteo
+      Open Virtual Desktop infrastructure</emphasis>.  It will manage
+      all your application servers through an administration web
+      interface.
     </para>
 
   <section>
@@ -161,10 +186,13 @@ mysql> exit]]>
       </listitem>
     </itemizedlist>
 
-    <para>
-      The server is now installed but not configured yet. You have to open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a web browser.It should display this page:
+    <para id="sm_install_browse">
+      The server is now installed but not configured yet. You have to
+      open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a
+      web browser.It should display this page:
     </para>
-    <para>
+
+    <para id="sm_install_browse_pic">
       <inlinemediaobject>
 	<imageobject>
 	  <imagedata fileref="img/sm_www_service_not_available.png"/>
@@ -175,10 +203,8 @@ mysql> exit]]>
       </inlinemediaobject>
     </para>
 
-
-
     <section>
-      <title>Setup the application system archive</title>
+      <title>dsdSetup the application system archive</title>
 
       <para>
 	If you didn't specify an URL at the last question, you have to copy an application system archive into <emphasis role="strong">/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>.
@@ -193,11 +219,111 @@ mysql> exit]]>
 
   </section>
 
-  <xi:include href="sub/generic.xml" xpointer="sessionmanager_configuration" />
+  <section id="sessionmanager_configuration">
+    <title>Configuration</title>
+
+    <para>
+      The first step is to go to <ulink
+      url="http://sm.ulteo.com/sessionmanager/admin" /> and
+      autenticate yourself with the login and password you provided
+      during the installation.
+    </para>
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_www_admin_login.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin login</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    <para>
+      For the first time you login, the system detect that is not well
+      configured so you are redirected to a basic setup page which
+      will save a default configuration.
+    </para>
+    <para>
+      You have to set the MySQL configuration. For instance, if you
+      install MySQL on the same host as described previously, here is
+      the configuration:
+    </para>
+    
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_install_admin_config_init.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin init configuration</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    <para>
+      Then, you should be redirected to the main page:
+    </para>
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_admin_main.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin main page</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    <!--
+    <simplesect>
+      <title>Applications server settings</title>
+
+      <para>
+	Before begin to install an Application server, we just have to
+	setup the authorized server list in order to your server won't
+	be refused.
+      </para>
+
+      <para>
+	So, go to <emphasis role="strong">Configuration</emphasis>
+	then <emphasis role="strong">Server settings</emphasis>.
+      </para>
+
+      <para>
+	In our example, the Application server named is <emphasis>aps.ulteo.com</emphasis>:
+      </para>
+
+      <para>
+	<inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_admin_install_fqdn.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager configure authorized servers</phrase>
+	  </textobject>
+	</inlinemediaobject>
+      </para>
+    </simplesect>
+    -->
+
+    <para>
+     For other specific configuration, please refer to the <emphasis
+     role="strong">Administration Console documentation</emphasis>.
+    </para>
+
+    <para>
+      The session manager has no application server plugged yet.
+      You now have to install one or more application servers.
+    </para>
+    <beginpage />
+  </section>
+
+
   </section>
 
   <section>
-    <title>
+    <title id="aps_title">
       Application Server installation (aps.ulteo.com)
     </title>
     <itemizedlist>
@@ -223,10 +349,13 @@ mysql> exit]]>
 
       <listitem>
         <para>
-	  The first question is about the FQDN (Fully Qualified Domain Name) hostname of the machine you are using as an application server.
-	  This <emphasis>FQDN</emphasis> is used by the session manager server to manage application servers.
-	  If the FQDN is not defined well, this application server will never register on the Main server. 
-	  Here we are using <emphasis>aps.ulteo.com</emphasis>:
+	  The first question is about the FQDN (Fully Qualified Domain
+	  Name) hostname of the machine you are using as an
+	  application server.  This <emphasis>FQDN</emphasis> is used
+	  by the session manager server to manage application servers.
+	  If the FQDN is not defined well, this application server
+	  will never register on the Main server.  Here we are using
+	  <emphasis>aps.ulteo.com</emphasis>.
 	</para>
 
 	<important>
@@ -252,8 +381,12 @@ mysql> exit]]>
 
       <listitem>
         <para>
-	  The next question is about the URL/path where the session manager can be accessed.
-	  Provide the URL that was used previously (we use <ulink url="http://sm.ulteo.com/sessionmanager" /> here for the example, but of course, you have to set your own domain name).
+	  The next question is about the URL/path where the session
+	  manager can be accessed. Provide the URL that was used
+	  previously (we use <ulink
+	  url="http://sm.ulteo.com/sessionmanager" /> here for the
+	  example, but of course, you have to set your own domain
+	  name).
 	</para>
 
 	<important>
@@ -276,15 +409,13 @@ mysql> exit]]>
             </textobject>
           </inlinemediaobject>
         </para>
-      </listitem>
-      
-
- 
+      </listitem> 
     </itemizedlist>
 
     <para>
-      The configuration is now done.
-      The system is going to donwload and uncompress the application system archive from the Session Manager your registered.
+      The configuration is now done.  The system is going to donwload
+      and uncompress the application system archive from the Session
+      Manager your registered.
     </para>
     <para>
       Once done, you just have to restart the service:
@@ -294,11 +425,183 @@ mysql> exit]]>
 # /etc/init.d/ulteo-ovd restart]]>
     </screen>
 
-    <xi:include href="sub/generic.xml" xpointer="aps_manage_sm" />
+
+    <section id="aps_manage_sm">
+      <title>Configuration</title>
+      <simplesect>
+	<title>Register the server</title>
+      <para>
+      An Application server has been installed and is now
+      ready. First, we have to register it, and switch it from
+      "maintenance" to "production" mode.
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Your server should appear in the <emphasis
+	  role="strong">Unregistered server</emphasis> page.
+	</para>
+
+	<screenshot>
+	  <screeninfo>Session Manager - server page</screeninfo>
+	  <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
+	</screenshot>
+
+	<para>
+	  If your server does not appear in the list, you might have
+	  a DNS configuration issue, please report to the <emphasis
+	  role="strong">FAQ</emphasis> to solve this issue.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  If you want to use this server on your network, you have to
+	  click on <emphasis>register</emphasis> to accept the server
+	  in your environment and switch it to maintenance mode.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  Now, click on <emphasis>Switch to production</emphasis> to
+	  switch it to Production mode.
+	</para>
+      </listitem>
+    </itemizedlist>
+    </para>
+    </simplesect>
+
+    <simplesect>
+      <title>Set an redirection name</title>
+
+      <para>
+	The server <emphasis role="strong">redirection name</emphasis> is
+	an option. If all your machines are in the same network, you
+	don't have to change it.
+      </para>
+
+      <important>
+	<para>
+	  If you installed your Application server on the same machine
+	  as your Session Manager and you follow our advices, you
+	  setup <emphasis role="strong">127.0.0.1</emphasis> as server
+	  name so you <emphasis role="strong">must</emphasis> define
+	  an redirection name.
+	</para>
+      </important>
+
+      <para>
+	The <emphasis role="strong">redirection name</emphasis> is used
+	to launch session. When you launch a session, you are
+	redirected to an Application server using the redirection name as
+	redirection. In some cases the default redirection name (the
+	FQDN you gave at the ApS installation) is not valid. For
+	instance, if you setup an private IP address and you want to
+	connect from Internet.
+      </para>
+
+      <screenshot>
+	<screeninfo>Session Manager - server redirection name</screeninfo>
+	<graphic fileref="img/sm_admin_external_name.png"></graphic>
+      </screenshot>
+    </simplesect>
+
+    </section>
     <beginpage />
   </section>
 
-  <xi:include href="sub/generic.xml" xpointer="publication" />
-  <xi:include href="sub/generic.xml" xpointer="launch_session" />
+  <section id="publication">
+    <title>Perform a "Publication"</title>
+ 
+      <para>
+	A publication is an association between a users group and an
+	applications group. It's an authorization for a users group to
+	launch the applications include in the group.
+      </para>
 
+      <para>
+	By default, there is no users or applications group installed
+	so you have to create it to launch sessions (it's not possible
+	to launch session without application in the default
+	configuration).
+      </para>
+
+      <para>
+	To simplify the process, you can use the <emphasis
+	role="strong">Publication wizard</emphasis> by going on
+	<emphasis>Applications</emphasis> page.
+      </para>
+
+      <screenshot>
+	<screeninfo>Session manager - publication page</screeninfo>
+	<graphic fileref="img/sm_admin_publication.png"></graphic>
+      </screenshot>
+
+    <para>
+      Go to the Publications page, select and follow the
+      <emphasis>wizard</emphasis> steps.
+    </para>
+    <beginpage />
+  </section>
+
+
+  <section id="launch_session">
+    <title>Launch a session</title>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Back to <ulink url="http://sm.ulteo.com/sessionmanager/" />
+	  with your browser, you should see a login page:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/sm_login.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session Manager login</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+	<para>&nbsp;</para>
+	<beginpage />
+      </listitem>
+
+
+      <listitem>
+	<para>
+	  Once logged in, the session is launching:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session_launching.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launching</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+	<beginpage />
+      </listitem>
+
+      <listitem>
+	<para>
+	  The session is launched and is ready to use with
+	  applications that have been published for the user:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/cm_session.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launched</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist> 
+  </section>
 </article>
