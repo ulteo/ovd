@@ -26,11 +26,6 @@ $session = $_SESSION['session'];
 if (!isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
 
-if (!isset($_SESSION['width']) || !isset($_SESSION['height'])) {
-	$_SESSION['width'] = @$_REQUEST['width'];
-	$_SESSION['height'] = @$_REQUEST['height'];
-}
-
 $vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
 $sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
 $sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
@@ -64,7 +59,7 @@ switch ($_SESSION['parameters']['quality']) {
 		break;
 }
 
-if (isset($_REQUEST['html'])) {
+if (isset($_GET['html'])) {
 ?>
 <applet width="<?php echo $_SESSION['width']; ?>" height="<?php echo $_SESSION['height']; ?>">
 	<param name="name" value="ulteoapplet" />
