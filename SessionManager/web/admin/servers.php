@@ -87,6 +87,14 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset
 	redirect();
 }
 
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'upgrade' && isset($_REQUEST['fqdn'])) {
+	$t = new Task_upgrade(0, $_REQUEST['fqdn']);
+	
+	$tm = new Tasks_Manager();
+	$tm->add($t);
+	redirect();
+}
+
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset($_REQUEST['fqdn']) && isset($_REQUEST['servers'])) {
 	$server_from = Abstract_Server::load($_REQUEST['fqdn']);
 	$applications_from = $server_from->getApplications();
@@ -717,6 +725,12 @@ function show_manage($fqdn) {
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
     echo '<input type="text" name="line"> ';
     echo '<input type="submit" value="'._('Install').'">';
+    echo '</form>';
+    echo '<br />';
+    echo '<form>';
+    echo '<input type="hidden" name="action" value="upgrade">';
+    echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
+    echo '<input type="submit" value="'._('Upgrade the internal system and applications').'">';
     echo '</form>';
   }
   echo '</div>';

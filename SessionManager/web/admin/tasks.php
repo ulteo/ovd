@@ -28,8 +28,17 @@ $tm->refresh_all();
 
 if (isset($_POST['action'])) {
 	if ($_POST['action']=='create') {
-		$task = new Task_install_from_line(0, $_POST['server'], $_POST['request']);
-		$tm->add($task);
+		if (isset($_POST['type'])) {
+			$type_task = 'Task_'.$_POST['type'];
+			try {
+				$task = new $type_task(0, $_POST['server'], $_POST['request']);
+				$tm->add($task);
+			}
+			catch (Exception $e) {
+				Logger::error('main', 'tasks.php error create task (type=\''.$type_task.'\')');
+				popup_error('error create task (type=\''.$type_task.'\')');
+			}
+		}
 	}
 	elseif ($_POST['action']=='remove') {
 		if (isset($_POST['task']))
@@ -209,8 +218,22 @@ function show_default($tm) {
 		echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
     	echo '</select>';
     	echo '<input type="text" name="request" value="" />';
+    	echo '<input type="hidden" name="type" value="install_from_line" />';
     	echo '<input type="submit" name="submit" value="'._('Install').'" />';
     	echo '</form>';
+
+        echo '<h2>'._('Upgrade the internal system and applications').'</h2>';
+
+        echo '<form action="" method="post">';
+        echo '<input type="hidden" name="action" value="create" />';
+        echo '<input type="hidden" name="type" value="upgrade" />';
+        echo '<input type="hidden" name="request" value="" />'; // hack for the task creation
+        echo '<select name="server">';
+        foreach ($servers as $server)
+            echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+        echo '</select>';
+        echo '<input type="submit" name="submit" value="'._('Upgrade').'" />';
+        echo '</form>';
     }
 
     echo '</div>';
