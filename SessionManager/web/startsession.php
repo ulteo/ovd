@@ -290,6 +290,7 @@ foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;
 
 $session->setAttribute('settings', $data);
+$session->setAttribute('start_time', time());
 Abstract_Session::save($session);
 
 $token = new Token(gen_string(5));
