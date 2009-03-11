@@ -749,67 +749,74 @@
 	printing.
       </para>
 
-
       <simplesect>
-	<title>start.php</title>
+	<title>access.php</title>
 	
 	<itemizedlist>
 	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> ANY</para>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
 	  </listitem>
 	  <listitem>
 	    <para><emphasis role="strong">arguments:</emphasis> 
 	    <itemizedlist>
 	      <listitem>
-		<para>height: the desired height of the session</para>
-	      </listitem>
-	      <listitem>
-		<para>width: the desired width of the session</para>
+		<para>html: an optional argument to force a HTML view
+		instead of the XML one. Usefull for the Web client.</para>
 	      </listitem>
 	    </itemizedlist>
 	    </para>
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
+	    <para><emphasis role="strong">returns:</emphasis> the
+	    session access as XML content or HTML depending if the
+	    <emphasis>html</emphasis> is set.</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  This webservice is called when <emphasis>whatsup</emphasis>
-	  returned 0 as session status. Startsession sets the session
-	  status to 1.
+	  When <emphasis>whatsup</emphasis> give a session ready, the
+	  client has to call this one to get all the access to join
+	  the session: SSH port/login/password, VNC port/password ...
 	</para>
       </simplesect>
 
-
       <simplesect>
-	<title>whatsup.php</title>
+	<title>invite.php</title>
 	
 	<itemizedlist>
 	  <listitem>
-	    <para><emphasis role="strong">method:</emphasis> ANY</para>
+	    <para><emphasis role="strong">method:</emphasis> POST</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> NO</para>
+	    <para><emphasis role="strong">arguments:</emphasis> 
+	    <itemizedlist>
+	      <listitem>
+		<para>email: the email address to send the invitation</para>
+	      </listitem>
+	      <listitem>
+		<para>mode: active|passive</para>
+	      </listitem>
+	    </itemizedlist>
+	    </para>
 	  </listitem>
+
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> session
-	    informations as XML content</para>
+	    <para><emphasis role="strong">returns:</emphasis> OK</para>
 	  </listitem>
 	</itemizedlist>
 
 	<para>
-	  The webservice has several uses. First of all, it's used to
-	  know that the user is still connected (a kind of ping
-	  timeout process).  Secondly, it allows the client to know
-	  session status changes. Finally, it is used to know when a
-	  new pdf file is ready for download and print.
+	  <emphasis>invite.php</emphasis> is call when the session
+	  owner wants to invite someone. The Application server ask to
+	  the Session Manager to create the invitation and send the
+	  email.
 	</para>
 
 	<para>
-	  The client calls this webservice every 10 seconds
-	  maximum.
+	  The <emphasis role="strong">passive</emphasis> mode is a
+	  view of the session where you cannot move the mouse cursor
+	  or type keys on your keyboard. It's a view only mode.
 	</para>
       </simplesect>
 
@@ -877,6 +884,70 @@
 	  timestamp and alerts the client. Then the client has just to
 	  request a print with the timestamp to get the print job and
 	  use a mean to print localy (printing applet).
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>start.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET|POST</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> 
+	    <itemizedlist>
+	      <listitem>
+		<para>height: the desired height of the session</para>
+	      </listitem>
+	      <listitem>
+		<para>width: the desired width of the session</para>
+	      </listitem>
+	    </itemizedlist>
+	    </para>
+	  </listitem>
+
+	  <listitem>
+	    <para><emphasis role="strong">returns:</emphasis> nothing</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  This webservice is called when <emphasis>whatsup</emphasis>
+	  returned 0 as session status. Startsession sets the session
+	  status to 1.
+	</para>
+      </simplesect>
+
+
+      <simplesect>
+	<title>whatsup.php</title>
+	
+	<itemizedlist>
+	  <listitem>
+	    <para><emphasis role="strong">method:</emphasis> GET</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">arguments:</emphasis> NO</para>
+	  </listitem>
+	  <listitem>
+	    <para><emphasis role="strong">returns:</emphasis> session
+	    informations as XML content</para>
+	  </listitem>
+	</itemizedlist>
+
+	<para>
+	  The webservice has several uses. First of all, it's used to
+	  know that the user is still connected (a kind of ping
+	  timeout process).  Secondly, it allows the client to know
+	  session status changes. Finally, it is used to know when a
+	  new pdf file is ready for download and print.
+	</para>
+
+	<para>
+	  The client calls this webservice every 10 seconds
+	  maximum.
 	</para>
       </simplesect>
     </section>
