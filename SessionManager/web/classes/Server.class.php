@@ -432,36 +432,46 @@ class Server {
 	public function getMonitoring() {
 		Logger::debug('main', 'Starting Server::getMonitoring for \''.$this->fqdn.'\'');
 
-		if (! $this->isOnline())
+		if (! $this->isOnline()) {
+			Logger::error('main', 'Server::getMonitoring server \''.$this->fqdn.'\' is not online');
 			return false;
+		}
 
 		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_monitoring.php');
 
 		if (! $xml) {
 			$this->isUnreachable();
+			Logger::error('main', 'Server::getMonitoring server \''.$this->fqdn.'\' is unreachable');
 			return false;
 		}
 
-		if (! is_string($xml))
+		if (! is_string($xml)) {
+			Logger::error('main', 'Server::getMonitoring invalid xml1');
 			return false;
+		}
 
 		if (substr($xml, 0, 5) == 'ERROR') {
 			$this->returnedError();
+			Logger::error('main', 'Server::getMonitoring invalid xml2');
 			return false;
 		}
 
-		if ($xml == '')
+		if ($xml == '') {
+			Logger::error('main', 'Server::getMonitoring invalid xml3');
 			return false;
+		}
 
 		$dom = new DomDocument();
 		$ret = @$dom->loadXML($xml);
-		if (! $ret)
+		if (! $ret) {
+			Logger::error('main', 'Server::getMonitoring loadXML failed');
 			return false;
+		}
 
 		$keys = array();
 
 		$cpu_node = $dom->getElementsByTagname('cpu')->item(0);
-		if (is_array($cpu_node) && count($cpu_node) > 0) {
+		if (is_object($cpu_node)) {
 			$keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
 			if ($cpu_node->hasAttribute('nb_cores'))
 				$keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
@@ -470,7 +480,7 @@ class Server {
 		}
 
 		$ram_node = $dom->getElementsByTagname('ram')->item(0);
-		if (is_array($ram_node) && count($ram_node) > 0) {
+		if (is_object($ram_node)) {
 			if ($ram_node->hasAttribute('total'))
 				$keys['ram_total'] = $ram_node->getAttribute('total');
 			if ($ram_node->hasAttribute('used'))
@@ -581,11 +591,15 @@ class Server {
 	public function updateApplications(){
 		Logger::debug('admin','SERVERADMIN::updateApplications');
 		$prefs = Preferences::getInstance();
-		if (! $prefs)
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
+		}
 
-		if (!$this->isOnline())
+		if (!$this->isOnline()) {
+			Logger::error('main', 'Server::updateApplications server \''.$this->fqdn.'\' is not online');
 			return false;
+		}
 
 		$mods_enable = $prefs->get('general','module_enable');
 		if (!in_array('ApplicationDB',$mods_enable)){
@@ -598,19 +612,25 @@ class Server {
 
 		if (! $xml) {
 			$this->isUnreachable();
+			Logger::error('main', 'Server::updateApplications server \''.$this->fqdn.'\' is unreachable');
 			return false;
 		}
 
-		if (! is_string($xml))
+		if (! is_string($xml)) {
+			Logger::error('main', 'Server::updateApplications invalid xml1');
 			return false;
+		}
 
 		if (substr($xml, 0, 5) == 'ERROR') {
 			$this->returnedError();
+			Logger::error('main', 'Server::updateApplications invalid xml2');
 			return false;
 		}
 
-		if ($xml == '')
+		if ($xml == '') {
+			Logger::error('main', 'Server::updateApplications invalid xml3');
 			return false;
+		}
 
 		$dom = new DomDocument();
 		@$dom->loadXML($xml);
