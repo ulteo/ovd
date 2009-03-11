@@ -54,26 +54,21 @@ div#pageWrap {
 
 .debug {
 	color: grey;
-	display: block;
 }
 
 .info {
 	color: green;
-	display: block;
 }
 
 .warning {
 	color: orange;
-	display: block;
 }
 
 .error {
 	color: red;
-	display: block;
 }
 
 .critical {
 	color: red;
 	font-weight: bold;
-	display: block;
 }

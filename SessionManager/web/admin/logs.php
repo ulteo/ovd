@@ -74,7 +74,7 @@ function show_all($flags_) {
 	foreach ($display as $name => $lines) {
 		echo '<h2><a href="?show='.$name.'">'.$name.'</a></h2>';
 		echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;">';
-		echo implode("\n", $lines);
+		echo implode("<br />\n", $lines);
 		echo '</div>';
 	}
 
@@ -97,7 +97,7 @@ function show_specific($name_, $flags_) {
 	echo '<h1><a href="?">'._('Logs').'</a> - '.$name_.'</h1>';
 	echo '<div>';
 	echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;">';
-	echo implode("\n", $lines);
+	echo implode("<br />\n", $lines);
 	echo '</div>';
 
 	echo '</div>';
