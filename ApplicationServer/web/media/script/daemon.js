@@ -93,17 +93,21 @@ function switch_splash_to_applet() {
 		{
 			method: 'get',
 			parameters: {
-				html: 1,
-				width: parseInt(my_width),
-				height: parseInt(my_height)
+				html: 1
 			},
 			onSuccess: function(transport) {
 				$('splashContainer').hide();
 				if ($('menuContainer'))
 					$('menuContainer').show();
 
-				$('appletContainer').show();
 				$('appletContainer').innerHTML = transport.responseText;
+				var appletNode = $('appletContainer').getElementsByTagName('applet');
+				if (appletNode.length > 0) {
+					appletNode = appletNode[0];
+					appletNode.width = parseInt(my_width);
+					appletNode.height = (parseInt(my_height)-4);
+				}
+				$('appletContainer').show();
 			}
 		}
 	);
