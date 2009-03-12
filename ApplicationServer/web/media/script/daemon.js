@@ -105,7 +105,8 @@ function switch_splash_to_applet() {
 				if (appletNode.length > 0) {
 					appletNode = appletNode[0];
 					appletNode.width = parseInt(my_width);
-					appletNode.height = (parseInt(my_height)-4);
+					//4px issue for invites
+					appletNode.height = parseInt(my_height);
 				}
 				$('appletContainer').show();
 			}
