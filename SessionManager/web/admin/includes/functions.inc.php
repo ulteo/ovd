@@ -364,6 +364,8 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 	$color = 0;
 	$color2 = 0;
 	$elements = $prefs->elements[$key_name];
+	if ($elements == array())
+		return;
 	echo '<table class="main_sub2" border="0" cellspacing="1" cellpadding="3" id="'.$key_name.'">';
 	echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($key_name).'</th></tr>';
 
