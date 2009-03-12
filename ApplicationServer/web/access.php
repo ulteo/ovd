@@ -26,6 +26,11 @@ $session = $_SESSION['session'];
 if (!isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
 
+if (!isset($_SESSION['width']) || !isset($_SESSION['height'])) {
+	$_SESSION['width'] = @$_REQUEST['width'];
+	$_SESSION['height'] = @$_REQUEST['height'];
+}
+
 $vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
 $sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
 $sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');

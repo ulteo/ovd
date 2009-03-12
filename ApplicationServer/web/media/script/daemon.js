@@ -93,7 +93,9 @@ function switch_splash_to_applet() {
 		{
 			method: 'get',
 			parameters: {
-				html: 1
+				html: 1,
+				width: parseInt(my_width),
+				height: parseInt(my_height)
 			},
 			onSuccess: function(transport) {
 				$('splashContainer').hide();
