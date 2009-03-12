@@ -89,7 +89,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'upgrade' && isset($_REQUEST['fqdn'])) {
 	$t = new Task_upgrade(0, $_REQUEST['fqdn']);
-	
+
 	$tm = new Tasks_Manager();
 	$tm->add($t);
 	redirect();
@@ -341,7 +341,7 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
+      echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
       echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
       echo '</form>';
       echo '</td>';
@@ -445,7 +445,7 @@ function show_unregistered() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" name="mass_register" value="'._('Register').'"/><br />';
+      echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '<td>';
