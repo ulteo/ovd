@@ -42,11 +42,13 @@ function do_auto_clean_db($new_prefs) {
     list($has_changed_u, $has_changed_ug) = $p->has_change($prefs, $new_prefs);
   }
 
+  $del_default_ug = False;
   // If UserDB module change
   if ($old_u != $new_u || $has_changed_u) {
     // Remove Users from user groups
     Abstract_Liaison::delete('UsersGroup', NULL, NULL) or
       popup_error('Unable to remove Users from UserGroups');
+    $del_default_ug = True;
   }
 
   // If UserGroupDB module change
@@ -54,7 +56,12 @@ function do_auto_clean_db($new_prefs) {
     // Remove Publications
     Abstract_Liaison::delete('UsersGroupApplicationsGroup', NULL, NULL) or
       popup_error('Unable to remove Publications');
+    $del_default_ug = True;
   }
+
+  // Unset default usersgroup
+  if ($del_default_ug == True)
+    $new_prefs->set('general', 'user_default_group', NULL);
 }
 
 function do_save($prefs, $name) {
