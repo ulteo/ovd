@@ -148,7 +148,8 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $form['host'] = $config['host'];
     $form['suffix'] = $config['suffix'];
-    $form['ad'] = $config['ad'];
+    if ($config['ad'] == 1)
+      $form['ad'] = $config['ad'];
     $form['port'] = ($config['port']=='')?'389':$config['port'];
     $form['proto'] = ($config['protocol_version']=='')?'3':$config['protocol_version'];
 
@@ -213,7 +214,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="proto" value="'.$form['proto'].'" /></td></tr>';
     $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';
     $str.= '<tr><td>'._('Use as Active Directory server:').'</td><td><input type="checkbox" name="ad" value="'.$form['ad'].'"';
-    if ($form['ad'] == 1)
+    if (isset($form['ad']))
       $str.= ' checked="checked"';
     $str.= ' /></td></tr>';
     $str.= '</table>';
