@@ -177,19 +177,8 @@ class Preferences {
 		$c = new ConfigElement('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, ConfigElement::$INPUT);
 		$this->add($c,'general');
 
-		if (Preferences::hasInstance()) {
-			$user_groups = array();
-			$ugs = get_all_usergroups($this);
-			if ($ugs){
-				foreach ($ugs as $ug) {
-					$user_groups[$ug->id] = $ug->name;
-				}
-				$user_groups[-1] = 'None';
-				ksort($user_groups);
-				$c = new ConfigElement('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), -1, $user_groups , ConfigElement::$SELECT);
-				$this->add($c,'general');
-			}
-		}
+		$c = new ConfigElement('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '', NULL , ConfigElement::$TEXT);
+		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new ConfigElement('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,ConfigElement::$INPUT);

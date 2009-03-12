@@ -47,6 +47,22 @@ if (isset($_REQUEST['action'])) {
       show_manage($_REQUEST['id']);
     }
   }
+  elseif ($_REQUEST['action']=='set_default') {
+    if (isset($_REQUEST['id'])) {
+      $req_id = $_REQUEST['id'];
+
+      action_set_default($req_id);
+      redirect();
+    }
+  }
+  elseif ($_REQUEST['action']=='unset_default') {
+    if (isset($_REQUEST['id'])) {
+      $req_id = $_REQUEST['id'];
+
+      action_unset_default($req_id);
+      redirect();
+    }
+  }
 }
 
 if (! isset($_GET['view']))
@@ -142,6 +158,75 @@ function action_modify($id) {
 
   return true;
 }
+
+function action_set_default($id_) {
+  try {
+    $prefs = new Preferences_admin();
+  }
+  catch (Exception $e) {
+    // Error header sauvergarde
+    return False;
+  }
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+
+  $group = $userGroupDB->import($id_);
+  if (! is_object($group)) {
+    popup_error('No such group id "'.$id_.'"');
+    return False;
+  }
+
+  $mods_enable = $prefs->set('general', 'user_default_group', $id_);
+  if (! $prefs->backup()) {
+    Logger::error('main', 'usersgroup.php action_default: Unable to save $prefs');
+    return False;
+  }
+
+  return True;
+}
+
+function action_unset_default($id_) {
+  try {
+    $prefs = new Preferences_admin();
+  }
+  catch (Exception $e) {
+    // Error header sauvergarde
+    return False;
+  }
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+
+  $group = $userGroupDB->import($id_);
+  if (! is_object($group)) {
+    popup_error('No such group id "'.$id_.'"');
+    return False;
+  }
+
+  $default_id = $prefs->get('general', 'user_default_group');
+  if ($id_ != $default_id) {
+    popup_error('Group id "'.$id_.'" is not the default group');
+    return False;
+  }
+
+  $mods_enable = $prefs->set('general', 'user_default_group', NULL);
+  if (! $prefs->backup()) {
+    Logger::error('main', 'usersgroup.php action_default: Unable to save $prefs');
+    return False;
+  }
+
+  return True;
+}
+
 
 function show_default() {
   $groups = get_all_usergroups();
@@ -282,10 +367,6 @@ function show_manage($id) {
   $users = $group->usersLogin();
   $has_users = (count($users) > 0);
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
   $mods_enable = $prefs->get('general','module_enable');
   if (! in_array('UserDB',$mods_enable))
     die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
@@ -305,6 +386,9 @@ function show_manage($id) {
     if (! $found)
       $users_available[]= $user->getAttribute('login');
   }
+
+  // Default usergroup
+  $is_default_group = ($prefs->get('general', 'user_default_group') == $id);
 
   // Publications
   $groups_apps = array();
@@ -340,9 +424,24 @@ function show_manage($id) {
   echo '</tr>';
   echo '</table>';
 
+
+  echo '<div>';
+  echo '<h2>'._('Settings').'</h1>';
+
+  echo '<form action="" method="post">';
+  if ($is_default_group) {
+    echo '<input type="submit" value="'._('Remove from default').'"/>';
+    echo '<input type="hidden" name="action" value="unset_default" />';
+  } else {
+    echo '<input type="submit" value="'._('Define as default').'"/>';
+    echo '<input type="hidden" name="action" value="set_default" />';
+  }
+
+  echo '<input type="hidden" name="id" value="'.$id.'" />';
+  echo '</form>';
+  echo '<br/>';
+
   if ($usergroupdb_rw) {
-    echo '<div>';
-    echo '<h2>'._('Settings').'</h1>';
     echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
     echo '<input type="submit" value="'._('Delete this group').'"/>';
     echo '<input type="hidden" name="action" value="del" />';
@@ -364,9 +463,10 @@ function show_manage($id) {
     echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
     echo '<input type="submit" value="'._('Update the description').'"/>';
     echo '</form>';
-    echo '</div>';
-    echo '<br/>';
   }
+  echo '</div>';
+  echo '<br/>';
+
   // Users list
   if (count($users_all) > 0) {
     echo '<div>';
