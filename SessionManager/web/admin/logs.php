@@ -41,7 +41,7 @@ function get_lines_from_file($file_, $nb_lines, $allowed_types) {
 		$buf = shell_exec($cmd);
 		$lines = explode("\n", $buf);
 
-		array_reverse($lines);
+		$lines = array_reverse($lines);
 		foreach($lines as $line) {
 			$type = parse($line);
 			if (! in_array($type, $allowed_types))
@@ -52,7 +52,7 @@ function get_lines_from_file($file_, $nb_lines, $allowed_types) {
 				break;
 		}
 	}
-	array_reverse($spec_lines);
+	$spec_lines = array_reverse($spec_lines);
 	return $spec_lines;
 }
 
