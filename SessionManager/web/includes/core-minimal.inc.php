@@ -20,7 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-mb_internal_encoding('UTF-8');
+if (function_exists('mb_internal_encoding'))
+	mb_internal_encoding('UTF-8');
 
 define('SESSIONMANAGER_ROOT', realpath(dirname(__FILE__).'/..'));
 define('SESSIONMANAGER_ROOT_ADMIN', SESSIONMANAGER_ROOT.'/admin');
