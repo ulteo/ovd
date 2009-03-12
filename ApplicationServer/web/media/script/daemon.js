@@ -244,8 +244,8 @@ function onUpdateInfos(transport) {
 
         var html = '<div style="margin-left: 0px; margin-right: 0px; text-align: left"><ul>';
 
+        var nb_share_active = 0;
         for (var i = 0; i < totoNodes.length; i++) {
-            var nb_share_active = 0;
             var buf = totoNodes[i];
 
             var email = buf.getAttribute('email');
