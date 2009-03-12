@@ -99,7 +99,7 @@ function show_default($applicationDB) {
 
   page_header();
 
-  echo '<div>';
+  echo '<div>'; // general div
   echo '<h1>'._('Applications').'</h1>';
   echo '<div id="apps_list_div">';
 
@@ -183,13 +183,12 @@ function show_default($applicationDB) {
     echo '</table>';
 //     echo '</form>';
     echo '</div>';
-
   echo '</div>';
-  echo '</div>';
-  echo '</div>';
+  }
+  echo '</div>'; // apps_list_div
+  echo '</div>'; // general div
   page_footer();
   die();
-  }
 }
 
 function show_manage($id, $applicationDB) {
