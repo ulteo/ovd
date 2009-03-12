@@ -13,7 +13,7 @@
     </copyright>
   </articleinfo>
 
-  <section>
+  <section id="pre">
     <title id="pre_title">Prerequisites</title>
 
     <para id="prerequisites">
@@ -55,7 +55,7 @@ $ su]]>
       </listitem>
     </itemizedlist>
 
-    <section>
+    <section id="pre_mysql">
       <title id="sql_title">Installation of MySQL</title>
       <para id="mysql_install">
 	If you don't have any available MySQL database, you have to
@@ -84,7 +84,7 @@ mysql> exit]]>
     </section>
   </section>
 
-  <section>
+  <section id="sm">
     <title id="sm_title">Session Manager (sm.ulteo.com)</title>
     <para id="sm_definition">
       The Session Manager is the main server for your <emphasis>Ulteo
@@ -93,7 +93,7 @@ mysql> exit]]>
       interface.
     </para>
 
-  <section>
+  <section id="sm_install">
     <title>Installation</title>
 
     <itemizedlist>
@@ -203,8 +203,8 @@ mysql> exit]]>
       </inlinemediaobject>
     </para>
 
-    <section>
-      <title>dsdSetup the application system archive</title>
+    <section id="sm_chroot">
+      <title>Setup the application system archive</title>
 
       <para>
 	If you didn't specify an URL at the last question, you have to copy an application system archive into <emphasis role="strong">/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>.
@@ -322,7 +322,7 @@ mysql> exit]]>
 
   </section>
 
-  <section>
+  <section id="aps">
     <title id="aps_title">
       Application Server installation (aps.ulteo.com)
     </title>
@@ -471,7 +471,7 @@ mysql> exit]]>
     </para>
     </simplesect>
 
-    <simplesect>
+    <simplesect id="aps_redirection_name">
       <title>Set an redirection name</title>
 
       <para>
