@@ -97,7 +97,6 @@ class Preferences {
 
 	protected function getConfFileContents(){
 		if (!is_readable($this->conf_file)) {
-			Logger::critical('main' ,'Preferences::getConfFileContents Unable to read config file \''.$this->conf_file.'\'');
 			throw new Exception('Unable to read config file');
 			return array();
 		}
