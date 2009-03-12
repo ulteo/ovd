@@ -158,7 +158,7 @@ class Configuration_mode_ad extends Configuration_mode {
     $form['admin_branch'] = (str_endswith($config['login'], $config['ou']))?'same':'default';
 
     $buf = $prefs->get('UserGroupDB', 'enable');
-    $form['user_group'] = ($buf == 'activedirectory')?'ad':'sql';
+    $form['user_group'] = ($buf == 'activedirectory')?'activedirectory':'sql';
 
     // plugins fs ...
     $buf = $prefs->get('plugins', 'FS');
