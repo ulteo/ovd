@@ -58,7 +58,7 @@ else {
 header_static($main_title.' - '._('Administration'));
 ?>
 
-<h2 class="centered"><?php echo _('Login');?></h2>
+<h2 class="centered"><?php echo _('Log in');?></h2>
 
 <div id="login_box" class="centered">
 	<div id="login_status"></div>
