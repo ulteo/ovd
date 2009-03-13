@@ -136,20 +136,11 @@ class Preferences {
 											$buf = &$this->elements[$key1][$key2][$key3][$key4];
 											$buf->content = $filecontents[$key1][$key2][$key3][$key4];
 										}
-										else {
-											echo 'todo6<br>';
-										}
 									}
-								}
-								else {
-									echo 'todo5<br>';
 								}
 							}
 						}
 					}
-				}
-				else {
-					echo 'todo4<br>';
 				}
 			}
 		}
