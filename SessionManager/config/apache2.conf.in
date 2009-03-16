@@ -3,7 +3,9 @@
 Alias /sessionmanager @DATADIR@/ulteo/sessionmanager
 <Directory @DATADIR@/ulteo/sessionmanager>
     Options FollowSymLinks
-    AllowOverride Limit Options FileInfo
+    AllowOverride None
+    Order allow,deny
+    allow from all
     DirectoryIndex index.php
 </Directory>
 
