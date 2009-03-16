@@ -11,12 +11,9 @@ lmessage_CFLAGS = \
 lmessage_LDADD = \
 		@GTK_LIBS@
 
-if HAVE_HELP2MAN
 man_MANS = lmessage.1
+EXTRA_DIST = $(man_MANS)
 
-lmessage.1:
+gen-manpage:
 	help2man --no-info --section=1 --manual="User Commands" --name "Display messages in a GTK dialog" ./lmessage >$@
 
-clean-local:
-	rm -f $(man_MANS)
-endif # HAVE_HELP2MAN

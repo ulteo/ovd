@@ -2,7 +2,7 @@ Source: ovd-chroot-apps
 Section: x11
 Priority: extra
 Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libthunar-vfs-1-dev, xfce4-panel-dev (>= 4.4), libxml-parser-perl, help2man
+Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libthunar-vfs-1-dev, xfce4-panel-dev (>= 4.4), libxml-parser-perl
 Standards-Version: 3.7.3
 
 Package: xfce4-restricted-menu-plugin
