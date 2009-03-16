@@ -1,6 +1,6 @@
 m4_define([uovdas_version_major], [1])
 m4_define([uovdas_version_minor], [0])
-m4_define([uovdas_version_build], [~svn@REVISION@])
+m4_define([uovdas_version_build], [~rc1+svn@REVISION@])
 #m4_define([uovdas_version_build], [~rc1])
 m4_define([uovdas_version], [uovdas_version_major().uovdas_version_minor()uovdas_version_build()])
 
