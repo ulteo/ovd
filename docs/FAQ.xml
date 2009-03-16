@@ -18,7 +18,7 @@
     used by <emphasis>Ulteo Open Virtual Desktop</emphasis>.
   </para>
 
-  <section id="treport-bug">
+  <section id="report_bug">
     <title>How can I report a bug?</title>
     <para>
       Send an email to <email>bugmaster@ulteo.com</email> with a
@@ -127,7 +127,7 @@
   </section>
   -->
 
-  <section>
+  <section id="file_upload">
     <title>Where is the file upload button on OVD ?</title>
     <para>
       The <emphasis>upload file</emphasis> feature is not available in
@@ -181,7 +181,7 @@
 
   </section>
 
-  <section>
+  <section id="no_available_server">
     <title>
       Why did I got a 'No available server' message when i wanted to launch
       a session?
@@ -201,7 +201,7 @@
     </para>
   </section>
 
-  <section>
+  <section  id="aps_not_appear">
     <title>
       Why my Application server does not appear in the Session Manager
       server list?
@@ -218,7 +218,7 @@
   </section>
 
 
-  <section>
+  <section id="check_dns_config">
     <title>How to check the DNS configuration?</title>
     <para>
       Check your DNS with these commands:
@@ -275,7 +275,7 @@ These commands work ?
 </section>
   -->
 
-  <section>
+  <section id="err03_firewall">
     <title>
       Why do I get an <emphasis>Err03</emphasis> when I want to launch a
       session?
@@ -294,17 +294,17 @@ These commands work ?
     </para>
   </section>
 
-  <section>
+  <section id="class_not_found">
     <title>Why do I get a "Class XXXX not found"?</title>
     <para>
       If you are sure of your configuration,  it's possibly a bug,
-      <link linkend="treport-bug">please report it to us</link>.
+      <link linkend="report_bug">please report it to us</link>.
       
 
     </para>
   </section>
 
-  <section>
+  <section id="aps_daemon_start_error">
     <title>
       Why do I get this error after installing an Application
       Server?
@@ -323,7 +323,7 @@ such file or directory]]>
   </section>
 
 
-  <section>
+  <section id="debian_support">
     <title>Why GNU/Linux Debian 5.0 is not supported?</title>
 
     <para>
