@@ -18,10 +18,10 @@
     used by <emphasis>Ulteo Open Virtual Desktop</emphasis>.
   </para>
 
-  <section>
+  <section id="used_proto_list">
     <title>List of Protocols used</title>
     
-    <section>
+    <section id="proto_http">
       <title>Hyper Text Transfert Protocol (HTTP)</title>
 
       <para>
@@ -39,7 +39,7 @@
       <para><ulink url="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">HTTP on Wikipedia</ulink></para>
     </section>
 
-    <section>
+    <section id="proto_rfb">
       <title>Remote Frame Buffer (RFB)</title>
 
       <para>
@@ -59,7 +59,7 @@
 
     </section>
 
-    <section>
+    <section id="proto_ssh">
       <title>Secure Shell (SSH)</title>
 
       <para>
@@ -76,7 +76,7 @@
       <para><ulink url="http://en.wikipedia.org/wiki/Secure_Shell">SSH on Wikipedia</ulink></para>
     </section>
 
-    <section>
+    <section id="proto_rdp">
       <title>Remote Desktop Protocol (RDP)</title>
 
       <para>
@@ -96,7 +96,7 @@
   </section>
 
 
-  <section>
+  <section id="server_comm">
     <title>Server Communication</title>
     <para>
       Servers communicate by using HTTP webservices.
@@ -113,7 +113,7 @@
       (<emphasis>SESSION_MANAGER_URL</emphasis>).
     </para>
 
-    <section>
+    <section id="security">
       <title>Security</title>
       <para>
 	At the moment, the server are authenticated using the DNS resolution system.
@@ -147,7 +147,7 @@
       </para>
     </section>
 
-    <section>
+    <section id="windows_servers">
       <title>Windows servers</title>
       <para>
 	The Windows agent is using an embeded HTTP server instead of using
@@ -164,7 +164,7 @@
 
     </section>
 
-    <section>
+    <section id="http_code">
       <title>HTTP return codes</title>
       <para>
 	Webservices are using the standard HTTP return codes to know if the
@@ -197,7 +197,7 @@
       </itemizedlist>
     </section>
 
-    <section>
+    <section id="sm_webservices">
       <title>Session Manager webservices</title>
 
       <para>
@@ -451,7 +451,7 @@
     </section>
 
 
-    <section>
+    <section id="aps_webservices">
       <title>Application Server webservices</title>
       
       <para>
@@ -708,7 +708,7 @@
   </section>
 
 
-  <section>
+  <section id="desktop_session">
     <title>Desktop Session</title>
     <!--
     <para> startsession.php: HTTP 302 -> redirection on the APS
@@ -730,7 +730,7 @@
     </para>
 
 
-    <section>
+    <section id="desktop_comm">
       <title>Client/Server communication</title>
 
       <para>
@@ -952,7 +952,7 @@
       </simplesect>
     </section>
 
-    <section>
+    <section id="startsession">
       <title>Startsession</title>
 
       <para>
@@ -1060,10 +1060,10 @@
   </section>
 
 
-  <section>
+  <section id="ids_matching">
     <title>Numerical ID matching</title>
 
-    <section>
+    <section id="id_session_status">
       <title>Session status</title>
       
       <para>
@@ -1116,7 +1116,7 @@
     </section>
 
 
-    <section>
+    <section id="id_jobs_status">
       <title>Jobs status</title>
       
       <para>
