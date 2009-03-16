@@ -102,7 +102,8 @@ function share_parse_actives($dir_) {
      && (time() - filemtime($d.'/alive')) < 15)
       $info['alive'] = 1;
 
-    $shares[] = $info;
+    if (file_exists($d.'/alive') || (filemtime($d.'/email') > (time()-(60*30))))
+      $shares[] = $info;
   }
   usort($shares, "share_cmp");
   return $shares;
