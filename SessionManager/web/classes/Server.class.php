@@ -276,7 +276,7 @@ class Server {
 	public function getStatus() {
 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
 
-		if ($this->getAttribute('status') != 'ready') {
+		if ($this->getAttribute('status') == 'down' || $this->getAttribute('status') == 'broken') {
 			$this->isNotReady();
 			return false;
 		}
@@ -584,7 +584,7 @@ class Server {
 			return NULL;
 		}
 	}
-	
+
 	public function updateApplications(){
 		Logger::debug('admin','SERVERADMIN::updateApplications');
 		$prefs = Preferences::getInstance();
