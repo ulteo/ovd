@@ -113,13 +113,6 @@ class Server {
 	public function isAuthorized() {
 		Logger::debug('main', 'Starting Server::isAuthorized for \''.$this->fqdn.'\'');
 
-		if (! $this->isOnline()) {
-// 			Logger::critical('main', '"'.$this->fqdn.'": does not accept requests from me!');
-// 			popup_error('"'.$this->fqdn.'": '._('does not accept requests from me!'));
-			Logger::warning('main', '"'.$this->fqdn.'": server is NOT online!');
-			return false;
-		}
-
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
@@ -165,11 +158,15 @@ class Server {
 	public function register() {
 		Logger::debug('main', 'Starting Server::register for \''.$this->fqdn.'\'');
 
-		if (! $this->isOnline())
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::register server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
+		}
 
-		if (! $this->isOK())
+		if (! $this->isOK()) {
+			Logger::debug('main', 'Server::register server "'.$this->fqdn.':'.$this->web_port.'" is not OK');
 			return false;
+		}
 
 		$this->setAttribute('locked', true);
 		$this->setAttribute('registered', true);
@@ -205,25 +202,35 @@ class Server {
 	public function isUnreachable() {
 		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
 
+		if ($this->getAttribute('status') == 'broken') {
+			Logger::debug('main', 'Server::isUnreachable server "'.$this->fqdn.':'.$this->web_port.'" is already "broken"');
+			return false;
+		}
+
 		$ev = new ServerStatusChanged(array(
 			'fqdn'		=>	$this->fqdn,
 			'status'	=>	ServerStatusChanged::$UNREACHABLE
 		));
 
-		Logger::critical('main', 'Server '.$this->fqdn.':'.$this->web_port.' is unreachable, status switched to "broken"');
+		Logger::critical('main', 'Server "'.$this->fqdn.':'.$this->web_port.'" is unreachable, status switched to "broken"');
 		$this->setAttribute('status', 'broken');
 
 		$ev->emit();
 
 		$this->isNotReady();
 
-		Abstract_Server::save($this);
+		Abstract_Server::modify($this);
 
 		return true;
 	}
 
 	public function isNotReady() {
 		Logger::debug('main', 'Starting Server::isNotReady for \''.$this->fqdn.'\'');
+
+		if ($this->getAttribute('status') == 'ready') {
+			Logger::debug('main', 'Server::isNotReady server "'.$this->fqdn.':'.$this->web_port.'" is already "not ready"');
+			return false;
+		}
 
 		$sessions = Sessions::getByServer($this->fqdn);
 		foreach ($sessions as $session) {
@@ -246,7 +253,7 @@ class Server {
 			if ($this->getAttribute('locked') === false)
 				$this->setAttribute('locked', true);
 
-		Abstract_Server::save($this);
+		Abstract_Server::modify($this);
 
 		return true;
 	}
@@ -254,7 +261,12 @@ class Server {
 	public function returnedError() {
 		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
 
-		Logger::error('main', 'Server '.$this->fqdn.':'.$this->web_port.' returned an ERROR, status switched to "broken"');
+		if ($this->getAttribute('status') == 'broken') {
+			Logger::debug('main', 'Server::returnedError server "'.$this->fqdn.':'.$this->web_port.'" is already "broken"');
+			return false;
+		}
+
+		Logger::error('main', 'Server "'.$this->fqdn.':'.$this->web_port.'" returned an ERROR, status switched to "broken"');
 		$this->setAttribute('status', 'broken');
 
 		$this->isNotReady();
@@ -264,7 +276,7 @@ class Server {
 	public function getStatus() {
 		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
 
-		if ($this->getAttribute('registered') === true && ($this->getAttribute('status') == 'offline' || $this->getAttribute('status') == 'broken')) {
+		if ($this->getAttribute('status') != 'ready') {
 			$this->isNotReady();
 			return false;
 		}
@@ -343,8 +355,10 @@ class Server {
 	public function getType() {
 		Logger::debug('main', 'Starting Server::getType for \''.$this->fqdn.'\'');
 
-		if (! $this->isOnline())
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::getType server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
+		}
 
 		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_type.php');
 
@@ -376,8 +390,10 @@ class Server {
 	public function getVersion() {
 		Logger::debug('main', 'Starting Server::getVersion for \''.$this->fqdn.'\'');
 
-		if (! $this->isOnline())
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::getVersion server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
+		}
 
 		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_version.php');
 
@@ -433,7 +449,7 @@ class Server {
 		Logger::debug('main', 'Starting Server::getMonitoring for \''.$this->fqdn.'\'');
 
 		if (! $this->isOnline()) {
-			Logger::error('main', 'Server::getMonitoring server \''.$this->fqdn.'\' is not online');
+			Logger::debug('main', 'Server::getMonitoring server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 
@@ -559,7 +575,7 @@ class Server {
 			$res = array();
 			foreach ($ls as $l) {
 				$a = $applicationDB->import($l->element);
-				if (is_object($a)) // if it's an object is an application OK 
+				if (is_object($a))
 					$res []= $a;
 			}
 			return $res;
@@ -596,8 +612,8 @@ class Server {
 			return false;
 		}
 
-		if (!$this->isOnline()) {
-			Logger::error('main', 'Server::updateApplications server \''.$this->fqdn.'\' is not online');
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::updateApplications server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 

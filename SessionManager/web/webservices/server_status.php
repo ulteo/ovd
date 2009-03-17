@@ -54,6 +54,11 @@ if (! $buf) {
 		die('Server not authorized');
 	}
 
+	if (! $buf->isOnline()) {
+		Logger::error('main', '(webservices/server_status) Server not "ready" : '.$_GET['fqdn']);
+		die('Server not "ready"');
+	}
+
 	if (! $buf->isOK()) {
 		Logger::error('main', '(webservices/server_status) Server not OK : '.$_GET['fqdn']);
 		die('Server not OK');
