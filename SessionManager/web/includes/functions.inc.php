@@ -28,7 +28,7 @@ function redirect($url_=NULL) {
 	die();
 }
 
-function die_error($error_=false, $file_=NULL, $line_=NULL) {
+function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 // 	if (!in_admin() && isset($_SESSION['login']))
 // 		unset($_SESSION['login']);
 
@@ -43,8 +43,8 @@ function die_error($error_=false, $file_=NULL, $line_=NULL) {
 	else
 		header_static(DEFAULT_PAGE_TITLE);
 
-	if (in_admin()) {
-		echo '<h2 class="centered">'._('Error').'</h2>';
+	if (in_admin() || $display_ === true) {
+		echo '&nbsp;<h2 class="centered">'._('Error').'</h2>&nbsp;';
 		echo '&nbsp;<p class="msg_error centered">'.$error_.'</p>&nbsp;';
 	} else
 		echo '&nbsp;<p class="msg_error centered">'._('The service is not available, please try again later').'</p>&nbsp;';

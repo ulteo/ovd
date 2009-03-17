@@ -98,14 +98,14 @@ if ($use_sso) {
 		do_login($_POST['login'], $_POST['password']);
 
 	if (!isset($_SESSION['login']))
-		die_error('You must be authenticated to start a session',__FILE__,__LINE__);
+		die_error(_('You must be authenticated to start a session'),__FILE__,__LINE__);
 
 	$user_login = $_SESSION['login'];
 }
 
 $user = $userDB->import($user_login);
 if (!is_object($user))
-	die_error(_('User importation failed'),__FILE__,__LINE__);
+	die_error('User importation failed',__FILE__,__LINE__);
 
 Logger::debug('main', '(startsession) Now checking for old session');
 
@@ -125,7 +125,7 @@ if ($sessions > 0) {
 			$buf = $buf['action_when_active_session'];
 
 			if ($buf == 0)
-				die(_('You already have an active session'));
+				die_error(_('You already have an active session'));
 			elseif ($buf == 1) {
 				$invite = new Invite(gen_string(5));
 				$invite->session = $session->id;
@@ -161,7 +161,7 @@ else {
 		$ev->setAttribute('ok', false);
 		$ev->setAttribute('error', _('No available server'));
 		$ev->emit();
-		die_error(_('No available server'),__FILE__,__LINE__);
+		die_error(_('You don\'t have access to any application or server for now'),__FILE__,__LINE__,true);
 	}
 }
 
