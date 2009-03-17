@@ -211,7 +211,7 @@ function print_element($key_name,$container,$element_key,$element) {
 				echo $myval;
 				echo '<br />';
 			}
-			echo '<input class="input_checkbox" type="hidden" name="'.$label2.'[]" />'; // dirty hack for []
+			echo '<input class="input_checkbox" type="hidden" name="'.$label2.'[]" value="thisIsADirtyHack" />'; // dirty hack for []
 			break;
 
 		case ConfigElement::$INPUT_LIST: // list of input text (fixed length)
@@ -514,7 +514,7 @@ function formToArray_cleanup(&$buf) {
 	if (is_array($buf)) {
 		$buf_keys = array_keys($buf);
 		if ( count($buf) > 0) {
-			if (  $buf[$buf_keys[count($buf)-1]] == '') {
+			if (  $buf[$buf_keys[count($buf)-1]] == 'thisIsADirtyHack') {
 				unset($buf[$buf_keys[count($buf)-1]]);
 			}
 			else {
