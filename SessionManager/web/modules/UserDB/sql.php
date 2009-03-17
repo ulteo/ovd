@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -19,17 +19,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserDB_sql {
+	protected $table;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		$mysql_conf = $prefs->get('general', 'mysql');
 		if (is_array($mysql_conf)) {
-			@define('USER_TABLE', $mysql_conf['prefix'].'user');
+			$this->table = $mysql_conf['prefix'].'user';
 		}
 	}
 	
 	public function import($login_){
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',USER_TABLE, 'login', $login_);
+		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
@@ -63,7 +64,7 @@ class UserDB_sql {
 		Logger::debug('main','USERDB::MYSQL::getList');
 		$result = array();
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1', USER_TABLE);
+		$res = $sql2->DoQuery('SELECT * FROM @1', $this->table);
 		if ($res !== false){
 			$rows = $sql2->FetchAllResults($res);
 			foreach ($rows as $row){
@@ -144,28 +145,31 @@ class UserDB_sql {
 		return $ret;
 	}
 	
-	public function prefsIsValid2($prefs_, &$log=array()) {
-		if (!defined('USER_TABLE'))
-			return false;
+	public static function prefsIsValid2($prefs_, &$log=array()) {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			
+			Logger::error('main', 'UserDB::sql::prefsIsValid2 no mysql_conf');
 			return false;
 		}
+		if (!isset($mysql_conf['prefix'])) {
+			Logger::error('main', 'UserDB::sql::prefsIsValid2 mysql_conf is not valid');
+			return false;
+		}
+		$table = $mysql_conf['prefix'].'user';
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$mysql_conf['database'],USER_TABLE);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {
 				return true;
 			}
 			else {
-				Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.USER_TABLE.'\' not exists');
+				Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.$table.'\' not exists');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.USER_TABLE.'\' not exists(2)');
+			Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.$table.'\' not exists(2)');
 			return false;
 		}
 	}
