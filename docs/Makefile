@@ -29,10 +29,10 @@ Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
 
 
 %.html: %.xml
-	xsltproc --xinclude xhtml.xsl $< >$@
+	xsltproc --xinclude style/xhtml.xsl $< >$@
 
 %.pdf:  %.xml 
-	dblatex -T db2latex $<
+	dblatex -t pdf -T db2latex -p style/latex.xsl $<
 
 %.anw: %.html
 	sed $(ANWIKI_REGEXP) $< > $@
