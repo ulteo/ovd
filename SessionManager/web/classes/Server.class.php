@@ -584,26 +584,7 @@ class Server {
 			return NULL;
 		}
 	}
-
-	public function appsGroups() {
-		$apps_roups_id = array();
-		$asl = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
-// 		$applications_on_server = $asl->elements();
-		foreach ($applications_on_server as $app_id) {
-			$ag = Abstract_Liaison::load('AppsGroup', $app_id, NULL);
-			$apps_roups_id = array_merge($apps_roups_id, $ag);
-		}
-		$apps_roups_id = array_unique($apps_roups_id);
-		$apps_roups = array();
-		foreach ($apps_roups_id as $id) {
-			$ag = new AppsGroup();
-			$ag->fromDB($id);
-			if ($ag->isOK())
-				$apps_roups []= $ag;
-		}
-		return $apps_roups;
-	}
-
+	
 	public function updateApplications(){
 		Logger::debug('admin','SERVERADMIN::updateApplications');
 		$prefs = Preferences::getInstance();

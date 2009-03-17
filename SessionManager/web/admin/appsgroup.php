@@ -249,19 +249,6 @@ function show_manage($id) {
       $applications[]= $application;
   }
 
-/*
-  // Servers
-  $servers_all = Servers::getOnline();
-  $servers_available = array();
-  $servers = array();
-  foreach($servers_all as $server) {
-    if (in_array($group, $server->appsGroups()))
-	$servers[]= $server;
-    else
-	$servers_available[]= $server;
-  }
-*/
-
   // Publications
   $groups_users = array();
   foreach (Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $id) as $group_liaison) {
