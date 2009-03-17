@@ -92,14 +92,13 @@
 <xsl:text>
 \textbf{}\\[4cm]
 \begin{flushright}
- \textit{coucou}
-\end{flushright}
+ \textit{
 </xsl:text>
-<!--<xsl:value-of select="$copyright"/>
+<xsl:value-of select="$copyright"/>
 <xsl:text>
  }
 \end{flushright}
-</xsl:text>-->
+</xsl:text>
 <xsl:text>
 \end{titlepage}
 </xsl:text>
