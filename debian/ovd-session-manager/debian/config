@@ -14,24 +14,24 @@ if [ "$RET" = "true" ]; then
 
   db_get od/sessionmanager/mysql/configure || true
   if [ "$RET" = "true" ]; then
-    db_input critical od/sessionmanager/mysql/dbserver || true
-    db_input critical od/sessionmanager/mysql/dbadmin || true
-    db_input critical od/sessionmanager/mysql/dbadmpass || true
-    db_input critical od/sessionmanager/mysql/dbuser || true
-    db_input critical od/sessionmanager/mysql/dbpass || true
+    db_input medium od/sessionmanager/mysql/dbserver || true
+    db_input medium od/sessionmanager/mysql/dbadmin || true
+    db_input medium od/sessionmanager/mysql/dbadmpass || true
+    db_input medium od/sessionmanager/mysql/dbuser || true
+    db_input medium od/sessionmanager/mysql/dbpass || true
     db_input medium od/sessionmanager/mysql/dbname || true
     db_go || true
   fi
 fi
 
-  db_input critical od/sessionmanager/admin_login || true
+  db_input medium od/sessionmanager/admin_login || true
   db_go
   while :; do
-    db_input critical od/sessionmanager/admin_password || true
+    db_input medium od/sessionmanager/admin_password || true
     db_go
     db_get od/sessionmanager/admin_password
     ROOT_PWD="$RET"
-    db_input critical od/sessionmanager/admin_password_again || true
+    db_input medium od/sessionmanager/admin_password_again || true
     db_go
     db_get od/sessionmanager/admin_password_again
     if [ "$RET" = "$ROOT_PWD" ]; then
@@ -46,7 +46,7 @@ fi
   done
 
   if [ ! -e /usr/share/ulteo/sessionmanager/base.tar.gz ]; then
-    db_input critical od/sessionmanager/download_tarball || true
+    db_input medium od/sessionmanager/download_tarball || true
     db_go
   fi
 fi
