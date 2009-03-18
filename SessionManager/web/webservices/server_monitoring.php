@@ -29,10 +29,8 @@ if (! isset($_POST['fqdn'])) {
 }
 
 $server = Abstract_Server::load($_POST['fqdn']);
-if (! $server || ! $server->isAuthorized()) {
-	Logger::error('main', '(webservices/server_monitoring) Server not authorized : '.$_POST['fqdn'].' == '.@gethostbyname($_POST['fqdn']).' ?');
+if (! $server || ! $server->isAuthorized())
 	die('Server not authorized');
-}
 
 Logger::debug('main', '(webservices/server_monitoring) Security check OK');
 
