@@ -68,3 +68,15 @@ pre {
 hr {
 	border: none;
 }
+
+div.important { 
+	background:  #ffdcaf;
+	border : 1px dashed #C52;
+	margin: 10px;
+	padding: 10px;
+}
+
+div.note { 
+	background: #e4e9f5;
+	border : 1px dashed #a9b8da;
+}

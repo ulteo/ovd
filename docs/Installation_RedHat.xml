@@ -20,10 +20,14 @@
     <xi:include href="Installation.xml" xpointer="prerequisites" />
 
     <para>
-      Both servers need to be installed with <emphasis
-      role="strong">Red Hat RHEL 5.2 32-bit</emphasis>, <emphasis
-      role="strong">Fedora Core 9</emphasis> or <emphasis
-      role="strong">CentOS 5.2</emphasis>.  All operations need to be
+      The servers used by Ulteo OVD need to be installed with
+      <emphasis role="strong">Red Hat RHEL 5.2 32-bit</emphasis>,
+      <emphasis role="strong">Fedora Core 9</emphasis> or <emphasis
+      role="strong">CentOS 5.2</emphasis>.
+    </para>
+
+    <para>
+      All operations need to be
       done as <emphasis>superuser</emphasis> (root).
     </para>
 

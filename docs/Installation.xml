@@ -17,30 +17,60 @@
     <title id="pre_title">Prerequisites</title>
 
     <para id="prerequisites">
-      At least two machines are needed to install Ulteo Open Virtual Desktop:
+      A minimal Open Virtual Desktop infrastructure requires one
+      <emphasis role="strong">Session Manager</emphasis> and one
+      <emphasis role="strong">Application Server</emphasis>.
 
       <itemizedlist>
 	<listitem>
 	  <para>
-	    a LAMP (Linux Apache MySQL PHP) server for the Session
-	    Manager (here we are using
-	    <emphasis>sm.ulteo.com</emphasis> for that server, but you
-	    need to set your own domain name)
+	    the Session Manager is a LAMP (Linux Apache MySQL
+	    PHP) system and could be used in an exising LAMP server.
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
-	    another server for the Application Server. (here we are
-	    using <emphasis>aps.ulteo.com</emphasis> for that server,
-	    but you need to set it according to your own domain name)
+	    the Application Server is a server where the desktop and
+	    applications will be executed. It has to be a Ulteo OVD
+	    <emphasis role="strong">dedicated server</emphasis>.
 	  </para>
 	</listitem>
       </itemizedlist>
+
+      <important>
+	<para>
+	  In this document, we are using
+	  <emphasis>sm.ulteo.com</emphasis> for the Session Manager
+	  and <emphasis>aps.ulteo.com</emphasis> for Application
+	  Server.
+	</para>
+
+	<para>
+	  You need to set that names according to your own domain
+	  names.
+	</para>
+      </important>
+
+      <note>
+	<para>
+	  It is possible to install both Application Server and
+	  Session Manager on the <emphasis role="strong">same machine</emphasis>.
+	</para>
+      </note>
+
     </para>
 
     <para>
-      Both servers need to be installed with <emphasis role="strong">Ubuntu 8.04.2 (Hardy Heron) Server for x86/32 bits</emphasis> (it can be downloaded from <ulink url="http://releases.ubuntu.com/8.04/ubuntu-8.04.2-server-i386.iso" />).
-      All operations need to be done as <emphasis>super user</emphasis>.
+      The servers used by Ulteo OVD need to be installed with <emphasis
+      role="strong">Ubuntu 8.04.2 (Hardy Heron) Server for x86/32
+      bits</emphasis> (it can be downloaded from <ulink
+      url="http://releases.ubuntu.com/8.04/ubuntu-8.04.2-server-i386.iso">this
+      link</ulink>).
+    </para>
+
+    <para>
+      All operations need to be done as <emphasis>super
+      user</emphasis>.
     </para>
 
     <itemizedlist>
