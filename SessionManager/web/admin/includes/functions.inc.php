@@ -160,7 +160,7 @@ function init($host_, $database_, $prefix_, $user_, $password_) {
 	$p->set('general','mysql', $mysql_conf);
 	$ret = $p->isValid();
 	if ($ret !== true) {
-		echo 'error isValid : '.$ret.'<br>';
+		echo 'error isValid : '.$ret."\n";
 		return false;
 	}
 	$p->backup();

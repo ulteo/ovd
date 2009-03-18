@@ -1,4 +1,4 @@
-SUBDIRS = media modules includes classes templates
+SUBDIRS = media modules includes init classes templates
 
 scripts_DATA = actions.php \
                applications.php \
