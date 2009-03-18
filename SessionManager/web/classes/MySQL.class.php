@@ -106,6 +106,13 @@ class MySQL {
 		return true;
 	}
 
+	private function CleanValue($value_) {
+		if (get_magic_quotes_gpc())
+			$value_ = stripslashes($value_);
+
+		return mysqli_real_escape_string($this->link, $value_);
+	}
+
 	public function DoQuery() {
 		$this->CheckLink();
 
@@ -114,7 +121,7 @@ class MySQL {
 		$query = $args[0];
 
 		$query = preg_replace('/@([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'`\'.mysqli_real_escape_string($this->link, $args[\\1]).\'`\')', $query);
-		$query = preg_replace('/%([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'"\'.mysqli_real_escape_string($this->link, $args[\\1]).\'"\')', $query);
+		$query = preg_replace('/%([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'"\'.$this->CleanValue($args[\\1]).\'"\')', $query);
 
 		if (is_resource($this->result)) {
 			mysqli_free_result($this->result);
