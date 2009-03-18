@@ -1,0 +1,16 @@
+
+http://www.ds9a.nl/docbook/minimal-page.html
+
+
+
+Build pdf with fop
+
+ xsltproc /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl HowTo_QuickInstall.xml > test.fo
+ fop -fo test.fo -pdf test.pdf
+
+  or
+
+ fop -xsl /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl -xml HowTo_QuickInstall.xml -pdf test.pdf
+      xmlto xhtml -m config.xsl $<
+      cat index.html | sed -e 's/index\.html//g' > $@ 
+      rm index.html

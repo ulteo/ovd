@@ -1,5 +1,3 @@
-# http://www.ds9a.nl/docbook/minimal-page.html
-
 .SUFFIXES: .xml .html
 
 SRC=AccountsIntegration.xml \
@@ -13,9 +11,6 @@ SRC=AccountsIntegration.xml \
 DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
 ANW=$(SRC:.xml=.anw)
-
-ANWIKI_REGEXP=-e 's/src=\"img/src=\"\/main\/images\/uovd\/doc\/img/g' -e 's/<img/<br\/><br\/><img/' -e 's/.*<body[^>]*>//' -e 's/<\/body>.*//' -e 's/<\/a>/\n<\/a>/g'
-
 
 all: $(DST) $(PDF)
 
@@ -34,8 +29,9 @@ Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
 %.pdf:  %.xml 
 	dblatex -t pdf -T db2latex -p style/latex.xsl $<
 
-%.anw: %.html
-	sed $(ANWIKI_REGEXP) $< > $@
+%.anw: %.xml
+	xsltproc --xinclude style/anw.xsl $< >$@
+	sed -i 's/<!DOCTYPE.*//' $@
 
 clean:
 	$(RM) $(DST)
@@ -56,16 +52,3 @@ install: all
 uninstall:
 	rm -rf dist
 
-
-# Generer pdf avec fop
-#
-# xsltproc /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl HowTo_QuickInstall.xml > test.fo
-# fop -fo test.fo -pdf test.pdf
-#
-#  ou
-#
-# fop -xsl /usr/share/xml/docbook/stylesheet/nwalsh/fo/docbook.xsl -xml HowTo_QuickInstall.xml -pdf test.pdf
-
-#      xmlto xhtml -m config.xsl $<
-#      cat index.html | sed -e 's/index\.html//g' > $@ 
-#      rm index.html
