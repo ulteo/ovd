@@ -44,7 +44,7 @@ if (isset($_REQUEST['action'])) {
   elseif ($_REQUEST['action']=='modify') {
     if (isset($_REQUEST['id'])) {
       action_modify($_REQUEST['id']);
-      redirect('appsgroup.php?action=manage&id='.$id);
+      redirect('appsgroup.php?action=manage&id='.$_REQUEST['id']);
     }
   }
 }

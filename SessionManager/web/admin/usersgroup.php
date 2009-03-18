@@ -44,7 +44,7 @@ if (isset($_REQUEST['action'])) {
   elseif ($_REQUEST['action']=='modify') {
     if (isset($_REQUEST['id'])) {
       action_modify($_REQUEST['id']);
-      redirect('usersgroup.php?action=manage&id='.$id);
+      redirect('usersgroup.php?action=manage&id='.$_REQUEST['id']);
     }
   }
   elseif ($_REQUEST['action']=='set_default') {
