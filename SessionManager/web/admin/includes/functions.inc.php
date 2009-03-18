@@ -20,7 +20,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
- require_once(dirname(__FILE__).'/core.inc.php');
 
 function display_loadbar($percents_) {
 	$bar_width = 1.25;
@@ -162,6 +161,7 @@ function init($host_, $database_, $prefix_, $user_, $password_) {
 	$ret = $p->isValid();
 	if ($ret !== true) {
 		echo 'error isValid : '.$ret.'<br>';
+		return false;
 	}
 	$p->backup();
 	return true;
