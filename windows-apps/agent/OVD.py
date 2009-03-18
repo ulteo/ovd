@@ -32,7 +32,8 @@ import logging
 import logging.handlers
 import os
 import platform
-import pythoncom,os,socket,urllib2,urllib
+import pythoncom
+import socket,urllib2,urllib,urlparse
 import re
 import servicemanager
 import signal
@@ -213,7 +214,18 @@ class OVD(win32serviceutil.ServiceFramework):
 			#logging.getLogger().addHandler(handler)
 			self.log.addHandler(handler)
 	
-
+	def isSessionManagerRequest(self, client_ip):
+		url_split = urlparse.urlsplit(self.conf['session_manager'])
+		sm_host =  url_split[1]
+		if utils.isIP(sm_host):
+			return  client_ip == sm_host
+		else:
+			try:
+				return client_ip == socket.gethostbyname(sm_host)
+			except Exception, err:
+				# exception if the getaddrinfo failed
+				self.log.error("fail to get address info for '%s'"%(sm_host))
+				return False
 	
 	def getStatusString(self):
 		return 'ready'

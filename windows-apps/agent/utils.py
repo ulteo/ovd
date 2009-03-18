@@ -30,12 +30,22 @@ import win32con
 import msvcrt
 import pythoncom
 from win32com.shell import shell, shellcon
+import socket
 
 def myOS():
 	if (len([b for b in ["windows","microsoft","microsoft windows"] if platform.system().lower() in b]) >0):
 		return "windows"
 	else:
 		return platform.system().lower()
+
+
+def isIP(address):
+	try:
+		socket.inet_ntoa(address)
+	except Exception, err:
+		return False
+	return True
+
 
 if myOS() == "windows":
 	class Process:

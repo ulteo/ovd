@@ -72,10 +72,13 @@ if utils.myOS() == "windows":
 		def UsedPhys(self):
 			return self.TotalPhys() - self.AvailPhys()
 
-
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
 		try:
+			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
+				self.response_error(401)
+				return
+			
 			self.server.daemon.log.debug("do_GET "+self.path)
 			if self.path == "/webservices/server_status.php":
 				self.webservices_server_status()
@@ -89,20 +92,21 @@ class Web(SimpleHTTPRequestHandler):
 				self.webservices_applications()
 			elif self.path.startswith("/webservices/icon.php"):
 				self.webservices_icon()
-			elif self.path == "/webservices/test.php":
-				t = 5/0
-				
 			else:
-				self.send_response(404)
-				self.send_header('Content-Type', 'text/html')
-				self.end_headers()
-				self.wfile.write('')
+				self.response_error(404)
+				return
 			
 		except Exception, err:
 			exception_type, exception_string, tb = sys.exc_info()
 			trace_exc = "".join(traceback.format_tb(tb))
-			self.server.daemon.log.debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
+			self.server.daemon.log.debug("do_GET error '%s' '%s'"%(trace_exc, str(exception_string)))
 			log_debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
+	
+	def response_error(self, code):
+		self.send_response(code)
+		self.send_header('Content-Type', 'text/html')
+		self.end_headers()
+		self.wfile.write('')
 	
 	def log_request(self,l):
 		pass
