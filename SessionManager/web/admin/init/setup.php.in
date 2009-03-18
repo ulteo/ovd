@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-require_once('/usr/share/ulteo/sessionmanager/admin/includes/core-minimal.inc.php');
+require_once('@DATADIR@/ulteo/sessionmanager/admin/includes/core-minimal.inc.php');
 
 function usage() {
   printf("usage: %s mysql_host mysql_db table_prefix mysql_login mysql_password\n", $_SERVER['argv'][0]);
