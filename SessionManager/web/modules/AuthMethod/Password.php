@@ -30,7 +30,7 @@ class AuthMethod_Password extends AuthMethod {
 	}
 
 	public function authenticate($user_) {
-		if (! isset($_POST['password']) || $_POST['password'] == '')
+		if ($this->userDB->needPassword() && (! isset($_POST['password']) || $_POST['password'] == ''))
 			return false;
 
 		$ret = $this->userDB->authenticate($user_, $_POST['password']);
