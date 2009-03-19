@@ -152,6 +152,7 @@ web/admin/classes/Makefile
 web/admin/Makefile
 web/applet/Makefile
 web/includes/Makefile
+web/includes/functions.inc.d/Makefile
 web/classes/Makefile
 web/classes/abstract/Makefile
 web/classes/abstract/liaison/Makefile

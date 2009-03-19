@@ -1,3 +1,5 @@
+SUBDIRS = functions.inc.d
+
 scripts_DATA = defaults.inc.php \
                functions.inc.php \
 			   core.inc.php \
