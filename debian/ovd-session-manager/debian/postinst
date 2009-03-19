@@ -11,7 +11,6 @@ WGETARGS="--tries=3 --timeout=60"
 CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
 
 CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
-
 apache_config()
 {
     if [ ! -e /etc/apache2/conf.d/sessionmanager ]; then
@@ -87,7 +86,7 @@ chown root:www-data $CONFFILE
 chmod 0640 $CONFFILE
 
 mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chown root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chown -R root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 
 # get the chroot
