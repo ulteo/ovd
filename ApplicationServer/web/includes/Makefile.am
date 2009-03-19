@@ -4,9 +4,7 @@ scripts_DATA = core.inc.php \
 
 scriptsdir = $(datadir)/ulteo/applicationserver/includes
 
-EXTRA_DIST = core.inc.php \
-             functions.inc.php \
-             session_path.inc.php.in
+EXTRA_DIST = $(scripts_DATA)
 
 session_path.inc.php:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \

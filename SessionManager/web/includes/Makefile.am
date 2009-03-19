@@ -6,11 +6,7 @@ scripts_DATA = defaults.inc.php \
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/includes
 
-EXTRA_DIST = defaults.inc.php.in \
-             functions.inc.php \
-		     core.inc.php \
-		     core-minimal.inc.php \
-			 load_balancing.inc.php
+EXTRA_DIST = $(scripts_DATA)
 
 defaults.inc.php:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
