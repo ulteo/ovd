@@ -150,7 +150,7 @@ class Server {
 		if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
 			return true;
 
-		Logger::warning('main', '"'.$this->fqdn.'": reverse DNS is invalid! ('.$buf.')');
+		Logger::warning('main', '"'.$this->fqdn.'": reverse DNS is invalid! ('.$reverse.')');
 
 		return false;
 	}
