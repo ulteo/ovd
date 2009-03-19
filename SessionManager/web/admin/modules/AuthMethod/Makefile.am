@@ -1,4 +1,4 @@
-scripts_DATA = Password.php RemoteUser.php
+scripts_DATA = Password.php RemoteUser.php Token.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin/modules/AuthMethod
 
