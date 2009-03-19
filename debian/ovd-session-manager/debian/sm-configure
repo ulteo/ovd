@@ -1,18 +1,33 @@
 #!/bin/sh
 
-pass=$(</dev/urandom tr -dc A-Za-z0-9 | head -c 8 ) 
+
+pass=$(</dev/urandom tr -dc A-Za-z0-9 | head -c 8 )
 echo "mysql-server-5.0 mysql-server/root_password_again password $pass" | debconf-set-selections
-echo "mysql-server-5.0 mysql-server/root_password password $pass" | debconf-set-selections 
+echo "mysql-server-5.0 mysql-server/root_password password $pass" | debconf-set-selections
 echo "$pass" > /etc/ulteo-ovd-session-manager.secret
 chmod 600 /etc/ulteo-ovd-session-manager.secret
+dbserver=localhost
+dbname=ulteo_sm
+dbuser=ulteoadmin
+
+echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbuser string $dbuser" | debconf-set-selections
+echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbname string $dbname" | debconf-set-selections
+echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbserver string $dbserver" | debconf-set-selections
 echo "ulteo-ovd-session-manager od/sessionmanager/admin_password_again password $pass" | debconf-set-selections
 echo "ulteo-ovd-session-manager od/sessionmanager/admin_password password admin"echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbadmpass password $pass" | debconf-set-selections
 echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbpass password $pass" | debconf-set-selections
-echo "ulteo-ovd-session-manager  od/sessionmanager/password_mismatch boolean false" | debconf-set-selections
+echo "ulteo-ovd-session-manager od/sessionmanager/password_mismatch boolean false" | debconf-set-selections
 echo "ulteo-ovd-session-manager od/sessionmanager/mysql/configure boolean true" | debconf-set-selections
 
-if dpkg-reconfigure -pcritical mysql-server-5.0; then
-	if dpkg-reconfigure -pcritical ulteo-ovd-session-manager; then
-		rm -f /etc/rc2.d/S98sessionmanager_first
-	fi
-fi
+
+
+dpkg-reconfigure -pcritical mysql-server-5.0
+dpkg-reconfigure -pcritical ulteo-ovd-session-manager
+rm -f /etc/rc2.d/S98sessionmanager_first
+
+/usr/bin/env php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
+			$dbserver \
+			$dbname \
+			ulteo_ \
+			$dbuser \
+			$pass

@@ -68,13 +68,6 @@ db_get od/sessionmanager/mysql/configure
 	# create user
 	. /usr/share/wwwconfig-common/mysql-createuser.sh
 
-	/usr/bin/env php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
-			$dbserver \
-			$dbname \
-			ulteo_ \
-			$dbuser \
-			$dbpass
-
    fi
 fi
 
