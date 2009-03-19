@@ -75,6 +75,7 @@ function __autoload($class_name) { //what about NameSpaces ?
 		$class_files []= CLASSES_DIR.'/events/'.$class_name.'.class.php';
 		$class_files []= EVENTS_DIR.'/'.$class_name.'.class.php';
 		$class_files []= CLASSES_DIR.'/tasks/'.$class_name.'.class.php';
+		$class_files []= MODULES_DIR.'/'.$class_name.'.php';
 		$class_files []= ABSTRACT_CLASSES_DIR.'/'.$class_name.'.class.php';
 		$class_files []= ABSTRACT_CLASSES_DIR.'/liaison/'.$class_name.'.class.php';
 		$class_files []= ADMIN_CLASSES_DIR.'/'.$class_name.'.class.php';

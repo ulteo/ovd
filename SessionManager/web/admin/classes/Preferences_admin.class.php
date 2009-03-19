@@ -138,12 +138,26 @@ class Preferences_admin extends Preferences {
 		$modules_enable = $this->get('general', 'module_enable');
 		foreach ($modules_enable as $module_name) {
 			if (! is_null($this->get($module_name,'enable'))) {
-				$mod_name = $module_name.'_'.$this->get($module_name,'enable');
-				$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
-				if ($ret_eval !== true) {
-					Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
-					$modules_ok = false;
-					return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
+				$enable = $this->get($module_name,'enable');
+				if (is_string($enable)) {
+					$mod_name = $module_name.'_'.$enable;
+					$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
+					if ($ret_eval !== true) {
+						Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
+						$modules_ok = false;
+						return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
+					}
+				}
+				else if (is_array($enable)) {
+					foreach ($enable as $sub_module) {
+						$mod_name = $module_name.'_'.$sub_module;
+						$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
+						if ($ret_eval !== true) {
+							Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
+							$modules_ok = false;
+							return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
+						}
+					}
 				}
 			}
 			else {

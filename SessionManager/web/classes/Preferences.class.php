@@ -340,19 +340,34 @@ class Preferences {
 
 		}
 		$modules_prettyname = array();
-		foreach ($available_module as $module_name => $sub_module)
+		$enabledByDefault = array();
+		foreach ($available_module as $module_name => $sub_module) {
 			$modules_prettyname[$module_name] = $module_name;
-
-		$c2 = new ConfigElement('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), array('UserDB', 'ApplicationDB', 'UserGroupDB'), $modules_prettyname, ConfigElement::$MULTISELECT);
+			if (eval('return '.$module_name.'::enabledByDefault();'))
+				$enabledByDefault[] =  $module_name;
+		}
+		$c2 = new ConfigElement('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), $enabledByDefault, $modules_prettyname, ConfigElement::$MULTISELECT);
 		$this->add($c2,'general');
 
 		foreach ($available_module as $mod => $sub_mod){
-			$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
+			$module_is_multiselect = eval('return '.$mod.'::multiSelectModule();');
+			if ( $module_is_multiselect) {
+				$c = new ConfigElement('enable', $mod, $mod, $mod, array(), $sub_mod, ConfigElement::$MULTISELECT);
+			}
+			else 
+				$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
+			
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
 				$default1 =  eval($default2);
-				if ($default1 === true)
-					$c = new ConfigElement('enable', $mod, $mod, $mod, $k4, $sub_mod, ConfigElement::$SELECT);
+				if ($default1 === true) {
+					if ( $module_is_multiselect) {
+						$c->content[] = $k4;
+					}
+					else {
+						$c->content = $k4;
+					}
+				}
 			}
 
 			//dirty hack (if this->elements[mod] will be empty)
@@ -429,16 +444,6 @@ class Preferences {
 							$ret[basename($pathinfo["dirname"])][$pathinfo["filename"]] = $pretty_name;
 						}
 					}
-				}
-			}
-			if (is_file($path)) {
-				$pathinfo = pathinfo_filename($path);
-				if ($pathinfo['extension'] == 'php') {
-					if (!isset($ret['module'])){
-						$ret['module'] = array();
-					}
-					// TODO : prettyname
-					$ret['module'][$pathinfo["filename"]] = $pathinfo["filename"];
 				}
 			}
 		}
