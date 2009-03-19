@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,13 +19,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-$ret = do_login();
-if (! $ret) {
-	return_error();
-	die(_('Authentication failed'));
+class AuthMethod_Password extends AuthMethod {
+	public function get_login() {
+		if (! isset($_POST['login']))
+			return NULL;
+
+		$this->login = $_POST['login'];
+		return $_POST['login'];
+	}
+
+	public function authenticate($user_) {
+		if (! isset($_POST['password']) || $_POST['password'] == '')
+			return false;
+
+		$ret = $this->userDB->authenticate($user_, $_POST['password']);
+		if ($ret == false)
+			return false;
+
+		return true;
+	}
+
+	public static function prettyName() {
+		return _('Login/Password authentication');
+	}
+
+	public static function prefsIsValid($prefs_, &$log=array()) {
+		return true;
+	}
+
+	public static function isDefault() {
+		return true;
+	}
 }
-
-return_ok();
-die(_('You are now logged in'));

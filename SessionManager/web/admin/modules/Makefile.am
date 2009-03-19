@@ -1,2 +1,1 @@
-SUBDIRS =  UserDB ApplicationDB UserGroupDB
-
+SUBDIRS =  UserDB ApplicationDB UserGroupDB AuthMethod

@@ -54,7 +54,7 @@ $buf = $prefs->get('general', 'web_interface_settings');
 foreach ($buf['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
 
-if (!is_array($advanced_settings))
+if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
 if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
@@ -81,30 +81,26 @@ if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_ic
 if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
 	$debug = $_REQUEST['debug'];
 
+if (! isset($_SESSION['login'])) {
+	$ret = do_login();
+	if (! $ret)
+		die_error(_('Authentication failed'));
+}
+
+if (! isset($_SESSION['login']))
+	die_error(_('Authentication failed'));
+
+$user_login = $_SESSION['login'];
+
 $mods_enable = $prefs->get('general', 'module_enable');
-if (!in_array('UserDB', $mods_enable))
+if (! in_array('UserDB', $mods_enable))
 	die_error('Module UserDB must be enabled',__FILE__,__LINE__);
 
 $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 $userDB = new $mod_user_name();
 
-$use_sso = $prefs->get('general', 'user_authenticate_sso');
-if ($use_sso) {
-	$user_authenticate_trust = $prefs->get('general', 'user_authenticate_trust');
-
-	$user_login = $_SERVER[$user_authenticate_trust];
-} else {
-	if (isset($_POST['login']) && isset($_POST['password']))
-		do_login($_POST['login'], $_POST['password']);
-
-	if (!isset($_SESSION['login']))
-		die_error(_('You must be authenticated to start a session'),__FILE__,__LINE__);
-
-	$user_login = $_SESSION['login'];
-}
-
 $user = $userDB->import($user_login);
-if (!is_object($user))
+if (! is_object($user))
 	die_error('User importation failed',__FILE__,__LINE__);
 
 Logger::debug('main', '(startsession) Now checking for old session');
@@ -157,11 +153,11 @@ else {
 	if (is_object($serv_tmp))
 		$random_server = $serv_tmp->fqdn;
 
-	if ((!isset($random_server)) || is_null($random_server) || $random_server == '') {
+	if ((! isset($random_server)) || is_null($random_server) || $random_server == '') {
 		$ev->setAttribute('ok', false);
 		$ev->setAttribute('error', _('No available server'));
 		$ev->emit();
-		die_error(_('You don\'t have access to any application or server for now'),__FILE__,__LINE__,true);
+		die_error(_('You don\'t have access to any application or server for now'),__FILE__,__LINE__);
 	}
 }
 
@@ -314,5 +310,8 @@ $ev->emit();
 
 $report = new Reporting($session->id);
 $report->session_begin($token->id, $user);
+
+if (isset($_SESSION['login']))
+	unset($_SESSION['login']);
 
 redirect($redir);

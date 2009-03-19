@@ -29,9 +29,6 @@ function redirect($url_=NULL) {
 }
 
 function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
-// 	if (!in_admin() && isset($_SESSION['login']))
-// 		unset($_SESSION['login']);
-
 	$file_ = substr(str_replace(SESSIONMANAGER_ROOT, '', $file_), 1);
 
 	Logger::error('main', 'die_error() called with message \''.$error_.'\' in '.$file_.':'.$line_);
@@ -108,46 +105,6 @@ function check_folder($folder_) {
 
 	return true;
 }
-
-// Waiting for removal...
-/*function check_ip($fqdn_) {
-	$prefs = Preferences::getInstance();
-	if (! $prefs) {
-		return_error();
-		die();
-	}
-
-	$buf = $prefs->get('general', 'application_server_settings');
-	$authorized_fqdn = $buf['authorized_fqdn'];
-	$fqdn_private_address = $buf['fqdn_private_address'];
-	$disable_fqdn_check = $buf['disable_fqdn_check'];
-
-	$address = $_SERVER['REMOTE_ADDR'];
-	$name = $fqdn_;
-
-	$buf = false;
-	foreach ($authorized_fqdn as $fqdn) {
-		$fqdn = str_replace('*', '.*', str_replace('.', '\.', $fqdn));
-
-		if (preg_match('/'.$fqdn.'/', $name))
-			$buf = true;
-	}
-
-	if (! $buf)
-		return false;
-
-	if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name))
-		return ($name == $address);
-
-	if ($disable_fqdn_check == 1)
-		return true;
-
-	$reverse = @gethostbyaddr($address);
-	if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
-		return true;
-
-	return false;
-}*/
 
 function sendamail($to_, $subject_, $message_) {
 	require_once('Mail.php');
@@ -586,61 +543,42 @@ function suffix2domain($suffix_) {
 	return $str;
 }
 
-function do_login($login_, $password_) {
-       if ($login_ == '') {
-               return_error();
-               die(_('There was an error with your authentication'));
-       }
+function do_login() {
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
 
-       $prefs = Preferences::getInstance();
-       if (! $prefs) {
-               return_error();
-               die(_('get Preferences failed'));
-       }
+	$mods_enable = $prefs->get('general', 'module_enable');
+	if (! in_array('UserDB', $mods_enable))
+		die_error('Module UserDB must be enabled',__FILE__,__LINE__);
 
-       $mods_enable = $prefs->get('general', 'module_enable');
-       if (!in_array('UserDB', $mods_enable)) {
-               return_error();
-               die(_('Module UserDB must be enabled'));
-       }
+	$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
+	$userDB = new $mod_user_name();
 
-       $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-       $userDB = new $mod_user_name();
-       $user = $userDB->import($login_);
-       if (!is_object($user)) {
-               return_error();
-               die(_('There was an error with your authentication'));
-       }
+	$auth_methods = $prefs->get('AuthMethod', 'enable');
+	if (! is_array($auth_methods))
+		return false;
 
-       $ret = $userDB->authenticate($user, $password_);
+	foreach ($auth_methods as $auth_method) {
+		$mod_authmethod_name = 'AuthMethod_'.$auth_method;
+		$authmethod = new $mod_authmethod_name($prefs, $userDB);
 
-       if ($ret == false) {
-               return_error();
-               die(_('There was an error with your authentication'));
-       }
+		$user_login = $authmethod->get_login();
+		if (is_null($user_login))
+			continue;
 
-       $_SESSION['login'] = $login_;
-       $_SESSION['password'] = $password_;
-
-		$buf = $prefs->get('general', 'session_settings_defaults');
-		$buf = $buf['action_when_active_session'];
-
-		if ($buf == 0) {
-			$already_online = 0;
-			$sessions = Sessions::getByUser($_SESSION['login']);
-			if ($sessions > 0) {
-				foreach ($sessions as $session)
-					if ($session->isAlive())
-						$already_online = 1;
-			}
-
-			if (isset($already_online) && $already_online == 1) {
-				return_error();
-				die(_('You already have an active session'));
-			}
-		} elseif ($buf == 1) {
+		$user = $userDB->import($user_login);
+		if (! is_object($user)) {
+			Logger::error('main', 'User importation failed for login "'.$user_login.'" with auth "'.$auth_method.'"',__FILE__,__LINE__);
+			return false;
 		}
 
-       //Logger::info('main', 'Login : ('.$row['id'].')'.$row['login'])
-       return true;
+		$buf = $authmethod->authenticate($user);
+		if ($buf === true) {
+			$_SESSION['login'] = $user_login;
+			return true;
+		}
+	}
+
+	return false;
 }

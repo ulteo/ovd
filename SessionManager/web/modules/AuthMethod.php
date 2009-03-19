@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,13 +19,21 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-$ret = do_login();
-if (! $ret) {
-	return_error();
-	die(_('Authentication failed'));
+abstract class AuthMethod extends Module {
+	protected $prefs;
+	protected $userDB;
+	protected $login;
+
+	public function __construct($prefs_, $userDB_) {
+		$this->prefs = $prefs_;
+		$this->userDB = $userDB_;
+	}
+
+	abstract public function get_login();
+	abstract public function authenticate($user_);
+
+	public static final function multiSelectModule() {
+		return true;
+	}
 }
-
-return_ok();
-die(_('You are now logged in'));
