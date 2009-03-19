@@ -128,6 +128,7 @@ web/media/Makefile
 web/plugins/Makefile
 web/plugins/FS/Makefile
 web/modules/Makefile
+web/modules/AuthMethod/Makefile
 web/modules/UserGroupDB/Makefile
 web/modules/UserDB/Makefile
 web/modules/ApplicationDB/Makefile
@@ -141,6 +142,7 @@ web/admin/media/style/Makefile
 web/admin/media/image/menu/Makefile
 web/admin/media/image/Makefile
 web/admin/media/Makefile
+web/admin/modules/AuthMethod/Makefile
 web/admin/modules/UserDB/Makefile
 web/admin/modules/ApplicationDB/Makefile
 web/admin/modules/UserGroupDB/Makefile
