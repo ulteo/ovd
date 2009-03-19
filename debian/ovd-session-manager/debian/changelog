@@ -1,3 +1,9 @@
+ovd-session-manager (1.0~rc1-0ulteo2) ovd-polaris-testing; urgency=low
+
+  * Use dpkg-reconfigure -pcritical for the first boot script
+
+ -- Daniele Favara <dfavara@ulteo.com>  Thu, 19 Mar 2009 08:11:56 +0000
+
 ovd-session-manager (1.0~rc1-0ulteo1) ovd-polaris-testing; urgency=low
 
   * add od/sessionmanager/oem in debconf, default value is false, if true
