@@ -37,7 +37,7 @@ $session_dir = SESSION_PATH.'/'.$session;
 
 if ($session_owner) {
   $exit_file = $session_dir.'/infos/owner_exit';
-  if (! is_file($file))
+  if (! is_file($exit_file))
     @touch($exit_file);
 }
 else {
