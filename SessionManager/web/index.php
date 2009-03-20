@@ -487,8 +487,10 @@ require_once('header.php');
 					</tr>
 					<?php
 						} else {
+							echo '<div style="display: none;">';
 							$buf_use_popup = ($use_popup == 1)?'use_popup_true':'use_popup_false';
-							echo '<input type="hidden" id="'.$buf_use_popup.'" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+							echo '<input class="input_radio" id="'.$buf_use_popup.'" type="radio" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+							echo '</div>';
 						}
 
 						if (in_array('debug', $advanced_settings)) {
@@ -511,8 +513,10 @@ require_once('header.php');
 			<?php
 				} else {
 					echo '<input type="hidden" id="desktop_size" name="desktop_size" value="auto" />';
+					echo '<div style="display: none;">';
 					$buf_use_popup = ($use_popup == 1)?'use_popup_true':'use_popup_false';
-					echo '<input type="hidden" id="'.$buf_use_popup.'" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+					echo '<input class="input_radio" id="'.$buf_use_popup.'" type="radio" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+					echo '</div>';
 					echo '<input type="hidden" id="session_debug_false" name="debug" value="0" checked="checked" />';
 				}
 			?>
