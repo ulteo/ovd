@@ -38,7 +38,7 @@ class Application(dict):
         self.target = os.path.join(self.directory, basename)
 
         execNode = doc.getElementsByTagName('executable')[0]
-        self['Exec'] = execNode.getAttribute("command")
+        self['Exec'] = 'startovdapp "%s" "%s"'%(self.target,execNode.getAttribute("command"))
         self['Icon'] = execNode.getAttribute("icon")
 
         if (self.filename.endswith('.lnk')):
