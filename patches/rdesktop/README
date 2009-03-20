@@ -1,0 +1,9 @@
+* seamless.patch:
+  From http://www.cendio.com/seamlessrdp/: seamless support
+
+* ulteo_sn.patch:
+  Simulate startup notification for windows applications
+
+* ulteo_monitoring.patch:
+  Ulteo specific. Monitor the startup/ending of launched applications. It
+  requires an update seamlessrdpshell.

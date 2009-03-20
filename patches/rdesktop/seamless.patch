@@ -1,0 +1,424 @@
+--- a/doc/rdesktop.1
++++ b/doc/rdesktop.1
+@@ -82,9 +82,29 @@
+ server side component, which is available from 
+ \fIhttp://www.cendio.com/seamlessrdp/\fR.
+ When using this option, you should specify a startup shell which
+-launches the desired application through SeamlessRDP. 
++launches the desired application through SeamlessRDP.
++When using SeamlessRDP, a control socket is created that allows additional
++commands to be executed inside the RDP session. Additonal commands can be
++executed by using subsequent invocations of rdesktop with the -l option,
++and the control socket path can be specified with the -M option.
+ 
+-Example: rdesktop -A -s 'seamlessrdpshell notepad'.
++Example: rdesktop -A -s 'seamlessrdpshell notepad'
++.TP
++.BR "-M <control socket path>"
++Specify the path for the SeamlessRDP control socket. Defaults to
++$HOME/.rdesktop/seamless.socket
++
++Example: rdesktop -A -s 'seamlessrdpshell notepad' -M /tmp/rdesktop-socket
++.TP
++.BR "-l"
++Use SeamlessRDP slave mode to execute an additional command within an existing
++SeamlessRDP session. When using this flag, the command line to execute on the
++RDP server replaces the server argument to the rdesktop command. Can be used
++in conjunction with the -M option to use a specific control socket, otherwise
++the default of $HOME/.rdesktop/seamless.socket is used. All other options are
++ignored.
++
++Example: rdesktop -l 'calc'
+ .TP
+ .BR "-B"
+ Use the BackingStore of the Xserver instead of the integrated one in
+--- a/proto.h
++++ b/proto.h
+@@ -309,6 +309,7 @@
+ void seamless_select_timeout(struct timeval *tv);
+ unsigned int seamless_send_zchange(unsigned long id, unsigned long below, unsigned long flags);
+ unsigned int seamless_send_focus(unsigned long id, unsigned long flags);
++unsigned int seamless_send_spawn(char *cmdline);
+ unsigned int seamless_send_destroy(unsigned long id);
+ /* scard.c */
+ void scard_lock(int lock);
+--- a/rdesktop.c
++++ b/rdesktop.c
+@@ -29,6 +29,7 @@
+ #include <ctype.h>		/* toupper */
+ #include <errno.h>
+ #include "rdesktop.h"
++#include "seamless.h"
+ 
+ #ifdef HAVE_LOCALE_H
+ #include <locale.h>
+@@ -91,6 +92,12 @@
+ RD_BOOL g_owncolmap = False;
+ RD_BOOL g_ownbackstore = True;	/* We can't rely on external BackingStore */
+ RD_BOOL g_seamless_rdp = False;
++
++/* Master socket identifier */
++char *master_socket = NULL;
++/* Seamless slave mode flag */
++RD_BOOL seamless_slave = False;
++
+ uint32 g_embed_wnd;
+ uint32 g_rdp5_performanceflags =
+ 	RDP5_NO_WALLPAPER | RDP5_NO_FULLWINDOWDRAG | RDP5_NO_MENUANIMATIONS;
+@@ -122,6 +129,10 @@
+ rdp2vnc_connect(char *server, uint32 flags, char *domain, char *password,
+ 		char *shell, char *directory);
+ #endif
++
++// Send message to rdesktop running in SeamlessrRDP master mode
++void send_seamless_slave_message(char *cmdline);
++
+ /* Display usage information */
+ static void
+ usage(char *program)
+@@ -131,6 +142,7 @@
+ 	fprintf(stderr, "See http://www.rdesktop.org/ for more information.\n\n");
+ 
+ 	fprintf(stderr, "Usage: %s [options] server[:port]\n", program);
++	fprintf(stderr, "       %s [-M <control socket path>] -l <command>\n", program);
+ #ifdef RDP2VNC
+ 	fprintf(stderr, "   -V: vnc port\n");
+ 	fprintf(stderr, "   -Q: defer time (ms)\n");
+@@ -149,6 +161,8 @@
+ 	fprintf(stderr, "   -L: local codepage\n");
+ #endif
+ 	fprintf(stderr, "   -A: enable SeamlessRDP mode\n");
++	fprintf(stderr, "   -M: SeamlessRDP master mode socket path\n");
++	fprintf(stderr, "   -l: SeamlessRDP slave mode\n");
+ 	fprintf(stderr, "   -B: use BackingStore of X-server (if available)\n");
+ 	fprintf(stderr, "   -e: disable encryption (French TS)\n");
+ 	fprintf(stderr, "   -E: disable encryption from client to server\n");
+@@ -442,7 +456,7 @@
+ 	g_embed_wnd = 0;
+ 
+ 	g_num_devices = 0;
+-
++	
+ #ifdef RDP2VNC
+ #define VNCOPT "V:Q:"
+ #else
+@@ -450,7 +464,7 @@
+ #endif
+ 
+ 	while ((c = getopt(argc, argv,
+-			   VNCOPT "Au:L:d:s:c:p:n:k:g:fbBeEmzCDKS:T:NX:a:x:Pr:045h?")) != -1)
++			   VNCOPT "Au:L:d:s:c:p:n:k:g:fbBeEmzCDKS:T:NX:a:x:Pr:045M:lh?")) != -1)
+ 	{
+ 		switch (c)
+ 		{
+@@ -783,6 +797,15 @@
+ 			case '5':
+ 				g_use_rdp5 = True;
+ 				break;
++				
++			case 'M':
++				master_socket = xmalloc(sizeof(char) * (strlen(optarg) + 1));
++				STRNCPY(master_socket, optarg, sizeof(char) * (strlen(optarg) + 1));
++				break;
++
++			case 'l':
++				seamless_slave = True;
++				break;
+ 
+ 			case 'h':
+ 			case '?':
+@@ -792,12 +815,44 @@
+ 		}
+ 	}
+ 
++	/* If no master socket path was supplied, use ~/.rdesktop/rdpsocket */
++	if (master_socket == NULL)
++	{
++		char *home;
++
++		home = getenv("HOME");
++		if (home == NULL)
++		{
++			warning("HOME environment variable undefined; could not create $HOME/.rdesktop/rdpsocket\n");
++			return 1;
++		}
++
++		master_socket = xmalloc(strlen(home) + sizeof("/.rdesktop/seamless.socket"));
++
++		sprintf(master_socket, "%s/.rdesktop", home);
++		if ((mkdir(master_socket, 0700) == -1) && errno != EEXIST)
++		{
++			perror(master_socket);
++			return 1;
++		}
++
++		sprintf(master_socket, "%s/.rdesktop/seamless.socket", home);
++	}
++	
+ 	if (argc - optind != 1)
+ 	{
+ 		usage(argv[0]);
+ 		return 1;
+ 	}
+ 
++	/* If slave mode is being used, send the command line to the master
++     * process and then exit. */
++	if (seamless_slave)
++	{
++		seamless_socket_send(master_socket, argv[optind]);
++		return 0;
++	}
++
+ 	STRNCPY(server, argv[optind], sizeof(server));
+ 	parse_server_and_port(server);
+ 
+@@ -836,6 +891,9 @@
+ 		}
+ 		g_width = -100;
+ 		g_grab_keyboard = False;
++		
++		/* Create a control socket as we're not in slave mode. */
++        seamless_create_socket(master_socket);
+ 	}
+ 
+ 	if (!username_option)
+@@ -981,6 +1039,13 @@
+ 
+ 	cache_save_state();
+ 	ui_deinit();
++	
++	/* If we opened a socket, clean it up. */
++	if (master_socket != NULL)
++	{
++		seamless_close_socket(master_socket);
++		xfree(master_socket);
++	}
+ 
+ 	if (ext_disc_reason >= 2)
+ 		print_disconnect_reason(ext_disc_reason);
+--- a/seamless.c
++++ b/seamless.c
+@@ -22,6 +22,12 @@
+ #include "rdesktop.h"
+ #include <stdarg.h>
+ #include <assert.h>
++#include <sys/types.h>
++#include <sys/stat.h>
++#include <sys/socket.h>
++#include <sys/un.h>
++#include <unistd.h>
++#include "seamless.h"
+ 
+ #ifdef WITH_DEBUG_SEAMLESS
+ #define DEBUG_SEAMLESS(args) printf args;
+@@ -29,6 +35,9 @@
+ #define DEBUG_SEAMLESS(args)
+ #endif
+ 
++// Control socket file descriptor
++int sock;
++
+ extern RD_BOOL g_seamless_rdp;
+ static VCHANNEL *seamless_channel;
+ static unsigned int seamless_serial;
+@@ -516,3 +525,151 @@
+ {
+ 	return seamless_send("DESTROY", "0x%08lx", id);
+ }
++
++/* Send client-to-server message to spawn a new process on the server. */
++unsigned int
++seamless_send_spawn(char *cmdline)
++{
++	if (!g_seamless_rdp)
++		return (unsigned int) -1;
++
++	return seamless_send("SPAWN", cmdline);
++}
++
++/* Check seamless master mode socket and send spawn command if input found.
++ * Returns 0 if a slave connected and sent command, 1 otherwise.  */
++int
++seamless_check_socket()
++{
++	fd_set rfds;
++	struct timeval tv;
++	int slaves, index, ns;
++	struct sockaddr_un fsaun;
++	char cmdline[256];
++	socklen_t fromlen;
++	FILE *fp;
++	char c;
++
++	FD_ZERO(&rfds);
++	FD_SET(sock, &rfds);
++
++	/* Don't wait - set timeout to zero. */
++	tv.tv_sec = 0;
++	tv.tv_usec = 0;
++
++	/* See if any slaves are trying to connect. */
++	slaves = select(sock + 1, &rfds, NULL, NULL, &tv);
++
++	if (slaves == -1)
++	{
++		perror("Error checking socket: select()");
++		return 1;
++	}
++	/* Return if no waiting slaves */
++	else if (slaves == 0)
++	{
++		return 1;
++	}
++
++	/* Accept connection */
++	fromlen = sizeof(fsaun);
++	if ((ns = accept(sock, (struct sockaddr *) &fsaun, &fromlen)) < 0)
++	{
++		perror("server: accept");
++		exit(1);
++	}
++
++	/* Read command from client socket */
++	fp = fdopen(ns, "r");
++	index = 0;
++	while ((c = fgetc(fp)) != EOF && index < 256)
++	{
++		cmdline[index] = c;
++
++		index++;
++	}
++	cmdline[index] = '\0';
++
++	/* Send spawn command to server-side SeamlessRDP component */
++	seamless_send_spawn(cmdline);
++
++	return 0;
++}
++
++/* Create control socket */
++void
++seamless_create_socket(char *socket_name)
++{
++	struct sockaddr_un saun;
++
++	/* Create socket */
++	if ((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
++	{
++		perror("Error creating socket: socket");
++		exit(1);
++	}
++
++	/* Bind to the socket. Any older socket with the same name will be
++	 * unlinked first. */
++	memset(&saun, 0, sizeof(struct sockaddr_un));
++	saun.sun_family = AF_UNIX;
++	strncpy(saun.sun_path, socket_name, sizeof(saun.sun_path));
++	unlink(socket_name);
++	if (bind(sock, (struct sockaddr *) &saun, sizeof(struct sockaddr_un)) < 0)
++	{
++		perror("Error binding to socket: bind");
++		exit(1);
++	}
++	/* Set some more restrictive permissions on the socket. */
++	chmod(socket_name, S_IRUSR | S_IWUSR | S_IXUSR);
++
++	/* Listen on the socket */
++	if (listen(sock, 5) < 0)
++	{
++		perror("Error listening on socket: listen");
++		exit(1);
++	}
++}
++
++/* Close control socket */
++void
++seamless_close_socket(char *socket_name)
++{
++	close(sock);
++	unlink(socket_name);
++
++	return;
++}
++
++/* Send a command line to a master process via a socket. */
++int
++seamless_socket_send(char *socket_name, char *cmdline)
++{
++	register int s, len;
++	struct sockaddr_un saun;
++
++	/* Create socket */
++	if ((s = socket(AF_UNIX, SOCK_STREAM, 0)) < 0)
++	{
++		perror("Error creating socket: socket");
++		exit(1);
++	}
++
++	/* Connect to server */
++	saun.sun_family = AF_UNIX;
++	strcpy(saun.sun_path, socket_name);
++	len = sizeof(saun.sun_family) + strlen(saun.sun_path);
++	if (connect(s, (struct sockaddr *) &saun, len) < 0)
++	{
++		perror("Error connecting to socket: connect");
++		exit(1);
++	}
++
++	/* Send command */
++	send(s, cmdline, strlen(cmdline), 0);
++
++	/* Close socket */
++	close(s);
++
++	return 0;
++}
+--- a/seamless.h
++++ b/seamless.h
+@@ -17,3 +17,12 @@
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
++
++/* Check seamless master mode socket and send spawn command if input found. */
++int seamless_check_socket();
++/* Create control socket */
++void seamless_create_socket(char *socket_name);
++/* Close control socket */
++void seamless_close_socket(char *socket_name);
++/* Send a command line to seamless master socket. */
++int seamless_socket_send(char *socket_name, char *cmdline);
+--- a/xwin.c
++++ b/xwin.c
+@@ -29,6 +29,7 @@
+ #include <strings.h>
+ #include "rdesktop.h"
+ #include "xproto.h"
++#include "seamless.h"
+ 
+ extern int g_width;
+ extern int g_height;
+@@ -89,6 +90,9 @@
+ static RD_BOOL g_seamless_broken_restack = False;	/* WM does not properly restack */
+ extern RD_BOOL g_seamless_rdp;
+ 
++/* SeamlessRDP master mode socket */
++extern char *master_socket;
++
+ extern uint32 g_embed_wnd;
+ RD_BOOL g_enable_compose = False;
+ RD_BOOL g_Unobscured;		/* used for screenblt */
+@@ -2621,6 +2625,13 @@
+ 		seamless_select_timeout(&tv);
+ 
+ 		n++;
++		
++		// check seamless control socket to see if any slave rdesktop
++		// processes are trying to send a command
++		if (master_socket != NULL)
++		{
++			seamless_check_socket();
++		}
+ 
+ 		switch (select(n, &rfds, &wfds, NULL, &tv))
+ 		{
