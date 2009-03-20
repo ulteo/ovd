@@ -85,5 +85,5 @@ windows_logoff() {
 
     windows_use_seamlessrdp $sessid_dir || return 0
 
-    su -s "/bin/bash" $user_login -c "rdesktop -l logoff"
+    su -s "/bin/bash" $user_login -c "rdesktop -l logoff logoff"
 }
