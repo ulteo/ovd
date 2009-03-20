@@ -24,24 +24,29 @@ from xml.dom import minidom
 from xml.parsers.expat import ExpatError
 
 class Application(dict):
-    def __init__(self, filename):
-        self.filename = filename
+    def __init__(self, directory):
+        self.directory = directory
 
     def fromXmlNode(self, doc):
         self['Name'] = doc.getAttribute("name")
         self['Comment'] = doc.getAttribute("description")
         self.filename = doc.getAttribute("desktopfile")
-        
+
+        basename = os.path.basename(self.filename)
+        if (basename.endswith('.lnk')):
+            basename = basename[:-4]+'.desktop'
+        self.target = os.path.join(self.directory, basename)
+
         execNode = doc.getElementsByTagName('executable')[0]
         self['Exec'] = execNode.getAttribute("command")
         self['Icon'] = execNode.getAttribute("icon")
 
         if (self.filename.endswith('.lnk')):
-            self['Exec'] = 'rdesktop -l "%s"'%(self['Exec'])
+            self['Exec'] = 'rdesktop -l "%s" "%s"'%(self['Exec'],self.target)
             self['Icon'] = 'windows-%s.png'%(doc.getAttribute("id"))
 
 
-    def toDesktopFile(self, directory):
+    def toDesktopFile(self):
         lines = ['[Desktop Entry]', 'Version=1.0', 'Encoding=UTF-8', 'Type=Application']
 
         for k,v in self.items():
@@ -53,12 +58,6 @@ class Application(dict):
         if ('\\' in self.filename):
             self.filename = self.filename.replace('\\', '/')
 
-        basename = os.path.basename(self.filename)
-
-        if (basename.endswith('.lnk')):
-            basename = basename[:-4]+'.desktop'
-
-        name = os.path.join(directory, basename)
         f = file(name, 'wb')
         f.writelines(lines)
         f.close()
@@ -94,10 +93,10 @@ try:
     doc = minidom.parse(xmlFile)
 except ExpatError,e:
     sys.exit(1)
-    
+
 
 for node in doc.getElementsByTagName('application'):
-    a = Application("test")
+    a = Application(directory)
     a.fromXmlNode(node)
-    a.toDesktopFile(directory)
+    a.toDesktopFile()
 
