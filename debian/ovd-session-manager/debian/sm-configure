@@ -21,8 +21,8 @@ echo "ulteo-ovd-session-manager od/sessionmanager/mysql/configure boolean true" 
 
 
 
-dpkg-reconfigure -pcritical mysql-server-5.0
-dpkg-reconfigure -pcritical ulteo-ovd-session-manager
+dpkg-reconfigure -fnoninteractive mysql-server-5.0
+dpkg-reconfigure -fnoninteractive ulteo-ovd-session-manager
 rm -f /etc/rc2.d/S98sessionmanager_first
 
 /usr/bin/env php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
