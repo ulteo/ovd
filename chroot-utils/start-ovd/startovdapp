@@ -23,22 +23,43 @@ import os
 import subprocess
 import sys
 
-MYPID = os.getpid()
+options = ['--start-monitoring', '--stop-monitoring']
 
-if not len(sys.argv) > 2:
-    sys.exit(1)
+def append_to_file(pid, desktop):
+    D = '%s/%s'%(os.environ['SPOOL_USERS'], os.environ['SESSID'])
+    f = file(D+'/apps', 'a')
+    f.write("%s %s\n"%(str(pid), desktop))
+    f.close()
 
+def del_from_file(pid):
+    D = '%s/%s'%(os.environ['SPOOL_USERS'], os.environ['SESSID'])
+    # windows pids will be strings (0x...)
+    os.system('sed -i "/^%s /d" %s/apps'%(str(pid), D))
+
+# stop if we don't have the needed env vars
 for key in ['SPOOL_USERS', 'SESSID']:
     if not os.environ.has_key(key):
         sys.exit(1)
 
-D = '%s/%s'%(os.environ['SPOOL_USERS'],
-             os.environ['SESSID'])
+# monitoring only
+if len(sys.argv) > 0 and sys.argv[1] in options:
+    if sys.argv[1] == '--start-monitoring' and len(sys.argv) == 4:
+        append_to_file(sys.argv[2], sys.argv[3])
+        sys.exit(0)
+    elif sys.argv[1] == '--stop-monitoring' and len(sys.argv) == 3:
+        del_from_file(sys.argv[2])
+        sys.exit(0)
+    else:
+        sys.exit(1)
+
+# monitoring + application startup
+if not len(sys.argv) > 2:
+    sys.exit(1)
+
+MYPID = os.getpid()
 
 # notify application start
-f = file(D+'/apps', 'a')
-f.write("%d %s\n"%(MYPID, sys.argv[1]))
-f.close()
+append_to_file(MYPID, sys.argv[1])
 
 # run the appli
 myargs = [x.replace("\\", "\\\\") for x in sys.argv[2:]]
@@ -46,6 +67,6 @@ cmd_line = subprocess.list2cmdline(myargs)
 os.system(cmd_line)
 
 # notify end
-os.system('sed -i "/^%d /d" %s/apps'%(MYPID, D))
+del_from_file(MYPID)
 
 sys.exit(0)
