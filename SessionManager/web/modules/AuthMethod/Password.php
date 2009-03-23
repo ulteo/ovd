@@ -37,6 +37,9 @@ class AuthMethod_Password extends AuthMethod {
 		if ($ret == false)
 			return false;
 
+		//Dirty?
+		$_SESSION['password'] = $_POST['password'];
+
 		return true;
 	}
 
