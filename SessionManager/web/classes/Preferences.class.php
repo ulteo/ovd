@@ -150,62 +150,66 @@ class Preferences {
 
 		$this->addPrettyName('general',_('General configuration'));
 
-		$c = new ConfigElement('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'en_GB', array('en_GB'=>'English','fr_FR'=>'Français'), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'en_GB');
+		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français'));
 		$this->add($c,'general');
 
-		$c = new ConfigElement('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'),array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')), ConfigElement::$MULTISELECT);
+		$c = new ConfigElement_multiselect('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'));
+		$c->setContentAvailable(array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')));
 		$this->add($c,'general');
 
-// 		$c = new ConfigElement('locale','locale','locale_des','fr_FR.UTF8@euro',NULL,ConfigElement::$INPUT);
+// 		$c = new ConfigElement_input('start_app','start_app','start_app_des','');
 // 		$this->add('general',$c);
-//
-// 		$c = new ConfigElement('start_app','start_app','start_app_des','',NULL,ConfigElement::$INPUT);
-// 		$this->add('general',$c);
 
-		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 
 		$this->add($c,'general');
-		$c = new ConfigElement('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER');
 		$this->add($c,'general');
 
-		$c = new ConfigElement('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '', NULL , ConfigElement::$TEXT);
+		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
 		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
-		$c = new ConfigElement('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'' ,NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');
 		$this->add($c,'general','mysql');
-		$c = new ConfigElement('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'');
 		$this->add($c,'general','mysql');
-		$c = new ConfigElement('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'',NULL,ConfigElement::$PASSWORD);
+		$c = new ConfigElement_password('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'');
 		$this->add($c,'general','mysql');
-		$c = new ConfigElement('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
 		$this->add($c,'general','mysql');
-		$c = new ConfigElement('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_','ulteo_',ConfigElement::$INPUT);
+		$c = new ConfigElement_input('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_');
 		$this->add($c,'general','mysql');
 
 		$this->addPrettyName('mails_settings',_('Email settings'));
-		$c = new ConfigElement('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail',array('mail'=>_('Local'),'smtp'=>_('SMTP server')),ConfigElement::$SELECT);
+		$c = new ConfigElement_select('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail');
+		$c->setContentAvailable(array('mail'=>_('Local'),'smtp'=>_('SMTP server')));
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement('send_from', _('From'), _('From'), _('From'),'no-reply@'.$_SERVER['SERVER_NAME'],NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('send_from', _('From'), _('From'), _('From'), 'no-reply@'.$_SERVER['SERVER_NAME']);
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement('send_host', _('Host'), _('Host'), _('Host'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('send_host', _('Host'), _('Host'), _('Host'), '');
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
+		$c = new ConfigElement_select('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('send_username', _('SMTP username'), _('SMTP username'), _('SMTP username'), '');
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'),'',NULL,ConfigElement::$PASSWORD);
+		$c = new ConfigElement_password('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'), '');
 		$this->add($c,'general','mails_settings');
 
 		$this->addPrettyName('application_server_settings',_('Application Server settings'));
-		$c = new ConfigElement('authorized_fqdn', _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), array('*'), NULL, ConfigElement::$LIST);
+		$c = new ConfigElement_list('authorized_fqdn', _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), array('*'));
 		$this->add($c,'general', 'application_server_settings');
 		//fqdn_private_address : array('dns' => ip);
-		$c = new ConfigElement('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array(), NULL, ConfigElement::$DICTIONARY);
+		$c = new ConfigElement_dictionary('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array());
 		$this->add($c,'general', 'application_server_settings');
-		$c = new ConfigElement('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general', 'application_server_settings');
-		$c = new ConfigElement('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 1, array(0=>_('Do nothing'),1=>_('Switch to maintenance')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 1);
+		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
 		$this->add($c,'general', 'application_server_settings');
 
 		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
@@ -214,57 +218,71 @@ class Preferences {
 				$c = new $criterion_class_name(NULL); // ugly
 				$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
 		}
-		$c = new ConfigElement('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing, NULL, ConfigElement::$SLIDERS);
+		$c = new ConfigElement_sliders_loadbalancing('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing);
 		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
-		$c = new ConfigElement('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8', array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB.UTF-8');
+		$c->setContentAvailable(array('en_GB.UTF-8'=>'English','fr_FR.UTF-8'=>'Français'));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 9, array(2=>_('Lowest'),5=>_('Medium'),8=>_('High'),9=>_('Highest')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 9);
+		$c->setContentAvailable(array(2=>_('Lowest'),5=>_('Medium'),8=>_('High'),9=>_('Highest')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400, array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400);
+		$c->setContentAvailable(array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), "Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !", NULL, ConfigElement::$TEXTAREA);
+		$c = new ConfigElement_textarea('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), "Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW !");
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement('action_when_active_session', _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), 0, array(0=>_('Forbid access'),1=>_('Invite into the session')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('action_when_active_session', _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), 0);
+		$c->setContentAvailable(array(0=>_('Forbid access'),1=>_('Invite into the session')));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'),array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'),
-			'shareable' => _('shareable'),
-			'desktop_icons' => _('desktop icons')),ConfigElement::$MULTISELECT);
+		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'));
+		$c->setContentAvailable(array('language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
 
-		$c = new ConfigElement('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE, NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE);
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new ConfigElement('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),DEFAULT_LOGO_URL ,NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),DEFAULT_LOGO_URL);
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new ConfigElement('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'),0,array(0=>_('no'),1=>_('yes')),ConfigElement::$SELECT);
+		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1,array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement('allow_proxy', _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('allow_proxy', _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement('use_popup', _('Launch session in a popup'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), 1, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('use_popup', _('Launch session in a popup'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array(),array('popup' => _('popup'), 'debug' => _('debug')),ConfigElement::$MULTISELECT);
+		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array());
+		$c->setContentAvailable(array('popup' => _('popup'), 'debug' => _('debug')));
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new ConfigElement('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0, array(0=>_('no'),1=>_('yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 
 		$this->getPrefsModules();
 		$this->getPrefsPlugins();
@@ -296,7 +314,8 @@ class Preferences {
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 			}
 
-			$c = new ConfigElement('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array(), $plugins_prettyname, ConfigElement::$MULTISELECT);
+			$c = new ConfigElement_multiselect('plugin_enable', _('Plugins activation'), _('Choose the plugins you want to enable.'), _('Choose the plugins you want to enable.'), array());
+			$c->setContentAvailable($plugins_prettyname);
 			$this->addPrettyName('plugins',_('Plugins configuration'));
 			$this->add($c,'plugins');
 			unset($p2['plugins']);
@@ -304,7 +323,8 @@ class Preferences {
 
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
-			$c = new ConfigElement($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array(), $plugins_prettyname, ConfigElement::$SELECT);
+			$c = new ConfigElement_select($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array());
+			$c->setContentAvailable($plugins_prettyname);
 			foreach ($value1 as $plugin_name => $plu6) {
 				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
 				if (is_null($plugin_prettyname))
@@ -313,7 +333,7 @@ class Preferences {
 
 				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
 				if ($isdefault1 === true) // replace the default value
-					$c = new ConfigElement($key1, $key1, 'plugins '.$key1,'plugins '.$key1, $plugin_name, $plugins_prettyname, ConfigElement::$SELECT);
+					$c->content = $plugin_name;
 
 				$plugin_conf = 'return '.$key1.'_'.$plugin_name.'::configuration();';
 				$list_conf = eval($plugin_conf);
@@ -346,16 +366,20 @@ class Preferences {
 			if (eval('return '.$module_name.'::enabledByDefault();'))
 				$enabledByDefault[] =  $module_name;
 		}
-		$c2 = new ConfigElement('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), $enabledByDefault, $modules_prettyname, ConfigElement::$MULTISELECT);
-		$this->add($c2,'general');
+		$c2 = new ConfigElement_multiselect('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), $enabledByDefault);
+		$c2->setContentAvailable($modules_prettyname);
+		$this->add($c2, 'general');
 
 		foreach ($available_module as $mod => $sub_mod){
 			$module_is_multiselect = eval('return '.$mod.'::multiSelectModule();');
 			if ( $module_is_multiselect) {
-				$c = new ConfigElement('enable', $mod, $mod, $mod, array(), $sub_mod, ConfigElement::$MULTISELECT);
+				$c = new ConfigElement_multiselect('enable', $mod, $mod, $mod, array());
+				$c->setContentAvailable($sub_mod);
 			}
-			else 
-				$c = new ConfigElement('enable', $mod, $mod, $mod, NULL, $sub_mod, ConfigElement::$SELECT);
+			else { 
+				$c = new ConfigElement_select('enable', $mod, $mod, $mod, NULL);
+				$c->setContentAvailable($sub_mod);
+			}
 			
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
@@ -394,9 +418,7 @@ class Preferences {
 		/* Events settings */
 		$this->addPrettyName('events', _("Events settings"));
 
-		$c = new ConfigElement('mail_to', _('Mail addresses to send alerts to'),
-			_('On system alerts, mails will be sent to these addresses'), NULL,
-			array(), NULL, ConfigElement::$LIST);
+		$c = new ConfigElement_list('mail_to', _('Mail addresses to send alerts to'), _('On system alerts, mails will be sent to these addresses'), NULL, array());
 		$this->add($c,'events');
 
 		$events = Events::loadAll();
@@ -414,11 +436,11 @@ class Preferences {
 
 			$event_name = $event->getPrettyName();
 			/* FIXME: descriptions */
-			$c = new ConfigElement(get_class($event), $event_name,
+			$c = new ConfigElement_multiselect(get_class($event), $event_name,
 			                       "When $event_name is emitted",
 			                       "When $event_name is emitted",
-			                       array(), $pretty_list,
-			                       ConfigElement::$MULTISELECT);
+			                       array());
+			$c->setContentAvailable($pretty_list);
 			$this->add($c, 'events', 'active_callbacks');
 		}
 		$this->addPrettyName('active_callbacks', _('Activated callbacks'));
@@ -499,77 +521,3 @@ class Preferences {
 
 
 }
-
-class ConfigElement{
-	public $id;
-	public $label;
-	public $description;
-	public $description_detailed;
-	public $content;
-	public $content_available;
-	public $type;
-
-	static $TEXT = 0;
-	static $INPUT = 1;
-	static $SELECT = 2;
-	static $MULTISELECT = 3;
-	static $DICTIONARY = 4;
-	static $LIST = 5;
-	static $TEXTAREA = 6;
-	static $PASSWORD = 7;
-	static $INPUT_LIST = 8;
-	static $SLIDERS = 9;
-
-	public function __construct($id_, $label_, $description_, $description_detailed_, $content_, $content_available_, $type_){
-		$this->id = $id_;
-		$this->label = $label_;
-		$this->description = $description_;
-		$this->description_detailed = $description_detailed_;
-		$this->content = $content_;
-// 		$this->content_default = $content_default_;
-		$this->content_available = $content_available_;
-		$this->type = $type_;
-	}
-
-	public function __toString(){
-		$str =  "<strong>ConfigElement</strong>( '".$this->id."','".$this->label."','";
-		$str .=  '<strong>';
-		if (is_array($this->content)) {
-			$str .= 'array(';
-			foreach($this->content as $k => $v)
-				$str .= '\''.$k.'\' => \''.$v.'\' , ';
-			$str .= ') ';
-		}
-		else
-			$str .= $this->content;
-		$str .=  '</strong>';
-		$str .=  "','";
-		if (is_array($this->content_available)) {
-			$str .= 'array(';
-			foreach($this->content_available as $k => $v)
-				$str .= '\''.$k.'\' => \''.$v.'\' , ';
-			$str .= ') ';
-		}
-		else
-			$str .= $this->content_available;
-		$str .=  "','".$this->description."','".$this->description_detailed."','".$this->type."'";
-		$str .= ')';
-		return $str;
-	}
-
-	public function reset() {
-		if (is_string($this->content)) {
-			$this->content = '';
-		}
-		else if (is_array($this->content)){
-			$this->content = array();
-		}
-		else{
-			// TODO
-			$this->content = '';
-		}
-	}
-}
-
-
-

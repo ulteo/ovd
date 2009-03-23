@@ -59,7 +59,7 @@ class AuthMethod_RemoteUser extends AuthMethod {
 
 	public static function configuration() {
 		return array(
-			new ConfigElement('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER', NULL, ConfigElement::$INPUT)
+			new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER')
 		);
 	}
 }

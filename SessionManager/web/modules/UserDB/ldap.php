@@ -199,26 +199,27 @@ class UserDB_ldap {
 
 	public function configuration(){
 		$ret = array();
-		$c = new ConfigElement('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com');
 		$ret []= $c;
-		$c = new ConfigElement('port', _('Server port'), _('The port number used by your LDAP server.'), _('The port use by your LDAP server.'),'389',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('port', _('Server port'), _('The port number used by your LDAP server.'), _('The port use by your LDAP server.'),'389');
 		$ret []= $c;
-		$c = new ConfigElement('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'');
 		$ret []= $c;
-		$c = new ConfigElement('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$PASSWORD);
+		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'');
 		$ret []= $c;
-		$c = new ConfigElement('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('suffix','suffix','suffix','suffix','dc=servldap,dc=example,dc=com');
 		$ret []= $c;
-		$c = new ConfigElement('userbranch','userbranch','userbranch','userbranch','ou=People',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('userbranch','userbranch','userbranch','userbranch','ou=People');
 		$ret []= $c;
-		$c = new ConfigElement('uidprefix','uidprefix','uidprefix','uidprefix','uid',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('uidprefix','uidprefix','uidprefix','uidprefix','uid');
 		$ret []= $c;
-		$c = new ConfigElement('protocol_version', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('protocol_version', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3');
 		$ret []= $c;
-		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'), NULL, ConfigElement::$DICTIONARY);
+		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
 		$ret []= $c;
 
-		$c = new ConfigElement('ad',_('Use as an Active Directory server ?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0', array(0=>_('No'),1=>_('Yes')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('ad',_('Use as an Active Directory server ?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0');
+		$c->setContentAvailable(array(0=>_('No'),1=>_('Yes')));
 		$ret []= $c;
 
 		return $ret;

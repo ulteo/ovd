@@ -110,17 +110,17 @@ class UserGroupDB_sql_external {
 	
 	public function configuration(){
 		$ret = array();
-		$c = new ConfigElement('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;
-		$c = new ConfigElement('login', _('User login'), _('The user login that must be used to access the database (to list users groups accounts).'), _('The user login that must be used to access the database (to list users groups accounts).'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users groups accounts).'), _('The user login that must be used to access the database (to list users groups accounts).'), '');
 		$ret []= $c;
-		$c = new ConfigElement('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$PASSWORD);
+		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), '');
 		$ret []= $c;
-		$c = new ConfigElement('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
 		$ret []= $c;
-		$c = new ConfigElement('table', _('table of usersgroup'), _('table of usersgroup'), _('table of usersgroup'), '',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('table', _('table of usersgroup'), _('table of usersgroup'), _('table of usersgroup'), '');
 		$ret []= $c;
-		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('id' => 'id', 'name' => 'name', 'description' => 'description'), NULL, ConfigElement::$INPUT_LIST);
+		$c = new ConfigElement_inputlist('match', _('Matching'), _('Matching'), _('Matching'), array('id' => 'id', 'name' => 'name', 'description' => 'description'));
 		$ret []= $c;
 		return $ret;
 	}

@@ -192,19 +192,20 @@ class UserDB_sql_external {
 	
 	public function configuration(){
 		$ret = array();
-		$c = new ConfigElement('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;
-		$c = new ConfigElement('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('login', _('User login'), _('The user login that must be used to access the database (to list users accounts).'), _('The user login that must be used to access the database (to list users accounts).'), '');
 		$ret []= $c;
-		$c = new ConfigElement('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'),'',NULL,ConfigElement::$PASSWORD);
+		$c = new ConfigElement_password('password', _('User password'), _('The user password that must be used to access the database (to list users accounts).'), _('The user password that must be used to access the database (to list users accounts).'), '');
 		$ret []= $c;
-		$c = new ConfigElement('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '',NULL,ConfigElement::$INPUT);
+		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
 		$ret []= $c;
-		$c = new ConfigElement('table', _('Table of users'), _('Table of users'), _('Table of users'), '', NULL, ConfigElement::$INPUT);
+		$c = new ConfigElement_input('table', _('Table of users'), _('Table of users'), _('Table of users'), '');
 		$ret []= $c;
-		$c = new ConfigElement('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'displayname' => 'displayname'), NULL, ConfigElement::$DICTIONARY);
+		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'displayname' => 'displayname'));
 		$ret []= $c;
-		$c = new ConfigElement('hash_method',_('Hash method'), _('Hash method'), _('Hash method'), 'plain', array('md5' => _('MD5'), 'crypt' => _('Crypt'), 'plain' => _('Plain')), ConfigElement::$SELECT);
+		$c = new ConfigElement_select('hash_method',_('Hash method'), _('Hash method'), _('Hash method'), 'plain');
+		$c->setContentAvailable(array('md5' => _('MD5'), 'crypt' => _('Crypt'), 'plain' => _('Plain')));
 		$ret []= $c;
 		return $ret;
 	}
