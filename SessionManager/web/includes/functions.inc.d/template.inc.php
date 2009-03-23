@@ -53,6 +53,8 @@ function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 
 function header_static($title_=false) {
 	global $base_url;
+	if ($base_url == '//')
+		$base_url = '/';
 
 	$prefs = Preferences::getInstance();
 	if (! $prefs) {
@@ -132,6 +134,8 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 
 function footer_static() {
 	global $base_url;
+	if ($base_url == '//')
+		$base_url = '/';
 
 echo '		</div>
 
