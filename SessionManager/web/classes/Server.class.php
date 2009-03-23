@@ -586,7 +586,6 @@ class Server {
 	}
 
 	public function updateApplications(){
-		return true;
 		Logger::debug('admin','SERVERADMIN::updateApplications');
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
