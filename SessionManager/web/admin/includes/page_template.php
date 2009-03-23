@@ -74,6 +74,9 @@ $sub_items =
 
 function page_header() {
   $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
+  if ($base_url == '//')
+    $base_url = '/';
+
   $title = 'Open Virtual Desktop - '._('Administration');
 
   if (isset($_SESSION['errormsg'])) {
@@ -128,7 +131,7 @@ function page_header() {
   echo '</td>';
 
   echo '<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
-  echo '<a href="index.php"><img src="'.$base_url.'/media/image/header.png" alt="logo" title="'.$title.'" /></a>';
+  echo '<a href="index.php"><img src="'.$base_url.'media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
   echo '</td>';
 
   echo '</tr>';
