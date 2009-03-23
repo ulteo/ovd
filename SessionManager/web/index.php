@@ -188,6 +188,8 @@ require_once('header.php');
 	<div id="login_status" class="centered"></div>
 
 	<form id="startsession" action="startsession.php" method="post" onsubmit="return doLogin(this);">
+		<input type="hidden" name="client" value="browser" />
+
 		<fieldset class="hidden">
 			<?php
 				if (!$password_field)

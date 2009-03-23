@@ -72,7 +72,7 @@ foreach ($session_node->childNodes as $node) {
 	$parameters[$node->nodeName] = $node->getAttribute('value');
 }
 
-$settings = array('user_login', 'user_displayname', 'locale', 'quality'); //user_id
+$settings = array('client', 'user_login', 'user_displayname', 'locale', 'quality'); //user_id
 
 foreach ($settings as $setting)
 	if (!isset($parameters[$setting]))
@@ -121,6 +121,8 @@ if ($_SESSION['mode'] == 'invite') {
 
 if ($_SESSION['mode'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
+
+if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -230,3 +232,17 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
 		</div>
 	</body>
 </html>
+<?php
+	die();
+}
+
+header('Content-Type: text/xml; charset=utf-8');
+
+$dom = new DomDocument();
+$aps_node = $dom->createElement('aps');
+$aps_node->setAttribute('server', $_SERVER['SERVER_NAME']);
+$dom->appendChild($aps_node);
+
+$xml = $dom->saveXML();
+
+echo $xml;

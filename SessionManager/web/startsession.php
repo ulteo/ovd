@@ -81,6 +81,10 @@ if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_ic
 if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
 	$debug = $_REQUEST['debug'];
 
+$client = 'unknown';
+if (isset($_REQUEST['client']) && $_REQUEST['client'] != '')
+	$client = $_REQUEST['client'];
+
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
 	if (! $ret)
@@ -198,6 +202,7 @@ $module_fs = $fs;
 
 $default_args = array(
 // 	'user_id'			=>	$user->getAttribute('uid'),
+	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	$desktop_locale,
