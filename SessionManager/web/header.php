@@ -42,6 +42,9 @@ if (isset($_SESSION['login'])) {
 $web_interface_settings = $prefs->get('general', 'web_interface_settings');
 $main_title = $web_interface_settings['main_title'];
 $logo_url = $web_interface_settings['logo_url'];
+
+if ($base_url == '//')
+	$base_url = '/';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

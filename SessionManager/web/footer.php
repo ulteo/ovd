@@ -19,13 +19,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+if ($base_url == '//')
+	$base_url = '/';
 ?>
 			</div>
 
 			<div class="spacer"></div>
 
 			<div id="footerWrap">
-				<?php echo _('powered by'); ?> <a href="http://www.ulteo.com"><img src="media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
+				<?php echo _('powered by'); ?> <a href="http://www.ulteo.com"><img src="<?php echo $base_url; ?>media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
 			</div>
 		</div>
 	</body>
