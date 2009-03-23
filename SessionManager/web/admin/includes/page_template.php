@@ -274,7 +274,7 @@ function page_sub_menu() {
   foreach($sub_items[$root] as $key => $value) {
     if ($son == $key) {
 echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
-      echo $value;
+      echo '<a href="'.$key.'">'.$value.'</a>';
     } else {
       echo '<div class="container">';
       echo '<a href="'.$key.'">'.$value.'</a>';
