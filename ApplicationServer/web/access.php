@@ -75,7 +75,7 @@ if (isset($_GET['html'])) {
 
 	<param name="SSH" value="yes" />
 	<param name="ssh.host" value="<?php echo $server; ?>" />
-	<param name="ssh.port" value="443,993,995,110,40001" />
+	<param name="ssh.port" value="443,993,995" />
 	<param name="ssh.user" value="<?php echo $sshuser; ?>" />
 	<param name="ssh.password" value="<?php echo $sshpass; ?>" />
 

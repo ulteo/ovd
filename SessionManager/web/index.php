@@ -588,7 +588,7 @@ if ($testapplet) {
 
 		<param name="SSH" value="yes" />
 		<param name="ssh.host" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
-		<param name="ssh.port" value="443,993,995,110,40001" />
+		<param name="ssh.port" value="443,993,995" />
 		<!--<param name="ssh.user" value="dummy" />
 		<param name="ssh.password" value="3666623866373263" />-->
 
