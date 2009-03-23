@@ -32,17 +32,22 @@ class Application(dict):
         self['Comment'] = doc.getAttribute("description")
         self.filename = doc.getAttribute("desktopfile")
 
-        basename = os.path.basename(self.filename)
-        if (basename.endswith('.lnk')):
-            basename = basename[:-4]+'.desktop'
-        self.target = os.path.join(self.directory, basename)
+        if ('\\' in self.filename):
+            tmp = self.filename.replace('\\', '/')
+    else:
+        tmp = self.filename
+
+        self.basename = os.path.basename(tmp)
+        if (self.basename.endswith('.lnk')):
+            self.basename = self.basename[:-4]+'.desktop'
+        self.target = os.path.join(self.directory, self.basename)
 
         execNode = doc.getElementsByTagName('executable')[0]
         self['Exec'] = 'startovdapp "%s" "%s"'%(self.target,execNode.getAttribute("command"))
         self['Icon'] = execNode.getAttribute("icon")
 
         if (self.filename.endswith('.lnk')):
-            self['Exec'] = 'rdesktop -l "%s" "%s"'%(self['Exec'],self.target)
+            self['Exec'] = 'rdesktop -l "%s" "%s"'%(execNode.getAttribute("command"),self.filename)
             self['Icon'] = 'windows-%s.png'%(doc.getAttribute("id"))
 
 
@@ -54,10 +59,7 @@ class Application(dict):
 
         lines = [e+"\n" for e in lines]
 
-
-        if ('\\' in self.filename):
-            self.filename = self.filename.replace('\\', '/')
-
+    name = os.path.join(directory, self.basename)
         f = file(name, 'wb')
         f.writelines(lines)
         f.close()
