@@ -59,7 +59,7 @@ class Application(dict):
 
         lines = [e+"\n" for e in lines]
 
-    name = os.path.join(directory, self.basename)
+        name = os.path.join(directory, self.basename)
         f = file(name, 'wb')
         f.writelines(lines)
         f.close()

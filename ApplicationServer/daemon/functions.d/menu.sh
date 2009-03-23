@@ -67,7 +67,11 @@ menu_put() {
     local basename=$(basename "$desktop")
     local dest=$menu_dir/applications/$basename
 
-    cp $desktop $dest
+    if ! grep -q "^Exec=rdesktop " "$desktop"; then
+        sed -r "s#^Exec=(.*)#Exec=startovdapp '$desktop' \1#" <"$desktop" >"$dest"
+    else
+        cp "$desktop" "$dest"
+    fi
 }
 
 menu_clean() {

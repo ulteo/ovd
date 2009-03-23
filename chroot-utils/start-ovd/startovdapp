@@ -27,6 +27,7 @@ options = ['--start-monitoring', '--stop-monitoring']
 
 def append_to_file(pid, desktop):
     D = '%s/%s'%(os.environ['SPOOL_USERS'], os.environ['SESSID'])
+    desktop = desktop.replace("\\", "\\\\")
     f = file(D+'/apps', 'a')
     f.write("%s %s\n"%(str(pid), desktop))
     f.close()
@@ -62,8 +63,7 @@ MYPID = os.getpid()
 append_to_file(MYPID, sys.argv[1])
 
 # run the appli
-myargs = [x.replace("\\", "\\\\") for x in sys.argv[2:]]
-cmd_line = subprocess.list2cmdline(myargs)
+cmd_line = subprocess.list2cmdline(sys.argv[2:])
 os.system(cmd_line)
 
 # notify end
