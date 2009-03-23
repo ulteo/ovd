@@ -92,17 +92,11 @@ if (isset($_GET['html'])) {
 	<param name="rfb.cache.alg" value="LRU">
 	<param name="rfb.cache.datasize" value="2000000">
 
-	<?php
-		//if (isset($_SESSION['enable_proxy']) && $_SESSION['enable_proxy'] == 1)  {
-	?>
 	<param name="proxyType" value="<?php if (isset($_SESSION['parameters']['proxy_type'])) echo $_SESSION['parameters']['proxy_type']; ?>" />
 	<param name="proxyHost" value="<?php if (isset($_SESSION['parameters']['proxy_host'])) echo $_SESSION['parameters']['proxy_host']; ?>" />
 	<param name="proxyPort" value="<?php if (isset($_SESSION['parameters']['proxy_port'])) echo $_SESSION['parameters']['proxy_port']; ?>" />
 	<param name="proxyUsername" value="<?php if (isset($_SESSION['parameters']['proxy_username'])) echo $_SESSION['parameters']['proxy_username']; ?>" />
 	<param name="proxyPassword" value="<?php if (isset($_SESSION['parameters']['proxy_password'])) echo $_SESSION['parameters']['proxy_password']; ?>" />
-	<?php
-		//}
-	?>
 
 	<param name="Share desktop" value="<?php echo $_SESSION['share_desktop']; ?>" />
 	<param name="View only" value="<?php echo $_SESSION['parameters']['view_only']; ?>" />
