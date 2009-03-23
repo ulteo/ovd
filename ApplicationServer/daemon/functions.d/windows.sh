@@ -41,7 +41,7 @@ windows_init_connection() {
     local login=`cat ${sessid_dir}/parameters/windows_login`
     local password=`cat ${sessid_dir}/parameters/windows_password`
 
-    local cmd='rdesktop -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe donothing.exe" '$server
+    local cmd='rdesktop -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$server
     # log_INFO "menu_windows_init_connection 2 launch cmd '$cmd'"
     su -s "/bin/bash" ${USER_LOGIN} -c "$cmd &" 
     # log_INFO "==============================="
