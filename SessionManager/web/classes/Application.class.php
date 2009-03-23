@@ -67,7 +67,11 @@ class Application {
 
 		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application'))
 			return false;
+		
+		return $this->getIcon();
+	}
 
+	public function getIcon() {
 		$servers_liaisons = Abstract_Liaison::load('ApplicationServer', $this->getAttribute('id'), NULL);
 		$servers = array();
 		foreach ($servers_liaisons as $servers_liaison) {

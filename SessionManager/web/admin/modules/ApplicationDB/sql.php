@@ -36,6 +36,10 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
+			
+			// clean up the icon cache
+			$a->getIcon();
+			
 			return ($res !== false);
 		}
 		return false;
