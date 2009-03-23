@@ -577,9 +577,9 @@ if ($testapplet) {
 		<param name="name" value="ulteoapplet" />
 		<param name="code" value="org.vnc.VncViewer" />
 		<param name="codebase" value="applet/" />
-		<param name="archive" value="ulteo-applet-0.2.3g.jar" />
-		<param name="cache_archive" value="ulteo-applet-0.2.3g.jar" />
-		<param name="cache_archive_ex" value="ulteo-applet-0.2.3g.jar;preload" />
+		<param name="archive" value="ulteo-applet-0.2.4.jar" />
+		<param name="cache_archive" value="ulteo-applet-0.2.4.jar" />
+		<param name="cache_archive_ex" value="ulteo-applet-0.2.4.jar;preload" />
 		<param name="mayscript" value="true" />
 
 		<param name="HOST" value="<?php echo $random_server->getAttribute('external_name'); ?>" />

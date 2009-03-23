@@ -20,7 +20,7 @@
              alias="ulteo"
              storepass="${keystore.password}"
              keystore="${build.cert}/.keystore"
-             signedjar="libs/ulteo-applet-0.2.3g.jar"/>
+             signedjar="libs/ulteo-applet-0.2.4.jar"/>
      </target>
  </project>
 
