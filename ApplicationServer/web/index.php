@@ -122,8 +122,8 @@ if ($_SESSION['mode'] == 'invite') {
 if ($_SESSION['mode'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 	<head>
 		<title>Ulteo Open Virtual Desktop</title>
 
@@ -170,7 +170,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 							<p><?php echo _('Email address'); ?>: <input type="text" id="invite_email" name="email" value="" />
 							<input class="input_checkbox" type="checkbox" id="invite_mode" name="mode" /> <?php echo _('active mode'); ?></p>
 
-							<input type="submit" id="invite_submit" value="<?php echo _('Invite'); ?>" />
+							<p><input type="submit" id="invite_submit" value="<?php echo _('Invite'); ?>" /></p>
 						</form>
 					</fieldset>
 				</div>
@@ -184,7 +184,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center" colspan="3">
-						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" align="middle" />
+						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
 					</td>
 				</tr>
 				<tr>
@@ -193,7 +193,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
-						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" align="middle" />
+						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
 					</td>
 				</tr>
 			</table>
@@ -203,10 +203,10 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		</div>
 
 		<div id="debugLevels" style="display: none;">
-			<span class="debug"><input type="checkbox" id="level_debug" onClick="switchDebug('debug')" value="10" /> Debug</span>
-			<span class="info"><input type="checkbox" id="level_info" onClick="switchDebug('info')" value="20" checked="checked" /> Info</span>
-			<span class="warning"><input type="checkbox" id="level_warning" onClick="switchDebug('warning')" value="30" checked="checked" /> Warning</span>
-			<span class="error"><input type="checkbox" id="level_error" onClick="switchDebug('error')" value="40" checked="checked" /> Error</span><br />
+			<span class="debug"><input type="checkbox" id="level_debug" onclick="switchDebug('debug')" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" onclick="switchDebug('info')" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" onclick="switchDebug('warning')" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" onclick="switchDebug('error')" value="40" checked="checked" /> Error</span><br />
 			<input type="button" onclick="clearDebug(); return false;" value="Clear" />
 		</div>
 

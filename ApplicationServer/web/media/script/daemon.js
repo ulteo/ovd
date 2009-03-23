@@ -11,8 +11,6 @@ var old_session_state = -1;
 
 var nb_share = 0;
 
-var is_owner = false;
-
 var window_alive = true;
 
 function daemon_init(server_, debug_) {
@@ -66,8 +64,6 @@ function daemon_loop() {
 	session_check();
 
 	if (session_state == 0 || session_state == 10) {
-		is_owner = true;
-
 		new Ajax.Request(
 			'start.php',
 			{
@@ -109,10 +105,7 @@ function switch_splash_to_applet() {
 				if (appletNode.length > 0) {
 					appletNode = appletNode[0];
 					appletNode.width = parseInt(my_width);
-					var apply_height = parseInt(my_height);
-					if (! is_owner)
-						apply_height -= 4;
-					appletNode.height = apply_height;
+					appletNode.height = parseInt(my_height);
 				}
 				$('appletContainer').show();
 			}

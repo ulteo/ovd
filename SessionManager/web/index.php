@@ -568,7 +568,7 @@ require_once('header.php');
 				</table>
 			</div>
 		</fieldset>
-	</form>
+	</form>&nbsp;
 </div>
 <?php
 if ($testapplet) {
