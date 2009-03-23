@@ -212,7 +212,7 @@ class Dialog:
         return True
 
     def doStartSession_cm(self):
-        values =  {'width': self.conf["geometry"][0],'height': self.conf["geometry"][1], "lead": 1}
+        values =  {'width': self.conf["geometry"][0], 'height': self.conf["geometry"][1]}
         # url = self.cm_url+"/startsession.php"
         url = "%s/start.php?%s"%(self.cm_url, urllib.urlencode(values))
         request = urllib2.Request(url, urllib.urlencode(values))
