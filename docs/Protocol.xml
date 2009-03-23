@@ -757,14 +757,7 @@
 	    <para><emphasis role="strong">method:</emphasis> GET</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">arguments:</emphasis> 
-	    <itemizedlist>
-	      <listitem>
-		<para>html: an optional argument to force a HTML view
-		instead of the XML one. Usefull for the Web client.</para>
-	      </listitem>
-	    </itemizedlist>
-	    </para>
+	    <para><emphasis role="strong">arguments:</emphasis> NO </para>
 	  </listitem>
 
 	  <listitem>
@@ -987,6 +980,11 @@
 	  <para><emphasis role="strong">optionnal arguments:</emphasis> 
 	  <itemizedlist>
 	    <listitem>
+	      <para>client: browser|strict.
+	      Define the client type. Default is strict
+	      </para>
+	    </listitem>
+	    <listitem>
 	      <para>desktop_quality: [1-9]</para>
 	    </listitem>
 	    <listitem>
@@ -1031,7 +1029,9 @@
 	  <![CDATA[
 <html>
   <body>
-<form action="http://sm.ulteo.com/sessionmanager" method="post">
+<form action="http://sm.ulteo.com/sessionmanager/startsession.php" method="post">
+ <input type="hidden" name="client" value="browser" />
+
  Login: 
  <input type="text" name="login" value="" />
  <br/>
