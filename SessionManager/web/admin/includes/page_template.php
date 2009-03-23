@@ -73,7 +73,7 @@ $sub_items =
 	);
 
 function page_header() {
-  $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
+  global $base_url;
   if ($base_url == '//')
     $base_url = '/';
 
