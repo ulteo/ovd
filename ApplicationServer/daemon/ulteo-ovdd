@@ -391,7 +391,7 @@ loop() {
 	local diff=$(( $t1 - $t0 ))
 	if [ $diff -gt 60 ]; then
 	    webservices_system_monitoring
-	    log_INFO "monitoring send result: $?"
+	    log_DEBUG "monitoring send result: $?"
 	    local t0=`date +%s`
 	fi
 
