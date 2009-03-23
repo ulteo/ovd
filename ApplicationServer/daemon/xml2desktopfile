@@ -34,8 +34,8 @@ class Application(dict):
 
         if ('\\' in self.filename):
             tmp = self.filename.replace('\\', '/')
-    else:
-        tmp = self.filename
+        else:
+            tmp = self.filename
 
         self.basename = os.path.basename(tmp)
         if (self.basename.endswith('.lnk')):
