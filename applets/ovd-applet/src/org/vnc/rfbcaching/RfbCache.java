@@ -1,8 +1,8 @@
 package org.vnc.rfbcaching;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class RfbCache implements IRfbCache {
 
@@ -13,7 +13,7 @@ public class RfbCache implements IRfbCache {
 	private int cacheSize = DEFAULT_CACHE_SIZE;
 	private float cacheLoadFactor = 0.75f;
 	
-	LinkedHashMap/*<Object, RfbCacheEntry>*/ cacheTable; 	
+	LinkedHashMap <Object, RfbCacheEntry> cacheTable; 	
 	
 	public RfbCache(RfbCacheProperties p) throws RfbCacheCreateException{		 			
 		this.cacheSize = p.getCacheMaxEntries();
@@ -24,10 +24,11 @@ public class RfbCache implements IRfbCache {
 		}
 		int maxCacheNum = (int)Math.ceil( cacheSize / cacheLoadFactor ) + 1;
 		boolean isLRU = (p.getCacheMaintAlg() != IRfbCachingConstants.RFB_CACHE_MAINT_ALG_FIFO);
-		this.cacheTable = new LinkedHashMap/*<Object, RfbCacheEntry>*/(maxCacheNum,cacheLoadFactor, isLRU /* access order storage */){
+		this.cacheTable = new LinkedHashMap<Object, RfbCacheEntry>(maxCacheNum,cacheLoadFactor, isLRU /* access order storage */){
 			static final long serialVersionUID = 1;
 			
-			protected boolean removeEldestEntry (Map.Entry/*<Object, RfbCacheEntry>*/ eldest) {
+			@Override
+			protected boolean removeEldestEntry (Map.Entry<Object, RfbCacheEntry> eldest) {
 				 boolean result = size() > RfbCache.this.cacheSize;
 		         return result;
 		    }
@@ -35,7 +36,7 @@ public class RfbCache implements IRfbCache {
 	}		
 			
 	public RfbCacheEntry get(byte[] key){
-		return (RfbCacheEntry)cacheTable.get(new RfbCacheKey(key));
+		return cacheTable.get(new RfbCacheKey(key));
 	}
 	
 	public Object put(byte[] key, RfbCacheEntry value){

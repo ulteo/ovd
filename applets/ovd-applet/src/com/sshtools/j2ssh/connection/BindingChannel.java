@@ -39,7 +39,7 @@ public abstract class BindingChannel
   protected BindingChannel boundChannel;
 
   /**  */
-  protected Vector messages = new Vector();
+  protected Vector<Object> messages = new Vector<Object>();
 
   /**
    *
@@ -98,7 +98,7 @@ public abstract class BindingChannel
     }
 
     synchronized (messages) {
-      Iterator it = messages.iterator();
+      Iterator<Object> it = messages.iterator();
 
       while (it.hasNext()) {
         Object obj = it.next();
@@ -131,7 +131,8 @@ public abstract class BindingChannel
    *
    * @throws java.io.IOException
    */
-  protected void onChannelExtData(SshMsgChannelExtendedData msg) throws java.io.
+  @Override
+protected void onChannelExtData(SshMsgChannelExtendedData msg) throws java.io.
       IOException {
     synchronized (messages) {
       if (boundChannel != null) {
@@ -153,7 +154,8 @@ public abstract class BindingChannel
    *
    * @throws java.io.IOException
    */
-  protected void onChannelData(SshMsgChannelData msg) throws java.io.
+  @Override
+protected void onChannelData(SshMsgChannelData msg) throws java.io.
       IOException {
     synchronized (messages) {
       if (boundChannel != null) {
@@ -177,7 +179,8 @@ public abstract class BindingChannel
        }
      }
    }*/
-  protected void setRemoteEOF() throws IOException {
+  @Override
+protected void setRemoteEOF() throws IOException {
     synchronized (state) {
       super.setRemoteEOF();
 
@@ -196,7 +199,8 @@ public abstract class BindingChannel
    *
    * @throws java.io.IOException
    */
-  protected void onChannelEOF() throws java.io.IOException {
+  @Override
+protected void onChannelEOF() throws java.io.IOException {
   }
 
   /**
@@ -204,7 +208,8 @@ public abstract class BindingChannel
    *
    * @throws java.io.IOException
    */
-  protected void onChannelClose() throws java.io.IOException {
+  @Override
+protected void onChannelClose() throws java.io.IOException {
     /*synchronized(state) {
          if (boundChannel != null) {
            if (boundChannel.isOpen())
@@ -218,7 +223,8 @@ public abstract class BindingChannel
    *
    * @throws java.io.IOException
    */
-  protected void onChannelOpen() throws java.io.IOException {
+  @Override
+protected void onChannelOpen() throws java.io.IOException {
     synchronized (messages) {
       if (boundChannel != null) {
         if (boundChannel.isOpen() && (messages.size() > 0)) {

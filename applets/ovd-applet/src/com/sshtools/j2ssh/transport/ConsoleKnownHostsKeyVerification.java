@@ -21,10 +21,8 @@
 
 package com.sshtools.j2ssh.transport;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
 
@@ -84,7 +82,8 @@ public class ConsoleKnownHostsKeyVerification
    *
    * @since 0.2.0
    */
-  public void onHostKeyMismatch(String host, SshPublicKey pk,
+  @Override
+public void onHostKeyMismatch(String host, SshPublicKey pk,
                                 SshPublicKey actual) {
     try {
       System.out.println("The host key supplied by " + host + " is: "
@@ -108,7 +107,8 @@ public class ConsoleKnownHostsKeyVerification
    *
    * @since 0.2.0
    */
-  public void onUnknownHost(String host, SshPublicKey pk) {
+  @Override
+public void onUnknownHost(String host, SshPublicKey pk) {
     try {
      /* System.out.println("The host " + host
                          + " is currently unknown to the system");

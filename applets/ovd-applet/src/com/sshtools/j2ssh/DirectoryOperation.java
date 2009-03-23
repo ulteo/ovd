@@ -37,11 +37,11 @@ import com.sshtools.j2ssh.sftp.SftpFile;
  */
 public class DirectoryOperation {
 
-  Vector unchangedFiles = new Vector();
-  Vector newFiles = new Vector();
-  Vector updatedFiles = new Vector();
-  Vector deletedFiles = new Vector();
-  Vector recursedDirectories = new Vector();
+  Vector<Object> unchangedFiles = new Vector<Object>();
+  Vector<Object> newFiles = new Vector<Object>();
+  Vector<Object> updatedFiles = new Vector<Object>();
+  Vector<Object> deletedFiles = new Vector<Object>();
+  Vector<Object> recursedDirectories = new Vector<Object>();
 
   /**
    * Construct a new directory operation object
@@ -85,7 +85,7 @@ public class DirectoryOperation {
        * Returns a list of new files that will be transfered in the directory operation
    * @return
    */
-  public List getNewFiles() {
+  public List<Object> getNewFiles() {
     return newFiles;
   }
 
@@ -93,7 +93,7 @@ public class DirectoryOperation {
    * Returns a list of files that will be updated in the directory operation
    * @return
    */
-  public List getUpdatedFiles() {
+  public List<Object> getUpdatedFiles() {
     return updatedFiles;
   }
 
@@ -102,7 +102,7 @@ public class DirectoryOperation {
    * operation
    * @return
    */
-  public List getUnchangedFiles() {
+  public List<Object> getUnchangedFiles() {
     return unchangedFiles;
   }
 
@@ -111,7 +111,7 @@ public class DirectoryOperation {
    * that will be deleted becasue they no longer exist at the source location.
    * @return
    */
-  public List getDeletedFiles() {
+  public List<Object> getDeletedFiles() {
     return deletedFiles;
   }
 
@@ -188,7 +188,7 @@ public class DirectoryOperation {
     long size = 0;
     SftpFile sftpfile;
     File file;
-    for (Iterator i = newFiles.iterator();
+    for (Iterator<Object> i = newFiles.iterator();
          i.hasNext(); ) {
       obj = i.next();
       if (obj instanceof File) {
@@ -204,7 +204,7 @@ public class DirectoryOperation {
         }
       }
     }
-    for (Iterator i = updatedFiles.iterator();
+    for (Iterator<Object> i = updatedFiles.iterator();
          i.hasNext(); ) {
       obj = i.next();
       if (obj instanceof File) {

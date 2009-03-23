@@ -23,12 +23,9 @@ package com.sshtools.j2ssh.transport.kex;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.sshtools.j2ssh.configuration.ConfigurationException;
-import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 
 /**
@@ -38,11 +35,11 @@ import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
  * @version $Revision: 1.29 $
  */
 public class SshKeyExchangeFactory {
-  private static Map kexs;
+  private static Map<String, Class<?>> kexs;
   private static String defaultAlgorithm;
 
   static {
-    kexs = new HashMap();
+    kexs = new HashMap<String, Class<?>>();
 
     kexs.put("diffie-hellman-group1-sha1", DhGroup1Sha1.class);
 
@@ -75,8 +72,8 @@ public class SshKeyExchangeFactory {
    *
    * @return
    */
-  public static List getSupportedKeyExchanges() {
-    return new ArrayList(kexs.keySet());
+  public static List<String> getSupportedKeyExchanges() {
+    return new ArrayList<String>(kexs.keySet());
   }
 
   /**
@@ -91,7 +88,7 @@ public class SshKeyExchangeFactory {
   public static SshKeyExchange newInstance(String methodName) throws
       AlgorithmNotSupportedException {
     try {
-      return (SshKeyExchange) ( (Class) kexs.get(methodName)).newInstance();
+      return (SshKeyExchange) (kexs.get(methodName)).newInstance();
     }
     catch (Exception e) {
       throw new AlgorithmNotSupportedException(methodName

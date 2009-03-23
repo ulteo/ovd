@@ -64,7 +64,8 @@ public class ServiceState
    *
    * @since 0.2.0
    */
-  public boolean isValidState(int state) {
+  @Override
+public boolean isValidState(int state) {
     return ( (state == SERVICE_UNINITIALIZED) || (state == SERVICE_STARTED)
             || (state == SERVICE_STOPPED));
   }

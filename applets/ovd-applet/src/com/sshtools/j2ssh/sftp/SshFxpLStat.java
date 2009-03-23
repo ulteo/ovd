@@ -68,7 +68,8 @@ public class SshFxpLStat
    * @throws com.sshtools.j2ssh.transport.InvalidMessageException DOCUMENT
    *         ME!
    */
-  public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
+  @Override
+public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     id = bar.readUINT32();
     path = bar.readString();
@@ -79,7 +80,8 @@ public class SshFxpLStat
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_FXP_LSTAT";
   }
 
@@ -110,7 +112,8 @@ public class SshFxpLStat
    * @throws com.sshtools.j2ssh.transport.InvalidMessageException DOCUMENT
    *         ME!
    */
-  public void constructByteArray(ByteArrayWriter baw) throws java.io.
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws java.io.
       IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     baw.writeUINT32(id);

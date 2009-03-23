@@ -82,7 +82,8 @@ public class SshMsgUserAuthBanner
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_USERAUTH_BANNER";
   }
 
@@ -93,7 +94,8 @@ public class SshMsgUserAuthBanner
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeString(banner);
@@ -111,7 +113,8 @@ public class SshMsgUserAuthBanner
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       banner = bar.readString();

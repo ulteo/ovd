@@ -21,20 +21,17 @@
 
 package com.sshtools.j2ssh.transport.compression;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Enumeration;
 import java.util.Properties;
-import java.net.URL;
-import java.io.InputStream;
-import java.util.Vector;
 
-import com.sshtools.j2ssh.io.IOUtil;
-import com.sshtools.j2ssh.configuration.ConfigurationException;
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
+import com.sshtools.j2ssh.io.IOUtil;
 import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 
 /**
@@ -47,10 +44,10 @@ public class SshCompressionFactory {
   /**  */
   public final static String COMP_NONE = "none";
   private static String defaultAlgorithm;
-  private static Map comps;
+  private static Map<String, Object> comps;
 
   static {
-    comps = new HashMap();
+    comps = new HashMap<String, Object>();
 
 
     comps.put(COMP_NONE, "");
@@ -59,19 +56,19 @@ public class SshCompressionFactory {
 
     try {
 
-      Enumeration enumer = ConfigurationLoader.getExtensionClassLoader().
+      Enumeration<URL> enumer = ConfigurationLoader.getExtensionClassLoader().
           getResources("j2ssh.compression");
       URL url;
       Properties properties = new Properties();
       InputStream in;
       while (enumer != null && enumer.hasMoreElements()) {
-        url = (URL) enumer.nextElement();
+        url = enumer.nextElement();
         in = url.openStream();
         properties.load(in);
         IOUtil.closeStream(in);
         int num = 1;
         String name = "";
-        Class cls;
+        Class<?> cls;
         while (properties.getProperty("compression.name."
                                       + String.valueOf(num))
                != null) {
@@ -123,8 +120,8 @@ public class SshCompressionFactory {
    *
    * @return
    */
-  public static List getSupportedCompression() {
-    return new ArrayList(comps.keySet());
+  public static List<String> getSupportedCompression() {
+    return new ArrayList<String>(comps.keySet());
   }
 
   /**
@@ -142,7 +139,7 @@ public class SshCompressionFactory {
       if(algorithmName.equals(COMP_NONE))
         return null;
       else
-        return (SshCompression)((Class)comps.get(algorithmName))
+        return (SshCompression)((Class<?>)comps.get(algorithmName))
           .newInstance();
     }
     catch (Exception e) {

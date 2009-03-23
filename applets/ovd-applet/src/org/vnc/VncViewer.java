@@ -27,12 +27,9 @@
 
 package org.vnc;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -45,43 +42,45 @@ import java.awt.ScrollPane;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.EOFException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.NoRouteToHostException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.HashMap;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-import org.vnc.rfbcaching.IRfbCachingConstants;
-import org.vnc.rfbcaching.RfbCacheProperties;
 
 import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
+
+import org.vnc.rfbcaching.IRfbCachingConstants;
+import org.vnc.rfbcaching.RfbCacheProperties;
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
+import com.sshtools.j2ssh.connection.ChannelInputStream;
+import com.sshtools.j2ssh.connection.ChannelOutputStream;
 import com.sshtools.j2ssh.forwarding.ForwardingIOChannel;
 import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 
 public class VncViewer extends java.applet.Applet
   implements java.lang.Runnable, WindowListener {
 
-  public static final String version = "0.2.3g";
+  public static final String version = "0.2.4";
 
   boolean inAnApplet = true;
   boolean inSeparateFrame = false;
   boolean rfbConnected = false;
   boolean firstTime = true;
-  InputStream in;
-  OutputStream out;
+  /*InputStream*/ ChannelInputStream in;
+  /*OutputStream*/ ChannelOutputStream out;
 
 
   //
@@ -179,7 +178,7 @@ public class VncViewer extends java.applet.Applet
    * @param value
    */
   public void setJavaScriptVariable(String varName, String value){
-	  JSObject window = (JSObject) JSObject.getWindow(this);
+	  JSObject window = JSObject.getWindow(this);
 	  window.setMember("testResult", value);
   }
 
@@ -200,7 +199,7 @@ public class VncViewer extends java.applet.Applet
    * @param value
    */
   public void callJavaScriptMethod(String methodName, Object[] args) {
-	  JSObject window = (JSObject) JSObject.getWindow(this);
+	  JSObject window = JSObject.getWindow(this);
 	  try {
 		  window.call(methodName, args);
 		  System.out.println("JS method called");
@@ -254,7 +253,8 @@ public class VncViewer extends java.applet.Applet
   // init()
   //
 
-  public void init() {
+  @Override
+public void init() {
 	 System.out.println("Starting UlteoVNC version "+version);
 
 	 String tmp;
@@ -389,12 +389,14 @@ public class VncViewer extends java.applet.Applet
 	}
   }
 
-  public void update(Graphics g) {
+  @Override
+public void update(Graphics g) {
 //	  g.clearRect(0, 0, this.getHeight(), this.getWidth());
 //	  paint(g);
   }
 
-  public void paint(Graphics g){
+  @Override
+public void paint(Graphics g){
 //	  if(isTesting){
 //		  Color chosenColor;
 //		  Font chosenFont;
@@ -439,11 +441,11 @@ public class VncViewer extends java.applet.Applet
     //  Disable the local cursor (only soft cursor visible)
         try {
         Image img = new BufferedImage(1, 1, BufferedImage.TYPE_4BYTE_ABGR);
-        if (img != null) {
+        //if (img != null) {
           Cursor c = getToolkit().createCustomCursor(img,
               new Point(0, 0), "Dot");
           vc.setCursor(c);
-        }
+        //}
       }
       catch (Throwable t) {
         t.printStackTrace();
@@ -574,30 +576,30 @@ public class VncViewer extends java.applet.Applet
   // Create a VncCanvas instance.
   //
 
-  void createCanvas(int maxWidth, int maxHeight) throws IOException {
-	  System.out.println("Size: "+maxWidth+"x"+maxHeight);
-    // Determine if Java 2D API is available and use a special
-    // version of VncCanvas if it is present.
-    vc = null;
-    vc = new VncCanvas2(this, maxWidth, maxHeight);
-    try {
-      // This throws ClassNotFoundException if there is no Java 2D API.
-      Class cl = Class.forName("java.awt.Graphics2D");
-      // If we could load Graphics2D class, then we can use VncCanvas2D.
-      cl = Class.forName("org.vnc.VncCanvas2");
-      Class[] argClasses = { this.getClass(), Integer.TYPE, Integer.TYPE };
-      java.lang.reflect.Constructor cstr = cl.getConstructor(argClasses);
-      Object[] argObjects =
-        { this, new Integer(maxWidth), new Integer(maxHeight) };
-      vc = (VncCanvas)cstr.newInstance(argObjects);
-    } catch (Exception e) {
-      System.out.println("Warning: Java 2D API is not available\n");
-    }
-
-    // If we failed to create VncCanvas2D, use old VncCanvas.
-    if (vc == null)
-      vc = new VncCanvas(this, maxWidth, maxHeight);
-  }
+//  void createCanvas(int maxWidth, int maxHeight) throws IOException {
+//	  System.out.println("Size: "+maxWidth+"x"+maxHeight);
+//    // Determine if Java 2D API is available and use a special
+//    // version of VncCanvas if it is present.
+//    vc = null;
+//    vc = new VncCanvas2(this, maxWidth, maxHeight);
+//    try {
+//      // This throws ClassNotFoundException if there is no Java 2D API.
+//      Class cl = Class.forName("java.awt.Graphics2D");
+//      // If we could load Graphics2D class, then we can use VncCanvas2D.
+//      cl = Class.forName("org.vnc.VncCanvas2");
+//      Class[] argClasses = { this.getClass(), Integer.TYPE, Integer.TYPE };
+//      java.lang.reflect.Constructor cstr = cl.getConstructor(argClasses);
+//      Object[] argObjects =
+//        { this, new Integer(maxWidth), new Integer(maxHeight) };
+//      vc = (VncCanvas)cstr.newInstance(argObjects);
+//    } catch (Exception e) {
+//      System.out.println("Warning: Java 2D API is not available\n");
+//    }
+//
+//    // If we failed to create VncCanvas2D, use old VncCanvas.
+//    if (vc == null)
+//      vc = new VncCanvas(this, maxWidth, maxHeight);
+//  }
 
 
   //
@@ -624,12 +626,12 @@ public class VncViewer extends java.applet.Applet
   // Connect to the RFB server and authenticate the user.
   //
 
-  boolean connectAndAuthenticate(InputStream in, OutputStream out) throws Exception
+  boolean connectAndAuthenticate(InputStream in, /*OutputStream*/ChannelOutputStream out) throws Exception
   {
     showConnectionStatus("Initializing...");
     if (inSeparateFrame) {
       vncFrame.pack();
-      vncFrame.show();
+      vncFrame.setVisible(true);
     } else {
       validate();
     }
@@ -1162,8 +1164,8 @@ public class VncViewer extends java.applet.Applet
 
     }
   }
-
-  public String readParameter(String name, boolean required) {
+  
+public String readParameter(String name, boolean required) {
     if (inAnApplet) {
       String s = getParameter(name);
       if ((s == null) && required) {
@@ -1298,7 +1300,8 @@ public class VncViewer extends java.applet.Applet
   //
 
 
- public void stop() {
+ @Override
+public void stop() {
     System.out.println("Stopping applet");
     try{
         if (rfb != null && !rfb.closed())
@@ -1324,27 +1327,27 @@ public class VncViewer extends java.applet.Applet
   // This method is called before the applet is destroyed.
   //
 
-  public void destroy() {
-    System.out.println("Destroying applet");
-    if(vncContainer != null && options != null && clipboard != null){
-    	vncContainer.removeAll();
-    	options.dispose();
-    	clipboard.dispose();
-    }
-    if (rec != null)
-      rec.dispose();
-    if (inSeparateFrame)
-      vncFrame.dispose();
-    refApplet = null;
-  }
+//  public void destroy() {
+//    System.out.println("Destroying applet");
+//    if(vncContainer != null && options != null && clipboard != null){
+//    	vncContainer.removeAll();
+//    	options.dispose();
+//    	clipboard.dispose();
+//    }
+//    if (rec != null)
+//      rec.dispose();
+//    if (inSeparateFrame)
+//      vncFrame.dispose();
+//    refApplet = null;
+//  }
 
   //
   // Start/stop receiving mouse events.
   //
 
-  public void enableInput(boolean enable) {
-    vc.enableInput(enable);
-  }
+//  public void enableInput(boolean enable) {
+//    vc.enableInput(enable);
+//  }
 
   //
   // Close application properly on window close event.
@@ -1355,14 +1358,15 @@ public class VncViewer extends java.applet.Applet
     if (rfb != null)
       disconnect();
 
-    vncContainer.hide();
+    vncContainer.setVisible(false);
 
     if (!inAnApplet) {
       System.exit(0);
     }
   }
 
-  public String getAppletInfo() {
+  @Override
+public String getAppletInfo() {
 		return "UlteoVNC";
 	}
 
@@ -1383,4 +1387,57 @@ public class VncViewer extends java.applet.Applet
   public void windowClosed(WindowEvent evt) {}
   public void windowIconified(WindowEvent evt) {}
   public void windowDeiconified(WindowEvent evt) {}
+  
+  
+  
+  
+  // -------------------------------------------------------------------
+  
+
+//cd ~/ulteo/client/client-python
+//python ovd-client.py -l frank -g 800x600 http://connectme22.ulteo.com/sessionmanager/
+//test1234
+  
+//  private  HashMap<String, String> map = null;
+//  private final boolean K1ZFP = true;
+//    @Override
+//  public String getParameter(String name) 
+//    {
+//  	  if (K1ZFP)
+//  	  		{
+//  			  if (map==null)
+//  				  {
+//  				  map = new HashMap<String, String>();
+//  				  map.put("width", "800");
+//  				  map.put( "height","600");
+//  					try 
+//  					{
+//  					final String NAME="name=\"";
+//  					final String VALUE ="value=\""; 
+//  					FileReader fr = new FileReader("/home/frankpreel/ulteo/client/client-python/content.html");
+//  					BufferedReader br = new BufferedReader(fr);
+//  					String s;
+//  					while ((s = br.readLine()) != null)
+//  						{
+//  						int idxname = s.indexOf(NAME);
+//  						int idxval = s.indexOf(VALUE);
+//  						if (idxname>=0 && idxval>=0)
+//  							{
+//  							String newstr = s.substring(idxname+NAME.length(), s.lastIndexOf("\""));
+//  							idxval = newstr.indexOf(VALUE);
+//  							String _name = newstr.substring(0, newstr.indexOf("\""));
+//  							String _val = newstr.substring(idxval+VALUE.length());
+//  							
+//  							//System.out.println(newstr+"("+_name+"-"+_val+")");
+//  							map.put(_name, _val);
+//  							}
+//  						}
+//  					fr.close();
+//  				} catch (Throwable e) { e.printStackTrace();}					  
+//  				  }
+//  			  return map.get(name);
+//  		}
+//  	return super.getParameter(name);
+//  }
+  
 }

@@ -52,9 +52,11 @@ public class ZlibInStream extends InStream {
     underlying = null;
   }
 
-  public int pos() { return ptrOffset + ptr; }
+  @Override
+public int pos() { return ptrOffset + ptr; }
 
-  protected int overrun(int itemSize, int nItems) throws Exception {
+  @Override
+protected int overrun(int itemSize, int nItems) throws Exception {
     if (itemSize > bufSize)
       throw new Exception("ZlibInStream overrun: max itemSize exceeded");
     if (underlying == null)

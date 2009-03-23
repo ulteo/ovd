@@ -102,7 +102,8 @@ public class SshMsgChannelOpenFailure
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_CHANNEL_OPEN_FAILURE";
   }
 
@@ -131,7 +132,8 @@ public class SshMsgChannelOpenFailure
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeInt(recipientChannel);
@@ -151,7 +153,8 @@ public class SshMsgChannelOpenFailure
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       recipientChannel = bar.readInt();

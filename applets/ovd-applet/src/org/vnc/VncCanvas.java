@@ -46,7 +46,6 @@ import java.awt.image.MemoryImageSource;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 import org.vnc.rfbcaching.IRfbCachingConstants;
@@ -149,15 +148,18 @@ public class VncCanvas extends Canvas
   // Callback methods to determine geometry of our Component.
   //
 
-  public Dimension getPreferredSize() {
+  @Override
+public Dimension getPreferredSize() {
     return new Dimension(scaledWidth, scaledHeight);
   }
 
-  public Dimension getMinimumSize() {
+  @Override
+public Dimension getMinimumSize() {
     return new Dimension(scaledWidth, scaledHeight);
   }
 
-  public Dimension getMaximumSize() {
+  @Override
+public Dimension getMaximumSize() {
     return new Dimension(scaledWidth, scaledHeight);
   }
 
@@ -165,11 +167,13 @@ public class VncCanvas extends Canvas
   // All painting is performed here.
   //
 
-  public void update(Graphics g) {
+  @Override
+public void update(Graphics g) {
     paint(g);
   }
 
-  public void paint(Graphics g) {
+  @Override
+public void paint(Graphics g) {
     synchronized(memImage) {
       if (rfb.framebufferWidth == scaledWidth) {
         g.drawImage(memImage, 0, 0, null);
@@ -195,7 +199,8 @@ public class VncCanvas extends Canvas
   // JPEG-encoded data.
   //
 
-  public boolean imageUpdate(Image img, int infoflags,
+  @Override
+public boolean imageUpdate(Image img, int infoflags,
                              int x, int y, int width, int height) {
     if ((infoflags & (ALLBITS | ABORT)) == 0) {
       return true;		// We need more image data.
@@ -405,22 +410,22 @@ public class VncCanvas extends Canvas
 	  int rx = rfb.updateRectX, ry = rfb.updateRectY;
 	  int rw = rfb.updateRectW, rh = rfb.updateRectH;
 
-	  if (rfb.updateRectEncoding == rfb.EncodingLastRect)
+	  if (rfb.updateRectEncoding == RfbProto.EncodingLastRect)
 	    break;
 
-	  if (rfb.updateRectEncoding == rfb.EncodingNewFBSize) {
+	  if (rfb.updateRectEncoding == RfbProto.EncodingNewFBSize) {
 	    rfb.setFramebufferSize(rw, rh);
 	    updateFramebufferSize();
 	    break;
 	  }
 
-	  if (rfb.updateRectEncoding == rfb.EncodingXCursor ||
-	      rfb.updateRectEncoding == rfb.EncodingRichCursor) {
+	  if (rfb.updateRectEncoding == RfbProto.EncodingXCursor ||
+	      rfb.updateRectEncoding == RfbProto.EncodingRichCursor) {
 	    handleCursorShapeUpdate(rfb.updateRectEncoding, rx, ry, rw, rh);
 	    continue;
 	  }
 
-	  if (rfb.updateRectEncoding == rfb.EncodingPointerPos) {
+	  if (rfb.updateRectEncoding == RfbProto.EncodingPointerPos) {
 	    softCursorMove(rx, ry);
 	    cursorPosReceived = true;
 	    continue;
@@ -559,7 +564,7 @@ public class VncCanvas extends Canvas
 //
 // Handle RFBCacheHit
 //
-void handleCacheHit(int rx, int ry, int rw, int rh) throws IOException{
+void handleCacheHit(int rx, int ry, int rw, int rh) /* throws IOException*/ {
     try {
         byte[] k = new byte[rfb.cacheKeySize];
         rfb.readFully(k);
@@ -819,14 +824,14 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     }
 
     // Is it a raw-encoded sub-rectangle?
-    if ((subencoding & rfb.HextileRaw) != 0) {
+    if ((subencoding & RfbProto.HextileRaw) != 0) {
       handleRawRect(tx, ty, tw, th, false);
       return;
     }
 
     // Read and draw the background if specified.
     byte[] cbuf = new byte[bytesPixel];
-    if ((subencoding & rfb.HextileBackgroundSpecified) != 0) {
+    if ((subencoding & RfbProto.HextileBackgroundSpecified) != 0) {
       rfb.readFully(cbuf);
       rfb.numBytesCached+=cbuf.length;
       if (bytesPixel == 1) {
@@ -842,7 +847,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     memGraphics.fillRect(tx, ty, tw, th);
 
     // Read the foreground color if specified.
-    if ((subencoding & rfb.HextileForegroundSpecified) != 0) {
+    if ((subencoding & RfbProto.HextileForegroundSpecified) != 0) {
       rfb.readFully(cbuf);
       rfb.numBytesCached+=cbuf.length;
       if (bytesPixel == 1) {
@@ -856,13 +861,13 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     }
 
     // Done with this tile if there is no sub-rectangles.
-    if ((subencoding & rfb.HextileAnySubrects) == 0)
+    if ((subencoding & RfbProto.HextileAnySubrects) == 0)
       return;
 
     int nSubrects = rfb.is.readUnsignedByte();
     rfb.numBytesCached++;
     int bufsize = nSubrects * 2;
-    if ((subencoding & rfb.HextileSubrectsColoured) != 0) {
+    if ((subencoding & RfbProto.HextileSubrectsColoured) != 0) {
       bufsize += nSubrects * bytesPixel;
     }
     byte[] buf = new byte[bufsize];
@@ -876,7 +881,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     int b1, b2, sx, sy, sw, sh;
     int i = 0;
 
-    if ((subencoding & rfb.HextileSubrectsColoured) == 0) {
+    if ((subencoding & RfbProto.HextileSubrectsColoured) == 0) {
 
       // Sub-rectangles are all of the same color.
       memGraphics.setColor(hextile_fg);
@@ -1023,12 +1028,12 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
   }
 
   void readPixels(InStream is, int[] dst, int count) throws Exception {
-    int pix;
+    //int pix;
     if (bytesPixel == 1) {
       byte[] buf = new byte[count];
       is.readBytes(buf, 0, count);
       for (int i = 0; i < count; i++) {
-        dst[i] = (int)buf[i] & 0xFF;
+        dst[i] = buf[i] & 0xFF;
       }
     } else {
       byte[] buf = new byte[count * 3];
@@ -1219,8 +1224,8 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     rfb.numBytesCached++;       
     if (rfb.rec != null) {
       if (rfb.recordFromBeginning ||
-	  comp_ctl == (rfb.TightFill << 4) ||
-	  comp_ctl == (rfb.TightJpeg << 4)) {
+	  comp_ctl == (RfbProto.TightFill << 4) ||
+	  comp_ctl == (RfbProto.TightJpeg << 4)) {
 	// Send data exactly as received.
 	rfb.rec.writeByte(comp_ctl);
       } else {
@@ -1238,12 +1243,12 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     }
 
     // Check correctness of subencoding value.
-    if (comp_ctl > rfb.TightMaxSubencoding) {
+    if (comp_ctl > RfbProto.TightMaxSubencoding) {
       throw new Exception("Incorrect tight subencoding: " + comp_ctl);
     }
 
     // Handle solid-color rectangles.
-    if (comp_ctl == rfb.TightFill) {
+    if (comp_ctl == RfbProto.TightFill) {
 
       if (bytesPixel == 1) {
 	int idx = rfb.is.readUnsignedByte();
@@ -1269,7 +1274,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 
     }
 
-    if (comp_ctl == rfb.TightJpeg) {
+    if (comp_ctl == RfbProto.TightJpeg) {
 
       // Read JPEG data.
       byte[] jpegData = new byte[rfb.readCompactLen()];
@@ -1311,13 +1316,13 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     byte[] palette8 = new byte[2];
     int[] palette24 = new int[256];
     boolean useGradient = false;
-    if ((comp_ctl & rfb.TightExplicitFilter) != 0) {
+    if ((comp_ctl & RfbProto.TightExplicitFilter) != 0) {
       int filter_id = rfb.is.readUnsignedByte();
       rfb.numBytesCached++;
       if (rfb.rec != null) {
 	rfb.rec.writeByte(filter_id);
       }
-      if (filter_id == rfb.TightFilterPalette) {
+      if (filter_id == RfbProto.TightFilterPalette) {
 	numColors = rfb.is.readUnsignedByte() + 1;
 	  rfb.numBytesCached++;  
 	if (rfb.rec != null) {
@@ -1347,9 +1352,9 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 	}
 	if (numColors == 2)
 	  rowSize = (w + 7) / 8;
-      } else if (filter_id == rfb.TightFilterGradient) {
+      } else if (filter_id == RfbProto.TightFilterGradient) {
 	useGradient = true;
-      } else if (filter_id != rfb.TightFilterCopy) {
+      } else if (filter_id != RfbProto.TightFilterCopy) {
 	throw new Exception("Incorrect tight filter id: " + filter_id);
       }
     }
@@ -1358,7 +1363,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 
     // Read, optionally uncompress and decode data.
     int dataSize = h * rowSize;
-    if (dataSize < rfb.TightMinToCompress) {
+    if (dataSize < RfbProto.TightMinToCompress) {
       // Data size is small - not compressed with zlib.
       if (numColors != 0) {
 	// Indexed colors.
@@ -1622,13 +1627,13 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
   //
 
   public void keyPressed(KeyEvent evt) {
-	int numChar=evt.getKeyChar();
+	//int numChar=evt.getKeyChar();
 //	System.out.println("Key pressed: "+numChar+"\n");
 	processLocalKeyEvent(evt);
   }
 
   public void keyReleased(KeyEvent evt) {
-	  int numChar=evt.getKeyChar();
+	  //int numChar=evt.getKeyChar();
 //	  System.out.println("Key released: "+numChar+"\n");
 	  processLocalKeyEvent(evt);
   }
@@ -1781,7 +1786,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
       int bytesPerRow = (width + 7) / 8;
       int bytesMaskData = bytesPerRow * height;
 
-      if (encodingType == rfb.EncodingXCursor) {
+      if (encodingType == RfbProto.EncodingXCursor) {
 	rfb.is.skipBytes(6 + bytesMaskData * 2);
       } else {
 	// rfb.EncodingRichCursor
@@ -1823,7 +1828,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 
     int[] softCursorPixels = new int[width * height];
 
-    if (encodingType == rfb.EncodingXCursor) {
+    if (encodingType == RfbProto.EncodingXCursor) {
 
       // Read foreground and background colors of the cursor.
       byte[] rgb = new byte[6];
@@ -1876,7 +1881,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
       rfb.readFully(maskBuf);
 
       // Decode pixel data into softCursorPixels[].
-      byte pixByte, maskByte;
+      byte /*pixByte,*/ maskByte;
       int x, y, n, result;
       int i = 0;
       for (y = 0; y < height; y++) {

@@ -1,9 +1,14 @@
 package com.sshtools.j2ssh.subsystem;
 
-import com.sshtools.j2ssh.connection.*;
-import com.sshtools.j2ssh.io.*;
-import java.io.*;
-import com.sshtools.j2ssh.transport.*;
+import java.io.IOException;
+
+import com.sshtools.j2ssh.connection.Channel;
+import com.sshtools.j2ssh.connection.SshMsgChannelData;
+import com.sshtools.j2ssh.connection.SshMsgChannelExtendedData;
+import com.sshtools.j2ssh.io.ByteArrayReader;
+import com.sshtools.j2ssh.io.ByteArrayWriter;
+import com.sshtools.j2ssh.io.DynamicBuffer;
+import com.sshtools.j2ssh.transport.InvalidMessageException;
 
 public abstract class SubsystemChannel extends Channel {
 
@@ -23,7 +28,8 @@ public abstract class SubsystemChannel extends Channel {
     this.messageStore = messageStore;
   }
 
-  public String getChannelType() {
+  @Override
+public String getChannelType() {
     return "session";
   }
 
@@ -40,17 +46,18 @@ public abstract class SubsystemChannel extends Channel {
   }
 
 
-  protected void onChannelRequest(String requestType, boolean wantReply, byte[] requestData) throws java.io.IOException {
+  @Override
+protected void onChannelRequest(String requestType, boolean wantReply, byte[] requestData) throws java.io.IOException {
 
         if (requestType.equals("exit-status")) {
           exitCode = new Integer( (int) ByteArrayReader.readInt(requestData, 0));
         }
         else if (requestType.equals("exit-signal")) {
           ByteArrayReader bar = new ByteArrayReader(requestData);
-          String signal = bar.readString();
-          boolean coredump = bar.read() != 0;
-          String message = bar.readString();
-          String language = bar.readString();
+          /*String signal =*/ bar.readString();
+          /*boolean coredump =*/ bar.read() ;//!= 0;
+          /*String message =*/ bar.readString();
+          /*String language =*/ bar.readString();
 
           /*if (signalListener != null) {
             signalListener.onExitSignal(signal, coredump, message);
@@ -62,7 +69,7 @@ public abstract class SubsystemChannel extends Channel {
           }*/
         }
         else if (requestType.equals("signal")) {
-          String signal = ByteArrayReader.readString(requestData, 0);
+          /*String signal =*/ ByteArrayReader.readString(requestData, 0);
 
           /*if (signalListener != null) {
             signalListener.onSignal(signal);
@@ -76,11 +83,13 @@ public abstract class SubsystemChannel extends Channel {
 
   }
 
-  protected void onChannelExtData(SshMsgChannelExtendedData msg) throws java.io.IOException {
+  @Override
+protected void onChannelExtData(SshMsgChannelExtendedData msg) throws java.io.IOException {
 
   }
 
-  protected void onChannelData(SshMsgChannelData msg) throws java.io.IOException {
+  @Override
+protected void onChannelData(SshMsgChannelData msg) throws java.io.IOException {
 
     // Write the data to a temporary buffer that may also contain data
     // that has not been processed
@@ -109,18 +118,22 @@ public abstract class SubsystemChannel extends Channel {
   }
 
 
-  protected void onChannelEOF() throws java.io.IOException {
+  @Override
+protected void onChannelEOF() throws java.io.IOException {
 
   }
-
+  
+  @Override
   protected void onChannelClose() throws java.io.IOException {
 
   }
 
+  @Override
   public byte[] getChannelOpenData() {
     return null;
   }
 
+  @Override
   protected void onChannelOpen() throws java.io.IOException {
 
   }
@@ -135,6 +148,8 @@ public abstract class SubsystemChannel extends Channel {
                                       baw.toByteArray());
 
   }
+  
+  @Override
   public byte[] getChannelConfirmationData() {
     return null;
   }

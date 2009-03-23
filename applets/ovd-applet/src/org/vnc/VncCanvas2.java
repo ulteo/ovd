@@ -19,8 +19,10 @@
 
 package org.vnc;
 
-import java.awt.*;
-import java.io.*;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.io.IOException;
 
 //
 // VncCanvas2 is a special version of VncCanvas which may use Java 2 API.
@@ -40,7 +42,8 @@ class VncCanvas2 extends VncCanvas {
     disableFocusTraversalKeys();
   }
 
-  public void paintScaledFrameBuffer(Graphics g) {
+  @Override
+public void paintScaledFrameBuffer(Graphics g) {
     Graphics2D g2d = (Graphics2D)g;
     g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
                          RenderingHints.VALUE_RENDER_QUALITY);
@@ -53,7 +56,7 @@ class VncCanvas2 extends VncCanvas {
 
   private void disableFocusTraversalKeys() {
     try {
-      Class[] argClasses = { Boolean.TYPE };
+      Class<?>[] argClasses = { Boolean.TYPE };
       java.lang.reflect.Method method =
         getClass().getMethod("setFocusTraversalKeysEnabled", argClasses);
       Object[] argObjects = { new Boolean(false) };

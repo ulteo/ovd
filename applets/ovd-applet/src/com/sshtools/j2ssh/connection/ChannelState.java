@@ -54,7 +54,8 @@ public class ChannelState
    *
    * @return
    */
-  public boolean isValidState(int state) {
+  @Override
+public boolean isValidState(int state) {
     return ( (state == CHANNEL_UNINITIALIZED) || (state == CHANNEL_OPEN)
             || (state == CHANNEL_CLOSED));
   }

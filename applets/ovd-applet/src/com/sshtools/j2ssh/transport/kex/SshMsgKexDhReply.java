@@ -93,7 +93,8 @@ public class SshMsgKexDhReply
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_KEXDH_REPLY";
   }
 
@@ -113,7 +114,8 @@ public class SshMsgKexDhReply
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeBinaryString(hostKey);
@@ -133,7 +135,8 @@ public class SshMsgKexDhReply
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       hostKey = bar.readBinaryString();

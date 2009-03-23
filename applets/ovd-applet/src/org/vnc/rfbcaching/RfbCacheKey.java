@@ -20,6 +20,7 @@ public class RfbCacheKey {
 	/**
 	 * Override equals method 
 	 */
+	@Override
 	public boolean equals(Object o){
 		if (!(o instanceof RfbCacheKey))
 			return false;
@@ -35,6 +36,7 @@ public class RfbCacheKey {
 	 * Override hashCode method
 	 * "One-A-Time" hash function. 
 	 */
+	@Override
 	public int hashCode(){
 		int hash = 0;
 		for (int i = 0; i < k.length; i++) {

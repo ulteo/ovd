@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
@@ -73,7 +74,8 @@ public class SshtoolsPrivateKeyFormat
    *
    * @return
    */
-  public String getFormatType() {
+  @Override
+public String getFormatType() {
     return "SSHTools-PrivateKey-" + super.getFormatType();
   }
 

@@ -22,8 +22,8 @@
 package com.sshtools.j2ssh.net;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-import java.net.SocketTimeoutException; 
 
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
 
@@ -135,8 +135,16 @@ public class TransportProviderFactory {
 //			e.printStackTrace();
 		}
       } while(failed);
-      socket.setTcpNoDelay(true);
-      socket.setSoTimeout(socketTimeout);
+      
+      if (socket == null)
+      	{
+    	  System.out.println("K1ZFP::The socket is null.");
+      	}
+      else
+      	{
+    	  socket.setTcpNoDelay(true);
+    	  socket.setSoTimeout(socketTimeout);    	  
+      	}
       return socket;
 
     }

@@ -30,7 +30,7 @@ import java.io.IOException;
  * @version $Revision: 1.23 $
  */
 public class SftpFile
-    implements Comparable {
+    implements Comparable<SftpFile> {
   private String filename;
   private byte[] handle;
   private FileAttributes attrs;
@@ -323,10 +323,15 @@ public class SftpFile
             & FileAttributes.S_IFSOCK) == FileAttributes.S_IFSOCK;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Comparable#compareTo(java.lang.Object)
-   */
-  public int compareTo(Object o) {
-    return getFilename().compareTo( ( (SftpFile) o).getFilename());
-  }
+//  /* (non-Javadoc)
+//   * @see java.lang.Comparable#compareTo(java.lang.Object)
+//   */
+//  public int compareTo(Object o) {
+//    return getFilename().compareTo( ( (SftpFile) o).getFilename());
+//  }
+
+@Override
+public int compareTo(SftpFile o) {
+	return getFilename().compareTo( o.getFilename());
+}
 }

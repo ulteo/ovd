@@ -22,7 +22,6 @@ package com.sshtools.j2ssh.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -30,7 +29,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
@@ -51,9 +49,9 @@ import java.util.zip.ZipFile;
 public class ExtensionClassLoader
     extends ClassLoader {
 
-  Vector classpath = new Vector();
-  private Hashtable cache = new Hashtable();
-  private HashMap packages = new HashMap();
+  Vector<File> classpath = new Vector<File>();
+  private HashMap<String, ClassCacheEntry> cache = new HashMap<String, ClassCacheEntry>();
+  private HashMap<String, Package> packages = new HashMap<String, Package>();
 
   public ExtensionClassLoader() {
   }
@@ -132,18 +130,19 @@ public class ExtensionClassLoader
     }
   }
 
-  protected URL findResource(String name) {
+  @Override
+protected URL findResource(String name) {
 
     // The class object that will be returned.
     URL url = null;
 
     // Try to load it from each classpath
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     while (it.hasNext()) {
-      byte[] classData;
+      //byte[] classData;
 
-      File file = (File) it.next();
+      File file = it.next();
 
       if (file.isDirectory()) {
         url = findResourceInDirectory(file, name);
@@ -163,18 +162,19 @@ public class ExtensionClassLoader
 
   }
 
-  protected Enumeration findResources(String name) {
+  @Override
+  protected Enumeration<URL> findResources(String name) {
 
-    HashSet resources = new HashSet();
+    HashSet<URL> resources = new HashSet<URL>();
     URL url = null;
 
     // Try to load it from each classpath
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     while (it.hasNext()) {
-      byte[] classData;
+      //byte[] classData;
 
-      File file = (File) it.next();
+      File file = it.next();
 
       if (file.isDirectory()) {
         url = findResourceInDirectory(file, name);
@@ -193,15 +193,15 @@ public class ExtensionClassLoader
 
   public byte[] loadClassData(String name) throws ClassNotFoundException {
     // Try to load it from each classpath
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     // Cache entry.
-    ClassCacheEntry classCache = new ClassCacheEntry();
+    //ClassCacheEntry classCache = new ClassCacheEntry();
 
     while (it.hasNext()) {
       byte[] classData;
 
-      File file = (File) it.next();
+      File file = it.next();
 
       try {
         if (file.isDirectory()) {
@@ -226,14 +226,15 @@ public class ExtensionClassLoader
 
   }
 
-  public Class findClass(String name) throws ClassNotFoundException {
+  @Override
+  public Class<?> findClass(String name) throws ClassNotFoundException {
 
     // The class object that will be returned.
-    Class c = null;
+    Class<?> c = null;
 
     // Use the cached value, if this class is already loaded into
     // this classloader.
-    ClassCacheEntry entry = (ClassCacheEntry) cache.get(name);
+    ClassCacheEntry entry = cache.get(name);
 
     if (entry != null) {
 
@@ -244,7 +245,7 @@ public class ExtensionClassLoader
     }
 
     // Try to load it from each classpath
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     // Cache entry.
     ClassCacheEntry classCache = new ClassCacheEntry();
@@ -252,7 +253,7 @@ public class ExtensionClassLoader
     while (it.hasNext()) {
       byte[] classData;
 
-      File file = (File) it.next();
+      File file = it.next();
 
       try {
         if (file.isDirectory()) {
@@ -384,23 +385,23 @@ public class ExtensionClassLoader
     }
   }
 
-  private InputStream loadResourceFromDirectory(File dir, String name) {
-    // Name of resources are always separated by /
-    String fileName = name.replace('/', File.separatorChar);
-    File resFile = new File(dir, fileName);
-
-    if (resFile.exists()) {
-      try {
-        return new FileInputStream(resFile);
-      }
-      catch (FileNotFoundException shouldnothappen) {
-        return null;
-      }
-    }
-    else {
-      return null;
-    }
-  }
+//  private InputStream loadResourceFromDirectory(File dir, String name) {
+//    // Name of resources are always separated by /
+//    String fileName = name.replace('/', File.separatorChar);
+//    File resFile = new File(dir, fileName);
+//
+//    if (resFile.exists()) {
+//      try {
+//        return new FileInputStream(resFile);
+//      }
+//      catch (FileNotFoundException shouldnothappen) {
+//        return null;
+//      }
+//    }
+//    else {
+//      return null;
+//    }
+//  }
 
   private URL findResourceInDirectory(File dir, String name) {
     // Name of resources are always separated by /
@@ -409,7 +410,7 @@ public class ExtensionClassLoader
 
     if (resFile.exists()) {
       try {
-        return resFile.toURL();
+        return resFile.toURI().toURL();
       }
       catch (MalformedURLException ex) {
         return null;
@@ -427,7 +428,7 @@ public class ExtensionClassLoader
       ZipEntry entry = zipfile.getEntry(name);
 
       if (entry != null) {
-        return new URL("jar:" + file.toURL() + "!" +
+        return new URL("jar:" + file.toURI().toURL() + "!" +
                        (name.startsWith("/") ? "" : "/") + name);
       }
       else {
@@ -440,29 +441,29 @@ public class ExtensionClassLoader
 
   }
 
-  private InputStream loadResourceFromZipfile(File file, String name) {
-    try {
-      ZipFile zipfile = new ZipFile(file);
-      ZipEntry entry = zipfile.getEntry(name);
-
-      if (entry != null) {
-        return zipfile.getInputStream(entry);
-      }
-      else {
-        return null;
-      }
-    }
-    catch (IOException e) {
-      return null;
-    }
-  }
+//  private InputStream loadResourceFromZipfile(File file, String name) {
+//    try {
+//      ZipFile zipfile = new ZipFile(file);
+//      ZipEntry entry = zipfile.getEntry(name);
+//
+//      if (entry != null) {
+//        return zipfile.getInputStream(entry);
+//      }
+//      else {
+//        return null;
+//      }
+//    }
+//    catch (IOException e) {
+//      return null;
+//    }
+//  }
 
   private class ResourceEnumeration
-      implements Enumeration {
+      implements Enumeration<URL> {
 
-    Set resources;
-    Iterator it;
-    ResourceEnumeration(Set resources) {
+    Set<URL> resources;
+    Iterator<URL> it;
+    ResourceEnumeration(Set<URL> resources) {
       this.resources = resources;
       it = resources.iterator();
     }
@@ -471,13 +472,13 @@ public class ExtensionClassLoader
       return it.hasNext();
     }
 
-    public Object nextElement() {
+    public URL nextElement() {
       return it.next();
     }
   }
 
   private static class ClassCacheEntry {
-    Class loadedClass;
+    Class<?> loadedClass;
     File origin;
     long lastModified;
 

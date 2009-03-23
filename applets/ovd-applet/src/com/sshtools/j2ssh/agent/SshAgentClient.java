@@ -50,7 +50,7 @@ public class SshAgentClient {
   InputStream in;
   OutputStream out;
   boolean isForwarded = false;
-  HashMap messages = new HashMap();
+  HashMap<Integer, Class<?>> messages = new HashMap<Integer, Class<?>>();
   Socket socket;
 
   SshAgentClient(boolean isForwarded, String application, InputStream in,
@@ -282,7 +282,7 @@ public class SshAgentClient {
    *
    * @throws IOException if an IO error occurs
    */
-  public Map listKeys() throws IOException {
+  public Map<SshPublicKey, String> listKeys() throws IOException {
     SubsystemMessage msg = new SshAgentListKeys();
     sendMessage(msg);
 
@@ -475,10 +475,10 @@ public class SshAgentClient {
         len += in.read(msgdata, len, msgdata.length - len);
       }
 
-      Integer id = new Integer( (int) msgdata[0] & 0xFF);
+      Integer id = new Integer(msgdata[0] & 0xFF);
 
       if (messages.containsKey(id)) {
-        Class cls = (Class) messages.get(id);
+        Class<?> cls = messages.get(id);
         SubsystemMessage msg = (SubsystemMessage) cls.newInstance();
         msg.fromByteArray(msgdata);
 

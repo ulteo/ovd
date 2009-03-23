@@ -21,19 +21,17 @@
 
 package com.sshtools.j2ssh.transport.publickey;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
-import com.sshtools.j2ssh.configuration.ConfigurationException;
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.net.URL;
-import java.io.InputStream;
-import java.util.Vector;
 import com.sshtools.j2ssh.io.IOUtil;
 
 /**
@@ -44,37 +42,37 @@ import com.sshtools.j2ssh.io.IOUtil;
  */
 public class SshPrivateKeyFormatFactory {
   private static String defaultFormat;
-  private static HashMap formatTypes;
-  private static Vector types;
+  private static HashMap<String, Class<?>> formatTypes;
+  private static Vector<String> types;
 
   static {
 
 
-    List formats = new ArrayList();
-    types = new Vector();
-    formatTypes = new HashMap();
+    List<String> formats = new ArrayList<String>();
+    types = new Vector<String>();
+    formatTypes = new HashMap<String, Class<?>>();
     formats.add(SshtoolsPrivateKeyFormat.class.getName());
     defaultFormat = "SSHTools-PrivateKey-Base64Encoded";
 
     try {
 
-      Enumeration enumer =
+      Enumeration<URL> enumer =
           ConfigurationLoader.getExtensionClassLoader().getResources("j2ssh.privatekey");
       URL url;
       Properties properties = new Properties();
       InputStream in;
       while(enumer!=null && enumer.hasMoreElements()) {
-        url = (URL)enumer.nextElement();
+        url = enumer.nextElement();
         in = url.openStream();
         properties.load(in);
         IOUtil.closeStream(in);
         int num = 1;
-        String name = "";
-        Class cls;
+        //String name = "";
+        //Class cls;
         while(properties.getProperty("privatekey.name."
                                      + String.valueOf(num))
               != null) {
-            name = properties.getProperty("privatekey.name."
+            /*name = */properties.getProperty("privatekey.name."
                                           + String.valueOf(num));
             formats.add(properties.getProperty("privatekey.class."
                                                + String.valueOf(num)));
@@ -90,14 +88,14 @@ public class SshPrivateKeyFormatFactory {
 
     SshPrivateKeyFormat f;
 
-    Iterator it = formats.iterator();
+    Iterator<String> it = formats.iterator();
     String classname;
 
     while (it.hasNext()) {
-      classname = (String) it.next();
+      classname = it.next();
 
       try {
-        Class cls = ConfigurationLoader.getExtensionClass(classname);
+        Class<?> cls = ConfigurationLoader.getExtensionClass(classname);
         f = (SshPrivateKeyFormat) cls.newInstance();
         formatTypes.put(f.getFormatType(), cls);
         types.add(f.getFormatType());
@@ -114,7 +112,7 @@ public class SshPrivateKeyFormatFactory {
    *
    * @return
    */
-  public static List getSupportedFormats() {
+  public static List<String> getSupportedFormats() {
     return types;
   }
 
@@ -136,7 +134,7 @@ public class SshPrivateKeyFormatFactory {
       InvalidSshKeyException {
     try {
       if (formatTypes.containsKey(type)) {
-        return (SshPrivateKeyFormat) ( (Class) formatTypes.get(type))
+        return (SshPrivateKeyFormat) (formatTypes.get(type))
             .newInstance();
       }
       else {

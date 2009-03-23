@@ -68,7 +68,7 @@ public class Base64 {
       // Letters 'a' through 'm'
       39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -9, -9, -9, -9
   };
-  private final static byte BAD_ENCODING = -9;
+  //private final static byte BAD_ENCODING = -9;
 
   // Indicates error in encoding
   private final static byte white_SPACE_ENC = -5;
@@ -179,13 +179,19 @@ public class Base64 {
     // end catch
     finally {
       try {
-        bais.close();
+    	  if (bais!=null)
+    		  bais.close();
+    	  else
+    		  System.out.println("K1Z bais is null.");
       }
       catch (Exception e) {
       }
 
       try {
-        ois.close();
+    	  if (ois!=null)
+    		  ois.close();
+    	  else
+    		  System.out.println("K1Z ois is null.");
       }
       catch (Exception e) {
       }
@@ -265,26 +271,38 @@ public class Base64 {
     // end catch
     finally {
       try {
-        oos.close();
+    	  if (oos!=null)
+    		  oos.close();
+    	  else
+    		  System.out.println("K1ZFP oos is null.");
       }
       catch (Exception e) {
       }
 
       try {
-        b64os.close();
+        if (b64os!=null)
+        	b64os.close();
+        else
+    		  System.out.println("K1ZFP b64os is null.");
       }
       catch (Exception e) {
       }
 
       try {
-        baos.close();
+    	  if (baos != null)
+    		  baos.close();
+    	  else
+    		  System.out.println("K1ZFP baos is null");
       }
       catch (Exception e) {
       }
     }
 
     // end finally
-    return new String(baos.toByteArray());
+    if (baos != null)		
+    	return new String(baos.toByteArray());
+    System.out.println("K1Z baos is null, return empty String.");
+    return "";
   }
 
   // end encode
@@ -401,9 +419,9 @@ public class Base64 {
   /*
    *  ********  E N C O D I N G   M E T H O D S  ********
    */
-  private static byte[] encode3to4(byte[] threeBytes) {
-    return encode3to4(threeBytes, 3);
-  }
+//  private static byte[] encode3to4(byte[] threeBytes) {
+//    return encode3to4(threeBytes, 3);
+//  }
 
   // end encodeToBytes
   private static byte[] encode3to4(byte[] threeBytes, int numSigBytes) {
@@ -498,7 +516,8 @@ public class Base64 {
     }
 
     // end constructor
-    public int read() throws java.io.IOException {
+    @Override
+	public int read() throws java.io.IOException {
       // Do we need to get data?
       if (position < 0) {
         if (encode) {
@@ -596,7 +615,8 @@ public class Base64 {
     }
 
     // end read
-    public int read(byte[] dest, int off, int len) throws java.io.IOException {
+    @Override
+	public int read(byte[] dest, int off, int len) throws java.io.IOException {
       int i;
       int b;
 
@@ -645,7 +665,8 @@ public class Base64 {
     }
 
     // end constructor
-    public void close() throws java.io.IOException {
+    @Override
+	public void close() throws java.io.IOException {
       this.flush();
 
       super.close();
@@ -656,7 +677,8 @@ public class Base64 {
     }
 
     // end close
-    public void flush() throws java.io.IOException {
+    @Override
+	public void flush() throws java.io.IOException {
       if (position > 0) {
         if (encode) {
           out.write(Base64.encode3to4(buffer, position));
@@ -676,7 +698,8 @@ public class Base64 {
     }
 
     // end flush
-    public void write(int theByte) throws java.io.IOException {
+    @Override
+	public void write(int theByte) throws java.io.IOException {
       buffer[position++] = (byte) theByte;
 
       if (position >= bufferLength) {
@@ -704,7 +727,8 @@ public class Base64 {
     }
 
     // end write
-    public void write(byte[] theBytes, int off, int len) throws java.io.
+    @Override
+	public void write(byte[] theBytes, int off, int len) throws java.io.
         IOException {
       for (int i = 0; i < len; i++) {
         write(theBytes[off + i]);

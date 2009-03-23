@@ -100,8 +100,8 @@ public class SshConnectionProperties {
   protected final int MAX_PORTS = 5;
   protected int[] port = new int[MAX_PORTS];
 
-  protected Map localForwardings = new HashMap();
-  protected Map remoteForwardings = new HashMap();
+  protected Map<String, ForwardingConfiguration> localForwardings = new HashMap<String, ForwardingConfiguration>();
+  protected Map<String, ForwardingConfiguration> remoteForwardings = new HashMap<String, ForwardingConfiguration>();
   protected boolean forwardingAutoStart = false;
 
   /**
@@ -426,11 +426,11 @@ public class SshConnectionProperties {
     return prefDecryption;
   }
 
-  public Map getLocalForwardings() {
+  public Map<String, ForwardingConfiguration> getLocalForwardings() {
     return localForwardings;
   }
 
-  public Map getRemoteForwardings() {
+  public Map<String, ForwardingConfiguration> getRemoteForwardings() {
     return remoteForwardings;
   }
 

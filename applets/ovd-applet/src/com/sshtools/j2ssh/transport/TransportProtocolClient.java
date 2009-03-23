@@ -27,10 +27,13 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.sshtools.j2ssh.SshException;
 import com.sshtools.j2ssh.transport.cipher.SshCipher;
 import com.sshtools.j2ssh.transport.cipher.SshCipherFactory;
+import com.sshtools.j2ssh.transport.compression.SshCompression;
+import com.sshtools.j2ssh.transport.compression.SshCompressionFactory;
 import com.sshtools.j2ssh.transport.hmac.SshHmac;
 import com.sshtools.j2ssh.transport.hmac.SshHmacFactory;
 import com.sshtools.j2ssh.transport.kex.KeyExchangeException;
@@ -38,7 +41,6 @@ import com.sshtools.j2ssh.transport.kex.SshKeyExchange;
 import com.sshtools.j2ssh.transport.publickey.SshKeyPair;
 import com.sshtools.j2ssh.transport.publickey.SshKeyPairFactory;
 import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
-import com.sshtools.j2ssh.transport.compression.*;
 
 /**
  *
@@ -51,7 +53,7 @@ public class TransportProtocolClient
   /**  */
   protected SshPublicKey pk;
   private HostKeyVerification hosts;
-  private Map services = new HashMap();
+  private Map<String, Service> services = new HashMap<String, Service>();
   //private SshMessageStore ms = new SshMessageStore();
 
   /**
@@ -83,7 +85,8 @@ public class TransportProtocolClient
    *
    * @throws MessageAlreadyRegisteredException
    */
-  public void registerTransportMessages() throws
+  @Override
+public void registerTransportMessages() throws
       MessageAlreadyRegisteredException {
     // Setup our private message store, we wont be registering any direct messages
     getMessageStore().registerMessage(SshMsgServiceAccept.SSH_MSG_SERVICE_ACCEPT,
@@ -142,13 +145,14 @@ public class TransportProtocolClient
   /**
    *
    */
-  protected void onDisconnect() {
-    Iterator it = services.entrySet().iterator();
-    Map.Entry entry;
+  @Override
+protected void onDisconnect() {
+    Iterator<Entry<String, Service>> it = services.entrySet().iterator();
+    /*Map.Entry*/Entry<String, Service> entry;
 
     while (it.hasNext()) {
-      entry = (Map.Entry) it.next();
-      ( (Service) entry.getValue()).stop();
+      entry = it.next();
+      (entry.getValue()).stop();
     }
 
     services.clear();
@@ -161,7 +165,8 @@ public class TransportProtocolClient
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String getDecryptionAlgorithm() throws AlgorithmNotAgreedException {
+  @Override
+protected String getDecryptionAlgorithm() throws AlgorithmNotAgreedException {
     return determineAlgorithm(clientKexInit.getSupportedSCEncryption(),
                               serverKexInit.getSupportedSCEncryption());
   }
@@ -173,7 +178,8 @@ public class TransportProtocolClient
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String getEncryptionAlgorithm() throws AlgorithmNotAgreedException {
+  @Override
+protected String getEncryptionAlgorithm() throws AlgorithmNotAgreedException {
     return determineAlgorithm(clientKexInit.getSupportedCSEncryption(),
                               serverKexInit.getSupportedCSEncryption());
   }
@@ -185,7 +191,8 @@ public class TransportProtocolClient
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String getInputStreamCompAlgorithm() throws
+  @Override
+protected String getInputStreamCompAlgorithm() throws
       AlgorithmNotAgreedException {
     return determineAlgorithm(clientKexInit.getSupportedSCComp(),
                               serverKexInit.getSupportedSCComp());
@@ -198,7 +205,8 @@ public class TransportProtocolClient
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String getInputStreamMacAlgorithm() throws
+  @Override
+protected String getInputStreamMacAlgorithm() throws
       AlgorithmNotAgreedException {
     return determineAlgorithm(clientKexInit.getSupportedSCMac(),
                               serverKexInit.getSupportedSCMac());
@@ -207,7 +215,8 @@ public class TransportProtocolClient
   /**
    *
    */
-  protected void setLocalIdent() {
+  @Override
+protected void setLocalIdent() {
     clientIdent = "SSH-" + PROTOCOL_VERSION + "-"
         + SOFTWARE_VERSION_COMMENTS + " [CLIENT]";
   }
@@ -217,7 +226,8 @@ public class TransportProtocolClient
    *
    * @return
    */
-  public String getLocalId() {
+  @Override
+public String getLocalId() {
     return clientIdent;
   }
 
@@ -226,7 +236,8 @@ public class TransportProtocolClient
    *
    * @param msg
    */
-  protected void setLocalKexInit(SshMsgKexInit msg) {
+  @Override
+protected void setLocalKexInit(SshMsgKexInit msg) {
     //log.debug(msg.toString());
     clientKexInit = msg;
   }
@@ -236,7 +247,8 @@ public class TransportProtocolClient
    *
    * @return
    */
-  protected SshMsgKexInit getLocalKexInit() {
+  @Override
+protected SshMsgKexInit getLocalKexInit() {
     return clientKexInit;
   }
 
@@ -247,7 +259,8 @@ public class TransportProtocolClient
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String getOutputStreamCompAlgorithm() throws
+  @Override
+protected String getOutputStreamCompAlgorithm() throws
       AlgorithmNotAgreedException {
     return determineAlgorithm(clientKexInit.getSupportedCSComp(),
                               serverKexInit.getSupportedCSComp());
@@ -260,7 +273,8 @@ public class TransportProtocolClient
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String getOutputStreamMacAlgorithm() throws
+  @Override
+protected String getOutputStreamMacAlgorithm() throws
       AlgorithmNotAgreedException {
     return determineAlgorithm(clientKexInit.getSupportedCSMac(),
                               serverKexInit.getSupportedCSMac());
@@ -271,7 +285,8 @@ public class TransportProtocolClient
    *
    * @param ident
    */
-  protected void setRemoteIdent(String ident) {
+  @Override
+protected void setRemoteIdent(String ident) {
     serverIdent = ident;
   }
 
@@ -280,7 +295,8 @@ public class TransportProtocolClient
    *
    * @return
    */
-  public String getRemoteId() {
+  @Override
+public String getRemoteId() {
     return serverIdent;
   }
 
@@ -289,7 +305,8 @@ public class TransportProtocolClient
    *
    * @param msg
    */
-  protected void setRemoteKexInit(SshMsgKexInit msg) {
+  @Override
+protected void setRemoteKexInit(SshMsgKexInit msg) {
     serverKexInit = msg;
   }
 
@@ -298,7 +315,8 @@ public class TransportProtocolClient
    *
    * @return
    */
-  protected SshMsgKexInit getRemoteKexInit() {
+  @Override
+protected SshMsgKexInit getRemoteKexInit() {
     return serverKexInit;
   }
 
@@ -317,7 +335,8 @@ public class TransportProtocolClient
    * @throws IOException
    * @throws TransportProtocolException
    */
-  protected void onStartTransportProtocol() throws IOException {
+  @Override
+protected void onStartTransportProtocol() throws IOException {
     while ( (state.getValue() != TransportProtocolState.CONNECTED)
            && (state.getValue() != TransportProtocolState.DISCONNECTED)) {
       try {
@@ -346,7 +365,8 @@ public class TransportProtocolClient
    *
    * @throws IOException
    */
-  protected void performKeyExchange(SshKeyExchange kex,
+  @Override
+protected void performKeyExchange(SshKeyExchange kex,
                                     boolean firstPacketFollows,
                                     boolean useFirstPacket) throws IOException {
     // Start the key exchange instance
@@ -382,7 +402,8 @@ public class TransportProtocolClient
    * @throws AlgorithmNotSupportedException
    * @throws AlgorithmInitializationException
    */
-  protected void setupNewKeys(byte[] encryptCSKey, byte[] encryptCSIV,
+  @Override
+protected void setupNewKeys(byte[] encryptCSKey, byte[] encryptCSIV,
                               byte[] encryptSCKey, byte[] encryptSCIV,
                               byte[] macCSKey,
                               byte[] macSCKey) throws

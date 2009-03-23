@@ -72,7 +72,6 @@
 
 package org.vnc;
 
-import java.io.*;
 
 /// The DES encryption method.
 // <P>

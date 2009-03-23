@@ -42,10 +42,10 @@ import com.sshtools.j2ssh.transport.TransportProtocolState;
  */
 public class ConnectionProtocol
     extends AsyncService {
-  private HashSet reusableChannels = new HashSet();
-  private Map activeChannels = new HashMap();
-  private Map allowedChannels = new HashMap();
-  private Map globalRequests = new HashMap();
+  private HashSet<Long> reusableChannels = new HashSet<Long>();
+  private Map<Long, Channel> activeChannels = new HashMap<Long, Channel>();
+  private Map<String, ChannelFactory> allowedChannels = new HashMap<String, ChannelFactory>();
+  private Map<String, GlobalRequestHandler> globalRequests = new HashMap<String, GlobalRequestHandler>();
   private long nextChannelId = 0;
 
   /**
@@ -100,7 +100,8 @@ public class ConnectionProtocol
   }
 
 
-  public void onStart() {
+  @Override
+public void onStart() {
 
   }
 
@@ -137,7 +138,7 @@ public class ConnectionProtocol
         return new Long(nextChannelId++);
       }
       else {
-        return (Long) reusableChannels.iterator().next();
+        return reusableChannels.iterator().next();
       }
     }
   }
@@ -215,13 +216,14 @@ public class ConnectionProtocol
   /**
    *
    */
-  protected void onStop() {
+  @Override
+protected void onStop() {
 
     try {
       Channel channel;
 
-      for (Iterator x = activeChannels.values().iterator(); x.hasNext(); ) {
-        channel = (Channel) x.next();
+      for (Iterator<Channel> x = activeChannels.values().iterator(); x.hasNext(); ) {
+        channel = x.next();
 
         if (channel != null) {
           /*if (log.isDebugEnabled()) {
@@ -486,7 +488,7 @@ public class ConnectionProtocol
                                                boolean wantReply,
                                                byte[] requestData) throws
       IOException {
-    boolean success = true;
+//    boolean success = true;
 
     SshMsgGlobalRequest msg = new SshMsgGlobalRequest(requestName, true,
         requestData);
@@ -578,7 +580,7 @@ public class ConnectionProtocol
       sendGlobalRequestFailure();
     }
     else {
-      GlobalRequestHandler handler = (GlobalRequestHandler) globalRequests
+      GlobalRequestHandler handler = globalRequests
           .get(requestName);
 
       GlobalRequestResponse response = handler.processGlobalRequest(requestName,
@@ -602,7 +604,8 @@ public class ConnectionProtocol
    *
    * @throws IOException
    */
-  public void onMessageReceived(SshMessage msg) throws IOException {
+  @Override
+public void onMessageReceived(SshMessage msg) throws IOException {
     // Route the message to the correct handling function
     switch (msg.getMessageId()) {
       case SshMsgGlobalRequest.SSH_MSG_GLOBAL_REQUEST: {
@@ -663,7 +666,8 @@ public class ConnectionProtocol
   /**
    *
    */
-  protected void onServiceAccept() {
+  @Override
+protected void onServiceAccept() {
   }
 
   /**
@@ -673,7 +677,8 @@ public class ConnectionProtocol
    *
    * @throws IOException
    */
-  protected void onServiceInit(int startMode) throws IOException {
+  @Override
+protected void onServiceInit(int startMode) throws IOException {
 
     transport.getMessageStore().registerMessage(SshMsgChannelOpenConfirmation.
                                  SSH_MSG_CHANNEL_OPEN_CONFIRMATION,
@@ -725,7 +730,8 @@ public class ConnectionProtocol
   /**
    *
    */
-  protected void onServiceRequest() {
+  @Override
+protected void onServiceRequest() {
   }
 
   /**
@@ -814,7 +820,7 @@ public class ConnectionProtocol
                               + " requested");
       }
 
-      return (Channel) activeChannels.get(l);
+      return activeChannels.get(l);
     }
   }
 
@@ -892,7 +898,7 @@ public class ConnectionProtocol
         //       + " channel recieved");
 
       // Try to get the channel implementation from the allowed channels
-      ChannelFactory cf = (ChannelFactory) allowedChannels.get(msg
+      ChannelFactory cf = allowedChannels.get(msg
           .getChannelType());
 
       if (cf == null) {
@@ -938,12 +944,12 @@ public class ConnectionProtocol
     Channel channel = getChannel(msg.getRecipientChannel());
 
     if (channel == null) {
-     // log.warn("Remote computer tried to make a request for "
-       //        + "a non existence channel!");
+     System.out.println("Remote computer tried to make a request for a non existence channel!");
     }
-
+    else {
     channel.onChannelRequest(msg.getRequestType(), msg.getWantReply(),
                              msg.getChannelData());
+    }
   }
 
   private void onMsgChannelWindowAdjust(SshMsgChannelWindowAdjust msg) throws

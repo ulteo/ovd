@@ -44,7 +44,8 @@ public class PasswordAuthenticationClient
    *
    * @return
    */
-  public final String getMethodName() {
+  @Override
+public final String getMethodName() {
     return "password";
   }
 
@@ -60,7 +61,8 @@ public class PasswordAuthenticationClient
   /**
    *
    */
-  public void reset() {
+  @Override
+public void reset() {
     password = null;
   }
 
@@ -99,7 +101,8 @@ public class PasswordAuthenticationClient
     }*/
   /*public void setAuthenticatedTokens(Map tokens) {
     }*/
-  public void authenticate(AuthenticationProtocolClient authentication,
+  @Override
+public void authenticate(AuthenticationProtocolClient authentication,
                            String serviceToStart) throws IOException,
       TerminatedStateException {
     if ( (getUsername() == null) || (password == null)) {
@@ -150,7 +153,8 @@ public class PasswordAuthenticationClient
    *
    * @return
    */
-  public Properties getPersistableProperties() {
+  @Override
+public Properties getPersistableProperties() {
     Properties properties = new Properties();
 
     if (getUsername() != null) {
@@ -165,7 +169,8 @@ public class PasswordAuthenticationClient
    *
    * @param properties
    */
-  public void setPersistableProperties(Properties properties) {
+  @Override
+public void setPersistableProperties(Properties properties) {
     setUsername(properties.getProperty("Username"));
 
     if (properties.getProperty("Password") != null) {
@@ -178,7 +183,8 @@ public class PasswordAuthenticationClient
    *
    * @return
    */
-  public boolean canAuthenticate() {
+  @Override
+public boolean canAuthenticate() {
     return ( (getUsername() != null) && (password != null));
   }
 }

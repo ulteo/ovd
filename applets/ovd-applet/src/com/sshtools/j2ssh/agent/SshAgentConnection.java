@@ -46,7 +46,7 @@ public class SshAgentConnection
   OutputStream out;
   KeyStore keystore;
   Thread thread;
-  Vector forwardingNodes = new Vector();
+  Vector<ForwardingNotice> forwardingNodes = new Vector<ForwardingNotice>();
   Socket socket;
 
   SshAgentConnection(KeyStore keystore, InputStream in, OutputStream out) {
@@ -242,7 +242,7 @@ public class SshAgentConnection
       }
       else if (msg.getOperation().equals("hash-and-sign")) {
         byte[] sig = keystore.performHashAndSign(msg.getPublicKey(),
-                                                 forwardingNodes,
+                                                 /*forwardingNodes,*/
                                                  msg.getOperationData());
         sendOperationComplete(sig);
       }
@@ -418,7 +418,7 @@ public class SshAgentConnection
    * @throws IOException if an IO error occurs
    */
   protected void onMessageReceived(byte[] msgdata) throws IOException {
-    switch ( (int) (msgdata[0] & 0xFF)) {
+    switch ( (msgdata[0] & 0xFF)) {
       case SshAgentForwardingNotice.SSH_AGENT_FORWARDING_NOTICE: {
 
         SshAgentForwardingNotice msg = new SshAgentForwardingNotice();

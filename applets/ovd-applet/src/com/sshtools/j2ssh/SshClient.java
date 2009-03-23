@@ -46,6 +46,7 @@ import com.sshtools.j2ssh.sftp.SftpSubsystemClient;
 import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 import com.sshtools.j2ssh.transport.HostKeyVerification;
 import com.sshtools.j2ssh.transport.TransportProtocolClient;
+import com.sshtools.j2ssh.transport.TransportProtocolCommon;
 import com.sshtools.j2ssh.transport.TransportProtocolState;
 import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
 import com.sshtools.j2ssh.util.State;
@@ -145,7 +146,7 @@ public class SshClient {
   protected SshEventAdapter eventHandler = null;
 
   /** The currently active channels for this SSH Client connection. */
-  protected Vector activeChannels = new Vector();
+  protected Vector<Channel> activeChannels = new Vector<Channel>();
 
   /**
    * An channel event listener implemention to maintain the active channel
@@ -161,7 +162,7 @@ public class SshClient {
   protected boolean useDefaultForwarding = true;
 
   /** The currently active Sftp clients */
-  private Vector activeSftpClients = new Vector();
+  private Vector<SftpClient> activeSftpClients = new Vector<SftpClient>();
 
   /**
    * <p>
@@ -228,7 +229,7 @@ public class SshClient {
    *
    * @since 0.2.0
    */
-  public List getAvailableAuthMethods(String username) throws IOException {
+  public List<String> getAvailableAuthMethods(String username) throws IOException {
     if (authentication != null) {
       return authentication.getAvailableAuths(username,
                                               connection.getServiceName());
@@ -403,7 +404,7 @@ public class SshClient {
    * @since 0.2.0
    */
   public String getRemoteEOLString() {
-    return ( (transport.getRemoteEOL() == TransportProtocolClient.EOL_CRLF)
+    return ( (transport.getRemoteEOL() == TransportProtocolCommon.EOL_CRLF)
             ? "\r\n" : "\n");
   }
 
@@ -932,9 +933,9 @@ public class SshClient {
    *
    * @since 0.2.0
    */
-  public List getActiveChannels() {
+  public List<Channel> getActiveChannels() {
     synchronized (activeChannels) {
-      return (List) activeChannels.clone();
+      return (List<Channel>) activeChannels.clone();
     }
   }
 
@@ -969,7 +970,7 @@ public class SshClient {
    * @since 0.2.0
    */
   public boolean hasActiveSession(String type) {
-    Iterator it = activeChannels.iterator();
+    Iterator<Channel> it = activeChannels.iterator();
     Object obj;
 
     while (it.hasNext()) {
@@ -999,7 +1000,7 @@ public class SshClient {
    * @since 0.2.0
    */
   public SessionChannelClient getActiveSession(String type) throws IOException {
-    Iterator it = activeChannels.iterator();
+    Iterator<Channel> it = activeChannels.iterator();
     Object obj;
 
     while (it.hasNext()) {
@@ -1148,7 +1149,7 @@ public class SshClient {
   public SftpClient getActiveSftpClient() throws IOException {
     synchronized (activeSftpClients) {
       if (activeSftpClients.size() > 0) {
-        return (SftpClient) activeSftpClients.get(0);
+        return activeSftpClients.get(0);
       }
       else {
         throw new SshException("There are no active SFTP clients");
@@ -1228,7 +1229,8 @@ public class SshClient {
    * @deprecated Access to this low level API is now deprecated. Use SftpClient
    * instead
    */
-  public SftpSubsystemClient openSftpChannel() throws IOException {
+  @Deprecated
+public SftpSubsystemClient openSftpChannel() throws IOException {
     return openSftpChannel(null);
   }
 
@@ -1244,9 +1246,10 @@ public class SshClient {
    * @deprecated Access to this low level API is now deprecated. Use SftpClient
    * instead
    */
-  public SftpSubsystemClient openSftpChannel(
+  @Deprecated
+public SftpSubsystemClient openSftpChannel(
       ChannelEventListener eventListener) throws IOException {
-    SessionChannelClient session = openSessionChannel(eventListener);
+    /*SessionChannelClient session = */openSessionChannel(eventListener);
 
     SftpSubsystemClient sftp = new SftpSubsystemClient();
 
@@ -1381,7 +1384,8 @@ public class SshClient {
      *
      * @param channel The channel being opened
      */
-    public void onChannelOpen(Channel channel) {
+    @Override
+	public void onChannelOpen(Channel channel) {
       synchronized (activeChannels) {
         activeChannels.add(channel);
       }
@@ -1394,7 +1398,8 @@ public class SshClient {
      *
      * @param channel The channle being closed
      */
-    public void onChannelClose(Channel channel) {
+    @Override
+	public void onChannelClose(Channel channel) {
       synchronized (activeChannels) {
         activeChannels.remove(channel);
       }

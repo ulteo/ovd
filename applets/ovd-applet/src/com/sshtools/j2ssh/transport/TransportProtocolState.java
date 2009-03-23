@@ -113,7 +113,8 @@ public class TransportProtocolState
    *
    * @return
    */
-  public boolean isValidState(int state) {
+  @Override
+public boolean isValidState(int state) {
     return ( (state == UNINITIALIZED) || (state == NEGOTIATING_PROTOCOL)
             || (state == PERFORMING_KEYEXCHANGE) || (state == CONNECTED)
             || (state == DISCONNECTED));

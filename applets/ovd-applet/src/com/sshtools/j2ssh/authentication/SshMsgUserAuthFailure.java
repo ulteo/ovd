@@ -42,7 +42,7 @@ public class SshMsgUserAuthFailure
     extends SshMessage {
   /**  */
   protected final static int SSH_MSG_USERAUTH_FAILURE = 51;
-  private List auths;
+  private List<String> auths;
   private boolean partialSuccess;
 
   /**
@@ -74,7 +74,7 @@ public class SshMsgUserAuthFailure
    *
    * @return
    */
-  public List getAvailableAuthentications() {
+  public List<String> getAvailableAuthentications() {
     return auths;
   }
 
@@ -83,7 +83,8 @@ public class SshMsgUserAuthFailure
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_USERAUTH_FAILURE";
   }
 
@@ -103,15 +104,16 @@ public class SshMsgUserAuthFailure
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       String authMethods = null;
-      Iterator it = auths.iterator();
+      Iterator<String> it = auths.iterator();
 
       while (it.hasNext()) {
         authMethods = ( (authMethods == null) ? "" : (authMethods + ","))
-            + (String) it.next();
+            + it.next();
       }
 
       baw.writeString(authMethods);
@@ -130,7 +132,8 @@ public class SshMsgUserAuthFailure
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       String auths = bar.readString();
@@ -146,10 +149,10 @@ public class SshMsgUserAuthFailure
   private void loadListFromDelimString(String list) {
     StringTokenizer tok = new StringTokenizer(list, ",");
 
-    auths = new ArrayList();
+    auths = new ArrayList<String>();
 
     while (tok.hasMoreElements()) {
-      auths.add(tok.nextElement());
+      auths.add(tok.nextElement().toString());
     }
   }
 }

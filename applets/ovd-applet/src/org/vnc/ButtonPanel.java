@@ -25,9 +25,14 @@
 
 package org.vnc;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
+import java.awt.Button;
+import java.awt.FlowLayout;
+import java.awt.Panel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 class ButtonPanel extends Panel implements ActionListener {
 
@@ -132,11 +137,11 @@ class ButtonPanel extends Panel implements ActionListener {
         final int modifiers = InputEvent.CTRL_MASK | InputEvent.ALT_MASK;
 
         KeyEvent ctrlAltDelEvent =
-          new KeyEvent(this, KeyEvent.KEY_PRESSED, 0, modifiers, 127);
+          new KeyEvent(this, KeyEvent.KEY_PRESSED, 0, modifiers, 127, (char)127);
         viewer.rfb.writeKeyEvent(ctrlAltDelEvent);
 
         ctrlAltDelEvent =
-          new KeyEvent(this, KeyEvent.KEY_RELEASED, 0, modifiers, 127);
+          new KeyEvent(this, KeyEvent.KEY_RELEASED, 0, modifiers, 127, (char)127);
         viewer.rfb.writeKeyEvent(ctrlAltDelEvent);
 
       } catch (IOException e) {

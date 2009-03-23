@@ -42,12 +42,12 @@ public class SubsystemMessageStore {
   // List to hold messages as they are received
 
   /**  */
-  protected List messages = new ArrayList();
+  protected List<SubsystemMessage> messages = new ArrayList<SubsystemMessage>();
 
   // Map to hold message implementation classes
 
   /**  */
-  protected Map registeredMessages = new HashMap();
+  protected Map<Integer, Class<?>> registeredMessages = new HashMap<Integer, Class<?>>();
   private OpenClosedState state = new OpenClosedState(OpenClosedState.OPEN);
 
   /**
@@ -80,7 +80,7 @@ public class SubsystemMessageStore {
   public synchronized void addMessage(byte[] msgdata) throws
       InvalidMessageException {
     try {
-      Class impl = (Class) registeredMessages.get(new Integer(msgdata[0]));
+      Class<?> impl = registeredMessages.get(new Integer(msgdata[0]));
 
       if (impl == null) {
         throw new InvalidMessageException("The message with id "
@@ -152,7 +152,7 @@ public class SubsystemMessageStore {
     }
 
     if (messages.size() > 0) {
-      return (SubsystemMessage) messages.remove(0);
+      return messages.remove(0);
     }
     else {
       throw new MessageNotAvailableException();
@@ -165,7 +165,7 @@ public class SubsystemMessageStore {
    * @param messageId
    * @param implementor
    */
-  public void registerMessage(int messageId, Class implementor) {
+  public void registerMessage(int messageId, Class<?> implementor) {
     registeredMessages.put(new Integer(messageId), implementor);
   }
 

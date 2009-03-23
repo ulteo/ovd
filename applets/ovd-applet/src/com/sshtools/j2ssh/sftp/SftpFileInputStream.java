@@ -68,7 +68,8 @@ public class SftpFileInputStream
    *
    * @throws IOException
    */
-  public int read(byte[] buffer, int offset, int len) throws IOException {
+  @Override
+public int read(byte[] buffer, int offset, int len) throws IOException {
     int read = file.getSFTPSubsystem().readFile(file.getHandle(), position,
                                                 buffer, offset, len);
 
@@ -86,7 +87,8 @@ public class SftpFileInputStream
    *
    * @throws java.io.IOException
    */
-  public int read() throws java.io.IOException {
+  @Override
+public int read() throws java.io.IOException {
     byte[] buffer = new byte[1];
     int read = file.getSFTPSubsystem().readFile(file.getHandle(), position,
                                                 buffer, 0, 1);
@@ -100,7 +102,8 @@ public class SftpFileInputStream
    *
    * @throws IOException
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     file.close();
   }
 
@@ -109,7 +112,8 @@ public class SftpFileInputStream
    *
    * @throws IOException
    */
-  protected void finalize() throws IOException {
+  @Override
+protected void finalize() throws IOException {
     if (file.getHandle() != null) {
       close();
     }

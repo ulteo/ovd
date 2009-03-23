@@ -57,13 +57,13 @@ public abstract class Channel {
 
   /**  */
   protected ChannelState state = new ChannelState();
-  private boolean isClosed = false;
+  //private boolean isClosed = false;
   private boolean isLocalEOF = false;
   private boolean isRemoteEOF = false;
   private boolean localHasClosed = false;
   private boolean remoteHasClosed = false;
   private String name = "Unnamed Channel";
-  private Vector eventListeners = new Vector();
+  private Vector<ChannelEventListener> eventListeners = new Vector<ChannelEventListener>();
 
   /**
    * Creates a new Channel object.
@@ -158,12 +158,12 @@ public abstract class Channel {
 
         onChannelData(msg);
 
-        Iterator it = eventListeners.iterator();
+        Iterator<ChannelEventListener> it = eventListeners.iterator();
         ChannelEventListener eventListener;
 
         while (it.hasNext()) {
 	  try{
-           eventListener = (ChannelEventListener) it.next();
+           eventListener = it.next();
            if (eventListener != null) {
              eventListener.onDataReceived(this, msg.getChannelData());
            }
@@ -221,11 +221,11 @@ public abstract class Channel {
      if (!isClosed()) {
       connection.sendChannelData(this, data);
 
-      Iterator it = eventListeners.iterator();
+      Iterator<ChannelEventListener> it = eventListeners.iterator();
       ChannelEventListener eventListener;
 
       while (it.hasNext()) {
-        eventListener = (ChannelEventListener) it.next();
+        eventListener = it.next();
 
         if (eventListener != null) {
           eventListener.onDataSent(this, data);
@@ -257,11 +257,11 @@ public abstract class Channel {
     if (!isClosed()) {
       connection.sendChannelExtData(this, type, data);
 
-      Iterator it = eventListeners.iterator();
+      Iterator<ChannelEventListener> it = eventListeners.iterator();
       ChannelEventListener eventListener;
 
       while (it.hasNext()) {
-        eventListener = (ChannelEventListener) it.next();
+        eventListener = it.next();
 
         if (eventListener != null) {
           eventListener.onDataSent(this, data);
@@ -316,12 +316,12 @@ public abstract class Channel {
 
       onChannelExtData(msg);
 
-      Iterator it = eventListeners.iterator();
+      Iterator<ChannelEventListener> it = eventListeners.iterator();
       ChannelEventListener eventListener;
 
       while (it.hasNext()) {
 	try{
-        eventListener = (ChannelEventListener) it.next();
+        eventListener = it.next();
 
          if (eventListener != null) {
            eventListener.onDataReceived(this, msg.getChannelData());
@@ -451,11 +451,11 @@ public abstract class Channel {
 
       onChannelClose();
 
-      Iterator it = eventListeners.iterator();
+      Iterator<ChannelEventListener> it = eventListeners.iterator();
       ChannelEventListener eventListener;
 
       while (it.hasNext()) {
-        eventListener = (ChannelEventListener) it.next();
+        eventListener = it.next();
 
         if (eventListener != null) {
           eventListener.onChannelClose(this);
@@ -509,11 +509,11 @@ public abstract class Channel {
 
       onChannelEOF();
 
-      Iterator it = eventListeners.iterator();
+      Iterator<ChannelEventListener> it = eventListeners.iterator();
       ChannelEventListener eventListener;
 
       while (it.hasNext()) {
-        eventListener = (ChannelEventListener) it.next();
+        eventListener = it.next();
 
         if (eventListener != null) {
           eventListener.onChannelEOF(this);
@@ -567,11 +567,11 @@ public abstract class Channel {
 
       onChannelOpen();
 
-      Iterator it = eventListeners.iterator();
+      Iterator<ChannelEventListener> it = eventListeners.iterator();
       ChannelEventListener eventListener;
 
       while (it.hasNext()) {
-        eventListener = (ChannelEventListener) it.next();
+        eventListener =  it.next();
 
         if (eventListener != null) {
           eventListener.onChannelOpen(this);

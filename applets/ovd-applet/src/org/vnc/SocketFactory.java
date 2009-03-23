@@ -24,9 +24,9 @@
 
 package org.vnc;
 
-import java.applet.*;
-import java.net.*;
-import java.io.*;
+import java.applet.Applet;
+import java.io.IOException;
+import java.net.Socket;
 
 public interface SocketFactory {
 

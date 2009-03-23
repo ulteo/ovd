@@ -24,6 +24,7 @@ package com.sshtools.j2ssh.transport.cipher;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
@@ -55,7 +56,8 @@ public class BlowfishCbc
    *
    * @return
    */
-  public int getBlockSize() {
+  @Override
+public int getBlockSize() {
     return cipher.getBlockSize();
   }
 
@@ -68,7 +70,8 @@ public class BlowfishCbc
    *
    * @throws AlgorithmOperationException
    */
-  public void init(int mode, byte[] iv, byte[] keydata) throws
+  @Override
+public void init(int mode, byte[] iv, byte[] keydata) throws
       AlgorithmOperationException {
     try {
       cipher = Cipher.getInstance("Blowfish/CBC/NoPadding");
@@ -113,7 +116,8 @@ public class BlowfishCbc
  	   * @throws AlgorithmOperationException
  	   */
 
-  public byte[] transform(byte[] data, int offset, int len) throws
+  @Override
+public byte[] transform(byte[] data, int offset, int len) throws
        AlgorithmOperationException {
  	    return cipher.update(data, offset, len);
    }

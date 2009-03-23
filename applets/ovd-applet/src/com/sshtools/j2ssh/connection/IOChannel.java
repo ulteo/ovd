@@ -70,7 +70,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  protected void init(ConnectionProtocol connection, long localChannelId,
+  @Override
+protected void init(ConnectionProtocol connection, long localChannelId,
                       long senderChannelId, long initialWindowSize,
                       long maximumPacketSize) throws IOException {
     this.in = new ChannelInputStream(incoming); //ChannelInputStream.createStandard(incoming);
@@ -85,7 +86,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  protected void open() throws IOException {
+  @Override
+protected void open() throws IOException {
     super.open();
 
     // If were bound send any outstanding messages sitting around
@@ -126,7 +128,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  protected void onChannelData(SshMsgChannelData msg) throws IOException {
+  @Override
+protected void onChannelData(SshMsgChannelData msg) throws IOException {
     // Synchronize on the message store to ensure that another thread
     // does not try to read its data. This will make sure that the incoming
     // messages are not being flushed to an outputstream after a bind
@@ -150,7 +153,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  public void setLocalEOF() throws IOException {
+  @Override
+public void setLocalEOF() throws IOException {
     super.setLocalEOF();
 
     if (!out.isClosed()) {
@@ -163,7 +167,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  protected void onChannelEOF() throws IOException {
+  @Override
+protected void onChannelEOF() throws IOException {
     if (!in.isClosed()) {
       in.close();
     }
@@ -174,7 +179,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  protected void onChannelClose() throws IOException {
+  @Override
+protected void onChannelClose() throws IOException {
     // Close the input/output streams
     if (!in.isClosed()) {
       in.close();
@@ -202,7 +208,8 @@ public abstract class IOChannel
    *
    * @throws IOException
    */
-  protected void onChannelExtData(SshMsgChannelExtendedData msg) throws
+  @Override
+protected void onChannelExtData(SshMsgChannelExtendedData msg) throws
       IOException {
     // This class will not deal with extended data
     // incoming.addMessage(msg);

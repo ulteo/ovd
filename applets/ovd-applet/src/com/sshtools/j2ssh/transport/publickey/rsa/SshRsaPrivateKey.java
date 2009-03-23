@@ -101,7 +101,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (obj instanceof SshRsaPrivateKey) {
       return prvKey.equals( ( (SshRsaPrivateKey) obj).prvKey);
     }
@@ -114,7 +115,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return prvKey.hashCode();
   }
 
@@ -123,7 +125,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public String getAlgorithmName() {
+  @Override
+public String getAlgorithmName() {
     return "ssh-rsa";
   }
 
@@ -132,7 +135,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public int getBitLength() {
+  @Override
+public int getBitLength() {
     return prvKey.getModulus().bitLength();
   }
 
@@ -141,7 +145,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public byte[] getEncoded() {
+  @Override
+public byte[] getEncoded() {
     try {
       ByteArrayWriter baw = new ByteArrayWriter();
 
@@ -163,7 +168,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public SshPublicKey getPublicKey() {
+  @Override
+public SshPublicKey getPublicKey() {
     return new SshRsaPublicKey(pubKey);
   }
 
@@ -174,7 +180,8 @@ public class SshRsaPrivateKey
    *
    * @return
    */
-  public byte[] generateSignature(byte[] data) {
+  @Override
+public byte[] generateSignature(byte[] data) {
     try {
       Signature sig = Signature.getInstance("SHA1withRSA");
       sig.initSign(prvKey);

@@ -60,6 +60,7 @@ public class SubsystemOutputStream
    *
    * @throws IOException
    */
+  @Override
   public void write(byte[] b, int off, int len) throws IOException {
     // Write the data
     super.write(b, off, len);
@@ -74,6 +75,7 @@ public class SubsystemOutputStream
    *
    * @throws IOException
    */
+  @Override
   public void write(int b) throws IOException {
     buffer.write(b);
   }

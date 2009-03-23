@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.sshtools.j2ssh.io.ByteArrayReader;
 import com.sshtools.j2ssh.io.ByteArrayWriter;
@@ -37,14 +38,14 @@ class SshAgentKeyList
     extends SubsystemMessage {
   /**  */
   public static final int SSH_AGENT_KEY_LIST = 104;
-  private Map keys;
+  private Map<SshPublicKey, String> keys;
 
   /**
    * Creates a new SshAgentKeyList object.
    *
    * @param keys
    */
-  public SshAgentKeyList(Map keys) {
+  public SshAgentKeyList(Map<SshPublicKey, String> keys) {
     super(SSH_AGENT_KEY_LIST);
     this.keys = keys;
   }
@@ -54,7 +55,7 @@ class SshAgentKeyList
    */
   public SshAgentKeyList() {
     super(SSH_AGENT_KEY_LIST);
-    this.keys = new HashMap();
+    this.keys = new HashMap<SshPublicKey, String>();
   }
 
   /**
@@ -62,7 +63,7 @@ class SshAgentKeyList
    *
    * @return
    */
-  public Map getKeys() {
+  public Map<SshPublicKey, String> getKeys() {
     return keys;
   }
 
@@ -71,7 +72,8 @@ class SshAgentKeyList
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_AGENT_KEY_LIST";
   }
 
@@ -85,21 +87,21 @@ class SshAgentKeyList
    *         ME!
    * @throws InvalidMessageException
    */
-  public void constructByteArray(ByteArrayWriter baw) throws java.io.
-      IOException,
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws java.io.IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     try {
       baw.writeInt(keys.size());
 
-      Map.Entry entry;
-      Iterator it = keys.entrySet().iterator();
+      Map.Entry<SshPublicKey, String> entry;
+      Iterator<Entry<SshPublicKey, String>> it = keys.entrySet().iterator();
       SshPublicKey key;
       String description;
 
       while (it.hasNext()) {
-        entry = (Map.Entry) it.next();
-        key = (SshPublicKey) entry.getKey();
-        description = (String) entry.getValue();
+        entry = it.next();
+        key = entry.getKey();
+        description = entry.getValue();
         baw.writeBinaryString(key.getEncoded());
         baw.writeString(description);
       }
@@ -119,7 +121,8 @@ class SshAgentKeyList
    *         ME!
    * @throws InvalidMessageException
    */
-  public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
+  @Override
+public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     try {
       int num = (int) bar.readInt();

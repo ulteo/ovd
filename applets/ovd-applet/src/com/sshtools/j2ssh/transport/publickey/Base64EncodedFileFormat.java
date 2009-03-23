@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.sshtools.j2ssh.io.ByteArrayWriter;
 import com.sshtools.j2ssh.util.Base64;
 
 /**
@@ -47,7 +46,7 @@ public abstract class Base64EncodedFileFormat
 
   /**  */
   protected String end;
-  private Map headers = new HashMap();
+  private Map<String, String> headers = new HashMap<String, String>();
   private int MAX_LINE_LENGTH = 70;
 
   /**
@@ -106,7 +105,7 @@ public abstract class Base64EncodedFileFormat
    * @return
    */
   public String getHeaderValue(String headerTag) {
-    return (String) headers.get(headerTag);
+    return headers.get(headerTag);
   }
 
   /**
@@ -178,7 +177,7 @@ public abstract class Base64EncodedFileFormat
       }
 
       // This is now the public key blob Base64 encoded
-      ByteArrayWriter baw = new ByteArrayWriter();
+      //ByteArrayWriter baw = new ByteArrayWriter();
 
       while (true) {
         blob += line;
@@ -222,12 +221,12 @@ public abstract class Base64EncodedFileFormat
 
       int pos;
 
-      Set tags = headers.keySet();
-      Iterator it = tags.iterator();
+      Set<String> tags = headers.keySet();
+      Iterator<String> it = tags.iterator();
 
       while (it.hasNext()) {
-        headerTag = (String) it.next();
-        headerValue = (String) headers.get(headerTag);
+        headerTag = it.next();
+        headerValue = headers.get(headerTag);
 
         String header = headerTag + ": " + headerValue;
         pos = 0;

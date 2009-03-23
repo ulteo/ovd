@@ -25,7 +25,6 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.DSAPrivateKey;
-import java.security.interfaces.DSAPublicKey;
 
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.transport.publickey.InvalidSshKeyException;
@@ -50,7 +49,8 @@ public class SshDssKeyPair
    *
    * @throws InvalidSshKeyException
    */
-  public SshPrivateKey decodePrivateKey(byte[] encoded) throws
+  @Override
+public SshPrivateKey decodePrivateKey(byte[] encoded) throws
       InvalidSshKeyException {
     return new SshDssPrivateKey(encoded);
   }
@@ -64,7 +64,8 @@ public class SshDssKeyPair
    *
    * @throws InvalidSshKeyException
    */
-  public SshPublicKey decodePublicKey(byte[] encoded) throws
+  @Override
+public SshPublicKey decodePublicKey(byte[] encoded) throws
       InvalidSshKeyException {
     return new SshDssPublicKey(encoded);
   }
@@ -74,7 +75,8 @@ public class SshDssKeyPair
    *
    * @param bits
    */
-  public void generate(int bits) {
+  @Override
+public void generate(int bits) {
     try {
       // Initialize the generator
       KeyPairGenerator keyGen = KeyPairGenerator.getInstance("DSA");
@@ -84,7 +86,7 @@ public class SshDssKeyPair
 
       // Get the keys
       DSAPrivateKey prvKey = (DSAPrivateKey) pair.getPrivate();
-      DSAPublicKey pubKey = (DSAPublicKey) pair.getPublic();
+      /*DSAPublicKey pubKey = (DSAPublicKey)*/ pair.getPublic();
 
       // Set the private key (the public is automatically generated)
       setPrivateKey(new SshDssPrivateKey(prvKey));

@@ -26,10 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
 
 import com.sshtools.j2ssh.io.ByteArrayReader;
 import com.sshtools.j2ssh.io.ByteArrayWriter;
@@ -65,10 +62,10 @@ public class FileAttributes {
 
   // Also as ACMODTIME for version 3
   private static final int SSH_FILEXFER_ATTR_ACCESSTIME = 0x0000008;
-  private static final int SSH_FILEXFER_ATTR_CREATETIME = 0x0000010;
-  private static final int SSH_FILEXFER_ATTR_MODIFYTIME = 0x0000020;
-  private static final int SSH_FILEXFER_ATTR_ACL = 0x0000040;
-  private static final int SSH_FILEXFER_ATTR_OWNERGROUP = 0x0000080;
+//  private static final int SSH_FILEXFER_ATTR_CREATETIME = 0x0000010;
+//  private static final int SSH_FILEXFER_ATTR_MODIFYTIME = 0x0000020;
+//  private static final int SSH_FILEXFER_ATTR_ACL = 0x0000040;
+//  private static final int SSH_FILEXFER_ATTR_OWNERGROUP = 0x0000080;
   private static final int SSH_FILEXFER_ATTR_EXTENDED = 0x8000000;
 
   // Posix stats
@@ -141,8 +138,8 @@ public class FileAttributes {
   UnsignedInteger32 atime = null; // Version 3 & 4
   UnsignedInteger32 createtime = null; // Version 4 only
   UnsignedInteger32 mtime = null; // Version 3 & 4
-  List acl = new Vector(); // Version 4 only
-  Map extended = new HashMap(); // Version 3 & 4
+//  List acl = new Vector(); // Version 4 only
+  Map<String, String> extended = new HashMap<String, String>(); // Version 3 & 4
   char[] types = {
       'p', 'c', 'd', 'b', '-', 'l', 's', };
 
@@ -527,7 +524,7 @@ public class FileAttributes {
       public List getACL() {
      return acl;
       }*/
-  public Map getExtendedAttributes() {
+  public Map<String, String> getExtendedAttributes() {
     return extended;
   }
 
@@ -619,13 +616,14 @@ public class FileAttributes {
     if (isFlagSet(SSH_FILEXFER_ATTR_EXTENDED)) {
       baw.writeInt(extended.size());
 
-      Iterator it = extended.entrySet().iterator();
-      Set set;
+      Iterator<String> it = extended.keySet().iterator();
+      //Set set;
 
       while (it.hasNext()) {
-        Map.Entry entry = (Map.Entry) it.next();
-        baw.writeString( (String) entry.getKey());
-        baw.writeString( (String) entry.getValue());
+        //Map.Entry entry = (Map.Entry) it.next();
+    	String s = it.next();
+        baw.writeString(s);
+        baw.writeString(extended.get(s));
       }
     }
 

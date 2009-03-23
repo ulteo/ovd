@@ -186,7 +186,8 @@ public class XDisplay {
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return getHost() + ":" + getDisplay()
         + ( (getScreen() == 0) ? "" : ("." + getScreen()));
   }

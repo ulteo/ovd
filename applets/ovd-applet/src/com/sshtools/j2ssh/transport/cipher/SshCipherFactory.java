@@ -21,21 +21,16 @@
 
 package com.sshtools.j2ssh.transport.cipher;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Enumeration;
-import java.util.Properties;
-import java.net.URL;
 import java.io.InputStream;
-import java.util.Vector;
-
-import com.sshtools.j2ssh.configuration.ConfigurationException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
-import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 import com.sshtools.j2ssh.io.IOUtil;
+import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 
 /**
  *
@@ -44,12 +39,12 @@ import com.sshtools.j2ssh.io.IOUtil;
  * @version $Revision: 1.32 $
  */
 public class SshCipherFactory {
-  private static HashMap ciphers;
+  private static HashMap<String, Class<?>> ciphers;
   private static String defaultCipher;
-  private static ArrayList supported;
+  private static ArrayList<String> supported;
 
   static {
-    ciphers = new HashMap();
+    ciphers = new HashMap<String, Class<?>>();
 
 
     ciphers.put("3des-cbc", TripleDesCbc.class);
@@ -58,18 +53,18 @@ public class SshCipherFactory {
 
     try {
 
-      Enumeration enumer = ConfigurationLoader.getExtensionClassLoader().getResources("j2ssh.cipher");
+      Enumeration<URL> enumer = ConfigurationLoader.getExtensionClassLoader().getResources("j2ssh.cipher");
       URL url;
       Properties properties = new Properties();
       InputStream in;
       while(enumer!=null && enumer.hasMoreElements()) {
-        url = (URL)enumer.nextElement();
+        url = enumer.nextElement();
         in = url.openStream();
         properties.load(in);
         IOUtil.closeStream(in);
         int num = 1;
         String name = "";
-        Class cls;
+        Class<?> cls;
         while(properties.getProperty("cipher.name."
                                      + String.valueOf(num))
               != null) {
@@ -94,7 +89,7 @@ public class SshCipherFactory {
     }
 
     // Build a list of the supported ciphers
-    supported = new ArrayList(ciphers.keySet());
+    supported = new ArrayList<String>(ciphers.keySet());
 
   }
 
@@ -124,7 +119,7 @@ public class SshCipherFactory {
    *
    * @return
    */
-  public static List getSupportedCiphers() {
+  public static List<String> getSupportedCiphers() {
     // Return the list
     return supported;
   }
@@ -142,7 +137,7 @@ public class SshCipherFactory {
       AlgorithmNotSupportedException {
 
     try {
-      return (SshCipher) ( (Class) ciphers.get(algorithmName)).newInstance();
+      return (SshCipher) ( ciphers.get(algorithmName)).newInstance();
     }
     catch (Throwable t) {
       throw new AlgorithmNotSupportedException(algorithmName

@@ -66,7 +66,8 @@ public class ForwardingBindingChannel
                                         originatingPort);
   }
 
-  public String getName() {
+  @Override
+public String getName() {
     return channel.getName();
   }
   /**
@@ -74,7 +75,8 @@ public class ForwardingBindingChannel
    *
    * @return
    */
-  public byte[] getChannelOpenData() {
+  @Override
+public byte[] getChannelOpenData() {
     return channel.getChannelOpenData();
   }
 
@@ -83,7 +85,8 @@ public class ForwardingBindingChannel
    *
    * @return
    */
-  public byte[] getChannelConfirmationData() {
+  @Override
+public byte[] getChannelConfirmationData() {
     return channel.getChannelConfirmationData();
   }
 
@@ -92,7 +95,8 @@ public class ForwardingBindingChannel
    *
    * @return
    */
-  public String getChannelType() {
+  @Override
+public String getChannelType() {
     return channel.getChannelType();
   }
 
@@ -101,7 +105,8 @@ public class ForwardingBindingChannel
    *
    * @return
    */
-  protected int getMinimumWindowSpace() {
+  @Override
+protected int getMinimumWindowSpace() {
     return 32768;
   }
 
@@ -110,7 +115,8 @@ public class ForwardingBindingChannel
    *
    * @return
    */
-  protected int getMaximumWindowSpace() {
+  @Override
+protected int getMaximumWindowSpace() {
     return 131072;
   }
 
@@ -119,7 +125,8 @@ public class ForwardingBindingChannel
    *
    * @return
    */
-  protected int getMaximumPacketSize() {
+  @Override
+protected int getMaximumPacketSize() {
     return 32768;
   }
 
@@ -168,7 +175,8 @@ public class ForwardingBindingChannel
    *
    * @throws IOException
    */
-  protected void onChannelRequest(String request, boolean wantReply,
+  @Override
+protected void onChannelRequest(String request, boolean wantReply,
                                   byte[] requestData) throws IOException {
     connection.sendChannelRequestFailure(this);
   }

@@ -41,7 +41,7 @@ public class PublicKeyAuthenticationClient
   /**  */
   protected SshPrivateKey key;
   private String privateKeyFile = null;
-  private String passphrase = null;
+  //private String passphrase = null;
 
   /**
    * Creates a new PublicKeyAuthenticationClient object.
@@ -69,9 +69,10 @@ public class PublicKeyAuthenticationClient
   /**
    *
    */
-  public void reset() {
+  @Override
+public void reset() {
     privateKeyFile = null;
-    passphrase = null;
+    //passphrase = null;
   }
 
   /**
@@ -79,7 +80,8 @@ public class PublicKeyAuthenticationClient
    *
    * @return
    */
-  public String getMethodName() {
+  @Override
+public String getMethodName() {
     return "publickey";
   }
 
@@ -141,7 +143,8 @@ public class PublicKeyAuthenticationClient
    * @throws TerminatedStateException
    * @throws AuthenticationProtocolException
    */
-  public void authenticate(AuthenticationProtocolClient authentication,
+  @Override
+public void authenticate(AuthenticationProtocolClient authentication,
                            String serviceToStart) throws IOException,
       TerminatedStateException {
     if ( (getUsername() == null) || (key == null)) {
@@ -246,7 +249,8 @@ public class PublicKeyAuthenticationClient
        }
        return true;
    }*/
-  public Properties getPersistableProperties() {
+  @Override
+public Properties getPersistableProperties() {
     Properties properties = new Properties();
 
     if (getUsername() != null) {
@@ -265,7 +269,8 @@ public class PublicKeyAuthenticationClient
    *
    * @param properties
    */
-  public void setPersistableProperties(Properties properties) {
+  @Override
+public void setPersistableProperties(Properties properties) {
     setUsername(properties.getProperty("Username"));
 
     if (properties.getProperty("PrivateKey") != null) {
@@ -273,7 +278,7 @@ public class PublicKeyAuthenticationClient
     }
 
     if (properties.getProperty("Passphrase") != null) {
-      passphrase = properties.getProperty("Passphrase");
+      //passphrase = properties.getProperty("Passphrase");
     }
   }
 
@@ -282,7 +287,8 @@ public class PublicKeyAuthenticationClient
    *
    * @return
    */
-  public boolean canAuthenticate() {
+  @Override
+public boolean canAuthenticate() {
     return ( (getUsername() != null) && (key != null));
   }
 }

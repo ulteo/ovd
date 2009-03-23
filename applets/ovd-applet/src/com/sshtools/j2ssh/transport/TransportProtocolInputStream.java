@@ -161,12 +161,12 @@ class TransportProtocolInputStream {
         catch (InterruptedIOException ex) {
           // We have an interrupted io; inform the event handler
           read = ex.bytesTransferred;
-          Iterator it = transport.getEventHandlers().iterator();
+          Iterator<TransportProtocolEventHandler> it = transport.getEventHandlers().iterator();
 
           TransportProtocolEventHandler eventHandler;
 
           while (it.hasNext()) {
-            eventHandler = (TransportProtocolEventHandler) it.next();
+            eventHandler = it.next();
 
             eventHandler.onSocketTimeout(transport);
           }

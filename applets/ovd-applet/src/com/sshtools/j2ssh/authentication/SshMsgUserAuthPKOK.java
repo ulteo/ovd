@@ -77,7 +77,8 @@ public class SshMsgUserAuthPKOK
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_USERAUTH_PK_OK";
   }
 
@@ -88,7 +89,8 @@ public class SshMsgUserAuthPKOK
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       //baw.write(ok ? 1 : 0);
@@ -107,7 +109,8 @@ public class SshMsgUserAuthPKOK
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       //ok = ((bar.read() == 1) ? true : false);

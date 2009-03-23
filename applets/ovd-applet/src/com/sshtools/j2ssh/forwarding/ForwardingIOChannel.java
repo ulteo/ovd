@@ -71,7 +71,8 @@ public class ForwardingIOChannel
    *
    * @return
    */
-  public byte[] getChannelOpenData() {
+  @Override
+public byte[] getChannelOpenData() {
     return channel.getChannelOpenData();
   }
 
@@ -80,12 +81,14 @@ public class ForwardingIOChannel
    *
    * @return
    */
-  public byte[] getChannelConfirmationData() {
+  @Override
+public byte[] getChannelConfirmationData() {
     return channel.getChannelConfirmationData();
   }
 
 
-  public String getName() {
+  @Override
+public String getName() {
     return channel.getName();
   }
 
@@ -94,7 +97,8 @@ public class ForwardingIOChannel
    *
    * @return
    */
-  public String getChannelType() {
+  @Override
+public String getChannelType() {
     return channel.getChannelType();
   }
 
@@ -103,7 +107,8 @@ public class ForwardingIOChannel
    *
    * @return
    */
-  protected int getMinimumWindowSpace() {
+  @Override
+protected int getMinimumWindowSpace() {
     return 32768;
   }
 
@@ -112,7 +117,8 @@ public class ForwardingIOChannel
    *
    * @return
    */
-  protected int getMaximumWindowSpace() {
+  @Override
+protected int getMaximumWindowSpace() {
     return 131072;
   }
 
@@ -121,7 +127,8 @@ public class ForwardingIOChannel
    *
    * @return
    */
-  protected int getMaximumPacketSize() {
+  @Override
+protected int getMaximumPacketSize() {
     return 32768;
   }
 
@@ -170,7 +177,8 @@ public class ForwardingIOChannel
    *
    * @throws IOException
    */
-  protected void onChannelRequest(String request, boolean wantReply,
+  @Override
+protected void onChannelRequest(String request, boolean wantReply,
                                   byte[] requestData) throws IOException {
     connection.sendChannelRequestFailure(this);
   }
@@ -180,6 +188,7 @@ public class ForwardingIOChannel
    *
    * @throws IOException
    */
-  protected void onChannelOpen() throws IOException {
+  @Override
+protected void onChannelOpen() throws IOException {
   }
 }

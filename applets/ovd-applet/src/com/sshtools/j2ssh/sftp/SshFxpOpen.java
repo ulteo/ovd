@@ -124,7 +124,8 @@ public class SshFxpOpen
    * @throws IOException
    * @throws InvalidMessageException
    */
-  public void constructMessage(ByteArrayReader bar) throws IOException,
+  @Override
+public void constructMessage(ByteArrayReader bar) throws IOException,
       InvalidMessageException {
     id = bar.readUINT32();
     filename = bar.readString();
@@ -137,7 +138,8 @@ public class SshFxpOpen
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_FXP_OPEN";
   }
 
@@ -149,7 +151,8 @@ public class SshFxpOpen
    * @throws IOException
    * @throws InvalidMessageException
    */
-  public void constructByteArray(ByteArrayWriter baw) throws IOException,
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws IOException,
       InvalidMessageException {
     baw.writeUINT32(id);
     baw.writeString(filename);

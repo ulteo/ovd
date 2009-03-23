@@ -60,7 +60,8 @@ public class SshMsgServiceRequest
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_SERVICE_REQUEST";
   }
 
@@ -80,7 +81,8 @@ public class SshMsgServiceRequest
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeString(serviceName);
@@ -97,7 +99,8 @@ public class SshMsgServiceRequest
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       serviceName = bar.readString();

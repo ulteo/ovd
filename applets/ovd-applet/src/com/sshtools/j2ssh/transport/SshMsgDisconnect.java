@@ -137,7 +137,8 @@ public class SshMsgDisconnect
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_DISCONNECT";
   }
 
@@ -157,7 +158,8 @@ public class SshMsgDisconnect
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeInt(reasonCode);
@@ -177,7 +179,8 @@ public class SshMsgDisconnect
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       // Save the values

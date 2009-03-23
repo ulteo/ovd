@@ -25,9 +25,9 @@ package org.vnc;
 // HTTP proxies supporting the HTTP CONNECT method.
 //
 
-import java.applet.*;
-import java.net.*;
-import java.io.*;
+import java.applet.Applet;
+import java.io.IOException;
+import java.net.Socket;
 
 class HTTPConnectSocketFactory implements SocketFactory {
 
@@ -68,7 +68,7 @@ class HTTPConnectSocketFactory implements SocketFactory {
     HTTPConnectSocket s =
       new HTTPConnectSocket(host, port, proxyHost, proxyPort);
 
-    return (Socket)s;
+    return s;
   }
 
   private String readArg(String[] args, String name) {

@@ -79,7 +79,8 @@ public class ChannelInputStream
    *
    * @return
    */
-  public int available() {
+  @Override
+public int available() {
     int available = 0;
 
     if (msgdata != null) {
@@ -134,7 +135,8 @@ public class ChannelInputStream
    *
    * @throws IOException
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     //messageStore.close();
   }
 
@@ -171,7 +173,8 @@ public class ChannelInputStream
    * @throws java.io.IOException
    * @throws InterruptedIOException
    */
-  public int read() throws java.io.IOException {
+  @Override
+public int read() throws java.io.IOException {
     try {
       block();
 
@@ -198,7 +201,8 @@ public class ChannelInputStream
    * @throws IOException
    * @throws IOException
    */
-  public int read(byte[] b, int off, int len) throws IOException {
+  @Override
+public int read(byte[] b, int off, int len) throws IOException {
     try {
       block();
 
@@ -251,7 +255,7 @@ public class ChannelInputStream
     }
   }
 
-  private void stopBlockingOperation() throws IOException {
+  private void stopBlockingOperation() /*throws IOException*/ {
     synchronized (lock) {
       blockingThread = null;
       isBlocking = false;

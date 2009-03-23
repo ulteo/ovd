@@ -91,7 +91,8 @@ public abstract class SshPublicKey {
    *
    * @return
    */
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (obj instanceof SshPublicKey) {
       return (getFingerprint().compareTo( ( (SshPublicKey) obj)
                                          .getFingerprint()) == 0);
@@ -105,7 +106,8 @@ public abstract class SshPublicKey {
    *
    * @return
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return getFingerprint().hashCode();
   }
 

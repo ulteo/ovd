@@ -106,7 +106,7 @@ public class SshAgentSocketListener {
           state.setValue(StartStopState.STARTED);
 
           while ( (socket = server.accept()) != null) {
-            SshAgentConnection agentClient = new SshAgentConnection(keystore,
+            /*SshAgentConnection agentClient =*/ new SshAgentConnection(keystore,
                 socket.getInputStream(),
                 socket.getOutputStream());
           }
@@ -161,7 +161,7 @@ public class SshAgentSocketListener {
    * @return the random port for this agent.
    */
   public static int configureNewLocation() {
-    return 49152 + (int) Math.round( ( (float) 16383 * Math.random()));
+    return 49152 + (int) Math.round( ( 16383 * Math.random()));
   }
 
   /**

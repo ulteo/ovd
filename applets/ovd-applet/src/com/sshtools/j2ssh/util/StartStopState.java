@@ -54,7 +54,8 @@ public class StartStopState
    *
    * @return
    */
-  public boolean isValidState(int state) {
+  @Override
+public boolean isValidState(int state) {
     return (state == STARTED) || (state == STOPPED) || (state == FAILED);
   }
 }

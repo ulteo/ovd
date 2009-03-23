@@ -73,7 +73,8 @@ public class SshMsgUserAuthRequest
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_USERAUTH_REQUEST";
   }
 
@@ -120,7 +121,8 @@ public class SshMsgUserAuthRequest
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeString(username);
@@ -143,7 +145,8 @@ public class SshMsgUserAuthRequest
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       username = bar.readString();

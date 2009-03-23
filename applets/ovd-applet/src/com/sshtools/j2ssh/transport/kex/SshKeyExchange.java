@@ -24,7 +24,6 @@ package com.sshtools.j2ssh.transport.kex;
 import java.io.IOException;
 import java.math.BigInteger;
 
-import com.sshtools.j2ssh.transport.SshMessageStore;
 import com.sshtools.j2ssh.transport.TransportProtocol;
 import com.sshtools.j2ssh.transport.publickey.SshPrivateKey;
 

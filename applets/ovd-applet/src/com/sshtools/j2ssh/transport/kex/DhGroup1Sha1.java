@@ -28,6 +28,7 @@ import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.KeyAgreement;
 import javax.crypto.interfaces.DHPrivateKey;
 import javax.crypto.interfaces.DHPublicKey;
@@ -152,7 +153,8 @@ public class DhGroup1Sha1
    * @throws IOException
    * @throws AlgorithmNotSupportedException
    */
-  protected void onInit() throws IOException {
+  @Override
+protected void onInit() throws IOException {
     transport.getMessageStore().registerMessage(SshMsgKexDhInit.SSH_MSG_KEXDH_INIT,
                                  SshMsgKexDhInit.class);
 
@@ -180,7 +182,8 @@ public class DhGroup1Sha1
    * @throws AlgorithmOperationException
    * @throws KeyExchangeException
    */
-  public void performClientExchange(String clientId, String serverId,
+  @Override
+public void performClientExchange(String clientId, String serverId,
                                     byte[] clientKexInit, byte[] serverKexInit,
                                     boolean firstPacketFollows,
                                     boolean useFirstPacket) throws
@@ -258,7 +261,8 @@ public class DhGroup1Sha1
    * @throws IOException
    * @throws KeyExchangeException
    */
-  public void performServerExchange(String clientId, String serverId,
+  @Override
+public void performServerExchange(String clientId, String serverId,
                                     byte[] clientKexInit, byte[] serverKexInit,
                                     SshPrivateKey prvKey,
                                     boolean firstPacketFollows,
@@ -343,7 +347,7 @@ public class DhGroup1Sha1
       throw new KeyExchangeException("SHA algorithm not supported");
     }
 
-    int i;
+    //int i;
 
     // The local software version comments
     hash.putString(clientId);

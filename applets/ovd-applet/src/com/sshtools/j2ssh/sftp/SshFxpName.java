@@ -86,7 +86,8 @@ public class SshFxpName
    * @throws com.sshtools.j2ssh.transport.InvalidMessageException DOCUMENT
    *         ME!
    */
-  public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
+  @Override
+public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     id = bar.readUINT32();
 
@@ -94,11 +95,11 @@ public class SshFxpName
     files = new SftpFile[count.intValue()];
 
     String shortname;
-    String longname;
+    //String longname;
 
     for (int i = 0; i < files.length; i++) {
       shortname = bar.readString();
-      longname = bar.readString();
+      /*longname =*/ bar.readString();
       files[i] = new SftpFile(shortname, new FileAttributes(bar));
     }
   }
@@ -108,7 +109,8 @@ public class SshFxpName
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_FXP_NAME";
   }
 
@@ -121,13 +123,14 @@ public class SshFxpName
    * @throws com.sshtools.j2ssh.transport.InvalidMessageException DOCUMENT
    *         ME!
    */
-  public void constructByteArray(ByteArrayWriter baw) throws java.io.
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws java.io.
       IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     baw.writeUINT32(id);
     baw.writeUINT32(new UnsignedInteger32(files.length));
 
-    SftpFile file;
+    //SftpFile file;
 
     for (int i = 0; i < files.length; i++) {
       baw.writeString(files[i].getAbsolutePath());

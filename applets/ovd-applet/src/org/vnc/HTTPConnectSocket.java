@@ -25,8 +25,10 @@ package org.vnc;
 // HTTP proxies supporting the HTTP CONNECT method.
 //
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
 
 class HTTPConnectSocket extends Socket {
 
@@ -42,7 +44,9 @@ class HTTPConnectSocket extends Socket {
 			     " HTTP/1.0\r\n\r\n").getBytes());
 
     // Read the first line of the response
-    DataInputStream is = new DataInputStream(getInputStream());
+    BufferedReader is = new BufferedReader(new InputStreamReader(getInputStream()));
+    //K1ZFP
+    //DataInputStream is = new DataInputStream(getInputStream());
     String str = is.readLine();
 
     // Check the HTTP error code -- it should be "200" on success

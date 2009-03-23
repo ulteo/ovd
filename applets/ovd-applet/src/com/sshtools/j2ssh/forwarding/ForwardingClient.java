@@ -26,9 +26,7 @@ import java.net.Socket;
 import java.net.SocketPermission;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
 import com.sshtools.j2ssh.connection.Channel;
@@ -55,9 +53,9 @@ public class ForwardingClient
   public final static String REMOTE_FORWARD_CANCEL_REQUEST =
       "cancel-tcpip-forward";
   private ConnectionProtocol connection;
-  private List channelTypes = new Vector();
-  private Map localForwardings = new HashMap();
-  private Map remoteForwardings = new HashMap();
+  //private List channelTypes = new Vector();
+  private Map<String, ForwardingConfiguration> localForwardings = new HashMap<String, ForwardingConfiguration>();
+  private Map<String, ForwardingConfiguration> remoteForwardings = new HashMap<String, ForwardingConfiguration>();
   private XDisplay xDisplay;
   private ForwardingConfiguration x11ForwardingConfiguration;
 
@@ -72,21 +70,21 @@ public class ForwardingClient
     this.connection = connection;
 
     //channelTypes.add(ForwardingSocketChannel.REMOTE_FORWARDING_CHANNEL);
-    connection.addChannelFactory(ForwardingSocketChannel.
+    connection.addChannelFactory(ForwardingChannel.
                                  REMOTE_FORWARDING_CHANNEL,
                                  this);
-    connection.addChannelFactory(ForwardingSocketChannel.X11_FORWARDING_CHANNEL,
+    connection.addChannelFactory(ForwardingChannel.X11_FORWARDING_CHANNEL,
                                  this);
   }
 
-  /**
-   *
-   *
-   * @return
-   */
-  public List getChannelType() {
-    return channelTypes;
-  }
+//  /**
+//   *
+//   *
+//   * @return
+//   */
+//  public List getChannelType() {
+//    return channelTypes;
+//  }
 
   /**
    *
@@ -119,10 +117,10 @@ public class ForwardingClient
       return false;
     }
 
-    Iterator it = localForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = localForwardings.values().iterator();
 
     while (it.hasNext()) {
-      if ( ( (ForwardingConfiguration) it.next()).getState().getValue() ==
+      if ( ( it.next()).getState().getValue() ==
           StartStopState.STARTED) {
         return true;
       }
@@ -131,7 +129,7 @@ public class ForwardingClient
     it = remoteForwardings.values().iterator();
 
     while (it.hasNext()) {
-      if ( ( (ForwardingConfiguration) it.next()).getState().getValue() ==
+      if ( (it.next()).getState().getValue() ==
           StartStopState.STARTED) {
         return true;
       }
@@ -144,10 +142,10 @@ public class ForwardingClient
     ForwardingConfiguration fwd = null;
 
     if (properties.getLocalForwardings().size() > 0) {
-      for (Iterator it = properties.getLocalForwardings().values().iterator();
+      for (Iterator<ForwardingConfiguration> it = properties.getLocalForwardings().values().iterator();
            it.hasNext(); ) {
         try {
-          fwd = (ForwardingConfiguration) it.next();
+          fwd = it.next();
           fwd = addLocalForwarding(fwd);
           if (properties.getForwardingAutoStartMode()) {
             startLocalForwarding(fwd.getName());
@@ -162,11 +160,11 @@ public class ForwardingClient
     }
 
     if (properties.getRemoteForwardings().size() > 0) {
-      for (Iterator it = properties.getRemoteForwardings().
+      for (Iterator<ForwardingConfiguration> it = properties.getRemoteForwardings().
            values().iterator();
            it.hasNext(); ) {
         try {
-          fwd = (ForwardingConfiguration) it.next();
+          fwd = it.next();
           addRemoteForwarding(fwd);
           if (properties.getForwardingAutoStartMode()) {
             startRemoteForwarding(fwd.getName());
@@ -193,10 +191,10 @@ public class ForwardingClient
       return false;
     }
 
-    Iterator it = localForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = localForwardings.values().iterator();
 
     while (it.hasNext()) {
-      if ( ( (ForwardingConfiguration) it.next()).
+      if ( (it.next()).
           getActiveForwardingSocketChannels()
           .size() > 0) {
         return true;
@@ -206,7 +204,7 @@ public class ForwardingClient
     it = remoteForwardings.values().iterator();
 
     while (it.hasNext()) {
-      if ( ( (ForwardingConfiguration) it.next()).
+      if ( ( it.next()).
           getActiveForwardingSocketChannels()
           .size() > 0) {
         return true;
@@ -229,11 +227,11 @@ public class ForwardingClient
   public ForwardingConfiguration getLocalForwardingByAddress(
       String addressToBind, int portToBind) throws
       ForwardingConfigurationException {
-    Iterator it = localForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = localForwardings.values().iterator();
     ForwardingConfiguration config;
 
     while (it.hasNext()) {
-      config = (ForwardingConfiguration) it.next();
+      config = it.next();
 
       if (config.getAddressToBind().equals(addressToBind)
           && (config.getPortToBind() == portToBind)) {
@@ -261,7 +259,7 @@ public class ForwardingClient
           "The configuraiton does not exist!");
     }
 
-    return (ForwardingConfiguration) localForwardings.get(name);
+    return localForwardings.get(name);
   }
 
   /**
@@ -280,7 +278,7 @@ public class ForwardingClient
           "The configuraiton does not exist!");
     }
 
-    return (ForwardingConfiguration) remoteForwardings.get(name);
+    return remoteForwardings.get(name);
   }
 
   /**
@@ -288,7 +286,7 @@ public class ForwardingClient
    *
    * @return
    */
-  public Map getLocalForwardings() {
+  public Map<String, ForwardingConfiguration> getLocalForwardings() {
     return localForwardings;
   }
 
@@ -297,7 +295,7 @@ public class ForwardingClient
    *
    * @return
    */
-  public Map getRemoteForwardings() {
+  public Map<String, ForwardingConfiguration> getRemoteForwardings() {
     return remoteForwardings;
   }
 
@@ -314,11 +312,11 @@ public class ForwardingClient
   public ForwardingConfiguration getRemoteForwardingByAddress(
       String addressToBind, int portToBind) throws
       ForwardingConfigurationException {
-    Iterator it = remoteForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = remoteForwardings.values().iterator();
     ForwardingConfiguration config;
 
     while (it.hasNext()) {
-      config = (ForwardingConfiguration) it.next();
+      config = it.next();
 
       if (config.getAddressToBind().equals(addressToBind)
           && (config.getPortToBind() == portToBind)) {
@@ -402,11 +400,11 @@ public class ForwardingClient
     }
 
     // Check that the address to bind and port are not already being used
-    Iterator it = localForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = localForwardings.values().iterator();
     ForwardingConfiguration config;
 
     while (it.hasNext()) {
-      config = (ForwardingConfiguration) it.next();
+      config = it.next();
 
       if (config.getAddressToBind().equals(addressToBind)
           && (config.getPortToBind() == portToBind)) {
@@ -514,11 +512,11 @@ public class ForwardingClient
     }
 
     // Check that the address to bind and port are not already being used
-    Iterator it = remoteForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = remoteForwardings.values().iterator();
     ForwardingConfiguration config;
 
     while (it.hasNext()) {
-      config = (ForwardingConfiguration) it.next();
+      config = it.next();
 
       if (config.getAddressToBind().equals(addressToBind)
           && (config.getPortToBind() == portToBind)) {
@@ -565,11 +563,11 @@ public class ForwardingClient
     }
 
     // Check that the address to bind and port are not already being used
-    Iterator it = remoteForwardings.values().iterator();
+    Iterator<ForwardingConfiguration> it = remoteForwardings.values().iterator();
     ForwardingConfiguration config;
 
     while (it.hasNext()) {
-      config = (ForwardingConfiguration) it.next();
+      config =  it.next();
 
       if (config.getAddressToBind().equals(fwd.getAddressToBind())
           && (config.getPortToBind() == fwd.getPortToBind())) {
@@ -611,7 +609,7 @@ public class ForwardingClient
    */
   public Channel createChannel(String channelType, byte[] requestData) throws
       InvalidChannelException {
-    if (channelType.equals(ForwardingSocketChannel.X11_FORWARDING_CHANNEL)) {
+    if (channelType.equals(ForwardingChannel.X11_FORWARDING_CHANNEL)) {
       if (xDisplay == null) {
         throw new InvalidChannelException(
             "Local display has not been set for X11 forwarding.");
@@ -649,7 +647,7 @@ public class ForwardingClient
     }
 
     if (channelType.equals(
-        ForwardingSocketChannel.REMOTE_FORWARDING_CHANNEL)) {
+        ForwardingChannel.REMOTE_FORWARDING_CHANNEL)) {
       try {
         ByteArrayReader bar = new ByteArrayReader(requestData);
         String addressBound = bar.readString();
@@ -768,9 +766,7 @@ public class ForwardingClient
           "The name is not a valid forwarding configuration");
     }
 
-    ForwardingConfiguration config = (ForwardingConfiguration)
-        remoteForwardings
-        .get(name);
+    ForwardingConfiguration config = remoteForwardings.get(name);
 
     ByteArrayWriter baw = new ByteArrayWriter();
     baw.writeString(config.getAddressToBind());
@@ -827,9 +823,7 @@ public class ForwardingClient
           "The remote forwarding configuration does not exist");
     }
 
-    ForwardingConfiguration config = (ForwardingConfiguration)
-        remoteForwardings
-        .get(name);
+    ForwardingConfiguration config = remoteForwardings.get(name);
 
     ByteArrayWriter baw = new ByteArrayWriter();
     baw.writeString(config.getAddressToBind());
@@ -852,11 +846,12 @@ public class ForwardingClient
             portToConnect);
     }
 
-    public ForwardingSocketChannel createChannel(String hostToConnect,
+    @Override
+	public ForwardingSocketChannel createChannel(String hostToConnect,
                                                  int portToConnect,
                                                  Socket socket) throws
         ForwardingConfigurationException {
-      return createForwardingSocketChannel(ForwardingSocketChannel.
+      return createForwardingSocketChannel(ForwardingChannel.
                                            LOCAL_FORWARDING_CHANNEL,
                                            hostToConnect, portToConnect,
                                            /*( (InetSocketAddress) socket.

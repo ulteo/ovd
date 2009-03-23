@@ -94,7 +94,7 @@ public class SshKeyGenerator {
 
     Thread thread = new SshThread(new Runnable() {
       public void run() {
-        pair.generate(SshKeyGenerator.this.bits);
+        pair.generate(SshKeyGenerator.bits);
       }
     }
 
@@ -157,7 +157,7 @@ public class SshKeyGenerator {
        Logger.getLogger("com.sshtools").addHandler(fh);
        Logger.getLogger("com.sshtools").setLevel(Level.ALL);*/
       if (useGUI) {
-        Class c = Class.forName("com.sshtools.j2ssh.keygen.Main");
+        Class<?> c = Class.forName("com.sshtools.j2ssh.keygen.Main");
         Method m = c.getMethod("main", new Class[] {args.getClass()});
         m.invoke(null, new Object[] {new String[] {}
         });

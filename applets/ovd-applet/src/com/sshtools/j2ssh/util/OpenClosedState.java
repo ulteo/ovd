@@ -51,7 +51,8 @@ public class OpenClosedState
    *
    * @return
    */
-  public boolean isValidState(int state) {
+  @Override
+public boolean isValidState(int state) {
     return (state == OPEN) || (state == CLOSED);
   }
 }

@@ -39,14 +39,14 @@ import com.sshtools.j2ssh.util.StartStopState;
  * @version $Revision: 1.16 $
  */
 public class SshAgentForwardingListener {
-  private static HashMap agents = new HashMap();
+  private static HashMap<String, SshAgentForwardingListener> agents = new HashMap<String, SshAgentForwardingListener>();
   ServerSocket server;
   int port;
   String location;
   StartStopState state = new StartStopState(StartStopState.STOPPED);
   Thread thread;
   ConnectionProtocol connection;
-  Vector references = new Vector();
+  Vector<Object> references = new Vector<Object>();
   String sessionId;
 
   SshAgentForwardingListener(String sessionId, ConnectionProtocol connection) {
@@ -156,7 +156,7 @@ public class SshAgentForwardingListener {
 
   private int selectPort() {
     return 49152
-        + (int) Math.round( ( (float) 16383 * ConfigurationLoader.getRND()
+        + Math.round( ( 16383 * ConfigurationLoader.getRND()
                              .nextFloat()));
   }
 
@@ -173,7 +173,7 @@ public class SshAgentForwardingListener {
   public static SshAgentForwardingListener getInstance(String sessionId,
       ConnectionProtocol connection) throws AgentNotAvailableException {
     if (agents.containsKey(sessionId)) {
-      SshAgentForwardingListener agent = (SshAgentForwardingListener) agents
+      SshAgentForwardingListener agent = agents
           .get(sessionId);
 
       return agent;

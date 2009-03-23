@@ -56,7 +56,8 @@ public class AgentSocketChannel
    *
    * @return
    */
-  public String getChannelType() {
+  @Override
+public String getChannelType() {
     return AGENT_FORWARDING_CHANNEL;
   }
 
@@ -67,7 +68,8 @@ public class AgentSocketChannel
        bindOutputStream(socket.getOutputStream());
      }
    }*/
-  protected void onChannelRequest(String requestType, boolean wantReply,
+  @Override
+protected void onChannelRequest(String requestType, boolean wantReply,
                                   byte[] requestData) throws java.io.
       IOException {
     if (wantReply) {
@@ -80,7 +82,8 @@ public class AgentSocketChannel
    *
    * @return
    */
-  protected int getMaximumPacketSize() {
+  @Override
+protected int getMaximumPacketSize() {
     return 32678;
   }
 
@@ -88,7 +91,8 @@ public class AgentSocketChannel
    }
    protected void onChannelEOF() throws IOException {
    }*/
-  public byte[] getChannelOpenData() {
+  @Override
+public byte[] getChannelOpenData() {
     return null;
   }
 
@@ -97,7 +101,8 @@ public class AgentSocketChannel
    *
    * @return
    */
-  protected int getMinimumWindowSpace() {
+  @Override
+protected int getMinimumWindowSpace() {
     return 1024;
   }
 
@@ -108,7 +113,8 @@ public class AgentSocketChannel
    *         ME!
    * @throws InvalidChannelException
    */
-  protected void onChannelOpen() throws com.sshtools.j2ssh.connection.
+  @Override
+protected void onChannelOpen() throws com.sshtools.j2ssh.connection.
       InvalidChannelException {
     try {
       //if (socket != null) {
@@ -141,7 +147,8 @@ public class AgentSocketChannel
    *
    * @return
    */
-  protected int getMaximumWindowSpace() {
+  @Override
+protected int getMaximumWindowSpace() {
     return 32768;
   }
 
@@ -150,7 +157,8 @@ public class AgentSocketChannel
    *
    * @return
    */
-  public byte[] getChannelConfirmationData() {
+  @Override
+public byte[] getChannelConfirmationData() {
     return null;
   }
 }

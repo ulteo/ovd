@@ -40,7 +40,8 @@ public class HmacMd596
    *
    * @return
    */
-  public int getMacLength() {
+  @Override
+public int getMacLength() {
     return 12;
   }
 
@@ -54,7 +55,8 @@ public class HmacMd596
    *
    * @return
    */
-  public byte[] generate(long sequenceNo, byte[] data, int offset, int len) {
+  @Override
+public byte[] generate(long sequenceNo, byte[] data, int offset, int len) {
     byte[] generated = super.generate(sequenceNo, data, offset, len);
     byte[] result = new byte[getMacLength()];
 

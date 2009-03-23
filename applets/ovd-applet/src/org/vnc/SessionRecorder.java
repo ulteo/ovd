@@ -24,7 +24,9 @@
 
 package org.vnc;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 class SessionRecorder {
 

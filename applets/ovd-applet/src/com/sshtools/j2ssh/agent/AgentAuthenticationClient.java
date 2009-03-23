@@ -21,18 +21,17 @@
 
 package com.sshtools.j2ssh.agent;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
-
-import java.awt.Component;
+import java.util.Map.Entry;
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolException;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
-import com.sshtools.j2ssh.authentication.PublicKeyAuthenticationClient;
 import com.sshtools.j2ssh.authentication.SshAuthenticationClient;
 import com.sshtools.j2ssh.authentication.SshMsgUserAuthPKOK;
 import com.sshtools.j2ssh.authentication.SshMsgUserAuthRequest;
@@ -73,7 +72,8 @@ public class AgentAuthenticationClient
   /**
    *
    */
-  public void reset() {
+  @Override
+public void reset() {
     agent = null;
   }
 
@@ -82,7 +82,8 @@ public class AgentAuthenticationClient
    *
    * @return
    */
-  public String getMethodName() {
+  @Override
+public String getMethodName() {
     return "publickey";
   }
 
@@ -144,7 +145,8 @@ public class AgentAuthenticationClient
    * @throws TerminatedStateException
    * @throws AuthenticationProtocolException
    */
-  public void authenticate(AuthenticationProtocolClient authentication,
+  @Override
+public void authenticate(AuthenticationProtocolClient authentication,
                            String serviceToStart) throws IOException,
       TerminatedStateException {
     if ( (getUsername() == null) || (agent == null)) {
@@ -153,17 +155,17 @@ public class AgentAuthenticationClient
     }
 
     // Iterate the agents keys, find an acceptable key and authenticate
-    Map keys = agent.listKeys();
-    Iterator it = keys.entrySet().iterator();
+    Map<SshPublicKey, String> keys = agent.listKeys();
+    Iterator<Entry<SshPublicKey, String>> it = keys.entrySet().iterator();
     boolean acceptable = false;
     SshPublicKey key = null;
-    String description;
-    Map.Entry entry;
+    //String description;
+    Map.Entry<SshPublicKey, String> entry;
 
     while (it.hasNext() && !acceptable) {
-      entry = (Map.Entry) it.next();
-      key = (SshPublicKey) entry.getKey();
-      description = (String) entry.getValue();
+      entry = it.next();
+      key = entry.getKey();
+      //description = entry.getValue();
       acceptable = acceptsKey(authentication, getUsername(),
                               serviceToStart, key);
       /*log.info("Agent authentication with key " + key.getFingerprint()
@@ -227,7 +229,8 @@ public class AgentAuthenticationClient
    *
    * @return
    */
-  public Properties getPersistableProperties() {
+  @Override
+public Properties getPersistableProperties() {
     Properties properties = new Properties();
 
     return properties;
@@ -238,7 +241,8 @@ public class AgentAuthenticationClient
    *
    * @param properties
    */
-  public void setPersistableProperties(Properties properties) {
+  @Override
+public void setPersistableProperties(Properties properties) {
   }
 
   /**
@@ -246,7 +250,8 @@ public class AgentAuthenticationClient
    *
    * @return
    */
-  public boolean canAuthenticate() {
+  @Override
+public boolean canAuthenticate() {
     return ( (agent != null) && (getUsername() != null));
   }
 
@@ -259,12 +264,12 @@ public class AgentAuthenticationClient
    */
   public boolean hasAcceptableKey(SshClient ssh) {
     try {
-      Map keys = agent.listKeys();
+      Map<SshPublicKey, String> keys = agent.listKeys();
 
       SshPublicKey key;
 
-      for (Iterator x = keys.keySet().iterator(); x.hasNext(); ) {
-        key = (SshPublicKey) x.next();
+      for (Iterator<SshPublicKey> x = keys.keySet().iterator(); x.hasNext(); ) {
+        key = x.next();
 
         if (ssh.acceptsKey(getUsername(), key)) {
           return true;

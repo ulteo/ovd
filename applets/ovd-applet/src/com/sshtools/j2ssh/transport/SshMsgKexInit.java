@@ -48,16 +48,16 @@ public class SshMsgKexInit
     extends SshMessage {
   /**  */
   protected final static int SSH_MSG_KEX_INIT = 20;
-  private List supportedCompCS;
-  private List supportedCompSC;
-  private List supportedEncryptCS;
-  private List supportedEncryptSC;
-  private List supportedKex;
-  private List supportedLangCS;
-  private List supportedLangSC;
-  private List supportedMacCS;
-  private List supportedMacSC;
-  private List supportedPK;
+  private List<String> supportedCompCS;
+  private List<String> supportedCompSC;
+  private List<String> supportedEncryptCS;
+  private List<String> supportedEncryptSC;
+  private List<String> supportedKex;
+  private List<String> supportedLangCS;
+  private List<String> supportedLangSC;
+  private List<String> supportedMacCS;
+  private List<String> supportedMacSC;
+  private List<String> supportedPK;
 
   // Message values
   private byte[] cookie;
@@ -119,8 +119,8 @@ public class SshMsgKexInit
                                         props.getPrefSCComp());
 
     // We currently don't support language preferences
-    supportedLangCS = new ArrayList();
-    supportedLangSC = new ArrayList();
+    supportedLangCS = new ArrayList<String>();
+    supportedLangSC = new ArrayList<String>();
 
     // We don't guess (I don't see the point of this in the protocol!)
     firstKexFollows = false;
@@ -131,7 +131,8 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_KEX_INIT";
   }
 
@@ -144,7 +145,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedCSComp() {
+  public List<String> getSupportedCSComp() {
     return supportedCompCS;
   }
 
@@ -153,7 +154,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedCSEncryption() {
+  public List<String> getSupportedCSEncryption() {
     return supportedEncryptCS;
   }
 
@@ -162,7 +163,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedCSMac() {
+  public List<String> getSupportedCSMac() {
     return supportedMacCS;
   }
 
@@ -171,7 +172,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedKex() {
+  public List<String> getSupportedKex() {
     return supportedKex;
   }
 
@@ -180,7 +181,7 @@ public class SshMsgKexInit
    *
    * @param pks
    */
-  public void setSupportedPK(List pks) {
+  public void setSupportedPK(List<String> pks) {
     supportedPK.clear();
     supportedPK.addAll(pks);
     sortAlgorithmList(supportedPK, SshKeyPairFactory.getDefaultPublicKey());
@@ -191,7 +192,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedPublicKeys() {
+  public List<String> getSupportedPublicKeys() {
     return supportedPK;
   }
 
@@ -200,7 +201,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedSCComp() {
+  public List<String> getSupportedSCComp() {
     return supportedCompSC;
   }
 
@@ -209,7 +210,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedSCEncryption() {
+  public List<String> getSupportedSCEncryption() {
     return supportedEncryptSC;
   }
 
@@ -218,7 +219,7 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public List getSupportedSCMac() {
+  public List<String> getSupportedSCMac() {
     return supportedMacSC;
   }
 
@@ -229,18 +230,18 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public String createDelimString(List list) {
+  public String createDelimString(List<String> list) {
     // Set up the seperator (blank to start cause we dont want a comma
     // at the beginning of the list)
     String sep = "";
     String ret = "";
 
     // Iterate through the list
-    Iterator it = list.iterator();
+    Iterator<String> it = list.iterator();
 
     while (it.hasNext()) {
       // Add the seperator and then the item
-      ret += (sep + (String) it.next());
+      ret += (sep + it.next());
 
       sep = ",";
     }
@@ -253,7 +254,8 @@ public class SshMsgKexInit
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     String ret = "SshMsgKexInit:\n";
     ret += ("Supported Kex " + supportedKex.toString() + "\n");
     ret += ("Supported Public Keys " + supportedPK.toString() + "\n");
@@ -286,7 +288,8 @@ public class SshMsgKexInit
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.write(cookie);
@@ -317,7 +320,8 @@ public class SshMsgKexInit
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       cookie = new byte[16];
@@ -343,21 +347,23 @@ public class SshMsgKexInit
     }
   }
 
-  private List loadListFromString(String str) {
+  private List<String> loadListFromString(String str) {
     // Create a tokeizer object
     StringTokenizer tok = new StringTokenizer(str, ",");
 
-    List ret = new ArrayList();
+    List<String> ret = new ArrayList<String>();
 
     // Iterate through the tokens adding the items to the list
     while (tok.hasMoreElements()) {
-      ret.add(tok.nextElement());
+    	Object o = tok.nextElement();
+    	if (o!=null)
+    		ret.add(o.toString());
     }
 
     return ret;
   }
 
-  private List sortAlgorithmList(List list, String pref) {
+  private List<String> sortAlgorithmList(List<String> list, String pref) {
     if (list.contains(pref)) {
       // Remove the prefered from the list wherever it may be
       list.remove(pref);

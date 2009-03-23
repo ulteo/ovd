@@ -10,6 +10,7 @@ public class RfbShaHashProvider extends RfbHashProvider {
 	      md = MessageDigest.getInstance("SHA-1");
 	}
 		
+	@Override
 	byte[] getHash(byte[] data){			
 		return md.digest(data);
 	}

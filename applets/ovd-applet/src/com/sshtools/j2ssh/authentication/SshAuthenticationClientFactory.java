@@ -21,17 +21,11 @@
 
 package com.sshtools.j2ssh.authentication;
 
-import java.io.FilePermission;
-import java.security.AccessControlException;
-import java.security.AccessController;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.sshtools.j2ssh.configuration.ConfigurationException;
-import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 
 /**
@@ -41,7 +35,7 @@ import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
  * @version $Revision: 1.21 $
  */
 public class SshAuthenticationClientFactory {
-  private static Map auths;
+  private static Map<String, Class<?>> auths;
 
   /**  */
   public final static String AUTH_PASSWORD = "password";
@@ -56,7 +50,7 @@ public class SshAuthenticationClientFactory {
   public final static String AUTH_HOSTBASED = "hostbased";
 
   static {
-    auths = new HashMap();
+    auths = new HashMap<String, Class<?>>();
 
 
     auths.put(AUTH_PASSWORD, PasswordAuthenticationClient.class);
@@ -96,9 +90,9 @@ public class SshAuthenticationClientFactory {
    *
    * @return
    */
-  public static List getSupportedMethods() {
+  public static List<String> getSupportedMethods() {
     // Get the list of ciphers
-    ArrayList list = new ArrayList(auths.keySet());
+    ArrayList<String> list = new ArrayList<String>(auths.keySet());
 
     // Return the list
     return list;
@@ -116,7 +110,7 @@ public class SshAuthenticationClientFactory {
   public static SshAuthenticationClient newInstance(String methodName) throws
       AlgorithmNotSupportedException {
     try {
-      return (SshAuthenticationClient) ( (Class) auths.get(methodName))
+      return (SshAuthenticationClient) ( auths.get(methodName))
           .newInstance();
     }
     catch (Exception e) {

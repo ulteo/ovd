@@ -79,7 +79,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public byte byteValue() {
+  @Override
+public byte byteValue() {
     return value.byteValue();
   }
 
@@ -88,7 +89,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public short shortValue() {
+  @Override
+public short shortValue() {
     return value.shortValue();
   }
 
@@ -97,7 +99,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public int intValue() {
+  @Override
+public int intValue() {
     return value.intValue();
   }
 
@@ -106,7 +109,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public long longValue() {
+  @Override
+public long longValue() {
     return value.longValue();
   }
 
@@ -115,7 +119,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public float floatValue() {
+  @Override
+public float floatValue() {
     return value.floatValue();
   }
 
@@ -124,7 +129,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public double doubleValue() {
+  @Override
+public double doubleValue() {
     return value.doubleValue();
   }
 
@@ -133,7 +139,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return value.toString();
   }
 
@@ -142,7 +149,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return value.hashCode();
   }
 
@@ -153,7 +161,8 @@ public class UnsignedInteger32
    *
    * @return
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     if (! (o instanceof UnsignedInteger32)) {
       return false;
     }

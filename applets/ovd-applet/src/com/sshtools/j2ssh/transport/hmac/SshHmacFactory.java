@@ -23,12 +23,9 @@ package com.sshtools.j2ssh.transport.hmac;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.sshtools.j2ssh.configuration.ConfigurationException;
-import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 
 /**
@@ -39,10 +36,10 @@ import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
  */
 public class SshHmacFactory {
   private static String defaultAlgorithm;
-  private static Map macs;
+  private static Map<String, Class<?>> macs;
 
   static {
-    macs = new HashMap();
+    macs = new HashMap<String, Class<?>>();
 
 
     macs.put("hmac-sha1", HmacSha.class);
@@ -79,8 +76,8 @@ public class SshHmacFactory {
    *
    * @return
    */
-  public static List getSupportedMacs() {
-    return new ArrayList(macs.keySet());
+  public static List<String> getSupportedMacs() {
+    return new ArrayList<String>(macs.keySet());
   }
 
   /**
@@ -95,7 +92,7 @@ public class SshHmacFactory {
   public static SshHmac newInstance(String methodName) throws
       AlgorithmNotSupportedException {
     try {
-      return (SshHmac) ( (Class) macs.get(methodName)).newInstance();
+      return (SshHmac) ( macs.get(methodName)).newInstance();
     }
     catch (Exception e) {
       throw new AlgorithmNotSupportedException(methodName

@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import com.sshtools.j2ssh.configuration.ConfigurationException;
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 
 
@@ -39,13 +38,13 @@ import com.sshtools.j2ssh.configuration.ConfigurationLoader;
  */
 public class SshPublicKeyFormatFactory {
   private static String defaultFormat;
-  private static HashMap formatTypes = new HashMap();
-  private static Vector types = new Vector();
+  private static HashMap<String,  Class<?>> formatTypes = new HashMap<String,  Class<?>>();
+  private static Vector<String> types = new Vector<String>();
 
   static {
 
 
-    List formats = new ArrayList();
+    List<String> formats = new ArrayList<String>();
 
     formats.add(SECSHPublicKeyFormat.class.getName());
     formats.add(OpenSSHPublicKeyFormat.class.getName());
@@ -53,19 +52,20 @@ public class SshPublicKeyFormatFactory {
 
     SshPublicKeyFormat f;
 
-    Iterator it = formats.iterator();
+    Iterator<String> it = formats.iterator();
     String classname;
 
     while (it.hasNext()) {
-      classname = (String) it.next();
+      classname = it.next();
 
       try {
-        Class cls = ConfigurationLoader.getExtensionClass(classname);
+        Class<?> cls = ConfigurationLoader.getExtensionClass(classname);
         f = (SshPublicKeyFormat) cls.newInstance();
         formatTypes.put(f.getFormatType(), cls);
         types.add(f.getFormatType());
       }
       catch (Throwable t) {
+    	  t.printStackTrace();
       }
     }
   }
@@ -79,7 +79,7 @@ public class SshPublicKeyFormatFactory {
    *
    * @return
    */
-  public static List getSupportedFormats() {
+  public static List<String> getSupportedFormats() {
     return types;
   }
 
@@ -96,7 +96,7 @@ public class SshPublicKeyFormatFactory {
       InvalidSshKeyException {
     try {
       if (formatTypes.containsKey(type)) {
-        return (SshPublicKeyFormat) ( (Class) formatTypes.get(type))
+        return (SshPublicKeyFormat) ( formatTypes.get(type))
             .newInstance();
       }
       else {

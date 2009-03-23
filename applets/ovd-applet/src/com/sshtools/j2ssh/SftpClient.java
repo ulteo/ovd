@@ -27,15 +27,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import com.sshtools.j2ssh.connection.*;
-import com.sshtools.j2ssh.sftp.*;
-import com.sshtools.j2ssh.io.*;
+import com.sshtools.j2ssh.connection.ChannelEventListener;
+import com.sshtools.j2ssh.io.IOUtil;
+import com.sshtools.j2ssh.io.UnsignedInteger32;
+import com.sshtools.j2ssh.sftp.FileAttributes;
+import com.sshtools.j2ssh.sftp.SftpFile;
+import com.sshtools.j2ssh.sftp.SftpFileInputStream;
+import com.sshtools.j2ssh.sftp.SftpFileOutputStream;
+import com.sshtools.j2ssh.sftp.SftpSubsystemClient;
 
 /**
  * <p>
@@ -139,7 +143,7 @@ public class SftpClient {
         }
     }
 
-    private File resolveLocalPath(String path) throws IOException {
+    private File resolveLocalPath(String path) /*throws IOException*/ {
         File f = new File(path);
 
         if (!f.isAbsolute()) {
@@ -256,7 +260,7 @@ public class SftpClient {
      * @see com.sshtools.j2ssh.sftp.SftpFile
      * @since 0.2.0
      */
-    public List ls() throws IOException {
+    public List<SftpFile> ls() throws IOException {
         return ls(cwd);
     }
 
@@ -279,7 +283,7 @@ public class SftpClient {
      * @see com.sshtools.j2ssh.sftp.SftpFile
      * @since 0.2.0
      */
-    public List ls(String path) throws IOException {
+    public List<SftpFile> ls(String path) throws IOException {
         String actual = resolveRemotePath(path);
 
         FileAttributes attrs = sftp.getAttributes(actual);
@@ -290,7 +294,7 @@ public class SftpClient {
 
         SftpFile file = sftp.openDirectory(actual);
 
-        Vector children = new Vector();
+        Vector<SftpFile> children = new Vector<SftpFile>();
 
         while (sftp.listChildren(file, children) > -1) {
             ;
@@ -386,10 +390,10 @@ public class SftpClient {
         return get(path, (FileTransferProgress) null);
     }
 
-    private void transferFile(InputStream in, OutputStream out)
-        throws IOException, TransferCancelledException {
-        transferFile(in, out, null);
-    }
+//    private void transferFile(InputStream in, OutputStream out)
+//        throws IOException, TransferCancelledException {
+//        transferFile(in, out, null);
+//    }
 
     private void transferFile(InputStream in, OutputStream out,
         FileTransferProgress progress)
@@ -851,14 +855,14 @@ public class SftpClient {
         SftpFile file;
 
         if (attrs.isDirectory()) {
-            List list = ls(path);
+            List<SftpFile> list = ls(path);
 
             if (!force && (list.size() > 0)) {
                 throw new IOException(
                     "You cannot delete non-empty directory, use force=true to overide");
             } else {
-                for (Iterator it = list.iterator(); it.hasNext();) {
-                    file = (SftpFile) it.next();
+                for (Iterator<SftpFile> it = list.iterator(); it.hasNext();) {
+                    file = it.next();
 
                     if (file.isDirectory() && !file.getFilename().equals(".")
                             && !file.getFilename().equals("..")) {
@@ -930,7 +934,7 @@ public class SftpClient {
      * @throws IOException
      */
     public String getAbsolutePath(String path) throws IOException {
-        String actual = resolveRemotePath(path);
+        /*String actual =*/ resolveRemotePath(path);
 
         return sftp.getAbsolutePath(path);
     }
@@ -968,8 +972,8 @@ public class SftpClient {
         DirectoryOperation op = new DirectoryOperation();
 
         // Record the previous
-        String pwd = pwd();
-        String lpwd = lpwd();
+        /*String pwd = */pwd();
+        /*String lpwd = */lpwd();
 
         File local = resolveLocalPath(localdir);
 
@@ -981,7 +985,7 @@ public class SftpClient {
         // Setup the remote directory if were committing
         if (commit) {
             try {
-                FileAttributes attrs = stat(remotedir);
+                /*FileAttributes attrs = */stat(remotedir);
             } catch (IOException ex) {
                 mkdir(remotedir);
             }
@@ -1032,16 +1036,16 @@ public class SftpClient {
             // List the contents of the new local directory and remove any
             // files/directories that were not updated
             try {
-                List files = ls(remotedir);
+                List<SftpFile> files = ls(remotedir);
                 SftpFile file;
 
-                File f;
+//                File f;
 
-                for (Iterator it = files.iterator(); it.hasNext();) {
-                    file = (SftpFile) it.next();
+                for (Iterator<SftpFile> it = files.iterator(); it.hasNext();) {
+                    file = it.next();
 
                     // Create a local file object to test for its existence
-                    f = new File(local, file.getFilename());
+                    //f = new File(local, file.getFilename());
 
                     if (!op.containsFile(file)
                             && !file.getFilename().equals(".")
@@ -1082,11 +1086,11 @@ public class SftpClient {
 
     private void recurseMarkForDeletion(SftpFile file, DirectoryOperation op)
         throws IOException {
-        List list = ls(file.getAbsolutePath());
+        List<SftpFile> list = ls(file.getAbsolutePath());
         op.addDeletedFile(file);
 
-        for (Iterator it = list.iterator(); it.hasNext();) {
-            file = (SftpFile) it.next();
+        for (Iterator<SftpFile> it = list.iterator(); it.hasNext();) {
+            file = it.next();
 
             if (file.isDirectory() && !file.getFilename().equals(".")
                     && !file.getFilename().equals("..")) {
@@ -1138,7 +1142,7 @@ public class SftpClient {
 
         // Record the previous working directoies
         String pwd = pwd();
-        String lpwd = lpwd();
+        /*String lpwd =*/ lpwd();
         cd(remotedir);
 
         // Setup the local cwd
@@ -1160,12 +1164,12 @@ public class SftpClient {
             local.mkdir();
         }
 
-        List files = ls();
+        List<SftpFile> files = ls();
         SftpFile file;
         File f;
 
-        for (Iterator it = files.iterator(); it.hasNext();) {
-            file = (SftpFile) it.next();
+        for (Iterator<SftpFile> it = files.iterator(); it.hasNext();) {
+            file = it.next();
 
             if (file.isDirectory() && !file.getFilename().equals(".")
                     && !file.getFilename().equals("..")) {

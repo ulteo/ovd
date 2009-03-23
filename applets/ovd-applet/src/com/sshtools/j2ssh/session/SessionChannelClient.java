@@ -73,7 +73,8 @@ public class SessionChannelClient
    *
    * @return
    */
-  public byte[] getChannelOpenData() {
+  @Override
+public byte[] getChannelOpenData() {
     return null;
   }
 
@@ -82,7 +83,8 @@ public class SessionChannelClient
    *
    * @return
    */
-  public byte[] getChannelConfirmationData() {
+  @Override
+public byte[] getChannelConfirmationData() {
     return null;
   }
 
@@ -91,7 +93,8 @@ public class SessionChannelClient
    *
    * @return
    */
-  public String getChannelType() {
+  @Override
+public String getChannelType() {
     return "session";
   }
 
@@ -100,7 +103,8 @@ public class SessionChannelClient
    *
    * @return
    */
-  protected int getMinimumWindowSpace() {
+  @Override
+protected int getMinimumWindowSpace() {
     return 1024;
   }
 
@@ -109,7 +113,8 @@ public class SessionChannelClient
    *
    * @return
    */
-  protected int getMaximumWindowSpace() {
+  @Override
+protected int getMaximumWindowSpace() {
     return 32648;
   }
 
@@ -118,7 +123,8 @@ public class SessionChannelClient
    *
    * @return
    */
-  protected int getMaximumPacketSize() {
+  @Override
+protected int getMaximumPacketSize() {
     return 32648;
   }
 
@@ -445,7 +451,8 @@ public class SessionChannelClient
    *
    * @throws IOException
    */
-  protected void onChannelClose() throws IOException {
+  @Override
+protected void onChannelClose() throws IOException {
     super.onChannelClose();
 
     try {
@@ -466,7 +473,8 @@ public class SessionChannelClient
    *
    * @throws IOException
    */
-  protected void onChannelOpen() throws IOException {
+  @Override
+protected void onChannelOpen() throws IOException {
   }
 
   /**
@@ -490,7 +498,8 @@ public class SessionChannelClient
    *
    * @throws IOException
    */
-  protected void onChannelExtData(SshMsgChannelExtendedData msg) throws
+  @Override
+protected void onChannelExtData(SshMsgChannelExtendedData msg) throws
       IOException {
     errorMessages.addMessage(msg);
   }
@@ -504,7 +513,8 @@ public class SessionChannelClient
    *
    * @throws IOException
    */
-  protected void onChannelRequest(String requestType, boolean wantReply,
+  @Override
+protected void onChannelRequest(String requestType, boolean wantReply,
                                   byte[] requestData) throws IOException {
 
     if (requestType.equals("exit-status")) {
@@ -515,7 +525,7 @@ public class SessionChannelClient
       String signal = bar.readString();
       boolean coredump = bar.read() != 0;
       String message = bar.readString();
-      String language = bar.readString();
+      /*String language =*/ bar.readString();
 
 
       if (signalListener != null) {

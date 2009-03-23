@@ -41,7 +41,7 @@ public class HostbasedAuthenticationClient
   /**  */
   protected SshPrivateKey key;
   private String privateKeyFile = null;
-  private String passphrase = null;
+  //private String passphrase = null;
   private String clientUser = null;
 
   /**
@@ -62,9 +62,10 @@ public class HostbasedAuthenticationClient
   /**
    *
    */
-  public void reset() {
+  @Override
+public void reset() {
     privateKeyFile = null;
-    passphrase = null;
+    //passphrase = null;
     clientUser = null;
   }
 
@@ -82,7 +83,8 @@ public class HostbasedAuthenticationClient
    *
    * @return
    */
-  public String getMethodName() {
+  @Override
+public String getMethodName() {
     return "hostbased";
   }
 
@@ -96,7 +98,8 @@ public class HostbasedAuthenticationClient
    * @throws TerminatedStateException
    * @throws AuthenticationProtocolException
    */
-  public void authenticate(AuthenticationProtocolClient authentication,
+  @Override
+public void authenticate(AuthenticationProtocolClient authentication,
                            String serviceToStart) throws IOException,
       TerminatedStateException {
     if ( (getUsername() == null) || (key == null)) {
@@ -228,7 +231,8 @@ public class HostbasedAuthenticationClient
       }
       return true;
     }*/
-  public Properties getPersistableProperties() {
+  @Override
+public Properties getPersistableProperties() {
     Properties properties = new Properties();
 
     if (getUsername() != null) {
@@ -247,16 +251,17 @@ public class HostbasedAuthenticationClient
    *
    * @param properties
    */
-  public void setPersistableProperties(Properties properties) {
+  @Override
+public void setPersistableProperties(Properties properties) {
     setUsername(properties.getProperty("Username"));
 
     if (properties.getProperty("PrivateKey") != null) {
       privateKeyFile = properties.getProperty("PrivateKey");
     }
 
-    if (properties.getProperty("Passphrase") != null) {
-      passphrase = properties.getProperty("Passphrase");
-    }
+//    if (properties.getProperty("Passphrase") != null) {
+//      passphrase = properties.getProperty("Passphrase");
+//    }
   }
 
   /**
@@ -264,7 +269,8 @@ public class HostbasedAuthenticationClient
    *
    * @return
    */
-  public boolean canAuthenticate() {
+  @Override
+public boolean canAuthenticate() {
     return ( (getUsername() != null) && (key != null));
   }
 }

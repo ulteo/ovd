@@ -208,7 +208,7 @@ public class DynamicBuffer {
       return -1;
     }
 
-    return (int) buf[readpos++];
+    return buf[readpos++];
 
   }
 
@@ -258,38 +258,46 @@ public class DynamicBuffer {
 
   class DynamicBufferInputStream
       extends InputStream {
-    public int read() throws IOException {
+    @Override
+	public int read() throws IOException {
       return DynamicBuffer.this.read();
     }
 
-    public int read(byte[] data, int offset, int len) throws IOException {
+    @Override
+	public int read(byte[] data, int offset, int len) throws IOException {
       return DynamicBuffer.this.read(data, offset, len);
     }
 
-    public int available() {
+    @Override
+	public int available() {
       return DynamicBuffer.this.available();
     }
 
-    public void close() {
+    @Override
+	public void close() {
       DynamicBuffer.this.close();
     }
   }
 
   class DynamicBufferOutputStream
       extends OutputStream {
-    public void write(int b) throws IOException {
+    @Override
+	public void write(int b) throws IOException {
       DynamicBuffer.this.write(b);
     }
 
-    public void write(byte[] data, int offset, int len) throws IOException {
+    @Override
+	public void write(byte[] data, int offset, int len) throws IOException {
       DynamicBuffer.this.write(data, offset, len);
     }
 
-    public void flush() throws IOException {
+    @Override
+	public void flush() throws IOException {
       DynamicBuffer.this.flush();
     }
 
-    public void close() {
+    @Override
+	public void close() {
       DynamicBuffer.this.close();
     }
   }

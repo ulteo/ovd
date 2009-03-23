@@ -95,7 +95,8 @@ class SshDssPrivateKey
    *
    * @return
    */
-  public boolean equals(Object obj) {
+  @Override
+public boolean equals(Object obj) {
     if (obj instanceof SshDssPrivateKey) {
       return prvkey.equals( ( (SshDssPrivateKey) obj).prvkey);
     }
@@ -108,7 +109,8 @@ class SshDssPrivateKey
    *
    * @return
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return prvkey.hashCode();
   }
 
@@ -117,7 +119,8 @@ class SshDssPrivateKey
    *
    * @return
    */
-  public String getAlgorithmName() {
+  @Override
+public String getAlgorithmName() {
     return "ssh-dss";
   }
 
@@ -126,7 +129,8 @@ class SshDssPrivateKey
    *
    * @return
    */
-  public int getBitLength() {
+  @Override
+public int getBitLength() {
     return prvkey.getX().bitLength();
   }
 
@@ -135,7 +139,8 @@ class SshDssPrivateKey
    *
    * @return
    */
-  public byte[] getEncoded() {
+  @Override
+public byte[] getEncoded() {
     try {
       ByteArrayWriter baw = new ByteArrayWriter();
       baw.writeString("ssh-dss");
@@ -156,7 +161,8 @@ class SshDssPrivateKey
    *
    * @return
    */
-  public SshPublicKey getPublicKey() {
+  @Override
+public SshPublicKey getPublicKey() {
     try {
       DSAPublicKeySpec spec = new DSAPublicKeySpec(getY(),
           prvkey.getParams().getP(), prvkey.getParams().getQ(),
@@ -180,7 +186,8 @@ class SshDssPrivateKey
    *
    * @throws InvalidSshKeySignatureException
    */
-  public byte[] generateSignature(byte[] data) throws
+  @Override
+public byte[] generateSignature(byte[] data) throws
       InvalidSshKeySignatureException {
     try {
 

@@ -57,7 +57,8 @@ public class IOStreamConnectorState
    *
    * @return
    */
-  public boolean isValidState(int state) {
+  @Override
+public boolean isValidState(int state) {
     return ( (state == BOF) || (state == CONNECTED) || (state == EOF)
             || (state == CLOSED));
   }

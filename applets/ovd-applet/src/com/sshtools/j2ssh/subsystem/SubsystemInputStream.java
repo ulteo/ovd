@@ -53,6 +53,7 @@ public class SubsystemInputStream
    *
    * @return
    */
+  @Override
   public int available() {
     if (msgdata == null) {
       return 0;
@@ -68,6 +69,7 @@ public class SubsystemInputStream
    *
    * @throws IOException
    */
+  @Override
   public int read() throws IOException {
     if (msgdata == null) {
       collectNextMessage();

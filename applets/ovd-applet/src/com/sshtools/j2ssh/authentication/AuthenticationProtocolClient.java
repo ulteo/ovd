@@ -42,7 +42,7 @@ public class AuthenticationProtocolClient
     extends Service {
   private int[] resultFilter = new int[2];
   private int[] singleIdFilter = new int[3];
-  private Vector listeners = new Vector();
+  private Vector<AuthenticationProtocolListener> listeners = new Vector<AuthenticationProtocolListener>();
 
   /**
    * Creates a new AuthenticationProtocolClient object.
@@ -61,17 +61,20 @@ public class AuthenticationProtocolClient
    *
    * @throws java.io.IOException
    */
-  protected void onServiceAccept() throws java.io.IOException {
+  @Override
+protected void onServiceAccept() throws java.io.IOException {
   }
 
   /**
    *
    */
-  protected void onStart() {
+  @Override
+protected void onStart() {
   }
 
 
-  protected void onStop() {
+  @Override
+protected void onStop() {
 
   }
 
@@ -83,7 +86,8 @@ public class AuthenticationProtocolClient
    * @throws java.io.IOException
    * @throws IOException
    */
-  protected void onServiceInit(int startMode) throws java.io.IOException {
+  @Override
+protected void onServiceInit(int startMode) throws java.io.IOException {
     if (startMode == Service.ACCEPTING_SERVICE) {
       throw new IOException(
           "The Authentication Protocol client cannot be accepted");
@@ -108,7 +112,8 @@ public class AuthenticationProtocolClient
    * @throws java.io.IOException
    * @throws IOException
    */
-  protected void onServiceRequest() throws java.io.IOException {
+  @Override
+protected void onServiceRequest() throws java.io.IOException {
     throw new IOException("This class implements the client protocol only!");
   }
 
@@ -134,7 +139,7 @@ public class AuthenticationProtocolClient
    * @throws IOException
    * @throws SshException
    */
-  public List getAvailableAuths(String username, String serviceName) throws
+  public List<String> getAvailableAuths(String username, String serviceName) throws
       IOException {
 
     SshMessage msg = new SshMsgUserAuthRequest(username, serviceName,
@@ -194,10 +199,8 @@ public class AuthenticationProtocolClient
         serviceToStart.init(Service.ACCEPTING_SERVICE, transport); //, nativeSettings);
         serviceToStart.start();
 
-        for (Iterator it = listeners.iterator(); it.hasNext(); ) {
-          AuthenticationProtocolListener listener = (
-              AuthenticationProtocolListener) it
-              .next();
+        for (Iterator<AuthenticationProtocolListener> it = listeners.iterator(); it.hasNext(); ) {
+          AuthenticationProtocolListener listener =  it.next();
 
           if (listener != null) {
             listener.onAuthenticationComplete();
@@ -239,7 +242,7 @@ public class AuthenticationProtocolClient
    * @param cls
    * @param messageId
    */
-  public void registerMessage(Class cls, int messageId) {
+  public void registerMessage(Class<?> cls, int messageId) {
     transport.getMessageStore().registerMessage(messageId, cls);
   }
 

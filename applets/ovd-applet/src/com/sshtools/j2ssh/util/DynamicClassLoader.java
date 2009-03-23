@@ -27,8 +27,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -45,10 +44,10 @@ import java.util.zip.ZipFile;
  */
 public class DynamicClassLoader
     extends ClassLoader {
-  private static int generationCounter = 0;
-  private Hashtable cache;
-  private List classpath = new Vector();
-  private int generation;
+//  private static int generationCounter = 0;
+  private HashMap<String, ClassCacheEntry> cache;
+  private List<File> classpath = new Vector<File>();
+//  private int generation;
   private ClassLoader parent;
 
   /**
@@ -59,30 +58,31 @@ public class DynamicClassLoader
    *
    * @throws IllegalArgumentException
    */
-  public DynamicClassLoader(ClassLoader parent, List classpath) throws
+  public DynamicClassLoader(ClassLoader parent, List<File> classpath) throws
       IllegalArgumentException {
     this.parent = parent;
 
     // Create the cache to hold the loaded classes
-    cache = new Hashtable();
+    cache = new HashMap<String, ClassCacheEntry>();
 
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     while (it.hasNext()) {
-      Object obj = it.next();
-      File f = null;
+//      Object obj = it.next();
+//      File f = null;
+//
+//      if (obj instanceof String) {
+//        f = new File( (String) obj);
+//      }
+//      else if (obj instanceof File) {
+//        f = (File) obj;
+//      }
+//      else {
+//        throw new IllegalArgumentException(
+//            "Entries in classpath must be either a String or File object");
+//      }
 
-      if (obj instanceof String) {
-        f = new File( (String) obj);
-      }
-      else if (obj instanceof File) {
-        f = (File) obj;
-      }
-      else {
-        throw new IllegalArgumentException(
-            "Entries in classpath must be either a String or File object");
-      }
-
+    	File f = it.next();
       if (!f.exists()) {
         throw new IllegalArgumentException("Classpath "
                                            + f.getAbsolutePath() +
@@ -105,7 +105,7 @@ public class DynamicClassLoader
     }
 
     // Increment and store generation counter
-    this.generation = generationCounter++;
+  //  this.generation = generationCounter++;
   }
 
   /**
@@ -115,7 +115,8 @@ public class DynamicClassLoader
    *
    * @return
    */
-  public URL getResource(String name) {
+  @Override
+public URL getResource(String name) {
     URL u = getSystemResource(name);
 
     if (u != null) {
@@ -124,10 +125,10 @@ public class DynamicClassLoader
 
     // Load for it only in directories since no URL can point into
     // a zip file.
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     while (it.hasNext()) {
-      File file = (File) it.next();
+      File file = it.next();
 
       if (file.isDirectory()) {
         String fileName = name.replace('/', File.separatorChar);
@@ -158,16 +159,17 @@ public class DynamicClassLoader
    *
    * @return
    */
-  public InputStream getResourceAsStream(String name) {
+  @Override
+public InputStream getResourceAsStream(String name) {
     // Try to load it from the system class
     InputStream s = getSystemResourceAsStream(name);
 
     if (s == null) {
       // Try to find it from every classpath
-      Iterator it = classpath.iterator();
+      Iterator<File> it = classpath.iterator();
 
       while (it.hasNext()) {
-        File file = (File) it.next();
+        File file = it.next();
 
         if (file.isDirectory()) {
           s = loadResourceFromDirectory(file, name);
@@ -202,7 +204,7 @@ public class DynamicClassLoader
    * @return
    */
   public synchronized boolean shouldReload(String classname) {
-    ClassCacheEntry entry = (ClassCacheEntry) cache.get(classname);
+    ClassCacheEntry entry = cache.get(classname);
 
     if (entry == null) {
       // class wasn't even loaded
@@ -226,10 +228,12 @@ public class DynamicClassLoader
    */
   public synchronized boolean shouldReload() {
     // Check whether any class has changed
-    Enumeration e = cache.elements();
+   // Enumeration e = cache.elements();
+	Iterator<String> e = cache.keySet().iterator();
 
-    while (e.hasMoreElements()) {
-      ClassCacheEntry entry = (ClassCacheEntry) e.nextElement();
+//    while (e.hasMoreElements()) {
+    while (e.hasNext()) {
+      ClassCacheEntry entry = cache.get(e.next());
 
       if (entry.isSystemClass()) {
         continue;
@@ -262,14 +266,15 @@ public class DynamicClassLoader
    *
    * @throws ClassNotFoundException
    */
-  protected synchronized Class loadClass(String name, boolean resolve) throws
+  @Override
+  protected synchronized Class<?> loadClass(String name, boolean resolve) throws
       ClassNotFoundException {
     // The class object that will be returned.
-    Class c = null;
+    Class<?> c = null;
 
     // Use the cached value, if this class is already loaded into
     // this classloader.
-    ClassCacheEntry entry = (ClassCacheEntry) cache.get(name);
+    ClassCacheEntry entry = cache.get(name);
 
     if (entry != null) {
       // Class found in our cache
@@ -303,7 +308,7 @@ public class DynamicClassLoader
     }
 
     // Try to load it from each classpath
-    Iterator it = classpath.iterator();
+    Iterator<File> it = classpath.iterator();
 
     // Cache entry.
     ClassCacheEntry classCache = new ClassCacheEntry();
@@ -311,7 +316,7 @@ public class DynamicClassLoader
     while (it.hasNext()) {
       byte[] classData;
 
-      File file = (File) it.next();
+      File file = it.next();
 
       try {
         if (file.isDirectory()) {
@@ -491,10 +496,10 @@ public class DynamicClassLoader
     }
   }
 
-  private Class loadSystemClass(String name, boolean resolve) throws
+  private Class<?> loadSystemClass(String name, boolean resolve) throws
       NoClassDefFoundError, ClassNotFoundException {
     //        Class c = findSystemClass(name);
-    Class c = parent.loadClass(name);
+    Class<?> c = parent.loadClass(name);
 
     if (resolve) {
       resolveClass(c);
@@ -540,7 +545,7 @@ public class DynamicClassLoader
   }
 
   private static class ClassCacheEntry {
-    Class loadedClass;
+    Class<?> loadedClass;
     File origin;
     long lastModified;
 

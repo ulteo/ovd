@@ -144,12 +144,12 @@ public class SshPublicKeyFile {
 
     if (!valid) {
 
-      Iterator it = SshPublicKeyFormatFactory.getSupportedFormats()
+      Iterator<String> it = SshPublicKeyFormatFactory.getSupportedFormats()
           .iterator();
       String ft;
 
       while (it.hasNext() && !valid) {
-        ft = (String) it.next();
+        ft = it.next();
         format = SshPublicKeyFormatFactory.newInstance(ft);
         valid = format.isFormatted(formattedKey);
       }
@@ -225,7 +225,8 @@ public class SshPublicKeyFile {
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return new String(format.formatKey(keyblob));
   }
 }

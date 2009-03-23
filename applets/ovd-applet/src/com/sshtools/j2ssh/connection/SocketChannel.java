@@ -65,7 +65,8 @@ public abstract class SocketChannel
    *
    * @throws IOException
    */
-  protected void onChannelData(SshMsgChannelData msg) throws IOException {
+  @Override
+protected void onChannelData(SshMsgChannelData msg) throws IOException {
     try {
       socket.getOutputStream().write(msg.getChannelData());
     }
@@ -78,7 +79,8 @@ public abstract class SocketChannel
    *
    * @throws IOException
    */
-  protected void onChannelEOF() throws IOException {
+  @Override
+protected void onChannelEOF() throws IOException {
     try {
       //synchronized(state) {
       //if (isOpen())
@@ -96,7 +98,8 @@ public abstract class SocketChannel
    *
    * @throws IOException
    */
-  protected void onChannelClose() throws IOException {
+  @Override
+protected void onChannelClose() throws IOException {
     try {
       socket.close();
     }
@@ -109,7 +112,8 @@ public abstract class SocketChannel
    *
    * @throws IOException
    */
-  protected void onChannelOpen() throws IOException {
+  @Override
+protected void onChannelOpen() throws IOException {
     if (socket == null) {
       throw new IOException(
           "The socket must be bound to the channel before opening");
@@ -126,7 +130,8 @@ public abstract class SocketChannel
    *
    * @throws IOException
    */
-  protected void onChannelExtData(SshMsgChannelExtendedData msg) throws
+  @Override
+protected void onChannelExtData(SshMsgChannelExtendedData msg) throws
       IOException {
     // We do not have an extended data channel for the socket so ignore
   }

@@ -79,7 +79,8 @@ public class SECSHPublicKeyFormat
    *
    * @return
    */
-  public String getFormatType() {
+  @Override
+public String getFormatType() {
     return "SECSH-PublicKey-" + super.getFormatType();
   }
 

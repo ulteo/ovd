@@ -56,10 +56,10 @@ public class SocksProxySocket
       "SOCKS server cannot connect to identd on the client",
       "The client program and identd report different user-ids"
   };
-  private String proxyHost;
-  private int proxyPort;
-  private String remoteHost;
-  private int remotePort;
+//  private String proxyHost;
+//  private int proxyPort;
+//  private String remoteHost;
+//  private int remotePort;
   private String providerDetail;
 
   private SocksProxySocket(String remoteHost, int remotePort,
@@ -67,10 +67,10 @@ public class SocksProxySocket
       UnknownHostException {
     super(proxyHost, proxyPort);
 
-    this.proxyHost = proxyHost;
-    this.proxyPort = proxyPort;
-    this.remoteHost = remoteHost;
-    this.remotePort = remotePort;
+//    this.proxyHost = proxyHost;
+//    this.proxyPort = proxyPort;
+//    this.remoteHost = remoteHost;
+//    this.remotePort = remotePort;
   }
 
   /**
@@ -184,7 +184,7 @@ public class SocksProxySocket
       byte[] request = {
           (byte) SOCKS5, (byte) 0x02, (byte) 0x00, (byte) 0x02
       };
-      byte[] reply = new byte[2];
+      //byte[] reply = new byte[2];
 
       proxyOut.write(request);
       proxyOut.flush();
@@ -356,7 +356,8 @@ public class SocksProxySocket
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "SocksProxySocket[addr=" + getInetAddress() + ",port="
         + getPort() + ",localport=" + getLocalPort() + "]";
   }

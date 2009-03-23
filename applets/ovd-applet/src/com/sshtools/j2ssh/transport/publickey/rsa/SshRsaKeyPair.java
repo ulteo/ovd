@@ -41,8 +41,8 @@ import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
  */
 public class SshRsaKeyPair
     extends SshKeyPair {
-  private RSAPrivateKey prvKey;
-  private RSAPublicKey pubKey;
+//  private RSAPrivateKey prvKey;
+//  private RSAPublicKey pubKey;
 
   /**
    * Creates a new SshRsaKeyPair object.
@@ -59,7 +59,8 @@ public class SshRsaKeyPair
    *
    * @throws InvalidSshKeyException
    */
-  public SshPrivateKey decodePrivateKey(byte[] encoded) throws
+  @Override
+public SshPrivateKey decodePrivateKey(byte[] encoded) throws
       InvalidSshKeyException {
     return new SshRsaPrivateKey(encoded);
   }
@@ -73,7 +74,8 @@ public class SshRsaKeyPair
    *
    * @throws InvalidSshKeyException
    */
-  public SshPublicKey decodePublicKey(byte[] encoded) throws
+  @Override
+public SshPublicKey decodePublicKey(byte[] encoded) throws
       InvalidSshKeyException {
     return new SshRsaPublicKey(encoded);
   }
@@ -83,7 +85,8 @@ public class SshRsaKeyPair
    *
    * @param bits
    */
-  public void generate(int bits) {
+  @Override
+public void generate(int bits) {
     try {
       // Initialize the generator
       KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
@@ -97,8 +100,8 @@ public class SshRsaKeyPair
           (RSAPublicKey) pair.getPublic()));
     }
     catch (NoSuchAlgorithmException nsae) {
-      prvKey = null;
-      pubKey = null;
+//      prvKey = null;
+//      pubKey = null;
     }
   }
 }

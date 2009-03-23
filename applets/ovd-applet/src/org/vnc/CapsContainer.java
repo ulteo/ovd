@@ -24,16 +24,16 @@ package org.vnc;
 // protocol 3.130
 //
 
+import java.util.HashMap;
 import java.util.Vector;
-import java.util.Hashtable;
 
 class CapsContainer {
 
   // Public methods
 
   public CapsContainer() {
-    infoMap = new Hashtable(64, (float)0.25);
-    orderedList = new Vector(32, 8);
+    infoMap = new HashMap<Integer, CapabilityInfo>(64, (float)0.25);
+    orderedList = new Vector<Integer>(32, 8);
   }
 
   public void add(CapabilityInfo capinfo) {
@@ -51,11 +51,11 @@ class CapsContainer {
   }
 
   public CapabilityInfo getInfo(int code) {
-    return (CapabilityInfo)infoMap.get(new Integer(code));
+    return infoMap.get(new Integer(code));
   }
 
   public String getDescription(int code) {
-    CapabilityInfo capinfo = (CapabilityInfo)infoMap.get(new Integer(code));
+    CapabilityInfo capinfo = infoMap.get(new Integer(code));
     if (capinfo == null)
       return null;
 
@@ -64,7 +64,7 @@ class CapsContainer {
 
   public boolean enable(CapabilityInfo other) {
     Integer key = new Integer(other.getCode());
-    CapabilityInfo capinfo = (CapabilityInfo)infoMap.get(key);
+    CapabilityInfo capinfo = infoMap.get(key);
     if (capinfo == null)
       return false;
 
@@ -76,7 +76,7 @@ class CapsContainer {
   }
 
   public boolean isEnabled(int code) {
-    CapabilityInfo capinfo = (CapabilityInfo)infoMap.get(new Integer(code));
+    CapabilityInfo capinfo = infoMap.get(new Integer(code));
     if (capinfo == null)
       return false;
 
@@ -90,7 +90,7 @@ class CapsContainer {
   public int getByOrder(int idx) {
     int code;
     try {
-      code = ((Integer)orderedList.elementAt(idx)).intValue();
+      code = (orderedList.elementAt(idx)).intValue();
     } catch (ArrayIndexOutOfBoundsException e) {
       code = 0;
     }
@@ -99,7 +99,7 @@ class CapsContainer {
 
   // Protected data
 
-  protected Hashtable infoMap;
-  protected Vector orderedList;
+  protected HashMap<Integer, CapabilityInfo> infoMap;
+  protected Vector<Integer> orderedList;
 }
 

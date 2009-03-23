@@ -65,7 +65,8 @@ class SshAgentUnlock
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_AGENT_UNLOCK";
   }
 
@@ -79,7 +80,8 @@ class SshAgentUnlock
    *         ME!
    * @throws InvalidMessageException
    */
-  public void constructByteArray(ByteArrayWriter baw) throws java.io.
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws java.io.
       IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     try {
@@ -100,7 +102,8 @@ class SshAgentUnlock
    *         ME!
    * @throws InvalidMessageException
    */
-  public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
+  @Override
+public void constructMessage(ByteArrayReader bar) throws java.io.IOException,
       com.sshtools.j2ssh.transport.InvalidMessageException {
     try {
       password = bar.readString();

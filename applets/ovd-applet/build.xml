@@ -11,7 +11,7 @@
       description="compile the Java source code to class files">
          <mkdir dir="classes"/>
          <mkdir dir="libs"/>
-         <javac srcdir="./src" destdir="classes" target="1.4" source="1.4"/>
+         <javac srcdir="./src" destdir="classes" target="1.5" source="1.5"/>
          <jar destfile="libs/UlteoVNC-unsigned.jar"
               basedir="classes/">
 	         <include name="**/*.*"/>

@@ -38,7 +38,7 @@ import com.sshtools.j2ssh.configuration.ConfigurationLoader;
  */
 public class SshThread
     extends Thread {
-  private static HashMap names = new HashMap();
+  private static HashMap<String, Integer> names = new HashMap <String, Integer>();
 
   /** The raw session id generating during the first key exchange. */
   protected byte[] sessionId;
@@ -50,7 +50,7 @@ public class SshThread
   protected String username;
 
   /** The thread properties */
-  private HashMap settings = new HashMap();
+  private HashMap<String, Object> settings = new HashMap<String, Object>();
 
   /**
    * <p>
@@ -76,7 +76,7 @@ public class SshThread
     Integer i;
 
     if (names.containsKey(name)) {
-      i = new Integer( ( (Integer) names.get(name)).intValue() + 1);
+      i = new Integer( (names.get(name)).intValue() + 1);
     }
     else {
       i = new Integer(1);
@@ -148,40 +148,40 @@ public class SshThread
     return username;
   }
 
-  /**
-   * <p>
-   * Create's a cloned copy of this thread with the given target and name.
-   * </p>
-   *
-   * @param target the target to execute
-   * @param name the thread name
-   *
-   * @return the cloned thread
-   *
-   * @since 0.2.0
-   */
-  public SshThread cloneThread(Runnable target, String name) {
-    SshThread thread = new SshThread(target, name, isDaemon());
-    thread.setSessionId(sessionId);
-    thread.setUsername(username);
-    thread.settings.putAll(settings);
+//  /**
+//   * <p>
+//   * Create's a cloned copy of this thread with the given target and name.
+//   * </p>
+//   *
+//   * @param target the target to execute
+//   * @param name the thread name
+//   *
+//   * @return the cloned thread
+//   *
+//   * @since 0.2.0
+//   */
+//  public SshThread cloneThread(Runnable target, String name) {
+//    SshThread thread = new SshThread(target, name, isDaemon());
+//    thread.setSessionId(sessionId);
+//    thread.setUsername(username);
+//    thread.settings.putAll(settings);
+//
+//    return thread;
+//  }
 
-    return thread;
-  }
-
-  /**
-   * <p>
-   * Sets a property in the thread.
-   * </p>
-   *
-   * @param name the name of the property
-   * @param value the property value
-   *
-   * @since 0.2.0
-   */
-  public void setProperty(String name, Object value) {
-    settings.put(name, value);
-  }
+//  /**
+//   * <p>
+//   * Sets a property in the thread.
+//   * </p>
+//   *
+//   * @param name the name of the property
+//   * @param value the property value
+//   *
+//   * @since 0.2.0
+//   */
+//  public void setProperty(String name, Object value) {
+//    settings.put(name, value);
+//  }
 
   /**
    * <p>
@@ -232,7 +232,7 @@ public class SshThread
    * @since 0.2.0
    */
   public static String getCurrentThreadUser() throws SshRuntimeException {
-    String username;
+    //String username;
 
     if (Thread.currentThread()instanceof SshThread) {
       return ( (SshThread) Thread.currentThread()).getUsername();
@@ -273,7 +273,7 @@ public class SshThread
    * @since 0.2.0
    */
   public static String getCurrentSessionId() throws SshRuntimeException {
-    String username;
+    //String username;
 
     if (Thread.currentThread()instanceof SshThread) {
       return ( (SshThread) Thread.currentThread()).getSessionIdString();

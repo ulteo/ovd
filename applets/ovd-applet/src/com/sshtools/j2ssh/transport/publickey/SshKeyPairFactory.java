@@ -24,12 +24,9 @@ package com.sshtools.j2ssh.transport.publickey;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.sshtools.j2ssh.configuration.ConfigurationException;
-import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.io.ByteArrayReader;
 import com.sshtools.j2ssh.transport.AlgorithmNotSupportedException;
 import com.sshtools.j2ssh.transport.publickey.dsa.SshDssKeyPair;
@@ -42,11 +39,11 @@ import com.sshtools.j2ssh.transport.publickey.rsa.SshRsaKeyPair;
  * @version $Revision: 1.27 $
  */
 public class SshKeyPairFactory {
-  private static Map pks;
+  private static Map<String, Class<?>> pks;
   private static String defaultAlgorithm;
 
   static {
-    pks = new HashMap();
+    pks = new HashMap<String, Class<?>>();
 
 
     pks.put("ssh-dss", SshDssKeyPair.class);
@@ -81,9 +78,9 @@ public class SshKeyPairFactory {
    *
    * @return
    */
-  public static List getSupportedKeys() {
+  public static List<String> getSupportedKeys() {
     // Get the list of pks
-    return new ArrayList(pks.keySet());
+    return new ArrayList<String>(pks.keySet());
   }
 
   /**
@@ -98,7 +95,7 @@ public class SshKeyPairFactory {
   public static SshKeyPair newInstance(String methodName) throws
       AlgorithmNotSupportedException {
     try {
-      return (SshKeyPair) ( (Class) pks.get(methodName)).newInstance();
+      return (SshKeyPair) ( pks.get(methodName)).newInstance();
     }
     catch (Exception e) {
       throw new AlgorithmNotSupportedException(methodName

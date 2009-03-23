@@ -47,7 +47,8 @@ public class SshMsgNewKeys
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_NEWKEYS";
   }
 
@@ -58,7 +59,8 @@ public class SshMsgNewKeys
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
   }
 
@@ -69,7 +71,8 @@ public class SshMsgNewKeys
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
   }
 }

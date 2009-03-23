@@ -33,18 +33,17 @@ import java.security.AccessController;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.PropertyPermission;
 import java.util.Vector;
+
 import com.sshtools.j2ssh.transport.cipher.SshCipherFactory;
-import com.sshtools.j2ssh.transport.publickey.SshPrivateKeyFormatFactory;
-import com.sshtools.j2ssh.transport.publickey.SshPublicKeyFormatFactory;
 import com.sshtools.j2ssh.transport.compression.SshCompressionFactory;
 import com.sshtools.j2ssh.transport.hmac.SshHmacFactory;
 import com.sshtools.j2ssh.transport.kex.SshKeyExchangeFactory;
 import com.sshtools.j2ssh.transport.publickey.SshKeyPairFactory;
-
+import com.sshtools.j2ssh.transport.publickey.SshPrivateKeyFormatFactory;
+import com.sshtools.j2ssh.transport.publickey.SshPublicKeyFormatFactory;
 import com.sshtools.j2ssh.util.ExtensionClassLoader;
 
 /**
@@ -54,7 +53,7 @@ import com.sshtools.j2ssh.util.ExtensionClassLoader;
  * @version $Revision: 1.68 $
  */
 public class ConfigurationLoader {
-  private static Vector contexts = new Vector();
+  private static Vector<ConfigurationContext> contexts = new Vector<ConfigurationContext>();
   private static SecureRandom rnd;
   private static ExtensionClassLoader ext = null;
   private static ClassLoader clsLoader = null;
@@ -194,7 +193,7 @@ public class ConfigurationLoader {
 
           // Attempt to load a JCE Provider - replace or remove these statements
           // depending upon how you want to initialize your JCE provider
-          Class cls;
+          Class<?> cls;
           cls = Class.forName(
               "org.bouncycastle.jce.provider.BouncyCastleProvider");
 
@@ -240,7 +239,7 @@ public class ConfigurationLoader {
 
           // Get the list
           File[] children = dir.listFiles(filter);
-          List classpath = new Vector();
+          //List<File> classpath = new Vector<File>();
 
           if (children != null) {
             for (int i = 0; i < children.length; i++) {
@@ -283,17 +282,17 @@ public class ConfigurationLoader {
    *
    * @throws ConfigurationException
    */
-  public static boolean isConfigurationAvailable(Class cls) throws
+  public static boolean isConfigurationAvailable(Class<?> cls) throws
       ConfigurationException {
     if (!initialized) {
       initialize(false);
     }
 
     if (contexts.size() > 0) {
-      Iterator it = contexts.iterator();
+      Iterator<ConfigurationContext> it = contexts.iterator();
 
       while (it.hasNext()) {
-        ConfigurationContext context = (ConfigurationContext) it.next();
+        ConfigurationContext context = it.next();
 
         if (context.isConfigurationAvailable(cls)) {
           return true;
@@ -316,13 +315,13 @@ public class ConfigurationLoader {
    *
    * @throws ConfigurationException
    */
-  public static Object getConfiguration(Class cls) throws
+  public static Object getConfiguration(Class<?> cls) throws
       ConfigurationException {
     if (contexts.size() > 0) {
-      Iterator it = contexts.iterator();
+      Iterator<ConfigurationContext> it = contexts.iterator();
 
       while (it.hasNext()) {
-        ConfigurationContext context = (ConfigurationContext) it.next();
+        ConfigurationContext context = it.next();
 
         if (context.isConfigurationAvailable(cls)) {
           return context.getConfiguration(cls);
@@ -354,7 +353,7 @@ public class ConfigurationLoader {
    * @throws ClassNotFoundException
    * @throws ConfigurationException
    */
-  public static Class getExtensionClass(String name) throws
+  public static Class<?> getExtensionClass(String name) throws
       ClassNotFoundException, ConfigurationException {
     if (!initialized) {
       initialize(false);
@@ -499,11 +498,11 @@ public class ConfigurationLoader {
       // Do nothing
     }
 
-    public boolean isConfigurationAvailable(Class cls) {
+    public boolean isConfigurationAvailable(Class<?> cls) {
       return false;
     }
 
-    public Object getConfiguration(Class cls) throws ConfigurationException {
+    public Object getConfiguration(Class<?> cls) throws ConfigurationException {
       throw new ConfigurationException(
           "Default configuration does not contain " + cls.getName());
     }

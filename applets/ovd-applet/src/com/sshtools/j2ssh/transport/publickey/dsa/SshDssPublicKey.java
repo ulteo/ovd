@@ -98,7 +98,8 @@ public class SshDssPublicKey
    *
    * @return
    */
-  public String getAlgorithmName() {
+  @Override
+public String getAlgorithmName() {
     return "ssh-dss";
   }
 
@@ -107,7 +108,8 @@ public class SshDssPublicKey
    *
    * @return
    */
-  public int getBitLength() {
+  @Override
+public int getBitLength() {
     return pubkey.getY().bitLength();
   }
 
@@ -116,7 +118,8 @@ public class SshDssPublicKey
    *
    * @return
    */
-  public byte[] getEncoded() {
+  @Override
+public byte[] getEncoded() {
     try {
       ByteArrayWriter baw = new ByteArrayWriter();
 
@@ -143,7 +146,8 @@ public class SshDssPublicKey
    *
    * @throws InvalidSshKeySignatureException
    */
-  public boolean verifySignature(byte[] signature, byte[] data) throws
+  @Override
+public boolean verifySignature(byte[] signature, byte[] data) throws
       InvalidSshKeySignatureException {
     try {
       // Check for differing version of the transport protocol

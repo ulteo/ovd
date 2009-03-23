@@ -37,7 +37,7 @@ import java.util.Set;
 public abstract class HttpHeader {
   /**  */
   protected final static String white_SPACE = " \t\r";
-  HashMap fields;
+  HashMap<String, String> fields;
 
   /**  */
   protected String begin;
@@ -46,7 +46,7 @@ public abstract class HttpHeader {
    * Creates a new HttpHeader object.
    */
   protected HttpHeader() {
-    fields = new HashMap();
+    fields = new HashMap<String, String>();
   }
 
   /**
@@ -99,7 +99,7 @@ public abstract class HttpHeader {
    *
    * @return
    */
-  public Map getHeaderFields() {
+  public Map<String, String> getHeaderFields() {
     return fields;
   }
 
@@ -108,7 +108,7 @@ public abstract class HttpHeader {
    *
    * @return
    */
-  public Set getHeaderFieldNames() {
+  public Set<String> getHeaderFieldNames() {
     return fields.keySet();
   }
 
@@ -120,7 +120,7 @@ public abstract class HttpHeader {
    * @return
    */
   public String getHeaderField(String headerName) {
-    return (String) fields.get(headerName.toLowerCase());
+    return fields.get(headerName.toLowerCase());
   }
 
   /**
@@ -138,12 +138,13 @@ public abstract class HttpHeader {
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     String str = begin + "\r\n";
-    Iterator it = getHeaderFieldNames().iterator();
+    Iterator<String> it = getHeaderFieldNames().iterator();
 
     while (it.hasNext()) {
-      String fieldName = (String) it.next();
+      String fieldName = it.next();
       str += (fieldName + ": " + getHeaderField(fieldName) + "\r\n");
     }
 
@@ -160,7 +161,7 @@ public abstract class HttpHeader {
    * @throws IOException
    */
   protected void processHeaderFields(InputStream in) throws IOException {
-    fields = new HashMap();
+    fields = new HashMap<String, String>();
 
     StringBuffer lineBuf = new StringBuffer();
     String lastHeaderName = null;

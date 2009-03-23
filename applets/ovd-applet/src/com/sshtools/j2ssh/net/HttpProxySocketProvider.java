@@ -37,8 +37,8 @@ import java.net.UnknownHostException;
 public class HttpProxySocketProvider
     extends Socket
     implements TransportProvider {
-  private String proxyHost;
-  private int proxyPort;
+  //private String proxyHost;
+  //private int proxyPort;
   private String remoteHost;
   private int remotePort;
   private HttpResponse responseHeader;
@@ -49,10 +49,10 @@ public class HttpProxySocketProvider
       UnknownHostException {
     super(proxyHost, proxyPort);
 
-    this.proxyHost = proxyHost;
-    this.proxyPort = proxyPort;
-    this.remoteHost = remoteHost;
-    this.remotePort = remotePort;
+//    this.proxyHost = proxyHost;
+//    this.proxyPort = proxyPort;
+//    this.remoteHost = remoteHost;
+//    this.remotePort = remotePort;
   }
 
   /**
@@ -184,7 +184,8 @@ public class HttpProxySocketProvider
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "HTTPProxySocket [Proxy IP=" + getInetAddress() + ",Proxy Port="
         + getPort() + ",localport=" + getLocalPort() + "Remote Host="
         + remoteHost + "Remote Port=" + String.valueOf(remotePort) + "]";

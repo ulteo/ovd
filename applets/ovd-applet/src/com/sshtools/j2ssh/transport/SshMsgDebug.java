@@ -101,7 +101,8 @@ public class SshMsgDebug
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_DEBUG";
   }
 
@@ -112,7 +113,8 @@ public class SshMsgDebug
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       // Write the data
@@ -133,7 +135,8 @@ public class SshMsgDebug
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       // Extract the message information

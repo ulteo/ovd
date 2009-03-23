@@ -112,12 +112,12 @@ public class SshPrivateKeyFile {
 
     if (!valid) {
 
-      Iterator it = SshPrivateKeyFormatFactory.getSupportedFormats()
+      Iterator<String> it = SshPrivateKeyFormatFactory.getSupportedFormats()
           .iterator();
       String ft;
 
       while (it.hasNext() && !valid) {
-        ft = (String) it.next();
+        ft = it.next();
         format = SshPrivateKeyFormatFactory.newInstance(ft);
         valid = format.isFormatted(formattedKey);
       }
@@ -153,9 +153,7 @@ public class SshPrivateKeyFile {
     }
     finally {
       try {
-        if (in != null) {
           in.close();
-        }
       }
       catch (IOException ex) {
       }
@@ -238,7 +236,8 @@ public class SshPrivateKeyFile {
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return new String(keyblob);
   }
 

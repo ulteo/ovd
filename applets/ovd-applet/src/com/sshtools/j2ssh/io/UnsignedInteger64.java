@@ -99,7 +99,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public boolean equals(Object o) {
+  @Override
+public boolean equals(Object o) {
     try {
       UnsignedInteger64 u = (UnsignedInteger64) o;
 
@@ -125,7 +126,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public int intValue() {
+  @Override
+public int intValue() {
     return bigInt.intValue();
   }
 
@@ -134,7 +136,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public long longValue() {
+  @Override
+public long longValue() {
     return bigInt.longValue();
   }
 
@@ -143,7 +146,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public double doubleValue() {
+  @Override
+public double doubleValue() {
     return bigInt.doubleValue();
   }
 
@@ -152,7 +156,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public float floatValue() {
+  @Override
+public float floatValue() {
     return bigInt.floatValue();
   }
 
@@ -172,7 +177,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public String toString() {
+  @Override
+public String toString() {
     return bigInt.toString();
   }
 
@@ -181,7 +187,8 @@ public class UnsignedInteger64
    *
    * @return
    */
-  public int hashCode() {
+  @Override
+public int hashCode() {
     return bigInt.hashCode();
   }
 

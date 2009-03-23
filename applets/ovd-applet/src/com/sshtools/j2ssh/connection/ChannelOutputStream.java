@@ -35,7 +35,7 @@ public class ChannelOutputStream
     extends OutputStream {
   private Channel channel;
   private boolean isClosed = false;
-  private Integer type = null;
+  //private Integer type = null;
 
   /**
    * Creates a new ChannelOutputStream object.
@@ -45,7 +45,7 @@ public class ChannelOutputStream
    */
   public ChannelOutputStream(Channel channel, Integer type) {
     this.channel = channel;
-    this.type = type;
+    //this.type = type;
   }
 
   /**
@@ -71,7 +71,8 @@ public class ChannelOutputStream
    *
    * @throws IOException
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     isClosed = true;
 
     // Send an EOF if the channel is not closed
@@ -95,7 +96,8 @@ public class ChannelOutputStream
    *
    * @throws IOException
    */
-  public void write(byte[] b, int off, int len) throws IOException {
+  @Override
+public void write(byte[] b, int off, int len) throws IOException {
     if (isClosed) {
       throw new IOException("The ChannelOutputStream is closed!");
     }
@@ -120,7 +122,8 @@ public class ChannelOutputStream
    *
    * @throws IOException
    */
-  public void write(int b) throws IOException {
+  @Override
+public void write(int b) throws IOException {
     if (isClosed) {
       throw new IOException("The ChannelOutputStream is closed!");
     }

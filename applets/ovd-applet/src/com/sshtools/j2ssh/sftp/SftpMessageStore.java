@@ -49,7 +49,7 @@ class SftpMessageStore
    */
   public synchronized SubsystemMessage getMessage(UnsignedInteger32 requestId) throws
       InterruptedException {
-    Iterator it;
+    Iterator<SubsystemMessage> it;
     SubsystemMessage msg;
 
     // If there ae no messages available then wait untill there are.
@@ -58,7 +58,7 @@ class SftpMessageStore
         it = messages.iterator();
 
         while (it.hasNext()) {
-          msg = (SubsystemMessage) it.next();
+          msg = it.next();
 
           if (msg instanceof MessageRequestId) {
             if ( ( (MessageRequestId) msg).getId().equals(requestId)) {

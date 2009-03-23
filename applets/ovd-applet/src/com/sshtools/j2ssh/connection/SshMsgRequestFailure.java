@@ -49,7 +49,8 @@ public class SshMsgRequestFailure
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_REQUEST_FAILURE";
   }
 
@@ -60,7 +61,8 @@ public class SshMsgRequestFailure
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
   }
 
@@ -71,7 +73,8 @@ public class SshMsgRequestFailure
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
   }
 }

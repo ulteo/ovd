@@ -104,7 +104,8 @@ public class SshRsaPublicKey
    *
    * @return
    */
-  public String getAlgorithmName() {
+  @Override
+public String getAlgorithmName() {
     return "ssh-rsa";
   }
 
@@ -113,7 +114,8 @@ public class SshRsaPublicKey
    *
    * @return
    */
-  public int getBitLength() {
+  @Override
+public int getBitLength() {
     return pubKey.getModulus().bitLength();
   }
 
@@ -122,7 +124,8 @@ public class SshRsaPublicKey
    *
    * @return
    */
-  public byte[] getEncoded() {
+  @Override
+public byte[] getEncoded() {
     try {
       ByteArrayWriter baw = new ByteArrayWriter();
 
@@ -147,7 +150,8 @@ public class SshRsaPublicKey
    *
    * @throws InvalidSshKeySignatureException
    */
-  public boolean verifySignature(byte[] signature, byte[] data) throws
+  @Override
+public boolean verifySignature(byte[] signature, byte[] data) throws
       InvalidSshKeySignatureException {
     try {
       // Check for older versions of the transport protocol

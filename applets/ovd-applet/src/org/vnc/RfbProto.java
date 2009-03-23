@@ -34,14 +34,17 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Vector;
 import java.util.zip.Deflater;
 
-import org.vnc.rfbcaching.*;
-//import com.sshtools.sshvnc.SshVNCPanel;
-//import com.sshtools.sshvnc.SshVNCViewer;
+import org.vnc.rfbcaching.IRfbCache;
+import org.vnc.rfbcaching.IRfbCacheFactory;
+import org.vnc.rfbcaching.IRfbCachingConstants;
+import org.vnc.rfbcaching.RfbCacheEntry;
+import org.vnc.rfbcaching.RfbCacheProperties;
+
+import com.sshtools.j2ssh.connection.ChannelOutputStream;
 
 class RfbProto {
 
@@ -165,7 +168,7 @@ class RfbProto {
   int port;
   Socket sock;
   DataInputStream is;
-  OutputStream os;
+  /*OutputStream*/ ChannelOutputStream os;
   SessionRecorder rec;
   boolean inNormalProtocol = false;
   VncViewer viewer;
@@ -279,7 +282,7 @@ class RfbProto {
       sock = new Socket(host, port);
     } else {
       try {
-	Class factoryClass = Class.forName(viewer.socketFactory);
+	Class<?> factoryClass = Class.forName(viewer.socketFactory);
 	SocketFactory factory = (SocketFactory)factoryClass.newInstance();
 	if (viewer.inAnApplet)
 	  sock = factory.createSocket(host, port, viewer);
@@ -292,15 +295,14 @@ class RfbProto {
     }
     is = new DataInputStream(new BufferedInputStream(sock.getInputStream(),
 						     16384));
-    os = sock.getOutputStream();
+    os = (ChannelOutputStream) sock.getOutputStream();
 
     timing = false;
     timeWaitedIn100us = 5;
     timedKbits = 0;
   }
 
-  RfbProto(InputStream in, OutputStream out, VncViewer v) throws
-  IOException {
+  RfbProto(InputStream in, /*OutputStream*/ ChannelOutputStream out, VncViewer v) /*throws IOException*/ {
 	viewer = v;
 	is = new DataInputStream(new BufferedInputStream(in, 16384));
 	os = out;
@@ -1132,7 +1134,7 @@ class RfbProto {
 	   int len = text.length();
 	   char keyChar;
 	   char translated;
-	   Vector processedBytes = new Vector();
+	   Vector<Byte> processedBytes = new Vector<Byte>();
 
 	   for (int i=0; i<len; i++) {
 		   keyChar = text.charAt(i);
@@ -1160,7 +1162,7 @@ class RfbProto {
 	   int byteLen = processedBytes.size();
 	   byte[] b = new byte[8 + byteLen];
 	   for(int k=0; k<processedBytes.size();k++){
-		   b[8+k] = ((Byte) processedBytes.get(k)).byteValue();
+		   b[8+k] = (processedBytes.get(k)).byteValue();
 	   }
 
 
@@ -1223,13 +1225,13 @@ class RfbProto {
 	   // modifiers do not include BUTTON2_MASK or BUTTON3_MASK.
 
 	   if (evt.getID() == MouseEvent.MOUSE_PRESSED) {
-	     if ((modifiers & (KeyEvent.BUTTON1_DOWN_MASK | KeyEvent.BUTTON2_DOWN_MASK | KeyEvent.BUTTON3_DOWN_MASK)) == KeyEvent.BUTTON2_DOWN_MASK){
+	     if ((modifiers & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) == InputEvent.BUTTON2_DOWN_MASK){
 	          pointerMask = mask2;
 	     }
-	     else if ((modifiers & (KeyEvent.BUTTON1_DOWN_MASK | KeyEvent.BUTTON2_DOWN_MASK | KeyEvent.BUTTON3_DOWN_MASK)) == KeyEvent.BUTTON3_DOWN_MASK){
+	     else if ((modifiers & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) == InputEvent.BUTTON3_DOWN_MASK){
 	          pointerMask = mask3;
 	     }
-	     else if ((modifiers & (KeyEvent.BUTTON1_DOWN_MASK | KeyEvent.BUTTON2_DOWN_MASK | KeyEvent.BUTTON3_DOWN_MASK)) == KeyEvent.BUTTON1_DOWN_MASK){
+	     else if ((modifiers & (InputEvent.BUTTON1_DOWN_MASK | InputEvent.BUTTON2_DOWN_MASK | InputEvent.BUTTON3_DOWN_MASK)) == InputEvent.BUTTON1_DOWN_MASK){
 	          pointerMask = 1;
 	     }
 	     else{
@@ -1238,8 +1240,8 @@ class RfbProto {
 	   }
 	   else if (evt.getID() == MouseEvent.MOUSE_RELEASED) {
 	     pointerMask = 0;
-	     modifiers &= ~KeyEvent.ALT_DOWN_MASK;
-	     modifiers &= ~KeyEvent.META_DOWN_MASK;
+	     modifiers &= ~InputEvent.ALT_DOWN_MASK;
+	     modifiers &= ~InputEvent.META_DOWN_MASK;
 	   }
 
 	   eventBufLen = 0;
@@ -1288,7 +1290,7 @@ class RfbProto {
 
 	   //This way we can configure the scroll in our home OS
 	   if(evt.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL){
-	     totalScroll = (int)Math.round(evt.getScrollAmount()/3);
+	     totalScroll = Math.round(evt.getScrollAmount()/3);
 	     totalScroll = totalScroll*notches; //notches is normally 1
 	   }else{ //block scroll
 	     totalScroll = 6;
@@ -1551,13 +1553,13 @@ class RfbProto {
 
   void writeModifierKeyEvents(int newModifiers) {
 
-	   if ( (newModifiers & KeyEvent.CTRL_DOWN_MASK) != (oldModifiers & KeyEvent.CTRL_DOWN_MASK)) {
-	     writeKeyEvent(Keysyms.Control_L, (newModifiers & KeyEvent.CTRL_DOWN_MASK) != 0);
+	   if ( (newModifiers & InputEvent.CTRL_DOWN_MASK) != (oldModifiers & InputEvent.CTRL_DOWN_MASK)) {
+	     writeKeyEvent(Keysyms.Control_L, (newModifiers & InputEvent.CTRL_DOWN_MASK) != 0);
 	   }
-	   if ( (newModifiers & KeyEvent.SHIFT_DOWN_MASK) != (oldModifiers & KeyEvent.SHIFT_DOWN_MASK)) {
-	     writeKeyEvent(Keysyms.Shift_L, (newModifiers & KeyEvent.SHIFT_DOWN_MASK) != 0);
+	   if ( (newModifiers & InputEvent.SHIFT_DOWN_MASK) != (oldModifiers & InputEvent.SHIFT_DOWN_MASK)) {
+	     writeKeyEvent(Keysyms.Shift_L, (newModifiers & InputEvent.SHIFT_DOWN_MASK) != 0);
 	   }
-	   if ( (newModifiers & KeyEvent.META_DOWN_MASK) != (oldModifiers & KeyEvent.META_DOWN_MASK)) {
+	   if ( (newModifiers & InputEvent.META_DOWN_MASK) != (oldModifiers & InputEvent.META_DOWN_MASK)) {
 	     writeKeyEvent(Keysyms.Meta_L, (newModifiers & KeyEvent.META_DOWN_MASK) != 0);
 
 	   }
@@ -1664,7 +1666,7 @@ class RfbProto {
 //
 // Start caching process
 //
-public void startCaching() throws IOException{
+public void startCaching() /*throws IOException*/{
 	//mark the current position in the socket stream
 	this.is.mark(rfbCacheMarkReadLimit);
 	numBytesCached = 0;
@@ -1675,7 +1677,7 @@ public void startCaching() throws IOException{
 //
 // Reset caching variables
 //
-public void resetCaching() throws IOException{
+public void resetCaching() /*throws IOException*/{
 	numBytesCached = 0;
 	isCaching = false;
 }

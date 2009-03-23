@@ -371,7 +371,8 @@ public final class ScpClient {
      *
      * @since 0.2.0
      */
-    protected void onChannelOpen() throws IOException {
+    @Override
+	protected void onChannelOpen() throws IOException {
       if (!executeCommand(cmd)) {
         throw new IOException("Failed to execute the command " + cmd);
       }
@@ -626,7 +627,7 @@ public final class ScpClient {
       int ch;
       int i = 0;
 
-      while ( ( (ch = in.read()) != ( (int) '\n')) && (ch >= 0)) {
+      while ( ( (ch = in.read()) != ( '\n')) && (ch >= 0)) {
         buffer[i++] = (byte) ch;
       }
 
@@ -744,7 +745,8 @@ public final class ScpClient {
       this.channel = channel;
     }
 
-    public int read() throws IOException {
+    @Override
+	public int read() throws IOException {
       if (count == length) {
         return -1;
       }
@@ -769,7 +771,8 @@ public final class ScpClient {
       return r;
     }
 
-    public void close() throws IOException {
+    @Override
+	public void close() throws IOException {
       channel.close();
     }
   }

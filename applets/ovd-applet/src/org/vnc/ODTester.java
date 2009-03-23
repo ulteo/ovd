@@ -7,18 +7,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.net.URL;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URI;
-import java.net.Proxy;
-import java.net.InetSocketAddress;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.net.UnknownHostException;
 import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
@@ -29,7 +25,7 @@ import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 
 public class ODTester implements Runnable {
 
-	 public static final String version = "0.2.3g";
+	 public static final String version = "0.2.4";
 
 	 public VncViewer ulteoapplet;
 
@@ -389,18 +385,18 @@ public class ODTester implements Runnable {
 		portList = readParameter("ssh.port");
 	}
 
-	private int readIntParameter(String name, int defaultValue) {
-		String s = readParameter(name);
-	    int result = defaultValue;
-	    if (s != null) {
-	      try {
-	    	  result = Integer.parseInt(s);
-	      } catch (NumberFormatException e) {
-	    	  System.err.println("Parameter "+name+" has invalid value: "+s);
-	      }
-	    }
-	    return result;
-	  }
+//	private int readIntParameter(String name, int defaultValue) {
+//		String s = readParameter(name);
+//	    int result = defaultValue;
+//	    if (s != null) {
+//	      try {
+//	    	  result = Integer.parseInt(s);
+//	      } catch (NumberFormatException e) {
+//	    	  System.err.println("Parameter "+name+" has invalid value: "+s);
+//	      }
+//	    }
+//	    return result;
+//	  }
 
 	private String readParameter(String name){
 		String s = ulteoapplet.readParameter(name, true);
@@ -416,10 +412,10 @@ public class ODTester implements Runnable {
 
 		try {
 			System.setProperty("java.net.useSystemProxies","true");
-			List l = ProxySelector.getDefault().select(new URI("http://www.ulteo.com"));
+			List<Proxy> l = ProxySelector.getDefault().select(new URI("http://www.ulteo.com"));
 
-			for (Iterator iter = l.iterator(); iter.hasNext(); ) {
-				Proxy proxy = (Proxy) iter.next();
+			for (Iterator<Proxy> iter = l.iterator(); iter.hasNext(); ) {
+				Proxy proxy = iter.next();
 				InetSocketAddress addr = (InetSocketAddress) proxy.address();
 				if(addr == null) {
 					// No proxy

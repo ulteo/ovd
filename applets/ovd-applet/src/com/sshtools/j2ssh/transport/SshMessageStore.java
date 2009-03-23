@@ -21,16 +21,13 @@
 
 package com.sshtools.j2ssh.transport;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import com.sshtools.j2ssh.io.ByteArrayReader;
-
-import java.io.IOException;
 
 /**
  * <p>
@@ -46,9 +43,9 @@ import java.io.IOException;
 public final class SshMessageStore {
 
   // List to hold messages as they are received
-  private List messages = new ArrayList();
-  private Map register = new HashMap();
-  private Map asyncronous = new HashMap();
+  private List<SshMessage> messages = new ArrayList<SshMessage>();
+  private Map<Integer, Class<?>> register = new HashMap<Integer, Class<?>>();
+  private Map<Integer, SshMessageListener> asyncronous = new HashMap<Integer, SshMessageListener>();
   private boolean isClosed = false;
   private int[] singleIdFilter = new int[1];
   private int interrupt = 5000;
@@ -291,7 +288,7 @@ public final class SshMessageStore {
       throw new MessageNotRegisteredException(messageId);
     }
 
-    Class cls = (Class) register.get(SshMessage.getMessageId(msgdata));
+    Class<?> cls = register.get(SshMessage.getMessageId(msgdata));
 
     try {
       SshMessage msg = (SshMessage) cls.newInstance();
@@ -326,7 +323,7 @@ public final class SshMessageStore {
 
     Integer id = new Integer(msg.getMessageId());
     if(asyncronous.containsKey(id)) {
-       ((SshMessageListener)asyncronous.get(id)).onMessageReceived(msg);
+       (asyncronous.get(id)).onMessageReceived(msg);
       } else {
         // Add the message
         messages.add(messages.size(), msg);
@@ -381,7 +378,7 @@ public final class SshMessageStore {
     }
 
     if (messages.size() > 0) {
-      return (SshMessage) messages.remove(0);
+      return messages.remove(0);
     }
     else {
       System.err.println("Cause #6\n");
@@ -478,7 +475,7 @@ public final class SshMessageStore {
     SshMessage msg;
 
     for (int x = 0; x < messages.size(); x++) {
-      msg = (SshMessage) messages.get(x);
+      msg = messages.get(x);
 
       // Determine whether its one of the filtered messages
       for (int i = 0; i < messageIdFilter.length; i++) {
@@ -564,14 +561,14 @@ public final class SshMessageStore {
    *
    * @since 0.2.0
    */
-  public void registerMessage(int messageId, Class implementor) {
+  public void registerMessage(int messageId, Class<?> implementor) {
     Integer id = new Integer(messageId);
     register.put(id, implementor);
   }
 
 
   public void registerMessage(int messageId,
-                              Class implementor,
+                              Class<?> implementor,
                               SshMessageListener listener) {
     Integer id = new Integer(messageId);
     register.put(id, implementor);
@@ -614,7 +611,7 @@ public final class SshMessageStore {
       throw new MessageNotRegisteredException(messageId);
     }
 
-    Class cls = (Class) register.get(SshMessage.getMessageId(msgdata));
+    Class<?> cls = register.get(SshMessage.getMessageId(msgdata));
 
     try {
       SshMessage msg = (SshMessage) cls.newInstance();

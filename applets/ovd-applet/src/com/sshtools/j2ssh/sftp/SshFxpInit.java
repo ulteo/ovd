@@ -43,7 +43,7 @@ public class SshFxpInit
   /**  */
   public static final int SSH_FXP_INIT = 1;
   private UnsignedInteger32 version;
-  private Map extended;
+  private Map<String, String> extended;
 
   /**
    * Creates a new SshFxpInit object.
@@ -58,7 +58,7 @@ public class SshFxpInit
    * @param version
    * @param extended
    */
-  public SshFxpInit(UnsignedInteger32 version, Map extended) {
+  public SshFxpInit(UnsignedInteger32 version, Map<String, String> extended) {
     super(SSH_FXP_INIT);
     this.version = version;
     this.extended = extended;
@@ -78,7 +78,7 @@ public class SshFxpInit
    *
    * @return
    */
-  public Map getExtended() {
+  public Map<String, String> getExtended() {
     return extended;
   }
 
@@ -90,10 +90,11 @@ public class SshFxpInit
    * @throws IOException
    * @throws InvalidMessageException
    */
+  @Override
   public void constructMessage(ByteArrayReader bar) throws IOException,
       InvalidMessageException {
     version = bar.readUINT32();
-    extended = new HashMap();
+    extended = new HashMap<String, String>();
 
     String key;
     String value;
@@ -110,7 +111,8 @@ public class SshFxpInit
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_FXP_INIT";
   }
 
@@ -122,19 +124,20 @@ public class SshFxpInit
    * @throws IOException
    * @throws InvalidMessageException
    */
-  public void constructByteArray(ByteArrayWriter baw) throws IOException,
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws IOException,
       InvalidMessageException {
     baw.writeUINT32(version);
 
     if (extended != null) {
       if (extended.size() > 0) {
-        Iterator it = extended.entrySet().iterator();
-        Map.Entry entry;
+        Iterator<String> it = extended.keySet().iterator();
+        //Map.Entry entry;
 
         while (it.hasNext()) {
-          entry = (Map.Entry) it.next();
-          baw.writeString( (String) entry.getKey());
-          baw.writeString( (String) entry.getValue());
+          String s = it.next();
+          baw.writeString( s);
+          baw.writeString( extended.get(s));
         }
       }
     }

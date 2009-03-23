@@ -24,7 +24,6 @@ package com.sshtools.j2ssh.agent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -40,11 +39,11 @@ import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
  * @version $Revision: 1.15 $
  */
 public class KeyStore {
-  HashMap publickeys = new HashMap();
-  HashMap privatekeys = new HashMap();
-  HashMap constraints = new HashMap();
-  Vector index = new Vector();
-  Vector listeners = new Vector();
+  HashMap<SshPublicKey, String> publickeys = new HashMap<SshPublicKey, String>();
+  HashMap<SshPublicKey, SshPrivateKey> privatekeys = new HashMap<SshPublicKey, SshPrivateKey>();
+  HashMap<SshPublicKey, KeyConstraints> constraints = new HashMap<SshPublicKey, KeyConstraints>();
+  Vector<SshPublicKey> index = new Vector<SshPublicKey>();
+  Vector<KeyStoreListener> listeners = new Vector<KeyStoreListener>();
   String lockedPassword = null;
 
   /**
@@ -58,8 +57,8 @@ public class KeyStore {
    *
    * @return
    */
-  public Map getPublicKeys() {
-    return (Map) publickeys.clone();
+  public Map<SshPublicKey, String> getPublicKeys() {
+    return (Map<SshPublicKey, String>) publickeys.clone();
   }
 
   /**
@@ -81,7 +80,7 @@ public class KeyStore {
    * @return
    */
   public SshPublicKey elementAt(int i) {
-    return (SshPublicKey) index.elementAt(i);
+    return index.elementAt(i);
   }
 
   /**
@@ -92,7 +91,7 @@ public class KeyStore {
    * @return
    */
   public String getDescription(SshPublicKey key) {
-    return (String) publickeys.get(key);
+    return publickeys.get(key);
   }
 
   /**
@@ -103,7 +102,7 @@ public class KeyStore {
    * @return
    */
   public KeyConstraints getKeyConstraints(SshPublicKey key) {
-    return (KeyConstraints) constraints.get(key);
+    return constraints.get(key);
   }
 
   /**
@@ -155,11 +154,11 @@ public class KeyStore {
         constraints.put(pubkey, cs);
         index.add(pubkey);
 
-        Iterator it = listeners.iterator();
+        Iterator<KeyStoreListener> it = listeners.iterator();
         KeyStoreListener listener;
 
         while (it.hasNext()) {
-          listener = (KeyStoreListener) it.next();
+          listener = it.next();
           listener.onAddKey(this);
         }
 
@@ -181,11 +180,11 @@ public class KeyStore {
       constraints.clear();
       index.clear();
 
-      Iterator it = listeners.iterator();
+      Iterator<KeyStoreListener> it = listeners.iterator();
       KeyStoreListener listener;
 
       while (it.hasNext()) {
-        listener = (KeyStoreListener) it.next();
+        listener = it.next();
         listener.onDeleteAllKeys(this);
       }
     }
@@ -204,25 +203,25 @@ public class KeyStore {
    * @throws InvalidSshKeyException
    * @throws InvalidSshKeySignatureException
    */
-  public byte[] performHashAndSign(SshPublicKey pubkey, List forwardingNodes,
+  public byte[] performHashAndSign(SshPublicKey pubkey, /*List forwardingNodes,*/
                                    byte[] data) throws KeyTimeoutException,
       InvalidSshKeyException,
       InvalidSshKeySignatureException {
     synchronized (publickeys) {
       if (privatekeys.containsKey(pubkey)) {
-        SshPrivateKey key = (SshPrivateKey) privatekeys.get(pubkey);
-        KeyConstraints cs = (KeyConstraints) constraints.get(pubkey);
+        SshPrivateKey key = privatekeys.get(pubkey);
+        KeyConstraints cs = constraints.get(pubkey);
 
         if (cs.canUse()) {
           if (!cs.hasTimedOut()) {
             cs.use();
 
             byte[] sig = key.generateSignature(data);
-            Iterator it = listeners.iterator();
+            Iterator<KeyStoreListener> it = listeners.iterator();
             KeyStoreListener listener;
 
             while (it.hasNext()) {
-              listener = (KeyStoreListener) it.next();
+              listener = it.next();
               listener.onKeyOperation(this, "hash-and-sign");
             }
 
@@ -256,7 +255,7 @@ public class KeyStore {
       IOException {
     synchronized (publickeys) {
       if (publickeys.containsKey(pubkey)) {
-        String desc = (String) publickeys.get(pubkey);
+        String desc = publickeys.get(pubkey);
 
         if (description.equals(desc)) {
           publickeys.remove(pubkey);
@@ -264,11 +263,11 @@ public class KeyStore {
           constraints.remove(pubkey);
           index.remove(pubkey);
 
-          Iterator it = listeners.iterator();
+          Iterator<KeyStoreListener> it = listeners.iterator();
           KeyStoreListener listener;
 
           while (it.hasNext()) {
-            listener = (KeyStoreListener) it.next();
+            listener = it.next();
             listener.onDeleteKey(this);
           }
 
@@ -294,11 +293,11 @@ public class KeyStore {
       if (lockedPassword == null) {
         lockedPassword = password;
 
-        Iterator it = listeners.iterator();
+        Iterator<KeyStoreListener> it = listeners.iterator();
         KeyStoreListener listener;
 
         while (it.hasNext()) {
-          listener = (KeyStoreListener) it.next();
+          listener = it.next();
           listener.onLock(this);
         }
 
@@ -325,11 +324,11 @@ public class KeyStore {
         if (password.equals(lockedPassword)) {
           lockedPassword = null;
 
-          Iterator it = listeners.iterator();
+          Iterator<KeyStoreListener> it = listeners.iterator();
           KeyStoreListener listener;
 
           while (it.hasNext()) {
-            listener = (KeyStoreListener) it.next();
+            listener = it.next();
             listener.onUnlock(this);
           }
 

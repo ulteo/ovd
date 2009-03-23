@@ -66,7 +66,8 @@ public class SftpFileOutputStream
    *
    * @throws IOException
    */
-  public void write(byte[] buffer, int offset, int len) throws IOException {
+  @Override
+public void write(byte[] buffer, int offset, int len) throws IOException {
     int pos = 0;
     int count;
     int available;
@@ -90,7 +91,8 @@ public class SftpFileOutputStream
    *
    * @throws IOException
    */
-  public void write(int b) throws IOException {
+  @Override
+public void write(int b) throws IOException {
     byte[] buffer = new byte[1];
     buffer[0] = (byte) b;
     file.getSFTPSubsystem().writeFile(file.getHandle(), position, buffer,
@@ -103,7 +105,8 @@ public class SftpFileOutputStream
    *
    * @throws IOException
    */
-  public void close() throws IOException {
+  @Override
+public void close() throws IOException {
     file.close();
   }
 
@@ -112,7 +115,8 @@ public class SftpFileOutputStream
    *
    * @throws IOException
    */
-  protected void finalize() throws IOException {
+  @Override
+protected void finalize() throws IOException {
     if (file.getHandle() != null) {
       close();
     }

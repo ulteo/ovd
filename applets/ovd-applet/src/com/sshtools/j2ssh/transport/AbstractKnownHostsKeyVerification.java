@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Map.Entry;
 
 import com.sshtools.j2ssh.transport.publickey.SshKeyPairFactory;
 import com.sshtools.j2ssh.transport.publickey.SshPublicKey;
@@ -53,10 +54,10 @@ import com.sshtools.j2ssh.util.Base64;
  */
 public abstract class AbstractKnownHostsKeyVerification
     implements HostKeyVerification {
-  private static String defaultHostFile;
+  //private static String defaultHostFile;
 
   //private List deniedHosts = new ArrayList();
-  private Map allowedHosts = new HashMap();
+  private Map<String, Map<String, SshPublicKey>> allowedHosts = new HashMap<String, Map<String, SshPublicKey>>();
   private String knownhosts;
   private boolean hostFileWriteable;
 
@@ -101,7 +102,7 @@ public abstract class AbstractKnownHostsKeyVerification
           while ( (line = reader.readLine()) != null) {
             StringTokenizer tokens = new StringTokenizer(line, " ");
             String host = (String) tokens.nextElement();
-            String algorithm = (String) tokens.nextElement();
+            /*String algorithm = (String)*/ tokens.nextElement();
             String key = (String) tokens.nextElement();
 
             SshPublicKey pk = SshKeyPairFactory.decodePublicKey(Base64
@@ -254,7 +255,7 @@ public abstract class AbstractKnownHostsKeyVerification
    *
    * @since 0.2.0
    */
-  public Map allowedHosts() {
+  public Map<String, Map<String, SshPublicKey>> allowedHosts() {
     return allowedHosts;
   }
 
@@ -268,10 +269,10 @@ public abstract class AbstractKnownHostsKeyVerification
    * @since 0.2.0
    */
   public void removeAllowedHost(String host) {
-    Iterator it = allowedHosts.keySet().iterator();
+    Iterator<String> it = allowedHosts.keySet().iterator();
 
     while (it.hasNext()) {
-      StringTokenizer tokens = new StringTokenizer( (String) it.next(), ",");
+      StringTokenizer tokens = new StringTokenizer( it.next(), ",");
 
       while (tokens.hasMoreElements()) {
         String name = (String) tokens.nextElement();
@@ -306,17 +307,17 @@ public abstract class AbstractKnownHostsKeyVerification
    */
   public boolean verifyHost(String host, SshPublicKey pk) throws
       TransportProtocolException {
-    String fingerprint = pk.getFingerprint();
+    //String fingerprint = pk.getFingerprint();
 
     /*if (log.isDebugEnabled()) {
       log.debug("Fingerprint: " + fingerprint);
     }*/
 
-    Iterator it = allowedHosts.keySet().iterator();
+    Iterator<String> it = allowedHosts.keySet().iterator();
 
     while (it.hasNext()) {
       // Could be a comma delimited string of names/ip addresses
-      String names = (String) it.next();
+      String names = it.next();
 
       if (names.equals(host)) {
         return validateHost(names, pk);
@@ -378,9 +379,9 @@ public abstract class AbstractKnownHostsKeyVerification
 
   private SshPublicKey getAllowedKey(String names, String algorithm) {
     if (allowedHosts.containsKey(names)) {
-      Map map = (Map) allowedHosts.get(names);
+      Map<String, SshPublicKey> map =  allowedHosts.get(names);
 
-      return (SshPublicKey) map.get(algorithm);
+      return map.get(algorithm);
     }
 
     return null;
@@ -388,10 +389,10 @@ public abstract class AbstractKnownHostsKeyVerification
 
   private void putAllowedKey(String host, SshPublicKey key) {
     if (!allowedHosts.containsKey(host)) {
-      allowedHosts.put(host, new HashMap());
+      allowedHosts.put(host, new HashMap<String, SshPublicKey>());
     }
 
-    Map map = (Map) allowedHosts.get(host);
+    Map<String, SshPublicKey> map = allowedHosts.get(host);
     map.put(key.getAlgorithmName(), key);
   }
 
@@ -442,22 +443,25 @@ public abstract class AbstractKnownHostsKeyVerification
    *
    * @since 0.2.0
    */
-  public String toString() {
+  @Override
+public String toString() {
+	  	  
     String knownhosts = "";
+    
+    /*Map.Entry*/ Entry<String, Map<String, SshPublicKey>> entry;
+    /*Map.Entry*/ Entry<String, SshPublicKey> entry2;
+    Iterator<Entry<String, Map<String, SshPublicKey>>> it = allowedHosts.entrySet().iterator();
 
-    Map.Entry entry;
-    Map.Entry entry2;
-    Iterator it = allowedHosts.entrySet().iterator();
-
+    
     while (it.hasNext()) {
-      entry = (Map.Entry) it.next();
+      entry = it.next();
 
-      Iterator it2 = ( (Map) entry.getValue()).entrySet().iterator();
+      Iterator<Entry<String, SshPublicKey>> it2 = ( entry.getValue()).entrySet().iterator();
 
       while (it2.hasNext()) {
-        entry2 = (Map.Entry) it2.next();
+        entry2 = it2.next();
 
-        SshPublicKey pk = (SshPublicKey) entry2.getValue();
+        SshPublicKey pk = entry2.getValue();
         knownhosts += (entry.getKey().toString() + " "
                        + pk.getAlgorithmName() + " "
                        + Base64.encodeBytes(pk.getEncoded(), true) + "\n");

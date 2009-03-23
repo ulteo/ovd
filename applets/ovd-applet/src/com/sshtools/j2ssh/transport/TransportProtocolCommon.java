@@ -74,15 +74,15 @@ public abstract class TransportProtocolCommon
   /**  */
   protected BigInteger k = null;
 
-  /**  */
-  private boolean[] completeOnNewKeys = {
-      false};
+//  /**  */
+//  private boolean[] completeOnNewKeys = {
+//      false};
 
   /**  */
   protected HostKeyVerification hosts;
 
   /**  */
-  protected Map kexs = new HashMap();
+  protected Map<String, SshKeyExchange> kexs = new HashMap<String, SshKeyExchange>();
   private boolean sendIgnore = false;
 
   private int threadNo;
@@ -123,10 +123,10 @@ public abstract class TransportProtocolCommon
 
   /**  */
   protected byte[] signature = null;
-  private Vector eventHandlers = new Vector();
+  private Vector<TransportProtocolEventHandler> eventHandlers = new Vector<TransportProtocolEventHandler>();
 
   // Storage of messages whilst in key exchange
-  private List messageStack = new ArrayList();
+  private List<SshMessage> messageStack = new ArrayList<SshMessage>();
 
   // Message notification registry
   //private Map messageNotifications = new HashMap();
@@ -135,7 +135,7 @@ public abstract class TransportProtocolCommon
   private Object kexLock = new Object();
 
   // Object to synchronize key changing
-  private Object keyLock = new Object();
+  //private Object keyLock = new Object();
 
   // The connected socket
   //private Socket socket;
@@ -321,7 +321,7 @@ public abstract class TransportProtocolCommon
    * @return
    */
   public byte[] getSessionIdentifier() {
-    return (byte[]) sessionIdentifier.clone();
+    return sessionIdentifier.clone();
   }
 
   /**
@@ -365,12 +365,12 @@ public abstract class TransportProtocolCommon
 
       registerTransportMessages();
 
-      List list = SshKeyExchangeFactory.getSupportedKeyExchanges();
+      List<String> list = SshKeyExchangeFactory.getSupportedKeyExchanges();
 
-      Iterator it = list.iterator();
+      Iterator<String> it = list.iterator();
 
       while (it.hasNext()) {
-        String keyExchange = (String) it.next();
+        String keyExchange = it.next();
         SshKeyExchange kex = SshKeyExchangeFactory.newInstance(keyExchange);
 
         kex.init(this);
@@ -689,7 +689,7 @@ public abstract class TransportProtocolCommon
       kexAlgorithm = getKexAlgorithm();
 
       // Get an instance of the key exchange algortihm
-      SshKeyExchange kex = (SshKeyExchange) kexs.get(kexAlgorithm);
+      SshKeyExchange kex =  kexs.get(kexAlgorithm);
 
       // Do the key exchange
       performKeyExchange(kex, firstPacketFollows, useFirstPacket);
@@ -888,10 +888,10 @@ public abstract class TransportProtocolCommon
 
       // Send any outstanding messages
       synchronized (messageStack) {
-        Iterator it = messageStack.iterator();
+        Iterator<SshMessage> it = messageStack.iterator();
 
         while (it.hasNext()) {
-          SshMessage msg = (SshMessage) it.next();
+          SshMessage msg = it.next();
 
           sendMessage(msg, this);
         }
@@ -936,7 +936,7 @@ public abstract class TransportProtocolCommon
    *
    * @return
    */
-  protected List getEventHandlers() {
+  protected List<TransportProtocolEventHandler> getEventHandlers() {
     return eventHandlers;
   }
 
@@ -950,23 +950,23 @@ public abstract class TransportProtocolCommon
    *
    * @throws AlgorithmNotAgreedException
    */
-  protected String determineAlgorithm(List clientAlgorithms,
-                                      List serverAlgorithms) throws
+  protected String determineAlgorithm(List<String> clientAlgorithms,
+                                      List<String> serverAlgorithms) throws
       AlgorithmNotAgreedException {
 
     String algorithmClient;
 
     String algorithmServer;
 
-    Iterator itClient = clientAlgorithms.iterator();
+    Iterator<String> itClient = clientAlgorithms.iterator();
 
     while (itClient.hasNext()) {
-      algorithmClient = (String) itClient.next();
+      algorithmClient = itClient.next();
 
-      Iterator itServer = serverAlgorithms.iterator();
+      Iterator<String> itServer = serverAlgorithms.iterator();
 
       while (itServer.hasNext()) {
-        algorithmServer = (String) itServer.next();
+        algorithmServer = itServer.next();
 
         if (algorithmClient.equals(algorithmServer)) {
           return algorithmClient;
@@ -1044,12 +1044,12 @@ public abstract class TransportProtocolCommon
 
     onDisconnect();
 
-    Iterator it = eventHandlers.iterator();
+    Iterator<TransportProtocolEventHandler> it = eventHandlers.iterator();
 
     TransportProtocolEventHandler eventHandler;
 
     while (it.hasNext()) {
-      eventHandler = (TransportProtocolEventHandler) it.next();
+      eventHandler = it.next();
       eventHandler.onDisconnect(this);
     }
 
@@ -1146,9 +1146,9 @@ public abstract class TransportProtocolCommon
   }
 
   private void negotiateVersion() throws IOException {
-    byte[] buf;
-
-    int len;
+//    byte[] buf;
+//
+//    int len;
 
     String remoteVer = "";
 
@@ -1220,7 +1220,7 @@ public abstract class TransportProtocolCommon
     //log.debug(msg.getMessage());
   }
 
-  private void onMsgDisconnect(SshMsgDisconnect msg) throws IOException {
+  private void onMsgDisconnect(SshMsgDisconnect msg) /*throws IOException*/ {
 
     //System.out.println("Setting state to disconnect\n");
     state.setValue(TransportProtocolState.DISCONNECTED);
@@ -1274,21 +1274,21 @@ public abstract class TransportProtocolCommon
     }
   }
 
-  private void onMsgNewKeys(SshMsgNewKeys msg) throws IOException {
-    // Determine whether we have completed our own
-
-    algorithmsIn.lock();
-
-    synchronized (completeOnNewKeys) {
-      if (completeOnNewKeys[0]) {
-        completeKeyExchange();
-      }
-      else {
-        completeOnNewKeys[0] = true;
-      }
-    }
-
-  }
+//  private void onMsgNewKeys(SshMsgNewKeys msg) throws IOException {
+//    // Determine whether we have completed our own
+//
+//    algorithmsIn.lock();
+//
+//    synchronized (completeOnNewKeys) {
+//      if (completeOnNewKeys[0]) {
+//        completeKeyExchange();
+//      }
+//      else {
+//        completeOnNewKeys[0] = true;
+//      }
+//    }
+//
+//  }
 
   private void onMsgUnimplemented(SshMsgUnimplemented msg) {
   }
@@ -1401,7 +1401,7 @@ public abstract class TransportProtocolCommon
 
     SshMessage msg;
 
-    SshMessageStore ms;
+    //SshMessageStore ms;
 
     while (state.getValue() != TransportProtocolState.DISCONNECTED) {
       long currentTime = System.currentTimeMillis();
@@ -1424,12 +1424,12 @@ public abstract class TransportProtocolCommon
         }
         catch (InterruptedIOException ex) {
 
-          Iterator it = eventHandlers.iterator();
+          Iterator<TransportProtocolEventHandler> it = eventHandlers.iterator();
 
           TransportProtocolEventHandler eventHandler;
 
           while (it.hasNext()) {
-            eventHandler = (TransportProtocolEventHandler) it.next();
+            eventHandler = it.next();
 
             eventHandler.onSocketTimeout(this /*,
                                          provider.isConnected()*/);

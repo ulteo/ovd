@@ -62,7 +62,8 @@ public class SshMsgChannelEOF
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_MSG_CHANNEL_EOF";
   }
 
@@ -82,7 +83,8 @@ public class SshMsgChannelEOF
    *
    * @throws InvalidMessageException
    */
-  protected void constructByteArray(ByteArrayWriter baw) throws
+  @Override
+protected void constructByteArray(ByteArrayWriter baw) throws
       InvalidMessageException {
     try {
       baw.writeInt(recipientChannel);
@@ -99,7 +101,8 @@ public class SshMsgChannelEOF
    *
    * @throws InvalidMessageException
    */
-  protected void constructMessage(ByteArrayReader bar) throws
+  @Override
+protected void constructMessage(ByteArrayReader bar) throws
       InvalidMessageException {
     try {
       recipientChannel = bar.readInt();

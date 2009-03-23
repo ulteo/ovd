@@ -43,7 +43,7 @@ public class SshFxpVersion
   /**  */
   public static final int SSH_FXP_VERSION = 2;
   private UnsignedInteger32 version;
-  private Map extended = null;
+  private Map<String, String> extended = null;
 
   /**
    * Creates a new SshFxpVersion object.
@@ -58,7 +58,7 @@ public class SshFxpVersion
    * @param version
    * @param extended
    */
-  public SshFxpVersion(UnsignedInteger32 version, Map extended) {
+  public SshFxpVersion(UnsignedInteger32 version, Map<String, String> extended) {
     super(SSH_FXP_VERSION);
     this.version = version;
     this.extended = extended;
@@ -78,7 +78,7 @@ public class SshFxpVersion
    *
    * @return
    */
-  public Map getExtended() {
+  public Map<String, String> getExtended() {
     return extended;
   }
 
@@ -90,10 +90,11 @@ public class SshFxpVersion
    * @throws IOException
    * @throws InvalidMessageException
    */
-  public void constructMessage(ByteArrayReader bar) throws IOException,
+  @Override
+public void constructMessage(ByteArrayReader bar) throws IOException,
       InvalidMessageException {
     version = bar.readUINT32();
-    extended = new HashMap();
+    extended = new HashMap<String, String>();
 
     String key;
     String value;
@@ -110,7 +111,8 @@ public class SshFxpVersion
    *
    * @return
    */
-  public String getMessageName() {
+  @Override
+public String getMessageName() {
     return "SSH_FXP_INIT";
   }
 
@@ -122,19 +124,20 @@ public class SshFxpVersion
    * @throws IOException
    * @throws InvalidMessageException
    */
-  public void constructByteArray(ByteArrayWriter baw) throws IOException,
+  @Override
+public void constructByteArray(ByteArrayWriter baw) throws IOException,
       InvalidMessageException {
     baw.writeUINT32(version);
 
     if (extended != null) {
       if (extended.size() > 0) {
-        Iterator it = extended.entrySet().iterator();
-        Map.Entry entry;
+        Iterator<String> it = extended.keySet().iterator();
+        String entry;
 
         while (it.hasNext()) {
-          entry = (Map.Entry) it.next();
-          baw.writeString( (String) entry.getKey());
-          baw.writeString( (String) entry.getValue());
+          entry = it.next();
+          baw.writeString( entry);
+          baw.writeString( extended.get(entry));
         }
       }
     }

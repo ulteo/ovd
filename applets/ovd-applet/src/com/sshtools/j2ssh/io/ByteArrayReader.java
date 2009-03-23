@@ -111,7 +111,7 @@ public class ByteArrayReader
    */
   public static String readString(byte[] data, int start) {
     int len = (int) readInt(data, start);
-    byte[] chars = new byte[ (int) len];
+    byte[] chars = new byte[ len];
     System.arraycopy(data, start + 4, chars, 0, len);
 
     return new String(chars);

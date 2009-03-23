@@ -27,6 +27,7 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
+
 import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKeyFactory;
@@ -58,7 +59,8 @@ public class TripleDesCbc
    *
    * @return
    */
-  public int getBlockSize() {
+  @Override
+public int getBlockSize() {
     return cipher.getBlockSize();
   }
 
@@ -71,7 +73,8 @@ public class TripleDesCbc
    *
    * @throws AlgorithmOperationException
    */
-  public void init(int mode, byte[] iv, byte[] keydata) throws
+  @Override
+public void init(int mode, byte[] iv, byte[] keydata) throws
       AlgorithmOperationException {
     try {
       KeySpec keyspec;
@@ -118,7 +121,8 @@ public class TripleDesCbc
    *
    * @throws AlgorithmOperationException
    */
-  public byte[] transform(byte[] data, int offset, int len) throws
+  @Override
+public byte[] transform(byte[] data, int offset, int len) throws
       AlgorithmOperationException {
     return cipher.update(data, offset, len);
   }

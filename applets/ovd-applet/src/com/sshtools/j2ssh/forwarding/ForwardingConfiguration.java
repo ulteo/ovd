@@ -63,7 +63,7 @@ public class ForwardingConfiguration {
 
   /**  */
   protected EventListenerList listenerList = new EventListenerList();
-  private List activeForwardings = new Vector();
+  private List<Channel> activeForwardings = new Vector<Channel>();
 
   /**
    * Creates a new ForwardingConfiguration object.
@@ -120,7 +120,7 @@ public class ForwardingConfiguration {
    *
    * @return
    */
-  public List getActiveForwardingSocketChannels() {
+  public List<Channel> getActiveForwardingSocketChannels() {
     return activeForwardings;
   }
 
@@ -356,9 +356,8 @@ public class ForwardingConfiguration {
       // Add channel to the active forwardings
       activeForwardings.add(channel);
 
-      ForwardingConfigurationListener[] l = (ForwardingConfigurationListener[])
-          listenerList
-          .getListeners(ForwardingConfigurationListener.class);
+      ForwardingConfigurationListener[] l = listenerList
+	  .getListeners(ForwardingConfigurationListener.class);
 
       for (int i = (l.length - 1); i >= 0; i--) {
         l[i].opened(ForwardingConfiguration.this,
@@ -389,9 +388,8 @@ public class ForwardingConfiguration {
       // Remove channel from the active forwardings
       activeForwardings.remove(channel);
 
-      ForwardingConfigurationListener[] l = (ForwardingConfigurationListener[])
-          listenerList
-          .getListeners(ForwardingConfigurationListener.class);
+      ForwardingConfigurationListener[] l = listenerList
+	  .getListeners(ForwardingConfigurationListener.class);
 
       for (int i = (l.length - 1); i >= 0; i--) {
         l[i].closed(ForwardingConfiguration.this,
@@ -400,9 +398,8 @@ public class ForwardingConfiguration {
     }
 
     public void onDataReceived(Channel channel, byte[] data) {
-      ForwardingConfigurationListener[] l = (ForwardingConfigurationListener[])
-          listenerList
-          .getListeners(ForwardingConfigurationListener.class);
+      ForwardingConfigurationListener[] l = listenerList
+	  .getListeners(ForwardingConfigurationListener.class);
 
       for (int i = (l.length - 1); i >= 0; i--) {
         l[i].dataReceived(ForwardingConfiguration.this,
@@ -411,9 +408,8 @@ public class ForwardingConfiguration {
     }
 
     public void onDataSent(Channel channel, byte[] data) {
-      ForwardingConfigurationListener[] l = (ForwardingConfigurationListener[])
-          listenerList
-          .getListeners(ForwardingConfigurationListener.class);
+      ForwardingConfigurationListener[] l = listenerList
+	  .getListeners(ForwardingConfigurationListener.class);
 
       for (int i = (l.length - 1); i >= 0; i--) {
         l[i].dataSent(ForwardingConfiguration.this,

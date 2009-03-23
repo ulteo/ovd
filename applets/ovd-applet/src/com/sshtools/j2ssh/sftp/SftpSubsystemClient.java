@@ -73,7 +73,7 @@ public class SftpSubsystemClient
   public static final int VERSION_4 = 4;
 
   /* Private variables */
-  private List handles = new Vector();
+  private List<byte[]> handles = new Vector<byte[]>();
   private UnsignedInteger32 nextRequestId = new UnsignedInteger32(1);
   private int version = VERSION_3;
   private SftpMessageStore messageStore;
@@ -93,7 +93,8 @@ public class SftpSubsystemClient
    *
    * @return
    */
-  public String getName() {
+  @Override
+public String getName() {
     return "sftp";
   }
 
@@ -169,7 +170,7 @@ public class SftpSubsystemClient
    *
    * @throws IOException
    */
-  public synchronized int listChildren(SftpFile file, List children) throws
+  public synchronized int listChildren(SftpFile file, List<SftpFile> children) throws
       IOException {
     if (file.isDirectory()) {
       if (!isValidHandle(file.getHandle())) {
@@ -925,7 +926,8 @@ public class SftpSubsystemClient
     messageStore.registerMessage(SshFxpName.SSH_FXP_NAME, SshFxpName.class);
   }
 
-  protected int getMinimumWindowSpace() {
+  @Override
+protected int getMinimumWindowSpace() {
     return 1024;
   }
 
@@ -934,6 +936,7 @@ public class SftpSubsystemClient
  *
  * @return
  */
+@Override
 protected int getMaximumWindowSpace() {
   return 131070;
 }
@@ -943,6 +946,7 @@ protected int getMaximumWindowSpace() {
  *
  * @return
  */
+@Override
 protected int getMaximumPacketSize() {
   return 65535;
 }

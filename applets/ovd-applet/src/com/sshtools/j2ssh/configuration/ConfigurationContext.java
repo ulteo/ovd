@@ -35,7 +35,7 @@ public interface ConfigurationContext {
    *
    * @return
    */
-  public boolean isConfigurationAvailable(Class cls);
+  public boolean isConfigurationAvailable(Class<?> cls);
 
   /**
    *
@@ -46,7 +46,7 @@ public interface ConfigurationContext {
    *
    * @throws ConfigurationException
    */
-  public Object getConfiguration(Class cls) throws ConfigurationException;
+  public Object getConfiguration(Class<?> cls) throws ConfigurationException;
 
   /**
    *
