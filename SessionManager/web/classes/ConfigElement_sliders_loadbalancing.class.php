@@ -48,8 +48,8 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 
 			$html .= '<tr>';
 			$html .= '<td>';
-				$html .= $key1;
-				$html .= '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$key1.'" size="25" />';
+			$html .= '<strong>'.$key1.'</strong>';
+			$html .= '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$key1.'" size="25" />';
 			$html .= '</td>';
 			$html .= '<td>';
 				$html .= '<div id="'.$html_id.$this->formSeparator.$key1.'_divb">';
