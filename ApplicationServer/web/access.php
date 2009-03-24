@@ -85,12 +85,12 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 	<param name="Encoding" value="Tight" />
 
 	<!-- Caching options -->
-	<param name="rfb.cache.enabled" value="true">
-	<param name="rfb.cache.ver.major" value="1">
-	<param name="rfb.cache.ver.minor" value="0">
-	<param name="rfb.cache.size" value="42336000">
-	<param name="rfb.cache.alg" value="LRU">
-	<param name="rfb.cache.datasize" value="2000000">
+	<param name="rfb.cache.enabled" value="true" />
+	<param name="rfb.cache.ver.major" value="1" />
+	<param name="rfb.cache.ver.minor" value="0" />
+	<param name="rfb.cache.size" value="42336000" />
+	<param name="rfb.cache.alg" value="LRU" />
+	<param name="rfb.cache.datasize" value="2000000" />
 
 	<param name="proxyType" value="<?php if (isset($_SESSION['parameters']['proxy_type'])) echo $_SESSION['parameters']['proxy_type']; ?>" />
 	<param name="proxyHost" value="<?php if (isset($_SESSION['parameters']['proxy_host'])) echo $_SESSION['parameters']['proxy_host']; ?>" />

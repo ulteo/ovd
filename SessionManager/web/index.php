@@ -600,12 +600,12 @@ if ($testapplet) {
 		<!--<param name="Encoding" value="Tight" />-->
 
 		<!-- Caching options -->
-		<param name="rfb.cache.enabled" value="true">
-		<param name="rfb.cache.ver.major" value="1">
-		<param name="rfb.cache.ver.minor" value="0">
-		<param name="rfb.cache.size" value="42336000">
-		<param name="rfb.cache.alg" value="LRU">
-		<param name="rfb.cache.datasize" value="2000000">
+		<param name="rfb.cache.enabled" value="true" />
+		<param name="rfb.cache.ver.major" value="1" />
+		<param name="rfb.cache.ver.minor" value="0" />
+		<param name="rfb.cache.size" value="42336000" />
+		<param name="rfb.cache.alg" value="LRU" />
+		<param name="rfb.cache.datasize" value="2000000" />
 
 		<!--<param name="proxyType" value="<?php echo $proxy_type; ?>" />
 		<param name="proxyHost" value="<?php echo $proxy_host; ?>" />
