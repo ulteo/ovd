@@ -218,7 +218,7 @@ class Preferences {
 				$c = new $criterion_class_name(NULL); // ugly
 				$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
 		}
-		$c = new ConfigElement_sliders_loadbalancing('load_balancing', _('load_balancing'), _('load_balancing'), _('load_balancing'), $content_load_balancing);
+		$c = new ConfigElement_sliders_loadbalancing('load_balancing', _('Load Balancing policy'), _('Load Balancing policy'), _('Load Balancing policy'), $content_load_balancing);
 		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
@@ -376,11 +376,11 @@ class Preferences {
 				$c = new ConfigElement_multiselect('enable', $mod, $mod, $mod, array());
 				$c->setContentAvailable($sub_mod);
 			}
-			else { 
+			else {
 				$c = new ConfigElement_select('enable', $mod, $mod, $mod, NULL);
 				$c->setContentAvailable($sub_mod);
 			}
-			
+
 			foreach ($sub_mod as $k4 => $v4) {
 				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
 				$default1 =  eval($default2);

@@ -191,7 +191,7 @@ function print_prefs5($prefs,$key_name, $container) {
 
 	$elements2 = $prefs->elements[$key_name][$container];
 	$color=0;
-	echo '<table style="width: 100%" class="main_sub" border="0" cellspacing="1" cellpadding="0">'; // TODO
+	echo '<table style="width: 100%" class="main_sub" border="0" cellspacing="1" cellpadding="3">'; // TODO
 	echo '<tr class="title"><th colspan="2">'.$prefs->getPrettyName($container).'</th></tr>';
 	foreach ( $elements2 as $element_key => $element) {
 		// we print element
