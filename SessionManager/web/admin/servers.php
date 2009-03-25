@@ -209,7 +209,11 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQ
 		Abstract_Server::delete($buf->fqdn);
 	}
 
-	redirect('servers.php');
+	$buf = count(Servers::getUnregistered());
+	if ($buf == 0)
+		redirect('servers.php');
+
+	redirect();
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'manage' && isset($_REQUEST['fqdn'])) {
