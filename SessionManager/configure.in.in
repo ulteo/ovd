@@ -157,6 +157,7 @@ web/includes/functions.inc.d/Makefile
 web/classes/Makefile
 web/classes/abstract/Makefile
 web/classes/abstract/liaison/Makefile
+web/classes/configelements/Makefile
 web/classes/events/Makefile
 web/classes/tasks/Makefile
 web/PEAR/Makefile
