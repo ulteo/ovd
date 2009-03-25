@@ -120,7 +120,7 @@ $html .= '}
 		$html .= '</tr>';
 		$html .= '<tr>';
 		$html .= '<td style="text-align: center; vertical-align: middle;">';
-		$html .= 'FULL CPU (only CPU will be used to determine the server...)';
+		$html .= _('Full CPU (only CPU will be used to determine the server...)');
 		$html .= '</td>';
 		$html .= '</tr>';
 		$html .= '<tr>';
@@ -133,7 +133,7 @@ $html .= '}
 		$html .= '</tr>';
 		$html .= '<tr>';
 		$html .= '<td style="text-align: center; vertical-align: middle;">';
-		$html .= 'Both CPU and RAM are used, with a little random...';
+		$html .= _('Both CPU and RAM are used, with a little random...');
 		$html .= '</td>';
 		$html .= '</tr>';
 		$html .= '</table>';
