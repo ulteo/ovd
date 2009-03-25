@@ -300,7 +300,7 @@ function do_print(path, timestamp) {
   var print_url = 'http://'+server+'/print.php?timestamp='+timestamp;
 
   $('printerContainer').show();
-  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server_+'/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
+  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server+'/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
 
   push_log('[print] Applet: starting', 'warning');
 }

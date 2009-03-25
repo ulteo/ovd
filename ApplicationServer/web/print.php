@@ -92,11 +92,7 @@ if (!is_readable($path)) {
   return ret404("access err");
 }
 
-$file = fopen($path, 'r');
-if (! $file)
-  return ret404("can't open file in read mode");
-
-$buffer = file_get_contents($file);
+$buffer = file_get_contents($path);
 
 //header('HTTP/1.1 200 OK');
 header('Content-Type: application/pdf');
