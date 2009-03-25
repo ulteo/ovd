@@ -18,11 +18,22 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class configElement_textarea extends ConfigElement {  // text area
+class ConfigElement_select extends ConfigElement { // list of text (r) (fixed length) (only one can be selected)
 	public function toHTML() {
 		$html_id = $this->htmlID();
-		return '<textarea rows="7" cols="60" id="'.$html_id.'" name="'.$html_id.'">'.$this->content.'</textarea>';
+		$html = '';
+		if (is_array($this->content_available)) {
+			$html .= '<select id="'.$html_id.'"  name="'.$html_id.'"  onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');">';
+			foreach ($this->content_available as $mykey => $myval){
+				if ( $mykey == $this->content)
+					$html .= '<option value="'.$mykey.'" selected="selected" >'.$myval.'</option>';
+				else
+					$html .= '<option value="'.$mykey.'" >'.$myval.'</option>';
+			}
+			$html .= '</select>';
+		}
+		return $html;
 	}
 }

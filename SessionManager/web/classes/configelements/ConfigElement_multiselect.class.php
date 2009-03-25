@@ -18,13 +18,13 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_multiselect extends ConfigElement { // list of text (r) (fixed length) (more than one can be selected)
 	public function toHTML() {
 		$html_id = $this->htmlID();
 		$html = '';
-		
+
 		foreach ($this->content_available as $mykey => $myval){
 			if ( in_array($mykey,$this->content))
 				$html .= '<input class="input_checkbox" type="checkbox" name="'.$html_id.'[]" checked="checked" value="'.$mykey.'" onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');"/>';

@@ -18,14 +18,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_dictionary extends ConfigElement {
 	public function toHTML() {
 		$html = '';
 		$html_id = $this->htmlID();
-		
-		
+
+
 		$html .= '<div id="'.$html_id.'">';
 		$html .= '<table border="0" cellspacing="1" cellpadding="3">';
 		$i = 0;

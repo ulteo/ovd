@@ -18,12 +18,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class ConfigElement_password extends ConfigElement {  // input password (rw)
+class configElement_textarea extends ConfigElement {  // text area
 	public function toHTML() {
 		$html_id = $this->htmlID();
-		
-		return '<input type="password" id="'.$html_id.'" name="'.$html_id.'" value="'.$this->content.'" size="25" />';
+		return '<textarea rows="7" cols="60" id="'.$html_id.'" name="'.$html_id.'">'.$this->content.'</textarea>';
 	}
 }

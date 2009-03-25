@@ -18,42 +18,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class ConfigElement_list extends ConfigElement {
+class ConfigElement_inputlist extends ConfigElement { // list of input text (fixed length)
 	public function toHTML() {
-		$html = '';
 		$html_id = $this->htmlID();
-		
-		$html .= '<div id="'.$html_id.'">';
+		$html = '';
+
 		$html .= '<table border="0" cellspacing="1" cellpadding="3">';
+		$html .= "<!-- debut input list -->\n";
 		$i = 0;
 		foreach ($this->content as $key1 => $value1){
 			$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
 			$html .= '<tr>';
 				$html .= '<td>';
-				$html .= '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$i.'" size="40" />';
+					$html .=  $key1;
+					$html .=  '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$key1.'" size="25" />';
+				$html .= '</td>';
+				$html .= '<td>';
 				$html .= '<div id="'.$html_id.$this->formSeparator.$key1.'_divb">';
-					$html .= '<input type="text" id="'.$label3.'value" name="'.$label3.'value" value="'.$value1.'" size="25" />';
-					$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/hide.png"/></a>';
+					$html .=  '<input type="text" id="'.$label3.'value" name="'.$label3.'value" value="'.$value1.'" size="25" />';
 				$html .= '</div>';
 				$html .= '</td>';
-			$html .= '</tr>';
+			$html .=  '</tr>';
 			$i += 1;
-			
 		}
-		$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
-		$html .= '<tr>';
-		$html .= '<td>';
-			$html .= '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$i.'"  />';
-			$html .= '<div id="'.$html_id.$this->formSeparator.$i.'_divaddb">';
-					$html .= '<input type="text" id="'.$label3.'value" name="'.$label3.'value" value="" size="25" />';
-				$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/show.png"/></a>';
-				$html .= '</div>';
-			$html .= '</td>';
-		$html .= '</tr>';
 		$html .= '</table>';
-		$html .= '</div>';
-	return $html;
+		return $html;
 	}
 }
