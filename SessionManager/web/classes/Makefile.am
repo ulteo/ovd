@@ -3,7 +3,6 @@ SUBDIRS = abstract \
           tasks configelements
 
 scripts_DATA = Application.class.php \
-               ApplicationReport.class.php \
                ConfigElement.class.php \
                Invite.class.php \
                Invites.class.php \
@@ -18,9 +17,10 @@ scripts_DATA = Application.class.php \
                Reporting.class.php \
                Server.class.php \
                Servers.class.php \
-               ServerReport.class.php \
+               ServerReportItem.class.php \
                Session.class.php \
                Sessions.class.php \
+               SessionReportItem.class.php \
                Token.class.php \
                Tokens.class.php \
                User.class.php

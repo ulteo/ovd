@@ -46,10 +46,6 @@ $dom->loadXML($xml);
 
 $server_keys = array();
 
-/* store application information per server; this will be given to the
- * AppReport class */
-$per_server = array();
-
 $cpu_node = $dom->getElementsByTagname('cpu')->item(0);
 $server_keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
 $server_keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
@@ -59,75 +55,28 @@ $ram_node = $dom->getElementsByTagname('ram')->item(0);
 $server_keys['ram_total'] = $ram_node->getAttribute('total');
 $server_keys['ram_used'] = $ram_node->getAttribute('used');
 
-/* store an array of $desktop -> $id */
-$prefs = Preferences::getInstance();
-if (! $prefs)
-	die_error('get Preferences failed',__FILE__,__LINE__);
-
-$mods_enable = $prefs->get('general','module_enable');
-if (! in_array('ApplicationDB',$mods_enable))
-	die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-$applicationDB = new $mod_app_name();
-$all_applications = $applicationDB->getList();
-
-/* get a db of desktopfilename -> app_id */
-/* TODO: store this in a cache file? */
-$applications = array();
-foreach ($all_applications as $app) {
-	$applications[$app->getAttribute('desktopfile')] = (int)$app->getAttribute('id');
-}
-
-/* get running apps per session */
-$sessions_node = $dom->getElementsByTagName('session');
-foreach ($sessions_node as $session_node) {
-	$sessid = $session_node->getAttribute('id');
-	$session = Abstract_Session::load($sessid);
-
-	if (($session === false) || (! $session->isAlive()))
-		continue;
-
-	/* reset the applications infos for this session */
-	unset($session->applications);
-	$session->applications = array();
-
-	if (! isset($per_server[$session->server]))
-		$per_server[$session->server] = array();
-
-	foreach ($session_node->childNodes as $user_node) {
-		if ($user_node->nodeType != XML_ELEMENT_NODE ||
-			$user_node->tagName != 'user')
-				continue;
-
-		foreach ($user_node->childNodes as $pid_node) {
-			if ($pid_node->nodeType != XML_ELEMENT_NODE ||
-				$pid_node->tagName != 'pid')
-					continue;
-
-			$pid = (int)$pid_node->getAttribute('id');
-			$app_id = $applications[$pid_node->getAttribute('desktop')];
-
-			if (! in_array($app_id, $session->applications)) {
-				$session->applications[] = $app_id;
-
-				/* store everything for apps reporting */
-				$per_server[$session->server][$pid] = $app_id;
-
-				if (! isset($applications_count[$app_id]))
-					$applications_count[$app_id] = 0;
-				$applications_count[$app_id] +=1;
-			}
-		}
-	}
-
-	Abstract_Session::save($session);
-}
-
 foreach ($server_keys as $k => $v)
 	$server->setAttribute($k, trim($v));
 Abstract_Server::save($server);
 
-$report = ApplicationReport::load();
-$report->update($per_server);
-$report->save();
+/* session + server history */
+$sql_sessions = get_from_cache ('reports', 'sessids');
+if (! is_array($sql_sessions))
+	$sql_sessions = array();
 
+$sessions = $dom->getElementsByTagname('session');
+foreach ($sessions as $session) {
+	$token = $session->getAttribute('id');
+
+	/* We need to keep track of the link between the session token and the sql
+	 * id of the stored session */
+	if (! array_key_exists($token, $sql_sessions)) {
+		$sessitem = new SessionReportItem($token, $xml);
+		if ($sessitem->getId() >= 0)
+			$sql_sessions[$token] = $sessitem->getId();
+		set_cache ($sql_sessions, 'reports', 'sessids');
+	}
+}
+
+$sr = new ServerReportItem($_POST['fqdn'], $xml);
+$sr->save();

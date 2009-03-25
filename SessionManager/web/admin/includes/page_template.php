@@ -33,7 +33,7 @@ $items = array('index.php'		=>	_('Index'),
 	       'configuration-sumup.php'	=>	_('Configuration'),
 	       // 	'logs.php'		=>	_('Logs'),
 	       'sessions.php'		=>	_('Status'),
-		 'report.php'		=>	_('Reports'),
+//		 'report.php'		=>	_('Reports'),
 		 'logout.php'		=>	_('Logout')
 	       );
 
