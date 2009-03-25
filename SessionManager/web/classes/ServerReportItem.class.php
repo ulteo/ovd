@@ -67,7 +67,6 @@ class ServerReportItem {
 			$total = (float) ($node->item(0)->getAttribute('total'));
 			$used = (float) ($node->item(0)->getAttribute('used'));
 			$this->ram = round (($used / $total) * 100, 2);
-			Logger::error ('main', "ram: {$this->ram}");
 		} else {
 			$this->ram = -1;
 		}
@@ -94,7 +93,7 @@ class ServerReportItem {
 		foreach ($sessions as $session) {
 			$local_sessid = $session->getAttribute('id');
 			if (array_key_exists ($local_sessid, $sql_sessions))
-				$sessid = $sql_sessions[$session->getAttribute('id')];
+				$sessid = $sql_sessions[$session->getAttribute('id')]->getId();
 			else
 				/* FIXME: for now we're screwed */
 				$sessid = $local_sessid;

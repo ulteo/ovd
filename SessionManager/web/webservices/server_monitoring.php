@@ -65,18 +65,28 @@ if (! is_array($sql_sessions))
 	$sql_sessions = array();
 
 $sessions = $dom->getElementsByTagname('session');
+$tmp = array();
 foreach ($sessions as $session) {
 	$token = $session->getAttribute('id');
+	$tmp[] = $token;
 
 	/* We need to keep track of the link between the session token and the sql
 	 * id of the stored session */
 	if (! array_key_exists($token, $sql_sessions)) {
 		$sessitem = new SessionReportItem($token, $xml);
 		if ($sessitem->getId() >= 0)
-			$sql_sessions[$token] = $sessitem->getId();
-		set_cache ($sql_sessions, 'reports', 'sessids');
+			$sql_sessions[$token] = $sessitem;
 	}
 }
+
+/* cleanup sessions that disappeared */
+foreach ($sql_sessions as $token => $session) {
+	if (! in_array($token, $tmp))
+		unset($sql_sessions[$token]);
+}
+
+unset($tmp);
+set_cache($sql_sessions, 'reports', 'sessids');
 
 $sr = new ServerReportItem($_POST['fqdn'], $xml);
 $sr->save();
