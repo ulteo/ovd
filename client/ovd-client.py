@@ -311,6 +311,30 @@ class Dialog:
 
         return True
 
+
+    def do_call_exit(self):
+        url = "%s/exit.php"%(self.cm_url)
+        request = urllib2.Request(url)
+        
+        try:
+            url = self.urlOpener.open(request)
+
+        except urllib2.HTTPError, exc:
+            if exc.code == 500:
+                print "Le service n'est pas disponbile"
+                return False
+            
+            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
+            print " * return: ", exc.read()
+            return False
+
+        except urllib2.URLError, exc:
+            print "Echec. Cause:", exc.reason
+            return False
+
+        return True
+
+
     def check_whatsup(self):
         print "Begin check print"
 
@@ -363,6 +387,7 @@ class Dialog:
         os.kill(pid2, signal.SIGTERM)
         os.kill(pid, signal.SIGTERM)
 
+        self.do_call_exit()
         print "end"
         return True
 
