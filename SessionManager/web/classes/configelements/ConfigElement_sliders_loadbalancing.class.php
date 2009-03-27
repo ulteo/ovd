@@ -34,7 +34,7 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 		$html .= '<tr>';
 		$html .= '<td></td>';
 		$html .= '<td>';
-		$html .= '<div style="width: 50px; float: left; text-align: left;"><span class="msg_ok">'._('less').'</span></div> <div style="width: 50px; float: right; text-align: right;"><span class="msg_error">'._('more').'</span></div>';
+		$html .= '<div style="width: 50px; float: left; text-align: left;"><span style="font-weight: bold;">'._('less').'</span></div> <div style="width: 50px; float: right; text-align: right;"><span style="font-weight: bold;">'._('more').'</span></div>';
 		$html .= '</td>';
 		$html .= '</td><td>';
 		$html .= '</tr>';
@@ -120,7 +120,8 @@ $html .= '}
 		$html .= '</tr>';
 		$html .= '<tr>';
 		$html .= '<td style="text-align: center; vertical-align: middle;">';
-		$html .= _('Full CPU (only CPU will be used to determine the server...)');
+		$html .= _('Full CPU: only CPU usage is used as a criteria to choose the best
+server to use for an incoming user.');
 		$html .= '</td>';
 		$html .= '</tr>';
 		$html .= '<tr>';
@@ -133,7 +134,7 @@ $html .= '}
 		$html .= '</tr>';
 		$html .= '<tr>';
 		$html .= '<td style="text-align: center; vertical-align: middle;">';
-		$html .= _('Both CPU and RAM are used, with a little random...');
+		$html .= _('Both CPU and RAM are used as criterias, with a little randomization...');
 		$html .= '</td>';
 		$html .= '</tr>';
 		$html .= '</table>';
