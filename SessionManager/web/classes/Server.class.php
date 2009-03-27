@@ -171,8 +171,6 @@ class Server {
 		$this->setAttribute('locked', true);
 		$this->setAttribute('registered', true);
 
-		$this->updateApplications();
-
 		return true;
 	}
 

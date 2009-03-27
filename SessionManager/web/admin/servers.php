@@ -28,8 +28,8 @@ if (isset($_REQUEST['mass_register'])) {
 		foreach ($_REQUEST['checked_servers'] as $server) {
 			$buf = Abstract_Server::load($server);
 			$buf->register();
-			$buf->updateApplications();
 			Abstract_Server::save($buf);
+			$buf->updateApplications();
 		}
 	}
 
@@ -142,8 +142,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset(
 if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn'])) {
 	$buf = Abstract_Server::load($_GET['fqdn']);
 	$buf->register();
-	$buf->updateApplications();
 	Abstract_Server::save($buf);
+	$buf->updateApplications();
 
 	$buf = count(Servers::getUnregistered());
 	if ($buf == 0)
