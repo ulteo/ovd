@@ -59,37 +59,39 @@ foreach ($server_keys as $k => $v)
 	$server->setAttribute($k, trim($v));
 Abstract_Server::save($server);
 
-/* session + server history */
-$sql_sessions = get_from_cache ('reports', 'sessids');
-if (! is_array($sql_sessions))
+if ($server->getAttribute('type') != 'windows') {
+	/* session + server history */
+	$sql_sessions = get_from_cache ('reports', 'sessids');
+	if (! is_array($sql_sessions))
 	$sql_sessions = array();
 
-$sessions = $dom->getElementsByTagname('session');
-$tmp = array();
-foreach ($sessions as $session_node) {
-	$token = $session_node->getAttribute('id');
-	$tmp[] = $token;
+	$sessions = $dom->getElementsByTagname('session');
+	$tmp = array();
+	foreach ($sessions as $session_node) {
+		$token = $session_node->getAttribute('id');
+		$tmp[] = $token;
 
-	/* We need to keep track of the link between the session token and the sql
-	 * id of the stored session */
-	if (! array_key_exists($token, $sql_sessions)) {
-		$sessitem = new SessionReportItem($token, $session_node);
-		if ($sessitem->getId() >= 0) {
-			$sql_sessions[$token] = $sessitem;
+		/* We need to keep track of the link between the session token and the sql
+		 * id of the stored session */
+		if (! array_key_exists($token, $sql_sessions)) {
+			$sessitem = new SessionReportItem($token, $session_node);
+			if ($sessitem->getId() >= 0) {
+				$sql_sessions[$token] = $sessitem;
+			}
+		} else {
+			$sql_sessions[$token]->update($session_node);
 		}
-	} else {
-		$sql_sessions[$token]->update($session_node);
 	}
-}
 
-/* cleanup sessions that disappeared */
-foreach ($sql_sessions as $token => $session) {
-	if (! in_array($token, $tmp))
-		unset($sql_sessions[$token]);
-}
+	/* cleanup sessions that disappeared */
+	foreach ($sql_sessions as $token => $session) {
+		if (! in_array($token, $tmp))
+			unset($sql_sessions[$token]);
+	}
 
-unset($tmp);
-set_cache($sql_sessions, 'reports', 'sessids');
+	unset($tmp);
+	set_cache($sql_sessions, 'reports', 'sessids');
+}
 
 $sr = new ServerReportItem($_POST['fqdn'], $xml);
 $sr->save();
