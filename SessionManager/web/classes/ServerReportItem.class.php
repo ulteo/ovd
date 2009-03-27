@@ -84,6 +84,7 @@ class ServerReportItem {
 
 		/* get the sql_id => session_token array */
 		$sql_sessions = get_from_cache ('reports', 'sessids');
+		$apps_link = application_desktops_to_ids();
 
 		/* the interesting <sessions> node of the xml is like:
 		     <session id="token">
@@ -113,10 +114,14 @@ class ServerReportItem {
 
 						if ($user_child->tagName == 'pid') {
 							$desktop = $user_child->getAttribute('desktop');
-							if (! array_key_exists ($desktop, $this->applications))
-								$this->applications[$desktop] = array();
+							if (! array_key_exists($desktop, $apps_link))
+								continue;
 
-							$this->applications[$desktop][] = $sessid;
+							$id = $apps_link[$desktop];
+							if (! array_key_exists($id, $this->applications))
+								$this->applications[$id] = array();
+
+							$this->applications[$id][] = $sessid;
 						}
 					}
 				}
