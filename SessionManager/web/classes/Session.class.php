@@ -102,19 +102,15 @@ class Session {
 	public function setStatus($status_) {
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
-		switch ($status_) {
-			default:
-				Logger::warning('main', 'Status set to "'.$status_.'" for \''.$this->id.'\'');
-				$this->setAttribute('status', $status_);
+		Logger::info('main', 'Status set to "'.$status_.'" for \''.$this->id.'\'');
+		$this->setAttribute('status', $status_);
 
-				$ev = new SessionStatusChanged(array(
-					'id'		=>	$this->id,
-					'status'	=>	$status_
-				));
+		$ev = new SessionStatusChanged(array(
+			'id'		=>	$this->id,
+			'status'	=>	$status_
+		));
 
-				$ev->emit();
-				break;
-		}
+		$ev->emit();
 
 		return true;
 	}
