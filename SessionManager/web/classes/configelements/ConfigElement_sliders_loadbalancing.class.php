@@ -89,7 +89,7 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 				$html .= '</div>';
 			$html .= '</td>';
 			$html .= '<td>';
-				$html .= '<div id="slidetxt'.$i.'" style="float: right;">'.$value1.'</div>';
+				$html .= '<div id="slidetxt'.$i.'" style="float: right; width: 25px;">'.$value1.'</div>';
 			$html .= '</td>';
 			$html .= '</tr>';
 			$i += 1;
