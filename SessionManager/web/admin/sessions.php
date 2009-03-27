@@ -109,14 +109,14 @@ if (isset($_POST['join'])) {
 	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
 
-	if ($show_apps && isset($session->applications)) {
+	if ($show_apps && $session->hasAttribute('applications')) {
 		echo '<h2>'._('Running applications').'</h2>';
 
-		if (count($session->applications) == 0) {
+		if (count($session->getAttribute('applications')) == 0) {
 			echo _('No application running');
 		} else {
 			echo '<ul>';
-			foreach ($session->applications as $id) {
+			foreach ($session->getAttribute('applications') as $id) {
 				if (is_null($id))
 					continue;
 

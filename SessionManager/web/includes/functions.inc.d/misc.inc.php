@@ -308,3 +308,23 @@ function suffix2domain($suffix_) {
 	$str = implode('.', $build);
 	return $str;
 }
+
+function application_desktops_to_ids() {
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+
+	$mods_enable = $prefs->get('general','module_enable');
+	if (! in_array('ApplicationDB',$mods_enable))
+		die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
+	$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+	$applicationDB = new $mod_app_name();
+	$all_applications = $applicationDB->getList();
+
+	$ret = array();
+	foreach ($all_applications as $app) {
+		$ret[$app->getAttribute('desktopfile')] = (int)$app->getAttribute('id');
+	}
+
+	return $ret;
+}

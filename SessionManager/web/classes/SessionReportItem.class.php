@@ -23,18 +23,20 @@ class SessionReportItem {
 	private $token;
 	private $sql_id = -1;
 	private $server;
-	private $xml_input;
+	private $node;
+	private $current_apps = array();
 
 	/* Session items are stored in the db before computing anything else
 	 * because the sql_id is an auto-incremented int. we need to know this id
 	 * so that the server reports can be linked to it */
-	public function __construct($token_, $xml_input_) {
+	public function __construct($token_, $session_node_) {
 		$this->token = $token_;
 		$session = Abstract_Session::load($token_);
 		$this->server = $session->getAttribute('server');
 		$this->user = $session->getAttribute('user_login');
 
-		$this->xml_input = $xml_input_;
+		$this->node = $session_node_;
+		$this->current_apps = $this->currentApps();
 
 		$sql = MySQL::getInstance();
 		$res = $sql->DoQuery(
@@ -47,5 +49,39 @@ class SessionReportItem {
 
 	public function getId() {
 		return $this->sql_id;
+	}
+
+	public function getCurrentApps() {
+		return $this->current_apps;
+	}
+
+	/* private methods */
+	private function currentApps() {
+		$apps_link = application_desktops_to_ids();
+		$user_node = null;
+
+		foreach ($this->node->childNodes as $tmp) {
+			if ($tmp->nodeType != XML_ELEMENT_NODE ||
+				$tmp->tagName != 'user')
+					continue;
+			$user_node = $tmp;
+			break;
+		}
+
+		if ($user_node == null)
+			return array();
+
+		foreach ($user_node->childNodes as $pid_node) {
+			if ($pid_node->nodeType != XML_ELEMENT_NODE ||
+				$pid_node->tagName != 'pid')
+					continue;
+
+			$desktop = $pid_node->getAttribute('desktop');
+
+			if (array_key_exists ($desktop, $apps_link))
+				$ret[] = $apps_link[$desktop];
+		}
+
+		return $ret;
 	}
 }
