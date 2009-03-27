@@ -76,14 +76,9 @@ foreach ($sessions as $session_node) {
 		$sessitem = new SessionReportItem($token, $session_node);
 		if ($sessitem->getId() >= 0) {
 			$sql_sessions[$token] = $sessitem;
-
-			/* store sessions applications into the sessions table */
-			$session = Abstract_Session::load($token);
-			if (is_object($session)) {
-				$session->setAttribute('applications', $sessitem->getCurrentApps());
-				Abstract_Session::save($session);
-			}
 		}
+	} else {
+		$sql_sessions[$token]->update($session_node);
 	}
 }
 

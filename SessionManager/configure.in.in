@@ -165,6 +165,7 @@ web/PEAR/Net/Makefile
 web/events/Makefile
 web/events/callbacks/Makefile
 web/events/callbacks/SessionStart/Makefile
+web/events/callbacks/SessionStatusChanged/Makefile
 web/events/callbacks/ServerStatusChanged/Makefile
 web/events/callbacks/SqlFailure/Makefile
 examples/Makefile
