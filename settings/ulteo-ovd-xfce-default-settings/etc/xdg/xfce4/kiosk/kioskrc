@@ -12,6 +12,7 @@ UserMenu=%admin
 CustomizeDesktopMenu=%admin
 CustomizeWindowlist=%admin
 CustomizeDesktopIcons=%admin
+CustomizeBehavior=%admin
 
 [xfrun]
 AllowRun=%admin
