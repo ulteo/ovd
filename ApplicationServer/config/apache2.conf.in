@@ -8,6 +8,7 @@ NameVirtualHost *
                 AllowOverride None
         </Directory>
         <Directory @DATADIR@/ulteo/applicationserver/>
+                php_admin_flag magic_quotes_gpc Off
                 Options FollowSymLinks MultiViews
                 AllowOverride None
                 Order allow,deny
