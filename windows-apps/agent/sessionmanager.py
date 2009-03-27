@@ -75,7 +75,6 @@ class SessionManagerRequest:
 			f = urllib2.urlopen(request)
 		except IOError, e:
 			self.log.debug("SessionManagerRequest::monitoring error"+str(e))
-			self.log.error("SessionManagerRequest error when said %s"%(status))
 			return False
 		
 		return True
