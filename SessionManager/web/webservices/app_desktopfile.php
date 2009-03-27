@@ -65,8 +65,6 @@ if (! is_array($apps)) {
 foreach ($apps as $app) {
 	if ($app->hasAttribute('desktopfile')) {
 		$desktopfile = $_GET['desktopfile'];
-		if (get_magic_quotes_gpc())
-			$desktopfile = stripslashes($desktopfile);
 
 		if ($app->getAttribute('desktopfile') == $desktopfile) {
 			header('Content-Type: text/xml; charset=utf-8');
