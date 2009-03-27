@@ -163,10 +163,10 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		</div>
 
 		<div id="menuShare" style="display: none;">
-			<div style="width: 500px; height: 300px; float: right; margin-right: 0px;">
-				<div style="background: #eee; width: 500px; height: 300px;" id="menuShareFrame">
-
-					<div style="width: 16px; height: 16px; text-align: right; margin-left: auto; margin-right: 25px;">
+			<div style="width: 450px; margin-left: auto; margin-right: 0px;">
+				<div style="width: 450px;" id="menuShareFrame">
+					<table style="width: 100%;" border="0" cellspacing="0" cellpadding="10"><tr><td>
+					<div style="float: right;">
 						<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
 							<img src="media/image/close.png" width="16" height="16" alt="" title="" />
 						</a>
@@ -174,6 +174,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 
 					<h2 style="text-align: center;"><?php echo _('Desktop sharing'); ?></h2>
 					<span id="menuShareContent"></span>
+					<span id="menuShareError"></span>
 					<fieldset style="border: 0;">
 						<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">
 							<p><?php echo _('Email address'); ?>: <input type="text" id="invite_email" name="email" value="" />
@@ -182,6 +183,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 							<p><input type="submit" id="invite_submit" value="<?php echo _('Invite'); ?>" /></p>
 						</form>
 					</fieldset>
+					</td></tr></table>
 				</div>
 			</div>
 		</div>

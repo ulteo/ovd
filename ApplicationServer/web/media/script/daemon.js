@@ -321,13 +321,19 @@ function do_invite() {
 				'mode': mode
 			},
 			onSuccess: function(transport) {
-				if (transport.responseText != 'OK')
-					alert(transport.responseText);
+				if (transport.responseText != 'OK') {
+					$('invite_email').disabled = true;
+					$('invite_mode').disabled = true;
+					$('invite_submit').disabled = true;
+
+					$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
+				} else if (transport.responseText == 'OK') {
+					$('invite_submit').disabled = false;
+				}
 			}
 		}
 	);
 
 	$('invite_email').value = '';
 	$('invite_mode').checked = false;
-	$('invite_submit').disabled = false;
 }
