@@ -45,7 +45,10 @@ import utils
 import win32service
 import win32serviceutil
 import wmi
-
+import utils
+from ctypes import *
+from ctypes.wintypes import DWORD
+SIZE_T = c_ulong
 
 def log_debug(msg_):
 	servicemanager.LogInfoMsg(str(msg_))
@@ -119,7 +122,33 @@ def load_shell_config_file(conf):
 	
 	return conf
 
-
+class _MEMORYSTATUS(Structure):
+	_fields_ = [("dwLength", DWORD),
+				("dwMemoryLength", DWORD),
+				("dwTotalPhys", SIZE_T),
+				("dwAvailPhys", SIZE_T),
+				("dwTotalPageFile", SIZE_T),
+				("dwAvailPageFile", SIZE_T),
+				("dwTotalVirtual", SIZE_T),
+				("dwAvailVirtualPhys", SIZE_T)]
+	def show(self):
+		for field_name, field_type in self._fields_:
+			print field_name, getattr(self, field_name)
+	
+	def TotalPhys(self):
+		for field_name, field_type in self._fields_:
+			if 'dwTotalPhys' == field_name:
+				return int(getattr(self, field_name))/1024
+		return 0
+	
+	def AvailPhys(self):
+		for field_name, field_type in self._fields_:
+			if 'dwAvailPhys' == field_name:
+				return int(getattr(self, field_name))/1024
+		return 0
+	
+	def UsedPhys(self):
+		return self.TotalPhys() - self.AvailPhys()
 
 class OVD(win32serviceutil.ServiceFramework):
 	_svc_name_ = "OVD"
@@ -127,12 +156,10 @@ class OVD(win32serviceutil.ServiceFramework):
 	_svc_description_ = "OVD agent providing monitoring capacities"
 	
 	def __init__(self,args):
-		#log_debug("init 00")
 		win32serviceutil.ServiceFramework.__init__(self,args)
 		
 		self.install_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 		if os.environ.has_key('ALLUSERSPROFILE'):
-			log_debug("main 001-A os.environ.has_key('ALLUSERSPROFILE')")
 			all_users_dir = os.environ['ALLUSERSPROFILE']
 		else:
 			log_debug("main 001-B")
@@ -140,7 +167,6 @@ class OVD(win32serviceutil.ServiceFramework):
 			sys.exit(3)
 		
 		name = "ulteo-ovd"
-		#log_debug("main 003")
 		conf = {}
 		conf["conf_file"] = os.path.join(self.install_dir, '%s.conf'%(name))
 		conf["log_file"] = os.path.abspath(os.path.join(all_users_dir, 'Application Data', 'ulteo', 'ovd', 'main.log'))
@@ -165,6 +191,9 @@ class OVD(win32serviceutil.ServiceFramework):
 	
 		log_debug("init 01 "+str(conf))
 		self.conf = conf
+		self.monitoring_cpu_name = 'Unknow'
+		self.monitoring_cpu_load = 0
+		self.monitoring_cpu_number = 0
 		
 		self.init_log()
 		self.log.info("init")
@@ -176,27 +205,38 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.webserver.daemon = self
 		self.webserver.log = self.log
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
-		pythoncom.CoInitialize()
-		self.wmi = wmi.WMI()
-		try:
-			self.version_os = self.wmi.Win32_OperatingSystem ()[0].Name.split('|')[0]
-		except Exception, err:
-			self.version_os = platform.version()
 
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
+		pythoncom.CoInitialize()
+		self.wmi = wmi.WMI()
+		self.updateMonitoring()
+		cpus = self.wmi.Win32_Processor()
+		if type(cpus) == type([]): # list
+			self.monitoring_cpu_name = cpus[0].Name
+			self.monitoring_cpu_number = len(cpus)
+		try:
+			self.version_os = self.wmi.Win32_OperatingSystem ()[0].Name.split('|')[0].encode('ascii','ignore')
+		except Exception, err:
+			self.version_os = platform.version()
+		
 		#self.webserver.serve_forever()
 		self.thread_web.start()
 		if not self.smr.ready():
 			self.broken = True
+			servicemanager.LogInfoMsg("SessionManager does not get a 'ready', stopping agent")
 			self.SvcStop()
 		while self.isAlive:
-			time.sleep(1)
+			time.sleep(60)
+			self.updateMonitoring()
+			self.smr.monitoring(self.xmlMonitoring().toxml())
+		
 		servicemanager.LogInfoMsg("SvcDoRun 04 Stopped")
 	
 	def SvcStop(self):
-		servicemanager.LogInfoMsg("aservice - Recieved stop signal")
+		self.log.debug("OVD::SvcStop")
+		servicemanager.LogInfoMsg("Stopping agent")
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
 		self.isAlive = False #this will make SvcDoRun() break the while loop at the next iteration.
 		#self.webserver.shutdown()
@@ -291,3 +331,37 @@ class OVD(win32serviceutil.ServiceFramework):
 					app.appendChild(exe)
 		
 		return doc.toxml(output_encoding)
+	
+	def updateMonitoring(self):
+		pythoncom.CoInitialize()
+		cpus = wmi.WMI().Win32_Processor()
+		if type(cpus) == type([]): # list
+			load = 0.0
+			for cpu_wmi in cpus:
+				load += cpu_wmi.LoadPercentage
+				load = load / float(len(cpus)*100)
+			self.monitoring_cpu_load = load
+	
+	def xmlMonitoring(self):
+		self.log.debug("OVD::xmlMonitoring")
+		doc = Document()
+		monitoring = doc.createElement('monitoring')
+		doc.appendChild(monitoring)
+		cpu = doc.createElement('cpu')
+		cpu.setAttribute('nb_cores', str(self.monitoring_cpu_number))
+		text = doc.createTextNode(self.monitoring_cpu_name)
+		cpu.appendChild(text)
+		cpu.setAttribute('load', str(self.monitoring_cpu_load))
+		
+		monitoring.appendChild(cpu)
+		
+		memstatus = _MEMORYSTATUS()
+		windll.kernel32.GlobalMemoryStatus(byref(memstatus))
+		
+		ram = doc.createElement('ram')
+		ram.setAttribute('total', str(memstatus.TotalPhys()))
+		ram.setAttribute('used', str(memstatus.UsedPhys()))
+		monitoring.appendChild(ram)
+		
+		return doc
+

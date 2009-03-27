@@ -31,6 +31,7 @@ import msvcrt
 import pythoncom
 from win32com.shell import shell, shellcon
 import socket
+import mimetypes
 
 def myOS():
 	if (len([b for b in ["windows","microsoft","microsoft windows"] if platform.system().lower() in b]) >0):
@@ -129,3 +130,26 @@ if myOS() == "windows":
 			err = self.stderr.read()
 			status = win32process.GetExitCodeProcess(hProcess)
 			return [status,out,err]
+
+def encode_multipart_formdata(fields, files):
+	BOUNDARY = '----------ThIs_Is_tHe_bouNdaRY_$'
+	endlines = '\r\n'
+	L = []
+	for (key, value) in fields:
+		L.append('--' + BOUNDARY)
+		L.append('Content-Disposition: form-data; name="%s"' % key)
+		L.append('')
+		L.append(value)
+	for (key, filename, value) in files:
+		L.append('--' + BOUNDARY)
+		L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+		L.append('Content-Type: %s' % get_content_type(filename))
+		L.append('')
+		L.append(value)
+	L.append('--' + BOUNDARY + '--')
+	L.append('')
+	body = endlines.join(L)
+	content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+	return (content_type, body)
+def get_content_type(filename):
+	return mimetypes.guess_type(filename)[0] or 'application/octet-stream'

@@ -21,6 +21,7 @@
 
 import urllib
 import urllib2
+import utils
 
 class SessionManagerRequest:
 	def __init__(self, conf, log):
@@ -57,3 +58,24 @@ class SessionManagerRequest:
 	
 	def broken(self):
 		return self.server_status("broken")
+	
+	def monitoring(self, xml_):
+		urlOpener = urllib2.build_opener()
+		form_vars=[('fqdn',self.fqdn)]
+		form_files=[]
+		
+		form_files.append(('xml','monitoring.xml',xml_))
+		
+		data = utils.encode_multipart_formdata(form_vars, form_files)
+		(content_type,body) = data
+		url = "%s/webservices/server_monitoring.php"%(self.url)
+		request = urllib2.Request(url,body)
+		request.add_header('content-type', content_type)
+		try:
+			f = urllib2.urlopen(request)
+		except IOError, e:
+			self.log.debug("SessionManagerRequest::monitoring error"+str(e))
+			self.log.error("SessionManagerRequest error when said %s"%(status))
+			return False
+		
+		return True

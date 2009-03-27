@@ -27,7 +27,6 @@ import sys
 import platform
 import base64
 from xml.dom.minidom import Document
-import wmi
 import utils
 import pythoncom
 import tempfile
@@ -38,39 +37,6 @@ import traceback
 
 def log_debug(msg_):
 	servicemanager.LogInfoMsg(str(msg_))
-
-if utils.myOS() == "windows":
-	from ctypes import *
-	from ctypes.wintypes import DWORD
-	SIZE_T = c_ulong
-	
-	class _MEMORYSTATUS(Structure):
-		_fields_ = [("dwLength", DWORD),
-					("dwMemoryLength", DWORD),
-					("dwTotalPhys", SIZE_T),
-					("dwAvailPhys", SIZE_T),
-					("dwTotalPageFile", SIZE_T),
-					("dwAvailPageFile", SIZE_T),
-					("dwTotalVirtual", SIZE_T),
-					("dwAvailVirtualPhys", SIZE_T)]
-		def show(self):
-			for field_name, field_type in self._fields_:
-				print field_name, getattr(self, field_name)
-		
-		def TotalPhys(self):
-			for field_name, field_type in self._fields_:
-				if 'dwTotalPhys' == field_name:
-					return int(getattr(self, field_name))/1024
-			return 0
-		
-		def AvailPhys(self):
-			for field_name, field_type in self._fields_:
-				if 'dwAvailPhys' == field_name:
-					return int(getattr(self, field_name))/1024
-			return 0
-		
-		def UsedPhys(self):
-			return self.TotalPhys() - self.AvailPhys()
 
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
@@ -118,37 +84,7 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write(self.server.daemon.getStatusString())
 	
 	def webservices_server_monitoring(self):
-		doc = Document()
-		monitoring = doc.createElement('monitoring')
-		doc.appendChild(monitoring)
-		cpu = doc.createElement('cpu')
-		try:
-			pythoncom.CoInitialize()
-			wmi_obj = wmi.WMI()
-			cpus = wmi_obj.Win32_Processor()
-			if type(cpus) == type([]): # list
-				cpu.setAttribute('nb_cores', str(len(cpus)))
-				cpu_name = cpus[0].Name
-				text = doc.createTextNode(cpu_name)
-				cpu.appendChild(text)
-				
-				load = 0
-				for cpu_wmi in cpus:
-					load += cpu_wmi.LoadPercentage
-				load = load / float(len(cpus)*100)
-				cpu.setAttribute('load', str(load))
-		except Exception, err:
-			pass
-		
-		monitoring.appendChild(cpu)
-		
-		memstatus = _MEMORYSTATUS()
-		windll.kernel32.GlobalMemoryStatus(byref(memstatus))
-		
-		ram = doc.createElement('ram')
-		ram.setAttribute('total', str(memstatus.TotalPhys()))
-		ram.setAttribute('used', str(memstatus.UsedPhys()))
-		monitoring.appendChild(ram)
+		doc = self.server.daemon.xmlMonitoring()
 		
 		self.send_response(200, 'OK')
 		self.send_header('Content-Type', 'text/xml')
@@ -230,6 +166,3 @@ class Web(SimpleHTTPRequestHandler):
 				self.server.daemon.log.debug("webservices_icon no right argument2" )
 		else:
 			self.server.daemon.log.debug("webservices_icon no right argument3" )
-			
-
-
