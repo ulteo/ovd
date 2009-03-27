@@ -231,6 +231,16 @@ function action_unset_default($id_) {
 function show_default() {
   $groups = get_all_usergroups();
   $has_group = ! (is_null($groups) or (count($groups) == 0));
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
 
   page_header();
 
@@ -242,11 +252,15 @@ function show_default() {
   if (! $has_group)
     echo _('No available user group').'<br />';
   else {
-    echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
-    echo '<input type="hidden" name="action" value="del" />';
+    if ($userGroupDB->isWriteable()) {
+      echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
+      echo '<input type="hidden" name="action" value="del" />';
+    }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-    echo '<th class="unsortable"></th>';
+    if ($userGroupDB->isWriteable()) {
+      echo '<th class="unsortable"></th>';
+    }
     echo '<th>'._('Name').'</th>';
     echo '<th>'._('Description').'</th>';
     echo '<th>'._('Status').'</th>';
@@ -256,13 +270,15 @@ function show_default() {
     foreach($groups as $group){
       $content = 'content'.(($count++%2==0)?1:2);
       if ($group->published)
-	$publish = '<span class="msg_ok">'._('Enabled').'</span>';
+        $publish = '<span class="msg_ok">'._('Enabled').'</span>';
       else
-	$publish = '<span class="msg_error">'._('Blocked').'</span>';
+        $publish = '<span class="msg_error">'._('Blocked').'</span>';
 
       echo '<tr class="'.$content.'">';
-      echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
-      echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
+      if ($userGroupDB->isWriteable()) {
+        echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
+        echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
+      }
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
 
@@ -272,32 +288,30 @@ function show_default() {
       echo '<input type="hidden" name="id" value="'.$group->id.'" />';
       echo '</form></td>';
 
-      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
-      echo '<input type="submit" value="'._('Delete').'"/>';
-      echo '<input type="hidden" name="action" value="del" />';
-      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-      echo '</form></td>';
+      if ($userGroupDB->isWriteable()) {
+        echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+        echo '<input type="submit" value="'._('Delete').'"/>';
+        echo '<input type="hidden" name="action" value="del" />';
+        echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+        echo '</form></td>';
+      }
       echo '</tr>';
     }
     $content = 'content'.(($count++%2==0)?1:2);
-    echo '<tr class="'.$content.'">';
-    echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
-    echo '<td><input type="submit" value="'._('Delete').'"/></td>';
+    if ($userGroupDB->isWriteable()) {
+      echo '<tr class="'.$content.'">';
+      echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
+      echo '<td><input type="submit" value="'._('Delete').'"/></td>';
+      echo '</tr>';
+    }
     echo '</table>';
-    echo '</form>';
+    if ($userGroupDB->isWriteable()) {
+      echo '</form>';
+    }
   }
+
   echo '</div>';
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
   if ($userGroupDB->isWriteable()) {
     echo '<div>';
     echo '<h2>'._('Create a new group').'</h2>';
