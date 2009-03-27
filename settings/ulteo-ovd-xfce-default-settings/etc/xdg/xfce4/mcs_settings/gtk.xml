@@ -5,7 +5,7 @@
 	<option name="Gtk/CanChangeAccels" type="int" value="0"/>
 	<option name="Gtk/CursorThemeName" type="string" value="Human"/>
 	<option name="Gtk/CursorThemeSize" type="int" value="24"/>
-	<option name="Gtk/FontName" type="string" value="Sans 11"/>
+	<option name="Gtk/FontName" type="string" value="Sans 10"/>
 	<option name="Gtk/KeyThemeName" type="string" value="Default"/>
 	<option name="Gtk/ToolbarStyle" type="string" value="both"/>
 	<option name="Net/CursorBlink" type="int" value="1"/>
