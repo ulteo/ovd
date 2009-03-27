@@ -163,8 +163,15 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		</div>
 
 		<div id="menuShare" style="display: none;">
-			<div style="width: 500px; height: 300px; float: right;">
+			<div style="width: 500px; height: 300px; float: right; margin-right: 0px;">
 				<div style="background: #eee; width: 500px; height: 300px;" id="menuShareFrame">
+
+					<div style="width: 16px; height: 16px; text-align: right; margin-left: auto; margin-right: 25px;">
+						<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
+							<img src="media/image/close.png" width="16" height="16" alt="" title="" />
+						</a>
+					</div>
+
 					<h2 style="text-align: center;"><?php echo _('Desktop sharing'); ?></h2>
 					<span id="menuShareContent"></span>
 					<fieldset style="border: 0;">
