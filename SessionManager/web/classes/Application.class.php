@@ -81,19 +81,28 @@ class Application {
 				$servers[] = $buf;
 		}
 
-		if (!is_array($servers) || count($servers) == 0)
+		if (!is_array($servers) || count($servers) == 0) {
+			$this->delIcon();
 			return false;
+		}
 
 		$random_server = $servers[array_rand($servers)];
 
 		$buf = query_url('http://'.$random_server->fqdn.':'.$random_server->web_port.'/webservices/icon.php?path='.base64_encode($this->getAttribute('icon_path')).'&desktopfile='.base64_encode($this->getAttribute('desktopfile')));
 
-		if ($buf == false || $buf == '')
+		if ($buf == false || $buf == '') {
+			$this->delIcon();
 			return false;
+		}
 
 		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf);
 
 		return true;
+	}
+
+	public function delIcon() {
+		if ($this->hasAttribute('id'))
+			@unlink(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png');
 	}
 
 	public function groups(){
