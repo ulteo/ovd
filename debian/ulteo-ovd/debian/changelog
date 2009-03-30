@@ -1,3 +1,9 @@
+ulteo-ovd (1.0~rc2) ovd-polaris-testing; urgency=low
+
+  * New development release (RC 2)
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Mon, 30 Mar 2009 18:14:47 +0200
+
 ulteo-ovd (1.0~rc1) ovd-polaris-testing; urgency=low
 
   * New development release (RC 1)
