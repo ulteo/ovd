@@ -13,6 +13,7 @@ scripts_DATA = actions.php \
                logs.php \
                menu.php \
                publications.php \
+               reporting.php \
                servers.php \
                sessions.php \
                sumup.php \
