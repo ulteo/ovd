@@ -28,12 +28,13 @@ class Abstract_Invite {
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
 		$invites_table_structure = array(
-			'id' => 'varchar(255) NOT NULL',
-			'session' => 'varchar(255) NOT NULL',
-			'settings' => 'text NOT NULL',
-			'email' => 'varchar(255) NOT NULL',
-			'valid_until' => 'int(10) NOT NULL');
-		
+			'id'			=>	'varchar(255) NOT NULL',
+			'session'		=>	'varchar(255) NOT NULL',
+			'settings'		=>	'text NOT NULL',
+			'email'			=>	'varchar(255) NOT NULL',
+			'valid_until'	=>	'int(10) NOT NULL'
+		);
+
 		$ret = $SQL->buildTable($mysql_conf['prefix'].'invites', $invites_table_structure, array('id'));
 
 		if (! $ret) {

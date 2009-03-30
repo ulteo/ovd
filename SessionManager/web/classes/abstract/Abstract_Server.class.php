@@ -27,23 +27,25 @@ class Abstract_Server {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$server_table_structure = array(
-		'fqdn' => 'varchar(255) NOT NULL',
-		'status' => 'varchar(255) NOT NULL',
-		'registered' => 'int(8) NOT NULL',
-		'locked' => 'int(8) NOT NULL',
-		'type' => 'varchar(255) NOT NULL',
-		'version' => 'varchar(255) NOT NULL',
-		'external_name' => 'varchar(255) NOT NULL',
-		'web_port' => 'int(5) NOT NULL',
-		'max_sessions' => 'int(8) NOT NULL',
-		'cpu_model' => 'varchar(255) NOT NULL',
-		'cpu_nb_cores' => 'int(8) NOT NULL',
-		'cpu_load' => 'int(8) NOT NULL',
-		'ram_total' => 'int(16) NOT NULL',
-		'ram_used' => 'int(16) NOT NULL',
-		'timestamp' => 'int(10) NOT NULL');
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers', $server_table_structure, array('fqdn'));
+		$servers_table_structure = array(
+			'fqdn'			=>	'varchar(255) NOT NULL',
+			'status'		=>	'varchar(255) NOT NULL',
+			'registered'	=>	'int(8) NOT NULL',
+			'locked'		=>	'int(8) NOT NULL',
+			'type'			=>	'varchar(255) NOT NULL',
+			'version'		=>	'varchar(255) NOT NULL',
+			'external_name'	=>	'varchar(255) NOT NULL',
+			'web_port'		=>	'int(5) NOT NULL',
+			'max_sessions'	=>	'int(8) NOT NULL',
+			'cpu_model'		=>	'varchar(255) NOT NULL',
+			'cpu_nb_cores'	=>	'int(8) NOT NULL',
+			'cpu_load'		=>	'int(8) NOT NULL',
+			'ram_total'		=>	'int(16) NOT NULL',
+			'ram_used'		=>	'int(16) NOT NULL',
+			'timestamp'		=>	'int(10) NOT NULL'
+		);
+
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers', $servers_table_structure, array('fqdn'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers\'');
