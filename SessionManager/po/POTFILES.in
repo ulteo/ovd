@@ -105,7 +105,6 @@ web/admin/classes/Liaison.class.php
 web/admin/classes/Preferences_admin.class.php
 web/admin/classes/Configuration_mode_internal.class.php
 web/admin/index.php
-web/admin/init/setup.php
 web/admin/configuration-sumup.php
 web/admin/logout.php
 web/includes/functions.inc.php
