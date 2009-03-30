@@ -82,19 +82,19 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 		}
 		@define('APPLICATION_TABLE', $mysql_conf['prefix'].'application');
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-		$ret = $sql2->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-			@2 int(8) NOT NULL auto_increment,
-			@3 varchar(150) NOT NULL,
-			@4 varchar(150) NOT NULL,
-			@5 varchar(60)  NOT NULL,
-			@6 varchar(150) NOT NULL,
-			@7 varchar(150) default NULL,
-			@8 varchar(100) NOT NULL,
-			@9 varchar(150) default NULL,
-			@10 tinyint(1) default \'0\',
-			PRIMARY KEY  (@2)
-		)',APPLICATION_TABLE,'id','name','description','type','executable_path','icon_path','package','desktopfile','published');
+		$APPLICATION_table_structure = array(
+			'id' => 'int(8) NOT NULL auto_increment',
+			'name' => 'varchar(150) NOT NULL',
+			'description' => 'varchar(150) NOT NULL',
+			'type' => 'varchar(60)  NOT NULL',
+			'executable_path' => 'varchar(150) NOT NULL',
+			'icon_path' => 'varchar(150) default NULL',
+			'package' => 'varchar(100) NOT NULL',
+			'desktopfile' => 'varchar(150) default NULL',
+			'published' => 'tinyint(1) default \'0\'');
+
+		$ret = $sql2->buildTable($mysql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
+		
 		if ( $ret === false) {
 			Logger::error('admin','APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' fail to created');
 			return false;

@@ -41,6 +41,7 @@ class Preferences_admin extends Preferences {
 		@unlink($this->conf_file);
 	}
 	public function backup(){
+		init_db($this);
 		$this->deleteConfFile();
 		$filecontents = array();
 		foreach($this->elements as $key1 => $value1) {

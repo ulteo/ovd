@@ -91,14 +91,13 @@ function init_db($prefs_) {
 	// we create the sql table
 	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-	$ret = $sql2->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 int(8) NOT NULL auto_increment,
-		@3 varchar(150) NOT NULL,
-		@4 varchar(150) NOT NULL,
-		@5 tinyint(1) NOT NULL,
-		PRIMARY KEY  (@2)
-		)',$APPSGROUP_TABLE,'id','name','description','published');
+	$APPSGROUP_structure = array(
+		'id' => 'int(8) NOT NULL auto_increment',
+		'name' => 'varchar(150) NOT NULL',
+		'description' => 'varchar(150) NOT NULL',
+		'published' => 'tinyint(1) NOT NULL');
+	$ret = $sql2->buildTable($APPSGROUP_TABLE, $APPSGROUP_structure, array('id'));
+	
 	if ( $ret === false) {
 		Logger::error('admin','init_db table '.$APPSGROUP_TABLE.' fail to created');
 		return false;
@@ -106,13 +105,12 @@ function init_db($prefs_) {
 	else
 		Logger::debug('admin','init_db table '.$APPSGROUP_TABLE.' created');
 
-	$ret = $sql2->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@4 int(8) NOT NULL auto_increment,
-		@2 varchar(200) NOT NULL,
-		@3 varchar(200) NOT NULL,
-		PRIMARY KEY  (@4)
-		)',$SOURCES_LIST_TABLE,'element','group','id');
+	$SOURCES_LIST_structure = array(
+		'id' => 'int(8) NOT NULL auto_increment',
+		'element' => 'varchar(200) NOT NULL',
+		'group' => 'varchar(200) NOT NULL');
+	$ret = $sql2->buildTable($SOURCES_LIST_TABLE, $SOURCES_LIST_structure, array('id'));
+	
 	if ( $ret === false) {
 		Logger::error('admin','init_db table '.$SOURCES_LIST_TABLE.' fail to created');
 		return false;

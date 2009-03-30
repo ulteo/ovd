@@ -27,15 +27,14 @@ class Abstract_Invite {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$ret = $SQL->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 varchar(255) NOT NULL,
-		@3 varchar(255) NOT NULL,
-		@4 text NOT NULL,
-		@5 varchar(255) NOT NULL,
-		@6 int(10) NOT NULL,
-		PRIMARY KEY  (`id`)
-		)', $mysql_conf['prefix'].'invites', 'id', 'session', 'settings', 'email', 'valid_until');
+		$invites_table_structure = array(
+			'id' => 'varchar(255) NOT NULL',
+			'session' => 'varchar(255) NOT NULL',
+			'settings' => 'text NOT NULL',
+			'email' => 'varchar(255) NOT NULL',
+			'valid_until' => 'int(10) NOT NULL');
+		
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'invites', $invites_table_structure, array('id'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'invites\'');

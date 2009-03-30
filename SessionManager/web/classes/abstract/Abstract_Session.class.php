@@ -24,22 +24,24 @@ class Abstract_Session {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Session::init');
 
+		$table_structure = array();
+		$table_structure['id'] =  'varchar(255) NOT NULL';
+		$table_structure['server'] =  'varchar(255) NOT NULL';
+		$table_structure['status'] =  'int(8) NOT NULL';
+		$table_structure['settings'] =  'text NOT NULL';
+		$table_structure['user_login'] =  'varchar(255) NOT NULL';
+		$table_structure['user_displayname'] =  'varchar(255) NOT NULL';
+		$table_structure['applications'] =  'text NOT NULL';
+		$table_structure['start_time'] =  'varchar(255) NOT NULL';
+		$table_structure['timestamp'] =  'int(10) NOT NULL';
+		$primary_key = array('id');
+		
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$ret = $SQL->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 varchar(255) NOT NULL,
-		@3 varchar(255) NOT NULL,
-		@4 int(8) NOT NULL,
-		@5 text NOT NULL,
-		@6 varchar(255) NOT NULL,
-		@7 varchar(255) NOT NULL,
-		@8 text NOT NULL,
-		@9 varchar(255) NOT NULL,
-		@10 int(10) NOT NULL,
-		PRIMARY KEY  (@2)
-		)', $mysql_conf['prefix'].'sessions', 'id', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', 'timestamp');
+		$table = $mysql_conf['prefix'].'sessions';
+		
+		
+		$ret = $SQL->buildTable($table, $table_structure, $primary_key);
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions\'');

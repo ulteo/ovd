@@ -177,4 +177,77 @@ class MySQL {
 	public function TotalQueries() {
 		return $this->total_queries;
 	}
+	
+	public function buildTable($name_, $table_structure_, $primary_keys_) {
+		$this->CheckLink();
+		
+		// the table exists ?
+		$table_exists = false;
+		$ret = $this->DoQuery('SHOW TABLES LIKE %1', $name_);
+		if ($ret !== false) {
+			$ret2 = $this->NumRows($ret);
+			if ($ret2 == 1)
+				$table_exists =  true;
+			else
+				$table_exists = false;
+		}
+		if (! $table_exists) {
+			$query  = 'CREATE TABLE IF NOT EXISTS ';
+			$query .= mysql_escape_string($name_);
+			$query .= ' ( ';
+			foreach ($table_structure_ as $column_name => $column_type) {
+				$query .= '`'.mysql_escape_string($column_name).'` '.$column_type.' , ';
+			}
+			$query = substr($query, 0, -3);
+			
+			
+			if ($primary_keys_ != array()) {
+				$query .= ' , ';
+				$query .= 'PRIMARY KEY  (';
+				foreach ($primary_keys_ as $key_name) {
+					$query .= '`'.$key_name.'` , ';
+				}
+				$query = substr($query, 0, -3);
+				$query .= ')';
+			}
+			$query .= ' ) DEFAULT CHARSET=utf8; ';
+			$ret = $this->DoQuery($query);
+			return $ret;
+			
+		}
+		else {
+			// TODO : see if it works when we change the primary key
+		
+			// the table exists, it is the right structure ?
+			$res = $this->DoQuery('SHOW COLUMNS FROM '.$name_);
+			if ($res !== false){
+				$rows = $this->FetchAllResults($res);
+				$colums_from_database = array();
+				foreach($rows as $row) {
+					if (in_array( $row['Field'], array_keys($table_structure_))) {
+						// the column exists
+						// if the column we do nothing, we can not change the column type
+						$colums_from_database[] = $row['Field'];
+					}
+					else {
+						// we must remove this column
+						$res = $this->DoQuery('ALTER TABLE '.$name_.' DROP '.$row['Field']);
+						if ($res == false)
+							Logger::error('main', 'MySQL::createTable failed to remove \''.$row['Field'].'\' of the table \''.$name_.'\'');
+					}
+				}
+				
+				foreach($table_structure_ as $column_name => $column_structure) {
+					if (!in_array($column_name, $colums_from_database)) {
+						$res = $this->DoQuery("ALTER TABLE `$name_` ADD `$column_name` $column_structure");
+						if ($res == false)
+							Logger::error('main', "MySQL::createTable failed to add '$colums_from_database' of the table '$name_'");
+					}
+				}
+			}
+			// TODO : what about primary key
+			
+			return true;
+		}
+	}
 }

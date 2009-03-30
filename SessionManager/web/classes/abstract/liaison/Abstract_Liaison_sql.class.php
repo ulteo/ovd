@@ -198,12 +198,13 @@ class Abstract_Liaison_sql {
 		// we create the sql table
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 		
-		$ret = $sql2->DoQuery(
-			'CREATE TABLE IF NOT EXISTS @1 (
-			@2 varchar(200) NOT NULL,
-			@3 varchar(200) NOT NULL,
-			@4 varchar(200) NOT NULL
-			)', $LIAISON_TABLE, 'type', 'element', 'group');
+		$LIAISON_table_structure = array(
+			'type' => 'varchar(200) NOT NULL',
+			'element' => 'varchar(200) NOT NULL',
+			'group' => 'varchar(200) NOT NULL');
+		
+		$ret = $sql2->buildTable($LIAISON_TABLE, $LIAISON_table_structure, array());
+		
 		if ( $ret === false) {
 			Logger::error('admin','Abstract_Liaison::init table '.$LIAISON_TABLE.' fail to created');
 			return false;

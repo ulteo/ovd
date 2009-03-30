@@ -111,17 +111,17 @@ class admin_UserDB_sql extends UserDB_sql {
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 		
 		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
-		$ret = $sql2->DoQuery(
-			'CREATE TABLE IF NOT EXISTS @1 (
-			@2 int(8) NOT NULL,
-			@3 varchar(50) NOT NULL,
-			@4 varchar(50) NOT NULL,
-			@5 varchar(100) NOT NULL,
-			@6 varchar(100) NOT NULL,
-			@7 int(8) NOT NULL,
-			@8 varchar(50) NOT NULL,
-			PRIMARY KEY  (@3)
-		)', $table, 'uid', 'login', 'displayname', 'homedir', 'fileserver', 'fileserver_uid', 'password');
+		$user_table_structure = array(
+			'uid' => 'int(8) NOT NULL',
+			'login' => 'varchar(100) NOT NULL',
+			'displayname' => 'varchar(100) NOT NULL',
+			'homedir' => 'varchar(200) NOT NULL',
+			'fileserver' => 'varchar(250) NOT NULL',
+			'fileserver_uid' => 'int(8) NOT NULL',
+			'password' => 'varchar(50) NOT NULL');
+		
+		$ret = $sql2->buildTable($table, $user_table_structure, array('login'));
+		
 		if ( $ret === false) {
 			Logger::error('admin','USERDB::sql::init table '.$table.' fail to created');
 			return false;

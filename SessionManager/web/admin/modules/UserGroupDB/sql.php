@@ -78,14 +78,14 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 		
-		$ret = $sql2->DoQuery(
-			'CREATE TABLE IF NOT EXISTS `'.$usersgroup_table.'` (
-			@2 int(8) NOT NULL auto_increment,
-			@3 varchar(150) NOT NULL,
-			@4 varchar(150) NOT NULL,
-			@5 tinyint(1) NOT NULL,
-			PRIMARY KEY  (@2)
-			)', $usersgroup_table, 'id', 'name', 'description', 'published');
+		$usersgroup_table_structure = array(
+			'id' => 'int(8) NOT NULL auto_increment',
+			'name' => 'varchar(150) NOT NULL',
+			'description' => 'varchar(150) NOT NULL',
+			'published' => 'tinyint(1) NOT NULL');
+		
+		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
+		
 		if ( $ret === false) {
 			Logger::error('admin','ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' fail to created');
 			return false;

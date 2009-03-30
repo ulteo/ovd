@@ -27,14 +27,13 @@ class Abstract_Token {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$ret = $SQL->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		@2 varchar(255) NOT NULL,
-		@3 varchar(32) NOT NULL,
-		@4 varchar(255) NOT NULL,
-		@5 int(10) NOT NULL,
-		PRIMARY KEY  (`id`)
-		)', $mysql_conf['prefix'].'tokens', 'id', 'type', 'link_to', 'valid_until');
+		$token_table_structure = array(
+			'id' => 'varchar(255) NOT NULL',
+			'type' => 'varchar(32) NOT NULL',
+			'link_to' => 'varchar(255) NOT NULL',
+			'valid_until' => 'int(10) NOT NULL');
+		
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'tokens', $token_table_structure, array('id'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'tokens\'');

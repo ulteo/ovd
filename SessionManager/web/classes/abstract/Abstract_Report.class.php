@@ -32,34 +32,31 @@ class Abstract_Report {
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'],
 		                          $mysql_conf['password'], $mysql_conf['database']);
 
-		$ret = $SQL->DoQuery(
-		'CREATE TABLE IF NOT EXISTS @1 (
-		 @2 VARCHAR(255) NOT NULL,
-		 @3 VARCHAR(255) NOT NULL,
-		 @4 TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		 @5 FLOAT NOT NULL,
-		 @6 FLOAT NOT NULL,
-		 @7 LONGTEXT NOT NULL
-		)', $mysql_conf['prefix'].'servers_history', 'fqdn', 'external_name',
-		    'timestamp', 'cpu', 'ram', 'data');
+		$servers_history_table_structure = array(
+			'fqdn' => 'VARCHAR(255) NOT NULL',
+			'external_name' => 'VARCHAR(255) NOT NULL',
+			'timestamp' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
+			'cpu' => 'FLOAT NOT NULL',
+			'ram' => 'FLOAT NOT NULL',
+			'data' => 'LONGTEXT NOT NULL');
+		
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers_history', $servers_history_table_structure, array());
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers_history\'');
 			return false;
 		}
 
-		$ret = $SQL->DoQuery(
-        'CREATE TABLE IF NOT EXISTS @1 (
-		 @2 INT(16) NOT NULL auto_increment,
-		 @3 TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
-		 @4 TIMESTAMP NULL default NULL,
-		 @5 VARCHAR(16) default NULL,
-		 @6 VARCHAR(255) NOT NULL,
-		 @7 VARCHAR(255) NOT NULL,
-		 @8 LONGTEXT NOT NULL,
-		 UNIQUE KEY `id` (`id`)
-		)', $mysql_conf['prefix'].'sessions_history', 'id', 'start_stamp',
-		    'stop_stamp', 'stop_why', 'user', 'server', 'data');
+		$sessions_history_table_structure = array(
+			'id' => 'INT(16) NOT NULL auto_increment',
+			'start_stamp' => 'TIMESTAMP NOT NULL default CURRENT_TIMESTAMP',
+			'stop_stamp' => 'TIMESTAMP NULL default NULL',
+			'stop_why' => 'VARCHAR(16) default NULL',
+			'user' => 'VARCHAR(255) NOT NULL',
+			'server' => 'VARCHAR(255) NOT NULL',
+			'data' => 'LONGTEXT NOT NULL');
+		
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'sessions_history', $sessions_history_table_structure, array('id'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions_history\'');
