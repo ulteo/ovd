@@ -38,7 +38,7 @@ page_header();
 
 	<ul>
 		<li><a href="users.php"><?php echo _('User list'); ?></li>
-		<li><a href="usersgroup.php"><?php echo ('Users groups list'); ?></li>
+		<li><a href="usersgroup.php"><?php echo _('Users groups list'); ?></li>
 	</ul>
 </div>
 </div>
