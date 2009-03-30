@@ -32,7 +32,7 @@ class SessionReportItem {
 	/* Session items are stored in the db before computing anything else
 	 * because the sql_id is an auto-incremented int. We need to know this id
 	 * so that the server reports can be linked to it */
-	public function __construct($token_, $session_node_) {
+	public function __construct($token_) {
 		$this->token = $token_;
 		$session = Abstract_Session::load($token_);
 		$this->server = $session->getAttribute('server');
