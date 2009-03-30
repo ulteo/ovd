@@ -1,4 +1,4 @@
-SUBDIRS = web po config scripts examples
+SUBDIRS = web po config scripts extra examples
 
 noinst_DATA = ovd-session-manager.spec
 ovd-session-manager.spec:

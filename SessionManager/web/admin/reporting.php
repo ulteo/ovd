@@ -21,7 +21,7 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
-include('/usr/share/php/libphp-chart/libchart/classes/libchart.php');
+include(SESSIONMANAGER_ROOT.'/extra/libchart/classes/libchart.php');
 
 define('REPORT_PREFIX', 'report_');
 
