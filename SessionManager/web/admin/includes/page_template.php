@@ -69,6 +69,7 @@ $sub_items =
 	'sessions.php'		=>
 	array('sessions.php' => _('Sessions'),
 	      'logs.php' => _('Logs'),
+	      'reporting.php' => _('Reporting'),
 	      'sumup.php' => _('Summary')),
 	);
 
