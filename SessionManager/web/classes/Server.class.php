@@ -282,22 +282,22 @@ class Server {
 		$ret = query_url_return_errorcode('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
 		list($returncode, $returntext) = $ret;
 
-		if (! $ret) {
-			$this->isUnreachable();
+		if ($returncode != 200) {
+			$this->returnedError();
 			return false;
 		}
 
-		if ($ret != 200) {
-			$this->returnedError();
+		if (! $returntext) {
+			$this->isUnreachable();
 			return false;
 		}
 
 		$ev = new ServerStatusChanged(array(
 			'fqdn'		=>	$this->fqdn,
-			'status'	=>	($ret == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
+			'status'	=>	($returntext == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
 		));
 
-		$this->setStatus($ret);
+		$this->setStatus($returntext);
 
 		$ev->emit();
 
