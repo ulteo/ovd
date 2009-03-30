@@ -42,7 +42,7 @@ if (!isset($_GET['token']) || $_GET['token'] == '') {
 
 $token = Abstract_Token::load($_GET['token']);
 if (! $token) {
-	Logger::error('main', '(webservices/session_token) No such token : '.$token);
+	Logger::error('main', '(webservices/session_token) No such token : '.$_GET['token']);
 	die('No such token file');
 }
 
