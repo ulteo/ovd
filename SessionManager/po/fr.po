@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-30 14:06+0200\n"
+"POT-Creation-Date: 2009-03-30 14:44+0200\n"
 "PO-Revision-Date: 2009-02-25 16:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -250,7 +250,7 @@ msgstr "Correspondance"
 #: ../web/modules/UserGroupDB/sql_external.php:145
 #: ../web/modules/UserDB/sql_external.php:230
 msgid "MySQL external"
-msgstr ""
+msgstr "MySQL externe"
 
 #: ../web/modules/UserGroupDB/sql.php:149 ../web/modules/UserDB/sql.php:178
 #: ../web/modules/ApplicationDB/sql.php:158
@@ -289,7 +289,7 @@ msgstr "Authentification"
 
 #: ../web/modules/AuthMethod/Token.php:78
 msgid "Token validation URL"
-msgstr ""
+msgstr "URL de validation Token"
 
 #: ../web/modules/AuthMethod/Token.php:78
 msgid ""
@@ -321,15 +321,15 @@ msgstr "Liste des utilisateurs"
 
 #: ../web/modules/UserDB/sql_external.php:207
 msgid "Hash method"
-msgstr ""
+msgstr "Méthode de Hash"
 
 #: ../web/modules/UserDB/sql_external.php:208
 msgid "MD5"
-msgstr ""
+msgstr "MD5"
 
 #: ../web/modules/UserDB/sql_external.php:208
 msgid "Crypt"
-msgstr ""
+msgstr "Crypt"
 
 #: ../web/modules/UserDB/sql_external.php:208
 #, fuzzy
@@ -530,7 +530,7 @@ msgstr "Activé"
 #: ../web/admin/actions.php:52 ../web/admin/wizard.php:158
 #: ../web/admin/wizard.php:310 ../web/admin/applications.php:32
 #: ../web/includes/functions.inc.d/misc.inc.php:319
-#: ../web/classes/Server.class.php:601
+#: ../web/classes/Server.class.php:607
 msgid "Module ApplicationDB must be enabled"
 msgstr "Le module ApplicationDB doit être activé"
 
@@ -597,7 +597,7 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #: ../web/admin/configuration.php:92 ../web/admin/configuration-partial.php:94
-#: ../web/admin/includes/functions.inc.php:275
+#: ../web/admin/includes/functions.inc.php:273
 #: ../web/admin/configuration-profile.php:217
 msgid "Save"
 msgstr "Sauvegarder"
@@ -748,7 +748,7 @@ msgstr "accès à ces applications"
 
 #: ../web/admin/tasks.php:235
 msgid "Upgrade"
-msgstr ""
+msgstr "Mise à jour"
 
 #: ../web/admin/servers.php:202
 msgid "Unable to delete a server when there are active sessions on it!"
@@ -924,7 +924,7 @@ msgstr "L'Authentification a échoué"
 #: ../web/admin/login.php:83 ../web/admin/users.php:132
 #: ../web/admin/users.php:252 ../web/index.php:217
 msgid "Login"
-msgstr "Connexion"
+msgstr "Identifiant"
 
 #: ../web/admin/login.php:91 ../web/index.php:243
 msgid "Password"
@@ -971,7 +971,7 @@ msgstr "accès à ces applications"
 #. <th>'._('Desktop File').'</th>
 #: ../web/admin/sumup.php:56
 msgid "Available servers"
-msgstr "Serveur disponibles"
+msgstr "Serveurs disponibles"
 
 #: ../web/admin/sumup.php:171
 msgid "List of servers"
@@ -979,7 +979,7 @@ msgstr "Liste des serveurs"
 
 #: ../web/admin/sumup.php:175 ../web/admin/sumup.php:179
 msgid "No server available"
-msgstr "Aucun serveur disponible"
+msgstr "Pas de serveur disponible"
 
 #. 'usersgroup.php'	=>	_('Users groups'),
 #. general div
@@ -992,7 +992,7 @@ msgstr "Applications"
 
 #: ../web/admin/menu.php:22
 msgid "Home"
-msgstr ""
+msgstr "Accueil"
 
 #. 'sessions.php'		=>	_('Sessions'),
 #: ../web/admin/menu.php:25 ../web/admin/includes/page_template.php:28
@@ -1057,7 +1057,7 @@ msgstr "Utiliser un groupe d'utilisateurs"
 #: ../web/admin/wizard.php:237 ../web/admin/wizard.php:280
 #: ../web/admin/wizard.php:391 ../web/admin/wizard.php:433
 msgid "Next"
-msgstr "Prochain"
+msgstr "Suivant"
 
 #: ../web/admin/wizard.php:253
 msgid "Create usergroup"
@@ -1192,7 +1192,7 @@ msgstr "Paramètres de l'interface web"
 
 #: ../web/admin/includes/page_template.php:67
 msgid "Sum up"
-msgstr ""
+msgstr "Résumé"
 
 #: ../web/admin/includes/page_template.php:72
 msgid "Summary"
@@ -1250,7 +1250,7 @@ msgstr "OK"
 
 #: ../web/admin/configuration-profile.php:231
 msgid "Success"
-msgstr ""
+msgstr "OK"
 
 #: ../web/admin/users.php:133 ../web/admin/users.php:295
 msgid "Display name"
@@ -1308,7 +1308,7 @@ msgstr "Supprimer de ce serveur"
 
 #: ../web/admin/usersgroup.php:450
 msgid "Define as default"
-msgstr ""
+msgstr "Définir par défaut"
 
 #: ../web/admin/usersgroup.php:487
 msgid "List of users in this group"
@@ -1430,7 +1430,7 @@ msgstr ""
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:305
 #, fuzzy
 msgid "Login: "
-msgstr "Connexion"
+msgstr "Identifiant : "
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:307
 #, fuzzy
@@ -1528,40 +1528,40 @@ msgstr "Compte administrateur"
 msgid "Active Directory User Groups"
 msgstr "Utiliser les Groupes Utilisateurs Active Directory"
 
-#: ../web/admin/classes/Preferences_admin.class.php:87
+#: ../web/admin/classes/Preferences_admin.class.php:88
 msgid "Please install CURL support for PHP"
-msgstr ""
+msgstr "Veuillez installer le support de CURL pour PHP"
 
-#: ../web/admin/classes/Preferences_admin.class.php:92
+#: ../web/admin/classes/Preferences_admin.class.php:93
 msgid "SQL configuration not valid(2)"
 msgstr "Configuration SQL non valide(2)"
 
-#: ../web/admin/classes/Preferences_admin.class.php:98
+#: ../web/admin/classes/Preferences_admin.class.php:99
 msgid "SQL configuration not valid"
 msgstr "Configuration SQL non valide"
 
-#: ../web/admin/classes/Preferences_admin.class.php:104
+#: ../web/admin/classes/Preferences_admin.class.php:105
 msgid "Initialization failed"
 msgstr "L'initialisation a échoué"
 
-#: ../web/admin/classes/Preferences_admin.class.php:115
+#: ../web/admin/classes/Preferences_admin.class.php:116
 msgid "prefs is not valid for plugin"
 msgstr "prefs n'est pas valide pour le plugin"
 
-#: ../web/admin/classes/Preferences_admin.class.php:127
+#: ../web/admin/classes/Preferences_admin.class.php:128
 msgid "prefs is not valid for FS plugin"
 msgstr "prefs n'est pas valide pour le plugin FS"
 
-#: ../web/admin/classes/Preferences_admin.class.php:134
+#: ../web/admin/classes/Preferences_admin.class.php:135
 msgid "Plugins configuration not valid"
 msgstr "Configuration des plugins non valide"
 
-#: ../web/admin/classes/Preferences_admin.class.php:148
-#: ../web/admin/classes/Preferences_admin.class.php:158
+#: ../web/admin/classes/Preferences_admin.class.php:149
+#: ../web/admin/classes/Preferences_admin.class.php:159
 msgid "prefs is not valid for module"
 msgstr "prefs n'est pas valide pour le module"
 
-#: ../web/admin/classes/Preferences_admin.class.php:170
+#: ../web/admin/classes/Preferences_admin.class.php:171
 msgid "Modules configuration not valid"
 msgstr "Configuration de module invalide"
 
@@ -1605,6 +1605,11 @@ msgstr "Utiliser une liste d'utilisateur statique (utile pour les tests)"
 #: ../web/admin/index.php:40
 msgid "User list"
 msgstr "Liste utilisateurs"
+
+#: ../web/admin/index.php:41
+#, fuzzy
+msgid "Users groups list"
+msgstr "Groupe d'utilisateurs"
 
 #: ../web/admin/index.php:54
 msgid "Servers list"
@@ -1712,7 +1717,7 @@ msgstr "Pas de serveur disponible"
 
 #: ../web/startsession.php:164
 msgid "You don't have access to any application or server for now"
-msgstr ""
+msgstr "Vous n'avez pas accès à une application pour le moment"
 
 #: ../web/startsession.php:193
 msgid "No available session"
@@ -1738,24 +1743,24 @@ msgstr "ne retourne pas de monitoring valide"
 msgid "is NOT online!"
 msgstr "n'est pas en ligne !"
 
-#: ../web/classes/Server.class.php:338
+#: ../web/classes/Server.class.php:344
 msgid "Under maintenance"
 msgstr "En maintenance"
 
-#: ../web/classes/Server.class.php:342
+#: ../web/classes/Server.class.php:348
 msgid "Online"
 msgstr "En ligne"
 
-#: ../web/classes/Server.class.php:344
+#: ../web/classes/Server.class.php:350
 msgid "Offline"
 msgstr "Hors ligne"
 
-#: ../web/classes/Server.class.php:346
+#: ../web/classes/Server.class.php:352
 msgid "Broken"
 msgstr "Hors service"
 
-#: ../web/classes/Server.class.php:348 ../web/classes/Server.class.php:385
-#: ../web/classes/Server.class.php:420
+#: ../web/classes/Server.class.php:354 ../web/classes/Server.class.php:391
+#: ../web/classes/Server.class.php:426
 msgid "Unknown"
 msgstr "Inconnu"
 
@@ -1976,7 +1981,7 @@ msgstr "Configuration du serveur d'applications"
 
 #: ../web/classes/Preferences.class.php:203
 msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
-msgstr ""
+msgstr "Machines autorisées (FQDN ou IP - l'utilisation de wildcards (*.) est autorisée)"
 
 #. fqdn_private_address : array('dns' => ip);
 #: ../web/classes/Preferences.class.php:206
@@ -2134,7 +2139,7 @@ msgstr "L'utilisateur peut partager sa session"
 
 #: ../web/classes/Preferences.class.php:248
 msgid "User can use a console in the session"
-msgstr ""
+msgstr "L'utilisateur peut utiliser une console dans sa session"
 
 #: ../web/classes/Preferences.class.php:252
 #, fuzzy
@@ -2143,7 +2148,7 @@ msgstr "Vous avez déjà une session active"
 
 #: ../web/classes/Preferences.class.php:253
 msgid "Forbid access"
-msgstr ""
+msgstr "Interdire l'accès"
 
 #: ../web/classes/Preferences.class.php:253
 #, fuzzy
@@ -2246,7 +2251,7 @@ msgstr ""
 
 #: ../web/classes/Preferences.class.php:277
 msgid "Launch session in a popup"
-msgstr ""
+msgstr "Lancer la session dans une popup"
 
 #: ../web/classes/Preferences.class.php:277
 msgid ""
@@ -2256,7 +2261,7 @@ msgstr ""
 
 #: ../web/classes/Preferences.class.php:281
 msgid "popup"
-msgstr ""
+msgstr "popup"
 
 #: ../web/classes/Preferences.class.php:317
 #, fuzzy
@@ -2294,24 +2299,23 @@ msgstr "Callbacks activés"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:31
 msgid "Factor impact"
-msgstr ""
+msgstr "Impact du facteur"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
 msgid "less"
-msgstr ""
+msgstr "moins"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
-#, fuzzy
 msgid "more"
-msgstr "coeur"
+msgstr "plus"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:107
 msgid "Back to default"
-msgstr ""
+msgstr "Réglages par défaut"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:113
 msgid "Examples"
-msgstr ""
+msgstr "Exemples"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
 msgid ""
@@ -2478,16 +2482,16 @@ msgstr "Sauvegarder les infos de proxy"
 #~ msgstr "Utilisation maximum de RAM"
 
 #~ msgid "Down time: "
-#~ msgstr "Durée d'arrêt :"
+#~ msgstr "Durée d'arrêt : "
 
 #~ msgid " minute(s)"
-#~ msgstr "minute(s)"
+#~ msgstr " minute(s)"
 
 #~ msgid "Sessions count: "
-#~ msgstr "Nombre de sessions :"
+#~ msgstr "Nombre de sessions : "
 
 #~ msgid "Max simultaneous sessions: "
-#~ msgstr "Nombre maximal de sessions simultanées"
+#~ msgstr "Nombre maximal de sessions simultanées : "
 
 #~ msgid "Reports"
 #~ msgstr "Rapports"
