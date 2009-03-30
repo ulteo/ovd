@@ -1,2 +1,2 @@
 * monitoring:
-  - use the SessionStatusChanged to create a SessionReportItem
+  - use the data field for servers_history to store downtimes

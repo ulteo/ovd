@@ -37,8 +37,7 @@ class SessionReportItem {
 		$session = Abstract_Session::load($token_);
 		$this->server = $session->getAttribute('server');
 		$this->user = $session->getAttribute('user_login');
-
-		$this->init($session_node_);
+		$this->current_apps = array();
 
 		$sql = MySQL::getInstance();
 		$res = $sql->DoQuery(
@@ -145,47 +144,6 @@ class SessionReportItem {
 	/*
 	 * private methods
 	 */
-	private function init($session_node_) {
-		$apps_link = application_desktops_to_ids();
-		$user_node = null;
-
-		foreach ($session_node_->childNodes as $tmp) {
-			if ($tmp->nodeType != XML_ELEMENT_NODE ||
-				$tmp->tagName != 'user')
-					continue;
-			$user_node = $tmp;
-			break;
-		}
-
-		/* in case the xml is not as expected */
-		if ($user_node == null) {
-			$this->current_apps = array();
-			return;
-		}
-
-		foreach ($user_node->childNodes as $pid_node) {
-			if ($pid_node->nodeType != XML_ELEMENT_NODE ||
-				$pid_node->tagName != 'pid')
-					continue;
-
-			$app_pid = $pid_node->getAttribute('id');
-			$app_desktop = $pid_node->getAttribute('desktop');
-			if (array_key_exists ($app_desktop, $apps_link)) {
-				$app_id = $apps_link[$app_desktop];
-				$this->current_apps[] = $app_id;
-				$this->apps_raw_data[] = array(
-					'pid' => $app_pid,
-					'id' => $app_id,
-					'running' => new ReportRunningItem()
-				);
-			} else {
-				Logger::warning('main', 'SessionReportItem::init: unknow application '.$app_desktop);
-			}
-		}
-
-		$this->saveSessionCurrentApps();
-	}
-
 	private function saveSessionCurrentApps() {
 		$session = Abstract_Session::load($this->token);
 		if (is_object($session)) {

@@ -71,16 +71,8 @@ if ($server->getAttribute('type') != 'windows') {
 		$token = $session_node->getAttribute('id');
 		$tmp[] = $token;
 
-		/* We need to keep track of the link between the session token and the sql
-		 * id of the stored session */
-		if (! array_key_exists($token, $sql_sessions)) {
-			$sessitem = new SessionReportItem($token, $session_node);
-			if ($sessitem->getId() >= 0) {
-				$sql_sessions[$token] = $sessitem;
-			}
-		} else {
+		if (array_key_exists($token, $sql_sessions))
 			$sql_sessions[$token]->update($session_node);
-		}
 	}
 
 	/* cleanup sessions that disappeared */
