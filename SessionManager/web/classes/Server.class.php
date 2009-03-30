@@ -279,10 +279,16 @@ class Server {
 			return false;
 		}
 
-		$ret = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
+		$ret = query_url_return_errorcode('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
+		list($returncode, $returntext) = $ret;
 
 		if (! $ret) {
 			$this->isUnreachable();
+			return false;
+		}
+
+		if ($ret != 200) {
+			$this->returnedError();
 			return false;
 		}
 

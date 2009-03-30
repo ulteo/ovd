@@ -37,6 +37,26 @@ function query_url_no_error($url_) {
 	return $string;
 }
 
+function query_url_return_errorcode($url_) {
+	Logger::debug('main', 'HTTP query: "'.$url_.'"');
+
+	$socket = curl_init($url_);
+	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
+	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
+	$string = curl_exec($socket);
+	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
+	curl_close($socket);
+
+	if ($buf != 200)
+		Logger::debug('main', 'HTTP returncode: "'.$buf.'"');
+
+	Logger::debug('main', 'HTTP returntext: "'.$string.'"');
+
+	return array($buf, $string);
+}
+
 function query_url($url_) {
 	Logger::debug('main', 'HTTP query: "'.$url_.'"');
 
