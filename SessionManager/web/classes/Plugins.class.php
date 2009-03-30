@@ -112,7 +112,7 @@ class Plugins {
 						if (!isset($ret[basename($pathinfo['dirname'])]))
 							$ret[basename($pathinfo['dirname'])] = array();
 
-						if ($pathinfo['extension'] == 'php') {
+						if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
 							$plugin_name = strtoupper(basename($pathinfo['dirname'])).'_'.$pathinfo['filename'];
 							$p = new $plugin_name();
 
@@ -128,7 +128,7 @@ class Plugins {
 				if (!isset($ret['plugins']))
 					$ret['plugins'] = array();
 
-				if ($pathinfo['extension'] == 'php') {
+				if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
 					$plugin_name = 'Plugin_'.$pathinfo['filename'];
 					$p = new $plugin_name();
 

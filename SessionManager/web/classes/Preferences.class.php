@@ -459,7 +459,7 @@ class Preferences {
 						if (!isset($ret[basename($pathinfo["dirname"])])){
 							$ret[basename($pathinfo["dirname"])] = array();
 						}
-						if ($pathinfo['extension'] == 'php') {
+						if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
 							$pretty_name = eval('return '.basename($pathinfo["dirname"]).'_'.$pathinfo["filename"].'::prettyName();');
 							if ( is_null($pretty_name))
 								$pretty_name = $pathinfo["filename"];
