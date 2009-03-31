@@ -352,16 +352,16 @@ such file or directory]]>
 
 
   <section id="debian_support">
-    <title>Why GNU/Linux Debian 5.0 is fully not supported?</title>
+    <title>Why GNU/Linux Debian 5.0 is not fully supported?</title>
 
     <para>
       GNU/Linux Debian 5.0 is not fully supported because one kernel module
-      is missing on Debian system: <emphasis role="strong">aufs</emphasis>.
+      is missing on Debian systems: <emphasis role="strong">aufs</emphasis>.
     </para>
 
     <para>
       We are using the aufs module for CIFS mounts.
-      If you not using CIFS, Ulteo OVD will work fine on GNU/Linux.
+      If you are not using CIFS, Ulteo OVD will work fine on GNU/Linux Debian 5.0.
     </para>
 
 
