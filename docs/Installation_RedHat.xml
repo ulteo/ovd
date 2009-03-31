@@ -98,7 +98,8 @@
     <itemizedlist>
      <listitem>
 	<para>
-	  Download the Ulteo Open Virtual Desktop rpm packages from <ulink url="http://www.ulteo.com" />
+	  Download the Ulteo Open Virtual Desktop rpm packages from
+	  <ulink url="http://www.ulteo.com" />
 	</para>
      </listitem>
 
@@ -106,7 +107,7 @@
 	<para>Install the <emphasis>ovd-session-manager</emphasis> package:</para>
         <screen>
 	  <![CDATA[
-# yum install --nogpgcheck ovd-session-manager-1.0~beta1.2.1.noarch.rpm]]>
+# yum install --nogpgcheck ovd-session-manager-latest.rpm]]>
 	</screen>
       </listitem>
 
@@ -157,7 +158,8 @@ Is this correct? [Y/n] ]]>
     <itemizedlist>
      <listitem>
 	<para>
-	  Download the Ulteo Open Virtual Desktop rpm packages from <ulink url="http://www.ulteo.com" />
+	  Download the Ulteo Open Virtual Desktop rpm packages from
+	  <ulink url="http://www.ulteo.com" />
 	</para>
      </listitem>
 
@@ -165,7 +167,7 @@ Is this correct? [Y/n] ]]>
 	<para>Intall the <emphasis>ovd-application-server</emphasis> package:</para>
         <screen>
 	  <![CDATA[
-# yum install --nogpgcheck ovd-application-server-1.0~beta1.2.1.noarch.rpm]]>
+# yum install --nogpgcheck ovd-application-server-latest.rpm]]>
 	</screen>
      </listitem>
 

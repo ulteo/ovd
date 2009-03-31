@@ -241,8 +241,12 @@ mysql> exit]]>
       </para>
 
       <para>
-	For instance, you can download an arhive from <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd.php" /> from another computer which have access to Internet and copy it on a usb stick.
-	Then, you have to copy it on the Session Manager at <emphasis>/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>
+	For instance, you can download an arhive from <ulink
+	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php" />
+	from another computer which have access to Internet and copy
+	it on a usb stick.  Then, you have to copy it on the Session
+	Manager at
+	<emphasis>/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>
       </para>
       <beginpage />
     </section>
