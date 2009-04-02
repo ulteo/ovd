@@ -73,7 +73,7 @@ $sub_items =
 	      'sumup.php' => _('Summary')),
 	);
 
-function page_header() {
+function page_header($params_=array()) {
   global $base_url;
   if ($base_url == '//')
     $base_url = '/';
@@ -114,6 +114,10 @@ function page_header() {
   echo '<script type="text/javascript" src="'.$base_url.'media/script/sortable.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/common.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/configuration.js" charset="utf-8"></script>';
+
+  if (is_array($params_) && isset($params_['js_files']) && is_array($params_['js_files']))
+    foreach ($params_['js_files'] as $js_file)
+      echo '<script type="text/javascript" src="'.$base_url.$js_file.'" charset="utf-8"></script>';
 
   echo '</head>';
   echo '<body>';

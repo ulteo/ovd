@@ -1,4 +1,4 @@
-SUBDIRS = nifty
+SUBDIRS = nifty calendarpopup
 
 HOOKS =
 
