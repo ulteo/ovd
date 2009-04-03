@@ -215,6 +215,20 @@ if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
     chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
 fi
 
+# set the timezone (if possible)
+HOSTTZ=
+if [ -f /etc/timezone ]; then
+    # debian
+    HOSTTZ=$(head -n 1 /etc/timezone)
+elif [ -f /etc/sysconfig/clock ]; then
+    # redhat
+    HOSTTZ=$(grep '^ZONE=' /etc/sysconfig/clock | cut -d = -f 2 | sed "s/['\"]//g")
+fi
+if [ -n "$HOSTTZ" -a -f $CHROOT_PATH/usr/share/zoneinfo/$HOSTTZ ]; then
+    cp /usr/share/zoneinfo/$HOSTTZ $CHROOT_PATH/etc/localtime
+    echo "$HOSTTZ" > $CHROOT_PATH/etc/timezone
+fi
+
 echo "Installation done."
 echo "To activate the service you now need to:"
 echo " * restart the web server"

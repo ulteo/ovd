@@ -51,6 +51,16 @@ set_cups () {
     fi
 }
 
+set_tz () {
+    if [ -f /etc/timezone ]; then
+        HOSTTZ=$(head -n 1 /etc/timezone)
+    fi
+    if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
+        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
+        echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
+    fi
+}
+
 if [ "$1" = "configure" ]; then
     CHROOTPATH="/opt/ulteo"
     DOWNLOAD_OK="yes"
@@ -83,6 +93,7 @@ if [ "$1" = "configure" ]; then
         set_host_conf
         set_chroot_conf
         set_cups
+        set_tz
     fi
 fi
 
