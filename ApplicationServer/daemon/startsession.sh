@@ -25,7 +25,8 @@
 unexport i CONF_FILE FS GEOMETRY LOG_FILE \
     LOG_FLAGS MAXLUCK MINLUCK MODULES_FSD \
     MOUNT_LOG NICK RFB_PORT SERVERNAME \
-    SESSID_DIR SPOOL USER_HOME USER_ID \
+    SESSID_DIR SESSION_MANAGER_URL \
+    SPOOL USER_HOME USER_ID \
     USER_LOGIN VNC_USER VNC_USER_ID
 
 if rsbac_is_active; then
@@ -76,6 +77,15 @@ export OVD_APPS_DIR=$XDG_DATA_DIRS/applications
 menu_spool $XDG_DATA_DIRS ${SESSID_DIR}
 windows_init_connection ${SESSID_DIR}
 
+if [ -f ${SESSID_DIR}/parameters/timezone ]; then
+    tz=`cat ${SESSID_DIR}/parameters/timezone`
+    if [ -f /usr/share/zoneinfo/$tz ]; then
+	log_INFO "set TZ to $tz"
+	export TZ="/usr/share/zoneinfo/$tz"
+    else
+	log_WARN "invalid TZ to '/usr/share/zoneinfo/$tz'"
+    fi
+fi
 
 # Start autocutsel
 su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/autocutsel" &> $out &
