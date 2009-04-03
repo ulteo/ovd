@@ -209,7 +209,7 @@ Section "post" PostCmd
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\rdp"
 
   DetailPrint "Creating Service"
-  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVD.exe" DisplayName= "Ulteo Open Virtual Desktop agent"'
+  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVD.exe" DisplayName= "Ulteo Open Virtual Desktop agent" depend= EventLog/winmgmt start= auto'
 
   DetailPrint "Launch service"
   nsExec::execToStack 'sc start OVD'
