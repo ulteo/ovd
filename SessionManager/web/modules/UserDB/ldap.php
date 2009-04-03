@@ -218,7 +218,7 @@ class UserDB_ldap {
 		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
 		$ret []= $c;
 
-		$c = new ConfigElement_select('ad',_('Use as an Active Directory server ?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0');
+		$c = new ConfigElement_select('ad',_('Use as an Active Directory server?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0');
 		$c->setContentAvailable(array(0=>_('No'),1=>_('Yes')));
 		$ret []= $c;
 
