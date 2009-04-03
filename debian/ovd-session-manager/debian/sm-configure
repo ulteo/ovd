@@ -10,19 +10,22 @@ dbserver=localhost
 dbname=ulteo_sm
 dbuser=ulteoadmin
 
-echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbuser string $dbuser" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbname string $dbname" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbserver string $dbserver" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/admin_password_again password $pass" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/admin_password password admin"echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbadmpass password $pass" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/mysql/dbpass password $pass" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/oem boolean true" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbuser string $dbuser" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbname string $dbname" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbserver string $dbserver" | debconf-set-selections
+echo "ulteo-ovd-session-manager od/sessionmanager/admin_password_again password admin" | debconf-set-selections
+echo "ulteo-ovd-session-manager od/sessionmanager/admin_password password admin" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbadmpass password $pass" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbpass password $pass" | debconf-set-selections
 echo "ulteo-ovd-session-manager od/sessionmanager/password_mismatch boolean false" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/mysql/configure boolean true" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/configure boolean true" | debconf-set-selections
 
 
 
 dpkg-reconfigure -fnoninteractive mysql-server-5.0
 dpkg-reconfigure -fnoninteractive ulteo-ovd-session-manager
+dpkg-reconfigure -fnoninteractive ulteo-ovd-session-manager-demo
 rm -f /etc/rc2.d/S98sessionmanager_first
 
 /usr/bin/env php /usr/share/ulteo/sessionmanager/admin/init/setup.php \

@@ -9,13 +9,6 @@ Default: true
 _Description: Configure MySQL?
  Please confirm whether MySQL should be configured automatically.
 
-Template: od/sessionmanager/admin_login
-Type: string
-Default: admin
-_Description: Administrator login:
- Ulteo Session Manager needs to register an administrator. You can define the
- login of this user here.
-
 Template: od/sessionmanager/mysql/dbserver
 Type: string
 Default: localhost
@@ -53,25 +46,3 @@ _Description: Database server administrator username:
  Please enter the username of the database server administrator. This
  account must have database creation privileges.
 
-Template: od/sessionmanager/admin_password
-Type: password
-_Description: Administrator password:
- Password of the session manager administrator.
-
-Template: od/sessionmanager/admin_password_again
-Type: password
-_Description: Repeat password for the administrator:
-
-Template: od/sessionmanager/password_mismatch
-Type: error
-_Description: Password input error
- The two passwords you entered were not the same. Please try again.
-
-Template: od/sessionmanager/download_tarball
-Type: string
-Default: http://www.ulteo.com/main/downloads/ulteo-ovd.php
-_Description: Applications chroot URL:
- Application servers will need to retrieve an applications tarball, hosted on
- this session manager. A default tarball can be downloaded and stored for you.
- .
- Leave this field empty if you don't want to download the archive now.

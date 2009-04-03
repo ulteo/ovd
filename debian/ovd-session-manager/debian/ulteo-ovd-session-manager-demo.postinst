@@ -1,0 +1,45 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+# Do nothing if we're not installing
+if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
+    exit 0
+fi
+
+# Configure Mysql Database
+db_get od/sessionmanager/oem
+if [ "$RET" = true ];then
+db_get od/sessionmanager/mysql/configure
+    if [ "$RET" = true ]; then
+
+	# get the answers to our questions
+	db_get od/sessionmanager/mysql/dbserver
+	dbserver=$RET
+	db_get od/sessionmanager/mysql/dbadmin
+	dbadmin=$RET
+	db_get od/sessionmanager/mysql/dbadmpass
+	dbadmpass=$RET
+	db_reset od/sessionmanager/mysql/dbadmpass
+	db_get od/sessionmanager/mysql/dbname
+	dbname=$RET
+	db_get od/sessionmanager/mysql/dbuser
+	dbuser=$RET
+	db_get od/sessionmanager/mysql/dbpass
+	dbpass=$RET
+	db_reset od/sessionmanager/mysql/dbpass
+
+	# create the database
+	. /usr/share/wwwconfig-common/mysql-createdb.sh
+	# create user
+	. /usr/share/wwwconfig-common/mysql-createuser.sh
+
+   fi
+fi
+
+chown -R root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+
+#DEBHELPER#
+
+exit 0
