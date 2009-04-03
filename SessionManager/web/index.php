@@ -165,9 +165,12 @@ require_once('header.php');
 ?>
 <script type="text/javascript" src="media/script/ajax/login.js" charset="utf-8"></script>
 <script type="text/javascript" src="media/script/ajax/index.js" charset="utf-8"></script>
+<script type="text/javascript" src="media/script/timezones.js" charset="utf-8"></script>
 
 <script type="text/javascript">
 	Event.observe(window, 'load', function() {
+		$('timezone').value = getTimezoneName();
+
 		setAvailableSize('desktop_size');
 
 		<?php
@@ -189,6 +192,7 @@ require_once('header.php');
 
 	<form id="startsession" action="startsession.php" method="post" onsubmit="return doLogin(this);">
 		<input type="hidden" name="client" value="browser" />
+		<input type="hidden" id="timezone" name="timezone" value="" />
 
 		<fieldset class="hidden">
 			<?php

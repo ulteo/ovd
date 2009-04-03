@@ -980,6 +980,12 @@
 	  <para><emphasis role="strong">optionnal arguments:</emphasis> 
 	  <itemizedlist>
 	    <listitem>
+	      <para>timezone:
+	        US/Eastern|Europe/London|Asia/Tokyo... Desired timezone for the session.
+	        Default is server timezone
+	      </para>
+	    </listitem>
+	    <listitem>
 	      <para>client: browser|strict.
 	      Define the client type. Default is strict
 	      </para>

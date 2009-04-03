@@ -57,6 +57,9 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
+if (isset($_REQUEST['timezone']) && $_REQUEST['timezone'] != '')
+	$user_timezone = $_REQUEST['timezone'];
+
 if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
 	$desktop_locale = $_REQUEST['desktop_locale'];
 
@@ -211,6 +214,8 @@ $default_args = array(
 );
 
 $optional_args = array();
+if (isset($user_timezone))
+	$optional_args['timezone'] = $user_timezone;
 if (isset($desktop_timeout) && $desktop_timeout != -1) {
 	$optional_args['timeout'] = (time()+$desktop_timeout);
 	$optional_args['timeout_message'] = $timeout_message;

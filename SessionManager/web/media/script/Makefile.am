@@ -1,5 +1,5 @@
 SUBDIRS =  ajax lib
 
-scripts_DATA = common.js sortable.js
+scripts_DATA = common.js sortable.js timezones.js
 scriptsdir = $(datadir)/ulteo/sessionmanager/media/script
 EXTRA_DIST = $(scripts_DATA)
