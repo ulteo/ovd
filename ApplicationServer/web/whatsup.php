@@ -142,7 +142,7 @@ $dom->appendChild($session_node);
 
 $status = getSessionStatus($session);
 if ($status === false)
-  die2(400, 'ERROR - Unknown session');
+  $status = 4;
 
 $session_node->setAttribute('status', $status);
 
