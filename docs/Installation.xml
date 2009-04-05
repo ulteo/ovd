@@ -138,7 +138,7 @@ mysql> exit]]>
 	</screen>
       </listitem>
       <listitem>
-	<para>Intall the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
+	<para>Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
         <screen>
 	  <![CDATA[
 # apt-get install ulteo-ovd-session-manager]]>
@@ -210,8 +210,9 @@ mysql> exit]]>
 	  </inlinemediaobject>
 	</para>
 	<para>
-	If you don't have access to Internet, keep this field empty, 
-	we'll see later how to install it by hand.
+	If you don't have access to Internet, keep this field empty,
+	we'll see later <link linkend="sm_chroot">how to
+	install</link> it by hand.
 	</para>
       </listitem>
     </itemizedlist>
@@ -237,7 +238,9 @@ mysql> exit]]>
       <title>Setup the application system archive</title>
 
       <para>
-	If you didn't specify an URL at the last question, you have to copy an application system archive into <emphasis role="strong">/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>.
+	If you didn't specify an URL at the last question, you have to
+	copy an application system archive into <emphasis
+	role="strong">/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>.
       </para>
 
       <para>
@@ -340,15 +343,16 @@ mysql> exit]]>
       </para>
     </simplesect>
     -->
-
+<!--
     <para>
      For other specific configuration, please refer to the <emphasis
      role="strong">Administration Console documentation</emphasis>.
     </para>
-
+-->
     <para>
-      The session manager has no application server plugged yet.
-      You now have to install one or more application servers.
+      The session manager has no application server plugged yet.  You
+      now have to <link linkend="aps">install one or more Application
+      Servers</link>.
     </para>
     <beginpage />
   </section>
@@ -385,9 +389,9 @@ mysql> exit]]>
         <para>
 	  The first question is about the FQDN (Fully Qualified Domain
 	  Name) hostname of the machine you are using as an
-	  application server.  This <emphasis>FQDN</emphasis> is used
-	  by the session manager server to manage application servers.
-	  If the FQDN is not defined well, this application server
+	  Application Server.  This <emphasis>FQDN</emphasis> is used
+	  by the Session Manager server to manage Application Servers.
+	  If the FQDN is not defined well, this Application Server
 	  will never register on the Main server.  Here we are using
 	  <emphasis>aps.ulteo.com</emphasis>.
 	</para>
@@ -467,7 +471,8 @@ mysql> exit]]>
       <para>
       An Application server has been installed and is now
       ready. First, we have to register it, and switch it from
-      "maintenance" to "production" mode.
+      <emphasis>maintenance</emphasis> mode to
+      <emphasis>production</emphasis> mode.
 
     <itemizedlist>
       <listitem>
@@ -491,8 +496,11 @@ mysql> exit]]>
       <listitem>
 	<para>
 	  If you want to use this server on your network, you have to
-	  click on <emphasis>register</emphasis> to accept the server
+	  click on <emphasis>register</emphasis>.
+<!--
+	  The server is going to be add in the serveraccept add the server
 	  in your environment and switch it to maintenance mode.
+-->
 	</para>
       </listitem>
       <listitem>
@@ -598,7 +606,6 @@ mysql> exit]]>
             </textobject>
 	  </inlinemediaobject>
 	</para>
-	<para>&nbsp;</para>
 	<beginpage />
       </listitem>
 

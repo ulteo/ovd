@@ -152,7 +152,7 @@ Is this correct? [Y/n] ]]>
   <xi:include href="Installation.xml" xpointer="sessionmanager_configuration" />
   </section>
 
-  <section>
+  <section id="aps">
     <xi:include href="Installation.xml" xpointer="aps_title" />
 
     <itemizedlist>

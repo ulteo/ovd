@@ -40,6 +40,10 @@ a, img {
 	border: 0;
 }
 
+img {
+    margin-bottom: 20px;
+}
+
 pre {
 	background: #eee;
 	border: 1px solid #8cacbb;

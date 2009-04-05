@@ -137,7 +137,7 @@ in /usr/local/share/ulteo/sessionmanager/includes/core.inc.php and /usr/local/sh
   <xi:include href="Installation.xml" xpointer="sessionmanager_configuration" />
 </section>
 
-<section>
+<section id="aps">
   <xi:include href="Installation.xml" xpointer="aps_title" />
 
   <para>
