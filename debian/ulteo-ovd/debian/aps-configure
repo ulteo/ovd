@@ -1,7 +1,7 @@
 #!/bin/sh
 if echo get od/sessionmanager/mysql/dbserver | debconf-communicate &>/dev/null;then
         sleep 3
-        echo "utleo-ovd od/fqdn string localhost" | debconf-set-selections
+        echo "ulteo-ovd od/fqdn string localhost" | debconf-set-selections
         echo "ulteo-ovd od/sessions/server_url string http://localhost/sessionmanager" | debconf-set-selections
         dpkg-reconfigure -fnoninteractive  ulteo-ovd
 else

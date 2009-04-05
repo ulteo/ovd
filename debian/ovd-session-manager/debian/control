@@ -18,5 +18,5 @@ Architecture: all
 Depends: php5-cli, ulteo-ovd-session-manager, wwwconfig-common
 Recommends: mail-transport-agent
 Description: Ulteo Open Virtual Desktop - session manager - Demo
- This package configures a demo for the session manager web services for the Ulteo Open
-  Virtual Desktop.
+ This package configures a demo for the session manager web services for the
+ Ulteo Open Virtual Desktop.
