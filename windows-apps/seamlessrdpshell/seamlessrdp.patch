@@ -1,0 +1,44 @@
+diff -Nur cvs/seamlessrdp/ServerExe/main.c connection_sharing/seamlessrdp/ServerExe/main.c
+--- cvs/seamlessrdp/ServerExe/main.c	2008-03-07 22:27:12.000000000 +1100
++++ connection_sharing/seamlessrdp/ServerExe/main.c	2008-03-11 10:11:34.000000000 +1100
+@@ -192,6 +192,31 @@
+ }
+ 
+ static void
++do_spawn(char *cmdline)
++{
++	PROCESS_INFORMATION proc_info;
++	STARTUPINFO startup_info;
++
++	memset(&startup_info, 0, sizeof(STARTUPINFO));
++	startup_info.cb = sizeof(STARTUPINFO);
++
++	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, 0,
++			       NULL, NULL, &startup_info, &proc_info))
++	{
++		// CreateProcess failed.
++		char msg[256];
++		_snprintf(msg, sizeof(msg),
++			"Unable to launch the requested application:\n%s", cmdline);
++		message(msg);
++		return;
++	}
++
++	// Release handles
++	CloseHandle(proc_info.hProcess);
++	CloseHandle(proc_info.hThread);
++}
++
++static void
+ process_cmds(void)
+ {
+ 	char line[VCHANNEL_MAX_LINE];
+@@ -227,6 +252,8 @@
+ 				   (HWND) strtoul(tok4, NULL, 0));
+ 		else if (strcmp(tok1, "FOCUS") == 0)
+ 			do_focus(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0));
++		else if (strcmp(tok1, "SPAWN") == 0)
++			do_spawn(tok3);
+ 		else if (strcmp(tok1, "DESTROY") == 0)
+ 			do_destroy((HWND) strtoul(tok3, NULL, 0));
+ 	}
