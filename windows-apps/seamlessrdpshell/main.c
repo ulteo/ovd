@@ -212,7 +212,8 @@ do_spawn(char *cmdline, char *desktopfile)
 		message(msg);
 		return;
 	} else {
-		vchannel_write("APPSTART", "0x%08x,%s", proc_info.dwProcessId, desktopfile);
+		if (desktopfile)
+			vchannel_write("APPSTART", "0x%08x,%s", proc_info.dwProcessId, desktopfile);
 	}
 	// Release handles
 	CloseHandle(proc_info.hProcess);
