@@ -192,16 +192,18 @@ do_destroy(HWND hwnd)
 }
 
 static void
-do_spawn(char *cmdline)
+do_spawn(char *cmdline, char *desktopfile)
 {
 	PROCESS_INFORMATION proc_info;
 	STARTUPINFO startup_info;
-
+	BOOL pid;
+	
 	memset(&startup_info, 0, sizeof(STARTUPINFO));
 	startup_info.cb = sizeof(STARTUPINFO);
 
-	if (!CreateProcess(NULL, cmdline, NULL, NULL, FALSE, 0,
-			       NULL, NULL, &startup_info, &proc_info))
+	pid = CreateProcess(NULL, cmdline, NULL, NULL, FALSE, 0,
+			       NULL, NULL, &startup_info, &proc_info);
+	if (! pid)
 	{
 		// CreateProcess failed.
 		char msg[256];
@@ -209,8 +211,9 @@ do_spawn(char *cmdline)
 			"Unable to launch the requested application:\n%s", cmdline);
 		message(msg);
 		return;
+	} else {
+		vchannel_write("APPSTART", "0x%08x,%s", proc_info.dwProcessId, desktopfile);
 	}
-
 	// Release handles
 	CloseHandle(proc_info.hProcess);
 	CloseHandle(proc_info.hThread);
@@ -253,7 +256,7 @@ process_cmds(void)
 		else if (strcmp(tok1, "FOCUS") == 0)
 			do_focus(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0));
 		else if (strcmp(tok1, "SPAWN") == 0)
-			do_spawn(tok3);
+			do_spawn(tok3,tok4);
 		else if (strcmp(tok1, "DESTROY") == 0)
 			do_destroy((HWND) strtoul(tok3, NULL, 0));
 	}
@@ -375,6 +378,8 @@ int WINAPI
 WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 {
 	HMODULE hookdll;
+	MSG msg;
+	int check_counter;
 
 	set_hooks_proc_t set_hooks_fn;
 	remove_hooks_proc_t remove_hooks_fn;
@@ -436,86 +441,52 @@ WinMain(HINSTANCE instance, HINSTANCE prev_instance, LPSTR cmdline, int cmdshow)
 	/* We don't want windows denying requests to activate windows. */
 	SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT, 0, 0, 0);
 
-	if (strlen(cmdline) == 0)
+
+	check_counter = 5;
+	while (1)
 	{
-		message("No command line specified.");
-		return -1;
-	}
-	else
-	{
-		BOOL result;
-		PROCESS_INFORMATION proc_info;
-		STARTUPINFO startup_info;
-		MSG msg;
+		BOOL connected;
 
-		memset(&startup_info, 0, sizeof(STARTUPINFO));
-		startup_info.cb = sizeof(STARTUPINFO);
-
-		result = CreateProcess(NULL, cmdline, NULL, NULL, FALSE, 0,
-				       NULL, NULL, &startup_info, &proc_info);
-		// Release handles
-		CloseHandle(proc_info.hProcess);
-		CloseHandle(proc_info.hThread);
-
-		if (result)
+		connected = is_connected();
+		if (connected && !g_connected)
 		{
-			int check_counter;
+			int flags;
+			/* These get reset on each reconnect */
+			SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, NULL, 0);
+			SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL,
+					     0);
+			SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT, 0, 0, 0);
+
+			flags = SEAMLESS_HELLO_RECONNECT;
+			if (g_desktop_hidden)
+				flags |= SEAMLESS_HELLO_HIDDEN;
+			vchannel_write("HELLO", "0x%08x", flags);
+		}
+
+		g_connected = connected;
+
+		if (check_counter < 0)
+		{
+			BOOL hidden;
+
+			hidden = is_desktop_hidden();
+			if (hidden && !g_desktop_hidden)
+				vchannel_write("HIDE", "0x%08x", 0);
+			else if (!hidden && g_desktop_hidden)
+				vchannel_write("UNHIDE", "0x%08x", 0);
+
+			g_desktop_hidden = hidden;
 
 			check_counter = 5;
-			while (check_counter-- || !should_terminate())
-			{
-				BOOL connected;
-
-				connected = is_connected();
-				if (connected && !g_connected)
-				{
-					int flags;
-					/* These get reset on each reconnect */
-					SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, NULL, 0);
-					SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL,
-							     0);
-					SystemParametersInfo(SPI_SETFOREGROUNDLOCKTIMEOUT, 0, 0, 0);
-
-					flags = SEAMLESS_HELLO_RECONNECT;
-					if (g_desktop_hidden)
-						flags |= SEAMLESS_HELLO_HIDDEN;
-					vchannel_write("HELLO", "0x%08x", flags);
-				}
-
-				g_connected = connected;
-
-				if (check_counter < 0)
-				{
-					BOOL hidden;
-
-					hidden = is_desktop_hidden();
-					if (hidden && !g_desktop_hidden)
-						vchannel_write("HIDE", "0x%08x", 0);
-					else if (!hidden && g_desktop_hidden)
-						vchannel_write("UNHIDE", "0x%08x", 0);
-
-					g_desktop_hidden = hidden;
-
-					check_counter = 5;
-				}
-
-				while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-				{
-					TranslateMessage(&msg);
-					DispatchMessage(&msg);
-				}
-				process_cmds();
-				Sleep(100);
-			}
 		}
-		else
+
+		while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			// CreateProcess failed.
-			char msg[256];
-			_snprintf(msg, sizeof(msg),
-				  "Unable to launch the requested application:\n%s", cmdline);
-			message(msg);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 		}
+		process_cmds();
+		Sleep(100);
 	}
 
 	remove_hooks_fn();

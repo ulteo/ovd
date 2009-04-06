@@ -34,6 +34,7 @@
 #define ID_WMEXIT                       40002
 #define ID_WMABOUT                      40003
 #define ID_WMEXEC                       50000
+#define IDC_STATIC						-1
 
 // Next default values for new objects
 //
