@@ -171,7 +171,10 @@ require_once('header.php');
 	Event.observe(window, 'load', function() {
 		$('timezone').value = getTimezoneName();
 
-		setAvailableSize('desktop_size');
+		<?php
+			if (in_array('size', $advanced_settings_session))
+				echo 'setAvailableSize(\'desktop_size\');';
+		?>
 
 		<?php
 			if (count($list_servers) < 1)
