@@ -1,5 +1,5 @@
 #!/bin/sh
-sm_installed=$(dpkg -l | grep '^““' | awk '${print $2}' | grep ulteo-ovd-session-manager )
+sm_installed=$(dpkg -l | grep '^ii' | awk '${print $2}' | grep ulteo-ovd-session-manager )
 if [  'x'$sm_installed != 'x'  ];then
         sleep 3
         echo "ulteo-ovd od/fqdn string localhost" | debconf-set-selections
