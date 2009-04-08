@@ -1,3 +1,16 @@
+ulteo-ovd (1.0~rc2ulteo2) ovd-polaris-testing; urgency=low
+
+  * Fix SM configuration after iso installation
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 08 Apr 2009 14:26:55 +0200
+
+ulteo-ovd (1.0~rc2ulteo1) ovd-polaris-testing; urgency=low
+
+  [ Daniele Favara ]
+  * Debconf entries for SM & APS install
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Mon, 06 Apr 2009 11:01:34 +0200
+
 ulteo-ovd (1.0~rc2) ovd-polaris-testing; urgency=low
 
   * New development release (RC 2)
