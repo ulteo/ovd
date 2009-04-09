@@ -1,6 +1,6 @@
 ulteo-ovd (1.0~rc2ulteo2) ovd-polaris-testing; urgency=low
 
-  * Fix SM configuration after iso installation
+  * Fix ApS configuration after iso installation
 
  -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 08 Apr 2009 14:26:55 +0200
 
