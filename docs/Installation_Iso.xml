@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <articleinfo>
+    <title>Installation documentation for the Ulteo Open Virtual
+    Desktop from the dvdrom</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2009</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+
+  <para>
+    If you don't have a Ulteo OVD dvdrom, please donwload it from
+    <ulink>http://www.ulteo.com</ulink> and burn it on a fresh dvd.
+  </para>
+
+
+  <para>
+    Insert the Ulteo OVD dvdrom into your computer and restart it.
+    When the system start, your should see that:
+
+    <screenshot>
+      <screeninfo>DVDrom Boot</screeninfo>
+      <graphic fileref="img/iso/gfxboot.png"></graphic>
+    </screenshot>
+  </para>
+
+  <para>
+    The Live system may install several type of system:
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  <emphasis role="strong">Install Ulteo SM and ApS</emphasis>
+	  will install a complete OVD infrastructure on the machine in
+	  order to, once install is finished, be able to launch
+	  sessions.
+	</para>
+      </listitem>
+      <listitem>
+	<para>
+	  <emphasis role="strong">Install Ulteo Session
+	  Manager</emphasis> will only install a OVD Session Manager.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  <emphasis role="strong">Install Ulteo Application
+	  Server</emphasis> will only install a OVD Application
+	  Server.
+	</para>
+      </listitem>
+    </itemizedlist>
+
+    This documentation is only about the first case: <emphasis
+    role="strong">Install Ulteo SM and ApS</emphasis>.
+  </para>
+  
+
+  <section id="install">
+    <title>Installation</title>
+
+    <para>
+      Select the <emphasis>Install Ulteo SM and ApS</emphasis> and
+      press <emphasis>Enter</emphasis>. The system is now going to
+      boot. It may take some time.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  The first step is used to select the system language. Select one
+	  and click on <emphasis>Forward</emphasis>.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 1</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step1.png"></graphic>
+	</screenshot>
+      </listitem>
+
+      <listitem>
+	<para>
+	  In the second step, the system asks you to define your
+	  location. Either select a point on the map or choose one by
+	  the <emphasis>Selected city</emphasis> form and click on
+	  <emphasis>Forward</emphasis>.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 2</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step2.png"></graphic>
+	</screenshot>
+      </listitem>
+
+
+      <listitem>
+	<para>
+	  The third step is used to define the keyboard layout. Select
+	  yours and click on <emphasis>Forward</emphasis>.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 3</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step3.png"></graphic>
+	</screenshot>
+      </listitem>
+
+
+      <listitem>
+	<para>
+	  Then, you have to select the partitioning method. We advice
+	  the automatic method: <emphasis>Guided - use entire
+	  disk</emphasis>.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 4</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step4.png"></graphic>
+	</screenshot>
+      </listitem>
+
+
+      <listitem id="install-step5">
+	<para>
+	  The last questions are about the system itself.
+	  You have to give an account name and password which will be the
+	  administrator of the system.
+	  You also have to define the hostname of the machine.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 5</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step5.png"></graphic>
+	</screenshot>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Then, the system display an installation sum-up to list the
+	  actions it is going to perform.
+	</para>
+
+	<para>
+	  Click on <emphasis>Install</emphasis>.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 6</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step6.png"></graphic>
+	</screenshot>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Now, you just have to wait during the system installation.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 6-1</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step6-1.png"></graphic>
+	</screenshot>
+      </listitem>
+
+
+
+      <listitem>
+	<para>
+	  Finally, click on <emphasis>Restart now</emphasis>.
+	</para>
+
+	<screenshot>
+	  <screeninfo>ubiquity - step 6-2</screeninfo>
+	  <graphic fileref="img/iso/ubiquity-step6-2.png"></graphic>
+	</screenshot>
+      </listitem>
+    </itemizedlist>
+
+  </section>
+
+
+  <section id="firstboot">
+    <title>First boot</title>
+
+    <para>
+      At first boot, the system is going to automatically configure
+      itself.
+    </para>
+
+    <screenshot>
+      <screeninfo>System auto configuration</screeninfo>
+      <graphic fileref="img/iso/both_firstboot.png"></graphic>
+    </screenshot>
+
+    <para>
+      When it is finished, the OVD infrastructure is up
+      and running.
+    </para>
+
+    <screenshot>
+      <screeninfo>System ready</screeninfo>
+      <graphic fileref="img/iso/system-ready.png"></graphic>
+    </screenshot>
+
+    <simplesect id="getip">
+      <title>Get the IP address</title>
+
+      <para>
+	Because Ulteo OVD is a network service, it is useful to get the
+	network address of this machine to access it from the network
+	with a web browser for instance.
+      </para>
+
+      <para>
+	First, you have to login to the system by giving the user
+	login and password you specified at <link
+	linkend="install-step5">installation</link>.
+      </para>
+
+      <screenshot>
+	<screeninfo>System login</screeninfo>
+	<graphic fileref="img/iso/system-login.png"></graphic>
+      </screenshot>
+
+      <para>
+	Then, exec the following command.
+	<screen><![CDATA[
+$ ifconfig eth0]]>
+	</screen>
+      </para>
+
+      <para>
+	The result should be something like that:
+	<screen><![CDATA[
+$ ifconfig eth0
+	eth0      Link encap:Ethernet  HWaddr 00:30:05:5c:73:a5  
+	inet addr:192.168.0.180  Bcast:192.168.0.255  Mask:255.255.255.0
+	UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+	RX packets:876143 errors:0 dropped:0 overruns:0 frame:0
+	TX packets:1053723 errors:0 dropped:0 overruns:0 carrier:0
+	collisions:0 txqueuelen:100 
+	RX bytes:205179680 (195.6 MiB)  TX bytes:573401350 (546.8 MiB)]]>
+	</screen>
+
+	The address we are looking for is <emphasis
+	role="strong">192.168.0.180</emphasis>.
+      </para>
+
+      <important>
+	<para>
+	  From now, the Session Manager adress we are going to use is
+	  <emphasis
+	  role="strong">http://192.168.0.180/sessionmanager</emphasis>
+	  and the administration console is at <emphasis
+	  role="strong">
+	  http://192.168.0.180/sessionmanager/admin</emphasis>
+	</para>
+      </important>
+
+      <para>
+	By using a web browser and entering the ip address, you should see
+	this kind of page:
+	
+	<screenshot>
+	  <screeninfo>Session Manager into a web browser</screeninfo>
+	  <graphic fileref="img/iso/sm_www_service_not_available.png"></graphic>
+	</screenshot>
+      </para>
+    </simplesect>
+  </section>
+
+
+  <section id="configuration">
+    <title>Configure your Application Server</title>
+
+    <para>
+      Once your can access to the Ulteo system from your browser, go
+      to the administration console:
+      <ulink url="http://192.168.0.180/sessionmanager/admin" /> and authenticate yourself.
+    </para>
+
+    <important>
+      <para>
+	The administrator login and password are both <emphasis
+	role="strong">admin</emphasis>.
+      </para>
+    </important>
+
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_www_admin_login.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin login</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    <para>
+      <inlinemediaobject>
+	<imageobject>
+	  <imagedata fileref="img/sm_admin_main.png"/>
+	</imageobject>
+	<textobject>
+	  <phrase>Session Manager admin main page</phrase>
+	</textobject>
+      </inlinemediaobject>
+    </para>
+
+    <simplesect>
+      <title>Register the server</title>
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Your server should appear in the <emphasis
+	    role="strong">Unregistered server</emphasis> page.
+	  </para>
+
+	  <screenshot>
+	    <screeninfo>Session Manager - server page</screeninfo>
+	    <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
+	  </screenshot>
+
+	  <para>
+	    Click on <emphasis>register</emphasis>.
+	  </para>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Then, click on <emphasis>Switch to production</emphasis> to
+	    switch it to Production mode.
+	  </para>
+	</listitem>
+      </itemizedlist>
+    </simplesect>
+
+    <simplesect>
+      <title>Set an redirection name</title>
+
+      <para>
+	Your Application Server have <emphasis
+	role="strong">localhost</emphasis> as server
+	name so you <emphasis role="strong">must</emphasis> replace it
+	by <link linkend="getip">the network address we previously got</link> (In our
+	example, it is 192.168.0.180).
+      </para>
+
+      <screenshot>
+	<screeninfo>Session Manager - server redirection name</screeninfo>
+	<graphic fileref="img/sm_admin_external_name.png"></graphic>
+      </screenshot>     
+
+      <xi:include href="Installation.xml" xpointer="redirectionname_explain" />
+    </simplesect>
+  </section>
+
+
+  <xi:include href="Installation.xml" xpointer="publication" />
+  <xi:include href="Installation.xml" xpointer="launch_session" />
+
+
+  <section id="system-info">
+    <title>System informations</title>
+
+    <simplesect>
+      <title>Session Manager administration access</title>
+
+      <para>
+	The administrator login and password on the Session Manager
+	are both <emphasis role="strong">admin</emphasis>.
+      </para>
+
+      <para>
+	It can be changed by editing the
+	<emphasis>/etc/ulteo/sessionmanager/config.inc.php</emphasis>
+	file.
+      </para>
+
+      <para>
+	The SESSIONMANAGER_ADMIN_PASSWORD is a MD5 hash of the password.
+	To have the MD5 hash of a password, use the following command:
+	<screen><![CDATA[
+# echo -n test_password |md5sum]]>
+	</screen>
+      </para>
+    </simplesect>
+
+    
+    <simplesect>
+      <title>MySQL configuration</title>
+
+      <para>
+	As the system as to run without any extra server, MySQL is
+	installed and autoconfigured.
+      </para>
+      <para>
+	The root sql password is autogenerated. A MySQL user/password
+	is also generated to be used by the Session Manager.
+      </para>
+
+      <para>
+	The MySQL Ulteo login is <emphasis>ulteoadmin</emphasis>. The
+	password is auto generated and is put into
+	<emphasis>/etc/ulteo-session-manager.secret</emphasis> in case
+	you would access directly to the MySQL server. If you change
+	it in the MySQL server, update this file too.
+      </para>
+    </simplesect>
+  </section>
+
+</article>

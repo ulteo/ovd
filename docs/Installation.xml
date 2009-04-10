@@ -532,7 +532,7 @@ mysql> exit]]>
 	</para>
       </important>
 
-      <para>
+      <para id="redirectionname_explain">
 	The <emphasis role="strong">redirection name</emphasis> is used
 	to launch session. When you launch a session, you are
 	redirected to an Application server using the redirection name as

@@ -3,6 +3,7 @@
 SRC=AccountsIntegration.xml \
 	FAQ.xml \
 	Installation.xml \
+	Installation_Iso.xml \
 	Installation_RedHat.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
@@ -21,6 +22,9 @@ Installation_RedHat.pdf:  Installation.xml
 Installation_Sources.html: Installation_RedHat.xml Installation.xml
 Installation_Sources.anw:  Installation_RedHat.xml Installation.xml
 Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
+Installation_Iso.html: Installation.xml
+Installation_Iso.anw: Installation.xml
+Installation_Iso.pdf: Installation.xml
 
 
 %.html: %.xml
