@@ -213,7 +213,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<tr><td>'._('Server Port:').'</td><td><input type="text" name="port" value="'.$form['port'].'" /></td></tr>';
     $str.= '<tr><td>'._('Protocol version:').'</td><td><input type="text" name="proto" value="'.$form['proto'].'" /></td></tr>';
     $str.= '<tr><td>'._('Base DN:').'</td><td><input type="text" name="suffix" value="'.$form['suffix'].'" /></td></tr>';
-    $str.= '<tr><td>'._('Use as Active Directory server:').'</td><td><input type="checkbox" name="ad" value="'.$form['ad'].'"';
+    $str.= '<tr><td>'._('Use as Active Directory server:').'</td><td><input type="checkbox" name="ad" value="1"';
     if (isset($form['ad']))
       $str.= ' checked="checked"';
     $str.= ' /></td></tr>';
