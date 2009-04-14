@@ -6,7 +6,7 @@
 
   <articleinfo>
     <title>Installation documentation for the Ulteo Open Virtual
-    Desktop from the dvdrom</title>
+    Desktop from the DVD-ROM</title>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -17,15 +17,15 @@
 
 
   <para>
-    If you haven't yet an Ulteo OVD dvdrom, please donwload it from
-    <ulink>http://www.ulteo.com</ulink> and burn it on a fresh dvd.
+    If you haven't yet an Ulteo OVD DVD-ROM, please donwload the corresponding ISO file from
+    <ulink>http://www.ulteo.com</ulink> and burn it to a fresh DVD.
   </para>
 
 
   <para>
-    Insert the Ulteo OVD dvdrom into your computer and restart it.
-    If you selected the dvdrom as first boot device you'll see the
-    bootloader iterface::
+    Insert the Ulteo OVD DVD-ROM into your computer and restart it.
+    If you selected the DVD-ROM as first boot device you'll see the
+    bootloader interface:
 
     <screenshot>
       <screeninfo>DVDrom Boot</screeninfo>
@@ -41,20 +41,20 @@
 	<para>
 	  <emphasis role="strong">Install Ulteo SM and ApS</emphasis>
 	  will install a complete OVD infrastructure with no additional 
-	  configurations required.
+	  configuration required.
 	</para>
       </listitem>
       <listitem>
 	<para>
 	  <emphasis role="strong">Install Ulteo Session
-	    Manager</emphasis> will only install  OVD Session Manager.
+	    Manager</emphasis> will only install the OVD Session Manager.
 	</para>
       </listitem>
 
       <listitem>
 	<para>
 	  <emphasis role="strong">Install Ulteo Application
-	    Server</emphasis> will only install OVD Application
+	    Server</emphasis> will only install the OVD Application
 	  Server.
 	</para>
       </listitem>
@@ -69,7 +69,7 @@
     <title>Installation</title>
 
     <para>
-      Select the <emphasis>Install Ulteo SM and ApS</emphasis> and
+      Select <emphasis>Install Ulteo SM and ApS</emphasis> and
       press <emphasis>Enter</emphasis>. The system is now going to
       boot. It may take some time.
     </para>
@@ -77,7 +77,7 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  The first step is used to select the system language. Select one
+	  The first step is used to select the system language. Choose your language from the list 
 	  and click on <emphasis>Forward</emphasis>.
 	</para>
 
@@ -144,7 +144,7 @@
 
       <listitem>
 	<para>
-	  Check now carefully the installation summary.
+	  Now now carefully the installation summary.
 	</para>
 
 	<para>
@@ -189,8 +189,7 @@
     <title>First boot</title>
 
     <para>
-      At first boot, the system is going to automatically configure
-      itself.
+      At first boot, the system is going to automatically self-configure.
     </para>
 
     <screenshot>
@@ -199,7 +198,7 @@
     </screenshot>
 
     <para>
-      When it is finished, the OVD infrastructure is up
+      When it is completed, the OVD infrastructure is up
       and running.
     </para>
 
@@ -209,17 +208,17 @@
     </screenshot>
 
     <simplesect id="getip">
-      <title>Get the IP address</title>
+      <title>Find the IP address</title>
 
       <para>
-	Ulteo OVD is mainly a network service, it is useful to get the
-	network address of this machine to access it from the network
-	with a web browser for instance.
+	Ulteo OVD is mainly a network service, so it is useful to know the
+	network IP address of this machine to access it from the network,
+	for instance with a web browser.
       </para>
 
       <para>
-	First, you have to login to the system, use  the user
-        name and password you specified at <link
+	First of all, you have to log into the system, and use the username
+	and password you specified at <link
 	  linkend="install-step5">install time</link>.
       </para>
 
@@ -229,14 +228,14 @@
       </screenshot>
 
       <para>
-        On the active tty type the following command.
+        On an active terminal command line type the following command:
 	<screen><![CDATA[
 $ ifconfig eth0]]>
 	</screen>
       </para>
 
       <para>
-	Following the possible output:
+	Following is a possible output:
 	<screen><![CDATA[
 $ ifconfig eth0
 	eth0      Link encap:Ethernet  HWaddr 00:30:05:5c:73:a5  
@@ -254,7 +253,7 @@ $ ifconfig eth0
 
       <important>
 	<para>
-	  From now on the Session Manager url  we are going to use is
+	  From now on the Session Manager url we are going to use is
 	  <emphasis
 	  role="strong">http://192.168.0.180/sessionmanager</emphasis>
 	and you can access the administrator console  from: <emphasis
@@ -264,7 +263,7 @@ $ ifconfig eth0
       </important>
 
       <para>
-	By using a web browser and entering the ip address, you should see
+	By using a web browser and entering the correct IP address, you should see
 	this kind of page:
 	
 	<screenshot>
@@ -280,7 +279,7 @@ $ ifconfig eth0
     <title>Configure your Application Server</title>
 
     <para>
-      Once you can access to the Ulteo system from your browser, go
+      Once you can access the Ulteo system from your browser, go
       to the administration console:
       <ulink url="http://192.168.0.180/sessionmanager/admin" /> and authenticate yourself.
     </para>
@@ -320,7 +319,7 @@ $ ifconfig eth0
       <itemizedlist>
 	<listitem>
 	  <para>
-	    Your Ulteo Applications Server (ApS) should appear in the <emphasis
+	    Your Ulteo Applications Server (ApS) should show up in the <emphasis
 	      role="strong">Unregistered servers</emphasis> page.
 	  </para>
 
@@ -344,13 +343,13 @@ $ ifconfig eth0
     </simplesect>
 
     <simplesect>
-      <title>Set an redirection name</title>
+      <title>Set a redirection name</title>
 
       <para>
 	Your Application Server has <emphasis
 	role="strong">localhost</emphasis> as server
       name so you <emphasis role="strong">have to</emphasis> replace it
-      with  <link linkend="getip">the network address we previously got</link> (In our
+      with  <link linkend="getip">the network address we previously retrieved</link> (In our
 	example, it is 192.168.0.180).
       </para>
 
@@ -369,7 +368,7 @@ $ ifconfig eth0
 
 
   <section id="system-info">
-    <title>System informations</title>
+    <title>System information</title>
 
     <simplesect>
       <title>Session Manager administration access</title>
@@ -387,9 +386,9 @@ $ ifconfig eth0
 
       <para>
 	The SESSIONMANAGER_ADMIN_PASSWORD is a MD5 hash of the password.
-	To have the MD5 hash of a password, use the following command:
+	In order to generate the MD5 hash of a password, use the following command:
 	<screen><![CDATA[
-# echo -n test_password |md5sum]]>
+# echo -n test_password | md5sum]]>
 	</screen>
       </para>
     </simplesect>
@@ -400,19 +399,19 @@ $ ifconfig eth0
 
       <para>
 	As the system has to run without any extra server, MySQL is
-	installed and autoconfigured.
+	automatically installed and autoconfigured.
       </para>
       <para>
-	The root sql password is autogenerated. A MySQL user/password
+	An administrator (root) SQL password is autogenerated. A MySQL user/password
 	is also generated to be used by the Session Manager.
       </para>
 
       <para>
 	The MySQL Ulteo login is <emphasis>ulteoadmin</emphasis>. The
-	password is auto generated and is put into
-	<emphasis>/etc/ulteo-session-manager.secret</emphasis> in case
+	password is auto generated and can be read in this file: 
+	<emphasis>/etc/ulteo-session-manager.secret</emphasis>. It's useful in case
 	you would access directly to the MySQL server. If you change
-	it in the MySQL server, update this file too.
+	it in the MySQL server, think about updating this file too.
       </para>
     </simplesect>
   </section>
