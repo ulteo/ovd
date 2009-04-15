@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-03 22:30+0200\n"
+"POT-Creation-Date: 2009-04-15 10:49+0200\n"
 "PO-Revision-Date: 2009-02-25 16:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -284,12 +284,17 @@ msgstr "URL de validation Token"
 
 #: ../web/modules/AuthMethod/Token.php:78
 msgid ""
-"If a token argument is sent to startsession, the system try to get a user "
-"login by request the token validation url.<br /><br />Put here the url to "
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
 "request if a token argument is sent to <i>startsession</i> instead of login/"
 "password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
 "because it's replaced by the token argument when the URL is requested."
 msgstr ""
+"Si un token est passé à startsession, le system essaie de récupérer un "
+"identifiant utilisateur via une requête sur l'url de validation.<br /><br /"
+">Saisissez ici l'url à utiliser si un token est fourni à la place d'un login/"
+"mot de passe.<br /><br />La valeur spéciale <b>%TOKEN%</b> doit être "
+"utilisée, elle sera remplacée par la valeur du token lors de la requête."
 
 #: ../web/modules/UserDB/fake.php:126
 msgid "fake"
@@ -323,7 +328,7 @@ msgstr "Crypt"
 
 #: ../web/modules/UserDB/sql_external.php:208
 msgid "Plain"
-msgstr ""
+msgstr "Plain"
 
 #: ../web/modules/UserDB/ldap.php:202
 msgid "The address of your LDAP server."
@@ -358,16 +363,18 @@ msgid ""
 "Set this to Yes when you use LDAP profile to connect to an ActiveDirectory "
 "environment instead of using the ActiveDirectory profile"
 msgstr ""
+"Choisissez Oui pour utiliser un profile LDAP pour se connecter à un "
+"environnement Active Directory"
 
 #: ../web/modules/UserDB/ldap.php:222 ../web/admin/sumup.php:82
-#: ../web/admin/sumup.php:108 ../web/index.php:440 ../web/index.php:454
-#: ../web/index.php:468 ../web/index.php:482 ../web/index.php:501
+#: ../web/admin/sumup.php:108 ../web/index.php:443 ../web/index.php:457
+#: ../web/index.php:471 ../web/index.php:485 ../web/index.php:504
 msgid "No"
 msgstr "Non"
 
 #: ../web/modules/UserDB/ldap.php:222 ../web/admin/sumup.php:80
-#: ../web/admin/sumup.php:106 ../web/index.php:439 ../web/index.php:453
-#: ../web/index.php:467 ../web/index.php:481 ../web/index.php:500
+#: ../web/admin/sumup.php:106 ../web/index.php:442 ../web/index.php:456
+#: ../web/index.php:470 ../web/index.php:484 ../web/index.php:503
 msgid "Yes"
 msgstr "Oui"
 
@@ -645,8 +652,8 @@ msgstr "Etes-vous sûr de vouloir tuer cette session ?"
 msgid "Session"
 msgstr "Session"
 
-#: ../web/admin/sessions.php:170 ../web/admin/tasks.php:173
-#: ../web/index.php:319
+#: ../web/admin/sessions.php:170 ../web/admin/reporting.php:422
+#: ../web/admin/tasks.php:173 ../web/index.php:322
 msgid "Server"
 msgstr "Serveur"
 
@@ -661,6 +668,69 @@ msgstr "Tuer"
 #: ../web/admin/sessions.php:204
 msgid "No active session"
 msgstr "Pas de session active"
+
+#: ../web/admin/reporting.php:99
+msgid "Day"
+msgstr "Jour"
+
+#: ../web/admin/reporting.php:128
+msgid "Hour"
+msgstr "Heure"
+
+#: ../web/admin/reporting.php:219
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Erreur: \"de\" plus récent que \"à\", inversion"
+
+#: ../web/admin/reporting.php:239 ../web/admin/reporting.php:279
+msgid "Number of sessions"
+msgstr "Nombre de sessions"
+
+#: ../web/admin/reporting.php:258
+msgid "Session repartition"
+msgstr "Répartition de sessions"
+
+#: ../web/admin/reporting.php:296 ../web/admin/servers.php:304
+#: ../web/admin/servers.php:646
+msgid "CPU usage"
+msgstr "Utilisation CPU"
+
+#: ../web/admin/reporting.php:312 ../web/admin/servers.php:306
+#: ../web/admin/servers.php:648
+msgid "RAM usage"
+msgstr "utilisation RAM"
+
+#: ../web/admin/reporting.php:320 ../web/admin/includes/page_template.php:72
+msgid "Reporting"
+msgstr "Rapports"
+
+#: ../web/admin/reporting.php:367 ../web/classes/Preferences.class.php:190
+msgid "From"
+msgstr "De"
+
+#: ../web/admin/reporting.php:379
+msgid "to"
+msgstr "à"
+
+#: ../web/admin/reporting.php:391
+msgid "step"
+msgstr "incrément"
+
+#: ../web/admin/reporting.php:410 ../web/admin/reporting.php:427
+msgid "Abscissa: number of session"
+msgstr "Abscisse : nombre de sessions"
+
+#: ../web/admin/reporting.php:412 ../web/admin/reporting.php:429
+#: ../web/admin/reporting.php:437 ../web/admin/reporting.php:445
+msgid "Ordinate: hour of the day"
+msgstr "Ordonnée : heure de la journée"
+
+#: ../web/admin/reporting.php:435
+msgid "Abscissa: usage of CPU in percent"
+msgstr "Abscisse : utilisation CPU en pourcents"
+
+#: ../web/admin/reporting.php:443
+msgid "Abscissa: usage of RAM in percent"
+msgstr "Abscisse : utilisation RAM en pourcents"
 
 #: ../web/admin/tasks.php:103
 msgid "Tasks managment"
@@ -785,14 +855,6 @@ msgstr "RAM"
 msgid "MB"
 msgstr "MO"
 
-#: ../web/admin/servers.php:304 ../web/admin/servers.php:646
-msgid "CPU usage"
-msgstr "Utilisation CPU"
-
-#: ../web/admin/servers.php:306 ../web/admin/servers.php:648
-msgid "RAM usage"
-msgstr "utilisation RAM"
-
 #: ../web/admin/servers.php:308 ../web/admin/servers.php:650
 msgid "Sessions usage"
 msgstr "Sessions"
@@ -900,7 +962,7 @@ msgstr "Informations sur cette session"
 msgid "Administration"
 msgstr "Administration"
 
-#: ../web/admin/login.php:61 ../web/admin/login.php:99 ../web/index.php:263
+#: ../web/admin/login.php:61 ../web/admin/login.php:99 ../web/index.php:266
 msgid "Log in"
 msgstr "Connexion"
 
@@ -909,11 +971,11 @@ msgid "There was an error with your authentication"
 msgstr "L'Authentification a échoué"
 
 #: ../web/admin/login.php:83 ../web/admin/users.php:132
-#: ../web/admin/users.php:252 ../web/index.php:221
+#: ../web/admin/users.php:252 ../web/index.php:224
 msgid "Login"
 msgstr "Identifiant"
 
-#: ../web/admin/login.php:91 ../web/index.php:247
+#: ../web/admin/login.php:91 ../web/index.php:250
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -1180,10 +1242,6 @@ msgstr "Paramètres de l'interface web"
 msgid "Sum up"
 msgstr "Résumé"
 
-#: ../web/admin/includes/page_template.php:72
-msgid "Reporting"
-msgstr "Rapports"
-
 #: ../web/admin/includes/page_template.php:73
 msgid "Summary"
 msgstr "Résumé"
@@ -1291,7 +1349,7 @@ msgstr "Gestion des groupes d'utilisateurs"
 
 #: ../web/admin/usersgroup.php:447
 msgid "Remove from default"
-msgstr ""
+msgstr "Supprimer des défauts"
 
 #: ../web/admin/usersgroup.php:450
 msgid "Define as default"
@@ -1394,23 +1452,23 @@ msgstr ""
 "utilisateur entre les serveurs)"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:287
-msgid "Use CIFS link using the LDAP field :"
-msgstr ""
+msgid "Use CIFS link using the LDAP field:"
+msgstr "Montage CIFS en utilisant le champ LDAP :"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:292
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:357
 msgid "In guest mode"
-msgstr ""
+msgstr "En mode invité"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:297
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:359
 msgid "Using user login/password to authenticate"
-msgstr ""
+msgstr "Utiliser le login/mot de passe utilisateur pour s'authentifier"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:302
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:361
 msgid "Using global login/password to authenticate"
-msgstr ""
+msgstr "Utiliser le login/mot de passe global pour s'authentifier"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:305
 msgid "Login: "
@@ -1436,7 +1494,7 @@ msgstr "Répertoire Utilisateur \"Home\" :"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:354
 msgid "Use CIFS link using the LDAP field"
-msgstr ""
+msgstr "Montage CIFS en utilisant le champ LDAP"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:178
 msgid "Active Directory integration"
@@ -1925,10 +1983,6 @@ msgstr "local"
 msgid "SMTP server"
 msgstr "Serveur SMTP"
 
-#: ../web/classes/Preferences.class.php:190
-msgid "From"
-msgstr "De"
-
 #: ../web/classes/Preferences.class.php:192
 msgid "Host"
 msgstr "Hôte"
@@ -1992,9 +2046,8 @@ msgid "Do nothing"
 msgstr "Ne rien faire"
 
 #: ../web/classes/Preferences.class.php:221
-#, fuzzy
 msgid "Load Balancing policy"
-msgstr "load_balancing"
+msgstr "Paramètres d'équilibrage de charge"
 
 #: ../web/classes/Preferences.class.php:224
 msgid "Sessions settings"
@@ -2097,7 +2150,7 @@ msgstr "Message de timeout de session"
 msgid "Sessions are persistent"
 msgstr "Sessions persistantes"
 
-#: ../web/classes/Preferences.class.php:239 ../web/index.php:464
+#: ../web/classes/Preferences.class.php:239 ../web/index.php:467
 msgid "Show icons on user desktop"
 msgstr "Afficher les icônes sur le bureau"
 
@@ -2195,7 +2248,8 @@ msgid ""
 msgstr ""
 "Vous pouvez customiser le logo en saisissant un nouveau chemin ou en "
 "remplaçant l'image correspondante sur le serveur. Utilisez une image de 90px "
-"de hauteur en format png ou jpeg. Par exemple: sessionmanager/media/image/header.png"
+"de hauteur en format png ou jpeg. Par exemple: sessionmanager/media/image/"
+"header.png"
 
 #: ../web/classes/Preferences.class.php:268
 msgid "Display users list"
@@ -2216,7 +2270,7 @@ msgstr "test ssh/ping pour applet client"
 
 #: ../web/classes/Preferences.class.php:274
 msgid "Allow connections through proxy (SSH/ping applet test required)"
-msgstr ""
+msgstr "Autoriser les connexions via proxy (applet SSH/ping nécessaire)"
 
 #: ../web/classes/Preferences.class.php:277
 msgid "Launch session in a popup"
@@ -2227,6 +2281,8 @@ msgid ""
 "When set to yes, the session will start in a new browser window, and when "
 "set to no, the session will start in the current browser window"
 msgstr ""
+"La session démarrera dans une nouvelle fenêtre si oui, dans le fenêtre "
+"courante si non."
 
 #: ../web/classes/Preferences.class.php:281
 msgid "popup"
@@ -2289,112 +2345,114 @@ msgid ""
 "Full CPU: only CPU usage is used as a criteria to choose the best\n"
 "server to use for an incoming user."
 msgstr ""
+"CPU seulement : l'utilisation CPU est le seul critère de sélection\n"
+"d'un serveur à utiliser pour une nouvelle session."
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:137
 msgid "Both CPU and RAM are used as criterias, with a little randomization..."
-msgstr ""
+msgstr "CPU et RAM sont les critères utilisés, en plus d'un peu de hasard..."
 
 #: ../web/index.php:31
 msgid "Maximum"
 msgstr "Maximum"
 
-#: ../web/index.php:207
+#: ../web/index.php:210
 msgid "Please login with your username and password"
 msgstr "Merci de vous authentifier avec votre identifiant et mot de passe"
 
-#: ../web/index.php:209
+#: ../web/index.php:212
 msgid "Please login with your username"
 msgstr "Merci de vous authentifier avec votre identifiant"
 
-#: ../web/index.php:259
+#: ../web/index.php:262
 msgid "Loading"
 msgstr "Chargement"
 
-#: ../web/index.php:264
+#: ../web/index.php:267
 msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
 msgstr "VOUS AVEZ DEJA UNE SESSION ACTIVE"
 
-#: ../web/index.php:265
+#: ../web/index.php:268
 msgid "WARNING, START ANYWAY"
 msgstr "PROBLEME - FORCER LE DEMARRAGE"
 
-#: ../web/index.php:266
+#: ../web/index.php:269
 msgid "ERROR"
 msgstr "ERREUR"
 
-#: ../web/index.php:267
+#: ../web/index.php:270
 msgid "SESSION IS STARTED"
 msgstr "LA SESSION EST DEMARREE"
 
-#: ../web/index.php:286
+#: ../web/index.php:289
 msgid "Advanced settings"
 msgstr "Réglages avancés"
 
-#: ../web/index.php:297
+#: ../web/index.php:300
 msgid "Language"
 msgstr "Langue"
 
-#: ../web/index.php:343
+#: ../web/index.php:346
 msgid "Size"
 msgstr "Taille"
 
-#: ../web/index.php:366
+#: ../web/index.php:369
 msgid "Quality"
 msgstr "Qualité"
 
-#: ../web/index.php:388
+#: ../web/index.php:391
 msgid "Timeout"
 msgstr "Timeout"
 
-#: ../web/index.php:410
+#: ../web/index.php:413
 msgid "Application"
 msgstr "Application"
 
-#: ../web/index.php:425
+#: ../web/index.php:428
 msgid "Full desktop"
 msgstr "Bureau complet"
 
-#: ../web/index.php:436
+#: ../web/index.php:439
 msgid "Persistent session"
 msgstr "Session persistante"
 
-#: ../web/index.php:450
+#: ../web/index.php:453
 msgid "Shareable session"
 msgstr "Session partageable"
 
-#: ../web/index.php:478
+#: ../web/index.php:481
 msgid "Use pop-up"
 msgstr "Utiliser un pop-up"
 
-#: ../web/index.php:497
+#: ../web/index.php:500
 msgid "Debug"
 msgstr "Debug"
 
-#: ../web/index.php:525
+#: ../web/index.php:528
 msgid "Proxy type"
 msgstr "Type de proxy"
 
-#: ../web/index.php:536
+#: ../web/index.php:539
 msgid "Proxy host"
 msgstr "Serveur proxy"
 
-#: ../web/index.php:544
+#: ../web/index.php:547
 msgid "Proxy port"
 msgstr "Port du proxy"
 
-#: ../web/index.php:552
+#: ../web/index.php:555
 msgid "Proxy username"
 msgstr "Identifiant proxy"
 
-#: ../web/index.php:552 ../web/index.php:560
+#: ../web/index.php:555 ../web/index.php:563
 msgid "optional"
 msgstr "optionnel"
 
-#: ../web/index.php:560
+#: ../web/index.php:563
 msgid "Proxy password"
 msgstr "Mot de passe proxy"
 
-#: ../web/index.php:568
+#: ../web/index.php:571
 msgid "Remember proxy"
 msgstr "Sauvegarder les infos de proxy"
 
@@ -2437,9 +2495,6 @@ msgstr "Sauvegarder les infos de proxy"
 
 #~ msgid "Maintenance time"
 #~ msgstr "Durée de maintenance"
-
-#~ msgid "Number of sessions"
-#~ msgstr "Nombre de sessions"
 
 #~ msgid "Maximum simultaneous sessions"
 #~ msgstr "Nombre maximal de sessions simultanées"

@@ -83,3 +83,5 @@ update-po: Makefile
 
 $(GETTEXT_PACKAGE).pot:
 	$(GENPOT)
+
+.PHONY: $(GETTEXT_PACKAGE).pot

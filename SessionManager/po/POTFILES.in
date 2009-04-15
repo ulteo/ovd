@@ -62,6 +62,7 @@ web/modules/UserGroupDB.php
 web/admin/appsgroup.php
 web/admin/configuration.php
 web/admin/sessions.php
+web/admin/reporting.php
 web/admin/tasks.php
 web/admin/configuration-partial.php
 web/admin/media/image/cache.php

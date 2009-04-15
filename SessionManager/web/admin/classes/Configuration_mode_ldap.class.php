@@ -284,7 +284,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     if ($form['homedir'] == 'cifs')
       $str.= ' checked="checked"';
     $str.= '/>';
-    $str.= _('Use CIFS link using the LDAP field :').' <input type="text" name="homedir_field" value="'.$form['homedir_field'].'"/>';
+    $str.= _('Use CIFS link using the LDAP field:').' <input type="text" name="homedir_field" value="'.$form['homedir_field'].'"/>';
     $str.= '<br/><div style="padding-left: 20px;">';
     $str.= '<input class="input_radio" type="radio" name="cifs_auth" value="anonymous"';
     if ($form['cifs_auth'] == 'anonymous')
