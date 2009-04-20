@@ -98,7 +98,7 @@ if [ "$AJAX" = "TRUE" ]; then
     su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/ulteowm $((6900+$i))" &> $out
 else
     # Start the KDE session
-    su -s "/bin/bash" ${USER_LOGIN} -c "startovd" &> $out
+    su -s "/bin/bash" ${USER_LOGIN} -c "cd ~ && startovd" &> $out
 fi
 
 # force session to end
