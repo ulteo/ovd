@@ -37,7 +37,8 @@ db_get od/sessionmanager/mysql/configure
    fi
 fi
 
-chown -R root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 
 #DEBHELPER#

@@ -48,7 +48,7 @@ chown root:www-data $CONFFILE
 chmod 0640 $CONFFILE
 
 mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chown -R root:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 
 # get the chroot
