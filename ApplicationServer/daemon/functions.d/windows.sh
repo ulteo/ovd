@@ -21,7 +21,8 @@ windows_use_seamlessrdp() {
 
     if [ ! -f $sessid_dir/parameters/windows_server ] || \
 	[ ! -f $sessid_dir/parameters/windows_login ] || \
-	[ ! -f $sessid_dir/parameters/windows_password ]; then
+	[ ! -f $sessid_dir/parameters/windows_password ] || \
+    [ ! -f $sessid_dir/parameters/windows_keymap ]; then
 	return 1
     fi
 
@@ -40,8 +41,9 @@ windows_init_connection() {
     local server=`cat ${sessid_dir}/parameters/windows_server`
     local login=`cat ${sessid_dir}/parameters/windows_login`
     local password=`cat ${sessid_dir}/parameters/windows_password`
+    local keymap=`cat ${sessid_dir}/parameters/windows_keymap`
 
-    local cmd='rdesktop -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$server
+    local cmd='rdesktop -k "'$keymap'" -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$server
     # log_INFO "menu_windows_init_connection 2 launch cmd '$cmd'"
     su -s "/bin/bash" ${USER_LOGIN} -c "$cmd &" 
     # log_INFO "==============================="
