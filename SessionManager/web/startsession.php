@@ -31,6 +31,7 @@ if (! $prefs)
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $desktop_locale = $default_settings['language'];
+$windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $desktop_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
@@ -62,6 +63,9 @@ if (isset($_REQUEST['timezone']) && $_REQUEST['timezone'] != '')
 
 if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
 	$desktop_locale = $_REQUEST['desktop_locale'];
+
+if (in_array('windows_keymap', $advanced_settings) && isset($_REQUEST['windows_keymap']) && $_REQUEST['windows_keymap'] != '')
+	$windows_keymap = $_REQUEST['windows_keymap'];
 
 if (in_array('quality', $advanced_settings) && isset($_REQUEST['desktop_quality']) && $_REQUEST['desktop_quality'] != '')
 	$desktop_quality = $_REQUEST['desktop_quality'];
@@ -209,6 +213,7 @@ $default_args = array(
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	$desktop_locale,
+	'windows_keymap'	=>	$windows_keymap,
 	'quality'			=>	$desktop_quality,
 	'home_dir_type'	=>	$module_fs
 );

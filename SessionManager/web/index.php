@@ -27,6 +27,46 @@ $list_languages = array(
 	'fr_FR.UTF-8'	=>	'Français'
 );
 
+$list_windows_keymaps = array(
+	'ar'	=>	'ar',
+	'cs'	=>	'cs',
+	'da'	=>	'da',
+	'de'	=>	'de',
+	'de-ch'	=>	'de-ch',
+	'en-dv'	=>	'en-dv',
+	'en-gb'	=>	'en-gb',
+	'en-us'	=>	'en-us',
+	'es'	=>	'es',
+	'et'	=>	'et',
+	'fi'	=>	'fi',
+	'fo'	=>	'fo',
+	'fr'	=>	'fr',
+	'fr-be'	=>	'fr-be',
+	'fr-ca'	=>	'fr-ca',
+	'fr-ch'	=>	'fr-ch',
+	'he'	=>	'he',
+	'hr'	=>	'hr',
+	'hu'	=>	'hu',
+	'is'	=>	'is',
+	'it'	=>	'it',
+	'ja'	=>	'ja',
+	'ko'	=>	'ko',
+	'lt'	=>	'lt',
+	'lv'	=>	'lv',
+	'mk'	=>	'mk',
+	'nl'	=>	'nl',
+	'nl-be'	=>	'nl-be',
+	'no'	=>	'no',
+	'pl'	=>	'pl',
+	'pt'	=>	'pt',
+	'pt-br'	=>	'pt-br',
+	'ru'	=>	'ru',
+	'sl'	=>	'sl',
+	'sv'	=>	'sv',
+	'th'	=>	'th',
+	'tr'	=>	'tr'
+);
+
 $list_desktop_sizes = array(
 	'auto'	=>	_('Maximum')
 );
@@ -63,6 +103,7 @@ if (! $prefs)
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $desktop_locale = $default_settings['language'];
+$windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $desktop_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
@@ -282,7 +323,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('language', $advanced_settings) || in_array('windows_keymap', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -307,6 +348,28 @@ require_once('header.php');
 										if ($desktop_locale == $code)
 											echo ' selected="selected"';
 										echo '>'.$language.'</option>'."\n";
+									}
+								?>
+							</select>
+						</td>
+					</tr>
+					<?php
+						}
+
+						if (in_array('windows_keymap', $advanced_settings)) {
+					?>
+					<tr class="content2">
+						<td class="title">
+							<?php echo _('Windows keymap'); ?>
+						</td>
+						<td>
+							<select id="windows_keymap" name="windows_keymap">
+								<?php
+									foreach ($list_windows_keymaps as $code => $keymap) {
+										echo '<option value="'.$code.'"';
+										if ($windows_keymap == $code)
+											echo ' selected="selected"';
+										echo '>'.$keymap.'</option>'."\n";
 									}
 								?>
 							</select>
