@@ -58,7 +58,7 @@
  	STRNCPY(server, argv[optind], sizeof(server));
 --- a/seamless.c
 +++ b/seamless.c
-@@ -89,7 +89,15 @@
+@@ -89,7 +89,17 @@
  	tok7 = seamless_get_token(&p);
  	tok8 = seamless_get_token(&p);
  
@@ -66,16 +66,18 @@
 +    if (!strcmp("APPSTART", tok1))
 +    {
 +        char buf[1025];
-+        snprintf (buf, 1024, "startovdapp --start-monitoring %s \"%s\"",
-+                  tok3, tok4);
-+        printf ("STARTING: %s\n", buf);
-+        system (buf);
++        if (!access ("/usr/bin/startovdapp", X_OK))
++        {
++            snprintf (buf, 1024, "/usr/bin/startovdapp --start-monitoring %s \"%s\"",
++                      tok3, tok4);
++            system (buf);
++        }
 +    }
 +	else if (!strcmp("CREATE", tok1))
  	{
  		unsigned long group, parent;
  		if (!tok6)
-@@ -142,6 +150,9 @@
+@@ -142,6 +152,9 @@
  		if (*endptr)
  			return False;
  
