@@ -1,3 +1,9 @@
+ulteo-ovd (1.0~rc2ulteo4) ovd-polaris-testing; urgency=low
+
+  * Really fix it
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Thu, 09 Apr 2009 11:26:34 +0200
+
 ulteo-ovd (1.0~rc2ulteo2) ovd-polaris-testing; urgency=low
 
   * Fix ApS configuration after iso installation
