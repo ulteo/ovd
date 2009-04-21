@@ -1,3 +1,9 @@
+ovd-chroot-utils (1.0-0ulteo0) ovd-polaris-experimental; urgency=low
+
+  * New release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 21 Apr 2009 17:25:01 +0200
+
 ovd-chroot-utils (1.0~rc2-0ulteo0) ovd-polaris-testing; urgency=low
 
   * New development release (RC 2)

@@ -1,6 +1,6 @@
 m4_define([uovdsm_version_major], [1])
 m4_define([uovdsm_version_minor], [0])
-m4_define([uovdsm_version_build], [~rc2+svn@REVISION@])
+#m4_define([uovdsm_version_build], [~rc2+svn@REVISION@])
 #m4_define([uovdsm_version_build], [~rc2])
 m4_define([uovdsm_version], [uovdsm_version_major().uovdsm_version_minor()uovdsm_version_build()])
 

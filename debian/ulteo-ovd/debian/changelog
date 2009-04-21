@@ -1,3 +1,9 @@
+ulteo-ovd (1.0ulteo0) ovd-polaris-experimental; urgency=low
+
+  * New release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 21 Apr 2009 17:25:05 +0200
+
 ulteo-ovd (1.0~rc2ulteo4) ovd-polaris-testing; urgency=low
 
   * Really fix it
