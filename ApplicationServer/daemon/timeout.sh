@@ -22,10 +22,10 @@
 . functions.sh
 
 if rsbac_is_active; then
+    # FIXME
     USER_TMP=/tmp/
 else
-    USER_ID=$(id -u $USER_LOGIN) 
-    USER_TMP=/tmp/.tmp${USER_ID}
+    USER_TMP=${SPOOL_USERS}/${SESSID}/
 fi
 
 [ ! -f ${SESSID_DIR}/parameters/timeout_message ] && exit 1

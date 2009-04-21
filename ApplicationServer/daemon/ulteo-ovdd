@@ -123,8 +123,7 @@ session_check_status() {
 
 	if [ ! -f ${SESSID_DIR}/private/timeouted  ] && [ $diff -gt -180 ] && [ $DESKTOP_SESSION -gt 0 ]; then
 	   log_INFO "Session is going to expire in 3 minutes"
-	    export i SESSID_DIR
-	    export USER_LOGIN 
+	    export i SESSID_DIR SESSID
 	    timeout.sh &
 	    touch ${SESSID_DIR}/private/timeouted 
 	fi
