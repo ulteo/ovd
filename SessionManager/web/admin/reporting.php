@@ -407,9 +407,12 @@ function show_page($mode_) {
 	echo '<table><tr><td>';
 	echo '<img src="?img=1&file='.$file_id.'" />';
 	echo '</td><td><i>';
-	echo _('Abscissa: number of session');
+	if ($mode_->get_value() == 'day')
+		echo _('Abscissa: day of the month');
+	else
+		echo _('Abscissa: hour of the day');
 	echo '<br/>';
-	echo _('Ordinate: hour of the day');
+	echo _('Ordinate: number of session');
 	echo '</i></td></tr>';
 	echo '</table>';
 
@@ -424,25 +427,34 @@ function show_page($mode_) {
 		echo '<tr><td>';
 		echo '<img src="?img=1&file='.$value['session_file'].'" />';
 		echo '</td><td><i>';
-		echo _('Abscissa: number of session');
+		if ($mode_->get_value() == 'day')
+			echo _('Abscissa: day of the month');
+		else
+			echo _('Abscissa: hour of the day');
 		echo '<br/>';
-		echo _('Ordinate: hour of the day');
+		echo _('Ordinate: number of session');
 		echo '</i></td></tr>';
 
 		echo '<tr><td>';
 		echo '<img src="?img=1&file='.$value['cpu_file'].'" />';
 		echo '</td><td><i>';
-		echo _('Abscissa: usage of CPU in percent');
+		if ($mode_->get_value() == 'day')
+			echo _('Abscissa: day of the month');
+		else
+			echo _('Abscissa: hour of the day');
 		echo '<br/>';
-		echo _('Ordinate: hour of the day');
+		echo _('Ordinate: usage of CPU in percent');
 		echo '</i></td></tr>';
 
 		echo '<tr><td>';
 		echo '<img src="?img=1&file='.$value['ram_file'].'" />';
 		echo '</td><td><i>';
-		echo _('Abscissa: usage of RAM in percent');
+		if ($mode_->get_value() == 'day')
+			echo _('Abscissa: day of the month');
+		else
+			echo _('Abscissa: hour of the day');
 		echo '<br/>';
-		echo _('Ordinate: hour of the day');
+		echo _('Ordinate: usage of RAM in percent');
 		echo '</i></td></tr>';
 
 		echo '</table>';
