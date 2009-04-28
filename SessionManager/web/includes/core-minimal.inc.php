@@ -29,6 +29,15 @@ define('SESSIONMANAGER_ROOT_ADMIN', SESSIONMANAGER_ROOT.'/admin');
 $buf = @ini_get('include_path');
 @ini_set('include_path', $buf.':'.SESSIONMANAGER_ROOT.'/PEAR');
 
+foreach ($_GET as $k => $v)
+  $_GET[$k] = htmlspecialchars($v);
+
+foreach ($_POST as $k => $v)
+  $_POST[$k] = htmlspecialchars($v);
+
+foreach ($_REQUEST as $k => $v)
+  $_REQUEST[$k] = htmlspecialchars($v);
+
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/classes');
