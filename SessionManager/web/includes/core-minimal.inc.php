@@ -30,13 +30,13 @@ $buf = @ini_get('include_path');
 @ini_set('include_path', $buf.':'.SESSIONMANAGER_ROOT.'/PEAR');
 
 foreach ($_GET as $k => $v)
-  $_GET[$k] = htmlspecialchars($v);
+  $_GET[$k] = htmlspecialchars($v, ENT_NOQUOTES);
 
 foreach ($_POST as $k => $v)
-  $_POST[$k] = htmlspecialchars($v);
+  $_POST[$k] = htmlspecialchars($v, ENT_NOQUOTES);
 
 foreach ($_REQUEST as $k => $v)
-  $_REQUEST[$k] = htmlspecialchars($v);
+  $_REQUEST[$k] = htmlspecialchars($v, ENT_NOQUOTES);
 
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
