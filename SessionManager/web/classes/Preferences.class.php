@@ -163,8 +163,8 @@ class Preferences {
 
 		$c = new ConfigElement_select('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-
 		$this->add($c,'general');
+
 		$c = new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER');
 		$this->add($c,'general');
 
@@ -283,9 +283,6 @@ class Preferences {
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array());
 		$c->setContentAvailable(array('popup' => _('popup'), 'debug' => _('debug')));
 		$this->add($c,'general','web_interface_settings');
-
-		$c = new ConfigElement_select('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 
 		$this->getPrefsModules();
 		$this->getPrefsPlugins();
