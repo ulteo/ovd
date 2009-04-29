@@ -32,7 +32,7 @@ abstract class ConfigElement{
 	public $path=array();
 
 	abstract public function toHTML();
-	
+
 	public function __construct($id_, $label_, $description_, $description_detailed_, $content_){
 		$this->id = $id_;
 		$this->label = $label_;
@@ -63,7 +63,7 @@ abstract class ConfigElement{
 		}
 		else
 			$str .= $this->content_available;
-		$str .=  "','".$this->description."','".$this->description_detailed."','".$this->type."'";
+		$str .=  "','".$this->description."','".$this->description_detailed."'";
 		$str .= ')';
 		return $str;
 	}
@@ -79,19 +79,19 @@ abstract class ConfigElement{
 			$this->content = '';
 		}
 	}
-	
+
 	public function setPath($path_) {
 		$this->path = $path_;
 	}
-	
+
 	public function setFormSeparator($sep_) {
 		$this->formSeparator = $sep_;
 	}
-	
+
 	public function setContentAvailable($content_available_) {
 		$this->content_available = $content_available_;
 	}
-	
+
 	protected function htmlID() {
 		$html_id = '';
 		foreach ($this->path as $node) {
