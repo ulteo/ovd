@@ -21,8 +21,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 function redirect($url_=NULL) {
-	if (is_null($url_))
-		$url_ = $_SERVER['HTTP_REFERER'];
+	if (is_null($url_)) {
+		if (! isset($_SERVER['HTTP_REFERER'])) {
+			global $base_url;
+			$url_ = $base_url;
+		} else
+			$url_ = $_SERVER['HTTP_REFERER'];
+	}
 
 	header('Location: '.$url_);
 	die();
