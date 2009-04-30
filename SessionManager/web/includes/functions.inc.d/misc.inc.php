@@ -20,6 +20,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
+function secure_html($data_) {
+	if (is_array($data_))
+		foreach ($data_ as $k => $v)
+			$data_[$k] = secure_html($v);
+	elseif (is_string($data_))
+		$data_ = htmlspecialchars($data_, ENT_NOQUOTES);
+
+	return $data_;
+}
+
 function in_admin() {
 	$buf = basename(dirname('http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']));
 

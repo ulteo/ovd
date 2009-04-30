@@ -29,15 +29,6 @@ define('SESSIONMANAGER_ROOT_ADMIN', SESSIONMANAGER_ROOT.'/admin');
 $buf = @ini_get('include_path');
 @ini_set('include_path', $buf.':'.SESSIONMANAGER_ROOT.'/PEAR');
 
-foreach ($_GET as $k => $v)
-  $_GET[$k] = htmlspecialchars($v, ENT_NOQUOTES);
-
-foreach ($_POST as $k => $v)
-  $_POST[$k] = htmlspecialchars($v, ENT_NOQUOTES);
-
-foreach ($_REQUEST as $k => $v)
-  $_REQUEST[$k] = htmlspecialchars($v, ENT_NOQUOTES);
-
 define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/classes');
@@ -51,6 +42,10 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 require_once(dirname(__FILE__).'/load_balancing.inc.php');
 
 require_once(dirname(__FILE__).'/defaults.inc.php');
+
+$_GET = secure_html($_GET);
+$_POST = secure_html($_POST);
+$_REQUEST = secure_html($_REQUEST);
 
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = split('[,;]', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
