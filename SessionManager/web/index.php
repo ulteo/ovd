@@ -22,84 +22,25 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 include_once(dirname(__FILE__).'/check.php');
 
-$list_languages = array(
-	'en_GB.UTF-8'	=>	'English',
-	'fr_FR.UTF-8'	=>	'Français'
-);
+$prefs = Preferences::getInstance();
+if (! $prefs)
+	die_error(_('get Preferences failed'),__FILE__,__LINE__);
 
-$list_windows_keymaps = array(
-	'ar'	=>	'ar',
-	'cs'	=>	'cs',
-	'da'	=>	'da',
-	'de'	=>	'de',
-	'de-ch'	=>	'de-ch',
-	'en-dv'	=>	'en-dv',
-	'en-gb'	=>	'en-gb',
-	'en-us'	=>	'en-us',
-	'es'	=>	'es',
-	'et'	=>	'et',
-	'fi'	=>	'fi',
-	'fo'	=>	'fo',
-	'fr'	=>	'fr',
-	'fr-be'	=>	'fr-be',
-	'fr-ca'	=>	'fr-ca',
-	'fr-ch'	=>	'fr-ch',
-	'he'	=>	'he',
-	'hr'	=>	'hr',
-	'hu'	=>	'hu',
-	'is'	=>	'is',
-	'it'	=>	'it',
-	'ja'	=>	'ja',
-	'ko'	=>	'ko',
-	'lt'	=>	'lt',
-	'lv'	=>	'lv',
-	'mk'	=>	'mk',
-	'nl'	=>	'nl',
-	'nl-be'	=>	'nl-be',
-	'no'	=>	'no',
-	'pl'	=>	'pl',
-	'pt'	=>	'pt',
-	'pt-br'	=>	'pt-br',
-	'ru'	=>	'ru',
-	'sl'	=>	'sl',
-	'sv'	=>	'sv',
-	'th'	=>	'th',
-	'tr'	=>	'tr'
-);
+if (isset($prefs->elements['general']['session_settings_defaults']['language']))
+	$list_languages = $prefs->elements['general']['session_settings_defaults']['language']->content_available;
+
+if (isset($prefs->elements['general']['session_settings_defaults']['windows_keymap']))
+	$list_windows_keymaps = $prefs->elements['general']['session_settings_defaults']['windows_keymap']->content_available;
 
 $list_desktop_sizes = array(
 	'auto'	=>	_('Maximum')
 );
 
-$list_desktop_qualitys = array(
-	//0	=>	'Auto',
-	2	=>	_('Lowest'),
-	5	=>	_('Medium'),
-	8	=>	_('High'),
-	9	=>	_('Highest')
-);
+if (isset($prefs->elements['general']['session_settings_defaults']['quality']))
+	$list_desktop_qualitys = $prefs->elements['general']['session_settings_defaults']['quality']->content_available;
 
-$list_desktop_timeouts = array(
-	60		=>	_('1 minute'),
-	120		=>	_('2 minutes'),
-	300		=>	_('5 minutes'),
-	600		=>	_('10 minutes'),
-	900		=>	_('15 minutes'),
-	1800		=>	_('30 minutes'),
-	3600		=>	_('1 hour'),
-	7200		=>	_('2 hours'),
-	18000	=>	_('5 hours'),
-	43200	=>	_('12 hours'),
-	86400	=>	_('1 day'),
-	172800	=>	_('2 days'),
-	604800	=>	_('1 week'),
-	2764800	=>	_('1 month'),
-	-1		=>	_('Never')
-);
-
-$prefs = Preferences::getInstance();
-if (! $prefs)
-	die_error(_('get Preferences failed'),__FILE__,__LINE__);
+if (isset($prefs->elements['general']['session_settings_defaults']['timeout']))
+	$list_desktop_timeouts = $prefs->elements['general']['session_settings_defaults']['timeout']->content_available;
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $desktop_locale = $default_settings['language'];
