@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+$types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web link'));
+
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
@@ -61,7 +63,13 @@ if ($_GET['view'] == 'all')
   show_default($applicationDB);
 
 function show_default($applicationDB) {
-	$applications = $applicationDB->getList(true);
+	global $types;
+	$applications2 = $applicationDB->getList(true);
+	$applications = array();
+	foreach ($applications2 as $k => $v) {
+		if ($v->getAttribute('static'))
+			$applications[$k] = $v;
+	}
 	$is_empty = (is_null($applications) or count($applications)==0);
 	
 	$is_rw = $applicationDB->isWriteable();
@@ -86,9 +94,6 @@ function show_default($applicationDB) {
 		echo '</thead>';
 		$count = 0;
 		foreach($applications as $app) {
-			if (!$app->getAttribute('static'))  // dirty hack
-				continue;
-		
 			$content = 'content'.(($count++%2==0)?1:2);
 		
 			if ($app->getAttribute('published')) {
@@ -140,7 +145,6 @@ function show_default($applicationDB) {
 			echo '<td>'._($minimun_attribute).'</td>';
 			if ($minimun_attribute == 'type') {
 				echo '<td>';
-				$types = array('linux' => 'linux' , 'windows' => 'windows');
 				echo '<select id="'.$minimun_attribute.'"  name="'.$minimun_attribute.'">';
 				foreach ($types as $mykey => $myval){
 					echo '<option value="'.$mykey.'" >'.$myval.'</option>';
@@ -207,6 +211,7 @@ function modify_application($applicationDB, $id_, $data_) {
 }
 
 function show_manage($id, $applicationDB, $modify_=false) {
+	global $types;
 	$app = $applicationDB->import($id);
 	if (!is_object($app))
 		return false;
@@ -265,7 +270,6 @@ function show_manage($id, $applicationDB, $modify_=false) {
 		echo '<input type="hidden" name="action" value="modify_static" />';
 		echo '<td><input type="text" name="package" value="'.$app->getAttribute('package').'" /></td>';
 		echo '<td>';
-		$types = array('linux' => 'linux', 'windows' => 'windows');
 		echo '<select id="type"  name="type">';
 		foreach ($types as $mykey => $myval){
 			echo '<option value="'.$mykey.'" >'.$myval.'</option>';
@@ -296,7 +300,6 @@ function show_manage($id, $applicationDB, $modify_=false) {
 		echo '<tr class="'.$content.'">';
 		echo '<td>'._('type').'</td>';
 		echo '<td>';
-		$types = array('linux' => 'linux' , 'windows' => 'windows');
 		foreach ($types as $type => $name) {
 			echo '<input type="radio" name="type" value="'.$type.'"';
 			if ($app->getAttribute('type') == $type)

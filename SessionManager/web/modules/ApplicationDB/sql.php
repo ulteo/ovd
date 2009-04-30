@@ -90,16 +90,11 @@ class ApplicationDB_sql {
 
 	public function isOK($app_){
 		$minimun_attribute = array('id','name','type','executable_path','published');
-
 		if (is_object($app_)){
 			foreach ($minimun_attribute as $attribute){
 				if ($app_->hasAttribute($attribute) == false)
 					return false;
 			}
-// 			if ($app_->getAttritute('type') == 'linux'){
-// 				if ($app_->hasAttribute('desktopfile') == false)
-// 					return false;
-// 			}
 			return true;
 		}
 		else

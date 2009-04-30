@@ -1,6 +1,7 @@
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
+# Author Laurent CLOUET <laurent@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License 
@@ -47,6 +48,10 @@ menu_spool() {
 	    'lnk')
 		[ $put_windows_app -ne 0 ] && continue
 		menu_windows_put "$app" $menu_dir
+		[ $? -eq 0 ] && local nbwindows_app=$(( $nbwindows_app + 1 ))
+		;;
+		'weblink')
+		menu_windows_put2 "$app" $menu_dir
 		[ $? -eq 0 ] && local nbwindows_app=$(( $nbwindows_app + 1 ))
 		;;
 	    *)
@@ -97,6 +102,27 @@ menu_windows_put() {
 
     if [ ! -f "$uri" ]; then
 	windows_catch_application "$desktop" || return 1
+    fi
+
+    menu_put "$uri" $menu_dir
+}
+
+menu_windows_put2() {
+    local desktop=$1
+    local menu_dir=$2
+
+    local windows_app_cache=$SPOOL'/windows'
+    [ ! -d $windows_app_cache ] && mkdir -p $windows_app_cache
+
+    local basename=$(echo "$desktop" | sed -e 's/\\/\//g')
+
+    local basename=`basename "$basename" .weblink`'.desktop'
+    local uri=$windows_app_cache'/'$basename
+
+    log_INFO "menu_windows_put: get '$uri'"
+
+    if [ ! -f "$uri" ]; then
+       windows_catch_application "$desktop" || return 1
     fi
 
     menu_put "$uri" $menu_dir

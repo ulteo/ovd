@@ -68,7 +68,7 @@ foreach ($apps as $app) {
 
 		if ($app->getAttribute('desktopfile') == $desktopfile) {
 			header('Content-Type: text/xml; charset=utf-8');
-			echo $app->toXML();
+			echo $app->toXML($buf);
 			die();
 		}
 	}

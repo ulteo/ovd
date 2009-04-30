@@ -170,6 +170,9 @@ class Preferences {
 
 		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
 		$this->add($c,'general');
+		
+		$c = new ConfigElement_inputlist('default_navigator', _('default_navigator'), _('default_navigator'), _('default_navigator'), array('linux' => NULL, 'windows' => NULL));
+		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');

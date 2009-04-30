@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Application {
-	private $attributes;
+	protected $attributes;
 
 	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $type_=NULL, $executable_path_=NULL, $package_=NULL, $icon_path_=NULL, $published_=true,$desktopfile_=NULL) {
 		$this->attributes = array();
@@ -39,7 +39,7 @@ class Application {
 	}
 
 	public function __toString() {
-		$ret = 'Application(';
+		$ret = get_class($this).'(';
 		foreach ($this->attributes as $k=>$attr)
 				$ret .= "'$k':'$attr', ";
 		$ret .= ')';
@@ -127,7 +127,7 @@ class Application {
 		return array_keys($this->attributes);
 	}
 
-	public function toXML() {
+	public function toXML($ApS=NULL) {
 		$list_attr = $this->getAttributesList();
 		foreach ($list_attr as $k => $v) {
 			if (in_array($v, array('executable_path', 'icon_path')))
