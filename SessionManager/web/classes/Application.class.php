@@ -60,7 +60,13 @@ class Application {
 		else
 			return NULL;
 	}
-
+	
+	public function unsetAttribute($myAttribute_) {
+		if ($this->hasAttribute($myAttribute_)) {
+			unset($this->attributes[$myAttribute_]);
+		}
+	}
+	
 	public function haveIcon() {
 		if (file_exists(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png'))
 			return true;

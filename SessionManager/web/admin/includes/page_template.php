@@ -53,7 +53,8 @@ $sub_items =
 	array('applications.php' => _('Applications'),
 	      'appsgroup.php' => _('Applications Groups'),
 	      'publications.php' => _('Publications'),
-	      'wizard.php' => _('Publication wizard')),
+	      'wizard.php' => _('Publication wizard'),
+	      'applications_static.php' => _('Static applications')),
 
 
 	'configuration-sumup.php'	=>

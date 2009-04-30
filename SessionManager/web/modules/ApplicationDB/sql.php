@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -35,8 +35,8 @@ class ApplicationDB_sql {
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE,'id',$id_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
-				$rows = $sql2->FetchAllResults($res);
-				$a = $this->generateApplicationFromRow($rows[0]);
+				$row = $sql2->FetchResult($res);
+				$a = $this->generateApplicationFromRow($row);
 				if ($this->isOK($a))
 					return $a;
 			}
@@ -106,7 +106,7 @@ class ApplicationDB_sql {
 			return false;
 	}
 
-	private function generateApplicationFromRow($row){
+	public function generateApplicationFromRow($row){
 		if ((!isset($row['id'])) || (!isset($row['name'])) || (!isset($row['type'])) || (!isset($row['executable_path'])) || (!isset($row['published']))) {
 			// no right attribute, we do nothing
 			Logger::info('main','ApplicationDB_sql::getList app not insert'); // todo right the content
@@ -117,13 +117,30 @@ class ApplicationDB_sql {
 				$row['package'] = NULL;
 			if (!isset($row['icon_path']))
 				$row['icon_path'] = NULL;
-			$r = new Application($row['id'],$row['name'],$row['description'],$row['type'],$row['executable_path'],$row['package'],$row['icon_path'],$row['published']);
+			if ( $row['type'] == 'weblink') {
+				$r = new Application_weblink($row['id'], $row['name'],$row['description'], $row['executable_path']);
+				
+				unset($row['id']);
+				unset($row['name']);
+				unset($row['description']);
+				unset($row['type']);
+				unset($row['executable_path']);
+				unset($row['package']);
+				unset($row['icon_path']);
+				unset($row['desktopfile']);
+				
+			}
+			else {
+				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['icon_path'], $row['published']);
+				
+			}
 			foreach ($row as $key => $value){
 				$r->setAttribute($key,$value);
 			}
 			return $r;
 		}
 	}
+	
 	public function configuration(){
 		return array();
 	}

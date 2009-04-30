@@ -115,7 +115,7 @@ class User {
 		// get the list of server who the user can launch his applications
 		Logger::debug('main','USER::getAvailableServers (type='.$type.')');
 		$servers = array();
-		$apps = $this->applications($type);
+		$apps = $this->applications($type, false);
 		$apps_id = array();
 		$apps_type = array();
 		foreach($apps as $app){
@@ -189,7 +189,7 @@ class User {
 		return NULL;
 	}
 
-	public function applications($type=NULL){
+	public function applications($type=NULL, $with_static_=true){
 		Logger::debug('main','USER::applications');
 
 		$prefs = Preferences::getInstance();
@@ -222,11 +222,28 @@ class User {
 			$app = $applicationDB->import($id);
 			if (is_object($app)) {
 				if ( $type != NULL) {
-					if ( $app->getAttribute('type') == $type)
-						$my_applications []= $app;
+					if ( $app->getAttribute('type') == $type) {
+						if ( $app->getAttribute('static') ) {
+							if ( $with_static_) {
+								$my_applications []= $app;
+							}
+						}
+						else {
+							$my_applications []= $app;
+						}
+					}
 				}
-				else
-					$my_applications []= $app;
+				else {
+					if ( $app->getAttribute('static') ) {
+						if ( $with_static_) {
+							$my_applications []= $app;
+						}
+					}
+					else {
+						$my_applications []= $app;
+					}
+					
+				}
 			}
 		}
 		return $my_applications;
