@@ -34,30 +34,23 @@ menu_spool() {
 
     [ -f $sessid_dir/parameters/menu ] || return 1
 
-    windows_use_seamlessrdp $sessid_dir
-    local put_windows_app=$?
-
-    sed -e 's/\\/\\\\/g' $sessid_dir'/parameters/menu' | \
-    while read app; do
-	local type=${app##*.}
+    while read app ; do
+	local id=$(echo $app| cut -d '|' -f1)
+	local type=$(echo $app| cut -d '|' -f2)
 
 	case $type in
-	    'desktop')
-		menu_put $app $menu_dir
+	    'local')
+		local path=$(echo $app| cut -d '|' -f3)
+		menu_put $id $path $menu_dir
 		;;
-	    'lnk')
-		[ $put_windows_app -ne 0 ] && continue
-		menu_windows_put "$app" $menu_dir
-		[ $? -eq 0 ] && local nbwindows_app=$(( $nbwindows_app + 1 ))
-		;;
-		'weblink')
-		menu_windows_put2 "$app" $menu_dir
-		[ $? -eq 0 ] && local nbwindows_app=$(( $nbwindows_app + 1 ))
+	    'virtual')
+		local mode=$(echo $app| cut -d '|' -f3)
+		menu_virtual_put $id $mode $menu_dir
 		;;
 	    *)
 		log_WARN "Unrecognized application type '$name'"
 	esac
-    done
+    done <$sessid_dir'/parameters/menu'
 
     if [ -f $sessid_dir/parameters/desktop_icons ]; then
 	touch $menu_dir/applications/.show_on_desktop
@@ -65,15 +58,16 @@ menu_spool() {
 }
 
 menu_put() {
-    local desktop=$1
-    local menu_dir=$2
+    local id=$1
+    local desktop=$2
+    local menu_dir=$3
 
     [ -f "$desktop" ] || return 1
     local basename=$(basename "$desktop")
     local dest=$menu_dir/applications/$basename
 
     if ! grep -q "^Exec=rdesktop " "$desktop"; then
-        sed -r "s#^Exec=(.*)#Exec=startovdapp '$desktop' \1#" <"$desktop" >"$dest"
+        sed -r "s#^Exec=(.*)#Exec=startovdapp $id \1#" <"$desktop" >"$dest"
     else
         cp "$desktop" "$dest"
     fi
@@ -85,45 +79,15 @@ menu_clean() {
     [ -d $menu_dir ] && rm -rf $menu_dir
 }
 
+menu_virtual_put() {
+    local id=$1
+    local mode=$2
+    local menu_dir=$3
 
-menu_windows_put() {
-    local desktop=$1
-    local menu_dir=$2
-
-    local windows_app_cache=$SPOOL'/windows'
-    [ ! -d $windows_app_cache ] && mkdir -p $windows_app_cache
-
-    local basename=$(echo "$desktop" | sed -e 's/\\/\//g')
-
-    local basename=`basename "$basename" .lnk`'.desktop'
-    local uri=$windows_app_cache'/'$basename
-
-    log_INFO "menu_windows_put: get '$uri'"
-
-    if [ ! -f "$uri" ]; then
-	windows_catch_application "$desktop" || return 1
+    if ! vapp_exist $id || [ $mode == 'reload' ]; then
+	vapp_get $id
+	[ $? -eq 0 ] || return 1
     fi
 
-    menu_put "$uri" $menu_dir
-}
-
-menu_windows_put2() {
-    local desktop=$1
-    local menu_dir=$2
-
-    local windows_app_cache=$SPOOL'/windows'
-    [ ! -d $windows_app_cache ] && mkdir -p $windows_app_cache
-
-    local basename=$(echo "$desktop" | sed -e 's/\\/\//g')
-
-    local basename=`basename "$basename" .weblink`'.desktop'
-    local uri=$windows_app_cache'/'$basename
-
-    log_INFO "menu_windows_put: get '$uri'"
-
-    if [ ! -f "$uri" ]; then
-       windows_catch_application "$desktop" || return 1
-    fi
-
-    menu_put "$uri" $menu_dir
+    menu_put $id $vapp_repo/$id.desktop $menu_dir
 }

@@ -26,9 +26,6 @@ windows_use_seamlessrdp() {
 	return 1
     fi
 
-    grep -q ".lnk$" $sessid_dir/parameters/menu
-    [ $? -ne 0 ] && return 1
-
     return 0
 }
 
@@ -48,37 +45,6 @@ windows_init_connection() {
     su -s "/bin/bash" ${USER_LOGIN} -c "$cmd &" 
     # log_INFO "==============================="
     #&> ${SESSID_DIR}/log_rdp.log
-}
-
-windows_catch_application() {
-    local desktop=$1
-    local buffer="/tmp/test.xml"
-
-    webservices_get_application "$desktop" $buffer
-    if [ $? -ne 0 ]; then
-	log_WARN "Cannot get application from $basename"
-	[ -f $buffer ] && rm $buffer
-	return 1
-    fi
-
-    local app_id=`grep id $buffer | sed -e 's/.*id="//' -e 's/".*//'`
-    local pixmap="/usr/share/pixmaps/windows-"$app_id'.png'
-
-    webservices_get_application_icon $app_id $pixmap
-    if [ $? -ne 0 ]; then
-	log_WARN "Unable to catch application icon"
-    fi
-
-    xml2desktopfile $buffer $windows_app_cache
-    if [ $? -ne 0 ] || [ ! -f "$uri" ]; then
-	log_WARN "Catch of $basename failed"
-	[ -f $buffer ] && rm $buffer
-	[ -f $pixmap ] && rm $pixmap
-	return 1
-    fi
-
-    [ -f $buffer ] && rm $buffer
-    return 0
 }
 
 windows_logoff() {

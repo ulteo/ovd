@@ -25,35 +25,20 @@ from xml.dom import minidom
 from xml.parsers.expat import ExpatError
 
 class Application(dict):
-    def __init__(self, directory):
-        self.directory = directory
-
     def fromXmlNode(self, doc):
+        id = doc.getAttribute("id")
         self['Name'] = doc.getAttribute("name")
         self['Comment'] = doc.getAttribute("description")
-        self.filename = doc.getAttribute("desktopfile")
-
-        if ('\\' in self.filename):
-            tmp = self.filename.replace('\\', '/')
-        else:
-            tmp = self.filename
-
-        self.basename = os.path.basename(tmp)
-        if (self.basename.endswith('.lnk')):
-            self.basename = self.basename[:-4]+'.desktop'
-        elif self.basename.endswith('.weblink'):
-            self.basename = self.basename[:-8]+'.desktop'
-        self.target = os.path.join(self.directory, self.basename)
+        self['Icon'] = 'vapp-%s.png'%(id)
 
         execNode = doc.getElementsByTagName('executable')[0]
-        self['Icon'] = 'windows-%s.png'%(doc.getAttribute("id"))
 
         if doc.getAttribute("type") == "windows":
-            self['Exec'] = 'rdesktop -l "%s" "%s"'%(execNode.getAttribute("command"),self.filename)
+            self['Exec'] = 'rdesktop -l "%s" "%s"'%(execNode.getAttribute("command"), id)
         else:
            self['Exec'] = execNode.getAttribute("command")
 
-    def toDesktopFile(self):
+    def toDesktopFile(self, file_):
         lines = ['[Desktop Entry]', 'Version=1.0', 'Encoding=UTF-8', 'Type=Application']
 
         for k,v in self.items():
@@ -61,8 +46,7 @@ class Application(dict):
 
         lines = [e+"\n" for e in lines]
 
-        name = os.path.join(directory, self.basename)
-        f = file(name, 'wb')
+        f = file(file_, 'wb')
         f.writelines(lines)
         f.close()
 
@@ -78,7 +62,7 @@ if len(sys.argv) < 3:
     sys.exit(1)
 
 xmlFile = sys.argv[1]
-directory = sys.argv[2]
+dest_file = sys.argv[2]
 
 if not os.path.isfile(xmlFile):
     print>> sys.stderr, "No such file '%s'"%(xmlFile)
@@ -86,8 +70,9 @@ if not os.path.isfile(xmlFile):
     usage()
     sys.exit(1)
 
-if not os.path.isdir(directory):
-    print>> sys.stderr, "No such directory '%s'"%(directory)
+
+if not os.path.isdir(os.path.dirname(dest_file)):
+    print>> sys.stderr, "No such directory '%s'"%(os.path.dirname(dest_file))
     print>> sys.stderr, ""
     usage()
     sys.exit(1)
@@ -100,7 +85,7 @@ except ExpatError,e:
 
 
 for node in doc.getElementsByTagName('application'):
-    a = Application(directory)
+    a = Application()
     a.fromXmlNode(node)
-    a.toDesktopFile()
+    a.toDesktopFile(dest_file)
 

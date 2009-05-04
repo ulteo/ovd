@@ -76,9 +76,9 @@ cache_set_monitoring() {
 
 	echo '<user login="'$USER_LOGIN'">'                >>$file
     if [ -f $SPOOL_USERS/$SESSID/apps ]; then
-        while read pid desktop; do
-            [ -z "$desktop" ] && continue
-            echo '<pid id="'$pid'" desktop="'$desktop'" />' >>$file
+        while read pid app_id; do
+            [ -z "$app_id" ] && continue
+            echo '<application pid="'$pid'" app_id="'$app_id'" />' >>$file
         done < $SPOOL_USERS/$SESSID/apps
     fi
 	echo '</user>'                                     >>$file

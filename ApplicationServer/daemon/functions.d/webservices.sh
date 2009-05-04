@@ -75,11 +75,11 @@ webservices_system_monitoring() {
 }
 
 webservices_get_application() {
-    local desktopfile="$1"
+    local id=$1
     local output=$2
 
-    local args="fqdn=${SERVERNAME}&desktopfile=$desktopfile"
-    local request="${SESSION_MANAGER_URL}/webservices/app_desktopfile.php?${args}"
+    local args="fqdn=${SERVERNAME}&id=$id"
+    local request="${SESSION_MANAGER_URL}/webservices/application.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
     $webservices_wget "$request" -O $output -o /dev/null
