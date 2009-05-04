@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Application_weblink extends Application{
-	protected $default_navigator;
+	protected $default_browser;
 
 	public function __construct($id_, $name_, $description_, $url_) {
 		Logger::debug('main', "Application_weblink::construct('$id_','$name_','$description_','$url_')");
@@ -39,11 +39,11 @@ class Application_weblink extends Application{
 		}
 		
 		
-		$default_navigator = $prefs->get('general','default_navigator');
-		if (!is_array($default_navigator)) {
-			Logger::error('main', 'Application_weblink::construct failed to get default_navigator preferences');
+		$default_browser = $prefs->get('general','default_browser');
+		if (!is_array($default_browser)) {
+			Logger::error('main', 'Application_weblink::construct failed to get default_browser preferences');
 		}
-		$this->default_navigator = $default_navigator;
+		$this->default_browser = $default_browser;
 	}
 	
 	public function haveIcon() {
@@ -67,8 +67,8 @@ class Application_weblink extends Application{
 		
 		if (is_object($ApS)) {
 			$this->attributes['type'] = $ApS->type;
-			if (array_key_exists($ApS->type ,$this->default_navigator)) {
-				$navigator_id = $this->default_navigator[$ApS->type];
+			if (array_key_exists($ApS->type ,$this->default_browser)) {
+				$browser_id = $this->default_browser[$ApS->type];
 				$prefs = Preferences::getInstance();
 				if (! $prefs)
 					die_error('get Preferences failed',__FILE__,__LINE__);
@@ -79,12 +79,12 @@ class Application_weblink extends Application{
 				}
 				$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
 				$applicationDB = new $mod_app_name();
-				$navigator = $applicationDB->import($navigator_id);
-				if (!is_object($navigator)) {
-					Logger::error('main', 'Application_weblink::toXML failed to load navigator (id='.$navigator_id.')');
+				$browser = $applicationDB->import($browser_id);
+				if (!is_object($browser)) {
+					Logger::error('main', 'Application_weblink::toXML failed to load browser (id='.$browser_id.')');
 				}
 				else {
-					$this->attributes['icon_path'] = $navigator->getAttribute('icon_path');
+					$this->attributes['icon_path'] = $browser->getAttribute('icon_path');
 				}
 			}
 		}
