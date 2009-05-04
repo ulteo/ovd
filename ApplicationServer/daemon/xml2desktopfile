@@ -46,13 +46,12 @@ class Application(dict):
         self.target = os.path.join(self.directory, self.basename)
 
         execNode = doc.getElementsByTagName('executable')[0]
-        self['Exec'] = 'startovdapp "%s" "%s"'%(self.target,execNode.getAttribute("command"))
-        self['Icon'] = execNode.getAttribute("icon")
+        self['Icon'] = 'windows-%s.png'%(doc.getAttribute("id"))
 
-        if (self.filename.endswith('.lnk')):
+        if doc.getAttribute("type") == "windows":
             self['Exec'] = 'rdesktop -l "%s" "%s"'%(execNode.getAttribute("command"),self.filename)
-            self['Icon'] = 'windows-%s.png'%(doc.getAttribute("id"))
-
+        else:
+           self['Exec'] = execNode.getAttribute("command")
 
     def toDesktopFile(self):
         lines = ['[Desktop Entry]', 'Version=1.0', 'Encoding=UTF-8', 'Type=Application']
