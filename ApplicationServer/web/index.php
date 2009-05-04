@@ -104,9 +104,22 @@ if (is_null($menu_node))
 
 $application_nodes = $menu_node->getElementsByTagname('application');
 $_SESSION['parameters']['desktopfiles'] = array();
-foreach ($application_nodes as $application_node)
-	if ($application_node->hasAttribute('desktopfile'))
-		$_SESSION['parameters']['desktopfiles'][md5($application_node->getAttribute('desktopfile'))] = $application_node->getAttribute('desktopfile');
+foreach ($application_nodes as $application_node) {
+	$_SESSION['parameters']['applications'][$application_node->getAttribute('id')] = '';
+	if ($application_node->hasAttribute('id'))
+		$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= $application_node->getAttribute('id');
+	if ($application_node->hasAttribute('mode')) {
+		$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|'.$application_node->getAttribute('mode');
+
+		if ($application_node->getAttribute('mode') == 'local') {
+			if ($application_node->hasAttribute('desktopfile'))
+				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|'.$application_node->getAttribute('desktopfile');
+		} elseif ($application_node->getAttribute('mode') == 'virtual') {
+			if ($application_node->hasAttribute('reload') && $application_node->getAttribute('reload') == 1)
+				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|reload';
+		}
+	}
+}
 
 $_SESSION['print_timestamp'] = time();
 

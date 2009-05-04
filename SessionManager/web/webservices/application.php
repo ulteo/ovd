@@ -20,26 +20,26 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', 'Starting webservices/app_desktopfile.php');
+Logger::debug('main', 'Starting webservices/application.php');
 
-if (! isset($_GET['desktopfile'])) {
-	Logger::error('main', '(webservices/app_desktopfile) Missing parameter : desktopfile');
+if (! isset($_GET['id'])) {
+	Logger::error('main', '(webservices/application) Missing parameter : id');
 	header('HTTP/1.1 400 Bad Request');
-	die('ERROR - NO $_GET[\'desktopfile\']');
+	die('ERROR - NO $_GET[\'id\']');
 }
 
 if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/app_desktopfile) Missing parameter : fqdn');
+	Logger::error('main', '(webservices/application) Missing parameter : fqdn');
 	die('ERROR - NO $_GET[\'fqdn\']');
 }
 
 $buf = Abstract_Server::load($_GET['fqdn']);
 if (! $buf || ! $buf->isAuthorized()) {
-	Logger::error('main', '(webservices/session_token) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
+	Logger::error('main', '(webservices/application) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
 	die('Server not authorized');
 }
 
-Logger::debug('main', '(webservices/app_desktopfile) Security check OK');
+Logger::debug('main', '(webservices/application) Security check OK');
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -47,7 +47,7 @@ if (! $prefs)
 
 $mods_enable = $prefs->get('general', 'module_enable');
 if (! in_array('ApplicationDB', $mods_enable)) {
-	Logger::error('main', '(webservices/app_desktopfile) Module ApplicationDB must be enabled');
+	Logger::error('main', '(webservices/application) Module ApplicationDB must be enabled');
 	header('HTTP/1.1 400 Bad Request');
 	die();
 }
@@ -58,20 +58,20 @@ $applicationDB = new $mod_app_name();
 $apps = $applicationDB->getList();
 
 if (! is_array($apps)) {
-	Logger::error('main', '(webservices/app_desktopfile) error getList failed');
+	Logger::error('main', '(webservices/application) error getList failed');
 	header('HTTP/1.1 400 Bad Request');
 }
 
 foreach ($apps as $app) {
-	if ($app->hasAttribute('desktopfile')) {
-		$desktopfile = $_GET['desktopfile'];
+	if ($app->hasAttribute('id')) {
+		$id = $_GET['id'];
 
-		if ($app->getAttribute('desktopfile') == $desktopfile) {
+		if ($app->getAttribute('id') == $id) {
 			header('Content-Type: text/xml; charset=utf-8');
 			echo $app->toXML($buf);
 			die();
 		}
 	}
 }
-Logger::error('main', '(webservices/app_desktopfile) error final');
+Logger::error('main', '(webservices/application) error final');
 header('HTTP/1.1 404 Not Found');

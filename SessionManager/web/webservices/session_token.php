@@ -62,12 +62,15 @@ if (! $session || ! $session->hasAttribute('settings')) {
 
 Abstract_Token::delete($token->id);
 
+$session_type = 'linux';
+
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument();
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $token->type);
+$session_node->setAttribute('type', $session_type);
 $dom->appendChild($session_node);
 
 $settings = $session->getAttribute('settings');
@@ -134,10 +137,19 @@ $userDB = new $mod_user_name();
 $user = $userDB->import($settings['user_login']);
 
 if (!is_null($user)) {
-	$desktopfiles = $user->desktopfiles();
-	foreach ($desktopfiles as $desktopfile) {
+	$available_apps = $user->applications();
+	foreach ($available_apps as $app) {
 		$item = $dom->createElement('application');
-		$item->setAttribute('desktopfile', $desktopfile);
+		$item->setAttribute('id', $app->getAttribute('id'));
+		switch ($session_type) {
+			case 'linux':
+				if ($app->getAttribute('type') == 'linux') {
+					$item->setAttribute('mode', 'local');
+					$item->setAttribute('desktopfile', $app->getAttribute('desktopfile'));
+				} else
+					$item->setAttribute('mode', 'virtual');
+		}
+		$item->setAttribute('reload', true);
 		$menu_node->appendChild($item);
 	}
 }

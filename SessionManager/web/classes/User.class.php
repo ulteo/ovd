@@ -52,28 +52,28 @@ class User {
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
 			$user_default_group = $prefs->get('general', 'user_default_group');
-			
+
 			$mods_enable = $prefs->get('general','module_enable');
 			if (! in_array('UserDB',$mods_enable))
 				die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-			
+
 			$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 			$userGroupDB = new $mod_usergroup_name();
 		}
-		
+
 		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
 		if (is_null($rows)) {
 			Logger::error('main', 'User::usersGroups load('.$this->attributes['login'].') is null');
 			return $result;
 		}
 		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
-		
+
 		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
 			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely
 			if (is_object($g))
 				$result[$user_default_group]= $g;
 		}
-		
+
 		foreach ($rows as $lug){
 			$g = $userGroupDB->import($lug->group);
 			if (is_object($g))
@@ -122,7 +122,7 @@ class User {
 			$apps_id[$app->getAttribute('id')] = $app->getAttribute('id');
 			$apps_type[$app->getAttribute('id')] = $app->getAttribute('type');
 		}
-		
+
 		if (count($apps_id)>0 || $launch_without_apps == 1){
 			$available_servers = Servers::getAvailableType($type);
 			foreach($available_servers as $server){
@@ -131,7 +131,7 @@ class User {
 				foreach($buf2 as $buf_liaison) {
 					$elements2 []= $buf_liaison->element;
 				}
-				
+
 				if ( count(array_diff($apps_id, $elements2)) == 0 ){
 					$servers[$server->fqdn]= $server;
 				}
@@ -170,7 +170,7 @@ class User {
 			}
 			$server_val[$server->fqdn] = $val;
 		}
-		
+
 		while (count($server_val)>0) {
 			$max_value = -1;
 			$max_fqdn = 0;
@@ -242,31 +242,17 @@ class User {
 					else {
 						$my_applications []= $app;
 					}
-					
+
 				}
 			}
 		}
 		return $my_applications;
 	}
 
-	public function desktopfiles(){
-		Logger::debug('main','USER::desktopfiles');
-		$apps = $this->applications();
-		$list = array();
-		if (is_array($apps)){
-			foreach ($apps as $a){
-				if ($a->hasAttribute('desktopfile'))
-					if ((!is_null($a->getAttribute('desktopfile'))) && ($a->getAttribute('desktopfile') != ''))
-						$list []= $a->getAttribute('desktopfile');
-			}
-		}
-		return $list;
-	}
-
 	public function getAttributesList(){
 		return array_keys($this->attributes);
 	}
-	
+
 	public function __toString() {
 		$ret = 'User(';
 		foreach ($this->attributes as $k=>$attr)

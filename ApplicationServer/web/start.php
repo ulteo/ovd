@@ -40,8 +40,8 @@ if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SE
 		put_to_file(SESSION_PATH.'/'.$session.'/parameters/module_fs/'.$k, $v);
 
 	$buf = '';
-	foreach ($_SESSION['parameters']['desktopfiles'] as $desktopfile)
-		$buf .= $desktopfile."\n";
+	foreach ($_SESSION['parameters']['applications'] as $app)
+		$buf .= $app."\n";
 	put_to_file(SESSION_PATH.'/'.$session.'/parameters/menu', $buf);
 
 	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');

@@ -61,9 +61,9 @@ Abstract_Server::save($server);
 
 if ($server->getAttribute('type') != 'windows') {
 	/* session + server history */
-	$sql_sessions = get_from_cache ('reports', 'sessids');
+	$sql_sessions = get_from_cache('reports', 'sessids');
 	if (! is_array($sql_sessions))
-	$sql_sessions = array();
+		$sql_sessions = array();
 
 	$sessions = $dom->getElementsByTagname('session');
 	$tmp = array();
@@ -80,8 +80,8 @@ if ($server->getAttribute('type') != 'windows') {
 		if (! in_array($token, $tmp))
 			unset($sql_sessions[$token]);
 	}
-
 	unset($tmp);
+
 	set_cache($sql_sessions, 'reports', 'sessids');
 }
 

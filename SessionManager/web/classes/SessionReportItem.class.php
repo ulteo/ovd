@@ -53,7 +53,7 @@ class SessionReportItem {
 	}
 
 	public function update($session_node_) {
-		$apps_link = application_desktops_to_ids();
+		//$apps_link = application_desktops_to_ids();
 		$user_node = null;
 		/* reset the current apps data */
 		$this->current_apps = array();
@@ -76,18 +76,13 @@ class SessionReportItem {
 		$tmp = array();
 		foreach ($user_node->childNodes as $pid_node) {
 			if ($pid_node->nodeType != XML_ELEMENT_NODE ||
-				$pid_node->tagName != 'pid')
+				$pid_node->tagName != 'application')
 					continue;
 
-			$app_pid = $pid_node->getAttribute('id');
-			$app_desktop = $pid_node->getAttribute('desktop');
-			if (array_key_exists ($app_desktop, $apps_link)) {
-				$app_id = $apps_link[$app_desktop];
-				$this->current_apps[] = $app_id;
-				$tmp[$app_pid] = $app_id;
-			} else {
-				Logger::warning('main', 'SessionReportItem::init: unknow application '.$app_desktop);
-			}
+			$app_pid = $pid_node->getAttribute('pid');
+			$app_id = $pid_node->getAttribute('app_id');
+			$this->current_apps[] = $app_id;
+			$tmp[$app_pid] = $app_id;
 		}
 
 		/* for each app that was already active, we check if it's still there

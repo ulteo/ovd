@@ -112,8 +112,8 @@ class ServerReportItem {
 						if ($user_child->nodeType != XML_ELEMENT_NODE)
 							continue;
 
-						if ($user_child->tagName == 'pid') {
-							$desktop = $user_child->getAttribute('desktop');
+						if ($user_child->tagName == 'application') {
+							$desktop = $user_child->getAttribute('app_id');
 							if (! array_key_exists($desktop, $apps_link))
 								continue;
 
