@@ -7,7 +7,7 @@ scripts_DATA =  icon.php \
                 server_status.php \
                 userlist.php \
 		session_invite.php \
-                app_desktopfile.php
+                application.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/webservices
 EXTRA_DIST = $(scripts_DATA)
