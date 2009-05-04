@@ -416,9 +416,9 @@
       </simplesect>
 
       <simplesect>
-	<title>app_desktopfile.php</title>
+	<title>application.php</title>
 
-	<para><emphasis role="strong">Used for Windows applications</emphasis></para>	
+	<para><emphasis role="strong">Used for Virtual and Windows applications</emphasis></para>	
 	
 	<itemizedlist>
 	  <listitem>
@@ -431,7 +431,7 @@
 		<para>fqdn</para>
 	      </listitem>
 	      <listitem>
-		<para>desktopfile: a file path</para>
+		<para>id: the application id</para>
 	      </listitem>
 	    </itemizedlist>
 	    </para>
@@ -442,7 +442,7 @@
 	</itemizedlist>
 
 	<para>
-	  Gets the application information from the desktopfile
+	  Gets the application information from the id
 	  argument to create the application shortcut
 	  on the user's desktop.
 	</para>
