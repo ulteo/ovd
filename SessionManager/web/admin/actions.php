@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -131,4 +131,25 @@ if ($_REQUEST['name'] == 'Publication') {
 	}
 }
 
-redirect($_SERVER['HTTP_REFERER']);
+if ($_REQUEST['name'] == 'default_browser') {
+	if ($_REQUEST['action'] == 'add') {
+		$prefs = new Preferences_admin();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$mods_enable = $prefs->get('general','module_enable');
+		if (!in_array('ApplicationDB',$mods_enable)){
+			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
+		}
+		$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+		$applicationDB = new $mod_app_name();
+		$app = $applicationDB->import($_REQUEST['browser']);
+		if (is_object($app)) {
+			$browsers = $prefs->get('general', 'default_browser');
+			$browsers[$_REQUEST['type']] = $app->getAttribute('id');
+			$prefs->set('general', 'default_browser', $browsers);
+			$prefs->backup();
+		}
+	}
+}
+redirect();

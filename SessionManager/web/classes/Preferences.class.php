@@ -171,7 +171,7 @@ class Preferences {
 		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_inputlist('default_browser', _('default_browser'), _('default_browser'), _('default_browser'), array('linux' => NULL, 'windows' => NULL));
+		$c = new ConfigElement_inputlist('default_browser', _('default_browser'), _('default_browser'), _('default_browser'), array('linux' => NULL)); // TODO: 'windows' to add
 		$this->add($c,'general');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));

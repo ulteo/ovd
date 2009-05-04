@@ -60,10 +60,14 @@ class ApplicationDB_sql {
 		return NULL;
 	}
 
-	public function getList($sort_=false){
+	public function getList($sort_=false, $type_=NULL){
 		Logger::debug('main','ApplicationDB_sql::getList');
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1',APPLICATION_TABLE);
+		if (is_null($type_))
+			$res = $sql2->DoQuery('SELECT * FROM @1',APPLICATION_TABLE);
+		else
+			$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE, 'type', $type_);
+		
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);

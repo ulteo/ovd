@@ -60,9 +60,9 @@ if (! isset($_GET['view']))
   $_GET['view'] = 'all';
 
 if ($_GET['view'] == 'all')
-  show_default($applicationDB);
+  show_default($prefs, $applicationDB);
 
-function show_default($applicationDB) {
+function show_default($prefs, $applicationDB) {
 	global $types;
 	$applications2 = $applicationDB->getList(true);
 	$applications = array();
@@ -130,7 +130,6 @@ function show_default($applicationDB) {
 		echo '</table>'; // table A
 		echo '</div>'; // apps_list
 	}
-	echo '</div>'; // general div
 	if ($is_rw) {
 		echo '<br />';
 		echo '<h2>'._('Add a static application').'</h2>';
@@ -171,6 +170,46 @@ function show_default($applicationDB) {
 		echo '</form>';
 		echo '</div>'; // application_add
 	}
+	
+	echo '<br />';
+	echo '<h2>'._('Web link configuration').'</h2>';
+	echo 'Default browser for :';
+	$browsers = $prefs->get('general', 'default_browser');
+	if ( $browsers != array() && !is_null($browsers)) {
+		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
+		foreach ($browsers as $type => $browser) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="default_browser" />';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="type" value="'.$type.'" />';
+			echo '<td>';
+			echo $type;
+			echo '</td>';
+			echo '<td>';
+			$apps = $applicationDB->getList(false, $type);
+			echo '<select id="browser_'.$type.'"  name="browser">';
+			echo '<option value="-1" >'._('None').'</option>';
+			
+			foreach ($apps as $mykey => $myval) {
+				echo '<option value="'.$mykey.'" ';
+				if (isset($browsers[$type]) && ($mykey == $browsers[$type]))
+					echo 'selected="selected" ';
+				echo '>'.$myval->getAttribute('name').'</option>';
+			}
+			echo '</select>';
+			
+			echo '</td>';
+			echo '<td>';
+			echo '<input type="submit" value="'._('Update').'" />';
+			echo '</td>';
+			echo '</form>';
+			echo '</tr>';
+		}
+		echo '</table>';
+	}
+	echo '</div>'; // general div
 	page_footer();
 	die();
 }
