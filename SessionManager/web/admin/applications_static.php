@@ -80,8 +80,9 @@ function show_default($applicationDB) {
 	echo '<h1>'._('Static Applications').'</h1>';
 	echo '<div id="apps_list_div">'; // apps_list_div
 	
-	if ($is_empty)
+	if ($is_empty) {
 		echo _('No available application').'<br />';
+	}
 	else {
 		echo '<div id="apps_list">'; // apps_list
 		echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">'; // table A
@@ -106,7 +107,7 @@ function show_default($applicationDB) {
 		
 			echo '<tr class="'.$content.'">';
 			if ($is_rw)
-			echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
+				echo '<td><img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
 			echo '<td>'.$app->getAttribute('description').'</td>';
 			echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 		
@@ -125,28 +126,28 @@ function show_default($applicationDB) {
 			echo '</td>';
 		
 			echo '</tr>';
-			}
-			echo '</table>';
-			echo '</div>'; // apps_list
 		}
-		echo '</div>'; // general div
-		if ($is_rw) {
-			echo '<br />';
-			echo '<h2>'._('Add a static application').'</h2>';
-			echo '<div id="application_add">';
-			echo '<form action="" method="post">';
-			echo '<input type="hidden" name="action" value="add" />';
-			
-			echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
-			$count = 0;
-			foreach ($applicationDB->minimun_attributes() as $minimun_attribute) {
+		echo '</table>'; // table A
+		echo '</div>'; // apps_list
+	}
+	echo '</div>'; // general div
+	if ($is_rw) {
+		echo '<br />';
+		echo '<h2>'._('Add a static application').'</h2>';
+		echo '<div id="application_add">';
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="add" />';
+		
+		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
+		$count = 0;
+		foreach ($applicationDB->minimun_attributes() as $minimun_attribute) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td>'._($minimun_attribute).'</td>';
 			if ($minimun_attribute == 'type') {
 				echo '<td>';
 				echo '<select id="'.$minimun_attribute.'"  name="'.$minimun_attribute.'">';
-				foreach ($types as $mykey => $myval){
+				foreach ($types as $mykey => $myval) {
 					echo '<option value="'.$mykey.'" >'.$myval.'</option>';
 				}
 				echo '</select>';
@@ -156,23 +157,22 @@ function show_default($applicationDB) {
 				echo '<td><input type="text" name="'.$minimun_attribute.'" value="" /></td>';
 			}
 			echo '</tr>';
-			}
-			
-			echo '<tr class="'.$content.'">';
-			echo '<td colspan="2">';
-			echo '<input type="submit" value="'._('Add').'" />';
-			echo '<input type="hidden" name="published" value="1" />';
-			echo '<input type="hidden" name="static" value="1" />';
-			echo '</td>';
-			echo '</tr>';
-			
-			echo '</table>';
-			echo '</form>';
-			echo '</div>'; // application_add
 		}
 		
-		page_footer();
-		die();
+		echo '<tr class="'.$content.'">';
+		echo '<td colspan="2">';
+		echo '<input type="submit" value="'._('Add').'" />';
+		echo '<input type="hidden" name="published" value="1" />';
+		echo '<input type="hidden" name="static" value="1" />';
+		echo '</td>';
+		echo '</tr>';
+		
+		echo '</table>';
+		echo '</form>';
+		echo '</div>'; // application_add
+	}
+	page_footer();
+	die();
 }
 
 function add_application($applicationDB, $data_) {
