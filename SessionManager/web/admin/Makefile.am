@@ -2,6 +2,7 @@ SUBDIRS = media modules includes init classes
 
 scripts_DATA = actions.php \
                applications.php \
+               applications_static.php \
                appsgroup.php \
                configuration.php \
                configuration-partial.php \

@@ -3,6 +3,7 @@ SUBDIRS = abstract \
           tasks configelements
 
 scripts_DATA = Application.class.php \
+               Application_weblink.class.php \
                ConfigElement.class.php \
                Invite.class.php \
                Invites.class.php \

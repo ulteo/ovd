@@ -1,6 +1,6 @@
-SUBDIRS = Auth Mail Net
+SUBDIRS = Auth CAS Mail Net
 
-scripts_DATA = Mail.php
+scripts_DATA = CAS.php Mail.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/PEAR
 
