@@ -66,7 +66,7 @@ class Application_weblink extends Application{
 		}
 		
 		if (is_object($ApS)) {
-			$this->attributes['type'] = $ApS->type;
+			//$this->attributes['type'] = $ApS->type;
 			if (array_key_exists($ApS->type ,$this->default_browser)) {
 				$browser_id = $this->default_browser[$ApS->type];
 				$prefs = Preferences::getInstance();
