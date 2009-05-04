@@ -43,6 +43,9 @@ class ConfigElement_inputlist extends ConfigElement { // list of input text (fix
 			$html .=  '</tr>';
 			$i += 1;
 		}
+		$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
+		$html .= '<input type="hidden" name="'.$label3.'key" value="" />'; // dirty hack 
+		$html .= '<input type="hidden" name="'.$label3.'value" value="" />'; // dirty hack 
 		$html .= '</table>';
 		return $html;
 	}
