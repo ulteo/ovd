@@ -110,7 +110,7 @@ function show_default($applicationDB) {
 			echo '<td>'.$app->getAttribute('description').'</td>';
 			echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 		
-			echo '<td><form action="" method="post">';
+			echo '<td><form action="" method="get">';
 			echo '<input type="hidden" name="action" value="manage" />';
 			echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
 			echo '<input type="submit" value="'._('Manage').'"/>';
