@@ -67,6 +67,25 @@ class Application {
 		}
 	}
 	
+	public function getIconPath() {
+		if ($this->hasAttribute('id')) {
+			$path_with_id = CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
+			if (file_exists($path_with_id)) {
+				return $path_with_id;
+			}
+			else {
+				if ($this->getAttribute('static')) {
+					return $this->getDefaultIconPath();
+				}
+			}
+		}
+		return NULL;
+	}
+	
+	public function getDefaultIconPath() {
+		return SESSIONMANAGER_ROOT_ADMIN.'/media/image/server-'.$this->getAttribute('type').'.png';
+	}
+	
 	public function haveIcon() {
 		if (file_exists(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png'))
 			return true;

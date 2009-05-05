@@ -53,9 +53,16 @@ class Application_weblink extends Application{
 		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application'))
 			return false;
 
-		@copy(SESSIONMANAGER_ROOT_ADMIN.'/media/image/server-weblink.png',  CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png');
-
 		return true;
+	}
+	
+	public function getIconPath() {
+		if (file_exists(parent::getIconPath())) {
+			return parent::getIconPath();
+		}
+		else {
+			return SESSIONMANAGER_ROOT_ADMIN.'/media/image/server-'.$this->getAttribute('type').'.png';
+		}
 	}
 	
 	public function toXML($ApS=NULL) {

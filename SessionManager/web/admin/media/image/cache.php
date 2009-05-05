@@ -22,11 +22,36 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-if (!isset($_REQUEST['id']))
-	$_REQUEST['id'] = 0;
+if (!isset($_REQUEST['id'])) {
+	header('HTTP/1.1 400 Bad Request');
+	die();
+}
 
-if (!file_exists(CACHE_DIR.'/image/application/'.$_REQUEST['id'].'.png'))
-	$_REQUEST['id'] = 0;
+$prefs = new Preferences_admin();
+if (! $prefs) {
+	header('HTTP/1.1 500 Internal Error');
+	die();
+}
 
-header('Content-Type: image/png');
-echo @file_get_contents(CACHE_DIR.'/image/application/'.$_REQUEST['id'].'.png');
+$mods_enable = $prefs->get('general','module_enable');
+if (!in_array('ApplicationDB',$mods_enable)){
+	header('HTTP/1.1 500 Internal Error');
+	die();
+}
+$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+$applicationDB = new $mod_app_name();
+$app = $applicationDB->import($_REQUEST['id']);
+if (!file_exists($app->getIconPath())) {
+	$ret = $app->getIcon();
+	if ( $ret == false) {
+		header('HTTP/1.1 404 Not Found');
+		die();
+	}
+}
+else {
+	header('Content-Type: image/png');
+	echo @file_get_contents($app->getIconPath());
+}
+
+
+
