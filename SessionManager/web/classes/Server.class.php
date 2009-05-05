@@ -552,6 +552,8 @@ class Server {
 	public function orderDeletion() {
 		Logger::debug('main', 'Starting Server::orderDeletion for \''.$this->fqdn.'\'');
 
+		Abstract_Liaison::delete('StaticApplicationServer', NULL, $this->fqdn);
+
 		return true;
 	}
 

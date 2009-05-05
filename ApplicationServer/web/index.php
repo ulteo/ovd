@@ -117,6 +117,8 @@ foreach ($application_nodes as $application_node) {
 		} elseif ($application_node->getAttribute('mode') == 'virtual') {
 			if ($application_node->hasAttribute('reload') && $application_node->getAttribute('reload') == 1)
 				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|reload';
+			else
+				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|cache';
 		}
 	}
 }

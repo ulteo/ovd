@@ -72,15 +72,15 @@ function show_default($prefs, $applicationDB) {
 			$applications[$k] = $v;
 	}
 	$is_empty = (is_null($applications) or count($applications)==0);
-	
+
 	$is_rw = $applicationDB->isWriteable();
-	
+
 	page_header();
-	
+
 	echo '<div>'; // general div
 	echo '<h1>'._('Static Applications').'</h1>';
 	echo '<div id="apps_list_div">'; // apps_list_div
-	
+
 	if ($is_empty) {
 		echo _('No available application').'<br />';
 	}
@@ -97,19 +97,19 @@ function show_default($prefs, $applicationDB) {
 		$count = 0;
 		foreach($applications as $app) {
 			$content = 'content'.(($count++%2==0)?1:2);
-		
+
 			if ($app->getAttribute('published')) {
 				$status_change_value = 0;
 			} else {
 				$status_change_value = 1;
 			}
-		
+
 			echo '<tr class="'.$content.'">';
 			if ($is_rw)
 				echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
 			echo '<td>'.$app->getAttribute('description').'</td>';
 			echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
-		
+
 			echo '<td><form action="" method="get">';
 			echo '<input type="hidden" name="action" value="manage" />';
 			echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
@@ -123,7 +123,7 @@ function show_default($prefs, $applicationDB) {
 			echo '<input type="submit" value="'._('Delete').'" />';
 			echo '</form>';
 			echo '</td>';
-		
+
 			echo '</tr>';
 		}
 		echo '</table>'; // table A
@@ -135,7 +135,7 @@ function show_default($prefs, $applicationDB) {
 		echo '<div id="application_add">';
 		$first_type = array_keys($types);
 		$first_type = $first_type[0];
-		
+
 		foreach ($types as $type => $name) {
 			echo '<input class="input_radio" type="radio" name="type" value="'.$type.'" onclick="';
 			foreach ($types as $type2 => $name2) {
@@ -147,19 +147,19 @@ function show_default($prefs, $applicationDB) {
 			echo '" ';
 			if ( $type == $first_type)
 				echo 'checked="checked"';
-			
+
 			echo '/>';
 			echo '<img src="media/image/server-'.$type.'.png" alt="'.$type.'" title="'.$type.'" />';
 		}
-		
+
 		foreach ($types as $type => $name) {
 			echo '<table id="table_'.$type.'"';
 			if ( $type != $first_type)
 				echo ' style="display: none" ';
-			else 
+			else
 				echo ' style="display: visible" ';
 			echo ' border="0" class="main_sub" cellspacing="1" cellpadding="3" >';
-			
+
 			echo '<form action="" method="post" enctype="multipart/form-data">';
 			echo '<input type="hidden" name="action" value="add" />';
 			$count = 0;
@@ -199,7 +199,7 @@ function show_default($prefs, $applicationDB) {
 
 		echo '</div>'; // application_add
 	}
-	
+
 	echo '<br />';
 	echo '<h2>'._('Web link configuration').'</h2>';
 	echo 'Default browser for :';
@@ -220,7 +220,7 @@ function show_default($prefs, $applicationDB) {
 			$apps = $applicationDB->getList(false, $type);
 			echo '<select id="browser_'.$type.'"  name="browser">';
 			echo '<option value="-1" >'._('None').'</option>';
-			
+
 			foreach ($apps as $mykey => $myval) {
 				echo '<option value="'.$mykey.'" ';
 				if (isset($browsers[$type]) && ($mykey == $browsers[$type]))
@@ -228,7 +228,7 @@ function show_default($prefs, $applicationDB) {
 				echo '>'.$myval->getAttribute('name').'</option>';
 			}
 			echo '</select>';
-			
+
 			echo '</td>';
 			echo '<td>';
 			echo '<input type="submit" value="'._('Update').'" />';
@@ -246,7 +246,7 @@ function show_default($prefs, $applicationDB) {
 function add_application($applicationDB, $data_) {
   if (! isset($data_['type']))
     return false;
-  
+
   unset($data_['action']);
   $data_['id'] = 666; // little hack
   $a = $applicationDB->generateApplicationFromRow($data_);
@@ -259,6 +259,7 @@ function add_application($applicationDB, $data_) {
 function del_application($applicationDB, $id_) {
 	$app = $applicationDB->import($id_);
 	if (is_object($app)) {
+		Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 		return $applicationDB->remove($app);
 	}
 	return false;
@@ -278,6 +279,8 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 	$applicationDB->update($app);
 	if (array_key_exists('file_icon' ,$files_)) {
 		$upload = $files_['file_icon'];
+
+		$have_file = true;
 		if($upload['error']) {
 			switch ($upload['error']) {
 				case 1: // UPLOAD_ERR_INI_SIZE
@@ -287,31 +290,37 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 					die_error('The file was corrupted while upload');
 					break;
 				case 4: // UPLOAD_ERR_NO_FILE
-					return true;
+					$have_file = false;
 					break;
 			}
 		}
-		$source_file = $upload['tmp_name'];
-		if (! is_readable($source_file))
-			die('file is not readable');
-		
-		$mypicture = new Imagick();
-		try {
-			$is_image = $mypicture->readImage($source_file);
-		}
-		catch (Exception $e) {
-			$is_image = false;
-		}
-		if ($is_image) {
-			$mypicture->scaleImage(32, 0);
-			$mypicture->setImageFileName($app->getIconPath());
-			$mypicture->writeImage();
-		}
-		else {
-			die_error('not an image');
-			return false;
+
+		if ($have_file) {
+			$source_file = $upload['tmp_name'];
+			if (! is_readable($source_file))
+				die('file is not readable');
+
+			$mypicture = new Imagick();
+			try {
+				$is_image = $mypicture->readImage($source_file);
+			}
+			catch (Exception $e) {
+				$is_image = false;
+			}
+			if ($is_image) {
+				$mypicture->scaleImage(32, 0);
+				$mypicture->setImageFileName($app->getIconPath());
+				$mypicture->writeImage();
+			}
+			else {
+				die_error('Not an image');
+				return false;
+			}
 		}
 	}
+
+	Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
+
 	return true;
 }
 
@@ -320,9 +329,9 @@ function show_manage($id, $applicationDB) {
 	$app = $applicationDB->import($id);
 	if (!is_object($app))
 		return false;
-	
+
 	$is_rw = $applicationDB->isWriteable();
-	
+
 	// App groups
 	$appgroups = getAllAppsGroups();
 	$groups_id = array();
@@ -337,12 +346,12 @@ function show_manage($id, $applicationDB) {
 		else
 			$groups_available[]= $group;
 	}
-	
+
 	page_header();
 
 	echo '<div>';
 	echo '<h1><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> '.$app->getAttribute('name').'</h1>';
-	
+
 	echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
 	echo '<tr class="title">';
 // 	echo '<th>'._('Package').'</th>';
@@ -352,14 +361,14 @@ function show_manage($id, $applicationDB) {
 		echo '<th>'._('Command').'</th>';
 	else
 		echo '<th>'._('URL').'</th>';
-	
+
 	if ($is_rw) {
 		echo '<th></th>';
 	}
 	echo '</tr>';
-	
+
 	echo '<tr class="content1">';
-	
+
 // 		echo '<td>'.$app->getAttribute('package').'</td>';
 	echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 	echo '<td>'.$app->getAttribute('description').'</td>';
@@ -369,8 +378,8 @@ function show_manage($id, $applicationDB) {
 	else
 		echo '<a href="'.$app->getAttribute('executable_path').'">'.$app->getAttribute('executable_path').'</a>';
 	echo '</td>';
-	
-	
+
+
 	echo '<td>';
 	echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
@@ -380,7 +389,7 @@ function show_manage($id, $applicationDB) {
 	echo '</td>';
 	echo '</tr>';
 	echo '</table>';
-	
+
 	if ($is_rw) {
 		echo '<br />';
 		echo '<h2>'._('Modify').'</h2>';
@@ -389,7 +398,7 @@ function show_manage($id, $applicationDB) {
 		echo '<input type="hidden" name="action" value="modify" />';
 		echo '<input type="hidden" name="published" value="1" />';
 		echo '<input type="hidden" name="static" value="1" />';
-		
+
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 		$count = 1;
 		$attr_list = $app->getAttributesList();
@@ -397,7 +406,7 @@ function show_manage($id, $applicationDB) {
 			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'icon_path')))
 				unset($attr_list[$k]);
 		}
-		
+
 		foreach ($attr_list as $attr_name) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
@@ -417,7 +426,7 @@ function show_manage($id, $applicationDB) {
 			echo '</td>';
 			echo '</tr>';
 		}
-		
+
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td>'._('Icon').'</td>';
@@ -437,20 +446,20 @@ function show_manage($id, $applicationDB) {
 		echo '<input type="file"  name="file_icon" /> ';
 		echo '</td>';
 		echo '</tr>';
-		
+
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="2">';
 		echo '<input type="submit" value="'._('Modify').'" />';
 		echo '</td>';
 		echo '</tr>';
-		
+
 		echo '</table>';
-		
+
 		echo '</form>'; // form A
 		echo '</div>'; // application_modify
 	}
-	
+
 	if (count($appgroups) > 0) {
 		echo '<div>';
 		echo '<h2>'._('Groups with this application').'</h2>';
@@ -469,7 +478,7 @@ function show_manage($id, $applicationDB) {
 			echo '</form></td>';
 			echo '</tr>';
 		}
-	
+
 		if (count($groups_available) > 0) {
 			echo '<tr>';
 			echo '<form action="actions.php" method="post"><td>';
@@ -487,7 +496,7 @@ function show_manage($id, $applicationDB) {
 		echo '</table>';
 		echo "<div>\n";
 	}
-	
+
 	echo '</div>';
 	echo '</div>';
 	echo '</div>';

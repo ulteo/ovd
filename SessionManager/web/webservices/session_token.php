@@ -146,7 +146,11 @@ if (!is_null($user)) {
 			$item->setAttribute('desktopfile', $app->getAttribute('desktopfile'));
 		} else
 			$item->setAttribute('mode', 'virtual');
-		$item->setAttribute('reload', true);
+
+		$buf = Abstract_Liaison::load('StaticApplicationServer', $app->getAttribute('id'), $session->server);
+		if (is_null($buf))
+			$item->setAttribute('reload', true);
+
 		$menu_node->appendChild($item);
 	}
 }

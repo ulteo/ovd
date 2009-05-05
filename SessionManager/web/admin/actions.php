@@ -5,7 +5,7 @@
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -43,7 +43,7 @@ if ($_REQUEST['name'] == 'Application_Server') {
 		header('Location: '.$_SERVER['HTTP_REFERER']);
 		die();
 	}
-	
+
 	if (! is_array($_REQUEST['application']))
 		$_REQUEST['application'] = array($_REQUEST['application']);
 
@@ -61,7 +61,7 @@ if ($_REQUEST['name'] == 'Application_Server') {
 		$t = new Task_install(0, $_REQUEST['server'], $apps);
 	else
 		$t = new Task_remove(0, $_REQUEST['server'], $apps);
-	
+
 	$tm = new Tasks_Manager();
 	$tm->add($t);
 	redirect($_SERVER['HTTP_REFERER']);
@@ -136,7 +136,7 @@ if ($_REQUEST['name'] == 'default_browser') {
 		$prefs = new Preferences_admin();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
-		
+
 		$mods_enable = $prefs->get('general','module_enable');
 		if (!in_array('ApplicationDB',$mods_enable)){
 			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
@@ -160,7 +160,7 @@ if ($_REQUEST['name'] == 'static_application') {
 				$prefs = new Preferences_admin();
 				if (! $prefs)
 					die_error('get Preferences failed',__FILE__,__LINE__);
-				
+
 				$mods_enable = $prefs->get('general','module_enable');
 				if (!in_array('ApplicationDB',$mods_enable)){
 					die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
@@ -168,6 +168,7 @@ if ($_REQUEST['name'] == 'static_application') {
 				$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
 				$applicationDB = new $mod_app_name();
 				$app = $applicationDB->import($_REQUEST['id']);
+				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 				$app->delIcon();
 			}
 		}

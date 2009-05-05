@@ -55,23 +55,16 @@ if (! in_array('ApplicationDB', $mods_enable)) {
 $mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
 $applicationDB = new $mod_app_name();
 
-$apps = $applicationDB->getList();
-
-if (! is_array($apps)) {
-	Logger::error('main', '(webservices/application) error getList failed');
-	header('HTTP/1.1 400 Bad Request');
+$app = $applicationDB->import($_GET['id']);
+if (! is_object($app)) {
+	Logger::error('main', '(webservices/application) error final');
+	header('HTTP/1.1 404 Not Found');
+	die();
 }
 
-foreach ($apps as $app) {
-	if ($app->hasAttribute('id')) {
-		$id = $_GET['id'];
+if ($app->getAttribute('static'))
+	Abstract_Liaison::save('StaticApplicationServer', $app->getAttribute('id'), $buf->fqdn);
 
-		if ($app->getAttribute('id') == $id) {
-			header('Content-Type: text/xml; charset=utf-8');
-			echo $app->toXML($buf);
-			die();
-		}
-	}
-}
-Logger::error('main', '(webservices/application) error final');
-header('HTTP/1.1 404 Not Found');
+header('Content-Type: text/xml; charset=utf-8');
+echo $app->toXML($buf);
+die();

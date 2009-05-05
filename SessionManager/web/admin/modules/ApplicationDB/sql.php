@@ -4,7 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
- * This program is free software; you can redistribute it and/or 
+ * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; version 2
  * of the License.
@@ -36,10 +36,10 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
-			
+
 			// clean up the icon cache
 			$a->getIcon();
-			
+
 			return ($res !== false);
 		}
 		return false;
@@ -56,16 +56,17 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			return false;
 
 	}
+//htmlspecialchars($data_, ENT_QUOTES);
 	public function update($a){
 		if ($this->isOK($a)){
 			$query = 'UPDATE `'.APPLICATION_TABLE.'` SET ';
 			$attributes = $a->getAttributesList();
 			foreach ($attributes as $key){
-				$query .=  '`'.$key.'` = \''.$a->getAttribute($key).'\' , ';
+				$query .=  '`'.$key.'` = \''.mysql_escape_string($a->getAttribute($key)).'\' , ';
 			}
 			$query = substr($query, 0, -2); // del the last ,
 			$query .= ' WHERE `id` =\''.$a->getAttribute('id').'\'';
-			
+
 			$sql2 = MySQL::getInstance();
 			$res = $sql2->DoQuery($query);
 			return ($res !== false);
@@ -95,7 +96,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			'static' => 'tinyint(1) default \'0\'');
 
 		$ret = $sql2->buildTable($mysql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
-		
+
 		if ( $ret === false) {
 			Logger::error('admin','APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' fail to created');
 			return false;
@@ -105,11 +106,11 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			return true;
 		}
 	}
-	
+
 	public static function enable() {
 		return true;
 	}
-	
+
 	public function minimun_attributes() {
 		return array('name', 'description', 'type', 'executable_path', 'icon_path', 'package', 'desktopfile');
 	}
