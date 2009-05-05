@@ -141,14 +141,11 @@ if (!is_null($user)) {
 	foreach ($available_apps as $app) {
 		$item = $dom->createElement('application');
 		$item->setAttribute('id', $app->getAttribute('id'));
-		switch ($session_type) {
-			case 'linux':
-				if ($app->getAttribute('type') == 'linux') {
-					$item->setAttribute('mode', 'local');
-					$item->setAttribute('desktopfile', $app->getAttribute('desktopfile'));
-				} else
-					$item->setAttribute('mode', 'virtual');
-		}
+		if (! $app->getAttribute('static')) {
+			$item->setAttribute('mode', 'local');
+			$item->setAttribute('desktopfile', $app->getAttribute('desktopfile'));
+		} else
+			$item->setAttribute('mode', 'virtual');
 		$item->setAttribute('reload', true);
 		$menu_node->appendChild($item);
 	}
