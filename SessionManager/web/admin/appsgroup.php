@@ -316,7 +316,7 @@ function show_manage($id) {
     if (count($applications) > 0) {
       foreach($applications as $application) {
 	echo '<tr>';
-	echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
+	echo '<td><img src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
 	echo '</td>';
 	echo '<td>';
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';

@@ -194,7 +194,9 @@ function show_manage($id, $applicationDB) {
   if (!is_object($app))
     return false;
 //     die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
-
+  if ( $app->getAttribute('static')) {
+    redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
+  }
   $is_rw = $applicationDB->isWriteable();
 
   if ($app->getAttribute('published')) {

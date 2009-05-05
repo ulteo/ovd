@@ -152,4 +152,26 @@ if ($_REQUEST['name'] == 'default_browser') {
 		}
 	}
 }
+
+if ($_REQUEST['name'] == 'static_application') {
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['attribute']) && ($_REQUEST['attribute'] == 'icon_file')) {
+			if (isset($_REQUEST['id'])) {
+				$prefs = new Preferences_admin();
+				if (! $prefs)
+					die_error('get Preferences failed',__FILE__,__LINE__);
+				
+				$mods_enable = $prefs->get('general','module_enable');
+				if (!in_array('ApplicationDB',$mods_enable)){
+					die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
+				}
+				$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+				$applicationDB = new $mod_app_name();
+				$app = $applicationDB->import($_REQUEST['id']);
+				$app->delIcon();
+			}
+		}
+	}
+}
+
 redirect();

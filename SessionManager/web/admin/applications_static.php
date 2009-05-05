@@ -21,7 +21,8 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-$types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web link'));
+$types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web'));
+$regular_types = array('linux', 'windows');
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -63,7 +64,7 @@ if ($_GET['view'] == 'all')
   show_default($prefs, $applicationDB);
 
 function show_default($prefs, $applicationDB) {
-	global $types;
+	global $types, $regular_types;
 	$applications2 = $applicationDB->getList(true);
 	$applications = array();
 	foreach ($applications2 as $k => $v) {
@@ -132,40 +133,70 @@ function show_default($prefs, $applicationDB) {
 		echo '<br />';
 		echo '<h2>'._('Add a static application').'</h2>';
 		echo '<div id="application_add">';
-		echo '<form action="" method="post">';
-		echo '<input type="hidden" name="action" value="add" />';
+		$first_type = array_keys($types);
+		$first_type = $first_type[0];
 		
-		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
-		$count = 0;
-		foreach ($applicationDB->minimun_attributes() as $minimun_attribute) {
-			$content = 'content'.(($count++%2==0)?1:2);
-			echo '<tr class="'.$content.'">';
-			echo '<td>'._($minimun_attribute).'</td>';
-			if ($minimun_attribute == 'type') {
-				echo '<td>';
-				echo '<select id="'.$minimun_attribute.'"  name="'.$minimun_attribute.'">';
-				foreach ($types as $mykey => $myval) {
-					echo '<option value="'.$mykey.'" >'.$myval.'</option>';
-				}
-				echo '</select>';
-				echo '</td>';
+		foreach ($types as $type => $name) {
+			echo '<input class="input_radio" type="radio" name="type" value="'.$type.'" onclick="';
+			foreach ($types as $type2 => $name2) {
+				if ( $type == $type2)
+					echo '$(\'table_'.$type2.'\').show(); ';
+				else
+					echo '$(\'table_'.$type2.'\').hide(); ';
 			}
-			else {
-				echo '<td><input type="text" name="'.$minimun_attribute.'" value="" /></td>';
-			}
-			echo '</tr>';
+			echo '" ';
+			if ( $type == $first_type)
+				echo 'checked="checked"';
+			
+			echo '/>';
+			echo '<img src="media/image/server-'.$type.'.png" alt="'.$type.'" title="'.$type.'" />';
 		}
 		
-		echo '<tr class="'.$content.'">';
-		echo '<td colspan="2">';
-		echo '<input type="submit" value="'._('Add').'" />';
-		echo '<input type="hidden" name="published" value="1" />';
-		echo '<input type="hidden" name="static" value="1" />';
-		echo '</td>';
-		echo '</tr>';
-		
-		echo '</table>';
-		echo '</form>';
+		foreach ($types as $type => $name) {
+			echo '<table id="table_'.$type.'"';
+			if ( $type != $first_type)
+				echo ' style="display: none" ';
+			else 
+				echo ' style="display: visible" ';
+			echo ' border="0" class="main_sub" cellspacing="1" cellpadding="3" >';
+			
+			echo '<form action="" method="post" enctype="multipart/form-data">';
+			echo '<input type="hidden" name="action" value="add" />';
+			$count = 0;
+			foreach ($applicationDB->minimun_attributes() as $attr_name) {
+				if (in_array($attr_name, array('type', 'package', 'desktopfile', 'icon_path' )))
+					continue;
+				$content = 'content'.(($count++%2==0)?1:2);
+				echo '<tr class="'.$content.'">';
+				echo '<td>';
+				if ( $attr_name == 'executable_path') {
+					if (in_array($type, $regular_types))
+						echo _('Command');
+					else
+						echo _('URL');
+				}
+				else {
+					echo _($attr_name);
+				}
+				echo '</td>';
+				echo '<td>';
+				echo '<input type="text" name="'.$attr_name.'" value="" size="50"/>';
+				echo '</td>';
+				echo '</tr>';
+			}
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			echo '<td colspan="2">';
+			echo '<input type="submit" value="'._('Add').'" />';
+			echo '<input type="hidden" name="published" value="1" />';
+			echo '<input type="hidden" name="static" value="1" />';
+			echo '<input type="hidden" name="type" value="'.$type.'" />';
+			echo '</td>';
+			echo '</tr>';
+			echo '</form>';
+			echo '</table>';
+		}
+
 		echo '</div>'; // application_add
 	}
 	
@@ -284,8 +315,8 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 	return true;
 }
 
-function show_manage($id, $applicationDB, $modify_=false) {
-	global $types;
+function show_manage($id, $applicationDB) {
+	global $types, $regular_types;
 	$app = $applicationDB->import($id);
 	if (!is_object($app))
 		return false;
@@ -317,95 +348,93 @@ function show_manage($id, $applicationDB, $modify_=false) {
 // 	echo '<th>'._('Package').'</th>';
 	echo '<th>'._('Type').'</th>';
 	echo '<th>'._('Description').'</th>';
-	echo '<th>'._('Executable').'</th>';
+	if (in_array($app->getAttribute('type'), $regular_types))
+		echo '<th>'._('Command').'</th>';
+	else
+		echo '<th>'._('URL').'</th>';
+	
 	if ($is_rw) {
 		echo '<th></th>';
 	}
 	echo '</tr>';
 	
 	echo '<tr class="content1">';
-	if ($modify_ == false ) {
+	
 // 		echo '<td>'.$app->getAttribute('package').'</td>';
-		echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
-		echo '<td>'.$app->getAttribute('description').'</td>';
-		echo '<td>'.$app->getAttribute('executable_path').'</td>';
-		
-		echo '<td>';
-		echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
-		echo '<input type="hidden" name="action" value="del" />';
-		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-		echo '<input type="submit"  value="'._('Delete').'" />';
-		echo '</form>';
-		echo '</td>';
-	}
-	else {
-		echo '<form action="" method="post">';
-		echo '<input type="hidden" name="action" value="modify_static" />';
-		echo '<td><input type="text" name="package" value="'.$app->getAttribute('package').'" /></td>';
-		echo '<td>';
-		echo '<select id="type"  name="type">';
-		foreach ($types as $mykey => $myval){
-			echo '<option value="'.$mykey.'" >'.$myval.'</option>';
-		}
-		echo '</select>';
-		echo '</td>';
-		echo '<td><input type="text" name="description" value="'.$app->getAttribute('description').'" /></td>';
-		echo '<td><input type="text" name="executable_path" value="'.$app->getAttribute('executable_path').'" /></td>';
-		echo '<td><input type="submit" value="'._('Modify2').'"/></td>';
-		echo '</form>';
-	}
+	echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
+	echo '<td>'.$app->getAttribute('description').'</td>';
+	echo '<td>';
+	if (in_array($app->getAttribute('type'), $regular_types))
+		echo $app->getAttribute('executable_path');
+	else
+		echo '<a href="'.$app->getAttribute('executable_path').'">'.$app->getAttribute('executable_path').'</a>';
+	echo '</td>';
+	
+	
+	echo '<td>';
+	echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+	echo '<input type="hidden" name="action" value="del" />';
+	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+	echo '<input type="submit"  value="'._('Delete').'" />';
+	echo '</form>';
+	echo '</td>';
 	echo '</tr>';
 	echo '</table>';
-	
 	
 	if ($is_rw) {
 		echo '<br />';
 		echo '<h2>'._('Modify').'</h2>';
 		echo '<div id="application_modify">';
-		echo '<form action="" method="post" enctype="multipart/form-data" >';
+		echo '<form action="" method="post" enctype="multipart/form-data" >'; // form A
 		echo '<input type="hidden" name="action" value="modify" />';
+		echo '<input type="hidden" name="published" value="1" />';
+		echo '<input type="hidden" name="static" value="1" />';
 		
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 		$count = 1;
 		$attr_list = $app->getAttributesList();
-		
-		$content = 'content'.(($count++%2==0)?1:2);
-		echo '<tr class="'.$content.'">';
-		echo '<td>'._('type').'</td>';
-		echo '<td>';
-		foreach ($types as $type => $name) {
-			echo '<input type="radio" name="type" value="'.$type.'"';
-			if ($app->getAttribute('type') == $type)
-				echo ' checked="checked"';
-			echo '/>';
-			echo '<img src="media/image/server-'.$type.'.png" alt="'.$type.'" title="'.$type.'" />';
+		foreach ($attr_list as $k => $v) {
+			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'icon_path')))
+				unset($attr_list[$k]);
 		}
-		echo '</td>';
-		echo '</tr>';
+		
+		foreach ($attr_list as $attr_name) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			if ($attr_name == 'executable_path') {
+				if (in_array($app->getAttribute('type'), $regular_types)) {
+					echo '<td>'._('Command').'</td>';
+				}
+				else {
+					echo '<td>'._('URL').'</td>';
+				}
+			}
+			else {
+				echo '<td>'._($attr_name).'</td>';
+			}
+			echo '<td>';
+			echo '<input type="text" name="'.$attr_name.'" value="'.$app->getAttribute($attr_name).'" style="with:100%;"/>';
+			echo '</td>';
+			echo '</tr>';
+		}
 		
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
-		echo '<td>'._('name').'</td>';
-		echo '<td><input type="text" name="name" value="'.$app->getAttribute('name').'" /></td>';
-		echo '</tr>';
-		
-		$content = 'content'.(($count++%2==0)?1:2);
-		echo '<tr class="'.$content.'">';
-		echo '<td>'._('description').'</td>';
-		echo '<td><textarea rows="7" cols="60"  name="description">'.$app->getAttribute('description').'</textarea></td>';
-		echo '</tr>';
-		
-		$content = 'content'.(($count++%2==0)?1:2);
-		echo '<tr class="'.$content.'">';
-		echo '<td>'._('executable_path').'</td>';
-		echo '<td><input type="text" name="executable_path" value="'.$app->getAttribute('executable_path').'" /></td>';
-		echo '</tr>';
-		
-		$content = 'content'.(($count++%2==0)?1:2);
-		echo '<tr class="'.$content.'">';
-		echo '<td>'._('icon').'</td>';
+		echo '<td>'._('Icon').'</td>';
 		echo '<td>';
-		echo '<input type="file"  name="file_icon" />';
+		if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
+			echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
+			echo '<form></form>'; // stupid hack..... (really really dirty.....)
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this icon?').'\');" style="display:inline;">'; // form B
+				echo '<input type="hidden" name="name" value="static_application" />';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="attribute" value="icon_file" />';
+				echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+				echo '<input type="submit" value="'._('Delete this icon').'"/>';
+			echo '</form>'; // form B
+			echo '<br />';
+		}
+		echo '<input type="file"  name="file_icon" /> ';
 		echo '</td>';
 		echo '</tr>';
 		
@@ -413,13 +442,12 @@ function show_manage($id, $applicationDB, $modify_=false) {
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="2">';
 		echo '<input type="submit" value="'._('Modify').'" />';
-		echo '<input type="hidden" name="published" value="1" />';
-		echo '<input type="hidden" name="static" value="1" />';
 		echo '</td>';
 		echo '</tr>';
 		
 		echo '</table>';
-		echo '</form>';
+		
+		echo '</form>'; // form A
 		echo '</div>'; // application_modify
 	}
 	
@@ -451,12 +479,11 @@ function show_manage($id, $applicationDB, $modify_=false) {
 			echo '<select name="group">';
 			foreach ($groups_available as $group)
 				echo '<option value="'.$group->id.'">'.$group->name.'</option>';
-				echo '</select>';
-				echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
-				echo '</form>';
-				echo '</tr>';
-			}
-	
+			echo '</select>';
+			echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
+			echo '</form>';
+			echo '</tr>';
+		}
 		echo '</table>';
 		echo "<div>\n";
 	}
