@@ -41,7 +41,7 @@ if (isset($_REQUEST['action'])) {
 	}
 	elseif ($_REQUEST['action'] == 'modify' && $applicationDB->isWriteable()) {
 		if (isset($_REQUEST['id'])) {
-			modify_application($applicationDB, $_REQUEST['id'], $_POST);
+			modify_application($applicationDB, $_REQUEST['id'], $_POST, $_FILES);
 			redirect();
 		}
 	}
@@ -235,7 +235,7 @@ function del_application($applicationDB, $id_) {
 	return false;
 }
 
-function modify_application($applicationDB, $id_, $data_) {
+function modify_application($applicationDB, $id_, $data_, $files_) {
 	unset($data_['action']);
 	$app = $applicationDB->import($id_);
 	if (!is_object($app))
@@ -247,6 +247,43 @@ function modify_application($applicationDB, $id_, $data_) {
 		}
 	}
 	$applicationDB->update($app);
+	if (array_key_exists('file_icon' ,$files_)) {
+		$upload = $files_['file_icon'];
+		if($upload['error']) {
+			switch ($upload['error']) {
+				case 1: // UPLOAD_ERR_INI_SIZE
+					die_error('Oversized file for server rules');
+					break;
+				case 3: // UPLOAD_ERR_PARTIAL
+					die_error('The file was corrupted while upload');
+					break;
+				case 4: // UPLOAD_ERR_NO_FILE
+					return true;
+					break;
+			}
+		}
+		$source_file = $upload['tmp_name'];
+		if (! is_readable($source_file))
+			die('file is not readable');
+		
+		$mypicture = new Imagick();
+		try {
+			$is_image = $mypicture->readImage($source_file);
+		}
+		catch (Exception $e) {
+			$is_image = false;
+		}
+		if ($is_image) {
+			$mypicture->scaleImage(32, 0);
+			$mypicture->setImageFileName(CACHE_DIR.'/image/application/'.$app->getAttribute('id').'.png');
+			$mypicture->writeImage();
+		}
+		else {
+			die_error('not an image');
+			return false;
+		}
+	}
+	return true;
 }
 
 function show_manage($id, $applicationDB, $modify_=false) {
@@ -328,7 +365,7 @@ function show_manage($id, $applicationDB, $modify_=false) {
 		echo '<br />';
 		echo '<h2>'._('Modify').'</h2>';
 		echo '<div id="application_modify">';
-		echo '<form action="" method="post">';
+		echo '<form action="" method="post" enctype="multipart/form-data" >';
 		echo '<input type="hidden" name="action" value="modify" />';
 		
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
@@ -366,8 +403,16 @@ function show_manage($id, $applicationDB, $modify_=false) {
 		echo '<td>'._('executable_path').'</td>';
 		echo '<td><input type="text" name="executable_path" value="'.$app->getAttribute('executable_path').'" /></td>';
 		echo '</tr>';
-		$content = 'content'.(($count++%2==0)?1:2);
 		
+		$content = 'content'.(($count++%2==0)?1:2);
+		echo '<tr class="'.$content.'">';
+		echo '<td>'._('icon').'</td>';
+		echo '<td>';
+		echo '<input type="file"  name="file_icon" />';
+		echo '</td>';
+		echo '</tr>';
+		
+		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="2">';
 		echo '<input type="submit" value="'._('Modify').'" />';
