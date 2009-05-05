@@ -304,7 +304,7 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 		}
 		if ($is_image) {
 			$mypicture->scaleImage(32, 0);
-			$mypicture->setImageFileName(CACHE_DIR.'/image/application/'.$app->getAttribute('id').'.png');
+			$mypicture->setImageFileName($app->getIconPath());
 			$mypicture->writeImage();
 		}
 		else {

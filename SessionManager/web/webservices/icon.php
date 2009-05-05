@@ -63,7 +63,7 @@ if (! is_object($app)) {
 }
 
 
-$path = CACHE_DIR.'/image/application/'.$app->getAttribute('id').'.png';
+$path = $app->getIconPath();
 if (file_exists($path)) {
 	header('Content-Type: image/png');
 	echo @file_get_contents($path);
