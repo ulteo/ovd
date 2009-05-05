@@ -751,11 +751,10 @@ function show_manage($fqdn) {
       foreach ($applications as $app) {
 	$content = 'content'.(($count++%2==0)?1:2);
 	$remove_in_progress = in_array($app, $apps_in_remove);
-	$icon_id = ($app->haveIcon())?$app->getAttribute('id'):0;
 
 	echo '<tr class="'.$content.'">';
 	echo '<td>';
-	echo '<img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> ';
+	echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 	echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 	echo $app->getAttribute('name').'</a>';
 	echo '</td>';

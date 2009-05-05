@@ -353,8 +353,7 @@ function show_step3($error_=NULL) {
     if (isset($_SESSION['wizard']['apps']) && in_array($application->getAttribute('id'), $_SESSION['wizard']['apps']))
       echo ' checked="checked"';
     echo '/>';
-    $icon_id = ($application->haveIcon())?$application->getAttribute('id'):0;
-    echo '&nbsp; <img src="media/image/cache.php?id='.$icon_id.'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
+    echo '&nbsp; <img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
     echo '</tr>';
   }
   $content = 'content'.(($count++%2==0)?1:2);
