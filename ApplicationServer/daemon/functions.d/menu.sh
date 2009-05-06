@@ -24,6 +24,10 @@ menu_init() {
     mkdir -p                  $menu_dir/applications
     ln -sf /usr/share/icons   $menu_dir/icons
     ln -sf /usr/share/pixmaps $menu_dir/pixmaps
+    ln -sf /usr/share/mime    $menu_dir/mime
+    ln -sf /usr/share/themes  $menu_dir/themes
+    ln -sf /usr/share/applications/mimeinfo.cache \
+        $menu_dir/applications/mimeinfo.cache
 }
 
 menu_spool() {
