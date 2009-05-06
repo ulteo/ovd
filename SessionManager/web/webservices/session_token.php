@@ -141,15 +141,19 @@ if (!is_null($user)) {
 	foreach ($available_apps as $app) {
 		$item = $dom->createElement('application');
 		$item->setAttribute('id', $app->getAttribute('id'));
-		if (! $app->getAttribute('static')) {
-			$item->setAttribute('mode', 'local');
-			$item->setAttribute('desktopfile', $app->getAttribute('desktopfile'));
-		} else
+
+		if ($app->getAttribute('static') || $app->getAttribute('type') != $session_type) {
 			$item->setAttribute('mode', 'virtual');
 
-		$buf = Abstract_Liaison::load('StaticApplicationServer', $app->getAttribute('id'), $session->server);
-		if (is_null($buf))
-			$item->setAttribute('reload', true);
+			if ($app->getAttribute('static')) {
+				$buf = Abstract_Liaison::load('StaticApplicationServer', $app->getAttribute('id'), $session->server);
+				if (is_null($buf))
+					$item->setAttribute('reload', true);
+			}
+		} else {
+			$item->setAttribute('mode', 'local');
+			$item->setAttribute('desktopfile', $app->getAttribute('desktopfile'));
+		}
 
 		$menu_node->appendChild($item);
 	}
