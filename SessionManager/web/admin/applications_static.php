@@ -299,22 +299,27 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 			$source_file = $upload['tmp_name'];
 			if (! is_readable($source_file))
 				die('file is not readable');
-
-			$mypicture = new Imagick();
-			try {
-				$is_image = $mypicture->readImage($source_file);
-			}
-			catch (Exception $e) {
-				$is_image = false;
-			}
-			if ($is_image) {
-				$mypicture->scaleImage(32, 0);
-				$mypicture->setImageFileName($app->getIconPath());
-				$mypicture->writeImage();
+			
+			if ( get_classes_startwith('Imagick') != array()) {
+				$mypicture = new Imagick();
+				try {
+					$is_image = $mypicture->readImage($source_file);
+				}
+				catch (Exception $e) {
+					$is_image = false;
+				}
+				if ($is_image) {
+					$mypicture->scaleImage(32, 0);
+					$mypicture->setImageFileName($app->getIconPath());
+					$mypicture->writeImage();
+				}
+				else {
+					die_error('Not an image');
+					return false;
+				}
 			}
 			else {
-				die_error('Not an image');
-				return false;
+				Logger::info('main', 'No Imagick support found');
 			}
 		}
 	}
@@ -426,26 +431,31 @@ function show_manage($id, $applicationDB) {
 			echo '</td>';
 			echo '</tr>';
 		}
-
-		$content = 'content'.(($count++%2==0)?1:2);
-		echo '<tr class="'.$content.'">';
-		echo '<td>'._('Icon').'</td>';
-		echo '<td>';
-		if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
-			echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
-			echo '<form></form>'; // stupid hack..... (really really dirty.....)
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this icon?').'\');" style="display:inline;">'; // form B
-				echo '<input type="hidden" name="name" value="static_application" />';
-				echo '<input type="hidden" name="action" value="del" />';
-				echo '<input type="hidden" name="attribute" value="icon_file" />';
-				echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-				echo '<input type="submit" value="'._('Delete this icon').'"/>';
-			echo '</form>'; // form B
-			echo '<br />';
+		
+		if ( get_classes_startwith('Imagick') != array()) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			echo '<td>'._('Icon').'</td>';
+			echo '<td>';
+			if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
+				echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
+				echo '<form></form>'; // stupid hack..... (really really dirty.....)
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this icon?').'\');" style="display:inline;">'; // form B
+					echo '<input type="hidden" name="name" value="static_application" />';
+					echo '<input type="hidden" name="action" value="del" />';
+					echo '<input type="hidden" name="attribute" value="icon_file" />';
+					echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+					echo '<input type="submit" value="'._('Delete this icon').'"/>';
+				echo '</form>'; // form B
+				echo '<br />';
+			}
+			echo '<input type="file"  name="file_icon" /> ';
+			echo '</td>';
+			echo '</tr>';
 		}
-		echo '<input type="file"  name="file_icon" /> ';
-		echo '</td>';
-		echo '</tr>';
+		else {
+			Logger::info('main', 'No Imagick support found');
+		}
 
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';

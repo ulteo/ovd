@@ -132,3 +132,15 @@ function isSessionManagerRequest() {
 function is_writable2($filename) {
   return ( (is_file($filename) && is_writable($filename)) ||  is_writable(dirname($filename)) );
 }
+
+function get_classes_startwith($start_name) {
+	$classes_name = get_declared_classes();
+	
+	$ret = array();
+	foreach ($classes_name as $name)
+		if (substr($name, 0, strlen($start_name)) == $start_name)
+			$ret[] = $name;
+	
+	return $ret;
+}
+

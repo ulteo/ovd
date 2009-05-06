@@ -34,6 +34,12 @@ if (!isset($_GET['path'])) {
 	die('ERROR - NO $_GET[\'path\']');
 }
 
+if ( get_classes_startwith('Imagick') == array()) {
+	Logger::error('main', 'No Imagick support found');
+	header('HTTP/1.1 500 Internal Server Error');
+	die();
+}
+
 $path = base64_decode($_GET['path']);
 $bloblo = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
 $bloblo = explode("\n", $bloblo);
