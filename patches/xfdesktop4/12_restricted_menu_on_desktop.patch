@@ -1,5 +1,7 @@
---- a/src/xfdesktop-special-file-icon.h
-+++ b/src/xfdesktop-special-file-icon.h
+Index: xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.h
+===================================================================
+--- xfdesktop4-4.4.2.orig/src/xfdesktop-special-file-icon.h	2007-11-17 20:31:41.000000000 +0100
++++ xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.h	2009-05-06 11:18:30.000000000 +0200
 @@ -55,12 +55,14 @@
      XFDESKTOP_SPECIAL_FILE_ICON_FILESYSTEM = 0,
      XFDESKTOP_SPECIAL_FILE_ICON_HOME,
@@ -16,8 +18,10 @@
  
  XfdesktopSpecialFileIconType xfdesktop_special_file_icon_get_icon_type(XfdesktopSpecialFileIcon *icon);
  
---- a/src/xfdesktop-special-file-icon.c
-+++ b/src/xfdesktop-special-file-icon.c
+Index: xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.c
+===================================================================
+--- xfdesktop4-4.4.2.orig/src/xfdesktop-special-file-icon.c	2007-11-17 20:31:41.000000000 +0100
++++ xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.c	2009-05-06 11:18:30.000000000 +0200
 @@ -72,6 +72,7 @@
                                                            gint size);
  static G_CONST_RETURN gchar *xfdesktop_special_file_icon_peek_label(XfdesktopIcon *icon);
@@ -162,8 +166,10 @@
      if(G_UNLIKELY(!special_file_icon->priv->info)) {
          g_object_unref(G_OBJECT(special_file_icon));
          return NULL;
---- a/src/xfdesktop-file-icon-manager.c
-+++ b/src/xfdesktop-file-icon-manager.c
+Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
+===================================================================
+--- xfdesktop4-4.4.2.orig/src/xfdesktop-file-icon-manager.c	2009-05-06 11:18:30.000000000 +0200
++++ xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c	2009-05-06 11:19:21.000000000 +0200
 @@ -52,6 +52,8 @@
  #endif
  
@@ -370,7 +376,7 @@
 +    {
 +        while ((tmp = g_strdup (g_dir_read_name (dir))) != NULL)
 +        {
-+            if (!strcmp (tmp, ".show_on_desktop"))
++            if (!g_str_has_suffix (tmp, ".desktop"))
 +            {
 +                g_free (tmp);
 +                tmp = NULL;
