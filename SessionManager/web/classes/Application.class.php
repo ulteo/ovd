@@ -119,6 +119,9 @@ class Application {
 			$this->delIcon();
 			return false;
 		}
+		
+		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application'))
+			return false;
 
 		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf);
 
