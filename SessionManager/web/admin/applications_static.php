@@ -135,10 +135,10 @@ function show_default($prefs, $applicationDB) {
 		echo '<div id="application_add">';
 		$first_type = array_keys($types);
 		$first_type = $first_type[0];
-
+		$types2 = $types; // bug in php 5.1.6 (redhat 5.2)
 		foreach ($types as $type => $name) {
 			echo '<input class="input_radio" type="radio" name="type" value="'.$type.'" onclick="';
-			foreach ($types as $type2 => $name2) {
+			foreach ($types2 as $type2 => $name2) { // bug in php 5.1.6
 				if ( $type == $type2)
 					echo '$(\'table_'.$type2.'\').show(); ';
 				else
