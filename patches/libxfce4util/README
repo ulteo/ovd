@@ -1,0 +1,3 @@
+* ulteo_01_restricted_xdg.patch
+  Only use the XDG_DATA_DIR provided by the ovd daemon to search for .desktop
+  files

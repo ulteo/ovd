@@ -1,0 +1,73 @@
+--- a/libxfce4util/xfce-resource.c
++++ b/libxfce4util/xfce-resource.c
+@@ -149,17 +149,6 @@
+   _list[XFCE_RESOURCE_CACHE] = g_list_prepend (_list[XFCE_RESOURCE_CACHE], g_strdup (dir));
+ 
+   /*
+-   * Data home
+-   */
+-  dir = _res_getenv ("XDG_DATA_HOME", DEFAULT_XDG_DATA_HOME);
+-  if (!xfce_mkdirhier (dir, 0700, NULL))
+-    {
+-      g_warning ("Invalid XDG_DATA_HOME directory `%s', program may behave incorrectly.", dir);
+-    }
+-  _save[XFCE_RESOURCE_DATA] = g_strdup (dir);
+-  _list[XFCE_RESOURCE_DATA] = g_list_prepend (_list[XFCE_RESOURCE_DATA], g_strdup (dir));
+-
+-  /*
+    * Config home
+    */
+   dir = _res_getenv ("XDG_CONFIG_HOME", DEFAULT_XDG_CONFIG_HOME);
+@@ -175,7 +164,6 @@
+    */
+   dirs = _res_getenv ("XDG_DATA_DIRS", DEFAULT_XDG_DATA_DIRS);
+   _res_split_and_append (dirs, XFCE_RESOURCE_DATA);
+-  _res_split_and_append (DATADIR, XFCE_RESOURCE_DATA);
+ 
+   /*
+    * Config dirs
+@@ -184,44 +172,6 @@
+   _res_split_and_append (dirs, XFCE_RESOURCE_CONFIG);
+   _res_split_and_append (SYSCONFDIR "/xdg", XFCE_RESOURCE_CONFIG);
+ 
+-  /*
+-   * Icons dirs
+-   */
+-  /* local icons dir first */
+-  path = g_build_filename (_save[XFCE_RESOURCE_DATA], "icons", NULL);
+-  _save[XFCE_RESOURCE_ICONS] = g_strdup (path);
+-  _list[XFCE_RESOURCE_ICONS] = g_list_prepend (_list[XFCE_RESOURCE_ICONS], path);
+-
+-  /* backward compatibility */
+-  path = xfce_get_homefile (".icons", NULL);
+-  _list[XFCE_RESOURCE_ICONS] = g_list_append (_list[XFCE_RESOURCE_ICONS], path);
+-
+-  for (l = _list[XFCE_RESOURCE_DATA]; l != NULL; l = l->next)
+-    {
+-      path = g_build_filename ((const gchar *) l->data, "icons", NULL);
+-      _list[XFCE_RESOURCE_ICONS] = g_list_append (_list[XFCE_RESOURCE_ICONS], path);
+-    }
+-
+-  /* XDG fallback */
+-  _list[XFCE_RESOURCE_ICONS] = g_list_append (_list[XFCE_RESOURCE_ICONS], "/usr/share/pixmaps");
+-
+-  /* fallback for system which that don't install everything in /usr */
+-  _list[XFCE_RESOURCE_ICONS] = g_list_append (_list[XFCE_RESOURCE_ICONS], "/usr/local/share/pixmaps");
+-  _list[XFCE_RESOURCE_ICONS] = g_list_append (_list[XFCE_RESOURCE_ICONS], DATADIR "/share/pixmaps");
+-
+-  /*
+-   * Themes dirs
+-   */
+-  path = xfce_get_homefile (".themes", NULL);
+-  _save[XFCE_RESOURCE_THEMES] = g_strdup (path);
+-  _list[XFCE_RESOURCE_THEMES] = g_list_prepend (_list[XFCE_RESOURCE_THEMES], path);
+-
+-  for (l = _list[XFCE_RESOURCE_DATA]; l != NULL; l = l->next)
+-    {
+-      path = g_build_filename ((const gchar *) l->data, "themes", NULL);
+-      _list[XFCE_RESOURCE_THEMES] = g_list_append (_list[XFCE_RESOURCE_THEMES], path);
+-    }
+-
+   /* remove duplicates from the lists */
+ #define REMOVE_DUPLICATES(type) { _list[(type)] = _res_remove_duplicates (_list[(type)]); }
+   REMOVE_DUPLICATES (XFCE_RESOURCE_DATA);
