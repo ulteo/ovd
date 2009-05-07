@@ -131,6 +131,7 @@ function show_default($userDB) {
     echo '<tr class="title">';
     echo '<th>'._('Login').'</th>';
     echo '<th>'._('Display name').'</th>';
+    echo '<th>'._('Others').'</th>';
     echo '</tr>';
 
     $count = 0;
@@ -254,6 +255,7 @@ function show_manage($login, $userDB, $userGroupDB) {
   foreach($keys as $key)
     if ($key != 'password')
       echo '<th>'.$key.'</th>';
+  echo '<th>'._('Locale').'</th>';
   echo '</tr>';
 
   echo '<tr class="content1">';
@@ -267,7 +269,8 @@ function show_manage($login, $userDB, $userGroupDB) {
         $buf = $u->getAttribute($key);
       echo '<td>'.$buf.'</td>';
     }
-
+  echo '<td>'.$u->getLocale().'</td>';
+  echo '</tr>';
   echo '</table>';
 
   if ($userdb_rw) {

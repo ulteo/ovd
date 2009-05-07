@@ -87,7 +87,8 @@ class UserDB_activedirectory  extends UserDB_ldap{
 					'login'	=> 'samaccountname',
 					'displayname'	=> 'displayname',
 					'real_login'    => 'samaccountname',
-					'distinguishedname' => 'distinguishedname'
+					'distinguishedname' => 'distinguishedname',
+					'countrycode' => 'c' // in ISO-3166 see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 		);
 
 		$config_ldap = array(

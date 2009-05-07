@@ -30,7 +30,6 @@ if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
-$desktop_locale = $default_settings['language'];
 $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $desktop_quality = $default_settings['quality'];
@@ -57,6 +56,24 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
+
+if (! isset($_SESSION['login']))
+	die_error(_('Authentication failed'));
+
+$user_login = $_SESSION['login'];
+
+$mods_enable = $prefs->get('general', 'module_enable');
+if (! in_array('UserDB', $mods_enable))
+	die_error('Module UserDB must be enabled',__FILE__,__LINE__);
+
+$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
+$userDB = new $mod_user_name();
+
+$user = $userDB->import($user_login);
+if (! is_object($user))
+	die_error('User importation failed',__FILE__,__LINE__);
+
+$desktop_locale = $user->getLocale();
 
 if (isset($_REQUEST['timezone']) && $_REQUEST['timezone'] != '')
 	$user_timezone = $_REQUEST['timezone'];
@@ -97,22 +114,6 @@ if (! isset($_SESSION['login'])) {
 	if (! $ret)
 		die_error(_('Authentication failed'));
 }
-
-if (! isset($_SESSION['login']))
-	die_error(_('Authentication failed'));
-
-$user_login = $_SESSION['login'];
-
-$mods_enable = $prefs->get('general', 'module_enable');
-if (! in_array('UserDB', $mods_enable))
-	die_error('Module UserDB must be enabled',__FILE__,__LINE__);
-
-$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-$userDB = new $mod_user_name();
-
-$user = $userDB->import($user_login);
-if (! is_object($user))
-	die_error('User importation failed',__FILE__,__LINE__);
 
 Logger::debug('main', '(startsession) Now checking for old session');
 

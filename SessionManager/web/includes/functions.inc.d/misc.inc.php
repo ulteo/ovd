@@ -102,6 +102,10 @@ function is_writable2($filename) {
 }
 
 function locale2unix($locale_) {
+	if (preg_match('/[a-z]+_[A-Z]+\.[a-zA-Z-0-9]+/', $locale_))
+		return $locale_;
+	
+	$locale = strtolower($locale_);
 	$locales = array(
 		'fr'	=>	'fr_FR',
 		'en'	=>	'en_US',
@@ -111,17 +115,21 @@ function locale2unix($locale_) {
 		'it'	=>	'it_IT'
 	);
 
-	if (!preg_match('/[a-zA-Z-_]/', $locale_))
-		$locale_ = $locales['en'];
+	if (!preg_match('/[a-zA-Z-_]/', $locale))
+		$locale = $locales['en'];
 
-	if (strlen($locale_) == 2)
-		$locale_ = $locales[$locale_];
-	elseif (strlen($locale_) == 5)
-		$locale_ = substr($locale_, 0, 2).'_'.strtoupper(substr($locale_, -2));
+	if (strlen($locale) == 2) {
+		if (array_key_exists($locale, $locales))
+			$locale = $locales[$locale];
+		else
+			$locale = $locale.'_'.strtoupper($locale);
+	}
+	elseif (strlen($locale) == 5)
+		$locale = substr($locale, 0, 2).'_'.strtoupper(substr($locale, -2));
 
-	$locale_ .= '.UTF-8';
+	$locale .= '.UTF-8';
 
-	return $locale_;
+	return $locale;
 }
 
 function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
