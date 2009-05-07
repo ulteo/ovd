@@ -67,6 +67,15 @@ class Application {
 		}
 	}
 	
+	public function getIconPathRW() {
+		if ($this->hasAttribute('id')) {
+			return CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
+		}
+		else {
+			return NULL;
+		}
+	}
+	
 	public function getIconPath() {
 		if ($this->hasAttribute('id')) {
 			$path_with_id = CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';

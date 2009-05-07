@@ -284,10 +284,12 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 		if($upload['error']) {
 			switch ($upload['error']) {
 				case 1: // UPLOAD_ERR_INI_SIZE
-					die_error('Oversized file for server rules');
+					popup_error('Oversized file for server rules');
+					return false;
 					break;
 				case 3: // UPLOAD_ERR_PARTIAL
-					die_error('The file was corrupted while upload');
+					popup_error('The file was corrupted while upload');
+					return false;
 					break;
 				case 4: // UPLOAD_ERR_NO_FILE
 					$have_file = false;
@@ -301,20 +303,23 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 				die('file is not readable');
 			
 			if ( get_classes_startwith('Imagick') != array()) {
-				$mypicture = new Imagick();
-				try {
-					$is_image = $mypicture->readImage($source_file);
-				}
-				catch (Exception $e) {
-					$is_image = false;
-				}
-				if ($is_image) {
-					$mypicture->scaleImage(32, 0);
-					$mypicture->setImageFileName($app->getIconPath());
-					$mypicture->writeImage();
+				
+				$path_rw = $app->getIconPathRW();
+				if (is_writable2($path_rw)) {
+					try {
+						$mypicture = new Imagick();
+						$mypicture->readImage($source_file);
+						$mypicture->scaleImage(32, 0);
+						$mypicture->setImageFileName($app->getIconPathRW());
+						$mypicture->writeImage();
+					}
+					catch (Exception $e) {
+						popup_error('The icon is not an image');
+						return false;
+					}
 				}
 				else {
-					die_error('Not an image');
+					Logger::error('main', 'getIconPathRW ('.$path_rw.') is not writeable');
 					return false;
 				}
 			}
