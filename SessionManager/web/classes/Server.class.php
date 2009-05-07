@@ -711,7 +711,7 @@ class Server {
 		foreach ($previous_liaison_key as $key){
 			if (in_array($key, $current_liaison_key) == false) {
 				$a = $applicationDB->import($key);
-				if ( $a->getAttribute('static') == false)
+				if ( is_null($a) || $a->getAttribute('static') == false)
 					Abstract_Liaison::delete('ApplicationServer', $key, $this->fqdn);
 			}
 		}
