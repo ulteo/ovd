@@ -1,3 +1,9 @@
+ulteo-ovd-xfce-default-settings (0.7) ovd-polaris-experimental; urgency=low
+
+  * kiosk config: forbid execution in thunar
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Sun, 10 May 2009 17:06:47 +0200
+
 ulteo-ovd-xfce-default-settings (0.6) ovd-polaris-experimental; urgency=low
 
   * Update the kiosk config to hide the desktop behaviour tab

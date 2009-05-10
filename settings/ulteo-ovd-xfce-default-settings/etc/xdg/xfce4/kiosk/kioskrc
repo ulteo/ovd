@@ -16,3 +16,7 @@ CustomizeBehavior=%admin
 
 [xfrun]
 AllowRun=%admin
+
+[thunar]
+AllowExecute=%admin
+
