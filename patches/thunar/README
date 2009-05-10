@@ -4,3 +4,7 @@
 * ulteo_remove-throbber.patch
   remove the progress gif icon which doesn't work and defaults to the gnome
   icon
+
+* ulteo_executable-kiosk.patch
+  add a kiosk config to allow/forbid execution of executable files (+x files
+  and .desktop files)

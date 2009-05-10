@@ -1,0 +1,26 @@
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-info.c thunar-0.9.0.new/thunar-vfs/thunar-vfs-info.c
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-info.c	2009-05-10 16:11:33.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-info.c	2009-05-10 16:11:54.000000000 +0200
+@@ -332,6 +332,8 @@
+                          GError             **error)
+ {
+   ThunarVfsPath *parent;
++  XfceKiosk     *kiosk;
++  gboolean       allow;
+   const gchar   *icon = NULL;
+   const gchar   *name;
+   const gchar   *type;
+@@ -346,6 +348,13 @@
+   gchar        **argv = NULL;
+   gchar         *exec;
+ 
++  /* check if we are allowed to run executables */
++  kiosk = xfce_kiosk_new ("thunar");
++  allow = xfce_kiosk_query (kiosk, "AllowExecute");
++  xfce_kiosk_free (kiosk);
++  if (!allow)
++      return FALSE;
++
+   g_return_val_if_fail (info != NULL, FALSE);
+   g_return_val_if_fail (error == NULL || *error == NULL, FALSE);
+   g_return_val_if_fail (screen == NULL || GDK_IS_SCREEN (screen), FALSE);
