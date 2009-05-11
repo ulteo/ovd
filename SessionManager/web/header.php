@@ -93,6 +93,3 @@ if ($base_url == '//')
 			<div class="spacer"></div>
 
 			<div id="pageWrap">
-				<?php
-					if (isset($_GET['error']) && $_GET['error'] != '')
-						echo '<p class="msg_error">'.$_GET['error'].'</p><br /><br  />';

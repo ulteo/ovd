@@ -28,9 +28,14 @@ class AuthMethod_CAS extends AuthMethod {
 		if (! isset($CAS_server_url) || $CAS_server_url == '')
 			return NULL;
 
+		if (! query_url($CAS_server_url))
+			return NULL;
+
 		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), '/cas');
 		phpCAS::setNoCasServerValidation();
-		phpCAS::forceAuthentication();
+
+		if (! phpCAS::forceAuthentication())
+			return NULL;
 
 		if (! phpCAS::isAuthenticated())
 			return NULL;
