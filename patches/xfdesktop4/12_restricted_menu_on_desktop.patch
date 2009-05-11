@@ -1,7 +1,5 @@
-Index: xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.h
-===================================================================
---- xfdesktop4-4.4.2.orig/src/xfdesktop-special-file-icon.h	2007-11-17 20:31:41.000000000 +0100
-+++ xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.h	2009-05-06 11:18:30.000000000 +0200
+--- a/src/xfdesktop-special-file-icon.h
++++ b/src/xfdesktop-special-file-icon.h
 @@ -55,12 +55,14 @@
      XFDESKTOP_SPECIAL_FILE_ICON_FILESYSTEM = 0,
      XFDESKTOP_SPECIAL_FILE_ICON_HOME,
@@ -18,10 +16,8 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.h
  
  XfdesktopSpecialFileIconType xfdesktop_special_file_icon_get_icon_type(XfdesktopSpecialFileIcon *icon);
  
-Index: xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.c
-===================================================================
---- xfdesktop4-4.4.2.orig/src/xfdesktop-special-file-icon.c	2007-11-17 20:31:41.000000000 +0100
-+++ xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.c	2009-05-06 11:18:30.000000000 +0200
+--- a/src/xfdesktop-special-file-icon.c
++++ b/src/xfdesktop-special-file-icon.c
 @@ -72,6 +72,7 @@
                                                            gint size);
  static G_CONST_RETURN gchar *xfdesktop_special_file_icon_peek_label(XfdesktopIcon *icon);
@@ -166,10 +162,8 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-special-file-icon.c
      if(G_UNLIKELY(!special_file_icon->priv->info)) {
          g_object_unref(G_OBJECT(special_file_icon));
          return NULL;
-Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
-===================================================================
---- xfdesktop4-4.4.2.orig/src/xfdesktop-file-icon-manager.c	2009-05-06 11:18:30.000000000 +0200
-+++ xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c	2009-05-06 11:19:21.000000000 +0200
+--- a/src/xfdesktop-file-icon-manager.c
++++ b/src/xfdesktop-file-icon-manager.c
 @@ -52,6 +52,8 @@
  #endif
  
@@ -196,7 +190,15 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      
      gboolean show_removable_media;
      gboolean show_special[XFDESKTOP_SPECIAL_FILE_ICON_TRASH+1];
-@@ -290,7 +295,7 @@
+@@ -158,6 +163,7 @@
+ static gboolean xfdesktop_file_icon_manager_check_create_desktop_folder(ThunarVfsPath *path);
+ static void xfdesktop_file_icon_manager_load_desktop_folder(XfdesktopFileIconManager *fmanager);
+ static void xfdesktop_file_icon_manager_load_removable_media(XfdesktopFileIconManager *fmanager);
++static void xfdesktop_file_icon_manager_set_launchers(XfdesktopFileIconManager *fmanager);
+ static void xfdesktop_file_icon_manager_remove_removable_media(XfdesktopFileIconManager *fmanager);
+ 
+ static void xfdesktop_file_icon_position_changed(XfdesktopFileIcon *icon,
+@@ -290,7 +296,7 @@
      gtk_target_list_unref(fmanager->priv->drop_targets);
      
      thunar_vfs_path_unref(fmanager->priv->folder);
@@ -205,7 +207,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      G_OBJECT_CLASS(xfdesktop_file_icon_manager_parent_class)->finalize(obj);
  }
  
-@@ -413,7 +418,6 @@
+@@ -413,7 +419,6 @@
      return ret;
  }
  
@@ -213,7 +215,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
  /* icon signal handlers */
  
  static void
-@@ -1600,6 +1604,7 @@
+@@ -1600,6 +1605,7 @@
      GList *selected, *mime_apps, *l, *mime_actions = NULL;
      GtkWidget *menu, *mi, *img, *menu2, *menu3;
      gboolean multi_sel, have_templates = FALSE, got_custom_menu = FALSE;
@@ -221,7 +223,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      gint w = 0, h = 0;
      GdkPixbuf *pix;
      ThunarVfsMimeInfo *minfo;
-@@ -1615,6 +1620,13 @@
+@@ -1615,6 +1621,13 @@
      
      gtk_icon_size_lookup(GTK_ICON_SIZE_MENU, &w, &h);
      
@@ -235,7 +237,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      if(!multi_sel) {
          menu = xfdesktop_icon_get_popup_menu(XFDESKTOP_ICON(selected->data));
          if(menu)
-@@ -1682,7 +1694,8 @@
+@@ -1682,7 +1695,8 @@
                      gtk_menu_shell_append(GTK_MENU_SHELL(menu), mi);
                      
                      if(!g_ascii_strcasecmp("application/x-desktop",
@@ -245,7 +247,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
                      {
                          ThunarVfsInfo *info1 = (ThunarVfsInfo *)info;  /* why? */
                          img = gtk_image_new_from_stock(GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-@@ -2101,6 +2114,8 @@
+@@ -2101,6 +2115,8 @@
                           file_icon_hash_write_icons, rcfile);
      g_hash_table_foreach(fmanager->priv->special_icons,
                           file_icon_hash_write_icons, rcfile);
@@ -254,7 +256,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      
      xfce_rc_flush(rcfile);
      xfce_rc_close(rcfile);
-@@ -2274,12 +2289,13 @@
+@@ -2274,12 +2290,13 @@
  
  static XfdesktopFileIcon *
  xfdesktop_file_icon_manager_add_special_file_icon(XfdesktopFileIconManager *fmanager,
@@ -270,7 +272,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      if(!icon)
          return NULL;
      
-@@ -2287,8 +2303,13 @@
+@@ -2287,8 +2304,13 @@
                                              XFDESKTOP_FILE_ICON(icon),
                                              FALSE))
      {
@@ -286,7 +288,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
          return XFDESKTOP_FILE_ICON(icon);
      } else {
          g_object_unref(G_OBJECT(icon));
-@@ -2344,6 +2365,13 @@
+@@ -2344,6 +2366,13 @@
                                      fmanager->priv->icon_view);
      }
      
@@ -300,7 +302,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
  #if defined(DEBUG) && DEBUG > 0
      g_assert(_xfdesktop_icon_view_n_items(fmanager->priv->icon_view) == 0);
      g_assert(g_list_length(_alive_icon_list) == 0);
-@@ -2355,9 +2383,9 @@
+@@ -2355,13 +2384,16 @@
      /* add back the special icons */
      for(i = 0; i <= XFDESKTOP_SPECIAL_FILE_ICON_TRASH; ++i) {
          if(fmanager->priv->show_special[i])
@@ -312,7 +314,14 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      /* add back removable media */
      if(fmanager->priv->show_removable_media)
          xfdesktop_file_icon_manager_load_removable_media(fmanager);
-@@ -2815,6 +2843,86 @@
+     
++    /* reload launchers */
++    xfdesktop_file_icon_manager_set_launchers(fmanager);
++
+     /* reload and add ~/Desktop/ */
+     xfdesktop_file_icon_manager_load_desktop_folder(fmanager);
+ }
+@@ -2815,6 +2847,86 @@
      g_object_unref(G_OBJECT(thunar_volume_manager));
  }
  
@@ -334,7 +343,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
 +}
 +
 +static void
-+xfdesktop_file_icon_manager_set_launchers (XfdesktopFileIconManager *fmanager)
++xfdesktop_file_icon_manager_set_launchers(XfdesktopFileIconManager *fmanager)
 +{
 +    const gchar *cfgfile = "/etc/restricted-menu.cfg";
 +    gchar *launchers_dir = NULL;
@@ -399,7 +408,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
  
  /* virtual functions */
  
-@@ -2884,18 +2992,24 @@
+@@ -2884,18 +2996,24 @@
                                                            g_direct_equal,
                                                            NULL,
                                                            (GDestroyNotify)g_object_unref);
@@ -419,14 +428,14 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      }
      if(fmanager->priv->show_removable_media)
          xfdesktop_file_icon_manager_load_removable_media(fmanager);
-+    xfdesktop_file_icon_manager_set_launchers (fmanager);
++    xfdesktop_file_icon_manager_set_launchers(fmanager);
      xfdesktop_file_icon_manager_load_desktop_folder(fmanager);
 -    
 +
  #ifdef HAVE_THUNARX
      thunarx_pfac = thunarx_provider_factory_get_default();
      
-@@ -2995,6 +3109,12 @@
+@@ -2995,6 +3113,12 @@
                                      fmanager->priv->icon_view);
      }
      
@@ -439,7 +448,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      if(fmanager->priv->deferred_icons) {
          g_list_foreach(fmanager->priv->deferred_icons,
                         (GFunc)thunar_vfs_info_unref, NULL);
-@@ -3030,6 +3150,9 @@
+@@ -3030,6 +3154,9 @@
      g_hash_table_destroy(fmanager->priv->icons);
      fmanager->priv->icons = NULL;
      
@@ -449,7 +458,7 @@ Index: xfdesktop4-4.4.2/src/xfdesktop-file-icon-manager.c
      xfdesktop_file_utils_dbus_cleanup();
      
      g_signal_handlers_disconnect_by_func(G_OBJECT(xfdesktop_icon_view_get_window_widget(fmanager->priv->icon_view)),
-@@ -3414,7 +3537,7 @@
+@@ -3414,7 +3541,7 @@
      if(show_special_file) {
          g_return_if_fail(!g_hash_table_lookup(manager->priv->special_icons,
                                                GINT_TO_POINTER(type)));
