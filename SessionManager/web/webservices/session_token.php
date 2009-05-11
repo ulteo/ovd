@@ -95,16 +95,6 @@ foreach ($settings as $k => $v) {
 	$session_node->appendChild($item);
 }
 
-/*if ($buf[0] == 'invite') {
-	$invite_settings = unserialize(@file_get_contents(SESSIONS_DIR.'/'.$session->server.'/'.$session->session.'/'.$token));
-
-	foreach ($invite_settings as $k => $v) {
-		$item = $dom->createElement($k);
-		$item->setAttribute('value', $v);
-		$session_node->appendChild($item);
-	}
-}*/
-
 $module_fs_node = $dom->createElement('module_fs');
 $module_fs_node->setAttribute('type', $settings['home_dir_type']);
 $session_node->appendChild($module_fs_node);
