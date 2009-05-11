@@ -27,7 +27,7 @@ class FS_local extends Plugin {
 		return $req;
 	}
 	
-	public function prettyName() {
+	public static function prettyName() {
 		return _('local');
 	}
 	

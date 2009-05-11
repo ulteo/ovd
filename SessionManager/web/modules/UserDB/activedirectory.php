@@ -192,10 +192,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return _('Active Directory');
 	}
 
-	public static function init() {
-		return true;
-	}
-
 	public static function isDefault() {
 		return false;
 	}

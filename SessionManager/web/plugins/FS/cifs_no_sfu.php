@@ -27,7 +27,7 @@ class FS_cifs_no_sfu extends FS_cifs {
 		return $req;
 	}
 	
-	public function prettyName() {
+	public static function prettyName() {
 		return _('Common Internet File System (CIFS) without services for unix');
 	}
 	

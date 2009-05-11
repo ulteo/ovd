@@ -32,7 +32,7 @@ class Plugin {
 	public function remove_session($params_=array()) {
 	}
 
-	public function prefsIsValid($prefs_) {
+	public static function prefsIsValid($prefs_) {
 		return true;
 	}
 
@@ -40,7 +40,7 @@ class Plugin {
 		return false;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		return array();
 	}
 }

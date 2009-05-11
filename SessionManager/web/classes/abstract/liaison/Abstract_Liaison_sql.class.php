@@ -31,7 +31,7 @@ class Abstract_Liaison_sql {
 		else
 			return Abstract_Liaison_sql::loadUnique($type_, $element_, $group_);
 	}
-	public function save($type_, $element_, $group_) {
+	public static function save($type_, $element_, $group_) {
 		Logger::debug('admin', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
@@ -48,7 +48,7 @@ class Abstract_Liaison_sql {
 		$res = $sql2->DoQuery('INSERT INTO @1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', $table, 'type', 'element', 'group', $type_, $element_, $group_);
 		return ($res !== false);
 	}
-	public function delete($type_, $element_, $group_) {
+	public static function delete($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_sql::delete ($type_,$element_,$group_)");
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
@@ -78,7 +78,7 @@ class Abstract_Liaison_sql {
 		}
 		return ($res !== false);
 	}
-	public function loadElements($type_, $group_) {
+	public static function loadElements($type_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_sql::loadElements ($type_,$group_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
@@ -106,7 +106,7 @@ class Abstract_Liaison_sql {
 		return NULL;
 	}
 	
-	public function loadGroups($type_, $element_) {
+	public static function loadGroups($type_, $element_) {
 		Logger::debug('admin',"Abstract_Liaison_sql::loadGroups ($type_,$element_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
@@ -134,7 +134,7 @@ class Abstract_Liaison_sql {
 		return NULL;
 	}
 	
-	public function loadAll($type_) {
+	public static function loadAll($type_) {
 		Logger::debug('admin',"Abstract_Liaison_sql::loadAll ($type_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
@@ -161,7 +161,7 @@ class Abstract_Liaison_sql {
 		}
 		return NULL;
 	}
-	public function loadUnique($type_, $element_, $group_) {
+	public static function loadUnique($type_, $element_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_sql::loadUnique ($type_,$element_,$group_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();

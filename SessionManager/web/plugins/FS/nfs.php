@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class FS_nfs extends Plugin {
-	public function start_session($params_) {
+	public function start_session($params_=array()) {
 		global $user;
 
 		$this->redir_args = array(
@@ -42,7 +42,7 @@ class FS_nfs extends Plugin {
 		return $req;
 	}
 
-	public function prettyName() {
+	public static function prettyName() {
 		return _('Network File System (NFS)');
 	}
 

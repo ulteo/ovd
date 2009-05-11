@@ -41,15 +41,15 @@ class Abstract_Liaison_ldap_memberof {
 		return NULL;
 		
 	}
-	public function save($type_, $element_, $group_) {
+	public static function save($type_, $element_, $group_) {
 		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::save</b>");
 		return false;
 	}
-	public function delete($type_, $element_, $group_) {
+	public static function delete($type_, $element_, $group_) {
 		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::delete</b>");
 		return false;
 	}
-	public function loadElements($type_, $group_) {
+	public static function loadElements($type_, $group_) {
 		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::loadElements ($type_,$group_)</b>");
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -112,7 +112,7 @@ class Abstract_Liaison_ldap_memberof {
 		return $elements;
 	}
 	
-	public function loadGroups($type_, $element_) {
+	public static function loadGroups($type_, $element_) {
 		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::loadGroups ($type_,$element_)</b>");
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -149,12 +149,12 @@ class Abstract_Liaison_ldap_memberof {
 		return NULL;
 	}
 	
-	public function loadAll($type_) {
+	public static function loadAll($type_) {
 		Logger::debug('main',"<b>Abstract_Liaison_ldap_memberof::loadAll ($type_)</b>");
 		echo "Abstract_Liaison_ldap_memberof::loadAll($type_)<br>";
 		return NULL;
 	}
-	public function loadUnique($type_, $element_, $group_) {
+	public static function loadUnique($type_, $element_, $group_) {
 		Logger::debug('main',"<b>Abstract_Liaison_ldap_memberof::loadUnique ($type_,$element_,$group_)</b>");
 		echo "Abstract_Liaison_ldap_memberof::loadUnique($type_,$element_,$group_)<br>";
 		return NULL;

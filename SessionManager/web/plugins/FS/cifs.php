@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class FS_cifs extends Plugin {
-	public function start_session($params_) {
+	public function start_session($params_=array()) {
 		global $user;
 		
 		$prefs = Preferences::getInstance();
@@ -86,7 +86,7 @@ class FS_cifs extends Plugin {
 		return $req;
 	}
 
-	public function prettyName() {
+	public static function prettyName() {
 		return _('Common Internet File System (CIFS)');
 	}
 
@@ -94,7 +94,7 @@ class FS_cifs extends Plugin {
 		return true;
 	}
 	
-	public function configuration() {
+	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_select('authentication_method', 'authentication_method', 'authentication_method', 'authentication_method', 'anonymous');
 		$c->setContentAvailable(array('anonymous' => 'anonymous', 'user' => 'user','global_user' => 'global_user'));

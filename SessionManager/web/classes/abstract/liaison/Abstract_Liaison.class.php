@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison {
-	public function load($type_, $element_=NULL, $group_=NULL) {
+	public static function load($type_, $element_=NULL, $group_=NULL) {
 		Logger::debug('main', "Abstract_Liaison::load ('$type_', '$element_', '$group_')");
 		if ($type_ != 'UsersGroup')
 			return Abstract_Liaison_sql::load($type_,  $element_, $group_);
@@ -56,7 +56,7 @@ class Abstract_Liaison {
 			return NULL;
 		}
 	}
-	public function delete($type_, $element_, $group_) {
+	public static function delete($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison::delete ('$type_', '$element_', '$group_')");
 		if ($type_ != 'UsersGroup')
 			return Abstract_Liaison_sql::delete($type_,  $element_, $group_);
@@ -91,7 +91,7 @@ class Abstract_Liaison {
 			return false;
 		}
 	}
-	public function save($type_, $element_, $group_) {
+	public static function save($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison::save ('$type_', '$element_', '$group_')");
 		if ($type_ != 'UsersGroup')
 			return Abstract_Liaison_sql::save($type_,  $element_, $group_);

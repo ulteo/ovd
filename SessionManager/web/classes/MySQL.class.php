@@ -41,7 +41,7 @@ class MySQL {
 		$this->sqlbase = $db_;
 	}
 
-	public function newInstance($host_, $user_, $pass_, $db_) {
+	public static function newInstance($host_, $user_, $pass_, $db_) {
 		self::$instance = new MySQL($host_, $user_, $pass_, $db_);
 
 		return self::$instance;

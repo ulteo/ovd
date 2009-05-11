@@ -40,15 +40,15 @@ class Abstract_Liaison_activedirectory {
 		}
 		
 	}
-	public function save($type_, $element_, $group_) {
+	public static function save($type_, $element_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_activedirectory::save");
 		return false;
 	}
-	public function delete($type_, $element_, $group_) {
+	public static function delete($type_, $element_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_activedirectory::delete");
 		return false;
 	}
-	public function loadElements($type_, $group_) {
+	public static function loadElements($type_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_activedirectory::loadElements ($type_,$group_)");
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -111,7 +111,7 @@ class Abstract_Liaison_activedirectory {
 		return $elements;
 	}
 	
-	public function loadGroups($type_, $element_) {
+	public static function loadGroups($type_, $element_) {
 		Logger::debug('admin',"Abstract_Liaison_activedirectory::loadGroups ($type_,$element_)");
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -148,18 +148,18 @@ class Abstract_Liaison_activedirectory {
 		return NULL;
 	}
 	
-	public function loadAll($type_) {
+	public static function loadAll($type_) {
 		Logger::debug('main',"Abstract_Liaison_activedirectory::loadAll ($type_)");
 		echo "Abstract_Liaison_activedirectory::loadAll($type_)<br>";
 		return NULL;
 	}
-	public function loadUnique($type_, $element_, $group_) {
+	public static function loadUnique($type_, $element_, $group_) {
 		Logger::debug('main',"Abstract_Liaison_activedirectory::loadUnique ($type_,$element_,$group_)");
 		echo "Abstract_Liaison_activedirectory::loadUnique($type_,$element_,$group_)<br>";
 		return NULL;
 	}
 	
-	public static function init($prefs_) {
+	public static static function init($prefs_) {
 		return true;
 	}
 }
