@@ -277,8 +277,8 @@ function show_default() {
       echo '<tr class="'.$content.'">';
       if ($userGroupDB->isWriteable()) {
         echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
-        echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       }
+      echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
 
