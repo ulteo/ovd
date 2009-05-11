@@ -34,6 +34,10 @@ class AppsGroup {
 		$this->published = (bool)$published_;
 	}
 	
+	public function __toString() {
+		return get_class($this).'(id: \''.$this->id.'\' name: \''.$this->name.'\' description: \''.$this->description.'\' published: '.$this->published.')';
+	}
+	
 	public function fromDB($id_) {
 		Logger::debug('admin',"APPSGROUP::fromDB($id_)");
 		if (is_numeric($id_)){
