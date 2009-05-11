@@ -40,11 +40,6 @@ class User {
 			return NULL;
 	}
 
-	protected function delete() {
-		Logger::debug('main','USER::delete');
-		unset($this->attributes);
-	}
-	
 	public function getLocale() {
 		if ( $this->hasAttribute('countrycode')) {
 			$desktop_locale = $this->getAttribute('countrycode'); // only works for ISO-3166

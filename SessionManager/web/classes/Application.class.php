@@ -181,10 +181,4 @@ class Application {
 		$dom->appendChild($application_node);
 		return $dom->saveXML();
 	}
-
-	protected function delete(){
-		Logger::debug('main','APPLICATION::delete');
-		unset($this->attributes);
-		$this->attributes = array();
-	}
 }

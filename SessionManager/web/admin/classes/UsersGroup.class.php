@@ -38,14 +38,6 @@ class UsersGroup {
 		return get_class($this).'(id: \''.$this->id.'\' name: \''.$this->name.'\' description: \''.$this->description.'\' published: '.$this->published.')';
 	}
 	
-	public function delete(){
-		Logger::debug('admin','USERSGROUP::delete');
-		unset($this->id);
-		unset($this->name);
-		unset($this->description);
-		unset($this->published);
-	}
-	
 	public function appsGroups(){
 		Logger::debug('admin','USERSGROUP::appsGroups');
 		
