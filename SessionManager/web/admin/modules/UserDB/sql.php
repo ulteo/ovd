@@ -96,10 +96,6 @@ class admin_UserDB_sql extends UserDB_sql {
 		return false;
 	}
 	
-	public function configuration(){
-		return array();
-	}
-	
 	public static function init($prefs_) {
 		Logger::debug('admin','USERDB::sql::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');

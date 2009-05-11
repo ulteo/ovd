@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_sql {
+class UserGroupDB_sql extends UserGroupDB {
 	protected $table;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
@@ -107,7 +107,7 @@ class UserGroupDB_sql {
 		return $u;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		return array();
 	}
 	

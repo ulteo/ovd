@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserDB_fake {
+class UserDB_fake extends UserDB {
 	public function __construct(){
 		$this->users = array();
 		$this->construct_addUser('mwilson', 'Marvin Wilson', 2001);
@@ -114,11 +114,11 @@ class UserDB_fake {
 		$this->users[$login_] = $u;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		return array();
 	}
 	
-	public function prefsIsValid($prefs_, &$log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		return true;
 	}
 	

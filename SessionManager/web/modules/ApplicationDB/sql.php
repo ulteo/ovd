@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class ApplicationDB_sql {
+class ApplicationDB_sql extends ApplicationDB {
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		$mysql_conf = $prefs->get('general', 'mysql');
@@ -140,11 +140,11 @@ class ApplicationDB_sql {
 		}
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		return array();
 	}
 
-	public function prefsIsValid($prefs_, &$log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		if (!defined('APPLICATION_TABLE'))
 			return false;
 		$mysql_conf = $prefs_->get('general', 'mysql');

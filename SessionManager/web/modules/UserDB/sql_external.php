@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserDB_sql_external {
+class UserDB_sql_external extends UserDB {
 	
 	public function import($login_){
 		Logger::debug('main','USERDB::MYSQL_external::import('.$login_.')');
@@ -190,7 +190,7 @@ class UserDB_sql_external {
 		return false;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;

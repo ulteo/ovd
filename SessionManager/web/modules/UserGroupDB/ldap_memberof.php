@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_ldap_memberof {
+class UserGroupDB_ldap_memberof extends UserGroupDB {
 
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::ldap_memberof::import (id = $id_)");
@@ -112,7 +112,7 @@ class UserGroupDB_ldap_memberof {
 			return false;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		return array();
 	}
 	

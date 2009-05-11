@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class UserDB_ldap {
+class UserDB_ldap  extends UserDB {
 	public $config;
 	public function __construct () {
 		$prefs = Preferences::getInstance();
@@ -197,7 +197,7 @@ class UserDB_ldap {
 		return $a;
 	}
 
-	public function configuration(){
+	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your LDAP server.'), _('The address of your LDAP server.'), 'servldap.example.com');
 		$ret []= $c;
@@ -225,7 +225,7 @@ class UserDB_ldap {
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_, &$log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		$config_ldap = $prefs_->get('UserDB','ldap');
 		$LDAP2 = new LDAP($config_ldap);
 		$ret = $LDAP2->connect($log);

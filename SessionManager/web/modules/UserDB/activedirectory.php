@@ -117,7 +117,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $ret;
 	}
 
-	public function configuration(){
+	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your Active Directory server.'), _('The address of your Active Directory server.'),  NULL);
 		$ret []= $c;
@@ -134,7 +134,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		return $ret;
 	}
 
-	public function prefsIsValid($prefs_=NULL , &$log=array()) {
+	public static function prefsIsValid($prefs_, &$log=array()) {
 		$config_AD = $prefs_->get('UserDB','activedirectory');
 
 		$minimum_keys = array ('host', 'domain', 'login', 'password', 'domain', 'ou');

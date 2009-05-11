@@ -115,7 +115,7 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 		return $groups;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		$c = new ConfigElement_input('group_dn', _('Group Branch DN'), _('Use LDAP User Groups using Posix group, Group Branch DN:'), _('Use LDAP User Groups using Posix group, Group Branch DN:'),'');
 		return array($c);
 	}

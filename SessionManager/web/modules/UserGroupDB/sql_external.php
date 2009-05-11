@@ -18,7 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_sql_external {
+class UserGroupDB_sql_external extends UserGroupDB {
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
@@ -108,7 +108,7 @@ class UserGroupDB_sql_external {
 			return false;
 	}
 	
-	public function configuration(){
+	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
 		$ret []= $c;
