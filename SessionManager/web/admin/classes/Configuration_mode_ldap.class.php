@@ -53,7 +53,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $fields =  array('host', 'suffix', 'user_branch',
 		     'port', 'proto',
 		     'bind_dn', 'bind_password',
-		     'field_rdn', 'field_displayname',
+		     'field_rdn', 'field_displayname', 'field_countrycode',
 		     'group_branch_dn',
 		     'homedir', 'homedir_field',
 		     'cifs_auth', 'global_user_login',
@@ -104,6 +104,8 @@ class Configuration_mode_ldap extends Configuration_mode {
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
     $config['match']['distinguishedname'] = 'distinguishedname';
+    if ( $form['field_countrycode'] != '')
+      $config['match']['countrycode'] = $form['field_countrycode'];
 
     // plugins fs ...
     if ($form['homedir'] == 'cifs') {
@@ -170,6 +172,10 @@ class Configuration_mode_ldap extends Configuration_mode {
       $form['field_displayname'] = $config['match']['displayname'];
     else
       $form['field_displayname'] = '';
+    if (isset($config['match']['field_countrycode']))
+      $form['field_countrycode'] = $config['match']['countrycode'];
+    else
+      $form['field_countrycode'] = '';
 
     $config2 = $prefs->get('UserGroupDB', 'enable');
     if ($config2 == 'ldap_memberof')
@@ -232,6 +238,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
     $str.= '<tr><td>'._('Display name field:').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Locale field').'('._('optional').'):</td><td><input type="text" name="field_countrycode" value="'.$form['field_countrycode'].'" /></td></tr>';
     $str.= '</table>';
 
     $str.= '<div>';
