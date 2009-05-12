@@ -100,9 +100,13 @@ class UserDB_ldap  extends UserDB {
 			$u = new User();
 			foreach ($this->config['match'] as $attribut => $match_ldap){
 				if (isset($info[$match_ldap])) {
-					unset($info[$match_ldap]['count']);
-					if (count($info[$match_ldap]) == 1) {
-						$u->setAttribute($attribut,$info[$match_ldap][0]);
+					if (is_array($info[$match_ldap])) {
+						if (count($info[$match_ldap]) == 1) {
+							$u->setAttribute($attribut,$info[$match_ldap][0]);
+						}
+						else {
+							$u->setAttribute($attribut,$info[$match_ldap]);
+						}
 					}
 					else {
 						$u->setAttribute($attribut,$info[$match_ldap]);
