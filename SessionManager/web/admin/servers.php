@@ -236,6 +236,10 @@ function show_default() {
 
   $nb_a_servs_online = 0;
   foreach($a_servs as $s) {
+	$external_name_checklist = array('localhost', '127.0.0.1');
+	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
+		popup_error($s->fqdn.': '._('redirection name may be invalid!'));
+
     if ($s->isOnline())
       $nb_a_servs_online++;
   }
