@@ -487,6 +487,10 @@ function show_manage($fqdn) {
   if (! $server)
     redirect('servers.php');
 
+	$external_name_checklist = array('localhost', '127.0.0.1');
+	if (in_array($server->fqdn, $external_name_checklist) && in_array($server->getAttribute('external_name'), $external_name_checklist))
+		popup_error($server->fqdn.': '._('redirection name may be invalid!'));
+
 //FIX ME?
   if ($server->getAttribute('status') == 'ready')
     $server->getStatus();
