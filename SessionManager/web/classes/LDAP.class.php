@@ -217,11 +217,14 @@ class LDAP {
 		if (!is_resource($search_))
 			return false;
 
-		$ret = @ldap_get_entries($this->link, $search_);
-		if (is_array($ret))
-			return $ret;
-
-		return false;
+		$ret = array();
+		for ($entryID=ldap_first_entry($this->link, $search_); $entryID != false; $entryID = ldap_next_entry($this->link, $entryID)) {
+			$info = ldap_get_attributes($this->link, $entryID);
+			$dn = ldap_get_dn($this->link, $entryID);
+			if ( $dn !== false)
+				$ret[$dn] = $info;
+		}
+		return $ret;
 	}
 
 	public function count_entries($result_) {

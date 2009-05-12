@@ -39,27 +39,16 @@ class UserDB_ldap  extends UserDB {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
-		if ( $infos["count"] == 1){
-			$info = $infos[0];
-			$u = new User();
-			foreach ($this->config['match'] as $attribut => $match_ldap){
-				if (isset($info[$match_ldap])) {
-					unset($info[$match_ldap]['count']);
-					if (count($info[$match_ldap]) == 1) {
-						$u->setAttribute($attribut,$info[$match_ldap][0]);
-					}
-					else {
-						$u->setAttribute($attribut,$info[$match_ldap]);
-					}
-				}
-			}
-			if ($u->hasAttribute('uid') == false)
-				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-
-			$u = $this->cleanupUser($u);
+		$keys = array_keys($infos);
+		$dn = $keys[0];
+		$info = $infos[$dn];
+		$u = $this->generateUserFromRow($info);
+		$u->setAttribute('dn',  $dn);
+		$u = $this->cleanupUser($u);
+		if ($this->isOK($u))
 			return $u;
-		}
-		return NULL;
+		else
+			return NULL;
 	}
 
 	public function importFromDN($dn_) {
@@ -73,20 +62,16 @@ class UserDB_ldap  extends UserDB {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
-		if ( $infos["count"] == 1){
-			$info = $infos[0];
-			$u = new User();
-			foreach ($config['match'] as $attribut => $match_ldap){
-				if (isset($info[$match_ldap][0]))
-					$u->setAttribute($attribut,$info[$match_ldap][0]);
-			}
-			if ($u->hasAttribute('uid') == false)
-				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-
-			$u = $this->cleanupUser($u);
+		$keys = array_keys($infos);
+		$dn = $keys[0];
+		$info = $infos[$dn];
+		$u = $this->generateUserFromRow($info);
+		$u->setAttribute('dn',  $dn);
+		$u = $this->cleanupUser($u);
+		if ($this->isOK($u))
 			return $u;
-		}
-		return NULL;
+		else
+			return NULL;
 	}
 
 	public function getList($sort_=false) {
@@ -96,28 +81,11 @@ class UserDB_ldap  extends UserDB {
 		$ldap = new LDAP($this->config);
 		$sr = $ldap->search($this->config['match']['login'].'=*', NULL);
 		$infos = $ldap->get_entries($sr);
-		foreach ($infos as $info){
-			$u = new User();
-			foreach ($this->config['match'] as $attribut => $match_ldap){
-				if (isset($info[$match_ldap])) {
-					if (is_array($info[$match_ldap])) {
-						if (count($info[$match_ldap]) == 1) {
-							$u->setAttribute($attribut,$info[$match_ldap][0]);
-						}
-						else {
-							$u->setAttribute($attribut,$info[$match_ldap]);
-						}
-					}
-					else {
-						$u->setAttribute($attribut,$info[$match_ldap]);
-					}
-				}
-			}
-			if ($u->hasAttribute('uid') == false)
-				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-
+		foreach ($infos as $dn => $info) {
+			$u = $this->generateUserFromRow($info);
+			$u->setAttribute('dn',  $dn);
+			
 			$u = $this->cleanupUser($u);
-
 			if ($this->isOK($u))
 				$users []= $u;
 			else {
@@ -134,6 +102,29 @@ class UserDB_ldap  extends UserDB {
 		return $users;
 	}
 
+	protected function generateUserFromRow($row_) {
+		$u = new User();
+		foreach ($this->config['match'] as $attribut => $match_ldap) {
+			if (isset($row_[$match_ldap])) {
+				if (is_array($row_[$match_ldap])) {
+					unset($row_[$match_ldap]['count']);
+					if (count($row_[$match_ldap]) == 1) {
+						$u->setAttribute($attribut, $row_[$match_ldap][0]);
+					}
+					else {
+						$u->setAttribute($attribut, $row_[$match_ldap]);
+					}
+				}
+				else {
+					$u->setAttribute($attribut, $row_[$match_ldap]);
+				}
+			}
+		}
+		if ($u->hasAttribute('uid') == false)
+			$u->setAttribute('uid', str2num($u->getAttribute('login')));
+		return $u;
+	}
+	
 	protected function cleanupUser($u){
 		if (is_object($u)){
 			if ($u->hasAttribute('homedir')){
@@ -185,8 +176,8 @@ class UserDB_ldap  extends UserDB {
 	public function authenticate($user_,$password_){
 		Logger::debug('main','UserDB::ldap::authenticate '.$user_->getAttribute('login'));
 		$conf_ldap2 = $this->config;
-		if (($user_->hasAttribute('distinguishedname')) && ($user_->getAttribute('distinguishedname') !== ''))
-			$conf_ldap2['login'] = $user_->getAttribute('distinguishedname');
+		if (($user_->hasAttribute('dn')) && ($user_->getAttribute('dn') !== ''))
+			$conf_ldap2['login'] = $user_->getAttribute('dn');
 		else
 			$conf_ldap2['login'] = $user_->getAttribute('login');
 		$conf_ldap2['password'] = $password_;

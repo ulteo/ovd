@@ -34,41 +34,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 		$this->config =  $this->makeLDAPconfig();
 	}
 
-	public function getList($sort_=false) {
-		$users = array();
-		$ldap = new LDAP($this->config);
-		$sr = $ldap->search($this->config['match']['login'].'=*', NULL);
-		if ($sr === false) {
-			Logger::error('main','UserDB_activedirectory::getList ldap failed (mostly timeout on server)');
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		foreach ($infos as $info){
-			$u = new User();
-			foreach ($this->config['match'] as $attribut => $match_ldap){
-				if (isset($info[$match_ldap])) {
-					unset($info[$match_ldap]['count']);
-					if (count($info[$match_ldap]) == 1) {
-						$u->setAttribute($attribut,$info[$match_ldap][0]);
-					}
-					else {
-						$u->setAttribute($attribut,$info[$match_ldap]);
-					}
-				}
-			}
-			if ($u->hasAttribute('uid') == false)
-				$u->setAttribute('uid',str2num($u->getAttribute('login')));
-			$u = $this->cleanupUser($u);
-			if ($this->isOK($u))
-				$users []= $u;
-		}
-		// do we need to sort alphabetically ?
-		if ($sort_) {
-			usort($users, "user_cmp");
-		}
-		return $users;
-	}
-
 	public function makeLDAPconfig($config_=NULL) {
 		if ($config_ != NULL)
 			$config = $config_;
@@ -84,10 +49,9 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 
 		$match_minimal  = array(
-					'login'	=> 'samaccountname',
-					'displayname'	=> 'displayname',
-					'real_login'    => 'samaccountname',
-					'distinguishedname' => 'distinguishedname',
+					'login'	=> 'sAMAccountName',
+					'displayname'	=> 'displayName',
+					'real_login'    => 'sAMAccountName',
 					'countrycode' => 'c' // in ISO-3166 see http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
 		);
 
@@ -109,12 +73,6 @@ class UserDB_activedirectory  extends UserDB_ldap{
 
 	protected function domain2suffix($domain_) {
 		return domain2suffix($domain_);
-	}
-
-	public function authenticate($user_,$password_){
-		Logger::debug('main','UserDB::activedirectory::authenticate '.$user_->getAttribute('login'));
-		$ret = parent::authenticate($user_,$password_);
-		return $ret;
 	}
 
 	public static function configuration() {
