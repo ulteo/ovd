@@ -589,7 +589,19 @@ mysql> exit]]>
 
   <section id="launch_session">
     <title>Launch a session</title>
-
+    <important>
+      <para>
+        Client prerequisites:
+         <itemizedlist>
+           <listitem>
+             Sun Java 1.5/1.6
+           </listitem>
+           <listitem>
+             browser: Firefox 2+ or Internet Explorer 7+
+           </listitem>
+         </itemizedlist>
+      </para>
+    </important>
     <itemizedlist>
       <listitem>
 	<para>
