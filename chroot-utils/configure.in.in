@@ -1,5 +1,5 @@
 m4_define([chrootutils_version_major], [1])
-m4_define([chrootutils_version_minor], [0])
+m4_define([chrootutils_version_minor], [0.1])
 m4_define([chrootutils_version_build], [+svn@REVISION@])
 #m4_define([chrootutils_version_build], [])
 m4_define([chrootutils_version], [chrootutils_version_major().chrootutils_version_minor()chrootutils_version_build()])
