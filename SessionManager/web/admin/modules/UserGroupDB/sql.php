@@ -71,6 +71,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	public static function init($prefs_) {
 		parent::init($prefs_);
 		// do nothing more
+		return true;
 	}
 	
 	public static function enable() {
