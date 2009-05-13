@@ -91,24 +91,6 @@ class UserDB_sql extends UserDB  {
 		return $result;
 	}
 	
-	public function isOK($user_){
-		$minimun_attribute = array_unique(array_merge(array('login','displayname','uid'),get_needed_attributes_user_from_module_plugin()));
-		if (is_object($user_)){
-			foreach ($minimun_attribute as $attribute){
-				if ($user_->hasAttribute($attribute) == false)
-					return false;
-				else {
-					$a = $user_->getAttribute($attribute);
-					if ( is_null($a) || $a == "")
-						return false;
-				}
-			}
-			return true;
-		}
-		else
-			return false;
-	}
-	
 	public function authenticate($user_,$password_){
 		if (!($user_->hasAttribute('login')))
 			return false;

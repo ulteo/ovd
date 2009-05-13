@@ -20,4 +20,14 @@
  **/
 
 abstract class UserGroupDB extends Module {
+	public function isOK($usergroup_) {
+		if (is_object($usergroup_)) {
+			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || ($usergroup_->name == '') || (!isset($usergroup_->published)))
+				return false;
+			else
+				return true;
+		}
+		else
+			return false;
+	}
 }

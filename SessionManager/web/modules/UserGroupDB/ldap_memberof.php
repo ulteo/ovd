@@ -101,17 +101,6 @@ class UserGroupDB_ldap_memberof extends UserGroupDB {
 		return $groups;
 	}
 	
-	public function isOK($usergroup_){
-		if (is_object($usergroup_)) {
-			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || (!isset($usergroup_->published)))
-				return false;
-			else
-				return true;
-		}
-		else
-			return false;
-	}
-	
 	public static function configuration() {
 		return array();
 	}

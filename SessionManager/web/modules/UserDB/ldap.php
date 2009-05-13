@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -152,25 +152,6 @@ class UserDB_ldap  extends UserDB {
 
 	public function needPassword(){
 		return true;
-	}
-
-
-	public function isOK($user_){
-		$minimun_attribute = array_unique(array_merge(array('login','displayname','uid'),get_needed_attributes_user_from_module_plugin()));
-		if (is_object($user_)){
-			foreach ($minimun_attribute as $attribute){
-				if ($user_->hasAttribute($attribute) == false)
-					return false;
-				else {
-					$a = $user_->getAttribute($attribute);
-					if ( is_null($a) || $a == "")
-						return false;
-				}
-			}
-			return true;
-		}
-		else
-			return false;
 	}
 
 	public function authenticate($user_,$password_){

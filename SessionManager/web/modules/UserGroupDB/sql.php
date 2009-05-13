@@ -88,17 +88,6 @@ class UserGroupDB_sql extends UserGroupDB {
 		}
 	}
 	
-	public function isOK($usergroup_){
-		if (is_object($usergroup_)) {
-			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || (!isset($usergroup_->published)))
-				return false;
-			else
-				return true;
-		}
-		else
-			return false;
-	}
-	
 	private function generateUserFromRow($row){
 		$u = new User();
 		foreach ($row as $key => $value){

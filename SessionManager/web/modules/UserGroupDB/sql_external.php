@@ -97,17 +97,6 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		
 	}
 	
-	public function isOK($usergroup_){
-		if (is_object($usergroup_)) {
-			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || (!isset($usergroup_->published)))
-				return false;
-			else
-				return true;
-		}
-		else
-			return false;
-	}
-	
 	public static function configuration() {
 		$ret = array();
 		$c = new ConfigElement_input('host', _('Server host address'), _('The address of your MySQL server.'), _('The address of your MySQL server.'), '');
