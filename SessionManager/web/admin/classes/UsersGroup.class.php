@@ -70,4 +70,14 @@ class UsersGroup {
 		}
 		return $logins;
 	}
+	
+	public function containUser($user_) {
+		Logger::debug('main','USERSGROUP::containUser');
+		if (!$user_->hasAttribute('login')) {
+			Logger::error('main', 'USERSGROUP::containUser user '.$user_.' has no attribute \'login\'');
+			return false;
+		}
+		$users_login = $this->usersLogin();
+		return in_array($user_->getAttribute('login'), $users_login);
+	}
 }

@@ -34,6 +34,7 @@ class admin_UserGroupDB_sql_external extends UserGroupDB_sql_external {
 	}
 	
 	public static function init($prefs_) {
+		parent::init($prefs_);
 		return true;
 	}
 	

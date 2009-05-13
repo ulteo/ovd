@@ -22,6 +22,9 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::activedirectory::import (id = $id_)");
+		$obj = parent::import_sql($id_, true);
+		if (is_object($obj))
+			return $obj;
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)

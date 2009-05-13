@@ -69,29 +69,8 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 // 	}
 
 	public static function init($prefs_) {
-		Logger::debug('admin','ADMIN_USERGROUPDB::sql::init');
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init mysql conf not valid');
-			return false;
-		}
-		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-		
-		$usersgroup_table_structure = array(
-			'id' => 'int(8) NOT NULL auto_increment',
-			'name' => 'varchar(150) NOT NULL',
-			'description' => 'varchar(150) NOT NULL',
-			'published' => 'tinyint(1) NOT NULL');
-		
-		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
-		
-		if ( $ret === false) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' fail to created');
-			return false;
-		}
-		
-		return true;
+		parent::init($prefs_);
+		// do nothing more
 	}
 	
 	public static function enable() {

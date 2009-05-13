@@ -32,6 +32,10 @@ class UserGroupDB_sql_external extends UserGroupDB {
 	
 	public function import($id_){
 		Logger::debug('admin',"USERGROUPDB::MYSQL_external::fromDB (id = $id_)");
+		$obj = parent::import_sql($id_, true);
+		if (is_object($obj))
+			return $obj;
+		
 		$groups = array();
 		
 		$sql2 = new MySQL($this->config['host'], $this->config['login'], $this->config['password'], $this->config['database']);
@@ -93,7 +97,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 				Logger::info('main', 'USERGROUPDB::MYSQL_external::getList group \''.$row[$this->config['match']['id']].'\' not ok');
 			}
 		}
-		return $groups;
+		return array_unique(array_merge($groups, parent::getListDynamic()));
 		
 	}
 	

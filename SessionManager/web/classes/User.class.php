@@ -72,12 +72,16 @@ class User {
 			$userGroupDB = new $mod_usergroup_name();
 		}
 
-		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
-		if (is_null($rows)) {
+		$static = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
+		if (is_null($static)) {
 			Logger::error('main', 'User::usersGroups load('.$this->attributes['login'].') is null');
 			return $result;
 		}
-		$rows = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
+		$dynamic = Abstract_Liaison_dynamic::load('UsersGroup', $this->attributes['login'], NULL);
+		if (is_null($dynamic)) {
+			$dynamic = array();
+		}
+		$rows = array_unique(array_merge($static, $dynamic));
 
 		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {
 			$g = $userGroupDB->import($user_default_group);// safe because even if  group = -1, the import failed safely

@@ -18,29 +18,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-class admin_UserGroupDB_ldap_memberof extends UserGroupDB_ldap_memberof {
-	public function add($usergroup_){
-		return false;
+class UsersGroup_dynamic extends UsersGroup {
+	public function usersLogin(){
+		Logger::debug('main','UsersGroup_dynamic::usersLogin');
+		$static = parent::usersLogin();
+		$ls = Abstract_Liaison_dynamic::load('UsersGroup',NULL, $this->id);
+		$dynamic = array();
+		if (is_array($ls)) {
+			foreach ($ls as $l) {
+				$dynamic []= $l->element;
+			}
+		}
+		return array_unique(array_merge($static, $dynamic));
 	}
-	
-	public function remove($usergroup_){
+
+	public function containUser($user_) {
+		// DO NOT USE usersLogin !!!
+		Logger::debug('main','UsersGroup_dynamic::containUser');
 		return true;
 	}
-	
-	public function update($usergroup_){
-		return true;
-	}
-	
-	public static function init($prefs_) {
-		parent::init($prefs_);
-		return true;
-	}
-	
-	public static function enable() {
-		return true;
-	}
-	
 }
-

@@ -34,6 +34,7 @@ class admin_UserGroupDB_ldap_posix extends UserGroupDB_ldap_posix {
 	}
 	
 	public static function init($prefs_) {
+		parent::init($prefs_);
 		return true;
 	}
 	

@@ -31,33 +31,17 @@ class UserGroupDB_sql extends UserGroupDB {
 				$this->table = NULL;
 		}
 	}
-	
-	public function import($id_){
-		Logger::debug('admin',"USERGROUPDB::MYSQL::fromDB (id = $id_)");
-		if (is_null($this->table)) {
-			Logger::error('main', 'USERGROUPDB::MYSQL::fromDB table is null');
-			return NULL;
-		}
-		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1= %6', 'id', 'name', 'description', 'published', $this->table, $id_);
-		if ($sql2->NumRows($res) == 1) {
-			$row = $sql2->FetchResult($res);
-			$ug = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
-			if ($this->isOK($ug))
-				return $ug;
-		}
-		else {
-			Logger::error('main' ,"USERGROUPDB::MYSQL::fromDB import group '$id_' failed");
-			return NULL;
-		}
-	}
-	
+		
 	public function isWriteable(){
 		return true;
 	}
 	
 	public function canShowList(){
 		return true;
+	}
+	
+	public function import($id_) {
+		return parent::import_sql($id_, false);
 	}
 	
 	public function getList() {
@@ -67,19 +51,27 @@ class UserGroupDB_sql extends UserGroupDB {
 			return NULL;
 		}
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5', 'id', 'name', 'description', 'published', $this->table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @6 FROM @5', 'id', 'name', 'description', 'published', $this->table, 'type');
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
 			foreach ($rows as $row){
-				$ug = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
+				if (!isset($row['type'])) {
+					$ug = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
+				}
+				else if ($row['type'] == 'dynamic') {
+					$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published']);
+				}
+				else {
+					$ug = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
+				}
 				if ($this->isOK($ug))
 					$result[$ug->id]= $ug;
 				else {
 					Logger::info('main', 'USERGROUPDB::MYSQL::getList group \''.$row['id'].'\' not ok');
 				}
 			}
-			return $result;
+			return array_unique(array_merge($result, parent::getListDynamic()));
 		}
 		else {
 			Logger::error('main', 'USERGROUPDB::MYSQL::getList failed (sql query failed)');

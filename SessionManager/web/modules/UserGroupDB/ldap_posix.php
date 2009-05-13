@@ -22,6 +22,9 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::ldap_posix::import (id = $id_)");
+		$obj = parent::import_sql($id_, true);
+		if (is_object($obj))
+			return $obj;
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -112,7 +115,7 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 				}
 			}
 		}
-		return $groups;
+		return array_unique(array_merge($groups, parent::getListDynamic()));
 	}
 	
 	public static function configuration() {
