@@ -29,4 +29,8 @@ class Liaison {
 		$this->element = $element_;
 		$this->group = $group_;
 	}
+	
+	public function __toString() {
+		return get_class($this).'(element: \''.$this->element.'\' group: \''.$this->group.'\')';
+	}
 }
