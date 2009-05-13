@@ -31,10 +31,10 @@ abstract class UserGroupDB extends Module {
 			return false;
 	}
 	public static function init($prefs_) {
-		Logger::debug('admin','ADMIN_USERGROUPDB::sql::init');
+		Logger::debug('admin','ADMIN_USERGROUPDB::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init mysql conf not valid');
+			Logger::error('admin','ADMIN_USERGROUPDB::init mysql conf not valid');
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
@@ -45,12 +45,12 @@ abstract class UserGroupDB extends Module {
 			'name' => 'varchar(150) NOT NULL',
 			'description' => 'varchar(150) NOT NULL',
 			'published' => 'tinyint(1) NOT NULL',
-			'type' => "VARCHAR( 50 ) NULL DEFAULT 'static'");
+			'type' => "VARCHAR(50) NULL DEFAULT 'static'");
 		
 		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' failed');
+			Logger::error('admin','ADMIN_USERGROUPDB::init table '.$usersgroup_table.' failed');
 			return false;
 		}
 		
@@ -63,7 +63,7 @@ abstract class UserGroupDB extends Module {
 		return true;
 	}
 	protected function import_sql($id_, $must_be_dynamic=false){
-		Logger::debug('admin',"USERGROUPDB::MYSQL::fromDB (id = $id_)");
+		Logger::debug('admin',"USERGROUPDB::import_sql (id = $id_)");
 		
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
@@ -95,7 +95,7 @@ abstract class UserGroupDB extends Module {
 				return $ug;
 		}
 		else {
-			Logger::error('main' ,"USERGROUPDB::MYSQL::fromDB import group '$id_' failed");
+			Logger::error('main' ,"USERGROUPDB::import_sql import group '$id_' failed");
 			return NULL;
 		}
 	}
@@ -113,7 +113,7 @@ abstract class UserGroupDB extends Module {
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @6 FROM @5 WHERE @6 = %7', 'id', 'name', 'description', 'published', $this->table, 'type', 'dynamic');
 		if ($res === false) {
-			Logger::error('main', 'USERGROUPDB::MYSQL::getList failed (sql query failed)');
+			Logger::error('main', 'USERGROUPDB::getListDynamic failed (sql query failed)');
 			// not the right argument
 			return array();
 		}
@@ -124,7 +124,7 @@ abstract class UserGroupDB extends Module {
 			if ($this->isOK($ug))
 				$result[$ug->id]= $ug;
 			else {
-				Logger::info('main', 'USERGROUPDB::MYSQL::getList group \''.$row['id'].'\' not ok');
+				Logger::info('main', 'USERGROUPDB::getListDynamic group \''.$row['id'].'\' not ok');
 			}
 		}
 		return $result;;
