@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,7 +30,10 @@ if (isset($_REQUEST['action'])) {
   }
 
   if ($_REQUEST['action']=='add') {
-    $id = action_add();
+    if ($_REQUEST['type'] == 'static')
+      $id = action_add();
+    elseif ($_REQUEST['type'] == 'dynamic')
+      $id = action_add_dynamic();
     if ($id !== false)
       redirect('usersgroup.php?action=manage&id='.$id);
   }
@@ -100,6 +104,49 @@ function action_add() {
   $res = $userGroupDB->add($g);
   if (!$res)
     die_error('Unable to create user group '.$res,__FILE__,__LINE__);
+
+  return $g->id;
+}
+
+function action_add_dynamic() {
+  if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
+    return false;
+
+  if ($_REQUEST['name'] == '') {
+    popup_error(_('You must define a name to your usergroup'));
+    return false;
+  }
+
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+
+  $mods_enable = $prefs->get('general','module_enable');
+  if (! in_array('UserGroupDB',$mods_enable))
+    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+
+  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $userGroupDB = new $mod_usergroup_name();
+
+  $rules = array();
+  foreach ($_POST['rules'] as $rule) {
+    if ($rule['value'] == '') {
+      popup_error(_('You must give a value to each rule of your usergroup'));
+      return false;
+    }
+
+    $buf = new Rule(NULL);
+    $buf->attribute = $rule['attribute'];
+    $buf->type = $rule['type'];
+    $buf->value = $rule['value'];
+
+    $rules[] = $buf;
+  }
+
+  $g = new UsersGroup_dynamic(NULL,$_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type']);
+  $res = $userGroupDB->add($g);
+  if (!$res)
+    die_error('Unable to create dynamic user group '.$res,__FILE__,__LINE__);
 
   return $g->id;
 }
@@ -307,10 +354,12 @@ function show_default() {
     }
     $content = 'content'.(($count++%2==0)?1:2);
     if ($userGroupDB->isWriteable()) {
+      echo '<tfoot>';
       echo '<tr class="'.$content.'">';
       echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
       echo '<td><input type="submit" value="'._('Delete').'"/></td>';
       echo '</tr>';
+      echo '</tfoot>';
     }
     echo '</table>';
     if ($userGroupDB->isWriteable()) {
@@ -321,35 +370,90 @@ function show_default() {
   echo '</div>';
 
   if ($userGroupDB->isWriteable()) {
+	$usergroup_types = array('static' => _('Static'), 'dynamic' => _('Dynamic'));
+
     echo '<div>';
     echo '<h2>'._('Create a new group').'</h2>';
-    echo '<form action="" method="post">';
-    echo '<input type="hidden" name="action" value="add" />';
-    echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
-    echo '<tr class="content1">';
-    echo '<th>'._('Name').'</th>';
-    echo '<td><input type="text" name="name" value="" /></td>';
-    echo '</tr>';
+	$first_type = array_keys($usergroup_types);
+	$first_type = $first_type[0];
+	$usergroup_types2 = $usergroup_types; // bug in php 5.1.6 (redhat 5.2)
+	foreach ($usergroup_types as $type => $name) {
+		echo '<input class="input_radio" type="radio" name="type" value="'.$type.'" onclick="';
+		foreach ($usergroup_types2 as $type2 => $name2) { // bug in php 5.1.6
+			if ($type == $type2)
+				echo '$(\'table_'.$type2.'\').show(); ';
+			else
+				echo '$(\'table_'.$type2.'\').hide(); ';
+		}
+		echo '"';
+		if ($type == $first_type)
+			echo ' checked="checked"';
 
-    echo '<tr class="content2">';
-    echo '<th>'._('Description').'</th>';
-    echo '<td><input type="text" name="description" value="" /></td>';
-    echo '</tr>';
-    /*
-    echo '<tr class="content2">';
-    echo '<th>'._('Status').'</th>';
-    echo '<td>';
-    echo '<input class="input_radio" type="radio" name="published" value="1" checked />'._('Enable');
-    echo '<input class="input_radio" type="radio" name="published" value="0"  />'._('Block');
-    echo '</td>';
-    echo '</tr>';
-    */
-    echo '<tr class="content1">';
-    echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
-    echo '</tr>';
-    echo '</table>';
-    echo '</form>';
+		echo ' />';
+		echo $type;
+	}
+
+	foreach ($usergroup_types as $type => $name) {
+		echo '<form action="" method="post">';
+		echo '<table id="table_'.$type.'"';
+		if ( $type != $first_type)
+			echo ' style="display: none" ';
+		else
+			echo ' style="display: visible" ';
+		echo ' border="0" class="main_sub" cellspacing="1" cellpadding="5" >';
+		echo '<input type="hidden" name="action" value="add" />';
+		echo '<input type="hidden" name="type" value="'.$type.'" />';
+		echo '<tr class="content1">';
+		echo '<th>'._('Name').'</th>';
+		echo '<td><input type="text" name="name" value="" /></td>';
+		echo '</tr>';
+
+		echo '<tr class="content2">';
+		echo '<th>'._('Description').'</th>';
+		echo '<td><input type="text" name="description" value="" /></td>';
+		echo '</tr>';
+
+		if ($type == 'dynamic') {
+			echo '<tr class="content1">';
+			echo '<th>'._('Validation type').'</th>';
+			echo '<td><input type="radio" name="validation_type" value="and" checked="checked" /> '._('All').' <input type="radio" name="validation_type" value="or" /> '._('At least one').'</td>';
+			echo '</tr>';
+
+			echo '<tr class="content2">';
+			echo '<th>'._('Filters').'</th>';
+			echo '<td>';
+
+			$i = 0;
+			$filter_attributes = array('login', 'displayname');
+			$filter_types = array('equal', 'contains', 'startswith', 'endswith');
+			echo '<table id="toto" border="0" cellspacing="1" cellpadding="3">';
+			echo '<tr>';
+			echo '<td><select name="rules[0][attribute]">';
+			foreach ($filter_attributes as $filter_attribute)
+				echo '<option value="'.$filter_attribute.'">'.$filter_attribute.'</option>';
+			echo '</select></td>';
+			echo '<td><select name="rules[0][type]">';
+			foreach ($filter_types as $filter_type) {
+				echo '<option value="'.$filter_type.'">'.$filter_type.'</option>';
+				echo '<option value="not_'.$filter_type.'">NOT '.$filter_type.'</option>';
+			}
+			echo '</select></td>';
+			echo '<td><input type="text" name="rules[0][value]" value="" /></td>';
+			echo '<td><input style="display: none;" type="button" onclick="del_field(this.parentNode.parentNode); return false;" value="-" /><input type="button" onclick="add_field(this.parentNode.parentNode); return false;" value="+" /></td>';
+			echo '</tr>';
+			echo '</table>';
+
+			echo '</td>';
+			echo '</tr>';
+		}
+
+		echo '<tr class="content1">';
+		echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
+		echo '</tr>';
+		echo '</table>';
+		echo '</form>';
+	}
     echo '</div>';
   }
 

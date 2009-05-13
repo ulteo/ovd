@@ -50,7 +50,13 @@ abstract class UserGroupDB extends Module {
 		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' fail to created');
+			Logger::error('admin','ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' failed');
+			return false;
+		}
+		
+		$ret = Abstract_UserGroup_Rule::init($prefs_);
+		if ($ret === false) {
+			Logger::error('admin','ADMIN_USERGROUPDB::init Abstract_UserGroup_Rule::init failed');
 			return false;
 		}
 		

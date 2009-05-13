@@ -115,6 +115,7 @@ function page_header($params_=array()) {
   echo '<script type="text/javascript" src="'.$base_url.'media/script/sortable.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/common.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/configuration.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/add_del_rows.js" charset="utf-8"></script>';
 
   if (is_array($params_) && isset($params_['js_files']) && is_array($params_['js_files']))
     foreach ($params_['js_files'] as $js_file)
