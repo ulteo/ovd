@@ -1,6 +1,428 @@
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-application.c thunar-0.9.0.new/thunar/thunar-application.c
+--- thunar-0.9.0/thunar/thunar-application.c	2009-05-10 15:06:23.000000000 +0200
++++ thunar-0.9.0.new/thunar/thunar-application.c	2009-05-13 07:52:50.000000000 +0200
+@@ -1100,8 +1100,6 @@
+       /* try to launch this file, display an error dialog if that fails */
+       if (!thunar_file_launch (lp->data, screen, &derror))
+         {
+-          /* tell the user that we were unable to launch the file specified on the cmdline */
+-          thunar_dialogs_show_error (screen, derror, _("Failed to open \"%s\""), thunar_file_get_display_name (lp->data));
+           g_error_free (derror);
+           break;
+         }
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-chooser-dialog.c thunar-0.9.0.new/thunar/thunar-chooser-dialog.c
+--- thunar-0.9.0/thunar/thunar-chooser-dialog.c	2009-05-10 15:06:23.000000000 +0200
++++ thunar-0.9.0.new/thunar/thunar-chooser-dialog.c	2009-05-13 07:53:25.000000000 +0200
+@@ -75,14 +75,9 @@
+ static void     thunar_chooser_dialog_update_accept       (ThunarChooserDialog      *dialog);
+ static void     thunar_chooser_dialog_update_header       (ThunarChooserDialog      *dialog);
+ static void     thunar_chooser_dialog_action_remove       (ThunarChooserDialog      *dialog);
+-static void     thunar_chooser_dialog_browse_clicked      (GtkWidget                *button,
+-                                                           ThunarChooserDialog      *dialog);
+ static gboolean thunar_chooser_dialog_button_press_event  (GtkWidget                *tree_view,
+                                                            GdkEventButton           *event,
+                                                            ThunarChooserDialog      *dialog);
+-static void     thunar_chooser_dialog_notify_expanded     (GtkExpander              *expander,
+-                                                           GParamSpec               *pspec,
+-                                                           ThunarChooserDialog      *dialog);
+ static void     thunar_chooser_dialog_notify_loading      (ThunarChooserModel       *model,
+                                                            GParamSpec               *pspec,
+                                                            ThunarChooserDialog      *dialog);
+@@ -112,9 +107,6 @@
+   GtkWidget   *header_image;
+   GtkWidget   *header_label;
+   GtkWidget   *tree_view;
+-  GtkWidget   *custom_expander;
+-  GtkWidget   *custom_entry;
+-  GtkWidget   *custom_button;
+   GtkWidget   *default_button;
+   GtkWidget   *cancel_button;
+   GtkWidget   *accept_button;
+@@ -208,7 +200,6 @@
+   GtkTreeSelection  *selection;
+   GtkCellRenderer   *renderer;
+   GtkWidget         *header;
+-  GtkWidget         *hbox;
+   GtkWidget         *vbox;
+   GtkWidget         *box;
+   GtkWidget         *swin;
+@@ -290,39 +281,6 @@
+                 NULL);
+ #endif
+ 
+-  /* create the "Custom command" expand */
+-  dialog->custom_expander = gtk_expander_new_with_mnemonic (_("Use a _custom command:"));
+-  thunar_gtk_widget_set_tooltip (dialog->custom_expander, _("Use a custom command for an application that is not "
+-                                                            "available from the above application list."));
+-  exo_binding_new_with_negation (G_OBJECT (dialog->custom_expander), "expanded", G_OBJECT (dialog->tree_view), "sensitive");
+-  g_signal_connect (G_OBJECT (dialog->custom_expander), "notify::expanded", G_CALLBACK (thunar_chooser_dialog_notify_expanded), dialog);
+-  gtk_box_pack_start (GTK_BOX (box), dialog->custom_expander, FALSE, FALSE, 0);
+-  gtk_widget_show (dialog->custom_expander);
+-
+-  /* create the "Custom command" box */
+-  hbox = gtk_hbox_new (FALSE, 2);
+-  gtk_container_add (GTK_CONTAINER (dialog->custom_expander), hbox);
+-  gtk_widget_show (hbox);
+-
+-  /* create the "Custom command" entry */
+-  dialog->custom_entry = g_object_new (GTK_TYPE_ENTRY, "activates-default", TRUE, NULL);
+-  g_signal_connect_swapped (G_OBJECT (dialog->custom_entry), "changed", G_CALLBACK (thunar_chooser_dialog_update_accept), dialog);
+-  gtk_box_pack_start (GTK_BOX (hbox), dialog->custom_entry, TRUE, TRUE, 0);
+-  gtk_widget_show (dialog->custom_entry);
+-
+-  /* create the "Custom command" button */
+-  dialog->custom_button = gtk_button_new_with_mnemonic (_("_Browse..."));
+-  g_signal_connect (G_OBJECT (dialog->custom_button), "clicked", G_CALLBACK (thunar_chooser_dialog_browse_clicked), dialog);
+-  gtk_box_pack_start (GTK_BOX (hbox), dialog->custom_button, FALSE, FALSE, 0);
+-  gtk_widget_show (dialog->custom_button);
+-
+-  /* create the "Use as default for this kind of file" button */
+-  dialog->default_button = gtk_check_button_new_with_mnemonic (_("Use as _default for this kind of file"));
+-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->default_button), TRUE);
+-  exo_binding_new (G_OBJECT (dialog), "open", G_OBJECT (dialog->default_button), "visible");
+-  gtk_box_pack_start (GTK_BOX (box), dialog->default_button, FALSE, FALSE, 0);
+-  gtk_widget_show (dialog->default_button);
+-
+   /* add the "Cancel" button */
+   dialog->cancel_button = gtk_dialog_add_button (GTK_DIALOG (dialog), GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL);
+ 
+@@ -440,12 +398,8 @@
+   GtkTreeSelection         *selection;
+   GtkTreeModel             *model;
+   GtkTreeIter               iter;
+-  const gchar              *exec;
+   gboolean                  succeed = TRUE;
+   GError                   *error = NULL;
+-  gchar                    *path;
+-  gchar                    *name;
+-  gchar                    *s;
+   GList                     list;
+ 
+   /* no special processing for non-accept responses */
+@@ -459,70 +413,14 @@
+   mime_info = thunar_file_get_mime_info (dialog->file);
+ 
+   /* determine the application that was chosen by the user */
+-  if (!gtk_expander_get_expanded (GTK_EXPANDER (dialog->custom_expander)))
+-    {
+-      selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (dialog->tree_view));
+-      if (gtk_tree_selection_get_selected (selection, &model, &iter))
+-        gtk_tree_model_get (model, &iter, THUNAR_CHOOSER_MODEL_COLUMN_APPLICATION, &application, -1);
+-    }
+-  else
+-    {
+-      /* determine the command line for the custom command */
+-      exec = gtk_entry_get_text (GTK_ENTRY (dialog->custom_entry));
+-
+-      /* determine the path for the custom command */
+-      path = g_strdup (exec);
+-      s = strchr (path, ' ');
+-      if (G_UNLIKELY (s != NULL))
+-        *s = '\0';
+-
+-      /* determine the name from the path of the custom command */
+-      name = g_path_get_basename (path);
+-
+-      /* try to add an application for the custom command */
+-      application = thunar_vfs_mime_database_add_application (mime_database, mime_info, name, exec, &error);
+-
+-      /* verify the application */
+-      if (G_UNLIKELY (application == NULL))
+-        {
+-          /* display an error to the user */
+-          thunar_dialogs_show_error (GTK_WIDGET (dialog), error, _("Failed to add new application \"%s\""), name);
+-
+-          /* release the error */
+-          g_error_free (error);
+-        }
+-
+-      /* cleanup */
+-      g_free (path);
+-      g_free (name);
+-    }
++  selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (dialog->tree_view));
++  if (gtk_tree_selection_get_selected (selection, &model, &iter))
++    gtk_tree_model_get (model, &iter, THUNAR_CHOOSER_MODEL_COLUMN_APPLICATION, &application, -1);
+ 
+   /* verify that we have a valid application */
+   if (G_UNLIKELY (application == NULL))
+     goto cleanup;
+ 
+-  /* check if we should also set the application as default */
+-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->default_button)))
+-    {
+-      /* remember the application as default for these kind of file */
+-      succeed = thunar_vfs_mime_database_set_default_application (mime_database, mime_info, application, &error);
+-
+-      /* verify that we were successfull */
+-      if (G_UNLIKELY (!succeed))
+-        {
+-          /* display an error to the user */
+-          thunar_dialogs_show_error (GTK_WIDGET (dialog), error, _("Failed to set default application for \"%s\""),
+-                                     thunar_file_get_display_name (dialog->file));
+-
+-          /* release the error */
+-          g_error_free (error);
+-        }
+-
+-      /* emit "changed" on the file if we successfully changed the default application */
+-      if (G_LIKELY (succeed))
+-        thunar_file_changed (dialog->file);
+-    }
+-
+   /* check if we should also execute the application */
+   if (G_LIKELY (succeed && dialog->open))
+     {
+@@ -629,28 +527,18 @@
+   GtkTreeSelection *selection;
+   GtkTreeModel     *model;
+   GtkTreeIter       iter;
+-  const gchar      *text;
+   gboolean          sensitive = FALSE;
+   GValue            value = { 0, };
+ 
+   _thunar_return_if_fail (THUNAR_IS_CHOOSER_DIALOG (dialog));
+ 
+-  if (gtk_expander_get_expanded (GTK_EXPANDER (dialog->custom_expander)))
+-    {
+-      /* check if the user entered a valid custom command */
+-      text = gtk_entry_get_text (GTK_ENTRY (dialog->custom_entry));
+-      sensitive = (text != NULL && *text != '\0');
+-    }
+-  else
++  selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (dialog->tree_view));
++  if (gtk_tree_selection_get_selected (selection, &model, &iter))
+     {
+-      selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (dialog->tree_view));
+-      if (gtk_tree_selection_get_selected (selection, &model, &iter))
+-        {
+-          /* check if the selected row refers to a valid application */
+-          gtk_tree_model_get_value (model, &iter, THUNAR_CHOOSER_MODEL_COLUMN_APPLICATION, &value);
+-          sensitive = (g_value_get_object (&value) != NULL);
+-          g_value_unset (&value);
+-        }
++      /* check if the selected row refers to a valid application */
++      gtk_tree_model_get_value (model, &iter, THUNAR_CHOOSER_MODEL_COLUMN_APPLICATION, &value);
++      sensitive = (g_value_get_object (&value) != NULL);
++      g_value_unset (&value);
+     }
+ 
+   /* update the "Ok"/"Open" button sensitivity */
+@@ -704,18 +592,6 @@
+       gtk_label_set_markup (GTK_LABEL (dialog->header_label), text);
+       g_free (text);
+ 
+-      /* update the "Browse..." tooltip */
+-      thunar_gtk_widget_set_tooltip (dialog->custom_button,
+-                                     _("Browse the file system to select an "
+-                                       "application to open files of type \"%s\"."),
+-                                     thunar_vfs_mime_info_get_comment (mime_info));
+-
+-      /* update the "Use as default for this kind of file" tooltip */
+-      thunar_gtk_widget_set_tooltip (dialog->default_button,
+-                                     _("Change the default application for files "
+-                                       "of type \"%s\" to the selected application."),
+-                                     thunar_vfs_mime_info_get_comment (mime_info));
+-
+       /* cleanup */
+       g_object_unref (G_OBJECT (icon_factory));
+     }
+@@ -797,119 +673,6 @@
+ 
+ 
+ 
+-static void
+-thunar_chooser_dialog_browse_clicked (GtkWidget           *button,
+-                                      ThunarChooserDialog *dialog)
+-{
+-  GtkFileFilter *filter;
+-  GtkWidget     *chooser;
+-  gchar         *filename;
+-  gchar         *s;
+-
+-  chooser = gtk_file_chooser_dialog_new (_("Select an Application"),
+-                                         GTK_WINDOW (dialog),
+-                                         GTK_FILE_CHOOSER_ACTION_OPEN,
+-                                         GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+-                                         GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+-                                         NULL);
+-  gtk_file_chooser_set_local_only (GTK_FILE_CHOOSER (chooser), TRUE);
+-
+-  /* add file chooser filters */
+-  filter = gtk_file_filter_new ();
+-  gtk_file_filter_set_name (filter, _("All Files"));
+-  gtk_file_filter_add_pattern (filter, "*");
+-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+-
+-  filter = gtk_file_filter_new ();
+-  gtk_file_filter_set_name (filter, _("Executable Files"));
+-  gtk_file_filter_add_mime_type (filter, "application/x-csh");
+-  gtk_file_filter_add_mime_type (filter, "application/x-executable");
+-  gtk_file_filter_add_mime_type (filter, "application/x-perl");
+-  gtk_file_filter_add_mime_type (filter, "application/x-python");
+-  gtk_file_filter_add_mime_type (filter, "application/x-ruby");
+-  gtk_file_filter_add_mime_type (filter, "application/x-shellscript");
+-  gtk_file_filter_add_pattern (filter, "*.pl");
+-  gtk_file_filter_add_pattern (filter, "*.py");
+-  gtk_file_filter_add_pattern (filter, "*.rb");
+-  gtk_file_filter_add_pattern (filter, "*.sh");
+-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+-  gtk_file_chooser_set_filter (GTK_FILE_CHOOSER (chooser), filter);
+-
+-  filter = gtk_file_filter_new ();
+-  gtk_file_filter_set_name (filter, _("Perl Scripts"));
+-  gtk_file_filter_add_mime_type (filter, "application/x-perl");
+-  gtk_file_filter_add_pattern (filter, "*.pl");
+-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+-
+-  filter = gtk_file_filter_new ();
+-  gtk_file_filter_set_name (filter, _("Python Scripts"));
+-  gtk_file_filter_add_mime_type (filter, "application/x-python");
+-  gtk_file_filter_add_pattern (filter, "*.py");
+-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+-
+-  filter = gtk_file_filter_new ();
+-  gtk_file_filter_set_name (filter, _("Ruby Scripts"));
+-  gtk_file_filter_add_mime_type (filter, "application/x-ruby");
+-  gtk_file_filter_add_pattern (filter, "*.rb");
+-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+-
+-  filter = gtk_file_filter_new ();
+-  gtk_file_filter_set_name (filter, _("Shell Scripts"));
+-  gtk_file_filter_add_mime_type (filter, "application/x-csh");
+-  gtk_file_filter_add_mime_type (filter, "application/x-shellscript");
+-  gtk_file_filter_add_pattern (filter, "*.sh");
+-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (chooser), filter);
+-
+-  /* use the bindir as default folder */
+-  gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (chooser), BINDIR);
+-
+-  /* setup the currently selected file */
+-  filename = gtk_editable_get_chars (GTK_EDITABLE (dialog->custom_entry), 0, -1);
+-  if (G_LIKELY (filename != NULL))
+-    {
+-      /* use only the first argument */
+-      s = strchr (filename, ' ');
+-      if (G_UNLIKELY (s != NULL))
+-        *s = '\0';
+-
+-      /* check if we have a file name */
+-      if (G_LIKELY (*filename != '\0'))
+-        {
+-          /* check if the filename is not an absolute path */
+-          if (G_LIKELY (!g_path_is_absolute (filename)))
+-            {
+-              /* try to lookup the filename in $PATH */
+-              s = g_find_program_in_path (filename);
+-              if (G_LIKELY (s != NULL))
+-                {
+-                  /* use the absolute path instead */
+-                  g_free (filename);
+-                  filename = s;
+-                }
+-            }
+-
+-          /* check if we have an absolute path now */
+-          if (G_LIKELY (g_path_is_absolute (filename)))
+-            gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (chooser), filename);
+-        }
+-
+-      /* release the filename */
+-      g_free (filename);
+-    }
+-
+-  /* run the chooser dialog */
+-  if (gtk_dialog_run (GTK_DIALOG (chooser)) == GTK_RESPONSE_ACCEPT)
+-    {
+-      filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (chooser));
+-      gtk_entry_set_text (GTK_ENTRY (dialog->custom_entry), filename);
+-      g_free (filename);
+-    }
+-
+-  gtk_widget_destroy (chooser);
+-}
+-
+-
+-
+ static gboolean
+ thunar_chooser_dialog_button_press_event (GtkWidget           *tree_view,
+                                           GdkEventButton      *event,
+@@ -945,31 +708,6 @@
+ 
+ 
+ static void
+-thunar_chooser_dialog_notify_expanded (GtkExpander         *expander,
+-                                       GParamSpec          *pspec,
+-                                       ThunarChooserDialog *dialog)
+-{
+-  GtkTreeSelection *selection;
+-
+-  _thunar_return_if_fail (GTK_IS_EXPANDER (expander));
+-  _thunar_return_if_fail (THUNAR_IS_CHOOSER_DIALOG (dialog));
+-
+-  /* clear the application selection whenever the expander
+-   * is expanded to avoid confusion for the user.
+-   */
+-  if (gtk_expander_get_expanded (expander))
+-    {
+-      selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (dialog->tree_view));
+-      gtk_tree_selection_unselect_all (selection);
+-    }
+-
+-  /* update the sensitivity of the "Ok"/"Open" button */
+-  thunar_chooser_dialog_update_accept (dialog);
+-}
+-
+-
+-
+-static void
+ thunar_chooser_dialog_notify_loading (ThunarChooserModel  *model,
+                                       GParamSpec          *pspec,
+                                       ThunarChooserDialog *dialog)
+@@ -1085,11 +823,6 @@
+ 
+       /* determine the command for the mime application */
+       exec = thunar_vfs_mime_handler_get_command (THUNAR_VFS_MIME_HANDLER (mime_application));
+-      if (G_LIKELY (exec != NULL && g_utf8_validate (exec, -1, NULL)))
+-        {
+-          /* setup the command as default for the custom command box */
+-          gtk_entry_set_text (GTK_ENTRY (dialog->custom_entry), exec);
+-        }
+ 
+       /* cleanup */
+       g_object_unref (G_OBJECT (mime_application));
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-launcher.c thunar-0.9.0.new/thunar/thunar-launcher.c
+--- thunar-0.9.0/thunar/thunar-launcher.c	2009-05-10 15:06:23.000000000 +0200
++++ thunar-0.9.0.new/thunar/thunar-launcher.c	2009-05-13 07:52:50.000000000 +0200
+@@ -547,8 +547,23 @@
+     {
+       if (!thunar_file_execute (lp->data, screen, NULL, &error))
+         {
+-          /* display an error message to the user */
+-          thunar_dialogs_show_error (launcher->widget, error, _("Failed to execute file \"%s\""), thunar_file_get_display_name (lp->data));
++          /* try to open the file using its mime type, as xfdesktop does */
++          ThunarVfsInfo *info;
++          ThunarVfsMimeDatabase *mime_database;
++          ThunarVfsMimeApplication *mime_app;
++
++          info = thunarx_file_info_get_vfs_info ((ThunarxFileInfo *) lp->data);
++          mime_database = thunar_vfs_mime_database_get_default ();
++          mime_app = thunar_vfs_mime_database_get_default_application (mime_database,
++                                                                       info->mime_info);
++
++          if (mime_app)
++            {
++              GList *path_list = g_list_prepend (NULL, info->path);
++              thunar_vfs_mime_handler_exec (THUNAR_VFS_MIME_HANDLER (mime_app), screen, path_list, NULL);
++              g_object_unref (G_OBJECT (mime_app));
++              g_list_free (path_list);
++            }
+           g_error_free (error);
+           break;
+         }
 diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-info.c thunar-0.9.0.new/thunar-vfs/thunar-vfs-info.c
---- thunar-0.9.0/thunar-vfs/thunar-vfs-info.c	2009-05-10 16:11:33.000000000 +0200
-+++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-info.c	2009-05-10 16:11:54.000000000 +0200
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-info.c	2009-05-13 07:52:48.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-info.c	2009-05-13 07:52:50.000000000 +0200
 @@ -332,6 +332,8 @@
                           GError             **error)
  {
@@ -10,7 +432,7 @@ diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-info.c thunar-0
    const gchar   *icon = NULL;
    const gchar   *name;
    const gchar   *type;
-@@ -346,6 +348,13 @@
+@@ -346,6 +348,16 @@
    gchar        **argv = NULL;
    gchar         *exec;
  
@@ -19,7 +441,10 @@ diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-info.c thunar-0
 +  allow = xfce_kiosk_query (kiosk, "AllowExecute");
 +  xfce_kiosk_free (kiosk);
 +  if (!allow)
++    {
++      g_set_error (error, G_FILE_ERROR, G_FILE_ERROR_INVAL, _("Permission denied"));
 +      return FALSE;
++    }
 +
    g_return_val_if_fail (info != NULL, FALSE);
    g_return_val_if_fail (error == NULL || *error == NULL, FALSE);

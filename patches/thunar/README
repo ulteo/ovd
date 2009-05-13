@@ -6,5 +6,8 @@
   icon
 
 * ulteo_executable-kiosk.patch
-  add a kiosk config to allow/forbid execution of executable files (+x files
+  - add a kiosk config to allow/forbid execution of executable files (+x files
   and .desktop files)
+  - if execution is denied, try to open the file using its mime type
+  - restrict the "Open with" dialog; don't show the custom entry, and don't
+    allow the user to save his choice
