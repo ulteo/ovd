@@ -24,7 +24,8 @@ scripts_DATA = Application.class.php \
                SessionReportItem.class.php \
                Token.class.php \
                Tokens.class.php \
-               User.class.php
+               User.class.php \
+               UserGroup_Rule.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/classes
 

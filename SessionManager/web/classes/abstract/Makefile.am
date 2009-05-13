@@ -4,7 +4,8 @@ scripts_DATA = Abstract_Invite.class.php \
                Abstract_Report.class.php \
                Abstract_Server.class.php \
                Abstract_Session.class.php \
-               Abstract_Token.class.php
+               Abstract_Token.class.php \
+               Abstract_UserGroup_Rule.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/classes/abstract
 
