@@ -130,6 +130,6 @@ class UserGroupDB_ldap_memberof extends UserGroupDB {
 	}
 	
 	public static function liaisonType() {
-		return 'ldap_memberOf';
+		return 'ldap_memberof';
 	}
 }

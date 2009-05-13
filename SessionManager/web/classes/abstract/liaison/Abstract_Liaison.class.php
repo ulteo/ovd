@@ -21,10 +21,12 @@
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison {
-	public static function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('main', "Abstract_Liaison::load ('$type_', '$element_', '$group_')");
-		if ($type_ != 'UsersGroup')
-			return Abstract_Liaison_sql::load($type_,  $element_, $group_);
+	public static function callMethod($method_name_, $type_, $element_=NULL, $group_=NULL) {
+		Logger::debug('main', "Abstract_Liaison::callMethod ('$method_name_', '$type_', '$element_', '$group_')");
+		if ($type_ != 'UsersGroup') {
+			$method_to_call = 'Abstract_Liaison_sql::'.$method_name_;
+			$class_to_use = 'Abstract_Liaison_sql';
+		}
 		else {
 			$prefs = Preferences::getInstance();
 			if (! $prefs) {
@@ -38,93 +40,26 @@ class Abstract_Liaison {
 			}
 			
 			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-			$userGroupDB = new $mod_usergroup_name();
-			switch ($userGroupDB->liaisonType()) {
-				case 'sql':
-					return Abstract_Liaison_sql::load($type_,  $element_, $group_);
-				break;
-				case 'ldap_memberOf':
-					return Abstract_Liaison_ldap_memberof::load($type_,  $element_, $group_);
-				break;
-				case 'ldap_posix':
-					return Abstract_Liaison_ldap_posix::load($type_,  $element_, $group_);
-				break;
-				case 'activedirectory':
-					return Abstract_Liaison_activedirectory::load($type_,  $element_, $group_);
-				break;
-			}
+			$liaison_type = call_user_func($mod_usergroup_name.'::liaisonType');
+			
+			$method_to_call = 'Abstract_Liaison_'.$liaison_type.'::'.$method_name_;
+			$class_to_use = 'Abstract_Liaison_'.$liaison_type;
+		}
+		
+		if (!method_exists($class_to_use, $method_name_)) {
+			Logger::error('main', "Abstract_Liaison::callMethod method '$methode_to_call' does not exist");
 			return NULL;
 		}
+		return call_user_func($method_to_call, $type_,  $element_, $group_);
+	}
+	public static function load($type_, $element_=NULL, $group_=NULL) {
+		return self::callMethod('load', $type_, $element_, $group_);
 	}
 	public static function delete($type_, $element_, $group_) {
-		Logger::debug('main', "Abstract_Liaison::delete ('$type_', '$element_', '$group_')");
-		if ($type_ != 'UsersGroup')
-			return Abstract_Liaison_sql::delete($type_,  $element_, $group_);
-		else {
-			$prefs = Preferences::getInstance();
-			if (! $prefs) {
-				Logger::error('main', 'Abstract_Liaison::delete get Preferences failed');
-				return false;
-			}
-			$mods_enable = $prefs->get('general','module_enable');
-			if (! in_array('UserGroupDB',$mods_enable)) {
-				Logger::error('main', 'Abstract_Liaison::delete Module UserGroupDB must be enabled');
-				return false;
-			}
-			
-			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-			$userGroupDB = new $mod_usergroup_name();
-			switch ($userGroupDB->liaisonType()) {
-				case 'sql':
-					return Abstract_Liaison_sql::delete($type_,  $element_, $group_);
-				break;
-				case 'ldap_memberOf':
-					return Abstract_Liaison_ldap_memberof::delete($type_,  $element_, $group_);
-				break;
-				case 'ldap_posix':
-					return Abstract_Liaison_ldap_posix::delete($type_,  $element_, $group_);
-				break;
-				case 'activedirectory':
-					return Abstract_Liaison_activedirectory::delete($type_,  $element_, $group_);
-				break;
-			}
-			return false;
-		}
+		return self::callMethod('delete', $type_, $element_, $group_);
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('main', "Abstract_Liaison::save ('$type_', '$element_', '$group_')");
-		if ($type_ != 'UsersGroup')
-			return Abstract_Liaison_sql::save($type_,  $element_, $group_);
-		else {
-			$prefs = Preferences::getInstance();
-			if (! $prefs) {
-				Logger::error('main', 'Abstract_Liaison::save get Preferences failed');
-				return NULL;
-			}
-			$mods_enable = $prefs->get('general','module_enable');
-			if (! in_array('UserGroupDB',$mods_enable)) {
-				Logger::error('main', 'Abstract_Liaison::load Module UserGroupDB must be enabled');
-				return NULL;
-			}
-			
-			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-			$userGroupDB = new $mod_usergroup_name();
-			switch ($userGroupDB->liaisonType()) {
-				case 'sql':
-					return Abstract_Liaison_sql::save($type_,  $element_, $group_);
-				break;
-				case 'ldap_memberOf':
-					return Abstract_Liaison_ldap_memberof::save($type_,  $element_, $group_);
-				break;
-				case 'ldap_posix':
-					return Abstract_Liaison_ldap_posix::save($type_,  $element_, $group_);
-				break;
-				case 'activedirectory':
-					return Abstract_Liaison_activedirectory::save($type_,  $element_, $group_);
-				break;
-			}
-			return NULL;
-		}
+		return self::callMethod('save', $type_, $element_, $group_);
 	}
 	
 	public static function init($prefs) {
