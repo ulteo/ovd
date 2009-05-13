@@ -233,4 +233,14 @@ class UserDB_sql_external extends UserDB {
 	public static function isDefault() {
 		return false;
 	}
+
+	public function getAttributesList() {
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		$config = $prefs->get('UserDB','sql_external');
+		if (!isset($config['match']))
+			return array();
+		return array_keys($config['match']);
+	}
 }

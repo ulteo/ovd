@@ -119,4 +119,8 @@ class UserDB_unix extends UserDB {
 	public static function isDefault() {
 		return false;
 	}
+
+	public function getAttributesList() {
+		return array_unique( array_merge( array('login', 'displayname', 'uid', 'gid', 'homedir'), get_needed_attributes_user_from_module_plugin()));
+	}
 }

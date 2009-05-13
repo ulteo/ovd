@@ -37,4 +37,7 @@ abstract class UserDB extends Module  {
 		else
 			return false;
 	}
+	public function getAttributesList() {
+		return array();
+	}
 }

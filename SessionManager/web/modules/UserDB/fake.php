@@ -111,4 +111,8 @@ class UserDB_fake extends UserDB {
 	public static function isDefault() {
 		return true;
 	}
+
+	public function getAttributesList() {
+		return array_unique(array_merge(array('login','displayname', 'uid', 'fileserver_uid'),  get_needed_attributes_user_from_module_plugin()));
+	}
 }

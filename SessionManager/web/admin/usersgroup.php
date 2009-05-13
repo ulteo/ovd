@@ -293,9 +293,14 @@ function show_default() {
   $mods_enable = $prefs->get('general','module_enable');
   if (! in_array('UserGroupDB',$mods_enable))
     die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
+  
+  if (! in_array('UserDB',$mods_enable))
+    die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+  
   $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
   $userGroupDB = new $mod_usergroup_name();
+  $mod_userdb_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
+  $userDB = new $mod_userdb_name();
 
   page_header();
 
@@ -425,7 +430,11 @@ function show_default() {
 			echo '<td>';
 
 			$i = 0;
-			$filter_attributes = array('login', 'displayname');
+			$filter_attributes = $userDB->getAttributesList();
+			foreach ($filter_attributes as $key1 => $value1) {
+				if ( $value1 == 'password')
+					unset($filter_attributes[$key1]);
+			}
 			$filter_types = array('equal', 'contains', 'startswith', 'endswith');
 			echo '<table id="toto" border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr>';

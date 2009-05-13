@@ -163,4 +163,8 @@ class UserDB_sql extends UserDB  {
 	public static function isDefault() {
 		return false;
 	}
+
+	public function getAttributesList() {
+		return array('uid', 'login', 'displayname', 'homedir', 'fileserver', 'fileserver_uid', 'password');
+	}
 }
