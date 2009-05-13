@@ -30,7 +30,8 @@ if (isset($_REQUEST['action'])) {
 
   if ($_REQUEST['action']=='add') {
     $id = action_add();
-    redirect('usersgroup.php?action=manage&id='.$id);
+    if ($id !== false)
+      redirect('usersgroup.php?action=manage&id='.$id);
   }
   elseif ($_REQUEST['action']=='del') {
     if (isset($_REQUEST['id'])) {
@@ -63,6 +64,8 @@ if (isset($_REQUEST['action'])) {
       redirect();
     }
   }
+
+  redirect();
 }
 
 if (! isset($_GET['view']))
@@ -74,6 +77,11 @@ if ($_GET['view'] == 'all')
 function action_add() {
   if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
     return false;
+
+  if ($_REQUEST['name'] == '') {
+    popup_error(_('You must define a name to your usergroup'));
+    return false;
+  }
 
   $prefs = Preferences::getInstance();
   if (! $prefs)
