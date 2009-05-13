@@ -45,10 +45,49 @@ AC_MSG_CHECKING([PLATFORM_LDFLAGS])
 AC_MSG_RESULT([$PLATFORM_LDFLAGS])
 AC_SUBST([PLATFORM_LDFLAGS])
 
+# Check for python (needed by cups2all and d-f2xml)
+AM_PATH_PYTHON
+
+# Check for cups
+AC_PATH_PROG(CUPS_CONFIG, cups-config)
+if test "x$CUPS_CONFIG" = x; then
+    AC_MSG_ERROR(You need to install cups-config or disable cups2all with --disable-cups2all.)
+fi
+CUPSSERVERBIN=`$CUPS_CONFIG --serverbin`
+CUPSSERVERROOT=`$CUPS_CONFIG --serverroot`
+CUPSDATADIR=`$CUPS_CONFIG --datadir`
+AC_SUBST(CUPSSERVERBIN)
+AC_SUBST(CUPSSERVERROOT)
+AC_SUBST(CUPSDATADIR)
+
+# startovd default start script
+AC_ARG_WITH(
+    startovd,
+    AC_HELP_STRING([--with-startovd=xfce|kde], [select which startup script will be used (default=xfce)]),
+    [ case "$withval" in
+        xfce|kde)
+            startovd="startovd-$withval";;
+        *)
+            AC_MSG_ERROR(Wrong value $withval, use ./configure --help to find valid options);;
+      esac
+      STARTOVD=$startovd
+    ],
+    [STARTOVD=startovd-xfce]
+)
+AC_SUBST(STARTOVD)
+
 AC_OUTPUT([
 Makefile
 restricted-menu/Makefile
 lmessage/Makefile
 po/Makefile.in
+cups2all/Makefile
+desktopfiles2xml/Makefile
+start-ovd/Makefile
 ])
+
+echo
+echo "Configuration:"
+echo "* cups2all: $enable_cups2all"
+echo "* startovd: $STARTOVD"
 

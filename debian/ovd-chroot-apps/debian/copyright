@@ -3,11 +3,14 @@ Mon, 06 Oct 2008 22:35:15 +0200.
 
 Upstream Author:
 
+    Julien LANGLOIS <julien@ulteo.com>
     Gauvain Pocentek <gpocentek@linutop.com>
+    Olivier Fourdan <fourdan@xfce.org>
 
 Copyright:
 
-    Copyright (C) 2008 Gauvain Pocentek
+    Copyright (C) 2008 Ulteo
+    Copyright (C) 1996-2003 Olivier Fourdan
 
 License:
 
@@ -26,3 +29,4 @@ License:
 
 The Debian packaging is (C) 2008, Gauvain Pocentek <gauvain@ulteo.com> and
 is licensed under the GPL, see `/usr/share/common-licenses/GPL-2'.
+
