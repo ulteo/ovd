@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison_ldap_memberof {
 	public static function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::load($type_,$element_,$group_)</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_memberof::load($type_,$element_,$group_)");
 		if ($type_ == 'UsersGroup') {
 			if (is_null($element_) && is_null($group_))
 				return self::loadAll($type_);
@@ -42,15 +42,15 @@ class Abstract_Liaison_ldap_memberof {
 		
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::save</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_memberof::save");
 		return false;
 	}
 	public static function delete($type_, $element_, $group_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::delete</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_memberof::delete");
 		return false;
 	}
 	public static function loadElements($type_, $group_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::loadElements ($type_,$group_)</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_memberof::loadElements ($type_,$group_)");
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -113,7 +113,7 @@ class Abstract_Liaison_ldap_memberof {
 	}
 	
 	public static function loadGroups($type_, $element_) {
-		Logger::debug('admin',"<b>Abstract_Liaison_ldap_memberof::loadGroups ($type_,$element_)</b>");
+		Logger::debug('admin',"Abstract_Liaison_ldap_memberof::loadGroups ($type_,$element_)");
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -150,12 +150,12 @@ class Abstract_Liaison_ldap_memberof {
 	}
 	
 	public static function loadAll($type_) {
-		Logger::debug('main',"<b>Abstract_Liaison_ldap_memberof::loadAll ($type_)</b>");
+		Logger::debug('main',"Abstract_Liaison_ldap_memberof::loadAll ($type_)");
 		echo "Abstract_Liaison_ldap_memberof::loadAll($type_)<br>";
 		return NULL;
 	}
 	public static function loadUnique($type_, $element_, $group_) {
-		Logger::debug('main',"<b>Abstract_Liaison_ldap_memberof::loadUnique ($type_,$element_,$group_)</b>");
+		Logger::debug('main',"Abstract_Liaison_ldap_memberof::loadUnique ($type_,$element_,$group_)");
 		echo "Abstract_Liaison_ldap_memberof::loadUnique($type_,$element_,$group_)<br>";
 		return NULL;
 	}
