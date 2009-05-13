@@ -30,18 +30,20 @@ if (isset($_POST['from'])) {
 		if ($_POST['use'] == 'usergroups') {
 			$_SESSION['wizard']['use_users'] = 'usergroups';
 
-			if (!isset($_POST['usergroups']) || !is_array($_POST['usergroups']))
-				show_step1(_('No selected user group'));
-			else {
+			if (!isset($_POST['usergroups']) || !is_array($_POST['usergroups'])) {
+				popup_error(_('No user group selected'));
+				show_step1();
+			} else {
 				$_SESSION['wizard']['usergroups'] = $_POST['usergroups'];
 				show_step3();
 			}
 		} elseif ($_POST['use'] == 'users') {
 			$_SESSION['wizard']['use_users'] = 'users';
 
-			if (!isset($_POST['users']) || !is_array($_POST['users']))
-				show_step1(_('No user selected'));
-			else {
+			if (!isset($_POST['users']) || !is_array($_POST['users'])) {
+				popup_error(_('No user selected'));
+				show_step1();
+			} else {
 				$_SESSION['wizard']['users'] = $_POST['users'];
 				show_step2();
 			}
@@ -52,9 +54,10 @@ if (isset($_POST['from'])) {
 		if (isset($_POST['submit_previous']))
 			show_step1();
 		elseif (isset($_POST['submit_next'])) {
-			if (!isset($_POST['group_name']) || $_POST['group_name'] === '')
-				show_step2(_('No group name'));
-			else {
+			if (!isset($_POST['group_name']) || $_POST['group_name'] === '') {
+				popup_error(_('No group name'));
+				show_step2();
+			} else {
 				$_SESSION['wizard']['user_group_name'] = $_POST['group_name'];
 				$_SESSION['wizard']['user_group_description'] = $_POST['group_description'];
 				show_step3();
@@ -75,16 +78,18 @@ if (isset($_POST['from'])) {
 				show_step2();
 		} elseif (isset($_POST['submit_next'])) {
 			if ($_SESSION['wizard']['use_apps'] == 'appgroups')
-				if (!isset($_POST['appgroups']) || !is_array($_POST['appgroups']))
-					show_step3(_('No application group selected'));
-				else {
+				if (!isset($_POST['appgroups']) || !is_array($_POST['appgroups'])) {
+					popup_error(_('No application group selected'));
+					show_step3();
+				} else {
 					$_SESSION['wizard']['appgroups'] = $_POST['appgroups'];
 					show_step5();
 				}
 			elseif ($_SESSION['wizard']['use_apps'] == 'apps')
-				if (!isset($_POST['apps']) || !is_array($_POST['apps']))
-					show_step3(_('No application selected'));
-				else {
+				if (!isset($_POST['apps']) || !is_array($_POST['apps'])) {
+					popup_error(_('No application selected'));
+					show_step3();
+				} else {
 					$_SESSION['wizard']['apps'] = $_POST['apps'];
 					show_step4();
 				}
@@ -95,9 +100,10 @@ if (isset($_POST['from'])) {
 		if (isset($_POST['submit_previous']))
 			show_step3();
 		elseif (isset($_POST['submit_next'])) {
-			if (!isset($_POST['group_name']) || $_POST['group_name'] === '')
-				show_step4(_('No group name'));
-			else {
+			if (!isset($_POST['group_name']) || $_POST['group_name'] === '') {
+				popup_error(_('No group name'));
+				show_step4();
+			} else {
 				$_SESSION['wizard']['application_group_name'] = $_POST['group_name'];
 				$_SESSION['wizard']['application_group_description'] = $_POST['group_description'];
 				show_step5();
@@ -121,18 +127,7 @@ function show_default() {
   show_step1();
 }
 
-function show_error($error_) {
-  page_header();
-  echo '<div>';
-  echo '<h1>'._('Publication Wizard').'</h1>';
-  echo '<span class="msg_error">'.$error_.'</span>';
-  echo '</div>';
-
-  page_footer();
-  die();
-}
-
-function show_step1($error_=NULL) {
+function show_step1() {
   $usergroups = get_all_usergroups();
   $has_usergroups = (count($usergroups) > 0);
 
@@ -161,16 +156,13 @@ function show_step1($error_=NULL) {
   $applications = $applicationDB->getList();
 
   if (!count($users))
-    show_error(_('No available user'));
+    popup_error(_('No available user'));
   if (!count($applications))
-    show_error(_('No available application'));
+    popup_error(_('No available application'));
 
   page_header();
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('User/group selection').'</h1>';
-
-  if ($error_ != NULL)
-    echo '<span class="msg_error">'.$error_.'</span>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step1" />';
@@ -245,15 +237,12 @@ function show_step1($error_=NULL) {
   die();
 }
 
-function show_step2($error_=NULL) {
+function show_step2() {
   $count = 0;
 
   page_header();
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create usergroup').'</h1>';
-
-  if ($error_ != NULL)
-    echo '<span class="msg_error">'.$error_.'</span>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step2" />';
@@ -292,7 +281,7 @@ function show_step2($error_=NULL) {
   die();
 }
 
-function show_step3($error_=NULL) {
+function show_step3() {
   $appgroups = getAllAppsGroups();
   $has_appgroups = (count($appgroups) > 0);
 
@@ -315,9 +304,6 @@ function show_step3($error_=NULL) {
   page_header();
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/groups selection').'</h1>';
-
-  if ($error_ != NULL)
-    echo '<span class="msg_error">'.$error_.'</span>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step3" />';
@@ -398,14 +384,11 @@ function show_step3($error_=NULL) {
   die();
 }
 
-function show_step4($error_=NULL) {
+function show_step4() {
   $count = 0;
   page_header();
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Create appgroup').'</h1>';
-
-  if ($error_ != NULL)
-    echo '<span class="msg_error">'.$error_.'</span>';
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step4" />';
@@ -495,7 +478,7 @@ function do_validate() {
 		$res = $userGroupDB->add($g);
 
 		if (!$res || !is_object($g) || $g->id == NULL)
-			show_error(_('Cannot create usergroup'));
+			popup_error(_('Cannot create usergroup'));
 
 		$users = $_SESSION['wizard']['users'];
 
@@ -512,7 +495,7 @@ function do_validate() {
 		$res = $g->insertDB();
 
 		if (!$res || !is_object($g) || $g->id == NULL)
-			show_error(_('Cannot create appgroup'));
+			popup_error(_('Cannot create application group'));
 
 		$apps = $_SESSION['wizard']['apps'];
 
