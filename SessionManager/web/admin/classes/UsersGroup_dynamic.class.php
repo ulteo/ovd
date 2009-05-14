@@ -21,19 +21,31 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class UsersGroup_dynamic extends UsersGroup {
-	protected $rules;
-	protected $validation_type; //(and/or)
+	public $rules;
+	public $validation_type; //(and/or)
+	public static $validation_types = array('and', 'or');
 
-	public function __construct($id_=NULL, $name_=NULL, $description_='', $published_=false, $rules_=array(), $validation_type_=NULL) {
+	public function __construct($id_='', $name_=NULL, $description_='', $published_=false, $rules_=array(), $validation_type_=NULL) {
+		Logger::debug('main', "UsersGroup_dynamic::construct($id_,$name_,$description_,$published_)");
 		parent::__construct($id_, $name_, $description_, $published_);
+		$this->type = 'dynamic';
 		$this->rules = $rules_;
 		$this->validation_type = $validation_type_;
 	}
-
-	public function usersLogin(){
+	
+	public function __toString() {
+		$ret = get_class($this).'(id: \''.$this->id.'\' name: \''.$this->name.'\' description: \''.$this->description.'\' published: '.$this->published.' validation_type \''.$this->validation_type.'\' rules [';
+		foreach ($this->rules as $a_rule) {
+			$ret .= $a_rule.' , ';
+		}
+		$ret .= '])';
+		return $ret;
+	}
+	
+	public function usersLogin() {
 		Logger::debug('main','UsersGroup_dynamic::usersLogin');
 		$static = parent::usersLogin();
-		$ls = Abstract_Liaison_dynamic::load('UsersGroup',NULL, $this->id);
+		$ls = Abstract_Liaison_dynamic::load('UsersGroup', NULL, $this->id);
 		$dynamic = array();
 		if (is_array($ls)) {
 			foreach ($ls as $l) {
@@ -49,7 +61,7 @@ class UsersGroup_dynamic extends UsersGroup {
 		if (count($this->rules) == 0)
 			return false;
 
-		if (! in_array($this->validation_type, $this->validation_types))
+		if (! in_array($this->validation_type, self::$validation_types))
 			return false;
 
 		foreach ($this->rules as $rule) {

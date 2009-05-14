@@ -105,7 +105,7 @@ function action_add() {
   if (!$res)
     die_error('Unable to create user group '.$res,__FILE__,__LINE__);
 
-  return $g->id;
+  return $g->getUniqueID();
 }
 
 function action_add_dynamic() {
@@ -117,16 +117,7 @@ function action_add_dynamic() {
     return false;
   }
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getInstance();
 
   $rules = array();
   foreach ($_POST['rules'] as $rule) {
@@ -147,8 +138,7 @@ function action_add_dynamic() {
   $res = $userGroupDB->add($g);
   if (!$res)
     die_error('Unable to create dynamic user group '.$res,__FILE__,__LINE__);
-
-  return $g->id;
+  return $g->getUniqueID();
 }
 
 function action_del($id) {
@@ -284,8 +274,6 @@ function action_unset_default($id_) {
 
 
 function show_default() {
-  $groups = get_all_usergroups();
-  $has_group = ! (is_null($groups) or (count($groups) == 0));
   $prefs = Preferences::getInstance();
   if (! $prefs)
     die_error('get Preferences failed',__FILE__,__LINE__);
@@ -297,10 +285,11 @@ function show_default() {
   if (! in_array('UserDB',$mods_enable))
     die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
   
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getInstance();
   $mod_userdb_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
   $userDB = new $mod_userdb_name();
+  $groups = $userGroupDB->getList(true);
+  $has_group = ! (is_null($groups) or (count($groups) == 0));
 
   page_header();
 
@@ -324,6 +313,7 @@ function show_default() {
     echo '<th>'._('Name').'</th>';
     echo '<th>'._('Description').'</th>';
     echo '<th>'._('Status').'</th>';
+    echo '<th>'._('Type').'</th>';
     echo '</tr>';
 
     $count = 0;
@@ -336,23 +326,24 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
       if ($userGroupDB->isWriteable()) {
-        echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
+        echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td><form></form>';
       }
-      echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
+      echo '<td><a href="?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
+      echo '<td class="centered">'.$group->type.'</td>';
 
       echo '<td><form action="">';
       echo '<input type="submit" value="'._('Manage').'"/>';
       echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+      echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
       echo '</form></td>';
 
       if ($userGroupDB->isWriteable()) {
         echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
         echo '<input type="submit" value="'._('Delete').'"/>';
         echo '<input type="hidden" name="action" value="del" />';
-        echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+        echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
         echo '</form></td>';
       }
       echo '</tr>';
@@ -361,7 +352,7 @@ function show_default() {
     if ($userGroupDB->isWriteable()) {
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
+      echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
       echo '<td><input type="submit" value="'._('Delete').'"/></td>';
       echo '</tr>';
       echo '</tfoot>';
@@ -478,9 +469,8 @@ function show_manage($id) {
   if (! in_array('UserGroupDB',$mods_enable))
     die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
-  $usergroupdb_rw = $userGroupDB->isWriteable();
+  $userGroupDB = UserGroupDB::getInstance();
+  $usergroupdb_rw = true;// TODO  $usergroupdb_rw = $userGroupDB->isWriteable();
 
   $group = $userGroupDB->import($id);
 

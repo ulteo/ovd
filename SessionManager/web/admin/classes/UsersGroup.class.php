@@ -25,9 +25,11 @@ class UsersGroup {
 	public $name; // (ex: IT)
 	public $description; // (ex: People from the basement)
 	public $published; //(yes/no)
+	public $type; // static
 
-	public function __construct($id_=NULL, $name_=NULL, $description_='', $published_=false) {
+	public function __construct($id_='', $name_=NULL, $description_='', $published_=false) {
 		Logger::debug('admin',"USERSGROUP::contructor from_scratch (id_='$id_', name_='$name_', description_='$description_', published_=$published_)");
+		$this->type = 'static';
 		$this->id = $id_;
 		$this->name = $name_;
 		$this->description = $description_;
@@ -36,6 +38,10 @@ class UsersGroup {
 	
 	public function __toString() {
 		return get_class($this).'(id: \''.$this->id.'\' name: \''.$this->name.'\' description: \''.$this->description.'\' published: '.$this->published.')';
+	}
+	
+	public function getUniqueID() {
+		return $this->type.'_'.$this->id;
 	}
 	
 	public function appsGroups(){

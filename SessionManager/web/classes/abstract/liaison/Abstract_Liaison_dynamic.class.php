@@ -53,6 +53,7 @@ class Abstract_Liaison_dynamic {
 	}
 	public static function loadElements($type_, $group_) {
 		Logger::debug('main',"Abstract_Liaison_dynamic::loadElements ($type_,$group_)");
+		$group_ = 'dynamic_'.$group_;
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -65,10 +66,9 @@ class Abstract_Liaison_dynamic {
 		if (! in_array('UserDB', $mods_enable))
 			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB', 'enable');
 		$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 		
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = new $mod_user_name();
 		
 		$group = $userGroupDB->import($group_);

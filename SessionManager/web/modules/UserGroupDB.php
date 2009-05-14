@@ -19,114 +19,92 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-abstract class UserGroupDB extends Module {
-	public function isOK($usergroup_) {
-		if (is_object($usergroup_)) {
-			if ((!isset($usergroup_->id)) || (!isset($usergroup_->name)) || ($usergroup_->name == '') || (!isset($usergroup_->published)))
-				return false;
-			else
-				return true;
-		}
-		else
-			return false;
+class UserGroupDB extends Module {
+	protected $instance_type; // static, dynamic
+	protected static $instance=NULL;
+	public function __construct() {
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$mods_enable = $prefs->get('general','module_enable');
+		if (! in_array('UserGroupDB',$mods_enable))
+			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+		
+		$this->instance_type = array();
+		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+		$a_userGroupDB = new $mod_usergroup_name();
+		$this->instance_type['static'] = $a_userGroupDB;
+		$this->instance_type['dynamic'] = new UserGroupDBDynamic();
+		
 	}
-	public static function init($prefs_) {
-		Logger::debug('admin','ADMIN_USERGROUPDB::init');
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('admin','ADMIN_USERGROUPDB::init mysql conf not valid');
-			return false;
+	public static function getInstance() {
+		if (is_null(self::$instance)) {
+			self::$instance = new self();
 		}
-		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-		
-		$usersgroup_table_structure = array(
-			'id' => 'int(8) NOT NULL auto_increment',
-			'name' => 'varchar(150) NOT NULL',
-			'description' => 'varchar(150) NOT NULL',
-			'published' => 'tinyint(1) NOT NULL',
-			'type' => "VARCHAR(50) NULL DEFAULT 'static'");
-		
-		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
-		
-		if ( $ret === false) {
-			Logger::error('admin','ADMIN_USERGROUPDB::init table '.$usersgroup_table.' failed');
-			return false;
+		return self::$instance;
+	}
+	public function __toString() {
+		$ret = get_class($this).'(';
+		foreach ($this->instance_type as $key => $value) {
+			$ret .= '\''.$key.'\':\''.$value->prettyName().'\' ';
 		}
-		
-		$ret = Abstract_UserGroup_Rule::init($prefs_);
-		if ($ret === false) {
-			Logger::error('admin','ADMIN_USERGROUPDB::init Abstract_UserGroup_Rule::init failed');
-			return false;
+		$ret .= ')';
+		return $ret;
+	}
+	public function import($id_) {
+		Logger::debug('UserGroupDB::import('.$id_.')');
+		foreach ($this->instance_type as $key => $value) {
+			if (str_startswith($id_, $key.'_'))
+				return $value->import(substr($id_, strlen($key)+1));
 		}
-		
+		return NULL; // not found
+	}
+	public function getList() {
+		Logger::debug('UserGroupDB::getList');
+		$result = array();
+		foreach ($this->instance_type as $key => $value) {
+			$result = array_merge($result, $value->getList());
+		}
+		return array_unique($result);
+	}
+	public function isWriteable() {
 		return true;
 	}
-	protected function import_sql($id_, $must_be_dynamic=false){
-		Logger::debug('admin',"USERGROUPDB::import_sql (id = $id_)");
-		
-		$prefs = Preferences::getInstance();
-		if ($prefs) {
-			$mysql_conf = $prefs->get('general', 'mysql');
-			if (!is_array($mysql_conf))
-				return NULL;
-			else
-				$table =  $mysql_conf['prefix'].'usergroup';
-		}
-		
-		$sql2 = MySQL::getInstance();
-		if ( $must_be_dynamic)
-			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6 AND @7 = %8', 'id', 'name', 'description', 'published', $table, $id_, 'type', 'dynamic');
-		else
-			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $table, $id_, 'type');
-			
-		if ($sql2->NumRows($res) == 1) {
-			$row = $sql2->FetchResult($res);
-			if (!isset($row['type'])) {
-				$ug = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
-			}
-			else if ($row['type'] == 'dynamic') {
-				$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published']);
-			}
-			else {
-				$ug = new UsersGroup($row['id'], $row['name'], $row['description'], (bool)$row['published']);
-			}
-			if ($this->isOK($ug))
-				return $ug;
-		}
-		else {
-			Logger::error('main' ,"USERGROUPDB::import_sql import group '$id_' failed");
+	public function canShowList() {}
+	
+	// admin function
+	public static function init($prefs_) {}
+	public function add($usergroup_) {
+		return $this->call_method('add', $usergroup_);
+	}
+	public function remove($usergroup_) {
+		return $this->call_method('remove', $usergroup_);
+	}
+	public function update($usergroup_) {
+		return $this->call_method('update', $usergroup_);
+	}
+	protected function call_method($method_name_, $usergroup_) {
+		Logger::debug('main', 'UserGroupDB::call_method method '.$method_name_);
+		if (!array_key_exists($usergroup_->type, $this->instance_type)) {
+			Logger::error('main', 'UserGroupDB::call_method method \''.$methode_name_.'\' type \''.$usergroup_->type.'\' not implemented');
+			// do a die_error ?
 			return NULL;
 		}
+		$method_to_call = array($this->instance_type[$usergroup_->type]);
+		if (!method_exists($method_to_call[0], $method_name_)) {
+			Logger::error('main', 'UserGroupDB::call_method \''.$usergroup_->type.'\',\''.$method_name_.'\'  does not exist');
+			return NULL;
+		}
+		$method_to_call []= $method_name_;
+		Logger::debug('main', 'UserGroupDB::call_method \''.$usergroup_->type.'\',\''.$method_name_.'\'');
+		return call_user_func($method_to_call, $usergroup_); // [instance, method], parameter
 	}
-	protected function getListDynamic() {
-		Logger::debug('main','UserGroupDB::getListDynamic');
-		$prefs = Preferences::getInstance();
-		if (!$prefs) {
-			return array();
-		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			return array();
-		}
-		$table =  $mysql_conf['prefix'].'usergroup';
-		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @6 FROM @5 WHERE @6 = %7', 'id', 'name', 'description', 'published', $this->table, 'type', 'dynamic');
-		if ($res === false) {
-			Logger::error('main', 'USERGROUPDB::getListDynamic failed (sql query failed)');
-			// not the right argument
-			return array();
-		}
-		$result = array();
-		$rows = $sql2->FetchAllResults($res);
-		foreach ($rows as $row){
-			$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published']);
-			if ($this->isOK($ug))
-				$result[$ug->id]= $ug;
-			else {
-				Logger::info('main', 'USERGROUPDB::getListDynamic group \''.$row['id'].'\' not ok');
-			}
-		}
-		return $result;;
-	}
+	
+	public static function enable() {}
+	public static function configuration() {}
+	public static function prefsIsValid($prefs_, &$log=array()) {}
+	public static function prettyName() {}
+	public static function isDefault() {}
+	public static function liaisonType() {}
 }
