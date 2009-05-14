@@ -44,6 +44,8 @@ function add_field(clone_tr_) {
   for(var j = 0; j < buf2.length; j++) {
     if (buf2[j].type == 'text')
       buf2[j].value = '';
+	if (buf2[j].type == 'button')
+	  buf2[j].style.display = '';
   }
   table.appendChild(buf);
 
@@ -51,5 +53,17 @@ function add_field(clone_tr_) {
 }
 
 function del_field(clone_tr_) {
-  clone_tr_.parentNode.removeChild(clone_tr_);
+  var table = clone_tr_.parentNode;
+
+  table.removeChild(clone_tr_);
+
+  var buf = table.lastChild.getElementsByTagName('input');
+  for (var i = 0; i < buf.length; i++) {
+    if (buf[i].type == 'button') {
+	  if (buf[i].value == '-' && table.rows.length == 1)
+	    buf[i].style.display = 'none';
+      else
+	    buf[i].style.display = '';
+	}
+  }
 }

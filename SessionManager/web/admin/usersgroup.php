@@ -50,7 +50,13 @@ if (isset($_REQUEST['action'])) {
   elseif ($_REQUEST['action']=='modify') {
     if (isset($_REQUEST['id'])) {
       action_modify($_REQUEST['id']);
-      redirect('usersgroup.php?action=manage&id='.$_REQUEST['id']);
+      redirect();
+    }
+  }
+  elseif ($_REQUEST['action']=='modify_rules') {
+    if (isset($_REQUEST['id'])) {
+	  action_modify_rules($_REQUEST['id']);
+      redirect();
     }
   }
   elseif ($_REQUEST['action']=='set_default') {
@@ -126,7 +132,7 @@ function action_add_dynamic() {
     $rules[] = $buf;
   }
 
-  $g = new UsersGroup_dynamic(NULL,$_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type']);
+  $g = new UsersGroup_dynamic(NULL, $_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type']);
   $res = $userGroupDB->add($g);
   if (!$res)
     die_error('Unable to create dynamic user group '.$res,__FILE__,__LINE__);
@@ -176,6 +182,37 @@ function action_modify($id) {
     die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 
   return true;
+}
+
+function action_modify_rules($id) {
+	$userGroupDB = UserGroupDB::getInstance();
+	if (! $userGroupDB->isWriteable())
+		return false;
+
+	$group = $userGroupDB->import($id);
+	if (! is_object($group))
+		die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
+
+	$rules = array();
+	foreach ($_POST['rules'] as $rule) {
+		if ($rule['value'] == '') {
+			popup_error(_('You must give a value to each rule of your usergroup'));
+			return false;
+		}
+
+		$buf = new UserGroup_Rule(NULL);
+		$buf->attribute = $rule['attribute'];
+		$buf->type = $rule['type'];
+		$buf->value = $rule['value'];
+
+		$rules[] = $buf;
+	}
+	$group->rules = $rules;
+
+	$group->validation_type = $_REQUEST['validation_type'];
+
+	if (! $userGroupDB->update($group))
+		die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 }
 
 function action_set_default($id_) {
@@ -389,7 +426,7 @@ function show_default() {
 					unset($filter_attributes[$key1]);
 			}
 			$filter_types = UserGroup_Rule::$types;
-			echo '<table id="toto" border="0" cellspacing="1" cellpadding="3">';
+			echo '<table border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr>';
 			echo '<td><select name="rules[0][attribute]">';
 			foreach ($filter_attributes as $filter_attribute)
@@ -489,7 +526,6 @@ function show_manage($id) {
       $groups_apps_available[]= $group_apps;
   }
 
-
   page_header();
   echo '<div id="users_div">';
   echo '<h1><a href="?">'._('User groups management').'</a> - '.$group->name.'</h1>';
@@ -549,6 +585,84 @@ function show_manage($id) {
   echo '</div>';
   echo '<br/>';
 
+  if ($group->type == 'dynamic') {
+    echo '<div>';
+    echo '<h2>'._('Rules').'</h1>';
+
+echo '<form action="" method="post">';
+echo '<input type="hidden" name="action" value="modify_rules" />';
+echo '<input type="hidden" name="id" value="'.$id.'" />';
+echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
+echo '<tr class="content1">';
+echo '<th>'._('Validation type').'</th>';
+echo '<td><input type="radio" name="validation_type" value="and" checked="checked" /> '._('All').' <input type="radio" name="validation_type" value="or" /> '._('At least one').'</td>';
+echo '</tr>';
+
+echo '<tr class="content2">';
+echo '<th>'._('Filters').'</th>';
+echo '<td>';
+
+$i = 0;
+$filter_attributes = $userDB->getAttributesList();
+foreach ($filter_attributes as $key1 => $value1) {
+	if ($value1 == 'password')
+		unset($filter_attributes[$key1]);
+}
+
+$filter_types = UserGroup_Rule::$types;
+echo '<table border="0" cellspacing="1" cellpadding="3">';
+$i = 0;
+foreach ($group->rules as $rule) {
+	echo '<tr>';
+	echo '<td><select name="rules['.$i.'][attribute]">';
+	foreach ($filter_attributes as $filter_attribute) {
+		echo '<option value="'.$filter_attribute.'"';
+		if ($rule->attribute == $filter_attribute)
+			echo ' selected="selected"';
+		echo '>'.$filter_attribute.'</option>';
+	}
+	echo '</select></td>';
+	echo '<td><select name="rules['.$i.'][type]">';
+	foreach ($filter_types as $filter_type) {
+		echo '<option value="'.$filter_type.'"';
+		if ($rule->type == $filter_type)
+			echo ' selected="selected"';
+		echo '>'.$filter_type.'</option>';
+	}
+	echo '</select></td>';
+	echo '<td><input type="text" name="rules['.$i.'][value]" value="'.$rule->value.'" /></td>';
+	echo '<td>';
+
+	echo '<input';
+	if (($i == 0 && count($group->rules) == 1) || $i == count($group->rules))
+		echo ' style="display: none;"';
+	echo ' type="button" onclick="del_field(this.parentNode.parentNode); return false;" value="-" />';
+
+	echo '<input';
+	if ($i+1 != count($group->rules))
+		echo ' style="display: none;"';
+	echo ' type="button" onclick="add_field(this.parentNode.parentNode); return false;" value="+" />';
+
+	echo '</td>';
+	echo '</tr>';
+
+	$i++;
+}
+echo '</table>';
+
+echo '</td>';
+echo '</tr>';
+echo '</table>';
+echo '<br />';
+echo '<input type="submit" value="'._('Update rules').'" />';
+echo '</form>';
+
+
+//   var_dump($group->rules);
+    echo '</div>';
+	echo '<br />';
+  }
+
   // Users list
   if (count($users_all) > 0) {
     echo '<div>';
@@ -560,7 +674,7 @@ function show_manage($id) {
 	echo '<tr>';
 	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
 	echo '<td>';
-	if ( $usergroupdb_rw) {
+	if ($usergroupdb_rw && $group->type == 'static') {
 		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 		echo '<input type="hidden" name="action" value="del" />';
 		echo '<input type="hidden" name="name" value="User_UserGroup" />';
@@ -574,7 +688,7 @@ function show_manage($id) {
       }
     }
 
-    if ((count ($users_available) >0) && $usergroupdb_rw) {
+    if ((count ($users_available) >0) && $usergroupdb_rw && $group->type == 'static') {
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
