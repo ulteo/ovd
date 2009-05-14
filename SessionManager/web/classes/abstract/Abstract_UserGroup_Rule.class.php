@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -90,17 +91,27 @@ class Abstract_UserGroup_Rule {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		if (! Abstract_UserGroup_Rule::exists($usergroup_rule_->attribute, $usergroup_rule_->type, $usergroup_rule_->value)) {
+		$rule_id = Abstract_UserGroup_Rule::exists($usergroup_rule_->attribute, $usergroup_rule_->type, $usergroup_rule_->value);
+		if (! $rule_id) {
 			$buf = Abstract_UserGroup_Rule::create($usergroup_rule_);
 
-			if (! $buf)
+			if ($buf === false) {
+				Logger::error('main', 'Abstract_UserGroup_Rule::save failed to create rule');
 				return false;
+			}
 
 			$usergroup_rule_->id = $buf;
 		}
+		else {
+			Logger::debug('main', 'Abstract_UserGroup_Rule::save rule('.$usergroup_rule_->attribute.','.$usergroup_rule_->type.','.$usergroup_rule_->value.') already exists');
+			$usergroup_rule_->id = $rule_id;
+			return true;
+		}
 
-		if (is_null($usergroup_rule_->id))
+		if (is_null($usergroup_rule_->id)) {
+			Logger::error('main', 'Abstract_UserGroup_Rule::save rule\'s id attribute is null');
 			return false;
+		}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'attribute', $usergroup_rule_->attribute, 'type', $usergroup_rule_->type, 'value', $usergroup_rule_->value, 'id', $usergroup_rule_->id);
 
@@ -124,8 +135,10 @@ class Abstract_UserGroup_Rule {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total != 0)
+		if ($total != 0) {
+			Logger::error('main', 'Abstract_UserGroup_Rule::create rule id \''.$id.'\' not found');
 			return false;
+		}
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'usergroup_rules', 'id', '');
 
