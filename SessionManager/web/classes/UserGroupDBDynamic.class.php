@@ -133,7 +133,19 @@ class UserGroupDBDynamic {
 		}
 		// second we delete the group
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
-		return ($res !== false);
+		if ( $res === false) {
+			Logger::error('main', 'UserGroupDBDynamic::remove Failed to remove group from SQL DB');
+			return false;
+		}
+		// third we delete the rules
+		$rules = UserGroup_Rules::getByUserGroupId($usergroup_->id);
+		foreach ($rules as $a_rule) {
+			if ( Abstract_UserGroup_Rule::delete($a_rule->id) === false) {
+				Logger::error('main', 'UserGroupDBDynamic::remove Failed to remove rule from SQL DB');
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public function update($usergroup_){

@@ -44,6 +44,7 @@ if (isset($_REQUEST['action'])) {
         $req_ids = array($req_ids);
       foreach ($req_ids as $req_id)
         action_del($req_id);
+      redirect('usersgroup.php');
     }
   }
   elseif ($_REQUEST['action']=='modify') {
@@ -422,6 +423,10 @@ function show_default() {
 }
 
 function show_manage($id) {
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
+  
   $userGroupDB = UserGroupDB::getInstance();
   $usergroupdb_rw = true;// TODO  $usergroupdb_rw = $userGroupDB->isWriteable();
 
