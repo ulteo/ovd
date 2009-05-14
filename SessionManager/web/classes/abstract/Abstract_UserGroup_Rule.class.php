@@ -169,8 +169,6 @@ class Abstract_UserGroup_Rule {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$id = $id_;
-
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 LIMIT 1', 'id', $mysql_conf['prefix'].'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_);
 		$total = $SQL->NumRows();
 
