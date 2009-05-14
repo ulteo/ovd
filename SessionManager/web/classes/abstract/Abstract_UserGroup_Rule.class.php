@@ -61,7 +61,7 @@ class Abstract_UserGroup_Rule {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3 FROM @4 WHERE @5 = %6 LIMIT 1', 'attribute', 'type', 'value', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'attribute', 'type', 'value', 'usergroup_id', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -76,6 +76,7 @@ class Abstract_UserGroup_Rule {
 		$buf->attribute = (string)$attribute;
 		$buf->type = (string)$type;
 		$buf->value = (string)$value;
+		$buf->usergroup_id = (int)$usergroup_id;
 
 		return $buf;
 	}
