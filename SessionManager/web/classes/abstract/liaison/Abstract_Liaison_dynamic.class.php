@@ -73,7 +73,7 @@ class Abstract_Liaison_dynamic {
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
-			Logger::error('main', "Abstract_Liaison_dynamic::loadElements load group ($goup_) failed");
+			Logger::error('main', "Abstract_Liaison_dynamic::loadElements load group ($group_) failed");
 			return NULL;
 		}
 		
@@ -163,7 +163,7 @@ class Abstract_Liaison_dynamic {
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
-			Logger::error('main', "Abstract_Liaison_dynamic::loadUnique load group ($goup_) failed");
+			Logger::error('main', "Abstract_Liaison_dynamic::loadUnique load group ($group_) failed");
 			return NULL;
 		}
 		
