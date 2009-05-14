@@ -136,15 +136,15 @@ done
 
 stty_orig=$(stty -g)
 while [ -z "$PASS1" -o x"$PASS1" != x"$PASS2" ]; do
-    echo -n "Password: "
     while [ -z "$PASS1" ]; do
+        echo -n "Password: "
         stty -echo
         read PASS1
         stty $stty_orig
         echo
     done
-    echo -n "Retype password: "
     while [ -z "$PASS2" ]; do
+        echo -n "Retype password: "
         stty -echo
         read PASS2
         stty $stty_orig
