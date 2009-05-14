@@ -32,7 +32,8 @@ class Abstract_UserGroup_Rule {
 			'id'			=>	'int(8) NOT NULL auto_increment',
 			'attribute'		=>	'varchar(255) NOT NULL',
 			'type'			=>	'varchar(255) NOT NULL',
-			'value'			=>	'varchar(255) NOT NULL'
+			'value'			=>	'varchar(255) NOT NULL',
+			'usergroup_id'	=>	'int(8) NOT NULL'
 		);
 
 		$ret = $SQL->buildTable($mysql_conf['prefix'].'usergroup_rules', $invites_table_structure, array('id'));
@@ -168,6 +169,35 @@ class Abstract_UserGroup_Rule {
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
 
 		return true;
+	}
+
+	public static function load_all() {
+		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load_all');
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			return false;
+		}
+
+		$mysql_conf = $prefs->get('general', 'mysql');
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'usergroup_rules');
+		$rows = $SQL->FetchAllResults();
+
+		$usergroup_rules = array();
+		foreach ($rows as $row) {
+			$id = $row['id'];
+
+			$usergroup_rule = Abstract_UserGroup_Rule::load($id);
+			if (! $usergroup_rule)
+				continue;
+
+			$usergroup_rules[] = $usergroup_rule;
+		}
+
+		return $usergroup_rules;
 	}
 
 	public static function exists($attribute_, $type_, $value_) {

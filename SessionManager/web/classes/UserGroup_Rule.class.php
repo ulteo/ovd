@@ -27,6 +27,7 @@ class UserGroup_Rule {
 	public $attribute = NULL;
 	public $type = NULL;
 	public $value = NULL;
+	public $usergroup_id = NULL;
 
 	public static $types = array('equal', 'not_equal', 'contains', 'not_contains', 'startswith', 'not_startswith', 'endswith', 'not_endswith');
 
@@ -35,11 +36,11 @@ class UserGroup_Rule {
 
 		$this->id = $id_;
 	}
-	
+
 	public function __toString() {
-		return get_class($this).'(attribute \''.$this->attribute.'\' type \''.$this->type.'\' value \''.$this->value.'\')';
+		return get_class($this).'(attribute \''.$this->attribute.'\' type \''.$this->type.'\' value \''.$this->value.'\' usergroup_id \''.$this->usergroup_id.'\')';
 	}
-	
+
 	public function match($user_) {
 		switch ($this->type) {
 			case 'equal':
