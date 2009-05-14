@@ -224,7 +224,7 @@ function action_set_default($id_) {
     return False;
   }
 
-  $userGroupDB = UserGroupDB::getIntance();
+  $userGroupDB = UserGroupDB::getInstance();
 
   $group = $userGroupDB->import($id_);
   if (! is_object($group)) {
