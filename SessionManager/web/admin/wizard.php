@@ -462,15 +462,7 @@ function show_step5() {
 
 function do_validate() {
 	if ($_SESSION['wizard']['use_users'] == 'users') {
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getIntance();
 		if (! $userGroupDB->isWriteable())
 			return false;
 

@@ -87,16 +87,7 @@ function action_add() {
     return false;
   }
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getInstance();
   if (! $userGroupDB->isWriteable())
       return false;
 
@@ -142,16 +133,7 @@ function action_add_dynamic() {
 }
 
 function action_del($id) {
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getInstance();
   if (! $userGroupDB->isWriteable())
       return false;
 
@@ -166,16 +148,7 @@ function action_del($id) {
 }
 
 function action_modify($id) {
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getInstance();
   if (! $userGroupDB->isWriteable())
       return false;
 
@@ -213,12 +186,7 @@ function action_set_default($id_) {
     return False;
   }
 
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getIntance();
 
   $group = $userGroupDB->import($id_);
   if (! is_object($group)) {
@@ -244,12 +212,7 @@ function action_unset_default($id_) {
     return False;
   }
 
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getIntance();
 
   $group = $userGroupDB->import($id_);
   if (! is_object($group)) {
@@ -279,8 +242,6 @@ function show_default() {
     die_error('get Preferences failed',__FILE__,__LINE__);
 
   $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
   
   if (! in_array('UserDB',$mods_enable))
     die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
@@ -461,14 +422,6 @@ function show_default() {
 }
 
 function show_manage($id) {
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
   $userGroupDB = UserGroupDB::getInstance();
   $usergroupdb_rw = true;// TODO  $usergroupdb_rw = $userGroupDB->isWriteable();
 

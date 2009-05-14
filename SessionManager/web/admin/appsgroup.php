@@ -225,13 +225,7 @@ function show_manage($id) {
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
 
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserGroupDB',$mods_enable))
-    die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getIntance();
 
   $applications_all = $applicationDB->getList();
   $applications_id = array();
@@ -258,7 +252,7 @@ function show_manage($id) {
       $groups_users[]= $obj;
   }
 
-  $groups_users_all = get_all_usergroups();
+  $groups_users_all = $userGroupDB->getList();
   $groups_users_available = array();
   foreach($groups_users_all as $group_users) {
     if (! in_array($group_users, $groups_users))
