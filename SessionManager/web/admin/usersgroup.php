@@ -135,7 +135,7 @@ function action_add_dynamic() {
       return false;
     }
 
-    $buf = new Rule(NULL);
+    $buf = new UserGroup_Rule(NULL);
     $buf->attribute = $rule['attribute'];
     $buf->type = $rule['type'];
     $buf->value = $rule['value'];
@@ -435,7 +435,7 @@ function show_default() {
 				if ( $value1 == 'password')
 					unset($filter_attributes[$key1]);
 			}
-			$filter_types = array('equal', 'contains', 'startswith', 'endswith');
+			$filter_types = UserGroup_Rule::$types;
 			echo '<table id="toto" border="0" cellspacing="1" cellpadding="3">';
 			echo '<tr>';
 			echo '<td><select name="rules[0][attribute]">';
@@ -445,7 +445,6 @@ function show_default() {
 			echo '<td><select name="rules[0][type]">';
 			foreach ($filter_types as $filter_type) {
 				echo '<option value="'.$filter_type.'">'.$filter_type.'</option>';
-				echo '<option value="not_'.$filter_type.'">NOT '.$filter_type.'</option>';
 			}
 			echo '</select></td>';
 			echo '<td><input type="text" name="rules[0][value]" value="" /></td>';

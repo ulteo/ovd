@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,14 +28,18 @@ class UserGroup_Rule {
 	public $type = NULL;
 	public $value = NULL;
 
-	private static $types = array('equal', 'not_equal', 'contains', 'not_contains', 'startswith', 'not_startswith', 'endswith', 'not_endswith');
+	public static $types = array('equal', 'not_equal', 'contains', 'not_contains', 'startswith', 'not_startswith', 'endswith', 'not_endswith');
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting UserGroup_Rule::__construct for \''.$id_.'\'');
 
 		$this->id = $id_;
 	}
-
+	
+	public function __toString() {
+		return get_class($this).'(attribute \''.$this->attribute.'\' type \''.$this->type.'\' value \''.$this->value.'\')';
+	}
+	
 	public function match($user_) {
 		switch ($this->type) {
 			case 'equal':
