@@ -23,6 +23,11 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 class Abstract_Liaison_ldap_posix {
 	public static function load($type_, $element_=NULL, $group_=NULL) {
 		Logger::debug('admin',"Abstract_Liaison_ldap_posix::load($type_,$element_,$group_)");
+		if (str_startswith($element_, 'static_'))
+			$element_ = substr($element_, strlen('static_'));
+		if (str_startswith($group_, 'static_'))
+			$group_ = substr($group_, strlen('static_'));
+		
 		if ($type_ == 'UsersGroup') {
 			if (is_null($element_) && is_null($group_))
 				return self::loadAll($type_);
