@@ -95,8 +95,6 @@ class UserGroupDBDynamic {
 	}
 	
 	// admin function
-	public static function init($prefs_) { // TODO
-	}
 	public function add($usergroup_){
 		Logger::debug('admin','UserGroupDBDynamic::add');
 		$sql2 = MySQL::getInstance();
@@ -174,7 +172,68 @@ class UserGroupDBDynamic {
 
 	public static function enable() {} // TODO
 	public static function configuration() {} // TODO
-	public static function prefsIsValid($prefs_, &$log=array()) {} // TODO
+	
+	public static function init($prefs_) {
+		Logger::debug('admin','UserGroupDBDynamic::init');
+		$mysql_conf = $prefs_->get('general', 'mysql');
+		if (!is_array($mysql_conf)) {
+			Logger::error('admin','UserGroupDBDynamic::init mysql conf not valid');
+			return false;
+		}
+		$usersgroup_table = $mysql_conf['prefix'].'usergroup_dynamic';
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		
+		$usersgroup_table_structure = array(
+			'id' => 'int(8) NOT NULL auto_increment',
+			'name' => 'varchar(150) NOT NULL',
+			'description' => 'varchar(150) NOT NULL',
+			'published' => 'tinyint(1) NOT NULL',
+			'validation_type' => 'varchar(15) NOT NULL',
+			);
+		
+		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
+		
+		if ( $ret === false) {
+			Logger::error('admin','UserGroupDBDynamic::init table '.$usersgroup_table.' fail to created');
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public static function prefsIsValid($prefs_, &$log=array()) {
+		// dirty
+		$ret = self::prefsIsValid2($prefs_, $log);
+		if ( $ret != true) {
+			$ret = self::init($prefs_);
+		}
+		return $ret;
+	}
+	
+	public static function prefsIsValid2($prefs_, &$log=array()) {
+		$mysql_conf = $prefs_->get('general', 'mysql');
+		if (!is_array($mysql_conf)) {
+			
+			return false;
+		}
+		$table =  $mysql_conf['prefix'].'usergroup_dynamic';
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
+		if ($ret !== false) {
+			$ret2 = $sql2->NumRows($ret);
+			if ($ret2 == 1) {
+				return true;
+			}
+			else {
+				Logger::error('main','UserGroupDBDynamic::prefsIsValid table \''.$table.'\' not exists');
+				return false;
+			}
+		}
+		else {
+			Logger::error('main','UserGroupDBDynamic::prefsIsValid table \''.$table.'\' not exists(2)');
+			return false;
+		}
+	}
 	public static function prettyName() {
 		return 'UserGroupDBDynamic';
 	}

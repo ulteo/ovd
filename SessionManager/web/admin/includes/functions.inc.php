@@ -155,6 +155,9 @@ function init_db($prefs_) {
 	Abstract_Token::init($prefs_);
 	Abstract_Liaison::init($prefs_);
 	Abstract_Report::init($prefs_);
+	Abstract_UserGroup_Rule::init($prefs_);
+	
+	UserGroupDBDynamic::init($prefs_);
 
 	return true;
 }

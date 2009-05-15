@@ -170,6 +170,12 @@ class Preferences_admin extends Preferences {
 			Logger::error('admin','PREFERENCESADMIN::isValid modules false');
 			return _('Modules configuration not valid');
 		}
+		
+		$ug_dynamic = UserGroupDBDynamic::prefsIsValid($this);
+		if ( $ug_dynamic === false) {
+			Logger::error('admin','PREFERENCESADMIN::isValid module UserGroupDBDynamic');
+			return _('Modules configuration not valid');
+		}
 		return true;
 	}
 
