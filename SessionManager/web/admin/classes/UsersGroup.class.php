@@ -47,7 +47,7 @@ class UsersGroup {
 	public function appsGroups(){
 		Logger::debug('admin','USERSGROUP::appsGroups');
 		
-		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', $this->id, NULL);
+		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', $this->getUniqueID(), NULL);
 		if (is_array($groups)) {
 			$result = array();
 			foreach ($groups as $UGAG_liaison){
@@ -67,7 +67,7 @@ class UsersGroup {
 	
 	public function usersLogin(){
 		Logger::debug('admin','USERSGROUP::usersLogin');
-		$ls = Abstract_Liaison::load('UsersGroup',NULL, $this->id);
+		$ls = Abstract_Liaison::load('UsersGroup',NULL, $this->getUniqueID());
 		$logins = array();
 		if (is_array($ls)) {
 			foreach ($ls as $l) {
