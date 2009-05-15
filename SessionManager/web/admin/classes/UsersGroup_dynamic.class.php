@@ -73,7 +73,7 @@ class UsersGroup_dynamic extends UsersGroup {
 			if ($this->validation_type == 'and' && $buf === false)
 				return false;
 		}
-
-		return true;
+		
+		return $this->validation_type == 'and';
 	}
 }
