@@ -170,10 +170,14 @@ function show_step1() {
   echo '<table class="" id="wizard_list_table" border="0" cellspacing="1" cellpadding="5">';
   if ($has_usergroups) {
 	echo '<tr class="title">';
-	echo '<th><input class="input_radio" type="radio" name="use" value="users" onclick="$(\'wizard_usergroups_list_table\').hide(); $(\'wizard_users_list_table\').show()"';
-	if (!$usergroup_selected)
-		echo ' checked="checked"';
-	echo '/>'._('Create a group with users').'</th>';
+	echo '<th>';
+	if ($usergroupdb->isWriteable()) {
+		echo '<input class="input_radio" type="radio" name="use" value="users" onclick="$(\'wizard_usergroups_list_table\').hide(); $(\'wizard_users_list_table\').show()"';
+		if (!$usergroup_selected)
+			echo ' checked="checked"';
+		echo '/>'._('Create a group with users');
+	}
+	echo '</th>';
 	echo '<th><input class="input_radio" type="radio" name="use" value="usergroups" onclick="$(\'wizard_users_list_table\').hide(); $(\'wizard_usergroups_list_table\').show()"';
 	if ($usergroup_selected)
 		echo ' checked="checked"';
@@ -184,27 +188,29 @@ function show_step1() {
 
   echo '<tr>';
   echo '<td>';
-  $count = 0;
-  echo '<table class="main_sub"';
-  if ($has_usergroups) {
-    if ($usergroup_selected)
-      echo ' style="display: none" ';
-  }
-  echo 'id="wizard_users_list_table" border="0" cellspacing="1" cellpadding="5">';
-  foreach($users as $user) {
-    $content = 'content'.(($count++%2==0)?1:2);
+  if ($usergroupdb->isWriteable()) {
+    $count = 0;
+    echo '<table class="main_sub"';
+    if ($has_usergroups) {
+      if ($usergroup_selected)
+        echo ' style="display: none" ';
+    }
+    echo 'id="wizard_users_list_table" border="0" cellspacing="1" cellpadding="5">';
+    foreach($users as $user) {
+      $content = 'content'.(($count++%2==0)?1:2);
 
-    echo '<tr class="'.$content.'">';
-    echo '<td colspan="2"><input class="input_checkbox" type="checkbox" name="users[]" value="'.$user->getAttribute('login').'"';
-    if (isset($_SESSION['wizard']['users']) && in_array($user->getAttribute('login'), $_SESSION['wizard']['users']))
-      echo ' checked="checked"';
-    echo '/> <a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a></td>';
-    echo '</tr>';
+      echo '<tr class="'.$content.'">';
+      echo '<td colspan="2"><input class="input_checkbox" type="checkbox" name="users[]" value="'.$user->getAttribute('login').'"';
+      if (isset($_SESSION['wizard']['users']) && in_array($user->getAttribute('login'), $_SESSION['wizard']['users']))
+        echo ' checked="checked"';
+      echo '/> <a href="users.php?action=manage&id='.$user->getAttribute('login').'">'.$user->getAttribute('displayname').'</a></td>';
+      echo '</tr>';
+    }
+    $content = 'content'.(($count++%2==0)?1:2);
+    echo '<tr class="'.$content.'"><td colspan="2"><a href="javascript:;" onclick="markAllRows(\'wizard_users_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'wizard_users_list_table\'); return false">'._('Unmark all').'</a></td></tr>';
+    echo '</table>';
+    echo '</td>';
   }
-  $content = 'content'.(($count++%2==0)?1:2);
-  echo '<tr class="'.$content.'"><td colspan="2"><a href="javascript:;" onclick="markAllRows(\'wizard_users_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'wizard_users_list_table\'); return false">'._('Unmark all').'</a></td></tr>';
-  echo '</table>';
-  echo '</td>';
   echo '<td>';
   if ($has_usergroups) {
 	$count = 0;
