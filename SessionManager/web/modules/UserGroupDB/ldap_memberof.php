@@ -18,14 +18,17 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-class UserGroupDB_ldap_memberof extends UserGroupDB {
-
+class UserGroupDB_ldap_memberof {
+	public function __construct() {
+	}
+	
+	public function __toString() {
+		$ret = get_class($this).'()';
+		return $ret;
+	}
+	
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::ldap_memberof::import (id = $id_)");
-		$obj = parent::import_sql($id_, true);
-		if (is_object($obj))
-			return $obj;
-		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -55,7 +58,9 @@ class UserGroupDB_ldap_memberof extends UserGroupDB {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
-		$info = $infos[0];
+		$keys = array_keys($infos);
+		$dn = $keys[0];
+		$info = $infos[$dn];
 		foreach ($config_ldap['match'] as $attribut => $match_ldap){
 			if (isset($info[$match_ldap][0])) {
 				$buf[$attribut] = $info[$match_ldap][0];
@@ -101,7 +106,7 @@ class UserGroupDB_ldap_memberof extends UserGroupDB {
 				}
 			}
 		}
-		return array_unique(array_merge($groups, parent::getListDynamic()));
+		return $groups;
 	}
 	
 	public static function configuration() {

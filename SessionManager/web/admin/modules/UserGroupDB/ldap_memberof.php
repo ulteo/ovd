@@ -34,7 +34,6 @@ class admin_UserGroupDB_ldap_memberof extends UserGroupDB_ldap_memberof {
 	}
 	
 	public static function init($prefs_) {
-		parent::init($prefs_);
 		return true;
 	}
 	

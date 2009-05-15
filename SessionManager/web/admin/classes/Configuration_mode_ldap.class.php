@@ -114,7 +114,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 	$plugin_fs = 'local';
 
     if ($form['user_group'] == 'ldap_memberof')
-      $config['match']['memberof'] = 'memberof';
+      $config['match']['memberof'] = 'memberOf';
 
     // Select LDAP as UserDB
     $prefs->set('UserDB', 'enable', 'ldap');
