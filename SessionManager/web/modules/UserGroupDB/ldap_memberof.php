@@ -58,6 +58,11 @@ class UserGroupDB_ldap_memberof {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
+		if ($infos === array()) {
+			Logger::error('main',"UserGroupDB::ldap_memberof::import get_entries failed for ($id_)");
+			return NULL;
+		}
+		var_dump2($infos);
 		$keys = array_keys($infos);
 		$dn = $keys[0];
 		$info = $infos[$dn];
