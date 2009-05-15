@@ -150,9 +150,26 @@ class UserGroupDBDynamic {
 	
 	public function update($usergroup_){
 		Logger::debug('admin','UserGroupDBDynamic::update');
+		$old_usergroup = $this->import($usergroup_->id);
+		$old_rules = $old_usergroup->rules;
+		
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id);
-		return ($res !== false);
+		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type);
+		if ( $res === false) {
+			Logger::error('main', 'UserGroupDBDynamic::update failed to update the group from DB');
+			return false;
+		}
+		
+		foreach ($old_rules as $a_rule) {
+			Abstract_UserGroup_Rule::delete($a_rule->id);
+		}
+		
+		$new_rules = $usergroup_->rules;
+		foreach ($new_rules as $a_rule) {
+			$a_rule->usergroup_id = $usergroup_->id;
+			Abstract_UserGroup_Rule::save($a_rule);
+		}
+		return true;
 	}
 
 	public static function enable() {} // TODO

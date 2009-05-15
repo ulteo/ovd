@@ -204,6 +204,7 @@ function action_modify_rules($id) {
 		$buf->attribute = $rule['attribute'];
 		$buf->type = $rule['type'];
 		$buf->value = $rule['value'];
+		$buf->usergroup_id = $id;
 
 		$rules[] = $buf;
 	}

@@ -38,7 +38,7 @@ class UserGroup_Rule {
 	}
 
 	public function __toString() {
-		return get_class($this).'(attribute \''.$this->attribute.'\' type \''.$this->type.'\' value \''.$this->value.'\' usergroup_id \''.$this->usergroup_id.'\')';
+		return get_class($this).'(id \''.$this->id.'\' attribute \''.$this->attribute.'\' type \''.$this->type.'\' value \''.$this->value.'\' usergroup_id \''.$this->usergroup_id.'\')';
 	}
 
 	public function match($user_) {
