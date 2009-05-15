@@ -64,7 +64,7 @@ class Abstract_Liaison_ldap_memberof {
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
-			Logger::error('admin',"Abstract_Liaison_ldap_memberof::loadElements load group ($goup_) failed");
+			Logger::error('admin',"Abstract_Liaison_ldap_memberof::loadElements load group ($group_) failed");
 			return NULL;
 		}
 		

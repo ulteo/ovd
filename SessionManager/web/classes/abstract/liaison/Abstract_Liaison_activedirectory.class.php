@@ -63,7 +63,7 @@ class Abstract_Liaison_activedirectory {
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
-			Logger::error('admin',"Abstract_Liaison_activedirectory::loadElements load group ($goup_) failed");
+			Logger::error('admin',"Abstract_Liaison_activedirectory::loadElements load group ($group_) failed");
 			return NULL;
 		}
 		
