@@ -287,7 +287,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<br/><br/>';
 
     echo '<div>';
-    echo '<form action="users.php" method="post">';
+    echo '<form action="users.php" method="get">';
     echo '<input type="hidden" name="action" value="modify" />';
     echo '<input type="hidden" name="id" value="'.$login.'" />';
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
