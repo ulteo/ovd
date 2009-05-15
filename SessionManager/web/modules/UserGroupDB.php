@@ -69,7 +69,10 @@ class UserGroupDB extends Module {
 		return array_unique($result);
 	}
 	public function isWriteable() {
-		return true;
+		if (!array_key_exists('static', $this->instance_type))
+			return false;
+		$buf = $this->instance_type['static'];
+		return $buf->isWriteable();
 	}
 	public function canShowList() {}
 	

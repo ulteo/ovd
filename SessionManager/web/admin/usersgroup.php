@@ -141,12 +141,15 @@ function action_add_dynamic() {
 
 function action_del($id) {
   $userGroupDB = UserGroupDB::getInstance();
-  if (! $userGroupDB->isWriteable())
-      return false;
 
   $group = $userGroupDB->import($id);
   if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
+
+  if ($group->type == 'static') {
+    if (! $userGroupDB->isWriteable())
+     return false;
+  }
 
   if (! $userGroupDB->remove($group))
     die_error('Unable to remove group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -157,7 +160,7 @@ function action_del($id) {
 function action_modify($id) {
   $userGroupDB = UserGroupDB::getInstance();
   if (! $userGroupDB->isWriteable())
-      return false;
+     return false;
 
   $group = $userGroupDB->import($id);
   if (! is_object($group))
@@ -174,7 +177,6 @@ function action_modify($id) {
     $group->published = (bool)$_REQUEST['published'];
     $has_change = true;
   }
-
   if (! $has_change)
     return false;
 
@@ -186,9 +188,7 @@ function action_modify($id) {
 
 function action_modify_rules($id) {
 	$userGroupDB = UserGroupDB::getInstance();
-	if (! $userGroupDB->isWriteable())
-		return false;
-
+	
 	$group = $userGroupDB->import($id);
 	if (! is_object($group))
 		die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -274,7 +274,6 @@ function action_unset_default($id_) {
   return True;
 }
 
-
 function show_default() {
   $prefs = Preferences::getInstance();
   if (! $prefs)
@@ -301,14 +300,21 @@ function show_default() {
   if (! $has_group)
     echo _('No available user group').'<br />';
   else {
-    if ($userGroupDB->isWriteable()) {
+     $all_static = true;
+     foreach($groups as $group){
+       if ($group->type != 'static') {
+         $all_static = false;
+         break; // no need to continue;
+       }
+     }
+    if ( !$all_static || $userGroupDB->isWriteable()) {
       echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
       echo '<input type="hidden" name="action" value="del" />';
     }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-    if ($userGroupDB->isWriteable()) {
-      echo '<th class="unsortable"></th>';
+     if ( !$all_static) { //     if ($userGroupDB->isWriteable())
+      echo '<th class="unsortable"></th>'; // masse action
     }
     echo '<th>'._('Name').'</th>';
     echo '<th>'._('Description').'</th>';
@@ -325,9 +331,13 @@ function show_default() {
         $publish = '<span class="msg_error">'._('Blocked').'</span>';
 
       echo '<tr class="'.$content.'">';
-      if ($userGroupDB->isWriteable()) {
-        echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td><form></form>';
+      if ($group->type != 'static' || $userGroupDB->isWriteable()) {
+        echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td>';
       }
+      else if ( !$all_static) {
+        echo '<td></td>';
+      }
+      echo '<form></form>';
       echo '<td><a href="?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
@@ -339,17 +349,20 @@ function show_default() {
       echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
       echo '</form></td>';
 
-      if ($userGroupDB->isWriteable()) {
+      if ($group->type != 'static' || $userGroupDB->isWriteable()) {
         echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
         echo '<input type="submit" value="'._('Delete').'"/>';
         echo '<input type="hidden" name="action" value="del" />';
         echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
         echo '</form></td>';
       }
+      else if ( !$all_static) {
+        echo '<td></td>';
+      }
       echo '</tr>';
     }
     $content = 'content'.(($count++%2==0)?1:2);
-    if ($userGroupDB->isWriteable()) {
+    if ( !$all_static) {
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
       echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
@@ -365,11 +378,12 @@ function show_default() {
 
   echo '</div>';
 
+  $usergroup_types = array('dynamic' => _('Dynamic'));
   if ($userGroupDB->isWriteable()) {
-	$usergroup_types = array('static' => _('Static'), 'dynamic' => _('Dynamic'));
-
-    echo '<div>';
-    echo '<h2>'._('Create a new group').'</h2>';
+    $usergroup_types['static'] = _('Static');
+  }
+  echo '<div>';
+  echo '<h2>'._('Create a new group').'</h2>';
 
 	$first_type = array_keys($usergroup_types);
 	$first_type = $first_type[0];
@@ -453,8 +467,7 @@ function show_default() {
 		echo '</table>';
 		echo '</form>';
 	}
-    echo '</div>';
-  }
+  echo '</div>';
 
   echo '</div>';
   page_footer();
@@ -466,9 +479,9 @@ function show_manage($id) {
     die_error('get Preferences failed',__FILE__,__LINE__);
   
   $userGroupDB = UserGroupDB::getInstance();
-  $usergroupdb_rw = true;// TODO  $usergroupdb_rw = $userGroupDB->isWriteable();
 
   $group = $userGroupDB->import($id);
+  $usergroupdb_rw = $userGroupDB->isWriteable();
 
   if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -560,7 +573,7 @@ function show_manage($id) {
   echo '</form>';
   echo '<br/>';
 
-  if ($usergroupdb_rw) {
+  if ($usergroupdb_rw && ($group->id != 'static')) {
     echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
     echo '<input type="submit" value="'._('Delete this group').'"/>';
     echo '<input type="hidden" name="action" value="del" />';

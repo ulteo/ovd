@@ -33,8 +33,7 @@ if (! in_array('UserDB',$mods_enable))
 $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
 $userDB = new $mod_user_name();
 
-$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-$userGroupDB = new $mod_usergroup_name();
+$userGroupDB = UserGroupDB::getInstance();
 
 
 if (isset($_REQUEST['action'])) {
