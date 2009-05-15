@@ -215,7 +215,7 @@ function show_step1() {
 		$content = 'content'.(($count++%2==0)?1:2);
 
 		echo '<tr class="'.$content.'">';
-		echo '<td><input class="input_checkbox" type="checkbox" name="usergroups[]" value="'.$usergroup->id.'" /> <a href="usersgroup.php?action=manage&id='.$usergroup->id.'">'.$usergroup->name.'</a></td>';
+		echo '<td><input class="input_checkbox" type="checkbox" name="usergroups[]" value="'.$usergroup->getUniqueID().'" /> <a href="usersgroup.php?action=manage&id='.$usergroup->getUniqueID().'">'.$usergroup->name.'</a></td>';
 		echo '</tr>';
 	}
 	$content = 'content'.(($count++%2==0)?1:2);
@@ -475,10 +475,10 @@ function do_validate() {
 		$users = $_SESSION['wizard']['users'];
 
 		foreach ($users as $user) {
-			Abstract_Liaison::save('UsersGroup', $user, $g->id);
+			Abstract_Liaison::save('UsersGroup', $user, $g->getUniqueID());
 		}
 
-		$usergroups = array($g->id);
+		$usergroups = array($g->getUniqueID());
 	} else
 		$usergroups = $_SESSION['wizard']['usergroups'];
 

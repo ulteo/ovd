@@ -82,7 +82,7 @@ function show_default() {
       $group_a = $publication['app'];
 
       echo '<tr class="'.$content.'">';
-      echo '<td><a href="usersgroup.php?action=manage&id='.$group_u->id.'">'.$group_u->name.'</a></td>';
+      echo '<td><a href="usersgroup.php?action=manage&id='.$group_u->getUniqueID().'">'.$group_u->name.'</a></td>';
       echo '<td><a href="appsgroup.php?action=manage&id='.$group_a->id.'">'.$group_a->name.'</a></td>';
 
       echo '<td><form action="actions.php" metthod="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
@@ -90,7 +90,7 @@ function show_default() {
       echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="hidden" name="name" value="Publication" />';
       echo '<input type="hidden" name="group_a" value="'.$group_a->id.'" />';
-      echo '<input type="hidden" name="group_u" value="'.$group_u->id.'" />';
+      echo '<input type="hidden" name="group_u" value="'.$group_u->getUniqueID().'" />';
       echo '<input type="submit" value="'._('Delete').'"/>';
       echo '</form></td>';
       echo '</tr>';
@@ -110,7 +110,7 @@ function show_default() {
     echo '<td>';
     echo '<select name="group_u">';
     foreach($groups_users as $group_users)
-      echo '<option value="'.$group_users->id.'" >'.$group_users->name.'</option>';
+      echo '<option value="'.$group_users->getUniqueID().'" >'.$group_users->name.'</option>';
     echo '</select>';
     echo '</td>';
 
