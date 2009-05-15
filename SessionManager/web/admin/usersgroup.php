@@ -595,7 +595,13 @@ echo '<input type="hidden" name="id" value="'.$id.'" />';
 echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
 echo '<tr class="content1">';
 echo '<th>'._('Validation type').'</th>';
-echo '<td><input type="radio" name="validation_type" value="and" checked="checked" /> '._('All').' <input type="radio" name="validation_type" value="or" /> '._('At least one').'</td>';
+echo '<td><input type="radio" name="validation_type" value="and"';
+if ($group->validation_type == 'and')
+	echo ' checked="checked"';
+echo ' /> '._('All').' <input type="radio" name="validation_type" value="or"';
+if ($group->validation_type == 'or')
+	echo ' checked="checked"';
+echo ' /> '._('At least one').'</td>';
 echo '</tr>';
 
 echo '<tr class="content2">';
