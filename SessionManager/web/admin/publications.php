@@ -34,7 +34,8 @@ function show_default() {
       unset($groups_apps[$i]);
   }
 
-  $groups_users = get_all_usergroups();
+  $usergroupdb = UserGroupDB::getInstance();
+  $groups_users = $usergroupdb->getList();
   foreach($groups_users as $i => $group_users) {
     if (! $group_users->published)
       unset($groups_users[$i]);

@@ -128,7 +128,8 @@ function show_default() {
 }
 
 function show_step1() {
-  $usergroups = get_all_usergroups();
+  $usergroupdb = UserGroupDB::getInstance();
+  $usergroups = $usergroupdb->getList();
   $has_usergroups = (count($usergroups) > 0);
 
   $usergroup_selected = false;

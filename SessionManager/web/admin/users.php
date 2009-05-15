@@ -231,7 +231,7 @@ function show_manage($login, $userDB, $userGroupDB) {
   if (is_null($groups_mine))
     die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
 
-  $groups_all = get_all_usergroups();
+  $groups_all = $userGroupDB->getList();
   $groups_available = array();
   foreach($groups_all as $group)
     if (! in_array($group, $groups_mine))

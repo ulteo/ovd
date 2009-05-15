@@ -224,27 +224,6 @@ function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 	return $ret;
 }
 
-function get_all_usergroups(){
-	Logger::debug('main', 'get_all_usergroups');
-
-	$prefs = Preferences::getInstance();
-	if (! $prefs) {
-		Logger::error('main', 'get_all_usergroups get Preferences failed');
-		return NULL;
-	}
-
-	$mods_enable = $prefs->get('general','module_enable');
-	if (! is_array($mods_enable) || ! in_array('UserGroupDB', $mods_enable)) {
-		Logger::error('main', 'get_all_usergroups Module UserGroupDB must be enabled');
-		return NULL;
-	}
-
-	$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-	$UserGroupDB = new $mod_usergroup_name();
-
-	return $UserGroupDB->getList();
-}
-
 function get_needed_attributes_user_from_module_plugin() {
 	$prefs = Preferences::getInstance();
 	if (! $prefs)
