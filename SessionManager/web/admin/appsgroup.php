@@ -225,7 +225,7 @@ function show_manage($id) {
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
 
-  $userGroupDB = UserGroupDB::getIntance();
+  $userGroupDB = UserGroupDB::getInstance();
 
   $applications_all = $applicationDB->getList();
   $applications_id = array();

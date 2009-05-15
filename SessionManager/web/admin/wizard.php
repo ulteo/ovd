@@ -462,7 +462,7 @@ function show_step5() {
 
 function do_validate() {
 	if ($_SESSION['wizard']['use_users'] == 'users') {
-		$userGroupDB = UserGroupDB::getIntance();
+		$userGroupDB = UserGroupDB::getInstance();
 		if (! $userGroupDB->isWriteable())
 			return false;
 
