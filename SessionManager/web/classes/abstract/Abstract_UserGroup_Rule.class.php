@@ -93,7 +93,7 @@ class Abstract_UserGroup_Rule {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$rule_id = Abstract_UserGroup_Rule::exists($usergroup_rule_->attribute, $usergroup_rule_->type, $usergroup_rule_->value);
+		$rule_id = Abstract_UserGroup_Rule::exists($usergroup_rule_->attribute, $usergroup_rule_->type, $usergroup_rule_->value, $usergroup_rule_->usergroup_id);
 		if (! $rule_id) {
 			$buf = Abstract_UserGroup_Rule::create($usergroup_rule_);
 
@@ -201,8 +201,8 @@ class Abstract_UserGroup_Rule {
 		return $usergroup_rules;
 	}
 
-	public static function exists($attribute_, $type_, $value_) {
-		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with \''.$attribute_.'\' \''.$type_.'\' \''.$value_.'\'');
+	public static function exists($attribute_, $type_, $value_, $usergroup_id_) {
+		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with attribute \''.$attribute_.'\' type \''.$type_.'\' value \''.$value_.'\' usergroup_id \''.$usergroup_id_.'\'');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -213,7 +213,7 @@ class Abstract_UserGroup_Rule {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 LIMIT 1', 'id', $mysql_conf['prefix'].'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_);
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $mysql_conf['prefix'].'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
