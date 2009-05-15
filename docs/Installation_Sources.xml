@@ -73,7 +73,7 @@
 	<listitem>
 	  <para>
 	    Download the Ulteo Open Virtual Desktop tarball from
-	    <ulink url="http://www.ulteo.com" />
+	    <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" />
 	  </para>
 	</listitem>
 	<listitem>
@@ -177,14 +177,14 @@ in /usr/local/share/ulteo/sessionmanager/includes/core.inc.php and /usr/local/sh
       <listitem>
 	  <para>
 	    Download the Ulteo Open Virtual Desktop tarball from
-	    <ulink url="http://www.ulteo.com" />
+	    <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" />
 	  </para>
 	</listitem>
 	<listitem>
 	  <para>
 	    Uncompress the tarball and enter into the Application
 	    server directory
-	    <ulink url="http://www.ulteo.com" />
+	    <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" />
 	  </para>
 	  <screen>
 	    <![CDATA[
