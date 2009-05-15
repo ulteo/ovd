@@ -56,7 +56,7 @@ class UserGroupDB_sql {
 	public function import($id_) {
 		Logger::debug('admin',"USERGROUPDB::sql::import (id = $id_)");
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_, 'type');
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_);
 			
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult($res);
@@ -77,7 +77,7 @@ class UserGroupDB_sql {
 			return NULL;
 		}
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @6 FROM @5', 'id', 'name', 'description', 'published', $this->table, 'type');
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5', 'id', 'name', 'description', 'published', $this->table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
