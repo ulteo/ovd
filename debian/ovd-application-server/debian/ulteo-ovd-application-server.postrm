@@ -11,6 +11,9 @@ reload_apache()
     fi
 }
 
+# remove the config
+rm -f /etc/ulteo-ovd.conf
+
 # apache2 link
 rm -f /etc/apache2/sites-available/applicationserver
 rm -f /etc/apache2/sites-enabled/applicationserver

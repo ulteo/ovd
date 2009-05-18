@@ -5,15 +5,23 @@ Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 5)
 Standards-Version: 3.7.3
 
-Package: ulteo-ovd-daemon
+Package: ulteo-ovd-application-server-daemon
 Architecture: all
 Depends: openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), m-privacy-ulteo-chroot (>= 1.1), cpulimit, inotify-tools, xdg-utils, curl, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
+Conflicts: ulteo-ovd-daemon (<= 1.0.1+svn01187)
 Description: Ulteo Open Virtual Desktop - daemon
  This daemon manages the sessions on Open Virtual Desktop application servers.
 
+Package: ulteo-ovd-daemon
+Architecture: all
+Depends: ulteo-ovd-application-server-daemon
+Description: Ulteo Open Virtual Desktop - daemon (Transitional package)
+ This package exists for transitional purpose only. It can be safely removed.
+
 Package: ulteo-ovd-application-server
 Architecture: all
-Depends: libapache2-mod-php5, php5-curl, php5-imagick
+Depends: debconf (>= 0.2.26), po-debconf, libapache2-mod-php5, php5-curl, php5-imagick
+Conflicts: ulteo-ovd (<= 1.0.1+svn1087)
 Description: Ulteo Open Virtual Desktop - application server
  This package provides the application server web services for the Ulteo Online
  Virtual Desktop.
