@@ -560,18 +560,20 @@ function show_manage($id) {
   echo '<div>';
   echo '<h2>'._('Settings').'</h1>';
 
-  echo '<form action="" method="post">';
-  if ($is_default_group) {
-    echo '<input type="submit" value="'._('Remove from default').'"/>';
-    echo '<input type="hidden" name="action" value="unset_default" />';
-  } else {
-    echo '<input type="submit" value="'._('Define as default').'"/>';
-    echo '<input type="hidden" name="action" value="set_default" />';
-  }
+  if ($group->type == 'static') {
+    echo '<form action="" method="post">';
+    if ($is_default_group) {
+      echo '<input type="submit" value="'._('Remove from default').'"/>';
+      echo '<input type="hidden" name="action" value="unset_default" />';
+    } else {
+      echo '<input type="submit" value="'._('Define as default').'"/>';
+      echo '<input type="hidden" name="action" value="set_default" />';
+    }
 
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '</form>';
-  echo '<br/>';
+    echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
+    echo '</form>';
+    echo '<br/>';
+  }
 
   if ($usergroupdb_rw && ($group->type != 'static')) {
     echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
