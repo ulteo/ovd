@@ -221,3 +221,4 @@ else{
 	echo '</table>';
 	}
 }
+page_footer();
