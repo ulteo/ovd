@@ -1,5 +1,6 @@
 scripts_DATA = cifs_no_sfu.sh \
            cifs.sh \
+           dav.sh \
 		   local.sh \
 		   nfs.sh
 
