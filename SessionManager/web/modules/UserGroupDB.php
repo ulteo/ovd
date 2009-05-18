@@ -104,10 +104,39 @@ class UserGroupDB extends Module {
 		return call_user_func($method_to_call, $usergroup_); // [instance, method], parameter
 	}
 	
-	public static function enable() {}
-	public static function configuration() {}
-	public static function prefsIsValid($prefs_, &$log=array()) {}
-	public static function prettyName() {}
-	public static function isDefault() {}
-	public static function liaisonType() {}
+	public static function enable() {
+		return self::call_static_method('enable');
+	}
+	public static function configuration() {
+		return self::call_static_method('configuration');
+	}
+	public static function prefsIsValid($prefs_, &$log=array()) {
+		return self::call_static_method('prefsIsValid', $prefs_ , $log);
+	}
+	public static function prettyName() {
+		return self::call_static_method('prettyName');
+	}
+	public static function isDefault() {
+		return self::call_static_method('isDefault');
+	}
+	public static function liaisonType() {
+		return self::call_static_method('liaisonType');
+	}
+	
+	protected static function call_static_method($method_name_, $prefs_=NULL, &$log=array()) {
+		if (is_null($prefs_))
+			$prefs = Preferences::getInstance();
+		else
+			$prefs = $prefs_;
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$mods_enable = $prefs->get('general','module_enable');
+		if (! in_array('UserGroupDB',$mods_enable))
+			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+		
+		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+		$a_userGroupDB = new $mod_usergroup_name();
+		return $a_userGroupDB->$method_name_($prefs, $log);
+	}
 }
