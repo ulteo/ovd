@@ -573,7 +573,7 @@ function show_manage($id) {
   echo '</form>';
   echo '<br/>';
 
-  if ($usergroupdb_rw && ($group->id != 'static')) {
+  if ($usergroupdb_rw && ($group->type != 'static')) {
     echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
     echo '<input type="submit" value="'._('Delete this group').'"/>';
     echo '<input type="hidden" name="action" value="del" />';
