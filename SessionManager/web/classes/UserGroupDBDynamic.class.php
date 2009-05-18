@@ -69,12 +69,13 @@ class UserGroupDBDynamic {
 			return NULL;
 		}
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5', 'id', 'name', 'description', 'published', $this->table);
+		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5 FROM @6', 'id', 'name', 'description', 'published',  'validation_type', $this->table);
 		if ($res !== false){
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
 			foreach ($rows as $row){
-				$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published']);
+				$rules = UserGroup_Rules::getByUserGroupId($row['id']);
+				$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published'], $rules, $row['validation_type']);
 				if ($this->isOK($ug))
 					$result[$ug->id]= $ug;
 				else {
