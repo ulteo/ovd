@@ -200,7 +200,7 @@ function page_footer() {
 function get_menu_entry() {
   $matches = array();
   $buf = preg_match('/admin\/((.+)\.php)/', $_SERVER['REQUEST_URI'], $matches);
-  if (is_array($matches))
+  if (is_array($matches) && array_key_exists(1, $matches))
     return $matches[1];
 
   return basename($_SERVER['REQUEST_URI']);
