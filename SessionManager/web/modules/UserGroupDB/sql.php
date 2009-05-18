@@ -98,14 +98,6 @@ class UserGroupDB_sql {
 		}
 	}
 	
-	private function generateUserFromRow($row){
-		$u = new User();
-		foreach ($row as $key => $value){
-			$u->setAttribute($key,$value);
-		}
-		return $u;
-	}
-	
 	public static function configuration() {
 		return array();
 	}
