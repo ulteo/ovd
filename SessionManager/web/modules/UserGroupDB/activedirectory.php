@@ -26,16 +26,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		if (is_object($obj))
 			return $obj;
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-		
-		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
 		
 		$userDBAD = new UserDB_activedirectory();
 		$config_ldap = $userDBAD->makeLDAPconfig();

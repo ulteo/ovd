@@ -61,16 +61,12 @@ class User {
 		$result = array();
 		// add the default user group is enable
 		$prefs = Preferences::getInstance();
-		if ($prefs) {
-			$user_default_group = $prefs->get('general', 'user_default_group');
-
-			$mods_enable = $prefs->get('general','module_enable');
-			if (! in_array('UserDB',$mods_enable))
-				die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-
-			$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-			$userGroupDB = new $mod_usergroup_name();
+		if (!$prefs) {
+			Logger::critical('main', 'USER::UsersGroups get prefs failed');
+			die_error('get Preferences failed',__FILE__,__LINE__);
 		}
+		$user_default_group = $prefs->get('general', 'user_default_group');
+		$userGroupDB = UserGroupDB::getInstance();
 
 		$static = Abstract_Liaison::load('UsersGroup', $this->attributes['login'], NULL);
 		if (is_null($static)) {

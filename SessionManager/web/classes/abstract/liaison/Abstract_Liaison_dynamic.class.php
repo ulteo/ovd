@@ -60,8 +60,6 @@ class Abstract_Liaison_dynamic {
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
 		$mods_enable = $prefs->get('general', 'module_enable');
-		if (! in_array('UserGroupDB', $mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
 		if (! in_array('UserDB', $mods_enable))
 			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
@@ -95,20 +93,16 @@ class Abstract_Liaison_dynamic {
 	}
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('admin',"Abstract_Liaison_dynamic::loadGroups ($type_,$element_)");
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
+		$userGroupDB_dynamic = new UserGroupDBDynamic();
 		$groups = array();
-		$usergroup_list = $userGroupDB->getList();
+		$usergroup_list_static = $userGroupDB->getList();
+		$usergroup_list_dynamic = $userGroupDB_dynamic->getList();
+		$usergroup_list = array_unique(array_merge($usergroup_list_dynamic, $usergroup_list_static));
 		foreach ($usergroup_list as $group) {
 			if (in_array($element_, $group->usersLogin())){
-				$l = new Liaison($element_,$group->id);
+				$l = new Liaison($element_,$group->getUniqueID());
 				$groups[$l->group] = $l;
 			}
 		}
@@ -122,14 +116,11 @@ class Abstract_Liaison_dynamic {
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
 		$mods_enable = $prefs->get('general', 'module_enable');
-		if (! in_array('UserGroupDB', $mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
 		if (! in_array('UserDB', $mods_enable))
 			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB', 'enable');
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
 		$group_list = $userGroupDB->getList();
 		
 		$result = array();
@@ -149,16 +140,13 @@ class Abstract_Liaison_dynamic {
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
 		$mods_enable = $prefs->get('general', 'module_enable');
-		if (! in_array('UserGroupDB', $mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
 		if (! in_array('UserDB', $mods_enable))
 			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB', 'enable');
 		$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 		
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = new $mod_user_name();
 		
 		$group = $userGroupDB->import($group_);

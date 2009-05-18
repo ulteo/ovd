@@ -50,16 +50,8 @@ class Abstract_Liaison_activedirectory {
 	}
 	public static function loadElements($type_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_activedirectory::loadElements ($type_,$group_)");
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
 		
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
-		
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
@@ -117,13 +109,10 @@ class Abstract_Liaison_activedirectory {
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
 		
 		if (! in_array('UserDB',$mods_enable))
 			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-		$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-		$userGroupDB = new $mod_usergroup_name();
+		$userGroupDB = UserGroupDB::getInstance();
 		$mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
 		$userDB = new $mod_user_name();
 		$element_user = $userDB->import($element_);

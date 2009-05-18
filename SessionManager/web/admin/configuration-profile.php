@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -84,8 +85,7 @@ function do_save($prefs, $name) {
     return False;
   }
 
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-  $userGroupDB = new $mod_usergroup_name();
+  $userGroupDB = UserGroupDB::getInstance();
   if (! $userGroupDB->prefsIsValid($prefs)) {
     // error
     popup_error('Configuration is invalid for UserGroups');
