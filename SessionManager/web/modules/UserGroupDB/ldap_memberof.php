@@ -89,8 +89,8 @@ class UserGroupDB_ldap_memberof {
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
 		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserGroupDB',$mods_enable))
-			die_error(_('Module UserGroupDB must be enabled'),__FILE__,__LINE__);
+		if (! in_array('UserDB',$mods_enable))
+			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		
 		$mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
 		$userDB = new $mod_user_name();
