@@ -395,13 +395,13 @@ function show_manage($id) {
     if (count($groups_users) > 0) {
       foreach($groups_users as $group_users) {
 	echo '<tr>';
-	echo '<td><a href="usersgroup.php?action=manage&id='.$group_users->id.'">'.$group_users->name.'</td>';
+	echo '<td><a href="usersgroup.php?action=manage&id='.$group_users->getUniqueID().'">'.$group_users->name.'</td>';
 	echo '<td>';
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Publication" />';
 	echo '<input type="hidden" name="group_a" value="'.$id.'" />';
-	echo '<input type="hidden" name="group_u" value="'.$group_users->id.'" />';
+	echo '<input type="hidden" name="group_u" value="'.$group_users->getUniqueID().'" />';
 	echo '<input type="submit" value="'._('Delete this publication').'" />';
 	echo '</form>';
 	echo '</td>';
@@ -416,7 +416,7 @@ function show_manage($id) {
       echo '<input type="hidden" name="group_a" value="'.$id.'" />';
       echo '<select name="group_u">';
       foreach($groups_users_available as $group_users)
-	echo '<option value="'.$group_users->id.'" >'.$group_users->name.'</option>';
+	echo '<option value="'.$group_users->getUniqueID().'" >'.$group_users->name.'</option>';
       echo '</select>';
       echo '</td><td><input type="submit" value="'._('Add this publication').'" /></td>';
       echo '</form></tr>';

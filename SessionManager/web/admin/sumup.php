@@ -73,9 +73,9 @@ else{
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $ugrp){
 					echo '<tr>';
-					echo '<td>('.$ugrp->id.')</td>';
+					echo '<td>('.$ugrp->getUniqueID().')</td>';
 					echo '<td>
-					<a href="usersgroup.php?action=manage&id='.$ugrp->id.'">'.$ugrp->name.'</a></td>';
+					<a href="usersgroup.php?action=manage&id='.$ugrp->getUniqueID().'">'.$ugrp->name.'</a></td>';
 					if ($ugrp->published)
 						echo '<td>('._('Yes').')</td>';
 					else
