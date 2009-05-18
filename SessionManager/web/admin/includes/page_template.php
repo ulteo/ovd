@@ -198,6 +198,11 @@ function page_footer() {
 }
 
 function get_menu_entry() {
+  $matches = array();
+  $buf = preg_match('/admin\/((.+)\.php)/', $_SERVER['REQUEST_URI'], $matches);
+  if (is_array($matches))
+    return $matches[1];
+
   return basename($_SERVER['REQUEST_URI']);
 }
 
