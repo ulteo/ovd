@@ -49,22 +49,12 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search('cn='.$id_, NULL);
 		$infos = $ldap->get_entries($sr);
-		if (!is_array($infos))
+		$keys = array_keys($infos);
+		if (!is_array($infos) || $infos === array())
 			return NULL;
-		if (isset($infos[0])) {
-			$info = $infos[0];
-			if ( isset($info['dn']) && $info['cn']) {
-				if (is_string($info['dn']) && isset($info['cn']) && is_array($info['cn']) && isset($info['cn'][0]) ) {
-					// return  = new UsersGroup($info['dn'], $info['cn'][0], '', true);
-					if (isset($info['description'][0]))
-						$description = $info['description'][0];
-					else
-						$description = '';
-					return  new UsersGroup($info['cn'][0], $info['cn'][0], $description, true);
-				}
-			}
-		}
-		return NULL;
+		$dn = $keys[0];
+		$info = $infos[$dn];
+		return $this->generateUsersGroupFromRow($info, $dn);
 	}
 	
 	public function getList() {
@@ -100,19 +90,40 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 		$groups = array();
 		if (! is_array($infos))
 			return $groups;
-		foreach ($infos as $info){
-			if ( isset($info['dn']) && $info['cn']) {
-				if (is_string($info['dn']) && isset($info['cn']) && is_array($info['cn']) && isset($info['cn'][0]) ) {
-					if (isset($info['description'][0]))
-						$description = $info['description'][0];
-					else
-						$description = '';
-					
-					$groups[$info['dn']] = new UsersGroup($info['cn'][0], $info['cn'][0], $description, true);
+		foreach ($infos as $dn => $info) {
+			$g = $this->generateUsersGroupFromRow($info, $dn);
+			if (is_object($g))
+				$groups[$dn] = $g;
+		}
+		return $groups;
+	}
+	
+	protected function generateUsersGroupFromRow($row_, $dn_) {
+		if (! isset($row_['cn'])) {
+			return NULL;
+		}
+		$cn = NULL;
+		$description = NULL;
+		if ( is_string($row_['cn'])) {
+			$cn = $row_['cn'];
+		}
+		elseif (is_array($row_['cn'])) {
+			if (isset($row_['cn'][0])) {
+				$cn = $row_['cn'][0];
+			}
+		}
+		
+		if ( isset($row_['description'])) {
+			if ( is_string($row_['description'])) {
+				$description = $row_['description'];
+			}
+			else if (is_array($row_['description'])) {
+				if (isset($row_['description'][0])) {
+					$description = $row_['description'][0];
 				}
 			}
 		}
-		return $groups;
+		return new UsersGroup($cn, $cn, $description, true);
 	}
 	
 	public static function configuration() {

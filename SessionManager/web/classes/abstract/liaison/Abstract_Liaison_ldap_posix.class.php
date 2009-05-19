@@ -90,27 +90,41 @@ class Abstract_Liaison_ldap_posix {
 		$infos = $ldap->get_entries($sr);
 		if (!is_array($infos))
 			return NULL;
-		$info = $infos[0];
-		if ( isset($info['dn']) && $info['cn']) {
-			if (is_string($info['dn']) && isset($info['cn']) && is_array($info['cn']) && isset($info['cn'][0]) ) {
-				$u = new UsersGroup($info['cn'][0], $info['cn'][0], '', true);
-				if ($userGroupDB->isOK($u)) {
-					$elements = array();
-					if (isset($info['memberuid'])) {
-						unset($info['memberuid']['count']);
-						foreach ($info['memberuid'] as $memberuid) {
-							$u = $userDB->import($memberuid);
-							if (is_object($u)) {
-								$l = new Liaison($u->getAttribute('login'), $group_);
-								$elements[$l->element] = $l;
-							}
-						}
-					}
-					return $elements;
+		$keys = array_keys($infos);
+		$dn = $keys[0];
+		$info = $infos[$dn];
+		
+		if (! isset($info['cn'])) {
+			Logger::error('main', 'Abstract_Liaison_ldap_posix::loadElements no cn');
+			return NULL;
+		}
+		$cn = '';
+		if ( is_string($info['cn'])) {
+			$cn = $info['cn'];
+		}
+		elseif (is_array($info['cn'])) {
+			if (isset($info['cn'][0])) {
+				$cn = $info['cn'][0];
+			}
+		}
+		$userGroupDB = UserGroupDB::getInstance();
+		$ug = $userGroupDB->import('static_'.$cn);
+		if (!is_object($ug)) {
+			Logger::error('main', 'Abstract_Liaison_ldap_posix::loadElements load UserGroup ('.'static_'.$cn.') failed');
+			return NULL;
+		}
+		$elements = array();
+		if (isset($info['memberUid'])) {
+			unset($info['memberUid']['count']);
+			foreach ($info['memberUid'] as $memberuid) {
+				$u = $userDB->import($memberuid);
+				if (is_object($u)) {
+					$l = new Liaison($u->getAttribute('login'), $group_);
+					$elements[$l->element] = $l;
 				}
 			}
 		}
-		return NULL;
+		return $elements;
 	}
 	
 	public static function loadGroups($type_, $element_) {
