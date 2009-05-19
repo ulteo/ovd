@@ -53,7 +53,7 @@ class UserGroupDB extends Module {
 		return $ret;
 	}
 	public function import($id_) {
-		Logger::debug('UserGroupDB::import('.$id_.')');
+		Logger::debug('main', 'UserGroupDB::import('.$id_.')');
 		foreach ($this->instance_type as $key => $value) {
 			if (str_startswith($id_, $key.'_'))
 				return $value->import(substr($id_, strlen($key)+1));
