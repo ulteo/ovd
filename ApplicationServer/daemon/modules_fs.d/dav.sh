@@ -109,6 +109,13 @@ dav_do_umount_bind() {
     done < ${SESSID_DIR}/parameters/module_fs/dav_dirs
 }
 
+dav_do_umount_critical() {
+    local dirs=`find $DAV_MOUNT_POINT -maxdepth 1 -mindepth 1 -type d`
+    for dir in $dirs; do
+	umount "$dir"
+	rmdir "$dir"
+    done
+}
 
 dav_do_clean() {
     # clean the mountbinds
@@ -116,6 +123,11 @@ dav_do_clean() {
     [ -d /mnt/dav ] || return 0
 
     local dirt_mounts=`find /mnt/dav -maxdepth 1 -mindepth 1`
+    for mount_point in $dirt_mounts; do
+	log_WARN "dav: Cleaning dirt mount $mount_point"
+	
+	DAV_MOUNT_POINT=$mount_point dav_do_umount_critical	
+    done
 
     if [ -d /mnt/dav ]; then
         rmdir /mnt/dav 2>/dev/null
