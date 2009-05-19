@@ -59,20 +59,20 @@ class Abstract_UserGroup_Rule {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$id = $id_;
-
-		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'attribute', 'type', 'value', 'usergroup_id', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'attribute', 'type', 'value', 'usergroup_id', $mysql_conf['prefix'].'usergroup_rules', 'id', $id_);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', 'Abstract_UserGroup_Rule::load no rule (id='.$id_.')found');
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 
 		foreach ($row as $k => $v)
 			$$k = $v;
 
-		$buf = new UserGroup_Rule($id);
+		$buf = new UserGroup_Rule($id_);
 		$buf->attribute = (string)$attribute;
 		$buf->type = (string)$type;
 		$buf->value = (string)$value;
@@ -82,7 +82,7 @@ class Abstract_UserGroup_Rule {
 	}
 
 	public static function save($usergroup_rule_) {
-		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::save for \''.$usergroup_rule_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::save for (attribute: \''.$usergroup_rule_->attribute.'\', type: \''.$usergroup_rule_->type.'\', value: \''.$usergroup_rule_->value.'\',	usergroup_id: \''.$usergroup_rule_->usergroup_id.'\')');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -122,7 +122,7 @@ class Abstract_UserGroup_Rule {
 	}
 
 	private static function create($usergroup_rule_) {
-		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::create for \''.$usergroup_rule_->id.'\'');
+		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::create for (attribute: \''.$usergroup_rule_->attribute.'\', type: \''.$usergroup_rule_->type.'\', value: \''.$usergroup_rule_->value.'\',	usergroup_id: \''.$usergroup_rule_->usergroup_id.'\')');
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
