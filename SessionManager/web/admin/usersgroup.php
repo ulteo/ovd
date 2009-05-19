@@ -378,9 +378,12 @@ function show_default() {
 
   echo '</div>';
 
-  $usergroup_types = array('dynamic' => _('Dynamic'));
+  
   if ($userGroupDB->isWriteable()) {
-    $usergroup_types['static'] = _('Static');
+    $usergroup_types = array('static' => _('Static'), 'dynamic' => _('Dynamic'));
+  }
+  else {
+    $usergroup_types = array('dynamic' => _('Dynamic'));
   }
   echo '<div>';
   echo '<h2>'._('Create a new group').'</h2>';
