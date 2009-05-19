@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-application-server-daemon
 Architecture: all
-Depends: openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), m-privacy-ulteo-chroot (>= 1.1), cpulimit, inotify-tools, xdg-utils, curl, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
+Depends: openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), davfs2, m-privacy-ulteo-chroot (>= 1.1), cpulimit, inotify-tools, xdg-utils, curl, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
 Conflicts: ulteo-ovd-daemon (<= 1.0.1+svn01187)
 Description: Ulteo Open Virtual Desktop - daemon
  This daemon manages the sessions on Open Virtual Desktop application servers.
