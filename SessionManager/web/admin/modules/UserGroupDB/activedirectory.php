@@ -34,7 +34,6 @@ class admin_UserGroupDB_activedirectory extends UserGroupDB_activedirectory {
 	}
 	
 	public static function init($prefs_) {
-		parent::init($prefs_);
 		return true;
 	}
 	
