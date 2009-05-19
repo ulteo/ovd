@@ -63,9 +63,9 @@ class UserGroupDBDynamic {
 	}
 	
 	public function getList() {
-		Logger::debug('main','UserGroupDB_sql::getList');
+		Logger::debug('main','UserGroupDBDynamic::getList');
 		if (is_null($this->table)) {
-			Logger::error('main', 'USERGROUPDB::MYSQL::getList table is null');
+			Logger::error('main', 'UserGroupDBDynamic::getList table is null');
 			return NULL;
 		}
 		$sql2 = MySQL::getInstance();
@@ -79,13 +79,13 @@ class UserGroupDBDynamic {
 				if ($this->isOK($ug))
 					$result[$ug->id]= $ug;
 				else {
-					Logger::info('main', 'USERGROUPDB::MYSQL::getList group \''.$row['id'].'\' not ok');
+					Logger::info('main', 'UserGroupDBDynamic::getList group \''.$row['id'].'\' not ok');
 				}
 			}
 			return $result;
 		}
 		else {
-			Logger::error('main', 'USERGROUPDB::MYSQL::getList failed (sql query failed)');
+			Logger::error('main', 'UserGroupDBDynamic::getList failed (sql query failed)');
 			// not the right argument
 			return NULL;
 		}
