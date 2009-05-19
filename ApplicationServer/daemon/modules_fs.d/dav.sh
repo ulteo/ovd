@@ -36,7 +36,7 @@ dav_set_fs() {
     check_variables DAV_LOGIN DAV_PASSWORD || return 1
 
     DAV_MOUNT_POINT=/mnt/dav/$USER_LOGIN
-    CREDENTIALS=/etc/davfs2/secrets
+    DAV_CREDENTIALS=/etc/davfs2/secrets
 }
 
 dav_get_status() {
@@ -56,7 +56,7 @@ dav_do_mount() {
         local name=$(echo $line| cut -d '|' -f1)
         local url=$(echo $line| cut -d '|' -f2)
 
-        echo "$url $DAV_LOGIN $DAV_PASSWORD" >>$CREDENTIALS
+        echo "$url $DAV_LOGIN $DAV_PASSWORD" >>$DAV_CREDENTIALS
 
         mkdir -p $DAV_MOUNT_POINT/$i
         mount -t davfs -o uid=$USER_ID,dir_mode=700,file_mode=600 $url $DAV_MOUNT_POINT/$i
@@ -88,7 +88,7 @@ dav_do_umount_real() {
 
         local dir=$DAV_MOUNT_POINT/$i
         umount "$dir" || log_ERROR "dav: Failed to umount $dir"
-        sed -i "\%^$url %d" $CREDENTIALS
+        sed -i "\%^$url %d" $DAV_CREDENTIALS
         rmdir $DAV_MOUNT_POINT/$i
 
         i=$(( $i + 1 ))
