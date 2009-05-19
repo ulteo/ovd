@@ -74,6 +74,8 @@ dav_do_mount() {
 dav_do_umount() {
     dav_do_umount_bind && dav_do_umount_real
 
+    rmdir $DAV_MOUNT_POINT
+
     local_do_umount
 }
 
@@ -91,8 +93,6 @@ dav_do_umount_real() {
 
         i=$(( $i + 1 ))
     done < ${SESSID_DIR}/parameters/module_fs/dav_dirs
-
-    rmdir $dir
 }
 
 
