@@ -96,7 +96,7 @@ class Configuration_mode_ad extends Configuration_mode {
 
     $ad_ar['match'] = array();
     if ($form['user_group'] == 'activedirectory')
-      $ad_ar['match']['memberof'] = 'memberof';
+      $ad_ar['match']['memberof'] = 'memberOf';
 
 
     // plugins fs ...

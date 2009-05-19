@@ -51,7 +51,9 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
-		$info = $infos[0];
+		$keys = array_keys($infos);
+		$dn = $keys[0];
+		$info = $infos[$dn];
 		foreach ($config_ldap['match'] as $attribut => $match_ldap){
 			if (isset($info[$match_ldap][0])) {
 				$buf[$attribut] = $info[$match_ldap][0];
