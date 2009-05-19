@@ -90,7 +90,7 @@ class UserGroupDB extends Module {
 	protected function call_method($method_name_, $usergroup_) {
 		Logger::debug('main', 'UserGroupDB::call_method method '.$method_name_);
 		if (!array_key_exists($usergroup_->type, $this->instance_type)) {
-			Logger::error('main', 'UserGroupDB::call_method method \''.$methode_name_.'\' type \''.$usergroup_->type.'\' not implemented');
+			Logger::error('main', 'UserGroupDB::call_method method \''.$method_name_.'\' type \''.$usergroup_->type.'\' not implemented');
 			// do a die_error ?
 			return NULL;
 		}
