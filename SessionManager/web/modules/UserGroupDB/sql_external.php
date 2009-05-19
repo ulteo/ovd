@@ -93,7 +93,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 				Logger::info('main', 'USERGROUPDB::MYSQL_external::getList group \''.$row[$this->config['match']['id']].'\' not ok');
 			}
 		}
-		return array_unique(array_merge($groups, parent::getListDynamic()));
+		return $groups;
 		
 	}
 	

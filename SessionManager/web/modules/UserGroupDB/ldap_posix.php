@@ -112,7 +112,7 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 				}
 			}
 		}
-		return array_unique(array_merge($groups, parent::getListDynamic()));
+		return $groups;
 	}
 	
 	public static function configuration() {
