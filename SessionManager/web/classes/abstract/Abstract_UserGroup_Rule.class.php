@@ -33,7 +33,7 @@ class Abstract_UserGroup_Rule {
 			'attribute'		=>	'varchar(255) NOT NULL',
 			'type'			=>	'varchar(255) NOT NULL',
 			'value'			=>	'varchar(255) NOT NULL',
-			'usergroup_id'	=>	'int(8) NOT NULL'
+			'usergroup_id'	=>	'varchar(255) NOT NULL'
 		);
 
 		$ret = $SQL->buildTable($mysql_conf['prefix'].'usergroup_rules', $usergroup_rules_table_structure, array('id'));
