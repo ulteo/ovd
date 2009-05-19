@@ -327,12 +327,12 @@ class Preferences {
 		foreach ($p2 as $key1 => $value1){
 			$plugins_prettyname = array();
 			$c = new ConfigElement_select($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array());
-			$c->setContentAvailable($plugins_prettyname);
 			foreach ($value1 as $plugin_name => $plu6) {
 				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
 				if (is_null($plugin_prettyname))
 					$plugin_prettyname = $plugin_name;
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
+				$c->setContentAvailable($plugins_prettyname);
 
 				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
 				if ($isdefault1 === true) // replace the default value
