@@ -4,7 +4,7 @@ SUBDIRS = ajax webservices media plugins modules \
 
 scripts_DATA = footer.php header.php \
                startsession.php index.php \
-               check.php
+               check.php webdav.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager
 

@@ -1,4 +1,4 @@
-SUBDIRS = Auth CAS Mail Net
+SUBDIRS = Auth CAS Mail Net HTTP
 
 scripts_DATA = CAS.php Mail.php
 

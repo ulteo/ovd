@@ -59,6 +59,18 @@ if (isset($_REQUEST['action'])) {
       redirect();
     }
   }
+  elseif ($_REQUEST['action']=='add_sharedfolder') {
+    if (isset($_REQUEST['usergroup_id'])) {
+	  action_add_sharedfolder($_REQUEST['usergroup_id']);
+      redirect();
+    }
+  }
+  elseif ($_REQUEST['action']=='del_sharedfolder') {
+    if (isset($_REQUEST['id'])) {
+	  action_del_sharedfolder($_REQUEST['id']);
+      redirect();
+    }
+  }
   elseif ($_REQUEST['action']=='set_default') {
     if (isset($_REQUEST['id'])) {
       $req_id = $_REQUEST['id'];
@@ -214,6 +226,44 @@ function action_modify_rules($id) {
 
 	if (! $userGroupDB->update($group))
 		die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
+}
+
+function action_add_sharedfolder($usergroup_id) {
+	$userGroupDB = UserGroupDB::getInstance();
+
+	$group = $userGroupDB->import($usergroup_id);
+	if (! is_object($group))
+		die_error('Group "'.$usergroup_id.'" is not OK',__FILE__,__LINE__);
+
+	$sharedfolder_name = $_REQUEST['name'];
+	if ($sharedfolder_name == '') {
+		popup_error(_('You must give a name to your shared folder'));
+		return false;
+	}
+
+	$buf = UserGroup_SharedFolders::getByName($sharedfolder_name);
+	if (count($buf) > 0) {
+		popup_error(_('A shared folder with this name already exists'));
+		return false;
+	}
+
+	$buf = new UserGroup_SharedFolder(NULL);
+	$buf->name = $sharedfolder_name;
+	$buf->usergroup_id = $usergroup_id;
+	Abstract_UserGroup_SharedFolder::save($buf);
+
+	return true;
+}
+
+function action_del_sharedfolder($sharedfolder_id) {
+	$buf = Abstract_UserGroup_SharedFolder::delete($sharedfolder_id);
+
+	if (! $buf) {
+		popup_error(_('Unable to delete this shared folder'));
+		return false;
+	}
+
+	return true;
 }
 
 function action_set_default($id_) {
@@ -768,7 +818,32 @@ echo '</form>';
     }
     echo '</table>';
     echo '</div>';
+	echo '<br />';
   }
+
+    echo '<div>';
+    echo '<h2>'._('Shared folders').'</h1>';
+
+	$sharedfolders = UserGroup_SharedFolders::getByUserGroupId($group->getUniqueID());
+
+	echo '<table border="0" cellspacing="1" cellpadding="3">';
+	foreach ($sharedfolders as $sharedfolder) {
+		echo '<tr>';
+		echo '<td>'.$sharedfolder->name.'</td>';
+        echo '<td><form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder?').'\');">';
+        echo '<input type="hidden" name="action" value="del_sharedfolder" />';
+        echo '<input type="hidden" name="id" value="'.$sharedfolder->id.'" />';
+        echo '<input type="submit" value="'._('Delete this shared folder').'" />';
+        echo '</form></td>';
+		echo '</tr>';
+	}
+	echo '<tr><form action="usersgroup.php" method="post"><td>';
+	echo '<input type="hidden" name="action" value="add_sharedfolder" />';
+	echo '<input type="text" name="name" value="" />';
+	echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
+	echo '</td><td><input type="submit" value="'._('Create this shared folder').'" /></td>';
+	echo '</form></tr>';
+	echo '</table>';
 
   echo '</div>';
   page_footer();
