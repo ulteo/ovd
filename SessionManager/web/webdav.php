@@ -9,7 +9,7 @@ function Unauthorized() {
 
 function ParseURL() {
 	$matches = array();
-	preg_match('/\/webdav\.php\/(.+)\/(.+)(\/.*)/', $_SERVER['REQUEST_URI'], $matches);
+	preg_match('@/webdav\.php/([^/]+)/([^/]+)/@', $_SERVER['REQUEST_URI'], $matches);
 	if (! is_array($matches) || ! array_key_exists(1, $matches) || ! array_key_exists(2, $matches))
 		return Unauthorized();
 
