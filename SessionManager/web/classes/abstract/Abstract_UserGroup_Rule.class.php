@@ -28,7 +28,7 @@ class Abstract_UserGroup_Rule {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
 
-		$invites_table_structure = array(
+		$usergroup_rules_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
 			'attribute'		=>	'varchar(255) NOT NULL',
 			'type'			=>	'varchar(255) NOT NULL',
@@ -36,7 +36,7 @@ class Abstract_UserGroup_Rule {
 			'usergroup_id'	=>	'int(8) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'usergroup_rules', $invites_table_structure, array('id'));
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'usergroup_rules', $usergroup_rules_table_structure, array('id'));
 
 		if (! $ret) {
 			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'usergroup_rules\'');
@@ -103,15 +103,16 @@ class Abstract_UserGroup_Rule {
 			}
 
 			$usergroup_rule_->id = $buf;
-		}
-		else {
-			Logger::debug('main', 'Abstract_UserGroup_Rule::save rule('.$usergroup_rule_->attribute.','.$usergroup_rule_->type.','.$usergroup_rule_->value.') already exists');
+		} else {
+			Logger::debug('main', 'Abstract_UserGroup_Rule::save rule('.$usergroup_rule_->attribute.','.$usergroup_rule_->type.','.$usergroup_rule_->value.','.$usergroup_rule_->usergroup_id.') already exists');
+
 			$usergroup_rule_->id = $rule_id;
+
 			return true;
 		}
 
 		if (is_null($usergroup_rule_->id)) {
-			Logger::error('main', 'Abstract_UserGroup_Rule::save rule\'s id attribute is null');
+			Logger::error('main', 'Abstract_UserGroup_Rule::save rule\'s id is null');
 			return false;
 		}
 
@@ -138,7 +139,7 @@ class Abstract_UserGroup_Rule {
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
-			Logger::error('main', 'Abstract_UserGroup_Rule::create rule id \''.$id.'\' not found');
+			Logger::error('main', 'Abstract_UserGroup_Rule::create rule id \''.$id.'\' already exists');
 			return false;
 		}
 
