@@ -172,7 +172,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 	
 	public function updateCache($usergroup_) {
 		if ( mktime() > ( $usergroup_->last_update + $usergroup_->schedule )) {
-			Logger::error('main', 'UserGroupDBDynamic_cached::updateCache usergroup (id='.$usergroup_->getUniqueID().') must update his cache');
+			Logger::debug('main', 'UserGroupDBDynamic_cached::updateCache usergroup (id='.$usergroup_->getUniqueID().') must update his cache');
 			$usergroup_->updateCache(); // update the liaison
 			$sql2 = MySQL::getInstance();
 			$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3  WHERE @4 = %5', $this->table, 'last_update', mktime(), 'id', $usergroup_->id);
