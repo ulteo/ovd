@@ -62,7 +62,7 @@ class UserGroupDB extends Module {
 		return NULL; // not found
 	}
 	public function getList() {
-		Logger::debug('UserGroupDB::getList');
+		Logger::debug('main', 'UserGroupDB::getList');
 		$result = array();
 		foreach ($this->instance_type as $key => $value) {
 			$result = array_merge($result, $value->getList());

@@ -52,7 +52,7 @@ class Abstract_UserGroup_Rule {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -86,7 +86,7 @@ class Abstract_UserGroup_Rule {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -126,7 +126,7 @@ class Abstract_UserGroup_Rule {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -153,7 +153,7 @@ class Abstract_UserGroup_Rule {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -178,7 +178,7 @@ class Abstract_UserGroup_Rule {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -207,7 +207,7 @@ class Abstract_UserGroup_Rule {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 

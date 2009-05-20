@@ -115,7 +115,7 @@ class Server {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -242,7 +242,7 @@ class Server {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -563,13 +563,13 @@ class Server {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return NULL;
 		}
 
 		$mods_enable = $prefs->get('general', 'module_enable');
 		if (!in_array('ApplicationDB', $mods_enable)) {
-			Logger::error('Module ApplicationDB must be enabled');
+			Logger::error('main', 'Module ApplicationDB must be enabled');
 			return NULL;
 		}
 
@@ -595,7 +595,7 @@ class Server {
 		Logger::debug('admin','SERVERADMIN::updateApplications');
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 

@@ -211,7 +211,7 @@ class User {
 
 		$mods_enable = $prefs->get('general', 'module_enable');
 		if (!in_array('ApplicationDB', $mods_enable)) {
-			Logger::error('Module ApplicationDB must be enabled');
+			Logger::error('main', 'Module ApplicationDB must be enabled');
 			return NULL;
 		}
 

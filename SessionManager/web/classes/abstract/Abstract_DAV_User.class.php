@@ -48,7 +48,7 @@ class Abstract_DAV_User {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -80,7 +80,7 @@ class Abstract_DAV_User {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -103,7 +103,7 @@ class Abstract_DAV_User {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
@@ -130,7 +130,7 @@ class Abstract_DAV_User {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::critical('get Preferences failed in '.__FILE__.' line '.__LINE__);
+			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
 			return false;
 		}
 
