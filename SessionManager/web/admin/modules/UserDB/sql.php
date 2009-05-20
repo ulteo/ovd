@@ -24,7 +24,7 @@ class admin_UserDB_sql extends UserDB_sql {
 // 	public function __construct(){
 // 	}
 	public function add($user_){
-		Logger::debug('UserDB::sql::add');
+		Logger::debug('main', 'UserDB::sql::add');
 		if ($this->isOK($user_)){
 			$query_keys = "";
 			$query_values = "";
@@ -50,15 +50,15 @@ class admin_UserDB_sql extends UserDB_sql {
 		}
 		else {
 			if ($user_->hasAttribute('login'))
-				Logger::debug('UserDB::sql::add failed (user \''.$user_->getAttribute('login').'\' not ok)');
+				Logger::debug('main', 'UserDB::sql::add failed (user \''.$user_->getAttribute('login').'\' not ok)');
 			else
-				Logger::debug('UserDB::sql::add failed (user not ok)');
+				Logger::debug('main', 'UserDB::sql::add failed (user not ok)');
 			return false;
 		}
 	}
 	
 	public function remove($user_){
-		Logger::debug('UserDB::sql::remove');
+		Logger::debug('main', 'UserDB::sql::remove');
 		if (is_object($user_) && $user_->hasAttribute('login')){
 			$SQL = MySQL::getInstance();
 			// first we delete all liaisons 
@@ -71,7 +71,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			return $SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'login', $user_->getAttribute('login'));
 		}
 		else {
-			Logger::debug('UserDB::sql::remove failed (user not ok)');
+			Logger::debug('main', 'UserDB::sql::remove failed (user not ok)');
 			return false;
 		}
 	}
