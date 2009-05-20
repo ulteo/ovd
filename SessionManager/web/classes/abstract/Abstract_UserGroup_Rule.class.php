@@ -76,7 +76,7 @@ class Abstract_UserGroup_Rule {
 		$buf->attribute = (string)$attribute;
 		$buf->type = (string)$type;
 		$buf->value = (string)$value;
-		$buf->usergroup_id = (int)$usergroup_id;
+		$buf->usergroup_id = (string)$usergroup_id;
 
 		return $buf;
 	}
