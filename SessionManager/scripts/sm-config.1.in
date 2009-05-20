@@ -29,8 +29,11 @@ set the apache group to 'group'
 (default: guess from /etc/group)
 .TP
 \fB\-\-apache\-dir\fR dir
-et the apache configuration directory to 'dir'"
+set the apache configuration directory to 'dir'
 (default: guess from /etc/{httpd,apache2})
+.TP
+\fB\-\-cron\-dir\fR dir
+set the cron dir to 'dir' (default: /etc/cron.hourly)
 .TP
 \fB\-\-assume\-yes\fR
 don't ask confirmation

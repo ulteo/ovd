@@ -24,6 +24,8 @@ ALIASFILE=$CONFDIR/apache2.conf
 LOGDIR=@LOCALSTATEDIR@/log/ulteo
 SPOOLDIR=@LOCALSTATEDIR@/spool/ulteo
 WEBDIR=@WEBDIR@
+CRON_DIR=/etc/cron.hourly
+CRON_SCRIPT=$CONFDIR/cron.php
 
 WGETARGS="--tries=3 --timeout=60"
 
@@ -50,6 +52,7 @@ usage ()
     echo "  --apache-group group set the apache group to 'group'"
     echo "                       (default: guess from /etc/group)"
     echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
+    echo "  --cron-dir dir       set the cron dir to 'dir' (default: /etc/cron.hourly)"
     echo "  --assume-yes         don't ask confirmation"
     echo "                       (default: guess from /etc/{httpd,apache2})"
     echo "  --help|-h            display this help"
@@ -113,6 +116,9 @@ while [ x"$1" != x"" ]; do
             shift;;
         --apache-dir)
             APACHE_DIR="$2"
+            shift;;
+        --cron-dir)
+            CRON_DIR="$2"
             shift;;
         --assume-yes)
             NOCONFIRM=1;;
@@ -236,6 +242,11 @@ fi
 [ -z "$NODOWNLOAD" ] && get_chroot
 set_admin_credentials
 set_apache
+
+chmod a+x $CRON_SCRIPT
+if [ -d "$CRON_DIR" ] && [ ! -e "$CRON_DIR/sessionmanager" ]; then
+    ln -s $CRON_SCRIPT $CRON_DIR/session-manager.php
+fi
 
 echo "Configuration done."
 echo "Please reload the web server configuration to enable the service."
