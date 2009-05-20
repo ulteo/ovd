@@ -50,7 +50,7 @@ class UserGroupDBDynamic {
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult($res);
 			
-			$rules = UserGroup_Rules::getByUserGroupId($row['id']);
+			$rules = UserGroup_Rules::getByUserGroupId('dynamic_'.$row['id']);
 			
 			$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published'], $rules, $row['validation_type']);
 			if ($this->isOK($ug))
@@ -74,7 +74,7 @@ class UserGroupDBDynamic {
 			$result = array();
 			$rows = $sql2->FetchAllResults($res);
 			foreach ($rows as $row){
-				$rules = UserGroup_Rules::getByUserGroupId($row['id']);
+				$rules = UserGroup_Rules::getByUserGroupId('dynamic_'.$row['id']);
 				$ug = new UsersGroup_dynamic($row['id'], $row['name'], $row['description'], (bool)$row['published'], $rules, $row['validation_type']);
 				if ($this->isOK($ug))
 					$result[$ug->id]= $ug;
@@ -110,7 +110,7 @@ class UserGroupDBDynamic {
 			return false;
 		}
 		foreach ($usergroup_->rules as $a_rule) {
-			$a_rule->usergroup_id = $usergroup_->id;
+			$a_rule->usergroup_id = $usergroup_->getUniqueID();
 			if (Abstract_UserGroup_Rule::save($a_rule) == false) {
 				Logger::error('main', 'UserGroupDBDynamic::add failed to save rule');
 				return false;
@@ -128,7 +128,7 @@ class UserGroupDBDynamic {
 			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
 		}
 		foreach ($liaisons as $liaison) {
-			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->id);
+			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->getUniqueID());
 		}
 		// second we delete the group
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
@@ -137,7 +137,7 @@ class UserGroupDBDynamic {
 			return false;
 		}
 		// third we delete the rules
-		$rules = UserGroup_Rules::getByUserGroupId($usergroup_->id);
+		$rules = UserGroup_Rules::getByUserGroupId($usergroup_->getUniqueID());
 		foreach ($rules as $a_rule) {
 			if ( Abstract_UserGroup_Rule::delete($a_rule->id) === false) {
 				Logger::error('main', 'UserGroupDBDynamic::remove Failed to remove rule from SQL DB');
@@ -165,7 +165,7 @@ class UserGroupDBDynamic {
 		
 		$new_rules = $usergroup_->rules;
 		foreach ($new_rules as $a_rule) {
-			$a_rule->usergroup_id = $usergroup_->id;
+			$a_rule->usergroup_id = $usergroup_->getUniqueID();
 			Abstract_UserGroup_Rule::save($a_rule);
 		}
 		return true;

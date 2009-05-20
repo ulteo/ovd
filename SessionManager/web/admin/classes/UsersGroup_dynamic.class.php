@@ -45,7 +45,7 @@ class UsersGroup_dynamic extends UsersGroup {
 	public function usersLogin() {
 		Logger::debug('main','UsersGroup_dynamic::usersLogin');
 		$static = parent::usersLogin();
-		$ls = Abstract_Liaison_dynamic::load('UsersGroup', NULL, $this->id);
+		$ls = Abstract_Liaison_dynamic::load('UsersGroup', NULL, $this->getUniqueID());
 		$dynamic = array();
 		if (is_array($ls)) {
 			foreach ($ls as $l) {

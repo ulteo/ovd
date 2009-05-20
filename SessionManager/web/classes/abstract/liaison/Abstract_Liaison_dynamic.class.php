@@ -53,7 +53,6 @@ class Abstract_Liaison_dynamic {
 	}
 	public static function loadElements($type_, $group_) {
 		Logger::debug('main',"Abstract_Liaison_dynamic::loadElements ($type_,$group_)");
-		$group_ = 'dynamic_'.$group_;
 		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
