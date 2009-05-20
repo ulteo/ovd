@@ -160,7 +160,7 @@ function init_db($prefs_) {
 	Abstract_DAV_User::init($prefs_);
 	
 	UserGroupDBDynamic::init($prefs_);
-
+	UserGroupDBDynamic_cached::init($prefs_);
 	return true;
 }
 

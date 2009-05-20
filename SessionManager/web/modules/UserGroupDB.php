@@ -35,6 +35,7 @@ class UserGroupDB extends Module {
 		$mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
 		$a_userGroupDB = new $mod_usergroup_name();
 		$this->instance_type['static'] = $a_userGroupDB;
+		$this->instance_type['dynamiccached'] = new UserGroupDBDynamic_cached();
 		$this->instance_type['dynamic'] = new UserGroupDBDynamic();
 		
 	}

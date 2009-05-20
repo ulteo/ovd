@@ -26,6 +26,7 @@ scripts_DATA = Application.class.php \
                Tokens.class.php \
                User.class.php \
                UserGroupDBDynamic.class.php \
+               UserGroupDBDynamic_cached.class.php \
                UserGroup_Rule.class.php \
                UserGroup_Rules.class.php \
                UserGroup_SharedFolders.class.php \

@@ -23,6 +23,15 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+$schedules = array(
+	30		=>	_('30 seconds'),
+	500		=>	_('5 minutes'),
+	1800	=>	_('30 minutes'),
+	3600	=>	_('1 hour'),
+	86400	=>	_('1 day'),
+	604800	=>	_('1 week')
+);
+
 if (isset($_REQUEST['action'])) {
   if ($_REQUEST['action']=='manage') {
     if (isset($_REQUEST['id']))
@@ -144,7 +153,10 @@ function action_add_dynamic() {
     $rules[] = $buf;
   }
 
-  $g = new UsersGroup_dynamic(NULL, $_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type']);
+  if ($_REQUEST['cached'] === '0')
+    $g = new UsersGroup_dynamic(NULL, $_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type']);
+  else
+    $g = new UsersGroup_dynamic_cached(NULL, $_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type'], $_REQUEST['schedule']);
   $res = $userGroupDB->add($g);
   if (!$res)
     die_error('Unable to create dynamic user group '.$res,__FILE__,__LINE__);
@@ -171,7 +183,7 @@ function action_del($id) {
 
 function action_modify($id) {
   $userGroupDB = UserGroupDB::getInstance();
-  if (! $userGroupDB->isWriteable())
+  if ((str_startswith($id,'static_')) && (! $userGroupDB->isWriteable()))
      return false;
 
   $group = $userGroupDB->import($id);
@@ -189,6 +201,12 @@ function action_modify($id) {
     $group->published = (bool)$_REQUEST['published'];
     $has_change = true;
   }
+
+  if (isset($_REQUEST['schedule'])) {
+    $group->schedule = $_REQUEST['schedule'];
+    $has_change = true;
+  }
+
   if (! $has_change)
     return false;
 
@@ -325,6 +343,7 @@ function action_unset_default($id_) {
 }
 
 function show_default() {
+  global $schedules;
   $prefs = Preferences::getInstance();
   if (! $prefs)
     die_error('get Preferences failed',__FILE__,__LINE__);
@@ -428,7 +447,6 @@ function show_default() {
 
   echo '</div>';
 
-  
   if ($userGroupDB->isWriteable()) {
     $usergroup_types = array('static' => _('Static'), 'dynamic' => _('Dynamic'));
   }
@@ -458,6 +476,7 @@ function show_default() {
 	}
 
 	foreach ($usergroup_types as $type => $name) {
+		$count = 2;
 		echo '<form action="" method="post">';
 		echo '<table id="table_'.$type.'"';
 		if ( $type != $first_type)
@@ -467,23 +486,34 @@ function show_default() {
 		echo ' border="0" class="main_sub" cellspacing="1" cellpadding="5" >';
 		echo '<input type="hidden" name="action" value="add" />';
 		echo '<input type="hidden" name="type" value="'.$type.'" />';
-		echo '<tr class="content1">';
+		echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 		echo '<th>'._('Name').'</th>';
 		echo '<td><input type="text" name="name" value="" /></td>';
 		echo '</tr>';
 
-		echo '<tr class="content2">';
+		echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 		echo '<th>'._('Description').'</th>';
 		echo '<td><input type="text" name="description" value="" /></td>';
 		echo '</tr>';
-
-		if ($type == 'dynamic') {
-			echo '<tr class="content1">';
+		
+		if (str_startswith($type, 'dynamic')) {
+			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
+			echo '<th>'._('Cached').'</th>';
+			echo '<td>';
+			echo '<input type="radio" name="cached" value="0" checked="checked" onchange="$(\'schedule_select\').hide();" /> '._('No');
+			echo '<input type="radio" name="cached" value="1" onchange="$(\'schedule_select\').show();" /> '._('Yes');
+			echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two update:').' <select name="schedule">';
+			foreach ($schedules as $interval => $text)
+				echo '<option value="'.$interval.'">'.$text.'</option>';
+			echo '</select></span>';
+			echo '</td>';
+			echo '</tr>';
+			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 			echo '<th>'._('Validation type').'</th>';
 			echo '<td><input type="radio" name="validation_type" value="and" checked="checked" /> '._('All').' <input type="radio" name="validation_type" value="or" /> '._('At least one').'</td>';
 			echo '</tr>';
 
-			echo '<tr class="content2">';
+			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 			echo '<th>'._('Filters').'</th>';
 			echo '<td>';
 
@@ -527,6 +557,7 @@ function show_default() {
 }
 
 function show_manage($id) {
+  global $schedules;
   $prefs = Preferences::getInstance();
   if (! $prefs)
     die_error('get Preferences failed',__FILE__,__LINE__);
@@ -650,11 +681,28 @@ function show_manage($id) {
     echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
     echo '<input type="submit" value="'._('Update the description').'"/>';
     echo '</form>';
+    
+    if ($group->type == 'dynamiccached') {
+      echo '<form action="" method="post">';
+      echo '<input type="hidden" name="action" value="modify" />';
+      echo '<input type="hidden" name="id" value="'.$id.'" />';
+
+echo ' <select name="schedule">';
+foreach ($schedules as $interval => $text) {
+	echo '<option value="'.$interval.'"';
+	if ($group->schedule == $interval)
+		echo ' selected="selected"';
+	echo '>'.$text.'</option>';
+}
+echo '</select>';
+      echo '<input type="submit" value="'._('Update the schedule').'"/>';
+      echo '</form>';
+    }
   }
   echo '</div>';
   echo '<br/>';
 
-  if ($group->type == 'dynamic') {
+  if (str_startswith($group->type,'dynamic')) {
     echo '<div>';
     echo '<h2>'._('Rules').'</h1>';
 
