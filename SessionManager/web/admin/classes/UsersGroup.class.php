@@ -78,7 +78,7 @@ class UsersGroup {
 	}
 	
 	public function containUser($user_) {
-		Logger::debug('main','USERSGROUP::containUser');
+		Logger::debug('main','USERSGROUP::containUser (login='.$user_->getAttribute('login').')');
 		if (!$user_->hasAttribute('login')) {
 			Logger::error('main', 'USERSGROUP::containUser user '.$user_.' has no attribute \'login\'');
 			return false;
