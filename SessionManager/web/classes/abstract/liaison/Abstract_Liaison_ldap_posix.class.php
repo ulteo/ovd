@@ -90,6 +90,9 @@ class Abstract_Liaison_ldap_posix {
 		$infos = $ldap->get_entries($sr);
 		if (!is_array($infos))
 			return NULL;
+		if ($infos == array())
+			return NULL;
+		
 		$keys = array_keys($infos);
 		$dn = $keys[0];
 		$info = $infos[$dn];
