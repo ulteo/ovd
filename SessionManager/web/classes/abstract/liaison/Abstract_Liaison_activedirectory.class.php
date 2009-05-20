@@ -60,7 +60,7 @@ class Abstract_Liaison_activedirectory {
 		}
 		
 		$elements = array();
-		$id_ = $group_;
+		$id_ = $group->id;
 		
 		$userDBAD = new UserDB_activedirectory();
 		$config_ldap = $userDBAD->makeLDAPconfig();
@@ -74,6 +74,8 @@ class Abstract_Liaison_activedirectory {
 			$id2 = $id_;
 		}
 		$expl = explode(',',$id2,2);
+		if (count($expl) < 2)
+			return NULL;
 		$config_ldap['userbranch'] = $expl[1];
 
 		$buf = array();
@@ -85,7 +87,9 @@ class Abstract_Liaison_activedirectory {
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
-		$info = $infos[0];
+		$keys = array_keys($infos);
+		$dn = $keys[0];
+		$info = $infos[$dn];
 		foreach ($config_ldap['match'] as $attribut => $match_ldap){
 			if (isset($info[$match_ldap])) {
 				unset($info[$match_ldap]['count']);
