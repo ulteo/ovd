@@ -171,7 +171,7 @@ class Configuration_mode_ldap extends Configuration_mode {
       $form['field_displayname'] = $config['match']['displayname'];
     else
       $form['field_displayname'] = '';
-    if (isset($config['match']['field_countrycode']))
+    if (isset($config['match']['countrycode']))
       $form['field_countrycode'] = $config['match']['countrycode'];
     else
       $form['field_countrycode'] = '';
