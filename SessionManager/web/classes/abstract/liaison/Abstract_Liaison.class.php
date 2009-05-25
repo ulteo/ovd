@@ -24,7 +24,7 @@ class Abstract_Liaison {
 	public static function callMethod($method_name_, $type_, $element_=NULL, $group_=NULL) {
 		Logger::debug('main', "Abstract_Liaison::callMethod ('$method_name_', '$type_', '$element_', '$group_')");
 		if ($type_ != 'UsersGroup') {
-			$method_to_call = 'Abstract_Liaison_sql::'.$method_name_;
+			$method_to_call = array('Abstract_Liaison_sql', $method_name_);
 			$class_to_use = 'Abstract_Liaison_sql';
 		}
 		else {
@@ -40,9 +40,9 @@ class Abstract_Liaison {
 			}
 			
 			$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-			$liaison_type = call_user_func($mod_usergroup_name.'::liaisonType');
+			$liaison_type = call_user_func(array($mod_usergroup_name, 'liaisonType'));
 			
-			$method_to_call = 'Abstract_Liaison_'.$liaison_type.'::'.$method_name_;
+			$method_to_call = array('Abstract_Liaison_'.$liaison_type, $method_name_);
 			$class_to_use = 'Abstract_Liaison_'.$liaison_type;
 		}
 		
