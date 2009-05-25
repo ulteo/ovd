@@ -19,6 +19,6 @@ install-exec-hook:
 	mkdir -p $(DESTDIR)$(localstatedir)/spool/ulteo/sessionmanager
 
 clean-local:
-	rm -f $(conf_DATA)
+	rm -f $(conf_DATA) $(conf_SCRIPTS)
 
 .PHONY: $(conf_DATA) $(conf_SCRIPTS)
