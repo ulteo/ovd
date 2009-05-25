@@ -146,12 +146,12 @@ class UserDB_sql extends UserDB  {
 				return true;
 			}
 			else {
-				Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.$table.'\' not exists');
+				Logger::error('main', 'USERDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','USERDB::MYSQL::prefsIsValid table \''.$table.'\' not exists(2)');
+			Logger::error('main', 'USERDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist(2)');
 			return false;
 		}
 	}

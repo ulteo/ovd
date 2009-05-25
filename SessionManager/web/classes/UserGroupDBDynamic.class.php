@@ -226,12 +226,12 @@ class UserGroupDBDynamic {
 				return true;
 			}
 			else {
-				Logger::error('main','UserGroupDBDynamic::prefsIsValid table \''.$table.'\' not exists');
+				Logger::error('main', 'UserGroupDBDynamic::prefsIsValid table \''.$table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','UserGroupDBDynamic::prefsIsValid table \''.$table.'\' not exists(2)');
+			Logger::error('main', 'UserGroupDBDynamic::prefsIsValid table \''.$table.'\' does not exist(2)');
 			return false;
 		}
 	}

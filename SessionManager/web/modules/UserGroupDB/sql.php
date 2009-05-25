@@ -126,12 +126,12 @@ class UserGroupDB_sql {
 				return true;
 			}
 			else {
-				Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' not exists');
+				Logger::error('main', 'USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' not exists(2)');
+			Logger::error('main', 'USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist(2)');
 			return false;
 		}
 	}

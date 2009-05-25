@@ -160,12 +160,12 @@ class ApplicationDB_sql extends ApplicationDB {
 				return true;
 			}
 			else {
-				Logger::error('main','APPLICATIONSDB_SQL table \''.APPLICATION_TABLE.'\' not exists');
+				Logger::error('main', 'APPLICATIONSDB_SQL table \''.APPLICATION_TABLE.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','APPLICATIONSDB_SQL table \''.APPLICATION_TABLE.'\' not exists(2)');
+			Logger::error('main', 'APPLICATIONSDB_SQL table \''.APPLICATION_TABLE.'\' does not exist(2)');
 			return false;
 		}
 	}

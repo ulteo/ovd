@@ -72,7 +72,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		Logger::debug('admin','ADMIN_USERGROUPDB::sql::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init mysql conf not valid');
+			Logger::error('admin','ADMIN_USERGROUPDB::sql::init mysql conf is not valid');
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
@@ -118,12 +118,12 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 				return true;
 			}
 			else {
-				Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' not exists');
+				Logger::error('main', 'USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main','USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' not exists(2)');
+			Logger::error('main', 'USERGROUPDB::MYSQL::prefsIsValid table \''.$table.'\' does not exist(2)');
 			return false;
 		}
 	}
