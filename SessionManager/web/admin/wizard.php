@@ -310,7 +310,7 @@ function show_step3() {
   $has_applications  = $applications !== array() && !is_null($applications);
 
   if (!$has_applications) {
-    popup_error(_('No application found'));
+    popup_error(_('No available application'));
   }
   page_header();
   echo '<div>';
@@ -387,8 +387,8 @@ function show_step3() {
   echo '</td>';
   echo '<td style="text-align: right;">';
   if ($has_applications) {
-  echo '<input type="submit" name="submit_next" value="'._('Next').'" />';
-  echo '</td>';
+    echo '<input type="submit" name="submit_next" value="'._('Next').'" />';
+    echo '</td>';
   }
   echo '</tr>';
   echo '</table>';
