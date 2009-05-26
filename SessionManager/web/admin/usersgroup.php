@@ -24,9 +24,6 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
 $schedules = array(
-	30		=>	_('30 seconds'),
-	500		=>	_('5 minutes'),
-	1800	=>	_('30 minutes'),
 	3600	=>	_('1 hour'),
 	86400	=>	_('1 day'),
 	604800	=>	_('1 week')
