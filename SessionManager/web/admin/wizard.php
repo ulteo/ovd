@@ -307,7 +307,11 @@ function show_step3() {
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
   $applications = $applicationDB->getList(true);
+  $has_applications  = $applications !== array() && !is_null($applications);
 
+  if (!$has_applications) {
+    popup_error(_('No application found'));
+  }
   page_header();
   echo '<div>';
   echo '<h1><a href="wizard.php">'._('Publication Wizard').'</a> - '._('Applications/groups selection').'</h1>';
@@ -330,29 +334,31 @@ function show_step3() {
   	echo '<input type="hidden" name="use" value="apps" />';
 
   echo '<tr>';
-  echo '<td>';
-  $count = 0;
-  echo '<table class="main_sub"';
-  if ($has_appgroups) {
-    if ($appgroup_selected)
-      echo ' style="display: none" ';
-  }
-  echo 'id="wizard_apps_list_table" border="0" cellspacing="1" cellpadding="5">';
-  foreach($applications as $application) {
-    $content = 'content'.(($count++%2==0)?1:2);
+  if ($has_applications) {
+    echo '<td>';
+    $count = 0;
+    echo '<table class="main_sub"';
+    if ($has_appgroups) {
+      if ($appgroup_selected)
+        echo ' style="display: none" ';
+    }
+    echo 'id="wizard_apps_list_table" border="0" cellspacing="1" cellpadding="5">';
+    foreach($applications as $application) {
+      $content = 'content'.(($count++%2==0)?1:2);
 
-    echo '<tr class="'.$content.'">';
-    echo '<td colspan="2" onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $application->getAttribute('description')).'\'); return false;" onmouseout="hideInfoBulle(); return false;"><input class="input_checkbox" type="checkbox" name="apps[]" value="'.$application->getAttribute('id').'"';
-    if (isset($_SESSION['wizard']['apps']) && in_array($application->getAttribute('id'), $_SESSION['wizard']['apps']))
-      echo ' checked="checked"';
-    echo '/>';
-    echo '&nbsp; <img src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
-    echo '</tr>';
+      echo '<tr class="'.$content.'">';
+      echo '<td colspan="2" onmouseover="showInfoBulle(\''.str_replace("'", "&rsquo;", $application->getAttribute('description')).'\'); return false;" onmouseout="hideInfoBulle(); return false;"><input class="input_checkbox" type="checkbox" name="apps[]" value="'.$application->getAttribute('id').'"';
+      if (isset($_SESSION['wizard']['apps']) && in_array($application->getAttribute('id'), $_SESSION['wizard']['apps']))
+        echo ' checked="checked"';
+      echo '/>';
+      echo '&nbsp; <img src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="" title="" /> &nbsp; <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a> <img src="media/image/server-'.$application->getAttribute('type').'.png" width="16" height="16" alt="'.$application->getAttribute('type').'" title="'.$application->getAttribute('type').'" /></td>';
+      echo '</tr>';
+    }
+    $content = 'content'.(($count++%2==0)?1:2);
+    echo '<tr class="'.$content.'"><td colspan="2"><a href="javascript:;" onclick="markAllRows(\'wizard_apps_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'wizard_apps_list_table\'); return false">'._('Unmark all').'</a></td></tr>';
+    echo '</table>';
+    echo '</td>';
   }
-  $content = 'content'.(($count++%2==0)?1:2);
-  echo '<tr class="'.$content.'"><td colspan="2"><a href="javascript:;" onclick="markAllRows(\'wizard_apps_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'wizard_apps_list_table\'); return false">'._('Unmark all').'</a></td></tr>';
-  echo '</table>';
-  echo '</td>';
   echo '<td>';
   if ($has_appgroups) {
 	$count = 0;
@@ -380,8 +386,10 @@ function show_step3() {
   echo '<input type="submit" name="submit_previous" value="'._('Previous').'" />';
   echo '</td>';
   echo '<td style="text-align: right;">';
+  if ($has_applications) {
   echo '<input type="submit" name="submit_next" value="'._('Next').'" />';
   echo '</td>';
+  }
   echo '</tr>';
   echo '</table>';
   echo '</form>';
