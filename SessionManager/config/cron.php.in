@@ -28,7 +28,6 @@ if ($groups == array()) {
 }
 else {
 	foreach ($groups as $a_group) {
-		echo "update ".$a_group->getUniqueID()."\n";
 		$ret = $ugdbdc->updateCache($a_group);
 		if ( $ret !== true)
 			Logger::error('main', 'cron failed to updateCache for '.$a_group->getUniqueID());

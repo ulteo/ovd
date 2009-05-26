@@ -190,7 +190,7 @@ class Preferences {
 		$c = new ConfigElement_select('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail');
 		$c->setContentAvailable(array('mail'=>_('Local'),'smtp'=>_('SMTP server')));
 		$this->add($c,'general','mails_settings');
-		$c = new ConfigElement_input('send_from', _('From'), _('From'), _('From'), 'no-reply@'.$_SERVER['SERVER_NAME']);
+		$c = new ConfigElement_input('send_from', _('From'), _('From'), _('From'), 'no-reply@'.@$_SERVER['SERVER_NAME']);
 		$this->add($c,'general','mails_settings');
 		$c = new ConfigElement_input('send_host', _('Host'), _('Host'), _('Host'), '');
 		$this->add($c,'general','mails_settings');
