@@ -31,7 +31,7 @@ function secure_html($data_) {
 }
 
 function in_admin() {
-	$buf = basename(dirname('http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF']));
+	$buf = basename(dirname('http://'.@$_SERVER['SERVER_NAME'].@$_SERVER['PHP_SELF']));
 
 	if ($buf == 'admin')
 		return true;
