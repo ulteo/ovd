@@ -22,6 +22,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class FS_cifs_no_sfu extends FS_cifs {
+	public function getHomeDirType() {
+		return 'cifs_no_sfu';
+	}
+
 	public function requirements() {
 		$req = parent::requirements();
 		return $req;

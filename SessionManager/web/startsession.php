@@ -216,7 +216,6 @@ $default_args = array(
 	'locale'			=>	$desktop_locale,
 	'windows_keymap'	=>	$windows_keymap,
 	'quality'			=>	$desktop_quality,
-	'home_dir_type'	=>	$module_fs
 );
 
 $optional_args = array();
@@ -320,6 +319,9 @@ foreach ($plugins->plugins as $plugin) {
 	foreach ($plugin->redir_args as $k => $v)
 		if ($k != 'session')
 			$plugins_args[$k] = $v;
+
+	if (substr(get_class($plugin), 0, 3) == 'FS_')
+		$plugins_args['home_dir_type'] = $plugin->getHomeDirType();
 }
 
 $data = array();

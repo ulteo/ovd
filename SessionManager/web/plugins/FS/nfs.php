@@ -22,6 +22,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class FS_nfs extends Plugin {
+	public function getHomeDirType() {
+		return 'nfs';
+	}
+
 	public function start_session($params_=array()) {
 		global $user;
 

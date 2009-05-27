@@ -22,13 +22,17 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class FS_local extends Plugin {
+	public function getHomeDirType() {
+		return 'local';
+	}
+
 	public function requirements() {
 		$req = array();
 		return $req;
 	}
 	
 	public static function prettyName() {
-		return _('local');
+		return _('Local');
 	}
 	
 	public static function enable() {

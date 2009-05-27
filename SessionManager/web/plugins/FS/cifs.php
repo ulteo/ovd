@@ -22,6 +22,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class FS_cifs extends Plugin {
+	public function getHomeDirType() {
+		return 'cifs';
+	}
+
 	public function start_session($params_=array()) {
 		global $user;
 		
