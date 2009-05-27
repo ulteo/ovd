@@ -25,8 +25,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 			$this->config = $prefs->get('UserGroupDB', 'sql_external');
 		}
 		else {
-			Logger::error('main', 'USERGROUPDB::MYSQL_external::construct get Prefs failed');
-			die_error('USERGROUPDB::MYSQL_external::construct get Prefs failed');
+			die_error('USERGROUPDB::MYSQL_external::construct get Prefs failed',__FILE__,__LINE__);
 		}
 	}
 	

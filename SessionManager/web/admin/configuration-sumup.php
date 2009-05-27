@@ -27,8 +27,7 @@ page_header();
 
 $prefs = Preferences::getInstance();
 if (! $prefs) {
-	Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-	die_error(_('get Preferences failed'));
+	die_error(_('get Preferences failed'),__FILE__,__LINE__);
 }
 ?>
 

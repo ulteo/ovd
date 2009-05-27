@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class MySQL {
-	private static $instance=NULL;
+	private static $instance = NULL;
 
 	private $link = false;
 	private $db = NULL;
@@ -42,7 +42,7 @@ class MySQL {
 		$this->sqluser = $user_;
 		$this->sqlpass = $pass_;
 		$this->sqlbase = $db_;
-		$this->prefix =  $prefix_;
+		$this->prefix = $prefix_;
 	}
 
 	public static function newInstance($host_, $user_, $pass_, $db_, $prefix_) {
@@ -52,14 +52,14 @@ class MySQL {
 	}
 
 	public function hasInstance() {
-		return !(is_null(self::$instance));
+		return (! is_null(self::$instance));
 	}
 
 	public static function getInstance() {
-		if ( is_null(self::$instance)) {
+		if (is_null(self::$instance)) {
 			$prefs = Preferences::getInstance();
 			if (! $prefs) {
-				die_error('get Preferences failed in MySQL::getInstance');
+				die_error('get Preferences failed in MySQL::getInstance',__FILE__,__LINE__);
 				return false;
 			}
 			$mysql_conf = $prefs->get('general', 'mysql');
@@ -83,7 +83,7 @@ class MySQL {
 			if ($die_) {
 				$ev->setAttribute('status', -1);
 				$ev->emit();
-				die_error('Link to SQL server failed.');
+				die_error('Link to SQL server failed.',__FILE__,__LINE__);
 			}
 
 			return false;
@@ -93,7 +93,7 @@ class MySQL {
 			if ($die_) {
 				$ev->setAttribute('status', -1);
 				$ev->emit();
-				die_error('Could not select database.');
+				die_error('Could not select database.',__FILE__,__LINE__);
 			}
 
 			return false;
@@ -138,7 +138,7 @@ class MySQL {
 			$this->result = false;
 		}
 
-		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query);
+		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query,__FILE__,__LINE__);
 
 		$this->total_queries += 1;
 
@@ -208,7 +208,6 @@ class MySQL {
 				$query .= '`'.mysql_escape_string($column_name).'` '.$column_type.' , ';
 			}
 			$query = substr($query, 0, -3);
-			
 			
 			if ($primary_keys_ != array()) {
 				$query .= ' , ';

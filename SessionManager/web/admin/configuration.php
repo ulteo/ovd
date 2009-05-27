@@ -110,7 +110,7 @@ else {
 			page_footer();
 		}
 		else {
-			die_error(_('Preferences not loaded'));
+			die_error(_('Preferences not loaded'),__FILE__,__LINE__);
 		}
 	}
 }

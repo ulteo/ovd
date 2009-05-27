@@ -60,11 +60,11 @@ if (! is_array($advanced_settings))
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
 	if (! $ret)
-		die_error(_('Authentication failed'));
+		die_error(_('Authentication failed'),__FILE__,__LINE__);
 }
 
 if (! isset($_SESSION['login']))
-	die_error(_('Authentication failed'));
+	die_error(_('Authentication failed'),__FILE__,__LINE__);
 
 $user_login = $_SESSION['login'];
 
@@ -133,7 +133,7 @@ if ($sessions > 0) {
 			$buf = $buf['action_when_active_session'];
 
 			if ($buf == 0)
-				die_error(_('You already have an active session'));
+				die_error(_('You already have an active session'),__FILE__,__LINE__);
 			elseif ($buf == 1) {
 				$invite = new Invite(gen_string(5));
 				$invite->session = $session->id;
@@ -156,7 +156,7 @@ if ($sessions > 0) {
 				redirect('http://'.$server->getAttribute('external_name').'/index.php?token='.$token->id);
 			}
 		} else
-			die_error(_('You already have a session, please contact your administrator'));
+			die_error(_('You already have a session, please contact your administrator'),__FILE__,__LINE__);
 	}
 }
 
