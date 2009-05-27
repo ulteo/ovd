@@ -57,6 +57,12 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
+if (! isset($_SESSION['login'])) {
+	$ret = do_login();
+	if (! $ret)
+		die_error(_('Authentication failed'));
+}
+
 if (! isset($_SESSION['login']))
 	die_error(_('Authentication failed'));
 
@@ -108,12 +114,6 @@ if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQU
 $client = 'unknown';
 if (isset($_REQUEST['client']) && $_REQUEST['client'] != '')
 	$client = $_REQUEST['client'];
-
-if (! isset($_SESSION['login'])) {
-	$ret = do_login();
-	if (! $ret)
-		die_error(_('Authentication failed'));
-}
 
 Logger::debug('main', '(startsession) Now checking for old session');
 
@@ -226,8 +226,37 @@ if (isset($desktop_timeout) && $desktop_timeout != -1) {
 	$optional_args['timeout'] = (time()+$desktop_timeout);
 	$optional_args['timeout_message'] = $timeout_message;
 }
-if (isset($start_app) && $start_app != '')
-	$optional_args['start_app'] = $start_app;
+if (isset($start_app) && $start_app != '') {
+	$mods_enabled = $prefs->get('general', 'module_enable');
+	if (! in_array('ApplicationDB', $mods_enabled))
+		die_error(_('Module ApplicationDB must be enabled'), __FILE__, __LINE__);
+
+	$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
+	$applicationDB = new $mod_app_name();
+	$app = $applicationDB->import($start_app);
+
+	if (! is_object($app)) {
+		Logger::error('main', '(startsession) No such application for id \''.$start_app.'\'');
+		die_error(_('Application does not exist'), __FILE__, __LINE__);
+	}
+
+	$apps = $user->applications();
+
+	$ok = false;
+	foreach ($apps as $user_app) {
+		if ($user_app->getAttribute('id') == $start_app) {
+			$ok = true;
+			break;
+		}
+	}
+
+	if ($ok === false) {
+		Logger::error('main', '(startsession) Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app.'\'');
+		die_error(_('Application not available'), __FILE__, __LINE__);
+	}
+
+	$optional_args['start_app'] = $app->getAttribute('executable_path');
+}
 if (isset($debug) && $debug != '0')
 	$optional_args['debug'] = 1;
 if (isset($persistent) && $persistent != '0')

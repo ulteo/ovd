@@ -22,23 +22,23 @@
 
 class AuthMethod_Password extends AuthMethod {
 	public function get_login() {
-		if (! isset($_POST['login']))
+		if (! isset($_REQUEST['login']))
 			return NULL;
 
-		$this->login = $_POST['login'];
-		return $_POST['login'];
+		$this->login = $_REQUEST['login'];
+		return $_REQUEST['login'];
 	}
 
 	public function authenticate($user_) {
-		if ($this->userDB->needPassword() && (! isset($_POST['password']) || $_POST['password'] == ''))
+		if ($this->userDB->needPassword() && (! isset($_REQUEST['password']) || $_REQUEST['password'] == ''))
 			return false;
 
-		$ret = $this->userDB->authenticate($user_, $_POST['password']);
+		$ret = $this->userDB->authenticate($user_, $_REQUEST['password']);
 		if ($ret == false)
 			return false;
 
 		//Dirty?
-		$_SESSION['password'] = $_POST['password'];
+		$_SESSION['password'] = $_REQUEST['password'];
 
 		return true;
 	}
