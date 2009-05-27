@@ -62,14 +62,7 @@ class Abstract_UserGroup_Rule {
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new UserGroup_Rule($id_);
-		$buf->attribute = (string)$attribute;
-		$buf->type = (string)$type;
-		$buf->value = (string)$value;
-		$buf->usergroup_id = (string)$usergroup_id;
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -150,15 +143,14 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = MySQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'usergroup_rules');
+		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules');
+
 		$rows = $SQL->FetchAllResults();
 
 		$usergroup_rules = array();
 		foreach ($rows as $row) {
-			$id = $row['id'];
-
-			$usergroup_rule = Abstract_UserGroup_Rule::load($id);
-			if (! $usergroup_rule)
+			$usergroup_rule = self::generateFromRow($row);
+			if (! is_object($usergroup_rule))
 				continue;
 
 			$usergroup_rules[] = $usergroup_rule;
@@ -180,5 +172,18 @@ class Abstract_UserGroup_Rule {
 
 		$row = $SQL->FetchResult();
 		return $row['id'];
+	}
+	
+	protected static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new UserGroup_Rule($id_);
+		$buf->attribute = (string)$attribute;
+		$buf->type = (string)$type;
+		$buf->value = (string)$value;
+		$buf->usergroup_id = (string)$usergroup_id;
+		
+		return $buf;
 	}
 }
