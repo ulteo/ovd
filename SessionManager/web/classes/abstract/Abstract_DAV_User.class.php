@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,7 @@ class Abstract_DAV_User {
 		Logger::debug('main', 'Starting Abstract_DAV_User::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$dav_users_table_structure = array(
 			'login'			=>	'varchar(255) NOT NULL',
@@ -46,18 +47,11 @@ class Abstract_DAV_User {
 	public static function load($login_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::load for \''.$login_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$login = $login_;
 
-		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'login', 'password', $mysql_conf['prefix'].'dav_users', 'login', $login);
+		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'login', 'password', $SQL->prefix.'dav_users', 'login', $login);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -78,14 +72,7 @@ class Abstract_DAV_User {
 	public static function save($dav_user_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::save for \''.$dav_user_->login.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$login = $dav_user_->login;
 
@@ -93,7 +80,7 @@ class Abstract_DAV_User {
 			if (! Abstract_DAV_User::create($dav_user_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 LIMIT 1', $mysql_conf['prefix'].'dav_users', 'password', $dav_user_->password, 'login', $dav_user_->login);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 LIMIT 1', $SQL->prefix.'dav_users', 'password', $dav_user_->password, 'login', $dav_user_->login);
 
 		return true;
 	}
@@ -101,18 +88,11 @@ class Abstract_DAV_User {
 	private static function create($dav_user_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::create for \''.$dav_user_->login.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$login = $dav_user_->login;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'dav_users', 'login', $login);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login);
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
@@ -120,7 +100,7 @@ class Abstract_DAV_User {
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'dav_users', 'login', $login);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'dav_users', 'login', $login);
 
 		return true;
 	}
@@ -128,24 +108,17 @@ class Abstract_DAV_User {
 	public static function delete($login_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::delete for \''.$login_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$login = $login_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'dav_users', 'login', $login);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'dav_users', 'login', $login);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login);
 
 		return true;
 	}

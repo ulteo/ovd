@@ -34,17 +34,7 @@ class Abstract_Liaison_sql {
 	public static function save($type_, $element_, $group_) {
 		Logger::debug('admin', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
 		$sql2 = MySQL::getInstance();
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::error('main', 'Abstract_Liaison_sql::save get Preferences failed');
-			return false;
-		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::save mysql conf not valid');
-			return false;
-		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql2->prefix.'liaison';
 		$res = $sql2->DoQuery('INSERT INTO @1 ( @2,@3,@4 ) VALUES ( %5,%6,%7)', $table, 'type', 'element', 'group', $type_, $element_, $group_);
 		return ($res !== false);
 	}
@@ -196,7 +186,7 @@ class Abstract_Liaison_sql {
 		}
 		$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
 		// we create the sql table
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
 		
 		$LIAISON_table_structure = array(
 			'type' => 'varchar(200) NOT NULL',

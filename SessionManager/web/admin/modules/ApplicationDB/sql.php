@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -82,7 +82,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			return false;
 		}
 		@define('APPLICATION_TABLE', $mysql_conf['prefix'].'application');
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
 			'name' => 'varchar(150) NOT NULL',

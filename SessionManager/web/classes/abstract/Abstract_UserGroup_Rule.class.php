@@ -26,7 +26,7 @@ class Abstract_UserGroup_Rule {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$usergroup_rules_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
@@ -50,16 +50,9 @@ class Abstract_UserGroup_Rule {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
+		$SQL = MySQL::getInstance();
 
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'attribute', 'type', 'value', 'usergroup_id', $mysql_conf['prefix'].'usergroup_rules', 'id', $id_);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -84,14 +77,7 @@ class Abstract_UserGroup_Rule {
 	public static function save($usergroup_rule_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::save for (attribute: \''.$usergroup_rule_->attribute.'\', type: \''.$usergroup_rule_->type.'\', value: \''.$usergroup_rule_->value.'\',	usergroup_id: \''.$usergroup_rule_->usergroup_id.'\')');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$rule_id = Abstract_UserGroup_Rule::exists($usergroup_rule_->attribute, $usergroup_rule_->type, $usergroup_rule_->value, $usergroup_rule_->usergroup_id);
 		if (! $rule_id) {
@@ -116,7 +102,7 @@ class Abstract_UserGroup_Rule {
 			return false;
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'attribute', $usergroup_rule_->attribute, 'type', $usergroup_rule_->type, 'value', $usergroup_rule_->value, 'usergroup_id', $usergroup_rule_->usergroup_id, 'id', $usergroup_rule_->id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $SQL->prefix.'usergroup_rules', 'attribute', $usergroup_rule_->attribute, 'type', $usergroup_rule_->type, 'value', $usergroup_rule_->value, 'usergroup_id', $usergroup_rule_->usergroup_id, 'id', $usergroup_rule_->id);
 
 		return true;
 	}
@@ -124,18 +110,11 @@ class Abstract_UserGroup_Rule {
 	private static function create($usergroup_rule_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::create for (attribute: \''.$usergroup_rule_->attribute.'\', type: \''.$usergroup_rule_->type.'\', value: \''.$usergroup_rule_->value.'\',	usergroup_id: \''.$usergroup_rule_->usergroup_id.'\')');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $usergroup_rule_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_rules', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
@@ -143,7 +122,7 @@ class Abstract_UserGroup_Rule {
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'usergroup_rules', 'id', '');
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'usergroup_rules', 'id', '');
 
 		return $SQL->InsertId();
 	}
@@ -151,24 +130,17 @@ class Abstract_UserGroup_Rule {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::delete for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_rules', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_rules', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_rules', 'id', $id);
 
 		return true;
 	}
@@ -176,16 +148,9 @@ class Abstract_UserGroup_Rule {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load_all');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
+		$SQL = MySQL::getInstance();
 
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'usergroup_rules');
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'usergroup_rules');
 		$rows = $SQL->FetchAllResults();
 
 		$usergroup_rules = array();
@@ -205,16 +170,9 @@ class Abstract_UserGroup_Rule {
 	public static function exists($attribute_, $type_, $value_, $usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with attribute \''.$attribute_.'\' type \''.$type_.'\' value \''.$value_.'\' usergroup_id \''.$usergroup_id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
+		$SQL = MySQL::getInstance();
 
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $mysql_conf['prefix'].'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $SQL->prefix.'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)

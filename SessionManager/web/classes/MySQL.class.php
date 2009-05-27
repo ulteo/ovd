@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class MySQL {
-	private static $instance;
+	private static $instance=NULL;
 
 	private $link = false;
 	private $db = NULL;
@@ -31,30 +32,39 @@ class MySQL {
 	public $sqluser;
 	public $sqlpass;
 	public $sqlbase;
+	
+	public $prefix;
 
 	private $total_queries = 0;
 
-	public function __construct($host_, $user_, $pass_, $db_) {
+	public function __construct($host_, $user_, $pass_, $db_, $prefix_) {
 		$this->sqlhost = $host_;
 		$this->sqluser = $user_;
 		$this->sqlpass = $pass_;
 		$this->sqlbase = $db_;
+		$this->prefix =  $prefix_;
 	}
 
-	public static function newInstance($host_, $user_, $pass_, $db_) {
-		self::$instance = new MySQL($host_, $user_, $pass_, $db_);
+	public static function newInstance($host_, $user_, $pass_, $db_, $prefix_) {
+		self::$instance = new MySQL($host_, $user_, $pass_, $db_, $prefix_);
 
 		return self::$instance;
 	}
 
 	public function hasInstance() {
-		return (isset(self::$instance));
+		return !(is_null(self::$instance));
 	}
 
 	public static function getInstance() {
-		if (! isset(self::$instance))
-			return false;
-
+		if ( is_null(self::$instance)) {
+			$prefs = Preferences::getInstance();
+			if (! $prefs) {
+				die_error('get Preferences failed in MySQL::getInstance');
+				return false;
+			}
+			$mysql_conf = $prefs->get('general', 'mysql');
+			self::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		}
 		return self::$instance;
 	}
 
@@ -128,7 +138,6 @@ class MySQL {
 			$this->result = false;
 		}
 
-		Logger::debug('main','MySQL::DoQuery '.$query);
 		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query);
 
 		$this->total_queries += 1;

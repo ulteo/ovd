@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,7 @@ class Abstract_UserGroup_SharedFolder {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
 
 		$usergroup_sharedfolders_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
@@ -71,18 +72,11 @@ class Abstract_UserGroup_SharedFolder {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::load for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3 FROM @4 WHERE @5 = %6 LIMIT 1', 'name', 'url', 'usergroup_id', $mysql_conf['prefix'].'usergroup_sharedfolders', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3 FROM @4 WHERE @5 = %6 LIMIT 1', 'name', 'url', 'usergroup_id', $SQL->prefix.'usergroup_sharedfolders', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -104,14 +98,7 @@ class Abstract_UserGroup_SharedFolder {
 	public static function save($usergroup_sharedfolder_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::save for \''.$usergroup_sharedfolder_->id.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$sharedfolder_id = Abstract_UserGroup_SharedFolder::exists($usergroup_sharedfolder_->name, $usergroup_sharedfolder_->url, $usergroup_sharedfolder_->usergroup_id);
 		if (! $sharedfolder_id) {
@@ -136,7 +123,7 @@ class Abstract_UserGroup_SharedFolder {
 			return false;
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $mysql_conf['prefix'].'usergroup_sharedfolders', 'name', $usergroup_sharedfolder_->name, 'url', $usergroup_sharedfolder_->url, 'usergroup_id', $usergroup_sharedfolder_->usergroup_id, 'id', $usergroup_sharedfolder_->id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'usergroup_sharedfolders', 'name', $usergroup_sharedfolder_->name, 'url', $usergroup_sharedfolder_->url, 'usergroup_id', $usergroup_sharedfolder_->usergroup_id, 'id', $usergroup_sharedfolder_->id);
 
 		return true;
 	}
@@ -144,18 +131,11 @@ class Abstract_UserGroup_SharedFolder {
 	private static function create($usergroup_sharedfolder_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::create for \''.$usergroup_sharedfolder_->id.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $usergroup_sharedfolder_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_sharedfolders', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_sharedfolders', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
@@ -163,7 +143,7 @@ class Abstract_UserGroup_SharedFolder {
 			return false;
 		}
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'usergroup_sharedfolders', 'id', '');
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'usergroup_sharedfolders', 'id', '');
 
 		$usergroup_sharedfolder_->id = $SQL->InsertId();
 
@@ -175,24 +155,17 @@ class Abstract_UserGroup_SharedFolder {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::delete for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_sharedfolders', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_sharedfolders', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'usergroup_sharedfolders', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_sharedfolders', 'id', $id);
 
 		//rmdir SHAREDFOLDERS_DIR.'/'.$buf->usergroup_id.'/'.$buf->id
 
@@ -202,16 +175,9 @@ class Abstract_UserGroup_SharedFolder {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::load_all');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
+		$SQL = MySQL::getInstance();
 
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'usergroup_sharedfolders');
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'usergroup_sharedfolders');
 		$rows = $SQL->FetchAllResults();
 
 		$usergroup_sharedfolders = array();
@@ -231,16 +197,9 @@ class Abstract_UserGroup_SharedFolder {
 	public static function exists($name_, $url_, $usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::exists with name \''.$name_.'\' url \''.$url_.'\' usergroup_id \''.$usergroup_id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
+		$SQL = MySQL::getInstance();
 
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 LIMIT 1', 'id', $mysql_conf['prefix'].'usergroup_sharedfolders', 'name', $name_, 'url', $url_, 'usergroup_id', $usergroup_id_);
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 LIMIT 1', 'id', $SQL->prefix.'usergroup_sharedfolders', 'name', $name_, 'url', $url_, 'usergroup_id', $usergroup_id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)

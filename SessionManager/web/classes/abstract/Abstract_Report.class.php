@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,7 +31,7 @@ class Abstract_Report {
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'],
-		                          $mysql_conf['password'], $mysql_conf['database']);
+		                          $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
 
 		$servers_history_table_structure = array(
 			'fqdn' => 'VARCHAR(255) NOT NULL',

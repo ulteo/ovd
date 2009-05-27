@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,7 @@ class Abstract_Server {
 		Logger::debug('main', 'Starting Abstract_Server::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$servers_table_structure = array(
 			'fqdn'			=>	'varchar(255) NOT NULL',
@@ -63,18 +64,11 @@ class Abstract_Server {
 		if (substr($fqdn_, -1) == '.')
 			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$fqdn = $fqdn_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13 FROM @14 WHERE @15 = %16 LIMIT 1', 'status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13 FROM @14 WHERE @15 = %16 LIMIT 1', 'status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -106,14 +100,7 @@ class Abstract_Server {
 	public static function save($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::save for \''.$server_->fqdn.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$fqdn = $server_->fqdn;
 
@@ -121,7 +108,7 @@ class Abstract_Server {
 			if (! Abstract_Server::create($server_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $mysql_conf['prefix'].'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
 		return true;
@@ -130,24 +117,17 @@ class Abstract_Server {
 	private static function create($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$fqdn = $server_->fqdn;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
 		if ($total != 0)
 			return false;
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'servers', 'fqdn', $fqdn);
 
 		return true;
 	}
@@ -155,21 +135,14 @@ class Abstract_Server {
 	public static function modify($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::modify for \''.$server_->fqdn.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$fqdn = $server_->fqdn;
 
 		if (! Abstract_Server::load($fqdn))
 			return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $mysql_conf['prefix'].'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
 		return true;
@@ -181,24 +154,17 @@ class Abstract_Server {
 		if (substr($fqdn_, -1) == '.')
 			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$fqdn = $fqdn_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 
 		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
 		foreach ($sessions_liaisons as $sessions_liaison) {
@@ -219,7 +185,7 @@ class Abstract_Server {
 		}
 
 		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2', 'fqdn', $mysql_conf['prefix'].'servers');
 		$rows = $SQL->FetchAllResults();
@@ -240,17 +206,10 @@ class Abstract_Server {
 
 	public static function uptodate($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
+		
+		$SQL = MySQL::getInstance();
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $mysql_conf['prefix'].'servers', 'fqdn', $server_->fqdn);
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'servers', 'fqdn', $server_->fqdn);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)

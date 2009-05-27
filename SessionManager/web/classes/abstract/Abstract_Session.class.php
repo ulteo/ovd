@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,7 @@ class Abstract_Session {
 		Logger::debug('main', 'Starting Abstract_Session::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$sessions_table_structure = array(
 			'id'				=>	'varchar(255) NOT NULL',
@@ -53,18 +54,11 @@ class Abstract_Session {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7 FROM @8 WHERE @9 = %10 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7 FROM @8 WHERE @9 = %10 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -89,15 +83,8 @@ class Abstract_Session {
 
 	public static function save($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::save for \''.$session_->id.'\'');
-
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		
+		$SQL = MySQL::getInstance();
 
 		$id = $session_->id;
 
@@ -105,7 +92,7 @@ class Abstract_Session {
 			if (! Abstract_Session::create($session_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $mysql_conf['prefix'].'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}
@@ -113,24 +100,17 @@ class Abstract_Session {
 	private static function create($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $session_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0)
 			return false;
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'sessions', 'id', $id);
 
 		Abstract_Liaison::save('ServerSession', $session_->server, $session_->id);
 
@@ -140,24 +120,17 @@ class Abstract_Session {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::delete for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'sessions', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 
 		$invites_liaisons = Abstract_Liaison::load('SessionInvite', $id_, NULL);
 		foreach ($invites_liaisons as $invites_liaison) {
@@ -172,17 +145,10 @@ class Abstract_Session {
 
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Session::load_all');
+		
+		$SQL = MySQL::getInstance();
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'sessions');
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'sessions');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
@@ -201,17 +167,9 @@ class Abstract_Session {
 
 	public static function uptodate($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
-
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $mysql_conf['prefix'].'sessions', 'id', $session_->id);
+		
+		$SQL = MySQL::getInstance();
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'sessions', 'id', $session_->id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)

@@ -89,7 +89,7 @@ function init_db($prefs_) {
 	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
 
 	// we create the sql table
-	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
 
 	$APPSGROUP_structure = array(
 		'id' => 'int(8) NOT NULL auto_increment',

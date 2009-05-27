@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,7 +26,7 @@ class Abstract_Invite {
 		Logger::debug('main', 'Starting Abstract_Invite::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
 
 		$invites_table_structure = array(
 			'id'			=>	'varchar(255) NOT NULL',
@@ -49,18 +50,11 @@ class Abstract_Invite {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Invite::load for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'session', 'settings', 'email', 'valid_until', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'session', 'settings', 'email', 'valid_until', $SQL->prefix.'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
@@ -83,14 +77,7 @@ class Abstract_Invite {
 	public static function save($invite_) {
 		Logger::debug('main', 'Starting Abstract_Invite::save for \''.$invite_->id.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $invite_->id;
 
@@ -98,7 +85,7 @@ class Abstract_Invite {
 			if (! Abstract_Invite::create($invite_))
 				return false;
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $mysql_conf['prefix'].'invites', 'session', $invite_->session, 'settings', serialize($invite_->settings), 'email', $invite_->email, 'valid_until', $invite_->valid_until, 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $SQL->prefix.'invites', 'session', $invite_->session, 'settings', serialize($invite_->settings), 'email', $invite_->email, 'valid_until', $invite_->valid_until, 'id', $id);
 
 		return true;
 	}
@@ -106,24 +93,17 @@ class Abstract_Invite {
 	private static function create($invite_) {
 		Logger::debug('main', 'Starting Abstract_Invite::create for \''.$invite_->id.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $invite_->id;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total != 0)
 			return false;
 
-		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'invites', 'id', $id);
 
 		Abstract_Liaison::save('SessionInvite', $invite_->session, $invite_->id);
 
@@ -133,24 +113,17 @@ class Abstract_Invite {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Invite::delete for \''.$id_.'\'');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
-
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
+		$SQL = MySQL::getInstance();
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0)
 			return false;
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $mysql_conf['prefix'].'invites', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id);
 
 		Abstract_Liaison::delete('SessionInvite', NULL, $id_);
 
@@ -160,16 +133,9 @@ class Abstract_Invite {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Invite::load_all');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
+		$SQL = MySQL::getInstance();
 
-		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database']);
-
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $mysql_conf['prefix'].'invites');
+		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'invites');
 		$rows = $SQL->FetchAllResults();
 
 		$invites = array();
