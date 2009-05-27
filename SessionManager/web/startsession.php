@@ -122,7 +122,7 @@ $ev = new SessionStart(array('user' => $user));
 $already_online = 0;
 $sessions = Sessions::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
-	foreach ($sessions as $session)
+	foreach ($sessions as $session) {
 		if ($session->isSuspended()) {
 			$old_session_id = $session->id;
 			$old_session_server = $session->server;
@@ -155,7 +155,9 @@ if ($sessions > 0) {
 
 				redirect('http://'.$server->getAttribute('external_name').'/index.php?token='.$token->id);
 			}
-		}
+		} else
+			die_error(_('You already have a session, please contact your administrator'));
+	}
 }
 
 if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
