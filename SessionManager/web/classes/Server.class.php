@@ -561,20 +561,7 @@ class Server {
 	public function getApplications() {
 		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return NULL;
-		}
-
-		$mods_enable = $prefs->get('general', 'module_enable');
-		if (!in_array('ApplicationDB', $mods_enable)) {
-			Logger::error('main', 'Module ApplicationDB must be enabled');
-			return NULL;
-		}
-
-		$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
-		$applicationDB = new $mod_app_name();
+		$applicationDB = ApplicationDB::getInstance();
 
 		$ls = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
 		if (is_array($ls)) {

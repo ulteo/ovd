@@ -57,17 +57,8 @@ class Abstract_Liaison_ldap_posix {
 	public static function loadElements($type_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_ldap_posix::loadElements ($type_,$group_)");
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$mods_enable = $prefs->get('general','module_enable');
-		if (! in_array('UserDB',$mods_enable))
-			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-		
 		$userGroupDB = UserGroupDB::getInstance();
-		$mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
-		$userDB = new $mod_user_name();
+		$userDB = UserDB::getInstance();
 		
 		$configLDAP = $prefs->get('UserDB','ldap');
 		
@@ -133,16 +124,8 @@ class Abstract_Liaison_ldap_posix {
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('admin',"Abstract_Liaison_ldap_posix::loadGroups ($type_,$element_)");
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		$mods_enable = $prefs->get('general','module_enable');
-		
-		if (! in_array('UserDB',$mods_enable))
-			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		$userGroupDB = UserGroupDB::getInstance();
-		$mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
-		$userDB = new $mod_user_name();
+		$userDB = UserDB::getInstance();
 		
 		$groups = array();
 		$groups_all = $userGroupDB->getList();

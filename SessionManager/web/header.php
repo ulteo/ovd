@@ -25,12 +25,7 @@ if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
 
 if (isset($_SESSION['login'])) {
-	$mods_enable = $prefs->get('general', 'module_enable');
-	if (!in_array('UserDB', $mods_enable))
-		die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-
-	$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-	$userDB = new $mod_user_name();
+	$userDB = UserDB::getInstance();
 	$user = $userDB->import($_SESSION['login']);
 
 	if (is_object($user))

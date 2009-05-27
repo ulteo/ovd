@@ -138,22 +138,10 @@ function show_step1() {
   elseif ($_SESSION['wizard']['use_users'] == 'usergroups')
     $usergroup_selected = true;
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserDB',$mods_enable))
-    die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-  $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
-  $userDB = new $mod_user_name();
+  $userDB = UserDB::getInstance();
   $users = $userDB->getList();
 
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('ApplicationDB',$mods_enable))
-    die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-  $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-  $applicationDB = new $mod_app_name();
+  $applicationDB = ApplicationDB::getInstance();
   $applications = $applicationDB->getList();
 
   if (!count($users))
@@ -298,14 +286,7 @@ function show_step3() {
   elseif ($_SESSION['wizard']['use_apps'] == 'appgroups')
     $appgroup_selected = true;
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('ApplicationDB',$mods_enable))
-    die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-  $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-  $applicationDB = new $mod_app_name();
+  $applicationDB = ApplicationDB::getInstance();
   $applications = $applicationDB->getList(true);
   $has_applications  = $applications !== array() && !is_null($applications);
 

@@ -203,20 +203,7 @@ class User {
 	public function applications($type=NULL, $with_static_=true){
 		Logger::debug('main','USER::applications');
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::error('main', 'get Preferences failed');
-			return NULL;
-		}
-
-		$mods_enable = $prefs->get('general', 'module_enable');
-		if (!in_array('ApplicationDB', $mods_enable)) {
-			Logger::error('main', 'Module ApplicationDB must be enabled');
-			return NULL;
-		}
-
-		$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-		$applicationDB = new $mod_app_name();
+		$applicationDB = ApplicationDB::getInstance();
 
 		$my_applications_id = array();
 		$my_applications = array();

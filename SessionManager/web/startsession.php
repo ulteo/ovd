@@ -228,12 +228,7 @@ if (isset($desktop_timeout) && $desktop_timeout != -1) {
 	$optional_args['timeout_message'] = $timeout_message;
 }
 if (isset($start_app) && $start_app != '') {
-	$mods_enabled = $prefs->get('general', 'module_enable');
-	if (! in_array('ApplicationDB', $mods_enabled))
-		die_error(_('Module ApplicationDB must be enabled'), __FILE__, __LINE__);
-
-	$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
-	$applicationDB = new $mod_app_name();
+	$applicationDB = ApplicationDB::getInstance();
 	$app = $applicationDB->import($start_app);
 
 	if (! is_object($app)) {

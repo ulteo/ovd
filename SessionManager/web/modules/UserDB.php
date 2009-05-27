@@ -20,6 +20,22 @@
  **/
 
 abstract class UserDB extends Module  {
+	protected static $instance=NULL;
+	public static function getInstance() {
+		if (is_null(self::$instance)) {
+			$prefs = Preferences::getInstance();
+			if (! $prefs)
+				die_error('get Preferences failed',__FILE__,__LINE__);
+			
+			$mods_enable = $prefs->get('general','module_enable');
+			if (!in_array('UserDB',$mods_enable)){
+				die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
+			}
+			$mod_app_name = 'UserDB_'.$prefs->get('UserDB','enable');
+			self::$instance = new $mod_app_name();
+		}
+		return self::$instance;
+	}
 	public function isOK($user_){
 		$minimun_attribute = array_unique(array_merge(array('login','displayname','uid'), get_needed_attributes_user_from_module_plugin()));
 		if (is_object($user_)){

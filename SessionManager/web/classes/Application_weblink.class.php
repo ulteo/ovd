@@ -38,7 +38,6 @@ class Application_weblink extends Application{
 			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
 		}
 		
-		
 		$default_browser = $prefs->get('general','default_browser');
 		if (!is_array($default_browser)) {
 			Logger::error('main', 'Application_weblink::construct failed to get default_browser preferences');
@@ -76,16 +75,8 @@ class Application_weblink extends Application{
 			//$this->attributes['type'] = $ApS->type;
 			if (array_key_exists($ApS->type ,$this->default_browser)) {
 				$browser_id = $this->default_browser[$ApS->type];
-				$prefs = Preferences::getInstance();
-				if (! $prefs)
-					die_error('get Preferences failed',__FILE__,__LINE__);
 				
-				$mods_enable = $prefs->get('general','module_enable');
-				if (!in_array('ApplicationDB',$mods_enable)){
-					die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-				}
-				$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-				$applicationDB = new $mod_app_name();
+				$applicationDB = ApplicationDB::getInstance();
 				$browser = $applicationDB->import($browser_id);
 				if (!is_object($browser)) {
 					Logger::error('main', 'Application_weblink::toXML failed to load browser (id='.$browser_id.')');

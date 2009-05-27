@@ -109,16 +109,9 @@ class Abstract_Liaison_activedirectory {
 	
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('admin',"Abstract_Liaison_activedirectory::loadGroups ($type_,$element_)");
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		$mods_enable = $prefs->get('general','module_enable');
-		
-		if (! in_array('UserDB',$mods_enable))
-			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		$userGroupDB = UserGroupDB::getInstance();
-		$mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
-		$userDB = new $mod_user_name();
+		$userDB = UserDB::getInstance();
+		
 		$element_user = $userDB->import($element_);
 		if (! is_object($element_user)) {
 			Logger::error('admin',"Abstract_Liaison_activedirectory::loadGroups load element ($element_) failed");

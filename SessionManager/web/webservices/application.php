@@ -52,8 +52,7 @@ if (! in_array('ApplicationDB', $mods_enable)) {
 	die();
 }
 
-$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB', 'enable');
-$applicationDB = new $mod_app_name();
+$applicationDB = ApplicationDB::getInstance();
 
 $app = $applicationDB->import($_GET['id']);
 if (! is_object($app)) {

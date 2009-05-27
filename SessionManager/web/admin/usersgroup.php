@@ -341,18 +341,9 @@ function action_unset_default($id_) {
 
 function show_default() {
   global $schedules;
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
 
-  $mods_enable = $prefs->get('general','module_enable');
-  
-  if (! in_array('UserDB',$mods_enable))
-    die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-  
   $userGroupDB = UserGroupDB::getInstance();
-  $mod_userdb_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
-  $userDB = new $mod_userdb_name();
+  $userDB = UserDB::getInstance();
   $groups = $userGroupDB->getList(true);
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
@@ -555,10 +546,7 @@ function show_default() {
 
 function show_manage($id) {
   global $schedules;
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-  
+
   $userGroupDB = UserGroupDB::getInstance();
 
   $group = $userGroupDB->import($id);
@@ -581,12 +569,7 @@ function show_manage($id) {
   $users = $group->usersLogin();
   $has_users = (count($users) > 0);
 
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('UserDB',$mods_enable))
-    die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-
-  $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
-  $userDB = new $mod_user_name();
+  $userDB = UserDB::getInstance();
 
   $users_all = $userDB->getList();
   $users_available = array();

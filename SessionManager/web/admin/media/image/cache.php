@@ -38,8 +38,7 @@ if (!in_array('ApplicationDB',$mods_enable)){
 	header('HTTP/1.1 500 Internal Error');
 	die();
 }
-$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-$applicationDB = new $mod_app_name();
+$applicationDB = ApplicationDB::getInstance();
 $app = $applicationDB->import($_REQUEST['id']);
 if (!file_exists($app->getIconPath())) {
 	$ret = $app->getIcon();

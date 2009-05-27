@@ -54,19 +54,8 @@ class Abstract_Liaison_dynamic {
 	public static function loadElements($type_, $group_) {
 		Logger::debug('main',"Abstract_Liaison_dynamic::loadElements ($type_,$group_)");
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$mods_enable = $prefs->get('general', 'module_enable');
-		
-		if (! in_array('UserDB', $mods_enable))
-			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-		
-		$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-		
 		$userGroupDB = UserGroupDB::getInstance();
-		$userDB = new $mod_user_name();
+		$userDB = UserDB::getInstance();
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
@@ -110,15 +99,6 @@ class Abstract_Liaison_dynamic {
 	
 	public static function loadAll($type_) {
 		Logger::debug('admin',"Abstract_Liaison_dynamic::loadAll ($type_)");
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$mods_enable = $prefs->get('general', 'module_enable');
-		
-		if (! in_array('UserDB', $mods_enable))
-			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-		
 		$userGroupDB = UserGroupDB::getInstance();
 		$group_list = $userGroupDB->getList();
 		
@@ -134,19 +114,8 @@ class Abstract_Liaison_dynamic {
 	public static function loadUnique($type_, $element_, $group_) {
 		Logger::debug('admin',"Abstract_Liaison_dynamic::loadUnique ($type_,$element_,$group_)");
 		
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-		
-		$mods_enable = $prefs->get('general', 'module_enable');
-		
-		if (! in_array('UserDB', $mods_enable))
-			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-		
-		$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-		
 		$userGroupDB = UserGroupDB::getInstance();
-		$userDB = new $mod_user_name();
+		$userDB = UserDB::getInstance();
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
