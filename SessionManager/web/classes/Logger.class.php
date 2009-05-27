@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 class Logger {
-	protected static $level_flags=NULL;
+	protected static $level_flags = NULL;
 	
 	public static function append($module_='main', $data_='', $level_='info') {
 		if (is_null(self::$level_flags)) {
@@ -35,16 +35,16 @@ class Logger {
 				
 				if (is_object($prefs))
 					$level_flags2 = $prefs->get('general', 'log_flags');
-				if (!isset($level_flags) || !is_array($level_flags))
+				if (! isset($level_flags2) || ! is_array($level_flags2))
 					$level_flags2 = array($level_);
 				
 				self::$level_flags = $level_flags2;
-			}
-			else {
+			} else {
 				@file_put_contents(SESSIONMANAGER_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - NOPREFS - '.$data_."\r\n", FILE_APPEND);
 				return;
 			}
 		}
+		
 		if (in_array($level_, self::$level_flags))
 			@file_put_contents(SESSIONMANAGER_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
 	}
