@@ -1003,8 +1003,8 @@
 	    </listitem>
 	    <listitem>
 	      <para>start_app:
-	      /usr/bin/soffice-writer|/usr/bin/firefox... An
-	      application path to launch at session start</para>
+	      1|2... An application id to launch at
+	      session start</para>
 	    </listitem>
 	    <listitem>
 	      <para>debug: 0|1</para>
