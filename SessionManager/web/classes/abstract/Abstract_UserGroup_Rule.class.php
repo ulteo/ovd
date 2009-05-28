@@ -178,7 +178,7 @@ class Abstract_UserGroup_Rule {
 		foreach ($row_ as $k => $v)
 			$$k = $v;
 
-		$buf = new UserGroup_Rule($id_);
+		$buf = new UserGroup_Rule($usergroup_id);
 		$buf->attribute = (string)$attribute;
 		$buf->type = (string)$type;
 		$buf->value = (string)$value;
