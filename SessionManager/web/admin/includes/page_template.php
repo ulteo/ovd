@@ -129,13 +129,13 @@ function page_header($params_=array()) {
 
   echo '<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">';
   echo '<tr>';
-  echo '<td style="min-width: 10%; text-align: right;" class="menu">';
+  echo '<td style="min-width: 10%; text-align: left; border-bottom: 1px solid #ccc;" class="menu">';
   page_menu();
-
   echo '</td>';
+
   //echo '<td style="text-align: center; width: 100%;" class="title centered">';
   //echo '<h1 class="centered">'.$title.'</h1>';
-  echo '</td>';
+  //echo '</td>';
 
   echo '<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
   echo '<a href="index.php"><img src="'.$base_url.'media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
@@ -143,6 +143,7 @@ function page_header($params_=array()) {
 
   echo '</tr>';
   echo '</table>';
+
   echo '</div>';
 
   echo '<div class="spacer"></div>';
@@ -245,12 +246,9 @@ function page_menu(){
   echo '<table border="0" cellspacing="0" cellpadding="10">';
   echo '<tr>';
   foreach($items as $k => $v) {
-    echo '<td style="min-width: 60px; height: 81px;text-align: center; vertical-align: middle;';
-    if ($root == $k){
-      echo ' background: #eee; border-right: 1px solid #ccc;';
-      echo ' border-left: 1px solid  #ccc;';
-    } else
-      echo ' border-bottom: 1px solid #ccc;';
+    echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
+    if ($root == $k)
+      echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
 
     echo '" class="menu"><a href="'.$k.'"><img src="media/image/menu/'.$k.'.png" width="32" height="32" alt="'.$v.'" title="'.$v.'" /><br />';
     echo '<span class="menulink';
