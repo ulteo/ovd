@@ -152,10 +152,6 @@ function page_header($params_=array()) {
   echo '<br />';
   echo '<div class="spacer"></div>';
 
-  // Useless ?
-  if (isset($_GET['error']) && $_GET['error'] != '')
-    echo '<p class="msg_error">'.$_GET['error'].'</p><br /><br  />';
-
   echo '<div id="adminContent">';
 
   if (count($errors) > 0) {
