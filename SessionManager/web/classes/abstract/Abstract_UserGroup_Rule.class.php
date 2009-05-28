@@ -52,7 +52,7 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = MySQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', 'id', $id_);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @7 = %8 LIMIT 1', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -143,7 +143,7 @@ class Abstract_UserGroup_Rule {
 
 		$SQL = MySQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules');
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules');
 
 		$rows = $SQL->FetchAllResults();
 
@@ -178,7 +178,7 @@ class Abstract_UserGroup_Rule {
 		foreach ($row_ as $k => $v)
 			$$k = $v;
 
-		$buf = new UserGroup_Rule($usergroup_id);
+		$buf = new UserGroup_Rule($id);
 		$buf->attribute = (string)$attribute;
 		$buf->type = (string)$type;
 		$buf->value = (string)$value;
