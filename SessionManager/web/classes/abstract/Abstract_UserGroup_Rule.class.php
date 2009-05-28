@@ -159,6 +159,27 @@ class Abstract_UserGroup_Rule {
 		return $usergroup_rules;
 	}
 
+	public static function loadByUserGroupId($usergroup_id_) {
+		Logger::debug('main', "Abstract_UserGroup_Rule::loadByUserGroupId($usergroup_id_)");
+
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @5 = %7', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', $usergroup_id_);
+
+		$rows = $SQL->FetchAllResults();
+
+		$usergroup_rules = array();
+		foreach ($rows as $row) {
+			$usergroup_rule = self::generateFromRow($row);
+			if (! is_object($usergroup_rule))
+				continue;
+
+			$usergroup_rules[] = $usergroup_rule;
+		}
+
+		return $usergroup_rules;
+	}
+
 	public static function exists($attribute_, $type_, $value_, $usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with attribute \''.$attribute_.'\' type \''.$type_.'\' value \''.$value_.'\' usergroup_id \''.$usergroup_id_.'\'');
 

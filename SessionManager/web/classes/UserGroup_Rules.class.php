@@ -3,6 +3,7 @@
  * Copyright (C) 2008-2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,15 +34,9 @@ class UserGroup_Rules {
 	}
 
 	public static function getByUserGroupId($usergroup_id_) {
-// 		Logger::debug('main', 'Starting UserGroup_Rules::getByUserGroupId');
-
-		$usergroup_rules = UserGroup_Rules::getAll();
-
-		foreach ($usergroup_rules as $k => $usergroup_rule) {
-			if ($usergroup_rule->usergroup_id != $usergroup_id_)
-				unset($usergroup_rules[$k]);
-		}
-
+		Logger::debug('main', "UserGroup_Rules::getByUserGroupId($usergroup_id_)");
+		
+		$usergroup_rules = Abstract_UserGroup_Rule::loadByUserGroupId($usergroup_id_);
 		return $usergroup_rules;
 	}
 }
