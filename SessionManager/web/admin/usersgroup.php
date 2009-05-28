@@ -546,6 +546,10 @@ function show_default() {
 
 function show_manage($id) {
   global $schedules;
+  
+  $prefs = Preferences::getInstance();
+  if (! $prefs)
+    die_error('get Preferences failed',__FILE__,__LINE__);
 
   $userGroupDB = UserGroupDB::getInstance();
 
