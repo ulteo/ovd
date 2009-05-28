@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class UserDB_ldap  extends UserDB {
 	public $config;
+	protected $cache_userlist=NULL;
 	public function __construct () {
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -73,9 +74,25 @@ class UserDB_ldap  extends UserDB {
 		else
 			return NULL;
 	}
-
+	
 	public function getList($sort_=false) {
-		Logger::debug('main','UserDB::ldap::getList');
+		Logger::debug('main','USERDB::ldap::getList');
+		if (!is_array($this->cache_userlist)) {
+			$users = $this->getList_nocache();
+			$this->cache_userlist = $users;
+		}
+		else {
+			$users = $this->cache_userlist;
+		}
+		// do we need to sort alphabetically ?
+		if ($sort_ && is_array($users)) {
+			usort($users, "user_cmp");
+		}
+		return $users;
+	}
+
+	public function getList_nocache() {
+		Logger::debug('main','UserDB::ldap::getList_nocache');
 		$users = array();
 
 		$ldap = new LDAP($this->config);
@@ -90,14 +107,10 @@ class UserDB_ldap  extends UserDB {
 				$users []= $u;
 			else {
 				if ($u->hasAttribute('login'))
-					Logger::info('main', 'UserDB::ldap::getList user \''.$u->getAttribute('login').'\' not ok');
+					Logger::info('main', 'UserDB::ldap::getList_nocache user \''.$u->getAttribute('login').'\' not ok');
 				else
-					Logger::info('main', 'UserDB::ldap::getList user does not have login');
+					Logger::info('main', 'UserDB::ldap::getList_nocache user does not have login');
 			}
-		}
-		// do we need to sort alphabetically ?
-		if ($sort_) {
-			usort($users, "user_cmp");
 		}
 		return $users;
 	}

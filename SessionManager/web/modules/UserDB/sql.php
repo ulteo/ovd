@@ -20,6 +20,7 @@
  **/
 class UserDB_sql extends UserDB  {
 	protected $table;
+	protected $cache_userlist=NULL;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		$mysql_conf = $prefs->get('general', 'mysql');
@@ -59,9 +60,25 @@ class UserDB_sql extends UserDB  {
 	public function needPassword(){
 		return true;
 	}
-
-	public function getList($sort_=false){
+	
+	public function getList($sort_=false) {
 		Logger::debug('main','USERDB::MYSQL::getList');
+		if (!is_array($this->cache_userlist)) {
+			$users = $this->getList_nocache();
+			$this->cache_userlist = $users;
+		}
+		else {
+			$users = $this->cache_userlist;
+		}
+		// do we need to sort alphabetically ?
+		if ($sort_ && is_array($users)) {
+			usort($users, "user_cmp");
+		}
+		return $users;
+	}
+	
+	public function getList_nocache(){
+		Logger::debug('main','USERDB::MYSQL::getList_nocache');
 		$result = array();
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1', $this->table);
@@ -73,20 +90,16 @@ class UserDB_sql extends UserDB  {
 					$result []= $u;
 				else {
 					if (isset($row['login']))
-						Logger::info('main', 'USERDB::MYSQL::getList user \''.$row['login'].'\' not ok');
+						Logger::info('main', 'USERDB::MYSQL::getList_nocache user \''.$row['login'].'\' not ok');
 					else
-						Logger::info('main', 'USERDB::MYSQL::getList user does not have login');
+						Logger::info('main', 'USERDB::MYSQL::getList_nocache user does not have login');
 				}
 			}
 		}
 		else {
-			Logger::error('main', 'USERDB::MYSQL::getList failed (sql query failed)');
+			Logger::error('main', 'USERDB::MYSQL::getList_nocache failed (sql query failed)');
 			// not the right argument
 			return NULL;
-		}
-		// do we need to sort alphabetically ?
-		if ($sort_) {
-			usort($result, "user_cmp");
 		}
 		return $result;
 	}
