@@ -300,10 +300,9 @@ class Preferences {
 		foreach ($p2 as $plugin_dir2 => $plu2) {
 			foreach ($plu2 as $plugin_name2 => $plugin_name2_value){
 				if ($plugin_dir2 == 'plugins')
-					$plugin_enable2 = eval('return Plugin_'.$plugin_name2.'::enable();');
+					$plugin_enable2 = call_user_func(array('Plugin_'.$plugin_name2, 'enable'));
 				else
-					$plugin_enable2 = eval('return '.$plugin_dir2.'_'.$plugin_name2.'::enable();');
-
+					$plugin_enable2 = call_user_func(array($plugin_dir2.'_'.$plugin_name2, 'enable'));
 				if ($plugin_enable2 !== true)
 					unset($p2[$plugin_dir2][$plugin_name2]);
 			}
@@ -311,7 +310,7 @@ class Preferences {
 		$plugins_prettyname = array();
 		if (array_key_exists('plugins', $p2)) {
 			foreach ($p2['plugins'] as $plugin_name => $plu6) {
-				$plugin_prettyname = eval('return '.'Plugin_'.$plugin_name.'::prettyName();');
+				$plugin_prettyname = call_user_func(array('Plugin_'.$plugin_name, 'prettyName'));
 				if (is_null($plugin_prettyname))
 					$plugin_prettyname = $plugin_name;
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
@@ -328,18 +327,18 @@ class Preferences {
 			$plugins_prettyname = array();
 			$c = new ConfigElement_select($key1, $key1, 'plugins '.$key1, 'plugins '.$key1, array());
 			foreach ($value1 as $plugin_name => $plu6) {
-				$plugin_prettyname = eval('return '.$key1.'_'.$plugin_name.'::prettyName();');
+				$plugin_prettyname = call_user_func(array($key1.'_'.$plugin_name, 'prettyName'));
 				if (is_null($plugin_prettyname))
 					$plugin_prettyname = $plugin_name;
 				$plugins_prettyname[$plugin_name] = $plugin_prettyname;
 				$c->setContentAvailable($plugins_prettyname);
 
-				$isdefault1 = eval('return '.$key1.'_'.$plugin_name.'::isDefault();');
+				$isdefault1 = call_user_func(array($key1.'_'.$plugin_name, 'isDefault'));
 				if ($isdefault1 === true) // replace the default value
 					$c->content = $plugin_name;
 
 				$plugin_conf = 'return '.$key1.'_'.$plugin_name.'::configuration();';
-				$list_conf = eval($plugin_conf);
+				$list_conf = call_user_func(array($key1.'_'.$plugin_name, 'configuration'));
 				if (is_array($list_conf)) {
 					foreach ($list_conf as $l_conf){
 						$this->add($l_conf,'plugins', $key1.'_'.$plugin_name);
@@ -355,8 +354,7 @@ class Preferences {
 		// we remove all diseable modules
 		foreach ($available_module as $mod2 => $sub_mod2){
 			foreach ($sub_mod2 as $sub_mod_name2 => $sub_mod_pretty2){
-				$enable1 = 'return '.'admin_'.$mod2.'_'.$sub_mod_name2.'::enable();';
-				$enable =  eval($enable1);
+				$enable =  call_user_func(array('admin_'.$mod2.'_'.$sub_mod_name2, 'enable'));
 				if ($enable !== true)
 					unset ($available_module[$mod2][$sub_mod_name2]);
 			}
@@ -366,7 +364,7 @@ class Preferences {
 		$enabledByDefault = array();
 		foreach ($available_module as $module_name => $sub_module) {
 			$modules_prettyname[$module_name] = $module_name;
-			if (eval('return '.$module_name.'::enabledByDefault();'))
+			if (call_user_func(array($module_name, 'enabledByDefault')))
 				$enabledByDefault[] =  $module_name;
 		}
 		$c2 = new ConfigElement_multiselect('module_enable',_('Modules activation'), _('Choose the modules you want to enable.'), _('Choose the modules you want to enable.'), $enabledByDefault);
@@ -374,7 +372,7 @@ class Preferences {
 		$this->add($c2, 'general');
 
 		foreach ($available_module as $mod => $sub_mod){
-			$module_is_multiselect = eval('return '.$mod.'::multiSelectModule();');
+			$module_is_multiselect = call_user_func(array($mod, 'multiSelectModule'));
 			if ( $module_is_multiselect) {
 				$c = new ConfigElement_multiselect('enable', $mod, $mod, $mod, array());
 				$c->setContentAvailable($sub_mod);
@@ -385,8 +383,7 @@ class Preferences {
 			}
 
 			foreach ($sub_mod as $k4 => $v4) {
-				$default2 = 'return '.$mod.'_'.$k4.'::isDefault();';
-				$default1 =  eval($default2);
+				$default1 = call_user_func(array($mod.'_'.$k4, 'isDefault'));
 				if ($default1 === true) {
 					if ( $module_is_multiselect) {
 						$c->content[] = $k4;
@@ -406,8 +403,7 @@ class Preferences {
 
 			foreach ($sub_mod as $sub_mod_name => $sub_mod_pretty){
 				$module_name= $mod.'_'.$sub_mod_name;
-				$mod_conf = 'return '.$module_name.'::configuration();';
-				$list_conf = eval($mod_conf);
+				$list_conf = call_user_func(array($module_name, 'configuration'));
 				if (is_array($list_conf)) {
 					foreach ($list_conf as $l_conf){
 						$this->add($l_conf,$mod,$sub_mod_name);
@@ -463,7 +459,7 @@ class Preferences {
 							$ret[basename($pathinfo["dirname"])] = array();
 						}
 						if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
-							$pretty_name = eval('return '.basename($pathinfo["dirname"]).'_'.$pathinfo["filename"].'::prettyName();');
+							$pretty_name = call_user_func(array(basename($pathinfo["dirname"]).'_'.$pathinfo["filename"],'prettyName'));
 							if ( is_null($pretty_name))
 								$pretty_name = $pathinfo["filename"];
 							$ret[basename($pathinfo["dirname"])][$pathinfo["filename"]] = $pretty_name;

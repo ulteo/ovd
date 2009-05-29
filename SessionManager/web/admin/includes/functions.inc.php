@@ -126,7 +126,7 @@ function init_db($prefs_) {
 			$enable = $prefs_->get($module_name,'enable');
 			if (is_string($enable)) {
 				$mod_name = 'admin_'.$module_name.'_'.$enable;
-				$ret_eval = eval('return '.$mod_name.'::init($prefs_);');
+				$ret_eval = call_user_func(array($mod_name, 'init'), $prefs_);
 				if ($ret_eval !== true) {
 					Logger::error('admin','init_db init module \''.$mod_name.'\' failed');
 					return false;
@@ -135,7 +135,7 @@ function init_db($prefs_) {
 			elseif (is_array($enable)) {
 				foreach ($enable as $sub_module) {
 					$mod_name = 'admin_'.$module_name.'_'.$sub_module;
-					$ret_eval = eval('return '.$mod_name.'::init($prefs_);');
+					$ret_eval = call_user_func(array($mod_name, 'init'), $prefs_);
 					if ($ret_eval !== true) {
 						Logger::error('admin','init_db init module \''.$mod_name.'\' failed');
 						return false;

@@ -109,7 +109,7 @@ class Preferences_admin extends Preferences {
 		$plugins_enable = $this->get('plugins', 'plugin_enable');
 		if (!is_null($plugins_enable)) {
 			foreach ($plugins_enable as $plugin_name) {
-				$ret_eval = eval('return Plugin_'.strtolower($plugin_name).'::prefsIsValid($this);');
+				$ret_eval = call_user_func(array('Plugin_'.strtolower($plugin_name), 'prefsIsValid'), $this);
 				if ($ret_eval !== true) {
 					Logger::error('admin','prefs is not valid for plugin \''.$plugin_name.'\'');
 					$plugins_ok = false;
@@ -121,7 +121,7 @@ class Preferences_admin extends Preferences {
 		// for now we can use one FS at the same time
 		if (!is_null($plugins_FS)) {
 // 			foreach ($plugins_FS['FS'] as $plugin_name) {
-				$ret_eval = eval('return FS_'.strtolower($plugins_FS).'::prefsIsValid($this);');
+				$ret_eval = call_user_func(array('FS_'.strtolower($plugins_FS), 'prefsIsValid'), $this);
 				if ($ret_eval !== true) {
 					Logger::error('admin','prefs is not valid for FS plugin \''.$plugins_FS.'\'');
 					$plugins_ok = false;
@@ -142,7 +142,7 @@ class Preferences_admin extends Preferences {
 				$enable = $this->get($module_name,'enable');
 				if (is_string($enable)) {
 					$mod_name = $module_name.'_'.$enable;
-					$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
+					$ret_eval = call_user_func(array($mod_name, 'prefsIsValid'), $this);
 					if ($ret_eval !== true) {
 						Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
 						$modules_ok = false;
@@ -152,7 +152,7 @@ class Preferences_admin extends Preferences {
 				else if (is_array($enable)) {
 					foreach ($enable as $sub_module) {
 						$mod_name = $module_name.'_'.$sub_module;
-						$ret_eval = eval('return '.$mod_name.'::prefsIsValid($this);');
+						$ret_eval = call_user_func(array($mod_name, 'prefsIsValid'), $this);
 						if ($ret_eval !== true) {
 							Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
 							$modules_ok = false;
