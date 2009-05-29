@@ -192,7 +192,7 @@ class Abstract_Liaison_sql {
 		}
 		$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
 		// we create the sql table
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		$LIAISON_table_structure = array(
 			'type' => 'varchar(200) NOT NULL',

@@ -31,7 +31,7 @@ class Abstract_Report {
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'],
-		                          $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		                          $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$servers_history_table_structure = array(
 			'fqdn' => 'VARCHAR(255) NOT NULL',

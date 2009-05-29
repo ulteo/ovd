@@ -112,7 +112,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			return false;
 		}
 		$table = $mysql_conf['prefix'].'user';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$user_table_structure = array(

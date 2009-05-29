@@ -152,7 +152,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 			return false;
 		}
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$mysql_conf['database'],APPLICATION_TABLE);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);

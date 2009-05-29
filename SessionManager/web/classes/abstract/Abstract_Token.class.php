@@ -26,7 +26,7 @@ class Abstract_Token {
 		Logger::debug('main', 'Starting Abstract_Token::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$tokens_table_structure = array(
 			'id'			=>	'varchar(255) NOT NULL',

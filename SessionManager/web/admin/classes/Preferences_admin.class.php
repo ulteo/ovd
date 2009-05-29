@@ -92,7 +92,7 @@ class Preferences_admin extends Preferences {
 			Logger::error('admin','PREFERENCESADMIN::isValid db conf failed');
 			return _('SQL configuration not valid(2)');
 		}
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$db_ok = $sql2->CheckLink(false);
 		if ( $db_ok === false) {
 			Logger::error('admin','PREFERENCESADMIN::isValid db link failed');

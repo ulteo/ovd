@@ -196,7 +196,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup_dynamic_cached';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		$usersgroup_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
@@ -234,7 +234,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			return false;
 		}
 		$table =  $mysql_conf['prefix'].'usergroup_dynamic_cached';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows();

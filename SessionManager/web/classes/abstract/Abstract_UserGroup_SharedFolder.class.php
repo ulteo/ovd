@@ -26,7 +26,7 @@ class Abstract_UserGroup_SharedFolder {
 		Logger::debug('main', 'Starting Abstract_UserGroup_SharedFolder::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_prefix['prefix']);
+		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$usergroup_sharedfolders_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
