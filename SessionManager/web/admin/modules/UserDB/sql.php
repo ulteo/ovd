@@ -26,6 +26,14 @@ class admin_UserDB_sql extends UserDB_sql {
 	public function add($user_){
 		Logger::debug('main', 'UserDB::sql::add');
 		if ($this->isOK($user_)){
+			// user already exists ?
+			$user_from_db = $this->import($user_->getAttribute('login'));
+			if (is_object($user_from_db)) {
+				Logger::error('main', 'admin_UserDB_sql::add user (login='.$user_->getAttribute('login').') already exists');
+				popup_error(_('User already exists'));
+				return false;
+			}
+			
 			$query_keys = "";
 			$query_values = "";
 			$attributes = $user_->getAttributesList();

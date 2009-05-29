@@ -24,6 +24,15 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	public function add($usergroup_){
 		Logger::debug('admin','ADMIN_USERGROUPDB::add');
 		$sql2 = MySQL::getInstance();
+		// usergroup already exists ?
+		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 AND @4 = %5', $this->table, 'name', $usergroup_->name, 'description', $usergroup_->description);
+			
+		if ($sql2->NumRows($res) > 0) {
+			Logger::error('main', 'admin_UserGroupDB_sql::add usersgroup (name='.$usergroup_->name.',description='.$usergroup_->description.') already exists');
+			popup_error(_('Users group already exists'));
+			return false;
+		}
+		
 		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)',$this->table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published);
 		if ($res !== false) {
 			$usergroup_->id = $sql2->InsertId();
