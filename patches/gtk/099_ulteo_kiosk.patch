@@ -1,0 +1,184 @@
+diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c gtk+2.0-2.12.9.new/gtk/gtkfilechooserdefault.c
+--- gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c	2008-03-12 04:16:53.000000000 +0000
++++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserdefault.c	2009-06-01 14:52:27.000000000 +0000
+@@ -834,6 +834,7 @@
+   impl->pending_select_paths = NULL;
+   impl->location_mode = LOCATION_MODE_PATH_BAR;
+   impl->operation_mode = OPERATION_MODE_BROWSE;
++  impl->can_browse_file_system = _gtk_file_chooser_allow_browse_file_system ();
+ 
+   gtk_box_set_spacing (GTK_BOX (impl), 12);
+ 
+@@ -7080,6 +7081,7 @@
+ {
+   GtkFileChooserDefault *impl = GTK_FILE_CHOOSER_DEFAULT (chooser);
+   struct UpdateCurrentFolderData *data;
++  const gchar *filename;
+ 
+   profile_start ("start", (char *) path);
+ 
+@@ -7109,6 +7111,13 @@
+       return FALSE;
+     }
+ 
++  if (!impl->can_browse_file_system)
++    {
++      filename = gtk_file_path_get_string (path);
++      if (!g_str_has_prefix (filename, g_get_home_dir ()))
++        return FALSE;
++    }
++
+   if (impl->update_current_folder_handle)
+     gtk_file_system_cancel_operation (impl->update_current_folder_handle);
+ 
+diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserprivate.h gtk+2.0-2.12.9.new/gtk/gtkfilechooserprivate.h
+--- gtk+2.0-2.12.9/gtk/gtkfilechooserprivate.h	2009-06-01 15:01:19.000000000 +0000
++++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserprivate.h	2009-06-01 14:45:29.000000000 +0000
+@@ -313,6 +313,8 @@
+   guint has_search : 1;
+   guint has_recent : 1;
+ 
++  gboolean can_browse_file_system;
++
+ #if 0
+   guint shortcuts_drag_outside : 1;
+ #endif
+diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.c
+--- gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c	2009-06-01 15:01:19.000000000 +0000
++++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.c	2009-06-01 14:51:17.000000000 +0000
+@@ -20,6 +20,10 @@
+  */
+ 
+ #include <config.h>
++#include <unistd.h>
++#include <sys/types.h>
++#include <pwd.h>
++#include <grp.h>
+ #include "gtkfilechooserutils.h"
+ #include "gtkfilechooser.h"
+ #include "gtkfilesystem.h"
+@@ -377,5 +381,112 @@
+   return conf;
+ }
+ 
++/* Ulteo: kiosk related */
++/* FIXME: the following functions should go somewhere else, but where? */
++GList *
++gtk_get_groups (gchar **username)
++{
++  GList *groups_list = NULL;
++  struct passwd *pw;
++  struct group *gr;
++  gint groups_nb;
++  gid_t *groups;
++  int i;
++
++  pw = getpwuid (getuid ());
++  *username = g_strdup (pw->pw_name);
++
++  groups_nb = getgroups (0, NULL);
++  if (groups_nb < 0)
++    return NULL;
++
++  groups = g_malloc (groups_nb * sizeof (*groups));
++  groups_nb = getgroups (groups_nb, groups);
++  if (groups_nb < 0)
++    return NULL;
++
++  for (i = 0; i < groups_nb; i++)
++    {
++      gr = getgrgid (groups[i]);
++      if (gr)
++        groups_list = g_list_append (groups_list, g_strdup (gr->gr_name));
++    }
++  g_free (groups);
++
++  return groups_list;
++}
++
++gint
++gtk_kiosk_compare_s (gconstpointer a, gconstpointer b)
++{
++  return strcmp ((gchar *)a, (gchar *)b);
++}
++
++gboolean
++gtk_kiosk_allowed (const gchar *group, const gchar *key)
++{
++  gboolean ret = FALSE;
++  GKeyFile *keyfile;
++  gchar **allowed;
++  gchar *username = NULL;
++  int i;
++  GList *groups = NULL;
++
++  groups = gtk_get_groups (&username);
++  if (!groups)
++    return FALSE;
++
++  keyfile = g_key_file_new ();
++
++  /*
++   * FIXME:
++   * - we suppose that the fle doesn't exist if this fails
++   * - the patch shouldn't be hardcoded of course
++   */
++  if (!g_key_file_load_from_file (keyfile,
++                                  "/etc/xdg/xfce4/kiosk/kioskrc",
++                                  0, NULL))
++    return TRUE;
++  g_key_file_set_list_separator (keyfile, ',');
++  if (! (allowed = g_key_file_get_string_list (keyfile, group, key, NULL, NULL)))
++    return FALSE;
++
++  for (i=0 ; i < g_strv_length (allowed); i++)
++    {
++      if (*allowed[i] == '%')
++        {
++          if (g_list_find_custom (groups,
++                                  (gconstpointer) (allowed[i]+1),
++                                  gtk_kiosk_compare_s))
++            {
++              ret = TRUE;
++              goto out;
++            }
++        }
++      else
++        {
++          if (!strcmp (username,allowed[i]))
++            {
++              ret = TRUE;
++              goto out;
++            }
++        }
++    }
++out:
++  g_list_foreach (groups, g_free, NULL);
++  g_list_free (groups);
++  g_strfreev (allowed);
++  g_key_file_free (keyfile);
++  g_free (username);
++
++  return ret;
++}
++
++gboolean
++_gtk_file_chooser_allow_browse_file_system (void)
++{
++    return gtk_kiosk_allowed ("GTK", "BrowseFileSystem");
++}
++
+ #define __GTK_FILE_CHOOSER_UTILS_C__
+ #include "gtkaliasdef.c"
+diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.h gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.h
+--- gtk+2.0-2.12.9/gtk/gtkfilechooserutils.h	2009-06-01 15:01:19.000000000 +0000
++++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.h	2009-06-01 14:35:36.000000000 +0000
+@@ -63,6 +63,8 @@
+ 
+ GQuark _gtk_file_chooser_delegate_get_quark (void) G_GNUC_CONST;
+ 
++gboolean _gtk_file_chooser_allow_browse_file_system (void);
++
+ G_END_DECLS
+ 
+ #endif /* __GTK_FILE_CHOOSER_UTILS_H__ */

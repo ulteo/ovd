@@ -1,0 +1,9 @@
+* 099_ulteo_kiosk.patch:
+  Create a kiosk mode based on the Xfce one in gtkfilechooser to allow/forbid
+  browsing of the file system. It's still a bit rough but works.
+
+  TODO:
+    - hide the File System link in the shortcuts
+    - don't use a hardcoded path for the kioskrc file
+    - move some code from gtkfilechooserutils to glib?
+    - find a nicer solution to try and push the idea upstream :)
