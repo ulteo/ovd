@@ -67,10 +67,8 @@ class Abstract_Liaison {
 		if (in_array('UserGroupDB', $mods_enable)) {
 			if (! is_null($prefs->get('UserGroupDB','enable'))) {
 				$mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
-				$userGroupDB = new $mod_usergroup_name();
-				if ($userGroupDB->liaisonType() == 'ldap') {
-					Abstract_Liaison_ldap::init($prefs);
-				}
+				$liaison_type = call_user_func(array($mod_usergroup_name, 'liaisonType'));
+				call_user_func(array('Abstract_Liaison_'.$liaison_type, 'init'), $prefs);
 			}
 			else {
 				Logger::info('main', 'Abstract_Liaison::init no module UserGroupDB enable');
