@@ -53,12 +53,6 @@ class UsersGroup_dynamic_cached extends UsersGroup_dynamic {
 		return $logins;
 	}
 	
-	public function usersLogin_parent() {
-		global $pouet;
-		$pouet = true;
-		return parent::usersLogin();
-	}
-	
 	public function updateCache() {  // update the liaison
 		Logger::debug('main', 'UsersGroup_dynamic_cached::updateCache for ID='.$this->getUniqueID());
 		$logins = parent::usersLogin();
