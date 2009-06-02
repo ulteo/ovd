@@ -26,22 +26,17 @@ from win32com.shell import shell, shellcon
 from xml.dom.minidom import Document
 import commands
 import communication
-import getopt
 import locale
 import logging
 import logging.handlers
 import os
 import platform
 import pythoncom
-import socket,urllib2,urllib,urlparse
-import re
+import socket,urlparse
 import servicemanager
-import signal
 import sys
 import threading
 import time
-import traceback
-import utils
 import win32service
 import win32serviceutil
 import wmi

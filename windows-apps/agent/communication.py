@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008,2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2008
+# Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -24,7 +24,6 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import cgi
 import os
 import sys
-import platform
 import base64
 from xml.dom.minidom import Document
 import utils
@@ -32,7 +31,6 @@ import pythoncom
 import tempfile
 import servicemanager
 from win32com.shell import shell
-import pythoncom
 import traceback
 
 def log_debug(msg_):
