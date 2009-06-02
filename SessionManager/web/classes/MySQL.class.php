@@ -230,12 +230,26 @@ class MySQL {
 			$res = $this->DoQuery('SHOW COLUMNS FROM '.$name_);
 			if ($res !== false){
 				$rows = $this->FetchAllResults($res);
-				$colums_from_database = array();
+				$columns_from_database = array();
 				foreach($rows as $row) {
 					if (in_array( $row['Field'], array_keys($table_structure_))) {
 						// the column exists
-						// if the column we do nothing, we can not change the column type
-						$colums_from_database[] = $row['Field'];
+						// it's the same type ?
+						$ret2 = $this->DoQuery('SHOW COLUMNS FROM @1 WHERE @2=%3', $name_, 'Field', $row['Field']);
+						if ($ret2 === false) {
+							Logger::error('main', 'MySQL::createTable failed to get type of \''.$row['Field'].'\'');
+							return false;
+						}
+						$rows6 = $this->FetchResult();
+						$field_type = $rows6['Type'];
+						$type6 = explode(' ', $table_structure_[$row['Field']]);
+						if (isset($type6[0])) {
+							if ($type6[0] !== $field_type) {
+								// it's not the same -> we will alter the table
+								$this->DoQuery('ALTER TABLE @1 CHANGE @2 @2 '.$table_structure_[$row['Field']], $name_, $row['Field']);
+							}
+						}
+						$columns_from_database[] = $row['Field'];
 					}
 					else {
 						// we must remove this column
@@ -246,10 +260,10 @@ class MySQL {
 				}
 				
 				foreach($table_structure_ as $column_name => $column_structure) {
-					if (!in_array($column_name, $colums_from_database)) {
+					if (!in_array($column_name, $columns_from_database)) {
 						$res = $this->DoQuery("ALTER TABLE `$name_` ADD `$column_name` $column_structure");
 						if ($res == false)
-							Logger::error('main', "MySQL::createTable failed to add '$colums_from_database' of the table '$name_'");
+							Logger::error('main', "MySQL::createTable failed to add '$columns_from_database' of the table '$name_'");
 					}
 				}
 			}
