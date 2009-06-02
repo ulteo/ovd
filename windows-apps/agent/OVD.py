@@ -22,7 +22,7 @@
 
 import sessionmanager
 from BaseHTTPServer import HTTPServer
-from win32com.shell import shell
+from win32com.shell import shell, shellcon
 from xml.dom.minidom import Document
 import commands
 import communication
@@ -159,17 +159,12 @@ class OVD(win32serviceutil.ServiceFramework):
 		win32serviceutil.ServiceFramework.__init__(self,args)
 		
 		self.install_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
-		if os.environ.has_key('ALLUSERSPROFILE'):
-			all_users_dir = os.environ['ALLUSERSPROFILE']
-		else:
-			log_debug("main 001-B")
-			log_debug("exit 3")
-			sys.exit(3)
+		common_appdata = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
 		
 		name = "ulteo-ovd"
 		conf = {}
 		conf["conf_file"] = os.path.join(self.install_dir, '%s.conf'%(name))
-		conf["log_file"] = os.path.abspath(os.path.join(all_users_dir, 'Application Data', 'ulteo', 'ovd', 'main.log'))
+		conf["log_file"] = os.path.abspath(os.path.join(common_appdata, 'ulteo', 'ovd', 'main.log'))
 		
 		conf["log_flags"] = ["info", "warn", "error"]
 		conf["hostname"] = None
