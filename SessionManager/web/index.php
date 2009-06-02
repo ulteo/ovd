@@ -48,7 +48,6 @@ $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $desktop_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
-$start_app = '';
 $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
@@ -136,12 +135,6 @@ if (@gethostbyname($random_server->fqdn) == $random_server->fqdn) {
 	if (isset($fqdn_private_address[$random_server->fqdn]))
 		$random_server->fqdn = $fqdn_private_address[$random_server->fqdn];
 }
-
-// $applications = $user->applications();
-// $list_start_app = array();
-// if (count($applications) > 0)
-// 	foreach ($applications as $a)
-// 		$list_start_app[$a->getAttribute('executable_path')] = $a->getAttribute('name');
 
 require_once('header.php');
 ?>
@@ -264,7 +257,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('windows_keymap', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('application', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('language', $advanced_settings) || in_array('windows_keymap', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -405,32 +398,6 @@ require_once('header.php');
 									}
 								?>
 							</select>
-						</td>
-					</tr>
-					<?php
-						}
-
-						if (in_array('application', $advanced_settings)) {
-					?>
-					<tr class="content2">
-						<td class="title">
-							<?php echo _('Application'); ?>
-						</td>
-						<td>
-							<?php
-								if (isset($list_start_app) && count($list_start_app) > 0) {
-									echo '<select id="start_app" name="start_app">';
-
-									foreach ($list_start_app as $app => $text) {
-										echo '<option value="'.$app.'"';
-										if ($start_app == $app)
-											echo ' selected="selected"';
-										echo '>'.$text.'</option>'."\n";
-									}
-									echo '</select>';
-								} else
-									echo _('Full desktop');
-							?>
 						</td>
 					</tr>
 					<?php
