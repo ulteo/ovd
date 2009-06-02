@@ -99,6 +99,9 @@ if (in_array('timeout', $advanced_settings) && isset($_REQUEST['desktop_timeout'
 if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app']) && $_REQUEST['start_app'] != '')
 	$start_app = $_REQUEST['start_app'];
 
+if (in_array('document', $advanced_settings) && isset($_REQUEST['open_doc']) && $_REQUEST['open_doc'] != '')
+	$open_doc = $_REQUEST['open_doc'];
+
 if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
 	$persistent = $_REQUEST['persistent'];
 
@@ -253,6 +256,8 @@ if (isset($start_app) && $start_app != '') {
 
 	$optional_args['start_app'] = $app->getAttribute('executable_path');
 }
+if (isset($open_doc) && $open_doc != '')
+	$optional_args['open_doc'] = $open_doc;
 if (isset($debug) && $debug != '0')
 	$optional_args['debug'] = 1;
 if (isset($persistent) && $persistent != '0')

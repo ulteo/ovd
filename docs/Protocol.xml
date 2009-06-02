@@ -1007,6 +1007,10 @@
 	      session start</para>
 	    </listitem>
 	    <listitem>
+	      <para>open_doc:
+	      /some/file/path... A document path to open inside the OVD</para>
+	    </listitem>
+	    <listitem>
 	      <para>debug: 0|1</para>
 	    </listitem>
 	  </itemizedlist>
