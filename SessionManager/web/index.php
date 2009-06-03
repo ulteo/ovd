@@ -600,7 +600,7 @@ if ($testapplet) {
 		<param name="onBadPing" value="badPing()" />
 		<param name="onFail" value="testFailed" />
 		<param name="haveProxy" value="haveProxy" />
-		<param name="hostToPing" value="<?php echo $random_server->fqdn; ?>" />
+		<param name="hostToPing" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
 		<param name="maxPingAccepted" value="150" />
 	</applet>
 <?php
