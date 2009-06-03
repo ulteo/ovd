@@ -11,3 +11,7 @@
   - if execution is denied, try to open the file using its mime type
   - restrict the "Open with" dialog; don't show the custom entry, and don't
     allow the user to save his choice
+
+* ulteo_fs_kiosk.patch
+  new kiosk config to forbid browsing of the root file system (simulates
+  chrooting the user in his HOME)

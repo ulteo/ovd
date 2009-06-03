@@ -1,0 +1,168 @@
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar/thunar-path-entry.c thunar-0.9.0.new/thunar/thunar-path-entry.c
+--- thunar-0.9.0/thunar/thunar-path-entry.c	2009-06-03 16:17:50.000000000 +0200
++++ thunar-0.9.0.new/thunar/thunar-path-entry.c	2009-06-03 16:57:03.000000000 +0200
+@@ -584,12 +584,13 @@
+                                 GdkEventExpose *event)
+ {
+   ThunarPathEntry *path_entry = THUNAR_PATH_ENTRY (widget);
+-  GdkPixbuf       *icon;
++  GdkPixbuf       *icon = NULL;
+   gint             icon_height;
+   gint             icon_width;
+   gint             icon_size;
+   gint             height;
+   gint             width;
++  gchar           *absolute_path = NULL;
+ 
+   if (event->window == path_entry->icon_area)
+     {
+@@ -605,11 +606,21 @@
+                           0, 0, width, height);
+ 
+       if (G_UNLIKELY (path_entry->current_file != NULL))
+-        icon = thunar_icon_factory_load_file_icon (path_entry->icon_factory, path_entry->current_file, THUNAR_FILE_ICON_STATE_DEFAULT, icon_size);
++          absolute_path = thunar_vfs_path_dup_string (thunar_file_get_path (path_entry->current_file));
+       else if (G_LIKELY (path_entry->current_folder != NULL))
+-        icon = thunar_icon_factory_load_file_icon (path_entry->icon_factory, path_entry->current_folder, THUNAR_FILE_ICON_STATE_DEFAULT, icon_size);
+-      else
+-        icon = gtk_widget_render_icon (widget, GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_SMALL_TOOLBAR, "path_entry");
++          absolute_path = thunar_vfs_path_dup_string (thunar_file_get_path (path_entry->current_folder));
++
++      if (thunar_vfs_allowed_browse_fs
++          || !absolute_path
++          || g_str_has_prefix (absolute_path, g_get_home_dir ()))
++        {
++          if (G_UNLIKELY (path_entry->current_file != NULL))
++            icon = thunar_icon_factory_load_file_icon (path_entry->icon_factory, path_entry->current_file, THUNAR_FILE_ICON_STATE_DEFAULT, icon_size);
++          else if (G_LIKELY (path_entry->current_folder != NULL))
++            icon = thunar_icon_factory_load_file_icon (path_entry->icon_factory, path_entry->current_folder, THUNAR_FILE_ICON_STATE_DEFAULT, icon_size);
++        }
++      if (G_UNLIKELY (!icon))
++          icon = gtk_widget_render_icon (widget, GTK_STOCK_DIALOG_ERROR, GTK_ICON_SIZE_SMALL_TOOLBAR, "path_entry");
+ 
+       if (G_LIKELY (icon != NULL))
+         {
+@@ -626,6 +637,8 @@
+ 
+           g_object_unref (G_OBJECT (icon));
+         }
++
++      g_free (absolute_path);
+     }
+   else
+     {
+@@ -800,6 +813,7 @@
+   ThunarFile         *current_file;
+   gchar              *folder_part = NULL;
+   gchar              *file_part = NULL;
++  gchar              *filename = NULL;
+ 
+   /* check if we should ignore this event */
+   if (G_UNLIKELY (path_entry->in_change))
+@@ -833,6 +847,8 @@
+   /* determine new current file/folder from the paths */
+   current_folder = (folder_path != NULL) ? thunar_file_get_for_path (folder_path, NULL) : NULL;
+   current_file = (file_path != NULL) ? thunar_file_get_for_path (file_path, NULL) : NULL;
++  if (current_file)
++      filename = thunar_vfs_path_dup_string (thunar_file_get_path (current_file));
+ 
+   /* determine the entry completion */
+   completion = gtk_entry_get_completion (GTK_ENTRY (path_entry));
+@@ -880,10 +896,21 @@
+           g_object_ref (G_OBJECT (current_file));
+           g_signal_connect_swapped (G_OBJECT (current_file), "changed", G_CALLBACK (thunar_path_entry_set_current_file), path_entry);
+         }
+-      g_object_notify (G_OBJECT (path_entry), "current-file");
++      /*
++       * don't send the 'current-file' signal if we can't browse the FS and we're
++       * not in HOME
++       */
++      if (thunar_vfs_allowed_browse_fs
++          || !filename
++          || g_str_has_prefix (filename, g_get_home_dir ()))
++        {
++          g_object_notify (G_OBJECT (path_entry), "current-file");
++        }
+     }
+ 
+   /* cleanup */
++  if (G_LIKELY (filename != NULL))
++    g_free (filename);
+   if (G_LIKELY (current_folder != NULL))
+     g_object_unref (G_OBJECT (current_folder));
+   if (G_LIKELY (current_file != NULL))
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs.c thunar-0.9.0.new/thunar-vfs/thunar-vfs.c
+--- thunar-0.9.0/thunar-vfs/thunar-vfs.c	2009-06-03 16:57:00.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs.c	2009-06-03 16:57:03.000000000 +0200
+@@ -57,6 +57,9 @@
+       /* ensure any strings get translated properly */
+       xfce_textdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR, "UTF-8");
+ 
++      /* initialize the kiosk configuration */
++      _thunar_vfs_kiosk_init ();
++
+       /* initialize the path module */
+       _thunar_vfs_path_init ();
+ 
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-config.c thunar-0.9.0.new/thunar-vfs/thunar-vfs-config.c
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-config.c	2009-06-03 16:57:00.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-config.c	2009-06-03 16:57:03.000000000 +0200
+@@ -25,8 +25,6 @@
+ #include <thunar-vfs/thunar-vfs-config.h>
+ #include <thunar-vfs/thunar-vfs-alias.h>
+ 
+-
+-
+ /**
+  * thunar_vfs_major_version:
+  *
+@@ -121,6 +119,14 @@
+ }
+ 
+ 
++void
++_thunar_vfs_kiosk_init ()
++{
++    XfceKiosk *kiosk;
++    kiosk = xfce_kiosk_new ("GTK");
++    thunar_vfs_allowed_browse_fs = xfce_kiosk_query (kiosk, "BrowseFileSystem");
++    xfce_kiosk_free (kiosk);
++}
+ 
+ #define __THUNAR_VFS_CONFIG_C__
+ #include <thunar-vfs/thunar-vfs-aliasdef.c>
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-config.h.in thunar-0.9.0.new/thunar-vfs/thunar-vfs-config.h.in
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-config.h.in	2009-06-03 16:17:50.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-config.h.in	2009-06-03 16:57:03.000000000 +0200
+@@ -58,6 +58,10 @@
+                                        guint required_minor,
+                                        guint required_micro) G_GNUC_WARN_UNUSED_RESULT;
+ 
++gboolean thunar_vfs_allowed_browse_fs;
++
++void _thunar_vfs_kiosk_init ();
++
+ G_END_DECLS;
+ 
+ #endif /* !__THUNAR_VFS_CONFIG_H__ */
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-io-local.c thunar-0.9.0.new/thunar-vfs/thunar-vfs-io-local.c
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-io-local.c	2009-06-03 16:57:02.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-io-local.c	2009-06-03 16:59:00.000000000 +0200
+@@ -62,6 +62,7 @@
+ #include <thunar-vfs/thunar-vfs-io-local.h>
+ #include <thunar-vfs/thunar-vfs-mime-database-private.h>
+ #include <thunar-vfs/thunar-vfs-os.h>
++#include <thunar-vfs/thunar-vfs-config.h>
+ #include <thunar-vfs/thunar-vfs-private.h>
+ #include <thunar-vfs/thunar-vfs-alias.h>
+ 
+@@ -642,6 +643,9 @@
+     return NULL;
+ 
+   /* try to scan the specified directory */
++  if (!thunar_vfs_allowed_browse_fs && !g_str_has_prefix (absolute_path, g_get_home_dir ()))
++      return NULL;
++
+   list = _thunar_vfs_os_scandir (path, absolute_path, TRUE, NULL, error);
+   if (G_UNLIKELY (list == NULL))
+     return NULL;
