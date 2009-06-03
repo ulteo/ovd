@@ -129,7 +129,7 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c gtk+2.0-2.12.9.new/gtk
 +    return TRUE;
 +  g_key_file_set_list_separator (keyfile, ',');
 +  if (! (allowed = g_key_file_get_string_list (keyfile, group, key, NULL, NULL)))
-+    return FALSE;
++    return TRUE;
 +
 +  for (i=0 ; i < g_strv_length (allowed); i++)
 +    {
