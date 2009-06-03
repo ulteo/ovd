@@ -20,3 +20,5 @@ AllowRun=%admin
 [thunar]
 AllowExecute=%admin
 
+[GTK]
+BrowseFileSystem=%admin
