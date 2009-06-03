@@ -14,7 +14,6 @@ web/print.php
 web/whatsup.php
 web/includes/functions.inc.php
 web/includes/core.inc.php
-web/includes/session_path.inc.php
 web/exit.php
 web/access.php
 web/classes/Logger.class.php
