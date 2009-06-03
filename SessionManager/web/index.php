@@ -553,7 +553,7 @@ require_once('header.php');
 <?php
 if ($testapplet) {
 ?>
-	<applet width="1" height="1">
+	<applet code="org.vnc.VncViewer" codebase="applet/" archive="ulteo-applet-0.2.4.jar" mayscript="true" width="1" height="1">
 		<param name="name" value="ulteoapplet" />
 		<param name="code" value="org.vnc.VncViewer" />
 		<param name="codebase" value="applet/" />
