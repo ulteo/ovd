@@ -394,3 +394,17 @@ session_restore() {
     log_INFO "session_restore: $i"
     session_switch_status $SESSID 2
 }
+
+session_change_login_if_needed() {
+    local login=$USER_LOGIN
+    local pos=0
+
+    grep -q "^$login:" /etc/passwd || return 0
+
+    while grep -q "^$login$pos:" /etc/passwd; do
+	pos=$(( $pos + 1 ))
+    done
+
+    echo "$login$pos" >${SESSID_DIR}/parameters/user_login 
+    return 1
+}

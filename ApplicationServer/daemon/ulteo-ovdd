@@ -203,6 +203,12 @@ session_check_status() {
 	    return 1
 	fi
 
+	# If the user login is root or dbus or 
+	# anything already exist, we change it
+	session_change_login_if_needed || \
+	    USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
+
+
         # remove wipeout stamp is still there
 	rm -f /tmp/wipeout/$NICK
 

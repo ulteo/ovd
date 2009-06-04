@@ -55,6 +55,12 @@ fi
 
 groupadd ${USER_LOGIN} 
 useradd --shell ${USER_SHELL} --home $USER_HOME -m -k /dev/null $USERADD_ARG} -g ${USER_LOGIN} ${USER_LOGIN}
+if [ $? -ne 0 ]; then
+    log_ERROR "Unable to useradd '${USER_LOGIN}', that could say that's it already exist."
+    session_switch_status $SESSID 3
+    exit 1
+fi
+
 export USER_ID=$(id -u $USER_LOGIN)
 
 chown ${USER_ID} $SPOOL_USERS/$SESSID
