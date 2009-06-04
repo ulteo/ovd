@@ -370,7 +370,7 @@ function show_default() {
     }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-     if ( !$all_static) { //     if ($userGroupDB->isWriteable())
+    if ( !$all_static || $userGroupDB->isWriteable()) {
       echo '<th class="unsortable"></th>'; // masse action
     }
     echo '<th>'._('Name').'</th>';
