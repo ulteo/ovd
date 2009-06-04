@@ -253,8 +253,20 @@ class User {
 
 	public function __toString() {
 		$ret = 'User(';
-		foreach ($this->attributes as $k=>$attr)
-				$ret .= "'$k':'$attr', ";
+		foreach ($this->attributes as $k => $attr) {
+				$ret .= "'$k':'";
+				if ( is_array($attr)) {
+					$ret .= ' [';
+					foreach ($attr as $k => $v) {
+						$ret .= "'$k':'$v', ";
+					}
+					$ret .= '] ';
+				}
+				else {
+					$ret .= $attr;
+				}
+				$ret .= "', ";
+		}
 		$ret .= ')';
 		return $ret;
 	}
