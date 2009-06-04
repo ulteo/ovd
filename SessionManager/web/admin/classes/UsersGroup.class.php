@@ -67,13 +67,30 @@ class UsersGroup {
 	
 	public function usersLogin(){
 		Logger::debug('admin','USERSGROUP::usersLogin');
-		$ls = Abstract_Liaison::load('UsersGroup',NULL, $this->getUniqueID());
 		$logins = array();
-		if (is_array($ls)) {
-			foreach ($ls as $l) {
-				$logins []= $l->element;
+		$prefs = Preferences::getInstance();
+		if (!$prefs) {
+			Logger::critical('main', 'USERSGROUP::usersLogin get prefs failed');
+			die_error('get Preferences failed', __FILE__, __LINE__);
+		}
+		$user_default_group = $prefs->get('general', 'user_default_group');
+		if ($user_default_group === $this->getUniqueID()) {
+			// it's the default group -> we add all users
+			$userdb = UserDB::getInstance();
+			$users = $userdb->getList();
+			foreach ($users as $a_user) {
+				$logins []= $a_user->getAttribute('login');
 			}
 		}
+		else {
+			$ls = Abstract_Liaison::load('UsersGroup',NULL, $this->getUniqueID());
+			if (is_array($ls)) {
+				foreach ($ls as $l) {
+					$logins []= $l->element;
+				}
+			}
+		}
+		
 		return $logins;
 	}
 	
