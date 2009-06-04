@@ -97,6 +97,10 @@ class UserDB_ldap  extends UserDB {
 
 		$ldap = new LDAP($this->config);
 		$sr = $ldap->search($this->config['match']['login'].'=*', NULL);
+		if ($sr === false) {
+			Logger::error('main', 'UserDB::ldap::getList_nocache search failed');
+			return NULL;
+		}
 		$infos = $ldap->get_entries($sr);
 		foreach ($infos as $dn => $info) {
 			$u = $this->generateUserFromRow($info);
