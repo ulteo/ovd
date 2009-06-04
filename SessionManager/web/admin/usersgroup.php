@@ -781,7 +781,7 @@ echo '</form>';
 	echo '<tr>';
 	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
 	echo '<td>';
-	if ($usergroupdb_rw && $group->type == 'static') {
+	if ($usergroupdb_rw && $group->type == 'static' && !$group->isDefault()) {
 		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 		echo '<input type="hidden" name="action" value="del" />';
 		echo '<input type="hidden" name="name" value="User_UserGroup" />';

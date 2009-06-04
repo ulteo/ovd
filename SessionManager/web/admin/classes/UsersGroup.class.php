@@ -103,4 +103,14 @@ class UsersGroup {
 		$users_login = $this->usersLogin();
 		return in_array($user_->getAttribute('login'), $users_login);
 	}
+	
+	public function isDefault() {
+		$prefs = Preferences::getInstance();
+		if (!$prefs) {
+			Logger::critical('main', 'USERSGROUP::isDefault get prefs failed');
+			die_error('get Preferences failed', __FILE__, __LINE__);
+		}
+		$user_default_group = $prefs->get('general', 'user_default_group');
+		return $user_default_group === $this->getUniqueID();
+	}
 }
