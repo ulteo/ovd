@@ -51,18 +51,17 @@ system_set_broken() {
 }
 
 check_cpulimit() {
-    CPULIMITPS=`cache_ps_display | grep "cpulimit"  |awk '{ print $13 }'`
-    FIREFOXPS=`cache_ps_display  | grep "firefox"   |awk '{ print $2 }'`
-    JAVAPS=`cache_ps_display     | grep "java_vm"   |awk '{ print $2 }'`
-    KONQPS=`cache_ps_display     | grep "konqueror" |awk '{ print $2 }'`
-    GIMPPS=`cache_ps_display     | grep "gimp"      |awk '{ print $2 }'`
-    ALLPS=$FIREFOXPS" "$JAVAPS" "$KONQPS" "$GIMPPS
-    for j in $ALLPS; do
-	if echo "$CPULIMITPS" | grep -q "$j" ; then
-	    log_DEBUG "process $j already cpulimited" 
+    cache_ps_chroot_display |awk '{ if ($3 > 10.0) print $1" "$2 }' |\
+    while read i j; do
+	if cache_is_cpulimited $j; then
+	    log_DEBUG "process $j already cpulimited"
 	else
-	    cpulimit -p $j -l 25 -z& 
-	    log_INFO "limiting process $j"
+	    k=`id -u $i`
+
+	    if [ $? -eq 0 ] && [ $k -ge 1000 ]; then
+	        cpulimit -p $j -l 10 -z&
+	        log_INFO "limiting process $j"
+	    fi
 	fi
     done
 }
@@ -332,6 +331,7 @@ garbage_collector() {
 spool_init() {
     [ -d $SPOOL ] || mkdir -p $SPOOL
     [ -d $SPOOL/apt ] || mkdir $SPOOL/apt
+    [ -d $SPOOL/cache ] || mkdir $SPOOL/cache
     [ -d $SPOOL/files ] || mkdir $SPOOL/files
     [ -d $SPOOL/id ] || mkdir $SPOOL/id
     [ -d $SPOOL/sessions ] || mkdir $SPOOL/sessions

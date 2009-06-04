@@ -20,20 +20,30 @@
 ## Cache function 
 #
 cache_build() {
-    netstat -n --tcp > /tmp/netstatcache
-    ps auxww > /tmp/pscache
+    netstat -n --tcp > $SPOOL/cache/netstat
+    ps aux |tail -n +2 > $SPOOL/cache/ps
+    grep "cpulimit" $SPOOL/cache/ps | awk '{ print $13 }' > $SPOOL/cache/ps_cpulimit
+    ps axo ruser,pid,pcpu |tail -n +2 |grep -v "^root" > $SPOOL/cache/ps_chroot
 }
 
 cache_net_display() {
-    cat /tmp/netstatcache
+    cat $SPOOL/cache/netstat
 }
 
 cache_ps_display() {
-    cat /tmp/pscache
+    cat $SPOOL/cache/ps
+}
+
+cache_ps_chroot_display() {
+    cat $SPOOL/cache/ps_chroot
 }
 
 cache_ps_pid_for_user() {
-    cache_ps_display | grep "^$1" | awk '{ print $2 }'
+    grep "^$1" $SPOOL/cache/ps | awk '{ print $2 }'
+}
+
+cache_is_cpulimited() {
+    grep -q "$1" $SPOOL/cache/ps_cpulimit
 }
 
 cache_set_monitoring() {
