@@ -27,6 +27,8 @@ function ParseURL() {
 }
 
 function AuthenticationBasicHTTP() {
+	Logger::debug('main', '(webdav) Starting AuthenticationBasicHTTP');
+
 	if (! isset($_SERVER['PHP_AUTH_USER']) || empty($_SERVER['PHP_AUTH_USER']))
 		return Unauthorized();
 
@@ -37,26 +39,36 @@ function AuthenticationBasicHTTP() {
 	$password = $_SERVER['PHP_AUTH_PW'];
 
 	$dav_user = Abstract_DAV_User::load($login);
-	if (! $dav_user)
+	if (! $dav_user) {
+		Logger::error('main', '(webdav) Unable to load DAV user \''.$login.'\'');
 		return Unauthorized();
+	}
 
 	if ($password != $dav_user->password)
 		return Unauthorized();
 
 	$sharedfolder = ParseURL();
-	if (! $sharedfolder)
+	if (! $sharedfolder) {
+		Logger::error('main', '(webdav) ParseURL error => bad request');
 		return Unauthorized();
+	}
 
 	$userGroupDB = UserGroupDB::getInstance();
 
 	$usergroup = $userGroupDB->import($sharedfolder->usergroup_id);
 
-	if (! is_object($usergroup))
+	if (! is_object($usergroup)) {
+		Logger::error('main', '(webdav) Unable to load UserGroup \''.$sharedfolder->usergroup_id.'\'');
 		return Unauthorized();
+	}
 
 	$usergroup_users = $usergroup->usersLogin();
-	if (! in_array($login, $usergroup_users))
+	if (! in_array($login, $usergroup_users)) {
+		Logger::error('main', '(webdav) User \''.$login.'\' not in UserGroup \''.$sharedfolder->usergroup_id.'\'');
 		return Unauthorized();
+	}
+
+	Logger::debug('main', '(webdav) Ending AuthenticationBasicHTTP => OK');
 
 	return true;
 }
