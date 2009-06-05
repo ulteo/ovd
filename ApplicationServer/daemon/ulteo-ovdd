@@ -51,7 +51,7 @@ system_set_broken() {
 }
 
 check_cpulimit() {
-    cache_ps_chroot_display |awk '{ if ($3 > 10.0) print $1" "$2 }' |\
+    cache_ps_chroot_display |awk '{ if ($3 > 25.0) print $1" "$2 }' |\
     while read i j; do
 	if cache_is_cpulimited $j; then
 	    log_DEBUG "process $j already cpulimited"
@@ -59,7 +59,7 @@ check_cpulimit() {
 	    k=`id -u $i`
 
 	    if [ $? -eq 0 ] && [ $k -ge 1000 ]; then
-	        cpulimit -p $j -l 10 -z&
+	        cpulimit -p $j -l 25 -z&
 	        log_INFO "limiting process $j"
 	    fi
 	fi
