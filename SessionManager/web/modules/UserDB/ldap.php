@@ -96,7 +96,8 @@ class UserDB_ldap  extends UserDB {
 		$users = array();
 
 		$ldap = new LDAP($this->config);
-		$sr = $ldap->search($this->config['match']['login'].'=*', NULL);
+		$filter = $this->generateFilter();
+		$sr = $ldap->search($filter, NULL);
 		if ($sr === false) {
 			Logger::error('main', 'UserDB::ldap::getList_nocache search failed');
 			return NULL;
@@ -118,7 +119,17 @@ class UserDB_ldap  extends UserDB {
 		}
 		return $users;
 	}
-
+	
+	public function generateFilter() {
+		$filter = '('.$this->config['match']['login'].'=*)';
+		if (isset($this->config['filter'])) {
+			if ($this->config['filter'] != '') {
+				$filter = html_entity_decode($this->config['filter']);
+			}
+		}
+		return $filter;
+	}
+	
 	protected function generateUserFromRow($row_) {
 		$u = new User();
 		foreach ($this->config['match'] as $attribut => $match_ldap) {
@@ -209,6 +220,9 @@ class UserDB_ldap  extends UserDB {
 		$c = new ConfigElement_input('protocol_version', _('Protocol version'),  _('The protocol version used by your LDAP server.'), _('The protocol version used by your LDAP server.'), '3');
 		$ret []= $c;
 		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'uid' => 'uidnumber',  'displayname' => 'displayname', 'distinguishedname' => 'distinguishedname'));
+		$ret []= $c;
+		
+		$c = new ConfigElement_input('filter', _('Filter (optional)'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), _('Filter, example (&(distinguishedname=mike*)(uid=42*))'), '');
 		$ret []= $c;
 
 		$c = new ConfigElement_select('ad',_('Use as an Active Directory server?'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), _('Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile'), '0');

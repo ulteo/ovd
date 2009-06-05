@@ -66,6 +66,7 @@ class UserDB_activedirectory  extends UserDB_ldap{
 			'userbranch'	=> $config['ou'],
 			'uidprefix' => 'cn',
 			'protocol_version' => 3,
+			'filter' => '(&(objectCategory=person)(objectClass=user))',
 			'match' => array_merge($match_minimal, $config['match'])
 			);
 		return $config_ldap;

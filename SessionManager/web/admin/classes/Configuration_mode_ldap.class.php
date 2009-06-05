@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -53,7 +54,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $fields =  array('host', 'suffix', 'user_branch',
 		     'port', 'proto',
 		     'bind_dn', 'bind_password',
-		     'field_rdn', 'field_displayname', 'field_countrycode',
+		     'field_rdn', 'field_displayname', 'field_countrycode', 'field_filter',
 		     'group_branch_dn',
 		     'homedir', 'homedir_field',
 		     'cifs_auth', 'global_user_login',
@@ -100,6 +101,8 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $config['userbranch'] = $form['user_branch'];
     $config['uidprefix'] = $form['field_rdn'];
+    if ( $form['field_filter'] != '')
+      $config['filter'] = $form['field_filter'];
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
@@ -175,6 +178,11 @@ class Configuration_mode_ldap extends Configuration_mode {
       $form['field_countrycode'] = $config['match']['countrycode'];
     else
       $form['field_countrycode'] = '';
+    if (isset($config['filter']))
+      $form['field_filter'] = $config['filter'];
+    else
+      $form['field_filter'] = '';
+    
 
     $config2 = $prefs->get('UserGroupDB', 'enable');
     if ($config2 == 'ldap_memberof')
@@ -238,6 +246,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<tr><td>'._('Distinguished name field:').'</td><td><input type="text" name="field_rdn" value="'.$form['field_rdn'].'" /></td></tr>';
     $str.= '<tr><td>'._('Display name field:').'</td><td><input type="text" name="field_displayname" value="'.$form['field_displayname'].'" /></td></tr>';
     $str.= '<tr><td>'._('Locale field').'('._('optional').'):</td><td><input type="text" name="field_countrycode" value="'.$form['field_countrycode'].'" /></td></tr>';
+    $str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="field_filter" value="'.$form['field_filter'].'" /></td></tr>';
     $str.= '</table>';
 
     $str.= '<div>';
