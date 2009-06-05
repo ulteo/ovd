@@ -40,7 +40,19 @@ windows_init_connection() {
     local password=`cat ${sessid_dir}/parameters/windows_password`
     local keymap=`cat ${sessid_dir}/parameters/windows_keymap`
 
-    local cmd='rdesktop -k "'$keymap'" -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$server
+    local have_printers=$(LANG= lpstat -p |wc -l)
+    local printer_args=""
+    if [ $have_printers -gt 0 ]; then
+        local printers=$(LANG= lpstat -p |cut -d' ' -f 2)
+        local default_printer=$(LANG= lpstat -d |cut -d':' -f 2 |cut -d' ' -f 2)
+        [ d"$default_printer" != d"" ] && local printer_args="$printer_args -r printer:$default_printer"
+        for printer in $printers; do
+            [ "$printer" != "$default_printer" ] || continue
+            local printer_args="$printer_args -r printer:$printer"
+        done
+    fi
+
+    local cmd='rdesktop -k "'$keymap'" -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$printer_args' '$server
     # log_INFO "menu_windows_init_connection 2 launch cmd '$cmd'"
     su -s "/bin/bash" ${USER_LOGIN} -c "$cmd &" 
     # log_INFO "==============================="
