@@ -255,6 +255,7 @@ if (isset($start_app) && $start_app != '') {
 	}
 
 	$optional_args['start_app'] = $app->getAttribute('executable_path');
+	$optional_args['start_app_id'] = $start_app;
 }
 if (isset($open_doc) && $open_doc != '')
 	$optional_args['open_doc'] = $open_doc;

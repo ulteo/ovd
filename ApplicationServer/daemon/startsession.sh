@@ -74,6 +74,7 @@ export DISPLAY=:$i XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
 export XDG_DATA_DIRS=$SPOOL_USERS/$SESSID/xdg
 export OVD_APPS_DIR=$XDG_DATA_DIRS/applications
 [ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
+[ -f ${SESSID_DIR}/parameters/start_app_id ] && export APP_ID=`cat ${SESSID_DIR}/parameters/start_app_id`
 [ -f ${SESSID_DIR}/parameters/open_doc ] && export DOC=`cat ${SESSID_DIR}/parameters/open_doc`
 
 menu_spool $XDG_DATA_DIRS ${SESSID_DIR}

@@ -66,7 +66,7 @@ if [ "$DOC" != "" ] || [ "$APP" != "" ]; then
   if [ "$APP" = "oobase" ]; then APP="soffice -base"; fi
   if [ "$APP" = "oodraw" ]; then APP="soffice -draw"; fi
 
-  $APP "$DOC" &
+  startovdapp $APP_ID $APP "$DOC" &
 fi
 
 xfce4-session
