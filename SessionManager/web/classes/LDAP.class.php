@@ -83,7 +83,7 @@ class LDAP {
 		$log['LDAP connect'] = true;
 
 		$this->link = $buf;
-		if (!is_null($this->port))
+		if (!is_null($this->protocol_version))
 			@ldap_set_option($this->link, LDAP_OPT_PROTOCOL_VERSION, $this->protocol_version);
 
 		if ($this->login == '') {
