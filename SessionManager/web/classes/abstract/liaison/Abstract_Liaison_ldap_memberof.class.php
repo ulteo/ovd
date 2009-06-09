@@ -23,10 +23,6 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 class Abstract_Liaison_ldap_memberof {
 	public static function load($type_, $element_=NULL, $group_=NULL) {
 		Logger::debug('admin',"Abstract_Liaison_ldap_memberof::load($type_,$element_,$group_)");
-		if (str_startswith($element_, 'static_'))
-			$element_ = substr($element_, strlen('static_'));
-		if (str_startswith($group_, 'static_'))
-			$group_ = substr($group_, strlen('static_'));
 		
 		if ($type_ == 'UsersGroup') {
 			if (is_null($element_) && is_null($group_))
@@ -69,7 +65,7 @@ class Abstract_Liaison_ldap_memberof {
 		}
 		
 		$elements = array();
-		$id_ = $group_;
+		$id_ = $group->id;
 		
 		$userDBldap = new UserDB_ldap();
 		$config_ldap = $prefs->get('UserDB','ldap');
@@ -110,7 +106,7 @@ class Abstract_Liaison_ldap_memberof {
 			foreach ($buf['member'] as $member) {
 				$ldap->searchDN($member);
 				$u = $userDBldap->importFromDN($member);
-				$l = new Liaison($u->getAttribute('login'), $group_);
+				$l = new Liaison($u->getAttribute('login'), $group->id);
 				$elements[$l->element] = $l;
 			}
 		}
