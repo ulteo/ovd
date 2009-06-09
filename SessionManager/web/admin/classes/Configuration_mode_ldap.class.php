@@ -101,8 +101,7 @@ class Configuration_mode_ldap extends Configuration_mode {
 
     $config['userbranch'] = $form['user_branch'];
     $config['uidprefix'] = $form['field_rdn'];
-    if ( $form['field_filter'] != '')
-      $config['filter'] = $form['field_filter'];
+    $config['filter'] = $form['field_filter'];
     $config['match'] = array();
     $config['match']['login'] = $form['field_rdn'];
     $config['match']['displayname'] = $form['field_displayname'];
