@@ -25,6 +25,7 @@ class UserGroup_SharedFolder {
 
 	public $name = NULL;
 	public $url = NULL;
+	public $usergroup_id = NULL;
 
 	public function __construct($id_) {
 // 		Logger::debug('main', 'Starting UserGroup_SharedFolder::__construct for \''.$id_.'\'');
@@ -33,6 +34,6 @@ class UserGroup_SharedFolder {
 	}
 
 	public function __toString() {
-		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' url \''.$this->url.'\')';
+		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' url \''.$this->url.'\' usergroup_id \''.$this->usergroup_id.'\')';
 	}
 }
