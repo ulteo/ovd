@@ -56,7 +56,7 @@ if ($token->getAttribute('type') == 'start' || $token->getAttribute('type') == '
 
 $session = Abstract_Session::load($session_id);
 if (! $session || ! $session->hasAttribute('settings')) {
-	Logger::error('main', '(webservices/session_token) Invalid session: '.$session->id);
+	Logger::error('main', '(webservices/session_token) Invalid session: '.$session_id);
 	die('Invalid session');
 }
 
