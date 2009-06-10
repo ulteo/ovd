@@ -60,6 +60,10 @@ class Abstract_Liaison_ldap_posix {
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();
 		
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
 		$configLDAP = $prefs->get('UserDB','ldap');
 		
 		$conf = $prefs->get('UserGroupDB', $prefs->get('UserGroupDB','enable'));
