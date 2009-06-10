@@ -317,3 +317,19 @@ function application_desktops_to_ids() {
 
 	return $ret;
 }
+
+function base64url_encode($string_) {
+	$base64 = base64_encode($string_);
+	$base64url = strtr($base64, '+/', '-_');
+	return ($base64url);
+}
+
+function base64url_decode($base64url_) {
+	$base64 = strtr($base64url_, '-_', '+/');
+	$string = base64_decode($base64);
+	return ($string);
+}
+
+function is_base64($string_) {
+	return (substr($string_, -1) === '=');
+}
