@@ -104,12 +104,12 @@ class Configuration_mode_ad extends Configuration_mode {
       $plugin_fs = 'local';
     elseif ($form['homedir'] == 'ad_profile') {
       $plugin_fs = 'cifs_no_sfu';
-      $ad_ar['match']['homedir'] = 'profilepath';
+      $ad_ar['match']['homedir'] = 'profilePath';
 
     }
     else {
       $plugin_fs = 'cifs_no_sfu';
-      $ad_ar['match']['homedir'] = 'homedirectory';
+      $ad_ar['match']['homedir'] = 'homeDirectory';
     }
 
     // Select AD as UserDB
