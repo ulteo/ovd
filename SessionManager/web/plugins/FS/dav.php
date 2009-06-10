@@ -45,7 +45,7 @@ class FS_dav extends Plugin {
 
 		$buf = '';
 		foreach ($sharedfolders as $sharedfolder)
-			$buf.= $sharedfolder->name.'|http://'.$_SERVER['SERVER_NAME'].$base_url.'webdav.php/'.urlencode($sharedfolder->usergroup_id).'/'.$sharedfolder->id.'/'."\n";
+			$buf.= $sharedfolder->name.'|http://'.$_SERVER['SERVER_NAME'].$base_url.'webdav.php/'.base64url_encode($sharedfolder->usergroup_id).'/'.$sharedfolder->id.'/'."\n";
 
 		$this->redir_args['module_fs']['dav_dirs'] = $buf;
 

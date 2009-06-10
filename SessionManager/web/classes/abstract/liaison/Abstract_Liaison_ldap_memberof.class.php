@@ -65,7 +65,11 @@ class Abstract_Liaison_ldap_memberof {
 		}
 		
 		$elements = array();
-		$id_ = $group->id;
+		
+		if (is_base64($group->id))
+			$id_ = base64url_decode($group->id);
+		else
+			$id_ = $group->id;
 		
 		$userDBldap = new UserDB_ldap();
 		$config_ldap = $prefs->get('UserDB','ldap');

@@ -54,6 +54,9 @@ class UserGroupDB extends Module {
 		return $ret;
 	}
 	public function import($id_) {
+		if (is_base64($id_)) {
+			$id_ = base64url_decode($id_);
+		}
 		Logger::debug('main', 'UserGroupDB::import('.$id_.')');
 		foreach ($this->instance_type as $key => $value) {
 			if (str_startswith($id_, $key.'_'))

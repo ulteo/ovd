@@ -34,8 +34,8 @@ function ParseURL() {
 	if (! is_array($matches) || ! array_key_exists(1, $matches) || ! array_key_exists(2, $matches))
 		return Unauthorized();
 
-	$usergroup_id = urldecode(urldecode($matches[1]));
-	$sharedfolder_id = urldecode($matches[2]);
+	$usergroup_id = base64url_decode($matches[1]);
+	$sharedfolder_id = $matches[2];
 
 	$sharedfolder = Abstract_UserGroup_SharedFolder::load($sharedfolder_id);
 	if (! $sharedfolder)

@@ -27,8 +27,14 @@ class UserGroupDB_ldap_memberof {
 		return $ret;
 	}
 	
-	public function import($id_) {
-		Logger::debug('main',"UserGroupDB::ldap_memberof::import (id = $id_)");
+	public function import($id1_) {
+		Logger::debug('main',"UserGroupDB::ldap_memberof::import (id = $id1_)");
+		
+		if (is_base64($id1_))
+			$id_ = base64url_decode($id1_);
+		else
+			$id_ = $id1_;
+		
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);

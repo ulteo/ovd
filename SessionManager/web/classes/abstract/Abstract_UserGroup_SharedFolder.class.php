@@ -147,7 +147,7 @@ class Abstract_UserGroup_SharedFolder {
 
 		$usergroup_sharedfolder_->id = $SQL->InsertId();
 
-		@mkdir(SHAREDFOLDERS_DIR.'/'.$usergroup_sharedfolder_->usergroup_id.'/'.$usergroup_sharedfolder_->id, 0770, true);
+		@mkdir(SHAREDFOLDERS_DIR.'/'.base64url_encode($usergroup_sharedfolder_->usergroup_id).'/'.$usergroup_sharedfolder_->id, 0770, true);
 
 		return $usergroup_sharedfolder_->id;
 	}
