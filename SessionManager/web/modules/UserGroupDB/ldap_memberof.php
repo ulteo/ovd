@@ -92,8 +92,7 @@ class UserGroupDB_ldap_memberof {
 		if (! in_array('UserDB',$mods_enable))
 			die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
 		
-		$mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
-		$userDB = new $mod_user_name();
+		$userDB = UserDB::getInstance();
 		
 		$users = $userDB->getList();
 
