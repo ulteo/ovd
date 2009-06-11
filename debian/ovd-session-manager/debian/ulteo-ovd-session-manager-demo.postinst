@@ -2,6 +2,10 @@
 
 . /usr/share/debconf/confmodule
 
+mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+
 # Do nothing if we're not installing
 if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
     exit 0
@@ -36,10 +40,6 @@ db_get od/sessionmanager/mysql/configure
 
    fi
 fi
-
-mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 
 #DEBHELPER#
 
