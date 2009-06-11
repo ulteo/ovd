@@ -77,6 +77,10 @@ export OVD_APPS_DIR=$XDG_DATA_DIRS/applications
 [ -f ${SESSID_DIR}/parameters/start_app_id ] && export APP_ID=`cat ${SESSID_DIR}/parameters/start_app_id`
 [ -f ${SESSID_DIR}/parameters/open_doc ] && export DOC=`cat ${SESSID_DIR}/parameters/open_doc`
 
+if [ "r$DOC" != "r" ] || [ "r$APP" != "r" ]; then
+    [ -f ${SESSID_DIR}/parameters/app_with_desktop ] || export NODESKTOP=1
+fi
+
 menu_spool $XDG_DATA_DIRS ${SESSID_DIR}
 windows_init_connection ${SESSID_DIR}
 
