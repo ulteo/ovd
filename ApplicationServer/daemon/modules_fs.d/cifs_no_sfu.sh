@@ -29,60 +29,36 @@
 
 . $MODULES_FSD/cifs.sh
 
-parse_dir_name(){
-    file=$1
-
-    echo $file
-}
-
 cifs_no_sfu_daemon() {
+    log_INFO "Start cifs synchronisation daemon"
     echo $$ > $SESSID_DIR/cifs_no_sfu_daemon_pid
 
-    log_INFO "Start cifs synchronisation daemon"
-    
-    touch $SESSID_DIR/cifs_no_sfu_buf
-    inotifywait -mrq --format "%w!%e!%f" $CIFS_NO_SFU_TMP_BR >> $SESSID_DIR/cifs_no_sfu_buf &
-    echo $$ > $SESSID_DIR/cifs_no_sfu_daemon_inotify_pid
-    
-    i=0
-    while [ -d $SESSID_DIR ]
-    do
-        if [[ $i != `cat $SESSID_DIR/cifs_no_sfu_buf | wc -l` ]]
-        then
-            i=$(($i + 1))
-            
-            buf=`head -n $i $SESSID_DIR/cifs_no_sfu_buf | tail -n 1`
+    events="-e create -e modify -e close_write -e moved_to -e moved_from -e move -e delete"
+    inotifywait $events -mrq --format "%e/%w%f" $CIFS_NO_SFU_TMP_BR | \
+    while read buf; do
+        event=$(echo "$buf" | cut -d/ -f1)
+        file=${buf#$event/$CIFS_NO_SFU_TMP_BR}
 
-            file=`echo "$buf" | cut -d '!' -f1``echo "$buf" | cut -d '!' -f3` #FIXME problem when there is ! in names
-            file=${file#$CIFS_NO_SFU_TMP_BR/}
-
-            event=`echo "$buf" | cut -d '!' -f2`
-
-            if [ "$event" = "CLOSE_WRITE,CLOSE" ] && [ -f "$CIFS_NO_SFU_TMP_BR/$file" ] || [ "$event" = "CREATE,ISDIR" ] || [ "$event" = "MOVED_TO" ]
-            then
-                log_DEBUG "Copy file from $CIFS_NO_SFU_TMP_BR/$file to $CIFS_MOUNT_POINT/$file"
-                cp -r "$CIFS_NO_SFU_TMP_BR/$file" "$CIFS_MOUNT_POINT/$file" 2>/dev/null
-            fi
-
-            if [ "$event" = "DELETE" ] || [ "$event" = "MOVED_FROM" ]
-            then
-                log_DEBUG "Delete file $CIFS_MOUNT_POINT/$file"
-                rm "$CIFS_MOUNT_POINT/$file" 2>/dev/null
-            fi
-
-            if [ "$event" = "DELETE,ISDIR" ]
-            then
-                directory=`dirname $file`
-                file=`basename $file`
-                file=${file#.wh..wh.}
-                file=${file%.*}
-                file=$directory/$file
-                log_DEBUG "Delete directory $CIFS_MOUNT_POINT/$file"
-                rm -r "$CIFS_MOUNT_POINT/$file" 2>/dev/null
-            fi
+        if ([ "$event" = "CLOSE_WRITE,CLOSE" ] && [ -f "$CIFS_NO_SFU_TMP_BR/$file" ]) \
+                || [ "$event" = "CREATE,ISDIR" ] \
+                || [ "$event" = "MOVED_TO" ]; then
+            log_DEBUG "Copy file from $CIFS_NO_SFU_TMP_BR/$file to $CIFS_MOUNT_POINT/$file"
+            cp -r "$CIFS_NO_SFU_TMP_BR/$file" "$CIFS_MOUNT_POINT/$file" 2>/dev/null
         fi
-        
-		kill_processus $SESSID_DIR/cifs_no_sfu_daemon_inotify_pid
+        if [ "$event" = "DELETE" ] || [ "$event" = "MOVED_FROM" ]; then
+            log_DEBUG "Delete file $CIFS_MOUNT_POINT/$file"
+            rm "$CIFS_MOUNT_POINT/$file" 2>/dev/null
+        fi
+
+        if [ "$event" = "DELETE,ISDIR" ]; then
+            directory=`dirname $file`
+            file=`basename $file`
+            file=${file#.wh..wh.}
+            file=${file%.*}
+            file=$directory/$file
+            log_DEBUG "Delete directory $CIFS_MOUNT_POINT/$file"
+            rm -r "$CIFS_MOUNT_POINT/$file" 2>/dev/null
+        fi
     done
 }
 
@@ -104,8 +80,8 @@ cifs_no_sfu_do_mount() {
     # Unmount the mountbind from regular cifs module.
     umount -t bind $USER_HOME 2>> $MOUNT_LOG
     if [ $? != 0 ]; then
-	log_ERROR "unable to umount bind '$USER_HOME'"
-	return 1
+        log_ERROR "unable to umount bind '$USER_HOME'"
+        return 1
     fi
 
     # This branch will be able to receive special files, symlinks...
@@ -117,21 +93,24 @@ cifs_no_sfu_do_mount() {
     retry "$mount_cmd" $MOUNT_RETRIES 1 2>> $MOUNT_LOG
     [ $? == 0 ] || return 1
 
-    #cifs_no_sfu_daemon &
+    cifs_no_sfu_daemon &
 }
 
 cifs_no_sfu_do_umount() {
     log_DEBUG "cifs_no_sfu_do_umount"
-    
+
     kill_processus $SESSID_DIR/cifs_no_sfu_daemon_pid
-    kill_processus $SESSID_DIR/cifs_no_sfu_daemon_inotify_pid
-    
+
+    # we don't have the pid of the inotify process, try to guess it
+    INOTIFY_PID=$(ps axu | grep inotify.*$CIFS_NO_SFU_TMP_BR$ | awk '{print $2}')
+    [ -n "$INOTIFY_PID" ] && kill $INOTIFY_PID
+
     cifs_do_umount_bind || return 1
 
     # --exclude is to prevent aufs inode tables copies.
     rsync -ru --exclude='*.wh.*' $CIFS_NO_SFU_TMP_BR/ $CIFS_MOUNT_POINT
     if [ $? -ne 0 ]; then
-	log_WARN "cifs_no_sfu: unable to rsync $USER_HOME --> $CIFS_BRANCH, some data may have been lost."
+        log_WARN "cifs_no_sfu: unable to rsync $USER_HOME --> $CIFS_BRANCH, some data may have been lost."
     fi
 
     cifs_do_umount_real
@@ -147,13 +126,13 @@ cifs_no_sfu_do_clean() {
 
     local dirt_mounts=`find /mnt/cifs_no_sfu -maxdepth 1 -mindepth 1`
     for mount_point in $dirt_mounts; do
-	log_WARN "cifs_no_sfu: Cleaning dirt $mount_point"
-	rm -rf $mount_point
+        log_WARN "cifs_no_sfu: Cleaning dirt $mount_point"
+        rm -rf $mount_point
     done
 
     rmdir /mnt/cifs_no_sfu
     if [ $? != 0 ]; then
-	log_WARN "cifs_no_sfu: Cleaning '/mnt/cifs_no_sfu' not empty, erasing"
-	rm -rf /mnt/cifs_no_sfu
+        log_WARN "cifs_no_sfu: Cleaning '/mnt/cifs_no_sfu' not empty, erasing"
+        rm -rf /mnt/cifs_no_sfu
     fi
 }
