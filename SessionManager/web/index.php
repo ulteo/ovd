@@ -51,7 +51,6 @@ $desktop_timeout = $default_settings['timeout'];
 $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
-$allow_shell = $default_settings['allow_shell'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
