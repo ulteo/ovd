@@ -57,8 +57,8 @@ if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
 fi
 
 # automatically open an application if needed
-if [ "$DOC" != "" ] || [ "$APP" != "" ]; then
-  if [ "$APP" = "" ]; then APP="xdg-open"; fi
+if [ -n "$DOC" ] || [ -n "$APP" ]; then
+  [ -z "$APP" ] && APP="xdg-open"
 
   if [ "$NODESKTOP" -eq 1 ]; then
     xfwm4 &
