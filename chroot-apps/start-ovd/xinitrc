@@ -58,15 +58,15 @@ fi
 
 # automatically open an application if needed
 if [ "$DOC" != "" ] || [ "$APP" != "" ]; then
-  if [ "$APP" = "" ]; then APP="xdg-open"; fi # Open the default application for the document type. Needs xdg-utils.
-  if [ "$APP" = "oowriter" ]; then APP="soffice -writer"; fi
-  if [ "$APP" = "oocalc" ]; then APP="soffice -calc"; fi
-  if [ "$APP" = "ooimpress" ]; then APP="soffice -impress"; fi
-  if [ "$APP" = "oomath" ]; then APP="soffice -math"; fi
-  if [ "$APP" = "oobase" ]; then APP="soffice -base"; fi
-  if [ "$APP" = "oodraw" ]; then APP="soffice -draw"; fi
+  if [ "$APP" = "" ]; then APP="xdg-open"; fi
 
-  startovdapp $APP_ID $APP "$DOC" &
+  if [ "$NODESKTOP" -eq 1 ]; then
+    xfwm4 &
+    startovdapp $APP_ID $APP "$DOC"
+    exit 0
+  else
+    startovdapp $APP_ID $APP "$DOC" &
+  fi
 fi
 
 xfce4-session
