@@ -1011,6 +1011,10 @@
 	      /some/file/path... A document path to open inside the OVD</para>
 	    </listitem>
 	    <listitem>
+	      <para>app_with_desktop:
+	      0|1 Launch a full desktop when start_app is used</para>
+	    </listitem>
+	    <listitem>
 	      <para>debug: 0|1</para>
 	    </listitem>
 	  </itemizedlist>

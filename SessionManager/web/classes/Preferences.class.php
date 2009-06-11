@@ -254,13 +254,16 @@ class Preferences {
 		$c = new ConfigElement_select('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
+		$c = new ConfigElement_select('app_with_desktop', _('Launch forced application with a desktop'), _('Launch forced application with a desktop'), _('Launch forced application with a desktop'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_select('action_when_active_session', _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), 0);
 		$c->setContentAvailable(array(0=>_('Forbid access'),1=>_('Invite into the session')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'));
-		$c->setContentAvailable(array('language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'document' => _('document'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons')));
+		$c->setContentAvailable(array('language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'document' => _('document'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));

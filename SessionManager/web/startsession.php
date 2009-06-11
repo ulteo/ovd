@@ -40,6 +40,7 @@ $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $allow_shell = $default_settings['allow_shell'];
+$app_with_desktop = $default_settings['app_with_desktop'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
@@ -110,6 +111,9 @@ if (in_array('shareable', $advanced_settings) && isset($_REQUEST['shareable']) &
 
 if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_icons']) && $_REQUEST['desktop_icons'] != '')
 	$desktop_icons = $_REQUEST['desktop_icons'];
+
+if (in_array('app_with_desktop', $advanced_settings) && isset($_REQUEST['app_with_desktop']) && $_REQUEST['app_with_desktop'] != '')
+	$app_with_desktop = $_REQUEST['app_with_desktop'];
 
 if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
 	$debug = $_REQUEST['debug'];
@@ -269,6 +273,8 @@ if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 if (isset($allow_shell) && $allow_shell != '0')
 	$optional_args['allow_shell'] = 1;
+if (isset($app_with_desktop) && $app_with_desktop != '0')
+	$optional_args['app_with_desktop'] = 1;
 if (isset($allow_proxy) && $allow_proxy != '0') {
 	$optional_args['enable_proxy'] = 1;
 	if (isset($_REQUEST['proxy_type']))
