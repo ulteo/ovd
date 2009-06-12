@@ -364,7 +364,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       echo '<input type="hidden" name="element" value="'.$login.'" />';
       echo '<select name="group">';
       foreach($groups_available as $group)
-        echo '<option value="'.$group->id.'" >'.$group->name.'</option>';
+        echo '<option value="'.$group->getUniqueID().'" >'.$group->name.'</option>';
       echo '</select>';
       echo '</td><td><input type="submit" value="'._('Add to this group').'" /></td>';
       echo '</form></tr>';
