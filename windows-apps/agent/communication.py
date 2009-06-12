@@ -122,7 +122,7 @@ class Web(SimpleHTTPRequestHandler):
 					pythoncom.CoInitialize()
 					shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 					shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(args['desktopfile'])
-					if ( shortcut.GetPath(0)[0][-3:] == "exe"):
+					if ( shortcut.GetPath(0)[0][-3:].lower() == "exe"):
 						exe_file = shortcut.GetPath(0)[0]
 						path_bmp = tempfile.mktemp()+'.bmp'
 						
