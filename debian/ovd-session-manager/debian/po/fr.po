@@ -47,7 +47,7 @@ msgid ""
 "login of this user here."
 msgstr ""
 "Ulteo Session Manager nécessite d'enregistrer un administrateur. Vous "
-"pouvezdéfinir son login ici."
+"pouvez définir son login ici."
 
 #. Type: string
 #. Description
