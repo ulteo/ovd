@@ -1,6 +1,8 @@
 var refresh = 2000;
 
+var protocol;
 var server;
+var port;
 var debug;
 
 var my_width;
@@ -13,12 +15,14 @@ var nb_share = 0;
 
 var window_alive = true;
 
-function daemon_init(server_, debug_) {
-	server = server_;
+function daemon_init(debug_) {
+	protocol = window.location.protocol;
+	server = window.location.host;
+	port = window.location.port;
 	debug = debug_;
 
 	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server_+'/applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
 
 	push_log('[daemon] init()', 'info');
 
@@ -297,10 +301,10 @@ function onUpdateInfos(transport) {
 function do_print(path, timestamp) {
   push_log('[print] PDF: yes', 'info');
 
-  var print_url = 'http://'+server+'/print.php?timestamp='+timestamp;
+  var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
 
   $('printerContainer').show();
-  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="http://'+server+'/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
+  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
 
   push_log('[print] Applet: starting', 'warning');
 }

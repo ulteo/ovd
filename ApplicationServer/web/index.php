@@ -160,7 +160,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				daemon_init('<?php echo $_SERVER['SERVER_NAME']; ?>', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon_init(<?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>
