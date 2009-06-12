@@ -83,20 +83,16 @@ class Session {
 		if (! $server)
 			return false;
 
-		$ret = query_url('http://'.$server->fqdn.':'.$server->web_port.'/webservices/session_status.php?session='.$this->id);
+		$ret = query_url_no_error('http://'.$server->fqdn.':'.$server->web_port.'/webservices/session_status.php?session='.$this->id);
 
-		if (! $ret) {
-			$server->isUnreachable();
+		if (! is_numeric($ret) || $ret === '') {
+			Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
 			return false;
 		}
 
-		if (is_numeric($ret)) {
-			$this->setStatus($ret);
+		$this->setStatus($ret);
 
-			return $ret;
-		}
-
-		return false;
+		return $ret;
 	}
 
 	public function setStatus($status_) {
