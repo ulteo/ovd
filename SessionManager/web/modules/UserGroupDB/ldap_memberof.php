@@ -30,7 +30,7 @@ class UserGroupDB_ldap_memberof {
 	public function import($id1_) {
 		Logger::debug('main',"UserGroupDB::ldap_memberof::import (id = $id1_)");
 		
-		if (is_base64($id1_))
+		if (is_base64url($id1_))
 			$id_ = base64url_decode($id1_);
 		else
 			$id_ = $id1_;

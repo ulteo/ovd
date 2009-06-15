@@ -54,7 +54,7 @@ class UserGroupDB extends Module {
 		return $ret;
 	}
 	public function import($id_) {
-		if (is_base64($id_)) {
+		if (is_base64url($id_)) {
 			$id_ = base64url_decode($id_);
 		}
 		Logger::debug('main', 'UserGroupDB::import('.$id_.')');

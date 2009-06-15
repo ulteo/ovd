@@ -66,7 +66,7 @@ class Abstract_Liaison_ldap_memberof {
 		
 		$elements = array();
 		
-		if (is_base64($group->id))
+		if (is_base64url($group->id))
 			$id_ = base64url_decode($group->id);
 		else
 			$id_ = $group->id;

@@ -330,6 +330,6 @@ function base64url_decode($base64url_) {
 	return ($string);
 }
 
-function is_base64($string_) {
-	return (substr($string_, -1) === '=' || substr($string_, -1) === '.');
+function is_base64url($string_) {
+	return (substr($string_, -1) === '.');
 }
