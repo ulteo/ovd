@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -148,7 +149,7 @@ class SessionReportItem {
 	}
 
 	private function toXml() {
-		$dom = new DomDocument ();
+		$dom = new DomDocument ('1.0', 'utf-8');
 	    $dom->formatOutput = true;
 
 	    /* main node */

@@ -92,7 +92,7 @@ class Application_weblink extends Application{
 			$this->attributes['icon_path'] = 'firefox';
 		}
 		
-		$dom = new DomDocument();
+		$dom = new DomDocument('1.0', 'utf-8');
 		$application_node = $dom->createElement('application');
 		$executable_node = $dom->createElement('executable');
 

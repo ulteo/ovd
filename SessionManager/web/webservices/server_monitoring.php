@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +42,7 @@ if (! $_FILES['xml']) {
 
 $xml = trim(@file_get_contents($_FILES['xml']['tmp_name']));
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $dom->loadXML($xml);
 
 $server_keys = array();

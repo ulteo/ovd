@@ -3,6 +3,7 @@
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,7 +68,7 @@ class Reporting {
 		$user = unserialize(@file_get_contents($buf.'/user'));
 		$remote_addr = @file_get_contents($buf.'/remote_addr');
 
-		$dom = new DomDocument();
+		$dom = new DomDocument('1.0', 'utf-8');
 		$session_node = $dom->createElement('session');
 		$session_node->setAttribute('id', $this->session->id);
 		$session_node->setAttribute('date_begin', $date_begin);

@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +38,7 @@ class ServerReportItem {
 		$this->fqdn = $fqdn_;
 		$this->external_name = $server->getAttribute('external_name');
 
-		$this->dom = new DomDocument();
+		$this->dom = new DomDocument('1.0', 'utf-8');
 		$this->dom->loadXML($xml_input_);
 
 		$this->compute_load();
@@ -130,7 +131,7 @@ class ServerReportItem {
 	}
 
 	public function toXml() {
-		$dom = new DomDocument ();
+		$dom = new DomDocument ('1.0', 'utf-8');
 		$dom->formatOutput = true;
 
 		/* main node */

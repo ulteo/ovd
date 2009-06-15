@@ -165,7 +165,7 @@ class Application {
 				unset($list_attr[$k]);
 		}
 
-		$dom = new DomDocument();
+		$dom = new DomDocument('1.0', 'utf-8');
 		$application_node = $dom->createElement('application');
 		$executable_node = $dom->createElement('executable');
 

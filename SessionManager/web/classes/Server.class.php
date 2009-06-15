@@ -481,7 +481,7 @@ class Server {
 			return false;
 		}
 
-		$dom = new DomDocument();
+		$dom = new DomDocument('1.0', 'utf-8');
 		$ret = @$dom->loadXML($xml);
 		if (! $ret) {
 			Logger::error('main', 'Server::getMonitoring loadXML failed');
@@ -622,7 +622,7 @@ class Server {
 			return false;
 		}
 
-		$dom = new DomDocument();
+		$dom = new DomDocument('1.0', 'utf-8');
 		@$dom->loadXML($xml);
 		$root = $dom->documentElement;
 

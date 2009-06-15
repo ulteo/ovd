@@ -3,6 +3,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +37,7 @@ class AuthMethod_Token extends AuthMethod {
 
 		$xml = query_url($token_url);
 
-		$dom = new DomDocument();
+		$dom = new DomDocument('1.0', 'utf-8');
 		$ret = @$dom->loadXML($xml);
 		if (! $ret) {
 			Logger::error('main', 'Token webservice does not send a valid XML');

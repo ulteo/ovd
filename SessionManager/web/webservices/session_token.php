@@ -3,6 +3,7 @@
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -66,7 +67,7 @@ $session_type = 'linux';
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $token->type);
