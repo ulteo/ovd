@@ -15,6 +15,7 @@ scripts_DATA = actions.php \
                publications.php \
                reporting.php \
                servers.php \
+               sharedfolders.php \
                sessions.php \
                sumup.php \
                tasks.php \

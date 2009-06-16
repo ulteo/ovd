@@ -175,4 +175,83 @@ if ($_REQUEST['name'] == 'static_application') {
 	}
 }
 
+if ($_REQUEST['name'] == 'SharedFolder') {
+	if ($_REQUEST['action']=='add') {
+		action_add_sharedfolder();
+		redirect();
+	}
+	elseif ($_REQUEST['action']=='del') {
+		if (isset($_REQUEST['id'])) {
+			action_del_sharedfolder($_REQUEST['id']);
+			redirect();
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'SharedFolder_ACL') {
+	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
+		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
+		redirect();
+	}
+	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
+		action_del_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
+		redirect();
+	}
+}
+
+function action_add_sharedfolder() {
+	$sharedfolder_name = $_REQUEST['sharedfolder_name'];
+	if ($sharedfolder_name == '') {
+		popup_error(_('You must give a name to your shared folder'));
+		return false;
+	}
+
+	$buf = SharedFolders::getByName($sharedfolder_name);
+	if (count($buf) > 0) {
+		popup_error(_('A shared folder with this name already exists'));
+		return false;
+	}
+
+	$buf = new SharedFolder(NULL);
+	$buf->name = $sharedfolder_name;
+	Abstract_SharedFolder::save($buf);
+
+	return true;
+}
+
+function action_del_sharedfolder($sharedfolder_id) {
+	$buf = Abstract_SharedFolder::delete($sharedfolder_id);
+
+	if (! $buf) {
+		popup_error(_('Unable to delete this shared folder'));
+		return false;
+	}
+
+	return true;
+}
+
+function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
+	$sharedfolder = Abstract_SharedFolder::load($sharedfolder_id_);
+	if (! $sharedfolder) {
+		popup_error(_('Unable to create this shared folder access'));
+		return false;
+	}
+
+	Abstract_SharedFolder::add_acl($sharedfolder, $usergroup_id_);
+
+	return true;
+}
+
+function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
+	$sharedfolder = Abstract_SharedFolder::load($sharedfolder_id_);
+	if (! $sharedfolder) {
+		popup_error(_('Unable to delete this shared folder access'));
+		return false;
+	}
+
+	Abstract_SharedFolder::del_acl($sharedfolder, $usergroup_id_);
+
+	return true;
+}
+
 redirect();

@@ -30,18 +30,14 @@ function Unauthorized() {
 
 function ParseURL() {
 	$matches = array();
-	preg_match('@/webdav\.php/([^/]+)/([^/]+)/@', $_SERVER['REQUEST_URI'], $matches);
-	if (! is_array($matches) || ! array_key_exists(1, $matches) || ! array_key_exists(2, $matches))
+	preg_match('@/webdav\.php/([^/]+)/@', $_SERVER['REQUEST_URI'], $matches);
+	if (! is_array($matches) || ! array_key_exists(1, $matches))
 		return Unauthorized();
 
-	$usergroup_id = base64url_decode($matches[1]);
-	$sharedfolder_id = $matches[2];
+	$sharedfolder_id = $matches[1];
 
-	$sharedfolder = Abstract_UserGroup_SharedFolder::load($sharedfolder_id);
+	$sharedfolder = Abstract_SharedFolder::load($sharedfolder_id);
 	if (! $sharedfolder)
-		return Unauthorized();
-
-	if ($sharedfolder->usergroup_id != $usergroup_id)
 		return Unauthorized();
 
 	return $sharedfolder;
@@ -69,29 +65,25 @@ function AuthenticationBasicHTTP() {
 		return Unauthorized();
 
 	$sharedfolder = ParseURL();
-	if (! $sharedfolder) {
+	if (! is_object($sharedfolder)) {
 		Logger::error('main', '(webdav) ParseURL error => bad request');
 		return Unauthorized();
 	}
 
-	$userGroupDB = UserGroupDB::getInstance();
+	$userDB = UserDB::getInstance();
+	$user = $userDB->import($login);
+	$usergroup_ids = array_keys($user->usersGroups());
+	$sharedfolder_acls_ids = array_keys($sharedfolder->acls);
 
-	$usergroup = $userGroupDB->import($sharedfolder->usergroup_id);
+	foreach ($usergroup_ids as $usergroup_id) {
+		if (in_array($usergroup_id, $sharedfolder_acls_ids)) {
+			Logger::debug('main', '(webdav) Ending AuthenticationBasicHTTP => OK');
 
-	if (! is_object($usergroup)) {
-		Logger::error('main', '(webdav) Unable to load UserGroup \''.$sharedfolder->usergroup_id.'\'');
-		return Unauthorized();
+			return true;
+		}
 	}
 
-	$usergroup_users = $usergroup->usersLogin();
-	if (! in_array($login, $usergroup_users)) {
-		Logger::error('main', '(webdav) User \''.$login.'\' not in UserGroup \''.$sharedfolder->usergroup_id.'\'');
-		return Unauthorized();
-	}
-
-	Logger::debug('main', '(webdav) Ending AuthenticationBasicHTTP => OK');
-
-	return true;
+	return Unauthorized();
 }
 
 if (! AuthenticationBasicHTTP())

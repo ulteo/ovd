@@ -38,14 +38,14 @@ class FS_dav extends Plugin {
 		$usergroups = $user->usersGroups();
 		$sharedfolders = array();
 		foreach ($usergroups as $usergroup)
-			$sharedfolders = array_merge($sharedfolders, UserGroup_SharedFolders::getByUserGroupId($usergroup->getUniqueID()));
+			$sharedfolders = array_merge($sharedfolders, SharedFolders::getByUserGroupId($usergroup->getUniqueID()));
 
 		if (count($sharedfolders) == 0)
 			return;
 
 		$buf = '';
 		foreach ($sharedfolders as $sharedfolder)
-			$buf.= $sharedfolder->name.'|http://'.$_SERVER['SERVER_NAME'].$base_url.'webdav.php/'.base64url_encode($sharedfolder->usergroup_id).'/'.$sharedfolder->id.'/'."\n";
+			$buf.= $sharedfolder->name.'|http://'.$_SERVER['SERVER_NAME'].$base_url.'webdav.php/'.$sharedfolder->id.'/'."\n";
 
 		$this->redir_args['module_fs']['dav_dirs'] = $buf;
 

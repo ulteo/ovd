@@ -20,20 +20,20 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-class UserGroup_SharedFolder {
+class SharedFolder {
 	public $id = NULL;
 
 	public $name = NULL;
-	public $url = NULL;
-	public $usergroup_id = NULL;
+
+	public $acls = array();
 
 	public function __construct($id_) {
-// 		Logger::debug('main', 'Starting UserGroup_SharedFolder::__construct for \''.$id_.'\'');
+// 		Logger::debug('main', 'Starting SharedFolder::__construct for \''.$id_.'\'');
 
 		$this->id = $id_;
 	}
 
 	public function __toString() {
-		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' url \''.$this->url.'\' usergroup_id \''.$this->usergroup_id.'\')';
+		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\')';
 	}
 }

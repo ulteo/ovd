@@ -41,7 +41,8 @@ $sub_items =
   array('servers.php'		=>
 	array('servers.php' => _('Servers'),
 	      'servers.php?view=unregistered' => _('Unregistered servers'),
-		'tasks.php' => _('Tasks')),
+		'tasks.php' => _('Tasks'),
+		'sharedfolders.php'	=>	_('Shared folders')),
 
 	'users.php'		=>
 	array('users.php' => _('Users'),

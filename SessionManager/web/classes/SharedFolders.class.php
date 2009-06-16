@@ -20,11 +20,11 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-class UserGroup_SharedFolders {
+class SharedFolders {
 	public static function getAll() {
-// 		Logger::debug('main', 'Starting UserGroup_SharedFolders::getAll');
+// 		Logger::debug('main', 'Starting SharedFolders::getAll');
 
-		$buf = Abstract_UserGroup_SharedFolder::load_all();
+		$buf = Abstract_SharedFolder::load_all();
 
 		if (! is_array($buf))
 			return array();
@@ -33,28 +33,23 @@ class UserGroup_SharedFolders {
 	}
 
 	public static function getByName($sharedfolder_name_) {
-// 		Logger::debug('main', 'Starting UserGroup_SharedFolders::getByName');
+// 		Logger::debug('main', 'Starting SharedFolders::getByName');
 
-		$usergroup_sharedfolders = UserGroup_SharedFolders::getAll();
+		$sharedfolders = SharedFolders::getAll();
 
-		foreach ($usergroup_sharedfolders as $k => $usergroup_sharedfolder) {
-			if ($usergroup_sharedfolder->name != $sharedfolder_name_)
-				unset($usergroup_sharedfolders[$k]);
+		foreach ($sharedfolders as $k => $sharedfolder) {
+			if ($sharedfolder->name != $sharedfolder_name_)
+				unset($sharedfolders[$k]);
 		}
 
-		return $usergroup_sharedfolders;
+		return $sharedfolders;
 	}
 
 	public static function getByUserGroupId($usergroup_id_) {
-// 		Logger::debug('main', 'Starting UserGroup_SharedFolders::getByUserGroupId');
+// 		Logger::debug('main', 'Starting SharedFolders::getByUserGroupId');
 
-		$usergroup_sharedfolders = UserGroup_SharedFolders::getAll();
+		$sharedfolders = Abstract_SharedFolder::load_by_usergroup_id($usergroup_id_);
 
-		foreach ($usergroup_sharedfolders as $k => $usergroup_sharedfolder) {
-			if ($usergroup_sharedfolder->usergroup_id != $usergroup_id_)
-				unset($usergroup_sharedfolders[$k]);
-		}
-
-		return $usergroup_sharedfolders;
+		return $sharedfolders;
 	}
 }

@@ -53,8 +53,12 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		foreach ($liaisons as $liaison) {
 			Abstract_Liaison::delete('UsersGroup', NULL, $usergroup_->id);
 		}
-		// second we delete the group
+		// second we delete sharedfolder acls for the group
+		Abstract_SharedFolder::del_usergroup_acl($usergroup_->getUniqueID());
+
+		// third we delete the group
 		$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $usergroup_->id);
+
 		return ($res !== false);
 	}
 	
