@@ -64,7 +64,7 @@ check_variables() {
 }
 
 is_mount_point() {
-    grep " $1 " /proc/mounts > /dev/null
+    mount | grep -q " $1 "
 }
 
 #
