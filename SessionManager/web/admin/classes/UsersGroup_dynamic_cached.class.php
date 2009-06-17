@@ -65,6 +65,5 @@ class UsersGroup_dynamic_cached extends UsersGroup_dynamic {
 			if (! isset($liaisons[$a_login]))
 				Abstract_Liaison::save('UsersGroupCached', $a_login, $this->getUniqueID());
 		}
-		$pouet = false;
 	}
 }
