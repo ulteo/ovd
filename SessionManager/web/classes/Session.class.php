@@ -80,8 +80,10 @@ class Session {
 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
-		if (! $server)
+		if (! $server) {
+			Logger::error('main', 'Session::getStatus failed to load server (server='.$this->server.')');
 			return false;
+		}
 
 		$ret = query_url_no_error('http://'.$server->fqdn.':'.$server->web_port.'/webservices/session_status.php?session='.$this->id);
 

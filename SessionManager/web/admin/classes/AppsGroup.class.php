@@ -76,11 +76,15 @@ class AppsGroup {
 				$this->id = $row['id'];
 				return true;
 			}
-			else
+			else {
+				Logger::error('main', 'AppsGroup::insertDB  select NumRows != 1 ('.$sql2->NumRows($res).')');
 				return false;
+			}
 		}
-		else
+		else {
+			Logger::error('main', 'AppsGroup::insertDB Insert (of '.$this.') failed (DoQuery return false)');
 			return false;
+		}
 	}
 	
 	public function updateDB(){
@@ -112,8 +116,10 @@ class AppsGroup {
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPSGROUP_TABLE, 'id', $this->id);
 			return ($res !== false);
 		}
-		else
+		else {
+			Logger::error('main', 'AppsGroup::removeDB this->id is not a numeric (id='.$this->id.')');
 			return false;
+		}
 	}
 	
 	public function isOK(){

@@ -105,6 +105,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 		$usergroup_->id = $sql2->InsertId();
 		$status = is_object($this->import($sql2->InsertId()));
 		if ( $status === false) {
+			Logger::error('main', 'UserGroupDBDynamic_cached::add import failed (import of '.$sql2->InsertId());
 			return false;
 		}
 		foreach ($usergroup_->rules as $a_rule) {

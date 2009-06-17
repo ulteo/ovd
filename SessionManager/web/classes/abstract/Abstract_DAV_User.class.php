@@ -54,8 +54,10 @@ class Abstract_DAV_User {
 		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'login', 'password', $SQL->prefix.'dav_users', 'login', $login);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_DAV_User::load($login_) failed: NumRow == 0");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 
@@ -77,8 +79,10 @@ class Abstract_DAV_User {
 		$login = $dav_user_->login;
 
 		if (! Abstract_DAV_User::load($login))
-			if (! Abstract_DAV_User::create($dav_user_))
+			if (! Abstract_DAV_User::create($dav_user_)) {
+				Logger::error('main', "Abstract_DAV_User::save($dav_user_) Abstract_DAV_User::create failed");
 				return false;
+			}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 LIMIT 1', $SQL->prefix.'dav_users', 'password', $dav_user_->password, 'login', $dav_user_->login);
 
@@ -115,8 +119,10 @@ class Abstract_DAV_User {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_DAV_User::delete($login_) User does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login);
 

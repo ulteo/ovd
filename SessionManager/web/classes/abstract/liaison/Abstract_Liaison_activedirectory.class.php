@@ -74,8 +74,10 @@ class Abstract_Liaison_activedirectory {
 			$id2 = $id_;
 		}
 		$expl = explode(',',$id2,2);
-		if (count($expl) < 2)
+		if (count($expl) < 2) {
+			Logger::error('main', "Abstract_Liaison_activedirectory::loadElements($type_,$group_) count(expl) != 2 (count=".count($expl).")(id2=".$id2.")");
 			return NULL;
+		}
 		$config_ldap['userbranch'] = $expl[1];
 
 		$buf = array();
@@ -131,6 +133,7 @@ class Abstract_Liaison_activedirectory {
 			}
 			return $groups;
 		}
+		Logger::error('main', "Abstract_Liaison_activedirectory::loadGroups($type_,$element_) end of function");
 		return NULL;
 	}
 	

@@ -68,7 +68,7 @@ class UserGroup_Rule {
 				return (! (str_endswith($user_->getAttribute($this->attribute), $this->value)));
 				break;
 		}
-
+		Logger::error('main', 'UserGroup_Rule::match type (='.$this->type.') not matched');
 		return false;
 	}
 }

@@ -158,7 +158,7 @@ class User {
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
-			Logger::error('main', 'get Preferences failed');
+			Logger::error('main', 'USER::getAvailableServer get Preferences failed');
 			return NULL;
 		}
 		$application_server_settings = $prefs->get('general', 'application_server_settings');
@@ -167,8 +167,10 @@ class User {
 			return NULL;
 		}
 		$criterions = $application_server_settings['load_balancing'];
-		if (is_null($criterions))
+		if (is_null($criterions)) {
+			Logger::error('main' , 'USER::getAvailableServer criterions is null');
 			return NULL;
+		}
 
 		$server_val = array();
 		foreach($list_servers as $server) {
@@ -197,6 +199,7 @@ class User {
 			if ($buf->isOnline())
 				return $buf;
 		}
+		Logger::error('main' , 'USER::getAvailableServer error end of function');
 		return NULL;
 	}
 

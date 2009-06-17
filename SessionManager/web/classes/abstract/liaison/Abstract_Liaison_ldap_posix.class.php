@@ -83,10 +83,14 @@ class Abstract_Liaison_ldap_posix {
 		$ldap = new LDAP($configLDAP);
 		$sr = $ldap->search('cn='.$group_, NULL);
 		$infos = $ldap->get_entries($sr);
-		if (!is_array($infos))
+		if (!is_array($infos)) {
+			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements($type_,$group_) ldap->get_entries is not an array");
 			return NULL;
-		if ($infos == array())
+		}
+		if ($infos == array()) {
+			Logger::error('main', "Abstract_Liaison_ldap_posix::loadElements($type_,$group_) ldap->get_entries is empty");
 			return NULL;
+		}
 		
 		$keys = array_keys($infos);
 		$dn = $keys[0];

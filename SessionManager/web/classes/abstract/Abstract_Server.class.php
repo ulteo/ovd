@@ -105,8 +105,10 @@ class Abstract_Server {
 		$fqdn = $server_->fqdn;
 
 		if (! Abstract_Server::load($fqdn))
-			if (! Abstract_Server::create($server_))
+			if (! Abstract_Server::create($server_)) {
+				Logger::error('main', "Abstract_Server::save($server_) create failed");
 				return false;
+			}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
@@ -124,8 +126,10 @@ class Abstract_Server {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
-		if ($total != 0)
+		if ($total != 0) {
+			Logger::error('main', "Abstract_Server::create($server_) server already exist (NumRows != 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'servers', 'fqdn', $fqdn);
 
@@ -139,8 +143,10 @@ class Abstract_Server {
 
 		$fqdn = $server_->fqdn;
 
-		if (! Abstract_Server::load($fqdn))
+		if (! Abstract_Server::load($fqdn)) {
+			Logger::error('main', "Abstract_Server::modify($server_) failed to load server");
 			return false;
+		}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
@@ -161,8 +167,10 @@ class Abstract_Server {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Server::delete($server_) server does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 
@@ -212,8 +220,10 @@ class Abstract_Server {
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'servers', 'fqdn', $server_->fqdn);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Server::uptodate($server_) server does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 

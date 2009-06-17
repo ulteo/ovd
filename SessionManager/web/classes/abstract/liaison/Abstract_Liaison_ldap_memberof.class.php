@@ -141,6 +141,7 @@ class Abstract_Liaison_ldap_memberof {
 			}
 			return $groups;
 		}
+		Logger::error('main', "Abstract_Liaison_ldap_memberof::loadGroups ($type_,$element_) end of function");
 		return NULL;
 	}
 	

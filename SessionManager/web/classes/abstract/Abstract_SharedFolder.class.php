@@ -84,8 +84,10 @@ class Abstract_SharedFolder {
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'name', $SQL->prefix.'sharedfolders', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_SharedFolder::load($id_) ShareFolder does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 
@@ -181,8 +183,10 @@ class Abstract_SharedFolder {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sharedfolders', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_SharedFolder::delete($id_) ShareFolder does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sharedfolders', 'id', $id);
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $id);

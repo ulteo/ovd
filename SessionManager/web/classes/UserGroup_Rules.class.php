@@ -22,13 +22,15 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class UserGroup_Rules {
-	public static function getAll() {
+	public static function UserGroup_Rules() {
 // 		Logger::debug('main', 'Starting UserGroup_Rules::getAll');
 
 		$buf = Abstract_UserGroup_Rule::load_all();
 
-		if (! is_array($buf))
+		if (! is_array($buf)) {
+			Logger::error('main', 'UserGroup_Rules::UserGroup_Rules Abstract_UserGroup_Rule::load_all failed (not an array)'):
 			return array();
+		}
 
 		return $buf;
 	}

@@ -56,8 +56,10 @@ class Abstract_Token {
 		$SQL->DoQuery('SELECT @1,@2,@3 FROM @4 WHERE @5 = %6 LIMIT 1', 'type', 'link_to', 'valid_until', $SQL->prefix.'tokens', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Token::load($id_) Token does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 
@@ -80,8 +82,10 @@ class Abstract_Token {
 		$id = $token_->id;
 
 		if (! Abstract_Token::load($id))
-			if (! Abstract_Token::create($token_))
+			if (! Abstract_Token::create($token_)) {
+				Logger::error('main', "Abstract_Token::save($token_) Abstract_Token::create failed");
 				return false;
+			}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'tokens', 'type', $token_->type, 'link_to', $token_->link_to, 'valid_until', $token_->valid_until, 'id', $id);
 
@@ -98,8 +102,10 @@ class Abstract_Token {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total != 0)
+		if ($total != 0) {
+			Logger::error('main', "Abstract_Token::create($token_) Token already exist (NumRows == $total)");
 			return false;
+		}
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'tokens', 'id', $id);
 
@@ -116,8 +122,10 @@ class Abstract_Token {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Token::delete($id_) Token does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id);
 

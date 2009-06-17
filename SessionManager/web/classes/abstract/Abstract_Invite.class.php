@@ -57,8 +57,10 @@ class Abstract_Invite {
 		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'session', 'settings', 'email', 'valid_until', $SQL->prefix.'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', 'Abstract_Invite::load('.$id_.') NumRows == 0');
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 
@@ -82,8 +84,10 @@ class Abstract_Invite {
 		$id = $invite_->id;
 
 		if (! Abstract_Invite::load($id))
-			if (! Abstract_Invite::create($invite_))
+			if (! Abstract_Invite::create($invite_)) {
+				Logger::error('main', "Abstract_Invite::save($invite_) create failed");
 				return false;
+			}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9 WHERE @10 = %11 LIMIT 1', $SQL->prefix.'invites', 'session', $invite_->session, 'settings', serialize($invite_->settings), 'email', $invite_->email, 'valid_until', $invite_->valid_until, 'id', $id);
 
@@ -100,8 +104,10 @@ class Abstract_Invite {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total != 0)
+		if ($total != 0) {
+			Logger::error('main', "Abstract_Invite::create($invite_) NumRows != 0 (NumRows=".$total.")");
 			return false;
+		}
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'invites', 'id', $id);
 
@@ -120,8 +126,10 @@ class Abstract_Invite {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Invite::delete($id_) Invite does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id);
 

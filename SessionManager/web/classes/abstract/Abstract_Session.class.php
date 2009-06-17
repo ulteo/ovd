@@ -61,8 +61,10 @@ class Abstract_Session {
 		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7 FROM @8 WHERE @9 = %10 LIMIT 1', 'server', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Session::load($id_) session does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 
@@ -89,8 +91,10 @@ class Abstract_Session {
 		$id = $session_->id;
 
 		if (! Abstract_Session::load($id))
-			if (! Abstract_Session::create($session_))
+			if (! Abstract_Session::create($session_)) {
+				Logger::error('main', "Abstract_Session::save($session_) failed to create session");
 				return false;
+			}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17 WHERE @18 = %19 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
@@ -107,8 +111,10 @@ class Abstract_Session {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total != 0)
+		if ($total != 0) {
+			Logger::error('main', "Abstract_Session::create($session_) session already exists (NumRows != 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'sessions', 'id', $id);
 
@@ -127,8 +133,10 @@ class Abstract_Session {
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Session::delete($session_) session does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id);
 
@@ -172,8 +180,10 @@ class Abstract_Session {
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'sessions', 'id', $session_->id);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Session::uptodate($session_) session does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 

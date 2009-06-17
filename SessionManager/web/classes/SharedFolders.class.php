@@ -3,6 +3,7 @@
  * Copyright (C) 2008-2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +27,10 @@ class SharedFolders {
 
 		$buf = Abstract_SharedFolder::load_all();
 
-		if (! is_array($buf))
+		if (! is_array($buf)) {
+			Logger::error('main', 'SharedFolders::getAll Abstract_SharedFolder::load_all failed (not an array)');
 			return array();
+		}
 
 		return $buf;
 	}

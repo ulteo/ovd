@@ -130,6 +130,7 @@ class Abstract_Liaison_dynamic {
 		}
 		
 		if (! $group->containUser($user)) {
+			Logger::error('main', "Abstract_Liaison_dynamic::loadUnique($type_,$element_,$group_) group does not contain the user");
 			return NULL;
 		}
 		else {
