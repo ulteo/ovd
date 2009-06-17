@@ -99,6 +99,7 @@ class Abstract_Liaison_sql {
 			}
 			return $result;
 		}
+		Logger::error('main', "Abstract_Liaison_sql::loadElements($type_, $group_) error end of function");
 		return NULL;
 	}
 	
@@ -127,6 +128,7 @@ class Abstract_Liaison_sql {
 			}
 			return $result;
 		}
+		Logger::error('main', "Abstract_Liaison_sql::loadGroups($type_, $element_) error end of function");
 		return NULL;
 	}
 	
@@ -155,6 +157,7 @@ class Abstract_Liaison_sql {
 			}
 			return $result;
 		}
+		Logger::error('main', "Abstract_Liaison_sql::loadAll($type_) error end of function");
 		return NULL;
 	}
 	public static function loadUnique($type_, $element_, $group_) {
@@ -177,11 +180,15 @@ class Abstract_Liaison_sql {
 		if ($res !== false){
 			if ($sql2->NumRows() == 1)
 				return  new Liaison($element_, $group_);
-			else
+			else {
+				Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error doublon (".$sql2->NumRows().")");
 				return NULL;
+			}
 		}
-		else
+		else {
+			Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error DoQuery failed");
 			return NULL;
+		}
 	}
 	
 	public static function init($prefs_) {
