@@ -43,7 +43,7 @@ class UserGroupDBDynamic {
 			return false;
 	}
 	public function import($id_) {
-		Logger::debug('admin',"UserGroupDBDynamic::import (id = $id_)");
+		Logger::debug('main', "UserGroupDBDynamic::import (id = $id_)");
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @7 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_, 'validation_type');
 		
@@ -97,7 +97,7 @@ class UserGroupDBDynamic {
 	
 	// admin function
 	public function add($usergroup_){
-		Logger::debug('admin','UserGroupDBDynamic::add');
+		Logger::debug('main', 'UserGroupDBDynamic::add');
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@8) VALUES (%5,%6,%7,%9)',$this->table, 'name', 'description', 'published', $usergroup_->name, $usergroup_->description, $usergroup_->published, 'validation_type', $usergroup_->validation_type);
 		if ($res === false) {
@@ -120,7 +120,7 @@ class UserGroupDBDynamic {
 	}
 	
 	public function remove($usergroup_){
-		Logger::debug('admin','UserGroupDBDynamic::remove');
+		Logger::debug('main', 'UserGroupDBDynamic::remove');
 		// first we delete liaisons
 		$sql2 = MySQL::getInstance();
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
@@ -148,7 +148,7 @@ class UserGroupDBDynamic {
 	}
 	
 	public function update($usergroup_){
-		Logger::debug('admin','UserGroupDBDynamic::update');
+		Logger::debug('main', 'UserGroupDBDynamic::update');
 		$old_usergroup = $this->import($usergroup_->id);
 		$old_rules = $old_usergroup->rules;
 		
@@ -175,10 +175,10 @@ class UserGroupDBDynamic {
 	public static function configuration() {} // TODO
 	
 	public static function init($prefs_) {
-		Logger::debug('admin','UserGroupDBDynamic::init');
+		Logger::debug('main', 'UserGroupDBDynamic::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','UserGroupDBDynamic::init mysql conf not valid');
+			Logger::error('main', 'UserGroupDBDynamic::init mysql conf not valid');
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup_dynamic';
@@ -195,7 +195,7 @@ class UserGroupDBDynamic {
 		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
-			Logger::error('admin','UserGroupDBDynamic::init table '.$usersgroup_table.' fail to created');
+			Logger::error('main', 'UserGroupDBDynamic::init table '.$usersgroup_table.' fail to created');
 			return false;
 		}
 		

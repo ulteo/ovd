@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison_activedirectory {
 	public static function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('admin',"Abstract_Liaison_activedirectory::load($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_activedirectory::load($type_,$element_,$group_)");
 		if ($type_ == 'UsersGroup') {
 			if (is_null($element_) && is_null($group_))
 				return Abstract_Liaison_activedirectory::loadAll($type_);
@@ -35,27 +35,27 @@ class Abstract_Liaison_activedirectory {
 		}
 		else
 		{
-			Logger::error('admin',"Abstract_Liaison_activedirectory::load error liaison != UsersGroup not implemented");
+			Logger::error('main', "Abstract_Liaison_activedirectory::load error liaison != UsersGroup not implemented");
 			return NULL;
 		}
 		
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_activedirectory::save");
+		Logger::debug('main', "Abstract_Liaison_activedirectory::save");
 		return false;
 	}
 	public static function delete($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_activedirectory::delete");
+		Logger::debug('main', "Abstract_Liaison_activedirectory::delete");
 		return false;
 	}
 	public static function loadElements($type_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_activedirectory::loadElements ($type_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_activedirectory::loadElements ($type_,$group_)");
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		
 		$group = $userGroupDB->import($group_);
 		if (! is_object($group)) {
-			Logger::error('admin',"Abstract_Liaison_activedirectory::loadElements load group ($group_) failed");
+			Logger::error('main', "Abstract_Liaison_activedirectory::loadElements load group ($group_) failed");
 			return NULL;
 		}
 		
@@ -108,13 +108,13 @@ class Abstract_Liaison_activedirectory {
 	}
 	
 	public static function loadGroups($type_, $element_) {
-		Logger::debug('admin',"Abstract_Liaison_activedirectory::loadGroups ($type_,$element_)");
+		Logger::debug('main', "Abstract_Liaison_activedirectory::loadGroups ($type_,$element_)");
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();
 		
 		$element_user = $userDB->import($element_);
 		if (! is_object($element_user)) {
-			Logger::error('admin',"Abstract_Liaison_activedirectory::loadGroups load element ($element_) failed");
+			Logger::error('main', "Abstract_Liaison_activedirectory::loadGroups load element ($element_) failed");
 			return NULL;
 		}
 		if ($element_user->hasAttribute('memberof')) {

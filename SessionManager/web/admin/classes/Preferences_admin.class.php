@@ -82,26 +82,26 @@ class Preferences_admin extends Preferences {
 	}
 
 	public function isValid() {
-		Logger::debug('admin','PREFERENCESADMIN::isValid');
+		Logger::debug('main', 'PREFERENCESADMIN::isValid');
 
 		if (!function_exists('curl_init'))
 			return _('Please install CURL support for PHP');
 
 		$mysql_conf = $this->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','PREFERENCESADMIN::isValid db conf failed');
+			Logger::error('main', 'PREFERENCESADMIN::isValid db conf failed');
 			return _('SQL configuration not valid(2)');
 		}
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$db_ok = $sql2->CheckLink(false);
 		if ( $db_ok === false) {
-			Logger::error('admin','PREFERENCESADMIN::isValid db link failed');
+			Logger::error('main', 'PREFERENCESADMIN::isValid db link failed');
 			return _('SQL configuration not valid');
 		}
 		// now we can initialize the system (mysql DB ...)
 		$ret = init_db($this);
 		if ($ret !== true) {
-			Logger::error('admin','init_db failed');
+			Logger::error('main', 'init_db failed');
 			return _('Initialization failed');
 		}
 
@@ -111,7 +111,7 @@ class Preferences_admin extends Preferences {
 			foreach ($plugins_enable as $plugin_name) {
 				$ret_eval = call_user_func(array('Plugin_'.strtolower($plugin_name), 'prefsIsValid'), $this);
 				if ($ret_eval !== true) {
-					Logger::error('admin','prefs is not valid for plugin \''.$plugin_name.'\'');
+					Logger::error('main', 'prefs is not valid for plugin \''.$plugin_name.'\'');
 					$plugins_ok = false;
 					return _('prefs is not valid for plugin').' ('.$plugin_name.')'; // TODO
 				}
@@ -123,7 +123,7 @@ class Preferences_admin extends Preferences {
 // 			foreach ($plugins_FS['FS'] as $plugin_name) {
 				$ret_eval = call_user_func(array('FS_'.strtolower($plugins_FS), 'prefsIsValid'), $this);
 				if ($ret_eval !== true) {
-					Logger::error('admin','prefs is not valid for FS plugin \''.$plugins_FS.'\'');
+					Logger::error('main', 'prefs is not valid for FS plugin \''.$plugins_FS.'\'');
 					$plugins_ok = false;
 					return _('prefs is not valid for FS plugin').' ('.$plugins_FS.')'; // TODO
 				}
@@ -131,7 +131,7 @@ class Preferences_admin extends Preferences {
 		}
 		
 		if ( $plugins_ok === false) {
-			Logger::error('admin','PREFERENCESADMIN::isValid plugins false');
+			Logger::error('main', 'PREFERENCESADMIN::isValid plugins false');
 			return _('Plugins configuration not valid');
 		}
 
@@ -144,7 +144,7 @@ class Preferences_admin extends Preferences {
 					$mod_name = $module_name.'_'.$enable;
 					$ret_eval = call_user_func(array($mod_name, 'prefsIsValid'), $this);
 					if ($ret_eval !== true) {
-						Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
+						Logger::error('main', 'prefs is not valid for module \''.$mod_name.'\'');
 						$modules_ok = false;
 						return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
 					}
@@ -154,7 +154,7 @@ class Preferences_admin extends Preferences {
 						$mod_name = $module_name.'_'.$sub_module;
 						$ret_eval = call_user_func(array($mod_name, 'prefsIsValid'), $this);
 						if ($ret_eval !== true) {
-							Logger::error('admin','prefs is not valid for module \''.$mod_name.'\'');
+							Logger::error('main', 'prefs is not valid for module \''.$mod_name.'\'');
 							$modules_ok = false;
 							return _('prefs is not valid for module').' ('.$mod_name.')'; // TODO
 						}
@@ -162,18 +162,18 @@ class Preferences_admin extends Preferences {
 				}
 			}
 			else {
-				Logger::info('admin', 'preferences::isvalid module \''.$module_name.'\' not enable');
+				Logger::info('main', 'preferences::isvalid module \''.$module_name.'\' not enable');
 			}
 		}
 
 		if ( $modules_ok === false) {
-			Logger::error('admin','PREFERENCESADMIN::isValid modules false');
+			Logger::error('main', 'PREFERENCESADMIN::isValid modules false');
 			return _('Modules configuration not valid');
 		}
 		
 		$ug_dynamic = UserGroupDBDynamic::prefsIsValid($this);
 		if ( $ug_dynamic === false) {
-			Logger::error('admin','PREFERENCESADMIN::isValid module UserGroupDBDynamic');
+			Logger::error('main', 'PREFERENCESADMIN::isValid module UserGroupDBDynamic');
 			return _('Modules configuration not valid');
 		}
 		return true;

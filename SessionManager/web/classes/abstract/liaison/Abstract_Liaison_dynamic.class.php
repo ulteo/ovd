@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison_dynamic {
 	public static function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('admin',"Abstract_Liaison_dynamic::load($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_dynamic::load($type_,$element_,$group_)");
 		
 		if ($type_ == 'UsersGroup') {
 			if (is_null($element_) && is_null($group_))
@@ -36,13 +36,13 @@ class Abstract_Liaison_dynamic {
 		}
 		else
 		{
-			Logger::error('admin',"Abstract_Liaison_dynamic::load error liaison != UsersGroup not implemented");
+			Logger::error('main', "Abstract_Liaison_dynamic::load error liaison != UsersGroup not implemented");
 			return NULL;
 		}
 		return NULL;
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('admin', "Abstract_Liaison_dynamic::save ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_dynamic::save ($type_,$element_,$group_)");
 		// not implemented
 		return true;
 	}
@@ -80,7 +80,7 @@ class Abstract_Liaison_dynamic {
 		return $elements;
 	}
 	public static function loadGroups($type_, $element_) {
-		Logger::debug('admin',"Abstract_Liaison_dynamic::loadGroups ($type_,$element_)");
+		Logger::debug('main',"Abstract_Liaison_dynamic::loadGroups ($type_,$element_)");
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		$userGroupDB_dynamic = new UserGroupDBDynamic();
@@ -98,7 +98,7 @@ class Abstract_Liaison_dynamic {
 	}
 	
 	public static function loadAll($type_) {
-		Logger::debug('admin',"Abstract_Liaison_dynamic::loadAll ($type_)");
+		Logger::debug('main', "Abstract_Liaison_dynamic::loadAll ($type_)");
 		$userGroupDB = UserGroupDB::getInstance();
 		$group_list = $userGroupDB->getList();
 		
@@ -112,7 +112,7 @@ class Abstract_Liaison_dynamic {
 		return $result;
 	}
 	public static function loadUnique($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_dynamic::loadUnique ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_dynamic::loadUnique ($type_,$element_,$group_)");
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();

@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	public function add($usergroup_){
-		Logger::debug('admin','ADMIN_USERGROUPDB::add');
+		Logger::debug('main', "ADMIN_USERGROUPDB::add($usergroup_)");
 		$sql2 = MySQL::getInstance();
 		// usergroup already exists ?
 		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 AND @4 = %5', $this->table, 'name', $usergroup_->name, 'description', $usergroup_->description);
@@ -43,7 +43,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	}
 	
 	public function remove($usergroup_){
-		Logger::debug('admin','ADMIN_USERGROUPDB::remove');
+		Logger::debug('main', "ADMIN_USERGROUPDB::remove($usergroup_)");
 		// first we delete liaisons
 		$sql2 = MySQL::getInstance();
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
@@ -63,7 +63,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	}
 	
 	public function update($usergroup_){
-		Logger::debug('admin','ADMIN_USERGROUPDB::update');
+		Logger::debug('main',"ADMIN_USERGROUPDB::update($usergroup_)");
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id);
 		return ($res !== false);
@@ -82,10 +82,10 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 // 	}
 
 	public static function init($prefs_) {
-		Logger::debug('admin','ADMIN_USERGROUPDB::sql::init');
+		Logger::debug('main', 'ADMIN_USERGROUPDB::sql::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init mysql conf is not valid');
+			Logger::error('main','ADMIN_USERGROUPDB::sql::init mysql conf is not valid');
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
@@ -100,7 +100,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		$ret = $sql2->buildTable($usersgroup_table, $usersgroup_table_structure, array('id'));
 		
 		if ( $ret === false) {
-			Logger::error('admin','ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' fail to created');
+			Logger::error('main', 'ADMIN_USERGROUPDB::sql::init table '.$usersgroup_table.' fail to created');
 			return false;
 		}
 		

@@ -28,7 +28,7 @@ class UsersGroup {
 	public $type; // static
 
 	public function __construct($id_='', $name_=NULL, $description_='', $published_=false) {
-		Logger::debug('admin',"USERSGROUP::contructor from_scratch (id_='$id_', name_='$name_', description_='$description_', published_=$published_)");
+		Logger::debug('main', "USERSGROUP::contructor from_scratch (id_='$id_', name_='$name_', description_='$description_', published_=$published_)");
 		$this->type = 'static';
 		$this->id = $id_;
 		$this->name = $name_;
@@ -45,7 +45,7 @@ class UsersGroup {
 	}
 	
 	public function appsGroups(){
-		Logger::debug('admin','USERSGROUP::appsGroups');
+		Logger::debug('main', 'USERSGROUP::appsGroups');
 		
 		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', $this->getUniqueID(), NULL);
 		if (is_array($groups)) {
@@ -60,13 +60,13 @@ class UsersGroup {
 			return $result;
 		}
 		else {
-			Logger::error('admin','USERSGROUP::appsGroups result query is false');
+			Logger::error('main', 'USERSGROUP::appsGroups result query is false');
 			return NULL;
 		}
 	}
 	
 	public function usersLogin(){
-		Logger::debug('admin','USERSGROUP::usersLogin');
+		Logger::debug('main', 'USERSGROUP::usersLogin');
 		$logins = array();
 		$prefs = Preferences::getInstance();
 		if (!$prefs) {

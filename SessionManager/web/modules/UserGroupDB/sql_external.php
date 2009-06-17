@@ -30,7 +30,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 	}
 	
 	public function import($id_){
-		Logger::debug('admin',"USERGROUPDB::MYSQL_external::fromDB (id = $id_)");		
+		Logger::debug('main', "USERGROUPDB::MYSQL_external::fromDB (id = $id_)");		
 		$groups = array();
 		
 		$sql2 = new MySQL($this->config['host'], $this->config['login'], $this->config['password'], $this->config['database']);

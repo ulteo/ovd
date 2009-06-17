@@ -25,7 +25,7 @@ class Liaison {
 	public $group; // id
 
 	public function __construct($element_=NULL, $group_=NULL) {
-		Logger::debug('admin',"LIAISON::contructor ($element_,$group_)");
+		Logger::debug('main', "LIAISON::contructor ($element_,$group_)");
 		$this->element = $element_;
 		$this->group = $group_;
 	}

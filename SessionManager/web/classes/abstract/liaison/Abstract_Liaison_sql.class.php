@@ -32,7 +32,7 @@ class Abstract_Liaison_sql {
 			return Abstract_Liaison_sql::loadUnique($type_, $element_, $group_);
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('admin', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
 		$sql2 = MySQL::getInstance();
 		$table = $sql2->prefix.'liaison';
 		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $table, 'type', 'element', 'group',  $type_, $element_, $group_);
@@ -75,7 +75,7 @@ class Abstract_Liaison_sql {
 		return ($res !== false);
 	}
 	public static function loadElements($type_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_sql::loadElements ($type_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_sql::loadElements ($type_,$group_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
@@ -104,7 +104,7 @@ class Abstract_Liaison_sql {
 	}
 	
 	public static function loadGroups($type_, $element_) {
-		Logger::debug('admin',"Abstract_Liaison_sql::loadGroups ($type_,$element_)");
+		Logger::debug('main', "Abstract_Liaison_sql::loadGroups ($type_,$element_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
@@ -133,7 +133,7 @@ class Abstract_Liaison_sql {
 	}
 	
 	public static function loadAll($type_) {
-		Logger::debug('admin',"Abstract_Liaison_sql::loadAll ($type_)");
+		Logger::debug('main', "Abstract_Liaison_sql::loadAll ($type_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
@@ -161,7 +161,7 @@ class Abstract_Liaison_sql {
 		return NULL;
 	}
 	public static function loadUnique($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_sql::loadUnique ($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_sql::loadUnique ($type_,$element_,$group_)");
 		$result = array();
 		$sql2 = MySQL::getInstance();
 		$prefs = Preferences::getInstance();
@@ -194,7 +194,7 @@ class Abstract_Liaison_sql {
 	public static function init($prefs_) {
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','Abstract_Liaison::init mysql conf not valid');
+			Logger::error('main', 'Abstract_Liaison::init mysql conf not valid');
 			return false;
 		}
 		$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
@@ -209,11 +209,11 @@ class Abstract_Liaison_sql {
 		$ret = $sql2->buildTable($LIAISON_TABLE, $LIAISON_table_structure, array());
 		
 		if ( $ret === false) {
-			Logger::error('admin','Abstract_Liaison::init table '.$LIAISON_TABLE.' fail to created');
+			Logger::error('main', 'Abstract_Liaison::init table '.$LIAISON_TABLE.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('admin','Abstract_Liaison::init table '.$LIAISON_TABLE.' created');
+			Logger::debug('main', 'Abstract_Liaison::init table '.$LIAISON_TABLE.' created');
 			return true;
 		}
 	}

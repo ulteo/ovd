@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class Abstract_Liaison_ldap_posix {
 	public static function load($type_, $element_=NULL, $group_=NULL) {
-		Logger::debug('admin',"Abstract_Liaison_ldap_posix::load($type_,$element_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_ldap_posix::load($type_,$element_,$group_)");
 		if (str_startswith($element_, 'static_'))
 			$element_ = substr($element_, strlen('static_'));
 		if (str_startswith($group_, 'static_'))
@@ -40,22 +40,22 @@ class Abstract_Liaison_ldap_posix {
 		}
 		else
 		{
-			Logger::error('admin',"Abstract_Liaison_ldap_posix::load error liaison != UsersGroup not implemented");
+			Logger::error('main', "Abstract_Liaison_ldap_posix::load error liaison != UsersGroup not implemented");
 			return NULL;
 		}
 		return NULL;
 		
 	}
 	public static function save($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_ldap_posix::save");
+		Logger::debug('main', "Abstract_Liaison_ldap_posix::save");
 		return true;
 	}
 	public static function delete($type_, $element_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_ldap_posix::delete");
+		Logger::debug('main', "Abstract_Liaison_ldap_posix::delete");
 		return true;
 	}
 	public static function loadElements($type_, $group_) {
-		Logger::debug('admin',"Abstract_Liaison_ldap_posix::loadElements ($type_,$group_)");
+		Logger::debug('main', "Abstract_Liaison_ldap_posix::loadElements ($type_,$group_)");
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();
@@ -126,7 +126,7 @@ class Abstract_Liaison_ldap_posix {
 	}
 	
 	public static function loadGroups($type_, $element_) {
-		Logger::debug('admin',"Abstract_Liaison_ldap_posix::loadGroups ($type_,$element_)");
+		Logger::debug('main', "Abstract_Liaison_ldap_posix::loadGroups ($type_,$element_)");
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		$userDB = UserDB::getInstance();

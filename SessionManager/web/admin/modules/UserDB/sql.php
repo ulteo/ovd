@@ -105,10 +105,10 @@ class admin_UserDB_sql extends UserDB_sql {
 	}
 	
 	public static function init($prefs_) {
-		Logger::debug('admin','USERDB::sql::init');
+		Logger::debug('main', 'USERDB::sql::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','USERDB::sql::init mysql conf not valid');
+			Logger::error('main', 'USERDB::sql::init mysql conf not valid');
 			return false;
 		}
 		$table = $mysql_conf['prefix'].'user';
@@ -127,11 +127,11 @@ class admin_UserDB_sql extends UserDB_sql {
 		$ret = $sql2->buildTable($table, $user_table_structure, array('login'));
 		
 		if ( $ret === false) {
-			Logger::error('admin','USERDB::sql::init table '.$table.' fail to created');
+			Logger::error('main', 'USERDB::sql::init table '.$table.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('admin','USERDB::sql::init table '.$table.' created');
+			Logger::debug('main', 'USERDB::sql::init table '.$table.' created');
 			return true;
 		}
 	}

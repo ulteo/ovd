@@ -77,10 +77,10 @@ function get_all_sourceslist_mirrors(){
 
 function init_db($prefs_) {
 	// prefs must be valid
-	Logger::debug('admin','init_db');
+	Logger::debug('main', 'init_db');
 	$mysql_conf = $prefs_->get('general', 'mysql');
 	if (!is_array($mysql_conf)) {
-		Logger::error('admin','init_db mysql conf not valid');
+		Logger::error('main', 'init_db mysql conf not valid');
 		return false;
 	}
 	$APPSGROUP_TABLE = $mysql_conf['prefix'].'gapplication';
@@ -99,11 +99,11 @@ function init_db($prefs_) {
 	$ret = $sql2->buildTable($APPSGROUP_TABLE, $APPSGROUP_structure, array('id'));
 	
 	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$APPSGROUP_TABLE.' fail to created');
+		Logger::error('main', 'init_db table '.$APPSGROUP_TABLE.' fail to created');
 		return false;
 	}
 	else
-		Logger::debug('admin','init_db table '.$APPSGROUP_TABLE.' created');
+		Logger::debug('main', 'init_db table '.$APPSGROUP_TABLE.' created');
 
 	$SOURCES_LIST_structure = array(
 		'id' => 'int(8) NOT NULL auto_increment',
@@ -112,13 +112,13 @@ function init_db($prefs_) {
 	$ret = $sql2->buildTable($SOURCES_LIST_TABLE, $SOURCES_LIST_structure, array('id'));
 	
 	if ( $ret === false) {
-		Logger::error('admin','init_db table '.$SOURCES_LIST_TABLE.' fail to created');
+		Logger::error('main', 'init_db table '.$SOURCES_LIST_TABLE.' fail to created');
 		return false;
 	}
 	else
-		Logger::debug('admin','init_db table '.$SOURCES_LIST_TABLE.' created');
+		Logger::debug('main', 'init_db table '.$SOURCES_LIST_TABLE.' created');
 
-	Logger::debug('admin','init_db all tables created');
+	Logger::debug('main', 'init_db all tables created');
 
 	$modules_enable = $prefs_->get('general', 'module_enable');
 	foreach ($modules_enable as $module_name) {
@@ -128,7 +128,7 @@ function init_db($prefs_) {
 				$mod_name = 'admin_'.$module_name.'_'.$enable;
 				$ret_eval = call_user_func(array($mod_name, 'init'), $prefs_);
 				if ($ret_eval !== true) {
-					Logger::error('admin','init_db init module \''.$mod_name.'\' failed');
+					Logger::error('main', 'init_db init module \''.$mod_name.'\' failed');
 					return false;
 				}
 			}
@@ -137,14 +137,14 @@ function init_db($prefs_) {
 					$mod_name = 'admin_'.$module_name.'_'.$sub_module;
 					$ret_eval = call_user_func(array($mod_name, 'init'), $prefs_);
 					if ($ret_eval !== true) {
-						Logger::error('admin','init_db init module \''.$mod_name.'\' failed');
+						Logger::error('main', 'init_db init module \''.$mod_name.'\' failed');
 						return false;
 					}
 				}
 			}
 		}
 	}
-	Logger::debug('admin','init_db modules inited');
+	Logger::debug('main', 'init_db modules inited');
 
 	//TODO : do the same for plugins
 

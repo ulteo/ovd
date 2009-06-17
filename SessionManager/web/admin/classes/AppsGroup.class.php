@@ -27,7 +27,7 @@ class AppsGroup {
 	public $published; //(yes/no) (the group is available to user)
 
 	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $published_=false) {
-		Logger::debug('admin',"APPSGROUP::contructor ($id_,$name_,$description_,$published_)");
+		Logger::debug('main', "APPSGROUP::contructor ($id_,$name_,$description_,$published_)");
 		$this->id = $id_;
 		$this->name = $name_;
 		$this->description = $description_;
@@ -39,7 +39,7 @@ class AppsGroup {
 	}
 	
 	public function fromDB($id_) {
-		Logger::debug('admin',"APPSGROUP::fromDB($id_)");
+		Logger::debug('main', "APPSGROUP::fromDB($id_)");
 		if (is_numeric($id_)){
 			$sql2 = MySQL::getInstance();
 			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1=%6', 'id', 'name', 'description', 'published', APPSGROUP_TABLE, $id_);
@@ -51,14 +51,14 @@ class AppsGroup {
 				$this->name = $row['name'];
 				$this->description = $row['description'];
 				$this->published = (bool)$row['published'];
-				Logger::debug('admin','APPSGROUP::fromDB an AppsGroup (id='.$this->id.') has been created from DB');
+				Logger::debug('main', 'APPSGROUP::fromDB an AppsGroup (id='.$this->id.') has been created from DB');
 			}
 			else
 				$this->delete();
 		}
 		else {
 			// not the right argument
-			Logger::error('admin',"APPSGROUP::fromDB($id_) id is not correct");
+			Logger::error('main', "APPSGROUP::fromDB($id_) id is not correct");
 			$this->delete();
 		}
 	}
@@ -66,7 +66,7 @@ class AppsGroup {
 	public function insertDB(){
 		// return:
 		// 	false :  problem, true : ok
-		Logger::debug('admin','APPSGROUP::insertDB');
+		Logger::debug('main', 'APPSGROUP::insertDB');
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (NULL,%6,%7,%8)',APPSGROUP_TABLE, 'id'  , 'name', 'description', 'published', $this->name, $this->description, $this->published);
 		if ($res !== false) {
@@ -86,7 +86,7 @@ class AppsGroup {
 	public function updateDB(){
 		// return:
 		// 	false :  problem, true : ok
-		Logger::debug('admin','APPSGROUP::updateDB');
+		Logger::debug('main', 'APPSGROUP::updateDB');
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1 SET  @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9',APPSGROUP_TABLE, 'published', $this->published, 'name', $this->name, 'description', $this->description, 'id', $this->id);
 		return ($res !== false);
@@ -95,7 +95,7 @@ class AppsGroup {
 	public function removeDB(){
 		// return:
 		// 	false :  problem, true : ok
-		Logger::debug('admin','APPSGROUP::removeDB');
+		Logger::debug('main', 'APPSGROUP::removeDB');
 		if (is_numeric($this->id)){
 			// first we delete liaison
 			$sql2 = MySQL::getInstance();
@@ -124,7 +124,7 @@ class AppsGroup {
 	}
 	
 	public function delete(){
-		Logger::debug('admin','APPSGROUP::delete');
+		Logger::debug('main', 'APPSGROUP::delete');
 		unset($this->id);
 		unset($this->name);
 		unset($this->description);

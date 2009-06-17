@@ -579,7 +579,7 @@ class Server {
 	}
 
 	public function updateApplications(){
-		Logger::debug('admin','SERVERADMIN::updateApplications');
+		Logger::debug('main', 'Server::updateApplications');
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
@@ -667,7 +667,7 @@ class Server {
 			else {
 				// echo $app_name." NOT in DB\n";
 				if ($applicationDB->isWriteable() == false){
-					Logger::debug('admin','applicationDB is not writeable');
+					Logger::debug('main', 'Server::updateApplications applicationDB is not writeable');
 				}
 				else{
 					if ($applicationDB->add($a) == false){

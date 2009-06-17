@@ -75,10 +75,10 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 	}
 
 	public static function init($prefs_) {
-		Logger::debug('admin','APPLICATIONDB::sql::init');
+		Logger::debug('main', 'APPLICATIONDB::sql::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
 		if (!is_array($mysql_conf)) {
-			Logger::error('admin','APPLICATIONDB::sql::init mysql conf not valid');
+			Logger::error('main', 'APPLICATIONDB::sql::init mysql conf not valid');
 			return false;
 		}
 		@define('APPLICATION_TABLE', $mysql_conf['prefix'].'application');
@@ -98,11 +98,11 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 		$ret = $sql2->buildTable($mysql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
 
 		if ( $ret === false) {
-			Logger::error('admin','APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' fail to created');
+			Logger::error('main', 'APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' fail to created');
 			return false;
 		}
 		else {
-			Logger::debug('admin','APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' created');
+			Logger::debug('main', 'APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' created');
 			return true;
 		}
 	}
