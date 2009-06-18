@@ -18,9 +18,11 @@
 
 package org.ulteo;
 
+import org.vnc.DesCipher;
+
 public class Utils {
 
-    public static String DecryptString(String input) {
+    public static byte[] DecryptString_(String input) {
 	byte[] c = {
 	    0, 0, 0, 0, 0, 0, 0, 0};
 	int len = input.length() / 2;
@@ -30,6 +32,22 @@ public class Utils {
 	    c[i] = x.byteValue();
 	}
 
-	return new String(c);
+	return c;
     }
+
+
+	public static String DecryptString(String input) {
+		return new String(DecryptString_(input));
+	}
+
+	public static String DecryptEncVNCString(String input) {
+		byte[] out = DecryptString_(input);
+		byte[] key = {23, 82, 107, 6, 35, 78, 88, 7};
+
+		DesCipher des = new DesCipher(key);
+		des.decrypt(out, 0, out, 0);
+
+		return new String(out);
+
+	}
 }

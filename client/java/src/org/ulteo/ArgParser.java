@@ -40,20 +40,14 @@ public class ArgParser extends org.vnc.ArgParser{
 	    return this.ssh_port;
 	else if (param == "ssh.user")
 	    return this.ssh_login;
-	else if (param == "ssh.password") {
-	    String buffer = Utils.DecryptString(this.ssh_password);
-	    return buffer;
-	}
+	else if (param == "ssh.password")
+	    return this.ssh_password;
 	else if (param == "HOST")
 	    return "localhost";
 	else if (param == "PORT")
 	    return this.vnc_port;
-	else if (param == "PASSWORD") {
-	    String buffer = Utils.DecryptString(this.vnc_password);
-	    System.out.println("password from "+this.vnc_password+ " to "+buffer);
-
-	    return buffer;
-	}
+	else if (param == "PASSWORD")
+	    return this.vnc_password;
 
 	return null;
     }

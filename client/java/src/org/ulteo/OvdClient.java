@@ -108,6 +108,7 @@ public class OvdClient implements Runnable {
 	this.ap.ssh_host = t.getNamedItem("host").getNodeValue();
 	this.ap.ssh_login = t.getNamedItem("user").getNodeValue();
 	this.ap.ssh_password = t.getNamedItem("passwd").getNodeValue();
+	this.ap.ssh_password = Utils.DecryptString(this.ap.ssh_password);
 
 	for (Node n2=n.getFirstChild(); n2!=null; n2 = n2.getNextSibling()) {
 	    if (n2.getNodeName() != "port")
@@ -123,12 +124,7 @@ public class OvdClient implements Runnable {
 	n = nl.item(0);
 	t = n.getAttributes();
 	this.ap.vnc_password = t.getNamedItem("passwd").getNodeValue();
-
-
-	System.out.println("vnc password: "+this.ap.vnc_password);
-	System.out.println("VNC password: "+Utils.DecryptString(this.ap.vnc_password));
-
-
+	this.ap.vnc_password = Utils.DecryptEncVNCString(this.ap.vnc_password);
 	this.ap.vnc_port = t.getNamedItem("port").getNodeValue();
 
 	return e==200;
