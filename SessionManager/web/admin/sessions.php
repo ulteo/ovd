@@ -121,8 +121,10 @@ if (isset($_POST['join'])) {
 					continue;
 
 				$myapp = $apps[$id];
-				if (! is_object($myapp))
+				if (! is_object($myapp)) {
+					echo '<li>'._('Unknown application').'</li>';
 					continue;
+				}
 
 				echo '<li><a href="applications.php?action=manage&id='.
 					$myapp->getAttribute('id').'">'.

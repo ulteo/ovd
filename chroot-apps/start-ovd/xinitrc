@@ -59,9 +59,14 @@ fi
 # automatically open an application if needed
 if [ -n "$DOC" ] || [ -n "$APP" ]; then
   [ -z "$APP" ] && APP="xdg-open"
+  [ -z "$APP_ID" ] && APP_ID=0
+
+  # Start xfwm4 in any case to load the GTK configuration first.
+  # This prevents some apps (ooo) to be ugly
+  xfwm4 &
+  sleep 1
 
   if [ "$NODESKTOP" == "1" ]; then
-    xfwm4 &
     startovdapp $APP_ID $APP "$DOC"
     exit 0
   else
