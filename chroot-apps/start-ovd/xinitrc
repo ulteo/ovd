@@ -63,8 +63,7 @@ if [ -n "$DOC" ] || [ -n "$APP" ]; then
 
   # Start xfwm4 in any case to load the GTK configuration first.
   # This prevents some apps (ooo) to be ugly
-  xfwm4 &
-  sleep 1
+  xfwm4 --daemon
 
   if [ "$NODESKTOP" == "1" ]; then
     startovdapp $APP_ID $APP "$DOC"
