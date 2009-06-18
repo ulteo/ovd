@@ -19,8 +19,6 @@
 	
 	<target name="compile"
 		description="compile the Java source code to class files">
-		<delete dir="classes"/>
-		<delete dir="libs"/>
 		<mkdir dir="classes"/>
 		<mkdir dir="libs"/>
 		<javac srcdir="./src" 
@@ -54,12 +52,6 @@
 			</manifest>
 		</jar>
 
-		<signjar jar="libs/sshvnc.jar"
-			alias="sshvnc"
-			storepass="${keystore.password}"
-			keystore="${build.cert}/.keystore"
-			signedjar="libs/sshvnc-signed.jar"/>
-
 		<jar destfile="libs/UlteoOVD.jar"
 			basedir="classes/">
 			<include name="**/*.*"/>
@@ -68,12 +60,23 @@
 			</manifest>
 		</jar>
 		
+	</target>
+	
+	<target name="sign"
+			description="sign applets"  depends="compile" >
+		
 		<signjar jar="libs/UlteoOVD.jar"
-			alias="ulteo"
-			storepass="${keystore.password}"
-			keystore="${build.cert}/.keystore"
+				 alias="ulteo"
+				 storepass="${keystore.password}"
+				 keystore="${build.cert}/.keystore"
 			signedjar="libs/ulteo-applet-${compile.release}.jar"/>
 
+		<signjar jar="libs/sshvnc.jar"
+				 alias="sshvnc"
+				 storepass="${keystore.password}"
+				 keystore="${build.cert}/.keystore"
+			signedjar="libs/sshvnc-signed.jar"/>
+		
 	</target>
 	
      <target name="clean" description="clean files">
