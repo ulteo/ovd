@@ -288,7 +288,7 @@ class Abstract_SharedFolder {
 			$buf = new SharedFolder($row['id']);
 			$buf->name = (string)$row['name'];
 
-			$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4', 'usergroup_id', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $id);
+			$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4', 'usergroup_id', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $row['id']);
 			$rows2 = $SQL->FetchAllResults();
 
 			foreach ($rows2 as $row2)
