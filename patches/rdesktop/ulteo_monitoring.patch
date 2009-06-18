@@ -1,61 +1,52 @@
 --- a/rdesktop.c
 +++ b/rdesktop.c
-@@ -839,17 +839,33 @@
+@@ -838,18 +838,24 @@
+ 
  		sprintf(master_socket, "%s/.rdesktop/seamless.socket", home);
  	}
- 	
+-	
 -	if (argc - optind != 1)
 -	{
 -		usage(argv[0]);
 -		return 1;
 -	}
--
+ 
  	/* If slave mode is being used, send the command line to the master
       * process and then exit. */
  	if (seamless_slave)
- 	{
+-	{
 -		seamless_socket_send(master_socket, argv[optind]);
-+        char buf[1025-6]; /* max message size for rdp - "SPAWN " */
-+        size_t size;
-+        if ((argc - optind) < 1)
-+        {
-+            usage(argv[0]);
-+            return 1;
-+        }
-+        else if ((argc - optind) == 1)
-+        {
-+            snprintf (buf, strlen(argv[optind])+1, "%s", argv[optind]);
-+        }
-+	    else if ((argc - optind) == 2)
-+        {
-+            size = strlen(argv[optind]) + strlen(argv[optind+1]) + 2; /* ',' */
-+            if (size > 1019)
-+            {
-+                fprintf (stderr, "Command line too long!\n");
-+                return 1;
-+            }
-+            snprintf (buf, size, "%s,%s", argv[optind], argv[optind+1]);
-+        }
++    {
++         char buf[1025-6]; /* max message size for rdp - "SPAWN " */
++         size_t size;
++         if ((argc - optind) < 1)
++         {
++             usage(argv[0]);
++             return 1;
++         }
++         snprintf (buf, 1025-6, "%s,%s,%s",
++                   argv[optind],
++                   ((argc - optind) <= 1) ? "" : argv[optind+1],
++                   ((argc - optind) <= 2) ? "" : argv[optind+2]);
 +
-+    	seamless_socket_send(master_socket, buf);
-         // Ulteo begin HACK startup notification
-         printf("Ulteo startup notifier Exec '%s' ...\n", "xsetroot -cursor_name watch");
++        seamless_socket_send(master_socket, buf);
+ 
+         // fake startup notification
          system("xsetroot -cursor_name watch");
-@@ -857,7 +873,13 @@
-         printf("Ulteo timeout notifier\n");
-         system("xsetroot -cursor_name left_ptr");
-         // Ulteo end HACK
--		return 0;
-+        return 0;
-+	}
-+
-+	if (argc - optind != 1)
-+	{
-+		usage(argv[0]);
-+		return 1;
+@@ -859,6 +865,13 @@
+ 		return 0;
  	}
  
++    if (argc - optind != 1)
++    {
++        usage(argv[0]);
++        return 1;
++    }
++
++
  	STRNCPY(server, argv[optind], sizeof(server));
+ 	parse_server_and_port(server);
+ 
 --- a/seamless.c
 +++ b/seamless.c
 @@ -89,7 +89,17 @@

@@ -15,3 +15,7 @@
 * ulteo_fs_kiosk.patch
   new kiosk config to forbid browsing of the root file system (simulates
   chrooting the user in his HOME)
+
+* ulteo_run_windows_app.patch
+  if the executable is an rdesktop (windows) application, use the CIFS path to
+  be able to open the file on the windows server

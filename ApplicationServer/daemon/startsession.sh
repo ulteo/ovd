@@ -73,9 +73,12 @@ export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC
 export DISPLAY=:$i XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
 export XDG_DATA_DIRS=$SPOOL_USERS/$SESSID/xdg
 export OVD_APPS_DIR=$XDG_DATA_DIRS/applications
+
 [ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
 [ -f ${SESSID_DIR}/parameters/start_app_id ] && export APP_ID=`cat ${SESSID_DIR}/parameters/start_app_id`
 [ -f ${SESSID_DIR}/parameters/open_doc ] && export DOC=`cat ${SESSID_DIR}/parameters/open_doc`
+
+[ -f ${SESSID_DIR}/parameters/module_fs/user_homedir ] && export  CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
 
 if [ "r$DOC" != "r" ] || [ "r$APP" != "r" ]; then
     [ -f ${SESSID_DIR}/parameters/app_with_desktop ] || export NODESKTOP=1

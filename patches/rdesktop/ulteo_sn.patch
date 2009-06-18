@@ -1,33 +1,30 @@
 --- a/rdesktop.c
 +++ b/rdesktop.c
-@@ -850,6 +850,13 @@
+@@ -850,6 +850,12 @@
  	if (seamless_slave)
  	{
  		seamless_socket_send(master_socket, argv[optind]);
-+        // Ulteo begin HACK startup notification
-+        printf("Ulteo startup notifier Exec '%s' ...\n", "xsetroot -cursor_name watch");
++
++        // fake startup notification
 +        system("xsetroot -cursor_name watch");
 +        sleep(10);
-+        printf("Ulteo timeout notifier\n");
 +        system("xsetroot -cursor_name left_ptr");
-+        // Ulteo end HACK
++
  		return 0;
  	}
  
 --- a/xwin.c
 +++ b/xwin.c
-@@ -3807,6 +3807,14 @@
+@@ -3807,6 +3807,12 @@
  		XSetWMHints(g_display, sw->wnd, wmhints);
  		XFree(wmhints);
  	}
 +
-+    // Ulteo begin HACK startup notification
++    // Fake startup notification
 +    if (parent == 0x00000000)
 +    {
-+        printf("Set normal cursor '%s'\n", "xsetroot -cursor_name left_ptr");
 +        system("xsetroot -cursor_name left_ptr");
 +    }
-+    // Ulteo end HACK
  }
  
  

@@ -1,0 +1,107 @@
+diff -Nur -x '*.orig' -x '*~' thunar-0.9.0/thunar-vfs/thunar-vfs-exec.c thunar-0.9.0.new/thunar-vfs/thunar-vfs-exec.c
+--- thunar-0.9.0/thunar-vfs/thunar-vfs-exec.c	2009-06-18 12:24:17.000000000 +0200
++++ thunar-0.9.0.new/thunar-vfs/thunar-vfs-exec.c	2009-06-18 12:26:47.000000000 +0200
+@@ -51,16 +51,31 @@
+ 
+ 
+ 
++static gboolean _tve_is_windows_exec          (const gchar         *exec);
++
+ static void     tve_string_append_quoted      (GString             *string,
+                                                const gchar         *unquoted);
+ static gboolean tve_string_append_quoted_path (GString             *string,
+                                                ThunarVfsPath       *path,
++                                               gboolean             winapp,
+                                                GError             **error);
+ static void     tve_string_append_quoted_uri  (GString             *string,
+                                                const ThunarVfsPath *path);
+ 
+ 
+ 
++static gboolean
++_tve_is_windows_exec (const gchar *exec)
++{
++  if (g_str_has_prefix (exec, "rdesktop -l ")
++    && g_getenv ("CIFS_HOME_DIR"))
++      return TRUE;
++
++  return FALSE;
++}
++
++
++
+ static void
+ tve_string_append_quoted (GString     *string,
+                           const gchar *unquoted)
+@@ -77,12 +92,25 @@
+ static gboolean
+ tve_string_append_quoted_path (GString       *string,
+                                ThunarVfsPath *path,
++                               gboolean       winapp,
+                                GError       **error)
+ {
+   gchar *absolute_path;
++  gchar *tmp;
++
++  if (winapp)
++  {
++    /* append the absolute, local, quoted path to the string */
++    tmp = _thunar_vfs_path_translate_dup_string (path, THUNAR_VFS_PATH_SCHEME_FILE, error);
++    if (tmp)
++    {
++      absolute_path = exo_str_replace (tmp, xfce_get_homedir (), g_getenv ("CIFS_HOME_DIR"));
++      g_free (tmp);
++    }
++  } else {
++    absolute_path = _thunar_vfs_path_translate_dup_string (path, THUNAR_VFS_PATH_SCHEME_FILE, error);
++  }
+ 
+-  /* append the absolute, local, quoted path to the string */
+-  absolute_path = _thunar_vfs_path_translate_dup_string (path, THUNAR_VFS_PATH_SCHEME_FILE, error);
+   if (G_LIKELY (absolute_path != NULL))
+     {
+       tve_string_append_quoted (string, absolute_path);
+@@ -152,6 +180,7 @@
+   gboolean       result = FALSE;
+   GString       *command_line = g_string_new (NULL);
+   GList         *lp;
++  gboolean       winapp = _tve_is_windows_exec (exec);
+ 
+   /* prepend terminal command if required */
+   if (G_UNLIKELY (terminal))
+@@ -165,7 +194,7 @@
+             {
+             case 'f':
+               /* append the absolute local path of the first path object */
+-              if (path_list != NULL && !tve_string_append_quoted_path (command_line, path_list->data, error))
++              if (path_list != NULL && !tve_string_append_quoted_path (command_line, path_list->data, winapp, error))
+                 goto done;
+               break;
+ 
+@@ -174,7 +203,7 @@
+                 {
+                   if (G_LIKELY (lp != path_list))
+                     g_string_append_c (command_line, ' ');
+-                  if (!tve_string_append_quoted_path (command_line, lp->data, error))
++                  if (!tve_string_append_quoted_path (command_line, lp->data, winapp, error))
+                     goto done;
+                 }
+               break;
+@@ -197,7 +226,7 @@
+               if (G_LIKELY (path_list != NULL))
+                 {
+                   parent = thunar_vfs_path_get_parent (path_list->data);
+-                  if (parent != NULL && !tve_string_append_quoted_path (command_line, parent, error))
++                  if (parent != NULL && !tve_string_append_quoted_path (command_line, parent, winapp, error))
+                     goto done;
+                 }
+               break;
+@@ -210,7 +239,7 @@
+                     {
+                       if (G_LIKELY (lp != path_list))
+                         g_string_append_c (command_line, ' ');
+-                      if (!tve_string_append_quoted_path (command_line, parent, error))
++                      if (!tve_string_append_quoted_path (command_line, parent, winapp, error))
+                         goto done;
+                     }
+                 }
