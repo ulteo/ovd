@@ -1,9 +1,0 @@
-
-== Depends ==
-
-ant
-
-== To compile on Linux ==
-
-$ export CLASSPATH="/usr/lib/jvm/java-6-sun/jre/lib/:.:/usr/lib/jvm/java-6-sun/jre/:/usr/lib/jvm/java-6-sun/jre/lib/plugin.jar"
-$ ant
