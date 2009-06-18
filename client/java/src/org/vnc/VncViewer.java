@@ -25,7 +25,7 @@
 // a VNC desktop.
 //
 
-package org.ulteo;
+package org.vnc;
 
 import java.awt.Container;
 import java.awt.Cursor;
