@@ -56,7 +56,7 @@ check_cpulimit() {
 	if cache_is_cpulimited $j; then
 	    log_DEBUG "process $j already cpulimited"
 	else
-	    k=`id -u $i`
+	    k=`id -u $i 2>/dev/null`
 
 	    if [ $? -eq 0 ] && [ $k -ge 1000 ]; then
 	        cpulimit -p $j -l 25 -z&
