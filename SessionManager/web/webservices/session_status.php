@@ -73,8 +73,5 @@ if ($_GET['status'] == 4) {
 		'session'	=>	$session->id
 	));
 
-	$report = new Reporting($session->id);
-	$report->session_end();
-
 	Abstract_Session::delete($session->id);
 }

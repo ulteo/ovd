@@ -364,9 +364,6 @@ $ev->setAttributes(array(
 ));
 $ev->emit();
 
-$report = new Reporting($session->id);
-$report->session_begin($token->id, $user);
-
 if (isset($_SESSION['login']))
 	unset($_SESSION['login']);
 

@@ -15,7 +15,6 @@ scripts_DATA = Application.class.php \
                Plugins.class.php \
                Preferences.class.php \
                ReportItems.class.php \
-               Reporting.class.php \
                Server.class.php \
                Servers.class.php \
                ServerReportItem.class.php \
