@@ -88,8 +88,10 @@ class LDAP {
 
 		if ($this->login == '') {
 			$buf_bind = $this->bind();
-			if ($buf_bind === false)
+			if ($buf_bind === false) {
+				Logger::error('main', 'LDAP::connect bind anonymous failed');
 				$log['LDAP anonymous bind'] = false;
+			}
 			else
 				$log['LDAP anonymous bind'] = true;
 		}
@@ -120,8 +122,10 @@ class LDAP {
 				}
 			}
 			$buf_bind = $this->bind($dn, $this->password);
-			if ($buf_bind === false)
+			if ($buf_bind === false) {
+				Logger::error('main', 'LDAP::connect bind failed');
 				$log['LDAP bind'] = false;
+			}
 			else
 				$log['LDAP bind'] = true;
 		}
@@ -139,7 +143,7 @@ class LDAP {
 		$buf = @ldap_bind($this->link, $dn_, $pwd_);
 
 		if (!$buf) {
-			Logger::error('main', 'LDAP - bind failed : ('.$this->errno().') ');
+			Logger::error('main', "LDAP::bind bind($dn_,$pwd_) failed : (error:".$this->errno().')');
 			$searchbase =$this->userbranch.','.$this->suffix;
 			$ldapsearch = 'ldapsearch -x -h "'.$this->host.'" -p '.$this->port.'  -P '.$this->protocol_version.' -W -D '.$dn_.' -LLL -b '.$searchbase;
 			Logger::error('main', 'LDAP - failed to validate the configuration please try this bash command : '.$ldapsearch);
