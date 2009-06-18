@@ -115,7 +115,10 @@ class Reporting {
 		$session_node->appendChild($applications_node);
 
 		$invitations_node = $dom->createElement('invitations');
-		$invitations = $this->session->getAttribute('invitations');
+		if (is_array($this->session->getAttribute('invitations')))
+			$invitations = $this->session->getAttribute('invitations');
+		else
+			$invitations = array();
 		foreach ($invitations as $invitation) {
 			if ($invitation === '') //for the last \n ...
 				continue;
