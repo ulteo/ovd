@@ -40,8 +40,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import org.ulteo.VncViewer;
-
 public class ClipboardFrame extends Frame
   implements WindowListener, ActionListener {
 

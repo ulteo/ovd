@@ -42,8 +42,6 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import org.ulteo.VncViewer;
-
 public class OptionsFrame extends Frame
   implements WindowListener, ActionListener, ItemListener {
 

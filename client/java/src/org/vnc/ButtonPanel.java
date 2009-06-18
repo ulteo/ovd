@@ -34,7 +34,6 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import org.ulteo.VncViewer;
 
 public class ButtonPanel extends Panel implements ActionListener {
 

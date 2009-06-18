@@ -41,7 +41,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 
-import org.ulteo.VncViewer;
 
 public class RecordingFrame extends Frame
   implements WindowListener, ActionListener {

@@ -32,8 +32,6 @@ import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.ulteo.VncViewer;
-
 //
 // The panel which implements the user authentication scheme
 //

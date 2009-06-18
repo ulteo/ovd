@@ -34,19 +34,17 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Vector;
 import java.util.zip.Deflater;
 
-import org.ulteo.VncViewer;
 import org.vnc.rfbcaching.IRfbCache;
 import org.vnc.rfbcaching.IRfbCacheFactory;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 import org.vnc.rfbcaching.RfbCacheEntry;
 import org.vnc.rfbcaching.RfbCacheFactory;
 import org.vnc.rfbcaching.RfbCacheProperties;
-
-import com.sshtools.j2ssh.connection.ChannelOutputStream;
 
 public class RfbProto {
 
@@ -171,7 +169,7 @@ public final static int
   public int port;
   public Socket sock;
   public DataInputStream is;
-  public /*OutputStream*/ ChannelOutputStream os;
+  public OutputStream os;
   public SessionRecorder rec;
   public boolean inNormalProtocol = false;
   public VncViewer viewer;
@@ -281,31 +279,17 @@ public final static int
     host = h;
     port = p;
 
-    if (viewer.socketFactory == null) {
-      sock = new Socket(host, port);
-    } else {
-      try {
-	Class<?> factoryClass = Class.forName(viewer.socketFactory);
-	SocketFactory factory = (SocketFactory)factoryClass.newInstance();
-	if (viewer.inAnApplet)
-	  sock = factory.createSocket(host, port, viewer);
-	else
-	  sock = factory.createSocket(host, port, viewer.mainArgs);
-      } catch(Exception e) {
-	e.printStackTrace();
-	throw new IOException(e.getMessage());
-      }
-    }
+    sock = new Socket(host, port);
     is = new DataInputStream(new BufferedInputStream(sock.getInputStream(),
 						     16384));
-    os = (ChannelOutputStream) sock.getOutputStream();
+    os = sock.getOutputStream();
 
     timing = false;
     timeWaitedIn100us = 5;
     timedKbits = 0;
   }
 
-  public RfbProto(InputStream in, /*OutputStream*/ ChannelOutputStream out, VncViewer v) /*throws IOException*/ {
+  public RfbProto(InputStream in, OutputStream out, VncViewer v) /*throws IOException*/ {
 	viewer = v;
 	is = new DataInputStream(new BufferedInputStream(in, 16384));
 	os = out;

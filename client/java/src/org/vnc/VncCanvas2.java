@@ -24,8 +24,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.IOException;
 
-import org.ulteo.VncViewer;
-
 //
 // VncCanvas2 is a special version of VncCanvas which may use Java 2 API.
 //

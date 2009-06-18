@@ -48,7 +48,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.zip.Inflater;
 
-import org.ulteo.VncViewer;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 import org.vnc.rfbcaching.RfbCache;
 import org.vnc.rfbcaching.RfbCacheEntry;
@@ -342,13 +341,13 @@ public boolean imageUpdate(Image img, int infoflags,
 				     2 * Math.min(insets.left, insets.right),
 				     scaledHeight +
 				     2 * Math.min(insets.top, insets.bottom));
-
-    viewer.vncFrame.pack();
+    if (viewer.vncFrame != null)
+	viewer.vncFrame.pack();
 
     // Try to limit the frame size to the screen size.
 
-    Dimension screenSize = viewer.vncFrame.getToolkit().getScreenSize();
-    Dimension frameSize = viewer.vncFrame.getSize();
+    Dimension screenSize = viewer.vncContainer.getToolkit().getScreenSize();
+    Dimension frameSize = viewer.vncContainer.getSize();
     Dimension newSize = frameSize;
 
     // Reduce Screen Size by 30 pixels in each direction;
@@ -371,7 +370,7 @@ public boolean imageUpdate(Image img, int infoflags,
       needToResizeFrame = true;
     }
     if (needToResizeFrame) {
-      viewer.vncFrame.setSize(newSize);
+      viewer.vncContainer.setSize(newSize);
     }
 
     viewer.desktopScrollPane.doLayout();
