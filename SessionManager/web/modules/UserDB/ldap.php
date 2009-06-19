@@ -36,10 +36,18 @@ class UserDB_ldap  extends UserDB {
 		$ldap = new LDAP($this->config);
 		$sr = $ldap->search($this->config['match']['login'].'='.$login_, NULL);
 		if ($sr === false) {
-			Logger::error('main','UserDB_ldap::import ldap failed (mostly timeout on server)');
+			Logger::error('main', "UserDB_ldap::import($login_) ldap failed (usually timeout on server)");
 			return NULL;
 		}
 		$infos = $ldap->get_entries($sr);
+		if (!is_array($infos)) {
+			Logger::error('main', "UserDB_ldap::import($login_) get_entries failed");
+			return NULL;
+		}
+		if ($infos == array()) {
+			Logger::error('main', "UserDB_ldap::import($login_) get_entries is empty");
+			return NULL;
+		}
 		$keys = array_keys($infos);
 		$dn = $keys[0];
 		$info = $infos[$dn];
