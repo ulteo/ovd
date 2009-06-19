@@ -178,12 +178,14 @@ class Abstract_Liaison_sql {
 		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $table, 'type', 'element', 'group',  $type_, $element_, $group_);
 // 		echo 'FetchAllResults ';var_dump2($sql2->FetchAllResults());
 		if ($res !== false){
-			if ($sql2->NumRows() == 1)
-				return  new Liaison($element_, $group_);
-			else {
-				Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error doublon (".$sql2->NumRows().")");
+			if ($sql2->NumRows() == 0) {
 				return NULL;
 			}
+			else if ($sql2->NumRows() > 1) {
+				Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error doublon (".$sql2->NumRows().")");
+				self::cleanup();
+			}
+			return new Liaison($element_, $group_);
 		}
 		else {
 			Logger::error('main', "Abstract_Liaison_sql::loadUnique($type_, $element_, $group_) error DoQuery failed");
@@ -216,5 +218,40 @@ class Abstract_Liaison_sql {
 			Logger::debug('main', 'Abstract_Liaison::init table '.$LIAISON_TABLE.' created');
 			return true;
 		}
+	}
+	
+	protected static function  cleanup() {
+		Logger::debug('main', 'Abstract_Liaison_sql::cleanup');
+		$sql2 = MySQL::getInstance();
+		$prefs = Preferences::getInstance();
+		if (! $prefs) {
+			Logger::error('main', 'Abstract_Liaison_sql::cleanup get Preferences failed');
+			return false;
+		}
+		$mysql_conf = $prefs->get('general', 'mysql');
+		if (!is_array($mysql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::cleanup mysql conf not valid');
+			return $result;
+		}
+		$table = $mysql_conf['prefix'].'liaison';
+		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM @4', 'type', 'element', 'group', $table);
+		if ($res === false) {
+			Logger::error('main', 'Abstract_Liaison_sql::cleanup DoQuery failed');
+			return false;
+		}
+		
+		$rows = $sql2->FetchAllResults();
+		$rows2 = $rows; // for bug in php of rhel5.2
+		foreach ($rows as $key => $row) {
+			foreach ($rows2 as $key2 => $row2) {
+				if ($row['type'] == $row2['type'] && $row['element'] == $row2['element'] &&  $row['group'] == $row2['group'] && $key != $key2) {
+					// it's a duplicate
+					self::delete($row['type'], $row['element'],  $row['group']);
+					unset($rows2[$key2]); // optimization
+				}
+			}
+			unset($rows2[$key]); // optimization
+		}
+		return true;
 	}
 }
