@@ -189,7 +189,7 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	$ret = true;
 
-	Logger::info('main', '(startsession) Resuming session ('.$old_session_id.' => '.$old_session_server.')');
+	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
 } else {
 	$random_session_id = gen_string(5);
 
@@ -203,7 +203,7 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	$ret = true;
 
-	Logger::info('main', '(startsession) Creating new session ('.$random_session_id.' => '.$random_server.')');
+	Logger::info('main', '(startsession) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.' => '.$random_server.')');
 }
 
 if ($ret === false)
