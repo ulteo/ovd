@@ -180,6 +180,8 @@ class Abstract_Server {
 		}
 		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
 
+		Abstract_Liaison::delete('ApplicationServer', NULL, $fqdn_);
+
 		return true;
 	}
 
