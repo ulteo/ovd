@@ -42,7 +42,11 @@ if (isset($prefs->elements['general']['session_settings_defaults']['quality']))
 if (isset($prefs->elements['general']['session_settings_defaults']['timeout']))
 	$list_desktop_timeouts = $prefs->elements['general']['session_settings_defaults']['timeout']->content_available;
 
+if (isset($prefs->elements['general']['session_settings_defaults']['session_mode']))
+	$list_session_modes = $prefs->elements['general']['session_settings_defaults']['session_mode']->content_available;
+
 $default_settings = $prefs->get('general', 'session_settings_defaults');
+$session_mode = $default_settings['session_mode'];
 $desktop_locale = $default_settings['language'];
 $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
@@ -256,7 +260,7 @@ require_once('header.php');
 			<input type="hidden" id="user_password" name="user_password" value="" />
 
 			<?php
-				if (in_array('language', $advanced_settings) || in_array('windows_keymap', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
+				if (in_array('session_mode', $advanced_settings) || in_array('language', $advanced_settings) || in_array('windows_keymap', $advanced_settings) || in_array('server', $advanced_settings) || in_array('size', $advanced_settings) || in_array('quality', $advanced_settings) || in_array('timeout', $advanced_settings) || in_array('persistent', $advanced_settings) || in_array('shareable', $advanced_settings) || in_array('desktop_icons', $advanced_settings) || in_array('popup', $advanced_settings) || in_array('debug', $advanced_settings)) {
 			?>
 			<br />
 			<div class="centered">
@@ -267,6 +271,28 @@ require_once('header.php');
 				<br />
 				<table class="main_sub centered" border="0" cellspacing="1" cellpadding="5">
 					<?php
+						if (in_array('session_mode', $advanced_settings)) {
+					?>
+					<tr class="content2">
+						<td class="title">
+							<?php echo _('Session mode'); ?>
+						</td>
+						<td>
+							<select id="session_mode" name="session_mode">
+								<?php
+									foreach ($list_session_modes as $mode => $text) {
+										echo '<option value="'.$mode.'"';
+										if ($session_mode == $mode)
+											echo ' selected="selected"';
+										echo '>'.$text.'</option>'."\n";
+									}
+								?>
+							</select>
+						</td>
+					</tr>
+					<?php
+						}
+
 						if (in_array('language', $advanced_settings)) {
 					?>
 					<tr class="content2">

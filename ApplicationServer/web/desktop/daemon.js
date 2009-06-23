@@ -22,7 +22,7 @@ function daemon_init(debug_) {
 	debug = debug_;
 
 	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="/applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
 
 	push_log('[daemon] init()', 'info');
 
@@ -69,7 +69,7 @@ function daemon_loop() {
 
 	if (session_state == 0 || session_state == 10) {
 		new Ajax.Request(
-			'start.php',
+			'../start.php',
 			{
 				method: 'get',
 				parameters: {
@@ -93,7 +93,7 @@ function daemon_loop() {
 
 function switch_splash_to_applet() {
 	new Ajax.Request(
-		'access.php',
+		'../access.php',
 		{
 			method: 'get',
 			parameters: {
@@ -130,7 +130,7 @@ function switch_applet_to_end() {
 
 function client_exit() {
 	new Ajax.Request(
-		'exit.php',
+		'../exit.php',
 		{
 			method: 'get'
 		}
@@ -186,7 +186,7 @@ function push_log(data_, level_) {
 function session_check() {
 	push_log('[session] check()', 'debug');
 	new Ajax.Request(
-		'whatsup.php',
+		'../whatsup.php',
 		{
 			method: 'get',
 			asynchronous: false,
@@ -303,7 +303,7 @@ function do_print(path, timestamp) {
   var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
 
   $('printerContainer').show();
-  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
+  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
 
   push_log('[print] Applet: starting', 'warning');
 }
@@ -316,7 +316,7 @@ function do_invite() {
 	$('invite_submit').disabled = true;
 
 	new Ajax.Request(
-		'invite.php',
+		'../invite.php',
 		{
 			method: 'post',
 			parameters: {

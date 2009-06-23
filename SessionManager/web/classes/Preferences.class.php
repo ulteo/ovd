@@ -225,6 +225,11 @@ class Preferences {
 		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
+
+		$c = new ConfigElement_select('session_mode', _('Default mode for session'), _('Default mode for session'), _('Default mode for session'), 'desktop');
+		$c->setContentAvailable(array('desktop'=>'Desktop'));
+		$this->add($c,'general','session_settings_defaults');
+
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
 		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français'));
 		$this->add($c,'general','session_settings_defaults');
@@ -263,7 +268,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'));
-		$c->setContentAvailable(array('language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'document' => _('document'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop')));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'document' => _('document'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));

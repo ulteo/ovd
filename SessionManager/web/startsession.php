@@ -30,6 +30,7 @@ if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
+$session_mode = $default_settings['session_mode'];
 $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $desktop_quality = $default_settings['quality'];
@@ -84,6 +85,9 @@ $desktop_locale = $user->getLocale();
 
 if (isset($_REQUEST['timezone']) && $_REQUEST['timezone'] != '')
 	$user_timezone = $_REQUEST['timezone'];
+
+if (in_array('session_mode', $advanced_settings) && isset($_REQUEST['session_mode']) && $_REQUEST['session_mode'] != '')
+	$session_mode = $_REQUEST['session_mode'];
 
 if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
 	$desktop_locale = $_REQUEST['desktop_locale'];
@@ -185,7 +189,7 @@ else {
 if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
 
-	$session_mode = 'resume';
+	$session_mode = 'resume_'.$session->mode;
 
 	$ret = true;
 
@@ -195,11 +199,12 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	$session = new Session($random_session_id);
 	$session->server = $random_server;
+	$session->mode = $session_mode;
 	$session->status = -1;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
 
-	$session_mode = 'start';
+	$session_mode = 'start_'.$session_mode;
 
 	$ret = true;
 

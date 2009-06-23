@@ -28,7 +28,7 @@ if (!isset($session) || $session == '')
 $_SESSION['width'] = @$_REQUEST['width'];
 $_SESSION['height'] = @$_REQUEST['height'];
 
-if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
+if (isset($_SESSION['mode']) && substr($_SESSION['mode'], 0, 5) == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
 	put_to_file(SESSION_PATH.'/'.$session.'/parameters/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
 
 	foreach ($_SESSION['parameters'] as $k => $v)
@@ -47,7 +47,7 @@ if (isset($_SESSION['mode']) && $_SESSION['mode'] == 'start' && get_from_file(SE
 	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 1);
-} elseif (isset($_SESSION['mode']) && $_SESSION['mode'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
+} elseif (isset($_SESSION['mode']) && substr($_SESSION['mode'], 0, 6) == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
 	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 11);

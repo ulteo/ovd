@@ -22,6 +22,19 @@
  **/
 require_once(dirname(__FILE__).'/core.inc.php');
 
+function redirect($url_=NULL) {
+	if (is_null($url_)) {
+		if (! isset($_SERVER['HTTP_REFERER'])) {
+			global $base_url;
+			$url_ = $base_url;
+		} else
+			$url_ = $_SERVER['HTTP_REFERER'];
+	}
+
+	header('Location: '.$url_);
+	die();
+}
+
 function get_from_file($file_) {
 	if (!is_readable($file_)) {
 		Logger::error('main', 'Unable to read from : '.$file_);
@@ -144,3 +157,12 @@ function get_classes_startwith($start_name) {
 	return $ret;
 }
 
+function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+	$len = strlen($st)-1;
+
+	$ret = '';
+	while ($nc-- > 0)
+		$ret .= $st{mt_rand(0, $len)};
+
+	return $ret;
+}

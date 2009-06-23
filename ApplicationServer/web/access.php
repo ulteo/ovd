@@ -61,10 +61,10 @@ switch ($_SESSION['parameters']['quality']) {
 
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
 ?>
-<applet code="org.vnc.VncViewer" codebase="applet/" archive="ulteo-applet-0.2.4.jar" mayscript="true" width="<?php echo @$_SESSION['width']; ?>" height="<?php echo @$_SESSION['height']; ?>">
+<applet code="org.vnc.VncViewer" codebase="/applet/" archive="ulteo-applet-0.2.4.jar" mayscript="true" width="<?php echo @$_SESSION['width']; ?>" height="<?php echo @$_SESSION['height']; ?>">
 	<param name="name" value="ulteoapplet" />
 	<param name="code" value="org.vnc.VncViewer" />
-	<param name="codebase" value="applet/" />
+	<param name="codebase" value="/applet/" />
 	<param name="archive" value="ulteo-applet-0.2.4.jar" />
 	<param name="cache_archive" value="ulteo-applet-0.2.4.jar" />
 	<param name="cache_archive_ex" value="ulteo-applet-0.2.4.jar;preload" />
