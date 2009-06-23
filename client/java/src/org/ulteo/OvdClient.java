@@ -1,290 +1,327 @@
 package org.ulteo;
 
-import org.ulteo.HttpClient;
 import java.net.*;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import javax.swing.*;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.*;
-import org.xml.sax.InputSource;
-
 import java.io.StringReader;
-
 import java.applet.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.swing.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.*;
+import org.xml.sax.InputSource;
+import org.ulteo.HttpClient;
 import org.sshvnc.Viewer;
 
 public class OvdClient implements Runnable, ActionListener {
-	protected Frame frame;
-	protected Panel panel;
-	protected TextField tflogin;
-	protected TextField tfpassword;
-	protected TextField tfsm_url;
-	protected Button bsubmit;
-
+    protected OvdClientJFrame frame;
     protected URL sm_url;
     protected String login;
     protected String password;
-
     protected URL aps_url;
-
-	protected Boolean logged_in = false;
-
+    protected Boolean logged_in = false;
     protected HttpClient hc = null;
-
     protected ArgParser ap;
 
-    public static void usage() {
-		System.err.println("Usage: ...");
+    public OvdClient()
+    {
+        this.ap = new ArgParser();
     }
 
-    public OvdClient() {
-		this.ap = new ArgParser();
+    public static void usage()
+    {
+        System.err.println("Usage: ...");
     }
 
-    public void run() {
-		while (true) {
-			try {
-				this.getSessionStatus();
-				Thread.currentThread().sleep(1000);
-			} catch(Exception e) {
-				System.err.println("is going to end ...");
-				return;
-			}
-		}
+    public void run()
+    {
+        while(true) {
+            try {
+                this.getSessionStatus();
+                Thread.currentThread().sleep(1000);
+            } catch(Exception e) {
+                System.err.println("is going to end ...");
+                return;
+            }
+        }
     }
 
-    public boolean StartSession() throws Exception {
-		hc = new HttpClient(this.sm_url);
+    public boolean StartSession() throws Exception
+    {
+        hc = new HttpClient(this.sm_url);
 
-		int r = hc.request_POST(this.sm_url.getPath() + "/startsession.php", "login=" + this.login + "&password=" + this.password);
+        int r = hc.request_POST(this.sm_url.getPath() + "/startsession.php", "login=" + this.login + "&password=" + this.password);
+        try {
+            this.aps_url = hc.server.getURL();
+        } catch (Exception e) {
+            debug("exception");
+            return false;
+        }
 
-		this.aps_url = hc.server.getURL();
-
-		return true;
+        return true;
     }
 
-    protected int getSessionStatus() throws Exception {
-		int e = hc.request_GET("/whatsup.php", "");
+    protected int getSessionStatus() throws Exception
+    {
+        int e = hc.request_GET("/whatsup.php", "");
 
-		String response = hc.getResponseText();
-		DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document document = parser.parse(new InputSource(new StringReader(response)));
-		NodeList n = document.getElementsByTagName("session");
-		if (n.getLength() < 1)
-			return -1;
+        String response = hc.getResponseText();
+        DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = parser.parse(new InputSource(new StringReader(response)));
+        NodeList n = document.getElementsByTagName("session");
 
-		Node m = n.item(0);
-		NamedNodeMap t = m.getAttributes();
-		Node g = t.getNamedItem("status");
-		String rr = g.getNodeValue();
+        if(n.getLength() < 1)
+            return -1;
 
-		return (new Integer(rr)).intValue();
-		//	System.out.println("Node value: "+rr);
-		//	    return 0;
+        Node m = n.item(0);
+        NamedNodeMap t = m.getAttributes();
+        Node g = t.getNamedItem("status");
+        String rr = g.getNodeValue();
+
+        return (new Integer(rr)).intValue();
+        //    System.out.println("Node value: "+rr);
+        //        return 0;
     }
 
-    protected boolean StartSession_aps() throws Exception {
-		Dimension d = this.frame.getSize();
-		Insets i = this.frame.getInsets();
+    protected boolean StartSession_aps() throws Exception
+    {
+        Dimension d = this.frame.getSize();
+        Insets i = this.frame.getInsets();
 
-		int width = (int)d.getWidth()-(i.left+i.right);
-		int height = (int)d.getHeight()-(i.top+i.bottom);
+        int width = (int)d.getWidth() - (i.left + i.right);
+        int height = (int)d.getHeight() - (i.top + i.bottom);
 
-		int e = hc.request_GET("/start.php", "width="+width+"&height="+height);
+        int e = hc.request_GET("/start.php", "width=" + width + "&height=" + height);
 
-		return e==200;
-	}
-
-    protected boolean getAccess() throws Exception {
-		int e = hc.request_GET("/access.php", "");
-
-		String response = hc.getResponseText();
-		DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document document = parser.parse(new InputSource(new StringReader(response)));
-		NodeList nl = document.getElementsByTagName("ssh");
-
-		Node n = nl.item(0);
-		NamedNodeMap t = n.getAttributes();
-		this.ap.ssh_host = t.getNamedItem("host").getNodeValue();
-		this.ap.ssh_login = t.getNamedItem("user").getNodeValue();
-		this.ap.ssh_password = t.getNamedItem("passwd").getNodeValue();
-		this.ap.ssh_password = Utils.DecryptString(this.ap.ssh_password);
-
-		for (Node n2=n.getFirstChild(); n2!=null; n2 = n2.getNextSibling()) {
-			if (n2.getNodeName() != "port")
-				continue;
-
-			this.ap.ssh_port = n2.getTextContent();
-			break;
-		}
-
-		nl = document.getElementsByTagName("vnc");
-
-		n = nl.item(0);
-		t = n.getAttributes();
-		this.ap.vnc_password = t.getNamedItem("passwd").getNodeValue();
-		this.ap.vnc_password = Utils.DecryptEncVNCString(this.ap.vnc_password);
-		this.ap.vnc_port = t.getNamedItem("port").getNodeValue();
-
-		System.out.println("VNC password: "+this.ap.vnc_password);
-
-		return e==200;
+        return e == 200;
     }
 
-    public void launchViewer() {
-		/*System.out.println("Launching with following parameters:");
-		System.out.println("\tssh_host: "+this.ssh_host);
-		System.out.println("\tssh_port: "+this.ssh_port);
-		System.out.println("\tssh_login: "+this.ssh_login);
-		System.out.println("\tssh_password: "+this.ssh_password);
-		System.out.println("\tvnc_password: "+this.vnc_password);
-		System.out.println("\tvnc_port: "+this.vnc_port);*/
+    protected boolean getAccess() throws Exception
+    {
+        int e = hc.request_GET("/access.php", "");
 
-		Viewer v = new Viewer(this.frame);
-		v.arg_parser = this.ap;
-		v.readParameters();
+        String response = hc.getResponseText();
+        DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        Document document = parser.parse(new InputSource(new StringReader(response)));
+        NodeList nl = document.getElementsByTagName("ssh");
 
-		v.init();
-		v.start();
+        Node n = nl.item(0);
+        NamedNodeMap t = n.getAttributes();
+
+        this.ap.ssh_host = t.getNamedItem("host").getNodeValue();
+        this.ap.ssh_login = t.getNamedItem("user").getNodeValue();
+        this.ap.ssh_password = t.getNamedItem("passwd").getNodeValue();
+        this.ap.ssh_password = Utils.DecryptString(this.ap.ssh_password);
+
+        for(Node n2 = n.getFirstChild(); n2 != null; n2 = n2.getNextSibling()) {
+            if(n2.getNodeName() != "port")
+                continue;
+
+            this.ap.ssh_port = n2.getTextContent();
+            break;
+        }
+
+        nl = document.getElementsByTagName("vnc");
+
+        n = nl.item(0);
+        t = n.getAttributes();
+        this.ap.vnc_password = t.getNamedItem("passwd").getNodeValue();
+        this.ap.vnc_password = Utils.DecryptEncVNCString(this.ap.vnc_password);
+        this.ap.vnc_port = t.getNamedItem("port").getNodeValue();
+
+        debug("VNC password: " + this.ap.vnc_password);
+
+        return e == 200;
     }
 
-    public static void main(String[] args) {
-		System.out.println("Begin main()");
+    public void launchViewer()
+    {
+        /*System.out.println("Launching with following parameters:");
+           System.out.println("\tssh_host: "+this.ssh_host);
+           System.out.println("\tssh_port: "+this.ssh_port);
+           System.out.println("\tssh_login: "+this.ssh_login);
+           System.out.println("\tssh_password: "+this.ssh_password);
+           System.out.println("\tvnc_password: "+this.vnc_password);
+           System.out.println("\tvnc_port: "+this.vnc_port);*/
 
-		OvdClient ovdclient = new OvdClient();
+        debug("launch viewer");
 
-		try {
-			ovdclient.AskLogin();
-		} catch(Exception e) {
-			System.out.println("Exception !!");
-			e.printStackTrace();
-			System.exit(0);
-		}
+        Viewer v = new Viewer(this.frame);
 
-		System.out.println("End main()");
-	}
+        v.arg_parser = this.ap;
+        v.readParameters();
 
-	public void AskLogin() {
-		System.out.println("Begin AskLogin()");
+        v.init();
+        v.start();
+    }
 
-		this.frame = new JFrame("Ulteo Open Virtual Desktop");
-		this.panel = new Panel();
+    public static void main(String[] args)
+    {
+        System.out.println("Begin main()");
 
-		Label llogin = new Label("Login: ");
-		Label lpassword = new Label("Password: ");
-		Label lsm_url = new Label("SessionManager: ");
-		this.tflogin = new TextField("login");
-		this.tfpassword = new TextField("password");
-		this.tfsm_url = new TextField("http://url");
-		tfpassword.setEchoCharacter('*');
+        OvdClient ovdclient = new OvdClient();
 
-		this.bsubmit = new Button(" Log in ");
-		this.bsubmit.addActionListener(this);
+        try {
+            ovdclient.AskLogin();
+        } catch(Exception e) {
+            System.out.println("An exception occured in AskLogin()");
+            e.printStackTrace();
+            System.exit(0);
+        }
 
-		GraphicsConfiguration gc = this.frame.getGraphicsConfiguration();
-		System.out.println(gc);
+        ovdclient.debug("End main()");
+    }
 
-		this.panel.add(llogin);
-		this.panel.add(this.tflogin);
+    public void AskLogin()
+    {
+        System.out.println("Begin AskLogin()");
 
-		this.panel.add(lpassword);
-		this.panel.add(this.tfpassword);
+        javax.swing.UIManager.LookAndFeelInfo[] info = javax.swing.UIManager.getInstalledLookAndFeels();
+        String systemName = System.getProperty("os.name");
+        for(int i = 0; i < info.length; i++) {
+            String className = info[i].getClassName();
+            if(className == "com.sun.java.swing.plaf.gtk.GTKLookAndFeel" && (systemName.contains("Linux") || systemName.contains("BSD") || systemName.contains("Solaris")) ||
+            className == "com.sun.java.swing.plaf.mac.MacLookAndFeel" && systemName.contains("Mac OS") ||
+            className == "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" && systemName.contains("Windows")) {
+                try {
+                    javax.swing.UIManager.setLookAndFeel(className);
+                    break;
+                } catch (Exception e) {
+                    System.err.println("Could not set look and feel");
+                }
+            }
+        }
 
-		this.panel.add(lsm_url);
-		this.panel.add(tfsm_url);
+        this.frame = new OvdClientJFrame();
+        this.frame.setSize(410, 265);
+        this.frame.setTitle("Ulteo Open Virtual Desktop");
+        this.frame.debugPane.setVisible(false);
+        this.frame.show();
 
-		this.panel.add(bsubmit);
+        this.frame.loginButton.addActionListener(this);
+        this.frame.debugCheckBox.addActionListener(this);
+        this.frame.exitButton.addActionListener(this);
 
-		this.frame.add(this.panel);
+        while(!this.logged_in) {
+            try {
+                Thread.currentThread().sleep(1000);
+            } catch(Exception ie) {}
+        }
 
-		this.frame.pack();
-		this.frame.setSize(800, 600);
+        this.frame.remove(this.frame.loginPanel);
+        this.frame.remove(this.frame.exitButton);
+        if(this.frame.debugPane.isVisible() == false) {
+            this.frame.remove(this.frame.jScrollPane1);
+            this.frame.setSize(800, 600);
+        }
+        else if(this.frame.debugPane.isVisible() == true) {
+            this.frame.setSize(800, 800);
+            //TODO: move at bottom
+        }
+        this.AfterLogin();
 
-		this.frame.show();
+        debug("End AskLogin()");
+    }
 
-		while(! this.logged_in) {
-			try{
-					Thread.currentThread().sleep(1000);//sleep for 1000 ms
-			} catch(Exception ie) {}
-		}
+    public void actionPerformed(ActionEvent ae)
+    {
+        debug("Begin actionPerformed()");
 
-		this.frame.remove(this.panel);
+        Object source = ae.getSource();
 
-		this.AfterLogin();
+        if(source == this.frame.loginButton) {
+            this.login = this.frame.userNameTextField.getText();
+            this.password = this.frame.passwordField.getText();
 
-		System.out.println("End AskLogin()");
-	}
+            try {
+                this.sm_url = new URL(this.frame.sessionManagerURLTextField.getText());
+            } catch(MalformedURLException e) {
+                System.err.println("Exception !!");
+                e.printStackTrace();
+                System.exit(1);
+            }
 
-	public void actionPerformed(ActionEvent ae) {
-		System.out.println("Begin actionPerformed()");
+            this.logged_in = true;
+        }
 
-		Object source = ae.getSource();
+        if(source == this.frame.debugCheckBox) {
+            if(this.frame.debugPane.isVisible() == true) {
+                this.frame.debugPane.setVisible(false);
+                this.frame.setSize(410, 265);
+            }
+            else if(this.frame.debugPane.isVisible() == false) {
+                this.frame.debugPane.setVisible(true);
+                this.frame.setSize(410, 450);
+            }
+        }
 
-		if (source == this.bsubmit) {
-			this.login = this.tflogin.getText();
-			this.password = this.tfpassword.getText();
+        if(source == this.frame.exitButton)
+            System.exit(0);
 
-			try {
-				this.sm_url = new URL(this.tfsm_url.getText());
-			} catch(MalformedURLException e) {
-				System.out.println("Exception !!");
-				e.printStackTrace();
-				System.exit(0);
-			}
+        debug("End actionPerformed()");
+    }
 
-			this.logged_in = true;
-		}
+    public void AfterLogin()
+    {
+        debug("Begin AfterLogin()");
 
-		System.out.println("End actionPerformed()");
-	}
+        try {
+            this.StartSession();
 
-	public void AfterLogin() {
-		System.out.println("Begin AfterLogin()");
+            int status = -1;
+            while(status != 0 && status != 10) {
+                try {
+                    status = this.getSessionStatus();
+                    debug("Status: " + status);
+                } catch(Exception e) {
+                    debug("exception");
+                    return;
+                }
+                try {
+                    Thread.currentThread().sleep(1000);    //sleep for 1000 ms
+                } catch(Exception ie) {
+                    debug("exception");
+                }
+            }
 
-		try {
-			this.StartSession();
+            this.StartSession_aps();
 
-			int status = -1;
-			while(status!=0 && status!= 10) {
-				status = this.getSessionStatus();
-				System.out.println("Status: "+status);
+            status = 0;
+            while(status != 2) {
+                try {
+                    status = this.getSessionStatus();
+                    debug("Status: " + status);
+                } catch(Exception e) {
+                    debug("exception");
+                    return;
+                }
+                try {
+                    Thread.currentThread().sleep(1000);    //sleep for 1000 ms
+                } catch(Exception ie) {
+                    debug("exception");
+                }
+            }
 
-				try{
-					Thread.currentThread().sleep(1000);//sleep for 1000 ms
-				} catch(Exception ie) {}
-			}
+            this.getAccess();
 
-			this.StartSession_aps();
+            Thread t1 = new Thread(this);
+            t1.start();
 
-			status = 0;
-			while(status!=2) {
-				status = this.getSessionStatus();
-				System.out.println("Status: "+status);
+            this.launchViewer();
+        } catch(Exception e) {
+            debug("Exception !!");
+            e.printStackTrace();
+            System.exit(0);
+        }
 
-				try{
-					Thread.currentThread().sleep(1000);//sleep for 1000 ms
-				} catch(Exception ie) {}
-			}
+        debug("End AfterLogin()");
+    }
 
-			this.getAccess();
+    public void debug(String message)
+    {
+        System.out.println(message);
+        this.frame.debugPane.setText(this.frame.debugPane.getText() + "\n" + message);
+    }
 
-			Thread t1 = new Thread(this);
-			t1.start();
-
-			this.launchViewer();
-		} catch(Exception e) {
-			System.out.println("Exception !!");
-			e.printStackTrace();
-			System.exit(0);
-		}
-
-		System.out.println("End AfterLogin()");
-	}
 }

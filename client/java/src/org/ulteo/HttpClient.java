@@ -111,7 +111,6 @@ public class HttpClient {
     public String getResponseText() throws Exception {
 	String line;
 	String response;
-
 	try {
 	    BufferedReader s = new BufferedReader(new InputStreamReader(server.getInputStream()));
 	    line = s.readLine();
