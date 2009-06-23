@@ -53,7 +53,7 @@ function daemon_init(debug_) {
 	}
 
 	if (debug)
-		my_height = parseInt(my_height)-150;
+		my_height = parseInt(my_height)-149;
 
 	Event.observe(window, 'unload', function() {
 		client_exit();
@@ -182,7 +182,6 @@ function push_log(data_, level_) {
 	if (flag)
 		$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
 }
-
 
 function session_check() {
 	push_log('[session] check()', 'debug');
