@@ -92,7 +92,6 @@ session_check_status() {
 	return 0
     fi
 
-    # LUCK=`cat ${SESSID_DIR}/luck` <-- not created by default
     NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
     USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
 
@@ -159,33 +158,6 @@ session_check_status() {
     fi
 
 	   
-    # if desktop session without alive ssh connection 
-    # and no luck, kill the whole session
-    if [ $DESKTOP_SESSION -gt 0 ] && [ $SSH_SESSION -eq 0 ] ;then
-	if [ ! -f ${SESSID_DIR}/private/luck ]; then
-	    log_INFO "LUCK does not exist, creating it"
-	    echo $MAXLUCK > ${SESSID_DIR}/private/luck
-	fi
-	LUCK=`cat ${SESSID_DIR}/private/luck`
-
-	if [ $LUCK -gt 0 ]; then
-	    local newluck=$(($LUCK-1))
-	    log_INFO "Decreasing luck $LUCK to $newluck";
-	    LUCK=$newluck
-	    echo $LUCK > ${SESSID_DIR}/private/luck
-	fi
-
-	if [ $LUCK -lt 1 ]; then
-	    # Suspend the session if the sesion was running and it's setup to suspend
-	    if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
-		session_suspend $SESSID
-		[ $? -eq 0 ] && return 0
-	    fi
-	    log_INFO "STAT - NOLUCK - CLOSING"
-	    session_switch_status $SESSID 3
-	    RUNASAP=3
-	fi
-    fi
 
 
     #
@@ -231,21 +203,12 @@ session_check_status() {
 	return
 
     elif [ $RUNASAP -eq 2 ]; then
-        # if the ssh tunnel is up then the session is likely to start, 
-        # so we can set the "luck" to a little number, 
-        # so the session can regenerate more quickly after its end
-	LUCK=`cat ${SESSID_DIR}/private/luck`
-	if [ $DESKTOP_SESSION -gt 0 ] && [ $SSH_SESSION -gt 0 ]; then
-	    if [ "$LUCK" != "$MINLUCK" ]; then
-                log_INFO "Session started: set LUCK to MINLUCK to terminate session quickly"
-                echo $MINLUCK > ${SESSID_DIR}/private/luck
-		touch ${SESSID_DIR}/private/running
-            fi
-	fi
+        local continue=1
 
         # if the owner_exit file exist, kill the session
         if [ -f ${SESSID_DIR}/infos/owner_exit ]; then
-            log_WARN "Owner exit"
+            log_INFO "Owner exit"
+            local continue=0
             # Suspend the session if the sesion was running and it's setup to suspend
             if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
         	session_suspend $SESSID
@@ -258,6 +221,30 @@ session_check_status() {
                 RUNASAP=3
             fi
         fi
+
+        # if session without alive ssh connection 
+        # and no luck, kill the whole session
+        if [ $continue -eq 1 ] && [ $SSH_SESSION -eq 0 ] ;then
+            if [ -f ${SESSID_DIR}/private/ssh_connected ]; then
+                rm ${SESSID_DIR}/private/ssh_connected
+                local timeout=1
+            else
+                local timeout=$CONNECTION_TIMEOUT
+            fi
+
+            local ready_t0=`cat  ${SESSID_DIR}/private/ready_since`
+            local ready_t1=`date +%s`
+            local diff=$(( $ready_t1 - $ready_t0 ))
+            if [ $diff -gt $timeout ]; then
+	        log_ERROR "No ssh connection since $timeout seconds"
+	        session_switch_status $SESSID 3
+	        RUNASAP=3
+            fi
+        else
+            [ ! -f ${SESSID_DIR}/private/ssh_connected ] && \
+                touch ${SESSID_DIR}/private/ssh_connected && \
+                touch ${SESSID_DIR}/private/running
+	fi
     fi
 	
     # if a session is required to stop asap
@@ -439,8 +426,7 @@ SPOOL=/var/spool/ulteo-ovd
 SPOOL_USERS=/var/spool/sessions
 SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"
 SERVERNAME=localhost
-MAXLUCK=20
-MINLUCK=1
+CONNECTION_TIMEOUT=20
 # end of default configuration
 
 # unset some env vars
@@ -490,8 +476,8 @@ export BIN_DIR SPOOL
 export SPOOL_USERS
 export LOG_FILE LOG_FLAGS
 export SESSION_MANAGER_URL SERVERNAME
-export MAXLUCK MINLUCK
 export CONF_FILE
+export CONNECTION_TIMEOUT
 
 # Set PATH to BIN_DIR in priority
 export PATH=$BIN_DIR:$PATH

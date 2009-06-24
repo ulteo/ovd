@@ -264,6 +264,10 @@ session_switch_status() {
 
     log_INFO "session_switch_status: ${SESSID} => $RUNASAP"
     echo $RUNASAP> ${SESSID_DIR}/infos/status
+    if [ $RUNASAP -eq 2 ]; then
+        echo `date +%s` > ${SESSID_DIR}/private/ready_since
+    fi
+
     webservices_session_request $SESSID $RUNASAP
 }
 
