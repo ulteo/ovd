@@ -4,3 +4,6 @@
 * xubuntu-default-config.patch
   modified patch to set PromptOnLogout to false by default (and thus always
   call our logout dialog)
+
+* ulteo_autostart_kiosk.patch:
+  add a kiosk option to forbid execution of applications in autostart/

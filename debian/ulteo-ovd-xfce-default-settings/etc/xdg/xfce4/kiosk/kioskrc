@@ -3,6 +3,7 @@ CustomizeChooser=%admin
 CustomizeLogout=%admin
 CustomizeCompatibility=%admin
 Shutdown=%admin
+Autostart=%admin
 
 [xfce4-panel]
 CustomizePanel=%admin

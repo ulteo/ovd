@@ -1,0 +1,32 @@
+--- a/xfce4-session/xfsm-startup.c
++++ b/xfce4-session/xfsm-startup.c
+@@ -45,6 +45,7 @@
+ 
+ #include <glib/gstdio.h>
+ 
++#include <libxfce4util/libxfce4util.h>
+ #include <libxfcegui4/libxfcegui4.h>
+ 
+ #include <libxfsm/xfsm-util.h>
+@@ -434,6 +435,12 @@
+ xfsm_startup_continue (const gchar *previous_id)
+ {
+   gboolean startup_done = FALSE;
++  gboolean allowed_autostart;
++  XfceKiosk *kiosk;
++
++  kiosk = xfce_kiosk_new ("xfce4-session");
++  allowed_autostart = xfce_kiosk_query (kiosk, "Autostart");
++  xfce_kiosk_free (kiosk);
+ 
+   if (failsafe_mode)
+     startup_done = xfsm_startup_continue_failsafe ();
+@@ -441,7 +448,7 @@
+     startup_done = xfsm_startup_continue_session (previous_id);
+ 
+   /* perform Autostart */
+-  if (startup_done)
++  if (startup_done && allowed_autostart)
+     xfsm_startup_autostart ();
+   
+   return startup_done;

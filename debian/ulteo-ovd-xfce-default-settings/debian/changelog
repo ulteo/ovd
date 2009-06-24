@@ -1,3 +1,9 @@
+ulteo-ovd-xfce-default-settings (0.9) ovd-polaris-experimental; urgency=low
+
+  * kiosk config: forbid autostart of applications in .config/autostart
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 24 Jun 2009 11:43:41 +0200
+
 ulteo-ovd-xfce-default-settings (0.8) ovd-polaris-experimental; urgency=low
 
   * kiosk config: forbid browsing of the file system (acts on GTK and Thunar)
