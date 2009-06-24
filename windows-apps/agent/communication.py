@@ -112,7 +112,7 @@ class Web(SimpleHTTPRequestHandler):
 			args = {}
 			args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
 			for (k,v) in args2:
-				args[k] = base64.decodestring(v)
+				args[k] = base64.decodestring(v).decode('utf-8')
 		except Exception, err:
 			args = {}
 		
