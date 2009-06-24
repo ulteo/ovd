@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2006-2008 Ulteo SAS
+# Copyright (C) 2006-2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Gaël DUVAL <gduval@ulteo.com>
 # Author Gauvain POCENTEK <gauvain@ulteo.com>
@@ -21,14 +21,6 @@
 
 . functions.sh
 . log.sh
-
-unexport i BIN_DIR CONF_FILE FS GEOMETRY LOG_FILE \
-    LOG_FLAGS MAXLUCK MINLUCK MODULES_FSD \
-    MOUNT_LOG MOUNT_RETRIES NICK RFB_PORT SERVERNAME \
-    SESSID_DIR SESSION_MANAGER_URL \
-    SPOOL USER_HOME USER_ID \
-    USER_LOGIN VNC_USER VNC_USER_ID \
-    SUDO_USER SUDO_GID SUDO_UID SUDO_COMMAND
 
 if rsbac_is_active; then
     USER_TMP=/tmpdir/tmp${USER_ID}/
@@ -69,47 +61,47 @@ session_switch_status $SESSID 2
 # Xvnc accept connexion only from MIT_MAGIC_COOKIEs
 su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$i XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/xhost -";
 
-export LC_ALL=$LOC LANG=$LOC LANGUAGE=$LOC
-export DISPLAY=:$i XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
-export XDG_DATA_DIRS=$SPOOL_USERS/$SESSID/xdg
-export OVD_APPS_DIR=$XDG_DATA_DIRS/applications
+LC_ALL=$LOC
+LANG=$LOC
+LANGUAGE=$LOC
 
-[ -f ${SESSID_DIR}/parameters/start_app ] && export APP=`cat ${SESSID_DIR}/parameters/start_app`
-[ -f ${SESSID_DIR}/parameters/start_app_id ] && export APP_ID=`cat ${SESSID_DIR}/parameters/start_app_id`
-[ -f ${SESSID_DIR}/parameters/open_doc ] && export DOC=`cat ${SESSID_DIR}/parameters/open_doc`
+DISPLAY=:$i
+XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
 
-[ -f ${SESSID_DIR}/parameters/module_fs/user_homedir ] && export  CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
+OVD_SESSID_DIR=$SPOOL_USERS/$SESSID
+XDG_DATA_DIRS=$OVD_SESSID_DIR/xdg
+OVD_APPS_DIR=$XDG_DATA_DIRS/applications
+
+[ -f ${SESSID_DIR}/parameters/start_app ] && APP=`cat ${SESSID_DIR}/parameters/start_app`
+[ -f ${SESSID_DIR}/parameters/start_app_id ] && APP_ID=`cat ${SESSID_DIR}/parameters/start_app_id`
+[ -f ${SESSID_DIR}/parameters/open_doc ] && DOC=`cat ${SESSID_DIR}/parameters/open_doc`
+
+[ -f ${SESSID_DIR}/parameters/module_fs/user_homedir ] && CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
 
 if [ "r$DOC" != "r" ] || [ "r$APP" != "r" ]; then
-    [ -f ${SESSID_DIR}/parameters/app_with_desktop ] || export NODESKTOP=1
+    [ -f ${SESSID_DIR}/parameters/app_with_desktop ] || NODESKTOP=1
 fi
-
-menu_spool $XDG_DATA_DIRS ${SESSID_DIR}
-windows_init_connection ${SESSID_DIR}
 
 if [ -f ${SESSID_DIR}/parameters/timezone ]; then
     tz=`cat ${SESSID_DIR}/parameters/timezone`
     if [ -f /usr/share/zoneinfo/$tz ]; then
 	log_INFO "set TZ to $tz"
-	export TZ="/usr/share/zoneinfo/$tz"
+	TZ="/usr/share/zoneinfo/$tz"
     else
 	log_WARN "invalid TZ to '/usr/share/zoneinfo/$tz'"
     fi
 fi
 
+session_create_env_file
+
+menu_spool $XDG_DATA_DIRS ${SESSID_DIR}
+windows_init_connection ${SESSID_DIR}
+
 # Start autocutsel
-su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/autocutsel" &> $out &
+su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; /usr/bin/autocutsel" &> $out &
 
-if [ "$AJAX" = "TRUE" ]; then
-    # Start DCOP/etc services
-    su -s "/bin/bash" ${USER_LOGIN} -c "LD_BIND_NOW=true /usr/bin/kdeinit" &> $out &
-
-    # Start ulteowm
-    su -s "/bin/bash" ${USER_LOGIN} -c "/usr/bin/ulteowm $((6900+$i))" &> $out
-else
-    # Start the KDE session
-    su -s "/bin/bash" ${USER_LOGIN} -c "cd ~ && startovd" &> $out
-fi
+# Start the desktop session
+su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; cd ~; startovd" &> $out
 
 # force session to end
 session_switch_status $SESSID 3

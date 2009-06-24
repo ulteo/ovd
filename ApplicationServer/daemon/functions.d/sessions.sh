@@ -410,3 +410,15 @@ session_change_login_if_needed() {
     echo "$login$pos" >${SESSID_DIR}/parameters/user_login 
     return 1
 }
+
+session_create_env_file() {
+    ENV_FILE=$OVD_SESSID_DIR/env.sh
+    for key in LC_ALL LANG LANGUAGE TZ \
+               DISPLAY XAUTHORITY \
+               OVD_SESSID_DIR XDG_DATA_DIRS OVD_APPS_DIR \
+               APP APP_ID DOC NODESKTOP \
+               CIFS_HOME_DIR; do
+        eval value=\$$key
+        echo "export $key=$value" >> $ENV_FILE
+    done
+}

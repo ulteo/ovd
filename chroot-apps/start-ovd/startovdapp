@@ -26,21 +26,20 @@ import sys
 options = ['--start-monitoring', '--stop-monitoring']
 
 def append_to_file(pid, desktop):
-    D = '%s/%s'%(os.environ['SPOOL_USERS'], os.environ['SESSID'])
+    D = os.environ['OVD_SESSID_DIR']
     desktop = desktop.replace("\\", "\\\\")
     f = file(D+'/apps', 'a')
     f.write("%s %s\n"%(str(pid), desktop))
     f.close()
 
 def del_from_file(pid):
-    D = '%s/%s'%(os.environ['SPOOL_USERS'], os.environ['SESSID'])
+    D = os.environ['OVD_SESSID_DIR']
     # windows pids will be strings (0x...)
     os.system('sed -i "/^%s /d" %s/apps'%(str(pid), D))
 
 # stop if we don't have the needed env vars
-for key in ['SPOOL_USERS', 'SESSID']:
-    if not os.environ.has_key(key):
-        sys.exit(1)
+if not os.environ.has_key('OVD_SESSID_DIR'):
+    sys.exit(1)
 
 # monitoring only
 if len(sys.argv) > 0 and sys.argv[1] in options:

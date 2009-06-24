@@ -50,7 +50,7 @@ windows_init_connection() {
     fi
 
     local cmd='rdesktop -k "'$keymap'" -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$printer_args' '$server
-    su -s "/bin/bash" ${USER_LOGIN} -c "$cmd &" 
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $cmd &" 
 }
 
 windows_logoff() {
