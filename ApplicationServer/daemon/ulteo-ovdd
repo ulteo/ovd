@@ -243,21 +243,6 @@ session_check_status() {
             fi
 	fi
 
-        # if past session (runasap == 2)
-        # without desktop session => kill session (Xvnc), kill possible ssh connexion
-        # or if session required to start (timeout, other session...)
-	if [ $DESKTOP_SESSION -eq 0 ] && [ -e /tmp/wipeout/$NICK ]; then
-	    let ctg=$(( `date +%s` / 60 ))
-	    candidate=$(( `stat -c "%Z" /tmp/wipeout/$NICK` / 60 ))
-	    let diffg=$(( $ctg - $candidate ))
-
-	    if [ $diffg -gt 1 ]; then
-		log_INFO "Wipeout session $diffg"
-		session_switch_status $SESSID 3
-		RUNASAP=3
-	    fi
-	fi
-
         # if the owner_exit file exist, kill the session
         if [ -f ${SESSID_DIR}/infos/owner_exit ]; then
             log_WARN "Owner exit"
@@ -287,27 +272,6 @@ session_check_status() {
 # clean possibly remaining user dirs, only if they are umounted
 #
 garbage_collector() {
-
-## No use anymore, replace by module_fs
-#    let ctg=$(( `date +%s` / 60 ))
-#
-#    for j in `ls /tmp/wipeout/`; do	
-#	log_INFO "Garbage Collector --> Trying: "$j
-#	
-#	candidate=$(( `stat -c "%Z" /tmp/wipeout/$j` / 60 ))
-#	let diffg=$(( $ctg - $candidate ))
-#
-#	if [ $diffg -gt 1 ]; then
-#	    log_INFO "Garbage collector --> diff more than 1 min for $j ($diffg)"
-#	    rmdir /home/$j
-#
-#	    if [ ! -e /home/$j ]; then
-#		jdated=$j
-#		rm -f /tmp/wipeout/$j 
-#	    fi
-#	fi
-#    done
-
     #
     # Clean active session non-used 
     # (runasap=0) since 60 second
