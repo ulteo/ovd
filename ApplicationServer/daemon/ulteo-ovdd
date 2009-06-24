@@ -328,21 +328,6 @@ garbage_collector() {
     done
 }
 
-spool_init() {
-    [ -d $SPOOL ] || mkdir -p $SPOOL
-    [ -d $SPOOL/apt ] || mkdir $SPOOL/apt
-    [ -d $SPOOL/cache ] || mkdir $SPOOL/cache
-    [ -d $SPOOL/files ] || mkdir $SPOOL/files
-    [ -d $SPOOL/id ] || mkdir $SPOOL/id
-    [ -d $SPOOL/sessions ] || mkdir $SPOOL/sessions
-    [ -d $SPOOL/sessions2create ] || mkdir $SPOOL/sessions2create
-
-    [ -d $SPOOL_USERS ] || mkdir -p $SPOOL_USERS
-
-    chgrp www-data $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
-    chmod g+w $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
-}
-
 loop() {
     # check if the system is clean before to start
     system_clean
@@ -353,6 +338,7 @@ loop() {
     fi
 
     trap 'stop' KILL EXIT
+    spool_clean
     spool_init
 
     if ! rsbac_is_active; then
@@ -459,11 +445,7 @@ stop() {
     # if not 0 => broken !
 
     # Remove the old sessions from the local server
-    rm -rf $SPOOL/apt/*
-    rm -rf $SPOOL/files/*
-    rm -rf $SPOOL/id/*
-    rm -rf $SPOOL/sessions/*
-    rm -rf $SPOOL/sessions2create/*
+    spool_clean
 
     if [ -f "$PID_FILE" ]; then
        local mpid=`cat $PID_FILE`

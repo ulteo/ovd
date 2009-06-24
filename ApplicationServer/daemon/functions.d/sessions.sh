@@ -56,22 +56,21 @@ session_init() {
     local SESSID_DIR=$SPOOL/sessions/$SESSID
 
     # Choose a number for this session
-    let i=0
-    while [ -f $SPOOL/id/$i ]; do
-	[ $i -ge 1000 ] && return 1
-	let i=$(( $i + 1 ))
-    done
-    touch $SPOOL/id/$i
+    local i=`spool_get_id`
+    [ $? -eq 0 ] || return 1
 
     log_INFO "session_init: '$SESSID' => $i"
-    local RFB_PORT=$((5900+$i))
+    local RFB_PORT=`spool_get_rfbport`
+    [ $? -eq 0 ] || return 1
+
     local SSH_USER="SSH$i"
     local VNC_USER="VNC$i"
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
     if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
 	log_ERROR "session_init: user '$SSH_USER' already in /etc/passwd"
-	rm $SPOOL/id/$i
+        spool_free_id $i
+        spool_free_rfbport $RFB_PORT
 	return 1
     fi
     log_INFO "useradd $SSH_USER with uid : $uid"
@@ -81,7 +80,8 @@ session_init() {
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
     if [ `grep -e "$VNC_USER\:x" /etc/group` ]; then
 	log_ERROR "session_init: user '$VNC_USER' already in /etc/group"
-	rm $SPOOL/id/$i
+        spool_free_id $i
+        spool_free_rfbport $RFB_PORT
 	return 1
     fi
     log_INFO "groupadd -K GID_MAX=70000 $VNC_USER"
@@ -91,7 +91,8 @@ session_init() {
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
     if [ `grep -e "$VNC_USER\:x" /etc/passwd` ]; then
 	log_ERROR "session_init: user '$VNC_USER' already in /etc/passwd"
-	rm $SPOOL/id/$i
+        spool_free_id $i
+        spool_free_rfbport $RFB_PORT
 	return 1
     fi
     log_INFO "useradd $VNC_USER with uid : $uid"
@@ -204,7 +205,8 @@ session_remove() {
 
     rm -rf $SPOOL_USERS/$SESSID
     rm -rf $SESSID_DIR
-    rm $SPOOL/id/$i
+    spool_free_id $i
+    spool_free_rfbport $rfb_port
 
     webservices_session_request $SESSID 4
 }

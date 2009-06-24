@@ -2,6 +2,7 @@ scripts_DATA = apt.sh \
            cache.sh \
 		   menu.sh \
 		   sessions.sh \
+		   spool.sh \
 		   tmp.sh \
 		   utils.sh \
 		   webservices.sh \
