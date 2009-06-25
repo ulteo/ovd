@@ -20,10 +20,13 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+if (! isset($_SESSION) || ! isset($_SESSION['session']))
+	die('CRITICAL ERROR'); // That's odd !
+
 $server = $_SERVER['SERVER_NAME'];
 $session = $_SESSION['session'];
 
-if (!isset($session) || $session == '')
+if (! isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
 
 $vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
