@@ -28,7 +28,7 @@ class UserGroup_Rules {
 		$buf = Abstract_UserGroup_Rule::load_all();
 
 		if (! is_array($buf)) {
-			Logger::error('main', 'UserGroup_Rules::UserGroup_Rules Abstract_UserGroup_Rule::load_all failed (not an array)'):
+			Logger::error('main', 'UserGroup_Rules::UserGroup_Rules Abstract_UserGroup_Rule::load_all failed (not an array)');
 			return array();
 		}
 
