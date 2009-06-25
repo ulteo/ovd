@@ -180,9 +180,6 @@ session_check_status() {
 	    USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
 
 
-        # remove wipeout stamp is still there
-	rm -f /tmp/wipeout/$NICK
-
 	USER_HOME=/home/$NICK
 	echo $NICK > /tmp/VNC$i
 
@@ -307,12 +304,6 @@ loop() {
 	    mkdir /tmp/.ICE-unix
 	fi
 	chmod a+rwxt /tmp/.ICE-unix
-    fi
-
-    # this dir is used to have the script remember
-    # about nicknames whose connection is normally closed
-    if [ ! -e /tmp/wipeout ]; then
-	mkdir /tmp/wipeout
     fi
 
     # Give availables application to the sessionmanager
