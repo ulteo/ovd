@@ -80,11 +80,24 @@ session_check_status() {
 	return 1
     fi
 
-    RUNASAP=`cat ${SESSID_DIR}/infos/status`
+    if [ $# -gt 1 ]; then
+        RUNASAP=$2
+    else
+        RUNASAP=`cat ${SESSID_DIR}/infos/status`
+    fi
+
     if ! session_valid_runasap $RUNASAP; then
 	log_WARN "Unsupported runasap value for session $SESSID"
 	session_switch_status $SESSID 3
-	RUNASAP=3
+        session_check_status $SESSID 3
+        return $?
+    fi
+
+    # if a session is required to stop asap
+    if [ $RUNASAP -eq 3 ]; then
+        log_INFO "Killing Session $SESSID"
+        session_purge ${SESSID}
+	return 1
     fi
 
     # If sesion is not initialize yet
@@ -129,7 +142,8 @@ session_check_status() {
 	if [ $diff -gt 0 ]; then
 	    log_INFO "Session expired => Timeout:$ct, EXPIRE:$EXPIRE, diff:$diff"
 	    session_switch_status $SESSID 3
-	    RUNASAP=3
+            session_check_status $SESSID 3
+            return $?
 	fi
     fi
 
@@ -153,7 +167,8 @@ session_check_status() {
 		[ $? -eq 0 ] && return 0
 	    fi
 	    session_switch_status $SESSID 3
-	    RUNASAP=3
+            session_check_status $SESSID 3
+            return $?
 	fi
     fi
 
@@ -211,11 +226,13 @@ session_check_status() {
         	session_suspend $SESSID
         	if [ $? -ne 0 ]; then
                     session_switch_status $SESSID 3
-                    RUNASAP=3
+                    session_check_status $SESSID 3
+                    return $?
                 fi
             else
                 session_switch_status $SESSID 3
-                RUNASAP=3
+                session_check_status $SESSID 3
+                return $?
             fi
         fi
 
@@ -235,20 +252,15 @@ session_check_status() {
             if [ $diff -gt $timeout ]; then
 	        log_ERROR "No ssh connection since $timeout seconds"
 	        session_switch_status $SESSID 3
-	        RUNASAP=3
+                session_check_status $SESSID 3
+                return $?
             fi
         else
-            [ ! -f ${SESSID_DIR}/private/ssh_connected ] && \
-                touch ${SESSID_DIR}/private/ssh_connected && \
+            if [ ! -f ${SESSID_DIR}/private/ssh_connected ]; then
+                touch ${SESSID_DIR}/private/ssh_connected
                 touch ${SESSID_DIR}/private/running
+            fi
 	fi
-    fi
-	
-    # if a session is required to stop asap
-    if [ $RUNASAP -eq 3 ]; then # iff5
-	log_INFO "Killing Session $SESSID"
-	session_purge ${SESSID}
-	return 1
     fi
 }
 
