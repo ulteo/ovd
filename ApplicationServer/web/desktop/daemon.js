@@ -1,5 +1,7 @@
 var refresh = 2000;
 
+var applet_version;
+var printing_applet_version;
 var protocol;
 var server;
 var port;
@@ -15,14 +17,18 @@ var nb_share = 0;
 
 var window_alive = true;
 
-function daemon_init(debug_) {
+function daemon_init(applet_version_, printing_applet_version_, debug_) {
+	applet_version = applet_version_;
+	printing_applet_version = printing_applet_version_;
 	protocol = window.location.protocol;
 	server = window.location.host;
 	port = window.location.port;
 	debug = debug_;
 
 	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="/applet/" width="1" height="1" name="ulteoprinting"><param name="do_nothing" value="1"></applet>';
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
+		<param name="do_nothing" value="1"> \
+	</applet>';
 
 	push_log('[daemon] init()', 'info');
 
@@ -100,11 +106,114 @@ function switch_splash_to_applet() {
 				html: 1
 			},
 			onSuccess: function(transport) {
+				var buffer;
+
 				$('splashContainer').hide();
 				if ($('menuContainer'))
 					$('menuContainer').show();
 
-				$('appletContainer').innerHTML = transport.responseText;
+				try {
+					var xml = transport.responseXML;
+					buffer = xml.getElementsByTagName('session');
+					if (buffer.length != 1) {
+						push_log('[applet] bad xml format', 'error');
+						return;
+					}
+
+					var sessionNode = buffer[0];
+
+					buffer = sessionNode.getElementsByTagName('parameters');
+					var parametersNode = buffer[0];
+
+					applet_width = parametersNode.getAttribute('width');
+					applet_height = parametersNode.getAttribute('height');
+					applet_share_desktop = parametersNode.getAttribute('share_desktop');
+					applet_view_only = parametersNode.getAttribute('view_only');
+
+					buffer = sessionNode.getElementsByTagName('ssh');
+					var sshNode = buffer[0];
+
+					applet_ssh_host = sshNode.getAttribute('host');
+					applet_ssh_user = sshNode.getAttribute('user');
+					applet_ssh_passwd = sshNode.getAttribute('passwd');
+
+					buffer = sshNode.getElementsByTagName('port');
+					applet_ssh_ports = '';
+					for (var i = 0; i < buffer.length; i++) {
+					    applet_ssh_ports = applet_ssh_ports+buffer[i].firstChild.nodeValue;
+						if (i < buffer.length-1)
+							applet_ssh_ports = applet_ssh_ports+',';
+					}
+
+					buffer = sessionNode.getElementsByTagName('vnc');
+					var vncNode = buffer[0];
+
+					applet_vnc_host = vncNode.getAttribute('host');
+					applet_vnc_port = vncNode.getAttribute('port');
+					applet_vnc_passwd = vncNode.getAttribute('passwd');
+
+					buffer = vncNode.getElementsByTagName('quality');
+					var vncQualityNode = buffer[0];
+
+					applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
+					applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
+					applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
+					applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
+
+					buffer = sessionNode.getElementsByTagName('proxy');
+					var proxyNode = buffer[0];
+
+					applet_proxy_type = proxyNode.getAttribute('type');
+					applet_proxy_host = proxyNode.getAttribute('host');
+					applet_proxy_port = proxyNode.getAttribute('port');
+					applet_proxy_username = proxyNode.getAttribute('username');
+					applet_proxy_password = proxyNode.getAttribute('password');
+				} catch(e) {
+					push_log('[applet] bad xml format', 'error');
+					return;
+				}
+
+				$('appletContainer').innerHTML = '<applet code="org.vnc.VncViewer" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+					<param name="name" value="ulteoapplet" /> \
+					<param name="code" value="org.vnc.VncViewer" /> \
+					<param name="codebase" value="/applet/" /> \
+					<param name="archive" value="'+applet_version+'" /> \
+					<param name="cache_archive" value="'+applet_version+'" /> \
+					<param name="cache_archive_ex" value="'+applet_version+';preload" /> \
+					\
+					<param name="Share desktop" value="'+applet_share_desktop+'" /> \
+					<param name="View only" value="'+applet_view_only+'" /> \
+					\
+					<param name="SSH" value="yes" /> \
+					<param name="ssh.host" value="'+applet_ssh_host+'" /> \
+					<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
+					<param name="ssh.user" value="'+applet_ssh_user+'" /> \
+					<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
+					\
+					<param name="HOST" value="'+applet_vnc_host+'" /> \
+					<param name="PORT" value="'+applet_vnc_port+'" /> \
+					<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
+					\
+					<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
+					<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
+					<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
+					<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
+					\
+					<!-- Caching options --> \
+					<param name="rfb.cache.enabled" value="true" /> \
+					<param name="rfb.cache.ver.major" value="1" /> \
+					<param name="rfb.cache.ver.minor" value="0" /> \
+					<param name="rfb.cache.size" value="42336000" /> \
+					<param name="rfb.cache.alg" value="LRU" /> \
+					<param name="rfb.cache.datasize" value="2000000" /> \
+					\
+					<param name="proxyType" value="'+applet_proxy_type+'" /> \
+					<param name="proxyHost" value="'+applet_proxy_host+'" /> \
+					<param name="proxyPort" value="'+applet_proxy_port+'" /> \
+					<param name="proxyUsername" value="'+applet_proxy_username+'" /> \
+					<param name="proxyPassword" value="'+applet_proxy_password+'" /> \
+				</applet>';
+
 				var appletNode = $('appletContainer').getElementsByTagName('applet');
 				if (appletNode.length > 0) {
 					appletNode = appletNode[0];
@@ -302,8 +411,11 @@ function do_print(path, timestamp) {
 
   var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
 
-  $('printerContainer').show();
-  $('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="ulteo-printing-0.5.1.jar" codebase="/applet/" width="1" height="1" name="ulteoprinting"><param name="url" value="'+print_url+'"><param name="filename" value="'+path+'"></applet>';
+	$('printerContainer').show();
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+'+printing_applet_version+'+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
+		<param name="url" value="'+print_url+'"> \
+		<param name="filename" value="'+path+'"> \
+	</applet>';
 
   push_log('[print] Applet: starting', 'warning');
 }
