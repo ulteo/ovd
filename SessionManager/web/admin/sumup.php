@@ -43,7 +43,7 @@ $userDB = new $mod_user_name();
 
 $userGroupDB = UserGroupDB::getInstance();
 
-$us = $userDB->getList();  // in admin, getList is always present (even if canShowList is false)
+$us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
 if (is_null($us)){
 }
 else{

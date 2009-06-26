@@ -112,7 +112,7 @@ function modify_user($userDB, $login) {
 }
 
 function show_default($userDB) {
-  $us = $userDB->getList();  // in admin, getList is always present (even if canShowList is false)
+  $us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
 
   $users_list_empty = (is_null($us) or count($us)==0);
   $userdb_rw = $userDB->isWriteable();
@@ -231,7 +231,7 @@ function show_manage($login, $userDB, $userGroupDB) {
   if (is_null($groups_mine))
     die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
 
-  $groups_all = $userGroupDB->getList();
+  $groups_all = $userGroupDB->getList(true);
   $groups_available = array();
   foreach($groups_all as $group)
     if (! in_array($group, $groups_mine))

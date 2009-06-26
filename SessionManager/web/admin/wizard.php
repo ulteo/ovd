@@ -129,7 +129,7 @@ function show_default() {
 
 function show_step1() {
   $usergroupdb = UserGroupDB::getInstance();
-  $usergroups = $usergroupdb->getList();
+  $usergroups = $usergroupdb->getList(true);
   $has_usergroups = (count($usergroups) > 0);
 
   $usergroup_selected = false;
@@ -139,10 +139,10 @@ function show_step1() {
     $usergroup_selected = true;
 
   $userDB = UserDB::getInstance();
-  $users = $userDB->getList();
+  $users = $userDB->getList(true);
 
   $applicationDB = ApplicationDB::getInstance();
-  $applications = $applicationDB->getList();
+  $applications = $applicationDB->getList(true);
 
   if (!count($users))
     popup_error(_('No available user'));

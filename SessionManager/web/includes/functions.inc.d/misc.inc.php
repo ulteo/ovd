@@ -249,6 +249,10 @@ function user_cmp($o1, $o2) {
 	return strcmp($o1->getAttribute('login'), $o2->getAttribute('login'));
 }
 
+function usergroup_cmp($o1, $o2) {
+	return strcmp($o1->name, $o2->name);
+}
+
 function application_cmp($o1, $o2) {
 	return strcmp($o1->getAttribute('name'), $o2->getAttribute('name'));
 }

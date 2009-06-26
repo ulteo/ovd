@@ -219,7 +219,7 @@ function show_manage($id) {
 
   $userGroupDB = UserGroupDB::getInstance();
 
-  $applications_all = $applicationDB->getList();
+  $applications_all = $applicationDB->getList(true);
   $applications_id = array();
   $liaisons = Abstract_Liaison::load('AppsGroup', NULL, $id);
   foreach ($liaisons as $liaison)
@@ -244,7 +244,7 @@ function show_manage($id) {
       $groups_users[]= $obj;
   }
 
-  $groups_users_all = $userGroupDB->getList();
+  $groups_users_all = $userGroupDB->getList(true);
   $groups_users_available = array();
   foreach($groups_users_all as $group_users) {
     if (! in_array($group_users, $groups_users))

@@ -64,13 +64,17 @@ class UserGroupDB extends Module {
 		}
 		return NULL; // not found
 	}
-	public function getList() {
+	public function getList($sort_=false) {
 		Logger::debug('main', 'UserGroupDB::getList');
 		$result = array();
 		foreach ($this->instance_type as $key => $value) {
 			$result = array_merge($result, $value->getList());
 		}
-		return array_unique($result);
+		$unique = array_unique($result);
+		if ($sort_) {
+			usort($unique, "usergroup_cmp");
+		}
+		return $unique;
 	}
 	public function isWriteable() {
 		if (!array_key_exists('static', $this->instance_type))

@@ -521,11 +521,12 @@ function show_manage($id) {
   }
 
   $users = $group->usersLogin();
+  sort($users);
   $has_users = (count($users) > 0);
 
   $userDB = UserDB::getInstance();
 
-  $users_all = $userDB->getList();
+  $users_all = $userDB->getList(true);
   $users_available = array();
   foreach($users_all as $user) {
     $found = false;

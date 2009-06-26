@@ -560,10 +560,11 @@ function show_manage($fqdn) {
   $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
   $applicationDB = new $mod_app_name();
 
-  $applications_all = $applicationDB->getList();
+  $applications_all = $applicationDB->getList(true);
   $applications = $server->getApplications();
   if (! is_array($applications))
     $applications = array();
+  usort($applications, 'application_cmp');
 
   $applications_available = array();
   if ($server_online) {
