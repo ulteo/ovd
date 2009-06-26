@@ -83,8 +83,7 @@ if (isset($_POST['join'])) {
 	else
 	{
 		$show_apps = true;
-		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-		$applicationDB = new $mod_app_name();
+		$applicationDB = ApplicationDB::getInstance();
 		$apps = $applicationDB->getList(true);
 	}
 
