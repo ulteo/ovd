@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: gauvain@ulteo.com\n"
-"POT-Creation-Date: 2009-01-20 17:05+0100\n"
+"Report-Msgid-Bugs-To: ovd-application-server@packages.debian.org\n"
+"POT-Creation-Date: 2009-06-29 07:53+0200\n"
 "PO-Revision-Date: 2009-01-20 17:07+0100\n"
 "Last-Translator: Gauvain Pocentek <gauvain@ulteo.com>\n"
 "Language-Team: fr\n"
@@ -17,12 +17,12 @@ msgstr ""
 
 #. Type: string
 #. Description
-#: ../ulteo-ovd.templates:1001
+#: ../ulteo-ovd-application-server.templates:1001
 msgid "Full qualified domain name of this server:"
 msgstr "Nom complet du serveur :"
 
 #. Type: string
 #. Description
-#: ../ulteo-ovd.templates:2001
+#: ../ulteo-ovd-application-server.templates:2001
 msgid "Url used to access the session manager:"
 msgstr "Url d'accès au session manager :"

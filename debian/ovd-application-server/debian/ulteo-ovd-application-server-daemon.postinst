@@ -1,6 +1,7 @@
 #!/bin/sh -e
 
 INSTALLDIR=/usr/share/ulteo-ovd
+CONFIGFILE=/etc/ulteo-ovd.conf
 
 if [ "$1" = "configure" ]; then
     if ! dpkg-statoverride --list $INSTALLDIR >/dev/null 2>&1; then
@@ -22,6 +23,20 @@ EOF
 
     # first run of desktop-files2xml
     /usr/bin/desktop-files2xml >/var/lib/ulteo/available-apps.xml 2>/dev/null || true
+
+    # update the configuration if needed
+    if [ -n "$2" ] && grep -q "^MINLUCK=" $CONFIGFILE; then
+        sed -e '/^### Luck system/,/MINLUCK=/d' $CONFIGFILE > $CONFIGFILE.tmp
+        cat >> $CONFIGFILE.tmp << EOF
+### Connection timeout
+#
+# When a session is initialise (runasap=2), the user has
+# $CONNECTION_TIMEOUT seconds to join the session
+# after this delay, the session is destroyed
+CONNECTION_TIMEOUT=20
+EOF
+        mv $CONFIGFILE.tmp $CONFIGFILE
+    fi
 fi
 
 #DEBHELPER#
