@@ -121,6 +121,7 @@ daemon/functions.d/Makefile
 scripts/Makefile
 config/Makefile
 examples/Makefile
+web/desktop/Makefile
 web/webservices/Makefile
 web/media/image/Makefile
 web/media/script/Makefile
