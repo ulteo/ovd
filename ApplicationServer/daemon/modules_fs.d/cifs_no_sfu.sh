@@ -33,32 +33,39 @@ cifs_no_sfu_daemon() {
     log_INFO "Start cifs synchronisation daemon"
     echo $$ > $SESSID_DIR/cifs_no_sfu_daemon_pid
 
-    events="-e create -e modify -e close_write -e moved_to -e moved_from -e move -e delete"
+    events="-e create -e modify -e close_write -e moved_to -e moved_from -e move -e delete -e delete_self"
     inotifywait $events -mrq --format "%e/%w%f" $CIFS_NO_SFU_TMP_BR | \
     while read buf; do
         event=$(echo "$buf" | cut -d/ -f1)
-        file=${buf#$event/$CIFS_NO_SFU_TMP_BR}
+        file=${buf#$event/$CIFS_NO_SFU_TMP_BR/}
+        log_DEBUG "$buf"
 
-        if ([ "$event" = "CLOSE_WRITE,CLOSE" ] && [ -f "$CIFS_NO_SFU_TMP_BR/$file" ]) \
-                || [ "$event" = "CREATE,ISDIR" ] \
-                || [ "$event" = "MOVED_TO" ]; then
-            log_DEBUG "Copy file from $CIFS_NO_SFU_TMP_BR/$file to $CIFS_MOUNT_POINT/$file"
-            cp -r "$CIFS_NO_SFU_TMP_BR/$file" "$CIFS_MOUNT_POINT/$file" 2>/dev/null
-        fi
-        if [ "$event" = "DELETE" ] || [ "$event" = "MOVED_FROM" ]; then
-            log_DEBUG "Delete file $CIFS_MOUNT_POINT/$file"
-            rm "$CIFS_MOUNT_POINT/$file" 2>/dev/null
-        fi
-
-        if [ "$event" = "DELETE,ISDIR" ]; then
-            directory=`dirname $file`
-            file=`basename $file`
-            file=${file#.wh..wh.}
-            file=${file%.*}
-            file=$directory/$file
-            log_DEBUG "Delete directory $CIFS_MOUNT_POINT/$file"
-            rm -r "$CIFS_MOUNT_POINT/$file" 2>/dev/null
-        fi
+        case $event in
+            CLOSE_WRITE,CLOSE|MOVED_TO*)
+                log_DEBUG "Copy file from $CIFS_NO_SFU_TMP_BR/$file to $CIFS_MOUNT_POINT/$file"
+                if [ -e "$CIFS_NO_SFU_TMP_BR/$file" ]; then
+                    log_DEBUG "Copy file from $CIFS_NO_SFU_TMP_BR/$file to $CIFS_MOUNT_POINT/$file"
+                    cp -r "$CIFS_NO_SFU_TMP_BR/$file" "$CIFS_MOUNT_POINT/$file"
+                fi
+                ;;
+            CREATE,ISDIR)
+                log_DEBUG "Creating directory $CIFS_MOUNT_POINT/$file"
+                mkdir -p "$CIFS_MOUNT_POINT/$file"
+                ;;
+            DELETE|MOVED_FROM*)
+                log_DEBUG "Delete file $CIFS_MOUNT_POINT/$file"
+                [ -e "$CIFS_MOUNT_POINT/$file" ] && rm -rf "$CIFS_MOUNT_POINT/$file"
+                ;;
+            DELETE,ISDIR)
+                directory=`dirname $file`
+                file=`basename $file`
+                file=${file#.wh..wh.}
+                file=${file%.*}
+                file=$directory/$file
+                log_DEBUG "Delete directory $CIFS_MOUNT_POINT/$file"
+                rm -rf "$CIFS_MOUNT_POINT/$file"
+                ;;
+        esac
     done
 }
 
