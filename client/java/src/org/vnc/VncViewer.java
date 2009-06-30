@@ -93,8 +93,6 @@ public class VncViewer implements WindowListener{
 
 //  public String[] mainArgs;
   public ArgParser arg_parser;
-  public int width = 800;
-  public int height = 600;
 
   public RfbProto rfb;
   public Thread rfbThread;
@@ -206,7 +204,7 @@ public void init() {
 	  }
     doProtocolInitialisation();
     System.out.println("RFB initialized");
-    vc = new VncCanvas2(this, this.width, this.height);
+    vc = new VncCanvas2(this, Options.width, Options.height);
     System.out.println("debug -1");
     vc.setFocusable(true);
     vc.setVisible(true);
