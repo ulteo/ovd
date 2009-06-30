@@ -1,4 +1,5 @@
 //
+//  Copyright (C) 2009 Ulteo SAS.  All Rights Reserved.
 //  Copyright (C) 2001-2004 HorizonLive.com, Inc.  All Rights Reserved.
 //  Copyright (C) 2002 Constantin Kaplinsky.  All Rights Reserved.
 //  Copyright (C) 1999 AT&T Laboratories Cambridge.  All Rights Reserved.
@@ -57,7 +58,6 @@ import java.util.HashMap;
 import java.awt.Dimension;
 
 
-import org.vnc.rfbcaching.IRfbCachingConstants;
 import org.vnc.rfbcaching.RfbCacheProperties;
 
 public class VncViewer implements WindowListener{
@@ -125,21 +125,6 @@ public class VncViewer implements WindowListener{
   public String startuponFailure = "";
   public String startuponBadPing = "";
 
-  // Variables read from parameter values.
-  public String socketFactory;
-  public String host;
-  public int port;
-  public String passwordParam;
-  public boolean showControls;
-  //boolean offerRelogin;
-  public boolean showOfflineDesktop;
-  public int deferScreenUpdates;
-  public int deferCursorUpdates;
-  public int deferUpdateRequests;
-
-  // RFBCaching properties
-  RfbCacheProperties cacheProps = null;
-
   // Reference to this applet for inter-applet communication.
   //public static VncViewer refApplet;
 
@@ -188,7 +173,7 @@ public void init() {
       gridbag = new GridBagLayout();
       vncContainer.setLayout(gridbag);
       System.out.println("Test 1");
-      if (showControls) {
+      if (Options.showControls) {
 	  GridBagConstraints gbc = new GridBagConstraints();
 	  gbc.gridwidth = GridBagConstraints.REMAINDER;
 	  gbc.anchor = GridBagConstraints.CENTER;
@@ -209,7 +194,7 @@ public void init() {
 	      }
 	  }
 	  catch(java.net.ConnectException e) {
-	      System.out.println("No such vnc server at "+host+":"+port);
+	      System.out.println("No such vnc server at "+Options.host+":"+Options.port);
 	      disconnect();
 	      return;
 	  }
@@ -251,7 +236,9 @@ this.vncContainer.validate();
     System.out.println("debug 1");
      //this is where prepareCanvas() normally goes --> no splash;
       System.out.println("Starting RFB protocol");
-     setRfbCachingEncoding();
+
+		if (Options.cacheEnable)
+			setRfbCachingEncoding();
 System.out.println("debug 1_0");
 	 setEncodings();
 System.out.println("debug 1_1");
@@ -260,14 +247,14 @@ System.out.println("debug 1_2");
 
     System.out.println("debug 2");
     } catch (NoRouteToHostException e) {
-      fatalError("Network error: no route to server: " + host, e);
+      fatalError("Network error: no route to server: " + Options.host, e);
     } catch (UnknownHostException e) {
-      fatalError("Network error: server name unknown: " + host, e);
+      fatalError("Network error: server name unknown: " + Options.host, e);
     } catch (ConnectException e) {
       fatalError("Network error: could not connect to server: " +
-		 host + ":" + port, e);
+		 Options.host + ":" + Options.port, e);
     } catch (EOFException e) {
-      if (showOfflineDesktop) {
+      if (Options.showOfflineDesktop) {
 	e.printStackTrace();
 	System.out.println("Network error: remote side closed connection");
 	if (vc != null) {
@@ -279,7 +266,7 @@ System.out.println("debug 1_2");
 	if (rfb != null && !rfb.closed())
 	  rfb.close();
 	    System.out.println("Coucou 0");
-	if (showControls && buttonPanel != null) {
+	if (Options.showControls && buttonPanel != null) {
 	    System.out.println("Coucou 1");
 	  buttonPanel.disableButtonsOnDisconnect();
 	  if (inSeparateFrame) {
@@ -308,6 +295,8 @@ System.out.println("debug 1_2");
   }
 
  private void setRfbCachingEncoding() {
+		RfbCacheProperties cacheProps = Options.getCacheProperties();
+
    if (cacheProps != null){
    rfb.setCacheProps(cacheProps);
    int[] encodings = {RfbProto.EncodingRfbCaching};
@@ -358,7 +347,7 @@ System.out.println("debug 1_2");
 	      }
 	      vc.resizeDesktopFrame();
 
-	      if (showControls)
+	      if (Options.showControls)
 		buttonPanel.enableButtons();
 	     moveFocusToDesktop();
   }
@@ -429,7 +418,7 @@ System.out.println("debug 1_2");
     System.out.println("rfb proto");
     if (rfb == null) {
 	System.out.println("rfb proto def");
-	rfb = new RfbProto(host, port, this);
+	rfb = new RfbProto(Options.host, Options.port, this);
     }
 
     showConnectionStatus("Connected to server");
@@ -461,8 +450,8 @@ System.out.println("pouet 22");
       break;
     case RfbProto.AuthVNC:
       showConnectionStatus("Performing standard VNC authentication");
-      if (passwordParam != null) {
-        rfb.authenticateVNC(passwordParam);
+      if (Options.password != null) {
+        rfb.authenticateVNC(Options.password);
       } else {
         String pw = askPassword();
         rfb.authenticateVNC(pw);
@@ -800,105 +789,113 @@ System.out.println("pouet 22");
   //
 
   public void readParameters() {
-    host = readParameter("HOST", true);
+	  String buffer;
 
-    String str = readParameter("PORT", true);
-    port = Integer.parseInt(str);
+	  Options.host = readParameter("HOST", true);
 
-    cacheProps = readCacheProperties();
+	  buffer = readParameter("PORT", false);
+	  if (buffer != null) {
+		  try {
+			  Options.port = Integer.parseInt(buffer);
+		  } catch (NumberFormatException e) { }
+	  }
 
+	  buffer = readParameter("GEOMETRY", false);
+	  if (buffer != null) {
+		  try {
+			  int cut = buffer.indexOf("x", 0);
+			  Options.width = Integer.parseInt(buffer.substring(0, cut));
+			  Options.height = Integer.parseInt(buffer.substring(cut + 1));
+		  } catch(Exception e) {
+			  System.err.println("GEOMETRY parsing error");
+		  }
+	  }
 
-    str = readParameter("GEOMETRY", false);
-    if (str != null) {
-	try {
-	    int cut = str.indexOf("x", 0);
-	    int w = Integer.parseInt(str.substring(0, cut));
-	    int h = Integer.parseInt(str.substring(cut + 1));
-
-	    // attr modification after any possible Exceptions
-	    this.width = w;
-	    this.height = h;
-	} catch(Exception e) {
-	    System.err.println("GEOMETRY parsing error");
-	}
-    }
-
-    // Read "ENCPASSWORD" or "PASSWORD" parameter if specified.
-    readPasswordParameters();
-
-   // "Show Controls" set to "No" disables button panel. */
-    showControls = false;
-   str = readParameter("Show Controls", false);
-   if (str != null && str.equalsIgnoreCase("Yes"))
-     showControls = true;
-
-	//viewOnly = readParameter("viewOnly",true);
-
-/*	"Offer Relogin" set to "No" disables "Login again" and "Close */
-  /*  window" buttons under error messages in applet mode. */
-    //offerRelogin = false;
-   str = readParameter("Offer Relogin", false);
-   if (str != null && str.equalsIgnoreCase("Yes"))
-     ;//offerRelogin = true;
-
-/*    Do we continue showing desktop on remote disconnect? */
-    showOfflineDesktop = false;
-   str = readParameter("Show Offline Desktop", false);
-   if (str != null && str.equalsIgnoreCase("Yes"))
-     showOfflineDesktop = true;
+	  Options.password = readParameter("PASSWORD", false);
 
 
+	  // "Show Controls" set to "No" disables button panel.
+	  buffer = readParameter("Show Controls", false);
+	  if (buffer != null && buffer.equalsIgnoreCase("Yes"))
+		  Options.showControls = true;
 
- /*   Fine tuning options. */
-    deferScreenUpdates = readIntParameter("Defer screen updates", 20);
-    deferCursorUpdates = readIntParameter("Defer cursor updates", 10);
-    deferUpdateRequests = readIntParameter("Defer update requests", 50);
+	  
+	  buffer = readParameter("viewOnly", false);
+	  if (buffer != null && buffer.equalsIgnoreCase("Yes"))
+		  Options.viewOnly = true;
 
-    // SocketFactory.
-    socketFactory = readParameter("SocketFactory", false);
- }
+      // "Offer Relogin" set to "No" disables "Login again" and "Close
+	  //  window" buttons under error messages in applet mode. 
+	  buffer = readParameter("Offer Relogin", false);
+	  if (buffer != null && buffer.equalsIgnoreCase("Yes"))
+		  Options.offerRelogin = true;
+	  
+	  // Do we continue showing desktop on remote disconnect?
+	  buffer = readParameter("Show Offline Desktop", false);
+	  if (buffer != null && buffer.equalsIgnoreCase("Yes"))
+		  Options.showOfflineDesktop = true;
 
-  // Read cache parameters from html-applet properties
-  //
-  public RfbCacheProperties readCacheProperties(){
-      String isCacheOnS = readParameter("rfb.cache.enabled", false);
-      boolean isCacheOn = false;
-      if (isCacheOnS!=null){
-          if (isCacheOnS.equalsIgnoreCase("TRUE")){
-              isCacheOn = true;
-          }
-      }
-      if (!isCacheOn){
-          //System.out.println("Caching is switched off");
-          return null;
-      }
-      int cacheVerMajor = readIntParameter("rfb.cache.ver.major", IRfbCachingConstants.RFB_CACHE_DEFAULT_VER_MAJOR);
-      int cacheVerMinor = readIntParameter("rfb.cache.ver.minor", IRfbCachingConstants.RFB_CACHE_DEFAULT_VER_MINOR);
-      int cacheSize = readIntParameter("rfb.cache.size", IRfbCachingConstants.RFB_CACHE_DEFAULT_SIZE);
-      String cacheMaintAlgS = readParameter("rfb.cache.alg", false);
-      int cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_DEFAULT_MAINT_ALG;
-      if (cacheMaintAlgS!=null){
-          if (cacheMaintAlgS.equalsIgnoreCase("FIFO")){
-              cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_DEFAULT_MAINT_ALG;
-          }else if (!cacheMaintAlgS.equalsIgnoreCase("LRU")){
-              //System.out.println("Unknown cache algorithm specified, (LRU) will be used as default");
-          }
-      }
-      int cacheDataSize = readIntParameter("rfb.cache.datasize", IRfbCachingConstants.RFB_CACHE_DEFAULT_DATA_SIZE);
-      return new RfbCacheProperties(cacheMaintAlgI, cacheSize, cacheDataSize, cacheVerMajor, cacheVerMinor);
+	  // Fine tuning options.
+
+
+	  buffer = readParameter("Defer screen updates", false);
+	  if (buffer != null) {
+		  try {
+			  Options.deferScreenUpdates = Integer.parseInt(buffer);
+		  } catch (NumberFormatException e) { }
+	  }
+
+	  buffer = readParameter("Defer cursor updates", false);
+	  if (buffer != null) {
+		  try {
+			  Options.deferCursorUpdates = Integer.parseInt(buffer);
+		  } catch (NumberFormatException e) { }
+	  }
+
+	  buffer = readParameter("Defer update requests", false);
+	  if (buffer != null) {
+		  try {
+			  Options.deferUpdateRequests = Integer.parseInt(buffer);
+		  } catch (NumberFormatException e) { }
+	  }
+
+	  // Read cache parameters from html-applet properties
+	  //
+	  buffer = readParameter("rfb.cache.enabled", false);
+	  if (buffer != null && buffer.equalsIgnoreCase("TRUE"))
+		  Options.cacheEnable = true;
+
+      if (Options.cacheEnable) {
+		  buffer = readParameter("rfb.cache.ver.major", false);
+		  if (buffer != null) {
+			  try {
+				  Options.cacheVerMajor = Integer.parseInt(buffer);
+			  } catch (NumberFormatException e) { }
+		  }
+
+		  buffer = readParameter("rfb.cache.ver.minor", false);
+		  if (buffer != null) {
+			  try {
+				  Options.cacheVerMinor = Integer.parseInt(buffer);
+			  } catch (NumberFormatException e) { }
+		  }
+
+		  buffer = readParameter("rfb.cache.size", false);
+		  if (buffer != null) {
+			  try {
+				  Options.cacheSize = Integer.parseInt(buffer);
+			  } catch (NumberFormatException e) { }
+		  }
+
+		  buffer = readParameter("rfb.cache.datasize", false);
+		  if (buffer != null) {
+			  try {
+				  Options.cacheDataSize = Integer.parseInt(buffer);
+			  } catch (NumberFormatException e) { }
+		  }
+	  }
   }
 
-
-  //
-  // Read password parameters. If an "ENCPASSWORD" parameter is set,
-  // then decrypt the password into the passwordParam string. Otherwise,
-  // try to read the "PASSWORD" parameter directly to passwordParam.
-  //
-
-  public void readPasswordParameters() {
-      passwordParam = readParameter("PASSWORD", false);
-  }
-  
 public String readParameter(String name, boolean required) {
     System.out.println("Read parameter '"+name+"'");
 
@@ -909,16 +906,6 @@ public String readParameter(String name, boolean required) {
     return buffer;
   }
 
-public int readIntParameter(String name, int defaultValue) {
-    String str = readParameter(name, false);
-    int result = defaultValue;
-    if (str != null) {
-      try {
-    	  result = Integer.parseInt(str);
-      } catch (NumberFormatException e) { }
-    }
-    return result;
-  }
 
   //
   // moveFocusToDesktop() - move keyboard focus to VncCanvas.

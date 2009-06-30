@@ -1,4 +1,5 @@
 //
+//  Copyright (C) 2009 Ulteo SAS.  All Rights Reserved.
 //  Copyright (C) 2004 Horizon Wimba.  All Rights Reserved.
 //  Copyright (C) 2001-2003 HorizonLive.com, Inc.  All Rights Reserved.
 //  Copyright (C) 2001,2002 Constantin Kaplinsky.  All Rights Reserved.
@@ -232,7 +233,7 @@ public boolean imageUpdate(Image img, int infoflags,
       addMouseListener(this);
       addMouseWheelListener(this);
       addMouseMotionListener(this);
-      if (viewer.showControls) {
+      if (Options.showControls) {
 	viewer.buttonPanel.enableRemoteAccessControls(true);
       }
       createSoftCursor();	// scaled cursor
@@ -241,7 +242,7 @@ public boolean imageUpdate(Image img, int infoflags,
       removeMouseListener(this);
       removeMouseWheelListener(this);
       removeMouseMotionListener(this);
-      if (viewer.showControls) {
+      if (Options.showControls) {
 	viewer.buttonPanel.enableRemoteAccessControls(false);
       }
       createSoftCursor();	// non-scaled cursor
@@ -511,11 +512,11 @@ public boolean imageUpdate(Image img, int infoflags,
 	// immediately on keyboard or mouse event. Also, don't sleep
 	// if there is some data to receive, or if the last update
 	// included a PointerPos message.
-	if (viewer.deferUpdateRequests > 0 &&
+	if (Options.deferUpdateRequests > 0 &&
 	    rfb.is.available() == 0 && !cursorPosReceived) {
 	  synchronized(rfb) {
 	    try {
-	      rfb.wait(viewer.deferUpdateRequests);
+	      rfb.wait(Options.deferUpdateRequests);
 	    } catch (InterruptedException e) {
 	    }
 	  }
@@ -1611,13 +1612,13 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
   void scheduleRepaint(int x, int y, int w, int h) {
     // Request repaint, deferred if necessary.
     if (rfb.framebufferWidth == scaledWidth) {
-      repaint(viewer.deferScreenUpdates, x, y, w, h);
+      repaint(Options.deferScreenUpdates, x, y, w, h);
     } else {
       int sx = x * scalingFactor / 100;
       int sy = y * scalingFactor / 100;
       int sw = ((x + w) * scalingFactor + 49) / 100 - sx + 1;
       int sh = ((y + h) * scalingFactor + 49) / 100 - sy + 1;
-      repaint(viewer.deferScreenUpdates, sx, sy, sw, sh);
+      repaint(Options.deferScreenUpdates, sx, sy, sw, sh);
     }
   }
 
@@ -1810,7 +1811,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     // Create off-screen cursor image.
     createSoftCursor();
 
-    repaint(viewer.deferCursorUpdates,
+    repaint(Options.deferCursorUpdates,
 	    cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
   }
 
@@ -1964,7 +1965,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
       w = Math.max(w, cursorWidth);
       h = Math.max(h, cursorHeight);
 
-      repaint(viewer.deferCursorUpdates, x, y, w, h);
+      repaint(Options.deferCursorUpdates, x, y, w, h);
     }
   }
 
@@ -1978,9 +1979,9 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
     cursorX = x;
     cursorY = y;
     if (showSoftCursor) {
-      repaint(viewer.deferCursorUpdates,
+      repaint(Options.deferCursorUpdates,
 	      oldX - hotX, oldY - hotY, cursorWidth, cursorHeight);
-      repaint(viewer.deferCursorUpdates,
+      repaint(Options.deferCursorUpdates,
 	      cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
     }
   }
@@ -1995,7 +1996,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
       softCursor = null;
       softCursorSource = null;
 
-      repaint(viewer.deferCursorUpdates,
+      repaint(Options.deferCursorUpdates,
 	      cursorX - hotX, cursorY - hotY, cursorWidth, cursorHeight);
     }
   }

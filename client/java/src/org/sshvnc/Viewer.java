@@ -26,6 +26,7 @@ import java.io.IOException;
 import org.vnc.ArgParser;
 import org.vnc.RfbProto;
 import org.vnc.VncViewer;
+import org.vnc.Options;
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
@@ -110,7 +111,7 @@ public class Viewer extends VncViewer{
 	    } else {
 		System.out.println("Authentication failed");
 	    }
-	    int vncServerPort = port;
+	    int vncServerPort = Options.port;
 	    int vncLocalPort = vncServerPort+10;
 
 	    channel = new ForwardingIOChannel(ForwardingIOChannel.LOCAL_FORWARDING_CHANNEL,
@@ -138,26 +139,42 @@ public class Viewer extends VncViewer{
     }
 
     public void readParameters() {
+		String buffer;
+
 	sshHost = readParameter("ssh.host", true);
 	sshUser = readParameter("ssh.user", true);
 	// ArnauVP: we read the whole list and we'll parse it later
 	portList = readParameter("ssh.port", true);
+	sshPassword = readParameter("ssh.password", true);
 
 
 	// Read proxy parameters, if any -- by ArnauVP
 	proxyType = readParameter("proxyType", false);
 	proxyHost = readParameter("proxyHost", false);
-	proxyPort = readIntParameter("proxyPort", 80);
+	buffer = readParameter("proxyPort", false);
+	if (buffer != null) {
+		try {
+			proxyPort = Integer.parseInt(buffer);
+		} catch(NumberFormatException e) {}
+	}
 	proxyUsername = readParameter("proxyUsername", false);
 	proxyPassword = readParameter("proxyPassword", false);
 
-	super.readParameters();
-    }
+	buffer = readParameter("PORT", true);
+	org.vnc.Options.port = Integer.parseInt(buffer);
 
-    public void readPasswordParameters() {
-	super.readPasswordParameters();
+	buffer = readParameter("GEOMETRY", true);
+	if (buffer != null) {
+		try {
+			int cut = buffer.indexOf("x", 0);
+			org.vnc.Options.width = Integer.parseInt(buffer.substring(0, cut));
+			org.vnc.Options.height = Integer.parseInt(buffer.substring(cut + 1));
+		} catch(Exception e) {
+			System.err.println("GEOMETRY parsing error");
+		}
+	}
 
-	sshPassword = readParameter("ssh.password", true);
+	Options.password = readParameter("PASSWORD", true);
     }
 
     public void stop() {
