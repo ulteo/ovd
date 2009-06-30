@@ -163,6 +163,8 @@ require_once('header.php');
 			if (!$testapplet) {
 				echo 'appletLoaded();';
 				echo 'testDone = true;';
+			} else {
+				echo 'setTimeout(testFailed(1), 5000)';
 			}
 		?>
 	});
