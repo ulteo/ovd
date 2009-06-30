@@ -42,6 +42,7 @@ import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 public class Viewer extends VncViewer{
     public SshClient ssh;
     public String sshUser,sshPassword,sshHost;
+    public String portList;
     public ForwardingIOChannel channel;
 
     //Proxy parameters
@@ -119,8 +120,6 @@ public class Viewer extends VncViewer{
 		in = channel.getInputStream();
 		out = channel.getOutputStream();
 	    }
-	    port = vncLocalPort;
-	    //host = "localhost";
 	} catch(Exception e) {
 	    System.out.println("ssh tunnel problem");
 	    e.printStackTrace();

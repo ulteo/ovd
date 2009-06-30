@@ -129,7 +129,6 @@ public class VncViewer implements WindowListener{
   public String socketFactory;
   public String host;
   public int port;
-  public String portList;
   public String passwordParam;
   public boolean showControls;
   //boolean offerRelogin;
