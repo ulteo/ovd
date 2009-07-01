@@ -101,7 +101,7 @@ class Session {
 	public function setStatus($status_) {
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
-		Logger::info('main', 'Status set to "'.$status_.'" for \''.$this->id.'\'');
+		Logger::info('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for \''.$this->id.'\'');
 		$this->setAttribute('status', $status_);
 
 		$ev = new SessionStatusChanged(array(
@@ -114,55 +114,50 @@ class Session {
 		return true;
 	}
 
+	public function textStatus($status_=4) {
+// 		Logger::debug('main', 'Starting Session::textStatus for \''.$this->id.'\'');
+
+		$states = array(
+			-1	=>	_('To create'),
+			0	=>	_('Created'),
+			1	=>	_('To start'),
+			22	=>	_('Initializing'),
+			2	=>	_('Active'),
+			9	=>	_('Suspending'),
+			10	=>	_('Suspended'),
+			11	=>	_('Resuming'),
+			3	=>	_('To destroy'),
+			4	=>	_('Destroyed')
+		);
+
+		return $states[$status_];
+	}
+
+	public function colorStatus($status_=4) {
+// 		Logger::debug('main', 'Starting Session::colorStatus for \''.$this->id.'\'');
+
+		$states = array(
+			-1	=>	'warn',
+			0	=>	'warn',
+			1	=>	'warn',
+			22	=>	'warn',
+			2	=>	'ok',
+			9	=>	'warn',
+			10	=>	'ok',
+			11	=>	'warn',
+			3	=>	'error',
+			4	=>	'error'
+		);
+
+		return $states[$status_];
+	}
+
 	public function stringStatus() {
 // 		Logger::debug('main', 'Starting Session::stringStatus for \''.$this->id.'\'');
 
-		$states = array(
-			-1	=>	array(
-						'color'	=>	'warn',
-						'message'	=>	_('To create')
-					),
-			0	=>	array(
-						'color'	=>	'warn',
-						'message'	=>	_('Created')
-					),
-			1	=>	array(
-						'color'	=>	'warn',
-						'message'	=>	_('To start')
-					),
-			22	=>	array(
-						'color'	=>	'warn',
-						'message'	=>	_('Initializing')
-					),
-			2	=>	array(
-						'color'	=>	'ok',
-						'message'	=>	_('Active')
-					),
-			9	=>	array(
-						'color'	=>	'warn',
-						'message'	=>	_('Suspending')
-					),
-			10	=>	array(
-						'color'	=>	'ok',
-						'message'	=>	_('Suspended')
-					),
-			11	=>	array(
-						'color'	=>	'warn',
-						'message'	=>	_('Resuming')
-					),
-			3	=>	array(
-						'color'	=>	'error',
-						'message'	=>	_('To destroy')
-					),
-			4	=>	array(
-						'color'	=>	'error',
-						'message'	=>	_('Destroyed')
-					)
-		);
-
 		$buf = $this->getAttribute('status');
 
-		return '<span class="msg_'.$states[$buf]['color'].'">'.$states[$buf]['message'].'</span>';
+		return '<span class="msg_'.$this->colorStatus($buf).'">'.$this->textStatus($buf).'</span>';
 	}
 
 	public function isAlive() {
