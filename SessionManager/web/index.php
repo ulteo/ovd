@@ -164,7 +164,9 @@ require_once('header.php');
 				echo 'appletLoaded();';
 				echo 'testDone = true;';
 			} else {
-				echo 'setTimeout(function() { testFailed(1) }, 10000)';
+				echo 'setTimeout(function() {
+					testFailed(1);
+				}, 10000);';
 			}
 		?>
 	});
