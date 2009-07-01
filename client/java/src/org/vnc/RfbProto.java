@@ -287,6 +287,8 @@ public final static int
     timing = false;
     timeWaitedIn100us = 5;
     timedKbits = 0;
+
+    initOSName();
   }
 
   public RfbProto(InputStream in, OutputStream out, VncViewer v) /*throws IOException*/ {
@@ -294,22 +296,7 @@ public final static int
 	is = new DataInputStream(new BufferedInputStream(in, 16384));
 	os = out;
 
-	//
-	//OS detection --> better keyboard handling
-	// Ulteo fix by ArnauVP
-	//
-
-	String OS = System.getProperty("os.name");
-//	System.out.println("******OS: "+OS);
-	if(OS.equalsIgnoreCase("Linux")){
-		OSName = "linux";
-	} else if(OS.startsWith("Windows")){
-		OSName = "windows";
-	} else if(OS.equalsIgnoreCase("Mac OS X")){
-		OSName = "mac";
-	} else {
-		OSName = "unknown";
-	}
+    initOSName();
   }
 
   public synchronized void close() {
@@ -334,6 +321,26 @@ public final static int
   public synchronized boolean closed() {
     return closed;
   }
+
+
+  //
+  //OS detection --> better keyboard handling
+  // Ulteo fix by ArnauVP
+  //
+
+  private void initOSName() {
+    String OS = System.getProperty("os.name");
+    if(OS.equalsIgnoreCase("Linux")){
+      OSName = "linux";
+    } else if(OS.startsWith("Windows")){
+      OSName = "windows";
+    } else if(OS.equalsIgnoreCase("Mac OS X")){
+      OSName = "mac";
+    } else {
+      OSName = "unknown";
+    }
+  }
+
 
   //
   // Read server's protocol version message
