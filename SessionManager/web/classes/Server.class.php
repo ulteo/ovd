@@ -292,14 +292,7 @@ class Server {
 			return false;
 		}
 
-		$ev = new ServerStatusChanged(array(
-			'fqdn'		=>	$this->fqdn,
-			'status'	=>	($returntext == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
-		));
-
 		$this->setStatus($returntext);
-
-		$ev->emit();
 
 		if ($ret !== 'ready')
 			$this->isNotReady();
@@ -309,6 +302,11 @@ class Server {
 
 	public function setStatus($status_) {
 		Logger::debug('main', 'Starting Server::setStatus for \''.$this->fqdn.'\'');
+
+		$ev = new ServerStatusChanged(array(
+			'fqdn'		=>	$this->fqdn,
+			'status'	=>	($status_ == 'ready')?ServerStatusChanged::$ONLINE:ServerStatusChanged::$OFFLINE
+		));
 
 		switch ($status_) {
 			case 'ready':
@@ -331,6 +329,8 @@ class Server {
 				}
 				break;
 		}
+
+		$ev->emit();
 
 		return true;
 	}
