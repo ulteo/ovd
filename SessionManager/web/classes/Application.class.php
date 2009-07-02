@@ -182,4 +182,14 @@ class Application {
 		$dom->appendChild($application_node);
 		return $dom->saveXML();
 	}
+	
+	public function isOrphan() {
+		Logger::debug('main', 'Application::isOrphan');
+		
+		$liaisons = Abstract_Liaison::load('ApplicationServer', $this->getAttribute('id'), NULL);
+		if (is_array($liaisons) && count($liaisons) == 0)
+			return true;
+		
+		return false;
+	}
 }

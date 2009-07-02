@@ -214,6 +214,9 @@ class Preferences {
 		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 1);
 		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
 		$this->add($c,'general', 'application_server_settings');
+		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','application_server_settings');
 
 		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
 		$content_load_balancing = array();

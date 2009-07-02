@@ -160,9 +160,21 @@ class Abstract_Server {
 		if (substr($fqdn_, -1) == '.')
 			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$application_server_settings = $prefs->get('general', 'application_server_settings');
+		$remove_orphan = (bool)$application_server_settings['remove_orphan'];
+
 		$SQL = MySQL::getInstance();
 
 		$fqdn = $fqdn_;
+
+		if ($remove_orphan) {
+			$a_server = Abstract_Server::load($fqdn_);
+			$apps = $a_server->getApplications();
+		}
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
@@ -181,6 +193,24 @@ class Abstract_Server {
 		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
 
 		Abstract_Liaison::delete('ApplicationServer', NULL, $fqdn_);
+		
+		
+		if ($remove_orphan) {
+			$mods_enable = $prefs->get('general','module_enable');
+			if (!in_array('ApplicationDB',$mods_enable)){
+				die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
+			}
+			$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+			$applicationDB = new $mod_app_name();
+			
+			// remove the orphan applications
+			foreach ($apps as $an_application) {
+				if ($an_application->isOrphan()) {
+					Logger::debug('main', "Abstract_Server::delete $an_application is orphan");
+					$applicationDB->remove($an_application);
+				}
+			}
+		}
 		
 		$tm = new Tasks_Manager();
 		$tm->load_from_server($fqdn_);
