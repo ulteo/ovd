@@ -23,7 +23,7 @@
 // VNCViewer desktop window.
 //
 
-package org.vnc;
+package org.vnc.GraphicalClient;
 
 import java.awt.Button;
 import java.awt.FlowLayout;
@@ -34,6 +34,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
+import org.vnc.RfbProto;
 
 public class ButtonPanel extends Panel implements ActionListener {
 

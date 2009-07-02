@@ -1,4 +1,5 @@
 //
+//  Copyright (C) 2009 Ulteo SAS.  All Rights Reserved.
 //  Copyright (C) 2001-2004 HorizonLive.com, Inc.  All Rights Reserved.
 //  Copyright (C) 2001-2006 Constantin Kaplinsky.  All Rights Reserved.
 //  Copyright (C) 2000 Tridia Corporation.  All Rights Reserved.
@@ -172,7 +173,6 @@ public final static int
   public OutputStream os;
   public SessionRecorder rec;
   public boolean inNormalProtocol = false;
-  public VncViewer viewer;
 
   // RFB Caching declaration section
   // Cache object
@@ -274,8 +274,7 @@ public final static int
   // Constructor. Make TCP connection to RFB server.
   //
 
-  public RfbProto(String h, int p, VncViewer v) throws IOException {
-    viewer = v;
+  public RfbProto(String h, int p) throws IOException {
     host = h;
     port = p;
 
@@ -291,8 +290,7 @@ public final static int
     initOSName();
   }
 
-  public RfbProto(InputStream in, OutputStream out, VncViewer v) /*throws IOException*/ {
-	viewer = v;
+  public RfbProto(InputStream in, OutputStream out) /*throws IOException*/ {
 	is = new DataInputStream(new BufferedInputStream(in, 16384));
 	os = out;
 
@@ -654,12 +652,11 @@ public final static int
   //
 
   public void writeClientInit() throws IOException {
-    if (viewer.options.shareDesktop) {
+    if (Options.shareDesktop) {
       os.write(1);
     } else {
       os.write(0);
     }
-    viewer.options.disableShareDesktop();
   }
 
 
@@ -1022,7 +1019,7 @@ public final static int
   // Write a FramebufferUpdateRequest message
   //
 
-  void writeFramebufferUpdateRequest(int x, int y, int w, int h,
+  public void writeFramebufferUpdateRequest(int x, int y, int w, int h,
 				     boolean incremental)
        throws IOException
   {
@@ -1211,7 +1208,7 @@ public final static int
 
 	   int mask2 = 2;
 	   int mask3 = 4;
-	   if (viewer.options.reverseMouseButtons2And3) {
+	   if (Options.reverseMouseButtons2And3) {
 	     mask2 = 4;
 	     mask3 = 2;
 	   }
@@ -1334,7 +1331,7 @@ public final static int
   // from the Java key values to the X keysym values used by the RFB protocol.
   //
 
-  void writeKeyEvent(KeyEvent evt) throws IOException{
+  public void writeKeyEvent(KeyEvent evt) throws IOException{
 
 		 int keyCode, keysym, keyChar, modifiersMask;
 

@@ -27,7 +27,7 @@
 // It sets the encodings array and some booleans.
 //
 
-package org.vnc;
+package org.vnc.GraphicalClient;
 
 import java.awt.Button;
 import java.awt.Choice;
@@ -41,6 +41,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+
+import org.vnc.RfbProto;
 
 public class OptionsFrame extends Frame
   implements WindowListener, ActionListener, ItemListener {

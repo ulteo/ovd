@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- **/
+ */
 
 package org.vnc;
 
@@ -30,16 +30,14 @@ public class Options {
 	public static String host = null;
 	public static int port = 5900;
 
-	public static String password = null;
-
 	public static int width=800;
 	public static int height=600;
-	public static float scale=1;
-
+	public static int scalingFactor=100;
 
 	public static boolean viewOnly = false;
+	public static boolean shareDesktop = false;
+	public static boolean reverseMouseButtons2And3 = false;
 
-	public static boolean showControls = false;
 	public static boolean offerRelogin = false;
 	public static boolean showOfflineDesktop = false;
 
@@ -47,6 +45,15 @@ public class Options {
 	public static int deferCursorUpdates = 10;
 	public static int deferUpdateRequests = 50;
 
+	public static boolean eightBitColors = false;
+	public static int scaleCursor = 0;
+	public static int preferredEncoding = RfbProto.EncodingTight;
+	public static boolean useCopyRect = false;
+
+	public static int compressLevel = 0;
+	public static int jpegQuality = 9;
+	public static boolean requestCursorUpdates = true;
+	public static boolean ignoreCursorUpdates = false;
 
 	// Rfb caching
 	public static boolean cacheEnable = false;

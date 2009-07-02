@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- **/
+ */
 
 package org.sshvnc;
 
@@ -27,30 +27,30 @@ import java.awt.Frame;
 
 import javax.swing.JOptionPane;
 
-public class Applet extends java.applet.Applet implements Runnable {
+public class Applet extends java.applet.Applet {
 	public static final String version = "0.2.4";
 
+    //Proxy parameters
+    public String proxyType,proxyHost,proxyUsername,proxyPassword;
+    public int proxyPort;
     public Viewer obj;
 
     //  @Override
 	public void init() {
 	 System.out.println("Starting UlteoVNC version "+version);
-	 
-	 //	 this.obj = new Viewer();
-	 this.obj = new Viewer(this);
-	 this.obj.arg_parser = new ArgParser(this);
-	 this.obj.readParameters();
-	 this.obj.init();
 
-	 Thread rfbThread = new Thread(this);
-	 rfbThread.start();
-    }
+	 readParameters();
 
-    public void run() {
-	System.out.println("Run 0");
-    	this.obj.start();
+	 this.obj = new Viewer();
 
-	System.out.println("Run 1");
+	 if(proxyHost != null && !proxyHost.equals("")){
+		this.obj.ssh_properties.setTransportProviderString(proxyType);
+		this.obj.ssh_properties.setPort(443); //Always use this when using proxy
+		this.obj.ssh_properties.setProxyHost(proxyHost);
+		this.obj.ssh_properties.setProxyPort(proxyPort);
+		this.obj.ssh_properties.setProxyUsername(proxyUsername);
+		this.obj.ssh_properties.setProxyPassword(proxyPassword);
+	 }
     }
 
   //
@@ -82,15 +82,9 @@ public class Applet extends java.applet.Applet implements Runnable {
 
    public void start()
    {
-
-       //       Thread tr;
-       //      Thread tr = new Thread(this);
        System.out.println("applet Start");
-       //  tr.start();
-       // System.out.println("applet Start 0");
-
-       //       this.run();
-       //code de d'éxécution
+	   this.obj.process_init();
+	   this.obj.loop();
    }
    
    public void stop()
@@ -104,5 +98,33 @@ public class Applet extends java.applet.Applet implements Runnable {
        System.out.println("applet destroy");
        //code de terminaison
    }
-  
+
+    public void readParameters() {
+		String buffer;
+
+	obj.sshHost = getParameter("ssh.host");
+	try {
+		obj.sshPort = Integer.parseInt(getParameter("ssh.port"));
+	} catch(NumberFormatException e) {}
+
+	obj.sshUser = getParameter("ssh.user");
+	obj.sshPassword = getParameter("ssh.password");
+
+	// Read proxy parameters, if any -- by ArnauVP
+	proxyType = getParameter("proxyType");
+	proxyHost = getParameter("proxyHost");
+	buffer = getParameter("proxyPort");
+	if (buffer != null) {
+		try {
+			proxyPort = Integer.parseInt(buffer);
+		} catch(NumberFormatException e) {}
+	}
+	proxyUsername = getParameter("proxyUsername");
+	proxyPassword = getParameter("proxyPassword");
+
+	buffer = getParameter("vncPort");
+	obj.vncPort = Integer.parseInt(buffer);
+
+	obj.vncPassword = getParameter("vncPassword");
+    }
 }

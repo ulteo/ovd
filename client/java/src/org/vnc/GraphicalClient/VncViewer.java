@@ -26,7 +26,7 @@
 // a VNC desktop.
 //
 
-package org.vnc;
+package org.vnc.GraphicalClient;
 
 import java.awt.Container;
 import java.awt.Cursor;
@@ -57,7 +57,11 @@ import java.util.HashMap;
 
 import java.awt.Dimension;
 
-
+import org.vnc.Options;
+import org.vnc.RfbProto;
+import org.vnc.VncCanvas;
+import org.vnc.VncCanvas2;
+import org.vnc.VncClient;
 import org.vnc.rfbcaching.RfbCacheProperties;
 
 public class VncViewer implements WindowListener{
@@ -65,6 +69,12 @@ public class VncViewer implements WindowListener{
   public static final String version = "0.2.4";
   public boolean inSeparateFrame = true;
   public boolean firstTime = true;
+  public String password;
+
+	public boolean showControls = false;
+	public VncClient client = null;
+
+	public static String[] args = null;
 
     public static void usage() {
 	System.err.println("VncViewer");
@@ -82,8 +92,7 @@ public class VncViewer implements WindowListener{
 
   public static void main(String[] argv) {
     VncViewer v = new VncViewer();
-
-    v.arg_parser = new ArgParser(argv);
+	VncViewer.args = argv;
 
     v.readParameters();
 
@@ -92,7 +101,6 @@ public class VncViewer implements WindowListener{
   }
 
 //  public String[] mainArgs;
-  public ArgParser arg_parser;
 
   public RfbProto rfb;
   public Thread rfbThread;
@@ -171,7 +179,7 @@ public void init() {
       gridbag = new GridBagLayout();
       vncContainer.setLayout(gridbag);
       System.out.println("Test 1");
-      if (Options.showControls) {
+      if (showControls) {
 	  GridBagConstraints gbc = new GridBagConstraints();
 	  gbc.gridwidth = GridBagConstraints.REMAINDER;
 	  gbc.anchor = GridBagConstraints.CENTER;
@@ -204,7 +212,7 @@ public void init() {
 	  }
     doProtocolInitialisation();
     System.out.println("RFB initialized");
-    vc = new VncCanvas2(this, Options.width, Options.height);
+    vc = new VncCanvas2(this.client, Options.width, Options.height);
     System.out.println("debug -1");
     vc.setFocusable(true);
     vc.setVisible(true);
@@ -264,7 +272,7 @@ System.out.println("debug 1_2");
 	if (rfb != null && !rfb.closed())
 	  rfb.close();
 	    System.out.println("Coucou 0");
-	if (Options.showControls && buttonPanel != null) {
+	if (showControls && buttonPanel != null) {
 	    System.out.println("Coucou 1");
 	  buttonPanel.disableButtonsOnDisconnect();
 	  if (inSeparateFrame) {
@@ -343,9 +351,9 @@ System.out.println("debug 1_2");
 		  // Finally, add our ScrollPane to the Frame window.
 		  vncContainer.add(desktopScrollPane);
 	      }
-	      vc.resizeDesktopFrame();
+//	      vc.resizeDesktopFrame();
 
-	      if (Options.showControls)
+	      if (showControls)
 		buttonPanel.enableButtons();
 	     moveFocusToDesktop();
   }
@@ -416,7 +424,7 @@ System.out.println("debug 1_2");
     System.out.println("rfb proto");
     if (rfb == null) {
 	System.out.println("rfb proto def");
-	rfb = new RfbProto(Options.host, Options.port, this);
+	rfb = new RfbProto(Options.host, Options.port);
     }
 
     showConnectionStatus("Connected to server");
@@ -448,8 +456,8 @@ System.out.println("pouet 22");
       break;
     case RfbProto.AuthVNC:
       showConnectionStatus("Performing standard VNC authentication");
-      if (Options.password != null) {
-        rfb.authenticateVNC(Options.password);
+      if (password != null) {
+        rfb.authenticateVNC(password);
       } else {
         String pw = askPassword();
         rfb.authenticateVNC(pw);
@@ -809,13 +817,13 @@ System.out.println("pouet 22");
 		  }
 	  }
 
-	  Options.password = readParameter("PASSWORD", false);
+	  password = readParameter("PASSWORD", false);
 
 
 	  // "Show Controls" set to "No" disables button panel.
 	  buffer = readParameter("Show Controls", false);
 	  if (buffer != null && buffer.equalsIgnoreCase("Yes"))
-		  Options.showControls = true;
+		  showControls = true;
 
 	  
 	  buffer = readParameter("viewOnly", false);
@@ -894,15 +902,25 @@ System.out.println("pouet 22");
 	  }
   }
 
-public String readParameter(String name, boolean required) {
-    System.out.println("Read parameter '"+name+"'");
+	public String readParameter(String name, boolean required) {
+		System.out.println("Read parameter '"+name+"'");
 
-    String buffer = this.arg_parser.getParameter(name);
-    if (buffer == null && required)
-	fatalError(name + " parameter not specified", null);
+		for (int i = 0; i < this.args.length; i += 2) {
+			if (! this.args[i].equalsIgnoreCase(name))
+				continue;
 
-    return buffer;
-  }
+			try {
+				return this.args[i+1];
+			} catch (Exception e) {
+				if (required)
+					fatalError(name + " parameter not specified", null);
+				return null;
+			}
+		}
+		if (required)
+			fatalError(name + " parameter not specified", null);
+		return null;
+	}
 
 
   //

@@ -61,7 +61,7 @@ import org.vnc.rfbcaching.RfbCacheEntry;
 public class VncCanvas extends Canvas
   implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, FocusListener {
 
-  VncViewer viewer;
+  VncClient client;
   RfbProto rfb;
   ColorModel cm8, cm24;
   Color[] colors;
@@ -111,15 +111,15 @@ public class VncCanvas extends Canvas
   // The constructors.
   //
 
-  public VncCanvas(VncViewer v, int maxWidth_, int maxHeight_)
+  public VncCanvas(VncClient c, int maxWidth_, int maxHeight_)
     throws IOException {
 
-    viewer = v;
+    client = c;
     maxWidth = maxWidth_;
     maxHeight = maxHeight_;
 
-    rfb = viewer.rfb;
-    scalingFactor = viewer.options.scalingFactor;
+    rfb = client.rfb;
+    scalingFactor = Options.scalingFactor;
 
     tightInflaters = new Inflater[4];
 
@@ -133,7 +133,7 @@ public class VncCanvas extends Canvas
     setPixelFormat();
 
     inputEnabled = false;
-    if (!viewer.options.viewOnly)
+    if (! Options.viewOnly)
       enableInput(true);
 
     // Keyboard listener is enabled even in view-only mode, to catch
@@ -233,24 +233,18 @@ public boolean imageUpdate(Image img, int infoflags,
       addMouseListener(this);
       addMouseWheelListener(this);
       addMouseMotionListener(this);
-      if (Options.showControls) {
-	viewer.buttonPanel.enableRemoteAccessControls(true);
-      }
       createSoftCursor();	// scaled cursor
     } else if (!enable && inputEnabled) {
       inputEnabled = false;
       removeMouseListener(this);
       removeMouseWheelListener(this);
       removeMouseMotionListener(this);
-      if (Options.showControls) {
-	viewer.buttonPanel.enableRemoteAccessControls(false);
-      }
       createSoftCursor();	// non-scaled cursor
     }
   }
 
   public void setPixelFormat() throws IOException {
-    if (viewer.options.eightBitColors) {
+    if (Options.eightBitColors) {
       rfb.writeSetPixelFormat(8, 8, false, true, 7, 7, 3, 0, 3, 6);
       bytesPixel = 1;
     } else {
@@ -284,12 +278,12 @@ public boolean imageUpdate(Image img, int infoflags,
     // its geometry should be changed. It's not necessary to replace
     // existing image if only pixel format should be changed.
     if (memImage == null) {
-      memImage = viewer.vncContainer.createImage(fbWidth, fbHeight);
+      memImage = client.container.createImage(fbWidth, fbHeight);
       memGraphics = memImage.getGraphics();
     } else if (memImage.getWidth(null) != fbWidth ||
 	       memImage.getHeight(null) != fbHeight) {
       synchronized(memImage) {
-	memImage = viewer.vncContainer.createImage(fbWidth, fbHeight);
+	memImage = client.container.createImage(fbWidth, fbHeight);
 	memGraphics = memImage.getGraphics();
       }
     }
@@ -323,6 +317,7 @@ public boolean imageUpdate(Image img, int infoflags,
     rawPixelsImage = Toolkit.getDefaultToolkit().createImage(pixelsSource);
 
     // Update the size of desktop containers.
+/*
     if (viewer.inSeparateFrame) {
       if (viewer.desktopScrollPane != null)
 	resizeDesktopFrame();
@@ -330,51 +325,8 @@ public boolean imageUpdate(Image img, int infoflags,
       setSize(scaledWidth, scaledHeight);
     }
     viewer.moveFocusToDesktop();
-  }
-
-  public void resizeDesktopFrame() {
-    setSize(scaledWidth, scaledHeight);
-
-    // FIXME: Find a better way to determine correct size of a
-    // ScrollPane.  -- const
-    Insets insets = viewer.desktopScrollPane.getInsets();
-    viewer.desktopScrollPane.setSize(scaledWidth +
-				     2 * Math.min(insets.left, insets.right),
-				     scaledHeight +
-				     2 * Math.min(insets.top, insets.bottom));
-    if (viewer.vncFrame != null)
-	viewer.vncFrame.pack();
-
-    // Try to limit the frame size to the screen size.
-
-    Dimension screenSize = viewer.vncContainer.getToolkit().getScreenSize();
-    Dimension frameSize = viewer.vncContainer.getSize();
-    Dimension newSize = frameSize;
-
-    // Reduce Screen Size by 30 pixels in each direction;
-    // This is a (poor) attempt to account for
-    //     1) Menu bar on Macintosh (should really also account for
-    //        Dock on OSX).  Usually 22px on top of screen.
-    //     2) Taxkbar on Windows (usually about 28 px on bottom)
-    //     3) Other obstructions.
-
-    screenSize.height -= 30;
-    screenSize.width  -= 30;
-
-    boolean needToResizeFrame = false;
-    if (frameSize.height > screenSize.height) {
-      newSize.height = screenSize.height;
-      needToResizeFrame = true;
-    }
-    if (frameSize.width > screenSize.width) {
-      newSize.width = screenSize.width;
-      needToResizeFrame = true;
-    }
-    if (needToResizeFrame) {
-      viewer.vncContainer.setSize(newSize);
-    }
-
-    viewer.desktopScrollPane.doLayout();
+*/
+	requestFocusInWindow();
   }
 
   //
@@ -383,9 +335,6 @@ public boolean imageUpdate(Image img, int infoflags,
   //
 
   public void processNormalProtocol() throws Exception {
-
-    // Start/stop session recording if necessary.
-    viewer.checkRecordingStatus();
 
     rfb.writeFramebufferUpdateRequest(0, 0, rfb.framebufferWidth,
 				      rfb.framebufferHeight, false);
@@ -503,11 +452,6 @@ public boolean imageUpdate(Image img, int infoflags,
 
 	boolean fullUpdateNeeded = false;
 
-	// Start/stop session recording if necessary. Request full
-	// update if a new session file was opened.
-	if (viewer.checkRecordingStatus())
-	  fullUpdateNeeded = true;
-
 	// Defer framebuffer update request if necessary. But wake up
 	// immediately on keyboard or mouse event. Also, don't sleep
 	// if there is some data to receive, or if the last update
@@ -525,12 +469,12 @@ public boolean imageUpdate(Image img, int infoflags,
 	// Before requesting framebuffer update, check if the pixel
 	// format should be changed. If it should, request full update
 	// instead of an incremental one.
-	if (viewer.options.eightBitColors != (bytesPixel == 1)) {
+	if (Options.eightBitColors != (bytesPixel == 1)) {
 	  setPixelFormat();
 	  fullUpdateNeeded = true;
 	}
 
-        viewer.autoSelectEncodings();
+        client.autoSelectEncodings();
 
 	rfb.writeFramebufferUpdateRequest(0, 0, rfb.framebufferWidth,
 					  rfb.framebufferHeight,
@@ -547,7 +491,7 @@ public boolean imageUpdate(Image img, int infoflags,
 
       case RfbProto.ServerCutText:
 	String s = rfb.readServerCutText();
-	viewer.clipboard.setCutText(s);
+	client.setCutText(s);
 	break;
       case IRfbCachingConstants.RFB_CACHE_SERVER_INIT_MSG:	  
     	rfb.readServerCacheInit();
@@ -1644,7 +1588,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 //	  System.out.println("New key typed: "+evt.getKeyChar()+" ("+numChar+")\n");
 	  processLocalKeyEvent(evt);
 	  if(numChar == 9){
-		  viewer.moveFocusToDesktop();
+		  requestFocusInWindow();
 	  }
   }
 
@@ -1668,7 +1612,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 
   //Added for Ulteo by ArnauVP
   public void processLocalMouseWheelEvent(MouseWheelEvent evt) {
-	    if (viewer.rfb != null && rfb.inNormalProtocol && inputEnabled) {
+	    if (rfb != null && rfb.inNormalProtocol && inputEnabled) {
 	      synchronized (rfb) {
 	        try {
 	          rfb.writePointerWheelEvent(evt);
@@ -1682,7 +1626,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 	  }
   
   public void processLocalKeyEvent(KeyEvent evt) {
-    if (viewer.rfb != null && rfb.inNormalProtocol) {
+    if (rfb != null && rfb.inNormalProtocol) {
       if (!inputEnabled) {
 	if ((evt.getKeyChar() == 'r' || evt.getKeyChar() == 'R') &&
 	    evt.getID() == KeyEvent.KEY_PRESSED ) {
@@ -1712,7 +1656,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
   }
 
   public void processLocalMouseEvent(MouseEvent evt, boolean moved) {
-    if (viewer.rfb != null && rfb.inNormalProtocol) {
+    if (rfb != null && rfb.inNormalProtocol) {
       if (moved) {
 	softCursorMove(evt.getX(), evt.getY());
       }
@@ -1735,7 +1679,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
 
   
   public void mouseClicked(MouseEvent evt) {
-	  viewer.getClipboard().checkClipboard();
+//	  viewer.getClipboard().checkClipboard();
 	  this.requestFocus();
 //	  System.out.println("Click: " + this.hasFocus()7);
 //	  viewer.moveFocusToDesktop();
@@ -1783,7 +1727,7 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
       return;
 
     // Ignore cursor shape data if requested by user.
-    if (viewer.options.ignoreCursorUpdates) {
+    if (Options.ignoreCursorUpdates) {
       int bytesPerRow = (width + 7) / 8;
       int bytesMaskData = bytesPerRow * height;
 
@@ -1931,13 +1875,13 @@ void handleRawRect(int x, int y, int w, int h) throws IOException {
   // Uses softCursorSource as a source for new cursor image.
   //
 
-  synchronized void
+  synchronized public void
     createSoftCursor() {
 
     if (softCursorSource == null)
       return;
 
-    int scaleCursor = viewer.options.scaleCursor;
+    int scaleCursor = Options.scaleCursor;
     if (scaleCursor == 0 || !inputEnabled)
       scaleCursor = 100;
 

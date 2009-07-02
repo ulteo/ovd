@@ -22,11 +22,18 @@ public class OvdClient implements Runnable, ActionListener {
     protected URL aps_url;
     protected Boolean logged_in = false;
     protected HttpClient hc = null;
-    protected ArgParser ap;
+	protected Viewer v;
 
     public OvdClient()
     {
-        this.ap = new ArgParser();
+        this.frame = new OvdClientJFrame();
+        this.frame.setSize(410, 265);
+        this.frame.setTitle("Ulteo Open Virtual Desktop");
+        this.frame.debugPane.setVisible(false);
+        this.frame.show();
+
+
+		v = new Viewer();
     }
 
     public static void usage()
@@ -109,16 +116,16 @@ public class OvdClient implements Runnable, ActionListener {
         Node n = nl.item(0);
         NamedNodeMap t = n.getAttributes();
 
-        this.ap.ssh_host = t.getNamedItem("host").getNodeValue();
-        this.ap.ssh_login = t.getNamedItem("user").getNodeValue();
-        this.ap.ssh_password = t.getNamedItem("passwd").getNodeValue();
-        this.ap.ssh_password = Utils.DecryptString(this.ap.ssh_password);
+        v.sshHost = t.getNamedItem("host").getNodeValue();
+        v.sshUser = t.getNamedItem("user").getNodeValue();
+        v.sshPassword = t.getNamedItem("passwd").getNodeValue();
+        v.sshPassword = Utils.DecryptString(v.sshPassword);
 
         for(Node n2 = n.getFirstChild(); n2 != null; n2 = n2.getNextSibling()) {
             if(n2.getNodeName() != "port")
                 continue;
 
-            this.ap.ssh_port = n2.getTextContent();
+            v.sshPort = Integer.parseInt(n2.getTextContent());
             break;
         }
 
@@ -126,11 +133,11 @@ public class OvdClient implements Runnable, ActionListener {
 
         n = nl.item(0);
         t = n.getAttributes();
-        this.ap.vnc_password = t.getNamedItem("passwd").getNodeValue();
-        this.ap.vnc_password = Utils.DecryptEncVNCString(this.ap.vnc_password);
-        this.ap.vnc_port = t.getNamedItem("port").getNodeValue();
+        v.vncPassword = t.getNamedItem("passwd").getNodeValue();
+        v.vncPassword = Utils.DecryptEncVNCString(v.vncPassword);
+        v.vncPort = Integer.parseInt(t.getNamedItem("port").getNodeValue());
 
-        debug("VNC password: " + this.ap.vnc_password);
+        debug("VNC password: " + v.vncPassword);
 
         return e == 200;
     }
@@ -147,13 +154,8 @@ public class OvdClient implements Runnable, ActionListener {
 
         debug("launch viewer");
 
-        Viewer v = new Viewer(this.frame);
-
-        v.arg_parser = this.ap;
-        v.readParameters();
-
-        v.init();
-        v.start();
+		v.process_init();
+		v.loop();
     }
 
     public static void main(String[] args)
@@ -193,11 +195,6 @@ public class OvdClient implements Runnable, ActionListener {
             }
         }
 
-        this.frame = new OvdClientJFrame();
-        this.frame.setSize(410, 265);
-        this.frame.setTitle("Ulteo Open Virtual Desktop");
-        this.frame.debugPane.setVisible(false);
-        this.frame.show();
 
         this.frame.loginButton.addActionListener(this);
         this.frame.debugCheckBox.addActionListener(this);

@@ -1,4 +1,5 @@
 //
+//  Copyright (C) 2009 Ulteo SAS.  All Rights Reserved.
 //  Copyright (C) 2006 Constantin Kaplinsky.  All Rights Reserved.
 //
 //  This is free software; you can redistribute it and/or modify
@@ -35,10 +36,10 @@ public class VncCanvas2 extends VncCanvas {
 //    disableFocusTraversalKeys();
 //  }
 
-  public VncCanvas2(VncViewer v, int maxWidth_, int maxHeight_)
+  public VncCanvas2(VncClient c, int maxWidth_, int maxHeight_)
     throws IOException {
 
-    super(v, maxWidth_, maxHeight_);
+    super(c, maxWidth_, maxHeight_);
     disableFocusTraversalKeys();
   }
 

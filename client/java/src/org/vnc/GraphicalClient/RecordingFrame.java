@@ -17,7 +17,7 @@
 //  USA.
 //
 
-package org.vnc;
+package org.vnc.GraphicalClient;
 
 //
 // Recording frame. It allows to control recording RFB sessions into

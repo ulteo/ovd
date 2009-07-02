@@ -22,7 +22,6 @@
 
 package org.ulteo;
 
-import org.sshvnc.ArgParser;
 import org.sshvnc.Viewer;
 
 import javax.swing.JOptionPane;
@@ -34,6 +33,23 @@ public class OvdApplet extends org.sshvnc.Applet implements java.lang.Runnable {
     public String startuponLoad = "";
     public String startuponFailure = "";
     public String startuponBadPing = "";
+
+/*
+	    String[] sTemp = sshPort.split(",");
+	    int[] arrayPorts = new int[sTemp.length];
+	    for(int i=0; i<sTemp.length; i++){
+		try{
+		    arrayPorts[i] = Integer.parseInt(sTemp[i]);
+		    properties.setPort(arrayPorts[i],i);
+		}catch(NumberFormatException nfe){
+		    System.err.println("One of the entered ports is not valid "+sTemp[i]);
+		    throw nfe;
+		}
+	    }
+		}
+
+*/
+
 
 
     /**
@@ -151,7 +167,8 @@ public class OvdApplet extends org.sshvnc.Applet implements java.lang.Runnable {
     //
 
     public void run() {
-	this.obj.start();
+		//this.obj.start();
+// ArnauVP: we read the whole list and we'll parse it later
     }
 
     //

@@ -18,7 +18,7 @@
 //  USA.
 //
 
-package org.vnc;
+package org.vnc.GraphicalClient;
 
 import java.awt.Button;
 import java.awt.Color;
