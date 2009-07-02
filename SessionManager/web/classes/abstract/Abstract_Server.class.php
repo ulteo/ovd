@@ -181,6 +181,12 @@ class Abstract_Server {
 		Abstract_Liaison::delete('ServerSession', $fqdn_, NULL);
 
 		Abstract_Liaison::delete('ApplicationServer', NULL, $fqdn_);
+		
+		$tm = new Tasks_Manager();
+		$tm->load_from_server($fqdn_);
+		foreach ($tm->tasks as $a_task) {
+			$tm->remove($a_task->id);
+		}
 
 		return true;
 	}

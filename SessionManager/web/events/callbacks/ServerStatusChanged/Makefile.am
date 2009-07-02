@@ -1,4 +1,4 @@
-scripts_DATA = Mail.class.php
+scripts_DATA = Mail.class.php Task.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/events/callbacks/ServerStatusChanged
 
