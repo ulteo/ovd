@@ -227,7 +227,7 @@ $default_args = array(
 	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
-	'locale'			=>	$desktop_locale,
+	'locale'			=>	locale2unix($desktop_locale),
 	'windows_keymap'	=>	$windows_keymap,
 	'quality'			=>	$desktop_quality,
 );
