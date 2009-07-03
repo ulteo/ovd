@@ -99,6 +99,17 @@ public class VncClient implements Runnable{
 		}
 	}
 
+	public void stop() {
+		stop_background_process();
+
+		this.container.remove(this.vc);
+
+		if (isConnected())
+			disconnect();
+
+	}
+
+
 	// run() - executed by the rfbThread to deal with the RFB socket.
 	//
 	//

@@ -25,106 +25,117 @@ import java.awt.Label;
 import java.awt.Color;
 import java.awt.Frame;
 
-import javax.swing.JOptionPane;
+import org.vnc.VncClient;
 
-public class Applet extends java.applet.Applet {
-	public static final String version = "0.2.4";
 
-    //Proxy parameters
-    public String proxyType,proxyHost,proxyUsername,proxyPassword;
-    public int proxyPort;
-    public Viewer obj;
+public class Applet extends java.applet.Applet implements org.vnc.Dialog {
+	private boolean stopped = false;
 
-    //  @Override
+	public VncClient vnc;
+	protected SshConnection ssh;
+
+	protected String vncPassword = null;
+
+	//Proxy parameters
+	public String proxyType,proxyHost,proxyUsername,proxyPassword;
+	public int proxyPort;
+
 	public void init() {
-	 System.out.println("Starting UlteoVNC version "+version);
+		System.out.println("SSHVnc init");
+		vnc = new VncClient(this, this);
+		ssh = new SshConnection();
 
-	 readParameters();
+		readParameters();
 
-	 this.obj = new Viewer();
-
-	 if(proxyHost != null && !proxyHost.equals("")){
-		this.obj.ssh_properties.setTransportProviderString(proxyType);
-		this.obj.ssh_properties.setPort(443); //Always use this when using proxy
-		this.obj.ssh_properties.setProxyHost(proxyHost);
-		this.obj.ssh_properties.setProxyPort(proxyPort);
-		this.obj.ssh_properties.setProxyUsername(proxyUsername);
-		this.obj.ssh_properties.setProxyPassword(proxyPassword);
-	 }
-    }
-
-  //
-  // Show message text and optionally "Relogin" and "Close" buttons.
-  //
-
-  void showMessage(String msg) {
-      this.removeAll();
-    JOptionPane.showMessageDialog(this, "The Online Desktop has closed.\n" +
-			"Thanks for using our service!\n", "Online Desktop session finished",JOptionPane.INFORMATION_MESSAGE);
-    	//System.err.println("ERROR: "+msg+"\n");
-  }
-
-  //
-  // Stop the applet.
-  // Main applet thread will terminate on first exception
-  // after seeing that rfbThread has been set to null
-  //
-
-  
-  public String getAppletInfo() {
-	  return "UlteoVNC";
-  }
-
-  public String getHostToPing(){
-	  return getParameter("hostToPing");
-  }
-
-
-   public void start()
-   {
-       System.out.println("applet Start");
-	   this.obj.process_init();
-	   this.obj.loop();
-   }
-   
-   public void stop()
-   {
-       System.out.println("applet Stop");
-       //code de suspension de l'execution
-   }
-   
-   public void destroy()
-   {
-       System.out.println("applet destroy");
-       //code de terminaison
-   }
-
-    public void readParameters() {
-		String buffer;
-
-	obj.sshHost = getParameter("ssh.host");
-	try {
-		obj.sshPort = Integer.parseInt(getParameter("ssh.port"));
-	} catch(NumberFormatException e) {}
-
-	obj.sshUser = getParameter("ssh.user");
-	obj.sshPassword = getParameter("ssh.password");
-
-	// Read proxy parameters, if any -- by ArnauVP
-	proxyType = getParameter("proxyType");
-	proxyHost = getParameter("proxyHost");
-	buffer = getParameter("proxyPort");
-	if (buffer != null) {
-		try {
-			proxyPort = Integer.parseInt(buffer);
-		} catch(NumberFormatException e) {}
+		if(proxyHost != null && !proxyHost.equals("")) {
+			this.ssh.ssh_properties.setTransportProviderString(proxyType);
+			this.ssh.port = 443; //Always use this when using proxy
+			this.ssh.ssh_properties.setProxyHost(proxyHost);
+			this.ssh.ssh_properties.setProxyPort(proxyPort);
+			this.ssh.ssh_properties.setProxyUsername(proxyUsername);
+			this.ssh.ssh_properties.setProxyPassword(proxyPassword);
+		}
 	}
-	proxyUsername = getParameter("proxyUsername");
-	proxyPassword = getParameter("proxyPassword");
 
-	buffer = getParameter("vncPort");
-	obj.vncPort = Integer.parseInt(buffer);
+	public void start() {
+		System.out.println("SSHVnc start");
 
-	obj.vncPassword = getParameter("vncPassword");
+		if (! this.ssh.start())
+			stop();
+		
+		this.vnc.setInOut(this.ssh.in, this.ssh.out);
+	
+		if (! this.vnc.connect())
+			stop();
+
+		if (! this.vnc.authenticate())
+			stop();
+
+		if (! vnc.init())
+			stop();
+
+		vnc.start_background_process();
+		System.out.println("Session start");
+	}
+   
+	public void stop() {
+		if (stopped)
+			return;
+		stopped = true;
+
+		System.out.println("SSHVnc stop");
+		this.vnc.stop();
+		this.ssh.stop();
+	}
+   
+	public void destroy() {
+		System.out.println("SSHVnc destroy");
+
+		proxyType = null;
+		proxyHost = null;
+		proxyUsername = null;
+		proxyPassword = null;
+
+		vnc = null;
+		ssh = null;
+
+		vncPassword = null;
+	}
+
+	public void readParameters() {
+		this.ssh.host = getParameter("ssh.host");
+		try {
+			this.ssh.port = Integer.parseInt(getParameter("ssh.port"));
+		} catch(NumberFormatException e) {}
+		this.ssh.user = getParameter("ssh.user");
+		this.ssh.password = getParameter("ssh.password");
+
+		// Read proxy parameters, if any -- by ArnauVP
+		proxyType = getParameter("proxyType");
+		proxyHost = getParameter("proxyHost");
+		try {
+			proxyPort = Integer.parseInt(getParameter("proxyPort"));
+		} catch(NumberFormatException e) {}
+
+		proxyUsername = getParameter("proxyUsername");
+		proxyPassword = getParameter("proxyPassword");
+
+		try {
+			this.ssh.vncPort = Integer.parseInt(getParameter("vnc.port"));
+		} catch(NumberFormatException e) {}
+
+
+		this.vncPassword = getParameter("vnc.password");
     }
+
+	// Begin Implements org.vnc.Dialog
+	public String vncGetPassword() {
+		return this.vncPassword;
+	}
+	
+	public void vncSetError(String err) {
+		System.err.println("Vnc error: " + err);
+		stop();
+	}
+	// End Implements org.vnc.Dialog
 }
