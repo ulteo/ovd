@@ -60,19 +60,27 @@ public class Applet extends java.applet.Applet implements org.vnc.Dialog {
 	public void start() {
 		System.out.println("SSHVnc start");
 
-		if (! this.ssh.start())
+		if (! this.ssh.start()) {
 			stop();
+			return;
+		}
 		
 		this.vnc.setInOut(this.ssh.in, this.ssh.out);
 	
-		if (! this.vnc.connect())
+		if (! this.vnc.connect()) {
 			stop();
+			return;
+		}
 
-		if (! this.vnc.authenticate())
+		if (! this.vnc.authenticate()) {
 			stop();
+			return;
+		}
 
-		if (! vnc.init())
+		if (! vnc.init()) {
 			stop();
+			return;
+		}
 
 		vnc.start_background_process();
 		System.out.println("Session start");

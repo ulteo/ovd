@@ -102,7 +102,10 @@ public class VncClient implements Runnable{
 	public void stop() {
 		stop_background_process();
 
-		this.container.remove(this.vc);
+		if (this.vc!= null && this.vc.getParent() != null) {
+			System.out.println("Remove canva from container");
+			this.vc.getParent().remove(this.vc);
+		}
 
 		if (isConnected())
 			disconnect();
