@@ -41,6 +41,21 @@ if (! $buf) {
 
 	$buf->registered = false;
 	$buf->locked = true;
+
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error(_('get Preferences failed'), __FILE__, __LINE__);
+
+	$buf_prefs = $prefs->get('general', 'application_server_settings');
+	$auto_register_new_servers = $buf_prefs['auto_register_new_servers'];
+	$auto_switch_new_servers_to_production = $buf_prefs['auto_switch_new_servers_to_production'];
+
+	if ($auto_register_new_servers == 1)
+		$buf->registered = true;
+
+	if ($auto_switch_new_servers_to_production == 1)
+		$buf->locked = false;
+
 	$buf->external_name = $buf->fqdn;
 	if (isset($_GET['web_port']))
 		$web_port = $_GET['web_port'];

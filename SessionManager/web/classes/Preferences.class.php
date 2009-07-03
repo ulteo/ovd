@@ -217,6 +217,12 @@ class Preferences {
 		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','application_server_settings');
+		$c = new ConfigElement_select('auto_register_new_servers', _('Auto register new servers'), _('Auto register new servers'), _('Auto register new servers'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','application_server_settings');
+		$c = new ConfigElement_select('auto_switch_new_servers_to_production', _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), 0);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','application_server_settings');
 
 		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
 		$content_load_balancing = array();

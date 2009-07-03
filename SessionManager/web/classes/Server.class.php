@@ -168,7 +168,6 @@ class Server {
 			return false;
 		}
 
-		$this->setAttribute('locked', true);
 		$this->setAttribute('registered', true);
 
 		return true;
