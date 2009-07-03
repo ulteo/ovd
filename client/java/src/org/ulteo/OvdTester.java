@@ -1,3 +1,23 @@
+/*
+ * Copyright (C) 2009 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
 package org.ulteo;
 
 
@@ -6,160 +26,177 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.Thread;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URI;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.applet.Applet;
 
 
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
-import com.sshtools.j2ssh.forwarding.ForwardingIOChannel;
 import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
 
 
-public class OvdTester extends Applet {
+public class OvdTester extends java.applet.Applet implements java.lang.Runnable {
+    public String startuponLoad = "";
+    public String startuponFailure = "";
+    public String startuponBadPing = "";
 
-	 public static final String version = "0.2.4";
+	protected String js_haveProxy_function_name = "haveProxy";
 
+	// Results
+	public int testResult = 0;
+	public long avgPing = -1;
 
-	 // Results
-	 int testResult = -1;
-	 long avgPing = -1;
+	// System properties
+	protected String operativeSystem;
 
-	 // Java properties
-	 String javaVendor;
-	 String javaVersion;
+	// Browser properties
+	protected String userAgent;
 
-	 // System properties
-	 String operativeSystem;
-	 String OSVersion;
+	protected String sshUser,sshPassword,sshHost;
+	protected int[] sshPortList;
 
-	 // Browser properties
-	 String browser;
-	 String browserVersion;
-	 String userAgent;
+	//	Proxy parameters
+	protected boolean proxy = false;
+	protected String proxyType,proxyHost,proxyUsername,proxyPassword;
+	protected int proxyPort;
 
-	 // Connection properties
-	 String passwordParam;
-	 InputStream in;
-	 OutputStream out;
-	 SshClient ssh;
-	 int sshPort, port;
-	 String portList;
-	 String sshUser,sshPassword,sshHost;
-	 ForwardingIOChannel channel;
-	 String afterLoad,afterSSH, afterConnected, sshError;
-	 //	Proxy parameters
-	 String proxyType,proxyHost,proxyUsername,proxyPassword;
-	 int proxyPort;
+	protected int maxPingAccepted = 250;
+	protected String urlProxyTest = "http://www.ulteo.com";
 
 
-
-    
-
-    public void init(){
-	 System.out.println("Starting UlteoVNC version "+version);
-
-	 String tmp;
-	 tmp = getParameter("preLoad");
-	 if(tmp != null && tmp.equalsIgnoreCase("true")){
-
-		 //startupPreload = tmp.equalsIgnoreCase("true");
-		 tmp = null;
-
-		 // Get the Javascript URLs to show the results
-		 //tmp = readParameter("onLoad");
-		 if(tmp != null){
-			//startuponLoad = tmp;
-			 tmp = null;
-		 }
-		 //tmp = readParameter("onFail");
-		 if(tmp != null){
-			 //startuponFailure = tmp;
-			 tmp = null;
-		 }
-		 //tmp = readParameter("onBadPing");
-		 if(tmp != null){
-			// startuponBadPing = tmp;
-			 tmp = null;
-		 }
-
-
-    }
-}
-
-	public void run(){
-		// first of all, we try to detect proxy
-		String proxy_param[] = DetectProxy();
-		if ( proxy_param != null ){
-			if (proxy_param.length == 5){
-			// param : proxyType,proxyHost,proxyPort,proxyUsername,proxyPassword
-				try {
-					//this.ulteoapplet.openUrl("javascript:"+"haveProxy"+"('"+proxy_param[0]+"','"+ proxy_param[1]+"','"+proxy_param[2]+"','"+proxy_param[3]+"','"+proxy_param[4]+"')");
-					proxyType = new String(proxy_param[0]);
-					proxyHost = new String(proxy_param[1]);
-					if ((proxy_param[2]).length() != 0) {
-						proxyPort = (new Integer(proxy_param[2])).intValue();
-					}
-					else {
-						proxyPort = -1;
-					}
-					proxyUsername = new String(proxy_param[3]);
-					proxyPassword = new String(proxy_param[4]);
-				} catch (Exception e) {
-					e.printStackTrace();
-					proxyType = new String("");
-					proxyHost = new String("");
-					proxyPort = -1;
-					proxyUsername = new String("");
-					proxyPassword = new String("");
-				}
-			}
-			else {
-				proxyType = new String(proxy_param[0]);
-				proxyHost = new String(proxy_param[1]);
-				if ((proxy_param[2]).length() != 0) {
-					proxyPort = (new Integer(proxy_param[2])).intValue();
-				}
-				else {
-					proxyPort = -1;
-				}
-				proxyUsername = new String(proxy_param[3]);
-				proxyPassword = new String(proxy_param[4]);
-			}
+	protected String getNeededParameter(String key) {
+		String buffer = getParameter(key);
+		if (buffer == null && buffer.equals("")) {
+			System.err.println("Missing parameter key '"+key+"'");
+			stop();
 		}
-		else {
-			proxyType = new String("");
-			proxyHost = new String("");
-			proxyPort = -1;
-			proxyUsername = new String("");
-			proxyPassword = new String("");
-		}
-		testResult = startTest();
-		//ulteoapplet.testFinished(testResult, avgPing);
+
+		return buffer;
 	}
 
-	public int startTest(){
-		int result = -1;
-		readParameters();
+	protected void read_args() {
+		// Get the Javascript URLs to show the results
+		startuponLoad = getNeededParameter("onLoad");
+		startuponFailure = getNeededParameter("onFail");
+		startuponBadPing = getNeededParameter("onBadPing");
 
-		result = javaTest();
+		userAgent = getNeededParameter("agent");
+		sshHost = getNeededParameter("ssh.host");
 
-		if(result < 0){
-			System.err.println("\n***TEST FAILED***\n");
-			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
-//			JOptionPane.showMessageDialog(null, "Your Java Virtual Machine is not supported\nYou will probably not be able to run OnlineDesktop in the best conditions\n Please check the minimum requirements.", "Warning", JOptionPane.ERROR_MESSAGE);
-			return -1;
+		String buffer = getNeededParameter("ssh.port");
+		String[] buflist = buffer.split(",");
+		this.sshPortList = new int[buflist.length];
+		for(int i=0; i<buflist.length; i++) {
+			try{
+				this.sshPortList[i] = Integer.parseInt(buflist[i]);
+			}catch(NumberFormatException nfe){
+				System.err.println("One of the entered ports is not valid "+buflist[i]);
+				stop();
+			}
 		}
 
+		buffer = getParameter("maxPingAccepted");
+		if (buffer != null) {
+			try {
+				maxPingAccepted = Integer.parseInt(buffer);
+			} catch (NumberFormatException e) {}
+		}
+	}
+
+    public void init() {
+		System.out.println("OvdTester init");
+
+		read_args();
+
+		operativeSystem = System.getProperty("os.name");
+
+	}
+
+	public void start() {
+		System.out.println("OvdTester start");
+
+		if (! jvmIsSupported()) {
+			testResult = -1;
+			stop();
+			return;
+		}
+
+		if (! browserIsSupported()) {
+			testResult = -2;
+			System.err.println("You're using a browser currently unsupported by OnlineDesktop," +
+							   "or which doesn't have the capabilities to run it. Please try another one");
+			System.err.println("\n***TEST FAILED***\n");
+			stop();
+			return;
+		}
+
+		Thread t = new Thread(this);
+		t.start();
+	}
+
+	public void stop() {
+		testFinished();
+
+		super.stop();
+	}
+
+	public void run(){
+		// we try to detect proxy
+		detectProxy();
+
+		testPing();
+
+		if (! testSSH()) {
+			testResult = -3;
+			System.err.println("\n***TEST FAILED***\n");
+			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
+			return;
+		}
+
+		stop();
+	}
+
+
+	/**
+	 * testFinished()
+	 * According to the value of testResult, call one of the three
+	 * URLs from the parameters: urlOnPass, urlOnFail, urlLowPing
+	 */
+	public void testFinished() {
+		//1. if fails --> red
+		//2. if high ping --> yellow
+		//3. else --> green
+		System.out.println("Test result: "+testResult);
+		String methodName = null;
+		Object[] methodArgs = null;
+
+		if (testResult < 0){
+			testResult = -testResult;
+			methodName = startuponFailure;
+			methodArgs = new Object[1];
+			methodArgs[0] = ""+testResult;
+			openUrl("javascript:"+startuponFailure+"("+testResult+")");
+		} else if (avgPing > maxPingAccepted){
+			methodName = startuponBadPing;
+			openUrl("javascript:"+startuponBadPing);
+		} else {
+			methodName = startuponLoad;
+			openUrl("javascript:"+startuponLoad);
+		}
+	}
+
+
+	public void testPing() {
 		if (operativeSystem.toLowerCase().contains("windows")) {
 			if (!operativeSystem.toLowerCase().contains("vista")) {
 				//avgPing = pingTestWindows(ulteoapplet.getHostToPing(), 4);
@@ -173,56 +210,37 @@ public class OvdTester extends Applet {
 		}else{
 			//avgPing = pingTestUnix(ulteoapplet.getHostToPing(), 4);
 		}
-
-		result = browserTest();
-
-		if(result < 0){
-			System.err.println("\n***TEST FAILED***\n");
-			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
-//			JOptionPane.showMessageDialog(null, "Your browser is not supported\nYou will probably not be able to run OnlineDesktop in the best conditions\n Please check the minimum requirements.", "Warning", JOptionPane.ERROR_MESSAGE);
-			return -2;
-		}
-
-		result = connectionTest();
-
-		if(result < 0){
-			System.err.println("\n***TEST FAILED***\n");
-			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
-//			JOptionPane.showMessageDialog(null, "You might have problems connecting to the OD server\n Please check that you aren't behind a firewall or proxy.", "Warning", JOptionPane.ERROR_MESSAGE);
-			return -3;
-		}else{
-			System.out.println("\n*_*_*_TEST PASSED_*_*_*\n");
-		}
-		stop();
-		System.out.println("End of Test");
-		return result;
 	}
+
+
 
 	/**
 	 * Check JVM version: accept only Sun/Apple JVM version 1.5 or higher.
 	 *
 	 */
-	public int javaTest(){
-		javaVersion = System.getProperty("java.version");
-		javaVendor = System.getProperty("java.vendor");
-		operativeSystem = System.getProperty("os.name");
+	public boolean jvmIsSupported(){
+		String javaVersion = System.getProperty("java.version");
+		String javaVendor = System.getProperty("java.vendor");
+
 		System.out.println("You're using Java version "+javaVersion+" from "+javaVendor + " on " + operativeSystem);
 		float jVersion = 1.0f;
 		try{
 			jVersion = Float.parseFloat(javaVersion.substring(0, 3));
 		}catch(NumberFormatException ex){
 			System.err.println("Error parsing java version: "+javaVersion);
+			return false;
 		}
 		if( jVersion <= 1.4){
 			System.err.println("Please, update your Java Virtual Machine");
-			return -1;
+			return false;
 		}
 
 		if(!(javaVendor.startsWith("Sun Microsystems") || javaVendor.startsWith("Apple"))){
 			System.err.println("Please get Java JRE from Sun or Apple in order to run OD");
-			return -1;
+			return false;
 		}
-		return 1;
+
+		return true;
 	}
 
 
@@ -308,7 +326,6 @@ public class OvdTester extends Applet {
 		return pingResult;
 	}
 
-
 	/**
 	 * Accepted browsers:
 	 * IE6, IE7,
@@ -322,50 +339,52 @@ public class OvdTester extends Applet {
 	 * Konqueror,
 	 * Safari windows;
 	 *
-	 * @return 0 if supported, -1 otherwise
+	 * @return true if supported, false otherwise
 	 *
 	 */
-	public int browserTest(){
+	public boolean browserIsSupported() {
 		System.out.println("User agent: "+userAgent);
-		boolean kjasSM = false; // Konqueror's Security Manager not working well
+		//boolean kjasSM = false; // Konqueror's Security Manager not working well
 
-		if((System.getSecurityManager() != null) && (System.getSecurityManager().toString().startsWith("org.kde.kjas"))) {
-			kjasSM = true;
-		}
+		if(System.getSecurityManager() != null &&
+		   System.getSecurityManager().toString().startsWith("org.kde.kjas"))
+			// Konqueror's Security Manager not working well
+			return false;
 
-		if(userAgent.contains("Camino") || kjasSM
-			|| (userAgent.contains("Firefox") && userAgent.contains("Mac OS X"))
-			|| (userAgent.contains("Safari") && userAgent.contains("Windows"))){
-			System.err.println("You're using a browser currently unsupported by OnlineDesktop," +
-					"or which doesn't have the capabilities to run it. Please try another one");
-			return -1;
-		}
-		return 1;
+
+		if (userAgent.contains("Camino"))
+			return false;
+
+
+		// We are not supported Firefox on Mac OS
+		if (userAgent.contains("Firefox") &&
+			userAgent.contains("Mac OS X"))
+			return false;
+
+		// We are not supported Safari on Windows
+		if(userAgent.contains("Safari") &&
+		   userAgent.contains("Windows"))
+		   return false;
+
+		return true;
 	}
+
 
 	/**
 	 * Open
-	 * @return 0 if successful, -1 otherwise
+	 * @return true if successful, false otherwise
 	 */
-	public int connectionTest(){
-		ssh = new SshClient();
+	public boolean testSSH() {
+		SshClient ssh = new SshClient();
 	    ssh.setSocketTimeout(20000);
+
 	    // Create SSH properties
 	    SshConnectionProperties properties = new SshConnectionProperties();
 	    properties.setHost(sshHost);
+		for(int i=0; i<this.sshPortList.length; i++)
+			properties.setPort(this.sshPortList[i],i);
 
-	    String[] sTemp = portList.split(",");
-		int[] arrayPorts = new int[sTemp.length];
-		for(int i=0; i<sTemp.length; i++){
-			try{
-			arrayPorts[i] = Integer.parseInt(sTemp[i]);
-			properties.setPort(arrayPorts[i],i);
-			}catch(NumberFormatException nfe){
-				System.err.println("One of the entered ports is not valid "+sTemp[i]);
-				throw nfe;
-			}
-		}
-	    if(!proxyHost.equals("")){
+	    if (proxy) {
 			properties.setTransportProviderString(proxyType);
 			properties.setPort(443); //Always use this when using proxy
 			properties.setProxyHost(proxyHost);
@@ -373,97 +392,124 @@ public class OvdTester extends Applet {
 			properties.setProxyUsername(proxyUsername);
 			properties.setProxyPassword(proxyPassword);
 		}
-	    try{
-	    	ssh.connect(properties,new ConsoleKnownHostsKeyVerification());
-	    	PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
-	    	pwd.setUsername("dummy");
-	    	pwd.setPassword("dummy");
-	    	ssh.authenticate(pwd);
-	    	// We know it failed, but we hope it didn't produce any exception.
 
-	    	return 1;
-	    }catch(Exception ex){
-	    	ex.printStackTrace();
-	    	return -1;
-	    }
-	}
+	    try {
+	    	ssh.connect(properties, new ConsoleKnownHostsKeyVerification());
+		} catch (UnknownHostException e) {
+			return false;
+		} catch (IOException  e) {
+			return false;
+		}
 
-
-	public void stop() {
-
-	    if(in != null && out != null){
-	    	try{
-	    	in.close();
-	      	out.close();
-	    	}catch(IOException ioe){
-	    		System.err.println("Problem closing IO streams");
-	    	}
-	    }
-	    if(channel != null) channel = null;
-	    if(ssh != null)   ssh.disconnect();
-
-	  }
-
-	/**
-	 * Get various parameters passed to the applet:
-	 * User agent, from PHP detection
-	 *
-	 */
-	public void readParameters(){
-		//userAgent = readParameter("agent");
-		//sshHost = readParameter("ssh.host");
-		//portList = readParameter("ssh.port");
-	}
-
-//	private int readIntParameter(String name, int defaultValue) {
-//		String s = readParameter(name);
-//	    int result = defaultValue;
-//	    if (s != null) {
-//	      try {
-//	    	  result = Integer.parseInt(s);
-//	      } catch (NumberFormatException e) {
-//	    	  System.err.println("Parameter "+name+" has invalid value: "+s);
-//	      }
-//	    }
-//	    return result;
-//	  }
-
-	private String[] DetectProxy(){
-		String proxy_param[] = new String[5];
-		int result = -1;
-		result = javaTest();
-		if(result < 0)
-			return null;
+		PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
+		pwd.setUsername("dummy");
+		pwd.setPassword("dummy");
 
 		try {
-			System.setProperty("java.net.useSystemProxies","true");
-			List<Proxy> l = ProxySelector.getDefault().select(new URI("http://www.ulteo.com"));
+			ssh.authenticate(pwd);
+			// We know it failed, but we hope it didn't produce any exception.
+		} catch (IOException e) {
+			return false;
+		}
 
-			for (Iterator<Proxy> iter = l.iterator(); iter.hasNext(); ) {
-				Proxy proxy = iter.next();
-				InetSocketAddress addr = (InetSocketAddress) proxy.address();
-				if(addr == null) {
-					// No proxy
-					// little hack for JS side
-					proxy_param[0] = new String("");
-					proxy_param[1] = new String("");
-					proxy_param[2] = new String("");
-					proxy_param[3] = new String("");
-					proxy_param[4] = new String("");
-					return proxy_param;
-				} else {
-					proxy_param[0] = new String(proxy.type().toString());
-					proxy_param[1] = new String(addr.getHostName());
-					proxy_param[2] = new String(new Integer(addr.getPort()).toString());
-					proxy_param[3] = new String("");
-					proxy_param[4] = new String("");
+		ssh.disconnect();
+	    return true;
+	}
 
-					return proxy_param;
-				}
-			}
+
+
+	private void detectProxy() {
+		List<Proxy> l;
+
+		try {
+			System.setProperty("java.net.useSystemProxies", "true");
+			l = ProxySelector.getDefault().select(new URI(this.urlProxyTest));
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
-		return null;
+
+		Iterator<Proxy> iter = l.iterator();
+		if (! iter.hasNext())
+			// No proxy
+			return;
+
+		Proxy proxy = iter.next();
+		InetSocketAddress addr = (InetSocketAddress) proxy.address();
+		if(addr == null)
+			// No proxy
+			return;
+
+		this.proxy = true;
+		this.proxyType = proxy.type().toString();
+		this.proxyHost = new String(addr.getHostName());
+		this.proxyPort = addr.getPort();
+		this.proxyUsername = "";
+		this.proxyPassword = "";
+
+
+		String buffer = "javascript:" + js_haveProxy_function_name +
+			"('" + this.proxyType + "', '" +
+			this.proxyHost + "', '" +
+			this.proxyPort + "', '" +
+			this.proxyUsername + "', " +
+			this.proxyPassword + "');";
+		System.out.println("JS command: "+buffer);
+
+		this.openUrl(buffer);
 	}
+
+	public void openUrl(String url) {
+		System.out.println("Openurl: "+url);
+		try {
+			getAppletContext().showDocument(new URL(url));
+		} catch(Exception e) {
+			System.err.println("Couldn't execute javascript "+e.getMessage());
+			stop();
+		}
+	}
+
+	/**
+	 * Sets the value of the given Javascript variable
+	 *
+	 * @param varName
+	 * @param value
+	 */
+/*
+	public void setJavaScriptVariable(String varName, String value){
+		JSObject window = JSObject.getWindow(this);
+		window.setMember("testResult", value);
+	}
+*/
+	/**
+	 * Sets the value of the given Javascript variable
+	 *
+	 * @param varName
+	 * @param value
+	 */
+/*
+	public void setJavaScriptVariable(String varName, int value){
+		this.setJavaScriptVariable(varName, ""+value);
+	}
+*/
+
+	/**
+	 * Calls the given Javascript method with its parameters
+	 *
+	 * @param methodName
+	 * @param value
+	 */
+/*
+	public void callJavaScriptMethod(String methodName, Object[] args) {
+		JSObject window = JSObject.getWindow(this);
+		try {
+			window.call(methodName, args);
+			System.out.println("JS method called");
+		} catch(JSException ex) {
+//		  This method doesn't like it when the args are null (although it works in Konqueror)
+			System.err.println("Ouch: " + ex.getMessage());
+			setJavaScriptVariable("testResult", testResult);
+		}
+	}
+*/
 }
