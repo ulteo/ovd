@@ -84,7 +84,7 @@ if (isset($_POST['join'])) {
 	{
 		$show_apps = true;
 		$applicationDB = ApplicationDB::getInstance();
-		$apps = $applicationDB->getList(true);
+		$apps = $applicationDB->getList(false);
 	}
 
 //FIX ME?
