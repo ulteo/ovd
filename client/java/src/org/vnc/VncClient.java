@@ -294,18 +294,6 @@ public class VncClient implements Runnable{
 		if (! isConnected())
 			return;
 
-/*
-  int preferredEncoding = options.preferredEncoding;
-  if (preferredEncoding == -1) {
-  preferredEncoding = RfbProto.EncodingTight;
-  } else {
-*/
-		// Auto encoder selection is not enabled.
-		if (autoSelectOnly)
-			return;
-//    }
-
-
 		int[] encodings = new int[20];
 		int nEncodings = 0;
 

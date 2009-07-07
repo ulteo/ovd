@@ -48,7 +48,7 @@ public class Options {
 	public static boolean eightBitColors = false;
 	public static int scaleCursor = 0;
 	public static int preferredEncoding = RfbProto.EncodingTight;
-	public static boolean useCopyRect = false;
+	public static boolean useCopyRect = true;
 
 	public static int compressLevel = 0;
 	public static int jpegQuality = 9;

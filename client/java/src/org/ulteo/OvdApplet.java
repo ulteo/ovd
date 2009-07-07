@@ -22,6 +22,8 @@
 package org.ulteo;
 
 import org.sshvnc.Viewer;
+import org.vnc.RfbProto;
+import org.vnc.rfbcaching.IRfbCachingConstants;
 
 import javax.swing.JOptionPane;
 
@@ -38,7 +40,6 @@ public class OvdApplet extends org.sshvnc.Applet {
 			return;
 		}
 
-//		this.add("Center", this);
 		super.init();
     }
 
@@ -48,6 +49,8 @@ public class OvdApplet extends org.sshvnc.Applet {
 
 
 	public void readParameters() {
+		String buf;
+
 		this.ssh.host = getParameter("ssh.host");
 
 		String[] buffer = getParameter("ssh.port").split(",");
@@ -78,6 +81,87 @@ public class OvdApplet extends org.sshvnc.Applet {
 
 		org.vnc.Options.host = getParameter("HOST");
 		this.vncPassword = getParameter("ENCPASSWORD");
+
+		buf = getParameter("Encoding");
+		if (buf != null) {
+			if (buf.equalsIgnoreCase("RRE"))
+				org.vnc.Options.preferredEncoding = RfbProto.EncodingRRE;
+			else if (buf.equalsIgnoreCase("CoRRE"))
+				org.vnc.Options.preferredEncoding = RfbProto.EncodingCoRRE;
+			else if (buf.equalsIgnoreCase("Hextile"))
+				org.vnc.Options.preferredEncoding = RfbProto.EncodingHextile;
+			else if (buf.equalsIgnoreCase("ZRLE"))
+				org.vnc.Options.preferredEncoding = RfbProto.EncodingZRLE;
+			else if (buf.equalsIgnoreCase("Zlib"))
+				org.vnc.Options.preferredEncoding = RfbProto.EncodingZlib;
+			else if (buf.equalsIgnoreCase("Tight"))
+				org.vnc.Options.preferredEncoding = RfbProto.EncodingTight;
+		}
+
+		buf = getParameter("JPEG image quality");
+		if (buf != null) {
+			try {
+				org.vnc.Options.jpegQuality = Integer.parseInt(buf);
+			} catch(NumberFormatException e) {}
+		}
+
+		buf = getParameter("Compression level");
+		if (buf != null) {
+			try {
+				org.vnc.Options.compressLevel = Integer.parseInt(buf);
+			} catch(NumberFormatException e) {}
+		}
+
+		buf = getParameter("Restricted colors");
+		if (buf != null && buf.equalsIgnoreCase("yes"))
+			org.vnc.Options.eightBitColors = true;
+
+		buf = getParameter("View only");
+		if (buf != null && buf.equalsIgnoreCase("yes"))
+			org.vnc.Options.viewOnly = true;
+
+		buf = getParameter("Share desktop");
+		if (buf != null && buf.equalsIgnoreCase("true"))
+			org.vnc.Options.shareDesktop = true;
+
+
+		if (getParameter("rfb.cache.enabled") != null) {
+			org.vnc.Options.cacheEnable = true;
+			buf = getParameter("rfb.cache.ver.major");
+			if (buf != null) {
+				try {
+					org.vnc.Options.cacheVerMajor = Integer.parseInt(buf);
+				} catch(NumberFormatException e) {}
+			}
+
+			buf = getParameter("rfb.cache.ver.minor");
+			if (buf != null) {
+				try {
+					org.vnc.Options.cacheVerMinor = Integer.parseInt(buf);
+				} catch(NumberFormatException e) {}
+			}
+
+			buf = getParameter("rfb.cache.size");
+			if (buf != null) {
+				try {
+					org.vnc.Options.cacheSize = Integer.parseInt(buf);
+				} catch(NumberFormatException e) {}
+			}
+
+
+			buf = getParameter("rfb.cache.datasize");
+			if (buf != null) {
+				try {
+					org.vnc.Options.cacheDataSize = Integer.parseInt(buf);
+				} catch(NumberFormatException e) {}
+			}
+
+			buf = getParameter("rfb.cache.alg");
+			if (buf.equalsIgnoreCase("FIFO"))
+				org.vnc.Options.cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_MAINT_ALG_FIFO;
+			else if (buf.equalsIgnoreCase("LRU"))
+				org.vnc.Options.cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_MAINT_ALG_LRU;
+		}
     }
 
     void showMessage(String msg) {
