@@ -4,15 +4,13 @@ var rand_ = Math.round(Math.random()*100);
 
 function doLogin(this_) {
 	form_ = this_;
-	if ($('use_popup_true') && $('use_popup_true').checked)
-		window_ = popupOpen(rand_);
 
 	$('launch_button').disabled = true;
 
 	var user_passwd = $('login_password').value;
 	$('login_password').value = '';
 
-	new Ajax.Request(
+	var ret = new Ajax.Request(
 		'ajax/login.php',
 		{
 			method: 'post',
@@ -34,6 +32,12 @@ function doLogin(this_) {
 	setTimeout(function() {
 		$('login_status').innerHTML = '';
 	}, 30000);
+
+	if (parseInt(ret.getStatus()) != 200)
+		return false;
+
+	if ($('use_popup_true') && $('use_popup_true').checked)
+		window_ = popupOpen(rand_);
 
 	return false;
 }
