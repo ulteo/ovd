@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class ServerStatusChangedTask extends EventCallback {
 	public function run () {
-		Logger::critical('main', 'ServerStatusChangedTask::run');
+		Logger::debug('main', 'ServerStatusChangedTask::run');
 		$needs_cleanup = false;
 		$data = get_from_cache('events', 'ServerStatusChanged');
 		
