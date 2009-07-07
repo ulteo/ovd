@@ -2,7 +2,7 @@
 /**
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julient@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
