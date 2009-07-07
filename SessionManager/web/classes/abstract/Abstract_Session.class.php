@@ -136,7 +136,7 @@ class Abstract_Session {
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Session::delete($session_) session does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Session::delete($id_) session does not exist (NumRows == 0)");
 			return false;
 		}
 
