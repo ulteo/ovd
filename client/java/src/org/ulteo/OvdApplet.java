@@ -25,6 +25,7 @@ import org.sshvnc.Viewer;
 import org.vnc.RfbProto;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 
+import java.awt.FlowLayout;
 import javax.swing.JOptionPane;
 
 public class OvdApplet extends org.sshvnc.Applet {
@@ -39,6 +40,11 @@ public class OvdApplet extends org.sshvnc.Applet {
 			stop();
 			return;
 		}
+
+		FlowLayout layout = new FlowLayout();
+		layout.setHgap(0);
+		layout.setVgap(0);
+		this.setLayout(layout);
 
 		super.init();
     }
