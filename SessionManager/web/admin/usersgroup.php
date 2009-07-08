@@ -440,7 +440,7 @@ function show_default() {
 			echo '<td>';
 			echo '<input type="radio" name="cached" value="0" checked="checked" onchange="$(\'schedule_select\').hide();" /> '._('No');
 			echo '<input type="radio" name="cached" value="1" onchange="$(\'schedule_select\').show();" /> '._('Yes');
-			echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two update:').' <select name="schedule">';
+			echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two updates:').' <select name="schedule">';
 			foreach ($schedules as $interval => $text)
 				echo '<option value="'.$interval.'">'.$text.'</option>';
 			echo '</select></span>';

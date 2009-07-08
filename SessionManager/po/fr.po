@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-06 11:09+0200\n"
+"POT-Creation-Date: 2009-07-08 06:23+0200\n"
 "PO-Revision-Date: 2009-02-25 16:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -397,7 +397,7 @@ msgstr "Sauvegarder"
 #. *
 #. * Copyright (C) 2009 Ulteo SAS
 #. * http://www.ulteo.com
-#. * Author Julien LANGLOIS <julient@ulteo.com>
+#. * Author Julien LANGLOIS <julien@ulteo.com>
 #. * Author Jeremy DESVAGES <jeremy@ulteo.com>
 #. *
 #. * This program is free software; you can redistribute it and/or
@@ -937,7 +937,7 @@ msgid "Yes"
 msgstr "Oui"
 
 #: ../web/admin/usersgroup.php:443
-msgid "Time between two update:"
+msgid "Time between two updates:"
 msgstr "Délai entre deux mises à jour :"
 
 #: ../web/admin/usersgroup.php:450 ../web/admin/usersgroup.php:649
