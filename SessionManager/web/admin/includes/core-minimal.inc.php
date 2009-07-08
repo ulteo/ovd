@@ -24,10 +24,8 @@ require_once(dirname(__FILE__).'/../../includes/core-minimal.inc.php');
 
 $buf = 'en_GB';
 $prefs = Preferences::getInstance();
-if (is_object($prefs)) {
+if (is_object($prefs))
 	$buf = $prefs->get('general', 'admin_language');
-	echo "LANGUAGE: $buf<br />\n";
-}
 $language = locale2unix($buf);
 setlocale(LC_ALL, $language);
 $domain = 'uovdsm';
