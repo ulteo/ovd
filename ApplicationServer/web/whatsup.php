@@ -37,6 +37,36 @@ function getSessionStatus($session) {
   return $status;
 }
 
+function getApplicationStatus($session, $application_id) {
+  if (file_exists(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'.txt'))
+    return -1;
+
+  if (! is_readable(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status'))
+    return false;
+
+  $status = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status');
+  if ($status === false)
+    return false;
+
+  return $status;
+}
+
+function getRunningApplications($session) {
+  $buf = glob(SESSION_PATH.'/'.$session.'/sessions/*', GLOB_ONLYDIR);
+
+  $apps = array();
+  foreach ($buf as $app) {
+    $job_id = basename($app);
+    $app_id = get_from_file($app.'/app_id');
+	if ($app_id === false || $app_id == 'desktop')
+	  continue;
+
+	$apps[$job_id] = $app_id;
+  }
+
+  return $apps;
+}
+
 // Begin Printing functions
 function getPathFromMagic($magic) {
   $buf = SESSION_PATH.'/'.$magic.'/parameters/user_login';
@@ -145,6 +175,32 @@ if ($status === false)
   $status = 4;
 
 $session_node->setAttribute('status', $status);
+
+if (isset($_GET['application_id'])) {
+  $application_node = $dom->createElement('application');
+  $session_node->appendChild($application_node);
+
+
+  $application_status = getApplicationStatus($session, $_GET['application_id']);
+  if ($application_status === false)
+    $application_status = 4;
+  if ($_GET['application_id'] === '')
+    $application_status = -1;
+
+  $application_node->setAttribute('status', $application_status);
+} else {
+  $applications_node = $dom->createElement('applications');
+  $session_node->appendChild($applications_node);
+
+
+  $apps = getRunningApplications($session);
+  foreach ($apps as $k => $v) {
+     $running_node = $dom->createElement('running');
+	 $running_node->setAttribute('job', $k);
+	 $running_node->setAttribute('app_id', $v);
+	 $applications_node->appendChild($running_node);
+  }
+}
 
 // Only if session is running
 if ($status == 2) {

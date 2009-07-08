@@ -1,4 +1,4 @@
-SUBDIRS =
+SUBDIRS = nifty
 HOOKS =
 
 if !PROTOTYPE

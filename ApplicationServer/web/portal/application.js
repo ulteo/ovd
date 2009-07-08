@@ -1,7 +1,9 @@
 var refresh = 2000;
 
+var app_id;
+var command;
+var access_id;
 var applet_version;
-var printing_applet_version;
 var protocol;
 var server;
 var port;
@@ -13,25 +15,24 @@ var my_height;
 var session_state = -1;
 var old_session_state = -1;
 
+var application_state = -1;
+var old_application_state = -1;
+
 var nb_share = 0;
 
 var application_started = false;
 var window_alive = true;
 
-function daemon_init(applet_version_, printing_applet_version_, debug_) {
+function application_init(app_id_, command_, applet_version_, debug_) {
+	app_id = app_id_;
+	command = command_;
 	applet_version = applet_version_;
-	printing_applet_version = printing_applet_version_;
 	protocol = window.location.protocol;
 	server = window.location.host;
 	port = window.location.port;
 	debug = debug_;
 
-	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
-		<param name="do_nothing" value="1"> \
-	</applet>';
-
-	push_log('[daemon] init()', 'info');
+	push_log('[application] init()', 'info');
 
 	if (debug) {
 		$('debugContainer').style.display = 'inline';
@@ -49,66 +50,45 @@ function daemon_init(applet_version_, printing_applet_version_, debug_) {
 		my_height = document.body.clientHeight;
 	}
 
-	if ($('menuShare')) {
-		$('menuShare').style.width = my_width+'px';
-		var new_height = parseInt(my_height)-18;
-		if (debug)
-			new_height = parseInt(new_height)-149;
-		$('menuShare').style.height = new_height+'px';
-
-		my_height = parseInt(my_height)-18;
-	}
-
 	if (debug)
 		my_height = parseInt(my_height)-149;
 
 	Event.observe(window, 'unload', function() {
-		client_exit();
+// 		client_exit();
 	});
 
-	daemon_loop();
+	application_loop();
 }
 
-function daemon_loop() {
-	push_log('[daemon] loop()', 'debug');
+function application_loop() {
+	push_log('[application] loop()', 'debug');
 
-	session_check();
+	application_check();
 
-	if (session_state == 0 || session_state == 10) {
-		new Ajax.Request(
-			'../start.php',
-			{
-				method: 'get',
-				parameters: {
-					width: parseInt(my_width),
-					height: parseInt(my_height)
-				}
-			}
-		);
-	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
+	if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
 		if (! application_started)
-			start_app('desktop');
+			start_app();
 
 		application_started = true;
-	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
+	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4 || (old_application_state == 2 && application_state != 2) || application_state == 3 || application_state == 4) {
 		window_alive = false;
 		switch_applet_to_end();
 		return;
 	}
 
 	setTimeout(function() {
-		daemon_loop();
+		application_loop();
 	}, refresh);
 }
 
-function start_app(command_) {
+function start_app() {
 	new Ajax.Request(
 		'../start_app.php',
 		{
 			method: 'get',
 			parameters: {
-				app_id: 'desktop',
-				command: command_,
+				app_id: app_id,
+				command: command,
 				size: my_width+'x'+my_height
 			},
 			onSuccess: function(transport) {
@@ -128,26 +108,24 @@ function start_app(command_) {
 					return;
 				}
 
-				switch_splash_to_applet(access_id);
+				switch_splash_to_applet();
 			}
 		}
 	);
 }
 
-function switch_splash_to_applet(access_id_) {
+function switch_splash_to_applet() {
 	new Ajax.Request(
 		'../access.php',
 		{
 			method: 'get',
 			parameters: {
-				application_id: access_id_
+				application_id: access_id
 			},
 			onSuccess: function(transport) {
 				var buffer;
 
 				$('splashContainer').hide();
-				if ($('menuContainer'))
-					$('menuContainer').show();
 
 				try {
 					var xml = transport.responseXML;
@@ -265,10 +243,10 @@ function switch_splash_to_applet(access_id_) {
 
 function switch_applet_to_end() {
 	$('splashContainer').hide();
-	if ($('menuContainer'))
-		$('menuContainer').hide();
 	$('appletContainer').hide();
-	$('endContainer').show();
+// 	$('endContainer').show();
+
+	window.close();
 
 // 	if (text_ != false)
 // 		$('errorContainer').innerHTML = text_;
@@ -329,16 +307,17 @@ function push_log(data_, level_) {
 		$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
 }
 
-function session_check() {
+function application_check() {
 	push_log('[session] check()', 'debug');
 	new Ajax.Request(
 		'../whatsup.php',
 		{
 			method: 'get',
-			asynchronous: false,
 			parameters: {
-					differentiator: Math.floor(Math.random()*50000)
+				application_id: access_id,
+				differentiator: Math.floor(Math.random()*50000)
 			},
+			asynchronous: false,
 			onSuccess: onUpdateInfos
 		}
 	);
@@ -350,7 +329,7 @@ function onUpdateInfos(transport) {
   var buffer = xml.getElementsByTagName('session');
 
   if (buffer.length != 1) {
-    push_log('[session] bad xml format', 'error');
+    push_log('[session] bad xml format 1', 'error');
     return;
   }
 
@@ -361,7 +340,7 @@ function onUpdateInfos(transport) {
   try { // IE does not have hasAttribute in DOM API...
     session_state = sessionNode.getAttribute('status');
   } catch(e) {
-    push_log('[session] bad xml format', 'error');
+    push_log('[session] bad xml format 2', 'error');
     return;
   }
 
@@ -371,6 +350,31 @@ function onUpdateInfos(transport) {
     push_log('[session] Status: '+session_state, 'warning');
   else
     push_log('[session] Status: '+session_state, 'debug');
+
+  var buffer = xml.getElementsByTagName('application');
+
+  if (buffer.length != 1) {
+    push_log('[application] bad xml format 1', 'error');
+    return;
+  }
+
+  var applicationNode = buffer[0];
+
+  old_application_state = application_state;
+
+  try { // IE does not have hasAttribute in DOM API...
+    application_state = applicationNode.getAttribute('status');
+  } catch(e) {
+    push_log('[application] bad xml format 2', 'error');
+    return;
+  }
+
+  if (application_state != old_application_state)
+    push_log('[application] Change status from '+old_application_state+' to '+application_state, 'info');
+  if (application_state != 2)
+    push_log('[application] Status: '+application_state, 'warning');
+  else
+    push_log('[application] Status: '+application_state, 'debug');
 
   var printNode = sessionNode.getElementsByTagName('print');
   if (printNode.length > 0) {
@@ -391,101 +395,5 @@ function onUpdateInfos(transport) {
       push_log('[session] bad xml format', 'error');
       return;
     }
-
-    if (nb > 0) {
-        var totoNodes = sharingNode.getElementsByTagName('share');
-
-        var html = '<div style="margin-left: 0px; margin-right: 0px; text-align: left"><ul>';
-
-        var nb_share_active = 0;
-        for (var i = 0; i < totoNodes.length; i++) {
-            var buf = totoNodes[i];
-
-            var email = buf.getAttribute('email');
-            var mode = buf.getAttribute('mode');
-            var alive = buf.getAttribute('alive');
-            if (alive == 1)
-              nb_share_active += 1;
-            var joined = buf.getAttribute('joined');
-
-            html += '<li>';
-
-            html += '<span style="';
-            if (alive != 1 && joined != 1)
-              html += 'color: orange;';
-            if (alive == 1 && joined == 1)
-              html += 'color: green;';
-            if (alive != 1 && joined == 1)
-              html += 'color: blue; text-decoration: line-through;';
-            html += '">'+email+'</span>';
-
-            html += ' ('+mode+')</li>';
-        }
-
-        html += '</ul></div>';
-
-        $('menuShareContent').innerHTML = html;
-
-      if (nb_share != nb_share_active) {
-        push_log('[session] Watching desktop: '+nb_share_active+' users', 'info');
-        nb_share = nb_share_active;
-      }
-
-      if (nb_share_active != 0) {
-        var buf_html = '<img style="margin-left: 5px;" src="media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share_active+' user';
-        if (nb_share_active > 1)
-          buf_html += 's';
-        buf_html += '</span>';
-        $('menuShareWarning').innerHTML = buf_html;
-      } else
-        $('menuShareWarning').innerHTML = '';
-    }
   }
-}
-
-function do_print(path, timestamp) {
-  push_log('[print] PDF: yes', 'info');
-
-  var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
-
-	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+'+printing_applet_version+'+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
-		<param name="url" value="'+print_url+'"> \
-		<param name="filename" value="'+path+'"> \
-	</applet>';
-
-  push_log('[print] Applet: starting', 'warning');
-}
-
-function do_invite() {
-	var email = $('invite_email').value;
-	var mode = 'passive';
-	if ($('invite_mode').checked)
-		mode = 'active';
-	$('invite_submit').disabled = true;
-
-	new Ajax.Request(
-		'../invite.php',
-		{
-			method: 'post',
-			parameters: {
-				'email': email,
-				'mode': mode
-			},
-			onSuccess: function(transport) {
-				if (transport.responseText != 'OK') {
-					$('invite_email').disabled = true;
-					$('invite_mode').disabled = true;
-					$('invite_submit').disabled = true;
-
-					$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
-				} else if (transport.responseText == 'OK') {
-					$('invite_submit').disabled = false;
-				}
-			}
-		}
-	);
-
-	$('invite_email').value = '';
-	$('invite_mode').checked = false;
 }

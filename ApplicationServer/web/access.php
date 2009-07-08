@@ -29,10 +29,14 @@ $session = $_SESSION['session'];
 if (! isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
 
+if (! isset($_GET['application_id']) || $_GET['application_id'] == '')
+	die('CRITICAL ERROR'); // That's odd !
+
 $vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
 $sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
 $sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
-$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/clients/rfbport');
+
+$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
 if ($_SESSION['parameters']['quality'] == 2)
 	$eight_bits = 'yes';

@@ -140,6 +140,8 @@ if (substr($_SESSION['mode'], 0, 5) == 'start')
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
 	if (substr($_SESSION['mode'], -7) == 'desktop')
 		redirect('desktop/');
+	elseif (substr($_SESSION['mode'], -6) == 'portal')
+		redirect('portal/');
 
 	die();
 }

@@ -39,56 +39,16 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
-		<script type="text/javascript" src="daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="application.js" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				daemon_init('ulteo-applet-0.2.4.jar', 'ulteo-printing-0.5.1.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				application_init(<?php echo $_GET['app_id']; ?>, '<?php echo $_GET['command']; ?>', 'ulteo-applet-0.2.4.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>
 
 	<body>
-<?php
-if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
-?>
-		<div id="menuContainer" style="display: none;">
-			<div id="menuShareWarning"></div>
-
-			<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
-				<img src="../media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" />
-			</a>
-		</div>
-
-		<div id="menuShare" style="display: none;">
-			<div style="width: 450px; margin-left: auto; margin-right: 0px;">
-				<div style="width: 450px;" id="menuShareFrame">
-					<table style="width: 100%;" border="0" cellspacing="0" cellpadding="10"><tr><td>
-					<div style="float: right;">
-						<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
-							<img src="../media/image/close.png" width="16" height="16" alt="" title="" />
-						</a>
-					</div>
-
-					<h2 style="text-align: center;"><?php echo _('Desktop sharing'); ?></h2>
-					<span id="menuShareContent"></span>
-					<span id="menuShareError"></span>
-					<fieldset style="border: 0;">
-						<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">
-							<p><?php echo _('Email address'); ?>: <input type="text" id="invite_email" name="email" value="" />
-							<input class="input_checkbox" type="checkbox" id="invite_mode" name="mode" /> <?php echo _('active mode'); ?></p>
-
-							<p><input type="submit" id="invite_submit" value="<?php echo _('Invite'); ?>" /></p>
-						</form>
-					</fieldset>
-					</td></tr></table>
-				</div>
-			</div>
-		</div>
-<?php
-}
-?>
-
 		<div id="splashContainer">
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -98,7 +58,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Desktop</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Application</span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
@@ -120,7 +80,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		</div>
 
 		<div id="endContainer" style="display: none;">
-			Your session has ended, you can now close the window
+			Your application has ended, you can now close the window
 
 			<div id="errorContainer">
 			</div>
@@ -129,10 +89,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 			<input type="button" value="Close" onclick="window.close(); return false" />
 		</div>
 
-		<div id="appletContainer" style="<?php
-if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
-	echo 'top: 18px; ';
-?>display: none;">
+		<div id="appletContainer" style="display: none;">
 		</div>
 
 		<div id="printerContainer">

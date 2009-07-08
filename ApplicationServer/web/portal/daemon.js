@@ -49,16 +49,6 @@ function daemon_init(applet_version_, printing_applet_version_, debug_) {
 		my_height = document.body.clientHeight;
 	}
 
-	if ($('menuShare')) {
-		$('menuShare').style.width = my_width+'px';
-		var new_height = parseInt(my_height)-18;
-		if (debug)
-			new_height = parseInt(new_height)-149;
-		$('menuShare').style.height = new_height+'px';
-
-		my_height = parseInt(my_height)-18;
-	}
-
 	if (debug)
 		my_height = parseInt(my_height)-149;
 
@@ -86,10 +76,12 @@ function daemon_loop() {
 			}
 		);
 	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
-		if (! application_started)
+		if (! application_started) {
+			list_apps();
 			start_app('desktop');
 
-		application_started = true;
+			application_started = true;
+		}
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
 		window_alive = false;
 		switch_applet_to_end();
@@ -116,7 +108,7 @@ function start_app(command_) {
 					var xml = transport.responseXML;
 					buffer = xml.getElementsByTagName('access');
 					if (buffer.length != 1) {
-						push_log('[start_app] bad xml format', 'error');
+						push_log('[start_app] bad xml format 1', 'error');
 						return;
 					}
 
@@ -124,7 +116,7 @@ function start_app(command_) {
 
 					access_id = accessNode.getAttribute('id');
 				} catch(e) {
-					push_log('[start_app] bad xml format', 'error');
+					push_log('[start_app] bad xml format 2', 'error');
 					return;
 				}
 
@@ -254,9 +246,12 @@ function switch_splash_to_applet(access_id_) {
 				var appletNode = $('appletContainer').getElementsByTagName('applet');
 				if (appletNode.length > 0) {
 					appletNode = appletNode[0];
-					appletNode.width = parseInt(my_width);
-					appletNode.height = parseInt(my_height);
+// 					appletNode.width = parseInt(my_width);
+					appletNode.width = 1;
+// 					appletNode.height = parseInt(my_height);
+					appletNode.height = 1;
 				}
+				$('mainWrap').show();
 				$('appletContainer').show();
 			}
 		}
@@ -268,6 +263,7 @@ function switch_applet_to_end() {
 	if ($('menuContainer'))
 		$('menuContainer').hide();
 	$('appletContainer').hide();
+	$('mainWrap').hide();
 	$('endContainer').show();
 
 // 	if (text_ != false)
@@ -371,6 +367,24 @@ function onUpdateInfos(transport) {
     push_log('[session] Status: '+session_state, 'warning');
   else
     push_log('[session] Status: '+session_state, 'debug');
+
+  var buffer = xml.getElementsByTagName('applications');
+
+  if (buffer.length != 1) {
+    push_log('[applications] bad xml format', 'error');
+    return;
+  }
+
+  var applicationsNode = buffer[0];
+
+  var runningApplicationsNodes = applicationsNode.getElementsByTagName('running');
+  var app_ids;
+  for (var i = 0; i < runningApplicationsNodes.length; i++) {
+    var app_id = runningApplicationsNodes[i].getAttribute('app_id');
+
+	app_ids = app_ids+','+app_id;
+  }
+  list_running_apps(app_ids);
 
   var printNode = sessionNode.getElementsByTagName('print');
   if (printNode.length > 0) {
@@ -488,4 +502,52 @@ function do_invite() {
 
 	$('invite_email').value = '';
 	$('invite_mode').checked = false;
+}
+
+function list_apps() {
+	new Ajax.Updater(
+		$('appsContainer'),
+		'apps.php'
+	);
+}
+
+function list_running_apps(app_ids_) {
+	new Ajax.Updater(
+		$('runningAppsContainer'),
+		'running_apps.php',
+		{
+			method: 'get',
+			parameters: {
+				app_ids: app_ids_
+			}
+		}
+	);
+}
+
+function startExternalApp(app_id_, command_) {
+	var rand_ = Math.round(Math.random()*100);
+
+	window_ = popupOpen(rand_);
+
+	setTimeout(function() {
+		window_.location.href = 'external_app.php?app_id='+app_id_+'&command='+command_;
+	}, 1000);
+
+	return true;
+}
+
+function popupOpen(rand_) {
+	var my_width = screen.width;
+	var my_height = screen.height;
+	var new_width = 0;
+	var new_height = 0;
+	var pos_top = 0;
+	var pos_left = 0;
+
+	new_width = my_width;
+	new_height = my_height;
+
+	var w = window.open('about:blank', 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+new_width+',height='+new_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
+
+	return w;
 }
