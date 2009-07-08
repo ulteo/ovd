@@ -42,7 +42,7 @@ if (isset($_POST['join'])) {
 	Abstract_Invite::save($invite);
 
 	$token = new Token(gen_string(5));
-	$token->type = 'invite';
+	$token->type = 'invite_desktop';
 	$token->link_to = $invite->id;
 	$token->valid_until = (time()+(60*30));
 	Abstract_Token::save($token);

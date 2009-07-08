@@ -125,7 +125,7 @@ foreach ($application_nodes as $application_node) {
 
 $_SESSION['print_timestamp'] = time();
 
-if ($_SESSION['mode'] == 'invite') {
+if ($_SESSION['mode'] == 'invite_desktop') {
 	$session_dir = SESSION_PATH.'/'.$_SESSION['session'];
 
 	$buf = $session_dir.'/infos/share/'.$token;
