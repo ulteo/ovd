@@ -71,7 +71,6 @@ session_check_status() {
     SESSID_DIR=$SPOOL/sessions/$SESSID
     i=`cat $SESSID_DIR/private/id`
 
-    RFB_PORT=`cat $SESSID_DIR/private/rfbport`
     VNC_USER="VNC$i"
     SSH_USER="SSH$i"
 
@@ -108,16 +107,8 @@ session_check_status() {
     NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
     USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
 
-    # check if a KDE desktop connexion is alive for this session
-    DESKTOP_SESSION=`cache_ps_display | grep VNC$i | grep "Xtightvnc" | wc -l`
-    log_DEBUG "Desktop session for VNC$i: $DESKTOP_SESSION"
-
-    SSH_SESSION=`cache_net_display | grep "127.0.0.1\:$RFB_PORT" | grep "ESTABLISHED" | wc -l`
+    SSH_SESSION=`cache_ps_display | grep "sshd:" | grep "^$SSH_USER" | wc -l`
     log_DEBUG "Alive SSH tunelling connexion for $RFB_PORT: $SSH_SESSION"
-
-    if [ $DESKTOP_SESSION -gt 0 ] || [ $SSH_SESSION -gt 0 ]; then
-	log_DEBUG "Session $i  DS: $DESKTOP_SESSION SSHS: $SSH_SESSION"
-    fi
 
     # If sesion need to be restore ...
     if [ $RUNASAP -eq 11 ]; then 
@@ -203,24 +194,20 @@ session_check_status() {
 	session_switch_status $SESSID 22
 	RUNASAP=22
 
-	export i SESSID SESSID_DIR RFB_PORT
-	export VNC_USER
- 	export NICK
-	export USER_LOGIN USER_HOME
-	prestart.sh &
-	unset SESSID SESSID_DIR RFB_PORT
-	unset VNC_USER
- 	unset NICK
-	unset USER_LOGIN USER_HOME
-	return
+        set_user_env.sh $SESSID
+        if [  $? -ne 0 ]; then
+            session_switch_status $SESSID 3
+            session_check_status $SESSID 3
+            return 1
+        fi
+        session_switch_status $SESSID 2
+
+	return 0
 
     elif [ $RUNASAP -eq 2 ]; then
-        local continue=1
-
         # if the owner_exit file exist, kill the session
         if [ -f ${SESSID_DIR}/infos/owner_exit ]; then
             log_INFO "Owner exit"
-            local continue=0
             # Suspend the session if the sesion was running and it's setup to suspend
             if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
         	session_suspend $SESSID
@@ -238,7 +225,7 @@ session_check_status() {
 
         # if session without alive ssh connection 
         # and no luck, kill the whole session
-        if [ $continue -eq 1 ] && [ $SSH_SESSION -eq 0 ] ;then
+        if [ $SSH_SESSION -eq 0 ] ;then
             if [ -f ${SESSID_DIR}/private/ssh_connected ]; then
                 rm ${SESSID_DIR}/private/ssh_connected
                 local timeout=1
@@ -261,6 +248,17 @@ session_check_status() {
                 touch ${SESSID_DIR}/private/running
             fi
 	fi
+
+        local sessions=$(find $SESSID_DIR/sessions/ -maxdepth 1 -mindepth 1 -type f -name "*.txt")
+        local job=""
+        for s in $sessions; do
+	    [ -d ${s%.txt} ] && continue
+            
+            local job=$(basename $s .txt)
+            application.sh $SESSID $job &
+            sleep 0.5
+            return 0
+        done
     fi
 }
 

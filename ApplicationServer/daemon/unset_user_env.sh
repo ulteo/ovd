@@ -22,15 +22,29 @@
 . functions.sh
 . log.sh
 
-log_INFO "UUMOUNT"
-#NICK=$1
+log_INFO "UNSET_ENV"
+
+if [ -z "$1" ]; then
+    log_ERROR "$0 missing argument"
+    exit 1
+fi
+
+SESSID=$1
+session_load $SESSID
+if [ $? -ne 0 ]; then
+    log_ERROR "$0: unable to load session $SESSID"
+    exit 1
+fi
+
 USER_HOME=/home/$NICK
 
-log_DEBUG "Uumount nick:"$NICK
 
 . modules_fs.sh || exit 1
 
 set_fs
+if [  $? -ne 0 ]; then
+    log_WARN "$0: set_fs FAILED, continue anyway"
+fi
 
 if ! get_status; then
     log_INFO "UUMOUNT:Info: $USER_HOME is not mounted"    
@@ -41,12 +55,10 @@ else
     fi
 fi
 
-
-userdel $USER_LOGIN
-groupdel $USER_LOGIN
-
 # Clean the menu
 menu_clean $SPOOL_USERS/$SESSID'/xdg'
 
 # HERE remove CUPS stuff
 rm -rf /var/spool/cups2all/$USER_LOGIN
+
+user_delete

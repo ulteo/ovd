@@ -67,31 +67,6 @@ is_mount_point() {
     mount | grep -q " $1 "
 }
 
-#
-# Exec a command for a specific user
-#
-# $1 : login
-# $2 : command
-# $3 : directory OPTIONAL
-#
-user_exec() {
-    local login=$1
-    local cmd=$2
-    local directory=$3
-
-    local chpwd=""
-    if [ -d $directory ]; then
-	local chpwd="cd ${directory} &&"
-    fi
-
-    local out=/dev/null
-    if [ $LOG_LEVEL -gt 8 ]; then
-	local out=$LOG_FILE
-    fi
-
-    su -s "/bin/bash" $login -c "${chpwd} ${cmd}" >>$out 2>&1
-}
-
 kill_processus() {
     pid_file=$1
     [ -e $pid_file ] || return 0    

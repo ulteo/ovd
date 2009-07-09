@@ -113,6 +113,7 @@ session_init() {
     install -d -g www-data -m 770 $SESSID_DIR/infos
     install -d             -m 700 $SESSID_DIR/private
     install -d -g www-data -m 750 $SESSID_DIR/clients
+    install -d -g www-data -m 770 $SESSID_DIR/sessions
 
     install -d -m 700 $SPOOL_USERS/$SESSID
 
@@ -134,6 +135,7 @@ session_init() {
     # for realvncpasswd
     echo $VNC_PASS | $TIGHTVNCPASSWD -f > $SESSID_DIR/private/encvncpasswd
     HEXA_VNC_PASS=`cat $SESSID_DIR/private/encvncpasswd | str2hex`
+    install -o $VNC_USER -m 700 $SESSID_DIR/private/encvncpasswd /tmp/.tmp${UUID}encvncpasswd
 
     ## SSH password
     #
@@ -152,7 +154,6 @@ session_init() {
     echo $i > $SESSID_DIR/private/id
     echo $HEXA_VNC_PASS > $SESSID_DIR/private/hexavncpasswd
     echo $HEXA_SSH_PASS > $SESSID_DIR/private/hexasshpasswd
-    echo $RFB_PORT > $SESSID_DIR/private/rfbport
     echo $SSH_USER > $SESSID_DIR/private/ssh_user
     echo $VNC_USER > $SESSID_DIR/private/vnc_user
 
@@ -174,7 +175,6 @@ session_remove() {
 
     #session_switch_status $SESSID 3
 
-    local rfb_port=`cat $SESSID_DIR/private/rfbport`
     local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
     local VNC_USER=`cat $SESSID_DIR/private/vnc_user`
     
@@ -206,7 +206,6 @@ session_remove() {
     rm -rf $SPOOL_USERS/$SESSID
     rm -rf $SESSID_DIR
     spool_free_id $i
-    spool_free_rfbport $rfb_port
 
     webservices_session_request $SESSID 4
 }
@@ -280,7 +279,6 @@ session_install_client() {
     install -o www-data $SESSID_DIR/private/hexavncpasswd $SESSID_DIR/clients/
     install -o www-data $SESSID_DIR/private/hexasshpasswd $SESSID_DIR/clients/
     install -o www-data $SESSID_DIR/private/ssh_user      $SESSID_DIR/clients/
-    install -o www-data $SESSID_DIR/private/rfbport       $SESSID_DIR/clients/
 }
 
 session_load() {
@@ -291,7 +289,6 @@ session_load() {
 
     # Private informations
     i=`cat $SESSID_DIR/private/id` || return 1
-    RFB_PORT=`cat $SESSID_DIR/private/rfbport` || return 1
     SSH_USER=`cat $SESSID_DIR/private/ssh_user` || return 1
     VNC_USER=`cat $SESSID_DIR/private/vnc_user` || return 1
 
@@ -317,7 +314,6 @@ session_unload() {
 
     # Private informations
     unset i
-    unset RFB_PORT
     unset SSH_USER
     unset VNC_USER
 

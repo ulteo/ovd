@@ -4,12 +4,15 @@ SUBDIRS = \
 	log.d \
 	modules_fs.d
 
-daemon_SCRIPTS = cpu_load.py \
+daemon_SCRIPTS = application.sh \
+                 cpu_load.py \
                  prestart.sh \
+                 set_user_env.sh \
                  startsession.sh \
 				 timeout.sh \
 				 uumount.sh \
 				 ulteo-ovdd \
+				 unset_user_env.sh \
 				 xml2desktopfile
 daemondir = $(datadir)/ulteo-ovd
 

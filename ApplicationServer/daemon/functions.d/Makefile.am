@@ -1,9 +1,11 @@
 scripts_DATA = apt.sh \
            cache.sh \
+		   display.sh \
 		   menu.sh \
 		   sessions.sh \
 		   spool.sh \
 		   tmp.sh \
+		   user.sh \
 		   utils.sh \
 		   webservices.sh \
 		   windows.sh \
