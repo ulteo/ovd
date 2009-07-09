@@ -45,10 +45,8 @@ chown ${USER_LOGIN}      $SPOOL_USERS/$SESSID/.Xauthority
 cp ${SESSID_DIR}/private/encvncpasswd ${VNC_TMP}encvncpasswd
 chown $VNC_USER:$VNC_USER ${VNC_TMP}encvncpasswd
 
-out=/dev/null
-
 # Start the VNC server
-/bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/Xtightvnc $VNCCACHINGOPTS :$i -desktop X$i -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry $GEOMETRY -depth 24 -rfbwait 240000 -rfbauth ${VNC_TMP}encvncpasswd -rfbport $RFB_PORT -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${VNC_TMP}.Xauthority" &> $out &
+/bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${VNC_TMP}.Xauthority /usr/bin/Xtightvnc $VNCCACHINGOPTS :$i -desktop X$i -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry $GEOMETRY -depth 24 -rfbwait 240000 -rfbauth ${VNC_TMP}encvncpasswd -rfbport $RFB_PORT -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${VNC_TMP}.Xauthority" &> /dev/null &
 
 session_install_client $SESSID
 
@@ -98,10 +96,10 @@ menu_spool $XDG_DATA_DIRS ${SESSID_DIR}
 windows_init_connection ${SESSID_DIR}
 
 # Start autocutsel
-su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; /usr/bin/autocutsel" &> $out &
+su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; /usr/bin/autocutsel" &> /dev/null &
 
 # Start the desktop session
-su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; cd ~; startovd" &> $out
+su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; cd ~; startovd" &> /dev/null
 
 # force session to end
 session_switch_status $SESSID 3
