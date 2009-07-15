@@ -1,0 +1,13 @@
+Source: ovd-applets
+Section: utils
+Priority: optional
+Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Build-Depends: debhelper (>= 5), cdbs, sun-java6-jdk, ant, ulteo-ovd-cert
+Standards-Version: 3.8.2
+
+Package: ulteo-ovd-applets
+Architecture: all
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ulteo Open Virtual Desktop applet
+ This applet is used in the Open Virtual Desktop to display the user session in
+ a browser.

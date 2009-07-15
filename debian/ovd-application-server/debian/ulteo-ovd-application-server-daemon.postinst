@@ -22,7 +22,7 @@ EOF
     fi
 
     # first run of desktop-files2xml
-    /usr/bin/desktop-files2xml >/var/lib/ulteo/available-apps.xml 2>/dev/null || true
+    desktop-files2xml >/var/lib/ulteo/available-apps.xml 2>/dev/null || true
 
     # update the configuration if needed
     if [ -n "$2" ] && grep -q "^MINLUCK=" $CONFIGFILE; then
