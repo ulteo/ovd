@@ -56,7 +56,7 @@ function application_init(app_id_, command_, applet_version_, applet_main_class_
 		my_height = parseInt(my_height)-149;
 
 	Event.observe(window, 'unload', function() {
-// 		client_exit();
+		client_exit();
 	});
 
 	application_loop();
@@ -256,9 +256,12 @@ function switch_applet_to_end() {
 
 function client_exit() {
 	new Ajax.Request(
-		'../exit.php',
+		'application_exit.php',
 		{
-			method: 'get'
+			method: 'get',
+			parameters: {
+				access_id: access_id
+			}
 		}
 	);
 }
