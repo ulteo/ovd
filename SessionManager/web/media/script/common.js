@@ -23,7 +23,6 @@ function popupOpen(rand_) {
 	}
 
 	var w = window.open('about:blank', 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+new_width+',height='+new_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-// 	$('startsession').target = 'Ulteo'+rand_;
 
 	if ($('session_debug_false').checked)
 		sessionStart();
