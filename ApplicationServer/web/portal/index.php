@@ -74,14 +74,14 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			<div class="spacer"></div>
 
 			<div id="pageWrap">
-				<table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
+				<table id="portalContainer" style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 					<tr>
 						<td style="width: 20%; text-align: left; vertical-align: top;">
 							<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 							<div>
 								<h2>My applications</h2>
 
-								<div id="appsContainer">
+								<div id="appsContainer" style="overflow: auto;">
 								</div>
 							</div>
 							</div>
@@ -93,7 +93,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 							<div>
 								<h2>Running applications</h2>
 
-								<div id="runningAppsContainer">
+								<div id="runningAppsContainer" style="overflow: auto;">
 								</div>
 							</div>
 							</div>
@@ -105,7 +105,9 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 							<div>
 								<h2>My files</h2>
 
-								TODO
+								<div id="fileManagerContainer" style="overflow: auto;">
+									TODO
+								</div>
 							</div>
 							</div>
 						</td>
@@ -143,10 +145,6 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 					</tr>
 				</table>
 			</div>
-
-			<div class="spacer"></div>
-
-			<div id="footerWrap">powered by <a href="http://www.ulteo.com"><img src="media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;</div>
 		</div>
 
 		<div id="splashContainer">

@@ -54,6 +54,11 @@ function daemon_init(applet_version_, applet_main_class_, printing_applet_versio
 	if (debug)
 		my_height = parseInt(my_height)-149;
 
+	$('portalContainer').style.height = parseInt(my_height)-154+'px';
+	$('appsContainer').style.height = parseInt(my_height)-154+'px';
+	$('runningAppsContainer').style.height = parseInt(my_height)-154+'px';
+	$('fileManagerContainer').style.height = parseInt(my_height)-154+'px';
+
 	Event.observe(window, 'unload', function() {
 		client_exit();
 	});
