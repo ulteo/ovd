@@ -4,6 +4,7 @@ var app_id;
 var command;
 var access_id;
 var applet_version;
+var applet_main_class;
 var protocol;
 var server;
 var port;
@@ -23,10 +24,11 @@ var nb_share = 0;
 var application_started = false;
 var window_alive = true;
 
-function application_init(app_id_, command_, applet_version_, debug_) {
+function application_init(app_id_, command_, applet_version_, applet_main_class_, debug_) {
 	app_id = app_id_;
 	command = command_;
 	applet_version = applet_version_;
+	applet_main_class = applet_main_class_;
 	protocol = window.location.protocol;
 	server = window.location.host;
 	port = window.location.port;
@@ -188,9 +190,9 @@ function switch_splash_to_applet() {
 					return;
 				}
 
-				$('appletContainer').innerHTML = '<applet code="org.vnc.VncViewer" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+				$('appletContainer').innerHTML = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
 					<param name="name" value="ulteoapplet" /> \
-					<param name="code" value="org.vnc.VncViewer" /> \
+					<param name="code" value="'+applet_main_class+'" /> \
 					<param name="codebase" value="/applet/" /> \
 					<param name="archive" value="'+applet_version+'" /> \
 					<param name="cache_archive" value="'+applet_version+'" /> \

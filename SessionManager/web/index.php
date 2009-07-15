@@ -581,14 +581,16 @@ require_once('header.php');
 </div>
 <?php
 if ($testapplet) {
+	$applet_version = 'ulteo-applet-0.2.4.jar';
+	$applet_main_class = 'org.vnc.VncViewer';
 ?>
-	<applet code="org.vnc.VncViewer" codebase="applet/" archive="ulteo-applet-0.2.4.jar" mayscript="true" width="1" height="1">
+	<applet code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
 		<param name="name" value="ulteoapplet" />
-		<param name="code" value="org.vnc.VncViewer" />
+		<param name="code" value="<?php echo $applet_main_class; ?>" />
 		<param name="codebase" value="applet/" />
-		<param name="archive" value="ulteo-applet-0.2.4.jar" />
-		<param name="cache_archive" value="ulteo-applet-0.2.4.jar" />
-		<param name="cache_archive_ex" value="ulteo-applet-0.2.4.jar;preload" />
+		<param name="archive" value="<?php echo $applet_version; ?>" />
+		<param name="cache_archive" value="<?php echo $applet_version; ?>" />
+		<param name="cache_archive_ex" value="<?php echo $applet_version; ?>;preload" />
 		<param name="mayscript" value="true" />
 
 		<param name="HOST" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
