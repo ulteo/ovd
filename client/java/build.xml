@@ -36,16 +36,17 @@
 			basedir="classes/">
 			<include name="org/vnc/**"/>
 			<manifest>
-				<attribute name="Main-Class" value="org.vnc.VncViewer"/>
+				<attribute name="Main-Class" value="org.vnc.SimpleClient.Viewer"/>
 			</manifest>
 		</jar>
 
 		<jar destfile="libs/sshvnc.jar"
 			basedir="classes/">
-			<include name="org/vnc/**"/>
 			<include name="com/sshtools/**"/>
 			<exclude name="com/sshtools/j2ssh/sftp" />
-			<include name="org/sshvnc/**"/>
+			<include name="org/vnc/*"/>
+			<include name="org/vnc/rfbcaching/*"/>
+			<include name="org/sshvnc/*"/>
 			
 			<manifest>
 				<attribute name="Main-Class" value="org.sshvnc.Viewer"/>
@@ -54,7 +55,12 @@
 
 		<jar destfile="libs/UlteoOVD.jar"
 			basedir="classes/">
-			<include name="**/*.*"/>
+			<include name="com/sshtools/**"/>
+			<exclude name="com/sshtools/j2ssh/sftp" />
+			<include name="org/vnc/*"/>
+			<include name="org/vnc/rfbcaching/*"/>
+			<include name="org/sshvnc/*"/>
+			<include name="org/ulteo/**"/>
 			<manifest>
 				<attribute name="Main-Class" value="org.ulteo.OvdClient"/>
 			</manifest>
@@ -70,13 +76,6 @@
 				 storepass="${keystore.password}"
 				 keystore="${build.cert}/.keystore"
 			signedjar="libs/ulteo-applet-${compile.release}.jar"/>
-
-		<signjar jar="libs/sshvnc.jar"
-				 alias="sshvnc"
-				 storepass="${keystore.password}"
-				 keystore="${build.cert}/.keystore"
-			signedjar="libs/sshvnc-signed.jar"/>
-		
 	</target>
 	
      <target name="clean" description="clean files">
