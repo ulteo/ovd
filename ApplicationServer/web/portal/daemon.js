@@ -190,13 +190,15 @@ function switch_splash_to_applet(access_id_) {
 					applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
 
 					buffer = sessionNode.getElementsByTagName('proxy');
-					var proxyNode = buffer[0];
+					if (buffer.length == 1) {
+						var proxyNode = buffer[0];
 
-					applet_proxy_type = proxyNode.getAttribute('type');
-					applet_proxy_host = proxyNode.getAttribute('host');
-					applet_proxy_port = proxyNode.getAttribute('port');
-					applet_proxy_username = proxyNode.getAttribute('username');
-					applet_proxy_password = proxyNode.getAttribute('password');
+						applet_proxy_type = proxyNode.getAttribute('type');
+						applet_proxy_host = proxyNode.getAttribute('host');
+						applet_proxy_port = proxyNode.getAttribute('port');
+						applet_proxy_username = proxyNode.getAttribute('username');
+						applet_proxy_password = proxyNode.getAttribute('password');
+					}
 				} catch(e) {
 					push_log('[applet] bad xml format', 'error');
 					return;
