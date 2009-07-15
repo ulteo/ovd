@@ -109,6 +109,45 @@ if test x"$with_scriptaculousdir" != xno; then
 fi
 AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
 
+AC_ARG_WITH([ulteo-applet],
+    [AC_HELP_STRING([--with-ulteo-applet],
+        [where is installed the ulteo OVD applet])],
+    ,
+    [with_ulteo_applet=])
+if test x"$with_ulteo_applet" = x""; then
+    for p in /usr /usr/local /opt; do
+        if test -e $p/share/ulteo/applets/ulteo-applet.jar; then
+            with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
+        fi
+    done
+fi
+if test x"$with_ulteo_applet" = x""; then
+    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
+else
+    ULTEOAPPLET="$with_ulteo_applet"
+fi
+AC_SUBST(ULTEOAPPLET)
+
+AC_ARG_WITH([printing-applet],
+    [AC_HELP_STRING([--with-printing-applet],
+        [where is installed the ulteo OVD applet])],
+    ,
+    [with_printing_applet=])
+if test x"$with_printing_applet" = x""; then
+    for p in /usr /usr/local /opt; do
+        if test -e $p/share/ulteo/applets/ulteo-printing.jar; then
+            with_printing_applet=$p/share/ulteo/applets/ulteo-printing.jar
+        fi
+    done
+fi
+if test x"$with_printing_applet" = x""; then
+    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
+else
+    PRINTINGAPPLET="$with_printing_applet"
+fi
+AC_SUBST(PRINTINGAPPLET)
+
+
 
 AC_CONFIG_FILES([
 Makefile

@@ -43,7 +43,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				daemon_init('ulteo-applet-0.2.4.jar', 'org.vnc.VncViewer', 'ulteo-printing-0.5.1.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon_init('ulteo-applet.jar', 'org.vnc.VncViewer', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>

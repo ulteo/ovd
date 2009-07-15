@@ -1,6 +1,10 @@
-scripts_DATA = ulteo-printing-0.5.1.jar \
-               ulteo-applet-0.2.4.jar
+install-exec-hook:
+	mkdir -p $(DESTDIR)$(datadir)/ulteo/applicationserver/applet
+	ln -s $(ULTEOAPPLET) \
+		$(DESTDIR)$(datadir)/ulteo/applicationserver/applet/ulteo-applet.jar
+	ln -s $(PRINTINGAPPLET) \
+		$(DESTDIR)$(datadir)/ulteo/applicationserver/applet/ulteo-printing.jar
 
-scriptsdir = $(datadir)/ulteo/applicationserver/applet
+uninstall-hook:
+	rm -rf $(DESTDIR)$(datadir)/ulteo/applicationserver/applet
 
-EXTRA_DIST = $(scripts_DATA)

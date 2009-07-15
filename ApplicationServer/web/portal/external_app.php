@@ -64,7 +64,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				application_init(<?php echo $_GET['app_id']; ?>, '<?php echo $_GET['command']; ?>', 'ulteo-applet-0.2.4.jar', 'org.vnc.VncViewer', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				application_init(<?php echo $_GET['app_id']; ?>, '<?php echo $_GET['command']; ?>', 'ulteo-applet.jar', 'org.vnc.VncViewer', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>

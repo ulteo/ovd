@@ -1,5 +1,8 @@
-scripts_DATA = ulteo-applet-0.2.4.jar
+install-exec-hook:
+	mkdir -p $(DESTDIR)$(datadir)/ulteo/sessionmanager/applet
+	ln -s $(ULTEOAPPLET) \
+		$(DESTDIR)$(datadir)/ulteo/sessionmanager/applet/ulteo-applet.jar
 
-scriptsdir = $(datadir)/ulteo/sessionmanager/applet
+uninstall-hook:
+	rm -rf $(DESTDIR)$(datadir)/ulteo/sessionmanager/applet
 
-EXTRA_DIST = $(scripts_DATA)

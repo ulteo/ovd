@@ -106,6 +106,25 @@ if test x"$with_libchartdir" != xno; then
 fi
 AM_CONDITIONAL(LIBCHART, [test -n "$LIBCHARTDIR"])
 
+AC_ARG_WITH([ulteo-applet],
+    [AC_HELP_STRING([--with-ulteo-applet],
+        [where is installed the ulteo OVD applet])],
+    ,
+    [with_ulteo_applet=])
+if test x"$with_ulteo_applet" = x""; then
+    for p in /usr /usr/local /opt; do
+        if test -e $p/share/ulteo/applets/ulteo-applet.jar; then
+            with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
+        fi
+    done
+fi
+if test x"$with_ulteo_applet" = x""; then
+    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
+else
+    ULTEOAPPLET="$with_ulteo_applet"
+fi
+AC_SUBST(ULTEOAPPLET)
+
 
 AC_CONFIG_FILES([
 Makefile

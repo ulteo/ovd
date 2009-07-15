@@ -2,7 +2,7 @@ Source: ovd-application-server
 Section: net
 Priority: extra
 Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 5)
+Build-Depends: cdbs, debhelper (>= 5), ulteo-ovd-applets
 Standards-Version: 3.7.3
 
 Package: ulteo-ovd-application-server-daemon
@@ -21,7 +21,7 @@ Description: Ulteo Open Virtual Desktop - daemon (Transitional package)
 
 Package: ulteo-ovd-application-server
 Architecture: all
-Depends: debconf (>= 0.2.26), po-debconf, libapache2-mod-php5, php5-curl, php5-imagick
+Depends: debconf (>= 0.2.26), po-debconf, libapache2-mod-php5, php5-curl, php5-imagick, ulteo-ovd-applets
 Conflicts: ulteo-ovd (<= 1.0.1+svn1187)
 Description: Ulteo Open Virtual Desktop - application server
  This package provides the application server web services for the Ulteo Online
