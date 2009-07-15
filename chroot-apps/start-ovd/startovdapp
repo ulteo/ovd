@@ -38,6 +38,15 @@ def del_from_file(pid):
     # windows pids will be strings (0x...)
     os.system('sed -i "/^%s /d" %s/apps'%(str(pid), D))
 
+
+#
+# the subprocess.list2cmdline function doesn't
+# take care about the "(" or ")" characters ...
+#
+def list2cmdline(args):
+    return " ".join('"'+arg+'"' for arg in args)
+
+
 # stop if we don't have the needed env vars
 if not os.environ.has_key('OVD_SESSID_DIR'):
     sys.exit(1)
@@ -63,7 +72,7 @@ MYPID = os.getpid()
 append_to_file(MYPID, sys.argv[1])
 
 # run the appli
-cmd_line = subprocess.list2cmdline(sys.argv[2:])
+cmd_line = list2cmdline(sys.argv[2:])
 os.system(cmd_line)
 
 # notify end
