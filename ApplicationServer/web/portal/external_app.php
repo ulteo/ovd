@@ -21,11 +21,32 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+	$window_title = 'Ulteo Open Virtual Desktop';
+
+	try {
+		$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$_GET['app_id'].'&fqdn='.SERVERNAME);
+
+		$dom = new DomDocument();
+		@$dom->loadXML($application);
+
+		if (! $dom->hasChildNodes())
+			throw new Exception('No Child Nodes');
+
+		$application_node = $dom->getElementsByTagname('application')->item(0);
+		if (is_null($application_node))
+			throw new Exception('Null Application Node');
+
+		if ($application_node->hasAttribute('name'))
+			$name = $application_node->getAttribute('name');
+
+		$window_title = $name;
+	} catch (Exception $e) {
+	}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Ulteo Open Virtual Desktop</title>
+		<title><?php echo $window_title; ?></title>
 
 		<?php //<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" /> ?>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
