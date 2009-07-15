@@ -35,8 +35,8 @@ file=$SESSID_DIR/sessions/$job.txt
 dir=$SESSID_DIR/sessions/$job
 log_INFO "Session $SESSID detect job $job"
 
-mkdir -p $dir
-echo 1 > $dir/status
+install -d -g www-data -m 770 $dir
+application_switch_status $SESSID $job 1
 
 app_id=$(head -n 1 $file)
 geometry=$(head -n 2 $file |tail -n 1)
@@ -68,17 +68,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Todo: DOC, desktop
-echo 2 > $dir/status
+application_switch_status $SESSID $job 2
 user_exec $app_id "$app" $rfb_port 1
-echo 3 > $dir/status
+application_switch_status $SESSID $job 3
 
-display_stop $rfb_port
-
-spool_get_rfbport $rfb_port
-
-echo 3 > $dir/status
-rm -rf $dir
-
-if [ "$app_id" == "desktop" ]; then
-    session_switch_status $SESSID 3
-fi

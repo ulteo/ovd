@@ -1,4 +1,5 @@
 scripts_DATA = apt.sh \
+		   application.sh \
            cache.sh \
 		   display.sh \
 		   menu.sh \

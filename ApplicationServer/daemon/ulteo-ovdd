@@ -249,16 +249,7 @@ session_check_status() {
             fi
 	fi
 
-        local sessions=$(find $SESSID_DIR/sessions/ -maxdepth 1 -mindepth 1 -type f -name "*.txt")
-        local job=""
-        for s in $sessions; do
-	    [ -d ${s%.txt} ] && continue
-            
-            local job=$(basename $s .txt)
-            application.sh $SESSID $job &
-            sleep 0.5
-            return 0
-        done
+        application_loop $SESSID
     fi
 }
 
