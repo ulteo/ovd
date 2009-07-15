@@ -20,13 +20,13 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-Logger::debug('main', 'Starting webservices/client_exit.php');
+Logger::debug('main', 'Starting exit.php');
 
 if (! isset($_SESSION['session']))
   die2(400, 'ERROR - No $session');
 
 if (! isset($_SESSION['current_token']))
-      die2(400, 'ERROR - no current token');
+  die2(400, 'ERROR - no current token');
 
 
 $session = $_SESSION['session'];
@@ -49,4 +49,4 @@ else {
 
 unset($_SESSION);
 
-die('bye');
+die();
