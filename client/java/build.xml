@@ -14,15 +14,6 @@
     <property name="datadir"     location="${prefix}/share" />
     <property name="destdir"     location="" />
 
-<!-- FIXME: useful?
-	<path id="compile.classpath">
-		<pathelement location="./classes"/>
-		<fileset dir="./required_libraries">
-			<include name="*.jar"/>
-		</fileset>	
-	</path>
--->
-	
 	<target name="compile"
 		description="compile the Java source code to class files">
 		<mkdir dir="classes"/>
@@ -88,16 +79,22 @@
             description="install applets"
             depends="sign">
         <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
+
         <copy todir="${destdir}${datadir}/ulteo/applets">
             <fileset dir="./libs">
                 <include name="ulteo-applet-${compile.release}.jar" />
             </fileset>
         </copy>
+        <symlink link="${destdir}${datadir}/ulteo/applets/ulteo-applet.jar"
+                 resource="ulteo-applet-${compile.release}.jar"/>
+
         <copy todir="${destdir}${datadir}/ulteo/applets">
             <fileset dir="./">
                 <include name="ulteo-printing-0.5.1.jar" />
             </fileset>
         </copy>
+        <symlink link="${destdir}${datadir}/ulteo/applets/ulteo-printing.jar"
+                 resource="ulteo-printing-0.5.1.jar"/>
     </target>
 
      <target name="clean" description="clean files">
