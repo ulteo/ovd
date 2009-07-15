@@ -207,10 +207,14 @@ if ($status == 2) {
   $session_dir = SESSION_PATH.'/'.$session;
 
   // KMA
-  if ($session_owner)
-    if (file_exists($session_dir.'/infos/keepmealive'))
+  if ($session_owner) {
+    if (file_exists($session_dir.'/infos/keepmealive')) {
       @touch($session_dir.'/infos/keepmealive');
 
+      if (isset($_GET['application_id']) && $_GET['application_id'] != '')
+        @touch($session_dir.'/sessions/'.$_GET['application_id'].'/keepmealive');
+    }
+  }
 
   // Check print file
   $r = getNextPrintFile($session, $_SESSION['print_timestamp']);
