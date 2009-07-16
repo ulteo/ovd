@@ -582,7 +582,7 @@ require_once('header.php');
 <?php
 if ($testapplet) {
 	$applet_version = 'ulteo-applet.jar';
-	$applet_main_class = 'org.vnc.VncViewer';
+	$applet_main_class = 'org.ulteo.OvdTester';
 ?>
 	<applet code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
 		<param name="name" value="ulteoapplet" />
