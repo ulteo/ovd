@@ -347,7 +347,7 @@ session_suspend() {
     sleep 0.5
     killall -9 -u $SSH_USER
 
-    userdel $SSH_USER
+    passwd -d $SSH_USER
     rm $SESSID_DIR/clients/*
     rm ${SESSID_DIR}/infos/keepmealive
 
@@ -362,18 +362,6 @@ session_restore() {
 
     local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
     session_switch_status $SESSID 11
-
-    log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
-    if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
-	log_ERROR "session_restore: user '$SSH_USER' already in /etc/passwd"
-	return 1
-    fi
-
-    useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
-    if [ $? -ne 0 ]; then
-	log_ERROR "session_restore: unable to useradd ssh user"
-	return 1
-    fi
 
     ## SSH password
     #
