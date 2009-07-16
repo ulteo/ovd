@@ -32,14 +32,18 @@ if (!isset($session) || $session == '') {
 	die('CRITICAL ERROR'); // That's odd !
 }
 
-$ids = explode(',', $_GET['app_ids']);
-foreach ($ids as $k => $id) {
+$apps = explode(',', $_GET['apps']);
+foreach ($apps as $k => $app) {
+	list($id, $access_id, $status) = explode('-', $app);
+
 	if ($id === '' || $id == 'undefined')
-		unset($ids[$k]);
+		unset($apps[$k]);
 }
 
 echo '<table border="0" cellspacing="1" cellpadding="3">';
-foreach ($ids as $id) {
+foreach ($apps as $k => $app) {
+	list($id, $access_id, $status) = explode('-', $app);
+
 	$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$id.'&fqdn='.SERVERNAME);
 
 	$dom = new DomDocument();
@@ -64,7 +68,15 @@ foreach ($ids as $id) {
 
 	echo '<tr>';
 	echo '<td><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></td>';
-	echo '<td><strong>'.$name.'</strong></td>';
+	echo '<td><strong>'.$name.'</strong>';
+	if (isset($_SESSION['parameters']['persistent'])) {
+		echo ' ';
+		if ($status == 2)
+			echo '<a href="javascript:;" onclick="return suspendApplication(\''.$access_id.'\');">'._('suspend').'</a>';
+		elseif ($status == 10)
+			echo '<a href="javascript:;" onclick="return resumeApplication(\''.$access_id.'\');">'._('resume').'</a>';
+	}
+	echo '</td>';
 	echo '</tr>';
 }
 echo '</table>';

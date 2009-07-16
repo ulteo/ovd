@@ -58,10 +58,11 @@ function getRunningApplications($session) {
   foreach ($buf as $app) {
     $job_id = basename($app);
     $app_id = get_from_file($app.'/app_id');
+    $status = get_from_file($app.'/status');
 	if ($app_id === false || $app_id == 'desktop')
 	  continue;
 
-	$apps[$job_id] = $app_id;
+	$apps[$job_id] = array($app_id, $status);
   }
 
   return $apps;
@@ -197,7 +198,8 @@ if (isset($_GET['application_id'])) {
   foreach ($apps as $k => $v) {
      $running_node = $dom->createElement('running');
 	 $running_node->setAttribute('job', $k);
-	 $running_node->setAttribute('app_id', $v);
+	 $running_node->setAttribute('app_id', $v[0]);
+	 $running_node->setAttribute('status', $v[1]);
 	 $applications_node->appendChild($running_node);
   }
 }

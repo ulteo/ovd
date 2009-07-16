@@ -62,6 +62,43 @@ function application_init(app_id_, command_, applet_version_, applet_main_class_
 	application_loop();
 }
 
+function application_init_resume(applet_version_, applet_main_class_, access_id_, debug_) {
+	applet_version = applet_version_;
+	applet_main_class = applet_main_class_;
+	access_id = access_id_;
+	protocol = window.location.protocol;
+	server = window.location.host;
+	port = window.location.port;
+	debug = debug_;
+
+	push_log('[application] init_resume()', 'info');
+
+	if (debug) {
+		$('debugContainer').style.display = 'inline';
+		$('debugLevels').style.display = 'inline';
+	}
+
+	if (typeof(window.innerWidth) == 'number' || typeof(window.innerHeight) == 'number') {
+		my_width  = window.innerWidth;
+		my_height = window.innerHeight;
+	} else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+		my_width  = document.documentElement.clientWidth;
+		my_height = document.documentElement.clientHeight;
+	} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+		my_width  = document.body.clientWidth;
+		my_height = document.body.clientHeight;
+	}
+
+	if (debug)
+		my_height = parseInt(my_height)-149;
+
+	Event.observe(window, 'unload', function() {
+		client_exit();
+	});
+
+	application_loop_resume();
+}
+
 function application_loop() {
 	push_log('[application] loop()', 'debug');
 
@@ -70,6 +107,27 @@ function application_loop() {
 	if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
 		if (! application_started)
 			start_app();
+
+		application_started = true;
+	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4 || (old_application_state == 2 && application_state != 2) || application_state == 3 || application_state == 4) {
+		window_alive = false;
+		switch_applet_to_end();
+		return;
+	}
+
+	setTimeout(function() {
+		application_loop();
+	}, refresh);
+}
+
+function application_loop_resume() {
+	push_log('[application] loop()', 'debug');
+
+	application_check();
+
+	if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
+		if (! application_started)
+			resume_app();
 
 		application_started = true;
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4 || (old_application_state == 2 && application_state != 2) || application_state == 3 || application_state == 4) {
@@ -110,6 +168,21 @@ function start_app() {
 					return;
 				}
 
+				switch_splash_to_applet();
+			}
+		}
+	);
+}
+
+function resume_app() {
+	new Ajax.Request(
+		'resume_app.php',
+		{
+			method: 'get',
+			parameters: {
+				access_id: access_id,
+			},
+			onSuccess: function(transport) {
 				switch_splash_to_applet();
 			}
 		}
