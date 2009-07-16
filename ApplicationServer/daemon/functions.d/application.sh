@@ -27,6 +27,22 @@ application_switch_status() {
 }
 
 
+application_is_valid_status() {
+    local status=$1
+
+    [ $PERSISTENT -eq 1 ] && \
+        [ $status -ge 8 ] && \
+        [ $status -le 11 ] && \
+        return 0
+
+    [ $status -ge 1 ] && \
+        [ $status -le 3 ] && \
+        return 0
+
+    return 1
+}
+
+
 application_check_status() {
     local sessid=$1
     local job_id=$2
@@ -35,7 +51,17 @@ application_check_status() {
     local status=$(cat $dir/status)
     local app_id=$(cat $dir/app_id)
     local rfb_port=$(cat $dir/rfb_port)
+    if [ $PERSISTENT -eq 1 ]; then
+        local next_status=8
+    else
+        local next_status=3
+    fi
 
+    if ! application_is_valid_status $status; then
+        log_INFO "session $sessid wrong application status, killing"
+        application_switch_status $sessid $job_id 3
+        local status=3
+    fi
 
     #
     # SWITCH CASE status
@@ -53,23 +79,55 @@ application_check_status() {
         # if the owner_exit file exist, kill the application
         if [ -f $dir/owner_exit ]; then
             log_INFO "session $sessid kill application $job_id"
-            application_switch_status $sessid $job_id 3
+            application_switch_status $sessid $job_id $next_status
             application_check_status $sessid $job_id
             return $?
         fi
 
         # if application owner has vanished, kill session
-        if [ -e $dir/keepmealive ]; then
+        if [ -f $dir/keepmealive ]; then
             local t0=$(stat -c "%Z" $dir/keepmealive)
             local t1=$(date +%s)
             local diff=$(( $t1 - $t0 ))
 
             if [ $diff -gt 20 ]; then
 	        log_WARN "sesion $sessid KEEPMEALIVE expired application $job_id"
-                application_switch_status $sessid $job_id 3
+                application_switch_status $sessid $job_id $next_status
                 application_check_status $sessid $job_id
                 return $?
 	    fi
+        else
+            # Create a kma to use as timeout
+            install -g www-data -m 660 $dir/status $dir/keepmealive
+        fi
+
+    # Suspend/resume management
+    elif [ $PERSISTENT -eq 1 ]; then
+        if [ $status -eq 8 ]; then
+            application_switch_status $sessid $job_id 9
+            log_INFO "session $sessid suspend $job_id"
+            [ -f $dir/owner_exit ] && rm $dir/owner_exit
+            [ -f $dir/keepmealive ] && rm $dir/keepmealive
+            application_switch_status $sessid $job_id 10
+            return
+        
+        # If application is in suspend mode ... Nothing to do
+        elif [ $status -eq 10 ]; then
+            if [ -f $dir/owner_is_back ]; then
+                log_INFO "session $sessid application $job_id owner_is_back"
+                rm $dir/owner_is_back
+                application_switch_status $sessid $job_id 11
+                application_check_status $sessid $job_id
+                return $?
+            fi
+	    return
+            
+        # If application need to be restored ...
+        elif [ $status -eq 11 ]; then
+            log_INFO "session $sessid resume $job_id"
+            [ -f $dir/owner_exit ] && rm $dir/owner_exit
+            application_switch_status $sessid $job_id 2
+            return
         fi
     fi
 }

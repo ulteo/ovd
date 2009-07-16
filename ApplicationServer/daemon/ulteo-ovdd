@@ -110,6 +110,12 @@ session_check_status() {
     SSH_SESSION=`cache_ps_display | grep "sshd:" | grep "^$SSH_USER" | wc -l`
     log_DEBUG "Alive SSH tunelling connexion for $RFB_PORT: $SSH_SESSION"
 
+    if [ -f $SESSID_DIR/parameters/persistent ]; then
+        PERSISTENT=1
+    else
+        PERSISTENT=0
+    fi
+
     # If sesion need to be restore ...
     if [ $RUNASAP -eq 11 ]; then 
 	session_restore $SESSID
