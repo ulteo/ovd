@@ -349,7 +349,6 @@ session_suspend() {
 
     userdel $SSH_USER
     rm $SESSID_DIR/clients/*
-    rm ${SESSID_DIR}/private/luck
     rm ${SESSID_DIR}/infos/keepmealive
 
     log_INFO "session_suspend: $i"
