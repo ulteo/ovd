@@ -31,6 +31,20 @@
       done as <emphasis>superuser</emphasis> (root).
     </para>
 
+    <simplesect>
+      <title>SELinux</title>
+      <para>
+        Ulteo OVD is not compatible with SELinux yet.
+      </para>
+      <para>
+        So please disable SELinux support:
+      </para>
+      <screen>
+        <![CDATA[
+# yum remove selinux-policy]]>
+      </screen>
+    </simplesect>
+
 
    <section>
       <xi:include href="Installation.xml" xpointer="sql_title" />
