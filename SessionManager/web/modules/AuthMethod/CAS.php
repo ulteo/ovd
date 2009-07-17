@@ -25,6 +25,12 @@ class AuthMethod_CAS extends AuthMethod {
 	public function get_login() {
 		Logger::debug('main', 'AuthMethod_CAS::get_login()');
 
+		if (! isset($_SESSION['backup_sso']) || ! is_array($_SESSION['backup_sso']))
+			$_SESSION['backup_sso'] = array();
+
+		foreach ($_REQUEST as $k => $v)
+			$_SESSION['backup_sso'][$k] = $v;
+
 		$buf = $this->prefs->get('AuthMethod','CAS');
 		$CAS_server_url = $buf['user_authenticate_cas_server_url'];
 		if (! isset($CAS_server_url) || $CAS_server_url == '') {
@@ -47,6 +53,13 @@ class AuthMethod_CAS extends AuthMethod {
 		}
 
 		$this->login = phpCAS::getUser();
+
+		foreach ($_SESSION['backup_sso'] as $k => $v) {
+			if (isset($_REQUEST[$k]))
+				continue;
+			$_REQUEST[$k] = $v;
+		}
+
 		return $this->login;
 	}
 
