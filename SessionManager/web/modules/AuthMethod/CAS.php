@@ -23,22 +23,28 @@
 
 class AuthMethod_CAS extends AuthMethod {
 	public function get_login() {
+		Logger::debug('main', 'AuthMethod_CAS::get_login()');
+
 		$buf = $this->prefs->get('AuthMethod','CAS');
 		$CAS_server_url = $buf['user_authenticate_cas_server_url'];
-		if (! isset($CAS_server_url) || $CAS_server_url == '')
+		if (! isset($CAS_server_url) || $CAS_server_url == '') {
+			Logger::error('main', 'AuthMethod_CAS::get_login() - Unable to find CAS server url in Preferences');
 			return NULL;
+		}
 
-		if (! query_url($CAS_server_url))
-			return NULL;
-
-		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), '/cas');
+		phpCAS::client(CAS_VERSION_2_0, parse_url($CAS_server_url, PHP_URL_HOST), parse_url($CAS_server_url, PHP_URL_PORT), parse_url($CAS_server_url, PHP_URL_PATH));
+		Logger::debug('main', 'AuthMethod_CAS::get_login() - Parsing URL - Host:"'.parse_url($CAS_server_url, PHP_URL_HOST).'" Port:"'.parse_url($CAS_server_url, PHP_URL_PORT).'" Path:"'.parse_url($CAS_server_url, PHP_URL_PATH).'"');
 		phpCAS::setNoCasServerValidation();
 
-		if (! phpCAS::forceAuthentication())
+		if (! phpCAS::forceAuthentication()) {
+			Logger::error('main', 'AuthMethod_CAS::get_login() - phpCAS::forceAuthentication failed');
 			return NULL;
+		}
 
-		if (! phpCAS::isAuthenticated())
+		if (! phpCAS::isAuthenticated()) {
+			Logger::error('main', 'AuthMethod_CAS::get_login() - phpCAS::isAuthenticated failed');
 			return NULL;
+		}
 
 		$this->login = phpCAS::getUser();
 		return $this->login;
