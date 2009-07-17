@@ -83,48 +83,18 @@ if (! is_object($user))
 
 $desktop_locale = $user->getLocale();
 
-if (isset($_REQUEST['timezone']) && $_REQUEST['timezone'] != '')
-	$user_timezone = $_REQUEST['timezone'];
-
-if (in_array('session_mode', $advanced_settings) && isset($_REQUEST['session_mode']) && $_REQUEST['session_mode'] != '')
-	$session_mode = $_REQUEST['session_mode'];
-
-if (in_array('language', $advanced_settings) && isset($_REQUEST['desktop_locale']) && $_REQUEST['desktop_locale'] != '')
-	$desktop_locale = $_REQUEST['desktop_locale'];
-
-if (in_array('windows_keymap', $advanced_settings) && isset($_REQUEST['windows_keymap']) && $_REQUEST['windows_keymap'] != '')
-	$windows_keymap = $_REQUEST['windows_keymap'];
-
-if (in_array('quality', $advanced_settings) && isset($_REQUEST['desktop_quality']) && $_REQUEST['desktop_quality'] != '')
-	$desktop_quality = $_REQUEST['desktop_quality'];
-
-if (in_array('timeout', $advanced_settings) && isset($_REQUEST['desktop_timeout']) && $_REQUEST['desktop_timeout'] != '')
-	$desktop_timeout = $_REQUEST['desktop_timeout'];
-
-if (in_array('application', $advanced_settings) && isset($_REQUEST['start_app']) && $_REQUEST['start_app'] != '')
-	$start_app = $_REQUEST['start_app'];
-
-if (in_array('document', $advanced_settings) && isset($_REQUEST['open_doc']) && $_REQUEST['open_doc'] != '')
-	$open_doc = $_REQUEST['open_doc'];
-
-if (in_array('persistent', $advanced_settings) && isset($_REQUEST['persistent']) && $_REQUEST['persistent'] != '')
-	$persistent = $_REQUEST['persistent'];
-
-if (in_array('shareable', $advanced_settings) && isset($_REQUEST['shareable']) && $_REQUEST['shareable'] != '')
-	$shareable = $_REQUEST['shareable'];
-
-if (in_array('desktop_icons', $advanced_settings) && isset($_REQUEST['desktop_icons']) && $_REQUEST['desktop_icons'] != '')
-	$desktop_icons = $_REQUEST['desktop_icons'];
-
-if (in_array('app_with_desktop', $advanced_settings) && isset($_REQUEST['app_with_desktop']) && $_REQUEST['app_with_desktop'] != '')
-	$app_with_desktop = $_REQUEST['app_with_desktop'];
-
-if (in_array('debug', $advanced_settings) && isset($_REQUEST['debug']) && $_REQUEST['debug'] != '')
-	$debug = $_REQUEST['debug'];
+$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'debug');
+foreach ($protocol_vars as $protocol_var) {
+	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
+		$$protocol_var = $_REQUEST[$protocol_var];
+}
 
 $client = 'unknown';
-if (isset($_REQUEST['client']) && $_REQUEST['client'] != '')
-	$client = $_REQUEST['client'];
+$other_vars = array('timezone', 'client');
+foreach ($other_vars as $other_var) {
+	if (isset($_REQUEST[$other_var]) && $_REQUEST[$other_var] != '')
+		$$other_var = $_REQUEST[$other_var];
+}
 
 Logger::debug('main', '(startsession) Now checking for old session');
 
@@ -233,8 +203,8 @@ $default_args = array(
 );
 
 $optional_args = array();
-if (isset($user_timezone))
-	$optional_args['timezone'] = $user_timezone;
+if (isset($timezone))
+	$optional_args['timezone'] = $timezone;
 if (isset($desktop_timeout) && $desktop_timeout != -1) {
 	$optional_args['timeout'] = (time()+$desktop_timeout);
 	$optional_args['timeout_message'] = $timeout_message;
