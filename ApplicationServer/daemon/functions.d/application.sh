@@ -91,7 +91,7 @@ application_check_status() {
             local diff=$(( $t1 - $t0 ))
 
             if [ $diff -gt 20 ]; then
-	        log_WARN "sesion $sessid KEEPMEALIVE expired application $job_id"
+	        log_WARN "session $sessid KEEPMEALIVE expired application $job_id"
                 application_switch_status $sessid $job_id $next_status
                 application_check_status $sessid $job_id
                 return $?
