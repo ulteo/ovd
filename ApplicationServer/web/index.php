@@ -125,13 +125,18 @@ foreach ($application_nodes as $application_node) {
 
 $_SESSION['print_timestamp'] = time();
 
-if ($_SESSION['mode'] == 'invite_desktop') {
+if ($_SESSION['mode'] == 'invite') {
 	$session_dir = SESSION_PATH.'/'.$_SESSION['session'];
 
 	$buf = $session_dir.'/infos/share/'.$token;
 	@mkdir($buf);
 	@file_put_contents($buf.'/email', $_SESSION['parameters']['invite_email']);
 	@file_put_contents($buf.'/mode', ($_SESSION['parameters']['view_only'] == 'No')?'active':'passive');
+
+	$_SESSION['tokens'][$_GET['token']] = array(
+		'session_id'	=>	$_SESSION['session'],
+		'access_id'		=>	@file_get_contents($buf.'/access_id')
+	);
 }
 
 if (substr($_SESSION['mode'], 0, 5) == 'start')
@@ -142,6 +147,8 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		redirect('desktop/');
 	elseif (substr($_SESSION['mode'], -6) == 'portal')
 		redirect('portal/');
+	elseif ($_SESSION['mode'] == 'invite')
+		redirect('share/?token='.$_GET['token']);
 
 	die();
 }

@@ -18,12 +18,6 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-/*
-if (isset($_GET['error']))
-	echo '<p class="msg_error centered">'._('An error occured with your invitation, please try again!').'</p>';
-elseif (isset($_GET['invited']))
-	echo '<p class="msg_ok centered">'._('Your invitation to '.$_GET['invited'].' has been sent!').'</p>';
-*/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 Logger::debug('main', 'Starting invite.php');
@@ -36,6 +30,9 @@ $session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
 $token = $_SESSION['current_token'];
 
 $session_dir = SESSION_PATH.'/'.$session;
+
+if (get_from_file($session_dir.'/sessions/'.$_POST['access_id'].'/status') != 2)
+  die2(400, 'ERROR - No such application');
 
 $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_invite.php?fqdn='.SERVERNAME.'&session='.$session.'&email='.$_POST['email'].'&mode='.$_POST['mode']);
 
@@ -60,5 +57,6 @@ $buf = $session_dir.'/infos/share/'.$invite_token;
 @mkdir($buf);
 @file_put_contents($buf.'/email', $invite_email);
 @file_put_contents($buf.'/mode', $invite_mode);
+@file_put_contents($buf.'/access_id', $_POST['access_id']);
 
 echo 'OK';

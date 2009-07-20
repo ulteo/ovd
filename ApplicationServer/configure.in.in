@@ -161,6 +161,7 @@ scripts/Makefile
 config/Makefile
 examples/Makefile
 web/desktop/Makefile
+web/share/Makefile
 web/portal/Makefile
 web/portal/media/Makefile
 web/portal/media/image/Makefile
