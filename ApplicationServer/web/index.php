@@ -60,8 +60,10 @@ if ($session_node->hasAttribute('id'))
 	$_SESSION['session'] = $session_node->getAttribute('id');
 if ($session_node->hasAttribute('mode'))
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
+if ($session_node->hasAttribute('type'))
+	$_SESSION['type'] = $session_node->getAttribute('type');
 $_SESSION['owner'] = false;
-if (substr($_SESSION['mode'], 0, 5) == 'start' || substr($_SESSION['mode'], 0, 6) == 'resume')
+if ($_SESSION['type'] == 'start' || $_SESSION['type'] == 'resume')
 	$_SESSION['owner'] = true;
 
 $parameters = array();
@@ -79,6 +81,7 @@ foreach ($settings as $setting)
 		die('Missing parameter \''.$setting.'\'');
 
 $_SESSION['parameters'] = $parameters;
+$_SESSION['parameters']['session_mode'] = $_SESSION['mode'];
 
 $_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
 
@@ -125,7 +128,7 @@ foreach ($application_nodes as $application_node) {
 
 $_SESSION['print_timestamp'] = time();
 
-if ($_SESSION['mode'] == 'invite') {
+if ($_SESSION['type'] == 'invite') {
 	$session_dir = SESSION_PATH.'/'.$_SESSION['session'];
 
 	$buf = $session_dir.'/infos/share/'.$token;
@@ -139,19 +142,11 @@ if ($_SESSION['mode'] == 'invite') {
 	);
 }
 
-if (substr($_SESSION['mode'], 0, 5) == 'start')
+if ($_SESSION['type'] == 'start')
 	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
-	if (substr($_SESSION['mode'], -7) == 'desktop')
-		redirect('desktop/');
-	elseif (substr($_SESSION['mode'], -6) == 'portal')
-		redirect('portal/');
-	elseif ($_SESSION['mode'] == 'invite')
-		redirect('share/?token='.$_GET['token']);
-
-	die();
-}
+if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser')
+	redirect($_SESSION['mode'].'/?token='.$_GET['token']);
 
 header('Content-Type: text/xml; charset=utf-8');
 

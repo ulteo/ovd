@@ -32,6 +32,7 @@ class Abstract_Session {
 			'id'				=>	'varchar(255) NOT NULL',
 			'server'			=>	'varchar(255) NOT NULL',
 			'mode'				=>	'varchar(32) NOT NULL',
+			'type'				=>	'varchar(32) NOT NULL',
 			'status'			=>	'int(8) NOT NULL',
 			'settings'			=>	'text NOT NULL',
 			'user_login'		=>	'varchar(255) NOT NULL',
@@ -59,7 +60,7 @@ class Abstract_Session {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8 FROM @9 WHERE @10 = %11 LIMIT 1', 'server', 'mode', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9 FROM @10 WHERE @11 = %12 LIMIT 1', 'server', 'mode', 'type', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -75,6 +76,7 @@ class Abstract_Session {
 		$buf = new Session($id);
 		$buf->server = (string)$server;
 		$buf->mode = (string)$mode;
+		$buf->type = (string)$type;
 		$buf->status = (int)$status;
 		$buf->settings = unserialize($settings);
 		$buf->user_login = (string)$user_login;
@@ -98,7 +100,7 @@ class Abstract_Session {
 				return false;
 			}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19 WHERE @20 = %21 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'mode', $session_->mode, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21 WHERE @22 = %23 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}

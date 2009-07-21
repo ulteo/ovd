@@ -25,6 +25,7 @@ class Session {
 
 	public $server = NULL;
 	public $mode = NULL;
+	public $type = NULL;
 	public $status = NULL;
 	public $settings = NULL;
 	public $user_login = NULL;
@@ -40,7 +41,7 @@ class Session {
 
 	public function __toString() {
 		/* print array of apps? */
-		return 'Session(\''.$this->id.'\', \''.$this->server.'\', \''.$this->mode.'\', \''.$this->status.'\', \''.$this->user_login.'\', \''.$this->user_displayname.'\', \''.$this->start_time.'\')';
+		return 'Session(\''.$this->id.'\', \''.$this->server.'\', \''.$this->mode.'\', \''.$this->type.'\', \''.$this->status.'\', \''.$this->user_login.'\', \''.$this->user_displayname.'\', \''.$this->start_time.'\')';
 	}
 
 	public function hasAttribute($attrib_) {

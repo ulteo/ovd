@@ -47,9 +47,9 @@ if (! $token) {
 	die('No such token file');
 }
 
-if (substr($token->getAttribute('type'), 0, 5) == 'start' || substr($token->getAttribute('type'), 0, 6) == 'resume') {
+if ($token->getAttribute('type') == 'start' || $token->getAttribute('type') == 'resume') {
 	$session_id = $token->getAttribute('link_to');
-} elseif (substr($token->getAttribute('type'), 0, 6) == 'invite') {
+} elseif ($token->getAttribute('type') == 'invite') {
 	$invite = Abstract_Invite::load($token->getAttribute('link_to'));
 
 	$session_id = $invite->getAttribute('session');
@@ -61,17 +61,18 @@ if (! $session || ! $session->hasAttribute('settings')) {
 	die('Invalid session');
 }
 
-Abstract_Token::delete($token->id);
+if ($token->getAttribute('type') == 'invite')
+	$session->mode = 'share';
 
-$session_type = 'linux';
+Abstract_Token::delete($token->id);
 
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
-$session_node->setAttribute('mode', $token->type);
-$session_node->setAttribute('type', $session_type);
+$session_node->setAttribute('mode', $session->mode);
+$session_node->setAttribute('type', $token->type);
 $dom->appendChild($session_node);
 
 $settings = $session->getAttribute('settings');

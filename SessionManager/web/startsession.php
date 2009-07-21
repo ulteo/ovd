@@ -159,7 +159,7 @@ else {
 if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
 
-	$session_mode = 'resume_'.$session->mode;
+	$session_type = 'resume';
 
 	$ret = true;
 
@@ -167,14 +167,15 @@ if (isset($old_session_id) && isset($old_session_server)) {
 } else {
 	$random_session_id = gen_string(5);
 
+	$session_type = 'start';
+
 	$session = new Session($random_session_id);
 	$session->server = $random_server;
 	$session->mode = $session_mode;
+	$session->type = $session_type;
 	$session->status = -1;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
-
-	$session_mode = 'start_'.$session_mode;
 
 	$ret = true;
 
@@ -321,7 +322,7 @@ $session->setAttribute('start_time', time());
 Abstract_Session::save($session);
 
 $token = new Token(gen_string(5));
-$token->type = $session_mode;
+$token->type = $session_type;
 $token->link_to = $session->id;
 $token->valid_until = (time()+(60*5));
 Abstract_Token::save($token);
