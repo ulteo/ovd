@@ -138,8 +138,8 @@ FunctionEnd
 
 Function .onInit
   ; to install for all user
-  SetShellVarContext all
-  !insertmacro MUI_LANGDLL_DISPLAY
+    SetShellVarContext all
+    !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
 Function un.onInit
@@ -167,6 +167,105 @@ Section "Main Section" SecMain
   WriteRegStr HKLM "${UNINSTALL_REGKEY}" "URLInfoUbout"    "${PRODUCT_WEB_SITE}"
   WriteRegDWORD HKLM "${UNINSTALL_REGKEY}" "NoModify" "1"
   WriteRegDWORD HKLM "${UNINSTALL_REGKEY}" "NoRepair" "1"
+
+  ;Windows Version
+  Push $R0
+  Push $R1
+ 
+  ClearErrors
+ 
+  ReadRegStr $R0 HKLM \
+  "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+ 
+  IfErrors 0 lbl_winnt
+ 
+  ; we are not NT
+  ReadRegStr $R0 HKLM \
+  "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
+ 
+  StrCpy $R1 $R0 1
+  StrCmp $R1 '4' 0 lbl_error
+ 
+  StrCpy $R1 $R0 3
+ 
+  StrCmp $R1 '4.0' lbl_win32_95
+  StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
+ 
+  lbl_win32_95:
+    ;StrCpy $R0 '95'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 95" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_win32_98:
+    ;StrCpy $R0 '98'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 98" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_win32_ME:
+    ;StrCpy $R0 'ME'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows ME" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt:
+ 
+    StrCpy $R1 $R0 1
+    StrCmp $R1 '3' lbl_winnt_x
+    StrCmp $R1 '4' lbl_winnt_x
+
+    StrCpy $R1 $R0 3
+    StrCmp $R1 '5.0' lbl_winnt_2000
+    StrCmp $R1 '5.1' lbl_winnt_XP
+    StrCmp $R1 '5.2' lbl_winnt_2003
+    StrCmp $R1 '6.0' lbl_winnt_vista
+    StrCmp $R1 '6.1' lbl_winnt_7 lbl_error
+ 
+  lbl_winnt_x:
+    StrCpy $R0 "NT $R0" 6
+
+    Goto lbl_done
+ 
+  lbl_winnt_2000:
+    ;Strcpy $R0 '2000'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2000" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_XP:
+    ;Strcpy $R0 'XP'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows XP" IDOK 
+    ;Change the default Shell for Windows XP
+    DetailPrint "Change Default Shell"
+    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
+
+    Goto lbl_done
+ 
+  lbl_winnt_2003:
+    ;Strcpy $R0 '2003'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2003" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_vista:
+    Strcpy $R0 'Vista'
+    MessageBox MB_OK|MB_ICONQUESTION "Windows Vista" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_7:
+    Strcpy $R0 '7'
+    MessageBox MB_OK|MB_ICONQUESTION "Windows 7" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_error:
+    Strcpy $R0 ''
+  
+  lbl_done:
+    Pop $R1
+    Exch $R0
 
 ;  SetOutPath "$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
 ;  SetOverwrite ifnewer
@@ -230,6 +329,105 @@ Section "un.Shortcut Section" SecUnShortcut
 SectionEnd
 
 Section "Uninstall"
+  ;Windows Version
+  Push $R0
+  Push $R1
+ 
+  ClearErrors
+ 
+  ReadRegStr $R0 HKLM \
+  "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+ 
+  IfErrors 0 lbl_winnt
+ 
+  ; we are not NT
+  ReadRegStr $R0 HKLM \
+  "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
+ 
+  StrCpy $R1 $R0 1
+  StrCmp $R1 '4' 0 lbl_error
+ 
+  StrCpy $R1 $R0 3
+ 
+  StrCmp $R1 '4.0' lbl_win32_95
+  StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
+ 
+  lbl_win32_95:
+    ;StrCpy $R0 '95'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 95" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_win32_98:
+    ;StrCpy $R0 '98'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 98" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_win32_ME:
+    ;StrCpy $R0 'ME'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows ME" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt:
+ 
+    StrCpy $R1 $R0 1
+    StrCmp $R1 '3' lbl_winnt_x
+    StrCmp $R1 '4' lbl_winnt_x
+
+    StrCpy $R1 $R0 3
+    StrCmp $R1 '5.0' lbl_winnt_2000
+    StrCmp $R1 '5.1' lbl_winnt_XP
+    StrCmp $R1 '5.2' lbl_winnt_2003
+    StrCmp $R1 '6.0' lbl_winnt_vista
+    StrCmp $R1 '6.1' lbl_winnt_7 lbl_error
+ 
+  lbl_winnt_x:
+    StrCpy $R0 "NT $R0" 6
+
+    Goto lbl_done
+ 
+  lbl_winnt_2000:
+    ;Strcpy $R0 '2000'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2000" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_XP:
+    ;Strcpy $R0 'XP'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows XP" IDOK 
+    ;Change the default Shell for Windows XP
+    DetailPrint "Restore Default Shell"
+    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "explorer.exe"
+
+    Goto lbl_done
+ 
+  lbl_winnt_2003:
+    ;Strcpy $R0 '2003'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2003" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_vista:
+    Strcpy $R0 'Vista'
+    MessageBox MB_OK|MB_ICONQUESTION "Windows Vista" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_7:
+    Strcpy $R0 '7'
+    MessageBox MB_OK|MB_ICONQUESTION "Windows 7" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_error:
+    Strcpy $R0 ''
+  
+  lbl_done:
+    Pop $R1
+    Exch $R0
+
   RMDir /r "$INSTDIR"
   RMDir /r "$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
   RMDir "$APPDATA\${PRODUCT_PUBLISHER}"
