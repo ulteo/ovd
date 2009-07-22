@@ -46,7 +46,7 @@
 ;General
 
   ;Name and file
-  Name "${PRODUCT_NAME}"
+  Name "${PRODUCT_NAME}"INSTDIR
   OutFile "${SETUP_NAME}.exe"
 
   BrandingText "Copyright Ulteo"
@@ -168,105 +168,6 @@ Section "Main Section" SecMain
   WriteRegDWORD HKLM "${UNINSTALL_REGKEY}" "NoModify" "1"
   WriteRegDWORD HKLM "${UNINSTALL_REGKEY}" "NoRepair" "1"
 
-  ;Windows Version
-  Push $R0
-  Push $R1
- 
-  ClearErrors
- 
-  ReadRegStr $R0 HKLM \
-  "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
- 
-  IfErrors 0 lbl_winnt
- 
-  ; we are not NT
-  ReadRegStr $R0 HKLM \
-  "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
- 
-  StrCpy $R1 $R0 1
-  StrCmp $R1 '4' 0 lbl_error
- 
-  StrCpy $R1 $R0 3
- 
-  StrCmp $R1 '4.0' lbl_win32_95
-  StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
- 
-  lbl_win32_95:
-    ;StrCpy $R0 '95'
-    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 95" IDOK 
-
-    Goto lbl_done
- 
-  lbl_win32_98:
-    ;StrCpy $R0 '98'
-    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 98" IDOK 
-
-    Goto lbl_done
- 
-  lbl_win32_ME:
-    ;StrCpy $R0 'ME'
-    ;MessageBox MB_OK|MB_ICONQUESTION "Windows ME" IDOK 
-
-    Goto lbl_done
- 
-  lbl_winnt:
- 
-    StrCpy $R1 $R0 1
-    StrCmp $R1 '3' lbl_winnt_x
-    StrCmp $R1 '4' lbl_winnt_x
-
-    StrCpy $R1 $R0 3
-    StrCmp $R1 '5.0' lbl_winnt_2000
-    StrCmp $R1 '5.1' lbl_winnt_XP
-    StrCmp $R1 '5.2' lbl_winnt_2003
-    StrCmp $R1 '6.0' lbl_winnt_vista
-    StrCmp $R1 '6.1' lbl_winnt_7 lbl_error
- 
-  lbl_winnt_x:
-    StrCpy $R0 "NT $R0" 6
-
-    Goto lbl_done
- 
-  lbl_winnt_2000:
-    ;Strcpy $R0 '2000'
-    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2000" IDOK 
-
-    Goto lbl_done
- 
-  lbl_winnt_XP:
-    ;Strcpy $R0 'XP'
-    ;MessageBox MB_OK|MB_ICONQUESTION "Windows XP" IDOK 
-    ;Change the default Shell for Windows XP
-    DetailPrint "Change Default Shell"
-    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
-
-    Goto lbl_done
- 
-  lbl_winnt_2003:
-    ;Strcpy $R0 '2003'
-    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2003" IDOK 
-
-    Goto lbl_done
- 
-  lbl_winnt_vista:
-    Strcpy $R0 'Vista'
-    MessageBox MB_OK|MB_ICONQUESTION "Windows Vista" IDOK 
-
-    Goto lbl_done
- 
-  lbl_winnt_7:
-    Strcpy $R0 '7'
-    MessageBox MB_OK|MB_ICONQUESTION "Windows 7" IDOK 
-
-    Goto lbl_done
- 
-  lbl_error:
-    Strcpy $R0 ''
-  
-  lbl_done:
-    Pop $R1
-    Exch $R0
-
 ;  SetOutPath "$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
 ;  SetOverwrite ifnewer
 SectionEnd
@@ -281,7 +182,7 @@ Section "un.pre" UnPostCmd
   DetailPrint "Remove PATH Environment variable"
   ${un.EnvVarUpdate} $0 "PATH" "D" "HKLM" "$INSTDIR\rdp"
 
-  DetailPrint "Removing Configuration file"
+  Detailprint "Removing Configuration file"
   Delete "$INSTDIR\ulteo-ovd.conf"
   ;RMDir  "$APPDATA\${PRODUCT_PUBLISHER}\ovd\log"
   RMDir  "$APPDATA\${PRODUCT_PUBLISHER}\ovd"
@@ -303,6 +204,103 @@ Section "post" PostCmd
   FileWrite $4 "$\r$\n" 
   FileWrite $4 "WEBPORT=8082"
   FileClose $4
+
+  ;Windows Version
+  Push $R0
+  Push $R1
+ 
+  ClearErrors
+ 
+  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+ 
+  IfErrors 0 lbl_winnt
+ 
+  ; we are not NT
+  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
+ 
+  StrCpy $R1 $R0 1
+  StrCmp $R1 '4' 0 lbl_error
+ 
+  StrCpy $R1 $R0 3
+ 
+  ;StrCmp $R1 '4.0' lbl_win32_95
+  ;StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
+ 
+  ;lbl_win32_95:
+    ;StrCpy $R0 '95'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 95" IDOK 
+
+    ;Goto lbl_done
+ 
+  ;lbl_win32_98:
+    ;StrCpy $R0 '98'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 98" IDOK 
+
+    ;Goto lbl_done
+ 
+  ;lbl_win32_ME:
+    ;StrCpy $R0 'ME'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows ME" IDOK 
+
+    ;Goto lbl_done
+ 
+  lbl_winnt:
+ 
+    StrCpy $R1 $R0 1
+    ;StrCmp $R1 '3' lbl_winnt_x
+    ;StrCmp $R1 '4' lbl_winnt_x
+
+    StrCpy $R1 $R0 3
+    ;StrCmp $R1 '5.0' lbl_winnt_2000
+    StrCmp $R1 '5.1' lbl_winnt_XP
+    StrCmp $R1 '5.2' lbl_winnt_2003
+    StrCmp $R1 '6.0' lbl_winnt_vista
+    ;StrCmp $R1 '6.1' lbl_winnt_7 lbl_error
+ 
+  ;lbl_winnt_x:
+    ;StrCpy $R0 "NT $R0" 6
+
+    ;Goto lbl_done
+ 
+  ;lbl_winnt_2000:
+    ;Strcpy $R0 '2000'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2000" IDOK 
+
+    ;Goto lbl_done
+ 
+  lbl_winnt_XP:
+    ;Strcpy $R0 'XP'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows XP" IDOK 
+    ;Change the default Shell for Windows XP
+    DetailPrint "Change Default Shell"
+    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
+
+    Goto lbl_done
+ 
+  lbl_winnt_2003:
+    ;Strcpy $R0 '2003'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2003" IDOK 
+
+    Goto lbl_done
+ 
+  lbl_winnt_vista:
+    ;Strcpy $R0 'Vista OR Windows Server 2008' 
+    CopyFiles $INSTDIR\rdp\* $SYSDIR
+
+    Goto lbl_done
+ 
+  ;lbl_winnt_7:
+    ;Strcpy $R0 '7'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 7" IDOK 
+
+    ;Goto lbl_done
+ 
+  lbl_error:
+    Strcpy $R0 ''
+  
+  lbl_done:
+    Pop $R1
+    Exch $R0
 
   DetailPrint "Change PATH Environment variable"
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\rdp"
@@ -335,64 +333,62 @@ Section "Uninstall"
  
   ClearErrors
  
-  ReadRegStr $R0 HKLM \
-  "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
  
   IfErrors 0 lbl_winnt
  
   ; we are not NT
-  ReadRegStr $R0 HKLM \
-  "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
+  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
  
   StrCpy $R1 $R0 1
   StrCmp $R1 '4' 0 lbl_error
  
   StrCpy $R1 $R0 3
  
-  StrCmp $R1 '4.0' lbl_win32_95
-  StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
+  ;StrCmp $R1 '4.0' lbl_win32_95
+  ;StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
  
-  lbl_win32_95:
+  ;lbl_win32_95:
     ;StrCpy $R0 '95'
     ;MessageBox MB_OK|MB_ICONQUESTION "Windows 95" IDOK 
 
-    Goto lbl_done
+   ; Goto lbl_done
  
-  lbl_win32_98:
+  ;lbl_win32_98:
     ;StrCpy $R0 '98'
     ;MessageBox MB_OK|MB_ICONQUESTION "Windows 98" IDOK 
 
-    Goto lbl_done
+   ; Goto lbl_done
  
-  lbl_win32_ME:
+  ;lbl_win32_ME:
     ;StrCpy $R0 'ME'
     ;MessageBox MB_OK|MB_ICONQUESTION "Windows ME" IDOK 
 
-    Goto lbl_done
+   ; Goto lbl_done
  
   lbl_winnt:
  
     StrCpy $R1 $R0 1
-    StrCmp $R1 '3' lbl_winnt_x
-    StrCmp $R1 '4' lbl_winnt_x
+    ;StrCmp $R1 '3' lbl_winnt_x
+    ;StrCmp $R1 '4' lbl_winnt_x
 
     StrCpy $R1 $R0 3
-    StrCmp $R1 '5.0' lbl_winnt_2000
+    ;StrCmp $R1 '5.0' lbl_winnt_2000
     StrCmp $R1 '5.1' lbl_winnt_XP
     StrCmp $R1 '5.2' lbl_winnt_2003
     StrCmp $R1 '6.0' lbl_winnt_vista
-    StrCmp $R1 '6.1' lbl_winnt_7 lbl_error
+    ;StrCmp $R1 '6.1' lbl_winnt_7 lbl_error
  
-  lbl_winnt_x:
-    StrCpy $R0 "NT $R0" 6
+  ;lbl_winnt_x:
+   ; StrCpy $R0 "NT $R0" 6
 
-    Goto lbl_done
+    ;Goto lbl_done
  
-  lbl_winnt_2000:
+  ;lbl_winnt_2000:
     ;Strcpy $R0 '2000'
     ;MessageBox MB_OK|MB_ICONQUESTION "Windows 2000" IDOK 
 
-    Goto lbl_done
+   ; Goto lbl_done
  
   lbl_winnt_XP:
     ;Strcpy $R0 'XP'
@@ -410,16 +406,18 @@ Section "Uninstall"
     Goto lbl_done
  
   lbl_winnt_vista:
-    Strcpy $R0 'Vista'
-    MessageBox MB_OK|MB_ICONQUESTION "Windows Vista" IDOK 
+    ;Strcpy $R0 'Vista OR Windows Server 2008'
+    Delete "$SYSDIR\seamlessrdpshell.exe"
+    Delete "$SYSDIR\seamlessrdpshell.dll"
+    Delete "$SYSDIR\vchannel.dll"
 
     Goto lbl_done
  
-  lbl_winnt_7:
-    Strcpy $R0 '7'
-    MessageBox MB_OK|MB_ICONQUESTION "Windows 7" IDOK 
+  ;lbl_winnt_7:
+   ; Strcpy $R0 '7'
+    ;MessageBox MB_OK|MB_ICONQUESTION "Windows 7" IDOK 
 
-    Goto lbl_done
+    ;Goto lbl_done
  
   lbl_error:
     Strcpy $R0 ''
