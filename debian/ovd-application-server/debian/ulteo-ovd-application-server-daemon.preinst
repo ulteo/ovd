@@ -1,0 +1,23 @@
+#!/bin/sh -e
+
+# This workarounds a bug with the extraction of the chroot
+# We need to change the permissions of some policykit scripts to avoid upgrade
+# failures of hal
+
+if ! ls -l /usr/lib/policykit/polkit-explicit-grant-helper | grep -q polkituser; then
+    for i in polkit-read-auth-helper polkit-revoke-helper polkit-grant-helper polkit-explicit-grant-helper polkit-set-default-helper; do
+        if [ -f /usr/lib/policykit/$i ]; then
+            chown root:polkituser /usr/lib/policykit/$i
+            chmod 2755 /usr/lib/policykit/$i
+        fi
+    done
+    if [ -f /usr/lib/policykit/polkit-grant-helper-pam ]; then
+        chown root:polkituser /usr/lib/policykit/polkit-grant-helper-pam
+        chmod 4754 /usr/lib/policykit/polkit-grant-helper-pam
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0
+
