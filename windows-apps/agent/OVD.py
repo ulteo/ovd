@@ -303,7 +303,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		for filename in shortcut_list:
 			shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 			shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
-			if (os.path.splitext(shortcut.GetPath(0)[0]).lower() == ".exe"):
+			if (os.path.splitext(shortcut.GetPath(0)[0])[1].lower() == ".exe"):
 				application_name = os.path.basename(filename)[:-4]
 				if isBan(application_name) == False:
 					app = doc.createElement("application")
