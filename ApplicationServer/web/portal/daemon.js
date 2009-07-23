@@ -457,7 +457,7 @@ function onUpdateInfos(transport) {
       }
 
       if (nb_share_active != 0) {
-        var buf_html = '<img style="margin-left: 5px;" src="media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share_active+' user';
+        var buf_html = '<img style="margin-left: 5px;" src="../media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share_active+' user';
         if (nb_share_active > 1)
           buf_html += 's';
         buf_html += '</span>';
@@ -474,7 +474,7 @@ function do_print(path, timestamp) {
   var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
 
 	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+'+printing_applet_version+'+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
 		<param name="url" value="'+print_url+'"> \
 		<param name="filename" value="'+path+'"> \
 	</applet>';
