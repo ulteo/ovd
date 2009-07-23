@@ -93,7 +93,7 @@ if [ -z "$2" ] || [ ! -e "$CHROOTCONF" ]; then
 
     wget --spider $WGETARGS "$URL" || DOWNLOAD_OK="no"
     if [ "$DOWNLOAD_OK" = "yes" ]; then
-        wget $WGETARGS "$URL" -O - | tar zx -C "$CHROOTPATH" -f - || DOWNLOAD_OK="no"
+        wget $WGETARGS "$URL" -O - | tar zx --numeric-owner --preserve -C "$CHROOTPATH" -f - || DOWNLOAD_OK="no"
     fi
     [ -n $HTTPPASSWD ] && unset HTTPPASSWD
 
