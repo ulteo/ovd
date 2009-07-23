@@ -152,7 +152,7 @@ function switch_splash_to_applet(access_id_) {
 					var xml = transport.responseXML;
 					buffer = xml.getElementsByTagName('session');
 					if (buffer.length != 1) {
-						push_log('[applet] bad xml format', 'error');
+						push_log('[applet] bad xml format 1', 'error');
 						return;
 					}
 
@@ -207,7 +207,7 @@ function switch_splash_to_applet(access_id_) {
 						applet_proxy_password = proxyNode.getAttribute('password');
 					}
 				} catch(e) {
-					push_log('[applet] bad xml format', 'error');
+					push_log('[applet] bad xml format 2', 'error');
 					return;
 				}
 
