@@ -135,6 +135,7 @@ Function InputBoxPageLeave
  !define OVD_SMURL $R1
 FunctionEnd
 
+!include nsis\WindowsVersion.nsh
 
 Function .onInit
   ; to install for all user
@@ -144,8 +145,8 @@ FunctionEnd
 
 Function un.onInit
   ; to uninstall for all user
-  SetShellVarContext all
-  !insertmacro MUI_UNGETLANGUAGE
+    SetShellVarContext all
+    !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
 Section "Main Section" SecMain
@@ -205,57 +206,10 @@ Section "post" PostCmd
   FileWrite $4 "WEBPORT=8082"
   FileClose $4
 
-  ;Windows Version
-  Push $R0
-  Push $R1
- 
-  ClearErrors
- 
-  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
- 
-  IfErrors 0 lbl_winnt
- 
-  ; we are not NT
-  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
- 
-  StrCpy $R1 $R0 1
-  StrCmp $R1 '4' 0 lbl_error
- 
-  StrCpy $R1 $R0 3
- 
-  lbl_winnt:
- 
-    StrCpy $R1 $R0 1
-  
-    StrCpy $R1 $R0 3
-    StrCmp $R1 '5.1' lbl_winnt_XP
-    StrCmp $R1 '5.2' lbl_winnt_2003
-    StrCmp $R1 '6.0' lbl_winnt_vista
-   
-  lbl_winnt_XP:
-    ;Change the default Shell for Windows XP
-    DetailPrint "Change Default Shell"
-    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
-
-    Goto lbl_done
- 
-  lbl_winnt_2003:
-    Goto lbl_done
- 
-  lbl_winnt_vista:
-    CopyFiles $INSTDIR\rdp\* $SYSDIR
-
-    Goto lbl_done
- 
-  lbl_error:
-    Strcpy $R0 ''
-  
-  lbl_done:
-    Pop $R1
-    Exch $R0
-
   DetailPrint "Change PATH Environment variable"
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\rdp"
+
+  Call .WindowsInstall
 
   DetailPrint "Creating Service"
   nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVD.exe" DisplayName= "Ulteo Open Virtual Desktop agent" depend= EventLog/winmgmt start= auto'
@@ -279,55 +233,7 @@ Section "un.Shortcut Section" SecUnShortcut
 SectionEnd
 
 Section "Uninstall"
-  ;Windows Version
-  Push $R0
-  Push $R1
- 
-  ClearErrors
- 
-  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
- 
-  IfErrors 0 lbl_winnt
- 
-  ; we are not NT
-  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion" VersionNumber
- 
-  StrCpy $R1 $R0 1
-  StrCmp $R1 '4' 0 lbl_error
- 
-  StrCpy $R1 $R0 3
- 
-    StrCpy $R1 $R0 1
-
-    StrCpy $R1 $R0 3
-    StrCmp $R1 '5.1' lbl_winnt_XP
-    StrCmp $R1 '5.2' lbl_winnt_2003
-    StrCmp $R1 '6.0' lbl_winnt_vista
- 
-  lbl_winnt_XP:
-    ;Change the default Shell for Windows XP
-    DetailPrint "Restore Default Shell"
-    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "explorer.exe"
-
-    Goto lbl_done
- 
-  lbl_winnt_2003:
-    Goto lbl_done
- 
-  lbl_winnt_vista:
-    ;Vista or 2008 Server
-    Delete "$SYSDIR\seamlessrdpshell.exe"
-    Delete "$SYSDIR\seamlessrdpshell.dll"
-    Delete "$SYSDIR\vchannel.dll"
-
-    Goto lbl_done
- 
-  lbl_error:
-    Strcpy $R0 ''
-  
-  lbl_done:
-    Pop $R1
-    Exch $R0
+  Call un.WindowsInstall
 
   RMDir /r "$INSTDIR"
   RMDir /r "$APPDATA\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
