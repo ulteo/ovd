@@ -1,21 +1,29 @@
-.TH SM-CONFIG "1" "December 2008" "sm-config @PKG_VERSION@" "User Commands"
+.TH SM-CONFIG "1" "July 2009" "sm-config @PKG_VERSION@" "User Commands"
 .SH NAME
 sm-config
 .SH SYNOPSIS
 .B sm-config
-[\fI--no-download\fR] [\fI--chroot-url url\fR] [\fI--chroot-dir dir\fR] [\fI--admin-login login\fR] [\fI--admin-pwd pwd\fR] [\fI--apache-group group\fR] [\fI--apache-dir dir\fR] [\fI--assume-yes\fR] [\fI--version|-v\fR] [\fI--help|-h\fR]
+[\fI--no-download\fR] [\fI--chroot-uri uri\fR] [\fI--chroot-url url\fR] [\fI--copy\fR] [\fI--chroot-dir dir\fR] [\fI--admin-login login\fR] [\fI--admin-pwd pwd\fR] [\fI--apache-group group\fR] [\fI--apache-dir dir\fR] [\fI--assume-yes\fR] [\fI--version|-v\fR] [\fI--help|-h\fR]
 .SH DESCRIPTION
 Configure an Ulteo Session Manager (Open Virtual Desktop)
 .TP
 \fB\-\-no\-download\fR
 don't download the chroot, assume it is already installed
 .TP
+\fB\-\-chroot\-uri\fR uri
+get the chroot from 'uri'
+recognised protocoles are http://, ftp:// and file://
+(default: http://www.ulteo.com/main/downloads/ulteo-ovd.php)
+.TP
 \fB\-\-chroot\-url\fR url
-download the chroot from 'url'
-(default: http://www.ulteo.com/main/downloads/ulteo\-ovd.php)
+same as --chroot-uri, for backward compatibility
+.TP
+\fB\-\-copy\fR
+if the chroot is a file, copy it in the Session Manager dir
+(a symlink is created by default)
 .TP
 \fB\-\-chroot\-dir\fR dir
-downlod the chroot as dir/base.tar.gz
+download the chroot as dir/base.tar.gz
 (default: @WEBDIR@/base.tar.gz)
 .TP
 \fB\-\-admin\-login\fR login

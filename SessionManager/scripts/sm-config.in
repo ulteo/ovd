@@ -37,15 +37,19 @@ die () {
 
 usage ()
 {
-    echo -n "Usage: $PROGRAM [--no-download] [--chroot-url url] [--chroot-dir dir]"
+    echo -n "Usage: $PROGRAM [--no-download] [--chroot-uri uri] [--chroot-url url] [--copy] [--chroot-dir dir]"
     echo -n " [--admin-login login] [--admin-pwd pwd] [--apache-group group]"
     echo " [--apache-dir dir] [--version|-v] [--help|-h]"
     echo "Configure an Ulteo Session Manager (Open Virtual Desktop)"
     echo
-    echo "  --no-download        don't download the chroot, assume it is already installed"
-    echo "  --chroot-url url     download the chroot from 'url'"
+    echo "  --no-download        don't get the chroot, assume it is already installed"
+    echo "  --chroot-uri url     get the chroot from 'uri'"
+    echo "                       recognised protocoles are http://, ftp:// and file://"
     echo "                       (default: http://www.ulteo.com/main/downloads/ulteo-ovd.php)"
-    echo "  --chroot-dir dir     downlod the chroot as dir/base.tar.gz"
+    echo "  --chroot-url url     same as --chroot-uri, for backward compatibility"
+    echo "  --copy               if the chroot is a file, copy it in the Session Manager dir"
+    echo "                       (a symlink is created by default)"
+    echo "  --chroot-dir dir     downlaod the chroot as dir/base.tar.gz"
     echo "                       (default: $WEBDIR/base.tar.gz)"
     echo "  --admin-login login  set the admin login to 'login'"
     echo "  --admin-pwd pwd      set the admin password to 'pwd'"
@@ -78,11 +82,29 @@ set_admin_credentials () {
 }
 
 get_chroot () {
-    wget --spider $WGETARGS $URL || die Unable to reach the chroot tarball. Aborting.
-    wget $WGETARGS "$URL" -O $TARGET || die An error occured while downloading the chroot. Aborting.
+    case $URI in
+    http://*|ftp://*)
+        wget --spider $WGETARGS $URI || die Unable to reach the chroot tarball. Aborting.
+        wget $WGETARGS "$URI" -O $TARGET || die An error occured while downloading the chroot. Aborting.
+        # Create a symlink to $WEBDIR/base.tar.gz if this file doesn't exist
+        [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$TARGET" "$WEBDIR/base.tar.gz"
+        ;;
 
-    # Create a symlink to $WEBDIR/base.tar.gz if this file doesn't exist
-    [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$TARGET" "$WEBDIR/base.tar.gz"
+    file://*)
+        path=${URI#file://}
+        [ ! -e $path ] && die $URI does not exist. Aborting.
+        if [ -n "$COPY" ]; then
+            echo "Copying the archive to $WEBDIR/base.tar.gz."
+            cp "$path" "$WEBDIR/base.tar.gz" || die Unable to copy $path to $WEBDIR/base.tar.gz. Aborting
+        else
+            ln -sf "$path" "$WEBDIR/base.tar.gz" || die Unable to link $path to $WEBDIR/base.tar.gz. Aborting.
+        fi
+        ;;
+
+    *)
+        die Unrecognized protocol \($URI\)
+        ;;
+    esac
 }
 
 unset NODOWNLOAD
@@ -91,16 +113,20 @@ unset APACHE_DIR
 unset LOGIN
 unset PASS1
 unset PASS2
-unset URL
+unset URI
+unset COPY
 unset TARGET
 NOCONFIRM=0
 while [ x"$1" != x"" ]; do
     case $1 in
         --no-download)
             NODOWNLOAD="ok";;
-        --chroot-url)
-            URL="$2"
+        --chroot-url|--chroot-uri)
+            URI="$2"
             shift;;
+        --copy)
+            COPY="yes"
+            ;;
         --chroot-dir)
             TARGET="$2"
             shift;;
@@ -190,14 +216,15 @@ done
 if [ -z "$NODOWNLOAD" ]; then
     PROPOSED_URL=http://www.ulteo.com/main/downloads/ulteo-ovd.php
     PROPOSED_TARGET=$WEBDIR/base.tar.gz
-    if [ -z "$URL" ]; then
+    if [ -z "$URI" ]; then
         echo -n "Chroot download url [$PROPOSED_URL]: "
-        read URL
-        if [ -z "$URL" ]; then
-            URL=$PROPOSED_URL
+        read URI
+        if [ -z "$URI" ]; then
+            URI=$PROPOSED_URL
         fi
     fi
-    if [ -z "$TARGET" ]; then
+    case $URI in
+    http://*|ftp://*)
         echo -n "Chroot destination [$PROPOSED_TARGET]: "
         read TARGET
         if [ -z "$TARGET" ]; then
@@ -206,7 +233,11 @@ if [ -z "$NODOWNLOAD" ]; then
         if [ -d "$TARGET" ]; then
             TARGET="$TARGET"/base.tar.gz
         fi
-    fi
+        ;;
+    *)
+        # noop
+        ;;
+    esac
 fi
 
 echo
@@ -214,7 +245,7 @@ echo "Options:"
 echo -n "* chroot download:  "
 if [ -z "$NODOWNLOAD" ]; then
     echo "yes"
-    echo "* chroot URL:       $URL"
+    echo "* chroot URI:       $URI"
     echo "* chroot directory: $TARGET"
 else
     echo "no"
