@@ -156,7 +156,7 @@ function start_app() {
 					var xml = transport.responseXML;
 					buffer = xml.getElementsByTagName('access');
 					if (buffer.length != 1) {
-						push_log('[start_app] bad xml format', 'error');
+						push_log('[start_app] bad xml format 1', 'error');
 						return;
 					}
 
@@ -164,7 +164,7 @@ function start_app() {
 
 					access_id = accessNode.getAttribute('id');
 				} catch(e) {
-					push_log('[start_app] bad xml format', 'error');
+					push_log('[start_app] bad xml format 2', 'error');
 					return;
 				}
 
