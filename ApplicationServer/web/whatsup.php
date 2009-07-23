@@ -213,7 +213,9 @@ if ($status == 2) {
     if (file_exists($session_dir.'/infos/keepmealive')) {
       @touch($session_dir.'/infos/keepmealive');
 
-      if (isset($_GET['application_id']) && $_GET['application_id'] != '')
+      if ($_SESSION['mode'] == 'desktop')
+        @touch($session_dir.'/sessions/desktop/keepmealive');
+      elseif (isset($_GET['application_id']) && $_GET['application_id'] != '')
         @touch($session_dir.'/sessions/'.$_GET['application_id'].'/keepmealive');
     }
   }

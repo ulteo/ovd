@@ -89,7 +89,7 @@ function daemon_loop() {
 		);
 	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
 		if (! application_started)
-			start_app('desktop');
+			switch_splash_to_applet('desktop');
 
 		application_started = true;
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
@@ -101,39 +101,6 @@ function daemon_loop() {
 	setTimeout(function() {
 		daemon_loop();
 	}, refresh);
-}
-
-function start_app(command_) {
-	new Ajax.Request(
-		'../start_app.php',
-		{
-			method: 'get',
-			parameters: {
-				app_id: 'desktop',
-				command: command_,
-				size: my_width+'x'+my_height
-			},
-			onSuccess: function(transport) {
-				try {
-					var xml = transport.responseXML;
-					buffer = xml.getElementsByTagName('access');
-					if (buffer.length != 1) {
-						push_log('[start_app] bad xml format 1', 'error');
-						return;
-					}
-
-					var accessNode = buffer[0];
-
-					access_id = accessNode.getAttribute('id');
-				} catch(e) {
-					push_log('[start_app] bad xml format 2', 'error');
-					return;
-				}
-
-				switch_splash_to_applet(access_id);
-			}
-		}
-	);
 }
 
 function switch_splash_to_applet(access_id_) {
