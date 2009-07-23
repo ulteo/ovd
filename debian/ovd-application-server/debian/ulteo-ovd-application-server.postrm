@@ -18,8 +18,11 @@ rm -f /etc/ulteo-ovd.conf
 rm -f /etc/apache2/sites-available/applicationserver
 rm -f /etc/apache2/sites-enabled/applicationserver
 
-reload_apache
-
 #DEBHELPER#
+
+# make sure debhelp doesn't get confused by the apache reload
+db_stop
+
+reload_apache
 
 exit 0
