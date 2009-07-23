@@ -88,10 +88,26 @@ Function un.WindowsInstall
 
   StrCmp $UNWinVersion '5.1' lbl_winnt_XP
   StrCmp $UNWinVersion '5.2' lbl_winnt_2003
-  StrCmp $UNWinVersion '6.0' lbl_winnt_vista
+  StrCmp $UNWinVersion '6.0' lbl_winnt_6.0
   
   Goto lbl_done
  
+  lbl_winnt_6.0:
+    ;Detecting the OS version between Vista and 2008
+    Var /GLOBAL prodName
+    Var /GLOBAL strSize
+
+    ReadRegStr $prodName HKLM "Software\Microsoft\Windows NT\CurrentVersion" ProductName
+
+    Push $prodName
+    Push "2008"
+    Call StrStr
+    Pop $R0
+
+    StrLen $strSize $R0
+    IntCmp 0 $sizeStr lbl_winnt_vista
+    Goto lbl_winnt_2008
+
   lbl_winnt_XP:
     ;Change the default Shell for Windows XP
     DetailPrint "Restore Default Shell"
@@ -103,7 +119,9 @@ Function un.WindowsInstall
     Goto lbl_done
  
   lbl_winnt_vista:
-    ;Vista or 2008 Server
+    Goto lbl_done
+
+  lbl_winnt_2008:
     Delete "$SYSDIR\seamlessrdpshell.exe"
     Delete "$SYSDIR\seamlessrdpshell.dll"
     Delete "$SYSDIR\vchannel.dll"
