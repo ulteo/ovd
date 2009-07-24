@@ -1,6 +1,6 @@
 SUBDIRS = media
 
-scripts_DATA = application.js apps.php common.css daemon.js external_app.php index.php running_apps.php resume.php resume_app.php
+scripts_DATA = application.js apps.php common.css daemon.js external_app.php index.php running_apps.php resume.php resume_app.php functions.js
 
 scriptsdir = $(datadir)/ulteo/applicationserver/portal
 

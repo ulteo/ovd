@@ -84,11 +84,12 @@ function daemon_loop() {
 		);
 	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
 		if (! application_started) {
-			list_apps();
-			start_app('desktop');
+			switch_splash_to_applet('desktop');
 
-			application_started = true;
+			list_apps();
 		}
+
+		application_started = true;
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
 		window_alive = false;
 		switch_applet_to_end();
@@ -98,39 +99,6 @@ function daemon_loop() {
 	setTimeout(function() {
 		daemon_loop();
 	}, refresh);
-}
-
-function start_app(command_) {
-	new Ajax.Request(
-		'../start_app.php',
-		{
-			method: 'get',
-			parameters: {
-				app_id: 'desktop',
-				command: command_,
-				size: my_width+'x'+my_height
-			},
-			onSuccess: function(transport) {
-				try {
-					var xml = transport.responseXML;
-					buffer = xml.getElementsByTagName('access');
-					if (buffer.length != 1) {
-						push_log('[start_app] bad xml format 1', 'error');
-						return;
-					}
-
-					var accessNode = buffer[0];
-
-					access_id = accessNode.getAttribute('id');
-				} catch(e) {
-					push_log('[start_app] bad xml format 2', 'error');
-					return;
-				}
-
-				switch_splash_to_applet(access_id);
-			}
-		}
-	);
 }
 
 function switch_splash_to_applet(access_id_) {
@@ -158,13 +126,8 @@ function switch_splash_to_applet(access_id_) {
 
 					var sessionNode = buffer[0];
 
-					buffer = sessionNode.getElementsByTagName('parameters');
-					var parametersNode = buffer[0];
-
-					applet_width = parametersNode.getAttribute('width');
-					applet_height = parametersNode.getAttribute('height');
-					applet_share_desktop = parametersNode.getAttribute('share_desktop');
-					applet_view_only = parametersNode.getAttribute('view_only');
+					applet_width = 1;
+					applet_height = 1;
 
 					buffer = sessionNode.getElementsByTagName('ssh');
 					var sshNode = buffer[0];
@@ -180,21 +143,6 @@ function switch_splash_to_applet(access_id_) {
 						if (i < buffer.length-1)
 							applet_ssh_ports = applet_ssh_ports+',';
 					}
-
-					buffer = sessionNode.getElementsByTagName('vnc');
-					var vncNode = buffer[0];
-
-					applet_vnc_host = vncNode.getAttribute('host');
-					applet_vnc_port = vncNode.getAttribute('port');
-					applet_vnc_passwd = vncNode.getAttribute('passwd');
-
-					buffer = vncNode.getElementsByTagName('quality');
-					var vncQualityNode = buffer[0];
-
-					applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
-					applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
-					applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
-					applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
 
 					buffer = sessionNode.getElementsByTagName('proxy');
 					if (buffer.length == 1) {
@@ -219,31 +167,11 @@ function switch_splash_to_applet(access_id_) {
 					<param name="cache_archive" value="'+applet_version+'" /> \
 					<param name="cache_archive_ex" value="'+applet_version+';preload" /> \
 					\
-					<param name="Share desktop" value="'+applet_share_desktop+'" /> \
-					<param name="View only" value="'+applet_view_only+'" /> \
-					\
 					<param name="SSH" value="yes" /> \
 					<param name="ssh.host" value="'+applet_ssh_host+'" /> \
 					<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
 					<param name="ssh.user" value="'+applet_ssh_user+'" /> \
 					<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
-					\
-					<param name="HOST" value="'+applet_vnc_host+'" /> \
-					<param name="PORT" value="'+applet_vnc_port+'" /> \
-					<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
-					\
-					<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
-					<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
-					<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
-					<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
-					\
-					<!-- Caching options --> \
-					<param name="rfb.cache.enabled" value="true" /> \
-					<param name="rfb.cache.ver.major" value="1" /> \
-					<param name="rfb.cache.ver.minor" value="0" /> \
-					<param name="rfb.cache.size" value="42336000" /> \
-					<param name="rfb.cache.alg" value="LRU" /> \
-					<param name="rfb.cache.datasize" value="2000000" /> \
 					\
 					<param name="proxyType" value="'+applet_proxy_type+'" /> \
 					<param name="proxyHost" value="'+applet_proxy_host+'" /> \
@@ -255,9 +183,7 @@ function switch_splash_to_applet(access_id_) {
 				var appletNode = $('appletContainer').getElementsByTagName('applet');
 				if (appletNode.length > 0) {
 					appletNode = appletNode[0];
-// 					appletNode.width = parseInt(my_width);
 					appletNode.width = 1;
-// 					appletNode.height = parseInt(my_height);
 					appletNode.height = 1;
 				}
 				$('mainWrap').show();
@@ -513,76 +439,4 @@ function do_invite() {
 
 	$('invite_email').value = '';
 	$('invite_mode').checked = false;
-}
-
-function list_apps() {
-	new Ajax.Updater(
-		$('appsContainer'),
-		'apps.php'
-	);
-}
-
-function list_running_apps(apps_) {
-	new Ajax.Updater(
-		$('runningAppsContainer'),
-		'running_apps.php',
-		{
-			method: 'get',
-			parameters: {
-				apps: apps_
-			}
-		}
-	);
-}
-
-function startExternalApp(app_id_, command_) {
-	var rand_ = Math.round(Math.random()*100);
-
-	window_ = popupOpen(rand_);
-
-	setTimeout(function() {
-		window_.location.href = 'external_app.php?app_id='+app_id_+'&command='+command_;
-	}, 1000);
-
-	return true;
-}
-
-function popupOpen(rand_) {
-	var my_width = screen.width;
-	var my_height = screen.height;
-	var new_width = 0;
-	var new_height = 0;
-	var pos_top = 0;
-	var pos_left = 0;
-
-	new_width = my_width;
-	new_height = my_height;
-
-	var w = window.open('about:blank', 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+new_width+',height='+new_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-
-	return w;
-}
-
-function suspendApplication(access_id_) {
-	new Ajax.Request(
-		'application_exit.php',
-		{
-			method: 'get',
-			parameters: {
-				access_id: access_id_
-			}
-		}
-	);
-}
-
-function resumeApplication(access_id_) {
-	var rand_ = Math.round(Math.random()*100);
-
-	window_ = popupOpen(rand_);
-
-	setTimeout(function() {
-		window_.location.href = 'resume.php?access_id='+access_id_;
-	}, 1000);
-
-	return true;
 }
