@@ -28,15 +28,71 @@
 !ifndef WINDOWSVERSION_FUNCTION
 !define WINDOWSVERSION_FUNCTION
 
+!include nsis\String.nsh
+
 !macro WindowsVersionDetection un
 
   !ifndef ${un}WINVERSION_SET
     !define ${un}WINVERSION_SET
 
-    Var /GLOBAL ${un}WinVersion
+    Var /GLOBAL ${un}WinVersionNum
+    Var /GLOBAL ${un}WinVersionLbl
 
-    ReadRegStr $${un}WinVersion HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+    ReadRegStr $${un}WinVersionNum HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+
+    StrCmp $${un}WinVersionNum '5.1' lbl_winnt_XP
+    StrCmp $${un}WinVersionNum '5.2' lbl_winnt_2003
+    StrCmp $${un}WinVersionNum '6.0' lbl_winnt_6.0
+
+    Goto lbl_winDetect_done
+
+    lbl_winnt_XP:
+      StrCpy $${un}WinVersionLbl "XP"
+
+      Goto lbl_winDetect_done
+
+    lbl_winnt_2003:
+      StrCpy $${un}WinVersionLbl "2003"
+
+      Goto lbl_winDetect_done
+
+    lbl_winnt_6.0:
+      !insertmacro DifferenciateVistaAnd2008 "${un}"
+      Pop $R0
+      IntCmp 0 $R0 lbl_winnt_vista
+      
+      Goto lbl_winnt_2008
+
+    lbl_winnt_vista:
+      StrCpy $${un}WinVersionLbl "Vista"
+
+      Goto lbl_winDetect_done
+
+    lbl_winnt_2008:
+      StrCpy $${un}WinVersionLbl "2008"
+
+      Goto lbl_winDetect_done
+
+    lbl_winDetect_done:
+  
   !endif
+
+!macroend
+
+;Detecting the OS version between Vista and 2008
+!macro DifferenciateVistaAnd2008 un
+
+    Var /GLOBAL ${un}prodName
+    Var /GLOBAL ${un}strSize
+
+    ReadRegStr $${un}prodName HKLM "Software\Microsoft\Windows NT\CurrentVersion" ProductName
+
+    Push $${un}prodName
+    Push "2008"
+    !insertmacro SubStr
+    Pop $R0
+    StrLen $${un}strSize $R0
+    Push $${un}strSize
 
 !macroend
 
@@ -47,23 +103,19 @@ Function .WindowsInstall
     !insertmacro WindowsVersionDetection ""
   !endif
 
-  StrCmp $WinVersion '5.1' lbl_winnt_XP
-  StrCmp $WinVersion '5.2' lbl_winnt_2003
-  StrCmp $WinVersion '6.0' lbl_winnt_vista
+  StrCmp $WinVersionLbl "XP" lbl_XP
+  StrCmp $WinVersionLbl "2008" lbl_2008
   
   Goto lbl_done
 
-  lbl_winnt_XP:
+  lbl_XP:
     ;Change the default Shell for Windows XP
     DetailPrint "Change Default Shell"
     WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
-
+    
     Goto lbl_done
  
-  lbl_winnt_2003:
-    Goto lbl_done
- 
-  lbl_winnt_vista:
+  lbl_2008:
     ; If you apply local modification on the user environment variable "path", 
     ; this modification can't be applied in seamless mode.
     ; When you try to connect in seamless mode you end up getting a full-screen 
@@ -86,42 +138,19 @@ Function un.WindowsInstall
     !insertmacro WindowsVersionDetection "UN"
   !endif
 
-  StrCmp $UNWinVersion '5.1' lbl_winnt_XP
-  StrCmp $UNWinVersion '5.2' lbl_winnt_2003
-  StrCmp $UNWinVersion '6.0' lbl_winnt_6.0
+  StrCmp $UNWinVersionLbl "XP" lbl_XP
+  StrCmp $UNWinVersionLbl "2008" lbl_2008
   
   Goto lbl_done
  
-  lbl_winnt_6.0:
-    ;Detecting the OS version between Vista and 2008
-    Var /GLOBAL prodName
-    Var /GLOBAL strSize
-
-    ReadRegStr $prodName HKLM "Software\Microsoft\Windows NT\CurrentVersion" ProductName
-
-    Push $prodName
-    Push "2008"
-    Call StrStr
-    Pop $R0
-
-    StrLen $strSize $R0
-    IntCmp 0 $sizeStr lbl_winnt_vista
-    Goto lbl_winnt_2008
-
-  lbl_winnt_XP:
+  lbl_XP:
     ;Change the default Shell for Windows XP
     DetailPrint "Restore Default Shell"
     WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "explorer.exe"
 
     Goto lbl_done
  
-  lbl_winnt_2003:
-    Goto lbl_done
- 
-  lbl_winnt_vista:
-    Goto lbl_done
-
-  lbl_winnt_2008:
+  lbl_2008:
     Delete "$SYSDIR\seamlessrdpshell.exe"
     Delete "$SYSDIR\seamlessrdpshell.dll"
     Delete "$SYSDIR\vchannel.dll"
