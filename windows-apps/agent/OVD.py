@@ -41,6 +41,7 @@ import win32service
 import win32serviceutil
 import wmi
 import utils
+import mime
 from ctypes import *
 from ctypes.wintypes import DWORD
 SIZE_T = c_ulong
@@ -97,7 +98,7 @@ def load_shell_config_file(conf):
 		# We are not very strict because it's a configuration file
 		# use by the old daemon software
 		if not key in match.keys():
-		#     raise Exception("Invalid key name '%s'"%(key))
+		#	 raise Exception("Invalid key name '%s'"%(key))
 			continue
 
 		if utils.myOS() == "windows":
@@ -196,6 +197,8 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.webserver.log = self.log
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
 
+		self.mimetypes = mime.MimeInfos()
+
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
@@ -271,6 +274,11 @@ class OVD(win32serviceutil.ServiceFramework):
 		else:
 			return self.applicationsXML
 	
+	def _compare_commands(self, cm1, cm2):
+		if cm1.lower().find(cm2.lower()) != -1:
+			return True
+		return False
+
 	def getApplicationsXML_nocache(self):
 		self.log.debug("getApplicationsXML_nocache")
 		def find_lnk(base_):
@@ -316,6 +324,17 @@ class OVD(win32serviceutil.ServiceFramework):
 					
 					if unicode(shortcut.GetIconLocation()[0], output_encoding) != '':
 						exe.setAttribute("icon", unicode(shortcut.GetIconLocation()[0], output_encoding))
+
+					# Find the mime types linked to the application
+					# TODO: there is probably a faster way to handle this
+					mimetypes = ""
+					cmd = unicode(shortcut.GetPath(0)[0], output_encoding)
+					for extension in self.mimetypes.extensions:
+						for app_path in self.mimetypes.ext_keys[extension]["apps"]:
+							if self._compare_commands(app_path, cmd):
+								mimetypes += "%s;"%self.mimetypes.ext_keys[extension]["type"]
+					exe.setAttribute("mimetypes", mimetypes);
+
 					exe.setAttribute("command", unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding))
 					
 					app.appendChild(exe)
