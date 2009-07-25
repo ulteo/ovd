@@ -127,10 +127,11 @@ class ApplicationDB_sql extends ApplicationDB {
 				unset($row['package']);
 				unset($row['icon_path']);
 				unset($row['desktopfile']);
+				unset($row['mimetypes']);
 				
 			}
 			else {
-				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['icon_path'], $row['published']);
+				$r = new Application($row['id'], $row['name'],$row['description'], $row['type'], $row['executable_path'], $row['package'], $row['icon_path'], $row['mimetypes'], $row['published']);
 				
 			}
 			foreach ($row as $key => $value){

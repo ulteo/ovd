@@ -92,6 +92,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			'icon_path' => 'varchar(150) default NULL',
 			'package' => 'varchar(100) NOT NULL',
 			'desktopfile' => 'varchar(150) default NULL',
+			'mimetypes' => 'varchar(500) default NULL',
 			'published' => 'tinyint(1) default \'0\'',
 			'static' => 'tinyint(1) default \'0\'');
 

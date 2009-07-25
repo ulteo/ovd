@@ -24,7 +24,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Application {
 	protected $attributes;
 
-	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $type_=NULL, $executable_path_=NULL, $package_=NULL, $icon_path_=NULL, $published_=true,$desktopfile_=NULL) {
+	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $type_=NULL, $executable_path_=NULL, $package_=NULL, $icon_path_=NULL, $mimetypes_=NULL, $published_=true, $desktopfile_=NULL) {
 		$this->attributes = array();
 		$this->attributes['id'] = $id_;
 		$this->attributes['name'] = $name_;
@@ -35,7 +35,7 @@ class Application {
 		$this->attributes['package'] = $package_;
 		$this->attributes['published'] = (bool)($published_);
 		$this->attributes['desktopfile'] = $desktopfile_;
-
+		$this->attributes['mimetypes'] = $mimetypes_;
 	}
 
 	public function __toString() {
@@ -174,6 +174,8 @@ class Application {
 			$executable_node->setAttribute('command', $this->attributes['executable_path']);
 		if ( $this->hasAttribute('icon_path'))
 			$executable_node->setAttribute('icon', $this->attributes['icon_path']);
+		if ( $this->hasAttribute('mimetypes'))
+			$executable_node->setAttribute('mimetypes', $this->attributes['mimetypes']);
 
 		foreach ($list_attr as $attr_name) {
 			$application_node->setAttribute($attr_name, $this->attributes[$attr_name]);
