@@ -31,6 +31,7 @@ class Application(dict):
         self['Name'] = doc.getAttribute("name")
         self['Comment'] = doc.getAttribute("description")
         self['Icon'] = 'vapp-%s.png'%(id)
+        self['MimeType'] = doc.getAttribute("mimetypes")
 
         execNode = doc.getElementsByTagName('executable')[0]
 
