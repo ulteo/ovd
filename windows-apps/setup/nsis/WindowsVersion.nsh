@@ -40,41 +40,33 @@
 
     ReadRegStr $${un}WinVersionNum HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
 
-    StrCmp $${un}WinVersionNum '5.1' lbl_winnt_XP
-    StrCmp $${un}WinVersionNum '5.2' lbl_winnt_2003
-    StrCmp $${un}WinVersionNum '6.0' lbl_winnt_6.0
+    ${Switch} $${un}WinVersionNum
+      ;Windows XP
+      ${Case} '5.1'
+        StrCpy $${un}WinVersionLbl "XP"
+        ${Break}
 
-    Goto lbl_winDetect_done
+      ;Windows 2003
+      ${Case} '5.2'
+        StrCpy $${un}WinVersionLbl "2003"
+        ${Break}
 
-    lbl_winnt_XP:
-      StrCpy $${un}WinVersionLbl "XP"
+      ${Case} 6.0
+        !insertmacro DifferenciateVistaAnd2008 "${un}"
+        Pop $R0
+        ${If} $R0 == '0'
+          ;Windows Vista
+          StrCpy $${un}WinVersionLbl "Vista"
+        ${Else}
+          ;Windows 2008
+          StrCpy $${un}WinVersionLbl "2008"
+        ${EndIf}
+        ${Break}
 
-      Goto lbl_winDetect_done
+      ${Default}
+        ${Break}
+    ${EndSwitch}
 
-    lbl_winnt_2003:
-      StrCpy $${un}WinVersionLbl "2003"
-
-      Goto lbl_winDetect_done
-
-    lbl_winnt_6.0:
-      !insertmacro DifferenciateVistaAnd2008 "${un}"
-      Pop $R0
-      IntCmp 0 $R0 lbl_winnt_vista
-      
-      Goto lbl_winnt_2008
-
-    lbl_winnt_vista:
-      StrCpy $${un}WinVersionLbl "Vista"
-
-      Goto lbl_winDetect_done
-
-    lbl_winnt_2008:
-      StrCpy $${un}WinVersionLbl "2008"
-
-      Goto lbl_winDetect_done
-
-    lbl_winDetect_done:
-  
   !endif
 
 !macroend
@@ -103,31 +95,27 @@ Function .WindowsInstall
     !insertmacro WindowsVersionDetection ""
   !endif
 
-  StrCmp $WinVersionLbl "XP" lbl_XP
-  StrCmp $WinVersionLbl "2008" lbl_2008
-  
-  Goto lbl_done
+  ${Switch} $WinVersionLbl
+    ${Case} "XP"
+      ;Change the default Shell for Windows XP
+      DetailPrint "Change Default Shell"
+      WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
+      ${Break}
 
-  lbl_XP:
-    ;Change the default Shell for Windows XP
-    DetailPrint "Change Default Shell"
-    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "seamlessrdpshell.exe"
-    
-    Goto lbl_done
- 
-  lbl_2008:
-    ; If you apply local modification on the user environment variable "path", 
-    ; this modification can't be applied in seamless mode.
-    ; When you try to connect in seamless mode you end up getting a full-screen 
-    ; display of the entire windows desktop.
-    ; It's not possible to modify the path environment variable for 
-    ; remote application users even if you use Group policy object.
-    ; This solution helps also to keep the control on the explorer for administrative tasks.
-    CopyFiles $INSTDIR\rdp\* $SYSDIR
+    ${Case} "2008"
+      ; If you apply local modification on the user environment variable "path", 
+      ; this modification can't be applied in seamless mode.
+      ; When you try to connect in seamless mode you end up getting a full-screen 
+      ; display of the entire windows desktop.
+      ; It's not possible to modify the path environment variable for 
+      ; remote application users even if you use Group policy object.
+      ; This solution helps also to keep the control on the explorer for administrative tasks.
+      CopyFiles $INSTDIR\rdp\* $SYSDIR
+      ${Break}
 
-    Goto lbl_done
- 
-  lbl_done:
+    ${Default}
+      ${Break}
+  ${EndSwitch}
 
 FunctionEnd
 
@@ -138,26 +126,22 @@ Function un.WindowsInstall
     !insertmacro WindowsVersionDetection "UN"
   !endif
 
-  StrCmp $UNWinVersionLbl "XP" lbl_XP
-  StrCmp $UNWinVersionLbl "2008" lbl_2008
-  
-  Goto lbl_done
- 
-  lbl_XP:
-    ;Change the default Shell for Windows XP
-    DetailPrint "Restore Default Shell"
-    WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "explorer.exe"
+  ${Switch} $UNWinVersionLbl
+    ${Case} "XP"
+      ;Change the default Shell for Windows XP
+      DetailPrint "Restore Default Shell"
+      WriteRegStr HKLM "Software\Microsoft\Windows NT\CurrentVersion\WinLogon" "Shell" "explorer.exe"
+      ${Break}
 
-    Goto lbl_done
- 
-  lbl_2008:
-    Delete "$SYSDIR\seamlessrdpshell.exe"
-    Delete "$SYSDIR\seamlessrdpshell.dll"
-    Delete "$SYSDIR\vchannel.dll"
+    ${Case} "2008"
+      Delete "$SYSDIR\seamlessrdpshell.exe"
+      Delete "$SYSDIR\seamlessrdpshell.dll"
+      Delete "$SYSDIR\vchannel.dll"
+      ${Break}
 
-    Goto lbl_done
- 
-  lbl_done:
+    ${Default}
+      ${Break}
+  ${EndSwitch}
 
 FunctionEnd
 
