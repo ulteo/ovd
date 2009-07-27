@@ -41,7 +41,7 @@ class UserDB_ldap  extends UserDB {
 		}
 		$infos = $ldap->get_entries($sr);
 		if (!is_array($infos)) {
-			Logger::error('main', "UserDB_ldap::import($login_) get_entries failed");
+			Logger::error('main', "UserDB_ldap::import($login_) get_entries failed (does user exist ?)");
 			return NULL;
 		}
 		if ($infos == array()) {
