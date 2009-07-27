@@ -17,6 +17,12 @@
 
 from _winreg import *
 
+# _winreg.ExpandEnvironmentStrings only appears in python 2.6
+try:
+	ExpandEnvironmentStrings("%TMP%")
+except:
+	from win32api import ExpandEnvironmentStrings
+
 ROOT = HKEY_CLASSES_ROOT
 
 class MimeInfos():
