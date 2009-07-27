@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import re
 from _winreg import *
 
 # _winreg.ExpandEnvironmentStrings only appears in python 2.6
@@ -49,8 +50,10 @@ class MimeInfos():
 
 
 	def _replace(self, cmd):
-		for s in ["\"%L\"", "%L", "\"%1\"", "%1", "\"%l\"", "%l"]:
-			cmd = cmd.replace(s, "")
+		r = re.compile(r'("?)%[l0-9]+("?)')
+		cmd = r.sub(r'\1%f\2', cmd)
+		r = re.compile(r'("?)%[L]+("?)')
+		cmd = r.sub(r'\1%F\2', cmd)
 		return cmd
 
 	def _get_app_path(self, app):
