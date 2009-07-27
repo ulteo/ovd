@@ -149,7 +149,10 @@ Function un.onInit
     !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
+!include nsis\ActiveDirectory.nsh
+
 Section "Main Section" SecMain
+  Call .DomainVerification 
   SetOutPath "$INSTDIR"
 
   ;Store installation folder
