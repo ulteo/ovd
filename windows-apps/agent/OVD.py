@@ -327,13 +327,15 @@ class OVD(win32serviceutil.ServiceFramework):
 
 					# Find the mime types linked to the application
 					# TODO: there is probably a faster way to handle this
-					mimetypes = ""
+					mimetypes = []
 					cmd = unicode(shortcut.GetPath(0)[0], output_encoding)
 					for extension in self.mimetypes.extensions:
 						for app_path in self.mimetypes.ext_keys[extension]["apps"]:
-							if self._compare_commands(app_path, cmd):
-								mimetypes += "%s;"%self.mimetypes.ext_keys[extension]["type"]
-					exe.setAttribute("mimetypes", mimetypes);
+							if self._compare_commands(app_path, cmd) and \
+							        self.mimetypes.ext_keys[extension]["type"] not in mimetypes:
+								mimetypes.append(self.mimetypes.ext_keys[extension]["type"])
+					if mimetypes:
+						exe.setAttribute("mimetypes", ";".join(mimetypes)+";");
 
 					exe.setAttribute("command", unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding))
 					
