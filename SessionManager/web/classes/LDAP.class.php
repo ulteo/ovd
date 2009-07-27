@@ -218,8 +218,10 @@ class LDAP {
 
 		$this->check_link();
 
-		if (!is_resource($search_))
+		if (!is_resource($search_)) {
+			Logger::error('main', 'LDAP::get_entries: search_ is not a resource (type: '.gettype($search_).')');
 			return false;
+		}
 
 		$ret = array();
 		for ($entryID=ldap_first_entry($this->link, $search_); $entryID != false; $entryID = ldap_next_entry($this->link, $entryID)) {
