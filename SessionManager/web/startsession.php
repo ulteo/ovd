@@ -152,7 +152,7 @@ else {
 		$ev->setAttribute('ok', false);
 		$ev->setAttribute('error', _('No available server'));
 		$ev->emit();
-		die_error(_('You don\'t have access to any application or server for now'),__FILE__,__LINE__);
+		die_error(_('You don\'t have access to a linux server for now'),__FILE__,__LINE__);
 	}
 }
 
@@ -290,8 +290,10 @@ if (isset($windows_login) && $windows_login != '') {
 		$optional_args['windows_server'] = $windows_server->fqdn;
 		$optional_args['windows_login'] = $windows_login;
 		$optional_args['windows_password'] = $_SESSION['password'];
-	} else
+	} else {
 		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
+		die_error(_('You don\'t have access to a windows server for now'),__FILE__,__LINE__);
+	}
 }
 
 $plugins->doStartsession(array(
