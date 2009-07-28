@@ -58,6 +58,16 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 	</head>
 
 	<body>
+		<div id="lockWrap" style="display: none;">
+		</div>
+
+		<div id="errorWrap" style="display: none;">
+		</div>
+		<div id="okWrap" style="display: none;">
+		</div>
+		<div id="infoWrap" style="display: none;">
+		</div>
+
 		<div id="mainWrap" style="display: none;">
 			<div id="headerWrap">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">

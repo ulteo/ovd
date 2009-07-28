@@ -69,3 +69,118 @@ function resumeApplication(access_id_) {
 
 	return true;
 }
+
+function shareApplication(access_id_) {
+	new Ajax.Request(
+		'share_app.php',
+		{
+			method: 'get',
+			parameters: {
+				access_id: access_id_
+			},
+			onSuccess: function(transport) {
+				showInfo(transport.responseText);
+			}
+		}
+	);
+}
+
+Event.observe(window, 'load', function() {
+	$('lockWrap').hide();
+	$('lockWrap').style.width = document.body.clientWidth+'px';
+	$('lockWrap').style.height = document.body.clientHeight+'px';
+
+	$('errorWrap').hide();
+	$('okWrap').hide();
+	$('infoWrap').hide();
+
+	Event.observe($('lockWrap'), 'click', function() {
+		if ($('errorWrap').visible())
+			hideError();
+
+		if ($('okWrap').visible())
+			hideOk();
+
+		if ($('infoWrap').visible())
+			hideInfo();
+	});
+});
+
+function showLock() {
+	if (!$('lockWrap').visible()) {
+		$('lockWrap').style.width = document.body.clientWidth+'px';
+		$('lockWrap').style.height = document.body.clientHeight+'px';
+
+		$('lockWrap').show();
+	}
+}
+
+function hideLock() {
+	if ($('lockWrap').visible())
+		$('lockWrap').hide();
+}
+
+function showError(errormsg) {
+	hideOk();
+	hideInfo();
+
+	showLock();
+
+	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideError(); return false"><img src="media/image/cross.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+errormsg;
+
+	Effect.Center($('errorWrap'));
+
+	Effect.Appear($('errorWrap'));
+}
+
+function hideError() {
+	$('errorWrap').hide();
+
+	hideLock();
+
+	$('errorWrap').innerHTML = '';
+	$('errorWrap').style.width = '';
+	$('errorWrap').style.height = '';
+}
+
+function showOk(okmsg) {
+	hideInfo();
+
+	showLock();
+
+	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideOk(); return false"><img src="media/image/cross.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+okmsg;
+
+	Effect.Center($('okWrap'));
+
+	Effect.Appear($('okWrap'));
+}
+
+function hideOk() {
+	$('okWrap').hide();
+
+	hideLock();
+
+	$('okWrap').innerHTML = '';
+	$('okWrap').style.width = '';
+	$('okWrap').style.height = '';
+}
+
+function showInfo(infomsg) {
+	showLock();
+
+	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideInfo(); return false"><img src="media/image/cross.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+infomsg;
+
+	Effect.Center($('infoWrap'));
+
+	Effect.Appear($('infoWrap'));
+}
+
+function hideInfo() {
+	$('infoWrap').hide();
+
+	hideLock();
+
+	$('infoWrap').innerHTML = '';
+	$('infoWrap').style.width = '';
+	$('infoWrap').style.height = '';
+}

@@ -409,6 +409,7 @@ function do_print(path, timestamp) {
 }
 
 function do_invite() {
+	var invite_access_id = $('invite_access_id').value;
 	var email = $('invite_email').value;
 	var mode = 'passive';
 	if ($('invite_mode').checked)
@@ -421,17 +422,21 @@ function do_invite() {
 			method: 'post',
 			parameters: {
 				'email': email,
-				'mode': mode
+				'mode': mode,
+				'access_id': invite_access_id
 			},
 			onSuccess: function(transport) {
 				if (transport.responseText != 'OK') {
+					$('invite_access_id').disabled = true;
 					$('invite_email').disabled = true;
 					$('invite_mode').disabled = true;
 					$('invite_submit').disabled = true;
 
-					$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
+					showError('Unable to send invitation mail, please try again later...');
 				} else if (transport.responseText == 'OK') {
 					$('invite_submit').disabled = false;
+
+					showOk('Invitation has been sent !');
 				}
 			}
 		}

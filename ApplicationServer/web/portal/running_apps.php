@@ -68,7 +68,16 @@ foreach ($apps as $k => $app) {
 
 	echo '<tr>';
 	echo '<td><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></td>';
-	echo '<td><strong>'.$name.'</strong>';
+	echo '<td><strong>'.$name.'</strong><br />';
+	if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
+		echo ' ';
+		if ($status == 2)
+			echo '<a href="javascript:;" onclick="return shareApplication(\''.$access_id.'\');">'._('share').'</a>';
+	}
+
+	if (($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) && ($_SESSION['parameters']['persistent']) && ($status == 2))
+		echo ' - ';
+
 	if (isset($_SESSION['parameters']['persistent'])) {
 		echo ' ';
 		if ($status == 2)
