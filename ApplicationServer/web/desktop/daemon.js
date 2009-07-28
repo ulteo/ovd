@@ -1,5 +1,6 @@
 var refresh = 2000;
 
+var access_id;
 var applet_version;
 var applet_main_class;
 var printing_applet_version;
@@ -88,8 +89,11 @@ function daemon_loop() {
 			}
 		);
 	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
-		if (! application_started)
-			switch_splash_to_applet('desktop');
+		if (! application_started) {
+			access_id = 'desktop';
+
+			switch_splash_to_applet();
+		}
 
 		application_started = true;
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
@@ -103,13 +107,13 @@ function daemon_loop() {
 	}, refresh);
 }
 
-function switch_splash_to_applet(access_id_) {
+function switch_splash_to_applet() {
 	new Ajax.Request(
 		'../access.php',
 		{
 			method: 'get',
 			parameters: {
-				application_id: access_id_
+				application_id: access_id
 			},
 			onSuccess: function(transport) {
 				var buffer;
