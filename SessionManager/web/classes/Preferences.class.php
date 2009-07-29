@@ -161,13 +161,6 @@ class Preferences {
 // 		$c = new ConfigElement_input('start_app','start_app','start_app_des','');
 // 		$this->add('general',$c);
 
-		$c = new ConfigElement_select('user_authenticate_sso', _('Use SSO for user authentication'), _('Use SSO for user authentication'), _('Use SSO for user authentication'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general');
-
-		$c = new ConfigElement_input('user_authenticate_trust', _('SERVER variable for SSO'), _('SERVER variable for SSO'), _('SERVER variable for SSO'), 'REMOTE_USER');
-		$this->add($c,'general');
-
 		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
 		$this->add($c,'general');
 		
