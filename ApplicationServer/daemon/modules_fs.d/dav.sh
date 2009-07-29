@@ -61,6 +61,7 @@ dav_get_status() {
 
 dav_do_init_config() {
     echo "ask_auth 0"      >$DAV_CONFIG
+    echo "use_locks 0"    >>$DAV_CONFIG
 
     if [ $DAV_AUTH == 'url' ]; then
 	echo "allow_cookie 1" >>$DAV_CONFIG
