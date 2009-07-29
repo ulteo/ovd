@@ -296,6 +296,18 @@ function show_manage($id, $applicationDB) {
   echo '<td>'.$app->getAttribute('executable_path').'</td>';
   echo '</tr>';
   echo '</table>';
+  
+  // orphan part
+  if ($app->isOrphan() && !($app->getAttribute('static'))) {
+    echo '<br />';
+    echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application?').'\');">';
+    echo '<input type="hidden" name="action" value="del" />';
+    echo '<input type="hidden" name="name" value="Application" />';
+    echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+    echo _('This application is orphan').' <input type="submit" value="'._('Remove this application').'"/>';
+    echo '</form>';
+    echo '<br />';
+  }
 
 //   if ($is_rw) {
 //     echo '<h2>'._('Settings').'</h2>';

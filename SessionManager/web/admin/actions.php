@@ -89,6 +89,27 @@ if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 	die();
 }*/
 
+if ($_REQUEST['name'] == 'Application') {
+	if ($_REQUEST['action'] == 'del') {
+		$prefs = Preferences::getInstance();
+		
+		$mods_enable = $prefs->get('general','module_enable');
+		if (!in_array('ApplicationDB',$mods_enable)){
+			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
+		}
+		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
+		$applicationDB = new $mod_app_name();
+		
+		if ($applicationDB->isWriteable()) {
+			$app = $applicationDB->import($_REQUEST['id']);
+			$applicationDB->remove($app);
+		}
+		else {
+			die_error(_('ApplicationDB is not writeable'),__FILE__,__LINE__);
+		}
+	}
+}
+
 if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		Abstract_Liaison::save('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
