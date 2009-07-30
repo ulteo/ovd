@@ -225,7 +225,7 @@ class Server {
 		Logger::debug('main', 'Starting Server::isNotReady for \''.$this->fqdn.'\'');
 
 		if ($this->getAttribute('status') == 'ready') {
-			Logger::debug('main', 'Server::isNotReady server "'.$this->fqdn.':'.$this->web_port.'" is already "not ready"');
+			Logger::debug('main', 'Server::isNotReady server "'.$this->fqdn.':'.$this->web_port.'" is "ready"');
 			return false;
 		}
 
