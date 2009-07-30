@@ -94,11 +94,14 @@ class Abstract_Session {
 
 		$id = $session_->id;
 
-		if (! Abstract_Session::load($id))
+		if (! Abstract_Session::load($id)) {
+			Logger::info('main', "Abstract_Session::save($session_) unable to load session, we must create it");
+
 			if (! Abstract_Session::create($session_)) {
 				Logger::error('main', "Abstract_Session::save($session_) failed to create session");
 				return false;
 			}
+		}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21 WHERE @22 = %23 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 

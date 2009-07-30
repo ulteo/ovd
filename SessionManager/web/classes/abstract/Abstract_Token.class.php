@@ -81,11 +81,14 @@ class Abstract_Token {
 
 		$id = $token_->id;
 
-		if (! Abstract_Token::load($id))
+		if (! Abstract_Token::load($id)) {
+			Logger::info('main', "Abstract_Token::save($token_) unable to load token, we must create it");
+
 			if (! Abstract_Token::create($token_)) {
 				Logger::error('main', "Abstract_Token::save($token_) Abstract_Token::create failed");
 				return false;
 			}
+		}
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'tokens', 'type', $token_->type, 'link_to', $token_->link_to, 'valid_until', $token_->valid_until, 'id', $id);
 
