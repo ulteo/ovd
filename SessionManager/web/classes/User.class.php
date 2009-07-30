@@ -127,16 +127,17 @@ class User {
 		Logger::debug('main','USER::getAvailableServers (type='.$type.')');
 		$servers = array();
 		$apps = $this->applications($type, false);
+		$apps_static = $this->applications($type, true);
 		$apps_id = array();
 		$apps_type = array();
 		foreach($apps as $app){
 			$apps_id[$app->getAttribute('id')] = $app->getAttribute('id');
 			$apps_type[$app->getAttribute('id')] = $app->getAttribute('type');
 		}
-
-		if (count($apps_id)>0 || $launch_without_apps == 1){
-			$available_servers = Servers::getAvailableType($type);
-			foreach($available_servers as $server){
+		
+		$available_servers = Servers::getAvailableType($type);
+		foreach($available_servers as $server) {
+			if (count($apps_id)>0 || $launch_without_apps == 1) {
 				$elements2 = array();
 				$buf2 = Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn);
 				foreach($buf2 as $buf_liaison) {
@@ -146,6 +147,9 @@ class User {
 				if ( count(array_diff($apps_id, $elements2)) == 0 ){
 					$servers[$server->fqdn]= $server;
 				}
+			}
+			else if (count($apps_static) > 0) {
+				$servers[$server->fqdn]= $server;
 			}
 		}
 		return $servers;
