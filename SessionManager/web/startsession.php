@@ -284,7 +284,7 @@ switch ($prefs->get('UserDB', 'enable')) {
 		break;
 }
 
-if (isset($windows_login) && $windows_login != '') {
+if (isset($windows_login) && $windows_login != '' && count($user->applications('windows')) > 0) {
 	$windows_server = $user->getAvailableServer('windows');
 	if (is_object($windows_server)) {
 		$optional_args['windows_server'] = $windows_server->fqdn;
