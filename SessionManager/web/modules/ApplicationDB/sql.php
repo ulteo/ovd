@@ -30,7 +30,7 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 
 	public function import($id_){
-		Logger::debug('main','ApplicationDB_sql::import');
+		Logger::debug('main', "ApplicationDB_sql::import($id_)");
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE,'id',$id_);
 		if ($res !== false){
@@ -61,7 +61,7 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 
 	public function getList($sort_=false, $type_=NULL){
-		Logger::debug('main','ApplicationDB_sql::getList');
+		Logger::debug('main', "ApplicationDB_sql::getList(sort=$sort_, type=$type_)");
 		$sql2 = MySQL::getInstance();
 		if (is_null($type_))
 			$res = $sql2->DoQuery('SELECT * FROM @1',APPLICATION_TABLE);

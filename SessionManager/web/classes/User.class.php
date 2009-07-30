@@ -153,7 +153,7 @@ class User {
 
 	public function getAvailableServer($type){
 		// get a server who the user can launch his applications
-		Logger::debug('main','USER::getAvailableServer');
+		Logger::debug('main', "USER::getAvailableServer($type)");
 		$list_servers = $this->getAvailableServers($type);
 
 		$prefs = Preferences::getInstance();
@@ -204,7 +204,7 @@ class User {
 	}
 
 	public function applications($type=NULL, $with_static_=true){
-		Logger::debug('main','USER::applications');
+		Logger::debug('main', "USER::applications(type=$type, with_static=$with_static_)");
 
 		$applicationDB = ApplicationDB::getInstance();
 
