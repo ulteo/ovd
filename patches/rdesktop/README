@@ -7,3 +7,6 @@
 * ulteo_monitoring.patch:
   Ulteo specific. Monitor the startup/ending of launched applications. It
   requires an update seamlessrdpshell.
+
+* seamless_hide_main_frame:
+  Add an option : --hide-main-frame which hide the logon windows at start.

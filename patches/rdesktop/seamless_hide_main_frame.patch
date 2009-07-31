@@ -1,0 +1,112 @@
+diff -Naur a/rdesktop.c b/rdesktop.c
+--- a/rdesktop.c	2009-07-31 13:20:02.000000000 +0200
++++ b/rdesktop.c	2009-07-31 14:12:17.000000000 +0200
+@@ -72,6 +72,7 @@
+ extern int g_tcp_port_rdp;
+ int g_server_depth = -1;
+ int g_win_button_size = 0;	/* If zero, disable single app mode */
++RD_BOOL g_show_main_frame = True;
+ RD_BOOL g_bitmap_compression = True;
+ RD_BOOL g_sendmotion = True;
+ RD_BOOL g_bitmap_cache = True;
+@@ -163,6 +164,7 @@
+ 	fprintf(stderr, "   -A: enable SeamlessRDP mode\n");
+ 	fprintf(stderr, "   -M: SeamlessRDP master mode socket path\n");
+ 	fprintf(stderr, "   -l: SeamlessRDP slave mode\n");
++	fprintf(stderr, "   --hide-main-frame: Hide the main frame. Needs the username and the password were specified, and the SeamlessRDP mode was enabled.\n");
+ 	fprintf(stderr, "   -B: use BackingStore of X-server (if available)\n");
+ 	fprintf(stderr, "   -e: disable encryption (French TS)\n");
+ 	fprintf(stderr, "   -E: disable encryption from client to server\n");
+@@ -437,6 +439,11 @@
+ 	RD_BOOL geometry_option = False;
+ 	int run_count = 0;	/* Session Directory support */
+ 	RD_BOOL continue_connect = True;	/* Session Directory support */
++	static const struct option long_options[]=
++		{
++			{"hide-main-frame", no_argument, NULL, 10},
++			{NULL, 0, NULL, 0} /* End of array need by getopt_long do not delete it*/
++		};
+ #ifdef WITH_RDPSND
+ 	char *rdpsnd_optarg = NULL;
+ #endif
+@@ -463,8 +470,8 @@
+ #define VNCOPT
+ #endif
+ 
+-	while ((c = getopt(argc, argv,
+-			   VNCOPT "Au:L:d:s:c:p:n:k:g:fbBeEmzCDKS:T:NX:a:x:Pr:045M:lh?")) != -1)
++	while ((c = getopt_long(argc, argv,
++                                VNCOPT "Au:L:d:s:c:p:n:k:g:fbBeEmzCDKS:T:NX:a:x:Pr:045M:lh?", long_options, NULL)) != -1)
+ 	{
+ 		switch (c)
+ 		{
+@@ -482,6 +489,10 @@
+ 				break;
+ #endif
+ 
++                        case 10: //--hide-main-frame
++				g_show_main_frame = False;
++				break;
++
+ 			case 'A':
+ 				g_seamless_rdp = True;
+ 				break;
+@@ -925,6 +936,11 @@
+         seamless_create_socket(master_socket);
+ 	}
+ 
++        if(!g_show_main_frame && (password[0] == 0 || username_option == 0 || !g_seamless_rdp)){
++                error("You must use -u, -p, and -A with --hide-main-frame\n");
++                return 1;
++        }
++
+ 	if (!username_option)
+ 	{
+ 		pw = getpwuid(getuid());
+diff -Naur a/rdesktop.h b/rdesktop.h
+--- a/rdesktop.h	2009-07-31 13:19:42.000000000 +0200
++++ b/rdesktop.h	2009-07-31 13:21:09.000000000 +0200
+@@ -21,6 +21,7 @@
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
++#include <getopt.h>
+ #ifdef _WIN32
+ #define WINVER 0x0400
+ #include <windows.h>
+diff -Naur a/xwin.c b/xwin.c
+--- a/xwin.c	2009-07-31 13:19:59.000000000 +0200
++++ b/xwin.c	2009-07-31 13:30:18.000000000 +0200
+@@ -36,6 +36,7 @@
+ extern int g_xpos;
+ extern int g_ypos;
+ extern int g_pos;
++extern RD_BOOL g_show_main_frame;
+ extern RD_BOOL g_sendmotion;
+ extern RD_BOOL g_fullscreen;
+ extern RD_BOOL g_grab_keyboard;
+@@ -2083,14 +2084,18 @@
+ 	}
+ 
+ 	XSelectInput(g_display, g_wnd, input_mask);
+-	XMapWindow(g_display, g_wnd);
+ 
+-	/* wait for VisibilityNotify */
+-	do
+-	{
+-		XMaskEvent(g_display, VisibilityChangeMask, &xevent);
++	if(g_show_main_frame){
++		XMapWindow(g_display, g_wnd);
++
++		/* wait for VisibilityNotify */
++		do
++		{
++			XMaskEvent(g_display, VisibilityChangeMask, &xevent);
++		}
++		while (xevent.type != VisibilityNotify);
+ 	}
+-	while (xevent.type != VisibilityNotify);
++
+ 	g_Unobscured = xevent.xvisibility.state == VisibilityUnobscured;
+ 
+ 	g_focused = False;
