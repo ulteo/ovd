@@ -39,7 +39,7 @@ function doLogin(this_) {
 	if ($('use_popup_true') && $('use_popup_true').checked)
 		window_ = popupOpen(rand_);
 
-	return false;
+	return true;
 }
 
 function onLoginSuccess(transport) {
@@ -47,7 +47,6 @@ function onLoginSuccess(transport) {
 
 	if ($('use_popup_true') && $('use_popup_true').checked)
 		$('startsession').target = 'Ulteo'+rand_;
-	$('startsession').submit();
 
 	return true;
 }
