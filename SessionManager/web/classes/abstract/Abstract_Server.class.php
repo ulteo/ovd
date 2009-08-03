@@ -71,8 +71,10 @@ class Abstract_Server {
 		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13 FROM @14 WHERE @15 = %16 LIMIT 1', 'status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used', $SQL->prefix.'servers', 'fqdn', $fqdn);
 		$total = $SQL->NumRows();
 
-		if ($total == 0)
+		if ($total == 0) {
+			Logger::error('main', "Abstract_Server::load($id_) server does not exist (NumRows == 0)");
 			return false;
+		}
 
 		$row = $SQL->FetchResult();
 

@@ -57,7 +57,7 @@ class Abstract_Token {
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Token::load($id_) Token does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Token::load($id_) token does not exist (NumRows == 0)");
 			return false;
 		}
 
