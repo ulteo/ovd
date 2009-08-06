@@ -49,7 +49,10 @@ $dom = new DomDocument();
 
 $buf = gen_string(5);
 
-put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id']."\n".$_GET['size']."\n".$_GET['command']);
+$cmdline = $_GET['command'];
+if (isset($_GET['doc']) && $_GET['doc'] != '')
+	$cmdline .= "\n".$_GET['doc'];
+put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id']."\n".$_GET['size']."\n".$cmdline."\n");
 
 $error = false;
 
