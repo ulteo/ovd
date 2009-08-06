@@ -46,7 +46,6 @@ user_set_env() {
     LANG=$LOC
     LANGUAGE=$LOC
 
-#    DISPLAY=:$i
     XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
 
     OVD_SESSID_DIR=$SPOOL_USERS/$SESSID
@@ -73,10 +72,8 @@ user_exec() {
     local app_id=$1
     local app=$2
     local rfb_port=$3
-    if [ -n "$3" ]; then
-        local wait=1
-    else
-        local wait=0
+    if [ -n "$4" ]; then
+        local doc=$4
     fi
 
     # Start autocutsel
@@ -85,14 +82,12 @@ user_exec() {
     local env="DISPLAY=:$rfb_port"
     if [ $app_id != "desktop" ]; then
         local env="$env NODESKTOP=1 APP=$app APP_ID=$app_id"
+        if [ -n "$4" ]; then
+            local env="$env DOC=\"$4\""
+        fi
     fi
     log_INFO "env: $env"
 
     # Start the desktop session
-    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $env startovd" &> /dev/null &
-    local pid=$!
-
-    if [ $wait -eq 1 ]; then
-        wait $pid
-    fi
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $env startovd" &> /dev/null
 }

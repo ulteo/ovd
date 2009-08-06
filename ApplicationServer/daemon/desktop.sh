@@ -20,45 +20,30 @@
 . functions.sh
 . log.sh
 
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$1" ]; then
     log_ERROR "$0 missing arguments"
     exit 1
 fi
 
 SESSID=$1
-job=$2
+job=desktop
 
 session_load $SESSID
 ENV_FILE=$SPOOL_USERS/$SESSID/env.sh
 
-file=$SESSID_DIR/sessions/$job.txt
 dir=$SESSID_DIR/sessions/$job
 log_INFO "Session $SESSID detect job $job"
 
 install -d -g www-data -m 770 $dir
 application_switch_status $SESSID $job 1
 
-nb_line=$(wc -l $file | cut -d' ' -f1)
-if [ $nb_line -lt 3 ] || [ $nb_line -gt 4 ]; then
-    log_WARN "Unable to perform job: missing arguments ($nb_line lines)"
-    exit 1
-fi
 
-app_id=$(head -n 1 $file)
-geometry=$(head -n 2 $file |tail -n 1)
-app=$(head -n 3 $file |tail -n 1)
-if [ -z "$app_id" ] || [ -z "$geometry" ] || \
-    [ -z "$app" ] && [ "$app_id" != "desktop" ]; then
+geometry=$(cat $SESSID_DIR/parameters/geometry)
+
+if [ -z "$geometry" ]; then
     log_WARN "Unable to perform job: missing arguments"
     exit 1
 fi
-[ $nb_line -eq 4 ] && doc=$(head -n 4 $file |tail -n 1)
-
-echo $app_id > $dir/app_id
-echo $app > $dir/app
-[ -n "$doc" ] && echo "$doc" > $dir/doc
-echo $geometry > $dir/geometry
-rm $file
 
 rfb_port=$(spool_get_rfbport)
 echo $rfb_port > $dir/rfb_port
@@ -77,8 +62,5 @@ fi
 
 # Todo: DOC, desktop
 application_switch_status $SESSID $job 2
-user_exec $app_id "$app" $rfb_port "$doc"
-# If application already killed
-[ -d $dir ] || exit 0
+user_exec "desktop" "desktop" $rfb_port 1
 application_switch_status $SESSID $job 3
-

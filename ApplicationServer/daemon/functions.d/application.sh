@@ -49,7 +49,6 @@ application_check_status() {
 
     local dir=$SPOOL/sessions/$sessid/sessions/$job_id
     local status=$(cat $dir/status)
-    local app_id=$(cat $dir/app_id)
     local rfb_port=$(cat $dir/rfb_port)
     if [ $PERSISTENT -eq 1 ]; then
         local next_status=8
@@ -69,8 +68,8 @@ application_check_status() {
 
     # if the application is required to stop
     if [ $status -eq 3 ]; then
-        application_purge $job_id $rfb_port
-        if [ "$app_id" == "desktop" ]; then
+        application_purge $job_id $dir
+        if [ "$job_id" == "desktop" ]; then
             session_switch_status $sessid 3
             return 2
         fi
@@ -156,9 +155,13 @@ application_loop() {
 
 application_purge() {
     local job=$1
-    local rfb_port=$2
+    local dir=$2
 
-    display_stop $rfb_port
+    local rfb_port=$(cat $dir/rfb_port)
+
+
+    log_INFO "application_purge !!"
+    display_stop $rfb_port $dir/vnc.pid
 
     spool_free_rfbport $rfb_port
     rm -rf $dir

@@ -208,6 +208,12 @@ session_check_status() {
         fi
         session_switch_status $SESSID 2
 
+        local type=$(cat ${SESSID_DIR}/parameters/session_mode)
+        if [ "$type" == "desktop" ]; then
+            desktop.sh $SESSID &
+            sleep 0.5
+        fi
+
 	return 0
 
     elif [ $RUNASAP -eq 2 ]; then

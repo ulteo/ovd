@@ -37,11 +37,13 @@ display_init() {
 display_start() {
     local rfb_port=$1
     local geometry=$2
+    local pid_file=$3
 
     local vnc_tmp=/tmp/.tmp${VNC_UID} 
 
     # Start the VNC server
     /bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/Xtightvnc ${multei_session_vnc_opts} :${rfb_port} -desktop X${rfb_port} -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry ${geometry} -depth 24 -rfbwait 240000 -rfbauth ${vnc_tmp}encvncpasswd -rfbport ${rfb_port} -fp /usr/share/X11/fonts/Type1/,/usr/share/X11/fonts/misc/,/usr/share/X11/fonts/75dpi/,/usr/share/X11/fonts/100dpi/ -co /etc/X11/rgb -ac -auth ${vnc_tmp}.Xauthority" &> /dev/null &
+    echo $! >$pid_file
 
     sleep 1
 
@@ -52,12 +54,23 @@ display_start() {
 
 display_stop() {
     local rfb_port=$1
+    local pid_file=$2
 
     tightvncserver -kill :$rfb_port 2>/dev/null
     [ $? -eq 0 ] && return 0
 
-    local pid=$(ps ax |grep Xtightvnc |grep ":200" |cut -d ' ' -f1)
-    [ -n "$pid" ] || return 1
+    if [ -f $pid_file ]; then
+        local pid=$(head -n 1 $pid_file)
+    else
+        local pid=$(ps ax |grep Xtightvnc |grep ":$rfb_port" |cut -d ' ' -f1)
+    fi
 
+    if [ -z "$pid" ]; then
+        log_WARN "Unable to find PID for display $rfb_port"
+        return 1
+    fi
+
+    log_INFO "display_stop: kill $pid"
     kill $pid
+    [ $? -eq 0 ] || kill -9 $pid
 }
