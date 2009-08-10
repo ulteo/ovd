@@ -42,6 +42,10 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		$window_title = $name;
 	} catch (Exception $e) {
 	}
+
+	$doc = '';
+	if (isset($_GET['doc']) && $_GET['doc'] != '')
+		$doc = $_GET['doc'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -64,7 +68,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				application_init(<?php echo $_GET['app_id']; ?>, '<?php echo $_GET['command']; ?>', 'ulteo-applet.jar', 'org.ulteo.OvdApplet', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				application_init(<?php echo $_GET['app_id']; ?>, '<?php echo $_GET['command']; ?>', '<?php echo $doc; ?>', 'ulteo-applet.jar', 'org.ulteo.OvdApplet', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>
