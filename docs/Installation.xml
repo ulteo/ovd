@@ -377,11 +377,11 @@ mysql> exit]]>
       </listitem>
       <listitem>
         <para>
-	  Install the package <emphasis>ulteo-ovd</emphasis>:
+	  Install the package <emphasis>ulteo-ovd-application-server</emphasis>:
         </para>
         <screen>
 	  <![CDATA[
-# apt-get install ulteo-ovd]]>
+# apt-get install ulteo-ovd-application-server]]>
 	</screen>
       </listitem>
 
