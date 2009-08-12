@@ -20,60 +20,190 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+$menu = array();
 
-// Menu Items
-$items = array('index.php'		=>	_('Index'),
-	       'servers.php'		=>	_('Servers'),
-	       // 	'sessions.php'		=>	_('Sessions'),
-	       'users.php'		=>	_('Users'),
-	       // 	'usersgroup.php'	=>	_('Users groups'),
-	       'applications.php'	=>	_('Applications'),
-	       // 	'appsgroup.php'	=>	_('Appgroups'),
-	       // 	'publications.php'	=>	_('Publications'),
-	       'configuration-sumup.php'	=>	_('Configuration'),
-	       // 	'logs.php'		=>	_('Logs'),
-	       'sessions.php'		=>	_('Status'),
-//		 'report.php'		=>	_('Reports'),
-		 'logout.php'		=>	_('Logout')
-	       );
+$menu['main'] = 
+	array('id' => 'main',
+		  'name' => _('Index'),
+		  'page' => 'index.php',
+		  'parent' => Null);
 
-$sub_items =
-  array('servers.php'		=>
-	array('servers.php' => _('Servers'),
-	      'servers.php?view=unregistered' => _('Unregistered servers'),
-		'tasks.php' => _('Tasks'),
-		'sharedfolders.php'	=>	_('Shared folders')),
+$menu['servers'] = 
+	array('id' => 'servers',
+		  'name' => _('Servers'),
+		  'page' => 'servers.php',
+		  'parent' => Null);
 
-	'users.php'		=>
-	array('users.php' => _('Users'),
-	      'usersgroup.php' => _('Users Groups'),
-	      'publications.php' => _('Publications'),
-	      'wizard.php' => _('Publication wizard')),
+$menu['users'] =
+	array('id' => 'users',
+		  'name' => _('Users'),
+		  'page' => 'users.php',
+		  'parent' => Null);
 
-	'applications.php'	=>
-	array('applications.php' => _('Applications'),
-	      'appsgroup.php' => _('Applications Groups'),
-	      'publications.php' => _('Publications'),
-	      'wizard.php' => _('Publication wizard'),
-	      'applications_static.php' => _('Static applications')),
+$menu['applications'] = 
+	array('id' => 'applications',
+		  'name' => _('Applications'),
+		  'page' => 'applications.php',
+		  'parent' => Null);
+
+$menu['configuration'] = 
+	array('id' => 'configuration',
+		  'name' => _('Configuration'),
+		  'page' => 'configuration-sumup.php',
+		  'parent' => Null);
+
+$menu['status'] = 
+	array('id' => 'status',
+		  'name' => _('Status'),
+		  'page' => 'sessions.php',
+		  'parent' => Null);
+
+$menu['logout'] =
+	array('id' => 'logout',
+		  'name' => _('Logout'),
+		  'page' => 'logout.php',
+		  'parent' => Null);
+
+$menu['servers_child'] =
+	array('id' => 'servers_child',
+		  'name' => _('Servers'),
+		  'page' => 'servers.php',
+		  'parent' => 'servers');
+
+$menu['servers_unregistered'] = 
+	array('id' => 'servers_unregistered',
+		  'name' => _('Unregistered servers'),
+		  'page' => 'servers.php?view=unregistered',
+		  'parent' => 'servers');
+
+$menu['tasks'] = 
+	array('id' => 'tasks',
+		  'name' => _('Tasks'),
+		  'page' => 'tasks.php',
+		  'parent' => 'servers');
+
+$menu['sharedfolders'] = 
+	array('id' => 'sharedfolders',
+		  'name' => _('Shared folders'),
+		  'page' => 'sharedfolders.php',
+		  'parent' => 'servers');
+
+$menu['user_child'] = 
+	array('id' => 'user_child',
+		  'name' => _('Users'),
+		  'page' => 'users.php',
+		  'parent' => 'users');
+
+$menu['users_groups'] = 
+	array('id' => 'users_groups',
+		  'name' => _('Users Groups'),
+		  'page' => 'usersgroup.php',
+		  'parent' => 'users');
+
+$menu['applications_child'] = 
+	array('id' => 'applications_child',
+		  'name' => _('Applications'),
+		  'page' => 'applications.php',
+		  'parent' => 'applications');
+
+$menu['applications_groups'] = 
+	array('id' => 'applications_groups',
+		  'name' => _('Applications Groups'),
+		  'page' => 'appsgroup.php',
+		  'parent' => 'applications');
+
+$menu['applications_static'] = 
+	array('id' => 'applications_static',
+		  'name' => _('Static applications'),
+		  'page' => 'applications_static.php',
+		  'parent' => 'applications');
+
+$menu['publications'] = 
+	array('id' => 'publications',
+		  'name' => _('Publications'),
+		  'page' => 'publications.php',
+		  'parent' => array('users', 'applications'));
+
+$menu['publications_wizard'] = 
+	array('id' => 'publications_wizard',
+		  'name' => _('Publication wizard'),
+		  'page' => 'wizard.php',
+		  'parent' => array('users', 'applications'));
 
 
-	'configuration-sumup.php'	=>
-	array('configuration-partial.php?mode=mysql'		=> _('Database settings'),
-	      'configuration-partial.php?mode=general'		=> _('System settings'),
-	      'configuration-partial.php?mode=application_server_settings' => _('Server settings'),
-	      'configuration-profile.php' => _('Profile settings'),
-	      'configuration-partial.php?mode=session_settings_defaults' => _('Session settings'),
-	      'configuration-partial.php?mode=events' => _('Events settings'),
-	      'configuration-partial.php?mode=web_interface_settings' => _('Web interface settings'),
-	      'configuration-sumup.php' => _('Sum up')),
+$menu['configuration_sumup'] = 
+	array('id' => 'configuration_sumup',
+		  'name' => _('Sum up'),
+		  'page' => 'configuration-sumup.php',
+		  'parent' => 'configuration');
 
-	'sessions.php'		=>
-	array('sessions.php' => _('Sessions'),
-	      'logs.php' => _('Logs'),
-	      'reporting.php' => _('Reporting'),
-	      'sumup.php' => _('Summary')),
-	);
+$menu['configuration_db'] = 
+	array('id' => 'configuration_db',
+		  'name' => _('Database settings'),
+		  'page' => 'configuration-partial.php?mode=mysql',
+		  'parent' => 'configuration');
+
+$menu['configuration_general'] = 
+	array('id' => 'configuration_general',
+		  'name' => _('System settings'),
+		  'page' => 'configuration-partial.php?mode=general',
+		  'parent' => 'configuration');
+
+$menu['configuration_server'] = 
+	array('id' => 'configuration_server',
+		  'name' => _('Server settings'),
+		  'page' => 'configuration-partial.php?mode=application_server_settings',
+		  'parent' => 'configuration');
+
+$menu['configuration_profiles'] = 
+	array('id' => 'configuration_profiles',
+		  'name' => _('Profile settings'),
+		  'page' => 'configuration-profile.php',
+		  'parent' => 'configuration');
+
+$menu['configuration_sessions'] = 
+	array('id' => 'configuration_sessions',
+		  'name' => _('Session settings'),
+		  'page' => 'configuration-partial.php?mode=session_settings_defaults',
+		  'parent' => 'configuration');
+
+$menu['configuration_events'] = 
+	array('id' => 'configuration_events',
+		  'name' => _('Events settings'),
+		  'page' => 'configuration-partial.php?mode=events',
+		  'parent' => 'configuration');
+
+$menu['configuration_webui'] = 
+	array('id' => 'configuration_webui',
+		  'name' => _('Web interface settings'),
+		  'page' => 'configuration-partial.php?mode=web_interface_settings',
+		  'parent' => 'configuration');
+
+
+$menu['sessions'] = 
+	array('id' => 'sessions_child',
+		  'name' => _('Sessions'),
+		  'page' => 'sessions.php',
+		  'parent' => 'status');
+
+$menu['logs'] = 
+	array('id' => 'logs',
+		  'name' => _('Logs'),
+		  'page' => 'logs.php',
+		  'parent' => 'status');
+
+$menu['reporting'] = 
+	array('id' => 'reporting',
+		  'name' => _('Reporting'),
+		  'page' => 'reporting.php',
+		  'parent' => 'status');
+
+$menu['sumup'] = 
+	array('id' => 'sumup',
+		  'name' => _('Summary'),
+		  'page' => 'sumup.php',
+		  'parent' => 'status');
+
 
 function page_header($params_=array()) {
   global $base_url;
@@ -196,100 +326,101 @@ function page_footer() {
 }
 
 function get_menu_entry() {
-  $matches = array();
-  $buf = preg_match('/admin\/(.+)/', $_SERVER['REQUEST_URI'], $matches);
-  if (is_array($matches) && array_key_exists(1, $matches))
-    return str_replace('/', '%2F', $matches[1]);
+	global $menu;
 
-  return basename($_SERVER['REQUEST_URI']);
-}
+	$matches = array();
+	$buf = preg_match('/admin\/(.+)/', $_SERVER['REQUEST_URI'], $matches);
+	if (is_array($matches) && array_key_exists(1, $matches))
+		$page = str_replace('/', '%2F', $matches[1]);
+	else
+		$page = basename($_SERVER['REQUEST_URI']);
 
-function get_parent_menu_entry() {
-  global $items;
-  global $sub_items;
+	$buffer_id = Null;
+	$buffer_len = 0;
+	foreach($menu as $id => $entrie) {
+		if ($entrie['parent'] == NULL)
+			continue;
 
-  $in_menu = get_menu_entry();
+		if (! str_startswith($page, $entrie['page']))
+			continue;
 
-  $len = 0;
-  $parent = NULL;
-  $son = NULL;
+		if ( strlen($entrie['page']) > $buffer_len) {
+			$buffer_id = $id;
+			$buffer_len = strlen($entrie['page']);
+		}
+	}
 
-  foreach($sub_items as $k => $v) {
-    foreach($v as $kk => $vv) {
-      if (str_startswith($in_menu, $kk) &&
-	  strlen($kk) > $len) {
-	$parent = $k;
-	$son = $kk;
-      }
-    }
-  }
-
-  return array($parent, $son);
+	if ($buffer_id == Null)
+		$buffer_id = 'main';
+	
+	return $buffer_id;
 }
 
 function page_menu(){
-  global $items;
+	global $menu;
 
-  $in_menu = get_menu_entry();
+	$position = get_menu_entry();
+	$parent = $menu[$position]['parent'];
+	if ($parent == Null)
+		$parent = $position;
+	elseif (is_array($parent))
+		$parent = $parent[0];
 
-  $parent = get_parent_menu_entry();
-  if ($parent == NULL)
-    $root = $in_menu;
-  else
-    $root = $parent;
+	echo '<table border="0" cellspacing="0" cellpadding="10">';
+	echo '<tr>';
 
+	foreach($menu as $id => $entrie) {
+		if ($entrie['parent'] != Null)
+			continue;
 
-  $i = 0;
-  echo '<table border="0" cellspacing="0" cellpadding="10">';
-  echo '<tr>';
-  foreach($items as $k => $v) {
-    echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
-    if ($root == $k)
-      echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
+		echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
+//		if ($id == $parent)
+//			echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
 
-    echo '" class="menu"><a href="'.$k.'"><img src="media/image/menu/'.$k.'.png" width="32" height="32" alt="'.$v.'" title="'.$v.'" /><br />';
-    echo '<span class="menulink';
+		echo '" class="menu"><a href="'.$entrie['page'].'"><img src="media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
+		echo '<span class="menulink';
+		if ($id == $parent)
+			echo '_active';
 
-    if ($in_menu == $k)
-      echo '_active';
-
-    echo '">'.$v.'</span></a></td>'."\n";
-  }
-  echo '</tr>';
-  echo '</table>';
+		echo '">'.$entrie['name'].'</span></a></td>'."\n";
+	}
+	echo '</tr>';
+	echo '</table>';
 }
 
 function page_sub_menu() {
-  global $sub_items;
+	global $menu;
 
+	$position = get_menu_entry();
+	$parent = $menu[$position]['parent'];
+	if ($parent == Null)
+		return;
+	elseif(is_array($parent))
+		$parent = $parent[0];
 
-  $in_menu = get_menu_entry();
+	echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
+	echo '<tr>';
+	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
 
-  list($parent, $son) = get_parent_menu_entry();
-  if ($parent == NULL)
-    $root = $in_menu;
-  else
-    $root = $parent;
+	foreach($menu as $id => $entrie) {
+		if (is_array($entrie['parent'])) {
+			if (! in_array($parent, $entrie['parent']))
+				continue;
+		} else {
+			if ($parent != $entrie['parent'])
+				continue;
+		}
 
-  if (! isset($sub_items[$root]))
-    return;
+		if ($id == $position)
+			echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
+		else
+			echo '<div class="container">';
 
-  echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
-  echo '<tr>';
-  echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+		echo '<a href="'.$entrie['page'].'">'.$entrie['name'].'</a>';
+		echo '</div>';
+	}
 
-  foreach($sub_items[$root] as $key => $value) {
-    if ($son == $key) {
-echo '<div class="container" style="background: #fff; border-top: 1px solid #ccc; border-left: 1px solid #ccc; border-bottom: 1px solid #ccc;">';
-      echo '<a href="'.$key.'">'.$value.'</a>';
-    } else {
-      echo '<div class="container">';
-      echo '<a href="'.$key.'">'.$value.'</a>';
-    }
-    echo '</div>';
-  }
-
-  echo '</td>';
-  echo '<td style="text-align: left; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
-  echo '<div class="container">';
+	echo '</td>';
+	echo '<td style="text-align: left; vertical-align: top; background: #fff; border-top: 1px solid  #ccc; border-right: 1px solid  #ccc; border-bottom: 1px solid  #ccc;">';
+	echo '<div class="container">';
 }
