@@ -1,12 +1,14 @@
 .SUFFIXES: .xml .html
 
 SRC=AccountsIntegration.xml \
+	AD_Primary_Authentication.xml \
 	FAQ.xml \
 	Installation.xml \
 	Installation_Iso.xml \
 	Installation_RedHat.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
+	Vpn.xml \
 	Windows_Applications.xml
 
 DST=$(SRC:.xml=.html)

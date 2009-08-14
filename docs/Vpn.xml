@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - VPN solution</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <year>2009</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    This document aims to provide a VPN solution to answer to the
+    multi server access though Internet.
+  </para>
+
+  <para>
+    This documentation allow to secure all the Ulteo stream between
+    the client and the server but that's not the goal
+  </para>
+
+  <para>
+    This documentation won't explain how to use authentication with
+    the VPN client key. VPN is just used to make a virtual network to
+    get access on multiple machines with only one IP public adress.
+  </para>
+
+
+
+  <section>
+    <title>Introduction</title>
+
+    <para>
+      Ulteo Open Virtual Desktop is a product that's using several
+      machines. Even if, for a demo or a small solution, it's possible
+      to use the same machine for all the product. In a production
+      site, it's recommanded to have several <emphasis>Application
+      Server</emphasis>.
+    </para>
+
+    <para>
+      In a LAN, it's not a problem to use several machines. Because
+      it's possible to use private IP adress. But on Internet, it's
+      more difficult to get 10 public IP adress for only one
+      service. It's too expensive.
+    </para>
+
+    <section>
+        <title>Use Case</title>
+        <para>
+          A factory install OVD in their internal network. In a first
+          step, the employees have access to OVD when they are at
+          work. But in a second time, they want give access to OVD by
+          Intenert in order to employees be able to access to their
+          workstartion remotly (from their home for instance).
+        </para>
+
+        <inlinemediaobject>
+          <imageobject>
+            <imagedata fileref="media/vpn/main_view.png"/>
+          </imageobject>
+          <textobject>
+            <phrase>...</phrase>
+          </textobject>
+        </inlinemediaobject>
+      </section>
+
+      <simpara>
+        The issue is the factory can only have one public IP adress. So
+        how to dispatch the multiples Ulteo server on only one address: the
+        solution we are going to explain here by using the VPN tecnology.
+      </simpara>
+
+      <simplesect>
+        <title>Networks:</title>
+        
+        <itemizedlist>
+          <listitem>
+            <para>
+              <emphasis>Ulteo secure net:</emphasis>
+              contain the Session Manager, all the Application server
+              and the Ulteo VPN server
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis>VPN:</emphasis>
+              contain the Ulteo VPN server and all VPN client
+            </para>
+          </listitem>
+          
+          <listitem>
+            <para>
+              <emphasis>Factory network:</emphasis>
+              the base network which host all those servers
+            </para>
+          </listitem>
+          
+        </itemizedlist>
+ 
+        <note>
+          <para>
+            the Ulteo secure net can be the factory network. It's just
+            depends of the security policy.
+          </para>
+        </note>
+      </simplesect>
+
+      <simplesect>
+        <title>Routing</title>
+        <para>
+          The VPN server will give route to each client in order to client
+          be able to route the Ulteo secure network.
+        </para>
+        
+        <para>
+          IP address plan:
+          <itemizedlist>
+            <listitem>
+              <para>factory netwok: <emphasis>10.0.0.0/8</emphasis></para>
+            </listitem>
+            <listitem>
+              <para>Ulteo secure network:
+              <emphasis>10.0.1.0/24</emphasis></para>
+            </listitem>
+            <listitem>
+              <para>VPN net: <emphasis>10.0.2.0/24</emphasis></para>
+            </listitem>
+          </itemizedlist>
+    
+          The VPN server will deliver a route to 10.0.2.0/24
+
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="media/vpn/routing.png"/>
+            </imageobject>
+            <textobject>
+              <phrase>...</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </para>
+
+        <para>
+          As your server will be a router, you have to enable the ip forwarding of the system
+        </para>
+        <screen>
+          <![CDATA[
+# echo 1 > /proc/sys/net/ipv4/ip_forward]]>
+          </screen>
+
+
+      </simplesect>
+  </section>
+
+
+<section>
+  <title>VPN server installation</title>
+
+
+  <important>
+    <para>
+      The machine needs to be a Debian lenny or Ubuntu Hardy
+      system. It may works on other systems but we don't support it.
+    </para>
+  </important>
+
+  <para>
+    Install the packages:
+  </para>
+  <screen>
+    <![CDATA[
+# apt-get install openvpn openssl liblzo1]]>
+  </screen>
+
+
+
+    <section>
+      <title>SSL keys generation</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>Create a working directory and place into it</para>
+          <screen>
+            <![CDATA[
+$ mkdir ~/vpn-keys
+$ cd ~/vpn-keys]]>
+          </screen>
+        </listitem>
+
+        <listitem>
+          <para>Add the directory to your PATH environment variable</para>
+          <screen>
+            <![CDATA[
+$ export PATH=$PATH:/usr/share/doc/openvpn/examples/easy-rsa/2.0]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>config some env vars into the file <emphasis
+          role="strong">vars</emphasis></para>
+          <screen>
+            <![CDATA[
+$ export KEY_COUNTRY="EN"
+$ export KEY_PROVINCE="Your province"
+$ export KEY_CITY="Your country"
+$ export KEY_ORG="Ulteo"
+$ export KEY_EMAIL="some@email.adress"]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>Load the following file and clean the directory</para>
+          <screen>
+            <![CDATA[ 
+$ . /usr/share/doc/openvpn/examples/easy-rsa/2.0/vars
+$ clean-all]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>build the certificate authority</para>
+          <screen>
+            <![CDATA[
+$ build-ca]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>build the server key</para>
+          <screen>
+            <![CDATA[ 
+$ build-key-server ulteo-vpn]]>
+          </screen>
+        </listitem>
+
+        <listitem>
+          <para>build the Diffie Hellman parameters</para>
+          <screen>
+            <![CDATA[
+$ build-dh]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+
+      <note>
+        <para>careful with server/client times when generating
+        certificate, if server time is in the future the client
+        certificate/key will not be valid until the server time is
+        reached. (SSL + UTC, maybe one day)
+        </para>
+      </note>
+    </section>
+
+    <section>
+      <title>OpenVPN configuration</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>Go into your key directory</para>
+          <screen>
+            <![CDATA[
+$ cd ~/vpn-keys]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>
+            Copy the needed files on the openvpn directory
+          </para>
+          <screen>
+            <![CDATA[
+# cp ./keys/ca.crt              /etc/openvpn/
+# cp ./keys/ca.key              /etc/openvpn/
+# cp ./keys/UlteoVPNServer.crt  /etc/openvpn/
+# cp ./keys/UlteoVPNServer.key  /etc/openvpn/
+# cp ./keys/dh1024.pem          /etc/openvpn/
+# chmod 600 /etc/openvpn/*.key]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>
+            Customize the openvpn configuration file as the following
+            one. <emphasis>''/etc/openvpn/openvpn.conf</emphasis>
+          </para>
+          <screen>
+            <![CDATA[
+port 1194 ## You can use 443 if you 
+          ## want bypass some proxy/firewall
+proto tcp
+dev tun
+
+ca ca.crt
+cert UlteoVPNServer.crt
+key UlteoVPNServer.key
+dh dh1024.pem
+
+server 10.0.2.0 255.255.255.0
+route 10.0.1.0 255.255.255.0
+  # used to provide the route to the
+  # Ulteo secure network
+
+keepalive 10 120
+persist-key
+persist-tun
+status openvpn-status.log]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>restart OpenVPN</para>
+          <screen>
+            <![CDATA[
+# /etc/init.d/openvpn restart]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </section>
+</section>
+
+
+<section>
+  <title>VPN client installation</title>
+
+  <section>
+    <title>SSL keys generation</title>
+    <important>
+      <para>
+        The operations have to be done on the Ulteo VPN server
+      </para>
+    </important>
+
+    <itemizedlist>
+      <listitem>
+        <para>go into your key generation directory</para>
+        <screen>
+          <![CDATA[
+$ cd ~/vpn-keys]]>
+        </screen>
+      </listitem>
+      <listitem>
+        <para>Add the directory to your PATH environment variable</para>
+        <screen>
+          <![CDATA[
+$ export PATH=$PATH:/usr/share/doc/openvpn/examples/easy-rsa/2.0]]>
+        </screen>
+      </listitem>
+      <listitem>
+        <para>config some env vars into the file <emphasis
+        role="strong">vars</emphasis></para>
+        <screen>
+          <![CDATA[
+$ export KEY_COUNTRY="EN"
+$ export KEY_PROVINCE="Your province"
+$ export KEY_CITY="Your country"
+$ export KEY_ORG="Ulteo"
+$ export KEY_EMAIL="some@email.adress"]]>
+        </screen>
+      </listitem>
+      <listitem>
+        <para>build the client key</para>
+        <screen>
+          <![CDATA[
+$ build-key client-name]]>
+        </screen>
+      </listitem>
+    </itemizedlist>
+
+
+  </section>
+
+  <section>
+    <title>OpenVPN configuration</title>
+
+    <para>
+      On the Ulteo VPN server, copy the ca certificate and the client
+      key + certificate on a removable device.
+    </para>
+    <screen>
+      <![CDATA[
+$ cp ~/vpn-keys/ca.crt      /media/disk
+$ cp ~/vpn-keys/client.crt  /media/disk
+$ cp ~/vpn-keys/client.key  /media/disk]]>
+    </screen>
+
+
+    <section>
+      <title>On Windows</title>
+      <para>
+        ToDo
+      </para>
+    </section>
+  
+    <section>
+      <title>On Linux</title>
+
+      <para>
+      On the client system:
+      <itemizedlist>
+        <listitem>
+          <para>
+            Copy the files from the removable device to the OpenVPN
+            directory
+          </para>
+          <screen>
+            <![CDATA[
+# cp /media/disk/ca.crt      /etc/openvpn/
+# cp /media/disk/client.crt  /etc/openvpn/
+# cp /media/disk/client.key  /etc/openvpn/
+# chmod 600 /etc/openvpn/client.key]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>
+            Customize the openvpn configuration file as the following
+            one. <emphasis>''/etc/openvpn/openvpn.conf</emphasis>
+          </para>
+          <screen>
+            <![CDATA[
+client
+dev tun
+proto tcp
+
+remote your.public.adress.where.the.vpn.is 1194
+
+resolv-retry infinite
+nobind
+
+persist-key
+persist-tun
+
+ca ca.crt
+cert client.crt
+key client.key]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>Restart OpenVPN</para>
+          <screen>
+            <![CDATA[
+# /etc/init.d/openvpn restart]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </para>
+    </section>
+  </section>
+
+
+  <section>
+    <title>Test a session</title>
+
+    <para>
+      Open a browser with the Session manager local adress (10.0.1.10).
+    </para>
+  </section>
+    
+</section>
+
+</article>

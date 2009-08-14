@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+"/usr/share/xml/docbook/schema/dtd/4.5/docbookx.dtd">
+
+<article>
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop - <trademark>Active Directory</trademark> Primary Authentication</title>
+    <graphic fileref="img/ovd.png" align="center"/>
+    <!--
+    <authorgroup>
+      <author>
+	<firstname>Julien</firstname>
+	<surname>Langlois</surname>
+	<affiliation>
+	  <jobtitle>Ulteo developer</jobtitle>
+	  <address><email>julien@ulteo.com</email></address>
+	</affiliation>
+      </author>
+    </authorgroup>
+    -->
+
+    <copyright>
+      <year>2009</year>
+      <holder>Ulteo SAS</holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    This documentation describes how to use the primary authentication
+    of a <trademark>Windows</trademark> session in order to
+    authenticate the user on the <emphasis>Ulteo Open Virtual
+    Desktop</emphasis> interface.
+  </para>
+  <para>
+    The use case is simple. A user is logged on his Windows machine
+    (linked on a Domain Controller). He want to start an external
+    application. It jsut have to click on his desktop shortcut. That
+    launch a Ulteo session into his browser. The user didn't type any
+    password.
+  </para>
+
+  <note>
+    <para>
+      This documention <emphasis role="strong">does not
+      describe</emphasis> the Open Virtual Desktop installation or
+      configuration. For that, please read the <emphasis
+      role="strong">Installation documentation</emphasis>.
+    </para>
+  </note>
+
+
+  <section>
+    <title>Prerequisites</title>
+    <para>
+      To use the primary authentication, you need to use Active
+      Directory as OVD user base.
+    </para>
+
+    <para>
+      The <trademark>Windows</trademark> Server machines have to be
+      plugged to the same domain controler as the Session Manager. To plug a
+      Session Manager to a <trademark class="registered">Microsoft
+      Active</trademark> Directory, please refer to the
+      <emphasis>Administration Console</emphasis> documentation.
+    </para>
+
+
+
+
+
+    <para>
+      First if you use Windows 2003 server in a Windows 2000 domain there is a patch to apply to avoid keytab version number problems : [http://support.microsoft.com/kb/870987] (don't forget to follow the instructions at the end, after installing the patch) (you will need a Windows 2003 CD) 
+    </para>
+
+  </section>
+
+  <section>
+    <title>Kerberos stuff</title>
+
+    <para>
+      We have to create a service principal into the kerberos (Active
+      Directory) database.
+    </para>
+    <para>
+      It'll generate a .keytab file which is the secret key of the service.
+    </para>
+
+    <important>
+      <para>
+        Change DOMAIN.NAME by the Domain controller domain name
+      </para>
+    </important>
+
+    <screen>
+      <![CDATA[
+# ktpass -princ HTTP/server_name@DOMAIN.NAME -mapuser apache -crypto
+DES-CBC-MD5 +DesOnly -ptype KRB5_NT_PRINCIPAL -out
+/etc/apache2/service.keytab
+# chown www-data /etc/apache2/service.keytab
+# chmod 400 /etc/apache2/service.keytab]]>
+    </screen>
+  </section>
+
+
+
+  <section>
+    <title>Apache configuration</title>
+    <para>
+      Install the auth_kerb module and enable it.
+      <screen>
+        <![CDATA[
+# apt-get install libapache2-mod-auth-kerb
+# a2enmod auth-kerb]]>
+      </screen>
+    </para>
+
+    <para>
+      Edit the apache configuration for the OVD
+      <emphasis>/etc/ulteo/sessionmanager/apache2.conf</emphasis> and
+      add the following entries into the <emphasis
+      role="strong">Directory</emphasis>.
+
+      <screen>
+        <![CDATA[
+AuthName "Kerberos Login"
+AuthType Kerberos
+Krb5Keytab /etc/apache2/service.keytab
+KrbAuthRealms DOMAIN.NAME
+KrbMethodK5Passwd On
+KrbMethodNegotiate on
+KrbVerifyKDC off
+Require valid-user]]>
+      </screen>
+    </para>
+
+  <para>
+    Restart Apache. 
+    <screen>
+      <![CDATA[
+# /etc/init.d/apache2 reload]]>
+    </screen>
+  </para>
+  </section>
+
+
+  <section>
+    <title>Ulteo OVD configuration</title>
+    <para>
+      Authentication method: remote user
+    </para>
+  </section>
+
+</article>
