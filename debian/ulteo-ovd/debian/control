@@ -7,7 +7,6 @@ Standards-Version: 3.8.0
 
 Package: ulteo-ovd
 Architecture: all
-Pre-Depends: wget
 Depends: ulteo-ovd-application-server
 Recommends: ulteo-ovd-rsbac
 Description: Ulteo Open Virtual Desktop - Transitional package
