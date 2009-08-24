@@ -22,6 +22,10 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewUsers'))
+	redirect();
+
+
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
@@ -41,6 +45,9 @@ if (isset($_REQUEST['action'])) {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id'], $userDB, $userGroupDB);
   }
+
+	if (! checkAutorization('manageUsers'))
+		redirect();
 
   if ($userDB->isWriteable()) {
     if ($_REQUEST['action']=='add')
@@ -117,6 +124,8 @@ function show_default($userDB) {
   $users_list_empty = (is_null($us) or count($us)==0);
   $userdb_rw = $userDB->isWriteable();
 
+	$can_manage_users = isAutorized('manageUsers');
+
   page_header();
   echo '<div id="users_div">';
   echo '<h1>'._('Users').'</h1>';
@@ -166,7 +175,7 @@ function show_default($userDB) {
       echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
       echo '</form></td>';
 
-      if ($userdb_rw) {
+      if ($userdb_rw and $can_manage_users) {
 	echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 	echo '<input type="submit" value="'._('Delete').'"/>';
 	echo '<input type="hidden" name="action" value="del" />';
@@ -177,7 +186,7 @@ function show_default($userDB) {
     echo '</table>';
   }
 
-  if ($userdb_rw) {
+  if ($userdb_rw and $can_manage_users) {
     echo '<h2>'._('Add').'</h2>';
     echo '<div id="user_add">';
     echo '<form action="" method="post">';
@@ -241,6 +250,8 @@ function show_manage($login, $userDB, $userGroupDB) {
   $sessions = Sessions::getByUser($login);
   $has_sessions = count($sessions);
 
+	$can_manage_users = isAutorized('manageUsers');
+	$can_manage_usersgroups = isAutorized('manageUsersGroups');
 
   page_header();
 
@@ -272,7 +283,7 @@ function show_manage($login, $userDB, $userGroupDB) {
   echo '</tr>';
   echo '</table>';
 
-  if ($userdb_rw) {
+  if ($userdb_rw and $can_manage_users) {
     echo '<div>';
     echo '<h2>'._('Settings').'</h2>';
 
@@ -345,7 +356,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       echo '<tr><td>';
       echo '<a href="usersgroup.php?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a>';
       echo '</td>';
-      if ($usergroupdb_rw) {
+      if ($usergroupdb_rw and $can_manage_usersgroups) {
         echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
         echo '<input type="hidden" name="name" value="User_UserGroup" />';
         echo '<input type="hidden" name="action" value="del" />';
@@ -357,7 +368,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       echo '</tr>';
     }
 
-    if ((count ($groups_available) >0) && $usergroupdb_rw) {
+    if ((count ($groups_available) >0) && $usergroupdb_rw and $can_manage_usersgroups) {
       echo '<tr><form action="actions.php" method="get"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';

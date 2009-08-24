@@ -265,18 +265,22 @@ function print_prefs4($prefs,$key_name,$recursive=true) {
 	echo '</table>';
 }
 
-function print_prefs($prefs_) {
+function print_prefs($prefs_, $print_form_=true) {
 	echo '<script type="text/javascript"> configuration_switch_init();</script>';
 	// printing of preferences
 	$keys = $prefs_->getKeys();
-	echo '<form method="post" action="configuration.php">';
+	if ($print_form_) {
+		echo '<form method="post" action="configuration.php">';
+	}
 	foreach ($keys as $key_name){
 		echo '<div id="'.$key_name.'">';
 		print_prefs4($prefs_,$key_name);
 		echo '</div>';
 	}
-	echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
-	echo '</form>';
+	if ($print_form_) {
+		echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
+		echo '</form>';
+	}
 }
 
 function formToArray($form_) {
@@ -413,4 +417,21 @@ function getProfileMode($prefs) {
 
   // Should never be called !!!
   return 'Configuration_mode_internal';
+}
+
+function isAutorized($policy_) {
+	if (! isset($_SESSION['admin_ovd_user']))
+		return true;
+
+	$policy = $_SESSION['admin_ovd_user']->getPolicy();
+	return $policy[$policy_];
+}
+
+function checkAutorization($policy_) {
+	if (isAutorized($policy_))
+		return true;
+
+	Logger::warning('main', 'User(id='.$_SESSION['admin_ovd_user']->getAttribute('uid').') is  not allowed to perform '.$policy_.'.');
+	popup_error(_('You are not allowed to perform this action'));
+	return false;
 }

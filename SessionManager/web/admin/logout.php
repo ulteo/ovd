@@ -21,5 +21,7 @@
  require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 unset($_SESSION['admin_login']);
+if (isset($_SESSION['admin_ovd_user']))
+	unset($_SESSION['admin_ovd_user']);
 
 redirect('index.php');

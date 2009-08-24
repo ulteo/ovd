@@ -21,6 +21,10 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewPublications'))
+	redirect('index.php');
+
+
 show_default();
 
 function show_default() {
@@ -62,6 +66,9 @@ function show_default() {
 
   $count = 0;
 
+	$can_manage_publications = isAutorized('managePublications');
+
+
   page_header();
 
   echo '<div>';
@@ -86,20 +93,21 @@ function show_default() {
       echo '<td><a href="usersgroup.php?action=manage&id='.$group_u->getUniqueID().'">'.$group_u->name.'</a></td>';
       echo '<td><a href="appsgroup.php?action=manage&id='.$group_a->id.'">'.$group_a->name.'</a></td>';
 
-      echo '<td><form action="actions.php" metthod="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
-
-      echo '<input type="hidden" name="action" value="del" />';
-      echo '<input type="hidden" name="name" value="Publication" />';
-      echo '<input type="hidden" name="group_a" value="'.$group_a->id.'" />';
-      echo '<input type="hidden" name="group_u" value="'.$group_u->getUniqueID().'" />';
-      echo '<input type="submit" value="'._('Delete').'"/>';
-      echo '</form></td>';
+			if ($can_manage_publications) {
+				echo '<td><form action="actions.php" metthod="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="name" value="Publication" />';
+				echo '<input type="hidden" name="group_a" value="'.$group_a->id.'" />';
+				echo '<input type="hidden" name="group_u" value="'.$group_u->getUniqueID().'" />';
+				echo '<input type="submit" value="'._('Delete').'"/>';
+				echo '</form></td>';
+			}
       echo '</tr>';
     }
   }
 
 
-  if ($can_add_publish) {
+  if ($can_add_publish and $can_manage_publications) {
     $content = 'content'.(($count++%2==0)?1:2);
 
     echo '<tfoot>';

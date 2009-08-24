@@ -20,10 +20,17 @@
  **/
 require_once(dirname(__FILE__).'/includes/core-minimal.inc.php');
 
+if (! checkAutorization('viewConfiguration'))
+	redirect('index.php');
+
+
 // core of the page
 $sep = '___';
 
 if (isset($_POST['submit'])) {
+	if (! checkAutorization('viewConfiguration'))
+		redirect();
+
 	// saving preferences
 	unset($_POST['submit']);
 	$setup = false;
@@ -74,6 +81,8 @@ if (isset($_POST['submit'])) {
 	}
 }
 else {
+	$can_manage_configuration = isAutorized('manageConfiguration');
+
 	if (isset($_GET['action']) && $_GET['action'] == 'init') {
 		try {
 			$prefs = new Preferences_admin();
@@ -86,11 +95,15 @@ else {
 		page_header();
 		
 		// printing of preferences
-		echo '<form method="post" action="configuration.php">';
-		echo '<input type="hidden" name="setup" value="setup" />';
+		if ($can_manage_configuration) {
+			echo '<form method="post" action="configuration.php">';
+			echo '<input type="hidden" name="setup" value="setup" />';
+		}
 		print_prefs5($prefs, 'general', 'mysql');
-		echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
-		echo '</form>';
+		if ($can_manage_configuration) {
+			echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
+			echo '</form>';
+		}
 
 		page_footer();
 		
@@ -105,7 +118,7 @@ else {
 			require_once(dirname(__FILE__).'/includes/page_template.php');
 			page_header();
 
-			print_prefs($prefs);
+			print_prefs($prefs, $can_manage_configuration);
 
 			page_footer();
 		}

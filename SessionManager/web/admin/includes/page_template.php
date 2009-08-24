@@ -26,183 +26,199 @@ $menu['main'] =
 	array('id' => 'main',
 		  'name' => _('Index'),
 		  'page' => 'index.php',
-		  'parent' => Null);
+		  'parent' => array(),
+		  'always_display' => true);
 
 $menu['servers'] = 
 	array('id' => 'servers',
 		  'name' => _('Servers'),
 		  'page' => 'servers.php',
-		  'parent' => Null);
+		  'parent' => array());
 
 $menu['users'] =
 	array('id' => 'users',
 		  'name' => _('Users'),
 		  'page' => 'users.php',
-		  'parent' => Null);
+		  'parent' => array());
 
 $menu['applications'] = 
 	array('id' => 'applications',
 		  'name' => _('Applications'),
 		  'page' => 'applications.php',
-		  'parent' => Null);
+		  'parent' => array());
 
 $menu['configuration'] = 
 	array('id' => 'configuration',
 		  'name' => _('Configuration'),
 		  'page' => 'configuration-sumup.php',
-		  'parent' => Null);
+		  'parent' => array());
 
 $menu['status'] = 
 	array('id' => 'status',
 		  'name' => _('Status'),
 		  'page' => 'sessions.php',
-		  'parent' => Null);
+		  'parent' => array());
 
 $menu['logout'] =
 	array('id' => 'logout',
-		  'name' => _('Logout'),
+		  'name' => _('Logout').(isset($_SESSION['admin_ovd_user'])?' ('.$_SESSION['admin_login'].')':''),
 		  'page' => 'logout.php',
-		  'parent' => Null);
+		  'parent' => array(),
+		  'always_display' => true);
 
-$menu['servers_child'] =
-	array('id' => 'servers_child',
-		  'name' => _('Servers'),
-		  'page' => 'servers.php',
-		  'parent' => 'servers');
+if (isAutorized('viewServers')) {
+	$menu['servers_child'] =
+		array('id' => 'servers_child',
+			  'name' => _('Servers'),
+			  'page' => 'servers.php',
+			  'parent' => array('servers'));
 
-$menu['servers_unregistered'] = 
-	array('id' => 'servers_unregistered',
-		  'name' => _('Unregistered servers'),
-		  'page' => 'servers.php?view=unregistered',
-		  'parent' => 'servers');
+	$menu['servers_unregistered'] = 
+		array('id' => 'servers_unregistered',
+			  'name' => _('Unregistered servers'),
+			  'page' => 'servers.php?view=unregistered',
+			  'parent' => array('servers'));
 
-$menu['tasks'] = 
-	array('id' => 'tasks',
-		  'name' => _('Tasks'),
-		  'page' => 'tasks.php',
-		  'parent' => 'servers');
+	$menu['tasks'] = 
+		array('id' => 'tasks',
+			  'name' => _('Tasks'),
+			  'page' => 'tasks.php',
+			  'parent' => array('servers'));
+}
 
-$menu['sharedfolders'] = 
-	array('id' => 'sharedfolders',
-		  'name' => _('Shared folders'),
-		  'page' => 'sharedfolders.php',
-		  'parent' => 'servers');
+if (isAutorized('viewSharedFolders'))
+	$menu['sharedfolders'] = 
+		array('id' => 'sharedfolders',
+			  'name' => _('Shared folders'),
+			  'page' => 'sharedfolders.php',
+			  'parent' => array('servers'));
 
-$menu['user_child'] = 
-	array('id' => 'user_child',
-		  'name' => _('Users'),
-		  'page' => 'users.php',
-		  'parent' => 'users');
+if (isAutorized('viewUsers'))
+	$menu['user_child'] = 
+		array('id' => 'user_child',
+			  'name' => _('Users'),
+			  'page' => 'users.php',
+			  'parent' => array('users'));
 
-$menu['users_groups'] = 
-	array('id' => 'users_groups',
-		  'name' => _('Users Groups'),
-		  'page' => 'usersgroup.php',
-		  'parent' => 'users');
+if (isAutorized('viewUsersGroups'))
+	$menu['users_groups'] = 
+		array('id' => 'users_groups',
+			  'name' => _('Users Groups'),
+			  'page' => 'usersgroup.php',
+			  'parent' => array('users'));
 
-$menu['applications_child'] = 
-	array('id' => 'applications_child',
-		  'name' => _('Applications'),
-		  'page' => 'applications.php',
-		  'parent' => 'applications');
+if (isAutorized('viewApplications'))
+	$menu['applications_child'] = 
+		array('id' => 'applications_child',
+			  'name' => _('Applications'),
+			  'page' => 'applications.php',
+			  'parent' => array('applications'));
 
-$menu['applications_groups'] = 
-	array('id' => 'applications_groups',
-		  'name' => _('Applications Groups'),
-		  'page' => 'appsgroup.php',
-		  'parent' => 'applications');
+if (isAutorized('viewApplicationsGroups'))
+	$menu['applications_groups'] = 
+		array('id' => 'applications_groups',
+			  'name' => _('Applications Groups'),
+			  'page' => 'appsgroup.php',
+			  'parent' => array('applications'));
 
-$menu['applications_static'] = 
-	array('id' => 'applications_static',
-		  'name' => _('Static applications'),
-		  'page' => 'applications_static.php',
-		  'parent' => 'applications');
+if (isAutorized('viewApplications'))
+	$menu['applications_static'] = 
+		array('id' => 'applications_static',
+			  'name' => _('Static applications'),
+			  'page' => 'applications_static.php',
+			  'parent' => array('applications'));
 
-$menu['publications'] = 
-	array('id' => 'publications',
-		  'name' => _('Publications'),
-		  'page' => 'publications.php',
-		  'parent' => array('users', 'applications'));
+if (isAutorized('viewPublications'))
+	$menu['publications'] = 
+		array('id' => 'publications',
+			  'name' => _('Publications'),
+			  'page' => 'publications.php',
+			  'parent' => array('applications', 'users'));
 
-$menu['publications_wizard'] = 
-	array('id' => 'publications_wizard',
-		  'name' => _('Publication wizard'),
-		  'page' => 'wizard.php',
-		  'parent' => array('users', 'applications'));
+if (isAutorized('managePublications'))
+	$menu['publications_wizard'] = 
+		array('id' => 'publications_wizard',
+			  'name' => _('Publication wizard'),
+			  'page' => 'wizard.php',
+			  'parent' => array('applications', 'users'));
+
+if (isAutorized('viewConfiguration')) {
+	$menu['configuration_sumup'] = 
+		array('id' => 'configuration_sumup',
+			  'name' => _('Sum up'),
+			  'page' => 'configuration-sumup.php',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_db'] = 
+		array('id' => 'configuration_db',
+			  'name' => _('Database settings'),
+			  'page' => 'configuration-partial.php?mode=mysql',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_general'] = 
+		array('id' => 'configuration_general',
+			  'name' => _('System settings'),
+			  'page' => 'configuration-partial.php?mode=general',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_server'] = 
+		array('id' => 'configuration_server',
+			  'name' => _('Server settings'),
+			  'page' => 'configuration-partial.php?mode=application_server_settings',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_profiles'] = 
+		array('id' => 'configuration_profiles',
+			  'name' => _('Profile settings'),
+			  'page' => 'configuration-profile.php',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_sessions'] = 
+		array('id' => 'configuration_sessions',
+			  'name' => _('Session settings'),
+			  'page' => 'configuration-partial.php?mode=session_settings_defaults',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_events'] = 
+		array('id' => 'configuration_events',
+			  'name' => _('Events settings'),
+			  'page' => 'configuration-partial.php?mode=events',
+			  'parent' => array('configuration'));
+
+	$menu['configuration_webui'] = 
+		array('id' => 'configuration_webui',
+			  'name' => _('Web interface settings'),
+			  'page' => 'configuration-partial.php?mode=web_interface_settings',
+			  'parent' => array('configuration'));
+}
+
+if (isAutorized('viewStatus')) {
+	$menu['sessions'] = 
+		array('id' => 'sessions_child',
+			  'name' => _('Sessions'),
+			  'page' => 'sessions.php',
+			  'parent' => array('status'));
+
+	$menu['logs'] = 
+		array('id' => 'logs',
+			  'name' => _('Logs'),
+			  'page' => 'logs.php',
+			  'parent' => array('status'));
+
+	$menu['reporting'] = 
+		array('id' => 'reporting',
+			  'name' => _('Reporting'),
+			  'page' => 'reporting.php',
+			  'parent' => array('status'));
+}
 
 
-$menu['configuration_sumup'] = 
-	array('id' => 'configuration_sumup',
-		  'name' => _('Sum up'),
-		  'page' => 'configuration-sumup.php',
-		  'parent' => 'configuration');
-
-$menu['configuration_db'] = 
-	array('id' => 'configuration_db',
-		  'name' => _('Database settings'),
-		  'page' => 'configuration-partial.php?mode=mysql',
-		  'parent' => 'configuration');
-
-$menu['configuration_general'] = 
-	array('id' => 'configuration_general',
-		  'name' => _('System settings'),
-		  'page' => 'configuration-partial.php?mode=general',
-		  'parent' => 'configuration');
-
-$menu['configuration_server'] = 
-	array('id' => 'configuration_server',
-		  'name' => _('Server settings'),
-		  'page' => 'configuration-partial.php?mode=application_server_settings',
-		  'parent' => 'configuration');
-
-$menu['configuration_profiles'] = 
-	array('id' => 'configuration_profiles',
-		  'name' => _('Profile settings'),
-		  'page' => 'configuration-profile.php',
-		  'parent' => 'configuration');
-
-$menu['configuration_sessions'] = 
-	array('id' => 'configuration_sessions',
-		  'name' => _('Session settings'),
-		  'page' => 'configuration-partial.php?mode=session_settings_defaults',
-		  'parent' => 'configuration');
-
-$menu['configuration_events'] = 
-	array('id' => 'configuration_events',
-		  'name' => _('Events settings'),
-		  'page' => 'configuration-partial.php?mode=events',
-		  'parent' => 'configuration');
-
-$menu['configuration_webui'] = 
-	array('id' => 'configuration_webui',
-		  'name' => _('Web interface settings'),
-		  'page' => 'configuration-partial.php?mode=web_interface_settings',
-		  'parent' => 'configuration');
-
-
-$menu['sessions'] = 
-	array('id' => 'sessions_child',
-		  'name' => _('Sessions'),
-		  'page' => 'sessions.php',
-		  'parent' => 'status');
-
-$menu['logs'] = 
-	array('id' => 'logs',
-		  'name' => _('Logs'),
-		  'page' => 'logs.php',
-		  'parent' => 'status');
-
-$menu['reporting'] = 
-	array('id' => 'reporting',
-		  'name' => _('Reporting'),
-		  'page' => 'reporting.php',
-		  'parent' => 'status');
-
-$menu['sumup'] = 
-	array('id' => 'sumup',
-		  'name' => _('Summary'),
-		  'page' => 'sumup.php',
-		  'parent' => 'status');
+if (isAutorized('viewSummary'))
+	$menu['sumup'] = 
+		array('id' => 'sumup',
+			  'name' => _('Summary'),
+			  'page' => 'sumup.php',
+			  'parent' => array('status'));
 
 
 function page_header($params_=array()) {
@@ -338,7 +354,7 @@ function get_menu_entry() {
 	$buffer_id = Null;
 	$buffer_len = 0;
 	foreach($menu as $id => $entrie) {
-		if ($entrie['parent'] == NULL)
+		if (count($entrie['parent']) == 0)
 			continue;
 
 		if (! str_startswith($page, $entrie['page']))
@@ -356,6 +372,31 @@ function get_menu_entry() {
 	return $buffer_id;
 }
 
+function get_target($id_) {
+	global $menu;
+	foreach($menu as $id => $entrie) {
+		if (! in_array($id_, $entrie['parent']))
+				continue;		   
+
+		return $entrie['page'];
+	}
+
+	return $menu[$id_]['page'];
+}
+
+function get_nb_child($id_) {
+	global $menu;
+	$nb = 0;
+
+	foreach($menu as $id => $entrie) {
+		if (in_array($id_, $entrie['parent']))
+			$nb++;
+	}
+
+	return $nb;
+}
+
+
 function page_menu(){
 	global $menu;
 
@@ -370,14 +411,17 @@ function page_menu(){
 	echo '<tr>';
 
 	foreach($menu as $id => $entrie) {
-		if ($entrie['parent'] != Null)
+		if (count($entrie['parent'])>0)
+			continue;
+
+		if (! isset($entrie['always_display']) && get_nb_child($id) == 0)
 			continue;
 
 		echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
 //		if ($id == $parent)
 //			echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
 
-		echo '" class="menu"><a href="'.$entrie['page'].'"><img src="media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
+		echo '" class="menu"><a href="'.get_target($id).'"><img src="media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
 		echo '<span class="menulink';
 		if ($id == $parent)
 			echo '_active';

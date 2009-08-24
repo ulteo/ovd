@@ -166,6 +166,30 @@ class Preferences {
 		
 		$c = new ConfigElement_inputlist('default_browser', _('default_browser'), _('default_browser'), _('default_browser'), array('linux' => NULL)); // TODO: 'windows' to add
 		$this->add($c,'general');
+		
+		$c = new ConfigElement_multiselect('default_policy', _('default_policy'), _('default_policy'), _('default_policy'), array());
+		$c->setContentAvailable(array(
+			'canUseAdminPanel' => _('use admin panel'),
+			'viewServers' => _('view Servers'),
+			'manageServers' => _('manage Servers'),
+			'viewSharedFolders' => _('view SharedFolders'),
+			'manageSharedFolders' => _('manage SharedFolders'),
+			'viewUsers' => _('view Users'),
+			'manageUsers' => _('manage Users'),
+			'viewUsersGroups' => _('view Users Groups'),
+			'manageUsersGroups' => _('manage Users Groups'),
+			'viewApplications' => _('view Applications'),
+			'manageApplications' => _('manage Applications'),
+			'viewApplicationsGroups' => _('view ApplicationsGroups'),
+			'manageApplicationsGroups' => _('manage ApplicationsGroups'),
+			'viewPublications' => _('view Publications'),
+			'managePublications' => _('manage Publications'),
+			'viewConfiguration' => _('view Configuration'),
+			'manageConfiguration' => _('manage Configuration'),
+			'viewStatus' => _('view Status'),
+			'viewSummary' => _('view Summary')));
+
+		$this->add($c,'general', 'policy');
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');

@@ -21,6 +21,10 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewStatus'))
+	redirect('index.php');
+
+
 if (isset($_POST['join'])) {
 	$session = Abstract_Session::load($_POST['join']);
 

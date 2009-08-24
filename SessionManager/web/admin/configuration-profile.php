@@ -23,6 +23,10 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewConfiguration'))
+	redirect('index.php');
+
+
 function do_auto_clean_db($new_prefs) {
   $prefs = Preferences::getInstance();
 
@@ -144,6 +148,9 @@ if (isset($_POST['config'])) {
   $previous = $_POST['config_previous'];
 
   if ($name == $previous) {
+		if (! checkAutorization('manageConfiguration'))
+			redirect();
+
     $_SESSION['config_profile'] = $name;
     $_SESSION[$name] = $_POST;
 
@@ -193,6 +200,7 @@ if (isset($_SESSION['config_profile_saved'])) {
   $green = true;
 }
 
+$can_manage_configuration = isAutorized('manageConfiguration');
 
 page_header();
 if (isset($preview))
@@ -214,8 +222,10 @@ echo '<br/>';
 
   echo $c->display($form);
 
-echo '<input type="submit" value="'._('Save').'"/>';
-echo ' <input type="submit" name="submit_preview" value="'._('Test').'"/>';
+if ($can_manage_configuration) {
+	echo '<input type="submit" value="'._('Save').'"/>';
+	echo ' <input type="submit" name="submit_preview" value="'._('Test').'"/>';
+}
 echo '</form>';
 
 if (isset($preview)) {

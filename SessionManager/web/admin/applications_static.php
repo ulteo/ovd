@@ -21,6 +21,9 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (checkAutorization('viewApplications'))
+	redirect();
+
 $types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web'));
 $regular_types = array('linux', 'windows');
 
@@ -40,7 +43,11 @@ if (isset($_REQUEST['action'])) {
 		if (isset($_REQUEST['id']))
 			show_manage($_REQUEST['id'], $applicationDB);
 	}
-	elseif ($_REQUEST['action'] == 'modify' && $applicationDB->isWriteable()) {
+
+	if (checkAutorization('manageApplications'))
+			redirect();
+
+	if ($_REQUEST['action'] == 'modify' && $applicationDB->isWriteable()) {
 		if (isset($_REQUEST['id'])) {
 			modify_application($applicationDB, $_REQUEST['id'], $_POST, $_FILES);
 			redirect();
@@ -74,6 +81,7 @@ function show_default($prefs, $applicationDB) {
 	$is_empty = (is_null($applications) or count($applications)==0);
 
 	$is_rw = $applicationDB->isWriteable();
+	$can_manage_applications = isAutorized('manageApplications');
 
 	page_header();
 
@@ -105,7 +113,7 @@ function show_default($prefs, $applicationDB) {
 			}
 
 			echo '<tr class="'.$content.'">';
-			if ($is_rw)
+			if ($is_rw and $can_manage_applications)
 				echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
 			echo '<td>'.$app->getAttribute('description').'</td>';
 			echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
@@ -116,20 +124,23 @@ function show_default($prefs, $applicationDB) {
 			echo '<input type="submit" value="'._('Manage').'"/>';
 			echo '</form>';
 			echo '</td>';
-			echo '<td>';
-			echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
-			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-			echo '<input type="submit" value="'._('Delete').'" />';
-			echo '</form>';
-			echo '</td>';
+
+			if ($can_manage_applications) {
+				echo '<td>';
+				echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+				echo '<input type="submit" value="'._('Delete').'" />';
+				echo '</form>';
+				echo '</td>';
+			}
 
 			echo '</tr>';
 		}
 		echo '</table>'; // table A
 		echo '</div>'; // apps_list
 	}
-	if ($is_rw) {
+	if ($is_rw and $can_manage_applications) {
 		echo '<br />';
 		echo '<h2>'._('Add a static application').'</h2>';
 		echo '<div id="application_add">';
@@ -209,10 +220,12 @@ function show_default($prefs, $applicationDB) {
 		foreach ($browsers as $type => $browser) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
-			echo '<form action="actions.php" method="post">';
-			echo '<input type="hidden" name="name" value="default_browser" />';
-			echo '<input type="hidden" name="action" value="add" />';
-			echo '<input type="hidden" name="type" value="'.$type.'" />';
+			if ($can_manage_applications) {
+				echo '<form action="actions.php" method="post">';
+				echo '<input type="hidden" name="name" value="default_browser" />';
+				echo '<input type="hidden" name="action" value="add" />';
+				echo '<input type="hidden" name="type" value="'.$type.'" />';
+			}
 			echo '<td>';
 			echo $type;
 			echo '</td>';
@@ -230,10 +243,12 @@ function show_default($prefs, $applicationDB) {
 			echo '</select>';
 
 			echo '</td>';
-			echo '<td>';
-			echo '<input type="submit" value="'._('Update').'" />';
-			echo '</td>';
-			echo '</form>';
+			if ($can_manage_applications) {
+				echo '<td>';
+				echo '<input type="submit" value="'._('Update').'" />';
+				echo '</td>';
+				echo '</form>';
+			}
 			echo '</tr>';
 		}
 		echo '</table>';
@@ -341,6 +356,7 @@ function show_manage($id, $applicationDB) {
 		return false;
 
 	$is_rw = $applicationDB->isWriteable();
+	$can_manage_applications = isAutorized('manageApplications');
 
 	// App groups
 	$appgroups = getAllAppsGroups();
@@ -372,7 +388,7 @@ function show_manage($id, $applicationDB) {
 	else
 		echo '<th>'._('URL').'</th>';
 
-	if ($is_rw) {
+	if ($is_rw and $can_manage_applications) {
 		echo '<th></th>';
 	}
 	echo '</tr>';
@@ -389,18 +405,20 @@ function show_manage($id, $applicationDB) {
 		echo '<a href="'.$app->getAttribute('executable_path').'">'.$app->getAttribute('executable_path').'</a>';
 	echo '</td>';
 
+	if ($is_rw and $can_manage_applications) {
+		echo '<td>';
+		echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<input type="submit"  value="'._('Delete').'" />';
+		echo '</form>';
+		echo '</td>';
+	}
 
-	echo '<td>';
-	echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-	echo '<input type="submit"  value="'._('Delete').'" />';
-	echo '</form>';
-	echo '</td>';
 	echo '</tr>';
 	echo '</table>';
 
-	if ($is_rw) {
+	if ($is_rw and $can_manage_applications) {
 		echo '<br />';
 		echo '<h2>'._('Modify').'</h2>';
 		echo '<div id="application_modify">';

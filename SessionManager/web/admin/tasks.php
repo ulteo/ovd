@@ -22,11 +22,18 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewServers'))
+		redirect();
+
+
 $tm = new Tasks_Manager();
 $tm->load_all();
 $tm->refresh_all();
 
 if (isset($_POST['action'])) {
+	if (! checkAutorization('manageServers'))
+		redirect();
+
 	if ($_POST['action']=='create') {
 		if (isset($_POST['type'])) {
 			$type_task = 'Task_'.$_POST['type'];
@@ -97,6 +104,8 @@ function show_manage($id, $tm) {
 	$infos = $task->get_AllInfos();
 	$can_remove = ($task->succeed() || $task->failed());
 
+	$can_do_action = isAutorized('manageServers');
+
 	page_header();
 
 	echo '<div id="tasks_div">';
@@ -110,7 +119,7 @@ function show_manage($id, $tm) {
 	echo '<th>'._('Status').'</th>';
 	echo '<th>'._('Details').'</th>';
 	echo '<th>'._('Job id').'</th>';
-	if ($can_remove)
+	if ($can_remove && $can_do_action)
     		echo '<th></th>';
 	echo '</tr>';
 	
@@ -128,7 +137,7 @@ function show_manage($id, $tm) {
 	echo '<td>'.$status.'</td>';
 	echo '<td>'.$task->getRequest().'</td>';
 	echo '<td>'.$task->job_id.'</td>';
-	if ($can_remove) {
+	if ($can_remove && $can_do_action) {
 		echo '<td>';
 		echo '<form action="" method="post">';
 		echo '<input type="hidden" name="action" value="remove" />';
@@ -155,6 +164,8 @@ function show_manage($id, $tm) {
 
 function show_default($tm) {
   $servers = Servers::getOnline();
+
+	$can_do_action = isAutorized('manageServers');
 
   page_header();
 
@@ -194,7 +205,7 @@ function show_default($tm) {
       echo '<td>'.$status.'</td>';
       echo '<td>'.$task->getRequest().'</td>';
       echo '<td>';
-      if ($can_remove) {
+      if ($can_remove && $can_do_action) {
     	echo '<form action="" method="post">';
 	echo '<input type="hidden" name="action" value="remove" />';
 	echo '<input type="hidden" name="task" value="'.$task->id.'" />';
@@ -208,7 +219,7 @@ function show_default($tm) {
     echo '</div>';
   }
   
-    if (count($servers)>0) {
+    if (count($servers)>0 && $can_do_action) {
     	echo '<h2>'._('Install a package from command line').'</h2>';
 
     	echo '<form action="" method="post">';

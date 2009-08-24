@@ -23,6 +23,10 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewUsersGroups'))
+	redirect('index.php');
+
+
 $schedules = array(
 	3600	=>	_('1 hour'),
 	86400	=>	_('1 day'),
@@ -34,6 +38,10 @@ if (isset($_REQUEST['action'])) {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id']);
   }
+
+	if (! checkAutorization('manageUsersGroups'))
+		redirect('index.php');
+
 
   if ($_REQUEST['action']=='add') {
     if ($_REQUEST['type'] == 'static')
@@ -167,6 +175,9 @@ function action_del($id) {
 }
 
 function action_modify($id) {
+	if (! checkAutorization('manageUsersGroups'))
+		return false;
+
   $userGroupDB = UserGroupDB::getInstance();
   if ((str_startswith($id,'static_')) && (! $userGroupDB->isWriteable()))
      return false;
@@ -297,6 +308,8 @@ function show_default() {
   $groups = $userGroupDB->getList(true);
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
+  $can_manage_usersgroups = isAutorized('manageUsersGroups');
+
   page_header();
 
   echo '<div id="usersgroup_div" >';
@@ -314,13 +327,13 @@ function show_default() {
          break; // no need to continue;
        }
      }
-    if ( !$all_static || $userGroupDB->isWriteable()) {
+    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
       echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
       echo '<input type="hidden" name="action" value="del" />';
     }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-    if ( !$all_static || $userGroupDB->isWriteable()) {
+    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
       echo '<th class="unsortable"></th>'; // masse action
     }
     echo '<th>'._('Name').'</th>';
@@ -338,11 +351,13 @@ function show_default() {
         $publish = '<span class="msg_error">'._('Blocked').'</span>';
 
       echo '<tr class="'.$content.'">';
-      if ($group->type != 'static' || $userGroupDB->isWriteable()) {
-        echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td>';
-      }
-      else if ( !$all_static) {
-        echo '<td></td>';
+      if ($can_manage_usersgroups) {
+        if ($group->type != 'static' || $userGroupDB->isWriteable()) {
+          echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td>';
+        }
+        else if ( !$all_static) {
+          echo '<td></td>';
+        }
       }
       echo '<form></form>';
       echo '<td><a href="?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a></td>';
@@ -356,20 +371,20 @@ function show_default() {
       echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
       echo '</form></td>';
 
-      if ($group->type != 'static' || $userGroupDB->isWriteable()) {
+      if (($group->type != 'static' || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
         echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
         echo '<input type="submit" value="'._('Delete').'"/>';
         echo '<input type="hidden" name="action" value="del" />';
         echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
         echo '</form></td>';
       }
-      else if ( !$all_static) {
+      else if ( !$all_static and $can_manage_usersgroups) {
         echo '<td></td>';
       }
       echo '</tr>';
     }
     $content = 'content'.(($count++%2==0)?1:2);
-    if ( !$all_static) {
+    if ( !$all_static and $can_manage_usersgroups) {
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
       echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
@@ -391,104 +406,108 @@ function show_default() {
   else {
     $usergroup_types = array('dynamic' => _('Dynamic'));
   }
-  echo '<div>';
-  echo '<h2>'._('Create a new group').'</h2>';
 
-	$first_type = array_keys($usergroup_types);
-	$first_type = $first_type[0];
-	$usergroup_types2 = $usergroup_types; // bug in php 5.1.6 (redhat 5.2)
-	foreach ($usergroup_types as $type => $name) {
-		echo '<input class="input_radio" type="radio" name="type" value="'.$type.'" onclick="';
-		foreach ($usergroup_types2 as $type2 => $name2) { // bug in php 5.1.6
-			if ($type == $type2)
-				echo '$(\'table_'.$type2.'\').show(); ';
-			else
-				echo '$(\'table_'.$type2.'\').hide(); ';
+
+	if ($can_manage_usersgroups) {
+		echo '<div>';
+		echo '<h2>'._('Create a new group').'</h2>';
+
+		$first_type = array_keys($usergroup_types);
+		$first_type = $first_type[0];
+		$usergroup_types2 = $usergroup_types; // bug in php 5.1.6 (redhat 5.2)
+		foreach ($usergroup_types as $type => $name) {
+			echo '<input class="input_radio" type="radio" name="type" value="'.$type.'" onclick="';
+			foreach ($usergroup_types2 as $type2 => $name2) { // bug in php 5.1.6
+				if ($type == $type2)
+					echo '$(\'table_'.$type2.'\').show(); ';
+				else
+					echo '$(\'table_'.$type2.'\').hide(); ';
+			}
+			echo '"';
+			if ($type == $first_type)
+				echo ' checked="checked"';
+
+			echo ' />';
+			echo $type;
 		}
-		echo '"';
-		if ($type == $first_type)
-			echo ' checked="checked"';
 
-		echo ' />';
-		echo $type;
-	}
+		foreach ($usergroup_types as $type => $name) {
+			$count = 2;
+			echo '<form action="" method="post">';
+			echo '<table id="table_'.$type.'"';
+			if ( $type != $first_type)
+				echo ' style="display: none" ';
+			else
+				echo ' style="display: visible" ';
+			echo ' border="0" class="main_sub" cellspacing="1" cellpadding="5" >';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="type" value="'.$type.'" />';
+			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
+			echo '<th>'._('Name').'</th>';
+			echo '<td><input type="text" name="name" value="" /></td>';
+			echo '</tr>';
 
-	foreach ($usergroup_types as $type => $name) {
-		$count = 2;
-		echo '<form action="" method="post">';
-		echo '<table id="table_'.$type.'"';
-		if ( $type != $first_type)
-			echo ' style="display: none" ';
-		else
-			echo ' style="display: visible" ';
-		echo ' border="0" class="main_sub" cellspacing="1" cellpadding="5" >';
-		echo '<input type="hidden" name="action" value="add" />';
-		echo '<input type="hidden" name="type" value="'.$type.'" />';
-		echo '<tr class="content'.(($count++%2==0)?1:2).'">';
-		echo '<th>'._('Name').'</th>';
-		echo '<td><input type="text" name="name" value="" /></td>';
-		echo '</tr>';
-
-		echo '<tr class="content'.(($count++%2==0)?1:2).'">';
-		echo '<th>'._('Description').'</th>';
-		echo '<td><input type="text" name="description" value="" /></td>';
-		echo '</tr>';
+			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
+			echo '<th>'._('Description').'</th>';
+			echo '<td><input type="text" name="description" value="" /></td>';
+			echo '</tr>';
 		
-		if (str_startswith($type, 'dynamic')) {
-			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
-			echo '<th>'._('Cached').'</th>';
-			echo '<td>';
-			echo '<input type="radio" name="cached" value="0" checked="checked" onchange="$(\'schedule_select\').hide();" /> '._('No');
-			echo '<input type="radio" name="cached" value="1" onchange="$(\'schedule_select\').show();" /> '._('Yes');
-			echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two updates:').' <select name="schedule">';
-			foreach ($schedules as $interval => $text)
-				echo '<option value="'.$interval.'">'.$text.'</option>';
-			echo '</select></span>';
-			echo '</td>';
-			echo '</tr>';
-			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
-			echo '<th>'._('Validation type').'</th>';
-			echo '<td><input type="radio" name="validation_type" value="and" checked="checked" /> '._('All').' <input type="radio" name="validation_type" value="or" /> '._('At least one').'</td>';
-			echo '</tr>';
+			if (str_startswith($type, 'dynamic')) {
+				echo '<tr class="content'.(($count++%2==0)?1:2).'">';
+				echo '<th>'._('Cached').'</th>';
+				echo '<td>';
+				echo '<input type="radio" name="cached" value="0" checked="checked" onchange="$(\'schedule_select\').hide();" /> '._('No');
+				echo '<input type="radio" name="cached" value="1" onchange="$(\'schedule_select\').show();" /> '._('Yes');
+				echo ' <span id="schedule_select" style="display: none;"><br />'._('Time between two updates:').' <select name="schedule">';
+				foreach ($schedules as $interval => $text)
+					echo '<option value="'.$interval.'">'.$text.'</option>';
+				echo '</select></span>';
+				echo '</td>';
+				echo '</tr>';
+				echo '<tr class="content'.(($count++%2==0)?1:2).'">';
+				echo '<th>'._('Validation type').'</th>';
+				echo '<td><input type="radio" name="validation_type" value="and" checked="checked" /> '._('All').' <input type="radio" name="validation_type" value="or" /> '._('At least one').'</td>';
+				echo '</tr>';
 
-			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
-			echo '<th>'._('Filters').'</th>';
-			echo '<td>';
+				echo '<tr class="content'.(($count++%2==0)?1:2).'">';
+				echo '<th>'._('Filters').'</th>';
+				echo '<td>';
 
-			$i = 0;
-			$filter_attributes = $userDB->getAttributesList();
-			foreach ($filter_attributes as $key1 => $value1) {
-				if ( $value1 == 'password')
-					unset($filter_attributes[$key1]);
+				$i = 0;
+				$filter_attributes = $userDB->getAttributesList();
+				foreach ($filter_attributes as $key1 => $value1) {
+					if ( $value1 == 'password')
+						unset($filter_attributes[$key1]);
+				}
+				$filter_types = UserGroup_Rule::$types;
+				echo '<table border="0" cellspacing="1" cellpadding="3">';
+				echo '<tr>';
+				echo '<td><select name="rules[0][attribute]">';
+				foreach ($filter_attributes as $filter_attribute)
+					echo '<option value="'.$filter_attribute.'">'.$filter_attribute.'</option>';
+				echo '</select></td>';
+				echo '<td><select name="rules[0][type]">';
+				foreach ($filter_types as $filter_type) {
+					echo '<option value="'.$filter_type.'">'.$filter_type.'</option>';
+				}
+				echo '</select></td>';
+				echo '<td><input type="text" name="rules[0][value]" value="" /></td>';
+				echo '<td><input style="display: none;" type="button" onclick="del_field(this.parentNode.parentNode); return false;" value="-" /><input type="button" onclick="add_field(this.parentNode.parentNode); return false;" value="+" /></td>';
+				echo '</tr>';
+				echo '</table>';
+
+				echo '</td>';
+				echo '</tr>';
 			}
-			$filter_types = UserGroup_Rule::$types;
-			echo '<table border="0" cellspacing="1" cellpadding="3">';
-			echo '<tr>';
-			echo '<td><select name="rules[0][attribute]">';
-			foreach ($filter_attributes as $filter_attribute)
-				echo '<option value="'.$filter_attribute.'">'.$filter_attribute.'</option>';
-			echo '</select></td>';
-			echo '<td><select name="rules[0][type]">';
-			foreach ($filter_types as $filter_type) {
-				echo '<option value="'.$filter_type.'">'.$filter_type.'</option>';
-			}
-			echo '</select></td>';
-			echo '<td><input type="text" name="rules[0][value]" value="" /></td>';
-			echo '<td><input style="display: none;" type="button" onclick="del_field(this.parentNode.parentNode); return false;" value="-" /><input type="button" onclick="add_field(this.parentNode.parentNode); return false;" value="+" /></td>';
+
+			echo '<tr class="content1">';
+			echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
 			echo '</tr>';
 			echo '</table>';
-
-			echo '</td>';
-			echo '</tr>';
+			echo '</form>';
 		}
-
-		echo '<tr class="content1">';
-		echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
-		echo '</tr>';
-		echo '</table>';
-		echo '</form>';
-	}
-  echo '</div>';
+		echo '</div>';
+	} //if ($can_manage_usersgroups)
 
   echo '</div>';
   page_footer();
@@ -505,6 +524,19 @@ function show_manage($id) {
 
   $group = $userGroupDB->import($id);
   $usergroupdb_rw = $userGroupDB->isWriteable();
+
+  $policy = $group->getPolicy();
+  $policy_rule_enable = 0;
+  $policy_rules_disable = 0;
+  foreach($policy as $key => $value) {
+	  if ($value === true)
+		  $policy_rule_enable++;
+	  else
+		  $policy_rules_disable++;
+  }
+
+  $buffer = $prefs_policy = $prefs->get('general', 'policy');
+  $default_policy = $default_policy = $prefs_policy['default_policy'];
 
   if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -559,6 +591,11 @@ function show_manage($id) {
       $groups_apps_available[]= $group_apps;
   }
 
+	$can_manage_usersgroups = isAutorized('manageUsersGroups');
+	$can_manage_publications = isAutorized('managePublications');
+	$can_manage_sharedfolders = isAutorized('manageServers');
+
+
   page_header();
   echo '<div id="users_div">';
   echo '<h1><a href="?">'._('User groups management').'</a> - '.$group->name.'</h1>';
@@ -576,74 +613,80 @@ function show_manage($id) {
   echo '</table>';
 
 
-  echo '<div>';
-  echo '<h2>'._('Settings').'</h1>';
+ 	if ($can_manage_usersgroups) {
+		echo '<div>';
+		echo '<h2>'._('Settings').'</h1>';
 
-  if ($group->type == 'static') {
-    echo '<form action="" method="post">';
-    if ($is_default_group) {
-      echo '<input type="submit" value="'._('Remove from default').'"/>';
-      echo '<input type="hidden" name="action" value="unset_default" />';
-    } else {
-      echo '<input type="submit" value="'._('Define as default').'"/>';
-      echo '<input type="hidden" name="action" value="set_default" />';
-    }
+		if ($group->type == 'static' and $can_manage_usersgroups) {
+			echo '<form action="" method="post">';
+			if ($is_default_group) {
+				echo '<input type="submit" value="'._('Remove from default').'"/>';
+				echo '<input type="hidden" name="action" value="unset_default" />';
+			} else {
+				echo '<input type="submit" value="'._('Define as default').'"/>';
+				echo '<input type="hidden" name="action" value="set_default" />';
+			}
 
-    echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
-    echo '</form>';
-    echo '<br/>';
-  }
+			echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
+			echo '</form>';
+			echo '<br/>';
+		}
 
-  if ($usergroupdb_rw || ($group->type != 'static')) {
-    echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
-    echo '<input type="submit" value="'._('Delete this group').'"/>';
-    echo '<input type="hidden" name="action" value="del" />';
-    echo '<input type="hidden" name="id" value="'.$id.'" />';
-    echo '</form>';
-    echo '<br/>';
+		if ($usergroupdb_rw || ($group->type != 'static')) {
+			echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+			echo '<input type="submit" value="'._('Delete this group').'"/>';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="id" value="'.$id.'" />';
+			echo '</form>';
+			echo '<br/>';
 
-    echo '<form action="" method="post">';
-    echo '<input type="hidden" name="action" value="modify" />';
-    echo '<input type="hidden" name="id" value="'.$id.'" />';
-    echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
-    echo '<input type="submit" value="'.$status_change.'"/>';
-    echo '</form>';
-    echo '<br/>';
-
-    echo '<form action="" method="post">';
-    echo '<input type="hidden" name="action" value="modify" />';
-    echo '<input type="hidden" name="id" value="'.$id.'" />';
-    echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
-    echo '<input type="submit" value="'._('Update the description').'"/>';
-    echo '</form>';
+			echo '<form action="" method="post">';
+			echo '<input type="hidden" name="action" value="modify" />';
+			echo '<input type="hidden" name="id" value="'.$id.'" />';
+			echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
+			echo '<input type="submit" value="'.$status_change.'"/>';
+			echo '</form>';
+			echo '<br/>';
+	
+			echo '<form action="" method="post">';
+			echo '<input type="hidden" name="action" value="modify" />';
+			echo '<input type="hidden" name="id" value="'.$id.'" />';
+			echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
+			echo '<input type="submit" value="'._('Update the description').'"/>';
+			echo '</form>';
+		}
     
-    if ($group->type == 'dynamiccached') {
-      echo '<form action="" method="post">';
-      echo '<input type="hidden" name="action" value="modify" />';
-      echo '<input type="hidden" name="id" value="'.$id.'" />';
+		if ($group->type == 'dynamiccached') {
+			echo '<form action="" method="post">';
+			echo '<input type="hidden" name="action" value="modify" />';
+			echo '<input type="hidden" name="id" value="'.$id.'" />';
 
-echo ' <select name="schedule">';
-foreach ($schedules as $interval => $text) {
-	echo '<option value="'.$interval.'"';
-	if ($group->schedule == $interval)
-		echo ' selected="selected"';
-	echo '>'.$text.'</option>';
-}
-echo '</select>';
-      echo '<input type="submit" value="'._('Update the schedule').'"/>';
-      echo '</form>';
-    }
-  }
-  echo '</div>';
-  echo '<br/>';
+			echo ' <select name="schedule">';
+			foreach ($schedules as $interval => $text) {
+				echo '<option value="'.$interval.'"';
+				if ($group->schedule == $interval)
+					echo ' selected="selected"';
+				echo '>'.$text.'</option>';
+			}
+			echo '</select>';
+			echo '<input type="submit" value="'._('Update the schedule').'"/>';
+			echo '</form>';
+		}
+
+		echo '</div>';
+		echo '<br/>';
+	} //if ($can_manage_usersgroups)
+
 
   if (str_startswith($group->type,'dynamic')) {
     echo '<div>';
     echo '<h2>'._('Rules').'</h1>';
 
-echo '<form action="" method="post">';
-echo '<input type="hidden" name="action" value="modify_rules" />';
-echo '<input type="hidden" name="id" value="'.$id.'" />';
+	if ($can_manage_usersgroups) {
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="modify_rules" />';
+		echo '<input type="hidden" name="id" value="'.$id.'" />';
+	}
 echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
 echo '<tr class="content1">';
 echo '<th>'._('Validation type').'</th>';
@@ -689,19 +732,21 @@ foreach ($group->rules as $rule) {
 	}
 	echo '</select></td>';
 	echo '<td><input type="text" name="rules['.$i.'][value]" value="'.$rule->value.'" /></td>';
-	echo '<td>';
+	if ($can_manage_usersgroups) {
+		echo '<td>';
 
-	echo '<input';
-	if (($i == 0 && count($group->rules) == 1) || $i == count($group->rules))
-		echo ' style="display: none;"';
-	echo ' type="button" onclick="del_field(this.parentNode.parentNode); return false;" value="-" />';
+		echo '<input';
+		if (($i == 0 && count($group->rules) == 1) || $i == count($group->rules))
+			echo ' style="display: none;"';
+		echo ' type="button" onclick="del_field(this.parentNode.parentNode); return false;" value="-" />';
 
-	echo '<input';
-	if ($i+1 != count($group->rules))
-		echo ' style="display: none;"';
-	echo ' type="button" onclick="add_field(this.parentNode.parentNode); return false;" value="+" />';
+		echo '<input';
+		if ($i+1 != count($group->rules))
+			echo ' style="display: none;"';
+		echo ' type="button" onclick="add_field(this.parentNode.parentNode); return false;" value="+" />';
 
-	echo '</td>';
+		echo '</td>';
+	}
 	echo '</tr>';
 
 	$i++;
@@ -712,8 +757,10 @@ echo '</td>';
 echo '</tr>';
 echo '</table>';
 echo '<br />';
-echo '<input type="submit" value="'._('Update rules').'" />';
-echo '</form>';
+	if ($can_manage_usersgroups) {
+		echo '<input type="submit" value="'._('Update rules').'" />';
+		echo '</form>';
+	}
 
 
 //   var_dump($group->rules);
@@ -732,7 +779,7 @@ echo '</form>';
 	echo '<tr>';
 	echo '<td><a href="users.php?action=manage&id='.$user.'">'.$user.'</td>';
 	echo '<td>';
-	if ($usergroupdb_rw && $group->type == 'static' && !$group->isDefault()) {
+	if ($usergroupdb_rw && $group->type == 'static' && !$group->isDefault() and $can_manage_usersgroups) {
 		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 		echo '<input type="hidden" name="action" value="del" />';
 		echo '<input type="hidden" name="name" value="User_UserGroup" />';
@@ -746,7 +793,7 @@ echo '</form>';
       }
     }
 
-    if ((count ($users_available) >0) && $usergroupdb_rw && $group->type == 'static') {
+    if ((count ($users_available) >0) && $usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
@@ -774,20 +821,22 @@ echo '</form>';
       foreach($groups_apps as $groups_app) {
 	echo '<tr>';
 	echo '<td><a href="appsgroup.php?action=manage&id='.$groups_app->id.'">'.$groups_app->name.'</td>';
-	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="name" value="Publication" />';
-	echo '<input type="hidden" name="group_u" value="'.$id.'" />';
-	echo '<input type="hidden" name="group_a" value="'.$groups_app->id.'" />';
-	echo '<input type="submit" value="'._('Delete this publication').'" />';
-	echo '</form>';
-	echo '</td>';
+		if ($can_manage_publications) {
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="name" value="Publication" />';
+			echo '<input type="hidden" name="group_u" value="'.$id.'" />';
+			echo '<input type="hidden" name="group_a" value="'.$groups_app->id.'" />';
+			echo '<input type="submit" value="'._('Delete this publication').'" />';
+			echo '</form>';
+			echo '</td>';
+		}
 	echo '</tr>';
       }
     }
 
-    if (count ($groups_apps_available) >0) {
+    if (count ($groups_apps_available) >0 and $can_manage_publications) {
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="Publication" />';
@@ -802,6 +851,58 @@ echo '</form>';
     echo '</table>';
     echo '</div>';
   }
+
+
+	// Policy of this group
+	echo '<div>';
+	echo '<h2>'._('Policy of this group').'</h2>';
+	echo '<table border="0" cellspacing="1" cellpadding="3">';
+
+	foreach($policy as $key => $value) {
+		if ($value === false)
+			continue;
+
+		$extends_from_default = (in_array($key,$default_policy));
+		$buffer = ($extends_from_default===true?' ('._('extend from default').')':'');
+
+		echo '<tr>';
+		echo '<td>'.$key.' '.$buffer.'</td>';
+		if ($can_manage_usersgroups && ! $extends_from_default) {
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this rule ?').'\');">';
+			echo '<input type="hidden" name="name" value="UserGroup_PolicyRule" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
+			echo '<input type="hidden" name="element" value="'.$key.'" />';
+			echo '<input type="submit" value="'._('Delete this rule').'" />';
+			echo '</form>';
+			echo '</td>';
+		}
+		echo '</tr>';
+	}
+	if ($can_manage_usersgroups && count($policy_rules_disable)>0) {
+		echo '<tr><form action="actions.php" method="post"><td>';
+		echo '<input type="hidden" name="name" value="UserGroup_PolicyRule" />';
+		echo '<input type="hidden" name="action" value="add" />';
+		echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
+		echo '<select name="element">';
+
+		foreach($policy as $key => $value) {
+			if ($value === true)
+				continue;
+
+			echo '<option value="'.$key.'" >'.$key.'</option>';
+		}
+		echo '</select>';
+		echo '</td><td><input type="submit" value="'._('Add this rule').'" /></td>';
+		echo '</form></tr>';
+	}
+
+	echo '</table>';
+	echo '</div>';
+	echo '<br/>';
+
+
 
     $all_sharedfolders = SharedFolders::getAll();
 
@@ -823,17 +924,19 @@ echo '</form>';
 		foreach ($used_sharedfolders as $sharedfolder) {
 			echo '<tr>';
 			echo '<td><a href="sharedfolders.php?action=manage&amp;id='.$sharedfolder->id.'">'.$sharedfolder->name.'</a></td>';
-			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder access?').'\');">';
-			echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
-			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="sharedfolder_id" value="'.$sharedfolder->id.'" />';
-			echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
-			echo '<input type="submit" value="'._('Delete access to this shared folder').'" />';
-			echo '</form></td>';
+			if ($can_manage_sharedfolders) {
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this shared folder access?').'\');">';
+				echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="sharedfolder_id" value="'.$sharedfolder->id.'" />';
+				echo '<input type="hidden" name="usergroup_id" value="'.$group->getUniqueID().'" />';
+				echo '<input type="submit" value="'._('Delete access to this shared folder').'" />';
+				echo '</form></td>';
+			}
 			echo '</tr>';
 		}
 
-		if (count($available_sharedfolders) > 0) {
+		if (count($available_sharedfolders) > 0 && $can_manage_sharedfolders) {
 			echo '<tr><form action="actions.php" method="post"><td>';
 			echo '<input type="hidden" name="name" value="SharedFolder_ACL" />';
 			echo '<input type="hidden" name="action" value="add" />';

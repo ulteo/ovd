@@ -39,6 +39,9 @@ if ($_REQUEST['action'] != 'add' && $_REQUEST['action'] != 'del') {
  *  Install some Applications on a specific server
  */
 if ($_REQUEST['name'] == 'Application_Server') {
+	if (! checkAutorization('manageServers'))
+		redirect();
+
 	if (!isset($_REQUEST['server']) || !isset($_REQUEST['application'])) {
 		header('Location: '.$_SERVER['HTTP_REFERER']);
 		die();
@@ -111,6 +114,9 @@ if ($_REQUEST['name'] == 'Application') {
 }
 
 if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
+	if (! checkAutorization('manageApplicationsGroups'))
+		redirect();
+
 	if ($_REQUEST['action'] == 'add') {
 		Abstract_Liaison::save('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
@@ -121,6 +127,9 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 }
 
 if ($_REQUEST['name'] == 'User_UserGroup') {
+	if (! checkAutorization('manageUsersGroups'))
+		redirect();
+
 	if ($_REQUEST['action'] == 'add') {
 		Abstract_Liaison::save('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
@@ -131,6 +140,9 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 }
 
 if ($_REQUEST['name'] == 'Publication') {
+	if (! checkAutorization('managePublications'))
+		redirect();
+
 	if (!isset($_REQUEST['group_a']) or !isset($_REQUEST['group_u']))
 		redirect($_SERVER['HTTP_REFERER']);
 
@@ -152,7 +164,45 @@ if ($_REQUEST['name'] == 'Publication') {
 	}
 }
 
+if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
+	if (! checkAutorization('manageUsersGroups'))
+		redirect();
+
+	if (!isset($_REQUEST['id']) 
+		or !isset($_REQUEST['element'])
+		or !in_array($_REQUEST['action'], array('add', 'del'))) {
+		popup_error('Error usage');
+		redirect();
+	}
+
+	if (isset($_SESSION['admin_ovd_user'])) {
+		$policy = $_SESSION['admin_ovd_user']->getPolicy();
+		if (! $policy['manageUsersGroup']) {
+			Logger::warning('main', 'User(id='.$_SESSION['admin_ovd_user']->getAttribute('uid').') is  not allowed to perform UserGroup_PolicyRule add('.$_REQUEST['element'].')');
+			popup_error('You are not allowed to perform this action');
+			redirect();
+		}
+	}
+
+	$userGroupDB = UserGroupDB::getInstance();
+	$group = $userGroupDB->import($_REQUEST['id']);
+	$policy = $group->getPolicy(false);
+
+	if ($_REQUEST['action'] == 'add')
+		$policy[$_REQUEST['element']] = true;
+	else
+		$policy[$_REQUEST['element']] = false;
+
+	$group->updatePolicy($policy);
+	redirect();
+}
+
+
+
 if ($_REQUEST['name'] == 'default_browser') {
+	if (! checkAutorization('manageApplications'))
+		redirect();
+
 	if ($_REQUEST['action'] == 'add') {
 		$prefs = new Preferences_admin();
 		if (! $prefs)
@@ -175,6 +225,9 @@ if ($_REQUEST['name'] == 'default_browser') {
 }
 
 if ($_REQUEST['name'] == 'static_application') {
+	if (! checkAutorization('manageApplications'))
+		redirect();
+
 	if ($_REQUEST['action'] == 'del') {
 		if (isset($_REQUEST['attribute']) && ($_REQUEST['attribute'] == 'icon_file')) {
 			if (isset($_REQUEST['id'])) {
@@ -197,6 +250,9 @@ if ($_REQUEST['name'] == 'static_application') {
 }
 
 if ($_REQUEST['name'] == 'SharedFolder') {
+	if (! checkAutorization('manageSharedFolders'))
+		redirect();
+
 	if ($_REQUEST['action']=='add') {
 		action_add_sharedfolder();
 		redirect();
@@ -210,6 +266,9 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 }
 
 if ($_REQUEST['name'] == 'SharedFolder_ACL') {
+	if (! checkAutorization('manageSharedFolders'))
+		redirect();
+
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
 		redirect();

@@ -23,6 +23,9 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (! checkAutorization('viewApplications'))
+	redirect('index.php');
+
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
@@ -36,6 +39,9 @@ $applicationDB = new $mod_app_name();
 
 if ($applicationDB->isWriteable()) {
 if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'block') {
+	if (! checkAutorization('manageApplications'))
+		redirect();
+
 	if (isset($_GET['manage_applications']) && is_array($_GET['manage_applications'])) {
 		foreach ($_GET['manage_applications'] as $application) {
 			$app = $applicationDB->import($application);
@@ -60,6 +66,9 @@ if (isset($_REQUEST['action'])) {
   }
 
   if ($_REQUEST['action']=='modify' && $applicationDB->isWriteable()) {
+		if (checkAutorization('manageApplications'))
+			redirect();
+
     if (isset($_REQUEST['id'])) {
       modify_user($applicationDB, $_REQUEST['id']);
       show_manage($_REQUEST['id'], $applicationDB);
@@ -273,6 +282,8 @@ function show_manage($id, $applicationDB) {
       $groups_available[]= $group;
   }
 
+  $can_manage_server = isAutorized('manageServers');
+  $can_manage_applicationsgroups = isAutorized('manageApplicationsGroups');
 
   page_header();
 
@@ -347,7 +358,7 @@ function show_manage($id, $applicationDB) {
       if ($remove_in_progress) {
 	echo 'remove in progress';
       }
-      elseif ($server->isOnline()) {
+      elseif ($server->isOnline() and $can_manage_server) {
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application from this server?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_Server" />';
@@ -425,17 +436,19 @@ function show_manage($id, $applicationDB) {
       echo '<td>';
       echo '<a href="appsgroup.php?action=manage&id='.$group->id.'">'.$group->name.'</a>';
       echo '</td>';
-      echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application from this group?').'\');">';
-      echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
-      echo '<input type="hidden" name="action" value="del" />';
-      echo '<input type="hidden" name="element" value="'.$id.'" />';
-      echo '<input type="hidden" name="group" value="'.$group->id.'" />';
-      echo '<input type="submit" value="'._('Delete from this group').'" />';
-      echo '</form></td>';
+		if ($can_manage_applicationsgroups) {
+			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application from this group?').'\');">';
+			echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="element" value="'.$id.'" />';
+			echo '<input type="hidden" name="group" value="'.$group->id.'" />';
+			echo '<input type="submit" value="'._('Delete from this group').'" />';
+			echo '</form></td>';
+		}
       echo '</tr>';
     }
 
-    if (count($groups_available) > 0) {
+    if (count($groups_available) > 0 and $can_manage_applicationsgroups) {
       echo '<tr>';
       echo '<form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';

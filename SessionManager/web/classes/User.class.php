@@ -277,4 +277,25 @@ class User {
 		$ret .= ')';
 		return $ret;
 	}
+	
+	public function getPolicy() {
+		Logger::debug('User::getPolicy for '.$this->getAttribute('login'));
+		$result = array();
+		$groups = $this->usersGroups();
+		foreach ($groups as $a_group) {
+			$policy = $a_group->getPolicy();
+			if (is_array($policy)) {
+				foreach ($policy as $key => $value){
+					if (array_key_exists($key, $result)) {
+						if ($value == true)
+							$result[$key] = $value;
+					}
+					else {
+						$result[$key] = $value;
+					}
+				}
+			}
+		}
+		return $result;
+	}
 }

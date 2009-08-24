@@ -33,6 +33,10 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 include(SESSIONMANAGER_ROOT.'/extra/libchart/classes/libchart.php');
 
+if (! checkAutorization('viewStatus'))
+	redirect('index.php');
+
+
 define('REPORT_PREFIX', 'report_');
 
 function clean_cache() {

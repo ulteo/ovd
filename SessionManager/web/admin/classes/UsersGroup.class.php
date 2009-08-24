@@ -113,4 +113,43 @@ class UsersGroup {
 		$user_default_group = $prefs->get('general', 'user_default_group');
 		return $user_default_group === $this->getUniqueID();
 	}
+	
+	public function getPolicy($with_default_=true) {
+		Logger::debug('main', 'UsersGroup::getPolicy for '.$this->id);
+		$prefs = Preferences::getInstance();
+		$prefs_policy = $prefs->get('general', 'policy');
+		// ugly
+		$result = $prefs->elements['general']['policy']['default_policy']->content_available;
+		foreach ($result as $k => $v) {
+			$result[$k] = false;
+		}
+		$default_policy = $prefs_policy['default_policy'];
+		
+		foreach ($default_policy as $k => $v) {
+			if ( $with_default_) {
+				$result[$v] = true;
+			}
+			else {
+				unset($result[$k]);
+			}
+		}
+		
+		$acls = Abstract_Liaison::load('ACL', $this->getUniqueID(), NULL);
+		if (is_array($acls)) {
+			foreach ($acls as $acl_liaison) {
+				$result[$acl_liaison->group] = True;
+			}
+		}
+		return $result;
+	}
+	
+	public function updatePolicy($new_policy_) {
+		$old_policy = $this->getPolicy();
+		Abstract_Liaison::delete('ACL', $this->getUniqueID(), NULL);
+		foreach ($new_policy_ as $a_policy => $allow) {
+			if ( $allow) {
+				Abstract_Liaison::save('ACL', $this->getUniqueID(), $a_policy);
+			}
+		}
+	}
 }

@@ -21,10 +21,16 @@
  **/
 require_once(dirname(__FILE__).'/includes/core-minimal.inc.php');
 
+if (! checkAutorization('viewConfiguration'))
+	redirect('index.php');
+
 // core of the page
 $sep = '___';
 
 if (isset($_POST['submit'])) {
+	if (! checkAutorization('manageConfiguration'))
+		redirect();
+
 	// saving preferences
 	unset($_POST['submit']);
 	unset($_POST['mode']);
@@ -52,6 +58,8 @@ if (isset($_POST['submit'])) {
 	}
 }
 else {
+	$can_manage_configuration = isAutorized('manageConfiguration');
+
 	try {
 		$prefs = new Preferences_admin();
 	}
@@ -66,12 +74,16 @@ else {
 
 		echo '<script type="text/javascript"> configuration_switch_init();</script>';
 		// printing of preferences
-		echo '<form method="post" action="configuration-partial.php">';
-		echo '<input type="hidden" name="mode" value="'.$_GET['mode'].'" />';
+		if ($can_manage_configuration) {
+			echo '<form method="post" action="configuration-partial.php">';
+			echo '<input type="hidden" name="mode" value="'.$_GET['mode'].'" />';
+		}
 		switch ($_GET['mode']) {
 			case 'general':
 				print_prefs4($prefs, 'general', false);
 				print_prefs5($prefs, 'general', 'mails_settings');
+				echo '<br />';
+				print_prefs5($prefs, 'general', 'policy');
 				if (is_array($prefs->elements['plugins'])) {
 					foreach (array_keys($prefs->elements['plugins']) as $k){
 						if (str_startswith($k,'FS')) {
@@ -91,8 +103,10 @@ else {
 				print_prefs5($prefs, 'general', $_GET['mode']);
 				break;
 		}
-		echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
-		echo '</form>';
+		if ($can_manage_configuration) {
+			echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
+			echo '</form>';
+		}
 
 		page_footer();
 	}

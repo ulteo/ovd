@@ -22,11 +22,17 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
+if (checkAutorization('viewApplicationsGroups'))
+	redirect('index.php');
+
 if (isset($_REQUEST['action'])) {
   if ($_REQUEST['action']=='manage') {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id']);
   }
+
+	if (checkAutorization('manageApplicationsGroups'))
+		redirect();
 
   if ($_REQUEST['action']=='add') {
     $id = action_add();
@@ -106,6 +112,8 @@ function show_default() {
   $groups = getAllAppsGroups();
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
+	$can_manage_applicationsgroups = isAutorized('manageApplicationsGroups');
+
   page_header();
 
   echo '<div>';
@@ -115,8 +123,10 @@ function show_default() {
   if (! $has_group)
     echo _('No application groups available').'<br />';
   else {
-    echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
-    echo '<input type="hidden" name="action" value="del" />';
+		if ($can_manage_applicationsgroups) {
+			echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
+			echo '<input type="hidden" name="action" value="del" />';
+		}
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
     echo '<th class="unsortable"></th>';
@@ -134,7 +144,8 @@ function show_default() {
 	$publish = '<span class="msg_error">'._('Blocked').'</span>';
 
       echo '<tr class="'.$content.'">';
-      echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
+		if ($can_manage_applicationsgroups)
+			echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
       echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
@@ -145,53 +156,60 @@ function show_default() {
       echo '<input type="hidden" name="id" value="'.$group->id.'" />';
       echo '</form></td>';
 
-      echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
-      echo '<input type="submit" value="'._('Delete').'"/>';
-      echo '<input type="hidden" name="action" value="del" />';
-      echo '<input type="hidden" name="id" value="'.$group->id.'" />';
-      echo '</form></td>';
-      echo '</tr>';
+		if ($can_manage_applicationsgroups) {
+			echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+			echo '<input type="submit" value="'._('Delete').'"/>';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+			echo '</form></td>';
+			echo '</tr>';
+		}
     }
-    $content = 'content'.(($count++%2==0)?1:2);
-    echo '<tr class="'.$content.'">';
-    echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
-    echo '<td><input type="submit" value="'._('Delete').'"/></td>';
-    echo '</table>';
-    echo '</form>';
+	if ($can_manage_applicationsgroups) {
+		$content = 'content'.(($count++%2==0)?1:2);
+		echo '<tr class="'.$content.'">';
+		echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
+		echo '<td><input type="submit" value="'._('Delete').'"/></td>';
+	}
+	echo '</table>';
+	if ($can_manage_applicationsgroups)
+		echo '</form>';
 
   }
   echo '</div>';
 
-  echo '<div>';
-  echo '<h2>'._('Create a new group').'</h2>';
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="add" />';
-  echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
+	if ($can_manage_applicationsgroups) {
+		echo '<div>';
+		echo '<h2>'._('Create a new group').'</h2>';
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="add" />';
+		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
-  echo '<tr class="content1">';
-  echo '<th>'._('Name').'</th>';
-  echo '<td><input type="text" name="name" value="" /></td>';
-  echo '</tr>';
+		echo '<tr class="content1">';
+		echo '<th>'._('Name').'</th>';
+		echo '<td><input type="text" name="name" value="" /></td>';
+		echo '</tr>';
 
-  echo '<tr class="content2">';
-  echo '<th>'._('Description').'</th>';
-  echo '<td><input type="text" name="description" value="" /></td>';
-  echo '</tr>';
-  /*
-  echo '<tr class="content2">';
-  echo '<th>'._('Status').'</th>';
-  echo '<td>';
-  echo '<input class="input_radio" type="radio" name="published" value="1" checked />'._('Enable');
-  echo '<input class="input_radio" type="radio" name="published" value="0"  />'._('Block');
-  echo '</td>';
-  echo '</tr>';
-  */
-  echo '<tr class="content1">';
-  echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
-  echo '</tr>';
-  echo '</table>';
-  echo '</form>';
-  echo '</div>';
+		echo '<tr class="content2">';
+		echo '<th>'._('Description').'</th>';
+		echo '<td><input type="text" name="description" value="" /></td>';
+		echo '</tr>';
+		/*
+		echo '<tr class="content2">';
+		echo '<th>'._('Status').'</th>';
+		echo '<td>';
+		echo '<input class="input_radio" type="radio" name="published" value="1" checked />'._('Enable');
+		echo '<input class="input_radio" type="radio" name="published" value="0"  />'._('Block');
+		echo '</td>';
+		echo '</tr>';
+		*/
+		echo '<tr class="content1">';
+		echo '<td class="centered" colspan="2"><input type="submit" value="'._('Add').'" /></td>';
+		echo '</tr>';
+		echo '</table>';
+		echo '</form>';
+		echo '</div>';
+	}
 
   echo '</div>';
   echo '</div>';
@@ -251,6 +269,8 @@ function show_manage($id) {
       $groups_users_available[]= $group_users;
   }
 
+	$can_manage_applicationsgroups = isAutorized('manageApplicationsGroups');
+	$can_manage_publications = isAutorized('managePublications');
 
   page_header();
 
@@ -268,33 +288,35 @@ function show_manage($id) {
   echo '</tr>';
   echo '</table>';
 
-  echo '<div>';
-  echo '<h2>'._('Settings').'</h2>';
-  echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
-  echo '<input type="submit" value="'._('Delete this group').'"/>';
-  echo '<input type="hidden" name="action" value="del" />';
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '</form>';
-  echo '<br/>';
+	if ($can_manage_applicationsgroups) {
+		echo '<div>';
+		echo '<h2>'._('Settings').'</h2>';
+		echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+		echo '<input type="submit" value="'._('Delete this group').'"/>';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="id" value="'.$id.'" />';
+		echo '</form>';
+		echo '<br/>';
 
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="modify" />';
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
-  echo '<input type="submit" value="'.$status_change.'"/>';
-  echo '</form>';
-  echo '<br/>';
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="modify" />';
+		echo '<input type="hidden" name="id" value="'.$id.'" />';
+		echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
+		echo '<input type="submit" value="'.$status_change.'"/>';
+		echo '</form>';
+		echo '<br/>';
 
-  echo '<form action="" method="post">';
-  echo '<input type="hidden" name="action" value="modify" />';
-  echo '<input type="hidden" name="id" value="'.$id.'" />';
-  echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
-  echo '<input type="submit" value="'._('Update the description').'"/>';
-  echo '</form>';
-  echo '<br/>';
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="modify" />';
+		echo '<input type="hidden" name="id" value="'.$id.'" />';
+		echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
+		echo '<input type="submit" value="'._('Update the description').'"/>';
+		echo '</form>';
+		echo '<br/>';
+	}
 
   // Application part
-  if (count($applications_all) > 0) {
+	if ((count($applications_all) > 0 and $can_manage_applicationsgroups) or count($applications) > 0) {
     echo '<div>';
     echo '<h2>'._('List of applications in this group').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
@@ -304,20 +326,22 @@ function show_manage($id) {
 	echo '<tr>';
 	echo '<td><img src="media/image/cache.php?id='.$application->getAttribute('id').'" alt="'.$application->getAttribute('name').'" title="'.$application->getAttribute('name').'" /> <a href="applications.php?action=manage&id='.$application->getAttribute('id').'">'.$application->getAttribute('name').'</a>';
 	echo '</td>';
-	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
-	echo '<input type="hidden" name="group" value="'.$id.'" />';
-	echo '<input type="hidden" name="element" value="'.$application->getAttribute('id').'" />';
-	echo '<input type="submit" value="'._('Delete from this group').'" />';
-	echo '</form>';
-	echo '</td>';
+		if ($can_manage_applicationsgroups) {
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
+			echo '<input type="hidden" name="group" value="'.$id.'" />';
+			echo '<input type="hidden" name="element" value="'.$application->getAttribute('id').'" />';
+			echo '<input type="submit" value="'._('Delete from this group').'" />';
+			echo '</form>';
+			echo '</td>';
+		}
 	echo '</tr>';
       }
     }
 
-    if (count ($applications_available) > 0) {
+    if (count ($applications_available) > 0 and $can_manage_applicationsgroups) {
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="Application_ApplicationGroup" />';
@@ -388,20 +412,23 @@ function show_manage($id) {
       foreach($groups_users as $group_users) {
 	echo '<tr>';
 	echo '<td><a href="usersgroup.php?action=manage&id='.$group_users->getUniqueID().'">'.$group_users->name.'</td>';
-	echo '<td>';
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="name" value="Publication" />';
-	echo '<input type="hidden" name="group_a" value="'.$id.'" />';
-	echo '<input type="hidden" name="group_u" value="'.$group_users->getUniqueID().'" />';
-	echo '<input type="submit" value="'._('Delete this publication').'" />';
-	echo '</form>';
-	echo '</td>';
+
+		if ($can_manage_publications) {
+			echo '<td>';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this publication?').'\');">';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="name" value="Publication" />';
+			echo '<input type="hidden" name="group_a" value="'.$id.'" />';
+			echo '<input type="hidden" name="group_u" value="'.$group_users->getUniqueID().'" />';
+			echo '<input type="submit" value="'._('Delete this publication').'" />';
+			echo '</form>';
+			echo '</td>';
+		}
 	echo '</tr>';
       }
     }
 
-    if (count ($groups_users_available) > 0) {
+    if (count ($groups_users_available) > 0 and $can_manage_publications) {
       echo '<tr><form action="actions.php" method="get"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="Publication" />';
