@@ -10,16 +10,16 @@ dbserver=localhost
 dbname=ulteo_sm
 dbuser=ulteoadmin
 
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/oem boolean true" | debconf-set-selections
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbuser string $dbuser" | debconf-set-selections
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbname string $dbname" | debconf-set-selections
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbserver string $dbserver" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/admin_password_again password admin" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/admin_password password admin" | debconf-set-selections
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbadmpass password $pass" | debconf-set-selections
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/dbpass password $pass" | debconf-set-selections
-echo "ulteo-ovd-session-manager od/sessionmanager/password_mismatch boolean false" | debconf-set-selections
-echo "ulteo-ovd-session-manager-demo od/sessionmanager/mysql/configure boolean true" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/oem boolean true" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/mysql_dbuser string $dbuser" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/mysql_dbname string $dbname" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/mysql_dbserver string $dbserver" | debconf-set-selections
+echo "ulteo-ovd-session-manager ulteo-ovd-session-manager/admin_password_again password admin" | debconf-set-selections
+echo "ulteo-ovd-session-manager ulteo-ovd-session-manager/admin_password password admin" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/mysql_dbadmpass password $pass" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/mysql_dbpass password $pass" | debconf-set-selections
+echo "ulteo-ovd-session-manager ulteo-ovd-session-manager/password_mismatch boolean false" | debconf-set-selections
+echo "ulteo-ovd-session-manager-demo ulteo-ovd-session-manager/mysql_configure boolean true" | debconf-set-selections
 
 
 

@@ -12,26 +12,26 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
 fi
 
 # Configure Mysql Database
-db_get od/sessionmanager/oem
+db_get ulteo-ovd-session-manager/oem
 if [ "$RET" = true ];then
-db_get od/sessionmanager/mysql/configure
+db_get ulteo-ovd-session-manager/mysql_configure
     if [ "$RET" = true ]; then
 
 	# get the answers to our questions
-	db_get od/sessionmanager/mysql/dbserver
+	db_get ulteo-ovd-session-manager/mysql_dbserver
 	dbserver=$RET
-	db_get od/sessionmanager/mysql/dbadmin
+	db_get ulteo-ovd-session-manager/mysql_dbadmin
 	dbadmin=$RET
-	db_get od/sessionmanager/mysql/dbadmpass
+	db_get ulteo-ovd-session-manager/mysql_dbadmpass
 	dbadmpass=$RET
-	db_reset od/sessionmanager/mysql/dbadmpass
-	db_get od/sessionmanager/mysql/dbname
+	db_reset ulteo-ovd-session-manager/mysql_dbadmpass
+	db_get ulteo-ovd-session-manager/mysql_dbname
 	dbname=$RET
-	db_get od/sessionmanager/mysql/dbuser
+	db_get ulteo-ovd-session-manager/mysql_dbuser
 	dbuser=$RET
-	db_get od/sessionmanager/mysql/dbpass
+	db_get ulteo-ovd-session-manager/mysql_dbpass
 	dbpass=$RET
-	db_reset od/sessionmanager/mysql/dbpass
+	db_reset ulteo-ovd-session-manager/mysql_dbpass
 
 	# create the database
 	. /usr/share/wwwconfig-common/mysql-createdb.sh

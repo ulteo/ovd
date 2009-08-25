@@ -1,8 +1,8 @@
-Template: od/fqdn
+Template: ulteo-ovd-application-server/fqdn
 Type: string
 _Description: Full qualified domain name of this server:
 
-Template: od/sessions/server_url
+Template: ulteo-ovd-application-server/sm_url
 Type: string
 Default: http://sm.ulteo.com/sessionmanager
 _Description: Url used to access the session manager:

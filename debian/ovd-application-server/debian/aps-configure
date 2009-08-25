@@ -2,8 +2,8 @@
 sm_installed=$(dpkg -l | grep '^ii' | awk '{print $2}' | grep ulteo-ovd-session-manager-demo )
 if [  'x'$sm_installed != 'x'  ];then
         sleep 3
-        echo "ulteo-ovd od/fqdn string localhost" | debconf-set-selections
-        echo "ulteo-ovd od/sessions/server_url string http://localhost/sessionmanager" | debconf-set-selections
+        echo "ulteo-ovd ulteo-ovd-application-server/fqdn string localhost" | debconf-set-selections
+        echo "ulteo-ovd ulteo-ovd-application-server/sm_url string http://localhost/sessionmanager" | debconf-set-selections
         dpkg-reconfigure -fnoninteractive  ulteo-ovd
 else
         dpkg-reconfigure ulteo-ovd
