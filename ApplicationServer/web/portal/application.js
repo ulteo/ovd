@@ -253,20 +253,25 @@ function switch_splash_to_applet() {
 					applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
 					applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
 
+					applet_have_proxy = false;
 					buffer = sessionNode.getElementsByTagName('proxy');
-					var proxyNode = buffer[0];
+					if (buffer.length == 1) {
+						applet_have_proxy = true;
 
-					applet_proxy_type = proxyNode.getAttribute('type');
-					applet_proxy_host = proxyNode.getAttribute('host');
-					applet_proxy_port = proxyNode.getAttribute('port');
-					applet_proxy_username = proxyNode.getAttribute('username');
-					applet_proxy_password = proxyNode.getAttribute('password');
+						var proxyNode = buffer[0];
+
+						applet_proxy_type = proxyNode.getAttribute('type');
+						applet_proxy_host = proxyNode.getAttribute('host');
+						applet_proxy_port = proxyNode.getAttribute('port');
+						applet_proxy_username = proxyNode.getAttribute('username');
+						applet_proxy_password = proxyNode.getAttribute('password');
+					}
 				} catch(e) {
 					push_log('[applet] bad xml format', 'error');
 					return;
 				}
 
-				$('appletContainer').innerHTML = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+				applet_html_string = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
 					<param name="name" value="ulteoapplet" /> \
 					<param name="code" value="'+applet_main_class+'" /> \
 					<param name="codebase" value="/applet/" /> \
@@ -298,14 +303,19 @@ function switch_splash_to_applet() {
 					<param name="rfb.cache.ver.minor" value="0" /> \
 					<param name="rfb.cache.size" value="42336000" /> \
 					<param name="rfb.cache.alg" value="LRU" /> \
-					<param name="rfb.cache.datasize" value="2000000" /> \
-					\
-					<param name="proxyType" value="'+applet_proxy_type+'" /> \
+					<param name="rfb.cache.datasize" value="2000000" />';
+
+				if (applet_have_proxy) {
+					applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \
 					<param name="proxyHost" value="'+applet_proxy_host+'" /> \
 					<param name="proxyPort" value="'+applet_proxy_port+'" /> \
 					<param name="proxyUsername" value="'+applet_proxy_username+'" /> \
-					<param name="proxyPassword" value="'+applet_proxy_password+'" /> \
-				</applet>';
+					<param name="proxyPassword" value="'+applet_proxy_password+'" />';
+				}
+
+				applet_html_string = applet_html_string+'</applet>';
+
+				$('appletContainer').innerHTML = applet_html_string;
 
 				var appletNode = $('appletContainer').getElementsByTagName('applet');
 				if (appletNode.length > 0) {

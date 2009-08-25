@@ -144,8 +144,11 @@ function switch_splash_to_applet(access_id_) {
 							applet_ssh_ports = applet_ssh_ports+',';
 					}
 
+					applet_have_proxy = false;
 					buffer = sessionNode.getElementsByTagName('proxy');
 					if (buffer.length == 1) {
+						applet_have_proxy = true;
+
 						var proxyNode = buffer[0];
 
 						applet_proxy_type = proxyNode.getAttribute('type');
@@ -159,7 +162,7 @@ function switch_splash_to_applet(access_id_) {
 					return;
 				}
 
-				$('appletContainer').innerHTML = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+				applet_html_string = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
 					<param name="name" value="ulteoapplet" /> \
 					<param name="code" value="'+applet_main_class+'" /> \
 					<param name="codebase" value="/applet/" /> \
@@ -171,14 +174,19 @@ function switch_splash_to_applet(access_id_) {
 					<param name="ssh.host" value="'+applet_ssh_host+'" /> \
 					<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
 					<param name="ssh.user" value="'+applet_ssh_user+'" /> \
-					<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
-					\
-					<param name="proxyType" value="'+applet_proxy_type+'" /> \
+					<param name="ssh.password" value="'+applet_ssh_passwd+'" />';
+
+				if (applet_have_proxy) {
+					applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \
 					<param name="proxyHost" value="'+applet_proxy_host+'" /> \
 					<param name="proxyPort" value="'+applet_proxy_port+'" /> \
 					<param name="proxyUsername" value="'+applet_proxy_username+'" /> \
-					<param name="proxyPassword" value="'+applet_proxy_password+'" /> \
-				</applet>';
+					<param name="proxyPassword" value="'+applet_proxy_password+'" />';
+				}
+
+				applet_html_string = applet_html_string+'</applet>';
+
+				$('appletContainer').innerHTML = applet_html_string;
 
 				var appletNode = $('appletContainer').getElementsByTagName('applet');
 				if (appletNode.length > 0) {
