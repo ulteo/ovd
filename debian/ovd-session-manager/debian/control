@@ -7,16 +7,9 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-session-manager
 Architecture: all
-Depends: libapache2-mod-php5, php5-cli, php5-curl, php5-mysql, php5-ldap, php-pear, php5-gd, php5-imagick, libphp-chart, debconf, po-debconf,  wget, ulteo-ovd-applets
+Depends: libapache2-mod-php5, php5-cli, php5-curl, php5-mysql, php5-ldap, php-pear, php5-gd, php5-imagick, libphp-chart, debconf, po-debconf,  wget, ulteo-ovd-applets, wwwconfig-common
 Recommends: mail-transport-agent
-Description: Ulteo Open Virtual Desktop - session manager
- This package provides the session manager web services for the Ulteo Open
+Suggests: mysql-server
+Description: Ulteo Open Virtual Desktop - Session Manager
+ This package provides the Session Manager web services for the Ulteo Open
  Virtual Desktop.
-
-Package: ulteo-ovd-session-manager-demo
-Architecture: all
-Depends: php5-cli, ulteo-ovd-session-manager, wwwconfig-common
-Recommends: mail-transport-agent
-Description: Ulteo Open Virtual Desktop - session manager - Demo
- This package configures a demo for the session manager web services for the
- Ulteo Open Virtual Desktop.
