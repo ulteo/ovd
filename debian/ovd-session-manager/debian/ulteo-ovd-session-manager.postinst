@@ -64,7 +64,6 @@ mysql_config()
     # create user
     . /usr/share/wwwconfig-common/mysql-createuser.sh
 
-    echo $dbserver $dbname $dbuser $dbpass
     /usr/bin/env php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
         $dbserver \
         $dbname \
