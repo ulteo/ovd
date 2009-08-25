@@ -1,8 +1,5 @@
 scripts_DATA = pgt-db.php \
                pgt-file.php \
-               pgt-main.php \
-               pgt-db.php \
-               pgt-file.php \
                pgt-main.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/PEAR/CAS/PGTStorage
