@@ -79,7 +79,7 @@ HOSTCONF=/etc/ulteo-ovd.conf
 
 DOWNLOAD_OK="yes"
 # download the chroot if needed
-if [ -z "$2" ] && [ ! -e "$CHROOTCONF" ]; then
+if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
     db_get ulteo-ovd-application-server/sm_url || true
     SM="$RET"
     URL="$SM/base.tar.gz"
@@ -95,7 +95,8 @@ if [ -z "$2" ] && [ ! -e "$CHROOTCONF" ]; then
 
     if [ "$DOWNLOAD_OK" = "no" ]; then
         echo "An error occured while downloading and installing the chroot, the server is not ready to be used."
-        echo "Please install the chroot manually in $CHROOTPATH and run 'dpkg-reconfigure ulteo-ovd-application-server'."
+        echo "You can either reconfigure this package or use the aps-chroot-install script to set up the server."
+        exit 0
     else
         set_cups
         set_tz
