@@ -198,7 +198,7 @@ msgid ""
 "If you intend to reinstall the Session Manager, keeping this archive will "
 "avoid to download it again."
 msgstr ""
-"Garder cette archive vous évitera un nouveau téléchargement si vous souhaitez"
+"Garder cette archive vous évitera un nouveau téléchargement si vous souhaitez "
 "réinstallaer le Session Manager."
 
 #~ msgid "Configure MySQL?"

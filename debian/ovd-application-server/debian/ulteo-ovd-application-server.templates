@@ -7,3 +7,11 @@ Type: string
 Default: http://sm.ulteo.com/sessionmanager
 _Description: Url used to access the session manager:
 
+Template: ulteo-ovd-application-server/postrm_remove_chroot
+Type: boolean
+Default: false
+_Description: Remove the system chroot?
+ The chroot containing the system can be removed for you.
+ .
+ If you intend to reinstall the Application Server, keeping this chroot would
+ avoid to download and uncompress it again.

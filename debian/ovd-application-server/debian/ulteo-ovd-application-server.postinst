@@ -1,10 +1,11 @@
 #!/bin/sh -e
 
+[ "$1" != "configure" ] && exit 0
+
 . /usr/share/debconf/confmodule
 
 WGETARGS="--tries=3 --timeout=60"
 
-# helpers
 set_conf () {
     # $1: configfile
     # $2: field
@@ -71,19 +72,14 @@ reload_apache()
 }
 
 
-if [ "$1" != "configure" ]; then
-    db_stop
-    exit 0
-fi
-
 CHROOTPATH="/opt/ulteo"
 
 CHROOTCONF=$CHROOTPATH/etc/ulteo-ovd.conf
 HOSTCONF=/etc/ulteo-ovd.conf
 
-# setup the chroot
-if [ -z "$2" ] || [ ! -e "$CHROOTCONF" ]; then
-    DOWNLOAD_OK="yes"
+DOWNLOAD_OK="yes"
+# download the chroot if needed
+if [ -z "$2" ] && [ ! -e "$CHROOTCONF" ]; then
     db_get ulteo-ovd-application-server/sm_url || true
     SM="$RET"
     URL="$SM/base.tar.gz"
@@ -99,15 +95,17 @@ if [ -z "$2" ] || [ ! -e "$CHROOTCONF" ]; then
 
     if [ "$DOWNLOAD_OK" = "no" ]; then
         echo "An error occured while downloading and installing the chroot, the server is not ready to be used."
-        echo "Please install the chroot manually in $CHROOTPATH and run 'dpkg-reconfigure ulteo-ovd'."
+        echo "Please install the chroot manually in $CHROOTPATH and run 'dpkg-reconfigure ulteo-ovd-application-server'."
     else
-        exec &>/dev/null
-        set_host_conf
-        set_chroot_conf
         set_cups
         set_tz
     fi
 fi
+
+# if we reinstall the ApS and the chroot is already there, the configs need to
+# be written again
+set_chroot_conf
+set_host_conf
 
 db_stop
 
