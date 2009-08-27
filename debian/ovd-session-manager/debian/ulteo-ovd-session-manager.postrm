@@ -1,6 +1,8 @@
 #!/bin/sh -e
 
-#DEBHELPER#
+if [ -f /usr/share/debconf/confmodule ]; then
+  . /usr/share/debconf/confmodule
+fi
 
 reload_apache()
 {
@@ -14,9 +16,20 @@ reload_apache()
 if [ "$1" = "purge" ]; then
     rm -rf /var/spool/ulteo/sessionmanager
     rm -rf /var/log/ulteo/sessionmanager
+
+    # ask the user if he wants to remove base.tar.gz
+    db_input high ulteo-ovd-session-manager/postrm_remove_tarball || true
+    db_go || true
+    db_get ulteo-ovd-session-manager/postrm_remove_tarball || true
+    if [ "$RET" = "true" ]; then
+        rm -f /usr/share/ulteo/sessionmanager/base.tar.gz
+    fi
+
     # apache2 link
     rm -f /etc/apache2/conf.d/sessionmanager
     reload_apache
 fi
+
+#DEBHELPER#
 
 exit 0

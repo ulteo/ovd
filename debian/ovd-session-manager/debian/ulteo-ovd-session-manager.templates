@@ -69,3 +69,12 @@ Default: root
 _Description: Database server administrator username:
  Please enter the username of the database server administrator. This
  account must have database creation privileges.
+
+Template: ulteo-ovd-session-manager/postrm_remove_tarball
+Type: boolean
+Default: false
+_Description: Remove the application tarball?
+ The tarball containing the system archive can be removed for you.
+ .
+ If you intend to reinstall the Session Manager, keeping this archive will
+ avoid to download it again.

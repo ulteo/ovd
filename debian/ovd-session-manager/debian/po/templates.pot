@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
-"POT-Creation-Date: 2009-08-25 11:19+0200\n"
+"POT-Creation-Date: 2009-08-27 08:53+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,4 +160,24 @@ msgstr ""
 msgid ""
 "Please enter the username of the database server administrator. This account "
 "must have database creation privileges."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:13001
+msgid "Remove the application tarball?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:13001
+msgid "The tarball containing the system archive can be removed for you."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:13001
+msgid ""
+"If you intend to reinstall the Session Manager, keeping this archive will "
+"avoid to download it again."
 msgstr ""
