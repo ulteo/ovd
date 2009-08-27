@@ -189,7 +189,7 @@ msgstr "Supprimer l'archive d'applications ?"
 #. Description
 #: ../ulteo-ovd-session-manager.templates:13001
 msgid "The tarball containing the system archive can be removed for you."
-msgstr "L'archive contenant le system peut être supprimée"
+msgstr "L'archive contenant le système peut être supprimée."
 
 #. Type: boolean
 #. Description
@@ -199,7 +199,7 @@ msgid ""
 "avoid to download it again."
 msgstr ""
 "Garder cette archive vous évitera un nouveau téléchargement si vous souhaitez"
-"réinstallaer le Session Manager"
+"réinstallaer le Session Manager."
 
 #~ msgid "Configure MySQL?"
 #~ msgstr "Configurer MySQL ?"
