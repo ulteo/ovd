@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (checkAutorization('viewApplicationsGroups'))
+if (! checkAutorization('viewApplicationsGroups'))
 	redirect('index.php');
 
 if (isset($_REQUEST['action'])) {
@@ -31,7 +31,7 @@ if (isset($_REQUEST['action'])) {
       show_manage($_REQUEST['id']);
   }
 
-	if (checkAutorization('manageApplicationsGroups'))
+	if (! checkAutorization('manageApplicationsGroups'))
 		redirect();
 
   if ($_REQUEST['action']=='add') {

@@ -66,7 +66,7 @@ if (isset($_REQUEST['action'])) {
   }
 
   if ($_REQUEST['action']=='modify' && $applicationDB->isWriteable()) {
-		if (checkAutorization('manageApplications'))
+		if (! checkAutorization('manageApplications'))
 			redirect();
 
     if (isset($_REQUEST['id'])) {

@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (checkAutorization('viewApplications'))
+if (! checkAutorization('viewApplications'))
 	redirect();
 
 $types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web'));
@@ -44,7 +44,7 @@ if (isset($_REQUEST['action'])) {
 			show_manage($_REQUEST['id'], $applicationDB);
 	}
 
-	if (checkAutorization('manageApplications'))
+	if (! checkAutorization('manageApplications'))
 			redirect();
 
 	if ($_REQUEST['action'] == 'modify' && $applicationDB->isWriteable()) {
