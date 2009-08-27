@@ -23,12 +23,12 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewServers'))
+if (! checkAuthorization('viewServers'))
 	redirect('index.php');
 
 
 if (isset($_REQUEST['mass_register'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
@@ -48,7 +48,7 @@ if (isset($_REQUEST['mass_register'])) {
 }
 
 if (isset($_REQUEST['mass_delete_unregistered'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
@@ -150,7 +150,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset(
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	$buf = Abstract_Server::load($_GET['fqdn']);
@@ -166,7 +166,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn
 }
 
 if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['fqdn'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	$buf = Abstract_Server::load($_GET['fqdn']);
@@ -183,7 +183,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['f
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' && isset($_REQUEST['fqdn'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if (isset($_REQUEST['max_sessions'])) {
@@ -196,7 +196,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' &&
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isset($_REQUEST['fqdn'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if (isset($_REQUEST['external_name'])) {
@@ -209,7 +209,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isse
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_REQUEST['fqdn'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if (isset($_REQUEST['web_port'])) {
@@ -222,7 +222,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_R
 }
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQUEST['fqdn'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	$sessions = Sessions::getByServer($_REQUEST['fqdn']);
@@ -272,7 +272,7 @@ function show_default() {
       $nb_a_servs_online++;
   }
 
-	$can_do_action = isAutorized('manageServers');
+	$can_do_action = isAuthorized('manageServers');
 
   page_header();
 
@@ -403,7 +403,7 @@ function show_unregistered() {
   if (! is_array($u_servs))
     $u_servs = array();
 
-	$can_do_action = isAutorized('manageServers');
+	$can_do_action = isAuthorized('manageServers');
 
   page_header();
 
@@ -656,7 +656,7 @@ function show_manage($fqdn) {
   $external_name = $server->getAttribute('external_name');
   $web_port = $server->getAttribute('web_port');
 
-	$can_do_action = isAutorized('manageServers');
+	$can_do_action = isAuthorized('manageServers');
 
   page_header();
 

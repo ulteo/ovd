@@ -419,7 +419,7 @@ function getProfileMode($prefs) {
   return 'Configuration_mode_internal';
 }
 
-function isAutorized($policy_) {
+function isAuthorized($policy_) {
 	if (! isset($_SESSION['admin_ovd_user']))
 		return true;
 
@@ -427,8 +427,8 @@ function isAutorized($policy_) {
 	return $policy[$policy_];
 }
 
-function checkAutorization($policy_) {
-	if (isAutorized($policy_))
+function checkAuthorization($policy_) {
+	if (isAuthorized($policy_))
 		return true;
 
 	Logger::warning('main', 'User(id='.$_SESSION['admin_ovd_user']->getAttribute('uid').') is  not allowed to perform '.$policy_.'.');

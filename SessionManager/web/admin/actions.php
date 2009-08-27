@@ -39,7 +39,7 @@ if ($_REQUEST['action'] != 'add' && $_REQUEST['action'] != 'del') {
  *  Install some Applications on a specific server
  */
 if ($_REQUEST['name'] == 'Application_Server') {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if (!isset($_REQUEST['server']) || !isset($_REQUEST['application'])) {
@@ -114,7 +114,7 @@ if ($_REQUEST['name'] == 'Application') {
 }
 
 if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
-	if (! checkAutorization('manageApplicationsGroups'))
+	if (! checkAuthorization('manageApplicationsGroups'))
 		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
@@ -127,7 +127,7 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 }
 
 if ($_REQUEST['name'] == 'User_UserGroup') {
-	if (! checkAutorization('manageUsersGroups'))
+	if (! checkAuthorization('manageUsersGroups'))
 		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
@@ -140,7 +140,7 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 }
 
 if ($_REQUEST['name'] == 'Publication') {
-	if (! checkAutorization('managePublications'))
+	if (! checkAuthorization('managePublications'))
 		redirect();
 
 	if (!isset($_REQUEST['group_a']) or !isset($_REQUEST['group_u']))
@@ -165,7 +165,7 @@ if ($_REQUEST['name'] == 'Publication') {
 }
 
 if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
-	if (! checkAutorization('manageUsersGroups'))
+	if (! checkAuthorization('manageUsersGroups'))
 		redirect();
 
 	if (!isset($_REQUEST['id']) 
@@ -200,7 +200,7 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 
 
 if ($_REQUEST['name'] == 'default_browser') {
-	if (! checkAutorization('manageApplications'))
+	if (! checkAuthorization('manageApplications'))
 		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
@@ -225,7 +225,7 @@ if ($_REQUEST['name'] == 'default_browser') {
 }
 
 if ($_REQUEST['name'] == 'static_application') {
-	if (! checkAutorization('manageApplications'))
+	if (! checkAuthorization('manageApplications'))
 		redirect();
 
 	if ($_REQUEST['action'] == 'del') {
@@ -250,7 +250,7 @@ if ($_REQUEST['name'] == 'static_application') {
 }
 
 if ($_REQUEST['name'] == 'SharedFolder') {
-	if (! checkAutorization('manageSharedFolders'))
+	if (! checkAuthorization('manageSharedFolders'))
 		redirect();
 
 	if ($_REQUEST['action']=='add') {
@@ -266,7 +266,7 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 }
 
 if ($_REQUEST['name'] == 'SharedFolder_ACL') {
-	if (! checkAutorization('manageSharedFolders'))
+	if (! checkAuthorization('manageSharedFolders'))
 		redirect();
 
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {

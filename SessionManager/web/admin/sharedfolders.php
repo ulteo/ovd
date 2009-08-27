@@ -21,13 +21,13 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewSharedFolders'))
+if (! checkAuthorization('viewSharedFolders'))
 	redirect('index.php');
 
 
 if (isset($_REQUEST['action'])) {
 	if ($_REQUEST['action'] == 'rename' && isset($_REQUEST['id'])) {
-		if (! checkAutorization('manageSharedFolders'))
+		if (! checkAuthorization('manageSharedFolders'))
 			redirect();
 
 
@@ -53,7 +53,7 @@ if (isset($_REQUEST['action'])) {
 function show_default() {
 	$sharedfolders = SharedFolders::getAll();
 
-	$can_manage_sharedfolders = isAutorized('manageSharedFolders');
+	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
 
 	page_header();
 
@@ -114,7 +114,7 @@ function show_manage($sharedfolder_id_) {
 			$available_groups[] = $group;
 	}
 
-	$can_manage_sharedfolders = isAutorized('manageSharedFolders');
+	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
 
 	page_header();
 

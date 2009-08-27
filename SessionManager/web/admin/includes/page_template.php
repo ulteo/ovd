@@ -66,7 +66,7 @@ $menu['logout'] =
 		  'parent' => array(),
 		  'always_display' => true);
 
-if (isAutorized('viewServers')) {
+if (isAuthorized('viewServers')) {
 	$menu['servers_child'] =
 		array('id' => 'servers_child',
 			  'name' => _('Servers'),
@@ -86,63 +86,63 @@ if (isAutorized('viewServers')) {
 			  'parent' => array('servers'));
 }
 
-if (isAutorized('viewSharedFolders'))
+if (isAuthorized('viewSharedFolders'))
 	$menu['sharedfolders'] = 
 		array('id' => 'sharedfolders',
 			  'name' => _('Shared folders'),
 			  'page' => 'sharedfolders.php',
 			  'parent' => array('servers'));
 
-if (isAutorized('viewUsers'))
+if (isAuthorized('viewUsers'))
 	$menu['user_child'] = 
 		array('id' => 'user_child',
 			  'name' => _('Users'),
 			  'page' => 'users.php',
 			  'parent' => array('users'));
 
-if (isAutorized('viewUsersGroups'))
+if (isAuthorized('viewUsersGroups'))
 	$menu['users_groups'] = 
 		array('id' => 'users_groups',
 			  'name' => _('Users Groups'),
 			  'page' => 'usersgroup.php',
 			  'parent' => array('users'));
 
-if (isAutorized('viewApplications'))
+if (isAuthorized('viewApplications'))
 	$menu['applications_child'] = 
 		array('id' => 'applications_child',
 			  'name' => _('Applications'),
 			  'page' => 'applications.php',
 			  'parent' => array('applications'));
 
-if (isAutorized('viewApplicationsGroups'))
+if (isAuthorized('viewApplicationsGroups'))
 	$menu['applications_groups'] = 
 		array('id' => 'applications_groups',
 			  'name' => _('Applications Groups'),
 			  'page' => 'appsgroup.php',
 			  'parent' => array('applications'));
 
-if (isAutorized('viewApplications'))
+if (isAuthorized('viewApplications'))
 	$menu['applications_static'] = 
 		array('id' => 'applications_static',
 			  'name' => _('Static applications'),
 			  'page' => 'applications_static.php',
 			  'parent' => array('applications'));
 
-if (isAutorized('viewPublications'))
+if (isAuthorized('viewPublications'))
 	$menu['publications'] = 
 		array('id' => 'publications',
 			  'name' => _('Publications'),
 			  'page' => 'publications.php',
 			  'parent' => array('applications', 'users'));
 
-if (isAutorized('managePublications'))
+if (isAuthorized('managePublications'))
 	$menu['publications_wizard'] = 
 		array('id' => 'publications_wizard',
 			  'name' => _('Publication wizard'),
 			  'page' => 'wizard.php',
 			  'parent' => array('applications', 'users'));
 
-if (isAutorized('viewConfiguration')) {
+if (isAuthorized('viewConfiguration')) {
 	$menu['configuration_sumup'] = 
 		array('id' => 'configuration_sumup',
 			  'name' => _('Sum up'),
@@ -192,7 +192,7 @@ if (isAutorized('viewConfiguration')) {
 			  'parent' => array('configuration'));
 }
 
-if (isAutorized('viewStatus')) {
+if (isAuthorized('viewStatus')) {
 	$menu['sessions'] = 
 		array('id' => 'sessions_child',
 			  'name' => _('Sessions'),
@@ -213,7 +213,7 @@ if (isAutorized('viewStatus')) {
 }
 
 
-if (isAutorized('viewSummary'))
+if (isAuthorized('viewSummary'))
 	$menu['sumup'] = 
 		array('id' => 'sumup',
 			  'name' => _('Summary'),

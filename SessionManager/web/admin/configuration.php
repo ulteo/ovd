@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/includes/core-minimal.inc.php');
 
-if (! checkAutorization('viewConfiguration'))
+if (! checkAuthorization('viewConfiguration'))
 	redirect('index.php');
 
 
@@ -28,7 +28,7 @@ if (! checkAutorization('viewConfiguration'))
 $sep = '___';
 
 if (isset($_POST['submit'])) {
-	if (! checkAutorization('viewConfiguration'))
+	if (! checkAuthorization('viewConfiguration'))
 		redirect();
 
 	// saving preferences
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
 	}
 }
 else {
-	$can_manage_configuration = isAutorized('manageConfiguration');
+	$can_manage_configuration = isAuthorized('manageConfiguration');
 
 	if (isset($_GET['action']) && $_GET['action'] == 'init') {
 		try {

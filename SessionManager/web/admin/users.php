@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewUsers'))
+if (! checkAuthorization('viewUsers'))
 	redirect();
 
 
@@ -46,7 +46,7 @@ if (isset($_REQUEST['action'])) {
       show_manage($_REQUEST['id'], $userDB, $userGroupDB);
   }
 
-	if (! checkAutorization('manageUsers'))
+	if (! checkAuthorization('manageUsers'))
 		redirect();
 
   if ($userDB->isWriteable()) {
@@ -124,7 +124,7 @@ function show_default($userDB) {
   $users_list_empty = (is_null($us) or count($us)==0);
   $userdb_rw = $userDB->isWriteable();
 
-	$can_manage_users = isAutorized('manageUsers');
+	$can_manage_users = isAuthorized('manageUsers');
 
   page_header();
   echo '<div id="users_div">';
@@ -250,8 +250,8 @@ function show_manage($login, $userDB, $userGroupDB) {
   $sessions = Sessions::getByUser($login);
   $has_sessions = count($sessions);
 
-	$can_manage_users = isAutorized('manageUsers');
-	$can_manage_usersgroups = isAutorized('manageUsersGroups');
+	$can_manage_users = isAuthorized('manageUsers');
+	$can_manage_usersgroups = isAuthorized('manageUsersGroups');
 
   page_header();
 

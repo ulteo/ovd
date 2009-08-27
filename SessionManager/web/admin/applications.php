@@ -23,7 +23,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewApplications'))
+if (! checkAuthorization('viewApplications'))
 	redirect('index.php');
 
 $prefs = Preferences::getInstance();
@@ -39,7 +39,7 @@ $applicationDB = new $mod_app_name();
 
 if ($applicationDB->isWriteable()) {
 if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'block') {
-	if (! checkAutorization('manageApplications'))
+	if (! checkAuthorization('manageApplications'))
 		redirect();
 
 	if (isset($_GET['manage_applications']) && is_array($_GET['manage_applications'])) {
@@ -66,7 +66,7 @@ if (isset($_REQUEST['action'])) {
   }
 
   if ($_REQUEST['action']=='modify' && $applicationDB->isWriteable()) {
-		if (! checkAutorization('manageApplications'))
+		if (! checkAuthorization('manageApplications'))
 			redirect();
 
     if (isset($_REQUEST['id'])) {
@@ -282,8 +282,8 @@ function show_manage($id, $applicationDB) {
       $groups_available[]= $group;
   }
 
-  $can_manage_server = isAutorized('manageServers');
-  $can_manage_applicationsgroups = isAutorized('manageApplicationsGroups');
+  $can_manage_server = isAuthorized('manageServers');
+  $can_manage_applicationsgroups = isAuthorized('manageApplicationsGroups');
 
   page_header();
 

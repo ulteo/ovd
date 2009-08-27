@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewApplications'))
+if (! checkAuthorization('viewApplications'))
 	redirect();
 
 $types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web'));
@@ -44,7 +44,7 @@ if (isset($_REQUEST['action'])) {
 			show_manage($_REQUEST['id'], $applicationDB);
 	}
 
-	if (! checkAutorization('manageApplications'))
+	if (! checkAuthorization('manageApplications'))
 			redirect();
 
 	if ($_REQUEST['action'] == 'modify' && $applicationDB->isWriteable()) {
@@ -81,7 +81,7 @@ function show_default($prefs, $applicationDB) {
 	$is_empty = (is_null($applications) or count($applications)==0);
 
 	$is_rw = $applicationDB->isWriteable();
-	$can_manage_applications = isAutorized('manageApplications');
+	$can_manage_applications = isAuthorized('manageApplications');
 
 	page_header();
 
@@ -356,7 +356,7 @@ function show_manage($id, $applicationDB) {
 		return false;
 
 	$is_rw = $applicationDB->isWriteable();
-	$can_manage_applications = isAutorized('manageApplications');
+	$can_manage_applications = isAuthorized('manageApplications');
 
 	// App groups
 	$appgroups = getAllAppsGroups();

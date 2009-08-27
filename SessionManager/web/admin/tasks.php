@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewServers'))
+if (! checkAuthorization('viewServers'))
 		redirect();
 
 
@@ -31,7 +31,7 @@ $tm->load_all();
 $tm->refresh_all();
 
 if (isset($_POST['action'])) {
-	if (! checkAutorization('manageServers'))
+	if (! checkAuthorization('manageServers'))
 		redirect();
 
 	if ($_POST['action']=='create') {
@@ -104,7 +104,7 @@ function show_manage($id, $tm) {
 	$infos = $task->get_AllInfos();
 	$can_remove = ($task->succeed() || $task->failed());
 
-	$can_do_action = isAutorized('manageServers');
+	$can_do_action = isAuthorized('manageServers');
 
 	page_header();
 
@@ -165,7 +165,7 @@ function show_manage($id, $tm) {
 function show_default($tm) {
   $servers = Servers::getOnline();
 
-	$can_do_action = isAutorized('manageServers');
+	$can_do_action = isAuthorized('manageServers');
 
   page_header();
 

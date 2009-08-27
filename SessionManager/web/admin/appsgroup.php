@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewApplicationsGroups'))
+if (! checkAuthorization('viewApplicationsGroups'))
 	redirect('index.php');
 
 if (isset($_REQUEST['action'])) {
@@ -31,7 +31,7 @@ if (isset($_REQUEST['action'])) {
       show_manage($_REQUEST['id']);
   }
 
-	if (! checkAutorization('manageApplicationsGroups'))
+	if (! checkAuthorization('manageApplicationsGroups'))
 		redirect();
 
   if ($_REQUEST['action']=='add') {
@@ -112,7 +112,7 @@ function show_default() {
   $groups = getAllAppsGroups();
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
-	$can_manage_applicationsgroups = isAutorized('manageApplicationsGroups');
+	$can_manage_applicationsgroups = isAuthorized('manageApplicationsGroups');
 
   page_header();
 
@@ -269,8 +269,8 @@ function show_manage($id) {
       $groups_users_available[]= $group_users;
   }
 
-	$can_manage_applicationsgroups = isAutorized('manageApplicationsGroups');
-	$can_manage_publications = isAutorized('managePublications');
+	$can_manage_applicationsgroups = isAuthorized('manageApplicationsGroups');
+	$can_manage_publications = isAuthorized('managePublications');
 
   page_header();
 

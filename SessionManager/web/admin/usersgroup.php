@@ -23,7 +23,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewUsersGroups'))
+if (! checkAuthorization('viewUsersGroups'))
 	redirect('index.php');
 
 
@@ -39,7 +39,7 @@ if (isset($_REQUEST['action'])) {
       show_manage($_REQUEST['id']);
   }
 
-	if (! checkAutorization('manageUsersGroups'))
+	if (! checkAuthorization('manageUsersGroups'))
 		redirect('index.php');
 
 
@@ -175,7 +175,7 @@ function action_del($id) {
 }
 
 function action_modify($id) {
-	if (! checkAutorization('manageUsersGroups'))
+	if (! checkAuthorization('manageUsersGroups'))
 		return false;
 
   $userGroupDB = UserGroupDB::getInstance();
@@ -308,7 +308,7 @@ function show_default() {
   $groups = $userGroupDB->getList(true);
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
-  $can_manage_usersgroups = isAutorized('manageUsersGroups');
+  $can_manage_usersgroups = isAuthorized('manageUsersGroups');
 
   page_header();
 
@@ -591,9 +591,9 @@ function show_manage($id) {
       $groups_apps_available[]= $group_apps;
   }
 
-	$can_manage_usersgroups = isAutorized('manageUsersGroups');
-	$can_manage_publications = isAutorized('managePublications');
-	$can_manage_sharedfolders = isAutorized('manageServers');
+	$can_manage_usersgroups = isAuthorized('manageUsersGroups');
+	$can_manage_publications = isAuthorized('managePublications');
+	$can_manage_sharedfolders = isAuthorized('manageServers');
 
 
   page_header();

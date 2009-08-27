@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('managePublications'))
+if (! checkAuthorization('managePublications'))
 	redirect('index.php');
 
 
@@ -462,7 +462,7 @@ function show_step5() {
 
 function do_validate() {
 	if ($_SESSION['wizard']['use_users'] == 'users') {
-		if (! checkAutorization('manageUsersGroups'))
+		if (! checkAuthorization('manageUsersGroups'))
 			redirect();
 
 		$userGroupDB = UserGroupDB::getInstance();
@@ -486,7 +486,7 @@ function do_validate() {
 		$usergroups = $_SESSION['wizard']['usergroups'];
 
 	if ($_SESSION['wizard']['use_apps'] == 'apps') {
-		if (! checkAutorization('manageApplicationsGroups'))
+		if (! checkAuthorization('manageApplicationsGroups'))
 			redirect();
 
 		$g = new AppsGroup(NULL, $_SESSION['wizard']['application_group_name'], $_SESSION['wizard']['application_group_description'], 1);

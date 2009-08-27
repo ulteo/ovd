@@ -23,7 +23,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
-if (! checkAutorization('viewConfiguration'))
+if (! checkAuthorization('viewConfiguration'))
 	redirect('index.php');
 
 
@@ -148,7 +148,7 @@ if (isset($_POST['config'])) {
   $previous = $_POST['config_previous'];
 
   if ($name == $previous) {
-		if (! checkAutorization('manageConfiguration'))
+		if (! checkAuthorization('manageConfiguration'))
 			redirect();
 
     $_SESSION['config_profile'] = $name;
@@ -200,7 +200,7 @@ if (isset($_SESSION['config_profile_saved'])) {
   $green = true;
 }
 
-$can_manage_configuration = isAutorized('manageConfiguration');
+$can_manage_configuration = isAuthorized('manageConfiguration');
 
 page_header();
 if (isset($preview))
