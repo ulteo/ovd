@@ -15,12 +15,12 @@ reload_apache()
     fi
 }
 
-# ask the user if he wants to remove the chroot
-db_input high ulteo-ovd-application-server/postrm_remove_chroot || true
-db_go || true
-db_get ulteo-ovd-application-server/postrm_remove_chroot || true
-if [ "$RET" = "true" ]; then
-    rm -rf /opt/ulteo
+if [ -e /opt/ulteo/etc/ulteo-ovd.conf ]; then
+    # ask the user if he wants to remove the chroot
+    db_input high ulteo-ovd-application-server/postrm_remove_chroot || true
+    db_go || true
+    db_get ulteo-ovd-application-server/postrm_remove_chroot || true
+    [ "$RET" = "true" ] && rm -rf /opt/ulteo
 fi
 
 # remove the logs
