@@ -17,14 +17,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-webservices_wget='wget --no-check-certificate --retry-connrefused --timeout=5'
+webservices_get='curl --insecure --retry 5 --connect-timeout 5'
 
 webservices_session_request() {
     local args="session=$1&status=$2&fqdn=${SERVERNAME}"
     local request="${SESSION_MANAGER_URL}/webservices/session_status.php?${args}"
 
     log_INFO "webservices_session_request: doing $request"
-    $webservices_wget $request -O /dev/null -o /dev/null
+    $webservices_get "$request" &>/dev/null
 }
 
 webservices_server_request() {
@@ -32,7 +32,7 @@ webservices_server_request() {
     local request="${SESSION_MANAGER_URL}/webservices/server_status.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    $webservices_wget $request -O /dev/null -o /dev/null
+    $webservices_get "$request" &>/dev/null
 }
 
 webservices_server_ready() {
@@ -65,13 +65,13 @@ webservices_available_application() {
 
     curl --form xml=@$file --form action=register \
         --form fqdn=${SERVERNAME} --form type=linux \
-        --form version="$version" --insecure $url >/dev/null 2>/dev/null 
+        --form version="$version" --insecure $url &/dev/null
 }
 
 webservices_system_monitoring() {
     local url="${SESSION_MANAGER_URL}/webservices/server_monitoring.php"
     cache_set_monitoring /tmp/monitoring.xml || return 1
-    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>/dev/null 
+    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url &>/dev/null
 }
 
 webservices_get_application() {
@@ -82,7 +82,7 @@ webservices_get_application() {
     local request="${SESSION_MANAGER_URL}/webservices/application.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    $webservices_wget "$request" -O $output -o /dev/null
+    $webservices_get "$request" >$output 2>/dev/null
 }
 
 webservices_get_application_icon() {
@@ -93,5 +93,5 @@ webservices_get_application_icon() {
     local request="${SESSION_MANAGER_URL}/webservices/icon.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    $webservices_wget "$request" -O $output -o /dev/null
+    $webservices_get "$request" >$output 2>/dev/null
 }

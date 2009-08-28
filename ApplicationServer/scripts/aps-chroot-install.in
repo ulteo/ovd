@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PROGRAM=$(basename $0)
-WGETARGS="--tries=3 --timeout=60"
+CURLOPTS="--retry 3 --connect-timeout 60 -s"
 
 # helper functions
 die () {
@@ -41,10 +41,13 @@ set_conf () {
 
 get_chroot () {
     mkdir -p $CHROOT_PATH || die Unable to create $CHROOT_PATH. Aborting.
-    wget --spider $WGETARGS "$SM_URL/base.tar.gz" || die Unable to reach the chroot tarball. Aborting.
-    DOWNLOAD_OK="yes"
-    wget $WGETARGS "$SM_URL/base.tar.gz" -O - | tar zx --numeric-owner --preserve -C "$CHROOT_PATH" -f - || DOWNLOAD_OK="no"
-    [ "$DOWNLOAD_OK" != "yes" ] && die An error occured while downloading the chroot. Aborting.
+
+    # Test if the file can be downloaded
+    curl $CURLOPTS -I "$SM_URL/base.tar.gz" | grep -qe "HTTP.*200 OK" || \
+        die Unable to reach the chroot tarball. Aborting.
+
+    curl $CURLOPTS "$SM_URL/base.tar.gz" - | tar zx --numeric-owner --preserve -C "$CHROOT_PATH" -f - || \
+        die An error occured while downloading the chroot. Aborting.
 }
 
 ovdchroot () {
