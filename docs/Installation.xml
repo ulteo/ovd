@@ -139,7 +139,7 @@ mysql> exit]]>
       </listitem>
     <listitem>
     <para>
-      Install the keyring package to valide the repository using gpg:
+      Install the keyring package to validate the repository using gpg:
     </para>
     <screen>
 	  <![CDATA[
@@ -385,6 +385,16 @@ mysql> exit]]>
 # apt-get update]]>
         </screen>
       </listitem>
+    <listitem>
+    <para>
+      Install the keyring package to validate the repository using gpg:
+    </para>
+    <screen>
+	  <![CDATA[
+# apt-get install ulteo-keyring
+# apt-get update]]>
+	</screen>
+    </listitem>
       <listitem>
         <para>
 	  Install the package <emphasis>ulteo-ovd-application-server</emphasis>:
