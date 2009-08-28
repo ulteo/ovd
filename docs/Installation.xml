@@ -137,6 +137,16 @@ mysql> exit]]>
 # apt-get update]]>
 	</screen>
       </listitem>
+    <listitem>
+    <para>
+      Install the keyring package to valide the repository using gpg:
+    </para>
+    <screen>
+	  <![CDATA[
+# apt-get install ulteo-keyring
+# apt-get update]]>
+	</screen>
+    </listitem>
       <listitem>
 	<para>Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
         <screen>
