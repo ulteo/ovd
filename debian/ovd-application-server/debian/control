@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-application-server-daemon
 Architecture: all
-Depends: python, openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), davfs2, m-privacy-ulteo-chroot (>= 1.1), cpulimit, inotify-tools, xdg-utils, cupsys-bsd, curl, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
+Depends: python, openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), autocutsel, davfs2, m-privacy-ulteo-chroot (>= 1.1), cpulimit, inotify-tools, aufs-tools, smbfs, xdg-utils, cupsys-bsd, curl, rsync, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
 Conflicts: ulteo-ovd-daemon (<= 1.0.1+svn01187)
 Replaces: ulteo-ovd-daemon
 Description: Ulteo Open Virtual Desktop - daemon
@@ -21,7 +21,7 @@ Description: Ulteo Open Virtual Desktop - daemon (Transitional package)
 
 Package: ulteo-ovd-application-server
 Architecture: all
-Depends: debconf (>= 0.2.26), po-debconf, libapache2-mod-php5, php5-curl, php5-imagick, ulteo-ovd-applets
+Depends: debconf (>= 0.2.26), po-debconf, curl, libapache2-mod-php5, php5-curl, php5-imagick, ulteo-ovd-applets
 Conflicts: ulteo-ovd (<= 1.0.1+svn1187)
 Description: Ulteo Open Virtual Desktop - application server
  This package provides the application server web services for the Ulteo Online
