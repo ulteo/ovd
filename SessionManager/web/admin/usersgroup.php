@@ -869,7 +869,7 @@ echo '<br />';
 		echo '<td>'.$key.' '.$buffer.'</td>';
 		if ($can_manage_usersgroups && ! $extends_from_default) {
 			echo '<td>';
-			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this rule ?').'\');">';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this rule?').'\');">';
 			echo '<input type="hidden" name="name" value="UserGroup_PolicyRule" />';
 			echo '<input type="hidden" name="action" value="del" />';
 			echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';

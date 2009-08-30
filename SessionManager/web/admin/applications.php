@@ -311,7 +311,7 @@ function show_manage($id, $applicationDB) {
   // orphan part
   if ($app->isOrphan() && !($app->getAttribute('static'))) {
     echo '<br />';
-    echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application?').'\');">';
+    echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application?').'\');">';
     echo '<input type="hidden" name="action" value="del" />';
     echo '<input type="hidden" name="name" value="Application" />';
     echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
@@ -359,7 +359,7 @@ function show_manage($id, $applicationDB) {
 	echo 'remove in progress';
       }
       elseif ($server->isOnline() and $can_manage_server) {
-	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want remove this application from this server?').'\');">';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_Server" />';
 	echo '<input type="hidden" name="application" value="'.$id.'" />';
