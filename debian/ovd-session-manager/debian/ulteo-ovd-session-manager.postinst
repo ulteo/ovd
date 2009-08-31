@@ -74,12 +74,6 @@ mysql_config()
 
 # set the configuration if we install
 gen_conf
-chown root:www-data $CONFFILE
-chmod 0640 $CONFFILE
-
-mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 
 # get the chroot
 db_get ulteo-ovd-session-manager/download_tarball || true
@@ -92,6 +86,14 @@ fi
 
 mysql_config
 apache_config
+
+chown root:www-data $CONFFILE
+chmod 0640 $CONFFILE
+
+mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+
 
 #DEBHELPER#
 
