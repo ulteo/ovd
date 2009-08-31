@@ -50,20 +50,6 @@ get_chroot () {
         die An error occured while downloading the chroot. Aborting.
 }
 
-ovdchroot () {
-    mkdir -p /usr/sbin
-    cat > /usr/sbin/ovdchroot << EOF
-#!/bin/sh
-
-export LANG=C
-export HOME=/root
-
-chroot $CHROOT_PATH \$@
-EOF
-
-chmod 0775 /usr/sbin/ovdchroot
-}
-
 
 # parse the command line
 unset NODOWNLOAD
@@ -246,9 +232,6 @@ if [ -n "$HOSTTZ" -a -f $CHROOT_PATH/usr/share/zoneinfo/$HOSTTZ ]; then
     cp /usr/share/zoneinfo/$HOSTTZ $CHROOT_PATH/etc/localtime
     echo "$HOSTTZ" > $CHROOT_PATH/etc/timezone
 fi
-
-# create the ovdchroot script
-ovdchroot
 
 
 echo "Installation done."

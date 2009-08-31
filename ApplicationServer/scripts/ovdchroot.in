@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ ! -f @SYSCONFDIR@/ulteo-ovd.conf ]; then
+    echo "No configuration file found."
+    exit 1
+fi
+
+. @SYSCONFDIR@/ulteo-ovd.conf
+
+export LANG=C
+export HOME=/root
+
+chroot $CHROOT $@
+exit $?
+
