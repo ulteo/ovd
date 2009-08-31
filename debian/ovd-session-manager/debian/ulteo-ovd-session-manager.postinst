@@ -81,7 +81,11 @@ db_get ulteo-ovd-session-manager/download_tarball || true
 URL="$RET"
 if [ ! -e $CHROOT_TARGET ]; then
 	if [ x"$URL" != x"" ]; then
-    	curl $CURLOPTS -f "$URI" > $CHROOT_TARGET || echo "Unable to retrieve the chroot archive. You need to download it manually as $CHROOT_TARGET, or use the 'sm-config' script."
+    	if ! curl $CURLOPTS -f "$URL" > $CHROOT_TARGET; then
+            rm -f $CHROOT_TARGET
+            echo "Unable to retrieve the chroot archive."
+            echo "You need to download it manually as $CHROOT_TARGET, or use the 'sm-config' script."
+        fi
 	fi
 fi
 
