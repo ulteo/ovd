@@ -228,6 +228,9 @@ session_purge() {
     local USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
     local USER_UID=$(id -u $USER_LOGIN)
     local HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
+    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
+    local VNC_USER=`cat $SESSID_DIR/private/vnc_user`
+    UUID=$(id -u $VNC_USER)
 
     windows_logoff $SESSID_DIR $USER_LOGIN
 
@@ -245,6 +248,12 @@ session_purge() {
         # clean tmp dirs
 	rm -rf /tmpdir/tmp$USER_UID
     fi
+
+    log_DEBUG "removing user's files from /tmp"
+    find /tmp/ -user $USER_LOGIN | xargs rm -rf {}\;
+    rm -f /tmp/.tmp"$UUID".Xauthority
+    rm -f /tmp/.tmp"$UUID"encvncpasswd
+    rm -f /tmp/$VNC_USER
 
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
 	HOME_DIR_TYPE=$HOME_DIR_TYPE \
