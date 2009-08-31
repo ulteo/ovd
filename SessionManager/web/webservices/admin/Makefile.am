@@ -1,5 +1,4 @@
-scripts_DATA = apt-get.php \
-			   sourceslist.php
+scripts_DATA = sourceslist.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/webservices/admin
 
