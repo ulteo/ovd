@@ -87,7 +87,7 @@ if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); the
 
     mkdir -p "$CHROOTPATH"
 
-    curl $CURLOPTS -s -I "$URL" | grep -qe "HTTP.*200 OK" || DOWNLOAD_OK="no"
+    curl $CURLOPTS -f -s -I "$URL" || DOWNLOAD_OK="no"
     if [ "$DOWNLOAD_OK" = "yes" ]; then
         curl $CURLOPTS "$URL" | tar zx --numeric-owner --preserve -C "$CHROOTPATH" -f - || DOWNLOAD_OK="no"
     fi

@@ -7,7 +7,7 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
     exit 0
 fi
 
-WGETARGS="--tries=3 --timeout=60"
+CURLOPTS="--retry 3 --connect-timeout 60"
 CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
 
 CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
@@ -81,7 +81,7 @@ db_get ulteo-ovd-session-manager/download_tarball || true
 URL="$RET"
 if [ ! -e $CHROOT_TARGET ]; then
 	if [ x"$URL" != x"" ]; then
-    	wget $WGETARGS $URL -O $CHROOT_TARGET || echo "Unable to retrieve the chroot archive. You need to download it manually as $CHROOT_TARGET, or use the 'sm-config' script."
+    	curl $CURLOPTS -f "$URI" > $CHROOT_TARGET || echo "Unable to retrieve the chroot archive. You need to download it manually as $CHROOT_TARGET, or use the 'sm-config' script."
 	fi
 fi
 

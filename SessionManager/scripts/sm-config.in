@@ -27,7 +27,7 @@ WEBDIR=@WEBDIR@
 CRON_DIR=/etc/cron.hourly
 CRON_SCRIPT=$CONFDIR/cron.php
 
-WGETARGS="--tries=3 --timeout=60"
+CURLOPTS="--retry 3 --connect-timeout 60"
 
 # helper functions
 die () {
@@ -84,8 +84,7 @@ set_admin_credentials () {
 get_chroot () {
     case $URI in
     http://*|ftp://*)
-        wget --spider $WGETARGS $URI || die Unable to reach the chroot tarball. Aborting.
-        wget $WGETARGS "$URI" -O $TARGET || die An error occured while downloading the chroot. Aborting.
+        curl $CURLOPTS -f "$URI" > $TARGET || die An error occured while downloading the chroot. Aborting.
         # Create a symlink to $WEBDIR/base.tar.gz if this file doesn't exist
         [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$TARGET" "$WEBDIR/base.tar.gz"
         ;;
