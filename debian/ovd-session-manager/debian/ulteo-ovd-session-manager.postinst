@@ -43,7 +43,10 @@ gen_conf()
 
 mysql_config()
 {
-    # get the answers to our questions
+    db_get ulteo-ovd-session-manager/mysql_setup || true
+    [ "$RET" != "true" ] && return
+
+    # let's configure mysql
     db_get ulteo-ovd-session-manager/mysql_dbserver
     dbserver=$RET
     db_get ulteo-ovd-session-manager/mysql_dbadmin

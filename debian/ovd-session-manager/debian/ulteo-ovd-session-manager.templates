@@ -33,6 +33,16 @@ Type: boolean
 Default: false
 _Description: Are we on the install CD?
 
+Template: ulteo-ovd-session-manager/mysql_setup
+Type: boolean
+Default: true
+_Description: Configure the MySQL server?
+ A connection to a MySQL server is needed by the Session Manager. This script
+ can configure a server automatically.
+ .
+ If you don't have a MySQL server ready to be used, choose 'no' here. The
+ Session Manager interface will let you configure the MySQL settings later.
+
 Template: ulteo-ovd-session-manager/mysql_dbserver
 Type: string
 Default: localhost
