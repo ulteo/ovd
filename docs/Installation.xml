@@ -133,7 +133,7 @@ mysql> exit]]>
 	</para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ulteo/ovd ovd-polaris main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
 # apt-get update]]>
 	</screen>
       </listitem>
@@ -381,7 +381,7 @@ mysql> exit]]>
         </para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ulteo/ovd ovd-polaris main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
 # apt-get update]]>
         </screen>
       </listitem>
