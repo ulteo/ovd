@@ -111,9 +111,10 @@ set_host_conf
 db_stop
 
 # setup apache
-mkdir -p /var/log/ulteo/applicationserver
-chown root:www-data /var/log/ulteo/applicationserver
-chmod 2770 /var/log/ulteo/applicationserver
+LOGDIR=/var/log/ulteo/applicationserver
+if ! dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
+    dpkg-statoverride --update --add www-data www-data 2770 $LOGDIR
+fi
 
 if [ ! -e /etc/apache2/sites-available/applicationserver ]; then
     ln -s /etc/ulteo/applicationserver/apache2.conf \

@@ -24,11 +24,14 @@ if [ -e /opt/ulteo/etc/ulteo-ovd.conf ]; then
 fi
 
 # remove the logs
-rm -rf /var/log/ulteo/applicationserver
+LOGDIR=/var/log/ulteo/applicationserver
+rm -f $LOGDIR/main.log
+if dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
+    dpkg-statoverride --remove $LOGDIR
+fi
 
 # remove the apache2 link
-rm -f /etc/apache2/sites-available/applicationserver
-rm -f /etc/apache2/sites-enabled/applicationserver
+rm -f /etc/apache2/conf.d/applicationserver
 
 #DEBHELPER#
 

@@ -14,8 +14,20 @@ reload_apache()
 }
 
 if [ "$1" = "purge" ]; then
-    rm -rf /var/spool/ulteo/sessionmanager
-    rm -rf /var/log/ulteo/sessionmanager
+    rm -rf /var/spool/ulteo/sessionmanager/*
+    rm -f /var/log/ulteo/sessionmanager/main.log*
+    rm -f /var/log/ulteo/sessionmanager/apt-get.log*
+
+    CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
+    if dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
+        dpkg-statoverride --remove $CONFFILE
+    fi
+
+    for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
+        if dpkg-statoverride --list $f >/dev/null 2>&1; then
+            dpkg-statoverride --remove $f
+        fi
+    done
 
     # ask the user if he wants to remove base.tar.gz
     db_input high ulteo-ovd-session-manager/postrm_remove_tarball || true

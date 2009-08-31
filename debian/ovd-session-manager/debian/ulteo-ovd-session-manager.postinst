@@ -37,8 +37,6 @@ gen_conf()
 
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
-
-    # TODO : add mysql database config
 }
 
 mysql_config()
@@ -90,12 +88,15 @@ fi
 mysql_config
 apache_config
 
-chown root:www-data $CONFFILE
-chmod 0640 $CONFFILE
+if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
+    dpkg-statoverride --update --add root www-data 0640 $CONFFILE
+fi
 
-mkdir -p /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
-chmod 2770 /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
+    if ! dpkg-statoverride --list $f >/dev/null 2>&1; then
+        dpkg-statoverride --update --add www-data www-data 2770 $f
+    fi
+done
 
 
 #DEBHELPER#
