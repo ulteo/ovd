@@ -87,7 +87,7 @@ class Session {
 			return false;
 		}
 
-		$ret = query_url_no_error('http://'.$server->fqdn.':'.$server->web_port.'/webservices/session_status.php?session='.$this->id);
+		$ret = $server->getSessionStatus($this->id);
 
 		if (! is_numeric($ret) || $ret === '') {
 			Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
@@ -196,7 +196,7 @@ class Session {
 
 		$server = Abstract_Server::load($this->server);
 
-		$buf = query_url('http://'.$server->fqdn.':'.$server->web_port.'/webservices/kill_session.php?session='.$this->id);
+		$buf = $server->orderSessionDeletion($this->id);
 
 		if (! $buf) {
 			Abstract_Session::delete($this->id);

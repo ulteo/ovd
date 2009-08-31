@@ -82,6 +82,12 @@ class Server {
 		return $buf;
 	}
 
+	public function getWebservicesBaseURL() {
+		Logger::debug('main', 'Starting Server::getWebservicesBaseURL for \''.$this->fqdn.'\'');
+
+		return 'http://'.$this->fqdn.':'.$this->web_port.'/applicationserver/webservices';
+	}
+
 	public function isOK() {
 		Logger::debug('main', 'Starting Server::isOK for \''.$this->fqdn.'\'');
 
@@ -278,7 +284,7 @@ class Server {
 			return false;
 		}
 
-		$ret = query_url_return_errorcode('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_status.php');
+		$ret = query_url_return_errorcode($this->getWebservicesBaseURL().'/server_status.php');
 		list($returncode, $returntext) = $ret;
 
 		if ($returncode != 200) {
@@ -363,7 +369,7 @@ class Server {
 			return false;
 		}
 
-		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_type.php');
+		$buf = query_url($this->getWebservicesBaseURL().'/server_type.php');
 
 		if (! $buf) {
 			$this->isUnreachable();
@@ -398,7 +404,7 @@ class Server {
 			return false;
 		}
 
-		$buf = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_version.php');
+		$buf = query_url($this->getWebservicesBaseURL().'/server_version.php');
 
 		if (! $buf) {
 			$this->isUnreachable();
@@ -456,7 +462,7 @@ class Server {
 			return false;
 		}
 
-		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/server_monitoring.php');
+		$xml = query_url($this->getWebservicesBaseURL().'/server_monitoring.php');
 
 		if (! $xml) {
 			$this->isUnreachable();
@@ -556,6 +562,33 @@ class Server {
 		return true;
 	}
 
+	public function getSessionStatus($session_id_) {
+		Logger::debug('main', 'Starting Server::getSessionStatus for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
+
+		$ret = query_url_no_error($this->getWebservicesBaseURL().'/session_status.php?session='.$session_id_);
+
+		return $ret;
+	}
+
+	public function orderSessionDeletion($session_id_) {
+		Logger::debug('main', 'Starting Server::orderSessionDeletion for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
+
+		$ret = query_url($this->getWebservicesBaseURL().'/kill_session.php?session='.$session_id_);
+
+		return $ret;
+	}
+
+	public function getApplicationIcon($icon_path_, $desktopfile_) {
+		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
+
+		$ret = query_url($this->getWebservicesBaseURL().'/icon.php?path='.base64_encode($icon_path_).'&desktopfile='.base64_encode($desktopfile_));
+
+		if ($ret == '')
+			return false;
+
+		return $ret;
+	}
+
 	// ? unclean?
 	public function getApplications() {
 		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
@@ -597,7 +630,7 @@ class Server {
 		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
 		$applicationDB = new $mod_app_name();
 
-		$xml = query_url('http://'.$this->fqdn.':'.$this->web_port.'/webservices/applications.php');
+		$xml = query_url($this->getWebservicesBaseURL().'/applications.php');
 
 		if (! $xml) {
 			$this->isUnreachable();

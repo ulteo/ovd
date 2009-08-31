@@ -40,8 +40,7 @@ class Task {
 	}
 
 	public function init() {
-		$buf = 'http://'.$this->server.'/webservices/apt-get.php?action=request&request='.urlencode($this->getRequest());
-		$job_id = query_url($buf);
+		$job_id = query_url($this->server->getWebservicesBaseURL().'/apt-get.php?action=request&request='.urlencode($this->getRequest()));
 		if ($job_id === false) {
 			$this->status = 'error';
 			$this->status_code = -4;
@@ -54,8 +53,7 @@ class Task {
 	}
 
 	public function refresh() {
-		$buf = 'http://'.$this->server.'/webservices/apt-get.php?action=status&job='.$this->job_id;
-		$buf = query_url($buf);
+		$buf = query_url($this->server->getWebservicesBaseURL().'/apt-get.php?action=status&job='.$this->job_id);
 		if ($buf === false) {
 			$this->status = 'error';
 			return true;
@@ -87,13 +85,9 @@ class Task {
 	}
 	
 	public function get_AllInfos() {
-		$base_url = 'http://'.$this->server.'/webservices/apt-get.php?action=show&job='.$this->job_id;
 		$infos = array();
-		
-		foreach (array('status', 'stdout', 'stderr') as $elem) {
-			$url = $base_url.'&show='.$elem;
-			$infos[$elem] = query_url_no_error($url);
-		}
+		foreach (array('status', 'stdout', 'stderr') as $elem)
+			$infos[$elem] = query_url_no_error($this->server->getWebservicesBaseURL().'/apt-get.php?action=show&job='.$this->job_id.'&show='.$elem);
 		
 		return $infos;
 	}

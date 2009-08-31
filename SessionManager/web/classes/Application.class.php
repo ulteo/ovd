@@ -123,7 +123,7 @@ class Application {
 
 		$random_server = $servers[array_rand($servers)];
 
-		$buf = query_url('http://'.$random_server->fqdn.':'.$random_server->web_port.'/webservices/icon.php?path='.base64_encode($this->getAttribute('icon_path')).'&desktopfile='.base64_encode($this->getAttribute('desktopfile')));
+		$buf = $random_server->getApplicationIcon($this->getAttribute('icon_path'), $this->getAttribute('desktopfile'));
 
 		if ($buf == false || $buf == '') {
 			$this->delIcon();
