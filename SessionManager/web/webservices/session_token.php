@@ -130,6 +130,8 @@ $user = $userDB->import($settings['user_login']);
 
 if (!is_null($user)) {
 	$available_apps = $user->applications();
+
+	$session_type = 'linux'; // For now we only have "Linux" session servers...
 	foreach ($available_apps as $app) {
 		$item = $dom->createElement('application');
 		$item->setAttribute('id', $app->getAttribute('id'));
