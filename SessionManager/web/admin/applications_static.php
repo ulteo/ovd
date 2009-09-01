@@ -197,6 +197,14 @@ function show_default($prefs, $applicationDB) {
 			}
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
+			echo '<td>';
+			echo _('MimeTypes');
+			echo '</td>';
+			echo '<td>';
+			echo '<input type="text" name="mimetypes" value="" size="50"/>';
+			echo '</td>';
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
 			echo '<td colspan="2">';
 			echo '<input type="submit" value="'._('Add').'" />';
 			echo '<input type="hidden" name="published" value="1" />';
