@@ -47,6 +47,20 @@ if (isset($_REQUEST['action'])) {
 
 	if ($_REQUEST['action'] == 'manage' && isset($_REQUEST['id']))
 		show_manage($_REQUEST['id']);
+
+	if ($_REQUEST['action'] == 'enable_dav_fs') {
+		if (! checkAuthorization('manageConfiguration'))
+			redirect();
+
+		$prefs = new Preferences_admin();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+
+		$prefs->set('plugins', 'FS', 'dav');
+		$prefs->backup();
+
+		redirect();
+	}
 } else
 	show_default();
 
@@ -54,6 +68,16 @@ function show_default() {
 	$sharedfolders = SharedFolders::getAll();
 
 	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
+	$can_manage_configuration = isAuthorized('manageConfiguration');
+
+	$prefs = Preferences::getInstance();
+	if (! $prefs)
+		die_error('get Preferences failed',__FILE__,__LINE__);
+
+	$using_dav_fs = ($prefs->get('plugins', 'FS') == 'dav');
+
+	if (! $using_dav_fs)
+		popup_error(_('You are not using Internal WebDAV filesystem, "Shared folders" are disabled !'));
 
 	page_header();
 
@@ -83,6 +107,13 @@ function show_default() {
 		echo '<input type="hidden" name="action" value="add" />';
 		echo '<input type="text" name="sharedfolder_name" value="" />';
 		echo '</td><td><input type="submit" value="'._('Create this shared folder').'" /></td>';
+		echo '</form></tr>';
+	}
+
+	if (! $using_dav_fs && $can_manage_configuration) {
+		echo '<tr><form action="" method="post"><td colspan="2">';
+		echo '<input type="hidden" name="action" value="enable_dav_fs" />';
+		echo '<input type="submit" value="'._('Enable Internal WebDAV filesystem').'" /></td>';
 		echo '</form></tr>';
 	}
 
