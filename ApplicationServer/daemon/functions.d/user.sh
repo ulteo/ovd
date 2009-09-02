@@ -81,7 +81,7 @@ user_exec() {
 
     local env="DISPLAY=:$rfb_port"
     if [ $app_id != "desktop" ]; then
-        local env="$env NODESKTOP=1 APP=$app APP_ID=$app_id"
+        local env="$env NODESKTOP=1 APP=\"$app\" APP_ID=$app_id"
         if [ -n "$4" ]; then
             local env="$env DOC=\"$4\""
         fi
