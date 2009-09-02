@@ -271,10 +271,10 @@ function switch_splash_to_applet() {
 					return;
 				}
 
-				applet_html_string = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+				applet_html_string = '<applet code="'+applet_main_class+'" codebase="../applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
 					<param name="name" value="ulteoapplet" /> \
 					<param name="code" value="'+applet_main_class+'" /> \
-					<param name="codebase" value="/applet/" /> \
+					<param name="codebase" value="../applet/" /> \
 					<param name="archive" value="'+applet_version+'" /> \
 					<param name="cache_archive" value="'+applet_version+'" /> \
 					<param name="cache_archive_ex" value="'+applet_version+';preload" /> \

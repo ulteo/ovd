@@ -31,7 +31,7 @@ function daemon_init(applet_version_, applet_main_class_, printing_applet_versio
 	debug = debug_;
 
 	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
 		<param name="do_nothing" value="1"> \
 	</applet>';
 
@@ -183,10 +183,10 @@ function switch_splash_to_applet(access_id_) {
 					return;
 				}
 
-				$('appletContainer').innerHTML = '<applet code="'+applet_main_class+'" codebase="/applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+				$('appletContainer').innerHTML = '<applet code="'+applet_main_class+'" codebase="../applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
 					<param name="name" value="ulteoapplet" /> \
 					<param name="code" value="'+applet_main_class+'" /> \
-					<param name="codebase" value="/applet/" /> \
+					<param name="codebase" value="../applet/" /> \
 					<param name="archive" value="'+applet_version+'" /> \
 					<param name="cache_archive" value="'+applet_version+'" /> \
 					<param name="cache_archive_ex" value="'+applet_version+';preload" /> \
@@ -422,7 +422,7 @@ function do_print(path, timestamp) {
   var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
 
 	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+'+printing_applet_version+'+'" codebase="/applet/" width="1" height="1" name="ulteoprinting"> \
+	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+'+printing_applet_version+'+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
 		<param name="url" value="'+print_url+'"> \
 		<param name="filename" value="'+path+'"> \
 	</applet>';
