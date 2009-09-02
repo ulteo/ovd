@@ -92,7 +92,6 @@ class Server {
 	public function getWebservicesBaseURL($redir_ = false) {
 		Logger::debug('main', 'Starting Server::getWebservicesBaseURL for \''.$this->fqdn.'\'');
 
-		$name = $redir_ ? $this->external_name : $this->fqdn;
 		return $this->getBaseURL($redir_).'/webservices';
 	}
 	public function isOK() {
