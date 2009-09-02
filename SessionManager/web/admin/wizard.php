@@ -245,6 +245,7 @@ function show_step2() {
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step2" />';
+  echo '<input style="display: none;" type="submit" name="submit_next" value="'._('Next').'" />';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   $content = 'content'.(($count++%2==0)?1:2);
   echo '<tr class="'.$content.'">';
@@ -303,6 +304,8 @@ function show_step3() {
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step3" />';
+  if ($has_applications)
+    echo '<input style="display: none;" type="submit" name="submit_next" value="'._('Next').'" />';
   echo '<table class="" id="wizard_list_table" border="0" cellspacing="1" cellpadding="5">';
   if ($has_appgroups) {
 	echo '<tr class="title">';
@@ -371,10 +374,9 @@ function show_step3() {
   echo '<input type="submit" name="submit_previous" value="'._('Previous').'" />';
   echo '</td>';
   echo '<td style="text-align: right;">';
-  if ($has_applications) {
+  if ($has_applications)
     echo '<input type="submit" name="submit_next" value="'._('Next').'" />';
-    echo '</td>';
-  }
+  echo '</td>';
   echo '</tr>';
   echo '</table>';
   echo '</form>';
@@ -392,6 +394,7 @@ function show_step4() {
 
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step4" />';
+  echo '<input style="display: none;" type="submit" name="submit_next" value="'._('Next').'" />';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   $content = 'content'.(($count++%2==0)?1:2);
   echo '<tr class="'.$content.'">';
