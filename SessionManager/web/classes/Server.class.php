@@ -82,12 +82,19 @@ class Server {
 		return $buf;
 	}
 
-	public function getWebservicesBaseURL() {
-		Logger::debug('main', 'Starting Server::getWebservicesBaseURL for \''.$this->fqdn.'\'');
+	public function getBaseURL($redir_ = false) {
+		Logger::debug('main', 'Starting Server::getBaseURL for \''.$this->fqdn.'\'');
 
-		return 'http://'.$this->fqdn.':'.$this->web_port.'/applicationserver/webservices';
+		$name = $redir_ ? $this->external_name : $this->fqdn;
+		return 'http://'.$name.':'.$this->web_port.'/applicationserver';
 	}
 
+	public function getWebservicesBaseURL($redir_ = false) {
+		Logger::debug('main', 'Starting Server::getWebservicesBaseURL for \''.$this->fqdn.'\'');
+
+		$name = $redir_ ? $this->external_name : $this->fqdn;
+		return $this->getBaseURL($redir_).'/webservices';
+	}
 	public function isOK() {
 		Logger::debug('main', 'Starting Server::isOK for \''.$this->fqdn.'\'');
 
