@@ -104,7 +104,7 @@ if which dnsdomainname >/dev/null 2>&1; then
 fi
 FQDNPROPOSAL="$HOSTNAME"
 if [ "$DOMAINNAME" != "" ]; then
-    FQDNPROPOSAL="$FQDN.$DOMAINNAME"
+    FQDNPROPOSAL="$HOSTNAME.$DOMAINNAME"
 fi
 
 while [ -z "$FQDN" ]; do
