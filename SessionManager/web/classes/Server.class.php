@@ -94,6 +94,7 @@ class Server {
 
 		return $this->getBaseURL($redir_).'/webservices';
 	}
+
 	public function isOK() {
 		Logger::debug('main', 'Starting Server::isOK for \''.$this->fqdn.'\'');
 
