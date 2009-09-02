@@ -102,6 +102,8 @@ for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
     fi
 done
 
+# make sure that the data created by the postinst are owned by www-data
+chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
 
 #DEBHELPER#
 
