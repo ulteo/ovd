@@ -5,6 +5,10 @@ function list_apps() {
 	);
 }
 
+function load_ajaxplorer() {
+	$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
+}
+
 function list_running_apps(apps_) {
 	new Ajax.Updater(
 		$('runningAppsContainer'),

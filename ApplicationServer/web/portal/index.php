@@ -117,7 +117,6 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 								<h2>My files</h2>
 
 								<div id="fileManagerContainer" style="overflow: auto;">
-									TODO
 								</div>
 							</div>
 							</div>

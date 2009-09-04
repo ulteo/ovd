@@ -87,6 +87,7 @@ function daemon_loop() {
 			switch_splash_to_applet('desktop');
 
 			list_apps();
+			load_ajaxplorer();
 		}
 
 		application_started = true;
