@@ -275,7 +275,21 @@ ActionsManager = Class.create({
 	},
 	
 	fireDefaultAction: function(defaultName){
-		var actionName = this.defaultActions.get(defaultName); 
+		var actionName = this.defaultActions.get(defaultName);
+
+		if (defaultName == "file") {
+			var path = ajaxplorer.getFilesList().getUserSelection().getUniqueFileName();
+
+			this.actions.each(function(pair){
+				var action = pair.value;
+
+				if (action.canOpenUlteoMimeType(path)) {
+					actionName = pair.key;
+					return;
+				}
+			});
+		}
+
 		if(actionName != null){
 			arguments[0] = actionName;
 			if(actionName == "ls"){
