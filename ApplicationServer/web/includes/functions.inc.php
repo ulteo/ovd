@@ -157,6 +157,14 @@ function get_classes_startwith($start_name) {
 	return $ret;
 }
 
+function str_startswith($string_, $search_) {
+	return (substr($string_, 0, strlen($search_)) == $search_);
+}
+
+function str_endswith($string_, $search_) {
+	return (substr($string_, (strlen($search_)*-1)) == $search_);
+}
+
 function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
 	$len = strlen($st)-1;
 
