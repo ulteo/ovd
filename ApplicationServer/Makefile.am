@@ -3,7 +3,7 @@ daemon_dir = daemon
 endif
 
 if WEB
-web_dir = web scripts config po
+web_dir = web tools config po
 endif
 
 SUBDIRS = $(daemon_dir) $(web_dir) examples

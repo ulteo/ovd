@@ -177,8 +177,8 @@ daemon/init/Makefile
 daemon/log.d/Makefile
 daemon/modules_fs.d/Makefile
 daemon/functions.d/Makefile
-scripts/Makefile
-scripts/portal/Makefile
+tools/Makefile
+tools/portal/Makefile
 config/Makefile
 examples/Makefile
 web/desktop/Makefile
