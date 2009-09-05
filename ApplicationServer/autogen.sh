@@ -7,8 +7,7 @@ if [ -d .svn ]; then
         < "configure.in.in" > "configure.in"
 fi
 
-#glib-gettextize --force --copy
-#intltoolize --copy --automake --force
+autoheader
 aclocal
 autoconf
 automake --add-missing --gnu --copy

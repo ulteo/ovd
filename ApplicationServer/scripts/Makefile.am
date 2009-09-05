@@ -1,3 +1,7 @@
+if PORTAL
+SUBDIRS = portal
+endif
+
 EXTRA_DIST = aps-chroot-install.in ovdchroot.in
 
 bin_SCRIPTS = aps-chroot-install ovdchroot
