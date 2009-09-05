@@ -21,7 +21,15 @@ Description: Ulteo Open Virtual Desktop - daemon (Transitional package)
 
 Package: ulteo-ovd-application-server
 Architecture: all
-Depends: debconf (>= 0.2.26), po-debconf, curl, libapache2-mod-php5, php5-curl, php5-imagick, ulteo-ovd-applets
+Depends: debconf (>= 0.2.26), po-debconf, curl, libapache2-mod-php5, php5-curl, php5-imagick, ulteo-ovd-applets, ulteo-ovd-application-server-tools (= ${binary:Version})
+Conflicts: ulteo-ovd (<= 1.0.1+svn1187)
+Description: Ulteo Open Virtual Desktop - application server
+ This package provides the application server web services for the Ulteo Online
+ Virtual Desktop.
+
+Package: ulteo-ovd-application-server-tools
+Architecture: any
+Depends: ${shlibs:Depends}
 Conflicts: ulteo-ovd (<= 1.0.1+svn1187)
 Description: Ulteo Open Virtual Desktop - application server
  This package provides the application server web services for the Ulteo Online
