@@ -188,6 +188,7 @@ CHROOT_CONFFILE="$CHROOT_PATH/etc/ulteo-ovd.conf"
 # set the host conf
 set_conf $MAIN_CONFFILE "CHROOT" "$CHROOT_PATH"
 set_conf $MAIN_CONFFILE "LOG_WWW" "@LOCALSTATEDIR@/log/ulteo/applicationserver"
+set_conf $MAIN_CONFFILE "WWW_USER" "$APACHE_GROUP"
 
 [ -z "$NODOWNLOAD" ] && get_chroot
 

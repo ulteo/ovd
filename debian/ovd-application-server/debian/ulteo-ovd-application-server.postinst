@@ -19,6 +19,7 @@ set_conf () {
 
 set_host_conf () {
     set_conf $HOSTCONF "CHROOT" $CHROOTPATH
+    set_conf $HOSTCONF "WWW_USER" "www-data"
 }
 
 set_chroot_conf () {
