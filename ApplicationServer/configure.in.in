@@ -8,7 +8,7 @@ AC_INIT([ovd-application-server], [uovdas_version], [http://bugs.ulteo.com])
 
 # Init automake
 AM_INIT_AUTOMAKE([1.9 tar-pax no-dependencies])
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_HEADERS([config.h])
 
 # Checks for programs.
 AC_PROG_INSTALL

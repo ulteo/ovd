@@ -2,10 +2,10 @@ if PORTAL
 SUBDIRS = portal
 endif
 
-EXTRA_DIST = aps-chroot-install.in ovdchroot.in
+EXTRA_DIST = aps-chroot-install.in aps-chroot.in
 
-bin_SCRIPTS = aps-chroot-install ovdchroot
-dist_man_MANS = aps-chroot-install.8 ovdchroot.8
+bin_SCRIPTS = aps-chroot-install aps-chroot
+dist_man_MANS = aps-chroot-install.8 aps-chroot.8
 
 aps-chroot-install:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
@@ -13,9 +13,9 @@ aps-chroot-install:
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
 		< $(srcdir)/aps-chroot-install.in > $@
 
-ovdchroot:
+aps-chroot:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
-		< $(srcdir)/ovdchroot.in > $@
+		< $(srcdir)/aps-chroot.in > $@
 
 clean-local:
 	rm -f $(bin_SCRIPTS)
