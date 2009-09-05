@@ -9,4 +9,7 @@ aps_shell_SOURCES = main.cpp \
                     Action.cpp Action.h
 
 aps_shell_CXXFLAGS = \
-     -DSYSCONFDIR=\""$(sysconfdir)"\"
+	-DSYSCONFDIR=\""$(sysconfdir)"\"
+
+install-exec-hook:
+	chmod 4755 $(DESTDIR)$(bindir)/aps-shell
