@@ -24,8 +24,6 @@
 #include <string>
 #include <vector>
 
-#define CHROOT_CMD "chroot"
-
 class Action {
  protected:
     std::string user;

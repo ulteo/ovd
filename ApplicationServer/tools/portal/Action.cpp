@@ -32,7 +32,7 @@
 
 
 Action::Action():
-    chroot_cmd(CHROOT_CMD)
+    chroot_cmd(CHROOT_PATH)
 {}
 
 

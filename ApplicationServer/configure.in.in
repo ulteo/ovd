@@ -160,12 +160,13 @@ if test x"$enable_portal" = x"yes"; then
     AC_CHECK_HEADERS([dirent.h pwd.h ])
 
     # Check if we have chroot in the path
-    AC_CHECK_PROG([chroot], [chroot], [yes], [no])
-    if test x"$chroot" = x"no"; then
+    AC_PATH_PROG([chroot_path], [chroot], [no])
+    if test x"$chroot_path" = x"no"; then
         AC_MSG_ERROR(You need to install the chroot program in PATH.)
     fi
 
     AC_DEFINE(WITH_PORTAL,1,[Whether the portal tools will be built])
+    AC_DEFINE_UNQUOTED(CHROOT_PATH,["$chroot_path"],[Absolute path of the chroot command])
 fi
 AM_CONDITIONAL(PORTAL, test x"$enable_portal" = x"yes")
 
