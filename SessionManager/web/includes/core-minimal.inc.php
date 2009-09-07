@@ -53,10 +53,12 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 } else
 	$buf = 'en_GB';
 $language = locale2unix($buf);
-setlocale(LC_ALL, $language);
-$domain = 'uovdsm';
-bindtextdomain($domain, LOCALE_DIR);
-textdomain($domain);
+if (! in_admin()) {
+	setlocale(LC_ALL, $language);
+	$domain = 'uovdsm';
+	bindtextdomain($domain, LOCALE_DIR);
+	textdomain($domain);
+}
 
 $desktop_locale = $language;
 
