@@ -10,7 +10,7 @@ startovd-xfce: Makefile
 	sed "s,@SYSCONFDIR@,$(sysconfdir)," $(srcdir)/startovd-xfce.in >$@
 
 install-exec-hook:
-	$(MKDIR_P) $(DESTDIR)$(bindir)
+	mkdir -p $(DESTDIR)$(bindir)
 	ln -sf $(STARTOVD) $(DESTDIR)$(bindir)/startovd
 
 clean-local:
