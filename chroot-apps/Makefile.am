@@ -1,4 +1,10 @@
-SUBDIRS = restricted-menu lmessage po start-ovd desktopfiles2xml cups2all
+if CUPS2ALL
+cups2all_dir = cups2all
+endif
+
+DISTCHECK_CONFIGURE_FLAGS = --disable-cups2all
+
+SUBDIRS = restricted-menu lmessage po start-ovd desktopfiles2xml $(cups2all_dir)
 
 EXTRA_DIST = \
 	intltool-extract.in \
