@@ -5,8 +5,8 @@ Release: 1
 License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
-BuildArch: noarch
-Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, ovd-applets
+BuildArch: i386
+Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, ovd-applets, libstdc++-devel, gcc-c++
 
 %description
 Ulteo OVD Application Server manages the sessions.
@@ -31,7 +31,11 @@ install -m 0755 examples/ulteo-ovd.init $RPM_BUILD_ROOT/etc/init.d/ulteo-ovd
 rm -rf $RPM_BUILD_ROOT
 
 %files
-/usr/*
+/usr/share/*
+/usr/bin/aps-chroot
+/usr/bin/aps-chroot-install
+%defattr(4755,root,root)
+/usr/bin/aps-shell
 %config /etc/logrotate.d/applicationserver
 %config /etc/ulteo/applicationserver/apache2.conf
 %defattr(0755,root,root)
