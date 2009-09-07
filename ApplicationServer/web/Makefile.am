@@ -1,6 +1,18 @@
-SUBDIRS = applet classes includes media webservices desktop share portal
+if PORTAL
+portal_dir = portal
+endif
 
-scripts_DATA = access.php index.php start.php whatsup.php print.php exit.php invite.php start_app.php
+SUBDIRS = applet classes includes media webservices desktop share $(portal_dir)
+
+scripts_DATA = access.php \
+               exit.php \
+               index.php \
+               invite.php \
+               print.php \
+               start.php \
+               start_app.php \
+               whatsup.php
+
 scriptsdir = $(datadir)/ulteo/applicationserver
 
 EXTRA_DIST = $(scripts_DATA) README
