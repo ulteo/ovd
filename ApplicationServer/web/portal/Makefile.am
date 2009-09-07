@@ -21,6 +21,9 @@ install-ajaxplorer:
 
 install-exec-hook: install-ajaxplorer
 
+uninstall-hook:
+	rm -rf $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ajaxplorer
+
 # Maintainer script
 ajaxplorer.tar.gz:
 	tar czf $(srcdir)/ajaxplorer.tar.gz --exclude=.svn -C $(srcdir) ajaxplorer
