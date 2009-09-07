@@ -85,16 +85,6 @@ su -s "/bin/bash" ${USER_LOGIN} -c "/bin/rm -rf ${USER_HOME}/.DCOP* ${USER_HOME}
 
 # create tmp dirs for VNC and the user, link unix sockets together
 export VNC_USER_ID=$(id -u $VNC_USER)
-if rsbac_is_active; then
-    tmp_make ${USER_LOGIN}
-    tmp_make $VNC_USER
-    chown :${USER_LOGIN} /tmpdir/tmp${VNC_USER_ID}
-    ln -sf /tmpdir/tmp${VNC_USER_ID}/.X11-unix /tmpdir/tmp${USER_ID}/
-fi
-
-if rsbac_is_active ; then
-    JAIL="/sbin/run-jail startsession"
-fi
 
 export GEOMETRY LOC
-$JAIL startsession.sh &
+startsession.sh &

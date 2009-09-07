@@ -102,11 +102,6 @@ session_init() {
     UUID=`id -u $VNC_USER`
     UGID=`id -g $VNC_USER`
 
-    if rsbac_is_active && [ ! -d /tmpdir/tmp$UUID ]; then
-	mkdir /tmpdir/tmp$UUID
-	chown $UUID:$UGID /tmpdir/tmp$UUID
-    fi
-
     # create new session dir
     install -d -g www-data -m 750 $SESSID_DIR
     install -d -g www-data -m 770 $SESSID_DIR/parameters
@@ -187,10 +182,6 @@ session_remove() {
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
     if [ `grep -e "$VNC_USER\:x" /etc/passwd` ]; then
         local VNC_UID=`id -u $VNC_USER`
-	if rsbac_is_active && [ -d /tmpdir/tmp$VNC_UID ]; then
-            # Delete the tmp directory
-	    rm -rf /tmpdir/tmp$VNC_UID
-	fi
 	log_INFO "userdel $VNC_USER"
 	userdel $VNC_USER
     fi
@@ -243,11 +234,6 @@ session_purge() {
     sleep 0.5
     killall -9 -u SSH$i
     killall -9 -u VNC$i
-
-    if rsbac_is_active && [ -d /tmpdir/tmp$USER_UID ]; then
-        # clean tmp dirs
-	rm -rf /tmpdir/tmp$USER_UID
-    fi
 
     log_DEBUG "removing user's files from /tmp"
     find /tmp/ -user $USER_LOGIN | xargs rm -rf {}\;

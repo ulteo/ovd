@@ -6,12 +6,6 @@
 #
 # All rights reserved.
 
-# do we have an active RSBAC server?
-rsbac_is_active () {
-    [ -d /proc/rsbac-info ] && return 0
-    return 1
-}
-
 waitpid() {
     local pid=$1
     local timeout=$2
@@ -34,13 +28,6 @@ BIN_DIR=@DATADIR@/ulteo-ovd
 
 PIDFILE="/var/run/ulteo-ovdd.pid"
 PROGRAM=$BIN_DIR/ulteo-ovdd
-
-# If we have rsbac, setup the jails
-if rsbac_is_active ; then
-    SSHJAIL="/sbin/run-jail ssh"
-    PORTMAPJAIL="/sbin/run-jail portmap"
-    DBUSJAIL="/sbin/run-jail dbus"
-fi
 
     # Start the services
 do_start () {
@@ -66,9 +53,9 @@ do_start () {
     fi
 
     # TODO: check if the services are already running
-    $SSHJAIL /etc/init.d/ssh start || true
-    $PORTMAPJAIL /etc/init.d/portmap start || true
-    $DBUSJAIL /etc/init.d/dbus start || true
+    /etc/init.d/ssh start || true
+    /etc/init.d/portmap start || true
+    /etc/init.d/dbus start || true
     /etc/init.d/cron start || true
     /etc/init.d/cupsys start || true
 
@@ -93,9 +80,9 @@ do_stop () {
     fi
 
     # Stop services
-    $SSHJAIL /etc/init.d/ssh stop || true
-    $PORTMAPJAIL /etc/init.d/portmap stop || true
-    $DBUSJAIL /etc/init.d/dbus stop || true
+    /etc/init.d/ssh stop || true
+    /etc/init.d/portmap stop || true
+    /etc/init.d/dbus stop || true
     /etc/init.d/cron stop || true
     /etc/init.d/cupsys stop || true
 

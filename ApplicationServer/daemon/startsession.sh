@@ -22,13 +22,8 @@
 . functions.sh
 . log.sh
 
-if rsbac_is_active; then
-    USER_TMP=/tmpdir/tmp${USER_ID}/
-    VNC_TMP=/tmpdir/tmp${VNC_USER_ID}/
-else
-    USER_TMP=/tmp/.tmp${USER_ID}
-    VNC_TMP=/tmp/.tmp${VNC_USER_ID}
-fi
+USER_TMP=/tmp/.tmp${USER_ID}
+VNC_TMP=/tmp/.tmp${VNC_USER_ID}
 
 VNCCACHINGOPTS="-caching -caching_ent 1500 -caching_malg LRU -caching_minsize 5000000"
 

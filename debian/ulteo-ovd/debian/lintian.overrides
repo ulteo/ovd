@@ -1,4 +1,0 @@
-# these are not bashisms
-ulteo-ovd: possible-bashism-in-maintainer-script config:11 '$HOSTNAME'
-ulteo-ovd: possible-bashism-in-maintainer-script postinst:89 '&>'
-

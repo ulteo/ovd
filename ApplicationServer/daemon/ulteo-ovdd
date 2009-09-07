@@ -302,17 +302,11 @@ loop() {
     spool_clean
     spool_init
 
-    if ! rsbac_is_active; then
-	if [ ! -d /tmpdir/tmp ]; then
-	    mkdir /tmpdir/tmp
-	fi
-	chmod 777 /tmpdir/tmp
-	
 	if [ ! -d /tmp/.X11-unix ]; then
             mkdir /tmp/.X11-unix
 	fi
 	chmod a+rwxt /tmp/.X11-unix
-	
+
 	if [ ! -d /tmp/.ICE-unix ]; then
 	    mkdir /tmp/.ICE-unix
 	fi

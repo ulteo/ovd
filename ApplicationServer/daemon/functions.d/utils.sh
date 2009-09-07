@@ -19,12 +19,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-# do we have an active RSBAC server?
-rsbac_is_active () {
-    [ -d /proc/rsbac-info ] && return 0
-    return 1
-}
-
 retry() {
     #args: command, number of attempts, delay
     local COUNTER=1

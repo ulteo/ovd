@@ -43,7 +43,6 @@ tmp_make() {
 
 ## Futur functions
 tmp_init() {
-    if ! rsbac_is_active; then
 	local tmpdir=$tmp_base
 
 	[ ! -d $tmpdir ] && mkdir $tmpdir
@@ -54,40 +53,23 @@ tmp_init() {
 	
 	[ ! -d $tmpdir/.ICE-unix ] && mkdir $tmpdir/.ICE-unix
 	chmod a+rwxt $CHROOT/$tmp_base/.ICE-unix
-    fi
 }
 
 tmp_create() {
     local uid=$1
 
-    if rsbac_is_active; then
-	local tmpdir=$CHROOT/$tmp_base$uid
-    else
 	local tmpdir=$CHROOT/$tmp_base/$uid
-    fi
 
     [ -d $tmpdir ] && rm -rf $tmpdir
     mkdir $tmpdir && chmod 750 $tmpdir
     
-    if rsbac_is_active; then
-	mkdir $tmpdir/.X11-unix 
-	chmod a+rwxt $tmpdir/.X11-unix
-
-	mkdir $tmpdir/.ICE-unix
-	chmod a+rwxt $tmpdir/.ICE-unix
-    fi
-
     chown -R $uid:$uid $tmpdir
 }
 
 tmp_destroy() {
     local uid=$1
 
-    if rsbac_is_active; then
-	local tmpdir=$tmp_base$uid
-    else
 	local tmpdir=$tmp_base/$uid
-    fi
     
     [ -d $tmpdir ] && rm -rf $tmpdir
 }
