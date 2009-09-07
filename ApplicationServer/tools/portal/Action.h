@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#define CHROOT_CMD "/usr/sbin/chroot"
+#define CHROOT_CMD "chroot"
 
 class Action {
  protected:

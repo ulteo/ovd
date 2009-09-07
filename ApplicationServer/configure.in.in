@@ -162,7 +162,7 @@ if test x"$enable_portal" = x"yes"; then
     # Check if we have chroot in the path
     AC_CHECK_PROG([chroot], [chroot], [yes], [no])
     if test x"$chroot" = x"no"; then
-        AC_MSG_ERROR(You need to install the chroot program.)
+        AC_MSG_ERROR(You need to install the chroot program in PATH.)
     fi
 
     AC_DEFINE(WITH_PORTAL,1,[Whether the portal tools will be built])
