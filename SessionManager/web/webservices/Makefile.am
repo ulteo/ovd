@@ -1,12 +1,13 @@
 SUBDIRS =  admin
 
 scripts_DATA =  icon.php \
+                get_news.php \
                 server_monitoring.php \
                 session_token.php \
                 session_status.php \
                 server_status.php \
                 userlist.php \
-		session_invite.php \
+                session_invite.php \
                 application.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/webservices

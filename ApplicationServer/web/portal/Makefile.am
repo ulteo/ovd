@@ -4,8 +4,9 @@ scripts_DATA = application.js \
                apps.php \
                common.css \
                daemon.js \
-               functions.js \
                external_app.php \
+               functions.js \
+               get_news.php \
                index.php \
                running_apps.php \
                resume.php \

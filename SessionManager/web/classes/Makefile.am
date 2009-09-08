@@ -11,6 +11,7 @@ scripts_DATA = Application.class.php \
                Logger.class.php \
                Module.class.php \
                MySQL.class.php \
+               News.class.php \
                Plugin.class.php \
                Plugins.class.php \
                Preferences.class.php \
