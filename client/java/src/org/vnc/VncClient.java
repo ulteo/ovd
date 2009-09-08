@@ -88,14 +88,24 @@ public class VncClient implements Runnable{
 	}
 
 	public void stop_background_process() {
-		if (rfbThread != null && rfbThread.isAlive()) {
-			System.out.println("alive");
-			rfbThread.interrupt();
-			System.out.println("alive 2");
-			rfbThread.stop();
+		if (rfbThread == null || !rfbThread.isAlive()) {
+			System.out.println("stop_background_process(): not alive");
+			return;
 		}
-		else {
-			System.out.println("not alive");
+
+		System.out.println("stop_background_process(): alive");
+		rfbThread.interrupt();
+
+		// Wait a moment to give a chance of
+		// the thread to exit properly
+		try{
+			Thread.currentThread().sleep(2000);
+		}
+		catch(java.lang.InterruptedException ie){}
+
+		if (rfbThread.isAlive()) {
+			System.out.println("stop_background_process(): alive even after interrupt -> kill");
+			rfbThread.stop();
 		}
 	}
 
