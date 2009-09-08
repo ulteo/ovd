@@ -119,7 +119,7 @@ class Abstract_Session {
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
-			Logger::error('main', "Abstract_Session::create($session_) session already exists (NumRows != 0)");
+			Logger::error('main', "Abstract_Session::create($session_) session already exists (NumRows == $total)");
 			return false;
 		}
 

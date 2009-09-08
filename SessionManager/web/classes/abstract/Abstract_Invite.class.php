@@ -108,7 +108,7 @@ class Abstract_Invite {
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
-			Logger::error('main', "Abstract_Invite::create($invite_) NumRows != 0 (NumRows=".$total.")");
+			Logger::error('main', "Abstract_Invite::create($invite_) invite already exist (NumRows == $total)");
 			return false;
 		}
 
@@ -130,7 +130,7 @@ class Abstract_Invite {
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Invite::delete($id_) Invite does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Invite::delete($id_) invite does not exist (NumRows == 0)");
 			return false;
 		}
 

@@ -106,7 +106,7 @@ class Abstract_Token {
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
-			Logger::error('main', "Abstract_Token::create($token_) Token already exist (NumRows == $total)");
+			Logger::error('main', "Abstract_Token::create($token_) token already exist (NumRows == $total)");
 			return false;
 		}
 
@@ -126,7 +126,7 @@ class Abstract_Token {
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Token::delete($id_) Token does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Token::delete($id_) token does not exist (NumRows == 0)");
 			return false;
 		}
 

@@ -132,7 +132,7 @@ class Abstract_Server {
 		$total = $SQL->NumRows();
 
 		if ($total != 0) {
-			Logger::error('main', "Abstract_Server::create($server_) server already exist (NumRows != 0)");
+			Logger::error('main', "Abstract_Server::create($server_) server already exist (NumRows == $total)");
 			return false;
 		}
 
