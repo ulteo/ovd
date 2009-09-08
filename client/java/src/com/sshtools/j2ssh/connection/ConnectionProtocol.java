@@ -146,7 +146,9 @@ public void onStart() {
           SSH_MSG_CHANNEL_OPEN_FAILURE;
 
       try {
+        System.err.println("ConnectionProtocol:openChannel: before random bug#1");
         SshMessage result = transport.getMessageStore().getMessage(messageIdFilter);
+        System.err.println("ConnectionProtocol:openChannel: after  random bug#2");
 
         if (result.getMessageId() ==
             SshMsgChannelOpenConfirmation.SSH_MSG_CHANNEL_OPEN_CONFIRMATION) {

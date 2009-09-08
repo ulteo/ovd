@@ -70,12 +70,12 @@ public class SshConnection {
 			PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
 			pwd.setUsername(this.user);
 			pwd.setPassword(this.password);
-			System.out.println("user: '"+this.user+"'\npassword: "+this.password);
+
 			int result = ssh.authenticate(pwd);
 			if(result==AuthenticationProtocolState.COMPLETE) {
-				System.out.println("Authentication completed.");
+				System.out.println("ssh: Authentication completed.");
 			} else {
-				System.out.println("SSh Authentication failed");
+				System.out.println("ssh: Authentication failed");
 				return false;
 			}
 			int vncServerPort = vncPort;
@@ -84,16 +84,15 @@ public class SshConnection {
 			channel = new ForwardingIOChannel(ForwardingIOChannel.LOCAL_FORWARDING_CHANNEL,
 											  "VNC","localhost",vncServerPort,"0.0.0.0",vncLocalPort);
 			if(! ssh.openChannel(channel)) {
-				System.err.println("Unable to open Channel");
+				System.err.println("ssh: Unable to open Channel");
 				return false;
 			}
 
-			System.out.println("Channel open");
 			in = channel.getInputStream();
 			out = channel.getOutputStream();
 		}
 		catch(Exception e) {
-			System.out.println("ssh tunnel problem");
+			System.out.println("ssh: tunnel problem");
 			e.printStackTrace();
 			this.stop();
 			return false;
