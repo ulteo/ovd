@@ -20,6 +20,8 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
+$_SESSION['connected_since'] = time();
+
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -72,8 +74,12 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			<div id="headerWrap">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 100%;" class="title centered">
-							<h1>&nbsp;Welcome <?php echo $_SESSION['parameters']['user_displayname']; ?> !</h1>
+						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
+							<h1>&nbsp;Welcome&nbsp;<?php echo $_SESSION['parameters']['user_displayname']; ?>&nbsp;!</h1>
+						</td>
+						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 65%;" class="title centered">
+							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
+							</div>
 						</td>
 						<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">
 							<a href="index.php"><img src="media/image/header.png" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" /></a>

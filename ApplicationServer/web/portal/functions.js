@@ -9,6 +9,17 @@ function load_ajaxplorer() {
 	$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
 }
 
+function list_news() {
+	new Ajax.Updater(
+		$('newsContainer'),
+		'get_news.php'
+	);
+
+	setTimeout(function() {
+		list_news();
+	}, 300000);
+}
+
 function list_running_apps(apps_) {
 	new Ajax.Updater(
 		$('runningAppsContainer'),

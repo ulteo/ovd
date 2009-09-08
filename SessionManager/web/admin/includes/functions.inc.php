@@ -153,6 +153,7 @@ function init_db($prefs_) {
 	Abstract_Session::init($prefs_);
 	Abstract_Invite::init($prefs_);
 	Abstract_Token::init($prefs_);
+	Abstract_News::init($prefs_);
 	Abstract_Liaison::init($prefs_);
 	Abstract_Report::init($prefs_);
 	Abstract_UserGroup_Rule::init($prefs_);

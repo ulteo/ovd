@@ -88,6 +88,7 @@ function daemon_loop() {
 
 			list_apps();
 			load_ajaxplorer();
+			list_news();
 		}
 
 		application_started = true;
