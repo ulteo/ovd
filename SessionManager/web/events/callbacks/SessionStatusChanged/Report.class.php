@@ -30,6 +30,8 @@ class SessionStatusChangedReport extends EventCallback {
 			case 2:
 				$token = $this->ev->id;
 				$sql_sessions = get_from_cache ('reports', 'sessids');
+				if (! is_array ($sql_session))
+					$sql_session = array ();
 				if (! array_key_exists($token, $sql_sessions)) {
 					$sessitem = new SessionReportItem($token);
 					if ($sessitem->getId() >= 0) {
