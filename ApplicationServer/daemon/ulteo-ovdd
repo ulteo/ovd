@@ -311,7 +311,6 @@ loop() {
 	    mkdir /tmp/.ICE-unix
 	fi
 	chmod a+rwxt /tmp/.ICE-unix
-    fi
 
     # Give availables application to the sessionmanager
     # webservices_available_application || exit 1
