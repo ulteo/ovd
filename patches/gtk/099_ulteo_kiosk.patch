@@ -1,6 +1,5 @@
-diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c gtk+2.0-2.12.9.new/gtk/gtkfilechooserdefault.c
---- gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c	2008-03-12 04:16:53.000000000 +0000
-+++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserdefault.c	2009-06-01 14:52:27.000000000 +0000
+--- a/gtk/gtkfilechooserdefault.c
++++ b/gtk/gtkfilechooserdefault.c
 @@ -834,6 +834,7 @@
    impl->pending_select_paths = NULL;
    impl->location_mode = LOCATION_MODE_PATH_BAR;
@@ -9,7 +8,17 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c gtk+2.0-2.12.9.new/g
  
    gtk_box_set_spacing (GTK_BOX (impl), 12);
  
-@@ -7080,6 +7081,7 @@
+@@ -5056,7 +5057,8 @@
+ 
+   /* Box */
+ 
+-  gtk_widget_show (impl->location_entry_box);
++  if (impl->can_browse_file_system)
++      gtk_widget_show (impl->location_entry_box);
+ 
+   /* Entry */
+ 
+@@ -7080,6 +7082,7 @@
  {
    GtkFileChooserDefault *impl = GTK_FILE_CHOOSER_DEFAULT (chooser);
    struct UpdateCurrentFolderData *data;
@@ -17,7 +26,7 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c gtk+2.0-2.12.9.new/g
  
    profile_start ("start", (char *) path);
  
-@@ -7109,6 +7111,13 @@
+@@ -7109,6 +7112,13 @@
        return FALSE;
      }
  
@@ -31,9 +40,28 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserdefault.c gtk+2.0-2.12.9.new/g
    if (impl->update_current_folder_handle)
      gtk_file_system_cancel_operation (impl->update_current_folder_handle);
  
-diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserprivate.h gtk+2.0-2.12.9.new/gtk/gtkfilechooserprivate.h
---- gtk+2.0-2.12.9/gtk/gtkfilechooserprivate.h	2009-06-01 15:01:19.000000000 +0000
-+++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserprivate.h	2009-06-01 14:45:29.000000000 +0000
+@@ -9005,7 +9015,8 @@
+     {
+       gtk_widget_show (impl->location_button);
+ 
+-      if (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY)
++      if (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY
++          && impl->can_browse_file_system)
+ 	gtk_widget_show (impl->location_entry_box);
+     }
+ 
+@@ -9516,7 +9527,8 @@
+     {
+       gtk_widget_show (impl->location_button);
+ 
+-      if (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY)
++      if (impl->location_mode == LOCATION_MODE_FILENAME_ENTRY
++          && impl->can_browse_file_system)
+ 	gtk_widget_show (impl->location_entry_box);
+     }
+ 
+--- a/gtk/gtkfilechooserprivate.h
++++ b/gtk/gtkfilechooserprivate.h
 @@ -313,6 +313,8 @@
    guint has_search : 1;
    guint has_recent : 1;
@@ -43,9 +71,8 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserprivate.h gtk+2.0-2.12.9.new/g
  #if 0
    guint shortcuts_drag_outside : 1;
  #endif
-diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.c
---- gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c	2009-06-01 15:01:19.000000000 +0000
-+++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.c	2009-06-01 14:51:17.000000000 +0000
+--- a/gtk/gtkfilechooserutils.c
++++ b/gtk/gtkfilechooserutils.c
 @@ -20,6 +20,10 @@
   */
  
@@ -120,7 +147,7 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c gtk+2.0-2.12.9.new/gtk
 +
 +  /*
 +   * FIXME:
-+   * - we suppose that the fle doesn't exist if this fails
++   * - we suppose that the file doesn't exist if this fails
 +   * - the patch shouldn't be hardcoded of course
 +   */
 +  if (!g_key_file_load_from_file (keyfile,
@@ -170,9 +197,8 @@ diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.c gtk+2.0-2.12.9.new/gtk
 +
  #define __GTK_FILE_CHOOSER_UTILS_C__
  #include "gtkaliasdef.c"
-diff -Naur -Naur gtk+2.0-2.12.9/gtk/gtkfilechooserutils.h gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.h
---- gtk+2.0-2.12.9/gtk/gtkfilechooserutils.h	2009-06-01 15:01:19.000000000 +0000
-+++ gtk+2.0-2.12.9.new/gtk/gtkfilechooserutils.h	2009-06-01 14:35:36.000000000 +0000
+--- a/gtk/gtkfilechooserutils.h
++++ b/gtk/gtkfilechooserutils.h
 @@ -63,6 +63,8 @@
  
  GQuark _gtk_file_chooser_delegate_get_quark (void) G_GNUC_CONST;
