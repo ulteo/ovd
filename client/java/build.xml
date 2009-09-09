@@ -14,6 +14,9 @@
     <property name="datadir"     location="${prefix}/share" />
     <property name="destdir"     location="" />
 
+    <property name="tar"    value="ulteo-ovd-applets-HEAD.tar" />
+    <property name="tar.gz"    value="${tar}.gz" />
+
     <target name="compile"
             description="compile the Java source code to class files">
         <mkdir dir="classes"/>
@@ -96,6 +99,15 @@
                  resource="ulteo-printing-0.5.1.jar"/>
     </target>
 
+    <target name="dist" description="create a source tarball">
+        <tar tarfile="${tar}" basedir=".."
+             includes="java/build.xml, java/README,
+                       java/required_libraries/** , java/src/**,
+                       java/ulteo-printing-0.5.1.jar"
+             excludes="java/classes, java/libs" />
+        <gzip zipfile="${tar.gz}" src="${tar}" />
+        <delete file="${tar}" />
+    </target>
     <target name="clean" description="clean files">
         <delete dir="classes"/>
         <delete dir="libs"/>
