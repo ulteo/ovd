@@ -536,7 +536,7 @@ function show_manage($id) {
   }
 
   $buffer = $prefs_policy = $prefs->get('general', 'policy');
-  $default_policy = $default_policy = $prefs_policy['default_policy'];
+  $default_policy = $prefs_policy['default_policy'];
 
   if (! is_object($group))
     die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
@@ -675,7 +675,7 @@ function show_manage($id) {
 
 		echo '</div>';
 		echo '<br/>';
-	} //if ($can_manage_usersgroups)
+	}
 
 
   if (str_startswith($group->type,'dynamic')) {
@@ -762,8 +762,6 @@ echo '<br />';
 		echo '</form>';
 	}
 
-
-//   var_dump($group->rules);
     echo '</div>';
 	echo '<br />';
   }
@@ -901,8 +899,6 @@ echo '<br />';
 	echo '</table>';
 	echo '</div>';
 	echo '<br/>';
-
-
 
     $all_sharedfolders = SharedFolders::getAll();
 
