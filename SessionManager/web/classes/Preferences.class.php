@@ -169,25 +169,28 @@ class Preferences {
 		
 		$c = new ConfigElement_multiselect('default_policy', _('default_policy'), _('default_policy'), _('default_policy'), array());
 		$c->setContentAvailable(array(
-			'canUseAdminPanel' => _('use admin panel'),
+			'canUseAdminPanel' => _('use Admin panel'),
 			'viewServers' => _('view Servers'),
 			'manageServers' => _('manage Servers'),
-			'viewSharedFolders' => _('view SharedFolders'),
-			'manageSharedFolders' => _('manage SharedFolders'),
+			'viewSharedFolders' => _('view Shared folders'),
+			'manageSharedFolders' => _('manage Shared folders'),
 			'viewUsers' => _('view Users'),
 			'manageUsers' => _('manage Users'),
-			'viewUsersGroups' => _('view Users Groups'),
-			'manageUsersGroups' => _('manage Users Groups'),
+			'viewUsersGroups' => _('view Usergroups'),
+			'manageUsersGroups' => _('manage Usergroups'),
 			'viewApplications' => _('view Applications'),
 			'manageApplications' => _('manage Applications'),
-			'viewApplicationsGroups' => _('view ApplicationsGroups'),
-			'manageApplicationsGroups' => _('manage ApplicationsGroups'),
+			'viewApplicationsGroups' => _('view Application groups'),
+			'manageApplicationsGroups' => _('manage Application groups'),
 			'viewPublications' => _('view Publications'),
 			'managePublications' => _('manage Publications'),
 			'viewConfiguration' => _('view Configuration'),
 			'manageConfiguration' => _('manage Configuration'),
 			'viewStatus' => _('view Status'),
-			'viewSummary' => _('view Summary')));
+			'viewSummary' => _('view Summary'),
+			'viewNews' => _('view News'),
+			'manageNews' => _('manage News')
+		));
 
 		$this->add($c,'general', 'policy');
 
