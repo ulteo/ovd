@@ -82,10 +82,11 @@ class Abstract_News {
 		$id = $news_->id;
 
 		if (! Abstract_News::load($id)) {
-			Logger::info('main', "Abstract_News::save($token_) unable to load news, we must create it");
+			Logger::info('main', "Abstract_News::save($news_) unable to load news, we must create it");
 
-			if (! Abstract_News::create($token_)) {
-				Logger::error('main', "Abstract_News::save($token_) Abstract_News::create failed");
+			$id = Abstract_News::create($news_);
+			if (! $id) {
+				Logger::error('main', "Abstract_News::save($news_) Abstract_News::create failed");
 				return false;
 			}
 		}
@@ -112,7 +113,7 @@ class Abstract_News {
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'news', 'id', $id);
 
-		return true;
+		return $SQL->InsertId();
 	}
 
 	public static function delete($id_) {

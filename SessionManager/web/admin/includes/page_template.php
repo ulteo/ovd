@@ -212,6 +212,12 @@ if (isAuthorized('viewStatus')) {
 			  'parent' => array('status'));
 }
 
+if (isAuthorized('viewNews'))
+	$menu['news'] =
+		array('id' => 'news',
+			  'name' => _('News'),
+			  'page' => 'news.php',
+			  'parent' => array('status'));
 
 if (isAuthorized('viewSummary'))
 	$menu['sumup'] = 

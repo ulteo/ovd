@@ -12,6 +12,7 @@ scripts_DATA = actions.php \
                login.php \
                logout.php \
                logs.php \
+               news.php \
                publications.php \
                reporting.php \
                servers.php \

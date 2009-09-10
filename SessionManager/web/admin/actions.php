@@ -279,6 +279,25 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 	}
 }
 
+if ($_REQUEST['name'] == 'News') {
+	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['news_title']) && isset($_REQUEST['news_content'])) {
+		$news = new News('');
+		$news->title = $_REQUEST['news_title'];
+		$news->content = $_REQUEST['news_content'];
+		$news->timestamp = time();
+		Abstract_News::save($news);
+		redirect();
+	}
+	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['id'])) {
+		$buf = Abstract_News::delete($_REQUEST['id']);
+
+		if (! $buf)
+			popup_error(_('Unable to delete this news'));
+
+		redirect();
+	}
+}
+
 function action_add_sharedfolder() {
 	$sharedfolder_name = $_REQUEST['sharedfolder_name'];
 	if ($sharedfolder_name == '') {
