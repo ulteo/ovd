@@ -19,6 +19,8 @@ EXTRA_DIST = $(scripts_DATA) ajaxplorer.tar.gz
 install-ajaxplorer:
 	mkdir -p $(DESTDIR)$(datadir)/ulteo/applicationserver/portal
 	tar xzf $(srcdir)/ajaxplorer.tar.gz -C $(DESTDIR)$(datadir)/ulteo/applicationserver/portal
+	ln -sf $(localstatedir)/spool/ulteo/applicationserver/portal/users \
+		   $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ajaxplorer/server/users
 
 install-exec-hook: install-ajaxplorer
 

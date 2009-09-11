@@ -181,6 +181,8 @@ daemon/functions.d/Makefile
 tools/Makefile
 tools/portal/Makefile
 config/Makefile
+config/users/Makefile
+config/users/admin/Makefile
 examples/Makefile
 web/desktop/Makefile
 web/share/Makefile
