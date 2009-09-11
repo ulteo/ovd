@@ -122,7 +122,7 @@ if ! dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
     dpkg-statoverride --update --add www-data www-data 2770 $LOGDIR
 fi
 
-if [ ! -e /etc/apache2/sites-available/applicationserver ]; then
+if [ ! -e /etc/apache2/conf.d/applicationserver ]; then
     ln -s /etc/ulteo/applicationserver/apache2.conf \
         /etc/apache2/conf.d/applicationserver
 
