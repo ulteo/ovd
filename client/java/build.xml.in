@@ -15,11 +15,7 @@
     <property name="destdir"     location="" />
 
     <property name="version.base" value="2.0~~+svn0" />
-    <exec executable="svn" output="svninfo.xml">
-        <arg line="info --xml"/>
-    </exec>
-    <xmlproperty file="svninfo.xml" collapseattributes="true"/>
-    <property name="version.svn.revno" value="${info.entry.revision}" />
+    <property name="version.svn.revno" value="@REVISION@" />
 
     <property name="tar"    value="ulteo-ovd-applets-${version.base}${version.svn.revno}.tar" />
     <property name="tar.gz"    value="${tar}.gz" />

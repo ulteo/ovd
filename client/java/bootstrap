@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if [ -d .svn ]; then
+    revision=$(LC_ALL=C svn info build.xml.in | awk '/^Revision: / {printf "%05d\n", $2}')
+    sed -e "s/@REVISION@/${revision}/g" \
+        < "build.xml.in" > "build.xml"
+fi
+
