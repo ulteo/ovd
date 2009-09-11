@@ -37,8 +37,8 @@ page_header();
 	<h2>Users and Users groups</h2>
 
 	<ul>
-		<li><a href="users.php"><?php echo _('User list'); ?></li>
-		<li><a href="usersgroup.php"><?php echo _('Users groups list'); ?></li>
+		<li><a href="users.php"><?php echo _('User list'); ?></a></li>
+		<li><a href="usersgroup.php"><?php echo _('Users groups list'); ?></a></li>
 	</ul>
 </div>
 </div>
@@ -51,8 +51,8 @@ page_header();
 	<h2>Servers</h2>
 
 	<ul>
-		<li><a href="servers.php"><?php echo _('Servers list'); ?></li>
-		<li><a href="servers.php?view=unregistered"><?php echo ('Unregistered servers list'); ?></li>
+		<li><a href="servers.php"><?php echo _('Servers list'); ?></a></li>
+		<li><a href="servers.php?view=unregistered"><?php echo ('Unregistered servers list'); ?></a></li>
 	</ul>
 </div>
 </div>
@@ -65,7 +65,7 @@ page_header();
 	<h2>Configuration</h2>
 
 	<ul>
-		<li><a href="configuration-sumup.php"><?php echo _('General configuration'); ?></li>
+		<li><a href="configuration-sumup.php"><?php echo _('General configuration'); ?></a></li>
 	</ul>
 </div>
 </div>
@@ -82,10 +82,10 @@ page_header();
 	<h2>Applications and Appgroups</h2>
 
 	<ul>
-		<li><a href="applications.php"><?php echo _('Application list'); ?></li>
-		<li><a href="appsgroup.php"><?php echo _('Application groups list'); ?><br /><br /></li>
-		<li><a href="publications.php"><?php echo _('Publication list'); ?></li>
-		<li><a href="wizard.php"><?php echo _('Publication wizard'); ?></li>
+		<li><a href="applications.php"><?php echo _('Application list'); ?></a></li>
+		<li><a href="appsgroup.php"><?php echo _('Application groups list'); ?></a><br /><br /></li>
+		<li><a href="publications.php"><?php echo _('Publication list'); ?></a></li>
+		<li><a href="wizard.php"><?php echo _('Publication wizard'); ?></a></li>
 	</ul>
 </div>
 </div>
