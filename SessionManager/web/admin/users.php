@@ -354,7 +354,12 @@ function show_manage($login, $userDB, $userGroupDB) {
 
     foreach ($groups_mine as $group) {
       echo '<tr><td>';
-      echo '<a href="usersgroup.php?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a>';
+      if ($can_manage_usersgroups) {
+        echo '<a href="usersgroup.php?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a>';
+      }
+      else {
+        echo $group->name;
+      }
       echo '</td>';
       if ($usergroupdb_rw and $can_manage_usersgroups) {
         echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
