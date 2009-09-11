@@ -14,10 +14,10 @@
     <property name="datadir"     location="${prefix}/share" />
     <property name="destdir"     location="" />
 
-    <property name="version.base" value="2.0~~+svn0" />
+    <property name="version.base" value="2.0~~+svn" />
     <property name="version.svn.revno" value="@REVISION@" />
 
-    <property name="tar"    value="ulteo-ovd-applets-${version.base}${version.svn.revno}.tar" />
+    <property name="tar"    value="ovd-applets-${version.base}${version.svn.revno}.tar" />
     <property name="tar.gz"    value="${tar}.gz" />
 
     <target name="compile"
