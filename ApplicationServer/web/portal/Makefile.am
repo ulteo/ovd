@@ -10,6 +10,9 @@ scripts_DATA = application.js \
                index.php \
                running_apps.php \
                resume.php \
+               application_exit.php \
+               get_news.php \
+               share_app.php \
                resume_app.php
 
 scriptsdir = $(datadir)/ulteo/applicationserver/portal
