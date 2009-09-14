@@ -77,7 +77,7 @@ Abstract_Token::save($token);
 
 $buf = Abstract_Server::load($session->server);
 
-$redir = 'http://'.$buf->getAttribute('external_name').'/index.php?token='.$token->id;
+$redir = $buf->getBaseURL(true).'/index.php?token='.$token->id;
 
 $email = $_REQUEST['email'];
 
