@@ -51,6 +51,9 @@
 
 
 <xsl:variable name="title">
+  <xsl:text> 
+    \textbf{\huge{
+  </xsl:text>
   <xsl:call-template name="normalize-scape">
     <xsl:with-param name="string">
       <xsl:choose>
@@ -63,6 +66,31 @@
       </xsl:choose>
     </xsl:with-param>
   </xsl:call-template>
+
+  <xsl:choose>
+    <xsl:when test="$info/subtitle">
+      <xsl:text>}\\[1cm]}</xsl:text>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:text>}\\[4cm]}</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>
+
+<xsl:variable name="subtitle">
+  <xsl:if test="$info/subtitle">
+    <xsl:text>
+      \textbf{\LARGE{
+    </xsl:text>
+    <xsl:call-template name="normalize-scape">
+      <xsl:with-param name="string">
+        <xsl:value-of select="$info/subtitle"/>
+      </xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>
+      }\\[3cm]}
+    </xsl:text>
+  </xsl:if>
 </xsl:variable>
 
 
@@ -78,12 +106,9 @@
 <xsl:text>
 \begin{titlepage}
   \begin{center}
-    \textbf{\huge{
 </xsl:text>
 <xsl:value-of select="$title"/>
-<xsl:text> 
-}\\[2cm]}
-</xsl:text>
+<xsl:value-of select="$subtitle"/>
 <xsl:apply-templates select="$info/graphic"/>
 <xsl:text>
   \end{center}

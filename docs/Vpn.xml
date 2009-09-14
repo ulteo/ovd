@@ -174,10 +174,8 @@
   </para>
   <screen>
     <![CDATA[
-# apt-get install openvpn openssl liblzo1]]>
+# apt-get install openvpn openssl]]>
   </screen>
-
-
 
     <section>
       <title>SSL keys generation</title>
@@ -187,18 +185,11 @@
           <para>Create a working directory and place into it</para>
           <screen>
             <![CDATA[
-$ mkdir ~/vpn-keys
+$ cp -R /usr/share/doc/openvpn/examples/easy-rsa/2.0 ~/vpn-keys
 $ cd ~/vpn-keys]]>
           </screen>
         </listitem>
 
-        <listitem>
-          <para>Add the directory to your PATH environment variable</para>
-          <screen>
-            <![CDATA[
-$ export PATH=$PATH:/usr/share/doc/openvpn/examples/easy-rsa/2.0]]>
-          </screen>
-        </listitem>
         <listitem>
           <para>config some env vars into the file <emphasis
           role="strong">vars</emphasis></para>
@@ -215,22 +206,22 @@ $ export KEY_EMAIL="some@email.adress"]]>
           <para>Load the following file and clean the directory</para>
           <screen>
             <![CDATA[ 
-$ . /usr/share/doc/openvpn/examples/easy-rsa/2.0/vars
-$ clean-all]]>
+$ . ./vars
+$ ./clean-all]]>
           </screen>
         </listitem>
         <listitem>
           <para>build the certificate authority</para>
           <screen>
             <![CDATA[
-$ build-ca]]>
+$ ./build-ca]]>
           </screen>
         </listitem>
         <listitem>
           <para>build the server key</para>
           <screen>
             <![CDATA[ 
-$ build-key-server ulteo-vpn]]>
+$ ./build-key-server ulteo-vpn]]>
           </screen>
         </listitem>
 
@@ -238,7 +229,7 @@ $ build-key-server ulteo-vpn]]>
           <para>build the Diffie Hellman parameters</para>
           <screen>
             <![CDATA[
-$ build-dh]]>
+$ ./build-dh]]>
           </screen>
         </listitem>
       </itemizedlist>
@@ -270,7 +261,6 @@ $ cd ~/vpn-keys]]>
           <screen>
             <![CDATA[
 # cp ./keys/ca.crt              /etc/openvpn/
-# cp ./keys/ca.key              /etc/openvpn/
 # cp ./keys/UlteoVPNServer.crt  /etc/openvpn/
 # cp ./keys/UlteoVPNServer.key  /etc/openvpn/
 # cp ./keys/dh1024.pem          /etc/openvpn/
@@ -336,6 +326,15 @@ status openvpn-status.log]]>
 $ cd ~/vpn-keys]]>
         </screen>
       </listitem>
+        <listitem>
+          <para>Load the following file and clean the directory</para>
+          <screen>
+            <![CDATA[ 
+$ . ./vars
+$ ./clean-all]]>
+          </screen>
+        </listitem>
+<!--
       <listitem>
         <para>Add the directory to your PATH environment variable</para>
         <screen>
@@ -355,11 +354,12 @@ $ export KEY_ORG="Ulteo"
 $ export KEY_EMAIL="some@email.adress"]]>
         </screen>
       </listitem>
+-->
       <listitem>
         <para>build the client key</para>
         <screen>
           <![CDATA[
-$ build-key client-name]]>
+$ ./build-key client-name]]>
         </screen>
       </listitem>
     </itemizedlist>
