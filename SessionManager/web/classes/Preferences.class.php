@@ -164,10 +164,10 @@ class Preferences {
 		$c = new ConfigElement_text('user_default_group', _('Default user group'), _('Default user group'), _('Default user group'), '');
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_inputlist('default_browser', _('default_browser'), _('default_browser'), _('default_browser'), array('linux' => NULL)); // TODO: 'windows' to add
+		$c = new ConfigElement_inputlist('default_browser', _('Default browser'), _('Default browser'), _('Default browser'), array('linux' => NULL)); // TODO: 'windows' to add
 		$this->add($c,'general');
 		
-		$c = new ConfigElement_multiselect('default_policy', _('default_policy'), _('default_policy'), _('default_policy'), array());
+		$c = new ConfigElement_multiselect('default_policy', _('Default policy'), _('Default policy'), _('Default policy'), array());
 		$c->setContentAvailable(array(
 			'canUseAdminPanel' => _('use Admin panel'),
 			'viewServers' => _('view Servers'),

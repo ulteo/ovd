@@ -3,13 +3,13 @@ web/check.php
 web/ajax/login.php
 web/webservices/userlist.php
 web/webservices/server_monitoring.php
+web/webservices/get_news.php
 web/webservices/session_token.php
 web/webservices/application.php
 web/webservices/session_status.php
 web/webservices/icon.php
 web/webservices/domain.php
 web/webservices/admin/sourceslist.php
-web/webservices/admin/apt-get.php
 web/webservices/session_invite.php
 web/webservices/server_status.php
 web/header.php
@@ -87,6 +87,7 @@ web/admin/appsgroup.php
 web/admin/configuration.php
 web/admin/sessions.php
 web/admin/reporting.php
+web/admin/news.php
 web/admin/tasks.php
 web/admin/configuration-partial.php
 web/admin/media/image/cache.php
@@ -154,6 +155,7 @@ web/classes/Plugin.class.php
 web/classes/Invite.class.php
 web/classes/ConfigElement.class.php
 web/classes/UserGroup_Rules.class.php
+web/classes/News.class.php
 web/classes/Plugins.class.php
 web/classes/SessionReportItem.class.php
 web/classes/ServerReportItem.class.php
@@ -179,6 +181,7 @@ web/classes/abstract/Abstract_Token.class.php
 web/classes/abstract/Abstract_DAV_User.class.php
 web/classes/abstract/Abstract_Session.class.php
 web/classes/abstract/Abstract_SharedFolder.class.php
+web/classes/abstract/Abstract_News.class.php
 web/classes/abstract/Abstract_UserGroup_Rule.class.php
 web/classes/abstract/liaison/Abstract_Liaison_dynamic.class.php
 web/classes/abstract/liaison/Abstract_Liaison_activedirectory.class.php

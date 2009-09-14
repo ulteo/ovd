@@ -77,7 +77,7 @@ function show_default() {
 	$using_dav_fs = ($prefs->get('plugins', 'FS') == 'dav');
 
 	if (! $using_dav_fs)
-		popup_error(_('You are not using Internal WebDAV filesystem, "Shared folders" are disabled !'));
+		popup_error(_('You are not using Internal WebDAV filesystem, "Shared folders" are disabled!'));
 
 	page_header();
 
