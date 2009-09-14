@@ -1,6 +1,7 @@
 .SUFFIXES: .xml .html
 
 SRC=AccountsIntegration.xml \
+	AdminConsole.xml \
 	AD_Primary_Authentication.xml \
 	FAQ.xml \
 	Installation.xml \
