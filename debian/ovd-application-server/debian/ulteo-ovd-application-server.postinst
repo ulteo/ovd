@@ -137,6 +137,15 @@ if [ ! -e /etc/apache2/conf.d/applicationserver ]; then
     reload_apache
 fi
 
+SPOOLDIR=/var/spool/ulteo/applicationserver
+for f in $SPOOLDIR; do
+    if ! dpkg-statoverride --list $SPOOLDIR >/dev/null 2>&1; then
+        dpkg-statoverride --update --add www-data www-data 2770 $SPOOLDIR
+    fi
+done
+
+chown -R www-data:www-data $SPOOLDIR
+
 #DEBHELPER#
 
 exit 0
