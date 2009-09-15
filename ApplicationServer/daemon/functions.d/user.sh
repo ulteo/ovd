@@ -32,8 +32,8 @@ user_create() {
 
     useradd --shell ${USER_SHELL} --home $USER_HOME -m -k /dev/null ${USERADD_ARG} ${USER_LOGIN}
 
-    local user_id=$(id -u $USER_LOGIN)
-    chown $user_id $SPOOL_USERS/$SESSID
+    USER_ID=$(id -u $USER_LOGIN)
+    chown $USER $SPOOL_USERS/$SESSID
     chmod 770      $SPOOL_USERS/$SESSID
 }
 
