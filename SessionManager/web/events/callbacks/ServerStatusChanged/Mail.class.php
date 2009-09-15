@@ -56,7 +56,7 @@ class ServerStatusChangedMail extends EventCallback {
     }
 
 	public function getDescription() {
-		return "Send a mail";
+		return _("Send a mail");
 	}
 
 	public function isInternal() {

@@ -50,7 +50,7 @@ class ServerStatusChangedTask extends EventCallback {
     }
 	
 	public function getDescription() {
-		return "Cleanup tasks";
+		return _("Cleanup tasks");
 	}
 	
 	public function isInternal() {
