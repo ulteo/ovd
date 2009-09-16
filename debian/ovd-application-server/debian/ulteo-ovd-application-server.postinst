@@ -134,6 +134,9 @@ if [ ! -e /etc/apache2/conf.d/applicationserver ]; then
         a2dissite applicationserver 2>/dev/null
     fi
 
+    # try to restore the default site
+    a2ensite default 2>/dev/null || true
+
     reload_apache
 fi
 
