@@ -33,7 +33,7 @@ retry() {
         SUCCESS=$?
         log_INFO "retry $COUNTER.."
         if [ $SUCCESS -ne 0 ]; then
-            let COUNTER++
+            COUNTER=$(( $COUNTER + 1 ))
             sleep $DELAY
         fi
     done
@@ -63,13 +63,13 @@ is_mount_point() {
 
 kill_processus() {
     pid_file=$1
-    [ -e $pid_file ] || return 0    
+    [ -e $pid_file ] || return 0
     pid=`cat $pid_file`
 
     kill $pid > /dev/null
 
     if [ $? != 0 ]; then
-        kill -9 $pid > /dev/null
+        kill -s 9 $pid > /dev/null
     fi
     rm -f $pid_file
 }

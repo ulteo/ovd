@@ -45,20 +45,20 @@ spool_clean() {
 }
 
 spool_get_id() {
-    let buf=0
+    local buf=0
     while [ -f $SPOOL/id/id_$buf ]; do
         [ $buf -ge 1000 ] && return 1
-        let buf=$(( $buf + 1 ))
+        buf=$(( $buf + 1 ))
     done
     touch $SPOOL/id/id_$buf
     echo $buf
 }
 
 spool_get_rfbport() {
-    let buf=5900
+    local buf=5900
     while [ -f $SPOOL/id/vnc_$buf ]; do
         [ $buf -ge 6900 ] && return 1
-        let buf=$(( $buf + 1 ))
+        buf=$(( $buf + 1 ))
     done
     touch $SPOOL/id/vnc_$buf
     echo $buf

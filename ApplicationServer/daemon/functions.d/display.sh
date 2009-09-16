@@ -42,13 +42,13 @@ display_start() {
     local vnc_tmp=/tmp/.tmp${VNC_UID} 
 
     # Start the VNC server
-    /bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/Xtightvnc ${multei_session_vnc_opts} :${rfb_port} -desktop X${rfb_port} -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry ${geometry} -depth 24 -rfbwait 240000 -rfbauth ${vnc_tmp}encvncpasswd -rfbport ${rfb_port} -fp /usr/share/fonts/X11/Type1/,/usr/share/fonts/X11/misc/,/usr/share/fonts/X11/75dpi/,/usr/share/fonts/X11/100dpi/ -co /etc/X11/rgb -ac -auth ${vnc_tmp}.Xauthority" &> /dev/null &
+    /bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/Xtightvnc ${multei_session_vnc_opts} :${rfb_port} -desktop X${rfb_port} -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry ${geometry} -depth 24 -rfbwait 240000 -rfbauth ${vnc_tmp}encvncpasswd -rfbport ${rfb_port} -fp /usr/share/fonts/X11/Type1/,/usr/share/fonts/X11/misc/,/usr/share/fonts/X11/75dpi/,/usr/share/fonts/X11/100dpi/ -co /etc/X11/rgb -ac -auth ${vnc_tmp}.Xauthority" >/dev/null 2>&1 &
     echo $! >$pid_file
 
     sleep 1
 
     # Xvnc accept connection only from MIT_MAGIC_COOKIEs
-    su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$rfb_port XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/xhost +" &> /dev/null
+    su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$rfb_port XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/xhost +" >/dev/null 2>&1
 }
 
 display_stop() {
@@ -70,6 +70,5 @@ display_stop() {
     fi
 
     log_INFO "display_stop: kill $pid"
-    kill $pid
-    [ $? -eq 0 ] || kill -9 $pid
+    kill $pid || kill -s 9 $pid
 }

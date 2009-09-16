@@ -24,7 +24,7 @@ webservices_session_request() {
     local request="${SESSION_MANAGER_URL}/webservices/session_status.php?${args}"
 
     log_INFO "webservices_session_request: doing $request"
-    $webservices_get "$request" &>/dev/null
+    $webservices_get "$request" >/dev/null 2>&1
 }
 
 webservices_server_request() {
@@ -32,7 +32,7 @@ webservices_server_request() {
     local request="${SESSION_MANAGER_URL}/webservices/server_status.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"
-    $webservices_get "$request" &>/dev/null
+    $webservices_get "$request" >/dev/null 2>&1
 }
 
 webservices_server_ready() {
@@ -71,7 +71,7 @@ webservices_available_application() {
 webservices_system_monitoring() {
     local url="${SESSION_MANAGER_URL}/webservices/server_monitoring.php"
     cache_set_monitoring /tmp/monitoring.xml || return 1
-    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url &>/dev/null
+    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>&1
 }
 
 webservices_get_application() {

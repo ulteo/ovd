@@ -69,7 +69,7 @@ application_check_status() {
     # if the application is required to stop
     if [ $status -eq 3 ]; then
         application_purge $job_id $dir
-        if [ "$job_id" == "desktop" ]; then
+        if [ "$job_id" = "desktop" ]; then
             session_switch_status $sessid 3
             return 2
         fi

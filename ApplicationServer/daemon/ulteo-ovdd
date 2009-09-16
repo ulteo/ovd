@@ -370,10 +370,10 @@ stop() {
     killall -q gam_server
     killall -q startovd
 
-    killall -q -9 Xtightvnc
-    killall -q -9 gam_server
-    killall -q -9 startovd
-    killall -q -9 kblankscrn.kss
+    killall -q -s 9 Xtightvnc
+    killall -q -s 9 gam_server
+    killall -q -s 9 startovd
+    killall -q -s 9 kblankscrn.kss
 
     for SESSID in $(sessions_get_active); do
         local SESSID_DIR=$SPOOL/sessions/$SESSID

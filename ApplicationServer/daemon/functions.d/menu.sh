@@ -97,7 +97,7 @@ menu_virtual_put() {
     local menu_dir=$3
     local ret=0 # if 1 => we'll update the mimetypes cache
 
-    if ! vapp_exist $id || [ $mode == 'reload' ]; then
+    if ! vapp_exist $id || [ $mode = 'reload' ]; then
         ret=1
         vapp_get $id
         [ $? -eq 0 ] || return 1

@@ -98,7 +98,7 @@ cifs_no_sfu_do_mount() {
     log_INFO "cifs_no_sfu: aufs $CIFS_NO_SFU_TMP_BR:rw, $CIFS_MOUNT_POINT:ro into $USER_HOME"
     local mount_cmd="mount -t aufs -o br:$CIFS_NO_SFU_TMP_BR=rw:$CIFS_MOUNT_POINT=ro none $USER_HOME"
     retry "$mount_cmd" $MOUNT_RETRIES 1 2>> $MOUNT_LOG
-    [ $? == 0 ] || return 1
+    [ $? = 0 ] || return 1
 
     cifs_no_sfu_daemon &
 }

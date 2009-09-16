@@ -77,7 +77,7 @@ user_exec() {
     fi
 
     # Start autocutsel
-    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; DISPLAY=:$rfb_port /usr/bin/autocutsel" &> /dev/null &
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; DISPLAY=:$rfb_port /usr/bin/autocutsel" >/dev/null 2>&1 &
 
     local env="DISPLAY=:$rfb_port"
     if [ $app_id != "desktop" ]; then
@@ -89,5 +89,5 @@ user_exec() {
     log_INFO "env: $env"
 
     # Start the desktop session
-    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $env startovd" &> /dev/null
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $env startovd" >/dev/null 2>&1
 }

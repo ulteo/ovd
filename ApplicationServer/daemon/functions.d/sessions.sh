@@ -224,13 +224,13 @@ session_purge() {
 
     killall -u $USER_LOGIN
     sleep 0.5
-    killall -9 -u $USER_LOGIN
+    killall -s 9 -u $USER_LOGIN
 
     killall -u SSH$i
     killall -u VNC$i
     sleep 0.5
-    killall -9 -u SSH$i
-    killall -9 -u VNC$i
+    killall -s 9 -u SSH$i
+    killall -s 9 -u VNC$i
 
     log_DEBUG "removing user's files from /tmp"
     find /tmp/ -user $USER_LOGIN | xargs rm -rf {}\;
@@ -335,7 +335,7 @@ session_suspend() {
     # Kill all ssh process about this session
     killall -u $SSH_USER
     sleep 0.5
-    killall -9 -u $SSH_USER
+    killall -s 9 -u $SSH_USER
 
     passwd -d $SSH_USER
     rm $SESSID_DIR/clients/*
