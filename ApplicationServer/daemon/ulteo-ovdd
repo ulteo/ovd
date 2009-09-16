@@ -51,7 +51,7 @@ system_set_broken() {
 }
 
 check_cpulimit() {
-    cache_ps_chroot_display |awk '{ if ($3 > 25.0) print $1" "$2 }' |\
+    cache_ps_chroot_display | mawk '{ if ($3 > 25.0) print $1" "$2 }' |\
     while read i j; do
 	if cache_is_cpulimited $j; then
 	    log_DEBUG "process $j already cpulimited"

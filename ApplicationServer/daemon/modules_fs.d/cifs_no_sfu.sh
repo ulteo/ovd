@@ -109,7 +109,7 @@ cifs_no_sfu_do_umount() {
     kill_processus $SESSID_DIR/cifs_no_sfu_daemon_pid
 
     # we don't have the pid of the inotify process, try to guess it
-    INOTIFY_PID=$(ps axu | grep inotify.*$CIFS_NO_SFU_TMP_BR$ | awk '{print $2}')
+    INOTIFY_PID=$(ps axu | grep inotify.*$CIFS_NO_SFU_TMP_BR$ | mawk '{print $2}')
     [ -n "$INOTIFY_PID" ] && kill $INOTIFY_PID
 
     cifs_do_umount_bind || return 1

@@ -119,7 +119,7 @@ session_init() {
 
     ## VNC password
     #
-    VNC_PASS=`echo $RANDOM\`date +%s\` | md5sum | awk '{ print substr($1, 0, 9) }'`
+    VNC_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
     # on hardy we have tightvncpasswd, vncpasswd on dapper
     if $(which tightvncpasswd >/dev/null 2>&1); then
       TIGHTVNCPASSWD="tightvncpasswd"
@@ -135,7 +135,7 @@ session_init() {
     ## SSH password
     #
     # Seems the applet doesn't like too long password ...
-    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | awk '{ print substr($1, 0, 9) }'`
+    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
     # we set new shadow pass for this session
     # just be paranoid by default
     echo "$SSH_USER:$SSH_PASS" | chpasswd
@@ -361,7 +361,7 @@ session_restore() {
     ## SSH password
     #
     # Seems the applet doesn't like too long password ...
-    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | awk '{ print substr($1, 0, 9) }'`
+    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
     # we set new shadow pass for this session
     # just be paranoid by default
     echo "$SSH_USER:$SSH_PASS" | chpasswd

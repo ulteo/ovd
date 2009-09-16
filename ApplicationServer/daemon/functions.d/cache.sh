@@ -22,7 +22,7 @@
 cache_build() {
     netstat -n --tcp > $SPOOL/cache/netstat
     ps aux |tail -n +2 > $SPOOL/cache/ps
-    grep "cpulimit" $SPOOL/cache/ps | awk '{ print $13 }' > $SPOOL/cache/ps_cpulimit
+    grep "cpulimit" $SPOOL/cache/ps | mawk '{ print $13 }' > $SPOOL/cache/ps_cpulimit
     ps axo ruser,pid,pcpu |tail -n +2 |grep -v "^root" > $SPOOL/cache/ps_chroot
 }
 
@@ -39,7 +39,7 @@ cache_ps_chroot_display() {
 }
 
 cache_ps_pid_for_user() {
-    grep "^$1" $SPOOL/cache/ps | awk '{ print $2 }'
+    grep "^$1" $SPOOL/cache/ps | mawk '{ print $2 }'
 }
 
 cache_is_cpulimited() {
@@ -50,7 +50,7 @@ cache_set_monitoring() {
     local file=$1
 
     local cpu_model=`grep "model name" /proc/cpuinfo |head -n 1| sed -e 's/.*: //'` || return 1
-    local cpu_nb=`grep "^processor" /proc/cpuinfo |tail -n 1| awk '{ print $3 }'` || return 1
+    local cpu_nb=`grep "^processor" /proc/cpuinfo |tail -n 1| mawk '{ print $3 }'` || return 1
     local cpu_nb=$(( $cpu_nb + 1 ))
     local cpu_load=`cpu_load.py`
 

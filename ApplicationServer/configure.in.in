@@ -72,6 +72,12 @@ AC_ARG_ENABLE(
     [enable_daemon=no])
 if test x$enable_daemon != xno; then
     enable_daemon=yes
+
+    # we need mawk
+    AC_CHECK_PROG([mawk], [mawk], [yes], [no])
+    if test x"$mawk" = x"no"; then
+        AC_MSG_ERROR(You need mawk to make the daemon run.)
+    fi
 fi
 AM_CONDITIONAL([DAEMON], [test x"$enable_daemon" = x"yes"])
 

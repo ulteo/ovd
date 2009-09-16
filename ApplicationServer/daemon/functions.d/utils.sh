@@ -84,7 +84,7 @@ unbase64() {
 }
 
 get_real_user() {
-    awk '{ split($1, buf, ":"); if (buf[3]>1000) print buf[1] }' < /etc/passwd
+    mawk '{ split($1, buf, ":"); if (buf[3]>1000) print buf[1] }' < /etc/passwd
 }
 
 # Delete vars from export but keep value set

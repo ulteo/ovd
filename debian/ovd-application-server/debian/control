@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-application-server-daemon
 Architecture: all
-Depends: python, openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), autocutsel, davfs2, cpulimit, inotify-tools, aufs-tools, smbfs, xdg-utils, cupsys-bsd, curl, rsync, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
+Depends: mawk, python, openssh-server, tightvncserver (>= 1.2.9-21ulteo0.1), rdesktop (>= 1.6.0-2ulteo0.1), autocutsel, davfs2, cpulimit, inotify-tools, aufs-tools, smbfs, xdg-utils, cupsys-bsd, curl, rsync, desktop-files2xml, ulteo-ovd-start, lmessage | xdialog
 Conflicts: ulteo-ovd-daemon (<= 1.0.1+svn01187)
 Replaces: ulteo-ovd-daemon
 Description: Ulteo Open Virtual Desktop - daemon
