@@ -71,7 +71,6 @@ bool load_config(const std::string& key, std::string& result) {
 
 bool check_effective_user(const std::string& user) {
 
-    uid_t uid;
     std::string login;
     uid_t u1,u2,u3;
     int retval;
@@ -84,7 +83,7 @@ bool check_effective_user(const std::string& user) {
 
     struct passwd * buffer = getpwuid(u1);
     if (buffer==NULL) {
-        std::cerr << "Unable to getresui " << uid << std::endl;
+        std::cerr << "Unable to getpwuid " << u1 << std::endl;
         return false;
     }
 
