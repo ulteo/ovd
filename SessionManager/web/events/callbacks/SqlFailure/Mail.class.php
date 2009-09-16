@@ -19,8 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-/* This is an exemple for now, real implementation needs to be done */
-
 require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
 
 class SqlFailureMail extends EventCallback {
