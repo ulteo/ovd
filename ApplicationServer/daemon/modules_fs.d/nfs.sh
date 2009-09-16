@@ -25,8 +25,8 @@
 . $MODULES_FSD/local.sh
 
 nfs_set_fs() {
-    NFS_SERVER=`cat ${SESSID_DIR}/parameters/module_fs/fileserver`
-    NFS_ROOT=`cat ${SESSID_DIR}/parameters/module_fs/base`
+    NFS_SERVER=$(cat ${SESSID_DIR}/parameters/module_fs/fileserver)
+    NFS_ROOT=$(cat ${SESSID_DIR}/parameters/module_fs/base)
     check_variables NFS_SERVER NFS_ROOT || return 1
 
     local default_opts="nfsvers=3,nolock,tcp,soft,timeo=80,retry=5,intr,rsize=8192,wsize=8192,noexec"
@@ -94,7 +94,7 @@ nfs_do_clean() {
     [ -d /mnt/nfs ] || return 0
 
     # We remove the global mount too.
-    local dirt_mounts=`find /mnt/nfs -maxdepth 1 -mindepth 1`
+    local dirt_mounts=$(find /mnt/nfs -maxdepth 1 -mindepth 1)
     for mount_point in $dirt_mounts; do
         log_WARN "nfs: Cleaning $mount_point"
 

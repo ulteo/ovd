@@ -49,15 +49,15 @@ cache_is_cpulimited() {
 cache_set_monitoring() {
     local file=$1
 
-    local cpu_model=`grep "model name" /proc/cpuinfo |head -n 1| sed -e 's/.*: //'` || return 1
-    local cpu_nb=`grep "^processor" /proc/cpuinfo |tail -n 1| mawk '{ print $3 }'` || return 1
+    local cpu_model=$(grep "model name" /proc/cpuinfo |head -n 1| sed -e 's/.*: //') || return 1
+    local cpu_nb=$(grep "^processor" /proc/cpuinfo |tail -n 1| mawk '{ print $3 }') || return 1
     local cpu_nb=$(( $cpu_nb + 1 ))
     local cpu_load=`cpu_load.py`
 
-    local ram=`grep ^MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
-    local ram_Free=`grep ^MemFree: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
-    local ram_Buffers=`grep ^Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
-    local ram_Cached=`grep ^Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
+    local ram=$(grep ^MemTotal: /proc/meminfo |tr -s ' '|cut -d ' ' -f2) || return 1
+    local ram_Free=$(grep ^MemFree: /proc/meminfo |tr -s ' '|cut -d ' ' -f2) || return 1
+    local ram_Buffers=$(grep ^Buffers: /proc/meminfo |tr -s ' '|cut -d ' ' -f2) || return 1
+    local ram_Cached=$(grep ^Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2) || return 1
     ram_used=$(( $ram - $ram_Free - $ram_Buffers - $ram_Cached))
 
     echo '<?xml version="1.0" encoding="utf-8"?>'          > $file || return 1

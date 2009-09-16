@@ -56,7 +56,7 @@ check_cpulimit() {
     if cache_is_cpulimited $j; then
         log_DEBUG "process $j already cpulimited"
     else
-        k=`id -u $i 2>/dev/null`
+        k=$(id -u $i 2>/dev/null)
 
         if [ $? -eq 0 ] && [ $k -ge 1000 ]; then
             cpulimit -p $j -l 25 -z&
@@ -69,7 +69,7 @@ check_cpulimit() {
 session_check_status() {
     SESSID=$1
     SESSID_DIR=$SPOOL/sessions/$SESSID
-    i=`cat $SESSID_DIR/private/id`
+    i=$(cat $SESSID_DIR/private/id)
 
     VNC_USER="VNC$i"
     SSH_USER="SSH$i"
@@ -82,7 +82,7 @@ session_check_status() {
     if [ $# -gt 1 ]; then
         RUNASAP=$2
     else
-        RUNASAP=`cat ${SESSID_DIR}/infos/status`
+        RUNASAP=$(cat ${SESSID_DIR}/infos/status)
     fi
 
     if ! session_valid_runasap $RUNASAP; then
@@ -104,10 +104,10 @@ session_check_status() {
         return 0
     fi
 
-    NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
-    USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
+    NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)
+    USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login)
 
-    SSH_SESSION=`cache_ps_display | grep "sshd:" | grep "^$SSH_USER" | wc -l`
+    SSH_SESSION=$(cache_ps_display | grep "sshd:" | grep "^$SSH_USER" | wc -l)
     log_DEBUG "Alive SSH tunelling connexion for $RFB_PORT: $SSH_SESSION"
 
     if [ -f $SESSID_DIR/parameters/persistent ]; then
@@ -124,10 +124,10 @@ session_check_status() {
 
     # Check the timeout if the session is timetouted
     if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/timeout ]; then
-        EXPIRE=`cat ${SESSID_DIR}/parameters/timeout`
+        EXPIRE=$(cat ${SESSID_DIR}/parameters/timeout)
 
-        let ct=$(( `date +%s` ))
-        let diff=$(( $ct - $EXPIRE ))
+        local ct=$(date +%s)
+        local diff=$(( $ct - $EXPIRE ))
 
         if [ ! -f ${SESSID_DIR}/private/timeouted  ] && [ $diff -gt -180 ] && [ $DESKTOP_SESSION -gt 0 ]; then
             log_INFO "Session is going to expire in 3 minutes"
@@ -152,9 +152,9 @@ session_check_status() {
     # if session owner has vanished, kill session (useful for shared sessions)
     KMA=${SESSID_DIR}/infos/keepmealive
     if [ -e $KMA ]; then
-        let ctg2=$(( `date +%s` ))
-        let candidate2=$(( `stat -c "%Z" $KMA` ))
-        let diffg2=$(( $ctg2 - $candidate2 ))
+        local ctg2=$(date +%s)
+        local candidate2=$(stat -c "%Z" $KMA)
+        local diffg2=$(( $ctg2 - $candidate2 ))
 
         if [ $diffg2 -gt 20 ]; then
             log_WARN "KMA expired diff:$diffg2"
@@ -186,7 +186,7 @@ session_check_status() {
         # If the user login is root or dbus or 
         # anything already exist, we change it
         session_change_login_if_needed || \
-            USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
+            USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login)
 
 
         USER_HOME=/home/$NICK
@@ -242,8 +242,8 @@ session_check_status() {
                 local timeout=$CONNECTION_TIMEOUT
             fi
 
-            local ready_t0=`cat  ${SESSID_DIR}/private/ready_since`
-            local ready_t1=`date +%s`
+            local ready_t0=$(cat  ${SESSID_DIR}/private/ready_since)
+            local ready_t1=$(date +%s)
             local diff=$(( $ready_t1 - $ready_t0 ))
             if [ $diff -gt $timeout ]; then
                 log_ERROR "No ssh connection since $timeout seconds"
@@ -272,11 +272,11 @@ garbage_collector() {
     #
     for SESSID in $(sessions_get_active); do
         local SESSID_DIR=$SPOOL/sessions/$SESSID
-        local RUNASAP=`cat ${SESSID_DIR}/infos/status`
+        local RUNASAP=$(cat ${SESSID_DIR}/infos/status)
         [ $RUNASAP -ne 0 ] && continue
 
-        local now=`date +%s`
-        local runasap=`stat -c "%Z" ${SESSID_DIR}/infos/status`
+        local now=$(date +%s)
+        local runasap=$(stat -c "%Z" ${SESSID_DIR}/infos/status)
         local diff=$(( $now - $runasap ))
 
         if [ $diff -gt 60 ]; then
@@ -319,16 +319,16 @@ loop() {
     apt_daemon &
     PID_WATCH=$!
 
-    local t0=`date +%s`
+    local t0=$(date +%s)
     while [ 1 ]; do
         cache_build
 
-        local t1=`date +%s`
+        local t1=$(date +%s)
         local diff=$(( $t1 - $t0 ))
         if [ $diff -gt 60 ]; then
             webservices_system_monitoring
             log_DEBUG "monitoring send result: $?"
-            local t0=`date +%s`
+            local t0=$(date +%s)
         fi
 
         local active=$(sessions_get_active)
@@ -377,7 +377,7 @@ stop() {
 
     for SESSID in $(sessions_get_active); do
         local SESSID_DIR=$SPOOL/sessions/$SESSID
-        local RUNASAP=`cat ${SESSID_DIR}/infos/status`
+        local RUNASAP=$(cat ${SESSID_DIR}/infos/status)
         if [ $RUNASAP -ne 0 ]; then
             session_purge $SESSID
         fi
@@ -392,7 +392,7 @@ stop() {
     spool_clean
 
     if [ -f "$PID_FILE" ]; then
-       local mpid=`cat $PID_FILE`
+       local mpid=$(cat $PID_FILE)
        if [ $mpid == $$ ]; then
            rm $PID_FILE
        fi
@@ -439,7 +439,7 @@ fi
 
 
 # Load/overwrite configuration from command-line args
-ARGS=`getopt --unquoted -o dp: --long daemonize,no-daemonize,pid: -n $0 -- "$@"`
+ARGS=$(getopt --unquoted -o dp: --long daemonize,no-daemonize,pid: -n $0 -- "$@")
 if [ $? != 0 ]; then 
     echo "Error usage" >&2
     usage
@@ -477,7 +477,7 @@ export CONNECTION_TIMEOUT
 export PATH=$BIN_DIR:$PATH
 
 if [ $DAEMON -eq 1 ]; then
-    ARGS=`echo $ARGS | sed -e s/--daemonize//g -e s/-d//g`
+    ARGS=$(echo $ARGS | sed -e "s/--daemonize//g" -e "s/-d//g")
     $0 $ARGS &
     exit 0
 fi

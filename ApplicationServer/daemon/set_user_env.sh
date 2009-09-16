@@ -34,9 +34,9 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-LOC=`cat ${SESSID_DIR}/parameters/locale`
-GEOMETRY=`cat ${SESSID_DIR}/parameters/geometry`
-HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
+LOC=$(cat ${SESSID_DIR}/parameters/locale)
+GEOMETRY=$(cat ${SESSID_DIR}/parameters/geometry)
+HOME_DIR_TYPE=$(cat ${SESSID_DIR}/parameters/module_fs/type)
 USER_HOME=/home/$NICK
 
 check_variables GEOMETRY \

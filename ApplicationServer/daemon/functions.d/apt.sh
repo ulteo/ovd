@@ -18,7 +18,7 @@
 
 apt_do() {
     local file=$1
-    local request=`head -n 1 $file`
+    local request=$(head -n 1 $file)
 
     rm $file || return 2
     mkdir $file || return 2
@@ -58,7 +58,7 @@ apt_daemon() {
     local directory=$SPOOL/apt
 
     while [ -d $directory ]; do
-        local files=`find $directory -maxdepth 1 -mindepth 1 -type f`
+        local files=$(find $directory -maxdepth 1 -mindepth 1 -type f)
 
         if [ "$files" = "" ]; then
             inotifywait -t 10 -q -e close_write $directory

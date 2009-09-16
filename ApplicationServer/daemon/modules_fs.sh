@@ -22,7 +22,7 @@
 export MOUNT_LOG=/var/log/mount_problems
 export MOUNT_RETRIES=3
 export FS=$HOME_DIR_TYPE
-export MODULES_FSD=`dirname $0`/modules_fs.d
+export MODULES_FSD=$(dirname $0)/modules_fs.d
 
 #
 ## Module_FS functions
@@ -63,13 +63,13 @@ do_umount() {
 }
 
 do_clean() {
-    local homes=`find /home -maxdepth 1 -mindepth 1`
+    local homes=$(find /home -maxdepth 1 -mindepth 1)
     local fail=0
     for home in $homes; do
         do_clean_home ${home#/home/} || local fail=1
     done
 
-    local types=`find /mnt -maxdepth 1 -mindepth 1`
+    local types=$(find /mnt -maxdepth 1 -mindepth 1)
     for t in $types; do
         do_clean_module ${t#/mnt/} || local fail=1
     done

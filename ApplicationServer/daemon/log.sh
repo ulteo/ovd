@@ -33,10 +33,10 @@ log_INFO() {
 }
 
 log_push_basic() {
-    echo `date +"%F-%T"` $@ >> $LOG_FILE
+    echo $(date +"%F-%T") $@ >> $LOG_FILE
 }
 
-LOG_D=`dirname $0`/log.d
+LOG_D=$(dirname $0)/log.d
 for j in $LOG_FLAGS; do
     [ -e $LOG_D/$j.sh ] && . $LOG_D/$j.sh
 done

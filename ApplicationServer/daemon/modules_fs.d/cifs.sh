@@ -29,13 +29,13 @@
 cifs_set_fs() {
     log_DEBUG "cifs_set_fs"
 
-    CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
+    CIFS_HOME_DIR=$(cat ${SESSID_DIR}/parameters/module_fs/user_homedir)
     check_variables CIFS_HOME_DIR || return 1
 
     if [ -f ${SESSID_DIR}/parameters/module_fs/login ]; then
         CIFS_AUTH=1
-        CIFS_LOGIN=`cat ${SESSID_DIR}/parameters/module_fs/login`
-        CIFS_PASSWORD=`cat ${SESSID_DIR}/parameters/module_fs/password`
+        CIFS_LOGIN=$(cat ${SESSID_DIR}/parameters/module_fs/login)
+        CIFS_PASSWORD=$(cat ${SESSID_DIR}/parameters/module_fs/password)
 
         check_variables CIFS_LOGIN CIFS_PASSWORD || return 1
     else
@@ -105,7 +105,7 @@ cifs_do_clean() {
     [ -d /mnt/cifs ] || return 0
 
     # Clean all the CIFS mounts, for all servers.
-    local dirt_mounts=`find /mnt/cifs -maxdepth 1 -mindepth 1`
+    local dirt_mounts=$(find /mnt/cifs -maxdepth 1 -mindepth 1)
     for mount_point in $dirt_mounts; do
         log_WARN "cifs: Cleaning dirt mount $mount_point"
         CIFS_MOUNT_POINT=$mount_point cifs_do_umount_real

@@ -56,18 +56,18 @@ session_init() {
     local SESSID_DIR=$SPOOL/sessions/$SESSID
 
     # Choose a number for this session
-    local i=`spool_get_id`
+    local i=$(spool_get_id)
     [ $? -eq 0 ] || return 1
 
     log_INFO "session_init: '$SESSID' => $i"
-    local RFB_PORT=`spool_get_rfbport`
+    local RFB_PORT=$(spool_get_rfbport)
     [ $? -eq 0 ] || return 1
 
     local SSH_USER="SSH$i"
     local VNC_USER="VNC$i"
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
-    if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
+    if grep -q -e "$SSH_USER\:x" /etc/passwd; then
         log_ERROR "session_init: user '$SSH_USER' already in /etc/passwd"
         spool_free_id $i
         spool_free_rfbport $RFB_PORT
@@ -77,7 +77,7 @@ session_init() {
     useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
-    if [ `grep -e "$VNC_USER\:x" /etc/group` ]; then
+    if grep -q -e "$VNC_USER\:x" /etc/group; then
         log_ERROR "session_init: user '$VNC_USER' already in /etc/group"
         spool_free_id $i
         spool_free_rfbport $RFB_PORT
@@ -88,7 +88,7 @@ session_init() {
 
 
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
-    if [ `grep -e "$VNC_USER\:x" /etc/passwd` ]; then
+    if grep -q -e "$VNC_USER\:x" /etc/passwd; then
         log_ERROR "session_init: user '$VNC_USER' already in /etc/passwd"
         spool_free_id $i
         spool_free_rfbport $RFB_PORT
@@ -98,8 +98,8 @@ session_init() {
     useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER
 
 
-    UUID=`id -u $VNC_USER`
-    UGID=`id -g $VNC_USER`
+    UUID=$(id -u $VNC_USER)
+    UGID=$(id -g $VNC_USER)
 
     # create new session dir
     install -d -g www-data -m 750 $SESSID_DIR
@@ -118,7 +118,7 @@ session_init() {
 
     ## VNC password
     #
-    VNC_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
+    VNC_PASS=$(echo $RANDOM$(date +%s) | md5sum | mawk '{ print substr($1, 0, 9) }')
     # on hardy we have tightvncpasswd, vncpasswd on dapper
     if $(which tightvncpasswd >/dev/null 2>&1); then
         TIGHTVNCPASSWD="tightvncpasswd"
@@ -128,13 +128,13 @@ session_init() {
     # have to cut the pass to 8 characters
     # for realvncpasswd
     echo $VNC_PASS | $TIGHTVNCPASSWD -f > $SESSID_DIR/private/encvncpasswd
-    HEXA_VNC_PASS=`cat $SESSID_DIR/private/encvncpasswd | str2hex`
+    HEXA_VNC_PASS=$(cat $SESSID_DIR/private/encvncpasswd | str2hex)
     install -o $VNC_USER -m 700 $SESSID_DIR/private/encvncpasswd /tmp/.tmp${UUID}encvncpasswd
 
     ## SSH password
     #
     # Seems the applet doesn't like too long password ...
-    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
+    SSH_PASS=$(echo $RANDOM$(date +%s) | md5sum | mawk '{ print substr($1, 0, 9) }')
     # we set new shadow pass for this session
     # just be paranoid by default
     echo "$SSH_USER:$SSH_PASS" | chpasswd
@@ -142,7 +142,7 @@ session_init() {
     #
     # we encode the encrypted pass in hexa because the sshvnc 
     # applet wants it
-    HEXA_SSH_PASS=`echo $SSH_PASS | str2hex`
+    HEXA_SSH_PASS=$(echo $SSH_PASS | str2hex)
 
     ##echo $SSH_PASS >$SESSID_DIR/sshpasswd # <- just for test !!! remove it in production !!!
     echo $i > $SESSID_DIR/private/id
@@ -165,26 +165,26 @@ session_remove() {
     log_INFO "SESSION REMOVE"
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/private/id`
+    local i=$(cat $SESSID_DIR/private/id)
 
-    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
-    local VNC_USER=`cat $SESSID_DIR/private/vnc_user`
+    local SSH_USER=$(cat $SESSID_DIR/private/ssh_user)
+    local VNC_USER=$(cat $SESSID_DIR/private/vnc_user)
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
-    if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
+    if grep -q -e "$SSH_USER\:x" /etc/passwd; then
         log_INFO "userdel $SSH_USER"
         userdel $SSH_USER
     fi
 
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
-    if [ `grep -e "$VNC_USER\:x" /etc/passwd` ]; then
-        local VNC_UID=`id -u $VNC_USER`
+    if grep -q -e "$VNC_USER\:x" /etc/passwd; then
+        local VNC_UID=$(id -u $VNC_USER)
         log_INFO "userdel $VNC_USER"
         userdel $VNC_USER
     fi
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
-    if [ `grep -e "$VNC_USER\:x" /etc/group` ]; then
+    if grep -e "$VNC_USER\:x" /etc/group; then
         log_INFO "groupedel $VNC_USER"
         groupdel $VNC_USER
     fi
@@ -209,15 +209,15 @@ session_purge() {
     log_INFO "SESSION PURGE "
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/private/id`
+    local i=$(cat $SESSID_DIR/private/id)
 
     log_INFO "Purging ${SESSID}"
-    local NICK=`cat ${SESSID_DIR}/parameters/user_displayname`
-    local USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login`
+    local NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)
+    local USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login)
     local USER_UID=$(id -u $USER_LOGIN)
-    local HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
-    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
-    local VNC_USER=`cat $SESSID_DIR/private/vnc_user`
+    local HOME_DIR_TYPE=$(cat ${SESSID_DIR}/parameters/module_fs/type)
+    local SSH_USER=$(cat $SESSID_DIR/private/ssh_user)
+    local VNC_USER=$(cat $SESSID_DIR/private/vnc_user)
     UUID=$(id -u $VNC_USER)
 
     windows_logoff $SESSID_DIR $USER_LOGIN
@@ -254,7 +254,7 @@ session_switch_status() {
     log_INFO "session_switch_status: ${SESSID} => $RUNASAP"
     echo $RUNASAP> ${SESSID_DIR}/infos/status
     if [ $RUNASAP -eq 2 ]; then
-        echo `date +%s` > ${SESSID_DIR}/private/ready_since
+        echo $(date +%s) > ${SESSID_DIR}/private/ready_since
     fi
 
     webservices_session_request $SESSID $RUNASAP
@@ -275,25 +275,25 @@ session_load() {
     SESSID=$1
     SESSID_DIR=$SPOOL/sessions/$SESSID
 
-    RUNASAP=`cat ${SESSID_DIR}/infos/status`
+    RUNASAP=$(cat ${SESSID_DIR}/infos/status)
 
     # Private informations
-    i=`cat $SESSID_DIR/private/id` || return 1
-    SSH_USER=`cat $SESSID_DIR/private/ssh_user` || return 1
-    VNC_USER=`cat $SESSID_DIR/private/vnc_user` || return 1
+    i=$(cat $SESSID_DIR/private/id) || return 1
+    SSH_USER=$(cat $SESSID_DIR/private/ssh_user) || return 1
+    VNC_USER=$(cat $SESSID_DIR/private/vnc_user) || return 1
 
     # Parameters informations
-    NICK=`cat ${SESSID_DIR}/parameters/user_displayname`  || return 1
-    USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login` || return 1
+    NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)  || return 1
+    USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login) || return 1
     if [ -f ${SESSID_DIR}/parameters/user_id ]; then
-        USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
+        USER_ID=$(cat ${SESSID_DIR}/parameters/user_id)
     else
-        USER_ID=`id -u $USER_LOGIN`
+        USER_ID=$(id -u $USER_LOGIN)
     fi
 
     # Autodetection informations
-    VNC_UID=`id -u $VNC_USER` || return 1
-    SSH_UID=`id -u $SSH_USER` || return 1
+    VNC_UID=$(id -u $VNC_USER) || return 1
+    SSH_UID=$(id -u $SSH_USER) || return 1
 }
 
 session_unload() {
@@ -320,14 +320,14 @@ session_unload() {
 session_suspend() {
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/private/id`
+    local i=$(cat $SESSID_DIR/private/id)
 
     session_switch_status $SESSID 9
 
-    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
+    local SSH_USER=$(cat $SESSID_DIR/private/ssh_user)
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
-    if [ ! `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
+    if grep -q -e "$SSH_USER\:x" /etc/passwd; then
         log_ERROR "No ssh user in /etc/passwd"
         return 1
     fi
@@ -348,15 +348,15 @@ session_suspend() {
 session_restore() {
     local SESSID=$1
     local SESSID_DIR=$SPOOL/sessions/$SESSID
-    local i=`cat $SESSID_DIR/private/id`
+    local i=$(cat $SESSID_DIR/private/id)
 
-    local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
+    local SSH_USER=$(cat $SESSID_DIR/private/ssh_user)
     session_switch_status $SESSID 11
 
     ## SSH password
     #
     # Seems the applet doesn't like too long password ...
-    SSH_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
+    SSH_PASS=$(echo $RANDOM$(date +%s) | md5sum | mawk '{ print substr($1, 0, 9) }')
     # we set new shadow pass for this session
     # just be paranoid by default
     echo "$SSH_USER:$SSH_PASS" | chpasswd
@@ -364,7 +364,7 @@ session_restore() {
     #
     # we encode the encrypted pass in hexa because the sshvnc 
     # applet wants it
-    HEXA_SSH_PASS=`echo $SSH_PASS | str2hex`
+    HEXA_SSH_PASS=$(echo $SSH_PASS | str2hex)
     echo $HEXA_SSH_PASS > $SESSID_DIR/private/hexasshpasswd
 
     session_install_client $SESSID

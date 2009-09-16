@@ -64,7 +64,7 @@ is_mount_point() {
 kill_processus() {
     pid_file=$1
     [ -e $pid_file ] || return 0
-    pid=`cat $pid_file`
+    pid=$(cat $pid_file)
 
     kill $pid > /dev/null
 

@@ -57,8 +57,8 @@ cifs_no_sfu_daemon() {
                 [ -e "$CIFS_MOUNT_POINT/$file" ] && rm -rf "$CIFS_MOUNT_POINT/$file"
                 ;;
             DELETE,ISDIR)
-                directory=`dirname $file`
-                file=`basename $file`
+                directory=$(dirname $file)
+                file=$(basename $file)
                 file=${file#.wh..wh.}
                 file=${file%.*}
                 file=$directory/$file
@@ -131,7 +131,7 @@ cifs_no_sfu_do_clean() {
     cifs_do_clean
     [ -d /mnt/cifs_no_sfu ] || return 0
 
-    local dirt_mounts=`find /mnt/cifs_no_sfu -maxdepth 1 -mindepth 1`
+    local dirt_mounts=$(find /mnt/cifs_no_sfu -maxdepth 1 -mindepth 1)
     for mount_point in $dirt_mounts; do
         log_WARN "cifs_no_sfu: Cleaning dirt $mount_point"
         rm -rf $mount_point

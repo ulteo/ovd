@@ -151,7 +151,7 @@ dav_do_umount_bind() {
 }
 
 dav_do_umount_critical() {
-    local dirs=`find $DAV_MOUNT_POINT -maxdepth 1 -mindepth 1 -type d`
+    local dirs=$(find $DAV_MOUNT_POINT -maxdepth 1 -mindepth 1 -type d)
     for dir in $dirs; do
         is_mount_point "$dir" || continue
         umount "$dir"
@@ -164,7 +164,7 @@ dav_do_clean() {
     local_do_clean
     [ -d /mnt/dav ] || return 0
 
-    local dirt_mounts=`find /mnt/dav -maxdepth 1 -mindepth 1`
+    local dirt_mounts=$(find /mnt/dav -maxdepth 1 -mindepth 1)
     for mount_point in $dirt_mounts; do
     log_WARN "dav: Cleaning dirt mount $mount_point"
 

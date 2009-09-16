@@ -32,10 +32,10 @@ windows_init_connection() {
     windows_use_seamlessrdp $sessid_dir || return 0
     log_INFO "There are Windows applications parameters for this session"
 
-    local server=`cat ${sessid_dir}/parameters/windows_server`
-    local login=`cat ${sessid_dir}/parameters/windows_login`
-    local password=`cat ${sessid_dir}/parameters/windows_password`
-    local keymap=`cat ${sessid_dir}/parameters/windows_keymap`
+    local server=$(cat ${sessid_dir}/parameters/windows_server)
+    local login=$(cat ${sessid_dir}/parameters/windows_login)
+    local password=$(cat ${sessid_dir}/parameters/windows_password)
+    local keymap=$(cat ${sessid_dir}/parameters/windows_keymap)
 
     local have_printers=$(LANG= lpstat -p |wc -l)
     local printer_args=""

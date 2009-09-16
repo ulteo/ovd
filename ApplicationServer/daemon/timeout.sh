@@ -26,7 +26,7 @@ USER_TMP=${SPOOL_USERS}/${SESSID}/
 [ ! -f ${SESSID_DIR}/parameters/timeout_message ] && exit 1
 
 i=$(( $i + 5900 ))
-MESSAGE=`cat ${SESSID_DIR}/parameters/timeout_message`
+MESSAGE=$(cat ${SESSID_DIR}/parameters/timeout_message)
 
 # CMD="kdialog --sorry \"$message\" --caption \"Session is about to end\""
 if $(which lmessage > /dev/null); then

@@ -51,7 +51,7 @@ webservices_server_broken() {
 webservices_available_application() {
     local url="${SESSION_MANAGER_URL}/webservices/admin/server.php"
     local file=/var/lib/ulteo/available-apps.xml
-    local version="`head -n 1 /etc/issue |sed -e 's/ \\\n.*//g'`"
+    local version="$(head -n 1 /etc/issue |sed -e 's/ \\\n.*//g')"
 
     if [ ! -f $file ]; then
         log_ERROR "No such file '$file'"

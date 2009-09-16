@@ -16,13 +16,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-FUNCTION_SD=`dirname $0`/functions.d
+FUNCTION_SD=$(dirname $0)/functions.d
 
 if ! [ -d $FUNCTION_SD  ] ; then
     log_ERROR "functions: $FUNCTION_SD dir doesn't exists"
     exit 1
 fi
 
-for j in `find $FUNCTION_SD -name "*.sh"`; do
+for j in $(find $FUNCTION_SD -name "*.sh"); do
     . $j
 done

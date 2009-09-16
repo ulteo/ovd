@@ -31,11 +31,11 @@ close_session() {
 NFSSTATUS=0
 COUNTER=0
 
-LOC=`cat ${SESSID_DIR}/parameters/locale`
-GEOMETRY=`cat ${SESSID_DIR}/parameters/geometry`
+LOC=$(cat ${SESSID_DIR}/parameters/locale)
+GEOMETRY=$(cat ${SESSID_DIR}/parameters/geometry)
 check_variables USER_LOGIN USER_HOME LOC GEOMETRY RFB_PORT || close_session
 
-HOME_DIR_TYPE=`cat ${SESSID_DIR}/parameters/module_fs/type`
+HOME_DIR_TYPE=$(cat ${SESSID_DIR}/parameters/module_fs/type)
 . modules_fs.sh || close_session
 
 
@@ -46,8 +46,7 @@ else
 fi
 
 if [ -f ${SESSID_DIR}/parameters/module_fs/user_id ]; then
-    USER_ID=`cat ${SESSID_DIR}/parameters/module_fs/user_id`
-    #GROUPADD_ARG="-g ${USER_ID}"
+    USER_ID=$(cat ${SESSID_DIR}/parameters/module_fs/user_id)
     USERADD_ARG='-u '${USER_ID}
 else
     USERADD_ARG='-K UID_MIN=2000'

@@ -30,7 +30,7 @@ VNCCACHINGOPTS="-caching -caching_ent 1500 -caching_malg LRU -caching_minsize 50
 i=$(( $i + 5900 ))
 
 # Install the MIT_MAGIC_COOKIE
-/bin/su -s "/bin/bash" $VNC_USER -c "xauth -f ${VNC_TMP}.Xauthority add :$i . `/usr/bin/mcookie`"
+/bin/su -s "/bin/bash" $VNC_USER -c "xauth -f ${VNC_TMP}.Xauthority add :$i . $(/usr/bin/mcookie)"
 
 # Install the MIT_MAGIC_COOKIE into the real user env
 cp ${VNC_TMP}.Xauthority $SPOOL_USERS/$SESSID/.Xauthority
@@ -65,18 +65,18 @@ OVD_SESSID_DIR=$SPOOL_USERS/$SESSID
 XDG_DATA_DIRS=$OVD_SESSID_DIR/xdg
 OVD_APPS_DIR=$XDG_DATA_DIRS/applications
 
-[ -f ${SESSID_DIR}/parameters/start_app ] && APP=`cat ${SESSID_DIR}/parameters/start_app`
-[ -f ${SESSID_DIR}/parameters/start_app_id ] && APP_ID=`cat ${SESSID_DIR}/parameters/start_app_id`
-[ -f ${SESSID_DIR}/parameters/open_doc ] && DOC=`cat ${SESSID_DIR}/parameters/open_doc`
+[ -f ${SESSID_DIR}/parameters/start_app ] && APP=$(cat ${SESSID_DIR}/parameters/start_app)
+[ -f ${SESSID_DIR}/parameters/start_app_id ] && APP_ID=$(cat ${SESSID_DIR}/parameters/start_app_id)
+[ -f ${SESSID_DIR}/parameters/open_doc ] && DOC=$(cat ${SESSID_DIR}/parameters/open_doc)
 
-[ -f ${SESSID_DIR}/parameters/module_fs/user_homedir ] && CIFS_HOME_DIR=`cat ${SESSID_DIR}/parameters/module_fs/user_homedir`
+[ -f ${SESSID_DIR}/parameters/module_fs/user_homedir ] && CIFS_HOME_DIR=$(cat ${SESSID_DIR}/parameters/module_fs/user_homedir)
 
 if [ "r$DOC" != "r" ] || [ "r$APP" != "r" ]; then
     [ -f ${SESSID_DIR}/parameters/app_with_desktop ] || NODESKTOP=1
 fi
 
 if [ -f ${SESSID_DIR}/parameters/timezone ]; then
-    tz=`cat ${SESSID_DIR}/parameters/timezone`
+    tz=$(cat ${SESSID_DIR}/parameters/timezone)
     if [ -f /usr/share/zoneinfo/$tz ]; then
         log_INFO "set TZ to $tz"
         TZ="/usr/share/zoneinfo/$tz"

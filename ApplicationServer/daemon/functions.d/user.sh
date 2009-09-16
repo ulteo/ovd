@@ -24,7 +24,7 @@ user_create() {
     fi
 
     if [ -f ${SESSID_DIR}/parameters/module_fs/user_id ]; then
-        USER_ID=`cat ${SESSID_DIR}/parameters/module_fs/user_id`
+        USER_ID=$(cat ${SESSID_DIR}/parameters/module_fs/user_id)
         USERADD_ARG='-u '${USER_ID}
     else
         USERADD_ARG='-K UID_MIN=2000'
@@ -53,7 +53,7 @@ user_set_env() {
     OVD_APPS_DIR=$XDG_DATA_DIRS/applications
 
     if [ -f ${SESSID_DIR}/parameters/timezone ]; then
-        tz=`cat ${SESSID_DIR}/parameters/timezone`
+        tz=$(cat ${SESSID_DIR}/parameters/timezone)
         if [ -f /usr/share/zoneinfo/$tz ]; then
             log_INFO "set TZ to $tz"
             TZ="/usr/share/zoneinfo/$tz"

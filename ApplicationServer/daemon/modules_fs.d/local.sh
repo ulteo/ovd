@@ -73,7 +73,7 @@ local_do_umount() {
 local_do_clean() {
     local SOME_FAILED=0
 
-    local dirt_homes=`find /home -maxdepth 1 -mindepth 1`
+    local dirt_homes=$(find /home -maxdepth 1 -mindepth 1)
     for home in $dirt_homes; do
         log_WARN "local: $home is dirty, cleaning..."
         USER_HOME=${home} local_do_umount # || local SOME_FAILED=1
