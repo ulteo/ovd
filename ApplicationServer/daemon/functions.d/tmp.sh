@@ -43,33 +43,33 @@ tmp_make() {
 
 ## Futur functions
 tmp_init() {
-	local tmpdir=$tmp_base
+    local tmpdir=$tmp_base
 
-	[ ! -d $tmpdir ] && mkdir $tmpdir
-	chmod 777 $tmpdir
-	
-	[ ! -d $tmpdir/.X11-unix ] && mkdir $tmpdir/.X11-unix
-	chmod a+rwxt $CHROOT/$tmp_base/.X11-unix
-	
-	[ ! -d $tmpdir/.ICE-unix ] && mkdir $tmpdir/.ICE-unix
-	chmod a+rwxt $CHROOT/$tmp_base/.ICE-unix
+    [ ! -d $tmpdir ] && mkdir $tmpdir
+    chmod 777 $tmpdir
+
+    [ ! -d $tmpdir/.X11-unix ] && mkdir $tmpdir/.X11-unix
+    chmod a+rwxt $CHROOT/$tmp_base/.X11-unix
+
+    [ ! -d $tmpdir/.ICE-unix ] && mkdir $tmpdir/.ICE-unix
+    chmod a+rwxt $CHROOT/$tmp_base/.ICE-unix
 }
 
 tmp_create() {
     local uid=$1
 
-	local tmpdir=$CHROOT/$tmp_base/$uid
+    local tmpdir=$CHROOT/$tmp_base/$uid
 
     [ -d $tmpdir ] && rm -rf $tmpdir
     mkdir $tmpdir && chmod 750 $tmpdir
-    
+
     chown -R $uid:$uid $tmpdir
 }
 
 tmp_destroy() {
     local uid=$1
 
-	local tmpdir=$tmp_base/$uid
-    
+    local tmpdir=$tmp_base/$uid
+
     [ -d $tmpdir ] && rm -rf $tmpdir
 }

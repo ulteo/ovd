@@ -10,14 +10,14 @@ waitpid() {
     local pid=$1
     local timeout=$2
     local t0=`date +"%s"`
-    
-    while [ -d /proc/$1 ]; do
-	sleep 0.5
 
-	if [ $timeout ]; then
-	    local t1=`date +"%s"`
-	    [ $(($t1-$t0)) -gt $2 ] && return 1
-	fi
+    while [ -d /proc/$1 ]; do
+        sleep 0.5
+
+        if [ $timeout ]; then
+            local t1=`date +"%s"`
+            [ $(($t1-$t0)) -gt $2 ] && return 1
+        fi
     done
 }
 
@@ -39,8 +39,8 @@ do_start () {
 
     grep -q /dev/pts /etc/mtab 
     if [ $? -ne 0 ]; then
-	mkdir -p /dev/pts
-	mount -t devpts none /dev/pts
+        mkdir -p /dev/pts
+        mount -t devpts none /dev/pts
     fi
 
     if [ -f $PIDFILE ]; then
@@ -62,7 +62,7 @@ do_start () {
     for service in $EXTRA_SERVICES; do # from the config file
         /etc/init.d/$service start || true
     done
-    
+
     # Start the daemon (well, not exactly a daemon...)
     $PROGRAM --daemonize --pid "$PIDFILE"
 
@@ -74,9 +74,9 @@ do_stop () {
 
     # Kill apps
     if [ -f $PIDFILE ]; then
-	local pid=$(cat $PIDFILE)
-	kill $pid
-	waitpid $pid 5 && rm $PIDFILE || true
+        local pid=$(cat $PIDFILE)
+        kill $pid
+        waitpid $pid 5 && rm $PIDFILE || true
     fi
 
     # Stop services
@@ -92,11 +92,11 @@ do_stop () {
 
     grep -q /dev/pts /etc/mtab 
     if [ $? -eq 0 ]; then
-	umount /dev/pts
+        umount /dev/pts
     fi
 
     if [ -f /proc/mounts ]; then
-	umount /proc
+        umount /proc
     fi
 
     log_end_msg 0

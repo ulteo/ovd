@@ -39,7 +39,7 @@ sessions_get_to_create() {
 session_valid_runasap() {
     local i=0
     for i in 0 1 22 2 3 9 10 11; do
-	[ $i -eq $1 ] && return 0
+        [ $i -eq $1 ] && return 0
     done
 
     return 1
@@ -68,21 +68,20 @@ session_init() {
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
     if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
-	log_ERROR "session_init: user '$SSH_USER' already in /etc/passwd"
+        log_ERROR "session_init: user '$SSH_USER' already in /etc/passwd"
         spool_free_id $i
         spool_free_rfbport $RFB_PORT
-	return 1
+        return 1
     fi
     log_INFO "useradd $SSH_USER with uid : $uid"
     useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
 
-
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
     if [ `grep -e "$VNC_USER\:x" /etc/group` ]; then
-	log_ERROR "session_init: user '$VNC_USER' already in /etc/group"
+        log_ERROR "session_init: user '$VNC_USER' already in /etc/group"
         spool_free_id $i
         spool_free_rfbport $RFB_PORT
-	return 1
+        return 1
     fi
     log_INFO "groupadd -K GID_MAX=70000 $VNC_USER"
     groupadd -K GID_MAX=70000 $VNC_USER
@@ -90,10 +89,10 @@ session_init() {
 
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
     if [ `grep -e "$VNC_USER\:x" /etc/passwd` ]; then
-	log_ERROR "session_init: user '$VNC_USER' already in /etc/passwd"
+        log_ERROR "session_init: user '$VNC_USER' already in /etc/passwd"
         spool_free_id $i
         spool_free_rfbport $RFB_PORT
-	return 1
+        return 1
     fi
     log_INFO "useradd $VNC_USER with uid : $uid"
     useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER
@@ -122,9 +121,9 @@ session_init() {
     VNC_PASS=`echo $RANDOM\`date +%s\` | md5sum | mawk '{ print substr($1, 0, 9) }'`
     # on hardy we have tightvncpasswd, vncpasswd on dapper
     if $(which tightvncpasswd >/dev/null 2>&1); then
-      TIGHTVNCPASSWD="tightvncpasswd"
+        TIGHTVNCPASSWD="tightvncpasswd"
     else
-      TIGHTVNCPASSWD="vncpasswd"
+        TIGHTVNCPASSWD="vncpasswd"
     fi
     # have to cut the pass to 8 characters
     # for realvncpasswd
@@ -144,7 +143,7 @@ session_init() {
     # we encode the encrypted pass in hexa because the sshvnc 
     # applet wants it
     HEXA_SSH_PASS=`echo $SSH_PASS | str2hex`
-   
+
     ##echo $SSH_PASS >$SESSID_DIR/sshpasswd # <- just for test !!! remove it in production !!!
     echo $i > $SESSID_DIR/private/id
     echo $HEXA_VNC_PASS > $SESSID_DIR/private/hexavncpasswd
@@ -168,28 +167,26 @@ session_remove() {
     local SESSID_DIR=$SPOOL/sessions/$SESSID
     local i=`cat $SESSID_DIR/private/id`
 
-    #session_switch_status $SESSID 3
-
     local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
     local VNC_USER=`cat $SESSID_DIR/private/vnc_user`
-    
+
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
     if [ `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
-	log_INFO "userdel $SSH_USER"
-	userdel $SSH_USER
+        log_INFO "userdel $SSH_USER"
+        userdel $SSH_USER
     fi
 
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
     if [ `grep -e "$VNC_USER\:x" /etc/passwd` ]; then
         local VNC_UID=`id -u $VNC_USER`
-	log_INFO "userdel $VNC_USER"
-	userdel $VNC_USER
+        log_INFO "userdel $VNC_USER"
+        userdel $VNC_USER
     fi
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
     if [ `grep -e "$VNC_USER\:x" /etc/group` ]; then
-	log_INFO "groupedel $VNC_USER"
-	groupdel $VNC_USER
+        log_INFO "groupedel $VNC_USER"
+        groupdel $VNC_USER
     fi
 
     log_INFO "session_remove: removing '$SESSID_DIR' ($i)"
@@ -242,13 +239,11 @@ session_purge() {
     rm -f /tmp/$VNC_USER
 
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
-	HOME_DIR_TYPE=$HOME_DIR_TYPE \
-	USER_LOGIN=$USER_LOGIN USER_UID=$USER_UID \
-	NICK=$NICK uumount.sh
-    
-    if [ -d /home/$NICK ]; then
-	do_clean_home $NICK
-    fi
+    HOME_DIR_TYPE=$HOME_DIR_TYPE \
+    USER_LOGIN=$USER_LOGIN USER_UID=$USER_UID \
+    NICK=$NICK uumount.sh
+
+    [ -d /home/$NICK ] && do_clean_home $NICK
 }
 
 session_switch_status() {
@@ -291,9 +286,9 @@ session_load() {
     NICK=`cat ${SESSID_DIR}/parameters/user_displayname`  || return 1
     USER_LOGIN=`cat ${SESSID_DIR}/parameters/user_login` || return 1
     if [ -f ${SESSID_DIR}/parameters/user_id ]; then
-	USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
+        USER_ID=`cat ${SESSID_DIR}/parameters/user_id`
     else
-	USER_ID=`id -u $USER_LOGIN`
+        USER_ID=`id -u $USER_LOGIN`
     fi
 
     # Autodetection informations
@@ -330,11 +325,11 @@ session_suspend() {
     session_switch_status $SESSID 9
 
     local SSH_USER=`cat $SESSID_DIR/private/ssh_user`
-    
+
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
     if [ ! `grep -e "$SSH_USER\:x" /etc/passwd` ]; then
-	log_ERROR "No ssh user in /etc/passwd"
-	return 1
+        log_ERROR "No ssh user in /etc/passwd"
+        return 1
     fi
 
     # Kill all ssh process about this session
@@ -374,7 +369,7 @@ session_restore() {
 
     session_install_client $SESSID
     [ -f ${SESSID_DIR}/infos/owner_exit ] && \
-	rm ${SESSID_DIR}/infos/owner_exit
+        rm ${SESSID_DIR}/infos/owner_exit
     log_INFO "session_restore: $i"
     session_switch_status $SESSID 2
 }
@@ -386,7 +381,7 @@ session_change_login_if_needed() {
     grep -q "^$login:" /etc/passwd || return 0
 
     while grep -q "^$login$pos:" /etc/passwd; do
-	pos=$(( $pos + 1 ))
+    pos=$(( $pos + 1 ))
     done
 
     echo "$login$pos" >${SESSID_DIR}/parameters/user_login 

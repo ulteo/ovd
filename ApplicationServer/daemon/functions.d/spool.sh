@@ -34,11 +34,9 @@ spool_init() {
 
 spool_clean() {
     if [ -n "$SPOOL" ]; then
-        rm -rf $SPOOL/apt/*
-        rm -rf $SPOOL/files/*
-        rm -rf $SPOOL/id/*
-        rm -rf $SPOOL/sessions/*
-        rm -rf $SPOOL/sessions2create/*
+        for d in apt files id sessions sessions2create; do
+            rm -rf $SPOOL/$d/*
+        done
     fi
 
     if [ -n "$SPOOL_USERS" ]; then
@@ -49,8 +47,8 @@ spool_clean() {
 spool_get_id() {
     let buf=0
     while [ -f $SPOOL/id/id_$buf ]; do
-	[ $buf -ge 1000 ] && return 1
-	let buf=$(( $buf + 1 ))
+        [ $buf -ge 1000 ] && return 1
+        let buf=$(( $buf + 1 ))
     done
     touch $SPOOL/id/id_$buf
     echo $buf
@@ -59,8 +57,8 @@ spool_get_id() {
 spool_get_rfbport() {
     let buf=5900
     while [ -f $SPOOL/id/vnc_$buf ]; do
-	[ $buf -ge 6900 ] && return 1
-	let buf=$(( $buf + 1 ))
+        [ $buf -ge 6900 ] && return 1
+        let buf=$(( $buf + 1 ))
     done
     touch $SPOOL/id/vnc_$buf
     echo $buf

@@ -47,9 +47,8 @@ display_start() {
 
     sleep 1
 
-    # Xvnc accept connexion only from MIT_MAGIC_COOKIEs
-    su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$rfb_port XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/xhost +";
-#     su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$rfb_port XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/xhost -";
+    # Xvnc accept connection only from MIT_MAGIC_COOKIEs
+    su -s "/bin/bash" $VNC_USER -c "DISPLAY=:$rfb_port XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/xhost +" &> /dev/null
 }
 
 display_stop() {

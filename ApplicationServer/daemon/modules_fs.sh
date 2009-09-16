@@ -33,13 +33,13 @@ export MODULES_FSD=`dirname $0`/modules_fs.d
 # Initialize some values, must be done before any mount/umount
 set_fs() {
     if ! [ -d $MODULES_FSD  ] ; then
-	log_ERROR "MODULES_FS: $MODULES_FS dir doesn't exists"
-	return 1
+        log_ERROR "MODULES_FS: $MODULES_FS dir doesn't exists"
+        return 1
     fi
 
     if ! [ -f $MODULES_FSD/${HOME_DIR_TYPE}.sh ] ; then
-	log_ERROR "MODULES_FS: ${HOME_DIR_TYPE} is not an existing fs module."
-	return 1
+        log_ERROR "MODULES_FS: ${HOME_DIR_TYPE} is not an existing fs module."
+        return 1
     fi
 
     . ${MODULES_FSD}/${HOME_DIR_TYPE}.sh || return 1
@@ -52,12 +52,12 @@ get_status() {
     ${HOME_DIR_TYPE}_get_status
 }
 
-# Creates dirs ant do effective mount in ${USER_HOME}
+# Creates dirs and do effective mount in ${USER_HOME}
 do_mount() {
     ${HOME_DIR_TYPE}_do_mount
 }
 
-# Do umount and removes empty dirs.
+# Do umount and remove empty dirs.
 do_umount() {
     ${HOME_DIR_TYPE}_do_umount
 }
@@ -66,12 +66,12 @@ do_clean() {
     local homes=`find /home -maxdepth 1 -mindepth 1`
     local fail=0
     for home in $homes; do
-	do_clean_home ${home#/home/} || local fail=1
+        do_clean_home ${home#/home/} || local fail=1
     done
 
     local types=`find /mnt -maxdepth 1 -mindepth 1`
     for t in $types; do
-	do_clean_module ${t#/mnt/} || local fail=1
+        do_clean_module ${t#/mnt/} || local fail=1
     done
 
     return $fail
@@ -82,17 +82,17 @@ do_clean_home() {
     log_INFO "do_clean_home: job '$home'"
 
     while is_mount_point $home; do
-	umount $home
-	if [ $? != 0 ]; then
-	    log_ERROR "do_clean_home: umount of '$home' fail"
-	    return 1
-	fi
+        umount $home
+        if [ $? != 0 ]; then
+            log_ERROR "do_clean_home: umount of '$home' fail"
+            return 1
+        fi
     done
-	
+
     rmdir $home
     if [ $? != 0 ]; then
-	log_WARN "do_clean_home: '$home' not empty -> erasing"
-	rm -rf $home
+        log_WARN "do_clean_home: '$home' not empty -> erasing"
+        rm -rf $home
     fi
 }
 
@@ -102,13 +102,13 @@ do_clean_module() {
 
     . ${MODULES_FSD}/${module}.sh
     if [ $? != 0 ]; then
-	log_ERROR "do_clean_module: existing directory '$dir' but load of module '${module}' fail"
-	return 1
+        log_ERROR "do_clean_module: existing directory '$dir' but load of module '${module}' fail"
+        return 1
     fi
 
     ${module}_do_clean
     if [ -d $dir ]; then
-	log_ERROR "do_clean: still have '$t' after ${module}_do_clean"
-	return 1
+        log_ERROR "do_clean: still have '$t' after ${module}_do_clean"
+        return 1
     fi
 }

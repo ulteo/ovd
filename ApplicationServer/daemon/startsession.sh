@@ -78,10 +78,10 @@ fi
 if [ -f ${SESSID_DIR}/parameters/timezone ]; then
     tz=`cat ${SESSID_DIR}/parameters/timezone`
     if [ -f /usr/share/zoneinfo/$tz ]; then
-	log_INFO "set TZ to $tz"
-	TZ="/usr/share/zoneinfo/$tz"
+        log_INFO "set TZ to $tz"
+        TZ="/usr/share/zoneinfo/$tz"
     else
-	log_WARN "invalid TZ to '/usr/share/zoneinfo/$tz'"
+        log_WARN "invalid TZ to '/usr/share/zoneinfo/$tz'"
     fi
 fi
 

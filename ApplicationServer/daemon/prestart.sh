@@ -71,7 +71,7 @@ chmod 770        $SPOOL_USERS/$SESSID
 set_fs || close_session
 
 # Mount home directory
- 
+
 log_DEBUG "Prestart geometry: "$GEOMETRY
 
 do_mount

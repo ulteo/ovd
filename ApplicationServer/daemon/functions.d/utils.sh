@@ -31,28 +31,28 @@ retry() {
     while [ $SUCCESS -ne 0 ] && [ $COUNTER -lt $ATTEMPTS ] ; do
         $COMMAND
         SUCCESS=$?
-        log_INFO "retry $COUNTER.."	
-	if [ $SUCCESS -ne 0 ]; then
-	    let COUNTER++
-	    sleep $DELAY
-	fi
+        log_INFO "retry $COUNTER.."
+        if [ $SUCCESS -ne 0 ]; then
+            let COUNTER++
+            sleep $DELAY
+        fi
     done
 
     if [ $SUCCESS -eq 0 ]; then 
-	log_INFO "retry SUCCESS"
+        log_INFO "retry SUCCESS"
     else
-	log_INFO "retry FAILED"
+        log_INFO "retry FAILED"
     fi
     return $SUCCESS
 }
 
 check_variables() {
     for key in $@; do
-	eval content=\$$key
-	if ! [ $content ]; then
-	    log_ERROR "variable '$key' is empty"
-	    return 1
-	fi
+        eval content=\$$key
+        if ! [ $content ]; then
+            log_ERROR "variable '$key' is empty"
+            return 1
+        fi
     done
     return 0
 }
@@ -69,7 +69,7 @@ kill_processus() {
     kill $pid > /dev/null
 
     if [ $? != 0 ]; then
-            kill -9 $pid > /dev/null
+        kill -9 $pid > /dev/null
     fi
     rm -f $pid_file
 }
@@ -90,8 +90,8 @@ get_real_user() {
 # Delete vars from export but keep value set
 unexport() {
     for var in $@; do
-	local buf=$(eval "echo $"$var)
-	unset $var
-	eval "$var=\"$buf\""
+        local buf=$(eval "echo $"$var)
+        unset $var
+        eval "$var=\"$buf\""
     done
 }

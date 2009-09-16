@@ -90,11 +90,11 @@ application_check_status() {
             local diff=$(( $t1 - $t0 ))
 
             if [ $diff -gt 20 ]; then
-	        log_WARN "session $sessid KEEPMEALIVE expired application $job_id"
+                log_WARN "session $sessid KEEPMEALIVE expired application $job_id"
                 application_switch_status $sessid $job_id $next_status
                 application_check_status $sessid $job_id
                 return $?
-	    fi
+            fi
         else
             # Create a kma to use as timeout
             install -g www-data -m 660 $dir/status $dir/keepmealive
@@ -109,7 +109,7 @@ application_check_status() {
             [ -f $dir/keepmealive ] && rm $dir/keepmealive
             application_switch_status $sessid $job_id 10
             return
-        
+
         # If application is in suspend mode ... Nothing to do
         elif [ $status -eq 10 ]; then
             if [ -f $dir/owner_is_back ]; then
@@ -119,8 +119,8 @@ application_check_status() {
                 application_check_status $sessid $job_id
                 return $?
             fi
-	    return
-            
+            return
+
         # If application need to be restored ...
         elif [ $status -eq 11 ]; then
             log_INFO "session $sessid resume $job_id"

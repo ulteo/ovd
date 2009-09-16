@@ -40,9 +40,9 @@ vapp_get() {
 
     webservices_get_application $id $buffer
     if [ $? -ne 0 ]; then
-	log_WARN "Cannot get application from $id"
-	[ -f $buffer ] && rm $buffer
-	return 1
+        log_WARN "Cannot get application from $id"
+        [ -f $buffer ] && rm $buffer
+        return 1
     fi
 
     local desktop=$vapp_repo/$id.desktop
@@ -50,15 +50,15 @@ vapp_get() {
 
     webservices_get_application_icon $id $pixmap
     if [ $? -ne 0 ]; then
-	log_WARN "Unable to catch application icon"
+        log_WARN "Unable to catch application icon"
     fi
 
     xml2desktopfile $buffer $desktop
     if [ $? -ne 0 ] || [ ! -f $desktop ]; then
-	log_WARN "Catch of $id failed"
-	[ -f $buffer ] && rm $buffer
-	[ -f $pixmap ] && rm $pixmap
-	return 1
+        log_WARN "Catch of $id failed"
+        [ -f $buffer ] && rm $buffer
+        [ -f $pixmap ] && rm $pixmap
+        return 1
     fi
 
     [ -f $buffer ] && rm $buffer

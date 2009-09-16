@@ -27,11 +27,11 @@ local_set_fs() {
 
     LOCAL_HOME_BASE=/users
     . $CONF_FILE
-    
+
     # Maybe there is no user homes.
     if [ ! -d $LOCAL_HOME_BASE ]; then
-	mkdir -p $LOCAL_HOME_BASE
-	chmod 0711 $LOCAL_HOME_BASE
+        mkdir -p $LOCAL_HOME_BASE
+        chmod 0711 $LOCAL_HOME_BASE
     fi
 }
 
@@ -43,12 +43,12 @@ local_get_status() {
 
 local_do_mount() {
     if [ ! -d $LOCAL_HOME_BASE/$USER_LOGIN ]; then
-	mkdir $LOCAL_HOME_BASE/$USER_LOGIN
-	chown $USER_LOGIN:$USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
+        mkdir $LOCAL_HOME_BASE/$USER_LOGIN
+        chown $USER_LOGIN:$USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
     else
-	chown -R $USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
+        chown -R $USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
     fi
-#    [  $? -ne 0 ]  && return 1
+
     # Bind local user homedir to /home/nickname
     mount --bind $LOCAL_HOME_BASE/$USER_LOGIN $USER_HOME
 }
@@ -56,31 +56,29 @@ local_do_mount() {
 
 local_do_umount() {
     if is_mount_point $USER_HOME ; then
-
-	umount $USER_HOME
-	if [ $? -ne 0 ]; then
+        umount $USER_HOME
+        if [ $? -ne 0 ]; then
             log_WARN "local: Attempting to force unmount of local $USER_HOME"
             umount  -f $USER_HOME || umount -l  $USER_HOME
-	fi
-	
-     else
-	log_INFO "local: $USER_HOME is present but not a mount point"
-     fi
-     
-     rmdir $USER_HOME
+        fi
+    else
+        log_INFO "local: $USER_HOME is present but not a mount point"
+    fi
+
+    rmdir $USER_HOME
 }
 
 
-# TODO : put this function outside local in module_fs because it's generic
+# TODO: put this function outside local in module_fs because it's generic
 local_do_clean() {
     local SOME_FAILED=0
 
     local dirt_homes=`find /home -maxdepth 1 -mindepth 1`
     for home in $dirt_homes; do
-	log_WARN "local: $home is dirty, cleaning..."
-	USER_HOME=${home} local_do_umount # || local SOME_FAILED=1
-	[ -d "$home" ] && rm -rf "$home"        
-     done
+        log_WARN "local: $home is dirty, cleaning..."
+        USER_HOME=${home} local_do_umount # || local SOME_FAILED=1
+        [ -d "$home" ] && rm -rf "$home"
+    done
 
     return $SOME_FAILED
 }

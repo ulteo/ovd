@@ -33,9 +33,9 @@ apt_do() {
     apt-get update >>$stdout 2>>$stderr
     local ret=$?
     if [ $ret -ne 0 ]; then
-	echo -n $ret >$status
-	log_INFO "apt-do: apt-get update return $ret"
-	return 1
+        echo -n $ret >$status
+        log_INFO "apt-do: apt-get update return $ret"
+        return 1
     fi
 
     # avoid user interaction
@@ -47,8 +47,8 @@ apt_do() {
     local ret=$?
     echo -n $ret >$status
     if [ $ret -ne 0 ]; then
-	log_INFO "apt-do: apt-get $request return $ret"
-	return 1
+        log_INFO "apt-do: apt-get $request return $ret"
+        return 1
     fi
 
     log_INFO "apt-do $p success"
@@ -58,16 +58,16 @@ apt_daemon() {
     local directory=$SPOOL/apt
 
     while [ -d $directory ]; do
-	local files=`find $directory -maxdepth 1 -mindepth 1 -type f`
+        local files=`find $directory -maxdepth 1 -mindepth 1 -type f`
 
-	if [ "$files" = "" ]; then
-	    inotifywait -t 10 -q -e close_write $directory
-	else
-	    for file in $files; do
-		[ -f $SPOOL/files/sources.list ] && mv $SPOOL/files/sources.list /etc/apt/sources.list
-		apt_do $file
-		[ -f $file ] && rm $file
-	    done
-	fi
+        if [ "$files" = "" ]; then
+            inotifywait -t 10 -q -e close_write $directory
+        else
+            for file in $files; do
+                [ -f $SPOOL/files/sources.list ] && mv $SPOOL/files/sources.list /etc/apt/sources.list
+                apt_do $file
+                [ -f $file ] && rm $file
+            done
+        fi
     done
 }

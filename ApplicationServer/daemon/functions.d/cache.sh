@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-## Cache function 
+## Cache function
 #
 cache_build() {
     netstat -n --tcp > $SPOOL/cache/netstat
@@ -60,44 +60,45 @@ cache_set_monitoring() {
     local ram_Cached=`grep ^Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2` || return 1
     let ram_used=$ram-$ram_Free-$ram_Buffers-$ram_Cached
 
-    echo '<?xml version="1.0" encoding="utf-8"?>'         > $file || return 1
-    echo '<monitoring>'                                   >>$file
-    echo ' <cpu nb_cores="'$cpu_nb'" load="'$cpu_load'">' >>$file
-    echo $cpu_model                                       >>$file
-    echo '  </cpu>'                                       >>$file
-    echo '<ram total="'$ram'" used="'$ram_used'" />'      >>$file
+    echo '<?xml version="1.0" encoding="utf-8"?>'          > $file || return 1
+    echo '<monitoring>'                                    >>$file
+    echo ' <cpu nb_cores="'$cpu_nb'" load="'$cpu_load'">'  >>$file
+    echo $cpu_model                                        >>$file
+    echo '  </cpu>'                                        >>$file
+    echo '<ram total="'$ram'" used="'$ram_used'" />'       >>$file
 
-    echo '<sessions>'                                     >>$file
+    echo '<sessions>'                                      >>$file
     for s in $(sessions_get_active); do
-	session_load $s    
-	echo '<session id="'$s'" i="'$i'">'                >>$file
+        session_load $s
+        echo '<session id="'$s'" i="'$i'">'                >>$file
 
-	echo '<vnc login="'$VNC_USER'">'                   >>$file
-	for pid in $(cache_ps_pid_for_user $VNC_USER); do
-	    echo '<pid id="'$pid'" />'                     >>$file
-	done
-	echo '</vnc>'                                      >>$file
+        echo '<vnc login="'$VNC_USER'">'                   >>$file
+        for pid in $(cache_ps_pid_for_user $VNC_USER); do
+            echo '<pid id="'$pid'" />'                     >>$file
+        done
+        echo '</vnc>'                                      >>$file
 
-	echo '<ssh login="'$SSH_USER'">'                   >>$file
-	for pid in $(cache_ps_pid_for_user $SSH_USER); do
-	    echo '<pid id="'$pid'" />'                     >>$file
-	done
-	echo '</ssh>'                                      >>$file
+        echo '<ssh login="'$SSH_USER'">'                   >>$file
+        for pid in $(cache_ps_pid_for_user $SSH_USER); do
+            echo '<pid id="'$pid'" />'                     >>$file
+        done
+        echo '</ssh>'                                      >>$file
 
-	echo '<user login="'$USER_LOGIN'">'                >>$file
-    if [ -f $SPOOL_USERS/$SESSID/apps ]; then
-        while read pid app_id; do
-            [ -z "$app_id" ] && continue
-            echo '<application pid="'$pid'" app_id="'$app_id'" />' >>$file
-        done < $SPOOL_USERS/$SESSID/apps
-    fi
-	echo '</user>'                                     >>$file
-	echo '</session>'                                  >>$file
-	session_unload
+        echo '<user login="'$USER_LOGIN'">'                >>$file
+        if [ -f $SPOOL_USERS/$SESSID/apps ]; then
+            while read pid app_id; do
+                [ -z "$app_id" ] && continue
+                echo '<application pid="'$pid'" app_id="'$app_id'" />' >>$file
+            done < $SPOOL_USERS/$SESSID/apps
+        fi
+        echo '</user>'                                     >>$file
+        echo '</session>'                                  >>$file
+        session_unload
     done
+
     echo '</sessions>'                                     >>$file
     echo '<process_table><![CDATA['                        >>$file
     cache_ps_display                                       >>$file
     echo ']]></process_table>'                             >>$file
-    echo '</monitoring>'                                  >>$file
+    echo '</monitoring>'                                   >>$file
 }

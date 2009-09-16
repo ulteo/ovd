@@ -51,7 +51,7 @@ if ! get_status; then
 else
     do_umount
     if [ $? -ne 0 ]; then
-	log_WARN "UUMOUNT: umount of ${USER_HOME} failed"
+        log_WARN "UUMOUNT: umount of ${USER_HOME} failed"
     fi
 fi
 

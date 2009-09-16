@@ -33,11 +33,11 @@ log_DEBUG "Uumount nick:"$NICK
 set_fs
 
 if ! get_status; then
-    log_INFO "UUMOUNT:Info: $USER_HOME is not mounted"    
+    log_INFO "UUMOUNT:Info: $USER_HOME is not mounted"
 else
     do_umount
     if [ $? -ne 0 ]; then
-	log_WARN "UUMOUNT: umount of ${USER_HOME} failed"
+        log_WARN "UUMOUNT: umount of ${USER_HOME} failed"
     fi
 fi
 

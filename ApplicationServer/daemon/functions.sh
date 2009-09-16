@@ -19,8 +19,8 @@
 FUNCTION_SD=`dirname $0`/functions.d
 
 if ! [ -d $FUNCTION_SD  ] ; then
-  log_ERROR "functions: $FUNCTION_SD dir doesn't exists"
-  exit 1
+    log_ERROR "functions: $FUNCTION_SD dir doesn't exists"
+    exit 1
 fi
 
 for j in `find $FUNCTION_SD -name "*.sh"`; do
