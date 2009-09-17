@@ -131,6 +131,9 @@
   <!-- Print the TOC/LOTs -->
   <xsl:apply-templates select="." mode="toc_lots"/>
   <xsl:call-template name="label.id"/>
+  <xsl:text>
+    \newpage
+  </xsl:text>
 
   <!-- Print the abstract and front matter content -->
   <xsl:apply-templates select="(abstract|$info/abstract)[1]"/>
