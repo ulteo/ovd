@@ -43,7 +43,6 @@ fi
 
 
 userdel $USER_LOGIN
-groupdel $USER_LOGIN
 
 # Clean the menu
 menu_clean $SPOOL_USERS/$SESSID'/xdg'
