@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 . functions.sh
+. log.sh
 
 USER_TMP=${SPOOL_USERS}/${SESSID}/
 
@@ -36,6 +37,18 @@ elif $(which Xdialog > /dev/null); then
 fi
 
 if [ -n "$CMD" ]; then
-    export DISPLAY=:$i XAUTHORITY=${USER_TMP}.Xauthority
-    su -s "/bin/bash" $USER_LOGIN -c "${CMD}" &
+    dirs=$(find $SESSID_DIR/sessions/ -maxdepth 1 -mindepth 1 -type d)
+    rfb_port=0
+    for dir in $dirs; do
+        rfb_port=$(cat $dir/rfb_port)
+        break;
+    done
+
+    if [ -z "$rfb_port" ]; then
+        log_WARN "Unable to find a valid display from SESSID: $SESSID"
+        exit 1
+    fi
+
+    ENV_FILE=$SPOOL_USERS/$SESSID/env.sh
+    user_exec_ "${CMD}" $rfb_port
 fi

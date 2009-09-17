@@ -91,3 +91,14 @@ user_exec() {
     # Start the desktop session
     su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $env startovd" >/dev/null 2>&1
 }
+
+user_exec_() {
+    local command="$1"
+    local display=$2
+    [ $# -gt 2 ] && local env="$3"
+
+    local cmd="$env DISPLAY=:$display $command"
+
+    log_INFO "user_exec: $cmd"
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $cmd" &> /dev/null
+}
