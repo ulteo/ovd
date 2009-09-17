@@ -27,7 +27,7 @@ dav_set_fs() {
     log_DEBUG "dav_set_fs"
     local_set_fs
 
-    [ -f ${SESSID_DIR}/parameters/module_fs/dav_dirs ] || return 1
+    [ -f ${SESSID_DIR}/parameters/module_fs/dav_dirs ] || return 0
 
     if [ -f ${SESSID_DIR}/parameters/module_fs/cookie_url ]; then
         DAV_AUTH=url
@@ -84,6 +84,8 @@ dav_do_purge_config() {
 
 dav_do_mount() {
     local_do_mount || return 1
+
+    [ -f ${SESSID_DIR}/parameters/module_fs/dav_dirs ] || return 0
     dav_do_init_config || return 1
 
     local i=0
@@ -109,10 +111,12 @@ dav_do_mount() {
 }
 
 dav_do_umount() {
-    dav_do_purge_config
-    dav_do_umount_bind
-    dav_do_umount_real
-    rmdir $DAV_MOUNT_POINT
+    if [ -f ${SESSID_DIR}/parameters/module_fs/dav_dirs ]; then
+        dav_do_purge_config
+        dav_do_umount_bind
+        dav_do_umount_real
+        rmdir $DAV_MOUNT_POINT
+    fi
 
     local_do_umount
 }
