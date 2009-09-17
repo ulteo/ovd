@@ -25,7 +25,7 @@ EOF
     desktop-files2xml >/var/lib/ulteo/available-apps.xml 2>/dev/null || true
 
     # update the configuration if needed
-    if [ -n "$2" ] && grep -q "^MINLUCK=" $CONFIGFILE; then
+    if grep -q "^MINLUCK=" $CONFIGFILE; then
         sed -e '/^### Luck system/,/MINLUCK=/d' $CONFIGFILE > $CONFIGFILE.tmp
         cat >> $CONFIGFILE.tmp << EOF
 ### Connection timeout
