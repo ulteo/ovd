@@ -212,7 +212,7 @@ session_purge() {
     local i=$(cat $SESSID_DIR/private/id)
 
     log_INFO "Purging ${SESSID}"
-    local NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)
+    local NICK=$(cat ${SESSID_DIR}/parameters/user_displayname 2>/dev/null)
     local USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login)
     local USER_UID=$(id -u $USER_LOGIN)
     local HOME_DIR_TYPE=$(cat ${SESSID_DIR}/parameters/module_fs/type)
@@ -241,6 +241,11 @@ session_purge() {
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
     HOME_DIR_TYPE=$HOME_DIR_TYPE \
     USER_LOGIN=$USER_LOGIN USER_UID=$USER_UID \
+
+    if [ -z "$NICK" ]; then
+        log_WARN "Purge session ${SESSID} without NICK so we have neither HOME nor mount points"
+        return 0
+    fi
     NICK=$NICK uumount.sh
 
     [ -d /home/$NICK ] && do_clean_home $NICK
@@ -283,7 +288,7 @@ session_load() {
     VNC_USER=$(cat $SESSID_DIR/private/vnc_user) || return 1
 
     # Parameters informations
-    NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)  || return 1
+    NICK=$(cat ${SESSID_DIR}/parameters/user_displayname 2>/dev/null)  || return 1
     USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login) || return 1
     if [ -f ${SESSID_DIR}/parameters/user_id ]; then
         USER_ID=$(cat ${SESSID_DIR}/parameters/user_id)
