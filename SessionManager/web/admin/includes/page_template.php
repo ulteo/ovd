@@ -340,7 +340,7 @@ function page_footer() {
   echo '<div class="spacer"></div>';
 
   echo '<div id="footerWrap">'._('powered by');
-  echo ' <a href="http://www.ulteo.com"><img src="'.$base_url.'media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;';
+  echo ' <a href="http://www.ulteo.com"><img src="'.$base_url.'media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD v'.OVD_SM_VERSION.'&nbsp;&nbsp;&nbsp;';
   echo '</div>';
   echo '</div>';
   echo '</body>';
