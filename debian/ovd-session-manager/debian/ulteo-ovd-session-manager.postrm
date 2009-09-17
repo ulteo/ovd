@@ -17,6 +17,7 @@ if [ "$1" = "purge" ]; then
     rm -rf /var/spool/ulteo/sessionmanager/*
     rm -f /var/log/ulteo/sessionmanager/main.log*
     rm -f /var/log/ulteo/sessionmanager/apt-get.log*
+    rm -f /var/log/ulteo/sessionmanager/admin.log*
 
     CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
     if dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
