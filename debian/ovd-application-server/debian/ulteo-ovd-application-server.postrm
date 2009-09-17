@@ -29,7 +29,12 @@ fi
 
 # remove the logs
 LOGDIR=/var/log/ulteo/applicationserver
-rm -f $LOGDIR/main.log
+rm -f $LOGDIR/main.log*
+
+# remove possible left logs from an 1.0 installation
+rm -f $LOGDIR/access.log*
+rm -f $LOGDIR/error.log*
+
 if dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
     dpkg-statoverride --remove $LOGDIR
 fi
