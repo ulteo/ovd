@@ -15,13 +15,13 @@
   </articleinfo>
 
   <para>
-    This document aims to provide a VPN solution to answer to the
-    multi server access though Internet.
+    This document is aimed at providing a VPN solution that can 
+    provide multi server access though Internet.
   </para>
 
   <para>
-    This documentation allow to secure all the Ulteo stream between
-    the client and the server but that's not the goal
+    This documentation can also be used to secure all the Ulteo data stream between
+    the client software and Ulteo Open Virtual Desktop servers while that's not the primary goal.
   </para>
 
   <para>
@@ -30,34 +30,32 @@
     get access on multiple machines with only one IP public adress.
   </para>
 
-
-
   <section>
     <title>Introduction</title>
 
     <para>
       Ulteo Open Virtual Desktop is a product that's using several
-      machines. Even if, for a demo or a small solution, it's possible
-      to use the same machine for all the product. In a production
-      site, it's recommanded to have several <emphasis>Application
-      Server</emphasis>.
+      server machines. Although for a demo or a small solution, it's possible
+      to use a single machine for the whole OVD, on a production
+      site, it's recommended to have several <emphasis>Application
+      Servers</emphasis>.
     </para>
 
     <para>
-      In a LAN, it's not a problem to use several machines. Because
-      it's possible to use private IP adress. But on Internet, it's
-      more difficult to get 10 public IP adress for only one
-      service. It's too expensive.
+      On a LAN it's not a problem to use several machines, because
+      it's possible to use private IP adressing. But on Internet, it may be
+      more difficult or too expensive to get several public IP adresses for only one
+      service. 
     </para>
 
     <section>
         <title>Use Case</title>
         <para>
-          A factory install OVD in their internal network. In a first
-          step, the employees have access to OVD when they are at
-          work. But in a second time, they want give access to OVD by
-          Intenert in order to employees be able to access to their
-          workstartion remotly (from their home for instance).
+          A factory is installing OVD on their internal network. As a first
+          step, employees have access to OVD when they are at
+          work. On a second step, the factory wants to provide access to the Ulteo OVD from
+          Internet so that employees can access their corporate
+          desktop remotly (from home for instance).
         </para>
 
         <inlinemediaobject>
@@ -71,9 +69,9 @@
       </section>
 
       <simpara>
-        The issue is the factory can only have one public IP adress. So
-        how to dispatch the multiples Ulteo server on only one address: the
-        solution we are going to explain here by using the VPN tecnology.
+        The issue is that the factory can only have one public IP adress. So
+        how to install the several Ulteo servers on only one address? The
+        solution we are going to explain here is using the VPN technology.
       </simpara>
 
       <simplesect>
@@ -83,22 +81,22 @@
           <listitem>
             <para>
               <emphasis>Ulteo secure net:</emphasis>
-              contain the Session Manager, all the Application server
-              and the Ulteo VPN server
+              this network contains the Session Manager, all Application servers
+              and the Ulteo VPN server.
             </para>
           </listitem>
 
           <listitem>
             <para>
               <emphasis>VPN:</emphasis>
-              contain the Ulteo VPN server and all VPN client
+              contains the Ulteo VPN server and all VPN client
             </para>
           </listitem>
           
           <listitem>
             <para>
               <emphasis>Factory network:</emphasis>
-              the base network which host all those servers
+              the base network which is hosting all those servers
             </para>
           </listitem>
           
@@ -106,8 +104,8 @@
  
         <note>
           <para>
-            the Ulteo secure net can be the factory network. It's just
-            depends of the security policy.
+            The Ulteo secure net can be the factory network. It just
+            depends on the security policy.
           </para>
         </note>
       </simplesect>
@@ -115,8 +113,8 @@
       <simplesect>
         <title>Routing</title>
         <para>
-          The VPN server will give route to each client in order to client
-          be able to route the Ulteo secure network.
+          The VPN server will provide a route to each client so that clients
+          are able to reach the Ulteo secure network.
         </para>
         
         <para>
@@ -147,7 +145,7 @@
         </para>
 
         <para>
-          As your server will be a router, you have to enable the ip forwarding of the system
+          As your server will be a router, you have to enable IP forwarding on the system
         </para>
         <screen>
           <![CDATA[
@@ -165,13 +163,13 @@
 
   <important>
     <para>
-      The machine needs to be a Debian lenny or Ubuntu Hardy
-      system. It may works on other systems but we don't support it.
+      This documentation works for Debian lenny or Ubuntu Hardy
+      systems. It may work on other systems too but we haven't tested it.
     </para>
   </important>
 
   <para>
-    Install the packages:
+    Install packages:
   </para>
   <screen>
     <![CDATA[
@@ -236,10 +234,10 @@ $ ./build-dh]]>
       </itemizedlist>
 
       <note>
-        <para>careful with server/client times when generating
-        certificate, if server time is in the future the client
+        <para>Be careful with server/client internal time when generating
+        certificate! If server time is in the future the client
         certificate/key will not be valid until the server time is
-        reached. (SSL + UTC, maybe one day)
+        reached (SSL + UTC, maybe one day)
         </para>
       </note>
     </section>
@@ -257,7 +255,7 @@ $ cd ~/vpn-keys]]>
         </listitem>
         <listitem>
           <para>
-            Copy the needed files on the openvpn directory
+            Copy the needed files to the openvpn directory
           </para>
           <screen>
             <![CDATA[
@@ -270,13 +268,13 @@ $ cd ~/vpn-keys]]>
         </listitem>
         <listitem>
           <para>
-            Customize the openvpn configuration file as the following
+            Customize the openvpn configuration file like the following
             one. <emphasis>''/etc/openvpn/openvpn.conf</emphasis>
           </para>
           <screen>
             <![CDATA[
 port 1194 ## You can use 443 if you 
-          ## want bypass some proxy/firewall
+          ## want to bypass some proxy/firewall
 proto tcp
 dev tun
 
@@ -315,13 +313,13 @@ status openvpn-status.log]]>
     <title>SSL keys generation</title>
     <important>
       <para>
-        The operations have to be done on the Ulteo VPN server
+        These operations have to be done on the Ulteo VPN server
       </para>
     </important>
 
     <itemizedlist>
       <listitem>
-        <para>go into your key generation directory</para>
+        <para>Go to your key generation directory</para>
         <screen>
           <![CDATA[
 $ cd ~/vpn-keys]]>
@@ -344,7 +342,7 @@ $ export PATH=$PATH:/usr/share/doc/openvpn/examples/easy-rsa/2.0]]>
         </screen>
       </listitem>
       <listitem>
-        <para>config some env vars into the file <emphasis
+        <para>config some environment variables into the file <emphasis
         role="strong">vars</emphasis></para>
         <screen>
           <![CDATA[
@@ -373,7 +371,7 @@ $ ./build-key client-name]]>
 
     <para>
       On the Ulteo VPN server, copy the ca certificate and the client
-      key + certificate on a removable device.
+      key + certificate to a removable device.
     </para>
     <screen>
       <![CDATA[
@@ -411,7 +409,7 @@ $ cp ~/vpn-keys/client.key  /media/disk]]>
         </listitem>
         <listitem>
           <para>
-            Customize the openvpn configuration file as the following
+            Customize the openvpn configuration file like the following
             one. <emphasis>''/etc/openvpn/openvpn.conf</emphasis>
           </para>
           <screen>
