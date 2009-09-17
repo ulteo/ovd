@@ -7,9 +7,7 @@ SUBDIRS = \
 daemon_SCRIPTS = application.sh \
                  cpu_load.py \
                  desktop.sh \
-                 prestart.sh \
                  set_user_env.sh \
-                 startsession.sh \
                  timeout.sh \
                  uumount.sh \
                  ulteo-ovdd \
