@@ -84,7 +84,7 @@ Action::build_cmd() {
 
 int
 Action::perform() {
-    std::string cmd = this->chroot_cmd+" \""+chroot+"\" su - "+user+" -c '"+command+"'";
+    std::string cmd = this->chroot_cmd+" \""+chroot+"\" su -s /bin/sh - "+user+" -c '"+command+"'";
     int buffer_size = 4096;
     char buffer[buffer_size];
     // std::cout<<cmd<<std::endl;
