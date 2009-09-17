@@ -4,7 +4,7 @@
 <article>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
-    <subtitle>Administration Console</subtitle>
+    <subtitle>Administration Console guide</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
@@ -15,16 +15,14 @@
   </articleinfo>
 
   <para>
-    Ulteo OVD is configured by a web interface installed on the
-    Session Manager called <emphasis role="strong">Administration
-    Console</emphasis> or just <emphasis role="strong">console</emphasis>.
+    Ulteo OVD is configured by a web interface
+    called <emphasis role="strong">Administration Console</emphasis>
+    or just <emphasis role="strong">console</emphasis>.  It is
+    installed on and part of the Ulteo Session Manager.
   </para>
   <para>
-    This documentation explain the features pages by pages following
-    the menu.
-<!--    The first section of the documentation is going to explain features pages per pages.
-    The second section will explain each features in particular.
--->
+    This documentation describes the features available on the console
+    from the main menu, page per page.
   </para>
 
   <screenshot>
@@ -37,11 +35,11 @@
     <title>Log into the console</title>
 
     <para>
-      As you saw at the installation, the console is available using a
-      web browser and typing the
-      url <ulink>http://ip.or.host/sessionmanager/admin/</ulink> where
-      <emphasis>ip.or.host</emphasis> is the name or IP adress of the
-      machine you installed your Session Manager.
+      As you probably noticed at installation time, the console is
+      available using a web browser by entering the following
+      URL <ulink>http://ip.or.host/sessionmanager/admin/</ulink> where
+      <emphasis>ip.or.host</emphasis> is the name or IP address of the
+      machine where you installed the Session Manager.
     </para>
 
     <screenshot>
@@ -50,22 +48,22 @@
     </screenshot>
 
     <para>
-      You can login with the admin account. You can also login with OVD users if you
-      authorized to do that as we'll see later.
+      You can log in with the admin account. You can also log in with
+      OVD users if you priorly authorized them, as we'll see later in
+      that documentation.
     </para>
 
     <para>
-      Once logged, you are redirected to the main page. This page is
-      just shortcut and link to some informations about the
-      system. Let's following the menu.
+      Once logged in, you are redirected to the main page. This page is
+      just a shortcut to some system information. Let's follow the menu.
     </para>
   </section>
   
   <section>
     <title>Server Management</title>
     <para>
-      This category is about the application servers management. It's
-      also include the <emphasis>Shared Folders</emphasis> page.
+      This category is about Application Servers (ApS) management. 
+      It includes the <emphasis>Shared Folders</emphasis> page.
     </para>
 
     <section>
@@ -73,13 +71,13 @@
 
       <para>
         In the first page, you can see the list of Application
-        Server plugged to your Session Manager with some details.
+        Server that are plugged to your Session Manager and additional details.
       </para>
 
       <para>
-        By clicking on the FQDN link or on
-        the <emphasis>Manage</emphasis> button, you enter in
-        a <emphasis>manage</emphasis> page that give full details on
+        By clicking the FQDN link or 
+        the <emphasis>Manage</emphasis> button, you enter 
+        a <emphasis>manage</emphasis> page that provides full details for
         a specific server.
       </para>
 
@@ -89,31 +87,31 @@
     </screenshot>
 
       <simplesect>
-        <title>Specific server managment</title>
+        <title>Specific server management</title>
        
         <itemizedlist>
           <listitem>
             <para><emphasis>Number of available sessions on this
                 server:</emphasis> This value is not a limit for each
-                Application Server but a value used by the load
-                balancing algorithm as we'll see later.
+                Application Server. It's a value used by the load
+                balancer, as we'll see later.
             </para>
           </listitem>
           <listitem>
-            <para><emphasis>Redirection name of this
+            <para><emphasis>Redirection name of that
                 server:</emphasis> this is used to launch
-                session. When you launch a session, you are redirected
-                to an Application server using the redirection name as
-                redirection. In some cases the default redirection
-                name (the FQDN you gave at the ApS installation) is
-                not valid. For instance, if you setup an private IP
-                address and you want to connect from Internet.
+                sessions. When you launch a session, you are redirected
+                to an Application Server using the redirection name as
+                redirection. In some cases, the default redirection
+                name (the FQDN you provided during the ApS installation) is
+                not valid. For instance, if you setup a private IP
+                address and want to connect from Internet.
             </para>
           </listitem>
           <listitem>
-            <para><emphasis>Web port of this server:</emphasis> This
-            is the port where the Application Server listen for
-            webserices access from the Session Manager</para>.
+            <para><emphasis>Web port of this server:</emphasis> this
+            is the port where the Application Server is listening for
+            web services accesses from the Session Manager</para>.
             <important>
               <para>You shouldn't modify this value unless you are
               sure of what you are doing</para>
@@ -122,20 +120,20 @@
 
           <listitem>
             <para>
-              The maintenance/production is a status. This status is
+              The maintenance/production box is a status information. This status is
               used to keep some servers online and ready to use on
               maintenance to be sure that no sessions are going to be
-              launch. It's usefull when perfoming software upgrade for
-              instance.
+              started. For instance, it's useful when perfoming a software upgrade.
             </para>
           </listitem>
         </itemizedlist>
 
         <para>
-          On the Linux application, it's possible to install
-          applications directly from console by giving a package name.
-          It's also possible to ask for upgrade the server. It'll
-          upgrade the applications and the Ulteo software.
+          For Linux application, it's possible to install additional
+          applications directly from the console by entering a package
+          name.  It's also possible to ask for a global upgrade. It
+          will perform an applications and Ulteo software upgrade for
+          security and bugfixes.
         </para>
       </simplesect>
     </section>
@@ -145,7 +143,7 @@
 
       <para>
 	An Application server is unregistered
-	untill an admin registers it by clicking
+	until an admin registers it by clicking
 	the <emphasis>register button</emphasis>.
       </para>
     </section>
@@ -154,13 +152,13 @@
       <title>Tasks page</title>
 
       <para>
-        This is only available on Linux server yet. A tasks is a
-        request to a Application Server to install/remove an
+        At the moment, it is only available for Linux servers. A task is a
+        request to an Application Server to install or remove an
         application as we talked in the servers page.
       </para>
 
       <para>
-        This page just list the known tasks with their status.
+        This page is listing known tasks and their status.
       </para>
     </section>
 
@@ -168,22 +166,24 @@
       <title>Shared folders page</title>
 
       <para>
-        Shared folders is a feature to allow members of users groups
+        Shared folders is a feature that allows members of same user groups
         to work together on a virtual drive.
       </para>
       <para>
-        To make it work, create one, add some users groups to this
-        start a session.
+        To make it work, create one, add some user groups to it and start a session.
       </para>
       <important>
         <para>
-          You have to turn it on the Shared folder for session by
-          clicking on the button on the Shared folder page.
+          In order to enjoy that feature, you have to choose the
+          "Internal webDAV" filesystem for user's data. In order to do
+          that, click the "Enable Internal WebDAV filesystem" button
+          in the Shared Folders page. Using shared folders on other
+          filesystems is planned for future versions.
         </para>
       </important>
 
       <para>
-        This page just list the known tasks with their status.
+        This page is listing known tasks with their status.
       </para>
     </section>
   </section>
@@ -191,16 +191,16 @@
   <section>
     <title>Users</title>
     <para>
-      This category is about the user and the users groups.
+      This category is about users and the user groups.
     </para>
     <para>
-      Each user is shown with his login, his display name, his uid and
+      Each user is shown with his login, his display name, his user ID (uid) and
       all other extra fields from the user database.
     </para>
 
     <para>
       You can get more information about a User either by clicking
-      the <emphasis>Manage</emphasis> button or by clicking on the
+      the <emphasis>Manage</emphasis> button or by clicking the
       user login hyperlink.
     </para>
 
@@ -212,11 +212,12 @@
     <section>
       <title>Manage a user</title>
       <para>
-	In this page, we can modify each user attribute if the user database is writable. 
-	Actually, only MySQL module is writable.
+	On this page, you can modify each user attribute if the user database is writable. 
+	At the moment only the MySQL module is writable.
       </para>
       <para>
-	There is also the list of user groups that contain this user and the list of active sessions for this user.
+	The list of user groups that contain this user and the list of
+	active sessions for this user are already shown.
       </para>
     </section>
 
@@ -224,13 +225,13 @@
       <title>User Group Management</title>
       <para>
 	This page provides a list of user group with their name, their
-	description and their status (Enabled or Block).  You also
-	can add and remove user groups.
+	description and their status and corresponding action (Enable or Block).  Also can you
+	add and remove user groups.
       </para>
 
       <para>
 	The Manage page of a specific group lets you change status and
-	description.  It's also possible to add or remove users from a
+	description for that group.  It's also possible to add or remove users from a
 	specific group and view the list of publications for a
 	specific group.
       </para>
@@ -238,10 +239,10 @@
   </section>
 
   <section>
-    <title>Applications Management</title>
+    <title>Application Management</title>
     <para>
-      This page shows the list of applications which are (physically)
-      installed on the application servers.
+      This page provides the list of applications that are (physically)
+      installed on Application Servers.
     </para>
     <para>
       Each application is shown with his name, his description and his
@@ -256,29 +257,28 @@
     <para>
       You can have more information about an application either by
       clicking the <emphasis>Manage</emphasis> button or by clicking
-      on the application name hyperlink.
+      on application name hyperlink.
     </para>
 
     <section>
       <title>Manage an application</title>
       <para>
-	When you manage an application, you can add or remove this
-	application from online servers and from the application
-	groups.
+	In this part, managing applications means that you can either install/uninstall this
+	application on online servers, or add/remove them from application groups.
       </para>
     </section>
 
     <section>
-      <title>Application group Management</title>
+      <title>Application group management</title>
       <para>
 	This page provides a list of application groups with their
-	name, their description and their status (Enabled or Blocked).
+	name, their description and their status and corresponding action (Enable or Block).
 	You can also add and remove application groups.
       </para>
 
       <para>
-	The manage page of a specific group lets you change the status
-	and the description.  It's also possible to add or remove
+	The manage page of a specific group lets you change their status
+	and description.  It's also possible to add or remove
 	users from a specific group and view the list of publications
 	for a specific group.
       </para>
@@ -287,10 +287,10 @@
     <section>
       <title>Static applications page</title>
       <para>
-        Static application are application that have not be detected
+        Static applications are applications that have not been detected
 	automatically on an Application Server.
-        It's set directly on the console. It could be w Web
-	application for instance.
+        It's set directly on the console. For instance, it could be a "Web
+	application".
       </para>
     </section>
 
@@ -300,10 +300,10 @@
       <para>
 	This page shows associations between user groups and
 	application groups. A publication wizard is available to make
-	the process simple.
+	the process more simple.
       </para>
       <para>
-	This wizard is in 3 main steps:
+	The publication wizard consists of 3 main steps:
 	<itemizedlist>
 	  <listitem>
 	    <para>selection of users</para>
@@ -319,7 +319,7 @@
       <para>
 	If you choose users from the user list instead of an existing
 	user group, the system is going to ask you for a user group
-	name and description. It's the same for application selection.
+	name and description. It's the same for selecting applications.
       </para>
     </section>
   </section>
@@ -331,8 +331,8 @@
       At this page, you can configure your sesion manager.
     </para>
     <para>
-      Be careful when you change the config, it can break actives
-      session depending on the kind of action.
+      Be careful when you change those settings: on some actions it can break active
+      sessions.
     </para>
 
     <screenshot>
@@ -343,13 +343,13 @@
     <section>
       <title>Database settings page</title>
       <para>
-        In this page, it's possible to change the information the
+        On this page, it's possible to change settings for the
 	MySQL database used by the OVD.
       </para>
       <important>
         <para>
-          If you change informations on this page, you can break your
-          system, delete your users groups or other information.
+          Be careful if you change settings on this page: on some actions you can break your
+          system, delete your users groups or other important settings.
         </para>
       </important>
     </section>
@@ -357,28 +357,27 @@
     <section>
       <title>System settings page</title>
       <para>
-        In this page, it's possible to customize the language of the
+        On this page, it's possible to customize the language used for the
         console.
-        It's also possible to change the admin policy for OVD users.
+        Here it's also possible to change the admin policy for OVD users.
       </para>
 
       <section>
         <title>Policy</title>
         <para>
-          By modifying the policy, you authorized each of your OVD
-          users to perform some admin actions.  It's a default policy,
-          it's can be override by customize the policy for a users
-          group.
+          By modifying the policy, you authorize each of your OVD
+          users to perform some admin actions. This default policy can 
+          be overriden by customizing the policy for a specific user group.
         </para>
         <para>
           For instance, if you select <emphasis>user admin
-          panel</emphasis>, you authorizing every OVD users to logon
-          the admin console.
+          panel</emphasis>, you allow each OVD users to log into
+          the administration console.
         </para>
 
         <note>
           <para>
-            We advice to keep disable all field of the default policy.
+            We advise to leave all fields of the default policy on "disabled".
           </para>
           </note>
       </section>
@@ -387,15 +386,15 @@
     <section>
       <title>Server settings page</title>
       <para>
-        This page is about the Applications servers settings.
+        This page is about Application servers settings
       </para>
 
       <simplesect>
         <title>Load balancing</title>
         <para>
-          The load balancing is used to choose the server to use when
-          a user request for a session. It's possible to customize the
-          algorithm to change the priority of the criterians.
+          The load balancing feature is used to choose which server must be selected when
+          a user is requesting a new session. It's possible to customize the
+          algorithm to change the priority of criterions.
         </para>
       </simplesect>
     </section>
@@ -403,8 +402,8 @@
     <section>
       <title>Profile settings page</title>
       <para>
-        Ulteo OVD can be plugged to LDAP or Active Directory or keep
-        is own local database.
+        The Ulteo OVD can be plugged to LDAP or Active Directory, or use
+        its own local database.
       </para>
     </section>
 
@@ -412,7 +411,7 @@
     <section>
       <title>Session Configuration</title>
       <para>
-        This part is about the default configuration of the session
+        This part is about the default configuration for sessions
         and what the user can force.
       </para>
     </section>
@@ -420,8 +419,8 @@
     <section>
       <title>Events Configuration</title>
       <para>
-        In this page, you can give email adress to receive alert when
-        events occurs.
+        In this page, you can provide and email adress to receive and alert when
+        an event occurs.
       </para>
     </section>
 
@@ -429,7 +428,7 @@
       <title>Web interface settings page</title>
       <para>
         This page is about the configuration of the Ulteo OVD main
-        page (the one you use to start sessions).
+        page (the one the user is using to start a session).
       </para>
     </section>
   </section>
@@ -451,10 +450,10 @@
 	    <para><emphasis role="strong">Session:</emphasis> the session id</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">Server:</emphasis> the server where the session runs</para>
+	    <para><emphasis role="strong">Server:</emphasis> the server where the session is running</para>
 	  </listitem>
 	  <listitem>
-	    <para><emphasis role="strong">User:</emphasis> the user which started the session</para>
+	    <para><emphasis role="strong">User:</emphasis> the user who started the session</para>
 	  </listitem>
 	</itemizedlist>
       </para>
@@ -464,7 +463,7 @@
       </para>
 
       <para>
-	You can have more information about a session by clicking on the session id.
+	You can have more information about a session by clicking on the corresponding session id.
       </para>
 
       <section>
@@ -487,7 +486,7 @@
   <section>
     <title>Logs page</title>
     <para>
-      This page show the log on the Session Manager. The log level
+      This page shows the log on the Session Manager. The log level
       depends on the configuration set in the Configuration System
       settings page.
     </para>
@@ -504,12 +503,12 @@
   <section>
     <title>Summary page</title>
     <para>
-      Ths summary page show all links between user, users groups,
-      applications, applications groups and server.
+      Ths summary page shows all links between user, user groups,
+      applications, application groups and servers.
     </para>
     <para>
-      This page is very usefull when you are lost in the publication
-      or when you don't why you can't start sessions.
+      This page is very useful in the case you would be lost in publications
+      or if you don't know why you can't start sessions.
     </para>
     <important>
       <para>
