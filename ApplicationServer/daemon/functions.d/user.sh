@@ -33,7 +33,7 @@ user_create() {
     useradd --shell ${USER_SHELL} --home $USER_HOME -m -k /dev/null ${USERADD_ARG} ${USER_LOGIN}
 
     USER_ID=$(id -u $USER_LOGIN)
-    chown $USER $SPOOL_USERS/$SESSID
+    chown $USER_ID $SPOOL_USERS/$SESSID
     chmod 770      $SPOOL_USERS/$SESSID
 }
 
