@@ -73,7 +73,7 @@ session_init() {
         spool_free_rfbport $RFB_PORT
         return 1
     fi
-    log_INFO "useradd $SSH_USER with uid : $uid"
+    log_INFO "useradd $SSH_USER"
     useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
@@ -94,7 +94,7 @@ session_init() {
         spool_free_rfbport $RFB_PORT
         return 1
     fi
-    log_INFO "useradd $VNC_USER with uid : $uid"
+    log_INFO "useradd $VNC_USER"
     useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER
 
 
