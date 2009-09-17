@@ -206,7 +206,7 @@
 
     <screenshot>
       <screeninfo>Users page</screeninfo>
-      <graphic fileref="img/admin-console/servers.png"></graphic>
+      <graphic fileref="img/admin-console/users.png"></graphic>
     </screenshot>
 
     <section>
