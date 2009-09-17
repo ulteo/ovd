@@ -3,13 +3,14 @@
 "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop - Frequently Asked Questions</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Frequently Asked Questions</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
       <year>2008</year>
       <year>2009</year>
-      <holder>Ulteo SAS</holder>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
 

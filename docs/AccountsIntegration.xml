@@ -3,12 +3,13 @@
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <article>
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop - Accounts Integration</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Accounts Integration</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
       <year>2009</year>
-      <holder>Ulteo SAS</holder>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
 

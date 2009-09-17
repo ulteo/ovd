@@ -4,20 +4,9 @@
 
 <article>
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop - <trademark>Windows</trademark> Applications</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle><trademark class="registered">Microsoft Windows</trademark> Applications</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
-    <!--
-    <authorgroup>
-      <author>
-	<firstname>Julien</firstname>
-	<surname>Langlois</surname>
-	<affiliation>
-	  <jobtitle>Ulteo developer</jobtitle>
-	  <address><email>julien@ulteo.com</email></address>
-	</affiliation>
-      </author>
-    </authorgroup>
-    -->
 
     <copyright>
       <year>2009</year>

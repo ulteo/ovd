@@ -3,7 +3,8 @@
 	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
-    <title>Installation documentation for Ulteo Open Virtual Desktop</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Installation</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>

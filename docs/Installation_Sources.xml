@@ -5,7 +5,8 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <articleinfo>
-    <title>Installation documentation for the Ulteo Open Virtual Desktop from the sources</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Installation from sources</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>

@@ -4,24 +4,13 @@
 
 <article>
   <articleinfo>
-    <title>Ulteo Open Virtual Desktop - <trademark>Active Directory</trademark> Primary Authentication</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Active Directory Primary Authentication</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
-    <!--
-    <authorgroup>
-      <author>
-	<firstname>Julien</firstname>
-	<surname>Langlois</surname>
-	<affiliation>
-	  <jobtitle>Ulteo developer</jobtitle>
-	  <address><email>julien@ulteo.com</email></address>
-	</affiliation>
-      </author>
-    </authorgroup>
-    -->
 
     <copyright>
       <year>2009</year>
-      <holder>Ulteo SAS</holder>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
 

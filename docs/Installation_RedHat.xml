@@ -5,7 +5,8 @@
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
 
   <articleinfo>
-    <title>Installation documentation for the Ulteo Open Virtual Desktop on Red Hat systems</title>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Installation on Red Hat systems</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
