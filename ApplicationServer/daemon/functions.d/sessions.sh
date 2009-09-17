@@ -288,7 +288,11 @@ session_load() {
     if [ -f ${SESSID_DIR}/parameters/user_id ]; then
         USER_ID=$(cat ${SESSID_DIR}/parameters/user_id)
     else
-        USER_ID=$(id -u $USER_LOGIN)
+        USER_ID=$(id -u $USER_LOGIN 2>/dev/nul)
+        if [ $? -ne 0 ]; then
+            log_INFO "User doesn't exist yet: tweak USER_ID to 0"
+            USER_ID=0
+        fi
     fi
 
     # Autodetection informations
