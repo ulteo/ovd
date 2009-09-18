@@ -78,8 +78,18 @@ class Configuration_mode_ad extends Configuration_mode {
   public function form_read($form, $prefs) {
     if ($form['user_branch'] == 'default')
       $ou = 'cn=Users';
-    else
-      $ou = 'ou='.$form['user_branch_ou'];
+    else {
+		$ubranch = $form['user_branch_ou'];
+		if (strstr($ubranch, ',') != False) {
+			$buffer = explode(',', $ubranch);
+			$buffer = array_reverse($buffer);
+			for($i=0; $i<count($buffer); $i++)
+				$buffer[$i] = trim($buffer[$i]);
+			$ubranch = implode(',ou=', $buffer);
+		}
+
+		$ou = 'ou='.$ubranch;
+	}
 
     if ($form['admin_branch'] == 'default')
       $admin_dn = 'cn='.$form['admin_login'].',cn=Users';
@@ -141,9 +151,15 @@ class Configuration_mode_ad extends Configuration_mode {
     $form['domain'] = $config['domain'];
 
     $form['user_branch'] = ($config['ou'] == 'cn=Users')?'default':'specific';
-    $b = explode('=', $config['ou'], 2);
-    $form['user_branch_ou'] = ($form['user_branch'] == 'specific')?$b[1]:'';
 
+	$buffer = explode(',', $config['ou']);
+	for($i=0; $i<count($buffer); $i++) {
+		$buf = explode('=', $buffer[$i], 2);
+		if (! isset($buf[1]))
+			break;
+		$buffer[$i] = $buf[1];
+	}
+	$form['user_branch_ou'] = implode(',', array_reverse($buffer));
 
     // Admin login - Todo: replace by a regexp
     if ($config['login'] != '') {
@@ -197,7 +213,7 @@ class Configuration_mode_ad extends Configuration_mode {
     if ($form['user_branch'] == 'specific')
       $str.= ' checked="checked"';
     $str.= '/>'._('Specific Organization Unit:');
-    $str.= '<input type="text" name="user_branch_ou" value="'.$form['user_branch_ou'].'" />';
+    $str.= ' <input type="text" name="user_branch_ou" value="'.$form['user_branch_ou'].'" />';
 
     $str.= '<div>';
     $str.= '<h4>'._('Administrator account').'</h4>';
