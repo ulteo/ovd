@@ -934,6 +934,6 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function writeFile($filePathOrData, $localName='', $data=false) {
 		$localName = (($localName == '')?basename($filePathOrData):$localName);
 
-		$this->true_echo($filePathOrData, $localName, $data);
+		return $this->true_echo($filePathOrData, $localName, $data);
 	}
 }
