@@ -34,5 +34,3 @@ dist-hook: ajaxplorer.tar.gz
 ajaxplorer.tar.gz:
 	tar czf $(srcdir)/ajaxplorer.tar.gz --exclude=.svn -C $(srcdir) ajaxplorer
 
-distclean-local:
-	rm -f ajaxplorer.tar.gz
