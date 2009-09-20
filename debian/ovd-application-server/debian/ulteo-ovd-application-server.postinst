@@ -119,7 +119,12 @@ fi
 
 # if we reinstall the ApS and the chroot is already there, the configs need to
 # be written again
-set_chroot_conf
+if [ ! -e $CHROOTCONF ]; then
+    echo "Warning: the chroot configuration file is missing, the configuration will have"
+    echo "         to be done manually in $CHROOTCONF."
+else
+    set_chroot_conf
+fi
 set_host_conf
 
 db_stop
