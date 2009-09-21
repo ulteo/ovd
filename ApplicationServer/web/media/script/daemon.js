@@ -1,6 +1,7 @@
 var refresh = 2000;
 
 var access_id;
+var session_mode;
 var applet_version;
 var applet_main_class;
 var printing_applet_version;
@@ -17,10 +18,11 @@ var old_session_state = -1;
 
 var nb_share = 0;
 
-var application_started = false;
+var session_started = false;
 var window_alive = true;
 
-function daemon_init(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
+function daemon_init(session_mode_, applet_version_, applet_main_class_, printing_applet_version_, debug_) {
+	session_mode = session_mode_;
 	applet_version = applet_version_;
 	applet_main_class = applet_main_class_;
 	printing_applet_version = printing_applet_version_;
@@ -52,14 +54,21 @@ function daemon_init(applet_version_, applet_main_class_, printing_applet_versio
 		my_height = document.body.clientHeight;
 	}
 
-	if ($('menuShare')) {
-		$('menuShare').style.width = my_width+'px';
-		var new_height = parseInt(my_height)-18;
-		if (debug)
-			new_height = parseInt(new_height)-149;
-		$('menuShare').style.height = new_height+'px';
+	if (session_mode == 'desktop') {
+		if ($('menuShare')) {
+			$('menuShare').style.width = my_width+'px';
+			var new_height = parseInt(my_height)-18;
+			if (debug)
+				new_height = parseInt(new_height)-149;
+			$('menuShare').style.height = new_height+'px';
 
-		my_height = parseInt(my_height)-18;
+			my_height = parseInt(my_height)-18;
+		}
+	} else if (session_mode == 'portal') {
+		$('portalContainer').style.height = parseInt(my_height)-154+'px';
+		$('appsContainer').style.height = parseInt(my_height)-154+'px';
+		$('runningAppsContainer').style.height = parseInt(my_height)-154+'px';
+		$('fileManagerContainer').style.height = parseInt(my_height)-154+'px';
 	}
 
 	if (debug)
@@ -89,13 +98,19 @@ function daemon_loop() {
 			}
 		);
 	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
-		if (! application_started) {
+		if (! session_started) {
 			access_id = 'desktop';
 
 			switch_splash_to_applet();
+
+			if (session_mode == 'portal') {
+				list_apps();
+				load_ajaxplorer();
+				list_news();
+			}
 		}
 
-		application_started = true;
+		session_started = true;
 	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
 		window_alive = false;
 		switch_applet_to_end();
@@ -132,13 +147,18 @@ function switch_splash_to_applet() {
 
 					var sessionNode = buffer[0];
 
-					buffer = sessionNode.getElementsByTagName('parameters');
-					var parametersNode = buffer[0];
+					if (session_mode == 'desktop') {
+						buffer = sessionNode.getElementsByTagName('parameters');
+						var parametersNode = buffer[0];
 
-					applet_width = parametersNode.getAttribute('width');
-					applet_height = parametersNode.getAttribute('height');
-					applet_share_desktop = parametersNode.getAttribute('share_desktop');
-					applet_view_only = parametersNode.getAttribute('view_only');
+						applet_width = parametersNode.getAttribute('width');
+						applet_height = parametersNode.getAttribute('height');
+						applet_share_desktop = parametersNode.getAttribute('share_desktop');
+						applet_view_only = parametersNode.getAttribute('view_only');
+					} else if (session_mode == 'portal') {
+						applet_width = 1;
+						applet_height = 1;
+					}
 
 					buffer = sessionNode.getElementsByTagName('ssh');
 					var sshNode = buffer[0];
@@ -155,20 +175,22 @@ function switch_splash_to_applet() {
 							applet_ssh_ports = applet_ssh_ports+',';
 					}
 
-					buffer = sessionNode.getElementsByTagName('vnc');
-					var vncNode = buffer[0];
+					if (session_mode == 'desktop') {
+						buffer = sessionNode.getElementsByTagName('vnc');
+						var vncNode = buffer[0];
 
-					applet_vnc_host = vncNode.getAttribute('host');
-					applet_vnc_port = vncNode.getAttribute('port');
-					applet_vnc_passwd = vncNode.getAttribute('passwd');
+						applet_vnc_host = vncNode.getAttribute('host');
+						applet_vnc_port = vncNode.getAttribute('port');
+						applet_vnc_passwd = vncNode.getAttribute('passwd');
 
-					buffer = vncNode.getElementsByTagName('quality');
-					var vncQualityNode = buffer[0];
+						buffer = vncNode.getElementsByTagName('quality');
+						var vncQualityNode = buffer[0];
 
-					applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
-					applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
-					applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
-					applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
+						applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
+						applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
+						applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
+						applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
+					}
 
 					applet_have_proxy = false;
 					buffer = sessionNode.getElementsByTagName('proxy');
@@ -196,31 +218,35 @@ function switch_splash_to_applet() {
 					<param name="cache_archive" value="'+applet_version+'" /> \
 					<param name="cache_archive_ex" value="'+applet_version+';preload" /> \
 					\
-					<param name="Share desktop" value="'+applet_share_desktop+'" /> \
-					<param name="View only" value="'+applet_view_only+'" /> \
-					\
 					<param name="SSH" value="yes" /> \
 					<param name="ssh.host" value="'+applet_ssh_host+'" /> \
 					<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
 					<param name="ssh.user" value="'+applet_ssh_user+'" /> \
-					<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
-					\
-					<param name="HOST" value="'+applet_vnc_host+'" /> \
-					<param name="PORT" value="'+applet_vnc_port+'" /> \
-					<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
-					\
-					<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
-					<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
-					<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
-					<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
-					\
-					<!-- Caching options --> \
-					<param name="rfb.cache.enabled" value="true" /> \
-					<param name="rfb.cache.ver.major" value="1" /> \
-					<param name="rfb.cache.ver.minor" value="0" /> \
-					<param name="rfb.cache.size" value="42336000" /> \
-					<param name="rfb.cache.alg" value="LRU" /> \
-					<param name="rfb.cache.datasize" value="2000000" />';
+					<param name="ssh.password" value="'+applet_ssh_passwd+'" />';
+
+				if (session_mode == 'desktop') {
+					applet_html_string = applet_html_string+' \
+						\
+						<param name="Share desktop" value="'+applet_share_desktop+'" /> \
+						<param name="View only" value="'+applet_view_only+'" /> \
+						\
+						<param name="HOST" value="'+applet_vnc_host+'" /> \
+						<param name="PORT" value="'+applet_vnc_port+'" /> \
+						<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
+						\
+						<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
+						<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
+						<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
+						<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
+						\
+						<!-- Caching options --> \
+						<param name="rfb.cache.enabled" value="true" /> \
+						<param name="rfb.cache.ver.major" value="1" /> \
+						<param name="rfb.cache.ver.minor" value="0" /> \
+						<param name="rfb.cache.size" value="42336000" /> \
+						<param name="rfb.cache.alg" value="LRU" /> \
+						<param name="rfb.cache.datasize" value="2000000" />';
+				}
 
 				if (applet_have_proxy) {
 					applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \
@@ -237,9 +263,17 @@ function switch_splash_to_applet() {
 				var appletNode = $('appletContainer').getElementsByTagName('applet');
 				if (appletNode.length > 0) {
 					appletNode = appletNode[0];
-					appletNode.width = parseInt(my_width);
-					appletNode.height = parseInt(my_height);
+
+					if (session_mode == 'desktop') {
+						appletNode.width = parseInt(my_width);
+						appletNode.height = parseInt(my_height);
+					} else if (session_mode == 'portal') {
+						appletNode.width = 1;
+						appletNode.height = 1;
+					}
 				}
+				if (session_mode == 'portal')
+					$('mainWrap').show();
 				$('appletContainer').show();
 			}
 		}
@@ -251,6 +285,8 @@ function switch_applet_to_end() {
 	if ($('menuContainer'))
 		$('menuContainer').hide();
 	$('appletContainer').hide();
+	if (session_mode == 'portal')
+		$('mainWrap').hide();
 	$('endContainer').show();
 
 // 	if (text_ != false)
@@ -355,6 +391,29 @@ function onUpdateInfos(transport) {
   else
     push_log('[session] Status: '+session_state, 'debug');
 
+  if (session_mode == 'portal') {
+    var buffer = xml.getElementsByTagName('applications');
+
+    if (buffer.length != 1) {
+      push_log('[applications] bad xml format', 'error');
+      return;
+    }
+
+    var applicationsNode = buffer[0];
+
+    var runningApplicationsNodes = applicationsNode.getElementsByTagName('running');
+    var apps;
+    for (var i = 0; i < runningApplicationsNodes.length; i++) {
+      var app_id = runningApplicationsNodes[i].getAttribute('app_id');
+      var access_id = runningApplicationsNodes[i].getAttribute('job');
+      var app_status = runningApplicationsNodes[i].getAttribute('status');
+
+      apps = apps+','+app_id+'-'+access_id+'-'+app_status;
+    }
+
+    list_running_apps(apps);
+  }
+
   var printNode = sessionNode.getElementsByTagName('print');
   if (printNode.length > 0) {
     printNode = printNode[0];
@@ -441,6 +500,11 @@ function do_print(path, timestamp) {
 }
 
 function do_invite() {
+	if (session_mode == 'desktop')
+		var invite_access_id = 'desktop';
+	else if (session_mode == 'portal')
+		var invite_access_id = $('invite_access_id').value;
+
 	var email = $('invite_email').value;
 	var mode = 'passive';
 	if ($('invite_mode').checked)
@@ -454,7 +518,7 @@ function do_invite() {
 			parameters: {
 				'email': email,
 				'mode': mode,
-				'access_id': access_id
+				'access_id': invite_access_id
 			},
 			onSuccess: function(transport) {
 				if (transport.responseText != 'OK') {
@@ -462,9 +526,15 @@ function do_invite() {
 					$('invite_mode').disabled = true;
 					$('invite_submit').disabled = true;
 
-					$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
+					if (session_mode == 'desktop')
+						$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
+					else if (session_mode == 'portal')
+						showError('Unable to send invitation mail, please try again later...');
 				} else if (transport.responseText == 'OK') {
 					$('invite_submit').disabled = false;
+
+					if (session_mode == 'portal')
+						showOk('Invitation has been sent !');
 				}
 			}
 		}

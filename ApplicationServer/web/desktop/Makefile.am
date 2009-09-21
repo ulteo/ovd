@@ -1,4 +1,4 @@
-scripts_DATA = common.css daemon.js index.php
+scripts_DATA = common.css index.php
 
 scriptsdir = $(datadir)/ulteo/applicationserver/desktop
 

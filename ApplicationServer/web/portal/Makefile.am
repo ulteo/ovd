@@ -4,7 +4,6 @@ scripts_DATA = application.js \
                application_exit.php \
                apps.php \
                common.css \
-               daemon.js \
                external_app.php \
                functions.js \
                get_news.php \
