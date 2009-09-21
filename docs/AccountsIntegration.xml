@@ -188,14 +188,16 @@
       <graphic fileref="img/profile-ad.png"></graphic>
     </screenshot>
 
-    <important>
+    <note>
       <para>
-	At the moment, if you don't want to specify your own branch
-	for users, you can only specify an <emphasis
-	role="strong">Organization Unit</emphasis> (OU).
+        If you want to specify a
+	sub <emphasis role="strong">Organization Unit</emphasis> (OU),
+	you have to get the path separated by a coma.
       </para>
-    </important>
-
+      <para>
+        For instance: <emphasis>Developers,web,ajax</emphasis>.
+      </para>
+    </note>
 
     <simplesect>
       <title>User groups</title>
