@@ -1,35 +1,65 @@
 html {
-	background-color: white;
-	color: #252525;
+	background-color: #fff;
+	color: #585858;
 
-	font-family: Arial, Lucida Grande, sans-serif;
+	font-family: "Lucida Grande", Verdana, Lucida, Helvetica, Arial, sans-serif;
+
 	font-size: 1em;
 }
 
 a {
-	color: #d50000;
+	font-weight: bold;
+	font-size: 0.9em;
+	color: #36c;
 	text-decoration: none;
 }
 a:hover {
-	text-decoration: underline;
+	color: #f60;
 }
 
-h1, h2, h3, h4, h5, h6 {
-	border-bottom: 3px solid #8cacbb;
-	padding: 0 0 0.3em 0;
+h1, h2, h3, h4, h5 {
+	font-weight: normal;
+	border-bottom: 1px solid #8cacbb;
 }
+
+h1 {
+	border: none;
+	font-size: 1.6em;
+	font-weight: bold;
+}
+
 h2 {
-    font-size: 2.5em;
+	font-size: 1.8em;
+	/*margin-left: 1em;*/
+	margin-top: 1.5em;
+	text-align: center;
+	border-bottom: none;
+}
+
+.section h2 {
+	font-size: 1.5em;
+	text-align: left;
+	border-bottom: 1px solid #8cacbb;
 }
 
 h3 {
-    font-size: 1.66em;
-    border-bottom: 2px solid #8cacbb;
+	font-size: 1.6em;
+	/*margin-left: 2em;*/
+	margin-top: 1em;
+	text-align: center;
+	border-bottom: none;
+}
+
+.section h3 {
+	font-size: 1.3em;
+	text-align: left;
+	border-bottom: 1px solid #8cacbb;
 }
 
 h4 {
-    font-size: 1.33em;
-    border-bottom: 1px solid #8cacbb;
+	font-size: 1.1em;
+	/*margin-left: 2em;*/
+	margin-top: 1em;
 }
 
 li p {
@@ -70,7 +100,7 @@ pre {
 }
 
 hr {
-	border: none;
+	border: 1px solid #8cacbb;
 }
 
 div.important { 
