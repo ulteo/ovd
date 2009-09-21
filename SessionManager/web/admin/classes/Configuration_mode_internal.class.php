@@ -44,6 +44,9 @@ class Configuration_mode_internal extends Configuration_mode {
     if (! in_array($form['user'], array('fake', 'sql')))
       return False;
 
+	if (! in_array($form['homedir'], array('local', 'dav')))
+		return False;
+
     return True;
   }
 
@@ -57,7 +60,7 @@ class Configuration_mode_internal extends Configuration_mode {
 
 
     // Set the FS type
-    $prefs->set('plugins', 'FS', 'local');
+	$prefs->set('plugins', 'FS', $form['homedir']);
 
     return True;
   }
@@ -68,6 +71,7 @@ class Configuration_mode_internal extends Configuration_mode {
     $config = $prefs->get('UserDB', 'enable');
 
     $form['user'] = ($config == 'sql')?'sql':'fake';
+	$form['homedir']  = $prefs->get('plugins', 'FS');
     return $form;
   }
 
@@ -91,6 +95,23 @@ class Configuration_mode_internal extends Configuration_mode {
       $str.= ' checked="checked"';
     $str.= '/>'._('I want to create my own users');
     $str.= '</div>';
+
+	$str.= '<div>';
+	$str.= '<h3>'._('Home Directory').'</h3>';
+	$str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
+	if ($form['homedir'] == 'local')
+		$str.= ' checked="checked"';
+	$str.= '/>';
+	$str.= _('Use Internal home directory (no server replication)');
+	$str.= '<br/>';
+
+	$str.= '<input class="input_radio" type="radio" name="homedir" value="dav" ';
+	if ($form['homedir'] == 'dav')
+		$str.= ' checked="checked"';
+	$str.= '/>';
+	$str.= _('Use shared folders');
+	$str.= '<br/>';
+	$str.= '</div>';
 
     return $str;
   }
