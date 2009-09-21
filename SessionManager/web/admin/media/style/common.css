@@ -39,6 +39,16 @@ div#adminError {
 	margin-bottom: 15px;
 }
 
+div#adminInfo {
+	background: #ccffcc;
+	border: 1px solid #00cc00;
+	padding: 10px;
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 15px;
+}
+
 div#adminContent {
 	/*padding-left: 10px;
 	padding-right: 10px;*/

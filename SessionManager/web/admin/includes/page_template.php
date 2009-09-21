@@ -241,6 +241,13 @@ function page_header($params_=array()) {
   else
     $errors = array();
 
+  if (isset($_SESSION['infomsg'])) {
+    $infos = array_unique($_SESSION['infomsg']);
+    unset($_SESSION['infomsg']);
+  }
+  else
+    $infos = array();
+
   echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">';
   echo '<html xmlns="http://www.w3.org/1999/xhtml">';
   echo '<head>';
@@ -317,6 +324,20 @@ function page_header($params_=array()) {
       echo '</ul>';
     } else
       echo $errors[0];
+    echo '</span>';
+    echo '</div>';
+  }
+
+  if (count($infos) > 0) {
+    echo '<div id="adminInfo">';
+    echo '<span class="msg_ok">';
+    if (count($infos) > 1) {
+      echo '<ul>';
+      foreach ($infos as $info_msg)
+	echo '<li>'.$info_msg.'</li>';
+      echo '</ul>';
+    } else
+      echo $infos[0];
     echo '</span>';
     echo '</div>';
   }

@@ -166,3 +166,16 @@ function popup_error($msg_) {
 
 	return true;
 }
+
+function popup_info($msg_) {
+	if (! isset($_SESSION['infomsg']))
+		$_SESSION['infomsg'] = array();
+
+	if (is_array($msg_))
+		foreach ($msg_ as $infomsg)
+			$_SESSION['infomsg'][] = $infomsg;
+	else
+		$_SESSION['infomsg'][] = $msg_;
+
+	return true;
+}
