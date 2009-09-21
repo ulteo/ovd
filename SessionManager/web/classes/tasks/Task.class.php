@@ -40,6 +40,11 @@ class Task {
 	}
 
 	public function init() {
+		if (! is_object($this->server)) {
+			Logger::error('apt-get', 'TASK::init for task '.$this->id.' returned an error (unknown server '.$this->server.')');
+			return false;
+		}
+
 		$job_id = query_url($this->server->getWebservicesBaseURL().'/apt-get.php?action=request&request='.urlencode($this->getRequest()));
 		if ($job_id === false) {
 			$this->status = 'error';
@@ -53,6 +58,11 @@ class Task {
 	}
 
 	public function refresh() {
+		if (! is_object($this->server)) {
+			Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' returned an error (unknown server '.$this->server.')');
+			return false;
+		}
+
 		$buf = query_url($this->server->getWebservicesBaseURL().'/apt-get.php?action=status&job='.$this->job_id);
 		if ($buf === false) {
 			$this->status = 'error';
