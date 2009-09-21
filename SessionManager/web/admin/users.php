@@ -90,6 +90,7 @@ function add_user($userDB) {
   if (! $res)
     die_error('Unable to create user '.$res, __FILE__, __LINE__);
 
+  popup_info(_('User successfully added'));
   return true;
 }
 
@@ -99,6 +100,7 @@ function del_user($userDB, $login) {
   if (! $res)
     die_error('Unable to delete user '.$res,__FILE__,__LINE__);
 
+  popup_info(_('User successfully deleted'));
   return true;
 }
 
@@ -115,6 +117,7 @@ function modify_user($userDB, $login) {
   if (! $res)
     die_error('Unable to modify user '.$res,__FILE__,__LINE__);
 
+  popup_info(_('User successfully modified'));
   return true;
 }
 

@@ -67,6 +67,10 @@ if ($_REQUEST['name'] == 'Application_Server') {
 
 	$tm = new Tasks_Manager();
 	$tm->add($t);
+	if ($_REQUEST['action'] == 'add')
+		popup_info(_('Task successfully added'));
+	else if ($_REQUEST['action'] == 'del')
+		popup_info(_('Task successfully deleted'));
 	redirect($_SERVER['HTTP_REFERER']);
 
 }
@@ -124,6 +128,7 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if ($_REQUEST['action'] == 'del') {
 		Abstract_Liaison::delete('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
+	popup_info(_('ApplicationGroup successfully modified'));
 }
 
 if ($_REQUEST['name'] == 'User_UserGroup') {
@@ -137,6 +142,7 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 	if ($_REQUEST['action'] == 'del') {
 		Abstract_Liaison::delete('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 	}
+	popup_info(_('UsersGroup successfully modified'));
 }
 
 if ($_REQUEST['name'] == 'Publication') {
@@ -148,16 +154,20 @@ if ($_REQUEST['name'] == 'Publication') {
 
 	if ($_REQUEST['action'] == 'add') {
 		$l = Abstract_Liaison::load('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
-		if (is_null($l))
+		if (is_null($l)) {
 			Abstract_Liaison::save('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
+			popup_info(_('Publication successfully added'));
+		}
 		else
 			popup_error(_('This publication already exists'));
 	}
 
 	if ($_REQUEST['action'] == 'del') {
 		$l = Abstract_Liaison::load('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
-		if (! is_null($l))
+		if (! is_null($l)) {
 			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
+			popup_info(_('Publication successfully deleted'));
+		}
 		else
 			popup_error(_('This publication does not exist'));
 
@@ -194,6 +204,7 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 		$policy[$_REQUEST['element']] = false;
 
 	$group->updatePolicy($policy);
+	popup_info(_('UsersGroup successfully modified'));
 	redirect();
 }
 
@@ -244,6 +255,7 @@ if ($_REQUEST['name'] == 'static_application') {
 				$app = $applicationDB->import($_REQUEST['id']);
 				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 				$app->delIcon();
+				popup_info(_('Application successfully deleted'));
 			}
 		}
 	}
@@ -255,11 +267,13 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 
 	if ($_REQUEST['action']=='add') {
 		action_add_sharedfolder();
+		popup_info(_('SharedFolder successfully added'));
 		redirect();
 	}
 	elseif ($_REQUEST['action']=='del') {
 		if (isset($_REQUEST['id'])) {
 			action_del_sharedfolder($_REQUEST['id']);
+			popup_info(_('SharedFolder successfully deleted'));
 			redirect();
 		}
 	}
@@ -271,10 +285,12 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_add_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
+		popup_info(_('SharedFolder successfully modified'));
 		redirect();
 	}
 	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['sharedfolder_id']) && isset($_REQUEST['usergroup_id'])) {
 		action_del_sharedfolder_acl($_REQUEST['sharedfolder_id'], $_REQUEST['usergroup_id']);
+		popup_info(_('SharedFolder successfully modified'));
 		redirect();
 	}
 }
@@ -286,6 +302,7 @@ if ($_REQUEST['name'] == 'News') {
 		$news->content = $_REQUEST['news_content'];
 		$news->timestamp = time();
 		Abstract_News::save($news);
+		popup_info(_('News successfully added'));
 		redirect();
 	}
 	elseif ($_REQUEST['action'] == 'del' && isset($_REQUEST['id'])) {
@@ -293,6 +310,8 @@ if ($_REQUEST['name'] == 'News') {
 
 		if (! $buf)
 			popup_error(_('Unable to delete this news'));
+		else
+			popup_info(_('News successfully deleted'));
 
 		redirect();
 	}
@@ -315,6 +334,7 @@ function action_add_sharedfolder() {
 	$buf->name = $sharedfolder_name;
 	Abstract_SharedFolder::save($buf);
 
+	popup_info(_('SharedFolder successfully added'));
 	return true;
 }
 
@@ -326,6 +346,7 @@ function action_del_sharedfolder($sharedfolder_id) {
 		return false;
 	}
 
+	popup_info(_('SharedFolder successfully deleted'));
 	return true;
 }
 
@@ -338,6 +359,7 @@ function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 
 	Abstract_SharedFolder::add_acl($sharedfolder, $usergroup_id_);
 
+	popup_info(_('SharedFolder successfully modified'));
 	return true;
 }
 
@@ -350,6 +372,7 @@ function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 
 	Abstract_SharedFolder::del_acl($sharedfolder, $usergroup_id_);
 
+	popup_info(_('SharedFolder successfully modified'));
 	return true;
 }
 

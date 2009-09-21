@@ -36,6 +36,7 @@ if (isset($_REQUEST['action'])) {
 				$news->title = $_REQUEST['news_title'];
 				$news->content = $_REQUEST['news_content'];
 				Abstract_News::save($news);
+				popup_info(_('News successfully modified'));
 			}
 		}
 

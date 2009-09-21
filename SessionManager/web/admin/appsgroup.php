@@ -66,6 +66,7 @@ function action_add() {
   if (!$res)
     die_error('Unable to create application group '.$res,__FILE__,__LINE__);
 
+  popup_info(_('AppsGroup successfully added'));
   return $g->id;
 }
 
@@ -78,6 +79,7 @@ function action_del($id) {
   if (! $group->removeDB())
     die_error('Unable to remove group "'.$id.'" is not OK',__FILE__,__LINE__);
 
+  popup_info(_('AppsGroup successfully deleted'));
   return true;
 }
 
@@ -105,6 +107,7 @@ function action_modify($id) {
   if (! $group->updateDB())
     die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 
+  popup_info(_('AppsGroup successfully modified'));
   return true;
 }
 

@@ -117,6 +117,7 @@ function action_add() {
   if (!$res)
     die_error('Unable to create user group '.$res,__FILE__,__LINE__);
 
+  popup_info(_('UserGroup successfully added'));
   return $g->getUniqueID();
 }
 
@@ -153,6 +154,7 @@ function action_add_dynamic() {
   $res = $userGroupDB->add($g);
   if (!$res)
     die_error('Unable to create dynamic user group '.$res,__FILE__,__LINE__);
+  popup_info(_('UserGroup successfully added'));
   return $g->getUniqueID();
 }
 
@@ -171,6 +173,7 @@ function action_del($id) {
   if (! $userGroupDB->remove($group))
     die_error('Unable to remove group "'.$id.'" is not OK',__FILE__,__LINE__);
 
+  popup_info(_('UserGroup successfully deleted'));
   return true;
 }
 
@@ -209,6 +212,7 @@ function action_modify($id) {
   if (! $userGroupDB->update($group))
     die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 
+  popup_info(_('UserGroup successfully modified'));
   return true;
 }
 
@@ -265,6 +269,7 @@ function action_set_default($id_) {
     return False;
   }
 
+  popup_info(_('UserGroup successfully modified'));
   return True;
 }
 
@@ -297,6 +302,7 @@ function action_unset_default($id_) {
     return False;
   }
 
+  popup_info(_('UserGroup successfully modified'));
   return True;
 }
 

@@ -86,6 +86,7 @@ function do_remove($tm, $id) {
 	}
 
 	$tm->remove($id);
+	popup_info(_('Task successfully deleted'));
 	return true;
 }
 

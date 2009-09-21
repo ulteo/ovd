@@ -37,6 +37,7 @@ if (isset($_REQUEST['action'])) {
 				if (! Abstract_SharedFolder::exists($_REQUEST['sharedfolder_name']) || $_REQUEST['sharedfolder_name'] == $sharedfolder->name) {
 					$sharedfolder->name = $_REQUEST['sharedfolder_name'];
 					Abstract_SharedFolder::modify($sharedfolder);
+					popup_info(_('SharedFolder successfully renamed'));
 				} else
 					popup_error(_('A shared folder with that name already exists!'));
 			}
@@ -58,6 +59,7 @@ if (isset($_REQUEST['action'])) {
 
 		$prefs->set('plugins', 'FS', 'dav');
 		$prefs->backup();
+		popup_info(_('Configuration successfully saved'));
 
 		redirect();
 	}
