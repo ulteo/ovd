@@ -284,7 +284,7 @@ class Dialog:
 
     def do_getAppletParameters(self):
         #values =  {'html': 1}
-        url = "%s/access.php"%(self.cm_url)
+        url = "%s/access.php?application_id=desktop"%(self.cm_url)
 #, urllib.urlencode(values))
         request = urllib2.Request(url)
         
