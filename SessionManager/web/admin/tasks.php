@@ -148,10 +148,12 @@ function show_manage($id, $tm) {
 	}
 	echo '</tr>';
 	echo '</table>';
-	
-	foreach($infos as $k => $v) {
-		echo '<h3>'.$k.'</h3>';
-		echo '<pre>'.$v.'</pre>';
+
+	if ($infos !== false) {
+		foreach($infos as $k => $v) {
+			echo '<h3>'.$k.'</h3>';
+			echo '<pre>'.$v.'</pre>';
+		}
 	}
 	
 	
