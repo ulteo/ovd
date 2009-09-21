@@ -155,7 +155,7 @@
 
         <important>
           <para>
-            All the other server on the network (Session Manager, ApS,
+            All other servers on the network (Session Manager, ApS,
             ...) have to be able to route
             to <emphasis>10.0.2.0/24</emphasis>.
           </para>
