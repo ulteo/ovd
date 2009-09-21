@@ -72,3 +72,7 @@ div#pageWrap {
 	color: red;
 	font-weight: bold;
 }
+
+div.section {
+	margin-bottom: 20px;
+}

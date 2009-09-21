@@ -221,7 +221,7 @@ class Configuration_mode_ldap extends Configuration_mode {
   public function display($form) {
     $str= '<h1>'._('Lightweight Directory Access Protocol (LDAP)').'</h1>';
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>Server</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Server Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
@@ -234,9 +234,8 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= ' /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css padding bottom-->'."\n";
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>'._('Users').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('User branch:').'</td><td><input type="text" name="user_branch" value="'.$form['user_branch'].'" /></td></tr>';
@@ -250,24 +249,23 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<tr><td>'._('Locale field').'('._('optional').'):</td><td><input type="text" name="field_countrycode" value="'.$form['field_countrycode'].'" /></td></tr>';
     $str.= '<tr><td>'._('Filter:').'</td><td><input type="text" name="field_filter" value="'.$form['field_filter'].'" /></td></tr>';
     $str.= '</table>';
+    $str.= '</div>';
 
-    $str.= '<div>';
-    $str.= '<h4>'._('Administrator account').'</h4>';
+    $str.= '<div class="section">';
+    $str.= '<h3>'._('Administrator account').'</h3>';
     $str.= '<table>';
-    $str.= '<tr><td style="text-align: right;">';
+    $str.= '<tr><td style="text-align: left;" colspan="2">';
     $str.= '<input class="input_checkbox" type="checkbox" name="bind_anonymous"';
     if (isset($form['bind_anonymous']))
       $str.= ' checked="checked"';
-    $str.= '/></td><td>Anonymous bind';
+    $str.= '/> '._('Anonymous bind');
     $str.= '</td></tr>';
     $str.= '<tr><td>'._('Bind DN (without suffix):').'</td><td><input type="text" name="bind_dn" value="'.$form['bind_dn'].'" /></td></tr>';
     $str.= '<tr><td>'._('Bind password:').'</td><td><input type="password" name="bind_password" value="'.$form['bind_password'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
-    $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>'._('User Groups').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="user_group" value="ldap_memberof"';
     if ($form['user_group'] == 'ldap_memberof')
@@ -282,14 +280,14 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= _('Group Branch DN:').' <input type="text" name="group_branch_dn" value="'.$form['group_branch_dn'].'"/>';
     $str.= '</div>';
 
+    $str.= '<div class="section">';
     $str.= '<input class="input_radio" type="radio" name="user_group" value="sql"';
     if ($form['user_group'] == 'sql')
       $str.= ' checked="checked"';
     $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>'._('Home Directory').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
     if ($form['homedir'] == 'local')
@@ -333,17 +331,17 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '<td><input type="password" name="global_user_password" value="'.$form['global_user_password'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
-
+    $str.= '</div>';
 
     // Not yet Implemented
     /*
+    $str.= '<div class="section">';
     $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_homedir"';
     if ($form['homedir'] == 'ad_homedir')
       $str.= ' checked="checked"';
     $str.= '/>';
     $str.= _('Use NFS link using the LDAP field :').' <input type="text" name="homedir" value=""/>';
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
     */
 
     return $str;

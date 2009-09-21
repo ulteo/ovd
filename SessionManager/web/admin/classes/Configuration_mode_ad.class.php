@@ -197,16 +197,15 @@ class Configuration_mode_ad extends Configuration_mode {
   public function display($form) {
     $str= '<h1>'._('Active Directory integration').'</h1>';
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>Server</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('Server Host:').'</td><td><input type="text" name="host" value="'.$form['host'].'" /></td></tr>';
     $str.= '<tr><td>'._('Domain:').'</td><td><input type="text" name="domain" value="'.$form['domain'].'" /></td></tr>';
     $str.= '</table>';
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css padding bottom-->'."\n";
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>'._('Users').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="user_branch" value="default"';
     if ($form['user_branch'] == 'default')
@@ -218,9 +217,10 @@ class Configuration_mode_ad extends Configuration_mode {
       $str.= ' checked="checked"';
     $str.= '/>'._('Specific Organization Unit:');
     $str.= ' <input type="text" name="user_branch_ou" value="'.$form['user_branch_ou'].'" />';
+    $str.= '</div>';
 
-    $str.= '<div>';
-    $str.= '<h4>'._('Administrator account').'</h4>';
+    $str.= '<div class="section">';
+    $str.= '<h3>'._('Administrator account').'</h3>';
     $str.= '<table>';
     $str.= '<tr><td>'._('login:').'</td><td><input type="text" name="admin_login" value="'.$form['admin_login'].'" /></td></tr>';
     $str.= '<tr><td>'._('password:').'</td><td><input type="password" name="admin_password" value="'.$form['admin_password'].'" /></td></tr>';
@@ -237,10 +237,8 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '</td></tr>';
     $str.= '</table>';
     $str.= '</div>';
-    $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>'._('User Groups').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="user_group" value="activedirectory"';
     if ($form['user_group'] == 'activedirectory')
@@ -252,9 +250,8 @@ class Configuration_mode_ad extends Configuration_mode {
       $str.= ' checked="checked"';
     $str.= '/>'._('Use Internal User Groups');
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
 
-    $str.= '<div>';
+    $str.= '<div class="section">';
     $str.= '<h3>'._('Home Directory').'</h3>';
     $str.= '<input class="input_radio" type="radio" name="homedir" value="local"';
     if ($form['homedir'] == 'local')
@@ -282,17 +279,15 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '/>';
     $str.= _('Use Active Directory Home dir');
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
 
     /*
-    $str.= '<div style="display:none">';
+    $str.= '<div style="display:none" class="section">';
     $str.= '<h3>'._('Windows Applications').'</h3>';
     $str.= _('Allow Windows Application link thanks to TS and AD:');
     $str.= '<input class="input_radio" type="radio" name="ts_link" value="yes" checked="checked"/>';
     $str.= _('yes');
     $str.= '<input class="input_radio" type="radio" name="ts_link" value="no" />'._('no');
     $str.= '</div>';
-    $str.= '<br/><!-- useless => css-->'."\n";
     */
 
     return $str;
