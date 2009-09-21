@@ -222,7 +222,7 @@ function show_default($tm) {
   }
   
     if (count($servers)>0 && $can_do_action) {
-    	echo '<h2>'._('Install a package from command line').'</h2>';
+    	echo '<h2>'._('Install an application from a package name').'</h2>';
 
     	echo '<form action="" method="post">';
 	echo '<input type="hidden" name="action" value="create" />';
