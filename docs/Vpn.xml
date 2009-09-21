@@ -27,7 +27,7 @@
   <para>
     This documentation won't explain how to use authentication with
     the VPN client key. VPN is just used to make a virtual network to
-    get access on multiple machines with only one IP public adress.
+    get access on multiple machines with only one IP public address.
   </para>
 
  <important>
@@ -52,8 +52,8 @@
 
     <para>
       On a LAN it's not a problem to use several machines, because
-      it's possible to use private IP adressing. But on Internet, it may be
-      more difficult or too expensive to get several public IP adresses for only one
+      it's possible to use private IP addressing. But on Internet, it may be
+      more difficult or too expensive to get several public IP addresses for only one
       service. 
     </para>
 
@@ -78,7 +78,7 @@
       </section>
 
       <simpara>
-        The issue is that the factory can only have one public IP adress. So
+        The issue is that the factory can only have one public IP address. So
         how to install the several Ulteo servers on only one address? The
         solution we are going to explain here is using the VPN technology.
       </simpara>
@@ -157,10 +157,10 @@
           <para>
             All the other server on the network (Session Manager, ApS,
             ...) have to be able to route
-            the <emphasis>10.0.2.0/24</emphasis>.
+            to <emphasis>10.0.2.0/24</emphasis>.
           </para>
           <para>
-            Either the DHCP can give the route or you can define it by
+            Either the DHCP server can provide the route or you can define it by
             hand:
           </para>
           <screen>
@@ -197,7 +197,7 @@
 
     <para>
       We are considering that your server has the
-      adress <emphasis role="strong">10.0.1.100</emphasis> on
+      address <emphasis role="strong">10.0.1.100</emphasis> on
       the <emphasis>eth0</emphasis> network interface.
     </para>
     <screen>
@@ -216,9 +216,9 @@ eth0      Link encap:Ethernet  HWaddr 00:1f:c6:03:ba:2a
 
     <itemizedlist>
       <listitem>
-        <para>Enable the IP forwarding as default at system boot</para>
+        <para>Enable IP forwarding as default at system boot</para>
         <para>
-          Open the <emphasis>/etc/sysctl.conf</emphasis> and uncomment
+          Open <emphasis>/etc/sysctl.conf</emphasis> and uncomment
           the following line:
         </para>
         <screen>
@@ -228,7 +228,7 @@ net.ipv4.ip_forward=1]]>
       </listitem>
     
       <listitem>
-        <para>Enable the IP forwarding for the current system</para>
+        <para>Enable IP forwarding for the current system</para>
         <screen>
           <![CDATA[
 # echo 1 > /proc/sys/net/ipv4/ip_forward]]>
@@ -259,7 +259,7 @@ $ export KEY_COUNTRY="EN"
 $ export KEY_PROVINCE="Your province"
 $ export KEY_CITY="Your country"
 $ export KEY_ORG="Ulteo"
-$ export KEY_EMAIL="some@email.adress"]]>
+$ export KEY_EMAIL="some@email.address"]]>
           </screen>
         </listitem>
         <listitem>
@@ -331,7 +331,7 @@ $ cd ~/vpn-keys]]>
         <listitem>
           <para>
             Edit the <emphasis>/etc/openvpn/openvpn.conf</emphasis>
-            file and copy the following text
+            file and paste the following text to it:
           </para>
           <screen>
             <![CDATA[
@@ -370,13 +370,13 @@ status openvpn-status.log]]>
       <title>Check the VPN status</title>
       <itemizedlist>
         <listitem>
-          <para>Look at the tun0 network interface</para>
+          <para>Look at the tun0 network interface:</para>
           <screen>
             <![CDATA[
 # ifconfig tun0]]>
           </screen>
           <para>
-            You should get something like that
+            You should get something like:
           </para>
           <screen>
             <![CDATA[
@@ -408,14 +408,14 @@ tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
     <title>SSL keys generation</title>
     <important>
       <para>
-        These operations have to be done on the Ulteo VPN server. The
-        one you used for build server keys
+        These operations have to be performed on the Ulteo VPN server that you 
+	used to build the server keys.
       </para>
     </important>
 
     <itemizedlist>
       <listitem>
-        <para>Go to your key generation directory</para>
+        <para>Go to your key generation directory:</para>
         <screen>
           <![CDATA[
 $ cd ~/vpn-keys]]>
@@ -467,7 +467,7 @@ $ zip client.zip ca.crt client.key client.crt]]>
         </listitem>
        <listitem>
           <para>
-            Install openvpn without change any option
+            Install openvpn without changing any option
           </para>
           <screenshot>
             <screeninfo>OpenVPN installer step 1</screeninfo>
@@ -496,15 +496,15 @@ $ zip client.zip ca.crt client.key client.crt]]>
         </listitem>
         <listitem>
           <para>
-            Create a directory on your Desktop and copy the ZIP file
-            from the server and extract the zip file into the same directory
+            Create a directory on your Desktop, copy the ZIP file
+            from the server and extract the zip file to the same directory
           </para>
         </listitem>
         <listitem>
           <para>
             Create a new text file
-            called <emphasis>client.ovpn</emphasis> copy the following
-            text
+            called <emphasis>client.ovpn</emphasis> and paste the following
+            text inside:
           </para>
           <screen>
             <![CDATA[
@@ -512,7 +512,7 @@ client
 dev tun
 proto tcp
 
-remote vpn.ip.adress 1194
+remote vpn.ip.address 1194
 
 resolv-retry infinite
 nobind
@@ -527,22 +527,22 @@ key client.key]]>
           <important>
             <para>
               Replace
-              the <emphasis role="strong">vpn.ip.adress</emphasis> by
-              the actual IP adress of the VPN server you configured
+              the <emphasis role="strong">vpn.ip.address</emphasis> by
+              the current IP address of the VPN server you configured
               before.
             </para>
           </important>
         </listitem>
         <listitem>
           <para>
-            Then perform a right click on the <emphasis>client.ovpn</emphasis> file and select <emphasis role="strong"></emphasis>
+            Then right-click on the <emphasis>client.ovpn</emphasis> file and select <emphasis role="strong"></emphasis>
           </para>
           <screenshot>
             <screeninfo>start OpenVPN</screeninfo>
             <graphic fileref="img/Vpn/start.png"></graphic>
           </screenshot>
           <para>
-            Then, you should see a Windows appear looks like that:
+            Then, you should see a window appearing looking like:
           </para>
           <screenshot>
             <screeninfo>started OpenVPN</screeninfo>
@@ -551,22 +551,22 @@ key client.key]]>
 
           <note>
             <para>
-              The highlight part show that the connection succeed.
+              The highlighted part shows that the connection succeeded.
             </para>
           </note>
         </listitem>
      </itemizedlist>
 
       <simplesect>
-        <title>Check the VPN connexion</title>
+        <title>Check the VPN connection</title>
         <itemizedlist>
           <listitem>
             <para>
-              Launch a Window cmd and test to ping the VPN local IP
-              adress
+              Launch a Windows cmd and test to ping the VPN local IP
+              address
             </para>
           <screenshot>
-            <screeninfo>ping OpenVPN local adress</screeninfo>
+            <screeninfo>ping OpenVPN local address</screeninfo>
             <graphic fileref="img/Vpn/ping.png"></graphic>
           </screenshot>
           </listitem>
@@ -593,14 +593,14 @@ key client.key]]>
         </listitem>
         <listitem>
           <para>
-            Get the ZIP file from the server and copy
-            into <emphasis>/etc/openvpn/</emphasis>
+            Get the ZIP file from the server and copy it
+            to <emphasis>/etc/openvpn/</emphasis>
           </para>
         </listitem>
        <listitem>
           <para>
             Extract the zip file
-            into <emphasis>/etc/openvpn/</emphasis>
+            to <emphasis>/etc/openvpn/</emphasis>
           </para>
           <screen>
             <![CDATA[
@@ -627,7 +627,7 @@ key client.key]]>
         <listitem>
           <para>
             Edit the <emphasis>/etc/openvpn/openvpn.conf</emphasis>
-            file and copy the following text
+            file and copy paste the following text inside:
           </para>
           <screen>
             <![CDATA[
@@ -635,7 +635,7 @@ client
 dev tun
 proto tcp
 
-remote vpn.ip.adress 1194
+remote vpn.ip.address 1194
 
 resolv-retry infinite
 nobind
@@ -650,8 +650,8 @@ key client.key]]>
           <important>
             <para>
               Replace
-              the <emphasis role="strong">vpn.ip.adress</emphasis> by
-              the effective IP adress of the VPN server you configured
+              the <emphasis role="strong">vpn.ip.address</emphasis> by
+              the effective IP address of the VPN server you configured
               before.
             </para>
           </important>
@@ -666,7 +666,7 @@ key client.key]]>
       </itemizedlist>
 
       <simplesect>
-        <title>Check the VPN connexion</title>
+        <title>Check the VPN connection</title>
         <itemizedlist>
           <listitem>
             <para>Look at the tun0 network interface</para>
@@ -675,7 +675,7 @@ key client.key]]>
 # ifconfig tun0]]>
             </screen>
             <para>
-              You should get something like that
+              You should get something like:
             </para>
             <screen>
               <![CDATA[
@@ -691,12 +691,12 @@ tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
               <para>
                 If you don't have
                 a <emphasis role="strong">tun0</emphasis> network
-                interface, your VPN server won't works.
+                interface your VPN server won't work.
               </para>
             </important>
           </listitem>
           <listitem>
-            <para>Ping the VPN server with the local IP adress</para>
+            <para>Ping the VPN server with the local IP address</para>
             <screen>
               <![CDATA[
 $ ping 10.0.2.1
@@ -718,7 +718,7 @@ PING 10.0.2.1 (10.0.2.1) 56(84) bytes of data.
 
   <para>
     Open a browser with the Session manager local
-    adress: <emphasis role="strong">10.0.1.20</emphasis> and start a
+    address: <emphasis role="strong">10.0.1.20</emphasis> and start a
     session.
   </para>
 
