@@ -42,6 +42,7 @@ if (isset($_POST['submit'])) {
 		$ret = $prefs->backup();
 		if ($ret > 0){
 			// configuration saved
+			popup_info(_('Configuration successfully saved'));
 			redirect();
 		}
 		else {
