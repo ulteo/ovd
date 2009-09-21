@@ -96,7 +96,7 @@ class Task {
 	
 	public function get_AllInfos() {
 		if (! is_object($this->server)) {
-			Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' returned an error (unknown server '.$this->server.')');
+			Logger::error('apt-get', 'TASK::get_AllInfos for task '.$this->id.' returned an error (unknown server '.$this->server.')');
 			return false;
 		}
 
