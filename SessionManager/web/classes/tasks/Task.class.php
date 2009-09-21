@@ -95,6 +95,11 @@ class Task {
 	}
 	
 	public function get_AllInfos() {
+		if (! is_object($this->server)) {
+			Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' returned an error (unknown server '.$this->server.')');
+			return false;
+		}
+
 		$infos = array();
 		foreach (array('status', 'stdout', 'stderr') as $elem)
 			$infos[$elem] = query_url_no_error($this->server->getWebservicesBaseURL().'/apt-get.php?action=show&job='.$this->job_id.'&show='.$elem);
