@@ -585,6 +585,22 @@ class Server {
 		return $ret;
 	}
 
+	public function getWebLog() {
+		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
+
+		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web');
+
+		return $ret;
+	}
+
+	public function getDaemonLog() {
+		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
+
+		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon');
+
+		return $ret;
+	}
+
 	public function getApplicationIcon($icon_path_, $desktopfile_) {
 		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
 

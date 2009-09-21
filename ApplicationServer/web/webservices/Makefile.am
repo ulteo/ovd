@@ -6,6 +6,7 @@ scripts_DATA = applications.php \
                server_monitoring.php \
 			   server_type.php \
 			   session_status.php \
+			   server_log.php \
 			   server_status.php \
 			   server_version.php
 

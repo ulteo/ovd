@@ -4,6 +4,8 @@ scripts_DATA = server-linux.png \
                server-windows.png \
                cache.php \
                submenu_bg.png \
+               download.png \
+               view.png \
                server-weblink.png
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin/media/image
