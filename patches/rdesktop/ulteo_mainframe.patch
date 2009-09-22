@@ -1,0 +1,130 @@
+=== modified file 'rdesktop.c'
+--- rdesktop.c	2009-09-21 13:59:54 +0000
++++ rdesktop.c	2009-09-22 09:03:44 +0000
+@@ -28,6 +28,7 @@
+ #include <sys/times.h>		/* times */
+ #include <ctype.h>		/* toupper */
+ #include <errno.h>
++#include <getopt.h>
+ #include "rdesktop.h"
+ #include "seamless.h"
+ 
+@@ -92,6 +93,7 @@
+ RD_BOOL g_owncolmap = False;
+ RD_BOOL g_ownbackstore = True;	/* We can't rely on external BackingStore */
+ RD_BOOL g_seamless_rdp = False;
++enum main_frame g_main_frame = MAIN_FRAME_NORMAL;
+ 
+ /* Master socket identifier */
+ char *master_socket = NULL;
+@@ -163,6 +165,7 @@
+ 	fprintf(stderr, "   -A: enable SeamlessRDP mode\n");
+ 	fprintf(stderr, "   -M: SeamlessRDP master mode socket path\n");
+ 	fprintf(stderr, "   -l: SeamlessRDP slave mode\n");
++	fprintf(stderr, "   --main-frame [normal|show|hide] : Define the main frame behavior. [normal] is the default one\n");
+ 	fprintf(stderr, "   -B: use BackingStore of X-server (if available)\n");
+ 	fprintf(stderr, "   -e: disable encryption (French TS)\n");
+ 	fprintf(stderr, "   -E: disable encryption from client to server\n");
+@@ -437,6 +440,11 @@
+ 	RD_BOOL geometry_option = False;
+ 	int run_count = 0;	/* Session Directory support */
+ 	RD_BOOL continue_connect = True;	/* Session Directory support */
++	static const struct option long_options[]=
++	{
++		{"main-frame", 1, NULL, 10},
++		{NULL, 0, NULL, 0} /* End of array need by getopt_long do not delete it*/
++	};
+ #ifdef WITH_RDPSND
+ 	char *rdpsnd_optarg = NULL;
+ #endif
+@@ -463,8 +471,8 @@
+ #define VNCOPT
+ #endif
+ 
+-	while ((c = getopt(argc, argv,
+-			   VNCOPT "Au:L:d:s:c:p:n:k:g:fbBeEmzCDKS:T:NX:a:x:Pr:045M:lh?")) != -1)
++	while ((c = getopt_long(argc, argv,
++	                                VNCOPT "Au:L:d:s:c:p:n:k:g:fbBeEmzCDKS:T:NX:a:x:Pr:045M:lh?", long_options, NULL)) != -1)
+ 	{
+ 		switch (c)
+ 		{
+@@ -482,6 +490,17 @@
+ 				break;
+ #endif
+ 
++			case 10: //--main-frame
++				if(strcmp(optarg, "normal") == 0)
++					g_main_frame = MAIN_FRAME_NORMAL;
++				else if(strcmp(optarg, "show") == 0)
++					g_main_frame = MAIN_FRAME_SHOW;
++				else if(strcmp(optarg, "hide") == 0)
++					g_main_frame = MAIN_FRAME_HIDE;
++				else
++					usage(argv[0]);
++				break;
++
+ 			case 'A':
+ 				g_seamless_rdp = True;
+ 				break;
+
+=== modified file 'types.h'
+--- types.h	2009-09-21 13:59:54 +0000
++++ types.h	2009-09-22 08:49:00 +0000
+@@ -25,6 +25,11 @@
+ #define False (0)
+ #endif
+ 
++enum main_frame
++{
++	MAIN_FRAME_SHOW, MAIN_FRAME_HIDE, MAIN_FRAME_NORMAL
++};
++
+ typedef unsigned char uint8;
+ typedef signed char sint8;
+ typedef unsigned short uint16;
+
+=== modified file 'xwin.c'
+--- xwin.c	2009-09-21 13:59:54 +0000
++++ xwin.c	2009-09-22 08:48:19 +0000
+@@ -40,6 +40,7 @@
+ extern RD_BOOL g_fullscreen;
+ extern RD_BOOL g_grab_keyboard;
+ extern RD_BOOL g_hide_decorations;
++extern enum main_frame g_main_frame;
+ extern char g_title[];
+ /* Color depth of the RDP session.
+    As of RDP 5.1, it may be 8, 15, 16 or 24. */
+@@ -2083,14 +2084,18 @@
+ 	}
+ 
+ 	XSelectInput(g_display, g_wnd, input_mask);
+-	XMapWindow(g_display, g_wnd);
+ 
+-	/* wait for VisibilityNotify */
+-	do
++	if(g_main_frame != MAIN_FRAME_HIDE)
+ 	{
+-		XMaskEvent(g_display, VisibilityChangeMask, &xevent);
++		XMapWindow(g_display, g_wnd);
++
++		/* wait for VisibilityNotify */
++		do
++		{
++			XMaskEvent(g_display, VisibilityChangeMask, &xevent);
++		}
++		while (xevent.type != VisibilityNotify);
+ 	}
+-	while (xevent.type != VisibilityNotify);
+ 	g_Unobscured = xevent.xvisibility.state == VisibilityUnobscured;
+ 
+ 	g_focused = False;
+@@ -3617,7 +3622,7 @@
+ 	g_seamless_started = True;
+ 	g_seamless_hidden = hidden;
+ 
+-	if (!hidden)
++	if (!hidden && g_main_frame != MAIN_FRAME_SHOW)
+ 		ui_seamless_toggle();
+ }
+ 
+
