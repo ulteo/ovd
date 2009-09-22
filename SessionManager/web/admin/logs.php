@@ -185,11 +185,15 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 
 	page_header();
 
-	if ($where_ == 'sm')
-		echo '<h1><a href="?">'._('Logs').'</a> - '.$name_.' ';
-		echo '<a href="?download=1&amp;where='.$where_.'&amp;name='.$name_.'&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a></h1>';
-	elseif ($where_ == 'aps')
-		echo '<h1><a href="?">'._('Logs').'</a> - '.$server_.' - '.$name_.' <a href="?download=1&amp;where=aps&amp;name=daemon&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a></h1>';
+	if ($where_ == 'sm') {
+		echo '<h1><a href="?">'._('Logs').'</a> - '.$name_;
+		echo ' <a href="?download=1&amp;where='.$where_.'&amp;name='.$name_.'&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo '</h1>';
+	} elseif ($where_ == 'aps') {
+		echo '<h1><a href="?">'._('Logs').'</a> - '.$server_.' - '.$name_;
+		echo ' <a href="?download=1&amp;where=aps&amp;name=daemon&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo '</h1>';
+	}
 
 	echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
 	echo implode("<br />\n", $lines);
