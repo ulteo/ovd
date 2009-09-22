@@ -76,26 +76,6 @@ $buf = $prefs->get('general', 'web_interface_settings');
 $show_list_users = $buf['show_list_users'];
 $testapplet = $buf['testapplet'];
 
-// $mods_enable = $prefs->get('general', 'module_enable');
-// if (!in_array('UserDB', $mods_enable))
-// 	die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-
-// $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-// $userDB = new $mod_user_name();
-
-// $fs = $prefs->get('plugins', 'FS');
-// if (!is_array($fs) || count($fs) == 0)
-// 	die_error(_('No available filesystem'),__FILE__,__LINE__);
-// $module_fs = $fs[0];
-
-// $user = $userDB->import($_SESSION['login']);
-// if (!is_object($user))
-// 	die_error(_('User importation failed'),__FILE__,__LINE__);
-
-// $user_login = $user->getAttribute('login');
-// $user_id = $user->getAttribute('uid');
-// $user_displayname = $user->getAttribute('displayname');
-
 $advanced_settings_session = $prefs->get('general', 'session_settings_defaults');
 $advanced_settings_session = $advanced_settings_session['advanced_settings_startsession'];
 if (!is_array($advanced_settings_session))
@@ -108,26 +88,11 @@ if (!is_array($advanced_settings_webinterface))
 
 $advanced_settings = array_merge($advanced_settings_session, $advanced_settings_webinterface);
 
-$list_servers = array();
-// if (in_array('server', $advanced_settings) && isset($_GET['force'])) {
-// 	$servers = $user->getAvailableServers();
-	$servers = Servers::getAvailableType('linux');
-	if (!is_array($servers) || count($servers) < 1)
-		die_error(_('No available server'),__FILE__,__LINE__);
+$servers = Servers::getAvailableType('linux');
+if (!is_array($servers) || count($servers) < 1)
+	die_error(_('No available server'),__FILE__,__LINE__);
 
-	foreach ($servers as $server)
-		$list_servers[] = $server;
-// 	if (in_array($_GET['force'], $list_servers))
-// 		$random_server = $_GET['force'];
-// 	else
-		$random_server = $list_servers[array_rand($list_servers)];
-// } else {
-// 	$server = $user->getAvailableServer();
-// 	if (is_object($server)) {
-// 		$random_server = $server;
-// 		$list_servers []= $random_server;
-// 	}
-// }
+$random_server = $servers[array_rand($servers)];
 
 if ((!isset($random_server)) || !is_object($random_server))
 	die_error(_('No available server'),__FILE__,__LINE__);
@@ -152,14 +117,10 @@ require_once('header.php');
 		<?php
 			if (in_array('size', $advanced_settings_session))
 				echo 'setAvailableSize(\'desktop_size\');';
-		?>
 
-		<?php
 			if (count($list_servers) < 1)
 				echo 'testFailed(-1);';
-		?>
 
-		<?php
 			if (!$testapplet) {
 				echo 'appletLoaded();';
 				echo 'testDone = true;';
