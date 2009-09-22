@@ -4,6 +4,7 @@
 # Copyright (C) 2008 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Laurent CLOUET <laurent@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -187,7 +188,7 @@ class Dialog:
 
     def doStartSession(self):
         url = self.base_url+"/startsession.php"
-        values = {}
+        values = {"session_mode":"desktop"}
  
         request = urllib2.Request(url, urllib.urlencode(values))
               
