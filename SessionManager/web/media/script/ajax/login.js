@@ -7,8 +7,11 @@ function doLogin(this_) {
 
 	$('launch_button').disabled = true;
 
-	var user_passwd = $('login_password').value;
-	$('login_password').value = '';
+	var user_passwd = false;
+	if ($('login_password')) {
+		user_passwd = $('login_password').value;
+		$('login_password').value = '';
+	}
 
 	var ret = new Ajax.Request(
 		'ajax/login.php',

@@ -187,6 +187,7 @@ require_once('header.php');
 										echo _('Please login with your username');
 								} else {
 									echo sprintf(_('You are authenticated as %s'), $_SESSION['login']);
+									echo '<input type="hidden" id="login_login" name="user_login" value="'.$_SESSION['login'].'" />';
 								}
 							?></h2>
 					</td>
