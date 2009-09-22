@@ -1,6 +1,7 @@
 SUBDIRS =  admin
 
-scripts_DATA =  icon.php \
+scripts_DATA =  domain.php \
+                icon.php \
                 get_news.php \
                 server_monitoring.php \
                 session_token.php \
