@@ -97,7 +97,7 @@
 
 === modified file 'xwin.c'
 --- xwin.c	2009-09-21 13:59:54 +0000
-+++ xwin.c	2009-09-22 09:39:17 +0000
++++ xwin.c	2009-09-22 10:05:50 +0000
 @@ -40,6 +40,7 @@
  extern RD_BOOL g_fullscreen;
  extern RD_BOOL g_grab_keyboard;
@@ -130,6 +130,15 @@
  	g_Unobscured = xevent.xvisibility.state == VisibilityUnobscured;
  
  	g_focused = False;
+@@ -2105,7 +2110,7 @@
+ 	if (g_null_cursor == NULL)
+ 		g_null_cursor = ui_create_cursor(0, 0, 1, 1, null_pointer_mask, null_pointer_data);
+ 
+-	if (g_seamless_rdp)
++	if (g_seamless_rdp && g_main_frame != MAIN_FRAME_HIDE)
+ 	{
+ 		seamless_restack_test();
+ 	}
 @@ -3617,7 +3622,7 @@
  	g_seamless_started = True;
  	g_seamless_hidden = hidden;
