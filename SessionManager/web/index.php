@@ -104,6 +104,37 @@ if (@gethostbyname($random_server->fqdn) == $random_server->fqdn) {
 		$random_server->fqdn = $fqdn_private_address[$random_server->fqdn];
 }
 
+function get_connection_buttons($align_='right') {
+	switch ($align_) {
+		case 'left':
+			$style = 'margin-left: 0px; margin-right: auto';
+			break;
+		case 'center':
+			$style = 'margin-left: auto; margin-right: auto';
+			break;
+		case 'right':
+			$style = 'margin-left: auto; margin-right: 0px';
+			break;
+	}
+
+	$buf = '';
+	$buf = '<div id="loading_div" style="'.$style.'">';
+	$buf.= '<img src="media/image/loading.gif" width="32" height="32" alt="'._('Loading').'..." title="'._('Loading').'..." />';
+	$buf.= '</div>';
+
+	$buf.= '<div id="launch_buttons" style="'.$style.'">';
+	$buf.= '<input type="submit" id="launch_button" style="'.$style.'" value="'._('Log in').'" />';
+	$buf.= '<input type="button" id="lock_button" style="'.$style.'" value="'._('YOU ALREADY HAVE AN ACTIVE SESSION').'" />';
+	$buf.= '<input type="submit" id="warn_button" style="'.$style.'" value="'._('WARNING, START ANYWAY').'" />';
+	$buf.= '<input type="button" id="failed_button" style="'.$style.'" value="'._('ERROR').'" />';
+	$buf.= '<input type="button" id="started_button" style="'.$style.'" value="'._('SESSION IS STARTED').'" />';
+	$buf.= '</div>';
+
+	return $buf;
+}
+
+$is_logged_in = do_login();
+
 require_once('header.php');
 ?>
 <script type="text/javascript" src="media/script/ajax/login.js" charset="utf-8"></script>
@@ -149,14 +180,21 @@ require_once('header.php');
 				<tr>
 					<td class="centered" colspan="2">
 						<h2 class="centered"><?php
-								if ($password_field)
-									echo _('Please login with your username and password');
-								else
-									echo _('Please login with your username');
+								if (! $is_logged_in) {
+									if ($password_field)
+										echo _('Please login with your username and password');
+									else
+										echo _('Please login with your username');
+								} else {
+									echo sprintf(_('You are authenticated as %s'), $_SESSION['login']);
+								}
 							?></h2>
 					</td>
 				</tr>
 				<tr>
+					<?php
+						if (! $is_logged_in) {
+					?>
 					<td style="text-align: right; vertical-align: middle">
 						<img src="media/image/password.png" width="64" height="64" alt="" title="" />
 					</td>
@@ -200,22 +238,25 @@ require_once('header.php');
 								}
 							?>
 							<tr>
-								<td style="text-align: right" class="centered" colspan="2">
-									<div id="loading_div">
-										<img src="media/image/loading.gif" width="32" height="32" alt="<?php echo _('Loading'); ?>..." title="<?php echo _('Loading'); ?>..." />
-									</div>
-
-									<div id="launch_buttons">
-										<input type="submit" id="launch_button" value="<?php echo _('Log in'); ?>" />
-										<input type="button" id="lock_button" value="<?php echo _('YOU ALREADY HAVE AN ACTIVE SESSION'); ?>" />
-										<input type="submit" id="warn_button" value="<?php echo _('WARNING, START ANYWAY'); ?>" />
-										<input type="button" id="failed_button" value="<?php echo _('ERROR'); ?>" />
-										<input type="button" id="started_button" value="<?php echo _('SESSION IS STARTED'); ?>" />
+								<td class="centered" style="text-align: right" colspan="2">
+									<div style="width: 100%; margin-left: auto; margin-right: 0px; text-align: right;">
+										<?php echo get_connection_buttons('right'); ?>
 									</div>
 								</td>
 							</tr>
 						</table>
 					</td>
+					<?php
+						} else {
+					?>
+					<td class="centered" style="text-align: center" colspan="2">
+						<div style="width: 100%; margin-left: auto; margin-right: auto; text-align: center;">
+							<?php echo get_connection_buttons('center'); ?>
+						</div>
+					</td>
+					<?php
+						}
+					?>
 				</tr>
 			</table>
 		</fieldset>

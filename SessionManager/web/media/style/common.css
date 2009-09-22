@@ -299,18 +299,13 @@ table.main_sub2 td.status {
 }
 
 #loading_div {
-	text-align: right;
 	vertical-align: middle;
 
 	display: block;
 }
 
 #launch_buttons {
-	width: 250px;
-	text-align: right;
 	vertical-align: middle;
-	margin-left: auto;
-	margin-right: 0px;
 }
 
 #loading_button {
@@ -319,9 +314,6 @@ table.main_sub2 td.status {
 
 	color: #fff;
 	font-weight: bold;
-
-	margin-left: auto;
-	margin-right: 0px;
 
 	display: block;
 }
@@ -333,9 +325,6 @@ table.main_sub2 td.status {
 	/*color: #fff;*/
 	font-weight: bold;
 
-	margin-left: auto;
-	margin-right: 0px;
-
 	display: none;
 }
 
@@ -345,9 +334,6 @@ table.main_sub2 td.status {
 
 	color: #fff;
 	font-weight: bold;
-
-	margin-left: auto;
-	margin-right: 0px;
 
 	display: none;
 }
@@ -359,9 +345,6 @@ table.main_sub2 td.status {
 	color: #fff;
 	font-weight: bold;
 
-	margin-left: auto;
-	margin-right: 0px;
-
 	display: none;
 }
 
@@ -372,9 +355,6 @@ table.main_sub2 td.status {
 	color: #fff;
 	font-weight: bold;
 
-	margin-left: auto;
-	margin-right: 0px;
-
 	display: none;
 }
 
@@ -384,9 +364,6 @@ table.main_sub2 td.status {
 
 	color: #fff;
 	font-weight: bold;
-
-	margin-left: auto;
-	margin-right: 0px;
 
 	display: none;
 }
