@@ -118,7 +118,7 @@ require_once('header.php');
 			if (in_array('size', $advanced_settings_session))
 				echo 'setAvailableSize(\'desktop_size\');';
 
-			if (count($list_servers) < 1)
+			if (count($servers) < 1)
 				echo 'testFailed(-1);';
 
 			if (!$testapplet) {
@@ -311,7 +311,7 @@ require_once('header.php');
 						<td>
 							<select id="force" name="force">
 								<?php
-									foreach ($list_servers as $server) {
+									foreach ($servers as $server) {
 										if ($server->getNbAvailableSessions() > 0) {
 											echo '<option value="'.$server->fqdn.'"';
 											if ($random_server->fqdn == $server->fqdn)
