@@ -1,6 +1,6 @@
 === modified file 'rdesktop.c'
 --- rdesktop.c	2009-09-21 13:59:54 +0000
-+++ rdesktop.c	2009-09-22 09:03:44 +0000
++++ rdesktop.c	2009-09-22 09:41:39 +0000
 @@ -28,6 +28,7 @@
  #include <sys/times.h>		/* times */
  #include <ctype.h>		/* toupper */
@@ -66,10 +66,22 @@
  			case 'A':
  				g_seamless_rdp = True;
  				break;
+@@ -925,6 +944,11 @@
+         seamless_create_socket(master_socket);
+ 	}
+ 
++	if(g_main_frame == MAIN_FRAME_HIDE && (password[0] == 0 || username_option == 0 || !g_seamless_rdp)){
++		error("You must use -u, -p, and -A with '--main-frame hide'\n");
++		return 1;
++	}
++
+ 	if (!username_option)
+ 	{
+ 		pw = getpwuid(getuid());
 
 === modified file 'types.h'
 --- types.h	2009-09-21 13:59:54 +0000
-+++ types.h	2009-09-22 08:49:00 +0000
++++ types.h	2009-09-22 09:39:17 +0000
 @@ -25,6 +25,11 @@
  #define False (0)
  #endif
@@ -85,7 +97,7 @@
 
 === modified file 'xwin.c'
 --- xwin.c	2009-09-21 13:59:54 +0000
-+++ xwin.c	2009-09-22 08:48:19 +0000
++++ xwin.c	2009-09-22 09:39:17 +0000
 @@ -40,6 +40,7 @@
  extern RD_BOOL g_fullscreen;
  extern RD_BOOL g_grab_keyboard;
