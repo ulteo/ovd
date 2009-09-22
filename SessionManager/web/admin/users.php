@@ -300,7 +300,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<br/><br/>';
 
     echo '<div>';
-    echo '<form action="users.php" method="get">';
+    echo '<form action="users.php" method="post">';
     echo '<input type="hidden" name="action" value="modify" />';
     echo '<input type="hidden" name="id" value="'.$login.'" />';
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
@@ -365,7 +365,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       }
       echo '</td>';
       if ($usergroupdb_rw and $can_manage_usersgroups) {
-        echo '<td><form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
+        echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user from this group?').'\');">';
         echo '<input type="hidden" name="name" value="User_UserGroup" />';
         echo '<input type="hidden" name="action" value="del" />';
         echo '<input type="hidden" name="group" value="'.$group->getUniqueID().'" />';
@@ -377,7 +377,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     }
 
     if ((count ($groups_available) >0) && $usergroupdb_rw and $can_manage_usersgroups) {
-      echo '<tr><form action="actions.php" method="get"><td>';
+      echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
       echo '<input type="hidden" name="element" value="'.$login.'" />';
