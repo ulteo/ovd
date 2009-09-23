@@ -66,7 +66,7 @@ function generateAjaxplorerActionsXML() {
 		if (! $executable_node->hasAttribute('command'))
 			continue;
 
-		$app_command = $executable_node->getAttribute('command');
+		$app_command = str_replace("\\", "\\\\", $executable_node->getAttribute('command'));
 
 		$app_icon = query_url(SESSIONMANAGER_URL.'/webservices/icon.php?id='.$app_id.'&fqdn='.SERVERNAME);
 		@file_put_contents(dirname(__FILE__).'/portal/ajaxplorer/client/images/crystal/actions/16/ulteo'.$app_id.'.png', $app_icon);

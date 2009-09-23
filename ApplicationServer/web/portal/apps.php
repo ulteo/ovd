@@ -69,8 +69,8 @@ foreach ($ids as $id) {
 		$command = $executable_node->getAttribute('command');
 
 	echo '<tr>';
-	echo '<td><a href="javascript:;" onclick="return startExternalApp('.$id.', \''.$command.'\');"><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></a></td>';
-	echo '<td><a href="javascript:;" onclick="return startExternalApp('.$id.', \''.$command.'\');">'.$name.'</a></td>';
+	echo '<td><a href="javascript:;" onclick="return startExternalApp('.$id.', \''.str_replace("\\", "\\\\", $command).'\');"><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></a></td>';
+	echo '<td><a href="javascript:;" onclick="return startExternalApp('.$id.', \''.str_replace("\\", "\\\\", $command).'\');">'.$name.'</a></td>';
 	echo '</tr>';
 }
 echo '</table>';
