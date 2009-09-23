@@ -1,6 +1,6 @@
 === modified file 'Makefile.in'
---- Makefile.in	2009-09-21 13:59:54 +0000
-+++ Makefile.in	2009-09-21 14:33:39 +0000
+--- a/Makefile.in	2009-09-21 13:59:54 +0000
++++ b/Makefile.in	2009-09-21 14:33:39 +0000
 @@ -32,7 +32,7 @@
  SCARDOBJ    = @SCARDOBJ@
  
@@ -21,8 +21,8 @@
  
 
 === modified file 'orders.c'
---- orders.c	2009-09-21 13:59:54 +0000
-+++ orders.c	2009-09-22 13:57:12 +0000
+--- a/orders.c	2009-09-21 13:59:54 +0000
++++ b/orders.c	2009-09-22 13:57:12 +0000
 @@ -20,6 +20,7 @@
  
  #include "rdesktop.h"
@@ -42,8 +42,8 @@
  /* Reset order state */
 
 === modified file 'proto.h'
---- proto.h	2009-09-21 13:59:54 +0000
-+++ proto.h	2009-09-22 12:40:47 +0000
+--- a/proto.h	2009-09-21 13:59:54 +0000
++++ b/proto.h	2009-09-22 12:40:47 +0000
 @@ -231,6 +231,7 @@
  uint16 ui_get_numlock_state(unsigned int state);
  void reset_modifier_keys(void);
@@ -54,8 +54,8 @@
  RD_BOOL ui_init(void);
 
 === modified file 'rdp.c'
---- rdp.c	2009-09-21 13:59:54 +0000
-+++ rdp.c	2009-09-22 13:57:22 +0000
+--- a/rdp.c	2009-09-21 13:59:54 +0000
++++ b/rdp.c	2009-09-22 13:57:22 +0000
 @@ -24,6 +24,8 @@
  #include <unistd.h>
  #endif
@@ -93,8 +93,8 @@
  /* Process a palette update */
 
 === modified file 'seamless.c'
---- seamless.c	2009-09-21 13:59:54 +0000
-+++ seamless.c	2009-09-22 14:23:40 +0000
+--- a/seamless.c	2009-09-21 13:59:54 +0000
++++ b/seamless.c	2009-09-22 14:23:40 +0000
 @@ -26,8 +26,10 @@
  #include <sys/stat.h>
  #include <sys/socket.h>
@@ -323,8 +323,8 @@
 +}
 
 === modified file 'seamless.h'
---- seamless.h	2009-09-21 13:59:54 +0000
-+++ seamless.h	2009-09-22 13:53:08 +0000
+--- a/seamless.h	2009-09-21 13:59:54 +0000
++++ b/seamless.h	2009-09-22 13:53:08 +0000
 @@ -18,6 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
@@ -362,8 +362,8 @@
 +#endif
 
 === modified file 'types.h'
---- types.h	2009-09-22 09:28:34 +0000
-+++ types.h	2009-09-22 13:53:32 +0000
+--- a/types.h	2009-09-22 09:28:34 +0000
++++ b/types.h	2009-09-22 13:53:32 +0000
 @@ -18,6 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
@@ -382,8 +382,8 @@
 +#endif
 
 === added file 'xcursor.c'
---- xcursor.c	1970-01-01 00:00:00 +0000
-+++ xcursor.c	2009-09-22 13:11:22 +0000
+--- a/xcursor.c	1970-01-01 00:00:00 +0000
++++ b/xcursor.c	2009-09-22 13:11:22 +0000
 @@ -0,0 +1,290 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -677,8 +677,8 @@
 +}
 
 === added file 'xcursor.h'
---- xcursor.h	1970-01-01 00:00:00 +0000
-+++ xcursor.h	2009-09-21 14:28:46 +0000
+--- a/xcursor.h	1970-01-01 00:00:00 +0000
++++ b/xcursor.h	2009-09-21 14:28:46 +0000
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -714,8 +714,8 @@
 +#endif
 
 === added file 'xdisplay.c'
---- xdisplay.c	1970-01-01 00:00:00 +0000
-+++ xdisplay.c	2009-09-22 14:11:55 +0000
+--- a/xdisplay.c	1970-01-01 00:00:00 +0000
++++ b/xdisplay.c	2009-09-22 14:11:55 +0000
 @@ -0,0 +1,1501 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -2220,8 +2220,8 @@
 +}
 
 === added file 'xdisplay.h'
---- xdisplay.h	1970-01-01 00:00:00 +0000
-+++ xdisplay.h	2009-09-22 13:59:44 +0000
+--- a/xdisplay.h	1970-01-01 00:00:00 +0000
++++ b/xdisplay.h	2009-09-22 13:59:44 +0000
 @@ -0,0 +1,128 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -2353,8 +2353,8 @@
 +#endif
 
 === modified file 'xkeymap.c'
---- xkeymap.c	2009-09-21 13:59:54 +0000
-+++ xkeymap.c	2009-09-21 14:28:46 +0000
+--- a/xkeymap.c	2009-09-21 13:59:54 +0000
++++ b/xkeymap.c	2009-09-21 14:28:46 +0000
 @@ -454,7 +454,7 @@
  	XDisplayKeycodes(g_display, &min_keycode, (int *) &max_keycode);
  }
@@ -2366,8 +2366,8 @@
  	uint8 winkey;
 
 === modified file 'xwin.c'
---- xwin.c	2009-09-22 10:10:18 +0000
-+++ xwin.c	2009-09-22 14:25:04 +0000
+--- a/xwin.c	2009-09-22 10:10:18 +0000
++++ b/xwin.c	2009-09-22 14:25:04 +0000
 @@ -30,6 +30,8 @@
  #include "rdesktop.h"
  #include "xproto.h"
