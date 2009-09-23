@@ -129,10 +129,6 @@ Function InputBoxPageShow
 FunctionEnd
 
 Function InputBoxPageLeave
- Pop $R0
- !define OVD_SERVERNAME $R0
- Pop $R1
- !define OVD_SMURL $R1
 FunctionEnd
 
 !include nsis\WindowsVersion.nsh
@@ -200,9 +196,9 @@ Section "post" PostCmd
 
   DetailPrint "Generating Config file"
   FileOpen $4 "$INSTDIR\ulteo-ovd.conf" w
-  FileWrite $4 "SERVERNAME=${OVD_SERVERNAME}"
+  FileWrite $4 "SERVERNAME=$ovd_servname"
   FileWrite $4 "$\r$\n" 
-  FileWrite $4 "SESSION_MANAGER_URL=${OVD_SMURL}"
+  FileWrite $4 "SESSION_MANAGER_URL=$ovd_smurl"
   FileWrite $4 "$\r$\n" 
   FileWrite $4 'LOG_FLAGS="info warn error"'
   FileWrite $4 "$\r$\n" 
