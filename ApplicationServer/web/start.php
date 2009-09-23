@@ -38,6 +38,9 @@ function generateAjaxplorerActionsXML() {
 		$app_id = $buf[0];
 		$app_desktopfile = $buf[2];
 
+		if ($app_desktopfile == 'cache')
+			$app_desktopfile = '/var/spool/ulteo-ovd/virtual_apps/'.$app_id.'.desktop';
+
 		$buf = new DesktopFile(CHROOT.'/'.$app_desktopfile, $_SESSION['parameters']['locale']);
 		$buf->parse();
 
