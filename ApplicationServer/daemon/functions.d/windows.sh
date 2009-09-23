@@ -28,6 +28,7 @@ windows_use_seamlessrdp() {
 
 windows_init_connection() {
     local sessid_dir=$1
+    local display=$2
 
     windows_use_seamlessrdp $sessid_dir || return 0
     log_INFO "There are Windows applications parameters for this session"
@@ -50,7 +51,7 @@ windows_init_connection() {
     fi
 
     local cmd='rdesktop -k "'$keymap'" -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$printer_args' '$server
-    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $cmd &" 
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; DISPLAY=:$display $cmd &" 
 }
 
 windows_logoff() {
