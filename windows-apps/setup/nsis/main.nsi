@@ -122,7 +122,7 @@ Function InputBoxPageShow
  !insertmacro MUI_HEADER_TEXT "Configuration" "Give your server name and the Session Manager url."
 
  PassDialog::InitDialog /NOUNLOAD InputBox \
-            /HEADINGTEXT "Caution: give full name or ip adress" \
+            /HEADINGTEXT "Caution: give full name or ip address" \
             /BOX "Servername:" "aps.ulteo.com" 0 \
             /BOX "Session Manager URL:" "http://sm.ulteo.com/sessionmanager" 0
  PassDialog::Show
