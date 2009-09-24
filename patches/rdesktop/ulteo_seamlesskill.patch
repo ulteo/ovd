@@ -1,0 +1,137 @@
+=== modified file 'rdesktop.c'
+--- rdesktop.c	2009-09-24 08:08:20 +0000
++++ rdesktop.c	2009-09-24 09:40:33 +0000
+@@ -909,6 +909,12 @@
+         sleep(10);
+         printf("Ulteo timeout notifier\n");
+         system("xsetroot -cursor_name left_ptr");
++
++        if(strcmp(buf, "logoff") == 0)
++        	return 0;
++
++        while(1)
++        	sleep(60);
+         // Ulteo end HACK
+         return 0;
+ 	}
+
+=== modified file 'seamless.c'
+--- seamless.c	2009-09-24 08:08:20 +0000
++++ seamless.c	2009-09-24 10:04:21 +0000
+@@ -571,7 +571,7 @@
+ }
+ 
+ unsigned int
+-seamless_send_start_app(char *cmdline, xdisplay *dis)
++seamless_send_start_app(char *cmdline, xdisplay *dis, unsigned int pid)
+ {
+ 	int token = (int)time(NULL);
+ 	seamless_application * sa = NULL;
+@@ -583,6 +583,7 @@
+ 	sa = xmalloc(sizeof(seamless_application));
+ 	memset(sa, 0, sizeof(seamless_application));
+ 	sa->cmdline = strdup(cmdline);
++	sa->rdesktop_pid = pid;
+ 	sa->token = token;
+ 	sa->dis = dis;
+ 	sa->next = NULL;
+@@ -663,6 +664,8 @@
+ 		mm = strtok(mm, " ");
+ 		icon = strtok(NULL, " ");
+ 		displayName = strtok(NULL, " ");
++		free(hh);
++		hh = NULL;
+ 		if(strcmp(icon, "ON") == 0)
+ 		{
+ 			if(xdisplay_all_windows_iconify(displayName))
+@@ -678,6 +681,8 @@
+ 	}
+ 	else
+ 	{
++		int pid;
++
+ 		snprintf(cmdline, 256, mm);
+ 
+ 		mm = strtok( NULL, "\n");
+@@ -689,8 +694,10 @@
+ 				return 1;
+ 			}
+ 		}
++		pid = atoi(strtok(NULL, "\n"));
+ 		free(hh);
+-		DEBUG(("cmdline: %s\ndisplay: %s\n", cmdline, displayName));
++		hh = NULL;
++		DEBUG(("cmdline: %s\ndisplay: %s\npid: %d\n", cmdline, displayName, pid));
+ 
+ 		if(strcmp(getenv("DISPLAY"), displayName) != 0)
+ 		{
+@@ -700,7 +707,7 @@
+ 		}
+ 
+ 		/* Send spawn command to server-side SeamlessRDP component */
+-		seamless_send_start_app(cmdline, dis);
++		seamless_send_start_app(cmdline, dis, pid);
+ 	}
+ 	return 0;
+ }
+@@ -782,7 +789,16 @@
+ 	send(s, cmdline, strlen(cmdline), 0);
+ 	send(s, "\n", 1, 0);
+ 	if(!str_startswith(cmdline, "ICON"))
++	{
++		char pid[256];
++
+ 		send(s, display, strlen(display), 0);
++		send(s, "\n", 1, 0);
++
++		snprintf(pid, sizeof(pid), "%d", (int)getpid());
++		send(s, pid, strlen(pid), 0);
++		send(s, "\n", 1, 0);
++	}
+ 
+ 	/* Close socket */
+ 	close(s);
+
+=== modified file 'seamless.h'
+--- seamless.h	2009-09-22 14:29:02 +0000
++++ seamless.h	2009-09-24 09:32:49 +0000
+@@ -37,6 +37,7 @@
+ 	char * cmdline;
+ 	unsigned int token;
+ 	unsigned int pid;
++	unsigned int rdesktop_pid;
+ 
+ 	struct _xdisplay* dis;
+ 
+@@ -46,6 +47,7 @@
+ seamless_application * seamless_application_get_by_token(unsigned int token);
+ seamless_application * seamless_application_get_by_pid(unsigned int pid);
+ void seamless_application_add(seamless_application * target);
++void seamless_application_remove(seamless_application * target);
+ 
+ void seamless_register_pid(unsigned int token, unsigned int pid);
+ 
+
+=== modified file 'xdisplay.c'
+--- xdisplay.c	2009-09-24 08:08:20 +0000
++++ xdisplay.c	2009-09-24 10:00:01 +0000
+@@ -1104,6 +1104,8 @@
+ 	{
+ 		if (sw == win)
+ 		{
++			char kill_pid[256+5];// rdesktop_pid + "kill "
++
+ 			*prevnext = sw->next;
+ 			sw->group->refcnt--;
+ 			if (sw->group->refcnt == 0)
+@@ -1111,6 +1113,9 @@
+ 				XDestroyWindow(sw->sa->dis->display, sw->group->wnd);
+ 				xfree(sw->group);
+ 			}
++			snprintf(kill_pid, sizeof(kill_pid), "kill %d", sw->sa->rdesktop_pid);
++			system(kill_pid);
++			seamless_application_remove(sw->sa);
+ 			xfree(sw->position_timer);
+ 			xfree(sw);
+ 			return;
+
