@@ -38,23 +38,24 @@ def log_debug(msg_):
 
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
+		root_dir = '/applicationserver'
 		try:
 			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
 				self.response_error(401)
 				return
 			
 			self.server.daemon.log.debug("do_GET "+self.path)
-			if self.path == "/webservices/server_status.php":
+			if self.path == root_dir+"/webservices/server_status.php":
 				self.webservices_server_status()
-			elif self.path == "/webservices/server_monitoring.php":
+			elif self.path == root_dir+"/webservices/server_monitoring.php":
 				self.webservices_server_monitoring()
-			elif self.path == "/webservices/server_type.php":
+			elif self.path == root_dir+"/webservices/server_type.php":
 				self.webservices_server_type()
-			elif self.path == "/webservices/server_version.php":
+			elif self.path == root_dir+"/webservices/server_version.php":
 				self.webservices_server_version()
-			elif self.path == "/webservices/applications.php":
+			elif self.path == root_dir+"/webservices/applications.php":
 				self.webservices_applications()
-			elif self.path.startswith("/webservices/icon.php"):
+			elif self.path.startswith(root_dir+"/applicationserver/webservices/icon.php"):
 				self.webservices_icon()
 			else:
 				self.response_error(404)
