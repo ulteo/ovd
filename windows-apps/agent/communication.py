@@ -55,7 +55,7 @@ class Web(SimpleHTTPRequestHandler):
 				self.webservices_server_version()
 			elif self.path == root_dir+"/webservices/applications.php":
 				self.webservices_applications()
-			elif self.path.startswith(root_dir+"/applicationserver/webservices/icon.php"):
+			elif self.path.startswith(root_dir+"/webservices/icon.php"):
 				self.webservices_icon()
 			else:
 				self.response_error(404)
