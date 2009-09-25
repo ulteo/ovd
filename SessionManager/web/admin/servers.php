@@ -881,7 +881,7 @@ function show_manage($fqdn) {
 
 
   // Server Replication part
-  if (count($servers_replication)>0 && $can_do_action) {
+  if (count($servers_replication)>0 && $server->getAttribute('type') == 'linux' && $can_do_action) {
     echo '<div>';
     echo '<h3>'._('Replication').'</h3>';
     echo '<form action="" method="post">';
