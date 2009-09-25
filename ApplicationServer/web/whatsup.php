@@ -21,7 +21,7 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-Logger::debug('main', 'Starting webservices/session_status.php');
+Logger::debug('main', 'Starting whatsup.php');
 
 function getSessionStatus($session) {
   if (file_exists(SESSION2CREATE_PATH.'/'.$session))
@@ -57,7 +57,9 @@ function getRunningApplications($session) {
   $apps = array();
   foreach ($buf as $app) {
     $job_id = basename($app);
-    $app_id = get_from_file($app.'/app_id');
+    $app_id = false;
+    if (file_exists($app.'/app_id'))
+        $app_id = get_from_file($app.'/app_id');
     $status = get_from_file($app.'/status');
 	if ($app_id === false || $app_id == 'desktop')
 	  continue;
