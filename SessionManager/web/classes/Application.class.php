@@ -88,7 +88,6 @@ class Application {
 				}
 			}
 		}
-		Logger::error('main', 'Application::getIconPath end of function');
 		return NULL;
 	}
 	
