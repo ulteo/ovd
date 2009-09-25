@@ -110,7 +110,20 @@ Function .WindowsInstall
       ; It's not possible to modify the path environment variable for 
       ; remote application users even if you use Group policy object.
       ; This solution helps also to keep the control on the explorer for administrative tasks.
+      !define REG_REMOTEAPP "Software\Microsoft\Windows NT\CurrentVersion\Terminal Server\TsAppAllowList\Applications\seamlessrdpshell"
+
       CopyFiles $INSTDIR\rdp\* $SYSDIR
+
+      WriteRegDWORD HKLM "${REG_REMOTEAPP}" "CommandLineSetting" "1"
+      WriteRegDWORD HKLM "${REG_REMOTEAPP}" "IconIndex" "0"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "IconPath" "$SYSDIR\seamlessrdpshell.exe"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "Name" "seamlessrdpshell.exe"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "Path" "$SYSDIR\seamlessrdpshell.exe"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "RequiredCommandLine" ""
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "ShortPath" ""
+      WriteRegDWORD HKLM "${REG_REMOTEAPP}" "ShowInTSWA" "0"
+      WriteRegStr HKLM "${REG_REMOTEAPP}" "VPath" ""
+
       ${Break}
 
     ${Default}
