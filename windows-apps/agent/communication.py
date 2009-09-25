@@ -57,6 +57,8 @@ class Web(SimpleHTTPRequestHandler):
 				self.webservices_applications()
 			elif self.path.startswith(root_dir+"/webservices/icon.php"):
 				self.webservices_icon()
+			elif self.path.startswith(root_dir+"/webservices/server_log.php"):
+				self.webservices_server_log()
 			else:
 				self.response_error(404)
 				return
@@ -165,3 +167,33 @@ class Web(SimpleHTTPRequestHandler):
 				self.server.daemon.log.debug("webservices_icon no right argument2" )
 		else:
 			self.server.daemon.log.debug("webservices_icon no right argument3" )
+	
+	def webservices_server_log(self):
+		try :
+			args = {}
+			args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
+			for (k,v) in args2:
+				args[k] = v.decode('utf-8')
+		except Exception, err:
+			self.server.daemon.log.debug("webservices_server_log error decoding args %s"%(err))
+			args = {}
+		
+		if args.has_key('type'):
+			if args['type'] == 'web':
+				if os.path.isfile(self.server.daemon.conf["log_file"]):
+					f = open(self.server.daemon.conf["log_file"], 'rb')
+					self.send_response(200)
+					self.send_header('Content-Type', 'text/plain')
+					self.end_headers()
+					self.wfile.write(f.read())
+					f.close()
+				else:
+					self.send_header('Content-Type', 'text/plain')
+					self.end_headers()
+					self.wfile.write('')
+			else :
+				self.server.daemon.log.debug("webservices_server_log errorA 400")
+				self.send_response(400)
+		else :
+			self.server.daemon.log.debug("webservices_server_log errorB 400")
+			self.send_response(400)
