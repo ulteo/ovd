@@ -26,8 +26,16 @@ if (! checkAuthorization('viewStatus'))
 		redirect('index.php');
 
 
-function parse($str_) {
+function parse_linux($str_) {
 	$buf = preg_match('/[^-]*\ -\ [^-]*\ -\ ([^-]*)\ -\ .*/', $str_, $matches);
+	if (! $buf)
+		return false;
+
+	return strtolower($matches[1]);
+}
+
+function parse_windows($str_) {
+	$buf = preg_match('/[^\ ]*\ [^\ ]*\ \[([^\ ]*)\]:\ .*/', $str_, $matches);
 	if (! $buf)
 		return false;
 
@@ -55,7 +63,7 @@ function get_lines_from_file($file_, $nb_lines, $allowed_types) {
 
 		$lines = array_reverse($lines);
 		foreach($lines as $line) {
-			$type = parse($line);
+			$type = parse_linux($line);
 			if (! in_array($type, $allowed_types))
 				continue;
 
@@ -68,15 +76,18 @@ function get_lines_from_file($file_, $nb_lines, $allowed_types) {
 	return $spec_lines;
 }
 
-function get_lines_from_string($type_, $string_, $nb_lines, $allowed_types) {
+function get_lines_from_string($server_type_, $type_, $string_, $nb_lines, $allowed_types) {
 	$spec_lines = array();
 
 	$lines = explode("\n", $string_);
 	$lines = array_reverse($lines);
 	foreach($lines as $line) {
-		if ($type_ == 'web')
-			$type = parse($line);
-		elseif ($type_ == 'daemon')
+		if ($type_ == 'web') {
+			if ($server_type_ == 'linux')
+				$type = parse_linux($line);
+			elseif ($server_type_ == 'windows')
+				$type = parse_windows($line);
+		} elseif ($type_ == 'daemon')
 			$type = parse_daemon($line);
 
 		$spec_lines[]= '<span class="'.$type.'">'.trim($line).'</span>';
@@ -107,10 +118,10 @@ function show_all($flags_) {
 			$display2[$server->getAttribute('fqdn')] = array();
 
 		if ($lines !== false)
-			$display2[$server->getAttribute('fqdn')]['web'] = get_lines_from_string('web', $lines, 20, $flags_);
+			$display2[$server->getAttribute('fqdn')]['web'] = get_lines_from_string($server->getAttribute('type'), 'web', $lines, 20, $flags_);
 
 		if ($lines2 !== false)
-			$display2[$server->getAttribute('fqdn')]['daemon'] = get_lines_from_string('daemon', $lines2, 20, $flags_);
+			$display2[$server->getAttribute('fqdn')]['daemon'] = get_lines_from_string($server->getAttribute('type'), 'daemon', $lines2, 20, $flags_);
 	}
 
 	page_header();
