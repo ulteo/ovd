@@ -596,6 +596,11 @@ class Server {
 	public function getDaemonLog() {
 		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
 
+		if ($this->getAttribute('type') == 'windows') {
+			Logger::error('main', 'Server::getDaemonLog - No daemon log for windows server');
+			return false;
+		}
+
 		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon');
 
 		return $ret;

@@ -225,7 +225,7 @@ function download_log($where_, $name_, $server_=NULL) {
 
 		if ($name_ == 'web')
 			echo $server->getWebLog();
-		elseif ($name_ == 'daemon')
+		elseif ($name_ == 'daemon' && $server->getAttribute('type') != 'windows')
 			echo $server->getDaemonLog();
 
 		die();
