@@ -60,6 +60,12 @@ cache_set_monitoring() {
     local ram_Cached=$(grep ^Cached: /proc/meminfo |tr -s ' '|cut -d ' ' -f2) || return 1
     ram_used=$(( $ram - $ram_Free - $ram_Buffers - $ram_Cached))
 
+    if [ ! -f $file ]; then
+        touch $file
+        chown root:www-data $file
+        chmod 640 $file
+    fi
+
     echo '<?xml version="1.0" encoding="utf-8"?>'          > $file || return 1
     echo '<monitoring>'                                    >>$file
     echo ' <cpu nb_cores="'$cpu_nb'" load="'$cpu_load'">'  >>$file
