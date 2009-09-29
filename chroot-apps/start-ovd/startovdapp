@@ -113,7 +113,11 @@ MYPID = os.getpid()
 append_to_file(MYPID, sys.argv[1])
 
 # run the appli
-cmd_line = getFinalCommand(cmd, sys.argv[3:])
+extra_args = sys.argv[3:]
+if len(extra_args)==0 and os.environ.has_key("DOC"):
+    extra_args = [os.environ["DOC"]]
+
+cmd_line = getFinalCommand(cmd, extra_args)
 os.system(cmd_line)
 
 # notify end

@@ -39,7 +39,7 @@ install -d -g www-data -m 770 $dir
 application_switch_status $SESSID $job 1
 
 nb_line=$(wc -l $file | cut -d' ' -f1)
-if [ $nb_line -lt 3 ] || [ $nb_line -gt 4 ]; then
+if [ $nb_line -lt 2 ] || [ $nb_line -gt 3 ]; then
     log_WARN "Unable to perform job: missing arguments ($nb_line lines)"
     exit 1
 fi

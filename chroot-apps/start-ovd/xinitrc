@@ -63,24 +63,16 @@ if [ -n "$DOC" ] || [ -n "$APP_ID" ]; then
   xfwm4 --daemon
 
   if [ -n "$APP_ID" ] && [ -n "$OVD_APPS_DIR" ]; then
-      CMD=$(grep "Exec=" "$OVD_APPS_DIR/$APP_ID.desktop" | sed -e "s/^Exec=//")
+    CMD=$(grep "^Exec=" "$OVD_APPS_DIR/$APP_ID.desktop" | sed -e "s/^Exec=//")
   else
-      CMD="xdg-open"
+    CMD="xdg-open"
   fi
 
   if [ "$NODESKTOP" == "1" ]; then
-    if [ -z "$DOC" ]; then
-      $CMD
-    else
-      $CMD "$DOC"
-    fi
+    eval $CMD
     exit 0
   else
-    if [ -z "$DOC" ]; then
-      $CMD &
-    else
-      $CMD "$DOC" &
-    fi
+    eval $CMD &
   fi
 fi
 
