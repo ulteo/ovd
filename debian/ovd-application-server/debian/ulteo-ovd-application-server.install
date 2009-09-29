@@ -2,4 +2,3 @@ debian/tmp/usr/share/ulteo
 debian/tmp/etc/ulteo
 debian/tmp/var/spool
 debian/ulteo-ovd.conf etc/
-debian/aps-configure usr/bin
