@@ -1,0 +1,2 @@
+* 03_add_quiet_option.patch:
+  add a --quiet/-q option to avoid messages on stdin and stderr
