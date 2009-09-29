@@ -192,7 +192,7 @@ do_destroy(HWND hwnd)
 }
 
 static void
-do_spawn(char *cmdline, char *desktopfile)
+do_spawn(char *cmdline)
 {
 	PROCESS_INFORMATION proc_info;
 	STARTUPINFO startup_info;
@@ -211,10 +211,30 @@ do_spawn(char *cmdline, char *desktopfile)
 			"Unable to launch the requested application:\n%s", cmdline);
 		message(msg);
 		return;
-	} else {
-		if (desktopfile)
-			vchannel_write("APPSTART", "0x%08x,%s", proc_info.dwProcessId, desktopfile);
 	}
+	// Release handles
+	CloseHandle(proc_info.hProcess);
+	CloseHandle(proc_info.hThread);
+}
+
+static void
+do_start_app(char *cmdline, unsigned int token)
+{
+	PROCESS_INFORMATION proc_info;
+	STARTUPINFO startup_info;
+	BOOL pid;
+	memset(&startup_info, 0, sizeof(STARTUPINFO));
+	startup_info.cb = sizeof(STARTUPINFO);
+
+	pid = CreateProcess(NULL, cmdline, NULL, NULL, FALSE, 0,
+			       NULL, NULL, &startup_info, &proc_info);
+	if (! pid)
+	{
+		vchannel_write("APP_ID", "0x%08x,0x%08x", token, -1);
+		return;
+	}
+
+	vchannel_write("APP_ID", "0x%08x,0x%08x", token, proc_info.dwProcessId);
 	// Release handles
 	CloseHandle(proc_info.hProcess);
 	CloseHandle(proc_info.hThread);
@@ -257,7 +277,9 @@ process_cmds(void)
 		else if (strcmp(tok1, "FOCUS") == 0)
 			do_focus(strtoul(tok2, NULL, 0), (HWND) strtoul(tok3, NULL, 0));
 		else if (strcmp(tok1, "SPAWN") == 0)
-			do_spawn(tok3,tok4);
+			do_spawn(tok3);
+		else if (strcmp(tok1, "START_APP") == 0)
+			do_start_app(tok4, strtoul(tok3, NULL, 0));
 		else if (strcmp(tok1, "DESTROY") == 0)
 			do_destroy((HWND) strtoul(tok3, NULL, 0));
 	}
