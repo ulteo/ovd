@@ -1,0 +1,407 @@
+=== modified file 'rdesktop.c'
+--- rdesktop.c	2009-09-28 08:07:15 +0000
++++ rdesktop.c	2009-09-28 15:30:35 +0000
+@@ -99,6 +99,7 @@
+ char *master_socket = NULL;
+ /* Seamless slave mode flag */
+ RD_BOOL seamless_slave = False;
++RD_BOOL seamless_start_app = False;
+ 
+ uint32 g_embed_wnd;
+ uint32 g_rdp5_performanceflags =
+@@ -440,9 +441,11 @@
+ 	RD_BOOL geometry_option = False;
+ 	int run_count = 0;	/* Session Directory support */
+ 	RD_BOOL continue_connect = True;	/* Session Directory support */
++	char *arg = NULL;
+ 	static const struct option long_options[]=
+ 	{
+ 		{"main-frame", 1, NULL, 10},
++		{"start-app", 1, NULL, 11},
+ 		{NULL, 0, NULL, 0} /* End of array need by getopt_long do not delete it*/
+ 	};
+ #ifdef WITH_RDPSND
+@@ -501,6 +504,11 @@
+ 					usage(argv[0]);
+ 				break;
+ 
++			case 11: //--start-app
++				seamless_start_app = True;
++				arg = strdup(optarg);
++				break;
++
+ 			case 'A':
+ 				g_seamless_rdp = True;
+ 				break;
+@@ -857,7 +865,25 @@
+ 
+ 		sprintf(master_socket, "%s/.rdesktop/seamless.socket", home);
+ 	}
+-	
++
++	if (seamless_start_app)
++	{
++		char buf[4096];
++		if (seamless_slave)
++		{
++			error("You connot use --start-app and -l at the same time\n");
++			return 1;
++		}
++		snprintf (buf, sizeof(buf), "STARTAPP|%s|%d", arg, (int)getpid());
++
++		seamless_socket_send(master_socket, buf);
++
++		while(1)
++			sleep(60);
++
++		return 0;
++	}
++
+ 	if (argc - optind != 1)
+ 	{
+ 		usage(argv[0]);
+
+=== modified file 'seamless.c'
+--- seamless.c	2009-09-25 11:54:40 +0000
++++ seamless.c	2009-09-28 15:30:35 +0000
+@@ -26,6 +26,8 @@
+ #include <sys/stat.h>
+ #include <sys/socket.h>
+ #include <sys/un.h>
++#include <time.h>
++#include <signal.h>
+ #include <unistd.h>
+ #include "seamless.h"
+ 
+@@ -360,6 +362,24 @@
+ 
+ 		ui_seamless_unhide_desktop();
+ 	}
++	else if (!strcmp("APP_ID", tok1))
++	{
++		unsigned int token;
++		unsigned int pid;
++
++		if (!tok4)
++			return False;
++
++		token = strtoul(tok3, &endptr, 0);
++		if (*endptr)
++			return False;
++
++		pid = strtoul(tok4, &endptr, 0);
++		if (*endptr)
++			return False;
++
++		seamless_register_pid(token, pid);
++	}
+ 
+ 
+ 	xfree(l);
+@@ -536,6 +556,28 @@
+ 	return seamless_send("SPAWN", cmdline);
+ }
+ 
++unsigned int
++seamless_send_start_app(char *cmdline, unsigned int pid)
++{
++	int token = (int)time(NULL);
++	seamless_application * sa = NULL;
++
++	if (!g_seamless_rdp)
++		return (unsigned int) -1;
++
++	// Create a new Seamless App and register it
++	sa = xmalloc(sizeof(seamless_application));
++	memset(sa, 0, sizeof(seamless_application));
++	sa->cmdline = strdup(cmdline);
++	sa->rdesktop_pid = pid;
++	sa->token = token;
++	sa->next = NULL;
++
++	seamless_application_add(sa);
++
++	return seamless_send("START_APP", "0x%08lx,%s", token, cmdline);
++}
++
+ /* Check seamless master mode socket and send spawn command if input found.
+  * Returns 0 if a slave connected and sent command, 1 otherwise.  */
+ int
+@@ -545,10 +587,12 @@
+ 	struct timeval tv;
+ 	int slaves, index, ns;
+ 	struct sockaddr_un fsaun;
+-	char cmdline[256];
++	char cmdline[260]; //windows's MAX_PATH = 260
+ 	socklen_t fromlen;
+ 	FILE *fp;
+-	char c;
++	char buffer[1024];
++	char *hh;
++	char *mm;
+ 
+ 	FD_ZERO(&rfds);
+ 	FD_SET(sock, &rfds);
+@@ -581,14 +625,59 @@
+ 
+ 	/* Read command from client socket */
+ 	fp = fdopen(ns, "r");
+-	index = 0;
+-	while ((c = fgetc(fp)) != EOF && index < 256)
++
++	index = fread(buffer, sizeof(char), 1024, fp);
++	if (index >0)
++		buffer[index] = '\0';
++
++	hh = strdup(buffer);
++	if (hh == NULL)
++		return 0;
++
++	mm = strtok(buffer, "\n");
++	if (mm == NULL) {
++		free(hh);
++		hh = NULL;
++		return 0;
++	}
++
++	if (str_startswith(mm, "STARTAPP"))
+ 	{
+-		cmdline[index] = c;
+-
+-		index++;
++		unsigned int pid;
++
++		mm = strtok(mm, "|");
++		mm = strtok(NULL, "|");
++		if (mm == NULL) {
++			free(hh);
++			hh = NULL;
++			return 0;
++		}
++		snprintf(cmdline, sizeof(cmdline), mm);
++
++		mm = strtok(NULL, "|");
++		if (mm == NULL) {
++			free(hh);
++			hh = NULL;
++			return 0;
++		}
++		pid = atoi(mm);
++
++		free(hh);
++		hh = NULL;
++
++		DEBUG(("STARTAPP cmdline: %s pid: %d\n", cmdline, pid));
++
++		seamless_send_start_app(cmdline, pid);
++
++		return 0;
+ 	}
+-	cmdline[index] = '\0';
++
++	snprintf(cmdline, 256, mm);
++
++	free(hh);
++	hh = NULL;
++
++	DEBUG(("cmdline: %ss\n", cmdline));
+ 
+ 	/* Send spawn command to server-side SeamlessRDP component */
+ 	seamless_send_spawn(cmdline);
+@@ -673,3 +762,97 @@
+ 
+ 	return 0;
+ }
++
++
++static seamless_application *g_seamless_application = NULL;
++
++void seamless_register_pid(unsigned int token, unsigned int pid) {
++        seamless_application * obj = seamless_application_get_by_token(token);
++        printf("Register %d on %d\n", token, pid);
++
++        if (!obj) {
++                printf("Error, don't find any seamless_application token %d\n", token);
++                return;
++        }
++
++        if(pid == -1)
++        {
++        	seamless_application_remove(obj);
++
++        	return;
++        }
++        obj->windows_pid = pid;
++}
++
++seamless_application *
++seamless_application_get_by_token(unsigned int token)
++{
++	seamless_application *obj;
++	for (obj = g_seamless_application; obj; obj = obj->next)
++	{
++		if (obj->token == token)
++			return obj;
++	}
++	return NULL;
++}
++
++seamless_application *
++seamless_application_get_by_pid(unsigned int pid)
++{
++	seamless_application *obj;
++	for (obj = g_seamless_application; obj; obj = obj->next)
++	{
++		if (obj->windows_pid == pid)
++			return obj;
++	}
++	return NULL;
++}
++
++void
++seamless_application_add(seamless_application * target)
++{
++        target->next = g_seamless_application;
++        g_seamless_application = target;
++}
++
++void
++seamless_application_remove(seamless_application * target)
++{
++	seamless_application *obj, *prev = NULL;
++
++	for (obj = g_seamless_application; obj; obj = obj->next)
++	{
++		if (obj == target)
++		{
++			if(kill((pid_t)obj->rdesktop_pid, SIGTERM) != 0)
++			{
++				error("rdesktop startapp process (%d) cannot be killed.\n", obj->rdesktop_pid);
++			}
++
++			if (prev != NULL)
++				prev->next = obj->next;
++			else
++				g_seamless_application = obj->next;
++
++			obj->next = NULL;
++
++			if(obj)
++			{
++				free(obj);
++				obj = NULL;
++			}
++			return;
++		}
++
++		prev = obj;
++	}
++}
++
++void
++seamless_application_remove_all()
++{
++	seamless_application *sa;
++
++	for(sa = g_seamless_application; sa != NULL; sa = sa->next)
++		seamless_application_remove(sa);
++}
+
+=== modified file 'seamless.h'
+--- seamless.h	2009-09-25 11:54:40 +0000
++++ seamless.h	2009-09-28 15:30:35 +0000
+@@ -26,3 +26,23 @@
+ void seamless_close_socket(char *socket_name);
+ /* Send a command line to seamless master socket. */
+ int seamless_socket_send(char *socket_name, char *cmdline);
++
++
++// Seamless Application management
++typedef struct _seamless_app
++{
++	char * cmdline;
++	unsigned int token;
++	unsigned int windows_pid;
++	unsigned int rdesktop_pid;
++
++	struct _seamless_app *next;
++} seamless_application;
++
++seamless_application * seamless_application_get_by_token(unsigned int token);
++seamless_application * seamless_application_get_by_pid(unsigned int pid);
++void seamless_application_add(seamless_application * target);
++void seamless_application_remove(seamless_application * target);
++void seamless_application_remove_all();
++
++void seamless_register_pid(unsigned int token, unsigned int pid);
+
+=== modified file 'xwin.c'
+--- xwin.c	2009-09-28 08:07:15 +0000
++++ xwin.c	2009-09-28 15:32:15 +0000
+@@ -63,6 +63,8 @@
+ typedef struct _seamless_window
+ {
+ 	Window wnd;
++	seamless_application* sa;
++
+ 	unsigned long id;
+ 	unsigned long behind;
+ 	seamless_group *group;
+@@ -1947,6 +1949,8 @@
+ 		sw_remove_window(g_seamless_windows);
+ 	}
+ 
++	seamless_application_remove_all();
++
+ 	xclip_deinit();
+ 
+ 	if (g_IM != NULL)
+@@ -3702,6 +3706,7 @@
+ 	XWMHints *wmhints;
+ 	long input_mask;
+ 	seamless_window *sw, *sw_parent;
++	seamless_application *sa;        
+ 
+ 	if (!g_seamless_active)
+ 		return;
+@@ -3710,6 +3715,13 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (sw)
+ 		return;
++        
++	sa = seamless_application_get_by_pid(group);
++	if (! sa)
++		printf("Warning CREATE windows not associate to seamless_application\n");
++	else {
++		printf("CREATE window for application %s\n", sa->cmdline);
++	}
+ 
+ 	get_window_attribs(&attribs);
+ 	wnd = XCreateWindow(g_display, RootWindowOfScreen(g_screen), -1, -1, 1, 1, 0, g_depth,
+@@ -3787,6 +3799,7 @@
+ 	memset(sw, 0, sizeof(seamless_window));
+ 
+ 	sw->wnd = wnd;
++	sw->sa = sa;
+ 	sw->id = id;
+ 	sw->group = sw_find_group(group, False);
+ 	sw->group->refcnt++;
+@@ -3839,6 +3852,7 @@
+ ui_seamless_destroy_group(unsigned long id, unsigned long flags)
+ {
+ 	seamless_window *sw, *sw_next;
++	seamless_application *sa;
+ 
+ 	if (!g_seamless_active)
+ 		return;
+@@ -3853,6 +3867,9 @@
+ 			sw_remove_window(sw);
+ 		}
+ 	}
++
++	if((sa = seamless_application_get_by_pid(id)) && sa != NULL)
++		seamless_application_remove(sa);
+ }
+ 
+ 
+

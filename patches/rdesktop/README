@@ -1,15 +1,13 @@
 * seamless.patch:
   From http://www.cendio.com/seamlessrdp/: seamless support
 
-* ulteo_sn.patch:
-  Simulate startup notification for windows applications
+* ulteo-01_mainframe.patch:
+  Add a long option ("--main-frame") in order to define the main window behavior :
+    - show : always mapped
+    - hide : never mapped
+    - normal : unmapped on <<seamless HELLO>>
+  The user must use -u, -p, and -A with '--main-frame hide'
 
-* ulteo_monitoring.patch:
-  Ulteo specific. Monitor the startup/ending of launched applications. It
-  requires an update seamlessrdpshell.
-
-* ulteo_mainframe.patch:
-  Add a --main-frame option to define the main frame behaviour
-
-* ulteo_multidisplay.patch:
-  Support multiple X displays
+* ulteo-02_seamless_application.patch:
+  Feature: Seamless windows opened with 'rdesktop --start-app' are linked with Windows applications by their pid
+           Processes launched with "rdesktop --start-app app" are killed when their window is closed.
