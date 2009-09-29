@@ -33,13 +33,13 @@ function list_running_apps(apps_) {
 	);
 }
 
-function startExternalApp(app_id_, command_) {
+function startExternalApp(app_id_) {
 	var rand_ = Math.round(Math.random()*100);
 
 	window_ = popupOpen(rand_);
 
 	setTimeout(function() {
-		window_.location.href = 'external_app.php?app_id='+app_id_+'&command='+command_;
+		window_.location.href = 'external_app.php?app_id='+app_id_;
 	}, 1000);
 
 	return true;

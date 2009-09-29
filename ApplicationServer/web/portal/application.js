@@ -1,7 +1,6 @@
 var refresh = 2000;
 
 var app_id;
-var command;
 var doc;
 var access_id;
 var applet_version;
@@ -25,9 +24,8 @@ var nb_share = 0;
 var application_started = false;
 var window_alive = true;
 
-function application_init(app_id_, command_, doc_, applet_version_, applet_main_class_, debug_) {
+function application_init(app_id_, doc_, applet_version_, applet_main_class_, debug_) {
 	app_id = app_id_;
-	command = command_;
 	doc = doc_;
 	applet_version = applet_version_;
 	applet_main_class = applet_main_class_;
@@ -150,7 +148,6 @@ function start_app() {
 			method: 'get',
 			parameters: {
 				app_id: app_id,
-				command: command,
 				doc: doc,
 				size: my_width+'x'+my_height
 			},

@@ -68,7 +68,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
-				application_init('<?php echo $_GET['app_id']; ?>', '<?php echo str_replace("\\", "\\\\", $_GET['command']); ?>', '<?php echo $doc; ?>', 'ulteo-applet.jar', 'org.ulteo.OvdApplet', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				application_init('<?php echo $_GET['app_id']; ?>', '<?php echo $doc; ?>', 'ulteo-applet.jar', 'org.ulteo.OvdApplet', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 			});
 		</script>
 	</head>

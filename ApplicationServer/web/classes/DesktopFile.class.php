@@ -26,7 +26,6 @@ class DesktopFile {
     protected $lang_short = null;
 
     protected $name = 'unknown';
-    protected $command = '';
     protected $mimestypes = array();
 
     public function __construct($filename_, $lang_) {
@@ -50,11 +49,6 @@ class DesktopFile {
 
             list($key, $value) = explode('=', $line, 2);
 
-            if ($key == 'Exec') {
-                $this->command = $value;
-                continue;
-            }
-
             if ($key == 'MimeType') {
                 $this->mimestypes = explode(";", $value);
                 continue;
@@ -74,6 +68,5 @@ class DesktopFile {
     }
 
     public function getName() { return $this->name; }
-    public function getCommand() { return $this->command; }
     public function getMimeType() { return $this->mimestypes; }
 }

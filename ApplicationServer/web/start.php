@@ -59,15 +59,6 @@ function generateAjaxplorerActionsXML() {
 		if (is_null($application_node))
 			continue;
 
-		$executable_node = $application_node->getElementsByTagname('executable')->item(0);
-		if (is_null($executable_node))
-			continue;
-
-		if (! $executable_node->hasAttribute('command'))
-			continue;
-
-		$app_command = str_replace("\\", "\\\\", $executable_node->getAttribute('command'));
-
 		$app_icon = query_url(SESSIONMANAGER_URL.'/webservices/icon.php?id='.$app_id.'&fqdn='.SERVERNAME);
 		@file_put_contents(dirname(__FILE__).'/portal/ajaxplorer/client/images/crystal/actions/16/ulteo'.$app_id.'.png', $app_icon);
 		@file_put_contents(dirname(__FILE__).'/portal/ajaxplorer/client/images/crystal/actions/22/ulteo'.$app_id.'.png', $app_icon);
@@ -86,13 +77,12 @@ if (window.actionArguments && window.actionArguments.length > 0) {
 var window_ = window.open('about:blank', 'Ulteo'+Math.round(Math.random()*100), 'toolbar=no,status=no,top=0,left=0,width='+screen.width+',height='+screen.height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
 
 setTimeout(function() {
-	window_.location.href = '../external_app.php?app_id=$app_id&command=$app_command&doc='+path;
+	window_.location.href = '../external_app.php?app_id=$app_id&doc='+path;
 }, 1000);
 EOF;
 
 		$actions['ulteo'.$app_id] = array(
 			'id'				=>	$app_id,
-			'command'			=>	$buf->getCommand(),
 			'text'				=>	$buf->getName(),
 			'mimes'				=>	$buf->getMimeType(),
 			'clientcallback'	=>	$clientcallback_cdata

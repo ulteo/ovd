@@ -59,13 +59,6 @@ foreach ($apps as $k => $app) {
 	if ($application_node->hasAttribute('name'))
 		$name = $application_node->getAttribute('name');
 
-	$executable_node = $application_node->getElementsByTagname('executable')->item(0);
-	if (is_null($executable_node))
-		continue;
-
-	if ($executable_node->hasAttribute('command'))
-		$command = $executable_node->getAttribute('command');
-
 	echo '<tr>';
 	echo '<td><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></td>';
 	echo '<td><strong>'.$name.'</strong><br />';

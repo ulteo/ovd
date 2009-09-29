@@ -33,11 +33,6 @@ if (!isset($_GET['app_id']) || $_GET['app_id'] == '') {
 	die('CRITICAL ERROR'); // That's odd !
 }
 
-if (!isset($_GET['command']) || $_GET['command'] == '') {
-	Logger::critical('main', '(start_app) No command');
-	die('CRITICAL ERROR'); // That's odd !
-}
-
 if (!isset($_GET['size']) || $_GET['size'] == '') {
 	Logger::critical('main', '(start_app) No size');
 	die('CRITICAL ERROR'); // That's odd !
@@ -49,10 +44,10 @@ $dom = new DomDocument();
 
 $buf = gen_string(5);
 
-$cmdline = $_GET['command'];
+$doc = '';
 if (isset($_GET['doc']) && $_GET['doc'] != '')
-	$cmdline .= "\n".$_GET['doc'];
-put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id']."\n".$_GET['size']."\n".$cmdline."\n");
+	$doc = $_GET['doc']."\n";
+put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id']."\n".$_GET['size']."\n".$doc);
 
 $error = false;
 
