@@ -20,7 +20,7 @@
 . functions.sh
 . log.sh
 
-log_INFO "SET ENV"
+log_INFO "setting user environment"
 
 if [ -z "$1" ]; then
     log_ERROR "$0 missing argument"

@@ -92,7 +92,7 @@ user_exec() {
     su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; $env startovd" >/dev/null 2>&1
 }
 
-user_exec_() {
+user_exec_cmd() {
     local command="$1"
     local display=$2
     [ $# -gt 2 ] && local env="$3"

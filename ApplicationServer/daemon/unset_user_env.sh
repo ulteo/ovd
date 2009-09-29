@@ -22,7 +22,7 @@
 . functions.sh
 . log.sh
 
-log_INFO "UNSET_ENV"
+log_INFO "unsetting user environment"
 
 if [ -z "$1" ]; then
     log_ERROR "$0 missing argument"
@@ -47,7 +47,7 @@ if [  $? -ne 0 ]; then
 fi
 
 if ! get_status; then
-    log_INFO "UUMOUNT:Info: $USER_HOME is not mounted"    
+    log_INFO "UUMOUNT: $USER_HOME is not mounted"
 else
     do_umount
     if [ $? -ne 0 ]; then

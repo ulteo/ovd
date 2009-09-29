@@ -50,5 +50,5 @@ if [ -n "$CMD" ]; then
     fi
 
     ENV_FILE=$SPOOL_USERS/$SESSID/env.sh
-    user_exec_ "${CMD}" $rfb_port
+    user_exec_cmd "${CMD}" $rfb_port
 fi
