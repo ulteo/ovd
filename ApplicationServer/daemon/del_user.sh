@@ -22,30 +22,27 @@
 . functions.sh
 . log.sh
 
-log_INFO "UUMOUNT"
-#NICK=$1
+log_INFO "Forgetting about $NICK"
 USER_HOME=/home/$NICK
-
-log_DEBUG "Uumount nick:"$NICK
 
 . modules_fs.sh || exit 1
 
 set_fs
 
 if ! get_status; then
-    log_INFO "UUMOUNT:Info: $USER_HOME is not mounted"
+    log_INFO "del_user: $USER_HOME is not mounted"
 else
     do_umount
     if [ $? -ne 0 ]; then
-        log_WARN "UUMOUNT: umount of ${USER_HOME} failed"
+        log_WARN "del_user: umount of $USER_HOME failed"
     fi
 fi
 
-
+# Delete the user from the system
 userdel $USER_LOGIN
 
 # Clean the menu
-menu_clean $SPOOL_USERS/$SESSID'/xdg'
+menu_clean $SPOOL_USERS/$SESSID/xdg
 
-# HERE remove CUPS stuff
+# Remove the CUPS cache
 rm -rf /var/spool/cups2all/$USER_LOGIN

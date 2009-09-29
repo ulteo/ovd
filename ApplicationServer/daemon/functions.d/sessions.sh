@@ -241,12 +241,12 @@ session_purge() {
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
     HOME_DIR_TYPE=$HOME_DIR_TYPE \
     USER_LOGIN=$USER_LOGIN USER_UID=$USER_UID \
+    NICK=$NICK del_user.sh
 
     if [ -z "$NICK" ]; then
-        log_WARN "Purge session ${SESSID} without NICK so we have neither HOME nor mount points"
+        log_WARN "Session ${SESSID} has no NICK defined; purging HOME and mount points"
         return 0
     fi
-    NICK=$NICK uumount.sh
 
     [ -d /home/$NICK ] && do_clean_home $NICK
 }

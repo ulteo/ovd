@@ -6,10 +6,10 @@ SUBDIRS = \
 
 daemon_SCRIPTS = application.sh \
                  cpu_load.py \
+                 del_user.sh \
                  desktop.sh \
                  set_user_env.sh \
                  timeout.sh \
-                 uumount.sh \
                  ulteo-ovdd \
                  unset_user_env.sh \
                  xml2desktopfile
