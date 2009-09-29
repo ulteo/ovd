@@ -233,7 +233,7 @@ session_purge() {
     killall -s 9 -u VNC$i
 
     log_DEBUG "removing user's files from /tmp"
-    find /tmp/ -user $USER_LOGIN | xargs rm -rf {}\;
+    find /tmp/ -user $USER_LOGIN -exec rm -rf {} \;
     rm -f /tmp/.tmp"$UUID".Xauthority
     rm -f /tmp/.tmp"$UUID"encvncpasswd
     rm -f /tmp/$VNC_USER
