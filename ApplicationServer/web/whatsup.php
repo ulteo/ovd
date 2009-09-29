@@ -177,6 +177,13 @@ $status = getSessionStatus($session);
 if ($status === false)
   $status = 4;
 
+//user_login can be changed by the daemon if it already exists in the chroot /etc/passwd (ex: root becomes root1)...
+if (! isset($_SESSION['previous_status']))
+	$_SESSION['previous_status'] = -1;
+if ($_SESSION['previous_status'] != 2 && $status == 2)
+	$_SESSION['parameters']['user_login'] = get_from_file(SESSION_PATH.'/'.$session.'/parameters/user_login');
+$_SESSION['previous_status'] = $status;
+
 $session_node->setAttribute('status', $status);
 
 if (isset($_GET['application_id'])) {
