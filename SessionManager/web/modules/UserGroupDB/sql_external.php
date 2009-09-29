@@ -65,7 +65,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		return true;
 	}
 	
-	public function getList() {
+	public function getList($sort_=false) {
 		Logger::debug('main','USERGROUPDB::MYSQL_external::getList');
 		$groups = array();
 		
@@ -92,6 +92,10 @@ class UserGroupDB_sql_external extends UserGroupDB {
 				Logger::info('main', 'USERGROUPDB::MYSQL_external::getList group \''.$row[$this->config['match']['id']].'\' not ok');
 			}
 		}
+		if ($sort_) {
+			usort($groups, "usergroup_cmp");
+		}
+		
 		return $groups;
 		
 	}

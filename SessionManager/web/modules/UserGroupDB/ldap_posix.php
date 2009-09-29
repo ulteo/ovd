@@ -57,7 +57,7 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 		return $this->generateUsersGroupFromRow($info, $dn);
 	}
 	
-	public function getList() {
+	public function getList($sort_=false) {
 		Logger::debug('main','UserGroupDB::ldap_posix::getList');
 		
 		$prefs = Preferences::getInstance();
@@ -95,6 +95,10 @@ class UserGroupDB_ldap_posix extends UserGroupDB_ldap_memberof{
 			if (is_object($g))
 				$groups[$dn] = $g;
 		}
+		if ($sort_) {
+			usort($groups, "usergroup_cmp");
+		}
+		
 		return $groups;
 	}
 	

@@ -88,7 +88,7 @@ class UserGroupDB_ldap_memberof {
 		return true;
 	}
 	
-	public function getList() {
+	public function getList($sort_=false) {
 		Logger::debug('main','UserGroupDB::ldap_memberof::getList');
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
@@ -115,6 +115,10 @@ class UserGroupDB_ldap_memberof {
 				}
 			}
 		}
+		if ($sort_) {
+			usort($groups, "usergroup_cmp");
+		}
+		
 		return $groups;
 	}
 	

@@ -70,7 +70,7 @@ class UserGroupDB_sql {
 		}
 	}
 	
-	public function getList() {
+	public function getList($sort_=false) {
 		Logger::debug('main','UserGroupDB_sql::getList');
 		if (is_null($this->table)) {
 			Logger::error('main', 'USERGROUPDB::MYSQL::getList table is null');
@@ -89,6 +89,10 @@ class UserGroupDB_sql {
 					Logger::info('main', 'USERGROUPDB::MYSQL::getList group \''.$row['id'].'\' not ok');
 				}
 			}
+			if ($sort_) {
+				usort($result, "usergroup_cmp");
+			}
+			
 			return $result;
 		}
 		else {
