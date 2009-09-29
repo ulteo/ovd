@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash
 # Copyright (C) 2006-2008 Ulteo SAS
 # http://www.ulteo.com
 # Author Gaël DUVAL <gduval@ulteo.com>
@@ -422,6 +422,9 @@ SERVERNAME=localhost
 CONNECTION_TIMEOUT=20
 # end of default configuration
 
+# turn off job control to avoid unwanted log messages
+set +m
+
 # unset some env vars
 unset LANG
 unset USERNAME
@@ -440,7 +443,7 @@ fi
 
 # Load/overwrite configuration from command-line args
 ARGS=$(getopt --unquoted -o dp: --long daemonize,no-daemonize,pid: -n $0 -- "$@")
-if [ $? != 0 ]; then 
+if [ $? != 0 ]; then
     echo "Error usage" >&2
     usage
     exit 1
@@ -459,7 +462,7 @@ while true ; do
             shift;
             break ;;
         *)
-            echo "Internal error!" 
+            echo "Internal error!"
             exit 1;;
     esac
 done
