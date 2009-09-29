@@ -2,9 +2,6 @@
 /*
 Ulteo License
 */
-function logme44($content_) {
-	@file_put_contents('/tmp/test.log', $content_."\n", FILE_APPEND);
-}
 require_once(INSTALL_PATH.'/plugins/auth.serial/class.serialAuthDriver.php');
 
 class ulteoAuthDriver extends serialAuthDriver  {
@@ -21,7 +18,6 @@ class ulteoAuthDriver extends serialAuthDriver  {
 	}
 
 	public function preLogUser($sessionId) {
-logme44('SESSION ;) '.serialize($_SESSION));
 		if (! isset($_SESSION['parameters']['user_login']))
 			return;
 
