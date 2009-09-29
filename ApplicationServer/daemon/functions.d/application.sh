@@ -159,8 +159,7 @@ application_purge() {
 
     local rfb_port=$(cat $dir/rfb_port)
 
-
-    log_INFO "application_purge !!"
+    log_INFO "purging application '$job'"
     display_stop $rfb_port $dir/vnc.pid
 
     spool_free_rfbport $rfb_port
