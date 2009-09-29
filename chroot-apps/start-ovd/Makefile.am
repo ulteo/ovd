@@ -1,4 +1,4 @@
-scripts_DATA = startovd-xfce startovd-kde startovdapp
+scripts_DATA = startovd-xfce startovdapp
 scriptsdir = $(bindir)
 
 sysconfig_DATA = xinitrc
