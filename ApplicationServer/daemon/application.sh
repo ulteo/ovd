@@ -46,16 +46,14 @@ fi
 
 app_id=$(head -n 1 $file)
 geometry=$(head -n 2 $file |tail -n 1)
-app=$(head -n 3 $file |tail -n 1)
 if [ -z "$app_id" ] || [ -z "$geometry" ] || \
-    [ -z "$app" ] && [ "$app_id" != "desktop" ]; then
+    [ "$app_id" != "desktop" ]; then
     log_WARN "Unable to perform job: missing arguments"
     exit 1
 fi
-[ $nb_line -eq 4 ] && doc=$(head -n 4 $file |tail -n 1)
+[ $nb_line -eq 3 ] && doc=$(head -n 3 $file |tail -n 1)
 
 echo $app_id > $dir/app_id
-echo $app > $dir/app
 [ -n "$doc" ] && echo "$doc" > $dir/doc
 echo $geometry > $dir/geometry
 rm $file

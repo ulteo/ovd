@@ -57,23 +57,30 @@ if test x"$DBUS_SESSION_BUS_ADDRESS" = x""; then
 fi
 
 # automatically open an application if needed
-if [ -n "$DOC" ] || [ -n "$APP" ]; then
-  [ -z "$APP" ] && APP="xdg-open"
-  [ -z "$APP_ID" ] && APP_ID=0
-
+if [ -n "$DOC" ] || [ -n "$APP_ID" ]; then
   # Start xfwm4 in any case to load the GTK configuration first.
   # This prevents some apps (ooo) to be ugly
   xfwm4 --daemon
 
+  if [ -n "$APP_ID" ] && [ -n "$OVD_APPS_DIR" ]; then
+      CMD=$(grep "Exec=" "$OVD_APPS_DIR/$APP_ID.desktop" | sed -e "s/^Exec=//")
+  else
+      CMD="xdg-open"
+  fi
+
   if [ "$NODESKTOP" == "1" ]; then
     if [ -z "$DOC" ]; then
-      startovdapp $APP_ID $APP
+      $CMD
     else
-      startovdapp $APP_ID $APP "$DOC"
+      $CMD "$DOC"
     fi
     exit 0
   else
-    startovdapp $APP_ID $APP "$DOC" &
+    if [ -z "$DOC" ]; then
+      $CMD &
+    else
+      $CMD "$DOC" &
+    fi
   fi
 fi
 

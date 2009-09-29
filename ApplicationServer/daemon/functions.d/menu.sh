@@ -26,18 +26,11 @@ menu_init() {
     ln -sf /usr/share/pixmaps $menu_dir/pixmaps
     ln -sf /usr/share/mime    $menu_dir/mime
     ln -sf /usr/share/themes  $menu_dir/themes
-    cp /usr/share/applications/mimeinfo.cache \
-        $menu_dir/applications/mimeinfo.cache
-    if [ -f $SPOOL/virtual_apps/mimeinfo.cache ]; then
-        grep -v '^.MIME Cache.$' $SPOOL/virtual_apps/mimeinfo.cache >> \
-            $menu_dir/applications/mimeinfo.cache
-    fi
 }
 
 menu_spool() {
     local menu_dir=$1
     local sessid_dir=$2
-    local needs_mime_update=
 
     menu_init $menu_dir
 
@@ -55,14 +48,13 @@ menu_spool() {
         'virtual')
             local mode=$(echo $app| cut -d '|' -f3)
             menu_virtual_put $id $mode $menu_dir
-            [ $? -eq 1 ] && needs_mime_update="yes"
             ;;
         *)
             log_WARN "Unrecognized application type '$name'"
         esac
     done <$sessid_dir'/parameters/menu'
 
-    [ -n "$needs_mime_update" ] && update-desktop-database $SPOOL/virtual_apps/
+    update-desktop-database $menu_dir/applications
 
     if [ -f $sessid_dir/parameters/desktop_icons ]; then
         touch $menu_dir/applications/.show_on_desktop
@@ -75,14 +67,9 @@ menu_put() {
     local menu_dir=$3
 
     [ -f "$desktop" ] || return 1
-    local basename=$(basename "$desktop")
-    local dest=$menu_dir/applications/$basename
+    local dest=$menu_dir/applications/$id.desktop
 
-    if ! grep -q "^Exec=rdesktop " "$desktop"; then
-        sed -r "s#^Exec=(.*)#Exec=startovdapp $id \1#" <"$desktop" >"$dest"
-    else
-        cp "$desktop" "$dest"
-    fi
+    sed -r "s#^Exec=(.*)#Exec=startovdapp $id \"$desktop\"#" <"$desktop" >"$dest"
 }
 
 menu_clean() {
@@ -95,14 +82,11 @@ menu_virtual_put() {
     local id=$1
     local mode=$2
     local menu_dir=$3
-    local ret=0 # if 1 => we'll update the mimetypes cache
 
     if ! vapp_exist $id || [ $mode = 'reload' ]; then
-        ret=1
         vapp_get $id
         [ $? -eq 0 ] || return 1
     fi
 
     menu_put $id $vapp_repo/$id.desktop $menu_dir
-    return $ret
 }

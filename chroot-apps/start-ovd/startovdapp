@@ -21,10 +21,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import re
 import subprocess
 import sys
-
-options = ['--start-monitoring', '--stop-monitoring']
 
 def append_to_file(pid, desktop):
     D = os.environ['OVD_SESSID_DIR']
@@ -38,6 +37,55 @@ def del_from_file(pid):
     # windows pids will be strings (0x...)
     os.system('sed -i "/^%s /d" %s/apps'%(str(pid), D))
 
+def getDestkopfileKey(filename_, key_):
+    try:
+        f = file(filename_, "r")
+    except Exception:
+        return None
+
+    lines = f.readlines()
+    f.close()
+    for line in lines:
+        if line.startswith(key_+"="):
+            return line[len(key_)+1:].strip()
+
+    return None
+
+def getFinalCommand(cmd_, args_):
+    if "%F" in cmd_:
+        return cmd_.replace("%F", list2cmdline(args_))
+
+    if "%U" in cmd_:
+        b = []
+        for arg in args_:
+            if "://" not in arg:
+                b.append('file://%s'%(os.path.abspath(arg)))
+            else:
+                b.append(arg)
+        return cmd_.replace("%U", list2cmdline(b))
+
+    cmd = cmd_
+    args = args_
+    args.reverse()
+
+    while len(args)>0:
+        i = cmd.find("%")
+        try:
+            tok = cmd[i+1]
+        except Exception,e:
+            tok = ""
+
+        arg = args.pop()
+        if tok == "u" and "://" not in arg:
+            replace = "file://%s"%(os.path.abspath(arg))
+        else:
+            replace = arg
+
+        cmd = cmd.replace("%"+tok, '"%s"'%(replace), 1)
+
+    cmd = re.sub("%[a-z]", "", cmd)
+
+    return cmd
 
 #
 # the subprocess.list2cmdline function doesn't
@@ -51,20 +99,13 @@ def list2cmdline(args):
 if not os.environ.has_key('OVD_SESSID_DIR'):
     sys.exit(1)
 
-# monitoring only
-if len(sys.argv) > 0 and sys.argv[1] in options:
-    if sys.argv[1] == '--start-monitoring' and len(sys.argv) == 4:
-        append_to_file(sys.argv[2], sys.argv[3])
-        sys.exit(0)
-    elif sys.argv[1] == '--stop-monitoring' and len(sys.argv) == 3:
-        del_from_file(sys.argv[2])
-        sys.exit(0)
-    else:
-        sys.exit(1)
-
 # monitoring + application startup
 if not len(sys.argv) > 2:
     sys.exit(1)
+
+cmd = getDestkopfileKey(sys.argv[2], "Exec")
+if cmd == None:
+    sys.exit(2)
 
 MYPID = os.getpid()
 
@@ -72,7 +113,7 @@ MYPID = os.getpid()
 append_to_file(MYPID, sys.argv[1])
 
 # run the appli
-cmd_line = list2cmdline(sys.argv[2:])
+cmd_line = getFinalCommand(cmd, sys.argv[3:])
 os.system(cmd_line)
 
 # notify end

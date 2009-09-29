@@ -35,10 +35,9 @@ class Application(dict):
 
         execNode = doc.getElementsByTagName('executable')[0]
 
+        self['Exec'] = execNode.getAttribute("command")
         if doc.getAttribute("type") == "windows":
-            self['Exec'] = 'rdesktop -l "%s" "%s"'%(execNode.getAttribute("command"), id)
-        else:
-           self['Exec'] = execNode.getAttribute("command")
+            self['Exec'] = 'rdesktop --start-app "%s"'%(self['Exec'])
 
     def toDesktopFile(self, file_):
         lines = ['[Desktop Entry]', 'Version=1.0', 'Encoding=UTF-8', 'Type=Application']
