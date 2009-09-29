@@ -111,31 +111,42 @@
     <title>Installation</title>
 
     <itemizedlist>
-     <listitem>
-	<para>
-	  Download the Ulteo Open Virtual Desktop rpm packages from
-	  <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" />
-	</para>
-     </listitem>
+        <listitem>
+            <para>The first step is to configure yum to enable the Ulteo rpm repository.
+            Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
+            <screen><![CDATA[
+[ovd-2.0]
+name=Ulteo OVD 2.0
+baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/2.0
+enabled=1
+gpgcheck=1
+gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Let rpm know about the ulteo signing key by executing the following commands:</para>
+            <screen><![CDATA[
+# wget http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key
+# rpm --import ulteo-archive.key
+# rm ulteo-archive.key]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Install the <emphasis>ovd-session-manager</emphasis> package:</para>
+            <screen><![CDATA[
+# yum install ovd-session-manager]]>
+            </screen>
+        </listitem>
 
-     <listitem>
-	<para>Install the <emphasis>ovd-session-manager</emphasis> package:</para>
-        <screen>
-	  <![CDATA[
-# yum install --nogpgcheck ovd-session-manager-latest.rpm]]>
-	</screen>
-      </listitem>
-
-     <listitem id="sm_install_sm_config">
-       <para>Launch the configuration tool</para>
-       <screen>
-	 <![CDATA[
+        <listitem id="sm_install_sm_config">
+            <para>Launch the configuration tool</para>
+            <screen><![CDATA[
 # sm-config
 Admin login: admin
-Password: 
-Retype password: 
+Password:
+Retype password:
 Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php]:
-Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]: 
+Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]:
 
 Options:
 * chroot download:  yes
@@ -145,18 +156,17 @@ Options:
 * apache dir:       /etc/httpd/conf.d
 
 Is this correct? [Y/n] ]]>
-       </screen>
-     </listitem>
+            </screen>
+        </listitem>
 
 
-     <listitem>
-       <para>Configure and start apache service</para>
-       <screen>
-	 <![CDATA[
+        <listitem>
+            <para>Configure and start apache service</para>
+            <screen><![CDATA[
 # chkconfig httpd on
 # service httpd restart]]>
-       </screen>
-     </listitem>
+            </screen>
+        </listitem>
 
     </itemizedlist>
 
@@ -170,21 +180,34 @@ Is this correct? [Y/n] ]]>
   <section id="aps">
     <xi:include href="Installation.xml" xpointer="aps_title" />
 
-    <itemizedlist>
-     <listitem>
-	<para>
-	  Download the Ulteo Open Virtual Desktop rpm packages from
-	  <ulink url="http://www.ulteo.com/home/ovdi/openvirtualdesktop/download" />
-	</para>
-     </listitem>
-
-     <listitem>
-	<para>Intall the <emphasis>ovd-application-server</emphasis> package:</para>
-        <screen>
-	  <![CDATA[
-# yum install --nogpgcheck ovd-application-server-latest.rpm]]>
-	</screen>
-     </listitem>
+   <itemizedlist>
+        <listitem>
+            <para>If you haven't done it yet for the Session Manager, configure
+            yum to enable the Ulteo rpm repository.
+            Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
+            <screen><![CDATA[
+[ovd-2.0]
+name=Ulteo OVD 2.0
+baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/2.0
+enabled=1
+gpgcheck=1
+gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Let rpm know about the ulteo signing key by executing the following commands:</para>
+            <screen><![CDATA[
+# wget http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key
+# rpm --import ulteo-archive.key
+# rm ulteo-archive.key]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Install the <emphasis>ovd-application-server</emphasis> package:</para>
+            <screen><![CDATA[
+# yum install ovd-application-server]]>
+            </screen>
+        </listitem>
 
      <listitem id="aps_install_aps_chroot_install">
        <para>Launch the configuration tool</para>
