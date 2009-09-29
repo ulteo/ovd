@@ -206,7 +206,7 @@ session_check_status() {
         session_switch_status $SESSID 2
 
         local type=$(cat ${SESSID_DIR}/parameters/session_mode)
-        if [ "$type" == "desktop" ]; then
+        if [ "$type" = "desktop" ]; then
             desktop.sh $SESSID &
             sleep 0.5
         fi
@@ -393,7 +393,7 @@ stop() {
 
     if [ -f "$PID_FILE" ]; then
        local mpid=$(cat $PID_FILE)
-       if [ $mpid == $$ ]; then
+       if [ $mpid = $$ ]; then
            rm $PID_FILE
        fi
     fi
