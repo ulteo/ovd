@@ -149,7 +149,7 @@ class Abstract_Server {
 		$fqdn = $server_->fqdn;
 
 		if (! Abstract_Server::load($fqdn)) {
-			Logger::error('main', "Abstract_Server::modify($server_) failed to load server");
+			Logger::error('main', 'Abstract_Server::modify('.$server_->fqdn.') failed to load server');
 			return false;
 		}
 
