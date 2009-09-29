@@ -64,5 +64,5 @@ windows_init_connection ${SESSID_DIR} $rfb_port
 
 # Todo: DOC, desktop
 application_switch_status $SESSID $job 2
-user_exec "desktop" "desktop" $rfb_port 1
+user_exec "desktop" $rfb_port 1
 application_switch_status $SESSID $job 3

@@ -70,10 +70,9 @@ user_set_env() {
 
 user_exec() {
     local app_id=$1
-    local app=$2
-    local rfb_port=$3
-    if [ -n "$4" ]; then
-        local doc=$4
+    local rfb_port=$2
+    if [ -n "$3" ]; then
+        local doc="$3"
     fi
 
     # Start autocutsel
@@ -81,9 +80,9 @@ user_exec() {
 
     local env="DISPLAY=:$rfb_port"
     if [ $app_id != "desktop" ]; then
-        local env="$env NODESKTOP=1 APP=\"$app\" APP_ID=$app_id"
-        if [ -n "$4" ]; then
-            local env="$env DOC=\"$4\""
+        local env="$env NODESKTOP=1 APP_ID=$app_id"
+        if [ -n "$doc" ]; then
+            local env="$env DOC=\"$doc\""
         fi
     fi
     log_INFO "env: $env"

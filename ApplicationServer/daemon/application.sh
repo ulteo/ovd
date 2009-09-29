@@ -75,7 +75,7 @@ fi
 
 # Todo: DOC, desktop
 application_switch_status $SESSID $job 2
-user_exec $app_id "$app" $rfb_port "$doc"
+user_exec $app_id $rfb_port "$doc"
 # If application already killed
 [ -d $dir ] || exit 0
 application_switch_status $SESSID $job 3
