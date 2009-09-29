@@ -46,11 +46,7 @@ then
   fi
 fi
 
-if [ -f "$HOME/.xserverrc" ]; then
-  SERVERRC="$HOME/.xserverrc $SERVERRC"
-elif [ -f /etc/X11/xinit/xserverrc ]; then
-  SERVERRC="/etc/X11/xinit/xserverrc $SERVERRC"
-fi
+SERVERRC="/etc/X11/xinit/xserverrc $SERVERRC"
 
 if test ! "x$SERVERRC" = "x"
 then
