@@ -3,6 +3,7 @@
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -40,12 +41,13 @@ class Task {
 	}
 
 	public function init() {
-		if (! is_object($this->server)) {
+		$server = Abstract_Server::load($this->server);
+		if (! is_object($server)) {
 			Logger::error('apt-get', 'TASK::init for task '.$this->id.' returned an error (unknown server '.$this->server.')');
 			return false;
 		}
 
-		$job_id = query_url($this->server->getWebservicesBaseURL().'/apt-get.php?action=request&request='.urlencode($this->getRequest()));
+		$job_id = query_url($server->getWebservicesBaseURL().'/apt-get.php?action=request&request='.urlencode($this->getRequest()));
 		if ($job_id === false) {
 			$this->status = 'error';
 			$this->status_code = -4;
@@ -58,12 +60,13 @@ class Task {
 	}
 
 	public function refresh() {
-		if (! is_object($this->server)) {
+		$server = Abstract_Server::load($this->server);
+		if (! is_object($server)) {
 			Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' returned an error (unknown server '.$this->server.')');
 			return false;
 		}
 
-		$buf = query_url($this->server->getWebservicesBaseURL().'/apt-get.php?action=status&job='.$this->job_id);
+		$buf = query_url($server->getWebservicesBaseURL().'/apt-get.php?action=status&job='.$this->job_id);
 		if ($buf === false) {
 			$this->status = 'error';
 			return true;
@@ -89,20 +92,20 @@ class Task {
 		$this->status = 'finished';
 		$this->t_end = time();
 
-		$server = Abstract_Server::load($this->server);
 		$server->updateApplications();
 		return true;
 	}
 	
 	public function get_AllInfos() {
-		if (! is_object($this->server)) {
+		$server = Abstract_Server::load($this->server);
+		if (! is_object($server)) {
 			Logger::error('apt-get', 'TASK::get_AllInfos for task '.$this->id.' returned an error (unknown server '.$this->server.')');
 			return false;
 		}
 
 		$infos = array();
 		foreach (array('status', 'stdout', 'stderr') as $elem)
-			$infos[$elem] = query_url_no_error($this->server->getWebservicesBaseURL().'/apt-get.php?action=show&job='.$this->job_id.'&show='.$elem);
+			$infos[$elem] = query_url_no_error($server->getWebservicesBaseURL().'/apt-get.php?action=show&job='.$this->job_id.'&show='.$elem);
 		
 		return $infos;
 	}
