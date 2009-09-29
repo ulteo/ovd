@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -370,6 +371,7 @@ function page_footer() {
 
 function get_menu_entry() {
 	global $menu;
+	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$matches = array();
 	$buf = preg_match('/admin\/(.+)/', $_SERVER['REQUEST_URI'], $matches);
@@ -380,7 +382,7 @@ function get_menu_entry() {
 
 	$buffer_id = Null;
 	$buffer_len = 0;
-	foreach($menu as $id => $entrie) {
+	foreach($menu2 as $id => $entrie) {
 		if (count($entrie['parent']) == 0)
 			continue;
 
@@ -401,21 +403,24 @@ function get_menu_entry() {
 
 function get_target($id_) {
 	global $menu;
-	foreach($menu as $id => $entrie) {
+	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
+	
+	foreach($menu2 as $id => $entrie) {
 		if (! in_array($id_, $entrie['parent']))
 				continue;		   
 
 		return $entrie['page'];
 	}
 
-	return $menu[$id_]['page'];
+	return $menu2[$id_]['page'];
 }
 
 function get_nb_child($id_) {
 	global $menu;
+	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 	$nb = 0;
 
-	foreach($menu as $id => $entrie) {
+	foreach($menu2 as $id => $entrie) {
 		if (in_array($id_, $entrie['parent']))
 			$nb++;
 	}
@@ -426,9 +431,10 @@ function get_nb_child($id_) {
 
 function page_menu(){
 	global $menu;
+	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$position = get_menu_entry();
-	$parent = $menu[$position]['parent'];
+	$parent = $menu2[$position]['parent'];
 	if ($parent == Null)
 		$parent = $position;
 	elseif (is_array($parent))
@@ -437,7 +443,7 @@ function page_menu(){
 	echo '<table border="0" cellspacing="0" cellpadding="10">';
 	echo '<tr>';
 
-	foreach($menu as $id => $entrie) {
+	foreach($menu2 as $id => $entrie) {
 		if (count($entrie['parent'])>0)
 			continue;
 
@@ -461,9 +467,10 @@ function page_menu(){
 
 function page_sub_menu() {
 	global $menu;
+	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$position = get_menu_entry();
-	$parent = $menu[$position]['parent'];
+	$parent = $menu2[$position]['parent'];
 	if ($parent == Null)
 		return;
 	elseif(is_array($parent))
@@ -473,7 +480,7 @@ function page_sub_menu() {
 	echo '<tr>';
 	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
 
-	foreach($menu as $id => $entrie) {
+	foreach($menu2 as $id => $entrie) {
 		if (is_array($entrie['parent'])) {
 			if (! in_array($parent, $entrie['parent']))
 				continue;
