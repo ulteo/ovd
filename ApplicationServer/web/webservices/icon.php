@@ -41,26 +41,26 @@ if ( get_classes_startwith('Imagick') == array()) {
 }
 
 $path = base64_decode($_GET['path']);
-$bloblo = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
-$bloblo = explode("\n", $bloblo);
+$icon_files = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
+$icon_files = explode("\n", $icon_files);
 
-foreach ($bloblo as $k => $v) {
+foreach ($icon_files as $k => $v) {
 	if ($v == '') {
-		unset($bloblo[$k]);
+		unset($icon_files[$k]);
 		continue;
 	}
 
-	$bloblo[$k] = chroot_realpath(realpath($bloblo[$k]));
+	$icon_files[$k] = chroot_realpath(realpath($icon_files[$k]));
 }
 
-if (count($bloblo) == 0) {
+if (count($icon_files) == 0) {
 	header('HTTP/1.1 404 Not Found');
 	die();
 }
 
 $tab1 = array();
 $tab2 = array();
-foreach ($bloblo as $image) {
+foreach ($icon_files as $image) {
 	if (!is_file($image) || !is_readable($image))
 		continue;
 
