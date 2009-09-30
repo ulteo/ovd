@@ -129,9 +129,11 @@
         <para>
           IP address plan:
           <itemizedlist>
+          <!--
             <listitem>
-              <para>factory netwok: <emphasis>10.0.0.0/8</emphasis></para>
+              <para>factory network: <emphasis>10.0.0.0/8</emphasis></para>
             </listitem>
+          -->
             <listitem>
               <para>Ulteo secure network:
               <emphasis>10.0.1.0/24</emphasis></para>
@@ -152,22 +154,6 @@
             </textobject>
           </inlinemediaobject>
         </para>
-
-        <important>
-          <para>
-            All other servers on the network (Session Manager, ApS,
-            ...) have to be able to route
-            to <emphasis>10.0.2.0/24</emphasis>.
-          </para>
-          <para>
-            Either the DHCP server can provide the route or you can define it by
-            hand:
-          </para>
-          <screen>
-            <![CDATA[
-# route add -net 10.0.2.0/24 gw 10.0.1.100]]>
-          </screen>
-        </important>
       </simplesect>
 
   </section>
@@ -191,52 +177,6 @@
 # apt-get install openvpn openssl zip]]>
   </screen>
 
-
-  <section>
-    <title>Routing configuration</title>
-
-    <para>
-      We are considering that your server has the
-      address <emphasis role="strong">10.0.1.100</emphasis> on
-      the <emphasis>eth0</emphasis> network interface.
-    </para>
-    <screen>
-      <![CDATA[
-# ifconfig eth0
-eth0      Link encap:Ethernet  HWaddr 00:1f:c6:03:ba:2a
-          inet adr:10.0.1.100  Bcast:10.42.1.255  Masque:255.255.255.0
-          adr inet6: fe80::21f:c6ff:fe03:ba2a/64 Scope:Lien
-          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-          RX packets:163216 errors:0 dropped:2000551338 overruns:0 frame:0
-          TX packets:164821 errors:0 dropped:0 overruns:0 carrier:0
-          collisions:0 lg file transmission:1000
-          RX bytes:84956950 (81.0 MiB)  TX bytes:18580711 (17.7 MiB)
-          Interruption:221 Adresse de base:0xc000]]>
-    </screen>
-
-    <itemizedlist>
-      <listitem>
-        <para>Enable IP forwarding as default at system boot</para>
-        <para>
-          Open <emphasis>/etc/sysctl.conf</emphasis> and uncomment
-          the following line:
-        </para>
-        <screen>
-          <![CDATA[
-net.ipv4.ip_forward=1]]>
-        </screen>
-      </listitem>
-    
-      <listitem>
-        <para>Enable IP forwarding for the current system</para>
-        <screen>
-          <![CDATA[
-# echo 1 > /proc/sys/net/ipv4/ip_forward]]>
-        </screen>
-      </listitem>
-    </itemizedlist>
-  </section>
-
     <section>
       <title>SSL keys generation</title>
 
@@ -251,15 +191,15 @@ $ cd ~/vpn-keys]]>
         </listitem>
 
         <listitem>
-          <para>config some env vars into the file <emphasis
+          <para>Config some environment variables into the file <emphasis
           role="strong">vars</emphasis></para>
           <screen>
             <![CDATA[
-$ export KEY_COUNTRY="EN"
-$ export KEY_PROVINCE="Your province"
-$ export KEY_CITY="Your country"
-$ export KEY_ORG="Ulteo"
-$ export KEY_EMAIL="some@email.address"]]>
+export KEY_COUNTRY="EN"
+export KEY_PROVINCE="Your province"
+export KEY_CITY="Your city"
+export KEY_ORG="Ulteo"
+export KEY_EMAIL="some@email.address"]]>
           </screen>
         </listitem>
         <listitem>
@@ -271,14 +211,14 @@ $ ./clean-all]]>
           </screen>
         </listitem>
         <listitem>
-          <para>build the certificate authority</para>
+          <para>Build the certificate authority</para>
           <screen>
             <![CDATA[
 $ ./build-ca]]>
           </screen>
         </listitem>
         <listitem>
-          <para>build the server key</para>
+          <para>Build the server key</para>
           <screen>
             <![CDATA[ 
 $ ./build-key-server ulteo-vpn]]>
@@ -286,7 +226,7 @@ $ ./build-key-server ulteo-vpn]]>
         </listitem>
 
         <listitem>
-          <para>build the Diffie Hellman parameters</para>
+          <para>Build the Diffie-Hellman parameters</para>
           <screen>
             <![CDATA[
 $ ./build-dh]]>
@@ -347,7 +287,7 @@ dh dh1024.pem
 
 server 10.0.2.0 255.255.255.0
 
-push "route 10.10.1.0 255.255.255.0"
+push "route 10.0.1.0 255.255.255.0"
   # used to provide the route to the
   # Ulteo secure network
 
@@ -392,7 +332,7 @@ tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
             <para>
               If you don't have
               a <emphasis role="strong">tun0</emphasis> network
-              interface, your VPN server will not work.
+              interface, your VPN server is not working.
             </para>
           </important>
         </listitem>
@@ -506,6 +446,14 @@ $ zip client.zip ca.crt client.key client.crt]]>
             called <emphasis>client.ovpn</emphasis> and paste the following
             text inside:
           </para>
+          <important>
+            <para>
+              Replace
+              the <emphasis role="strong">vpn.ip.address</emphasis> by
+              the current IP address of the VPN server you configured
+              before.
+            </para>
+          </important>
           <screen>
             <![CDATA[
 client
@@ -524,14 +472,6 @@ ca ca.crt
 cert client.crt
 key client.key]]>
           </screen>
-          <important>
-            <para>
-              Replace
-              the <emphasis role="strong">vpn.ip.address</emphasis> by
-              the current IP address of the VPN server you configured
-              before.
-            </para>
-          </important>
         </listitem>
         <listitem>
           <para>
@@ -629,6 +569,14 @@ key client.key]]>
             Edit the <emphasis>/etc/openvpn/openvpn.conf</emphasis>
             file and copy paste the following text inside:
           </para>
+          <important>
+            <para>
+              Replace
+              the <emphasis role="strong">vpn.ip.address</emphasis> by
+              the effective IP address of the VPN server you configured
+              before.
+            </para>
+          </important>
           <screen>
             <![CDATA[
 client
@@ -647,14 +595,6 @@ ca ca.crt
 cert client.crt
 key client.key]]>
           </screen>
-          <important>
-            <para>
-              Replace
-              the <emphasis role="strong">vpn.ip.address</emphasis> by
-              the effective IP address of the VPN server you configured
-              before.
-            </para>
-          </important>
         </listitem>
         <listitem>
           <para>Restart OpenVPN</para>
@@ -691,7 +631,7 @@ tun0      Link encap:UNSPEC  HWaddr 00-00-00-00-00-00-00-00-00-00-00-00-00-00-00
               <para>
                 If you don't have
                 a <emphasis role="strong">tun0</emphasis> network
-                interface your VPN server won't work.
+                interface your VPN client is not working.
               </para>
             </important>
           </listitem>
@@ -712,6 +652,66 @@ PING 10.0.2.1 (10.0.2.1) 56(84) bytes of data.
     </section>
   </section>
 </section>
+
+<section>
+  <title>Routing configuration</title>
+  <section>
+      <title>Set the VPN server as a router</title>
+      <important>
+        <para>Those operations have to be done on the VPN server.</para>
+      </important>
+      <itemizedlist>
+        <listitem>
+          <para>Enable IP forwarding as default at system boot</para>
+          <para>
+            Open <emphasis>/etc/sysctl.conf</emphasis> and uncomment
+            the following line:
+          </para>
+          <screen>
+            <![CDATA[
+net.ipv4.ip_forward=1]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>Enable IP forwarding for the current system</para>
+          <screen>
+            <![CDATA[
+# echo 1 > /proc/sys/net/ipv4/ip_forward]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+  <section>
+    <title>Set the route on other network machines</title>
+    <para>
+      All other servers on the network (Session Manager, ApS,
+      ...) have to be able to route
+      to <emphasis>10.0.2.0/24</emphasis>.
+    </para>
+    <para>
+      Either the DHCP server can provide the route or you can define it by
+      hand:
+    </para>
+    <screen>
+      <![CDATA[
+# route add -net 10.0.2.0/24 gw 10.0.1.100]]>
+    </screen>
+  </section>
+  <section>
+    <title>Tests</title>
+    <para>On client machine ping the Session Manager</para>
+    <screen>
+      <![CDATA[
+$ ping 10.0.1.20
+PING 10.0.1.20 (10.0.1.20) 56(84) bytes of data.
+64 bytes from 10.0.1.20: icmp_seq=1 ttl=64 time=0.711 ms
+64 bytes from 10.0.1.20: icmp_seq=2 ttl=64 time=0.668 ms
+...]]>
+     </screen>
+  </section>
+</section>
+
 
 <section>
   <title>Test a session</title>
