@@ -1,4 +1,4 @@
-.TH APS-CHROOT-INSTALL "8" "" "aps-chroot-install 2.0" "User Commands"
+.TH APS-CHROOT-INSTALL "8" "" "aps-chroot-install @PKG_VERSION@" "User Commands"
 .SH NAME
 aps-chroot-install \- configure the Ulteo OVD chroot
 .SH SYNOPSIS

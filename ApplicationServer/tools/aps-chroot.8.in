@@ -1,4 +1,4 @@
-.TH OVDCHROOT "8" "" "ovdchroot 2.0" "User Commands"
+.TH OVDCHROOT "8" "" "ovdchroot @PKG_VERSION@" "User Commands"
 .SH NAME
 ovdchroot \- wrapper for the Ulteo OVD chroot
 .SH SYNOPSIS
