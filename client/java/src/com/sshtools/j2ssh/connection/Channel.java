@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import org.vnc.PopupError;
 
+import com.sshtools.j2ssh.SshDialog;
 
 /**
  *
@@ -219,7 +220,7 @@ public abstract class Channel {
     	 	IOException e = new IOException();
 			String message = "The connection has been closed [" + name + "]";
 			String caption = "Connection error";
-			PopupError.showError(null, message, caption, e);
+			SshDialog.logErrorMessage(message);
       throw e;
      }
 
@@ -242,7 +243,7 @@ public abstract class Channel {
  	 	IOException e = new IOException();
 		String message = "The connection has been closed [" + name + "]";
 		String caption = "Connection error";
-		PopupError.showError(null, message, caption, e);
+		SshDialog.logErrorMessage(message);
 		throw e;
      }
    }

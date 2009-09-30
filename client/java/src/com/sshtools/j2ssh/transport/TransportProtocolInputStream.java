@@ -31,6 +31,7 @@ import java.util.Iterator;
 
 import org.vnc.PopupError;
 
+import com.sshtools.j2ssh.SshDialog;
 import com.sshtools.j2ssh.io.ByteArrayReader;
 import com.sshtools.j2ssh.io.ByteArrayWriter;
 import com.sshtools.j2ssh.transport.cipher.SshCipher;
@@ -160,7 +161,7 @@ class TransportProtocolInputStream {
 					String message = "The socket is EOF.\n"
 							+ "Please close the window and try again.\n";
 					String title = "TransportProtocolInputStream Error";
-					PopupError.showError(null, message, title, null);
+					SshDialog.logErrorMessage(message);
 					throw new IOException("The socket is EOF");
 					}
 				endpos += read;

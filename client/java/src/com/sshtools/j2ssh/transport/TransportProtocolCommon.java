@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import com.sshtools.j2ssh.SshDialog;
 import com.sshtools.j2ssh.SshThread;
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
@@ -393,7 +394,7 @@ public abstract class TransportProtocolCommon
       if (state.getValue() != TransportProtocolState.DISCONNECTED) {
         //log.info(e.getMessage());
 	System.out.println("Transport protocol stopped due to: "+e.getMessage()+"\n");
-	e.printStackTrace();
+	SshDialog.notifyError("sshError");
         //stop();
       }
     }

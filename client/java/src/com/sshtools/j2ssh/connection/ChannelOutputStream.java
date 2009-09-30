@@ -26,6 +26,7 @@ import java.io.OutputStream;
 
 import org.vnc.PopupError;
 
+import com.sshtools.j2ssh.SshDialog;
 
 /**
  *
@@ -95,7 +96,7 @@ public void write(byte[] b, int off, int len) throws IOException {
  	 	IOException e = new IOException();
 		String message = "The ChannelOutputStream is closed!";
 		String caption = "Connection error";
-		PopupError.showError(null, message, caption, e);
+		SshDialog.logErrorMessage(message);
 		throw e;
     }
 
@@ -125,7 +126,7 @@ public void write(int b) throws IOException {
  	 	IOException e = new IOException();
 		String message = "The ChannelOutputStream is closed!";
 		String caption = "Connection error";
-		PopupError.showError(null, message, caption, e);
+		SshDialog.logErrorMessage(message);
 		throw e;
     }
 

@@ -25,10 +25,12 @@ import org.sshvnc.Viewer;
 import org.vnc.RfbProto;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 
+import com.sshtools.j2ssh.SshErrorResolver;
+import com.sshtools.j2ssh.SshDialog;
 import java.awt.FlowLayout;
 import javax.swing.JOptionPane;
 
-public class OvdApplet extends org.sshvnc.Applet {
+public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver {
     public static final String version = "0.2.4";
 
 
@@ -41,6 +43,7 @@ public class OvdApplet extends org.sshvnc.Applet {
 			return;
 		}
 
+		SshDialog.registerResolver(this);
 		FlowLayout layout = new FlowLayout();
 		layout.setHgap(0);
 		layout.setVgap(0);
@@ -175,9 +178,17 @@ public class OvdApplet extends org.sshvnc.Applet {
 		JOptionPane.showMessageDialog(this, "The Online Desktop has closed.\n" +
 				      "Thanks for using our service!\n", "Online Desktop session finished",JOptionPane.INFORMATION_MESSAGE);
 		System.err.println("ERROR: "+msg+"\n");
-    }
-  
-    public String getAppletInfo() {
+	}
+
+	public String getAppletInfo() {
 		return "UlteoVNC";
-    }
+	}
+
+	public void resolvError(String error) {
+		System.out.println(error);
+	}
+
+	public void logError(String errorMessage) {
+		System.err.println(errorMessage);
+	}
 }
