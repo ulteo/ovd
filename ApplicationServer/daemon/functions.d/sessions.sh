@@ -390,10 +390,24 @@ session_change_login_if_needed() {
     grep -q "^$login:" /etc/passwd || return 0
 
     while grep -q "^$login$pos:" /etc/passwd; do
-    pos=$(( $pos + 1 ))
+        pos=$(( $pos + 1 ))
     done
 
     echo "$login$pos" >${SESSID_DIR}/parameters/user_login 
+    return 1
+}
+
+session_change_displayname_if_needed() {
+    local displayname=$NICK
+    local pos=0
+
+    [ ! -d /home/$NICK ] && return 0
+
+    while [ -d /home/$NICK$pos ]; do
+        pos=$(( $pos + 1 ))
+    done
+
+    echo $NICK$pos >${SESSID_DIR}/parameters/user_displayname
     return 1
 }
 

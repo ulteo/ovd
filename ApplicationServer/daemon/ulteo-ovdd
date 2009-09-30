@@ -188,6 +188,9 @@ session_check_status() {
         session_change_login_if_needed || \
             USER_LOGIN=$(cat ${SESSID_DIR}/parameters/user_login)
 
+        # If the home dir (based on displayname) exists we change it as well
+        session_change_displayname_if_needed || \
+            NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)
 
         USER_HOME=/home/$NICK
         echo $NICK > /tmp/VNC$i
