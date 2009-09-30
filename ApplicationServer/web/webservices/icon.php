@@ -44,9 +44,14 @@ $path = base64_decode($_GET['path']);
 $bloblo = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
 $bloblo = explode("\n", $bloblo);
 
-foreach ($bloblo as $k => $v)
-	if ($v == '')
+foreach ($bloblo as $k => $v) {
+	if ($v == '') {
 		unset($bloblo[$k]);
+		continue;
+	}
+
+	$bloblo[$k] = chroot_realpath(realpath($bloblo[$k]));
+}
 
 if (count($bloblo) == 0) {
 	header('HTTP/1.1 404 Not Found');

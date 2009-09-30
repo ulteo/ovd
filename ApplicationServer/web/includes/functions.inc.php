@@ -174,3 +174,16 @@ function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 
 	return $ret;
 }
+
+function chroot_realpath($path_, $chroot_=CHROOT) {
+	if (str_startswith($path_, $chroot_))
+		$path = $path_;
+	else
+		$path = $chroot_.'/'.$path_;
+
+	while (is_link($path)) {
+		$path = $chroot_.realpath($path);
+	}
+
+	return $path;
+}
