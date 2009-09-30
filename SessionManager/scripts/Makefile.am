@@ -1,7 +1,7 @@
-EXTRA_DIST = sm-config.in sm-config.1.in
+EXTRA_DIST = sm-config.in sm-config.8.in
 
 bin_SCRIPTS = sm-config
-man_MANS = sm-config.1
+man_MANS = sm-config.8
 
 sm-config:
 	sed -e "s,@CONFDIR@,$(sysconfdir)/ulteo/sessionmanager," \
@@ -10,12 +10,12 @@ sm-config:
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
 			< $(srcdir)/sm-config.in > $@
 
-sm-config.1:
+sm-config.8:
 	sed -e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
-		< $(srcdir)/sm-config.1.in > $@
+		< $(srcdir)/sm-config.8.in > $@
 
 clean-local:
 	rm -f $(bin_SCRIPTS) $(man_MANS)
 
-.PHONY: sm-config.1 sm-config
+.PHONY: sm-config.8 sm-config

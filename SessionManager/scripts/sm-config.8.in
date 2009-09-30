@@ -1,6 +1,6 @@
-.TH SM-CONFIG "1" "July 2009" "sm-config @PKG_VERSION@" "User Commands"
+.TH SM-CONFIG "8" "July 2009" "sm-config @PKG_VERSION@" "User Commands"
 .SH NAME
-sm-config
+sm-config \- configure Ulteo OVD Session Manager
 .SH SYNOPSIS
 .B sm-config
 [\fI--no-download\fR] [\fI--chroot-uri uri\fR] [\fI--chroot-url url\fR] [\fI--copy\fR] [\fI--chroot-dir dir\fR] [\fI--admin-login login\fR] [\fI--admin-pwd pwd\fR] [\fI--apache-group group\fR] [\fI--apache-dir dir\fR] [\fI--assume-yes\fR] [\fI--version|-v\fR] [\fI--help|-h\fR]
