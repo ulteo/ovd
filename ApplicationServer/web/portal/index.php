@@ -82,7 +82,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 							</div>
 						</td>
 						<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">
-							<a href="index.php"><img src="media/image/header.png" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" /></a>
+							<img src="media/image/header.png" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 						</td>
 					</tr>
 				</table>
