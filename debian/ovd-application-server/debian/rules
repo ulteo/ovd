@@ -6,6 +6,11 @@ include /usr/share/cdbs/1/class/autotools.mk
 DEB_CONFIGURE_EXTRA_FLAGS := --enable-daemon
 DEB_DH_INSTALLINIT_ARGS := --name=ulteo-ovd -- "defaults 98 02"
 
+install/ulteo-ovd-application-server::
+	rm debian/tmp/usr/share/ulteo/applicationserver/portal/ajaxplorer/client/doc/LICENSE.txt
+	rm debian/tmp/usr/share/ulteo/applicationserver/portal/ajaxplorer/client/js/lib/codepress/license.txt
+	rm debian/tmp/usr/share/ulteo/applicationserver/portal/ajaxplorer/client/js/lib/scriptaculous/MIT-LICENSE
+
 clean::
 	debconf-updatepo
 
