@@ -75,7 +75,7 @@ kill_processus() {
 }
 
 str2hex() {
-    perl -pe 's/(.)/sprintf("%02lx", ord $1)/eg'
+    python -c 'import sys; print sys.stdin.read().encode("hex")'
 }
 
 unbase64() {
