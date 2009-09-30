@@ -615,7 +615,7 @@ mysql> exit]]>
         Client prerequisites:
          <itemizedlist>
            <listitem>
-             Sun Java 1.5/1.6
+             Java 1.5/1.6 (Sun or OpenJDK)
            </listitem>
            <listitem>
              browser: Firefox 2+ or Internet Explorer 7+
