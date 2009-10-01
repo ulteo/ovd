@@ -212,6 +212,9 @@ session_check_status() {
         if [ "$type" = "desktop" ]; then
             desktop.sh $SESSID &
             sleep 0.5
+        else
+            windows.sh $SESSID &
+            sleep 0.5
         fi
 
         return 0

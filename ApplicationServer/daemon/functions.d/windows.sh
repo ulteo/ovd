@@ -29,6 +29,8 @@ windows_use_seamlessrdp() {
 windows_init_connection() {
     local sessid_dir=$1
     local display=$2
+    local bg=1
+    [ -n "$3" ] && local bg=0
 
     windows_use_seamlessrdp $sessid_dir || return 0
     log_INFO "There are Windows applications parameters for this session"
@@ -51,14 +53,56 @@ windows_init_connection() {
     fi
 
     local cmd='rdesktop -k "'$keymap'" -u "'$login'" -p "'$password'" -A -s "seamlessrdpshell.exe" '$printer_args' '$server
-    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; DISPLAY=:$display $cmd &" 
+    [ $bg -eq 1 ] && local cmd="$cmd &"
+    touch $sessid_dir/private/windows_connected
+    su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; DISPLAY=:$display $cmd" 
+    rm $sessid_dir/private/windows_connected
 }
 
 windows_logoff() {
     local sessid_dir=$1
     local user_login=$2
 
-    windows_use_seamlessrdp $sessid_dir || return 0
+    windows_connected $sessid_dir || return 0
 
     su -s "/bin/bash" $user_login -c "rdesktop -l logoff"
 }
+
+windows_connected() {
+    local sessid_dir=$1
+
+    [ -f $sessid_dir/private/windows_connected ] || return 1
+}
+
+windows_is_application() {
+    local id=$1
+
+    vapp_exist $id || return 1
+
+    grep -q "^Exec=rdesktop" $vapp_repo/$id.desktop
+}
+
+windows_purge_app() {
+    local display=":$1"
+    local cmd="rdesktop --destroy-by-display $display"
+
+    log_INFO "windows_purge_app '${USER_LOGIN}' $display => $cmd"
+    su -s "/bin/bash" - ${USER_LOGIN} -c "$cmd"
+    log_INFO "windows_purge end $?"
+}
+
+windows_set_focus() {
+    local display=":$1"
+    local mode="$2"
+
+    if [ $mode == "on" ]; then
+        local c="uniconify"
+    else
+        local c="iconify"
+    fi
+
+    local cmd="rdesktop --$c-by-display $display"
+    log_INFO "windows_set_focus '${USER_LOGIN}' $display => $cmd"
+    su -s "/bin/bash" - ${USER_LOGIN} -c "$cmd"
+    log_INFO "windows_set_focus end $?"
+}    

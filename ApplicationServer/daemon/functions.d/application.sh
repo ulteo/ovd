@@ -50,6 +50,8 @@ application_check_status() {
     local dir=$SPOOL/sessions/$sessid/sessions/$job_id
     local status=$(cat $dir/status)
     local rfb_port=$(cat $dir/rfb_port)
+    local app_id=$(cat $dir/app_id)
+
     if [ $PERSISTENT -eq 1 ]; then
         local next_status=8
     else
@@ -83,6 +85,14 @@ application_check_status() {
             return $?
         fi
 
+        if [ -f $dir/focus ] && windows_is_application $app_id; then
+            local t=$(head -n 1 $dir/focus)
+            if [ "$t" == "on" ] || [ "$t" == "off" ]; then
+                windows_set_focus $rfb_port $t
+            fi
+            rm $dir/focus
+        fi
+
         # if application owner has vanished, kill session
         if [ -f $dir/keepmealive ]; then
             local t0=$(stat -c "%Z" $dir/keepmealive)
@@ -96,8 +106,10 @@ application_check_status() {
                 return $?
             fi
         else
-            # Create a kma to use as timeout
-            install -g www-data -m 660 $dir/status $dir/keepmealive
+            if [ $job_id != "windows" ]; then
+                # Create a kma to use as timeout
+                install -g www-data -m 660 $dir/status $dir/keepmealive
+            fi
         fi
 
     # Suspend/resume management
@@ -158,6 +170,11 @@ application_purge() {
     local dir=$2
 
     local rfb_port=$(cat $dir/rfb_port)
+    local app_id=$(cat $dir/app_id)
+
+    if windows_is_application $app_id; then
+        windows_purge_app $rfb_port
+    fi
 
     log_INFO "purging application '$job'"
     display_stop $rfb_port $dir/vnc.pid

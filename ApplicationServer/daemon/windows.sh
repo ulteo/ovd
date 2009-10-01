@@ -20,46 +20,38 @@
 . functions.sh
 . log.sh
 
-if [ -z "$1" ] || [ -z "$2" ]; then
+if [ -z "$1" ]; then
     log_ERROR "$0 missing arguments"
     exit 1
 fi
 
 SESSID=$1
-job=$2
+job=windows
 
 session_load $SESSID
+
+if ! windows_use_seamlessrdp $SESSID_DIR; then
+    log_INFO "Don't have to init windows"
+    exit 0
+fi
+
 ENV_FILE=$SPOOL_USERS/$SESSID/env.sh
 
-file=$SESSID_DIR/sessions/$job.txt
 dir=$SESSID_DIR/sessions/$job
 log_INFO "Session $SESSID detect job $job"
 
 install -d -g www-data -m 770 $dir
-application_switch_status $SESSID $job 1
 
-nb_line=$(wc -l $file | cut -d' ' -f1)
-if [ $nb_line -lt 2 ] || [ $nb_line -gt 3 ]; then
-    log_WARN "Unable to perform job: missing arguments ($nb_line lines)"
-    exit 1
-fi
+geometry=$(cat $SESSID_DIR/parameters/geometry)
 
-app_id=$(head -n 1 $file)
-geometry=$(head -n 2 $file |tail -n 1)
-if [ -z "$app_id" ] || [ -z "$geometry" ] || \
-    [ "$app_id" == "desktop" ]; then
+if [ -z "$geometry" ]; then
     log_WARN "Unable to perform job: missing arguments"
     exit 1
 fi
-[ $nb_line -eq 3 ] && doc=$(head -n 3 $file |tail -n 1)
-
-echo $app_id > $dir/app_id
-[ -n "$doc" ] && echo "$doc" > $dir/doc
-echo $geometry > $dir/geometry
-rm $file
 
 rfb_port=$(spool_get_rfbport)
 echo $rfb_port > $dir/rfb_port
+echo "desktop" > $dir/app_id
 
 display_init $SESSID $rfb_port
 if [ $? -ne 0 ]; then
@@ -74,8 +66,5 @@ if [ $? -ne 0 ]; then
 fi
 
 application_switch_status $SESSID $job 2
-user_exec $app_id $rfb_port "$doc"
-# If application already killed
-[ -d $dir ] || exit 0
+windows_init_connection ${SESSID_DIR} $rfb_port 1
 application_switch_status $SESSID $job 3
-
