@@ -52,22 +52,10 @@ put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id'].
 $error = false;
 
 if ($error === false) {
-	for ($i = 0; ! is_dir(SESSION_PATH.'/'.$session.'/sessions/'.$buf); $i++) {
-		if ($i >= 5) {
+	for ($i = 0; (! is_dir(SESSION_PATH.'/'.$session.'/sessions/'.$buf) || get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'/status') != 2); $i++) {
+		if ($i >= 20) {
 			$errno = 1;
-			$errstr = 'Unable to start external application: session creation failed';
-			break;
-		}
-
-		sleep(1);
-	}
-}
-
-if ($error === false) {
-	for ($i = 0; get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'/status') != 2; $i++) {
-		if ($i >= 5) {
-			$errno = 2;
-			$errstr = 'Unable to start external application: status not ok';
+			$errstr = 'Unable to start external application';
 			break;
 		}
 
