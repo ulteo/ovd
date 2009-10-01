@@ -169,9 +169,39 @@ function start_app() {
 				}
 
 				switch_splash_to_applet();
+
+				focus_watch();
 			}
 		}
 	);
+}
+
+function focus_watch() {
+	Event.observe(window, 'focus', function() {
+		new Ajax.Request(
+			'focus.php',
+			{
+				method: 'get',
+				parameters: {
+					access_id: access_id,
+					focus: 1
+				}
+			}
+		);
+	});
+
+	Event.observe(window, 'blur', function() {
+		new Ajax.Request(
+			'focus.php',
+			{
+				method: 'get',
+				parameters: {
+					access_id: access_id,
+					focus: 0
+				}
+			}
+		);
+	});
 }
 
 function resume_app() {
