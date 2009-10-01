@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.sshtools.j2ssh.SshException;
 import com.sshtools.j2ssh.transport.AsyncService;
@@ -47,6 +48,7 @@ public class ConnectionProtocol
   private Map<String, ChannelFactory> allowedChannels = new HashMap<String, ChannelFactory>();
   private Map<String, GlobalRequestHandler> globalRequests = new HashMap<String, GlobalRequestHandler>();
   private long nextChannelId = 0;
+  public static ReentrantLock lock = new ReentrantLock();
 
   /**
    * Creates a new ConnectionProtocol object.
@@ -146,9 +148,12 @@ public void onStart() {
           SSH_MSG_CHANNEL_OPEN_FAILURE;
 
       try {
+      	lock.lock();
         System.err.println("ConnectionProtocol:openChannel: before random bug#1");
+        Thread.sleep(1000);
         SshMessage result = transport.getMessageStore().getMessage(messageIdFilter);
         System.err.println("ConnectionProtocol:openChannel: after  random bug#2");
+        lock.unlock();
 
         if (result.getMessageId() ==
             SshMsgChannelOpenConfirmation.SSH_MSG_CHANNEL_OPEN_CONFIRMATION) {

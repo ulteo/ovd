@@ -36,6 +36,7 @@ import com.sshtools.j2ssh.SshDialog;
 import com.sshtools.j2ssh.SshThread;
 import com.sshtools.j2ssh.configuration.ConfigurationLoader;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
+import com.sshtools.j2ssh.connection.ConnectionProtocol;
 import com.sshtools.j2ssh.io.ByteArrayWriter;
 import com.sshtools.j2ssh.net.TransportProvider;
 import com.sshtools.j2ssh.transport.kex.KeyExchangeException;
@@ -1027,7 +1028,11 @@ public abstract class TransportProtocolCommon
 	  /*if(msg.getMessageId() != 94){
 	  System.out.println("Message received ("+msg.getMessageId()+")\n");
 	  }*/
-          messageStore.addMessage(msg);
+        	if(msg.getMessageName().equals("SSH_MSG_CHANNEL_DATA")) {
+    			ConnectionProtocol.lock.lock();
+    			ConnectionProtocol.lock.unlock();
+        	}
+        	messageStore.addMessage(msg);
 	}
           //onMessageReceived(msg);
       }
