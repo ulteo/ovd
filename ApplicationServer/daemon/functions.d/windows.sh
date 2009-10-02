@@ -66,6 +66,7 @@ windows_logoff() {
     windows_connected $sessid_dir || return 0
 
     su -s "/bin/bash" $user_login -c "rdesktop -l logoff"
+    sleep 0.5
 }
 
 windows_connected() {
