@@ -5,6 +5,7 @@ scripts_DATA = application.js \
                apps.php \
                common.css \
                external_app.php \
+               focus.php \
                functions.js \
                get_news.php \
                index.php \

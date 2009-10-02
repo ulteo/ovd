@@ -17,7 +17,8 @@ daemondir = $(datadir)/ulteo-ovd
 
 daemonlib_DATA = functions.sh \
                  log.sh \
-                 modules_fs.sh
+                 modules_fs.sh \
+                 windows.sh
 daemonlibdir = $(datadir)/ulteo-ovd
 
 sysconf_DATA = ulteo-ovd.conf
