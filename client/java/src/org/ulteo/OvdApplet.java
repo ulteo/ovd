@@ -2,6 +2,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author David LECHEVALIER <david@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,16 +22,19 @@
 
 package org.ulteo;
 
-import org.sshvnc.Viewer;
 import org.vnc.RfbProto;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 
 import com.sshtools.j2ssh.SshErrorResolver;
 import com.sshtools.j2ssh.SshDialog;
 import java.awt.FlowLayout;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.lang.Thread.UncaughtExceptionHandler;
 import javax.swing.JOptionPane;
 
-public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver {
+public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver, UncaughtExceptionHandler {
     public static final String version = "0.2.4";
 
 
@@ -43,6 +47,7 @@ public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver {
 			return;
 		}
 
+		Thread.setDefaultUncaughtExceptionHandler(this);
 		SshDialog.registerResolver(this);
 		FlowLayout layout = new FlowLayout();
 		layout.setHgap(0);
@@ -185,10 +190,19 @@ public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver {
 	}
 
 	public void resolvError(String error) {
-		System.out.println(error);
+		Logger.warn("Unresolved error : "+error);
 	}
 
 	public void logError(String errorMessage) {
-		System.err.println(errorMessage);
+		Logger.error(errorMessage);
+	}
+
+	public void uncaughtException(Thread arg0, Throwable arg1) {
+		Writer result = new StringWriter();
+		PrintWriter printWriter = new PrintWriter(result);
+		arg1.printStackTrace(printWriter);
+
+		logError("An uncaught Exception is arrived: \n"+result.toString());
+		
 	}
 }
