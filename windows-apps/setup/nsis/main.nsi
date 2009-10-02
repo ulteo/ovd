@@ -68,14 +68,6 @@
 ;Interface Settings
 
 ;--------------------------------
-;Language Selection Dialog Settings
-
-  ;Remember the installer language
-  !define MUI_LANGDLL_REGISTRY_ROOT "HKLM" 
-  !define MUI_LANGDLL_REGISTRY_KEY "Software\${PRODUCT_PUBLISHER}" 
-  !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
-
-;--------------------------------
 ;Pages
 
   ; Installer parameters and pages order
@@ -100,8 +92,6 @@
   !insertmacro MUI_UNPAGE_INSTFILES
   !insertmacro MUI_UNPAGE_FINISH
 
-  ;Multi Language configuration
-  !include nsis\i18n.nsh
   ; Env var managment
   ; http://nsis.sourceforge.net/Environmental_Variables:_append%2C_prepend%2C_and_remove_entries
   !include nsis\EnvVarUpdate.nsh
