@@ -73,7 +73,7 @@
   ; Installer parameters and pages order
   !define MUI_WELCOMEPAGE_TITLE_3LINES
   !define MUI_LICENSEPAGE_RADIOBUTTONS
-  !define MUI_FINISHPAGE_LINK $(VisitOurWebSite)
+  !define MUI_FINISHPAGE_LINK "Visit our web site"
   !define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
 
   !insertmacro MUI_PAGE_WELCOME
@@ -92,6 +92,7 @@
   !insertmacro MUI_UNPAGE_INSTFILES
   !insertmacro MUI_UNPAGE_FINISH
 
+  !insertmacro MUI_LANGUAGE "English"
   ; Env var managment
   ; http://nsis.sourceforge.net/Environmental_Variables:_append%2C_prepend%2C_and_remove_entries
   !include nsis\EnvVarUpdate.nsh
@@ -126,13 +127,11 @@ FunctionEnd
 Function .onInit
   ; to install for all user
     SetShellVarContext all
-    !insertmacro MUI_LANGDLL_DISPLAY
 FunctionEnd
 
 Function un.onInit
   ; to uninstall for all user
     SetShellVarContext all
-    !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
 !include nsis\ActiveDirectory.nsh
