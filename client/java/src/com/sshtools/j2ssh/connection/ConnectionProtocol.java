@@ -150,7 +150,6 @@ public void onStart() {
       try {
       	lock.lock();
         System.err.println("ConnectionProtocol:openChannel: before random bug#1");
-        Thread.sleep(1000);
         SshMessage result = transport.getMessageStore().getMessage(messageIdFilter);
         System.err.println("ConnectionProtocol:openChannel: after  random bug#2");
         lock.unlock();
