@@ -1,0 +1,2624 @@
+=== modified file 'Makefile.in'
+--- old/Makefile.in	2009-09-25 11:33:43 +0000
++++ new/Makefile.in	2009-10-02 10:05:17 +0000
+@@ -32,7 +32,7 @@
+ SCARDOBJ    = @SCARDOBJ@
+ 
+ RDPOBJ   = tcp.o iso.o mcs.o secure.o licence.o rdp.o orders.o bitmap.o cache.o rdp5.o channels.o rdpdr.o serial.o printer.o disk.o parallel.o printercache.o mppc.o pstcache.o lspci.o seamless.o ssl.o
+-X11OBJ   = rdesktop.o xwin.o xkeymap.o ewmhints.o xclip.o cliprdr.o
++X11OBJ   = rdesktop.o xwin.o xdisplay.o xwindow.o xcursor.o xkeymap.o ewmhints.o xclip.o cliprdr.o
+ VNCOBJ   = vnc/rdp2vnc.o vnc/vnc.o vnc/xkeymap.o vnc/x11stubs.o
+ 
+ .PHONY: all
+@@ -88,7 +88,7 @@
+ 	bitmap.c cache.c channels.c cliprdr.c disk.c mppc.c ewmhints.c	\
+ 	iso.c licence.c mcs.c orders.c parallel.c printer.c printercache.c \
+ 	pstcache.c rdesktop.c rdp5.c rdp.c rdpdr.c rdpsnd.c \
+-	secure.c serial.c tcp.c xclip.c xkeymap.c xwin.c lspci.c seamless.c \
++	secure.c serial.c tcp.c xclip.c xkeymap.c xwin.c xdisplay.c xwindow.c xcursor.c lspci.c seamless.c \
+ 	scard.c >> proto.h
+ 	cat proto.tail >> proto.h
+ 
+
+=== modified file 'orders.c'
+--- old/orders.c	2009-09-25 11:33:43 +0000
++++ new/orders.c	2009-10-02 10:05:17 +0000
+@@ -20,6 +20,7 @@
+ 
+ #include "rdesktop.h"
+ #include "orders.h"
++#include "xwindow.h"
+ 
+ extern uint8 *g_next_packet;
+ static RDP_ORDER_STATE g_order_state;
+@@ -1296,6 +1297,8 @@
+ 		error("%d bytes remaining\n", (int) (g_next_packet - s->p));
+ #endif
+ 
++	/* unlike seamless_window redraw management, redraw all xwindow as soon as there is a change on the backstore */
++	xwindow_redraw_all();
+ }
+ 
+ /* Reset order state */
+
+=== modified file 'proto.h'
+--- old/proto.h	2009-09-25 11:54:40 +0000
++++ new/proto.h	2009-10-02 10:05:17 +0000
+@@ -231,6 +231,7 @@
+ uint16 ui_get_numlock_state(unsigned int state);
+ void reset_modifier_keys(void);
+ void rdp_send_scancode(uint32 time, uint16 flags, uint8 scancode);
++void send_winkey(uint32 ev_time, RD_BOOL pressed, RD_BOOL leftkey);
+ /* xwin.c */
+ RD_BOOL get_key_state(unsigned int state, uint32 keysym);
+ RD_BOOL ui_init(void);
+
+=== modified file 'rdesktop.c'
+--- old/rdesktop.c	2009-09-28 15:34:27 +0000
++++ new/rdesktop.c	2009-10-02 10:05:17 +0000
+@@ -29,6 +29,7 @@
+ #include <ctype.h>		/* toupper */
+ #include <errno.h>
+ #include <getopt.h>
++#include <stdlib.h>
+ #include "rdesktop.h"
+ #include "seamless.h"
+ 
+@@ -874,7 +875,7 @@
+ 			error("You connot use --start-app and -l at the same time\n");
+ 			return 1;
+ 		}
+-		snprintf (buf, sizeof(buf), "STARTAPP|%s|%d", arg, (int)getpid());
++		snprintf (buf, sizeof(buf), "STARTAPP|%s|%d|%s", arg, (int)getpid(), getenv("DISPLAY"));
+ 
+ 		seamless_socket_send(master_socket, buf);
+ 
+@@ -1265,7 +1266,11 @@
+ void
+ xfree(void *mem)
+ {
+-	free(mem);
++	if(mem)
++	{
++		free(mem);
++		mem = NULL;
++	}
+ }
+ 
+ /* report an error */
+
+=== modified file 'rdp.c'
+--- old/rdp.c	2009-09-25 11:33:43 +0000
++++ new/rdp.c	2009-10-02 10:05:17 +0000
+@@ -24,6 +24,8 @@
+ #include <unistd.h>
+ #endif
+ #include "rdesktop.h"
++#include "xwindow.h"
++#include "xcursor.h"
+ 
+ #ifdef HAVE_ICONV
+ #ifdef HAVE_ICONV_H
+@@ -1028,6 +1030,7 @@
+ 	in_uint16_le(s, datalen);
+ 	in_uint8p(s, data, datalen);
+ 	in_uint8p(s, mask, masklen);
++	xcursor_main(x, y, width, height, mask, data, cache_idx);
+ 	cursor = ui_create_cursor(x, y, width, height, mask, data);
+ 	ui_set_cursor(cursor);
+ 	cache_put_cursor(cache_idx, cursor);
+@@ -1041,6 +1044,7 @@
+ 
+ 	in_uint16_le(s, cache_idx);
+ 	ui_set_cursor(cache_get_cursor(cache_idx));
++	xcursor_cache_main(cache_idx);
+ }
+ 
+ /* Process a system pointer PDU */
+@@ -1166,6 +1170,9 @@
+ 
+ 		xfree(bmpdata);
+ 	}
++
++	/* unlike seamless_window redraw management, redraw all xwindow as soon as there is a change on the backstore */
++	xwindow_redraw_all();
+ }
+ 
+ /* Process a palette update */
+
+=== modified file 'seamless.c'
+--- old/seamless.c	2009-09-28 15:34:27 +0000
++++ new/seamless.c	2009-10-02 10:05:17 +0000
+@@ -30,6 +30,7 @@
+ #include <signal.h>
+ #include <unistd.h>
+ #include "seamless.h"
++#include "xdisplay.h"
+ 
+ #ifdef WITH_DEBUG_SEAMLESS
+ #define DEBUG_SEAMLESS(args) printf args;
+@@ -380,6 +381,25 @@
+ 
+ 		seamless_register_pid(token, pid);
+ 	}
++	else if (!strcmp("APP_ID", tok1))
++	{
++		unsigned int token;
++		unsigned int pid;
++
++		if (!tok4)
++			return False;
++
++		token = strtoul(tok3, &endptr, 0);
++		if (*endptr)
++			return False;
++
++		pid = strtoul(tok4, &endptr, 0);
++		if (*endptr)
++			return False;
++
++		seamless_register_pid(token, pid);
++	}
++
+ 
+ 
+ 	xfree(l);
+@@ -557,7 +577,7 @@
+ }
+ 
+ unsigned int
+-seamless_send_start_app(char *cmdline, unsigned int pid)
++seamless_send_start_app(char *cmdline, unsigned int pid, xdisplay *dis)
+ {
+ 	int token = (int)time(NULL);
+ 	seamless_application * sa = NULL;
+@@ -570,6 +590,7 @@
+ 	memset(sa, 0, sizeof(seamless_application));
+ 	sa->cmdline = strdup(cmdline);
+ 	sa->rdesktop_pid = pid;
++	sa->dis = dis;
+ 	sa->token = token;
+ 	sa->next = NULL;
+ 
+@@ -593,6 +614,8 @@
+ 	char buffer[1024];
+ 	char *hh;
+ 	char *mm;
++	char * displayName = NULL;
++	xdisplay *dis = NULL;
+ 
+ 	FD_ZERO(&rfds);
+ 	FD_SET(sock, &rfds);
+@@ -662,12 +685,32 @@
+ 		}
+ 		pid = atoi(mm);
+ 
++		mm = strtok( NULL, "|");
++		if (mm == NULL) {
++			free(hh);
++			hh = NULL;
++			return 0;
++		}
++		displayName = strdup(mm);
++		if(!displayName)
++		{
++			error("strdup failed!\n");
++			return 1;
++		}
++
+ 		free(hh);
+ 		hh = NULL;
+ 
+-		DEBUG(("STARTAPP cmdline: %s pid: %d\n", cmdline, pid));
+-
+-		seamless_send_start_app(cmdline, pid);
++		DEBUG(("STARTAPP cmdline: %s pid: %d display: %s\n", cmdline, pid, displayName));
++
++		if(!xdisplay_compare(getenv("DISPLAY"), displayName))
++		{
++			dis = xdisplay_register(displayName);
++			if(!dis)
++				return 1;
++		}
++
++		seamless_send_start_app(cmdline, pid, dis);
+ 
+ 		return 0;
+ 	}
+@@ -756,6 +799,7 @@
+ 
+ 	/* Send command */
+ 	send(s, cmdline, strlen(cmdline), 0);
++	send(s, "\n", 1, 0);
+ 
+ 	/* Close socket */
+ 	close(s);
+
+=== modified file 'seamless.h'
+--- old/seamless.h	2009-09-28 15:34:27 +0000
++++ new/seamless.h	2009-10-02 10:05:17 +0000
+@@ -18,6 +18,11 @@
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+ 
++#ifndef __SEAMLESS_H__
++#define __SEAMLESS_H__
++
++#include "xdisplay.h"
++
+ /* Check seamless master mode socket and send spawn command if input found. */
+ int seamless_check_socket();
+ /* Create control socket */
+@@ -27,7 +32,6 @@
+ /* Send a command line to seamless master socket. */
+ int seamless_socket_send(char *socket_name, char *cmdline);
+ 
+-
+ // Seamless Application management
+ typedef struct _seamless_app
+ {
+@@ -35,6 +39,7 @@
+ 	unsigned int token;
+ 	unsigned int windows_pid;
+ 	unsigned int rdesktop_pid;
++	xdisplay *dis;
+ 
+ 	struct _seamless_app *next;
+ } seamless_application;
+@@ -46,3 +51,5 @@
+ void seamless_application_remove_all();
+ 
+ void seamless_register_pid(unsigned int token, unsigned int pid);
++
++#endif
+
+=== modified file 'types.h'
+--- old/types.h	2009-09-28 08:07:15 +0000
++++ new/types.h	2009-10-02 10:05:17 +0000
+@@ -18,6 +18,9 @@
+    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+ 
++#ifndef __TYPES_H__
++#define __TYPES_H__
++
+ typedef int RD_BOOL;
+ 
+ #ifndef True
+@@ -271,3 +274,5 @@
+ FILEINFO;
+ 
+ typedef RD_BOOL(*str_handle_lines_t) (const char *line, void *data);
++
++#endif
+
+=== added file 'xcursor.c'
+--- old/xcursor.c	1970-01-01 00:00:00 +0000
++++ new/xcursor.c	2009-10-02 10:05:17 +0000
+@@ -0,0 +1,290 @@
++/*
++ * Copyright (C) 2009 Ulteo SAS
++ * http://www.ulteo.com
++ * Author Thomas MOUTON <thomas@ulteo.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++#include "rdesktop.h"
++#include "xcursor.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <X11/Xatom.h>
++#include <X11/Xutil.h>
++#include <X11/Xproto.h>
++
++typedef struct _xcursor_data
++{
++	unsigned int x;
++	unsigned int y;
++	int width;
++	int height;
++	uint8 * andmask;
++	uint8 * xormask;
++} xcursor_data;
++
++extern xdisplay* xdisplay_g_first;
++
++static xcursor_data xcursor_data_cache[0x20];
++
++static RD_HGLYPH xcursor_glyph_create(xdisplay *dis, int width, int height, uint8 * data);
++static RD_HCURSOR xcursor_create(xdisplay *dis, unsigned int x, unsigned int y, int width, int height, uint8 * andmask, uint8 * xormask, uint16 cache_idx);
++static void xcursor_set(xdisplay *dis, RD_HCURSOR cursor);
++
++static void xcursor_cache_put(xdisplay *dis, uint16 cache_idx, RD_HCURSOR cursor);
++static RD_HCURSOR xcursor_cache_get(xdisplay *dis, uint16 cache_idx);
++
++static void xcursor_data_put(unsigned int x, unsigned int y, int width, int height, uint8 * andmask, uint8 * xormask, uint16 cache_idx);
++static xcursor_data* xcursor_data_get(uint16 cache_idx);
++
++
++RD_HGLYPH
++xcursor_glyph_create(xdisplay *dis, int width, int height, uint8 * data)
++{
++	GC create_glyph_gc;
++	XImage *image;
++	Pixmap bitmap;
++	int scanline;
++
++	scanline = (width + 7) / 8;
++	bitmap = XCreatePixmap(dis->display, RootWindowOfScreen(dis->screen), width, height, 1);
++	create_glyph_gc = XCreateGC(dis->display, bitmap, 0, NULL);
++
++	image = XCreateImage(dis->display, dis->visual, 1, ZPixmap, 0, (char *) data, width, height, 8, scanline);
++	image->byte_order = MSBFirst;
++	image->bitmap_bit_order = MSBFirst;
++	XInitImage(image);
++
++	XPutImage(dis->display, bitmap, create_glyph_gc, image, 0, 0, 0, 0, width, height);
++
++	XFree(image);
++	return (RD_HGLYPH) bitmap;
++}
++
++void
++xcursor_main(unsigned int x, unsigned int y, int width, int height, uint8 * andmask, uint8 * xormask, uint16 cache_idx)
++{
++	xdisplay *dis;
++	RD_HCURSOR cursor;
++
++	xcursor_data_put(x, y, width, height, andmask, xormask, cache_idx);
++	for(dis = xdisplay_g_first; dis; dis = dis->next)
++	{
++		cursor = xcursor_create(dis, x, y, width, height, andmask, xormask, cache_idx);
++		xcursor_set(dis, cursor);
++		xcursor_cache_put(dis, cache_idx, cursor);
++	}
++}
++
++RD_HCURSOR
++xcursor_create(xdisplay *dis, unsigned int x, unsigned int y, int width, int height, uint8 * andmask, uint8 * xormask, uint16 cache_idx)
++{
++	RD_HGLYPH maskglyph, cursorglyph;
++	XColor bg, fg;
++	Cursor xcursor;
++	uint8 *cursor, *pcursor;
++	uint8 *mask, *pmask;
++	uint8 nextbit;
++	int scanline, offset;
++	int i, j;
++
++	scanline = (width + 7) / 8;
++	offset = scanline * height;
++
++	cursor = (uint8 *) xmalloc(offset);
++	memset(cursor, 0, offset);
++
++	mask = (uint8 *) xmalloc(offset);
++	memset(mask, 0, offset);
++
++	/* approximate AND and XOR masks with a monochrome X pointer */
++	for (i = 0; i < height; i++)
++	{
++		offset -= scanline;
++		pcursor = &cursor[offset];
++		pmask = &mask[offset];
++
++		for (j = 0; j < scanline; j++)
++		{
++			for (nextbit = 0x80; nextbit != 0; nextbit >>= 1)
++			{
++				if (xormask[0] || xormask[1] || xormask[2])
++				{
++					*pcursor |= (~(*andmask) & nextbit);
++					*pmask |= nextbit;
++				}
++				else
++				{
++					*pcursor |= ((*andmask) & nextbit);
++					*pmask |= (~(*andmask) & nextbit);
++				}
++
++				xormask += 3;
++			}
++
++			andmask++;
++			pcursor++;
++			pmask++;
++		}
++	}
++
++	fg.red = fg.blue = fg.green = 0xffff;
++	bg.red = bg.blue = bg.green = 0x0000;
++	fg.flags = bg.flags = DoRed | DoBlue | DoGreen;
++	cursorglyph = xcursor_glyph_create(dis, width, height, cursor);
++	maskglyph = xcursor_glyph_create(dis, width, height, mask);
++	xcursor = XCreatePixmapCursor(dis->display, (Pixmap) cursorglyph, (Pixmap) maskglyph, &fg, &bg, x, y);
++	xfree(mask);
++	xfree(cursor);
++
++	return (RD_HCURSOR) xcursor;
++}
++
++void
++xcursor_set(xdisplay *dis, RD_HCURSOR cursor)
++{
++	XDefineCursor(dis->display, RootWindowOfScreen(dis->screen), (Cursor) cursor);
++}
++
++void
++xcursor_cache_main(uint16 cache_idx)
++{
++	xdisplay *dis;
++	RD_HCURSOR cursor;
++	xcursor_data *xcursor_data;
++
++	if((xcursor_data = xcursor_data_get(cache_idx)) == NULL)
++	{
++		error("cursor datas not found (%d)\n", cache_idx);
++		return;
++	}
++
++	for(dis = xdisplay_g_first; dis; dis = dis->next)
++	{
++		if((cursor = xcursor_cache_get(dis, cache_idx)) == NULL)
++		{
++			cursor = xcursor_create(dis, xcursor_data->x, xcursor_data->y, xcursor_data->width, xcursor_data->height, xcursor_data->andmask, xcursor_data->xormask, cache_idx);
++			xcursor_cache_put(dis, cache_idx, (RD_HCURSOR)cursor);
++		}
++
++		xcursor_set(dis, cursor);
++	}
++}
++
++void
++xcursor_cache_init(xdisplay *dis)
++{
++	int max;
++	int i;
++
++	max = sizeof(dis->xcursorcache) / sizeof(dis->xcursorcache[0]);
++
++	for(i = 0; i < max; i++)
++		dis->xcursorcache[i] = NULL;
++}
++
++/* Store cursor in cache */
++void
++xcursor_cache_put(xdisplay *dis, uint16 cache_idx, RD_HCURSOR cursor)
++{
++	RD_HCURSOR old;
++
++	if (cache_idx < (sizeof(dis->xcursorcache) / sizeof(dis->xcursorcache[0])))
++	{
++		old = dis->xcursorcache[cache_idx];
++		if (old != NULL)
++			XFreeCursor(dis->display, (Cursor)old);
++
++		dis->xcursorcache[cache_idx] = cursor;
++	}
++	else
++	{
++		error("(display%s) put cursor %d\n", dis->name, cache_idx);
++	}
++}
++
++/* Retrieve cursor from cache */
++RD_HCURSOR
++xcursor_cache_get(xdisplay *dis, uint16 cache_idx)
++{
++	RD_HCURSOR cursor;
++
++	if (cache_idx < (sizeof(dis->xcursorcache) / sizeof(dis->xcursorcache[0])))
++	{
++		cursor = dis->xcursorcache[cache_idx];
++		if (cursor != NULL)
++			return cursor;
++	}
++
++	return NULL;
++}
++
++void
++xcursor_data_init()
++{
++	int i;
++	int max;
++
++	max = sizeof(xcursor_data_cache) / sizeof(xcursor_data_cache[0]);
++
++	for(i = 0; i < max; i++)
++	{
++		xcursor_data_cache[i].andmask = NULL;
++		xcursor_data_cache[i].xormask = NULL;
++	}
++}
++
++void
++xcursor_data_put(unsigned int x, unsigned int y, int width, int height, uint8 * andmask, uint8 * xormask, uint16 cache_idx)
++{
++	if(cache_idx < (sizeof(xcursor_data_cache) / sizeof(xcursor_data_cache[0])) && (xcursor_data_cache[cache_idx].andmask == NULL || xcursor_data_cache[cache_idx].xormask == NULL))
++	{
++		int i;
++		int size_andmask, size_xormask;
++
++		size_andmask = height*(width+7)/8;
++		size_xormask = size_andmask * 8 * 3;
++
++		xcursor_data_cache[cache_idx].x = x;
++		xcursor_data_cache[cache_idx].y = y;
++		xcursor_data_cache[cache_idx].width = width;
++		xcursor_data_cache[cache_idx].height = height;
++
++		xcursor_data_cache[cache_idx].andmask = malloc(size_andmask*sizeof(uint8));
++		xcursor_data_cache[cache_idx].xormask = malloc(size_xormask*sizeof(uint8));
++		for(i = 0; i < size_andmask; i++)
++		{
++			xcursor_data_cache[cache_idx].andmask[i] = andmask[i];
++		}
++		for(i = 0; i < size_xormask; i++)
++		{
++			xcursor_data_cache[cache_idx].xormask[i] = xormask[i];
++		}
++	}
++}
++
++xcursor_data *
++xcursor_data_get(uint16 cache_idx)
++{
++	if(cache_idx > (sizeof(xcursor_data_cache) / sizeof(xcursor_data_cache[0])) || xcursor_data_cache[cache_idx].andmask == NULL || xcursor_data_cache[cache_idx].xormask == NULL)
++	{
++		error("get cursor data : %d\n", cache_idx);
++		return NULL;
++	}
++
++	return &xcursor_data_cache[cache_idx];
++}
+
+=== added file 'xcursor.h'
+--- old/xcursor.h	1970-01-01 00:00:00 +0000
++++ new/xcursor.h	2009-10-02 10:05:17 +0000
+@@ -0,0 +1,32 @@
++/*
++ * Copyright (C) 2009 Ulteo SAS
++ * http://www.ulteo.com
++ * Author Thomas MOUTON <thomas@ulteo.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++#ifndef __XCURSOR_H__
++#define __XCURSOR_H__
++
++#include "xdisplay.h"
++#include "types.h"
++
++void xcursor_data_init();
++void xcursor_cache_init(xdisplay *dis);
++void xcursor_cache_main(uint16 cache_idx);
++void xcursor_main(unsigned int x, unsigned int y, int width, int height, uint8 * andmask, uint8 * xormask, uint16 cache_idx);
++
++#endif
+
+=== added file 'xdisplay.c'
+--- old/xdisplay.c	1970-01-01 00:00:00 +0000
++++ new/xdisplay.c	2009-10-02 10:05:17 +0000
+@@ -0,0 +1,984 @@
++/*
++ * Copyright (C) 2009 Ulteo SAS
++ * http://www.ulteo.com
++ * Author Julien LANGLOIS <julien@ulteo.com>
++ * Author Thomas MOUTON <thomas@ulteo.com>
++ *
++ * This program is free software; you can redistribute it and/or 
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++#include "rdesktop.h"
++#include "xdisplay.h"
++#include "xwindow.h"
++#include "xcursor.h"
++#include "scancodes.h"
++#include "types.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <time.h>
++#include <unistd.h>
++#include <X11/Xatom.h>
++#include <X11/Xutil.h>
++#include <X11/Xproto.h>
++
++typedef struct _xconfigurenotify_context
++{
++	Window window;
++	unsigned long serial;
++} xconfigurenotify_context;
++
++extern Bool sw_configurenotify_p(Display * display, XEvent * xevent, XPointer arg);
++extern void error(char *format, ...);
++
++extern unsigned char g_pointer_log_to_phys_map[32];
++extern RD_BOOL g_numlock_sync;
++
++xdisplay* xdisplay_g_first = NULL;
++
++xdisplay* xdisplay_find(const char *name);
++
++static RD_BOOL xdisplay_get_key_state(xdisplay *dis, unsigned int state, uint32 keysym);
++static unsigned int xdisplay_read_keyboard_state(xdisplay *dis);
++
++
++// Ewmhints overide begin
++#define _NET_WM_STATE_REMOVE        0	/* remove/unset property */
++#define _NET_WM_STATE_ADD           1	/* add/set property */
++#define _NET_WM_STATE_TOGGLE        2	/* toggle property  */
++
++static int xdisplay_ewmh_modify_state(xdisplay* dis, Window wnd, int add, Atom atom1, Atom atom2);
++static int xdisplay_ewmh_get_window_state(xdisplay *dis, Window w);
++// Ewmhints overide end
++
++static int xdisplay_get_property_value(xdisplay* dis, Window wnd, char *propname, long max_length, unsigned long *nitems_return, unsigned char **prop_return, int nowarn);
++
++void
++xdisplay_add(xdisplay *dis)
++{
++	dis->next = xdisplay_g_first;
++	xdisplay_g_first = dis;
++	DEBUG(("Display %s added\n", dis->name));
++}
++
++RD_BOOL
++xdisplay_compare(char *dpy1, char *dpy2)
++{
++	size_t size1, size2;
++	char *a = dpy1, *b = dpy2;
++
++	if(strcmp(dpy1, dpy2) == 0)
++		return True;
++
++	size1 = strlen(dpy1);
++	size2 = strlen(dpy2);
++
++	if (size1 == size2)
++		return False;
++
++	if (size1 > size2)
++	{
++		a = dpy2;
++		b = dpy1;
++		size1 = size2;
++	}
++
++	if (strncmp(a, b, size1) == 0)
++	{
++		char *suf;
++
++		suf = b + size1;
++
++		if (strcmp(suf, ".0") == 0)
++			return True;
++	}
++
++	return False;
++}
++
++xdisplay*
++xdisplay_register(const char *name)
++{
++	xdisplay *dis = NULL;
++	int visuals_count;
++	int i;
++	XVisualInfo *vmatches = NULL;
++	XVisualInfo template;
++
++	dis = xdisplay_find(name);
++	if (dis != NULL)
++		return dis;
++
++	dis = (xdisplay*)malloc(sizeof(xdisplay));
++
++	DEBUG(("Opening %s display.\n", name));
++	dis->display = XOpenDisplay(name);
++
++	if(!dis->display)
++	{
++		free(dis);
++		error("Failed to open display: %s\n", name);
++
++		return NULL;
++	}
++
++#ifdef WITH_DEBUG
++	XSynchronize(dis->display, True);
++#endif
++
++	dis->name = strdup(name);
++	if(!dis->name)
++	{
++		error("strdup failed!\n");
++		return NULL;
++	}
++	dis->mod_map = XGetModifierMapping(dis->display);
++	dis->xserver_be = (ImageByteOrder(dis->display) == MSBFirst);
++	dis->screen_num = DefaultScreen(dis->display);
++	dis->screen = ScreenOfDisplay(dis->display, dis->screen_num);
++	dis->depth = DefaultDepthOfScreen(dis->screen);
++	dis->mod_map = XGetModifierMapping(dis->display);
++	dis->IM = XOpenIM(dis->display, NULL, NULL, NULL);
++	if(dis->IM != NULL)
++	{
++		dis->IC = XCreateIC(dis->IM, XNInputStyle, (XIMPreeditNothing | XIMStatusNothing), XNClientWindow, RootWindowOfScreen(dis->screen), XNFocusWindow, RootWindowOfScreen(dis->screen), NULL);
++	}
++	else
++		error("Cannot create the Input Context for display %s.\n", dis->name);
++
++	//add atoms
++	dis->atoms.net_wm_state_maximized_vert = XInternAtom(dis->display, "_NET_WM_STATE_MAXIMIZED_VERT", False);
++	dis->atoms.net_wm_state_maximized_horz = XInternAtom(dis->display, "_NET_WM_STATE_MAXIMIZED_HORZ", False);
++	dis->atoms.net_wm_state_hidden = XInternAtom(dis->display, "_NET_WM_STATE_HIDDEN", False);
++	dis->atoms.net_wm_state_skip_taskbar = XInternAtom(dis->display, "_NET_WM_STATE_SKIP_TASKBAR", False);
++	dis->atoms.net_wm_state_skip_pager = XInternAtom(dis->display, "_NET_WM_STATE_SKIP_PAGER", False);
++	dis->atoms.net_wm_state_modal = XInternAtom(dis->display, "_NET_WM_STATE_MODAL", False);
++	dis->atoms.net_wm_state_above = XInternAtom(dis->display, "_NET_WM_STATE_ABOVE", False);
++	dis->atoms.net_wm_state = XInternAtom(dis->display, "_NET_WM_STATE", False);
++	dis->atoms.net_wm_desktop = XInternAtom(dis->display, "_NET_WM_DESKTOP", False);
++	dis->atoms.protocol_atom = XInternAtom(dis->display, "WM_PROTOCOLS", True);
++	dis->atoms.kill_atom = XInternAtom(dis->display, "WM_DELETE_WINDOW", True);
++	dis->atoms.net_wm_name = XInternAtom(dis->display, "_NET_WM_NAME", False);
++	dis->atoms.net_wm_icon = XInternAtom(dis->display, "_NET_WM_ICON", False);
++	dis->atoms.utf8_string = XInternAtom(dis->display, "UTF8_STRING", False);
++
++	//add visual
++	template.class = TrueColor;
++	template.screen = dis->screen_num;
++	vmatches = XGetVisualInfo(dis->display, VisualClassMask | VisualScreenMask, &template, &visuals_count);
++
++	if (vmatches != NULL)
++	{
++		for (i = 0; i < visuals_count; ++i)
++		{
++			XVisualInfo *visual_info = &vmatches[i];
++
++			/* Try to find a no-translation visual that'll
++			   allow us to use RDP bitmaps directly as ZPixmaps. */
++			if (!dis->xserver_be && (((visual_info->depth == 15) &&
++						   /* R5G5B5 */
++						   (visual_info->red_mask == 0x7c00) &&
++						   (visual_info->green_mask == 0x3e0) &&
++						   (visual_info->blue_mask == 0x1f)) ||
++						  ((visual_info->depth == 16) &&
++						   /* R5G6B5 */
++						   (visual_info->red_mask == 0xf800) &&
++						   (visual_info->green_mask == 0x7e0) &&
++						   (visual_info->blue_mask == 0x1f)) ||
++						  ((visual_info->depth == 24) &&
++						   /* R8G8B8 */
++						   (visual_info->red_mask == 0xff0000) &&
++						   (visual_info->green_mask == 0xff00) &&
++						   (visual_info->blue_mask == 0xff))))
++			{
++				dis->visual = visual_info->visual;
++				break;
++			}
++		}
++		XFree(vmatches);
++	}
++
++	dis->xcolmap = XCreateColormap(dis->display, RootWindowOfScreen(dis->screen), dis->visual, AllocNone);
++	dis->gc = XCreateGC(dis->display, RootWindowOfScreen(dis->screen), 0, NULL);
++
++	xcursor_cache_init(dis);
++
++	xdisplay_add(dis);
++	return dis;
++}
++
++xdisplay*
++xdisplay_find(const char *name)
++{
++	xdisplay *dis = NULL;
++
++	if(name == NULL || xdisplay_g_first == NULL)
++		return NULL;
++
++	for(dis = xdisplay_g_first; dis; dis = dis->next){
++		if(strcmp(dis->name, name) == 0)
++			return dis;
++	}
++	return NULL;
++}
++
++void
++xdisplay_get_input_mask(long *input_mask)
++{
++	*input_mask = KeyPressMask | KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
++		VisibilityChangeMask | FocusChangeMask | StructureNotifyMask | PointerMotionMask;
++}
++
++
++
++void
++xdisplay_get_window_attribs(xdisplay* dis, XSetWindowAttributes * attribs)
++{
++	attribs->background_pixel = BlackPixelOfScreen(dis->screen);
++	attribs->background_pixel = WhitePixelOfScreen(dis->screen);
++	attribs->border_pixel = WhitePixelOfScreen(dis->screen);
++	attribs->colormap = dis->xcolmap;
++}
++
++#define MWM_HINTS_DECORATIONS   (1L << 1)
++#define PROP_MOTIF_WM_HINTS_ELEMENTS    5
++typedef struct
++{
++	unsigned long flags;
++	unsigned long functions;
++	unsigned long decorations;
++	long inputMode;
++	unsigned long status;
++} xPropMotifWmHints;
++
++void
++xdisplay_mwm_hide_decorations(xdisplay* dis, Window wnd)
++{
++	xPropMotifWmHints motif_hints;
++	Atom hintsatom;
++
++	/* setup the property */
++	motif_hints.flags = MWM_HINTS_DECORATIONS;
++	motif_hints.decorations = 0;
++
++	/* get the atom for the property */
++	hintsatom = XInternAtom(dis->display, "_MOTIF_WM_HINTS", False);
++	if (!hintsatom)
++	{
++		warning("Failed to get atom _MOTIF_WM_HINTS: probably your window manager does not support MWM hints\n");
++		return;
++	}
++
++	XChangeProperty(dis->display, wnd, hintsatom, hintsatom, 32, PropModeReplace,
++				(unsigned char *) &motif_hints, PROP_MOTIF_WM_HINTS_ELEMENTS);
++}
++
++static void
++xdisplay_handle_button_event(xdisplay *dis, xwindow *sw, XEvent xevent, RD_BOOL down)
++{
++	uint16 button, flags = 0;
++	/* Reverse the pointer button mapping, e.g. in the case of
++	   "left-handed mouse mode"; the RDP session expects to
++	   receive physical buttons (true in mstsc as well) and
++	   logical button behavior depends on the remote desktop's own
++	   mouse settings */
++	xevent.xbutton.button = g_pointer_log_to_phys_map[xevent.xbutton.button - 1];
++	button = xkeymap_translate_button(xevent.xbutton.button);
++	if (button == 0)
++		return;
++
++	if (down)
++		flags = MOUSE_FLAG_DOWN;
++
++	rdp_send_input(time(NULL), RDP_INPUT_MOUSE,
++		       flags | button, xevent.xbutton.x_root, xevent.xbutton.y_root);
++}
++
++unsigned int
++xdisplay_read_keyboard_state(xdisplay *dis)
++{
++	unsigned int state;
++	Window wdummy;
++	int dummy;
++
++	XQueryPointer(dis->display, RootWindowOfScreen(dis->screen), &wdummy, &wdummy, &dummy, &dummy, &dummy, &dummy, &state);
++	return state;
++}
++
++/* Handle special key combinations */
++RD_BOOL
++xdisplay_handle_special_keys(xdisplay *dis, uint32 keysym, unsigned int state, uint32 ev_time, RD_BOOL pressed)
++{
++	switch (keysym)
++	{
++		case XK_Return:
++			if ((xdisplay_get_key_state(dis, state, XK_Alt_L) || xdisplay_get_key_state(dis, state, XK_Alt_R))
++			    && (xdisplay_get_key_state(dis, state, XK_Control_L)
++				|| xdisplay_get_key_state(dis, state, XK_Control_R)))
++			{
++				/* Ctrl-Alt-Enter: toggle full screen */
++				if (pressed)
++					xwin_toggle_fullscreen();
++				return True;
++			}
++			break;
++
++		case XK_Break:
++			/* Send Break sequence E0 46 E0 C6 */
++			if (pressed)
++			{
++				rdp_send_scancode(ev_time, RDP_KEYPRESS, (SCANCODE_EXTENDED | 0x46));
++				rdp_send_scancode(ev_time, RDP_KEYPRESS, (SCANCODE_EXTENDED | 0xc6));
++			}
++			/* No release sequence */
++			return True;
++			break;
++
++		case XK_Pause:
++			/* According to MS Keyboard Scan Code
++			   Specification, pressing Pause should result
++			   in E1 1D 45 E1 9D C5. I'm not exactly sure
++			   of how this is supposed to be sent via
++			   RDP. The code below seems to work, but with
++			   the side effect that Left Ctrl stays
++			   down. Therefore, we release it when Pause
++			   is released. */
++			if (pressed)
++			{
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYPRESS, 0xe1, 0);
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYPRESS, 0x1d, 0);
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYPRESS, 0x45, 0);
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYPRESS, 0xe1, 0);
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYPRESS, 0x9d, 0);
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYPRESS, 0xc5, 0);
++			}
++			else
++			{
++				/* Release Left Ctrl */
++				rdp_send_input(ev_time, RDP_INPUT_SCANCODE, RDP_KEYRELEASE,
++					       0x1d, 0);
++			}
++			return True;
++			break;
++
++		case XK_Meta_L:	/* Windows keys */
++		case XK_Super_L:
++		case XK_Hyper_L:
++			send_winkey(ev_time, pressed, True);
++			return True;
++			break;
++
++		case XK_Meta_R:
++		case XK_Super_R:
++		case XK_Hyper_R:
++			send_winkey(ev_time, pressed, False);
++			return True;
++			break;
++
++		case XK_Num_Lock:
++			/* Synchronize on key release */
++			if (g_numlock_sync && !pressed)
++				rdp_send_input(0, RDP_INPUT_SYNCHRONIZE, 0, (xdisplay_get_key_state(dis, ((xdisplay_read_keyboard_state(dis))?KBD_FLAG_NUMLOCK:0), XK_Num_Lock)), 0);
++
++			/* Inhibit */
++			return True;
++			break;
++
++		case XK_Overlay1_Enable:
++			/* Toggle SeamlessRDP */
++			if (pressed)
++				ui_seamless_toggle();
++			break;
++
++	}
++	return False;
++}
++
++RD_BOOL
++xdisplay_get_key_state(xdisplay *dis, unsigned int state, uint32 keysym)
++{
++	int modifierpos, key, keysymMask = 0;
++	int offset;
++
++	KeyCode keycode = XKeysymToKeycode(dis->display, keysym);
++
++	if (keycode == NoSymbol)
++		return False;
++
++	for (modifierpos = 0; modifierpos < 8; modifierpos++)
++	{
++		offset = dis->mod_map->max_keypermod * modifierpos;
++
++		for (key = 0; key < dis->mod_map->max_keypermod; key++)
++		{
++			if (dis->mod_map->modifiermap[offset + key] == keycode)
++				keysymMask |= 1 << modifierpos;
++		}
++	}
++
++	return (state & keysymMask) ? True : False;
++}
++
++/* Process events in Xlib queue
++   Returns 0 after user quit, 1 otherwise */
++int xdisplay_process_events(xdisplay* dis)
++{
++	XEvent xevent;
++	KeySym keysym;
++	uint32 ev_time;
++	char str[256];
++	Status status;
++	int events = 0;
++	xwindow *sw;
++
++	while ((XPending(dis->display) > 0) && events++ < 20)
++	{
++		XNextEvent(dis->display, &xevent);
++
++		if ((dis->IC != NULL) && (XFilterEvent(&xevent, None) == True))
++		{
++			DEBUG_KBD(("Filtering event\n"));
++			continue;
++		}
++
++		switch (xevent.type)
++		{
++			case ClientMessage:
++				/* the window manager told us to quit */
++				if ((xevent.xclient.message_type == dis->atoms.protocol_atom)
++				    && ((Atom) xevent.xclient.data.l[0] == dis->atoms.kill_atom))
++				{
++					/* When killing a seamless window, close the window on the
++					   serverside instead of terminating rdesktop */
++					sw = xwindow_find_by_wnd(dis, xevent.xclient.window);
++					if (!sw)
++						/* Otherwise, quit */
++						return 0;
++					/* send seamless destroy process message */
++					seamless_send_destroy(sw->id);
++				}
++				break;
++
++			case KeyPress:
++				if (dis->IC != NULL)
++				{
++					XmbLookupString(dis->IC,
++							&xevent.xkey, str, sizeof(str), &keysym,
++							&status);
++					if (!((status == XLookupKeySym) || (status == XLookupBoth)))
++					{
++						error("XmbLookupString failed with status 0x%x\n",
++						      status);
++						break;
++					}
++				}
++				else
++				{
++
++					DEBUG_KBD(("\nNo input context, using XLookupString\n"));
++					XLookupString((XKeyEvent *) & xevent, str, sizeof(str), &keysym, NULL);
++				}
++
++				DEBUG_KBD(("KeyPress for keysym (0x%lx, %s)\n", keysym, get_ksname(keysym)));
++
++				ev_time = time(NULL);
++				if (xdisplay_handle_special_keys(dis, keysym, xevent.xkey.state, ev_time, True))
++					break;
++
++				xkeymap_send_keys(keysym, xevent.xkey.keycode, xevent.xkey.state,
++						  ev_time, True, 0);
++
++				break;
++
++			case KeyRelease:
++				XLookupString((XKeyEvent *) & xevent, str, sizeof(str), &keysym, NULL);
++
++				DEBUG_KBD(("\nKeyRelease for keysym (0x%lx, %s)\n", keysym,
++					   get_ksname(keysym)));
++
++				ev_time = time(NULL);
++				if (handle_special_keys(keysym, xevent.xkey.state, ev_time, False))
++					break;
++
++				xkeymap_send_keys(keysym, xevent.xkey.keycode, xevent.xkey.state,
++						  ev_time, False, 0);
++
++				break;
++
++			case ButtonPress:
++				sw = xwindow_find_by_wnd(dis, xevent.xexpose.window);
++				if (sw == NULL) {
++					break;
++				}
++
++				xdisplay_handle_button_event(dis, sw, xevent, True);
++				break;
++
++			case ButtonRelease:
++				sw = xwindow_find_by_wnd(dis, xevent.xexpose.window);
++				if (sw == NULL) {
++					break;
++				}
++
++				xdisplay_handle_button_event(dis, sw, xevent, False);
++				break;
++
++			case MotionNotify:
++				rdp_send_input(time(NULL), RDP_INPUT_MOUSE, MOUSE_FLAG_MOVE, xevent.xmotion.x_root, xevent.xmotion.y_root);
++				break;
++
++			case FocusIn:
++				sw = xwindow_find_by_wnd(dis, xevent.xexpose.window);
++				if (sw == NULL) {
++					break;
++				}
++
++				xwindow_redraw(sw);
++				break;
++
++			case PropertyNotify:
++				sw = xwindow_find_by_wnd(dis, xevent.xproperty.window);
++				if (sw == NULL) {
++					break;
++				}
++
++				if ((xevent.xproperty.atom == dis->atoms.net_wm_state)
++				    && (xevent.xproperty.state == PropertyNewValue))
++				{
++					sw->state = xdisplay_ewmh_get_window_state(dis, sw->wnd);
++					seamless_send_state(sw->id, sw->state, 0);
++				}
++				break;
++		}
++	}
++	/* Keep going */
++	return 1;
++}
++
++void xdisplay_process_events_main(){
++	xdisplay *dis = NULL;
++
++	if(xdisplay_g_first == NULL)
++		return;
++
++	for(dis = xdisplay_g_first; dis; dis = dis->next) {
++		xdisplay_process_events(dis);
++	}
++	return;
++}
++
++/* 
++   Get the window state: normal/minimized/maximized.
++*/
++int
++xdisplay_ewmh_get_window_state(xdisplay *dis, Window w)
++{
++	unsigned long nitems_return;
++	unsigned char *prop_return;
++	uint32 *return_words;
++	unsigned long item;
++	RD_BOOL maximized_vert, maximized_horz, hidden;
++
++	maximized_vert = maximized_horz = hidden = False;
++
++	if (xdisplay_get_property_value(dis, w, "_NET_WM_STATE", 64, &nitems_return, &prop_return, 0) < 0)
++		return SEAMLESSRDP_NORMAL;
++
++	return_words = (uint32 *) prop_return;
++
++	for (item = 0; item < nitems_return; item++)
++	{
++		if (return_words[item] == dis->atoms.net_wm_state_maximized_vert)
++			maximized_vert = True;
++		if (return_words[item] == dis->atoms.net_wm_state_maximized_horz)
++			maximized_horz = True;
++		if (return_words[item] == dis->atoms.net_wm_state_hidden)
++			hidden = True;
++	}
++
++	XFree(prop_return);
++
++	if (maximized_vert && maximized_horz)
++		return SEAMLESSRDP_MAXIMIZED;
++	else if (hidden)
++		return SEAMLESSRDP_MINIMIZED;
++	else
++		return SEAMLESSRDP_NORMAL;
++}
++
++/*
++   Set the window state: normal/minimized/maximized. 
++   Returns -1 on failure. 
++*/
++int
++xdisplay_ewmh_change_state(xdisplay* dis, Window wnd, int state)
++{
++	/*
++	 * Deal with the max atoms
++	 */
++	if (state == SEAMLESSRDP_MAXIMIZED)
++	{
++		if (xdisplay_ewmh_modify_state
++		    (dis, wnd, 1, dis->atoms.net_wm_state_maximized_vert,
++		     dis->atoms.net_wm_state_maximized_horz) < 0)
++			return -1;
++	}
++	else
++	{
++		if (xdisplay_ewmh_modify_state
++		    (dis, wnd, 0, dis->atoms.net_wm_state_maximized_vert,
++		     dis->atoms.net_wm_state_maximized_horz) < 0)
++			return -1;
++	}
++
++	return 0;
++}
++
++int
++xdisplay_ewmh_modify_state(xdisplay* dis, Window wnd, int add, Atom atom1, Atom atom2)
++{
++	Status status;
++	XEvent xevent;
++
++	int result;
++	unsigned long nitems;
++	unsigned char *props;
++	uint32 state = WithdrawnState;
++
++	/* The spec states that the window manager must respect any
++	   _NET_WM_STATE attributes on a withdrawn window. In order words, we
++	   modify the attributes directly for withdrawn windows and ask the WM
++	   to do it for active windows. */
++	result = xdisplay_get_property_value(dis, wnd, "WM_STATE", 64, &nitems, &props, 1);
++	if ((result >= 0) && nitems)
++	{
++		state = *(uint32 *) props;
++		XFree(props);
++	}
++
++	if (state == WithdrawnState)
++	{
++		if (add)
++		{
++			Atom atoms[2];
++
++			atoms[0] = atom1;
++			nitems = 1;
++			if (atom2)
++			{
++				atoms[1] = atom2;
++				nitems = 2;
++			}
++
++			XChangeProperty(dis->display, wnd, dis->atoms.net_wm_state, XA_ATOM,
++					32, PropModeAppend, (unsigned char *) atoms, nitems);
++		}
++		else
++		{
++			Atom *atoms;
++			int i;
++
++			if (xdisplay_get_property_value(dis, wnd, "_NET_WM_STATE", 64, &nitems, &props, 1) < 0)
++				return 0;
++
++			atoms = (Atom *) props;
++
++			for (i = 0; i < nitems; i++)
++			{
++				if ((atoms[i] == atom1) || (atom2 && (atoms[i] == atom2)))
++				{
++					if (i != (nitems - 1))
++						memmove(&atoms[i], &atoms[i + 1],
++							sizeof(Atom) * (nitems - i - 1));
++					nitems--;
++					i--;
++				}
++			}
++
++			XChangeProperty(dis->display, wnd, dis->atoms.net_wm_state, XA_ATOM,
++					32, PropModeReplace, (unsigned char *) atoms, nitems);
++
++			XFree(props);
++		}
++
++		return 0;
++	}
++
++	xevent.type = ClientMessage;
++	xevent.xclient.window = wnd;
++	xevent.xclient.message_type = dis->atoms.net_wm_state;
++	xevent.xclient.format = 32;
++	if (add)
++		xevent.xclient.data.l[0] = _NET_WM_STATE_ADD;
++	else
++		xevent.xclient.data.l[0] = _NET_WM_STATE_REMOVE;
++	xevent.xclient.data.l[1] = atom1;
++	xevent.xclient.data.l[2] = atom2;
++	xevent.xclient.data.l[3] = 0;
++	xevent.xclient.data.l[4] = 0;
++	status = XSendEvent(dis->display, DefaultRootWindow(dis->display), False,
++			    SubstructureNotifyMask | SubstructureRedirectMask, &xevent);
++	if (!status)
++		return -1;
++
++	return 0;
++}
++
++/* 
++   Get window property value (32 bit format) 
++   Returns zero on success, -1 on error
++*/
++static int
++xdisplay_get_property_value(xdisplay* dis, Window wnd, char *propname, long max_length,
++		   unsigned long *nitems_return, unsigned char **prop_return, int nowarn)
++{
++	int result;
++	Atom property;
++	Atom actual_type_return;
++	int actual_format_return;
++	unsigned long bytes_after_return;
++
++	property = XInternAtom(dis->display, propname, True);
++	if (property == None)
++	{
++		fprintf(stderr, "Atom %s does not exist\n", propname);
++		return (-1);
++	}
++
++	result = XGetWindowProperty(dis->display, wnd, property, 0,	/* long_offset */
++				    max_length,	/* long_length */
++				    False,	/* delete */
++				    AnyPropertyType,	/* req_type */
++				    &actual_type_return,
++				    &actual_format_return,
++				    nitems_return, &bytes_after_return, prop_return);
++
++	if (result != Success)
++	{
++		fprintf(stderr, "XGetWindowProperty failed\n");
++		return (-1);
++	}
++
++	if (actual_type_return == None || actual_format_return == 0)
++	{
++		if (!nowarn)
++			fprintf(stderr, "Window is missing property %s\n", propname);
++		return (-1);
++	}
++
++	if (bytes_after_return)
++	{
++		fprintf(stderr, "%s is too big for me\n", propname);
++		return (-1);
++	}
++
++	if (actual_format_return != 32)
++	{
++		fprintf(stderr, "%s has bad format\n", propname);
++		return (-1);
++	}
++
++	return (0);
++}
++
++void
++xdisplay_ewmh_set_icon(xdisplay* dis, Window wnd, int width, int height, const char *rgba_data)
++{
++	unsigned long nitems, i;
++	unsigned char *props;
++	uint32 *cur_set, *new_set;
++	uint32 *icon;
++
++	cur_set = NULL;
++	new_set = NULL;
++
++	if (xdisplay_get_property_value(dis, wnd, "_NET_WM_ICON", 10000, &nitems, &props, 1) >= 0)
++	{
++		cur_set = (uint32 *) props;
++
++		for (i = 0; i < nitems;)
++		{
++			if (cur_set[i] == width && cur_set[i + 1] == height)
++				break;
++
++			i += 2 + cur_set[i] * cur_set[i + 1];
++		}
++
++		if (i != nitems)
++			icon = cur_set + i;
++		else
++		{
++			new_set = xmalloc((nitems + width * height + 2) * 4);
++			memcpy(new_set, cur_set, nitems * 4);
++			icon = new_set + nitems;
++			nitems += width * height + 2;
++		}
++	}
++	else
++	{
++		new_set = xmalloc((width * height + 2) * 4);
++		icon = new_set;
++		nitems = width * height + 2;
++	}
++
++	icon[0] = width;
++	icon[1] = height;
++
++	/* Convert RGBA -> ARGB */
++	for (i = 0; i < width * height; i++)
++	{
++		icon[i + 2] =
++			rgba_data[i * 4 + 3] << 24 |
++			((rgba_data[i * 4 + 0] << 16) & 0x00FF0000) |
++			((rgba_data[i * 4 + 1] << 8) & 0x0000FF00) |
++			((rgba_data[i * 4 + 2] << 0) & 0x000000FF);
++	}
++
++	XChangeProperty(dis->display, wnd, dis->atoms.net_wm_icon, XA_CARDINAL, 32,
++			PropModeReplace, (unsigned char *) (new_set ? new_set : cur_set), nitems);
++
++	if (cur_set)
++		XFree(cur_set);
++	if (new_set)
++		xfree(new_set);
++}
++
++void
++xdisplay_ewmh_del_icon(xdisplay *dis, Window wnd, int width, int height)
++{
++	unsigned long nitems, i, icon_size;
++	unsigned char *props;
++	uint32 *cur_set, *new_set;
++
++	cur_set = NULL;
++	new_set = NULL;
++
++	if (xdisplay_get_property_value(dis, wnd, "_NET_WM_ICON", 10000, &nitems, &props, 1) < 0)
++		return;
++
++	cur_set = (uint32 *) props;
++
++	for (i = 0; i < nitems;)
++	{
++		if (cur_set[i] == width && cur_set[i + 1] == height)
++			break;
++
++		i += 2 + cur_set[i] * cur_set[i + 1];
++	}
++
++	if (i == nitems)
++		goto out;
++
++	icon_size = width * height + 2;
++	new_set = xmalloc((nitems - icon_size) * 4);
++
++	if (i != 0)
++		memcpy(new_set, cur_set, i * 4);
++	if (i != nitems - icon_size)
++		memcpy(new_set + i * 4, cur_set + i * 4 + icon_size, nitems - icon_size);
++
++	nitems -= icon_size;
++
++	XChangeProperty(dis->display, wnd, dis->atoms.net_wm_icon, XA_CARDINAL, 32,
++			PropModeReplace, (unsigned char *) new_set, nitems);
++
++	xfree(new_set);
++
++      out:
++	XFree(cur_set);
++}
++
++void
++xdisplay_ewmh_set_wm_name(xdisplay* dis, Window wnd, const char *title)
++{
++	int len;
++
++	len = strlen(title);
++	XChangeProperty(dis->display, wnd, dis->atoms.net_wm_name, dis->atoms.utf8_string,
++			8, PropModeReplace, (unsigned char *) title, len);
++}
++
++
++int
++xdisplay_ewmh_set_window_above(xdisplay* dis, Window wnd)
++{
++	if (xdisplay_ewmh_modify_state(dis, wnd, 1, dis->atoms.net_wm_state_above, 0) < 0)
++		return -1;
++	return 0;
++}
++
++
++int
++xdisplay_ewmh_set_window_modal(xdisplay* dis, Window wnd)
++{
++	if (xdisplay_ewmh_modify_state(dis, wnd, 1, dis->atoms.net_wm_state_modal, 0) < 0)
++		return -1;
++	return 0;
++}
++
++
++int
++xdisplay_ewmh_set_window_popup(xdisplay* dis, Window wnd)
++{
++	if (xdisplay_ewmh_modify_state(dis, wnd, 1, dis->atoms.net_wm_state_skip_taskbar, dis->atoms.net_wm_state_skip_pager) < 0)
++		return -1;
++	return 0;
++}
++
++/* Wait for a ConfigureNotify, with a equal or larger serial, on the
++   specified window. The event will be removed from the queue. We
++   could use XMaskEvent(StructureNotifyMask), but we would then risk
++   throwing away crucial events like DestroyNotify.
++
++   After a ConfigureWindow, according to ICCCM section 4.1.5, we
++   should recieve a ConfigureNotify, either a real or synthetic
++   one. This indicates that the configure has been "completed".
++   However, some WMs such as several versions of Metacity fails to
++   send synthetic events. See bug
++   http://bugzilla.gnome.org/show_bug.cgi?id=322840. We need to use a
++   timeout to avoid a hang. Tk uses the same approach. */
++void
++xdisplay_sw_wait_configurenotify(xdisplay *dis, Window wnd, unsigned long serial)
++{
++	XEvent xevent;
++	xconfigurenotify_context context;
++	struct timeval now;
++	struct timeval nextsecond;
++	RD_BOOL got = False;
++
++	context.window = wnd;
++	context.serial = serial;
++
++	gettimeofday(&nextsecond, NULL);
++	nextsecond.tv_sec += 1;
++
++	do
++	{
++		if (XCheckIfEvent(dis->display, &xevent, sw_configurenotify_p, (XPointer) & context))
++		{
++			got = True;
++			break;
++		}
++		usleep(100000);
++		gettimeofday(&now, NULL);
++	}
++	while (timercmp(&now, &nextsecond, <));
++
++	if (!got)
++	{
++		warning("Broken Window Manager: Timeout while waiting for ConfigureNotify\n");
++	}
++}
+
+=== added file 'xdisplay.h'
+--- old/xdisplay.h	1970-01-01 00:00:00 +0000
++++ new/xdisplay.h	2009-10-02 10:05:17 +0000
+@@ -0,0 +1,91 @@
++/*
++ * Copyright (C) 2009 Ulteo SAS
++ * http://www.ulteo.com
++ * Author Julien LANGLOIS <julien@ulteo.com>
++ * Author Thomas MOUTON <thomas@ulteo.com>
++ *
++ * This program is free software; you can redistribute it and/or 
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++
++#ifndef __XDISPLAY_H__
++#define __XDISPLAY_H__
++
++#include <X11/Xlib.h>
++#include <X11/Xutil.h>
++#include <X11/Xproto.h>
++
++#include "types.h"
++
++typedef struct _xdisplay_atoms{
++	Atom kill_atom;
++	Atom net_wm_desktop;
++	Atom net_wm_icon;
++	Atom net_wm_name;
++	Atom net_wm_state;
++	Atom net_wm_state_above;
++	Atom net_wm_state_hidden;
++	Atom net_wm_state_maximized_vert;
++	Atom net_wm_state_maximized_horz;
++	Atom net_wm_state_modal;
++	Atom net_wm_state_skip_pager;
++	Atom net_wm_state_skip_taskbar;
++	Atom protocol_atom;
++	Atom utf8_string;
++} xdisplay_atoms;
++
++typedef struct _xdisplay{
++	Display *display;
++	char *name;
++
++	int screen_num;
++	Screen *screen;
++	int depth;
++	Visual *visual;
++	Colormap xcolmap;
++	GC gc;
++
++	XModifierKeymap *mod_map;
++	XIM IM;
++	XIC IC;
++	RD_BOOL xserver_be;
++
++	RD_HCURSOR xcursorcache[0x20];
++	struct _xdisplay_atoms atoms;
++	
++	struct _xdisplay *next;
++} xdisplay;
++
++xdisplay * xdisplay_register(const char * name);
++RD_BOOL xdisplay_compare(char *dpy1, char *dpy2);
++void xdisplay_process_events_main();
++void xdisplay_seamless_ack(unsigned int serial);
++void xdisplay_seamless_syncbegin(unsigned long flags);
++void xdisplay_group_destroy(unsigned long id, unsigned long flags);
++
++void xdisplay_get_input_mask(long *input_mask);
++void xdisplay_get_window_attribs(xdisplay* dis, XSetWindowAttributes * attribs);
++void xdisplay_mwm_hide_decorations(xdisplay* dis, Window wnd);
++void xdisplay_sw_wait_configurenotify(xdisplay *dis, Window wnd, unsigned long serial);
++
++void xdisplay_ewmh_set_wm_name(xdisplay* dis, Window wnd, const char *title);
++int xdisplay_ewmh_set_window_above(xdisplay* dis, Window wnd);
++int xdisplay_ewmh_set_window_modal(xdisplay* dis, Window wnd);
++int xdisplay_ewmh_set_window_popup(xdisplay* dis, Window wnd);
++int xdisplay_ewmh_change_state(xdisplay* dis, Window wnd, int state);
++void xdisplay_ewmh_set_icon(xdisplay* dis, Window wnd, int width, int height, const char *rgba_data);
++void xdisplay_ewmh_del_icon(xdisplay *dis, Window wnd, int width, int height);
++
++#endif
+
+=== modified file 'xkeymap.c'
+--- old/xkeymap.c	2009-09-25 11:33:43 +0000
++++ new/xkeymap.c	2009-10-02 10:05:17 +0000
+@@ -454,7 +454,7 @@
+ 	XDisplayKeycodes(g_display, &min_keycode, (int *) &max_keycode);
+ }
+ 
+-static void
++void
+ send_winkey(uint32 ev_time, RD_BOOL pressed, RD_BOOL leftkey)
+ {
+ 	uint8 winkey;
+
+=== modified file 'xwin.c'
+--- old/xwin.c	2009-09-28 15:34:27 +0000
++++ new/xwin.c	2009-10-02 10:05:17 +0000
+@@ -30,6 +30,9 @@
+ #include "rdesktop.h"
+ #include "xproto.h"
+ #include "seamless.h"
++#include "xcursor.h"
++#include "xdisplay.h"
++#include "xwindow.h"
+ 
+ extern int g_width;
+ extern int g_height;
+@@ -85,12 +88,13 @@
+ 
+ 	struct _seamless_window *next;
+ } seamless_window;
++
+ static seamless_window *g_seamless_windows = NULL;
+ static unsigned long g_seamless_focused = 0;
+ static RD_BOOL g_seamless_started = False;	/* Server end is up and running */
+ static RD_BOOL g_seamless_active = False;	/* We are currently in seamless mode */
+ static RD_BOOL g_seamless_hidden = False;	/* Desktop is hidden on server */
+-static RD_BOOL g_seamless_broken_restack = False;	/* WM does not properly restack */
++RD_BOOL g_seamless_broken_restack = False;	/* WM does not properly restack */
+ extern RD_BOOL g_seamless_rdp;
+ 
+ /* SeamlessRDP master mode socket */
+@@ -117,7 +121,7 @@
+ static XModifierKeymap *g_mod_map;
+ /* Maps logical (xmodmap -pp) pointing device buttons (0-based) back
+    to physical (1-based) indices. */
+-static unsigned char g_pointer_log_to_phys_map[32];
++unsigned char g_pointer_log_to_phys_map[32];
+ static Cursor g_current_cursor;
+ static RD_HCURSOR g_null_cursor = NULL;
+ static Atom g_protocol_atom, g_kill_atom;
+@@ -544,7 +548,7 @@
+ } sw_configurenotify_context;
+ 
+ /* Predicate procedure for sw_wait_configurenotify */
+-static Bool
++Bool
+ sw_configurenotify_p(Display * display, XEvent * xevent, XPointer arg)
+ {
+ 	sw_configurenotify_context *context = (sw_configurenotify_context *) arg;
+@@ -1933,6 +1937,7 @@
+ 	if (g_seamless_rdp)
+ 	{
+ 		seamless_init();
++		xcursor_data_init();
+ 	}
+ 
+ 	DEBUG_RDP5(("server bpp %d client bpp %d depth %d\n", g_server_depth, g_bpp, g_depth));
+@@ -2294,6 +2299,9 @@
+ 	int events = 0;
+ 	seamless_window *sw;
+ 
++
++	xdisplay_process_events_main();
++
+ 	while ((XPending(g_display) > 0) && events++ < 20)
+ 	{
+ 		XNextEvent(g_display, &xevent);
+@@ -3613,6 +3621,17 @@
+ {
+ }
+ 
++XImage * ui_get_image() {
++	XImage *image = NULL;
++	if (! g_ownbackstore) {
++		Pixmap pix = 0;
++		XCopyArea(g_display, g_wnd, pix, g_gc, 0, 0, g_width, g_height,  0, 0);
++		image = XGetImage(g_display, pix, 0, 0, g_width, g_height, AllPlanes, ZPixmap);
++		return image;
++	}
++	image = XGetImage(g_display, g_backstore, 0, 0, g_width, g_height, AllPlanes, ZPixmap);
++	return image;
++}
+ 
+ void
+ ui_seamless_begin(RD_BOOL hidden)
+@@ -3682,6 +3701,9 @@
+ 			XDestroyWindow(g_display, g_seamless_windows->wnd);
+ 			sw_remove_window(g_seamless_windows);
+ 		}
++
++		xwindow_destroy_all();
++
+ 		XMapWindow(g_display, g_wnd);
+ 	}
+ 	else
+@@ -3715,14 +3737,16 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (sw)
+ 		return;
+-        
++
+ 	sa = seamless_application_get_by_pid(group);
+-	if (! sa)
+-		printf("Warning CREATE windows not associate to seamless_application\n");
+-	else {
+-		printf("CREATE window for application %s\n", sa->cmdline);
++	if (sa != NULL && sa->dis != NULL) {
++		DEBUG(("CREATE window [%s, \t%d, \t%s]\n", sa->cmdline, (int)id ,sa->dis->name));
++		xwindow_create(sa->dis, id, group, parent, flags);
++		return;
+ 	}
+ 
++	warning(("Warning CREATE windows not associate to seamless_application\n"));
++
+ 	get_window_attribs(&attribs);
+ 	wnd = XCreateWindow(g_display, RootWindowOfScreen(g_screen), -1, -1, 1, 1, 0, g_depth,
+ 			    InputOutput, g_visual,
+@@ -3798,6 +3822,7 @@
+ 
+ 	memset(sw, 0, sizeof(seamless_window));
+ 
++	sw->sa = sa;
+ 	sw->wnd = wnd;
+ 	sw->sa = sa;
+ 	sw->id = id;
+@@ -3839,6 +3864,14 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (!sw)
+ 	{
++		xwindow *sw;
++
++		sw = xwindow_find(id);
++		if (sw != NULL && sw->sa != NULL && sw->sa->dis != NULL) {
++			xwindow_destroy(sw);
++			return;
++		}
++
+ 		warning("ui_seamless_destroy_window: No information for window 0x%lx\n", id);
+ 		return;
+ 	}
+@@ -3870,6 +3903,8 @@
+ 
+ 	if((sa = seamless_application_get_by_pid(id)) && sa != NULL)
+ 		seamless_application_remove(sa);
++
++	xwindow_group_destroy(id, flags);
+ }
+ 
+ 
+@@ -3946,6 +3981,14 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (!sw)
+ 	{
++		xwindow *sw;
++
++		sw = xwindow_find(id);
++		if (sw != NULL && sw->sa != NULL && sw->sa->dis != NULL) {
++			xdisplay_ewmh_del_icon(sw->sa->dis, sw->wnd, width, height);
++			return;
++		}
++
+ 		warning("ui_seamless_seticon: No information for window 0x%lx\n", id);
+ 		return;
+ 	}
+@@ -3971,6 +4014,14 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (!sw)
+ 	{
++		xwindow *sw;
++
++		sw = xwindow_find(id);
++		if (sw != NULL && sw->sa != NULL && sw->sa->dis != NULL) {
++				xwindow_move(sw, id, x, y, width, height, flags);
++				return;
++		}
++			
+ 		warning("ui_seamless_move_window: No information for window 0x%lx\n", id);
+ 		return;
+ 	}
+@@ -4015,6 +4066,13 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (!sw)
+ 	{
++		xwindow *sw;
++
++		sw = xwindow_find(id);
++		if (sw != NULL && sw->sa != NULL && sw->sa->dis != NULL) {
++			xwindow_restack(sw, id, behind, flags);
++			return;
++		}
+ 		warning("ui_seamless_restack_window: No information for window 0x%lx\n", id);
+ 		return;
+ 	}
+@@ -4070,6 +4128,13 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (!sw)
+ 	{
++		xwindow *sw;
++
++		sw = xwindow_find(id);
++		if (sw != NULL && sw->sa != NULL && sw->sa->dis != NULL) {
++			xwindow_settitle(sw, title, flags);
++			return;
++		}
+ 		warning("ui_seamless_settitle: No information for window 0x%lx\n", id);
+ 		return;
+ 	}
+@@ -4091,6 +4156,14 @@
+ 	sw = sw_get_window_by_id(id);
+ 	if (!sw)
+ 	{
++		xwindow *sw;
++
++			sw = xwindow_find(id);
++			if (sw != NULL && sw->sa != NULL && sw->sa->dis != NULL) {
++				xwindow_setstate(sw, id, state, flags);
++				return;
++			}
++		
+ 		warning("ui_seamless_setstate: No information for window 0x%lx\n", id);
+ 		return;
+ 	}
+@@ -4145,6 +4218,8 @@
+ 		XDestroyWindow(g_display, g_seamless_windows->wnd);
+ 		sw_remove_window(g_seamless_windows);
+ 	}
++
++	xwindow_seamless_syncbegin(flags);
+ }
+ 
+ 
+@@ -4172,4 +4247,6 @@
+ 			break;
+ 		}
+ 	}
++
++	xwindow_seamless_ack(serial);
+ }
+
+=== added file 'xwindow.c'
+--- old/xwindow.c	1970-01-01 00:00:00 +0000
++++ new/xwindow.c	2009-10-02 10:05:17 +0000
+@@ -0,0 +1,575 @@
++/*
++ * Copyright (C) 2009 Ulteo SAS
++ * http://www.ulteo.com
++ * Author Thomas MOUTON <thomas@ulteo.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++#include "rdesktop.h"
++#include "xwindow.h"
++#include "xdisplay.h"
++
++extern XImage * ui_get_image();
++
++extern RD_BOOL g_seamless_broken_restack;
++
++static xwindow* xwindow_first = NULL;
++
++static void xwindow_add(xwindow *);
++static void xwindow_remove(xwindow * win);
++static xgroup * xwindow_find_group(xdisplay *dis, unsigned long id, RD_BOOL dont_create);
++static void xwindow_restack_window(xwindow * sw, unsigned long behind);
++
++xwindow *
++xwindow_find_by_wnd(xdisplay* dis, Window wnd)
++{
++	xwindow *sw;
++
++	for (sw = xwindow_first; sw; sw = sw->next)
++	{
++		if (sw->sa->dis == dis && sw->wnd == wnd)
++			return sw;
++	}
++
++	return NULL;
++}
++
++void
++xwindow_restack(xwindow *sw, unsigned long id, unsigned long behind, unsigned long flags)
++{
++	XWindowChanges values;
++	unsigned long restack_serial;
++
++	if (behind)
++	{
++		xwindow *sw_behind;
++
++		sw_behind = xwindow_find(behind);
++		if (!sw_behind)
++		{
++			warning("xwindow_restack: No information for behind window 0x%lx\n", behind);
++			return;
++		}
++
++		if (!g_seamless_broken_restack)
++		{
++			values.stack_mode = Below;
++			values.sibling = sw_behind->wnd;
++			restack_serial = XNextRequest(sw->sa->dis->display);
++			XReconfigureWMWindow(sw->sa->dis->display, sw->wnd, DefaultScreen(sw->sa->dis->display), CWStackMode | CWSibling, &values);
++			xdisplay_sw_wait_configurenotify(sw->sa->dis, sw->wnd, restack_serial);
++		}
++	}
++	else
++	{
++		values.stack_mode = Above;
++		restack_serial = XNextRequest(sw->sa->dis->display);
++		XReconfigureWMWindow(sw->sa->dis->display, sw->wnd, DefaultScreen(sw->sa->dis->display), CWStackMode, &values);
++		xdisplay_sw_wait_configurenotify(sw->sa->dis, sw->wnd, restack_serial);
++	}
++
++	xwindow_restack_window(sw, behind);
++
++	if (flags & SEAMLESSRDP_CREATE_TOPMOST)
++	{
++		/* Make window always-on-top */
++		xdisplay_ewmh_set_window_above(sw->sa->dis, sw->wnd);
++	}
++}
++
++void
++xwindow_create (xdisplay * dis, unsigned long id, unsigned long group, unsigned long parent,
++			  unsigned long flags)
++{
++	Window wnd;
++	XSetWindowAttributes attribs;
++	XClassHint *classhints;
++	XSizeHints *sizehints;
++	XWMHints *wmhints;
++	long input_mask;
++	xwindow *sw, *sw_parent;
++	seamless_application *sa;
++
++	/* Ignore CREATEs for existing windows */
++	sw = xwindow_find(id);
++	if (sw)
++		return;
++
++	sa = seamless_application_get_by_pid(group);
++	if (! sa) {
++		error("can't get seamless_application\n");
++		return;
++	}
++
++	xdisplay_get_window_attribs(dis, &attribs);
++	wnd = XCreateWindow(dis->display, RootWindowOfScreen(dis->screen), -1, -1, 1, 1, 0, dis->depth, InputOutput, dis->visual, CWBackPixel | CWColormap | CWBorderPixel, &attribs);
++
++	XStoreName(dis->display, wnd, "SeamlessRDP");
++	xdisplay_ewmh_set_wm_name(dis, wnd, "SeamlessRDP");
++
++	xdisplay_mwm_hide_decorations(dis, wnd);
++
++	classhints = XAllocClassHint();
++	if (classhints != NULL)
++	{
++		classhints->res_name = "rdesktop";
++		classhints->res_class = "SeamlessRDP";
++		XSetClassHint(dis->display, wnd, classhints);
++		XFree(classhints);
++	}
++
++	/* WM_NORMAL_HINTS */
++	sizehints = XAllocSizeHints();
++	if (sizehints != NULL)
++	{
++		sizehints->flags = USPosition;
++		XSetWMNormalHints(dis->display, wnd, sizehints);
++		XFree(sizehints);
++	}
++
++	/* Parent-less transient windows */
++	if (parent == 0xFFFFFFFF)
++	{
++		XSetTransientForHint(dis->display, wnd, RootWindowOfScreen(dis->screen));
++		/* Some buggy wm:s (kwin) do not handle the above, so fake it
++		   using some other hints. */
++		xdisplay_ewmh_set_window_popup(dis, wnd);
++	}
++	/* Normal transient windows */
++	else if (parent != 0x00000000)
++	{
++		sw_parent = xwindow_find(parent);
++		if (sw_parent)
++			XSetTransientForHint(dis->display, wnd, sw_parent->wnd);
++		else
++			warning("xwindow_create: No parent window 0x%lx\n", parent);
++	}
++
++	if (flags & SEAMLESSRDP_CREATE_MODAL)
++	{
++		/* We do this to support buggy wm:s (*cough* metacity *cough*)
++		   somewhat at least */
++		if (parent == 0x00000000)
++			XSetTransientForHint(dis->display, wnd, RootWindowOfScreen(dis->screen));
++		xdisplay_ewmh_set_window_modal(dis, wnd);
++	}
++
++	if (flags & SEAMLESSRDP_CREATE_TOPMOST)
++	{
++		/* Make window always-on-top */
++		xdisplay_ewmh_set_window_above(dis, wnd);
++	}
++
++	/* FIXME: Support for Input Context:s */
++
++	xdisplay_get_input_mask(&input_mask);
++	input_mask |= PropertyChangeMask;
++
++	XSelectInput(dis->display, wnd, input_mask);
++
++	/* handle the WM_DELETE_WINDOW protocol. */
++	XSetWMProtocols(dis->display, wnd, &dis->atoms.kill_atom, 1);
++
++	sw = xmalloc(sizeof(xwindow));
++
++	memset(sw, 0, sizeof(xwindow));
++	sw->sa = sa;
++	sw->wnd = wnd;
++	sw->id = id;
++	sw->group = xwindow_find_group(dis, group, False);
++	sw->group->refcnt++;
++	sw->state = SEAMLESSRDP_NOTYETMAPPED;
++	sw->desktop = 0;
++	sw->position_timer = xmalloc(sizeof(struct timeval));
++	timerclear(sw->position_timer);
++
++	sw->outstanding_position = False;
++	sw->outpos_serial = 0;
++	sw->outpos_xoffset = sw->outpos_yoffset = 0;
++	sw->outpos_width = sw->outpos_height = 0;
++
++	xwindow_add(sw);
++
++	/* WM_HINTS */
++	wmhints = XAllocWMHints();
++	if (wmhints)
++	{
++		wmhints->flags = WindowGroupHint;
++		//wmhints->window_group = sw->group->wnd;
++		XSetWMHints(dis->display, sw->wnd, wmhints);
++		XFree(wmhints);
++	}
++}
++
++void
++xwindow_destroy(xwindow *sw)
++{
++	XDestroyWindow(sw->sa->dis->display, sw->wnd);
++	xwindow_remove(sw);
++}
++
++void
++xwindow_setstate(xwindow *sw, unsigned long id, unsigned int state, unsigned long flags)
++{
++	switch (state)
++	{
++		case SEAMLESSRDP_NORMAL:
++		case SEAMLESSRDP_MAXIMIZED:
++			xdisplay_ewmh_change_state(sw->sa->dis, sw->wnd, state);
++			XMapWindow(sw->sa->dis->display, sw->wnd);
++			break;
++		case SEAMLESSRDP_MINIMIZED:
++			/* EWMH says: "if an Application asks to toggle _NET_WM_STATE_HIDDEN
++			   the Window Manager should probably just ignore the request, since
++			   _NET_WM_STATE_HIDDEN is a function of some other aspect of the window
++			   such as minimization, rather than an independent state." Besides,
++			   XIconifyWindow is easier. */
++			if (sw->state == SEAMLESSRDP_NOTYETMAPPED)
++			{
++				XWMHints *hints;
++				hints = XGetWMHints(sw->sa->dis->display, sw->wnd);
++
++				if (hints)
++				{
++					hints->flags |= StateHint;
++					hints->initial_state = IconicState;
++					XSetWMHints(sw->sa->dis->display, sw->wnd, hints);
++					XFree(hints);
++				}
++				XMapWindow(sw->sa->dis->display, sw->wnd);
++			}
++			else
++				XIconifyWindow(sw->sa->dis->display, sw->wnd, DefaultScreen(sw->sa->dis->display));
++			break;
++		default:
++			warning("SeamlessRDP: Invalid state %d\n", state);
++			break;
++	}
++
++	sw->state = state;
++	xwindow_redraw(sw);
++}
++
++void
++xwindow_seticon(xwindow *sw, const char *format, int width, int height, int chunk, const char *data, int chunk_len)
++{
++	if (chunk == 0)
++	{
++		if (sw->icon_size)
++			warning("xwindow_seticon: New icon started before previous completed\n");
++
++		if (strcmp(format, "RGBA") != 0)
++		{
++			warning("xwindow_seticon: Uknown icon format \"%s\"\n", format);
++			return;
++		}
++
++		sw->icon_size = width * height * 4;
++		if (sw->icon_size > 32 * 32 * 4)
++		{
++			warning("xwindow_seticon: Icon too large (%d bytes)\n", sw->icon_size);
++			sw->icon_size = 0;
++			return;
++		}
++
++		sw->icon_offset = 0;
++	}
++	else
++	{
++		if (!sw->icon_size)
++			return;
++	}
++
++	if (chunk_len > (sw->icon_size - sw->icon_offset))
++	{
++		warning("xwindow_seticon: Too large chunk received (%d bytes > %d bytes)\n", chunk_len, sw->icon_size - sw->icon_offset);
++		sw->icon_size = 0;
++		return;
++	}
++
++	memcpy(sw->icon_buffer + sw->icon_offset, data, chunk_len);
++	sw->icon_offset += chunk_len;
++
++	if (sw->icon_offset == sw->icon_size)
++	{
++		xdisplay_ewmh_set_icon(sw->sa->dis, sw->wnd, width, height, sw->icon_buffer);
++		sw->icon_size = 0;
++	}
++}
++
++void
++xwindow_settitle(xwindow *sw, const char *title, unsigned long flags)
++{
++	/* FIXME: Might want to convert the name for non-EWMH WMs */
++	XStoreName(sw->sa->dis->display, sw->wnd, title);
++	xdisplay_ewmh_set_wm_name(sw->sa->dis, sw->wnd, title);
++}
++
++
++void
++xwindow_move(xwindow *sw, unsigned long id, int x, int y, int width, int height, unsigned long flags)
++{
++	/* We ignore server updates until it has handled our request. */
++	if (sw->outstanding_position)
++		return;
++
++	if (!width || !height)
++		/* X11 windows must be at least 1x1 */
++		return;
++
++	sw->xoffset = x;
++	sw->yoffset = y;
++	sw->width = width;
++	sw->height = height;
++
++	/* If we move the window in a maximized state, then KDE won't
++	   accept restoration */
++	switch (sw->state)
++	{
++		case SEAMLESSRDP_MINIMIZED:
++		case SEAMLESSRDP_MAXIMIZED:
++			return;
++	}
++
++	/* FIXME: Perhaps use ewmh_net_moveresize_window instead */
++	XMoveResizeWindow(sw->sa->dis->display, sw->wnd, sw->xoffset, sw->yoffset, sw->width, sw->height);
++	xwindow_redraw(sw);
++}
++
++static void
++xwindow_redraw_(xwindow *sw, XImage* image)
++{
++	int xoffset = sw->xoffset, yoffset = sw->yoffset, x = 0, y = 0, width = sw->width, height = sw->height;
++
++	if(sw->xoffset < 0)
++	{
++		xoffset = 0;
++		x = - sw->xoffset;
++		width = sw->width - x;
++	}
++	if(sw->yoffset < 0)
++	{
++		yoffset = 0;
++		y = - sw->yoffset;
++		height = sw->height - y;
++	}
++
++	XPutImage(sw->sa->dis->display, sw->wnd, sw->sa->dis->gc, image, xoffset, yoffset, x, y, width, height);
++}
++
++void
++xwindow_redraw(xwindow *sw)
++{
++	XImage* image = ui_get_image();
++
++	if (image == NULL) {
++		error("xdisplay_window_redraw: unable to get main image\n");
++		return;
++	}
++
++	if (sw == NULL) {
++		error("seamless window does not exist");
++		return;
++	}
++
++	if (sw->sa->dis->gc == NULL) {
++		error("gc NULL on %s", sw->sa->dis->name);
++		return;
++	}
++
++	xwindow_redraw_(sw, image);
++	XDestroyImage(image);
++}
++
++void
++xwindow_redraw_all()
++{
++	if(xwindow_first != NULL)
++	{
++		xwindow *sw;
++		XImage* image = ui_get_image();
++
++		if (image == NULL) {
++			error("xdisplay_window_redraw: unable to get main image\n");
++			return;
++		}
++
++		for (sw = xwindow_first; sw != NULL  && sw->sa != NULL; sw = sw->next)
++			xwindow_redraw_(sw, image);
++
++		XDestroyImage(image);
++	}
++}
++
++void
++xwindow_destroy_all()
++{
++	xwindow *sw;
++
++	for (sw = xwindow_first; sw != NULL  && sw->sa != NULL; sw = sw->next)
++		xwindow_destroy(sw);
++}
++
++void
++xwindow_add(xwindow * sw) {
++	sw->next = xwindow_first;;
++	xwindow_first = sw;
++}
++
++xwindow *
++xwindow_find(int id) {
++	xwindow *sw;
++
++	for (sw = xwindow_first; sw; sw = sw->next)
++	{
++		if (sw->id == id)
++			return sw;
++	}
++
++	return NULL;
++}
++
++void
++xwindow_remove(xwindow * win) {
++	xwindow *sw, **prevnext = &xwindow_first;
++
++	for (sw = xwindow_first; sw; sw = sw->next)
++	{
++		if (sw == win)
++		{
++			*prevnext = sw->next;
++			sw->group->refcnt--;
++			if (sw->group->refcnt == 0)
++			{
++				XDestroyWindow(sw->sa->dis->display, sw->group->wnd);
++				xfree(sw->group);
++			}
++			xfree(sw->position_timer);
++			xfree(sw);
++			return;
++		}
++		prevnext = &sw->next;
++	}
++}
++
++void
++xwindow_restack_window(xwindow * sw, unsigned long behind)
++{
++	xwindow *sw_above;
++
++	/* Remove window from stack */
++	for (sw_above = xwindow_first; sw_above; sw_above = sw_above->next)
++	{
++		if (sw_above->behind == sw->id)
++			break;
++	}
++
++	if (sw_above)
++		sw_above->behind = sw->behind;
++
++	/* And then add it at the new position */
++	for (sw_above = xwindow_first; sw_above; sw_above = sw_above->next)
++	{
++		if (sw_above->behind == behind)
++			break;
++	}
++
++	if (sw_above)
++		sw_above->behind = sw->id;
++
++	sw->behind = behind;
++}
++
++void
++xwindow_seamless_ack(unsigned int serial)
++{
++	xwindow *sw;
++	for (sw = xwindow_first; sw; sw = sw->next)
++	{
++		if (sw->outstanding_position && (sw->outpos_serial == serial))
++		{
++			sw->xoffset = sw->outpos_xoffset;
++			sw->yoffset = sw->outpos_yoffset;
++			sw->width = sw->outpos_width;
++			sw->height = sw->outpos_height;
++			sw->outstanding_position = False;
++
++			/* Do a complete redraw of the window as part of the
++			   completion of the move. This is to remove any
++			   artifacts caused by our lack of synchronization. */
++			xwindow_redraw(sw);
++
++			break;
++		}
++	}
++}
++
++void
++xwindow_seamless_syncbegin(unsigned long flags)
++{
++	/* Destroy all seamless windows */
++	while (xwindow_first)
++	{
++		xwindow_destroy(xwindow_first);
++	}
++}
++
++xgroup *
++xwindow_find_group(xdisplay *dis, unsigned long id, RD_BOOL dont_create)
++{
++	xwindow *sw;
++	xgroup *sg;
++	XSetWindowAttributes attribs;
++
++	for (sw = xwindow_first; sw; sw = sw->next)
++	{
++		if (sw->group->id == id)
++			return (xgroup *)sw->group;
++	}
++
++	if (dont_create)
++		return NULL;
++
++	sg = xmalloc(sizeof(xgroup));
++
++	sg->wnd = XCreateWindow(dis->display, RootWindowOfScreen(dis->screen), -1, -1, 1, 1, 0, CopyFromParent, CopyFromParent, CopyFromParent, 0, &attribs);
++
++	sg->id = id;
++	sg->refcnt = 0;
++
++	return sg;
++}
++
++void
++xwindow_group_destroy(unsigned long id, unsigned long flags)
++{
++	xwindow *sw, *sw_next;
++	seamless_application *sa;
++
++	for (sw = xwindow_first; sw; sw = sw_next)
++	{
++		sw_next = sw->next;
++
++		if (sw->group->id == id)
++		{
++			XDestroyWindow(sw->sa->dis->display, sw->wnd);
++			xwindow_remove(sw);
++		}
++	}
++
++	if((sa = seamless_application_get_by_pid(id)) != NULL)
++		seamless_application_remove(sa);
++}
+
+=== added file 'xwindow.h'
+--- old/xwindow.h	1970-01-01 00:00:00 +0000
++++ new/xwindow.h	2009-10-02 10:05:17 +0000
+@@ -0,0 +1,79 @@
++/*
++ * Copyright (C) 2009 Ulteo SAS
++ * http://www.ulteo.com
++ * Author Thomas MOUTON <thomas@ulteo.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; version 2
++ * of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
++ */
++
++#ifndef __XWINDOW_H__
++#define __XWINDOW_H__
++
++#include "xdisplay.h"
++#include "seamless.h"
++
++typedef struct _xgroup
++{
++	Window wnd;
++	unsigned long id;
++	unsigned int refcnt;
++} xgroup;
++
++typedef struct _xwindow
++{
++	Window wnd;
++	struct _seamless_app *sa;
++
++	unsigned long id;
++	unsigned long behind;
++	xgroup *group;
++	int xoffset, yoffset;
++	int width, height;
++	int state;		/* normal/minimized/maximized. */
++	unsigned int desktop;
++	struct timeval *position_timer;
++
++	RD_BOOL outstanding_position;
++	unsigned int outpos_serial;
++	int outpos_xoffset, outpos_yoffset;
++	int outpos_width, outpos_height;
++
++	unsigned int icon_size;
++	unsigned int icon_offset;
++	char icon_buffer[32 * 32 * 4];
++
++	struct _xwindow *next;
++} xwindow;
++
++xwindow * xwindow_find(int);
++xwindow * xwindow_find_by_wnd(xdisplay* dis, Window wnd);
++
++void xwindow_create(xdisplay *, unsigned long, unsigned long, unsigned long, unsigned long);
++void xwindow_settitle(xwindow *sw, const char *title, unsigned long flags);
++void xwindow_setstate(xwindow *sw, unsigned long id, unsigned int state, unsigned long flags);
++void xwindow_seticon(xwindow *sw, const char *format, int width, int height, int chunk, const char *data, int chunk_len);
++void xwindow_move(xwindow *sw, unsigned long id, int x, int y, int width, int height, unsigned long flags);
++void xwindow_redraw(xwindow *sw);
++void xwindow_restack(xwindow *sw, unsigned long id, unsigned long behind, unsigned long flags);
++void xwindow_destroy(xwindow *sw);
++void xwindow_destroy_all();
++void xwindow_redraw_all();
++
++void xwindow_group_destroy(unsigned long id, unsigned long flags);
++
++void xwindow_seamless_ack(unsigned int serial);
++void xwindow_seamless_syncbegin(unsigned long flags);
++
++#endif
+

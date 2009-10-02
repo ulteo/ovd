@@ -11,3 +11,12 @@
 * ulteo-02_seamless_application.patch:
   Feature: Seamless windows opened with 'rdesktop --start-app' are linked with Windows applications by their pid
            Processes launched with "rdesktop --start-app app" are killed when their window is closed.
+
+* ulteo-03_multidisplay.patch:
+  Feature: add multi-display support
+
+* ulteo-04_iconify.patch:
+  Feature: 
+    * add option --iconify-by-display dpy
+    * add option --uniconify-by-display dpy
+    * add option --destroy-by-display dpy
