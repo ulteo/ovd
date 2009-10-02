@@ -106,7 +106,7 @@ if (is_null($menu_node))
 	die('Missing element \'menu\'');
 
 $application_nodes = $menu_node->getElementsByTagname('application');
-$_SESSION['parameters']['desktopfiles'] = array();
+$_SESSION['parameters']['applications'] = array();
 foreach ($application_nodes as $application_node) {
 	$_SESSION['parameters']['applications'][$application_node->getAttribute('id')] = '';
 	if ($application_node->hasAttribute('id'))
