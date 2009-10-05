@@ -12,13 +12,13 @@ daemon_SCRIPTS = application.sh \
                  timeout.sh \
                  ulteo-ovdd \
                  unset_user_env.sh \
+                 windows.sh \
                  xml2desktopfile
 daemondir = $(datadir)/ulteo-ovd
 
 daemonlib_DATA = functions.sh \
                  log.sh \
-                 modules_fs.sh \
-                 windows.sh
+                 modules_fs.sh
 daemonlibdir = $(datadir)/ulteo-ovd
 
 sysconf_DATA = ulteo-ovd.conf
