@@ -90,15 +90,9 @@ Function .ParseXML
 FunctionEnd
 
 Function .DomainVerification
+  Pop $0
 
   Var /GLOBAL domain
-  Var /GLOBAL ovd_servname
-  Var /GLOBAL ovd_smurl
-
-  Pop $R0
-  StrCpy $ovd_servname $R0
-  Pop $R1
-  StrCpy $ovd_smurl $R1
 
   ReadRegStr $domain HKLM "SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" Domain
 
@@ -106,7 +100,7 @@ Function .DomainVerification
     !insertmacro .ErrorDisplay "Your system is not connected to an Active Directory server."
   ${Else}
     ; get the domain by the session manager
-    inetc::post /RESTORE "$ovd_smurl/webservices/domain.php?domain=$domain" "$TEMP\domain.xml" /END
+    inetc::post /RESTORE "$0/webservices/domain.php?domain=$domain" "$TEMP\domain.xml" /END
     Pop $R0
 
     ${Switch} $R0
@@ -116,7 +110,7 @@ Function .DomainVerification
         ${Break}
 
       ${Default}
-        !insertmacro .ErrorDisplay "The connection with the session manager ($ovd_smurl) failed : $R0"
+        !insertmacro .ErrorDisplay "The connection with the session manager ($0) failed : $R0"
         ${Break}
     ${EndSwitch}
   ${EndIf}

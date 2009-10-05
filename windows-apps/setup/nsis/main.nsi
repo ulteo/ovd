@@ -111,16 +111,36 @@
 
 ## First Dialog
 Function InputBoxPageShow
+  ReadRegStr $R0 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name"
+  ReadRegStr $R1 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_url"
+
+  ${IF} $R0 == ""
+    StrCpy $R0 "aps.ulteo.com"
+  ${ENDIF}
+  ${IF} $R1 == ""
+    StrCpy $R1 "http://sm.ulteo.com/sessionmanager"
+  ${ENDIF}
+
  !insertmacro MUI_HEADER_TEXT "Configuration" "Give your server name and the Session Manager url."
 
  PassDialog::InitDialog /NOUNLOAD InputBox \
             /HEADINGTEXT "Caution: give full name or ip address" \
-            /BOX "Servername:" "aps.ulteo.com" 0 \
-            /BOX "Session Manager URL:" "http://sm.ulteo.com/sessionmanager" 0
+            /BOX "Servername:" $R0 0 \
+            /BOX "Session Manager URL:" $R1 0
  PassDialog::Show
 FunctionEnd
 
 Function InputBoxPageLeave
+  Var /GLOBAL ovd_servname
+  Var /GLOBAL ovd_smurl
+
+  Pop $ovd_servname
+  Pop $ovd_smurl
+
+  WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name" $ovd_servname
+  WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_url" $ovd_smurl
+
+  Push $ovd_smurl
   Call .DomainVerification
 FunctionEnd
 
