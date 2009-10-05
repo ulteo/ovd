@@ -135,6 +135,8 @@ FunctionEnd
 ;; changes uninstall
 Function un.WindowsInstall
 
+  SetRebootFlag true
+
   !ifndef UNWINVERSION_SET
     !insertmacro WindowsVersionDetection "UN"
   !endif
