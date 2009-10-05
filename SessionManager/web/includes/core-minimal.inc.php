@@ -102,8 +102,11 @@ function __autoload($class_name) { //what about NameSpaces ?
 			}
 		}
 
-		die_error('Class \''.$class_name.'\' not found',__FILE__,__LINE__);
+		if (isset($autoload_die) && $autoload_die === true)
+			die_error('Class \''.$class_name.'\' not found',__FILE__,__LINE__);
 	}
 }
 
+$autoload_die = false;
 session_start();
+$autoload_die = true;
