@@ -1,5 +1,6 @@
 # Copyright (C) 2008 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2009
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
 # This program is free software; you can redistribute it and/or
@@ -134,7 +135,7 @@ session_init() {
     ## SSH password
     #
     # Seems the applet doesn't like too long password ...
-    SSH_PASS=$(echo -n $RANDOM$(date +%s) | md5sum | mawk '{ print substr($1, 0, 9) }')
+    SSH_PASS=$(echo $RANDOM$(date +%s) | md5sum | mawk '{ print substr($1, 0, 9) }')
     # we set new shadow pass for this session
     # just be paranoid by default
     echo "$SSH_USER:$SSH_PASS" | chpasswd
@@ -142,7 +143,7 @@ session_init() {
     #
     # we encode the encrypted pass in hexa because the sshvnc 
     # applet wants it
-    HEXA_SSH_PASS=$(echo $SSH_PASS | str2hex)
+    HEXA_SSH_PASS=$(echo -n $SSH_PASS | str2hex)
 
     ##echo $SSH_PASS >$SESSID_DIR/sshpasswd # <- just for test !!! remove it in production !!!
     echo $i > $SESSID_DIR/private/id
