@@ -26,7 +26,7 @@ class Application_weblink extends Application{
 
 	public function __construct($id_, $name_, $description_, $url_) {
 		Logger::debug('main', "Application_weblink::construct('$id_','$name_','$description_','$url_')");
-		parent::__construct($id_, $name_, $description_, 'weblink', $url_, NULL, NULL, true, $name_.'.weblink');
+		parent::__construct($id_, $name_, $description_, 'weblink', $url_, NULL, NULL, NULL, true, $name_.'.weblink');
 		// executable_path <=> url;
 		
 		$prefs = Preferences::getInstance();
