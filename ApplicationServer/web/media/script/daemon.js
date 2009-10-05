@@ -97,7 +97,7 @@ function daemon_loop() {
 				}
 			}
 		);
-	} if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
+	} else if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
 		if (! session_started) {
 			access_id = 'desktop';
 
