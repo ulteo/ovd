@@ -67,8 +67,13 @@ if (!in_array('UserDB', $mods_enable))
 $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 $userDB = new $mod_user_name();
 
-if ($userDB->canShowList())
+if ($userDB->canShowList()) {
 	$list_users = $userDB->getList();
+	if (is_null($list_users))
+		die_error(_('Getting userlist failed'), __FILE__, __LINE__);
+	elseif (count($list_users) == 0)
+		die_error(_('No available user'), __FILE__, __LINE__);
+}
 
 $password_field = $userDB->needPassword();
 
