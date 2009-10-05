@@ -416,7 +416,7 @@ function show_manage($id, $applicationDB) {
 	$status = '<span class="msg_ok">'.$task->status.'</span>';
 
       echo '<tr class="'.$content.'">';
-      echo '<td>'.$task->id.'</td>';
+      echo '<td><a href="tasks.php?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
       echo '<td>'.get_class($task).'</td>';
       echo '<td>'.$status.'</td>';
       echo '<td>'.$task->server.', '.$task->getRequest().', '.$task->status_code.'</td>';
