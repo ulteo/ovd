@@ -47,7 +47,7 @@ fi
 app_id=$(head -n 1 $file)
 geometry=$(head -n 2 $file |tail -n 1)
 if [ -z "$app_id" ] || [ -z "$geometry" ] || \
-    [ "$app_id" == "desktop" ]; then
+    [ "$app_id" = "desktop" ]; then
     log_WARN "Unable to perform job: missing arguments"
     exit 1
 fi
