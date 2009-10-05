@@ -193,6 +193,7 @@ class Preferences {
 		));
 
 		$this->add($c,'general', 'policy');
+		$this->addPrettyName('policy', _('Policy for administration delegation'));
 
 		$this->addPrettyName('mysql',_('MySQL configuration'));
 		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');
