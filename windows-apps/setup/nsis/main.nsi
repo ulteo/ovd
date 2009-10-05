@@ -107,6 +107,7 @@
   
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
+  !include nsis\ActiveDirectory.nsh
 
 ## First Dialog
 Function InputBoxPageShow
@@ -120,6 +121,7 @@ Function InputBoxPageShow
 FunctionEnd
 
 Function InputBoxPageLeave
+  Call .DomainVerification
 FunctionEnd
 
 !include nsis\WindowsVersion.nsh
@@ -134,10 +136,7 @@ Function un.onInit
     SetShellVarContext all
 FunctionEnd
 
-!include nsis\ActiveDirectory.nsh
-
 Section "Main Section" SecMain
-  Call .DomainVerification 
   SetOutPath "$INSTDIR"
 
   ;Store installation folder

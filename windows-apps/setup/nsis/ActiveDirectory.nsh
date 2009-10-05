@@ -26,8 +26,8 @@
 
 !macro .ErrorDisplay str
 
-  MessageBox MB_OK|MB_TOPMOST|MB_ICONSTOP "The setup will stop now :$\n${str}"
-  Quit
+  MessageBox MB_OK|MB_TOPMOST|MB_ICONSTOP "Error :$\n${str}"
+  Abort
 
 !macroend
 
@@ -96,10 +96,9 @@ Function .DomainVerification
   Var /GLOBAL ovd_smurl
 
   Pop $R0
+  StrCpy $ovd_servname $R0
   Pop $R1
-  StrCpy $ovd_servname $R1
-  Pop $R2
-  StrCpy $ovd_smurl $R2
+  StrCpy $ovd_smurl $R1
 
   ReadRegStr $domain HKLM "SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" Domain
 
