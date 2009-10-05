@@ -565,6 +565,8 @@ function show_manage($id) {
   $userDB = UserDB::getInstance();
 
   $users_all = $userDB->getList(true);
+  if (is_null($users_all))
+    $users_all = array();
   $users_available = array();
   foreach($users_all as $user) {
     $found = false;
