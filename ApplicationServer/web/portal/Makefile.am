@@ -16,13 +16,22 @@ scripts_DATA = application.js \
 
 scriptsdir = $(datadir)/ulteo/applicationserver/portal
 
-EXTRA_DIST = $(scripts_DATA) ajaxplorer.tar.gz
+EXTRA_DIST = $(scripts_DATA) ajaxplorer
 
+install-exec-hook: install-ajaxplorer
 install-ajaxplorer:
 	mkdir -p $(DESTDIR)$(datadir)/ulteo/applicationserver/portal
-	mkdir -p $(DESTDIR)$(localstatedir)/spool/ulteo/applicationserver/portal/
+	mkdir -p $(DESTDIR)$(localstatedir)/spool/ulteo/applicationserver/portal
 
-	tar xzf $(srcdir)/ajaxplorer.tar.gz -C $(DESTDIR)$(datadir)/ulteo/applicationserver/portal
+	cd $(srcdir); \
+	for i in `find ajaxplorer -type d`; do \
+		install -d -m 0755 $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/$$i; \
+	done; \
+	for i in `find ajaxplorer -type f`; do \
+		install -m 0644 $$i $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/$$i; \
+	done
+	rm -rf `find $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ -type d -name .svn`
+
 	ln -sf $(localstatedir)/spool/ulteo/applicationserver/portal/users \
 		   $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ajaxplorer/server/users
 
@@ -31,13 +40,10 @@ install-ajaxplorer:
 	ln -sf $(localstatedir)/spool/ulteo/applicationserver/portal/actions \
 		   $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ajaxplorer/client/images/crystal/
 
-install-exec-hook: install-ajaxplorer
-
 uninstall-hook:
 	rm -rf $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ajaxplorer
+	rm -rf $(DESTDIR)$(localstatedir)/spool/ulteo/applicationserver/portal/actions
 
-dist-hook: ajaxplorer.tar.gz
-ajaxplorer.tar.gz:
-	tar czf $(srcdir)/ajaxplorer.tar.gz --exclude=.svn -C $(srcdir) ajaxplorer
+dist-hook:
+	rm -rf `find $(distdir)/ajaxplorer -type d -name .svn`
 
-.PHONY: ajaxplorer.tar.gz
