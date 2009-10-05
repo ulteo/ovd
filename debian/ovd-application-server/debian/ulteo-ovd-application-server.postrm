@@ -31,6 +31,9 @@ fi
 LOGDIR=/var/log/ulteo/applicationserver
 rm -f $LOGDIR/main.log*
 
+# empty the spool dir
+rm -rf /var/spool/ulteo/applicationserver/portal/*
+
 # remove possible left logs from an 1.0 installation
 rm -f $LOGDIR/access.log*
 rm -f $LOGDIR/error.log*
