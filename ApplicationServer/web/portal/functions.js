@@ -141,7 +141,7 @@ function showError(errormsg) {
 
 	showLock();
 
-	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideError(); return false"><img src="media/image/close.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+errormsg;
+	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideError(); return false"><img src="../media/image/close.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+errormsg;
 
 	Effect.Center($('errorWrap'));
 
@@ -163,7 +163,7 @@ function showOk(okmsg) {
 
 	showLock();
 
-	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideOk(); return false"><img src="media/image/close.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+okmsg;
+	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideOk(); return false"><img src="../media/image/close.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+okmsg;
 
 	Effect.Center($('okWrap'));
 
@@ -183,7 +183,7 @@ function hideOk() {
 function showInfo(infomsg) {
 	showLock();
 
-	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideInfo(); return false"><img src="media/image/close.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+infomsg;
+	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideInfo(); return false"><img src="../media/image/close.png" width="16" height="16" alt="fermer" title="Fermer" /></a></div>'+infomsg;
 
 	Effect.Center($('infoWrap'));
 
