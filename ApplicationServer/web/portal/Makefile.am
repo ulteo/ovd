@@ -30,7 +30,7 @@ uninstall-hook:
 	rm -rf $(DESTDIR)$(datadir)/ulteo/applicationserver/portal/ajaxplorer
 
 dist-hook: ajaxplorer.tar.gz
-
 ajaxplorer.tar.gz:
 	tar czf $(srcdir)/ajaxplorer.tar.gz --exclude=.svn -C $(srcdir) ajaxplorer
 
+.PHONY: ajaxplorer.tar.gz
