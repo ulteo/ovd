@@ -203,7 +203,7 @@ class User {
 			if ($buf->isOnline())
 				return $buf;
 		}
-		Logger::error('main' , 'USER::getAvailableServer error end of function');
+		Logger::error('main' , "USER::getAvailableServer($type) no server found for user '".$this->getAttribute('login')."'");
 		return NULL;
 	}
 
