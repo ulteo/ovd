@@ -58,5 +58,5 @@ function query_url($url_) {
 		Logger::error('main', "query_url($url) returncode: '$code'");
 		return false;
 	}
-	return array($ret['data']);
+	return $ret['data'];
 }
