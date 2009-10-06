@@ -1,6 +1,6 @@
 === modified file 'proto.h'
---- old/proto.h	2009-10-02 10:05:17 +0000
-+++ new/proto.h	2009-10-02 10:58:57 +0000
+--- old/proto.h	2009-10-06 14:09:51 +0000
++++ new/proto.h	2009-10-06 14:11:46 +0000
 @@ -312,6 +312,7 @@
  unsigned int seamless_send_focus(unsigned long id, unsigned long flags);
  unsigned int seamless_send_spawn(char *cmdline);
@@ -11,8 +11,8 @@
  void scard_unlock(int lock);
 
 === modified file 'rdesktop.c'
---- old/rdesktop.c	2009-10-02 10:05:17 +0000
-+++ new/rdesktop.c	2009-10-02 10:58:57 +0000
+--- old/rdesktop.c	2009-10-06 14:09:51 +0000
++++ new/rdesktop.c	2009-10-06 14:16:23 +0000
 @@ -50,6 +50,10 @@
  
  #include "ssl.h"
@@ -33,31 +33,31 @@
  
  /* Master socket identifier */
  char *master_socket = NULL;
-@@ -447,6 +453,9 @@
- 	{
+@@ -449,6 +455,9 @@
  		{"main-frame", 1, NULL, 10},
  		{"start-app", 1, NULL, 11},
-+		{"iconify-by-display", 1, NULL, 12},
-+		{"uniconify-by-display", 1, NULL, 13},
-+		{"destroy-by-display", 1, NULL, 14},
+ 		{"start-app-arg", 1, NULL, 12},
++		{"iconify-by-display", 1, NULL, 13},
++		{"uniconify-by-display", 1, NULL, 14},
++		{"destroy-by-display", 1, NULL, 15},
  		{NULL, 0, NULL, 0} /* End of array need by getopt_long do not delete it*/
  	};
  #ifdef WITH_RDPSND
-@@ -510,6 +519,21 @@
- 				arg = strdup(optarg);
+@@ -522,6 +531,21 @@
+ 				}
  				break;
  
-+			case 12: //--iconify-by-display
++			case 13: //--iconify-by-display
 +				g_icon = ICONIFY;
 +				arg = optarg;
 +				break;
 +
-+			case 13: //--uniconify-by-display
++			case 14: //--uniconify-by-display
 +				g_icon = UNICONIFY;
 +				arg = optarg;
 +				break;
 +
-+			case 14: //--destroy-by-display
++			case 15: //--destroy-by-display
 +				g_destroy_by_display = True;
 +				arg = optarg;
 +				break;
@@ -65,7 +65,7 @@
  			case 'A':
  				g_seamless_rdp = True;
  				break;
-@@ -875,6 +899,22 @@
+@@ -889,6 +913,21 @@
  			error("You connot use --start-app and -l at the same time\n");
  			return 1;
  		}
@@ -84,11 +84,10 @@
 +			error("You cannot use --start-app and --destroy-by-display at the same time\n");
 +			return 1;
 +		}
-+
- 		snprintf (buf, sizeof(buf), "STARTAPP|%s|%d|%s", arg, (int)getpid(), getenv("DISPLAY"));
  
- 		seamless_socket_send(master_socket, buf);
-@@ -885,6 +925,46 @@
+ 		startup_id = getenv("DESKTOP_STARTUP_ID");
+ 
+@@ -911,6 +950,46 @@
  		return 0;
  	}
  
@@ -137,10 +136,10 @@
  		usage(argv[0]);
 
 === modified file 'seamless.c'
---- old/seamless.c	2009-10-02 10:05:17 +0000
-+++ new/seamless.c	2009-10-02 10:58:57 +0000
-@@ -599,6 +599,13 @@
- 	return seamless_send("START_APP", "0x%08lx,%s", token, cmdline);
+--- old/seamless.c	2009-10-06 14:09:51 +0000
++++ new/seamless.c	2009-10-06 14:22:34 +0000
+@@ -588,6 +588,13 @@
+ 		return seamless_send("START_APP", "0x%08lx,%s \"%s\"", token, cmdline, arg);
  }
  
 +/* Send client-to-server message to kill process on the server. */
@@ -153,7 +152,17 @@
  /* Check seamless master mode socket and send spawn command if input found.
   * Returns 0 if a slave connected and sent command, 1 otherwise.  */
  int
-@@ -714,6 +721,44 @@
+@@ -714,13 +721,54 @@
+ 		{
+ 			dis = xdisplay_register(displayName);
+ 			if(!dis)
++			{
++				kill((pid_t)pid, SIGTERM);
+ 				return 1;
++			}
+ 		}
+ 
+ 		seamless_send_start_app(cmdline, arg, pid, startup_id, dis);
  
  		return 0;
  	}
@@ -200,8 +209,8 @@
  
 
 === modified file 'xdisplay.c'
---- old/xdisplay.c	2009-10-02 10:05:17 +0000
-+++ new/xdisplay.c	2009-10-02 10:58:57 +0000
+--- old/xdisplay.c	2009-10-06 14:09:51 +0000
++++ new/xdisplay.c	2009-10-06 14:11:46 +0000
 @@ -46,10 +46,11 @@
  
  extern unsigned char g_pointer_log_to_phys_map[32];
@@ -376,8 +385,8 @@
 +}
 
 === modified file 'xdisplay.h'
---- old/xdisplay.h	2009-10-02 10:05:17 +0000
-+++ new/xdisplay.h	2009-10-02 10:58:57 +0000
+--- old/xdisplay.h	2009-10-06 14:09:51 +0000
++++ new/xdisplay.h	2009-10-06 14:11:46 +0000
 @@ -68,12 +68,15 @@
  	struct _xdisplay *next;
  } xdisplay;
@@ -397,8 +406,8 @@
  void xdisplay_get_window_attribs(xdisplay* dis, XSetWindowAttributes * attribs);
 
 === modified file 'xwindow.c'
---- old/xwindow.c	2009-10-02 10:05:17 +0000
-+++ new/xwindow.c	2009-10-02 10:58:57 +0000
+--- old/xwindow.c	2009-10-06 14:09:51 +0000
++++ new/xwindow.c	2009-10-06 14:11:46 +0000
 @@ -26,7 +26,7 @@
  
  extern RD_BOOL g_seamless_broken_restack;

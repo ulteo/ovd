@@ -1,6 +1,6 @@
 === modified file 'rdesktop.c'
---- rdesktop.c	2009-09-28 08:07:15 +0000
-+++ rdesktop.c	2009-09-28 15:30:35 +0000
+--- old/rdesktop.c	2009-09-28 08:07:15 +0000
++++ new/rdesktop.c	2009-10-06 12:53:36 +0000
 @@ -99,6 +99,7 @@
  char *master_socket = NULL;
  /* Seamless slave mode flag */
@@ -9,19 +9,21 @@
  
  uint32 g_embed_wnd;
  uint32 g_rdp5_performanceflags =
-@@ -440,9 +441,11 @@
+@@ -440,9 +441,13 @@
  	RD_BOOL geometry_option = False;
  	int run_count = 0;	/* Session Directory support */
  	RD_BOOL continue_connect = True;	/* Session Directory support */
 +	char *arg = NULL;
++	char *arg2 = NULL;
  	static const struct option long_options[]=
  	{
  		{"main-frame", 1, NULL, 10},
 +		{"start-app", 1, NULL, 11},
++		{"start-app-arg", 1, NULL, 12},
  		{NULL, 0, NULL, 0} /* End of array need by getopt_long do not delete it*/
  	};
  #ifdef WITH_RDPSND
-@@ -501,6 +504,11 @@
+@@ -501,6 +506,21 @@
  					usage(argv[0]);
  				break;
  
@@ -30,10 +32,20 @@
 +				arg = strdup(optarg);
 +				break;
 +
++			case 12: //--start-app-arg
++				if (seamless_start_app)
++					arg2 = strdup(optarg);
++				else
++				{
++					fprintf(stderr, "--start-app-arg cannot be used without --start-app\n");
++					return 1;
++				}
++				break;
++
  			case 'A':
  				g_seamless_rdp = True;
  				break;
-@@ -857,7 +865,25 @@
+@@ -857,7 +877,39 @@
  
  		sprintf(master_socket, "%s/.rdesktop/seamless.socket", home);
  	}
@@ -42,14 +54,28 @@
 +	if (seamless_start_app)
 +	{
 +		char buf[4096];
++		char *startup_id;
++
 +		if (seamless_slave)
 +		{
 +			error("You connot use --start-app and -l at the same time\n");
 +			return 1;
 +		}
-+		snprintf (buf, sizeof(buf), "STARTAPP|%s|%d", arg, (int)getpid());
++
++		startup_id = getenv("DESKTOP_STARTUP_ID");
++
++		if (startup_id && startup_id != '\0')
++			startup_id = strdup(startup_id);
++		else
++			startup_id = strdup("");
++
++		unsetenv("DESKTOP_STARTUP_ID");
++
++		snprintf (buf, sizeof(buf), "STARTAPP|%s|%s|%d|%s\n", arg, (arg2)?arg2:" ", (int)getpid(), startup_id);
 +
 +		seamless_socket_send(master_socket, buf);
++
++		xfree(startup_id);
 +
 +		while(1)
 +			sleep(60);
@@ -62,8 +88,8 @@
  		usage(argv[0]);
 
 === modified file 'seamless.c'
---- seamless.c	2009-09-25 11:54:40 +0000
-+++ seamless.c	2009-09-28 15:30:35 +0000
+--- old/seamless.c	2009-09-25 11:54:40 +0000
++++ new/seamless.c	2009-10-06 13:02:17 +0000
 @@ -26,6 +26,8 @@
  #include <sys/stat.h>
  #include <sys/socket.h>
@@ -98,12 +124,12 @@
  
  
  	xfree(l);
-@@ -536,6 +556,28 @@
+@@ -536,6 +556,36 @@
  	return seamless_send("SPAWN", cmdline);
  }
  
 +unsigned int
-+seamless_send_start_app(char *cmdline, unsigned int pid)
++seamless_send_start_app(char *cmdline, char *arg, unsigned int pid, char *startup_id)
 +{
 +	int token = (int)time(NULL);
 +	seamless_application * sa = NULL;
@@ -115,19 +141,27 @@
 +	sa = xmalloc(sizeof(seamless_application));
 +	memset(sa, 0, sizeof(seamless_application));
 +	sa->cmdline = strdup(cmdline);
++	sa->arg = strdup(arg);
 +	sa->rdesktop_pid = pid;
++	if(strcmp(startup_id, "") == 0)
++		sa->startup_id = NULL;
++	else
++		sa->startup_id = startup_id;
 +	sa->token = token;
 +	sa->next = NULL;
 +
 +	seamless_application_add(sa);
 +
-+	return seamless_send("START_APP", "0x%08lx,%s", token, cmdline);
++	if (arg == NULL || strlen(arg) == 0 || (strlen(arg) == 1 && arg[0] == ' '))
++		return seamless_send("START_APP", "0x%08lx,%s", token, cmdline);
++	else
++		return seamless_send("START_APP", "0x%08lx,%s \"%s\"", token, cmdline, arg);
 +}
 +
  /* Check seamless master mode socket and send spawn command if input found.
   * Returns 0 if a slave connected and sent command, 1 otherwise.  */
  int
-@@ -545,10 +587,12 @@
+@@ -545,10 +595,12 @@
  	struct timeval tv;
  	int slaves, index, ns;
  	struct sockaddr_un fsaun;
@@ -142,7 +176,7 @@
  
  	FD_ZERO(&rfds);
  	FD_SET(sock, &rfds);
-@@ -581,14 +625,59 @@
+@@ -581,14 +633,77 @@
  
  	/* Read command from client socket */
  	fp = fdopen(ns, "r");
@@ -170,6 +204,10 @@
 -
 -		index++;
 +		unsigned int pid;
++		char arg[256];
++		char startup_id[1024];
++
++		startup_id[0] = '\0';
 +
 +		mm = strtok(mm, "|");
 +		mm = strtok(NULL, "|");
@@ -186,14 +224,28 @@
 +			hh = NULL;
 +			return 0;
 +		}
++		snprintf(arg, sizeof(arg), mm);
++
++		mm = strtok(NULL, "|");
++		if (mm == NULL) {
++			free(hh);
++			hh = NULL;
++			return 0;
++		}
 +		pid = atoi(mm);
 +
++		mm = strtok(NULL, "\n");
++		if(mm != NULL)
++		{
++			snprintf(startup_id, sizeof(startup_id), mm);
++		}
++		puts("4");
 +		free(hh);
 +		hh = NULL;
 +
-+		DEBUG(("STARTAPP cmdline: %s pid: %d\n", cmdline, pid));
++		DEBUG(("STARTAPP cmdline: %s arg: '%s' pid: %d startup_id: %s\n", cmdline, arg, pid, startup_id));
 +
-+		seamless_send_start_app(cmdline, pid);
++		seamless_send_start_app(cmdline, arg, pid, startup_id);
 +
 +		return 0;
  	}
@@ -208,7 +260,7 @@
  
  	/* Send spawn command to server-side SeamlessRDP component */
  	seamless_send_spawn(cmdline);
-@@ -673,3 +762,97 @@
+@@ -673,3 +788,97 @@
  
  	return 0;
  }
@@ -286,11 +338,11 @@
 +
 +			obj->next = NULL;
 +
-+			if(obj)
-+			{
-+				free(obj);
-+				obj = NULL;
-+			}
++			xfree(obj->cmdline);
++			xfree(obj->arg);
++			xfree(obj->startup_id);
++
++			xfree(obj);
 +			return;
 +		}
 +
@@ -308,9 +360,9 @@
 +}
 
 === modified file 'seamless.h'
---- seamless.h	2009-09-25 11:54:40 +0000
-+++ seamless.h	2009-09-28 15:30:35 +0000
-@@ -26,3 +26,23 @@
+--- old/seamless.h	2009-09-25 11:54:40 +0000
++++ new/seamless.h	2009-10-06 12:19:31 +0000
+@@ -26,3 +26,25 @@
  void seamless_close_socket(char *socket_name);
  /* Send a command line to seamless master socket. */
  int seamless_socket_send(char *socket_name, char *cmdline);
@@ -320,6 +372,8 @@
 +typedef struct _seamless_app
 +{
 +	char * cmdline;
++	char * arg;
++	char * startup_id;
 +	unsigned int token;
 +	unsigned int windows_pid;
 +	unsigned int rdesktop_pid;
@@ -336,8 +390,8 @@
 +void seamless_register_pid(unsigned int token, unsigned int pid);
 
 === modified file 'xwin.c'
---- xwin.c	2009-09-28 08:07:15 +0000
-+++ xwin.c	2009-09-28 15:32:15 +0000
+--- old/xwin.c	2009-09-28 08:07:15 +0000
++++ new/xwin.c	2009-10-06 12:12:30 +0000
 @@ -63,6 +63,8 @@
  typedef struct _seamless_window
  {
@@ -356,7 +410,81 @@
  	xclip_deinit();
  
  	if (g_IM != NULL)
-@@ -3702,6 +3706,7 @@
+@@ -3690,6 +3694,73 @@
+ 	g_seamless_active = !g_seamless_active;
+ }
+ 
++static void
++ui_end_startup_notify(char *startup_id)
++{
++	unsigned int len_startup_id;
++	unsigned int i;
++	char buf[1024];
++	char msg[2048];
++	char *p;
++	XSetWindowAttributes attrs;
++	Window root_wnd;
++	Window wnd;
++	Atom type_atom;
++	Atom type_atom_begin;
++	XEvent xevent;
++	const char* msg_end;
++
++	/* escape for xmessage */
++	p = buf;
++	len_startup_id = strlen(startup_id);
++
++	for(i = 0; i < len_startup_id; i++)
++	{
++		if(startup_id[i] == ' ' || startup_id[i] == '"' || startup_id[i] == '\\')
++		{
++			*p++ = '\\';
++		}
++		*p++ = startup_id[i];
++	}
++	*p = '\0';
++
++	/* format xmessage */
++	snprintf(msg, sizeof(msg), "remove: ID=%s", buf);
++
++	/* broadcast xmessage */
++	root_wnd = DefaultRootWindow(g_display);
++
++	attrs.override_redirect = True;
++	attrs.event_mask = PropertyChangeMask | StructureNotifyMask;
++	wnd = XCreateWindow(g_display, root_wnd, -100, -100, 1, 1, 0, CopyFromParent, CopyFromParent, CopyFromParent, CWOverrideRedirect | CWEventMask, &attrs);
++
++	type_atom = XInternAtom(g_display, "_NET_STARTUP_INFO", False);
++	type_atom_begin = XInternAtom(g_display, "_NET_STARTUP_INFO_BEGIN", False);
++
++	xevent.xclient.type = ClientMessage;
++	xevent.xclient.message_type = type_atom_begin;
++	xevent.xclient.display = g_display;
++	xevent.xclient.window = wnd;
++	xevent.xclient.format = 8;
++
++	p = msg;
++	msg_end = p + sizeof(msg) + 1; // Include trailing NUL.
++
++	while (p != msg_end) {
++		char* dest = &xevent.xclient.data.b[0];
++		char* dest_end = dest + 20;
++		while (dest != dest_end && p != msg_end) {
++			*dest++ = *p++;
++		}
++		while (dest != dest_end) {
++			*dest++ = 0;
++		}
++		XSendEvent(g_display, root_wnd, False, PropertyChangeMask, &xevent);
++		xevent.xclient.message_type = type_atom;
++	}
++
++	XDestroyWindow(g_display, wnd);
++}
+ 
+ void
+ ui_seamless_create_window(unsigned long id, unsigned long group, unsigned long parent,
+@@ -3702,6 +3773,7 @@
  	XWMHints *wmhints;
  	long input_mask;
  	seamless_window *sw, *sw_parent;
@@ -364,7 +492,7 @@
  
  	if (!g_seamless_active)
  		return;
-@@ -3710,6 +3715,13 @@
+@@ -3710,6 +3782,13 @@
  	sw = sw_get_window_by_id(id);
  	if (sw)
  		return;
@@ -378,7 +506,7 @@
  
  	get_window_attribs(&attribs);
  	wnd = XCreateWindow(g_display, RootWindowOfScreen(g_screen), -1, -1, 1, 1, 0, g_depth,
-@@ -3787,6 +3799,7 @@
+@@ -3787,6 +3866,7 @@
  	memset(sw, 0, sizeof(seamless_window));
  
  	sw->wnd = wnd;
@@ -386,7 +514,20 @@
  	sw->id = id;
  	sw->group = sw_find_group(group, False);
  	sw->group->refcnt++;
-@@ -3839,6 +3852,7 @@
+@@ -3812,6 +3892,12 @@
+ 		XSetWMHints(g_display, sw->wnd, wmhints);
+ 		XFree(wmhints);
+ 	}
++
++	if(sa && sa->startup_id)
++	{
++		ui_end_startup_notify(sa->startup_id);
++		sa->startup_id = NULL;
++	}
+ }
+ 
+ 
+@@ -3839,6 +3925,7 @@
  ui_seamless_destroy_group(unsigned long id, unsigned long flags)
  {
  	seamless_window *sw, *sw_next;
@@ -394,7 +535,7 @@
  
  	if (!g_seamless_active)
  		return;
-@@ -3853,6 +3867,9 @@
+@@ -3853,6 +3940,9 @@
  			sw_remove_window(sw);
  		}
  	}
