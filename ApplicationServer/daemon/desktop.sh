@@ -1,6 +1,7 @@
 #!/bin/sh
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com>
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
 # This program is free software; you can redistribute it and/or
@@ -47,6 +48,7 @@ fi
 
 rfb_port=$(spool_get_rfbport)
 echo $rfb_port > $dir/rfb_port
+echo desktop >$dir/app_id
 
 display_init $SESSID $rfb_port
 if [ $? -ne 0 ]; then
