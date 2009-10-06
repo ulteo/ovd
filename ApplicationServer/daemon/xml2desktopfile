@@ -37,7 +37,8 @@ class Application(dict):
 
         self['Exec'] = execNode.getAttribute("command")
         if doc.getAttribute("type") == "windows":
-            self['Exec'] = 'rdesktop --start-app "%s"'%(self['Exec'])
+            self['Exec'] = 'rdesktop --start-app "%s" %%W'%(self['Exec'])
+            self['StartupNotify'] = 'true'
 
     def toDesktopFile(self, file_):
         lines = ['[Desktop Entry]', 'Version=1.0', 'Encoding=UTF-8', 'Type=Application']

@@ -64,6 +64,18 @@ def getFinalCommand(cmd_, args_):
                 b.append(arg)
         return cmd_.replace("%U", list2cmdline(b))
 
+    # We add a non-standard message for Windows path translation
+    if "%W" in cmd_:
+        local_home = os.path.expanduser('~')
+        b = []
+        if os.environ.has_key("CIFS_HOME_DIR"):
+            win_home = os.environ["CIFS_HOME_DIR"]
+            for arg in args_:
+                b.append("--start-app-arg")
+                b.append(os.path.abspath(arg).replace(local_home, win_home))
+
+        return cmd_.replace("%W", list2cmdline(b))
+
     cmd = cmd_
     args = args_
     args.reverse()
