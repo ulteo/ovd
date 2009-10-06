@@ -80,7 +80,7 @@ if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance'
 					$buf->setAttribute('locked', false);
 
 				Abstract_Server::save($buf);
-				popup_info(_('Server status successfully modified'));
+				popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
 			}
 		}
 	}
@@ -162,7 +162,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn
 	$buf->register();
 	Abstract_Server::save($buf);
 	$buf->updateApplications();
-	popup_info(_('Server successfully registered'));
+	popup_info(sprintf(_('Server \'%s\' successfully registered'), $buf->getAttribute('fqdn')));
 
 	$buf = count(Servers::getUnregistered());
 	if ($buf == 0)
@@ -183,7 +183,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['f
 			$buf->setAttribute('locked', false);
 
 		Abstract_Server::save($buf);
-		popup_info(_('Server successfully modified'));
+		popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
 	}
 
 	redirect();
@@ -197,7 +197,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' &&
 		$server = Abstract_Server::load($_REQUEST['fqdn']);
 		$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
 		Abstract_Server::save($server);
-		popup_info(_('Server successfully modified'));
+		popup_info(sprintf(_('Server \'%s\' successfully modified'), $server->getAttribute('fqdn')));
 	}
 
 	redirect();
@@ -211,7 +211,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isse
 		$server = Abstract_Server::load($_REQUEST['fqdn']);
 		$server->setAttribute('external_name', $_REQUEST['external_name']);
 		Abstract_Server::save($server);
-		popup_info(_('Server successfully modified'));
+		popup_info(sprintf(_('Server \'%s\' successfully modified'), $server->getAttribute('fqdn')));
 	}
 
 	redirect();
@@ -225,7 +225,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_R
 		$server = Abstract_Server::load($_REQUEST['fqdn']);
 		$server->setAttribute('web_port', $_REQUEST['web_port']);
 		Abstract_Server::save($server);
-		popup_info(_('Server successfully modified'));
+		popup_info(sprintf(_('Server \'%s\' successfully modified'), $server->getAttribute('fqdn')));
 	}
 
 	redirect();
@@ -245,7 +245,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQ
 	if (is_object($buf)) {
 		$buf->orderDeletion();
 		Abstract_Server::delete($buf->fqdn);
-		popup_info(_('Server successfully deleted'));
+		popup_info(sprintf(_('Server \'%s\' successfully deleted'), $buf->getAttribute('fqdn')));
 	}
 
 	$buf = count(Servers::getUnregistered());

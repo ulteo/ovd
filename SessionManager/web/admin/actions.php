@@ -124,13 +124,13 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		$ret = Abstract_Liaison::save('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true)
-			popup_info(_('ApplicationGroup successfully modified'));
+			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $_REQUEST['group']));
 	}
 
 	if ($_REQUEST['action'] == 'del') {
 		$ret = Abstract_Liaison::delete('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true)
-			popup_info(_('ApplicationGroup successfully modified'));
+			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $_REQUEST['group']));
 	}
 }
 
@@ -141,13 +141,13 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		$ret = Abstract_Liaison::save('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true)
-			popup_info(_('UsersGroup successfully modified'));
+			popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']);
 	}
 
 	if ($_REQUEST['action'] == 'del') {
 		$ret = Abstract_Liaison::delete('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true)
-			popup_info(_('UsersGroup successfully modified'));
+			popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']));
 	}
 }
 
@@ -216,7 +216,7 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 		$policy[$_REQUEST['element']] = false;
 
 	$group->updatePolicy($policy);
-	popup_info(_('UsersGroup successfully modified'));
+	popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $group->name));
 	redirect();
 }
 
@@ -267,7 +267,7 @@ if ($_REQUEST['name'] == 'static_application') {
 				$app = $applicationDB->import($_REQUEST['id']);
 				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 				$app->delIcon();
-				popup_info(_('Application successfully deleted'));
+				popup_info(sprintf(_('Application \'%s\' successfully deleted'), $app->getAttribute('name'));
 			}
 		}
 	}
@@ -348,7 +348,7 @@ function action_add_sharedfolder() {
 	$ret = Abstract_SharedFolder::save($buf);
 
 	if ($ret === true)
-		popup_info(_('SharedFolder successfully added'));
+		popup_info(sprintf(_('SharedFolder \'%s\' successfully added'), $buf->name));
 	return true;
 }
 
