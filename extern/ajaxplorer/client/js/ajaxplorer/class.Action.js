@@ -509,7 +509,7 @@ MimeType = {
 	'bcpio': 'application/x-bcpio',
 	'bib': 'text/x-bibtex',
 	'bin': 'application/octet-stream',
-	'bmp': 'image/x-ms-bmp',
+	'bmp': 'image/bmp',
 	'boo': 'text/x-boo',
 	'book': 'application/x-maker',
 	'brf': 'text/plain',
