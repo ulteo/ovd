@@ -181,7 +181,7 @@ class Configuration_mode_ad extends Configuration_mode {
     // plugins fs ...
     $buf = $prefs->get('plugins', 'FS');
     if ($buf == 'cifs_no_sfu') {
-      if ($config['match']['homedir'] == 'profilepath')
+      if ($config['match']['homedir'] == 'profilePath')
 	$form['homedir'] = 'ad_profile';
       else
 	$form['homedir'] = 'ad_homedir';
