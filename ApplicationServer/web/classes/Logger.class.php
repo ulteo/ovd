@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -28,7 +29,7 @@ class Logger {
 		$level_flags = array($level_);
 
 		if (in_array($level_, $level_flags))
-			@file_put_contents(CONNECTME_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
+			@file_put_contents(APS_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
 	}
 
 	public static function debug($module_='main', $data_='') {

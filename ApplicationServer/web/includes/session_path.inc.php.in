@@ -42,7 +42,7 @@ $buf = trim($buf);
 if (!$buf || $buf == '')
 	die('Error parsing config file 1c: '.$config_file);
 
-define('CONNECTME_LOGS', $buf);
+define('APS_LOGS', $buf);
 unset($buf);
 
 if (!is_readable(CHROOT.'/etc/ulteo-ovd.conf'))

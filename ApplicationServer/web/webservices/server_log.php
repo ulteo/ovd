@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or 
@@ -35,7 +36,7 @@ if (! isset($_GET['type'])) {
 }
 
 if ($_GET['type'] == 'web')
-	die(@file_get_contents(CONNECTME_LOGS.'/main.log'));
+	die(@file_get_contents(APS_LOGS.'/main.log'));
 elseif ($_GET['type'] == 'daemon')
 	die(@file_get_contents(CHROOT.'/var/log/ulteo-ovd.log'));
 

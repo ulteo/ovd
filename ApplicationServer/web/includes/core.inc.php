@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or 
@@ -20,7 +21,7 @@
  **/
 require_once(dirname(__FILE__).'/session_path.inc.php');
 
-define('CONNECTME_ROOT', realpath(dirname(__FILE__).'/../'));
+define('APS_ROOT', realpath(dirname(__FILE__).'/../'));
 
 define('MAXTIME', 20);
 
@@ -30,7 +31,7 @@ function __autoload($class_name) {
 	$class_files = array();
 
 	if (!class_exists($class_name)) {
-		$class_files []= CONNECTME_ROOT.'/classes/'.$class_name.'.class.php';
+		$class_files []= APS_ROOT.'/classes/'.$class_name.'.class.php';
 
 		foreach ($class_files as $class_file)
 			if (file_exists($class_file))
