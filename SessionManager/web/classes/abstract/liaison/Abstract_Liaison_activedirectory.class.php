@@ -101,9 +101,11 @@ class Abstract_Liaison_activedirectory {
 		if (isset($buf['member']) && is_array($buf['member'])) {
 			foreach ($buf['member'] as $member) {
 				$ldap->searchDN($member);
-				$u =$userDBAD->importFromDN($member);
-				$l = new Liaison($u->getAttribute('login'), $group_);
-				$elements[$l->element] = $l;
+				$u = $userDBAD->importFromDN($member);
+				if (is_object($u)) {
+					$l = new Liaison($u->getAttribute('login'), $group_);
+					$elements[$l->element] = $l;
+				}
 			}
 		}
 		return $elements;
