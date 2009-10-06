@@ -1,6 +1,6 @@
 === modified file 'rdesktop.c'
 --- old/rdesktop.c	2009-09-28 08:07:15 +0000
-+++ new/rdesktop.c	2009-10-06 12:53:36 +0000
++++ new/rdesktop.c	2009-10-06 13:14:29 +0000
 @@ -99,6 +99,7 @@
  char *master_socket = NULL;
  /* Seamless slave mode flag */
@@ -89,7 +89,7 @@
 
 === modified file 'seamless.c'
 --- old/seamless.c	2009-09-25 11:54:40 +0000
-+++ new/seamless.c	2009-10-06 13:02:17 +0000
++++ new/seamless.c	2009-10-06 13:14:29 +0000
 @@ -26,6 +26,8 @@
  #include <sys/stat.h>
  #include <sys/socket.h>
@@ -361,7 +361,7 @@
 
 === modified file 'seamless.h'
 --- old/seamless.h	2009-09-25 11:54:40 +0000
-+++ new/seamless.h	2009-10-06 12:19:31 +0000
++++ new/seamless.h	2009-10-06 13:14:29 +0000
 @@ -26,3 +26,25 @@
  void seamless_close_socket(char *socket_name);
  /* Send a command line to seamless master socket. */
@@ -391,7 +391,7 @@
 
 === modified file 'xwin.c'
 --- old/xwin.c	2009-09-28 08:07:15 +0000
-+++ new/xwin.c	2009-10-06 12:12:30 +0000
++++ new/xwin.c	2009-10-06 13:14:29 +0000
 @@ -63,6 +63,8 @@
  typedef struct _seamless_window
  {

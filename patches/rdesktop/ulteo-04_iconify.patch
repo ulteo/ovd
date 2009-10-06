@@ -1,6 +1,6 @@
 === modified file 'proto.h'
 --- old/proto.h	2009-10-06 14:09:51 +0000
-+++ new/proto.h	2009-10-06 14:11:46 +0000
++++ new/proto.h	2009-10-06 16:09:15 +0000
 @@ -312,6 +312,7 @@
  unsigned int seamless_send_focus(unsigned long id, unsigned long flags);
  unsigned int seamless_send_spawn(char *cmdline);
@@ -12,7 +12,7 @@
 
 === modified file 'rdesktop.c'
 --- old/rdesktop.c	2009-10-06 14:09:51 +0000
-+++ new/rdesktop.c	2009-10-06 14:16:23 +0000
++++ new/rdesktop.c	2009-10-06 16:09:15 +0000
 @@ -50,6 +50,10 @@
  
  #include "ssl.h"
@@ -137,7 +137,7 @@
 
 === modified file 'seamless.c'
 --- old/seamless.c	2009-10-06 14:09:51 +0000
-+++ new/seamless.c	2009-10-06 14:22:34 +0000
++++ new/seamless.c	2009-10-06 16:09:15 +0000
 @@ -588,6 +588,13 @@
  		return seamless_send("START_APP", "0x%08lx,%s \"%s\"", token, cmdline, arg);
  }
@@ -210,7 +210,7 @@
 
 === modified file 'xdisplay.c'
 --- old/xdisplay.c	2009-10-06 14:09:51 +0000
-+++ new/xdisplay.c	2009-10-06 14:11:46 +0000
++++ new/xdisplay.c	2009-10-06 16:09:15 +0000
 @@ -46,10 +46,11 @@
  
  extern unsigned char g_pointer_log_to_phys_map[32];
@@ -386,7 +386,7 @@
 
 === modified file 'xdisplay.h'
 --- old/xdisplay.h	2009-10-06 14:09:51 +0000
-+++ new/xdisplay.h	2009-10-06 14:11:46 +0000
++++ new/xdisplay.h	2009-10-06 16:09:15 +0000
 @@ -68,12 +68,15 @@
  	struct _xdisplay *next;
  } xdisplay;
@@ -407,7 +407,7 @@
 
 === modified file 'xwindow.c'
 --- old/xwindow.c	2009-10-06 14:09:51 +0000
-+++ new/xwindow.c	2009-10-06 14:11:46 +0000
++++ new/xwindow.c	2009-10-06 16:09:15 +0000
 @@ -26,7 +26,7 @@
  
  extern RD_BOOL g_seamless_broken_restack;

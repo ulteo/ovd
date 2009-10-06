@@ -1,6 +1,6 @@
 === modified file 'Makefile.in'
 --- old/Makefile.in	2009-09-25 11:33:43 +0000
-+++ new/Makefile.in	2009-10-06 13:24:51 +0000
++++ new/Makefile.in	2009-10-06 14:09:51 +0000
 @@ -32,7 +32,7 @@
  SCARDOBJ    = @SCARDOBJ@
  
@@ -22,7 +22,7 @@
 
 === modified file 'orders.c'
 --- old/orders.c	2009-09-25 11:33:43 +0000
-+++ new/orders.c	2009-10-06 13:24:51 +0000
++++ new/orders.c	2009-10-06 14:09:51 +0000
 @@ -20,6 +20,7 @@
  
  #include "rdesktop.h"
@@ -43,7 +43,7 @@
 
 === modified file 'proto.h'
 --- old/proto.h	2009-09-25 11:54:40 +0000
-+++ new/proto.h	2009-10-06 13:24:51 +0000
++++ new/proto.h	2009-10-06 14:09:51 +0000
 @@ -231,6 +231,7 @@
  uint16 ui_get_numlock_state(unsigned int state);
  void reset_modifier_keys(void);
@@ -55,7 +55,7 @@
 
 === modified file 'rdesktop.c'
 --- old/rdesktop.c	2009-10-06 13:14:29 +0000
-+++ new/rdesktop.c	2009-10-06 13:30:44 +0000
++++ new/rdesktop.c	2009-10-06 14:09:51 +0000
 @@ -29,6 +29,7 @@
  #include <ctype.h>		/* toupper */
  #include <errno.h>
@@ -89,7 +89,7 @@
 
 === modified file 'rdp.c'
 --- old/rdp.c	2009-09-25 11:33:43 +0000
-+++ new/rdp.c	2009-10-06 13:24:51 +0000
++++ new/rdp.c	2009-10-06 14:09:51 +0000
 @@ -24,6 +24,8 @@
  #include <unistd.h>
  #endif
@@ -128,7 +128,7 @@
 
 === modified file 'seamless.c'
 --- old/seamless.c	2009-10-06 13:14:29 +0000
-+++ new/seamless.c	2009-10-06 13:46:20 +0000
++++ new/seamless.c	2009-10-06 14:09:51 +0000
 @@ -30,6 +30,7 @@
  #include <signal.h>
  #include <unistd.h>
@@ -137,19 +137,9 @@
  
  #ifdef WITH_DEBUG_SEAMLESS
  #define DEBUG_SEAMLESS(args) printf args;
-@@ -381,7 +382,6 @@
- 		seamless_register_pid(token, pid);
- 	}
- 
--
- 	xfree(l);
- 	return True;
- }
-@@ -556,8 +556,9 @@
- 	return seamless_send("SPAWN", cmdline);
+@@ -557,7 +558,7 @@
  }
  
-+<<<<<<< TREE
  unsigned int
 -seamless_send_start_app(char *cmdline, char *arg, unsigned int pid, char *startup_id)
 +seamless_send_start_app(char *cmdline, char *arg, unsigned int pid, char *startup_id, xdisplay *dis)
@@ -173,15 +163,7 @@
  
  	FD_ZERO(&rfds);
  	FD_SET(sock, &rfds);
-@@ -651,6 +655,7 @@
- 
- 	if (str_startswith(mm, "STARTAPP"))
- 	{
-+<<<<<<< TREE
- 		unsigned int pid;
- 		char arg[256];
- 		char startup_id[1024];
-@@ -682,6 +687,19 @@
+@@ -682,6 +686,19 @@
  		}
  		pid = atoi(mm);
  
@@ -201,7 +183,7 @@
  		mm = strtok(NULL, "\n");
  		if(mm != NULL)
  		{
-@@ -691,9 +709,16 @@
+@@ -691,9 +708,16 @@
  		free(hh);
  		hh = NULL;
  
@@ -221,18 +203,10 @@
  
  		return 0;
  	}
-@@ -782,6 +807,7 @@
- 
- 	/* Send command */
- 	send(s, cmdline, strlen(cmdline), 0);
-+	send(s, "\n", 1, 0);
- 
- 	/* Close socket */
- 	close(s);
 
 === modified file 'seamless.h'
 --- old/seamless.h	2009-10-06 13:14:29 +0000
-+++ new/seamless.h	2009-10-06 13:48:36 +0000
++++ new/seamless.h	2009-10-06 14:09:51 +0000
 @@ -18,6 +18,11 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
@@ -262,7 +236,7 @@
 
 === modified file 'types.h'
 --- old/types.h	2009-09-28 08:07:15 +0000
-+++ new/types.h	2009-10-06 13:24:51 +0000
++++ new/types.h	2009-10-06 14:09:51 +0000
 @@ -18,6 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
@@ -282,7 +256,7 @@
 
 === added file 'xcursor.c'
 --- old/xcursor.c	1970-01-01 00:00:00 +0000
-+++ new/xcursor.c	2009-10-06 13:24:51 +0000
++++ new/xcursor.c	2009-10-06 14:09:51 +0000
 @@ -0,0 +1,290 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -577,7 +551,7 @@
 
 === added file 'xcursor.h'
 --- old/xcursor.h	1970-01-01 00:00:00 +0000
-+++ new/xcursor.h	2009-10-06 13:24:51 +0000
++++ new/xcursor.h	2009-10-06 14:09:51 +0000
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -614,7 +588,7 @@
 
 === added file 'xdisplay.c'
 --- old/xdisplay.c	1970-01-01 00:00:00 +0000
-+++ new/xdisplay.c	2009-10-06 13:24:51 +0000
++++ new/xdisplay.c	2009-10-06 14:09:51 +0000
 @@ -0,0 +1,984 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -1603,7 +1577,7 @@
 
 === added file 'xdisplay.h'
 --- old/xdisplay.h	1970-01-01 00:00:00 +0000
-+++ new/xdisplay.h	2009-10-06 13:24:51 +0000
++++ new/xdisplay.h	2009-10-06 14:09:51 +0000
 @@ -0,0 +1,91 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -1699,7 +1673,7 @@
 
 === modified file 'xkeymap.c'
 --- old/xkeymap.c	2009-09-25 11:33:43 +0000
-+++ new/xkeymap.c	2009-10-06 13:24:51 +0000
++++ new/xkeymap.c	2009-10-06 14:09:51 +0000
 @@ -454,7 +454,7 @@
  	XDisplayKeycodes(g_display, &min_keycode, (int *) &max_keycode);
  }
@@ -1712,7 +1686,7 @@
 
 === modified file 'xwin.c'
 --- old/xwin.c	2009-10-06 13:14:29 +0000
-+++ new/xwin.c	2009-10-06 13:54:05 +0000
++++ new/xwin.c	2009-10-06 14:09:51 +0000
 @@ -30,6 +30,9 @@
  #include "rdesktop.h"
  #include "xproto.h"
@@ -1942,7 +1916,7 @@
 
 === added file 'xwindow.c'
 --- old/xwindow.c	1970-01-01 00:00:00 +0000
-+++ new/xwindow.c	2009-10-06 13:24:51 +0000
++++ new/xwindow.c	2009-10-06 14:09:51 +0000
 @@ -0,0 +1,575 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -2522,7 +2496,7 @@
 
 === added file 'xwindow.h'
 --- old/xwindow.h	1970-01-01 00:00:00 +0000
-+++ new/xwindow.h	2009-10-06 13:24:51 +0000
++++ new/xwindow.h	2009-10-06 14:09:51 +0000
 @@ -0,0 +1,79 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
