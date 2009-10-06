@@ -21,60 +21,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-function query_url_no_error($url_) {
-	Logger::debug('main', 'HTTP Query: "'.$url_.'"');
-
+function query_url_request($url_) {
+	Logger::debug('main', "query_url_request($url_)");
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
-	$string = curl_exec($socket);
+	$data = curl_exec($socket);
+	$code = curl_getinfo($socket, CURLINFO_HTTP_CODE);
+	$content_type=curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
 	curl_close($socket);
+	
+	if ($code != 200)
+		Logger::debug('main', "query_url_request($url_) returncode: '$code'");
+	
+	if (str_startswith($content_type, 'text/'))
+		Logger::debug('main', "query_url_request($url_) returntext: '$data'");
+	
+	return array('data' => $data, 'code' => $code, 'content_type' => $content_type);
+}
 
-	Logger::debug('main', 'HTTP returntext: "'.$string.'"');
-
-	return $string;
+function query_url_no_error($url_) {
+	$ret = query_url_request($url_);
+	return $ret['data'];
 }
 
 function query_url_return_errorcode($url_) {
-	Logger::debug('main', 'HTTP query: "'.$url_.'"');
-
-	$socket = curl_init($url_);
-	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
-	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
-	$string = curl_exec($socket);
-	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
-	curl_close($socket);
-
-	if ($buf != 200)
-		Logger::debug('main', 'HTTP returncode: "'.$buf.'"');
-
-	Logger::debug('main', 'HTTP returntext: "'.$string.'"');
-
-	return array($buf, $string);
+	$ret = query_url_request($url_);
+	return array($ret['code'], $ret['data']);
 }
 
 function query_url($url_) {
-	Logger::debug('main', 'HTTP query: "'.$url_.'"');
-
-	$socket = curl_init($url_);
-	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
-	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
-	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
-	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
-	$string = curl_exec($socket);
-	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
-	curl_close($socket);
-
-	if ($buf != 200) {
-		Logger::debug('main', 'HTTP returncode: "'.$buf.'"');
+	$ret = query_url_request($url_);
+	if ($ret['code'] != 200) {
+		Logger::error('main', "query_url($url) returncode: '$code'");
 		return false;
 	}
-
-	Logger::debug('main', 'HTTP returntext: "'.$string.'"');
-
-	return $string;
+	return array($ret['data']);
 }
