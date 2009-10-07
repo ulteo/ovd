@@ -141,7 +141,7 @@ if ($_REQUEST['name'] == 'User_UserGroup') {
 	if ($_REQUEST['action'] == 'add') {
 		$ret = Abstract_Liaison::save('UsersGroup', $_REQUEST['element'], $_REQUEST['group']);
 		if ($ret === true)
-			popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']);
+			popup_info(sprintf(_('UsersGroup \'%s\' successfully modified'), $_REQUEST['group']));
 	}
 
 	if ($_REQUEST['action'] == 'del') {
@@ -267,7 +267,7 @@ if ($_REQUEST['name'] == 'static_application') {
 				$app = $applicationDB->import($_REQUEST['id']);
 				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 				$app->delIcon();
-				popup_info(sprintf(_('Application \'%s\' successfully deleted'), $app->getAttribute('name'));
+				popup_info(sprintf(_('Application \'%s\' successfully deleted'), $app->getAttribute('name')));
 			}
 		}
 	}
