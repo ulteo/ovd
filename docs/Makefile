@@ -68,7 +68,7 @@ uninstall:
 	rm -rf dist
 
 tarball: clean
-	[ -d $(RELEASE_DIR) ] && rm -rf $(RELEASE_DIR)
+	rm -rf $(RELEASE_DIR)
 	mkdir $(RELEASE_DIR)
 	cp -r Makefile $(SRC) $(DIRS) $(RELEASE_DIR)
 	tar czf $(RELEASE_DIR).tar.gz --exclude=.svn $(RELEASE_DIR)
