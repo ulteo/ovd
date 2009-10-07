@@ -53,7 +53,7 @@ if (isset($_POST['join'])) {
 
 	$server = Abstract_Server::load($session->server);
 
-	redirect('http://'.$server->getBaseURL(true).'/index.php?token='.$token->id);
+	redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
 } elseif (isset($_POST['mass_action']) && $_POST['mass_action'] == 'kill') {
 	if (isset($_POST['kill_sessions']) && is_array($_POST['kill_sessions'])) {
 		foreach ($_POST['kill_sessions'] as $session) {
