@@ -12,6 +12,14 @@ SRC=AccountsIntegration.xml \
 	Vpn.xml \
 	Windows_Applications.xml
 
+DIRS=xsl2 \
+     media \
+     img \
+     style
+
+VERSION=2.0~beta1
+RELEASE_DIR=ovd-documentation-$(VERSION)
+
 DST=$(SRC:.xml=.html)
 PDF=$(SRC:.xml=.pdf)
 ANW=$(SRC:.xml=.anw)
@@ -59,3 +67,9 @@ install: all
 uninstall:
 	rm -rf dist
 
+tarball: clean
+	[ -d $(RELEASE_DIR) ] && rm -rf $(RELEASE_DIR)
+	mkdir $(RELEASE_DIR)
+	cp -r Makefile $(SRC) $(DIRS) $(RELEASE_DIR)
+	tar czf $(RELEASE_DIR).tar.gz --exclude=.svn $(RELEASE_DIR)
+	rm -rf $(RELEASE_DIR)
