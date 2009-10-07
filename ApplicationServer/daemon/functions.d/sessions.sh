@@ -61,7 +61,6 @@ session_init() {
     [ $? -eq 0 ] || return 1
 
     log_INFO "session_init: '$SESSID' => $i"
-    local RFB_PORT=$(spool_get_rfbport)
     [ $? -eq 0 ] || return 1
 
     local SSH_USER="SSH$i"
@@ -71,7 +70,6 @@ session_init() {
     if grep -q -e "$SSH_USER\:x" /etc/passwd; then
         log_ERROR "session_init: user '$SSH_USER' already in /etc/passwd"
         spool_free_id $i
-        spool_free_rfbport $RFB_PORT
         return 1
     fi
     log_INFO "useradd $SSH_USER"
@@ -81,7 +79,6 @@ session_init() {
     if grep -q -e "$VNC_USER\:x" /etc/group; then
         log_ERROR "session_init: user '$VNC_USER' already in /etc/group"
         spool_free_id $i
-        spool_free_rfbport $RFB_PORT
         return 1
     fi
     log_INFO "groupadd -K GID_MAX=70000 $VNC_USER"
@@ -92,7 +89,6 @@ session_init() {
     if grep -q -e "$VNC_USER\:x" /etc/passwd; then
         log_ERROR "session_init: user '$VNC_USER' already in /etc/passwd"
         spool_free_id $i
-        spool_free_rfbport $RFB_PORT
         return 1
     fi
     log_INFO "useradd $VNC_USER"
