@@ -138,7 +138,7 @@ if ($_SESSION['type'] == 'invite') {
 
 	$_SESSION['tokens'][$_GET['token']] = array(
 		'session_id'	=>	$_SESSION['session'],
-		'access_id'		=>	@file_get_contents($buf.'/access_id')
+		'access_id'		=>	'desktop'
 	);
 }
 
