@@ -1,306 +1,334 @@
-var refresh = 2000;
+var Daemon = Class.create({
+	applet_version: '',
+	applet_main_class: '',
+	printing_applet_version: '',
+	debug: '',
 
-var access_id;
-var session_mode;
-var applet_version;
-var applet_main_class;
-var printing_applet_version;
-var protocol;
-var server;
-var port;
-var debug;
+	protocol: '',
+	server: '',
+	port: '',
 
-var my_width;
-var my_height;
+	session_state: -1,
+	old_session_state: -1,
+	started: false,
+	access_id: '',
 
-var session_state = -1;
-var old_session_state = -1;
+	application_state: -1,
+	old_application_state: -1,
+	app_id: '',
+	doc: '',
 
-var nb_share = 0;
+	applet_width: -1,
+	applet_height: -1,
 
-var session_started = false;
-var window_alive = true;
+	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
+		this.applet_version = applet_version_;
+		this.applet_main_class = applet_main_class_;
+		this.printing_applet_version = printing_applet_version_;
+		this.debug = debug_;
 
-function daemon_init(session_mode_, applet_version_, applet_main_class_, printing_applet_version_, debug_) {
-	session_mode = session_mode_;
-	applet_version = applet_version_;
-	applet_main_class = applet_main_class_;
-	printing_applet_version = printing_applet_version_;
-	protocol = window.location.protocol;
-	server = window.location.host;
-	port = window.location.port;
-	debug = debug_;
+		this.protocol = window.location.protocol;
+		this.server = window.location.host;
+		this.port = window.location.port;
 
-	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
-		<param name="do_nothing" value="1"> \
-	</applet>';
+		this.session_state = -1;
+		this.old_session_state = -1;
+		this.started = false;
 
-	push_log('[daemon] init()', 'info');
-
-	if (debug) {
-		$('debugContainer').style.display = 'inline';
-		$('debugLevels').style.display = 'inline';
-	}
-
-	if (typeof(window.innerWidth) == 'number' || typeof(window.innerHeight) == 'number') {
-		my_width  = window.innerWidth;
-		my_height = window.innerHeight;
-	} else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-		my_width  = document.documentElement.clientWidth;
-		my_height = document.documentElement.clientHeight;
-	} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
-		my_width  = document.body.clientWidth;
-		my_height = document.body.clientHeight;
-	}
-
-	if (session_mode == 'desktop') {
-		if ($('menuShare')) {
-			$('menuShare').style.width = my_width+'px';
-			var new_height = parseInt(my_height)-18;
-			if (debug)
-				new_height = parseInt(new_height)-149;
-			$('menuShare').style.height = new_height+'px';
-
-			my_height = parseInt(my_height)-18;
+		if (this.debug) {
+			$('debugContainer').style.display = 'inline';
+			$('debugLevels').style.display = 'inline';
 		}
-	} else if (session_mode == 'portal') {
-		$('portalContainer').style.height = parseInt(my_height)-154+'px';
-		$('appsContainer').style.height = parseInt(my_height)-154+'px';
-		$('runningAppsContainer').style.height = parseInt(my_height)-154+'px';
-		$('fileManagerContainer').style.height = parseInt(my_height)-154+'px';
-	}
 
-	if (debug)
-		my_height = parseInt(my_height)-149;
+		if (typeof(window.innerWidth) == 'number' || typeof(window.innerHeight) == 'number') {
+			this.my_width  = window.innerWidth;
+			this.my_height = window.innerHeight;
+		} else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+			this.my_width  = document.documentElement.clientWidth;
+			this.my_height = document.documentElement.clientHeight;
+		} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+			this.my_width  = document.body.clientWidth;
+			this.my_height = document.body.clientHeight;
+		}
 
-	Event.observe(window, 'unload', function() {
-		client_exit();
-	});
+		if (this.debug)
+			this.my_height = parseInt(this.my_height)-149;
 
-	daemon_loop();
-}
+		this.preload();
 
-function daemon_loop() {
-	push_log('[daemon] loop()', 'debug');
+		Event.observe(window, 'unload', this.client_exit.bind(this));
+	},
 
-	session_check();
+	preload: function() {
+		$('printerContainer').show();
+		$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
+			<param name="do_nothing" value="1"> \
+		</applet>';
+	},
 
-	if (session_state == 0 || session_state == 10) {
+	push_log: function(data_, level_) {
+		if (! this.debug)
+			return;
+
+		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
+
+		buf = new Date();
+		hour = buf.getHours();
+		if (hour < 10)
+			hour = '0'+hour;
+		minutes = buf.getMinutes();
+		if (minutes < 10)
+			minutes = '0'+minutes;
+		seconds = buf.getSeconds();
+		if (seconds < 10)
+			seconds = '0'+seconds;
+
+		$('debugContainer').innerHTML += '<div class="'+level_+'">['+hour+':'+minutes+':'+seconds+'] - '+data_+'</div>'+"\n";
+
+		if (flag)
+			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+	},
+
+	loop: function() {
+		this.push_log('[daemon] loop()', 'debug');
+
+		this.check_status();
+
+		if (this.session_state == 0 || this.session_state == 10) {
+			this.start_request();
+		} else if (this.session_state == 2 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
+			if (! this.started)
+				this.start();
+
+			this.started = true;
+		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9) {
+			this.do_ended();
+
+			return;
+		}
+
+		setTimeout(this.loop.bind(this), 2000);
+	},
+
+	client_exit: function() {
+		new Ajax.Request(
+			'../exit.php',
+			{
+				method: 'get',
+				parameters: {
+					access_id: this.access_id
+				}
+			}
+		);
+	},
+
+	check_status: function() {
+		this.push_log('[daemon] check_status()', 'debug');
+
+		new Ajax.Request(
+			'../whatsup.php',
+			{
+				method: 'get',
+				asynchronous: false,
+				parameters: {
+					differentiator: Math.floor(Math.random()*50000)
+				},
+				onSuccess: this.parse_check_status.bind(this)
+			}
+		);
+	},
+
+	parse_check_status: function(transport) {
+	},
+
+	start_request: function() {
+		this.push_log('[daemon] start_request()', 'debug');
+
 		new Ajax.Request(
 			'../start.php',
 			{
 				method: 'get',
 				parameters: {
-					width: parseInt(my_width),
-					height: parseInt(my_height)
+					width: parseInt(this.my_width),
+					height: parseInt(this.my_height)
 				}
 			}
 		);
-	} else if (session_state == 2 && $('splashContainer').visible() && !$('appletContainer').visible()) {
-		if (! session_started) {
-			access_id = 'desktop';
+	},
 
-			switch_splash_to_applet();
+	start: function() {
+		this.access_id = 'desktop';
 
-			if (session_mode == 'portal') {
-				list_apps();
-				load_ajaxplorer();
-				list_news();
+		this.do_started();
+	},
+
+	do_started: function() {
+		new Ajax.Request(
+			'../access.php',
+			{
+				method: 'get',
+				parameters: {
+					application_id: this.access_id
+				},
+				onSuccess: this.parse_do_started.bind(this)
 			}
+		);
+	},
+
+	parse_do_started: function(transport) {
+		var buffer;
+
+		$('splashContainer').hide();
+		if ($('menuContainer'))
+			$('menuContainer').show();
+
+		try {
+			var xml = transport.responseXML;
+			buffer = xml.getElementsByTagName('session');
+			if (buffer.length != 1) {
+				this.push_log('[applet] bad xml format 1', 'error');
+				return;
+			}
+
+			var sessionNode = buffer[0];
+
+			buffer = sessionNode.getElementsByTagName('parameters');
+			var parametersNode = buffer[0];
+
+			if (this.applet_width == -1)
+				this.applet_width = parametersNode.getAttribute('width');
+			if (this.applet_height == -1)
+				this.applet_height = parametersNode.getAttribute('height');
+			applet_share_desktop = parametersNode.getAttribute('share_desktop');
+			applet_view_only = parametersNode.getAttribute('view_only');
+
+			buffer = sessionNode.getElementsByTagName('ssh');
+			var sshNode = buffer[0];
+
+			applet_ssh_host = sshNode.getAttribute('host');
+			applet_ssh_user = sshNode.getAttribute('user');
+			applet_ssh_passwd = sshNode.getAttribute('passwd');
+
+			buffer = sshNode.getElementsByTagName('port');
+			applet_ssh_ports = '';
+			for (var i = 0; i < buffer.length; i++) {
+				applet_ssh_ports = applet_ssh_ports+buffer[i].firstChild.nodeValue;
+				if (i < buffer.length-1)
+					applet_ssh_ports = applet_ssh_ports+',';
+			}
+
+			buffer = sessionNode.getElementsByTagName('vnc');
+			var vncNode = buffer[0];
+			applet_vnc_host = vncNode.getAttribute('host');
+			applet_vnc_port = vncNode.getAttribute('port');
+			applet_vnc_passwd = vncNode.getAttribute('passwd');
+
+			buffer = vncNode.getElementsByTagName('quality');
+			var vncQualityNode = buffer[0];
+
+			applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
+			applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
+			applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
+			applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
+
+			applet_have_proxy = false;
+			buffer = sessionNode.getElementsByTagName('proxy');
+			if (buffer.length == 1) {
+				applet_have_proxy = true;
+
+				var proxyNode = buffer[0];
+
+				applet_proxy_type = proxyNode.getAttribute('type');
+				applet_proxy_host = proxyNode.getAttribute('host');
+				applet_proxy_port = proxyNode.getAttribute('port');
+				applet_proxy_username = proxyNode.getAttribute('username');
+				applet_proxy_password = proxyNode.getAttribute('password');
+			}
+		} catch(e) {
+			this.push_log('[applet] bad xml format 2', 'error');
+			return;
 		}
 
-		session_started = true;
-	} else if ((old_session_state == 2 && session_state != 2) || session_state == 3 || session_state == 4) {
-		window_alive = false;
-		switch_applet_to_end();
-		return;
+		applet_html_string = '<applet code="'+this.applet_main_class+'" codebase="../applet/" archive="'+this.applet_version+'" mayscript="true" width="'+this.applet_width+'" height="'+this.applet_height+'"> \
+			<param name="name" value="ulteoapplet" /> \
+			<param name="code" value="'+this.applet_main_class+'" /> \
+			<param name="codebase" value="../applet/" /> \
+			<param name="archive" value="'+this.applet_version+'" /> \
+			<param name="cache_archive" value="'+this.applet_version+'" /> \
+			<param name="cache_archive_ex" value="'+this.applet_version+';preload" /> \
+			\
+			<param name="SSH" value="yes" /> \
+			<param name="ssh.host" value="'+applet_ssh_host+'" /> \
+			<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
+			<param name="ssh.user" value="'+applet_ssh_user+'" /> \
+			<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
+			\
+			<param name="Share desktop" value="'+applet_share_desktop+'" /> \
+			<param name="View only" value="'+applet_view_only+'" /> \
+			\
+			<param name="HOST" value="'+applet_vnc_host+'" /> \
+			<param name="PORT" value="'+applet_vnc_port+'" /> \
+			<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
+			\
+			<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
+			<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
+			<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
+			<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
+			\
+			<!-- Caching options --> \
+			<param name="rfb.cache.enabled" value="true" /> \
+			<param name="rfb.cache.ver.major" value="1" /> \
+			<param name="rfb.cache.ver.minor" value="0" /> \
+			<param name="rfb.cache.size" value="42336000" /> \
+			<param name="rfb.cache.alg" value="LRU" /> \
+			<param name="rfb.cache.datasize" value="2000000" />';
+
+		if (applet_have_proxy) {
+			applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \
+				<param name="proxyHost" value="'+applet_proxy_host+'" /> \
+				<param name="proxyPort" value="'+applet_proxy_port+'" /> \
+				<param name="proxyUsername" value="'+applet_proxy_username+'" /> \
+				<param name="proxyPassword" value="'+applet_proxy_password+'" />';
+		}
+
+		applet_html_string = applet_html_string+'</applet>';
+
+		$('appletContainer').innerHTML = applet_html_string;
+
+		var appletNode = $('appletContainer').getElementsByTagName('applet');
+		if (appletNode.length > 0) {
+			appletNode = appletNode[0];
+
+			appletNode.width = this.applet_width;
+			appletNode.height = this.applet_height;
+		}
+
+		if ($('mainWrap'))
+			$('mainWrap').show();
+		$('appletContainer').show();
+	},
+
+	do_ended: function() {
+		$('splashContainer').hide();
+		$('appletContainer').hide();
+		if ($('endContainer'))
+			$('endContainer').show();
+	},
+
+	do_print: function(path_, timestamp_) {
+		this.push_log('[print] PDF: yes', 'info');
+
+		var print_url = this.protocol+'//'+this.server+':'+this.port+'/print.php?timestamp='+timestamp;
+
+			$('printerContainer').show();
+			$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
+				<param name="url" value="'+print_url+'"> \
+					<param name="filename" value="'+path_+'"> \
+				</applet>';
+
+		this.push_log('[print] Applet: starting', 'warning');
 	}
-
-	setTimeout(function() {
-		daemon_loop();
-	}, refresh);
-}
-
-function switch_splash_to_applet() {
-	new Ajax.Request(
-		'../access.php',
-		{
-			method: 'get',
-			parameters: {
-				application_id: access_id
-			},
-			onSuccess: function(transport) {
-				var buffer;
-
-				$('splashContainer').hide();
-				if ($('menuContainer'))
-					$('menuContainer').show();
-
-				try {
-					var xml = transport.responseXML;
-					buffer = xml.getElementsByTagName('session');
-					if (buffer.length != 1) {
-						push_log('[applet] bad xml format 1', 'error');
-						return;
-					}
-
-					var sessionNode = buffer[0];
-
-					if (session_mode == 'desktop') {
-						buffer = sessionNode.getElementsByTagName('parameters');
-						var parametersNode = buffer[0];
-
-						applet_width = parametersNode.getAttribute('width');
-						applet_height = parametersNode.getAttribute('height');
-						applet_share_desktop = parametersNode.getAttribute('share_desktop');
-						applet_view_only = parametersNode.getAttribute('view_only');
-					} else if (session_mode == 'portal') {
-						applet_width = 1;
-						applet_height = 1;
-					}
-
-					buffer = sessionNode.getElementsByTagName('ssh');
-					var sshNode = buffer[0];
-
-					applet_ssh_host = sshNode.getAttribute('host');
-					applet_ssh_user = sshNode.getAttribute('user');
-					applet_ssh_passwd = sshNode.getAttribute('passwd');
-
-					buffer = sshNode.getElementsByTagName('port');
-					applet_ssh_ports = '';
-					for (var i = 0; i < buffer.length; i++) {
-					    applet_ssh_ports = applet_ssh_ports+buffer[i].firstChild.nodeValue;
-						if (i < buffer.length-1)
-							applet_ssh_ports = applet_ssh_ports+',';
-					}
-
-					if (session_mode == 'desktop') {
-						buffer = sessionNode.getElementsByTagName('vnc');
-						var vncNode = buffer[0];
-
-						applet_vnc_host = vncNode.getAttribute('host');
-						applet_vnc_port = vncNode.getAttribute('port');
-						applet_vnc_passwd = vncNode.getAttribute('passwd');
-
-						buffer = vncNode.getElementsByTagName('quality');
-						var vncQualityNode = buffer[0];
-
-						applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
-						applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
-						applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
-						applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
-					}
-
-					applet_have_proxy = false;
-					buffer = sessionNode.getElementsByTagName('proxy');
-					if (buffer.length == 1) {
-						applet_have_proxy = true;
-
-						var proxyNode = buffer[0];
-
-						applet_proxy_type = proxyNode.getAttribute('type');
-						applet_proxy_host = proxyNode.getAttribute('host');
-						applet_proxy_port = proxyNode.getAttribute('port');
-						applet_proxy_username = proxyNode.getAttribute('username');
-						applet_proxy_password = proxyNode.getAttribute('password');
-					}
-				} catch(e) {
-					push_log('[applet] bad xml format 2', 'error');
-					return;
-				}
-
-				applet_html_string = '<applet code="'+applet_main_class+'" codebase="../applet/" archive="'+applet_version+'" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
-					<param name="name" value="ulteoapplet" /> \
-					<param name="code" value="'+applet_main_class+'" /> \
-					<param name="codebase" value="../applet/" /> \
-					<param name="archive" value="'+applet_version+'" /> \
-					<param name="cache_archive" value="'+applet_version+'" /> \
-					<param name="cache_archive_ex" value="'+applet_version+';preload" /> \
-					\
-					<param name="SSH" value="yes" /> \
-					<param name="ssh.host" value="'+applet_ssh_host+'" /> \
-					<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
-					<param name="ssh.user" value="'+applet_ssh_user+'" /> \
-					<param name="ssh.password" value="'+applet_ssh_passwd+'" />';
-
-				if (session_mode == 'desktop') {
-					applet_html_string = applet_html_string+' \
-						\
-						<param name="Share desktop" value="'+applet_share_desktop+'" /> \
-						<param name="View only" value="'+applet_view_only+'" /> \
-						\
-						<param name="HOST" value="'+applet_vnc_host+'" /> \
-						<param name="PORT" value="'+applet_vnc_port+'" /> \
-						<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
-						\
-						<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
-						<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
-						<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
-						<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
-						\
-						<!-- Caching options --> \
-						<param name="rfb.cache.enabled" value="true" /> \
-						<param name="rfb.cache.ver.major" value="1" /> \
-						<param name="rfb.cache.ver.minor" value="0" /> \
-						<param name="rfb.cache.size" value="42336000" /> \
-						<param name="rfb.cache.alg" value="LRU" /> \
-						<param name="rfb.cache.datasize" value="2000000" />';
-				}
-
-				if (applet_have_proxy) {
-					applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \
-					<param name="proxyHost" value="'+applet_proxy_host+'" /> \
-					<param name="proxyPort" value="'+applet_proxy_port+'" /> \
-					<param name="proxyUsername" value="'+applet_proxy_username+'" /> \
-					<param name="proxyPassword" value="'+applet_proxy_password+'" />';
-				}
-
-				applet_html_string = applet_html_string+'</applet>';
-
-				$('appletContainer').innerHTML = applet_html_string;
-
-				var appletNode = $('appletContainer').getElementsByTagName('applet');
-				if (appletNode.length > 0) {
-					appletNode = appletNode[0];
-
-					if (session_mode == 'desktop') {
-						appletNode.width = parseInt(my_width);
-						appletNode.height = parseInt(my_height);
-					} else if (session_mode == 'portal') {
-						appletNode.width = 1;
-						appletNode.height = 1;
-					}
-				}
-				if (session_mode == 'portal')
-					$('mainWrap').show();
-				$('appletContainer').show();
-			}
-		}
-	);
-}
-
-function switch_applet_to_end() {
-	$('splashContainer').hide();
-	if ($('menuContainer'))
-		$('menuContainer').hide();
-	$('appletContainer').hide();
-	if (session_mode == 'portal')
-		$('mainWrap').hide();
-	$('endContainer').show();
-
-// 	if (text_ != false)
-// 		$('errorContainer').innerHTML = text_;
-}
-
-function client_exit() {
-	new Ajax.Request(
-		'../exit.php',
-		{
-			method: 'get'
-		}
-	);
-}
+});
 
 function clearDebug() {
 	$('debugContainer').innerHTML = '';
@@ -322,187 +350,10 @@ function switchDebug(level_) {
 		$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
 }
 
-function push_log(data_, level_) {
-	if (!debug)
-		return;
-
-	//if (! $('level_'+level_).checked)
-	//	return;
-
-	var flag = ($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight;
-
-	buf = new Date();
-	hour = buf.getHours();
-	if (hour < 10)
-		hour = '0'+hour;
-	minutes = buf.getMinutes();
-	if (minutes < 10)
-		minutes = '0'+minutes;
-	seconds = buf.getSeconds();
-	if (seconds < 10)
-		seconds = '0'+seconds;
-
-	$('debugContainer').innerHTML += '<div class="'+level_+'">['+hour+':'+minutes+':'+seconds+'] - '+data_+'</div>'+"\n";
-
-	if (flag)
-		$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
-}
-
-function session_check() {
-	push_log('[session] check()', 'debug');
-	new Ajax.Request(
-		'../whatsup.php',
-		{
-			method: 'get',
-			asynchronous: false,
-			parameters: {
-					differentiator: Math.floor(Math.random()*50000)
-			},
-			onSuccess: onUpdateInfos
-		}
-	);
-}
-
-function onUpdateInfos(transport) {
-  var xml = transport.responseXML;
-
-  var buffer = xml.getElementsByTagName('session');
-
-  if (buffer.length != 1) {
-    push_log('[session] bad xml format', 'error');
-    return;
-  }
-
-  var sessionNode = buffer[0];
-
-  old_session_state = session_state;
-
-  try { // IE does not have hasAttribute in DOM API...
-    session_state = sessionNode.getAttribute('status');
-  } catch(e) {
-    push_log('[session] bad xml format', 'error');
-    return;
-  }
-
-  if (session_state != old_session_state)
-    push_log('[session] Change status from '+old_session_state+' to '+session_state, 'info');
-  if (session_state != 2)
-    push_log('[session] Status: '+session_state, 'warning');
-  else
-    push_log('[session] Status: '+session_state, 'debug');
-
-  if (session_mode == 'portal') {
-    var buffer = xml.getElementsByTagName('applications');
-
-    if (buffer.length != 1) {
-      push_log('[applications] bad xml format', 'error');
-      return;
-    }
-
-    var applicationsNode = buffer[0];
-
-    var runningApplicationsNodes = applicationsNode.getElementsByTagName('running');
-    var apps;
-    for (var i = 0; i < runningApplicationsNodes.length; i++) {
-      var app_id = runningApplicationsNodes[i].getAttribute('app_id');
-      var access_id = runningApplicationsNodes[i].getAttribute('job');
-      var app_status = runningApplicationsNodes[i].getAttribute('status');
-
-      apps = apps+','+app_id+'-'+access_id+'-'+app_status;
-    }
-
-    list_running_apps(apps);
-  }
-
-  var printNode = sessionNode.getElementsByTagName('print');
-  if (printNode.length > 0) {
-    printNode = printNode[0];
-
-    var path = printNode.getAttribute('path');
-    var timestamp = printNode.getAttribute('time');
-    do_print(path, timestamp);
-  }
-
-  var sharingNode = sessionNode.getElementsByTagName('sharing');
-  if (sharingNode.length > 0) {
-    sharingNode = sharingNode[0];
-
-    try { // IE does not have hasAttribute in DOM API...
-      var nb = sharingNode.getAttribute('count');
-    } catch(e) {
-      push_log('[session] bad xml format', 'error');
-      return;
-    }
-
-    if (nb > 0) {
-        var totoNodes = sharingNode.getElementsByTagName('share');
-
-        var html = '<div style="margin-left: 0px; margin-right: 0px; text-align: left"><ul>';
-
-        var nb_share_active = 0;
-        for (var i = 0; i < totoNodes.length; i++) {
-            var buf = totoNodes[i];
-
-            var email = buf.getAttribute('email');
-            var mode = buf.getAttribute('mode');
-            var alive = buf.getAttribute('alive');
-            if (alive == 1)
-              nb_share_active += 1;
-            var joined = buf.getAttribute('joined');
-
-            html += '<li>';
-
-            html += '<span style="';
-            if (alive != 1 && joined != 1)
-              html += 'color: orange;';
-            if (alive == 1 && joined == 1)
-              html += 'color: green;';
-            if (alive != 1 && joined == 1)
-              html += 'color: blue; text-decoration: line-through;';
-            html += '">'+email+'</span>';
-
-            html += ' ('+mode+')</li>';
-        }
-
-        html += '</ul></div>';
-
-        $('menuShareContent').innerHTML = html;
-
-      if (nb_share != nb_share_active) {
-        push_log('[session] Watching desktop: '+nb_share_active+' users', 'info');
-        nb_share = nb_share_active;
-      }
-
-      if (nb_share_active != 0) {
-        var buf_html = '<img style="margin-left: 5px;" src="../media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share_active+' user';
-        if (nb_share_active > 1)
-          buf_html += 's';
-        buf_html += '</span>';
-        $('menuShareWarning').innerHTML = buf_html;
-      } else
-        $('menuShareWarning').innerHTML = '';
-    }
-  }
-}
-
-function do_print(path, timestamp) {
-  push_log('[print] PDF: yes', 'info');
-
-  var print_url = protocol+'//'+server+':'+port+'/print.php?timestamp='+timestamp;
-
-	$('printerContainer').show();
-	$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
-		<param name="url" value="'+print_url+'"> \
-		<param name="filename" value="'+path+'"> \
-	</applet>';
-
-  push_log('[print] Applet: starting', 'warning');
-}
-
-function do_invite() {
-	if (session_mode == 'desktop')
+function doInvite(mode_) {
+	if (mode_ == 'desktop')
 		var invite_access_id = 'desktop';
-	else if (session_mode == 'portal')
+	else if (mode_ == 'portal')
 		var invite_access_id = $('invite_access_id').value;
 
 	var email = $('invite_email').value;
@@ -526,14 +377,14 @@ function do_invite() {
 					$('invite_mode').disabled = true;
 					$('invite_submit').disabled = true;
 
-					if (session_mode == 'desktop')
+					if (mode_ == 'desktop')
 						$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
-					else if (session_mode == 'portal')
+					else if (mode_ == 'portal')
 						showError('Unable to send invitation mail, please try again later...');
 				} else if (transport.responseText == 'OK') {
 					$('invite_submit').disabled = false;
 
-					if (session_mode == 'portal')
+					if (mode_ == 'portal')
 						showOk('Invitation has been sent !');
 				}
 			}

@@ -40,11 +40,17 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
-		<script type="text/javascript" src="application.js" charset="utf-8"></script>
+
+		<script type="text/javascript" src="../media/script/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../media/script/daemon_resumeapp.js" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
+			var daemon;
+
 			Event.observe(window, 'load', function() {
-				application_init_resume('ulteo-applet.jar', 'org.ulteo.OvdApplet', '<?php echo $_GET['access_id']; ?>', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new ResumeApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon.access_id = '<?php echo $_GET['access_id']; ?>';
+				daemon.loop();
 			});
 		</script>
 	</head>

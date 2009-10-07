@@ -26,7 +26,7 @@ echo '<td colspan="2">';
 echo '	<table style="width: 100%;" border="0" cellspacing="0" cellpadding="10"><tr><td>';
 echo '		<h2 style="text-align: center;">'._('Application sharing').'</h2>';
 echo '	<fieldset style="border: 0;">';
-echo '		<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">';
+echo '		<form action="javascript:;" method="post" onsubmit="doInvite(\'portal\'); return false;">';
 echo '			<input type="hidden" id="invite_access_id" name="access_id" value="'.$_GET['access_id'].'" />';
 echo '			<p>'._('Email address').': <input type="text" id="invite_email" name="email" value="" /> <input class="input_checkbox" type="checkbox" id="invite_mode" name="mode" /> '._('active mode').'</p>';
 echo '			<p><input type="submit" id="invite_submit" value="'._('Invite').'" /></p>';

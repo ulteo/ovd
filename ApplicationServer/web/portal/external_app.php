@@ -64,11 +64,18 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
-		<script type="text/javascript" src="application.js" charset="utf-8"></script>
+
+		<script type="text/javascript" src="../media/script/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../media/script/daemon_startapp.js" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
+			var daemon;
+
 			Event.observe(window, 'load', function() {
-				application_init('<?php echo $_GET['app_id']; ?>', '<?php echo $doc; ?>', 'ulteo-applet.jar', 'org.ulteo.OvdApplet', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
+				daemon.doc = '<?php echo $doc; ?>';
+				daemon.loop();
 			});
 		</script>
 	</head>
@@ -83,7 +90,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Application</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading <?php echo $window_title; ?></span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">

@@ -136,9 +136,11 @@ if ($_SESSION['type'] == 'invite') {
 	@file_put_contents($buf.'/email', $_SESSION['parameters']['invite_email']);
 	@file_put_contents($buf.'/mode', ($_SESSION['parameters']['view_only'] == 'No')?'active':'passive');
 
+	$buf_access_id = @file_get_contents($buf.'/access_id');
+
 	$_SESSION['tokens'][$_GET['token']] = array(
 		'session_id'	=>	$_SESSION['session'],
-		'access_id'		=>	'desktop'
+		'access_id'		=>	(($buf_access_id !== false)?$buf_access_id:'desktop')
 	);
 }
 

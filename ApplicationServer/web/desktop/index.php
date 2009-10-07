@@ -39,11 +39,17 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
+
 		<script type="text/javascript" src="../media/script/daemon.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../media/script/daemon_desktop.js" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
+			var daemon;
+
 			Event.observe(window, 'load', function() {
-				daemon_init('desktop', 'ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon.access_id = 'desktop';
+				daemon.loop();
 			});
 		</script>
 	</head>
@@ -74,7 +80,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 					<span id="menuShareContent"></span>
 					<span id="menuShareError"></span>
 					<fieldset style="border: 0;">
-						<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">
+						<form action="javascript:;" method="post" onsubmit="doInvite('desktop'); return false;">
 							<p><?php echo _('Email address'); ?>: <input type="text" id="invite_email" name="email" value="" />
 							<input class="input_checkbox" type="checkbox" id="invite_mode" name="mode" /> <?php echo _('active mode'); ?></p>
 
