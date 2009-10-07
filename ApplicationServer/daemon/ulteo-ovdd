@@ -95,6 +95,7 @@ session_check_status() {
     # if a session is required to stop asap
     if [ $RUNASAP -eq 3 ]; then
         log_INFO "Killing Session $SESSID"
+        application_purge_all ${SESSID}
         session_purge ${SESSID}
         return 1
     fi
