@@ -328,12 +328,14 @@ session_suspend() {
     local SESSID_DIR=$SPOOL/sessions/$SESSID
     local i=$(cat $SESSID_DIR/private/id)
 
+    application_suspend_all $SESSID
+
     session_switch_status $SESSID 9
 
     local SSH_USER=$(cat $SESSID_DIR/private/ssh_user)
 
     log_DEBUG "seeking SSH user $SSH_USER in /etc/passwd"
-    if grep -q -e "$SSH_USER\:x" /etc/passwd; then
+    if ! grep -q -e "$SSH_USER\:x" /etc/passwd; then
         log_ERROR "No ssh user in /etc/passwd"
         return 1
     fi
@@ -370,13 +372,19 @@ session_restore() {
     #
     # we encode the encrypted pass in hexa because the sshvnc 
     # applet wants it
-    HEXA_SSH_PASS=$(echo $SSH_PASS | str2hex)
+    HEXA_SSH_PASS=$(echo -n $SSH_PASS | str2hex)
     echo $HEXA_SSH_PASS > $SESSID_DIR/private/hexasshpasswd
 
     session_install_client $SESSID
     [ -f ${SESSID_DIR}/infos/owner_exit ] && \
         rm ${SESSID_DIR}/infos/owner_exit
     log_INFO "session_restore: $i"
+
+    local type=$(cat ${SESSID_DIR}/parameters/session_mode)
+    if [ "$type" = "desktop" ]; then
+        application_switch_status $SESSID "desktop" 11
+    fi
+
     session_switch_status $SESSID 2
 }
 

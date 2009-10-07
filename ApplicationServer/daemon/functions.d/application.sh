@@ -191,7 +191,19 @@ application_purge_all() {
     for dir in $dirs; do
         local job=$(basename $file)
 
-        session_switch_status $sessid 3
+        application_switch_status $sessid 3
         application_purge $job $dir
+    done
+}
+
+
+application_suspend_all() {
+    local sessid=$1
+    local dirs=$(find $SESSID_DIR/sessions/ -type d -maxdepth 1 -mindepth 1)
+
+    for dir in $dirs; do
+        local job=$(basename $file)
+
+        application_switch_status $sessid $job 8
     done
 }

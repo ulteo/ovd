@@ -254,9 +254,15 @@ session_check_status() {
             local diff=$(( $ready_t1 - $ready_t0 ))
             if [ $diff -gt $timeout ]; then
                 log_ERROR "No ssh connection since $timeout seconds"
-                session_switch_status $SESSID 3
-                session_check_status $SESSID 3
-                return $?
+                # Suspend the session if the sesion was running and it's setup to suspend
+                if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
+                    session_suspend $SESSID
+                    if [ $? -ne 0 ]; then
+                        session_switch_status $SESSID 3
+                        session_check_status $SESSID 3
+                        return $?
+                    fi
+                fi
             fi
         else
             if [ ! -f ${SESSID_DIR}/private/ssh_connected ]; then
