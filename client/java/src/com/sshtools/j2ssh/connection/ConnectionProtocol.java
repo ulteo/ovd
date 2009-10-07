@@ -154,6 +154,9 @@ public void onStart() {
         System.err.println("ConnectionProtocol:openChannel: after  random bug#2");
         lock.unlock();
 
+        org.ulteo.Logger.debug("SshMessageStore.Class : "+result.getClass());
+        org.ulteo.Logger.debug("ConnectionProtocol.java : Result Id = "+result.getMessageId());
+        org.ulteo.Logger.debug("SshMessageStore.MessageName : "+msg.getMessageName());
         if (result.getMessageId() ==
             SshMsgChannelOpenConfirmation.SSH_MSG_CHANNEL_OPEN_CONFIRMATION) {
           SshMsgChannelOpenConfirmation conf = (SshMsgChannelOpenConfirmation)
