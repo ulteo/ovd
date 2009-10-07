@@ -1,6 +1,6 @@
 === modified file 'proto.h'
---- old/proto.h	2009-10-06 14:09:51 +0000
-+++ new/proto.h	2009-10-06 16:09:15 +0000
+--- old/proto.h	2009-10-07 09:51:23 +0000
++++ new/proto.h	2009-10-07 09:53:09 +0000
 @@ -312,6 +312,7 @@
  unsigned int seamless_send_focus(unsigned long id, unsigned long flags);
  unsigned int seamless_send_spawn(char *cmdline);
@@ -11,8 +11,8 @@
  void scard_unlock(int lock);
 
 === modified file 'rdesktop.c'
---- old/rdesktop.c	2009-10-06 14:09:51 +0000
-+++ new/rdesktop.c	2009-10-06 16:09:15 +0000
+--- old/rdesktop.c	2009-10-07 09:51:23 +0000
++++ new/rdesktop.c	2009-10-07 09:53:09 +0000
 @@ -50,6 +50,10 @@
  
  #include "ssl.h"
@@ -136,8 +136,8 @@
  		usage(argv[0]);
 
 === modified file 'seamless.c'
---- old/seamless.c	2009-10-06 14:09:51 +0000
-+++ new/seamless.c	2009-10-06 16:09:15 +0000
+--- old/seamless.c	2009-10-07 09:51:23 +0000
++++ new/seamless.c	2009-10-07 09:55:12 +0000
 @@ -588,6 +588,13 @@
  		return seamless_send("START_APP", "0x%08lx,%s \"%s\"", token, cmdline, arg);
  }
@@ -152,17 +152,7 @@
  /* Check seamless master mode socket and send spawn command if input found.
   * Returns 0 if a slave connected and sent command, 1 otherwise.  */
  int
-@@ -714,13 +721,54 @@
- 		{
- 			dis = xdisplay_register(displayName);
- 			if(!dis)
-+			{
-+				kill((pid_t)pid, SIGTERM);
- 				return 1;
-+			}
- 		}
- 
- 		seamless_send_start_app(cmdline, arg, pid, startup_id, dis);
+@@ -726,6 +733,44 @@
  
  		return 0;
  	}
@@ -170,7 +160,7 @@
 +	{
 +		char *icon;
 +
-+		mm = strtok(mm, "|");
++			mm = strtok(mm, "|");
 +		icon = strtok(NULL, "|");
 +		displayName = strtok(NULL, "|");
 +		if(strcmp(icon, "ON") == 0)
@@ -209,9 +199,9 @@
  
 
 === modified file 'xdisplay.c'
---- old/xdisplay.c	2009-10-06 14:09:51 +0000
-+++ new/xdisplay.c	2009-10-06 16:09:15 +0000
-@@ -46,10 +46,11 @@
+--- old/xdisplay.c	2009-10-07 09:51:23 +0000
++++ new/xdisplay.c	2009-10-07 09:58:04 +0000
+@@ -46,6 +46,7 @@
  
  extern unsigned char g_pointer_log_to_phys_map[32];
  extern RD_BOOL g_numlock_sync;
@@ -219,12 +209,7 @@
  
  xdisplay* xdisplay_g_first = NULL;
  
--xdisplay* xdisplay_find(const char *name);
-+xdisplay* xdisplay_find(char *name);
- 
- static RD_BOOL xdisplay_get_key_state(xdisplay *dis, unsigned int state, uint32 keysym);
- static unsigned int xdisplay_read_keyboard_state(xdisplay *dis);
-@@ -72,6 +73,32 @@
+@@ -73,6 +74,32 @@
  	dis->next = xdisplay_g_first;
  	xdisplay_g_first = dis;
  	DEBUG(("Display %s added\n", dis->name));
@@ -257,16 +242,7 @@
  }
  
  RD_BOOL
-@@ -110,7 +137,7 @@
- }
- 
- xdisplay*
--xdisplay_register(const char *name)
-+xdisplay_register(char *name)
- {
- 	xdisplay *dis = NULL;
- 	int visuals_count;
-@@ -220,16 +247,38 @@
+@@ -223,6 +250,27 @@
  	return dis;
  }
  
@@ -292,23 +268,9 @@
 +}
 +
  xdisplay*
--xdisplay_find(const char *name)
-+xdisplay_find(char *name)
+ xdisplay_find(char *name)
  {
- 	xdisplay *dis = NULL;
- 
- 	if(name == NULL || xdisplay_g_first == NULL)
- 		return NULL;
- 
--	for(dis = xdisplay_g_first; dis; dis = dis->next){
--		if(strcmp(dis->name, name) == 0)
-+	for(dis = xdisplay_g_first; dis; dis = dis->next)
-+	{
-+		if(xdisplay_compare(dis->name, name))
- 			return dis;
- 	}
- 	return NULL;
-@@ -982,3 +1031,74 @@
+@@ -1025,3 +1073,74 @@
  		warning("Broken Window Manager: Timeout while waiting for ConfigureNotify\n");
  	}
  }
@@ -385,16 +347,9 @@
 +}
 
 === modified file 'xdisplay.h'
---- old/xdisplay.h	2009-10-06 14:09:51 +0000
-+++ new/xdisplay.h	2009-10-06 16:09:15 +0000
-@@ -68,12 +68,15 @@
- 	struct _xdisplay *next;
- } xdisplay;
- 
--xdisplay * xdisplay_register(const char * name);
-+xdisplay * xdisplay_register(char * name);
- RD_BOOL xdisplay_compare(char *dpy1, char *dpy2);
- void xdisplay_process_events_main();
+--- old/xdisplay.h	2009-10-07 09:51:23 +0000
++++ new/xdisplay.h	2009-10-07 09:59:12 +0000
+@@ -75,6 +75,9 @@
  void xdisplay_seamless_ack(unsigned int serial);
  void xdisplay_seamless_syncbegin(unsigned long flags);
  void xdisplay_group_destroy(unsigned long id, unsigned long flags);
@@ -406,8 +361,8 @@
  void xdisplay_get_window_attribs(xdisplay* dis, XSetWindowAttributes * attribs);
 
 === modified file 'xwindow.c'
---- old/xwindow.c	2009-10-06 14:09:51 +0000
-+++ new/xwindow.c	2009-10-06 16:09:15 +0000
+--- old/xwindow.c	2009-10-07 09:51:23 +0000
++++ new/xwindow.c	2009-10-07 09:53:09 +0000
 @@ -26,7 +26,7 @@
  
  extern RD_BOOL g_seamless_broken_restack;

@@ -1,6 +1,6 @@
 === modified file 'Makefile.in'
 --- old/Makefile.in	2009-09-25 11:33:43 +0000
-+++ new/Makefile.in	2009-10-06 14:09:51 +0000
++++ new/Makefile.in	2009-10-07 09:28:25 +0000
 @@ -32,7 +32,7 @@
  SCARDOBJ    = @SCARDOBJ@
  
@@ -22,7 +22,7 @@
 
 === modified file 'orders.c'
 --- old/orders.c	2009-09-25 11:33:43 +0000
-+++ new/orders.c	2009-10-06 14:09:51 +0000
++++ new/orders.c	2009-10-07 09:28:25 +0000
 @@ -20,6 +20,7 @@
  
  #include "rdesktop.h"
@@ -43,7 +43,7 @@
 
 === modified file 'proto.h'
 --- old/proto.h	2009-09-25 11:54:40 +0000
-+++ new/proto.h	2009-10-06 14:09:51 +0000
++++ new/proto.h	2009-10-07 09:28:25 +0000
 @@ -231,6 +231,7 @@
  uint16 ui_get_numlock_state(unsigned int state);
  void reset_modifier_keys(void);
@@ -55,7 +55,7 @@
 
 === modified file 'rdesktop.c'
 --- old/rdesktop.c	2009-10-06 13:14:29 +0000
-+++ new/rdesktop.c	2009-10-06 14:09:51 +0000
++++ new/rdesktop.c	2009-10-07 09:28:25 +0000
 @@ -29,6 +29,7 @@
  #include <ctype.h>		/* toupper */
  #include <errno.h>
@@ -89,7 +89,7 @@
 
 === modified file 'rdp.c'
 --- old/rdp.c	2009-09-25 11:33:43 +0000
-+++ new/rdp.c	2009-10-06 14:09:51 +0000
++++ new/rdp.c	2009-10-07 09:28:25 +0000
 @@ -24,6 +24,8 @@
  #include <unistd.h>
  #endif
@@ -128,7 +128,7 @@
 
 === modified file 'seamless.c'
 --- old/seamless.c	2009-10-06 13:14:29 +0000
-+++ new/seamless.c	2009-10-06 14:09:51 +0000
++++ new/seamless.c	2009-10-07 09:28:25 +0000
 @@ -30,6 +30,7 @@
  #include <signal.h>
  #include <unistd.h>
@@ -183,7 +183,7 @@
  		mm = strtok(NULL, "\n");
  		if(mm != NULL)
  		{
-@@ -691,9 +708,16 @@
+@@ -691,9 +708,21 @@
  		free(hh);
  		hh = NULL;
  
@@ -196,7 +196,12 @@
 +		{
 +			dis = xdisplay_register(displayName);
 +			if(!dis)
++			{
++				if(kill((pid_t)pid, SIGTERM) != 0)
++					error("rdesktop startapp process (%d) cannot be killed.\n", pid);
++
 +				return 1;
++			}
 +		}
 +
 +		seamless_send_start_app(cmdline, arg, pid, startup_id, dis);
@@ -206,7 +211,7 @@
 
 === modified file 'seamless.h'
 --- old/seamless.h	2009-10-06 13:14:29 +0000
-+++ new/seamless.h	2009-10-06 14:09:51 +0000
++++ new/seamless.h	2009-10-07 09:28:25 +0000
 @@ -18,6 +18,11 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
@@ -236,7 +241,7 @@
 
 === modified file 'types.h'
 --- old/types.h	2009-09-28 08:07:15 +0000
-+++ new/types.h	2009-10-06 14:09:51 +0000
++++ new/types.h	2009-10-07 09:28:25 +0000
 @@ -18,6 +18,9 @@
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
@@ -256,7 +261,7 @@
 
 === added file 'xcursor.c'
 --- old/xcursor.c	1970-01-01 00:00:00 +0000
-+++ new/xcursor.c	2009-10-06 14:09:51 +0000
++++ new/xcursor.c	2009-10-07 09:28:25 +0000
 @@ -0,0 +1,290 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -551,7 +556,7 @@
 
 === added file 'xcursor.h'
 --- old/xcursor.h	1970-01-01 00:00:00 +0000
-+++ new/xcursor.h	2009-10-06 14:09:51 +0000
++++ new/xcursor.h	2009-10-07 09:28:25 +0000
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -588,8 +593,8 @@
 
 === added file 'xdisplay.c'
 --- old/xdisplay.c	1970-01-01 00:00:00 +0000
-+++ new/xdisplay.c	2009-10-06 14:09:51 +0000
-@@ -0,0 +1,984 @@
++++ new/xdisplay.c	2009-10-07 09:46:00 +0000
+@@ -0,0 +1,1027 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
 + * http://www.ulteo.com
@@ -641,8 +646,9 @@
 +
 +xdisplay* xdisplay_g_first = NULL;
 +
-+xdisplay* xdisplay_find(const char *name);
++xdisplay* xdisplay_find(char *name);
 +
++static void xdisplay_refresh_pointer_map(xdisplay *dis);
 +static RD_BOOL xdisplay_get_key_state(xdisplay *dis, unsigned int state, uint32 keysym);
 +static unsigned int xdisplay_read_keyboard_state(xdisplay *dis);
 +
@@ -671,6 +677,9 @@
 +{
 +	size_t size1, size2;
 +	char *a = dpy1, *b = dpy2;
++
++	if(!dpy1 || !dpy2)
++		return False;
 +
 +	if(strcmp(dpy1, dpy2) == 0)
 +		return True;
@@ -702,7 +711,7 @@
 +}
 +
 +xdisplay*
-+xdisplay_register(const char *name)
++xdisplay_register(char *name)
 +{
 +	xdisplay *dis = NULL;
 +	int visuals_count;
@@ -737,7 +746,6 @@
 +		error("strdup failed!\n");
 +		return NULL;
 +	}
-+	dis->mod_map = XGetModifierMapping(dis->display);
 +	dis->xserver_be = (ImageByteOrder(dis->display) == MSBFirst);
 +	dis->screen_num = DefaultScreen(dis->display);
 +	dis->screen = ScreenOfDisplay(dis->display, dis->screen_num);
@@ -813,7 +821,7 @@
 +}
 +
 +xdisplay*
-+xdisplay_find(const char *name)
++xdisplay_find(char *name)
 +{
 +	xdisplay *dis = NULL;
 +
@@ -821,7 +829,7 @@
 +		return NULL;
 +
 +	for(dis = xdisplay_g_first; dis; dis = dis->next){
-+		if(strcmp(dis->name, name) == 0)
++		if(xdisplay_compare(dis->name, name))
 +			return dis;
 +	}
 +	return NULL;
@@ -897,6 +905,28 @@
 +
 +	rdp_send_input(time(NULL), RDP_INPUT_MOUSE,
 +		       flags | button, xevent.xbutton.x_root, xevent.xbutton.y_root);
++}
++
++void
++xdisplay_refresh_pointer_map(xdisplay *dis)
++{
++	unsigned char phys_to_log_map[sizeof(dis->pointer_log_to_phys_map)];
++	int i, pointer_buttons;
++
++	pointer_buttons = XGetPointerMapping(dis->display, phys_to_log_map, sizeof(phys_to_log_map));
++	if (pointer_buttons > sizeof(phys_to_log_map))
++		pointer_buttons = sizeof(phys_to_log_map);
++
++	/* if multiple physical buttons map to the same logical button, then
++	 * use the lower numbered physical one */
++	for (i = pointer_buttons - 1; i >= 0; i--)
++	{
++		/* a user could specify arbitrary values for the logical button
++		 * number, ignore any that are abnormally large */
++		if (phys_to_log_map[i] > sizeof(dis->pointer_log_to_phys_map))
++			continue;
++		dis->pointer_log_to_phys_map[phys_to_log_map[i] - 1] = i + 1;
++	}
 +}
 +
 +unsigned int
@@ -1102,7 +1132,7 @@
 +					   get_ksname(keysym)));
 +
 +				ev_time = time(NULL);
-+				if (handle_special_keys(keysym, xevent.xkey.state, ev_time, False))
++				if (xdisplay_handle_special_keys(dis, keysym, xevent.xkey.state, ev_time, False))
 +					break;
 +
 +				xkeymap_send_keys(keysym, xevent.xkey.keycode, xevent.xkey.state,
@@ -1153,6 +1183,24 @@
 +					sw->state = xdisplay_ewmh_get_window_state(dis, sw->wnd);
 +					seamless_send_state(sw->id, sw->state, 0);
 +				}
++				break;
++			case MappingNotify:
++				/* Refresh keyboard mapping if it has changed. This is important for
++				   Xvnc, since it allocates keycodes dynamically */
++				if (xevent.xmapping.request == MappingKeyboard || xevent.xmapping.request == MappingModifier)
++					XRefreshKeyboardMapping(&xevent.xmapping);
++
++				if (xevent.xmapping.request == MappingModifier)
++				{
++					XFreeModifiermap(dis->mod_map);
++					dis->mod_map = XGetModifierMapping(dis->display);
++				}
++
++				if (xevent.xmapping.request == MappingPointer)
++				{
++					xdisplay_refresh_pointer_map(dis);
++				}
++
 +				break;
 +		}
 +	}
@@ -1577,8 +1625,8 @@
 
 === added file 'xdisplay.h'
 --- old/xdisplay.h	1970-01-01 00:00:00 +0000
-+++ new/xdisplay.h	2009-10-06 14:09:51 +0000
-@@ -0,0 +1,91 @@
++++ new/xdisplay.h	2009-10-07 09:47:08 +0000
+@@ -0,0 +1,92 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
 + * http://www.ulteo.com
@@ -1639,6 +1687,7 @@
 +	GC gc;
 +
 +	XModifierKeymap *mod_map;
++	unsigned char pointer_log_to_phys_map[32];
 +	XIM IM;
 +	XIC IC;
 +	RD_BOOL xserver_be;
@@ -1649,7 +1698,7 @@
 +	struct _xdisplay *next;
 +} xdisplay;
 +
-+xdisplay * xdisplay_register(const char * name);
++xdisplay * xdisplay_register(char * name);
 +RD_BOOL xdisplay_compare(char *dpy1, char *dpy2);
 +void xdisplay_process_events_main();
 +void xdisplay_seamless_ack(unsigned int serial);
@@ -1673,7 +1722,7 @@
 
 === modified file 'xkeymap.c'
 --- old/xkeymap.c	2009-09-25 11:33:43 +0000
-+++ new/xkeymap.c	2009-10-06 14:09:51 +0000
++++ new/xkeymap.c	2009-10-07 09:28:25 +0000
 @@ -454,7 +454,7 @@
  	XDisplayKeycodes(g_display, &min_keycode, (int *) &max_keycode);
  }
@@ -1686,7 +1735,7 @@
 
 === modified file 'xwin.c'
 --- old/xwin.c	2009-10-06 13:14:29 +0000
-+++ new/xwin.c	2009-10-06 14:09:51 +0000
++++ new/xwin.c	2009-10-07 09:28:25 +0000
 @@ -30,6 +30,9 @@
  #include "rdesktop.h"
  #include "xproto.h"
@@ -1916,7 +1965,7 @@
 
 === added file 'xwindow.c'
 --- old/xwindow.c	1970-01-01 00:00:00 +0000
-+++ new/xwindow.c	2009-10-06 14:09:51 +0000
++++ new/xwindow.c	2009-10-07 09:28:25 +0000
 @@ -0,0 +1,575 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
@@ -2496,7 +2545,7 @@
 
 === added file 'xwindow.h'
 --- old/xwindow.h	1970-01-01 00:00:00 +0000
-+++ new/xwindow.h	2009-10-06 14:09:51 +0000
++++ new/xwindow.h	2009-10-07 09:28:25 +0000
 @@ -0,0 +1,79 @@
 +/*
 + * Copyright (C) 2009 Ulteo SAS
