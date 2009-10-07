@@ -93,11 +93,11 @@ public void close() throws IOException {
   @Override
 public void write(byte[] b, int off, int len) throws IOException {
     if (isClosed) {
- 	 	IOException e = new IOException();
+// 	 	IOException e = new IOException();
 		String message = "The ChannelOutputStream is closed!";
-		String caption = "Connection error";
 		SshDialog.logErrorMessage(message);
-		throw e;
+//		throw e;
+ 	 	return;
     }
 
     byte[] data = null;
@@ -123,11 +123,11 @@ public void write(byte[] b, int off, int len) throws IOException {
   @Override
 public void write(int b) throws IOException {
     if (isClosed) {
- 	 	IOException e = new IOException();
+// 	 	IOException e = new IOException();
 		String message = "The ChannelOutputStream is closed!";
-		String caption = "Connection error";
 		SshDialog.logErrorMessage(message);
-		throw e;
+//		throw e;
+ 	 	return;
     }
 
     byte[] data = new byte[1];

@@ -451,7 +451,8 @@ public abstract class TransportProtocolCommon
 	      }
 	    }
     else {
-      throw new TransportProtocolException("The transport protocol is disconnected");
+      //throw new TransportProtocolException("The transport protocol is disconnected");
+    	SshDialog.logErrorMessage("The transport protocol is disconnected");
     }
   }
 
