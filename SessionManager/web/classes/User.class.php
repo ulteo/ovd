@@ -42,7 +42,7 @@ class User {
 
 	public function getLocale() {
 		if ( $this->hasAttribute('countrycode')) {
-			$desktop_locale = $this->getAttribute('countrycode'); // only works for ISO-3166
+			$language = $this->getAttribute('countrycode'); // only works for ISO-3166
 		}
 		else {
 			$prefs = Preferences::getInstance();
@@ -50,9 +50,9 @@ class User {
 				die_error('get Preferences failed',__FILE__,__LINE__);
 			
 			$default_settings = $prefs->get('general', 'session_settings_defaults');
-			$desktop_locale = $default_settings['language'];
+			$language = $default_settings['language'];
 		}
-		$locale = locale2unix($desktop_locale);
+		$locale = locale2unix($language);
 		return $locale;
 	}
 

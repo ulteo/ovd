@@ -81,7 +81,7 @@ $user = $userDB->import($user_login);
 if (! is_object($user))
 	die_error('User importation failed',__FILE__,__LINE__);
 
-$desktop_locale = $user->getLocale();
+$language = $user->getLocale();
 
 $protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'debug');
 foreach ($protocol_vars as $protocol_var) {
@@ -198,7 +198,7 @@ $default_args = array(
 	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
-	'locale'			=>	locale2unix($desktop_locale),
+	'locale'			=>	locale2unix($language),
 	'windows_keymap'	=>	$windows_keymap,
 	'quality'			=>	$desktop_quality,
 );

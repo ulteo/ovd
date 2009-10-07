@@ -47,7 +47,7 @@ if (isset($prefs->elements['general']['session_settings_defaults']['session_mode
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
-$desktop_locale = $default_settings['language'];
+$language = $default_settings['language'];
 $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $desktop_quality = $default_settings['quality'];
@@ -312,11 +312,11 @@ require_once('header.php');
 							<?php echo _('Language'); ?>
 						</td>
 						<td>
-							<select id="desktop_locale" name="desktop_locale">
+							<select id="language" name="language">
 								<?php
 									foreach ($list_languages as $code => $language) {
 										echo '<option value="'.$code.'"';
-										if ($desktop_locale == $code)
+										if ($language == $code)
 											echo ' selected="selected"';
 										echo '>'.$language.'</option>'."\n";
 									}

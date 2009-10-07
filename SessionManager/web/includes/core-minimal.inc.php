@@ -60,8 +60,6 @@ if (! in_admin()) {
 	textdomain($domain);
 }
 
-$desktop_locale = $language;
-
 if (! file_exists(SESSIONMANAGER_CONF_FILE))
 	die_error(_('Configuration file missing'),__FILE__,__LINE__);
 
