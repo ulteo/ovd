@@ -17,8 +17,9 @@
     <property name="version.base" value="2.0~~+svn" />
     <property name="version.svn.revno" value="@REVISION@" />
 
-    <property name="tar"    value="ovd-applets-${version.base}${version.svn.revno}.tar" />
-    <property name="tar.gz"    value="${tar}.gz" />
+    <property name="tar.dir" value="ovd-applets-${version.base}${version.svn.revno}" />
+    <property name="tar"     value="${tar.dir}.tar" />
+    <property name="tar.gz"  value="${tar}.gz" />
 
     <target name="compile"
             description="compile the Java source code to class files">
@@ -103,13 +104,27 @@
     </target>
 
     <target name="dist" description="create a source tarball">
-        <tar tarfile="${tar}" basedir=".."
-             includes="java/build.xml, java/README,
-                       java/required_libraries/** , java/src/**,
-                       java/ulteo-printing-0.5.1.jar"
-             excludes="java/classes, java/libs" />
+        <mkdir dir="${tar.dir}" />
+        <copy todir="${tar.dir}">
+            <fileset file="build.xml" />
+            <fileset file="README" />
+            <fileset file="ulteo-printing-0.5.1.jar" />
+        </copy>
+        <mkdir dir="${tar.dir}/required_libraries" />
+        <copy todir="${tar.dir}/required_libraries">
+            <fileset dir="required_libraries" />
+        </copy>
+        <mkdir dir="${tar.dir}/src" />
+        <copy todir="${tar.dir}/src">
+            <fileset dir="src" />
+        </copy>
+
+        <tar longfile="gnu" tarfile="${tar}" basedir="./"
+             includes="${tar.dir}/**" />
         <gzip zipfile="${tar.gz}" src="${tar}" />
+
         <delete file="${tar}" />
+        <delete dir="${tar.dir}" />
     </target>
     <target name="clean" description="clean files">
         <delete dir="classes"/>
