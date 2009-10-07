@@ -30,6 +30,8 @@ var Daemon = Class.create({
 		this.protocol = window.location.protocol;
 		this.server = window.location.host;
 		this.port = window.location.port;
+		if (this.port == '')
+			this.port = 80;
 
 		this.session_state = -1;
 		this.old_session_state = -1;
@@ -318,7 +320,7 @@ var Daemon = Class.create({
 	do_print: function(path_, timestamp_) {
 		this.push_log('[print] PDF: yes', 'info');
 
-		var print_url = this.protocol+'//'+this.server+':'+this.port+'/print.php?timestamp='+timestamp;
+		var print_url = this.protocol+'//'+this.server+':'+this.port+'/applicationserver/print.php?timestamp='+timestamp;
 
 			$('printerContainer').show();
 			$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
