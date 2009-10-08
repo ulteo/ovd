@@ -169,9 +169,38 @@
         Shared folders is a feature that allows members of same user groups
         to work together on a virtual drive.
       </para>
-      <para>
-        To make it work, create one, add some user groups to it and start a session.
-      </para>
+      <itemizedlist>
+        <listitem>
+          <para>
+            First, create a new folder
+          </para>
+          <screenshot>
+            <screeninfo>Create a share folder</screeninfo>
+            <graphic fileref="img/admin-console/sharedfolder1.png"></graphic>
+          </screenshot>
+        </listitem>
+
+        <listitem>
+          <para>
+            Then click on it
+          </para>
+          <screenshot>
+            <screeninfo>select the shared folder</screeninfo>
+            <graphic fileref="img/admin-console/sharedfolder2.png"></graphic>
+          </screenshot>
+        </listitem>
+
+        <listitem>
+          <para>
+            And authorize some users groups to acces on it
+          </para>
+          <screenshot>
+            <screeninfo>authorize users groups to the shared folder</screeninfo>
+            <graphic fileref="img/admin-console/sharedfolder3.png"></graphic>
+          </screenshot>
+        </listitem>
+      </itemizedlist>
+
       <important>
         <para>
           In order to enjoy that feature, you have to choose the
@@ -181,10 +210,6 @@
           filesystems is planned for future versions.
         </para>
       </important>
-
-      <para>
-        This page is listing known tasks with their status.
-      </para>
     </section>
   </section>
 
