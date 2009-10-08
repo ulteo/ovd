@@ -1,3 +1,9 @@
+ovd-chroot-apps (2.0~beta1-0ulteo0) 2-0-staging; urgency=low
+
+  * New release: 2.0 beta1
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Thu, 08 Oct 2009 12:25:11 +0200
+
 ovd-chroot-apps (1.0-0ulteo0) ovd-polaris-experimental; urgency=low
 
   * New release
