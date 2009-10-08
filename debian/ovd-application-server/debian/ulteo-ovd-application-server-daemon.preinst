@@ -2,13 +2,44 @@
 
 #DEBHELPER#
 
-if ! grep -q "^polkituser:" /etc/group; then
-    exit 0;
+#
+# Following code handles problems left from a previous OVD install that cannot
+# be easily fixed in an other way
+#
+
+# Make the openoffice splash executable again
+OOOSPLASH=/usr/lib/openoffice/program/oosplash.bin
+if dpkg-statoverride --list $OOOSPLASH >/dev/null; then
+    dpkg-statoverride --remove $OOOSPLASH
+    chmod 755 $OOOSPLASH
 fi
+# And add our hack to make ooo work in portal mode if needed
+OOOWRAPPER=/usr/lib/openoffice/program/soffice
+if ! grep -q HACK $OOOWRAPPER; then
+    sed -i "/^exit/d" $OOOWRAPPER
+    cat >> $OOOWRAPPER <<EOF
+# HACK
+# Avoid this script to end and send OVD Portal the signal to close the window
+while ps ux | grep soffice.bin | grep -v grep; do
+    sleep 1
+done
+
+exit
+EOF
+fi
+# Make sure we use the system icon theme
+OOOCONF=/etc/openoffice/soffice.sh
+if ! grep -q ^OOO_FORCE_DESKTOP $OOOCONF; then
+    echo "OOO_FORCE_DESKTOP=gnome" >> $OOOCONF
+fi
+
 
 # This workarounds a bug with the extraction of the chroot
 # We need to change the permissions of some policykit scripts to avoid upgrade
 # failures of hal
+if ! grep -q "^polkituser:" /etc/group; then
+    exit 0;
+fi
 if ! ls -l /usr/lib/policykit/polkit-explicit-grant-helper | grep -q polkituser; then
     for i in polkit-read-auth-helper polkit-revoke-helper polkit-grant-helper polkit-explicit-grant-helper polkit-set-default-helper; do
         if [ -f /usr/lib/policykit/$i ]; then
