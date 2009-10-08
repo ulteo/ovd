@@ -320,7 +320,7 @@ var Daemon = Class.create({
 	do_print: function(path_, timestamp_) {
 		this.push_log('[print] PDF: yes', 'info');
 
-		var print_url = this.protocol+'//'+this.server+':'+this.port+'/applicationserver/print.php?timestamp='+timestamp;
+		var print_url = this.protocol+'//'+this.server+':'+this.port+'/applicationserver/print.php?timestamp='+timestamp_;
 
 			$('printerContainer').show();
 			$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
