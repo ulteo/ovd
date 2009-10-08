@@ -38,6 +38,16 @@ $sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
 
 $rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
+$width = @$_SESSION['width'];
+$height = @$_SESSION['height'];
+
+$geometry = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
+if ($geometry !== false) {
+	$buf = explode('x', $geometry);
+	$width = $buf[0];
+	$height = $buf[1];
+}
+
 if ($_SESSION['parameters']['quality'] == 2)
 	$eight_bits = 'yes';
 else
@@ -73,8 +83,8 @@ $session_node = $dom->createElement('session');
 $dom->appendChild($session_node);
 
 $parameters_node = $dom->createElement('parameters');
-$parameters_node->setAttribute('width', @$_SESSION['width']);
-$parameters_node->setAttribute('height', @$_SESSION['height']);
+$parameters_node->setAttribute('width', $width);
+$parameters_node->setAttribute('height', $height);
 $parameters_node->setAttribute('share_desktop', $_SESSION['share_desktop']);
 $parameters_node->setAttribute('view_only', $_SESSION['parameters']['view_only']);
 $session_node->appendChild($parameters_node);
