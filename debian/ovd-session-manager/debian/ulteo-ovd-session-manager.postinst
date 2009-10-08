@@ -7,7 +7,7 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
     exit 0
 fi
 
-CURLOPTS="--retry 3 --connect-timeout 60"
+CURLOPTS="--retry 3 --connect-timeout 60 -L"
 CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
 
 CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"

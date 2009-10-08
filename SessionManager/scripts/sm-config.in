@@ -27,7 +27,7 @@ WEBDIR=@WEBDIR@
 CRON_DIR=/etc/cron.hourly
 CRON_SCRIPT=$CONFDIR/cron.php
 
-CURLOPTS="--retry 3 --connect-timeout 60"
+CURLOPTS="--retry 3 --connect-timeout 60 -L"
 
 # helper functions
 die () {
