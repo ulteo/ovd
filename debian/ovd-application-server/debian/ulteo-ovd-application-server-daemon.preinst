@@ -15,7 +15,7 @@ if dpkg-statoverride --list $OOOSPLASH >/dev/null; then
 fi
 # And add our hack to make ooo work in portal mode if needed
 OOOWRAPPER=/usr/lib/openoffice/program/soffice
-if ! grep -q HACK $OOOWRAPPER; then
+if [ -f $OOOWRAPPER ] && ! grep -q HACK $OOOWRAPPER; then
     sed -i "/^exit/d" $OOOWRAPPER
     cat >> $OOOWRAPPER <<EOF
 # HACK
@@ -29,7 +29,7 @@ EOF
 fi
 # Make sure we use the system icon theme
 OOOCONF=/etc/openoffice/soffice.sh
-if ! grep -q ^OOO_FORCE_DESKTOP $OOOCONF; then
+if [ -f $OOOCONF ] && ! grep -q ^OOO_FORCE_DESKTOP $OOOCONF; then
     echo "OOO_FORCE_DESKTOP=gnome" >> $OOOCONF
 fi
 
