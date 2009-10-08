@@ -104,7 +104,7 @@
     </para>
 
     <para>
-      The Session Manager identifies an Application server using its
+      The Session Manager identifies an Application Server using its
       Fully Qualified Domain Name (FQDN).
     </para>
 
@@ -121,29 +121,28 @@
       </para>
 
       <para>
-	When an Application server sends a status, it sends an extra
+	When an Application Server sends a status, it sends an extra
 	argument named <emphasis>fqdn</emphasis>.  The Session Manager
 	performs 2 authentication tests and 1 authorization.
 
 	<itemizedlist>
-	  <listitem><para><emphasis role="strong">fqdn
-	  resoltuion:</emphasis> resolves the fqdn to get an ip address
-	  and tests if it matches the remote server ip
-	  ($SERVER['REMOTE_ADDR'] in php).  Authentication directly
+	  <listitem><para><emphasis role="strong">FQDN
+	  resolution:</emphasis> resolves the FQDN to get an IP address
+	  and tests if it matches the remote server IP
+	  ($SERVER['REMOTE_ADDR'] in PHP). Authentication directly
 	  depends on that match</para></listitem>
 
 	  <listitem><para><emphasis role="strong">reverse
-	  resolution:</emphasis> resolves the server ip address and tests
-	  if it matches the fqdn argument. Authentication directly
+	  resolution:</emphasis> resolves the server IP address and tests
+	  if it matches the FQDN argument. Authentication directly
 	  depends on that match. This test can be disabled in the
-	  administration console using <emphasis>Disable fqdn
+	  administration console using <emphasis>Disable FQDN
 	  check</emphasis></para></listitem>
 
 	  <listitem><para><emphasis
-			      role="strong">authorisation:</emphasis> tests the match of the fqdn
-	  with one of the <emphasis>Authorized fqdn</emphasis> defined
+	  role="strong">authorization:</emphasis> tests the match of the FQDN
+	  with one of the <emphasis>Authorized FQDN</emphasis> defined
 	  in the admin console.</para></listitem>
-
 	</itemizedlist>
       </para>
     </section>
@@ -234,7 +233,7 @@
 	  An application server sends his status at startup, when it stops or
 	  when an important error occured.  That's the way the system
 	  can know when an offline server is online again or when
-	  a server needs to be registred.
+	  a server needs to be registered.
 	</para>
       </simplesect>
 
@@ -262,8 +261,8 @@
 	</itemizedlist>	  
 
 	<para>
-	  Application servers send periodically their system
-	  information to that the status of each
+	  Application Servers send periodically their system
+	  information so the status of each
 	  server is known. This is used for the session load balancing for
 	  instance.
 	</para>
@@ -305,7 +304,7 @@
 	</itemizedlist>
 
 	<para>
-	  Application servers send a request when a user want create
+	  Application Servers send a request when a user want create
 	  invite someone.
 	</para>
       </simplesect>
@@ -339,7 +338,7 @@
 	</itemizedlist>
 
 	<para>
-	  Application servers send, for each session, their status
+	  Application Servers send, for each session, their status
 	  each time it changes.
 	</para>
       </simplesect>
@@ -802,7 +801,7 @@
 
 	<para>
 	  <emphasis>invite.php</emphasis> is call when the session
-	  owner wants to invite someone. The Application server ask to
+	  owner wants to invite someone. The Application Server ask to
 	  the Session Manager to create the invitation and send the
 	  email.
 	</para>
@@ -1083,7 +1082,7 @@
       
       <para>
 	The status sent by webservices and used by both systems (Session
-	Manager and Application server) are integer figures.
+	Manager and Application Server) are integer figures.
       </para>
 
       <itemizedlist>
