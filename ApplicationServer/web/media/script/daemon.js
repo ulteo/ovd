@@ -21,6 +21,8 @@ var Daemon = Class.create({
 	applet_width: -1,
 	applet_height: -1,
 
+	nb_share: 0,
+
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;

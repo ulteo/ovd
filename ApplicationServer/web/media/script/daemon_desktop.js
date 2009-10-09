@@ -96,15 +96,15 @@ var Desktop = Class.create(Daemon, {
 
 				$('menuShareContent').innerHTML = html;
 
-				if (nb_share != nb_share_active) {
+				if (this.nb_share != nb_share_active) {
 					this.push_log('[session] Watching desktop: '+nb_share_active+' users', 'info');
-					nb_share = nb_share_active;
+					this.nb_share = nb_share_active;
 				}
 
 				if (nb_share_active != 0) {
 					var buf_html = '<img style="margin-left: 5px;" src="../media/image/watch_icon.png" width="16" height="16" alt="" title="" /> <span style="font-size: 0.8em;">Currently watching your desktop: '+nb_share_active+' user';
 					if (nb_share_active > 1)
-					buf_html += 's';
+						buf_html += 's';
 					buf_html += '</span>';
 					$('menuShareWarning').innerHTML = buf_html;
 				} else
