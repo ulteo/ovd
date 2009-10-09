@@ -276,8 +276,8 @@ public class VncClient implements Runnable{
 		setEncodings();
 
 
-		int width = rfb.framebufferWidth;
-		int height = rfb.framebufferHeight;
+		int width = container.getWidth();
+		int height = container.getHeight();
 		System.out.println("Desktop size is " + width + " x " + height);
 		// if (width > Options.width
 		// scale ...
