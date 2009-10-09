@@ -377,17 +377,11 @@ function doInvite(mode_) {
 			},
 			onSuccess: function(transport) {
 				if (transport.responseText != 'OK') {
-					$('invite_email').disabled = true;
-					$('invite_mode').disabled = true;
-					$('invite_submit').disabled = true;
-
 					if (mode_ == 'desktop')
 						$('menuShareError').innerHTML = '<ul><li>Unable to send invitation mail, please try again later...</li></ul>';
 					else if (mode_ == 'portal')
 						showError('Unable to send invitation mail, please try again later...');
 				} else if (transport.responseText == 'OK') {
-					$('invite_submit').disabled = false;
-
 					if (mode_ == 'portal')
 						showOk('Invitation has been sent !');
 				}
@@ -397,4 +391,5 @@ function doInvite(mode_) {
 
 	$('invite_email').value = '';
 	$('invite_mode').checked = false;
+	$('invite_submit').disabled = false;
 }
