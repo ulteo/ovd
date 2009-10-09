@@ -63,9 +63,9 @@
 
     <para>
       The servers used by Ulteo OVD need to be installed with <emphasis
-      role="strong">Ubuntu 8.04.2 (Hardy Heron) Server for x86/32
+      role="strong">Ubuntu 8.04.3 (Hardy Heron) Server for x86/32
       bits</emphasis> (it can be downloaded from <ulink
-      url="http://releases.ubuntu.com/8.04/ubuntu-8.04.2-server-i386.iso">this
+      url="http://releases.ubuntu.com/8.04/ubuntu-8.04.3-server-i386.iso">this
       link</ulink>).
     </para>
 
