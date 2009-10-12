@@ -30,6 +30,6 @@ class Task_upgrade extends Task {
 	}
 
 	public function getRequest() {
-		return 'upgrade ';
+		return 'dist-upgrade ';
 	}
 }
