@@ -1,3 +1,4 @@
 etc/xdg
 usr/bin/startovd-*
 usr/bin/startovdapp
+usr/bin/xfsm-compat
