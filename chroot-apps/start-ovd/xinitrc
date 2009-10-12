@@ -58,8 +58,8 @@ fi
 
 # automatically open an application if needed
 if [ -n "$DOC" ] || [ -n "$APP_ID" ]; then
-  # Start xfwm4 in any case to load the GTK configuration first.
-  # This prevents some apps (ooo) to be ugly
+  # simultate a desktop session startup
+  xfsm-compat start
   xfwm4 --daemon
 
   if [ -n "$APP_ID" ] && [ -n "$OVD_APPS_DIR" ]; then
