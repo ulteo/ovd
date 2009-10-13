@@ -371,11 +371,15 @@ public boolean imageUpdate(Image img, int infoflags,
 
 	  if (rfb.updateRectEncoding == RfbProto.EncodingXCursor ||
 	      rfb.updateRectEncoding == RfbProto.EncodingRichCursor) {
+	    rx = ((rx * scalingFactor ) + 1 ) / 100;
+	    ry = ((ry * scalingFactor ) + 1 ) / 100;
 	    handleCursorShapeUpdate(rfb.updateRectEncoding, rx, ry, rw, rh);
 	    continue;
 	  }
 
 	  if (rfb.updateRectEncoding == RfbProto.EncodingPointerPos) {
+	    rx = ((rx * scalingFactor )+1) / 100;
+	    ry = ((ry * scalingFactor )+1) / 100;
 	    softCursorMove(rx, ry);
 	    cursorPosReceived = true;
 	    continue;
