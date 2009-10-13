@@ -203,7 +203,7 @@ class LDAP {
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
 
-		$buf = explode(',', $filter_, 2);
+		$buf = explode_with_escape(',', $filter_, 2);
 
 		$ret = @ldap_search($this->link, $buf[1], $buf[0], $attribs_);
 

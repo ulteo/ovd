@@ -371,3 +371,29 @@ function rmdirr($dirname) {
     $dir->close();
     return rmdir($dirname);
 }
+
+function explode_with_escape($pattern_, $string_, $limit_=NULL) {
+	$buffer = explode($pattern_, $string_);
+	$ret = array();
+	
+	$i = 0;
+	$append_mode = false;
+	foreach($buffer as $e) {
+		if ($append_mode || $i>=$limit_) {
+			$ret[$i-1] .= $pattern_.$e;
+			$append_mode = false;
+		} else {
+			$ret[$i++] .= $e;
+		}
+		
+		if ( substr($e, -1) == '\\') {
+			if (strlen($e)>1 && substr($e, -2) != '\\') {
+				$append_mode = true;
+				$ret[$i-1] = substr($ret[$i-1], 0, -1);
+			}
+		}
+	}
+	
+	return $ret;
+}
+
