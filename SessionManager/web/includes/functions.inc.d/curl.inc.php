@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-function query_url_request($url_) {
+function query_url_request($url_, $log_returned_data_=true) {
 	Logger::debug('main', "query_url_request($url_)");
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
@@ -36,24 +36,24 @@ function query_url_request($url_) {
 	if ($code != 200)
 		Logger::debug('main', "query_url_request($url_) returncode: '$code'");
 	
-	if (str_startswith($content_type, 'text/'))
+	if (str_startswith($content_type, 'text/') && $log_returned_data_ === true)
 		Logger::debug('main', "query_url_request($url_) returntext: '$data'");
 	
 	return array('data' => $data, 'code' => $code, 'content_type' => $content_type);
 }
 
-function query_url_no_error($url_) {
-	$ret = query_url_request($url_);
+function query_url_no_error($url_, $log_returned_data_=true) {
+	$ret = query_url_request($url_, $log_returned_data_);
 	return $ret['data'];
 }
 
-function query_url_return_errorcode($url_) {
-	$ret = query_url_request($url_);
+function query_url_return_errorcode($url_, $log_returned_data_=true) {
+	$ret = query_url_request($url_, $log_returned_data_);
 	return array($ret['code'], $ret['data']);
 }
 
-function query_url($url_) {
-	$ret = query_url_request($url_);
+function query_url($url_, $log_returned_data_=true) {
+	$ret = query_url_request($url_, $log_returned_data_);
 	if ($ret['code'] != 200) {
 		Logger::error('main', "query_url($url) returncode: '$code'");
 		return false;
