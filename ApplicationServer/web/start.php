@@ -176,13 +176,15 @@ if ($_SESSION['type'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/in
 		$buf .= $app."\n";
 	put_to_file(SESSION_PATH.'/'.$session.'/parameters/menu', $buf);
 
-	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
+	if ($_SESSION['mode'] == 'desktop')
+		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
 	generateAjaxplorerActionsXML();
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 1);
 } elseif ($_SESSION['type'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
-	@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
+	if ($_SESSION['mode'] == 'desktop')
+		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
 	generateAjaxplorerActionsXML();
 

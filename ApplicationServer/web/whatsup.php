@@ -219,14 +219,13 @@ if ($status == 2) {
 
   // KMA
   if ($session_owner) {
-    if (file_exists($session_dir.'/infos/keepmealive')) {
+    if (file_exists($session_dir.'/infos/keepmealive'))
       @touch($session_dir.'/infos/keepmealive');
 
-      if ($_SESSION['mode'] == 'desktop')
-        @touch($session_dir.'/sessions/desktop/keepmealive');
-      elseif (isset($_GET['application_id']) && $_GET['application_id'] != '')
-        @touch($session_dir.'/sessions/'.$_GET['application_id'].'/keepmealive');
-    }
+    if ($_SESSION['mode'] == 'desktop')
+      @touch($session_dir.'/sessions/desktop/keepmealive');
+    elseif (isset($_GET['application_id']) && $_GET['application_id'] != '')
+      @touch($session_dir.'/sessions/'.$_GET['application_id'].'/keepmealive');
   }
 
   // Check print file
