@@ -153,8 +153,13 @@ class Server {
 			return false;
 		}
 
-		if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name)) // if IP?
-			return ($name == $address);
+		if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name)) {// if IP?
+			$ret = ($name == $address);
+			if (! $ret) {
+				Logger::error('main', "FQDN does NOT match ApplicationServer's source address (source='$address' sent='$name')");
+			}
+			return $ret;
+		}
 
 		if ($disable_fqdn_check == 1)
 			return true;
