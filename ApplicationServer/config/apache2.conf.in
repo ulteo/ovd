@@ -3,7 +3,7 @@
 Alias /applicationserver @DATADIR@/ulteo/applicationserver
 <Directory @DATADIR@/ulteo/applicationserver>
     Options FollowSymLinks
-    AllowOverride None
+    AllowOverride All
     Order allow,deny
     allow from all
     DirectoryIndex index.php

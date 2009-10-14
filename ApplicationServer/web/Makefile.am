@@ -16,3 +16,9 @@ scripts_DATA = access.php \
 scriptsdir = $(datadir)/ulteo/applicationserver
 
 EXTRA_DIST = $(scripts_DATA) README
+
+install-exec-hook:
+	ln -sf $(sysconfdir)/ulteo/applicationserver/dot.htaccess $(DESTDIR)$(scriptsdir)/.htaccess
+
+uninstall-hook:
+	rm -f $(DESTDIR)$(scriptsdir)/.htaccess

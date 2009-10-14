@@ -215,6 +215,11 @@ sed -i "s/^www-data:x:33:/www-data:x:$APACHE_GID:/" $CHROOT_PATH/etc/group
 ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
 ln -sf $ALIASFILE $APACHE_DIR/application-server.conf
 
+# give write permissions to apache for the htaccess file
+HTACCESS=@SYSCONFDIR@/ulteo/applicationserver/dot.htaccess
+chown root:$APACHE_GROUP $HTACCESS
+chmod 660 $HTACCESS
+
 # set cups
 if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
     chgrp -R $APACHE_GROUP $CHROOT_PATH/var/spool/cups2all
