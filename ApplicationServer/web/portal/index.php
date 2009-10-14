@@ -202,9 +202,14 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 			<div id="errorContainer">
 			</div>
-
+			<?php
+				if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1) {
+			?>
 			<br />
 			<input type="button" value="Close" onclick="window.close(); return false" />
+			<?php
+				}
+			?>
 		</div>
 
 		<div id="appletContainer" style="display: none;">

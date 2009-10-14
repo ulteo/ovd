@@ -46,6 +46,7 @@ $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
 $allow_proxy = $default_settings['allow_proxy'];
+$popup = $default_settings['use_popup'];
 
 $advanced_settings = array();
 $buf = $prefs->get('general', 'session_settings_defaults');
@@ -83,7 +84,7 @@ if (! is_object($user))
 
 $language = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'debug');
+$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
 		$$protocol_var = $_REQUEST[$protocol_var];
@@ -239,6 +240,8 @@ if (isset($start_app) && $start_app != '') {
 }
 if (isset($open_doc) && $open_doc != '')
 	$optional_args['open_doc'] = $open_doc;
+if (isset($popup))
+	$optional_args['popup'] = (int)$popup;
 if (isset($debug) && $debug != '0')
 	$optional_args['debug'] = 1;
 if (isset($persistent) && $persistent != '0')

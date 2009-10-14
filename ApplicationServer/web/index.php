@@ -83,6 +83,7 @@ foreach ($settings as $setting)
 $_SESSION['parameters'] = $parameters;
 $_SESSION['parameters']['session_mode'] = $_SESSION['mode'];
 
+$_SESSION['popup'] = $_SESSION['parameters']['popup'];
 $_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
 
 $_SESSION['share_desktop'] = 'true';

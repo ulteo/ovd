@@ -489,15 +489,15 @@ require_once('header.php');
 							<?php echo _('Use pop-up'); ?>
 						</td>
 						<td>
-							<input class="input_radio" id="use_popup_true" type="radio" name="use_popup" value="1"<?php if ($use_popup == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
-							<input class="input_radio" id="use_popup_false" type="radio" name="use_popup" value="0"<?php if ($use_popup != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
+							<input class="input_radio" id="use_popup_true" type="radio" name="popup" value="1"<?php if ($use_popup == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+							<input class="input_radio" id="use_popup_false" type="radio" name="popup" value="0"<?php if ($use_popup != 1) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
 						</td>
 					</tr>
 					<?php
 						} else {
 							echo '<div style="display: none;">';
 							$buf_use_popup = ($use_popup == 1)?'use_popup_true':'use_popup_false';
-							echo '<input class="input_radio" id="'.$buf_use_popup.'" type="radio" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+							echo '<input class="input_radio" id="'.$buf_use_popup.'" type="radio" name="popup" value="'.$use_popup.'" checked="checked" />';
 							echo '</div>';
 						}
 
@@ -523,7 +523,7 @@ require_once('header.php');
 					echo '<input type="hidden" id="desktop_size" name="desktop_size" value="auto" />';
 					echo '<div style="display: none;">';
 					$buf_use_popup = ($use_popup == 1)?'use_popup_true':'use_popup_false';
-					echo '<input class="input_radio" id="'.$buf_use_popup.'" type="radio" name="use_popup" value="'.$use_popup.'" checked="checked" />';
+					echo '<input class="input_radio" id="'.$buf_use_popup.'" type="radio" name="popup" value="'.$use_popup.'" checked="checked" />';
 					echo '</div>';
 					echo '<input type="hidden" id="session_debug_false" name="debug" value="0" checked="checked" />';
 				}
