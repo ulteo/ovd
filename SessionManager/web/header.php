@@ -75,7 +75,7 @@ if ($base_url == '//')
 						<td style="text-align: left;" class="logo">
 							<?php
 								if (isset($logo_url) && $logo_url != '')
-									echo '<a href="index.php"><img src="'.$logo_url.'" alt="'.$main_title.'" title="'.$main_title.'" /></a>';
+									echo '<a href="index.php"><img src="'.$logo_url.'" height="80" alt="'.$main_title.'" title="'.$main_title.'" /></a>';
 							?>
 						</td>
 						<td style="text-align: center; width: 100%;" class="title centered">
