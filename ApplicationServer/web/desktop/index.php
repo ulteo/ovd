@@ -126,18 +126,28 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		</div>
 
 		<div id="endContainer" style="display: none;">
-			Your session has ended, you can now close the window
-
-			<div id="errorContainer">
-			</div>
-			<?php
-				if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1) {
-			?>
-			<br />
-			<input type="button" value="Close" onclick="window.close(); return false" />
-			<?php
-				}
-			?>
+			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center">
+						<img src="../media/image/ulteo.png" width="376" height="188" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle">
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868">Your session has ended, you can now close the window<br />
+						<div id="errorContainer">
+						</div>
+						<br />
+						<?php
+							if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)
+								echo '<input type="button" value="Close this window" onclick="window.close(); return false" />';
+							else
+								echo 'If you want to start another session, click <a href="'.SESSIONMANAGER_URL.'">here</a>';
+						?>
+						</span>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 		<div id="appletContainer" style="<?php

@@ -18,6 +18,7 @@ function _closeMenuItem(oDiv) {
 Event.observe(window, 'load', function() {
 	Effect.Center($('splashContainer'));
 	Effect.Center($('endContainer'));
+	$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
 
 	$('appletContainer').hide();
 	$('splashContainer').show();
