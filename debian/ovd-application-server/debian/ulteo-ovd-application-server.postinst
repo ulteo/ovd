@@ -140,6 +140,11 @@ if ! dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
     dpkg-statoverride --update --add www-data www-data 2770 $LOGDIR
 fi
 
+HTACCESS=/etc/ulteo/applicationserver/dot.htaccess
+if ! dpkg-statoverride --list $HTACCESS >/dev/null 2>&1; then
+    dpkg-statoverride --update --add root www-data 0660 $HTACCESS
+fi
+
 if [ ! -e /etc/apache2/conf.d/applicationserver ]; then
     ln -s /etc/ulteo/applicationserver/apache2.conf \
         /etc/apache2/conf.d/applicationserver
