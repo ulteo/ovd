@@ -588,7 +588,7 @@ class Server {
 	public function getWebLog() {
 		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
 
-		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web');
+		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web', false);
 
 		return $ret;
 	}
@@ -601,7 +601,7 @@ class Server {
 			return false;
 		}
 
-		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon');
+		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false);
 
 		return $ret;
 	}
