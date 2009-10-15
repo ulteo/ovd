@@ -231,9 +231,6 @@ session_purge() {
 
     log_DEBUG "removing user's files from /tmp"
     find /tmp/ -user $USER_LOGIN -exec rm -rf {} \;
-    rm -f /tmp/.tmp"$UUID".Xauthority
-    rm -f /tmp/.tmp"$UUID"encvncpasswd
-    rm -f /tmp/$VNC_USER
 
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
     HOME_DIR_TYPE=$HOME_DIR_TYPE \

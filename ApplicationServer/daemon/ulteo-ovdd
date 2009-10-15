@@ -194,7 +194,6 @@ session_check_status() {
             NICK=$(cat ${SESSID_DIR}/parameters/user_displayname)
 
         USER_HOME=/home/$NICK
-        echo $NICK > /tmp/VNC$i
 
         log_INFO "ulteo-ovd runasap1, nickname: '$NICK', USER_HOME:'$USER_HOME'"
 
