@@ -113,8 +113,29 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		}
 	}
 
+	private boolean security_ok = false;
+	public boolean checkSecurity() {
+		try {
+			System.getProperty("user.home");
+		} catch(java.security.AccessControlException e) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean isSecurityOK() {
+		System.out.println("OvdTester isSecurityOK ? "+this.security_ok);
+		return this.security_ok;
+	}
+
     public void init() {
 		System.out.println("OvdTester init");
+		if (! this.checkSecurity())
+			return;
+
+		this.security_ok = true;
+		System.out.println("OvdTester continue");
 
 		read_args();
 
@@ -124,6 +145,9 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 
 	public void start() {
 		System.out.println("OvdTester start");
+
+		if (! this.security_ok)
+			return;
 
 		if (! jvmIsSupported()) {
 			testResult = -1;
@@ -145,6 +169,9 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	}
 
 	public void stop() {
+		if (! this.security_ok)
+			return;
+
 		testFinished();
 
 		super.stop();

@@ -56,6 +56,14 @@
             </manifest>
         </jar>
 
+        <jar destfile="libs/CheckJava.jar"
+            basedir="classes/">
+            <include name="org/ulteo/CheckJava.class"/>
+            <manifest>
+                <attribute name="Main-Class" value="org.ulteo.CheckJava"/>
+            </manifest>
+        </jar>
+
         <jar destfile="libs/UlteoOVD.jar"
             basedir="classes/">
             <include name="com/sshtools/**"/>
@@ -93,6 +101,14 @@
         </copy>
         <symlink link="${destdir}${datadir}/ulteo/applets/ulteo-applet.jar"
                  resource="ulteo-applet-${compile.release}.jar"/>
+
+        <copy todir="${destdir}${datadir}/ulteo/applets">
+            <fileset dir="./">
+                <include name="CheckJava-${compile.release}.jar" />
+            </fileset>
+        </copy>
+        <symlink link="${destdir}${datadir}/ulteo/applets/CheckJava.jar"
+                 resource="CheckJava-${compile.release}.jar"/>
 
         <copy todir="${destdir}${datadir}/ulteo/applets">
             <fileset dir="./">
