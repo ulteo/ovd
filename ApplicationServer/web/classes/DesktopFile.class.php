@@ -44,6 +44,9 @@ class DesktopFile {
         foreach($lines as $line) {
             $line = trim($line);
 
+            if ($line == '')
+                continue;
+
             if ($line == '[Desktop Entry]')
                 continue;
 
