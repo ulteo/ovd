@@ -34,7 +34,7 @@ if (!isset($session) || $session == '') {
 
 $apps = explode(',', $_GET['apps']);
 foreach ($apps as $k => $app) {
-	if ($app == 'undefined')
+	if ($app == 'undefined' || $app == '')
 		continue;
 
 	list($id, $access_id, $status) = explode('-', $app);
@@ -45,7 +45,7 @@ foreach ($apps as $k => $app) {
 
 echo '<table border="0" cellspacing="1" cellpadding="3">';
 foreach ($apps as $k => $app) {
-	if ($app == 'undefined')
+	if ($app == 'undefined' || $app == '')
 		continue;
 
 	list($id, $access_id, $status) = explode('-', $app);
