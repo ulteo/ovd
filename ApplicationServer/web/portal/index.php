@@ -79,7 +79,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			<div id="headerWrap">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td style="text-align: left; padding-left: 10px; border-bottom: 1px solid #ccc;" class="logo">
+						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="logo">
 							<?php
 								$logo_url = query_url(SESSIONMANAGER_URL.'/webservices/logo_url.php');
 
