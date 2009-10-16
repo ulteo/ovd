@@ -314,11 +314,11 @@ require_once('header.php');
 						<td>
 							<select id="language" name="language">
 								<?php
-									foreach ($list_languages as $code => $language) {
+									foreach ($list_languages as $code => $string) {
 										echo '<option value="'.$code.'"';
 										if ($language == $code)
 											echo ' selected="selected"';
-										echo '>'.$language.'</option>'."\n";
+										echo '>'.$string.'</option>'."\n";
 									}
 								?>
 							</select>
