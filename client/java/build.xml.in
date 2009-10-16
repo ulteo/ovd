@@ -56,7 +56,7 @@
             </manifest>
         </jar>
 
-        <jar destfile="libs/CheckJava.jar"
+        <jar destfile="libs/CheckJava-${compile.release}.jar"
             basedir="classes/">
             <include name="org/ulteo/CheckJava.class"/>
             <manifest>
