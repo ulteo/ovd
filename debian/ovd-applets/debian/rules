@@ -15,14 +15,7 @@ DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar
 DEB_INSTALL_DOCS_ALL =
 
 PASSWD := $(shell cat /usr/share/ulteo/ovd-cert/password)
-A_VERSION := $(shell grep "name=.compile\.release" build.xml | sed -e "s/^.*value=\"\([^\"]*\)\".*$$/\1/")
 
 configure/ulteo-ovd-applets::
 	sed -i "s/123456/$(PASSWD)/" build.xml
-
-install/ulteo-ovd-applets::
-	dh_link -pulteo-ovd-applets usr/share/ulteo/applets/ulteo-applet-$(A_VERSION).jar \
-		usr/share/ulteo/applets/ulteo-applet.jar
-	dh_link -pulteo-ovd-applets  usr/share/ulteo/applets/ulteo-printing-0.5.1.jar \
-		usr/share/ulteo/applets/ulteo-printing.jar
 
