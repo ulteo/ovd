@@ -385,14 +385,12 @@ stop() {
     system_is_broken || webservices_server_down
 
     [ $PID_WATCH ] && kill $PID_WATCH && wait $PID_WATCH
-    killall -q Xtightvnc
-    killall -q gam_server
-    killall -q startovd
-
-    killall -q -s 9 Xtightvnc
-    killall -q -s 9 gam_server
-    killall -q -s 9 startovd
-    killall -q -s 9 kblankscrn.kss
+    for VNC in $(egrep ^VNC[0-9]+: /etc/passwd | cut -d ':' -f1); do
+        for p in $(ps -U $VNC | grep Xtightvnc | cut -d' ' -f 1); do
+            kill -q $pid; kill -s 9 $pid
+        done
+    done
+    killall -q startovd; killall -q -s 9 startovd
 
     for SESSID in $(sessions_get_active); do
         local SESSID_DIR=$SPOOL/sessions/$SESSID
