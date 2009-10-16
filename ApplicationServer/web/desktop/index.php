@@ -21,12 +21,7 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
-	/* set the locale */
-	$language = $_SESSION['parameters']['locale'];
-	setlocale(LC_ALL, $language);
-	$domain = 'uovdaps';
-	bindtextdomain($domain, LOCALE_DIR);
-	textdomain($domain);
+	load_gettext();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

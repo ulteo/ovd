@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 $_SESSION['connected_since'] = time();
 
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+	load_gettext();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -79,7 +80,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
-							<h1>&nbsp;Welcome&nbsp;<?php echo $_SESSION['parameters']['user_displayname']; ?>&nbsp;!</h1>
+							<h1>&nbsp;<?php printf(_('Welcome %s!'), $_SESSION['parameters']['user_displayname']); ?>&nbsp;</h1>
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 65%;" class="title centered">
 							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
@@ -105,71 +106,40 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			<div id="pageWrap">
 				<table id="portalContainer" style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 					<tr>
-						<td style="width: 20%; text-align: left; vertical-align: top;">
+						<td style="width: 15%; text-align: left; vertical-align: top;">
 							<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 							<div>
-								<h2>My applications</h2>
+								<h2><?php echo _('My applications'); ?></h2>
 
 								<div id="appsContainer" style="overflow: auto;">
 								</div>
 							</div>
 							</div>
 						</td>
-						<td style="width: 10px;">
+						<td style="width: 5px;">
 						</td>
-						<td style="width: 20%; text-align: left; vertical-align: top;">
+						<td style="width: 15%; text-align: left; vertical-align: top;">
 							<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 							<div>
-								<h2>Running applications</h2>
+								<h2><?php echo _('Running applications'); ?></h2>
 
 								<div id="runningAppsContainer" style="overflow: auto;">
 								</div>
 							</div>
 							</div>
 						</td>
-						<td style="width: 10px;">
+						<td style="width: 5px;">
 						</td>
 						<td style="text-align: left; vertical-align: top;">
 							<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 							<div>
-								<h2>My files</h2>
+								<h2><?php echo _('My files'); ?></h2>
 
 								<div id="fileManagerContainer" style="overflow: auto;">
 								</div>
 							</div>
 							</div>
 						</td>
-						<!--<td style="width: 10px;">
-						</td>
-						<td>
-							<?php
-								if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
-							?>
-									<div id="menuShare" style="display: none;">
-										<table style="width: 100%;" border="0" cellspacing="0" cellpadding="10"><tr><td>
-											<div style="float: right;">
-												<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
-													<img src="../media/image/close.png" width="16" height="16" alt="" title="" />
-												</a>
-											</div>
-
-											<h2 style="text-align: center;"><?php echo _('Desktop sharing'); ?></h2>
-											<span id="menuShareContent"></span>
-											<span id="menuShareError"></span>
-											<fieldset style="border: 0;">
-												<form action="javascript:;" method="post" onsubmit="do_invite(); return false;">
-													<p><?php echo _('Email address'); ?>: <input type="text" id="invite_email" name="email" value="" />
-													<input class="input_checkbox" type="checkbox" id="invite_mode" name="mode" /> <?php echo _('active mode'); ?></p>
-
-													<p><input type="submit" id="invite_submit" value="<?php echo _('Invite'); ?>" /></p>
-												</form>
-											</fieldset>
-										</td></tr></table>
-									</div>
-							<?php
-								}
-							?>
-						</td>-->
 					</tr>
 				</table>
 			</div>
@@ -184,7 +154,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Portal</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868"><?php echo _('Loading Portal'); ?></span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
@@ -214,15 +184,15 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				</tr>
 				<tr>
 					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868">Your session has ended, you can now close the window<br />
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your session has ended, you can now close the window'); ?><br />
 						<div id="errorContainer">
 						</div>
 						<br />
 						<?php
 							if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)
-								echo '<input type="button" value="Close this window" onclick="window.close(); return false" />';
+								echo '<input type="button" value="'._('Close this window').'" onclick="window.close(); return false" />';
 							else
-								echo 'If you want to start another session, click <a href="'.SESSIONMANAGER_URL.'">here</a>';
+								printf (_('If you want to start another session, click <a href="%s">here</a>'), SESSIONMANAGER_URL);
 						?>
 						</span>
 					</td>

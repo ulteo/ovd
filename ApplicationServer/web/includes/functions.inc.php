@@ -187,3 +187,12 @@ function chroot_realpath($path_, $chroot_=CHROOT) {
 
 	return $path;
 }
+
+function load_gettext() {
+	/* set the locale */
+	$language = $_SESSION['parameters']['locale'];
+	setlocale(LC_ALL, $language);
+	$domain = 'uovdaps';
+	bindtextdomain($domain, LOCALE_DIR);
+	textdomain($domain);
+}

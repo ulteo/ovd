@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+	load_gettext();
+
 	$window_title = 'Ulteo Open Virtual Desktop';
 
 	try {
@@ -90,7 +92,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading <?php echo $window_title; ?></span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868"><?php printf(_('Loading %s'), $window_title); ?></span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
@@ -112,13 +114,23 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		</div>
 
 		<div id="endContainer" style="display: none;">
-			Your application has ended, you can now close the window
-
-			<div id="errorContainer">
-			</div>
-
-			<br />
-			<input type="button" value="Close" onclick="window.close(); return false" />
+			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center">
+						<img src="../media/image/ulteo.png" width="376" height="188" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle">
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your application has ended, you can now close the window'); ?><br />
+						<div id="errorContainer">
+						</div>
+						<br />
+						<?php echo '<input type="button" value="'._('Close this window').'" onclick="window.close(); return false" />'; ?>
+						</span>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 		<div id="appletContainer" style="display: none;">
