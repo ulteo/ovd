@@ -343,8 +343,8 @@ session_suspend() {
     killall -s 9 -u $SSH_USER
 
     passwd -d $SSH_USER
-    rm $SESSID_DIR/clients/*
-    rm ${SESSID_DIR}/infos/keepmealive
+    rm -f $SESSID_DIR/clients/*
+    rm -f ${SESSID_DIR}/infos/keepmealive
 
     log_INFO "session_suspend: $i"
     session_switch_status $SESSID 10
