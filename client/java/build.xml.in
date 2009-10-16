@@ -103,7 +103,7 @@
                  resource="ulteo-applet-${compile.release}.jar"/>
 
         <copy todir="${destdir}${datadir}/ulteo/applets">
-            <fileset dir="./">
+            <fileset dir="./libs">
                 <include name="CheckJava-${compile.release}.jar" />
             </fileset>
         </copy>
