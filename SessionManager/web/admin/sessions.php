@@ -137,7 +137,7 @@ if (isset($_POST['join'])) {
 		}
 	}
 
-	if ($session->getAttribute('status') == 2) {
+	if ($session->getAttribute('mode') == 'desktop' && $session->getAttribute('status') == 2) {
 		echo '<h2>'._('Connect to or observe this session').'</h2>';
 		echo '<form id="joinsession" action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 		echo '	<input type="hidden" id="desktop_size" value="auto" />';
