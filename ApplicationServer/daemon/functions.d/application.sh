@@ -191,7 +191,7 @@ application_purge_all() {
     for dir in $dirs; do
         local job=$(basename $file)
 
-        application_switch_status $sessid 3
+        application_switch_status $sessid $job 3
         application_purge $job $dir
     done
 }
