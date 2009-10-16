@@ -68,7 +68,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 			<div id="menuShareWarning"></div>
 
 			<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
-				<img src="../media/image/share-button.png" width="80" height="18" alt="Share desktop" title=<?php echo _("Share desktop") ?> />
+				<img src="../media/image/share-button.png" width="80" height="18" alt="Share desktop" title=<?php echo _("Share desktop"); ?> />
 			</a>
 		</div>
 
@@ -110,7 +110,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Desktop</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868"><?php echo _('Loading Desktop'); ?></span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
@@ -140,7 +140,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 				</tr>
 				<tr>
 					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php _('Your session has ended, you can now close the window') ?><br />
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your session has ended, you can now close the window'); ?><br />
 						<div id="errorContainer">
 						</div>
 						<br />
