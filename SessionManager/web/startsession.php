@@ -84,7 +84,7 @@ if (! is_object($user))
 
 $language = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug');
+$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug', 'start_app');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
 		$$protocol_var = $_REQUEST[$protocol_var];

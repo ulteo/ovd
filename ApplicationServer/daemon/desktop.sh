@@ -39,6 +39,7 @@ install -d -g www-data -m 770 $dir
 application_switch_status $SESSID $job 1
 
 
+APP_ID=$(cat $SESSID_DIR/parameters/start_app_id)
 geometry=$(cat $SESSID_DIR/parameters/geometry)
 
 if [ -z "$geometry" ]; then

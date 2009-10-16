@@ -84,6 +84,10 @@ user_exec() {
         if [ -n "$doc" ]; then
             local env="$env DOC=\"$doc\""
         fi
+    else
+        if [ -n "$APP_ID" ]; then
+            local env="$env APP_ID=$APP_ID"
+        fi
     fi
     log_INFO "env: $env"
 
