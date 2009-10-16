@@ -161,9 +161,43 @@ require_once('header.php');
 				echo 'appletLoaded();';
 				echo 'testDone = true;';
 			} else {
-				echo 'setTimeout(function() {
-					testFailed(1);
-				}, 10000);';
+		?>
+				var ti = 0;
+				function testUlteoApplet() {
+					try {
+						var ua_ok = $('UlteoApplet').security_ok;
+
+						if (ua_ok == true)
+							return;
+						else if (ua_ok == false) {
+							testFailed(5);
+							return;
+						} else
+							go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
+					} catch(e) {
+						ti += 1;
+						setTimeout(function() {
+							if (ti < 60) {
+								testUlteoApplet();
+							} else {
+								testFailed(4);
+								return;
+							}
+						}, 1000);
+					}
+				}
+
+				setTimeout(function() {
+					try {
+						$('CheckJava').isActive();
+					} catch(e) {
+						testFailed(1);
+						return;
+					}
+
+					testUlteoApplet();
+				}, 2000);
+		<?php
 			}
 		?>
 	});
@@ -592,7 +626,10 @@ if ($testapplet) {
 	$applet_version = 'ulteo-applet.jar';
 	$applet_main_class = 'org.ulteo.OvdTester';
 ?>
-	<applet code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
+	<applet id="CheckJava" code="org.ulteo.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="mayscript" width="1" height="1">
+	</applet>
+
+	<applet id="UlteoApplet" code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
 		<param name="name" value="ulteoapplet" />
 		<param name="code" value="<?php echo $applet_main_class; ?>" />
 		<param name="codebase" value="applet/" />

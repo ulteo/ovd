@@ -117,11 +117,15 @@ function testFailed(failCode) {
 		//$('loading_button').style.display = 'none';
 
 		if (failCode == 1) {
-			$('failed_button').value += ' (err01 java)';
+			$('failed_button').value += ' (err01 no java)';
 		} else if (failCode == 2) {
 			$('failed_button').value += ' (err02 browser)';
 		} else if (failCode == 3) {
 			$('failed_button').value += ' (err03 firewall)';
+		} else if (failCode == 4) {
+			$('failed_button').value += ' (err04 java timed out)';
+		} else if (failCode == 5) {
+			$('failed_button').value += ' (err05 java failed)';
 		} else if (failCode == -1) {
 			$('failed_button').value += ' (err-1 sessions)';
 		}
