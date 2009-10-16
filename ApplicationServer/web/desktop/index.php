@@ -146,7 +146,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 						<br />
 						<?php
 							if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)
-								echo '<input type="button" value="'._(Close this window).'" onclick="window.close(); return false" />';
+								echo '<input type="button" value="'._('Close this window').'" onclick="window.close(); return false" />';
 							else
 								printf (_('If you want to start another session, click <a href="%s">here</a>'), SESSIONMANAGER_URL);
 						?>

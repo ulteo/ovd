@@ -24,5 +24,5 @@ EXTRA_DIST = ovd-application-server.spec.in
 
 # maintainer rules
 update-potfiles-in:
-	find web -name "*.php" > po/POTFILES.in
+	find web -name "*.php" | grep -v ajaxplorer > po/POTFILES.in
 	sed -i '/session_path\.inc\.php/d' po/POTFILES.in
