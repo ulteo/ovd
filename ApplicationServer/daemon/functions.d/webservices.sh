@@ -70,8 +70,8 @@ webservices_available_application() {
 
 webservices_system_monitoring() {
     local url="${SESSION_MANAGER_URL}/webservices/server_monitoring.php"
-    cache_set_monitoring /tmp/monitoring.xml || return 1
-    curl --form xml=@/tmp/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>&1
+    cache_set_monitoring $SPOOL/cache/monitoring.xml || return 1
+    curl --form xml=@$SPOOL/cache/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>&1
 }
 
 webservices_get_application() {

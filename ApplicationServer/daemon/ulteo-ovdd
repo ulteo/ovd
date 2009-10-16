@@ -35,8 +35,15 @@ system_clean() {
     done
     [ $fail = 0 ] || return $fail
 
-    # Last, to ensure no user homes are left :
+    # Ensure no user homes are left:
     do_clean
+
+    # Manage data removal and/or migration of a previous installation
+    do_upgrade
+}
+
+do_upgrade() {
+    rm -f /tmp/monitoring.xml
 }
 
 system_is_broken() {
