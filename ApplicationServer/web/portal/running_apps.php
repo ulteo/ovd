@@ -34,6 +34,9 @@ if (!isset($session) || $session == '') {
 
 $apps = explode(',', $_GET['apps']);
 foreach ($apps as $k => $app) {
+	if ($app == 'undefined')
+		continue;
+
 	list($id, $access_id, $status) = explode('-', $app);
 
 	if ($id === '' || $id == 'undefined')
@@ -42,6 +45,9 @@ foreach ($apps as $k => $app) {
 
 echo '<table border="0" cellspacing="1" cellpadding="3">';
 foreach ($apps as $k => $app) {
+	if ($app == 'undefined')
+		continue;
+
 	list($id, $access_id, $status) = explode('-', $app);
 
 	$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$id.'&fqdn='.SERVERNAME);
@@ -68,7 +74,7 @@ foreach ($apps as $k => $app) {
 			echo '<a href="javascript:;" onclick="return shareApplication(\''.$access_id.'\');">'._('share').'</a>';
 	}
 
-	if (($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) && ($_SESSION['parameters']['persistent']) && ($status == 2))
+	if (($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) && (isset($_SESSION['parameters']['persistent']) && $_SESSION['parameters']['persistent']) && ($status == 2))
 		echo ' - ';
 
 	if (isset($_SESSION['parameters']['persistent'])) {
