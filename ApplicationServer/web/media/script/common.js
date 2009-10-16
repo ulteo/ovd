@@ -15,6 +15,15 @@ function _closeMenuItem(oDiv) {
 	$('appletContainer').style.visibility = 'visible';
 }
 
+function logout() {
+	new Ajax.Request(
+		'../exit.php',
+		{
+			method: 'get'
+		}
+	);
+}
+
 Event.observe(window, 'load', function() {
 	Effect.Center($('splashContainer'));
 	Effect.Center($('endContainer'));

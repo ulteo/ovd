@@ -79,14 +79,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			<div id="headerWrap">
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
-							<h1>&nbsp;<?php printf(_('Welcome %s!'), $_SESSION['parameters']['user_displayname']); ?>&nbsp;</h1>
-						</td>
-						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 65%;" class="title centered">
-							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
-							</div>
-						</td>
-						<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">
+						<td style="text-align: left; padding-left: 10px; border-bottom: 1px solid #ccc;" class="logo">
 							<?php
 								$logo_url = query_url(SESSIONMANAGER_URL.'/webservices/logo_url.php');
 
@@ -96,6 +89,20 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 								}
 							?>
 							<img src="<?php echo $logo_url; ?>" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
+						</td>
+						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
+							<h1><?php printf(_('Welcome %s!'), $_SESSION['parameters']['user_displayname']); ?></h1>
+						</td>
+						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 60%;" class="title centered">
+							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
+							</div>
+						</td>
+						<td style="text-align: center; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
+							<table border="0" cellspacing="0" cellpadding="10">
+								<tr>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="logout(); return false;"><img src="../media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 				</table>
