@@ -95,7 +95,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				</tr>
 				<tr>
 					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your session has ended, you can now close the window'); ?><br />
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your application has ended, you can now close the window'); ?><br />
 						<div id="errorContainer">
 						</div>
 						</span>
