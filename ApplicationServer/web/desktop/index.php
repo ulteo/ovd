@@ -21,6 +21,12 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+	/* set the locale */
+	$language = $_SESSION['parameters']['locale'];
+	setlocale(LC_ALL, $language);
+	$domain = 'uovdaps';
+	bindtextdomain($domain, LOCALE_DIR);
+	textdomain($domain);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -62,7 +68,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 			<div id="menuShareWarning"></div>
 
 			<a href="javascript:;" onclick="clicMenu('menuShare'); return false;">
-				<img src="../media/image/share-button.png" width="80" height="18" alt="Share desktop" title="Share desktop" />
+				<img src="../media/image/share-button.png" width="80" height="18" alt="Share desktop" title=<?php echo _("Share desktop") ?> />
 			</a>
 		</div>
 
@@ -134,15 +140,15 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 				</tr>
 				<tr>
 					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868">Your session has ended, you can now close the window<br />
+						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php _('Your session has ended, you can now close the window') ?><br />
 						<div id="errorContainer">
 						</div>
 						<br />
 						<?php
 							if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)
-								echo '<input type="button" value="Close this window" onclick="window.close(); return false" />';
+								echo '<input type="button" value="'._(Close this window).'" onclick="window.close(); return false" />';
 							else
-								echo 'If you want to start another session, click <a href="'.SESSIONMANAGER_URL.'">here</a>';
+								printf (_('If you want to start another session, click <a href="%s">here</a>'), SESSIONMANAGER_URL);
 						?>
 						</span>
 					</td>

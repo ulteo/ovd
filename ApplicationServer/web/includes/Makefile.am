@@ -10,7 +10,8 @@ EXTRA_DIST = core.inc.php \
 
 session_path.inc.php:
 	sed -e "s,@SYSCONFDIR@,$(sysconfdir)," \
-		< $(srcdir)/session_path.inc.php.in > $@
+	    -e "s,@LOCALE_DIR@,$(datadir)/locale," \
+		< $(srcdir)/$@.in > $@
 
 clean-local:
 	rm -f session_path.inc.php

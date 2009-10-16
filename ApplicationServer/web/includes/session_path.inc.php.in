@@ -61,6 +61,7 @@ define('SESSION_PATH', CHROOT_SPOOL.'/sessions');
 define('SESSION2CREATE_PATH', CHROOT_SPOOL.'/sessions2create');
 define('SPOOL_APT',  CHROOT_SPOOL.'/apt');
 define('SPOOL_FILE', CHROOT_SPOOL.'/files');
+define('LOCALE_DIR', '@LOCALE_DIR@');
 unset($buf);
 
 $buf = shell_exec('. '.CHROOT.'/etc/ulteo-ovd.conf && echo $SESSION_MANAGER_URL');
