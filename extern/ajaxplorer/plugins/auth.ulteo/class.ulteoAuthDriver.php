@@ -26,7 +26,7 @@ class ulteoAuthDriver extends serialAuthDriver  {
 		if (! isset($user_login))
 			return;
 
-		if (! $this->userExists($localHttpLogin)) {
+		if (! $this->userExists($user_login)) {
 			if (! $this->autoCreateUser())
 				return;
 
