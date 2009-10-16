@@ -100,6 +100,13 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 						<td style="text-align: center; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table border="0" cellspacing="0" cellpadding="10">
 								<tr>
+									<?php
+										if (isset($_SESSION['parameters']['persistent'])) {
+									?>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="suspend(); return false;"><img src="../media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
+									<?php
+										}
+									?>
 									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="logout(); return false;"><img src="../media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
 								</tr>
 							</table>

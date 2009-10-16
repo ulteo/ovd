@@ -11,6 +11,7 @@ scripts_DATA = access.php \
                print.php \
                start.php \
                start_app.php \
+               suspend.php \
                whatsup.php
 
 scriptsdir = $(datadir)/ulteo/applicationserver
