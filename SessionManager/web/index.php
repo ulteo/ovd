@@ -165,15 +165,14 @@ require_once('header.php');
 				var ti = 0;
 				function testUlteoApplet() {
 					try {
-						var ua_ok = $('UlteoApplet').security_ok;
-
-						if (ua_ok == true)
+						if (ulteo_applet_inited == true)
 							return;
-						else if (ua_ok == false) {
+						else if (ulteo_applet_inited == false) {
 							testFailed(5);
 							return;
-						} else
-							go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
+						}
+
+						go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
 					} catch(e) {
 						ti += 1;
 						setTimeout(function() {
@@ -672,6 +671,7 @@ if ($testapplet) {
 
 		<param name="agent" value="<?php echo $_SERVER['HTTP_USER_AGENT']; ?>" />
 		<param name="preload" value="true" />
+		<param name="onInit" value="appletInited" />
 		<param name="onLoad" value="appletLoaded()" />
 		<param name="onBadPing" value="badPing()" />
 		<param name="onFail" value="testFailed" />

@@ -99,6 +99,11 @@ function setAvailableSize(select_id) {
 	}
 }
 
+var ulteo_applet_inited = null;
+function appletInited(status_) {
+	ulteo_applet_inited = status_;
+}
+
 function appletLoaded() {
 	if (!testDone) {
 		testDone = true;
