@@ -628,7 +628,7 @@ if ($testapplet) {
 	<applet id="CheckJava" code="org.ulteo.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="mayscript" width="1" height="1">
 	</applet>
 
-	<applet id="UlteoApplet" code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
+	<applet id="UlteoApplet" name="ulteoapplet" code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" cache_archive="<?php echo $applet_version; ?>" cache_archive_ex="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
 		<param name="name" value="ulteoapplet" />
 		<param name="code" value="<?php echo $applet_main_class; ?>" />
 		<param name="codebase" value="applet/" />
@@ -637,28 +637,8 @@ if ($testapplet) {
 		<param name="cache_archive_ex" value="<?php echo $applet_version; ?>;preload" />
 		<param name="mayscript" value="true" />
 
-		<param name="HOST" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
-		<param name="PORT" value="5900" />
-		<!--<param name="ENCPASSWORD" value="ba0c8ea04ccc5697" />-->
-
-		<param name="SSH" value="yes" />
 		<param name="ssh.host" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
 		<param name="ssh.port" value="443,993,995" />
-		<!--<param name="ssh.user" value="dummy" />
-		<param name="ssh.password" value="3666623866373263" />-->
-
-		<!--<param name="Compression level" value="7" />
-		<param name="Restricted colors" value="false" />
-		<param name="JPEG image quality" value="" />-->
-		<!--<param name="Encoding" value="Tight" />-->
-
-		<!-- Caching options -->
-		<param name="rfb.cache.enabled" value="true" />
-		<param name="rfb.cache.ver.major" value="1" />
-		<param name="rfb.cache.ver.minor" value="0" />
-		<param name="rfb.cache.size" value="42336000" />
-		<param name="rfb.cache.alg" value="LRU" />
-		<param name="rfb.cache.datasize" value="2000000" />
 
 		<!--<param name="proxyType" value="<?php echo $proxy_type; ?>" />
 		<param name="proxyHost" value="<?php echo $proxy_host; ?>" />
@@ -666,18 +646,12 @@ if ($testapplet) {
 		<param name="proxyUsername" value="<?php echo $proxy_username; ?>" />
 		<param name="proxyPassword" value="<?php echo $proxy_password; ?>" />-->
 
-		<param name="Share desktop" value="true" />
-		<param name="View only" value="No" />
-
 		<param name="agent" value="<?php echo $_SERVER['HTTP_USER_AGENT']; ?>" />
-		<param name="preload" value="true" />
 		<param name="onInit" value="appletInited" />
 		<param name="onLoad" value="appletLoaded()" />
 		<param name="onBadPing" value="badPing()" />
 		<param name="onFail" value="testFailed" />
 		<param name="haveProxy" value="haveProxy" />
-		<param name="hostToPing" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
-		<param name="maxPingAccepted" value="150" />
 	</applet>
 <?php
 }
