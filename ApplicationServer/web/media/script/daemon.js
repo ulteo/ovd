@@ -253,7 +253,7 @@ var Daemon = Class.create({
 			return;
 		}
 
-		applet_html_string = '<applet code="'+this.applet_main_class+'" codebase="../applet/" archive="'+this.applet_version+'" mayscript="true" width="'+this.applet_width+'" height="'+this.applet_height+'"> \
+		applet_html_string = '<applet name="ulteoapplet" code="'+this.applet_main_class+'" codebase="../applet/" archive="'+this.applet_version+'" cache_archive="'+this.applet_version+'" cache_archive_ex="'+this.applet_version+';preload" mayscript="true" width="'+this.applet_width+'" height="'+this.applet_height+'"> \
 			<param name="name" value="ulteoapplet" /> \
 			<param name="code" value="'+this.applet_main_class+'" /> \
 			<param name="codebase" value="../applet/" /> \
