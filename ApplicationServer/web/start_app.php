@@ -38,7 +38,7 @@ if (!isset($_GET['size']) || $_GET['size'] == '') {
 	die('CRITICAL ERROR'); // That's odd !
 }
 
-header('Content-Type: text/xml');
+header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument();
 

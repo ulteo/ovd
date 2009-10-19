@@ -274,5 +274,5 @@ if ($status == 2) {
 
 $xml = $dom->saveXML();
 
-header('Content-Type: text/xml');
+header('Content-Type: text/xml; charset=utf-8');
 echo $xml;
