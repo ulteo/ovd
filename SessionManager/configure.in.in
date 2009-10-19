@@ -125,6 +125,25 @@ else
 fi
 AC_SUBST(ULTEOAPPLET)
 
+AC_ARG_WITH([check-applet],
+    [AC_HELP_STRING([--with-check-applet],
+        [where is installed the java test applet])],
+    ,
+    [with_check_applet=])
+if test x"$with_check_applet" = x""; then
+    for p in /usr /usr/local /opt; do
+        if test -e $p/share/ulteo/applets/CheckJava.jar; then
+            with_check_applet=$p/share/ulteo/applets/CheckJava.jar
+        fi
+    done
+fi
+if test x"$with_check_applet" = x""; then
+    AC_MSG_ERROR([No java test applet found. Install it first or specify its path with the --with-check-applet option])
+else
+    CHECKAPPLET="$with_check_applet"
+fi
+AC_SUBST(CHECKAPPLET)
+
 
 AC_CONFIG_FILES([
 Makefile
