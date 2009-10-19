@@ -49,6 +49,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
     public String startuponLoad = "";
     public String startuponFailure = "";
     public String startuponBadPing = "";
+	private String startupStatusReport = null;
 
 	protected String js_haveProxy_function_name = "haveProxy";
 
@@ -73,6 +74,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	protected int maxPingAccepted = 250;
 	protected String urlProxyTest = "http://www.ulteo.com";
 
+	private boolean can_run = false;
 
 	protected String getNeededParameter(String key) {
 		String buffer = getParameter(key);
@@ -113,7 +115,6 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		}
 	}
 
-	private boolean security_ok = false;
 	public boolean checkSecurity() {
 		try {
 			System.getProperty("user.home");
@@ -124,18 +125,26 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		return true;
 	}
 
-	public boolean isSecurityOK() {
-		System.out.println("OvdTester isSecurityOK ? "+this.security_ok);
-		return this.security_ok;
-	}
-
     public void init() {
 		System.out.println("OvdTester init");
-		if (! this.checkSecurity())
-			return;
 
-		this.security_ok = true;
-		System.out.println("OvdTester continue");
+		this.startupStatusReport = this.getParameter("onInit");
+		if (this.startupStatusReport == null && this.startupStatusReport.equals("")) {
+			System.err.println("OvdTester init: Missing parameter key 'onInit'");
+			System.err.println("OvdTester: Unable to continue");
+			return;
+		}
+
+		boolean status = this.checkSecurity();
+		this.applet_startup_info(status);
+
+		if (! status) {
+			System.err.println("OvdTester init: Not enought privileges, unable to continue");
+			return;
+		}
+
+		this.can_run = true;
+		System.out.println("OvdTester init continue");
 
 		read_args();
 
@@ -144,10 +153,10 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	}
 
 	public void start() {
-		System.out.println("OvdTester start");
-
-		if (! this.security_ok)
+		if (! this.can_run)
 			return;
+
+		System.out.println("OvdTester start");
 
 		if (! jvmIsSupported()) {
 			testResult = -1;
@@ -169,9 +178,10 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	}
 
 	public void stop() {
-		if (! this.security_ok)
+		if (! this.can_run)
 			return;
 
+		System.out.println("OvdTester stop");
 		testFinished();
 
 		super.stop();
@@ -191,6 +201,13 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		}
 
 		stop();
+	}
+
+
+	public void applet_startup_info(boolean status) {
+		String url = "javascript:"+this.startupStatusReport+"("+(status?"true":"false")+");";
+		System.out.println("OvdTester call javascript '"+url+"')");
+		openUrl(url);
 	}
 
 
