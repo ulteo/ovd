@@ -260,6 +260,7 @@ var Daemon = Class.create({
 			<param name="archive" value="'+this.applet_version+'" /> \
 			<param name="cache_archive" value="'+this.applet_version+'" /> \
 			<param name="cache_archive_ex" value="'+this.applet_version+';preload" /> \
+			<param name="mayscript" value="true" /> \
 			\
 			<param name="SSH" value="yes" /> \
 			<param name="ssh.host" value="'+applet_ssh_host+'" /> \
