@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>System Upgrade</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2009</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    This documentation aims to provide a way to upgrade an exising
+    Ulteo OVD architecture from minor version.
+  </para>
+    
+  <important>
+    <para>
+      This documentation doesn't provide a way to upgrade major
+      version of Ulteo OVD (for
+      instance, <emphasis role="strong">from 1.0 to 2.0</emphasis>).
+    </para>
+  </important>
+
+  <section id="sm">
+    <title id="sm_title">Session Manager</title>
+
+    <note>
+      <para>
+        Those operations have to be done on the Session Manager.
+      </para>
+    </note>
+
+    <simplesect>
+      <title>Using Debian or Ubuntu packages (standard installation)</title>
+
+      <itemizedlist>
+        <listitem>
+	  <para>
+	    Update the package list:
+	  </para>
+          <screen>
+	    <![CDATA[
+# apt-get update]]>
+	  </screen>
+        </listitem>
+        <listitem>
+          <para>
+            Upgrade the system:
+          </para>
+          <screen>
+	  <![CDATA[
+# apt-get upgrade]]>
+	  </screen>
+        </listitem>
+      </itemizedlist>
+    </simplesect>
+
+    <simplesect>
+      <title>Using Red Hat packages</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            Order an upgrade:
+          </para>
+          <screen>
+	    <![CDATA[
+# yum update]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+
+    </simplesect>
+  </section>
+
+
+  <section id="aps">
+    <title>Application Server</title>
+
+    <note>
+      <para>
+        Those operations have to be done on each Application Server of
+        your architecture.
+      </para>
+    </note>
+
+    <section>
+      <title>Core System</title>
+
+      <simplesect>
+        <title>Using Debian packages (standard installation)</title>
+
+        <itemizedlist>
+          <listitem>
+	    <para>
+	      Update the package list:
+	    </para>
+            <screen>
+	      <![CDATA[
+# apt-get update]]>
+	    </screen>
+          </listitem>
+          <listitem>
+            <para>
+              Upgrade the system:
+            </para>
+            <screen>
+	      <![CDATA[
+# apt-get upgrade]]>
+	    </screen>
+          </listitem>
+        </itemizedlist>
+      </simplesect>
+
+      <simplesect>
+        <title>Using Red Hat packages</title>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              Order an upgrade:
+            </para>
+            <screen>
+	      <![CDATA[
+# yum update]]>
+            </screen>
+          </listitem>
+        </itemizedlist>
+      </simplesect>
+    </section>
+
+    <section>
+      <title>Application System</title>
+
+      <para>
+        From the Session Manager administration console, go to the
+        Server page, select <emphasis>manage</emphasis> and click
+        on <emphasis>Upgrade the internal system and
+        applications</emphasis>.
+      </para>
+
+      <screenshot>
+        <screeninfo>Upgrade the ApS system</screeninfo>
+        <graphic fileref="img/admin-console/upgrade.png"></graphic>
+      </screenshot>
+    </section>
+  </section>
+</article>
