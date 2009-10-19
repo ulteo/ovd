@@ -155,7 +155,11 @@ header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument();
 $aps_node = $dom->createElement('aps');
+$aps_node->setAttribute('protocol', ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')?'https':'http'));
 $aps_node->setAttribute('server', $_SERVER['SERVER_NAME']);
+$aps_node->setAttribute('port', $_SERVER['SERVER_PORT']);
+$aps_node->setAttribute('location', dirname($_SERVER['REQUEST_URI']));
+$aps_node->setAttribute('mode', $_SESSION['mode']);
 $dom->appendChild($aps_node);
 
 $xml = $dom->saveXML();
