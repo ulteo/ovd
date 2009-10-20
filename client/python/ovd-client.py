@@ -48,29 +48,8 @@ def hex2str(hex_):
         sys.exit(1)
 
 
-def parse_applet_div(data):
-    r = """.*name="HOST"\ value="(.*)".*name="PORT"\ value="(\d+)".*name="ENCPASSWORD"\ value="([^"]+)".*name="ssh.host"\ value="([^"]+)".*name="ssh.port"\ value="(.*)".*name="ssh.user"\ value="(.*)".*name="ssh.password"\ value="([^"]*)".*"""
+def parse_access(data):
     
-    r = re.compile(r , re.M | re.S | re.X )
-    p = r.match(data)
-    if p == None:
-        print "failed"
-        return None
-
-    res = {}
-    res["ssh_host"] = p.groups()[0]
-    res["vnc_port"] = p.groups()[1]
-    res["vnc_pass"] = p.groups()[2]
-    res["ssh_port"] = p.groups()[4]
-    res["ssh_login"] = p.groups()[5]
-    res["ssh_pass"] = p.groups()[6]
-
-    res["vnc_pass"] = hex2str(res["vnc_pass"])
-    res["ssh_pass"] = hex2str(res["ssh_pass"])
-
-    return res
-
-def parse_applet_div2(data):
     res = {}
     dom = minidom.parseString(data)
 
@@ -306,7 +285,7 @@ class Dialog:
             return False
 
 
-        self.infos = parse_applet_div2(url.read())
+        self.infos = parse_access(url.read())
         if self.infos == None:
             return False
 
