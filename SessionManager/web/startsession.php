@@ -3,6 +3,7 @@
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -153,6 +154,7 @@ else {
 		$ev->setAttribute('ok', false);
 		$ev->setAttribute('error', _('No available server'));
 		$ev->emit();
+		Logger::error('main', '(startsession) no linux server found for \''.$user->getAttribute('login').'\' -> abort');
 		die_error(_('You don\'t have access to a linux server for now'),__FILE__,__LINE__);
 	}
 }
@@ -326,13 +328,24 @@ foreach ($plugins_args as $k => $v)
 
 $session->setAttribute('settings', $data);
 $session->setAttribute('start_time', time());
-Abstract_Session::save($session);
+$save_session = Abstract_Session::save($session);
+if ($save_session === true) {
+	Logger::info('main', '(startsession) session \''.$session->id.'\' actually saved on DB for user \''.$user->getAttribute('login').'\'');
+}
+else {
+	Logger::error('main', '(startsession) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
+	die_error(_('Internal error'), __FILE__, __LINE__);
+}
 
 $token = new Token(gen_string(5));
 $token->type = $session_type;
 $token->link_to = $session->id;
 $token->valid_until = (time()+(60*5));
-Abstract_Token::save($token);
+$save_token = Abstract_Token::save($token);
+if ($save_token === false) {
+	Logger::error('main', '(startsession) failed to save token \''.$token.'\' for session \''.$session->id.'\'');
+	die_error(_('Internal error'), __FILE__, __LINE__);
+}
 
 $buf = Abstract_Server::load($session->server);
 
