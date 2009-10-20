@@ -20,12 +20,14 @@
  **/
 
 abstract class Module {
-	abstract public static function prettyName();
+	public static function prettyName() {
+	}
 	public static function configuration() {
 		// list of ConfigElements
 		return array();
 	}
-	abstract public static function prefsIsValid($prefs_, &$log=array());
+	public static function prefsIsValid($prefs_, &$log=array()) {
+	}
 	public static function isDefault() {
 		return false;
 	}

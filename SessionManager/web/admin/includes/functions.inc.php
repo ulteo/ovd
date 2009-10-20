@@ -319,7 +319,8 @@ function formToArray($form_) {
 						if (is_array($value3)) {
 							$old = &$elements_form[$key1][$key2][$key3]; //$value3;
 							$new = array();
-							$last_key = end(array_keys($old));
+							$array_keys_old = array_keys($old);
+							$last_key = end($array_keys_old);
 							foreach ($old as $k9 => $v9){
 								if (is_array($v9)) {
 									$v9_keys = array_keys($v9);
