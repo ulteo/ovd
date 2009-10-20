@@ -50,7 +50,7 @@ spool_get_id() {
         [ $buf -ge 1000 ] && return 1
         buf=$(( $buf + 1 ))
     done
-    touch $SPOOL/id/id_$buf
+    echo $SESSID> $SPOOL/id/id_$buf
     echo $buf
 }
 
@@ -60,7 +60,7 @@ spool_get_rfbport() {
         [ $buf -ge 6900 ] && return 1
         buf=$(( $buf + 1 ))
     done
-    touch $SPOOL/id/vnc_$buf
+    echo $SESSID> $SPOOL/id/vnc_$buf
     echo $buf
 }
 
