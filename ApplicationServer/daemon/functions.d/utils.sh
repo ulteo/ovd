@@ -95,3 +95,8 @@ unexport() {
         eval "$var=\"$buf\""
     done
 }
+
+pid_alive() {
+    local pid=$1
+    ps ax | mawk '{ print $1 }' |grep -q $pid
+}

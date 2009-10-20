@@ -49,21 +49,14 @@ if [ -z "$geometry" ]; then
     exit 1
 fi
 
-rfb_port=$(spool_get_rfbport)
-echo $rfb_port > $dir/rfb_port
 echo "desktop" > $dir/app_id
 
-display_init $SESSID $rfb_port
+application_startdisplay $SESSID $job $geometry
 if [ $? -ne 0 ]; then
-    log_WARN "Job error !"
+    log_WARN "Session $SESSID: Unable to continue"
     exit 1
 fi
-
-display_start $rfb_port $geometry $dir/vnc.pid
-if [ $? -ne 0 ]; then
-    log_WARN "Job error ! 2"
-    exit 1
-fi
+rfb_port=$(cat $dir/rfb_port)
 
 application_switch_status $SESSID $job 2
 windows_init_connection ${SESSID_DIR} $rfb_port 1

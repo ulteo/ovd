@@ -207,3 +207,48 @@ application_suspend_all() {
         application_switch_status $sessid $job 8
     done
 }
+
+
+application_startdisplay() {
+    local sessid=$1
+    local app_instance=$2
+    local geometry=$3
+
+    local sessid_dir=$SPOOL/sessions/$sessid
+    local app_dir=$sessid_dir/sessions/$app_instance
+
+    local rfb_port=$(spool_get_rfbport)
+    echo $rfb_port > $app_dir/rfb_port
+
+    local try=0
+    local success=0
+
+    while [ $success -eq 0 ]; do
+        display_init $sessid $rfb_port
+        if [ $? -ne 0 ]; then
+            log_WARN "Job error !"
+            return 1
+        fi
+
+        display_start $rfb_port $geometry $app_dir/vnc.pid
+        local status1=$?
+        display_alive $rfb_port $app_dir/vnc.pid
+        local status2=$?
+
+        if [ $status1 -ne 0 ] || [ $status2 -ne 0 ]; then
+            if [ $try -ge 3 ]; then
+                log_ERROR "Unable to start a VNC server"
+                return 1
+            fi
+
+            log_WARN "Unable to start a VNC server on port $RFB_PORT (tried $try)"
+            echo $rfb_port >> $sessid_dir/private/failed_rfbports
+            local rfb_port=$(spool_get_rfbport)
+            echo $rfb_port > $app_dir/rfb_port
+        else
+            success=1
+        fi
+
+         try=$(( $try + 1 ))
+    done
+}

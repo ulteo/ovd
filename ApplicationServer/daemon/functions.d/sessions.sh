@@ -188,6 +188,13 @@ session_remove() {
 
     log_INFO "session_remove: removing '$SESSID_DIR' ($i)"
 
+    if [ -f $SESSID_DIR/private/failed_rfbports ]; then
+        while read rfb_port; do
+            log_INFO "remove failed rfb_port $port from session $SESSID"
+            spool_free_rfbport $rfb_port
+        done < $SESSID_DIR/private/failed_rfbports
+    fi
+
     rm -rf $SPOOL_USERS/$SESSID
     rm -rf $SESSID_DIR
     spool_free_id $i

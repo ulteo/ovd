@@ -72,3 +72,19 @@ display_stop() {
     log_INFO "display_stop: kill $pid"
     kill $pid || kill -s 9 $pid
 }
+
+display_alive() {
+    local rfb_port=$1
+    local pid_file=$2
+
+    if [ -f $pid_file ]; then
+        local pid=$(head -n 1 $pid_file)
+
+        if [ -n "$pid" ]; then
+            pid_alive $pid
+            return $?
+        fi
+    fi
+
+    return 1
+}

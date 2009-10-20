@@ -58,20 +58,13 @@ echo $app_id > $dir/app_id
 echo $geometry > $dir/geometry
 rm $file
 
-rfb_port=$(spool_get_rfbport)
-echo $rfb_port > $dir/rfb_port
 
-display_init $SESSID $rfb_port
+application_startdisplay $SESSID $job $geometry
 if [ $? -ne 0 ]; then
-    log_WARN "Job error !"
+    log_WARN "Session $SESSID: Unable to continue"
     exit 1
 fi
-
-display_start $rfb_port $geometry $dir/vnc.pid
-if [ $? -ne 0 ]; then
-    log_WARN "Job error ! 2"
-    exit 1
-fi
+rfb_port=$(cat $dir/rfb_port)
 
 application_switch_status $SESSID $job 2
 user_exec $app_id $rfb_port "$doc"
