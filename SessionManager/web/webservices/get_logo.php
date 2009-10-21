@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', '(webservices/logo_url) Starting webservices/logo_url.php');
+Logger::debug('main', '(webservices/get_logo) Starting webservices/get_logo.php');
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -29,4 +29,18 @@ if (! $prefs)
 $web_interface_settings = $prefs->get('general', 'web_interface_settings');
 $logo_url = $web_interface_settings['logo_url'];
 
-echo $logo_url;
+if (! str_startswith($logo_url, 'http'))
+	$logo_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')?'https':'http').'://'.$_SERVER['SERVER_NAME'].$logo_url;
+
+$buf = query_url_request($logo_url);
+
+if (! str_startswith($buf['content_type'], 'image/')) {
+	Logger::error('main', '(webservices/get_logo) target(\''.$logo_url.'\') is not an image');
+	die('(webservices/get_logo) $logo_url target is not an image');
+}
+
+header('Content-Type: '.$buf['content_type']);
+
+echo $buf['data'];
+
+die();

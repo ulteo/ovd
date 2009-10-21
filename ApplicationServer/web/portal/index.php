@@ -80,15 +80,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="logo">
-							<?php
-								$logo_url = query_url(SESSIONMANAGER_URL.'/webservices/logo_url.php');
-
-								if (! str_startswith($logo_url, 'http')) {
-									$buf = parse_url(SESSIONMANAGER_URL);
-									$logo_url = $buf['scheme'].'://'.$buf['host'].$logo_url;
-								}
-							?>
-							<img src="<?php echo $logo_url; ?>" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
+							<img src="<?php echo SESSIONMANAGER_URL.'/webservices/get_logo.php'; ?>" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
 							<h1><?php printf(_('Welcome %s!'), $_SESSION['parameters']['user_displayname']); ?></h1>

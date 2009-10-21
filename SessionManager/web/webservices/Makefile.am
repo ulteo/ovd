@@ -2,7 +2,7 @@ SUBDIRS =  admin
 
 scripts_DATA =  domain.php \
                 icon.php \
-                logo_url.php \
+                get_logo.php \
                 get_news.php \
                 server_monitoring.php \
                 session_token.php \
