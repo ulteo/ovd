@@ -112,8 +112,8 @@ function show_all($flags_) {
 	$servers = Servers::getAll();
 	$display2 = array();
 	foreach ($servers as $server) {
-		$lines = $server->getWebLog();
-		$lines2 = $server->getDaemonLog();
+		$lines = $server->getWebLog(20);
+		$lines2 = $server->getDaemonLog(20);
 		if ($lines !== false || $lines2 !== false)
 			$display2[$server->getAttribute('fqdn')] = array();
 

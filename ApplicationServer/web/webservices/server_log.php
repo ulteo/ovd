@@ -35,9 +35,18 @@ if (! isset($_GET['type'])) {
 	die('ERROR - No log type requested');
 }
 
-if ($_GET['type'] == 'web')
-	die(@file_get_contents(APS_LOGS.'/main.log'));
-elseif ($_GET['type'] == 'daemon')
-	die(@file_get_contents(CHROOT.'/var/log/ulteo-ovd.log'));
+if (isset($_REQUEST['nb_lines']) && is_numeric($_REQUEST['nb_lines'])) {
+	if ($_GET['type'] == 'web')
+		$log_content = shell_exec('tail -n '.$_REQUEST['nb_lines'].' '.APS_LOGS.'/main.log');
+	elseif ($_GET['type'] == 'daemon')
+		$log_content = shell_exec('tail -n '.$_REQUEST['nb_lines'].' '.CHROOT.'/var/log/ulteo-ovd.log');
+} else {
+	if ($_GET['type'] == 'web')
+		$log_content = @file_get_contents(APS_LOGS.'/main.log');
+	elseif ($_GET['type'] == 'daemon')
+		$log_content = @file_get_contents(CHROOT.'/var/log/ulteo-ovd.log');
+}
+
+echo $log_content;
 
 die();

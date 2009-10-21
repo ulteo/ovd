@@ -590,15 +590,18 @@ class Server {
 		return $ret;
 	}
 
-	public function getWebLog() {
+	public function getWebLog($nb_lines_=NULL) {
 		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
 
-		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web', false);
+		if ($nb_lines_ === NULL)
+			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web', false);
+		else
+			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web&nb_lines='.$nb_lines_, false);
 
 		return $ret;
 	}
 
-	public function getDaemonLog() {
+	public function getDaemonLog($nb_lines_=NULL) {
 		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
 
 		if ($this->getAttribute('type') == 'windows') {
@@ -606,7 +609,10 @@ class Server {
 			return false;
 		}
 
-		$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false);
+		if ($nb_lines_ === NULL)
+			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false);
+		else
+			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon&nb_lines='.$nb_lines_, false);
 
 		return $ret;
 	}
