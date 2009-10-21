@@ -101,7 +101,7 @@ class Abstract_News {
 
 		$SQL = MySQL::getInstance();
 
-		$id = $token_->id;
+		$id = $news_->id;
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'news', 'id', $id);
 		$total = $SQL->NumRows();
