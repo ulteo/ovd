@@ -358,7 +358,9 @@ loop() {
             log_DEBUG "loop active session: ${nb_active}, to create: ${nb_tocreate}"
         fi
 
-        check_cpulimit
+        if [ -n "$USE_CPULIMIT" ] && [ $USE_CPULIMIT == "1" ]; then
+            check_cpulimit
+        fi
 
         # Check session to create
         for SESSID in $(sessions_get_to_create); do
@@ -383,6 +385,8 @@ loop() {
 
 stop() {
     system_is_broken || webservices_server_down
+
+    killall -q cpulimit
 
     [ $PID_WATCH ] && kill $PID_WATCH && wait $PID_WATCH
     for VNC in $(egrep ^VNC[0-9]+: /etc/passwd | cut -d ':' -f1); do
@@ -437,6 +441,7 @@ SPOOL_USERS=/var/spool/sessions
 SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"
 SERVERNAME=localhost
 CONNECTION_TIMEOUT=20
+USE_CPULIMIT=1
 # end of default configuration
 
 # turn off job control to avoid unwanted log messages
