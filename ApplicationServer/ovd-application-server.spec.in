@@ -6,7 +6,8 @@ License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: i386
-Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, ovd-applets, libstdc++-devel, gcc-c++
+BuildRequires: ovd-applets, libstdc++-devel, gcc-c++
+Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, ovd-applets
 
 %description
 Ulteo OVD Application Server manages the sessions.
