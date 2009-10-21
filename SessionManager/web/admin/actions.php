@@ -311,6 +311,8 @@ if ($_REQUEST['name'] == 'News') {
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['news_title']) && isset($_REQUEST['news_content'])) {
 		$news = new News('');
 		$news->title = $_REQUEST['news_title'];
+		if ($news->title == '')
+			$news->title = '('._('Untitled').')';
 		$news->content = $_REQUEST['news_content'];
 		$news->timestamp = time();
 		$ret = Abstract_News::save($news);
