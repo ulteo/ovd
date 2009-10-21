@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -86,13 +87,16 @@ if (count($tab1 > 0)) {
 	die();
 }
 
-$buf = new Imagick($image);
-if (!$buf) {
+try {
+	$buf = new Imagick($image);
+	$buf->setImageFormat('png');
+	$buf->scaleImage(0, 32);
+}
+catch (Exception $e) {
+	Logger::error('main', '(webservices/icon.php) exception while scaling '.$image.' (path=\''.$path.'\'): '.$e->getMessage());
 	header('HTTP/1.1 404 Not Found');
 	die();
 }
-$buf->setImageFormat('png');
-$buf->scaleImage(0, 32);
 
 header('Content-Type: image/png');
 echo $buf;
