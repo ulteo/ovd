@@ -328,7 +328,7 @@ function show_default() {
   else {
      $all_static = true;
      foreach($groups as $group){
-       if ($group->type != 'static') {
+       if ($group->type != 'static' || $userGroupDB->isWriteable()) {
          $all_static = false;
          break; // no need to continue;
        }
