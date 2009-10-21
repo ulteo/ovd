@@ -137,7 +137,15 @@ mysql> exit]]>
 # echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
 # apt-get update]]>
 	</screen>
-      </listitem>
+    <note>
+	<para>
+	  GPG errors given by the previous command will be fixed in the next
+      installation steps. They won't prevent the installation to be
+      successful.
+	</para>
+    </note>
+    </listitem>
+
     <listitem>
     <para>
       Install the keyring package to validate the repository using gpg:
@@ -395,6 +403,13 @@ mysql> exit]]>
 # apt-get install ulteo-keyring
 # apt-get update]]>
 	</screen>
+    <note>
+	<para>
+	  GPG errors given by the previous command will be fixed in the next
+      installation steps. They won't prevent the installation to be
+      successful.
+	</para>
+    </note>
     </listitem>
       <listitem>
         <para>
