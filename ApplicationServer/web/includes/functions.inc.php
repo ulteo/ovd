@@ -182,7 +182,13 @@ function chroot_realpath($path_, $chroot_=CHROOT) {
 		$path = $chroot_.'/'.$path_;
 
 	while (is_link($path)) {
-		$path = $chroot_.realpath($path);
+		$readlink = readlink($path);
+		if (is_file($chroot_.$readlink)) {
+			return $chroot_.$readlink;
+		}
+		else {
+			$path = dirname($path).'/'.$readlink;
+		}
 	}
 
 	return $path;
