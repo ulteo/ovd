@@ -32,7 +32,7 @@ $logo_url = $web_interface_settings['logo_url'];
 if (! str_startswith($logo_url, 'http'))
 	$logo_url = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')?'https':'http').'://'.$_SERVER['SERVER_NAME'].$logo_url;
 
-$buf = query_url_request($logo_url);
+$buf = query_url_request($logo_url, false);
 
 if (! str_startswith($buf['content_type'], 'image/')) {
 	Logger::error('main', '(webservices/get_logo) target(\''.$logo_url.'\') is not an image');
