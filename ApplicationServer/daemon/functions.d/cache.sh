@@ -97,6 +97,13 @@ cache_set_monitoring() {
                 echo '<application pid="'$pid'" app_id="'$app_id'" />' >>$file
             done < $SPOOL_USERS/$SESSID/apps
         fi
+
+        for app in $(application_list $SESSID); do
+            local app=$(basename $app)
+            local app_id=$(application_get_appId $app $SESSID)
+            echo '<session id="'$app'" app_id="'$app_id'" />' >>$file
+        done
+
         echo '</user>'                                     >>$file
         echo '</session>'                                  >>$file
         session_unload

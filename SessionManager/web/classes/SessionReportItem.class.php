@@ -54,6 +54,9 @@ class SessionReportItem {
 	}
 
 	public function update($session_node_) {
+		$sessid = $session_node_->getAttribute('id');
+		$session = Abstract_Session::load($sessid);
+
 		//$apps_link = application_desktops_to_ids();
 		$user_node = null;
 		/* reset the current apps data */
@@ -84,6 +87,19 @@ class SessionReportItem {
 			$app_id = $pid_node->getAttribute('app_id');
 			$this->current_apps[] = $app_id;
 			$tmp[$app_pid] = $app_id;
+		}
+
+		if ($session->getAttribute('mode') == 'portal') {
+			$this->current_apps = array();
+			foreach ($user_node->childNodes as $sid_node) {
+				if ($sid_node->nodeType != XML_ELEMENT_NODE ||
+					$sid_node->tagName != 'session')
+						continue;
+
+				$session_id = $sid_node->getAttribute('id');
+				$app_id = $sid_node->getAttribute('app_id');
+				$this->current_apps[$session_id] = $app_id;
+			}
 		}
 
 		/* for each app that was already active, we check if it's still there

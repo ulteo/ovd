@@ -143,6 +143,20 @@ application_check_status() {
     fi
 }
 
+application_list() {
+    local sessid=$1
+    local sessid_dir=$SPOOL/sessions/$sessid
+
+    find $sessid_dir/sessions/ -type d -maxdepth 1 -mindepth 1
+}
+
+application_get_appId() {
+    local job=$1
+    local sessid=$2
+    local sessid_dir=$SPOOL/sessions/$sessid
+
+    cat $sessid_dir/sessions/$job/app_id
+}
 
 application_loop() {
     local sessid=$1

@@ -75,7 +75,7 @@ function popupOpen2(ulteoForm) {
 	var rand = Math.round(Math.random()*100);
 
 	var w = window.open('about:blank', 'Ulteo'+rand, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+new_width+',height='+new_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-	$('joinsession').target = 'Ulteo'+rand;
+	ulteoForm.target = 'Ulteo'+rand;
 
 	return false;
 }
