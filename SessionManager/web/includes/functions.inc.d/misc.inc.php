@@ -383,6 +383,8 @@ function explode_with_escape($pattern_, $string_, $limit_=NULL) {
 			$ret[$i-1] .= $pattern_.$e;
 			$append_mode = false;
 		} else {
+			if (!isset($ret[$i]))
+				$ret[$i] = '';
 			$ret[$i++] .= $e;
 		}
 		
