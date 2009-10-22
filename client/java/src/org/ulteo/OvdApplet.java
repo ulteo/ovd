@@ -22,30 +22,93 @@
 
 package org.ulteo;
 
-import org.vnc.RfbProto;
-import org.vnc.rfbcaching.IRfbCachingConstants;
-
-import com.sshtools.j2ssh.SshErrorResolver;
-import com.sshtools.j2ssh.SshDialog;
 import java.awt.FlowLayout;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
-import javax.swing.JOptionPane;
+import java.net.URL;
 
-public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver, UncaughtExceptionHandler {
-    public static final String version = "0.2.4";
+import com.sshtools.j2ssh.SshErrorResolver;
+import com.sshtools.j2ssh.SshDialog;
+import com.sshtools.j2ssh.forwarding.ForwardingIOChannel;
+import com.sshtools.j2ssh.transport.TransportProtocol;
+import com.sshtools.j2ssh.transport.TransportProtocolEventHandler;
+
+import org.vnc.RfbProto;
+import org.vnc.VncClient;
+import org.vnc.rfbcaching.IRfbCachingConstants;
+
+public class OvdApplet extends java.applet.Applet implements SshErrorResolver, UncaughtExceptionHandler, org.vnc.Dialog {
+	private VncClient vnc = null;
+	protected SshConnection ssh = null;
+
+	// Ssh parameters
+	protected String sshUser,sshPassword,sshHost;
+	protected int sshPort;
+
+	//	Proxy parameters
+	protected boolean proxy = false;
+	protected String proxyType,proxyHost,proxyUsername,proxyPassword;
+	protected int proxyPort;
+
+	// VNC parameters
+	protected String vncPassword = null;
+	protected int vncPort;
+
+	protected boolean continue2run = true;
+	protected boolean stopped = false;
+
+	private String startupStatusReport = null;
+
+	public boolean checkSecurity() {
+		try {
+			System.getProperty("user.home");
+		} catch(java.security.AccessControlException e) {
+			return false;
+		}
+
+		return true;
+	}
 
 
+	// Begin extends Applet
 	public void init() {
+		System.out.println(this.getClass().toString() +" init");
+
+		boolean status = this.checkSecurity();
+		//	this.applet_startup_info(status);
+		if (! status) {
+			System.err.println(this.getClass().toString() +" init: Not enought privileges, unable to continue");
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
+
 		Runtime rt = Runtime.getRuntime();
 		if(rt.totalMemory() == rt.maxMemory() && rt.freeMemory() < 11000000){
 			System.err.println("Not enough memory to start the applet");
-			JOptionPane.showMessageDialog(null, "Your Java Machine is low on virtual memory.\nPlease restart the browser before launching Ulteo Online Desktop", "Warning", JOptionPane.ERROR_MESSAGE);
-			stop();
+			// Call JS method
+			this.stop();
 			return;
 		}
+
+		if (! this.readParameters()) {
+			// Call JS method
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
+
+		this.ssh = new SshConnection(this.sshHost, this.sshPort, this.sshUser, this.sshPassword);
+		//this.ssh.addEventHandler(new SshHandler(this));
+
+		if(proxyHost != null && !proxyHost.equals("")) {
+			System.out.println("Enable proxy parameters");
+			this.ssh.setProxy(this.proxyType, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword);
+		}
+
+		this.vnc = new VncClient(this, this);
 
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		SshDialog.registerResolver(this);
@@ -53,150 +116,293 @@ public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver, Un
 		layout.setHgap(0);
 		layout.setVgap(0);
 		this.setLayout(layout);
-
-		super.init();
     }
 
-	public String vncGetPassword() {
-		return Utils.DecryptEncVNCString(this.vncPassword);
+
+	public void start() {
+		System.out.println(this.getClass().toString() +" start");
+
+		if (this.stopped || ! this.continue2run)
+			return;
+		System.out.println("org.ulteo.applet.Viewer start");
+
+
+		if (! this.ssh.connect()) {
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
+
+
+		ForwardingIOChannel tunnel = this.ssh.createTunnel(this.vncPort);
+		if (tunnel == null) {
+			System.err.println("Unable to create tunnel");
+			this.stop();
+			return;
+		}
+		
+		this.vnc.setInOut(tunnel.getInputStream(), tunnel.getOutputStream());
+	
+		if (! this.vnc.connect()) {
+			this.stop();
+			return;
+		}
+
+		if (! this.vnc.authenticate()) {
+			this.stop();
+			return;
+		}
+
+		if (! vnc.init()) {
+			this.stop();
+			return;
+		}
+
+		this.vnc.start_background_process();
+		System.out.println("Session started");
+	}
+   
+
+	public void stop() {
+		if (this.stopped)
+			return;
+
+		System.out.println(this.getClass().toString() +" stop");
+
+		if (this.vnc != null)
+			this.vnc.stop();
+		if (this.ssh != null)
+			this.ssh.disconnect();
+	}
+   
+
+	public void destroy() {
+		System.out.println(this.getClass().toString() +" destroy");
+
+		this.ssh = null;
+		this.sshUser = null;
+		this.sshPassword = null;
+		this.sshHost = null;
+
+		this.proxyType = null;
+		this.proxyHost = null;
+		this.proxyUsername = null;
+		this.proxyPassword = null;
+
+		this.vnc = null;
+		this.vncPassword = null;
+	}
+	// end extends Applet
+
+
+	public String getParameterNonEmpty(String key) throws Exception {
+		String buffer = super.getParameter(key);
+		if (buffer != null && buffer.equals("")) {
+			System.err.println("Parameter "+key+": empty value");
+			throw new Exception();
+		}
+
+		return buffer;
 	}
 
 
-	public void readParameters() {
-		String buf;
+	public String getParameter(String key, boolean required) throws Exception {
+		String buffer = this.getParameterNonEmpty(key);
 
-		this.ssh.host = getParameter("ssh.host");
-
-		String[] buffer = getParameter("ssh.port").split(",");
-		if (buffer.length == 0) {
-			System.err.println("no port given");
-			stop();
+		if (required &&  buffer == null) {
+			System.err.println("Missing parameter key '"+key+"'");
+			throw new Exception();
 		}
-		try {
-			this.ssh.port = Integer.parseInt(buffer[0]);
-		} catch(NumberFormatException e) {}
 
-		this.ssh.user = getParameter("ssh.user");
-		this.ssh.password = Utils.DecryptString(getParameter("ssh.password"));
+		return buffer;
+	}
+
+
+	public boolean readParameters() {
+		// SSH parameters
+		try {
+			this.sshHost = this.getParameter("ssh.host", true);
+
+			String[] buffer = this.getParameter("ssh.port", true).split(",");
+			this.sshPort = Integer.parseInt(buffer[0]);
+			// this.ssh_port = new int[buffer.length];
+			// for(int i=0; i<buffer.length; i++)
+			//	 this.ssh_port[i] = Integer.parseInt(buffer[i]);
+		
+			this.sshUser = this.getParameter("ssh.user", true);
+			this.sshPassword = this.getParameter("ssh.password", true);
+		}
+		catch(NumberFormatException e) {
+			System.err.println("Invalid ssh port number");
+			return false;
+		}
+		catch(Exception e) {
+			return false;
+		}
 
 		// Read proxy parameters, if any -- by ArnauVP
-		proxyType = getParameter("proxyType");
-		proxyHost = getParameter("proxyHost");
 		try {
-			proxyPort = Integer.parseInt(getParameter("proxyPort"));
-		} catch(NumberFormatException e) {}
+			
+			this.proxyType = this.getParameterNonEmpty("proxyType");
+			this.proxyHost = this.getParameterNonEmpty("proxyHost");
+			String buffer = this.getParameterNonEmpty("proxyPort");
+			if (buffer!=null)
+				this.proxyPort = Integer.parseInt(buffer);
+			this.proxyUsername = this.getParameterNonEmpty("proxyUsername");
+			this.proxyPassword = this.getParameterNonEmpty("proxyPassword");
+		} catch(NumberFormatException e) {
+			System.err.println("Invalid proxyPort ("+this.getParameter("proxyPort")+")");
+			return false;
+		} catch(Exception e) {
+			return false;
+		}
 
-		proxyUsername = getParameter("proxyUsername");
-		proxyPassword = getParameter("proxyPassword");
 
+		// VNC parameters
 		try {
-			this.ssh.vncPort = Integer.parseInt(getParameter("PORT"));
-		} catch(NumberFormatException e) {}
+			// org.vnc.Options.host = this.getParameter("HOST", true);
+			this.vncPort = Integer.parseInt(this.getParameter("PORT", true));
+			this.vncPassword = this.getParameter("ENCPASSWORD", true);
 
-		org.vnc.Options.host = getParameter("HOST");
-		this.vncPassword = getParameter("ENCPASSWORD");
-
-		buf = getParameter("Encoding");
-		if (buf != null) {
-			if (buf.equalsIgnoreCase("RRE"))
-				org.vnc.Options.preferredEncoding = RfbProto.EncodingRRE;
-			else if (buf.equalsIgnoreCase("CoRRE"))
-				org.vnc.Options.preferredEncoding = RfbProto.EncodingCoRRE;
-			else if (buf.equalsIgnoreCase("Hextile"))
-				org.vnc.Options.preferredEncoding = RfbProto.EncodingHextile;
-			else if (buf.equalsIgnoreCase("ZRLE"))
-				org.vnc.Options.preferredEncoding = RfbProto.EncodingZRLE;
-			else if (buf.equalsIgnoreCase("Zlib"))
-				org.vnc.Options.preferredEncoding = RfbProto.EncodingZlib;
-			else if (buf.equalsIgnoreCase("Tight"))
-				org.vnc.Options.preferredEncoding = RfbProto.EncodingTight;
+		}
+		catch(NumberFormatException e) {
+			System.err.println("Invalid vncPort");
+			return false;
+		} catch(Exception e) {
+			System.err.println("No VNC port or password");
+			return false;
 		}
 
-		buf = getParameter("JPEG image quality");
-		if (buf != null) {
-			try {
-				org.vnc.Options.jpegQuality = Integer.parseInt(buf);
-			} catch(NumberFormatException e) {}
+		// Extended VNC parameters
+		try {
+			String buf = this.getParameterNonEmpty("Encoding");
+			if (buf != null) {
+				if (buf.equalsIgnoreCase("RRE"))
+					org.vnc.Options.preferredEncoding = RfbProto.EncodingRRE;
+				else if (buf.equalsIgnoreCase("CoRRE"))
+					org.vnc.Options.preferredEncoding = RfbProto.EncodingCoRRE;
+				else if (buf.equalsIgnoreCase("Hextile"))
+					org.vnc.Options.preferredEncoding = RfbProto.EncodingHextile;
+				else if (buf.equalsIgnoreCase("ZRLE"))
+					org.vnc.Options.preferredEncoding = RfbProto.EncodingZRLE;
+				else if (buf.equalsIgnoreCase("Zlib"))
+					org.vnc.Options.preferredEncoding = RfbProto.EncodingZlib;
+				else if (buf.equalsIgnoreCase("Tight"))
+					org.vnc.Options.preferredEncoding = RfbProto.EncodingTight;
+			}
+
+			buf = this.getParameterNonEmpty("JPEG image quality");
+			if (buf != null) {
+				try {
+					org.vnc.Options.jpegQuality = Integer.parseInt(buf);
+				} catch(NumberFormatException e) {
+					System.err.println("invalid JPEG image quality");
+					return false;
+				}
+			}
+
+			buf = this.getParameterNonEmpty("Compression level");
+			if (buf != null) {
+				try {
+					org.vnc.Options.compressLevel = Integer.parseInt(buf);
+				} catch(NumberFormatException e) {
+					System.err.println("Invalid Compression level");
+					return false;
+				}
+			}
+
+			buf = this.getParameterNonEmpty("Restricted colors");
+			if (buf != null && buf.equalsIgnoreCase("yes"))
+				org.vnc.Options.eightBitColors = true;
+
+			buf = this.getParameterNonEmpty("View only");
+			if (buf != null && buf.equalsIgnoreCase("yes"))
+				org.vnc.Options.viewOnly = true;
+
+			buf = this.getParameterNonEmpty("Share desktop");
+			if (buf != null && buf.equalsIgnoreCase("true"))
+				org.vnc.Options.shareDesktop = true;
+
+		}
+		catch(Exception e) {
+			return false;
 		}
 
-		buf = getParameter("Compression level");
-		if (buf != null) {
-			try {
-				org.vnc.Options.compressLevel = Integer.parseInt(buf);
-			} catch(NumberFormatException e) {}
-		}
-
-		buf = getParameter("Restricted colors");
-		if (buf != null && buf.equalsIgnoreCase("yes"))
-			org.vnc.Options.eightBitColors = true;
-
-		buf = getParameter("View only");
-		if (buf != null && buf.equalsIgnoreCase("yes"))
-			org.vnc.Options.viewOnly = true;
-
-		buf = getParameter("Share desktop");
-		if (buf != null && buf.equalsIgnoreCase("true"))
-			org.vnc.Options.shareDesktop = true;
-
-
-		if (getParameter("rfb.cache.enabled") != null) {
+		if (this.getParameter("rfb.cache.enabled") != null) {
 			org.vnc.Options.cacheEnable = true;
-			buf = getParameter("rfb.cache.ver.major");
-			if (buf != null) {
-				try {
+
+			try {
+				String buf = this.getParameterNonEmpty("rfb.cache.ver.major");
+				if (buf != null)
 					org.vnc.Options.cacheVerMajor = Integer.parseInt(buf);
-				} catch(NumberFormatException e) {}
-			}
 
-			buf = getParameter("rfb.cache.ver.minor");
-			if (buf != null) {
-				try {
+				buf = this.getParameterNonEmpty("rfb.cache.ver.minor");
+				if (buf != null)
 					org.vnc.Options.cacheVerMinor = Integer.parseInt(buf);
-				} catch(NumberFormatException e) {}
-			}
 
-			buf = getParameter("rfb.cache.size");
-			if (buf != null) {
-				try {
+				buf = this.getParameterNonEmpty("rfb.cache.size");
+				if (buf != null)
 					org.vnc.Options.cacheSize = Integer.parseInt(buf);
-				} catch(NumberFormatException e) {}
-			}
 
-
-			buf = getParameter("rfb.cache.datasize");
-			if (buf != null) {
-				try {
+				buf = this.getParameterNonEmpty("rfb.cache.datasize");
+				if (buf != null)
 					org.vnc.Options.cacheDataSize = Integer.parseInt(buf);
-				} catch(NumberFormatException e) {}
-			}
 
-			buf = getParameter("rfb.cache.alg");
-			if (buf.equalsIgnoreCase("FIFO"))
-				org.vnc.Options.cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_MAINT_ALG_FIFO;
-			else if (buf.equalsIgnoreCase("LRU"))
-				org.vnc.Options.cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_MAINT_ALG_LRU;
+				buf = this.getParameterNonEmpty("rfb.cache.alg");
+				if (buf.equalsIgnoreCase("FIFO"))
+					org.vnc.Options.cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_MAINT_ALG_FIFO;
+				else if (buf.equalsIgnoreCase("LRU"))
+					org.vnc.Options.cacheMaintAlgI = IRfbCachingConstants.RFB_CACHE_MAINT_ALG_LRU;
+				else {
+					System.err.println("Unknown rfb.cach.alg");
+					return false;
+				}
+			}
+			catch(NumberFormatException e) {
+				System.err.println("Invalid rfb.cache parameters");
+				return false;
+			}
+			catch(Exception e) {
+				System.err.println("Empty forced rfb.cache parameters");
+				return false;
+			}
 		}
+
+		return true;
     }
 
-    void showMessage(String msg) {
-		//vncContainer.removeAll();
-		JOptionPane.showMessageDialog(this, "The Online Desktop has closed.\n" +
-				      "Thanks for using our service!\n", "Online Desktop session finished",JOptionPane.INFORMATION_MESSAGE);
-		System.err.println("ERROR: "+msg+"\n");
+
+	public void applet_startup_info(boolean status) {
+		String url = "javascript:"+this.startupStatusReport+"("+(status?"true":"false")+");";
+		System.out.println("org.ulteo.applet.Applet call javascript '"+url+"')");
+		this.openUrl(url);
 	}
 
-	public String getAppletInfo() {
-		return "UlteoVNC";
+
+	public void openUrl(String url) {
+		System.out.println("Openurl: "+url);
+		try {
+			getAppletContext().showDocument(new URL(url));
+		} catch(Exception e) {
+			System.err.println("Couldn't execute javascript "+e.getMessage());
+			stop();
+		}
 	}
 
+
+	// Begin Implements SshErrorResolver
 	public void resolvError(String error) {
 		Logger.warn("Unresolved error : "+error);
 	}
 
+
 	public void logError(String errorMessage) {
 		Logger.error(errorMessage);
 	}
+	// End Implements SshErrorResolver
 
+
+	// Begin Implements UncaughtExceptionHandler
 	public void uncaughtException(Thread arg0, Throwable arg1) {
 		Writer result = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(result);
@@ -205,4 +411,17 @@ public class OvdApplet extends org.sshvnc.Applet implements SshErrorResolver, Un
 		logError("An uncaught Exception is arrived: \n"+result.toString());
 		
 	}
+	// End Implements UncaughtExceptionHandler
+
+
+	// Begin Implements org.vnc.Dialog
+	public String vncGetPassword() {
+		return Utils.DecryptEncVNCString(this.vncPassword);
+	}
+	
+	public void vncSetError(String err) {
+		System.err.println("Vnc error: " + err);
+		stop();
+	}
+	// End Implements org.vnc.Dialog
 }

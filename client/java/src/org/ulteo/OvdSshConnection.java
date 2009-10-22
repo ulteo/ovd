@@ -21,164 +21,196 @@
 
 package org.ulteo;
 
-import java.io.IOException;
+import java.net.URL;
 
-import com.sshtools.j2ssh.SshClient;
-import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
-import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
-import com.sshtools.j2ssh.configuration.SshConnectionProperties;
-import com.sshtools.j2ssh.connection.ChannelInputStream;
-import com.sshtools.j2ssh.connection.ChannelOutputStream;
-import com.sshtools.j2ssh.forwarding.ForwardingIOChannel;
-import com.sshtools.j2ssh.transport.HostKeyVerification;
-import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
-
-import javax.swing.JOptionPane;
+import org.ulteo.Logger;
+import org.ulteo.SshConnection;
+import org.ulteo.Utils;
 
 public class OvdSshConnection extends java.applet.Applet {
-    public static SshClient ssh;
-    public String user,password,host;
-    public int port = 22;
- 	public SshConnectionProperties ssh_properties;
+	protected SshConnection ssh = null;
 
+	// Ssh parameters
+	protected String sshUser,sshPassword,sshHost;
+	protected int sshPort;
+
+	//	Proxy parameters
 	protected String proxyType, proxyHost, proxyUsername, proxyPassword;
 	protected int proxyPort;
 
+	protected boolean continue2run = true;
 	protected boolean stopped = false;
 
+	private String startupStatusReport = null;
+
+
+	// Begin extends Applet
 	public void init() {
-		System.out.println("OvdSSHConnection init");
+		System.out.println(this.getClass().toString() +"  init");
+/*
+		this.startupStatusReport = this.getParameter("onInit");
+		if (this.startupStatusReport == null || this.startupStatusReport.equals("")) {
+			System.err.println("OvdTester init: Missing parameter key 'onInit'");
+			System.err.println("OvdTester: Unable to continue");
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
+*/
 
-		ssh = new SshClient();
-		ssh_properties = new SshConnectionProperties();
+		boolean status = this.checkSecurity();
+//		this.applet_startup_info(status);
+		if (! status) {
+			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
 
-		readParameters();
+
+		if (! readParameters()) {
+			// Call JS method
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
+
+		this.ssh = new SshConnection(this.sshHost, this.sshPort, this.sshUser, this.sshPassword);
+//		this.ssh.addEventHandler(new SshHandler(this));
 
 		if(proxyHost != null && !proxyHost.equals("")) {
-			this.ssh_properties.setPort(443); //Always use this when using proxy
-			this.ssh_properties.setTransportProviderString(proxyType);
-			this.ssh_properties.setProxyHost(proxyHost);
-			this.ssh_properties.setProxyPort(proxyPort);
-			this.ssh_properties.setProxyUsername(proxyUsername);
-			this.ssh_properties.setProxyPassword(proxyPassword);
+			System.out.println("Enable proxy parameters");
+			this.ssh.setProxy(this.proxyType, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword);
 		}
 	}
+
 
 	public void start() {
-		System.out.println("OvdSSHConnection start");
+		if (this.stopped || ! this.continue2run)
+			return;	
+		System.out.println(this.getClass().toString() +"  start");
 
-		try {
-			ssh.setSocketTimeout(20000);
-
-			HostKeyVerification hkv;
-			try {
-				hkv = new ConsoleKnownHostsKeyVerification();
-			} catch (Exception e) {
-				// hkv = new IgnoreHostKeyVerification();
-				throw e;
-			}
-			ssh.connect(ssh_properties, hkv);
-
-			PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
-			pwd.setUsername(this.user);
-			pwd.setPassword(this.password);
-			// System.out.println("user: '"+this.user+"'\npassword: "+this.password);
-			int result = ssh.authenticate(pwd);
-			if(result==AuthenticationProtocolState.COMPLETE) {
-				System.out.println("Authentication completed.");
-			} else {
-				System.out.println("SSh Authentication failed");
-				this.stop();
-				return;
-			}
-		}
-		catch(Exception e) {
-			System.out.println("ssh problem");
-			e.printStackTrace();
+		if (! this.ssh.connect()) {
+			this.continue2run = false;
 			this.stop();
+			return;
 		}
 	}
+   
+	public void stop() {
+		if (this.stopped)
+			return;
+		System.out.println("org.ulteo.applet.Applet stop");
 
-	public static boolean createTunnel(int port) {
-		System.out.println("OvdSSHConnection createTunnel");
-		ChannelInputStream in;
-		ChannelOutputStream out;
 
+		if (this.ssh != null)
+			this.ssh.disconnect();
+	}
+   
+	public void destroy() {
+		System.out.println("org.ulteo.applet.Applet destroy");
+
+		this.ssh = null;
+		this.sshUser = null;
+		this.sshPassword = null;
+		this.sshHost = null;
+
+		this.proxyType = null;
+		this.proxyHost = null;
+		this.proxyUsername = null;
+		this.proxyPassword = null;
+	}
+	// end extends Applet
+
+
+	public boolean checkSecurity() {
 		try {
-			ForwardingIOChannel channel = new ForwardingIOChannel(ForwardingIOChannel.LOCAL_FORWARDING_CHANNEL,
-															  "VNC","localhost", port,"0.0.0.0", port+10);
-			if(! ssh.openChannel(channel)) {
-				System.err.println("Unable to open Channel");
-				return false;
-			}
+			System.getProperty("user.home");
+		} catch(java.security.AccessControlException e) {
+			return false;
+		}
 
-			System.out.println("Channel open");
-			in = channel.getInputStream();
-			out = channel.getOutputStream();
+		return true;
+	}
+
+	public String getParameterNonEmpty(String key) throws Exception {
+		String buffer = super.getParameter(key);
+		if (buffer != null && buffer.equals("")) {
+			System.err.println("Parameter "+key+": empty value");
+			throw new Exception();
+		}
+
+		return buffer;
+	}
+
+	public String getParameter(String key, boolean required) throws Exception {
+		String buffer = this.getParameterNonEmpty(key);
+
+		if (required &&  buffer == null) {
+			System.err.println("Missing parameter key '"+key+"'");
+			throw new Exception();
+		}
+
+		return buffer;
+	}
+
+
+	public boolean readParameters() {
+		// SSH parameters
+		try {
+			this.sshHost = this.getParameter("ssh.host", true);
+
+			String[] buffer = this.getParameter("ssh.port", true).split(",");
+			this.sshPort = Integer.parseInt(buffer[0]);
+			// this.ssh_port = new int[buffer.length];
+			// for(int i=0; i<buffer.length; i++)
+			//	 this.ssh_port[i] = Integer.parseInt(buffer[i]);
+		
+			this.sshUser = this.getParameter("ssh.user", true);
+			this.sshPassword = this.getParameter("ssh.password", true);
+		}
+		catch(NumberFormatException e) {
+			System.err.println("Invalid ssh port number");
+			return false;
 		}
 		catch(Exception e) {
-			System.out.println("ssh tunnel problem");
-			e.printStackTrace();
+			return false;
+		}
+
+		// Read proxy parameters, if any -- by ArnauVP
+		try {
+			
+			this.proxyType = this.getParameterNonEmpty("proxyType");
+			this.proxyHost = this.getParameterNonEmpty("proxyHost");
+			String buffer = this.getParameterNonEmpty("proxyPort");
+			if (buffer!=null)
+				this.proxyPort = Integer.parseInt(buffer);
+			this.proxyUsername = this.getParameterNonEmpty("proxyUsername");
+			this.proxyPassword = this.getParameterNonEmpty("proxyPassword");
+		} catch(NumberFormatException e) {
+			System.err.println("Invalid proxyPort ("+this.getParameter("proxyPort")+")");
+			return false;
+		} catch(Exception e) {
 			return false;
 		}
 
 		return true;
     }
-   
-	public void stop() {
-		if (stopped)
-			return;
-		stopped = true;
-		System.out.println("OvdSSHConnection stop");
 
-		ssh.disconnect();
-    }
-
-   
-	public void destroy() {
-		System.out.println("SSHVnc destroy");
+	public void applet_startup_info(boolean status) {
+		String url = "javascript:"+this.startupStatusReport+"("+(status?"true":"false")+");";
+		System.out.println("org.ulteo.applet.Applet call javascript '"+url+"')");
+		this.openUrl(url);
 	}
 
-
-
-	public void readParameters() {
-		String buf;
-
-		//this.ssh.host = getParameter("ssh.host");
-		this.ssh_properties.setHost(getParameter("ssh.host"));
-
-		String[] buffer = getParameter("ssh.port").split(",");
-		if (buffer.length == 0) {
-			System.err.println("no port given");
+	public void openUrl(String url) {
+		System.out.println("Openurl: "+url);
+		try {
+			getAppletContext().showDocument(new URL(url));
+		} catch(Exception e) {
+			System.err.println("Couldn't execute javascript "+e.getMessage());
 			stop();
 		}
-		try {
-			// this.ssh.port = Integer.parseInt(buffer[0]);
-			this.ssh_properties.setPort(Integer.parseInt(buffer[0]));
-		} catch(NumberFormatException e) {}
+	}
 
-		this.user = getParameter("ssh.user");
-		this.password = Utils.DecryptString(getParameter("ssh.password"));
-
-		// Read proxy parameters, if any -- by ArnauVP
-		proxyType = getParameter("proxyType");
-		proxyHost = getParameter("proxyHost");
-		try {
-			proxyPort = Integer.parseInt(getParameter("proxyPort"));
-		} catch(NumberFormatException e) {}
-
-		proxyUsername = getParameter("proxyUsername");
-		proxyPassword = getParameter("proxyPassword");
-    }
-
-    void showMessage(String msg) {
-		//vncContainer.removeAll();
-		JOptionPane.showMessageDialog(this, "The Online Desktop has closed.\n" +
-				      "Thanks for using our service!\n", "Online Desktop session finished",JOptionPane.INFORMATION_MESSAGE);
-		System.err.println("ERROR: "+msg+"\n");
-    }
-  
-    public String getAppletInfo() {
-		return "UlteoVNC";
-    }
 }

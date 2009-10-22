@@ -63,6 +63,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	// Browser properties
 	protected String userAgent;
 
+	// Ssh parameters
 	protected String sshUser,sshPassword,sshHost;
 	protected int[] sshPortList;
 
@@ -86,33 +87,38 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		return buffer;
 	}
 
-	protected void read_args() {
+	public boolean readParameters() {
 		// Get the Javascript URLs to show the results
 		startuponLoad = getNeededParameter("onLoad");
 		startuponFailure = getNeededParameter("onFail");
 		startuponBadPing = getNeededParameter("onBadPing");
 
 		userAgent = getNeededParameter("agent");
-		sshHost = getNeededParameter("ssh.host");
 
-		String buffer = getNeededParameter("ssh.port");
-		String[] buflist = buffer.split(",");
-		this.sshPortList = new int[buflist.length];
-		for(int i=0; i<buflist.length; i++) {
-			try{
-				this.sshPortList[i] = Integer.parseInt(buflist[i]);
-			}catch(NumberFormatException nfe){
-				System.err.println("One of the entered ports is not valid "+buflist[i]);
-				stop();
-			}
+		try {
+			this.sshHost = getNeededParameter("ssh.host");
+
+			String[] buffer = getNeededParameter("ssh.port").split(",");
+			this.sshPortList = new int[buffer.length];
+			for(int i=0; i<buffer.length; i++)
+				this.sshPortList[i] = Integer.parseInt(buffer[i]);
+		}
+		catch(NumberFormatException e) {
+			System.err.println("Invalid ssh port number");
+			return false;
+		}
+		catch(Exception e) {
+			return false;
 		}
 
-		buffer = getParameter("maxPingAccepted");
+		String buffer = getParameter("maxPingAccepted");
 		if (buffer != null) {
 			try {
 				maxPingAccepted = Integer.parseInt(buffer);
 			} catch (NumberFormatException e) {}
 		}
+
+		return true;
 	}
 
 	public boolean checkSecurity() {
@@ -146,7 +152,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		this.can_run = true;
 		System.out.println("OvdTester init continue");
 
-		read_args();
+		this.readParameters();
 
 		operativeSystem = System.getProperty("os.name");
 
@@ -512,48 +518,4 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 			stop();
 		}
 	}
-
-	/**
-	 * Sets the value of the given Javascript variable
-	 *
-	 * @param varName
-	 * @param value
-	 */
-/*
-	public void setJavaScriptVariable(String varName, String value){
-		JSObject window = JSObject.getWindow(this);
-		window.setMember("testResult", value);
-	}
-*/
-	/**
-	 * Sets the value of the given Javascript variable
-	 *
-	 * @param varName
-	 * @param value
-	 */
-/*
-	public void setJavaScriptVariable(String varName, int value){
-		this.setJavaScriptVariable(varName, ""+value);
-	}
-*/
-
-	/**
-	 * Calls the given Javascript method with its parameters
-	 *
-	 * @param methodName
-	 * @param value
-	 */
-/*
-	public void callJavaScriptMethod(String methodName, Object[] args) {
-		JSObject window = JSObject.getWindow(this);
-		try {
-			window.call(methodName, args);
-			System.out.println("JS method called");
-		} catch(JSException ex) {
-//		  This method doesn't like it when the args are null (although it works in Konqueror)
-			System.err.println("Ouch: " + ex.getMessage());
-			setJavaScriptVariable("testResult", testResult);
-		}
-	}
-*/
 }
