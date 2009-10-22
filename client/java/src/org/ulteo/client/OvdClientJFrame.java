@@ -1,4 +1,4 @@
-package org.ulteo;
+package org.ulteo.client;
 
 public class OvdClientJFrame extends javax.swing.JFrame {
 

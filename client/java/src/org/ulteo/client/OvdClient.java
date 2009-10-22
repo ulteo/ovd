@@ -1,4 +1,4 @@
-package org.ulteo;
+package org.ulteo.client;
 
 import java.net.*;
 import java.io.StringReader;
@@ -11,8 +11,9 @@ import javax.swing.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
-import org.ulteo.HttpClient;
 import org.sshvnc.Viewer;
+
+import org.ulteo.Utils;
 
 public class OvdClient implements Runnable, ActionListener {
     protected OvdClientJFrame frame;

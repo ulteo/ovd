@@ -1,4 +1,4 @@
-package org.ulteo;
+package org.ulteo.client;
 
 import java.util.*;
 import java.io.*;
