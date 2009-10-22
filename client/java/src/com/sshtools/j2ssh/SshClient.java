@@ -264,6 +264,40 @@ public class SshClient {
     return transport.getRemoteEOL();
   }
 
+  /**
+   * <p>
+   * Set the event handler for the underlying transport protocol.
+   * </p>
+   * <blockquote>
+   * <pre>
+   * ssh.setEventHandler(new TransportProtocolEventHandler() {
+   *
+   *   public void onSocketTimeout(TransportProtocol transport) {<br>
+   *     // Do something to handle the socket timeout<br>
+   *   }
+   *
+   *   public void onDisconnect(TransportProtocol transport) {
+   *     // Perhaps some clean up?
+   *   }
+   * });
+   * </pre>
+   * </blockquote>
+   *
+   * @param eventHandler The event handler instance to receive transport
+   *        protocol events
+   *
+   * @see com.sshtools.j2ssh.transport.TransportProtocolEventHandler
+   * @since 0.2.0
+   */
+  public void addEventHandler(SshEventAdapter eventHandler) {
+    // If were connected then add, otherwise store for later connection
+    if (transport != null) {
+      transport.addEventHandler(eventHandler);
+      authentication.addEventListener(eventHandler);
+    } else {
+      this .eventHandler = eventHandler;
+    }
+  }
 
   /**
    * <p>
