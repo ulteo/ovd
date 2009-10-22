@@ -494,8 +494,7 @@ public boolean imageUpdate(Image img, int infoflags,
 	break;
 
       case RfbProto.ServerCutText:
-	String s = rfb.readServerCutText();
-	client.setCutText(s);
+    	this.rfb.readServerCutText();
 	break;
       case IRfbCachingConstants.RFB_CACHE_SERVER_INIT_MSG:	  
     	rfb.readServerCacheInit();

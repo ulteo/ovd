@@ -48,6 +48,7 @@ public class VncClient implements Runnable{
 	protected OutputStream out;
 
 	protected Dialog dinterface;
+	protected ClipboardManagement clip = null;
 
 	public VncClient(Dialog dinterface, Container container) {
 		this.rfb = null;
@@ -57,6 +58,9 @@ public class VncClient implements Runnable{
 
 		this.in = null;
 		this.out = null;
+
+		if (! Options.viewOnly)
+			this.clip = new ClipboardManagement();
 	}
 
 
@@ -67,6 +71,8 @@ public class VncClient implements Runnable{
 			e.printStackTrace();
 		}
 		this.container.add(this.vc);
+		if (this.clip!=null)
+			this.clip.registerEvents(this.vc);
 
 		//  Disable the local cursor (only soft cursor visible)
 		try {
@@ -192,6 +198,8 @@ public class VncClient implements Runnable{
 			return false;
 		}
 	
+		if (this.clip!=null)
+			this.rfb.setClipBoard(this.clip);
 		
 		if (secType == RfbProto.SecTypeTight) {
 			System.out.println("Enabling TightVNC protocol extensions");

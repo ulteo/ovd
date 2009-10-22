@@ -270,6 +270,8 @@ public final static int
   // If true, informs that the RFB socket was closed.
   private boolean closed;
 
+  private ClipboardManagement clip = null;
+
   //
   // Constructor. Make TCP connection to RFB server.
   //
@@ -964,7 +966,7 @@ public final static int
   // Read a ServerCutText message
   //
 
-  String readServerCutText() throws IOException {
+  public void readServerCutText() throws IOException {
 
     StringBuffer buffer = new StringBuffer();
 
@@ -980,7 +982,8 @@ public final static int
 	j++;
     }
 //    System.out.println("readCut, result: "+buffer.toString());
-    return buffer.toString();
+    if (this.clip != null)
+      this.clip.recv(buffer.toString());
   }
 
 
@@ -1655,6 +1658,12 @@ public final static int
       timedKbits += newKbits;
     }
   }
+
+  public void setClipBoard(ClipboardManagement clip) {
+    this.clip = clip;
+    this.clip.setRfbProto(this);
+  }
+
 
 //
 // Start caching process
