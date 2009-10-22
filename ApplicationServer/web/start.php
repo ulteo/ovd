@@ -174,7 +174,7 @@ if ($_SESSION['type'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/in
 	$buf = '';
 	foreach ($_SESSION['parameters']['applications'] as $app)
 		$buf .= $app."\n";
-	put_to_file(SESSION_PATH.'/'.$session.'/parameters/menu', $buf);
+	put_to_file(SESSION_PATH.'/'.$session.'/parameters/applications', $buf);
 
 	if ($_SESSION['mode'] == 'desktop')
 		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');

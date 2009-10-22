@@ -34,7 +34,7 @@ menu_spool() {
 
     menu_init $menu_dir
 
-    [ -f $sessid_dir/parameters/menu ] || return 1
+    [ -f $sessid_dir/parameters/applications ] || return 1
 
     while read app ; do
         local id=$(echo $app| cut -d '|' -f1)
@@ -52,7 +52,7 @@ menu_spool() {
         *)
             log_WARN "Unrecognized application type '$name'"
         esac
-    done <$sessid_dir'/parameters/menu'
+    done <$sessid_dir'/parameters/applications'
 
     update-desktop-database $menu_dir/applications
 
