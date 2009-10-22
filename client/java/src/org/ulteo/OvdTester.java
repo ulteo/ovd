@@ -129,7 +129,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		System.out.println("OvdTester init");
 
 		this.startupStatusReport = this.getParameter("onInit");
-		if (this.startupStatusReport == null && this.startupStatusReport.equals("")) {
+		if (this.startupStatusReport == null || this.startupStatusReport.equals("")) {
 			System.err.println("OvdTester init: Missing parameter key 'onInit'");
 			System.err.println("OvdTester: Unable to continue");
 			return;
