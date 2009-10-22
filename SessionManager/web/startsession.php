@@ -237,7 +237,6 @@ if (isset($start_app) && $start_app != '') {
 		die_error(_('Application not available'), __FILE__, __LINE__);
 	}
 
-	$optional_args['start_app'] = $app->getAttribute('executable_path');
 	$optional_args['start_app_id'] = $start_app;
 }
 if (isset($open_doc) && $open_doc != '')
