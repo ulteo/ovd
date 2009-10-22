@@ -104,10 +104,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			</table>
 		</div>
 
-		<div id="appletContainer" style="<?php
-if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
-	echo 'top: 18px; ';
-?>display: none;">
+		<div id="appletContainer" style="display: none;">
 		</div>
 
 		<div id="printerContainer">
