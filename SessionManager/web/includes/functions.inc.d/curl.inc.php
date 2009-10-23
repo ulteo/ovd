@@ -55,7 +55,7 @@ function query_url_return_errorcode($url_, $log_returned_data_=true) {
 function query_url($url_, $log_returned_data_=true) {
 	$ret = query_url_request($url_, $log_returned_data_);
 	if ($ret['code'] != 200) {
-		Logger::error('main', "query_url($url) returncode: '$code'");
+		Logger::error('main', "query_url($url_) returncode: '".$ret['code']."'");
 		return false;
 	}
 	return $ret['data'];
