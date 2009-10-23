@@ -2,6 +2,7 @@ scripts_DATA = applications.php \
                apt-get.php \
                htaccess.php \
                icon.php \
+               installable_applications.php \
                kill_session.php \
                put_sourceslist.php \
                server_monitoring.php \

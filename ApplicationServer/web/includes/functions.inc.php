@@ -202,3 +202,56 @@ function load_gettext() {
 	bindtextdomain($domain, LOCALE_DIR);
 	textdomain($domain);
 }
+
+function parse_ini_file_quotes_safe($f){
+	$null = "";
+	$r=$null;
+	$first_char = "";
+	$sec=$null;
+	$comment_chars="/*<;#?>";
+	$num_comments = "0";
+	$header_section = "";
+	
+	$f = file($f);
+	
+	for ($i=0;$i<count($f);$i++) {
+		$newsec = 0;
+		$w = trim($f[$i]);
+		$first_char = substr($w,0,1);
+		if ($w) {
+			if ((!$r) or ($sec)) {
+				// Look for [] chars round section headings
+				if ((substr($w, 0, 1) == "[") and (substr($w, -1, 1)) == "]") {
+					$sec = substr($w, 1, strlen($w) - 2);
+					$newsec = 1;
+				}
+				// Look for comments and number into array
+				if ((stristr($comment_chars, $first_char) === true)){
+					$sec=$w;
+					$k="Comment".$num_comments;
+					$num_comments = $num_comments +1;
+					$v=$w;$newsec = 1;
+					$r[$k]=$v;
+				}
+			}
+			if (!$newsec){
+				// Look for the = char to allow us to split the section into key and value
+				$w = explode("=", $w);
+				$k = trim($w[0]);
+				unset($w[0]);
+				$v = trim(implode("=",$w));
+				// look for the new lines
+				if ((substr($v, 0, 1) == "\"") and (substr($v,-1,1) == "\"")) {
+					$v = substr($v, 1, strlen($v) - 2);
+				}
+				if ($sec) {
+					$r[$sec][$k] = $v;
+				}
+				else {
+					$r[$k] = $v;
+				}
+			}
+		}
+	}
+	return $r;
+}

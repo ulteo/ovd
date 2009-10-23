@@ -5,6 +5,9 @@ scripts_DATA = server-linux.png \
                cache.php \
                submenu_bg.png \
                download.png \
+               hide.png \
+               loader.gif \
+               show.png \
                view.png \
                server-weblink.png
 

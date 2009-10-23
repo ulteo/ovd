@@ -670,6 +670,7 @@ function show_manage($fqdn) {
 	$can_do_action = isAuthorized('manageServers');
 
   page_header();
+  echo '<script type="text/javascript" src="media/script/ajax/servers.js" charset="utf-8"></script>';
 
   echo '<div id="servers_div">';
   echo '<h1>'.$server->fqdn.'</h1>';
@@ -792,14 +793,42 @@ function show_manage($fqdn) {
   echo '</table>';
 
 	if ($server_online && $server->getAttribute('type') == 'linux' && $can_do_action) {
-    echo '<h2>'._('Install an application from a package name').'</h2>';
+    echo '<h2>'._('Install an application').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="install_line">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
     echo '<input type="text" name="line"> ';
-    echo '<input type="submit" value="'._('Install').'">';
+    echo '<input type="submit" value="'._('Install from a package name').'">';
     echo '</form>';
     echo '<br />';
+
+    echo '<div id="installableApplicationsList">';
+    echo '<a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;"><div style="width: 16px; height: 16px; float: left;" id="installableApplicationsList_ajax"></div></a><div style="float: left;"><a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;">&nbsp;more options</a></div>';
+	echo '<div style="clear: both;"></div>';
+    echo '<div id="installableApplicationsList_content" style="display: none;"><script type="text/javascript">Event.observe(window, \'load\', function() { offContent(\'installableApplicationsList\'); });</script></div>';
+    echo '</div>';
+
+    echo '<div id="installableApplicationsListDefault" style="display: none; visibility: hidden;">';
+    echo '<form>';
+    echo '<input type="hidden" name="action" value="install_line">';
+    echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
+    echo '<table>';
+    echo '<tr>';
+    echo '<td>'._('Category').'</td>';
+    echo '<td><div id="installable_applications_category"></div></td>';
+    echo '<td></td>';
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td>'._('Application').'</td>';
+    echo '<td><div id="installable_applications_application"></div></td> ';
+    echo '<td><input type="submit" value="'._('Install').'" /></td>';
+    echo '<td></td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '</form>';
+    echo '</div>';
+
+    echo '<h2>'._('Upgrade').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="upgrade">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';

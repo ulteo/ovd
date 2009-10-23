@@ -1,4 +1,4 @@
-SUBDIRS = media modules includes init classes
+SUBDIRS = ajax media modules includes init classes
 
 scripts_DATA = actions.php \
                applications.php \
