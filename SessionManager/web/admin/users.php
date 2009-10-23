@@ -66,6 +66,18 @@ if (isset($_REQUEST['action'])) {
   }
 }
 
+if (isset($_REQUEST['mass_delete'])) {
+	if (! checkAuthorization('manageUsers'))
+		redirect();
+
+	if (isset($_REQUEST['checked_users']) && is_array($_REQUEST['checked_users'])) {
+		foreach ($_REQUEST['checked_users'] as $user)
+			del_user($userDB, $user);
+	}
+
+	redirect();
+}
+
 if (! isset($_GET['view']))
 	$_GET['view'] = 'all';
 
@@ -138,8 +150,14 @@ function show_default($userDB) {
   if ($users_list_empty)
     echo _('No available user').'<br />';
   else {
+    if ($userdb_rw and $can_manage_users) {
+      echo '<form action="users.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\');">';
+      echo '<input type="hidden" name="mass_action" value="delete" />';
+    }
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
+    if ($userdb_rw and $can_manage_users)
+      echo '<th class="unsortable"></th>';
     echo '<th>'._('Login').'</th>';
     echo '<th>'._('Display name').'</th>';
     echo '<th>'._('Others').'</th>';
@@ -166,6 +184,8 @@ function show_default($userDB) {
       asort($extra);
 
       echo '<tr class="'.$content.'">';
+      if ($userdb_rw and $can_manage_users)
+        echo '<td><input class="input_checkbox" type="checkbox" name="checked_users[]" value="'.$u->getAttribute('login').'" /></td><form></form>';
       echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
       echo $u->getAttribute('login');
       echo '</a></td>';
@@ -185,8 +205,26 @@ function show_default($userDB) {
 	echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
 	echo '</form></td>';
       }
+      echo '</tr>';
+    }
+    if ($userdb_rw and $can_manage_users) {
+      $content = 'content'.(($count++%2==0)?1:2);
+      echo '<tfoot>';
+      echo '<tr class="'.$content.'">';
+      echo '<td colspan="5">';
+      echo '<a href="javascript:;" onclick="markAllRows(\'user_list_table\'); return false">'._('Mark all').'</a>';
+      echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
+      echo '</td>';
+      echo '<td>';
+      echo '<input type="submit" name="mass_delete" value="'._('Delete').'"/><br />';
+      echo '</form>';
+      echo '</td>';
+      echo '</tr>';
+      echo '</tfoot>';
     }
     echo '</table>';
+    if ($userdb_rw and $can_manage_users)
+      echo '</form>';
   }
 
   if ($userdb_rw and $can_manage_users) {
