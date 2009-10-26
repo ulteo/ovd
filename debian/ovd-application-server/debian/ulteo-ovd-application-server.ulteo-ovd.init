@@ -5,11 +5,14 @@
 # Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start Ulteo OD daemon at boot time
-# Description:       Start Ulteo OD daemon and needed services
+# Short-Description: Start Ulteo OVD daemon
+# Description:       Start Ulteo OVD daemon and needed services
 ### END INIT INFO
 
 . /lib/lsb/init-functions
+
+[ -f /etc/default/ovd-aps ] && . /etc/default/ovd-aps
+[ "$START" != yes ] && exit 0
 
 CNF=/etc/ulteo-ovd.conf
 
@@ -22,17 +25,17 @@ fi
 
 case $1 in
     start)
-        log_daemon_msg "Starting ulteo-ovdd daemon"
+        log_daemon_msg "Starting Ulteo OVD daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
         log_end_msg 0
         ;;
     stop)
-        log_daemon_msg "Stopping ulteo-ovdd daemon"
+        log_daemon_msg "Stopping Ulteo OVD daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
         log_end_msg 0
         ;;
     restart|reload|force-reload)
-        log_daemon_msg "Re-starting ulteo-ovdd daemon"
+        log_daemon_msg "Re-starting Ulteo OVD daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
         log_end_msg 0
