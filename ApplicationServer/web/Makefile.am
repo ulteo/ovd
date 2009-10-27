@@ -5,7 +5,9 @@ endif
 SUBDIRS = applet classes includes media webservices desktop share $(portal_dir)
 
 scripts_DATA = access.php \
+               apps.php \
                exit.php \
+               icon.php \
                index.php \
                invite.php \
                print.php \

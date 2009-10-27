@@ -1,4 +1,6 @@
 var Portal = Class.create(Daemon, {
+	applications: new Array(),
+
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
 
@@ -157,10 +159,68 @@ var Portal = Class.create(Daemon, {
 	},
 
 	list_apps: function() {
-		new Ajax.Updater(
-			$('appsContainer'),
-			'apps.php'
+		new Ajax.Request(
+			'../apps.php',
+			{
+				method: 'get',
+				onSuccess: this.parse_list_apps.bind(this)
+			}
 		);
+	},
+
+	parse_list_apps: function(transport) {
+		var xml = transport.responseXML;
+
+		var buffer = xml.getElementsByTagName('applications');
+
+		if (buffer.length != 1) {
+			this.push_log('[applications] bad xml format 1', 'error');
+			return;
+		}
+
+		var applicationNodes = xml.getElementsByTagName('application');
+
+		for (var i=0; i<applicationNodes.length; i++) {
+			try { // IE does not have hasAttribute in DOM API...
+				var application = new Application(applicationNodes[i].getAttribute('id'), applicationNodes[i].getAttribute('name'));
+				this.applications[i] = application;
+			} catch(e) {
+				this.push_log('[applications] bad xml format 2', 'error');
+				return;
+			}
+		}
+
+		this.generate_html_list_apps();
+	},
+
+	generate_html_list_apps: function() {
+		var table = document.createElement('table');
+
+		for (var i=0; i<this.applications.length; i++) {
+			var tr = document.createElement('tr');
+
+			var td_icon = document.createElement('td');
+			var td_icon_link = document.createElement('a');
+			td_icon_link.setAttribute('href', 'javascript:;');
+			td_icon_link.setAttribute('onclick', 'return startExternalApp(\''+this.applications[i].id+'\');');
+			var icon = document.createElement('img');
+			icon.setAttribute('src', this.applications[i].getIconURL());
+			td_icon_link.appendChild(icon);
+			td_icon.appendChild(td_icon_link);
+			tr.appendChild(td_icon);
+
+			var td_app = document.createElement('td');
+			var td_app_link = document.createElement('a');
+			td_app_link.setAttribute('href', 'javascript:;');
+			td_app_link.setAttribute('onclick', 'return startExternalApp(\''+this.applications[i].id+'\');');
+			td_app_link.innerHTML = this.applications[i].name;
+			td_app.appendChild(td_app_link);
+			tr.appendChild(td_app);
+
+			table.appendChild(tr);
+		}
+
+		$('appsContainer').appendChild(table);
 	},
 
 	list_running_apps: function(apps_) {

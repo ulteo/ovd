@@ -53,6 +53,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<script type="text/javascript" src="../media/script/daemon.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../media/script/daemon_portal.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../media/script/application.js" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
 			var daemon;

@@ -20,11 +20,6 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-if (isset($_GET['action']) && $_GET['action'] == 'get_image') {
-	header('Content-Type: image/png');
-	die(query_url(SESSIONMANAGER_URL.'/webservices/icon.php?id='.$_GET['id'].'&fqdn='.SERVERNAME));
-}
-
 $session = $_SESSION['session'];
 
 if (!isset($session) || $session == '') {
@@ -66,7 +61,7 @@ foreach ($apps as $k => $app) {
 		$name = $application_node->getAttribute('name');
 
 	echo '<tr>';
-	echo '<td><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></td>';
+	echo '<td><img src="../icon.php?id='.$id.'" alt="'.$name.'" title="'.$name.'" /></td>';
 	echo '<td><strong>'.$name.'</strong><br />';
 	if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		echo ' ';

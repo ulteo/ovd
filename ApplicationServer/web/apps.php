@@ -18,12 +18,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core.inc.php');
-
-if (isset($_GET['action']) && $_GET['action'] == 'get_image') {
-	header('Content-Type: image/png');
-	die(query_url(SESSIONMANAGER_URL.'/webservices/icon.php?id='.$_GET['id'].'&fqdn='.SERVERNAME));
-}
+require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $session = $_SESSION['session'];
 
@@ -32,38 +27,43 @@ if (!isset($session) || $session == '') {
 	die('CRITICAL ERROR'); // That's odd !
 }
 
-$buf = @file_get_contents(SESSION_PATH.'/'.$session.'/parameters/applications');
-$buf = explode("\n", $buf);
-
 $ids = array();
-foreach ($buf as $buf2) {
-	if ($buf2 == '')
+foreach ($_SESSION['parameters']['applications'] as $buf) {
+	if ($buf == '')
 		continue;
 
-	$buf3 = explode("|", $buf2);
-	$ids[] = $buf3[0];
+	$buf = explode("|", $buf);
+	$ids[] = $buf[0];
 }
 
-echo '<table border="0" cellspacing="1" cellpadding="3">';
+header('Content-Type: text/xml; charset=utf-8');
+
+$dom = new DomDocument('1.0', 'utf-8');
+$applications_node = $dom->createElement('applications');
+$dom->appendChild($applications_node);
+
 foreach ($ids as $id) {
 	$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$id.'&fqdn='.SERVERNAME);
 
-	$dom = new DomDocument();
-	@$dom->loadXML($application);
+	$buf = new DomDocument();
+	$buf->loadXML($application);
 
-	if (! $dom->hasChildNodes())
+	if (! $buf->hasChildNodes())
 		continue;
 
-	$application_node = $dom->getElementsByTagname('application')->item(0);
+	$application_node = $buf->getElementsByTagname('application')->item(0);
 	if (is_null($application_node))
 		continue;
 
 	if ($application_node->hasAttribute('name'))
 		$name = $application_node->getAttribute('name');
 
-	echo '<tr>';
-	echo '<td><a href="javascript:;" onclick="return startExternalApp('.$id.');"><img src="apps.php?action=get_image&id='.$id.'" alt="'.$name.'" title="'.$name.'" /></a></td>';
-	echo '<td><a href="javascript:;" onclick="return startExternalApp('.$id.');">'.$name.'</a></td>';
-	echo '</tr>';
+	$application_node = $dom->createElement('application');
+	$application_node->setAttribute('id', $id);
+	$application_node->setAttribute('name', $name);
+	$applications_node->appendChild($application_node);
 }
-echo '</table>';
+
+$xml = $dom->saveXML();
+
+echo $xml;

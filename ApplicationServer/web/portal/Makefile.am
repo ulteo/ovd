@@ -1,7 +1,6 @@
 SUBDIRS = media
 
 scripts_DATA = application_exit.php \
-               apps.php \
                common.css \
                external_app.php \
                focus.php \
