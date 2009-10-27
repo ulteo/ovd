@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET  <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
  *
@@ -43,7 +44,7 @@ if (! $prefs) {
   <div>
   <h2>Last save</h2>
 <?php
-echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONF_FILE));
+echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONFFILE_SERIALIZED));
 ?>
   </div>
   </div>
