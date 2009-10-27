@@ -32,48 +32,50 @@ if (! isset($session) || $session == '')
 if (! isset($_GET['application_id']) || $_GET['application_id'] == '')
 	die('CRITICAL ERROR'); // That's odd !
 
-$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
 $sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
 $sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
-
-$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
 $width = @$_SESSION['width'];
 $height = @$_SESSION['height'];
 
-$geometry = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
-if ($geometry !== false) {
-	$buf = explode('x', $geometry);
-	$width = $buf[0];
-	$height = $buf[1];
-}
+if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
+	$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
+	$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
-if ($_SESSION['parameters']['quality'] == 2)
-	$eight_bits = 'yes';
-else
-	$eight_bits = 'no';
+	$geometry = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
+	if ($geometry !== false) {
+		$buf = explode('x', $geometry);
+		$width = $buf[0];
+		$height = $buf[1];
+	}
 
-switch ($_SESSION['parameters']['quality']) {
-	case '2':
-		$compress_level = 9;
-		$jpeg_quality = 3;
-		break;
-	case '5':
-		$compress_level = 6;
-		$jpeg_quality = 5;
-		break;
-	case '8':
-		$compress_level = 3;
-		$jpeg_quality = 7;
-		break;
-	case '9':
-		$compress_level = 1;
-		$jpeg_quality = 9;
-		break;
-	default:
-		$compress_level = 1;
-		$jpeg_quality = 9;
-		break;
+	if ($_SESSION['parameters']['quality'] == 2)
+		$eight_bits = 'yes';
+	else
+		$eight_bits = 'no';
+
+	switch ($_SESSION['parameters']['quality']) {
+		case '2':
+			$compress_level = 9;
+			$jpeg_quality = 3;
+			break;
+		case '5':
+			$compress_level = 6;
+			$jpeg_quality = 5;
+			break;
+		case '8':
+			$compress_level = 3;
+			$jpeg_quality = 7;
+			break;
+		case '9':
+			$compress_level = 1;
+			$jpeg_quality = 9;
+			break;
+		default:
+			$compress_level = 1;
+			$jpeg_quality = 9;
+			break;
+	}
 }
 
 header('Content-Type: text/xml; charset=utf-8');
@@ -102,18 +104,20 @@ foreach ($ports as $port) {
 }
 $session_node->appendChild($ssh_node);
 
-$vnc_node = $dom->createElement('vnc');
-$vnc_node->setAttribute('host', $server);
-$vnc_node->setAttribute('port', $rfbport);
-$vnc_node->setAttribute('passwd', $vncpass);
-$session_node->appendChild($vnc_node);
+if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
+	$vnc_node = $dom->createElement('vnc');
+	$vnc_node->setAttribute('host', $server);
+	$vnc_node->setAttribute('port', $rfbport);
+	$vnc_node->setAttribute('passwd', $vncpass);
+	$session_node->appendChild($vnc_node);
 
-$quality_node = $dom->createElement('quality');
-$quality_node->setAttribute('compression_level', $compress_level);
-$quality_node->setAttribute('restricted_colors', $eight_bits);
-$quality_node->setAttribute('jpeg_image_quality', $jpeg_quality);
-$quality_node->setAttribute('encoding', 'Tight');
-$vnc_node->appendChild($quality_node);
+	$quality_node = $dom->createElement('quality');
+	$quality_node->setAttribute('compression_level', $compress_level);
+	$quality_node->setAttribute('restricted_colors', $eight_bits);
+	$quality_node->setAttribute('jpeg_image_quality', $jpeg_quality);
+	$quality_node->setAttribute('encoding', 'Tight');
+	$vnc_node->appendChild($quality_node);
+}
 
 if (isset($_SESSION['parameters']['enable_proxy']) && $_SESSION['parameters']['enable_proxy'] == 1) {
 	$proxy_node = $dom->createElement('proxy');
