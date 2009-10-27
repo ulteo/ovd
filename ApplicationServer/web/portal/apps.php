@@ -32,7 +32,7 @@ if (!isset($session) || $session == '') {
 	die('CRITICAL ERROR'); // That's odd !
 }
 
-$buf = @file_get_contents(SESSION_PATH.'/'.$session.'/parameters/menu');
+$buf = @file_get_contents(SESSION_PATH.'/'.$session.'/parameters/applications');
 $buf = explode("\n", $buf);
 
 $ids = array();
