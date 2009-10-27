@@ -803,7 +803,7 @@ function show_manage($fqdn) {
     echo '<br />';
 
     echo '<div id="installableApplicationsList">';
-    echo '<a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;"><div style="width: 16px; height: 16px; float: left;" id="installableApplicationsList_ajax"></div></a><div style="float: left;"><a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;">&nbsp;more options</a></div>';
+    echo '<a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;"><div style="width: 16px; height: 16px; float: left;" id="installableApplicationsList_ajax"></div></a><div style="float: left;"><a href="javascript:;" onclick="toggleInstallableApplicationsList(\''.$server->fqdn.'\'); return false;">&nbsp;'._('more options').'</a></div>';
 	echo '<div style="clear: both;"></div>';
     echo '<div id="installableApplicationsList_content" style="display: none;"><script type="text/javascript">Event.observe(window, \'load\', function() { offContent(\'installableApplicationsList\'); });</script></div>';
     echo '</div>';
