@@ -30,7 +30,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect($_SERVER['HTTP_REFERER']);
 
-if ($_REQUEST['action'] != 'add' && $_REQUEST['action'] != 'del') {
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change'))) {
 	header('Location: '.$_SERVER['HTTP_REFERER']);
 	die();
 }
@@ -330,6 +330,28 @@ if ($_REQUEST['name'] == 'News') {
 
 		redirect();
 	}
+}
+
+if ($_REQUEST['name'] == 'password') {
+	if ($_REQUEST['action'] == 'change') {
+		if (isset($_REQUEST['password']) && isset($_REQUEST['password_confirm'])) {
+			if ($_REQUEST['password'] != $_REQUEST['password_confirm']) {
+				popup_error(_('Passwords are not identical'));
+			}
+			else {
+				$ret = change_admin_password($_REQUEST['password']);
+				if ($ret) {
+					popup_info(_('Password successfully changed'));
+					redirect('configuration-sumup.php');
+				}
+				else {
+					popup_error(_('Password not changed'));
+				}
+			}
+		}
+		redirect();
+	}
+	
 }
 
 function action_add_sharedfolder() {

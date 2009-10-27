@@ -437,3 +437,20 @@ function checkAuthorization($policy_) {
 	popup_error(_('You are not allowed to perform this action'));
 	return false;
 }
+
+function change_admin_password($new_password_) {
+	$contents_conf = file_get_contents(SESSIONMANAGER_CONF_FILE);
+	$contents = explode("\n", $contents_conf);
+	
+	foreach ($contents as $k => $line) {
+		if (preg_match('/^define\([\'"]([^,\'"]+)[\'"],[\ ]{0,1}[\'"]([^,]+)[\'"]\);$/', $line, $matches)) {
+			if ($matches[1] == 'SESSIONMANAGER_ADMIN_PASSWORD') {
+				$contents[$k] = "define('SESSIONMANAGER_ADMIN_PASSWORD', '".md5($new_password_)."');";
+				break;
+			}
+		}
+	}
+	
+	$implode = implode("\n", $contents);
+	return file_put_contents(SESSIONMANAGER_CONF_FILE, $implode);
+}

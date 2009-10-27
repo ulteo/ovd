@@ -191,6 +191,12 @@ if (isAuthorized('viewConfiguration')) {
 			  'name' => _('Web interface settings'),
 			  'page' => 'configuration-partial.php?mode=web_interface_settings',
 			  'parent' => array('configuration'));
+	
+	$menu['configuration_changepassword'] = 
+		array('id' => 'configuration_changepassword',
+			  'name' => _('Change Administrator password'),
+			  'page' => 'password.php?action=change',
+			  'parent' => array('configuration'));
 }
 
 if (isAuthorized('viewStatus')) {
