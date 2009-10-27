@@ -778,4 +778,9 @@ class Server {
 		}
 		return true;
 	}
+	
+	public function getInstallableApplications() {
+		Logger::debug('main', 'Server::getInstallableApplications');
+		return query_url($this->getWebservicesBaseURL().'/installable_applications.php', false);
+	}
 }
