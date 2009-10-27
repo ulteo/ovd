@@ -13,6 +13,27 @@ var Desktop = Class.create(Daemon, {
 		}
 	},
 
+	loop: function() {
+		this.push_log('[desktop] loop()', 'debug');
+
+		this.check_status();
+
+		if (this.session_state == 0 || this.session_state == 10) {
+			this.start_request();
+		} else if (this.session_state == 2 && this.application_state == 2 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
+			if (! this.started)
+				this.start();
+
+			this.started = true;
+		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9 || (this.old_application_state == 2 && this.application_state != 2) || this.application_state == 3 || this.application_state == 4 || this.application_state == 9) {
+			this.do_ended();
+
+			return;
+		}
+
+		setTimeout(this.loop.bind(this), 2000);
+	},
+
 	parse_check_status: function(transport) {
 		var xml = transport.responseXML;
 
@@ -41,6 +62,31 @@ var Desktop = Class.create(Daemon, {
 			this.push_log('[session] Status: '+this.session_state, 'warning');
 		else
 			this.push_log('[session] Status: '+this.session_state, 'debug');
+
+		var buffer = xml.getElementsByTagName('application');
+
+		if (buffer.length != 1) {
+			this.push_log('[application] bad xml format 1', 'error');
+			return;
+		}
+
+		var applicationNode = buffer[0];
+
+		this.old_application_state = this.application_state;
+
+		try { // IE does not have hasAttribute in DOM API...
+			this.application_state = applicationNode.getAttribute('status');
+		} catch(e) {
+			this.push_log('[application] bad xml format 2', 'error');
+			return;
+		}
+
+		if (this.application_state != this.old_application_state)
+			this.push_log('[application] Change status from '+this.old_application_state+' to '+this.application_state, 'info');
+		if (this.application_state != 2)
+			this.push_log('[application] Status: '+this.application_state, 'warning');
+		else
+			this.push_log('[application] Status: '+this.application_state, 'debug');
 
 		var printNode = sessionNode.getElementsByTagName('print');
 		if (printNode.length > 0) {

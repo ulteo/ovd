@@ -42,6 +42,9 @@ function getApplicationStatus($session, $application_id) {
     return -1;
 
   if (! is_readable(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status'))
+    return -1;
+
+  if (! file_exists(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status'))
     return false;
 
   $status = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status');
@@ -61,7 +64,7 @@ function getRunningApplications($session) {
     if (file_exists($app.'/app_id'))
         $app_id = get_from_file($app.'/app_id');
     $status = get_from_file($app.'/status');
-	if ($app_id === false || $app_id == 'desktop')
+	if ($app_id === false || $app_id == 'desktop' || $app_id == 'portal')
 	  continue;
 
 	$apps[$job_id] = array($app_id, $status);

@@ -59,6 +59,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 			Event.observe(window, 'load', function() {
 				daemon = new Portal('ulteo-applet.jar', 'org.ulteo.OvdSshConnection', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon.access_id = 'portal';
 				daemon.loop();
 			});
 		</script>

@@ -142,7 +142,7 @@ if ($_SESSION['type'] == 'invite') {
 
 	$_SESSION['tokens'][$_GET['token']] = array(
 		'session_id'	=>	$_SESSION['session'],
-		'access_id'		=>	(($buf_access_id !== false)?$buf_access_id:'desktop')
+		'access_id'		=>	$buf_access_id
 	);
 }
 
