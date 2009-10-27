@@ -731,12 +731,6 @@ protected void onServiceRequest() {
     if (channel.getState().getValue() != ChannelState.CHANNEL_CLOSED) {
       channel.remoteClose();
     }
-
-    //In ConDesk we never get the Disconnect message. It may change with new TightVNCserver
-    if(transport.getState().getValue() != TransportProtocolState.DISCONNECTED){
-       //System.out.println("Setting state to disconnect\n");
-       transport.getState().setValue(TransportProtocolState.DISCONNECTED);
-    }
   }
 
   private void onMsgChannelData(SshMsgChannelData msg) throws IOException {
