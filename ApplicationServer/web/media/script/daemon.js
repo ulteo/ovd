@@ -135,6 +135,7 @@ var Daemon = Class.create({
 				method: 'get',
 				asynchronous: false,
 				parameters: {
+					application_id: this.access_id,
 					differentiator: Math.floor(Math.random()*50000)
 				},
 				onSuccess: this.parse_check_status.bind(this)

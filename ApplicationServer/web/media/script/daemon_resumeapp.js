@@ -63,23 +63,6 @@ var ResumeApp = Class.create(Daemon, {
 		});
 	},
 
-	check_status: function() {
-		this.push_log('[daemon] check_status()', 'debug');
-
-		new Ajax.Request(
-			'../whatsup.php',
-			{
-				method: 'get',
-				asynchronous: false,
-				parameters: {
-					application_id: this.access_id,
-					differentiator: Math.floor(Math.random()*50000)
-				},
-				onSuccess: this.parse_check_status.bind(this)
-			}
-		);
-	},
-
 	parse_check_status: function(transport) {
 		var xml = transport.responseXML;
 
