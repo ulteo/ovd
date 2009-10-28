@@ -23,10 +23,6 @@ if [ -e /opt/ulteo/etc/ulteo-ovd.conf ]; then
     [ "$RET" = "true" ] && rm -rf /opt/ulteo
 fi
 
-if dpkg-statoverride --list /usr/bin/aps-shell >/dev/null 2>&1; then
-    dpkg-statoverride --remove /usr/bin/aps-shell
-fi
-
 # remove the logs
 LOGDIR=/var/log/ulteo/applicationserver
 rm -f $LOGDIR/main.log*
