@@ -115,7 +115,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 		$out = fopen('php://output', 'a');
 		$handle = popen($cmd, 'r');
 		if (is_resource($handle)) {
-			if (function_exists(stream_copy_to_stream))
+			if (function_exists('stream_copy_to_stream'))
 				stream_copy_to_stream($handle, $out);
 			else {
 				while (! feof($handle))
@@ -140,7 +140,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 			$handle = @fopen($filepathordata_, 'rb');
 			$out = popen($cmd, 'w');
 			if (is_resource($out)) {
-				if (function_exists(stream_copy_to_stream))
+				if (function_exists('stream_copy_to_stream'))
 					stream_copy_to_stream($handle, $out);
 				else {
 					while (! feof($handle))
