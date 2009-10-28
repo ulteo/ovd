@@ -82,6 +82,20 @@ def parse_access(data):
 
         res['vnc_'+m] = node.getAttribute(attr)
 
+    node = node.getElementsByTagName('quality')
+    if len(node) != 1:
+        print "Bad xml result (no quality node inside vnc"
+        return False
+
+    node = node[0]
+    for attr in ['compression_level', 'restricted_colors', 'jpeg_image_quality']:
+        if not node.hasAttribute(attr):
+            print "Warning: missing attribute %s into quality"%(attr)
+            continue
+
+        res['vnc_q_'+attr] = node.getAttribute(attr)
+
+
     res["vnc_pass"] = hex2str(res["vnc_pass"])
     res["ssh_pass"] = hex2str(res["ssh_pass"])
     return res
@@ -326,6 +340,47 @@ class Dialog:
                 old_status = status
             time.sleep(2)
 
+
+    def get_vnc_extra_parameters(self):
+        compress = None
+        quality = None
+        color8bits = None
+
+        if self.conf.has_key('quality'):
+            if self.conf['quality'] == 'lowest':
+                compress = 9
+                quality = 8
+                color8bits = True
+
+            elif self.conf['quality'] == 'medium':
+                compress = 9
+                quality = 7
+
+            elif self.conf['quality'] == 'high':
+                compress = 9
+                quality = 8
+
+            elif self.conf['quality'] == 'highest':
+                compress = 9
+                quality = 9
+        else:
+            if self.infos.has_key('vnc_q_compression_level'):
+                buf = self.infos['vnc_q_compression_level']
+                if buf.isdigit() and 0<=int(buf)<=9:
+                    compress = int(buf)
+
+            if self.infos.has_key('vnc_q_jpeg_image_quality'):
+                buf = self.infos['vnc_q_jpeg_image_quality']
+                if buf.isdigit() and 0<=int(buf)<=9:
+                    quality = int(buf)
+
+            if self.infos.has_key('vnc_q_restricted_colors'):
+                buf = self.infos['vnc_q_restricted_colors']
+                if buf in ['yes', 'no']:
+                    color8bits = (buf=='yes')
+
+        return (compress, quality, color8bits)
+
     def launch(self):
         self.infos["ssh_port"] = self.infos["ssh_port"].split(",")[0]
         local_port = random.randrange(1024, 65536)
@@ -346,7 +401,32 @@ class Dialog:
 
         # Vnc managment
         vnc_file = tempfile.mktemp()
-        vnc_cmd = "vncviewer -passwd %s localhost::%s"%(vnc_file, local_port)
+
+        vnc_args = []
+        vnc_args.append("xtightvncviewer")
+        vnc_args.append("-passwd")
+        vnc_args.append(vnc_file)
+
+        vnc_args.append("-encodings")
+        vnc_args.append("Tight")
+
+        (compress, quality, color8bits) = self.get_vnc_extra_parameters()
+        
+        if compress is not None:
+            vnc_args.append("-compresslevel")
+            vnc_args.append(str(compress))
+
+        if quality is not None:
+            vnc_args.append("-quality")
+            vnc_args.append(str(quality))
+
+        if color8bits is not None and color8bits is True:
+            vnc_args.append("-bgr233")
+            vnc_args.append("-x11cursor")
+            
+        vnc_args.append("localhost::%s"%(local_port))
+
+        vnc_cmd = " ".join(vnc_args)
 
         f = file(vnc_file, "w")
         f.write(self.infos["vnc_pass"])
@@ -373,16 +453,22 @@ class Dialog:
 
 
 def usage():
-    print "Usage: %s [-l|--login=username] [-p|--password=PASSWORD] [-h|--help] [-g|--geometry=WIDTHxHEIGHT] sm_url"%(sys.argv[0])
+    print "Usage: %s [options] ovd_sm_url"%(sys.argv[0])
     print
-
+    print "Options:"
+    print "\t-g|--geometry=WIDTHxHEIGHT"
+    print "\t-h|--help"
+    print "\t-l|--login=username"
+    print "\t-p|--password=PASSWORD"
+    print "\t-q|--quality=lowest|medium|high|highest"
+    print
 
 conf = {}
 conf["geometry"] = "800x600"
 conf["login"] = os.environ["USER"]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'l:p:g:h', ['login=', 'password=', 'geometry=','help'])
+    opts, args = getopt.getopt(sys.argv[1:], 'g:hl:p:q:', ['geometry=', 'help', 'login=', 'password=', 'quality='])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -405,6 +491,12 @@ for o, a in opts:
     elif o in ("-h", "--help"):
         usage()
         sys.exit()
+    elif o in ("-q", "--quality"):
+        if a.lower() not in ['lowest', 'medium', 'high', 'highest']:
+            print >> sys.stderr, "Invalid quality option",a
+            usage()
+            sys.exit(2)
+        conf['quality'] = a.lower()
 
 
 conf["geometry"] = conf["geometry"].split("x")

@@ -3,29 +3,21 @@
 
 Launch a session using Ulteo Open Virtual Desktop protocol
 
-== Usage ==
-
-ovd-client.py [-l|--login=username] [-p|--password=PASSWORD] [-h|--help] [-g|--geometry=WIDTHxHEIGHT] sm_url
-
- * sm_url: http://sm.ulteo.com/sessionmanager ...
-
 == Depends ==
 
  * Linux
- * Python
- * vncviewer
- * openssh
+ * Python >=2.4
+ * openssh-client
+ * xtightvncviewer
 
 
 == Compatibility ==
 
-  * 1.0-beta1.2
+  * 1.1
 
-=== Feature ===
+=== Features ===
 
- * Authenticate on SM
- * redirect to a CM
- * interact with the CM to launch the session
+ * Launch desktop mode session
 
 
 
