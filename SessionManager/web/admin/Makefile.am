@@ -13,6 +13,7 @@ scripts_DATA = actions.php \
                logout.php \
                logs.php \
                news.php \
+               password.php \
                publications.php \
                reporting.php \
                servers.php \
