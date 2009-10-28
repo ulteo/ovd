@@ -112,7 +112,7 @@ header_static($main_title.' - '._('Administration'));
 </div>
 
 	<form id="login" action="" method="post">
-		<input type="hidden" name="redirect" value="<?php echo $_GET['redirect']; ?>" />
+		<input type="hidden" name="redirect" value="<?php echo $_SESSION['redirect']; ?>" />
 		<fieldset class="hidden">
 			<table class="centered" border="0" cellspacing="1" cellpadding="5">
 				<tr>
