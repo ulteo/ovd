@@ -51,7 +51,7 @@ foreach ($icon_files as $k => $v) {
 		continue;
 	}
 
-	$icon_files[$k] = chroot_realpath(realpath($icon_files[$k]));
+	$icon_files[$k] = chroot_realpath($icon_files[$k]);
 }
 
 if (count($icon_files) == 0) {
