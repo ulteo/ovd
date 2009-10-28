@@ -129,11 +129,6 @@ set_host_conf
 
 db_stop
 
-# set aps-shell setuid root
-if ! dpkg-statoverride --list /usr/bin/aps-shell >/dev/null 2>&1; then
-    dpkg-statoverride --update --add root root 4755 /usr/bin/aps-shell
-fi
-
 # setup apache
 LOGDIR=/var/log/ulteo/applicationserver
 if ! dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
