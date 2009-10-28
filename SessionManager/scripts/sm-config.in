@@ -68,6 +68,9 @@ set_apache () {
     chmod 755 $LOGDIR $SPOOLDIR
     chmod 2770 $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
 
+    chgrp $APACHE_GROUP $CONFFILE
+    chmod 660 $CONFFILE
+
     mkdir -p $APACHE_DIR
     ln -sf $ALIASFILE $APACHE_DIR/session-manager.conf
 }
