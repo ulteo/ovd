@@ -410,6 +410,10 @@ class Dialog:
         vnc_args.append("-encodings")
         vnc_args.append("Tight")
 
+        if self.conf['fullscreen']:
+            vnc_args.append("-fullscreen")
+
+
         (compress, quality, color8bits) = self.get_vnc_extra_parameters()
         
         if compress is not None:
@@ -460,6 +464,7 @@ def usage():
     print "Usage: %s [options] ovd_sm_url"%(sys.argv[0])
     print
     print "Options:"
+    print "\t-f|--fullscreen"
     print "\t-g|--geometry=WIDTHxHEIGHT"
     print "\t-h|--help"
     print "\t-l|--login=username"
@@ -468,11 +473,12 @@ def usage():
     print
 
 conf = {}
+conf["fullscreen"] = False
 conf["geometry"] = "800x600"
 conf["login"] = os.environ["USER"]
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'g:hl:p:q:', ['geometry=', 'help', 'login=', 'password=', 'quality='])
+    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['--fullscreen', 'geometry=', 'help', 'login=', 'password=', 'quality='])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -489,8 +495,10 @@ for o, a in opts:
     if o in ("-l", "--login"):
         conf["login"] = a
     elif o in ("-p", "--password"):
-        conf["password"] = a    
-    if o in ("-g", "--geometry"):
+        conf["password"] = a
+    elif o in ("-f", "--fullscreen"):
+        conf["fullscreen"] = True
+    elif o in ("-g", "--geometry"):
         conf["geometry"] = a
     elif o in ("-h", "--help"):
         usage()
@@ -502,12 +510,20 @@ for o, a in opts:
             sys.exit(2)
         conf['quality'] = a.lower()
 
+if conf["fullscreen"] == True:
+    (status, out) = commands.getstatusoutput('xrandr |head -n 1')
+    s = re.search('current ([0-9]+) x ([0-9]+)', out)
+    if s is None:
+        print >> sys.stderr, "Unable to get the screen resolution"
+        sys.exit(2)
 
-conf["geometry"] = conf["geometry"].split("x")
-if len(conf["geometry"])!=2:
-    print >> sys.stderr, "Invalid geometry ",conf["geometry"]
-    usage()
-    sys.exit(2)
+    conf["geometry"] = s.groups()
+else:
+    conf["geometry"] = conf["geometry"].split("x")
+    if len(conf["geometry"])!=2:
+        print >> sys.stderr, "Invalid geometry ",conf["geometry"]
+        usage()
+        sys.exit(2)
 
 if not conf.has_key("password"):
     print "Connect to '%s' with user '%s'"%(conf["url"], conf["login"])
