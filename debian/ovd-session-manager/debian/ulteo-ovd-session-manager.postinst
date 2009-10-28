@@ -38,7 +38,7 @@ gen_conf()
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
 
-    if ! dpkg-statoverride --list $CONFFILE
+    if ! dpkg-statoverride --list $CONFFILE; then
         dpkg-statoverride --update --add root www-data 0660 $CONFFILE
     fi
 }
