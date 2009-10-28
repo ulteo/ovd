@@ -6,7 +6,6 @@ scripts_DATA = application_exit.php \
                focus.php \
                get_news.php \
                index.php \
-               running_apps.php \
                resume.php \
                resume_app.php \
                share_app.php

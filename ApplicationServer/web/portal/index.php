@@ -61,6 +61,13 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			Event.observe(window, 'load', function() {
 				daemon = new Portal('ulteo-applet.jar', 'org.ulteo.OvdSshConnection', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = 'portal';
+				daemon.shareable = <?php echo (isset($_SESSION['parameters']['shareable']))?'true':'false'; ?>;
+				daemon.persistent = <?php echo (isset($_SESSION['parameters']['persistent']))?'true':'false'; ?>;
+
+				daemon.i18n['share'] = '<?php echo _('share'); ?>';
+				daemon.i18n['suspend'] = '<?php echo _('suspend'); ?>';
+				daemon.i18n['resume'] = '<?php echo _('resume'); ?>';
+
 				daemon.loop();
 			});
 		</script>

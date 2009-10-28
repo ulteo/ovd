@@ -1,5 +1,11 @@
 var Portal = Class.create(Daemon, {
+	i18n: new Array(),
+
 	applications: new Array(),
+	running_applications: new Array(),
+
+	shareable: false,
+	persistent: false,
 
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
@@ -11,6 +17,22 @@ var Portal = Class.create(Daemon, {
 
 		this.applet_width = 1;
 		this.applet_height = 1;
+	},
+
+	check_status: function() {
+		this.push_log('[portal] check_status()', 'debug');
+
+		new Ajax.Request(
+			'../whatsup.php',
+			{
+				method: 'get',
+				asynchronous: false,
+				parameters: {
+					differentiator: Math.floor(Math.random()*50000)
+				},
+				onSuccess: this.parse_check_status.bind(this)
+			}
+		);
 	},
 
 	parse_check_status: function(transport) {
@@ -51,18 +73,7 @@ var Portal = Class.create(Daemon, {
 
 		var applicationsNode = buffer[0];
 
-		var runningApplicationsNodes = applicationsNode.getElementsByTagName('running');
-
-		var apps;
-		for (var i = 0; i < runningApplicationsNodes.length; i++) {
-			var app_id = runningApplicationsNodes[i].getAttribute('app_id');
-			var access_id = runningApplicationsNodes[i].getAttribute('job');
-			var app_status = runningApplicationsNodes[i].getAttribute('status');
-
-			apps = apps+','+app_id+'-'+access_id+'-'+app_status;
-		}
-
-		this.list_running_apps(apps);
+		this.list_running_apps(applicationsNode);
 
 		var printNode = sessionNode.getElementsByTagName('print');
 		if (printNode.length > 0) {
@@ -183,7 +194,7 @@ var Portal = Class.create(Daemon, {
 		for (var i=0; i<applicationNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
 				var application = new Application(applicationNodes[i].getAttribute('id'), applicationNodes[i].getAttribute('name'));
-				this.applications[i] = application;
+				this.applications.push(application);
 			} catch(e) {
 				this.push_log('[applications] bad xml format 2', 'error');
 				return;
@@ -197,14 +208,16 @@ var Portal = Class.create(Daemon, {
 		var table = document.createElement('table');
 
 		for (var i=0; i<this.applications.length; i++) {
+			var application = this.applications[i];
+
 			var tr = document.createElement('tr');
 
 			var td_icon = document.createElement('td');
 			var td_icon_link = document.createElement('a');
 			td_icon_link.setAttribute('href', 'javascript:;');
-			td_icon_link.setAttribute('onclick', 'return startExternalApp(\''+this.applications[i].id+'\');');
+			td_icon_link.setAttribute('onclick', 'return startExternalApp(\''+application.id+'\');');
 			var icon = document.createElement('img');
-			icon.setAttribute('src', this.applications[i].getIconURL());
+			icon.setAttribute('src', application.getIconURL());
 			td_icon_link.appendChild(icon);
 			td_icon.appendChild(td_icon_link);
 			tr.appendChild(td_icon);
@@ -212,8 +225,8 @@ var Portal = Class.create(Daemon, {
 			var td_app = document.createElement('td');
 			var td_app_link = document.createElement('a');
 			td_app_link.setAttribute('href', 'javascript:;');
-			td_app_link.setAttribute('onclick', 'return startExternalApp(\''+this.applications[i].id+'\');');
-			td_app_link.innerHTML = this.applications[i].name;
+			td_app_link.setAttribute('onclick', 'return startExternalApp(\''+application.id+'\');');
+			td_app_link.innerHTML = application.name;
 			td_app.appendChild(td_app_link);
 			tr.appendChild(td_app);
 
@@ -221,19 +234,107 @@ var Portal = Class.create(Daemon, {
 		}
 
 		$('appsContainer').appendChild(table);
+		$('appsContainer').innerHTML = $('appsContainer').innerHTML; // IE DOM API... appendChild... LOL
 	},
 
-	list_running_apps: function(apps_) {
-		new Ajax.Updater(
-			$('runningAppsContainer'),
-			'running_apps.php',
-			{
-				method: 'get',
-				parameters: {
-					apps: apps_
+	list_running_apps: function(applicationsNode_) {
+		this.running_applications = new Array();
+
+		var runningApplicationsNodes = applicationsNode_.getElementsByTagName('running');
+
+		for (var i = 0; i < runningApplicationsNodes.length; i++) {
+			var app_id = runningApplicationsNodes[i].getAttribute('app_id');
+			var pid = runningApplicationsNodes[i].getAttribute('job');
+			var app_status = runningApplicationsNodes[i].getAttribute('status');
+
+			var app_object = this.get_application_from_id(app_id);
+			if (app_object == null)
+				continue;
+
+			var instance = new Running_Application(app_object.id, app_object.name, pid, app_status);
+
+			this.running_applications.push(instance);
+		}
+
+		this.generate_html_list_running_apps();
+	},
+
+	generate_html_list_running_apps: function() {
+		var table = document.createElement('table');
+
+		for (var i=0; i<this.running_applications.length; i++) {
+			var instance = this.running_applications[i];
+
+			var tr = document.createElement('tr');
+
+			var td_icon = document.createElement('td');
+			var icon = document.createElement('img');
+			icon.setAttribute('src', instance.getIconURL());
+			td_icon.appendChild(icon);
+			tr.appendChild(td_icon);
+
+			var td_app = document.createElement('td');
+			var td_app_div = document.createElement('div');
+			td_app_div.setAttribute('style', 'font-weight: bold;'); // IE DOM API... setAttribute... LOL
+			td_app_div.innerHTML = '<strong>'+instance.name+'</strong>';
+			td_app.appendChild(td_app_div);
+
+			if (instance.status == 2) {
+				if (this.shareable == true) {
+					var node = document.createElement('a');
+					node.setAttribute('href', 'javascript:;');
+					node.setAttribute('onclick', 'return shareApplication(\''+instance.pid+'\');');
+					node.innerHTML = this.i18n['share'];
+					td_app.appendChild(node);
+				}
+
+				if (this.persistent == true) {
+					var node = document.createElement('a');
+					node.setAttribute('href', 'javascript:;');
+					node.setAttribute('onclick', 'return suspendApplication(\''+instance.pid+'\');');
+					node.innerHTML = this.i18n['suspend'];
+					td_app.appendChild(node);
 				}
 			}
-		);
+
+			if (instance.status == 10) {
+				var node = document.createElement('a');
+				node.setAttribute('href', 'javascript:;');
+				node.setAttribute('onclick', 'return resumeApplication(\''+instance.pid+'\');');
+				node.innerHTML = this.i18n['resume'];
+				td_app.appendChild(node);
+			}
+
+			var real_childNodes = new Array();
+			for (var j=0; j<td_app.childNodes.length; j++)
+				real_childNodes.push(td_app.childNodes[j]);
+
+			if (real_childNodes.length > 2) {
+				var node = document.createElement('span');
+				node.innerHTML = ' - ';
+
+				for (var j=2; j<real_childNodes.length; j++)
+					td_app.insertBefore(node.cloneNode(true), real_childNodes[j]);
+			}
+
+			tr.appendChild(td_app);
+
+			table.appendChild(tr);
+		}
+
+		$('runningAppsContainer').innerHTML = '';
+
+		$('runningAppsContainer').appendChild(table);
+		$('runningAppsContainer').innerHTML = $('runningAppsContainer').innerHTML; // IE DOM API... appendChild... LOL
+	},
+
+	get_application_from_id: function(app_id_) {
+		for (var i=0; i<this.applications.length; i++) {
+			if (this.applications[i].id == app_id_)
+				return this.applications[i];
+		}
+
+		return null;
 	},
 
 	load_explorer: function() {

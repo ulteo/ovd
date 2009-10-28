@@ -11,3 +11,15 @@ var Application = Class.create({
 		return '../icon.php?id='+this.id;
 	}
 });
+
+var Running_Application = Class.create(Application, {
+	pid: '',
+	status: -1,
+
+	initialize: function(id_, name_, pid_, status_) {
+		Application.prototype.initialize.apply(this, [id_, name_]);
+
+		this.pid = pid_;
+		this.status = status_;
+	}
+});
