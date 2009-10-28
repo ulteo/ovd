@@ -72,7 +72,8 @@ function popupOpen2(ulteoForm) {
 	new_width = my_width;
 	new_height = my_height;
 
-	var rand = Math.round(Math.random()*100);
+	var date = new Date();
+	var rand = Math.round(Math.random()*100)+date.getTime();
 
 	var w = window.open('about:blank', 'Ulteo'+rand, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+new_width+',height='+new_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
 	ulteoForm.target = 'Ulteo'+rand;

@@ -242,7 +242,8 @@ var Portal = Class.create(Daemon, {
 });
 
 function startExternalApp(app_id_) {
-	var rand_ = Math.round(Math.random()*100);
+	var date = new Date();
+	var rand_ = Math.round(Math.random()*100)+date.getTime();
 
 	window_ = popupOpen(rand_);
 
@@ -282,7 +283,8 @@ function suspendApplication(access_id_) {
 }
 
 function resumeApplication(access_id_) {
-	var rand_ = Math.round(Math.random()*100);
+	var date = new Date();
+	var rand_ = Math.round(Math.random()*100)+date.getTime();
 
 	window_ = popupOpen(rand_);
 

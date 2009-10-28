@@ -1,6 +1,7 @@
 var form_ = '';
 var window_ = '';
-var rand_ = Math.round(Math.random()*100);
+var date = new Date();
+var rand_ = Math.round(Math.random()*100)+date.getTime();
 
 function doLogin(this_) {
 	form_ = this_;
