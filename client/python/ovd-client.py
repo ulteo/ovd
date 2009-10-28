@@ -153,6 +153,8 @@ class Dialog:
         cookiejar = cookielib.CookieJar()
         self.urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
 
+        self.desktopStatus = -1
+        self.sessionStatus = -1
 
     def doLogin(self):
         url = self.base_url+"/ajax/login.php"
@@ -190,25 +192,50 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "Le service n'est pas disponbile"
-                print exc.read()
+                print "The service is not available"
                 return False
             
             print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
-            print " * return: ", exc.read()
             return False
 
         except urllib2.URLError, exc:
             print "Echec. Cause:", exc.reason
             return False
 
-        self.cm_url = os.path.dirname(url.geturl())
+        headers = url.info()
+        if not headers['Content-Type'].startswith('text/xml'):
+            print >>sys.stderr, "Invalid response format"
+            return False
+
+        data = url.read()
+        try:
+            dom = minidom.parseString(data)
+        except ExpatError:
+            print >>sys.stderr, "Invalid XML result"
+            return False
+
+        node = dom.getElementsByTagName('aps')
+        if len(node) != 1:
+            print >>sys.stderr, "No aps root node"
+            return False
+
+        node = node[0]
+        for attr in ['mode', 'protocol', 'server', 'port', 'location']:
+            if not node.hasAttribute(attr):
+                print >>sys.stderr, "Missing attribute", attr
+                return False
+
+        self.mode = node.getAttribute('mode')
+
+        self.aps_url = "%s://%s:%s%s"%(node.getAttribute('protocol'),
+                                      node.getAttribute('server'),
+                                      node.getAttribute('port'),
+                                      node.getAttribute('location'))
         return True
 
-    def doStartSession_cm(self):
+    def doInitSession(self):
         values =  {'width': self.conf["geometry"][0], 'height': self.conf["geometry"][1]}
-        # url = self.cm_url+"/startsession.php"
-        url = "%s/start.php?%s"%(self.cm_url, urllib.urlencode(values))
+        url = "%s/start.php?%s"%(self.aps_url, urllib.urlencode(values))
         request = urllib2.Request(url, urllib.urlencode(values))
 
         try:
@@ -232,8 +259,8 @@ class Dialog:
         return True
 
     def doSessionStatus(self):
-        url = "%s/whatsup.php"%(self.cm_url)
-
+        values =  {'application_id': 'desktop'}
+        url = "%s/whatsup.php?%s"%(self.aps_url, urllib.urlencode(values))
         request = urllib2.Request(url)
         
         try:
@@ -252,9 +279,17 @@ class Dialog:
             print "Echec. Cause:", exc.reason
             return False
 
+        headers = url.info()
+        if not headers['Content-Type'].startswith('text/xml'):
+            print >>sys.stderr, "Invalid response format"
+            return False
 
         data = url.read()
-        dom = minidom.parseString(data)
+        try:
+            dom = minidom.parseString(data)
+        except ExpatError:
+            print >>sys.stderr, "Invalid XML result"
+            return False
 
         sessionNode = dom.getElementsByTagName('session')
         if len(sessionNode) != 1:
@@ -266,20 +301,35 @@ class Dialog:
             print "Bad xml result"
             return False
 
-        status = sessionNode.getAttribute('status')
+        buf = sessionNode.getAttribute('status')
 
         try:
-            status = int(status)
+            self.sessionStatus = int(buf)
         except exceptions.ValueError, err:
             print "Bad xml result"
             return False
 
-        return status
+        node = sessionNode.getElementsByTagName('application')
+        if len(node) != 1:
+            print "missing child node application"
+            return False
 
-    def do_getAppletParameters(self):
-        #values =  {'html': 1}
-        url = "%s/access.php?application_id=desktop"%(self.cm_url)
-#, urllib.urlencode(values))
+        node = node[0]
+        if not node.hasAttribute('status'):
+            print "Missing attribute status to application node"
+            return False
+
+        buf = node.getAttribute('status')
+        try:
+            self.desktopStatus = int(buf)
+        except exceptions.ValueError, err:
+            print "Invalid application status",buf
+            return False
+
+        return self.sessionStatus
+
+    def getSessionAccess(self):
+        url = "%s/access.php?application_id=desktop"%(self.aps_url)
         request = urllib2.Request(url)
         
         try:
@@ -307,7 +357,7 @@ class Dialog:
 
 
     def do_call_exit(self):
-        url = "%s/exit.php"%(self.cm_url)
+        url = "%s/exit.php"%(self.aps_url)
         request = urllib2.Request(url)
         
         try:
@@ -538,6 +588,12 @@ if not d.doStartSession():
     print "Unable to startsession"
     sys.exit(2)
 
+if d.mode != 'desktop':
+    print >>sys.stderr, "Doesn't support session mode", d.mode
+    self.do_call_exit()
+    sys.exit(0)
+
+
 status = -1
 while status not in [0,10]:
     status = d.doSessionStatus()
@@ -553,13 +609,13 @@ while status not in [0,10]:
         sys.exit(4)
 
 
-if not d.doStartSession_cm():
-    print "Unable to init session on cm"
+if not d.doInitSession():
+    print "Unable to init session on aps"
     sys.exit(3)
 
 
 status = 0
-while status != 2:
+while status != 2 or d.desktopStatus != 2:
     status = d.doSessionStatus()
     print "status ", status
     if type(0) == type(False):
@@ -571,8 +627,8 @@ while status != 2:
         print "Session not exist anymore (%d)"%(status)
         sys.exit(4)
 
-if not d.do_getAppletParameters():
-    print "Unable to get parameters from html"
+if not d.getSessionAccess():
+    print "Unable to get session parameters"
     sys.exit(5)
 
 d.launch()
