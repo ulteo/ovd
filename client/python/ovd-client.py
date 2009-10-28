@@ -434,7 +434,11 @@ class Dialog:
         os.chmod(vnc_file, 0400)
 
         print "launch vnc: '%s'"%(vnc_cmd)
-        status, out = commands.getstatusoutput(vnc_cmd)
+        try:
+            status, out = commands.getstatusoutput(vnc_cmd)
+        except KeyboardInterrupt: # ctrl+c of the user
+            print "Interrupt from user"
+            status = 0
         if status!=0:
             print "vnc return status %d and \n%s\n==="%(status, out)
 
