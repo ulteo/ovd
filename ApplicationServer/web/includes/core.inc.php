@@ -39,4 +39,5 @@ function __autoload($class_name) {
 	}
 }
 
-session_start();
+if (! isset($_SESSION))
+	session_start();
