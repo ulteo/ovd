@@ -109,7 +109,7 @@ class UserDB_sql extends UserDB  {
 			return false;
 
 		$login = $user_->getAttribute('login');
-		$hash = crypt($password_, $login);
+		$hash = crypt($password_, md5($login));
 		// TODO very very ugly
 		if ($user_->hasAttribute('password'))
 			return ($user_->getAttribute('password') == $hash);
