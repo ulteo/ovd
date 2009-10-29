@@ -351,6 +351,69 @@ such file or directory]]>
      </para>
   </section>
 
+  <section id="office_bug">
+    <title>Can I launch Microsoft Office applications?</title>
+    <para>
+      Yes, you can but the OVD 1.0 have a bug with Microsoft Office applications, it cannot understand the executable path.
+    </para>
+    <para>
+      Example:
+    </para>
+    <screenshot>
+      <screeninfo>Microsoft Office Word, default installation</screeninfo>
+      <graphic fileref="img/office_bug/office_01.png"></graphic>
+    </screenshot>
+    <para>
+      To fix this you have to do:
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>
+          Copy the winword.exe
+        </para>
+        <screenshot>
+          <screeninfo>Microsoft Office Word, step 2</screeninfo>
+          <graphic fileref="img/office_bug/office_02.png"></graphic>
+        </screenshot>
+      </listitem>
+      <listitem>
+        <para>
+          Paste as shortcut in the "all users" start menu directory
+        </para>
+        <screenshot>
+          <screeninfo>Microsoft Office Word, step 3</screeninfo>
+          <graphic fileref="img/office_bug/office_03.png"></graphic>
+        </screenshot>
+        <screenshot>
+          <screeninfo>Microsoft Office Word, step 3a</screeninfo>
+          <graphic fileref="img/office_bug/office_03a.png"></graphic>
+        </screenshot>
+      </listitem>
+      <listitem>
+        <para>
+          Restart the OVD agent
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          You should see the new winword in the server's applications
+        </para>
+        <screenshot>
+          <screeninfo>Microsoft Office Word, step 4</screeninfo>
+          <graphic fileref="img/office_bug/office_04.png"></graphic>
+        </screenshot>
+      </listitem>
+      <listitem>
+        <para>
+          Now you can launch Winword (after you have published it)
+        </para>
+        <screenshot>
+          <screeninfo>Microsoft Office Word, session</screeninfo>
+          <graphic fileref="img/office_bug/office_05.png"></graphic>
+        </screenshot>
+      </listitem>
+    </itemizedlist>
+  </section>
 
   <section id="debian_support">
     <title>Why GNU/Linux Debian 5.0 is not fully supported?</title>
