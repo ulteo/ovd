@@ -218,6 +218,8 @@ var Portal = Class.create(Daemon, {
 			}
 		}
 
+		this.applications.sort(this.compareApplication);
+
 		this.generate_html_list_apps();
 	},
 
@@ -272,6 +274,8 @@ var Portal = Class.create(Daemon, {
 
 			this.running_applications.push(instance);
 		}
+
+		this.running_applications.sort(this.compareApplication);
 
 		this.generate_html_list_running_apps();
 	},
@@ -352,6 +356,15 @@ var Portal = Class.create(Daemon, {
 		}
 
 		return null;
+	},
+
+	compareApplication: function(a, b) {
+		if (a.name < b.name)
+			return -1;
+		if (a.name > b.name)
+			return 1;
+
+		return 0;
 	},
 
 	load_explorer: function() {
