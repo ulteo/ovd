@@ -149,6 +149,7 @@ class Dialog:
     def __init__(self, conf):
         self.conf = conf
         self.base_url = conf["url"]
+        self.sessionProperties = {}
 
         cookiejar = cookielib.CookieJar()
         self.urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
@@ -214,18 +215,38 @@ class Dialog:
             print >>sys.stderr, "Invalid XML result"
             return False
 
-        node = dom.getElementsByTagName('aps')
+        node = dom.getElementsByTagName('session')
         if len(node) != 1:
-            print >>sys.stderr, "No aps root node"
+            print >>sys.stderr, "No session root node"
             return False
 
         node = node[0]
-        for attr in ['mode', 'protocol', 'server', 'port', 'location']:
+        for attr in ['mode', 'shareable', 'persistent']:
             if not node.hasAttribute(attr):
                 print >>sys.stderr, "Missing attribute", attr
                 return False
+            buf = node.getAttribute(attr)
+            if attr in ['shareable', 'persistent']:
+                if buf == 'true':
+                    buf = True
+                elif buf == 'false':
+                    buf = False
+                else:
+                    print >>sys.stderr, "Invalid attrbiture %s value (%s)"%(attr, buf)
+                    return False
 
-        self.mode = node.getAttribute('mode')
+            self.sessionProperties[attr] = buf
+
+        node = node.getElementsByTagName('aps')
+        if len(node) != 1:
+            print >>sys.stderr, "No aps child node from root node"
+            return False
+
+        node = node[0]
+        for attr in ['protocol', 'server', 'port', 'location']:
+            if not node.hasAttribute(attr):
+                print >>sys.stderr, "Missing attribute", attr
+                return False
 
         self.aps_url = "%s://%s:%s%s"%(node.getAttribute('protocol'),
                                       node.getAttribute('server'),
@@ -357,7 +378,10 @@ class Dialog:
 
 
     def do_call_exit(self):
-        url = "%s/exit.php"%(self.aps_url)
+        if d.sessionProperties["persistent"]:
+            url = "%s/suspend.php"%(self.aps_url)
+        else:
+            url = "%s/exit.php"%(self.aps_url)
         request = urllib2.Request(url)
         
         try:
@@ -495,6 +519,7 @@ class Dialog:
             status = 0
         if status!=0:
             print "vnc return status %d and \n%s\n==="%(status, out)
+            self.do_call_exit()
 
         os.remove(vnc_file)
         # end of vnc
@@ -505,7 +530,6 @@ class Dialog:
         os.kill(pid2, signal.SIGTERM)
         os.kill(pid, signal.SIGTERM)
 
-        self.do_call_exit()
         print "end"
         return True
 
@@ -588,7 +612,8 @@ if not d.doStartSession():
     print "Unable to startsession"
     sys.exit(2)
 
-if d.mode != 'desktop':
+print "Session properties: ",d.sessionProperties
+if d.sessionProperties["mode"] != 'desktop':
     print >>sys.stderr, "Doesn't support session mode", d.mode
     self.do_call_exit()
     sys.exit(0)
