@@ -28,6 +28,18 @@ if (! isset($_SESSION['session']))
 if (! isset($_SESSION['current_token']))
   die2(400, 'ERROR - no current token');
 
+$session = $_SESSION['session'];
+$session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
+$token = $_SESSION['current_token'];
+
+$session_dir = SESSION_PATH.'/'.$session;
+
+if ($session_owner) {
+  $exit_file = $session_dir.'/infos/owner_exit';
+  if (! is_file($exit_file))
+    @file_put_contents($exit_file, 'suspend');
+}
+
 unset($_SESSION);
 
 die();

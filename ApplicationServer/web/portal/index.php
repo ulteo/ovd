@@ -104,11 +104,11 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 									<?php
 										if (isset($_SESSION['parameters']['persistent'])) {
 									?>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="suspend(); return false;"><img src="../media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="../media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
 									<?php
 										}
 									?>
-									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="logout(); return false;"><img src="../media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.logout(); return false;"><img src="../media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
 								</tr>
 							</table>
 						</td>

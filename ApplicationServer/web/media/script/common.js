@@ -35,28 +35,6 @@ function _closeMenuItem(oDiv) {
 	$('appletContainer').style.visibility = 'visible';
 }
 
-function suspend() {
-	new Ajax.Request(
-		'../suspend.php',
-		{
-			method: 'get'
-		}
-	);
-
-	daemon.do_ended();
-}
-
-function logout() {
-	new Ajax.Request(
-		'../exit.php',
-		{
-			method: 'get'
-		}
-	);
-
-	daemon.do_ended();
-}
-
 Event.observe(window, 'load', function() {
 	Effect.Center($('splashContainer'));
 	Effect.Center($('endContainer'));

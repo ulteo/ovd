@@ -24,9 +24,6 @@ var Portal = Class.create(Daemon, {
 	applications: new Array(),
 	running_applications: new Array(),
 
-	shareable: false,
-	persistent: false,
-
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
 

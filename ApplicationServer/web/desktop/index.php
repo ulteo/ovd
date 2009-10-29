@@ -50,6 +50,8 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			Event.observe(window, 'load', function() {
 				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = 'desktop';
+				daemon.shareable = <?php echo (isset($_SESSION['parameters']['shareable']))?'true':'false'; ?>;
+				daemon.persistent = <?php echo (isset($_SESSION['parameters']['persistent']))?'true':'false'; ?>;
 				daemon.loop();
 			});
 		</script>

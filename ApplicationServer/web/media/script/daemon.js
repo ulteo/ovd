@@ -28,6 +28,9 @@ var Daemon = Class.create({
 	server: '',
 	port: '',
 
+	shareable: false,
+	persistent: false,
+
 	session_state: -1,
 	old_session_state: -1,
 	started: false,
@@ -134,16 +137,33 @@ var Daemon = Class.create({
 		setTimeout(this.loop.bind(this), 2000);
 	},
 
-	client_exit: function() {
+	suspend: function() {
+		new Ajax.Request(
+			'../suspend.php',
+			{
+				method: 'get'
+			}
+		);
+
+		this.do_ended();
+	},
+
+	logout: function() {
 		new Ajax.Request(
 			'../exit.php',
 			{
-				method: 'get',
-				parameters: {
-					access_id: this.access_id
-				}
+				method: 'get'
 			}
 		);
+
+		this.do_ended();
+	},
+
+	client_exit: function() {
+		if (this.persistent == true)
+			this.suspend();
+		else
+			this.logout();
 	},
 
 	check_status: function() {
