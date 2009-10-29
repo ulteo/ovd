@@ -155,13 +155,17 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument();
+$session_node = $dom->createElement('session');
+$session_node->setAttribute('mode', $_SESSION['mode']);
+$session_node->setAttribute('shareable', ((isset($_SESSION['parameters']['shareable']))?'true':'false'));
+$session_node->setAttribute('persistent', ((isset($_SESSION['parameters']['persistent']))?'true':'false'));
 $aps_node = $dom->createElement('aps');
 $aps_node->setAttribute('protocol', ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')?'https':'http'));
 $aps_node->setAttribute('server', $_SERVER['SERVER_NAME']);
 $aps_node->setAttribute('port', $_SERVER['SERVER_PORT']);
 $aps_node->setAttribute('location', dirname($_SERVER['REQUEST_URI']));
-$aps_node->setAttribute('mode', $_SESSION['mode']);
-$dom->appendChild($aps_node);
+$session_node->appendChild($aps_node);
+$dom->appendChild($session_node);
 
 $xml = $dom->saveXML();
 
