@@ -354,7 +354,7 @@ such file or directory]]>
   <section id="office_bug">
     <title>Can I launch Microsoft Office applications?</title>
     <para>
-      Yes, you can but the OVD 1.0 have a bug with Microsoft Office applications, it cannot understand the executable path.
+      Yes, you can but the OVD have a bug with Microsoft Office applications, it cannot understand the executable path.
     </para>
     <para>
       Example:
