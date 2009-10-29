@@ -734,13 +734,9 @@
       <title>Client/Server communication</title>
 
       <para>
-	Once the client is redirected to the ApS, it only requires this
-	server, not the SM, excepted for session sharing as described below.
-      </para>
-
-      <para>
-	The webservices used in the root directory
-	(<emphasis>/applicationserver</emphasis>) of the application server.
+	Once the client is redirected to the Application Server, it
+	only requires this server, not the Session Manager, excepted
+	for session sharing as described below.
       </para>
 
       <para>
@@ -748,6 +744,76 @@
 	webservices are also used to communicate. For instance, for
 	printing.
       </para>
+
+      <simplesect>
+        <title>Application Server first page informations</title>
+
+        <para>
+          the server provides some informations about the session. The
+          used content type is XML. Here is the XML used format:
+        </para>
+
+        <para>
+          The root node is
+          called <emphasis role="strong">session</emphasis> and contains
+          3 attributes:
+          <itemizedlist>
+	    <listitem>
+              <emphasis role="strong">shareable</emphasis>: <emphasis>true|false</emphasis>. Indicate
+              if the session is shareable or not.
+            </listitem>
+	    <listitem>
+              <emphasis role="strong">persistent</emphasis>: <emphasis>true|false</emphasis>. Indicate
+              if the session is persitent or not.
+            </listitem>
+	    <listitem>
+              <emphasis role="strong">mode</emphasis>: <emphasis>desktop|portal</emphasis>. Indicate
+              if the session is in remote desktop mode or in portal
+              mode.
+            </listitem>
+	  </itemizedlist>
+        </para>
+
+        <para>
+          The root node also contains a child node
+          called <emphasis role="strong">aps</emphasis> which have 4
+          attributes:
+          <itemizedlist>
+	    <listitem>
+              <emphasis role="strong">protocol</emphasis>: <emphasis>http|https</emphasis>
+            </listitem>
+	    <listitem>
+              <emphasis role="strong">server</emphasis>: the
+              Application Server hostname
+            </listitem>
+	    <listitem>
+              <emphasis role="strong">port</emphasis>: the Application
+              Server port of the service
+            </listitem>
+	    <listitem>
+              <emphasis role="strong">location</emphasis>: the
+              location of the Ulteo part on the HTTP server
+            </listitem>
+	  </itemizedlist>
+        </para>
+
+        <para>
+          Here is an example:
+          <screen><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<session mode="desktop" shareable="true" persistent="false">
+  <aps protocol="http" server="aps.ulteo.com" port="80" location="/applicationserver" />
+</session>]]>
+          </screen>
+        </para>
+
+        <para>
+          Thanks to the previous informations, it's possible to build
+          the base url to call the other webservices like
+          that: <emphasis><emphasis role="strong">protocol</emphasis>://<emphasis role="strong">server</emphasis>:<emphasis role="strong">port</emphasis><emphasis role="strong">location</emphasis></emphasis>.
+      </para>
+      </simplesect>
+
 
       <simplesect>
 	<title>access.php</title>
@@ -770,9 +836,10 @@
 	  </listitem>
 
 	  <listitem>
-	    <para><emphasis role="strong">returns:</emphasis> the
-	    session access as XML content or HTML depending if the
-	    <emphasis>html</emphasis> is set.</para>
+	    <para>
+              <emphasis role="strong">returns:</emphasis> the
+	      session access as XML content
+            </para>
 	  </listitem>
 	</itemizedlist>
 
@@ -781,8 +848,114 @@
 	  client has to call this one to get all the access to join
 	  the session: SSH port/login/password, VNC port/password ...
 	</para>
-      </simplesect>
 
+        <para>
+          XML format: 
+
+          <itemizedlist>
+            <listitem>
+              <emphasis role="strong">session</emphasis>
+              Root node
+
+              <itemizedlist>
+	        <listitem>
+                  <emphasis role="strong">parameters</emphasis>
+                  Node
+                  <itemizedlist>
+	            <listitem>
+                      <emphasis>height</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>width</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>share_desktop</emphasis> Attribute value: (yes|no)
+                    </listitem>
+	            <listitem>
+                      <emphasis>view_only</emphasis> Attribute value: (yes|no)
+                    </listitem>
+	          </itemizedlist>
+                </listitem>
+
+	        <listitem>
+                  <emphasis role="strong">ssh</emphasis>
+                  Node
+                  <itemizedlist>
+	            <listitem>
+                      <emphasis>host</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>passwd</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>user</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>ports</emphasis> Node
+                      <itemizedlist>
+	                <listitem>
+                          <emphasis>port</emphasis> Text node
+                        </listitem>
+	              </itemizedlist>
+                    </listitem>
+	          </itemizedlist>
+                </listitem>
+
+	        <listitem>
+                  <emphasis role="strong">vnc</emphasis>
+                  Node <emphasis>Optional</emphasis> (only exist if application_id parameters
+                  <itemizedlist>
+	            <listitem>
+                      <emphasis>passwd</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>port</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>user</emphasis> Attribute
+                    </listitem>
+	            <listitem>
+                      <emphasis>quality</emphasis> Node
+                      <itemizedlist>
+	                <listitem>
+                          <emphasis>compression_level</emphasis> Attribute value: [0-9]
+                        </listitem>
+	                <listitem>
+                          <emphasis>encoding</emphasis> Attribute value: Tight
+                        </listitem>
+	                <listitem>
+                          <emphasis>jpeg_image_quality</emphasis> Attribute value: [0-9]
+                        </listitem>
+	                <listitem>
+                          <emphasis>restricted_colors</emphasis> Attribute value: (yes|no)
+                        </listitem>
+	              </itemizedlist>
+                    </listitem>
+	          </itemizedlist>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+	  </itemizedlist>
+        </para>
+
+        <para>
+          Here is an example:
+          <screen><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<session>
+  <parameters width="1674" height="920" share_desktop="true" view_only="No"/>
+  <ssh host="aps.ulteo.com" user="SSH3" passwd="3064396264626635">
+    <port>443</port>
+    <port>993</port>
+    <port>995</port>
+  </ssh>
+  <vnc port="5901" passwd="43bc4beb567bdaec">
+    <quality compression_level="1" restricted_colors="no" jpeg_image_quality="9" encoding="Tight"/>
+  </vnc>
+</session>]]>
+          </screen>
+        </para>
+      </simplesect>
 
       <simplesect>
 	<title>apps.php</title>
@@ -807,12 +980,12 @@
 
 	<para>
           The XML root node is <emphasis>applications</emphasis> and
-          only contain child nodes
+          only contains child nodes
           called <emphasis>application</emphasis>.
 	</para>
 
 	<para>
-          An application node only contain attributes:
+          An application node only contains attributes:
           <itemizedlist>
             <listitem>
               <para>
@@ -825,6 +998,17 @@
               <para><emphasis>name:</emphasis> the pretty name of the application</para>
             </listitem>
           </itemizedlist>
+        </para>
+
+        <para>
+          Here is an example:
+          <screen><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<applications>
+  <application id="8" name="Firefox Web Browser"/>
+  <application id="9" name="GIMP Image Editor"/>
+</applications>]]>
+          </screen>
         </para>
       </simplesect>
 
@@ -1037,7 +1221,7 @@
 
         <para>
           If the command succeed, the XML root node
-          is <emphasis>access</emphasis> and contain one
+          is <emphasis>access</emphasis> and contains one
           attribute <emphasis>id</emphasis> that is the application
           instance.
 	</para>
@@ -1045,6 +1229,14 @@
 	<para>
           This webservice can take some time to answer (maximum 20 seconds)
 	</para>
+
+        <para>
+          Here is an example:
+          <screen><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<access id="gkFwi"/>]]>
+          </screen>
+        </para>
       </simplesect>
 
 
