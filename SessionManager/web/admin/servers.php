@@ -278,6 +278,8 @@ function show_default() {
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($s->fqdn, $external_name_checklist) && in_array($s->getAttribute('external_name'), $external_name_checklist))
 		popup_error($s->fqdn.': '._('redirection name may be invalid!'));
+	if ($s->getAttribute('external_name') == '')
+		popup_error($s->fqdn.': '._('redirection name cannot be empty!'));
 
     if ($s->isOnline())
       $nb_a_servs_online++;
@@ -535,6 +537,8 @@ function show_manage($fqdn) {
 	$external_name_checklist = array('localhost', '127.0.0.1');
 	if (in_array($server->fqdn, $external_name_checklist) && in_array($server->getAttribute('external_name'), $external_name_checklist))
 		popup_error($server->fqdn.': '._('redirection name may be invalid!'));
+	if ($server->getAttribute('external_name') == '')
+		popup_error($server->fqdn.': '._('redirection name cannot be empty!'));
 
 //FIX ME?
   if ($server->getAttribute('status') == 'ready')
