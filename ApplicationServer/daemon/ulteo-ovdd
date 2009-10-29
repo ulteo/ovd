@@ -268,6 +268,10 @@ session_check_status() {
                         session_check_status $SESSID 3
                         return $?
                     fi
+                else
+                    session_switch_status $SESSID 3
+                    session_check_status $SESSID 3
+                    return $?
                 fi
             fi
         else
