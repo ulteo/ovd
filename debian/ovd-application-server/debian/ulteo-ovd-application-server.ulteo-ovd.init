@@ -12,7 +12,7 @@
 . /lib/lsb/init-functions
 
 [ -f /etc/default/ovd-aps ] && . /etc/default/ovd-aps
-[ "$START" != yes ] && exit 0
+[ "$START" = no ] && exit 0
 
 CNF=/etc/ulteo-ovd.conf
 
