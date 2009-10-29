@@ -229,9 +229,12 @@ session_check_status() {
     elif [ $RUNASAP -eq 2 ]; then
         # if the owner_exit file exist, kill the session
         if [ -f ${SESSID_DIR}/infos/owner_exit ]; then
-            log_INFO "Owner exit"
+            local order=$(head -n 1 ${SESSID_DIR}/infos/owner_exit)
+            local ret=$?
+            log_INFO "Owner exit ($order)"
+
             # Suspend the session if the sesion was running and it's setup to suspend
-            if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
+            if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ] && [ $ret -eq 0 ] && [ "$order" == "suspend" ]; then
                 session_suspend $SESSID
                 if [ $? -ne 0 ]; then
                     session_switch_status $SESSID 3
