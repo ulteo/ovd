@@ -171,7 +171,7 @@ $session = $_SESSION['session'];
 $session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
 
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $dom->appendChild($session_node);
 

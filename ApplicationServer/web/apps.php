@@ -45,7 +45,7 @@ $dom->appendChild($applications_node);
 foreach ($ids as $id) {
 	$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$id.'&fqdn='.SERVERNAME);
 
-	$buf = new DomDocument();
+	$buf = new DomDocument('1.0', 'utf-8');
 	$buf->loadXML($application);
 
 	if (! $buf->hasChildNodes())

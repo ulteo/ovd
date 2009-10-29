@@ -109,7 +109,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $aps_node = $dom->createElement('aps');
 $aps_node->setAttribute('server', $_SERVER['SERVER_NAME']);
 $dom->appendChild($aps_node);

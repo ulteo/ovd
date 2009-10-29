@@ -80,7 +80,7 @@ if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['ap
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $dom->appendChild($session_node);
 

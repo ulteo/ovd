@@ -46,7 +46,7 @@ $_SESSION['sessionmanager_url'] = $sessionmanager_url;
 
 $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVERNAME.'&token='.$token);
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 @$dom->loadXML($xml);
 
 if (! $dom->hasChildNodes())
@@ -154,7 +154,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('mode', $_SESSION['mode']);
 $session_node->setAttribute('shareable', ((isset($_SESSION['parameters']['shareable']))?'true':'false'));

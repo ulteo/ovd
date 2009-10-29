@@ -40,7 +40,7 @@ if (!isset($_GET['size']) || $_GET['size'] == '') {
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 
 $buf = gen_string(5);
 

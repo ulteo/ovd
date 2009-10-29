@@ -169,7 +169,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
 
 header('Content-Type: text/xml; charset=utf-8');
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $aps_node = $dom->createElement('aps');
 $aps_node->setAttribute('server', $_SERVER['SERVER_NAME']);
 $dom->appendChild($aps_node);

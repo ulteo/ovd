@@ -49,7 +49,7 @@ function generateAjaxplorerActionsXML() {
 
 		$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$app_id.'&fqdn='.SERVERNAME);
 
-		$sm_dom = new DomDocument();
+		$sm_dom = new DomDocument('1.0', 'utf-8');
 		@$sm_dom->loadXML($application);
 
 		if (! $sm_dom->hasChildNodes())

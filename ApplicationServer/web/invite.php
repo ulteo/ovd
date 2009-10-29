@@ -36,7 +36,7 @@ if (get_from_file($session_dir.'/sessions/'.$_POST['access_id'].'/status') != 2)
 
 $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_invite.php?fqdn='.SERVERNAME.'&session='.$session.'&email='.$_POST['email'].'&mode='.$_POST['mode']);
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 @$dom->loadXML($xml);
 
 if (! $dom->hasChildNodes())

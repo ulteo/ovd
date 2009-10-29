@@ -27,7 +27,7 @@ if (! $xml) {
 	die();
 }
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 @$dom->loadXML($xml);
 
 if (! $dom->hasChildNodes())

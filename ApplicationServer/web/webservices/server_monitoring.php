@@ -79,7 +79,7 @@ $cpu_nb = trim(`grep processor /proc/cpuinfo |tail -n 1 |awk '{ print $3 }'`)+1;
 $cpu_load = get_cpu_load();
 $ram = get_ram_load();
 
-$dom = new DomDocument();
+$dom = new DomDocument('1.0', 'utf-8');
 $monitoring_node = $dom->createElement('monitoring');
 $dom->appendChild($monitoring_node);
 
