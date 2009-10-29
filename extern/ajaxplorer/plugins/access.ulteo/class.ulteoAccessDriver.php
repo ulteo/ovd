@@ -64,7 +64,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_file_exists($path_) {
 		$cmd = $this->wrapper_cmd.' ls "'.$this->clean_path($path_).'"';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
 
 		return ($ret == 0);
 	}
@@ -72,7 +72,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_mv($src_, $dst_) {
 		$cmd = $this->wrapper_cmd.' mv "'.$this->clean_path($src_).'" "'.$this->clean_path($dst_).'"';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
 
 		return ($ret == 0);
 	}
@@ -80,7 +80,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_cp($src_, $dst_) {
 		$cmd = $this->wrapper_cmd.' cp "'.$this->clean_path($src_).'" "'.$this->clean_path($dst_).'"';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
 
 		return ($ret == 0);
 	}
@@ -88,7 +88,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_rm($path_) {
 		$cmd = $this->wrapper_cmd.' rm "'.$this->clean_path($path_).'"';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
 
 		return ($ret == 0);
 	}
@@ -96,7 +96,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_mkdir($path_) {
 		$cmd = $this->wrapper_cmd.' mkdir "'.$this->clean_path($path_).'"';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
 
 		return ($ret == 0);
 	}
@@ -104,7 +104,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_touch($path_) {
 		$cmd = $this->wrapper_cmd.' touch "'.$this->clean_path($path_).'"';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
 
 		return ($ret == 0);
 	}
@@ -157,7 +157,10 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 	public function true_pwd() {
 		$cmd = $this->wrapper_cmd.' pwd';
 
-		exec($cmd, &$output, &$ret);
+		exec($cmd, $output, $ret);
+
+		if (! is_array($output) || count($output) == 0)
+			return '';
 
 		$output = $output[0];
 
