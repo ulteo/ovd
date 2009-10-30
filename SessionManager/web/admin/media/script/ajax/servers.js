@@ -37,6 +37,7 @@ function fetchInstallableApplicationsList(fqdn_) {
 				
 				buffer = xml.getElementsByTagName('categories');
 				if (buffer.length != 1) {
+					$('installableApplicationsList_content').innerHTML = '<br /><img src="media/image/error.png" width="16" height="16" alt="" title=""> Internal error<br />';
 					return;
 				}
 				
@@ -44,6 +45,7 @@ function fetchInstallableApplicationsList(fqdn_) {
 				
 				categories = buffer.getElementsByTagName('category');
 				if (categories.length < 1) {
+					$('installableApplicationsList_content').innerHTML = '<br /><img src="media/image/error.png" width="16" height="16" alt="" title="">  No installable application found<br />';
 					return;
 				}
 				
