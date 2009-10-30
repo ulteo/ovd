@@ -37,6 +37,11 @@ function sendamail($to_, $subject_, $message_) {
 	$from = $buf['send_from'];
 	$host = $buf['send_host'];
 	$port = $buf['send_port'];
+	$ssl = false;
+	if ($buf['send_ssl'] == '1')
+		$ssl = true;
+	if ($ssl === true)
+		$host = 'ssl://'.$host;
 	$localhost = '['.$_SERVER['SERVER_ADDR'].']';
 	$auth = false;
 	if ($buf['send_auth'] == '1')
