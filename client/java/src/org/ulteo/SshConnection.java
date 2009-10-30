@@ -138,9 +138,11 @@ public class SshConnection extends SshClient {
 		ForwardingIOChannel channel;
 
 		try {
-			channel = new ForwardingIOChannel(ForwardingIOChannel.LOCAL_FORWARDING_CHANNEL, "d_"+port, "localhost", port, "0.0.0.0", port+10);
+			channel = new ForwardingIOChannel(ForwardingIOChannel.LOCAL_FORWARDING_CHANNEL, "d_"+port, 
+					"localhost", port, 
+					/* Useless parameters */ null, 0);
 			if(! this.openChannel(channel)) {
-				System.err.println("SshConnection: Unable to open Channel");
+				System.err.println("SshConnection: Unable to open Channel (localhost:"+port+")");
 				return null;
 			}
 
