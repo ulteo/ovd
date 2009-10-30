@@ -21,16 +21,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-function query_url_request($url_, $log_returned_data_=true) {
-	Logger::debug('main', "query_url_request($url_)");
+function query_url_request($url_, $log_returned_data_=true, $data_in_file_=false) {
+	Logger::debug('main', "query_url_request($url_,$log_returned_data_, $data_in_file_)");
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
+	if ( $data_in_file_ === true) {
+		$data_file = tempnam(sys_get_temp_dir(), "curl_");
+		$fp = fopen($data_file, 'w');
+		curl_setopt($socket, CURLOPT_FILE, $fp);
+	}
 	$data = curl_exec($socket);
 	$code = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	$content_type=curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
+	if ( $data_in_file_ === true) {
+		$data = $data_file;
+		fclose($fp);
+	}
+
 	curl_close($socket);
 	
 	if ($code != 200)

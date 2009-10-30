@@ -181,7 +181,8 @@ function show_all($flags_) {
 
 function show_specific($where_, $name_, $server_=NULL, $flags_) {
 	if ($where_ == 'sm') {
-		$lines = explode("\n", @file_get_contents(SESSIONMANAGER_LOGS.'/'.$name_));
+		$filename = SESSIONMANAGER_LOGS.'/main.log';
+		$must_remove_tempfile = false;
 	} elseif ($where_ == 'aps') {
 		$server = Abstract_Server::load($server_);
 
@@ -191,9 +192,10 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 		}
 
 		if ($name_ == 'web')
-			$lines = explode("\n", $server->getWebLog());
+			$filename = $server->getWebLogFile();
 		elseif ($name_ == 'daemon')
-			$lines = explode("\n", $server->getDaemonLog());
+			$filename = $server->getDaemonLogFile();
+		$must_remove_tempfile = true;
 	}
 
 	page_header();
@@ -209,10 +211,21 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 	}
 
 	echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
-	echo implode("<br />\n", $lines);
+	$fp = @fopen($filename, 'r');
+	if ($fp !== false) {
+		while ($str = fgets($fp, 4096)) {
+			echo $str;
+			echo "<br />\n";
+		}
+		fclose($fp);
+	}
+	
 	echo '</div>';
 
 	page_footer();
+	if ($must_remove_tempfile) {
+		unlink($filename);
+	}
 
 	die();
 }
@@ -222,9 +235,9 @@ function download_log($where_, $name_, $server_=NULL) {
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename=sm_'.$name_);
 
-		echo @file_get_contents(SESSIONMANAGER_LOGS.'/'.$name_);
+		$filename = SESSIONMANAGER_LOGS.'/main.log';
+		$must_remove_tempfile = false;
 
-		die();
 	} elseif ($where_ == 'aps') {
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename=aps_'.$server_.'_'.$name_.'.log');
@@ -237,13 +250,24 @@ function download_log($where_, $name_, $server_=NULL) {
 		}
 
 		if ($name_ == 'web')
-			echo $server->getWebLog();
+			$filename = $server->getWebLogFile();
 		elseif ($name_ == 'daemon' && $server->getAttribute('type') != 'windows')
-			echo $server->getDaemonLog();
-
-		die();
+			$filename = $server->getDaemonLogFile();
+		$must_remove_tempfile = true;
 	}
-
+	
+	$fp = @fopen($filename, 'r');
+	if ($fp !== false) {
+		while ($str = fgets($fp, 4096)) {
+			echo $str;
+			echo "<br />\n";
+		}
+		fclose($fp);
+	}
+	
+	if ($must_remove_tempfile) {
+		unlink($filename);
+	}
 	die();
 }
 

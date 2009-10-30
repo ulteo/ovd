@@ -617,6 +617,36 @@ class Server {
 		return $ret;
 	}
 
+	public function getWebLogFile() {
+		Logger::debug('main', 'Starting Server::getWebLogFile for server \''.$this->fqdn.'\'');
+
+		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=web', false, true);
+		if (is_array($ret)) {
+			return $ret['data'];
+		}
+		else {
+			return false;
+		}
+	}
+
+	public function getDaemonLogFile() {
+		Logger::debug('main', 'Starting Server::getDaemonLogFile for server \''.$this->fqdn.'\'');
+
+		if ($this->getAttribute('type') == 'windows') {
+			Logger::error('main', 'Server::getDaemonLogFile - No daemon log for windows server');
+			return false;
+		}
+
+		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false, true);
+		if (is_array($ret)) {
+			return $ret['data'];
+		}
+		else {
+			return false;
+		}
+
+	}
+
 	public function getApplicationIcon($icon_path_, $desktopfile_) {
 		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
 
