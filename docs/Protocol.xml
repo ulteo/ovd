@@ -1279,7 +1279,7 @@
 	    <itemizedlist>
 	      <listitem>
 		<para>application_id: <emphasis role="strong">Optional</emphasis>
-		a running application intance
+		a running application instance
                 </para>
 	      </listitem>
 	    </itemizedlist>
@@ -1303,6 +1303,88 @@
 	  The client calls this webservice every 10 seconds
 	  top.
 	</para>
+
+
+        <para>
+          XML format: 
+
+          <itemizedlist>
+            <listitem>
+              <emphasis role="strong">session</emphasis>
+              Root node
+
+              <itemizedlist>
+                <listitem>
+                  <emphasis role="strong">status</emphasis> Attribute
+                </listitem>
+
+	        <listitem>
+                  <emphasis role="strong">applications</emphasis>
+                  Node
+                  <itemizedlist>
+                    <listitem>
+                      <emphasis>running</emphasis>
+                      Node (multiple)
+                      <itemizedlist>
+	                <listitem>
+                          <emphasis>app_id</emphasis> Attribute
+                        </listitem>
+	                <listitem>
+                          <emphasis>job</emphasis> Attribute
+                        </listitem>
+	                <listitem>
+                          <emphasis>status</emphasis> Attribute
+                        </listitem>
+	              </itemizedlist>
+                    </listitem>
+	          </itemizedlist>
+                </listitem>
+	        <listitem>
+                  <emphasis role="strong">sharing</emphasis>
+                  Node
+                  <itemizedlist>
+	            <listitem>
+                      <emphasis>count</emphasis> Attribute
+                    </listitem>
+                    <listitem>
+                      <emphasis>share</emphasis>
+                      Node (multiple)
+                      <itemizedlist>
+	                <listitem>
+                          <emphasis>alive</emphasis> Attribute (1|0)
+                        </listitem>
+	                <listitem>
+                          <emphasis>email</emphasis> Attribute
+                        </listitem>
+	                <listitem>
+                          <emphasis>mode</emphasis> Attribute (active|passive)
+                        </listitem>
+	              </itemizedlist>
+                    </listitem>
+	          </itemizedlist>
+                </listitem>
+              </itemizedlist>
+            </listitem>
+	  </itemizedlist>
+        </para>
+
+        <para>
+          Here is an example:
+          <screen><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<session status="2">
+	<applications>
+		<running job="gKjKg" app_id="15" status="2"/>
+		<running job="trV5v" app_id="9" status="2"/>
+	</applications>
+	<sharing count="1">
+		<share email="someone@ulteo.com" mode="passive" joined="1" alive="1"/>
+	</sharing>
+</session>]]>
+          </screen>
+        </para>
+
+
       </simplesect>
     </section>
 
