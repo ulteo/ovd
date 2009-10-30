@@ -36,6 +36,7 @@ function sendamail($to_, $subject_, $message_) {
 	$method = $buf['send_type'];
 	$from = $buf['send_from'];
 	$host = $buf['send_host'];
+	$port = $buf['send_port'];
 	$localhost = '['.$_SERVER['SERVER_ADDR'].']';
 	$auth = false;
 	if ($buf['send_auth'] == '1')
@@ -58,6 +59,7 @@ function sendamail($to_, $subject_, $message_) {
 		$method,
 		array (
 			'host'		=>	$host,
+			'port'		=>	$port,
 			'localhost'	=>	$localhost,
 			'auth'		=>	$auth,
 			'username'	=>	$username,

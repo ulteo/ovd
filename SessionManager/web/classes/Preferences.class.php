@@ -215,6 +215,8 @@ class Preferences {
 		$this->add($c,'general','mails_settings');
 		$c = new ConfigElement_input('send_host', _('Host'), _('Host'), _('Host'), '');
 		$this->add($c,'general','mails_settings');
+		$c = new ConfigElement_input('send_port', _('Port'), _('Port'), _('Port'), 25);
+		$this->add($c,'general','mails_settings');
 		$c = new ConfigElement_select('send_auth', _('Authentication'), _('Authentication'), _('Authentication'),0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','mails_settings');
