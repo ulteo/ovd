@@ -33,7 +33,7 @@ function fetchInstallableApplicationsList(fqdn_) {
 			},
 			onSuccess: function(transport) {
 				var xml = transport.responseXML;
-				var list = new Array();
+				var list = {};
 				
 				buffer = xml.getElementsByTagName('categories');
 				if (buffer.length != 1) {
@@ -53,7 +53,7 @@ function fetchInstallableApplicationsList(fqdn_) {
 					
 					applications = category.getElementsByTagName('application');
 					
-					list[category_name] = new Array();
+					list[category_name] = {};
 					for (j=0; j<applications.length; j++) {
 						application = applications[j];
 						
