@@ -20,7 +20,7 @@ application_switch_status() {
     local sessid=$1
     local job=$2
     local status=$3
-    local directory=$SPOOL/sessions/$sessid/sessions/$job
+    local dir=$SPOOL/sessions/$sessid/sessions/$job
 
     log_INFO "session $sessid application_switch_status $status"
     echo $status >$dir/status
