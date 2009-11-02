@@ -82,19 +82,11 @@ def parse_access(data):
 
         res['vnc_'+m] = node.getAttribute(attr)
 
-    node = node.getElementsByTagName('quality')
-    if len(node) != 1:
-        print "Bad xml result (no quality node inside vnc"
-        return False
-
-    node = node[0]
-    for attr in ['compression_level', 'restricted_colors', 'jpeg_image_quality']:
-        if not node.hasAttribute(attr):
-            print "Warning: missing attribute %s into quality"%(attr)
-            continue
-
-        res['vnc_q_'+attr] = node.getAttribute(attr)
-
+    if node.hasAttribute('quality'):
+        buf = node.getAttribute('quality')
+        if buf not in ['lowest', 'medium', 'high', 'highest']:
+            print >>sys.stderr, "Warning: doesn't support quality",buf
+        res['vnc_quality'] = buf
 
     res["vnc_pass"] = hex2str(res["vnc_pass"])
     res["ssh_pass"] = hex2str(res["ssh_pass"])
@@ -416,42 +408,37 @@ class Dialog:
 
 
     def get_vnc_extra_parameters(self):
-        compress = None
+        compress = 9
         quality = None
         color8bits = None
 
         if self.conf.has_key('quality'):
             if self.conf['quality'] == 'lowest':
-                compress = 9
                 quality = 8
                 color8bits = True
 
             elif self.conf['quality'] == 'medium':
-                compress = 9
                 quality = 7
 
             elif self.conf['quality'] == 'high':
-                compress = 9
                 quality = 8
 
             elif self.conf['quality'] == 'highest':
-                compress = 9
                 quality = 9
         else:
-            if self.infos.has_key('vnc_q_compression_level'):
-                buf = self.infos['vnc_q_compression_level']
-                if buf.isdigit() and 0<=int(buf)<=9:
-                    compress = int(buf)
+            if self.infos['vnc_quality'] == 'lowest':
+                quality = 8
+                color8bits = True
 
-            if self.infos.has_key('vnc_q_jpeg_image_quality'):
-                buf = self.infos['vnc_q_jpeg_image_quality']
-                if buf.isdigit() and 0<=int(buf)<=9:
-                    quality = int(buf)
+            elif self.infos['vnc_quality'] == 'medium':
+                quality = 7
 
-            if self.infos.has_key('vnc_q_restricted_colors'):
-                buf = self.infos['vnc_q_restricted_colors']
-                if buf in ['yes', 'no']:
-                    color8bits = (buf=='yes')
+            elif self.infos['vnc_quality'] == 'high':
+                quality = 8
+
+            elif self.infos['vnc_quality'] == 'highest':
+                quality = 9
+
 
         return (compress, quality, color8bits)
 
