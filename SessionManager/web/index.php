@@ -640,12 +640,6 @@ if ($testapplet) {
 		<param name="ssh.host" value="<?php echo $random_server->getAttribute('external_name'); ?>" />
 		<param name="ssh.port" value="443,993,995" />
 
-		<!--<param name="proxyType" value="<?php echo $proxy_type; ?>" />
-		<param name="proxyHost" value="<?php echo $proxy_host; ?>" />
-		<param name="proxyPort" value="<?php echo $proxy_port; ?>" />
-		<param name="proxyUsername" value="<?php echo $proxy_username; ?>" />
-		<param name="proxyPassword" value="<?php echo $proxy_password; ?>" />-->
-
 		<param name="agent" value="<?php echo $_SERVER['HTTP_USER_AGENT']; ?>" />
 		<param name="onInit" value="appletInited" />
 		<param name="onLoad" value="appletLoaded()" />
