@@ -275,21 +275,10 @@ public class OvdApplet extends java.applet.Applet implements SshErrorResolver, U
 
 		// Extended VNC parameters
 		try {
-			String buf = this.getParameterNonEmpty("Encoding");
-			if (buf != null) {
-				if (buf.equalsIgnoreCase("RRE"))
-					org.vnc.Options.preferredEncoding = RfbProto.EncodingRRE;
-				else if (buf.equalsIgnoreCase("CoRRE"))
-					org.vnc.Options.preferredEncoding = RfbProto.EncodingCoRRE;
-				else if (buf.equalsIgnoreCase("Hextile"))
-					org.vnc.Options.preferredEncoding = RfbProto.EncodingHextile;
-				else if (buf.equalsIgnoreCase("ZRLE"))
-					org.vnc.Options.preferredEncoding = RfbProto.EncodingZRLE;
-				else if (buf.equalsIgnoreCase("Zlib"))
-					org.vnc.Options.preferredEncoding = RfbProto.EncodingZlib;
-				else if (buf.equalsIgnoreCase("Tight"))
-					org.vnc.Options.preferredEncoding = RfbProto.EncodingTight;
-			}
+			String buf;
+
+			org.vnc.Options.preferredEncoding = RfbProto.EncodingTight;
+			org.vnc.Options.shareDesktop = true;
 
 			buf = this.getParameterNonEmpty("JPEG image quality");
 			if (buf != null) {
@@ -318,11 +307,6 @@ public class OvdApplet extends java.applet.Applet implements SshErrorResolver, U
 			buf = this.getParameterNonEmpty("View only");
 			if (buf != null && buf.equalsIgnoreCase("yes"))
 				org.vnc.Options.viewOnly = true;
-
-			buf = this.getParameterNonEmpty("Share desktop");
-			if (buf != null && buf.equalsIgnoreCase("true"))
-				org.vnc.Options.shareDesktop = true;
-
 		}
 		catch(Exception e) {
 			return false;
