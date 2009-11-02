@@ -33,7 +33,7 @@ gen_conf()
     PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1)
     # clear the password
     unset RET
-    db_set ulteo-ovd-session-manager/admin_password ""
+    db_reset ulteo-ovd-session-manager/admin_password
 
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
