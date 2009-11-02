@@ -244,7 +244,6 @@ var Daemon = Class.create({
 				this.applet_width = parametersNode.getAttribute('width');
 			if (this.applet_height == -1)
 				this.applet_height = parametersNode.getAttribute('height');
-			applet_share_desktop = parametersNode.getAttribute('share_desktop');
 			applet_view_only = parametersNode.getAttribute('view_only');
 
 			buffer = sessionNode.getElementsByTagName('ssh');
@@ -264,7 +263,6 @@ var Daemon = Class.create({
 
 			buffer = sessionNode.getElementsByTagName('vnc');
 			var vncNode = buffer[0];
-			applet_vnc_host = vncNode.getAttribute('host');
 			applet_vnc_port = vncNode.getAttribute('port');
 			applet_vnc_passwd = vncNode.getAttribute('passwd');
 
@@ -303,23 +301,19 @@ var Daemon = Class.create({
 			<param name="cache_archive_ex" value="'+this.applet_version+';preload" /> \
 			<param name="mayscript" value="true" /> \
 			\
-			<param name="SSH" value="yes" /> \
 			<param name="ssh.host" value="'+applet_ssh_host+'" /> \
 			<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
 			<param name="ssh.user" value="'+applet_ssh_user+'" /> \
 			<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
 			\
-			<param name="Share desktop" value="'+applet_share_desktop+'" /> \
 			<param name="View only" value="'+applet_view_only+'" /> \
 			\
-			<param name="HOST" value="'+applet_vnc_host+'" /> \
 			<param name="PORT" value="'+applet_vnc_port+'" /> \
 			<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
 			\
 			<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
 			<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
 			<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
-			<param name="Encoding" value="'+applet_vnc_quality_encoding+'" /> \
 			\
 			<!-- Caching options --> \
 			<param name="rfb.cache.enabled" value="true" /> \

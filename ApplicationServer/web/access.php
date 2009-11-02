@@ -87,7 +87,6 @@ $dom->appendChild($session_node);
 $parameters_node = $dom->createElement('parameters');
 $parameters_node->setAttribute('width', $width);
 $parameters_node->setAttribute('height', $height);
-$parameters_node->setAttribute('share_desktop', $_SESSION['share_desktop']);
 $parameters_node->setAttribute('view_only', $_SESSION['parameters']['view_only']);
 $session_node->appendChild($parameters_node);
 
@@ -106,7 +105,6 @@ $session_node->appendChild($ssh_node);
 
 if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
 	$vnc_node = $dom->createElement('vnc');
-	$vnc_node->setAttribute('host', $server);
 	$vnc_node->setAttribute('port', $rfbport);
 	$vnc_node->setAttribute('passwd', $vncpass);
 	$session_node->appendChild($vnc_node);
@@ -115,7 +113,6 @@ if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['ap
 	$quality_node->setAttribute('compression_level', $compress_level);
 	$quality_node->setAttribute('restricted_colors', $eight_bits);
 	$quality_node->setAttribute('jpeg_image_quality', $jpeg_quality);
-	$quality_node->setAttribute('encoding', 'Tight');
 	$vnc_node->appendChild($quality_node);
 }
 

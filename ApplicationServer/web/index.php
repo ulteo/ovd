@@ -86,7 +86,6 @@ $_SESSION['parameters']['session_mode'] = $_SESSION['mode'];
 $_SESSION['popup'] = $_SESSION['parameters']['popup'];
 $_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
 
-$_SESSION['share_desktop'] = 'true';
 if ($_SESSION['owner'])
 	$_SESSION['parameters']['view_only'] = 'No';
 
