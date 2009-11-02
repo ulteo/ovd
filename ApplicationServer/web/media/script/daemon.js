@@ -265,14 +265,19 @@ var Daemon = Class.create({
 			var vncNode = buffer[0];
 			applet_vnc_port = vncNode.getAttribute('port');
 			applet_vnc_passwd = vncNode.getAttribute('passwd');
+			applet_vnc_quality = vncNode.getAttribute('quality');
 
-			buffer = vncNode.getElementsByTagName('quality');
-			var vncQualityNode = buffer[0];
-
-			applet_vnc_quality_compression_level = vncQualityNode.getAttribute('compression_level');
-			applet_vnc_quality_restricted_colors = vncQualityNode.getAttribute('restricted_colors');
-			applet_vnc_quality_jpeg_image_quality = vncQualityNode.getAttribute('jpeg_image_quality');
-			applet_vnc_quality_encoding = vncQualityNode.getAttribute('encoding');
+			//default: highest
+			applet_vnc_quality_compression_level = 9;
+			applet_vnc_quality_jpeg_image_quality = 9;
+			applet_vnc_quality_restricted_colors = 'no';
+			if (applet_vnc_quality == 'lowest') {
+				applet_vnc_quality_jpeg_image_quality = 8;
+				applet_vnc_quality_restricted_colors = 'yes';
+			} else if (applet_vnc_quality == 'medium')
+				applet_vnc_quality_jpeg_image_quality = 7;
+			else if (applet_vnc_quality == 'high')
+				applet_vnc_quality_jpeg_image_quality = 8;
 
 			applet_have_proxy = false;
 			buffer = sessionNode.getElementsByTagName('proxy');

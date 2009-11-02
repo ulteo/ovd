@@ -271,8 +271,8 @@ class Preferences {
 		$c = new ConfigElement_select('windows_keymap', _('Default windows keymap for session'), _('Default windows keymap for session'), _('Default windows keymap for session'), 'en-us');
 		$c->setContentAvailable(array('ar' => 'ar', 'cs' => 'cs', 'da' => 'da', 'de' => 'de', 'de-ch' => 'de-ch', 'en-dv' => 'en-dv', 'en-gb' => 'en-gb', 'en-us' => 'en-us', 'es' => 'es', 'et' => 'et', 'fi' => 'fi', 'fo' => 'fo', 'fr' => 'fr', 'fr-be' => 'fr-be', 'fr-ca' => 'fr-ca', 'fr-ch' => 'fr-ch', 'he' => 'he', 'hr' => 'hr', 'hu' => 'hu', 'is' => 'is', 'it' => 'it', 'ja' => 'ja', 'ko' => 'ko', 'lt' => 'lt', 'lv' => 'lv', 'mk' => 'mk', 'nl' => 'nl', 'nl-be' => 'nl-be', 'no' => 'no', 'pl' => 'pl', 'pt' => 'pt', 'pt-br' => 'pt-br', 'ru' => 'ru', 'sl' => 'sl', 'sv' => 'sv', 'th' => 'th', 'tr' => 'tr'));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 9);
-		$c->setContentAvailable(array(2=>_('Lowest'),5=>_('Medium'),8=>_('High'),9=>_('Highest')));
+		$c = new ConfigElement_select('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 'highest');
+		$c->setContentAvailable(array('lowest'=>_('Lowest'),'medium'=>_('Medium'),'high'=>_('High'),'highest'=>_('Highest')));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400);
 		$c->setContentAvailable(array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')));

@@ -37,7 +37,7 @@ $list_desktop_sizes = array(
 );
 
 if (isset($prefs->elements['general']['session_settings_defaults']['quality']))
-	$list_desktop_qualitys = $prefs->elements['general']['session_settings_defaults']['quality']->content_available;
+	$list_qualities = $prefs->elements['general']['session_settings_defaults']['quality']->content_available;
 
 if (isset($prefs->elements['general']['session_settings_defaults']['timeout']))
 	$list_desktop_timeouts = $prefs->elements['general']['session_settings_defaults']['timeout']->content_available;
@@ -50,7 +50,7 @@ $session_mode = $default_settings['session_mode'];
 $language = $default_settings['language'];
 $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
-$desktop_quality = $default_settings['quality'];
+$default_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
 $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
@@ -436,11 +436,11 @@ require_once('header.php');
 							<?php echo _('Quality'); ?>
 						</td>
 						<td>
-							<select id="desktop_quality" name="desktop_quality">
+							<select id="quality" name="quality">
 								<?php
-									foreach ($list_desktop_qualitys as $code => $quality) {
+									foreach ($list_qualities as $code => $quality) {
 										echo '<option value="'.$code.'"';
-										if ($desktop_quality == $code)
+										if ($default_quality == $code)
 											echo ' selected="selected"';
 										echo '>'.$quality.'</option>'."\n";
 									}

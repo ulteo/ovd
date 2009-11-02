@@ -48,34 +48,6 @@ if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['ap
 		$width = $buf[0];
 		$height = $buf[1];
 	}
-
-	if ($_SESSION['parameters']['quality'] == 2)
-		$eight_bits = 'yes';
-	else
-		$eight_bits = 'no';
-
-	switch ($_SESSION['parameters']['quality']) {
-		case '2':
-			$compress_level = 9;
-			$jpeg_quality = 3;
-			break;
-		case '5':
-			$compress_level = 6;
-			$jpeg_quality = 5;
-			break;
-		case '8':
-			$compress_level = 3;
-			$jpeg_quality = 7;
-			break;
-		case '9':
-			$compress_level = 1;
-			$jpeg_quality = 9;
-			break;
-		default:
-			$compress_level = 1;
-			$jpeg_quality = 9;
-			break;
-	}
 }
 
 header('Content-Type: text/xml; charset=utf-8');
@@ -107,13 +79,8 @@ if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['ap
 	$vnc_node = $dom->createElement('vnc');
 	$vnc_node->setAttribute('port', $rfbport);
 	$vnc_node->setAttribute('passwd', $vncpass);
+	$vnc_node->setAttribute('quality', $_SESSION['parameters']['quality']);
 	$session_node->appendChild($vnc_node);
-
-	$quality_node = $dom->createElement('quality');
-	$quality_node->setAttribute('compression_level', $compress_level);
-	$quality_node->setAttribute('restricted_colors', $eight_bits);
-	$quality_node->setAttribute('jpeg_image_quality', $jpeg_quality);
-	$vnc_node->appendChild($quality_node);
 }
 
 if (isset($_SESSION['parameters']['enable_proxy']) && $_SESSION['parameters']['enable_proxy'] == 1) {

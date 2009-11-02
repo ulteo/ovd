@@ -34,7 +34,7 @@ $default_settings = $prefs->get('general', 'session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
 $windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
-$desktop_quality = $default_settings['quality'];
+$quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
 $timeout_message = $default_settings['session_timeout_msg'];
 $start_app = '';
@@ -203,7 +203,7 @@ $default_args = array(
 	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	locale2unix($language),
 	'windows_keymap'	=>	$windows_keymap,
-	'quality'			=>	$desktop_quality,
+	'quality'			=>	$quality
 );
 
 $optional_args = array();
