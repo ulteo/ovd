@@ -65,7 +65,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				</tr>
 				<tr>
 					<td style="text-align: left; vertical-align: middle">
-						<span style="font-size: 1.35em; font-weight: bold; color: #686868">Loading Application</span>
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868"><?php echo _('Loading Application'); ?></span>
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
