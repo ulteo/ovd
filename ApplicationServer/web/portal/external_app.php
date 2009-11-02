@@ -57,7 +57,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		<?php //<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" /> ?>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<link rel="shortcut icon" type="image/png" href="../media/image/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="../icon.php?id=<?php echo $_GET['app_id']; ?>" />
 
 		<link rel="stylesheet" type="text/css" href="common.css" />
 
@@ -78,6 +78,8 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
 				daemon.doc = '<?php echo $doc; ?>';
 				daemon.loop();
+
+				Effect.ShakeUp($('app_icon'), {'distance': 5, 'duration': 1.5, 'continue_statement': $('splashContainer')});
 			});
 		</script>
 	</head>
@@ -91,6 +93,10 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 					</td>
 				</tr>
 				<tr>
+					<td style="text-align: right; vertical-align: middle">
+						<img id="app_icon" src="../icon.php?id=<?php echo $_GET['app_id']; ?>" width="32" height="32" alt="" title="" />
+					</td>
+					<td style="width: 5px"></td>
 					<td style="text-align: left; vertical-align: middle">
 						<span style="font-size: 1.35em; font-weight: bold; color: #686868"><?php printf(_('Loading %s'), $window_title); ?></span>
 					</td>

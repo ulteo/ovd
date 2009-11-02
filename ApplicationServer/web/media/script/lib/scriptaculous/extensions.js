@@ -46,3 +46,26 @@ Effect.Center = function(element) {
 	element.style.left = setX+'px';
 	element.style.top  = setY+'px';
 }
+
+Effect.ShakeUp = function(element) {
+  element = $(element);
+  var options = Object.extend({
+    distance: 20,
+    duration: 0.5,
+    continue_statement: element
+  }, arguments[1] || {});
+  var distance = parseFloat(options.distance);
+  var split = parseFloat(options.duration) / 10.0;
+  var oldStyle = {
+    top: element.getStyle('top'),
+    left: element.getStyle('left') };
+    var ret = new Effect.Move(element,
+      { y:  -distance, x: 0, duration: split, afterFinishInternal: function(effect) {
+    new Effect.Move(effect.element,
+      { y: distance*2, x: 0, duration: split*2,  afterFinishInternal: function(effect) {
+    new Effect.Move(effect.element,
+      { y: -distance, x: 0, duration: split, afterFinishInternal: function(effect) {
+        if (options['continue_statement'].visible())
+          Effect.ShakeUp(element, options);
+  }}) }}) }});
+};
