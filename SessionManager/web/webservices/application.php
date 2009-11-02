@@ -61,8 +61,11 @@ if (! is_object($app)) {
 	die();
 }
 
-if ($app->getAttribute('static'))
-	Abstract_Liaison::save('StaticApplicationServer', $app->getAttribute('id'), $buf->fqdn);
+if ($app->getAttribute('static')) {
+	if (! is_object(Abstract_Liaison::load('StaticApplicationServer', $app->getAttribute('id'), $buf->fqdn))) {
+		Abstract_Liaison::save('StaticApplicationServer', $app->getAttribute('id'), $buf->fqdn);
+	}
+}
 
 header('Content-Type: text/xml; charset=utf-8');
 echo $app->toXML($buf);
