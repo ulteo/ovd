@@ -59,7 +59,7 @@ def parse_access(data):
         return False
 
     node = node[0]
-    for (attr, m) in [('host','host'), ('user', 'login'), ('passwd', 'pass') ]:
+    for (attr, m) in [('passwd', 'pass'), ('port', 'port')]:
         if not node.hasAttribute(attr):
             print "Bad xml result"
             return False
