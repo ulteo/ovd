@@ -172,7 +172,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 
 		if (! browserIsSupported()) {
 			testResult = -2;
-			System.err.println("You're using a browser currently unsupported by OnlineDesktop," +
+			System.err.println("You're using a browser currently unsupported by Ulteo Open Virtual Desktop," +
 							   "or which doesn't have the capabilities to run it. Please try another one");
 			System.err.println("\n***TEST FAILED***\n");
 			stop();
@@ -202,7 +202,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		if (! testSSH()) {
 			testResult = -3;
 			System.err.println("\n***TEST FAILED***\n");
-			System.err.println("You will probably not be able to run OnlineDesktop in the best conditions");
+			System.err.println("You will probably not be able to run Ulteo Open Virtual Desktop in the best conditions");
 			return;
 		}
 
