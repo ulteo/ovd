@@ -19,7 +19,7 @@
  */
 
 
-package org.ulteo;
+package org.ulteo.applet;
 
 import java.net.URL;
 
@@ -27,7 +27,7 @@ import org.ulteo.Logger;
 import org.ulteo.SshConnection;
 import org.ulteo.Utils;
 
-public class OvdSshConnection extends java.applet.Applet {
+public class Portal extends java.applet.Applet {
 	protected SshConnection ssh = null;
 
 	// Ssh parameters

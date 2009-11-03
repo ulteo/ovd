@@ -20,7 +20,7 @@
  */
 
 
-package org.ulteo;
+package org.ulteo.applet;
 
 import java.awt.FlowLayout;
 import java.io.PrintWriter;
@@ -35,11 +35,15 @@ import com.sshtools.j2ssh.forwarding.ForwardingIOChannel;
 import com.sshtools.j2ssh.transport.TransportProtocol;
 import com.sshtools.j2ssh.transport.TransportProtocolEventHandler;
 
+import org.ulteo.Logger;
+import org.ulteo.SshConnection;
+import org.ulteo.Utils;
+
 import org.vnc.RfbProto;
 import org.vnc.VncClient;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 
-public class OvdApplet extends java.applet.Applet implements SshErrorResolver, UncaughtExceptionHandler, org.vnc.Dialog {
+public class Standalone extends java.applet.Applet implements SshErrorResolver, UncaughtExceptionHandler, org.vnc.Dialog {
 	private VncClient vnc = null;
 	protected SshConnection ssh = null;
 

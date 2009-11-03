@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
- * Author David LECHEVALIER <david@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -18,8 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo;
 
-import java.applet.Applet;
+package org.ulteo.applet;
 
-public class CheckJava extends Applet {}
+
+public class PortalApplication extends Standalone {
+}
