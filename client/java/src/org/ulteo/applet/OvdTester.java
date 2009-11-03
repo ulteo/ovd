@@ -429,7 +429,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		for (int iterations=0; iterations<MAX_ITERATIONS; iterations++) {
 			for (int i=0; i<this.sshPortList.length; i++) {
 				int port = this.sshPortList[i];
-				System.out.println("Trying to open connection through port "+port+" ("+iterations+1+"/"+MAX_ITERATIONS+")");
+				System.out.println("Trying to open connection through port "+port+" ("+(iterations+1)+"/"+MAX_ITERATIONS+")");
 				if (this.testSSH(port))
 					return true;
 
