@@ -81,72 +81,12 @@ public class TransportProviderFactory {
                                properties.getPort()),
          connectTimeout);*/
 
-      boolean failed;
-      int nextPort = 0;
-      int iterations = 0;
-      int port = properties.getPort(nextPort);
-    	  
-      SocketTransportProvider socket = null;
-      do {
-        try{
-			System.err.println("Trying to open connection through port "+port);
-        	socket = new SocketTransportProvider(properties.getHost(), port);
-        	failed = false;
-        }catch(SocketTimeoutException socketEx){
-        	System.err.println("Connection through port "+port+" failed. ");
-    		failed = true;
-    		port = properties.getPort(++nextPort);
-    		if (port < 0) {
-    			if (iterations < MAX_ITERATIONS) {
-    				iterations++;
-    				nextPort = 0;
-    				port = properties.getPort(nextPort);
-    				try {
-        				Thread.sleep(2500);
-        			} catch (InterruptedException e) {
-//      				e.printStackTrace();
-        			}
-    			} else {
-    				throw new SocketTimeoutException("No port available. Socket timed out.");
-    			}
-    		}
-        }catch(IOException ioe){
-        	System.err.println("Connection through port "+port+" failed. ");
-    		failed = true;
-    		port = properties.getPort(++nextPort);
-    		if (port < 0) {
-    			if (iterations < MAX_ITERATIONS) {
-    				iterations++;
-    				nextPort = 0;
-    				port = properties.getPort(nextPort);
-    				try {
-        				Thread.sleep(2500);
-        			} catch (InterruptedException e) {
-//      				e.printStackTrace();
-        			}
-    			} else {
-    				throw new SocketTimeoutException("No port available. Socket timed out.");
-    			}
-    		}
-        }
-        try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-//			e.printStackTrace();
-		}
-      } while(failed);
-      
-      if (socket == null)
-      	{
-    	  System.out.println("K1ZFP::The socket is null.");
-      	}
-      else
-      	{
-    	  socket.setTcpNoDelay(true);
-    	  socket.setSoTimeout(socketTimeout);    	  
-      	}
-      return socket;
+        SocketTransportProvider socket = new SocketTransportProvider(
+                properties.getHost(), properties.getPort());
+        socket.setTcpNoDelay(true);
+        socket.setSoTimeout(socketTimeout);
 
+        return socket;
     }
   }
 }

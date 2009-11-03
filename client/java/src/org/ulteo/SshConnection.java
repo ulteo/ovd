@@ -72,12 +72,6 @@ public class SshConnection extends SshClient {
 		this.setSocketTimeout(5000);
 	}
 
-	public void setPortList(int ports[]) {
-		for (int i=0; i<ports.length; i++) {
-			this.ssh_properties.setPort(ports[i], i);
-		}
-	}
-
 	public void setProxy(String type, String host, int port, String username, String password) {
 		this.ssh_properties.setPort(443); //Always use this when using proxy
 		this.ssh_properties.setTransportProviderString(type);

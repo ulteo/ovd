@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
-import com.sshtools.j2ssh.transport.ConsoleKnownHostsKeyVerification;
+import com.sshtools.j2ssh.transport.IgnoreHostKeyVerification;
 
 
 public class OvdTester extends java.applet.Applet implements java.lang.Runnable {
@@ -424,16 +424,38 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	 * @return true if successful, false otherwise
 	 */
 	public boolean testSSH() {
+		int MAX_ITERATIONS = 5;		
+
+		for (int iterations=0; iterations<MAX_ITERATIONS; iterations++) {
+			for (int i=0; i<this.sshPortList.length; i++) {
+				int port = this.sshPortList[i];
+				System.out.println("Trying to open connection through port "+port+" ("+iterations+1+"/"+MAX_ITERATIONS+")");
+				if (this.testSSH(port))
+					return true;
+
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {}
+			}
+			
+			try {
+				Thread.sleep(2500);
+			} catch (InterruptedException e) {}
+		}
+		return false;
+	}
+
+
+	protected boolean testSSH(int port) {
 		SshClient ssh = new SshClient();
-	    ssh.setSocketTimeout(20000);
+		ssh.setSocketTimeout(20000);
 
-	    // Create SSH properties
-	    SshConnectionProperties properties = new SshConnectionProperties();
-	    properties.setHost(sshHost);
-		for(int i=0; i<this.sshPortList.length; i++)
-			properties.setPort(this.sshPortList[i],i);
+		// Create SSH properties
+		SshConnectionProperties properties = new SshConnectionProperties();
+		properties.setHost(this.sshHost);
+		properties.setPort(port);
 
-	    if (proxy) {
+		if (proxy) {
 			properties.setTransportProviderString(proxyType);
 			properties.setPort(443); //Always use this when using proxy
 			properties.setProxyHost(proxyHost);
@@ -442,8 +464,8 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 			properties.setProxyPassword(proxyPassword);
 		}
 
-	    try {
-	    	ssh.connect(properties, new ConsoleKnownHostsKeyVerification());
+		try {
+			ssh.connect(properties, new IgnoreHostKeyVerification());
 		} catch (UnknownHostException e) {
 			return false;
 		} catch (IOException  e) {
@@ -462,9 +484,8 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		}
 
 		ssh.disconnect();
-	    return true;
+		return true;
 	}
-
 
 
 	private void detectProxy() {

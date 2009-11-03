@@ -98,7 +98,7 @@ public class SshConnectionProperties {
 
   /**  */
   protected final int MAX_PORTS = 5;
-  protected int[] port = new int[MAX_PORTS];
+  protected int port = 22;
 
   protected Map<String, ForwardingConfiguration> localForwardings = new HashMap<String, ForwardingConfiguration>();
   protected Map<String, ForwardingConfiguration> remoteForwardings = new HashMap<String, ForwardingConfiguration>();
@@ -134,12 +134,7 @@ public class SshConnectionProperties {
    * @param port
    */
   public void setPort(int port) {
-	this.port[0] = port;
-  }
-
-  public void setPort(int port, int index) {
-	if(index < MAX_PORTS)
- 	  this.port[index] = port;
+	this.port = port;
   }
 
   /**
@@ -148,16 +143,7 @@ public class SshConnectionProperties {
    * @return
    */
   public int getPort() {
-    return port[0];
-  }
-
-  public int getPort(int index){
-	  if(index < port.length){
-		  return port[index];
-	  }else{
-		  return -1;
-	  }
-
+    return port;
   }
 
   /**
