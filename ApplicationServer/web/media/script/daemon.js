@@ -315,6 +315,8 @@ var Daemon = Class.create({
 			<param name="cache_archive_ex" value="'+this.applet_version+';preload" /> \
 			<param name="mayscript" value="true" /> \
 			\
+			<param name="errorCallback" value="daemon.errorCallback" /> \
+			\
 			<param name="ssh.host" value="'+applet_ssh_host+'" /> \
 			<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
 			<param name="ssh.user" value="'+applet_ssh_user+'" /> \
@@ -454,6 +456,12 @@ var Daemon = Class.create({
 
 			$('endContainer').show();
 		}
+	},
+
+	errorCallback: function(error_status_, error_string_) {
+		this.error_message = 'Java: '+error_string_;
+
+		this.do_ended();
 	},
 
 	do_print: function(path_, timestamp_) {
