@@ -203,7 +203,6 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 			testResult = -3;
 			System.err.println("\n***TEST FAILED***\n");
 			System.err.println("You will probably not be able to run Ulteo Open Virtual Desktop in the best conditions");
-			return;
 		}
 
 		stop();
