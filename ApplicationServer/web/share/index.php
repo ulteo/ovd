@@ -52,8 +52,8 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.access_id = '<?php echo $_SESSION['tokens'][$_GET['token']]['access_id']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
-				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
-				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
+				daemon.i18n['share_end_ok'] = '<?php echo _('Shared application has ended, you can now close the window'); ?>';
+				daemon.i18n['share_end_unexpected'] = '<?php echo _('Shared application has ended unexpectedly'); ?>';
 				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
 
 				daemon.loop();

@@ -23,6 +23,7 @@ var SharedApp = Class.create(Daemon, {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
 
 		this.in_popup = false;
+		this.shared = true;
 	},
 
 	loop: function() {
@@ -120,9 +121,9 @@ var SharedApp = Class.create(Daemon, {
 
 		if ($('endMessage')) {
 			if (this.error_message != '')
-				$('endMessage').innerHTML = '<span class="msg_error">'+this.i18n['application_end_unexpected']+'</span>';
+				$('endMessage').innerHTML = '<span class="msg_error">'+this.i18n['share_end_unexpected']+'</span>';
 			else
-				$('endMessage').innerHTML = this.i18n['application_end_ok'];
+				$('endMessage').innerHTML = this.i18n['share_end_ok'];
 		}
 	}
 });

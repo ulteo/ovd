@@ -33,6 +33,7 @@ var Daemon = Class.create({
 	shareable: false,
 	persistent: false,
 	in_popup: true,
+	shared: false,
 
 	session_state: -1,
 	old_session_state: -1,
@@ -384,7 +385,7 @@ var Daemon = Class.create({
 			end_message.setAttribute('id', 'endMessage');
 			buf.appendChild(end_message);
 
-			if (this.error_message != '') {
+			if (this.error_message != '' && this.error_message != 'undefined') {
 				var error_container = document.createElement('div');
 				error_container.setAttribute('id', 'errorContainer');
 				error_container.setAttribute('style', 'width: 100%; margin-top: 10px; margin-left: auto; margin-right: auto; display: none; visibility: hidden;');
@@ -440,7 +441,7 @@ var Daemon = Class.create({
 				close_button.setAttribute('value', this.i18n['close_this_window']);
 				close_button.setAttribute('onclick', 'window.close(); return false;');
 				close_container.appendChild(close_button);
-			} else {
+			} else if (this.shared == false) {
 				var close_text = document.createElement('span');
 				close_text.innerHTML = this.i18n['start_another_session'];
 				close_container.appendChild(close_text);
@@ -451,7 +452,7 @@ var Daemon = Class.create({
 
 			$('endContent').innerHTML = $('endContent').innerHTML;
 
-			if (this.error_message != '')
+			if (this.error_message != '' && this.error_message != 'undefined')
 				offContent('errorContainer');
 
 			$('endContainer').show();
