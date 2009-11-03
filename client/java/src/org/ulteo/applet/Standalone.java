@@ -113,7 +113,16 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 			return;
 		}
 
-		this.ssh = new SshConnection(this.sshHost, this.sshPort, this.sshUser, this.sshPassword);
+		try {
+			this.ssh = new SshConnection(this.sshHost, this.sshPort, this.sshUser, this.sshPassword);
+		}
+		catch(NumberFormatException e) {
+			System.err.println(this.getClass()+" invalid SSH password");
+			this.dialog.talk(JSDialog.ERROR_USAGE);
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
 		//this.ssh.addEventHandler(new SshHandler(this));
 
 		if(proxyHost != null && !proxyHost.equals("")) {
@@ -418,7 +427,16 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 
 	// Begin Implements org.vnc.Dialog
 	public String vncGetPassword() {
-		return Utils.DecryptEncVNCString(this.vncPassword);
+		try {
+			return Utils.DecryptEncVNCString(this.vncPassword);
+		}
+		catch(NumberFormatException e) {
+			System.err.println(this.getClass()+" invalid SSH password");
+			this.dialog.talk(JSDialog.ERROR_USAGE);
+			this.continue2run = false;
+		}
+
+		return null;
 	}
 	
 	public void vncSetError(String err) {

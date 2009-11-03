@@ -59,7 +59,7 @@ public class SshConnection extends SshClient {
 	protected String proxyType, proxyHost, proxyUsername, proxyPassword;
 	protected int proxyPort;
 
-	public SshConnection(String host, int port, String user, String password) {
+	public SshConnection(String host, int port, String user, String password) throws NumberFormatException {
 		this.ssh_properties = new SshConnectionProperties();
 		this.ssh_properties.setHost(host);
 		this.ssh_properties.setPort(port);	

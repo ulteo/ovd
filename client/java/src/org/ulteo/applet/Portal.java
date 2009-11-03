@@ -85,7 +85,16 @@ public class Portal extends java.applet.Applet {
 			return;
 		}
 
-		this.ssh = new SshConnection(this.sshHost, this.sshPort, this.sshUser, this.sshPassword);
+		try {
+			this.ssh = new SshConnection(this.sshHost, this.sshPort, this.sshUser, this.sshPassword);
+		}
+		catch(NumberFormatException e) {
+			System.err.println(this.getClass()+" invalid SSH password");
+			this.dialog.talk(JSDialog.ERROR_USAGE);
+			this.continue2run = false;
+			this.stop();
+			return;
+		}
 //		this.ssh.addEventHandler(new SshHandler(this));
 
 		if(proxyHost != null && !proxyHost.equals("")) {

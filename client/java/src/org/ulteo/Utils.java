@@ -22,25 +22,24 @@ import org.vnc.DesCipher;
 
 public class Utils {
 
-    public static byte[] DecryptString_(String input) {
-	byte[] c = {
-	    0, 0, 0, 0, 0, 0, 0, 0};
-	int len = input.length() / 2;
-	for (int i = 0; i < len; i++) {
-	    String hex = input.substring(i * 2, i * 2 + 2);
-	    Integer x = new Integer(Integer.parseInt(hex, 16));
-	    c[i] = x.byteValue();
-	}
+	public static byte[] DecryptString_(String input) throws NumberFormatException {
+		byte[] c = {0, 0, 0, 0, 0, 0, 0, 0};
+		int len = input.length() / 2;
+		for (int i = 0; i < len; i++) {
+			String hex = input.substring(i * 2, i * 2 + 2);
+			Integer x = new Integer(Integer.parseInt(hex, 16));
+			c[i] = x.byteValue();
+		}
 
-	return c;
+		return c;
     }
 
 
-	public static String DecryptString(String input) {
+	public static String DecryptString(String input) throws NumberFormatException {
 		return new String(DecryptString_(input));
 	}
 
-	public static String DecryptEncVNCString(String input) {
+	public static String DecryptEncVNCString(String input) throws NumberFormatException {
 		byte[] out = DecryptString_(input);
 		byte[] key = {23, 82, 107, 6, 35, 78, 88, 7};
 
