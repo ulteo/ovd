@@ -50,6 +50,13 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			Event.observe(window, 'load', function() {
 				daemon = new ResumeApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = '<?php echo $_GET['access_id']; ?>';
+
+				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
+				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
+				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
+				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
+				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
+
 				daemon.loop();
 			});
 		</script>
@@ -87,13 +94,17 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		</div>
 
 		<div id="endContainer" style="display: none;">
-			Your application has ended, you can now close the window
-
-			<div id="errorContainer">
-			</div>
-
-			<br />
-			<input type="button" value="Close" onclick="window.close(); return false" />
+			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center">
+						<img src="../media/image/ulteo.png" width="376" height="188" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle" id="endContent">
+					</td>
+				</tr>
+			</table>
 		</div>
 
 		<div id="appletContainer" style="display: none;">

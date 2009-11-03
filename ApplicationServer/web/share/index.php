@@ -50,6 +50,12 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			Event.observe(window, 'load', function() {
 				daemon = new SharedApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = '<?php echo $_SESSION['tokens'][$_GET['token']]['access_id']; ?>';
+
+				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
+				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
+				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
+				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
+
 				daemon.loop();
 			});
 		</script>
@@ -94,11 +100,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your application has ended, you can now close the window'); ?><br />
-						<div id="errorContainer">
-						</div>
-						</span>
+					<td style="text-align: center; vertical-align: middle" id="endContent">
 					</td>
 				</tr>
 			</table>

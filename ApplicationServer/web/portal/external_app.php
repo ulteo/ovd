@@ -77,6 +77,13 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
 				daemon.doc = '<?php echo $doc; ?>';
+
+				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
+				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
+				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
+				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
+				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
+
 				daemon.loop();
 
 				Effect.ShakeUp($('app_icon'), {'distance': 5, 'duration': 1.5, 'continue_statement': $('splashContainer')});
@@ -127,13 +134,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your application has ended, you can now close the window'); ?><br />
-						<div id="errorContainer">
-						</div>
-						<br />
-						<?php echo '<input type="button" value="'._('Close this window').'" onclick="window.close(); return false" />'; ?>
-						</span>
+					<td style="text-align: center; vertical-align: middle" id="endContent">
 					</td>
 				</tr>
 			</table>

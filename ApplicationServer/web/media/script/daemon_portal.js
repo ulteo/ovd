@@ -19,8 +19,6 @@
  **/
 
 var Portal = Class.create(Daemon, {
-	i18n: new Array(),
-
 	applications: new Array(),
 	running_applications: new Array(),
 
@@ -174,7 +172,17 @@ var Portal = Class.create(Daemon, {
 	do_ended: function() {
 		Daemon.prototype.do_ended.apply(this);
 
-		$('mainWrap').hide();
+		if ($('endMessage')) {
+			if (this.error_message != '')
+				$('endMessage').innerHTML = '<span class="msg_error">'+this.i18n['session_end_unexpected']+'</span>';
+			else
+				$('endMessage').innerHTML = this.i18n['session_end_ok'];
+		}
+
+		if ($('mainWrap')) {
+			$('mainWrap').innerHTML = '';
+			$('mainWrap').hide();
+		}
 	},
 
 	display_news: function() {

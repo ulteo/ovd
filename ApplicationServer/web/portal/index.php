@@ -63,10 +63,17 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.access_id = 'portal';
 				daemon.shareable = <?php echo (isset($_SESSION['parameters']['shareable']))?'true':'false'; ?>;
 				daemon.persistent = <?php echo (isset($_SESSION['parameters']['persistent']))?'true':'false'; ?>;
+				daemon.in_popup = <?php echo (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)?'true':'false'; ?>;
 
 				daemon.i18n['share'] = '<?php echo _('share'); ?>';
 				daemon.i18n['suspend'] = '<?php echo _('suspend'); ?>';
 				daemon.i18n['resume'] = '<?php echo _('resume'); ?>';
+				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
+				daemon.i18n['session_end_ok'] = '<?php echo _('Your session has ended, you can now close the window'); ?>';
+				daemon.i18n['session_end_unexpected'] = '<?php echo _('Your session has ended unexpectedly'); ?>';
+				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
+				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
+				daemon.i18n['start_another_session'] = '<?php printf (_('If you want to start another session, click <a href="%s">here</a>'), $_SESSION['sessionmanager_url']); ?>';
 
 				daemon.loop();
 			});
@@ -198,18 +205,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: center; vertical-align: middle">
-						<span style="font-size: 1.1em; font-weight: bold; color: #686868"><?php echo _('Your session has ended, you can now close the window'); ?><br />
-						<div id="errorContainer">
-						</div>
-						<br />
-						<?php
-							if (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)
-								echo '<input type="button" value="'._('Close this window').'" onclick="window.close(); return false" />';
-							else
-								printf (_('If you want to start another session, click <a href="%s">here</a>'), SESSIONMANAGER_URL);
-						?>
-						</span>
+					<td style="text-align: center; vertical-align: middle" id="endContent">
 					</td>
 				</tr>
 			</table>

@@ -34,6 +34,9 @@ var StartApp = Class.create(Daemon, {
 
 			this.started = true;
 		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9 || (this.old_application_state == 2 && this.application_state != 2) || this.application_state == 3 || this.application_state == 4 || this.application_state == 9) {
+			if (! this.started)
+				this.error_message = this.i18n['session_close_unexpected'];
+
 			this.do_ended();
 
 			return;
@@ -178,6 +181,13 @@ var StartApp = Class.create(Daemon, {
 
 	do_ended: function() {
 		Daemon.prototype.do_ended.apply(this);
+
+		if ($('endMessage')) {
+			if (this.error_message != '')
+				$('endMessage').innerHTML = '<span class="msg_error">'+this.i18n['application_end_unexpected']+'</span>';
+			else
+				$('endMessage').innerHTML = this.i18n['application_end_ok'];
+		}
 
 		window.close();
 	}

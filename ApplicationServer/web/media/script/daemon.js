@@ -19,6 +19,8 @@
  **/
 
 var Daemon = Class.create({
+	i18n: new Array(),
+
 	applet_version: '',
 	applet_main_class: '',
 	printing_applet_version: '',
@@ -30,16 +32,20 @@ var Daemon = Class.create({
 
 	shareable: false,
 	persistent: false,
+	in_popup: true,
 
 	session_state: -1,
 	old_session_state: -1,
 	started: false,
+	stopped: false,
 	access_id: '',
 
 	application_state: -1,
 	old_application_state: -1,
 	app_id: '',
 	doc: '',
+
+	error_message: '',
 
 	applet_width: -1,
 	applet_height: -1,
@@ -129,6 +135,9 @@ var Daemon = Class.create({
 
 			this.started = true;
 		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9) {
+			if (! this.started)
+				this.error_message = this.i18n['session_close_unexpected'];
+
 			this.do_ended();
 
 			return;
@@ -354,10 +363,97 @@ var Daemon = Class.create({
 	},
 
 	do_ended: function() {
+		if (this.stopped == true)
+			return;
+
+		this.stopped = true;
+
+		$('splashContainer').innerHTML = '';
 		$('splashContainer').hide();
 		$('appletContainer').hide();
-		if ($('endContainer'))
+
+		if ($('endContainer')) {
+			$('endContent').innerHTML = '';
+
+			var buf = document.createElement('span');
+			buf.setAttribute('style', 'font-size: 1.1em; font-weight: bold; color: #686868;');
+
+			var end_message = document.createElement('span');
+			end_message.setAttribute('id', 'endMessage');
+			buf.appendChild(end_message);
+
+			if (this.error_message != '') {
+				var error_container = document.createElement('div');
+				error_container.setAttribute('id', 'errorContainer');
+				error_container.setAttribute('style', 'width: 100%; margin-top: 10px; margin-left: auto; margin-right: auto; display: none; visibility: hidden;');
+				buf.appendChild(error_container);
+
+				var error_toggle_div = document.createElement('div');
+
+				var error_toggle_table = document.createElement('table');
+				error_toggle_table.setAttribute('style', 'margin-top: 10px; margin-left: auto; margin-right: auto;');
+
+				var error_toggle_tr = document.createElement('tr');
+
+				var error_toggle_img_td = document.createElement('td');
+				var error_toggle_img_link = document.createElement('a');
+				error_toggle_img_link.setAttribute('href', 'javascript:;');
+				error_toggle_img_link.setAttribute('onclick', 'toggleContent(\'errorContainer\'); return false;');
+				var error_toggle_img = document.createElement('span');
+				error_toggle_img.setAttribute('id', 'errorContainer_ajax');
+				error_toggle_img.setAttribute('style', 'width: 16px; height: 16px;');
+				error_toggle_img.innerHTML = '<img src="../media/image/show.png" width="16" height="16" alt="+" title="" />';
+				error_toggle_img_link.appendChild(error_toggle_img);
+				error_toggle_img_td.appendChild(error_toggle_img_link);
+				error_toggle_tr.appendChild(error_toggle_img_td);
+
+				var error_toggle_text_td = document.createElement('td');
+				var error_toggle_text_link = document.createElement('a');
+				error_toggle_text_link.setAttribute('href', 'javascript:;');
+				error_toggle_text_link.setAttribute('onclick', 'toggleContent(\'errorContainer\'); return false;');
+				var error_toggle_text = document.createElement('span');
+				error_toggle_text.setAttribute('style', 'height: 16px;');
+				error_toggle_text.innerHTML = this.i18n['error_details'];
+				error_toggle_text_link.appendChild(error_toggle_text);
+				error_toggle_text_td.appendChild(error_toggle_text_link);
+				error_toggle_tr.appendChild(error_toggle_text_td);
+
+				error_toggle_table.appendChild(error_toggle_tr);
+				error_toggle_div.appendChild(error_toggle_table);
+
+				var error_content = document.createElement('div');
+				error_content.setAttribute('id', 'errorContainer_content');
+				error_content.setAttribute('style', 'display: none;');
+				error_content.innerHTML = this.error_message;
+				error_toggle_div.appendChild(error_content);
+
+				buf.appendChild(error_toggle_div);
+			}
+
+			var close_container = document.createElement('div');
+			close_container.setAttribute('style', 'margin-top: 10px;');
+			if (this.in_popup == true) {
+				var close_button = document.createElement('input');
+				close_button.setAttribute('type', 'button');
+				close_button.setAttribute('value', this.i18n['close_this_window']);
+				close_button.setAttribute('onclick', 'window.close(); return false;');
+				close_container.appendChild(close_button);
+			} else {
+				var close_text = document.createElement('span');
+				close_text.innerHTML = this.i18n['start_another_session'];
+				close_container.appendChild(close_text);
+			}
+			buf.appendChild(close_container);
+
+			$('endContent').appendChild(buf);
+
+			$('endContent').innerHTML = $('endContent').innerHTML;
+
+			if (this.error_message != '')
+				offContent('errorContainer');
+
 			$('endContainer').show();
+		}
 	},
 
 	do_print: function(path_, timestamp_) {
@@ -393,6 +489,29 @@ function switchDebug(level_) {
 
 	if (flag)
 		$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+}
+
+function offContent(container) {
+	$(container+'_ajax').innerHTML = '<img src="../media/image/show.png" width="16" height="16" alt="+" title="" />';
+	$(container+'_content').hide();
+
+	return true;
+}
+
+function onContent(container) {
+	$(container+'_ajax').innerHTML = '<img src="../media/image/hide.png" width="16" height="16" alt="-" title="" />';
+	$(container+'_content').show();
+
+	return true;
+}
+
+function toggleContent(container) {
+	if ($(container+'_content').visible())
+		offContent(container);
+	else
+		onContent(container);
+
+	return true;
 }
 
 function doInvite(mode_) {

@@ -146,6 +146,15 @@ div#copyrightWrap {
 	display: block;
 }
 
+.msg_ok {
+	color: #05a305;
+	font-weight: bold;
+}
+.msg_error {
+	color: #a30505;
+	font-weight: bold;
+}
+
 #debugContainer.no_debug .debug {
 	display: none;
 }
@@ -160,6 +169,21 @@ div#copyrightWrap {
 
 #debugContainer.no_error .error {
 	display: none;
+}
+
+#errorContainer {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+#errorContainer_content {
+	margin-top: 5px;
+	background: #ffcccc;
+	border: 1px solid #cc0000;
+	color: #a30505;
+	padding: 5px;
+	width: 100%;
+	text-align: left;
 }
 
 .centered {
