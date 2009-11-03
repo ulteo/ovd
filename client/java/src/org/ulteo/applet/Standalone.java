@@ -64,6 +64,7 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 	protected boolean stopped = false;
 
 	private String startupStatusReport = null;
+	private JSDialog dialog = null;
 
 	public boolean checkSecurity() {
 		try {
@@ -80,10 +81,17 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 	public void init() {
 		System.out.println(this.getClass().toString() +" init");
 
+		this.dialog = new JSDialog(this);
+		if (! this.dialog.init()) { 
+			System.err.println("OvdTester: Unable to continue");
+			this.continue2run = false;
+			return;
+		}
+	
 		boolean status = this.checkSecurity();
-		//	this.applet_startup_info(status);
 		if (! status) {
 			System.err.println(this.getClass().toString() +" init: Not enought privileges, unable to continue");
+			this.dialog.talk(JSDialog.ERROR_SECURITY);
 			this.continue2run = false;
 			this.stop();
 			return;
@@ -91,14 +99,15 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 
 		Runtime rt = Runtime.getRuntime();
 		if(rt.totalMemory() == rt.maxMemory() && rt.freeMemory() < 11000000){
-			System.err.println("Not enough memory to start the applet");
-			// Call JS method
+			this.dialog.talk(JSDialog.ERROR_MEMORY);
+			this.continue2run = false;
 			this.stop();
 			return;
 		}
 
 		if (! this.readParameters()) {
 			// Call JS method
+			this.dialog.talk(JSDialog.ERROR_USAGE);
 			this.continue2run = false;
 			this.stop();
 			return;
@@ -132,6 +141,7 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 
 
 		if (! this.ssh.connect()) {
+			this.dialog.talk(JSDialog.ERROR_SSH);
 			this.continue2run = false;
 			this.stop();
 			return;
@@ -140,6 +150,7 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 
 		ForwardingIOChannel tunnel = this.ssh.createTunnel(this.vncPort);
 		if (tunnel == null) {
+			this.dialog.talk(JSDialog.ERROR_SSH);
 			System.err.println("Unable to create tunnel");
 			this.stop();
 			return;
@@ -148,16 +159,19 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 		this.vnc.setInOut(tunnel.getInputStream(), tunnel.getOutputStream());
 	
 		if (! this.vnc.connect()) {
+			this.dialog.talk(JSDialog.ERROR_VNC);
 			this.stop();
 			return;
 		}
 
 		if (! this.vnc.authenticate()) {
+			this.dialog.talk(JSDialog.ERROR_VNC);
 			this.stop();
 			return;
 		}
 
 		if (! vnc.init()) {
+			this.dialog.talk(JSDialog.ERROR_VNC);
 			this.stop();
 			return;
 		}
@@ -197,7 +211,7 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 		this.vncPassword = null;
 	}
 	// end extends Applet
-
+	
 
 	public String getParameterNonEmpty(String key) throws Exception {
 		String buffer = super.getParameter(key);

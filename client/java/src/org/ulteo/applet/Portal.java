@@ -42,11 +42,20 @@ public class Portal extends java.applet.Applet {
 	protected boolean stopped = false;
 
 	private String startupStatusReport = null;
+	private JSDialog dialog = null;
 
 
 	// Begin extends Applet
 	public void init() {
 		System.out.println(this.getClass().toString() +"  init");
+
+		this.dialog = new JSDialog(this);
+		if (! this.dialog.init()) { 
+			System.err.println("OvdTester: Unable to continue");
+			this.continue2run = false;
+			return;
+		}
+
 /*
 		this.startupStatusReport = this.getParameter("onInit");
 		if (this.startupStatusReport == null || this.startupStatusReport.equals("")) {
@@ -62,6 +71,7 @@ public class Portal extends java.applet.Applet {
 //		this.applet_startup_info(status);
 		if (! status) {
 			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
+			this.dialog.talk(JSDialog.ERROR_SECURITY);
 			this.continue2run = false;
 			this.stop();
 			return;
@@ -69,7 +79,7 @@ public class Portal extends java.applet.Applet {
 
 
 		if (! readParameters()) {
-			// Call JS method
+			this.dialog.talk(JSDialog.ERROR_USAGE);
 			this.continue2run = false;
 			this.stop();
 			return;
@@ -91,6 +101,7 @@ public class Portal extends java.applet.Applet {
 		System.out.println(this.getClass().toString() +"  start");
 
 		if (! this.ssh.connect()) {
+			this.dialog.talk(JSDialog.ERROR_SSH);
 			this.continue2run = false;
 			this.stop();
 			return;
