@@ -48,7 +48,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new SharedApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new SharedApp('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = '<?php echo $_SESSION['tokens'][$_GET['token']]['access_id']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';

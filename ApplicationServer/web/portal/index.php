@@ -59,7 +59,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new Portal('ulteo-applet.jar', 'org.ulteo.OvdSshConnection', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new Portal('ulteo-applet.jar', 'org.ulteo.applet.Portal', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = 'portal';
 				daemon.shareable = <?php echo (isset($_SESSION['parameters']['shareable']))?'true':'false'; ?>;
 				daemon.persistent = <?php echo (isset($_SESSION['parameters']['persistent']))?'true':'false'; ?>;

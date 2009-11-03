@@ -74,7 +74,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.OvdApplet', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
 				daemon.doc = '<?php echo $doc; ?>';
 

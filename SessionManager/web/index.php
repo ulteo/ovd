@@ -623,9 +623,9 @@ require_once('header.php');
 <?php
 if ($testapplet) {
 	$applet_version = 'ulteo-applet.jar';
-	$applet_main_class = 'org.ulteo.OvdTester';
+	$applet_main_class = 'org.ulteo.applet.OvdTester';
 ?>
-	<applet id="CheckJava" code="org.ulteo.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="mayscript" width="1" height="1">
+	<applet id="CheckJava" code="org.ulteo.applet.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="mayscript" width="1" height="1">
 	</applet>
 
 	<applet id="UlteoApplet" name="ulteoapplet" code="<?php echo $applet_main_class; ?>" codebase="applet/" archive="<?php echo $applet_version; ?>" cache_archive="<?php echo $applet_version; ?>" cache_archive_ex="<?php echo $applet_version; ?>" mayscript="true" width="1" height="1">
