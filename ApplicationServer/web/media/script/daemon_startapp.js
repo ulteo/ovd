@@ -168,15 +168,6 @@ var StartApp = Class.create(Daemon, {
 			this.push_log('[application] Status: '+this.application_state, 'warning');
 		else
 			this.push_log('[application] Status: '+this.application_state, 'debug');
-
-		var printNode = sessionNode.getElementsByTagName('print');
-		if (printNode.length > 0) {
-			printNode = printNode[0];
-
-			var path = printNode.getAttribute('path');
-			var timestamp = printNode.getAttribute('time');
-			this.do_print(path, timestamp);
-		}
 	},
 
 	do_ended: function() {
