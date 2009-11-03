@@ -135,7 +135,6 @@ if ($_SESSION['type'] == 'invite') {
 	@mkdir($buf);
 	@file_put_contents($buf.'/email', $_SESSION['parameters']['invite_email']);
 	@file_put_contents($buf.'/mode', ($_SESSION['parameters']['view_only'] == 'No')?'active':'passive');
-	@file_put_contents($buf.'/access_id', $_SESSION['parameters']['access_id']);
 
 	$buf_access_id = @file_get_contents($buf.'/access_id');
 
