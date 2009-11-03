@@ -189,6 +189,7 @@ var StartApp = Class.create(Daemon, {
 				$('endMessage').innerHTML = this.i18n['application_end_ok'];
 		}
 
-		window.close();
+		if (this.error_message == '')
+			window.close();
 	}
 });
