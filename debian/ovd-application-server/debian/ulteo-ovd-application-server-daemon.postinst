@@ -4,6 +4,9 @@ INSTALLDIR=/usr/share/ulteo-ovd
 CONFIGFILE=/etc/ulteo-ovd.conf
 
 if [ "$1" = "configure" ]; then
+    # make sure that soffice is executable
+    chmod 755 /usr/lib/openoffice/program/soffice
+
     if ! dpkg-statoverride --list $INSTALLDIR >/dev/null 2>&1; then
         dpkg-statoverride --update --add root root 0750 $INSTALLDIR
     fi
