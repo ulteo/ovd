@@ -136,7 +136,7 @@ if ($sessions > 0) {
 
 				$server = Abstract_Server::load($session->server);
 
-				redirect('http://'.$server->getAttribute('external_name').'/index.php?token='.$token->id);
+				redirect($buf->getBaseURL(true).'/index.php?token='.$token->id);
 			}
 		} else
 			die_error(_('You already have a session, please contact your administrator'),__FILE__,__LINE__);
