@@ -122,7 +122,8 @@ if ($sessions > 0) {
 				$invite->session = $session->id;
 				$invite->settings = array(
 					'invite_email'	=>	$user->getAttribute('displayname'),
-					'view_only'		=>	0
+					'view_only'		=>	0,
+					'access_id'		=>	'desktop'
 				);
 				$invite->email = 'none';
 				$invite->valid_until = (time()+(60*30));
