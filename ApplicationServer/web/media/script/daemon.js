@@ -95,10 +95,12 @@ var Daemon = Class.create({
 
 	preload: function() {
 		if ($('printerContainer')) {
-			$('printerContainer').show();
-			$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
-				<param name="do_nothing" value="1"> \
-			</applet>';
+			setTimeout(function() {
+				$('printerContainer').show();
+				$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
+					<param name="do_nothing" value="1"> \
+				</applet>';
+			}, 2000);
 		}
 	},
 
