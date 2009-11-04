@@ -88,19 +88,17 @@ var Daemon = Class.create({
 		if (this.debug)
 			this.my_height = parseInt(this.my_height)-149;
 
-		this.preload();
+		setTimeout(this.preload.bind(this), 2000);
 
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
 
 	preload: function() {
 		if ($('printerContainer')) {
-			setTimeout(function() {
-				$('printerContainer').show();
-				$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
-					<param name="do_nothing" value="1"> \
-				</applet>';
-			}, 2000);
+			$('printerContainer').show();
+			$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
+				<param name="do_nothing" value="1"> \
+			</applet>';
 		}
 	},
 
