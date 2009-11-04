@@ -99,6 +99,26 @@ def getFinalCommand(cmd_, args_):
 
     return cmd
 
+
+# Hack for OOo instance on mutliple display
+class Hack:    
+    def __init__(self):
+        self.appmode = (os.environ.has_key("NODESKTOP") and os.environ["NODESKTOP"] == "1")
+        self.oooHack = False
+
+    def changeCmdLine(self, cmd_line):
+        if self.appmode and cmd_line.startswith("ooffice"):
+            self.oooHack = True
+            self.oooDir = ".ooo_%d"%(os.getpid())
+
+            cmd_line+="-env:UserInstallation=%s"%(self.oooDir)
+
+        return cmd_line
+
+    def onExit(self):
+        if self.oooHack:
+            os.system("rm -rf %s"%(self.oooDir))
+
 #
 # the subprocess.list2cmdline function doesn't
 # take care about the "(" or ")" characters ...
@@ -124,13 +144,17 @@ MYPID = os.getpid()
 # notify application start
 append_to_file(MYPID, sys.argv[1])
 
+hack = Hack()
+
 # run the appli
 extra_args = sys.argv[3:]
 if len(extra_args)==0 and os.environ.has_key("DOC"):
     extra_args = [os.environ["DOC"]]
 
 cmd_line = getFinalCommand(cmd, extra_args)
+cmd_line = hack.changeCmdLine(cmd_line)
 os.system(cmd_line)
+hack.onExit()
 
 # notify end
 del_from_file(MYPID)
