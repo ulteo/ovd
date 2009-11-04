@@ -7,7 +7,7 @@ Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: i386
 BuildRequires: ovd-applets, libstdc++-devel, gcc-c++
-Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, ovd-applets
+Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, php-pecl-imagick, ovd-applets
 
 %description
 Ulteo OVD Application Server manages the sessions.
