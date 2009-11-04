@@ -2,6 +2,7 @@ web/footer.php
 web/check.php
 web/ajax/login.php
 web/webservices/userlist.php
+web/webservices/get_logo.php
 web/webservices/server_monitoring.php
 web/webservices/get_news.php
 web/webservices/session_token.php
@@ -89,6 +90,8 @@ web/admin/sessions.php
 web/admin/reporting.php
 web/admin/news.php
 web/admin/tasks.php
+web/admin/password.php
+web/admin/ajax/installable_applications.php
 web/admin/configuration-partial.php
 web/admin/media/image/cache.php
 web/admin/servers.php
