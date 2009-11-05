@@ -117,6 +117,7 @@ class Application {
 
 		if (!is_array($servers) || count($servers) == 0) {
 			$this->delIcon();
+			Logger::error('main', 'Application::getIcon (id='.$this->getAttribute('id').') No server avalaible');
 			return false;
 		}
 
@@ -126,11 +127,14 @@ class Application {
 
 		if ($buf == false || $buf == '') {
 			$this->delIcon();
+			Logger::error('main', 'Application::getIcon (id='.$this->getAttribute('id').') Server::getApplicationIcon failed');
 			return false;
 		}
 		
-		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application'))
+		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application')) {
+			Logger::error('main', 'Application::getIcon (id='.$this->getAttribute('id').') check_folder failed');
 			return false;
+		}
 
 		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf);
 
