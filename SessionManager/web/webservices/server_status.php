@@ -78,15 +78,15 @@ if (! $buf) {
 		Logger::error('main', '(webservices/server_status) Server not OK : '.$_GET['fqdn']);
 		die('Server not OK');
 	}
-	
-	try {
-		$buf->updateApplications();
-	}
-	catch (Exception $e) {
-		Logger::warning('main', '(webservices/server_status) updateApplications error for '.$_GET['fqdn']);
-	}
 }
 
 $buf->setStatus($_GET['status']);
 
 Abstract_Server::save($buf);
+
+try {
+	$buf->updateApplications();
+}
+catch (Exception $e) {
+	Logger::warning('main', '(webservices/server_status) updateApplications error for '.$_GET['fqdn']);
+}

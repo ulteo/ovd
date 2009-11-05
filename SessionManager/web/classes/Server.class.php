@@ -789,6 +789,9 @@ class Server {
 							Logger::error('main', 'Server::updateApplications failed to save application');
 							return $ret;
 						}
+						if (! file_exists($a->getIconPath())) {
+							$a->getIcon();
+						}
 					}
 					$current_liaison_key[] = $a->getAttribute('id');
 				}
