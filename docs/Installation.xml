@@ -77,11 +77,7 @@
     <itemizedlist>
       <listitem>
 	<para>To enable the root account:
-	  <screen>
-	    <![CDATA[
-$ sudo passwd
-$ su]]>
-	  </screen>
+	  <screen><![CDATA[$ sudo passwd]]></screen>
 	</para>
       </listitem>
     </itemizedlist>
