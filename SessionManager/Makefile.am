@@ -1,16 +1,17 @@
 SUBDIRS = web po config scripts extra examples
 
-noinst_DATA = ovd-session-manager.spec
-ovd-session-manager.spec:
+noinst_DATA = ovd-session-manager.rhel.spec ovd-session-manager.suse.spec
+
+%.spec:
 	sed -e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
-		< $(srcdir)/ovd-session-manager.spec.in > $@
+		< $(srcdir)/$@.in > $@
 
 clean-local:
-	rm -f ovd-session-manager.spec
+	rm -f $(noinst_DATA)
 
-EXTRA_DIST = ovd-session-manager.spec.in
+EXTRA_DIST = ovd-session-manager.rhel.spec.in ovd-session-manager.suse.spec.in
 
-.PHONY: ovd-session-manager.spec
+#.PHONY: $(noinst_DATA)
 
 # maintainer rules
 update-potfiles-in:

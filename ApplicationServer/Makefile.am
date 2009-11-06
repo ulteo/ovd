@@ -10,17 +10,18 @@ SUBDIRS = $(daemon_dir) $(web_dir) examples
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-daemon
 
-noinst_DATA = ovd-application-server.spec
-ovd-application-server.spec:
+noinst_DATA = ovd-application-server.rhel.spec ovd-application-server.suse.spec
+
+%.spec:
 	sed -e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
-		< $(srcdir)/ovd-application-server.spec.in > $@
+		< $(srcdir)/$@.in > $@
 
 clean-local:
-	rm -f ovd-application-server.spec
+	rm -f $(noinst_DATA)
 
-EXTRA_DIST = ovd-application-server.spec.in
+EXTRA_DIST = ovd-application-server.rhel.spec.in ovd-application-server.suse.spec.in
 
-.PHONY: ovd-application-server.spec
+#.PHONY: ovd-application-server.spec
 
 # maintainer rules
 update-potfiles-in:
