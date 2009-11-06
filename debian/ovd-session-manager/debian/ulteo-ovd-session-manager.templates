@@ -28,11 +28,6 @@ _Description: Applications chroot URL:
  .
  Leave this field empty if you don't want to download the archive now.
 
-Template: ulteo-ovd-session-manager/oem
-Type: boolean
-Default: false
-_Description: Are we on the install CD?
-
 Template: ulteo-ovd-session-manager/mysql_setup
 Type: boolean
 Default: true
