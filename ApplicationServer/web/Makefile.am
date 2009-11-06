@@ -2,7 +2,7 @@ if PORTAL
 portal_dir = portal
 endif
 
-SUBDIRS = applet classes includes media webservices desktop share $(portal_dir)
+SUBDIRS = applet classes includes media webservices error desktop share $(portal_dir)
 
 scripts_DATA = access.php \
                apps.php \

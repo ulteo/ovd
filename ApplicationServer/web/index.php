@@ -47,12 +47,16 @@ $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVE
 $dom = new DomDocument('1.0', 'utf-8');
 @$dom->loadXML($xml);
 
-if (! $dom->hasChildNodes())
-	die('Invalid XML');
+if (! $dom->hasChildNodes()) {
+	Logger::error('main', '(index) Invalid XML (token: '.$token.')');
+	redirect('error/');
+}
 
 $session_node = $dom->getElementsByTagname('session')->item(0);
-if (is_null($session_node))
-	die('Missing element \'session\'');
+if (is_null($session_node)) {
+	Logger::error('main', '(index) Missing element \'session\' (token: '.$token.')');
+	redirect('error/');
+}
 
 if ($session_node->hasAttribute('id'))
 	$_SESSION['session'] = $session_node->getAttribute('id');
@@ -74,9 +78,12 @@ foreach ($session_node->childNodes as $node) {
 
 $settings = array('client', 'user_login', 'user_displayname', 'locale', 'quality'); //user_id
 
-foreach ($settings as $setting)
-	if (!isset($parameters[$setting]))
-		die('Missing parameter \''.$setting.'\'');
+foreach ($settings as $setting) {
+	if (!isset($parameters[$setting])) {
+		Logger::error('main', '(index) Missing parameter \''.$setting.'\' (token: '.$token.')');
+		redirect('error/');
+	}
+}
 
 $_SESSION['parameters'] = $parameters;
 $_SESSION['parameters']['session_mode'] = $_SESSION['mode'];
@@ -88,8 +95,10 @@ if ($_SESSION['owner'])
 	$_SESSION['parameters']['view_only'] = 'No';
 
 $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
-if (is_null($module_fs_node))
-	die('Missing element \'module_fs\'');
+if (is_null($module_fs_node)) {
+	Logger::error('main', '(index) Missing element \'module_fs\' (token: '.$token.')');
+	redirect('error/');
+}
 
 $_SESSION['parameters']['module_fs'] = array();
 $_SESSION['parameters']['module_fs']['type'] = $module_fs_node->getAttribute('type');
@@ -100,8 +109,10 @@ foreach ($param_nodes as $param_node)
 		$_SESSION['parameters']['module_fs'][$param_node->getAttribute('key')] = $param_node->getAttribute('value');
 
 $menu_node = $session_node->getElementsByTagname('menu')->item(0);
-if (is_null($menu_node))
-	die('Missing element \'menu\'');
+if (is_null($menu_node)) {
+	Logger::error('main', '(index) Missing element \'menu\' (token: '.$token.')');
+	redirect('error/');
+}
 
 $application_nodes = $menu_node->getElementsByTagname('application');
 $_SESSION['parameters']['applications'] = array();
