@@ -350,7 +350,7 @@ class OVD(win32serviceutil.ServiceFramework):
 			load = 0.0
 			for cpu_wmi in cpus:
 				load += cpu_wmi.LoadPercentage
-				load = load / float(len(cpus)*100)
+			load = load / float(len(cpus)*100)
 			self.monitoring_cpu_load = load
 	
 	def xmlMonitoring(self):
