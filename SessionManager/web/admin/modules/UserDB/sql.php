@@ -90,7 +90,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			$query = 'UPDATE `'.$this->table.'` SET ';
 			foreach ($attributes as $key){
 				if ($key == 'password')
-					$value = crypt($user_->getAttribute($key), $user_->getAttribute('login'));
+					$value = crypt($user_->getAttribute($key), md5($user_->getAttribute('login')));
 				else
 					$value = $user_->getAttribute($key);
 
