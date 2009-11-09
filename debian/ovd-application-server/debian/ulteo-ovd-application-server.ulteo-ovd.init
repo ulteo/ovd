@@ -37,6 +37,7 @@ case $1 in
     restart|reload|force-reload)
         log_daemon_msg "Re-starting Ulteo OVD daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
+        sleep 2
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
         log_end_msg 0
         ;;
