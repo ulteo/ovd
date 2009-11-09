@@ -39,7 +39,8 @@ import threading
 import time
 import win32service
 import win32serviceutil
-import wmi
+import win32com.client
+from string import atoi
 import utils
 import mime
 from ctypes import *
@@ -188,6 +189,9 @@ class OVD(win32serviceutil.ServiceFramework):
 		
 		self.init_log()
 		self.log.info("init")
+		pythoncom.CoInitialize()
+		self.objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
+		self.objSWbemServices = self.objWMIService.ConnectServer(".")
 		self.smr = sessionmanager.SessionManagerRequest(self.conf, self.log)
 		self.broken = False
 		self.isAlive = True
@@ -202,15 +206,17 @@ class OVD(win32serviceutil.ServiceFramework):
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
-		pythoncom.CoInitialize()
-		self.wmi = wmi.WMI()
 		self.updateMonitoring()
-		cpus = self.wmi.Win32_Processor()
-		if type(cpus) == type([]): # list
+		cpus = self.get_cpus()
+		try:
 			self.monitoring_cpu_name = cpus[0].Name
 			self.monitoring_cpu_number = len(cpus)
+		except Exception, err:
+			self.monitoring_cpu_name = 'Unknown'
+			self.monitoring_cpu_number = 0
 		try:
-			self.version_os = self.wmi.Win32_OperatingSystem ()[0].Name.split('|')[0].encode('ascii','ignore')
+			windows_server = self.objSWbemServices.ExecQuery("Select Caption from Win32_OperatingSystem")
+			self.version_os = windows_server[0].Caption
 		except Exception, err:
 			self.version_os = platform.version()
 		
@@ -344,14 +350,15 @@ class OVD(win32serviceutil.ServiceFramework):
 		return doc.toxml(output_encoding)
 	
 	def updateMonitoring(self):
-		pythoncom.CoInitialize()
-		cpus = wmi.WMI().Win32_Processor()
-		if type(cpus) == type([]): # list
+		cpus = self.get_cpus()
+		try:
 			load = 0.0
 			for cpu_wmi in cpus:
-				load += cpu_wmi.LoadPercentage
+				load += atoi(cpu_wmi.PercentProcessorTime)
 			load = load / float(len(cpus)*100)
 			self.monitoring_cpu_load = load
+		except Exception, err:
+			pass
 	
 	def xmlMonitoring(self):
 		self.log.debug("OVD::xmlMonitoring")
@@ -375,4 +382,6 @@ class OVD(win32serviceutil.ServiceFramework):
 		monitoring.appendChild(ram)
 		
 		return doc
-
+	
+	def get_cpus(self):
+		return self.objSWbemServices.ExecQuery("Select * from Win32_Processor")
