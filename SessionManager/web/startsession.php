@@ -116,7 +116,7 @@ if ($sessions > 0) {
 			$buf = $buf['action_when_active_session'];
 
 			if ($buf == 0)
-				die_error(_('You already have an active session'),__FILE__,__LINE__);
+				die_error(_('You already have an active session'), __FILE__, __LINE__, true);
 			elseif ($buf == 1) {
 				$invite = new Invite(gen_string(5));
 				$invite->session = $session->id;
@@ -140,7 +140,7 @@ if ($sessions > 0) {
 				redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
 			}
 		} else
-			die_error(_('You already have a session, please contact your administrator'),__FILE__,__LINE__);
+			die_error(_('You already have a session, please contact your administrator'), __FILE__, __LINE__, true);
 	}
 }
 
