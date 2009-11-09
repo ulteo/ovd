@@ -267,8 +267,14 @@ Action = Class.create({
 				for(var j=0; j<node.childNodes.length;j++){
 					if(node.childNodes[j].nodeName == "context"){
 						this.attributesToObject(this.context, node.childNodes[j]);
-						if (this.context["ulteoMimes"].length > 0)
-							this.isUlteoApplication = true;
+
+						try {
+							var tmp = node.childNodes[j].getAttribute("ulteoMimes");
+							if (tmp!=null) {
+								this.isUlteoApplication = true;
+							}
+						}
+						catch(e) {}
 					}
 					else if(node.childNodes[j].nodeName == "selectionContext"){
 						this.attributesToObject(this.selectionContext, node.childNodes[j]);
