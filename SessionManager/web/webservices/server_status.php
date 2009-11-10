@@ -34,9 +34,9 @@ if (! isset($_GET['fqdn'])) {
 
 Logger::debug('main', '(webservices/server_status) Security check OK');
 
-$buf = Abstract_Server::load($_GET['fqdn']);
+$exists = Abstract_Server::exists($_GET['fqdn']);
 
-if (! $buf) {
+if (! $exists) {
 	$buf = new Server($_GET['fqdn']);
 
 	$buf->registered = false;
@@ -78,7 +78,8 @@ if (! $buf) {
 		Logger::error('main', '(webservices/server_status) Server not OK : '.$_GET['fqdn']);
 		die('Server not OK');
 	}
-}
+} else
+	$buf = Abstract_Server::load($_GET['fqdn']);
 
 $buf->setStatus($_GET['status']);
 

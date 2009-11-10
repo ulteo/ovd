@@ -58,6 +58,20 @@ class Abstract_Server {
 		return true;
 	}
 
+	public static function exists($fqdn_) {
+		Logger::debug('main', 'Starting Abstract_Server::exists for \''.$fqdn_.'\'');
+
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn_);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
+			return false;
+
+		return true;
+	}
+
 	public static function load($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::load for \''.$fqdn_.'\'');
 
@@ -106,8 +120,8 @@ class Abstract_Server {
 
 		$fqdn = $server_->fqdn;
 
-		if (! Abstract_Server::load($fqdn)) {
-			Logger::info('main', "Abstract_Server::save($server_) unable to load server, we must create it");
+		if (! Abstract_Server::exists($fqdn)) {
+			Logger::info('main', "Abstract_Server::save($server_) server does NOT exists, we must create it");
 
 			if (! Abstract_Server::create($server_)) {
 				Logger::error('main', "Abstract_Server::save($server_) create failed");
