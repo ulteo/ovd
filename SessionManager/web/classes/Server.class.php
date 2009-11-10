@@ -328,20 +328,20 @@ class Server {
 		switch ($status_) {
 			case 'ready':
 				if ($this->getAttribute('status') != 'ready') {
-					Logger::info('main', 'Status set to "ready" for \''.$this->fqdn.'\'');
+					Logger::info('main', 'Status set to "ready" for server \''.$this->fqdn.'\'');
 					$this->setAttribute('status', 'ready');
 				}
 				break;
 			case 'down':
 				if ($this->getAttribute('status') != 'down') {
-					Logger::warning('main', 'Status set to "down" for \''.$this->fqdn.'\'');
+					Logger::warning('main', 'Status set to "down" for server \''.$this->fqdn.'\'');
 					$this->setAttribute('status', 'down');
 				}
 				break;
 			case 'broken':
 			default:
 				if ($this->getAttribute('status') != 'broken') {
-					Logger::error('main', 'Status set to "broken" for \''.$this->fqdn.'\'');
+					Logger::error('main', 'Status set to "broken" for server \''.$this->fqdn.'\'');
 					$this->setAttribute('status', 'broken');
 				}
 				break;
