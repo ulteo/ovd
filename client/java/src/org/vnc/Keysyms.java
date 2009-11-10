@@ -33,7 +33,7 @@ public class Keysyms {
   public static final int Pause = 0xFF13;
 //  public static final int Scroll_Lock = 0xFF14;
 //  public static final int Sys_Req = 0xFF15;
-//  public static final int Escape = 0xFF1B;
+  public static final int Escape = 0xFF1B;
   public static final int Delete = 0xFFFF;
 
   public static final int Home = 0xFF50;

@@ -1345,6 +1345,7 @@ public final static int
 		    boolean down = (evt.getID() == KeyEvent.KEY_PRESSED);
 		    boolean typed = (evt.getID() == KeyEvent.KEY_TYPED);
 //		    System.out.println("WriteKeyEvent: keyCode: "+keyCode+" and keyChar: "+keyChar+"\n");
+			int translatedKeysym = translateActionKey(keyCode);
 
 		    if(OSName.equals("windows")){
 
@@ -1372,9 +1373,8 @@ public final static int
 		    			keysym = keyChar + 0x60;
 		    		}
 
-		    	} else if (evt.isActionKey()) {
-		    		keysym = translateActionKey(keyCode);
-		    		if(keysym < 0) return;
+		    	} else if (translatedKeysym>=0) {
+		    		keysym = translatedKeysym;
 		    	} else if (keyCode == 127) {
 		    		keysym = Keysyms.Delete;
 		    	} else if (keyCode == 8) {
@@ -1416,9 +1416,8 @@ public final static int
 		    			keysym = keyChar + 0x60;
 				        if (keysym == 104) keysym = Keysyms.BackSpace;
 		    		}
-		    	} else if (evt.isActionKey()) {
-		    		keysym = translateActionKey(keyCode);
-		    		if(keysym < 0) return;
+		    	} else if (translatedKeysym>=0) {
+		    		keysym = translatedKeysym;
 		    	} else if (keyCode == 127) {
 		    		keysym = Keysyms.Delete;
 		    	} else if (keyCode == 8) {
@@ -1449,9 +1448,9 @@ public final static int
 				        if (keysym == 104) keysym = Keysyms.BackSpace;
 		    		}
 
-		    	} else if (evt.isActionKey()) {
-		    		keysym = translateActionKey(keyCode);
-		    		if(keysym < 0) return;
+
+		    	} else if (translatedKeysym>=0) {
+		    		keysym = translatedKeysym;
 		    	} else if (keyCode == 127) {
 		    		keysym = Keysyms.Delete;
 		    	} else if (keyCode == 10) {
@@ -1520,6 +1519,7 @@ public final static int
 	     case KeyEvent.VK_PRINTSCREEN:  return Keysyms.Print;
 	     case KeyEvent.VK_PAUSE:        return Keysyms.Pause;
 	     case KeyEvent.VK_INSERT:       return Keysyms.Insert;
+	     case KeyEvent.VK_ESCAPE:		return Keysyms.Escape;
 	     default: return -1;
 	     }
 	 }
