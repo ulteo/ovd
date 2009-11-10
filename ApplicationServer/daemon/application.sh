@@ -35,12 +35,10 @@ file=$SESSID_DIR/sessions/$job.txt
 dir=$SESSID_DIR/sessions/$job
 log_INFO "Session $SESSID detect job $job"
 
-install -d -g www-data -m 770 $dir
-application_switch_status $SESSID $job 1
-
 nb_line=$(wc -l $file | cut -d' ' -f1)
 if [ $nb_line -lt 2 ] || [ $nb_line -gt 3 ]; then
     log_WARN "Unable to perform job: missing arguments ($nb_line lines)"
+    rm $file
     exit 1
 fi
 
@@ -49,10 +47,13 @@ geometry=$(head -n 2 $file |tail -n 1)
 if [ -z "$app_id" ] || [ -z "$geometry" ] || \
     [ "$app_id" = "desktop" ]; then
     log_WARN "Unable to perform job: missing arguments"
+    rm $file
     exit 1
 fi
 [ $nb_line -eq 3 ] && doc=$(head -n 3 $file |tail -n 1)
 
+install -d -g www-data -m 770 $dir
+application_switch_status $SESSID $job 1
 echo $app_id > $dir/app_id
 [ -n "$doc" ] && echo "$doc" > $dir/doc
 echo $geometry > $dir/geometry
