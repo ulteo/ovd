@@ -37,16 +37,21 @@ log_INFO "Session $SESSID detect job $job"
 
 nb_line=$(wc -l $file | cut -d' ' -f1)
 if [ $nb_line -lt 2 ] || [ $nb_line -gt 3 ]; then
-    log_WARN "Unable to perform job: missing arguments ($nb_line lines)"
+    log_WARN "Unable to perform job ($job): missing arguments ($nb_line lines)"
     rm $file
     exit 1
 fi
 
 app_id=$(head -n 1 $file)
+if [ -z "$app_id" ] || ! menu_has_application $SPOOL_USERS/$SESSID/xdg $app_id; then
+    log_WARN "Unable to perform job ($job): unknown application '$app_id'"
+    rm $file
+    exit 1
+fi
+
 geometry=$(head -n 2 $file |tail -n 1)
-if [ -z "$app_id" ] || [ -z "$geometry" ] || \
-    [ "$app_id" = "desktop" ]; then
-    log_WARN "Unable to perform job: missing arguments"
+if [ -z "$geometry" ]; then
+    log_WARN "Unable to perform job ($job): missing geometry"
     rm $file
     exit 1
 fi

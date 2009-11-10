@@ -90,3 +90,11 @@ menu_virtual_put() {
 
     menu_put $id $vapp_repo/$id.desktop $menu_dir
 }
+
+menu_has_application() {
+    local menu_dir=$1
+    local app_id=$2
+
+    test -f $menu_dir/applications/$app_id.desktop
+}
+
