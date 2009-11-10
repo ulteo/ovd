@@ -40,7 +40,7 @@ function getApplicationStatus($session, $application_id) {
     return -1;
 
   if (! is_readable(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status'))
-    return false;
+    return -1;
 
   $status = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$application_id.'/status');
   if ($status === false)
