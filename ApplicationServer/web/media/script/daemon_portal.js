@@ -162,6 +162,8 @@ var Portal = Class.create(Daemon, {
 	},
 
 	start: function() {
+		this.access_id = 'portal';
+
 		Daemon.prototype.start.apply(this);
 
 		this.display_news();

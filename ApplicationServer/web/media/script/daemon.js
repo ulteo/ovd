@@ -214,8 +214,6 @@ var Daemon = Class.create({
 	},
 
 	start: function() {
-		this.access_id = 'desktop';
-
 		this.do_started();
 	},
 
@@ -273,23 +271,25 @@ var Daemon = Class.create({
 					applet_ssh_ports = applet_ssh_ports+',';
 			}
 
-			buffer = sessionNode.getElementsByTagName('vnc');
-			var vncNode = buffer[0];
-			applet_vnc_port = vncNode.getAttribute('port');
-			applet_vnc_passwd = vncNode.getAttribute('passwd');
-			applet_vnc_quality = vncNode.getAttribute('quality');
+			if (this.access_id != 'portal') {
+				buffer = sessionNode.getElementsByTagName('vnc');
+				var vncNode = buffer[0];
+				applet_vnc_port = vncNode.getAttribute('port');
+				applet_vnc_passwd = vncNode.getAttribute('passwd');
+				applet_vnc_quality = vncNode.getAttribute('quality');
 
-			//default: highest
-			applet_vnc_quality_compression_level = 9;
-			applet_vnc_quality_jpeg_image_quality = 9;
-			applet_vnc_quality_restricted_colors = 'no';
-			if (applet_vnc_quality == 'lowest') {
-				applet_vnc_quality_jpeg_image_quality = 8;
-				applet_vnc_quality_restricted_colors = 'yes';
-			} else if (applet_vnc_quality == 'medium')
-				applet_vnc_quality_jpeg_image_quality = 7;
-			else if (applet_vnc_quality == 'high')
-				applet_vnc_quality_jpeg_image_quality = 8;
+				//default: highest
+				applet_vnc_quality_compression_level = 9;
+				applet_vnc_quality_jpeg_image_quality = 9;
+				applet_vnc_quality_restricted_colors = 'no';
+				if (applet_vnc_quality == 'lowest') {
+					applet_vnc_quality_jpeg_image_quality = 8;
+					applet_vnc_quality_restricted_colors = 'yes';
+				} else if (applet_vnc_quality == 'medium')
+					applet_vnc_quality_jpeg_image_quality = 7;
+				else if (applet_vnc_quality == 'high')
+					applet_vnc_quality_jpeg_image_quality = 8;
+			}
 
 			applet_have_proxy = false;
 			buffer = sessionNode.getElementsByTagName('proxy');
@@ -323,24 +323,26 @@ var Daemon = Class.create({
 			<param name="ssh.host" value="'+applet_ssh_host+'" /> \
 			<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
 			<param name="ssh.user" value="'+applet_ssh_user+'" /> \
-			<param name="ssh.password" value="'+applet_ssh_passwd+'" /> \
-			\
-			<param name="View only" value="'+applet_view_only+'" /> \
-			\
-			<param name="PORT" value="'+applet_vnc_port+'" /> \
-			<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
-			\
-			<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
-			<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
-			<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
-			\
-			<!-- Caching options --> \
-			<param name="rfb.cache.enabled" value="true" /> \
-			<param name="rfb.cache.ver.major" value="1" /> \
-			<param name="rfb.cache.ver.minor" value="0" /> \
-			<param name="rfb.cache.size" value="42336000" /> \
-			<param name="rfb.cache.alg" value="LRU" /> \
-			<param name="rfb.cache.datasize" value="2000000" />';
+			<param name="ssh.password" value="'+applet_ssh_passwd+'" />';
+
+		if (this.access_id != 'portal') {
+			applet_html_string = applet_html_string+'<param name="View only" value="'+applet_view_only+'" /> \
+				\
+				<param name="PORT" value="'+applet_vnc_port+'" /> \
+				<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
+				\
+				<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
+				<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
+				<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
+				\
+				<!-- Caching options --> \
+				<param name="rfb.cache.enabled" value="true" /> \
+				<param name="rfb.cache.ver.major" value="1" /> \
+				<param name="rfb.cache.ver.minor" value="0" /> \
+				<param name="rfb.cache.size" value="42336000" /> \
+				<param name="rfb.cache.alg" value="LRU" /> \
+				<param name="rfb.cache.datasize" value="2000000" />';
+		}
 
 		if (applet_have_proxy) {
 			applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \

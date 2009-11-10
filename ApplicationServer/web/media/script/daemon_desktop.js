@@ -182,6 +182,12 @@ var Desktop = Class.create(Daemon, {
 		}
 	},
 
+	start: function() {
+		this.access_id = 'desktop';
+
+		Daemon.prototype.start.apply(this);
+	},
+
 	do_ended: function() {
 		Daemon.prototype.do_ended.apply(this);
 
