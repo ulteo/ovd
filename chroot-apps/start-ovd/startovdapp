@@ -151,6 +151,13 @@ extra_args = sys.argv[3:]
 if len(extra_args)==0 and os.environ.has_key("DOC"):
     extra_args = [os.environ["DOC"]]
 
+# Hack: some applications as Acrobat reader doesn't follow the
+# freedesktop spec [1] so there is neither %F or %U on the desktop
+# file's Exec field [1]
+# http://standards.freedesktop.org/desktop-entry-spec
+if len(cmd.split(" "))==1 and len(extra_args)>0:
+    cmd = "%s %%F"%(cmd)
+
 cmd_line = getFinalCommand(cmd, extra_args)
 cmd_line = hack.changeCmdLine(cmd_line)
 os.system(cmd_line)
