@@ -46,6 +46,20 @@ class Abstract_Token {
 		return true;
 	}
 
+	public static function exists($id_) {
+		Logger::debug('main', 'Starting Abstract_Token::exists for \''.$id_.'\'');
+
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id_);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
+			return false;
+
+		return true;
+	}
+
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
 
@@ -81,8 +95,8 @@ class Abstract_Token {
 
 		$id = $token_->id;
 
-		if (! Abstract_Token::load($id)) {
-			Logger::info('main', "Abstract_Token::save($token_) unable to load token, we must create it");
+		if (! Abstract_Token::exists($id)) {
+			Logger::info('main', "Abstract_Token::save($token_) token does NOT exist, we must create it");
 
 			if (! Abstract_Token::create($token_)) {
 				Logger::error('main', "Abstract_Token::save($token_) Abstract_Token::create failed");

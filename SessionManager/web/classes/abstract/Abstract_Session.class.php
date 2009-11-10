@@ -53,6 +53,20 @@ class Abstract_Session {
 		return true;
 	}
 
+	public static function exists($id_) {
+		Logger::debug('main', 'Starting Abstract_Session::exists for \''.$id_.'\'');
+
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id_);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
+			return false;
+
+		return true;
+	}
+
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 
@@ -94,8 +108,8 @@ class Abstract_Session {
 
 		$id = $session_->id;
 
-		if (! Abstract_Session::load($id)) {
-			Logger::info('main', "Abstract_Session::save($session_) unable to load session, we must create it");
+		if (! Abstract_Session::exists($id)) {
+			Logger::info('main', "Abstract_Session::save($session_) session does NOT exist, we must create it");
 
 			if (! Abstract_Session::create($session_)) {
 				Logger::error('main', "Abstract_Session::save($session_) failed to create session");
