@@ -121,7 +121,7 @@ class Abstract_Server {
 		$fqdn = $server_->fqdn;
 
 		if (! Abstract_Server::exists($fqdn)) {
-			Logger::info('main', "Abstract_Server::save($server_) server does NOT exists, we must create it");
+			Logger::info('main', "Abstract_Server::save($server_) server does NOT exist, we must create it");
 
 			if (! Abstract_Server::create($server_)) {
 				Logger::error('main', "Abstract_Server::save($server_) create failed");
