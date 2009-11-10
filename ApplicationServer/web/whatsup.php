@@ -21,8 +21,6 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-Logger::debug('main', 'Starting whatsup.php');
-
 function getSessionStatus($session) {
   if (file_exists(SESSION2CREATE_PATH.'/'.$session))
     return -1;
