@@ -79,6 +79,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.doc = '<?php echo $doc; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
+				daemon.i18n['unknown_application'] = '<?php echo _('Server: unable to start application'); ?>';
 				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
 				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
 				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';

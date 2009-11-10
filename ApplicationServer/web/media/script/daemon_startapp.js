@@ -69,6 +69,8 @@ var StartApp = Class.create(Daemon, {
 			buffer = xml.getElementsByTagName('access');
 			if (buffer.length != 1) {
 				this.push_log('[start_app] bad xml format 1', 'error');
+				this.error_message = this.i18n['unknown_application'];
+				this.do_ended();
 				return;
 			}
 
