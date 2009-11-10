@@ -264,7 +264,7 @@ class Abstract_Server {
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Server::uptodate($server_) server does not exist (NumRows == 0)");
+			Logger::warning('main', "Abstract_Server::uptodate($server_) server does not exist (NumRows == 0)");
 			return false;
 		}
 
