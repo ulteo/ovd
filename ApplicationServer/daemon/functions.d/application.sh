@@ -108,7 +108,7 @@ application_check_status() {
         else
             if [ $job_id != "windows" ]; then
                 # Create a kma to use as timeout
-                install -g www-data -m 660 $dir/status $dir/keepmealive
+                install -o www-data -g www-data -m 660 $dir/status $dir/keepmealive
             fi
         fi
 
