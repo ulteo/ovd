@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ovd-application-server 1.0~svn00883\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-04 05:29+0100\n"
+"POT-Creation-Date: 2009-11-12 08:54+0100\n"
 "PO-Revision-Date: 2009-03-14 05:34+0100\n"
 "Last-Translator: Gauvain Pocentek <gauvain@ulteo.com>\n"
 "Language-Team: French\n"
@@ -32,7 +32,7 @@ msgid "Shared application has ended unexpectedly"
 msgstr "L'application partagée s'est terminée de manière inattendue"
 
 #: ../web/share/index.php:57 ../web/desktop/index.php:60
-#: ../web/portal/resume.php:57 ../web/portal/external_app.php:84
+#: ../web/portal/resume.php:57 ../web/portal/external_app.php:85
 #: ../web/portal/index.php:74
 msgid "error details"
 msgstr "détails de l'erreur"
@@ -50,7 +50,7 @@ msgid "Your session has ended unexpectedly"
 msgstr "Votre session s'est terminée de manière inattendue"
 
 #: ../web/desktop/index.php:61 ../web/portal/resume.php:58
-#: ../web/portal/external_app.php:85 ../web/portal/index.php:75
+#: ../web/portal/external_app.php:86 ../web/portal/index.php:75
 msgid "Close this window"
 msgstr "Fermer cette fenêtre"
 
@@ -83,11 +83,11 @@ msgstr "Inviter"
 msgid "Loading Desktop"
 msgstr "Chargement du bureau"
 
-#: ../web/portal/resume.php:55 ../web/portal/external_app.php:82
+#: ../web/portal/resume.php:55 ../web/portal/external_app.php:83
 msgid "Your application has ended, you can now close the window"
 msgstr "Votre application a quitté, vous pouvez fermer la fenêtre"
 
-#: ../web/portal/resume.php:56 ../web/portal/external_app.php:83
+#: ../web/portal/resume.php:56 ../web/portal/external_app.php:84
 msgid "Your application has ended unexpectedly"
 msgstr "Votre application s'éest terminée de manière inattendue"
 
@@ -95,7 +95,11 @@ msgstr "Votre application s'éest terminée de manière inattendue"
 msgid "Loading Application"
 msgstr "Chargement de l'application"
 
-#: ../web/portal/external_app.php:108
+#: ../web/portal/external_app.php:82
+msgid "Server: unable to start application"
+msgstr "Serveur : impossible de démarrer l'application"
+
+#: ../web/portal/external_app.php:109
 #, php-format
 msgid "Loading %s"
 msgstr "Chargement : %s"

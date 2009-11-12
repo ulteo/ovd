@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-04 05:29+0100\n"
+"POT-Creation-Date: 2009-11-12 08:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgid "Shared application has ended unexpectedly"
 msgstr ""
 
 #: ../web/share/index.php:57 ../web/desktop/index.php:60
-#: ../web/portal/resume.php:57 ../web/portal/external_app.php:84
+#: ../web/portal/resume.php:57 ../web/portal/external_app.php:85
 #: ../web/portal/index.php:74
 msgid "error details"
 msgstr ""
@@ -50,7 +50,7 @@ msgid "Your session has ended unexpectedly"
 msgstr ""
 
 #: ../web/desktop/index.php:61 ../web/portal/resume.php:58
-#: ../web/portal/external_app.php:85 ../web/portal/index.php:75
+#: ../web/portal/external_app.php:86 ../web/portal/index.php:75
 msgid "Close this window"
 msgstr ""
 
@@ -83,11 +83,11 @@ msgstr ""
 msgid "Loading Desktop"
 msgstr ""
 
-#: ../web/portal/resume.php:55 ../web/portal/external_app.php:82
+#: ../web/portal/resume.php:55 ../web/portal/external_app.php:83
 msgid "Your application has ended, you can now close the window"
 msgstr ""
 
-#: ../web/portal/resume.php:56 ../web/portal/external_app.php:83
+#: ../web/portal/resume.php:56 ../web/portal/external_app.php:84
 msgid "Your application has ended unexpectedly"
 msgstr ""
 
@@ -95,7 +95,11 @@ msgstr ""
 msgid "Loading Application"
 msgstr ""
 
-#: ../web/portal/external_app.php:108
+#: ../web/portal/external_app.php:82
+msgid "Server: unable to start application"
+msgstr ""
+
+#: ../web/portal/external_app.php:109
 #, php-format
 msgid "Loading %s"
 msgstr ""

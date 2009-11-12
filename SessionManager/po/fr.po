@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-04 05:43+0100\n"
+"POT-Creation-Date: 2009-11-12 08:54+0100\n"
 "PO-Revision-Date: 2009-02-25 16:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -457,7 +457,7 @@ msgstr "correspondance"
 #: ../web/admin/actions.php:236 ../web/admin/actions.php:263
 #: ../web/admin/applications_static.php:36 ../web/admin/applications.php:35
 #: ../web/classes/Server.class.php:697
-#: ../web/classes/abstract/Abstract_Server.class.php:206
+#: ../web/classes/abstract/Abstract_Server.class.php:220
 #: ../web/classes/Application_weblink.class.php:38
 msgid "Module ApplicationDB must be enabled"
 msgstr "Le module ApplicationDB doit être activé"
@@ -2319,40 +2319,40 @@ msgstr "Configuration invalide"
 msgid "You already have an active session"
 msgstr "Vous avez déjà une session active"
 
-#: ../web/startsession.php:142
+#: ../web/startsession.php:143
 msgid "You already have a session, please contact your administrator"
 msgstr ""
 "Vous avez déjà une session active, veuillez contacter votre administrateur"
 
-#: ../web/startsession.php:155 ../web/index.php:98 ../web/index.php:103
+#: ../web/startsession.php:156 ../web/index.php:98 ../web/index.php:103
 msgid "No available server"
 msgstr "Pas de serveur disponible"
 
-#: ../web/startsession.php:158
+#: ../web/startsession.php:159
 msgid "You don't have access to a linux server for now"
 msgstr "Vous n'avez pas accès à un serveur Linux pour le moment"
 
-#: ../web/startsession.php:189
+#: ../web/startsession.php:190
 msgid "No available session"
 msgstr "Aucune session n'est disponible"
 
-#: ../web/startsession.php:195
+#: ../web/startsession.php:196
 msgid "No available filesystem"
 msgstr "Aucun système de fichier disponible"
 
-#: ../web/startsession.php:222
+#: ../web/startsession.php:223
 msgid "Application does not exist"
 msgstr "Application non existante"
 
-#: ../web/startsession.php:237
+#: ../web/startsession.php:238
 msgid "Application not available"
 msgstr "Application non disponible"
 
-#: ../web/startsession.php:301
+#: ../web/startsession.php:302
 msgid "You don't have access to a windows server for now"
 msgstr "Vous n'avez pas accès à un serveur Windowsour le moment"
 
-#: ../web/startsession.php:336 ../web/startsession.php:346
+#: ../web/startsession.php:337 ../web/startsession.php:347
 msgid "Internal error"
 msgstr "Erreur interne"
 
@@ -2783,8 +2783,8 @@ msgid "Default quality for session"
 msgstr "Qualité de session par défaut"
 
 #: ../web/classes/Preferences.class.php:275
-msgid "Lowest"
-msgstr "Minimal"
+msgid "8-bits"
+msgstr "8-bits"
 
 #: ../web/classes/Preferences.class.php:275
 msgid "Medium"
@@ -3192,6 +3192,9 @@ msgstr "Mot de passe proxy"
 #: ../web/index.php:612
 msgid "Remember proxy"
 msgstr "Sauvegarder les infos de proxy"
+
+#~ msgid "Lowest"
+#~ msgstr "Minimal"
 
 #~ msgid "Server status successfully modified"
 #~ msgstr "Statut de serveur modifié"
