@@ -39,7 +39,7 @@ if (! isset($_GET['fqdn'])) {
 
 $buf = Abstract_Server::load($_GET['fqdn']);
 if (! $buf || ! $buf->isAuthorized()) {
-	Logger::error('main', '(webservices/session_status) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
+	Logger::error('main', '(webservices/session_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
 	die('Server not authorized');
 }
 
@@ -50,12 +50,12 @@ $session = Abstract_Session::load($_GET['session']);
 if (! $session)
 	die('ERROR - No such session');
 
-Logger::debug('main', '(webservices/session_status) Session '.$session->id.' on server '.$session->server.' have status '.$_GET['status']);
+Logger::debug('main', '(webservices/session_status) Session \''.$session->id.'\' on server \''.$session->server.'\' have status \''.$_GET['status'].'\'');
 
 $session->setStatus($_GET['status']);
 
 if ($_GET['status'] == 1) {
-	Logger::info('main', '(webservices/session_status) Session start : '.$session->id);
+	Logger::info('main', '(webservices/session_status) Session start : \''.$session->id.'\'');
 
 	$session->setAttribute('start_time', time());
 }
@@ -63,7 +63,7 @@ if ($_GET['status'] == 1) {
 Abstract_Session::save($session);
 
 if ($_GET['status'] == 4) {
-	Logger::info('main', '(webservices/session_status) Session end : '.$session->id);
+	Logger::info('main', '(webservices/session_status) Session end : \''.$session->id.'\'');
 
 	$plugins = new Plugins();
 	$plugins->doLoad();

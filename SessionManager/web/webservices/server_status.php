@@ -65,17 +65,17 @@ if (! $exists) {
 	$buf->max_sessions = 20;
 
 	if (! $buf->isAuthorized()) {
-		Logger::error('main', '(webservices/server_status) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
+		Logger::error('main', '(webservices/server_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
 		die('Server not authorized');
 	}
 
 	if (! $buf->isOnline()) {
-		Logger::error('main', '(webservices/server_status) Server not "ready" : '.$_GET['fqdn']);
+		Logger::error('main', '(webservices/server_status) Server not "ready" : \''.$_GET['fqdn'].'\'');
 		die('Server not "ready"');
 	}
 
 	if (! $buf->isOK()) {
-		Logger::error('main', '(webservices/server_status) Server not OK : '.$_GET['fqdn']);
+		Logger::error('main', '(webservices/server_status) Server not OK : \''.$_GET['fqdn'].'\'');
 		die('Server not OK');
 	}
 } else
@@ -89,5 +89,5 @@ try {
 	$buf->updateApplications();
 }
 catch (Exception $e) {
-	Logger::warning('main', '(webservices/server_status) updateApplications error for '.$_GET['fqdn']);
+	Logger::warning('main', '(webservices/server_status) updateApplications error for \''.$_GET['fqdn'].'\'');
 }

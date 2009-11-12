@@ -93,7 +93,7 @@ $subject = _('Invitation').' from '.$main_title;
 $message =  _('You received an invitation from').' '.$main_title.', '._('please click on the link below to join the online session').'.'."\r\n\r\n";
 $message .= $redir;
 
-Logger::info('main', 'Sending invitation mail to '.$email.' for token '.$token->id);
+Logger::info('main', 'Sending invitation mail to "'.$email.'" for token \''.$token->id.'\'');
 
 $buf = sendamail($email, $subject, wordwrap($message, 72));
 if ($buf !== true) {
