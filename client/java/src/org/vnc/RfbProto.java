@@ -1327,6 +1327,9 @@ public final static int
 
 	 }
 
+	// Firefox 3 on Linux systems don't trigger the keyPressed event
+	// for tab key (\t), use a hack instead
+	private boolean tabKeyPressed = false;
 
   //
   // Write a key event message.  We may need to send modifier key events
@@ -1346,6 +1349,23 @@ public final static int
 		    boolean typed = (evt.getID() == KeyEvent.KEY_TYPED);
 //		    System.out.println("WriteKeyEvent: keyCode: "+keyCode+" and keyChar: "+keyChar+"\n");
 			int translatedKeysym = translateActionKey(keyCode);
+
+			// Firefox 3 on Linux systems don't trigger the keyPressed event
+			// for tab key (\t), use a hack instead			
+			// hack begin
+			if (keyCode == evt.VK_TAB) {
+				if (evt.getID() == KeyEvent.KEY_RELEASED && ! this.tabKeyPressed) {
+					KeyEvent evt2 = new KeyEvent(evt.getComponent(), KeyEvent.KEY_PRESSED, evt.getWhen(), evt.getModifiers(), 
+												 evt.getKeyCode(), evt.getKeyChar(), evt.getKeyLocation());
+					this.writeKeyEvent(evt2);
+				}
+				
+				if (evt.getID() == KeyEvent.KEY_PRESSED)
+					this.tabKeyPressed = true;
+				else if (evt.getID() == KeyEvent.KEY_RELEASED)
+					this.tabKeyPressed = false;
+			}
+			// hack end
 
 		    if(OSName.equals("windows")){
 
