@@ -111,7 +111,7 @@ class Hack:
             self.oooHack = True
             self.oooDir = ".ooo_%d"%(os.getpid())
 
-            cmd_line+="-env:UserInstallation=%s"%(self.oooDir)
+            cmd_line+=" -env:UserInstallation=%s"%(self.oooDir)
 
         return cmd_line
 
