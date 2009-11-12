@@ -204,9 +204,9 @@ chown $APACHE_USER "$CHROOT_CONFFILE"
 
 # set owner on spool and log files
 chown $APACHE_USER:root @LOCALSTATEDIR@/log/ulteo/applicationserver
-chmod 2770 @LOCALSTATEDIR@/log/ulteo/applicationserver
+chmod 0770 @LOCALSTATEDIR@/log/ulteo/applicationserver
 chown -R $APACHE_USER:root @LOCALSTATEDIR@/spool/ulteo/applicationserver
-chmod 2770 @LOCALSTATEDIR@/spool/ulteo/applicationserver
+chmod 0770 @LOCALSTATEDIR@/spool/ulteo/applicationserver
 
 # update the apache uid and gid in the chroot
 if [ "$APACHE_USER" = "wwwrun" ]; then

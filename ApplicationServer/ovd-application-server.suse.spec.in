@@ -41,9 +41,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ulteo/applicationserver/apache2.conf
 %defattr(0755,root,root)
 %config /etc/init.d/ulteo-ovd
-%defattr(0770,wwwusr,root)
+%defattr(0770,wwwrun,root)
 %config /etc/ulteo/applicationserver/dot.htaccess
-%defattr(2770,wwwusr,root)
+%defattr(0770,wwwrun,root)
 /var/log/ulteo/*
 /var/spool/ulteo/*
 
