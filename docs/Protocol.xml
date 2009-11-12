@@ -1437,8 +1437,8 @@
 	      <para>desktop_quality: [1-9]</para>
 	    </listitem>
 	    <listitem>
-	      <para>desktop_locale:
-	      fr_FR.UTF-8|en_GB.UTF-8|en_US.UTF-8... Desired locale
+	      <para>language:
+	      fr_FR.UTF-8|en_GB.UTF-8|en_US.UTF-8... Desired language and locale
 	      for the session (in Unix format)</para>
 	    </listitem>
 	    <listitem>
