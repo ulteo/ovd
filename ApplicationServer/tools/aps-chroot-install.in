@@ -208,9 +208,16 @@ chmod 2770 @LOCALSTATEDIR@/log/ulteo/applicationserver
 chown -R $APACHE_USER:root @LOCALSTATEDIR@/spool/ulteo/applicationserver
 chmod 2770 @LOCALSTATEDIR@/spool/ulteo/applicationserver
 
-# update the apache uid in the chroot
+# update the apache uid and gid in the chroot
+if [ "$APACHE_USER" = "wwwrun" ]; then
+    APACHE_GROUP="www"
+else
+    APACHE_GROUP="$APACHE_USER"
+fi
 APACHE_UID=$(getent passwd $APACHE_USER | cut -d ":" -f "3")
-sed -i "s/^www-data:x:33:/www-data:x:$APACHE_UID:/" $CHROOT_PATH/etc/passwd
+APACHE_GID=$(getent group $APACHE_GROUP | cut -d ":" -f "3")
+sed -i -r "s/^www-data:x:33:[^:]+:/www-data:x:$APACHE_UID:$APACHE_GID:/" $CHROOT_PATH/etc/passwd
+sed -i "s/^www-data.*$/www-data:x:$APACHE_GID:/" $CHROOT_PATH/etc/group
 
 # set the main vhost
 ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
