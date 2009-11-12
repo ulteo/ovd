@@ -3,7 +3,7 @@
 sm-config \- configure Ulteo OVD Session Manager
 .SH SYNOPSIS
 .B sm-config
-[\fI--no-download\fR] [\fI--chroot-uri uri\fR] [\fI--chroot-url url\fR] [\fI--copy\fR] [\fI--chroot-dir dir\fR] [\fI--admin-login login\fR] [\fI--admin-pwd pwd\fR] [\fI--apache-group group\fR] [\fI--apache-dir dir\fR] [\fI--assume-yes\fR] [\fI--version|-v\fR] [\fI--help|-h\fR]
+[\fI--no-download\fR] [\fI--chroot-uri uri\fR] [\fI--chroot-url url\fR] [\fI--copy\fR] [\fI--chroot-dir dir\fR] [\fI--admin-login login\fR] [\fI--admin-pwd pwd\fR] [\fI--apache-user user\fR] [\fI--apache-dir dir\fR] [\fI--assume-yes\fR] [\fI--version|-v\fR] [\fI--help|-h\fR]
 .SH DESCRIPTION
 Configure an Ulteo Session Manager (Open Virtual Desktop)
 .TP
@@ -32,9 +32,9 @@ set the admin login to 'login'
 \fB\-\-admin\-pwd\fR pwd
 set the admin password to 'pwd'
 .TP
-\fB\-\-apache\-group\fR group
-set the apache group to 'group'
-(default: guess from /etc/group)
+\fB\-\-apache\-user\fR user
+set the apache user to 'user'
+(default: guess from /etc/passwd)
 .TP
 \fB\-\-apache\-dir\fR dir
 set the apache configuration directory to 'dir'

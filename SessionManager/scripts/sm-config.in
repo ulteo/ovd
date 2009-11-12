@@ -38,7 +38,7 @@ die () {
 usage ()
 {
     echo -n "Usage: $PROGRAM [--no-download] [--chroot-uri uri] [--chroot-url url] [--copy] [--chroot-dir dir]"
-    echo -n " [--admin-login login] [--admin-pwd pwd] [--apache-group group]"
+    echo -n " [--admin-login login] [--admin-pwd pwd] [--apache-user user]"
     echo " [--apache-dir dir] [--version|-v] [--help|-h]"
     echo "Configure an Ulteo Session Manager (Open Virtual Desktop)"
     echo
@@ -53,8 +53,8 @@ usage ()
     echo "                       (default: $WEBDIR/base.tar.gz)"
     echo "  --admin-login login  set the admin login to 'login'"
     echo "  --admin-pwd pwd      set the admin password to 'pwd'"
-    echo "  --apache-group group set the apache group to 'group'"
-    echo "                       (default: guess from /etc/group)"
+    echo "  --apache-user user   set the apache user to 'user'"
+    echo "                       (default: guess from /etc/passwd)"
     echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
     echo "  --cron-dir dir       set the cron dir to 'dir' (default: /etc/cron.hourly)"
     echo "  --assume-yes         don't ask confirmation"
@@ -64,11 +64,11 @@ usage ()
 }
 
 set_apache () {
-    chgrp $APACHE_GROUP $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
+    chown $APACHE_USER $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
     chmod 755 $LOGDIR $SPOOLDIR
     chmod 2770 $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
 
-    chgrp $APACHE_GROUP $CONFFILE
+    chown $APACHE_USER $CONFFILE
     chmod 660 $CONFFILE
 
     mkdir -p $APACHE_DIR
@@ -110,7 +110,7 @@ get_chroot () {
 }
 
 unset NODOWNLOAD
-unset APACHE_GROUP
+unset APACHE_USER
 unset APACHE_DIR
 unset LOGIN
 unset PASS1
@@ -139,8 +139,8 @@ while [ x"$1" != x"" ]; do
             PASS1="$2"
             PASS2="$2"
             shift;;
-        --apache-group)
-            APACHE_GROUP="$2"
+        --apache-user)
+            APACHE_USER="$2"
             shift;;
         --apache-dir)
             APACHE_DIR="$2"
@@ -191,15 +191,16 @@ while [ -z "$PASS1" -o x"$PASS1" != x"$PASS2" ]; do
     fi
 done
 
-while [ -z "$APACHE_GROUP" ]; do
-    if grep ^apache: /etc/group >/dev/null 2>&1; then
-        APACHE_GROUP="apache"
-    elif grep ^www-data: /etc/group >/dev/null 2>&1; then
-        APACHE_GROUP="www-data"
-    fi
-    if [ -z "$APACHE_GROUP" ]; then
-        echo -n "Apache group: "
-        read APACHE_GROUP
+while [ -z "$APACHE_USER" ]; do
+    for guess in apache www-data wwwrun; do
+        if grep ^$guess: /etc/passwd >/dev/null 2>&1; then
+            APACHE_USER=$guess
+            break
+        fi
+    done
+    if [ -z "$APACHE_USER" ]; then
+        echo -n "Apache user: "
+        read APACHE_USER
     fi
 done
 
@@ -252,7 +253,7 @@ if [ -z "$NODOWNLOAD" ]; then
 else
     echo "no"
 fi
-echo "* apache group:     $APACHE_GROUP"
+echo "* apache user:      $APACHE_USER"
 echo "* apache dir:       $APACHE_DIR"
 
 if [ "$NOCONFIRM" -ne 1 ]; then

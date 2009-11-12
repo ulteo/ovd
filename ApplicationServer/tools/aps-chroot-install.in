@@ -20,7 +20,7 @@ usage ()
     echo "  --fqdn fqdn          set the full qualified domain name to 'fqdn'"
     echo "  --sm-url url         set the session manager url to 'url'"
     echo "  --chroot-path path   set the chroot path to 'path'"
-    echo "  --apache-group group set the apache group to 'group'"
+    echo "  --apache-user user   set the apache user to 'user'"
     echo "  --apache-dir dir     set the apache configuration directory to 'dir'"
     echo "  --assume-yes         don't ask confirmation"
     echo "  --help|-h            display this help"
@@ -57,7 +57,7 @@ unset NOCUPS
 unset FQDN
 unset SM_URL
 unset CHROOT_PATH
-unset APACHE_GROUP
+unset APACHE_USER
 unset APACHE_DIR
 NOCONFIRM=0
 while [ "$1" != "" ]; do
@@ -75,8 +75,8 @@ while [ "$1" != "" ]; do
         --chroot-path)
             CHROOT_PATH="$2"
             shift;;
-        --apache-group)
-            APACHE_GROUP="$2"
+        --apache-user)
+            APACHE_USER="$2"
             shift;;
         --apache-dir)
             APACHE_DIR="$2"
@@ -126,15 +126,16 @@ while [ -z "$CHROOT_PATH" ]; do
 done
 
 # try to guess the apache group, if we can't, ask if to the admin
-while [ -z "$APACHE_GROUP" ]; do
-    if grep ^apache: /etc/group >/dev/null 2>&1; then
-        APACHE_GROUP="apache"
-    elif grep ^www-data: /etc/group >/dev/null 2>&1; then
-        APACHE_GROUP="www-data"
-    fi
-    if [ -z "$APACHE_GROUP" ]; then
-        echo -n "Apache group: "
-        read APACHE_GROUP
+while [ -z "$APACHE_USER" ]; do
+    for guess in apache www-data wwwrun; do
+        if grep ^$guess: /etc/passwd >/dev/null 2>&1; then
+            APACHE_USER=$guess
+            break
+        fi
+    done
+    if [ -z "$APACHE_USER" ]; then
+        echo -n "Apache user: "
+        read APACHE_USER
     fi
 done
 
@@ -161,8 +162,8 @@ if [ -z "$NODOWNLOAD" ]; then
 else
     echo "no"
 fi
-echo "* apache group: $APACHE_GROUP"
-echo "* apache dir: $APACHE_DIR"
+echo "* apache user: $APACHE_USER"
+echo "* apache dir:  $APACHE_DIR"
 
 if [ "$NOCONFIRM" -ne 1 ]; then
     echo
@@ -188,7 +189,7 @@ CHROOT_CONFFILE="$CHROOT_PATH/etc/ulteo-ovd.conf"
 # set the host conf
 set_conf $MAIN_CONFFILE "CHROOT" "$CHROOT_PATH"
 set_conf $MAIN_CONFFILE "LOG_WWW" "@LOCALSTATEDIR@/log/ulteo/applicationserver"
-set_conf $MAIN_CONFFILE "WWW_USER" "$APACHE_GROUP"
+set_conf $MAIN_CONFFILE "WWW_USER" "$APACHE_USER"
 
 [ -z "$NODOWNLOAD" ] && get_chroot
 
@@ -199,17 +200,17 @@ set_conf "$CHROOT_CONFFILE" "SESSION_MANAGER_URL" "$SM_URL"
     $CHROOT_PATH/etc/resolv.conf
 [ -f /etc/hosts ] && cp /etc/hosts \
     $CHROOT_PATH/etc/hosts
-chgrp $APACHE_GROUP "$CHROOT_CONFFILE"
+chown $APACHE_USER "$CHROOT_CONFFILE"
 
 # set owner on spool and log files
-chown root:$APACHE_GROUP @LOCALSTATEDIR@/log/ulteo/applicationserver
+chown $APACHE_USER:root @LOCALSTATEDIR@/log/ulteo/applicationserver
 chmod 2770 @LOCALSTATEDIR@/log/ulteo/applicationserver
-chown -R root:$APACHE_GROUP @LOCALSTATEDIR@/spool/ulteo/applicationserver
+chown -R $APACHE_USER:root @LOCALSTATEDIR@/spool/ulteo/applicationserver
 chmod 2770 @LOCALSTATEDIR@/spool/ulteo/applicationserver
 
-# update the apache gid in the chroot
-APACHE_GID=$(getent group $APACHE_GROUP | cut -d ":" -f "3")
-sed -i "s/^www-data:x:33:/www-data:x:$APACHE_GID:/" $CHROOT_PATH/etc/group
+# update the apache uid in the chroot
+APACHE_UID=$(getent passwd $APACHE_USER | cut -d ":" -f "3")
+sed -i "s/^www-data:x:33:/www-data:x:$APACHE_UID:/" $CHROOT_PATH/etc/passwd
 
 # set the main vhost
 ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
@@ -217,12 +218,12 @@ ln -sf $ALIASFILE $APACHE_DIR/application-server.conf
 
 # give write permissions to apache for the htaccess file
 HTACCESS=@SYSCONFDIR@/ulteo/applicationserver/dot.htaccess
-chown root:$APACHE_GROUP $HTACCESS
+chown $APACHE_USER:root $HTACCESS
 chmod 660 $HTACCESS
 
 # set cups
 if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
-    chgrp -R $APACHE_GROUP $CHROOT_PATH/var/spool/cups2all
+    chown -R $APACHE_USER $CHROOT_PATH/var/spool/cups2all
     chroot $CHROOT_PATH chown -R lp /var/spool/cups2all
     chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
 fi
