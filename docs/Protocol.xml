@@ -1434,7 +1434,9 @@
 	      </para>
 	    </listitem>
 	    <listitem>
-	      <para>desktop_quality: [1-9]</para>
+	      <para>quality:
+	      lowest|medium|high|highest
+	      </para>
 	    </listitem>
 	    <listitem>
 	      <para>language:
@@ -1498,7 +1500,7 @@
  <br/>
 
  Language: 
- <select name="desktop_locale">
+ <select name="locale">
   <option value="en_GB.UTF-8">English</option>
   <option value="fr_FR.UTF-8">French</option>
  </select>
