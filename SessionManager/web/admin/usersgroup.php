@@ -625,7 +625,7 @@ function show_manage($id) {
 		echo '<div>';
 		echo '<h2>'._('Settings').'</h1>';
 
-		if ($group->type == 'static' and $can_manage_usersgroups) {
+		if ($group->type == 'static' and $can_manage_usersgroups and $usergroupdb_rw) {
 			echo '<form action="" method="post">';
 			if ($is_default_group) {
 				echo '<input type="submit" value="'._('Remove from default').'"/>';
