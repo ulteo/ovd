@@ -1,7 +1,7 @@
 m4_define([chrootapps_version_major], [2])
 m4_define([chrootapps_version_minor], [0])
-#m4_define([chrootapps_version_build], [~beta3+svn@REVISION@])
-m4_define([chrootapps_version_build], [~rc1])
+m4_define([chrootapps_version_build], [~rc1+svn@REVISION@])
+#m4_define([chrootapps_version_build], [~rc1])
 m4_define([chrootapps_version], [chrootapps_version_major().chrootapps_version_minor()chrootapps_version_build()])
 
 AC_COPYRIGHT([Copyright (c) Gauvain Pocentek])
