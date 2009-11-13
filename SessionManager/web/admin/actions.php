@@ -123,14 +123,20 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 
 	if ($_REQUEST['action'] == 'add') {
 		$ret = Abstract_Liaison::save('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
-		if ($ret === true)
-			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $_REQUEST['group']));
+		if ($ret === true) {
+			$group = new AppsGroup();
+			$group->fromDB($_REQUEST['group']);
+			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $group->name));
+		}
 	}
 
 	if ($_REQUEST['action'] == 'del') {
 		$ret = Abstract_Liaison::delete('AppsGroup', $_REQUEST['element'], $_REQUEST['group']);
-		if ($ret === true)
-			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $_REQUEST['group']));
+		if ($ret === true) {
+			$group = new AppsGroup();
+			$group->fromDB($_REQUEST['group']);
+			popup_info(sprintf(_('ApplicationGroup \'%s\' successfully modified'), $group->name));
+		}
 	}
 }
 
