@@ -1,3 +1,9 @@
+ovd-session-manager (2.0~rc1-0ulteo0) 2-0-staging; urgency=low
+
+  * New release: 2.0 RC1
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Fri, 13 Nov 2009 11:35:23 +0100
+
 ovd-session-manager (2.0~beta3-0ulteo0) 2-0-staging; urgency=low
 
   * New release: 2.0 beta3
