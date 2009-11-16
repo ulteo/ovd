@@ -43,7 +43,7 @@ set_chroot_conf () {
         $CHROOTPATH/etc/hosts
 
     # permissions on the file
-    chgrp www-data $CHROOTCONF
+    chown www-data $CHROOTCONF
 }
 
 set_cups () {
@@ -132,12 +132,12 @@ db_stop
 # setup apache
 LOGDIR=/var/log/ulteo/applicationserver
 if ! dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
-    dpkg-statoverride --update --add www-data www-data 2770 $LOGDIR
+    dpkg-statoverride --update --add www-data www-data 0770 $LOGDIR
 fi
 
 HTACCESS=/etc/ulteo/applicationserver/dot.htaccess
 if ! dpkg-statoverride --list $HTACCESS >/dev/null 2>&1; then
-    dpkg-statoverride --update --add root www-data 0660 $HTACCESS
+    dpkg-statoverride --update --add www-data www-data 0660 $HTACCESS
 fi
 
 if [ ! -e /etc/apache2/conf.d/applicationserver ]; then
@@ -161,7 +161,7 @@ fi
 SPOOLDIR=/var/spool/ulteo/applicationserver
 for f in $SPOOLDIR; do
     if ! dpkg-statoverride --list $SPOOLDIR >/dev/null 2>&1; then
-        dpkg-statoverride --update --add www-data www-data 2770 $SPOOLDIR
+        dpkg-statoverride --update --add www-data www-data 0770 $SPOOLDIR
     fi
 done
 

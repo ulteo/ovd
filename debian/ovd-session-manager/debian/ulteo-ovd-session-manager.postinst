@@ -39,8 +39,8 @@ gen_conf()
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
 
-    if ! dpkg-statoverride --list $CONFFILE; then
-        dpkg-statoverride --update --add root www-data 0660 $CONFFILE
+    if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
+        dpkg-statoverride --update --add www-data www-data 0660 $CONFFILE
     fi
 }
 
@@ -97,13 +97,9 @@ fi
 mysql_config
 apache_config
 
-if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
-    dpkg-statoverride --update --add root www-data 0640 $CONFFILE
-fi
-
 for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
     if ! dpkg-statoverride --list $f >/dev/null 2>&1; then
-        dpkg-statoverride --update --add www-data www-data 2770 $f
+        dpkg-statoverride --update --add www-data www-data 0770 $f
     fi
 done
 
