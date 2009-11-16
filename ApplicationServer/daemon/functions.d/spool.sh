@@ -28,8 +28,8 @@ spool_init() {
 
     [ -d $SPOOL_USERS ] || mkdir -p $SPOOL_USERS
 
-    chgrp www-data $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
-    chmod g+w $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
+    chown www-data:www-data $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
+    chmod 770 $SPOOL/apt $SPOOL/files $SPOOL/sessions2create
 }
 
 spool_clean() {

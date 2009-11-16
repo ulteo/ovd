@@ -40,7 +40,7 @@ ENV_FILE=$SPOOL_USERS/$SESSID/env.sh
 dir=$SESSID_DIR/sessions/$job
 log_INFO "Session $SESSID detect job $job"
 
-install -d -g www-data -m 770 $dir
+install -d -o www-data -g www-data -m 770 $dir
 
 geometry=$(cat $SESSID_DIR/parameters/geometry)
 

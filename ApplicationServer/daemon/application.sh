@@ -57,7 +57,7 @@ if [ -z "$geometry" ]; then
 fi
 [ $nb_line -eq 3 ] && doc=$(head -n 3 $file |tail -n 1)
 
-install -d -g www-data -m 770 $dir
+install -d -o www-data -g www-data -m 770 $dir
 application_switch_status $SESSID $job 1
 echo $app_id > $dir/app_id
 [ -n "$doc" ] && echo "$doc" > $dir/doc

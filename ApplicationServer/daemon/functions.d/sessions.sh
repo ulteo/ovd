@@ -99,18 +99,18 @@ session_init() {
     UGID=$(id -g $VNC_USER)
 
     # create new session dir
-    install -d -g www-data -m 750 $SESSID_DIR
-    install -d -g www-data -m 770 $SESSID_DIR/parameters
-    install -d -g www-data -m 770 $SESSID_DIR/infos
-    install -d             -m 700 $SESSID_DIR/private
-    install -d -g www-data -m 750 $SESSID_DIR/clients
-    install -d -g www-data -m 770 $SESSID_DIR/sessions
+    install -d -g www-data             -m 750 $SESSID_DIR
+    install -d -o www-data -g www-data -m 770 $SESSID_DIR/parameters
+    install -d -o www-data -g www-data -m 770 $SESSID_DIR/infos
+    install -d                         -m 700 $SESSID_DIR/private
+    install -d -g www-data             -m 750 $SESSID_DIR/clients
+    install -d -o www-data -g www-data -m 770 $SESSID_DIR/sessions
 
     install -d -m 700 $SPOOL_USERS/$SESSID
 
     # Initialize status file
     echo "0" >     $SESSID_DIR/infos/status
-    chgrp www-data $SESSID_DIR/infos/status
+    chown www-data $SESSID_DIR/infos/status
     chmod 660      $SESSID_DIR/infos/status
 
     ## VNC password
