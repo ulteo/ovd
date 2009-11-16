@@ -33,9 +33,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ulteo/sessionmanager/apache2.conf
 %config /etc/ulteo/sessionmanager/cron.php
 %config /etc/logrotate.d/sessionmanager
-%defattr(0660,wwwusr,root)
+%defattr(0660,wwwrun,root)
 %config /etc/ulteo/sessionmanager/config.inc.php
-%defattr(2770,wwwusr,root)
+%defattr(2770,wwwrun,root)
 /var/log/ulteo/*
 /var/spool/ulteo/*
 
