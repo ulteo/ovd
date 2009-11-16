@@ -19,8 +19,10 @@
  **/
 
 var Portal = Class.create(Daemon, {
-	applications: new Array(),
-	running_applications: new Array(),
+	applications: new Hash(),
+	applicationsPanel: null,
+	running_applications: new Hash(),
+	runningApplicationsPanel: null,
 
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
@@ -29,6 +31,9 @@ var Portal = Class.create(Daemon, {
 		$('appsContainer').style.height = parseInt(this.my_height)-154+'px';
 		$('runningAppsContainer').style.height = parseInt(this.my_height)-154+'px';
 		$('fileManagerContainer').style.height = parseInt(this.my_height)-154+'px';
+
+		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
+		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 
 		this.applet_width = 1;
 		this.applet_height = 1;
@@ -221,235 +226,54 @@ var Portal = Class.create(Daemon, {
 		for (var i=0; i<applicationNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
 				var application = new Application(applicationNodes[i].getAttribute('id'), applicationNodes[i].getAttribute('name'));
-				this.applications.push(application);
+				this.applications.set(application.id, application);
+				this.applicationsPanel.add(application);
 			} catch(e) {
 				this.push_log('[applications] bad xml format 2', 'error');
 				return;
 			}
 		}
-
-		this.applications.sort(this.compareApplication);
-
-		this.generate_html_list_apps();
-	},
-
-	generate_html_list_apps: function() {
-		var table = document.createElement('table');
-
-		for (var i=0; i<this.applications.length; i++) {
-			var application = this.applications[i];
-
-			var tr = document.createElement('tr');
-
-			var td_icon = document.createElement('td');
-			var td_icon_link = document.createElement('a');
-			td_icon_link.setAttribute('href', 'javascript:;');
-			td_icon_link.setAttribute('onclick', 'return startExternalApp(\''+application.id+'\');');
-			var icon = document.createElement('img');
-			icon.setAttribute('src', application.getIconURL());
-			td_icon_link.appendChild(icon);
-			td_icon.appendChild(td_icon_link);
-			tr.appendChild(td_icon);
-
-			var td_app = document.createElement('td');
-			var td_app_link = document.createElement('a');
-			td_app_link.setAttribute('href', 'javascript:;');
-			td_app_link.setAttribute('onclick', 'return startExternalApp(\''+application.id+'\');');
-			td_app_link.innerHTML = application.name;
-			td_app.appendChild(td_app_link);
-			tr.appendChild(td_app);
-
-			table.appendChild(tr);
-		}
-
-		$('appsContainer').appendChild(table);
-		$('appsContainer').innerHTML = $('appsContainer').innerHTML; // IE DOM API... appendChild... LOL
 	},
 
 	list_running_apps: function(applicationsNode_) {
-		this.running_applications = new Array();
-
 		var runningApplicationsNodes = applicationsNode_.getElementsByTagName('running');
 
+		var apps_in_xml = new Array();
 		for (var i = 0; i < runningApplicationsNodes.length; i++) {
-			var app_id = runningApplicationsNodes[i].getAttribute('app_id');
 			var pid = runningApplicationsNodes[i].getAttribute('job');
-			var app_status = runningApplicationsNodes[i].getAttribute('status');
+			var app_status = parseInt(runningApplicationsNodes[i].getAttribute('status'));
 
-			var app_object = this.get_application_from_id(app_id);
-			if (app_object == null)
-				continue;
+			if (typeof this.running_applications.get(pid) == 'undefined') {
+				var app_id = runningApplicationsNodes[i].getAttribute('app_id');
 
-			var instance = new Running_Application(app_object.id, app_object.name, pid, app_status);
+				var app_object = this.applications.get(app_id);
+				if (typeof app_object == 'undefined')
+					continue;
 
-			this.running_applications.push(instance);
-		}
-
-		this.running_applications.sort(this.compareApplication);
-
-		this.generate_html_list_running_apps();
-	},
-
-	generate_html_list_running_apps: function() {
-		var table = document.createElement('table');
-
-		for (var i=0; i<this.running_applications.length; i++) {
-			var instance = this.running_applications[i];
-
-			var tr = document.createElement('tr');
-
-			var td_icon = document.createElement('td');
-			var icon = document.createElement('img');
-			icon.setAttribute('src', instance.getIconURL());
-			td_icon.appendChild(icon);
-			tr.appendChild(td_icon);
-
-			var td_app = document.createElement('td');
-			var td_app_div = document.createElement('div');
-			td_app_div.setAttribute('style', 'font-weight: bold;'); // IE DOM API... setAttribute... LOL
-			td_app_div.innerHTML = '<strong>'+instance.name+'</strong>';
-			td_app.appendChild(td_app_div);
-
-			if (instance.status == 2) {
-				if (this.shareable == true) {
-					var node = document.createElement('a');
-					node.setAttribute('href', 'javascript:;');
-					node.setAttribute('onclick', 'return shareApplication(\''+instance.pid+'\');');
-					node.innerHTML = this.i18n['share'];
-					td_app.appendChild(node);
-				}
-
-				if (this.persistent == true) {
-					var node = document.createElement('a');
-					node.setAttribute('href', 'javascript:;');
-					node.setAttribute('onclick', 'return suspendApplication(\''+instance.pid+'\');');
-					node.innerHTML = this.i18n['suspend'];
-					td_app.appendChild(node);
-				}
+				var instance = new Running_Application(app_object.id, app_object.name, pid, app_status, this.getContext());
+				this.running_applications.set(instance.pid, instance);
+				this.runningApplicationsPanel.add(instance);
+			} else {
+				var instance = this.running_applications.get(pid);
+				instance.update(app_status);
 			}
 
-			if (instance.status == 10) {
-				var node = document.createElement('a');
-				node.setAttribute('href', 'javascript:;');
-				node.setAttribute('onclick', 'return resumeApplication(\''+instance.pid+'\');');
-				node.innerHTML = this.i18n['resume'];
-				td_app.appendChild(node);
-			}
-
-			var real_childNodes = new Array();
-			for (var j=0; j<td_app.childNodes.length; j++)
-				real_childNodes.push(td_app.childNodes[j]);
-
-			if (real_childNodes.length > 2) {
-				var node = document.createElement('span');
-				node.innerHTML = ' - ';
-
-				for (var j=2; j<real_childNodes.length; j++)
-					td_app.insertBefore(node.cloneNode(true), real_childNodes[j]);
-			}
-
-			tr.appendChild(td_app);
-
-			table.appendChild(tr);
+			apps_in_xml.push(pid);
 		}
 
-		$('runningAppsContainer').innerHTML = '';
-
-		$('runningAppsContainer').appendChild(table);
-		$('runningAppsContainer').innerHTML = $('runningAppsContainer').innerHTML; // IE DOM API... appendChild... LOL
-	},
-
-	get_application_from_id: function(app_id_) {
-		for (var i=0; i<this.applications.length; i++) {
-			if (this.applications[i].id == app_id_)
-				return this.applications[i];
+		var runnings = this.running_applications.keys();
+		if (runnings.length > apps_in_xml.length) {
+			for (var i=0; i<runnings.length; i++) {
+				if (apps_in_xml.indexOf(runnings[i]) == -1)
+					this.runningApplicationsPanel.del(this.running_applications.get(runnings[i]));
+			}
 		}
-
-		return null;
-	},
-
-	compareApplication: function(a, b) {
-		if (a.name < b.name)
-			return -1;
-		if (a.name > b.name)
-			return 1;
-
-		return 0;
 	},
 
 	load_explorer: function() {
 		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
 	}
 });
-
-function startExternalApp(app_id_) {
-	var date = new Date();
-	var rand_ = Math.round(Math.random()*100)+date.getTime();
-
-	window_ = popupOpen(rand_);
-
-	setTimeout(function() {
-		window_.location.href = 'external_app.php?app_id='+app_id_;
-	}, 1000);
-
-	return true;
-}
-
-function popupOpen(rand_) {
-	var my_width = screen.width;
-	var my_height = screen.height;
-	var new_width = 0;
-	var new_height = 0;
-	var pos_top = 0;
-	var pos_left = 0;
-
-	new_width = my_width;
-	new_height = my_height;
-
-	var w = window.open('about:blank', 'Ulteo'+rand_, 'toolbar=no,status=no,top='+pos_top+',left='+pos_left+',width='+new_width+',height='+new_height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-
-	return w;
-}
-
-function suspendApplication(access_id_) {
-	new Ajax.Request(
-		'application_exit.php',
-		{
-			method: 'get',
-			parameters: {
-				access_id: access_id_
-			}
-		}
-	);
-}
-
-function resumeApplication(access_id_) {
-	var date = new Date();
-	var rand_ = Math.round(Math.random()*100)+date.getTime();
-
-	window_ = popupOpen(rand_);
-
-	setTimeout(function() {
-		window_.location.href = 'resume.php?access_id='+access_id_;
-	}, 1000);
-
-	return true;
-}
-
-function shareApplication(access_id_) {
-	new Ajax.Request(
-		'share_app.php',
-		{
-			method: 'get',
-			parameters: {
-				access_id: access_id_
-			},
-			onSuccess: function(transport) {
-				showInfo(transport.responseText);
-			}
-		}
-	);
-}
 
 Event.observe(window, 'load', function() {
 	$('lockWrap').hide();

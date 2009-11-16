@@ -20,6 +20,7 @@
 
 var Daemon = Class.create({
 	i18n: new Array(),
+	context: null,
 
 	applet_version: '',
 	applet_main_class: '',
@@ -100,6 +101,19 @@ var Daemon = Class.create({
 				<param name="do_nothing" value="1"> \
 			</applet>';
 		}
+	},
+
+	initContext: function() {
+		var context = new Context(this.i18n, this.shareable, this.persistent);
+
+		return context;
+	},
+
+	getContext: function() {
+		if (this.context == null)
+			this.context = this.initContext();
+
+		return this.context;
 	},
 
 	push_log: function(data_, level_) {

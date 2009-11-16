@@ -7,8 +7,7 @@ scripts_DATA = application_exit.php \
                get_news.php \
                index.php \
                resume.php \
-               resume_app.php \
-               share_app.php
+               resume_app.php
 
 scriptsdir = $(datadir)/ulteo/applicationserver/portal
 
