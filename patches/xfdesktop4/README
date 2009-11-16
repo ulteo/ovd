@@ -11,3 +11,7 @@
 * 15_simpler_settings.patch
   when CustomizeBehavior is not allowed, hide the main checkbox and the
   behavior tab in the settings dialog
+
+* 16_restore_parent_cursor.patch
+  use the parent cursor instead of forcing GDK_LEFT_PTR (fixes startup
+  notification)

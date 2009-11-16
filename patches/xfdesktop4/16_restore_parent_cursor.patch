@@ -1,0 +1,56 @@
+--- a/src/xfdesktop-file-icon-manager.c
++++ b/src/xfdesktop-file-icon-manager.c
+@@ -886,7 +886,7 @@
+     XfdesktopFileIconManager *fmanager = XFDESKTOP_FILE_ICON_MANAGER(user_data);
+     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(fmanager->priv->icon_view));
+     
+-    xfdesktop_file_utils_set_window_cursor(GTK_WINDOW(toplevel), GDK_LEFT_PTR);
++    xfdesktop_file_utils_set_window_cursor(GTK_WINDOW(toplevel), -1);
+     if(error)
+         xfdesktop_file_icon_manager_display_chooser_error(fmanager);
+ }
+--- a/src/xfdesktop-file-utils.c
++++ b/src/xfdesktop-file-utils.c
+@@ -307,14 +307,19 @@
+ 
+ void
+ xfdesktop_file_utils_set_window_cursor(GtkWindow *window,
+-                                       GdkCursorType cursor_type)
++                                       gint cursor_type)
+ {
+     GdkCursor *cursor;
+     
+     if(!window || !GTK_WIDGET(window)->window)
+         return;
+-    
+-    cursor = gdk_cursor_new(cursor_type);
++
++    if (cursor_type < 0) {
++        gdk_window_set_cursor(GTK_WIDGET(window)->window, NULL);
++        return;
++    }
++
++    cursor = gdk_cursor_new((GdkCursorType) cursor_type);
+     if(G_LIKELY(cursor)) {
+         gdk_window_set_cursor(GTK_WIDGET(window)->window, cursor);
+         gdk_cursor_unref(cursor);
+@@ -387,7 +392,7 @@
+     
+     g_return_if_fail(user_data);
+     
+-    xfdesktop_file_utils_set_window_cursor(dfdata->parent, GDK_LEFT_PTR);
++    xfdesktop_file_utils_set_window_cursor(dfdata->parent, -1);
+     
+     if(error) {
+         xfdesktop_file_utils_launch_fallback(dfdata->info, dfdata->screen,
+--- a/src/xfdesktop-special-file-icon.c
++++ b/src/xfdesktop-special-file-icon.c
+@@ -638,7 +638,7 @@
+     icon_view = xfdesktop_icon_peek_icon_view(XFDESKTOP_ICON(user_data));
+     toplevel = gtk_widget_get_toplevel(icon_view);
+     xfdesktop_file_utils_set_window_cursor(GTK_WINDOW(toplevel),
+-                                           GDK_LEFT_PTR);
++                                           -1);
+     
+     if(error) {
+         xfdesktop_special_file_icon_trash_handle_error(XFDESKTOP_SPECIAL_FILE_ICON(user_data),
