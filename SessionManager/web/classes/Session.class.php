@@ -191,7 +191,7 @@ class Session {
 		return false;
 	}
 
-	public function orderDeletion() {
+	public function orderDeletion($request_aps_=true) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
@@ -206,15 +206,17 @@ class Session {
 			}
 		}
 
-		$buf = $server->orderSessionDeletion($this->id);
+		if ($request_aps_) {
+			$buf = $server->orderSessionDeletion($this->id);
 
-		if (! $buf) {
-			Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on ApS side');
-			Abstract_Session::delete($this->id);
-			return true;
+			if ($buf) {
+				$this->setStatus(3);
+				return true;
+			} else
+				Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on ApS side');
 		}
 
-		$this->setStatus(3);
+		Abstract_Session::delete($this->id);
 
 		return true;
 	}
