@@ -196,6 +196,16 @@ class Session {
 
 		$server = Abstract_Server::load($this->server);
 
+		if ($this->settings['windows_manage_session']) {
+			$windows_server = Abstract_Server::load($this->settings['windows_server']);
+
+			$buf = $windows_server->orderWindowsSessionDeletion($this->id);
+			if (! $buf) {
+				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\'');
+				return false;
+			}
+		}
+
 		$buf = $server->orderSessionDeletion($this->id);
 
 		if (! $buf) {

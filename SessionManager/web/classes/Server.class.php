@@ -590,6 +590,99 @@ class Server {
 		return $ret;
 	}
 
+	public function orderWindowsSessionCreation($session_id_, $login_, $password_, $displayname_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$session_node = $dom->createElement('session');
+		$session_node->setAttribute('id', $session_id_);
+		$user_node = $dom->createElement('user');
+		$user_node->setAttribute('login', $login_);
+		$user_node->setAttribute('password', $password_);
+		$user_node->setAttribute('displayName', $displayname_);
+		$session_node->appendChild($user_node);
+		$dom->appendChild($session_node);
+
+		$xml = $dom->saveXML();
+
+		$ret = query_url_post_xml($this->getWebservicesBaseURL().'/session/create', $xml);
+
+		$buf = @$dom->loadXML($ret);
+		if (! $buf) {
+			Logger::error('main', 'Server::orderWindowsSessionCreation Unable to get a valid XML from windows session/create');
+			return false;
+		}
+
+		if (! $dom->hasChildNodes()) {
+			Logger::error('main', 'Server::orderWindowsSessionCreation Unable to get a valid XML from windows session/create');
+			return false;
+		}
+
+		$session_node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($session_node)) {
+			Logger::error('main', 'Server::orderWindowsSessionCreation Unable to get a valid XML from windows session/create');
+			return false;
+		}
+
+		$windows_session_id = $session_node->getAttribute('id');
+		if ($windows_session_id != $session_id_) {
+			Logger::error('main', 'Server::orderWindowsSessionCreation Unable to get a valid XML from windows session/create');
+			return false;
+		}
+
+		if ($session_node->hasAttribute('login'))
+			$login_ = $session_node->getAttribute('login');
+
+		return true;
+	}
+
+	public function orderWindowsSessionDeletion($session_id_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$ret = query_url_post($this->getWebservicesBaseURL().'/session/status/'.$session_id_);
+
+		$buf = @$dom->loadXML($ret);
+		if (! $buf) {
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/status');
+			return false;
+		}
+
+		if (! $dom->hasChildNodes()) {
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
+			return false;
+		}
+
+		$session_node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($session_node)) {
+			Logger::critical('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/status');
+			return false;
+		}
+
+		$windows_session_status = $session_node->getAttribute('status');
+
+		if ($windows_session_status != 5 && $windows_session_status != 6) {
+			$ret = query_url_post($this->getWebservicesBaseURL().'/session/destroy/'.$session_id_);
+
+			$buf = @$dom->loadXML($ret);
+			if (! $buf) {
+				Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
+				return false;
+			}
+
+			if (! $dom->hasChildNodes()) {
+				Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
+				return false;
+			}
+
+			$session_node = $dom->getElementsByTagname('session')->item(0);
+			if (is_null($session_node)) {
+				Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	public function getWebLog($nb_lines_=NULL) {
 		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
 

@@ -272,10 +272,12 @@ if (isset($allow_proxy) && $allow_proxy != '0') {
 	}
 }
 
+$manage_windows_session = false;
 switch ($prefs->get('UserDB', 'enable')) {
 	case 'activedirectory':
 		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
 		$windows_login = $user->getAttribute('real_login').'@'.$prefs_ad['domain'];
+		$windows_password = $_SESSION['password'];
 		break;
 	case 'ldap':
 		$prefs_ldap = $prefs->get('UserDB', 'ldap');
@@ -287,20 +289,36 @@ switch ($prefs->get('UserDB', 'enable')) {
 				break;
 			}
 			$windows_login = $user->getAttribute('login').'@'.$suffix;
+			$windows_password = $_SESSION['password'];
 		}
 		break;
+	default:
+		$manage_windows_session = true;
+		$windows_login = $user->getAttribute('login');
+		$windows_password = gen_string(8);
 }
 
 if (isset($windows_login) && $windows_login != '' && count($user->applications('windows')) > 0) {
+	$optional_args['windows_manage_session'] = $manage_windows_session;
+
 	$windows_server = $user->getAvailableServer('windows');
 	if (is_object($windows_server)) {
 		$optional_args['windows_server'] = $windows_server->fqdn;
 		$optional_args['windows_login'] = $windows_login;
-		$optional_args['windows_password'] = $_SESSION['password'];
+		$optional_args['windows_password'] = $windows_password;
 	} else {
 		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
 		die_error(_('You don\'t have access to a windows server for now'),__FILE__,__LINE__);
 	}
+}
+
+if ($manage_windows_session === true) {
+	$buf = $windows_server->orderWindowsSessionCreation($session->id, &$windows_login, $windows_password, $user->getAttribute('displayname'));
+	if (! $buf) {
+		Logger::error('main', '(startsession) Unable to create windows session for user \''.$user->getAttribute('login').'\' on server \''.$windows_server->fqdn.'\'');
+		die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
+	}
+	$optional_args['windows_login'] = $windows_login; // Login can be changed by the windows ApS daemon
 }
 
 $plugins->doStartsession(array(

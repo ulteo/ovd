@@ -57,7 +57,8 @@ if ($sessions) {
 		if (! $buf || (int)$buf == 4) {
 			Logger::warning('main', '(check) Session \''.$session->id.'\' is no longer existing, deleting');
 
-			Abstract_Session::delete($session->id);
+			if (! $session->orderDeletion())
+				Logger::error('main', '(check) Unable to delete session \''.$session->id.'\'');
 		}
 	}
 }
