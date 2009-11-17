@@ -272,53 +272,44 @@ if (isset($allow_proxy) && $allow_proxy != '0') {
 	}
 }
 
-$manage_windows_session = false;
-switch ($prefs->get('UserDB', 'enable')) {
-	case 'activedirectory':
-		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
-		$windows_login = $user->getAttribute('real_login').'@'.$prefs_ad['domain'];
-		$windows_password = $_SESSION['password'];
-		break;
-	case 'ldap':
-		$prefs_ldap = $prefs->get('UserDB', 'ldap');
-		if ($prefs_ldap['ad'] == 1) {
-			$buf = $prefs_ldap['suffix'];
-			$suffix = suffix2domain($buf);
-			if (! is_string($suffix)) {
-				Logger::error('main', 'LDAP suffix is invalid for AD usage : '.$buf);
-				break;
-			}
-			$windows_login = $user->getAttribute('login').'@'.$suffix;
-			$windows_password = $_SESSION['password'];
-		}
-		break;
-	default:
-		$manage_windows_session = true;
-		$windows_login = $user->getAttribute('login');
-		$windows_password = gen_string(8);
-}
-
-if (isset($windows_login) && $windows_login != '' && count($user->applications('windows')) > 0) {
-	$optional_args['windows_manage_session'] = $manage_windows_session;
-
+if (count($user->applications('windows')) > 0) {
 	$windows_server = $user->getAvailableServer('windows');
-	if (is_object($windows_server)) {
-		$optional_args['windows_server'] = $windows_server->fqdn;
-		$optional_args['windows_login'] = $windows_login;
-		$optional_args['windows_password'] = $windows_password;
-	} else {
+	if (! is_object($windows_server)) {
 		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
-		die_error(_('You don\'t have access to a windows server for now'),__FILE__,__LINE__);
+		die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
+	}
+	$optional_args['windows_server'] = $windows_server->fqdn;
+
+	$optional_args['windows_manage_session'] = false;
+
+	$user_profile_mode = $prefs->get('UserDB', 'enable');
+	$prefs_ldap = $prefs->get('UserDB', 'ldap');
+	if ($user_profile_mode == 'activedirectory') {
+		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
+		$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$prefs_ad['domain'];
+	} elseif ($user_profile_mode == 'ldap' && $prefs_ldap['ad'] == 1) {
+		$buf = $prefs_ldap['suffix'];
+		$suffix = suffix2domain($buf);
+		if (! is_string($suffix)) {
+			Logger::error('main', 'LDAP suffix is invalid for AD usage : '.$buf);
+			die_error('LDAP suffix is invalid for AD usage', __FILE__, __LINE__);
+		}
+		$optional_args['windows_login'] = $user->getAttribute('login').'@'.$suffix;
+	} else {
+		$optional_args['windows_manage_session'] = true;
+		$optional_args['windows_login'] = $user->getAttribute('login');
 	}
 
-	if ($manage_windows_session === true) {
-		$buf = $windows_server->orderWindowsSessionCreation($session->id, &$windows_login, $windows_password, $user->getAttribute('displayname'));
+	if ($optional_args['windows_manage_session'] === true) {
+		$optional_args['windows_password'] = gen_string(8);
+
+		$buf = $windows_server->orderWindowsSessionCreation($session->id, &$optional_args['windows_login'], $optional_args['windows_password'], $user->getAttribute('displayname'));
 		if (! $buf) {
-			Logger::error('main', '(startsession) Unable to create windows session for user \''.$user->getAttribute('login').'\' on server \''.$windows_server->fqdn.'\'');
+			Logger::error('main', '(startsession) Unable to create windows session for user \''.$user->getAttribute('login').'\' on server \''.$optional_args['windows_server'].'\'');
 			die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
 		}
-		$optional_args['windows_login'] = $windows_login; // Login can be changed by the windows ApS daemon
-	}
+	} else
+		$optional_args['windows_password'] = $_SESSION['password'];
 }
 
 $plugins->doStartsession(array(
