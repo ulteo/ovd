@@ -310,15 +310,15 @@ if (isset($windows_login) && $windows_login != '' && count($user->applications('
 		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
 		die_error(_('You don\'t have access to a windows server for now'),__FILE__,__LINE__);
 	}
-}
 
-if ($manage_windows_session === true) {
-	$buf = $windows_server->orderWindowsSessionCreation($session->id, &$windows_login, $windows_password, $user->getAttribute('displayname'));
-	if (! $buf) {
-		Logger::error('main', '(startsession) Unable to create windows session for user \''.$user->getAttribute('login').'\' on server \''.$windows_server->fqdn.'\'');
-		die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
+	if ($manage_windows_session === true) {
+		$buf = $windows_server->orderWindowsSessionCreation($session->id, &$windows_login, $windows_password, $user->getAttribute('displayname'));
+		if (! $buf) {
+			Logger::error('main', '(startsession) Unable to create windows session for user \''.$user->getAttribute('login').'\' on server \''.$windows_server->fqdn.'\'');
+			die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
+		}
+		$optional_args['windows_login'] = $windows_login; // Login can be changed by the windows ApS daemon
 	}
-	$optional_args['windows_login'] = $windows_login; // Login can be changed by the windows ApS daemon
 }
 
 $plugins->doStartsession(array(
