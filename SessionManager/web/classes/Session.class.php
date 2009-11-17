@@ -199,8 +199,9 @@ class Session {
 		$buf = $server->orderSessionDeletion($this->id);
 
 		if (! $buf) {
+			Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on ApS side');
 			Abstract_Session::delete($this->id);
-			return false;
+			return true;
 		}
 
 		$this->setStatus(3);
