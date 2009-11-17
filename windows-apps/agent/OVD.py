@@ -3,7 +3,7 @@
 
 # Copyright (C) 2008-2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2009
 #
 # This program is free software; you can redistribute it and/or 
@@ -19,6 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+from Logger import Logger
+from SessionManagement import SessionManagement
 
 import sessionmanager
 from BaseHTTPServer import HTTPServer
@@ -166,6 +169,10 @@ class OVD(win32serviceutil.ServiceFramework):
 		conf["log_flags"] = ["info", "warn", "error"]
 		conf["hostname"] = None
 		conf["web_port"] = None
+		
+		# Init the logger instance
+		Logger.initialize(name, Logger.INFO | Logger.WARN | Logger.ERROR, conf["log_file"], False, True)
+		
 		log_debug("main 004 log_file "+conf["log_file"])
 		
 		try:
@@ -202,6 +209,8 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
 
 		self.mimetypes = mime.MimeInfos()
+		
+		self.internalSM = SessionManagement(self)
 
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
@@ -219,6 +228,11 @@ class OVD(win32serviceutil.ServiceFramework):
 			self.version_os = windows_server[0].Caption
 		except Exception, err:
 			self.version_os = platform.version()
+		
+		if not self.internalSM.initialize():
+			Logger.error("internal SM init failed")
+			self.SvcStop()
+			return
 		
 		#self.webserver.serve_forever()
 		self.thread_web.start()

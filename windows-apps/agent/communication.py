@@ -19,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+from Logger import Logger
+from Session import Session
 
 from SimpleHTTPServer import SimpleHTTPRequestHandler
 import cgi
@@ -68,6 +70,116 @@ class Web(SimpleHTTPRequestHandler):
 			trace_exc = "".join(traceback.format_tb(tb))
 			self.server.daemon.log.debug("do_GET error '%s' '%s'"%(trace_exc, str(exception_string)))
 			log_debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
+
+	def do_POST(self):
+		root_dir = '/applicationserver'
+		try:
+			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
+				self.response_error(401)
+				return
+
+			if self.path.startswith(root_dir+"/webservices/session"):
+				self.webservices_session(self.path[len(root_dir+"/webservices/session"):])
+			else:
+				self.response_error(404)
+				return
+			
+		except Exception, err:
+			Logger.error("exception: "+str(err))
+
+
+	@staticmethod
+	def error2xml(code, message=None):
+		doc = Document()
+		
+		rootNode = doc.createElement("error")
+		rootNode.setAttribute("id", code)
+		
+		if message is not None:
+			textNode = doc.createTextNode(message)
+			rootNode.appendChild(textNode)
+		
+		doc.appendChild(rootNode)
+		return doc
+
+
+	def webservices_session_answer(self, content):
+		self.send_response(200, 'OK')
+		self.send_header('Content-Type', 'text/xml')
+		self.end_headers()
+		self.wfile.write(content.toprettyxml())
+		return
+
+	def webservices_session(self, request):
+		Logger.debug("Communication do_POST webservice session (%s)"%(request))
+		internalSM = self.server.daemon.internalSM
+		
+		if request == "/create":
+			try:
+				length = int(self.headers["Content-Length"])
+				content = self.rfile.read(length)
+				s = Session(content)
+			
+			except Exception, e:
+				return self.webservices_session_answer(self.error2xml("usage", str(e)))
+			
+			if internalSM.exist(s.id):
+				return self.webservices_session_answer(self.error2xml("already exist session"))
+			
+			try:
+				s.init()
+	
+			except Exception, e:
+				return self.webservices_session_answer(self.error2xml("user", str(e)))
+			
+			internalSM.add(s)
+
+			doc = Document()
+			rootNode = doc.createElement("session")
+			rootNode.setAttribute("id", s.id)
+			if s.userParams[0] != s.user.login:
+				rootNode.setAttribute("login", s.user.login)
+			doc.appendChild(rootNode)
+
+			return self.webservices_session_answer(doc)
+
+
+		elif request.startswith("/destroy/"):
+			session_id = request[len("/destroy/"):]
+			if not internalSM.exist(session_id):
+				return self.webservices_session_answer(self.error2xml("unknwown"))
+
+			s = internalSM.get(session_id)
+			if s.getState() in [Session.DESTROYING, Session.DESTROYED]:
+				return self.webservices_session_answer(self.error2xml("already"))
+			
+			s.orderDestroy()
+		
+			doc = Document()
+			rootNode = doc.createElement("session")
+			rootNode.setAttribute("id", s.id)
+			doc.appendChild(rootNode)
+		
+			return self.webservices_session_answer(doc)
+
+	
+		elif request.startswith("/status/"):
+			session_id = request[len("/status/"):]
+			if not internalSM.exist(session_id):
+				return self.webservices_session_answer(self.error2xml("unknwown"))
+
+			s = internalSM.get(session_id)
+			state = s.getState()
+			if state == Session.DESTROYED:
+				internalSM.delete(s)
+				# todo: find a better way to do that
+
+			doc = Document()
+			rootNode = doc.createElement("session")
+			rootNode.setAttribute("id", s.id)
+			rootNode.setAttribute("satus", str(state))
+			doc.appendChild(rootNode)
+			return self.webservices_session_answer(doc)
 	
 	def response_error(self, code):
 		self.send_response(code)
