@@ -102,7 +102,7 @@ if (isset($_POST['join'])) {
 	echo '<h2>'._('Information').'</h2>';
 
 	echo '<ul>';
-	echo '<li><strong>Server:</strong> '.$session->getAttribute('server').'</li>';
+	echo '<li><strong>Server:</strong> <a href="servers.php?action=manage&fqdn='.$session->getAttribute('server').'">'.$session->getAttribute('server').'</a></li>';
 	echo '<li><strong>User:</strong> '.$session->getAttribute('user_displayname').'</li>';
 	echo '<li><strong>Type:</strong> ';
 	if ($session->getAttribute('mode') == 'desktop')
