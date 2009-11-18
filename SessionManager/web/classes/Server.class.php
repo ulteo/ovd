@@ -714,12 +714,10 @@ class Server {
 		Logger::debug('main', 'Starting Server::getWebLogFile for server \''.$this->fqdn.'\'');
 
 		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=web', false, true);
-		if (is_array($ret)) {
+		if (is_array($ret))
 			return $ret['data'];
-		}
-		else {
-			return false;
-		}
+
+		return false;
 	}
 
 	public function getDaemonLogFile() {
@@ -731,13 +729,10 @@ class Server {
 		}
 
 		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false, true);
-		if (is_array($ret)) {
+		if (is_array($ret))
 			return $ret['data'];
-		}
-		else {
-			return false;
-		}
 
+		return false;
 	}
 
 	public function getApplicationIcon($icon_path_, $desktopfile_) {
