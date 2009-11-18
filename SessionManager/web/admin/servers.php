@@ -729,22 +729,24 @@ function show_manage($fqdn) {
 		echo '</td></tr>';
 	}
 
-  echo '<tr><td>';
-  echo _('Number of available sessions on this server').': ';
-  echo '</td><td>';
-	if ($can_do_action) {
-		echo '<form action="servers.php" method="GET">';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-		echo '<input type="hidden" name="action" value="available_sessions" />';
-		echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
+	if ($server->type == 'linux') {
+		echo '<tr><td>';
+		echo _('Number of available sessions on this server').': ';
+		echo '</td><td>';
+		if ($can_do_action) {
+			echo '<form action="servers.php" method="GET">';
+			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="action" value="available_sessions" />';
+			echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
+		}
+		echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
+		if ($can_do_action) {
+			echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
+			echo ' <input type="submit" value="'._('change').'" />';
+			echo '</form>';
+		}
+		echo '</td></tr>';
 	}
-  echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
-	if ($can_do_action) {
-		echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
-		echo ' <input type="submit" value="'._('change').'" />';
-		echo '</form>';
-  }
-  echo '</td></tr>';
 
   echo '<tr><td>';
   echo _('Redirection name of this server').': ';
