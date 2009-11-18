@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ovd-application-server 1.0~svn00883\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-12 08:54+0100\n"
+"POT-Creation-Date: 2009-11-18 10:35+0100\n"
 "PO-Revision-Date: 2009-03-14 05:34+0100\n"
 "Last-Translator: Gauvain Pocentek <gauvain@ulteo.com>\n"
 "Language-Team: French\n"
@@ -15,6 +15,32 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/error/index.php:51
+msgid "Server: invalid token"
+msgstr "Serveur : token invalide"
+
+#: ../web/error/index.php:52 ../web/desktop/index.php:59
+#: ../web/portal/index.php:73
+msgid "Your session has ended unexpectedly"
+msgstr "Votre session s'est terminée de manière inattendue"
+
+#: ../web/error/index.php:53 ../web/share/index.php:57
+#: ../web/desktop/index.php:60 ../web/portal/resume.php:57
+#: ../web/portal/external_app.php:85 ../web/portal/index.php:74
+msgid "error details"
+msgstr "détails de l'erreur"
+
+#: ../web/error/index.php:54 ../web/desktop/index.php:62
+#: ../web/portal/index.php:76
+#, php-format
+msgid "If you want to start another session, click <a href=\"%s\">here</a>"
+msgstr "Cliquez <a href=\"%s\">ici</a> pour démarrer une autre session"
+
+#: ../web/error/index.php:71
+msgid "Loading Error"
+msgstr "Erreur de chargement"
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/share/index.php:54 ../web/desktop/index.php:57
@@ -31,12 +57,6 @@ msgstr "L'application partagée a quitté, vous pouvez fermer la fenêtre"
 msgid "Shared application has ended unexpectedly"
 msgstr "L'application partagée s'est terminée de manière inattendue"
 
-#: ../web/share/index.php:57 ../web/desktop/index.php:60
-#: ../web/portal/resume.php:57 ../web/portal/external_app.php:85
-#: ../web/portal/index.php:74
-msgid "error details"
-msgstr "détails de l'erreur"
-
 #: ../web/share/index.php:74
 msgid "Loading Share"
 msgstr "Chargement du partage"
@@ -45,19 +65,10 @@ msgstr "Chargement du partage"
 msgid "Your session has ended, you can now close the window"
 msgstr "Votre session est terminée, vous pouvez fermer la fenêtre"
 
-#: ../web/desktop/index.php:59 ../web/portal/index.php:73
-msgid "Your session has ended unexpectedly"
-msgstr "Votre session s'est terminée de manière inattendue"
-
 #: ../web/desktop/index.php:61 ../web/portal/resume.php:58
 #: ../web/portal/external_app.php:86 ../web/portal/index.php:75
 msgid "Close this window"
 msgstr "Fermer cette fenêtre"
-
-#: ../web/desktop/index.php:62 ../web/portal/index.php:76
-#, php-format
-msgid "If you want to start another session, click <a href=\"%s\">here</a>"
-msgstr "Cliquez <a href=\"%s\">ici</a> pour démarrer une autre session"
 
 #: ../web/desktop/index.php:77
 msgid "Share desktop"

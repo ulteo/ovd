@@ -17,6 +17,7 @@ web/invite.php
 web/suspend.php
 web/print.php
 web/icon.php
+web/error/index.php
 web/share/index.php
 web/whatsup.php
 web/desktop/index.php

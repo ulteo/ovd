@@ -8,13 +8,39 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-11-12 08:54+0100\n"
+"POT-Creation-Date: 2009-11-18 10:35+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/error/index.php:51
+msgid "Server: invalid token"
+msgstr ""
+
+#: ../web/error/index.php:52 ../web/desktop/index.php:59
+#: ../web/portal/index.php:73
+msgid "Your session has ended unexpectedly"
+msgstr ""
+
+#: ../web/error/index.php:53 ../web/share/index.php:57
+#: ../web/desktop/index.php:60 ../web/portal/resume.php:57
+#: ../web/portal/external_app.php:85 ../web/portal/index.php:74
+msgid "error details"
+msgstr ""
+
+#: ../web/error/index.php:54 ../web/desktop/index.php:62
+#: ../web/portal/index.php:76
+#, php-format
+msgid "If you want to start another session, click <a href=\"%s\">here</a>"
+msgstr ""
+
+#: ../web/error/index.php:71
+msgid "Loading Error"
+msgstr ""
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/share/index.php:54 ../web/desktop/index.php:57
@@ -31,12 +57,6 @@ msgstr ""
 msgid "Shared application has ended unexpectedly"
 msgstr ""
 
-#: ../web/share/index.php:57 ../web/desktop/index.php:60
-#: ../web/portal/resume.php:57 ../web/portal/external_app.php:85
-#: ../web/portal/index.php:74
-msgid "error details"
-msgstr ""
-
 #: ../web/share/index.php:74
 msgid "Loading Share"
 msgstr ""
@@ -45,18 +65,9 @@ msgstr ""
 msgid "Your session has ended, you can now close the window"
 msgstr ""
 
-#: ../web/desktop/index.php:59 ../web/portal/index.php:73
-msgid "Your session has ended unexpectedly"
-msgstr ""
-
 #: ../web/desktop/index.php:61 ../web/portal/resume.php:58
 #: ../web/portal/external_app.php:86 ../web/portal/index.php:75
 msgid "Close this window"
-msgstr ""
-
-#: ../web/desktop/index.php:62 ../web/portal/index.php:76
-#, php-format
-msgid "If you want to start another session, click <a href=\"%s\">here</a>"
 msgstr ""
 
 #: ../web/desktop/index.php:77
