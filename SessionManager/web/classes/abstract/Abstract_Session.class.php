@@ -141,6 +141,9 @@ class Abstract_Session {
 
 		Abstract_Liaison::save('ServerSession', $session_->server, $session_->id);
 
+		if (isset($session_->settings['windows_server']))
+			Abstract_Liaison::save('ServerSession', $session_->settings['windows_server'], $session_->id);
+
 		return true;
 	}
 
