@@ -19,3 +19,7 @@
 * ulteo_run_windows_app.patch
   if the executable is an rdesktop (windows) application, use the CIFS path to
   be able to open the file on the windows server
+
+* ulteo_allow-slash-in-desktop-files.patch
+  some .desktop file have a '/' in the Name field, allow their use instead of
+  useing the file name
