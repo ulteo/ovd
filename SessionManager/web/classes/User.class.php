@@ -123,6 +123,9 @@ class User {
 		$default_settings = $prefs->get('general', 'session_settings_defaults');
 		$launch_without_apps = (int)$default_settings['launch_without_apps'];
 
+		$user_profile_mode = $prefs->get('UserDB', 'enable');
+		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
+
 		// get the list of server who the user can launch his applications
 		Logger::debug('main','USER::getAvailableServers (type='.$type.')');
 		$servers = array();
@@ -137,6 +140,11 @@ class User {
 		
 		$available_servers = Servers::getAvailableType($type);
 		foreach($available_servers as $server) {
+			if ($user_profile_mode == 'activedirectory' && $type == 'windows' && $server->getAttribute('windows_domain') != $prefs_ad['domain']) {
+				Logger::warning('main', 'USER::getAvailableServers Server \''.$server->fqdn.'\' is NOT linked to Active Directory domain \''.$prefs_ad['domain'].'\'');
+				continue;
+			}
+
 			if (count($apps_id)>0 || $launch_without_apps == 1) {
 				$elements2 = array();
 				$buf2 = Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn);

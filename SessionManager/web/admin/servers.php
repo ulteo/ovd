@@ -721,6 +721,14 @@ function show_manage($fqdn) {
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
 
+	if ($server->type == 'windows' && ! is_null($server->windows_domain)) {
+		echo '<tr><td>';
+		echo _('Inside Active Directory domain').': ';
+		echo '</td><td>';
+		echo $server->windows_domain;
+		echo '</td></tr>';
+	}
+
   echo '<tr><td>';
   echo _('Number of available sessions on this server').': ';
   echo '</td><td>';

@@ -735,6 +735,48 @@ class Server {
 		return false;
 	}
 
+	public function getWindowsADDomain() {
+		Logger::debug('main', 'Starting Server::getWindowsADDomain for server \''.$this->fqdn.'\'');
+
+		if ($this->getAttribute('type') != 'windows') {
+			Logger::error('main', 'Server::getWindowsADDomain - \''.$this->fqdn.'\' is NOT a windows server');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$ret = query_url_post($this->getWebservicesBaseURL().'/domain', false);
+
+		$buf = @$dom->loadXML($ret);
+		if (! $buf) {
+			Logger::error('main', 'Server::getWindowsADDomain Unable to get a valid XML from windows domain');
+			return false;
+		}
+
+		if (! $dom->hasChildNodes()) {
+			Logger::error('main', 'Server::getWindowsADDomain Unable to get a valid XML from windows domain');
+			return false;
+		}
+
+		$domain_node = $dom->getElementsByTagname('domain')->item(0);
+		if (is_null($domain_node)) {
+			$error_node = $dom->getElementsByTagname('error')->item(0);
+			if (is_null($error_node)) {
+				Logger::error('main', 'Server::getWindowsADDomain Unable to get a valid XML from windows domain');
+				return false;
+			} else  {
+				$buf = $error_node->getAttribute('id');
+				if ($buf == 'no_domain') {
+					Logger::info('main', 'Server::getWindowsADDomain No domain for server \''.$this->fqdn.'\'');
+					$this->windows_domain = NULL;
+				}
+			}
+		} else
+			$this->windows_domain = $domain_node->getAttribute('name');
+
+		return true;
+	}
+
 	public function getApplicationIcon($icon_path_, $desktopfile_) {
 		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
 

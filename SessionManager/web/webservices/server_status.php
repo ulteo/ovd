@@ -83,6 +83,11 @@ if (! $exists) {
 
 $buf->setStatus($_GET['status']);
 
+if ($buf->getAttribute('status') == 'ready' && $buf->type == 'windows') {
+	if (! $buf->getWindowsADDomain())
+		die('Server not OK');
+}
+
 Abstract_Server::save($buf);
 
 try {

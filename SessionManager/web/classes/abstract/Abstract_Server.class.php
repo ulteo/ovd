@@ -22,6 +22,10 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Abstract_Server {
+	public static $server_properties = array(
+		'windows_domain'	=>	'windows_domain'
+	);
+
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Server::init');
 
@@ -54,6 +58,21 @@ class Abstract_Server {
 		}
 
 		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers\' created');
+
+		$servers_properties_table_structure = array(
+			'fqdn'			=>	'varchar(255) NOT NULL',
+			'property'		=>	'varchar(255) NOT NULL',
+			'value'			=>	'varchar(255) NOT NULL'
+		);
+
+		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers_properties', $servers_properties_table_structure, array('fqdn', 'property'));
+
+		if (! $ret) {
+			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers_properties\'');
+			return false;
+		}
+
+		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers_properties\' created');
 
 		return true;
 	}
@@ -110,6 +129,13 @@ class Abstract_Server {
 		$buf->ram_total = (int)$ram_total;
 		$buf->ram_used = (int)$ram_used;
 
+		$properties = Abstract_Server::loadProperties($buf);
+
+		foreach (Abstract_Server::$server_properties as $object_property => $db_property) {
+			if (isset($properties[$db_property]))
+				$buf->$object_property = $properties[$db_property];
+		}
+
 		return $buf;
 	}
 
@@ -131,6 +157,41 @@ class Abstract_Server {
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
+
+		$properties = Abstract_Server::loadProperties($server_);
+
+		foreach (Abstract_Server::$server_properties as $object_property => $db_property)
+			Abstract_Server::saveProperty($server_, $object_property, $db_property, (isset($properties[$object_property])?$properties[$object_property]:NULL));
+
+		return true;
+	}
+
+	private static function loadProperties($server_) {
+		Logger::debug('main', 'Starting Abstract_Server::loadProperties for \''.$server_->fqdn.'\'');
+
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'property', 'value', $SQL->prefix.'servers_properties', 'fqdn', $server_->fqdn);
+		$rows = $SQL->FetchAllResults();
+
+		$properties = array();
+		foreach ($rows as $row)
+			$properties[$row['property']] = $row['value'];
+
+		return $properties;
+	}
+
+	private static function saveProperty($server_, $object_property_, $db_property_, $old_property_) {
+		Logger::debug('main', 'Starting Abstract_Server::saveProperty for \''.$server_->fqdn.'\' object_property \''.$object_property_.'\' db_property \''.$db_property_.'\'');
+
+		$SQL = MySQL::getInstance();
+
+		if (! is_null($old_property_) && is_null($server_->$object_property_))
+			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.'servers_properties', 'property', $db_property_, 'fqdn', $server_->fqdn);
+		elseif (is_null($old_property_) && ! is_null($server_->$object_property_))
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES(%5,%6,%7)', $SQL->prefix.'servers_properties', 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $server_->$object_property_);
+		elseif ($old_property_ != $server_->$object_property_)
+			$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', $SQL->prefix.'servers_properties', 'value', $server_->$object_property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
 
 		return true;
 	}
@@ -170,6 +231,11 @@ class Abstract_Server {
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
+		$properties = Abstract_Server::loadProperties($buf);
+
+		foreach (Abstract_Server::$server_properties as $object_property => $db_property)
+			Abstract_Server::saveProperty($server_, $object_property, $db_property, (isset($properties[$object_property])?$properties[$object_property]:NULL));
+
 		return true;
 	}
 
@@ -204,6 +270,7 @@ class Abstract_Server {
 		}
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'servers_properties', 'fqdn', $fqdn);
 
 		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
 		foreach ($sessions_liaisons as $sessions_liaison) {
