@@ -135,13 +135,11 @@ if (isset($_POST['join'])) {
 					continue;
 
 				$myapp = $apps[$app_id];
-				if (! is_object($myapp)) {
-					echo '<li>'._('Unknown application').'</li>';
+				if (! is_object($myapp))
 					continue;
-				}
 
 				echo '<tr><td>';
-				echo '<li><a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
+				echo '<img src="media/image/cache.php?id='.$myapp->getAttribute('id').'" alt="" title="" /> <a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
 				echo '</td><td>';
 				if ($session->getAttribute('mode') == 'portal' && $session->getAttribute('status') == 2) {
 					echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
@@ -153,7 +151,6 @@ if (isset($_POST['join'])) {
 					echo '	<input type="submit" name="active" value="'._('Join this application').'" />';
 					echo '</form>';
 				}
-				echo '</li>';
 				echo '</td></tr>';
 			}
 			echo '</table>';
