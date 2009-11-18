@@ -102,7 +102,16 @@ if (isset($_POST['join'])) {
 	echo '<h2>'._('Information').'</h2>';
 
 	echo '<ul>';
+	echo '<li><strong>Server:</strong> '.$session->getAttribute('server').'</li>';
 	echo '<li><strong>User:</strong> '.$session->getAttribute('user_displayname').'</li>';
+	echo '<li><strong>Type:</strong> ';
+	if ($session->getAttribute('mode') == 'desktop')
+		echo _('Desktop');
+	elseif ($session->getAttribute('mode') == 'portal')
+		echo _('Portal');
+	else
+		echo _('Unknown');
+	echo '</li>';
 	echo '<li><strong>Started:</strong> ';
 	$buf = $session->getAttribute('start_time');
 	if (! $buf)
