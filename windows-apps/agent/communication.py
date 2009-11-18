@@ -34,6 +34,7 @@ import tempfile
 import servicemanager
 from win32com.shell import shell
 import traceback
+import win32api
 
 def log_debug(msg_):
 	servicemanager.LogInfoMsg(str(msg_))
@@ -72,14 +73,18 @@ class Web(SimpleHTTPRequestHandler):
 			log_debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
 
 	def do_POST(self):
-		root_dir = '/applicationserver'
+		root_dir = '/applicationserver/webservices'
 		try:
 			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
 				self.response_error(401)
 				return
 
-			if self.path.startswith(root_dir+"/webservices/session"):
-				self.webservices_session(self.path[len(root_dir+"/webservices/session"):])
+			if self.path.startswith(root_dir+"/session"):
+				self.webservices_session(self.path[len(root_dir+"/session"):])
+				
+			elif self.path == root_dir+"/domain":
+				self.webservices_domain()
+			
 			else:
 				self.response_error(404)
 				return
@@ -309,3 +314,36 @@ class Web(SimpleHTTPRequestHandler):
 		else :
 			self.server.daemon.log.debug("webservices_server_log errorB 400")
 			self.send_response(400)
+	
+	def webservices_domain(self):
+		Logger.info("webservices_domain")
+		doc = Document()
+		domain = None
+		
+		try:
+			domain = win32api.GetComputerNameEx(win32api.NameSamCompatible)
+		except Excpetion, e:
+			Logger.warn("webservices_domain: exception '%s'"%(str(e)))
+			rootNode = doc.createElement("error")
+			rootNode.setAttribute("id", "internal")
+			
+			textNode = doc.createTextNode(str(e))
+			rootNode.appendChild(textNode)
+		
+		if domain is not None:
+			if domain == u"":
+				Logger.info("webservices_domain: no domain")
+				rootNode = doc.createElement("error")
+				rootNode.setAttribute("id", "no_domain")
+			else:
+				rootNode = doc.createElement("domain")
+				rootNode.setAttribute("name", domain)
+				
+				Logger.info("webservices_domain: '%s'"%(domain))
+		
+		doc.appendChild(rootNode)
+		self.send_response(200, 'OK')
+		self.send_header('Content-Type', 'text/xml')
+		self.end_headers()
+		self.wfile.write(doc.toxml())
+		return
