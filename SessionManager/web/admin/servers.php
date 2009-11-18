@@ -746,22 +746,22 @@ function show_manage($fqdn) {
 			echo '</form>';
 		}
 		echo '</td></tr>';
-	}
 
-  echo '<tr><td>';
-  echo _('Redirection name of this server').': ';
-  echo '</td><td>';
-	if ($can_do_action) {
-	    echo '<form action="servers.php" method="GET">';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-		echo '<input type="hidden" name="action" value="external_name" />';
+		echo '<tr><td>';
+		echo _('Redirection name of this server').': ';
+		echo '</td><td>';
+		if ($can_do_action) {
+			echo '<form action="servers.php" method="GET">';
+			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+			echo '<input type="hidden" name="action" value="external_name" />';
+		}
+		echo '<input type="text" name="external_name" value="'.$external_name.'" />';
+		if ($can_do_action) {
+			echo ' <input type="submit" value="'._('change').'" />';
+			echo '</form>';
+		}
+		echo "</td></tr>\n";
 	}
-  echo '<input type="text" name="external_name" value="'.$external_name.'" />';
-	if ($can_do_action) {
-		echo ' <input type="submit" value="'._('change').'" />';
-		echo '</form>';
-	}
-  echo "</td></tr>\n";
 
   echo '<tr><td>';
   echo _('Web port of this server').': ';
