@@ -87,7 +87,6 @@ Abstract_Server::save($buf);
 
 try {
 	$buf->updateApplications();
-}
-catch (Exception $e) {
-	Logger::warning('main', '(webservices/server_status) updateApplications error for \''.$_GET['fqdn'].'\'');
+} catch (Exception $e) {
+	Logger::error('main', '(webservices/server_status) updateApplications error for \''.$_GET['fqdn'].'\'');
 }
