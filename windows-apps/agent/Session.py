@@ -20,6 +20,7 @@
 
 from xml.dom import minidom
 import threading
+import win32api
 import win32ts
 
 from Logger import Logger
@@ -75,8 +76,15 @@ class Session:
 		for session in sessions:
 			if not 0 < session["SessionId"] < 65536:
 				continue
+			
 			login = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
 			if self.user.login != login:
+				continue
+			
+			domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+			computerName = win32api.GetComputerName()
+			if domain.lower() != computerName.lower():
+				Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], self.user.login))
 				continue
 			
 			return session["SessionId"]
