@@ -75,7 +75,6 @@ class SessionManagement:
 		try:
 			win32net.NetLocalGroupGetInfo(None, SessionManagement.ULTEO_GROUP, 0)
 		except win32net.error, e:
-			Logger.error("SessionManagement existGroupOVD: '%s'"%(str(e)))
 			return False
 		
 		return True
