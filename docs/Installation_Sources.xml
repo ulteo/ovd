@@ -39,21 +39,26 @@
       <emphasis>superuser</emphasis> (root).
     </para>
 
-
+    <section>
+      <title>Java Applet</title>
+    </section>
+     
+     <section>
+    <title>Session Manager package</title>
    <section>
       <title>Dependencies</title>
 
       <itemizedlist>
         <listitem>
 	  <para>
-	    <emphasis role="strong">Autotools: </emphasis>autoconf
-	    intltool make
+	    <emphasis role="strong">Autotools: </emphasis>autoconf,
+	    intltool, make.
 	  </para>
         </listitem>
         <listitem>
 	  <para>
-	    <emphasis role="strong">PHP 5</emphasis> with modules curl
-	    ldap mysql and gettext.
+	    <emphasis role="strong">PHP 5</emphasis> with modules curl,
+	    ldap, mysql, and gettext.
 	  </para>
         </listitem>
        <listitem>
@@ -62,10 +67,143 @@
 	    module enable.
 	  </para>
         </listitem>
+       <listitem>
+	  <para>
+	    <emphasis role="strong">Java developper kit</emphasis> with ant, keytool, jdk >=1.5
+	  </para>
+        </listitem>
 
       </itemizedlist>
       <beginpage />
     </section>
+
+   <section id="build_applet">
+     <title>Java applet compilation</title>
+
+     <para>
+       Extract the ovd applet tarball and enter in the directory
+     </para>
+     <screen>
+       <![CDATA[
+$ tar xfz ovd-applets.tar.gz
+$ cd ovd-applets/]]>
+     </screen>
+
+     <simplesect>
+       <title>Generate a certificate</title>
+
+       <itemizedlist>
+         <listitem>
+	   <para>
+	    Create a working directory
+	  </para>
+	  <screen>
+	    <![CDATA[
+$ mkdir certificate
+$ cd  certificate]]>
+	  </screen>
+	 </listitem>
+
+         <listitem>
+	   <para>
+	     Set the options
+	   </para>
+	   <screen>
+	     <![CDATA[
+$ export PASSWD="123546"
+$ export DNAME="cn=myname, ou=Ulteo, o=Ulteo, c=EN"
+$ export ALIAS="ulteo"
+$ export KEYSTORE=keystore
+$ export VALIDITY=180]]>
+	   </screen>
+	 </listitem>
+
+         <listitem>
+	   <para>
+	     Build the certificate
+	   </para>
+	   <screen>
+	     <![CDATA[
+$ keytool -genkeypair -dname "$DNAME" -alias "$ALIAS" -keypass "$PASSWD" -storepass "$PASSWD" -keystore "$KEYSTORE" -validity "$VALIDITY"]]>
+	   </screen>
+	 </listitem>
+
+        <listitem>
+	   <para>
+	     Self sign the certificate
+	   </para>
+	   <screen>
+	     <![CDATA[
+$ keytool -selfcert -alias "$ALIAS" -keystore "$KEYSTORE" -keypass "$PASSWD" -storepass "$PASSWD"]]>
+	   </screen>
+	 </listitem>
+
+        <listitem>
+	   <para>
+             Back to the parent directory (the applet source one)
+	   </para>
+	   <screen>
+	     <![CDATA[
+$ cd ..]]>
+	   </screen>
+	 </listitem>
+       </itemizedlist>
+     </simplesect>
+
+     
+     <simplesect>
+       <title>Compilation</title>
+
+       <itemizedlist>
+	 <listitem>
+           <para>
+             Set the java development environnement.
+             For instance, if you are using Sun java 5:
+           </para>
+            <screen>
+	     <![CDATA[
+$ export JAVA_BINDIR=/usr/lib/jvm/java-1.5.0-sun-1.5.0/bin
+$ export JAVA_ROOT=/usr/lib/jvm/java-1.5.0-sun-1.5.0
+$ export JAVA_HOME=/usr/lib/jvm/java-1.5.0-sun-1.5.0]]>
+	   </screen>
+	 </listitem>
+
+	 <listitem>
+           <para>
+            Compile
+           </para>
+            <screen>
+	     <![CDATA[
+$ ant sign -Dprefix=/usr -Dbuild.cert=certificate/]]></screen>
+	 </listitem>
+
+<!--
+
+Hack OpenSuse, modify the build.xml:
+
+Change 
+    <property name="datadir"     location="${prefix}/share" />
+by
+    <property name="datadir"     location="/share" />
+
+Change
+    <property name="destdir"     location="" />  <- mettre /usr/local/share/ 
+by
+    <property name="destdir"     location="/usr/local/share/" />
+-->
+
+	 <listitem>
+           <para>
+             Install
+           </para>
+            <screen>
+	     <![CDATA[
+# ant install]]>
+	   </screen>
+	 </listitem>
+       </itemizedlist>
+     </simplesect>
+   </section>
 
    <section>
       <title>Installation</title>
@@ -137,6 +275,7 @@ in /usr/local/share/ulteo/sessionmanager/includes/core.inc.php and /usr/local/sh
 
   <xi:include href="Installation.xml" xpointer="sessionmanager_configuration" />
 </section>
+</section>
 
 <section id="aps">
   <xi:include href="Installation.xml" xpointer="aps_title" />
@@ -145,6 +284,9 @@ in /usr/local/share/ulteo/sessionmanager/includes/core.inc.php and /usr/local/sh
     All operations need to be done as <emphasis>superuser</emphasis>
     (root).
   </para>
+  
+
+  
 
   <section>
     <title>Dependencies</title>
@@ -173,6 +315,16 @@ in /usr/local/share/ulteo/sessionmanager/includes/core.inc.php and /usr/local/sh
 
   <section>
     <title>Installation</title>
+
+    <important>
+      <para>
+        If you are not installing on the same server as a already
+        existing one, you have to build the applets. To build the
+        applet, please follow
+        the <link linkend="build_applet">instructions on the Session
+        Manager installation</link>.
+      </para>
+    </important>
 
     <itemizedlist>
       <listitem>
