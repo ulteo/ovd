@@ -244,6 +244,8 @@ function action_modify_rules($id) {
 
 	if (! $userGroupDB->update($group))
 		die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
+	else
+		popup_info(_('Rules of \''.$group->name.'\' successfully modified'));
 }
 
 function action_set_default($id_) {
