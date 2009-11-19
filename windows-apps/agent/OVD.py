@@ -226,7 +226,9 @@ class OVD(win32serviceutil.ServiceFramework):
 		try:
 			windows_server = self.objSWbemServices.ExecQuery("Select Caption from Win32_OperatingSystem")
 			self.version_os = windows_server[0].Caption
+			self.version_os = self.version_os.encode('utf-8')
 		except Exception, err:
+			Logger.warn("Daemon version except '%s'"%(str(err)))
 			self.version_os = platform.version()
 		
 		if not self.internalSM.initialize():
