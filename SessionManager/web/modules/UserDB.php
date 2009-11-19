@@ -40,18 +40,28 @@ abstract class UserDB extends Module  {
 		$minimun_attribute = array_unique(array_merge(array('login','displayname','uid'), get_needed_attributes_user_from_module_plugin()));
 		if (is_object($user_)){
 			foreach ($minimun_attribute as $attribute){
-				if ($user_->hasAttribute($attribute) == false)
+				if ($user_->hasAttribute($attribute) == false) {
+					Logger::debug('main', 'UserDB::isOK attribute \''.$attribute.'\' missing');
 					return false;
+				}
 				else {
 					$a = $user_->getAttribute($attribute);
-					if ( is_null($a) || $a == "")
+					if (is_null($a)) {
+						Logger::debug('main', 'UserDB::isOK attribute \''.$attribute.'\' null');
 						return false;
+					}
+					if ($a == "") {
+						Logger::debug('main', 'UserDB::isOK attribute \''.$attribute.'\' empty');
+						return false;
+					}
 				}
 			}
 			return true;
 		}
-		else
+		else {
+			Logger::debug('main', 'UserDB::isOK user not an object ('.gettype($user_).')');
 			return false;
+		}
 	}
 	public function getAttributesList() {
 		return array();
