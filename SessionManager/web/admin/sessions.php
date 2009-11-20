@@ -102,15 +102,15 @@ if (isset($_POST['join'])) {
 	echo '<h2>'._('Information').'</h2>';
 
 	echo '<ul>';
-	echo '<li><strong>User:</strong> '.$session->getAttribute('user_displayname').'</li>';
-	echo '<li><strong>Started:</strong> ';
+	echo '<li><strong>'._('User:').'</strong> '.$session->getAttribute('user_displayname').'</li>';
+	echo '<li><strong>'._('Started:').'</strong> ';
 	$buf = $session->getAttribute('start_time');
 	if (! $buf)
 		echo _('Not started yet');
 	else
 		echo @date('d/m/Y H:i:s', $session->getAttribute('start_time'));
 	echo '</li>';
-	echo '<li><strong>Status:</strong> '.$session->stringStatus().'</li>';
+	echo '<li><strong>'._('Status:').'</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
 
 	if ($show_apps && $session->hasAttribute('applications')) {
