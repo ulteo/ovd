@@ -186,7 +186,8 @@ else {
 		echo '	<input type="hidden" name="mass_action" value="kill" />';
 		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
 		echo '	<tr class="title">';
-		echo '		<th class="unsortable"></th>';
+		if (count($sessions) > 1)
+			echo '		<th class="unsortable"></th>';
 		echo '		<th>'._('Session').'</th>';
 		echo '		<th>'._('Server').'</th>';
 		echo '		<th>'._('User').'</th>';
@@ -198,7 +199,8 @@ else {
 			$css_class = 'content'.(($i++%2==0)?1:2);
 
 			echo '	<tr class="'.$css_class.'">';
-			echo '		<td><input class="input_checkbox" type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td><form></form>';
+			if (count($sessions) > 1)
+				echo '		<td><input class="input_checkbox" type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td><form></form>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
@@ -213,12 +215,14 @@ else {
 			echo '	</tr>';
 		}
 		$css_class = 'content'.(($i++%2==0)?1:2);
-		echo '<tfoot>';
-		echo '	<tr class="'.$css_class.'">';
-		echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
-		echo '<td><input type="submit" name="kill" value="'._('Kill').'" /></td>';
-		echo '	</tr>';
-		echo '</tfoot>';
+		if (count($sessions) > 1) {
+			echo '<tfoot>';
+			echo '	<tr class="'.$css_class.'">';
+			echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
+			echo '<td><input type="submit" name="kill" value="'._('Kill').'" /></td>';
+			echo '	</tr>';
+			echo '</tfoot>';
+		}
 		echo '</table>';
 		echo '</form>';
 	} else {

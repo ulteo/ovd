@@ -335,13 +335,13 @@ function show_default() {
          break; // no need to continue;
        }
      }
-    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
+    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
       echo '<input type="hidden" name="action" value="del" />';
     }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
+    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '<th class="unsortable"></th>'; // masse action
     }
     echo '<th>'._('Name').'</th>';
@@ -360,10 +360,10 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
       if ($can_manage_usersgroups) {
-        if ($group->type != 'static' || $userGroupDB->isWriteable()) {
+        if ($group->type != 'static' || $userGroupDB->isWriteable() and count($groups) > 1) {
           echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td>';
         }
-        else if ( !$all_static) {
+        else if ( !$all_static and count($groups) > 1) {
           echo '<td></td>';
         }
       }
@@ -392,7 +392,7 @@ function show_default() {
       echo '</tr>';
     }
     $content = 'content'.(($count++%2==0)?1:2);
-    if ( !$all_static and $can_manage_usersgroups) {
+    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
       echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
@@ -401,7 +401,7 @@ function show_default() {
       echo '</tfoot>';
     }
     echo '</table>';
-    if ($userGroupDB->isWriteable()) {
+    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
       echo '</form>';
     }
   }
