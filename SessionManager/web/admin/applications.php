@@ -116,7 +116,7 @@ function show_default($applicationDB) {
     echo _('No available application').'<br />';
   else {
     echo '<div id="apps_list">';
-//     echo '<form action="applications.php" method="get">';
+//     echo '<form action="applications.php" method="post">';
 //     echo '	<input type="hidden" name="mass_action" value="block" />';
     echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<thead>';
