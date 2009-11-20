@@ -126,10 +126,6 @@ function show_default() {
   if (! $has_group)
     echo _('No application groups available').'<br />';
   else {
-		if ($can_manage_applicationsgroups) {
-			echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
-			echo '<input type="hidden" name="action" value="del" />';
-		}
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
     if ($can_manage_applicationsgroups && count($groups) > 1)
@@ -149,7 +145,7 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
 		if ($can_manage_applicationsgroups && count($groups) > 1)
-			echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td><form></form>';
+			echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td>';
       echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
@@ -173,11 +169,14 @@ function show_default() {
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
-		echo '<td><input type="submit" value="'._('Delete').'"/></td>';
+		echo '<td>';
+		echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'appgroups_list\');">';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="submit" value="'._('Delete').'"/>';
+		echo '</form>';
+		echo '</td>';
 	}
 	echo '</table>';
-	if ($can_manage_applicationsgroups)
-		echo '</form>';
 
   }
   echo '</div>';

@@ -81,6 +81,26 @@ function unMarkAllRows( container_id ) {
     return true;
 }
 
+function updateMassActionsForm(form_, table_id_) {
+	var rows = $(table_id_).getElementsByTagName('tr');
+
+	for ( var i = 0; i < rows.length; i++ ) {
+		var checkbox = rows[i].getElementsByTagName('input')[0];
+
+		if ( checkbox && checkbox.type == 'checkbox' ) {
+			if ( checkbox.checked ==  true ) {
+				var node = document.createElement('input');
+				node.setAttribute('type', 'hidden')
+				node.setAttribute('name', checkbox.name);
+				node.setAttribute('value', checkbox.value);
+				form_.appendChild(node);
+			}
+		}
+	}
+
+	return true;
+}
+
 function popupOpen2(ulteoForm) {
 	var my_width = screen.width;
 	var my_height = screen.height;

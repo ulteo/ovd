@@ -430,6 +430,14 @@ function show_manage($id, $applicationDB) {
 		echo '<br />';
 		echo '<h2>'._('Modify').'</h2>';
 		echo '<div id="application_modify">';
+
+		echo '<form id="delete_icon" action="actions.php" method="post" style="display: none;">';
+		echo '<input type="hidden" name="name" value="static_application" />';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="attribute" value="icon_file" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '</form>';
+
 		echo '<form action="" method="post" enctype="multipart/form-data" >'; // form A
 		echo '<input type="hidden" name="action" value="modify" />';
 		echo '<input type="hidden" name="published" value="1" />';
@@ -470,14 +478,7 @@ function show_manage($id, $applicationDB) {
 			echo '<td>';
 			if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
 				echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
-				echo '<form></form>'; // stupid hack..... (really really dirty.....)
-				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this icon?').'\');" style="display:inline;">'; // form B
-					echo '<input type="hidden" name="name" value="static_application" />';
-					echo '<input type="hidden" name="action" value="del" />';
-					echo '<input type="hidden" name="attribute" value="icon_file" />';
-					echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
-					echo '<input type="submit" value="'._('Delete this icon').'"/>';
-				echo '</form>'; // form B
+				echo '<input type="button" value="'._('Delete this icon').'" onclick="return confirm(\''._('Are you sure you want to delete this icon?').'\') && $(\'delete_icon\').submit();"/>';
 				echo '<br />';
 			}
 			echo '<input type="file"  name="file_icon" /> ';

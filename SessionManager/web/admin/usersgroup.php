@@ -335,10 +335,6 @@ function show_default() {
          break; // no need to continue;
        }
      }
-    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
-      echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\');">';
-      echo '<input type="hidden" name="action" value="del" />';
-    }
     echo '<table class="main_sub sortable" id="usergroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
     if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
@@ -367,7 +363,6 @@ function show_default() {
           echo '<td></td>';
         }
       }
-      echo '<form></form>';
       echo '<td><a href="?action=manage&id='.$group->getUniqueID().'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
@@ -396,14 +391,16 @@ function show_default() {
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
       echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
-      echo '<td><input type="submit" value="'._('Delete').'"/></td>';
+	  echo '<td>';
+	  echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'usergroups_list\');">';
+	  echo '<input type="hidden" name="action" value="del" />';
+	  echo '<input type="submit" value="'._('Delete').'"/>';
+	  echo '</form>';
+	  echo '</td>';
       echo '</tr>';
       echo '</tfoot>';
     }
     echo '</table>';
-    if ( (!$all_static || $userGroupDB->isWriteable()) and $can_manage_usersgroups and count($groups) > 1) {
-      echo '</form>';
-    }
   }
 
   echo '</div>';
