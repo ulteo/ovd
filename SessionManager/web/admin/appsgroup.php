@@ -128,7 +128,8 @@ function show_default() {
   else {
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-    echo '<th class="unsortable"></th>';
+	if ($can_manage_applicationsgroups && count($groups) > 1)
+		echo '<th class="unsortable"></th>';
     echo '<th>'._('Name').'</th>';
     echo '<th>'._('Description').'</th>';
     echo '<th>'._('Status').'</th>';
@@ -143,7 +144,7 @@ function show_default() {
 	$publish = '<span class="msg_error">'._('Blocked').'</span>';
 
       echo '<tr class="'.$content.'">';
-		if ($can_manage_applicationsgroups)
+		if ($can_manage_applicationsgroups && count($groups) > 1)
 			echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td>';
       echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
@@ -164,7 +165,7 @@ function show_default() {
 			echo '</tr>';
 		}
     }
-	if ($can_manage_applicationsgroups) {
+	if ($can_manage_applicationsgroups && count($groups) > 1) {
 		$content = 'content'.(($count++%2==0)?1:2);
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
