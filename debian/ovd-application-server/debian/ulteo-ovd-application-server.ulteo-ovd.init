@@ -27,6 +27,13 @@ case $1 in
     start)
         log_daemon_msg "Starting Ulteo OVD daemon"
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
+
+        # This will only happen after an installation using our iso
+        if [ -f /usr/share/ulteo/sessionmanager/ovd-config.php ]; then
+            sleep 5 # let the server register itself
+            php /usr/share/ulteo/sessionmanager/ovd-config.php || true
+            rm /usr/share/ulteo/sessionmanager/ovd-config.php
+        fi
         log_end_msg 0
         ;;
     stop)
