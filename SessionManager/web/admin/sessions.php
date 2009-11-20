@@ -190,8 +190,6 @@ else {
 
 	$sessions = Sessions::getAll();
 	if (is_array($sessions) && count($sessions) > 0) {
-		echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\');">';
-		echo '	<input type="hidden" name="mass_action" value="kill" />';
 		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
 		echo '	<tr class="title">';
 		echo '		<th class="unsortable"></th>';
@@ -206,7 +204,7 @@ else {
 			$css_class = 'content'.(($i++%2==0)?1:2);
 
 			echo '	<tr class="'.$css_class.'">';
-			echo '		<td><input class="input_checkbox" type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td><form></form>';
+			echo '		<td><input class="input_checkbox" type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
@@ -224,11 +222,14 @@ else {
 		echo '<tfoot>';
 		echo '	<tr class="'.$css_class.'">';
 		echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
-		echo '<td><input type="submit" name="kill" value="'._('Kill').'" /></td>';
+		echo '<td>';
+		echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+		echo '	<input type="hidden" name="mass_action" value="kill" />';
+		echo '<input type="submit" name="kill" value="'._('Kill').'" />';
+		echo '</td>';
 		echo '	</tr>';
 		echo '</tfoot>';
 		echo '</table>';
-		echo '</form>';
 	} else {
 		echo _('No active session');
 		echo '<br /><br />';

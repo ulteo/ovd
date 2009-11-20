@@ -150,10 +150,6 @@ function show_default($userDB) {
   if ($users_list_empty)
     echo _('No available user').'<br />';
   else {
-    if ($userdb_rw and $can_manage_users) {
-      echo '<form action="users.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\');">';
-      echo '<input type="hidden" name="mass_action" value="delete" />';
-    }
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
     if ($userdb_rw and $can_manage_users)
@@ -185,7 +181,7 @@ function show_default($userDB) {
 
       echo '<tr class="'.$content.'">';
       if ($userdb_rw and $can_manage_users)
-        echo '<td><input class="input_checkbox" type="checkbox" name="checked_users[]" value="'.$u->getAttribute('login').'" /></td><form></form>';
+        echo '<td><input class="input_checkbox" type="checkbox" name="checked_users[]" value="'.$u->getAttribute('login').'" /></td>';
       echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
       echo $u->getAttribute('login');
       echo '</a></td>';
@@ -216,6 +212,8 @@ function show_default($userDB) {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
+      echo '<form action="users.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
+      echo '<input type="hidden" name="mass_action" value="delete" />';
       echo '<input type="submit" name="mass_delete" value="'._('Delete').'"/><br />';
       echo '</form>';
       echo '</td>';
@@ -223,8 +221,6 @@ function show_default($userDB) {
       echo '</tfoot>';
     }
     echo '</table>';
-    if ($userdb_rw and $can_manage_users)
-      echo '</form>';
   }
 
   if ($userdb_rw and $can_manage_users) {

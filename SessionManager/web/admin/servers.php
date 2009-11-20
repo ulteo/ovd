@@ -294,10 +294,6 @@ function show_default() {
 
   if (count($a_servs) > 0) {
     echo '<div id="servers_list_div">';
-    if ($nb_a_servs_online > 1 and $can_do_action) {
-      echo '<form action="servers.php" method="get">';
-      echo '<input type="hidden" name="mass_action" value="maintenance" />';
-    }
     echo '<table id="available_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
     echo '<thead>';
     echo '<tr class="title">';
@@ -331,7 +327,7 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
       if ($nb_a_servs_online > 1 and $can_do_action)
-        echo '<td><input class="input_checkbox" type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td><form></form>';
+        echo '<td><input class="input_checkbox" type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td>';
       echo '<td>';
       echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
       echo '</td>';
@@ -392,6 +388,8 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
+      echo '<form action="servers.php" method="get" onsubmit="return updateMassActionsForm(this, \'available_servers_table\');">';
+      echo '<input type="hidden" name="mass_action" value="maintenance" />';
       echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
       echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
       echo '</form>';
@@ -401,7 +399,6 @@ function show_default() {
     }
 
     echo '</table>';
-    echo '</form>';
   }
 
   echo '</div>';
@@ -426,10 +423,6 @@ function show_unregistered() {
   if (count($u_servs) > 0){
     echo '<div id="servers_list_div">';
 
-    if (count($u_servs) > 1 && $can_do_action) {
-      echo '<form action="servers.php" method="get">';
-    }
-
     echo '<table id="unregistered_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
     echo '<thead>';
     echo '<tr class="title">';
@@ -446,7 +439,7 @@ function show_unregistered() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tr class="'.$content.'">';
             if (count($u_servs) > 1)
-	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /><form></form>';
+	echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" />';
 
 	if ($s->getAttribute('type') == '')
 		$s->getType();
@@ -500,10 +493,12 @@ function show_unregistered() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
+      echo '<form action="servers.php" method="get" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
       echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '<td>';
+      echo '<form action="servers.php" method="get" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
       echo '<input type="submit" name="mass_delete_unregistered" value="'._('Delete').'"/><br />';
       echo '</form>';
       echo '</td>';
@@ -512,9 +507,6 @@ function show_unregistered() {
     }
 
     echo '</table>';
-    if (count($u_servs) > 1) {
-      echo '</form>';
-    }
     echo '</div>';
     echo '<br />';
   } else {
