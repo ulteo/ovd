@@ -177,7 +177,7 @@ function show_default($applicationDB) {
 //       echo '</td>';
 //       echo '<td>';
 
-//     echo '<form action="applications.php" method="get" onsubmit="return updateMassActionsForm(this, \'applications_list_table\');">';
+//     echo '<form action="applications.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\');">';
 //     echo '	<input type="hidden" name="mass_action" value="block" />';
       /*echo '<input type="submit" name="unblock" value="'._('Unblock').'" />';
       echo '<br />';

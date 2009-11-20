@@ -212,7 +212,7 @@ function show_default($userDB) {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="users.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
+      echo '<form action="users.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
       echo '<input type="hidden" name="mass_action" value="delete" />';
       echo '<input type="submit" name="mass_delete" value="'._('Delete').'"/><br />';
       echo '</form>';

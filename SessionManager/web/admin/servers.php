@@ -388,7 +388,7 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="servers.php" method="get" onsubmit="return updateMassActionsForm(this, \'available_servers_table\');">';
+      echo '<form action="servers.php" method="post" onsubmit="return updateMassActionsForm(this, \'available_servers_table\');">';
       echo '<input type="hidden" name="mass_action" value="maintenance" />';
       echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
       echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
@@ -493,12 +493,12 @@ function show_unregistered() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="servers.php" method="get" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
+      echo '<form action="servers.php" method="post" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
       echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="servers.php" method="get" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
+      echo '<form action="servers.php" method="post" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
       echo '<input type="submit" name="mass_delete_unregistered" value="'._('Delete').'"/><br />';
       echo '</form>';
       echo '</td>';
