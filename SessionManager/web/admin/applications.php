@@ -341,7 +341,7 @@ function show_manage($id, $applicationDB) {
       continue;
     }
     else {
-      unset($servers[$k]);
+      unset($servers[$k2]);
     }
   }
   if (count($servers) + count($servers_in_install) + count($servers_available) > 0) {
