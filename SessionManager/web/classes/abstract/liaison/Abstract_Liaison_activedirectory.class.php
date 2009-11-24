@@ -150,7 +150,7 @@ class Abstract_Liaison_activedirectory {
 		return NULL;
 	}
 	
-	public static static function init($prefs_) {
+	public static function init($prefs_) {
 		return true;
 	}
 }
