@@ -32,6 +32,7 @@ install -m 0755 examples/ulteo-ovd.init $RPM_BUILD_ROOT/etc/init.d/ulteo-ovd
 rm -rf $RPM_BUILD_ROOT
 
 %files
+%defattr(-,root,root)
 /usr/share/*
 /usr/bin/aps-chroot
 /usr/bin/aps-chroot-install
