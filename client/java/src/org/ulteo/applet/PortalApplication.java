@@ -21,6 +21,24 @@
 
 package org.ulteo.applet;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
-public class PortalApplication extends Standalone {
+
+public class PortalApplication extends Standalone implements FocusListener {
+	public void start() {
+		super.start();
+		this.addFocusListener(this);
+		this.vnc.vc.addFocusListener(this);
+	}
+	
+	public void focusGained(FocusEvent e) {
+		System.out.println("Portal app focus gained");
+		this.dialog.forwardFocusInfo(true);
+	}
+    
+	public void focusLost(FocusEvent e) {
+		System.out.println("Portal app focus lost");
+		this.dialog.forwardFocusInfo(false);
+	}
 }

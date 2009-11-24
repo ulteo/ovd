@@ -90,30 +90,37 @@ var StartApp = Class.create(Daemon, {
 	focus_watch: function() {
 		var access_id = this.access_id;
 
-		Event.observe(window, 'focus', function() {
-			new Ajax.Request(
-				'focus.php',
-				{
-					method: 'get',
-					parameters: {
-						access_id: access_id,
-						focus: 1
-					}
-				}
-			);
-		});
+		Event.observe(window, 'focus', this.focusGained.bind(this));
+		Event.observe(window, 'blur',  this.focusLost.bind(this));
+	},
+ 
+	focusGained: function() {
+		this.push_log('[start_app] focusGained', 'info');
 
-		Event.observe(window, 'blur', function() {
-			new Ajax.Request(
-				'focus.php',
-				{
-					method: 'get',
-					parameters: {
-						access_id: access_id,
-						focus: 0
-					}
-				}
-			);
+		var access_id = this.access_id;
+		
+		new Ajax.Request('focus.php', {
+			'asynchronous': false,
+			'method': 'get',
+			'parameters': {
+				'access_id': access_id,
+				'focus': 1
+			}
+		});	
+	},
+		 
+	focusLost: function() {
+		this.push_log('[start_app] focusLost', 'info');
+
+		var access_id = this.access_id;
+		
+		new Ajax.Request('focus.php', {
+			'asynchronous': false,
+			'method': 'get',
+			'parameters': {
+				'access_id': access_id,
+				'focus': 0
+			}
 		});
 	},
 

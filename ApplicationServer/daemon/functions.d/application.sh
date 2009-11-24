@@ -85,12 +85,16 @@ application_check_status() {
             return $?
         fi
 
-        if [ -f $dir/focus ] && windows_is_application $app_id; then
-            local t=$(head -n 1 $dir/focus)
-            if [ "$t" == "on" ] || [ "$t" == "off" ]; then
-                windows_set_focus $rfb_port $t
+        focus=$(find $dir -name "focus_*" | sort)
+        if [ -n "$focus" ]; then
+            if windows_is_application $app_id; then
+                local t=$(cat $focus | tail -n 1)
+                log_DEBUG "focus last request: '$t'"
+                if [ "$t" == "on" ] || [ "$t" == "off" ]; then
+                    windows_set_focus $rfb_port $t
+                fi
             fi
-            rm $dir/focus
+            rm $focus
         fi
 
         # if application owner has vanished, kill session
