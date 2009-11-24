@@ -9,10 +9,10 @@
 
 # Make the openoffice splash executable again
 OOOSPLASH=/usr/lib/openoffice/program/oosplash.bin
-if dpkg-statoverride --list $OOOSPLASH >/dev/null; then
-    dpkg-statoverride --remove $OOOSPLASH
-    chmod 755 $OOOSPLASH
+if ! dpkg-statoverride --list $OOOSPLASH >/dev/null 2>&1; then
+    dpkg-statoverride --update --add root root 0644 $OOOSPLASH
 fi
+
 # Drop our ooo hack, we'll provide the entire script
 OOOWRAPPER=/usr/lib/openoffice/program/soffice
 if ! dpkg-divert --list | grep -q $OOOWRAPPER; then
