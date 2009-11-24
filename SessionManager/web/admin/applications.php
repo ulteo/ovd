@@ -358,7 +358,7 @@ function show_manage($id, $applicationDB) {
       if ($remove_in_progress) {
 	echo 'remove in progress';
       }
-      elseif ($server->isOnline() and $can_manage_server) {
+      elseif ($server->isOnline() and $can_manage_server  and $app->getAttribute('type') == 'linux') {
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_Server" />';
@@ -379,7 +379,7 @@ function show_manage($id, $applicationDB) {
       echo '</tr>';
     }
 
-    if (count($servers_available) > 0 and $can_manage_server) {
+    if (count($servers_available) > 0 and $can_manage_server and $app->getAttribute('type') == 'linux') {
       echo '<tr>';
       echo '<form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="name" value="Application_Server" />';
