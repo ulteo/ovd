@@ -379,7 +379,7 @@ function show_manage($id, $applicationDB) {
       echo '</tr>';
     }
 
-    if (count($servers_available) > 0) {
+    if (count($servers_available) > 0 and $can_manage_server) {
       echo '<tr>';
       echo '<form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="name" value="Application_Server" />';
