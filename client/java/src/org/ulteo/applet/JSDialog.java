@@ -80,6 +80,12 @@ public class JSDialog {
 		System.out.println(this.getClass()+" call javascript '"+url+"')");
 		this.openUrl(url);
 	}
+	
+	public void forwardFocusInfo(boolean focus) {
+		String url = "javascript:daemon."+(focus?"focusGained":"focusLost")+"();";
+		System.out.println(this.getClass()+" call javascript '"+url+"')");
+		this.openUrl(url);
+	}
 
 	protected void openUrl(String url) {
 		try {

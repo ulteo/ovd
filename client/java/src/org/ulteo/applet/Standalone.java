@@ -22,7 +22,7 @@
 
 package org.ulteo.applet;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -44,7 +44,7 @@ import org.vnc.VncClient;
 import org.vnc.rfbcaching.IRfbCachingConstants;
 
 public class Standalone extends java.applet.Applet implements SshErrorResolver, UncaughtExceptionHandler, org.vnc.Dialog {
-	private VncClient vnc = null;
+	protected VncClient vnc = null;
 	protected SshConnection ssh = null;
 
 	// Ssh parameters
@@ -64,7 +64,7 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 	protected boolean stopped = false;
 
 	private String startupStatusReport = null;
-	private JSDialog dialog = null;
+	protected JSDialog dialog = null;
 
 	public boolean checkSecurity() {
 		try {
@@ -134,9 +134,7 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 
 		Thread.setDefaultUncaughtExceptionHandler(this);
 		SshDialog.registerResolver(this);
-		FlowLayout layout = new FlowLayout();
-		layout.setHgap(0);
-		layout.setVgap(0);
+		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
     }
 

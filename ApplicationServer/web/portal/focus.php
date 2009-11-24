@@ -33,7 +33,11 @@ $application_dir = SESSION_PATH.'/'.$session.'/sessions/'.$_GET['access_id'];
 
 Logger::debug('main', 'Setting focus to '.(($_GET['focus']==1)?'on':'off').' for appid '.$_GET['access_id']);
 
-if ($session_owner)
-  @file_put_contents($application_dir.'/focus', (($_GET['focus']==1)?'on':'off'), FILE_APPEND);
-
+if ($session_owner) {
+  $t0 = (int)(microtime(true)*1000);
+  $filename = 'focus_'.$t0;
+  $content = (($_GET['focus']==1)?'on':'off');
+  Logger::debug('main', 'focus filename "'.$filename.'" content: "'.$content.'"');
+  @file_put_contents($application_dir.'/'.$filename, $content."\n");
+}
 die();
