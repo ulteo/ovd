@@ -300,6 +300,7 @@ class Server {
 		list($returncode, $returntext) = $ret;
 
 		if ($returncode != 200) {
+			Logger::error('main', 'Server "'.$this->fqdn.':'.$this->web_port.'" returned an erroneous HTTP code \''.$returncode.'\'');
 			$this->returnedError();
 			return false;
 		}
