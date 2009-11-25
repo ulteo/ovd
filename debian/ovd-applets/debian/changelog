@@ -1,3 +1,9 @@
+ovd-applets (2.0-0ulteo0) 2-0-staging; urgency=low
+
+  * New stable release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 25 Nov 2009 11:01:31 +0100
+
 ovd-applets (2.0~rc1-0ulteo0) 2-0-staging; urgency=low
 
   * New release: 2.0 RC1
