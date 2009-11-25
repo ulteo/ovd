@@ -57,7 +57,6 @@ require_once("server/classes/class.AJXP_Logger.php");
 ConfService::init("server/conf/conf.php");
 $confStorageDriver = ConfService::getConfStorageImpl();
 require_once($confStorageDriver->getUserClassFileName());
-session_name("AjaXplorer");
 session_start();
 
 set_error_handler(array("AJXP_XMLWriter", "catchError"), E_ALL & ~E_NOTICE );
