@@ -577,8 +577,9 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 						$userfile_name = SystemTextEncoding::fromUTF8($userfile_name);
 
 					$userfile_name = Utils::processFileName($userfile_name);
-					if (isset($auto_rename))
-						$userfile_name = fsDriver::autoRenameForDest($destination, $userfile_name);
+					$userfile_name = $destination.'/'.$userfile_name;
+					while ($userfile_name{0} == '/')
+						$userfile_name = substr($userfile_name, 1);
 
 					if (! $this->writeFile($boxData['tmp_name'], $userfile_name)) {
 						$errorMessage = ($fancyLoader?'411 ':'').$mess[33].' '.$userfile_name;
