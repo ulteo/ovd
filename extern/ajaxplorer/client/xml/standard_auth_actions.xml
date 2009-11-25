@@ -47,28 +47,6 @@
 				<serverCallback methodName="switchAction"></serverCallback>
 			</processing>
 		</action>		
-		<action name="logout" enabled="AJXP_NOT_REMOTE_AUTH">
-			<gui text="164" title="169" src="decrypted.png"
-				accessKey="" hasAccessKey="false">
-				<context selection="false" dir="" recycle="false"
-					actionBar="true" contextMenu="false" infoPanel="false"
-					actionBarGroup="user">
-				</context>
-			</gui>
-			<rightsContext noUser="false" userLogged="only" guestLogged="hidden" read="false" write="false" adminOnly=""></rightsContext>			
-			<processing>
-				<clientCallback prepareModal="false"><![CDATA[
-					clearRememberData();
-					var connexion = new Connexion();
-					connexion.addParameter('get_action', 'logout');
-					connexion.onComplete = function(transport){
-						ajaxplorer.actionBar.parseXmlMessage(transport.responseXML);
-						};
-					connexion.sendAsync();
-					]]></clientCallback>
-				<serverCallback methodName="switchAction"></serverCallback>
-			</processing>
-		</action>
         <action name="back" enabled="AJXP_REMOTE_AUTH">
 			<gui text="304" title="305" src="go_back.png" accessKey="" hasAccessKey="false">
 				<context selection="false" dir="" recycle="false"
