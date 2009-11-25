@@ -147,33 +147,5 @@
 				<serverCallback methodName="switchAction"></serverCallback>
 			</processing>
 		</action>		
-		<action name="splash">
-			<gui text="166" title="167" src="info.png" hasAccessKey="true"
-				accessKey="about_access_key">
-				<context selection="false" dir="" recycle="false"
-					actionBar="true" contextMenu="false" infoPanel="false"
-					actionBarGroup="user">
-				</context>
-			</gui>
-			<processing>
-				<clientCallback prepareModal="true"><![CDATA[
-				modal.showDialogForm(
-					'Ajaxplorer', 
-					'splash_form', 
-					function(){
-						modal.dialogContent.setStyle({paddingBottom:'10px'});
-					}, 
-					function(){hideLightBox();return false;}, 
-					null, 
-					true);		
-					]]></clientCallback>
-				<clientForm id="splash_form"><![CDATA[
-					<div id="splash_form" box_width="455" box_padding="0">
-						<iframe frameborder="0" src="AJXP_SERVER_ACCESS?get_action=display_doc&doc_file=CREDITS" id="docFileIframe"></iframe>
-					</div>				
-				]]></clientForm>
-				<serverCallback methodName="switchAction"></serverCallback>
-			</processing>
-		</action>		
 	</actions>
 </driver>
