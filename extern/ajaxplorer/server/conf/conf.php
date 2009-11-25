@@ -67,17 +67,17 @@ define("HTTPS_POLICY_FILE", "");
 /* users and repository data inside files on the server.
 /*********************************************************/
 $CONF_STORAGE = array(
-	"NAME"		=> "serial",
+	"NAME"		=> "ulteo",
 	"OPTIONS"	=> array(
 		"REPOSITORIES_FILEPATH"	=> "AJXP_INSTALL_PATH/server/conf/repo.ser",
 		"USERS_DIRPATH"			=> "AJXP_INSTALL_PATH/server/users")
 );
 $AUTH_DRIVER = array(
-	"NAME"		=> "serial",
+	"NAME"		=> "ulteo",
 	"OPTIONS"	=> array(
 		"LOGIN_REDIRECT"		=> false,
 		"USERS_FILEPATH"		=> "AJXP_INSTALL_PATH/server/users/users.ser",
-		"AUTOCREATE_AJXPUSER" 	=> false, 
+		"AUTOCREATE_AJXPUSER" 	=> true, 
 		"TRANSMIT_CLEAR_PASS"	=> false)
 );
 /*
@@ -117,11 +117,11 @@ $AUTH_DRIVER = array(
 /*********************************************************/
 $REPOSITORIES[0] = array(
 	"DISPLAY"		=>	"Default Files", 
-	"DRIVER"		=>	"fs", 
+	"DRIVER"		=>	"ulteo", 
 	"DRIVER_OPTIONS"=> array(
-		"PATH"			=>	realpath(dirname(__FILE__)."/../../files"), 
-		"CREATE"		=>	true,
-		"RECYCLE_BIN" 	=> 	'recycle_bin',
+		"PATH"			=>	realpath('/dev/null'), 
+		"CREATE"		=>	false,
+		"RECYCLE_BIN" 	=> 	'',
 		"CHMOD_VALUE"   =>  '0600',
 		"DEFAULT_RIGHTS"=>  "",
 		"PAGINATION_THRESHOLD" => 500,
