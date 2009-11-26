@@ -165,7 +165,7 @@ function show_step1() {
   if ($has_usergroups) {
 	echo '<tr class="title">';
 	echo '<th>';
-	if ($usergroupdb->isWriteable()) {
+	if ($usergroupdb->isWriteable() && count($users) > 0) {
 		echo '<input class="input_radio" type="radio" name="use" value="users" onclick="$(\'wizard_usergroups_list_table\').hide(); $(\'wizard_users_list_table\').show()"';
 		if (!$usergroup_selected)
 			echo ' checked="checked"';
