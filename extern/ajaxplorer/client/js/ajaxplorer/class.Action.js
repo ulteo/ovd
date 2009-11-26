@@ -221,7 +221,7 @@ Action = Class.create({
 		for (var i=0; i<this.context.ulteoMimes.length; i++) {
 			if (this.context.ulteoMimes[i] == mime)
 				return true;
-			}
+		}
 
 		return false;
 	},
