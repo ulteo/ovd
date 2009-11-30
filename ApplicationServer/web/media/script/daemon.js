@@ -167,6 +167,7 @@ var Daemon = Class.create({
 		new Ajax.Request(
 			'../suspend.php',
 			{
+				asynchronous: false,
 				method: 'get'
 			}
 		);
@@ -178,6 +179,7 @@ var Daemon = Class.create({
 		new Ajax.Request(
 			'../exit.php',
 			{
+				asynchronous: false,
 				method: 'get'
 			}
 		);
