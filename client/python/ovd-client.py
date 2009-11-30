@@ -36,6 +36,71 @@ import urllib
 import urllib2
 from xml.dom import minidom
 
+class Logger:
+    _instance = None
+
+    ERROR = 8
+    WARN = 4
+    INFO = 2
+    DEBUG = 1
+
+    def __init__(self, loglevel):
+        self.loglevel = loglevel
+
+    def log_info(self, message):
+        if self.loglevel&Logger.INFO != Logger.INFO:
+            return
+
+        print "[INFO]",message
+
+    def log_warn(self, message):
+        if self.loglevel&Logger.WARN != Logger.WARN:
+            return
+
+        print "[WARN]",message
+
+    def log_error(self, message):
+        if self.loglevel&Logger.ERROR != Logger.ERROR:
+            return
+
+        print "[ERROR]",message
+
+    def log_debug(self, message):
+        if self.loglevel&Logger.DEBUG != Logger.DEBUG:
+            return
+
+        print "[DEBUG]",message
+
+    # Static methods
+    @staticmethod 
+    def initialize(loglevel):
+        instance = Logger(loglevel)
+        Logger._instance = instance
+
+    @staticmethod
+    def info(message):
+        if not Logger._instance:
+            return
+        Logger._instance.log_info(message)
+
+    @staticmethod
+    def warn(message):
+        if not Logger._instance:
+            return
+        Logger._instance.log_warn(message)
+
+    @staticmethod
+    def error(message):
+        if not Logger._instance:
+            return
+        Logger._instance.log_error(message)
+
+    @staticmethod
+    def debug(message):
+        if not Logger._instance:
+            return
+        Logger._instance.log_debug(message)
+
 
 def str2hex(str_):
     return str_.encode('hex')
@@ -44,7 +109,7 @@ def hex2str(hex_):
     try:
         return hex_.decode('hex')
     except TypeError:
-        print "Cant decode this string", hex_
+        Logger.error("Cant decode this string '%s'"%(str(hex_)))
         sys.exit(1)
 
 
@@ -55,13 +120,13 @@ def parse_access(data):
 
     node = dom.getElementsByTagName('ssh')
     if len(node) != 1:
-        print "Bad xml result"
+        Logger.warn("Bad xml result")
         return False
 
     node = node[0]
     for (attr, m) in [('host','host'), ('user', 'login'), ('passwd', 'pass') ]:
         if not node.hasAttribute(attr):
-            print "Bad xml result"
+            Logger.warn("Bad xml result")
             return False
 
         res['ssh_'+m] = node.getAttribute(attr)
@@ -71,13 +136,13 @@ def parse_access(data):
 
     node = dom.getElementsByTagName('vnc')
     if len(node) != 1:
-        print "Bad xml result"
+        Logger.warn("Bad xml result")
         return False
 
     node = node[0]
     for (attr, m) in [('passwd', 'pass'), ('port', 'port')]:
         if not node.hasAttribute(attr):
-            print "Bad xml result"
+            Logger.warn("Bad xml result")
             return False
 
         res['vnc_'+m] = node.getAttribute(attr)
@@ -85,7 +150,7 @@ def parse_access(data):
     if node.hasAttribute('quality'):
         buf = node.getAttribute('quality')
         if buf not in ['lowest', 'medium', 'high', 'highest']:
-            print >>sys.stderr, "Warning: doesn't support quality",buf
+            Logger.warn("Warning: doesn't support quality '%s'"%(buf))
         res['vnc_quality'] = buf
 
     res["vnc_pass"] = hex2str(res["vnc_pass"])
@@ -112,8 +177,7 @@ def launch_ssh(host, user, password, extra):
     time.sleep(0.2)
     # Get password prompt; ignore
     r = os.read(fd, 1000)
-    print "read"
-    print r
+    Logger.debug("ssh read: '%s'"%(str(r)))
     time.sleep(0.2)
     # write password
     os.write(fd, password + "\n")
@@ -161,15 +225,15 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "Le service n'est pas disponbile"
+                Logger.info("The service is not available")
                 return False
-            
-            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
-            print " * return: ", exc.read()
+
+            Logger.debug("HTTP request return code %d (%s)"%(exc.code, exc.msg))
+            Logger.debug(" * return: %s"%(str(exc.read())))
             return False
 
         except urllib2.URLError, exc:
-            print "Echec. Cause:", exc.reason
+            Logger.warn("Login failure: %s"%(str(exc.reason)))
             return False
 
         return True
@@ -185,37 +249,37 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "The service is not available"
+                Logger.info("The service is not available")
                 return False
-            
-            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
+
+            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
             return False
 
         except urllib2.URLError, exc:
-            print "Echec. Cause:", exc.reason
+            Logger.warn("Startsession failure: %s"%(exc.reason))
             return False
 
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
-            print >>sys.stderr, "Invalid response format"
+            Logger.warn("Invalid response format")
             return False
 
         data = url.read()
         try:
             dom = minidom.parseString(data)
         except ExpatError:
-            print >>sys.stderr, "Invalid XML result"
+            Logger.warn("Invalid XML result")
             return False
 
         node = dom.getElementsByTagName('session')
         if len(node) != 1:
-            print >>sys.stderr, "No session root node"
+            Logger.warn("No session root node")
             return False
 
         node = node[0]
         for attr in ['mode', 'shareable', 'persistent']:
             if not node.hasAttribute(attr):
-                print >>sys.stderr, "Missing attribute", attr
+                Logger.warn("Missing attribute %s"%(str(attr)))
                 return False
             buf = node.getAttribute(attr)
             if attr in ['shareable', 'persistent']:
@@ -224,20 +288,20 @@ class Dialog:
                 elif buf == 'false':
                     buf = False
                 else:
-                    print >>sys.stderr, "Invalid attrbiture %s value (%s)"%(attr, buf)
+                    Logger.warn("Invalid attrbiture %s value (%s)"%(attr, buf))
                     return False
 
             self.sessionProperties[attr] = buf
 
         node = node.getElementsByTagName('aps')
         if len(node) != 1:
-            print >>sys.stderr, "No aps child node from root node"
+            Logger.warn("No aps child node from root node")
             return False
 
         node = node[0]
         for attr in ['protocol', 'server', 'port', 'location']:
             if not node.hasAttribute(attr):
-                print >>sys.stderr, "Missing attribute", attr
+                Logger.warn("Missing attribute %s"%(str(attr)))
                 return False
 
         self.aps_url = "%s://%s:%s%s"%(node.getAttribute('protocol'),
@@ -256,19 +320,19 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "Le service n'est pas disponbile"
+                Logger.warn("Service failure")
                 return False
             
-            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
-            print " * return: ", exc.read()
+            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
+            Logger.debug(" * return: %s"%(str(exc.read())))
             return False
 
         except urllib2.URLError, exc:
-            print "Echec. Cause:", exc.reason
+            Logger.warn("Init session failure %s"%(str(exc.reason)))
             return False
 
-        print url.geturl()
-        print url.read()
+        #print url.geturl()
+        #print url.read()
         return True
 
     def doSessionStatus(self):
@@ -281,37 +345,37 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "Le service n'est pas disponbile"
+                Logger.warn("Service failure")
                 return False
             
-            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
-            print " * return: ", exc.read()
+            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
+            Logger.debug(" * return: %s"%(str(exc.read())))
             return False
 
         except urllib2.URLError, exc:
-            print "Echec. Cause:", exc.reason
+            Logger.warn("Service failure: %s"%(str(exc.reason)))
             return False
 
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
-            print >>sys.stderr, "Invalid response format"
+            Logger.warn("Invalid response format")
             return False
 
         data = url.read()
         try:
             dom = minidom.parseString(data)
         except ExpatError:
-            print >>sys.stderr, "Invalid XML result"
+            Logger.warn("Invalid XML result")
             return False
 
         sessionNode = dom.getElementsByTagName('session')
         if len(sessionNode) != 1:
-            print "Bad xml result"
+            Logger.warn("Bad xml result")
             return False
 
         sessionNode = sessionNode[0]
         if not sessionNode.hasAttribute('status'):
-            print "Bad xml result"
+            Logger.warn("Bad xml result")
             return False
 
         buf = sessionNode.getAttribute('status')
@@ -319,24 +383,24 @@ class Dialog:
         try:
             self.sessionStatus = int(buf)
         except exceptions.ValueError, err:
-            print "Bad xml result"
+            Logger.warn("Bad xml result")
             return False
 
         node = sessionNode.getElementsByTagName('application')
         if len(node) != 1:
-            print "missing child node application"
+            Logger.warn("missing child node application")
             return False
 
         node = node[0]
         if not node.hasAttribute('status'):
-            print "Missing attribute status to application node"
+            Logger.warn("Missing attribute status to application node")
             return False
 
         buf = node.getAttribute('status')
         try:
             self.desktopStatus = int(buf)
         except exceptions.ValueError, err:
-            print "Invalid application status",buf
+            Logger.warn("Invalid application status %s"%(str(buf)))
             return False
 
         return self.sessionStatus
@@ -350,15 +414,15 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "Le service n'est pas disponbile"
+                Logger.warn("Service failure")
                 return False
             
-            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
-            print " * return: ", exc.read()
+            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
+            Logger.debug(" * return: %s"%(str(exc.read())))
             return False
 
         except urllib2.URLError, exc:
-            print "Echec. Cause:", exc.reason
+            Logger.warn("Failure: %s"%(str(exc.reason)))
             return False
 
 
@@ -381,28 +445,28 @@ class Dialog:
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
-                print "Le service n'est pas disponbile"
+                Logger.warn("Service failurek")
                 return False
-            
-            print "HTTP request return code %d (%s)" % (exc.code, exc.msg)
-            print " * return: ", exc.read()
+
+            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
+            Logger.debug(" * return: %s"%(str(exc.read())))
             return False
 
         except urllib2.URLError, exc:
-            print "Echec. Cause:", exc.reason
+            Logger.warn("Failure: %s"%(str(exc.reason)))
             return False
 
         return True
 
 
     def check_whatsup(self):
-        print "Begin check print"
+        Logger.debug("Begin check print")
 
         old_status = 2
         while 1==1:
             status = self.doSessionStatus()
             if status != old_status:
-                print "Status changed: ",old_status," -> ",status
+                Logger.info("Status changed: %d -> %d"%(old_status, status))
                 old_status = status
             time.sleep(2)
 
@@ -451,10 +515,10 @@ class Dialog:
                           "-L", "%d:localhost:%s"%(local_port, self.infos["vnc_port"]),
                           '-p', self.infos["ssh_port"]])
         if pid<=0 or pid2<=0:
-            print "Error: ssh pid is %d"%(pid)
+            Logger.warn("Error: ssh pid is %d"%(pid))
             return False
 
-        print "sleeping to be sure ssh is ok"
+        Logger.debug("sleeping to be sure ssh is ok")
         time.sleep(2)
 
         t = threading.Thread(target=self.check_whatsup)
@@ -498,14 +562,14 @@ class Dialog:
         f.close()
         os.chmod(vnc_file, 0400)
 
-        print "launch vnc: '%s'"%(vnc_cmd)
+        Logger.debug("launch vnc: '%s'"%(vnc_cmd))
         try:
             status, out = commands.getstatusoutput(vnc_cmd)
         except KeyboardInterrupt: # ctrl+c of the user
-            print "Interrupt from user"
+            Logger.info("Interrupt from user")
             status = 0
         if status!=0:
-            print "vnc return status %d and \n%s\n==="%(status, out)
+            Logger.info("vnc return status %d and \n%s\n==="%(status, out))
             self.do_call_exit()
 
         os.remove(vnc_file)
@@ -517,7 +581,7 @@ class Dialog:
         os.kill(pid2, signal.SIGTERM)
         os.kill(pid, signal.SIGTERM)
 
-        print "end"
+        Logger.debug("end")
         return True
 
 
@@ -531,6 +595,8 @@ def usage():
     print "\t-l|--login=username"
     print "\t-p|--password=PASSWORD"
     print "\t-q|--quality=lowest|medium|high|highest"
+    print "\t--quiet"
+    print "\t--verbose"
     print
 
 conf = {}
@@ -538,8 +604,10 @@ conf["fullscreen"] = False
 conf["geometry"] = "800x600"
 conf["login"] = os.environ["USER"]
 
+logger_flags = Logger.ERROR | Logger.INFO | Logger.WARN
+
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['--fullscreen', 'geometry=', 'help', 'login=', 'password=', 'quality='])
+    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['--fullscreen', 'geometry=', 'help', 'login=', 'password=', 'quality=', 'quiet', 'verbose'])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -570,6 +638,11 @@ for o, a in opts:
             usage()
             sys.exit(2)
         conf['quality'] = a.lower()
+    elif o == "--quiet":
+        logger_flags = Logger.ERROR
+    elif o == "--verbose":
+        logger_flags |= Logger.DEBUG
+        
 
 if conf["fullscreen"] == True:
     (status, out) = commands.getstatusoutput('xrandr |head -n 1')
@@ -586,22 +659,25 @@ else:
         usage()
         sys.exit(2)
 
+# Initialize the Logger instance
+Logger.initialize(logger_flags)
+
 if not conf.has_key("password"):
-    print "Connect to '%s' with user '%s'"%(conf["url"], conf["login"])
+    Logger.info("Connect to '%s' with user '%s'"%(conf["url"], conf["login"]))
     conf["password"] = getpass.getpass("Password please: ")
 
 d = Dialog(conf)
 if not d.doLogin():
-    print "Unable to login"
+    Logger.error("Unable to login")
     sys.exit(1)
 
 if not d.doStartSession():
-    print "Unable to startsession"
+    Logger.error("Unable to startsession")
     sys.exit(2)
 
-print "Session properties: ",d.sessionProperties
+Logger.debug("Session properties: %s"%(str(d.sessionProperties)))
 if d.sessionProperties["mode"] != 'desktop':
-    print >>sys.stderr, "Doesn't support session mode", d.mode
+    Logger.error("Doesn't support session mode '%s'"%(str(d.mode)))
     self.do_call_exit()
     sys.exit(0)
 
@@ -609,43 +685,43 @@ if d.sessionProperties["mode"] != 'desktop':
 status = -1
 while status not in [0,10]:
     status = d.doSessionStatus()
-    print "status ", status
+    Logger.debug("status %s"%(str(status)))
 
     if type(status) == type(False):
-        print "Error in get status"
+        Logger.error("Error in get status")
         sys.exit(5)
     
     time.sleep(0.5)
     if not status in [-1, 0, 10]:
-        print "Session not 0 or -1 (%d) => exit"%(status)
+        Logger.error("Session not 0 or -1 (%d) => exit"%(status))
         sys.exit(4)
 
 
 if not d.doInitSession():
-    print "Unable to init session on aps"
+    Logger.error("Unable to init session on aps")
     sys.exit(3)
 
 
 status = 0
 while status != 2 or d.desktopStatus != 2:
     status = d.doSessionStatus()
-    print "status ", status
+    Logger.debug("status %s"%(str(status)))
     if type(0) == type(False):
-        print "Error in get status"
+        Logger.error("Error in get status")
         sys.exit(5)
 
     time.sleep(0.5)
     if status == 3 or status == -1:
-        print "Session not exist anymore (%d)"%(status)
+        Logger.error("Session not exist anymore (%d)"%(status))
         sys.exit(4)
 
 if not d.getSessionAccess():
-    print "Unable to get session parameters"
+    Logger.error("Unable to get session parameters")
     sys.exit(5)
 
 d.launch()
 
-print "end"
+Logger.debug("end")
 
 
 
