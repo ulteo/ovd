@@ -43,16 +43,33 @@ if (! $_FILES['xml']) {
 $xml = trim(@file_get_contents($_FILES['xml']['tmp_name']));
 
 $dom = new DomDocument('1.0', 'utf-8');
-$dom->loadXML($xml);
+$buf = @$dom->loadXML($xml);
+if (! $buf) {
+	Logger::error('main', '(webservices/server_monitoring) Invalid XML for server \''.$server->fqdn.'\'');
+	die();
+}
+
+if (! $dom->hasChildNodes()) {
+	Logger::error('main', '(webservices/server_monitoring) Invalid XML for server \''.$server->fqdn.'\'');
+	die();
+}
 
 $server_keys = array();
 
 $cpu_node = $dom->getElementsByTagname('cpu')->item(0);
+if (is_null($cpu_node)) {
+	Logger::error('main', '(webservices/server_monitoring) Missing element \'cpu_node\' for server \''.$server->fqdn.'\'');
+	die();
+}
 $server_keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
 $server_keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
 $server_keys['cpu_load'] = $cpu_node->getAttribute('load');
 
 $ram_node = $dom->getElementsByTagname('ram')->item(0);
+if (is_null($ram_node)) {
+	Logger::error('main', '(webservices/server_monitoring) Missing element \'ram_node\' for server \''.$server->fqdn.'\'');
+	die();
+}
 $server_keys['ram_total'] = $ram_node->getAttribute('total');
 $server_keys['ram_used'] = $ram_node->getAttribute('used');
 
