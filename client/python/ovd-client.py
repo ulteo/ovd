@@ -607,7 +607,7 @@ conf["login"] = os.environ["USER"]
 logger_flags = Logger.ERROR | Logger.INFO | Logger.WARN
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['--fullscreen', 'geometry=', 'help', 'login=', 'password=', 'quality=', 'quiet', 'verbose'])
+    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['fullscreen', 'geometry=', 'help', 'login=', 'password=', 'quality=', 'quiet', 'verbose'])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
