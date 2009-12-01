@@ -163,7 +163,7 @@ def launch_ssh(host, user, password, extra):
     for arg in extra:
         cmd_args.append(arg)
     cmd_args.append(host)
-    # print "exec: '%s'"%(" ".join(cmd_args))
+    Logger.debug("SSH command '%s'"%(" ".join(cmd_args)))
     
     # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
     pid, fd = os.forkpty()
@@ -174,14 +174,19 @@ def launch_ssh(host, user, password, extra):
         sys.exit(0)
      
     # if parent, read/write with child through file descriptor
-    time.sleep(0.2)
-    # Get password prompt; ignore
-    r = os.read(fd, 1000)
-    Logger.debug("ssh read: '%s'"%(str(r)))
-    time.sleep(0.2)
+    buf = os.read(fd, 1000)
+
+    while "password:" not in buf:
+        # Logger.debug("new ssh output: '%s'"%(buf))
+        time.sleep(0.3)
+        buf += os.read(fd, 1)
+
     # write password
     os.write(fd, password + "\n")
-    time.sleep(0.2)
+    
+    # Get password prompt; ignore
+    for line in buf.splitlines():
+        Logger.debug("SSH out: %s"%(line))
 
     pid2 = os.fork()
     if pid2 == 0:
