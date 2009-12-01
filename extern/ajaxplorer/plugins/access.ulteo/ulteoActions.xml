@@ -51,7 +51,7 @@
 			<rightsContext noUser="true" userLogged="only" read="true" write="false" adminOnly=""></rightsContext>
 			<processing>
 				<clientCallback prepareModal="true"><![CDATA[
-				if(ajaxplorer.actionBar.getFlashVersion() >= 8 && (document.location.href.substring(0,5)!='https' || Prototype.Browser.IE))
+				/*if(ajaxplorer.actionBar.getFlashVersion() >= 8 && (document.location.href.substring(0,5)!='https' || Prototype.Browser.IE))
 				{
 					modal.setCloseAction(function(){
 						$('closeFlashUploadBox').disabled=false;
@@ -67,7 +67,7 @@
 										true, true);				
 				}
 				else
-				{
+				{*/
 					$('hidden_frames').innerHTML = '<iframe name="hidden_iframe" id="hidden_iframe"></iframe>';			
 					var onLoadFunction = function(oForm){
 						this.multi_selector = new MultiSelector(oForm, oForm.getElementsBySelector('div.uploadFilesList')[0], '6' );
@@ -84,7 +84,7 @@
 					});
 					modal.showDialogForm('Upload', 'originalUploadForm', onLoadFunction, function(){ajaxplorer.actionBar.multi_selector.submitMainForm();return false;});
 					
-				}				
+				/*}*/				
 					]]></clientCallback>
 				<clientForm id="flash_upload_form"><![CDATA[
 					<!-- UPLOAD FORM -->
