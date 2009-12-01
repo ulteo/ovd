@@ -238,9 +238,14 @@ class Dialog:
 
         return True
 
-    def doStartSession(self):
+    def doStartSession(self, args = {}):
         url = self.base_url+"/startsession.php"
         values = {"session_mode":"desktop"}
+        for (k,v) in args.items():
+            if not values.has_key(k):
+                values[k] = v
+            else:
+                Logger.warn("Cannot overwrite option '%s' to '%s'"%(k, v))
  
         request = urllib2.Request(url, urllib.urlencode(values))
               
@@ -589,6 +594,7 @@ def usage():
     print "Usage: %s [options] ovd_sm_url"%(sys.argv[0])
     print
     print "Options:"
+    print "\t--extra-startsession-opt=key:value[,key1:value1...]"
     print "\t-f|--fullscreen"
     print "\t-g|--geometry=WIDTHxHEIGHT"
     print "\t-h|--help"
@@ -606,8 +612,18 @@ conf["login"] = os.environ["USER"]
 
 logger_flags = Logger.ERROR | Logger.INFO | Logger.WARN
 
+extra_args = {}
+
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['fullscreen', 'geometry=', 'help', 'login=', 'password=', 'quality=', 'quiet', 'verbose'])
+    opts, args = getopt.getopt(sys.argv[1:], 'fg:hl:p:q:', ['extra-startsession-opt=',
+                                                            'fullscreen',
+                                                            'geometry=',
+                                                            'help',
+                                                            'login=',
+                                                            'password=',
+                                                            'quality=',
+                                                            'quiet',
+                                                            'verbose'])
     
 except getopt.GetoptError, err:
     print >> sys.stderr, str(err)
@@ -640,6 +656,21 @@ for o, a in opts:
         conf['quality'] = a.lower()
     elif o == "--quiet":
         logger_flags = Logger.ERROR
+    elif o == "--extra-startsession-opt":
+        items = a.split(",")
+        if len(items)==0:
+            print >> sys.stderr, "Invalid extra-startsession-opt option",a
+            usage()
+            sys.exit(2)
+        
+        for item in a.split(","):
+            (k,v) = item.split(":")
+            if len(k)==0 or len(v)==0:
+                print >> sys.stderr, "Invalid extra-startsession-opt option",item
+                usage()
+                sys.exit(2)
+            
+            extra_args[k] = v
     elif o == "--verbose":
         logger_flags |= Logger.DEBUG
         
@@ -671,7 +702,7 @@ if not d.doLogin():
     Logger.error("Unable to login")
     sys.exit(1)
 
-if not d.doStartSession():
+if not d.doStartSession(extra_args):
     Logger.error("Unable to startsession")
     sys.exit(2)
 
