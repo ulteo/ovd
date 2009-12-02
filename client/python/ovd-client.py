@@ -205,6 +205,9 @@ def launch_ssh(host, user, password, extra):
 
     return pid,pid2
 
+def isAliveProcess(pid):
+    f = os.path.join("/proc", str(pid))
+    return os.path.isdir(f)
 
 class Dialog:
     def __init__(self, conf):
@@ -528,9 +531,6 @@ class Dialog:
             Logger.warn("Error: ssh pid is %d"%(pid))
             return False
 
-        Logger.debug("sleeping to be sure ssh is ok")
-        time.sleep(2)
-
         t = threading.Thread(target=self.check_whatsup)
         t.start()
 
@@ -572,12 +572,28 @@ class Dialog:
         f.close()
         os.chmod(vnc_file, 0400)
 
-        Logger.debug("launch vnc: '%s'"%(vnc_cmd))
-        try:
-            status, out = commands.getstatusoutput(vnc_cmd)
-        except KeyboardInterrupt: # ctrl+c of the user
-            Logger.info("Interrupt from user")
-            status = 0
+        Logger.debug("VNC command: '%s'"%(vnc_cmd))
+
+        flag_continue = True
+        vnc_try = 0
+
+        while vnc_try<5 and flag_continue:
+            t0 = time.time()
+            try:
+                status, out = commands.getstatusoutput(vnc_cmd)
+            except KeyboardInterrupt: # ctrl+c of the user
+                Logger.info("Interrupt from user")
+                status = 0
+            status = 256
+            t1 = time.time()
+
+            if t1-t0<2 and status == 256 and isAliveProcess(pid):
+                Logger.warn("Unable to connect to VNC server, sleep and try again (%d/5)"%(vnc_try+1))
+                time.sleep(0.3)
+                vnc_try+= 1
+            else:
+                flag_continue = False
+
         if status!=0:
             Logger.info("vnc return status %d and \n%s\n==="%(status, out))
             self.do_call_exit()
