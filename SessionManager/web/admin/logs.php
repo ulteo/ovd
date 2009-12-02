@@ -258,10 +258,8 @@ function download_log($where_, $name_, $server_=NULL) {
 	
 	$fp = @fopen($filename, 'r');
 	if ($fp !== false) {
-		while ($str = fgets($fp, 4096)) {
+		while ($str = fgets($fp, 4096))
 			echo $str;
-			echo "<br />\n";
-		}
 		fclose($fp);
 	}
 	
