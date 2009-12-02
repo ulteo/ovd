@@ -113,8 +113,13 @@ function show_default($prefs, $applicationDB) {
 			}
 
 			echo '<tr class="'.$content.'">';
+			echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 			if ($is_rw and $can_manage_applications)
-				echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
+				echo '<a href="?action=manage&id='.$app->getAttribute('id').'">';
+			echo $app->getAttribute('name');
+			if ($is_rw and $can_manage_applications)
+				echo '</a>';
+			echo '</td>';
 			echo '<td>'.$app->getAttribute('description').'</td>';
 			echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
 
