@@ -144,6 +144,8 @@ function show_step1() {
 
   $userDB = UserDB::getInstance();
   $users = $userDB->getList(true);
+  if (! is_array($users))
+    $users = array();
 
   $applicationDB = ApplicationDB::getInstance();
   $applications = $applicationDB->getList(true);
