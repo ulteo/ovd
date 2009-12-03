@@ -45,7 +45,11 @@ $_SESSION['sessionmanager_url'] = $sessionmanager_url;
 $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVERNAME.'&token='.$token);
 
 $dom = new DomDocument('1.0', 'utf-8');
-@$dom->loadXML($xml);
+$buf = @$dom->loadXML($xml);
+if (! $buf) {
+	Logger::error('main', '(index) Invalid XML (token: '.$token.')');
+	redirect('error/');
+}
 
 if (! $dom->hasChildNodes()) {
 	Logger::error('main', '(index) Invalid XML (token: '.$token.')');
