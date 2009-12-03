@@ -194,6 +194,7 @@ else{
 		$count = 0;
 		foreach($servs_all as $server){
 			$applications = $server->getApplications();
+			usort($applications, "application_cmp");
 			echo '<tr class="content';
 			if ($count % 2 == 0)
 				echo '1';
