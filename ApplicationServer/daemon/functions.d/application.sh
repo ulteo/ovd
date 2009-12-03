@@ -207,7 +207,7 @@ application_purge_all() {
     local dirs=$(find $SESSID_DIR/sessions/ -type d -maxdepth 1 -mindepth 1)
 
     for dir in $dirs; do
-        local job=$(basename $file)
+        local job=$(basename $dir)
 
         application_switch_status $sessid $job 3
         application_purge $job $dir
