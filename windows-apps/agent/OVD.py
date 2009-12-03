@@ -171,7 +171,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		conf["web_port"] = None
 		
 		# Init the logger instance
-		Logger.initialize(name, Logger.INFO | Logger.WARN | Logger.ERROR, conf["log_file"], False, True)
+		Logger.initialize(name, Logger.INFO | Logger.WARN | Logger.ERROR, None, False, True)
 		
 		log_debug("main 004 log_file "+conf["log_file"])
 		
@@ -187,6 +187,14 @@ class OVD(win32serviceutil.ServiceFramework):
 			print >> sys.stderr, "invalid configuration"
 			log_debug("exit 23")
 			sys.exit(2)
+			
+		# ReInit the logger instance with flags from config
+		match_log = [("info", Logger.INFO), ("warn", Logger.WARN), ("error", Logger.ERROR), ("debug", Logger.DEBUG)]
+		lflags = 0
+		for (k,v) in match_log:
+			if k in conf["log_flags"]:
+				lflags|= v
+		Logger.initialize(name, lflags, conf["log_file"], False, True)
 	
 		log_debug("init 01 "+str(conf))
 		self.conf = conf
