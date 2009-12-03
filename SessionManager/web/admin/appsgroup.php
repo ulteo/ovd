@@ -91,6 +91,11 @@ function action_modify($id) {
 
   $has_change = false;
 
+  if (isset($_REQUEST['name'])) {
+    $group->name = $_REQUEST['name'];
+    $has_change = true;
+  }
+
   if (isset($_REQUEST['description'])) {
     $group->description = $_REQUEST['description'];
     $has_change = true;
@@ -306,6 +311,14 @@ function show_manage($id) {
 		echo '<input type="hidden" name="id" value="'.$id.'" />';
 		echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
 		echo '<input type="submit" value="'.$status_change.'"/>';
+		echo '</form>';
+		echo '<br/>';
+
+		echo '<form action="" method="post">';
+		echo '<input type="hidden" name="action" value="modify" />';
+		echo '<input type="hidden" name="id" value="'.$id.'" />';
+		echo '<input type="text" name="name"  value="'.$group->name.'" size="50" /> ';
+		echo '<input type="submit" value="'._('Update the name').'"/>';
 		echo '</form>';
 		echo '<br/>';
 
