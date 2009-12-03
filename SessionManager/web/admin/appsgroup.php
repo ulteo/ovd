@@ -133,8 +133,8 @@ function show_default() {
   else {
     echo '<table class="main_sub sortable" id="appgroups_list" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-	if ($can_manage_applicationsgroups && count($groups) > 1)
-		echo '<th class="unsortable"></th>';
+    if ($can_manage_applicationsgroups && count($groups) > 1)
+        echo '<th class="unsortable"></th>';
     echo '<th>'._('Name').'</th>';
     echo '<th>'._('Description').'</th>';
     echo '<th>'._('Status').'</th>';
