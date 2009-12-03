@@ -684,58 +684,6 @@ class Server {
 		return true;
 	}
 
-	public function getWebLog($nb_lines_=NULL) {
-		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
-
-		if ($nb_lines_ === NULL)
-			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web', false);
-		else
-			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web&nb_lines='.$nb_lines_, false);
-
-		return $ret;
-	}
-
-	public function getDaemonLog($nb_lines_=NULL) {
-		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
-
-		if ($this->getAttribute('type') == 'windows') {
-			Logger::error('main', 'Server::getDaemonLog - No daemon log for windows server');
-			return false;
-		}
-
-		if ($nb_lines_ === NULL)
-			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false);
-		else
-			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=daemon&nb_lines='.$nb_lines_, false);
-
-		return $ret;
-	}
-
-	public function getWebLogFile() {
-		Logger::debug('main', 'Starting Server::getWebLogFile for server \''.$this->fqdn.'\'');
-
-		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=web', false, true);
-		if (is_array($ret))
-			return $ret['data'];
-
-		return false;
-	}
-
-	public function getDaemonLogFile() {
-		Logger::debug('main', 'Starting Server::getDaemonLogFile for server \''.$this->fqdn.'\'');
-
-		if ($this->getAttribute('type') == 'windows') {
-			Logger::error('main', 'Server::getDaemonLogFile - No daemon log for windows server');
-			return false;
-		}
-
-		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=daemon', false, true);
-		if (is_array($ret))
-			return $ret['data'];
-
-		return false;
-	}
-
 	public function getWindowsADDomain() {
 		Logger::debug('main', 'Starting Server::getWindowsADDomain for server \''.$this->fqdn.'\'');
 

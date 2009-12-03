@@ -33,6 +33,7 @@ import pythoncom
 import tempfile
 import servicemanager
 from win32com.shell import shell
+import time
 import traceback
 import win32api
 
@@ -295,25 +296,99 @@ class Web(SimpleHTTPRequestHandler):
 			self.server.daemon.log.debug("webservices_server_log error decoding args %s"%(err))
 			args = {}
 		
-		if args.has_key('type'):
-			if args['type'] == 'web':
-				if os.path.isfile(self.server.daemon.conf["log_file"]):
-					f = open(self.server.daemon.conf["log_file"], 'rb')
-					self.send_response(200)
-					self.send_header('Content-Type', 'text/plain')
-					self.end_headers()
-					self.wfile.write(f.read())
-					f.close()
-				else:
-					self.send_header('Content-Type', 'text/plain')
-					self.end_headers()
-					self.wfile.write('')
-			else :
-				self.server.daemon.log.debug("webservices_server_log errorA 400")
-				self.send_response(400)
-		else :
-			self.server.daemon.log.debug("webservices_server_log errorB 400")
+		Logger.debug("webservices_server_log args: "+str(args))
+		
+		if not args.has_key('since'):
+			Logger.warn("webservices_server_log: no since arg")
 			self.send_response(400)
+			return
+		
+		try:
+			since = int(args['since'])
+		except:
+			Logger.warn("webservices_server_log: since arg not int")
+			self.send_response(400)
+			return
+
+		(last, data) = self.getLogSince(since)
+		data = base64.encodestring("".join(data))
+		
+		doc = Document()
+		rootNode = doc.createElement("log")
+		rootNode.setAttribute("since", str(since))
+		rootNode.setAttribute("last", str(int(last)))
+
+		node = doc.createElement("web")
+		dataNode = doc.createCDATASection(data)
+		node.appendChild(dataNode)
+		rootNode.appendChild(node)
+		
+		node = doc.createElement("daemon")
+		dataNode = doc.createCDATASection("")
+		node.appendChild(dataNode)
+		rootNode.appendChild(node)
+		
+		doc.appendChild(rootNode)
+		
+		self.send_response(200, 'OK')
+		self.send_header('Content-Type', 'text/xml')
+		self.end_headers()
+		self.wfile.write(doc.toxml())
+		
+		return
+	
+	@staticmethod
+	def getTimeFromLine(line):
+		try:
+			d,_ = line.split(",", 1)		
+			t = time.strptime(d, "%Y-%m-%d %H:%M:%S")
+		except:
+			return False
+		
+		return time.mktime(t)
+	
+	def getLogSince(self, since):
+		if not os.path.isfile(self.server.daemon.conf["log_file"]):
+			return (since, [])
+		
+		f = open(self.server.daemon.conf["log_file"], 'rb')
+		lines = f.readlines()
+		i = len(lines) - 1
+		
+		data = []
+		last = None
+		data_buffer = []
+		
+		while(i > 0):
+			line = lines[i]
+			i-= 1
+			t = self.getTimeFromLine(line)
+			
+			if t is False:
+				data_buffer.append(line)
+				continue
+			
+			if last is None:
+				last = t
+			
+			if t < since:
+				break
+			
+			if t >= last:
+				utils.array_flush(data_buffer)
+				continue
+			
+			for elem in utils.array_flush(data_buffer):
+				data.append(elem)
+			data.append(line)
+		
+		if last is None:
+			data = data_buffer
+			last = since
+		
+		data.reverse()
+		return (last, data)
+	
 	
 	def webservices_domain(self):
 		Logger.info("webservices_domain")

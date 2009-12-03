@@ -112,10 +112,13 @@ function show_all($flags_) {
 	$servers = Servers::getAll();
 	$display2 = array();
 	foreach ($servers as $server) {
-		$lines = $server->getWebLog(20);
+		$buf = new Server_Logs($server);
+		$buf->process();
+
+		$lines = $buf->getWebLog(20);
 		$lines2 = false;
 		if ($server->getAttribute('type') != 'windows')
-			$lines2 = $server->getDaemonLog(20);
+			$lines2 = $buf->getDaemonLog(20);
 		if ($lines !== false || $lines2 !== false)
 			$display2[$server->getAttribute('fqdn')] = array();
 
@@ -180,10 +183,9 @@ function show_all($flags_) {
 }
 
 function show_specific($where_, $name_, $server_=NULL, $flags_) {
-	if ($where_ == 'sm') {
+	if ($where_ == 'sm')
 		$filename = SESSIONMANAGER_LOGS.'/main.log';
-		$must_remove_tempfile = false;
-	} elseif ($where_ == 'aps') {
+	elseif ($where_ == 'aps') {
 		$server = Abstract_Server::load($server_);
 
 		if (! $server) {
@@ -191,11 +193,9 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 			redirect();
 		}
 
-		if ($name_ == 'web')
-			$filename = $server->getWebLogFile();
-		elseif ($name_ == 'daemon')
-			$filename = $server->getDaemonLogFile();
-		$must_remove_tempfile = true;
+		$buf = new Server_Logs($server);
+		$buf->process();
+		$filename = $buf->logsdir.'/'.$name_.'.log';
 	}
 
 	page_header();
@@ -219,13 +219,9 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 		}
 		fclose($fp);
 	}
-	
 	echo '</div>';
 
 	page_footer();
-	if ($must_remove_tempfile) {
-		unlink($filename);
-	}
 
 	die();
 }
@@ -236,8 +232,6 @@ function download_log($where_, $name_, $server_=NULL) {
 		header('Content-Disposition: attachment; filename=sm_'.$name_);
 
 		$filename = SESSIONMANAGER_LOGS.'/main.log';
-		$must_remove_tempfile = false;
-
 	} elseif ($where_ == 'aps') {
 		header('Content-Type: application/octet-stream');
 		header('Content-Disposition: attachment; filename=aps_'.$server_.'_'.$name_.'.log');
@@ -249,11 +243,9 @@ function download_log($where_, $name_, $server_=NULL) {
 			redirect();
 		}
 
-		if ($name_ == 'web')
-			$filename = $server->getWebLogFile();
-		elseif ($name_ == 'daemon' && $server->getAttribute('type') != 'windows')
-			$filename = $server->getDaemonLogFile();
-		$must_remove_tempfile = true;
+		$buf = new Server_Logs($server);
+		$buf->process();
+		$filename = $buf->logsdir.'/'.$name_.'.log';
 	}
 	
 	$fp = @fopen($filename, 'r');
@@ -262,10 +254,7 @@ function download_log($where_, $name_, $server_=NULL) {
 			echo $str;
 		fclose($fp);
 	}
-	
-	if ($must_remove_tempfile) {
-		unlink($filename);
-	}
+
 	die();
 }
 
