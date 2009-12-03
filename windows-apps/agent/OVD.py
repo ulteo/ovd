@@ -114,6 +114,11 @@ def load_shell_config_file(conf):
 				raise Exception("Invalid value for key '%s'"%(key))
 		value = out
 		if key == "LOG_FLAGS":
+			if value.startswith('"'):
+				value = value[1:]
+			if value.endswith('"'):
+				value = value[:-1]
+			
 			value = value.split(" ")
 		elif key in ["MAXLUCK", "MINLUCK"]:
 			value = int(value)
