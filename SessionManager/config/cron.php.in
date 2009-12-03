@@ -21,16 +21,71 @@
  **/
 require_once('@DATADIR@/ulteo/sessionmanager/admin/includes/core.inc.php');
 
+//Check for expired sessions/tokens/invites
+$tokens = Tokens::getAll();
+if ($tokens) {
+	foreach ($tokens as $token) {
+		if (! $token->isValid()) {
+			Logger::warning('main', '(cron) Token \''.$token->id.'\' is no longer valid, deleting');
+
+			if ($token->type == 'start') //Token start Session
+				Abstract_Session::delete($token->link_to);
+			if ($token->type == 'invite') //Token invite Session
+				Abstract_Invite::delete($token->link_to);
+
+			Abstract_Token::delete($token->id);
+		}
+	}
+}
+
+$invites = Invites::getAll();
+if ($invites) {
+	foreach ($invites as $invite) {
+		if (! $invite->isValid()) {
+			Logger::warning('main', '(cron) Invite \''.$invite->id.'\' is no longer valid, deleting');
+
+			Abstract_Invite::delete($invite->id);
+		}
+	}
+}
+
+$sessions = Sessions::getAll();
+if ($sessions) {
+	foreach ($sessions as $session) {
+		$buf = $session->getStatus();
+
+		if (! $buf || (int)$buf == 4) {
+			Logger::warning('main', '(cron) Session \''.$session->id.'\' is no longer existing, deleting');
+
+			if (! $session->orderDeletion())
+				Logger::error('main', '(cron) Unable to delete session \''.$session->id.'\'');
+		}
+	}
+}
+
+
+//Updating logs cache
+$servers = Servers::getAll();
+foreach ($servers as $server) {
+	$buf = new Server_Logs($server);
+	$buf->process();
+}
+
+
+//UserGroup DB Dynamic_cached update
 $ugdbdc = new UserGroupDBDynamic_cached();
 
 $groups = $ugdbdc->getList();
-if ($groups == array()) {
+if (! is_array($groups)) {
+	Logger::error('main', '(cron) UserGroupDBDynamic_cached->getList() failed');
 }
 else {
 	foreach ($groups as $a_group) {
 		$ret = $ugdbdc->updateCache($a_group);
 		if ( $ret !== true)
-			Logger::error('main', 'cron failed to updateCache for '.$a_group->getUniqueID());
+			Logger::error('main', '(cron) Failed to updateCache for group \''.$a_group->getUniqueID().'\'');
 	}
 }
+
+//End of cron
 exit(0);
