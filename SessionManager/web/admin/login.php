@@ -98,6 +98,11 @@ else {
 
 header_static($main_title.' - '._('Administration'));
 ?>
+<script type="text/javascript">
+Event.observe(window, 'load', function() {
+	$('admin_login').focus();
+});
+</script>
 
 <h2 class="centered"><?php echo _('Log in');?></h2>
 
@@ -126,7 +131,7 @@ header_static($main_title.' - '._('Administration'));
 									<span style="color: #fff; font-weight: bold; font-size: 1.5em;"><?php echo _('Login'); ?></span>
 								</td>
 								<td>
-									<input class="input_text" type="text" name="admin_login" value="" />
+									<input class="input_text" type="text" name="admin_login" id="admin_login" value="" />
 								</td>
 							</tr>
 							<tr>
