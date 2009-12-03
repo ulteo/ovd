@@ -116,8 +116,6 @@ function show_default($applicationDB) {
     echo _('No available application').'<br />';
   else {
     echo '<div id="apps_list">';
-//     echo '<form action="applications.php" method="post">';
-//     echo '	<input type="hidden" name="mass_action" value="block" />';
     echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<thead>';
     echo '<tr class="title">';
@@ -145,7 +143,7 @@ function show_default($applicationDB) {
 
       echo '<tr class="'.$content.'">';
       if ($is_rw)
-// 	echo '<td><input class="input_checkbox" type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td><form></form>';
+// 	echo '<td><input class="input_checkbox" type="checkbox" name="manage_applications[]" value="'.$app->getAttribute('id').'" /></td>';
       echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> <a href="?action=manage&id='.$app->getAttribute('id').'">'.$app->getAttribute('name').'</a></td>';
       echo '<td>'.$app->getAttribute('description').'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$app->getAttribute('type').'.png" alt="'.$app->getAttribute('type').'" title="'.$app->getAttribute('type').'" /><br />'.$app->getAttribute('type').'</td>';
@@ -179,16 +177,18 @@ function show_default($applicationDB) {
 //       echo '</td>';
 //       echo '<td>';
 
+//     echo '<form action="applications.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\');">';
+//     echo '	<input type="hidden" name="mass_action" value="block" />';
       /*echo '<input type="submit" name="unblock" value="'._('Unblock').'" />';
       echo '<br />';
       echo '<input type="submit" name="block" value="'._('Block').'" />';*/
+//	  echo '</form>';
 //       echo '</td>';
 //       echo '</tr>';
 //       echo '</tfoot>';
     }
 
     echo '</table>';
-//     echo '</form>';
     echo '</div>';
   echo '</div>';
   }
@@ -358,7 +358,7 @@ function show_manage($id, $applicationDB) {
       if ($remove_in_progress) {
 	echo 'remove in progress';
       }
-      elseif ($server->isOnline() and $can_manage_server  and $app->getAttribute('type') == 'linux') {
+      elseif ($server->isOnline() and $can_manage_server and $app->getAttribute('type') == 'linux') {
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
 	echo '<input type="hidden" name="action" value="del" />';
 	echo '<input type="hidden" name="name" value="Application_Server" />';
