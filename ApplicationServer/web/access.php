@@ -42,7 +42,7 @@ if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['ap
 	$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
 	$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
-	$geometry = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
+	$geometry = @file_get_contents(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
 	if ($geometry !== false) {
 		$buf = explode('x', $geometry);
 		$width = $buf[0];
