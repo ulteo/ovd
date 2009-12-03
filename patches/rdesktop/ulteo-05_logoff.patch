@@ -1,0 +1,102 @@
+=== modified file 'rdesktop.c'
+--- rdesktop.c	2009-10-07 10:03:25 +0000
++++ rdesktop.c	2009-12-03 08:59:48 +0000
+@@ -107,6 +107,7 @@
+ /* Seamless slave mode flag */
+ RD_BOOL seamless_slave = False;
+ RD_BOOL seamless_start_app = False;
++RD_BOOL seamless_logoff = False;
+ 
+ uint32 g_embed_wnd;
+ uint32 g_rdp5_performanceflags =
+@@ -458,6 +459,7 @@
+ 		{"iconify-by-display", 1, NULL, 13},
+ 		{"uniconify-by-display", 1, NULL, 14},
+ 		{"destroy-by-display", 1, NULL, 15},
++		{"logoff", 0, NULL, 16},
+ 		{NULL, 0, NULL, 0} /* End of array need by getopt_long do not delete it*/
+ 	};
+ #ifdef WITH_RDPSND
+@@ -546,6 +548,10 @@
+ 				arg = optarg;
+ 				break;
+ 
++			case 16: //--logoff
++				seamless_logoff = True;
++				break;
++
+ 			case 'A':
+ 				g_seamless_rdp = True;
+ 				break;
+@@ -928,6 +934,11 @@
+ 			error("You cannot use --start-app and --destroy-by-display at the same time\n");
+ 			return 1;
+ 		}
++		if(seamless_logoff)
++		{
++			error("You cannot use --start-app and --logoff at the same time\n");
++			return 1;
++		}
+ 
+ 		startup_id = getenv("DESKTOP_STARTUP_ID");
+ 
+@@ -959,6 +970,11 @@
+ 			error("You cannot use --(un)iconify-by-display and --destroy-by-display at the same time\n");
+ 			return 1;
+ 		}
++		if(seamless_logoff)
++		{
++			error("You cannot use --(un)iconify-by-display and --logoff at the same time\n");
++			return 1;
++		}
+ 
+ 		switch(g_icon)
+ 		{
+@@ -980,6 +996,12 @@
+ 	{
+ 		char buf[4096];
+ 
++		if(seamless_logoff)
++		{
++			error("You cannot use --destroy-by-display and --logoff at the same time\n");
++			return 1;
++		}
++
+ 		snprintf (buf, sizeof(buf), "DESTROY|%s|%d", arg, (int)getpid());
+ 
+ 		seamless_socket_send(master_socket, buf);
+@@ -990,6 +1012,20 @@
+ 		return 0;
+ 	}
+ 
++	if(seamless_logoff)
++	{
++		char buf[4096];
++
++		snprintf (buf, sizeof(buf), "STARTAPP|%s|%s|%d|%s|%s\n", "logoff", " ", (int)getpid(), "*", "");
++
++		seamless_socket_send(master_socket, buf);
++
++		while(1)
++			sleep(60);
++
++		return 0;
++	}
++
+ 	if (argc - optind != 1)
+ 	{
+ 		usage(argv[0]);
+
+=== modified file 'seamless.c'
+--- seamless.c	2009-10-07 10:03:25 +0000
++++ seamless.c	2009-12-03 08:59:59 +0000
+@@ -717,7 +717,7 @@
+ 
+ 		DEBUG(("STARTAPP cmdline: %s arg: '%s' pid: %d display: %s startup_id: %s\n", cmdline, arg, pid, displayName, startup_id));
+ 
+-		if(!xdisplay_compare(getenv("DISPLAY"), displayName))
++		if(!xdisplay_compare(getenv("DISPLAY"), displayName) && strcmp(displayName, "*") != 0)
+ 		{
+ 			dis = xdisplay_register(displayName);
+ 			if(!dis)
+
