@@ -70,8 +70,7 @@ class Web(SimpleHTTPRequestHandler):
 		except Exception, err:
 			exception_type, exception_string, tb = sys.exc_info()
 			trace_exc = "".join(traceback.format_tb(tb))
-			self.server.daemon.log.debug("do_GET error '%s' '%s'"%(trace_exc, str(exception_string)))
-			log_debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
+			Logger.debug("do_GET error '%s' '%s'"%(trace_exc, str(exception_string)))
 
 	def do_POST(self):
 		root_dir = '/applicationserver/webservices'
@@ -250,7 +249,7 @@ class Web(SimpleHTTPRequestHandler):
 						command = """"%s" "%s" "%s" """%(os.path.join(self.server.daemon.install_dir, 'extract_icon.exe'), exe_file, path_bmp)
 						p = utils.Process()
 						status = p.run(command)
-						self.server.daemon.log.debug("status of extract_icon %s (command %s)"%(status, command))
+						Logger.debug("status of extract_icon %s (command %s)"%(status, command))
 						
 						if os.path.exists(path_bmp):
 							path_png = tempfile.mktemp()+'.png'
@@ -258,7 +257,7 @@ class Web(SimpleHTTPRequestHandler):
 							command = """"%s" -Q -O "%s" "%s" """%(os.path.join(self.server.daemon.install_dir, 'bmp2png.exe'), path_png, path_bmp)
 							p = utils.Process()
 							status = p.run(command)
-							self.server.daemon.log.debug("status of bmp2png %s (command %s)"%(status, command))
+							Logger.debug("status of bmp2png %s (command %s)"%(status, command))
 							
 							f = open(path_png, 'rb')
 							self.send_response(200)
@@ -269,10 +268,10 @@ class Web(SimpleHTTPRequestHandler):
 							os.remove(path_bmp)
 							os.remove(path_png)
 						else :
-							self.server.daemon.log.debug("webservices_icon error 500")
+							Logger.debug("webservices_icon error 500")
 							self.send_response(500)
 					else :
-						self.server.daemon.log.debug("webservices_icon send default icon")
+						Logger.debug("webservices_icon send default icon")
 						f = open('icon.png', 'rb')
 						self.send_response(200)
 						self.send_header('Content-Type', 'image/png')
@@ -280,11 +279,11 @@ class Web(SimpleHTTPRequestHandler):
 						self.wfile.write(f.read())
 						f.close()
 				else:
-					self.server.daemon.log.debug("webservices_icon no right argument1")
+					Logger.debug("webservices_icon no right argument1")
 			else:
-				self.server.daemon.log.debug("webservices_icon no right argument2" )
+				Logger.debug("webservices_icon no right argument2" )
 		else:
-			self.server.daemon.log.debug("webservices_icon no right argument3" )
+			Logger.debug("webservices_icon no right argument3" )
 	
 	def webservices_server_log(self):
 		try :
@@ -293,7 +292,7 @@ class Web(SimpleHTTPRequestHandler):
 			for (k,v) in args2:
 				args[k] = v.decode('utf-8')
 		except Exception, err:
-			self.server.daemon.log.debug("webservices_server_log error decoding args %s"%(err))
+			Logger.debug("webservices_server_log error decoding args %s"%(err))
 			args = {}
 		
 		Logger.debug("webservices_server_log args: "+str(args))

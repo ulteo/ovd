@@ -22,38 +22,38 @@
 import urllib
 import urllib2
 import utils
+from Logger import Logger
 
 class SessionManagerRequest:
-	def __init__(self, conf, log):
+	def __init__(self, conf):
 		self.url = conf["session_manager"]
 		self.fqdn = conf["hostname"]
 		self.web_port = conf["web_port"]
-		self.log = log
 
 	def server_status(self, status):
 		values =  {'status'  : status,
 				'fqdn' : self.fqdn,
 				'web_port' : self.web_port}
 		url = "%s/webservices/server_status.php?%s"%(self.url, urllib.urlencode(values))
-		self.log.debug('SessionManagerRequest::server_status url '+url)
+		Logger.debug('SessionManagerRequest::server_status url '+url)
 		
 		req = urllib2.Request(url)
 		try:
 			f = urllib2.urlopen(req)
 		except IOError, e:
-			self.log.debug("SessionManagerRequest::server_status error"+str(e))
-			self.log.error("SessionManagerRequest error when said %s"%(status))
+			Logger.debug("SessionManagerRequest::server_status error"+str(e))
+			Logger.errot("SessionManagerRequest error when said %s"%(status))
 			return False
 		
 		return True
 	
 	def ready(self):
-		self.log.debug("SessionManagerRequest::ready")
+		Logger.debug("SessionManagerRequest::ready")
 		ret = self.server_status("ready")
 		return ret
 	
 	def down(self):
-		self.log.debug("SessionManagerRequest::down")
+		Logger.debug("SessionManagerRequest::down")
 		return self.server_status("down")
 	
 	def broken(self):
@@ -74,7 +74,7 @@ class SessionManagerRequest:
 		try:
 			f = urllib2.urlopen(request)
 		except IOError, e:
-			self.log.debug("SessionManagerRequest::monitoring error"+str(e))
+			Logger.debug("SessionManagerRequest::monitoring error"+str(e))
 			return False
 		
 		return True
