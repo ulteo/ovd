@@ -64,6 +64,15 @@ if (isset($_REQUEST['action'])) {
 	}
 }
 
+if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'delete') {
+	if (isset($_REQUEST['manage_static_applications']) && is_array($_REQUEST['manage_static_applications'])) {
+		foreach ($_REQUEST['manage_static_applications'] as $app_id)
+			del_application($applicationDB, $app_id);
+	}
+
+	redirect();
+}
+
 if (! isset($_GET['view']))
   $_GET['view'] = 'all';
 
@@ -97,6 +106,8 @@ function show_default($prefs, $applicationDB) {
 		echo '<table class="main_sub sortable" id="applications_list_table" border="0" cellspacing="1" cellpadding="5">'; // table A
 		echo '<thead>';
 		echo '<tr class="title">';
+		if (count($applications) > 1 and $is_rw and $can_manage_applications)
+			echo '<th class="unsortable"></th>';
 		echo '<th>'._('Name').'</th>';
 		echo '<th>'._('Description').'</th>';
 		echo '<th>'._('Type').'</th>';
@@ -113,6 +124,8 @@ function show_default($prefs, $applicationDB) {
 			}
 
 			echo '<tr class="'.$content.'">';
+			if (count($applications) > 1 and $is_rw and $can_manage_applications)
+				echo '<td><input class="input_checkbox" type="checkbox" name="manage_static_applications[]" value="'.$app->getAttribute('id').'" /></td>';
 			echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 			if ($is_rw and $can_manage_applications)
 				echo '<a href="?action=manage&id='.$app->getAttribute('id').'">';
@@ -141,6 +154,23 @@ function show_default($prefs, $applicationDB) {
 			}
 
 			echo '</tr>';
+		}
+		if (count($applications) > 1 and $is_rw and $can_manage_applications) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tfoot>';
+			echo '<tr class="'.$content.'">';
+			echo '<td colspan="5">';
+			echo '<a href="javascript:;" onclick="markAllRows(\'applications_list_table\'); return false">'._('Mark all').'</a>';
+			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
+			echo '</td>';
+			echo '<td>';
+			echo '<form action="" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these static applications?').'\');;">';
+			echo '<input type="hidden" name="mass_action" value="delete" />';
+			echo '<input type="submit" name="delete" value="'._('Delete').'"/>';
+			echo '</form>';
+			echo '</td>';
+			echo '</tr>';
+			echo '</tfoot>';
 		}
 		echo '</table>'; // table A
 		echo '</div>'; // apps_list
