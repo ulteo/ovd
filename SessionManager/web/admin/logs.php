@@ -206,7 +206,7 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 		echo '</h1>';
 	} elseif ($where_ == 'aps') {
 		echo '<h1><a href="?">'._('Logs').'</a> - '.$server_.' - '.$name_;
-		echo ' <a href="?download=1&amp;where=aps&amp;name=daemon&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo ' <a href="?download=1&amp;where=aps&amp;name='.$name_.'&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 		echo '</h1>';
 	}
 
@@ -258,10 +258,8 @@ function download_log($where_, $name_, $server_=NULL) {
 	
 	$fp = @fopen($filename, 'r');
 	if ($fp !== false) {
-		while ($str = fgets($fp, 4096)) {
+		while ($str = fgets($fp, 4096))
 			echo $str;
-			echo "<br />\n";
-		}
 		fclose($fp);
 	}
 	
