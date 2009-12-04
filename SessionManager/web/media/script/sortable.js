@@ -163,6 +163,7 @@ function ts_resortTable(lnk, clid) {
 	}
 	span.innerHTML = ARROW;
 	alternate(t);
+	repaint(t);
 }
 
 function getParent(el, pTagName) {
@@ -330,6 +331,19 @@ function alternate(table) {
 					}
 				}
 			}
+		}
+	}
+}
+function repaint(table) {
+	var tableBodies = table.getElementsByTagName("tbody");
+
+	for (var i = 0; i < tableBodies.length; i++) {
+		var tableRows = tableBodies[i].getElementsByTagName("tr");
+		for (var j = 1; j < tableRows.length; j++) {
+			if (j % 2 == 1)
+				tableRows[j].className = 'content1';
+			else
+				tableRows[j].className = 'content2';
 		}
 	}
 }
