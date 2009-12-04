@@ -195,7 +195,6 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 
 		$buf = new Server_Logs($server);
 		$buf->process();
-		$filename = $buf->logsdir.'/'.$name_.'-'.date('Ymd').'.log';
 	}
 
 	page_header();
@@ -211,13 +210,16 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 	}
 
 	echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
-	$fp = @fopen($filename, 'r');
-	if ($fp !== false) {
-		while ($str = fgets($fp, 4096)) {
-			echo $str;
-			echo "<br />\n";
+	if ($where_ == 'sm') {
+		$fp = @fopen($filename, 'r');
+		if ($fp !== false) {
+			while ($str = fgets($fp, 4096))
+				echo $str.'<br />'."\n";
+			fclose($fp);
 		}
-		fclose($fp);
+	} elseif ($where_ == 'aps') {
+		while ($str = $buf->getContent($name_))
+			echo $str.'<br />'."\n";
 	}
 	echo '</div>';
 
@@ -245,15 +247,10 @@ function download_log($where_, $name_, $server_=NULL) {
 
 		$buf = new Server_Logs($server);
 		$buf->process();
-		$filename = $buf->logsdir.'/'.$name_.'-'.date('Ymd').'.log';
 	}
 	
-	$fp = @fopen($filename, 'r');
-	if ($fp !== false) {
-		while ($str = fgets($fp, 4096))
-			echo $str;
-		fclose($fp);
-	}
+	while ($str = $buf->getContent($name_))
+		echo $str;
 
 	die();
 }

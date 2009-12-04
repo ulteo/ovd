@@ -28,6 +28,9 @@ class Server_Logs {
 	public $since = NULL;
 	public $last = NULL;
 
+	public $weblog = NULL; //pointer to the fopen resource
+	public $daemonlog = NULL; //pointer to the fopen resource
+
 	public function __construct($server_) {
 // 		Logger::debug('main', 'Starting Server_Logs::__construct for \''.$server_->fqdn.'\'');
 
@@ -50,6 +53,13 @@ class Server_Logs {
 		$this->last = @file_get_contents($this->logsdir.'/last');
 		if (! $this->last)
 			$this->last = 0;
+	}
+
+	public function __destruct() {
+		if (is_resource($this->weblog))
+			@fclose($this->weblog);
+		if (is_resource($this->daemonlog))
+			@fclose($this->daemonlog);
 	}
 
 	public function __toString() {
@@ -118,6 +128,23 @@ class Server_Logs {
 			return @file_get_contents($this->logsdir.'/daemon-'.date('Ymd').'.log');
 		else
 			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/daemon-'.date('Ymd').'.log');
+	}
+
+	public function getContent($type_) {
+		if ($type_ == 'web') {
+			if (! is_resource($this->weblog))
+				$this->weblog = @fopen($this->logsdir.'/web-'.date('Ymd').'.log', 'r');
+			$fp = $this->weblog;
+		} elseif ($type_ == 'daemon') {
+			if (! is_resource($this->daemonlog))
+				$this->daemonlog = @fopen($this->logsdir.'/daemon-'.date('Ymd').'.log', 'r');
+			$fp = $this->daemonlog;
+		}
+
+		if ($fp !== false)
+			return fgets($fp, 4096);
+
+		return false;
 	}
 
 	public function process() {
