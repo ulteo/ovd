@@ -37,9 +37,6 @@ import time
 import traceback
 import win32api
 
-def log_debug(msg_):
-	servicemanager.LogInfoMsg(str(msg_))
-
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
 		root_dir = '/applicationserver'
@@ -48,7 +45,7 @@ class Web(SimpleHTTPRequestHandler):
 				self.response_error(401)
 				return
 			
-			self.server.daemon.log.debug("do_GET "+self.path)
+			Logger.debug("do_GET "+self.path)
 			if self.path == root_dir+"/webservices/server_status.php":
 				self.webservices_server_status()
 			elif self.path == root_dir+"/webservices/server_monitoring.php":
