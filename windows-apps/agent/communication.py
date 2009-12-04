@@ -27,6 +27,7 @@ import cgi
 import os
 import sys
 import base64
+import httplib
 from xml.dom.minidom import Document
 import utils
 import pythoncom
@@ -42,7 +43,7 @@ class Web(SimpleHTTPRequestHandler):
 		root_dir = '/applicationserver'
 		try:
 			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
-				self.response_error(401)
+				self.send_error(httplib.UNAUTHORIZED)
 				return
 			
 			Logger.debug("do_GET "+self.path)
@@ -61,7 +62,7 @@ class Web(SimpleHTTPRequestHandler):
 			elif self.path.startswith(root_dir+"/webservices/server_log.php"):
 				self.webservices_server_log()
 			else:
-				self.response_error(404)
+				self.send_error(httplib.NOT_FOUND)
 				return
 			
 		except Exception, err:
@@ -73,7 +74,7 @@ class Web(SimpleHTTPRequestHandler):
 		root_dir = '/applicationserver/webservices'
 		try:
 			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
-				self.response_error(401)
+				self.send_error(httplib.UNAUTHORIZED)
 				return
 
 			if self.path.startswith(root_dir+"/session"):
@@ -83,7 +84,7 @@ class Web(SimpleHTTPRequestHandler):
 				self.webservices_domain()
 			
 			else:
-				self.response_error(404)
+				self.send_error(httplib.NOT_FOUND)
 				return
 			
 		except Exception, err:
@@ -106,7 +107,7 @@ class Web(SimpleHTTPRequestHandler):
 
 
 	def webservices_session_answer(self, content):
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(content.toprettyxml())
@@ -183,17 +184,11 @@ class Web(SimpleHTTPRequestHandler):
 			doc.appendChild(rootNode)
 			return self.webservices_session_answer(doc)
 	
-	def response_error(self, code):
-		self.send_response(code)
-		self.send_header('Content-Type', 'text/html')
-		self.end_headers()
-		self.wfile.write('')
-	
 	def log_request(self,l):
 		pass
 	
 	def webservices_server_status(self):
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.getStatusString())
@@ -201,25 +196,25 @@ class Web(SimpleHTTPRequestHandler):
 	def webservices_server_monitoring(self):
 		doc = self.server.daemon.xmlMonitoring()
 		
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(doc.toxml())
 	
 	def webservices_server_type(self):
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write('windows')
 	
 	def webservices_server_version(self):
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/plain')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.version_os)
 	
 	def webservices_applications(self):
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(self.server.daemon.getApplicationsXML())
@@ -257,7 +252,7 @@ class Web(SimpleHTTPRequestHandler):
 							Logger.debug("status of bmp2png %s (command %s)"%(status, command))
 							
 							f = open(path_png, 'rb')
-							self.send_response(200)
+							self.send_response(httplib.OK)
 							self.send_header('Content-Type', 'image/png')
 							self.end_headers()
 							self.wfile.write(f.read())
@@ -266,11 +261,11 @@ class Web(SimpleHTTPRequestHandler):
 							os.remove(path_png)
 						else :
 							Logger.debug("webservices_icon error 500")
-							self.send_response(500)
+							self.send_error(httplib.INTERNAL_SERVER_ERROR)
 					else :
 						Logger.debug("webservices_icon send default icon")
 						f = open('icon.png', 'rb')
-						self.send_response(200)
+						self.send_response(httplib.OK)
 						self.send_header('Content-Type', 'image/png')
 						self.end_headers()
 						self.wfile.write(f.read())
@@ -296,14 +291,14 @@ class Web(SimpleHTTPRequestHandler):
 		
 		if not args.has_key('since'):
 			Logger.warn("webservices_server_log: no since arg")
-			self.send_response(400)
+			self.send_error(httplib.BAD_REQUEST)
 			return
 		
 		try:
 			since = int(args['since'])
 		except:
 			Logger.warn("webservices_server_log: since arg not int")
-			self.send_response(400)
+			self.send_error(httplib.BAD_REQUEST)
 			return
 
 		(last, data) = self.getLogSince(since)
@@ -326,7 +321,7 @@ class Web(SimpleHTTPRequestHandler):
 		
 		doc.appendChild(rootNode)
 		
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(doc.toxml())
@@ -413,7 +408,7 @@ class Web(SimpleHTTPRequestHandler):
 				Logger.info("webservices_domain: '%s'"%(domain))
 		
 		doc.appendChild(rootNode)
-		self.send_response(200, 'OK')
+		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
 		self.wfile.write(doc.toxml())
