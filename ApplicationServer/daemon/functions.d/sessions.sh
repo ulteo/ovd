@@ -224,8 +224,6 @@ session_purge() {
     local VNC_USER=$(cat $SESSID_DIR/private/vnc_user)
     UUID=$(id -u $VNC_USER)
 
-    windows_logoff $SESSID_DIR $USER_LOGIN
-
     killall -u $USER_LOGIN
     sleep 0.5
     killall -s 9 -u $USER_LOGIN
