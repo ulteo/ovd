@@ -195,7 +195,7 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 
 		$buf = new Server_Logs($server);
 		$buf->process();
-		$filename = $buf->logsdir.'/'.$name_.'.log';
+		$filename = $buf->logsdir.'/'.$name_.'-'.date('Ymd').'.log';
 	}
 
 	page_header();
@@ -245,7 +245,7 @@ function download_log($where_, $name_, $server_=NULL) {
 
 		$buf = new Server_Logs($server);
 		$buf->process();
-		$filename = $buf->logsdir.'/'.$name_.'.log';
+		$filename = $buf->logsdir.'/'.$name_.'-'.date('Ymd').'.log';
 	}
 	
 	$fp = @fopen($filename, 'r');

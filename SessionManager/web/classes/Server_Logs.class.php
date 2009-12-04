@@ -25,8 +25,6 @@ class Server_Logs {
 
 	public $logsdir = NULL;
 
-	private $cache_lifetime = 30;
-
 	public $since = NULL;
 	public $last = NULL;
 
@@ -100,37 +98,43 @@ class Server_Logs {
 		@file_put_contents($this->logsdir.'/last', $log_node->getAttribute('last'));
 
 		$buf = base64_decode($log_web_node->firstChild->nodeValue);
-		@file_put_contents($this->logsdir.'/web.log', $buf, FILE_APPEND);
+		@file_put_contents($this->logsdir.'/web-'.date('Ymd').'.log', $buf, FILE_APPEND);
 
 		$buf = base64_decode($log_daemon_node->firstChild->nodeValue);
-		@file_put_contents($this->logsdir.'/daemon.log', $buf, FILE_APPEND);
+		@file_put_contents($this->logsdir.'/daemon-'.date('Ymd').'.log', $buf, FILE_APPEND);
 
 		return true;
 	}
 
 	public function getWebLog($nb_lines_=NULL) {
 		if (is_null($nb_lines_) || ! is_numeric($nb_lines_) || $nb_lines_ == 0)
-			return @file_get_contents($this->logsdir.'/web.log');
+			return @file_get_contents($this->logsdir.'/web-'.date('Ymd').'.log');
 		else
-			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/web.log');
+			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/web-'.date('Ymd').'.log');
 	}
 
 	public function getDaemonLog($nb_lines_=NULL) {
 		if (is_null($nb_lines_) || ! is_numeric($nb_lines_) || $nb_lines_ == 0)
-			return @file_get_contents($this->logsdir.'/daemon.log');
+			return @file_get_contents($this->logsdir.'/daemon-'.date('Ymd').'.log');
 		else
-			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/daemon.log');
+			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/daemon-'.date('Ymd').'.log');
 	}
 
 	public function process() {
 		Logger::debug('main', 'Starting Server_Logs::process for server \''.$this->server->fqdn.'\'');
+
+		$prefs = Preferences::getInstance();
+		$cache_update_interval = (int)$prefs->get('general', 'cache_update_interval');
+		$cache_expiry_time = (int)$prefs->get('general', 'cache_expiry_time');
+
+		$this->purge_expired_logs();
 
 		if (! $this->server->isOnline()) {
 			Logger::error('main', 'Server_Logs::process Server \''.$this->server->fqdn.'\' is NOT online');
 			return false;
 		}
 
-		if ($this->since >= (time()-$this->cache_lifetime)) {
+		if ($this->since >= (time()-$cache_update_interval)) {
 			Logger::debug('main', 'Server_Logs::process Logs cache for Server \''.$this->server->fqdn.'\' is up-to-date');
 			return true;
 		}
@@ -141,6 +145,28 @@ class Server_Logs {
 		}
 
 		Logger::debug('main', 'Server_Logs::process Logs cache for Server \''.$this->server->fqdn.'\' updated');
+
+		return true;
+	}
+
+	public function purge_expired_logs() {
+		Logger::debug('main', 'Starting Server_Logs::purge for server \''.$this->server->fqdn.'\'');
+
+		$prefs = Preferences::getInstance();
+		$cache_expiry_time = (int)$prefs->get('general', 'cache_expiry_time');
+		$delete_before = (int)(date('Ymd', (time()-$cache_expiry_time)));
+
+		$files = glob($this->logsdir.'/*');
+		foreach ($files as $file) {
+			$buf = preg_match('@.+\-([0-9]+)\.log@', basename($file), $matches);
+			if (! $buf)
+				continue;
+
+			$file_date = (int)$matches[1];
+
+			if ($file_date < $delete_before)
+				@unlink($file);
+		}
 
 		return true;
 	}

@@ -157,6 +157,12 @@ class Preferences {
 		$c = new ConfigElement_multiselect('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'));
 		$c->setContentAvailable(array('debug' => _('debug'),'info' => _('info'), 'warning' => _('warning'),'error' => _('error'),'critical' => _('critical')));
 		$this->add($c,'general');
+		$c = new ConfigElement_select('cache_update_interval', _('Cache logs update interval'), _('Cache logs update interval'), _('Cache logs update interval'), 30);
+		$c->setContentAvailable(array(30=>_('30 seconds'), 60=>_('1 minute'), 300=>_('5 minutes'), 900=>_('15 minutes'), 1800=>_('30 minutes'), 3600=>_('1 hour'), 7200=>_('2 hours')));
+		$this->add($c,'general');
+		$c = new ConfigElement_select('cache_expire_time', _('Cache logs expiry time'), _('Cache logs expiry time'), _('Cache logs expiry time'), (86400*366));
+		$c->setContentAvailable(array(86400=>_('A day'), (86400*7)=>_('A week'), (86400*31)=>_('A month'), (86400*366)=>_('A year')));
+		$this->add($c,'general');
 
 // 		$c = new ConfigElement_input('start_app','start_app','start_app_des','');
 // 		$this->add('general',$c);
