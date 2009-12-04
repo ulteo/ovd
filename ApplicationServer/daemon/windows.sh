@@ -60,4 +60,7 @@ rfb_port=$(cat $dir/rfb_port)
 
 application_switch_status $SESSID $job 2
 windows_init_connection ${SESSID_DIR} $rfb_port 1
+sleep 2
+[ -d $dir ] || exit 0
+log_WARN "Session $SESSID Application $job still exist but should not !"
 application_switch_status $SESSID $job 3
