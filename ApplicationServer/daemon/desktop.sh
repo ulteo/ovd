@@ -58,7 +58,7 @@ if [ $? -ne 0 ]; then
 fi
 rfb_port=$(cat $dir/rfb_port)
 
-windows_init_connection ${SESSID_DIR} $rfb_port
+windows_init_connection ${SESSID_DIR} $rfb_port&
 
 # Todo: DOC, desktop
 application_switch_status $SESSID $job 2

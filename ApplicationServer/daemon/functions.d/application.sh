@@ -194,6 +194,10 @@ application_purge() {
         windows_purge_app $rfb_port
     fi
 
+    if [ $job == "desktop" ] || [ $job == "windows" ]; then
+        windows_logoff $SESSID_DIR $USER_LOGIN
+    fi
+    
     log_INFO "purging application '$job'"
     display_stop $rfb_port $dir/vnc.pid
 
@@ -208,6 +212,19 @@ application_purge_all() {
 
     for dir in $dirs; do
         local job=$(basename $dir)
+        if [ $job == "windows" ] || [ $job == "desktop" ]; then
+            continue
+        fi
+
+        application_switch_status $sessid $job 3
+        application_purge $job $dir
+    done
+
+    for job in windows desktop; do
+        local dir=$SESSID_DIR/sessions/$job
+        if [ ! -d $dir ]; then
+            continue
+        fi
 
         application_switch_status $sessid $job 3
         application_purge $job $dir
