@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
+ * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Gauvain Pocentek <gauvain@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -85,6 +86,10 @@ class ServerReportItem {
 
 		/* get the sql_id => session_token array */
 		$sql_sessions = get_from_cache ('reports', 'sessids');
+		if (! is_array($sql_sessions)) {
+			Logger::error('main', 'ServerReportItem::compute_sessions - get_from_cache(\'reports\', \'sessids\') failed');
+			return;
+		}
 		$apps_link = application_desktops_to_ids();
 
 		/* the interesting <sessions> node of the xml is like:
