@@ -48,6 +48,7 @@ local_do_mount() {
     else
         chown -R $USER_LOGIN $LOCAL_HOME_BASE/$USER_LOGIN
     fi
+    chmod 700 $LOCAL_HOME_BASE/$USER_LOGIN
 
     # Bind local user homedir to /home/nickname
     mount --bind $LOCAL_HOME_BASE/$USER_LOGIN $USER_HOME
