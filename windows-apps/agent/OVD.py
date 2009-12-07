@@ -40,6 +40,7 @@ import servicemanager
 import sys
 import threading
 import time
+import win32event
 import win32service
 import win32serviceutil
 import win32com.client
@@ -159,6 +160,7 @@ class OVD(win32serviceutil.ServiceFramework):
 	
 	def __init__(self,args):
 		win32serviceutil.ServiceFramework.__init__(self,args)
+		self.hWaitStop = win32event.CreateEvent(None, 0, 0, None)
 		
 		self.install_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
 		common_appdata = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
@@ -210,7 +212,6 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.objSWbemServices = self.objWMIService.ConnectServer(".")
 		self.smr = sessionmanager.SessionManagerRequest(self.conf)
 		self.broken = False
-		self.isAlive = True
 		self.applicationsXML = None
 		self.webserver = HTTPServer( ("", int(self.conf["web_port"])), communication.Web)
 		self.webserver.daemon = self
@@ -250,19 +251,23 @@ class OVD(win32serviceutil.ServiceFramework):
 			self.broken = True
 			Logger.info("SessionManager does not get a 'ready', stopping agent")
 			self.SvcStop()
-		while self.isAlive:
-			time.sleep(60)
+		
+		timeout = 60 * 1000
+		rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
+		while rc == win32event.WAIT_TIMEOUT:
 			self.updateMonitoring()
 			self.smr.monitoring(self.xmlMonitoring().toxml())
+	
+			rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
 		
+		self.smr.down()
 		Logger.info("SvcDoRun 04 Stopped")
 	
 	def SvcStop(self):
 		Logger.info("Stopping agent")
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
-		self.isAlive = False #this will make SvcDoRun() break the while loop at the next iteration.
-		#self.webserver.shutdown()
-		self.smr.down()
+		
+		win32event.SetEvent(self.hWaitStop)
 	
 	def isSessionManagerRequest(self, client_ip):
 		url_split = urlparse.urlsplit(self.conf['session_manager'])
@@ -396,3 +401,7 @@ class OVD(win32serviceutil.ServiceFramework):
 	
 	def get_cpus(self):
 		return self.objSWbemServices.ExecQuery("Select * from Win32_Processor")
+
+
+if __name__=='__main__':
+	win32serviceutil.HandleCommandLine(OVD)
