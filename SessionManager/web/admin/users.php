@@ -135,6 +135,7 @@ function modify_user($userDB, $login) {
 
 function show_default($userDB) {
   $us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
+  $total_us = count($us);
 
   $users_list_empty = (is_null($us) or count($us)==0);
   $userdb_rw = $userDB->isWriteable();
@@ -152,7 +153,7 @@ function show_default($userDB) {
   else {
     echo '<table class="main_sub sortable" id="user_list_table" border="0" cellspacing="1" cellpadding="5">';
     echo '<tr class="title">';
-    if ($userdb_rw and $can_manage_users)
+    if ($userdb_rw and $can_manage_users and $total_us > 1)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('Login').'</th>';
     echo '<th>'._('Display name').'</th>';
@@ -180,7 +181,7 @@ function show_default($userDB) {
       asort($extra);
 
       echo '<tr class="'.$content.'">';
-      if ($userdb_rw and $can_manage_users)
+      if ($userdb_rw and $can_manage_users and $total_us > 1)
         echo '<td><input class="input_checkbox" type="checkbox" name="checked_users[]" value="'.$u->getAttribute('login').'" /></td>';
       echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
       echo $u->getAttribute('login');
@@ -203,7 +204,7 @@ function show_default($userDB) {
       }
       echo '</tr>';
     }
-    if ($userdb_rw and $can_manage_users) {
+    if ($userdb_rw and $can_manage_users and $total_us > 1) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
