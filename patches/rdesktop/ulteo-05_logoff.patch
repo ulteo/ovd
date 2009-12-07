@@ -89,7 +89,7 @@
 
 === modified file 'seamless.c'
 --- seamless.c	2009-10-07 10:03:25 +0000
-+++ seamless.c	2009-12-03 08:59:59 +0000
++++ seamless.c	2009-12-07 10:02:37 +0000
 @@ -717,7 +717,7 @@
  
  		DEBUG(("STARTAPP cmdline: %s arg: '%s' pid: %d display: %s startup_id: %s\n", cmdline, arg, pid, displayName, startup_id));
@@ -99,4 +99,55 @@
  		{
  			dis = xdisplay_register(displayName);
  			if(!dis)
+
+=== modified file 'xwin.c'
+--- xwin.c	2009-10-07 09:51:23 +0000
++++ xwin.c	2009-12-07 10:03:30 +0000
+@@ -336,6 +336,8 @@
+ 			{
+ 				XDestroyWindow(g_display, sw->group->wnd);
+ 				xfree(sw->group);
++				if (sw->sa != NULL)
++					seamless_application_remove(sw->sa);
+ 			}
+ 			xfree(sw->position_timer);
+ 			xfree(sw);
+@@ -1954,6 +1956,7 @@
+ 		sw_remove_window(g_seamless_windows);
+ 	}
+ 
++	xwindow_destroy_all();
+ 	seamless_application_remove_all();
+ 
+ 	xclip_deinit();
+
+=== modified file 'xwindow.c'
+--- xwindow.c	2009-10-07 10:03:25 +0000
++++ xwindow.c	2009-12-07 10:11:26 +0000
+@@ -219,6 +219,7 @@
+ {
+ 	XDestroyWindow(sw->sa->dis->display, sw->wnd);
+ 	xwindow_remove(sw);
++	seamless_application_remove(sw->sa);
+ }
+ 
+ void
+@@ -419,7 +420,7 @@
+ {
+ 	xwindow *sw;
+ 
+-	for (sw = xwindow_first; sw != NULL  && sw->sa != NULL; sw = sw->next)
++	for (sw = xwindow_first; sw && sw->sa; sw = sw->next)
+ 		xwindow_destroy(sw);
+ }
+ 
+@@ -456,6 +457,8 @@
+ 			{
+ 				XDestroyWindow(sw->sa->dis->display, sw->group->wnd);
+ 				xfree(sw->group);
++				if (sw->sa)
++					seamless_application_remove(sw->sa);
+ 			}
+ 			xfree(sw->position_timer);
+ 			xfree(sw);
 
