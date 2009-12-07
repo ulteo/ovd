@@ -25,15 +25,13 @@ if (!isset($_SERVER['HTTP_REFERER']))
 	redirect('index.php');
 
 if (!isset($_REQUEST['name']))
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 
 if (!isset($_REQUEST['action']))
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change'))) {
-	header('Location: '.$_SERVER['HTTP_REFERER']);
-	die();
-}
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change')))
+	redirect();
 
 if ($_REQUEST['name'] == 'System') {
 	if (! checkAuthorization('manageServers'))
@@ -58,10 +56,8 @@ if ($_REQUEST['name'] == 'Application_Server') {
 	if (! checkAuthorization('manageServers'))
 		redirect();
 
-	if (!isset($_REQUEST['server']) || !isset($_REQUEST['application'])) {
-		header('Location: '.$_SERVER['HTTP_REFERER']);
-		die();
-	}
+	if (!isset($_REQUEST['server']) || !isset($_REQUEST['application']))
+		redirect();
 
 	if (! is_array($_REQUEST['application']))
 		$_REQUEST['application'] = array($_REQUEST['application']);
@@ -87,13 +83,13 @@ if ($_REQUEST['name'] == 'Application_Server') {
 		popup_info(_('Task successfully added'));
 	else if ($_REQUEST['action'] == 'del')
 		popup_info(_('Task successfully deleted'));
-	redirect($_SERVER['HTTP_REFERER']);
+	redirect();
 
 }
 /*
 if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 	if (!isset($_REQUEST['server']) || !isset($_REQUEST['group']))
-		header('Location: '.$_SERVER['HTTP_REFERER']);
+		redirect();
 
 	if (!is_array($_REQUEST['server']))
 		$_REQUEST['server'] = array($_REQUEST['server']);
@@ -108,8 +104,7 @@ if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 	$tm = new Tasks_Manager();
 	$tm->add($t);
 
-	header('Location: '.$_SERVER['HTTP_REFERER']);
-	die();
+	redirect();
 }*/
 
 if ($_REQUEST['name'] == 'Application') {
@@ -196,7 +191,7 @@ if ($_REQUEST['name'] == 'Publication') {
 		redirect();
 
 	if (!isset($_REQUEST['group_a']) or !isset($_REQUEST['group_u']))
-		redirect($_SERVER['HTTP_REFERER']);
+		redirect();
 
 	if ($_REQUEST['action'] == 'add') {
 		$l = Abstract_Liaison::load('UsersGroupApplicationsGroup', $_REQUEST['group_u'], $_REQUEST['group_a']);
