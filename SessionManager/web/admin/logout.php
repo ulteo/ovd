@@ -20,8 +20,11 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-unset($_SESSION['admin_login']);
-if (isset($_SESSION['admin_ovd_user']))
-	unset($_SESSION['admin_ovd_user']);
+$_SESSION = array();
+if (@ini_get('session.use_cookies')) {
+	$params = session_get_cookie_params();
+	setcookie(session_name(), '', (time()-86400), $params['path'], $params['domain']);
+}
+session_destroy();
 
 redirect('index.php');

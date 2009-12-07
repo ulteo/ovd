@@ -46,6 +46,11 @@ else {
     @touch($file);
 }
 
-unset($_SESSION);
+$_SESSION = array();
+if (@ini_get('session.use_cookies')) {
+	$params = session_get_cookie_params();
+	setcookie(session_name(), '', (time()-86400), $params['path'], $params['domain']);
+}
+session_destroy();
 
 die();
