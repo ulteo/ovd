@@ -35,6 +35,22 @@ if (! in_array($_REQUEST['action'], array('add', 'del', 'change'))) {
 	die();
 }
 
+if ($_REQUEST['name'] == 'System') {
+	if (! checkAuthorization('manageServers'))
+		redirect();
+
+	$prefs = new Preferences_admin();
+	if (! $prefs)
+		die_error('get Preferences failed', __FILE__, __LINE__);
+
+	if ($_REQUEST['action'] == 'change') {
+		$prefs->set('general', 'system_in_maintenance', (($_REQUEST['switch_to']=='maintenance')?1:0));
+		$prefs->backup();
+	}
+
+	redirect();
+}
+
 /*
  *  Install some Applications on a specific server
  */

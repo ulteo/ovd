@@ -30,6 +30,10 @@ $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
 
+$system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
+if ($system_in_maintenance == '1')
+	die_error(_('The system is in maintenance mode'), __FILE__, __LINE__, true);
+
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
 $windows_keymap = $default_settings['windows_keymap'];

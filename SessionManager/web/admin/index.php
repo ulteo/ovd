@@ -92,7 +92,37 @@ page_header();
 		</td>
 		<td style="width: 20px;">
 		</td>
-		<td style="padding-right: 20px; text-align: left; vertical-align: top;" colspan="3">
+		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
+<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+<div>
+	<h2><?php echo _('System'); ?></h2>
+
+	<span style="text-align: center; margin-left: auto; margin-right: auto;">
+	<?php
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+
+		$system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
+		if ($system_in_maintenance == '1') {
+			echo '<span class="msg_error">'._('The system is in maintenance mode').'</span><br /><br />';
+
+			if (checkAuthorization('manageServers'))
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Switch the system to production mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="production" /><input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Switch the system to production mode').'" /></form>';
+		} else {
+			echo '<span class="msg_ok">'._('The system is in production mode').'</span><br /><br />';
+
+			if (checkAuthorization('manageServers'))
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Switch the system to maintenance mode?').'\');"><input type="hidden" name="name" value="System" /><input type="hidden" name="action" value="change" /><input type="hidden" name="switch_to" value="maintenance" /><input type="submit" value="'._('Switch the system to maintenance mode').'" /></form>';
+		}
+	?>
+	</span>
+</div>
+</div>
+		</td>
+		<td style="width: 20px;">
+		</td>
+		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 99%; margin-left: auto; margin-right: auto;">
 <div>
 	<h2>Status</h2>

@@ -29,3 +29,11 @@ if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SEL
 	$_SESSION['redirect'] = base64_encode($_SERVER['REQUEST_URI']);
 	redirect('login.php');
 }
+
+$prefs = Preferences::getInstance();
+if (! $prefs)
+	die_error(_('get Preferences failed'), __FILE__, __LINE__);
+
+$system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
+if ($system_in_maintenance == '1')
+	popup_error(_('The system is in maintenance mode'));
