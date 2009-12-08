@@ -69,18 +69,6 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 		return ($res !== false);
 	}
 	
-// 	public function configuration(){
-// 		$c = new ConfigElement('mysql','host','host_des(mysql)','un host',NULL,1);
-// 		$this->add('general',$c);
-// 		$c = new ConfigElement('mysql','port','port_des(mysql)','un port',NULL,0);
-// 		$this->add('general',$c);
-// 		$c = new ConfigElement('mysql','login','login_des(mysql)','un login',NULL,1);
-// 		$this->add('general',$c);
-// 		$c = new ConfigElement('mysql','pass','pass_des(mysql)','un password',NULL,1);
-// 		$this->add('general',$c);
-// 		$p = new Preferences_admin();
-// 	}
-
 	public static function init($prefs_) {
 		Logger::debug('main', 'ADMIN_USERGROUPDB::sql::init');
 		$mysql_conf = $prefs_->get('general', 'mysql');
