@@ -192,7 +192,7 @@ class MySQL {
 		
 		// the table exists ?
 		$table_exists = false;
-		$ret = $this->DoQuery('SHOW TABLES LIKE %1', $name_);
+		$ret = $this->DoQuery('SHOW TABLES LIKE @1', $name_);
 		if ($ret !== false) {
 			$ret2 = $this->NumRows($ret);
 			if ($ret2 == 1)
@@ -201,9 +201,7 @@ class MySQL {
 				$table_exists = false;
 		}
 		if (! $table_exists) {
-			$query  = 'CREATE TABLE IF NOT EXISTS ';
-			$query .= mysql_escape_string($name_);
-			$query .= ' ( ';
+			$query  = 'CREATE TABLE IF NOT EXISTS @1 (';
 			foreach ($table_structure_ as $column_name => $column_type) {
 				$query .= '`'.mysql_escape_string($column_name).'` '.$column_type.' , ';
 			}
@@ -218,8 +216,8 @@ class MySQL {
 				$query = substr($query, 0, -3);
 				$query .= ')';
 			}
-			$query .= ' ) DEFAULT CHARSET=utf8; ';
-			$ret = $this->DoQuery($query);
+			$query .= ') DEFAULT CHARSET=utf8;';
+			$ret = $this->DoQuery($query, $name_);
 			return $ret;
 			
 		}
@@ -227,7 +225,7 @@ class MySQL {
 			// TODO : see if it works when we change the primary key
 		
 			// the table exists, it is the right structure ?
-			$res = $this->DoQuery('SHOW COLUMNS FROM '.$name_);
+			$res = $this->DoQuery('SHOW COLUMNS FROM @1', $name_);
 			if ($res !== false){
 				$rows = $this->FetchAllResults($res);
 				$columns_from_database = array();
@@ -253,7 +251,7 @@ class MySQL {
 					}
 					else {
 						// we must remove this column
-						$res = $this->DoQuery('ALTER TABLE '.$name_.' DROP '.$row['Field']);
+						$res = $this->DoQuery('ALTER TABLE @1 DROP @2', $name_, $row['Field']);
 						if ($res == false)
 							Logger::error('main', 'MySQL::createTable failed to remove \''.$row['Field'].'\' of the table \''.$name_.'\'');
 					}
@@ -261,7 +259,7 @@ class MySQL {
 				
 				foreach($table_structure_ as $column_name => $column_structure) {
 					if (!in_array($column_name, $columns_from_database)) {
-						$res = $this->DoQuery("ALTER TABLE `$name_` ADD `$column_name` $column_structure");
+						$res = $this->DoQuery('ALTER TABLE @1 ADD @2 '.$column_structure, $name_, $column_name);
 						if ($res == false)
 							Logger::error('main', "MySQL::createTable failed to add '$columns_from_database' of the table '$name_'");
 					}
