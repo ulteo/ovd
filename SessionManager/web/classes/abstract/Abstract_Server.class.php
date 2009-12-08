@@ -61,7 +61,7 @@ class Abstract_Server {
 
 		$servers_properties_table_structure = array(
 			'fqdn'			=>	'varchar(255) NOT NULL',
-			'property'		=>	'varchar(255) NOT NULL',
+			'property'		=>	'varchar(64) NOT NULL',
 			'value'			=>	'varchar(255) NOT NULL'
 		);
 
