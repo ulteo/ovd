@@ -205,17 +205,17 @@ class Preferences {
 		$this->add($c,'general', 'policy');
 		$this->addPrettyName('policy', _('Policy for administration delegation'));
 
-		$this->addPrettyName('mysql',_('MySQL configuration'));
+		$this->addPrettyName('sql',_('MySQL configuration'));
 		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');
-		$this->add($c,'general','mysql');
+		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'');
-		$this->add($c,'general','mysql');
+		$this->add($c,'general','sql');
 		$c = new ConfigElement_password('password',_('Database password'), _('The user password that must be used to access the database.'), _('The user password that must be used to access the database.'),'');
-		$this->add($c,'general','mysql');
+		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('database', _('Database name'), _('The name of the database.'), _('The name of the database.'), '');
-		$this->add($c,'general','mysql');
+		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('prefix', _('Table prefix'), _('The table prefix for the database.'), _('The table prefix for the database.'), 'ulteo_');
-		$this->add($c,'general','mysql');
+		$this->add($c,'general','sql');
 
 		$this->addPrettyName('mails_settings',_('Email settings'));
 		$c = new ConfigElement_select('send_type', _('Mail server type'), _('Mail server type'), _('Mail server type'),'mail');
