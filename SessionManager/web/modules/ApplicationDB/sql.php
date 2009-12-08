@@ -23,9 +23,9 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class ApplicationDB_sql extends ApplicationDB {
 	public function __construct(){
 		$prefs = Preferences::getInstance();
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (is_array($mysql_conf)) {
-			@define('APPLICATION_TABLE', $mysql_conf['prefix'].'application');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (is_array($sql_conf)) {
+			@define('APPLICATION_TABLE', $sql_conf['prefix'].'application');
 		}
 	}
 
@@ -148,13 +148,13 @@ class ApplicationDB_sql extends ApplicationDB {
 	public static function prefsIsValid($prefs_, &$log=array()) {
 		if (!defined('APPLICATION_TABLE'))
 			return false;
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
 
 			return false;
 		}
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$mysql_conf['database'],APPLICATION_TABLE);
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$sql_conf['database'],APPLICATION_TABLE);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {

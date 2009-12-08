@@ -29,8 +29,8 @@ class Abstract_Server {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Server::init');
 
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql_conf = $prefs_->get('general', 'sql');
+		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 
 		$servers_table_structure = array(
 			'fqdn'			=>	'varchar(255) NOT NULL',
@@ -50,14 +50,14 @@ class Abstract_Server {
 			'timestamp'		=>	'int(10) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers', $servers_table_structure, array('fqdn'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'servers', $servers_table_structure, array('fqdn'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'servers\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'servers\' created');
 
 		$servers_properties_table_structure = array(
 			'fqdn'			=>	'varchar(255) NOT NULL',
@@ -65,14 +65,14 @@ class Abstract_Server {
 			'value'			=>	'varchar(255) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers_properties', $servers_properties_table_structure, array('fqdn', 'property'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_properties', $servers_properties_table_structure, array('fqdn', 'property'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers_properties\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'servers_properties\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'servers_properties\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'servers_properties\' created');
 
 		return true;
 	}
@@ -316,10 +316,10 @@ class Abstract_Server {
 			return false;
 		}
 
-		$mysql_conf = $prefs->get('general', 'mysql');
+		$sql_conf = $prefs->get('general', 'sql');
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'fqdn', $mysql_conf['prefix'].'servers');
+		$SQL->DoQuery('SELECT @1 FROM @2', 'fqdn', $sql_conf['prefix'].'servers');
 		$rows = $SQL->FetchAllResults();
 
 		$servers = array();

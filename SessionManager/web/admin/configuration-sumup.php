@@ -53,15 +53,15 @@ echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONFFILE_SERIALIZED));
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><a href="configuration-partial.php?mode=mysql">Database</a></h2>
+  <h2><a href="configuration-partial.php?mode=sql">Database</a></h2>
 <?php
-$mysql_conf = $prefs->get('general', 'mysql');
+$sql_conf = $prefs->get('general', 'sql');
 ?>
   <ul>
-  <li><strong>Host</strong>: <?php echo $mysql_conf['host']; ?></li>
-  <li><strong>User</strong>: <?php echo $mysql_conf['user']; ?></li>
-  <li><strong>Database</strong>: <?php echo $mysql_conf['database']; ?></li>
-  <li><strong>Prefix</strong>: <?php echo $mysql_conf['prefix']; ?></li>
+  <li><strong>Host</strong>: <?php echo $sql_conf['host']; ?></li>
+  <li><strong>User</strong>: <?php echo $sql_conf['user']; ?></li>
+  <li><strong>Database</strong>: <?php echo $sql_conf['database']; ?></li>
+  <li><strong>Prefix</strong>: <?php echo $sql_conf['prefix']; ?></li>
   </ul>
   </div>
   </div>

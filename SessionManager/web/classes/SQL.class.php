@@ -62,8 +62,8 @@ class SQL {
 				die_error('get Preferences failed in SQL::getInstance',__FILE__,__LINE__);
 				return false;
 			}
-			$mysql_conf = $prefs->get('general', 'mysql');
-			self::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+			$sql_conf = $prefs->get('general', 'sql');
+			self::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 		}
 		return self::$instance;
 	}
@@ -77,9 +77,6 @@ class SQL {
 		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
 
 		if (! $this->link) {
-			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --database="'.$this->sqlbase.'"';
-			Logger::error('main', '(SQL::CheckLink) Link to SQL server failed, please try this bash command to validate the configuration : '.$mysqlcommand);
-
 			if ($die_) {
 				$ev->setAttribute('status', -1);
 				$ev->emit();

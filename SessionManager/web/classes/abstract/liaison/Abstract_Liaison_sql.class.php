@@ -52,12 +52,12 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::delete get Preferences failed');
 			return false;
 		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::delete mysql conf not valid');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::delete sql conf not valid');
 			return false;
 		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql_conf['prefix'].'liaison';
 		
 		$res = false;
 		if (is_null($element_) && is_null($group_)) {
@@ -83,12 +83,12 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadElements get Preferences failed');
 			return NULL;
 		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadElements mysql conf not valid');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::loadElements sql conf not valid');
 			return $result;
 		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql_conf['prefix'].'liaison';
 		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6','element', $table, 'type', $type_, 'group', $group_);
 		if ($res !== false){
 			$result = array();
@@ -112,12 +112,12 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadGroups get Preferences failed');
 			return NULL;
 		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadGroups mysql conf not valid');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::loadGroups sql conf not valid');
 			return $result;
 		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql_conf['prefix'].'liaison';
 		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6', 'group', $table, 'type', $type_, 'element', $element_);
 		if ($res !== false){
 			$result = array();
@@ -141,12 +141,12 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
 			return NULL;
 		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadAll mysql conf not valid');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::loadAll sql conf not valid');
 			return $result;
 		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql_conf['prefix'].'liaison';
 		$res = $sql2->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'element', 'group', $table, 'type', $type_);
 		if ($res !== false){
 			$result = array();
@@ -169,12 +169,12 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
 			return NULL;
 		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::loadAll mysql conf not valid');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::loadAll sql conf not valid');
 			return $result;
 		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql_conf['prefix'].'liaison';
 		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $table, 'type', 'element', 'group',  $type_, $element_, $group_);
 // 		echo 'FetchAllResults ';var_dump2($sql2->FetchAllResults());
 		if ($res !== false){
@@ -194,14 +194,14 @@ class Abstract_Liaison_sql {
 	}
 	
 	public static function init($prefs_) {
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison::init mysql conf not valid');
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison::init sql conf not valid');
 			return false;
 		}
-		$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
+		$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
 		// we create the sql table
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 		
 		$LIAISON_table_structure = array(
 			'type' => 'varchar(200) NOT NULL',
@@ -228,12 +228,12 @@ class Abstract_Liaison_sql {
 			Logger::error('main', 'Abstract_Liaison_sql::cleanup get Preferences failed');
 			return false;
 		}
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'Abstract_Liaison_sql::cleanup mysql conf not valid');
+		$sql_conf = $prefs->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'Abstract_Liaison_sql::cleanup sql conf not valid');
 			return $result;
 		}
-		$table = $mysql_conf['prefix'].'liaison';
+		$table = $sql_conf['prefix'].'liaison';
 		$res = $sql2->DoQuery('SELECT @1,@2,@3 FROM @4', 'type', 'element', 'group', $table);
 		if ($res === false) {
 			Logger::error('main', 'Abstract_Liaison_sql::cleanup DoQuery failed');

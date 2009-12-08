@@ -23,9 +23,9 @@ class UserGroupDB_sql {
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
-			$mysql_conf = $prefs->get('general', 'mysql');
-			if (is_array($mysql_conf)) {
-				$this->table =  $mysql_conf['prefix'].'usergroup';
+			$sql_conf = $prefs->get('general', 'sql');
+			if (is_array($sql_conf)) {
+				$this->table =  $sql_conf['prefix'].'usergroup';
 			}
 			else
 				$this->table = NULL;
@@ -120,14 +120,14 @@ class UserGroupDB_sql {
 	}
 	
 	public static function prefsIsValid2($prefs_, &$log=array()) {
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
 			
 			return false;
 		}
-		$table =  $mysql_conf['prefix'].'usergroup';
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
+		$table =  $sql_conf['prefix'].'usergroup';
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {

@@ -23,9 +23,9 @@ class UserDB_sql extends UserDB  {
 	protected $cache_userlist=NULL;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
-		$mysql_conf = $prefs->get('general', 'mysql');
-		if (is_array($mysql_conf)) {
-			$this->table = $mysql_conf['prefix'].'user';
+		$sql_conf = $prefs->get('general', 'sql');
+		if (is_array($sql_conf)) {
+			$this->table = $sql_conf['prefix'].'user';
 		}
 	}
 	
@@ -141,18 +141,18 @@ class UserDB_sql extends UserDB  {
 	}
 	
 	public static function prefsIsValid2($prefs_, &$log=array()) {
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'UserDB::sql::prefsIsValid2 no mysql_conf');
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'UserDB::sql::prefsIsValid2 no sql_conf');
 			return false;
 		}
-		if (!isset($mysql_conf['prefix'])) {
-			Logger::error('main', 'UserDB::sql::prefsIsValid2 mysql_conf is not valid');
+		if (!isset($sql_conf['prefix'])) {
+			Logger::error('main', 'UserDB::sql::prefsIsValid2 sql_conf is not valid');
 			return false;
 		}
-		$table = $mysql_conf['prefix'].'user';
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
+		$table = $sql_conf['prefix'].'user';
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {

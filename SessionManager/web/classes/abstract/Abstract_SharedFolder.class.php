@@ -25,22 +25,22 @@ class Abstract_SharedFolder {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::init');
 
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql_conf = $prefs_->get('general', 'sql');
+		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 
 		$sharedfolders_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
 			'name'			=>	'varchar(255) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'sharedfolders', $sharedfolders_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'sharedfolders', $sharedfolders_table_structure, array('id'));
 
 		$sharedfolders_acl_table_structure = array(
 			'sharedfolder_id'	=>	'int(8) NOT NULL',
 			'usergroup_id'		=>	'varchar(255) NOT NULL',
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'sharedfolders_acl', $sharedfolders_acl_table_structure, array('sharedfolder_id', 'usergroup_id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'sharedfolders_acl', $sharedfolders_acl_table_structure, array('sharedfolder_id', 'usergroup_id'));
 
 		//begin PHP-PEAR HTTP_WebDAV_Server
 		$sharedfolders_locks_table_structure = array(
@@ -53,7 +53,7 @@ class Abstract_SharedFolder {
 			'exclusivelock'	=>	'int(11) NOT NULL default "0"'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'dav_locks', $sharedfolders_locks_table_structure, array('token'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'dav_locks', $sharedfolders_locks_table_structure, array('token'));
 
 		$sharedfolders_properties_table_structure = array(
 			'path'	=>	'varchar(255) NOT NULL',
@@ -62,15 +62,15 @@ class Abstract_SharedFolder {
 			'value'	=>	'text'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'dav_properties', $sharedfolders_properties_table_structure, array('path'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'dav_properties', $sharedfolders_properties_table_structure, array('path'));
 		//end PHP-PEAR HTTP_WebDAV_Server
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sharedfolders\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'sharedfolders\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'sharedfolders\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'sharedfolders\' created');
 		return true;
 	}
 

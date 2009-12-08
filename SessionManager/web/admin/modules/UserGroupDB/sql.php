@@ -71,13 +71,13 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	
 	public static function init($prefs_) {
 		Logger::debug('main', 'ADMIN_USERGROUPDB::sql::init');
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main','ADMIN_USERGROUPDB::sql::init mysql conf is not valid');
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main','ADMIN_USERGROUPDB::sql::init sql conf is not valid');
 			return false;
 		}
-		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$usersgroup_table = $sql_conf['prefix'].'usergroup';
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 		
 		$usersgroup_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
@@ -105,14 +105,14 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	}
 	
 	public static function prefsIsValid2($prefs_, &$log=array()) {
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
 			
 			return false;
 		}
-		$table =  $mysql_conf['prefix'].'usergroup';
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
-		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
+		$table =  $sql_conf['prefix'].'usergroup';
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $sql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
 			if ($ret2 == 1) {

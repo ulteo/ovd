@@ -78,18 +78,18 @@ function get_all_sourceslist_mirrors(){
 function init_db($prefs_) {
 	// prefs must be valid
 	Logger::debug('main', 'init_db');
-	$mysql_conf = $prefs_->get('general', 'mysql');
-	if (!is_array($mysql_conf)) {
-		Logger::error('main', 'init_db mysql conf not valid');
+	$sql_conf = $prefs_->get('general', 'sql');
+	if (!is_array($sql_conf)) {
+		Logger::error('main', 'init_db sql conf not valid');
 		return false;
 	}
-	$APPSGROUP_TABLE = $mysql_conf['prefix'].'gapplication';
-	$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
-	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $mysql_conf['prefix'].'ug_ag_link';
-	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
+	$APPSGROUP_TABLE = $sql_conf['prefix'].'gapplication';
+	$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
+	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $sql_conf['prefix'].'ug_ag_link';
+	$SOURCES_LIST_TABLE = $sql_conf['prefix'].'sources_list';
 
 	// we create the sql table
-	$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+	$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 
 	$APPSGROUP_structure = array(
 		'id' => 'int(8) NOT NULL auto_increment',
@@ -167,13 +167,13 @@ function init_db($prefs_) {
 
 function init($host_, $database_, $prefix_, $user_, $password_) {
 	$p = new Preferences_admin();
-	$mysql_conf = array();
-	$mysql_conf['host'] = $host_;
-	$mysql_conf['database'] = $database_;
-	$mysql_conf['user'] = $user_;
-	$mysql_conf['password'] = $password_;
-	$mysql_conf['prefix'] = $prefix_;
-	$p->set('general','mysql', $mysql_conf);
+	$sql_conf = array();
+	$sql_conf['host'] = $host_;
+	$sql_conf['database'] = $database_;
+	$sql_conf['user'] = $user_;
+	$sql_conf['password'] = $password_;
+	$sql_conf['prefix'] = $prefix_;
+	$p->set('general','sql', $sql_conf);
 	$ret = $p->isValid();
 	if ($ret !== true) {
 		echo 'error isValid : '.$ret."\n";

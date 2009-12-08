@@ -76,13 +76,13 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 
 	public static function init($prefs_) {
 		Logger::debug('main', 'APPLICATIONDB::sql::init');
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'APPLICATIONDB::sql::init mysql conf not valid');
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'APPLICATIONDB::sql::init sql conf not valid');
 			return false;
 		}
-		@define('APPLICATION_TABLE', $mysql_conf['prefix'].'application');
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		@define('APPLICATION_TABLE', $sql_conf['prefix'].'application');
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
 			'name' => 'varchar(150) NOT NULL',
@@ -96,7 +96,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			'published' => 'tinyint(1) default \'0\'',
 			'static' => 'tinyint(1) default \'0\'');
 
-		$ret = $sql2->buildTable($mysql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
+		$ret = $sql2->buildTable($sql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
 
 		if ( $ret === false) {
 			Logger::error('main', 'APPLICATIONDB::sql::init table '.APPLICATION_TABLE.' fail to created');

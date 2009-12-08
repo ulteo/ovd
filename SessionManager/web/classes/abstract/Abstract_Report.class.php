@@ -29,9 +29,9 @@ class Abstract_Report {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Report::init');
 
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'],
-		                          $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql_conf = $prefs_->get('general', 'sql');
+		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'],
+		                          $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 
 		$servers_history_table_structure = array(
 			'fqdn' => 'VARCHAR(255) NOT NULL',
@@ -41,10 +41,10 @@ class Abstract_Report {
 			'ram' => 'FLOAT NOT NULL',
 			'data' => 'LONGTEXT NOT NULL');
 		
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'servers_history', $servers_history_table_structure, array());
+		$ret = $SQL->buildTable($sql_conf['prefix'].'servers_history', $servers_history_table_structure, array());
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'servers_history\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'servers_history\'');
 			return false;
 		}
 
@@ -57,10 +57,10 @@ class Abstract_Report {
 			'server' => 'VARCHAR(255) NOT NULL',
 			'data' => 'LONGTEXT NOT NULL');
 		
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'sessions_history', $sessions_history_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'sessions_history', $sessions_history_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'sessions_history\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'sessions_history\'');
 			return false;
 		}
 

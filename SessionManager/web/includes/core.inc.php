@@ -40,12 +40,12 @@ foreach ($folders as $folder) {
 $prefs = Preferences::getInstance();
 if (is_object($prefs)) {
 	define('HAS_PREFERENCES', true);
-	$mysql_conf = $prefs->get('general', 'mysql');
-	if (is_array($mysql_conf)) {
-		define('APPSGROUP_TABLE', $mysql_conf['prefix'].'gapplication');
-		define('SOURCES_LIST_TABLE', $mysql_conf['prefix'].'sources_list');
-		define('SERVERS_HISTORY_TABLE', $mysql_conf['prefix'].'servers_history');
-		define('SESSIONS_HISTORY_TABLE', $mysql_conf['prefix'].'sessions_history');
-		SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+	$sql_conf = $prefs->get('general', 'sql');
+	if (is_array($sql_conf)) {
+		define('APPSGROUP_TABLE', $sql_conf['prefix'].'gapplication');
+		define('SOURCES_LIST_TABLE', $sql_conf['prefix'].'sources_list');
+		define('SERVERS_HISTORY_TABLE', $sql_conf['prefix'].'servers_history');
+		define('SESSIONS_HISTORY_TABLE', $sql_conf['prefix'].'sessions_history');
+		SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 	}
 }

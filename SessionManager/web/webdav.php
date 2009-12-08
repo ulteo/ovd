@@ -96,12 +96,12 @@ $prefs = Preferences::getInstance();
 
 if (! $prefs)
 	Unauthorized();
-$mysql_conf = $prefs->get('general', 'mysql');
+$sql_conf = $prefs->get('general', 'sql');
 
-$server->db_host = $mysql_conf['host'];
-$server->db_user = $mysql_conf['user'];
-$server->db_passwd = $mysql_conf['password'];
-$server->db_name = $mysql_conf['database'];
-$server->db_prefix = $mysql_conf['prefix'].'dav_';
+$server->db_host = $sql_conf['host'];
+$server->db_user = $sql_conf['user'];
+$server->db_passwd = $sql_conf['password'];
+$server->db_name = $sql_conf['database'];
+$server->db_prefix = $sql_conf['prefix'].'dav_';
 
 $server->ServeRequest(SHAREDFOLDERS_DIR);

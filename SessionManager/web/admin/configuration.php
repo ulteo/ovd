@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
 		catch (Exception $e) {
 		}
 		$prefs->initialize();
-		$prefs->set('general','mysql', $elements_form['general']['mysql']);
+		$prefs->set('general','sql', $elements_form['general']['sql']);
 	}
 	else {
 		$elements_form = formToArray($_POST);
@@ -100,7 +100,7 @@ else {
 			echo '<form method="post" action="configuration.php">';
 			echo '<input type="hidden" name="setup" value="setup" />';
 		}
-		print_prefs5($prefs, 'general', 'mysql');
+		print_prefs5($prefs, 'general', 'sql');
 		if ($can_manage_configuration) {
 			echo '<input type="submit" id="submit" name="submit"  value="'._('Save').'" />';
 			echo '</form>';

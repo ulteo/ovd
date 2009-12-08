@@ -25,8 +25,8 @@ class Abstract_Invite {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_Invite::init');
 
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql_conf = $prefs_->get('general', 'sql');
+		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 
 		$invites_table_structure = array(
 			'id'			=>	'varchar(255) NOT NULL',
@@ -36,14 +36,14 @@ class Abstract_Invite {
 			'valid_until'	=>	'int(10) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'invites', $invites_table_structure, array('id'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'invites', $invites_table_structure, array('id'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'invites\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'invites\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'invites\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'invites\' created');
 		return true;
 	}
 

@@ -106,13 +106,13 @@ class admin_UserDB_sql extends UserDB_sql {
 	
 	public static function init($prefs_) {
 		Logger::debug('main', 'USERDB::sql::init');
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
-			Logger::error('main', 'USERDB::sql::init mysql conf not valid');
+		$sql_conf = $prefs_->get('general', 'sql');
+		if (!is_array($sql_conf)) {
+			Logger::error('main', 'USERDB::sql::init sql conf not valid');
 			return false;
 		}
-		$table = $mysql_conf['prefix'].'user';
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$table = $sql_conf['prefix'].'user';
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 		
 		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$user_table_structure = array(

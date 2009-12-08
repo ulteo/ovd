@@ -25,22 +25,22 @@ class Abstract_DAV_User {
 	public static function init($prefs_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::init');
 
-		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql_conf = $prefs_->get('general', 'sql');
+		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 
 		$dav_users_table_structure = array(
 			'login'			=>	'varchar(255) NOT NULL',
 			'password'		=>	'varchar(255) NOT NULL'
 		);
 
-		$ret = $SQL->buildTable($mysql_conf['prefix'].'dav_users', $dav_users_table_structure, array('login'));
+		$ret = $SQL->buildTable($sql_conf['prefix'].'dav_users', $dav_users_table_structure, array('login'));
 
 		if (! $ret) {
-			Logger::error('main', 'Unable to create MySQL table \''.$mysql_conf['prefix'].'dav_users\'');
+			Logger::error('main', 'Unable to create MySQL table \''.$sql_conf['prefix'].'dav_users\'');
 			return false;
 		}
 
-		Logger::debug('main', 'MySQL table \''.$mysql_conf['prefix'].'dav_users\' created');
+		Logger::debug('main', 'MySQL table \''.$sql_conf['prefix'].'dav_users\' created');
 		return true;
 	}
 
