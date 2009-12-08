@@ -153,7 +153,7 @@ if (isAuthorized('viewConfiguration')) {
 	$menu['configuration_db'] = 
 		array('id' => 'configuration_db',
 			  'name' => _('Database settings'),
-			  'page' => 'configuration-partial.php?mode=mysql',
+			  'page' => 'configuration-partial.php?mode=sql',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_general'] = 
