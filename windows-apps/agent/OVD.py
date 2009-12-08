@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from Logger import Logger
+from Msi import Msi
 from SessionManagement import SessionManagement
 
 import sessionmanager
@@ -330,6 +331,12 @@ class OVD(win32serviceutil.ServiceFramework):
 			self.log.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
 			shortcut_list = find_lnk( os.path.join('c:\\', 'Documents and Settings', 'All Users'))
 		
+		try:
+			msi = Msi()
+		except WindowsError,e:
+			Logger.warn("getApplicationsXML_nocache: Unable to init Msi")
+			msi = None
+		
 		for filename in shortcut_list:
 			shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 			shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
@@ -359,8 +366,11 @@ class OVD(win32serviceutil.ServiceFramework):
 					if mimetypes:
 						exe.setAttribute("mimetypes", ";".join(mimetypes)+";");
 
-					exe.setAttribute("command", unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding))
+					command = msi.getTargetFromShortcut(filename)
+					if command is None:
+						command = unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding)
 					
+					exe.setAttribute("command", command)
 					app.appendChild(exe)
 		
 		return doc.toxml(output_encoding)
