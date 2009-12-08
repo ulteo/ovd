@@ -1,3 +1,9 @@
+ovd-chroot-apps (2.0.1-0ulteo0) 2-0-staging; urgency=low
+
+  * New bugfix release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 08 Dec 2009 08:49:23 +0100
+
 ovd-chroot-apps (2.0-0ulteo0) 2-0-staging; urgency=low
 
   * New stable release
