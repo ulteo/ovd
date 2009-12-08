@@ -262,7 +262,6 @@ class OVD(win32serviceutil.ServiceFramework):
 			rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
 		
 		self.smr.down()
-		Logger.info("SvcDoRun 04 Stopped")
 	
 	def SvcStop(self):
 		Logger.info("Stopping agent")
