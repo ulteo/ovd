@@ -73,10 +73,17 @@ class User {
 			Logger::error('main', 'User::usersGroups load('.$this->attributes['login'].') is null');
 			return $result;
 		}
-		$dynamic = Abstract_Liaison_dynamic::load('UsersGroup', $this->attributes['login'], NULL);
-		if (is_null($dynamic)) {
+		
+		if ($userGroupDB->isDynamic()) {
+			$dynamic = Abstract_Liaison_dynamic::load('UsersGroup', $this->attributes['login'], NULL);
+			if (is_null($dynamic)) {
+				$dynamic = array();
+			}
+		}
+		else {
 			$dynamic = array();
 		}
+		
 		$rows = array_unique(array_merge($static, $dynamic));
 
 		if (!is_null($user_default_group) && $user_default_group !== '-1' && $user_default_group !== '') {

@@ -84,6 +84,10 @@ class UserGroupDB extends Module {
 	}
 	public function canShowList() {}
 	
+	public function isDynamic() {
+		return true;
+	}
+	
 	// admin function
 	public static function init($prefs_) {}
 	public function add($usergroup_) {

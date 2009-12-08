@@ -102,6 +102,10 @@ class UserGroupDB_sql {
 		}
 	}
 	
+	public function isDynamic() {
+		return false;
+	}
+	
 	public static function configuration() {
 		return array();
 	}
