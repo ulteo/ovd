@@ -189,7 +189,7 @@ class SQL {
 		
 		// the table exists ?
 		$table_exists = false;
-		$ret = $this->DoQuery('SHOW TABLES LIKE @1', $name_);
+		$ret = $this->DoQuery('SHOW TABLES LIKE %1', $name_);
 		if ($ret !== false) {
 			$ret2 = $this->NumRows($ret);
 			if ($ret2 == 1)
