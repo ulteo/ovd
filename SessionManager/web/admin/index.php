@@ -29,6 +29,7 @@ if (!file_exists(SESSIONMANAGER_CONFFILE_SERIALIZED)) {
 
 page_header();
 ?>
+<h1 style="margin-left: 10px;"><?php echo _('Index'); ?></h1>
 <table style="width: 100%;" border="0" cellspacing="3" cellpadding="5">
 	<tr>
 		<td style="width: 30%; text-align: left; vertical-align: top;">
