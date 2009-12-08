@@ -57,8 +57,10 @@ if ($sessions) {
 		if (! $buf || (int)$buf == 4) {
 			Logger::warning('main', '(cron) Session \''.$session->id.'\' is no longer existing, deleting');
 
-			if (! $session->orderDeletion())
-				Logger::error('main', '(cron) Unable to delete session \''.$session->id.'\'');
+			if (! $session->orderDeletion()) {
+				Logger::error('main', '(cron) Unable to order deletion of session \''.$session->id.'\'... purging');
+				Abstract_Session::delete($session->id);
+			}
 		}
 	}
 }
