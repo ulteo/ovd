@@ -40,7 +40,7 @@ class SessionReportItem {
 		$this->user = $session->getAttribute('user_login');
 		$this->current_apps = array();
 
-		$sql = MySQL::getInstance();
+		$sql = SQL::getInstance();
 		$res = $sql->DoQuery(
 			'INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)',
 			SESSIONS_HISTORY_TABLE,'user','server','data',
@@ -142,7 +142,7 @@ class SessionReportItem {
 				$app['running']->stop($now);
 		}
 
-		$sql = MySQL::getInstance();
+		$sql = SQL::getInstance();
 		$res = $sql->DoQuery(
 			'UPDATE @1 SET @2=NOW(), @3=%4 WHERE @5=%6',
 			SESSIONS_HISTORY_TABLE,'stop_stamp','data',$this->toXml(),

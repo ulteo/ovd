@@ -26,7 +26,7 @@ class Abstract_News {
 		Logger::debug('main', 'Starting Abstract_News::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$news_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
@@ -49,7 +49,7 @@ class Abstract_News {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_News::load for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -77,7 +77,7 @@ class Abstract_News {
 	public static function save($news_) {
 		Logger::debug('main', 'Starting Abstract_News::save for \''.$news_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $news_->id;
 
@@ -99,7 +99,7 @@ class Abstract_News {
 	private static function create($news_) {
 		Logger::debug('main', 'Starting Abstract_News::create for \''.$news_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $news_->id;
 
@@ -119,7 +119,7 @@ class Abstract_News {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_News::delete for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -139,7 +139,7 @@ class Abstract_News {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_News::load_all');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2 ORDER BY @3 DESC', 'id', $SQL->prefix.'news', 'timestamp');
 		$rows = $SQL->FetchAllResults();

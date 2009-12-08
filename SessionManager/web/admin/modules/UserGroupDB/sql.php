@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	public function add($usergroup_){
 		Logger::debug('main', "ADMIN_USERGROUPDB::add($usergroup_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		// usergroup already exists ?
 		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 AND @4 = %5', $this->table, 'name', $usergroup_->name, 'description', $usergroup_->description);
 			
@@ -45,7 +45,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	public function remove($usergroup_){
 		Logger::debug('main', "ADMIN_USERGROUPDB::remove($usergroup_)");
 		// first we delete liaisons
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
 		foreach ($liaisons as $liaison) {
 			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
@@ -64,7 +64,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 	
 	public function update($usergroup_){
 		Logger::debug('main',"ADMIN_USERGROUPDB::update($usergroup_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id);
 		return ($res !== false);
 	}
@@ -89,7 +89,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		$usersgroup_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
@@ -123,7 +123,7 @@ class admin_UserGroupDB_sql extends UserGroupDB_sql {
 			return false;
 		}
 		$table =  $mysql_conf['prefix'].'usergroup';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);

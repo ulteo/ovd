@@ -26,7 +26,7 @@ class Abstract_Token {
 		Logger::debug('main', 'Starting Abstract_Token::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$tokens_table_structure = array(
 			'id'			=>	'varchar(255) NOT NULL',
@@ -49,7 +49,7 @@ class Abstract_Token {
 	public static function exists($id_) {
 		Logger::debug('main', 'Starting Abstract_Token::exists for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id_);
 		$total = $SQL->NumRows();
@@ -63,7 +63,7 @@ class Abstract_Token {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Token::load for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -91,7 +91,7 @@ class Abstract_Token {
 	public static function save($token_) {
 		Logger::debug('main', 'Starting Abstract_Token::save for \''.$token_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $token_->id;
 
@@ -112,7 +112,7 @@ class Abstract_Token {
 	private static function create($token_) {
 		Logger::debug('main', 'Starting Abstract_Token::create for \''.$token_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $token_->id;
 
@@ -132,7 +132,7 @@ class Abstract_Token {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Token::delete for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -152,7 +152,7 @@ class Abstract_Token {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Token::load_all');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'tokens');
 		$rows = $SQL->FetchAllResults();

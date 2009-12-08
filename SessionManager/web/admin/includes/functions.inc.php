@@ -41,7 +41,7 @@ function display_loadbar($percents_) {
 
 function getAllAppsGroups(){
 	Logger::debug('main','getAllAppsGroups');
-	$sql2 = MySQL::getInstance();
+	$sql2 = SQL::getInstance();
 	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5', 'id', 'name', 'description', 'published', APPSGROUP_TABLE);
 	if ($res !== false){
 		$result = array();
@@ -59,7 +59,7 @@ function getAllAppsGroups(){
 }
 
 function get_all_sourceslist_mirrors(){
-	$sql2 = MySQL::getInstance();
+	$sql2 = SQL::getInstance();
 	$res = $sql2->DoQuery('SELECT @1 FROM @2','element', SOURCES_LIST_TABLE);
 	if ($res !== false){
 		$result = array();
@@ -89,7 +89,7 @@ function init_db($prefs_) {
 	$SOURCES_LIST_TABLE = $mysql_conf['prefix'].'sources_list';
 
 	// we create the sql table
-	$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+	$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 	$APPSGROUP_structure = array(
 		'id' => 'int(8) NOT NULL auto_increment',

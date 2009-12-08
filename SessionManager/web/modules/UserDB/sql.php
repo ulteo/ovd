@@ -30,7 +30,7 @@ class UserDB_sql extends UserDB  {
 	}
 	
 	public function import($login_){
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
@@ -80,7 +80,7 @@ class UserDB_sql extends UserDB  {
 	public function getList_nocache(){
 		Logger::debug('main','USERDB::MYSQL::getList_nocache');
 		$result = array();
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1', $this->table);
 		if ($res !== false){
 			$rows = $sql2->FetchAllResults($res);
@@ -151,7 +151,7 @@ class UserDB_sql extends UserDB  {
 			return false;
 		}
 		$table = $mysql_conf['prefix'].'user';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);

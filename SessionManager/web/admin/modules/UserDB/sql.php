@@ -48,7 +48,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			}
 			$query_keys = substr($query_keys, 0, -1); // del the last ,
 			$query_values = substr($query_values, 0, -1); // del the last ,
-			$SQL = MySQL::getInstance();
+			$SQL = SQL::getInstance();
 			$query = 'INSERT INTO `'.$this->table.'` ( '.$query_keys.' ) VALUES ('.$query_values.' )';
 			$ret = $SQL->DoQuery($query);
 			$id = $SQL->InsertId();
@@ -68,7 +68,7 @@ class admin_UserDB_sql extends UserDB_sql {
 	public function remove($user_){
 		Logger::debug('main', 'UserDB::sql::remove');
 		if (is_object($user_) && $user_->hasAttribute('login')){
-			$SQL = MySQL::getInstance();
+			$SQL = SQL::getInstance();
 			// first we delete all liaisons 
 			$liaisons = Abstract_Liaison::load('UsersGroup', $user_->getAttribute('login'), NULL);
 			foreach ($liaisons as $liaison) {
@@ -98,7 +98,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			}
 			$query = substr($query, 0, -2); // del the last ,
 			$query .= ' WHERE `login` = \''.$user_->getAttribute('login').'\'';
-			$SQL = MySQL::getInstance();
+			$SQL = SQL::getInstance();
 			return $SQL->DoQuery($query);
 		}
 		return false;
@@ -112,7 +112,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			return false;
 		}
 		$table = $mysql_conf['prefix'].'user';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$user_table_structure = array(

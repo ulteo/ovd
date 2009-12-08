@@ -142,7 +142,7 @@ function get_session_history($t0, $t1, $mode_) {
 	$result = build_array($t0, $t1, $mode_);
 	$res_server = array();
 
-	$sql = MySQL::getInstance();
+	$sql = SQL::getInstance();
 	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4;',
 						SESSIONS_HISTORY_TABLE, 'start_stamp', date('c', $t0), date('c', $t1));
 
@@ -168,7 +168,7 @@ function get_session_history($t0, $t1, $mode_) {
 
 
 function get_server_history($t0, $t1, $mode_) {
-	$sql = MySQL::getInstance();
+	$sql = SQL::getInstance();
 	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4 ORDER BY @2 ASC;', SERVERS_HISTORY_TABLE, 'timestamp', date('c', $t0), date('c', $t1));
 
 	$infos = array();

@@ -26,7 +26,7 @@ class Abstract_DAV_User {
 		Logger::debug('main', 'Starting Abstract_DAV_User::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$dav_users_table_structure = array(
 			'login'			=>	'varchar(255) NOT NULL',
@@ -47,7 +47,7 @@ class Abstract_DAV_User {
 	public static function load($login_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::load for \''.$login_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$login = $login_;
 
@@ -74,7 +74,7 @@ class Abstract_DAV_User {
 	public static function save($dav_user_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::save for \''.$dav_user_->login.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$login = $dav_user_->login;
 
@@ -92,7 +92,7 @@ class Abstract_DAV_User {
 	private static function create($dav_user_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::create for \''.$dav_user_->login.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$login = $dav_user_->login;
 
@@ -112,7 +112,7 @@ class Abstract_DAV_User {
 	public static function delete($login_) {
 		Logger::debug('main', 'Starting Abstract_DAV_User::delete for \''.$login_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$login = $login_;
 

@@ -26,7 +26,7 @@ class Abstract_Invite {
 		Logger::debug('main', 'Starting Abstract_Invite::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$invites_table_structure = array(
 			'id'			=>	'varchar(255) NOT NULL',
@@ -50,7 +50,7 @@ class Abstract_Invite {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Invite::load for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -79,7 +79,7 @@ class Abstract_Invite {
 	public static function save($invite_) {
 		Logger::debug('main', 'Starting Abstract_Invite::save for \''.$invite_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $invite_->id;
 
@@ -100,7 +100,7 @@ class Abstract_Invite {
 	private static function create($invite_) {
 		Logger::debug('main', 'Starting Abstract_Invite::create for \''.$invite_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $invite_->id;
 
@@ -122,7 +122,7 @@ class Abstract_Invite {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Invite::delete for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -144,7 +144,7 @@ class Abstract_Invite {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Invite::load_all');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'invites');
 		$rows = $SQL->FetchAllResults();

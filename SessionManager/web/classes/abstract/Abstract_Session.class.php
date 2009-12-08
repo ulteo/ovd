@@ -26,7 +26,7 @@ class Abstract_Session {
 		Logger::debug('main', 'Starting Abstract_Session::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$sessions_table_structure = array(
 			'id'				=>	'varchar(255) NOT NULL',
@@ -56,7 +56,7 @@ class Abstract_Session {
 	public static function exists($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::exists for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id_);
 		$total = $SQL->NumRows();
@@ -70,7 +70,7 @@ class Abstract_Session {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::load for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -104,7 +104,7 @@ class Abstract_Session {
 	public static function save($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::save for \''.$session_->id.'\'');
 		
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $session_->id;
 
@@ -125,7 +125,7 @@ class Abstract_Session {
 	private static function create($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::create for \''.$session_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $session_->id;
 
@@ -150,7 +150,7 @@ class Abstract_Session {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_Session::delete for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -178,7 +178,7 @@ class Abstract_Session {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Session::load_all');
 		
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'sessions');
 		$rows = $SQL->FetchAllResults();
@@ -200,7 +200,7 @@ class Abstract_Session {
 	public static function uptodate($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 		
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'sessions', 'id', $session_->id);
 		$total = $SQL->NumRows();
 

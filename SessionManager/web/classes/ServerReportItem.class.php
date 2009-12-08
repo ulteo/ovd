@@ -47,7 +47,7 @@ class ServerReportItem {
 	}
 
 	public function save() {
-		$sql = MySQL::getInstance();
+		$sql = SQL::getInstance();
 		$res = $sql->DoQuery(
 			'INSERT INTO @1 (@2,@3,@4,@5,@6) VALUES (%7,%8,%9,%10,%11)',
 			SERVERS_HISTORY_TABLE,'fqdn','external_name','cpu','ram','data',

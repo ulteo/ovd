@@ -30,7 +30,7 @@ class Abstract_Server {
 		Logger::debug('main', 'Starting Abstract_Server::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$servers_table_structure = array(
 			'fqdn'			=>	'varchar(255) NOT NULL',
@@ -80,7 +80,7 @@ class Abstract_Server {
 	public static function exists($fqdn_) {
 		Logger::debug('main', 'Starting Abstract_Server::exists for \''.$fqdn_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn_);
 		$total = $SQL->NumRows();
@@ -97,7 +97,7 @@ class Abstract_Server {
 		if (substr($fqdn_, -1) == '.')
 			$fqdn_ = substr($fqdn_, 0, (strlen($fqdn_)-1));
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$fqdn = $fqdn_;
 
@@ -142,7 +142,7 @@ class Abstract_Server {
 	public static function save($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::save for \''.$server_->fqdn.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$fqdn = $server_->fqdn;
 
@@ -169,7 +169,7 @@ class Abstract_Server {
 	private static function loadProperties($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::loadProperties for \''.$server_->fqdn.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5', 'property', 'value', $SQL->prefix.'servers_properties', 'fqdn', $server_->fqdn);
 		$rows = $SQL->FetchAllResults();
@@ -184,7 +184,7 @@ class Abstract_Server {
 	private static function saveProperty($server_, $object_property_, $db_property_, $old_property_) {
 		Logger::debug('main', 'Starting Abstract_Server::saveProperty for \''.$server_->fqdn.'\' object_property \''.$object_property_.'\' db_property \''.$db_property_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		if (! is_null($old_property_) && is_null($server_->$object_property_))
 			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.'servers_properties', 'property', $db_property_, 'fqdn', $server_->fqdn);
@@ -199,7 +199,7 @@ class Abstract_Server {
 	private static function create($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::create for \''.$server_->fqdn.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$fqdn = $server_->fqdn;
 
@@ -219,7 +219,7 @@ class Abstract_Server {
 	public static function modify($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::modify for \''.$server_->fqdn.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$fqdn = $server_->fqdn;
 
@@ -252,7 +252,7 @@ class Abstract_Server {
 		$application_server_settings = $prefs->get('general', 'application_server_settings');
 		$remove_orphan = (bool)$application_server_settings['remove_orphan'];
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$fqdn = $fqdn_;
 
@@ -317,7 +317,7 @@ class Abstract_Server {
 		}
 
 		$mysql_conf = $prefs->get('general', 'mysql');
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2', 'fqdn', $mysql_conf['prefix'].'servers');
 		$rows = $SQL->FetchAllResults();
@@ -339,7 +339,7 @@ class Abstract_Server {
 	public static function uptodate($server_) {
 		Logger::debug('main', 'Starting Abstract_Server::uptodate for \''.$server_->fqdn.'\'');
 		
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'timestamp', $SQL->prefix.'servers', 'fqdn', $server_->fqdn);
 		$total = $SQL->NumRows();

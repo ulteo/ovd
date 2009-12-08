@@ -26,7 +26,7 @@ class Abstract_SharedFolder {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$sharedfolders_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
@@ -77,7 +77,7 @@ class Abstract_SharedFolder {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::load for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -109,7 +109,7 @@ class Abstract_SharedFolder {
 	public static function save($sharedfolder_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::save for \''.$sharedfolder_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$sharedfolder_id = Abstract_SharedFolder::exists($sharedfolder_->name);
 		if (! $sharedfolder_id) {
@@ -142,7 +142,7 @@ class Abstract_SharedFolder {
 	public static function modify($sharedfolder_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::modify for \''.$sharedfolder_->id.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 LIMIT 1', $SQL->prefix.'sharedfolders', 'name', $sharedfolder_->name, 'id', $sharedfolder_->id);
 
@@ -152,7 +152,7 @@ class Abstract_SharedFolder {
 	private static function create($sharedfolder_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::create for \''.$sharedfolder_->name.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $sharedfolder_->id;
 
@@ -176,7 +176,7 @@ class Abstract_SharedFolder {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::delete for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -199,7 +199,7 @@ class Abstract_SharedFolder {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::load_all');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'sharedfolders');
 		$rows = $SQL->FetchAllResults();
@@ -221,7 +221,7 @@ class Abstract_SharedFolder {
 	public static function exists($name_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::exists with name \''.$name_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'id', $SQL->prefix.'sharedfolders', 'name', $name_);
 		$total = $SQL->NumRows();
@@ -236,7 +236,7 @@ class Abstract_SharedFolder {
 	public static function add_acl($sharedfolder, $usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::add_acl with sharedfolder \''.$sharedfolder->id.'\' and usergroup \''.$usergroup_id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('INSERT INTO @1 (@2,@3) VALUES(%4,%5)', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', 'usergroup_id', $sharedfolder->id, $usergroup_id_);
 		$total = $SQL->NumRows();
@@ -250,7 +250,7 @@ class Abstract_SharedFolder {
 	public static function del_acl($sharedfolder, $usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::del_acl with sharedfolder \''.$sharedfolder->id.'\' and usergroup \''.$usergroup_id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $sharedfolder->id, 'usergroup_id', $usergroup_id_);
 // 		$total = $SQL->NumRows();
@@ -264,7 +264,7 @@ class Abstract_SharedFolder {
 	public static function del_usergroup_acl($usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::del_usergroup_acl with usergroup \''.$usergroup_id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sharedfolders_acl', 'usergroup_id', $usergroup_id_);
 // 		$total = $SQL->NumRows();
@@ -278,7 +278,7 @@ class Abstract_SharedFolder {
 	public static function load_by_usergroup_id($usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::load_by_usergroup_id for usergroup \''.$usergroup_id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1,@2 FROM @3,@4 WHERE @3.@5 = @4.@6 AND @4.@7 = %8', 'id', 'name', $SQL->prefix.'sharedfolders', $SQL->prefix.'sharedfolders_acl', 'id', 'sharedfolder_id', 'usergroup_id', $usergroup_id_);
 		$rows = $SQL->FetchAllResults();

@@ -31,7 +31,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 	public function import($id_){
 		Logger::debug('main', "ApplicationDB_sql::import($id_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE,'id',$id_);
 		if ($res !== false){
 			if ($sql2->NumRows($res) == 1){
@@ -48,7 +48,7 @@ class ApplicationDB_sql extends ApplicationDB {
 	public function search($app_name,$app_description,$app_type,$app_path_exe){
 	Logger::debug('main',"ApplicationDB_sql::search ('".$app_name."','".$app_description."','".$app_type."','".$app_path_exe."')");
 // 		echo "ApplicationDB_sql::search ('".$app_name."','".$app_description."','".$app_type."','".$app_path_exe."')\n";
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE
 		@3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10', 'id', APPLICATION_TABLE, 'name', $app_name, 'description', $app_description, 'type', $app_type, 'executable_path', $app_path_exe);
 		if ($res !== false){
@@ -62,7 +62,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 	public function getList($sort_=false, $type_=NULL){
 		Logger::debug('main', "ApplicationDB_sql::getList(sort=$sort_, type=$type_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		if (is_null($type_))
 			$res = $sql2->DoQuery('SELECT * FROM @1',APPLICATION_TABLE);
 		else
@@ -153,7 +153,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 			return false;
 		}
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$mysql_conf['database'],APPLICATION_TABLE);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);

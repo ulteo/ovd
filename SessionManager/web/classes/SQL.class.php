@@ -21,7 +21,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-class MySQL {
+class SQL {
 	private static $instance = NULL;
 
 	private $link = false;
@@ -46,7 +46,7 @@ class MySQL {
 	}
 
 	public static function newInstance($host_, $user_, $pass_, $db_, $prefix_) {
-		self::$instance = new MySQL($host_, $user_, $pass_, $db_, $prefix_);
+		self::$instance = new SQL($host_, $user_, $pass_, $db_, $prefix_);
 
 		return self::$instance;
 	}
@@ -59,7 +59,7 @@ class MySQL {
 		if (is_null(self::$instance)) {
 			$prefs = Preferences::getInstance();
 			if (! $prefs) {
-				die_error('get Preferences failed in MySQL::getInstance',__FILE__,__LINE__);
+				die_error('get Preferences failed in SQL::getInstance',__FILE__,__LINE__);
 				return false;
 			}
 			$mysql_conf = $prefs->get('general', 'mysql');
@@ -78,7 +78,7 @@ class MySQL {
 
 		if (! $this->link) {
 			$mysqlcommand = 'mysql --host="'.$this->sqlhost.'" --user="'.$this->sqluser.'" --database="'.$this->sqlbase.'"';
-			Logger::error('main', '(MySQL::CheckLink) Link to SQL server failed, please try this bash command to validate the configuration : '.$mysqlcommand);
+			Logger::error('main', '(SQL::CheckLink) Link to SQL server failed, please try this bash command to validate the configuration : '.$mysqlcommand);
 
 			if ($die_) {
 				$ev->setAttribute('status', -1);
@@ -235,7 +235,7 @@ class MySQL {
 						// it's the same type ?
 						$ret2 = $this->DoQuery('SHOW COLUMNS FROM @1 WHERE @2=%3', $name_, 'Field', $row['Field']);
 						if ($ret2 === false) {
-							Logger::error('main', 'MySQL::createTable failed to get type of \''.$row['Field'].'\'');
+							Logger::error('main', 'SQL::createTable failed to get type of \''.$row['Field'].'\'');
 							return false;
 						}
 						$rows6 = $this->FetchResult();
@@ -253,7 +253,7 @@ class MySQL {
 						// we must remove this column
 						$res = $this->DoQuery('ALTER TABLE @1 DROP @2', $name_, $row['Field']);
 						if ($res == false)
-							Logger::error('main', 'MySQL::createTable failed to remove \''.$row['Field'].'\' of the table \''.$name_.'\'');
+							Logger::error('main', 'SQL::createTable failed to remove \''.$row['Field'].'\' from the table \''.$name_.'\'');
 					}
 				}
 				
@@ -261,7 +261,7 @@ class MySQL {
 					if (!in_array($column_name, $columns_from_database)) {
 						$res = $this->DoQuery('ALTER TABLE @1 ADD @2 '.$column_structure, $name_, $column_name);
 						if ($res == false)
-							Logger::error('main', "MySQL::createTable failed to add '$columns_from_database' of the table '$name_'");
+							Logger::error('main', "SQL::createTable failed to add '$columns_from_database' in the table '$name_'");
 					}
 				}
 			}

@@ -55,7 +55,7 @@ class UserGroupDB_sql {
 	}
 	public function import($id_) {
 		Logger::debug('main', "USERGROUPDB::sql::import (id = $id_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_);
 			
 		if ($sql2->NumRows($res) == 1) {
@@ -76,7 +76,7 @@ class UserGroupDB_sql {
 			Logger::error('main', 'USERGROUPDB::MYSQL::getList table is null');
 			return NULL;
 		}
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5', 'id', 'name', 'description', 'published', $this->table);
 		if ($res !== false){
 			$result = array();
@@ -126,7 +126,7 @@ class UserGroupDB_sql {
 			return false;
 		}
 		$table =  $mysql_conf['prefix'].'usergroup';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);

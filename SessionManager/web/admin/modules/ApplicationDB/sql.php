@@ -32,7 +32,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			}
 			$query_keys = substr($query_keys, 0, -1); // del the last ,
 			$query_values = substr($query_values, 0, -1); // del the last ,
-			$sql2 = MySQL::getInstance();
+			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery('INSERT INTO @1 ( '.$query_keys.' ) VALUES ('.$query_values.' )',APPLICATION_TABLE);
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
@@ -48,7 +48,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 	public function remove($a){
 		// TODO remove also all liasons
 		if (is_object($a) && $a->hasAttribute('id') && is_numeric($a->getAttribute('id'))) {
-			$sql2 = MySQL::getInstance();
+			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPLICATION_TABLE, 'id', $a->getAttribute('id'));
 			return ($res !== false);
 		}
@@ -67,7 +67,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			$query = substr($query, 0, -2); // del the last ,
 			$query .= ' WHERE `id` =\''.$a->getAttribute('id').'\'';
 
-			$sql2 = MySQL::getInstance();
+			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery($query);
 			return ($res !== false);
 		}
@@ -82,7 +82,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			return false;
 		}
 		@define('APPLICATION_TABLE', $mysql_conf['prefix'].'application');
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
 			'name' => 'varchar(150) NOT NULL',

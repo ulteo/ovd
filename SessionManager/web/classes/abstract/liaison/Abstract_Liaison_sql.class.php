@@ -33,7 +33,7 @@ class Abstract_Liaison_sql {
 	}
 	public static function save($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_sql::save ($type_,$element_,$group_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$table = $sql2->prefix.'liaison';
 		$res = $sql2->DoQuery('SELECT @3,@4 FROM @1 WHERE @2=%5 AND @3=%6 AND @4=%7', $table, 'type', 'element', 'group',  $type_, $element_, $group_);
 		if ($sql2->NumRows() > 0) {
@@ -46,7 +46,7 @@ class Abstract_Liaison_sql {
 	}
 	public static function delete($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_sql::delete ($type_,$element_,$group_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::delete get Preferences failed');
@@ -77,7 +77,7 @@ class Abstract_Liaison_sql {
 	public static function loadElements($type_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_sql::loadElements ($type_,$group_)");
 		$result = array();
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::loadElements get Preferences failed');
@@ -106,7 +106,7 @@ class Abstract_Liaison_sql {
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('main', "Abstract_Liaison_sql::loadGroups ($type_,$element_)");
 		$result = array();
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::loadGroups get Preferences failed');
@@ -135,7 +135,7 @@ class Abstract_Liaison_sql {
 	public static function loadAll($type_) {
 		Logger::debug('main', "Abstract_Liaison_sql::loadAll ($type_)");
 		$result = array();
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
@@ -163,7 +163,7 @@ class Abstract_Liaison_sql {
 	public static function loadUnique($type_, $element_, $group_) {
 		Logger::debug('main', "Abstract_Liaison_sql::loadUnique ($type_,$element_,$group_)");
 		$result = array();
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::loadAll get Preferences failed');
@@ -201,7 +201,7 @@ class Abstract_Liaison_sql {
 		}
 		$LIAISON_TABLE = $mysql_conf['prefix'].'liaison';
 		// we create the sql table
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		$LIAISON_table_structure = array(
 			'type' => 'varchar(200) NOT NULL',
@@ -222,7 +222,7 @@ class Abstract_Liaison_sql {
 	
 	protected static function  cleanup() {
 		Logger::debug('main', 'Abstract_Liaison_sql::cleanup');
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::error('main', 'Abstract_Liaison_sql::cleanup get Preferences failed');

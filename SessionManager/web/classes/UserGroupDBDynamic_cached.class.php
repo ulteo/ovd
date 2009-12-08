@@ -44,7 +44,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 	}
 	public function import($id_) {
 		Logger::debug('main', "UserGroupDBDynamic_cached::import (id = $id_)");
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5, @6, @7 FROM @8 WHERE @1 = %9', 'id', 'name', 'description', 'published', 'validation_type', 'schedule', 'last_update', $this->table, $id_);
 		if ($sql2->NumRows($res) == 1) {
 			$row = $sql2->FetchResult();
@@ -66,7 +66,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			Logger::error('main', 'UserGroupDBDynamic_cached::getList table is null');
 			return NULL;
 		}
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4, @5, @6, @7 FROM @8', 'id', 'name', 'description', 'published',  'validation_type', 'schedule', 'last_update', $this->table);
 		if ($res !== false){
 			$result = array();
@@ -96,7 +96,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 	// admin function
 	public function add($usergroup_){
 		Logger::debug('main', 'UserGroupDBDynamic_cached::add');
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@4,@6,@8,@10) VALUES (%3,%5,%7,%9,%11)',$this->table, 'name', $usergroup_->name, 'description', $usergroup_->description, 'published', $usergroup_->published, 'validation_type', $usergroup_->validation_type, 'schedule', $usergroup_->schedule);
 		if ($res === false) {
 			Logger::error('main', 'UserGroupDBDynamic_cached::add SQL insert request failed');
@@ -122,7 +122,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 	public function remove($usergroup_){
 		Logger::debug('main', 'UserGroupDBDynamic_cached::remove');
 		// first we delete liaisons
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
 		foreach ($liaisons as $liaison) {
 			Abstract_Liaison::delete('UsersGroupApplicationsGroup', $liaison->element, $liaison->group);
@@ -152,7 +152,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 		$old_usergroup = $this->import($usergroup_->id);
 		$old_rules = $old_usergroup->rules;
 		
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7 , @10 = %11, @12 = %13  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id, 'validation_type', $usergroup_->validation_type, 'schedule', $usergroup_->schedule);
 		if ( $res === false) {
 			Logger::error('main', 'UserGroupDBDynamic_cached::update failed to update the group from DB');
@@ -175,7 +175,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 		if ( time() > ( $usergroup_->last_update + $usergroup_->schedule )) {
 			Logger::debug('main', 'UserGroupDBDynamic_cached::updateCache usergroup (id='.$usergroup_->getUniqueID().') must update his cache');
 			$usergroup_->updateCache(); // update the liaison
-			$sql2 = MySQL::getInstance();
+			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3  WHERE @4 = %5', $this->table, 'last_update', time(), 'id', $usergroup_->id);
 			if ( $res === false) {
 				Logger::error('main', 'UserGroupDBDynamic_cached::updateCache failed to update the group from DB');
@@ -197,7 +197,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			return false;
 		}
 		$usersgroup_table = $mysql_conf['prefix'].'usergroup_dynamic_cached';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		
 		$usersgroup_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
@@ -235,7 +235,7 @@ class UserGroupDBDynamic_cached extends UserGroupDBDynamic {
 			return false;
 		}
 		$table =  $mysql_conf['prefix'].'usergroup_dynamic_cached';
-		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2', $mysql_conf['database'], $table);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows();

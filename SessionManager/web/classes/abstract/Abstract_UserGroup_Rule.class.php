@@ -26,7 +26,7 @@ class Abstract_UserGroup_Rule {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::init');
 
 		$mysql_conf = $prefs_->get('general', 'mysql');
-		$SQL = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$SQL = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 
 		$usergroup_rules_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
@@ -50,7 +50,7 @@ class Abstract_UserGroup_Rule {
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @7 = %8 LIMIT 1', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', 'id', $id_);
 		$total = $SQL->NumRows();
@@ -70,7 +70,7 @@ class Abstract_UserGroup_Rule {
 	public static function save($usergroup_rule_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::save for (attribute: \''.$usergroup_rule_->attribute.'\', type: \''.$usergroup_rule_->type.'\', value: \''.$usergroup_rule_->value.'\',	usergroup_id: \''.$usergroup_rule_->usergroup_id.'\')');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$rule_id = Abstract_UserGroup_Rule::exists($usergroup_rule_->attribute, $usergroup_rule_->type, $usergroup_rule_->value, $usergroup_rule_->usergroup_id);
 		if (! $rule_id) {
@@ -103,7 +103,7 @@ class Abstract_UserGroup_Rule {
 	private static function create($usergroup_rule_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::create for (attribute: \''.$usergroup_rule_->attribute.'\', type: \''.$usergroup_rule_->type.'\', value: \''.$usergroup_rule_->value.'\',	usergroup_id: \''.$usergroup_rule_->usergroup_id.'\')');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $usergroup_rule_->id;
 
@@ -123,7 +123,7 @@ class Abstract_UserGroup_Rule {
 	public static function delete($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::delete for \''.$id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$id = $id_;
 
@@ -143,7 +143,7 @@ class Abstract_UserGroup_Rule {
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load_all');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules');
 
@@ -164,7 +164,7 @@ class Abstract_UserGroup_Rule {
 	public static function loadByUserGroupId($usergroup_id_) {
 		Logger::debug('main', "Abstract_UserGroup_Rule::loadByUserGroupId($usergroup_id_)");
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @5 = %7', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', $usergroup_id_);
 
@@ -185,7 +185,7 @@ class Abstract_UserGroup_Rule {
 	public static function exists($attribute_, $type_, $value_, $usergroup_id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with attribute \''.$attribute_.'\' type \''.$type_.'\' value \''.$value_.'\' usergroup_id \''.$usergroup_id_.'\'');
 
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $SQL->prefix.'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
 		$total = $SQL->NumRows();

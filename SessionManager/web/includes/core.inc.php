@@ -46,6 +46,6 @@ if (is_object($prefs)) {
 		define('SOURCES_LIST_TABLE', $mysql_conf['prefix'].'sources_list');
 		define('SERVERS_HISTORY_TABLE', $mysql_conf['prefix'].'servers_history');
 		define('SESSIONS_HISTORY_TABLE', $mysql_conf['prefix'].'sessions_history');
-		MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 	}
 }
