@@ -87,18 +87,18 @@ class Preferences_admin extends Preferences {
 		if (!function_exists('curl_init'))
 			return _('Please install CURL support for PHP');
 
-		$mysql_conf = $this->get('general', 'mysql');
-		if (!is_array($mysql_conf)) {
+		$sql_conf = $this->get('general', 'sql');
+		if (!is_array($sql_conf)) {
 			Logger::error('main', 'PREFERENCESADMIN::isValid db conf failed');
 			return _('SQL configuration not valid(2)');
 		}
-		$sql2 = SQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
+		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
 		$db_ok = $sql2->CheckLink(false);
 		if ( $db_ok === false) {
 			Logger::error('main', 'PREFERENCESADMIN::isValid db link failed');
 			return _('SQL configuration not valid');
 		}
-		// now we can initialize the system (mysql DB ...)
+		// now we can initialize the system (sql DB ...)
 		$ret = init_db($this);
 		if ($ret !== true) {
 			Logger::error('main', 'init_db failed');
