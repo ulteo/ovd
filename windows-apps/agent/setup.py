@@ -70,5 +70,4 @@ setup(
 
 	service = [myservice],
 	data_files=[(".", ["icon.png"])],
-	scripts = ['communication.py', 'mime.py', 'Msi.py', 'OVD.py', 'sessionmanager.py', 'utils.py']
 	)
