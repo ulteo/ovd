@@ -1423,45 +1423,57 @@
 	  <para><emphasis role="strong">optionnal arguments:</emphasis> 
 	  <itemizedlist>
 	    <listitem>
-	      <para>timezone:
-	        US/Eastern|Europe/London|Asia/Tokyo... Desired timezone for the session.
-	        Default is server timezone
-	      </para>
-	    </listitem>
-	    <listitem>
-	      <para>client: browser|strict.
-	      Define the client type. Default is strict
-	      </para>
-	    </listitem>
-	    <listitem>
-	      <para>quality:
-	      lowest|medium|high|highest
-	      </para>
-	    </listitem>
-	    <listitem>
-	      <para>language:
-	      fr_FR.UTF-8|en_GB.UTF-8|en_US.UTF-8... Desired language and locale
-	      for the session (in Unix format)</para>
-	    </listitem>
-	    <listitem>
-	      <para>desktop_timeout: a number of second</para>
-	    </listitem>
-	    <listitem>
-	      <para>start_app:
-	      1|2... An application id to launch at
-	      session start</para>
-	    </listitem>
-	    <listitem>
-	      <para>open_doc:
-	      /some/file/path... A document path to open inside the OVD</para>
-	    </listitem>
-	    <listitem>
-	      <para>app_with_desktop:
-	      0|1 Launch a full desktop when start_app is used</para>
-	    </listitem>
-	    <listitem>
-	      <para>debug: 0|1</para>
-	    </listitem>
+              <para>app_with_desktop:
+                0|1 Launch a full desktop when start_app is used</para>
+            </listitem>
+            <listitem>
+              <para>client: browser|strict.
+                Define the client type. Default is strict
+              </para>
+            </listitem>
+            <listitem>
+              <para>debug: 0|1</para>
+            </listitem>
+            <listitem>
+              <para>desktop_icons:
+                0|1 Show application icons on the desktop</para>
+            </listitem>
+            <listitem>
+              <para>desktop_timeout: a number of second</para>
+            </listitem>
+            <listitem>
+              <para>language:
+                fr_FR.UTF-8|en_GB.UTF-8|en_US.UTF-8... Desired language and locale
+                for the session (in Unix format)</para>
+            </listitem>
+            <listitem>
+              <para>open_doc:
+                /some/file/path... A document path to open inside the OVD</para>
+            </listitem>
+            <listitem>
+              <para>quality:
+                lowest|medium|high|highest
+              </para>
+            </listitem>
+            <listitem>
+              <para>session_mode:
+                desktop|portal Request for a desktop or a portal session</para>
+            </listitem>
+            <listitem>
+              <para>start_app:
+                1|2... An application id to launch at
+                session start</para>
+            </listitem>
+            <listitem>
+              <para>timezone:
+                US/Eastern|Europe/London|Asia/Tokyo... Desired timezone for the session.
+                Default is server timezone
+              </para>
+            </listitem>
+            <listitem>
+              <para>windows_keymap:
+                en|fr|... Force the keymap for Windows applications</para>
+            </listitem>
 	  </itemizedlist>
 	  </para>
 	</listitem>
