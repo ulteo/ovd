@@ -204,7 +204,7 @@ class Server {
 		if ($this->hasAttribute('status') && $this->getAttribute('status') == 'ready')
 			return true;
 
-		if ($warn === true) {
+		if ($warn === true && $this->getAttribute('locked') == 0) {
 			popup_error('"'.$this->fqdn.'": '._('is NOT online!'));
 			Logger::error('main', '"'.$this->fqdn.'": is NOT online!');
 		}
