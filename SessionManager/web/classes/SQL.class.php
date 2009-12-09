@@ -59,7 +59,7 @@ class SQL {
 		if (is_null(self::$instance)) {
 			$prefs = Preferences::getInstance();
 			if (! $prefs) {
-				die_error('get Preferences failed in SQL::getInstance',__FILE__,__LINE__);
+				die_error('get Preferences failed',__FILE__,__LINE__);
 				return false;
 			}
 			$sql_conf = $prefs->get('general', 'sql');
