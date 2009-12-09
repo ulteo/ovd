@@ -112,7 +112,7 @@ class admin_UserDB_sql extends UserDB_sql {
 			return false;
 		}
 		$table = $sql_conf['prefix'].'user';
-		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$sql2 = SQL::newInstance($sql_conf);
 		
 		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$user_table_structure = array(

@@ -28,25 +28,32 @@ class SQL {
 	private $db = NULL;
 	private $result = false;
 
+	public $sqltype;
 	public $sqlhost;
 	public $sqluser;
 	public $sqlpass;
 	public $sqlbase;
-	
 	public $prefix;
 
 	private $total_queries = 0;
 
-	public function __construct($host_, $user_, $pass_, $db_, $prefix_) {
-		$this->sqlhost = $host_;
-		$this->sqluser = $user_;
-		$this->sqlpass = $pass_;
-		$this->sqlbase = $db_;
-		$this->prefix = $prefix_;
+	public function __construct($sql_conf_) {
+		if (array_key_exists('type', $sql_conf_))
+			$this->sqltype = $sql_conf_['type'];
+		if (array_key_exists('host', $sql_conf_))
+			$this->sqlhost = $sql_conf_['host'];
+		if (array_key_exists('user', $sql_conf_))
+			$this->sqluser = $sql_conf_['user'];
+		if (array_key_exists('password', $sql_conf_))
+			$this->sqlpass = $sql_conf_['password'];
+		if (array_key_exists('database', $sql_conf_))
+			$this->sqlbase = $sql_conf_['database'];
+		if (array_key_exists('prefix', $sql_conf_))
+			$this->prefix = $sql_conf_['prefix'];
 	}
 
-	public static function newInstance($host_, $user_, $pass_, $db_, $prefix_) {
-		self::$instance = new SQL($host_, $user_, $pass_, $db_, $prefix_);
+	public static function newInstance($sql_conf_) {
+		self::$instance = new self($sql_conf_);
 
 		return self::$instance;
 	}
@@ -63,7 +70,7 @@ class SQL {
 				return false;
 			}
 			$sql_conf = $prefs->get('general', 'sql');
-			self::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+			self::newInstance($sql_conf);
 		}
 		return self::$instance;
 	}

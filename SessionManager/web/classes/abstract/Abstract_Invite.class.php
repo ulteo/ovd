@@ -26,7 +26,7 @@ class Abstract_Invite {
 		Logger::debug('main', 'Starting Abstract_Invite::init');
 
 		$sql_conf = $prefs_->get('general', 'sql');
-		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$SQL = SQL::newInstance($sql_conf);
 
 		$invites_table_structure = array(
 			'id'			=>	'varchar(255) NOT NULL',

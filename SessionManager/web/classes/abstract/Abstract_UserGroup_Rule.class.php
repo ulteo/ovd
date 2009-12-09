@@ -26,7 +26,7 @@ class Abstract_UserGroup_Rule {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::init');
 
 		$sql_conf = $prefs_->get('general', 'sql');
-		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$SQL = SQL::newInstance($sql_conf);
 
 		$usergroup_rules_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',

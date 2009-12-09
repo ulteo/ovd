@@ -89,7 +89,7 @@ function init_db($prefs_) {
 	$SOURCES_LIST_TABLE = $sql_conf['prefix'].'sources_list';
 
 	// we create the sql table
-	$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+	$sql2 = SQL::newInstance($sql_conf);
 
 	$APPSGROUP_structure = array(
 		'id' => 'int(8) NOT NULL auto_increment',

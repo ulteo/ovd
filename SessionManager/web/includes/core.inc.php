@@ -46,6 +46,6 @@ if (is_object($prefs)) {
 		define('SOURCES_LIST_TABLE', $sql_conf['prefix'].'sources_list');
 		define('SERVERS_HISTORY_TABLE', $sql_conf['prefix'].'servers_history');
 		define('SESSIONS_HISTORY_TABLE', $sql_conf['prefix'].'sessions_history');
-		SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		SQL::newInstance($sql_conf);
 	}
 }

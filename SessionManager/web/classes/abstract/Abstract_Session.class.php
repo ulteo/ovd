@@ -26,7 +26,7 @@ class Abstract_Session {
 		Logger::debug('main', 'Starting Abstract_Session::init');
 
 		$sql_conf = $prefs_->get('general', 'sql');
-		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$SQL = SQL::newInstance($sql_conf);
 
 		$sessions_table_structure = array(
 			'id'				=>	'varchar(255) NOT NULL',

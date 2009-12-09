@@ -206,6 +206,9 @@ class Preferences {
 		$this->addPrettyName('policy', _('Policy for administration delegation'));
 
 		$this->addPrettyName('sql',_('SQL configuration'));
+		$c = new ConfigElement_select('type', _('Database type'), _('The type of your database.'), _('The type of your database.'), 'mysql');
+		$c->setContentAvailable(array('mysql'=>_('MySQL')));
+		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('host', _('Database host address'), _('The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com.'), _('The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com.'),'');
 		$this->add($c,'general','sql');
 		$c = new ConfigElement_input('user', _('Database username'), _('The username that must be used to access the database.'), _('The user name that must be used to access the database.'),'');

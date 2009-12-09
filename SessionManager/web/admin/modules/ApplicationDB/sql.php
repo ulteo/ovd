@@ -82,7 +82,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			return false;
 		}
 		@define('APPLICATION_TABLE', $sql_conf['prefix'].'application');
-		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$sql2 = SQL::newInstance($sql_conf);
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
 			'name' => 'varchar(150) NOT NULL',

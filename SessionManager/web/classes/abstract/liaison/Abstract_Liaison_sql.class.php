@@ -201,7 +201,7 @@ class Abstract_Liaison_sql {
 		}
 		$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
 		// we create the sql table
-		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$sql2 = SQL::newInstance($sql_conf);
 		
 		$LIAISON_table_structure = array(
 			'type' => 'varchar(200) NOT NULL',

@@ -30,8 +30,7 @@ class Abstract_Report {
 		Logger::debug('main', 'Starting Abstract_Report::init');
 
 		$sql_conf = $prefs_->get('general', 'sql');
-		$SQL = SQL::newInstance($sql_conf['host'], $sql_conf['user'],
-		                          $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$SQL = SQL::newInstance($sql_conf);
 
 		$servers_history_table_structure = array(
 			'fqdn' => 'VARCHAR(255) NOT NULL',

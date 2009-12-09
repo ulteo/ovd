@@ -153,7 +153,7 @@ class ApplicationDB_sql extends ApplicationDB {
 
 			return false;
 		}
-		$sql2 = SQL::newInstance($sql_conf['host'], $sql_conf['user'], $sql_conf['password'], $sql_conf['database'], $sql_conf['prefix']);
+		$sql2 = SQL::newInstance($sql_conf);
 		$ret = $sql2->DoQuery('SHOW TABLES FROM @1 LIKE %2',$sql_conf['database'],APPLICATION_TABLE);
 		if ($ret !== false) {
 			$ret2 = $sql2->NumRows($ret);
