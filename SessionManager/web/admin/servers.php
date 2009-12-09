@@ -73,15 +73,13 @@ if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance'
 	if (isset($_REQUEST['manage_servers']) && is_array($_REQUEST['manage_servers'])) {
 		foreach ($_REQUEST['manage_servers'] as $server) {
 			$buf = Abstract_Server::load($server);
-			if ($buf->isOnline()) {
-				if (isset($_REQUEST['to_maintenance']))
-					$buf->setAttribute('locked', true);
-				else
-					$buf->setAttribute('locked', false);
+			if (isset($_REQUEST['to_maintenance']))
+				$buf->setAttribute('locked', true);
+			elseif ($buf->isOnline())
+				$buf->setAttribute('locked', false);
 
-				Abstract_Server::save($buf);
-				popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
-			}
+			Abstract_Server::save($buf);
+			popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
 		}
 	}
 
@@ -176,15 +174,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['f
 		redirect();
 
 	$buf = Abstract_Server::load($_GET['fqdn']);
-	if ($buf->isOnline()) {
-		if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
-			$buf->setAttribute('locked', true);
-		else
-			$buf->setAttribute('locked', false);
+	if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
+		$buf->setAttribute('locked', true);
+	elseif ($buf->isOnline())
+		$buf->setAttribute('locked', false);
 
-		Abstract_Server::save($buf);
-		popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
-	}
+	Abstract_Server::save($buf);
+	popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
 
 	redirect();
 }
@@ -313,7 +309,6 @@ function show_default() {
       $content = 'content'.(($count++%2==0)?1:2);
       $server_online = $s->isOnline();
 
-      if ($server_online) {
 	if ($s->getAttribute('locked')) {
 	  $switch_msg = _('Switch to production');
 	  $switch_value = 0;
@@ -322,7 +317,6 @@ function show_default() {
 	  $switch_msg = _('Switch to maintenance');
 	  $switch_value = 1;
 	}
-      }
 
 
       echo '<tr class="'.$content.'">';
@@ -361,9 +355,9 @@ function show_default() {
       echo '</form>';
       echo '</td>';
 
-      if ($nb_a_servs_online > 0 and $can_do_action) {
+      if ($can_do_action) {
 	echo '<td>';
-	if ($server_online) {
+	  if ($server_online || $switch_value == 1) {
 	  echo '<form action="servers.php" method="get">';
 	  echo '<input';
        if ($switch_value == 0)
@@ -373,17 +367,17 @@ function show_default() {
 	  echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
 	  echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
 	  echo '</form>';
-	}
+	  }
 	echo '</td>';
       }
       echo '</tr>';
     }
 
-    if ($nb_a_servs_online > 1 and $can_do_action) {
+    if (count($a_servs) > 1 and $can_do_action) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="7">';
+      echo '<td colspan="6">';
       echo '<a href="javascript:;" onclick="markAllRows(\'available_servers_table\'); return false">'._('Mark all').'</a>';
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
@@ -649,7 +643,6 @@ function show_manage($fqdn) {
   else
     $has_sessions = false;
 
-  if ($server_online) {
     if ($server_lock) {
       $switch_button = _('Switch to production');
       $switch_value = 0;
@@ -658,7 +651,6 @@ function show_manage($fqdn) {
       $switch_button = _('Switch to maintenance');
       $switch_value = 1;
     }
-  }
 
   $external_name = $server->getAttribute('external_name');
   $web_port = $server->getAttribute('web_port');
@@ -771,7 +763,7 @@ function show_manage($fqdn) {
   echo "</td></tr>\n";
 
 	if ($can_do_action) {
-		if ($server_online) {
+		if ($server_online || $switch_value == 1) {
 			echo '<tr><td></td><td>';
 			echo '<form action="servers.php" method="get">';
 			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
