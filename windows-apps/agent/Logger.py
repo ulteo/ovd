@@ -37,25 +37,36 @@ class Logger:
 		self.win32LogService = False
 		self.loglevel = loglevel
 		
+		self.fileHandler = None
+		self.consoleHandler = None
+		
 		if file is not None or stdout is not None:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
 			self.logging = logging.getLogger(name)
 			self.logging.setLevel(logging.DEBUG)
 		
 		if file is not None:
-			fileHandler = logging.handlers.RotatingFileHandler(file, maxBytes=1000000, backupCount=2)
-			fileHandler.setFormatter(formatter)
-			self.logging.addHandler(fileHandler)
+			self.fileHandler = logging.handlers.RotatingFileHandler(file, maxBytes=1000000, backupCount=2)
+			self.fileHandler.setFormatter(formatter)
+			self.logging.addHandler(self.fileHandler)
 		
 		if stdout is True:
-			consoleHandler = logging.StreamHandler(sys.stdout)
-			consoleHandler.setFormatter(formatter)
-			self.logging.addHandler(consoleHandler)
+			self.consoleHandler = logging.StreamHandler(sys.stdout)
+			self.consoleHandler.setFormatter(formatter)
+			self.logging.addHandler(self.consoleHandler)
 		
 		if win32LogService is True:
 			self.win32LogService = True
 	
 	
+	def __del__(self):
+		if self.logging is not None:
+			if self.fileHandler is not None:
+				self.logging.removeHandler(self.fileHandler)
+
+			if self.consoleHandler is not None:
+				self.logging.removeHandler(self.consoleHandler)
+
 	def log_info(self, message):
 		if self.loglevel&Logger.INFO != Logger.INFO:
 			return
