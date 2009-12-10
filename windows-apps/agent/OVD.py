@@ -224,7 +224,6 @@ class OVD(win32serviceutil.ServiceFramework):
 
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
-		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
 		self.updateMonitoring()
 		cpus = self.get_cpus()
 		try:
@@ -253,6 +252,7 @@ class OVD(win32serviceutil.ServiceFramework):
 			Logger.info("SessionManager does not get a 'ready', stopping agent")
 			self.SvcStop()
 		
+		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
 		timeout = 60 * 1000
 		rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
 		while rc == win32event.WAIT_TIMEOUT:
@@ -262,6 +262,7 @@ class OVD(win32serviceutil.ServiceFramework):
 			rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
 		
 		self.smr.down()
+		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 	
 	def SvcStop(self):
 		Logger.info("Stopping agent")
@@ -269,6 +270,13 @@ class OVD(win32serviceutil.ServiceFramework):
 		
 		win32event.SetEvent(self.hWaitStop)
 	
+	def SvcShutdown(self):
+		# Reinit Logger because the Windows service manager logging system is already down
+		Logger.initialize("ulteo-ovd", Logger.INFO | Logger.WARN | Logger.ERROR | Logger.DEBUG, self.conf["log_file"], False, False)
+		Logger.info("Stopping agent (shutdown)")
+
+		win32event.SetEvent(self.hWaitStop)
+
 	def isSessionManagerRequest(self, client_ip):
 		url_split = urlparse.urlsplit(self.conf['session_manager'])
 		sm_host =  url_split[1]
