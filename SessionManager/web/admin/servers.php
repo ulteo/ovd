@@ -288,12 +288,14 @@ function show_default() {
   echo '<div id="servers_div">';
   echo '<h1>'._('Servers').'</h1>';
 
-  if (count($a_servs) > 0) {
+  $av_servers = count($a_servs);
+
+  if ($av_servers > 0) {
     echo '<div id="servers_list_div">';
     echo '<table id="available_servers_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
     echo '<thead>';
     echo '<tr class="title">';
-    if ($nb_a_servs_online > 1)
+    if ($av_servers > 1 and $can_do_action)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
     // echo '<th>'._('Version').'</th>';
@@ -320,7 +322,7 @@ function show_default() {
 
 
       echo '<tr class="'.$content.'">';
-      if ($nb_a_servs_online > 1 and $can_do_action)
+      if ($av_servers > 1 and $can_do_action)
         echo '<td><input class="input_checkbox" type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td>';
       echo '<td>';
       echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
@@ -373,7 +375,7 @@ function show_default() {
       echo '</tr>';
     }
 
-    if (count($a_servs) > 1 and $can_do_action) {
+    if ($av_servers > 1 and $can_do_action) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
