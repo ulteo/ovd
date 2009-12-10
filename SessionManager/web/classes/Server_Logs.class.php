@@ -157,7 +157,7 @@ class Server_Logs {
 		$this->purge_expired_logs();
 
 		if (! $this->server->isOnline()) {
-			Logger::error('main', 'Server_Logs::process Server \''.$this->server->fqdn.'\' is NOT online');
+			Logger::debug('main', 'Server_Logs::process Server \''.$this->server->fqdn.'\' is NOT online');
 			return false;
 		}
 
