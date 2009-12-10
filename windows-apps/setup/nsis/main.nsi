@@ -107,8 +107,6 @@
   
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
-  !include nsis\ActiveDirectory.nsh
-
 ## First Dialog
 Function InputBoxPageShow
   ReadRegStr $R0 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name"
@@ -141,7 +139,6 @@ Function InputBoxPageLeave
   WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_url" $ovd_smurl
 
   Push $ovd_smurl
-  Call .DomainVerification
 FunctionEnd
 
 !include nsis\WindowsVersion.nsh
