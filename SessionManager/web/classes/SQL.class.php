@@ -24,9 +24,8 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class SQL {
 	private static $instance = NULL;
 
-	private $link = false;
-	private $db = NULL;
-	private $result = false;
+	private $pdo = false;
+	private $statement = false;
 
 	public $sqltype;
 	public $sqlhost;
@@ -76,14 +75,24 @@ class SQL {
 	}
 
 	public function CheckLink($die_=true) {
-		if ($this->link)
+		if (is_object($this->pdo))
 			return;
 
 		$ev = new SqlFailure(array('host' => $this->sqlhost));
 
-		$this->link = @mysqli_connect($this->sqlhost, $this->sqluser, $this->sqlpass);
+		try {
+			switch ($this->sqltype) {
+				case 'mysql':
+					$this->pdo = new PDO('mysql:host='.$this->sqlhost.';dbname='.$this->sqlbase, $this->sqluser, $this->sqlpass);
+					$this->DoQuery('SET NAMES utf8');
+					break;
+				default:
+					throw new Exception('Unsupported SQL type \''.$this->sqltype.'\'');
+					break;
+			}
+		} catch (Exception $e) {
+			Logger::error('main', 'SQL::CheckLink - '.$e);
 
-		if (! $this->link) {
 			if ($die_) {
 				$ev->setAttribute('status', -1);
 				$ev->emit();
@@ -93,38 +102,9 @@ class SQL {
 			return false;
 		}
 
-		if ($this->SelectDB($this->sqlbase) === false) {
-			if ($die_) {
-				$ev->setAttribute('status', -1);
-				$ev->emit();
-				die_error('Could not select database.',__FILE__,__LINE__);
-			}
-
-			return false;
-		}
-
-		$this->DoQuery('SET NAMES utf8');
 		$ev->setAttribute('status', 1);
 		$ev->emit();
 		return true;
-	}
-
-	public function SelectDB($db) {
-		$this->CheckLink();
-
-		if (! mysqli_select_db($this->link, $db))
-			return false;
-
-		$this->db = $db;
-
-		return true;
-	}
-
-	private function CleanValue($value_) {
-		if (get_magic_quotes_gpc())
-			$value_ = stripslashes($value_);
-
-		return mysqli_real_escape_string($this->link, $value_);
 	}
 
 	public function DoQuery() {
@@ -134,57 +114,56 @@ class SQL {
 
 		$query = $args[0];
 
-		$query = preg_replace('/@([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'`\'.mysqli_real_escape_string($this->link, $args[\\1]).\'`\')', $query);
-		$query = preg_replace('/%([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'"\'.$this->CleanValue($args[\\1]).\'"\')', $query);
+		$query = preg_replace('/@([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'`\'.$args[\\1].\'`\')', $query);
+		$query = preg_replace('/%([0-9]+)/se', '(is_null($args[\\1])?\'NULL\':\'"\'.$args[\\1].\'"\')', $query);
 
-		if (is_resource($this->result)) {
-			mysqli_free_result($this->result);
-			$this->result = false;
+		$this->statement = $this->pdo->prepare($query);
+
+		$result = $this->statement->execute();
+		if (! $result) {
+			$buf = $this->statement->errorInfo();
+			die_error('<strong>Error:</strong><br />('.$buf[0].' - '.$buf[1].') '.$buf[2].'<br />Query: '.$query,__FILE__,__LINE__);
 		}
-
-		$this->result = @mysqli_query($this->link, $query) or die_error('<strong>Error:</strong><br /> '.mysqli_error($this->link).'<br />Query: '.$query,__FILE__,__LINE__);
 
 		$this->total_queries += 1;
 
-		return $this->result;
+		return true;
 	}
 
 	public function FetchResult() {
 		$this->CheckLink();
 
-		if (! $this->result)
+		if (! $this->statement)
 			return false;
 
-		return @mysqli_fetch_assoc($this->result);
+		return $this->statement->fetch(PDO::FETCH_ASSOC);
 	}
 
 	public function FetchAllResults() {
 		$this->CheckLink();
 
-		if (! $this->result)
+		if (! $this->statement)
 			return false;
 
-		$res = array();
-
-		while ($r = @mysqli_fetch_assoc($this->result))
-			$res[] = $r;
-
-		return $res;
+		return $this->statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function NumRows() {
 		$this->CheckLink();
 
-		if (! $this->result)
+		if (! $this->statement)
 			return false;
 
-		return @mysqli_num_rows($this->result);
+		return $this->statement->rowCount();
 	}
 
-	public function InsertId() {
+	public function InsertId($name_=NULL) {
 		$this->CheckLink();
 
-		return @mysqli_insert_id($this->link);
+		if (! is_null($name_))
+			return $this->pdo->lastInsertId($name_);
+
+		return $this->pdo->lastInsertId();
 	}
 
 	public function TotalQueries() {
