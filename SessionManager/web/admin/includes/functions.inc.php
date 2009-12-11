@@ -42,7 +42,7 @@ function display_loadbar($percents_) {
 function getAllAppsGroups(){
 	Logger::debug('main','getAllAppsGroups');
 	$sql2 = SQL::getInstance();
-	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5', 'id', 'name', 'description', 'published', APPSGROUP_TABLE);
+	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5', 'id', 'name', 'description', 'published', $sql2->prefix.AppsGroup::$prefixless_tablename);
 	if ($res !== false){
 		$result = array();
 		$rows = $sql2->FetchAllResults($res);
@@ -83,7 +83,7 @@ function init_db($prefs_) {
 		Logger::error('main', 'init_db sql conf not valid');
 		return false;
 	}
-	$APPSGROUP_TABLE = $sql_conf['prefix'].'gapplication';
+	$APPSGROUP_TABLE = $sql_conf['prefix'].AppsGroup::$prefixless_tablename;
 	$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $sql_conf['prefix'].'ug_ag_link';
 	$SOURCES_LIST_TABLE = $sql_conf['prefix'].'sources_list';

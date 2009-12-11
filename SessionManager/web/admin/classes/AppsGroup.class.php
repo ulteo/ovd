@@ -25,6 +25,9 @@ class AppsGroup {
 	public $name; // (ex: Officeapps)
 	public $description; // (ex: Office application)
 	public $published; //(yes/no) (the group is available to user)
+	
+	public $table;
+	public static $prefixless_tablename = 'gapplication';
 
 	public function __construct($id_=NULL, $name_=NULL, $description_=NULL, $published_=false) {
 		Logger::debug('main', "APPSGROUP::contructor ($id_,$name_,$description_,$published_)");
@@ -32,6 +35,9 @@ class AppsGroup {
 		$this->name = $name_;
 		$this->description = $description_;
 		$this->published = (bool)$published_;
+		$prefs = Preferences::getInstance();
+		$mysql_conf = $prefs->get('general','sql');
+		$this->table = $mysql_conf['prefix'].AppsGroup::$prefixless_tablename;
 	}
 	
 	public function __toString() {
@@ -42,7 +48,7 @@ class AppsGroup {
 		Logger::debug('main', "APPSGROUP::fromDB($id_)");
 		if (is_numeric($id_)){
 			$sql2 = SQL::getInstance();
-			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1=%6', 'id', 'name', 'description', 'published', APPSGROUP_TABLE, $id_);
+			$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1=%6', 'id', 'name', 'description', 'published', $this->table, $id_);
 // 			echo 'FetchAllResults ';print_array($sql2->FetchAllResults());echo '<br>';
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
@@ -68,9 +74,9 @@ class AppsGroup {
 		// 	false :  problem, true : ok
 		Logger::debug('main', 'APPSGROUP::insertDB');
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (NULL,%6,%7,%8)',APPSGROUP_TABLE, 'id'  , 'name', 'description', 'published', $this->name, $this->description, $this->published);
+		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (NULL,%6,%7,%8)', $this->table, 'id'  , 'name', 'description', 'published', $this->name, $this->description, $this->published);
 		if ($res !== false) {
-			$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3=%4 AND @5=%6 AND @7=%8', 'id', APPSGROUP_TABLE, 'name', $this->name, 'description', $this->description, 'published', $this->published);
+			$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3=%4 AND @5=%6 AND @7=%8', 'id', $this->table, 'name', $this->name, 'description', $this->description, 'published', $this->published);
 			if ($sql2->NumRows($res) == 1){
 				$row = $sql2->FetchResult($res);
 				$this->id = $row['id'];
@@ -92,7 +98,7 @@ class AppsGroup {
 		// 	false :  problem, true : ok
 		Logger::debug('main', 'APPSGROUP::updateDB');
 		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('UPDATE @1 SET  @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9',APPSGROUP_TABLE, 'published', $this->published, 'name', $this->name, 'description', $this->description, 'id', $this->id);
+		$res = $sql2->DoQuery('UPDATE @1 SET  @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $this->published, 'name', $this->name, 'description', $this->description, 'id', $this->id);
 		return ($res !== false);
 	}
 	
@@ -113,7 +119,7 @@ class AppsGroup {
 			}
 			
 			// second we delete the group
-			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPSGROUP_TABLE, 'id', $this->id);
+			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', $this->table, 'id', $this->id);
 			return ($res !== false);
 		}
 		else {
