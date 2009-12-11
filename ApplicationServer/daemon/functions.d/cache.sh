@@ -110,8 +110,5 @@ cache_set_monitoring() {
     done
 
     echo '</sessions>'                                     >>$file
-    echo '<process_table><![CDATA['                        >>$file
-    cache_ps_display                                       >>$file
-    echo ']]></process_table>'                             >>$file
     echo '</monitoring>'                                   >>$file
 }
