@@ -231,7 +231,7 @@ class Abstract_Server {
 		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27,@28=%29 WHERE @30 = %31 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'web_port', $server_->web_port, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
-		$properties = Abstract_Server::loadProperties($buf);
+		$properties = Abstract_Server::loadProperties($server_);
 
 		foreach (Abstract_Server::$server_properties as $object_property => $db_property)
 			Abstract_Server::saveProperty($server_, $object_property, $db_property, (isset($properties[$object_property])?$properties[$object_property]:NULL));
