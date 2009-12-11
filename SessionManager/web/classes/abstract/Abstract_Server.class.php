@@ -186,11 +186,11 @@ class Abstract_Server {
 
 		$SQL = SQL::getInstance();
 
-		if (! is_null($old_property_) && is_null($server_->$object_property_))
+		if (! is_null($old_property_) && (! isset($server_->$object_property_) || is_null($server_->$object_property_)))
 			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.'servers_properties', 'property', $db_property_, 'fqdn', $server_->fqdn);
-		elseif (is_null($old_property_) && ! is_null($server_->$object_property_))
+		elseif (is_null($old_property_) && (isset($server_->$object_property_) && ! is_null($server_->$object_property_)))
 			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES(%5,%6,%7)', $SQL->prefix.'servers_properties', 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $server_->$object_property_);
-		elseif ($old_property_ != $server_->$object_property_)
+		elseif (isset($server_->$object_property_) && $old_property_ != $server_->$object_property_)
 			$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', $SQL->prefix.'servers_properties', 'value', $server_->$object_property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
 
 		return true;
