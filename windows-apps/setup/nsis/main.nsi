@@ -17,8 +17,7 @@
 ;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 !define PRODUCT_NAME "Open Virtual Desktop"
-!define PRODUCT_VERSION "1.0-rc2"
-!define PRODUCT_LONGVERSION "1.0.0.2"
+!define PRODUCT_LONGVERSION "${PRODUCT_VERSION}.0.0"
 !define PRODUCT_PUBLISHER "Ulteo"
 !define PRODUCT_WEB_SITE "http://www.ulteo.com"
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
