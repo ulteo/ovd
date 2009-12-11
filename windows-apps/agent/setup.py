@@ -50,6 +50,7 @@ myservice = Target(
 	# used for the versioninfo resource
 	description = "Ulteo Open Virtual Desktop agent",
 	# what to build.  For a service, the module name (not the filename) must be specified!
+	icon_resources = [(1, "media/ulteo.ico")],
 	modules = ["OVD"]
 	)
 
