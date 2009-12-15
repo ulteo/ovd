@@ -295,7 +295,16 @@ class User {
 	
 	public function getPolicy() {
 		Logger::debug('main', 'User::getPolicy for '.$this->getAttribute('login'));
-		$result = array();
+		$prefs = Preferences::getInstance();
+		$policies = $prefs->get('general', 'policy');
+		$default_policy = $policies['default_policy'];
+		$result = $prefs->elements['general']['policy']['default_policy']->content_available;
+		foreach ($result as $k => $v) {
+				if (in_array($k, $default_policy))
+						$result[$k] = true;
+				else 
+						$result[$k] = false;
+		}
 		$groups = $this->usersGroups();
 		foreach ($groups as $a_group) {
 			$policy = $a_group->getPolicy();
