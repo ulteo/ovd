@@ -294,7 +294,7 @@ class User {
 	}
 	
 	public function getPolicy() {
-		Logger::debug('User::getPolicy for '.$this->getAttribute('login'));
+		Logger::debug('main', 'User::getPolicy for '.$this->getAttribute('login'));
 		$result = array();
 		$groups = $this->usersGroups();
 		foreach ($groups as $a_group) {
