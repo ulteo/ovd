@@ -76,12 +76,7 @@ if (! isset($_SESSION['login']))
 
 $user_login = $_SESSION['login'];
 
-$mods_enable = $prefs->get('general', 'module_enable');
-if (! in_array('UserDB', $mods_enable))
-	die_error('Module UserDB must be enabled',__FILE__,__LINE__);
-
-$mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
-$userDB = new $mod_user_name();
+$userDB = UserDB::getInstance();
 
 $user = $userDB->import($user_login);
 if (! is_object($user))
