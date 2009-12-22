@@ -67,7 +67,7 @@ class DecisionCriterion_session extends DecisionCriterion {
 		if ((float)($nbsessions_max) == 0.0)
 			return 0;
 		else
-			return (float)($nbsessions_used)/(float)($nbsessions_max);
+			return 1.0 - (float)($nbsessions_used)/(float)($nbsessions_max);
 	}
 	public function default_value() {
 		return 100;
