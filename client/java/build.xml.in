@@ -25,10 +25,16 @@
             description="compile the Java source code to class files">
         <mkdir dir="classes"/>
         <mkdir dir="libs"/>
+
+        <!-- 
+            the following 'classpath="${java.home}/lib/plugin.jar"' is
+            needed when using Sun JDK, useless when using OpenJDK 
+         -->
         <javac srcdir="./src"
                destdir="classes"
                target="${compile.version}"
                source="${compile.version}"
+               classpath="${java.home}/lib/plugin.jar"
                debug="${compile.debug}"
                optimize="${compile.optimize}"
                deprecation="${compile.deprecation}" >

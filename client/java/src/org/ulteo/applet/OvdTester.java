@@ -37,6 +37,7 @@ import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+import netscape.javascript.JSObject;
 
 
 import com.sshtools.j2ssh.SshClient;
@@ -76,6 +77,9 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	protected String urlProxyTest = "http://www.ulteo.com";
 
 	private boolean can_run = false;
+	private boolean stopped = false;
+	
+	protected JSDialog dialog = null;
 
 	protected String getNeededParameter(String key) {
 		String buffer = getParameter(key);
@@ -140,8 +144,11 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 			System.err.println("OvdTester: Unable to continue");
 			return;
 		}
-
+		
 		boolean status = this.checkSecurity();
+		
+		this.dialog = new JSDialog(this);
+
 		this.applet_startup_info(status);
 
 		if (! status) {
@@ -155,7 +162,6 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		this.readParameters();
 
 		operativeSystem = System.getProperty("os.name");
-
 	}
 
 	public void start() {
@@ -186,6 +192,9 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 	public void stop() {
 		if (! this.can_run)
 			return;
+		if (this.stopped)
+			return;
+		this.stopped = true;
 
 		System.out.println("OvdTester stop");
 		testFinished();
@@ -210,9 +219,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 
 
 	public void applet_startup_info(boolean status) {
-		String url = "javascript:"+this.startupStatusReport+"("+(status?"true":"false")+");";
-		System.out.println("OvdTester call javascript '"+url+"')");
-		openUrl(url);
+		this.dialog.callJS(this.startupStatusReport, status);
 	}
 
 
@@ -226,21 +233,14 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		//2. if high ping --> yellow
 		//3. else --> green
 		System.out.println("Test result: "+testResult);
-		String methodName = null;
-		Object[] methodArgs = null;
 
 		if (testResult < 0){
 			testResult = -testResult;
-			methodName = startuponFailure;
-			methodArgs = new Object[1];
-			methodArgs[0] = ""+testResult;
-			openUrl("javascript:"+startuponFailure+"("+testResult+")");
+			this.dialog.callJS(this.startuponFailure, new Integer(this.testResult).toString());
 		} else if (avgPing > maxPingAccepted){
-			methodName = startuponBadPing;
-			openUrl("javascript:"+startuponBadPing);
+			this.dialog.callJS(this.startuponBadPing);
 		} else {
-			methodName = startuponLoad;
-			openUrl("javascript:"+startuponLoad);
+			this.dialog.callJS(this.startuponLoad);
 		}
 	}
 
@@ -517,25 +517,6 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 		this.proxyUsername = "";
 		this.proxyPassword = "";
 
-
-		String buffer = "javascript:" + js_haveProxy_function_name +
-			"('" + this.proxyType + "', '" +
-			this.proxyHost + "', '" +
-			this.proxyPort + "', '" +
-			this.proxyUsername + "', " +
-			this.proxyPassword + "');";
-		System.out.println("JS command: "+buffer);
-
-		this.openUrl(buffer);
-	}
-
-	public void openUrl(String url) {
-		System.out.println("Openurl: "+url);
-		try {
-			getAppletContext().showDocument(new URL(url));
-		} catch(Exception e) {
-			System.err.println("Couldn't execute javascript "+e.getMessage());
-			stop();
-		}
+		this.dialog.callJS(this.js_haveProxy_function_name, this.proxyType, this.proxyHost, this.proxyPort, this.proxyUsername, this.proxyPassword);
 	}
 }

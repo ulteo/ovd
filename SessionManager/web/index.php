@@ -648,8 +648,8 @@ if ($testapplet) {
 
 		<param name="agent" value="<?php echo $_SERVER['HTTP_USER_AGENT']; ?>" />
 		<param name="onInit" value="appletInited" />
-		<param name="onLoad" value="appletLoaded()" />
-		<param name="onBadPing" value="badPing()" />
+		<param name="onLoad" value="appletLoaded" />
+		<param name="onBadPing" value="badPing" />
 		<param name="onFail" value="testFailed" />
 		<param name="haveProxy" value="haveProxy" />
 	</applet>

@@ -22,6 +22,9 @@ package org.ulteo.applet;
 
 import java.applet.Applet;
 import java.net.URL;
+import netscape.javascript.JSObject;
+
+import org.ulteo.Logger;
 
 public class JSDialog {
 	public static final int ERROR_UNKNOWN = 0;
@@ -76,22 +79,30 @@ public class JSDialog {
 			return;
 		}
 		
-		String url = "javascript:"+this.function_error+"("+status+ ", '"+message+"');";
-		System.out.println(this.getClass()+" call javascript '"+url+"')");
-		this.openUrl(url);
+		this.callJS(this.function_error, status, message);
 	}
 	
 	public void forwardFocusInfo(boolean focus) {
-		String url = "javascript:daemon."+(focus?"focusGained":"focusLost")+"();";
-		System.out.println(this.getClass()+" call javascript '"+url+"')");
-		this.openUrl(url);
+		if (focus)
+			this.callJS("daemon.focusGained");
+		else
+			this.callJS("daemon.focusLost");
 	}
 
-	protected void openUrl(String url) {
+	public void callJS(String function_name, Object ... args) {
 		try {
-			this.applet.getAppletContext().showDocument(new URL(url));
-		} catch(Exception e) {
-			System.err.println(this.getClass()+" couldn't execute javascript "+e.getMessage());
+			JSObject win = JSObject.getWindow(this.applet);
+			win.call(function_name, args);
+		}
+		catch (netscape.javascript.JSException e) {
+			String buffer = function_name+"(";
+			for(Object o: args)
+				buffer+= o+", ";
+			if (buffer.endsWith(", "))
+				buffer = buffer.substring(0, buffer.length()-2);
+			buffer+=")";
+			
+			Logger.error(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
 		}
 	}
 }
