@@ -57,7 +57,7 @@ class DecisionCriterion_cpu extends DecisionCriterion {
 
 class DecisionCriterion_session extends DecisionCriterion {
 	public function get() {
-		if (!($this->server->hasAttribute('ram_used') && $this->server->hasAttribute('max_sessions'))) {
+		if (! $this->server->hasAttribute('max_sessions')) {
 			Logger::error('main','DecisionCriterion_session::get error hasAttribute failed');
 			return 0;
 		}
