@@ -214,7 +214,6 @@ class User {
 			}
 			$buf = $list_servers[$max_fqdn];
 			unset($server_val[$max_fqdn]);
-			$buf->getStatus();
 			if ($buf->isOnline())
 				return $buf;
 		}
