@@ -217,7 +217,7 @@ function action_modify($id) {
   if (! $userGroupDB->update($group))
     die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 
-  popup_info(_('UserGroup successfully modified'));
+  popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
   return true;
 }
 
