@@ -37,6 +37,7 @@ from win32com.shell import shell
 import time
 import traceback
 import win32api
+import win32con
 
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
@@ -387,7 +388,7 @@ class Web(SimpleHTTPRequestHandler):
 		domain = None
 		
 		try:
-			domain = win32api.GetComputerNameEx(win32api.NameSamCompatible)
+			domain = win32api.GetComputerNameEx(win32con.ComputerNameDnsDomain)
 		except Excpetion, e:
 			Logger.warn("webservices_domain: exception '%s'"%(str(e)))
 			rootNode = doc.createElement("error")
