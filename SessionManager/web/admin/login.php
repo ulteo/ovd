@@ -117,7 +117,7 @@ Event.observe(window, 'load', function() {
 </div>
 
 	<form id="login" action="" method="post">
-		<input type="hidden" name="redirect" value="<?php echo $_SESSION['redirect']; ?>" />
+		<input type="hidden" name="redirect" value="<?php echo (isset($_SESSION['redirect'])?$_SESSION['redirect']:''); ?>" />
 		<fieldset class="hidden">
 			<table class="centered" border="0" cellspacing="1" cellpadding="5">
 				<tr>
