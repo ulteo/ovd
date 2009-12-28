@@ -34,7 +34,7 @@ except ImportError:
 	# no build path setup, no worries.
 	pass
 
-import py2exe,glob
+import py2exe
 sys.argv.append("py2exe")
 
 class Target:
