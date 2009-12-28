@@ -373,7 +373,9 @@ class OVD(win32serviceutil.ServiceFramework):
 					if mimetypes:
 						exe.setAttribute("mimetypes", ";".join(mimetypes)+";");
 
-					command = msi.getTargetFromShortcut(filename)
+					command = None
+					if msi is not None:
+						command = msi.getTargetFromShortcut(filename)
 					if command is None:
 						command = unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding)
 					
