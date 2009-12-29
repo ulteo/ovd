@@ -154,7 +154,7 @@ class User {
 
 			$buf = $server->userIsLoggedIn($this->getAttribute('login'));
 			if ($buf) {
-				Logger::warning('main', 'USER::getAvailableServers User is already logged in Server \''.$server->fqdn.'\'');
+				Logger::warning('main', 'USER::getAvailableServers User(login='.$this->getAttribute('login').') is already logged in Server \''.$server->fqdn.'\'');
 				continue;
 			}
 
