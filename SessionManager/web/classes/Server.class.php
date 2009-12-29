@@ -639,79 +639,60 @@ class Server {
 	public function orderWindowsSessionDeletion($session_id_) {
 		$dom = new DomDocument('1.0', 'utf-8');
 
-		$ret = query_url_post($this->getWebservicesBaseURL().'/session/status/'.$session_id_);
-
-		$buf = @$dom->loadXML($ret);
-		if (! $buf) {
-			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/status');
-			return false;
-		}
-
-		if (! $dom->hasChildNodes()) {
-			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
-			return false;
-		}
-
-		$session_node = $dom->getElementsByTagname('session')->item(0);
-		if (is_null($session_node)) {
-			Logger::critical('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/status');
-			return false;
-		}
-
-		$windows_session_status = $session_node->getAttribute('status');
-
-		if ($windows_session_status != 5 && $windows_session_status != 6) {
-			$ret = query_url_post($this->getWebservicesBaseURL().'/session/destroy/'.$session_id_);
-
-			$buf = @$dom->loadXML($ret);
-			if (! $buf) {
-				Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
-				return false;
-			}
-
-			if (! $dom->hasChildNodes()) {
-				Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
-				return false;
-			}
-
-			$session_node = $dom->getElementsByTagname('session')->item(0);
-			if (is_null($session_node)) {
-				Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML from windows session/destroy');
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	public function orderWindowsSessionDeletionWithinAD($session_id_) {
-		$dom = new DomDocument('1.0', 'utf-8');
-
 		$session = Abstract_Session::load($session_id_);
 
-		$prefs = Preferences::getInstance();
-		if (! $prefs)
-			die_error('get Preferences failed', __FILE__, __LINE__);
-		$user_profile_mode = $prefs->get('UserDB', 'enable');
-		$user_domain = ($user_profile_mode == 'activedirectory')?'ad':'local';
+		if (isset($session->settings['windows_manage_session']) && $session->settings['windows_manage_session'] === true) {
+			$ret = query_url_post($this->getWebservicesBaseURL().'/session/status/'.$session_id_);
+		} else {
+			$prefs = Preferences::getInstance();
+			if (! $prefs)
+				die_error('get Preferences failed', __FILE__, __LINE__);
+			$user_profile_mode = $prefs->get('UserDB', 'enable');
+			$user_domain = ($user_profile_mode == 'activedirectory')?'ad':'local';
 
-		$ret = query_url_post($this->getWebservicesBaseURL().'/logoff/'.$session->getAttribute('user_login').'/'.$user_domain);
+			$ret = query_url_post($this->getWebservicesBaseURL().'/logoff/'.$session->getAttribute('user_login').'/'.$user_domain);
+		}
 
 		$buf = @$dom->loadXML($ret);
 		if (! $buf) {
-			Logger::error('main', 'Server::orderWindowsSessionDeletionWithinAD(\''.$session_id_.'\') Unable to get a valid XML from windows logoff/'.$session->getAttribute('user_login').'/'.$user_domain.' - Return: '.$ret);
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
 			return false;
 		}
 
 		if (! $dom->hasChildNodes()) {
-			Logger::error('main', 'Server::orderWindowsSessionDeletionWithinAD(\''.$session_id_.'\') Unable to get a valid XML from windows logoff/'.$session->getAttribute('user_login').'/'.$user_domain.' - Return: '.$ret);
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
 			return false;
 		}
 
 		$session_node = $dom->getElementsByTagname('session')->item(0);
 		if (is_null($session_node)) {
-			Logger::error('main', 'Server::orderWindowsSessionDeletionWithinAD(\''.$session_id_.'\') Unable to get a valid XML from windows logoff/'.$session->getAttribute('user_login').'/'.$user_domain.' - Return: '.$ret);
+			Logger::critical('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
 			return false;
+		}
+
+		if (isset($session->settings['windows_manage_session']) && $session->settings['windows_manage_session'] === true) {
+			$windows_session_status = $session_node->getAttribute('status');
+
+			if ($windows_session_status != 5 && $windows_session_status != 6) {
+				$ret = query_url_post($this->getWebservicesBaseURL().'/session/destroy/'.$session_id_);
+
+				$buf = @$dom->loadXML($ret);
+				if (! $buf) {
+					Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
+					return false;
+				}
+
+				if (! $dom->hasChildNodes()) {
+					Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
+					return false;
+				}
+
+				$session_node = $dom->getElementsByTagname('session')->item(0);
+				if (is_null($session_node)) {
+					Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
+					return false;
+				}
+			}
 		}
 
 		return true;
