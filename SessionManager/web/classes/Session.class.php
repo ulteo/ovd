@@ -204,6 +204,14 @@ class Session {
 				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\'');
 				return false;
 			}
+		} else {
+			$windows_server = Abstract_Server::load($this->settings['windows_server']);
+
+			$buf = $windows_server->orderWindowsSessionDeletionWithinAD($this->id);
+			if (! $buf) {
+				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\'');
+				return false;
+			}
 		}
 
 		if ($request_aps_) {

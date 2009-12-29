@@ -152,6 +152,12 @@ class User {
 				continue;
 			}
 
+			$buf = $server->userIsLoggedIn($this->getAttribute('login'));
+			if ($buf) {
+				Logger::warning('main', 'USER::getAvailableServers User is already logged in Server \''.$server->fqdn.'\'');
+				continue;
+			}
+
 			if (count($apps_id)>0 || $launch_without_apps == 1) {
 				$elements2 = array();
 				$buf2 = Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn);
