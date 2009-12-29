@@ -72,6 +72,7 @@ function query_url($url_, $log_returned_data_=true) {
 }
 
 function query_url_post_xml($url_, $xml_, $log_returned_data_=true) {
+	Logger::debug('main', "query_url_post_xml($url_, $xml_, $log_returned_data_)");
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
@@ -87,6 +88,7 @@ function query_url_post_xml($url_, $xml_, $log_returned_data_=true) {
 }
 
 function query_url_post($url_, $string_=NULL, $log_returned_data_=true) {
+	Logger::debug('main', "query_url_post($url_, $string_, $log_returned_data_)");
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
