@@ -47,6 +47,9 @@ function get_cpu_load() {
 	$load2 = $ab + $ac + $ad;        // cpu.user + cpu.sys
 	$total2 = $ab + $ac + $ad + $ae; // cpu.total
 
+	if ($total-$total2 == 0)
+		return 0;
+
 	return (($load-$load2)/($total-$total2));
 }
 
