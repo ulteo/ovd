@@ -38,6 +38,7 @@ import time
 import traceback
 import win32api
 import win32con
+import win32ts
 
 class Web(SimpleHTTPRequestHandler):
 	def do_GET(self):
@@ -83,6 +84,12 @@ class Web(SimpleHTTPRequestHandler):
 				
 			elif self.path == root_dir+"/domain":
 				self.webservices_domain()
+			
+			elif self.path.startswith(root_dir+"/loggedin"):
+				self.webservices_loggedin(self.path[len(root_dir+"/loggedin"):])
+			
+			elif self.path.startswith(root_dir+"/logoff"):
+				self.webservices_logoff(self.path[len(root_dir+"/logoff"):])
 			
 			else:
 				self.send_error(httplib.NOT_FOUND)
@@ -328,6 +335,107 @@ class Web(SimpleHTTPRequestHandler):
 		self.wfile.write(doc.toxml())
 		
 		return
+	
+	
+	def webservices_loggedin(self, arg):
+		try:
+			_, login, domain = arg.split("/", 3)
+		except:
+			Logger.warn("webservices_loggedin: usage error not enough argument")
+			return self.webservices_session_answer(self.error2xml("usage"))
+		
+		if len(login) == 0:
+			Logger.warn("webservices_loggedin: usage error empty login")
+			return self.webservices_session_answer(self.error2xml("usage"))
+		
+		if len(domain) == 0:
+			domain = "local"
+		
+		Logger.info("webservices_loggedin: login '%s'"%(login))
+		found = False
+		sessions = win32ts.WTSEnumerateSessions(None)
+		for session in sessions:
+			if not 0 < session["SessionId"] < 65536:
+				continue
+			
+			l_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
+			if login != l_:
+				continue
+	
+			d_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+			computerName = win32api.GetComputerName()
+			if d_.lower() == computerName.lower():
+				if domain == "ad":
+					continue
+			else:
+				if domain == "local":
+					continue
+			
+			found = True
+			break
+		
+		doc = Document()
+		rootNode = doc.createElement("user")
+		rootNode.setAttribute("id", login)
+		rootNode.setAttribute("loggedin", str(found).lower())
+		doc.appendChild(rootNode)
+		return self.webservices_session_answer(doc)
+	
+	def webservices_logoff(self, arg):
+		try:
+			_, login, domain = arg.split("/", 3)
+		except:
+			Logger.warn("webservices_loggedin: usage error not enough argument")
+			return self.webservices_session_answer(self.error2xml("usage"))
+		
+		if len(login) == 0:
+			Logger.warn("webservices_loggedin: usage error empty login")
+			return self.webservices_session_answer(self.error2xml("usage"))
+		
+		if len(domain) == 0:
+			domain = "local"
+			
+	
+		Logger.info("webservices_logoff: login '%s'"%(login))
+		found = None
+		sessions = win32ts.WTSEnumerateSessions(None)
+		for session in sessions:
+			if not 0 < session["SessionId"] < 65536:
+				continue
+			
+			l_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
+			if login != l_:
+				continue
+	
+			d_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+			computerName = win32api.GetComputerName()
+			if d_.lower() == computerName.lower():
+				if domain == "ad":
+					continue
+			else:
+				if domain == "local":
+					continue
+			
+			found = session["SessionId"]
+			break;
+		
+		if found is None:
+			return self.webservices_session_answer(self.error2xml("not found"))
+		
+		doc = Document()
+		rootNode = doc.createElement("session")
+		rootNode.setAttribute("id", str(found))
+		
+		try:
+			win32ts.WTSLogoffSession(None, session["SessionId"], False)
+			rootNode.setAttribute("status", "logged off")
+		except Exception, e:
+			Logger.warn("webservices_logoffADUser: excpetion at logoff (%s)"%(str(e)))
+			rootNode.setAttribute("error", "unable to log off")
+
+		doc.appendChild(rootNode)
+		return self.webservices_session_answer(doc)
+	
 	
 	@staticmethod
 	def getTimeFromLine(line):
