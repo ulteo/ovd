@@ -158,7 +158,7 @@ class Web(SimpleHTTPRequestHandler):
 		elif request.startswith("/destroy/"):
 			session_id = request[len("/destroy/"):]
 			if not internalSM.exist(session_id):
-				return self.webservices_session_answer(self.error2xml("unknwown"))
+				return self.webservices_session_answer(self.error2xml("unknown"))
 
 			s = internalSM.get(session_id)
 			if s.getState() in [Session.DESTROYING, Session.DESTROYED]:
@@ -177,7 +177,7 @@ class Web(SimpleHTTPRequestHandler):
 		elif request.startswith("/status/"):
 			session_id = request[len("/status/"):]
 			if not internalSM.exist(session_id):
-				return self.webservices_session_answer(self.error2xml("unknwown"))
+				return self.webservices_session_answer(self.error2xml("unknown"))
 
 			s = internalSM.get(session_id)
 			state = s.getState()
