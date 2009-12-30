@@ -97,7 +97,9 @@ class Web(SimpleHTTPRequestHandler):
 				return
 			
 		except Exception, err:
-			Logger.error("exception: "+str(err))
+			exception_type, exception_string, tb = sys.exc_info()
+			trace_exc = "".join(traceback.format_tb(tb))
+			Logger.debug("do_POST error '%s' '%s'"%(trace_exc, str(exception_string)))
 
 
 	@staticmethod
