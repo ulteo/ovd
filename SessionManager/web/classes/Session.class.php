@@ -191,20 +191,38 @@ class Session {
 		return false;
 	}
 
-	public function orderDeletion() {
+	public function orderDeletion($request_aps_=true) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
-
-		$buf = $server->orderSessionDeletion($this->id);
-
-		if (! $buf) {
-			Abstract_Session::delete($this->id);
+		if (! $server) {
+			Logger::error('main', 'Session::orderDeletion Unable to load server \''.$this->server.'\'');
 			return false;
 		}
 
-		$this->setStatus(3);
+		if (isset($this->settings['windows_server'])) {
+			$windows_server = Abstract_Server::load($this->settings['windows_server']);
+
+			$buf = $windows_server->orderWindowsSessionDeletion($this->id);
+			if (! $buf) {
+				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\'');
+				return false;
+			}
+		}
+
+		if ($request_aps_) {
+			$buf = $server->orderSessionDeletion($this->id);
+
+			if ($buf) {
+				$this->setStatus(3);
+				return true;
+			} else
+				Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on ApS side');
+		}
+
+		Abstract_Session::delete($this->id);
 
 		return true;
 	}
+
 }

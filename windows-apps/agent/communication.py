@@ -4,6 +4,7 @@
 # Copyright (C) 2008,2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -32,6 +33,8 @@ import tempfile
 import servicemanager
 from win32com.shell import shell
 import traceback
+import win32api
+import win32ts
 
 def log_debug(msg_):
 	servicemanager.LogInfoMsg(str(msg_))
@@ -69,6 +72,26 @@ class Web(SimpleHTTPRequestHandler):
 			self.server.daemon.log.debug("do_GET error '%s' '%s'"%(trace_exc, str(exception_string)))
 			log_debug("do_GET error %s %s"%(trace_exc, str(exception_string)))
 	
+	def do_POST(self):
+		root_dir = '/applicationserver/webservices'
+		try:
+			if self.server.daemon.isSessionManagerRequest(self.client_address[0]) == False:
+				self.response_error(401)
+				return
+			
+			if self.path.startswith(root_dir+"/loggedin"):
+				self.webservices_loggedin(self.path[len(root_dir+"/loggedin"):])
+			elif self.path.startswith(root_dir+"/logoff"):
+				self.webservices_logoff(self.path[len(root_dir+"/logoff"):])
+			else:
+				self.response_error(404)
+				return
+			
+		except Exception, err:
+			exception_type, exception_string, tb = sys.exc_info()
+			trace_exc = "".join(traceback.format_tb(tb))
+			self.server.daemon.log.debug("do_POST error '%s' '%s'"%(trace_exc, str(exception_string)))
+	
 	def response_error(self, code):
 		self.send_response(code)
 		self.send_header('Content-Type', 'text/html')
@@ -77,6 +100,27 @@ class Web(SimpleHTTPRequestHandler):
 	
 	def log_request(self,l):
 		pass
+	
+	@staticmethod
+	def error2xml(code, message=None):
+		doc = Document()
+		
+		rootNode = doc.createElement("error")
+		rootNode.setAttribute("id", code)
+		
+		if message is not None:
+			textNode = doc.createTextNode(message)
+			rootNode.appendChild(textNode)
+		
+		doc.appendChild(rootNode)
+		return doc
+	
+	def webservices_answer(self, content):
+		self.send_response(200, 'OK')
+		self.send_header('Content-Type', 'text/xml')
+		self.end_headers()
+		self.wfile.write(content.toprettyxml())
+		return
 	
 	def webservices_server_status(self):
 		self.send_response(200, 'OK')
@@ -197,3 +241,101 @@ class Web(SimpleHTTPRequestHandler):
 		else :
 			self.server.daemon.log.debug("webservices_server_log errorB 400")
 			self.send_response(400)
+	
+	def webservices_loggedin(self, arg):
+		try:
+			_, login, domain = arg.split("/", 3)
+		except:
+			self.server.daemon.log.debug("webservices_loggedin: usage error not enough argument")
+			return self.webservices_answer(self.error2xml("usage"))
+		
+		if len(login) == 0:
+			self.server.daemon.log.debug("webservices_loggedin: usage error empty login")
+			return self.webservices_answer(self.error2xml("usage"))
+		
+		if len(domain) == 0:
+			domain = "local"
+		
+		self.server.daemon.log.debug("webservices_loggedin: login '%s'"%(login))
+		found = False
+		sessions = win32ts.WTSEnumerateSessions(None)
+		for session in sessions:
+			if not 0 < session["SessionId"] < 65536:
+				continue
+			
+			l_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
+			if login != l_:
+				continue
+				
+			d_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+			computerName = win32api.GetComputerName()
+			if d_.lower() == computerName.lower():
+				if domain == "ad":
+					continue
+			else:
+				if domain == "local":
+					continue
+			
+			found = True
+			break
+		
+		doc = Document()
+		rootNode = doc.createElement("user")
+		rootNode.setAttribute("id", login)
+		rootNode.setAttribute("loggedin", str(found).lower())
+		doc.appendChild(rootNode)
+		return self.webservices_answer(doc)
+	
+	def webservices_logoff(self, arg):
+		try:
+			_, login, domain = arg.split("/", 3)
+		except:
+			self.server.daemon.log.debug("webservices_loggedin: usage error not enough argument")
+			return self.webservices_answer(self.error2xml("usage"))
+		
+		if len(login) == 0:
+			self.server.daemon.log.debug("webservices_loggedin: usage error empty login")
+			return self.webservices_answer(self.error2xml("usage"))
+		
+		if len(domain) == 0:
+			domain = "local"
+		
+		self.server.daemon.log.debug("webservices_logoff: login '%s'"%(login))
+		found = None
+		sessions = win32ts.WTSEnumerateSessions(None)
+		for session in sessions:
+			if not 0 < session["SessionId"] < 65536:
+				continue
+			
+			l_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
+			if login != l_:
+				continue
+			
+			d_ = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
+			computerName = win32api.GetComputerName()
+			if d_.lower() == computerName.lower():
+				if domain == "ad":
+					continue
+			else:
+				if domain == "local":
+					continue
+			
+			found = session["SessionId"]
+			break;
+		
+		if found is None:
+			return self.webservices_answer(self.error2xml("not found"))
+		
+		doc = Document()
+		rootNode = doc.createElement("session")
+		rootNode.setAttribute("id", str(found))
+		
+		try:
+			win32ts.WTSLogoffSession(None, session["SessionId"], False)
+			rootNode.setAttribute("status", "logged off")
+		except Exception, e:
+			self.server.daemon.log.debug("webservices_logoffADUser: exception at logoff (%s)"%(str(e)))
+			rootNode.setAttribute("error", "unable to log off")
+		
+		doc.appendChild(rootNode)
+		return self.webservices_answer(doc)

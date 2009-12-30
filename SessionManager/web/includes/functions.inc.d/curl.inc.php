@@ -70,3 +70,19 @@ function query_url($url_, $log_returned_data_=true) {
 	}
 	return $ret['data'];
 }
+
+function query_url_post($url_, $string_=NULL, $log_returned_data_=true) {
+	Logger::debug('main', "query_url_post($url_, $string_, $log_returned_data_)");
+	$socket = curl_init($url_);
+	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
+	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
+	curl_setopt($socket, CURLOPT_POSTFIELDS, $string_);
+	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close'));
+	$data = curl_exec($socket);
+
+	curl_close($socket);
+
+	return $data;
+}

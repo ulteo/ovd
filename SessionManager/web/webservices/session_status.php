@@ -73,5 +73,6 @@ if ($_GET['status'] == 4) {
 		'session'	=>	$session->id
 	));
 
-	Abstract_Session::delete($session->id);
+	if (! $session->orderDeletion(false))
+		Logger::error('main', '(webservices/session_status) Unable to delete session \''.$session->id.'\'');
 }

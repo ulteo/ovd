@@ -648,6 +648,81 @@ class Server {
 
 	}
 
+	public function orderWindowsSessionDeletion($session_id_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$session = Abstract_Session::load($session_id_);
+		if (! $session) {
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to load session \''.$session_id_.'\'');
+			return false;
+		}
+
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed', __FILE__, __LINE__);
+		$user_profile_mode = $prefs->get('UserDB', 'enable');
+		$user_domain = 'ad';
+
+		$ret = query_url_post($this->getWebservicesBaseURL().'/logoff/'.$session->getAttribute('user_login').'/'.$user_domain);
+
+		$buf = @$dom->loadXML($ret);
+		if (! $buf) {
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
+			return false;
+		}
+
+		if (! $dom->hasChildNodes()) {
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
+			return false;
+		}
+
+		$session_node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($session_node)) {
+			Logger::critical('main', 'Server::orderWindowsSessionDeletion Unable to get a valid XML - Return: '.$ret);
+			return false;
+		}
+
+		return true;
+	}
+	
+	public function userIsLoggedIn($user_login_) {
+		if ($this->getAttribute('type') == 'windows') {
+			$dom = new DomDocument('1.0', 'utf-8');
+
+			$prefs = Preferences::getInstance();
+			if (! $prefs)
+				die_error('get Preferences failed', __FILE__, __LINE__);
+			$user_profile_mode = $prefs->get('UserDB', 'enable');
+			$user_domain = ($user_profile_mode == 'activedirectory')?'ad':'local';
+
+			$ret = query_url_post($this->getWebservicesBaseURL().'/loggedin/'.$user_login_.'/'.$user_domain);
+
+			$buf = @$dom->loadXML($ret);
+			if (! $buf) {
+				Logger::error('main', 'Server::userIsLoggedIn(\''.$user_login_.'\') Unable to get a valid XML from windows loggedin/'.$user_login_.'/'.$user_domain.' - Return: '.$ret);
+				return false;
+			}
+
+			if (! $dom->hasChildNodes()) {
+				Logger::error('main', 'Server::userIsLoggedIn(\''.$user_login_.'\') Unable to get a valid XML from windows loggedin/'.$user_login_.'/'.$user_domain.' - Return: '.$ret);
+				return false;
+			}
+
+			$user_node = $dom->getElementsByTagname('user')->item(0);
+			if (is_null($user_node)) {
+				Logger::critical('main', 'Server::userIsLoggedIn(\''.$user_login_.'\') Unable to get a valid XML from windows loggedin/'.$user_login_.'/'.$user_domain.' - Return: '.$ret);
+				return false;
+			}
+
+			if ($user_node->hasAttribute('loggedin'))
+				$loggedin = $user_node->getAttribute('loggedin');
+
+			return ($loggedin == 'true');
+		}
+
+		return false;
+	}
+
 	public function getApplicationIcon($icon_path_, $desktopfile_) {
 		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
 
