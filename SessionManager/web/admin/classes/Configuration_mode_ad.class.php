@@ -63,10 +63,15 @@ class Configuration_mode_ad extends Configuration_mode {
     if (! in_array($form['user_branch'], array('default', 'specific')))
       return False;
 
-    if (! in_array($form['admin_branch'], array('default', 'same')))
+    if (! in_array($form['admin_branch'], array('default', 'same', 'specific')))
       return False;
 
     if ($form['user_branch'] == 'specific' && ! isset($form['user_branch_ou'])){
+      // Error
+      return False;
+    }
+
+    if ($form['admin_branch'] == 'specific' && ! isset($form['admin_branch_ou'])){
       // Error
       return False;
     }
@@ -93,6 +98,19 @@ class Configuration_mode_ad extends Configuration_mode {
 
     if ($form['admin_branch'] == 'default')
       $admin_dn = 'cn='.$form['admin_login'].',cn=Users';
+	
+	elseif ($form['admin_branch'] == 'specific') {
+		$abranch = $form['admin_branch_ou'];
+		if (strstr($abranch, ',') != False) {
+			$buffer = explode(',', $abranch);
+			$buffer = array_reverse($buffer);
+			for($i=0; $i<count($buffer); $i++)
+				$buffer[$i] = trim($buffer[$i]);
+			$abranch = implode(',ou=', $buffer);
+		}
+		
+		$admin_dn = 'cn='.$form['admin_login'].',ou='.$abranch;
+	}
     else
       $admin_dn = 'cn='.$form['admin_login'].','.$ou;
 
@@ -168,12 +186,32 @@ class Configuration_mode_ad extends Configuration_mode {
       $buf = explode('=', $config['login'], 2);
       $buf = explode(',', $buf[1], 2);
       $admin_login = $buf[0];
-    } else
-      $admin_login = '';
+		$admin_ou = $buf[1];
+	} else {
+		$admin_login = '';
+		$admin_ou = '';
+    }
 
     $form['admin_login'] = $admin_login;
     $form['admin_password'] = $config['password'];
-    $form['admin_branch'] = (str_endswith($config['login'], $config['ou']))?'same':'default';
+
+	$form['admin_branch_ou'] = '';
+	if (str_endswith($config['login'], $config['ou']))
+		$form['admin_branch'] = 'same';
+	elseif($config['login'] == 'cn='.$admin_login.',cn=Users')
+		$form['admin_branch'] = 'default';
+	else {
+		$form['admin_branch'] = 'specific';
+		
+		$buffer = explode(',', $admin_ou);
+		for($i=0; $i<count($buffer); $i++) {
+			$buf = explode('=', $buffer[$i], 2);
+			if (! isset($buf[1]))
+				break;
+			$buffer[$i] = $buf[1];
+		}
+		$form['admin_branch_ou'] = implode(',', array_reverse($buffer));
+	}
 
     $buf = $prefs->get('UserGroupDB', 'enable');
     $form['user_group'] = ($buf == 'activedirectory')?'activedirectory':'sql';
@@ -230,10 +268,18 @@ class Configuration_mode_ad extends Configuration_mode {
     if ($form['admin_branch'] == 'same')
       $str.= ' checked="checked"';
     $str.= '/>'._('Same as Users, ');
+    $str.= '<br/>';
     $str.= '<input class="input_radio" type="radio" name="admin_branch" value="default"';
     if ($form['admin_branch'] == 'default')
       $str.= ' checked="checked"';
     $str.= '/>'._('Default user branch');
+    $str.= '<br/>';
+    $str.= '<input class="input_radio" type="radio" name="admin_branch" value="specific"';
+    if ($form['admin_branch'] == 'specific')
+      $str.= ' checked="checked"';
+    $str.= '/>'._('Specific Organization Unit:');
+    $str.= ' <input type="text" name="admin_branch_ou" value="'.$form['admin_branch_ou'].'" />';
+    $str.= '</div>';
     $str.= '</td></tr>';
     $str.= '</table>';
     $str.= '</div>';
