@@ -1460,6 +1460,10 @@
                 desktop|portal Request for a desktop or a portal session</para>
             </listitem>
             <listitem>
+              <para>size:
+                WIDTHxHEIGHT Specify the size of the session</para>
+            </listitem>
+            <listitem>
               <para>start_app:
                 1|2... An application id to launch at
                 session start</para>
