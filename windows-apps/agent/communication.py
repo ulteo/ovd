@@ -431,7 +431,7 @@ class Web(SimpleHTTPRequestHandler):
 			win32ts.WTSLogoffSession(None, session["SessionId"], False)
 			rootNode.setAttribute("status", "logged off")
 		except Exception, e:
-			Logger.warn("webservices_logoffADUser: excpetion at logoff (%s)"%(str(e)))
+			Logger.warn("webservices_logoffADUser: exception at logoff (%s)"%(str(e)))
 			rootNode.setAttribute("error", "unable to log off")
 
 		doc.appendChild(rootNode)
