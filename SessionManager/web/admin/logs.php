@@ -151,8 +151,9 @@ function show_all($flags_) {
 	echo '<h1>'._('Application Servers').'</h1>';
 
 	foreach ($display2 as $fqdn => $logs) {
-		echo '<h2>'.$fqdn.'</h2>';
+		$server = Abstract_Server::load($fqdn);
 
+		echo '<h2><img src="media/image/server-'.$server->stringType().'.png" alt="'.$server->stringType().'" title="'.$server->stringType().'" /> <a href="servers.php?action=manage&amp;fqdn='.$fqdn.'">'.$fqdn.'</a></h2>';
 		echo '<div class="section">';
 		if (array_key_exists('web', $logs)) {
 			echo '<h4>Web log';
