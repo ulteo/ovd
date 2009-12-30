@@ -195,6 +195,10 @@ class Session {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
+		if (! $server) {
+			Logger::error('main', 'Session::orderDeletion Unable to load server \''.$this->server.'\'');
+			return false;
+		}
 
 		if (isset($this->settings['windows_server'])) {
 			$windows_server = Abstract_Server::load($this->settings['windows_server']);

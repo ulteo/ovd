@@ -640,6 +640,10 @@ class Server {
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$session = Abstract_Session::load($session_id_);
+		if (! $session) {
+			Logger::error('main', 'Server::orderWindowsSessionDeletion Unable to load session \''.$session_id_.'\'');
+			return false;
+		}
 
 		if (isset($session->settings['windows_manage_session']) && $session->settings['windows_manage_session'] === true) {
 			$ret = query_url_post($this->getWebservicesBaseURL().'/session/status/'.$session_id_);
