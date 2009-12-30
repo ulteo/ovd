@@ -115,7 +115,7 @@ class Web(SimpleHTTPRequestHandler):
 		return doc
 
 
-	def webservices_session_answer(self, content):
+	def webservices_answer(self, content):
 		self.send_response(httplib.OK)
 		self.send_header('Content-Type', 'text/xml')
 		self.end_headers()
@@ -133,16 +133,16 @@ class Web(SimpleHTTPRequestHandler):
 				s = Session(content)
 			
 			except Exception, e:
-				return self.webservices_session_answer(self.error2xml("usage", str(e)))
+				return self.webservices_answer(self.error2xml("usage", str(e)))
 			
 			if internalSM.exist(s.id):
-				return self.webservices_session_answer(self.error2xml("already exist session"))
+				return self.webservices_answer(self.error2xml("already exist session"))
 			
 			try:
 				s.init()
 	
 			except Exception, e:
-				return self.webservices_session_answer(self.error2xml("user", str(e)))
+				return self.webservices_answer(self.error2xml("user", str(e)))
 			
 			internalSM.add(s)
 
@@ -153,17 +153,17 @@ class Web(SimpleHTTPRequestHandler):
 				rootNode.setAttribute("login", s.user.login)
 			doc.appendChild(rootNode)
 
-			return self.webservices_session_answer(doc)
+			return self.webservices_answer(doc)
 
 
 		elif request.startswith("/destroy/"):
 			session_id = request[len("/destroy/"):]
 			if not internalSM.exist(session_id):
-				return self.webservices_session_answer(self.error2xml("unknown"))
+				return self.webservices_answer(self.error2xml("unknown"))
 
 			s = internalSM.get(session_id)
 			if s.getState() in [Session.DESTROYING, Session.DESTROYED]:
-				return self.webservices_session_answer(self.error2xml("already"))
+				return self.webservices_answer(self.error2xml("already"))
 			
 			s.orderDestroy()
 		
@@ -172,13 +172,13 @@ class Web(SimpleHTTPRequestHandler):
 			rootNode.setAttribute("id", s.id)
 			doc.appendChild(rootNode)
 		
-			return self.webservices_session_answer(doc)
+			return self.webservices_answer(doc)
 
 	
 		elif request.startswith("/status/"):
 			session_id = request[len("/status/"):]
 			if not internalSM.exist(session_id):
-				return self.webservices_session_answer(self.error2xml("unknown"))
+				return self.webservices_answer(self.error2xml("unknown"))
 
 			s = internalSM.get(session_id)
 			state = s.getState()
@@ -191,7 +191,7 @@ class Web(SimpleHTTPRequestHandler):
 			rootNode.setAttribute("id", s.id)
 			rootNode.setAttribute("satus", str(state))
 			doc.appendChild(rootNode)
-			return self.webservices_session_answer(doc)
+			return self.webservices_answer(doc)
 	
 	def log_request(self,l):
 		pass
@@ -343,11 +343,11 @@ class Web(SimpleHTTPRequestHandler):
 			_, login, domain = arg.split("/", 3)
 		except:
 			Logger.warn("webservices_loggedin: usage error not enough argument")
-			return self.webservices_session_answer(self.error2xml("usage"))
+			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(login) == 0:
 			Logger.warn("webservices_loggedin: usage error empty login")
-			return self.webservices_session_answer(self.error2xml("usage"))
+			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(domain) == 0:
 			domain = "local"
@@ -380,18 +380,18 @@ class Web(SimpleHTTPRequestHandler):
 		rootNode.setAttribute("id", login)
 		rootNode.setAttribute("loggedin", str(found).lower())
 		doc.appendChild(rootNode)
-		return self.webservices_session_answer(doc)
+		return self.webservices_answer(doc)
 	
 	def webservices_logoff(self, arg):
 		try:
 			_, login, domain = arg.split("/", 3)
 		except:
 			Logger.warn("webservices_loggedin: usage error not enough argument")
-			return self.webservices_session_answer(self.error2xml("usage"))
+			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(login) == 0:
 			Logger.warn("webservices_loggedin: usage error empty login")
-			return self.webservices_session_answer(self.error2xml("usage"))
+			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(domain) == 0:
 			domain = "local"
@@ -421,7 +421,7 @@ class Web(SimpleHTTPRequestHandler):
 			break;
 		
 		if found is None:
-			return self.webservices_session_answer(self.error2xml("not found"))
+			return self.webservices_answer(self.error2xml("not found"))
 		
 		doc = Document()
 		rootNode = doc.createElement("session")
@@ -435,7 +435,7 @@ class Web(SimpleHTTPRequestHandler):
 			rootNode.setAttribute("error", "unable to log off")
 
 		doc.appendChild(rootNode)
-		return self.webservices_session_answer(doc)
+		return self.webservices_answer(doc)
 	
 	
 	@staticmethod
