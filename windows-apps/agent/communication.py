@@ -4,6 +4,7 @@
 # Copyright (C) 2008,2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
