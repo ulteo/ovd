@@ -35,16 +35,7 @@ function my_own_callback($matches) {
 
 echo'<h2>'._('List of users').'</h2>';
 
-$prefs = Preferences::getInstance();
-if (! $prefs)
-	die_error('get Preferences failed',__FILE__,__LINE__);
-$mods_enable = $prefs->get('general','module_enable');
-if (!in_array('UserDB',$mods_enable)){
-	die_error(_('Module UserDB must be enabled'),__FILE__,__LINE__);
-}
-$mod_user_name = 'admin_'.'UserDB_'.$prefs->get('UserDB','enable');
-$userDB = new $mod_user_name();
-
+$userDB = UserDB::getInstance();
 $userGroupDB = UserGroupDB::getInstance();
 
 $us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
