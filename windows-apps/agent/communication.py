@@ -32,6 +32,7 @@ import pythoncom
 import tempfile
 import servicemanager
 from win32com.shell import shell
+import threading
 import traceback
 import win32api
 import win32ts
@@ -330,12 +331,20 @@ class Web(SimpleHTTPRequestHandler):
 		rootNode = doc.createElement("session")
 		rootNode.setAttribute("id", str(found))
 		
-		try:
-			win32ts.WTSLogoffSession(None, session["SessionId"], False)
-			rootNode.setAttribute("status", "logged off")
-		except Exception, e:
-			self.server.daemon.log.debug("webservices_logoffADUser: exception at logoff (%s)"%(str(e)))
-			rootNode.setAttribute("error", "unable to log off")
+		self.server.daemon.log.debug("webservices_logoffADUser: start thread logoff")
+		th = threading.Thread(target=self.perform_logoff, args=[session["SessionId"]])
+		th.start()
+		rootNode.setAttribute("status", "logged off")
 		
 		doc.appendChild(rootNode)
 		return self.webservices_answer(doc)
+	
+	
+	def perform_logoff(self, session_id):
+		try:
+			self.server.daemon.log.debug("perform_logoff: start logoff %d"%(session_id))
+			ret = win32ts.WTSLogoffSession(None, session_id, True)
+			self.server.daemon.log.debug("perform_logoff: finish logoff %d ret: %s"%(session_id, str(ret)))
+		except Exception, e:
+			self.server.daemon.log.debug("perform_logoff: exception %s"%(e))
+
