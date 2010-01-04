@@ -912,7 +912,7 @@ function show_manage($fqdn) {
   // Server Replication part
   if (count($servers_replication)>0 && $server->getAttribute('type') == 'linux' && $can_do_action) {
     echo '<div>';
-    echo '<h3>'._('Replication').'</h3>';
+    echo '<h2>'._('Replication').'</h2>';
     echo '<form action="" method="post">';
     echo '<input type="hidden" name="action" value="replication" />';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
