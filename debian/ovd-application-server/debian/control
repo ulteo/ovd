@@ -13,12 +13,6 @@ Replaces: ulteo-ovd-daemon
 Description: Ulteo Open Virtual Desktop - daemon
  This daemon manages the sessions on Open Virtual Desktop application servers.
 
-Package: ulteo-ovd-daemon
-Architecture: all
-Depends: ulteo-ovd-application-server-daemon
-Description: Ulteo Open Virtual Desktop - daemon (Transitional package)
- This package exists for transitional purpose only. It can be safely removed.
-
 Package: ulteo-ovd-application-server
 Architecture: all
 Depends: debconf (>= 0.2.26), po-debconf, curl, libapache2-mod-php5, php5-curl, php5-imagick, ulteo-ovd-applets, ulteo-ovd-application-server-tools (= ${binary:Version})
@@ -35,10 +29,3 @@ Description: Ulteo Open Virtual Desktop - application server
  This package provides the application server web services for the Ulteo Online
  Virtual Desktop.
 
-Package: ulteo-ovd
-Architecture: all
-Depends: ulteo-ovd-application-server
-Description: Ulteo Open Virtual Desktop (dummy transitional package)
- This transitional package ease the upgrade of the OVD Application Server.
- .
- You can safely purge this package.
