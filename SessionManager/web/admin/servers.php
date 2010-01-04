@@ -668,7 +668,7 @@ function show_manage($fqdn) {
 //   if ($server_online === false)
 //     echo '<h2><p class="msg_error centered">'.$status_error_msg.'</p></h2>';
 
-  echo '<div>';
+  echo '<div class="section">';
   echo '<h2>'._('Monitoring').'</h2>';
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="3">';
   echo '<tr class="title">';
@@ -701,9 +701,9 @@ function show_manage($fqdn) {
 
   echo '</tr>';
   echo '</table>';
-  echo '<div>';
+  echo '</div>';
 
-  echo '<div>';
+  echo '<div class="section">';
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
 
@@ -791,8 +791,10 @@ function show_manage($fqdn) {
 		}
 	}
   echo '</table>';
+  echo '</div>';
 
 	if ($server_online && $server->getAttribute('type') == 'linux' && $can_do_action) {
+    echo '<div class="section">';
     echo '<h2>'._('Install an application').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="install_line">';
@@ -827,21 +829,23 @@ function show_manage($fqdn) {
     echo '</table>';
     echo '</form>';
     echo '</div>';
+    echo '</div>';
 
+    echo '<div class="section">';
     echo '<h2>'._('Upgrade').'</h2>';
     echo '<form>';
     echo '<input type="hidden" name="action" value="upgrade">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
     echo '<input type="submit" value="'._('Upgrade the internal system and applications').'">';
     echo '</form>';
+    echo '</div>';
   }
-  echo '</div>';
 
 
   // Application part
   if (count($applications_all) > 0) {
     $count = 0;
-    echo '<div>';
+    echo '<div class="section">';
     echo '<h2>'._('Applications available on this server').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
 
@@ -911,7 +915,7 @@ function show_manage($fqdn) {
 
   // Server Replication part
   if (count($servers_replication)>0 && $server->getAttribute('type') == 'linux' && $can_do_action) {
-    echo '<div>';
+    echo '<div class="section">';
     echo '<h2>'._('Replication').'</h2>';
     echo '<form action="" method="post">';
     echo '<input type="hidden" name="action" value="replication" />';
@@ -931,7 +935,7 @@ function show_manage($fqdn) {
 
   // Tasks part
   if (count($tasks) >0) {
-    echo '<div>';
+    echo '<div class="section">';
     echo '<h2>'._('Active tasks on this server').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     echo '<tr class="title">';
