@@ -179,14 +179,16 @@ if ($_SESSION['type'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/in
 	if ($_SESSION['mode'] == 'desktop')
 		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-	generateAjaxplorerActionsXML();
+	if ($_SESSION['mode'] == 'portal')
+		generateAjaxplorerActionsXML();
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 1);
 } elseif ($_SESSION['type'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
 	if ($_SESSION['mode'] == 'desktop')
 		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-	generateAjaxplorerActionsXML();
+	if ($_SESSION['mode'] == 'portal')
+		generateAjaxplorerActionsXML();
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 11);
 }
