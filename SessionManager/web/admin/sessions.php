@@ -60,8 +60,12 @@ if (isset($_POST['join'])) {
 		foreach ($_POST['kill_sessions'] as $session) {
 			$session = Abstract_Session::load($session);
 
-			if (is_object($session))
-				$session->orderDeletion();
+			if (is_object($session)) {
+				if (! $session->orderDeletion()) {
+					Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\'... purging');
+					Abstract_Session::delete($session->id);
+				}
+			}
 		}
 	}
 
@@ -69,8 +73,12 @@ if (isset($_POST['join'])) {
 } elseif (isset($_POST['action']) && $_POST['action'] == 'kill') {
 	$session = Abstract_Session::load($_POST['session']);
 
-	if (is_object($session))
-		$session->orderDeletion();
+	if (is_object($session)) {
+		if (! $session->orderDeletion()) {
+			Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\'... purging');
+			Abstract_Session::delete($session->id);
+		}
+	}
 
 	redirect($_SERVER['HTTP_REFERER']);
 } elseif (isset($_GET['info'])) {
