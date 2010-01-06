@@ -89,7 +89,6 @@ if (isset($_POST['join'])) {
 	{
 		$show_apps = true;
 		$applicationDB = ApplicationDB::getInstance();
-		$apps = $applicationDB->getList(false);
 	}
 
 //FIX ME?
@@ -122,12 +121,14 @@ if (isset($_POST['join'])) {
 			echo '<ul>';
 			echo '<table>';
 			foreach ($session->getAttribute('applications') as $access_id => $app_id) {
-				if (is_null($app_id))
+				if (is_null($app_id)) {
+					Logger::warning('main', '(admin/sessions) Application ID is NULL for access_id \''.$access_id.'\', session \''.$session->getAttribute('id').'\'');
 					continue;
+				}
 
-				$myapp = $apps[$app_id];
+				$myapp = $applicationDB->import($app_id);
 				if (! is_object($myapp)) {
-					echo '<li>'._('Unknown application').'</li>';
+					Logger::warning('main', '(admin/sessions) Unable to import application \''.$app_id.'\' for session \''.$session->getAttribute('id').'\'');
 					continue;
 				}
 
