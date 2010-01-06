@@ -439,6 +439,105 @@ function show_step5() {
 
   echo '<p>'._('Are you sure that you want to create this publication?').'</p>';
 
+	echo '<table style="width: 50%;" border="0" cellspacing="1" cellpadding="3">';
+	echo '<tr>';
+	echo '<td style="text-align: left; vertical-align: top;">';
+	echo '<div class="container rounded" style="background: #eee;">';
+	if ($_SESSION['wizard']['use_users'] == 'usergroups') {  
+		$usergroupDB = UserGroupDB::getInstance();
+
+		echo '<p style="font-weight: bold;">';
+		if (count($_SESSION['wizard']['usergroups']) == 1)
+			echo _('Between this usergroup');
+		else
+			echo _('Between these usergroups');
+		echo '</p>';
+
+		echo '<ul>';
+		foreach ($_SESSION['wizard']['usergroups'] as $ug_id) {
+			$ug = $usergroupDB->import($ug_id);
+			if (! is_object($ug)) {
+				Logger::warning('main', '(admin/wizard) Usergroup \''.$ug_id.'\' import failed');
+				continue;
+			}
+
+			echo '<li>'.$ug->name.'</li>';
+		}
+		echo '</ul>';
+	} elseif ($_SESSION['wizard']['use_users'] == 'users') {
+		$userDB = UserDB::getInstance();
+
+		echo '<p style="font-weight: bold;">';
+		echo _('Between this newly created usergroup');
+		echo '</p>';
+
+		echo '<ul>';
+		echo '<li><strong>'._('Name:').'</strong> '.$_SESSION['wizard']['user_group_name'].'</li>';
+		echo '<li><strong>'._('Description: ').'</strong> '.$_SESSION['wizard']['user_group_description'].'</li>';
+		echo '<li><strong>'._('Users:').'</strong> <ul>';
+		foreach ($_SESSION['wizard']['users'] as $user_login) {
+			$user = $userDB->import($user_login);
+			if (! is_object($user)) {
+				Logger::warning('main', '(admin/wizard) User \''.$user_login.'\' import failed');
+				continue;
+			}
+
+			echo '<li>'.$user->getAttribute('displayname').'</li>';
+		}
+		echo '</ul></li>';
+		echo '</ul>';
+	}
+	echo '</div>';
+	echo '</td>';
+	echo '<td style="width: 50px;">';
+	echo '</td>';
+	echo '<td style="text-align: left; vertical-align: top;">';
+	echo '<div class="container rounded" style="background: #eee;">';
+	if ($_SESSION['wizard']['use_apps'] == 'appgroups') {
+		$appgroup = new AppsGroup();
+
+		echo '<p style="font-weight: bold;">';
+		if (count($_SESSION['wizard']['appgroups']) == 1)
+			echo _('and this applications group');
+		else
+			echo _('and these applications groups');
+		echo '</p>';
+
+		echo '<ul>';
+		foreach ($_SESSION['wizard']['appgroups'] as $ag_id) {
+			$appgroup->fromDB($ag_id);
+
+			echo '<li>'.$appgroup->name.'</li>';
+		}
+		echo '</ul>';
+	} elseif ($_SESSION['wizard']['use_apps'] == 'apps') {
+		$applicationDB = ApplicationDB::getInstance();
+
+		echo '<p style="font-weight: bold;">';
+		echo _('and this newly created applications group');
+		echo '</p>';
+
+		echo '<ul>';
+		echo '<li><strong>'._('Name:').'</strong> '.$_SESSION['wizard']['application_group_name'].'</li>';
+		echo '<li><strong>'._('Description: ').'</strong> '.$_SESSION['wizard']['application_group_description'].'</li>';
+		echo '<li><strong>'._('Applications:').'</strong> <ul>';
+		foreach ($_SESSION['wizard']['apps'] as $application_id) {
+			$application = $applicationDB->import($application_id);
+			if (! is_object($application)) {
+				Logger::warning('main', '(admin/wizard) Application \''.$application_id.'\' import failed');
+				continue;
+			}
+
+			echo '<li>'.$application->getAttribute('name').'</li>';
+		}
+		echo '</ul></li>';
+		echo '</ul>';
+	}
+	echo '</div>';
+	echo '</td>';
+	echo '</tr>';
+	echo '</table>';
+
   echo '<form action="" method="post">';
   echo '<input type="hidden" name="from" value="step5" />';
   echo '<table style="width: 50%;" class="" border="0" cellspacing="1" cellpadding="5">';
