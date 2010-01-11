@@ -2,7 +2,8 @@
 /**
  * Copyright (C) 2008 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,9 +29,10 @@ if (! checkAuthorization('viewPublications'))
 show_default();
 
 function show_default() {
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
   $publications = array();
 
-  $groups_apps = getAllAppsGroups();
+  $groups_apps = $applicationsGroupDB->getList(true);
   if (is_null($groups_apps))
       $groups_apps = array();
   foreach($groups_apps as $i => $group_apps) {

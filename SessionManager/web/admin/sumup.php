@@ -37,6 +37,7 @@ echo'<h2>'._('List of users').'</h2>';
 
 $userDB = UserDB::getInstance();
 $userGroupDB = UserGroupDB::getInstance();
+$applicationsGroupDB = ApplicationsGroupDB::getInstance();
 
 $us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
 if (is_null($us)){
@@ -86,9 +87,8 @@ else{
 			if ( count($apps_grps) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($apps_grps as $agrp_id){
-					$agrp = new AppsGroup();
-					$agrp->fromDB($agrp_id);
-					if (is_object($agrp) && $agrp->isOK()) {
+					$agrp = $applicationsGroupDB->import($agrp_id);
+					if (is_object($agrp)) {
 						echo '<tr>';
 						echo '<td>('.$agrp->id.')</td>';
 						echo '<td><a href="appsgroup.php?action=manage&id='.$agrp->id.'">'.$agrp->name.'</a></td>';

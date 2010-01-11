@@ -46,15 +46,14 @@ class UsersGroup {
 	
 	public function appsGroups(){
 		Logger::debug('main', 'USERSGROUP::appsGroups (for id='.$this->getUniqueID().')');
-		
+		$ApplicationsGroupDB = ApplicationsGroupDB::getInstance();
 		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', $this->getUniqueID(), NULL);
 		if (is_array($groups)) {
 			$result = array();
 			foreach ($groups as $UGAG_liaison){
 // 				var_dump2($UGAG_liaison);
-				$g = new AppsGroup();
-				$g->fromDB($UGAG_liaison->group);
-				if ($g->isOK())
+				$g = $ApplicationsGroupDB->import($UGAG_liaison->group);
+				if (is_object($g))
 					$result[$UGAG_liaison->group]= $g;
 			}
 			return $result;

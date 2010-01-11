@@ -61,8 +61,9 @@ function action_add() {
   if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
     return false;
 
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
   $g = new AppsGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
-  $res = $g->insertDB();
+  $res = $applicationsGroupDB->add($g);
   if (!$res)
     die_error('Unable to create application group '.$res,__FILE__,__LINE__);
 
@@ -71,23 +72,23 @@ function action_add() {
 }
 
 function action_del($id) {
-  $group = new AppsGroup();
-  $group->fromDB($id);
-  if (! $group->isOK())
-    die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+  $group = $applicationsGroupDB->import($id);
+  if (! is_object($group))
+    die_error('Import of Group "'.$id.'" failed',__FILE__,__LINE__);
 
-  if (! $group->removeDB())
-    die_error('Unable to remove group "'.$id.'" is not OK',__FILE__,__LINE__);
+  if (! $applicationsGroupDB->remove($group))
+    die_error('Unable to remove group "'.$id.'"',__FILE__,__LINE__);
 
   popup_info(_('AppsGroup successfully deleted'));
   return true;
 }
 
 function action_modify($id) {
-  $group = new AppsGroup();
-  $group->fromDB($id);
-  if (! $group->isOK())
-    die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+  $group = $applicationsGroupDB->import($id);
+  if (! is_object($group))
+    die_error('Import Group "'.$id.'" failed',__FILE__,__LINE__);
 
   $has_change = false;
 
@@ -109,7 +110,7 @@ function action_modify($id) {
   if (! $has_change)
     return false;
 
-  if (! $group->updateDB())
+  if (! $applicationsGroupDB->update($group))
     die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 
   popup_info(_('AppsGroup successfully modified'));
@@ -117,7 +118,8 @@ function action_modify($id) {
 }
 
 function show_default() {
-  $groups = getAllAppsGroups();
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+  $groups = $applicationsGroupDB->getList(true);
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
 	$can_manage_applicationsgroups = isAuthorized('manageApplicationsGroups');
@@ -225,10 +227,10 @@ function show_default() {
 }
 
 function show_manage($id) {
-  $group = new AppsGroup();
-  $group->fromDB($id);
-  if (! $group->isOK())
-    die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+  $group = $applicationsGroupDB->import($id);
+  if (! is_object($group))
+    die_error('Import Group "'.$id.'" failed',__FILE__,__LINE__);
 
   if ($group->published) {
     $status = '<span class="msg_ok">'._('Enabled').'</span>';

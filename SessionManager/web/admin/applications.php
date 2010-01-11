@@ -199,6 +199,7 @@ function show_default($applicationDB) {
 }
 
 function show_manage($id, $applicationDB) {
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
   $app = $applicationDB->import($id);
   if (!is_object($app))
     return false;
@@ -268,7 +269,7 @@ function show_manage($id, $applicationDB) {
   }
 
   // App groups
-  $appgroups = getAllAppsGroups();
+  $appgroups = $applicationsGroupDB->getList(true);
   $groups_id = array();
   $liaisons = Abstract_Liaison::load('AppsGroup', $app->getAttribute('id'), NULL);
   foreach ($liaisons as $liaison)

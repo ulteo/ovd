@@ -567,6 +567,7 @@ function show_manage($id) {
   $has_users = (count($users) > 0);
 
   $userDB = UserDB::getInstance();
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
 
   $users_all = $userDB->getList(true);
   if (is_null($users_all))
@@ -589,14 +590,13 @@ function show_manage($id) {
   // Publications
   $groups_apps = array();
   foreach ( Abstract_Liaison::load('UsersGroupApplicationsGroup',  $id, NULL) as $group_a) {
-    $obj = new AppsGroup();
-    $obj->fromDB($group_a->group);
+    $obj = $applicationsGroupDB->import($group_a->group);
 
     if (is_object($obj))
 	$groups_apps[]= $obj;
   }
 
-  $groups_apps_all = getAllAppsGroups();
+  $groups_apps_all = $applicationsGroupDB->getList();
   $groups_apps_available = array();
   foreach($groups_apps_all as $group_apps) {
     if (! in_array($group_apps, $groups_apps))

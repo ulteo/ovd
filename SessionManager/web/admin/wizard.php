@@ -284,7 +284,8 @@ function show_step2() {
 }
 
 function show_step3() {
-  $appgroups = getAllAppsGroups();
+  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
+  $appgroups = $applicationsGroupDB->getList(true);
   $has_appgroups = (count($appgroups) > 0);
 
   $appgroup_selected = false;
@@ -494,7 +495,7 @@ function show_step5() {
 	echo '<td style="text-align: left; vertical-align: top;">';
 	echo '<div class="container rounded" style="background: #eee;">';
 	if ($_SESSION['wizard']['use_apps'] == 'appgroups') {
-		$appgroup = new AppsGroup();
+		$applicationsGroupDB = ApplicationsGroupDB::getInstance();
 
 		echo '<p style="font-weight: bold;">';
 		if (count($_SESSION['wizard']['appgroups']) == 1)
@@ -505,9 +506,9 @@ function show_step5() {
 
 		echo '<ul>';
 		foreach ($_SESSION['wizard']['appgroups'] as $ag_id) {
-			$appgroup->fromDB($ag_id);
-
-			echo '<li>'.$appgroup->name.'</li>';
+			$appgroup = $applicationsGroupDB->import($ag_id);
+			if (is_object($appgroup))
+				echo '<li>'.$appgroup->name.'</li>';
 		}
 		echo '</ul>';
 	} elseif ($_SESSION['wizard']['use_apps'] == 'apps') {
@@ -594,7 +595,8 @@ function do_validate() {
 			redirect();
 
 		$g = new AppsGroup(NULL, $_SESSION['wizard']['application_group_name'], $_SESSION['wizard']['application_group_description'], 1);
-		$res = $g->insertDB();
+		$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+		$res = $applicationsGroupDB->add($g);
 
 		if (!$res || !is_object($g) || $g->id == NULL)
 			popup_error(_('Cannot create application group'));

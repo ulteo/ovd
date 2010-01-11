@@ -39,25 +39,6 @@ function display_loadbar($percents_) {
 	return $normal_bar;
 }
 
-function getAllAppsGroups(){
-	Logger::debug('main','getAllAppsGroups');
-	$sql2 = SQL::getInstance();
-	$res = $sql2->DoQuery('SELECT @1,@2,@3,@4 FROM @5', 'id', 'name', 'description', 'published', $sql2->prefix.AppsGroup::$prefixless_tablename);
-	if ($res !== false){
-		$result = array();
-		$rows = $sql2->FetchAllResults($res);
-		foreach ($rows as $row){
-			$g = new AppsGroup($row['id'],$row['name'],$row['description'],$row['published']);
-			$result []= $g;
-		}
-		return $result;
-	}
-	else {
-		// not the right argument
-		return NULL;
-	}
-}
-
 function get_all_sourceslist_mirrors(){
 	$sql2 = SQL::getInstance();
 	$res = $sql2->DoQuery('SELECT @1 FROM @2','element', SOURCES_LIST_TABLE);
@@ -83,27 +64,12 @@ function init_db($prefs_) {
 		Logger::error('main', 'init_db sql conf not valid');
 		return false;
 	}
-	$APPSGROUP_TABLE = $sql_conf['prefix'].AppsGroup::$prefixless_tablename;
 	$LIAISON_TABLE = $sql_conf['prefix'].'liaison';
 	$USERSGROUP_APPLICATIONSGROUP_LIAISON_TABLE = $sql_conf['prefix'].'ug_ag_link';
 	$SOURCES_LIST_TABLE = $sql_conf['prefix'].'sources_list';
 
 	// we create the sql table
 	$sql2 = SQL::newInstance($sql_conf);
-
-	$APPSGROUP_structure = array(
-		'id' => 'int(8) NOT NULL auto_increment',
-		'name' => 'varchar(150) NOT NULL',
-		'description' => 'varchar(150) NOT NULL',
-		'published' => 'tinyint(1) NOT NULL');
-	$ret = $sql2->buildTable($APPSGROUP_TABLE, $APPSGROUP_structure, array('id'));
-	
-	if ( $ret === false) {
-		Logger::error('main', 'init_db table '.$APPSGROUP_TABLE.' fail to created');
-		return false;
-	}
-	else
-		Logger::debug('main', 'init_db table '.$APPSGROUP_TABLE.' created');
 
 	$SOURCES_LIST_structure = array(
 		'id' => 'int(8) NOT NULL auto_increment',

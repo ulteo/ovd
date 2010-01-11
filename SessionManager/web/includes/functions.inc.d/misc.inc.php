@@ -257,6 +257,10 @@ function application_cmp($o1, $o2) {
 	return strcmp($o1->getAttribute('name'), $o2->getAttribute('name'));
 }
 
+function appsgroup_cmp($o1, $o2) {
+	return strcmp($o1->name, $o2->name);
+}
+
 /* caching helpers */
 function get_from_cache($subdir_, $id_) {
 	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;

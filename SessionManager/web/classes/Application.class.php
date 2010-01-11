@@ -148,12 +148,13 @@ class Application {
 
 	public function groups(){
 		Logger::debug('main','APPLICATION::groups');
+		$ApplicationsGroupDB = ApplicationsGroupDB::getInstance();
 		$result = array();
 		$rows = Abstract_Liaison::load('AppsGroup', $this->attributes['id'],NULL);
 		foreach ($rows as $row){
-			$g = new AppsGroup();
-			$g->fromDB($row->group);
-			$result []= $g;
+			$g = $ApplicationsGroupDB->import($row->group);
+			if (is_object($g))
+				$result []= $g;
 		}
 		return $result;
 	}

@@ -394,6 +394,7 @@ function modify_application($applicationDB, $id_, $data_, $files_) {
 
 function show_manage($id, $applicationDB) {
 	global $types, $regular_types;
+	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
 	$app = $applicationDB->import($id);
 	if (!is_object($app))
 		return false;
@@ -402,7 +403,7 @@ function show_manage($id, $applicationDB) {
 	$can_manage_applications = isAuthorized('manageApplications');
 
 	// App groups
-	$appgroups = getAllAppsGroups();
+	$appgroups = $applicationsGroupDB->getList();
 	$groups_id = array();
 	$liaisons = Abstract_Liaison::load('AppsGroup', $app->getAttribute('id'), NULL);
 	foreach ($liaisons as $liaison)
