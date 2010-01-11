@@ -707,7 +707,7 @@ function show_manage($fqdn) {
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
 
-	if ($server->type == 'windows' && ! is_null($server->windows_domain)) {
+	if ($server->type == 'windows' && isset($server->windows_domain) && ! is_null($server->windows_domain)) {
 		echo '<tr><td>';
 		echo _('Inside Active Directory domain').': ';
 		echo '</td><td>';
