@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd"> 
+
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Installation on Novell Suse systems</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <year>2009</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <section>
+    <xi:include href="Installation.xml" xpointer="pre_title" />
+    <xi:include href="Installation.xml" xpointer="prerequisites" />
+
+    <para>
+      The servers used by Ulteo OVD need to be installed with
+      <emphasis role="strong">SUSE Linux Enterprise 11</emphasis>.
+    </para>
+
+    <para>
+      All operations need to be
+      done as <emphasis>superuser</emphasis> (root).
+    </para>
+
+    <simplesect>
+      <title>SELinux</title>
+      <para>
+        Ulteo OVD is not compatible with SELinux yet.
+      </para>
+      <para>
+        So please disable SELinux support:
+      </para>
+      <screen>
+        <![CDATA[
+# zypper remove selinux-policy]]>
+      </screen>
+    </simplesect>
+
+
+   <section>
+      <xi:include href="Installation.xml" xpointer="sql_title" />
+      <xi:include href="Installation.xml" xpointer="mysql_install" />
+
+      <itemizedlist>
+	<listitem>
+	  <para>
+	    Install the <emphasis>mysql</emphasis> package:
+	  </para>
+          <screen>
+            <![CDATA[
+# zypper install mysql]]>
+          </screen>
+        </listitem>
+
+	<listitem>
+	  <para>
+	    To start automatically MySQL when the system boots up
+	  </para>
+	  <screen>
+	    <![CDATA[
+# chkconfig mysql on]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Start the service
+	  </para>
+	  <screen>
+	    <![CDATA[
+# service mysql start]]>
+	  </screen>
+	</listitem>
+
+	<listitem>
+	  <para>
+	    Define the root mysql password
+	  </para>
+	  <screen>
+	    <![CDATA[
+# mysqladmin -u root password 'mysql_root_password']]>
+	  </screen>
+	</listitem>
+
+        <listitem>
+	  <xi:include href="Installation.xml" xpointer="mysql_db_create" />
+        </listitem>
+      </itemizedlist>
+      <beginpage />
+    </section>
+  </section>
+
+
+
+
+  <section>
+    <xi:include href="Installation.xml" xpointer="sm_title" />
+    <xi:include href="Installation.xml" xpointer="sm_definition" />
+
+  <section>
+    <title>Installation</title>
+
+    <itemizedlist>
+        <listitem>
+            <para>The first step is to enable the Ulteo RPM repository.</para>
+            <screen><![CDATA[
+# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/2.0 ovd]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Let rpm know about the ulteo signing key by executing the following commands:</para>
+            <screen><![CDATA[
+# wget http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key
+# rpm --import ulteo-archive.key
+# rm ulteo-archive.key]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Install the <emphasis>ovd-session-manager</emphasis> package:</para>
+            <screen><![CDATA[
+# zypper install ovd-session-manager]]>
+            </screen>
+        </listitem>
+
+        <listitem id="sm_install_sm_config">
+            <para>Launch the configuration tool</para>
+            <screen><![CDATA[
+# sm-config
+Admin login: admin
+Password:
+Retype password:
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0]:
+Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]:
+
+Options:
+* chroot download:  yes
+* chroot URL:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0
+* chroot directory: /usr/share/ulteo/sessionmanager/base.tar.gz
+* apache group:     apache
+* apache dir:       /etc/httpd/conf.d
+
+Is this correct? [Y/n] ]]>
+            </screen>
+        </listitem>
+
+
+        <listitem>
+            <para>Configure and start apache service</para>
+            <screen><![CDATA[
+# chkconfig apache2 on
+# service apache2 restart]]>
+            </screen>
+        </listitem>
+
+    </itemizedlist>
+
+    <xi:include href="Installation.xml" xpointer="sm_install_browse" />
+    <xi:include href="Installation.xml" xpointer="sm_install_browse_pic" />
+  </section>
+
+  <xi:include href="Installation.xml" xpointer="sessionmanager_configuration" />
+  </section>
+
+  <section id="aps">
+    <xi:include href="Installation.xml" xpointer="aps_title" />
+
+   <itemizedlist>
+        <listitem>
+            <para>If you have not done it yet for the Session Manager, 
+            enable the Ulteo RPM repository.</para>
+            <screen><![CDATA[
+# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/2.0 ovd]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Let rpm know about the ulteo signing key by executing the following commands:</para>
+            <screen><![CDATA[
+# wget http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key
+# rpm --import ulteo-archive.key
+# rm ulteo-archive.key]]>
+            </screen>
+        </listitem>
+        <listitem>
+            <para>Install the <emphasis>ovd-application-server</emphasis> package:</para>
+            <screen><![CDATA[
+# zypper install ovd-application-server]]>
+            </screen>
+        </listitem>
+
+     <listitem id="aps_install_aps_chroot_install">
+       <para>Launch the configuration tool</para>
+
+       <important>
+	 <para>
+	   If you are going to install an Application server on the
+	   same machine as your Session Manager, it's recommended to use:
+	   <itemizedlist>
+	     <listitem>
+	       <para>FQDN: 127.0.0.1</para>
+	     </listitem>
+	     <listitem>
+	       <para>SM URL: <ulink url="http://127.0.0.1/sessionmanager" /></para>
+	     </listitem>
+	   </itemizedlist>
+	 </para>
+       </important>
+
+       <screen>
+	 <![CDATA[
+# aps-chroot-install 
+Full Qualified Domain Name [aps.ulteo.com]: aps.ulteo.com
+Session Manager URL: http://sm.ulteo.com/sessionmanager
+Chroot installation path: /opt/ulteo
+
+Options:
+* FQDN: aps.ulteo.com
+* SM URL: http://sm.ulteo.com/sessionmanager
+* chroot path: /opt/ulteo
+* chroot download: yes
+* apache group: apache
+* apache dir: /etc/httpd/conf.d
+
+Is this correct? [Y/n] ]]>
+       </screen>
+     </listitem>
+
+     <listitem>
+       <para>Configure and start apache service</para>
+       <screen>
+	 <![CDATA[
+# chkconfig apache2 on
+# service apache2 restart]]>
+       </screen>
+     </listitem>
+
+     <listitem>
+       <para>Configure and start Ulteo service</para>
+       <screen>
+	 <![CDATA[
+# chkconfig ulteo-ovd on
+# service ulteo-ovd restart]]>
+       </screen>
+     </listitem>
+
+    </itemizedlist>
+
+    <xi:include href="Installation.xml" xpointer="aps_manage_sm" />
+    <beginpage />
+  </section>
+
+  <xi:include href="Installation.xml" xpointer="publication" />
+  <xi:include href="Installation.xml" xpointer="launch_session" />
+
+</article>
