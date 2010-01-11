@@ -335,15 +335,10 @@ function alternate(table) {
 	}
 }
 function repaint(table) {
-	var tableBodies = table.getElementsByTagName("tbody");
+	var tableBody = table_.getElementsByTagName('tbody');
+	tableBody = tableBody[0];
 
-	for (var i = 0; i < tableBodies.length; i++) {
-		var tableRows = tableBodies[i].getElementsByTagName("tr");
-		for (var j = 1; j < tableRows.length; j++) {
-			if (j % 2 == 1)
-				tableRows[j].className = 'content1';
-			else
-				tableRows[j].className = 'content2';
-		}
-	}
+	var tableRows = tableBody.getElementsByTagName('tr');
+	for (var j = 0; j < tableRows.length; j++)
+		tableRows[j].className = 'content'+((j % 2)+1);
 }
