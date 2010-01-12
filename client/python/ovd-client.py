@@ -35,6 +35,7 @@ import time
 import urllib
 import urllib2
 from xml.dom import minidom
+from xml.parsers.expat import ExpatError
 
 class Logger:
     _instance = None
