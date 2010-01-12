@@ -86,7 +86,7 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
 			'name' => 'varchar(150) NOT NULL',
-			'description' => 'varchar(150) NOT NULL',
+			'description' => 'text NOT NULL',
 			'type' => 'varchar(60)  NOT NULL',
 			'executable_path' => 'varchar(150) NOT NULL',
 			'icon_path' => 'varchar(150) default NULL',
