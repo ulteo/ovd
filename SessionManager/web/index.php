@@ -1,7 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -67,7 +68,10 @@ if (!in_array('UserDB', $mods_enable))
 $mod_user_name = 'UserDB_'.$prefs->get('UserDB', 'enable');
 $userDB = new $mod_user_name();
 
-if ($userDB->canShowList()) {
+$buf = $prefs->get('general', 'web_interface_settings');
+$show_list_users = $buf['show_list_users'];
+
+if ($show_list_users && $userDB->canShowList()) {
 	$list_users = $userDB->getList();
 	if (is_null($list_users))
 		die_error(_('Getting userlist failed'), __FILE__, __LINE__);
@@ -77,8 +81,6 @@ if ($userDB->canShowList()) {
 
 $password_field = $userDB->needPassword();
 
-$buf = $prefs->get('general', 'web_interface_settings');
-$show_list_users = $buf['show_list_users'];
 $testapplet = $buf['testapplet'];
 
 $advanced_settings_session = $prefs->get('general', 'session_settings_defaults');
