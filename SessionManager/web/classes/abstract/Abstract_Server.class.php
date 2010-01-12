@@ -131,10 +131,8 @@ class Abstract_Server {
 
 		$properties = Abstract_Server::loadProperties($buf);
 
-		foreach (Abstract_Server::$server_properties as $object_property => $db_property) {
-			if (isset($properties[$db_property]))
-				$buf->$object_property = $properties[$db_property];
-		}
+		foreach (Abstract_Server::$server_properties as $object_property => $db_property)
+			$buf->$object_property = ((isset($properties[$db_property]))?$properties[$db_property]:NULL);
 
 		return $buf;
 	}
@@ -176,7 +174,7 @@ class Abstract_Server {
 
 		$properties = array();
 		foreach ($rows as $row)
-			$properties[$row['property']] = $row['value'];
+			$properties[$row['property']] = unserialize($row['value']);
 
 		return $properties;
 	}
@@ -184,14 +182,17 @@ class Abstract_Server {
 	private static function saveProperty($server_, $object_property_, $db_property_, $old_property_) {
 		Logger::debug('main', 'Starting Abstract_Server::saveProperty for \''.$server_->fqdn.'\' object_property \''.$object_property_.'\' db_property \''.$db_property_.'\'');
 
+		$property_ = ((isset($server_->$object_property_))?serialize($server_->$object_property_):NULL);
+		$old_property_ = ((! is_null($old_property_))?serialize($old_property_):NULL);
+
 		$SQL = SQL::getInstance();
 
-		if (! is_null($old_property_) && (! isset($server_->$object_property_) || is_null($server_->$object_property_)))
+		if (! is_null($old_property_) && is_null($property_))
 			$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 AND @4 = %5 LIMIT 1', $SQL->prefix.'servers_properties', 'property', $db_property_, 'fqdn', $server_->fqdn);
-		elseif (is_null($old_property_) && (isset($server_->$object_property_) && ! is_null($server_->$object_property_)))
-			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES(%5,%6,%7)', $SQL->prefix.'servers_properties', 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $server_->$object_property_);
-		elseif (isset($server_->$object_property_) && $old_property_ != $server_->$object_property_)
-			$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', $SQL->prefix.'servers_properties', 'value', $server_->$object_property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
+		elseif (is_null($old_property_) && ! is_null($property_))
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES(%5,%6,%7)', $SQL->prefix.'servers_properties', 'fqdn', 'property', 'value', $server_->fqdn, $db_property_, $property_);
+		elseif ($old_property_ != $property_)
+			$SQL->DoQuery('UPDATE @1 SET @2=%3 WHERE @4 = %5 AND @6 = %7 LIMIT 1', $SQL->prefix.'servers_properties', 'value', $property_, 'property', $db_property_, 'fqdn', $server_->fqdn);
 
 		return true;
 	}
