@@ -30,3 +30,6 @@
   * New behavior for "--uniconify-by-display dpy" option:
     * uniconify all windows of 'dpy'
     * iconify all windows of all others display
+
+* ulteo-07_bugfix-01.patch:
+  * Fix a SegFault with windows in portal mode
