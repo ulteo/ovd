@@ -291,10 +291,12 @@ class Abstract_Server {
 			$applicationDB = new $mod_app_name();
 			
 			// remove the orphan applications
-			foreach ($apps as $an_application) {
-				if ($an_application->isOrphan()) {
-					Logger::debug('main', "Abstract_Server::delete $an_application is orphan");
-					$applicationDB->remove($an_application);
+			if (is_array($apps)) {
+				foreach ($apps as $an_application) {
+					if ($an_application->isOrphan()) {
+						Logger::debug('main', "Abstract_Server::delete $an_application is orphan");
+						$applicationDB->remove($an_application);
+					}
 				}
 			}
 		}
