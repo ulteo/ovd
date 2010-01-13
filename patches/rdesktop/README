@@ -24,3 +24,9 @@
 * ulteo-05_logoff.patch:
   Feature:
     * add option --logoff
+
+* ulteo-06_patch04-optimized:
+  * Disable "--iconify-by-display dpy" option
+  * New behavior for "--uniconify-by-display dpy" option:
+    * uniconify all windows of 'dpy'
+    * iconify all windows of all others display
