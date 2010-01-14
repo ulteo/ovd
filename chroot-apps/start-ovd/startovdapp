@@ -20,10 +20,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import glob
+import md5
 import os
+import random
 import re
 import subprocess
 import sys
+import time
 
 def append_to_file(pid, desktop):
     D = os.environ['OVD_SESSID_DIR']
@@ -106,6 +110,9 @@ class Hack:
         self.appmode = (os.environ.has_key("NODESKTOP") and os.environ["NODESKTOP"] == "1")
         self.oooHack = False
 
+        self.token = md5.md5("%f%f"%(random.random(), time.time())).hexdigest()
+        os.environ["OVD_INSTANCE_TOKEN"] = self.token
+
     def changeCmdLine(self, cmd_line):
         if self.appmode and cmd_line.startswith("ooffice"):
             self.oooHack = True
@@ -113,9 +120,48 @@ class Hack:
 
             cmd_line+=" -env:UserInstallation=%s"%(self.oooDir)
 
+        self.t0 = time.time()
         return cmd_line
 
+    def findPID(self):
+        uid = os.getuid()
+        pid = os.getpid()
+
+        files = glob.glob("/proc/[0-9]*")
+        for f in files:
+            if not os.path.isdir(f):
+                continue
+            
+            if not os.stat(f)[4] == uid:
+                continue
+
+            if int(os.path.basename(f)) == pid:
+                continue
+
+            try:
+                f_ = file(os.path.join(f, 'environ'), 'r')
+                buffer = f_.read()
+                f_.close()
+            except IOError, err:
+                continue
+
+            if not "OVD_INSTANCE_TOKEN=%s"%(self.token) in buffer:
+                continue
+            
+            return int(os.path.basename(f))
+
+        return None
+
     def onExit(self):
+        t1 = time.time()
+        delta = t1 - self.t0
+        if delta < 2:
+            print "Application have forked (quit in %f)"%(delta)
+            p = self.findPID()
+            while p is not None:
+                time.sleep(1)
+                p = self.findPID()
+
         if self.oooHack:
             os.system("rm -rf %s"%(self.oooDir))
 
