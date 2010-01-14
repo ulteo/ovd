@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -76,10 +76,10 @@ foreach ($icon_files as $image) {
 		$tab2[$buf[1]] = $image;
 }
 
-if (count($tab1 > 0)) {
+if (count($tab1) > 0) {
 	krsort($tab1);
 	$image = array_pop($tab1);
-} elseif (count($tab2 > 0)) {
+} elseif (count($tab2) > 0) {
 	ksort($tab2);
 	$image = array_pop($tab2);
 } else {
