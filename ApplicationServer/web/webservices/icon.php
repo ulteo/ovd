@@ -42,6 +42,12 @@ if ( get_classes_startwith('Imagick') == array()) {
 }
 
 $path = base64_decode($_GET['path']);
+if (! $path) {
+	Logger::error('main', 'Parameter path must be base64');
+	header('HTTP/1.1 400 Bad Request');
+	die('ERROR - Parameter path must be base64');
+}
+
 if ($path[0] == DIRECTORY_SEPARATOR) { // is it an absolute path ?
 	$icon_files = array($path);
 }
