@@ -42,8 +42,13 @@ if ( get_classes_startwith('Imagick') == array()) {
 }
 
 $path = base64_decode($_GET['path']);
-$icon_files = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
-$icon_files = explode("\n", $icon_files);
+if ($path[0] == DIRECTORY_SEPARATOR) { // is it an absolute path ?
+	$icon_files = array($path);
+}
+else {
+	$icon_files = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
+	$icon_files = explode("\n", $icon_files);
+}
 
 foreach ($icon_files as $k => $v) {
 	if ($v == '') {
