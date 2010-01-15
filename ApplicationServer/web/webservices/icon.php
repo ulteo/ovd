@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -42,8 +42,19 @@ if ( get_classes_startwith('Imagick') == array()) {
 }
 
 $path = base64_decode($_GET['path']);
-$icon_files = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
-$icon_files = explode("\n", $icon_files);
+if (! $path) {
+	Logger::error('main', 'Parameter path must be base64');
+	header('HTTP/1.1 400 Bad Request');
+	die('ERROR - Parameter path must be base64');
+}
+
+if ($path[0] == DIRECTORY_SEPARATOR) { // is it an absolute path ?
+	$icon_files = array($path);
+}
+else {
+	$icon_files = shell_exec('find '.CHROOT.'/usr/share/pixmaps '.CHROOT.'/usr/share/icons -iname \'*'.$path.'*\'');
+	$icon_files = explode("\n", $icon_files);
+}
 
 foreach ($icon_files as $k => $v) {
 	if ($v == '') {
@@ -76,10 +87,10 @@ foreach ($icon_files as $image) {
 		$tab2[$buf[1]] = $image;
 }
 
-if (count($tab1 > 0)) {
+if (count($tab1) > 0) {
 	krsort($tab1);
 	$image = array_pop($tab1);
-} elseif (count($tab2 > 0)) {
+} elseif (count($tab2) > 0) {
 	ksort($tab2);
 	$image = array_pop($tab2);
 } else {
