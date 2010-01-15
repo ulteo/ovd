@@ -85,14 +85,14 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 		$sql2 = MySQL::newInstance($mysql_conf['host'], $mysql_conf['user'], $mysql_conf['password'], $mysql_conf['database'], $mysql_conf['prefix']);
 		$APPLICATION_table_structure = array(
 			'id' => 'int(8) NOT NULL auto_increment',
-			'name' => 'varchar(150) NOT NULL',
+			'name' => 'text NOT NULL',
 			'description' => 'text NOT NULL',
-			'type' => 'varchar(60)  NOT NULL',
-			'executable_path' => 'varchar(150) NOT NULL',
-			'icon_path' => 'varchar(150) default NULL',
-			'package' => 'varchar(100) NOT NULL',
-			'desktopfile' => 'varchar(150) default NULL',
-			'mimetypes' => 'varchar(500) default NULL',
+			'type' => 'text  NOT NULL',
+			'executable_path' => 'text NOT NULL',
+			'icon_path' => 'text default NULL',
+			'package' => 'text NOT NULL',
+			'desktopfile' => 'text default NULL',
+			'mimetypes' => 'text default NULL',
 			'published' => 'tinyint(1) default \'0\'',
 			'static' => 'tinyint(1) default \'0\'');
 
