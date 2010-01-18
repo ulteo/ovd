@@ -78,8 +78,13 @@ if (! $exists) {
 		Logger::error('main', '(webservices/server_status) Server not OK : \''.$_GET['fqdn'].'\'');
 		die('Server not OK');
 	}
-} else
+} else {
 	$buf = Abstract_Server::load($_GET['fqdn']);
+	if (! $buf->isAuthorized()) {
+		Logger::error('main', '(webservices/server_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
+		die('Server not authorized');
+	}
+}
 
 $buf->setStatus($_GET['status']);
 
