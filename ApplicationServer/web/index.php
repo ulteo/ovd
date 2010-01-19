@@ -27,6 +27,12 @@ if (!isset($_SERVER['HTTP_REFERER']) && isset($_GET['token']))
 	$_SERVER['HTTP_REFERER'] = SESSIONMANAGER_URL;
 
 $buf1 = @parse_url($_SERVER['HTTP_REFERER']);
+if (! $buf1) {
+	if (! isset($_GET['token']) || $_GET['token'] == '')
+		redirect(SESSIONMANAGER_URL);
+
+	$buf1 = @parse_url(SESSIONMANAGER_URL);
+}
 $buf2 = @parse_url(SESSIONMANAGER_URL);
 $sessionmanager_url = $buf1['scheme'].'://'.$buf1['host'].$buf2['path'];
 
