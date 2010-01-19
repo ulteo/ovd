@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2009 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
 # Author Laurent CLOUET <laurent@ulteo.com> 2009
@@ -43,7 +43,7 @@ menu_spool() {
         case $type in
         'local')
             local path=$(echo $app| cut -d '|' -f3)
-            menu_put $id $path $menu_dir
+            menu_put $id "$path" $menu_dir
             ;;
         'virtual')
             local mode=$(echo $app| cut -d '|' -f3)
@@ -63,7 +63,7 @@ menu_spool() {
 
 menu_put() {
     local id=$1
-    local desktop=$2
+    local desktop="$2"
     local menu_dir=$3
 
     [ -f "$desktop" ] || return 1
