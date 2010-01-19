@@ -17,6 +17,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+
+# desktop files syntax is defined in the followin freedesktop
+# specification:
+# http://standards.freedesktop.org/desktop-entry-spec/latest
+
 import commands
 import ConfigParser
 import sys, os
@@ -24,12 +29,21 @@ from xml.dom import minidom
 
 class Application(dict):
     def __init__(self, filename):
-        self.desktop_keys = {'Name' : ['Name[en]','Name'], 
-                             'Exec' : ['Exec'],
+        # The spec defines that only Name and Exec keys are required
+        # for type Application
+        self.desktop_keys_required = ['Name', 'Exec']
+        
+        self.desktop_keys = {'Name' : ['Name[en]',
+                                       'name'], # Non standard but used by IBM Lotus Symphony
                              'Icon' : ['Icon'],
                              'Categories' : ['Categories'],
                              'Comment' : ['Comment','GenericName[en]', 'GenericName']
                              }
+
+        # Default values
+        self["Categories"] = ""
+        self["Comment"] = ""
+         
         self.filename = filename
 
     def toXmlNode(self):
@@ -41,7 +55,8 @@ class Application(dict):
         node_app.setAttribute("desktopfile", self.filename)
         
         node_exe = doc.createElement("executable")
-        node_exe.setAttribute("icon", self["Icon"])
+        if self.has_key("Icon"):
+            node_exe.setAttribute("icon", self["Icon"])
         node_exe.setAttribute("command", self["Exec"])
  
         node_app.appendChild(node_exe)
@@ -74,8 +89,18 @@ class Application(dict):
         if not parser.has_option('Desktop Entry', 'Type'):
             return False
         if not parser.get('Desktop Entry','Type') == "Application":
+            # the spec define three type: Application, Link and
+            # Directory
             print>> sys.stderr, "don't have Type=Application"
             return False
+
+
+        for key in self.desktop_keys_required:
+            if not parser.has_option('Desktop Entry', key):
+                print>> sys.stderr, filename,"don't have keys",key
+                return False
+
+            obj[key] = parser.get('Desktop Entry', key)
 
         for name,values in self.desktop_keys.items():
             flag = False
@@ -84,9 +109,6 @@ class Application(dict):
                     obj[name] = parser.get('Desktop Entry', alternative)
                     flag = True
                     break
-            if not flag:
-                print>> sys.stderr, filename,"don't have keys",values
-                return False
 
         return True
 
