@@ -20,3 +20,16 @@
     * add option --iconify-by-display dpy
     * add option --uniconify-by-display dpy
     * add option --destroy-by-display dpy
+
+* ulteo-05_logoff.patch:
+  Feature:
+    * add option --logoff
+
+* ulteo-06_patch04-optimized.patch:
+  * Disable "--iconify-by-display dpy" option
+  * New behavior for "--uniconify-by-display dpy" option:
+    * uniconify all windows of 'dpy'
+    * iconify all windows of all others display
+
+* ulteo-07_bugfix-01.patch:
+  * Fix a SegFault with windows in portal mode
