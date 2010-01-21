@@ -89,6 +89,7 @@ def _SessionProcessRequest(request):
 		packet_len = struct.unpack('>I', buffer)[0]
 	except Exception, e:
 		print "packet recv syntax error"
+		s.close()
 		return None
 	
 	data = s.recv(packet_len)

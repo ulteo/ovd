@@ -27,7 +27,7 @@ def _VchannelGetSocket():
 		return None
 	
 	path = "/tmp/channel_socket%s"%(os.environ["DISPLAY"])
-	if not os.path.isfile(path):
+	if not os.path.exists(path):
 		return None
 	
 	# todo if not read/write access ...
@@ -43,7 +43,7 @@ def VchannelOpen(name):
 	s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 	s.connect(path)
 	
-	VchannelWrite(name)
+	VchannelWrite(s, name)
 	return s
 
 def VchannelClose(s):
