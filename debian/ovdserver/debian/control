@@ -1,0 +1,12 @@
+Source: ovdserver
+Section: net
+Priority: extra
+Maintainer: Jeremy Desvages <jeremy@ulteo.com>
+Build-Depends: debhelper (>= 5)
+Standards-Version: 3.7.2
+
+Package: ulteo-ovdserver
+Architecture: any
+Depends: debconf, python2.5, imagemagick, passwd, adduser
+Description: Ulteo OvdServer
+ This daemon manages the Open Virtual Desktop servers.

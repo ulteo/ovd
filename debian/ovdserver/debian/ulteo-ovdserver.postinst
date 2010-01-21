@@ -1,0 +1,28 @@
+#! /bin/sh -e
+
+. /usr/share/debconf/confmodule
+db_version 2.0
+
+# Do nothing if we're not installing
+if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
+    exit 0
+fi
+
+CONFFILE="/etc/ulteo/ovdserver.conf"
+
+gen_conf()
+{
+    db_get ulteo-ovdserver/session_manager || true
+    SESSION_MANAGER="$RET"
+
+    sed -r -i "s,^(session_manager = )(.*)$,\1$SESSION_MANAGER," $CONFFILE
+}
+
+# set the configuration if we install
+gen_conf
+
+db_stop
+
+#DEBHELPER#
+
+exit 0
