@@ -45,7 +45,7 @@ class UsersGroup {
 	}
 	
 	public function appsGroups(){
-		Logger::debug('main', 'USERSGROUP::appsGroups');
+		Logger::debug('main', 'USERSGROUP::appsGroups (for id='.$this->getUniqueID().')');
 		
 		$groups = Abstract_Liaison::load('UsersGroupApplicationsGroup', $this->getUniqueID(), NULL);
 		if (is_array($groups)) {
@@ -60,17 +60,17 @@ class UsersGroup {
 			return $result;
 		}
 		else {
-			Logger::error('main', 'USERSGROUP::appsGroups result query is false');
+			Logger::error('main', 'USERSGROUP::appsGroups (for id='.$this->getUniqueID().') result query is false');
 			return NULL;
 		}
 	}
 	
 	public function usersLogin(){
-		Logger::debug('main', 'USERSGROUP::usersLogin');
+		Logger::debug('main', 'USERSGROUP::usersLogin (for id='.$this->getUniqueID().')');
 		$logins = array();
 		$prefs = Preferences::getInstance();
 		if (!$prefs) {
-			Logger::critical('main', 'USERSGROUP::usersLogin get prefs failed');
+			Logger::critical('main', 'USERSGROUP::usersLogin (for id='.$this->getUniqueID().') get prefs failed');
 			die_error('get Preferences failed', __FILE__, __LINE__);
 		}
 		$user_default_group = $prefs->get('general', 'user_default_group');
