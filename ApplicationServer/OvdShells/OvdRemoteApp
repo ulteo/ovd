@@ -1,0 +1,93 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2009 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gauvain@ulteo.com>
+# Author Julien LANGLOIS <julien@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import struct
+import sys
+import threading
+import time
+
+from ovd_shells import Platform
+
+debug_mode=False
+
+if debug_mode:
+	import os
+	import sys
+	
+	path = os.path.join(os.path.expanduser('~'), "dump.txt")
+	buf = file(path,"a")
+	sys.stderr.close()
+	sys.stderr = buf
+	sys.stdout.close()
+	sys.stdout = buf
+	print "#################################################"
+
+
+
+Platform.startSeamless()
+
+vchannel = Platform.VirtualChannel("ovdapp")
+
+if not vchannel.Open():
+	print "marche po"
+	sys.exit(1)
+
+
+buf = struct.pack(">B", 0x00)
+vchannel.Write(buf)
+
+im = Platform.InstancesManager(vchannel)
+im.start()
+
+print "read loop"
+
+while 1:
+	# Read a complete packet
+	# so we assume a maximum packet size is 512
+	packet = vchannel.Read(512)
+	if packet is None:
+		print "error at read"
+		time.sleep(0.5)
+		continue
+	
+	order = packet[0]
+	if order == "\x01":
+		token = struct.unpack('>I', packet[1:5])[0]
+		app_id = struct.unpack('>I', packet[5:9])[0]
+		
+		print "recv startapp order %d %d"%(token, app_id)
+		im.pushJob((pushJob, token))
+	
+	
+	elif order == "\x04":
+		# logoff
+		break
+	
+	else:
+		print "unkonwn message %X"%(order)
+	
+
+im.stop()
+
+vchannel.Close()
+
+sys.exit(0)

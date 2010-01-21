@@ -1,0 +1,64 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2009,2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Gauvain POCENTEK <gauvain@ulteo.com>
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import os
+import sys
+
+from ovd_shell.CheckFork import CheckFork
+from ovd_shell.Monitoring import Monitoring
+
+
+# stop if we don't have the needed env vars
+if not os.environ.has_key('OVD_SESSID_DIR'):
+	sys.exit(1)
+
+if not len(sys.argv) > 1:
+	sys.exit(1)
+
+if not sys.arv[1].isdigit():
+	sys.exit(1)
+
+application_id = int(sys.argv[1])
+args = sys.argv[1:]
+
+application = Application(application_id, args)
+
+cmd = application.getBaseCommand()
+if cmd is None:
+	sys.exit(1)
+
+cmd = application.transformCommand(cmd)
+
+modules = []
+modules.append(CheckFork(application))
+modules.append(Monitoring(application))
+
+
+for module in modules:
+	module.beforeStartApp()
+
+os.system(cmd)
+
+for module in modules:
+	module.afterStartApp()
+
+sys.exit(0)
