@@ -7,6 +7,6 @@ Standards-Version: 3.7.2
 
 Package: ulteo-ovdserver
 Architecture: any
-Depends: debconf, python2.5, imagemagick, passwd, adduser
+Depends: debconf, python2.5, python-xrdp, imagemagick, passwd, adduser
 Description: Ulteo OvdServer
  This daemon manages the Open Virtual Desktop servers.
