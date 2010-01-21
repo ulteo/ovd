@@ -27,67 +27,64 @@ import time
 
 from ovd_shells import Platform
 
-debug_mode=False
-
-if debug_mode:
-	import os
-	import sys
+def main():
+	seamPid = Platform.launch("seamlessrdpshell", False)
 	
-	path = os.path.join(os.path.expanduser('~'), "dump.txt")
-	buf = file(path,"a")
-	sys.stderr.close()
-	sys.stderr = buf
-	sys.stdout.close()
-	sys.stdout = buf
-	print "#################################################"
-
-
-
-Platform.startSeamless()
-
-vchannel = Platform.VirtualChannel("ovdapp")
-
-if not vchannel.Open():
-	print "marche po"
-	sys.exit(1)
-
-
-buf = struct.pack(">B", 0x00)
-vchannel.Write(buf)
-
-im = Platform.InstancesManager(vchannel)
-im.start()
-
-print "read loop"
-
-while 1:
-	# Read a complete packet
-	# so we assume a maximum packet size is 512
-	packet = vchannel.Read(512)
-	if packet is None:
-		print "error at read"
-		time.sleep(0.5)
-		continue
+	vchannel = Platform.VirtualChannel("ovdapp")
+	if not vchannel.Open():
+		print "Unable to init vchannel"
+		sys.exit(1)
 	
-	order = packet[0]
-	if order == "\x01":
-		token = struct.unpack('>I', packet[1:5])[0]
-		app_id = struct.unpack('>I', packet[5:9])[0]
+	
+	buf = struct.pack(">B", 0x00)
+	vchannel.Write(buf)
+	
+	im = Platform.InstancesManager(vchannel)
+	im.start()
+	
+	print "read loop"
+	
+	while 1:
+		# Read a complete packet
+		# so we assume a maximum packet size is 512
+		packet = vchannel.Read(512)
+		if packet is None:
+			print "error at read"
+			time.sleep(0.5)
+			continue
 		
-		print "recv startapp order %d %d"%(token, app_id)
-		im.pushJob((pushJob, token))
+		order = packet[0]
+		if order == "\x01":
+			token = struct.unpack('>I', packet[1:5])[0]
+			app_id = struct.unpack('>I', packet[5:9])[0]
+			
+			print "recv startapp order %d %d"%(token, app_id)
+			im.pushJob((pushJob, token))
+		
+		
+		elif order == "\x04":
+			# logoff
+			break
+		
+		else:
+			print "unkonwn message %X"%(order)	
 	
+	im.stop()
 	
-	elif order == "\x04":
-		# logoff
-		break
-	
-	else:
-		print "unkonwn message %X"%(order)
-	
+	vchannel.Close()
+	sys.exit(0)
 
-im.stop()
 
-vchannel.Close()
-
-sys.exit(0)
+if __name__ == "__main__":
+	if True:
+		import os
+		import sys
+		
+		path = os.path.join(os.path.expanduser('~'), "dump.txt")
+		buf = file(path, "a")
+		sys.stderr.close()
+		sys.stderr = buf
+		sys.stdout.close()
+		sys.stdout = buf
+		print "#################################################"
+	main()

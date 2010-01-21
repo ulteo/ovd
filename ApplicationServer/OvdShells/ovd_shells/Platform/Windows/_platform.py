@@ -35,6 +35,8 @@ def launch(cmd, wait=False):
 	
 	win32file.CloseHandle(hProcess)
 	win32file.CloseHandle(hThread)
+	
+	return dwProcessId
 
 
 def startDesktop():

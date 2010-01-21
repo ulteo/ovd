@@ -25,15 +25,22 @@ from ovd_shell.VirtualChannel import VirtualChannel as AbstractVirtualChannel
 class VirtualChannel(AbstractVirtualChannel):
 	def __init__(self, name_):
 		AbstractVirtualChannel.__init__(self, name_)
+		self._handle = None
+	
 	
 	def Open(self):
-		pass
+		self._handle = XrdpApi.VchannelOpen(name_)
+		return self._handle != None
+	
 	
 	def Close(self):
-		pass
+		if self._handle is not None:
+			XrdpApi.VchannelClose(self._handle)
+	
 	
 	def Read(self, size):
-		pass
+		return XrdpApi.VchannelRead(self._handle)
+	
 	
 	def Write(self, message):
-		pass
+		return XrdpApi.VchannelWrite(self._handle, message)
