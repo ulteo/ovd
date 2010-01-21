@@ -51,6 +51,7 @@ fi
 
 AC_CONFIG_FILES([
 Makefile
+config/Makefile
 ovd/Makefile
 ovd/Communication/Makefile
 ovd/Platform/Makefile

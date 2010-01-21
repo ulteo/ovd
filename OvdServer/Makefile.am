@@ -1,4 +1,4 @@
-SUBDIRS = ovd
+SUBDIRS = config ovd
 
 scripts_DATA = simpleServer.py
 
