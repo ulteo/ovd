@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@ulteo.com>
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -27,7 +28,7 @@ import re
 # take care about the "(" or ")" characters ...
 #
 def list2cmdline(args):
-    return " ".join('"'+arg+'"' for arg in args)
+	return " ".join('"'+arg+'"' for arg in args)
 
 
 class Application:
