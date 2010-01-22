@@ -21,10 +21,9 @@
 import win32event
 import win32file
 
+from ovd_shells.InstancesManager import InstancesManager as AbstractInstancesManager
 
-from ovd_shell.InstanceManager import InstanceManager as AbstractInstanceManager
-
-class InstanceManager(AbstractInstanceManager):
+class InstancesManager(AbstractInstancesManager):
 	def launch(self, cmd):
 		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
 		win32file.CloseHandle(hThread)

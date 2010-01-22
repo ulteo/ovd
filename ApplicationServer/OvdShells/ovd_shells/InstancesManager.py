@@ -20,7 +20,7 @@
 
 import threading
 
-class InstanceManager(threading.Thread):
+class InstancesManager(threading.Thread):
 	def __init__(self, vchannel):
 		self.vchannel = vchannel
 		self.jobs = []
@@ -36,7 +36,7 @@ class InstanceManager(threading.Thread):
 	def run(self):
 		# todo mutex lock
 		while len(self.job) != 0:
-			(token, app) self.job.pop()
+			(token, app) = self.job.pop()
 			cmd = "notepad" # harcoded ...
 			
 			instance = self.launch(cmd)

@@ -22,9 +22,9 @@ import os
 import signal
 import time
 
-from ovd_shell.InstanceManager import InstanceManager as AbstractInstanceManager
+from ovd_shells.InstancesManager import InstancesManager as AbstractInstancesManager
 
-class InstanceManager(AbstractInstanceManager):
+class InstanceManager(AbstractInstancesManager):
 	def launch(self, cmd):
 		pid = os.fork()
 		

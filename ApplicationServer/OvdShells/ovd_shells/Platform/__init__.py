@@ -36,7 +36,6 @@ if get_platform() == "linux":
 elif get_platform() == "windows":
 	from Windows._platform import *
 	from Windows import InstancesManager
-	#from WtsApi32 import VirtualChannel
 
 else:
 	raise Exception("Not supported platform")
