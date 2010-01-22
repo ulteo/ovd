@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2009 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008
-# Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2009,2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -22,7 +22,6 @@
 import httplib
 import urllib
 import urllib2
-import socket
 from xml.dom import minidom
 from xml.dom.minidom import Document
 
@@ -177,6 +176,13 @@ class Dialog(AbstractDialog):
 		return True
 	
 	
+	def response_error(self, code):
+		self.send_response(code)
+		self.send_header('Content-Type', 'text/html')
+		self.end_headers()
+		self.wfile.write('')
+	
+	
 	def req_server_status(self, request):
 		doc = Document()
 		rootNode = doc.createElement('server')
@@ -235,14 +241,14 @@ class Dialog(AbstractDialog):
 		
 		if not args.has_key('since'):
 			Logger.warn("webservices_server_log: no since arg")
-			self.send_error(httplib.BAD_REQUEST)
+			self.response_error(httplib.BAD_REQUEST)
 			return
 		
 		try:
 			since = int(args['since'])
 		except:
 			Logger.warn("webservices_server_log: since arg not int")
-			self.send_error(httplib.BAD_REQUEST)
+			self.response_error(httplib.BAD_REQUEST)
 			return
 
 		(last, data) = self.getLogSince(since)
