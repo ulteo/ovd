@@ -28,39 +28,58 @@ from ovd_shells.CheckFork import CheckFork
 from ovd_shells.Monitoring import Monitoring
 from ovd_shells.Application import Application
 
+def main():
+	# stop if we don't have the needed env vars
+	if not os.environ.has_key('OVD_SESSID_DIR'):
+		print "no 'OVD_SESSID_DIR' env var define"
+		sys.exit(1)
+	
+	if not len(sys.argv) > 1:
+		print "no app_id given"
+		sys.exit(1)
+	
+	if not sys.argv[1].isdigit():
+		print "arg is not a integer"
+		sys.exit(1)
+	
+	application_id = int(sys.argv[1])
+	args = sys.argv[1:]
+	
+	application = Application(application_id, args)
+	
+	cmd = application.getBaseCommand()
+	if cmd is None:
+		print "No available command"
+		sys.exit(1)
+	
+	cmd = application.transformCommand(cmd)
+	
+	modules = []
+	modules.append(CheckFork(application))
+	modules.append(Monitoring(application))
+	
+	
+	for module in modules:
+		module.beforeStartApp()
+	
+	os.system(cmd)
+	
+	for module in modules:
+		module.afterStartApp()
+	
+	sys.exit(0)
 
-# stop if we don't have the needed env vars
-if not os.environ.has_key('OVD_SESSID_DIR'):
-	sys.exit(1)
 
-if not len(sys.argv) > 1:
-	sys.exit(1)
-
-if not sys.argv[1].isdigit():
-	sys.exit(1)
-
-application_id = int(sys.argv[1])
-args = sys.argv[1:]
-
-application = Application(application_id, args)
-
-cmd = application.getBaseCommand()
-if cmd is None:
-	sys.exit(1)
-
-cmd = application.transformCommand(cmd)
-
-modules = []
-modules.append(CheckFork(application))
-modules.append(Monitoring(application))
-
-
-for module in modules:
-	module.beforeStartApp()
-
-os.system(cmd)
-
-for module in modules:
-	module.afterStartApp()
-
-sys.exit(0)
+if __name__ == "__main__":
+	if True:
+		import os
+		import sys
+		
+		path = os.path.join(os.path.expanduser('~'), "dump.txt")
+		buf = file(path, "a")
+		#sys.stderr.close()
+		sys.stderr = buf
+		#sys.stdout.close()
+		sys.stdout = buf
+		print "#################################################"
+	main()

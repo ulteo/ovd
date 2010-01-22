@@ -59,7 +59,7 @@ def main():
 			app_id = struct.unpack('>I', packet[5:9])[0]
 			
 			print "recv startapp order %d %d"%(token, app_id)
-			im.pushJob((pushJob, token))
+			im.pushJob((app_id, token))
 		
 		
 		elif order == "\x04":
