@@ -34,7 +34,7 @@ if not os.environ.has_key('OVD_SESSID_DIR'):
 if not len(sys.argv) > 1:
 	sys.exit(1)
 
-if not sys.arv[1].isdigit():
+if not sys.argv[1].isdigit():
 	sys.exit(1)
 
 application_id = int(sys.argv[1])
