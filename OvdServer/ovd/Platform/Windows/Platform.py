@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -134,7 +135,7 @@ class Platform(AbstractPlatform):
 	def getADDomain():
 		try:
 			domain = win32api.GetComputerNameEx(win32con.ComputerNameDnsDomain)
-		except Excpetion, e:
+		except Exception, e:
 			Logger.warn("System::getADDomain: exception '%s'"%(str(e)))
 			return False
 			

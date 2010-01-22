@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -68,7 +69,7 @@ class TS(AbstractTS):
 			
 			domain = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSDomainName)
 			if domain.lower() != domain_.lower():
-				Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], self.user.login))
+				Logger.debug("Session %s: ts session %d is not from the user %s but from a AD user"%(session["SessionId"], username_))
 				continue
 			
 			return session["SessionId"]

@@ -22,6 +22,8 @@
 import httplib
 import urllib
 import urllib2
+import cgi
+import base64
 from xml.dom import minidom
 from xml.dom.minidom import Document
 
