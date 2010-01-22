@@ -21,13 +21,16 @@
 
 from ovd.Logger import Logger
 
+SESSION_STATUS_INIT = "init"
+
 class Session:
-	def __init__(self, infos):
-		self.status = infos["status"]
-		self.user_login = infos["login"]
-		self.applications = infos["applications"]
-		self.parameters = infos["parameters"]
-	
+	def __init__(self, id_, user_, parameters_, applications_):
+		self.id = id_
+		self.user = user_
+		self.parameters = parameters_
+		self.applications = applications_
+		
+		self.status = SESSION_STATUS_INIT
 	
 	def install_client(self):
 		pass

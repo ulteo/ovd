@@ -28,7 +28,9 @@ from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
 from ovd.Platform import Platform
+from ovd.Platform import Session
 from ovd.Platform import TS
+from ovd.Platform import User
 from ovd import util
 
 from ovd.Communication.Dialog import Dialog as AbstractDialog
@@ -83,8 +85,8 @@ class Dialog(AbstractDialog):
 	def session2xmlstatus(session):
 		doc = Document()
 		rootNode = doc.createElement('session')
-		rootNode.setAttribute("id", session["id"])
-		rootNode.setAttribute("status", session["status"])
+		rootNode.setAttribute("id", session.id)
+		rootNode.setAttribute("status", session.status)
 		doc.appendChild(rootNode)
 		
 		return doc
@@ -156,8 +158,7 @@ class Dialog(AbstractDialog):
 			session["parameters"] = {}
 			for node in sessionNode.getElementsByTagName("parameter"):
 				session["parameters"][node.getAttribute("name")] = node.getAttribute("value")
-			
-			
+		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
 			doc = Document()
@@ -166,7 +167,11 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		self.role_instance.sessions[session["id"]] = session
+		
+		user = User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
+		session = Session(session["id"], user, session["parameters"], session["applications"])
+		
+		self.role_instance.sessions[session.id] = session
 		self.role_instance.sessions_spooler.put(("create", session))
 		
 		return self.req_answer(self.session2xmlstatus(session))
@@ -176,9 +181,8 @@ class Dialog(AbstractDialog):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
 		else:
-			session = {}
-			session["id"] = session_id
-			session["status"] = "unknown"
+			session = Session(session_id, None, None, None)
+			session.status = "unknown"
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
@@ -186,12 +190,11 @@ class Dialog(AbstractDialog):
 	def req_session_destroy(self, session_id):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
-			session["status"] = "wait_destroy"
+			session.status = "wait_destroy"
 			self.role_instance.sessions_spooler.put(("destroy", session))
 		else:
-			session = {}
-			session["id"] = session_id
-			session["status"] = "unknown"
+			session = Session(session_id, None, None, None)
+			session.status = "unknown"
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
@@ -256,11 +259,8 @@ class Dialog(AbstractDialog):
 			
 			return self.req_answer(doc)
 		
-		session = {}
-		session["status"] = "unknown"
-		session["login"] = login
-		session["tsid"] = ret
-		self.role_instance.sessions_spooler.put(("logoff", session))
+		user = User(login, {"tsid": ret})
+		self.role_instance.sessions_spooler.put(("logoff", user))
 		
 		return self.req_answer(document)
 	

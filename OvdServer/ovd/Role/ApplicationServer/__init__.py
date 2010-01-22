@@ -105,8 +105,8 @@ class ApplicationServer(AbstractRole):
 	def send_session_status(self, session):
 		doc = Document()
 		rootNode = doc.createElement('session')
-		rootNode.setAttribute("id", session["id"])
-		rootNode.setAttribute("status", session["status"])
+		rootNode.setAttribute("id", session.id)
+		rootNode.setAttribute("status", session.status)
 		doc.appendChild(rootNode)
 		
 		response = self.main_instance.dialog.send_packet("/session/status", doc)
@@ -120,7 +120,7 @@ class ApplicationServer(AbstractRole):
 		return None
 		
 	def session_switch_status(self, session, status):
-		session["status"] = status
+		session.status = status
 		Logger.info("Session switch status")
 		self.send_session_status(session)
 	
@@ -136,17 +136,17 @@ class ApplicationServer(AbstractRole):
 		
 		while 1:
 			for session in self.sessions.values():
-				ts_id = TS.getSessionID(session["login"])
+				ts_id = TS.getSessionID(session.user.name)
 				
 				if ts_id is None:
-					if session["status"] in ["logged", "disconnected"]:
+					if session.status in ["logged", "disconnected"]:
 						Logger.error("Weird, running session no longer exist")
 						self.session_switch_status(session, "wait_destroy")
 						self.sessions_spooler.put(("destroy", session))
 					continue
 				
 				ts_status = TS.getState(ts_id)
-				if session["status"] == "ready":
+				if session.status == "ready":
 					if ts_status is TS.STATUS_LOGGED:
 						self.session_switch_status(session, "logged")
 						continue
@@ -155,7 +155,7 @@ class ApplicationServer(AbstractRole):
 						self.session_switch_status(session, "disconnected")
 						continue
 					
-				if session["status"] == "logged" and ts_status is TS.STATUS_DISCONNECTED:
+				if session.status == "logged" and ts_status is TS.STATUS_DISCONNECTED:
 					self.session_switch_status(session, "disconnected")
 					continue
 			

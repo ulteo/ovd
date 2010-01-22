@@ -25,7 +25,6 @@ import signal
 import sys
 
 from ovd.Communication.HttpServer import HttpServer as Communication
-#from ovd.Communication.UnixSocketServer import UnixSocketServer as Communication
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer

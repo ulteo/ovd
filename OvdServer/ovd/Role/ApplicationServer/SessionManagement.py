@@ -36,70 +36,66 @@ class SessionManagement(Thread):
 	def run(self):
 		while True:
 			#Logger.debug("%s wait job"%(str(self)))
-			(request, session) = self.queue.get()
+			(request, obj) = self.queue.get()
 			
 			if request == "create":
+				session = obj
 				self.create_session(session)
 			elif request == "destroy":
+				session = obj
 				self.destroy_session(session)
 			elif request == "logoff":
-				self.destroy_user(session)
+				user = obj
+				self.destroy_user(user)
 	
 	
 	def create_session(self, session):
-		Logger.info("SessionManagement::create %s"%(session["id"]))
+		Logger.info("SessionManagement::create %s"%(session.id))
 		
-		if Platform.getInstance().userExist(session["login"]):
+		if Platform.getInstance().userExist(session.user.name):
 			Logger.error("unable to create session: user already exist")
 			self.aps_instance.session_switch_status(session, "error")
 			return
 		
 		
-		rr = Platform.getInstance().userAdd(session["login"], session["displayName"], session["password"], [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name])
+		session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
+		
+		if True: # todo is parameter["mode"] == "desktop"
+			session.user.infos["shell"] = "OvdDesktop"
+		else:
+			session.user.infos["shell"] = "OvdRemoteApps"
+		
+		rr = session.user.create()
 		if rr is False:
 			Logger.error("unable to create session")
 			self.aps_instance.session_switch_status(session, "error")
 			return
 		
-		s = Session(session)
-		s.install_client()
+		session.install_client()
 		
 		self.aps_instance.session_switch_status(session, "ready")
 	
 	
 	def destroy_session(self, session):
-		Logger.info("SessionManagement::destroy %s"%(session["id"]))
+		Logger.info("SessionManagement::destroy %s"%(session.id))
 		
-		sessid = TS.getSessionID(session["login"])
+		sessid = TS.getSessionID(session.user.name)
 		if sessid is not None:
-			session["tsid"] = sessid
-		self.destroy_user(session)
-		del(self.aps_instance.sessions[session["id"]])
+			session.user.infos["tsid"] = sessid
+		self.destroy_user(session.user)
+		del(self.aps_instance.sessions[session.id])
 	
 	
-	def destroy_user(self, session):
-		Logger.info("SessionManagement::logoff_user %s"%(session["login"]))
+	def destroy_user(self, user):
+		Logger.info("SessionManagement::logoff_user %s"%(user.name))
 		
-		if session.has_key("tsid"):
-			sessid = session["tsid"]
+		if user.infos.has_key("tsid"):
+			sessid = user.infos["tsid"]
 			
 			status = TS.getState(sessid)
 			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
-				Logger.info("must log off ts session %s user %s"%(sessid, session["login"]))
+				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
 				
 				TS.logoff(sessid)
 		
-		session["applications"] = []
-		session["parameters"] = {}
-		s = Session(session)
-		s.uninstall_client()
-		
-		
-		if Platform.getInstance().userExist(session["login"]):
-			Logger.info("remove user %s "%(session["login"]))
-		
-			rr = Platform.getInstance().userRemove(session["login"])
-			if rr is False:
-				Logger.error("unable to remove session")
-		
-		session["status"] = "unknown"
+		user.destroy()

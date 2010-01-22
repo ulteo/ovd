@@ -60,9 +60,11 @@ class Platform:
 if get_platform() == "linux":
 	from Linux.Session import Session
 	from Linux.TS import TS
+	from Linux.User import User
 elif get_platform() == "windows":
 	from Windows.Session import Session
 	from Windows.TS import TS
+	from Windows.User import User
 else:
 	raise Exception("Not supported platform")
 

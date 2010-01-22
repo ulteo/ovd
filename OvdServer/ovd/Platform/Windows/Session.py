@@ -37,11 +37,6 @@ from Platform import Platform
 import Reg
 
 class Session(AbstractSession):
-	def __init__(self, infos):
-		AbstractSession.__init__(self, infos)
-		self.user_password = infos["password"]
-	
-	
 	def install_client(self):
 		(logon, profileDir) = self.init()
 		
@@ -77,35 +72,12 @@ class Session(AbstractSession):
 				if os.path.exists(final_file):
 					os.remove(final_file)
 				win32file.CopyFile(app_target, final_file, True)
-
-
+	
+	
 	
 	def uninstall_client(self):
-		sid = self.getSid()
-		if sid is None:
-			return False
-
-		if not self.deleteProfile(sid):
-			if not self.unload(sid):
-				Logger.error("Unable to unload User reg key")
-				return False
-			
-			if not self.deleteProfile(sid):
-				Logger.error("Unable to delete profile")
-				return False
+		self.user.destroy()
 		
-		
-		# ToDo: remove the HKLM regitry key
-		
-		return True
-	
-	
-	def deleteProfile(self, sid):
-		try:
-			win32profile.DeleteProfile(sid)
-		except:
-			return False
-	
 		return True
 	
 	
@@ -116,10 +88,10 @@ class Session(AbstractSession):
 		#win32ts.WTSSetUserConfig(None, self.login , win32ts.WTSUserConfigInitialProgram, r"OVDShell.exe")
 		#win32ts.WTSSetUserConfig(None, self.login , win32ts.WTSUserConfigfInheritInitialProgram, False)
 	
-		logon = win32security.LogonUser(self.user_login, None, self.user_password, win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
+		logon = win32security.LogonUser(self.user.name, None, self.user.infos["password"], win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
 		
 		data = {}
-		data["UserName"] = self.user_login
+		data["UserName"] = self.user.name
 		
 		hkey = win32profile.LoadUserProfile(logon, data)
 		#self.init_ulteo_registry(sid)
@@ -146,16 +118,7 @@ class Session(AbstractSession):
 		
 		return True
 	
-	def getSid(self):
-		#get the sid
-		try:
-			sid, _, _ = win32security.LookupAccountName(None, self.user_login)
-			sid = win32security.ConvertSidToStringSid(sid)
-		except Exception,e:
-			Logger.warn("Unable to get SID: %s"%(str(e)))
-			return None
-		
-		return sid
+
 	
 	
 	def overwriteDefaultRegistry(self, directory):
