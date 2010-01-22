@@ -24,7 +24,7 @@ import os
 from Module import Module
 
 class Monitoring(Module):
-	def beforeStartApp():
+	def beforeStartApp(self):
 		path = os.path.join(os.environ['OVD_SESSID_DIR'], "apps")
 		buf = "%d %d%s"%(os.getpid(), self.application.id, os.linesep)
 		
@@ -33,7 +33,7 @@ class Monitoring(Module):
 		f.close()
 	
 	
-	def afterStartApp():
+	def afterStartApp(self):
 		path = os.path.join(os.environ['OVD_SESSID_DIR'], "apps")
 		subject = str(os.getpid())
 		
@@ -49,5 +49,5 @@ class Monitoring(Module):
 			buf2.append(line)
 		
 		f = file(path, "w")
-		buf = f.witelines(buf2)
+		buf = f.writelines(buf2)
 		f.close()

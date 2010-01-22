@@ -20,6 +20,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import re
+
+#
+# the subprocess.list2cmdline function doesn't
+# take care about the "(" or ")" characters ...
+#
+def list2cmdline(args):
+    return " ".join('"'+arg+'"' for arg in args)
 
 
 class Application:
@@ -51,7 +59,7 @@ class Application:
 		args_ = self.args
 		
 		if "%F" in cmd_:
-        		return cmd_.replace("%F", list2cmdline(args_))
+			return cmd_.replace("%F", list2cmdline(args_))
 		
 		if "%U" in cmd_:
 			b = []
