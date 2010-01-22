@@ -21,7 +21,7 @@
 import os
 import socket
 from xml.dom import minidom
-import XrdpApi
+import xrdp
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.TS import TS as AbstractTS
@@ -31,7 +31,7 @@ from ovd.Role.ApplicationServer.TS import TS as AbstractTS
 class TS (AbstractTS):
 	@staticmethod
 	def getSessionID(username_):
-		sessions = XrdpApi.SessionGetList()
+		sessions = xrdp.SessionGetList()
 		for session in sessions.values():
 			login = session["username"]
 			if login == username_:
@@ -42,11 +42,11 @@ class TS (AbstractTS):
 	
 	@staticmethod
 	def getState(session_id):
-		status = XrdpApi.SessionGetStatus(session_id)
+		status = xrdp.SessionGetStatus(session_id)
 		
-		if status == XrdpApi.SESSION_STATUS_ACTIVE:
+		if status == xrdp.SESSION_STATUS_ACTIVE:
 			return TS.STATUS_LOGGED
-		elif status == XrdpApi.SESSION_STATUS_DISCONNECTED():
+		elif status == xrdp.SESSION_STATUS_DISCONNECTED():
 			return TS.STATUS_DISCONNECTED
 			
 		return TS.STATUS_UNKNOWN
@@ -54,5 +54,5 @@ class TS (AbstractTS):
 	
 	@staticmethod
 	def logoff(session_id):
-		return XrdpApi.SessionLogoff(session_id)
+		return xrdp.SessionLogoff(session_id)
 
