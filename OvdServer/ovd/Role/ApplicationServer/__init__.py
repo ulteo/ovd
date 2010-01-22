@@ -88,7 +88,7 @@ class ApplicationServer(AbstractRole):
 				thread._Thread__stop()
 				
 		cleaner = SessionManagement(self, self.sessions_spooler)
-		for session in self.sessions:
+		for session in self.sessions.values():
 			cleaner.destroy_session(session)
 		
 		self.purgeGroup()
@@ -186,7 +186,7 @@ class ApplicationServer(AbstractRole):
 	
 	@staticmethod
 	def isMemberGroupOVD(login_):
-		members = Platform.getInstance().groupMember(self.ovd_group_name)
+		members = Platform.getInstance().groupMember(ApplicationServer.ovd_group_name)
 		if members is None:
 			return False
 		

@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import pythoncom
 import random
 import time
 import win32api
@@ -33,6 +34,7 @@ import _winreg
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
+from Msi import Msi
 from Platform import Platform
 import Reg
 
@@ -55,23 +57,49 @@ class Session(AbstractSession):
 			Platform.DeleteDirectory(programsDir)
 		os.makedirs(programsDir)
 		
+		lnk_files = []
+		
 		for (app_id, app_target) in self.applications:
 			final_file = os.path.join(programsDir, os.path.basename(app_target))
 			
 			# todo: make a new shortcut from the old one to use the same as startovdapp
-			win32file.CopyFile(app_target, final_file, True)
-		
+			#win32file.CopyFile(app_target, final_file, True)
+			
+			#path = os.path.basename(srcFile)
+			#path = os.path.splitext(path)[0] + ".lnk"
+			#path = os.path.join(dstDir, path)
+			self.cloneShortcut(app_target, final_file, "startovdapp", app_id)
+			lnk_files.append(final_file)
+			
+			
 		if self.parameters.has_key("desktop_icons"):
 			if not os.path.exists(desktopDir):
 				os.makedirs(desktopDir)
 			
-			for (app_id, app_target) in self.applications:
-				final_file = os.path.join(desktopDir, os.path.basename(app_target))
+			for srcFile in lnk_files:
+				dstFile = os.path.join(desktopDir, os.path.basename(srcFile))
 			
 				# todo: make a new shortcut from the old one to use the same as startovdapp
-				if os.path.exists(final_file):
-					os.remove(final_file)
-				win32file.CopyFile(app_target, final_file, True)
+				if os.path.exists(dstFile):
+					os.remove(dstFile)
+				win32file.CopyFile(srcFile, dstFile, True)
+		
+				#cmd = None
+		#try:
+			#msi = Msi()
+		#except WindowsError,e:
+			#Logger.warn("getApplicationsXML_nocache: Unable to init Msi")
+			#msi = None
+		#if msi is not None:
+			#cmd = self.msi.getTargetFromShortcut(srcFile)
+		
+		#if cmd is None:
+			#cmd = shortcut.GetPath(0)[0] + " " + shortcut.GetArguments()
+		
+				#path = os.path.basename(srcFile)
+		#path = os.path.splitext(path)[0] + ".lnk"
+		#path = os.path.join(dstDir, path)
+		
 	
 	
 	
@@ -79,6 +107,25 @@ class Session(AbstractSession):
 		self.user.destroy()
 		
 		return True
+	
+	
+	@staticmethod
+	def cloneShortcut(srcFile, dstFile, path, args):
+		pythoncom.CoInitialize()
+		
+		shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+		shortcut.QueryInterface(pythoncom.IID_IPersistFile).Load(srcFile)
+		
+		icon = shortcut.GetIconLocation()[0]
+		if len(icon) == 0:
+			icon = shortcut.GetPath(0)[0]
+		
+		shortcut.SetPath(path)
+		shortcut.SetArguments(args)
+		shortcut.SetIconLocation(icon, 0)
+		
+		shortcut.QueryInterface(pythoncom.IID_IPersistFile).Save(dstFile, 0)
+	
 	
 	
 	def init(self):
@@ -213,7 +260,7 @@ class Session(AbstractSession):
 		
 		key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, _winreg.KEY_SET_VALUE)
 		for item in items:
-			_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
+			_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
 		_winreg.CloseKey(key)
 		
 		

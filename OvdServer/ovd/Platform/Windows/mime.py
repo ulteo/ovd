@@ -103,7 +103,7 @@ class MimeInfos():
 				self.ext_keys[extension]["type"] = value[0]
 			except:
 				self.ext_keys[extension]["type"] = "application/x-extension-%s"%extension[1:]
-		CloseKey(key)
+			CloseKey(key)
 
 	def get_progids_for_ext(self, extension):
 		try:
