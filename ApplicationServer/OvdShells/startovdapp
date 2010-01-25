@@ -24,14 +24,15 @@
 import os
 import sys
 
+from ovd_shells.Application import Application
 from ovd_shells.CheckFork import CheckFork
 from ovd_shells.Monitoring import Monitoring
-from ovd_shells.Application import Application
+from ovd_shells import Platform
 
 def main():
 	# stop if we don't have the needed env vars
-	if not os.environ.has_key('OVD_SESSID_DIR'):
-		print "no 'OVD_SESSID_DIR' env var define"
+	if not os.environ.has_key("OVD_SESSION_DIR"):
+		print "no 'OVD_SESSION_DIR' env var define"
 		sys.exit(1)
 	
 	if not len(sys.argv) > 1:
@@ -47,22 +48,26 @@ def main():
 	
 	application = Application(application_id, args)
 	
+	if not application.isAvailable():
+		print "Application %d is not available"%(application_id)
+		sys.exit(1)
+	
 	cmd = application.getBaseCommand()
 	if cmd is None:
 		print "No available command"
 		sys.exit(1)
 	
-	cmd = application.transformCommand(cmd)
+	#cmd = application.transformCommand(cmd)
 	
 	modules = []
-	modules.append(CheckFork(application))
+	#modules.append(CheckFork(application))
 	modules.append(Monitoring(application))
 	
 	
 	for module in modules:
 		module.beforeStartApp()
 	
-	os.system(cmd)
+	Platform.launch(cmd, True)
 	
 	for module in modules:
 		module.afterStartApp()

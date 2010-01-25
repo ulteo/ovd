@@ -35,21 +35,28 @@ class Application:
 	def __init__(self, id_, args_):
 		self.id = id_
 		self.args = args_
+		
+		self.basedir = None
+		if os.environ.has_key("OVD_SESSION_DIR"):
+			self.basedir = os.environ["OVD_SESSION_DIR"]
+	
 	
 	def isAvailable(self):
-		if not os.environ.has_key("OVD_SESSID_DIR"):
+		if self.basedir is None:
+			print "basedir none"
 			return False
 		
-		base_dir = os.environ.has_key("OVD_SESSID_DIR")
-		if not os.path.is_dir(base_dir):
+		if not os.path.isfile(os.path.join(self.basedir, "matching", str(self.id))):
+			print "not file"
 			return False
 		
-		
-		
-		return False
+		return True
+	
 	
 	def getBaseCommand(self):
-		f = file(self.filename, "r")
+		filename = os.path.join(self.basedir, "matching", str(self.id))
+		
+		f = file(filename, "r")
 		line = f.readline()
 		f.close()
 		

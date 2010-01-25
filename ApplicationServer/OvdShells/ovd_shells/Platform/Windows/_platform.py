@@ -18,6 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
+from win32com.shell import shell, shellcon
 import win32event
 import win32file
 import win32process
@@ -38,6 +40,9 @@ def launch(cmd, wait=False):
 	
 	return dwProcessId
 
+def getUserSessionDir():
+	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)
+	return os.path.join(d, "ovd")
 
 def startDesktop():
 	launch("explorer", True)

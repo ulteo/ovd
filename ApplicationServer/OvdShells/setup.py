@@ -25,6 +25,21 @@ from distutils.core import setup,Extension
 import py2exe
 sys.argv.append("py2exe")
 
+try:
+	import modulefinder
+	import win32com,sys
+	for p in win32com.__path__[1:]:
+		modulefinder.AddPackagePath("win32com", p)
+	for extra in ["win32com.shell","win32com.mapi"]:
+		__import__(extra)
+		m = sys.modules[extra]
+		for p in m.__path__[1:]:
+			modulefinder.AddPackagePath(extra, p)
+except ImportError:
+	# no build path setup, no worries.
+	pass
+
+
 setup(
 	zipfile = "lib/shared.zip",
 

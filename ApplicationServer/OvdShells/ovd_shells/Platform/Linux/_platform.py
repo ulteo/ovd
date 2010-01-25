@@ -53,6 +53,14 @@ def findProcessWithEnviron(pattern):
 	
 	return None
 
+def getUserSessionDir():
+	return os.path.join("/var/spool/ovd/", os.environ["USER"])
+	
 
 def startDesktop():
 	os.system("startovd")
+
+
+def launch(cmd, wait=False):
+	# todo: use another way to use the wait parameter
+	return os.system(cmd)

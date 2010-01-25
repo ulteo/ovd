@@ -20,22 +20,29 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import time
 
 from Module import Module
 
 class Monitoring(Module):
 	def beforeStartApp(self):
-		path = os.path.join(os.environ['OVD_SESSID_DIR'], "apps")
+		path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances")
 		buf = "%d %d%s"%(os.getpid(), self.application.id, os.linesep)
+		
+		self.lock()
 		
 		f = file(path, 'a')
 		f.write(buf)
 		f.close()
+		
+		self.unlock()
 	
 	
 	def afterStartApp(self):
-		path = os.path.join(os.environ['OVD_SESSID_DIR'], "apps")
+		path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances")
 		subject = str(os.getpid())
+		
+		self.lock()
 		
 		f = file(path, "r")
 		buf = f.readlines()
@@ -51,3 +58,37 @@ class Monitoring(Module):
 		f = file(path, "w")
 		buf = f.writelines(buf2)
 		f.close()
+		
+		self.unlock()
+	
+	def lock(self):
+		path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances_lock")
+		
+		while True:
+			while os.path.isfile(path):
+				time.sleep(0.2)
+		
+			f = file(path, 'w')
+			f.write(str(os.getpid()))
+			f.close()
+			
+			f = file(path, 'r')
+			pid = int(f.read())
+			f.close()
+			
+			if pid == os.getpid():
+				return True
+	
+	def unlock(self):
+		path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances_lock")
+		
+		if not os.path.isfile(path):
+			return
+		
+		f = file(path, 'r')
+		pid = int(f.read())
+		f.close()
+		if pid != os.getpid():
+			return
+		
+		os.remove(path)
