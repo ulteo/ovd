@@ -10,3 +10,8 @@ Alias /sessionmanager @DATADIR@/ulteo/sessionmanager
     php_admin_flag magic_quotes_gpc Off
 </Directory>
 
+NameVirtualHost *:1111
+Listen 1111
+<VirtualHost *:1111>
+	DocumentRoot @DATADIR@/ulteo/sessionmanager/webservices
+</VirtualHost>
