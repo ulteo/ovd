@@ -51,10 +51,10 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon = new SharedApp('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = '<?php echo $_SESSION['tokens'][$_GET['token']]['access_id']; ?>';
 
-				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
-				daemon.i18n['share_end_ok'] = '<?php echo _('Shared application has ended, you can now close the window'); ?>';
-				daemon.i18n['share_end_unexpected'] = '<?php echo _('Shared application has ended unexpectedly'); ?>';
-				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
+				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
+				daemon.i18n['share_end_ok'] = '<?php echo str_replace("'", "\'", _('Shared application has ended, you can now close the window')); ?>';
+				daemon.i18n['share_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Shared application has ended unexpectedly')); ?>';
+				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
 
 				daemon.loop();
 			});

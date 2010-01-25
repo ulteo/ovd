@@ -51,11 +51,11 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon = new ResumeApp('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = '<?php echo $_GET['access_id']; ?>';
 
-				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
-				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
-				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
-				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
-				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
+				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
+				daemon.i18n['application_end_ok'] = '<?php echo str_replace("'", "\'", _('Your application has ended, you can now close the window')); ?>';
+				daemon.i18n['application_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your application has ended unexpectedly')); ?>';
+				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
+				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
 
 				daemon.loop();
 			});

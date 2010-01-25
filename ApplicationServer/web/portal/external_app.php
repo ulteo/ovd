@@ -78,12 +78,12 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
 				daemon.doc = '<?php echo $doc; ?>';
 
-				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
-				daemon.i18n['unknown_application'] = '<?php echo _('Server: unable to start application'); ?>';
-				daemon.i18n['application_end_ok'] = '<?php echo _('Your application has ended, you can now close the window'); ?>';
-				daemon.i18n['application_end_unexpected'] = '<?php echo _('Your application has ended unexpectedly'); ?>';
-				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
-				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
+				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
+				daemon.i18n['unknown_application'] = '<?php echo str_replace("'", "\'", _('Server: unable to start application')); ?>';
+				daemon.i18n['application_end_ok'] = '<?php echo str_replace("'", "\'", _('Your application has ended, you can now close the window')); ?>';
+				daemon.i18n['application_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your application has ended unexpectedly')); ?>';
+				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
+				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
 
 				daemon.loop();
 
