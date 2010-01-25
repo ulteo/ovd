@@ -1,3 +1,9 @@
+ovd-application-server (99.99~trunk-0ulteo0) 2-0-staging; urgency=low
+
+  * Trunk versioning
+
+ -- Jeremy Desvages <jeremy@ulteo.com>  Mon, 25 Jan 2010 13:31:58 +0100
+
 ovd-application-server (2.0~rc1-0ulteo0) 2-0-staging; urgency=low
 
   * New release: 2.0 RC1
