@@ -34,6 +34,7 @@ import _winreg
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
+import LnkFile
 from Msi import Msi
 from Platform import Platform
 import Reg
@@ -42,65 +43,66 @@ class Session(AbstractSession):
 	def install_client(self):
 		(logon, profileDir) = self.init()
 		
+		lnk_files = []
+		
+		buf = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
+		print "appdata: ",buf
+		buf = os.path.join(buf, "ovd")
+		if not os.path.isdir(buf):
+			os.makedirs(buf)
+		os.mkdir(os.path.join(buf, "shortcuts"))
+		os.mkdir(os.path.join(buf, "matching"))
+		
+		for (app_id, app_target) in self.applications:
+			cmd = LnkFile.getTarget(app_target)
+			f = file(os.path.join(buf, "matching", app_id), "w")
+			f.write(cmd)
+			f.close()
+			
+			final_file = os.path.join(buf, "shortcuts", os.path.basename(app_target))
+			
+			LnkFile.clone(app_target, final_file, "startovdapp", app_id)
+			lnk_files.append(final_file)
+		
+		
 		programsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
 		print "startmenu: ",programsDir
-		
-				
-		#desktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
-		# bug: this return the Administrator desktop dir path ...
-		desktopDir = os.path.join(profileDir, "Desktop")
-		print "desktop dir",desktopDir
-		
-		
 		# remove default startmenu
 		if os.path.exists(programsDir):
 			Platform.DeleteDirectory(programsDir)
 		os.makedirs(programsDir)
 		
-		lnk_files = []
 		
-		for (app_id, app_target) in self.applications:
-			final_file = os.path.join(programsDir, os.path.basename(app_target))
+		#desktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
+		# bug: this return the Administrator desktop dir path ...
+		desktopDir = os.path.join(profileDir, "Desktop")
+		print "desktop dir",desktopDir
+		if self.parameters.has_key("desktop_icons") and not os.path.exists(desktopDir):
+			os.makedirs(desktopDir)
+		
+		# close our logon instance
+		win32api.CloseHandle(logon)
+		
+		for srcFile in lnk_files:
+			dstFile = os.path.join(programsDir, os.path.basename(srcFile))
+			if os.path.exists(dstFile):
+				os.remove(dstFile)
+			win32file.CopyFile(srcFile, dstFile, True)
 			
-			# todo: make a new shortcut from the old one to use the same as startovdapp
-			#win32file.CopyFile(app_target, final_file, True)
 			
-			#path = os.path.basename(srcFile)
-			#path = os.path.splitext(path)[0] + ".lnk"
-			#path = os.path.join(dstDir, path)
-			self.cloneShortcut(app_target, final_file, "startovdapp", app_id)
-			lnk_files.append(final_file)
-			
-			
-		if self.parameters.has_key("desktop_icons"):
-			if not os.path.exists(desktopDir):
-				os.makedirs(desktopDir)
-			
-			for srcFile in lnk_files:
+			if self.parameters.has_key("desktop_icons"):
 				dstFile = os.path.join(desktopDir, os.path.basename(srcFile))
-			
-				# todo: make a new shortcut from the old one to use the same as startovdapp
 				if os.path.exists(dstFile):
 					os.remove(dstFile)
 				win32file.CopyFile(srcFile, dstFile, True)
+				
+				
 		
-				#cmd = None
-		#try:
-			#msi = Msi()
-		#except WindowsError,e:
-			#Logger.warn("getApplicationsXML_nocache: Unable to init Msi")
-			#msi = None
-		#if msi is not None:
-			#cmd = self.msi.getTargetFromShortcut(srcFile)
-		
-		#if cmd is None:
-			#cmd = shortcut.GetPath(0)[0] + " " + shortcut.GetArguments()
-		
-				#path = os.path.basename(srcFile)
-		#path = os.path.splitext(path)[0] + ".lnk"
-		#path = os.path.join(dstDir, path)
-		
-	
+		for (app_id, app_target) in self.applications:
+			final_file = os.path.join(programsDir, os.path.basename(app_target))
+
+			self.cloneShortcut(app_target, final_file, "startovdapp", app_id)
+			lnk_files.append(final_file)
 	
 	
 	def uninstall_client(self):
@@ -130,10 +132,6 @@ class Session(AbstractSession):
 	
 	def init(self):
 		"""Init profile repo"""
-		
-		# Set some TS settings
-		#win32ts.WTSSetUserConfig(None, self.login , win32ts.WTSUserConfigInitialProgram, r"OVDShell.exe")
-		#win32ts.WTSSetUserConfig(None, self.login , win32ts.WTSUserConfigfInheritInitialProgram, False)
 	
 		logon = win32security.LogonUser(self.user.name, None, self.user.infos["password"], win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
 		
