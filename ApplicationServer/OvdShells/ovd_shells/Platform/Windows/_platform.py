@@ -50,3 +50,8 @@ def startDesktop():
 def startSeamless():
 	launch("seamlessrdpshell")
 	
+def transformCommand(cmd_, args_):
+		if "%1" in cmd_ and len(args_)>0:
+			return cmd_.replace("%1", args[0])
+		
+		return cmd_

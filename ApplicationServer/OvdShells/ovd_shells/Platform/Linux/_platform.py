@@ -20,6 +20,7 @@
 
 import glob
 import os
+import re
 
 
 def findProcessWithEnviron(pattern):
@@ -64,3 +65,47 @@ def startDesktop():
 def launch(cmd, wait=False):
 	# todo: use another way to use the wait parameter
 	return os.system(cmd)
+
+#
+# the subprocess.list2cmdline function doesn't
+# take care about the "(" or ")" characters ...
+#
+def list2cmdline(args):
+	return " ".join('"'+arg+'"' for arg in args)
+
+
+def transformCommand(cmd_, args_):
+		if "%F" in cmd_:
+			return cmd_.replace("%F", list2cmdline(args_))
+		
+		if "%U" in cmd_:
+			b = []
+			for arg in args_:
+				if "://" not in arg:
+					b.append('file://%s'%(os.path.abspath(arg)))
+				else:
+					b.append(arg)
+			return cmd_.replace("%U", list2cmdline(b))
+		
+		cmd = cmd_
+		args = args_
+		args.reverse()
+		
+		while len(args)>0:
+			i = cmd.find("%")
+			try:
+				tok = cmd[i+1]
+			except Exception,e:
+				tok = ""
+		
+			arg = args.pop()
+			if tok == "u" and "://" not in arg:
+				replace = "file://%s"%(os.path.abspath(arg))
+			else:
+				replace = arg
+		
+			cmd = cmd.replace("%"+tok, '"%s"'%(replace), 1)
+		
+		cmd = re.sub("%[a-z]", "", cmd)
+		
+		return cmd

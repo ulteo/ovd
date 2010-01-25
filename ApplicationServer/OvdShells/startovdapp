@@ -52,15 +52,13 @@ def main():
 		print "Application %d is not available"%(application_id)
 		sys.exit(1)
 	
-	cmd = application.getBaseCommand()
+	cmd = application.getFinalCommand()
 	if cmd is None:
 		print "No available command"
 		sys.exit(1)
 	
-	#cmd = application.transformCommand(cmd)
-	
 	modules = []
-	#modules.append(CheckFork(application))
+	modules.append(CheckFork(application))
 	modules.append(Monitoring(application))
 	
 	
