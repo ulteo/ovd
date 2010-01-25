@@ -6,7 +6,7 @@ if WEB
 web_dir = web tools config po
 endif
 
-SUBDIRS = $(daemon_dir) $(web_dir) examples
+SUBDIRS = $(daemon_dir) $(web_dir) OvdShells examples
 
 DISTCHECK_CONFIGURE_FLAGS = --enable-daemon
 
