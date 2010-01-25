@@ -342,6 +342,3 @@ class Session(AbstractSession):
 			win32api.RegSetValueEx(key, item, 0, win32con.REG_SZ, r"Z:\%s"%(item))
 		
 		win32api.RegCloseKey(key)
-	
-		
-		

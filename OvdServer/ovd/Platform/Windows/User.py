@@ -32,11 +32,7 @@ from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
 
-class User:
-	def __init__(self, name, infos = {}):
-		self.name = name
-		self.infos = infos
-	
+class User(AbstractUser):
 	def create(self):
 		userData = {}
 		userData['name'] = self.name

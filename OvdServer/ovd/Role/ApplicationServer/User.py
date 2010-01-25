@@ -19,9 +19,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 class User:
-	def __init__(self, name, extra_infos = {}):
-		self.name = name
-		self.infos = infos
+	def __init__(self, name_, infos_ = {}):
+		self.name = name_
+		self.infos = infos_
 	
 	def create(self):
 		pass

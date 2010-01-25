@@ -21,6 +21,7 @@
 
 import commands
 import grp
+import os
 import platform
 import pwd
 import time
@@ -201,7 +202,7 @@ class Platform(AbstractPlatform):
 	
 	@staticmethod
 	def DeleteDirectory(path):
-		raise Exception("Not implementer")
+		os.system("rm -rf '%s'"%(path))
 	
 	@staticmethod
 	def groupCreate(name_):

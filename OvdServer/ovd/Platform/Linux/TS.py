@@ -46,7 +46,7 @@ class TS (AbstractTS):
 		
 		if status == xrdp.SESSION_STATUS_ACTIVE:
 			return TS.STATUS_LOGGED
-		elif status == xrdp.SESSION_STATUS_DISCONNECTED():
+		elif status == xrdp.SESSION_STATUS_DISCONNECTED:
 			return TS.STATUS_DISCONNECTED
 			
 		return TS.STATUS_UNKNOWN

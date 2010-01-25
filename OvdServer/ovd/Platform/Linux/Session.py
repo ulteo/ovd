@@ -23,17 +23,21 @@ import os
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
+from Platform import Platform
+
 class Session(AbstractSession):
 	
 	SPOOL_USER = "/var/spool/ovd/"
 	
 	def install_client(self):
-		d = os.path.join(self.SPOOL_USER, self.user_login)
+		d = os.path.join(self.SPOOL_USER, self.user.name)
+		if os.path.exists(d):
+			Platform.DeleteDirectory(d)
 		os.makedirs(d)
 		
 		buf = os.path.join(d, "apps")
 		os.system('touch "%s"'%(buf))
-		os.system('chown %s "%s"'%(self.user_login, buf))
+		os.system('chown %s "%s"'%(self.user.name, buf))
 		
 		xdg_dir = os.path.join(d, "xdg")
 		
@@ -79,7 +83,7 @@ class Session(AbstractSession):
 		
 	
 	def uninstall_client(self):
-		d = os.path.join(self.SPOOL_USER, self.user_login)
+		d = os.path.join(self.SPOOL_USER, self.user.name)
 		xdg_dir = os.path.join(d, "xdg")
 		
 		for p in ["icons", "pixmaps", "mime", "themes"]:
