@@ -1,0 +1,9 @@
+#! /bin/sh -e
+
+#DEBHELPER#
+
+if [ "$1" = "purge" ]; then
+    find /usr/lib/python2.5/site-packages/ovd/ -type f -name '*.pyc' 2>/dev/null|xargs rm -f
+fi
+
+exit 0
