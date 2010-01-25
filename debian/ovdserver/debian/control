@@ -5,8 +5,8 @@ Maintainer: Jeremy Desvages <jeremy@ulteo.com>
 Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
 
-Package: ulteo-ovdserver
+Package: ulteo-ovd-slaveserver
 Architecture: any
-Depends: debconf, python2.5, python-xrdp, imagemagick, passwd, adduser
-Description: Ulteo OvdServer
+Depends: debconf, python2.5, python-xrdp, ulteo-ovd-shells, imagemagick, passwd, adduser
+Description: Ulteo OVD slave server
  This daemon manages the Open Virtual Desktop servers.
