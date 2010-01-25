@@ -207,6 +207,11 @@ web/applet/Makefile
 web/includes/Makefile
 web/classes/Makefile
 web/Makefile
+OvdShells/Makefile
+OvdShells/ovd_shells/Makefile
+OvdShells/ovd_shells/Platform/Makefile
+OvdShells/ovd_shells/Platform/Linux/Makefile
+OvdShells/ovd_shells/Platform/Windows/Makefile
 ])
 AC_OUTPUT
 
