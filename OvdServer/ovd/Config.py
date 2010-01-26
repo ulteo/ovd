@@ -27,8 +27,7 @@ class Config:
 	
 	role = []
 	log_file = None
-	log_level = []
-	log_stdout = False
+	log_level = ["warn", "error"]
 	
 	# ApS	
 	socket = "/var/spool/ulteo/ds.sock"
@@ -61,34 +60,15 @@ class Config:
 		if Config.infos.has_key("session_manager"):
 			Config.session_manager = Config.infos["session_manager"]
 		
-		
-		#if infos.has_key("WWW_USER"):
-			#Config.www_user = infos["WWW_USER"]
+		if Config.infos.has_key("LOG_FILE"):
+			Config.log_level = Config.infos["LOG_FILE"]
 			
-#		if infos.has_key("LOG_LEVEL"):
-#			Config.log_level = infos["LOG_LEVEL"].split(' ')
+		if Config.infos.has_key("LOG_LEVEL"):
+			Config.log_level = Config.infos["LOG_LEVEL"].split(' ')
 		
-
-		#try:
-			#infos = utils.parse_file(filename)
-		#except Exception, err:
-##			print >> sys.stderr, "invalid configuration file '%s'"%(filename)
-##			print >> sys.stderr, err
-			#return False
-		
-
-			
-		#if infos.has_key("SOCKET"):
-			#Config.socket = infos["SOCKET"]
-		
-		#if infos.has_key("LOG_FILE"):
-			#Config.log_file = infos["LOG_FILE"]
-			
-##		if infos.has_key("LOG_LEVEL"):
-##			Config.log_level = infos["LOG_LEVEL"].split(' ')
 		return True
-			
-			
+	
+	
 	@staticmethod
 	def is_valid():
 		if len(Config.role) == 0:
@@ -99,13 +79,6 @@ class Config:
 			if role not in ["aps", "fs"]:
 				print >>sys.stderr, "Invalid role '%s'"%(role)
 				return False
-			
-		if Config.session_manager is None:
-			print >>sys.stderr, "No SM host"
-			return False
-		
-		return True
-		
 		
 		
 		if Config.session_manager is None:
@@ -125,19 +98,24 @@ class Config:
 				print >>sys.stderr, "Unable to write into '%s'"%(Config.log_file)
 				return False
 		
+		for item in Config.log_level:
+			if item not in ["info", "warn", "error", "debug"]:
+				print >>sys.stderr, "Invalid log level '%s'"%(item)
+				return False 
 		
-		if os.path.exists(Config.socket):
-			try:
-				os.remove(Config.socket)
-			except:
-				print >>sys.stderr, "Unable to remove existing socket file '%s'"%(Config.socket)
-				return False
-		try:
-			f = file(Config.socket, "w")
-			f.close()
-		except IOError:
-			print >>sys.stderr, "Unable to write into '%s'"%(Config.socket)
-			return False
+		
+		#if os.path.exists(Config.socket):
+			#try:
+				#os.remove(Config.socket)
+			#except:
+				#print >>sys.stderr, "Unable to remove existing socket file '%s'"%(Config.socket)
+				#return False
+		#try:
+			#f = file(Config.socket, "w")
+			#f.close()
+		#except IOError:
+			#print >>sys.stderr, "Unable to write into '%s'"%(Config.socket)
+			#return False
 	
 		return True
 	

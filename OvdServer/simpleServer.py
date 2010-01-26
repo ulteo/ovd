@@ -32,30 +32,48 @@ from ovd.Platform import Platform
 
 
 def usage():
-	print "Usage: %s [-c|--config-file= filename] [-h|--help]"%(sys.argv[0])
+	print "Usage: %s [-c|--config-file= filename] [-d|--daemonize] [-h|--help] [-p|--pid-file= filename]"%(sys.argv[0])
 	print "\t-c|--config-file filename: load filename as configuration file instead default one"
+	print "\t-d|--daemonize: start in background"
 	print "\t-h|--help: print this help"
+	print "\t-p|--pid-file filename: write process id in specified file"
 	print
 
+
+def writePidFile(filename):
+	try:
+		f = file(filename, "w")
+	except:
+		return False
+	
+	f.write(str(os.getpid()))
+	f.close()
+	return True
+
+
 def main():
-	config_file = os.path.join(Platform.getInstance().get_default_config_dir(), "ulteo-ovd.conf")
+	config_file = os.path.join(Platform.getInstance().get_default_config_dir(), "ovdserver.conf")
+	daemonize = False
+	pidFile = None
 
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], 'c:h', ['config-file=', 'help'])
+		opts, args = getopt.getopt(sys.argv[1:], 'c:dhp:', ['config-file=', 'daemonize', 'help', 'pid-file='])
 	
 	except getopt.GetoptError, err:
 		print >> sys.stderr, str(err)
 		usage()
 		sys.exit(2)
 	
-	conf_cmdline = {}
-	
 	for o, a in opts:
 		if o in ("-c", "--config-file"):
 			config_file = a
+		elif o in ("-d", "--daemonize"):
+			daemonize = True
 		elif o in ("-h", "--help"):
 			usage()
 			sys.exit()
+		elif o in ("-p", "--pid-file"):
+			pidFile = a
 	
 	if not Config.read(config_file):
 		print >> sys.stderr, "invalid configuration file '%s'"%(config_file)
@@ -65,7 +83,40 @@ def main():
 		print >> sys.stderr, "invalid config"
 		sys.exit(1)
 	
-	Logger.initialize("simpleServer", Logger.INFO | Logger.WARN | Logger.ERROR | Logger.DEBUG, None, True)
+	if daemonize:
+		pid = os.fork()
+		if pid < 0:
+			print >> sys.stderr, "Error when fork"
+			sys.exit(1)
+		if pid > 0:
+			sys.exit(0)
+		
+		pid = os.fork()
+		if pid < 0:
+			print >> sys.stderr, "Error when fork"
+			sys.exit(1)
+		if pid > 0:
+			sys.exit(0)
+	
+	
+	if pidFile is not None:
+		if not writePidFile(pidFile):
+			print >> sys.stderr, "Unable to write pid-file '%s'"%(pidFile)
+			sys.exit(1)
+	
+	
+	log_flags = 0
+	for item in Config.log_level:
+		if item == "info":
+			log_flags|= Logger.INFO
+		elif item == "warn":
+			log_flags|= Logger.WARN
+		elif item == "error":
+			log_flags|= Logger.ERROR
+		elif item == "debug":
+			log_flags|= Logger.DEBUG
+
+	Logger.initialize("simpleServer", log_flags, Config.log_file, (not daemonize))
 	
 	
 	server = SlaveServer(Communication)
@@ -74,6 +125,9 @@ def main():
 	server.loop()
 	if not server.stopped:
 		server.stop()
+	
+	if pidFile is not None and os.path.exists(pidFile):
+		os.remove(pidFile)
 
 
 if __name__ == "__main__":

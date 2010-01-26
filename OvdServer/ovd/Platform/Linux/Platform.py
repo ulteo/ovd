@@ -40,7 +40,7 @@ class Platform(AbstractPlatform):
 	
 	@staticmethod
 	def get_default_config_dir():
-		return "/etc"
+		return "/etc/ulteo"
 	
 	@staticmethod
 	def get_default_ts_users_group():
