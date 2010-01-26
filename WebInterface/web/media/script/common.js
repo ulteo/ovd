@@ -22,8 +22,10 @@ function startSession(login_, password_) {
 	if (parseInt(ret.getStatus()) != 200)
 		return false;
 
-	window_ = popupOpen(rand);
-	$('startsession').target = 'Ulteo'+rand;
+	if ($('use_popup_true') && $('use_popup_true').checked) {
+		window_ = popupOpen(rand);
+		$('startsession').target = 'Ulteo'+rand;
+	}
 
 	return true;
 }

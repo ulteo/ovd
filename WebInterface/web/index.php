@@ -80,6 +80,15 @@
 												</td>
 											</tr>
 											<tr>
+												<td style="text-align: right; vertical-align: middle;">
+													<strong><?php echo _('Use pop-up'); ?></strong>
+												</td>
+												<td style="text-align: center; vertical-align: middle;">
+													<input class="input_radio" id="use_popup_true" type="radio" name="popup" value="1" checked="checked" /> <?php echo _('Yes'); ?>
+													<input class="input_radio" id="use_popup_false" type="radio" name="popup" value="0" /> <?php echo _('No'); ?>
+												</td>
+											</tr>
+											<tr>
 												<td style="height: 40px; text-align: center; vertical-align: bottom;" colspan="2">
 													<span id="submitButton"><input type="submit" value="<?php echo _('Log in!'); ?>" /></span>
 													<span id="submitLoader" style="display: none;"><img src="media/image/loader.gif" width="24" height="24" alt="" title="" /></span>
