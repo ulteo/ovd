@@ -8,7 +8,21 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
     exit 0
 fi
 
-CONFFILE="/etc/ulteo/webinterface.conf.php"
+CONFFILE="/etc/ulteo/webinterface/config.inc.php"
+
+apache_config()
+{
+    if [ ! -e /etc/apache2/conf.d/webinterface ]; then
+        ln -s /etc/ulteo/webinterface/apache2.conf \
+            /etc/apache2/conf.d/webinterface
+
+        if apache2ctl configtest 2>/dev/null; then
+            invoke-rc.d apache2 reload || true
+        else
+            echo "Your apache2 configuration is broken, so we're not restarting it for you."
+        fi
+    fi
+}
 
 gen_conf()
 {
@@ -20,6 +34,8 @@ gen_conf()
 
 # set the configuration if we install
 gen_conf
+
+apache_config
 
 db_stop
 
