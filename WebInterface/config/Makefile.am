@@ -1,5 +1,13 @@
-scripts_DATA = webinterface.conf.php
+EXTRA_DIST = apache2.conf.in config.inc.php.in
 
-scriptsdir = $(sysconfdir)/ulteo
+conf_DATA = apache2.conf config.inc.php
 
-EXTRA_DIST = $(scripts_DATA)
+confdir = $(sysconfdir)/ulteo/webinterface
+
+apache2.conf:
+	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2.conf.in > $@
+
+clean-local:
+	rm -f $(conf_DATA)
+
+.PHONY: $(conf_DATA)
