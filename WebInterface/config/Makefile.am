@@ -6,7 +6,7 @@ EXTRA_DIST = $(scripts_DATA) apache2.conf.in
 
 conf_DATA = apache2.conf
 
-confdir = $(sysconfdir)/ulteo/sessionmanager
+confdir = $(sysconfdir)/ulteo/webinterface
 
 apache2.conf:
 	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2.conf.in > $@
