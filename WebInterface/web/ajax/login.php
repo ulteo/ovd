@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-requice_once(dirname(__FILE__).'/../includes/core.inc.php');
+require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 function return_error($errno_, $errstr_) {
 	$dom = new DomDocument('1.0', 'utf-8');
