@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
@@ -194,10 +194,6 @@ application_purge() {
         windows_purge_app $rfb_port
     fi
 
-    if [ $job == "desktop" ] || [ $job == "windows" ]; then
-        windows_logoff $SESSID_DIR $USER_LOGIN
-    fi
-    
     log_INFO "purging application '$job'"
     display_stop $rfb_port $dir/vnc.pid
 

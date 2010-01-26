@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
@@ -54,15 +54,6 @@ windows_init_connection() {
     echo $display > $sessid_dir/private/windows_connected
     su -s "/bin/bash" - ${USER_LOGIN} -c ". $ENV_FILE; DISPLAY=:$display $cmd" 
     rm $sessid_dir/private/windows_connected
-}
-
-windows_logoff() {
-    local sessid_dir=$1
-    local user_login=$2
-
-    windows_connected $sessid_dir || return 0
-
-    su -s "/bin/bash" $user_login -c "rdesktop --logoff"
 }
 
 windows_connected() {
