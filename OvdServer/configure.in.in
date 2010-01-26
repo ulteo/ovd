@@ -1,9 +1,9 @@
-m4_define([uovdserver_version_major], [99])
-m4_define([uovdserver_version_minor], [99])
-m4_define([uovdserver_version_build], [~trunk+svn@REVISION@])
-m4_define([uovdserver_version], [uovdserver_version_major().uovdserver_version_minor()uovdserver_version_build()])
+m4_define([uovdss_version_major], [99])
+m4_define([uovdss_version_minor], [99])
+m4_define([uovdss_version_build], [~trunk+svn@REVISION@])
+m4_define([uovdss_version], [uovdss_version_major().uovdss_version_minor()uovdss_version_build()])
 
-AC_INIT([ovdserver], [uovdserver_version], [http://bugs.ulteo.com])
+AC_INIT([ovd-slaveserver], [uovdss_version], [http://bugs.ulteo.com])
 
 # Init automake
 AM_INIT_AUTOMAKE([1.9 tar-pax])
