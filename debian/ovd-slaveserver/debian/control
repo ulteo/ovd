@@ -1,4 +1,4 @@
-Source: ovdserver
+Source: ovd-slaveserver
 Section: net
 Priority: extra
 Maintainer: Jeremy Desvages <jeremy@ulteo.com>
