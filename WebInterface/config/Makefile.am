@@ -1,8 +1,12 @@
-EXTRA_DIST = apache2.conf.in config.inc.php.in
+scripts_DATA = config.inc.php
 
-conf_DATA = apache2.conf config.inc.php
+scriptsdir = $(sysconfdir)/ulteo/webinterface
 
-confdir = $(sysconfdir)/ulteo/webinterface
+EXTRA_DIST = $(scripts_DATA) apache2.conf.in
+
+conf_DATA = apache2.conf
+
+confdir = $(sysconfdir)/ulteo/sessionmanager
 
 apache2.conf:
 	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2.conf.in > $@
