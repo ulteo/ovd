@@ -19,6 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+requice_once(dirname(__FILE__).'/../includes/core.inc.php');
+
 function return_error($errno_, $errstr_) {
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
@@ -62,7 +64,7 @@ $node->setAttribute('login', $_POST['login']);
 $node->setAttribute('password', $_POST['password']);
 $dom->appendChild($node);
 
-$ret = query_url_post_xml('http://10.42.1.54/~jejem/ovd/SessionManager/web/startsession.php', $dom->saveXML());
+$ret = query_url_post_xml(SESSIONMANAGER_URL.'/startsession.php', $dom->saveXML());
 
 echo $ret;
 die();
