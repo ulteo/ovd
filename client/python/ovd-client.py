@@ -714,8 +714,7 @@ if not d.doStartSession(extra_args):
 
 Logger.debug("Session properties: %s"%(str(d.sessionProperties)))
 if d.sessionProperties["mode"] != 'desktop':
-    Logger.error("Doesn't support session mode '%s'"%(str(d.mode)))
-    self.do_call_exit()
+    Logger.error("Doesn't support session mode '%s'"%(str(d.sessionProperties["mode"])))
     sys.exit(0)
 
 
