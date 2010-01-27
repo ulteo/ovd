@@ -2,7 +2,7 @@ var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
 
-function startSession(login_, password_) {
+function startSession(login_, password_, mode_) {
 	disableLogin();
 
 	var ret = new Ajax.Request(
@@ -11,7 +11,8 @@ function startSession(login_, password_) {
 			method: 'post',
 			parameters: {
 				login: login_,
-				password: password_
+				password: password_,
+				mode: mode_
 			},
 			asynchronous: false,
 			onSuccess: onStartSessionSuccess,
