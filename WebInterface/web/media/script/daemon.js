@@ -487,26 +487,3 @@ return;
 			</applet>';
 	}
 });
-
-function offContent(container) {
-	$(container+'_ajax').innerHTML = '<img src="media/image/show.png" width="16" height="16" alt="+" title="" />';
-	$(container+'_content').hide();
-
-	return true;
-}
-
-function onContent(container) {
-	$(container+'_ajax').innerHTML = '<img src="media/image/hide.png" width="16" height="16" alt="-" title="" />';
-	$(container+'_content').show();
-
-	return true;
-}
-
-function toggleContent(container) {
-	if ($(container+'_content').visible())
-		offContent(container);
-	else
-		onContent(container);
-
-	return true;
-}
