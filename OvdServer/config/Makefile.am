@@ -1,4 +1,4 @@
-scripts_DATA = ovdserver.conf
+scripts_DATA = ovd-slaveserver.conf
 
 scriptsdir = $(sysconfdir)/ulteo
 
