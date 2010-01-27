@@ -57,37 +57,32 @@ class Application {
 	public function getAttribute($myAttribute_){
 		if (isset($this->attributes[$myAttribute_]))
 			return $this->attributes[$myAttribute_];
-		else
-			return NULL;
+
+		return NULL;
 	}
 	
 	public function unsetAttribute($myAttribute_) {
-		if ($this->hasAttribute($myAttribute_)) {
+		if ($this->hasAttribute($myAttribute_))
 			unset($this->attributes[$myAttribute_]);
-		}
 	}
 	
 	public function getIconPathRW() {
-		if ($this->hasAttribute('id')) {
+		if ($this->hasAttribute('id'))
 			return CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
-		}
-		else {
-			return NULL;
-		}
+
+		return NULL;
 	}
 	
 	public function getIconPath() {
-		if ($this->hasAttribute('id')) {
-			$path_with_id = CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
-			if (file_exists($path_with_id)) {
-				return $path_with_id;
-			}
-			else {
-				if ($this->getAttribute('static')) {
-					return $this->getDefaultIconPath();
-				}
-			}
-		}
+		if (! $this->hasAttribute('id'))
+			return NULL;
+
+		if (file_exists(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png'))
+			return CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
+
+		if ($this->getAttribute('static'))
+			return $this->getDefaultIconPath();
+
 		return NULL;
 	}
 	
@@ -99,51 +94,16 @@ class Application {
 		if (file_exists(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png'))
 			return true;
 
-		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application'))
-			return false;
-		
-		return $this->getIcon();
-	}
-
-	public function getIcon() {
-		$servers_liaisons = Abstract_Liaison::load('ApplicationServer', $this->getAttribute('id'), NULL);
-		$servers = array();
-		foreach ($servers_liaisons as $servers_liaison) {
-			$buf = Abstract_Server::load($servers_liaison->group);
-
-			if ($buf != false && $buf->isOnline())
-				$servers[] = $buf;
-		}
-
-		if (!is_array($servers) || count($servers) == 0) {
-			$this->delIcon();
-			Logger::error('main', 'Application::getIcon (id='.$this->getAttribute('id').') No server avalaible');
-			return false;
-		}
-
-		$random_server = $servers[array_rand($servers)];
-
-		$buf = $random_server->getApplicationIcon($this->getAttribute('icon_path'), $this->getAttribute('desktopfile'));
-
-		if ($buf == false || $buf == '') {
-			$this->delIcon();
-			Logger::error('main', 'Application::getIcon (id='.$this->getAttribute('id').') Server::getApplicationIcon failed');
-			return false;
-		}
-		
-		if (!check_folder(CACHE_DIR.'/image') || !check_folder(CACHE_DIR.'/image/application')) {
-			Logger::error('main', 'Application::getIcon (id='.$this->getAttribute('id').') check_folder failed');
-			return false;
-		}
-
-		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf);
-
-		return true;
+		return false;
 	}
 
 	public function delIcon() {
-		if ($this->hasAttribute('id'))
-			@unlink(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png');
+		if (! $this->hasAttribute('id'))
+			return false;
+
+		@unlink(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png');
+
+		return true;
 	}
 
 	public function groups(){

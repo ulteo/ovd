@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Servers {
+	public static $role_aps = 'aps';
+
 	public static function getAll() {
 // 		Logger::debug('main', 'Starting Servers::getAll');
 
@@ -124,6 +126,19 @@ class Servers {
 
 		foreach ($servers as $k => $server) {
 			if ($server->getAttribute('type') != $type_)
+				unset($servers[$k]);
+		}
+
+		return $servers;
+	}
+
+	public static function getAvailableByRole($role_) {
+// 		Logger::debug('main', 'Starting Servers::getAvailableByRole');
+
+		$servers = Servers::getAvailable();
+
+		foreach ($servers as $k => $server) {
+			if (! array_key_exists($role_, $server->roles))
 				unset($servers[$k]);
 		}
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008,2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -20,6 +20,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+function parse_login_XML($xml_) {
+	if (! $xml_ || strlen($xml_) == 0)
+		return false;
+
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$buf = @$dom->loadXML($xml_);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$node = $dom->getElementsByTagname('user')->item(0);
+	if (is_null($node))
+		return false;
+
+	if (! $node->hasAttribute('login'))
+		return false;
+
+	$_SESSION['login'] = $node->getAttribute('login');
+	return true;
+}
+
+function parse_session_create_XML($xml_) {
+	if (! $xml_ || strlen($xml_) == 0)
+		return false;
+
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$buf = @$dom->loadXML($xml_);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$node = $dom->getElementsByTagname('session')->item(0);
+	if (is_null($node))
+		return false;
+
+	if (! $node->hasAttribute('id'))
+		return false;
+
+	return true;
+}
 
 $plugins = new Plugins();
 $plugins->doLoad();
@@ -65,6 +112,15 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
+//BEGIN New login XML from WebInterface (insecure for now)
+$ret = parse_login_XML(@file_get_contents('php://input'));
+//END New login XML from WebInterface (insecure for now)
+
+//BEGIN A way to try startsession with any user (very insecure, should be removed ASAP)
+if (isset($_GET['login']))
+	$_SESSION['login'] = $_GET['login'];
+//END A way to try startsession with any user (very insecure, should be removed ASAP)
+
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
 	if (! $ret)
@@ -102,7 +158,7 @@ Logger::debug('main', '(startsession) Now checking for old session');
 $ev = new SessionStart(array('user' => $user));
 
 $already_online = 0;
-$sessions = Sessions::getByUser($user->getAttribute('login'));
+/*$sessions = Sessions::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	foreach ($sessions as $session) {
 		if ($session->isSuspended()) {
@@ -141,25 +197,21 @@ if ($sessions > 0) {
 		} else
 			die_error(_('You already have a session, please contact your administrator'), __FILE__, __LINE__, true);
 	}
+}*/
+
+$serv_tmp = $user->getAvailableServers();
+if (count($serv_tmp) == 0) {
+	$ev->setAttribute('ok', false);
+	$ev->setAttribute('error', _('No available server'));
+	$ev->emit();
+	Logger::error('main', '(startsession) no server found for \''.$user->getAttribute('login').'\' -> abort');
+	die_error(_('You don\'t have access to a server for now'),__FILE__,__LINE__);
 }
 
-if (in_array('server', $advanced_settings) && isset($_REQUEST['force']) && $_REQUEST['force'] != '')
-	$random_server = $_REQUEST['force'];
-else {
-	$serv_tmp = $user->getAvailableServer('linux'); // FIXME : session server != linux server...
-	if (is_object($serv_tmp))
-		$random_server = $serv_tmp->fqdn;
+$random_server = array_shift($serv_tmp);
+$random_server = $random_server->fqdn;
 
-	if ((! isset($random_server)) || is_null($random_server) || $random_server == '') {
-		$ev->setAttribute('ok', false);
-		$ev->setAttribute('error', _('No available server'));
-		$ev->emit();
-		Logger::error('main', '(startsession) no linux server found for \''.$user->getAttribute('login').'\' -> abort');
-		die_error(_('You don\'t have access to a linux server for now'),__FILE__,__LINE__);
-	}
-}
-
-if (isset($old_session_id) && isset($old_session_server)) {
+/*if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
 
 	$session_type = 'resume';
@@ -167,7 +219,7 @@ if (isset($old_session_id) && isset($old_session_server)) {
 	$ret = true;
 
 	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
-} else {
+} else {*/
 	$random_session_id = gen_string(5);
 
 	$session_type = 'start';
@@ -183,21 +235,17 @@ if (isset($old_session_id) && isset($old_session_server)) {
 	$ret = true;
 
 	Logger::info('main', '(startsession) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.' => '.$random_server.')');
-}
+//}
 
 if ($ret === false)
 	die_error(_('No available session'),__FILE__,__LINE__);
 
 $fs = $prefs->get('plugins', 'FS');
-// for now we can use one FS at the same time
-//if (!is_array($fs) || count($fs) == 0)
 if (is_null($fs))
 	die_error(_('No available filesystem'),__FILE__,__LINE__);
-//$module_fs = $fs[0];
 $module_fs = $fs;
 
 $default_args = array(
-// 	'user_id'			=>	$user->getAttribute('uid'),
 	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
@@ -271,7 +319,7 @@ if (isset($allow_proxy) && $allow_proxy != '0') {
 	}
 }
 
-if (count($user->applications('windows')) > 0) {
+/*if (count($user->applications('windows')) > 0) {
 	$windows_server = $user->getAvailableServer('windows');
 	if (! is_object($windows_server)) {
 		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
@@ -309,7 +357,7 @@ if (count($user->applications('windows')) > 0) {
 		}
 	} else
 		$optional_args['windows_password'] = $_SESSION['password'];
-}
+}*/
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
@@ -355,9 +403,7 @@ if ($save_token === false) {
 	die_error(_('Internal error'), __FILE__, __LINE__);
 }
 
-$buf = Abstract_Server::load($session->server);
-
-$redir = $buf->getBaseURL(true).'/index.php?token='.$token->id;
+$server = Abstract_Server::load($session->server);
 
 $ev->setAttributes(array(
 	'ok'	=> true,
@@ -368,11 +414,88 @@ $ev->setAttributes(array(
 ));
 $ev->emit();
 
-$_SESSION = array();
-if (@ini_get('session.use_cookies')) {
-	$params = session_get_cookie_params();
-	setcookie(session_name(), '', (time()-86400), $params['path'], $params['domain']);
-}
-session_destroy();
+$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
+$user_password = gen_string(8);
 
-redirect($redir);
+$dom = new DomDocument('1.0', 'utf-8');
+
+$session_node = $dom->createElement('session');
+$session_node->setAttribute('id', $session->id);
+foreach (array('desktop_icons') as $parameter) {
+// continue;
+	$parameter_node = $dom->createElement('parameter');
+	$parameter_node->setAttribute('name', $parameter);
+	$parameter_node->setAttribute('value', true);
+	$session_node->appendChild($parameter_node);
+}
+$user_node = $dom->createElement('user');
+$user_node->setAttribute('login', $user_login);
+$user_node->setAttribute('password', $user_password);
+$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+$session_node->appendChild($user_node);
+
+foreach ($user->applications() as $application) {
+	if ($application->getAttribute('static'))
+		continue;
+
+	$application_node = $dom->createElement('application');
+	$application_node->setAttribute('id', $application->getAttribute('id'));
+	$application_node->setAttribute('mode', 'local');
+	$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+
+	$session_node->appendChild($application_node);
+}
+
+$dom->appendChild($session_node);
+
+$xml = $dom->saveXML();
+
+$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
+if (! $ret) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 1);
+	$node->setAttribute('message', 'Server does not send a valid XML');
+	$dom->appendChild($node);
+
+	echo $dom->saveXML();
+	exit(1);
+}
+
+header('Content-Type: text/xml; charset=utf-8');
+$dom = new DomDocument('1.0', 'utf-8');
+
+$session_node = $dom->createElement('session');
+$session_node->setAttribute('id', $session->id);
+$session_node->setAttribute('mode', $session->mode);
+foreach (array($session->server) as $server) {
+	$server_node = $dom->createElement('server');
+	$server_node->setAttribute('fqdn', $server);
+	$server_node->setAttribute('login', $user_login);
+	$server_node->setAttribute('password', $user_password);
+	foreach ($user->applications() as $application) {
+		if ($application->getAttribute('static'))
+			continue;
+
+		$application_node = $dom->createElement('application');
+		$application_node->setAttribute('id', $application->getAttribute('id'));
+		$application_node->setAttribute('name', $application->getAttribute('name'));
+		$application_node->setAttribute('command', $application->getAttribute('executable_path'));
+		foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
+			if ($mimetype == '')
+				continue;
+
+			$mimetype_node = $dom->createElement('mime');
+			$mimetype_node->setAttribute('type', $mimetype);
+			$application_node->appendChild($mimetype_node);
+		}
+		$server_node->appendChild($application_node);
+	}
+	$session_node->appendChild($server_node);
+}
+$dom->appendChild($session_node);
+
+echo $dom->saveXML();
+exit(0);

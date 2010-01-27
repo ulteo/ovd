@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,83 +20,100 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', '(webservices/server_status) Starting webservices/server_status.php');
+function parse_server_status_XML($xml_) {
+	if (! $xml_ || strlen($xml_) == 0)
+		return false;
 
-if (! isset($_GET['status'])) {
-	Logger::error('main', '(webservices/server_status) Missing parameter : status');
-	die('ERROR - NO $_GET[\'status\']');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$buf = @$dom->loadXML($xml_);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$node = $dom->getElementsByTagname('server')->item(0);
+	if (is_null($node))
+		return false;
+
+	if (! $node->hasAttribute('name'))
+		return false;
+
+	if (! $node->hasAttribute('status'))
+		return false;
+
+	return array(
+		'name'		=>	$node->getAttribute('name'),
+		'status'	=>	$node->getAttribute('status')
+	);
 }
 
-if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/server_status) Missing parameter : fqdn');
-	die('ERROR - NO $_GET[\'fqdn\']');
+$ret = parse_server_status_XML(@file_get_contents('php://input'));
+if (! $ret) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 1);
+	$node->setAttribute('message', 'Server does not send a valid XML');
+	$dom->appendChild($node);
+
+	echo $dom->saveXML();
+	exit(1);
 }
 
-Logger::debug('main', '(webservices/server_status) Security check OK');
+$server = Abstract_Server::load($ret['name']);
+if (! $server) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
 
-$exists = Abstract_Server::exists($_GET['fqdn']);
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 2);
+	$node->setAttribute('message', 'Server does not exist');
+	$dom->appendChild($node);
 
-if (! $exists) {
-	$buf = new Server($_GET['fqdn']);
+	echo $dom->saveXML();
+	exit(2);
+}
 
-	$buf->registered = false;
-	$buf->locked = true;
+if (! $server->isAuthorized()) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
 
-	$prefs = Preferences::getInstance();
-	if (! $prefs)
-		die_error(_('get Preferences failed'), __FILE__, __LINE__);
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 3);
+	$node->setAttribute('message', 'Server is not authorized');
+	$dom->appendChild($node);
 
-	$buf_prefs = $prefs->get('general', 'application_server_settings');
-	$auto_register_new_servers = $buf_prefs['auto_register_new_servers'];
-	$auto_switch_new_servers_to_production = $buf_prefs['auto_switch_new_servers_to_production'];
+	echo $dom->saveXML();
+	exit(3);
+}
 
-	if ($auto_register_new_servers == 1)
-		$buf->registered = true;
+$server->setStatus($ret['status']);
+if ($server->isOnline()) {
+	if (! $server->getConfiguration()) {
+		header('Content-Type: text/xml; charset=utf-8');
+		$dom = new DomDocument('1.0', 'utf-8');
 
-	if ($auto_switch_new_servers_to_production == 1)
-		$buf->locked = false;
+		$node = $dom->createElement('error');
+		$node->setAttribute('id', 4);
+		$node->setAttribute('message', 'Server does not send a valid configuration');
+		$dom->appendChild($node);
 
-	$buf->external_name = $buf->fqdn;
-	if (isset($_GET['web_port']))
-		$web_port = $_GET['web_port'];
-	else
-		$web_port = 80;
-	$buf->web_port = $web_port;
-	$buf->max_sessions = 20;
-
-	if (! $buf->isAuthorized()) {
-		Logger::error('main', '(webservices/server_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
-		die('Server not authorized');
+		echo $dom->saveXML();
+		exit(4);
 	}
-
-	if (! $buf->isOnline()) {
-		Logger::error('main', '(webservices/server_status) Server not "ready" : \''.$_GET['fqdn'].'\'');
-		die('Server not "ready"');
-	}
-
-	if (! $buf->isOK()) {
-		Logger::error('main', '(webservices/server_status) Server not OK : \''.$_GET['fqdn'].'\'');
-		die('Server not OK');
-	}
-} else {
-	$buf = Abstract_Server::load($_GET['fqdn']);
-	if (! $buf->isAuthorized()) {
-		Logger::error('main', '(webservices/server_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
-		die('Server not authorized');
-	}
 }
+Abstract_Server::save($server);
 
-$buf->setStatus($_GET['status']);
+header('Content-Type: text/xml; charset=utf-8');
+$dom = new DomDocument('1.0', 'utf-8');
 
-if ($buf->getAttribute('status') == 'ready' && $buf->type == 'windows') {
-	if (! $buf->getWindowsADDomain())
-		die('Server not OK');
-}
+$node = $dom->createElement('server');
+$node->setAttribute('name', $server->fqdn);
+$node->setAttribute('status', $server->status);
+$dom->appendChild($node);
 
-Abstract_Server::save($buf);
-
-try {
-	$buf->updateApplications();
-} catch (Exception $e) {
-	Logger::error('main', '(webservices/server_status) updateApplications error for \''.$_GET['fqdn'].'\'');
-}
+echo $dom->saveXML();
+exit(0);

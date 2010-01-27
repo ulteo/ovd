@@ -37,9 +37,6 @@ class admin_ApplicationDB_sql extends ApplicationDB_sql{
 			$id = $sql2->InsertId();
 			$a->setAttribute('id', $id);
 
-			// clean up the icon cache
-			$a->getIcon();
-
 			return ($res !== false);
 		}
 		return false;

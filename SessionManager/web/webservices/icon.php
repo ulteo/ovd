@@ -28,19 +28,6 @@ if (! isset($_GET['id'])) {
 	die('ERROR - NO $_GET[\'id\']');
 }
 
-if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/icon) Missing parameter : fqdn');
-	die('ERROR - NO $_GET[\'fqdn\']');
-}
-
-$buf = Abstract_Server::load($_GET['fqdn']);
-if (! $buf || ! $buf->isAuthorized()) {
-	Logger::error('main', '(webservices/icon) Server not authorized : '.$_GET['fqdn'].' == '.@gethostbyname($_GET['fqdn']).' ?');
-	die('Server not authorized');
-}
-
-Logger::debug('main', '(webservices/icon) Security check OK');
-
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error('get Preferences failed',__FILE__,__LINE__);
@@ -60,7 +47,6 @@ if (! is_object($app)) {
 	Logger::error('main', '(webservices/icon) error import app failed for \''.$_GET['id'].'\'');
 	header('HTTP/1.1 400 Bad Request');
 }
-
 
 $path = $app->getIconPath();
 if (file_exists($path)) {

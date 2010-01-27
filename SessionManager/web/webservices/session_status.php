@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,59 +20,73 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', 'Starting webservices/session_status.php');
+function parse_session_status_XML($xml_) {
+	if (! $xml_ || strlen($xml_) == 0)
+		return false;
 
-if (! isset($_GET['session'])) {
-	Logger::error('main', '(webservices/session_status) Missing parameter : session');
-	die('ERROR - NO $_GET[\'session\']');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$buf = @$dom->loadXML($xml_);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$node = $dom->getElementsByTagname('session')->item(0);
+	if (is_null($node))
+		return false;
+
+	if (! $node->hasAttribute('id'))
+		return false;
+
+	if (! $node->hasAttribute('status'))
+		return false;
+
+	return array(
+		'id'		=>	$node->getAttribute('id'),
+		'status'	=>	$node->getAttribute('status')
+	);
 }
 
-if (! isset($_GET['status'])) {
-	Logger::error('main', '(webservices/session_status) Missing parameter : status');
-	die('ERROR - NO $_GET[\'status\']');
+$ret = parse_session_status_XML(@file_get_contents('php://input'));
+if (! $ret) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 1);
+	$node->setAttribute('message', 'Server does not send a valid XML');
+	$dom->appendChild($node);
+
+	echo $dom->saveXML();
+	exit(1);
 }
 
-if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/session_status) Missing parameter : fqdn');
-	die('ERROR - NO $_GET[\'fqdn\']');
+$session = Abstract_Session::load($ret['id']);
+if (! $session) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 2);
+	$node->setAttribute('message', 'Session does not exist');
+	$dom->appendChild($node);
+
+	echo $dom->saveXML();
+	exit(2);
 }
 
-$buf = Abstract_Server::load($_GET['fqdn']);
-if (! $buf || ! $buf->isAuthorized()) {
-	Logger::error('main', '(webservices/session_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
-	die('Server not authorized');
-}
-
-Logger::debug('main', '(webservices/session_status) Security check OK');
-
-$session = Abstract_Session::load($_GET['session']);
-
-if (! $session)
-	die('ERROR - No such session');
-
-Logger::debug('main', '(webservices/session_status) Session \''.$session->id.'\' on server \''.$session->server.'\' have status \''.$_GET['status'].'\'');
-
-$session->setStatus($_GET['status']);
-
-if ($_GET['status'] == 1) {
-	Logger::info('main', '(webservices/session_status) Session start : \''.$session->id.'\'');
-
-	$session->setAttribute('start_time', time());
-}
-
+$session->setStatus($ret['status']);
 Abstract_Session::save($session);
 
-if ($_GET['status'] == 4) {
-	Logger::info('main', '(webservices/session_status) Session end : \''.$session->id.'\'');
+header('Content-Type: text/xml; charset=utf-8');
+$dom = new DomDocument('1.0', 'utf-8');
 
-	$plugins = new Plugins();
-	$plugins->doLoad();
+$node = $dom->createElement('session');
+$node->setAttribute('id', $session->id);
+$node->setAttribute('status', $server->status);
+$dom->appendChild($node);
 
-	$plugins->doRemovesession(array(
-		'fqdn'	=>	$session->server,
-		'session'	=>	$session->id
-	));
-
-	if (! $session->orderDeletion(false))
-		Logger::error('main', '(webservices/session_status) Unable to delete session \''.$session->id.'\'');
-}
+echo $dom->saveXML();
+exit(0);

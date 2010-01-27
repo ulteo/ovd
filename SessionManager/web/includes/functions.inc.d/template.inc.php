@@ -38,20 +38,18 @@ function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 
 	Logger::error('main', 'die_error() called with message \''.$error_.'\' in '.$file_.':'.$line_);
 
-	header('HTTP/1.1 500 Internal Server Error');
+	header('Content-Type: text/xml; charset=utf-8');
 
-	if (in_admin())
-		header_static(DEFAULT_PAGE_TITLE.' - '._('Error'));
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 0);
+	if (in_admin() || $display_ === true)
+		$node->setAttribute('message', $error_);
 	else
-		header_static(DEFAULT_PAGE_TITLE);
+		$node->setAttribute('message', 'The service is not available, please try again later');
+	$dom->appendChild($node);
 
-	if (in_admin() || $display_ === true) {
-		echo '&nbsp;<h2 class="centered">'._('Error').'</h2>&nbsp;';
-		echo '&nbsp;<p class="msg_error centered">'.$error_.'</p>&nbsp;';
-	} else
-		echo '&nbsp;<p class="msg_error centered">'._('The service is not available, please try again later').'</p>&nbsp;';
-
-	footer_static();
+	echo $dom->saveXML();
 
 	die();
 }

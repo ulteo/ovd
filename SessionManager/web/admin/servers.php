@@ -707,6 +707,15 @@ function show_manage($fqdn) {
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
 
+	if (is_array($server->roles)) {
+		echo '<tr><td>';
+		echo _('Roles').': ';
+		echo '</td><td><ul>';
+		foreach ($server->roles as $role => $bool)
+			echo '<li>'.$role.'</li>';
+		echo '</ul></td></tr>';
+	}
+
 	if ($server->type == 'windows' && isset($server->windows_domain) && ! is_null($server->windows_domain)) {
 		echo '<tr><td>';
 		echo _('Inside Active Directory domain').': ';

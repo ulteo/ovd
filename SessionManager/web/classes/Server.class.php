@@ -30,7 +30,7 @@ class Server {
 	public $type = NULL;
 	public $version = NULL;
 	public $external_name = NULL;
-	public $web_port = NULL;
+	public $web_port = 1112;
 	public $max_sessions = NULL;
 	public $cpu_model = NULL;
 	public $cpu_nb_cores = NULL;
@@ -82,45 +82,93 @@ class Server {
 		return $buf;
 	}
 
-	public function getBaseURL($redir_ = false) {
-		Logger::debug('main', 'Starting Server::getBaseURL for \''.$this->fqdn.'\'');
-
-		$name = $redir_ ? $this->external_name : $this->fqdn;
-		return 'http://'.$name.':'.$this->web_port.'/applicationserver';
-	}
-
-	public function getWebservicesBaseURL($redir_ = false) {
-		Logger::debug('main', 'Starting Server::getWebservicesBaseURL for \''.$this->fqdn.'\'');
-
-		return $this->getBaseURL($redir_).'/webservices';
-	}
-
-	public function isOK() {
-		Logger::debug('main', 'Starting Server::isOK for \''.$this->fqdn.'\'');
-
-		$buf_type = $this->getType();
-		if (! $buf_type) {
-			Logger::error('main', '"'.$this->fqdn.'": does not send a valid type');
-			popup_error('"'.$this->fqdn.'": '._('does not send a valid type'));
-
+	public function getConfiguration() {
+		$xml = query_url($this->getBaseURL().'/server/configuration');
+		if (! $xml) {
+			Logger::error('main', 'Server::getConfiguration - query_url failed');
 			return false;
 		}
-		$buf_version = $this->getVersion();
-		if (! $buf_version) {
-			Logger::error('main', '"'.$this->fqdn.'": does not send a valid version');
-			popup_error('"'.$this->fqdn.'": '._('does not send a valid version'));
 
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf) {
+			Logger::error('main', 'Server::getConfiguration - Unable to load XML');
 			return false;
 		}
-		$buf_monitoring = $this->getMonitoring();
-		if (! $buf_monitoring) {
-			Logger::error('main', '"'.$this->fqdn.'": does not send a valid monitoring');
-			popup_error('"'.$this->fqdn.'": '._('does not send a valid monitoring'));
 
+		if (! $dom->hasChildNodes()) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no child nodes)');
 			return false;
+		}
+
+		$node = $dom->getElementsByTagname('configuration')->item(0);
+		if (is_null($node)) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no configuration node)');
+			return false;
+		}
+
+		if (! $node->hasAttribute('type')) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no attribute type in configuration node)');
+			return false;
+		}
+
+		if (! $node->hasAttribute('version')) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no attribute version in configuration node)');
+			return false;
+		}
+
+		if (! $node->hasAttribute('ram')) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no attribute ram in configuration node)');
+			return false;
+		}
+
+		$this->type = $node->getAttribute('type');
+		$this->version = $node->getAttribute('version');
+		$this->ram_total = $node->getAttribute('ram');
+
+		$node = $node->getElementsByTagname('cpu')->item(0);
+		if (is_null($node)) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no cpu node)');
+			return false;
+		}
+
+		if (! $node->hasAttribute('nb_cores')) {
+			Logger::error('main', 'Server::getConfiguration - Invalid XML (no attribute nb_cores in cpu node)');
+			return false;
+		}
+
+		$this->cpu_nb_cores = $node->getAttribute('nb_cores');
+		$this->cpu_model = $node->firstChild->nodeValue;
+
+		$node = $dom->getElementsByTagname('configuration')->item(0);
+		$nodes = $node->getElementsByTagname('role');
+		if (count($nodes) > 0) {
+			$this->roles = array();
+
+			foreach ($nodes as $node) {
+				if (! $node->hasAttribute('name')) {
+					Logger::error('main', 'Server::getConfiguration - Invalid XML (no attribute name in role node)');
+					return false;
+				}
+
+				$this->roles[$node->getAttribute('name')] = true;
+			}
 		}
 
 		return true;
+	}
+
+	public function getBaseURL() {
+		return 'http://'.$this->fqdn.':'.$this->web_port;
+	}
+
+	public function getWebservicesBaseURL() {
+		return $this->getBaseURL();
+	}
+
+	public function isOK() {
+		return $this->getConfiguration();
 	}
 
 	public function isAuthorized() {
@@ -289,31 +337,32 @@ class Server {
 	}
 
 	public function getStatus() {
-		Logger::debug('main', 'Starting Server::getStatus for \''.$this->fqdn.'\'');
-
-		if ($this->getAttribute('status') == 'down' || $this->getAttribute('status') == 'broken') {
+		if ($this->getAttribute('status') != 'ready') {
 			$this->isNotReady();
 			return false;
 		}
 
-		$ret = query_url_return_errorcode($this->getWebservicesBaseURL().'/server_status.php');
-		list($returncode, $returntext) = $ret;
-
-		if ($returncode != 200) {
-			Logger::error('main', 'Server "'.$this->fqdn.':'.$this->web_port.'" returned an erroneous HTTP code \''.$returncode.'\'');
-			$this->returnedError();
+		$xml = query_url($this->getBaseURL().'/server/status');
+		if (! $xml)
 			return false;
-		}
 
-		if (! $returntext) {
-			$this->isUnreachable();
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
 			return false;
-		}
 
-		$this->setStatus($returntext);
+		if (! $dom->hasChildNodes())
+			return false;
 
-		if ($ret !== 'ready')
-			$this->isNotReady();
+		$node = $dom->getElementsByTagname('server')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('status'))
+			return false;
+
+		$this->setStatus($node->getAttribute('status'));
 
 		return true;
 	}
@@ -374,32 +423,6 @@ class Server {
 		return $string;
 	}
 
-	public function getType() {
-		Logger::debug('main', 'Starting Server::getType for \''.$this->fqdn.'\'');
-
-		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::getType server "'.$this->fqdn.':'.$this->web_port.'" is not online');
-			return false;
-		}
-
-		$buf = query_url($this->getWebservicesBaseURL().'/server_type.php');
-
-		if (! $buf) {
-			$this->isUnreachable();
-			return false;
-		}
-
-		if (! is_string($buf))
-			return false;
-
-		if ($buf == '')
-			return false;
-
-		$this->setAttribute('type', $buf);
-
-		return true;
-	}
-
 	public function stringType() {
 // 		Logger::debug('main', 'Starting Server::stringType for \''.$this->fqdn.'\'');
 
@@ -407,32 +430,6 @@ class Server {
 			return $this->getAttribute('type');
 
 		return _('Unknown');
-	}
-
-	public function getVersion() {
-		Logger::debug('main', 'Starting Server::getVersion for \''.$this->fqdn.'\'');
-
-		if (! $this->isOnline()) {
-			Logger::debug('main', 'Server::getVersion server "'.$this->fqdn.':'.$this->web_port.'" is not online');
-			return false;
-		}
-
-		$buf = query_url($this->getWebservicesBaseURL().'/server_version.php');
-
-		if (! $buf) {
-			$this->isUnreachable();
-			return false;
-		}
-
-		if (! is_string($buf))
-			return false;
-
-		if ($buf == '')
-			return false;
-
-		$this->setAttribute('version', $buf);
-
-		return true;
 	}
 
 	public function stringVersion() {
@@ -468,59 +465,34 @@ class Server {
 	}
 
 	public function getMonitoring() {
-		Logger::debug('main', 'Starting Server::getMonitoring for \''.$this->fqdn.'\'');
-
 		if (! $this->isOnline()) {
 			Logger::debug('main', 'Server::getMonitoring server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 
-		$xml = query_url($this->getWebservicesBaseURL().'/server_monitoring.php');
-
-		if (! $xml) {
-			$this->isUnreachable();
-			Logger::error('main', 'Server::getMonitoring server \''.$this->fqdn.'\' is unreachable');
+		$xml = query_url($this->getBaseURL().'/server/monitoring');
+		if (! $xml)
 			return false;
-		}
-
-		if (! is_string($xml)) {
-			Logger::error('main', 'Server::getMonitoring invalid xml1');
-			return false;
-		}
-
-		if (substr($xml, 0, 5) == 'ERROR') {
-			$this->returnedError();
-			Logger::error('main', 'Server::getMonitoring invalid xml2');
-			return false;
-		}
-
-		if ($xml == '') {
-			Logger::error('main', 'Server::getMonitoring invalid xml3');
-			return false;
-		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
-		$ret = @$dom->loadXML($xml);
-		if (! $ret) {
-			Logger::error('main', 'Server::getMonitoring loadXML failed');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
 			return false;
-		}
+
+		if (! $dom->hasChildNodes())
+			return false;
 
 		$keys = array();
 
 		$cpu_node = $dom->getElementsByTagname('cpu')->item(0);
 		if (is_object($cpu_node)) {
-			$keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
-			if ($cpu_node->hasAttribute('nb_cores'))
-				$keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
 			if ($cpu_node->hasAttribute('load'))
 				$keys['cpu_load'] = $cpu_node->getAttribute('load');
 		}
 
 		$ram_node = $dom->getElementsByTagname('ram')->item(0);
 		if (is_object($ram_node)) {
-			if ($ram_node->hasAttribute('total'))
-				$keys['ram_total'] = $ram_node->getAttribute('total');
 			if ($ram_node->hasAttribute('used'))
 				$keys['ram_used'] = $ram_node->getAttribute('used');
 		}
@@ -578,17 +550,80 @@ class Server {
 	public function getSessionStatus($session_id_) {
 		Logger::debug('main', 'Starting Server::getSessionStatus for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
-		$ret = query_url_no_error($this->getWebservicesBaseURL().'/session_status.php?session='.$session_id_);
+		$xml = query_url($this->getBaseURL().'/aps/session/status/'.$session_id_);
 
-		return $ret;
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('id'))
+			return false;
+
+		if (! $node->hasAttribute('status'))
+			return false;
+
+		$session_status = $node->getAttribute('status');
+		var_dump($session_status);
+		if (! is_numeric($session_status)) {
+			switch ($session_status) {
+				case 'ready':
+					$session_status = 2;
+					break;
+				case 'wait_destroy':
+					$session_status = 3;
+					break;
+				case 'disconnected':
+					$session_status = 4;
+					break;
+				case 'unknown':
+					$session_status = 4;
+					break;
+				default:
+					$session_status = -1;
+					break;
+			}
+		}
+
+		return $session_status;
 	}
 
 	public function orderSessionDeletion($session_id_) {
 		Logger::debug('main', 'Starting Server::orderSessionDeletion for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
-		$ret = query_url($this->getWebservicesBaseURL().'/kill_session.php?session='.$session_id_);
+		$xml = query_url($this->getBaseURL().'/aps/session/destroy/'.$session_id_);
 
-		return $ret;
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('session')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('id'))
+			return false;
+
+		if (! $node->hasAttribute('status'))
+			return false;
+
+		if ($node->getAttribute('status') != 'destroying')
+			return false;
+
+		return true;
 	}
 
 	public function orderWindowsSessionCreation($session_id_, $login_, $password_, $displayname_) {
@@ -703,41 +738,76 @@ class Server {
 	}
 
 	public function userIsLoggedIn($user_login_) {
-		if ($this->getAttribute('type') == 'windows') {
-			$dom = new DomDocument('1.0', 'utf-8');
+		$user_login_ .= '_OVD'; //hardcoded
 
-			$prefs = Preferences::getInstance();
-			if (! $prefs)
-				die_error('get Preferences failed', __FILE__, __LINE__);
-			$user_profile_mode = $prefs->get('UserDB', 'enable');
-			$user_domain = ($user_profile_mode == 'activedirectory')?'ad':'local';
+		$dom = new DomDocument('1.0', 'utf-8');
 
-			$ret = query_url_post($this->getWebservicesBaseURL().'/loggedin/'.$user_login_.'/'.$user_domain);
+		$node = $dom->createElement('user');
+		$node->setAttribute('login', $user_login_);
+		$dom->appendChild($node);
 
-			$buf = @$dom->loadXML($ret);
-			if (! $buf) {
-				Logger::error('main', 'Server::userIsLoggedIn(\''.$user_login_.'\') Unable to get a valid XML from windows loggedin/'.$user_login_.'/'.$user_domain.' - Return: '.$ret);
-				return false;
-			}
+		$xml = $dom->saveXML();
 
-			if (! $dom->hasChildNodes()) {
-				Logger::error('main', 'Server::userIsLoggedIn(\''.$user_login_.'\') Unable to get a valid XML from windows loggedin/'.$user_login_.'/'.$user_domain.' - Return: '.$ret);
-				return false;
-			}
+		$xml = query_url_post_xml($this->getBaseURL().'/aps/user/loggedin', $xml);
+		if (! $xml)
+			return false;
 
-			$user_node = $dom->getElementsByTagname('user')->item(0);
-			if (is_null($user_node)) {
-				Logger::critical('main', 'Server::userIsLoggedIn(\''.$user_login_.'\') Unable to get a valid XML from windows loggedin/'.$user_login_.'/'.$user_domain.' - Return: '.$ret);
-				return false;
-			}
+		$dom = new DomDocument('1.0', 'utf-8');
 
-			if ($user_node->hasAttribute('loggedin'))
-				$loggedin = $user_node->getAttribute('loggedin');
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
 
-			return ($loggedin == 'true');
-		}
+		if (! $dom->hasChildNodes())
+			return false;
 
-		return false;
+		$node = $dom->getElementsByTagname('user')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('login'))
+			return false;
+
+		if (! $node->hasAttribute('loggedin'))
+			return false;
+
+		$loggedin = $node->getAttribute('loggedin');
+
+		return ($loggedin == 'true');
+	}
+
+	public function userLogout($user_login_) {
+		$user_login_ .= '_OVD'; //hardcoded
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('user');
+		$node->setAttribute('login', $user_login_);
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/aps/user/logout', $xml);
+		if (! $xml)
+			return false;
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('user')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('login'))
+			return false;
+
+		return true;
 	}
 
 	public function getWindowsADDomain() {
@@ -782,19 +852,27 @@ class Server {
 		return true;
 	}
 
-	public function getApplicationIcon($icon_path_, $desktopfile_) {
-		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
+	public function getApplicationIcon($id_, $real_id_) {
+		$ret = query_url($this->getBaseURL().'/aps/application/icon/'.$real_id_);
 
-		$ret = query_url($this->getWebservicesBaseURL().'/icon.php?path='.base64_encode($icon_path_).'&desktopfile='.base64_encode($desktopfile_));
-
-		if ($ret == '')
+		if (! $ret || $ret == '')
 			return false;
 
-		return $ret;
+		if (! check_folder(CACHE_DIR.'/image') || ! check_folder(CACHE_DIR.'/image/application'))
+			return false;
+
+		@file_put_contents(CACHE_DIR.'/image/application/'.$id_.'.png', $ret);
+
+		return true;
 	}
 
 	// ? unclean?
 	public function getApplications() {
+if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
+	Logger::critical('main', 'SERVER IS NOT AN APS');
+	return NULL;
+}
+
 		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
 
 		$applicationDB = ApplicationDB::getInstance();
@@ -815,6 +893,11 @@ class Server {
 	}
 
 	public function updateApplications(){
+if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
+	Logger::critical('main', 'SERVER IS NOT AN APS');
+	return false;
+}
+
 		Logger::debug('main', 'Server::updateApplications');
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -834,7 +917,7 @@ class Server {
 		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
 		$applicationDB = new $mod_app_name();
 
-		$xml = query_url($this->getWebservicesBaseURL().'/applications.php');
+		$xml = query_url($this->getBaseURL().'/aps/applications');
 
 		if (! $xml) {
 			$this->isUnreachable();
@@ -884,6 +967,8 @@ class Server {
 				$app_package = $app_node->getAttribute("package");
 			if ($app_node->hasAttribute("desktopfile"))
 				$app_desktopfile = $app_node->getAttribute("desktopfile");
+			if ($app_node->hasAttribute("id"))
+				$app_real_id = $app_node->getAttribute("id");
 
 			$exe_node = $app_node->getElementsByTagName('executable')->item(0);
 			if ($exe_node->hasAttribute("command")) {
@@ -925,7 +1010,7 @@ class Server {
 							return $ret;
 						}
 						if (! file_exists($a->getIconPath())) {
-							$a->getIcon();
+							$this->getApplicationIcon($a->getAttribute('id'), $app_real_id);
 						}
 					}
 					$current_liaison_key[] = $a->getAttribute('id');

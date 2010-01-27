@@ -40,21 +40,15 @@ if (!in_array('ApplicationDB',$mods_enable)){
 }
 $applicationDB = ApplicationDB::getInstance();
 $app = $applicationDB->import($_REQUEST['id']);
-if (!file_exists($app->getIconPath())) {
-	$ret = $app->getIcon();
-	if ( $ret == false) {
-		header('HTTP/1.1 404 Not Found');
-		die();
-	}
-	else {
-		header('Content-Type: image/png');
-		echo @file_get_contents($app->getIconPath());
-	}
-}
-else {
-	header('Content-Type: image/png');
-	echo @file_get_contents($app->getIconPath());
+if (! is_object($app)) {
+	header('HTTP/1.1 500 Internal Error');
+	die();
 }
 
+if (! file_exists($app->getIconPath())) {
+	header('HTTP/1.1 404 Not Found');
+	die();
+}
 
-
+header('Content-Type: image/png');
+echo @file_get_contents($app->getIconPath());

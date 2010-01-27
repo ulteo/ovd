@@ -122,7 +122,7 @@ class User {
 		return array_unique($apps_group_list);
 	}
 
-	public function getAvailableServers($type){
+	public function getAvailableServers(){
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
@@ -134,10 +134,10 @@ class User {
 		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
 
 		// get the list of server who the user can launch his applications
-		Logger::debug('main','USER::getAvailableServers (type='.$type.')');
+		Logger::debug('main','USER::getAvailableServers()');
 		$servers = array();
-		$apps = $this->applications($type, false);
-		$apps_static = $this->applications($type, true);
+		$apps = $this->applications(NULL, false);
+		$apps_static = $this->applications(NULL, true);
 		$apps_id = array();
 		$apps_type = array();
 		foreach($apps as $app){
@@ -145,9 +145,9 @@ class User {
 			$apps_type[$app->getAttribute('id')] = $app->getAttribute('type');
 		}
 		
-		$available_servers = Servers::getAvailableType($type);
+		$available_servers = Servers::getAvailableByRole(Servers::$role_aps);
 		foreach($available_servers as $server) {
-			if ($user_profile_mode == 'activedirectory' && $type == 'windows' && $server->getAttribute('windows_domain') != $prefs_ad['domain']) {
+			if ($user_profile_mode == 'activedirectory' && $server->getAttribute('type') == 'windows' && $server->getAttribute('windows_domain') != $prefs_ad['domain']) {
 				Logger::warning('main', 'USER::getAvailableServers Server \''.$server->fqdn.'\' is NOT linked to Active Directory domain \''.$prefs_ad['domain'].'\'');
 				continue;
 			}
@@ -155,7 +155,10 @@ class User {
 			$buf = $server->userIsLoggedIn($this->getAttribute('login'));
 			if ($buf) {
 				Logger::warning('main', 'USER::getAvailableServers User(login='.$this->getAttribute('login').') is already logged in Server \''.$server->fqdn.'\'');
-				continue;
+				if (! $server->userLogout($this->getAttribute('login'))) {
+					Logger::error('main', 'USER::getAvailableServers User(login='.$this->getAttribute('login').') unable to logout from Server \''.$server->fqdn.'\'');
+					continue;
+				}
 			}
 
 			if (count($apps_id)>0 || $launch_without_apps == 1) {
@@ -176,10 +179,10 @@ class User {
 		return $servers;
 	}
 
-	public function getAvailableServer($type){
+	public function getAvailableServer(){
 		// get a server who the user can launch his applications
-		Logger::debug('main', "USER::getAvailableServer($type)");
-		$list_servers = $this->getAvailableServers($type);
+		Logger::debug('main', "USER::getAvailableServer()");
+		$list_servers = $this->getAvailableServers();
 
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
@@ -223,7 +226,7 @@ class User {
 			if ($buf->isOnline())
 				return $buf;
 		}
-		Logger::error('main' , "USER::getAvailableServer($type) no server found for user '".$this->getAttribute('login')."'");
+		Logger::error('main' , "USER::getAvailableServer() no server found for user '".$this->getAttribute('login')."'");
 		return NULL;
 	}
 
