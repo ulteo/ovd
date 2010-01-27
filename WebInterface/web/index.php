@@ -51,14 +51,14 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			<div class="spacer"></div>
 
 			<div id="pageWrap">
-				<div id="loginBox" style="width: 75%; margin-left: auto; margin-right: auto; padding: 10px; background: #fff;" class="rounded">
+				<div id="loginBox" style="width: 65%; margin-left: auto; margin-right: auto; padding: 10px; background: #fff;" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td style="width: 376px; text-align: center; vertical-align: middle;">
 								<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
 							</td>
 							<td style="text-align: center; vertical-align: middle;">
-								<div id="loginForm" style="width: 65%; margin-left: auto; margin-right: auto; padding: 10px; background: #eee;" class="rounded">
+								<div id="loginForm" style="width: 90%; margin-left: auto; margin-right: 0px; padding: 10px; background: #eee;" class="rounded">
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession($('user_login').value, $('user_password').value, $('session_mode').value);">
 										<input type="hidden" id="session_id" name="session_id" value="" />
 										<input type="hidden" id="session_server" name="session_server" value="" />
