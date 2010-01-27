@@ -121,7 +121,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			</table>
 		</div>
 
-		<div id="appletContainer" style="display: none;">toto
+		<div id="appletContainer" style="display: none;">
 		</div>
 
 		<div id="printerContainer">
