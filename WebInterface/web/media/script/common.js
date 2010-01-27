@@ -68,6 +68,7 @@ function onStartSessionSuccess(transport) {
 	$('session_login').value = session_login;
 	$('session_password').value = session_password;
 
+	$('session_password').value = '';
 	enableLogin();
 
 	return true;
