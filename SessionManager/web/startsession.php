@@ -34,14 +34,26 @@ function parse_login_XML($xml_) {
 	if (! $dom->hasChildNodes())
 		return false;
 
-	$node = $dom->getElementsByTagname('user')->item(0);
-	if (is_null($node))
+	$session_node = $dom->getElementsByTagname('session')->item(0);
+	if (is_null($session_node))
 		return false;
 
-	if (! $node->hasAttribute('login'))
+	if (! $session_node->hasAttribute('mode'))
 		return false;
 
-	$_SESSION['login'] = $node->getAttribute('login');
+	// It's not a login process to handle the session mode... should be moved somewhere else...
+	$_SESSION['mode'] = $session_node->getAttribute('mode');
+
+	$user_node = $dom->getElementsByTagname('user')->item(0);
+	if (is_null($user_node))
+		return false;
+
+	if (! $user_node->hasAttribute('login'))
+		return false;
+
+	// Maybe we should authenticate the user? see do_login();
+	$_SESSION['login'] = $user_node->getAttribute('login');
+
 	return true;
 }
 
@@ -112,14 +124,11 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
-//BEGIN New login XML from WebInterface (insecure for now)
+// The "user" node of this XML should be handled by do_login();
 $ret = parse_login_XML(@file_get_contents('php://input'));
-//END New login XML from WebInterface (insecure for now)
 
-//BEGIN A way to try startsession with any user (very insecure, should be removed ASAP)
-if (isset($_GET['login']))
-	$_SESSION['login'] = $_GET['login'];
-//END A way to try startsession with any user (very insecure, should be removed ASAP)
+if (isset($_SESSION['mode']))
+	$session_mode = $_SESSION['mode'];
 
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
