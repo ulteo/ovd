@@ -31,6 +31,8 @@ from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
+from Platform import Platform
+import Reg
 
 class User(AbstractUser):
 	def create(self):
@@ -133,12 +135,20 @@ class User(AbstractUser):
 				win32profile.DeleteProfile(sid)
 				succefulDelete = True
 			except Exception, e:
-				print "Unable to unload user reg: ",str(e)
-				raise e	
-
+				Logger.warn("Unable to unload user reg: "%(str(e)))
+				
+				try:
+					path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%s"%(sid)
+					Reg.DeleteTree(win32con.HKEY_LOCAL_MACHINE, path)
+				except Exception, err:
+					Logger.warn("RegDeleteTree of %s return: %s"%(path, str(err)))
+					raise e
+				
+				# Todo: remove the directory
+				#Platform.DeleteDirectory(userdir)
+		
 		try:
 			win32net.NetUserDel(None, self.name)
-			# toDo clean: HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\DefaultUserProfile = Default User
 		except Exception, err:
 			Logger.error("Unable to delete user: %s"%(str(err)))
 			raise err
