@@ -38,9 +38,20 @@ class InstancesManager(threading.Thread):
 	
 	def run(self):
 		# todo mutex lock
-		while len(self.job) != 0:
+		while len(self.jobs) != 0:
 			(token, app) = self.job.pop()
-			cmd = "notepad" # harcoded ...
+			
+			application = Application(app, "")
+			if not application.isAvailable():
+				print "Application %d is not available"%(app)
+				self.onInstanceNotAvailable(token)
+				return
+			
+			cmd = application.getFinalCommand()
+			if cmd is None:
+				print "No available command"
+				self.onInstanceNotAvailable(token)
+				return
 			
 			instance = self.launch(cmd)
 			
@@ -77,6 +88,10 @@ class InstancesManager(threading.Thread):
 		"""must be redeclared"""
 		pass
 	
+	def onInstanceNotAvailable(self, token):
+		buf = struct.pack(">B", 0x06)
+		buf+= struct.pack(">I", token)
+		self.vchannel.Write(buf)
 	
 	def onInstanceExited(self, instance):
 		self.instances.remove(instance)
