@@ -8,11 +8,11 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
     exit 0
 fi
 
-CONFFILE="/etc/ulteo/ovdserver.conf"
+CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
 
 gen_conf()
 {
-    db_get ulteo-ovdserver/session_manager || true
+    db_get ulteo-ovd-slaveserver/session_manager || true
     SESSION_MANAGER="$RET"
 
     sed -r -i "s,^(session_manager = )(.*)$,\1$SESSION_MANAGER," $CONFFILE
