@@ -59,11 +59,13 @@ if (! array_key_exists('password', $_POST)) {
 
 $dom = new DomDocument('1.0', 'utf-8');
 
-$node = $dom->createElement('user');
-$node->setAttribute('login', $_POST['login']);
-$node->setAttribute('password', $_POST['password']);
-$node->setAttribute('mode', $_POST['mode']);
-$dom->appendChild($node);
+$session_node = $dom->createElement('session');
+$session_node->setAttribute('mode', $_POST['mode']);
+$user_node = $dom->createElement('user');
+$user_node->setAttribute('login', $_POST['login']);
+$user_node->setAttribute('password', $_POST['password']);
+$session_node->appendChild($user_node);
+$dom->appendChild($session_node);
 
 $ret = query_url_post_xml(SESSIONMANAGER_URL.'/startsession.php', $dom->saveXML());
 
