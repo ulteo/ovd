@@ -48,12 +48,19 @@ function onStartSessionSuccess(transport) {
 		enableLogin();
 		return false;
 	}
-	buffer = buffer[0];
+	session = buffer[0];
 
-	var session_id = buffer.getAttribute('id');
-	var session_server = buffer.getAttribute('server');
-	var session_login = buffer.getAttribute('login');
-	var session_password = buffer.getAttribute('password');
+	var buffer = session.getElementsByTagName('server');
+	if (buffer.length != 1) {
+		enableLogin();
+		return false;
+	}
+	server = buffer[0];
+
+	var session_id = session.getAttribute('id');
+	var session_server = server.getAttribute('fqdn');
+	var session_login = server.getAttribute('login');
+	var session_password = server.getAttribute('password');
 
 	$('session_id').value = session_id;
 	$('session_server').value = session_server;
