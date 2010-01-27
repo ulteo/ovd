@@ -1,0 +1,11 @@
+# Ulteo webinterface alias
+
+Alias /webinterface @DATADIR@/ulteo/webinterface
+<Directory @DATADIR@/ulteo/webinterface>
+    Options FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    allow from all
+    DirectoryIndex index.php
+    php_admin_flag magic_quotes_gpc Off
+</Directory>
