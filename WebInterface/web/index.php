@@ -40,7 +40,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 		<link rel="shortcut icon" type="image/png" href="favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
-		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 	</head>
 
 	<body style="margin: 50px; background: #ddd; color: #333;">

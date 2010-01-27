@@ -43,7 +43,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 		<link rel="shortcut icon" type="image/png" href="favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
-		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
@@ -82,7 +82,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
 				daemon.i18n['start_another_session'] = '<?php echo _('If you want to start another session, ...'); ?>';
 
-				daemon.loop();
+				setTimeout(function() {
+					daemon.loop();
+				}, 1000);
 			});
 		</script>
 	</head>
