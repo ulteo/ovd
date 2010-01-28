@@ -11,8 +11,7 @@ scripts_DATA =  domain.php \
                 server_status.php \
                 userlist.php \
                 session_invite.php \
-                application.php \
-                .htaccess
+                application.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/webservices
 EXTRA_DIST = $(scripts_DATA)

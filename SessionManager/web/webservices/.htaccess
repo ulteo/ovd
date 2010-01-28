@@ -1,4 +1,0 @@
-RewriteEngine on
-
-RewriteCond %{REQUEST_URI} ^/(.+)/(.+)$
-RewriteRule . /%1_%2.php [L]
