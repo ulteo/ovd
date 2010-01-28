@@ -64,25 +64,6 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 					$('appletContainer').hide();
 				if ($('splashContainer'))
 					$('splashContainer').show();
-
-				$('lockWrap').hide();
-				$('lockWrap').style.width = document.body.clientWidth+'px';
-				$('lockWrap').style.height = document.body.clientHeight+'px';
-
-				$('errorWrap').hide();
-				$('okWrap').hide();
-				$('infoWrap').hide();
-
-				Event.observe($('lockWrap'), 'click', function() {
-					if ($('errorWrap').visible())
-						hideError();
-
-					if ($('okWrap').visible())
-						hideOk();
-
-					if ($('infoWrap').visible())
-						hideInfo();
-				});
 			});
 		</script>
 

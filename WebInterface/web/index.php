@@ -44,6 +44,16 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 	</head>
 
 	<body style="margin: 50px; background: #ddd; color: #333;">
+		<div id="lockWrap" style="display: none;">
+		</div>
+
+		<div id="errorWrap" style="display: none;">
+		</div>
+		<div id="okWrap" style="display: none;">
+		</div>
+		<div id="infoWrap" style="display: none;">
+		</div>
+
 		<div id="mainWrap">
 			<div id="headerWrap">
 			</div>

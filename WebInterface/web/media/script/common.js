@@ -112,3 +112,24 @@ function toggleContent(container) {
 
 	return true;
 }
+
+Event.observe(window, 'load', function() {
+	$('lockWrap').hide();
+	$('lockWrap').style.width = document.body.clientWidth+'px';
+	$('lockWrap').style.height = document.body.clientHeight+'px';
+
+	$('errorWrap').hide();
+	$('okWrap').hide();
+	$('infoWrap').hide();
+
+	Event.observe($('lockWrap'), 'click', function() {
+		if ($('errorWrap').visible())
+			hideError();
+
+		if ($('okWrap').visible())
+			hideOk();
+
+		if ($('infoWrap').visible())
+			hideInfo();
+	});
+});
