@@ -480,8 +480,12 @@ $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
 foreach (array($session->server) as $server) {
+	$server = Abstract_Server::load($session->server);
+	if (! $server)
+		continue;
+
 	$server_node = $dom->createElement('server');
-	$server_node->setAttribute('fqdn', $server);
+	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 	$server_node->setAttribute('login', $user_login);
 	$server_node->setAttribute('password', $user_password);
 	foreach ($user->applications() as $application) {
