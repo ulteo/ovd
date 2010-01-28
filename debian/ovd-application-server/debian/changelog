@@ -1,3 +1,9 @@
+ovd-application-server (2.0.2-0ulteo0) 2-0-staging; urgency=low
+
+  * New bugfix release
+
+ -- Jeremy Desvages <jeremy@ulteo.com>  Thu, 28 Jan 2010 13:44:44 +0100
+
 ovd-application-server (2.0.1-0ulteo0) 2-0-staging; urgency=low
 
   * New bugfix release
