@@ -169,13 +169,13 @@ Logger::debug('main', '(startsession) Now checking for old session');
 $ev = new SessionStart(array('user' => $user));
 
 $already_online = 0;
-/*$sessions = Sessions::getByUser($user->getAttribute('login'));
+$sessions = Sessions::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	foreach ($sessions as $session) {
-		if ($session->isSuspended()) {
+		/*if ($session->isSuspended()) {
 			$old_session_id = $session->id;
 			$old_session_server = $session->server;
-		} elseif ($session->isAlive()) {
+		} else*/if ($session->isAlive()) {
 			$already_online = 1;
 
 			$buf = $prefs->get('general', 'session_settings_defaults');
@@ -183,7 +183,7 @@ if ($sessions > 0) {
 
 			if ($buf == 0)
 				die_error(_('You already have an active session'), __FILE__, __LINE__, true);
-			elseif ($buf == 1) {
+			/*elseif ($buf == 1) {
 				$invite = new Invite(gen_string(5));
 				$invite->session = $session->id;
 				$invite->settings = array(
@@ -204,11 +204,11 @@ if ($sessions > 0) {
 				$server = Abstract_Server::load($session->server);
 
 				redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
-			}
+			}*/
 		} else
 			die_error(_('You already have a session, please contact your administrator'), __FILE__, __LINE__, true);
 	}
-}*/
+}
 
 $serv_tmp = $user->getAvailableServers();
 if (count($serv_tmp) == 0) {
