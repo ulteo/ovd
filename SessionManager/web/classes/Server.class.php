@@ -572,21 +572,22 @@ class Server {
 			return false;
 
 		$session_status = $node->getAttribute('status');
-		var_dump($session_status);
 		if (! is_numeric($session_status)) {
+			//Matching between new OvdServer session statuses and SessionManager ones
 			switch ($session_status) {
 				case 'ready':
+				case 'logged': //ready + client inside
 					$session_status = 2;
 					break;
 				case 'wait_destroy':
+				case 'disconnected': //sending destruction order (and what about session suspend/resume?)
+				case 'error': //sending destruction order (?)
 					$session_status = 3;
-					break;
-				case 'disconnected':
-					$session_status = 4;
 					break;
 				case 'unknown':
 					$session_status = 4;
 					break;
+				case 'init': //default status for a newly created session (?)
 				default:
 					$session_status = -1;
 					break;

@@ -102,6 +102,45 @@ class Session {
 	public function setStatus($status_) {
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
+		//Matching between new OvdServer session statuses and SessionManager ones
+		switch ($status_) {
+			case 'ready':
+			case 'logged': //ready + client inside
+				$status_ = 2;
+				break;
+			case 'wait_destroy':
+			case 'disconnected': //sending destruction order (and what about session suspend/resume?)
+			case 'error': //sending destruction order (?)
+				$status_ = 3;
+				break;
+			case 'unknown':
+				$status_ = 4;
+				break;
+			case 'init': //default status for a newly created session (?)
+			default:
+				$status_ = -1;
+				break;
+		}
+
+		if ($status_ == 1) {
+			Logger::info('main', 'Session start : \''.$this->id.'\'');
+
+			$this->setAttribute('start_time', time());
+		} elseif ($status_ == 3 || $status_ == 4) {
+			Logger::info('main', 'Session end : \''.$this->id.'\'');
+
+			$plugins = new Plugins();
+			$plugins->doLoad();
+
+			$plugins->doRemovesession(array(
+				'fqdn'		=>	$this->server,
+				'session'	=>	$this->id
+			));
+
+			if (! $this->orderDeletion((($status_ == 4)?false:true)))
+				Logger::error('main', 'Unable to delete session \''.$this->id.'\'');
+		}
+
 		Logger::info('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for session \''.$this->id.'\'');
 		$this->setAttribute('status', $status_);
 
