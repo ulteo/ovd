@@ -1,0 +1,24 @@
+#!/bin/sh -e
+
+if [ -f /usr/share/debconf/confmodule ]; then
+  . /usr/share/debconf/confmodule
+fi
+
+reload_apache()
+{
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+}
+
+if [ "$1" = "purge" ]; then
+    # apache2 link
+    rm -f /etc/apache2/conf.d/webinterface
+    reload_apache
+fi
+
+#DEBHELPER#
+
+exit 0
