@@ -64,7 +64,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			<div class="spacer"></div>
 
 			<div id="pageWrap">
-				<div id="loginBox" style="width: 65%; margin-left: auto; margin-right: auto; padding: 10px; background: #fff;" class="rounded">
+				<div id="loginBox" style="position: absolute; width: 65%; margin-left: auto; margin-right: auto; padding: 10px; background: #fff;" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td style="width: 376px; text-align: center; vertical-align: middle;">

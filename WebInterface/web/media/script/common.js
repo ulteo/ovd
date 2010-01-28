@@ -2,6 +2,8 @@ var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
 
+var startsession = false;
+
 function startSession(login_, password_, mode_) {
 	disableLogin();
 
@@ -21,6 +23,9 @@ function startSession(login_, password_, mode_) {
 	);
 
 	if (parseInt(ret.getStatus()) != 200)
+		return false;
+
+	if (! startsession)
 		return false;
 
 	if ($('use_popup_true') && $('use_popup_true').checked) {
@@ -43,6 +48,13 @@ function enableLogin() {
 
 function onStartSessionSuccess(transport) {
 	var xml = transport.responseXML;
+
+	var buffer = xml.getElementsByTagName('error');
+	if (buffer.length == 1) {
+		showError('('+buffer[0].getAttribute('id')+') '+buffer[0].getAttribute('message'));
+		enableLogin();
+		return false;
+	}
 
 	var buffer = xml.getElementsByTagName('session');
 	if (buffer.length != 1) {
@@ -72,6 +84,8 @@ function onStartSessionSuccess(transport) {
 
 	$('user_password').value = '';
 	enableLogin();
+
+	startsession = true;
 
 	return true;
 }
@@ -114,6 +128,9 @@ function toggleContent(container) {
 }
 
 Event.observe(window, 'load', function() {
+	Effect.Center($('loginBox'));
+	$('loginBox').style.top = (parseInt($('loginBox').style.top)-50)+'px';
+
 	$('lockWrap').hide();
 	$('lockWrap').style.width = document.body.clientWidth+'px';
 	$('lockWrap').style.height = document.body.clientHeight+'px';
