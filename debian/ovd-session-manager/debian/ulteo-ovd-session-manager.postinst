@@ -13,6 +13,9 @@ CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
 CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
 apache_config()
 {
+    # Forcing rewrite Apache module (dirty?)
+    a2enmod rewrite >/dev/null
+
     if [ ! -e /etc/apache2/conf.d/sessionmanager ]; then
         ln -s /etc/ulteo/sessionmanager/apache2.conf \
             /etc/apache2/conf.d/sessionmanager
