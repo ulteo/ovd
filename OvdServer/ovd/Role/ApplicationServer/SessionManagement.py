@@ -54,7 +54,7 @@ class SessionManagement(Thread):
 		
 		if Platform.getInstance().userExist(session.user.name):
 			Logger.error("unable to create session: user already exist")
-			self.aps_instance.session_switch_status(session, "error")
+			self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 			return
 		
 		
@@ -68,12 +68,12 @@ class SessionManagement(Thread):
 		rr = session.user.create()
 		if rr is False:
 			Logger.error("unable to create session")
-			self.aps_instance.session_switch_status(session, "error")
+			self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 			return
 		
 		session.install_client()
 		
-		self.aps_instance.session_switch_status(session, "ready")
+		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_INITED)
 	
 	
 	def destroy_session(self, session):
@@ -90,6 +90,7 @@ class SessionManagement(Thread):
 			session.user.infos["tsid"] = sessid
 		self.destroy_user(session.user)
 		del(self.aps_instance.sessions[session.id])
+		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_DESTROYED)
 	
 	
 	def destroy_user(self, user):

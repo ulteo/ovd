@@ -135,7 +135,6 @@ class Dialog(AbstractDialog):
 			
 			session = {}
 			session["id"] = sessionNode.getAttribute("id")
-			session["status"] = "wait_init"
 			if len(session["id"])==0:
 				raise Exception("Missing attribute id")
 	

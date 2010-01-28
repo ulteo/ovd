@@ -29,6 +29,7 @@ from ovd.Platform import Platform
 from ovd.Platform import TS
 
 from Dialog import Dialog
+from Session import Session
 from SessionManagement import SessionManagement
 
 
@@ -149,9 +150,9 @@ class ApplicationServer(AbstractRole):
 					return
 				
 				if ts_id is None:
-					if session.status in ["logged", "disconnected"]:
+					if session.status in [Session.SESSION_STATUS_ACTIVE, Session.SESSION_STATUS_INACTIVE]:
 						Logger.error("Weird, running session no longer exist")
-						self.session_switch_status(session, "wait_destroy")
+						self.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
 						self.sessions_spooler.put(("destroy", session))
 					continue
 				
@@ -161,17 +162,17 @@ class ApplicationServer(AbstractRole):
 					Logger.error("RDP server dialog failed ... exiting")
 					return
 				
-				if session.status == "ready":
+				if session.status == Session.SESSION_STATUS_INITED:
 					if ts_status is TS.STATUS_LOGGED:
-						self.session_switch_status(session, "logged")
+						self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
 						continue
 						
 					if ts_status is TS.STATUS_DISCONNECTED:
-						self.session_switch_status(session, "disconnected")
+						self.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 						continue
 					
-				if session.status == "logged" and ts_status is TS.STATUS_DISCONNECTED:
-					self.session_switch_status(session, "disconnected")
+				if session.status == Session.SESSION_STATUS_ACTIVE and ts_status is TS.STATUS_DISCONNECTED:
+					self.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 					continue
 			
 			
