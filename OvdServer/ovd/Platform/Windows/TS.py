@@ -29,15 +29,14 @@ from ovd.Role.ApplicationServer.TS import TS as AbstractTS
 class TS(AbstractTS):
 	@staticmethod
 	def getList():
-		l = {}
+		l = []
 		
 		sessions = win32ts.WTSEnumerateSessions(None)
 		for session in sessions:
 			if not 0 < session["SessionId"] < 65536:
 				continue
 			
-			login = win32ts.WTSQuerySessionInformation(None, session["SessionId"], win32ts.WTSUserName)
-			l[session["SessionId"]] = login
+			l.append(session["SessionId"])
 		
 		return l
 	

@@ -30,6 +30,12 @@ from ovd.Role.ApplicationServer.TS import TS as AbstractTS
 
 class TS (AbstractTS):
 	@staticmethod
+	def getList():
+		sessions = xrdp.SessionGetList()
+		return sessions.keys()
+	
+	
+	@staticmethod
 	def getSessionID(username_):
 		sessions = xrdp.SessionGetList()
 		for session in sessions.values():

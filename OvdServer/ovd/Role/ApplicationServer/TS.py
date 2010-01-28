@@ -24,6 +24,10 @@ class TS:
 	STATUS_DISCONNECTED = 4
 
 	@staticmethod
+	def getList():
+		pass
+
+	@staticmethod
 	def getSessionID(username_):
 		pass
 	
