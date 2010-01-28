@@ -59,8 +59,14 @@ class ApplicationServer(AbstractRole):
 		if not self.init_config():
 			return False
 		
+		try:
+			TS.getList()
+		except Exception,err:
+			Logger.error("RDP server dialog failed ... exiting")
+			return
+		
 		if not Platform.getInstance().groupExist(self.ts_group_name):
-			Logger.info("The group '%s' doesn't exist"%(self.ts_group_name))
+			Logger.error("The group '%s' doesn't exist"%(self.ts_group_name))
 			return False
 		
 		if not Platform.getInstance().groupExist(self.ovd_group_name):
@@ -136,7 +142,11 @@ class ApplicationServer(AbstractRole):
 		
 		while 1:
 			for session in self.sessions.values():
-				ts_id = TS.getSessionID(session.user.name)
+				try:
+					ts_id = TS.getSessionID(session.user.name)
+				except Exception,err:
+					Logger.error("RDP server dialog failed ... exiting")
+					return
 				
 				if ts_id is None:
 					if session.status in ["logged", "disconnected"]:
@@ -145,7 +155,12 @@ class ApplicationServer(AbstractRole):
 						self.sessions_spooler.put(("destroy", session))
 					continue
 				
-				ts_status = TS.getState(ts_id)
+				try:
+					ts_status = TS.getState(ts_id)
+				except Exception,err:
+					Logger.error("RDP server dialog failed ... exiting")
+					return
+				
 				if session.status == "ready":
 					if ts_status is TS.STATUS_LOGGED:
 						self.session_switch_status(session, "logged")

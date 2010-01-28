@@ -221,8 +221,13 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
+		try:
+			ret = TS.getSessionID(login)
+		except Exception,err:
+			Logger.error("RDP server dialog failed ... ")
+			Logger.debug("Dialog::req_user_loggedin: %s"%(str(err)))
+			return
 		
-		ret = TS.getSessionID(login)
 		rootNode.setAttribute("loggedin", str((ret is not None)).lower())
 		
 		return self.req_answer(document)
@@ -250,7 +255,13 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		ret = TS.getSessionID(login)
+		try:
+			ret = TS.getSessionID(login)
+		except Exception,err:
+			Logger.error("RDP server dialog failed ... ")
+			Logger.debug("Dialog::req_user_logout: %s"%(str(err)))
+			return
+		
 		if ret is None:
 			doc = Document()
 			rootNode = doc.createElement('error')

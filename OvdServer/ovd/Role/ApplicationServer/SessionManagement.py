@@ -79,7 +79,13 @@ class SessionManagement(Thread):
 	def destroy_session(self, session):
 		Logger.info("SessionManagement::destroy %s"%(session.id))
 		
-		sessid = TS.getSessionID(session.user.name)
+		try:
+			sessid = TS.getSessionID(session.user.name)
+		except Exception,err:
+			Logger.error("RDP server dialog failed ... ")
+			Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
+			return
+		
 		if sessid is not None:
 			session.user.infos["tsid"] = sessid
 		self.destroy_user(session.user)
@@ -92,10 +98,22 @@ class SessionManagement(Thread):
 		if user.infos.has_key("tsid"):
 			sessid = user.infos["tsid"]
 			
-			status = TS.getState(sessid)
+			try:
+				status = TS.getState(sessid)
+			except Exception,err:
+				Logger.error("RDP server dialog failed ... ")
+				Logger.debug("SessionManagement::destroy_user: %s"%(str(err)))
+				return
+			
 			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
 				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
 				
-				TS.logoff(sessid)
+				try:
+					TS.logoff(sessid)
+				except Exception,err:
+					Logger.error("RDP server dialog failed ... ")
+					Logger.debug("SessionManagement::destroy_user: %s"%(str(err)))
+					return
+				
 		
 		user.destroy()
