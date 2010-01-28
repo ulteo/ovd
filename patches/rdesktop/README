@@ -21,10 +21,6 @@
     * add option --uniconify-by-display dpy
     * add option --destroy-by-display dpy
 
-* ulteo-05_logoff.patch:
-  Feature:
-    * add option --logoff
-
 * ulteo-06_patch04-optimized.patch:
   * Disable "--iconify-by-display dpy" option
   * New behavior for "--uniconify-by-display dpy" option:
