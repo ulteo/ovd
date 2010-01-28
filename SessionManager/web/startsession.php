@@ -21,6 +21,8 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+include_once(dirname(__FILE__).'/check.php');
+
 function parse_login_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
