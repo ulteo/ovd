@@ -59,11 +59,13 @@ function onStartSessionSuccess(transport) {
 	server = buffer[0];
 
 	var session_id = session.getAttribute('id');
+	var session_mode = session.getAttribute('mode');
 	var session_server = server.getAttribute('fqdn');
 	var session_login = server.getAttribute('login');
 	var session_password = server.getAttribute('password');
 
 	$('session_id').value = session_id;
+	$('session_mode').value = session_mode;
 	$('session_server').value = session_server;
 	$('session_login').value = session_login;
 	$('session_password').value = session_password;

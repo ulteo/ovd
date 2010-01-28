@@ -68,19 +68,23 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 			Event.observe(window, 'load', function() {
 				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
-				daemon.access_id = 'desktop';
+				daemon.access_id = '<?php echo $_POST['session_mode']; ?>';
 
 				daemon.session_id = '<?php echo $_POST['session_id']; ?>';
 				daemon.session_server = '<?php echo $_POST['session_server']; ?>';
 				daemon.session_login = '<?php echo $_POST['session_login']; ?>';
 				daemon.session_password = '<?php echo $_POST['session_password']; ?>';
 
-				daemon.i18n['session_close_unexpected'] = '<?php echo _('Server: session closed unexpectedly'); ?>';
-				daemon.i18n['session_end_ok'] = '<?php echo _('Your session has ended, you can now close the window'); ?>';
-				daemon.i18n['session_end_unexpected'] = '<?php echo _('Your session has ended unexpectedly'); ?>';
-				daemon.i18n['error_details'] = '<?php echo _('error details'); ?>';
-				daemon.i18n['close_this_window'] = '<?php echo _('Close this window'); ?>';
-				daemon.i18n['start_another_session'] = '<?php echo _('If you want to start another session, ...'); ?>';
+				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
+				daemon.i18n['session_end_ok'] = '<?php echo str_replace("'", "\'", _('Your session has ended, you can now close the window')); ?>';
+				daemon.i18n['session_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your session has ended unexpectedly')); ?>';
+				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
+				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
+				daemon.i18n['start_another_session'] = '<?php echo str_replace("'", "\'", _('You can now start a new session')); ?>';
+
+				daemon.i18n['share'] = '<?php echo str_replace("'", "\'", _('share')); ?>';
+				daemon.i18n['suspend'] = '<?php echo str_replace("'", "\'", _('suspend')); ?>';
+				daemon.i18n['resume'] = '<?php echo str_replace("'", "\'", _('resume')); ?>';
 
 				setTimeout(function() {
 					daemon.loop();
