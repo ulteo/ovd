@@ -1,4 +1,5 @@
-scripts_DATA = loader.gif \
+scripts_DATA = cross.png \
+               loader.gif \
                rotate.gif \
                ulteo.png \
                ulteo_small.png

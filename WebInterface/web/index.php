@@ -30,6 +30,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
 
+		<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/scriptaculous/extensions.js" charset="utf-8"></script>
+
 		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
 		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
