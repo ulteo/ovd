@@ -61,7 +61,6 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 								<div id="loginForm" style="width: 90%; margin-left: auto; margin-right: 0px; padding: 10px; background: #eee;" class="rounded">
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession($('user_login').value, $('user_password').value, $('session_mode').value);">
 										<input type="hidden" id="session_id" name="session_id" value="" />
-										<input type="hidden" id="session_mode" name="session_mode" value="" />
 										<input type="hidden" id="session_server" name="session_server" value="" />
 										<input type="hidden" id="session_login" name="session_login" value="" />
 										<input type="hidden" id="session_password" name="session_password" value="" />
@@ -87,7 +86,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 													<strong><?php echo _('Mode'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
-													<select id="session_mode">
+													<select id="session_mode" name="session_mode">
 														<option value="desktop" selected="selected"><?php echo _('Desktop'); ?></option>
 														<option value="portal"><?php echo _('Portal'); ?></option>
 													</select>

@@ -20,6 +20,7 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+$daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['session_mode'], 1);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -46,7 +47,8 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_<?php echo $_POST['session_mode']; ?>.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
@@ -56,10 +58,31 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 					Effect.Center($('endContainer'));
 				$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
 
+				if ($('<?php echo $_POST['session_mode']; ?>Container'))
+					$('<?php echo $_POST['session_mode']; ?>Container').hide();
 				if ($('appletContainer'))
 					$('appletContainer').hide();
 				if ($('splashContainer'))
 					$('splashContainer').show();
+
+				$('lockWrap').hide();
+				$('lockWrap').style.width = document.body.clientWidth+'px';
+				$('lockWrap').style.height = document.body.clientHeight+'px';
+
+				$('errorWrap').hide();
+				$('okWrap').hide();
+				$('infoWrap').hide();
+
+				Event.observe($('lockWrap'), 'click', function() {
+					if ($('errorWrap').visible())
+						hideError();
+
+					if ($('okWrap').visible())
+						hideOk();
+
+					if ($('infoWrap').visible())
+						hideInfo();
+				});
 			});
 		</script>
 
@@ -67,7 +90,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
+				daemon = new <?php echo $daemon_class; ?>('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
 				daemon.access_id = '<?php echo $_POST['session_mode']; ?>';
 
 				daemon.session_id = '<?php echo $_POST['session_id']; ?>';
@@ -94,6 +117,16 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 	</head>
 
 	<body>
+		<div id="lockWrap" style="display: none;">
+		</div>
+
+		<div id="errorWrap" style="display: none;">
+		</div>
+		<div id="okWrap" style="display: none;">
+		</div>
+		<div id="infoWrap" style="display: none;">
+		</div>
+
 		<div id="splashContainer">
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -127,7 +160,50 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			</table>
 		</div>
 
-		<div id="appletContainer" style="display: none;">
+		<div id="desktopModeContainer" style="display: none;">
+			<div id="appletContainer" style="display: none;">
+			</div>
+		</div>
+
+		<div id="portalModeContainer" style="display: none;">
+			<table id="portalContainer" style="width: 100%; background: #eee;" border="1" cellspacing="3" cellpadding="5">
+				<tr>
+					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
+						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+						<div>
+							<h2><?php echo _('My applications'); ?></h2>
+
+							<div id="appsContainer" style="overflow: auto;">
+							</div>
+						</div>
+						</div>
+					</td>
+					<td style="width: 5px;">
+					</td>
+					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
+						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+						<div>
+							<h2><?php echo _('Running applications'); ?></h2>
+
+							<div id="runningAppsContainer" style="overflow: auto;">
+							</div>
+						</div>
+						</div>
+					</td>
+					<td style="width: 5px;">
+					</td>
+					<td style="text-align: left; vertical-align: top; background: #eee;">
+						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
+						<div>
+							<h2><?php echo _('News'); ?></h2>
+
+							<div id="newsContainer" style="overflow: auto;">
+							</div>
+						</div>
+						</div>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 		<div id="printerContainer">

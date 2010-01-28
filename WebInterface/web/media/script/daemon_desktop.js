@@ -24,7 +24,7 @@ var Desktop = Class.create(Daemon, {
 
 		if (this.session_state == 0 || this.session_state == 10) {
 			this.start_request();
-		} else if (this.session_state == 2 && this.application_state == 2 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
+		} else if (this.session_state == 2 && this.application_state == 2 && $('splashContainer').visible() && ! $('desktopModeContainer').visible()) {
 			if (! this.started)
 				this.start();
 
@@ -41,52 +41,19 @@ var Desktop = Class.create(Daemon, {
 		setTimeout(this.loop.bind(this), 2000);
 	},
 
-	parse_check_status: function(transport) {
-		var xml = transport.responseXML;
-
-		var buffer = xml.getElementsByTagName('session');
-
-		if (buffer.length != 1)
-			return;
-
-		var sessionNode = buffer[0];
-
-		this.old_session_state = this.session_state;
-
-		try { // IE does not have hasAttribute in DOM API...
-			this.session_state = sessionNode.getAttribute('status');
-		} catch(e) {
-			return;
-		}
-
-		var buffer = xml.getElementsByTagName('application');
-
-		if (buffer.length != 1)
-			return;
-
-		var applicationNode = buffer[0];
-
-		this.old_application_state = this.application_state;
-
-		try { // IE does not have hasAttribute in DOM API...
-			this.application_state = applicationNode.getAttribute('status');
-		} catch(e) {
-			return;
-		}
-
-		var printNode = sessionNode.getElementsByTagName('print');
-		if (printNode.length > 0) {
-			printNode = printNode[0];
-
-			var path = printNode.getAttribute('path');
-			var timestamp = printNode.getAttribute('time');
-			this.do_print(path, timestamp);
-		}
-	},
-
 	start: function() {
 		this.access_id = 'desktop';
 
+		if (! $('desktopModeContainer').visible())
+			$('desktopModeContainer').show();
+
 		Daemon.prototype.start.apply(this);
+	},
+
+	do_ended: function() {
+		if ($('desktopModeContainer').visible())
+			$('desktopModeContainer').hide();
+
+		Daemon.prototype.do_ended.apply(this);
 	}
 });
