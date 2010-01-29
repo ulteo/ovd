@@ -582,7 +582,7 @@ msgstr "Bloquer"
 
 #: ../web/admin/appsgroup.php:235 ../web/admin/usersgroup.php:557
 msgid "Enable"
-msgstr "Activé"
+msgstr "Activer"
 
 #: ../web/admin/appsgroup.php:281
 msgid "Application groups management"
