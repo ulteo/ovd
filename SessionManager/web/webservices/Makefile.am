@@ -1,6 +1,7 @@
 SUBDIRS =  admin
 
-scripts_DATA =  domain.php \
+scripts_DATA =  apps.php \
+                domain.php \
                 icon.php \
                 get_logo.php \
                 get_news.php \
