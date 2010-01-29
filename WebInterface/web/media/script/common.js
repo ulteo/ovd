@@ -51,7 +51,10 @@ function onStartSessionSuccess(transport) {
 
 	var buffer = xml.getElementsByTagName('error');
 	if (buffer.length == 1) {
-		showError('('+buffer[0].getAttribute('id')+') '+buffer[0].getAttribute('message'));
+		try {
+			showError(buffer[0].getAttribute('message'));
+		} catch(e) {
+		}
 		enableLogin();
 		return false;
 	}
