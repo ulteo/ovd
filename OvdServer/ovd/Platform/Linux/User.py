@@ -20,6 +20,7 @@
 
 import commands
 import pwd
+import xrdp
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
@@ -53,9 +54,9 @@ class User(AbstractUser):
 	
 
 	def post_create(self):
-		#if self.infos.has_key("shell"):
-			#win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, self.infos["shell"])
-			#win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
+		if self.infos.has_key("shell"):
+			xrdp.UserSetShell(self.name, self.infos["shell"])
+			xrdp.UserAllowUserShellOverride(self.name, True)
 		return True
 	
 	
