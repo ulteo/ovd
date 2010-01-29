@@ -228,8 +228,8 @@ class Platform(AbstractPlatform):
 	def groupMember(name_):
 		try:
 			group = grp.getgrnam(name_)
-		except KeyError:
-			Logger.error("groupMember: '%s'"%(str(e)))
+		except KeyError, err:
+			Logger.error("groupMember: '%s'"%(str(err)))
 			return None
 		
 		return group[3]
