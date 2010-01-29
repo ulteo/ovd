@@ -27,10 +27,6 @@ var Portal = Class.create(Daemon, {
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
 
-		$('portalContainer').style.height = parseInt(this.my_height)-154+'px';
-		$('appsContainer').style.height = parseInt(this.my_height)-154+'px';
-		$('runningAppsContainer').style.height = parseInt(this.my_height)-154+'px';
-
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 	},
@@ -63,6 +59,9 @@ var Portal = Class.create(Daemon, {
 		if (! $('portalModeContainer').visible())
 			$('portalModeContainer').show();
 
+		if (! $('portalContainer').visible())
+			$('portalContainer').show();
+
 		Daemon.prototype.start.apply(this);
 
 		this.display_news();
@@ -70,6 +69,9 @@ var Portal = Class.create(Daemon, {
 	},
 
 	do_ended: function() {
+		if ($('portalContainer').visible())
+			$('portalContainer').hide();
+
 		if ($('portalModeContainer').visible())
 			$('portalModeContainer').hide();
 

@@ -4,11 +4,18 @@ div.spacer {
 	clear: both;
 }
 
+div.rounded {
+	padding: 10px;
+}
+
 html {
+	background: #fff;
 	font-family: Arial;
+	font-size: 90%;
 }
 
 body {
+	background: #fff;
 	font-size: 0.85em;
 	color: #333;
 	margin: 0;
@@ -190,4 +197,13 @@ div#infoWrap {
 	padding: 10px;
 	position: absolute;
 	z-index: 100;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+	padding-top: 5px;
+	padding-bottom: 10px;
+	text-align: left;
+	color: #666;
 }

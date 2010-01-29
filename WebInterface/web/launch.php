@@ -147,7 +147,7 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 		</div>
 
 		<div id="portalModeContainer" style="display: none;">
-			<table id="portalContainer" style="width: 100%; background: #eee;" border="1" cellspacing="3" cellpadding="5">
+			<table id="portalContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
 				<tr>
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
