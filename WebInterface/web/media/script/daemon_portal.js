@@ -90,7 +90,7 @@ return;
 
 	list_apps: function() {
 		new Ajax.Request(
-			'../apps.php',
+			'apps.php',
 			{
 				method: 'get',
 				onSuccess: this.parse_list_apps.bind(this)
@@ -103,10 +103,8 @@ return;
 
 		var buffer = xml.getElementsByTagName('applications');
 
-		if (buffer.length != 1) {
-			this.push_log('[applications] bad xml format 1', 'error');
+		if (buffer.length != 1)
 			return;
-		}
 
 		var applicationNodes = xml.getElementsByTagName('application');
 
@@ -116,7 +114,6 @@ return;
 				this.applications.set(application.id, application);
 				this.applicationsPanel.add(application);
 			} catch(e) {
-				this.push_log('[applications] bad xml format 2', 'error');
 				return;
 			}
 		}

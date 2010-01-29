@@ -19,13 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-define('WEBINTERFACE_CONF_FILE', '/etc/ulteo/webinterface/config.inc.php');
+require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (! file_exists(WEBINTERFACE_CONF_FILE))
-	die(_('Configuration file missing: '.WEBINTERFACE_CONF_FILE));
-
-require_once(WEBINTERFACE_CONF_FILE);
-
-require_once(dirname(__FILE__).'/functions.inc.php');
-
-session_start();
+header('Content-Type: text/xml; charset=utf-8');
+die(query_url(SESSIONMANAGER_URL.'/webservices/apps.php?session='.$_SESSION['session']));

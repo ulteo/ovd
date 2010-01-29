@@ -1,6 +1,8 @@
 SUBDIRS = ajax applet includes media
 
-scripts_DATA = index.php \
+scripts_DATA = apps.php \
+               icon.php \
+               index.php \
                launch.php
 
 scriptsdir = $(datadir)/ulteo/webinterface

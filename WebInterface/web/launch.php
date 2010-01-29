@@ -20,6 +20,9 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+$_SESSION['session'] = $_POST['session_id'];
+
 $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['session_mode'], 1);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

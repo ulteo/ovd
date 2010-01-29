@@ -1,4 +1,5 @@
-scripts_DATA = core.inc.php
+scripts_DATA = core.inc.php \
+               functions.inc.php
 
 scriptsdir = $(datadir)/ulteo/webinterface/includes
 

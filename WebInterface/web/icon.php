@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
@@ -19,13 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-define('WEBINTERFACE_CONF_FILE', '/etc/ulteo/webinterface/config.inc.php');
+require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (! file_exists(WEBINTERFACE_CONF_FILE))
-	die(_('Configuration file missing: '.WEBINTERFACE_CONF_FILE));
-
-require_once(WEBINTERFACE_CONF_FILE);
-
-require_once(dirname(__FILE__).'/functions.inc.php');
-
-session_start();
+header('Content-Type: image/png');
+die(query_url(SESSIONMANAGER_URL.'/webservices/icon.php?id='.$_GET['id']));

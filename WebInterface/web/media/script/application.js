@@ -85,7 +85,7 @@ var Application = Class.create({
 	},
 
 	getIconURL: function() {
-		return '../icon.php?id='+this.id;
+		return 'icon.php?id='+this.id;
 	}
 });
 

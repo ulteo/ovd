@@ -19,13 +19,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-define('WEBINTERFACE_CONF_FILE', '/etc/ulteo/webinterface/config.inc.php');
+require_once(dirname(__FILE__).'/core.inc.php');
 
-if (! file_exists(WEBINTERFACE_CONF_FILE))
-	die(_('Configuration file missing: '.WEBINTERFACE_CONF_FILE));
+function query_url($url_) {
+	$socket = curl_init($url_);
+	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
+	$string = curl_exec($socket);
+	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
+	curl_close($socket);
 
-require_once(WEBINTERFACE_CONF_FILE);
+	if ($buf != 200)
+		return false;
 
-require_once(dirname(__FILE__).'/functions.inc.php');
-
-session_start();
+	return $string;
+}
