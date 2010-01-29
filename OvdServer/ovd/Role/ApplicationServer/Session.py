@@ -23,6 +23,7 @@ from ovd.Logger import Logger
 
 
 class Session:
+	SESSION_STATUS_UNKNOWN = "unknown"
 	SESSION_STATUS_ERROR = "error"
 	SESSION_STATUS_INIT = "init"
 	SESSION_STATUS_INITED = "ready"

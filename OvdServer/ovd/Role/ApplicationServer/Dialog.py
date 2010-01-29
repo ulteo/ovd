@@ -189,11 +189,11 @@ class Dialog(AbstractDialog):
 	def req_session_destroy(self, session_id):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
-			session.status = "wait_destroy"
+			session.status = Session.SESSION_STATUS_WAIT_DESTROY
 			self.role_instance.sessions_spooler.put(("destroy", session))
 		else:
 			session = Session(session_id, None, None, None)
-			session.status = "unknown"
+			session.status = Session.SESSION_STATUS_UNKNOWN
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
