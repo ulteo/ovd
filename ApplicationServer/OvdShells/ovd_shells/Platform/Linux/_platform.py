@@ -59,7 +59,7 @@ def getUserSessionDir():
 	
 
 def startDesktop():
-	os.system("startovd")
+	os.system("startxfce4")
 
 
 def launch(cmd, wait=False):
