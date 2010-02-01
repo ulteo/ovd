@@ -21,6 +21,8 @@
 import struct
 import threading
 
+import OvdAppChannel
+
 class InstancesManager(threading.Thread):
 	def __init__(self, vchannel):
 		threading.Thread.__init__(self)
@@ -55,7 +57,7 @@ class InstancesManager(threading.Thread):
 			
 			instance = self.launch(cmd)
 			
-			buf = struct.pack(">B", 0x02)
+			buf = struct.pack(">B", OvdAppChannel.ORDER_STARTED)
 			buf+= struct.pack(">I", token)
 			print "send1",token
 			self.vchannel.Write(buf)
@@ -69,7 +71,7 @@ class InstancesManager(threading.Thread):
 		for instance in self.instances:
 			self.kill(instance[0])
 			
-			buf = struct.pack(">B", 0x02)
+			buf = struct.pack(">B", OvdAppChannel.ORDER_STOPPED)
 			buf+= struct.pack(">I", instance[1])
 			print "send2",instance[1]
 			self.vchannel.Write(buf)
@@ -89,14 +91,14 @@ class InstancesManager(threading.Thread):
 		pass
 	
 	def onInstanceNotAvailable(self, token):
-		buf = struct.pack(">B", 0x06)
+		buf = struct.pack(">B", OvdAppChannel.ORDER_CANT_START)
 		buf+= struct.pack(">I", token)
 		self.vchannel.Write(buf)
 	
 	def onInstanceExited(self, instance):
 		self.instances.remove(instance)
 		
-		buf = struct.pack(">B", 0x02)
+		buf = struct.pack(">B", OvdAppChannel.ORDER_STOPPED)
 		buf+= struct.pack(">I", instance[1])
 		print "send3",instance[1]
 		self.vchannel.Write(buf)

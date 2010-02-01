@@ -27,6 +27,7 @@ import threading
 import time
 
 from ovd_shells.Application import Application
+from ovd_shells import OvdAppChannel
 from ovd_shells import Platform
 
 def main():
@@ -39,13 +40,13 @@ def main():
 	
 	seamPid = Platform.launch("seamlessrdpshell", False)
 	
-	vchannel = Platform.VirtualChannel("ovdapp")
+	vchannel = Platform.VirtualChannel(OvdAppChannel.NAME)
 	if not vchannel.Open():
 		print "Unable to init vchannel"
 		sys.exit(1)
 	
 	
-	buf = struct.pack(">B", 0x00)
+	buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
 	vchannel.Write(buf)
 	
 	im = Platform.InstancesManager(vchannel)
@@ -63,7 +64,7 @@ def main():
 			continue
 		
 		order = packet[0]
-		if order == "\x01":
+		if order == OvdAppChannel.ORDER_START:
 			token = struct.unpack('>I', packet[1:5])[0]
 			app_id = struct.unpack('>I', packet[5:9])[0]
 			
@@ -71,7 +72,7 @@ def main():
 			im.pushJob((app_id, token))
 		
 		
-		elif order == "\x04":
+		elif order == OvdAppChannel.ORDER_EXIT:
 			# logoff
 			break
 		
