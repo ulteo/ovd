@@ -1,6 +1,6 @@
 SUBDIRS = ovd_shells
 
-scripts_DATA = OvdDesktop OvdRemoteApp startovdapp
+scripts_DATA = OvdDesktop OvdRemoteApps startovdapp
 
 scriptsdir = $(prefix)/bin
 
