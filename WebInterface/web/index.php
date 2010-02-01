@@ -123,9 +123,6 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 										</table>
 									</form>
 								</div>
-
-								<div id="appletContainer" style="display: none; width: 480px; height: 320px; margin-left: auto; margin-right: auto;">
-								</div>
 							</td>
 						</tr>
 					</table>
