@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Contributor Stanislav IEVLEV <stanislav.ievlev@gmail.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,7 +43,7 @@ page_header();
 		<td style="width: 30%; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Users and Users groups</h2>
+	<h2><?php echo _('Users and Users groups'); ?></h2>
 
 	<ul>
 		<?php
@@ -60,13 +61,13 @@ page_header();
 		<td style="width: 30%; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Servers</h2>
+	<h2><?php echo _('Servers'); ?></h2>
 <?php
 if ($show_servers) {
 ?>
 	<ul>
 		<li><a href="servers.php"><?php echo _('Servers list'); ?></a></li>
-		<li><a href="servers.php?view=unregistered"><?php echo ('Unregistered servers list'); ?></a></li>
+		<li><a href="servers.php?view=unregistered"><?php echo _('Unregistered servers list'); ?></a></li>
 	</ul>
 <?php
 }
@@ -79,7 +80,7 @@ if ($show_servers) {
 		<td style="padding-right: 20px; text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Configuration</h2>
+	<h2><?php echo _('Configuration'); ?></h2>
 <?php
 if ($show_configuration) {
 ?>
@@ -101,7 +102,7 @@ if ($show_configuration) {
 		<td style="text-align: left; vertical-align: top;">
 <div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Applications and Appgroups</h2>
+	<h2><?php echo _('Applications and Appgroups'); ?></h2>
 
 	<ul>
 		<?php
@@ -123,7 +124,7 @@ if ($show_configuration) {
 		<td style="padding-right: 20px; text-align: left; vertical-align: top;" colspan="3">
 <div class="container rounded" style="background: #fff; width: 99%; margin-left: auto; margin-right: auto;">
 <div>
-	<h2>Status</h2>
+	<h2><?php echo _('Status'); ?></h2>
 <?php
 if ($show_status) {
 	echo '<ul>';
