@@ -30,6 +30,8 @@ var Daemon = Class.create({
 	server: '',
 	port: '',
 
+	mode: '',
+
 	shareable: false,
 	persistent: false,
 	in_popup: true,
@@ -112,7 +114,7 @@ return;
 
 		if (this.session_state == 0 || this.session_state == 10) {
 			this.start_request();
-		} else if (this.session_state == 2 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
+		} else if (this.session_state == 2 && $('splashContainer').visible()) {
 			if (! this.started)
 				this.start();
 
@@ -143,7 +145,7 @@ return;
 
 	logout: function() {
 		new Ajax.Request(
-			'exit.php',
+			'logout.php',
 			{
 				asynchronous: false,
 				method: 'get'
@@ -181,6 +183,7 @@ return;
 	},
 
 	parse_check_status: function(transport) {
+return;
 		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('session');
@@ -224,7 +227,6 @@ return;
 	},
 
 	start_request: function() {
-alert('start_request');
 return;
 		new Ajax.Request(
 			'start.php',
@@ -239,6 +241,12 @@ return;
 	},
 
 	start: function() {
+		if (! $(this.mode+'ModeContainer').visible())
+			$(this.mode+'ModeContainer').show();
+
+		if (! $(this.mode+'AppletContainer').visible())
+			$(this.mode+'AppletContainer').show();
+
 		this.do_started();
 	},
 
@@ -258,157 +266,10 @@ return;
 	},
 
 	parse_do_started: function(transport) {
-$('splashContainer').hide();
-this.applet_width = this.my_width;//-10;
-this.applet_height = this.my_height;//-27;
-$('appletContainer').show();
-var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="org.ulteo.RemoteDesktopApplet" codebase="applet/" archive="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" cache_archive="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" cache_archive_ex="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar;preload" mayscript="true" width="'+this.applet_width+'" height="'+this.applet_height+'"> \
-	<param name="name" value="ulteoapplet" /> \
-	<param name="code" value="org.ulteo.RemoteDesktopApplet" /> \
-	<param name="codebase" value="applet/" /> \
-	<param name="archive" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" /> \
-	<param name="cache_archive" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" /> \
-	<param name="cache_archive_ex" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar;preload" /> \
-	<param name="mayscript" value="true" /> \
-	\
-	<param name="server" value="'+this.session_server+'" /> \
-	<param name="port" value="3389" /> \
-	<param name="username" value="'+this.session_login+'" /> \
-	<param name="password" value="'+this.session_password+'" /> \
-</applet>';
-$('appletContainer').innerHTML = applet_html_string;
-return;
-		var buffer;
+	},
 
-		$('splashContainer').hide();
-
-		try {
-			var xml = transport.responseXML;
-			buffer = xml.getElementsByTagName('session');
-			if (buffer.length != 1)
-				return;
-
-			var sessionNode = buffer[0];
-
-			buffer = sessionNode.getElementsByTagName('parameters');
-			var parametersNode = buffer[0];
-
-			if (this.applet_width == -1)
-				this.applet_width = parametersNode.getAttribute('width');
-			if (this.applet_height == -1)
-				this.applet_height = parametersNode.getAttribute('height');
-			applet_view_only = parametersNode.getAttribute('view_only');
-
-			buffer = sessionNode.getElementsByTagName('ssh');
-			var sshNode = buffer[0];
-
-			applet_ssh_host = sshNode.getAttribute('host');
-			applet_ssh_user = sshNode.getAttribute('user');
-			applet_ssh_passwd = sshNode.getAttribute('passwd');
-
-			buffer = sshNode.getElementsByTagName('port');
-			applet_ssh_ports = '';
-			for (var i = 0; i < buffer.length; i++) {
-				applet_ssh_ports = applet_ssh_ports+buffer[i].firstChild.nodeValue;
-				if (i < buffer.length-1)
-					applet_ssh_ports = applet_ssh_ports+',';
-			}
-
-			if (this.access_id != 'portal') {
-				buffer = sessionNode.getElementsByTagName('vnc');
-				var vncNode = buffer[0];
-				applet_vnc_port = vncNode.getAttribute('port');
-				applet_vnc_passwd = vncNode.getAttribute('passwd');
-				applet_vnc_quality = vncNode.getAttribute('quality');
-
-				//default: highest
-				applet_vnc_quality_compression_level = 9;
-				applet_vnc_quality_jpeg_image_quality = 9;
-				applet_vnc_quality_restricted_colors = 'no';
-				if (applet_vnc_quality == 'lowest') {
-					applet_vnc_quality_jpeg_image_quality = 8;
-					applet_vnc_quality_restricted_colors = 'yes';
-				} else if (applet_vnc_quality == 'medium')
-					applet_vnc_quality_jpeg_image_quality = 7;
-				else if (applet_vnc_quality == 'high')
-					applet_vnc_quality_jpeg_image_quality = 8;
-			}
-
-			applet_have_proxy = false;
-			buffer = sessionNode.getElementsByTagName('proxy');
-			if (buffer.length == 1) {
-				applet_have_proxy = true;
-
-				var proxyNode = buffer[0];
-
-				applet_proxy_type = proxyNode.getAttribute('type');
-				applet_proxy_host = proxyNode.getAttribute('host');
-				applet_proxy_port = proxyNode.getAttribute('port');
-				applet_proxy_username = proxyNode.getAttribute('username');
-				applet_proxy_password = proxyNode.getAttribute('password');
-			}
-		} catch(e) {
-			return;
-		}
-
-		applet_html_string = '<applet name="ulteoapplet" code="'+this.applet_main_class+'" codebase="../applet/" archive="'+this.applet_version+'" cache_archive="'+this.applet_version+'" cache_archive_ex="'+this.applet_version+';preload" mayscript="true" width="'+this.applet_width+'" height="'+this.applet_height+'"> \
-			<param name="name" value="ulteoapplet" /> \
-			<param name="code" value="'+this.applet_main_class+'" /> \
-			<param name="codebase" value="../applet/" /> \
-			<param name="archive" value="'+this.applet_version+'" /> \
-			<param name="cache_archive" value="'+this.applet_version+'" /> \
-			<param name="cache_archive_ex" value="'+this.applet_version+';preload" /> \
-			<param name="mayscript" value="true" /> \
-			\
-			<param name="errorCallback" value="daemon.errorCallback" /> \
-			\
-			<param name="ssh.host" value="'+applet_ssh_host+'" /> \
-			<param name="ssh.port" value="'+applet_ssh_ports+'" /> \
-			<param name="ssh.user" value="'+applet_ssh_user+'" /> \
-			<param name="ssh.password" value="'+applet_ssh_passwd+'" />';
-
-		if (this.access_id != 'portal') {
-			applet_html_string = applet_html_string+'<param name="View only" value="'+applet_view_only+'" /> \
-				\
-				<param name="PORT" value="'+applet_vnc_port+'" /> \
-				<param name="ENCPASSWORD" value="'+applet_vnc_passwd+'" /> \
-				\
-				<param name="Compression level" value="'+applet_vnc_quality_compression_level+'" /> \
-				<param name="Restricted colors" value="'+applet_vnc_quality_restricted_colors+'" /> \
-				<param name="JPEG image quality" value="'+applet_vnc_quality_jpeg_image_quality+'" /> \
-				\
-				<!-- Caching options --> \
-				<param name="rfb.cache.enabled" value="true" /> \
-				<param name="rfb.cache.ver.major" value="1" /> \
-				<param name="rfb.cache.ver.minor" value="0" /> \
-				<param name="rfb.cache.size" value="42336000" /> \
-				<param name="rfb.cache.alg" value="LRU" /> \
-				<param name="rfb.cache.datasize" value="2000000" />';
-		}
-
-		if (applet_have_proxy) {
-			applet_html_string = applet_html_string+'<param name="proxyType" value="'+applet_proxy_type+'" /> \
-				<param name="proxyHost" value="'+applet_proxy_host+'" /> \
-				<param name="proxyPort" value="'+applet_proxy_port+'" /> \
-				<param name="proxyUsername" value="'+applet_proxy_username+'" /> \
-				<param name="proxyPassword" value="'+applet_proxy_password+'" />';
-		}
-
-		applet_html_string = applet_html_string+'</applet>';
-
-		$('appletContainer').innerHTML = applet_html_string;
-
-		var appletNode = $('appletContainer').getElementsByTagName('applet');
-		if (appletNode.length > 0) {
-			appletNode = appletNode[0];
-
-			appletNode.width = this.applet_width;
-			appletNode.height = this.applet_height;
-		}
-
-		if ($('mainWrap'))
-			$('mainWrap').show();
-		$('appletContainer').show();
+	applet_loaded: function() {
+		return true;
 	},
 
 	do_ended: function() {
@@ -417,8 +278,14 @@ return;
 
 		this.stopped = true;
 
-		$('splashContainer').hide();
-		$('appletContainer').hide();
+		if ($('splashContainer').visible())
+			$('splashContainer').hide();
+
+		if ($(this.mode+'AppletContainer').visible())
+			$(this.mode+'AppletContainer').hide();
+
+		if ($(this.mode+'ModeContainer').visible())
+			$(this.mode+'ModeContainer').hide();
 
 		if ($('endContainer')) {
 			$('endContent').innerHTML = '';
@@ -511,13 +378,8 @@ return;
 		}
 	},
 
-	errorCallback: function(error_status_, error_string_) {
-		this.error_message = 'Java: '+error_string_;
-
-		this.do_ended();
-	},
-
 	do_print: function(path_, timestamp_) {
+return;
 		var print_url = this.protocol+'//'+this.server+':'+this.port+'/applicationserver/print.php?timestamp='+timestamp_;
 
 		$('printerContainer').show();

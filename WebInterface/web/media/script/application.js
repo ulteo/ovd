@@ -22,11 +22,13 @@
 var Application = Class.create({
 	id: 0,
 	name: '',
+	server: '',
 	node: null,
 
-	initialize: function(id_, name_) {
+	initialize: function(id_, name_, server_) {
 		this.id = id_;
 		this.name = name_;
+		this.server = server_;
 	},
 
 	initNode: function() {
@@ -67,21 +69,9 @@ var Application = Class.create({
 	},
 
 	launch: function() {
-		var popup = this.popupOpen();
-
-		var app_id = this.id;
-		setTimeout(function() {
-			popup.location.href = 'external_app.php?app_id='+app_id;
-		}, 1000);
-	},
-
-	popupOpen: function() {
 		var date = new Date();
-		var rand = Math.round(Math.random()*100)+date.getTime();
-
-		var w = window.open('about:blank', 'Ulteo'+rand, 'toolbar=no,status=no,top=0,left=0,width='+screen.width+',height='+screen.height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
-
-		return w;
+		var rand = parseInt(Math.random()*date.getTime());
+		$('ulteoapplet').startApplication(rand, this.id, this.server);
 	},
 
 	getIconURL: function() {
@@ -96,8 +86,8 @@ var Running_Application = Class.create(Application, {
 
 	app_span: null,
 
-	initialize: function(id_, name_, pid_, status_, context_) {
-		Application.prototype.initialize.apply(this, [id_, name_]);
+	initialize: function(id_, name_, server_, pid_, status_, context_) {
+		Application.prototype.initialize.apply(this, [id_, name_, server_]);
 
 		this.pid = pid_;
 		this.status = status_;

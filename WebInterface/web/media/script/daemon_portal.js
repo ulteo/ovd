@@ -19,6 +19,9 @@
  **/
 
 var Portal = Class.create(Daemon, {
+	mode: 'portal',
+	access_id: 'portal',
+
 	applications: new Hash(),
 	applicationsPanel: null,
 	running_applications: new Hash(),
@@ -31,51 +34,37 @@ var Portal = Class.create(Daemon, {
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 	},
 
-	loop: function() {
-		this.check_status();
-
-		if (this.session_state == 0 || this.session_state == 10) {
-			this.start_request();
-		} else if (this.session_state == 2 && $('splashContainer').visible() && ! $('portalModeContainer').visible()) {
-			if (! this.started)
-				this.start();
-
-			this.started = true;
-		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9) {
-			if (! this.started)
-				this.error_message = this.i18n['session_close_unexpected'];
-
-			this.do_ended();
-
-			return;
-		}
-
-		setTimeout(this.loop.bind(this), 2000);
-	},
-
-	start: function() {
-		this.access_id = 'portal';
-
-		if (! $('portalModeContainer').visible())
-			$('portalModeContainer').show();
-
-		if (! $('portalContainer').visible())
-			$('portalContainer').show();
-
-		Daemon.prototype.start.apply(this);
+	do_started: function() {
+		Daemon.prototype.do_started.apply(this);
 
 		this.display_news();
 		this.list_apps();
 	},
 
-	do_ended: function() {
-		if ($('portalContainer').visible())
-			$('portalContainer').hide();
+	parse_do_started: function(transport) {
+		$('splashContainer').hide();
 
-		if ($('portalModeContainer').visible())
-			$('portalModeContainer').hide();
+		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="org.ulteo.ovd.applet.Portal" codebase="applet/" archive="getopt-signed.jar,log4j-signed.jar,OVDapplet.jar" cache_archive="getopt-signed.jar,log4j-signed.jar,OVDapplet.jar" cache_archive_ex="getopt-signed.jar,log4j-signed.jar,OVDapplet.jar;preload" mayscript="true" width="1" height="1"> \
+			<param name="name" value="ulteoapplet" /> \
+			<param name="code" value="org.ulteo.ovd.applet.Portal" /> \
+			<param name="codebase" value="applet/" /> \
+			<param name="archive" value="getopt-signed.jar,log4j-signed.jar,OVDapplet.jar" /> \
+			<param name="cache_archive" value="getopt-signed.jar,log4j-signed.jar,OVDapplet.jar" /> \
+			<param name="cache_archive_ex" value="getopt-signed.jar,log4j-signed.jar,OVDapplet.jar;preload" /> \
+			<param name="mayscript" value="true" /> \
+			\
+			<param name="onInit" value="daemon.applet_loaded" /> \
+			<param name="js_daemon_var" value="daemon" /> \
+			<param name="access_nb" value="1" /> \
+			<param name="server0" value="'+this.session_server+'" /> \
+			<param name="username0" value="'+this.session_login+'" /> \
+			<param name="password0" value="'+this.session_password+'" /> \
+		</applet>';
 
-		Daemon.prototype.do_ended.apply(this);
+		$('portalAppletContainer').show();
+		$('portalAppletContainer').innerHTML = applet_html_string;
+
+		return true;
 	},
 
 	display_news: function() {
@@ -110,7 +99,7 @@ return;
 
 		for (var i=0; i<applicationNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
-				var application = new Application(applicationNodes[i].getAttribute('id'), applicationNodes[i].getAttribute('name'));
+				var application = new Application(applicationNodes[i].getAttribute('id'), applicationNodes[i].getAttribute('name'), applicationNodes[i].getAttribute('server'));
 				this.applications.set(application.id, application);
 				this.applicationsPanel.add(application);
 			} catch(e) {
@@ -134,7 +123,7 @@ return;
 				if (typeof app_object == 'undefined')
 					continue;
 
-				var instance = new Running_Application(app_object.id, app_object.name, pid, app_status, this.getContext());
+				var instance = new Running_Application(app_object.id, app_object.name, app_object.server, pid, app_status, this.getContext());
 				this.running_applications.set(instance.pid, instance);
 				this.runningApplicationsPanel.add(instance);
 			} else {

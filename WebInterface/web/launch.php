@@ -61,10 +61,10 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 					Effect.Center($('endContainer'));
 				$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
 
-				if ($('<?php echo $_POST['session_mode']; ?>Container'))
-					$('<?php echo $_POST['session_mode']; ?>Container').hide();
-				if ($('appletContainer'))
-					$('appletContainer').hide();
+				if ($('<?php echo $_POST['session_mode']; ?>ModeContainer'))
+					$('<?php echo $_POST['session_mode']; ?>ModeContainer').hide();
+				if ($('<?php echo $_POST['session_mode']; ?>AppletContainer'))
+					$('<?php echo $_POST['session_mode']; ?>AppletContainer').hide();
 				if ($('splashContainer'))
 					$('splashContainer').show();
 			});
@@ -145,7 +145,7 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 		</div>
 
 		<div id="desktopModeContainer" style="display: none;">
-			<div id="appletContainer" style="display: none;">
+			<div id="desktopAppletContainer" style="display: none;">
 			</div>
 		</div>
 
@@ -188,6 +188,9 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 					</td>
 				</tr>
 			</table>
+
+			<div id="portalAppletContainer" style="display: none;">
+			</div>
 		</div>
 
 		<div id="printerContainer">

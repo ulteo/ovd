@@ -141,7 +141,14 @@ a:hover {
 	font-weight: bold;
 }
 
-#appletContainer {
+#desktopAppletContainer {
+	position: absolute;
+
+	top: 0px;
+	left: 0px;
+}
+
+#portalAppletContainer {
 	position: absolute;
 
 	top: 0px;

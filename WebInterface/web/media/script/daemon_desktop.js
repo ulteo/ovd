@@ -19,41 +19,30 @@
  **/
 
 var Desktop = Class.create(Daemon, {
-	loop: function() {
-		this.check_status();
+	mode: 'desktop',
+	access_id: 'desktop',
 
-		if (this.session_state == 0 || this.session_state == 10) {
-			this.start_request();
-		} else if (this.session_state == 2 && this.application_state == 2 && $('splashContainer').visible() && ! $('desktopModeContainer').visible()) {
-			if (! this.started)
-				this.start();
+	parse_do_started: function(transport) {
+		$('splashContainer').hide();
 
-			this.started = true;
-		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9 || (this.old_application_state == 2 && this.application_state != 2) || this.application_state == 3 || this.application_state == 4 || this.application_state == 9) {
-			if (! this.started)
-				this.error_message = this.i18n['session_close_unexpected'];
+		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="org.ulteo.RemoteDesktopApplet" codebase="applet/" archive="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" cache_archive="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" cache_archive_ex="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar;preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
+			<param name="name" value="ulteoapplet" /> \
+			<param name="code" value="org.ulteo.RemoteDesktopApplet" /> \
+			<param name="codebase" value="applet/" /> \
+			<param name="archive" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" /> \
+			<param name="cache_archive" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" /> \
+			<param name="cache_archive_ex" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar;preload" /> \
+			<param name="mayscript" value="true" /> \
+			\
+			<param name="server" value="'+this.session_server+'" /> \
+			<param name="port" value="3389" /> \
+			<param name="username" value="'+this.session_login+'" /> \
+			<param name="password" value="'+this.session_password+'" /> \
+		</applet>';
 
-			this.do_ended();
+		$('desktopAppletContainer').show();
+		$('desktopAppletContainer').innerHTML = applet_html_string;
 
-			return;
-		}
-
-		setTimeout(this.loop.bind(this), 2000);
-	},
-
-	start: function() {
-		this.access_id = 'desktop';
-
-		if (! $('desktopModeContainer').visible())
-			$('desktopModeContainer').show();
-
-		Daemon.prototype.start.apply(this);
-	},
-
-	do_ended: function() {
-		if ($('desktopModeContainer').visible())
-			$('desktopModeContainer').hide();
-
-		Daemon.prototype.do_ended.apply(this);
+		return true;
 	}
 });
