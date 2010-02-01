@@ -21,7 +21,9 @@ import md5
 import commands
 import ConfigParser
 import random
+import re
 import sys, os
+import tempfile
 
 from ovd.Logger import Logger
 
@@ -127,47 +129,38 @@ class ApplicationsDetection():
 	
 	
 	def getIcon(self, filename):
-		Logger.warn("youpla %s"%(filename))
+		Logger.debug("ApplicationsDetection::getIcon %s"%(filename))
 		parser = ConfigParser.ConfigParser()
 		
 		try:
 			parser.read(filename)
 		except ConfigParser.MissingSectionHeaderError:
-			Logger.warn("ouet -1")
+			Logger.warn("ApplicationsDetection::getIcon invalid desktop file syntax")
 			return None
 	
 		if not parser.has_section('Desktop Entry'):
-			Logger.warn("ouet 0")
+			Logger.warn("ApplicationsDetection::getIcon invalid desktop file syntax")
 			return None	
 		
 		if not parser.has_option('Desktop Entry', "Icon"):
-			Logger.warn("ouet 1")
+			# icon field is not required for type=Application
 			return None
 		
 		iconName = parser.get('Desktop Entry', "Icon")
+		if not os.path.isabs(iconName):
+			iconName = self.chooseBestIcon(iconName)
+			if iconName is None:
+				return None
 		
-		cmd = 'find /usr/share/pixmaps /usr/share/icons -iname "*%s*"'%(iconName)
+		bufFile = tempfile.mktemp(".png")		
+		cmd = 'convert -resize 32x32 "%s" "%s"'%(iconName, bufFile)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
-			Logger.error("find error:%d (%s)"%(s, o))
-			return None
-		
-		files = o.splitlines()
-		if len(files)==0:
-			return None
-		
-		f_src = files[0]
-		
-		bufFile = "/tmp/%f.png"%(random.random())
-		cmd = 'convert -resize 32x32 "%s" "%s"'%(f_src, bufFile)
-		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
-			Logger.error("find error:%d (%s)"%(s, o))
-			
+			Logger.debug("getIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
+			Logger.error("getIcon: imagemagick error")
 			if os.path.exists(bufFile):
 				os.remove(bufFile)
-		
-		
+			
 			return None
 		
 		
@@ -177,3 +170,59 @@ class ApplicationsDetection():
 		os.remove(bufFile)
 		
 		return buffer
+	
+	def chooseBestIcon(self, pattern):
+		cmd = 'find /usr/share/pixmaps /usr/share/icons -iname "*%s*"'%(pattern)
+		s,o = commands.getstatusoutput(cmd)
+		if s != 0:
+			Logger.debug("chooseBestIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
+			Logger.error("chooseBestIcon: unable to get icon")
+			return None
+		
+		files = o.splitlines()
+		if len(files)==0:
+			return None
+		
+		list1 = {};
+		list2 = {};
+		
+		for image in files:
+			cmd = 'identify "%s"'%(image)
+			s,o = commands.getstatusoutput(cmd)
+			if s != 0:
+				Logger.debug("chooseBestIcon cmd '%s' returned (%d): %s"%(cmd, s, o))
+				continue
+			
+			if not o.startswith(image+" "):
+				Logger.debug("chooseBestIcon identify weird out")
+				continue
+			
+			
+			buf = o[len(image+" "):]
+			buf = buf.split(" ")
+			if len(buf)<2:
+				Logger.debug("chooseBestIcon identify weird out")
+				continue
+			
+			res = buf[1]
+			match = re.match("(\d+)x(\d+).*", res)
+			if match is None:
+				Logger.debug("chooseBestIcon identify weird out")
+				continue
+			
+			width = int(match.group(1))
+			height =  int(match.group(2))
+			
+			if height >= 32:
+				list1[height] = image
+			else:
+				list2[height] = image
+		
+		
+		if len(list1) > 0:
+			return list1.values()[0]
+		
+		if len(list2) > 0:
+			return list2.values()[-1]
+		
+		return None
