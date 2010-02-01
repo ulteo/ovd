@@ -1,9 +1,8 @@
 scripts_DATA = getopt-signed.jar \
                log4j-signed.jar \
-               ulteo-applet.jar \
+               OVDapplet.jar \
                ulteo-printing.jar \
-               UlteoRDP-signed.jar \
-               UlteoRDP-unsigned.jar
+               UlteoRDP-signed.jar
 
 scriptsdir = $(datadir)/ulteo/webinterface/applet
 
