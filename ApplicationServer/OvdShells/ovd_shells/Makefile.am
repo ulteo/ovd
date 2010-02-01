@@ -6,6 +6,7 @@ scripts_DATA = Application.py \
                InstancesManager.py \
                Module.py \
                Monitoring.py \
+               OvdAppChannel.py \
                VirtualChannel.py
 
 scriptsdir = $(prefix)/lib/python2.5/site-packages/ovd_shells
