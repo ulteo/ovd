@@ -495,9 +495,13 @@ foreach (array($session->server) as $server) {
 		if ($application->getAttribute('static'))
 			continue;
 
+		if ($application->getAttribute('type') != $server->getAttribute('type'))
+			continue;
+
 		$application_node = $dom->createElement('application');
 		$application_node->setAttribute('id', $application->getAttribute('id'));
 		$application_node->setAttribute('name', $application->getAttribute('name'));
+		$application_node->setAttribute('server', $server->getAttribute('external_name'));
 		$application_node->setAttribute('command', $application->getAttribute('executable_path'));
 		foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
 			if ($mimetype == '')

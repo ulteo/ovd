@@ -29,6 +29,10 @@ $session = Abstract_Session::load($_GET['session']);
 if (! $session)
 	die();
 
+$server = Abstract_Server::load($session->server);
+if (! $server)
+	die();
+
 $userDB = UserDB::getInstance();
 
 $user = $userDB->import($session->settings['user_login']);
@@ -38,9 +42,24 @@ if (! is_object($user))
 $applications_node = $dom->createElement('applications');
 
 foreach ($user->applications() as $application) {
+	if ($application->getAttribute('static'))
+		continue;
+
+	if ($application->getAttribute('type') != $server->getAttribute('type'))
+		continue;
+
 	$application_node = $dom->createElement('application');
 	$application_node->setAttribute('id', $application->getAttribute('id'));
 	$application_node->setAttribute('name', $application->getAttribute('name'));
+	$application_node->setAttribute('server', $server->getAttribute('external_name'));
+	foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
+		if ($mimetype == '')
+			continue;
+
+		$mimetype_node = $dom->createElement('mime');
+		$mimetype_node->setAttribute('type', $mimetype);
+		$application_node->appendChild($mimetype_node);
+	}
 	$applications_node->appendChild($application_node);
 }
 
