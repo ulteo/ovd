@@ -152,8 +152,10 @@ class ApplicationServer(AbstractRole):
 				if ts_id is None:
 					if session.status in [Session.SESSION_STATUS_ACTIVE, Session.SESSION_STATUS_INACTIVE]:
 						Logger.error("Weird, running session no longer exist")
-						self.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
-						self.sessions_spooler.put(("destroy", session))
+						
+						if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED]:
+							self.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
+							self.sessions_spooler.put(("destroy", session))
 					continue
 				
 				try:
