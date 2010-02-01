@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009, 2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+ * Contributor Ronaldo Yamada 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -47,9 +48,27 @@ Action::init(const std::string& _user,
 
 bool
 Action::user_exist() {
-    std::string cmd = this->chroot_cmd+" \""+this->chroot+"\" getent passwd "+this->user;
+    std::string cmd;
     std::string buffer;
     
+    if (this->is_only_numeric_login()) {
+        /**
+           http://docs.sun.com/app/docs/doc/819-2240/getent-1m?a=view
+           
+           If the key value consists only of numeric characters,
+           getent assumes that the key value is a numeric user ID and
+           searches the user database for a matching user ID.
+
+           If the user ID is not found in the user database or if the
+           key value contains any non-numeric characters, getent
+           assumes the key value is a user name and searches the user
+           database for a matching user name
+        **/
+        cmd = this->chroot_cmd+" \""+this->chroot+"\" getent passwd |grep ^"+this->user+"\\:";
+    }
+    else
+        cmd = this->chroot_cmd+" \""+this->chroot+"\" getent passwd "+this->user;
+
     if (! Utils::Exec(cmd, buffer))
         return false;
 
@@ -105,4 +124,18 @@ Action::perform() {
 unsigned int
 Action::nb_args() {
     return 0;
+}
+
+bool
+Action::is_only_numeric_login() {
+    std::string pattern = "0123456789";
+
+    for (unsigned int i=0; i< this->user.size(); i++) {
+        char t = this->user[i];
+
+        if (pattern.find(t) >= pattern.size())
+            return false;
+    }
+
+    return true;
 }
