@@ -133,11 +133,24 @@ class Dialog(AbstractDialog):
 			if not sessionNode.hasAttribute("id"):
 				raise Exception("invalid root node")
 			
+			if not sessionNode.hasAttribute("mode"):
+				raise Exception("invalid root node")
+			
 			session = {}
 			session["id"] = sessionNode.getAttribute("id")
+			session["mode"] = sessionNode.getAttribute("mode")
+			
 			if len(session["id"])==0:
 				raise Exception("Missing attribute id")
-	
+			
+			if session["mode"] == "desktop":
+				session["mode"] = Session.MODE_DESKTOP
+			elif session["mode"] == "applications":
+				session["mode"] = Session.MODE_APPLICATIONS
+			else:
+				raise Exception("Missing attribute id")
+			
+			
 			userNode = sessionNode.getElementsByTagName("user")[0]
 			
 			for attr in ["login", "password", "displayName"]:
@@ -168,7 +181,7 @@ class Dialog(AbstractDialog):
 		
 		
 		user = User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
-		session = Session(session["id"], user, session["parameters"], session["applications"])
+		session = Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
 		
 		self.role_instance.sessions[session.id] = session
 		self.role_instance.sessions_spooler.put(("create", session))
@@ -180,7 +193,7 @@ class Dialog(AbstractDialog):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
 		else:
-			session = Session(session_id, None, None, None)
+			session = Session(session_id, None, None, None, None)
 			session.status = "unknown"
 		
 		return self.req_answer(self.session2xmlstatus(session))
@@ -192,7 +205,7 @@ class Dialog(AbstractDialog):
 			session.status = Session.SESSION_STATUS_WAIT_DESTROY
 			self.role_instance.sessions_spooler.put(("destroy", session))
 		else:
-			session = Session(session_id, None, None, None)
+			session = Session(session_id, None, None, None, None)
 			session.status = Session.SESSION_STATUS_UNKNOWN
 		
 		return self.req_answer(self.session2xmlstatus(session))

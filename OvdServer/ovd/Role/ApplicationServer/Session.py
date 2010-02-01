@@ -32,10 +32,13 @@ class Session:
 	SESSION_STATUS_WAIT_DESTROY = "wait_destroy"
 	SESSION_STATUS_DESTROYED = "destroyed"
 	
+	MODE_DESKTOP = "desktop"
+	MODE_APPLICATIONS = "applications"
 	
-	def __init__(self, id_, user_, parameters_, applications_):
+	def __init__(self, id_, mode_, user_, parameters_, applications_):
 		self.id = id_
 		self.user = user_
+		self.mode = mode_
 		self.parameters = parameters_
 		self.applications = applications_
 		

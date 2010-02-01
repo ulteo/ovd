@@ -60,7 +60,7 @@ class SessionManagement(Thread):
 		
 		session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
 		
-		if True: # todo is parameter["mode"] == "desktop"
+		if session.mode == "desktop":
 			session.user.infos["shell"] = "OvdDesktop"
 		else:
 			session.user.infos["shell"] = "OvdRemoteApps"
