@@ -31,7 +31,7 @@ std::vector<std::string>
 Utils::StringExplode(const std::string &input, const std::string &separator) {
     std::string str(input);
     std::vector<std::string> results;
-    unsigned int found = str.find_first_of(separator);
+    std::string::size_type found = str.find_first_of(separator);
 
     while(found != std::string::npos){
         if(found >=0)
