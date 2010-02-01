@@ -90,7 +90,7 @@ class SessionManagement(Thread):
 			session.user.infos["tsid"] = sessid
 		self.destroy_user(session.user)
 		
-		if self.role_instance.sessions.has_key(session.id):
+		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])
 		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_DESTROYED)
 	
