@@ -432,6 +432,7 @@ $dom = new DomDocument('1.0', 'utf-8');
 
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
+$session_node->setAttribute('mode', (($session->mode == 'desktop')?'desktop':'applications'));
 foreach (array('desktop_icons') as $parameter) {
 // continue;
 	$parameter_node = $dom->createElement('parameter');
