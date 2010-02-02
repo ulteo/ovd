@@ -434,7 +434,6 @@ $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', (($session->mode == 'desktop')?'desktop':'applications'));
 foreach (array('desktop_icons') as $parameter) {
-// continue;
 	$parameter_node = $dom->createElement('parameter');
 	$parameter_node->setAttribute('name', $parameter);
 	$parameter_node->setAttribute('value', true);
@@ -482,6 +481,10 @@ $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
+$user_node = $dom->createElement('user');
+$user_node->setAttribute('login', $user_login);
+$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+$session_node->appendChild($user_node);
 foreach (array($session->server) as $server) {
 	$server = Abstract_Server::load($session->server);
 	if (! $server)

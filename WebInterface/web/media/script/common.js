@@ -66,6 +66,13 @@ function onStartSessionSuccess(transport) {
 	}
 	session = buffer[0];
 
+	var buffer = session.getElementsByTagName('user');
+	if (buffer.length != 1) {
+		enableLogin();
+		return false;
+	}
+	user = buffer[0];
+
 	var buffer = session.getElementsByTagName('server');
 	if (buffer.length != 1) {
 		enableLogin();
@@ -73,17 +80,13 @@ function onStartSessionSuccess(transport) {
 	}
 	server = buffer[0];
 
-	var session_id = session.getAttribute('id');
-	var session_mode = session.getAttribute('mode');
-	var session_server = server.getAttribute('fqdn');
-	var session_login = server.getAttribute('login');
-	var session_password = server.getAttribute('password');
-
-	$('session_id').value = session_id;
-	$('session_mode').value = session_mode;
-	$('session_server').value = session_server;
-	$('session_login').value = session_login;
-	$('session_password').value = session_password;
+	$('session_id').value = session.getAttribute('id');
+	$('session_mode').value = session.getAttribute('mode');
+	$('session_login').value = user.getAttribute('login');
+	$('session_displayname').value = user.getAttribute('displayName');
+	$('session_server').value = server.getAttribute('fqdn');
+	$('session_login').value = server.getAttribute('login');
+	$('session_password').value = server.getAttribute('password');
 
 	$('user_password').value = '';
 	enableLogin();
