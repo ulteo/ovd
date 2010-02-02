@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -51,6 +51,10 @@ if ($token->getAttribute('type') == 'start' || $token->getAttribute('type') == '
 	$session_id = $token->getAttribute('link_to');
 } elseif ($token->getAttribute('type') == 'invite') {
 	$invite = Abstract_Invite::load($token->getAttribute('link_to'));
+	if (! $invite) {
+		Logger::error('main', '(webservices/session_token) No such invite : token: '.$_GET['token'].' invite id: '.$token->getAttribute('link_to'));
+		die('No such invite');
+	}
 
 	$session_id = $invite->getAttribute('session');
 }
