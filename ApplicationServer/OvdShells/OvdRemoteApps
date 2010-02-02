@@ -41,9 +41,7 @@ def main():
 	seamPid = Platform.launch("seamlessrdpshell", False)
 	
 	vchannel = Platform.VirtualChannel(OvdAppChannel.NAME)
-	if not vchannel.Open():
-		print "Unable to init vchannel"
-		sys.exit(1)
+	tryOpenChannel(vchannel)
 	
 	
 	buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
@@ -83,6 +81,27 @@ def main():
 	
 	vchannel.Close()
 	sys.exit(0)
+
+
+def tryOpenChannel(vchannel):
+	if vchannel.Open():
+		return
+	
+	time.sleep(0.5)
+	if vchannel.Open():
+		return
+	
+	time.sleep(1)
+	if vchannel.Open():
+		return
+	
+	time.sleep(2)
+	if vchannel.Open():
+		return
+	
+	print "Unable to init vchannel"
+	sys.exit(1)
+
 
 
 if __name__ == "__main__":
