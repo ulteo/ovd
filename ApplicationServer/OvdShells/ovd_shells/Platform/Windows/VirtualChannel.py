@@ -21,7 +21,7 @@
 import ctypes
 import win32event
 
-from ovd_shell.VirtualChannel import VirtualChannel as AbstractVirtualChannel
+from ovd_shells.VirtualChannel import VirtualChannel as AbstractVirtualChannel
 
 class VirtualChannel(AbstractVirtualChannel):
 	def __init__(self, name_):

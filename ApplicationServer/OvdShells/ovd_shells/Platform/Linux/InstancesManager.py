@@ -24,7 +24,7 @@ import time
 
 from ovd_shells.InstancesManager import InstancesManager as AbstractInstancesManager
 
-class InstanceManager(AbstractInstancesManager):
+class InstancesManager(AbstractInstancesManager):
 	def launch(self, cmd):
 		pid = os.fork()
 		

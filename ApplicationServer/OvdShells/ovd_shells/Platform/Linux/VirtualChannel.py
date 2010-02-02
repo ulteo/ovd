@@ -20,7 +20,7 @@
 
 import xrdp
 
-from ovd_shell.VirtualChannel import VirtualChannel as AbstractVirtualChannel
+from ovd_shells.VirtualChannel import VirtualChannel as AbstractVirtualChannel
 
 class VirtualChannel(AbstractVirtualChannel):
 	def __init__(self, name_):
@@ -29,8 +29,8 @@ class VirtualChannel(AbstractVirtualChannel):
 	
 	
 	def Open(self):
-		self._handle = xrdp.VchannelOpen(name_)
-		return self._handle != None
+		self._handle = xrdp.VchannelOpen(self.name)
+		return self._handle != False
 	
 	
 	def Close(self):

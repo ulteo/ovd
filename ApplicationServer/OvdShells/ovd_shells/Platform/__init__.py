@@ -31,12 +31,17 @@ def get_platform():
 
 if get_platform() == "linux":
 	from Linux._platform import *
-	from Linux import InstancesManager
+	from Linux.InstancesManager import InstancesManager
+	from Linux.VirtualChannel import VirtualChannel
 
 elif get_platform() == "windows":
 	from Windows._platform import *
-	from Windows import InstancesManager
+	from Windows.InstancesManager import InstancesManager
+	from Windows.VirtualChannel import VirtualChannel
 
 else:
 	raise Exception("Not supported platform")
 
+
+#s = 'ovd_shells.%(os_name)s.Platform' % {'os_name' :  os.name}
+#mon_module = __import__(s, globals(), locals(),  [''])
