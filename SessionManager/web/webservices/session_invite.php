@@ -52,6 +52,8 @@ if (!isset($_REQUEST['email']) || $_REQUEST['email'] == '') {
 }
 
 $session = Abstract_Session::load($_REQUEST['session']);
+if (! $session)
+	die('ERROR - No such session');
 
 $mode = $_REQUEST['mode'];
 if ($mode == 'passive')
