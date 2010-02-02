@@ -20,7 +20,9 @@
 
 import struct
 import threading
+import time
 
+from Application import Application
 import OvdAppChannel
 
 class InstancesManager(threading.Thread):
@@ -38,11 +40,21 @@ class InstancesManager(threading.Thread):
 		# todo mutex unlock
 	
 	
-	def run(self):
+	def popJob(self):
 		# todo mutex lock
-		while len(self.jobs) != 0:
-			(token, app) = self.job.pop()
-			
+		if len(self.jobs) == 0:
+			return None
+		# todo mutex unlock
+		return self.jobs.pop()
+	
+	
+	def run(self):
+		while True:
+			job = self.popJob()
+			if job is None:
+				time.sleep(0.1)
+				continue
+			(token, app) = job
 			application = Application(app, "")
 			if not application.isAvailable():
 				print "Application %d is not available"%(app)

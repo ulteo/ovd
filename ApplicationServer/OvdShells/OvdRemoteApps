@@ -61,13 +61,13 @@ def main():
 			time.sleep(0.5)
 			continue
 		
-		order = packet[0]
+		order = struct.unpack('>B', packet[0])[0]
 		if order == OvdAppChannel.ORDER_START:
 			token = struct.unpack('>I', packet[1:5])[0]
 			app_id = struct.unpack('>I', packet[5:9])[0]
 			
 			print "recv startapp order %d %d"%(token, app_id)
-			im.pushJob((app_id, token))
+			im.pushJob(app_id, token)
 		
 		
 		elif order == OvdAppChannel.ORDER_EXIT:
@@ -75,7 +75,7 @@ def main():
 			break
 		
 		else:
-			print "unkonwn message %X"%(order)	
+			print "unknown message %X"%(order)
 	
 	im.stop()
 	
@@ -84,22 +84,15 @@ def main():
 
 
 def tryOpenChannel(vchannel):
+	
+	for t in [0.5, 1, 2]:
+		if vchannel.Open():
+			return
+		time.sleep(t)
+		
 	if vchannel.Open():
 		return
 	
-	time.sleep(0.5)
-	if vchannel.Open():
-		return
-	
-	time.sleep(1)
-	if vchannel.Open():
-		return
-	
-	time.sleep(2)
-	if vchannel.Open():
-		return
-	
-	print "Unable to init vchannel"
 	sys.exit(1)
 
 
