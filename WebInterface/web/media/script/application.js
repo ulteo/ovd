@@ -70,7 +70,7 @@ var Application = Class.create({
 
 	launch: function() {
 		var date = new Date();
-		var rand = parseInt(Math.random()*date.getTime());
+		var rand = parseInt(Math.round(Math.random()*100)+date.getTime());
 		$('ulteoapplet').startApplication(rand, this.id, this.server);
 	},
 
