@@ -31,6 +31,6 @@ Description: Ulteo Open Virtual Desktop - application server
 
 Package: ulteo-ovd-shells
 Architecture: all
-Depends: python2.5
+Depends: python2.5, python-xrdp
 Description: Ulteo OVD shells
  These scripts handle the Open Virtual Desktop user sessions.
