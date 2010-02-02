@@ -31,7 +31,7 @@ abstract class ApplicationsGroupDB extends Module {
 			if (!in_array('ApplicationsGroupDB',$mods_enable)){
 				die_error(_('Module ApplicationsGroupDB must be enabled'),__FILE__,__LINE__);
 			}
-			$mod_app_name = 'admin_ApplicationsGroupDB_'.$prefs->get('ApplicationsGroupDB','enable');
+			$mod_app_name = 'ApplicationsGroupDB_'.$prefs->get('ApplicationsGroupDB','enable');
 			self::$instance = new $mod_app_name();
 		}
 		return self::$instance;

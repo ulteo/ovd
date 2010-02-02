@@ -214,7 +214,7 @@ class UserDB_sql_external extends UserDB {
 		// dirty
 		$ret = self::prefsIsValid2($prefs_, $log);
 		if ( $ret != true) {
-			$ret = admin_UserDB_sql::init($prefs_);
+			$ret = UserDB_sql::init($prefs_);
 		}
 		return $ret;
 	}
@@ -242,5 +242,25 @@ class UserDB_sql_external extends UserDB {
 		if (!isset($config['match']))
 			return array();
 		return array_keys($config['match']);
+	}
+	
+	public function add($user_){
+		return false;
+	}
+	
+	public function remove($user_){
+		return false;
+	}
+	
+	public function update($user_){
+		return false;
+	}
+	
+	public static function init($prefs_) {
+		return true;
+	}
+	
+	public static function enable() {
+		return true;
 	}
 }

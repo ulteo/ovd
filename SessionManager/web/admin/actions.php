@@ -62,11 +62,7 @@ if ($_REQUEST['name'] == 'Application_Server') {
 	if (! is_array($_REQUEST['application']))
 		$_REQUEST['application'] = array($_REQUEST['application']);
 
-	$mods_enable = $prefs->get('general','module_enable');
-	if (! in_array('ApplicationDB',$mods_enable))
-		die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-	$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-	$applicationDB = new $mod_app_name();
+	$applicationDB = ApplicationDB::getInstance();
 
 	$apps = array();
 	foreach($_REQUEST['application'] as $id)
@@ -109,14 +105,7 @@ if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 
 if ($_REQUEST['name'] == 'Application') {
 	if ($_REQUEST['action'] == 'del') {
-		$prefs = Preferences::getInstance();
-		
-		$mods_enable = $prefs->get('general','module_enable');
-		if (!in_array('ApplicationDB',$mods_enable)){
-			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-		}
-		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-		$applicationDB = new $mod_app_name();
+		$applicationDB = ApplicationDB::getInstance();
 		
 		if ($applicationDB->isWriteable()) {
 			$app = $applicationDB->import($_REQUEST['id']);

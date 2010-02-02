@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -27,16 +27,7 @@ if (! checkAuthorization('viewApplications'))
 $types = array('linux' => 'linux' , 'windows' => 'windows', 'weblink' => _('Web'));
 $regular_types = array('linux', 'windows');
 
-$prefs = Preferences::getInstance();
-if (! $prefs)
-	die_error('get Preferences failed',__FILE__,__LINE__);
-
-$mods_enable = $prefs->get('general','module_enable');
-if (!in_array('ApplicationDB',$mods_enable)){
-	die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-}
-$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-$applicationDB = new $mod_app_name();
+$applicationDB = ApplicationDB::getInstance();
 
 if (isset($_REQUEST['action'])) {
 	if ($_REQUEST['action'] == 'manage') {

@@ -154,4 +154,24 @@ class UserDB_activedirectory  extends UserDB_ldap{
 	public static function isDefault() {
 		return false;
 	}
+	
+	public function add($user_){
+		return false;
+	}
+	
+	public function remove($user_){
+		return false;
+	}
+	
+	public function modify($user_){
+		return false;
+	}
+	
+	public static function init($prefs_) {
+		return true;
+	}
+	
+	public static function enable() {
+		return true;
+	}
 }

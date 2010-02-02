@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -122,5 +122,25 @@ class UserDB_unix extends UserDB {
 
 	public function getAttributesList() {
 		return array_unique( array_merge( array('login', 'displayname', 'uid', 'gid', 'homedir'), get_needed_attributes_user_from_module_plugin()));
+	}
+	
+	public function add($user_){
+		return false;
+	}
+	
+	public function remove($user_){
+		return false;
+	}
+	
+	public function modify($user_){
+		return false;
+	}
+	
+	public static function init($prefs_) {
+		return true;
+	}
+	
+	public static function enable() {
+		return false;
 	}
 }

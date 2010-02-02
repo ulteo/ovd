@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -141,5 +141,25 @@ class UserGroupDB_ldap_memberof {
 	
 	public static function liaisonType() {
 		return 'ldap_memberof';
+	}
+	
+	public function add($usergroup_){
+		return false;
+	}
+	
+	public function remove($usergroup_){
+		return true;
+	}
+	
+	public function update($usergroup_){
+		return true;
+	}
+	
+	public static function init($prefs_) {
+		return true;
+	}
+	
+	public static function enable() {
+		return true;
 	}
 }

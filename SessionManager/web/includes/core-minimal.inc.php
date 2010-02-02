@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,6 @@ define('CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes');
 define('ABSTRACT_CLASSES_DIR', SESSIONMANAGER_ROOT.'/classes/abstract');
 define('ADMIN_CLASSES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/classes');
 define('MODULES_DIR', SESSIONMANAGER_ROOT.'/modules');
-define('ADMIN_MODULES_DIR', SESSIONMANAGER_ROOT_ADMIN.'/modules');
 define('PLUGINS_DIR', SESSIONMANAGER_ROOT.'/plugins');
 define('EVENTS_DIR', SESSIONMANAGER_ROOT.'/events');
 define('CALLBACKS_DIR', SESSIONMANAGER_ROOT.'/events/callbacks');
@@ -86,8 +85,6 @@ function __autoload($class_name) { //what about NameSpaces ?
 		$class_files []= ADMIN_CLASSES_DIR.'/'.$class_name.'.class.php';
 
 		$class_files []= MODULES_DIR.'/'.preg_replace('/_/', '/', $class_name, 1).'.php';
-		if (substr($class_name, 0, 6) == 'admin_')
-			$class_files []= ADMIN_MODULES_DIR.'/'.preg_replace('/_/', '/', substr($class_name, 6), 1).'.php';
 
 		$class_files []= PLUGINS_DIR.'/'.strtolower(substr($class_name, 7)).'.php';
 		if (substr($class_name, 0, 3) == 'FS_')

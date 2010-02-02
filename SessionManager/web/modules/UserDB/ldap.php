@@ -277,4 +277,24 @@ class UserDB_ldap  extends UserDB {
 	public function getAttributesList() {
 		return array_unique( array_merge(array_keys($this->config['match']), get_needed_attributes_user_from_module_plugin()));
 	}
+	
+	public function add($user_){
+		return false;
+	}
+
+	public function remove($user_){
+		return false;
+	}
+
+	public function modify($user_){
+		return false;
+	}
+
+	public static function init($prefs_) {
+		return true;
+	}
+
+	public static function enable() {
+		return true;
+	}
 }

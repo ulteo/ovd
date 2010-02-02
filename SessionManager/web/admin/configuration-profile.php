@@ -80,7 +80,7 @@ function do_save($prefs, $name) {
   }
 
 
-  $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
+  $mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
   //var_dump($mod_user_name);
   $userDB = new $mod_user_name();
   if (! $userDB->prefsIsValid($prefs)) {
@@ -121,13 +121,13 @@ function do_preview($prefs, $name) {
     return $log;
   }
 
-  $mod_user_name = 'admin_UserDB_'.$prefs->get('UserDB','enable');
+  $mod_user_name = 'UserDB_'.$prefs->get('UserDB','enable');
   $userDB = new $mod_user_name();
   if (! $userDB->prefsIsValid($prefs, $log)) {
     return $log;
   }
 
-  $mod_usergroup_name = 'admin_UserGroupDB_'.$prefs->get('UserGroupDB','enable');
+  $mod_usergroup_name = 'UserGroupDB_'.$prefs->get('UserGroupDB','enable');
   $userGroupDB = new $mod_usergroup_name();
   if (! $userGroupDB->prefsIsValid($prefs, $log)) {
     return $log;

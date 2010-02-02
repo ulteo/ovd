@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -583,15 +583,7 @@ function show_manage($fqdn) {
   }
 
 
-  $prefs = Preferences::getInstance();
-  if (! $prefs)
-    die_error('get Preferences failed',__FILE__,__LINE__);
-
-  $mods_enable = $prefs->get('general','module_enable');
-  if (! in_array('ApplicationDB',$mods_enable))
-    die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-  $mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-  $applicationDB = new $mod_app_name();
+  $applicationDB = ApplicationDB::getInstance();
 
   $applications_all = $applicationDB->getList(true);
   $applications = $server->getApplications();

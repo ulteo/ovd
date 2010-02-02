@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -121,7 +121,7 @@ class UserGroupDB_sql_external extends UserGroupDB {
 		// dirty
 		$ret = self::prefsIsValid2($prefs_, $log);
 		if ( $ret != true) {
-			$ret = admin_UserGroupDB_sql::init($prefs_);
+			$ret = UserGroupDB_sql::init($prefs_);
 		}
 		return $ret;
 	}
@@ -143,5 +143,25 @@ class UserGroupDB_sql_external extends UserGroupDB {
 	
 	public static function liaisonType() {
 		return 'sql';
+	}
+	
+	public function add($usergroup_){
+		return false;
+	}
+	
+	public function remove($usergroup_){
+		return false;
+	}
+	
+	public function update($usergroup_){
+		return false;
+	}
+	
+	public static function init($prefs_) {
+		return true;
+	}
+	
+	public static function enable() {
+		return true;
 	}
 }

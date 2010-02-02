@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -92,5 +92,13 @@ class AuthMethod_Token extends AuthMethod {
 			new ConfigElement_input('user_node_name', _('Token XML user node name'), _('The id of the XML node which contains the user login'), _('The id of the XML node which contains the user login'), 'user'),
 			new ConfigElement_input('login_attribute_name', _('Token XML login attribute name'), _('The name of the XML attribute which contains the user login (in the node "user_node_name")'), _('The name of the XML attribute which contains the user login (in the node "user_node_name")'), 'login')
 		);
+	}
+	
+	public static function init($prefs_) {
+		return true;
+	}
+
+	public static function enable() {
+		return true;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -409,7 +409,7 @@ class Preferences {
 		// we remove all diseable modules
 		foreach ($available_module as $mod2 => $sub_mod2){
 			foreach ($sub_mod2 as $sub_mod_name2 => $sub_mod_pretty2){
-				$enable =  call_user_func(array('admin_'.$mod2.'_'.$sub_mod_name2, 'enable'));
+				$enable =  call_user_func(array($mod2.'_'.$sub_mod_name2, 'enable'));
 				if ($enable !== true)
 					unset ($available_module[$mod2][$sub_mod_name2]);
 			}

@@ -180,12 +180,6 @@ web/admin/media/image/loadbalancing/Makefile
 web/admin/media/image/menu/Makefile
 web/admin/media/image/Makefile
 web/admin/media/Makefile
-web/admin/modules/AuthMethod/Makefile
-web/admin/modules/UserDB/Makefile
-web/admin/modules/ApplicationDB/Makefile
-web/admin/modules/ApplicationsGroupDB/Makefile
-web/admin/modules/UserGroupDB/Makefile
-web/admin/modules/Makefile
 web/admin/includes/Makefile
 web/admin/classes/Makefile
 web/admin/Makefile

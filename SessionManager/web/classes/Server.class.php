@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008-2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -900,23 +900,13 @@ if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
 }
 
 		Logger::debug('main', 'Server::updateApplications');
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
-			return false;
-		}
 
 		if (! $this->isOnline()) {
 			Logger::debug('main', 'Server::updateApplications server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 
-		$mods_enable = $prefs->get('general','module_enable');
-		if (!in_array('ApplicationDB',$mods_enable)){
-			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-		}
-		$mod_app_name = 'admin_ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-		$applicationDB = new $mod_app_name();
+		$applicationDB = ApplicationDB::getInstance();
 
 		$xml = query_url($this->getBaseURL().'/aps/applications');
 
