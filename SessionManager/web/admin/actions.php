@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -30,7 +30,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -246,7 +246,77 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 	redirect();
 }
 
-
+if ($_REQUEST['name'] == 'User') {
+	if (! checkAuthorization('manageUsers')) {
+		redirect('users.php');
+	}
+	$userDB = UserDB::getInstance();
+	if (! $userDB->isWriteable()) {
+		die_error(_('User Database not writeable'), __FILE__, __LINE__);
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		$minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
+		if (!isset($_REQUEST['login']) or !isset($_REQUEST['displayname']) or !isset($_REQUEST['password']))
+			die_error(_("Unable to create user"), __FILE__, __LINE__);
+		
+		$u = new User();
+		foreach ($minimun_attributes as $attributes) {
+			if (isset($_REQUEST[$attributes])) {
+				$u->setAttribute($attributes, $_REQUEST[$attributes]);
+			}
+		}
+		if (!isset($_REQUEST['uid']) || ($_REQUEST['uid'] == ''))
+			$u->setAttribute('uid', str2num($_REQUEST['login']));
+		else
+			$u->setAttribute('uid', $_REQUEST['uid']);
+		
+		$res = $userDB->add($u);
+		if (! $res)
+			die_error(sprintf(_("Unable to create user '%s'",$_REQUEST['login'])), __FILE__, __LINE__);
+		
+		popup_info(sprintf(_("User '%s' successfully added"), $u->getAttribute('login')));
+		redirect('users.php');
+	}
+			
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_users']) && is_array($_REQUEST['checked_users'])) {
+			foreach ($_REQUEST['checked_users'] as $user_login) {
+				$u = $userDB->import($user_login);
+				$res = $userDB->remove($u);
+				
+				if (! $res) {
+					die_error(sprintf(_("Unable to delete user '%s'"), $user_login), __FILE__, __LINE__);
+				}
+				else {
+					popup_info(sprintf(_("User '%s' successfully deleted"), $user_login));
+				}
+			}
+		}
+		redirect('users.php');
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		$login = $_REQUEST['id'];
+		$u = $userDB->import($login);
+		
+		if (! is_object($u))
+			popup_info(sprintf(_("Unable to import user '%s'"), $login), __FILE__, __LINE__);
+		
+		foreach($u->getAttributesList() as $attr) {
+			if (isset($_REQUEST[$attr])) {
+				$u->setAttribute($attr, $_REQUEST[$attr]);
+			}
+		}
+		
+		$res = $userDB->update($u);
+		if (! $res)
+			die_error(sprintf(_("Unable to modify user '%s'"), $u->getAttribute('login')), __FILE__, __LINE__);
+		
+		popup_info(sprintf(_("User '%s' successfully modified"), $u->getAttribute('login')));
+		redirect('users.php?action=manage&id='.$u->getAttribute('login'));
+	}
+}
 
 if ($_REQUEST['name'] == 'default_browser') {
 	if (! checkAuthorization('manageApplications'))

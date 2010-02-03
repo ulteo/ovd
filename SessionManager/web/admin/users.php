@@ -34,37 +34,6 @@ if (isset($_REQUEST['action'])) {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id'], $userDB, $userGroupDB);
   }
-
-	if (! checkAuthorization('manageUsers'))
-		redirect();
-
-  if ($userDB->isWriteable()) {
-    if ($_REQUEST['action']=='add')
-      add_user($userDB);
-
-    elseif ($_REQUEST['action']=='del') {
-      if (isset($_REQUEST['id']))
-	del_user($userDB, $_REQUEST['id']);
-    }
-    elseif ($_REQUEST['action']=='modify') {
-      if (isset($_REQUEST['id'])) {
-	modify_user($userDB, $_REQUEST['id']);
-	show_manage($_REQUEST['id'], $userDB, $userGroupDB);
-      }
-    }
-  }
-}
-
-if (isset($_REQUEST['mass_delete'])) {
-	if (! checkAuthorization('manageUsers'))
-		redirect();
-
-	if (isset($_REQUEST['checked_users']) && is_array($_REQUEST['checked_users'])) {
-		foreach ($_REQUEST['checked_users'] as $user)
-			del_user($userDB, $user);
-	}
-
-	redirect();
 }
 
 if (! isset($_GET['view']))
@@ -72,55 +41,6 @@ if (! isset($_GET['view']))
 
 if ($_GET['view'] == 'all')
 	show_default($userDB);
-
-function add_user($userDB) {
-  $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
-  if (!isset($_REQUEST['login']) or !isset($_REQUEST['displayname']) or !isset($_REQUEST['password']))
-    return false;
-
-  $u = new User();
-  foreach ($minimun_attributes as $attributes) {
-    $u->setAttribute($attributes ,$_REQUEST[$attributes]);
-  }
-  if (!isset($_REQUEST['uid']) || ($_REQUEST['uid'] == ''))
-    $u->setAttribute('uid', str2num($_REQUEST['login']));
-  else
-    $u->setAttribute('uid', $_REQUEST['uid']);
-
-  $res = $userDB->add($u);
-  if (! $res)
-    die_error('Unable to create user '.$res, __FILE__, __LINE__);
-
-  popup_info(_('User successfully added'));
-  return true;
-}
-
-function del_user($userDB, $login) {
-  $u = $userDB->import($login);
-  $res = $userDB->remove($u);
-  if (! $res)
-    die_error('Unable to delete user '.$res,__FILE__,__LINE__);
-
-  popup_info(_('User successfully deleted'));
-  return true;
-}
-
-function modify_user($userDB, $login) {
-  $u = $userDB->import($login);
-  if (! is_object($u))
-    die_error('Unable to import user "'.$login.'"',__FILE__,__LINE__);
-
-  foreach($u->getAttributesList() as $attr)
-    if (isset($_REQUEST[$attr]))
-      $u->setAttribute($attr, $_REQUEST[$attr]);
-
-  $res = $userDB->update($u);
-  if (! $res)
-    die_error('Unable to modify user '.$res,__FILE__,__LINE__);
-
-  popup_info(_('User successfully modified'));
-  return true;
-}
 
 function show_default($userDB) {
   $us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
@@ -185,10 +105,11 @@ function show_default($userDB) {
       echo '</form></td>';
 
       if ($userdb_rw and $can_manage_users) {
-	echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
+	echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
 	echo '<input type="submit" value="'._('Delete').'"/>';
+	echo '<input type="hidden" name="name" value="User" />';
 	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
+	echo '<input type="hidden" name="checked_users[]" value="'.$u->getAttribute('login').'" />';
 	echo '</form></td>';
       }
       echo '</tr>';
@@ -202,9 +123,10 @@ function show_default($userDB) {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="users.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
-      echo '<input type="hidden" name="mass_action" value="delete" />';
-      echo '<input type="submit" name="mass_delete" value="'._('Delete').'"/><br />';
+      echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete selected users?').'\') && updateMassActionsForm(this, \'user_list_table\');;">';
+      echo '<input type="hidden" name="name" value="User" />';
+      echo '<input type="hidden" name="action" value="del" />';
+      echo '<input type="submit" value="'._('Delete').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '</tr>';
@@ -216,8 +138,9 @@ function show_default($userDB) {
   if ($userdb_rw and $can_manage_users) {
     echo '<h2>'._('Add').'</h2>';
     echo '<div id="user_add">';
-    echo '<form action="" method="post">';
+    echo '<form action="actions.php" method="post">';
     echo '<input type="hidden" name="action" value="add" />';
+    echo '<input type="hidden" name="name" value="User" />';
 
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
@@ -315,16 +238,18 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<h2>'._('Settings').'</h2>';
 
     echo '<div>';
-    echo '<form action="" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
+    echo '<form action="actions.php" onsubmit="return confirm(\''._('Are you sure you want to delete this user?').'\');">';
     echo '<input type="submit" value="'._('Delete this user').'"/>';
+    echo '<input type="hidden" name="name" value="User" />';
     echo '<input type="hidden" name="action" value="del" />';
-    echo '<input type="hidden" name="id" value="'.$login.'" />';
+    echo '<input type="hidden" name="checked_users[]" value="'.$login.'" />';
     echo '</form>';
     echo '</div>';
     echo '<br/><br/>';
 
     echo '<div>';
-    echo '<form action="users.php" method="post">';
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="User" />';
     echo '<input type="hidden" name="action" value="modify" />';
     echo '<input type="hidden" name="id" value="'.$login.'" />';
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
@@ -364,7 +289,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     $content = 'content'.(($count%2==0)?1:2);
     echo '<tr class="'.$content.'">';
     echo '<td colspan="2">';
-    echo '<input type="submit" name="add" value="'._('Save the modifications').'" />';
+    echo '<input type="submit" name="modify" value="'._('Save the modifications').'" />';
     echo '</td>';
     echo '</tr>';
 
