@@ -64,7 +64,15 @@ def startDesktop():
 
 def launch(cmd, wait=False):
 	# todo: use another way to use the wait parameter
-	return os.system(cmd)
+	pid = os.fork()
+	if pid > 0:
+		if wait:
+			os.waitpid(pid, 0)
+		return pid
+	
+	# Child process
+	os.execl("/bin/sh", "sh", "-c" , cmd)
+	sys.exit(1)
 
 #
 # the subprocess.list2cmdline function doesn't
