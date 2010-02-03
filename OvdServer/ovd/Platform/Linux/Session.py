@@ -23,6 +23,7 @@ import os
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
+from ApplicationsDetection import ApplicationsDetection
 from Platform import Platform
 
 class Session(AbstractSession):
@@ -34,6 +35,13 @@ class Session(AbstractSession):
 		if os.path.exists(d):
 			Platform.DeleteDirectory(d)
 		os.makedirs(d)
+		
+		os.mkdir(os.path.join(d, "matching"))
+		for (app_id, app_target) in self.applications:
+			cmd = ApplicationsDetection.getExec(app_target)
+			f = file(os.path.join(d, "matching", app_id), "w")
+			f.write(cmd)
+			f.close()
 		
 		buf = os.path.join(d, "apps")
 		os.system('touch "%s"'%(buf))

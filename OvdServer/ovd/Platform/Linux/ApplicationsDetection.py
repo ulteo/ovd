@@ -127,6 +127,27 @@ class ApplicationsDetection():
 			
 		return applications
 	
+	@staticmethod
+	def getExec(filename):
+		Logger.debug("ApplicationsDetection::getExec %s"%(filename))
+		parser = ConfigParser.ConfigParser()
+		
+		try:
+			parser.read(filename)
+		except ConfigParser.MissingSectionHeaderError:
+			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
+			return None
+	
+		if not parser.has_section('Desktop Entry'):
+			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
+			return None	
+		
+		if not parser.has_option('Desktop Entry', "Exec"):
+			Logger.warn("ApplicationsDetection::getExec invalid desktop file syntax")
+			return None
+		
+		return parser.get('Desktop Entry', "Exec")
+	
 	
 	def getIcon(self, filename):
 		Logger.debug("ApplicationsDetection::getIcon %s"%(filename))
