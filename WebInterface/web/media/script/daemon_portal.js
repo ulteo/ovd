@@ -146,12 +146,12 @@ return;
 	},
 
 	applicationStatus: function(token_, status_) {
+		var app_status = 2;
+
 		if (typeof this.running_applications.get(token_) == 'undefined') {
 			var app_id = this.matching_applications.get(token_);
 			if (typeof app_id == 'undefined')
 				return false;
-
-			var app_status = 2;
 
 			var app_object = this.applications.get(app_id);
 			if (typeof app_object == 'undefined')
@@ -159,10 +159,15 @@ return;
 
 			var instance = new Running_Application(app_object.id, app_object.name, app_object.server, token_, app_status, this.getContext());
 			this.running_applications.set(instance.pid, instance);
-			this.runningApplicationsPanel.add(instance);
+
+			if (status_ == 'started')
+				this.runningApplicationsPanel.add(instance);
 		} else {
 			var instance = this.running_applications.get(token_);
 			instance.update(app_status);
+
+			if (status_ == 'stopped')
+				this.runningApplicationsPanel.del(instance);
 		}
 
 		return true;
