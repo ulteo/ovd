@@ -133,8 +133,10 @@ function toggleContent(container) {
 }
 
 Event.observe(window, 'load', function() {
-	Effect.Center($('loginBox'));
-	$('loginBox').style.top = (parseInt($('loginBox').style.top)-50)+'px';
+	if ($('loginBox')) {
+		Effect.Center($('loginBox'));
+		$('loginBox').style.top = (parseInt($('loginBox').style.top)-50)+'px';
+	}
 
 	$('lockWrap').hide();
 	$('lockWrap').style.width = document.body.clientWidth+'px';
