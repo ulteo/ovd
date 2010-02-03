@@ -190,8 +190,8 @@ div#lockWrap {
 	position: absolute;
 	z-index: 50;
 
-	filter: alpha(opacity=80);
-	-moz-opacity: 0.80;
+	/*filter: alpha(opacity=80);
+	-moz-opacity: 0.80;*/
 	opacity: 0.80;
 }
 
