@@ -27,6 +27,8 @@ var Portal = Class.create(Daemon, {
 	running_applications: new Hash(),
 	runningApplicationsPanel: null,
 
+	matching_applications: new Hash(),
+
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
 
@@ -141,5 +143,32 @@ return;
 					this.runningApplicationsPanel.del(this.running_applications.get(runnings[i]));
 			}
 		}
+	},
+
+	applicationStatus: function(token_, status_) {
+		if (typeof this.running_applications.get(token_) == 'undefined') {
+			var app_id = this.matching_applications.get(token_);
+			if (typeof app_id == 'undefined')
+				return false;
+
+			var app_status = 2;
+
+			var app_object = this.applications.get(app_id);
+			if (typeof app_object == 'undefined')
+				return false;
+
+			var instance = new Running_Application(app_object.id, app_object.name, app_object.server, token_, app_status, this.getContext());
+			this.running_applications.set(instance.pid, instance);
+			this.runningApplicationsPanel.add(instance);
+		} else {
+			var instance = this.running_applications.get(token_);
+			instance.update(app_status);
+		}
+
+		return true;
 	}
 });
+
+function applicationStatus(token_, status_) {
+	return daemon.applicationStatus(token_, status_);
+}

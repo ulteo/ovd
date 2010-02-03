@@ -70,8 +70,9 @@ var Application = Class.create({
 
 	launch: function() {
 		var date = new Date();
-		var rand = parseInt(Math.round(Math.random()*100)+date.getTime());
+		var rand = parseInt(date.getTime()/1000);
 		$('ulteoapplet').startApplication(rand, this.id, this.server);
+		daemon.matching_applications.set(rand, this.id);
 	},
 
 	getIconURL: function() {
