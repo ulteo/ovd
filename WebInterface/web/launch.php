@@ -22,8 +22,6 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $_SESSION['session'] = $_POST['session_id'];
-
-$daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['session_mode'], 1);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -57,9 +55,10 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 			Event.observe(window, 'load', function() {
 				if ($('splashContainer'))
 					Effect.Center($('splashContainer'));
-				if ($('endContainer'))
+				if ($('endContainer')) {
 					Effect.Center($('endContainer'));
-				$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
+					$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
+				}
 
 				if ($('<?php echo $_POST['session_mode']; ?>ModeContainer'))
 					$('<?php echo $_POST['session_mode']; ?>ModeContainer').hide();
@@ -74,7 +73,7 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo $daemon_class; ?>('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
+				daemon = new <?php echo strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
 				daemon.access_id = '<?php echo $_POST['session_mode']; ?>';
 
 				daemon.session_id = '<?php echo $_POST['session_id']; ?>';
