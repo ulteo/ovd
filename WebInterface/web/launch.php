@@ -150,6 +150,33 @@ $daemon_class = strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['
 		</div>
 
 		<div id="portalModeContainer" style="display: none;">
+			<div id="portalHeaderWrap">
+				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td style="width: 175px; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
+							<img src="media/image/ulteo.png" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
+						</td>
+						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 60%;" class="title centered">
+							<h1><?php printf(_('Welcome %s!'), $_POST['session_displayname']); ?></h1>
+						</td>
+						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
+							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
+								<tr>
+									<?php
+										if (1) { //persistent session
+									?>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
+									<?php
+										}
+									?>
+									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.logout(); return false;"><img src="media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				</table>
+			</div>
+
 			<table id="portalContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
 				<tr>
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
