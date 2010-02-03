@@ -34,15 +34,13 @@ from ovd_shells.Platform.VirtualChannel import VirtualChannel
 
 
 def main():
-	#user_sdir = Platform.getUserSessionDir()
-	user_sdir = "/tmp/test"
+	user_sdir = Platform.getUserSessionDir()
 	if user_sdir is None or not os.path.isdir(user_sdir):
 		sys.exit(1)
 	
 	os.environ["OVD_SESSION_DIR"] = user_sdir
 	
-	
-	#seamPid = Platform.launch("seamlessrdpshell", False)
+	seamPid = Platform.launch("seamlessrdpshell", False)
 	
 	vchannel = VirtualChannel(OvdAppChannel.NAME)
 	tryOpenChannel(vchannel)
@@ -53,8 +51,6 @@ def main():
 	
 	im = InstancesManager(vchannel)
 	im.start()
-	
-	print "read loop"
 	
 	while 1:
 		# Read a complete packet

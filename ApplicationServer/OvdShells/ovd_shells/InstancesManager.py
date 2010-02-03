@@ -67,7 +67,6 @@ class InstancesManager(threading.Thread):
 					return
 				
 				instance = self.launch(cmd)
-				print "coucou apres launch: ",instance
 				
 				buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
 				buf+= struct.pack("<I", token)
@@ -91,7 +90,6 @@ class InstancesManager(threading.Thread):
 			
 			buf = struct.pack("<B", OvdAppChannel.ORDER_STOPPED)
 			buf+= struct.pack("<I", instance[1])
-			print "send2",instance[1]
 			self.vchannel.Write(buf)
 		
 		self.instances = []

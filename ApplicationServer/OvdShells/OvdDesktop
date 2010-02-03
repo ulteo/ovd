@@ -42,7 +42,7 @@ def main():
 
 
 if __name__ == "__main__":
-	if True:
+	if False:
 		import os
 		import sys
 		
