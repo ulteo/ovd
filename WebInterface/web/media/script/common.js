@@ -82,7 +82,6 @@ function onStartSessionSuccess(transport) {
 
 	$('session_id').value = session.getAttribute('id');
 	$('session_mode').value = session.getAttribute('mode');
-	$('session_login').value = user.getAttribute('login');
 	$('session_displayname').value = user.getAttribute('displayName');
 	$('session_server').value = server.getAttribute('fqdn');
 	$('session_login').value = server.getAttribute('login');
