@@ -32,8 +32,8 @@ class InstancesManager(threading.Thread):
 		self.vchannel = vchannel
 		self.jobs = []
 		self.instances = []
-		
-		
+
+
 	def pushJob(self, app_id, token):
 		# todo mutex lock
 		self.jobs.append((token, app_id))
@@ -51,30 +51,36 @@ class InstancesManager(threading.Thread):
 	def run(self):
 		while True:
 			job = self.popJob()
-			if job is None:
+			if job is not None:
+				print "IM got job",job
+				(token, app) = job
+				application = Application(app, [])
+				if not application.isAvailable():
+					print "Application %d is not available"%(app)
+					self.onInstanceNotAvailable(token)
+					return
+				
+				cmd = application.getFinalCommand()
+				if cmd is None:
+					print "No available command"
+					self.onInstanceNotAvailable(token)
+					return
+				
+				instance = self.launch(cmd)
+				print "coucou apres launch: ",instance
+				
+				buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
+				buf+= struct.pack("<I", token)
+				print "send1",token
+				self.vchannel.Write(buf)
+				
+				self.instances.append((instance, token))
+			
+			ret = self.wait()
+			
+			if job is None and ret is False:
 				time.sleep(0.1)
-				continue
-			(token, app) = job
-			application = Application(app, "")
-			if not application.isAvailable():
-				print "Application %d is not available"%(app)
-				self.onInstanceNotAvailable(token)
-				return
 			
-			cmd = application.getFinalCommand()
-			if cmd is None:
-				print "No available command"
-				self.onInstanceNotAvailable(token)
-				return
-			
-			instance = self.launch(cmd)
-			
-			buf = struct.pack(">B", OvdAppChannel.ORDER_STARTED)
-			buf+= struct.pack(">I", token)
-			print "send1",token
-			self.vchannel.Write(buf)
-			
-			self.instances.append((instance, token))
 	
 	def stop(self):
 		if self.isAlive():
@@ -83,8 +89,8 @@ class InstancesManager(threading.Thread):
 		for instance in self.instances:
 			self.kill(instance[0])
 			
-			buf = struct.pack(">B", OvdAppChannel.ORDER_STOPPED)
-			buf+= struct.pack(">I", instance[1])
+			buf = struct.pack("<B", OvdAppChannel.ORDER_STOPPED)
+			buf+= struct.pack("<I", instance[1])
 			print "send2",instance[1]
 			self.vchannel.Write(buf)
 		
@@ -103,14 +109,13 @@ class InstancesManager(threading.Thread):
 		pass
 	
 	def onInstanceNotAvailable(self, token):
-		buf = struct.pack(">B", OvdAppChannel.ORDER_CANT_START)
-		buf+= struct.pack(">I", token)
+		buf = struct.pack("<B", OvdAppChannel.ORDER_CANT_START)
+		buf+= struct.pack("<I", token)
 		self.vchannel.Write(buf)
 	
 	def onInstanceExited(self, instance):
 		self.instances.remove(instance)
 		
-		buf = struct.pack(">B", OvdAppChannel.ORDER_STOPPED)
-		buf+= struct.pack(">I", instance[1])
-		print "send3",instance[1]
+		buf = struct.pack("<B", OvdAppChannel.ORDER_STOPPED)
+		buf+= struct.pack("<I", instance[1])
 		self.vchannel.Write(buf)

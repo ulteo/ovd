@@ -1,4 +1,4 @@
-SUBDIRS = Platform
+SUBDIRS = Platform.Linux
 
 scripts_DATA = Application.py \
                CheckFork.py \

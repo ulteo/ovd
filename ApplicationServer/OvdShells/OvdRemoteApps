@@ -28,26 +28,30 @@ import time
 
 from ovd_shells.Application import Application
 from ovd_shells import OvdAppChannel
-from ovd_shells import Platform
+from ovd_shells.Platform import _platform as Platform
+from ovd_shells.Platform.InstancesManager import InstancesManager
+from ovd_shells.Platform.VirtualChannel import VirtualChannel
+
 
 def main():
-	user_sdir = Platform.getUserSessionDir()
+	#user_sdir = Platform.getUserSessionDir()
+	user_sdir = "/tmp/test"
 	if user_sdir is None or not os.path.isdir(user_sdir):
 		sys.exit(1)
-
+	
 	os.environ["OVD_SESSION_DIR"] = user_sdir
 	
 	
-	seamPid = Platform.launch("seamlessrdpshell", False)
+	#seamPid = Platform.launch("seamlessrdpshell", False)
 	
-	vchannel = Platform.VirtualChannel(OvdAppChannel.NAME)
+	vchannel = VirtualChannel(OvdAppChannel.NAME)
 	tryOpenChannel(vchannel)
 	
 	
 	buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
 	vchannel.Write(buf)
 	
-	im = Platform.InstancesManager(vchannel)
+	im = InstancesManager(vchannel)
 	im.start()
 	
 	print "read loop"
@@ -63,8 +67,11 @@ def main():
 		
 		order = struct.unpack('>B', packet[0])[0]
 		if order == OvdAppChannel.ORDER_START:
-			token = struct.unpack('>I', packet[1:5])[0]
-			app_id = struct.unpack('>I', packet[5:9])[0]
+			print "len: ",len(packet)
+			print repr(packet)
+			
+			token = struct.unpack('<I', packet[1:5])[0]
+			app_id = struct.unpack('<I', packet[5:9])[0]
 			
 			print "recv startapp order %d %d"%(token, app_id)
 			im.pushJob(app_id, token)
@@ -98,7 +105,7 @@ def tryOpenChannel(vchannel):
 
 
 if __name__ == "__main__":
-	if True:
+	if False:
 		import os
 		import sys
 		

@@ -24,7 +24,7 @@ import random
 import time
 
 from Module import Module
-import Platform
+from Platform import _platform as Platform
 
 class CheckFork(Module):
 	def __init__(self, application):

@@ -28,27 +28,27 @@ from ovd_shells.InstancesManager import InstancesManager as AbstractInstancesMan
 class InstancesManager(AbstractInstancesManager):
 	def launch(self, cmd):
 		pid = os.fork()
-		
 		if pid > 0:
 			return pid
 		
 		# Child process
-		ret = os.system(cmd)
-		sys.exit(ret)
+		os.execl("/bin/sh", "sh", "-c" , cmd)
+		sys.exit(1)
 	
 	
 	def wait(self):
 		haveWorked = False
 		for (pid, instance) in self.instances:
-			path = os.path.join("/proc", pid)
-			if os.path.is_dir(path):
+			os.waitpid(pid, os.P_NOWAIT)
+			
+			path = os.path.join("/proc", str(pid))
+			if os.path.isdir(path):
 				continue
 			
-			self.onInstanceExited(self.instances[index])
+			self.onInstanceExited((pid, instance))
 			haveWorked = True
 		
-		if not haveWorked:
-			time.sleep(0.1)
+		return haveWorked
 	
 	
 	def kill(self, pid):

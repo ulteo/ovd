@@ -22,7 +22,7 @@
 
 import os
 
-import Platform
+from Platform import _platform as Platform
 
 class Application:
 	def __init__(self, id_, args_):

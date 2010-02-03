@@ -27,7 +27,7 @@ import sys
 from ovd_shells.Application import Application
 from ovd_shells.CheckFork import CheckFork
 from ovd_shells.Monitoring import Monitoring
-from ovd_shells import Platform
+from ovd_shells.Platform import _platform as Platform
 
 def main():
 	# stop if we don't have the needed env vars
