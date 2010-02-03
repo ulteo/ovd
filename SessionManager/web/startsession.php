@@ -482,7 +482,6 @@ $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
 $user_node = $dom->createElement('user');
-$user_node->setAttribute('login', $user_login);
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
 foreach (array($session->server) as $server) {
