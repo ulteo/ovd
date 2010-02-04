@@ -59,6 +59,10 @@ class HttpServer(AbstractCommunication):
 
 
 class HttpRequestHandler(SimpleHTTPRequestHandler):
+	def log_request(self, l):
+		""" Override the parent log function"""
+		Logger.debug("HTTPRequestHandler %s"%(str(l)))
+	
 	def do_GET(self):
 		req = {}
 		req["client"] = self.client_address[0]
