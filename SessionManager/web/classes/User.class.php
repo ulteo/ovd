@@ -134,62 +134,10 @@ class User {
 		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
 
 		// get the list of server who the user can launch his applications
-		Logger::debug('main','USER::getAvailableServers()');
-		$servers = array();
-		$apps = $this->applications(NULL, false);
-		$apps_static = $this->applications(NULL, true);
-		$apps_id = array();
-		$apps_type = array();
-		foreach($apps as $app){
-			$apps_id[$app->getAttribute('id')] = $app->getAttribute('id');
-			$apps_type[$app->getAttribute('id')] = $app->getAttribute('type');
-		}
 		
-		$available_servers = Servers::getAvailableByRole(Servers::$role_aps);
-		foreach($available_servers as $server) {
-			if ($user_profile_mode == 'activedirectory' && $server->getAttribute('type') == 'windows' && $server->getAttribute('windows_domain') != $prefs_ad['domain']) {
-				Logger::warning('main', 'USER::getAvailableServers Server \''.$server->fqdn.'\' is NOT linked to Active Directory domain \''.$prefs_ad['domain'].'\'');
-				continue;
-			}
-
-			$buf = $server->userIsLoggedIn($this->getAttribute('login'));
-			if ($buf) {
-				Logger::warning('main', 'USER::getAvailableServers User(login='.$this->getAttribute('login').') is already logged in Server \''.$server->fqdn.'\'');
-				if (! $server->userLogout($this->getAttribute('login'))) {
-					Logger::error('main', 'USER::getAvailableServers User(login='.$this->getAttribute('login').') unable to logout from Server \''.$server->fqdn.'\'');
-					continue;
-				}
-			}
-
-			if (count($apps_id)>0 || $launch_without_apps == 1) {
-				$elements2 = array();
-				$buf2 = Abstract_Liaison::load('ApplicationServer', NULL,$server->fqdn);
-				foreach($buf2 as $buf_liaison) {
-					$elements2 []= $buf_liaison->element;
-				}
-
-				if ( count(array_diff($apps_id, $elements2)) == 0 ){
-					$servers[$server->fqdn]= $server;
-				}
-			}
-			else if (count($apps_static) > 0) {
-				$servers[$server->fqdn]= $server;
-			}
-		}
-		return $servers;
-	}
-
-	public function getAvailableServer(){
-		// get a server who the user can launch his applications
-		Logger::debug('main', "USER::getAvailableServer()");
-		$list_servers = $this->getAvailableServers();
-
-		$prefs = Preferences::getInstance();
-		if (! $prefs) {
-			Logger::error('main', 'USER::getAvailableServer get Preferences failed');
-			return NULL;
-		}
 		$application_server_settings = $prefs->get('general', 'application_server_settings');
+		$default_settings = $prefs->get('general', 'session_settings_defaults');
+		
 		if (!isset($application_server_settings['load_balancing'])) {
 			Logger::error('main' , 'USER::getAvailableServer $application_server_settings[\'load_balancing\'] not set');
 			return NULL;
@@ -199,35 +147,55 @@ class User {
 			Logger::error('main' , 'USER::getAvailableServer criterions is null');
 			return NULL;
 		}
-
-		$server_val = array();
-		foreach($list_servers as $server) {
-			$val = 0;
-			foreach ($criterions as $criterion_name  => $criterion_value ) {
-				$name_class1 = 'DecisionCriterion_'.$criterion_name;
-				$d1 = new $name_class1($server);
-				$r1 = $d1->get();
-				$val += $r1* $criterion_value;
+		
+		$available_servers = Servers::getAvailableByRole(Servers::$role_aps);
+		$server_object = array();
+		$servers = array();
+		
+		foreach($available_servers as $server) {
+			if ($server->isOnline()) {
+				$val = 0;
+				foreach ($criterions as $criterion_name  => $criterion_value ) {
+					$name_class1 = 'DecisionCriterion_'.$criterion_name;
+					$d1 = new $name_class1($server);
+					$r1 = $d1->get();
+					$val += $r1* $criterion_value;
+				}
+				$servers[$server->fqdn] = $val;
+				$server_object[$server->fqdn] = $server;
 			}
-			$server_val[$server->fqdn] = $val;
 		}
-
-		while (count($server_val)>0) {
-			$max_value = -1;
-			$max_fqdn = 0;
-			foreach ($server_val as $fqdn1 => $val1) {
-				if ( $max_value < $val1) {
-					$max_value = $val1;
-					$max_fqdn = $fqdn1;
+		arsort($servers);
+		
+		$applications = $this->applications(NULL, false);
+		$servers_to_use = array();
+		
+		foreach($servers as $fqdn => $val) {
+			$server = $server_object[$fqdn];
+			if (count($applications) == 0)
+				break;
+			$applications_from_server = $server->getApplications();
+			foreach ($applications_from_server as $k => $an_server_application) {
+				if (in_array($an_server_application, $applications)) {
+					$servers_to_use []= $server;
+					unset($applications[array_search($an_server_application, $applications)]);
 				}
 			}
-			$buf = $list_servers[$max_fqdn];
-			unset($server_val[$max_fqdn]);
-			if ($buf->isOnline())
-				return $buf;
 		}
-		Logger::error('main' , "USER::getAvailableServer() no server found for user '".$this->getAttribute('login')."'");
-		return NULL;
+		
+		// TODO: bug if the user have static application
+		
+		if (count($applications) == 0)
+			return $servers_to_use;
+		else {
+			if ($launch_without_apps == 1) {
+				return $servers_to_use;
+			}
+			else {
+				Logger::error('main' , "USER::getAvailableServer() no server found for user '".$this->getAttribute('login')."'");
+				return NULL;
+			}
+		}
 	}
 
 	public function applications($type=NULL, $with_static_=true){

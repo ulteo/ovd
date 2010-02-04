@@ -142,15 +142,11 @@ else{
 			*/
 
 			echo '<td>'; // server
-			if (count($apps_type) > 0) {
+			$serv_s = $u->getAvailableServers();
+			if (is_array($serv_s) && count($serv_s) > 0) {
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
-				foreach ($apps_type as $a_type) {
-					$serv_s = $u->getAvailableServers($a_type);
-					if (is_array($serv_s)){
-						foreach ($serv_s as $s){
-							echo '<tr><td><strong>('.$a_type.')</strong></td><td><a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a></td></tr>';
-						}
-					}
+				foreach ($serv_s as $s) {
+					echo '<tr><td><strong>('.$s->getAttribute('type').')</strong></td><td><a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a></td></tr>';
 				}
 				echo '</table>';
 			}
