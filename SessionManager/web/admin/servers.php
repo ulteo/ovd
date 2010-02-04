@@ -213,20 +213,6 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isse
 	redirect();
 }
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'web_port' && isset($_REQUEST['fqdn'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	if (isset($_REQUEST['web_port'])) {
-		$server = Abstract_Server::load($_REQUEST['fqdn']);
-		$server->setAttribute('web_port', $_REQUEST['web_port']);
-		Abstract_Server::save($server);
-		popup_info(sprintf(_('Server \'%s\' successfully modified'), $server->getAttribute('fqdn')));
-	}
-
-	redirect();
-}
-
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQUEST['fqdn'])) {
 	if (! checkAuthorization('manageServers'))
 		redirect();
