@@ -746,21 +746,6 @@ function show_manage($fqdn) {
 		echo "</td></tr>\n";
 	}
 
-  echo '<tr><td>';
-  echo _('Web port of this server').': ';
-  echo '</td><td>';
-	if ($can_do_action) {
-		echo '<form action="servers.php" method="GET">';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-		echo '<input type="hidden" name="action" value="web_port" />';
-	}
-  echo '<input type="text" name="web_port" value="'.$web_port.'" />';
-  if ($can_do_action) {
-    echo ' <input type="submit" value="'._('change').'" />';
-    echo '</form>';
-  }
-  echo "</td></tr>\n";
-
 	if ($can_do_action) {
 		if ($server_online || $switch_value == 1) {
 			echo '<tr><td></td><td>';
