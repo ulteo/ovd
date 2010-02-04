@@ -21,7 +21,12 @@ import locale
 import md5
 import os
 import pythoncom
+import re
+import tempfile
 from win32com.shell import shell, shellcon
+import win32event
+import win32file
+import win32process
 
 from ovd.Logger import Logger
 import mime
@@ -129,65 +134,103 @@ class ApplicationsDetection:
 	
 	
 	def getIcon(self, filename):
-		return None
-	
-	
-		#try :
-			#args = {}
-			#args2 = cgi.parse_qsl(self.path[self.path.index('?')+1:])
-			#for (k,v) in args2:
-				#args[k] = base64.decodestring(v).decode('utf-8')
-		#except Exception, err:
-			#args = {}
+		Logger.debug("ApplicationsDetection::getIcon %s"%(filename))
+		if not os.path.exists(filename):
+			Logger.warn("ApplicationsDetection::getIcon no such file")
+			return None
 		
-		#if args.has_key('desktopfile'):
-			#if args['desktopfile'] != '':
-				#if os.path.exists(args['desktopfile']):
-					#pythoncom.CoInitialize()
-					#shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
-					#shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(args['desktopfile'])
-					#if (os.path.splitext(shortcut.GetPath(0)[0])[1].lower() == ".exe"):
-						#exe_file = shortcut.GetPath(0)[0]
-						#path_bmp = tempfile.mktemp()+'.bmp'
-						
-						#command = """"%s" "%s" "%s" """%(os.path.join(self.server.daemon.install_dir, 'extract_icon.exe'), exe_file, path_bmp)
-						#p = utils.Process()
-						#status = p.run(command)
-						#Logger.debug("status of extract_icon %s (command %s)"%(status, command))
-						
-						#if os.path.exists(path_bmp):
-							#path_png = tempfile.mktemp()+'.png'
-							
-							#command = """"%s" -Q -O "%s" "%s" """%(os.path.join(self.server.daemon.install_dir, 'bmp2png.exe'), path_png, path_bmp)
-							#p = utils.Process()
-							#status = p.run(command)
-							#Logger.debug("status of bmp2png %s (command %s)"%(status, command))
-							
-							#f = open(path_png, 'rb')
-							#self.send_response(httplib.OK)
-							#self.send_header('Content-Type', 'image/png')
-							#self.end_headers()
-							#self.wfile.write(f.read())
-							#f.close()
-							#os.remove(path_bmp)
-							#os.remove(path_png)
-						#else :
-							#Logger.debug("webservices_icon error 500")
-							#self.send_error(httplib.INTERNAL_SERVER_ERROR)
-					#else :
-						#Logger.debug("webservices_icon send default icon")
-						#f = open('icon.png', 'rb')
-						#self.send_response(httplib.OK)
-						#self.send_header('Content-Type', 'image/png')
-						#self.end_headers()
-						#self.wfile.write(f.read())
-						#f.close()
-				#else:
-					#Logger.debug("webservices_icon no right argument1")
-			#else:
-				#Logger.debug("webservices_icon no right argument2" )
-		#else:
-			#Logger.debug("webservices_icon no right argument3" )
+		
+		pythoncom.CoInitialize()
+		
+		shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+		shortcut.QueryInterface( pythoncom.IID_IPersistFile ).Load(filename)
+		
+		(iconLocation, iconId) = shortcut.GetIconLocation()
+		iconLocation = self.evalPath(iconLocation)
+		
+		if len(iconLocation) == 0 or not os.path.exists(iconLocation):
+			Logger.debug("ApplicationsDetection::getIcon No IconLocation, use shortcut target")
+			iconLocation = self.evalPath(shortcut.GetPath(0)[0])
+			
+			if len(iconLocation) == 0 or not os.path.exists(iconLocation):
+				Logger.warn("ApplicationsDetection::getIcon Neither IconLocation nor shortcut target on %s (%s)"%(filename, iconLocation))
+				return None
+		
+		path_tmp = tempfile.mktemp()
+		
+		path_bmp = path_tmp + ".bmp"
+		cmd = """"%s" "%s" "%s" """%("extract_icon.exe", iconLocation, path_bmp)
+		
+		status = self.execute(cmd, True)
+		if status != 0:
+			Logger.warn("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+			if os.path.exists(path_bmp):
+				os.remove(path_bmp)
+			
+			return None
+		
+		if not os.path.exists(path_bmp):
+			Logger.warn("ApplicationsDetection::getIcon No bmp file returned")
+			return None
+		
+		path_png = path_tmp + ".png"
+		
+		cmd = """"%s" -Q -O "%s" "%s" """%("bmp2png.exe", path_png, path_bmp)
+		status = self.execute(cmd, True)
+		if status != 0:
+			Logger.warn("ApplicationsDetection::getIcon following command returned %d: %s"%(status, cmd))
+			os.remove(path_bmp)
+			if os.path.exists(path_png):
+				os.remove(path_png)
+			
+			return None
+		
+		if not os.path.exists(path_png):
+			Logger.warn("ApplicationsDetection::getIcon No png file returned")
+			return None
+		
+		f = open(path_png, 'rb')
+		buffer = f.read()
+		f.close()
+		
+		os.remove(path_bmp)
+		os.remove(path_png)
+		return buffer
+		
 	
+	@staticmethod	
+	def execute(cmd, wait=False):
+		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
+		
+		if wait:
+			win32event.WaitForSingleObject(hProcess, win32event.INFINITE)
+			retValue = win32process.GetExitCodeProcess(hProcess)
+		else:
+			retValue = dwProcessId
+		
+		win32file.CloseHandle(hProcess)
+		win32file.CloseHandle(hThread)
+		
+		return retValue
 	
-	
+	@staticmethod
+	def ArrayUnique(ar):
+		r = []
+		for i in ar:
+			if i not in r:
+				r.append(i)
+		
+		return r
+
+	@staticmethod
+	def evalPath(path):
+		all = re.findall("%[a-zA-Z]+%", path)
+		all = ApplicationsDetection.ArrayUnique(all)
+		
+		for item in all:
+			buf = item[1:-1].upper()
+			if os.environ.has_key(buf):
+				path = path.replace(item, os.environ[buf])
+		
+		return path
+
