@@ -30,7 +30,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'web_port')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -458,12 +458,48 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 		popup_info(_('SharedFolder successfully added'));
 		redirect();
 	}
-	elseif ($_REQUEST['action']=='del') {
+	
+	if ($_REQUEST['action']=='del') {
 		if (isset($_REQUEST['id'])) {
 			action_del_sharedfolder($_REQUEST['id']);
 			popup_info(_('SharedFolder successfully deleted'));
 			redirect();
 		}
+	}
+	
+	if ($_REQUEST['action'] == 'rename') {
+		if (isset($_REQUEST['id']) && isset($_REQUEST['sharedfolder_name'])) {
+			$id = $_REQUEST['id'];
+			$new_name = $_REQUEST['sharedfolder_name'];
+			
+			$sharedfolder = Abstract_SharedFolder::load($id);
+			if (is_object($sharedfolder)) {
+				if (! Abstract_SharedFolder::exists($new_name) || $new_name == $sharedfolder->name) {
+					$sharedfolder->name = $new_name;
+					$ret = Abstract_SharedFolder::modify($sharedfolder);
+					if ($ret === true)
+						popup_info(_('SharedFolder successfully renamed'));
+				} else
+					popup_error(_('A shared folder with that name already exists!'));
+			}
+			redirect('sharedfolders.php?action=manage&id='.$id);
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'enable_dav_fs') {
+		if (! checkAuthorization('manageConfiguration'))
+			redirect('index.php');
+		
+		$prefs = new Preferences_admin();
+		if (! $prefs)
+			die_error('get Preferences failed', __FILE__, __LINE__);
+		
+		$prefs->set('plugins', 'FS', 'dav');
+		$ret = $prefs->backup();
+		if ($ret == true)
+			popup_info(_('Configuration successfully saved'));
+		
+		redirect('sharedfolders.php');
 	}
 }
 

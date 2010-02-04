@@ -26,45 +26,8 @@ if (! checkAuthorization('viewSharedFolders'))
 
 
 if (isset($_REQUEST['action'])) {
-	if ($_REQUEST['action'] == 'rename' && isset($_REQUEST['id'])) {
-		if (! checkAuthorization('manageSharedFolders'))
-			redirect();
-
-
-		if (isset($_REQUEST['sharedfolder_name'])) {
-			$sharedfolder = Abstract_SharedFolder::load($_REQUEST['id']);
-			if (is_object($sharedfolder)) {
-				if (! Abstract_SharedFolder::exists($_REQUEST['sharedfolder_name']) || $_REQUEST['sharedfolder_name'] == $sharedfolder->name) {
-					$sharedfolder->name = $_REQUEST['sharedfolder_name'];
-					$ret = Abstract_SharedFolder::modify($sharedfolder);
-					if ($ret === true)
-						popup_info(_('SharedFolder successfully renamed'));
-				} else
-					popup_error(_('A shared folder with that name already exists!'));
-			}
-		}
-
-		redirect();
-	}
-
 	if ($_REQUEST['action'] == 'manage' && isset($_REQUEST['id']))
 		show_manage($_REQUEST['id']);
-
-	if ($_REQUEST['action'] == 'enable_dav_fs') {
-		if (! checkAuthorization('manageConfiguration'))
-			redirect();
-
-		$prefs = new Preferences_admin();
-		if (! $prefs)
-			die_error('get Preferences failed',__FILE__,__LINE__);
-
-		$prefs->set('plugins', 'FS', 'dav');
-		$ret = $prefs->backup();
-		if ($ret == true)
-			popup_info(_('Configuration successfully saved'));
-
-		redirect();
-	}
 } else
 	show_default();
 
@@ -115,7 +78,8 @@ function show_default() {
 	}
 
 	if (! $using_dav_fs && $can_manage_configuration) {
-		echo '<tr><form action="" method="post"><td colspan="2">';
+		echo '<tr><form action="actions.php" method="post"><td colspan="2">';
+		echo '<input type="hidden" name="name" value="SharedFolder" />';
 		echo '<input type="hidden" name="action" value="enable_dav_fs" />';
 		echo '<input type="submit" value="'._('Enable Internal WebDAV filesystem').'" /></td>';
 		echo '</form></tr>';
@@ -165,7 +129,8 @@ function show_manage($sharedfolder_id_) {
 	echo _('Name').': ';
 	echo '</td><td>';
 	if ($can_manage_sharedfolders) {
-		echo '<form action="sharedfolders.php" method="post">';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="SharedFolder" />';
 		echo '<input type="hidden" name="action" value="rename" />';
 		echo '<input type="hidden" name="id" value="'.$sharedfolder->id.'" />';
 	}
