@@ -268,10 +268,6 @@ return;
 	parse_do_started: function(transport) {
 	},
 
-	applet_loaded: function() {
-		return true;
-	},
-
 	do_ended: function() {
 		if (this.stopped == true)
 			return;
