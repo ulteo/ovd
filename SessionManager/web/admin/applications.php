@@ -61,7 +61,7 @@ if (isset($_REQUEST['action'])) {
 			redirect();
 
     if (isset($_REQUEST['id'])) {
-      modify_user($applicationDB, $_REQUEST['id']);
+      action_modify($applicationDB, $_REQUEST['id']);
       show_manage($_REQUEST['id'], $applicationDB);
     }
   }
