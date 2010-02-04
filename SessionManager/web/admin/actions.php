@@ -566,6 +566,29 @@ if ($_REQUEST['name'] == 'password') {
 	
 }
 
+if ($_REQUEST['name'] == 'Session') {
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['selected_session']) && is_array($_REQUEST['selected_session'])) {
+			foreach ($_POST['selected_session'] as $session) {
+				$session = Abstract_Session::load($session);
+				
+				if (is_object($session)) {
+					if (! $session->orderDeletion()) {
+						Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\': purging');
+						Abstract_Session::delete($session->id);
+						popup_error(sprintf_("Unable to delete session '%s'"), $session->id);
+						continue;
+					}
+					else {
+						popup_info(sprintf(_("Session '%s' successfully deleted"), $session->id));
+					}
+				}
+			}
+			redirect('sessions.php');
+		}
+	}
+}
+
 if ($_REQUEST['name'] == 'Server') {
 	if (! checkAuthorization('manageServers'))
 		redirect();

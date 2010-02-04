@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,32 +56,6 @@ if (isset($_POST['join'])) {
 	$server = Abstract_Server::load($session->server);
 
 	redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
-} elseif (isset($_POST['mass_action']) && $_POST['mass_action'] == 'kill') {
-	if (isset($_POST['kill_sessions']) && is_array($_POST['kill_sessions'])) {
-		foreach ($_POST['kill_sessions'] as $session) {
-			$session = Abstract_Session::load($session);
-
-			if (is_object($session)) {
-				if (! $session->orderDeletion()) {
-					Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\'... purging');
-					Abstract_Session::delete($session->id);
-				}
-			}
-		}
-	}
-
-	redirect($_SERVER['HTTP_REFERER']);
-} elseif (isset($_POST['action']) && $_POST['action'] == 'kill') {
-	$session = Abstract_Session::load($_POST['session']);
-
-	if (is_object($session)) {
-		if (! $session->orderDeletion()) {
-			Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\'... purging');
-			Abstract_Session::delete($session->id);
-		}
-	}
-
-	redirect($_SERVER['HTTP_REFERER']);
 } elseif (isset($_GET['info'])) {
 	$session = Abstract_Session::load($_GET['info']);
 
@@ -184,9 +159,10 @@ if (isset($_POST['join'])) {
 	}
 
 	echo '<h2>'._('Kill this session').'</h2>';
-	echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
-	echo '	<input type="hidden" name="action" value="kill" />';
-	echo '	<input type="hidden" name="session" value="'.$session->id.'" />';
+	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+	echo '  <input type="hidden" name="name" value="Session" />';
+	echo '	<input type="hidden" name="action" value="del" />';
+	echo '	<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
 	echo '	<input type="submit" value="'._('Kill this session').'" />';
 	echo '</form>';
 
@@ -217,15 +193,16 @@ else {
 
 			echo '	<tr class="'.$css_class.'">';
 			if (count($sessions) > 1)
-				echo '		<td><input class="input_checkbox" type="checkbox" name="kill_sessions[]" value="'.$session->id.'" /></td>';
+				echo '		<td><input class="input_checkbox" type="checkbox" name="selected_session[]" value="'.$session->id.'" /></td>';
 			echo '		<td><a href="sessions.php?info='.$session->id.'">'.$session->id.'</td>';
 			echo '		<td><a href="servers.php?action=manage&fqdn='.$session->server.'">'.$session->server.'</td>';
 			echo '		<td><a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</td>';
 			echo '		<td>'.$session->stringStatus().'</td>';
 			echo '		<td>';
-			echo '		<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
-			echo '			<input type="hidden" name="action" value="kill" />';
-			echo '			<input type="hidden" name="session" value="'.$session->id.'" />';
+			echo '		<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
+			echo '  		<input type="hidden" name="name" value="Session" />';
+			echo '			<input type="hidden" name="action" value="del" />';
+			echo '			<input type="hidden" name="selected_session[]" value="'.$session->id.'" />';
 			echo '			<input type="submit" value="'._('Kill').'" />';
 			echo '		</form>';
 			echo '		</td>';
@@ -237,8 +214,9 @@ else {
 			echo '	<tr class="'.$css_class.'">';
 			echo '		<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'sessions_list_table\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'sessions_list_table\'); return false">'._('Unmark all').'</a></td>';
 			echo '<td>';
-			echo '<form action="sessions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
-			echo '	<input type="hidden" name="mass_action" value="kill" />';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill selected sessions?').'\') && updateMassActionsForm(this, \'sessions_list_table\');">';
+			echo '  <input type="hidden" name="name" value="Session" />';
+			echo '  <input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="kill" value="'._('Kill').'" />';
 			echo '</td>';
 			echo '	</tr>';
