@@ -52,7 +52,7 @@ def writePidFile(filename):
 
 
 def main():
-	config_file = os.path.join(Platform.getInstance().get_default_config_dir(), "ovdserver.conf")
+	config_file = os.path.join(Platform.getInstance().get_default_config_dir(), "ovd-slaveserver.conf")
 	daemonize = False
 	pidFile = None
 
