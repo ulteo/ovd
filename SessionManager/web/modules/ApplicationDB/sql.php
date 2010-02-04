@@ -207,7 +207,7 @@ class ApplicationDB_sql extends ApplicationDB {
 			if (file_exists($icon_path)) {
 				@unlink($icon_path);
 			}
-			$sql2 = MySQL::getInstance();
+			$sql2 = SQL::getInstance();
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPLICATION_TABLE, 'id', $a->getAttribute('id'));
 			return ($res !== false);
 		}
