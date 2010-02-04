@@ -26,217 +26,6 @@ require_once(dirname(__FILE__).'/includes/page_template.php');
 if (! checkAuthorization('viewServers'))
 	redirect('index.php');
 
-
-if (isset($_REQUEST['mass_register'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
-		foreach ($_REQUEST['checked_servers'] as $server) {
-			$buf = Abstract_Server::load($server);
-			$buf->register();
-			Abstract_Server::save($buf);
-			$buf->updateApplications();
-		}
-	}
-
-	$buf = count(Servers::getUnregistered());
-	if ($buf == 0)
-		redirect('servers.php');
-
-	redirect();
-}
-
-if (isset($_REQUEST['mass_delete_unregistered'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
-		foreach ($_REQUEST['checked_servers'] as $server) {
-			$buf = Abstract_Server::load($server);
-			if (! $buf)
-				continue;
-
-			$buf->orderDeletion();
-			Abstract_Server::delete($buf->fqdn);
-		}
-	}
-
-	$buf = count(Servers::getUnregistered());
-	if ($buf == 0)
-		redirect('servers.php');
-
-	redirect();
-}
-
-if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance') {
-	if (isset($_REQUEST['manage_servers']) && is_array($_REQUEST['manage_servers'])) {
-		foreach ($_REQUEST['manage_servers'] as $server) {
-			$buf = Abstract_Server::load($server);
-			if (isset($_REQUEST['to_maintenance']))
-				$buf->setAttribute('locked', true);
-			elseif ($buf->isOnline())
-				$buf->setAttribute('locked', false);
-
-			Abstract_Server::save($buf);
-			popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
-		}
-	}
-
-	redirect();
-}
-
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
-//FIX ME ?
-	$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
-
-	$tm = new Tasks_Manager();
-	$tm->add($t);
-	popup_info(_('Task successfully added'));
-
-	redirect();
-}
-
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'upgrade' && isset($_REQUEST['fqdn'])) {
-	$t = new Task_upgrade(0, $_REQUEST['fqdn']);
-
-	$tm = new Tasks_Manager();
-	$tm->add($t);
-	popup_info(_('Server upgrading'));
-	redirect();
-}
-
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'replication' && isset($_REQUEST['fqdn']) && isset($_REQUEST['servers'])) {
-	$server_from = Abstract_Server::load($_REQUEST['fqdn']);
-	$applications_from = $server_from->getApplications();
-
-	$servers_fqdn = $_REQUEST['servers'];
-	foreach($servers_fqdn as $server_fqdn) {
-		$server_to = Abstract_Server::load($server_fqdn);
-		$applications_to = $server_to->getApplications();
-
-		$to_delete = array();
-		foreach($applications_to as $app) {
-			if (! in_array($app, $applications_from))
-				$to_delete[]= $app;
-		}
-
-		$to_install = array();
-		foreach($applications_from as $app) {
-			if (! in_array($app, $applications_to))
-				$to_install[]= $app;
-		}
-		/*
-		echo 'replicate '.$_REQUEST['fqdn'].' on '.$server_fqdn.'<br>';
-		echo 'to_install: ';
-		var_dump($to_install);
-		echo '<br>to remove: ';
-		var_dump($to_delete);
-		echo '<hr/>';
-		die();
-		*/
-//FIX ME ?
-		$tm = new Tasks_Manager();
-		if (count($to_delete) > 0) {
-			$t = new Task_remove(0, $server_fqdn, $to_delete);
-			popup_info(_('Task successfully deleted'));
-			$tm->add($t);
-		}
-		if (count($to_install) > 0) {
-			$t = new Task_install(0, $server_fqdn, $to_install);
-			$tm->add($t);
-			popup_info(_('Task successfully added'));
-		}
-	}
-
-	redirect();
-}
-
-if (isset($_GET['action']) && $_GET['action'] == 'register' && isset($_GET['fqdn'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	$buf = Abstract_Server::load($_GET['fqdn']);
-	$buf->register();
-	Abstract_Server::save($buf);
-	$buf->updateApplications();
-	popup_info(sprintf(_('Server \'%s\' successfully registered'), $buf->getAttribute('fqdn')));
-
-	$buf = count(Servers::getUnregistered());
-	if ($buf == 0)
-		redirect('servers.php');
-
-	redirect();
-}
-
-if (isset($_GET['action']) && $_GET['action'] == 'maintenance' && isset($_GET['fqdn'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	$buf = Abstract_Server::load($_GET['fqdn']);
-	if (isset($_GET['maintenance']) && $_GET['maintenance'] == 1)
-		$buf->setAttribute('locked', true);
-	elseif ($buf->isOnline())
-		$buf->setAttribute('locked', false);
-
-	Abstract_Server::save($buf);
-	popup_info(sprintf(_('Server \'%s\' successfully modified'), $buf->getAttribute('fqdn')));
-
-	redirect();
-}
-
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'available_sessions' && isset($_REQUEST['fqdn'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	if (isset($_REQUEST['max_sessions'])) {
-		$server = Abstract_Server::load($_REQUEST['fqdn']);
-		$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
-		Abstract_Server::save($server);
-		popup_info(sprintf(_('Server \'%s\' successfully modified'), $server->getAttribute('fqdn')));
-	}
-
-	redirect();
-}
-
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'external_name' && isset($_REQUEST['fqdn'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	if (isset($_REQUEST['external_name'])) {
-		$server = Abstract_Server::load($_REQUEST['fqdn']);
-		$server->setAttribute('external_name', $_REQUEST['external_name']);
-		Abstract_Server::save($server);
-		popup_info(sprintf(_('Server \'%s\' successfully modified'), $server->getAttribute('fqdn')));
-	}
-
-	redirect();
-}
-
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQUEST['fqdn'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	$sessions = Sessions::getByServer($_REQUEST['fqdn']);
-	if (count($sessions) > 0) {
-		popup_error(_('Unable to delete a server when there are active sessions on it!'));
-		redirect();
-	}
-
-	$buf = Abstract_Server::load($_REQUEST['fqdn']);
-	if (is_object($buf)) {
-		$buf->orderDeletion();
-		Abstract_Server::delete($buf->fqdn);
-		popup_info(sprintf(_('Server \'%s\' successfully deleted'), $buf->getAttribute('fqdn')));
-	}
-
-	$buf = count(Servers::getUnregistered());
-	if ($buf == 0)
-		redirect('servers.php');
-
-	redirect();
-}
-
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'manage' && isset($_REQUEST['fqdn'])) {
   show_manage($_REQUEST['fqdn']);
 }
@@ -309,7 +98,7 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
       if ($av_servers > 1 and $can_do_action)
-        echo '<td><input class="input_checkbox" type="checkbox" name="manage_servers[]" value="'.$s->fqdn.'" /></td>';
+        echo '<td><input class="input_checkbox" type="checkbox" name="checked_servers[]" value="'.$s->fqdn.'" /></td>';
       echo '<td>';
       echo '<a href="servers.php?action=manage&fqdn='.$s->fqdn.'">'.$s->fqdn.'</a>';
       echo '</td>';
@@ -346,14 +135,19 @@ function show_default() {
       if ($can_do_action) {
 	echo '<td>';
 	  if ($server_online || $switch_value == 1) {
-	  echo '<form action="servers.php" method="get">';
+	  echo '<form action="actions.php" method="post">';
 	  echo '<input';
        if ($switch_value == 0)
          echo ' style="background: #05a305; color: #fff; font-weight: bold;"';
        echo ' type="submit" value="'.$switch_msg.'"/>';
 	  echo '<input type="hidden" name="action" value="maintenance" />';
-	  echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
-	  echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+	  echo '<input type="hidden" name="name" value="Server" />';
+	  if ($switch_value == 0) 
+		echo '<input type="hidden" name="to_production" value="to_production"/>';
+	  else
+		echo '<input type="hidden" name="to_maintenance" value="to_maintenance"/>';
+	  echo '<input type="hidden" name="locked" value="'.$switch_value.'" />';
+	  echo '<input type="hidden" name="checked_servers[]" value="'.$s->fqdn.'" />';
 	  echo '</form>';
 	  }
 	echo '</td>';
@@ -370,8 +164,9 @@ function show_default() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="servers.php" method="post" onsubmit="return updateMassActionsForm(this, \'available_servers_table\');">';
-      echo '<input type="hidden" name="mass_action" value="maintenance" />';
+      echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'available_servers_table\');">';
+      echo '<input type="hidden" name="name" value="Server" />';
+      echo '<input type="hidden" name="action" value="maintenance" />';
       echo '<input type="submit" name="to_production" value="'._('Switch to production').'"/><br />';
       echo '<input type="submit" name="to_maintenance" value="'._('Switch to maintenance').'"/>';
       echo '</form>';
@@ -441,18 +236,20 @@ function show_unregistered() {
 		if ($can_do_action) {
 			echo '<td>';
 			if ($s->isOK()) {
-				echo '<form action="servers.php" method="get">';
+				echo '<form action="actions.php" method="post">';
+				echo '<input type="hidden" name="name" value="Server" />';
 				echo '<input type="hidden" name="action" value="register" />';
-				echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+				echo '<input type="hidden" name="checked_servers[]" value="'.$s->fqdn.'" />';
 				echo '<input style="background: #05a305; color: #fff; font-weight: bold;" type="submit" value="'._('Register').'" />';
 				echo '</form>';
 			}
 			echo '</td>';
 
 			echo '<td>';
-			echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
-			echo '<input type="hidden" name="action" value="delete" />';
-			echo '<input type="hidden" name="fqdn" value="'.$s->fqdn.'" />';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
+			echo '<input type="hidden" name="name" value="Server" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="checked_servers[]" value="'.$s->fqdn.'" />';
 			echo '<input type="submit" value="'._('Delete').'" />';
 			echo '</form>';
 			echo '</td>';
@@ -471,12 +268,16 @@ function show_unregistered() {
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="servers.php" method="post" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
+      echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
+      echo '<input type="hidden" name="name" value="Server" />';
+      echo '<input type="hidden" name="action" value="register" />';
       echo '<input type="submit" name="mass_register" value="'._('Register').'"/><br />';
       echo '</form>';
       echo '</td>';
       echo '<td>';
-      echo '<form action="servers.php" method="post" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
+      echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'unregistered_servers_table\');">';
+      echo '<input type="hidden" name="name" value="Server" />';
+      echo '<input type="hidden" name="action" value="del" />';
       echo '<input type="submit" name="mass_delete_unregistered" value="'._('Delete').'"/><br />';
       echo '</form>';
       echo '</td>';
@@ -703,7 +504,8 @@ function show_manage($fqdn) {
 		echo _('Number of available sessions on this server').': ';
 		echo '</td><td>';
 		if ($can_do_action) {
-			echo '<form action="servers.php" method="GET">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="Server" />';
 			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
 			echo '<input type="hidden" name="action" value="available_sessions" />';
 			echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
@@ -720,7 +522,8 @@ function show_manage($fqdn) {
 		echo _('Redirection name of this server').': ';
 		echo '</td><td>';
 		if ($can_do_action) {
-			echo '<form action="servers.php" method="GET">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="Server" />';
 			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
 			echo '<input type="hidden" name="action" value="external_name" />';
 		}
@@ -735,10 +538,14 @@ function show_manage($fqdn) {
 	if ($can_do_action) {
 		if ($server_online || $switch_value == 1) {
 			echo '<tr><td></td><td>';
-			echo '<form action="servers.php" method="get">';
-			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="Server" />';
+			echo '<input type="hidden" name="checked_servers[]" value="'.$server->fqdn.'" />';
 			echo '<input type="hidden" name="action" value="maintenance" />';
-			echo '<input type="hidden" name="maintenance" value="'.$switch_value.'" />';
+			if ($switch_value == 0) 
+				echo '<input type="hidden" name="to_production" value="to_production"/>';
+			else
+				echo '<input type="hidden" name="to_maintenance" value="to_maintenance"/>';
 			echo '<input';
 			if ($switch_value == 0)
 				echo ' style="background: #05a305; color: #fff; font-weight: bold;"';
@@ -750,9 +557,10 @@ function show_manage($fqdn) {
 
 		if ($server_lock || !$server_online) {
 			echo '<tr><td></td><td>';
-			echo '<form action="servers.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
-			echo '<input type="hidden" name="action" value="delete" />';
-			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+			echo '<form action="actions.php" method="get" onsubmit="return confirm(\''._('Are you sure you want to delete this server?').'\');">';
+			echo '<input type="hidden" name="name" value="Server" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="checked_servers[]" value="'.$server->fqdn.'" />';
 			echo '<input type="submit" value="'._('Delete').'" />';
 			echo '</form>';
 			echo '</td></tr>';
@@ -764,7 +572,8 @@ function show_manage($fqdn) {
 	if ($server_online && $server->getAttribute('type') == 'linux' && $can_do_action) {
     echo '<div class="section">';
     echo '<h2>'._('Install an application').'</h2>';
-    echo '<form>';
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="Server" />';
     echo '<input type="hidden" name="action" value="install_line">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
     echo '<input type="text" name="line"> ';
@@ -779,7 +588,8 @@ function show_manage($fqdn) {
     echo '</div>';
 
     echo '<div id="installableApplicationsListDefault" style="display: none; visibility: hidden;">';
-    echo '<form>';
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="Server" />';
     echo '<input type="hidden" name="action" value="install_line">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
     echo '<table>';
@@ -801,7 +611,8 @@ function show_manage($fqdn) {
 
     echo '<div class="section">';
     echo '<h2>'._('Upgrade').'</h2>';
-    echo '<form>';
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="Server" />';
     echo '<input type="hidden" name="action" value="upgrade">';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'">';
     echo '<input type="submit" value="'._('Upgrade the internal system and applications').'">';
@@ -885,7 +696,8 @@ function show_manage($fqdn) {
   if (count($servers_replication)>0 && $server->getAttribute('type') == 'linux' && $can_do_action) {
     echo '<div class="section">';
     echo '<h2>'._('Replication').'</h2>';
-    echo '<form action="" method="post">';
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="Server" />';
     echo '<input type="hidden" name="action" value="replication" />';
     echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
 

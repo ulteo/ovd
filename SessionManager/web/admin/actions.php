@@ -30,7 +30,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'web_port')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -448,6 +448,168 @@ if ($_REQUEST['name'] == 'password') {
 		redirect();
 	}
 	
+}
+
+if ($_REQUEST['name'] == 'Server') {
+	if (! checkAuthorization('manageServers'))
+		redirect();
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
+			foreach ($_REQUEST['checked_servers'] as $fqdn) {
+				$sessions = Sessions::getByServer($fqdn);
+				if (count($sessions) > 0) {
+					popup_error(sprintf_("Unable to delete the server '%s' because there are active sessions on it."), $fqdn);
+					continue; 
+				}
+			
+				$buf = Abstract_Server::load($fqdn);
+				if (is_object($buf)) {
+					$buf->orderDeletion();
+					Abstract_Server::delete($buf->fqdn);
+					popup_info(sprintf(_("Server '%s' successfully deleted"), $buf->getAttribute('fqdn')));
+				}
+			}
+			$buf = count(Servers::getUnregistered());
+			if ($buf == 0)
+				redirect('servers.php');
+			else
+				redirect('servers.php?view=unregistered');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'register') {
+		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers'])) {
+			foreach ($_REQUEST['checked_servers'] as $server) {
+				$buf = Abstract_Server::load($server);
+				$res = $buf->register();
+				if ($res) {
+					Abstract_Server::save($buf);
+					$buf->updateApplications();
+					popup_info(sprintf(_("Server '%s' successfully registered"), $buf->getAttribute('fqdn')));
+				}
+				else {
+					popup_info(sprintf(_("Failed to register Server '%s'"), $buf->getAttribute('fqdn')));
+				}
+			}
+		}
+		
+		$buf = count(Servers::getUnregistered());
+		if ($buf == 0)
+			redirect('servers.php');
+		else
+			redirect('servers.php?view=unregistered');
+	}
+	
+	if ($_REQUEST['action'] == 'maintenance') {
+		if (isset($_REQUEST['checked_servers']) && is_array($_REQUEST['checked_servers']) && (isset($_REQUEST['to_maintenance']) || isset($_REQUEST['to_production']))) {
+			foreach ($_REQUEST['checked_servers'] as $server) {
+				$a_server = Abstract_Server::load($server);
+				if (isset($_REQUEST['to_maintenance']))
+					$a_server->setAttribute('locked', true);
+				elseif (isset($_REQUEST['to_production']) && $a_server->isOnline())
+					$a_server->setAttribute('locked', false);
+	
+				Abstract_Server::save($a_server);
+				popup_info(sprintf(_("Server '%s' successfully modified"), $a_server->getAttribute('fqdn')));
+			}
+		}
+		redirect('servers.php');
+	}
+	
+	if ($_REQUEST['action'] == 'available_sessions') {
+		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['max_sessions'])) {
+			$server = Abstract_Server::load($_REQUEST['fqdn']);
+			$server->setAttribute('max_sessions', $_REQUEST['max_sessions']);
+			Abstract_Server::save($server);
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getAttribute('fqdn')));
+			
+			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'external_name') {
+		if (isset($_REQUEST['external_name']) && isset($_REQUEST['fqdn'])) {
+			$server = Abstract_Server::load($_REQUEST['fqdn']);
+			$server->setAttribute('external_name', $_REQUEST['external_name']);
+			Abstract_Server::save($server);
+			popup_info(sprintf(_("Server '%s' successfully modified"), $server->getAttribute('fqdn')));
+		
+			redirect('servers.php?action=manage&fqdn='.$server->getAttribute('fqdn'));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'install_line') {
+		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
+			//FIX ME ?
+			$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
+		
+			$tm = new Tasks_Manager();
+			$tm->add($t);
+			popup_info(_('Task successfully added'));
+		
+			redirect('servers.php?action=manage&fqdn='.$_REQUEST['fqdn']);
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'upgrade') {
+		if (isset($_REQUEST['fqdn'])) {
+			$t = new Task_upgrade(0, $_REQUEST['fqdn']);
+		
+			$tm = new Tasks_Manager();
+			$tm->add($t);
+			
+			popup_info(sprintf(_("Server '%s' is upgrading"), $_REQUEST['fqdn']));
+			redirect('servers.php?action=manage&fqdn='.$_REQUEST['fqdn']);
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'replication') {
+		if (isset($_REQUEST['fqdn']) && isset($_REQUEST['servers'])) {
+			$server_from = Abstract_Server::load($_REQUEST['fqdn']);
+			$applications_from = $server_from->getApplications();
+		
+			$servers_fqdn = $_REQUEST['servers'];
+			foreach($servers_fqdn as $server_fqdn) {
+				$server_to = Abstract_Server::load($server_fqdn);
+				$applications_to = $server_to->getApplications();
+		
+				$to_delete = array();
+				foreach($applications_to as $app) {
+					if (! in_array($app, $applications_from))
+						$to_delete[]= $app;
+				}
+		
+				$to_install = array();
+				foreach($applications_from as $app) {
+					if (! in_array($app, $applications_to))
+						$to_install[]= $app;
+				}
+				/*
+				echo 'replicate '.$_REQUEST['fqdn'].' on '.$server_fqdn.'<br>';
+				echo 'to_install: ';
+				var_dump($to_install);
+				echo '<br>to remove: ';
+				var_dump($to_delete);
+				echo '<hr/>';
+				die();
+				*/
+				//FIX ME ?
+				$tm = new Tasks_Manager();
+				if (count($to_delete) > 0) {
+					$t = new Task_remove(0, $server_fqdn, $to_delete);
+					popup_info(_('Task successfully deleted'));
+					$tm->add($t);
+				}
+				if (count($to_install) > 0) {
+					$t = new Task_install(0, $server_fqdn, $to_install);
+					$tm->add($t);
+					popup_info(_('Task successfully added'));
+				}
+			}
+			redirect();
+		}
+	}
 }
 
 function action_add_sharedfolder() {
