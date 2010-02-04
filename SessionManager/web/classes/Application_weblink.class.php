@@ -55,15 +55,6 @@ class Application_weblink extends Application{
 		return true;
 	}
 	
-	public function getIconPath() {
-		if (file_exists(parent::getIconPath())) {
-			return parent::getIconPath();
-		}
-		else {
-			return SESSIONMANAGER_ROOT_ADMIN.'/media/image/server-'.$this->getAttribute('type').'.png';
-		}
-	}
-	
 	public function toXML($ApS=NULL) {
 		$list_attr = $this->getAttributesList();
 		foreach ($list_attr as $k => $v) {

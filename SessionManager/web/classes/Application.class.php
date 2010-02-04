@@ -80,10 +80,7 @@ class Application {
 		if (file_exists(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png'))
 			return CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png';
 
-		if ($this->getAttribute('static'))
-			return $this->getDefaultIconPath();
-
-		return NULL;
+		return $this->getDefaultIconPath();
 	}
 	
 	public function getDefaultIconPath() {
