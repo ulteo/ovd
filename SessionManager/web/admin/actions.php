@@ -142,6 +142,86 @@ if ($_REQUEST['name'] == 'Application_ApplicationGroup') {
 	}
 }
 
+if ($_REQUEST['name'] == 'ApplicationsGroup') {
+	if (! checkAuthorization('manageApplicationsGroups'))
+		redirect();
+	
+	$applicationsGroupDB = ApplicationsGroupDB::getInstance();
+	if (! $applicationsGroupDB->isWriteable()) {
+		die_error(_('Application Group Database not writeable'), __FILE__, __LINE__);
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		if ( isset($_REQUEST['name_appsgroup']) && isset($_REQUEST['description_appsgroup'])) {
+			$name = $_REQUEST['name_appsgroup'];
+			$description = $_REQUEST['description_appsgroup'];
+			
+			$g = new AppsGroup(NULL, $name, $description, 1);
+			$res = $applicationsGroupDB->add($g);
+			if (!$res)
+				die_error(_("Unable to create applications group '%s'"), $name, __FILE__, __LINE__);
+			
+			popup_info(sprintf(_("Applications group '%s' successfully added"), $name));
+			redirect('appsgroup.php?action=manage&id='.$g->id);
+		}
+
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_groups']) and is_array($_REQUEST['checked_groups'])) {
+			$ids = $_REQUEST['checked_groups'];
+			foreach ($ids as $id) {
+				$group = $applicationsGroupDB->import($id);
+				if (! is_object($group)) {
+					popup_error(sprintf(_("Import of applications group '%s' failed"), $id));
+					continue;
+				}
+				
+				if (! $applicationsGroupDB->remove($group)) {
+					popup_error(sprintf(_("Unable to remove applications group '%s'"), $group->name));
+					continue;
+				}
+				popup_info(sprintf(_("Applications group '%s' successfully deleted"), $group->name));
+			}
+			redirect('appsgroup.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		if (isset($_REQUEST['id']) && (isset($_REQUEST['name_appsgroup']) || isset($_REQUEST['description_appsgroup']) || isset($_REQUEST['published_appsgroup']))) {
+			$id = $_REQUEST['id'];
+			$group = $applicationsGroupDB->import($id);
+			if (! is_object($group))
+				popup_error(sprintf(_("Import of applications group '%s' failed"), $id));
+			
+			$has_change = false;
+			
+			if (isset($_REQUEST['name_appsgroup'])) {
+				$group->name = $_REQUEST['name_appsgroup'];
+				$has_change = true;
+			}
+			
+			if (isset($_REQUEST['description_appsgroup'])) {
+				$group->description = $_REQUEST['description_appsgroup'];
+				$has_change = true;
+			}
+			
+			if (isset($_REQUEST['published_appsgroup'])) {
+				$group->published = (bool)$_REQUEST['published_appsgroup'];
+				$has_change = true;
+			}
+			
+			if ($has_change) {
+				if (! $applicationsGroupDB->update($group))
+					popup_error(sprintf(_("Unable to modify applications group '%s'"), $group->name));
+				else
+					popup_info(sprintf(_("Applications group '%s' successfully modified"), $group->name));
+			}
+			redirect('appsgroup.php?action=manage&id='.$group->id);
+		}
+	}
+}
+
 if ($_REQUEST['name'] == 'User_UserGroup') {
 	if (! checkAuthorization('manageUsersGroups'))
 		redirect();

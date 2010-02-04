@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2008-2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,92 +30,9 @@ if (isset($_REQUEST['action'])) {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id']);
   }
-
-	if (! checkAuthorization('manageApplicationsGroups'))
-		redirect();
-
-  if ($_REQUEST['action']=='add') {
-    $id = action_add();
-    redirect('appsgroup.php?action=manage&id='.$id);
-  }
-  elseif ($_REQUEST['action']=='del') {
-    if (isset($_REQUEST['id'])) {
-      $req_ids = $_REQUEST['id'];
-      if (!is_array($req_ids))
-        $req_ids = array($req_ids);
-      foreach ($req_ids as $req_id)
-        action_del($req_id);
-    }
-  }
-  elseif ($_REQUEST['action']=='modify') {
-    if (isset($_REQUEST['id'])) {
-      action_modify($_REQUEST['id']);
-      redirect('appsgroup.php?action=manage&id='.$_REQUEST['id']);
-    }
-  }
 }
 
 show_default();
-
-function action_add() {
-  if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
-    return false;
-
-  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
-  $g = new AppsGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
-  $res = $applicationsGroupDB->add($g);
-  if (!$res)
-    die_error('Unable to create application group '.$res,__FILE__,__LINE__);
-
-  popup_info(_('AppsGroup successfully added'));
-  return $g->id;
-}
-
-function action_del($id) {
-  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
-  $group = $applicationsGroupDB->import($id);
-  if (! is_object($group))
-    die_error('Import of Group "'.$id.'" failed',__FILE__,__LINE__);
-
-  if (! $applicationsGroupDB->remove($group))
-    die_error('Unable to remove group "'.$id.'"',__FILE__,__LINE__);
-
-  popup_info(_('AppsGroup successfully deleted'));
-  return true;
-}
-
-function action_modify($id) {
-  $applicationsGroupDB = ApplicationsGroupDB::getInstance();
-  $group = $applicationsGroupDB->import($id);
-  if (! is_object($group))
-    die_error('Import Group "'.$id.'" failed',__FILE__,__LINE__);
-
-  $has_change = false;
-
-  if (isset($_REQUEST['name'])) {
-    $group->name = $_REQUEST['name'];
-    $has_change = true;
-  }
-
-  if (isset($_REQUEST['description'])) {
-    $group->description = $_REQUEST['description'];
-    $has_change = true;
-  }
-
-  if (isset($_REQUEST['published'])) {
-    $group->published = (bool)$_REQUEST['published'];
-    $has_change = true;
-  }
-
-  if (! $has_change)
-    return false;
-
-  if (! $applicationsGroupDB->update($group))
-    die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
-
-  popup_info(_('AppsGroup successfully modified'));
-  return true;
-}
 
 function show_default() {
   $applicationsGroupDB = ApplicationsGroupDB::getInstance();
@@ -152,7 +69,7 @@ function show_default() {
 
       echo '<tr class="'.$content.'">';
 		if ($can_manage_applicationsgroups && count($groups) > 1)
-			echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->id.'" /></td>';
+			echo '<td><input class="input_checkbox" type="checkbox" name="checked_groups[]" value="'.$group->id.'" /></td>';
       echo '<td><a href="?action=manage&id='.$group->id.'">'.$group->name.'</a></td>';
       echo '<td>'.$group->description.'</td>';
       echo '<td class="centered">'.$publish.'</td>';
@@ -164,10 +81,11 @@ function show_default() {
       echo '</form></td>';
 
 		if ($can_manage_applicationsgroups) {
-			echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
 			echo '<input type="submit" value="'._('Delete').'"/>';
+			echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="id" value="'.$group->id.'" />';
+			echo '<input type="hidden" name="checked_groups[]" value="'.$group->id.'" />';
 			echo '</form></td>';
 			echo '</tr>';
 		}
@@ -177,7 +95,8 @@ function show_default() {
 		echo '<tr class="'.$content.'">';
 		echo '<td colspan="5"><a href="javascript:;" onclick="markAllRows(\'appgroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'appgroups_list\'); return false">'._('Unmark all').'</a></td>';
 		echo '<td>';
-		echo '<form action="appsgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'appgroups_list\');">';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'appgroups_list\');">';
+		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 		echo '<input type="hidden" name="action" value="del" />';
 		echo '<input type="submit" value="'._('Delete').'"/>';
 		echo '</form>';
@@ -191,18 +110,19 @@ function show_default() {
 	if ($can_manage_applicationsgroups) {
 		echo '<div>';
 		echo '<h2>'._('Create a new group').'</h2>';
-		echo '<form action="" method="post">';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 		echo '<input type="hidden" name="action" value="add" />';
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
 		echo '<tr class="content1">';
 		echo '<th>'._('Name').'</th>';
-		echo '<td><input type="text" name="name" value="" /></td>';
+		echo '<td><input type="text" name="name_appsgroup" value="" /></td>';
 		echo '</tr>';
 
 		echo '<tr class="content2">';
 		echo '<th>'._('Description').'</th>';
-		echo '<td><input type="text" name="description" value="" /></td>';
+		echo '<td><input type="text" name="description_appsgroup" value="" /></td>';
 		echo '</tr>';
 		/*
 		echo '<tr class="content2">';
@@ -308,26 +228,29 @@ function show_manage($id) {
 		echo '</form>';
 		echo '<br/>';
 
-		echo '<form action="" method="post">';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 		echo '<input type="hidden" name="action" value="modify" />';
 		echo '<input type="hidden" name="id" value="'.$id.'" />';
-		echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
+		echo '<input type="hidden" name="published_appsgroup" value="'.$status_change_value.'" />';
 		echo '<input type="submit" value="'.$status_change.'"/>';
 		echo '</form>';
 		echo '<br/>';
 
-		echo '<form action="" method="post">';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 		echo '<input type="hidden" name="action" value="modify" />';
 		echo '<input type="hidden" name="id" value="'.$id.'" />';
-		echo '<input type="text" name="name"  value="'.$group->name.'" size="50" /> ';
+		echo '<input type="text" name="name_appsgroup"  value="'.$group->name.'" size="50" /> ';
 		echo '<input type="submit" value="'._('Update the name').'"/>';
 		echo '</form>';
 		echo '<br/>';
 
-		echo '<form action="" method="post">';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 		echo '<input type="hidden" name="action" value="modify" />';
 		echo '<input type="hidden" name="id" value="'.$id.'" />';
-		echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
+		echo '<input type="text" name="description_appsgroup"  value="'.$group->description.'" size="50" /> ';
 		echo '<input type="submit" value="'._('Update the description').'"/>';
 		echo '</form>';
 		echo '<br/>';
