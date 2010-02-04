@@ -203,7 +203,11 @@ class ApplicationDB_sql extends ApplicationDB {
 	public function remove($a){
 		// TODO remove also all liasons
 		if (is_object($a) && $a->hasAttribute('id') && is_numeric($a->getAttribute('id'))) {
-			$sql2 = SQL::getInstance();
+			$icon_path = $a->getIconPathRW();
+			if (file_exists($icon_path)) {
+				@unlink($icon_path);
+			}
+			$sql2 = MySQL::getInstance();
 			$res = $sql2->DoQuery('DELETE FROM @1 WHERE @2 = %3', APPLICATION_TABLE, 'id', $a->getAttribute('id'));
 			return ($res !== false);
 		}
