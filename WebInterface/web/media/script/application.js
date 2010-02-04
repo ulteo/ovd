@@ -22,38 +22,63 @@
 var Application = Class.create({
 	id: 0,
 	name: '',
-	server: '',
+	server_id: 0,
 	node: null,
 
-	initialize: function(id_, name_, server_) {
+	app_span: null,
+
+	initialize: function(id_, name_, server_id_) {
 		this.id = id_;
 		this.name = name_;
-		this.server = server_;
+		this.server_id = server_id_;
+	},
+
+	update: function() {
+		this.repaintNode();
 	},
 
 	initNode: function() {
 		var tr = new Element('tr');
 
 		var td_icon = new Element('td');
-		var td_icon_link = new Element('a');
-		td_icon_link.observe('click', this.onClick.bind(this));
-		td_icon_link.setAttribute('href', 'javascript:;');
-
 		var icon = new Element('img');
 		icon.setAttribute('src', this.getIconURL());
-		td_icon_link.appendChild(icon);
-		td_icon.appendChild(td_icon_link);
+		td_icon.appendChild(icon);
 		tr.appendChild(td_icon);
 
 		var td_app = new Element('td');
-		var td_app_link = new Element('a');
-		td_app_link.observe('click', this.onClick.bind(this));
-		td_app_link.setAttribute('href', 'javascript:;');
-		td_app_link.innerHTML = this.name;
-		td_app.appendChild(td_app_link);
+		this.app_span = new Element('span');
+		td_app.appendChild(this.app_span);
 		tr.appendChild(td_app);
 
+		this.repaintNode();
+
 		return tr;
+	},
+
+	repaintNode: function() {
+		this.app_span.innerHTML = '';
+
+		var server = daemon.servers.get(this.server_id);
+
+		if (server.ready) {
+			var node = new Element('a');
+			node.observe('click', this.onClick.bind(this));
+			node.setAttribute('href', 'javascript:;');
+			node.innerHTML = this.name;
+			this.app_span.appendChild(node);
+
+			this.app_span.parentNode.parentNode.setAttribute('style', 'opacity: 1.00; filter: alpha(opacity=100); -moz-opacity: 1.00;');
+		} else {
+			var node = new Element('span');
+			node.setAttribute('style', 'font-weight: bold;');
+			node.innerHTML = this.name;
+			this.app_span.appendChild(node);
+
+			this.app_span.parentNode.parentNode.setAttribute('style', 'opacity: 0.40; filter: alpha(opacity=40); -moz-opacity: 0.40;');
+		}
+
+		return true;
 	},
 
 	getNode: function() {
@@ -71,8 +96,10 @@ var Application = Class.create({
 	launch: function() {
 		var date = new Date();
 		var rand = parseInt(date.getTime()/1000);
-		$('ulteoapplet').startApplication(rand, this.id, this.server);
-		daemon.matching_applications.set(rand, this.id);
+
+		var server = daemon.servers.get(this.server_id);
+		$('ulteoapplet').startApplication(rand, this.id, server.java_id);
+		daemon.liaison_runningapplicationtoken_application.set(rand, this.id);
 	},
 
 	getIconURL: function() {
@@ -87,8 +114,8 @@ var Running_Application = Class.create(Application, {
 
 	app_span: null,
 
-	initialize: function(id_, name_, server_, pid_, status_, context_) {
-		Application.prototype.initialize.apply(this, [id_, name_, server_]);
+	initialize: function(id_, name_, server_id_, pid_, status_, context_) {
+		Application.prototype.initialize.apply(this, [id_, name_, server_id_]);
 
 		this.pid = pid_;
 		this.status = status_;
@@ -114,7 +141,7 @@ var Running_Application = Class.create(Application, {
 		var td_app = new Element('td');
 		var td_app_div = new Element('div');
 		td_app_div.setAttribute('style', 'font-weight: bold;');
-		td_app_div.innerHTML = '<strong>'+this.name+'</strong>';
+		td_app_div.innerHTML = this.name;
 		td_app.appendChild(td_app_div);
 
 		this.app_span = new Element('span');

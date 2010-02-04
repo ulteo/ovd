@@ -49,6 +49,7 @@ $_SESSION['session'] = $_POST['session_id'];
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_<?php echo $_POST['session_mode']; ?>.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" charset="utf-8">
