@@ -78,8 +78,8 @@ if (! $session) {
 	exit(2);
 }
 
-$session->setStatus($ret['status']);
-Abstract_Session::save($session);
+if ($session->setStatus($ret['status']))
+	Abstract_Session::save($session);
 
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');

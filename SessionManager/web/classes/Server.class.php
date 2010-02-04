@@ -300,9 +300,8 @@ class Server {
 			if (! is_object($session))
 				continue;
 
-			$session->setStatus(3);
-
-			Abstract_Session::save($session);
+			if ($session->setStatus(3))
+				Abstract_Session::save($session);
 		}
 
 		$prefs = Preferences::getInstance();
@@ -584,6 +583,7 @@ class Server {
 				case 'error': //sending destruction order (?)
 					$session_status = 3;
 					break;
+				case 'destroyed':
 				case 'unknown':
 					$session_status = 4;
 					break;

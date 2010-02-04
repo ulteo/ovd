@@ -113,6 +113,7 @@ class Session {
 			case 'error': //sending destruction order (?)
 				$status_ = 3;
 				break;
+			case 'destroyed':
 			case 'unknown':
 				$status_ = 4;
 				break;
@@ -138,7 +139,11 @@ class Session {
 			));
 
 			if (! $this->orderDeletion((($status_ == 4)?false:true)))
-				Logger::error('main', 'Unable to delete session \''.$this->id.'\'');
+				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
+
+			Abstract_Session::delete($this);
+
+			return false;
 		}
 
 		Logger::info('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for session \''.$this->id.'\'');
@@ -239,7 +244,7 @@ class Session {
 			return false;
 		}
 
-		if (isset($this->settings['windows_server'])) {
+		if (isset($this->settings['windows_server']) && $request_aps_) {
 			$windows_server = Abstract_Server::load($this->settings['windows_server']);
 			if (! $windows_server) {
 				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\' server \''.$this->settings['windows_server'].'\' not found');
