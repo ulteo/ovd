@@ -46,6 +46,7 @@ $app = $applicationDB->import($_GET['id']);
 if (! is_object($app)) {
 	Logger::error('main', '(webservices/icon) error import app failed for \''.$_GET['id'].'\'');
 	header('HTTP/1.1 400 Bad Request');
+	die();
 }
 
 $path = $app->getIconPath();
