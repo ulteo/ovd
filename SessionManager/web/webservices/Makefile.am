@@ -8,6 +8,7 @@ scripts_DATA =  apps.php \
                 get_news.php \
                 server_monitoring.php \
                 server_name.php \
+                servers.php \
                 session_token.php \
                 session_status.php \
                 server_status.php \
