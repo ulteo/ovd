@@ -19,6 +19,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
+import shutil
 import sys
 from distutils.core import setup,Extension
 
@@ -40,8 +42,14 @@ except ImportError:
 	pass
 
 
+path = os.path.join("ovd_shells", "Platform")
+if os.path.exists(path):
+	shutil.rmtree(path)
+shutil.copytree(os.path.join("ovd_shells", "Platform.Windows"), path)
+
+
 setup(
 	zipfile = "lib/shared.zip",
 
-	windows = ["OvdDesktop", "OvdRemoteApp", "startovdapp"],
+	windows = ["OvdDesktop", "OvdRemoteApps", "startovdapp"],
 	)

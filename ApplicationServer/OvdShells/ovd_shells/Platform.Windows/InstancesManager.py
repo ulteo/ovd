@@ -20,6 +20,7 @@
 
 import win32event
 import win32file
+import win32process
 
 from ovd_shells.InstancesManager import InstancesManager as AbstractInstancesManager
 
@@ -27,28 +28,30 @@ class InstancesManager(AbstractInstancesManager):
 	def launch(self, cmd):
 		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
 		win32file.CloseHandle(hThread)
+		return hProcess
 
 	
 	def wait(self):
-		#win32event.WaitForSingleObject(hProcess, win32event.INFINITE)
+		if len(self.instances) == 0:
+			return False
 		
 		handleList = [instance[0] for instance in self.instances] 
 		
-	
-		res = WaitForMultipleObjects(handleList, False , 200)
+		res = win32event.WaitForMultipleObjects(handleList, False, 0)
 		
 		if res in [win32event.WAIT_TIMEOUT, win32event.WAIT_FAILED]:
-			return
+			return False
 		
 		if res > win32event.WAIT_ABANDONED_0:
 			# todo: understand what it means!
-			return
+			return False
 		
 		index = res - win32event.WAIT_OBJECT_0
 		
 		win32file.CloseHandle(handleList[index])
 		
 		self.onInstanceExited(self.instances[index])
+		return True
 	
 	def kill(self, handle):
 		TerminateProcess(handle, 0)
