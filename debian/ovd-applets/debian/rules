@@ -5,8 +5,8 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 
 JAVA_HOME = /usr/lib/jvm/java-6-sun
 
-DEB_ANT_INSTALL_TARGET = install
-DEB_ANT_BUILD_TARGET = sign
+DEB_ANT_INSTALL_TARGET = applet.install
+DEB_ANT_BUILD_TARGET = applet
 DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR)
 
 # debian bug #420287
