@@ -145,7 +145,7 @@ function show_default($userDB) {
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
     $content_color = 1;
-    $minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
+    $minimun_attributes =  array_unique(array_merge(array('login', 'displayname',  'password'), get_needed_attributes_user_from_module_plugin()));
     foreach ($minimun_attributes as $minimun_attribute) {
       echo '<tr class="content'.$content_color.'">';
       echo '<th>'._($minimun_attribute).'</th>';
@@ -193,7 +193,7 @@ function show_manage($login, $userDB, $userGroupDB) {
 
   $keys = array();
   foreach($u->getAttributesList() as $attr)
-    if (! in_array($attr, array('uid', 'login', 'displayname')))
+    if (! in_array($attr, array('login', 'displayname')))
       $keys[]= $attr;
 
   // Users Group
@@ -222,7 +222,6 @@ function show_manage($login, $userDB, $userGroupDB) {
   echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
   echo '<tr class="title">';
   echo '<th>'._('Login').'</th>';
-  echo '<th>'._('Uid').'</th>';
   foreach($keys as $key)
     if ($key != 'password')
       echo '<th>'.$key.'</th>';
@@ -231,7 +230,6 @@ function show_manage($login, $userDB, $userGroupDB) {
 
   echo '<tr class="content1">';
    echo '<td>'.$u->getAttribute('login').'</td>';
-  echo '<td>'.$u->getAttribute('uid').'</td>';
   foreach($keys as $key)
     if ($key != 'password') {
       if (is_array($u->getAttribute($key)))
@@ -270,12 +268,6 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<tr class="'.$content.'">';
     echo '<th>'._('Display name').'</th>';
     echo '<td><input type="text" name="displayname" value="'.$u->getAttribute('displayname').'" /></td>';
-    echo '</tr>';
-
-    $content = 'content'.(($count++%2==0)?1:2);
-    echo '<tr class="'.$content.'">';
-    echo '<th>'._('Uid').'</th>';
-    echo '<td><input type="text" name="uid" value="'.$u->getAttribute('uid').'" /></td>';
     echo '</tr>';
 
     if ($u->hasAttribute('password')) {

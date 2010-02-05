@@ -202,7 +202,7 @@ class UserDB_sql_external extends UserDB {
 		$ret []= $c;
 		$c = new ConfigElement_input('table', _('Table of users'), _('Table of users'), _('Table of users'), '');
 		$ret []= $c;
-		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'uid', 'displayname' => 'displayname'));
+		$c = new ConfigElement_dictionary('match',_('Matching'), _('Matching'), _('Matching'), array('login' => 'login', 'displayname' => 'displayname'));
 		$ret []= $c;
 		$c = new ConfigElement_select('hash_method',_('Hash method'), _('Hash method'), _('Hash method'), 'plain');
 		$c->setContentAvailable(array('md5' => _('MD5'), 'crypt' => _('Crypt'), 'plain' => _('Plain')));

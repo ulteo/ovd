@@ -306,7 +306,7 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 	if (isset($_SESSION['admin_ovd_user'])) {
 		$policy = $_SESSION['admin_ovd_user']->getPolicy();
 		if (! $policy['manageUsersGroup']) {
-			Logger::warning('main', 'User(id='.$_SESSION['admin_ovd_user']->getAttribute('uid').') is  not allowed to perform UserGroup_PolicyRule add('.$_REQUEST['element'].')');
+			Logger::warning('main', 'User(login='.$_SESSION['admin_ovd_user']->getAttribute('login').') is  not allowed to perform UserGroup_PolicyRule add('.$_REQUEST['element'].')');
 			popup_error('You are not allowed to perform this action');
 			redirect();
 		}
@@ -336,7 +336,7 @@ if ($_REQUEST['name'] == 'User') {
 	}
 	
 	if ($_REQUEST['action'] == 'add') {
-		$minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'uid',  'password'), get_needed_attributes_user_from_module_plugin()));
+		$minimun_attributes =  array_unique(array_merge(array('login', 'displayname', 'password'), get_needed_attributes_user_from_module_plugin()));
 		if (!isset($_REQUEST['login']) or !isset($_REQUEST['displayname']) or !isset($_REQUEST['password']))
 			die_error(_("Unable to create user"), __FILE__, __LINE__);
 		
@@ -346,10 +346,6 @@ if ($_REQUEST['name'] == 'User') {
 				$u->setAttribute($attributes, $_REQUEST[$attributes]);
 			}
 		}
-		if (!isset($_REQUEST['uid']) || ($_REQUEST['uid'] == ''))
-			$u->setAttribute('uid', str2num($_REQUEST['login']));
-		else
-			$u->setAttribute('uid', $_REQUEST['uid']);
 		
 		$res = $userDB->add($u);
 		if (! $res)

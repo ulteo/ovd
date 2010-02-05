@@ -156,8 +156,6 @@ class UserDB_ldap  extends UserDB {
 				}
 			}
 		}
-		if ($u->hasAttribute('uid') == false)
-			$u->setAttribute('uid', str2num($u->getAttribute('login')));
 		return $u;
 	}
 	

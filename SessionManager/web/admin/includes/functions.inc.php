@@ -399,7 +399,7 @@ function checkAuthorization($policy_) {
 	if (isAuthorized($policy_))
 		return true;
 
-	Logger::warning('main', 'User(id='.$_SESSION['admin_ovd_user']->getAttribute('uid').') is  not allowed to perform '.$policy_.'.');
+	Logger::warning('main', 'User(login='.$_SESSION['admin_ovd_user']->getAttribute('login').') is  not allowed to perform '.$policy_.'.');
 	popup_error(_('You are not allowed to perform this action'));
 	return false;
 }

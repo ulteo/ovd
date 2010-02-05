@@ -178,7 +178,7 @@ class UserDB_sql extends UserDB  {
 	}
 
 	public function getAttributesList() {
-		return array('uid', 'login', 'displayname', 'homedir', 'fileserver', 'fileserver_uid', 'password');
+		return array('login', 'displayname', 'homedir', 'fileserver', 'password');
 	}
 	
 	public function add($user_){
@@ -264,20 +264,20 @@ class UserDB_sql extends UserDB  {
 	
 	public function populate() {
 		$users = array(
-			array('login' => 'mwilson', 'displayname' => 'Marvin Wilson', 'uid' => 2001),
-			array('login' => 'jdoten', 'displayname' => 'John Doten', 'uid' => 2002),
-			array('login' => 'rfukasawa', 'displayname' => 'Ryuuji Fukasawa', 'uid' => 2003),
-			array('login' => 'jkang', 'displayname' => 'Jesse Kang', 'uid' => 2004),
-			array('login' => 'cthompson', 'displayname' => 'Chris Thompson', 'uid' => 2005),
-			array('login' => 'vkoch', 'displayname' => 'Victor Koch', 'uid' => 2006),
-			array('login' => 'dpaul', 'displayname' => 'Derrick Paul', 'uid' => 2007),
-			array('login' => 'scates', 'displayname' => 'Sandra Cates', 'uid' => 2008),
-			array('login' => 'mwhiddon', 'displayname' => 'Marcia Whiddon', 'uid' => 2009),
-			array('login' => 'cholland', 'displayname' => 'Charlotte Holland', 'uid' => 2010),
-			array('login' => 'rbrady', 'displayname' => 'Rosemary Brady', 'uid' => 2011),
-			array('login' => 'jeshelman', 'displayname' => 'Joanie Eshelman', 'uid' => 2012),
-			array('login' => 'hcarpenter', 'displayname' => 'Harriet Carpenter', 'uid' => 2013),
-			array('login' => 'rdavis', 'displayname' => 'Ricardo Davis', 'uid' => 2014)
+			array('login' => 'mwilson', 'displayname' => 'Marvin Wilson',),
+			array('login' => 'jdoten', 'displayname' => 'John Doten'),
+			array('login' => 'rfukasawa', 'displayname' => 'Ryuuji Fukasawa',),
+			array('login' => 'jkang', 'displayname' => 'Jesse Kang'),
+			array('login' => 'cthompson', 'displayname' => 'Chris Thompson'),
+			array('login' => 'vkoch', 'displayname' => 'Victor Koch'),
+			array('login' => 'dpaul', 'displayname' => 'Derrick Paul'),
+			array('login' => 'scates', 'displayname' => 'Sandra Cates'),
+			array('login' => 'mwhiddon', 'displayname' => 'Marcia Whiddon'),
+			array('login' => 'cholland', 'displayname' => 'Charlotte Holland'),
+			array('login' => 'rbrady', 'displayname' => 'Rosemary Brady'),
+			array('login' => 'jeshelman', 'displayname' => 'Joanie Eshelman'),
+			array('login' => 'hcarpenter', 'displayname' => 'Harriet Carpenter'),
+			array('login' => 'rdavis', 'displayname' => 'Ricardo Davis')
 		);
 		
 		foreach ($users as $row) {
@@ -306,12 +306,10 @@ class UserDB_sql extends UserDB  {
 		
 		// TODO : use get_needed_attributes_user_from_module_plugin to get all right fields
 		$user_table_structure = array(
-			'uid' => 'int(8) NOT NULL',
 			'login' => 'varchar(100) NOT NULL',
 			'displayname' => 'varchar(100) NOT NULL',
 			'homedir' => 'varchar(200) NOT NULL',
 			'fileserver' => 'varchar(250) NOT NULL',
-			'fileserver_uid' => 'int(8) NOT NULL',
 			'password' => 'varchar(50) NOT NULL');
 		
 		$ret = $sql2->buildTable($table, $user_table_structure, array('login'));

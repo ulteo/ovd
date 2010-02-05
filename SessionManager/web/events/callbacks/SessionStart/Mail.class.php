@@ -33,7 +33,6 @@ class SessionStartMail extends EventCallback {
 			$data = array();
 
 		$user = $this->ev->user->getAttribute('login');
-		$user_id = $this->ev->user->getAttribute('uid');
 		if (isset($data[$user]) && $this->ev->ok)
 			unset($data[$user]);
 
@@ -47,8 +46,8 @@ class SessionStartMail extends EventCallback {
 		if ($needs_alert) {
 			Logger::debug('main', 'SessionStartMail: sending alert');
 
-			$subject = sprintf(_('OVD Session alert: %s (uid %s) couldn\'t log in'),
-			                   $user, $user_id);
+			$subject = sprintf(_('OVD Session alert: %s couldn\'t log in'),
+			                   $user);
 
 			if (isset($this->ev->error))
 				$message = _("The following error happened:\n").$this->ev->error;
