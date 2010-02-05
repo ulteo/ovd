@@ -7,6 +7,6 @@ Standards-Version: 3.7.2
 
 Package: ulteo-ovd-webinterface
 Architecture: any
-Depends: libapache2-mod-php5, php5, php5-curl, debconf
+Depends: libapache2-mod-php5, php5, php5-curl, ulteo-ovd-applets, debconf
 Description: Ulteo OVD web interface
  This interface is a web client for Ulteo OVD.
