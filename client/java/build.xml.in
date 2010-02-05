@@ -26,7 +26,7 @@
          <mkdir dir="classes/ressources"/>
          <mkdir dir="classes/ressources/keymaps"/>
          <copy todir="classes/ressources/keymaps">
-           <fileset dir="classes/ressources/keymaps"/>
+           <fileset dir="keymaps"/>
          </copy>
 
          <mkdir dir="libs"/>
