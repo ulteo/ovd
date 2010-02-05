@@ -163,6 +163,17 @@ function show_default($userDB) {
     echo '</table>';
     echo '</form>';
     echo '</div>';
+    
+    echo '<br />';
+    echo '<h2>'._('Populate').'</h2>';
+    echo '<div id="user_populate">';
+    echo _('Populate with sample users').'<br />'._("The default password is 'test'").'<br />';
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="User" />';
+    echo '<input type="hidden" name="action" value="populate" />';
+    echo '<input type="submit" value="'._('Populate').'"/><br />';
+    echo '</form>';
+    echo '</div>';
   }
 
 

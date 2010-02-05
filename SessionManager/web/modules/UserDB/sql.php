@@ -262,6 +262,38 @@ class UserDB_sql extends UserDB  {
 		return false;
 	}
 	
+	public function populate() {
+		$users = array(
+			array('login' => 'mwilson', 'displayname' => 'Marvin Wilson', 'uid' => 2001),
+			array('login' => 'jdoten', 'displayname' => 'John Doten', 'uid' => 2002),
+			array('login' => 'rfukasawa', 'displayname' => 'Ryuuji Fukasawa', 'uid' => 2003),
+			array('login' => 'jkang', 'displayname' => 'Jesse Kang', 'uid' => 2004),
+			array('login' => 'cthompson', 'displayname' => 'Chris Thompson', 'uid' => 2005),
+			array('login' => 'vkoch', 'displayname' => 'Victor Koch', 'uid' => 2006),
+			array('login' => 'dpaul', 'displayname' => 'Derrick Paul', 'uid' => 2007),
+			array('login' => 'scates', 'displayname' => 'Sandra Cates', 'uid' => 2008),
+			array('login' => 'mwhiddon', 'displayname' => 'Marcia Whiddon', 'uid' => 2009),
+			array('login' => 'cholland', 'displayname' => 'Charlotte Holland', 'uid' => 2010),
+			array('login' => 'rbrady', 'displayname' => 'Rosemary Brady', 'uid' => 2011),
+			array('login' => 'jeshelman', 'displayname' => 'Joanie Eshelman', 'uid' => 2012),
+			array('login' => 'hcarpenter', 'displayname' => 'Harriet Carpenter', 'uid' => 2013),
+			array('login' => 'rdavis', 'displayname' => 'Ricardo Davis', 'uid' => 2014)
+		);
+		
+		foreach ($users as $row) {
+			$user = $this->generateUserFromRow($row);
+			$user->setAttribute('password', 'test');
+			$user_on_db = $this->import($user->getAttribute('login'));
+			if (!is_object($user_on_db)) {
+				$ret = $this->add($user);
+				if ($ret !== true) {
+					Logger::error('main', 'UserDB::sql::populate failed to add user \''.$user->getAttribute('login').'\'');
+				}
+			}
+		}
+		return true;
+	}
+	
 	public static function init($prefs_) {
 		Logger::debug('main', 'USERDB::sql::init');
 		$sql_conf = $prefs_->get('general', 'sql');

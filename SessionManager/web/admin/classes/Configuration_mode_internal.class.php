@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +28,7 @@ class Configuration_mode_internal extends Configuration_mode {
   }
 
   public function careAbout($userDB) {
-    return in_array($userDB, array('fake', 'sql'));
+    return in_array($userDB, array('sql'));
   }
 
   public function has_change($oldprefs, $newprefs) {
@@ -38,12 +39,6 @@ class Configuration_mode_internal extends Configuration_mode {
   }
 
   public function form_valid($form) {
-    if (! isset($form['user']))
-      return False;
-
-    if (! in_array($form['user'], array('fake', 'sql')))
-      return False;
-
 	if (! in_array($form['homedir'], array('local', 'dav')))
 		return False;
 
@@ -52,7 +47,7 @@ class Configuration_mode_internal extends Configuration_mode {
 
   public function form_read($form, $prefs) {
     // Select Module as UserDB
-    $prefs->set('UserDB', 'enable', $form['user']);
+    $prefs->set('UserDB', 'enable', 'sql');
 
 
     // Select Module for UserGroupDB
@@ -70,7 +65,6 @@ class Configuration_mode_internal extends Configuration_mode {
     $form = array();
     $config = $prefs->get('UserDB', 'enable');
 
-    $form['user'] = ($config == 'sql')?'sql':'fake';
 	$form['homedir']  = $prefs->get('plugins', 'FS');
     return $form;
   }
@@ -80,19 +74,6 @@ class Configuration_mode_internal extends Configuration_mode {
 
     $str.= '<div class="section">';
     $str.= _('This is the default Profile manager. This profile manager saves all the data into a the same SQL database as you defined it in the system configuration.');
-    $str.= '</div>';
-
-    $str.= '<div class="section">';
-    $str.= '<h3>'._('Users').'</h3>';
-    $str.= '<input class="input_radio" type="radio" name="user" value="fake"';
-    if ($form['user'] == 'fake')
-      $str.= ' checked="checked"';
-    $str.= '/>'._('Use a static user list (useful for test)');
-    $str.= '<br/>';
-    $str.= '<input class="input_radio" type="radio" name="user" value="sql"';
-    if ($form['user'] == 'sql')
-      $str.= ' checked="checked"';
-    $str.= '/>'._('I want to create my own users');
     $str.= '</div>';
 
 	$str.= '<div class="section">';
@@ -121,8 +102,6 @@ class Configuration_mode_internal extends Configuration_mode {
     $str = '';
     if ($config == 'sql')
       $str.= _('Use a dynamic internal user list');
-    else
-      $str.= _('Use the static user list');
 
     return $str;
   }

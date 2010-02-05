@@ -30,7 +30,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -395,6 +395,17 @@ if ($_REQUEST['name'] == 'User') {
 		
 		popup_info(sprintf(_("User '%s' successfully modified"), $u->getAttribute('login')));
 		redirect('users.php?action=manage&id='.$u->getAttribute('login'));
+	}
+	
+	if ($_REQUEST['action'] == 'populate') {
+		$ret = $userDB->populate();
+		if ($ret) {
+			popup_info(_('User database populated.'));
+		}
+		else {
+			popup_error(_('User database population failed.'));
+		}
+		redirect('users.php');
 	}
 }
 

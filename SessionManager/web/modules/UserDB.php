@@ -66,4 +66,8 @@ abstract class UserDB extends Module  {
 	public function getAttributesList() {
 		return array();
 	}
+	public function populate() {
+		// populate with sample users
+		return false;
+	}
 }
