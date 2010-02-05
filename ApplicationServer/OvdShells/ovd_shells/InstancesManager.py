@@ -49,7 +49,9 @@ class InstancesManager(threading.Thread):
 	
 	
 	def run(self):
+		t_init = 0
 		while True:
+			t0 = time.time()
 			job = self.popJob()
 			if job is not None:
 				print "IM got job",job
@@ -70,7 +72,6 @@ class InstancesManager(threading.Thread):
 				
 				buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
 				buf+= struct.pack("<I", token)
-				print "send1",token
 				self.vchannel.Write(buf)
 				
 				self.instances.append((instance, token))
@@ -80,6 +81,14 @@ class InstancesManager(threading.Thread):
 			if job is None and ret is False:
 				time.sleep(0.1)
 			
+					
+			t1 = time.time()
+			t+= (t1 - t0)
+			if t > 5:
+				# We send channel init time to time to manage the reconnection
+				buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
+				self.vchannel.Write(buf)
+				t = 0
 	
 	def stop(self):
 		if self.isAlive():
