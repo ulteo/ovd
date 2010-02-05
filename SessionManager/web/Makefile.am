@@ -1,10 +1,18 @@
-SUBDIRS = ajax webservices media plugins modules \
-          admin applet includes classes \
-		  PEAR events
+SUBDIRS = admin \
+          ajax \
+          applet \
+          classes \
+          events
+          includes \
+          media \
+          modules \
+          PEAR \
+          plugins \
+          webservices \
 
-scripts_DATA = footer.php header.php \
-               startsession.php index.php \
-               check.php webdav.php
+scripts_DATA = check.php \
+               startsession.php \
+               webdav.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager
 
