@@ -75,6 +75,11 @@ def main():
 		elif o in ("-p", "--pid-file"):
 			pidFile = a
 	
+	if len(args) > 0:
+		print >> sys.stderr, "Invalid argument '%s'"%(args[0])
+		usage()
+		sys.exit(2)
+	
 	if not Config.read(config_file):
 		print >> sys.stderr, "invalid configuration file '%s'"%(config_file)
 		sys.exit(1)
