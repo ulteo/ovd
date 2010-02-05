@@ -174,7 +174,7 @@ class UserDB_sql extends UserDB  {
 	}
 	
 	public static function isDefault() {
-		return false;
+		return true;
 	}
 
 	public function getAttributesList() {
