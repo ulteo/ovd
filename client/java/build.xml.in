@@ -36,6 +36,7 @@
     <target name="rdesktop" depends="clean,precompile" description="compile the Java source code to class files">
       <javac srcdir="./src;./src1.4"
              destdir="classes"
+             encoding="UTF8"
              target="1.5"
              source="1.5"
              classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;"
@@ -67,8 +68,13 @@
      <!-- Integrated client part -->
 
      <target name="integrated" depends="clean,precompile">
-         <javac srcdir="./src;./src1.4" destdir="classes" target="1.5" source="1.5" classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar"
-                includes="org/ulteo/ovd/integrated/Client.java"/> 
+         <javac srcdir="./src;./src1.4"
+                destdir="classes"
+                encoding="UTF8"
+                target="1.5"
+                source="1.5"
+                classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar"
+                includes="org/ulteo/ovd/integrated/Client.java"/>
 
          <jar destfile="libs/UlteoOVDIntegratedClient.jar" basedir="classes/">
              <include name="**"/>
@@ -101,6 +107,7 @@
      <target name="standalone" depends="clean,precompile">
        <javac srcdir="./src;./src1.4" 
               destdir="classes"
+              encoding="UTF8"
               target="1.5" 
               source="1.5" 
               classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
@@ -139,6 +146,7 @@
     <target name="applet" description="sign applets"  depends="clean,precompile" >
         <javac srcdir="./src;./src1.4" 
                destdir="classes"
+               encoding="UTF8"
                target="1.5" 
                source="1.5" 
                classpath="${java.home}/lib/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
