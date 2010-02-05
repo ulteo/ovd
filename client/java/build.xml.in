@@ -167,17 +167,17 @@
         <signjar jar="libs/UlteoOVD.jar"
                  alias="ulteo"
                  storepass="${keystore.password}"
-                 keystore="${build.cert}/.keystore"
+                 keystore="${build.cert}/keystore"
                  signedjar="libs/ulteo-applet-${compile.release}.jar"/>
         <signjar jar="required_libraries/log4j-1.2.jar"
                  alias="ulteo"
                  storepass="${keystore.password}"
-                 keystore="${build.cert}/.keystore"
+                 keystore="${build.cert}/keystore"
                  signedjar="libs/log4j-signed.jar"/>
         <signjar jar="required_libraries/gnu-getopt.jar"
                  alias="ulteo"
                  storepass="${keystore.password}"
-                 keystore="${build.cert}/.keystore"
+                 keystore="${build.cert}/keystore"
                  signedjar="libs/getopt-signed.jar"/>
     </target>
 
