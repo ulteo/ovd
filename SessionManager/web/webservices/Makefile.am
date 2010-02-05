@@ -1,14 +1,12 @@
 SUBDIRS =  admin
 
-scripts_DATA =  apps.php \
-                configuration.php \
+scripts_DATA =  configuration.php \
                 domain.php \
                 icon.php \
                 get_logo.php \
                 get_news.php \
                 server_monitoring.php \
                 server_name.php \
-                servers.php \
                 session_token.php \
                 session_status.php \
                 server_status.php \
