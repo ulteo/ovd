@@ -506,7 +506,6 @@ foreach (array($session->server) as $server) {
 		$application_node->setAttribute('id', $application->getAttribute('id'));
 		$application_node->setAttribute('name', $application->getAttribute('name'));
 		$application_node->setAttribute('server', $server->getAttribute('external_name'));
-		$application_node->setAttribute('command', $application->getAttribute('executable_path'));
 		foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
 			if ($mimetype == '')
 				continue;
