@@ -2,7 +2,7 @@ SUBDIRS = admin \
           ajax \
           applet \
           classes \
-          events
+          events \
           includes \
           media \
           modules \
