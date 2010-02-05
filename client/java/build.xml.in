@@ -227,6 +227,15 @@
         <copy todir="${tar.dir}/src">
             <fileset dir="src" />
         </copy>
+        <mkdir dir="${tar.dir}/src1.4" />
+        <copy todir="${tar.dir}/src1.4">
+            <fileset dir="src1.4" />
+        </copy>
+
+        <mkdir dir="${tar.dir}/keymaps" />
+        <copy todir="${tar.dir}/keymaps">
+            <fileset dir="keymaps" />
+        </copy>
 
         <tar longfile="gnu" tarfile="${tar}" basedir="./"
              includes="${tar.dir}/**" />
