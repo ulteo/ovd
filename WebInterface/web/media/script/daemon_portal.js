@@ -40,11 +40,10 @@ var Portal = Class.create(Daemon, {
 
 	connect_servers: function() {
 		if (! $('ulteoapplet').isActive()) {
-			alert('Applet not ready, LOOP <3');
 			setTimeout(this.connect_servers.bind(this), 1000);
 			return;
 		}
-		alert('Applet ready, YOUPIII !');
+
 		var servers = this.servers.values();
 		for (var i=0; i < servers.length; i++)
 			servers[i].connect();
@@ -58,7 +57,7 @@ var Portal = Class.create(Daemon, {
 		this.list_servers();
 		this.list_apps();
 
-		this.connect_servers();
+		setTimeout(this.connect_servers.bind(this), 1000);
 	},
 
 	parse_do_started: function(transport) {
@@ -102,7 +101,7 @@ var Portal = Class.create(Daemon, {
 
 		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
-				var server = new Server(serverNodes[i].getAttribute('fqdn'), i, serverNodes[i].getAttribute('fqdn'), 3389, this.session_login, this.session_password);
+				var server = new Server(serverNodes[i].getAttribute('fqdn'), i, serverNodes[i].getAttribute('fqdn'), 3389, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
 				this.servers.set(server.id, server);
 				this.liaison_server_applications.set(server.id, new Array());
 			} catch(e) {

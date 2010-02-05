@@ -20,8 +20,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-
-$_SESSION['session'] = $_POST['session_id'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -48,9 +46,15 @@ $_SESSION['session'] = $_POST['session_id'];
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<script type="text/javascript" src="media/script/daemon_<?php echo $_POST['session_mode']; ?>.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_<?php echo $_SESSION['session_mode']; ?>.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<?php
+			if ($_SESSION['session_mode'] == 'portal') {
+		?>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<?php
+			}
+		?>
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
@@ -61,10 +65,10 @@ $_SESSION['session'] = $_POST['session_id'];
 					$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
 				}
 
-				if ($('<?php echo $_POST['session_mode']; ?>ModeContainer'))
-					$('<?php echo $_POST['session_mode']; ?>ModeContainer').hide();
-				if ($('<?php echo $_POST['session_mode']; ?>AppletContainer'))
-					$('<?php echo $_POST['session_mode']; ?>AppletContainer').hide();
+				if ($('<?php echo $_SESSION['session_mode']; ?>ModeContainer'))
+					$('<?php echo $_SESSION['session_mode']; ?>ModeContainer').hide();
+				if ($('<?php echo $_SESSION['session_mode']; ?>AppletContainer'))
+					$('<?php echo $_SESSION['session_mode']; ?>AppletContainer').hide();
 				if ($('splashContainer'))
 					$('splashContainer').show();
 			});
@@ -74,13 +78,8 @@ $_SESSION['session'] = $_POST['session_id'];
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo strtoupper(substr($_POST['session_mode'], 0, 1)).substr($_POST['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
-				daemon.access_id = '<?php echo $_POST['session_mode']; ?>';
-
-				daemon.session_id = '<?php echo $_POST['session_id']; ?>';
-				daemon.session_server = '<?php echo $_POST['session_server']; ?>';
-				daemon.session_login = '<?php echo $_POST['session_login']; ?>';
-				daemon.session_password = '<?php echo $_POST['session_password']; ?>';
+				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
+				daemon.access_id = '<?php echo $_SESSION['session_mode']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
 				daemon.i18n['session_end_ok'] = '<?php echo str_replace("'", "\'", _('Your session has ended, you can now close the window')); ?>';
@@ -157,7 +156,7 @@ $_SESSION['session'] = $_POST['session_id'];
 							<img src="media/image/ulteo.png" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 60%;" class="title centered">
-							<h1><?php printf(_('Welcome %s!'), $_POST['session_displayname']); ?></h1>
+							<h1><?php printf(_('Welcome %s!'), $_SESSION['session_displayname']); ?></h1>
 						</td>
 						<td style="text-align: right; padding-left: 5px; padding-right: 10px; border-bottom: 1px solid #ccc;">
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">

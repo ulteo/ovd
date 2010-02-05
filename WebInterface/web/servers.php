@@ -21,5 +21,52 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+function return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	return $dom->saveXML();
+}
+
 header('Content-Type: text/xml; charset=utf-8');
-die(query_url(SESSIONMANAGER_URL.'/webservices/servers.php?session='.$_SESSION['session']));
+
+$dom = new DomDocument('1.0', 'utf-8');
+$buf = @$dom->loadXML($_SESSION['xml']);
+if (! $buf) {
+	echo return_error(0, 'Invalid XML');
+	die();
+}
+
+if (! $dom->hasChildNodes()) {
+	echo return_error(0, 'Invalid XML');
+	die();
+}
+
+$servers = array();
+$server_nodes = $dom->getElementsByTagName('server');
+foreach ($server_nodes as $server_node) {
+	$servers[] = array(
+		'fqdn'		=>	$server_node->getAttribute('fqdn'),
+		'login'		=>	$server_node->getAttribute('login'),
+		'password'	=>	$server_node->getAttribute('password')
+	);
+}
+
+$dom = new DomDocument('1.0', 'utf-8');
+
+$servers_node = $dom->createElement('servers');
+foreach ($servers as $server) {
+	$server_node = $dom->createElement('server');
+	$server_node->setAttribute('fqdn', $server['fqdn']);
+	$server_node->setAttribute('login', $server['login']);
+	$server_node->setAttribute('password', $server['password']);
+	$servers_node->appendChild($server_node);
+}
+$dom->appendChild($servers_node);
+
+$xml = $dom->saveXML();
+
+echo $xml;
+die();

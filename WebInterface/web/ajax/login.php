@@ -67,7 +67,51 @@ $user_node->setAttribute('password', $_POST['password']);
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
-$ret = query_url_post_xml(SESSIONMANAGER_URL.'/startsession.php', $dom->saveXML());
+$xml = query_url_post_xml(SESSIONMANAGER_URL.'/startsession.php', $dom->saveXML());
 
-echo $ret;
+$dom = new DomDocument('1.0', 'utf-8');
+$buf = @$dom->loadXML($xml);
+if (! $buf) {
+	echo return_error(0, 'Invalid XML');
+	die();
+}
+
+if (! $dom->hasChildNodes()) {
+	echo return_error(0, 'Invalid XML');
+	die();
+}
+
+$session_node = $dom->getElementsByTagName('session');
+if (count($session_node) != 1) {
+	echo return_error(1, 'Invalid XML: No session node');
+	die();
+}
+$session_node = $session_node->item(0);
+if (! is_object($session_node)) {
+	echo return_error(1, 'Invalid XML: No session node');
+	die();
+}
+$_SESSION['session_mode'] = $session_node->getAttribute('mode');
+
+$user_node = $session_node->getElementsByTagName('user');
+if (count($user_node) != 1) {
+	echo return_error(2, 'Invalid XML: No user node');
+	die();
+}
+$user_node = $user_node->item(0);
+if (! is_object($user_node)) {
+	echo return_error(2, 'Invalid XML: No user node');
+	die();
+}
+$_SESSION['session_displayname'] = $user_node->getAttribute('displayName');
+
+$server_nodes = $session_node->getElementsByTagName('server');
+if (count($server_nodes) < 1) {
+	echo return_error(3, 'Invalid XML: No server node');
+	die();
+}
+
+$_SESSION['xml'] = $xml;
+
+echo $_SESSION['xml'];
 die();

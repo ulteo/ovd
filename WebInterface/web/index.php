@@ -73,11 +73,6 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 							<td style="text-align: center; vertical-align: middle;">
 								<div id="loginForm" style="width: 90%; margin-left: auto; margin-right: 0px; padding: 10px; background: #eee;" class="rounded">
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession($('user_login').value, $('user_password').value, $('session_mode').value);">
-										<input type="hidden" id="session_id" name="session_id" value="" />
-										<input type="hidden" id="session_displayname" name="session_displayname" value="" />
-										<input type="hidden" id="session_server" name="session_server" value="" />
-										<input type="hidden" id="session_login" name="session_login" value="" />
-										<input type="hidden" id="session_password" name="session_password" value="" />
 										<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">

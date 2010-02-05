@@ -53,8 +53,7 @@ function onStartSessionSuccess(transport) {
 	if (buffer.length == 1) {
 		try {
 			showError(buffer[0].getAttribute('message'));
-		} catch(e) {
-		}
+		} catch(e) {}
 		enableLogin();
 		return false;
 	}
@@ -64,28 +63,6 @@ function onStartSessionSuccess(transport) {
 		enableLogin();
 		return false;
 	}
-	session = buffer[0];
-
-	var buffer = session.getElementsByTagName('user');
-	if (buffer.length != 1) {
-		enableLogin();
-		return false;
-	}
-	user = buffer[0];
-
-	var buffer = session.getElementsByTagName('server');
-	if (buffer.length != 1) {
-		enableLogin();
-		return false;
-	}
-	server = buffer[0];
-
-	$('session_id').value = session.getAttribute('id');
-	$('session_mode').value = session.getAttribute('mode');
-	$('session_displayname').value = user.getAttribute('displayName');
-	$('session_server').value = server.getAttribute('fqdn');
-	$('session_login').value = server.getAttribute('login');
-	$('session_password').value = server.getAttribute('password');
 
 	$('user_password').value = '';
 	enableLogin();

@@ -21,5 +21,52 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+function return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	return $dom->saveXML();
+}
+
 header('Content-Type: text/xml; charset=utf-8');
-die(query_url(SESSIONMANAGER_URL.'/webservices/apps.php?session='.$_SESSION['session']));
+
+$dom = new DomDocument('1.0', 'utf-8');
+$buf = @$dom->loadXML($_SESSION['xml']);
+if (! $buf) {
+	echo return_error(0, 'Invalid XML');
+	die();
+}
+
+if (! $dom->hasChildNodes()) {
+	echo return_error(0, 'Invalid XML');
+	die();
+}
+
+$apps = array();
+$app_nodes = $dom->getElementsByTagName('application');
+foreach ($app_nodes as $app_node) {
+	$apps[] = array(
+		'id'		=>	$app_node->getAttribute('id'),
+		'name'		=>	$app_node->getAttribute('name'),
+		'server'	=>	$app_node->getAttribute('server')
+	);
+}
+
+$dom = new DomDocument('1.0', 'utf-8');
+
+$applications_node = $dom->createElement('applications');
+foreach ($apps as $app) {
+	$application_node = $dom->createElement('application');
+	$application_node->setAttribute('id', $app['id']);
+	$application_node->setAttribute('name', $app['name']);
+	$application_node->setAttribute('server', $app['server']);
+	$applications_node->appendChild($application_node);
+}
+$dom->appendChild($applications_node);
+
+$xml = $dom->saveXML();
+
+echo $xml;
+die();
