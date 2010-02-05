@@ -353,7 +353,7 @@ if ($_REQUEST['name'] == 'User') {
 		
 		$res = $userDB->add($u);
 		if (! $res)
-			die_error(sprintf(_("Unable to create user '%s'",$_REQUEST['login'])), __FILE__, __LINE__);
+			die_error(sprintf(_("Unable to create user '%s'"),$_REQUEST['login']), __FILE__, __LINE__);
 		
 		popup_info(sprintf(_("User '%s' successfully added"), $u->getAttribute('login')));
 		redirect('users.php');
