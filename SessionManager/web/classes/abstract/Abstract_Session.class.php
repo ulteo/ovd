@@ -37,6 +37,7 @@ class Abstract_Session {
 			'settings'			=>	'text NOT NULL',
 			'user_login'		=>	'varchar(255) NOT NULL',
 			'user_displayname'	=>	'varchar(255) NOT NULL',
+			'servers'			=>	'text NOT NULL',
 			'applications'		=>	'text NOT NULL',
 			'start_time'		=>	'varchar(255) NOT NULL',
 			'timestamp'			=>	'int(10) NOT NULL'
@@ -74,7 +75,7 @@ class Abstract_Session {
 
 		$id = $id_;
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9 FROM @10 WHERE @11 = %12 LIMIT 1', 'server', 'mode', 'type', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9,@10 FROM @11 WHERE @12 = %13 LIMIT 1', 'server', 'mode', 'type', 'status', 'settings', 'user_login', 'user_displayname', 'servers', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
@@ -95,6 +96,7 @@ class Abstract_Session {
 		$buf->settings = unserialize($settings);
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
+		$buf->servers = unserialize($servers);
 		$buf->applications = unserialize($applications);
 		$buf->start_time = (string)$start_time;
 
@@ -117,7 +119,7 @@ class Abstract_Session {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21 WHERE @22 = %23 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.'sessions', 'server', $session_->server, 'mode', $session_->mode, 'type', $session_->type, 'status', $session_->status, 'settings', serialize($session_->settings), 'user_login', $session_->user_login, 'user_displayname', $session_->user_displayname, 'servers', serialize($session_->servers), 'applications', serialize($session_->applications), 'start_time', $session_->start_time, 'timestamp', time(), 'id', $id);
 
 		return true;
 	}
@@ -139,7 +141,8 @@ class Abstract_Session {
 
 		$SQL->DoQuery('INSERT INTO @1 (@2) VALUES (%3)', $SQL->prefix.'sessions', 'id', $id);
 
-		Abstract_Liaison::save('ServerSession', $session_->server, $session_->id);
+		foreach ($session_->servers as $server)
+			Abstract_Liaison::save('ServerSession', $server, $session_->id);
 
 		if (isset($session_->settings['windows_server']))
 			Abstract_Liaison::save('ServerSession', $session_->settings['windows_server'], $session_->id);

@@ -212,8 +212,8 @@ if ($sessions > 0) {
 	}
 }
 
-$serv_tmp = $user->getAvailableServers();
-if (count($serv_tmp) == 0) {
+$buf_servers = $user->getAvailableServers();
+if (is_null($buf_servers) || count($buf_servers) == 0) {
 	$ev->setAttribute('ok', false);
 	$ev->setAttribute('error', _('No available server'));
 	$ev->emit();
@@ -221,8 +221,10 @@ if (count($serv_tmp) == 0) {
 	die_error(_('You don\'t have access to a server for now'),__FILE__,__LINE__);
 }
 
-$random_server = array_shift($serv_tmp);
-$random_server = $random_server->fqdn;
+$servers = array();
+foreach ($buf_servers as $buf_server)
+	$servers[] = $buf_server->fqdn;
+$random_server = $servers[0];
 
 /*if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
@@ -244,6 +246,7 @@ $random_server = $random_server->fqdn;
 	$session->status = -1;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
+	$session->servers = $servers;
 
 	$ret = true;
 
@@ -416,8 +419,6 @@ if ($save_token === false) {
 	die_error(_('Internal error'), __FILE__, __LINE__);
 }
 
-$server = Abstract_Server::load($session->server);
-
 $ev->setAttributes(array(
 	'ok'	=> true,
 	'server'	=>	$session->server,
@@ -463,18 +464,24 @@ $dom->appendChild($session_node);
 
 $xml = $dom->saveXML();
 
-$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
-if (! $ret) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
+foreach ($session->servers as $server) {
+	$server = Abstract_Server::load($server);
+	if (! $server)
+		continue;
 
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 1);
-	$node->setAttribute('message', 'Server does not send a valid XML');
-	$dom->appendChild($node);
+	$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
+	if (! $ret) {
+		header('Content-Type: text/xml; charset=utf-8');
+		$dom = new DomDocument('1.0', 'utf-8');
 
-	echo $dom->saveXML();
-	exit(1);
+		$node = $dom->createElement('error');
+		$node->setAttribute('id', 1);
+		$node->setAttribute('message', 'Server does not send a valid XML');
+		$dom->appendChild($node);
+
+		echo $dom->saveXML();
+		exit(1);
+	}
 }
 
 header('Content-Type: text/xml; charset=utf-8');
@@ -486,8 +493,8 @@ $session_node->setAttribute('mode', $session->mode);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
-foreach (array($session->server) as $server) {
-	$server = Abstract_Server::load($session->server);
+foreach ($session->servers as $server) {
+	$server = Abstract_Server::load($server);
 	if (! $server)
 		continue;
 

@@ -31,6 +31,7 @@ class Session {
 	public $user_login = NULL;
 	public $user_displayname = NULL;
 	public $start_time = 0;
+	public $servers = array();
 	public $applications = array();
 
 	public function __construct($id_) {
