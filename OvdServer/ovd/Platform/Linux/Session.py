@@ -39,6 +39,9 @@ class Session(AbstractSession):
 		os.mkdir(os.path.join(d, "matching"))
 		for (app_id, app_target) in self.applications:
 			cmd = ApplicationsDetection.getExec(app_target)
+			if cmd is None:
+				Logger.error("Session::install_client unable to extract command from app_id %s (%s)"%(app_id, app_target))
+				continue
 			f = file(os.path.join(d, "matching", app_id), "w")
 			f.write(cmd)
 			f.close()
