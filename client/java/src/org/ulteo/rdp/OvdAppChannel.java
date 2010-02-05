@@ -64,7 +64,7 @@ public class OvdAppChannel extends VChannel {
 		int instance = 0;
 		switch( order ) {
 			case ORDER_INIT:
-				System.out.println("ovdapp channel init from server");
+				System.out.println("ovdapp channel init");
 				this.channel_open = true;
 
 				for(OvdAppListener listener : this.listener) {

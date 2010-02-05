@@ -259,8 +259,6 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 			System.out.println("got job "+o);
 			
 			if (o instanceof OrderServer) {
-			
-			//if (o.NAME == OrderServer.NAME) {
 				OrderServer order = (OrderServer)o;
 				System.out.println("job "+order.host);
 				
