@@ -63,13 +63,13 @@ var Portal = Class.create(Daemon, {
 	parse_do_started: function(transport) {
 		$('splashContainer').hide();
 
-		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" cache_archive="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" cache_archive_ex="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+';preload" mayscript="true" width="1" height="1"> \
+		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="1" height="1"> \
 			<param name="name" value="ulteoapplet" /> \
 			<param name="code" value="'+this.applet_main_class+'" /> \
 			<param name="codebase" value="applet/" /> \
-			<param name="archive" value="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" /> \
-			<param name="cache_archive" value="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" /> \
-			<param name="cache_archive_ex" value="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+';preload" /> \
+			<param name="archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
+			<param name="cache_archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
+			<param name="cache_archive_ex" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" /> \
 			<param name="mayscript" value="true" /> \
 		</applet>';
 
