@@ -78,7 +78,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar');
+				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', 'ulteo-printing.jar');
 				daemon.access_id = '<?php echo $_SESSION['session_mode']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';

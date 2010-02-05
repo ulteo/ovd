@@ -25,13 +25,13 @@ var Desktop = Class.create(Daemon, {
 	parse_do_started: function(transport) {
 		$('splashContainer').hide();
 
-		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="org.ulteo.RemoteDesktopApplet" codebase="applet/" archive="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" cache_archive="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" cache_archive_ex="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar;preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
+		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" cache_archive="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" cache_archive_ex="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
 			<param name="name" value="ulteoapplet" /> \
-			<param name="code" value="org.ulteo.RemoteDesktopApplet" /> \
+			<param name="code" value="'+this.applet_main_class+'" /> \
 			<param name="codebase" value="applet/" /> \
-			<param name="archive" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" /> \
-			<param name="cache_archive" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar" /> \
-			<param name="cache_archive_ex" value="getopt-signed.jar,log4j-signed.jar,UlteoRDP-signed.jar;preload" /> \
+			<param name="archive" value="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" /> \
+			<param name="cache_archive" value="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+'" /> \
+			<param name="cache_archive_ex" value="getopt-signed.jar,log4j-signed.jar,'+this.applet_version+';preload" /> \
 			<param name="mayscript" value="true" /> \
 			\
 			<param name="server" value="'+this.session_server+'" /> \
