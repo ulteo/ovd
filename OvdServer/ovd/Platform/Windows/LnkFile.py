@@ -51,9 +51,13 @@ def getTarget(filename):
 	
 	if cmd is None:
 		pythoncom.CoInitialize()
-	
+		
 		shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
-		shortcut.QueryInterface(pythoncom.IID_IPersistFile).Load(filename)
+		try:
+			shortcut.QueryInterface(pythoncom.IID_IPersistFile).Load(filename)
+		except pythoncom.com_error, err:
+			Logger.warn("LnkFile::getTarget: Unable to load file '%s': %s"%(filename, str(err)))
+			return None
 		
 		cmd = "%s %s"%(shortcut.GetPath(0)[0], shortcut.GetArguments())
 	
