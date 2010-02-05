@@ -1,0 +1,3 @@
+EXPORTS
+Java_org_ulteo_ovd_integrated_WindowsPaths_getStartMenuPath
+Java_org_ulteo_ovd_integrated_WindowsPaths_getDesktopPath

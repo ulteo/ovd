@@ -8,7 +8,7 @@
     <property name="compile.deprecation" value="false"/>
     <property name="compile.optimize" value="true"/>
     <property name="compile.version" value="1.5"/>
-    <property name="compile.release" value="0.3.2"/>
+    <property name="compile.release" value="0.5.0"/>
 
     <property name="prefix"      location="/usr/local" />
     <property name="datadir"     location="${prefix}/share" />
@@ -21,83 +21,161 @@
     <property name="tar"     value="${tar.dir}.tar" />
     <property name="tar.gz"  value="${tar}.gz" />
 
-    <target name="compile"
-            description="compile the Java source code to class files">
-        <mkdir dir="classes"/>
-        <mkdir dir="libs"/>
+     <target name="precompile">
+         <mkdir dir="classes"/>
+         <mkdir dir="classes/ressources"/>
+         <mkdir dir="classes/ressources/keymaps"/>
+         <copy todir="classes/ressources/keymaps">
+           <fileset dir="keymaps"/>
+         </copy>
 
-        <!-- 
-            the following 'classpath="${java.home}/lib/plugin.jar"' is
-            needed when using Sun JDK, useless when using OpenJDK 
-         -->
-        <javac srcdir="./src"
+         <mkdir dir="libs"/>
+     </target>
+
+    <!-- Rdesktop part -->
+    <target name="rdesktop" depends="clean,precompile" description="compile the Java source code to class files">
+      <javac srcdir="./src;./src1.4"
+             destdir="classes"
+             target="1.5"
+             source="1.5"
+             classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;"
+             includes="net/propero/rdp/Rdesktop.java"/>
+      <jar destfile="libs/rdesktop.jar" basedir="classes/">
+        <include name="**"/>
+        <manifest>
+          <attribute name="Main-Class" value="net.propero.rdp.Rdesktop"/>
+          <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar"/>
+        </manifest>
+      </jar>
+    </target>
+
+    <target name="rdesktop.install" depends="rdesktop">
+        <mkdir dir="${dist}"/>
+
+        <copy todir="${dist}">
+            <fileset dir="./libs">
+                <include name="rdesktop.jar" />
+            </fileset>
+            <fileset dir="./required_libraries">
+                <include name="gnu-getopt.jar" />
+                <include name="log4j-1.2.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+
+     <!-- Integrated client part -->
+
+     <target name="integrated" depends="clean,precompile">
+         <javac srcdir="./src;./src1.4" destdir="classes" target="1.5" source="1.5" classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar"
+                includes="org/ulteo/ovd/integrated/Client.java"/> 
+
+         <jar destfile="libs/UlteoOVDIntegratedClient.jar" basedir="classes/">
+             <include name="**"/>
+
+             <manifest>
+                 <attribute name="Main-Class" value="org.ulteo.ovd.integrated.Client"/>
+                 <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar jshortcut.jar image4j.jar registry.jar"/>
+             </manifest>
+         </jar>
+     </target>
+
+    <target name="integrated.install" depends="integrated">
+        <mkdir dir="${dist}"/>
+
+        <copy todir="${dist}">
+            <fileset dir="./libs">
+                <include name="UlteoOVDIntegratedClient.jar" />
+            </fileset>
+            <fileset dir="./required_libraries">
+                <include name="gnu-getopt.jar" />
+                <include name="log4j-1.2.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+     
+
+     <!-- Standalone client part -->
+
+     <target name="standalone" depends="clean,precompile">
+       <javac srcdir="./src;./src1.4" 
+              destdir="classes"
+              target="1.5" 
+              source="1.5" 
+              classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
+              includes="org/ulteo/ovd/standalone/Client.java" />
+       
+       <copy todir="classes/ressources">
+         <fileset dir="icons"/>
+       </copy>
+
+       <jar destfile="libs/OVDStandalone.jar"  basedir="classes/">
+         <include name="**" />
+
+         <manifest>
+	   <attribute name="Main-Class" value="org.ulteo.ovd.standalone.Client" />
+	   <attribute name="Class-Path" value="gnu-getopt.jar log4j-1.2.jar"/>
+	 </manifest>
+       </jar>
+     </target>
+
+    <target name="standalone.install" depends="standalone">
+        <mkdir dir="${dist}"/>
+
+        <copy todir="${dist}">
+            <fileset dir="./libs">
+                <include name="OVDStandalone.jar" />
+            </fileset>
+            <fileset dir="./required_libraries">
+                <include name="gnu-getopt.jar" />
+                <include name="log4j-1.2.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+
+    <!-- Applet part -->
+    <target name="applet" description="sign applets"  depends="clean,precompile" >
+        <javac srcdir="./src;./src1.4" 
                destdir="classes"
-               target="${compile.version}"
-               source="${compile.version}"
-               classpath="${java.home}/lib/plugin.jar"
-               debug="${compile.debug}"
-               optimize="${compile.optimize}"
-               deprecation="${compile.deprecation}" >
-        </javac>
-
-
-        <jar destfile="libs/vncviewer.jar"
-             basedir="classes/">
-            <include name="org/vnc/**"/>
-            <manifest>
-                <attribute name="Main-Class" value="org.vnc.SimpleClient.Viewer"/>
-            </manifest>
-        </jar>
-
-        <jar destfile="libs/sshvnc.jar"
-             basedir="classes/">
-            <include name="com/sshtools/**"/>
-            <exclude name="com/sshtools/j2ssh/sftp" />
-            <include name="org/vnc/*"/>
-            <include name="org/vnc/rfbcaching/*"/>
-            <include name="org/sshvnc/*"/>
-
-            <manifest>
-                <attribute name="Main-Class" value="org.sshvnc.Viewer"/>
-            </manifest>
+               target="1.5" 
+               source="1.5" 
+               classpath="${java.home}/lib/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
+               includes="org/ulteo/ovd/applet/**.java" />
+        
+        <jar destfile="libs/UlteoOVD.jar"  basedir="classes/">
+            <include name="**" />
         </jar>
 
         <jar destfile="libs/CheckJava-${compile.release}.jar"
             basedir="classes/">
-            <include name="org/ulteo/applet/CheckJava.class"/>
+            <include name="org/ulteo/ovd/applet/CheckJava.class"/>
             <manifest>
-                <attribute name="Main-Class" value="org.ulteo.applet.CheckJava"/>
+                <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
             </manifest>
         </jar>
-
-        <jar destfile="libs/UlteoOVD.jar"
-            basedir="classes/">
-            <include name="com/sshtools/**"/>
-            <exclude name="com/sshtools/j2ssh/sftp" />
-            <include name="org/vnc/*"/>
-            <include name="org/vnc/rfbcaching/*"/>
-            <include name="org/sshvnc/*"/>
-            <include name="org/ulteo/**"/>
-            <manifest>
-                <attribute name="Main-Class" value="org.ulteo.OvdClient"/>
-            </manifest>
-        </jar>
-
-    </target>
-
-    <target name="sign"
-            description="sign applets"  depends="compile" >
 
         <signjar jar="libs/UlteoOVD.jar"
                  alias="ulteo"
                  storepass="${keystore.password}"
-                 keystore="${build.cert}/keystore"
+                 keystore="${build.cert}/.keystore"
                  signedjar="libs/ulteo-applet-${compile.release}.jar"/>
+        <signjar jar="required_libraries/log4j-1.2.jar"
+                 alias="ulteo"
+                 storepass="${keystore.password}"
+                 keystore="${build.cert}/.keystore"
+                 signedjar="libs/log4j-signed.jar"/>
+        <signjar jar="required_libraries/gnu-getopt.jar"
+                 alias="ulteo"
+                 storepass="${keystore.password}"
+                 keystore="${build.cert}/.keystore"
+                 signedjar="libs/getopt-signed.jar"/>
     </target>
 
-    <target name="install"
+    <target name="applet.install"
             description="install applets"
-            depends="sign">
+            depends="applet">
         <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
 
         <copy todir="${destdir}${datadir}/ulteo/applets">
@@ -123,8 +201,17 @@
         </copy>
         <symlink link="${destdir}${datadir}/ulteo/applets/ulteo-printing.jar"
                  resource="ulteo-printing-0.5.1.jar"/>
+
+        <copy todir="${destdir}${datadir}/ulteo/applets">
+            <fileset dir="./required_libraries">
+                <include name="gnu-getopt.jar" />
+                <include name="log4j-1.2.jar" />
+            </fileset>
+        </copy>
     </target>
 
+
+    <!-- Source tarball part (not working at the moment -->
     <target name="dist" description="create a source tarball">
         <mkdir dir="${tar.dir}" />
         <copy todir="${tar.dir}">
@@ -148,6 +235,7 @@
         <delete file="${tar}" />
         <delete dir="${tar.dir}" />
     </target>
+
     <target name="clean" description="clean files">
         <delete dir="classes"/>
         <delete dir="libs"/>

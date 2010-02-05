@@ -1,0 +1,53 @@
+/*
+ * Copyright (C) 2009 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+package org.ulteo.ovd.integrated.shorcut;
+
+import java.io.File;
+import net.jimmc.jshortcut.JShellLink;
+import org.ulteo.ovd.Application;
+import org.ulteo.ovd.integrated.Constants;
+
+public class WindowsShortcut extends Shortcut {
+
+	@Override
+	public void create(Application app) {
+		JShellLink shortcut = new JShellLink(Constants.desktopPath, app.getName());
+		shortcut.setWorkingDirectory("");
+		shortcut.setPath(System.getProperty("user.dir")+Constants.separator+Constants.launcher);
+		shortcut.setArguments(""+app.getId());
+		shortcut.setIconLocation(Constants.iconsPath+Constants.separator+app.getId()+".ico");
+		shortcut.setIconIndex(0);
+		shortcut.save();
+		shortcut.setFolder(Constants.startmenuPath);
+		shortcut.save();
+	}
+
+	@Override
+	public void remove(Application app) {
+		File shortcut = new File(Constants.desktopPath+Constants.separator+app.getName()+".lnk");
+		if (shortcut.exists())
+			shortcut.delete();
+
+		shortcut = new File(Constants.startmenuPath+Constants.separator+app.getName()+".lnk");
+		if (shortcut.exists())
+			shortcut.delete();
+	}
+}
