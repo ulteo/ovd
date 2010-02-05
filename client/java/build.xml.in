@@ -210,8 +210,7 @@
         </copy>
     </target>
 
-
-    <!-- Source tarball part (not working at the moment -->
+    <!-- Source tarball part -->
     <target name="dist" description="create a source tarball">
         <mkdir dir="${tar.dir}" />
         <copy todir="${tar.dir}">
