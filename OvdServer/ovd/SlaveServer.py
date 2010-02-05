@@ -65,13 +65,13 @@ class SlaveServer:
 		try:
 			self.dialog.initialize()
 		except Exception, e:
-			Logger.error("SlaveServer: unable to initializa dialog class %s"%(str(e)))
+			Logger.error("SlaveServer: unable to initialize dialog class %s"%(str(e)))
 			return False
 		
 		self.updateMonitoring()
 		
 		if not self.communication.initialize():
-			Logger.error("SlaveServer: unable to initializa communication class")
+			Logger.error("SlaveServer: unable to initialize communication class")
 			return False
 		
 		self.threads.append(threading.Thread(target=self.communication.run))
@@ -81,7 +81,7 @@ class SlaveServer:
 			try:
 				role.init()
 			except Exception, e:
-				Logger.error("SlaveServer: unable to initializa role '%s' %s"%(role.getName(), str(e)))
+				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
 				
 			self.threads.append(threading.Thread(target=role.run))
