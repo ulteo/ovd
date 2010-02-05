@@ -182,7 +182,6 @@ web/admin/media/Makefile
 web/admin/includes/Makefile
 web/admin/classes/Makefile
 web/admin/Makefile
-web/applet/Makefile
 web/includes/Makefile
 web/includes/functions.inc.d/Makefile
 web/classes/Makefile

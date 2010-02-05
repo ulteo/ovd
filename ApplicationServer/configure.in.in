@@ -203,7 +203,6 @@ web/media/script/lib/scriptaculous/Makefile
 web/media/script/lib/nifty/Makefile
 web/media/script/lib/Makefile
 web/media/Makefile
-web/applet/Makefile
 web/includes/Makefile
 web/classes/Makefile
 web/Makefile
