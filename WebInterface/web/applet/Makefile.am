@@ -1,9 +1,5 @@
-scripts_DATA = getopt-signed.jar \
-               log4j-signed.jar \
-               OVDapplet.jar \
-               ulteo-printing.jar \
-               UlteoRDP-signed.jar
+install-exec-hook:
+	ln -sf $(DESTDIR)$(datadir)/ulteo/applet $(DESTDIR)$(datadir)/ulteo/webinterface/applet
 
-scriptsdir = $(datadir)/ulteo/webinterface/applet
-
-EXTRA_DIST = $(scripts_DATA)
+uninstall-hook:
+	rm -rf $(DESTDIR)$(datadir)/ulteo/webinterface/applet
