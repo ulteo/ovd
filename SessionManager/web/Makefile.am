@@ -8,7 +8,7 @@ SUBDIRS = admin \
           modules \
           PEAR \
           plugins \
-          webservices \
+          webservices
 
 scripts_DATA = check.php \
                startsession.php \
