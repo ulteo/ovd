@@ -34,34 +34,6 @@ if (isset($_REQUEST['action'])) {
 		if (isset($_REQUEST['id']))
 			show_manage($_REQUEST['id'], $applicationDB);
 	}
-
-	if (! checkAuthorization('manageApplications'))
-			redirect();
-
-	if ($_REQUEST['action'] == 'modify' && $applicationDB->isWriteable()) {
-		if (isset($_REQUEST['id'])) {
-			modify_application($applicationDB, $_REQUEST['id'], $_POST, $_FILES);
-			redirect();
-		}
-	}
-	elseif ($_REQUEST['action'] == 'add' && $applicationDB->isWriteable()) {
-		add_application($applicationDB, $_POST);
-		redirect();
-	}
-	elseif ($_REQUEST['action'] == 'del' && $applicationDB->isWriteable()) {
-		if (isset($_REQUEST['id']))
-			del_application($applicationDB, $_REQUEST['id']);
-		redirect();
-	}
-}
-
-if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'delete') {
-	if (isset($_REQUEST['manage_static_applications']) && is_array($_REQUEST['manage_static_applications'])) {
-		foreach ($_REQUEST['manage_static_applications'] as $app_id)
-			del_application($applicationDB, $app_id);
-	}
-
-	redirect();
 }
 
 if (! isset($_GET['view']))
@@ -116,7 +88,7 @@ function show_default($prefs, $applicationDB) {
 
 			echo '<tr class="'.$content.'">';
 			if (count($applications) > 1 and $is_rw and $can_manage_applications)
-				echo '<td><input class="input_checkbox" type="checkbox" name="manage_static_applications[]" value="'.$app->getAttribute('id').'" /></td>';
+				echo '<td><input class="input_checkbox" type="checkbox" name="checked_applications[]" value="'.$app->getAttribute('id').'" /></td>';
 			echo '<td><img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 			if ($is_rw and $can_manage_applications)
 				echo '<a href="?action=manage&id='.$app->getAttribute('id').'">';
@@ -136,9 +108,10 @@ function show_default($prefs, $applicationDB) {
 
 			if ($can_manage_applications) {
 				echo '<td>';
-				echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+				echo '<input type="hidden" name="name" value="Application_static" />';
 				echo '<input type="hidden" name="action" value="del" />';
-				echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+				echo '<input type="hidden" name="checked_applications[]" value="'.$app->getAttribute('id').'" />';
 				echo '<input type="submit" value="'._('Delete').'" />';
 				echo '</form>';
 				echo '</td>';
@@ -155,8 +128,9 @@ function show_default($prefs, $applicationDB) {
 			echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'applications_list_table\'); return false">'._('Unmark all').'</a>';
 			echo '</td>';
 			echo '<td>';
-			echo '<form action="" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these static applications?').'\');;">';
-			echo '<input type="hidden" name="mass_action" value="delete" />';
+			echo '<form action="actions.php" method="post" onsubmit="return updateMassActionsForm(this, \'applications_list_table\') && confirm(\''._('Are you sure you want to delete these static applications?').'\');;">';
+			echo '<input type="hidden" name="name" value="Application_static" />';
+			echo '<input type="hidden" name="action" value="del" />';
 			echo '<input type="submit" name="delete" value="'._('Delete').'"/>';
 			echo '</form>';
 			echo '</td>';
@@ -197,7 +171,8 @@ function show_default($prefs, $applicationDB) {
 				echo ' style="display: visible" ';
 			echo ' border="0" class="main_sub" cellspacing="1" cellpadding="3" >';
 
-			echo '<form action="" method="post" enctype="multipart/form-data">';
+			echo '<form action="actions.php" method="post" enctype="multipart/form-data">';
+			echo '<input type="hidden" name="name" value="Application_static" />';
 			echo '<input type="hidden" name="action" value="add" />';
 			$count = 0;
 			foreach ($applicationDB->minimun_attributes() as $attr_name) {
@@ -215,11 +190,14 @@ function show_default($prefs, $applicationDB) {
 				else {
 					echo _($attr_name);
 				}
+				if ($attr_name == 'name')
+					$attr_name = 'application_name';
 				echo '</td>';
 				echo '<td>';
 				echo '<input type="text" name="'.$attr_name.'" value="" size="50"/>';
 				echo '</td>';
 				echo '</tr>';
+				echo '<input type="hidden" name="attributes_send[]" value="'.$attr_name.'" />';
 			}
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
@@ -228,14 +206,19 @@ function show_default($prefs, $applicationDB) {
 			echo '</td>';
 			echo '<td>';
 			echo '<input type="text" name="mimetypes" value="" size="50"/>';
+			echo '<input type="hidden" name="attributes_send[]" value="mimetypes" />';
 			echo '</td>';
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td colspan="2">';
 			echo '<input type="submit" value="'._('Add').'" />';
 			echo '<input type="hidden" name="published" value="1" />';
+			echo '<input type="hidden" name="attributes_send[]" value="published" />';
 			echo '<input type="hidden" name="static" value="1" />';
+			echo '<input type="hidden" name="attributes_send[]" value="static" />';
 			echo '<input type="hidden" name="type" value="'.$type.'" />';
+			echo '<input type="hidden" name="attributes_send[]" value="type" />';
+			
 			echo '</td>';
 			echo '</tr>';
 			echo '</form>';
@@ -256,9 +239,12 @@ function show_default($prefs, $applicationDB) {
 			echo '<tr class="'.$content.'">';
 			if ($can_manage_applications) {
 				echo '<form action="actions.php" method="post">';
-				echo '<input type="hidden" name="name" value="default_browser" />';
+				echo '<input type="hidden" name="action" value="Application_static" />';
+				echo '<input type="hidden" name="application_name" value="default_browser" />';
+				echo '<input type="hidden" name="attributes_send[]" value="application_name" />';
 				echo '<input type="hidden" name="action" value="add" />';
 				echo '<input type="hidden" name="type" value="'.$type.'" />';
+				echo '<input type="hidden" name="attributes_send[]" value="type" />';
 			}
 			echo '<td>';
 			echo $type;
@@ -275,6 +261,7 @@ function show_default($prefs, $applicationDB) {
 				echo '>'.$myval->getAttribute('name').'</option>';
 			}
 			echo '</select>';
+			echo '<input type="hidden" name="attributes_send[]" value="browser" />';
 
 			echo '</td>';
 			if ($can_manage_applications) {
@@ -290,97 +277,6 @@ function show_default($prefs, $applicationDB) {
 	echo '</div>'; // general div
 	page_footer();
 	die();
-}
-
-function add_application($applicationDB, $data_) {
-  if (! isset($data_['type']))
-    return false;
-
-  unset($data_['action']);
-  $data_['id'] = 666; // little hack
-  $a = $applicationDB->generateApplicationFromRow($data_);
-  if (! $applicationDB->isOK($a))
-    return false;
-  $a->unsetAttribute('id');
-  return $applicationDB->add($a);
-}
-
-function del_application($applicationDB, $id_) {
-	$app = $applicationDB->import($id_);
-	if (is_object($app)) {
-		Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
-		return $applicationDB->remove($app);
-	}
-	return false;
-}
-
-function modify_application($applicationDB, $id_, $data_, $files_) {
-	unset($data_['action']);
-	$app = $applicationDB->import($id_);
-	if (!is_object($app))
-		return false;
-	$attr_list = $app->getAttributesList();
-	foreach ($data_ as $k => $v) {
-		if (in_array($k, $attr_list)) {
-			$app->setAttribute($k, $v);
-		}
-	}
-	$applicationDB->update($app);
-	if (array_key_exists('file_icon' ,$files_)) {
-		$upload = $files_['file_icon'];
-
-		$have_file = true;
-		if($upload['error']) {
-			switch ($upload['error']) {
-				case 1: // UPLOAD_ERR_INI_SIZE
-					popup_error('Oversized file for server rules');
-					return false;
-					break;
-				case 3: // UPLOAD_ERR_PARTIAL
-					popup_error('The file was corrupted while upload');
-					return false;
-					break;
-				case 4: // UPLOAD_ERR_NO_FILE
-					$have_file = false;
-					break;
-			}
-		}
-
-		if ($have_file) {
-			$source_file = $upload['tmp_name'];
-			if (! is_readable($source_file))
-				die('file is not readable');
-			
-			if ( get_classes_startwith('Imagick') != array()) {
-				
-				$path_rw = $app->getIconPathRW();
-				if (is_writable2($path_rw)) {
-					try {
-						$mypicture = new Imagick();
-						$mypicture->readImage($source_file);
-						$mypicture->scaleImage(32, 0);
-						$mypicture->setImageFileName($app->getIconPathRW());
-						$mypicture->writeImage();
-					}
-					catch (Exception $e) {
-						popup_error('The icon is not an image');
-						return false;
-					}
-				}
-				else {
-					Logger::error('main', 'getIconPathRW ('.$path_rw.') is not writeable');
-					return false;
-				}
-			}
-			else {
-				Logger::info('main', 'No Imagick support found');
-			}
-		}
-	}
-
-	Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
-
-	return true;
 }
 
 function show_manage($id, $applicationDB) {
@@ -443,8 +339,9 @@ function show_manage($id, $applicationDB) {
 	if ($is_rw and $can_manage_applications) {
 		echo '<td>';
 		echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+		echo '<input type="hidden" name="name" value="Application_static" />';
 		echo '<input type="hidden" name="action" value="del" />';
-		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<input type="hidden" name="checked_applications[]" value="'.$app->getAttribute('id').'" />';
 		echo '<input type="submit"  value="'._('Delete').'" />';
 		echo '</form>';
 		echo '</td>';
@@ -459,19 +356,22 @@ function show_manage($id, $applicationDB) {
 		echo '<div id="application_modify">';
 
 		echo '<form id="delete_icon" action="actions.php" method="post" style="display: none;">';
-		echo '<input type="hidden" name="name" value="static_application" />';
-		echo '<input type="hidden" name="action" value="del" />';
-		echo '<input type="hidden" name="attribute" value="icon_file" />';
-		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+		echo '<input type="hidden" name="name" value="Application_static" />';
+		echo '<input type="hidden" name="action" value="del_icon" />';
+		echo '<input type="hidden" name="checked_applications[]" value="'.$app->getAttribute('id').'" />';
 		echo '</form>';
 
-		echo '<form action="" method="post" enctype="multipart/form-data" >'; // form A
+		echo '<form action="actions.php" method="post" enctype="multipart/form-data" >'; // form A
+		echo '<input type="hidden" name="name" value="Application_static" />';
 		echo '<input type="hidden" name="action" value="modify" />';
 		echo '<input type="hidden" name="published" value="1" />';
 		echo '<input type="hidden" name="static" value="1" />';
+		echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
 
 		echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 		$count = 1;
+		$app->setAttribute('application_name', $app->getAttribute('name')); // ugly hack
+		$app->unsetAttribute('name');
 		$attr_list = $app->getAttributesList();
 		foreach ($attr_list as $k => $v) {
 			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'icon_path')))
@@ -494,6 +394,7 @@ function show_manage($id, $applicationDB) {
 			}
 			echo '<td>';
 			echo '<input type="text" name="'.$attr_name.'" value="'.$app->getAttribute($attr_name).'" style="with:100%;"/>';
+			echo '<input type="hidden" name="attributes_send[]" value="'.$attr_name.'" />';
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -503,6 +404,8 @@ function show_manage($id, $applicationDB) {
 			echo '<tr class="'.$content.'">';
 			echo '<td>'._('Icon').'</td>';
 			echo '<td>';
+			echo "getIconPath ".$app->getIconPath()."<br>";
+			echo "getDefaultIconPath ".$app->getDefaultIconPath()."<br>";
 			if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
 				echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 				echo '<input type="button" value="'._('Delete this icon').'" onclick="return confirm(\''._('Are you sure you want to delete this icon?').'\') && $(\'delete_icon\').submit();"/>';

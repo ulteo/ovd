@@ -21,6 +21,7 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+
 if (!isset($_SERVER['HTTP_REFERER']))
 	redirect('index.php');
 
@@ -30,7 +31,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate', 'publish')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate', 'publish', 'del_icon')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -115,7 +116,11 @@ if ($_REQUEST['name'] == 'Application') {
 	if ($_REQUEST['action'] == 'del') {
 		if (isset($_REQUEST['id'])) {
 			$app = $applicationDB->import($_REQUEST['id']);
-			$applicationDB->remove($app);
+			$ret = $applicationDB->remove($app);
+			if (! $ret) {
+				popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
+			}
+			popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
 		}
 	}
 	
@@ -135,6 +140,162 @@ if ($_REQUEST['name'] == 'Application') {
 				}
 			}
 			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
+		}
+	}
+}
+
+if ($_REQUEST['name'] == 'Application_static') {
+	if (! checkAuthorization('manageApplications'))
+		redirect();
+	
+	$applicationDB = ApplicationDB::getInstance();
+	if (! $applicationDB->isWriteable()) {
+		die_error(_('ApplicationDB is not writeable'),__FILE__,__LINE__);
+	}
+	
+	if ($_REQUEST['action'] == 'add') {
+		Logger::critical('main', '100');
+		if (isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send'])) {
+			$data = array();
+			foreach ($_REQUEST['attributes_send'] as $attrib_name) {
+				if (isset($_REQUEST[$attrib_name]))
+					$data[$attrib_name] = $_REQUEST[$attrib_name];
+			}
+			
+			$data['id'] = 666; // little hack
+			if (isset($data['application_name'])) {
+				$data['name'] = $data['application_name'];
+				unset($data['application_name']);
+			}
+			
+			$a = $applicationDB->generateApplicationFromRow($data);
+			
+			if (! $applicationDB->isOK($a)) {
+				popup_error(_("Application is not ok"));
+			}
+			$a->unsetAttribute('id');
+			
+			$ret = $applicationDB->add($a);
+			if (! $ret) {
+				popup_error(sprintf(_("Failed to add application '%s'"), $a->getAttribute('name')));
+			}
+			
+			popup_info(sprintf(_("Application '%s' successfully added"), $a->getAttribute('name')));
+			redirect('applications_static.php?action=manage&id='.$a->getAttribute('id'));
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_applications']) && is_array($_REQUEST['checked_applications'])) {
+			foreach ($_REQUEST['checked_applications'] as $id) {
+				$app = $applicationDB->import($id);
+				if (! is_object($app)) {
+					die_error(sprintf(_("Unable to import application '%s'"), $id), __FILE__, __LINE__);
+				}
+				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
+				$ret = $applicationDB->remove($app);
+				if (! $ret) {
+					popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
+				}
+				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
+			}
+			redirect('applications_static.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del_icon') {
+		if (isset($_REQUEST['checked_applications']) && is_array($_REQUEST['checked_applications'])) {
+			foreach ($_REQUEST['checked_applications'] as $id) {
+				$app = $applicationDB->import($id);
+				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
+				$app->delIcon();
+				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
+				redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
+			}
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		if (isset($_REQUEST['id']) && isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send'])) {
+			$data = array();
+			foreach ($_REQUEST['attributes_send'] as $attrib_name) {
+				if (isset($_REQUEST[$attrib_name]))
+					$data[$attrib_name] = $_REQUEST[$attrib_name];
+			}
+			
+			if (isset($data['application_name'])) {
+				$data['name'] = $data['application_name'];
+				unset($data['application_name']);
+			}
+			
+			$app = $applicationDB->import($_REQUEST['id']);
+			if (!is_object($app)) {
+				die_error(sprintf(_("Unable to import application '%s'"), $_REQUEST['id']), __FILE__, __LINE__);
+			}
+			
+			$attr_list = $app->getAttributesList();
+			foreach ($data as $k => $v) {
+				if (in_array($k, $attr_list)) {
+					$app->setAttribute($k, $v);
+				}
+			}
+			$ret = $applicationDB->update($app);
+			if (! $ret) {
+				popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
+			}
+			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
+			
+			if (array_key_exists('file_icon', $_FILES)) {
+				$upload = $_FILES['file_icon'];
+		
+				$have_file = true;
+				if($upload['error']) {
+					switch ($upload['error']) {
+						case 1: // UPLOAD_ERR_INI_SIZE
+							popup_error('Oversized file for server rules');
+							die();
+							break;
+						case 3: // UPLOAD_ERR_PARTIAL
+							popup_error('The file was corrupted while upload');
+							die();
+							break;
+						case 4: // UPLOAD_ERR_NO_FILE
+							$have_file = false;
+							break;
+					}
+				}
+				
+				if ($have_file) {
+					$source_file = $upload['tmp_name'];
+					if (! is_readable($source_file))
+						die('file is not readable');
+					
+					if ( get_classes_startwith('Imagick') != array()) {
+						
+						$path_rw = $app->getIconPathRW();
+						if (is_writable2($path_rw)) {
+							try {
+								$mypicture = new Imagick();
+								$mypicture->readImage($source_file);
+								$mypicture->scaleImage(32, 0);
+								$mypicture->setImageFileName($app->getIconPathRW());
+								$mypicture->writeImage();
+							}
+							catch (Exception $e) {
+								popup_error('The icon is not an image');
+								die();
+							}
+						}
+						else {
+							Logger::error('main', 'getIconPathRW ('.$path_rw.') is not writeable');
+							die();
+						}
+					}
+					else {
+						Logger::info('main', 'No Imagick support found');
+					}
+				}
+			}
 		}
 	}
 }
@@ -448,32 +609,6 @@ if ($_REQUEST['name'] == 'default_browser') {
 			$browsers[$_REQUEST['type']] = $app->getAttribute('id');
 			$prefs->set('general', 'default_browser', $browsers);
 			$prefs->backup();
-		}
-	}
-}
-
-if ($_REQUEST['name'] == 'static_application') {
-	if (! checkAuthorization('manageApplications'))
-		redirect();
-
-	if ($_REQUEST['action'] == 'del') {
-		if (isset($_REQUEST['attribute']) && ($_REQUEST['attribute'] == 'icon_file')) {
-			if (isset($_REQUEST['id'])) {
-				$prefs = new Preferences_admin();
-				if (! $prefs)
-					die_error('get Preferences failed',__FILE__,__LINE__);
-
-				$mods_enable = $prefs->get('general','module_enable');
-				if (!in_array('ApplicationDB',$mods_enable)){
-					die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
-				}
-				$mod_app_name = 'ApplicationDB_'.$prefs->get('ApplicationDB','enable');
-				$applicationDB = new $mod_app_name();
-				$app = $applicationDB->import($_REQUEST['id']);
-				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
-				$app->delIcon();
-				popup_info(sprintf(_('Application \'%s\' successfully deleted'), $app->getAttribute('name')));
-			}
 		}
 	}
 }
