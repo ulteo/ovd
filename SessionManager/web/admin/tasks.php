@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008-2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -30,32 +31,6 @@ $tm = new Tasks_Manager();
 $tm->load_all();
 $tm->refresh_all();
 
-if (isset($_POST['action'])) {
-	if (! checkAuthorization('manageServers'))
-		redirect();
-
-	if ($_POST['action']=='create') {
-		if (isset($_POST['type'])) {
-			$type_task = 'Task_'.$_POST['type'];
-			try {
-				$task = new $type_task(0, $_POST['server'], $_POST['request']);
-				$tm->add($task);
-			}
-			catch (Exception $e) {
-				Logger::error('main', 'tasks.php error create task (type=\''.$type_task.'\')');
-				popup_error('error create task (type=\''.$type_task.'\')');
-			}
-		}
-	}
-	elseif ($_POST['action']=='remove') {
-		if (isset($_POST['task']))
-			if (do_remove($tm, $_POST['task']))
-				redirect('tasks.php');
-	}
-
-	redirect();
-}
-
 if (isset($_REQUEST['action'])) {
 	if ($_REQUEST['action']=='manage') {
 		if (isset($_REQUEST['id']))
@@ -64,31 +39,6 @@ if (isset($_REQUEST['action'])) {
 }
 
 show_default($tm);
-
-
-function do_remove($tm, $id) {
-	$task = false;
-	foreach($tm->tasks as $t) {
-		if ($t->id == $id) {
-			$task = $t;
-			break;
-		}
-	}
-
-	if ($task === false) {
-		popup_error('Unable to find task id '.$id);
-		return false;
-	}
-
-	if (! ($task->succeed() || $task->failed())) {
-		popup_error('Task '.$id.' not removable');
-		return false;
-	}
-
-	$tm->remove($id);
-	popup_info(_('Task successfully deleted'));
-	return true;
-}
 
 function show_manage($id, $tm) {
 	$task = false;
@@ -140,9 +90,10 @@ function show_manage($id, $tm) {
 	echo '<td>'.$task->job_id.'</td>';
 	if ($can_remove && $can_do_action) {
 		echo '<td>';
-		echo '<form action="" method="post">';
-		echo '<input type="hidden" name="action" value="remove" />';
-		echo '<input type="hidden" name="task" value="'.$task->id.'" />';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Task" />';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="checked_tasks[]" value="'.$task->id.'" />';
 		echo '<input type="submit" value="'._('Delete').'" />';
 		echo '</form>';
 		echo '</td>';
@@ -209,9 +160,10 @@ function show_default($tm) {
       echo '<td>'.$task->getRequest().'</td>';
       echo '<td>';
       if ($can_remove && $can_do_action) {
-    	echo '<form action="" method="post">';
-	echo '<input type="hidden" name="action" value="remove" />';
-	echo '<input type="hidden" name="task" value="'.$task->id.'" />';
+    	echo '<form action="actions.php" method="post">';
+	echo '<input type="hidden" name="name" value="Task" />';
+	echo '<input type="hidden" name="action" value="del" />';
+	echo '<input type="hidden" name="checked_tasks[]" value="'.$task->id.'" />';
 	echo '<input type="submit" value="'._('Delete').'" />';
     	echo '</form>';
       }
@@ -225,8 +177,9 @@ function show_default($tm) {
     if (count($servers)>0 && $can_do_action) {
     	echo '<h2>'._('Install an application from a package name').'</h2>';
 
-    	echo '<form action="" method="post">';
-	echo '<input type="hidden" name="action" value="create" />';
+    	echo '<form action="actions.php" method="post">';
+	echo '<input type="hidden" name="name" value="Task" />';
+	echo '<input type="hidden" name="action" value="add" />';
     	echo '<select name="server">';
     	foreach ($servers as $server)
 		echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
@@ -238,8 +191,9 @@ function show_default($tm) {
 
         echo '<h2>'._('Upgrade the internal system and applications').'</h2>';
 
-        echo '<form action="" method="post">';
-        echo '<input type="hidden" name="action" value="create" />';
+        echo '<form action="actions.php" method="post">';
+        echo '<input type="hidden" name="name" value="Task" />';
+        echo '<input type="hidden" name="action" value="add" />';
         echo '<input type="hidden" name="type" value="upgrade" />';
         echo '<input type="hidden" name="request" value="" />'; // hack for the task creation
         echo '<select name="server">';

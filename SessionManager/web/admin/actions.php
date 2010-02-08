@@ -915,6 +915,60 @@ if ($_REQUEST['name'] == 'Server') {
 	}
 }
 
+if ($_REQUEST['name'] == 'Task') {
+	// it is the rigth place ? (see similar block on name=server action=install_line
+		if (! checkAuthorization('manageServers'))
+		redirect();
+	
+	$tm = new Tasks_Manager();
+	$tm->load_all();
+	$tm->refresh_all();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if (isset($_POST['type'])) {
+			$type_task = 'Task_'.$_POST['type'];
+			try {
+				$task = new $type_task(0, $_POST['server'], $_POST['request']);
+				$tm->add($task);
+				popup_info(_("Task successfully added"));
+			}
+			catch (Exception $e) {
+				Logger::error('main', 'tasks.php error create task (type=\''.$type_task.'\')');
+				popup_error("error create task (type='$type_task')");
+			}
+		}
+		redirect('tasks.php');
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_tasks']) && is_array($_REQUEST['checked_tasks'])) {
+			foreach ($_REQUEST['checked_tasks'] as $id) {
+				$task = false;
+				foreach($tm->tasks as $t) {
+					if ($t->id == $id) {
+						$task = $t;
+						break;
+					}
+				}
+				
+				if ($task === false) {
+					popup_error('Unable to find task id '.$id);
+					redirect('tasks.php');
+				}
+				
+				if (! ($task->succeed() || $task->failed())) {
+					popup_error('Task '.$id.' not removable');
+					redirect('tasks.php');
+				}
+				
+				$tm->remove($id);
+				popup_info(_('Task successfully deleted'));
+				redirect('tasks.php');
+			}
+		}
+		redirect('tasks.php');
+	}
+}
 function action_add_sharedfolder() {
 	$sharedfolder_name = $_REQUEST['sharedfolder_name'];
 	if ($sharedfolder_name == '') {
