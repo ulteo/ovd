@@ -162,11 +162,11 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 							<table style="margin-left: auto; margin-right: 0px;" border="0" cellspacing="0" cellpadding="10">
 								<tr>
 									<?php
-										if (1) { //persistent session
+										/*{ //persistent session
 									?>
 									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
 									<?php
-										}
+										}*/
 									?>
 									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.logout(); return false;"><img src="media/image/logout.png" width="32" height="32" alt="logout" title="<?php echo _('Logout'); ?>" /><br /><?php echo _('Logout'); ?></a></td>
 								</tr>
