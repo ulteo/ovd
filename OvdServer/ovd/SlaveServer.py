@@ -57,9 +57,9 @@ class SlaveServer:
 		
 		self.communication = CommunicationClass(dialogInstances)
 	
-
-	def loop(self):
-		Logger.debug("SlaveServer loop")
+	
+	def init(self):
+		Logger.debug("SlaveServer init")
 		
 		# Initialisation
 		try:
@@ -95,7 +95,11 @@ class SlaveServer:
 			Logger.warn("SlaveServer::loop unable to send status ready")
 			return False
 		
-		
+		return True
+	
+	
+	def loop(self):
+		Logger.debug("SlaveServer loop")
 		while True:
 			for thread in self.threads:
 				if not thread.isAlive():

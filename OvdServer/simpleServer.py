@@ -127,6 +127,7 @@ def main():
 	server = SlaveServer(Communication)
 	signal.signal(signal.SIGINT, server.stop)
 	signal.signal(signal.SIGTERM, server.stop)
+	server.init()
 	server.loop()
 	if not server.stopped:
 		server.stop()
