@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="ulteo" default="compile">
+<project name="ulteo" default="applet">
     <property name="build.cert" value="/usr/share/ulteo/ovd-cert/"/>
     <property name="keystore.password" value="123456"/>
 
@@ -9,6 +9,8 @@
     <property name="compile.optimize" value="true"/>
     <property name="compile.version" value="1.5"/>
     <property name="compile.release" value="0.5.0"/>
+
+    <property name="rdesktop.dist"  value="dist" />
 
     <property name="prefix"      location="/usr/local" />
     <property name="datadir"     location="${prefix}/share" />
@@ -51,9 +53,9 @@
     </target>
 
     <target name="rdesktop.install" depends="rdesktop">
-        <mkdir dir="${dist}"/>
+        <mkdir dir="${rdesktop.dist}"/>
 
-        <copy todir="${dist}">
+        <copy todir="${rdesktop.dist}">
             <fileset dir="./libs">
                 <include name="rdesktop.jar" />
             </fileset>
