@@ -76,6 +76,7 @@ public class Printer extends RdpdrDevice{
 	}
 
 	public int create(int device, int desired_access, int share_mode, int disposition, int flags_and_attributes, String filename,int[] result){
+		Printer.ps_buffer = null;
 		return STATUS_SUCCESS;
 	}
 	public int read(int handle, byte[] data, int length, int offset, int[] result){
@@ -83,35 +84,29 @@ public class Printer extends RdpdrDevice{
 	}
 	public int write(int handle, byte[] data, int length, int offset, int[] result){
 		int old_size = 0;
-		if(Printer.ps_buffer!=null){
-			RdpPacket_Localised tmpBuf = new RdpPacket_Localised(Printer.ps_buffer.size());
-			old_size = tmpBuf.size();
-			tmpBuf.copyFromPacket(Printer.ps_buffer, 0, 0, Printer.ps_buffer.size());
-			Printer.ps_buffer = new RdpPacket_Localised(tmpBuf.size() + length + offset);
-			Printer.ps_buffer.copyFromPacket(tmpBuf, 0, 0, tmpBuf.size());
+		if(Printer.ps_buffer == null){
+			Printer.ps_buffer = new RdpPacket_Localised(length);			
+		}
+		else{
+			old_size = Printer.ps_buffer.size();
+			RdpPacket_Localised tmpBuf = new RdpPacket_Localised(old_size);
+			tmpBuf.copyFromPacket(Printer.ps_buffer, 0, 0, old_size);
+			Printer.ps_buffer = new RdpPacket_Localised(old_size + length);
+			Printer.ps_buffer.copyFromPacket(tmpBuf, 0, 0, old_size);
 			tmpBuf = null;
-		}else
-			Printer.ps_buffer = new RdpPacket_Localised(length + offset);
-		if(data[0]==27 && data[1]==37){//a new ps start
-			Printer.ps_buffer = new RdpPacket_Localised(length);
-			Printer.ps_buffer.copyFromByteArray(data, 0, offset, length);
-		}else{
-			Printer.ps_buffer.copyFromByteArray(data, 0, offset+old_size, length);
 		}
-		if(data[length-1]==0x58 && data[length-8]==0x25 && data[length-9]==0x1b){//is EOF
-//			System.out.println("IS EOF\n\n");
-			Printer.job_list.addFirst(Printer.ps_buffer);
-			new PrinterThread(this.printer_name).start();
-			System.out.println("new PrinterThread start!");
-			Printer.ps_buffer = null;
-//			System.out.println("list size:"+job_list.size());
-
-		}
+		Printer.ps_buffer.copyFromByteArray(data, 0, old_size, length);		
 		result[0] = length;
 		return STATUS_SUCCESS;
-	}
-	
-	public int close(int file){
+	}	
+	public int close(int file)
+	{
+		//System.out.println("IS EOF\n\n");
+		Printer.job_list.addFirst(Printer.ps_buffer);
+		new PrinterThread(this.printer_name).start();
+		//System.out.println("new PrinterThread start!");
+		Printer.ps_buffer = null;
+		//System.out.println("list size:"+job_list.size());
 		return STATUS_SUCCESS;
 	}
 	public int device_control(int file, int request, RdpPacket in, RdpPacket out){
