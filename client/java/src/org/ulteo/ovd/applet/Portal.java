@@ -79,20 +79,20 @@ class OrderApplication extends Order {
 	}
 }
 
+class Connection {
+	public Options options = null;
+	public Thread thread = null;
+	public RdpConnection connection = null;
+	public OvdAppChannel channel = null;
+}
 
 
 public class Portal extends Applet implements Runnable, Observer, OvdAppListener {
-
-	private HashMap<Integer, Options> options = null;
-	private HashMap<Integer, Thread> threads = null;
-	private HashMap<Integer, RdpConnection> connections = null;
-	private HashMap<Integer, OvdAppChannel> channels = null;
-	
+	private HashMap<Integer, Connection> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
 
 	private boolean finished_init = false;
-	private boolean finished_start = false;
 	private boolean started_stop = false;
 	
 	public static final String JS_API_F_INSTANCE = "applicationStatus";
@@ -119,12 +119,8 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
+		this.connections = new HashMap<Integer, Connection>();
 		
-		this.options = new HashMap<Integer, Options>();
-		this.threads = new HashMap<Integer, Thread>();
-		this.connections = new HashMap<Integer, RdpConnection>();
-		this.channels = new HashMap<Integer, OvdAppChannel>();
-
 		this.finished_init = true;
 	}
 	
@@ -135,8 +131,6 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 		System.out.println(this.getClass().toString() +" start");
 
 		this.spoolThread.start();
-		
-		this.finished_start = true;
 	}
 	
 	@Override
@@ -149,13 +143,11 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 		if (this.spoolThread.isAlive())
 			this.spoolThread.interrupt();
 		
-		for (RdpConnection co: this.connections.values()) {
-			co.disconnect();
-		}
+		for (Connection co: this.connections.values()) {
+			co.connection.disconnect();
 		
-		for(Thread th : this.threads.values()) {
-			if (th.isAlive())
-				th.interrupt();
+			if (co.thread.isAlive())
+				co.thread.interrupt();
 		}
 	}
 	
@@ -163,11 +155,7 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 	public void destroy() {
 		this.spoolOrder = null;
 		this.spoolThread = null;
-		
-		this.options = null;
-		this.threads = null;
 		this.connections = null;
-		this.channels = null;
 	}
 	// End extends Applet
 	
@@ -200,7 +188,7 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 		Integer server_id = null;
 		
 		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i)== obj) {
+			if (this.connections.get(i).connection == obj) {
 				server_id = i;
 				break;
 			}
@@ -210,29 +198,29 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 			System.err.println("Observable event not for us");
 			return;
 		}
-		RdpConnection co = this.connections.get(server_id);
+		Connection co = this.connections.get(server_id);
 		
 		/* Connecting */
 		if (state.equals("connecting"))
-			System.out.println("Connecting to "+co.opt.hostname);
+			System.out.println("Connecting to "+co.options.hostname);
 		
 		/* Connected */
 		else if (state.equals("connected")) {
-			System.out.println("Connected to "+co.opt.hostname);
+			System.out.println("Connected to "+co.options.hostname);
 			
 			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_CONNECTED);
 		}
 		
 		/* Disconnected */
 		else if (state.equals("disconnected")) {
-			System.out.println("Disconneted from "+co.opt.hostname);
+			System.out.println("Disconneted from "+co.options.hostname);
 			
 			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
 		}
 		
 		/* Connection failed */
 		else if (state.equals("failed"))
-			System.out.println("Connection failed: removing rdpConnection to "+co.opt.hostname);
+			System.out.println("Connection failed: removing rdpConnection to "+co.options.hostname);
 		
 		/* Undefined status */
 		else
@@ -265,45 +253,39 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 				Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 				System.out.println("Width: "+screen.width);
 				System.out.println("Height: "+screen.height);
-						
 				
-				Options opt = new Options();
-				opt.width = screen.width;
-				opt.height = screen.height;
-				opt.set_bpp(24);
-				opt.seamlessEnabled = true;
+				Connection co = new Connection();
+				
+				co.options = new Options();
+				co.options.width = screen.width;
+				co.options.height = screen.height;
+				co.options.set_bpp(24);
+				co.options.seamlessEnabled = true;
 							
-				opt.hostname = order.host;
-				opt.port = order.port;
-				opt.username = order.login;
-				opt.password = order.password;
+				co.options.hostname = order.host;
+				co.options.port = order.port;
+				co.options.username = order.login;
+				co.options.password = order.password;
 				
-				
-				RdpConnection co = null;
 				try {
-					co = new RdpConnection(opt);
+					co.connection = new RdpConnection(co.options);
 				} catch (RdesktopException e) {
-					System.out.println(this.getClass().toString()+" Unable to inti connection to "+opt.hostname);
+					System.out.println(this.getClass().toString()+" Unable to inti connection to "+co.options.hostname);
 					continue;
 				}
-				co.addObserver(this);
+				co.connection.addObserver(this);
+				co.thread = new Thread(co.connection);
 				
-				OvdAppChannel channel = new OvdAppChannel(co.opt, co.common);
-				channel.addOvdAppListener(this);
-				if (! co.addChannel(channel)) {
+				co.channel = new OvdAppChannel(co.connection.opt, co.connection.common);
+				co.channel.addOvdAppListener(this);
+				if (! co.connection.addChannel(co.channel)) {
 					System.err.println("Can't add channel ovdapp ...");
 					continue;
 				}
-					
-				Thread th = new Thread(co);
-				th.start();
 				
-				Integer i = new Integer(order.id);
+				this.connections.put(new Integer(order.id), co);
 				
-				this.options.put(i, opt);
-				this.threads.put(i, th);
-				this.connections.put(i, co);
-				this.channels.put(i, channel);
+				co.thread.start();
 			}
 			
 			else if (o instanceof OrderApplication) {
@@ -312,7 +294,7 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 				
 				Integer server_id = null;
 				
-				for (Integer i: this.channels.keySet()) {
+				for (Integer i: this.connections.keySet()) {
 					if (i.intValue() == order.server_id) {
 						server_id = i;
 						break;
@@ -325,15 +307,15 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 				}
 				System.out.println("Server "+server_id);
 				
-				OvdAppChannel channel = this.channels.get(server_id);
-				System.out.println("channel got "+channel);
-				if (! channel.isReady()) {
+				Connection co = this.connections.get(server_id);
+				System.out.println("channel got "+co.channel);
+				if (! co.channel.isReady()) {
 					System.err.println("Channel not ready for order "+order);
 					continue;
 				}
 					
 				
-				channel.sendStartApp(order.id, order.application_id);	
+				co.channel.sendStartApp(order.id, order.application_id);	
 			}
 		}
 	}
@@ -378,8 +360,8 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 	// Begin implements OvdAppListener
 	@Override
 	public void ovdInited(OvdAppChannel channel) {
-		for (Integer i: this.channels.keySet()) {
-			if (this.channels.get(i)== channel) {
+		for (Integer i: this.connections.keySet()) {
+			if (this.connections.get(i).channel == channel) {
 				this.forwardJS(JS_API_F_SERVER, i, JS_API_O_SERVER_READY);
 				break;
 			}
