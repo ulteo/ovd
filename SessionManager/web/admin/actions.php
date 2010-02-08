@@ -30,7 +30,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate', 'publish')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -104,15 +104,37 @@ if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 }*/
 
 if ($_REQUEST['name'] == 'Application') {
+	if (! checkAuthorization('manageApplications'))
+		redirect();
+
+	$applicationDB = ApplicationDB::getInstance();
+	if (! $applicationDB->isWriteable()) {
+		die_error(_('ApplicationDB is not writeable'),__FILE__,__LINE__);
+	}
+	
 	if ($_REQUEST['action'] == 'del') {
-		$applicationDB = ApplicationDB::getInstance();
-		
-		if ($applicationDB->isWriteable()) {
+		if (isset($_REQUEST['id'])) {
 			$app = $applicationDB->import($_REQUEST['id']);
 			$applicationDB->remove($app);
 		}
-		else {
-			die_error(_('ApplicationDB is not writeable'),__FILE__,__LINE__);
+	}
+	
+	if ($_REQUEST['action'] == 'publish') {
+		if (isset($_REQUEST['checked_applications']) && is_array($_REQUEST['checked_applications']) && isset($_REQUEST['published'])) {
+			foreach ($_REQUEST['checked_applications'] as $id) {
+				$app = $applicationDB->import($id);
+				if (!is_object($app)) {
+					die_error(sprintf(_("Unable to import application %s"), $id), __FILE__, __LINE__);
+				}
+				
+				$app->setAttribute('published', $_REQUEST['published']);
+				
+				$res = $applicationDB->update($app);
+				if (! $res) {
+					die_error(sprintf(_("Unable to modify store application '%s'"), $id), __FILE__ ,__LINE__);
+				}
+			}
+			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
 		}
 	}
 }

@@ -28,43 +28,12 @@ if (! checkAuthorization('viewApplications'))
 
 $applicationDB = ApplicationDB::getInstance();
 
-if ($applicationDB->isWriteable()) {
-if (isset($_GET['mass_action']) && $_GET['mass_action'] == 'block') {
-	if (! checkAuthorization('manageApplications'))
-		redirect();
-
-	if (isset($_GET['manage_applications']) && is_array($_GET['manage_applications'])) {
-		foreach ($_GET['manage_applications'] as $application) {
-			$app = $applicationDB->import($application);
-			if (is_object($app)) {
-				if (isset($_GET['block']))
-					$app->setAttribute('published', 0);
-				else
-					$app->setAttribute('published', 1);
-				$buf = $applicationDB->update($app);
-			}
-		}
-	}
-
-	redirect($_SERVER['HTTP_REFERER']);
-}
-}
-
 if (isset($_REQUEST['action'])) {
   if ($_REQUEST['action']=='manage') {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id'], $applicationDB);
   }
 
-  if ($_REQUEST['action']=='modify' && $applicationDB->isWriteable()) {
-		if (! checkAuthorization('manageApplications'))
-			redirect();
-
-    if (isset($_REQUEST['id'])) {
-      action_modify($applicationDB, $_REQUEST['id']);
-      show_manage($_REQUEST['id'], $applicationDB);
-    }
-  }
 }
 
 if (! isset($_GET['view']))
@@ -72,24 +41,6 @@ if (! isset($_GET['view']))
 
 if ($_GET['view'] == 'all')
   show_default($applicationDB);
-
-function action_modify($applicationDB, $id) {
-  $app = $applicationDB->import($id);
-  if (!is_object($app))
-    return false;
-//     die_error('Unable to import application "'.$id.'"',__FILE__,__LINE__);
-
-  if (isset($_REQUEST['published']))
-      return false;
-
-  $app->setAttribute('published', $_REQUEST['published']);
-
-  $res = $applicationDB->update($app);
-  if (! $res)
-    die_error('Unable to modify application '.$res,__FILE__,__LINE__);
-
-  return true;
-}
 
 function show_default($applicationDB) {
   $applications = $applicationDB->getList(true);
@@ -148,8 +99,9 @@ function show_default($applicationDB) {
 
       /*if ($is_rw) {
 	echo '<td><form action="" method="post">';
-	echo '<input type="hidden" name="action" value="modify" />';
-	echo '<input type="hidden" name="id" value="'.$app->getAttribute('id').'" />';
+	echo '<input type="hidden" name="action" value="publish" />';
+	echo '<input type="hidden" name="name" value="Application" />';
+	echo '<input type="hidden" name="checked_applications[]" value="'.$app->getAttribute('id').'" />';
 	echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
 	echo '<input type="submit" value="'.$status_change.'"/>';
 	echo '</form></td>';
@@ -172,6 +124,8 @@ function show_default($applicationDB) {
 //     echo '	<input type="hidden" name="mass_action" value="block" />';
       /*echo '<input type="submit" name="unblock" value="'._('Unblock').'" />';
       echo '<br />';
+      echo '<input type="hidden" name="name" value="Application" />';
+      echo '<input type="hidden" name="action" value="publish" />';
       echo '<input type="submit" name="block" value="'._('Block').'" />';*/
 //	  echo '</form>';
 //       echo '</td>';
