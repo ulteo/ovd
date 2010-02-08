@@ -32,6 +32,9 @@ var Daemon = Class.create({
 
 	mode: '',
 
+	servers: new Hash(),
+	liaison_server_applications: new Hash(),
+
 	shareable: false,
 	persistent: false,
 	in_popup: true,
@@ -41,7 +44,6 @@ var Daemon = Class.create({
 	old_session_state: -1,
 	started: false,
 	stopped: false,
-	access_id: '',
 
 	application_state: -1,
 	old_application_state: -1,
@@ -80,6 +82,8 @@ var Daemon = Class.create({
 			this.my_width  = document.body.clientWidth;
 			this.my_height = document.body.clientHeight;
 		}
+
+		this.list_servers();
 
 		setTimeout(this.preload.bind(this), 2000);
 
@@ -251,21 +255,41 @@ return;
 	},
 
 	do_started: function() {
-this.parse_do_started();
-return;
+		this.parse_do_started();
+	},
+
+	parse_do_started: function(transport) {
+	},
+
+	list_servers: function() {
 		new Ajax.Request(
-			'access.php',
+			'servers.php',
 			{
 				method: 'get',
-				parameters: {
-					application_id: this.access_id
-				},
-				onSuccess: this.parse_do_started.bind(this)
+				onSuccess: this.parse_list_servers.bind(this)
 			}
 		);
 	},
 
-	parse_do_started: function(transport) {
+	parse_list_servers: function(transport) {
+		var xml = transport.responseXML;
+
+		var buffer = xml.getElementsByTagName('servers');
+
+		if (buffer.length != 1)
+			return;
+
+		var serverNodes = xml.getElementsByTagName('server');
+
+		for (var i=0; i<serverNodes.length; i++) {
+			try { // IE does not have hasAttribute in DOM API...
+				var server = new Server(serverNodes[i].getAttribute('fqdn'), i, serverNodes[i].getAttribute('fqdn'), 3389, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
+				this.servers.set(server.id, server);
+				this.liaison_server_applications.set(server.id, new Array());
+			} catch(e) {
+				return;
+			}
+		}
 	},
 
 	do_ended: function() {

@@ -20,12 +20,15 @@
 
 var Desktop = Class.create(Daemon, {
 	mode: 'desktop',
-	access_id: 'desktop',
 
 	parse_do_started: function(transport) {
+		var servers = this.servers.values();
+		for (var i=0; i < servers.length; i++)
+			var server = servers[i];
+
 		$('splashContainer').hide();
 
-		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
+		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+parseInt(this.my_height-100)+'"> \
 			<param name="name" value="ulteoapplet" /> \
 			<param name="code" value="'+this.applet_main_class+'" /> \
 			<param name="codebase" value="applet/" /> \
@@ -34,10 +37,10 @@ var Desktop = Class.create(Daemon, {
 			<param name="cache_archive_ex" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" /> \
 			<param name="mayscript" value="true" /> \
 			\
-			<param name="server" value="'+this.session_server+'" /> \
+			<param name="server" value="'+server.fqdn+'" /> \
 			<param name="port" value="3389" /> \
-			<param name="username" value="'+this.session_login+'" /> \
-			<param name="password" value="'+this.session_password+'" /> \
+			<param name="username" value="'+server.username+'" /> \
+			<param name="password" value="'+server.password+'" /> \
 		</applet>';
 
 		$('desktopAppletContainer').show();

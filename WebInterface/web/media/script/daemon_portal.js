@@ -20,15 +20,12 @@
 
 var Portal = Class.create(Daemon, {
 	mode: 'portal',
-	access_id: 'portal',
 
-	servers: new Hash(),
 	applications: new Hash(),
 	applicationsPanel: null,
 	running_applications: new Hash(),
 	runningApplicationsPanel: null,
 
-	liaison_server_applications: new Hash(),
 	liaison_runningapplicationtoken_application: new Hash(),
 
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
@@ -52,10 +49,9 @@ var Portal = Class.create(Daemon, {
 	},
 
 	do_started: function() {
-		Daemon.prototype.do_started.apply(this);
-
-		this.list_servers();
 		this.list_apps();
+
+		Daemon.prototype.do_started.apply(this);
 
 		setTimeout(this.connect_servers.bind(this), 1000);
 	},
@@ -77,37 +73,6 @@ var Portal = Class.create(Daemon, {
 		$('portalAppletContainer').innerHTML = applet_html_string;
 
 		return true;
-	},
-
-	list_servers: function() {
-		new Ajax.Request(
-			'servers.php',
-			 {
-				method: 'get',
-				onSuccess: this.parse_list_servers.bind(this)
-			}
-		);
-	},
-
-	parse_list_servers: function(transport) {
-		var xml = transport.responseXML;
-
-		var buffer = xml.getElementsByTagName('servers');
-
-		if (buffer.length != 1)
-			return;
-
-		var serverNodes = xml.getElementsByTagName('server');
-
-		for (var i=0; i<serverNodes.length; i++) {
-			try { // IE does not have hasAttribute in DOM API...
-				var server = new Server(serverNodes[i].getAttribute('fqdn'), i, serverNodes[i].getAttribute('fqdn'), 3389, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
-				this.servers.set(server.id, server);
-				this.liaison_server_applications.set(server.id, new Array());
-			} catch(e) {
-				return;
-			}
-		}
 	},
 
 	list_apps: function() {
