@@ -35,7 +35,6 @@ package net.propero.rdp.rdp5.seamless;
 import java.awt.Frame;
 import java.awt.Cursor;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -43,8 +42,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Observer;
-import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 
@@ -79,12 +76,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	
     protected Hashtable<String, SeamFrame> windows;
 
-    static Logger logger = Logger.getLogger("net.propero.rdp");
+	protected static Logger logger = Logger.getLogger("net.propero.rdp");
 
 	private Frame main_window = null;
 	private ClipChannel clipChannel = null;
-
-	private final EventListenerList listeners = new EventListenerList();
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -152,39 +147,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				logger.error("Couldn't parse argument from " + tokens[0] + " seamless command.", nfe);
 				return false;
 			}
-			/*
-			ToDo: Create a Window Type to be able to run seamless windows in native 
-			mode (frame) or javascript mode with openUrl and subapplet			  
-			rdp.openUrl("javascript:rdpAppletWindow({id:"+id+",x:0,y:0,width:0,height:0})");
-			*/
-			//TODO: ui_seamless_create_window(id, group, parent, flags);
 
-			String name = "w_"+id;
-			if( this.windows.containsKey(name)) {
-			    logger.error("ID '"+id+"' already exist");
-			    return false;
-			}
-
-			SeamFrame f = new SeamFrame((int)id, (int)group, this.common);
-			f.addWindowStateListener(this);
-			if (this.clipChannel != null)
-				f.addFocusListener(this.clipChannel);
-			else
-				logger.debug("Unable to add a focus listener to the window "+id);
-			this.windows.put(name, f);
-		}
-		else if (tokens[0].equals("APP_ID")) {
-			long token;
-			long pid;
-
-			if (numTokens < 4)
-				return false;
-
-			token = Long.parseLong(tokens[2]);
-
-			pid = Long.parseLong(tokens[3]);
-
-			this.fireInstanceCreated(token, pid);
+			return this.processCreate(id, group, parent, flags);
 		}
 		else if (tokens[0].equals("DESTROY"))
 		{
@@ -200,21 +164,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 
-			/*
-			ToDo: Create a Window Type to be able to run seamless windows in native 
-			mode (frame) or javascript mode with openUrl and subapplet
-			rdp.openUrl("javascript:destroyRdpWindow("+id+")");
-			*/
-			//TODO: ui_seamless_destroy_window(id, flags);
-	
-			String name = "w_"+id;
-			if(! this.windows.containsKey(name)) {
-			    logger.error("ID '"+id+"' doesn't exist");
-			    return false;
-			}
-
-			SeamFrame f = this.windows.remove(name);
-			f.destroy();
+			return this.processDestroy(id, flags);
 		}
 		else if (tokens[0].equals("DESTROYGRP"))
 		{
@@ -229,26 +179,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 
-			//TODO: ui_seamless_destroy_group(id, flags);
-			Set <String> keys = this.windows.keySet();
-
-			for(String key: keys)
-			{
-				try
-				{
-					SeamFrame sf = this.windows.get(key);
-					if(sf.getGroup() == id)
-					{
-						sf.destroy();
-						keys.remove(key);
-					}
-				} catch (Exception e) {
-					logger.error("Couldn't remove the window " + key + ".", e);
-					return false;
-				}
-			}
-
-			this.fireInstanceDestroyed(id);
+			return this.processDestroyGrp(id, flags);
 		}
 		/*else if (tokens[0].equals("SETICON"))
 		{
@@ -275,20 +206,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 
-			/*
-			ToDo: Create a Window Type to be able to run seamless windows in native 
-			mode (frame) or javascript mode with openUrl and subapplet
-			rdp.openUrl("javascript:rdpAppletWindow({id:"+id+",x:"+x+",y:"+y+",width:"+width+",height:"+height+"})");
-			*/
-
-			String name = "w_"+id;
-			if(! this.windows.containsKey(name)) {
-			    logger.error("ID '"+id+"' doesn't exist");
-			    return false;
-			}
-
-			SeamFrame f = this.windows.get(name);
-			f.setMyPosition((int)x, (int)y, (int)width, (int)height);
+			return this.processPosition(id, x, y, width, height, flags);
 		}
 		else if (tokens[0].equals("ZCHANGE"))
 		{
@@ -322,15 +240,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 	
-//			TODO: ui_seamless_settitle(id, tokens[3], flags);
-			String name = "w_"+id;
-			if(! this.windows.containsKey(name)) {
-			    logger.error("ID '"+id+"' doesn't exist");
-			    return false;
-			}
-
-			SeamFrame f = this.windows.get(name);
-			f.setTitle(tokens[3]);
+			return this.processTitle(id, tokens[3], flags);
 		}
 		else if (tokens[0].equals("STATE"))
 		{
@@ -348,32 +258,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 
-			/*
-			ToDo: Create a Window Type to be able to run seamless windows in native 
-			mode (frame) or javascript mode with openUrl and subapplet
-			rdp.openUrl("javascript:showRdpWindow({id:"+id+",show:"+(state==0?"true":"false")+"})");
-			*/
-//			TODO: ui_seamless_setstate(id, state, flags);
-
-			String name = "w_"+id;
-			if(! this.windows.containsKey(name)) {
-			    logger.error("ID '"+id+"' doesn't exist");
-			    return false;
-			}
-
-			SeamFrame f = this.windows.get(name);
-			int frame_state = Frame.NORMAL;
-			switch((int)state) {
-			case SeamlessChannel.WINDOW_MINIMIZED:
-				frame_state = Frame.ICONIFIED;
-				break;
-			case SeamlessChannel.WINDOW_MAXIMIZED:
-				frame_state = Frame.MAXIMIZED_BOTH;
-			default: //this.WINDOW_NORMAL
-				frame_state = Frame.NORMAL;
-			}
-
-			f.setExtendedState(frame_state);
+			return this.processState(id, state, flags);
 		}
 		else if (tokens[0].equals("DEBUG"))
 		{
@@ -391,11 +276,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 			
-//			TODO: ui_seamless_syncbegin(flags);
-			for(SeamFrame sf : this.windows.values()) {
-				sf.destroy();
-			}
-			this.windows.clear();
+			return this.processSyncBegin();
 		}
 		else if (tokens[0].equals("SYNCEND"))
 		{
@@ -423,18 +304,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				return false;
 			}
 
-			logger.info("Going to ack the HELLO");
-			try {
-			    this.send_sync();
-			} catch(Exception e) {
-			    logger.error("Unable to send_sync !!!");
-			}
-			logger.info("succeed to ack the HELLO");
-
-			if (this.main_window != null)
-				this.main_window.setVisible(false);
-//			TODO: ui_seamless_begin(!!(flags & SEAMLESSRDP_HELLO_HIDDEN));
-                        new SeamForm(this, this.opt);
+			return this.processHello();
 		}
 		else if (tokens[0].equals("ACK"))
 		{
@@ -480,8 +350,170 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 
 		return true;
 	}
+
+	protected boolean processCreate(long id, long group, long parent, long flags) {
+		/*
+		ToDo: Create a Window Type to be able to run seamless windows in native
+		mode (frame) or javascript mode with openUrl and subapplet
+		rdp.openUrl("javascript:rdpAppletWindow({id:"+id+",x:0,y:0,width:0,height:0})");
+		*/
+		//TODO: ui_seamless_create_window(id, group, parent, flags);
+
+		String name = "w_"+id;
+		if( this.windows.containsKey(name)) {
+		    logger.error("ID '"+id+"' already exist");
+		    return false;
+		}
+
+		this.addFrame(new SeamFrame((int)id, (int)group, this.common), name);
+
+		return true;
+	}
+
+	protected void addFrame(SeamFrame f, String name) {
+		f.addWindowStateListener(this);
+		if (this.clipChannel != null)
+			f.addFocusListener(this.clipChannel);
+		else
+			logger.debug("Unable to add a focus listener to the window "+name);
+		this.windows.put(name, f);
+	}
+
+	protected boolean processDestroy(long id, long flags) {
+		/*
+		ToDo: Create a Window Type to be able to run seamless windows in native
+		mode (frame) or javascript mode with openUrl and subapplet
+		rdp.openUrl("javascript:destroyRdpWindow("+id+")");
+		*/
+		//TODO: ui_seamless_destroy_window(id, flags);
+
+		String name = "w_"+id;
+		if(! this.windows.containsKey(name)) {
+		    logger.error("ID '"+id+"' doesn't exist");
+		    return false;
+		}
+
+		SeamFrame f = this.windows.remove(name);
+		f.destroy();
+
+		return true;
+	}
+
+	protected boolean processDestroyGrp(long id, long flags) {
+		//TODO: ui_seamless_destroy_group(id, flags);
+		Set <String> keys = this.windows.keySet();
+
+		for(String key: keys)
+		{
+			try
+			{
+				SeamFrame sf = this.windows.get(key);
+				if(sf.getGroup() == id)
+				{
+					sf.destroy();
+					keys.remove(key);
+				}
+			} catch (Exception e) {
+				logger.error("Couldn't remove the window " + key + ".", e);
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected boolean processPosition(long id, long x, long y, long width, long height, long flags) {
+		/*
+		ToDo: Create a Window Type to be able to run seamless windows in native
+		mode (frame) or javascript mode with openUrl and subapplet
+		rdp.openUrl("javascript:rdpAppletWindow({id:"+id+",x:"+x+",y:"+y+",width:"+width+",height:"+height+"})");
+		*/
+
+		String name = "w_"+id;
+		if(! this.windows.containsKey(name)) {
+		    logger.error("ID '"+id+"' doesn't exist");
+		    return false;
+		}
+
+		SeamFrame f = this.windows.get(name);
+		f.setMyPosition((int)x, (int)y, (int)width, (int)height);
+
+		return true;
+	}
+
+	protected boolean processTitle(long id, String title, long flags) {
+		//TODO: ui_seamless_settitle(id, tokens[3], flags);
+		String name = "w_"+id;
+		if(! this.windows.containsKey(name)) {
+		    logger.error("ID '"+id+"' doesn't exist");
+		    return false;
+		}
+
+		SeamFrame f = this.windows.get(name);
+		f.setTitle(title);
+
+		return true;
+	}
+
+	protected boolean processState(long id, long state, long flags) {
+		/*
+		ToDo: Create a Window Type to be able to run seamless windows in native
+		mode (frame) or javascript mode with openUrl and subapplet
+		rdp.openUrl("javascript:showRdpWindow({id:"+id+",show:"+(state==0?"true":"false")+"})");
+		*/
+		//TODO: ui_seamless_setstate(id, state, flags);
+
+		String name = "w_"+id;
+		if(! this.windows.containsKey(name)) {
+		    logger.error("ID '"+id+"' doesn't exist");
+		    return false;
+		}
+
+		SeamFrame f = this.windows.get(name);
+		int frame_state = Frame.NORMAL;
+		switch((int)state) {
+			case SeamlessChannel.WINDOW_MINIMIZED:
+				frame_state = Frame.ICONIFIED;
+				break;
+			case SeamlessChannel.WINDOW_MAXIMIZED:
+				frame_state = Frame.MAXIMIZED_BOTH;
+			default: //this.WINDOW_NORMAL
+				frame_state = Frame.NORMAL;
+		}
+
+		f.setExtendedState(frame_state);
+
+		return true;
+	}
+
+	protected boolean processSyncBegin() {
+		//TODO: ui_seamless_syncbegin(flags);
+		for(SeamFrame sf : this.windows.values()) {
+			sf.destroy();
+		}
+		this.windows.clear();
+
+		return true;
+	}
+
+	protected boolean processHello() {
+		logger.info("Going to ack the HELLO");
+		try {
+		    this.send_sync();
+		} catch(Exception e) {
+		    logger.error("Unable to send_sync !!!");
+		}
+		logger.info("succeed to ack the HELLO");
+
+		if (this.main_window != null)
+			this.main_window.setVisible(false);
+		//TODO: ui_seamless_begin(!!(flags & SEAMLESSRDP_HELLO_HIDDEN));
+		new SeamForm(this, this.opt);
+
+		return true;
+	}
 	
-	private boolean process_setIcon(long window_id, int chunk, String format, int width, int height, byte[] bitmap) {
+	protected boolean process_setIcon(long window_id, int chunk, String format, int width, int height, byte[] bitmap) {
 		String name = "w_"+window_id;
 		
 		if(! this.windows.containsKey(name)) {
@@ -670,16 +702,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	{
 		seamless_send("SPAWN", cmd);
 	}
-
-	public void send_startapp(long token, String cmd, String args) throws RdesktopException, IOException, CryptoException
-	{
-		String msg = null;
-		if (args != null)
-			msg = String.format("0x%08x,%s \"%s\"", token, cmd, args);
-		else
-			msg = String.format("0x%08x,%s", token, cmd);
-		seamless_send("START_APP", msg);
-	}
 	
 	public void	send_state(int id, int state, int flags) throws RdesktopException, IOException, CryptoException
 	{
@@ -745,30 +767,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	 */
 	public String name() {
 		return "seamrdp";
-	}
-
-	public void addApplicationManager(ApplicationManager listener) {
-		this.listeners.add(ApplicationManager.class, listener);
-	}
-
-	public void removeApplicationManager(ApplicationManager listener) {
-		this.listeners.remove(ApplicationManager.class, listener);
-	}
-
-	public ApplicationManager[] getApplicationManagers() {
-		return this.listeners.getListeners(ApplicationManager.class);
-	}
-
-	protected void fireInstanceCreated(long token, long pid) {
-		for(ApplicationManager listener : this.getApplicationManagers()) {
-			listener.instanceCreated(token, pid);
-		}
-	}
-
-	protected void fireInstanceDestroyed(long pid) {
-		for(ApplicationManager listener : this.getApplicationManagers()) {
-			listener.instanceDestroyed(pid);
-		}
 	}
 
 	public void windowStateChanged(WindowEvent ev) {
