@@ -34,9 +34,6 @@
 	    <listitem><para>
 	      <emphasis>/var/log/ulteo/sessionmanager/main.log</emphasis>
 	    </para></listitem>
-	    <listitem><para>
-	      <emphasis>/var/log/ulteo/sessionmanager/admin.log</emphasis>
-	    </para></listitem>
 	  </itemizedlist>
 	</para></listitem>
 	<listitem><para>
