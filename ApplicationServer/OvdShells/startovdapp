@@ -21,6 +21,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
+
 from ovd_shells.Application import Application
 from ovd_shells.CheckFork import CheckFork
 from ovd_shells.Monitoring import Monitoring
@@ -72,7 +74,6 @@ def main():
 
 if __name__ == "__main__":
 	if True:
-		import os
 		import sys
 		
 		path = os.path.join(os.path.expanduser('~'), "dump.txt")
