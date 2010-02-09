@@ -19,15 +19,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import os
-import platform
 import socket
 
 
 def isIP(address):
 	try:
 		socket.inet_ntoa(address)
-	except Exception, err:
+	except Exception:
 		return False
 	return True
 
@@ -36,5 +34,5 @@ def isIP(address):
 
 def array_flush(array):
 	array.reverse()
-	for i in xrange(len(array)):
+	for _ in xrange(len(array)):
 		yield array.pop()

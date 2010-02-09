@@ -20,7 +20,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import httplib
-import urllib
 import urllib2
 import cgi
 import base64
@@ -31,7 +30,6 @@ from ovd.Communication.Dialog import Dialog as AbstractDialog
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Platform import Platform
-from ovd import util
 
 
 class Dialog(AbstractDialog):

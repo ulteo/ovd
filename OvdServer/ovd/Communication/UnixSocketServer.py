@@ -23,8 +23,6 @@ import cgi
 import httplib
 import os
 from Queue import Queue
-import time
-import traceback
 
 import socket
 import struct
@@ -78,7 +76,7 @@ class UnixSocketServer(AbstractCommunication):
 		self.server.listen(5)
 		
 		while 1:
-			(sock, addr) = self.server.accept()
+			(sock, _) = self.server.accept()
 			Logger.debug("Communication accept job")
 			self.queue.put(sock)
 			Logger.debug("Communication dispatched job")
@@ -91,7 +89,7 @@ class UnixSocketServer(AbstractCommunication):
 		
 		try:
 			os.remove(self.socket_filename)
-		except Exception, e:
+		except Exception:
 			pass
 
 
@@ -123,7 +121,7 @@ class RequestHandler(Thread):
 		buffer = sock.recv(4)
 		try:
 			packet_len = struct.unpack('>I', buffer)[0]
-		except Exception, e:
+		except Exception:
 			Logger.warn("sock2data: packet recv syntax error")
 			return None
 		return sock.recv(packet_len)

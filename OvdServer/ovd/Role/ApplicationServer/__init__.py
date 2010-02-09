@@ -62,8 +62,9 @@ class ApplicationServer(AbstractRole):
 		
 		try:
 			TS.getList()
-		except Exception,err:
+		except Exception, err:
 			Logger.error("RDP server dialog failed ... exiting")
+			Logger.debug("RDP server dialog: "+str(err))
 			return
 		
 		if not Platform.getInstance().groupExist(self.ts_group_name):
@@ -79,7 +80,7 @@ class ApplicationServer(AbstractRole):
 			Logger.error("Unable to purge group")
 			return False
 		
-		for i in xrange(5):
+		for _ in xrange(5):
 			self.threads.append(SessionManagement(self, self.sessions_spooler))
 		
 		return True
@@ -117,6 +118,7 @@ class ApplicationServer(AbstractRole):
 		doc.appendChild(rootNode)
 		
 		response = self.main_instance.dialog.send_packet("/session/status", doc)
+		Logger.debug("ApplicationServer: send_session_status: %s"%(response))
 	
 	
 	def get_session_from_login(self, login_):
@@ -145,8 +147,9 @@ class ApplicationServer(AbstractRole):
 			for session in self.sessions.values():
 				try:
 					ts_id = TS.getSessionID(session.user.name)
-				except Exception,err:
+				except Exception, err:
 					Logger.error("RDP server dialog failed ... exiting")
+					Logger.debug("RDP server dialog: "+str(err))
 					return
 				
 				if ts_id is None:
@@ -208,7 +211,7 @@ class ApplicationServer(AbstractRole):
 		if members is None:
 			return False
 		
-		return login in members
+		return login_ in members
 	
 	def getApplications(self):
 		i = 0

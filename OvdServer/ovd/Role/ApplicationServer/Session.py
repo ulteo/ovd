@@ -19,9 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 
-from ovd.Logger import Logger
-
-
 class Session:
 	SESSION_STATUS_UNKNOWN = "unknown"
 	SESSION_STATUS_ERROR = "error"

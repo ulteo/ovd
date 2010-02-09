@@ -63,6 +63,7 @@ class Communication:
 				buffer = socket.gethostbyname(buffer)
 			except Exception, err:
 				Logger.error("Communication::isSessionManagerRequest: fail to get address info for '%s'"%(buffer))
+				Logger.debug("gethostbyname: %s"%(err))
 				return False
 		
 		return  request["client"] == buffer

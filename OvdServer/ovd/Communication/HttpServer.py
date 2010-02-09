@@ -25,8 +25,6 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import cgi
 import httplib
 import socket
-import time
-import traceback
 
 from ovd.Logger import Logger
 from ovd.Config import Config

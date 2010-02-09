@@ -20,9 +20,8 @@
 import md5
 import commands
 import ConfigParser
-import random
+import os
 import re
-import sys, os
 import tempfile
 
 from ovd.Logger import Logger
@@ -43,7 +42,7 @@ class ApplicationsDetection():
 	
 	def find_files(self):
 		ret = []
-		for root, dirs, files in os.walk(self.path):
+		for root, _, files in os.walk(self.path):
 			for name in files:
 				l = os.path.join(root,name)
 				if not os.path.isfile(l):
@@ -231,7 +230,6 @@ class ApplicationsDetection():
 				Logger.debug("chooseBestIcon identify weird out")
 				continue
 			
-			width = int(match.group(1))
 			height =  int(match.group(2))
 			
 			if height >= 32:
