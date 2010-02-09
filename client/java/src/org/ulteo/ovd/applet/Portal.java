@@ -37,6 +37,8 @@ import netscape.javascript.JSObject;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
+import net.propero.rdp.rdp5.rdpdr.Printer;
+import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 
 
 abstract class Order {
@@ -281,6 +283,20 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 				if (! co.connection.addChannel(co.channel)) {
 					System.err.println("Can't add channel ovdapp ...");
 					continue;
+				}
+				
+				
+				String[] printers = Printer.getAllAvailable();
+				if (printers.length > 0) {
+					RdpdrChannel rdpdrChannel = new RdpdrChannel(co.connection.opt, co.connection.common);
+				 	
+					for(int i=0; i<printers.length; i++) {
+						Printer p = new Printer(printers[i], i);
+						rdpdrChannel.register(p);
+					}
+					
+					if (! co.connection.addChannel(rdpdrChannel))
+						System.err.println("Unable to ass rdpdr channel, continue anyway");
 				}
 				
 				this.connections.put(new Integer(order.id), co);

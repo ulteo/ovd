@@ -28,6 +28,8 @@ import java.util.Observer;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.rdp5.rdpdr.Printer;
+import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import netscape.javascript.JSObject;
 
 public class Desktop extends Applet implements Observer {
@@ -95,6 +97,20 @@ public class Desktop extends Applet implements Observer {
 		}
 
 		this.rc.addObserver(this);
+		
+		String[] printers = Printer.getAllAvailable();
+		if (printers.length > 0) {
+			RdpdrChannel rdpdrChannel = new RdpdrChannel(this.rc.opt, this.rc.common);
+		 	
+			for(int i=0; i<printers.length; i++) {
+				Printer p = new Printer(printers[i], i);
+				rdpdrChannel.register(p);
+			}
+			
+			if (! this.rc.addChannel(rdpdrChannel))
+				System.err.println("Unable to ass rdpdr channel, continue anyway");
+		}
+		
 		this.rdp_th = new Thread(this.rc);
 		this.rdp_th.start();
 
