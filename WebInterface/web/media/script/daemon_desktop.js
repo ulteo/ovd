@@ -28,7 +28,7 @@ var Desktop = Class.create(Daemon, {
 
 		$('splashContainer').hide();
 
-		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+parseInt(this.my_height-100)+'"> \
+		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
 			<param name="name" value="ulteoapplet" /> \
 			<param name="code" value="'+this.applet_main_class+'" /> \
 			<param name="codebase" value="applet/" /> \
