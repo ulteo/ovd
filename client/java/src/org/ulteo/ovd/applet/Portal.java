@@ -23,10 +23,9 @@ package org.ulteo.ovd.applet;
 
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
-import net.propero.rdp.RdpConnection;
 import java.applet.Applet;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +36,7 @@ import netscape.javascript.JSObject;
 
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.RdpConnection;
 
 
 abstract class Order {
@@ -250,15 +250,15 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 				OrderServer order = (OrderServer)o;
 				System.out.println("job "+order.host);
 				
-				Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-				System.out.println("Width: "+screen.width);
-				System.out.println("Height: "+screen.height);
+				Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();	
+				System.out.println("Width: "+dim.width);
+				System.out.println("Height: "+dim.height);
 				
 				Connection co = new Connection();
 				
 				co.options = new Options();
-				co.options.width = screen.width;
-				co.options.height = screen.height;
+				co.options.width = dim.width;
+				co.options.height = dim.height;
 				co.options.set_bpp(24);
 				co.options.seamlessEnabled = true;
 							
@@ -363,7 +363,7 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 		for (Integer i: this.connections.keySet()) {
 			if (this.connections.get(i).channel == channel) {
 				this.forwardJS(JS_API_F_SERVER, i, JS_API_O_SERVER_READY);
-				break;
+				return;
 			}
 		}
 	}
