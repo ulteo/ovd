@@ -74,3 +74,12 @@ var Server = Class.create({
 		return true;
 	}
 });
+
+function serverStatus(java_id_, status_) {
+	var servers = daemon.servers.values();
+	for (var i=0; i < servers.length; i++)
+		if (servers[i].java_id == java_id_)
+			return servers[i].setStatus(status_);
+
+	return false;
+}
