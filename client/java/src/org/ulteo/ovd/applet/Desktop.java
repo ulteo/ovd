@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -216,6 +216,7 @@ public class Desktop extends Applet implements Observer {
 		RdesktopCanvas canvas = this.rc.getCanvas();
 		canvas.setLocation(0, 0);
 		this.add(canvas);
+		this.validate();
 	}
 	
 
