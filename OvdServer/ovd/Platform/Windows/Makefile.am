@@ -1,7 +1,6 @@
 scripts_DATA = ApplicationsDetection.py \
                Communication.py \
                __init__.py \
-               Logger.py \
                mime.py \
                Msi.py \
                Platform.py \
