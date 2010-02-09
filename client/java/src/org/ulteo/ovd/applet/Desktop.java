@@ -28,6 +28,7 @@ import java.util.Observer;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
+import netscape.javascript.JSObject;
 
 public class Desktop extends Applet implements Observer {
 
@@ -39,24 +40,18 @@ public class Desktop extends Applet implements Observer {
 	private RdpConnection rc = null;
 	private Thread rdp_th = null;
 	
-	private String startupStatusReport = null;
 	private boolean finished_init = false;
 	private boolean finished_start = false;
 	private boolean started_stop = false;
 	
+	public static final String JS_API_F_SERVER = "serverStatus";
+	public static final String JS_API_O_SERVER_CONNECTED = "connected";
+	public static final String JS_API_O_SERVER_DISCONNECTED = "disconnected";
+	public static final String JS_API_O_SERVER_READY = "ready";
 	
 	@Override
 	public void init() {
 		System.out.println(this.getClass().toString() +"  init");
-
-		this.startupStatusReport = this.getParameter("onInit");
-		if (this.startupStatusReport == null || this.startupStatusReport.equals("")) {
-			System.err.println(this.getClass().toString() +" init: Missing parameter key 'onInit'");
-			System.err.println(this.getClass().toString() +": Unable to continue");
-			this.stop();
-			return;
-		}
-		
 		
 		boolean status = this.checkSecurity();
 		if (! status) {
@@ -82,7 +77,7 @@ public class Desktop extends Applet implements Observer {
 		this.rdp_opt.set_bpp(24);
 		this.rdp_opt.seamlessEnabled = false;
 		this.rc = null;
-		
+				
 		this.finished_init = true;
 	}
 	
@@ -92,18 +87,20 @@ public class Desktop extends Applet implements Observer {
 			return;	
 		System.out.println(this.getClass().toString() +" start");
 
-	
 		try {
 			this.rc = new RdpConnection(this.rdp_opt);
 		} catch (RdesktopException e) {
+
 			System.out.println(this.getClass().toString()+" Unable to connect to "+this.server);
 		}
+
 		this.rc.addObserver(this);
-		
 		this.rdp_th = new Thread(this.rc);
 		this.rdp_th.start();
-		
+
 		this.finished_start = true;
+
+		System.out.println(this.getClass().toString() +" started");
 	}
 	
 	@Override
@@ -195,11 +192,13 @@ public class Desktop extends Applet implements Observer {
 		else if (state.equals("connected")) {
 			System.out.println("Connected to "+this.rc.opt.hostname);
 			this.switch2session();
+			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_CONNECTED);
 		}
 		
 		/* Disconnected */
 		else if (state.equals("disconnected")) {
 			System.out.println("Disconneted from "+this.rc.opt.hostname);
+			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_DISCONNECTED);
 			this.stop();
 		}
 		
@@ -217,5 +216,27 @@ public class Desktop extends Applet implements Observer {
 		RdesktopCanvas canvas = this.rc.getCanvas();
 		canvas.setLocation(0, 0);
 		this.add(canvas);
+	}
+	
+
+	public void forwardJS(String functionName, Integer instance, String status) {
+		Object[] args = new Object[2];
+		args[0] = instance;
+		args[1] = status;
+		
+		try {
+			JSObject win = JSObject.getWindow(this);
+			win.call(functionName, args);
+		}
+		catch (netscape.javascript.JSException e) {
+			String buffer = functionName+"(";
+			for(Object o: args)
+				buffer+= o+", ";
+			if (buffer.endsWith(", "))
+				buffer = buffer.substring(0, buffer.length()-2);
+			buffer+=")";
+			
+			System.err.println(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
+		}
 	}
 }
