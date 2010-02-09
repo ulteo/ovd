@@ -151,7 +151,7 @@
                encoding="UTF8"
                target="1.5" 
                source="1.5" 
-               classpath="${java.home}/lib/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
+               classpath="required_libraries/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
                includes="org/ulteo/ovd/applet/**.java" />
         
         <jar destfile="libs/UlteoOVD.jar"  basedir="classes/">
