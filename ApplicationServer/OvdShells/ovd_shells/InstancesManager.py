@@ -83,12 +83,12 @@ class InstancesManager(threading.Thread):
 			
 					
 			t1 = time.time()
-			t+= (t1 - t0)
-			if t > 5:
+			t_init+= (t1 - t0)
+			if t_init > 5:
 				# We send channel init time to time to manage the reconnection
 				buf = struct.pack(">B", OvdAppChannel.ORDER_INIT)
 				self.vchannel.Write(buf)
-				t = 0
+				t_init = 0
 	
 	def stop(self):
 		if self.isAlive():

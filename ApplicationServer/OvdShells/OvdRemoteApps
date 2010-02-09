@@ -20,13 +20,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import os
 import struct
-import sys
-import threading
 import time
 
-from ovd_shells.Application import Application
 from ovd_shells import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.InstancesManager import InstancesManager
@@ -40,7 +36,7 @@ def main():
 	
 	os.environ["OVD_SESSION_DIR"] = user_sdir
 	
-	seamPid = Platform.launch("seamlessrdpshell", False)
+	Platform.launch("seamlessrdpshell", False)
 	
 	vchannel = VirtualChannel(OvdAppChannel.NAME)
 	tryOpenChannel(vchannel)
