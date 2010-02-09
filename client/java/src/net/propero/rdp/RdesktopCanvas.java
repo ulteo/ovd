@@ -238,6 +238,9 @@ public abstract class RdesktopCanvas extends Canvas {
     public void displayImage(Image img, int x, int y) throws RdesktopException {
 
         Graphics g = backstore.getGraphics();
+	if (g == null)
+		return;
+
         g.drawImage(img, x, y, null);
         /* ********* Useful test for identifying image boundaries ************ */
         // g.setColor(Color.RED);
@@ -334,6 +337,9 @@ public abstract class RdesktopCanvas extends Canvas {
      */
     public void resetClip() {
         Graphics g = this.getGraphics();
+	if (g == null)
+		return;
+	
         Rectangle bounds = this.getBounds();
         g.setClip(bounds.x, bounds.y, bounds.width, bounds.height);
         this.top = 0;
@@ -350,6 +356,9 @@ public abstract class RdesktopCanvas extends Canvas {
      */
     public void setClip(BoundsOrder bounds) {
         Graphics g = this.getGraphics();
+	if (g == null)
+		return;
+	
         g.setClip(bounds.getLeft(), bounds.getTop(), bounds.getRight()
                 - bounds.getLeft(), bounds.getBottom() - bounds.getTop());
         this.top = bounds.getTop();
