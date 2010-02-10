@@ -45,8 +45,6 @@ var Daemon = Class.create({
 	started: false,
 	stopped: false,
 
-	application_state: -1,
-	old_application_state: -1,
 	app_id: '',
 	doc: '',
 
@@ -240,8 +238,6 @@ return;
 		this.push_log('debug', '[daemon] check_status()');
 this.old_session_state = 2;
 this.session_state = 2;
-this.old_application_state = 2;
-this.application_state = 2;
 this.push_log('error', '[daemon] check_status() - RETURN');
 return;
 		new Ajax.Request(
@@ -275,21 +271,6 @@ return;
 
 		try { // IE does not have hasAttribute in DOM API...
 			this.session_state = sessionNode.getAttribute('status');
-		} catch(e) {
-			return;
-		}
-
-		var buffer = xml.getElementsByTagName('application');
-
-		if (buffer.length != 1)
-			return;
-
-		var applicationNode = buffer[0];
-
-		this.old_application_state = this.application_state;
-
-		try { // IE does not have hasAttribute in DOM API...
-			this.application_state = applicationNode.getAttribute('status');
 		} catch(e) {
 			return;
 		}
