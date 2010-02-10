@@ -158,14 +158,6 @@ var Running_Application = Class.create(Application, {
 		this.app_span.innerHTML = '';
 
 		if (this.status == 2) {
-			if (this.context.shareable == true) {
-				var node = new Element('a');
-				node.observe('click', this.onClickShare.bind(this));
-				node.setAttribute('href', 'javascript:;');
-				node.innerHTML = this.context.translate('share');
-				this.app_span.appendChild(node);
-			}
-
 			if (this.context.persistent == true) {
 				var node = new Element('a');
 				node.observe('click', this.onClickSuspend.bind(this));
@@ -192,11 +184,6 @@ var Running_Application = Class.create(Application, {
 		return true;
 	},
 
-	onClickShare: function(event) {
-		this.share();
-		event.stop();
-	},
-
 	onClickSuspend: function(event) {
 		this.suspend();
 		event.stop();
@@ -205,63 +192,6 @@ var Running_Application = Class.create(Application, {
 	onClickResume: function(event) {
 		this.resume();
 		event.stop();
-	},
-
-	share: function() {
-		$('infoWrap').style.width = '30%';
-		var node = new Element('div');
-		var table = new Element('table');
-		table.setAttribute('style', 'width: 100%; margin-left: auto; margin-right: auto;');
-		var tbody = new Element('tbody');
-		var tr = new Element('tr');
-		var td = new Element('td');
-		td.setAttribute('style', 'text-align: center;');
-		var h2 = new Element('h2');
-		h2.setAttribute('style', 'text-align: center;');
-		h2.innerHTML = this.context.translate('application_sharing');
-		td.appendChild(h2);
-		var invite_form = new Element('form');
-		//invite_form.observe('submit', doInvite('portal'));
-		invite_form.setAttribute('action', 'javascript:;');
-		invite_form.setAttribute('method', 'post');
-		invite_form.setAttribute('onsubmit', 'doInvite(\'portal\'); return false;');
-		var input_pid = new Element('input');
-		input_pid.setAttribute('type', 'hidden');
-		input_pid.setAttribute('id', 'invite_access_id');
-		input_pid.setAttribute('name', 'access_id');
-		input_pid.setAttribute('value', this.pid);
-		invite_form.appendChild(input_pid);
-		var para = new Element('p');
-		para.innerHTML = this.context.translate('email_address')+':&nbsp;';
-		var input_email = new Element('input');
-		input_email.setAttribute('type', 'text');
-		input_email.setAttribute('id', 'invite_email');
-		input_email.setAttribute('name', 'email');
-		para.appendChild(input_email);
-		para.innerHTML += '&nbsp;';
-		var input_mode = new Element('input');
-		input_mode.setAttribute('class', 'input_checkbox');
-		input_mode.setAttribute('type', 'checkbox');
-		input_mode.setAttribute('id', 'invite_mode');
-		input_mode.setAttribute('name', 'mode');
-		para.appendChild(input_mode);
-		para.innerHTML += '&nbsp;'+this.context.translate('active_mode');
-		invite_form.appendChild(para);
-		var para2 = new Element('p');
-		para2.setAttribute('style', 'text-align: center;');
-		var input_submit = new Element('input');
-		input_submit.setAttribute('type', 'submit');
-		input_submit.setAttribute('id', 'invite_submit');
-		input_submit.setAttribute('value', this.context.translate('invite'));
-		para2.appendChild(input_submit);
-		invite_form.appendChild(para2);
-		td.appendChild(invite_form);
-		tr.appendChild(td);
-		tbody.appendChild(tr);
-		table.appendChild(tbody);
-		node.appendChild(table);
-
-		showInfo(node.innerHTML);
 	},
 
 	suspend: function() {
@@ -290,12 +220,10 @@ var Running_Application = Class.create(Application, {
 
 var Context = Class.create({
 	i18n: new Array(),
-	shareable: false,
 	persistent: false,
 
-	initialize: function(i18n_, shareable_, persistent_) {
+	initialize: function(i18n_, persistent_) {
 		this.i18n = i18n_,
-		this.shareable = shareable_;
 		this.persistent = persistent_;
 	},
 

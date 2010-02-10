@@ -37,10 +37,8 @@ var Daemon = Class.create({
 	servers: new Hash(),
 	liaison_server_applications: new Hash(),
 
-	shareable: false,
 	persistent: false,
 	in_popup: true,
-	shared: false,
 
 	session_state: -1,
 	old_session_state: -1,
@@ -56,8 +54,6 @@ var Daemon = Class.create({
 
 	applet_width: -1,
 	applet_height: -1,
-
-	nb_share: 0,
 
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		this.applet_version = applet_version_;
@@ -116,7 +112,7 @@ return;
 	},
 
 	initContext: function() {
-		var context = new Context(this.i18n, this.shareable, this.persistent);
+		var context = new Context(this.i18n, this.persistent);
 
 		return context;
 	},
@@ -452,7 +448,7 @@ return;
 				close_button.setAttribute('value', this.i18n['close_this_window']);
 				close_button.setAttribute('onclick', 'window.close(); return false;');
 				close_container.appendChild(close_button);
-			} else if (this.shared == false) {
+			} else {
 				var close_text = document.createElement('span');
 				close_text.innerHTML = this.i18n['start_another_session'];
 				close_container.appendChild(close_text);

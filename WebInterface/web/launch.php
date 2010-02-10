@@ -98,7 +98,6 @@ if (array_key_exists('interface', $_SESSION)) {
 				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
 				daemon.i18n['start_another_session'] = '<?php echo str_replace("'", "\'", _('You can now start a new session')); ?>';
 
-				daemon.i18n['share'] = '<?php echo str_replace("'", "\'", _('share')); ?>';
 				daemon.i18n['suspend'] = '<?php echo str_replace("'", "\'", _('suspend')); ?>';
 				daemon.i18n['resume'] = '<?php echo str_replace("'", "\'", _('resume')); ?>';
 
