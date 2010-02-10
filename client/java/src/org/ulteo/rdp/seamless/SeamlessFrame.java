@@ -22,9 +22,15 @@
 package org.ulteo.rdp.seamless;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import net.propero.rdp.Common;
+import net.propero.rdp.RdesktopException;
+import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.seamless.SeamFrame;
 
 
@@ -143,64 +149,73 @@ public class SeamlessFrame extends SeamFrame {
 		}
 	}
 
-	protected void resizeRW(MouseEvent me) {
+	protected Rectangle getRWSize(MouseEvent me) {
 		if (me == null)
-			return;
-		
-		int x_rw = 0, y_rw = 0, w_rw = 0, h_rw = 0;
+			return null;
+
+		Rectangle r = new Rectangle();
 		switch (this.corner) {
 			case SeamlessFrame.CORNER_TOP_LEFT:
-				x_rw = me.getXOnScreen() + this.xOffset;
-				y_rw = me.getYOnScreen() + this.yOffset;
-				w_rw = this.getX() + this.getWidth() - x_rw;
-				h_rw = this.getY() + this.getHeight() - y_rw;
+				r.x = me.getXOnScreen() + this.xOffset;
+				r.y = me.getYOnScreen() + this.yOffset;
+				r.width = this.getX() + this.getWidth() - r.x;
+				r.height = this.getY() + this.getHeight() - r.y;
 				break;
 			case SeamlessFrame.CORNER_BOTTOM_LEFT:
-				x_rw = me.getXOnScreen() + this.xOffset;
-				y_rw = this.getY();
-				w_rw = this.getX() + this.getWidth() - x_rw;
-				h_rw = me.getYOnScreen() - this.getY() + this.yOffset;
+				r.x = me.getXOnScreen() + this.xOffset;
+				r.y = this.getY();
+				r.width = this.getX() + this.getWidth() - r.x;
+				r.height = me.getYOnScreen() - this.getY() + this.yOffset;
 				break;
 			case SeamlessFrame.CORNER_BOTTOM_RIGHT:
-				x_rw = this.getX();
-				y_rw = this.getY();
-				w_rw = me.getXOnScreen() - x_rw + this.xOffset;
-				h_rw = me.getYOnScreen() - y_rw + this.yOffset;
+				r.x = this.getX();
+				r.y = this.getY();
+				r.width = me.getXOnScreen() - r.x + this.xOffset;
+				r.height = me.getYOnScreen() - r.y + this.yOffset;
 				break;
 			case SeamlessFrame.CORNER_TOP_RIGHT:
-				x_rw = this.getX();
-				y_rw = me.getYOnScreen() + this.yOffset;
-				w_rw = me.getXOnScreen() - this.getX() + this.xOffset;
-				h_rw = this.getY() + this.getHeight() - y_rw;
+				r.x = this.getX();
+				r.y = me.getYOnScreen() + this.yOffset;
+				r.width = me.getXOnScreen() - this.getX() + this.xOffset;
+				r.height = this.getY() + this.getHeight() - r.y;
 				break;
 			case SeamlessFrame.CORNER_LEFT:
-				x_rw = me.getXOnScreen();
-				y_rw = this.getY();
-				w_rw = this.getX() + this.getWidth() - x_rw;
-				h_rw = this.getHeight();
+				r.x = me.getXOnScreen();
+				r.y = this.getY();
+				r.width = this.getX() + this.getWidth() - r.x;
+				r.height = this.getHeight();
 				break;
 			case SeamlessFrame.CORNER_BOTTOM:
-				x_rw = this.getX();
-				y_rw = this.getY();
-				w_rw = this.getWidth();
-				h_rw = me.getYOnScreen() - y_rw;
+				r.x = this.getX();
+				r.y = this.getY();
+				r.width = this.getWidth();
+				r.height = me.getYOnScreen() - r.y;
 				break;
 			case SeamlessFrame.CORNER_RIGHT:
-				x_rw = this.getX();
-				y_rw = this.getY();
-				w_rw = me.getXOnScreen() - x_rw;
-				h_rw = this.getHeight();
+				r.x = this.getX();
+				r.y = this.getY();
+				r.width = me.getXOnScreen() - r.x;
+				r.height = this.getHeight();
 				break;
 			case SeamlessFrame.CORNER_TOP:
-				x_rw = this.getX();
-				y_rw = me.getYOnScreen();
-				w_rw = this.getWidth();
-				h_rw = this.getY() + this.getHeight() - y_rw;
+				r.x = this.getX();
+				r.y = me.getYOnScreen();
+				r.width = this.getWidth();
+				r.height = this.getY() + this.getHeight() - r.y;
 				break;
 			default:
-				return;
+				return null;
 		}
-		this.rw.setBounds(x_rw, y_rw, w_rw, h_rw);
+		return r;
+	}
+
+	protected void resizeRW(MouseEvent me) {
+		Rectangle r = this.getRWSize(me);
+		
+		if (r == null)
+			return;
+				
+		this.rw.setBounds(r.x, r.y, r.width, r.height);
 	}
 
 	@Override
@@ -243,7 +258,34 @@ public class SeamlessFrame extends SeamFrame {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		this.unlockMouseEvents();
+		if (this.lockMouseEvents) {
+			Rectangle r = null;
+			if (this.resizeClick != null) {
+				r = this.getRWSize(e);
+			}
+			else if (this.moveClick != null) {
+				r = new Rectangle();
+				
+				r.x = e.getXOnScreen() - this.xOffset;
+				r.y = e.getYOnScreen() - this.yOffset;
+				r.width = this.getWidth();
+				r.height = this.getHeight();
+			}
+
+			if (r != null) {
+				try {
+					this.common.seamlessChannelInstance.send_position(this.id, r.x, r.y, r.width, r.height, 0);
+				} catch (RdesktopException ex) {
+					Logger.getLogger(SeamlessFrame.class.getName()).log(Level.SEVERE, null, ex);
+				} catch (IOException ex) {
+					Logger.getLogger(SeamlessFrame.class.getName()).log(Level.SEVERE, null, ex);
+				} catch (CryptoException ex) {
+					Logger.getLogger(SeamlessFrame.class.getName()).log(Level.SEVERE, null, ex);
+				}
+
+				this.unlockMouseEvents();
+			}
+		}
 		
 		super.mouseReleased(e);
 	}
