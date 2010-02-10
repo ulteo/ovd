@@ -1,6 +1,7 @@
 # Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
+# Author Laurent CLOUET <laurent@ulteo.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -272,7 +273,7 @@ application_startdisplay() {
                 return 1
             fi
 
-            log_WARN "Unable to start a VNC server on port $RFB_PORT (tried $try)"
+            log_WARN "Unable to start a VNC server on port $rfb_port (tried $try)"
             echo $rfb_port >> $sessid_dir/private/failed_rfbports
             local rfb_port=$(spool_get_rfbport)
             echo $rfb_port > $app_dir/rfb_port
