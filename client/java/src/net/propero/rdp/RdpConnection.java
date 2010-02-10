@@ -27,9 +27,11 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Observable;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
+import net.propero.rdp.keymapping.KeyMapException;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 import net.propero.rdp.rdp5.Rdp5;
@@ -37,6 +39,8 @@ import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
 public class RdpConnection extends Observable implements Runnable {
+	private static final String keyMapPath = "ressources/keymaps/";
+
 	private VChannels channels = null;
 	private ClipChannel clipChannel = null;
 	private Rdp5 RdpLayer = null;
@@ -45,6 +49,7 @@ public class RdpConnection extends Observable implements Runnable {
 	private RdesktopCanvas_Localised canvas = null;
 	private ArrayList<Application> appsList = null;
 	private String state = "disconnected";
+	private String mapFile = null;
 	
 	public RdpConnection(Options opt_, Common common_) throws RdesktopException {
 		this.init(opt_, common_);
@@ -97,6 +102,56 @@ public class RdpConnection extends Observable implements Runnable {
 	public void addApp(Application app_) {
 		this.appsList.add(app_);
 	}
+
+	protected void detectKeymap() {
+		String language = System.getProperty("user.language");
+		String country = System.getProperty("user.country");
+
+		this.mapFile =  new Locale(language, country).toString().toLowerCase();
+		this.mapFile = this.mapFile.replace('_', '-');
+	}
+
+	protected boolean loadKeymap() {
+		InputStream istr = null;
+		KeyCode_FileBased keyMap = null;
+
+		if (this.mapFile == null)
+			this.detectKeymap();
+
+		istr = RdpConnection.class.getResourceAsStream("/" + RdpConnection.keyMapPath + this.mapFile);
+
+		if (istr == null) {
+			this.mapFile = this.mapFile.substring(0, this.mapFile.indexOf('-'));
+			istr = RdpConnection.class.getResourceAsStream("/" + RdpConnection.keyMapPath + this.mapFile);
+			if (istr == null) {
+				this.mapFile = "en-gb";
+				istr = RdpConnection.class.getResourceAsStream("/" + RdpConnection.keyMapPath + this.mapFile);
+			}
+		}
+
+		try {
+			keyMap = new KeyCode_FileBased_Localised(istr, opt);
+		} catch (KeyMapException kmEx) {
+			kmEx.printStackTrace();
+			return false;
+		}
+		System.out.println("Autoselected keyboard map "+this.mapFile);
+
+		if(istr != null) {
+			try {
+				istr.close();
+			} catch (IOException ioEx) {
+				System.err.println("Error: Unable to close keymap "+ this.mapFile +" : "+ ioEx);
+				ioEx.printStackTrace();
+			}
+		}
+		this.opt.keylayout = keyMap.getMapCode();
+
+		if (keyMap != null)
+			this.canvas.registerKeyboard(keyMap);
+
+		return true;
+	}
 	
 	public void run() {
 		int logonflags = Rdp.RDP_LOGON_NORMAL;
@@ -104,32 +159,9 @@ public class RdpConnection extends Observable implements Runnable {
 		int[] ext_disc_reason = new int[1];
 		
 		logonflags |= Rdp.RDP_LOGON_AUTO;
-		
-		// Configure a keyboard layout
-		InputStream istr = null;
-		KeyCode_FileBased keyMap = null;
-		try {
-			istr = RdpConnection.class.getResourceAsStream("/ressources/keymaps/fr");
-			if (istr == null)
-				keyMap = new KeyCode_FileBased_Localised("en-us", this.opt);
-			else
-				keyMap = new KeyCode_FileBased_Localised(istr, this.opt);
-		} catch (Exception kmEx) {
-			System.out.println(kmEx.getClass() + ": " + kmEx.getMessage());
-			exit(1);
-		}
-		if(istr != null) {
-			try {
-				istr.close();
-			} catch (IOException ioEx) {
-				ioEx.printStackTrace();
-				exit(1);
-			}
-		}
-		this.opt.keylayout = keyMap.getMapCode();
 
-		if (keyMap != null)
-			this.canvas.registerKeyboard(keyMap);
+		// Configure a keyboard layout
+		this.loadKeymap();
 		
 		/*main while*/
 		this.RdpLayer = new Rdp5(channels, this.opt, this.common);
