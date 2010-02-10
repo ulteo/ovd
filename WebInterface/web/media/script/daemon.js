@@ -33,6 +33,9 @@ var Daemon = Class.create({
 	server: '',
 	port: '',
 
+	my_width: 0,
+	my_height: 0,
+
 	mode: '',
 
 	servers: new Hash(),
@@ -42,6 +45,7 @@ var Daemon = Class.create({
 
 	session_state: -1,
 	old_session_state: -1,
+
 	started: false,
 	stopped: false,
 
@@ -60,10 +64,6 @@ var Daemon = Class.create({
 		this.port = window.location.port;
 		if (this.port == '')
 			this.port = 80;
-
-		this.session_state = -1;
-		this.old_session_state = -1;
-		this.started = false;
 
 		if (typeof(window.innerWidth) == 'number' || typeof(window.innerHeight) == 'number') {
 			this.my_width  = window.innerWidth;
@@ -165,14 +165,12 @@ return;
 
 		this.check_status();
 
-		if (this.session_state == 2 && $('splashContainer').visible()) {
-			if (! this.started) {
-				this.push_log('info', '[daemon] loop() - Now starting session');
-				this.start();
-			}
+		if (! this.started && this.session_state == 2) {
+			this.push_log('info', '[daemon] loop() - Now starting session');
+			this.start();
 
 			this.started = true;
-		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9) {
+		} else if (this.stopped || (this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9 || this.session_state == 10) {
 			this.push_log('info', '[daemon] loop() - Now ending session');
 
 			if (! this.started) {
@@ -182,10 +180,11 @@ return;
 
 			this.do_ended();
 
-			return;
+			this.stopped = true;
 		}
 
-		setTimeout(this.loop.bind(this), 2000);
+		if (! this.stopped)
+			setTimeout(this.loop.bind(this), 2000);
 	},
 
 	suspend: function() {
@@ -343,11 +342,6 @@ return;
 
 	do_ended: function() {
 		this.push_log('debug', '[daemon] do_ended()');
-
-		if (this.stopped == true)
-			return;
-
-		this.stopped = true;
 
 		if ($('splashContainer').visible())
 			$('splashContainer').hide();
