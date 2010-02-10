@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -24,60 +24,73 @@ require_once(dirname(__FILE__).'/core.inc.php');
 
 $config_file = '@SYSCONFDIR@/ulteo-ovd.conf';
 
-if (!is_readable($config_file))
+$keys_conf_outside_chroot = array(
+	'CHROOT' => 'CHROOT', 
+	'LOG_WWW' => 'APS_LOGS');  // key_bash => key_php
+$keys_conf_inside_chroot = array(
+	'SERVERNAME' => 'SERVERNAME', 
+	'SESSION_MANAGER_URL' => 'SESSIONMANAGER_URL', 
+	'LOG_FILE' => 'LOG_FILE', 
+	'LOG_FLAGS' => 'LOG_FLAGS', 
+	'SPOOL' => 'SPOOL');  // key_bash => key_php
+
+// read the conf file outside the chroot
+
+if (! is_readable($config_file))
 	die('Error reading config file 1a: '.$config_file);
 
-$buf = shell_exec('. '.$config_file.' && echo $CHROOT');
-$buf = trim($buf);
+$contents = file_get_contents($config_file);
+$lines = explode("\n", $contents);
 
-if (!$buf || $buf == '')
-	die('Error parsing config file 1b: '.$config_file);
+foreach ($lines as $line) {
+	$values = explode("=", $line);
+	if (count($values) == 2) {
+		if (array_key_exists($values[0], $keys_conf_outside_chroot)) {
+			if (! defined($keys_conf_outside_chroot[$values[0]])) {
+				define($keys_conf_outside_chroot[$values[0]], $values[1]);
+			}
+		}
+	}
+}
 
-define('CHROOT', $buf);
-unset($buf);
+foreach ($keys_conf_outside_chroot as $k => $v) {
+	if (! defined($v)) {
+		die("Error parsing config file 1d: $config_file key $v not found");
+	}
+}
 
-$buf = shell_exec('. '.$config_file.' && echo $LOG_WWW');
-$buf = trim($buf);
+// read the conf file inside the chroot
 
-if (!$buf || $buf == '')
-	die('Error parsing config file 1c: '.$config_file);
+$config_file_chroot = CHROOT.'/etc/ulteo-ovd.conf';
 
-define('APS_LOGS', $buf);
-unset($buf);
-
-if (!is_readable(CHROOT.'/etc/ulteo-ovd.conf'))
-	die('Error reading config file 2 : '.CHROOT.'/etc/ulteo-ovd.conf');
+if (! is_readable($config_file_chroot))
+	die('Error reading config file 2 : '.$config_file_chroot);
 
 define('PDF_POOL_DIR', CHROOT.'/var/spool/cups2all/');
 
-$buf = shell_exec('SPOOL="/var/spool/applicationserver" && . '.CHROOT.'/etc/ulteo-ovd.conf && echo $SPOOL');
-$buf = trim($buf);
+$contents = file_get_contents($config_file_chroot);
+$lines = explode("\n", $contents);
+ 
+foreach ($lines as $line) {
+	$values = explode("=", $line);
+	if (count($values) == 2) {
+		if (array_key_exists($values[0], $keys_conf_inside_chroot)) {
+			if (! defined($keys_conf_inside_chroot[$values[0]])) {
+				define($keys_conf_inside_chroot[$values[0]], $values[1]);
+			}
+		}
+	}
+}
 
-if (!$buf || $buf == '')
-	die('Error parsing config file 2 : '.CHROOT.'/etc/ulteo-ovd.conf');
+foreach ($keys_conf_inside_chroot as $k => $v) {
+	if (! defined($v)) {
+		die("Error parsing config file 1e: $config_file_chroot key $v not found");
+	}
+}
 
-define('CHROOT_SPOOL', CHROOT.'/'.$buf);
+define('CHROOT_SPOOL', CHROOT.'/'.SPOOL);
 define('SESSION_PATH', CHROOT_SPOOL.'/sessions');
 define('SESSION2CREATE_PATH', CHROOT_SPOOL.'/sessions2create');
 define('SPOOL_APT',  CHROOT_SPOOL.'/apt');
 define('SPOOL_FILE', CHROOT_SPOOL.'/files');
 define('LOCALE_DIR', '@LOCALE_DIR@');
-unset($buf);
-
-$buf = shell_exec('. '.CHROOT.'/etc/ulteo-ovd.conf && echo $SESSION_MANAGER_URL');
-$buf = trim($buf);
-
-if (!$buf || $buf == '')
-	die('Error parsing config file 3a : '.CHROOT.'/etc/ulteo-ovd.conf');
-
-define('SESSIONMANAGER_URL', $buf);
-unset($buf);
-
-$buf = shell_exec('. '.CHROOT.'/etc/ulteo-ovd.conf && echo $SERVERNAME');
-$buf = trim($buf);
-
-if (!$buf || $buf == '')
-	die('Error parsing config file 3b : '.CHROOT.'/etc/ulteo-ovd.conf');
-
-define('SERVERNAME', $buf);
-unset($buf);
