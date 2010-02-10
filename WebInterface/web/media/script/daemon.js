@@ -45,13 +45,7 @@ var Daemon = Class.create({
 	started: false,
 	stopped: false,
 
-	app_id: '',
-	doc: '',
-
 	error_message: '',
-
-	applet_width: -1,
-	applet_height: -1,
 
 	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, in_popup_, debug_) {
 		this.applet_version = applet_version_;
