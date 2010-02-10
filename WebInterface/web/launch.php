@@ -20,16 +20,6 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
-
-$debug = false;
-if (array_key_exists('interface', $_SESSION)) {
-	if (array_key_exists('debug', $_SESSION['interface'])) {
-		if ($_SESSION['interface']['debug'] == 'true')
-			$debug = true;
-		else
-			$debug = false;
-	}
-}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -88,7 +78,7 @@ if (array_key_exists('interface', $_SESSION)) {
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', 'ulteo-printing.jar', <?php echo (($debug)?'true':'false'); ?>);
+				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', 'ulteo-printing.jar', <?php echo $_SESSION['interface']['in_popup']; ?>, <?php echo $_SESSION['interface']['debug']; ?>);
 				daemon.access_id = '<?php echo $_SESSION['session_mode']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
@@ -96,7 +86,7 @@ if (array_key_exists('interface', $_SESSION)) {
 				daemon.i18n['session_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your session has ended unexpectedly')); ?>';
 				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
 				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
-				daemon.i18n['start_another_session'] = '<?php echo str_replace("'", "\'", _('You can now start a new session')); ?>';
+				daemon.i18n['start_another_session'] = '<?php printf(str_replace("'", "\'", _('Click %shere%s to start a new session')), '<a href="index.php">', '</a>'); ?>';
 
 				daemon.i18n['suspend'] = '<?php echo str_replace("'", "\'", _('suspend')); ?>';
 				daemon.i18n['resume'] = '<?php echo str_replace("'", "\'", _('resume')); ?>';

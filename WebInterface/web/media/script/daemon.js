@@ -26,6 +26,7 @@ var Daemon = Class.create({
 	applet_main_class: '',
 	printing_applet_version: '',
 
+	in_popup: true,
 	debug: false,
 
 	protocol: '',
@@ -38,7 +39,6 @@ var Daemon = Class.create({
 	liaison_server_applications: new Hash(),
 
 	persistent: false,
-	in_popup: true,
 
 	session_state: -1,
 	old_session_state: -1,
@@ -55,11 +55,12 @@ var Daemon = Class.create({
 	applet_width: -1,
 	applet_height: -1,
 
-	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
+	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, in_popup_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;
 		this.printing_applet_version = printing_applet_version_;
 
+		this.in_popup = in_popup_;
 		this.debug = debug_;
 
 		this.protocol = window.location.protocol;
@@ -411,8 +412,8 @@ return;
 				error_toggle_img_link.setAttribute('onclick', 'toggleContent(\'errorContainer\'); return false;');
 				var error_toggle_img = document.createElement('span');
 				error_toggle_img.setAttribute('id', 'errorContainer_ajax');
-				error_toggle_img.setAttribute('style', 'width: 16px; height: 16px;');
-				error_toggle_img.innerHTML = '<img src="../media/image/show.png" width="16" height="16" alt="+" title="" />';
+				error_toggle_img.setAttribute('style', 'width: 9px; height: 9px;');
+				error_toggle_img.innerHTML = '<img src="../media/image/show.png" width="9" height="9" alt="+" title="" />';
 				error_toggle_img_link.appendChild(error_toggle_img);
 				error_toggle_img_td.appendChild(error_toggle_img_link);
 				error_toggle_tr.appendChild(error_toggle_img_td);

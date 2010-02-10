@@ -45,6 +45,10 @@ function query_url_post_xml($url_, $xml_) {
 	return $ret;
 }
 
+$_SESSION['interface'] = array();
+$_SESSION['interface']['in_popup'] = $_POST['use_popup'];
+$_SESSION['interface']['debug'] = $_POST['debug'];
+
 header('Content-Type: text/xml; charset=utf-8');
 
 if (! array_key_exists('login', $_POST)) {
@@ -112,9 +116,6 @@ if (count($server_nodes) < 1) {
 }
 
 $_SESSION['xml'] = $xml;
-
-$_SESSION['interface'] = array();
-$_SESSION['interface']['debug'] = $_POST['debug'];
 
 echo $_SESSION['xml'];
 die();

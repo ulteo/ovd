@@ -28,8 +28,8 @@ var Portal = Class.create(Daemon, {
 
 	liaison_runningapplicationtoken_application: new Hash(),
 
-	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
-		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, debug_]);
+	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, in_popup_, debug_) {
+		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, printing_applet_version_, in_popup_, debug_]);
 
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));

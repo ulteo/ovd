@@ -7,6 +7,10 @@ var startsession = false;
 function startSession(login_, password_, mode_) {
 	disableLogin();
 
+	var use_popup = false;
+	if ($('use_popup_true') && $('use_popup_true').checked)
+		use_popup = true;
+
 	var debug = false;
 	if ($('debug_true') && $('debug_true').checked)
 		debug = true;
@@ -19,6 +23,7 @@ function startSession(login_, password_, mode_) {
 				login: login_,
 				password: password_,
 				mode: mode_,
+				use_popup: use_popup,
 				debug: debug
 			},
 			asynchronous: false,
@@ -92,14 +97,14 @@ function popupOpen(rand_) {
 }
 
 function offContent(container) {
-	$(container+'_ajax').innerHTML = '<img src="media/image/show.png" width="16" height="16" alt="+" title="" />';
+	$(container+'_ajax').innerHTML = '<img src="media/image/show.png" width="9" height="9" alt="+" title="" />';
 	$(container+'_content').hide();
 
 	return true;
 }
 
 function onContent(container) {
-	$(container+'_ajax').innerHTML = '<img src="media/image/hide.png" width="16" height="16" alt="-" title="" />';
+	$(container+'_ajax').innerHTML = '<img src="media/image/hide.png" width="9" height="9" alt="-" title="" />';
 	$(container+'_content').show();
 
 	return true;
