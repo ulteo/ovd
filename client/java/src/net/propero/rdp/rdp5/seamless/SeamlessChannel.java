@@ -714,12 +714,11 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	
 	public void	send_position(int id, int x, int y, int width, int height, int flags) throws RdesktopException, IOException, CryptoException
 	{
-		seamless_send("POSITION", 
-				"0x" + Integer.toHexString(id) + "," + 
-				"0x" + Integer.toHexString(x) + "," + 
-				"0x" + Integer.toHexString(y) + "," +
-				"0x" + Integer.toHexString(width) + "," +
-				"0x" + Integer.toHexString(height) + "," +
+		seamless_send("POSITION", "0x" + Integer.toHexString(id) + "," +
+				x + "," +
+				y + "," +
+				width + "," +
+				height + "," +
 				"0x" + Integer.toHexString(flags));
 	}
 	
