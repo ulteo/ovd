@@ -36,19 +36,26 @@ var Portal = Class.create(Daemon, {
 	},
 
 	connect_servers: function() {
+		this.push_log('debug', '[portal] connect_servers()');
+
 		if (! $('ulteoapplet').isActive()) {
+			this.push_log('warning', '[portal] connect_servers() - Applet is not ready');
 			setTimeout(this.connect_servers.bind(this), 1000);
 			return;
 		}
 
 		var servers = this.servers.values();
-		for (var i=0; i < servers.length; i++)
+		for (var i=0; i < servers.length; i++) {
+			this.push_log('info', '[portal] connect_servers() - Connecting to server "'+servers[i].id+'"');
 			servers[i].connect();
+		}
 
 		return true;
 	},
 
 	do_started: function() {
+		this.push_log('debug', '[portal] do_started()');
+
 		this.list_apps();
 
 		Daemon.prototype.do_started.apply(this);
@@ -57,6 +64,8 @@ var Portal = Class.create(Daemon, {
 	},
 
 	parse_do_started: function(transport) {
+		this.push_log('debug', '[portal] parse_do_started(transport@do_started())');
+
 		$('splashContainer').hide();
 
 		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="1" height="1"> \
@@ -76,6 +85,8 @@ var Portal = Class.create(Daemon, {
 	},
 
 	list_apps: function() {
+		this.push_log('debug', '[portal] list_apps()');
+
 		new Ajax.Request(
 			'apps.php',
 			{
@@ -86,17 +97,23 @@ var Portal = Class.create(Daemon, {
 	},
 
 	parse_list_apps: function(transport) {
+		this.push_log('debug', '[portal] parse_list_apps(transport@list_apps())');
+
 		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('applications');
 
-		if (buffer.length != 1)
+		if (buffer.length != 1) {
+			this.push_log('error', '[portal] parse_list_apps(transport@list_apps()) - Invalid XML (No "applications" node)');
 			return;
+		}
 
 		var applicationNodes = xml.getElementsByTagName('application');
 
 		for (var i=0; i < applicationNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
+				this.push_log('info', '[portal] parse_list_apps(transport@list_apps()) - Adding application "'+applicationNodes[i].getAttribute('id')+'" to applications list');
+
 				var server_id = applicationNodes[i].getAttribute('server');
 
 				if (typeof this.liaison_server_applications.get(server_id) == 'undefined')
@@ -107,12 +124,15 @@ var Portal = Class.create(Daemon, {
 				this.applicationsPanel.add(application);
 				this.liaison_server_applications.get(server_id).push(application.id);
 			} catch(e) {
+				this.push_log('error', '[portal] parse_list_apps(transport@list_apps()) - Invalid XML (Missing argument for "application" node '+i+')');
 				return;
 			}
 		}
 	},
 
 	list_running_apps: function(applicationsNode_) {
+		this.push_log('debug', '[portal] list_running_apps(xml@applicationsNode)');
+
 		var runningApplicationsNodes = applicationsNode_.getElementsByTagName('running');
 
 		var apps_in_xml = new Array();
@@ -149,28 +169,40 @@ var Portal = Class.create(Daemon, {
 	},
 
 	applicationStatus: function(token_, status_) {
+		this.push_log('debug', '[portal] applicationStatus(token: '+token_+', status: '+status_+')');
+
 		var app_status = 2;
 
 		if (typeof this.running_applications.get(token_) == 'undefined') {
+			this.push_log('info', '[portal] applicationStatus(token: '+token_+', status: '+status_+') - Creating "running" application "'+token_+'"');
+
 			var app_id = this.liaison_runningapplicationtoken_application.get(token_);
 			if (typeof app_id == 'undefined')
 				return false;
 
 			var app_object = this.applications.get(app_id);
-			if (typeof app_object == 'undefined')
+			if (typeof app_object == 'undefined') {
+				this.push_log('error', '[portal] applicationStatus(token: '+token_+', status: '+status_+') - Application "'+app_id+'" does not exist');
 				return false;
+			}
 
 			var instance = new Running_Application(app_object.id, app_object.name, app_object.server, token_, app_status, this.getContext());
 			this.running_applications.set(instance.pid, instance);
 
-			if (status_ == 'started')
+			if (status_ == 'started') {
+				this.push_log('info', '[portal] applicationStatus(token: '+token_+', status: '+status_+') - Adding "running" application "'+token_+'" to running applications list');
 				this.runningApplicationsPanel.add(instance);
+			}
 		} else {
+			this.push_log('info', '[portal] applicationStatus(token: '+token_+', status: '+status_+') - Updating "running" application "'+token_+'" status: "'+app_status+'"');
+
 			var instance = this.running_applications.get(token_);
 			instance.update(app_status);
 
-			if (status_ == 'stopped')
+			if (status_ == 'stopped') {
+				this.push_log('info', '[portal] applicationStatus(token: '+token_+', status: '+status_+') - Deleting "running" application "'+token_+'" from running applications list');
 				this.runningApplicationsPanel.del(instance);
+			}
 		}
 
 		return true;
@@ -178,5 +210,7 @@ var Portal = Class.create(Daemon, {
 });
 
 function applicationStatus(token_, status_) {
+	daemon.push_log('debug', '[proxy] applicationStatus(token: '+token_+', status: '+status_+')');
+
 	return daemon.applicationStatus(token_, status_);
 }

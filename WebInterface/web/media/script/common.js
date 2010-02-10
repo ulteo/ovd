@@ -7,6 +7,10 @@ var startsession = false;
 function startSession(login_, password_, mode_) {
 	disableLogin();
 
+	var debug = false;
+	if ($('debug_true') && $('debug_true').checked)
+		debug = true;
+
 	var ret = new Ajax.Request(
 		'ajax/login.php',
 		{
@@ -14,7 +18,8 @@ function startSession(login_, password_, mode_) {
 			parameters: {
 				login: login_,
 				password: password_,
-				mode: mode_
+				mode: mode_,
+				debug: debug
 			},
 			asynchronous: false,
 			onSuccess: onStartSessionSuccess,

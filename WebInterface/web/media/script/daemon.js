@@ -26,6 +26,8 @@ var Daemon = Class.create({
 	applet_main_class: '',
 	printing_applet_version: '',
 
+	debug: false,
+
 	protocol: '',
 	server: '',
 	port: '',
@@ -57,10 +59,12 @@ var Daemon = Class.create({
 
 	nb_share: 0,
 
-	initialize: function(applet_version_, applet_main_class_, printing_applet_version_) {
+	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;
 		this.printing_applet_version = printing_applet_version_;
+
+		this.debug = debug_;
 
 		this.protocol = window.location.protocol;
 		this.server = window.location.host;
@@ -83,6 +87,15 @@ var Daemon = Class.create({
 			this.my_height = document.body.clientHeight;
 		}
 
+		if (this.debug) {
+			$('debugContainer').show();
+			$('debugContainer').style.display = 'inline';
+			$('debugLevels').show();
+			$('debugLevels').style.display = 'inline';
+
+			this.my_height = parseInt(this.my_height)-149;
+		}
+
 		this.list_servers();
 
 		setTimeout(this.preload.bind(this), 2000);
@@ -91,6 +104,8 @@ var Daemon = Class.create({
 	},
 
 	preload: function() {
+		this.push_log('debug', '[daemon] preload()');
+this.push_log('error', '[daemon] preload() - RETURN');
 return;
 		if ($('printerContainer')) {
 			$('printerContainer').show();
@@ -113,19 +128,68 @@ return;
 		return this.context;
 	},
 
+	push_log: function(level_, data_) {
+		if (! this.debug)
+			return;
+
+		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
+
+		buf = new Date();
+		hour = buf.getHours();
+		if (hour < 10)
+			hour = '0'+hour;
+		minutes = buf.getMinutes();
+		if (minutes < 10)
+			minutes = '0'+minutes;
+		seconds = buf.getSeconds();
+		if (seconds < 10)
+			seconds = '0'+seconds;
+
+		$('debugContainer').innerHTML += '<div class="'+level_+'">['+hour+':'+minutes+':'+seconds+'] - '+data_+'</div>'+"\n";
+
+		if (flag)
+			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+	},
+
+	switch_debug: function(level_) {
+		var flag = (($('debugContainer').scrollTop+$('debugContainer').offsetHeight) == $('debugContainer').scrollHeight);
+
+		var buf = $('debugContainer').className;
+
+		if (buf.match('no_'+level_))
+			buf = buf.replace('no_'+level_, level_);
+		else
+			buf = buf.replace(level_, 'no_'+level_);
+
+		$('debugContainer').className = buf;
+
+		if (flag)
+			$('debugContainer').scrollTop = $('debugContainer').scrollHeight;
+	},
+
+	clear_debug: function() {
+		$('debugContainer').innerHTML = '';
+	},
+
 	loop: function() {
+		this.push_log('debug', '[daemon] loop()');
+
 		this.check_status();
 
-		if (this.session_state == 0 || this.session_state == 10) {
-			this.start_request();
-		} else if (this.session_state == 2 && $('splashContainer').visible()) {
-			if (! this.started)
+		if (this.session_state == 2 && $('splashContainer').visible()) {
+			if (! this.started) {
+				this.push_log('info', '[daemon] loop() - Now starting session');
 				this.start();
+			}
 
 			this.started = true;
 		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9) {
-			if (! this.started)
+			this.push_log('info', '[daemon] loop() - Now ending session');
+
+			if (! this.started) {
+				this.push_log('warning', '[daemon] loop() - Session end is unexpected (session was never started)');
 				this.error_message = this.i18n['session_close_unexpected'];
+			}
 
 			this.do_ended();
 
@@ -136,6 +200,8 @@ return;
 	},
 
 	suspend: function() {
+		this.push_log('debug', '[daemon] suspend()');
+
 		new Ajax.Request(
 			'suspend.php',
 			{
@@ -148,6 +214,8 @@ return;
 	},
 
 	logout: function() {
+		this.push_log('debug', '[daemon] logout()');
+
 		new Ajax.Request(
 			'logout.php',
 			{
@@ -160,17 +228,24 @@ return;
 	},
 
 	client_exit: function() {
-		if (this.persistent == true)
+		this.push_log('debug', '[daemon] client_exit()');
+
+		if (this.persistent == true) {
+			this.push_log('info', '[daemon] client_exit() - We are in a "persistent" mode, now suspending session');
 			this.suspend();
-		else
+		} else {
+			this.push_log('info', '[daemon] client_exit() - We are in a "non-persistent" mode, now ending session');
 			this.logout();
+		}
 	},
 
 	check_status: function() {
+		this.push_log('debug', '[daemon] check_status()');
 this.old_session_state = 2;
 this.session_state = 2;
 this.old_application_state = 2;
 this.application_state = 2;
+this.push_log('error', '[daemon] check_status() - RETURN');
 return;
 		new Ajax.Request(
 			'whatsup.php',
@@ -187,6 +262,8 @@ return;
 	},
 
 	parse_check_status: function(transport) {
+		this.push_log('debug', '[daemon] parse_check_status(transport@check_status())');
+this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - RETURN');
 return;
 		var xml = transport.responseXML;
 
@@ -230,21 +307,9 @@ return;
 		}
 	},
 
-	start_request: function() {
-return;
-		new Ajax.Request(
-			'start.php',
-			{
-				method: 'get',
-				parameters: {
-					width: parseInt(this.my_width),
-					height: parseInt(this.my_height)
-				}
-			}
-		);
-	},
-
 	start: function() {
+		this.push_log('debug', '[daemon] start()');
+
 		if (! $(this.mode+'ModeContainer').visible())
 			$(this.mode+'ModeContainer').show();
 
@@ -255,13 +320,18 @@ return;
 	},
 
 	do_started: function() {
+		this.push_log('debug', '[daemon] do_started()');
+
 		this.parse_do_started();
 	},
 
 	parse_do_started: function(transport) {
+		this.push_log('debug', '[daemon] parse_do_started(transport@do_started())');
 	},
 
 	list_servers: function() {
+		this.push_log('debug', '[daemon] list_servers()');
+
 		new Ajax.Request(
 			'servers.php',
 			{
@@ -272,27 +342,36 @@ return;
 	},
 
 	parse_list_servers: function(transport) {
+		this.push_log('debug', '[daemon] parse_list_servers(transport@list_servers())');
+
 		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('servers');
 
-		if (buffer.length != 1)
+		if (buffer.length != 1) {
+			this.push_log('error', '[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (No "servers" node)');
 			return;
+		}
 
 		var serverNodes = xml.getElementsByTagName('server');
 
 		for (var i=0; i<serverNodes.length; i++) {
 			try { // IE does not have hasAttribute in DOM API...
+				this.push_log('info', '[daemon] parse_list_servers(transport@list_servers()) - Adding server "'+serverNodes[i].getAttribute('fqdn')+'" to servers list');
+
 				var server = new Server(serverNodes[i].getAttribute('fqdn'), i, serverNodes[i].getAttribute('fqdn'), 3389, serverNodes[i].getAttribute('login'), serverNodes[i].getAttribute('password'));
 				this.servers.set(server.id, server);
 				this.liaison_server_applications.set(server.id, new Array());
 			} catch(e) {
+				this.push_log('error', '[daemon] parse_list_servers(transport@list_servers()) - Invalid XML (Missing argument for "server" node '+i+')');
 				return;
 			}
 		}
 	},
 
 	do_ended: function() {
+		this.push_log('debug', '[daemon] do_ended()');
+
 		if (this.stopped == true)
 			return;
 
@@ -399,6 +478,8 @@ return;
 	},
 
 	do_print: function(path_, timestamp_) {
+		this.push_log('debug', '[daemon] do_print()');
+this.push_log('error', '[daemon] do_print() - RETURN');
 return;
 		var print_url = this.protocol+'//'+this.server+':'+this.port+'/applicationserver/print.php?timestamp='+timestamp_;
 

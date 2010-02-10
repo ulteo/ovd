@@ -95,7 +95,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 													<strong><?php echo _('Mode'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
-													<select id="session_mode" name="session_mode">
+													<select id="session_mode">
 														<option value="desktop" selected="selected"><?php echo _('Desktop'); ?></option>
 														<option value="portal"><?php echo _('Portal'); ?></option>
 													</select>
@@ -106,8 +106,17 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 													<strong><?php echo _('Use pop-up'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
-													<input class="input_radio" id="use_popup_true" type="radio" name="popup" value="1" checked="checked" /> <?php echo _('Yes'); ?>
-													<input class="input_radio" id="use_popup_false" type="radio" name="popup" value="0" /> <?php echo _('No'); ?>
+													<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1" checked="checked" /> <?php echo _('Yes'); ?>
+													<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0" /> <?php echo _('No'); ?>
+												</td>
+											</tr>
+											<tr>
+												<td style="text-align: right; vertical-align: middle;">
+													<strong><?php echo _('Debug'); ?></strong>
+												</td>
+												<td style="text-align: center; vertical-align: middle;">
+													<input class="input_radio" type="radio" id="debug_true" name="debug" value="1" /> <?php echo _('Yes'); ?>
+													<input class="input_radio" type="radio" id="debug_false" name="debug" value="0" checked="checked" /> <?php echo _('No'); ?>
 												</td>
 											</tr>
 											<tr>

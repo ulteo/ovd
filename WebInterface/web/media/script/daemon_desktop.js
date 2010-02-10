@@ -22,6 +22,8 @@ var Desktop = Class.create(Daemon, {
 	mode: 'desktop',
 
 	parse_do_started: function(transport) {
+		this.push_log('debug', '[desktop] parse_do_started(transport@do_started())');
+
 		var servers = this.servers.values();
 		for (var i=0; i < servers.length; i++)
 			var server = servers[i];

@@ -20,9 +20,19 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+$debug = false;
+if (array_key_exists('interface', $_SESSION)) {
+	if (array_key_exists('debug', $_SESSION['interface'])) {
+		if ($_SESSION['interface']['debug'] == 'true')
+			$debug = true;
+		else
+			$debug = false;
+	}
+}
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title>Ulteo Open Virtual Desktop</title>
 
@@ -78,7 +88,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', 'ulteo-printing.jar');
+				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', 'ulteo-printing.jar', <?php echo (($debug)?'true':'false'); ?>);
 				daemon.access_id = '<?php echo $_SESSION['session_mode']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
@@ -217,6 +227,17 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 			<div id="portalAppletContainer" style="display: none;">
 			</div>
+		</div>
+
+		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
+		</div>
+
+		<div id="debugLevels" style="display: none;">
+			<span class="debug"><input type="checkbox" id="level_debug" onclick="daemon.switch_debug('debug');" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" onclick="daemon.switch_debug('info');" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" onclick="daemon.switch_debug('warning');" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" onclick="daemon.switch_debug('error');" value="40" checked="checked" /> Error</span><br />
+			<input type="button" onclick="daemon.clear_debug(); return false;" value="Clear" />
 		</div>
 
 		<div id="printerContainer">

@@ -113,5 +113,8 @@ if (count($server_nodes) < 1) {
 
 $_SESSION['xml'] = $xml;
 
+$_SESSION['interface'] = array();
+$_SESSION['interface']['debug'] = $_POST['debug'];
+
 echo $_SESSION['xml'];
 die();
