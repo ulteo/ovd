@@ -1,0 +1,281 @@
+/*
+ * Copyright (C) 2009-2010 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+package org.ulteo.rdp.seamless;
+
+import java.awt.Dimension;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
+import net.propero.rdp.Common;
+import net.propero.rdp.rdp5.seamless.SeamFrame;
+
+
+public class SeamlessFrame extends SeamFrame {
+	protected static int SEAMLESS_BORDER_SIZE = 4;
+	protected static int SEAMLESS_TOP_BORDER_SIZE = 20;
+	protected static int SEAMLESS_CORNER_SIZE = 20;
+
+	protected static final int NO_CORNER = -1;
+	protected static final int CORNER_TOP_LEFT = 0;
+	protected static final int CORNER_BOTTOM_LEFT = 1;
+	protected static final int CORNER_TOP_RIGHT = 2;
+	protected static final int CORNER_BOTTOM_RIGHT = 3;
+	protected static final int CORNER_LEFT = 4;
+	protected static final int CORNER_BOTTOM = 5;
+	protected static final int CORNER_RIGHT = 6;
+	protected static final int CORNER_TOP = 7;
+
+	protected boolean lockMouseEvents = false;
+	protected RectWindow rw = null;
+
+	protected MouseEvent moveClick = null;
+	protected int xOffset = 0;
+	protected int yOffset = 0;
+	
+	protected MouseEvent resizeClick = null;
+	protected int corner = SeamlessFrame.NO_CORNER;
+
+	public SeamlessFrame(int id_, int group_, Common common_) {
+		super(id_, group_, common_);
+
+		Dimension dim = new Dimension(this.backstore.getHeight(), this.backstore.getWidth());
+		this.rw = new RectWindow(this, dim);
+	}
+
+	protected void lockMouseEvents() {
+		lockMouseEvents = true;
+		this.rw.setVisible(true);
+	}
+
+	protected void unlockMouseEvents() {
+		this.rw.setVisible(false);
+		this.lockMouseEvents = false;
+		this.xOffset = 0;
+		this.yOffset = 0;
+
+		if (this.resizeClick != null)
+			this.resizeClick = null;
+		if(this.moveClick != null)
+			this.moveClick = null;
+	}
+	
+	protected int detectCorner(MouseEvent e) {
+		if (e == null)
+			return -1;
+
+		int xClick = e.getX();
+		int yClick = e.getY();
+
+		if (xClick >= 0 && xClick < SeamlessFrame.SEAMLESS_CORNER_SIZE) {
+			if (yClick >= 0 && yClick < SeamlessFrame.SEAMLESS_CORNER_SIZE) {
+				return SeamlessFrame.CORNER_TOP_LEFT;
+			}
+			else if (yClick > (this.getHeight() - SeamlessFrame.SEAMLESS_CORNER_SIZE) && yClick <= this.getHeight()) {
+				return SeamlessFrame.CORNER_BOTTOM_LEFT;
+			}
+			else if (yClick >= 0 && yClick <= this.getHeight()) {
+				return SeamlessFrame.CORNER_LEFT;
+			}
+		}
+		else if (xClick > (this.getWidth() - SeamlessFrame.SEAMLESS_CORNER_SIZE) && xClick <= this.getWidth()) {
+			if (yClick >= 0 && yClick < SeamlessFrame.SEAMLESS_CORNER_SIZE) {
+				return SeamlessFrame.CORNER_TOP_RIGHT;
+			}
+			else if (yClick > (this.getHeight() - SeamlessFrame.SEAMLESS_CORNER_SIZE) && yClick <= this.getHeight()) {
+				return SeamlessFrame.CORNER_BOTTOM_RIGHT;
+			}
+			else if (yClick >= 0 && yClick <= this.getHeight()) {
+				return SeamlessFrame.CORNER_RIGHT;
+			}
+		}
+		else if (yClick > (this.getHeight() - SeamlessFrame.SEAMLESS_BORDER_SIZE) && yClick <= this.getHeight()) {
+			return SeamlessFrame.CORNER_BOTTOM;
+		}
+		else if (yClick >= 0 && yClick < SeamlessFrame.SEAMLESS_BORDER_SIZE) {
+			return SeamlessFrame.CORNER_TOP;
+		}
+		return -1;
+	}
+
+	protected void offsetResize(MouseEvent me) {
+		if (me == null)
+			return;
+
+		switch (this.corner) {
+			case SeamlessFrame.CORNER_TOP_LEFT:
+				this.xOffset = this.getX() - me.getXOnScreen();
+				this.yOffset = this.getY() - me.getYOnScreen();
+				break;
+			case SeamlessFrame.CORNER_BOTTOM_LEFT:
+				this.xOffset = this.getX() - me.getXOnScreen();
+				this.yOffset = this.getHeight() - me.getY();
+				break;
+			case SeamlessFrame.CORNER_BOTTOM_RIGHT:
+				this.xOffset = this.getWidth() - me.getX();
+				this.yOffset = this.getHeight() - me.getY();
+				break;
+			case SeamlessFrame.CORNER_TOP_RIGHT:
+				this.xOffset = this.getWidth() - me.getX();
+				this.yOffset = this.getY() - me.getYOnScreen();
+				break;
+			default:
+				this.xOffset = 0;
+				this.yOffset = 0;
+				break;
+		}
+	}
+
+	protected void resizeRW(MouseEvent me) {
+		if (me == null)
+			return;
+		
+		int x_rw = 0, y_rw = 0, w_rw = 0, h_rw = 0;
+		switch (this.corner) {
+			case SeamlessFrame.CORNER_TOP_LEFT:
+				x_rw = me.getXOnScreen() + this.xOffset;
+				y_rw = me.getYOnScreen() + this.yOffset;
+				w_rw = this.getX() + this.getWidth() - x_rw;
+				h_rw = this.getY() + this.getHeight() - y_rw;
+				break;
+			case SeamlessFrame.CORNER_BOTTOM_LEFT:
+				x_rw = me.getXOnScreen() + this.xOffset;
+				y_rw = this.getY();
+				w_rw = this.getX() + this.getWidth() - x_rw;
+				h_rw = me.getYOnScreen() - this.getY() + this.yOffset;
+				break;
+			case SeamlessFrame.CORNER_BOTTOM_RIGHT:
+				x_rw = this.getX();
+				y_rw = this.getY();
+				w_rw = me.getXOnScreen() - x_rw + this.xOffset;
+				h_rw = me.getYOnScreen() - y_rw + this.yOffset;
+				break;
+			case SeamlessFrame.CORNER_TOP_RIGHT:
+				x_rw = this.getX();
+				y_rw = me.getYOnScreen() + this.yOffset;
+				w_rw = me.getXOnScreen() - this.getX() + this.xOffset;
+				h_rw = this.getY() + this.getHeight() - y_rw;
+				break;
+			case SeamlessFrame.CORNER_LEFT:
+				x_rw = me.getXOnScreen();
+				y_rw = this.getY();
+				w_rw = this.getX() + this.getWidth() - x_rw;
+				h_rw = this.getHeight();
+				break;
+			case SeamlessFrame.CORNER_BOTTOM:
+				x_rw = this.getX();
+				y_rw = this.getY();
+				w_rw = this.getWidth();
+				h_rw = me.getYOnScreen() - y_rw;
+				break;
+			case SeamlessFrame.CORNER_RIGHT:
+				x_rw = this.getX();
+				y_rw = this.getY();
+				w_rw = me.getXOnScreen() - x_rw;
+				h_rw = this.getHeight();
+				break;
+			case SeamlessFrame.CORNER_TOP:
+				x_rw = this.getX();
+				y_rw = me.getYOnScreen();
+				w_rw = this.getWidth();
+				h_rw = this.getY() + this.getHeight() - y_rw;
+				break;
+			default:
+				return;
+		}
+		this.rw.setBounds(x_rw, y_rw, w_rw, h_rw);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if (this.lockMouseEvents)
+			return;
+
+		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+			int xClick = e.getX();
+			int yClick = e.getY();
+
+			if (	xClick < SeamlessFrame.SEAMLESS_BORDER_SIZE ||
+				xClick > (this.width - SeamlessFrame.SEAMLESS_BORDER_SIZE) ||
+				yClick < SeamlessFrame.SEAMLESS_BORDER_SIZE ||
+				yClick > (this.height - SeamlessFrame.SEAMLESS_BORDER_SIZE)
+			) {
+				this.resizeClick = e;
+				this.corner = this.detectCorner(this.resizeClick);
+				
+				this.offsetResize(e);
+				this.resizeRW(e);
+			}
+			else if (
+				yClick >= SeamlessFrame.SEAMLESS_BORDER_SIZE &&
+				yClick <= (SeamlessFrame.SEAMLESS_BORDER_SIZE + SeamlessFrame.SEAMLESS_TOP_BORDER_SIZE) &&
+				xClick >= SeamlessFrame.SEAMLESS_BORDER_SIZE &&
+				xClick <= (this.width - SeamlessFrame.SEAMLESS_BORDER_SIZE)
+			) {
+				this.xOffset = e.getXOnScreen() - this.getX();
+				this.yOffset = e.getYOnScreen() - this.getY();
+
+				this.rw.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+				
+				this.moveClick = e;
+			}
+		}
+		
+		super.mousePressed(e);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		this.unlockMouseEvents();
+		
+		super.mouseReleased(e);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		if (this.lockMouseEvents)
+			return;
+		
+		super.mouseMoved(e);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		if (this.lockMouseEvents) {
+			if (this.resizeClick != null) {
+				this.resizeRW(e);
+			}
+			else if (this.moveClick != null) {
+				int x_rw = e.getXOnScreen() - this.xOffset;
+				int y_rw = e.getYOnScreen() - this.yOffset;
+				this.rw.setBounds(x_rw, y_rw, this.width, this.height);
+			}
+			return;
+		}
+
+		if (this.resizeClick != null || this.moveClick != null) {
+			this.lockMouseEvents();
+			
+			return;
+		}
+
+		super.mouseDragged(e);
+	}
+}

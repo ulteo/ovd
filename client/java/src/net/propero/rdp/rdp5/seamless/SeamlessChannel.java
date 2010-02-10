@@ -508,7 +508,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		if (this.main_window != null)
 			this.main_window.setVisible(false);
 		//TODO: ui_seamless_begin(!!(flags & SEAMLESSRDP_HELLO_HIDDEN));
-		new SeamForm(this, this.opt);
+		//new SeamForm(this, this.opt);
 
 		return true;
 	}

@@ -38,10 +38,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
+import org.ulteo.rdp.seamless.SeamlessChannel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -221,16 +223,16 @@ public class SessionManagerCommunication {
 			opt.width = (int)dim.width;
 			opt.height = (int)dim.height;
 			opt.set_bpp(24);
-			
-			if (this.sessionMode.equalsIgnoreCase("desktop")) {
-				opt.seamlessEnabled = false;
-			}
-			else if (this.sessionMode.equalsIgnoreCase("portal")) {
-				opt.seamlessEnabled = true;
-			}
+
+			Common common = new Common();
 
 			try {
-				rc = new RdpConnection(opt);
+				if (this.sessionMode.equalsIgnoreCase("desktop")) {
+					rc = new RdpConnection(opt, common);
+				}
+				else if (this.sessionMode.equalsIgnoreCase("portal")) {
+					rc = new RdpConnection(opt, common, new org.ulteo.rdp.seamless.SeamlessChannel(opt, common));
+				}
 			} catch (RdesktopException e) {
 				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Unable to prepare an RDP connection to "+server.getAttribute("hostname"));
 				return false;

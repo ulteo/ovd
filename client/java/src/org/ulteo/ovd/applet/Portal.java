@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import net.propero.rdp.Common;
 
 import netscape.javascript.JSObject;
 
@@ -83,6 +84,7 @@ class OrderApplication extends Order {
 
 class Connection {
 	public Options options = null;
+	public Common common = null;
 	public Thread thread = null;
 	public RdpConnection connection = null;
 	public OvdAppChannel channel = null;
@@ -262,15 +264,16 @@ public class Portal extends Applet implements Runnable, Observer, OvdAppListener
 				co.options.width = dim.width;
 				co.options.height = dim.height;
 				co.options.set_bpp(24);
-				co.options.seamlessEnabled = true;
 							
 				co.options.hostname = order.host;
 				co.options.port = order.port;
 				co.options.username = order.login;
 				co.options.password = order.password;
-				
+
+				co.common = new Common();
+
 				try {
-					co.connection = new RdpConnection(co.options);
+					co.connection = new RdpConnection(co.options, co.common, new org.ulteo.rdp.seamless.SeamlessChannel(co.options, co.common));
 				} catch (RdesktopException e) {
 					System.out.println(this.getClass().toString()+" Unable to inti connection to "+co.options.hostname);
 					continue;

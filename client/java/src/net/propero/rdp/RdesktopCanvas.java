@@ -101,6 +101,7 @@ public abstract class RdesktopCanvas extends Canvas {
         super();
         this.opt = opt_;
         this.common = common_;
+	this.common.canvas = this;
         rop = new RasterOp(this.opt);
         this.width = this.opt.width;
         this.height = this.opt.height;

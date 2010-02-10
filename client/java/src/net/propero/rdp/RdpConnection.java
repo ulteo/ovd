@@ -38,6 +38,7 @@ import net.propero.rdp.rdp5.VChannels;
 
 public class RdpConnection extends Observable implements Runnable {
 	private VChannels channels = null;
+	private ClipChannel clipChannel = null;
 	private Rdp5 RdpLayer = null;
 	public Options opt = null;
 	public Common common = null;
@@ -45,23 +46,37 @@ public class RdpConnection extends Observable implements Runnable {
 	private ArrayList<Application> appsList = null;
 	private String state = "disconnected";
 	
-	public RdpConnection(Options opt_) throws RdesktopException {
-		this.common = new Common();
+	public RdpConnection(Options opt_, Common common_) throws RdesktopException {
+		this.init(opt_, common_);
+		
+		this.opt.seamlessEnabled = false;
+		
+	}
+
+	public RdpConnection(Options opt_, Common common_, SeamlessChannel seamChan) throws RdesktopException {
+		this.init(opt_, common_);
+
+		if (seamChan == null) {
+			this.opt.seamlessEnabled = false;
+			return;
+		}
+		this.opt.seamlessEnabled = true;
+		this.common.seamlessChannelInstance  = seamChan;
+		this.common.seamlessChannelInstance.setClip(this.clipChannel);
+		this.channels.register(this.common.seamlessChannelInstance);
+	}
+
+	private void init(Options opt_, Common common_) throws RdesktopException {
+		this.common = common_;
 		this.opt = opt_;
 
 		this.channels = new VChannels(this.opt);
 		this.appsList = new ArrayList<Application>();
-		
-		ClipChannel clipChannel = new ClipChannel(common, opt);
-		this.channels.register(clipChannel);
-		
-		if (this.opt.seamlessEnabled) {
-			this.common.seamlessChannelInstance  = new SeamlessChannel(this.opt, this.common);
-			this.common.seamlessChannelInstance.setClip(clipChannel);
-			this.channels.register(this.common.seamlessChannelInstance);
-		}
 
-		this.canvas = new RdesktopCanvas_Localised(opt_, common);
+		this.clipChannel = new ClipChannel(common, opt);
+		this.channels.register(this.clipChannel);
+
+		this.canvas = new RdesktopCanvas_Localised(this.opt, this.common);
 	}
 	
 	public boolean addChannel(VChannel channel) {

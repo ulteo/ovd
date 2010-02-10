@@ -24,6 +24,7 @@ import net.propero.rdp.RdpConnection;
 import java.applet.Applet;
 import java.util.Observable;
 import java.util.Observer;
+import net.propero.rdp.Common;
 
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopCanvas;
@@ -77,7 +78,6 @@ public class Desktop extends Applet implements Observer {
 		this.rdp_opt.width = this.getWidth();
 		this.rdp_opt.height = this.getHeight();
 		this.rdp_opt.set_bpp(24);
-		this.rdp_opt.seamlessEnabled = false;
 		this.rc = null;
 				
 		this.finished_init = true;
@@ -90,7 +90,7 @@ public class Desktop extends Applet implements Observer {
 		System.out.println(this.getClass().toString() +" start");
 
 		try {
-			this.rc = new RdpConnection(this.rdp_opt);
+			this.rc = new RdpConnection(this.rdp_opt, new Common());
 		} catch (RdesktopException e) {
 
 			System.out.println(this.getClass().toString()+" Unable to connect to "+this.server);

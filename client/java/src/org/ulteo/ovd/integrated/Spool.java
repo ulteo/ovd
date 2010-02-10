@@ -31,10 +31,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
-import net.propero.rdp.rdp5.seamless.ApplicationManager;
 import net.propero.rdp.RdpConnection;
 
-public class Spool implements Runnable, ApplicationManager {
+public class Spool implements Runnable {
 	private ArrayList<RdpConnection> connections = null;
 	private String os = null;
 	private File instancesDir = null;
@@ -52,12 +51,10 @@ public class Spool implements Runnable, ApplicationManager {
 
 	public void addConnection(RdpConnection rc) {
 		this.connections.add(rc);
-		rc.common.seamlessChannelInstance.addApplicationManager(this);
 	}
 
 	public void removeConnection(RdpConnection rc) {
 		this.connections.remove(rc);
-		rc.common.seamlessChannelInstance.removeApplicationManager(this);
 	}
 
 	public void createTree() {
@@ -235,25 +232,5 @@ public class Spool implements Runnable, ApplicationManager {
 				Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
-	}
-
-	public void instanceCreated(long token_, long pid_) {
-		System.out.println("instanceCreated");
-		ApplicationInstance app = this.findAppInstanceByToken(token_);
-		if (app == null) {
-			Logger.getLogger(Spool.class.getName()).log(Level.WARNING, "Application created without application management");
-			return;
-		}
-		app.setPid(pid_);
-		Logger.getLogger(Spool.class.getName()).log(Level.INFO, "Application created with token: "+token_+" and pid: "+pid_);
-	}
-
-	public void instanceDestroyed(long pid_) {
-		System.out.println("instanceDestroyed");
-		ApplicationInstance app = this.findAppInstanceByPid(pid_);
-		if (app == null)
-			return;
-		this.destroyInstance(app.getToken());
-		Logger.getLogger(Spool.class.getName()).log(Level.INFO, "Application destroyed with pid: "+pid_);
 	}
 }

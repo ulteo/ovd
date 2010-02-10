@@ -87,8 +87,8 @@ public class SeamFrame extends Frame
 		this.icon_size = 0;
 		this.icon_buffer = new byte[32 * 32 * 4];
 
-		input = this.common.frame.getCanvas().getInput();
-		this.backstore = this.common.frame.getCanvas().backstore;
+		input = this.common.canvas.getInput();
+		this.backstore = this.common.canvas.backstore;
 
 		addKeyListener(this);
 		addMouseListener(this);

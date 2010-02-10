@@ -24,6 +24,7 @@ public class Common {
 	public Secure secure;
 	public MCS mcs;
 	public RdesktopFrame frame;
+	public RdesktopCanvas canvas;
 	public SeamlessChannel seamlessChannelInstance = null;
 	public SoundChannel soundChannel;
 
