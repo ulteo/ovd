@@ -149,12 +149,13 @@ var Daemon = Class.create({
 
 		this.check_status();
 
-		if (! this.started && this.session_state == 2) {
+		if (! this.started) {
 			this.push_log('info', '[daemon] loop() - Now starting session');
+
 			this.start();
 
 			this.started = true;
-		} else if (this.stopped || (this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9 || this.session_state == 10) {
+		} else if (this.stopped) {
 			this.push_log('info', '[daemon] loop() - Now ending session');
 
 			if (! this.started) {
