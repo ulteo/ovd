@@ -4,10 +4,12 @@ SUBDIRS = abstract \
 
 scripts_DATA = Application.class.php \
                Application_weblink.class.php \
+               AppsGroup.class.php \
                ConfigElement.class.php \
                Invite.class.php \
                Invites.class.php \
                LDAP.class.php \
+               Liaison.class.php \
                Logger.class.php \
                Module.class.php \
                SQL.class.php \
@@ -26,8 +28,11 @@ scripts_DATA = Application.class.php \
                Token.class.php \
                Tokens.class.php \
                User.class.php \
+               UsersGroup.class.php \
                UserGroupDBDynamic.class.php \
                UserGroupDBDynamic_cached.class.php \
+               UsersGroup_dynamic.class.php \
+               UsersGroup_dynamic_cached.class.php \
                UserGroup_Rule.class.php \
                UserGroup_Rules.class.php \
                SharedFolders.class.php \
