@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008,2009,2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -72,7 +72,7 @@ $buf = $prefs->get('general', 'web_interface_settings');
 $show_list_users = $buf['show_list_users'];
 
 if ($show_list_users && $userDB->canShowList()) {
-	$list_users = $userDB->getList();
+	$list_users = $userDB->getList(true);
 	if (is_null($list_users))
 		die_error(_('Getting userlist failed'), __FILE__, __LINE__);
 	elseif (count($list_users) == 0)
