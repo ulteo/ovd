@@ -1,9 +1,10 @@
 <?php
 /**
-* Copyright (C) 2009 Ulteo SAS
+* Copyright (C) 2009-2010 Ulteo SAS
 * http://www.ulteo.com
-* Author Julien LANGLOIS <julien@ulteo.com>
+* Author Laurent CLOUET <laurent@ulteo.com>
 * Author Jeremy DESVAGES <jeremy@ulteo.com>
+* Author Julien LANGLOIS <julien@ulteo.com>
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License
@@ -428,38 +429,44 @@ function show_page($mode_) {
 		echo '<hr/>';
 		echo '<h2>'._('Server').' '.$fqdn.'</h2>';
 		echo '<table>';
-		echo '<tr><td>';
-		echo '<img src="?img=1&file='.$value['session_file'].'" />';
-		echo '</td><td><i>';
-		if ($mode_->get_value() == 'day')
-			echo _('Abscissa: day of the month');
-		else
-			echo _('Abscissa: hour of the day');
-		echo '<br/>';
-		echo _('Ordinate: number of session');
-		echo '</i></td></tr>';
+		if (isset($value['session_file'])) {
+			echo '<tr><td>';
+			echo '<img src="?img=1&file='.$value['session_file'].'" />';
+			echo '</td><td><i>';
+			if ($mode_->get_value() == 'day')
+				echo _('Abscissa: day of the month');
+			else
+				echo _('Abscissa: hour of the day');
+			echo '<br/>';
+			echo _('Ordinate: number of session');
+			echo '</i></td></tr>';
+		}
 
-		echo '<tr><td>';
-		echo '<img src="?img=1&file='.$value['cpu_file'].'" />';
-		echo '</td><td><i>';
-		if ($mode_->get_value() == 'day')
-			echo _('Abscissa: day of the month');
-		else
-			echo _('Abscissa: hour of the day');
-		echo '<br/>';
-		echo _('Ordinate: usage of CPU in percent');
-		echo '</i></td></tr>';
+		if (isset($value['cpu_file'])) {
+			echo '<tr><td>';
+			echo '<img src="?img=1&file='.$value['cpu_file'].'" />';
+			echo '</td><td><i>';
+			if ($mode_->get_value() == 'day')
+				echo _('Abscissa: day of the month');
+			else
+				echo _('Abscissa: hour of the day');
+			echo '<br/>';
+			echo _('Ordinate: usage of CPU in percent');
+			echo '</i></td></tr>';
+		}
 
-		echo '<tr><td>';
-		echo '<img src="?img=1&file='.$value['ram_file'].'" />';
-		echo '</td><td><i>';
-		if ($mode_->get_value() == 'day')
-			echo _('Abscissa: day of the month');
-		else
-			echo _('Abscissa: hour of the day');
-		echo '<br/>';
-		echo _('Ordinate: usage of RAM in percent');
-		echo '</i></td></tr>';
+		if (isset($value['ram_file'])) {
+			echo '<tr><td>';
+			echo '<img src="?img=1&file='.$value['ram_file'].'" />';
+			echo '</td><td><i>';
+			if ($mode_->get_value() == 'day')
+				echo _('Abscissa: day of the month');
+			else
+				echo _('Abscissa: hour of the day');
+			echo '<br/>';
+			echo _('Ordinate: usage of RAM in percent');
+			echo '</i></td></tr>';
+		}
 
 		echo '</table>';
 	}
