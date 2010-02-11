@@ -24,7 +24,6 @@ var Daemon = Class.create({
 
 	applet_version: '',
 	applet_main_class: '',
-	printing_applet_version: '',
 
 	in_popup: true,
 	debug: false,
@@ -51,10 +50,9 @@ var Daemon = Class.create({
 
 	error_message: '',
 
-	initialize: function(applet_version_, applet_main_class_, printing_applet_version_, in_popup_, debug_) {
+	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;
-		this.printing_applet_version = printing_applet_version_;
 
 		this.in_popup = in_popup_;
 		this.debug = debug_;
@@ -87,21 +85,7 @@ var Daemon = Class.create({
 
 		this.list_servers();
 
-		setTimeout(this.preload.bind(this), 2000);
-
 		Event.observe(window, 'unload', this.client_exit.bind(this));
-	},
-
-	preload: function() {
-		this.push_log('debug', '[daemon] preload()');
-this.push_log('error', '[daemon] preload() - RETURN');
-return;
-		if ($('printerContainer')) {
-			$('printerContainer').show();
-			$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
-				<param name="do_nothing" value="1"> \
-			</applet>';
-		}
 	},
 
 	initContext: function() {
@@ -261,21 +245,6 @@ return;
 		var sessionNode = buffer[0];
 
 		this.old_session_state = this.session_state;
-
-		try { // IE does not have hasAttribute in DOM API...
-			this.session_state = sessionNode.getAttribute('status');
-		} catch(e) {
-			return;
-		}
-
-		var printNode = sessionNode.getElementsByTagName('print');
-		if (printNode.length > 0) {
-			printNode = printNode[0];
-
-			var path = printNode.getAttribute('path');
-			var timestamp = printNode.getAttribute('time');
-			this.do_print(path, timestamp);
-		}
 	},
 
 	start: function() {
@@ -441,18 +410,5 @@ return;
 			else
 				$('endMessage').innerHTML = this.i18n['session_end_ok'];
 		}
-	},
-
-	do_print: function(path_, timestamp_) {
-		this.push_log('debug', '[daemon] do_print()');
-this.push_log('error', '[daemon] do_print() - RETURN');
-return;
-		var print_url = this.protocol+'//'+this.server+':'+this.port+'/applicationserver/print.php?timestamp='+timestamp_;
-
-		$('printerContainer').show();
-		$('printerContainer').innerHTML = '<applet code="com.ulteo.OnlineDesktopPrinting" archive="'+this.printing_applet_version+'" codebase="../applet/" width="1" height="1" name="ulteoprinting"> \
-			<param name="url" value="'+print_url+'"> \
-				<param name="filename" value="'+path_+'"> \
-			</applet>';
 	}
 });

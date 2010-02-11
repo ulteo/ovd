@@ -173,13 +173,6 @@ div.rounded {
 	border-bottom: 1px solid #ccc;
 }
 
-#printerContainer {
-	width: 1px;
-	height: 1px;
-	background: #0f2d47;
-	border: 0px;
-}
-
 div#lockWrap {
 	width: 100%;
 	height: 100%;

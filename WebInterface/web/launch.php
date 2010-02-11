@@ -78,7 +78,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', 'ulteo-printing.jar', <?php echo $_SESSION['interface']['in_popup']; ?>, <?php echo $_SESSION['interface']['debug']; ?>);
+				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', <?php echo $_SESSION['interface']['in_popup']; ?>, <?php echo $_SESSION['interface']['debug']; ?>);
 				daemon.access_id = '<?php echo $_SESSION['session_mode']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
@@ -227,9 +227,6 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			<span class="warning"><input type="checkbox" id="level_warning" onclick="daemon.switch_debug('warning');" value="30" checked="checked" /> Warning</span>
 			<span class="error"><input type="checkbox" id="level_error" onclick="daemon.switch_debug('error');" value="40" checked="checked" /> Error</span><br />
 			<input type="button" onclick="daemon.clear_debug(); return false;" value="Clear" />
-		</div>
-
-		<div id="printerContainer">
 		</div>
 	</body>
 </html>
