@@ -38,58 +38,6 @@ if (isset($_REQUEST['action'])) {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id']);
   }
-
-	if (! checkAuthorization('manageUsersGroups'))
-		redirect('index.php');
-
-
-  if ($_REQUEST['action']=='add') {
-    if ($_REQUEST['type'] == 'static')
-      $id = action_add();
-    elseif ($_REQUEST['type'] == 'dynamic')
-      $id = action_add_dynamic();
-    if ($id !== false)
-      redirect('usersgroup.php?action=manage&id='.$id);
-  }
-  elseif ($_REQUEST['action']=='del') {
-    if (isset($_REQUEST['id'])) {
-      $req_ids = $_REQUEST['id'];
-      if (!is_array($req_ids))
-        $req_ids = array($req_ids);
-      foreach ($req_ids as $req_id)
-        action_del($req_id);
-      redirect('usersgroup.php');
-    }
-  }
-  elseif ($_REQUEST['action']=='modify') {
-    if (isset($_REQUEST['id'])) {
-      action_modify($_REQUEST['id']);
-      redirect();
-    }
-  }
-  elseif ($_REQUEST['action']=='modify_rules') {
-    if (isset($_REQUEST['id'])) {
-	  action_modify_rules($_REQUEST['id']);
-      redirect();
-    }
-  }
-  elseif ($_REQUEST['action']=='set_default') {
-    if (isset($_REQUEST['id'])) {
-      $req_id = $_REQUEST['id'];
-
-      action_set_default($req_id);
-      redirect();
-    }
-  }
-  elseif ($_REQUEST['action']=='unset_default') {
-    if (isset($_REQUEST['id'])) {
-      $req_id = $_REQUEST['id'];
-
-      action_unset_default($req_id);
-      redirect();
-    }
-  }
-
   redirect();
 }
 
@@ -98,220 +46,6 @@ if (! isset($_GET['view']))
 
 if ($_GET['view'] == 'all')
   show_default();
-
-function action_add() {
-  if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
-    return false;
-
-  if ($_REQUEST['name'] == '') {
-    popup_error(_('You must define a name to your usergroup'));
-    return false;
-  }
-
-  $userGroupDB = UserGroupDB::getInstance();
-  if (! $userGroupDB->isWriteable())
-      return false;
-
-  $g = new UsersGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
-  $res = $userGroupDB->add($g);
-  if (!$res)
-    die_error('Unable to create user group '.$res,__FILE__,__LINE__);
-
-  popup_info(_('UserGroup successfully added'));
-  return $g->getUniqueID();
-}
-
-function action_add_dynamic() {
-  if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
-    return false;
-
-  if ($_REQUEST['name'] == '') {
-    popup_error(_('You must define a name to your usergroup'));
-    return false;
-  }
-
-  $userGroupDB = UserGroupDB::getInstance();
-
-  $rules = array();
-  foreach ($_POST['rules'] as $rule) {
-    if ($rule['value'] == '') {
-      popup_error(_('You must give a value to each rule of your usergroup'));
-      return false;
-    }
-
-    $buf = new UserGroup_Rule(NULL);
-    $buf->attribute = $rule['attribute'];
-    $buf->type = $rule['type'];
-    $buf->value = $rule['value'];
-
-    $rules[] = $buf;
-  }
-
-  if ($_REQUEST['cached'] === '0')
-    $g = new UsersGroup_dynamic(NULL, $_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type']);
-  else
-    $g = new UsersGroup_dynamic_cached(NULL, $_REQUEST['name'], $_REQUEST['description'], 1, $rules, $_REQUEST['validation_type'], $_REQUEST['schedule']);
-  $res = $userGroupDB->add($g);
-  if (!$res)
-    die_error('Unable to create dynamic user group '.$res,__FILE__,__LINE__);
-  popup_info(_('UserGroup successfully added'));
-  return $g->getUniqueID();
-}
-
-function action_del($id) {
-  $userGroupDB = UserGroupDB::getInstance();
-
-  $group = $userGroupDB->import($id);
-  if (! is_object($group))
-    die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
-
-  if ($group->type == 'static') {
-    if (! $userGroupDB->isWriteable())
-     return false;
-  }
-
-  if (! $userGroupDB->remove($group))
-    die_error('Unable to remove group "'.$id.'" is not OK',__FILE__,__LINE__);
-
-  popup_info(_('UserGroup successfully deleted'));
-  return true;
-}
-
-function action_modify($id) {
-	if (! checkAuthorization('manageUsersGroups'))
-		return false;
-
-  $userGroupDB = UserGroupDB::getInstance();
-  if ((str_startswith($id,'static_')) && (! $userGroupDB->isWriteable()))
-     return false;
-
-  $group = $userGroupDB->import($id);
-  if (! is_object($group))
-    die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
-
-  $has_change = false;
-
-  if (isset($_REQUEST['name'])) {
-    $group->name = $_REQUEST['name'];
-    $has_change = true;
-  }
-
-  if (isset($_REQUEST['description'])) {
-    $group->description = $_REQUEST['description'];
-    $has_change = true;
-  }
-
-  if (isset($_REQUEST['published'])) {
-    $group->published = (bool)$_REQUEST['published'];
-    $has_change = true;
-  }
-
-  if (isset($_REQUEST['schedule'])) {
-    $group->schedule = $_REQUEST['schedule'];
-    $has_change = true;
-  }
-
-  if (! $has_change)
-    return false;
-
-  if (! $userGroupDB->update($group))
-    die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
-
-  popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
-  return true;
-}
-
-function action_modify_rules($id) {
-	$userGroupDB = UserGroupDB::getInstance();
-	
-	$group = $userGroupDB->import($id);
-	if (! is_object($group))
-		die_error('Group "'.$id.'" is not OK',__FILE__,__LINE__);
-
-	$rules = array();
-	foreach ($_POST['rules'] as $rule) {
-		if ($rule['value'] == '') {
-			popup_error(_('You must give a value to each rule of your usergroup'));
-			return false;
-		}
-
-		$buf = new UserGroup_Rule(NULL);
-		$buf->attribute = $rule['attribute'];
-		$buf->type = $rule['type'];
-		$buf->value = $rule['value'];
-		$buf->usergroup_id = $id;
-
-		$rules[] = $buf;
-	}
-	$group->rules = $rules;
-
-	$group->validation_type = $_REQUEST['validation_type'];
-
-	if (! $userGroupDB->update($group))
-		die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
-	else
-		popup_info(_('Rules of \''.$group->name.'\' successfully modified'));
-}
-
-function action_set_default($id_) {
-  try {
-    $prefs = new Preferences_admin();
-  }
-  catch (Exception $e) {
-    // Error header sauvergarde
-    return False;
-  }
-
-  $userGroupDB = UserGroupDB::getInstance();
-
-  $group = $userGroupDB->import($id_);
-  if (! is_object($group)) {
-    popup_error('No such group id "'.$id_.'"');
-    return False;
-  }
-
-  $mods_enable = $prefs->set('general', 'user_default_group', $id_);
-  if (! $prefs->backup()) {
-    Logger::error('main', 'usersgroup.php action_default: Unable to save $prefs');
-    return False;
-  }
-
-  popup_info(_('UserGroup successfully modified'));
-  return True;
-}
-
-function action_unset_default($id_) {
-  try {
-    $prefs = new Preferences_admin();
-  }
-  catch (Exception $e) {
-    // Error header sauvergarde
-    return False;
-  }
-
-  $userGroupDB = UserGroupDB::getInstance();
-
-  $group = $userGroupDB->import($id_);
-  if (! is_object($group)) {
-    popup_error('No such group id "'.$id_.'"');
-    return False;
-  }
-
-  $default_id = $prefs->get('general', 'user_default_group');
-  if ($id_ != $default_id) {
-    popup_error('Group id "'.$id_.'" is not the default group');
-    return False;
-  }
-
-  $mods_enable = $prefs->set('general', 'user_default_group', NULL);
-  if (! $prefs->backup()) {
-    Logger::error('main', 'usersgroup.php action_default: Unable to save $prefs');
-    return False;
-  }
-
-  popup_info(_('UserGroup successfully modified'));
-  return True;
-}
 
 function show_default() {
   global $schedules;
@@ -362,7 +96,7 @@ function show_default() {
       echo '<tr class="'.$content.'">';
       if ($can_manage_usersgroups) {
         if ($group->type != 'static' || $userGroupDB->isWriteable() and count($groups) > 1) {
-          echo '<td><input class="input_checkbox" type="checkbox" name="id[]" value="'.$group->getUniqueID().'" /></td>';
+          echo '<td><input class="input_checkbox" type="checkbox" name="checked_groups[]" value="'.$group->getUniqueID().'" /></td>';
         }
         else if ( !$all_static and count($groups) > 1) {
           echo '<td></td>';
@@ -380,10 +114,11 @@ function show_default() {
       echo '</form></td>';
 
       if (($group->type != 'static' || $userGroupDB->isWriteable()) and $can_manage_usersgroups) {
-        echo '<td><form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+        echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+        echo '<input type="hidden" name="name" value="UserGroup" />';
         echo '<input type="submit" value="'._('Delete').'"/>';
         echo '<input type="hidden" name="action" value="del" />';
-        echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
+        echo '<input type="hidden" name="checked_groups[]" value="'.$group->getUniqueID().'" />';
         echo '</form></td>';
       }
       else if ( !$all_static and $can_manage_usersgroups) {
@@ -397,7 +132,8 @@ function show_default() {
       echo '<tr class="'.$content.'">';
       echo '<td colspan="6"><a href="javascript:;" onclick="markAllRows(\'usergroups_list\'); return false">'._('Mark all').'</a> / <a href="javascript:;" onclick="unMarkAllRows(\'usergroups_list\'); return false">'._('Unmark all').'</a></td>';
 	  echo '<td>';
-	  echo '<form action="usersgroup.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'usergroups_list\');">';
+	  echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete these groups?').'\') && updateMassActionsForm(this, \'usergroups_list\');">';
+	  echo '<input type="hidden" name="name" value="UserGroup" />';
 	  echo '<input type="hidden" name="action" value="del" />';
 	  echo '<input type="submit" value="'._('Delete').'"/>';
 	  echo '</form>';
@@ -443,23 +179,24 @@ function show_default() {
 
 		foreach ($usergroup_types as $type => $name) {
 			$count = 2;
-			echo '<form action="" method="post">';
+			echo '<form action="actions.php" method="post">';
 			echo '<table id="table_'.$type.'"';
 			if ( $type != $first_type)
 				echo ' style="display: none" ';
 			else
 				echo ' style="display: visible" ';
 			echo ' border="0" class="main_sub" cellspacing="1" cellpadding="5" >';
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="add" />';
 			echo '<input type="hidden" name="type" value="'.$type.'" />';
 			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 			echo '<th>'._('Name').'</th>';
-			echo '<td><input type="text" name="name" value="" /></td>';
+			echo '<td><input type="text" name="name_group" value="" /></td>';
 			echo '</tr>';
 
 			echo '<tr class="content'.(($count++%2==0)?1:2).'">';
 			echo '<th>'._('Description').'</th>';
-			echo '<td><input type="text" name="description" value="" /></td>';
+			echo '<td><input type="text" name="description_group" value="" /></td>';
 			echo '</tr>';
 		
 			if (str_startswith($type, 'dynamic')) {
@@ -630,7 +367,7 @@ function show_manage($id) {
 		echo '<h2>'._('Settings').'</h1>';
 
 		if ($group->type == 'static' and $can_manage_usersgroups and $usergroupdb_rw) {
-			echo '<form action="" method="post">';
+			echo '<form action="actions.php" method="post">';
 			if ($is_default_group) {
 				echo '<input type="submit" value="'._('Remove from default').'"/>';
 				echo '<input type="hidden" name="action" value="unset_default" />';
@@ -639,20 +376,23 @@ function show_manage($id) {
 				echo '<input type="hidden" name="action" value="set_default" />';
 			}
 
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="id" value="'.$group->getUniqueID().'" />';
 			echo '</form>';
 			echo '<br/>';
 		}
 
 		if ($usergroupdb_rw || ($group->type != 'static')) {
-			echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+			echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
 			echo '<input type="submit" value="'._('Delete this group').'"/>';
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="id" value="'.$id.'" />';
+			echo '<input type="hidden" name="checked_groups[]" value="'.$id.'" />';
 			echo '</form>';
 			echo '<br/>';
 
-			echo '<form action="" method="post">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="modify" />';
 			echo '<input type="hidden" name="id" value="'.$id.'" />';
 			echo '<input type="hidden" name="published" value="'.$status_change_value.'" />';
@@ -660,15 +400,17 @@ function show_manage($id) {
 			echo '</form>';
 			echo '<br/>';
 
-			echo '<form action="" method="post">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="modify" />';
 			echo '<input type="hidden" name="id" value="'.$id.'" />';
-			echo '<input type="text" name="name"  value="'.$group->name.'" size="50" /> ';
+			echo '<input type="text" name="name_group"  value="'.$group->name.'" size="50" /> ';
 			echo '<input type="submit" value="'._('Update the name').'"/>';
 			echo '</form>';
 			echo '<br/>';
 	
-			echo '<form action="" method="post">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="modify" />';
 			echo '<input type="hidden" name="id" value="'.$id.'" />';
 			echo '<input type="text" name="description"  value="'.$group->description.'" size="50" /> ';
@@ -677,7 +419,8 @@ function show_manage($id) {
 		}
     
 		if ($group->type == 'dynamiccached') {
-			echo '<form action="" method="post">';
+			echo '<form action="actions.php" method="post">';
+			echo '<input type="hidden" name="name" value="UserGroup" />';
 			echo '<input type="hidden" name="action" value="modify" />';
 			echo '<input type="hidden" name="id" value="'.$id.'" />';
 
@@ -703,7 +446,8 @@ function show_manage($id) {
     echo '<h2>'._('Rules').'</h1>';
 
 	if ($can_manage_usersgroups) {
-		echo '<form action="" method="post">';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="UserGroup" />';
 		echo '<input type="hidden" name="action" value="modify_rules" />';
 		echo '<input type="hidden" name="id" value="'.$id.'" />';
 	}

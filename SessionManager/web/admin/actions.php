@@ -4,6 +4,7 @@
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +32,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate', 'publish', 'del_icon')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -472,6 +473,206 @@ if ($_REQUEST['name'] == 'Publication') {
 		else
 			popup_error(_('This publication does not exist'));
 
+	}
+}
+
+if ($_REQUEST['name'] == 'UserGroup') {
+	if (! checkAuthorization('manageUsersGroups'))
+		redirect();
+		
+	$userGroupDB = UserGroupDB::getInstance();
+	
+	if ($_REQUEST['action'] == 'add') {
+		if (isset($_REQUEST['type']) && isset($_REQUEST['name_group']) &&  isset($_REQUEST['description_group'])) {
+			if ($_REQUEST['name_group'] == '') {
+				popup_error(_('You must define a name to your usergroup'));
+				redirect('usersgroup.php');
+			}
+			
+			if ($_REQUEST['type'] == 'static') {
+				if (! $userGroupDB->isWriteable()) {
+					die_error(_('User Group Database not writeable'), __FILE__, __LINE__);
+				}
+				$g = new UsersGroup(NULL,$_REQUEST['name_group'], $_REQUEST['description_group'], 1);
+			}
+			elseif ($_REQUEST['type'] == 'dynamic') {
+				$rules = array();
+				foreach ($_POST['rules'] as $rule) {
+					if ($rule['value'] == '') {
+						popup_error(_('You must give a value to each rule of your usergroup'));
+						redirect();
+					}
+					
+					$buf = new UserGroup_Rule(NULL);
+					$buf->attribute = $rule['attribute'];
+					$buf->type = $rule['type'];
+					$buf->value = $rule['value'];
+					
+					$rules[] = $buf;
+				}
+				
+				if ($_REQUEST['cached'] === '0')
+					$g = new UsersGroup_dynamic(NULL, $_REQUEST['name_group'], $_REQUEST['description_group'], 1, $rules, $_REQUEST['validation_type']);
+				else
+					$g = new UsersGroup_dynamic_cached(NULL, $_REQUEST['name_group'], $_REQUEST['description_group'], 1, $rules, $_REQUEST['validation_type'], $_REQUEST['schedule']);
+			}
+			else {
+				die_error(_('Unknow usergroup type'));
+			}
+			
+			$res = $userGroupDB->add($g);
+			if (!$res) {
+				die_error(_("Unable to create user group"), __FILE__, __LINE__);
+			}
+			
+			popup_info(_('UserGroup successfully added'));
+			redirect('usersgroup.php?action=manage&id='.$g->getUniqueID());
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'del') {
+		if (isset($_REQUEST['checked_groups']) && is_array($_REQUEST['checked_groups'])) {
+			foreach ($_REQUEST['checked_groups'] as $id) {
+				$group = $userGroupDB->import($id);
+				if (! is_object($group)) {
+					popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+					redirect();
+				}
+				
+				if ($group->type == 'static') {
+					if (! $userGroupDB->isWriteable()) {
+						die_error(_('User Group Database not writeable'), __FILE__, __LINE__);
+					}
+				}
+				
+				if (! $userGroupDB->remove($group)) {
+					popup_error(sprintf(_("Unable to remove usergroup '%s'"), $id));
+				}
+				
+				popup_info(sprintf(_("UserGroup '%s' successfully deleted"), $group->name));
+			}
+			redirect('usersgroup.php');
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify') {
+		if (isset($_REQUEST['id'])) {
+			$id = $_REQUEST['id'];
+			if ((str_startswith($id, 'static_')) && (! $userGroupDB->isWriteable())) {
+				die_error(_('User Group Database not writeable'), __FILE__, __LINE__);
+			}
+			
+			$group = $userGroupDB->import($id);
+			if (! is_object($group)) {
+				popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+				redirect();
+			}
+			
+			$has_change = false;
+			
+			if (isset($_REQUEST['name_group'])) {
+				$group->name = $_REQUEST['name_group'];
+				$has_change = true;
+			}
+			
+			if (isset($_REQUEST['description'])) {
+				$group->description = $_REQUEST['description'];
+				$has_change = true;
+			}
+			
+			if (isset($_REQUEST['published'])) {
+				$group->published = (bool)$_REQUEST['published'];
+				$has_change = true;
+			}
+			
+			if (isset($_REQUEST['schedule'])) {
+				$group->schedule = $_REQUEST['schedule'];
+				$has_change = true;
+			}
+			
+			if (! $has_change)
+				return false;
+			
+			if (! $userGroupDB->update($group)) {
+				popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+				redirect();
+			}
+			
+			popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
+			redirect('usersgroup.php?action=manage&id='.$group->getUniqueID());
+		}
+	}
+	
+	if (($_REQUEST['action'] == 'set_default') or ($_REQUEST['action'] == 'unset_default')) {
+		if (! checkAuthorization('manageConfiguration')) {
+			die_error(_('Not enough rights'));
+		}
+		if (isset($_REQUEST['id'])) {
+			try {
+				$prefs = new Preferences_admin();
+			}
+			catch (Exception $e) {
+				// Error header save
+				die_error('error R6');
+			}
+			
+			$id = $_REQUEST['id'];
+			
+			$new_default = ($_REQUEST['action'] == 'set_default')?$id:NULL;
+			
+			$group = $userGroupDB->import($id);
+			if (! is_object($group)) {
+				popup_error(sprintf(_("Failed to import group '%s'"), $id));
+				redirect();
+			}
+			
+			$mods_enable = $prefs->set('general', 'user_default_group', $new_default);
+			if (! $prefs->backup()) {
+				Logger::error('main', 'usersgroup.php action_default: Unable to save prefs');
+				popup_error(_("Unable to save prefs"));
+			}
+			
+			popup_info(sprintf(_("UserGroup '%s' successfully modified"), $group->name));
+			redirect('usersgroup.php?action=manage&id='.$group->getUniqueID());
+			
+		}
+	}
+	
+	if ($_REQUEST['action'] == 'modify_rules') {
+		if (isset($_REQUEST['id'])) {
+			$id = $_REQUEST['id'];
+			$group = $userGroupDB->import($id);
+			if (! is_object($group)) {
+				popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+				redirect();
+			}
+			
+			$rules = array();
+			foreach ($_POST['rules'] as $rule) {
+				if ($rule['value'] == '') {
+					popup_error(_('You must give a value to each rule of your usergroup'));
+					redirect();
+				}
+				
+				$buf = new UserGroup_Rule(NULL);
+				$buf->attribute = $rule['attribute'];
+				$buf->type = $rule['type'];
+				$buf->value = $rule['value'];
+				$buf->usergroup_id = $id;
+				
+				$rules[] = $buf;
+			}
+			$group->rules = $rules;
+			
+			$group->validation_type = $_REQUEST['validation_type'];
+			
+			if (! $userGroupDB->update($group)) 
+				popup_error(sprintf(_("Unable to update Usergroup '%s'"), $group->name));
+			else
+				popup_info(sprintf(_("Rules of '%s' successfully modified"), $group->name));
+			
+			redirect('usersgroup.php?action=manage&id='.$group->getUniqueID());
+		}
 	}
 }
 
@@ -969,6 +1170,7 @@ if ($_REQUEST['name'] == 'Task') {
 		redirect('tasks.php');
 	}
 }
+
 function action_add_sharedfolder() {
 	$sharedfolder_name = $_REQUEST['sharedfolder_name'];
 	if ($sharedfolder_name == '') {
