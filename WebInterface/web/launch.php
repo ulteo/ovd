@@ -48,13 +48,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_<?php echo $_SESSION['session_mode']; ?>.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<?php
-			if ($_SESSION['session_mode'] == 'portal') {
-		?>
 		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
-		<?php
-			}
-		?>
 
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
