@@ -36,11 +36,3 @@ Enhances: cupsys
 Description: Ulteo Open Virtual Desktop - cups2all
  cups2all provides a pdf/ps printer. It is used in Open Virtual Desktop
  application servers to provide data to the printing applet.
-
-Package: ulteo-ovd-start
-Architecture: any
-Depends: python, ${shlibs:Depends}, ${misc:Depends}
-Description: Ulteo Open Virtual Desktop - startup scripts
- This package is a collection of various scripts that can be used to start an X
- session on an Open Virtual Desktop application server.
-
