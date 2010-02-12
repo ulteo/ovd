@@ -1,0 +1,22 @@
+m4_define([uovddesktop_version_major], [99])
+m4_define([uovddesktop_version_minor], [99])
+m4_define([uovddesktop_version_build], [~trunk+svn@REVISION@])
+m4_define([uovddesktop_version], [uovddesktop_version_major().uovddesktop_version_minor()uovddesktop_version_build()])
+
+AC_PREREQ(2.59)
+AC_INIT([ovd-desktop], [uovddesktop_version], [http://bugs.ulteo.com])
+AM_INIT_AUTOMAKE([1.6 foreign])
+
+if test "x${prefix}" = "xNONE" ; then
+sysconfdir="/etc"
+datarootdir="/usr/share"
+localstatedir="/var"
+fi
+
+AC_CONFIG_FILES([Makefile
+                 pictures/Makefile
+                 config/Makefile
+                 config/xfce4/Makefile
+                 config/thunar/Makefile
+])
+AC_OUTPUT
