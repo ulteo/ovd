@@ -1,5 +1,4 @@
 SUBDIRS = admin \
-          ajax \
           classes \
           events \
           includes \
