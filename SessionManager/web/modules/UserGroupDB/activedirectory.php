@@ -19,9 +19,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
+	protected $cache;
+	
+	public function __construct() {
+		parent::__construct();
+		$this->cache = array();
+	}
 
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::activedirectory::import (id = $id_)");
+		// cache 
+		if (isset($this->cache[$id_])) {
+			return $this->cache[$id_];
+		}
+		// cache end
 		
 		$userGroupDB = UserGroupDB::getInstance();
 		
@@ -60,6 +71,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			}
 		}
 		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
+		$this->cache[$buf['id']] = $ug;
 		return $ug;
 	}
 	
