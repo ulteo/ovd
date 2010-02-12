@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import pwd
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
@@ -46,24 +47,11 @@ class Session(AbstractSession):
 			f.write(cmd)
 			f.close()
 		
-		buf = os.path.join(d, "apps")
-		os.system('touch "%s"'%(buf))
-		os.system('chown %s "%s"'%(self.user.name, buf))
+		instances_dir = os.path.join(d, "instances")
+		os.mkdir(instances_dir, 0770)
+		os.chown(instances_dir, pwd.getpwnam(self.user.name)[2], -1)
 		
 		xdg_dir = os.path.join(d, "xdg")
-		
-		g = {}
-		g["OVD_SESSID_DIR"] = d
-		g["XDG_DATA_DIRS"] = xdg_dir
-		g["OVD_APPS_DIR"] = os.path.join(xdg_dir, "applications")
-		
-		env_file = os.path.join(d, "env.sh")
-		f = file(env_file, "w")
-		for (k,v) in g.items():
-			f.write("export %s=%s\n"%(k, v))
-		f.close()
-		
-		
 		os.mkdir(xdg_dir)
 		
 		xdg_app_d = os.path.join(xdg_dir, "applications")
