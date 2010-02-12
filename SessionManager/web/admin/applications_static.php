@@ -404,8 +404,6 @@ function show_manage($id, $applicationDB) {
 			echo '<tr class="'.$content.'">';
 			echo '<td>'._('Icon').'</td>';
 			echo '<td>';
-			echo "getIconPath ".$app->getIconPath()."<br>";
-			echo "getDefaultIconPath ".$app->getDefaultIconPath()."<br>";
 			if (($app->getIconPath() != $app->getDefaultIconPath()) && file_exists($app->getIconPath())) {
 				echo '<img src="media/image/cache.php?id='.$app->getAttribute('id').'" alt="" title="" /> ';
 				echo '<input type="button" value="'._('Delete this icon').'" onclick="return confirm(\''._('Are you sure you want to delete this icon?').'\') && $(\'delete_icon\').submit();"/>';
