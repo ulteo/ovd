@@ -108,7 +108,6 @@ class Abstract_Liaison_ldap_memberof {
 		}
 		if (isset($buf['member']) && is_array($buf['member'])) {
 			foreach ($buf['member'] as $member) {
-				$ldap->searchDN($member);
 				$u = $userDBldap->importFromDN($member);
 				$l = new Liaison($u->getAttribute('login'), $group->id);
 				$elements[$l->element] = $l;
