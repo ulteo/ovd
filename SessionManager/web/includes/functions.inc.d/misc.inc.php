@@ -136,26 +136,6 @@ function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
 	Logger::error('plugins', $errstr_.' in '.$errfile_.' line '.$errline_);
 }
 
-function return_ok($msg_=false) {
-// 	Logger::debug('main', 'return_ok()');
-
-	if ($msg_ !== false)
-		Logger::info('main', $msg_);
-
-	header('HTTP/1.1 200 OK');
-	return true;
-}
-
-function return_error($msg_=false) {
-// 	Logger::debug('main', 'return_error()');
-
-	if ($msg_ !== false)
-		Logger::error('main', $msg_);
-
-	header('HTTP/1.1 404 Not Found');
-	return false;
-}
-
 function conf_is_valid() {
 	if (! defined('SESSIONMANAGER_SPOOL'))
 		return _('SESSIONMANAGER_SPOOL is not defined');
