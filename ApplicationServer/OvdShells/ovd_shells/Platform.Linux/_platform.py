@@ -59,6 +59,9 @@ def getUserSessionDir():
 	
 
 def startDesktop():
+	os.environ["XDG_DATA_DIRS"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg")
+	os.environ["OVD_APPS_DIR"] = os.path.join(os.environ["OVD_SESSION_DIR"], "xdg", "applications")
+	
 	os.system("startxfce4")
 
 

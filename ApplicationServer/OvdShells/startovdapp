@@ -34,6 +34,11 @@ def main():
 		print "no 'OVD_SESSION_DIR' env var define"
 		sys.exit(1)
 	
+	path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances")
+	if not os.path.exists(path):
+		print "no such directory",path
+		sys.exit(1)
+	
 	if not len(sys.argv) > 1:
 		print "no app_id given"
 		sys.exit(1)
