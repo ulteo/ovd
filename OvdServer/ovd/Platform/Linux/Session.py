@@ -20,6 +20,7 @@
 
 import os
 import pwd
+import shutil
 
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
@@ -89,7 +90,7 @@ class Session(AbstractSession):
 			dst_dir =  os.path.join(xdg_dir, p)
 			os.remove(dst_dir)
 		
-		os.system('rm -rf "%s"'%(d))
+		shutil.rmtree(d)
 
 #user_set_env() {
 #    LC_ALL=$LOC
