@@ -62,7 +62,7 @@ class Session(AbstractSession):
 			src_dir = os.path.join("/usr/share/", p)
 			dst_dir =  os.path.join(xdg_dir, p)
 			
-			os.system('ln -sf "%s" "%s"'%(src_dir, dst_dir))
+			os.symlink(src_dir, dst_dir)
 		
 		
 		for (app_id, app_target) in self.applications:
@@ -88,7 +88,8 @@ class Session(AbstractSession):
 		
 		for p in ["icons", "pixmaps", "mime", "themes"]:
 			dst_dir =  os.path.join(xdg_dir, p)
-			os.remove(dst_dir)
+			if os.path.islink(dst_dir):
+				os.remove(dst_dir)
 		
 		shutil.rmtree(d)
 
