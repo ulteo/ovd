@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008-2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
  * This program is free software; you can redistribute it and/or
@@ -152,7 +153,7 @@ function show_all($flags_) {
 
 		echo '<div class="section">';
 		if (array_key_exists('web', $logs)) {
-			echo '<h4>Web log';
+			echo '<h4>'._('Web log');
 			echo ' <a href="?show=1&amp;where=aps&amp;name=web&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 			echo ' <a href="?download=1&amp;where=aps&amp;name=web&amp;server='.$fqdn.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 			echo '</h4>';
@@ -162,7 +163,7 @@ function show_all($flags_) {
 		}
 
 		if (array_key_exists('daemon', $logs)) {
-			echo '<h4>Daemon log';
+			echo '<h4>'._('Daemon log');
 			echo ' <a href="?show=1&amp;where=aps&amp;name=daemon&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 			echo ' <a href="?download=1&amp;where=aps&amp;name=daemon&amp;server='.$fqdn.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 			echo '</h4>';

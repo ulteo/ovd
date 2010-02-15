@@ -405,7 +405,7 @@ function show_page($mode_) {
 	echo '>day</option>';
 	echo '</select> ';
 
-	echo '<input type="submit" value="Refresh" />';
+	echo '<input type="submit" value="'._('Refresh').'" />';
 	echo '</form>';
 
 	echo '<div>';
