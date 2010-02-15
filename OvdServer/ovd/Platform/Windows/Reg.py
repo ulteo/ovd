@@ -77,9 +77,6 @@ def disableActiveSetup(rootPath):
 
 
 def CopyTree(KeySrc, SubKey, KeyDest):
-	#print "delete: ",SubKey
-	#DeleteTree(KeyDest, SubKey)
-	
 	win32api.RegCreateKey(KeyDest, SubKey)
 	hkey_src = win32api.RegOpenKey(KeySrc, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
@@ -87,7 +84,8 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	index = 0
 	while True:
 		try:
-			(string, object, type) = RegEnumValue(hkey_src, index)
+			(string, object, type) = win32api.RegEnumValue(hkey_src, index)
+			index+= 1
 			
 			win32api.RegSetValueEx(hkey_dst, string, 0, type, object)
 		except:
@@ -97,7 +95,7 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	index = 0
 	while True:
 		try:
-			buf = win32api.RegEnumKey(KeySrc, index)
+			buf = win32api.RegEnumKey(hkey_src, index)
 			index+= 1
 			
 			CopyTree(hkey_src, buf, hkey_dst)

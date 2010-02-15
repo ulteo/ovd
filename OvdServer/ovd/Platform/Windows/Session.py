@@ -277,25 +277,14 @@ class Session(AbstractSession):
 		win32api.RegCloseKey(key)
 		
 		
-		# Overwrite Active Setup : doesn't work !
-		#path = r"Software\Microsoft\Active Setup"
-		#hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_ALL_ACCESS)
+		# Overwrite Active Setup: works partially
+		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, "Software\Microsoft\Active Setup", 0, win32con.KEY_ALL_ACCESS)
+		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\Software\Microsoft\Active Setup"%(hiveName), 0, win32con.KEY_ALL_ACCESS)
 		
-		#path = r"%s\%s"%(hiveName, path)
-		#hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
-		
-		#try:
-			#CopyTree(hkey_src, "Installed Components", hkey_dst)
-		#except Exception, err:
-			#import traceback
-			#import sys
-			#exception_type, exception_string, tb = sys.exc_info()
-			#trace_exc = "".join(traceback.format_tb(tb))
-			#print trace_exc
-			#print exception_string
-		
-		#win32api.RegCloseKey(hkey_src)
-		#win32api.RegCloseKey(hkey_dst)
+		Reg.CopyTree(hkey_src, "Installed Components", hkey_dst)
+	
+		win32api.RegCloseKey(hkey_src)
+		win32api.RegCloseKey(hkey_dst)
 		
 		
 		# Unload the hive
