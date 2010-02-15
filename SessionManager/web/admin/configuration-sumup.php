@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET  <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -42,7 +42,7 @@ if (! $prefs) {
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2>Last save</h2>
+  <h2><?php echo _('Last save'); ?></h2>
 <?php
 echo date('m/d/Y H:i:s', filemtime(SESSIONMANAGER_CONFFILE_SERIALIZED));
 ?>
@@ -70,7 +70,7 @@ $sql_conf = $prefs->get('general', 'sql');
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><a href="configuration-partial.php?mode=general">Logs</a></h2>
+  <h2><a href="configuration-partial.php?mode=general"><?php echo _('Logs'); ?></a></h2>
 <?php
 $log_flags = $prefs->get('general', 'log_flags');
 ?>
@@ -92,12 +92,12 @@ if (is_array($log_flags) && count($log_flags) > 0)
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><a href="configuration-partial.php?mode=application_server_settings">Application Server</a></h2>
+  <h2><a href="configuration-partial.php?mode=application_server_settings"><?php echo _('Application Server'); ?></a></h2>
   <ul>
 <?php
 $application_server_settings = $prefs->get('general', 'application_server_settings');
 ?>
-    <li><strong>Authorized FQDN</strong>:<ul>
+    <li><strong><?php echo _('Authorized FQDN'); ?></strong>:<ul>
 <?php
 if (is_array($application_server_settings['authorized_fqdn']) && count($application_server_settings['authorized_fqdn']) > 0)
 	foreach ($application_server_settings['authorized_fqdn'] as $authorized_fqdn)
@@ -105,7 +105,7 @@ if (is_array($application_server_settings['authorized_fqdn']) && count($applicat
 ?>
     </ul></li>
 
-    <li><strong>FQDN private address</strong>:<ul>
+    <li><strong><?php echo _('FQDN private address'); ?></strong>:<ul>
 <?php
 if (is_array($application_server_settings['fqdn_private_address']) && count($application_server_settings['fqdn_private_address']) > 0)
 	foreach ($application_server_settings['fqdn_private_address'] as $name => $ip)
@@ -113,7 +113,7 @@ if (is_array($application_server_settings['fqdn_private_address']) && count($app
 ?>
     </ul></li>
 
-	<li><strong>FQDN check</strong>:
+	<li><strong><?php echo _('FQDN check'); ?></strong>:
 <?php
 if ($application_server_settings['disable_fqdn_check'] == 1)
 	echo 'disabled';

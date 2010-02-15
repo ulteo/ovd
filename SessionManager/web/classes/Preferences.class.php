@@ -274,7 +274,7 @@ class Preferences {
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
 
 		$c = new ConfigElement_select('session_mode', _('Default mode for session'), _('Default mode for session'), _('Default mode for session'), 'portal');
-		$c->setContentAvailable(array('desktop'=>'Desktop', 'portal'=>'Portal'));
+		$c->setContentAvailable(array('desktop'=>_('Desktop'), 'portal'=>_('Portal')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
