@@ -550,6 +550,8 @@ class Server {
 		Logger::debug('main', 'Starting Server::getSessionStatus for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
 		$xml = query_url($this->getBaseURL().'/aps/session/status/'.$session_id_);
+		if (! $xml)
+			return false;
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -571,28 +573,6 @@ class Server {
 			return false;
 
 		$session_status = $node->getAttribute('status');
-		if (! is_numeric($session_status)) {
-			//Matching between new OvdServer session statuses and SessionManager ones
-			switch ($session_status) {
-				case 'ready':
-				case 'logged': //ready + client inside
-					$session_status = 2;
-					break;
-				case 'wait_destroy':
-				case 'disconnected': //sending destruction order (and what about session suspend/resume?)
-				case 'error': //sending destruction order (?)
-					$session_status = 3;
-					break;
-				case 'destroyed':
-				case 'unknown':
-					$session_status = 4;
-					break;
-				case 'init': //default status for a newly created session (?)
-				default:
-					$session_status = -1;
-					break;
-			}
-		}
 
 		return $session_status;
 	}
