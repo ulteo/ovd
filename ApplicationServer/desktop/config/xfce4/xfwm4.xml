@@ -2,8 +2,8 @@
 <!DOCTYPE mcs-option SYSTEM "mcs-option.dtd">
 
 <mcs-option>
-	<option name="Xfwm/BoxMove" type="int" value="0"/>
-	<option name="Xfwm/BoxResize" type="int" value="0"/>
+	<option name="Xfwm/BoxMove" type="int" value="1"/>
+	<option name="Xfwm/BoxResize" type="int" value="1"/>
 	<option name="Xfwm/ButtonLayout" type="string" value="OT|SHMC"/>
 	<option name="Xfwm/ClickToFocus" type="int" value="1"/>
 	<option name="Xfwm/DblClickAction" type="string" value="maximize"/>
