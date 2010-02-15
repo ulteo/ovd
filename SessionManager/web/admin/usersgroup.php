@@ -250,7 +250,7 @@ function action_modify_rules($id) {
 	if (! $userGroupDB->update($group))
 		die_error('Unable to update group "'.$id.'"',__FILE__,__LINE__);
 	else
-		popup_info(_('Rules of \''.$group->name.'\' successfully modified'));
+		popup_info(sprintf(_("Rules of '%s' successfully modified"), $group->name));
 }
 
 function action_set_default($id_) {
