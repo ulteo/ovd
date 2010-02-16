@@ -345,7 +345,7 @@ class OVD(win32serviceutil.ServiceFramework):
 					cmd = unicode(shortcut.GetPath(0)[0], output_encoding)
 					for extension in self.mimetypes.extensions:
 						for app_path in self.mimetypes.ext_keys[extension]["apps"]:
-							if self._compare_commands(app_path, cmd) and \
+							if self._compare_commands(unicode(app_path, output_encoding), cmd) and \
 							        self.mimetypes.ext_keys[extension]["type"] not in mimetypes:
 								mimetypes.append(self.mimetypes.ext_keys[extension]["type"])
 					if mimetypes:
