@@ -22,7 +22,6 @@ import struct
 import threading
 import time
 
-from Application import Application
 import OvdAppChannel
 
 class InstancesManager(threading.Thread):
@@ -56,19 +55,12 @@ class InstancesManager(threading.Thread):
 			if job is not None:
 				print "IM got job",job
 				(token, app) = job
-				application = Application(app, [])
-				if not application.isAvailable():
-					print "Application %d is not available"%(app)
-					self.onInstanceNotAvailable(token)
-					return
-				
-				cmd = application.getFinalCommand()
-				if cmd is None:
-					print "No available command"
-					self.onInstanceNotAvailable(token)
-					return
+				cmd = "startovdapp %d"%(app)
 				
 				instance = self.launch(cmd)
+				
+				# ToDo: sleep 0.5s and check if the process exist
+				# with startovdapp return status, get the error
 				
 				buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
 				buf+= struct.pack("<I", token)
