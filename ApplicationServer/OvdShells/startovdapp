@@ -48,18 +48,18 @@ def main():
 		sys.exit(1)
 	
 	application_id = int(sys.argv[1])
-	args = sys.argv[1:]
+	args = sys.argv[2:]
 	
 	application = Application(application_id, args)
 	
 	if not application.isAvailable():
 		print "Application %d is not available"%(application_id)
-		sys.exit(1)
+		sys.exit(2)
 	
 	cmd = application.getFinalCommand()
 	if cmd is None:
 		print "No available command"
-		sys.exit(1)
+		sys.exit(2)
 	
 	modules = []
 	modules.append(CheckFork(application))
