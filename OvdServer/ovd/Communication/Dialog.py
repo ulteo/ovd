@@ -33,7 +33,7 @@ class Dialog:
 		response = {}
 		response["code"] = code
 		response["Content-Type"] = "text/xml"
-		response["data"] = content.toxml()
+		response["data"] = content.toxml("utf-8")
 		
 		return response
 
