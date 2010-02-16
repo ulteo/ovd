@@ -68,7 +68,7 @@ class Session(AbstractSession):
 		for (app_id, app_target) in self.applications:
 			target = os.path.join(xdg_app_d, "%s.desktop"%(app_id))
 			
-			cmd = """sed -r "s#^Exec=(.*)#Exec=startovdapp %s \"%s\"#" <"%s" >"%s" """%(app_id, app_target, app_target, target)
+			cmd = """sed -r "s#^Exec=(.*)#Exec=startovdapp %s#" <"%s" >"%s" """%(app_id, app_target, target)
 			ret = os.system(cmd)
 			if ret != 0:
 				Logger.warn("Following cmd return status %d: %s"%(ret, cmd))
