@@ -220,8 +220,10 @@ public class SeamlessFrame extends SeamFrame {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (this.lockMouseEvents)
+		if (this.lockMouseEvents) {
+			System.err.println("Weird behavior, should never appear (ref: 20)");
 			return;
+		}
 
 		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
 			int xClick = e.getX();
@@ -237,6 +239,7 @@ public class SeamlessFrame extends SeamFrame {
 				
 				this.offsetResize(e);
 				this.resizeRW(e);
+				this.lockMouseEvents();
 			}
 			else if (
 				yClick >= SeamlessFrame.SEAMLESS_BORDER_SIZE &&
@@ -250,6 +253,7 @@ public class SeamlessFrame extends SeamFrame {
 				this.rw.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 				
 				this.moveClick = e;
+				this.lockMouseEvents();
 			}
 		}
 		
@@ -272,7 +276,10 @@ public class SeamlessFrame extends SeamFrame {
 				r.height = this.getHeight();
 			}
 
-			if (r != null) {
+			super.mouseReleased(e);
+			this.unlockMouseEvents();
+			
+			if (r != null && ! this.getBounds().equals(r)) {
 				try {
 					this.common.seamlessChannelInstance.send_position(this.id, r.x, r.y, r.width, r.height, 0);
 				} catch (RdesktopException ex) {
@@ -282,9 +289,8 @@ public class SeamlessFrame extends SeamFrame {
 				} catch (CryptoException ex) {
 					Logger.getLogger(SeamlessFrame.class.getName()).log(Level.SEVERE, null, ex);
 				}
-
-				this.unlockMouseEvents();
 			}
+			return;
 		}
 		
 		super.mouseReleased(e);
