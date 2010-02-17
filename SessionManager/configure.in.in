@@ -171,7 +171,6 @@ web/modules/ApplicationDB/Makefile
 web/modules/ApplicationsGroupDB/Makefile
 web/admin/ajax/Makefile
 web/admin/init/Makefile
-web/admin/media/script/ajax/Makefile
 web/admin/media/script/Makefile
 web/admin/media/style/Makefile
 web/admin/media/image/loadbalancing/Makefile
