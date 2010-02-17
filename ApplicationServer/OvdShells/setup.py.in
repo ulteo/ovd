@@ -1,0 +1,78 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Copyright (C) 2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Samuel BOVEE    <samuel@ulteo.com> 2010
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import os
+import shutil
+import sys
+from distutils.core import setup,Extension
+
+if sys.platform is "win32":
+
+   import py2exe
+   sys.argv.append("py2exe")
+
+   try:
+      import modulefinder
+      import win32com,sys
+      for p in win32com.__path__[1:]:
+			modulefinder.AddPackagePath("win32com", p)
+      for extra in ["win32com.shell","win32com.mapi"]:
+         __import__(extra)
+         m = sys.modules[extra]
+         for p in m.__path__[1:]:
+            modulefinder.AddPackagePath(extra, p)
+   except ImportError:
+      # no build path setup, no worries.
+      pass
+
+   path = os.path.join("ovd_shells", "Platform")
+   if os.path.exists(path):
+      shutil.rmtree(path)
+   shutil.copytree(os.path.join("ovd_shells", "Platform.Windows"), path)
+  
+   setup(
+      zipfile = "lib/shared.zip",
+      windows = ["OvdDesktop", "OvdRemoteApps", "startovdapp"],
+   )
+   
+elif sys.platform == "linux2":
+
+   path      = os.path.join("ovd_shells", "Platform")
+   linuxpath = os.path.join("ovd_shells", "Platform.Linux")
+
+   if os.path.exists(linuxpath):
+      if os.path.exists(path):
+         shutil.rmtree(path)
+      shutil.copytree(linuxpath, path)
+
+   dist = setup(name='ovd-shells',
+         version='99.99~trunk+svn@REVISION@',
+         description='OVD shell',
+         author='Julien Langlois',
+         author_email='julient@ulteo.com',
+         url='http://www.ulteo.com/',
+         packages=['ovd_shells', 'ovd_shells.Platform'],
+         data_files=[('/usr/bin', ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
+   )
+
+else:
+   raise Exception("No supported platform")

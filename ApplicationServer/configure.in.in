@@ -206,9 +206,6 @@ web/media/Makefile
 web/includes/Makefile
 web/classes/Makefile
 web/Makefile
-OvdShells/Makefile
-OvdShells/ovd_shells/Makefile
-OvdShells/ovd_shells/Platform.Linux/Makefile
 ])
 AC_OUTPUT
 

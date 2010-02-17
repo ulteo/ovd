@@ -1,0 +1,3 @@
+include OvdDesktop  OvdRemoteApps startovdapp
+include ovd_shells/*.py
+include ovd_shells/Platform/*.py
