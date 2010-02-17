@@ -980,9 +980,9 @@ if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
 							Logger::error('main', 'Server::updateApplications failed to save application');
 							return $ret;
 						}
-						if (! file_exists($a->getIconPath())) {
-							$this->getApplicationIcon($a->getAttribute('id'), $app_real_id);
-						}
+					}
+					if (! file_exists($a->getIconPathRW())) {
+						$this->getApplicationIcon($a->getAttribute('id'), $app_real_id);
 					}
 					$current_liaison_key[] = $a->getAttribute('id');
 				}
