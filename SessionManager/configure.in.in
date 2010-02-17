@@ -150,7 +150,6 @@ po/Makefile
 config/Makefile
 scripts/Makefile
 web/Makefile
-web/ajax/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
 web/media/image/Makefile
