@@ -64,6 +64,7 @@ public class SeamlessFrame extends SeamFrame {
 
 		Dimension dim = new Dimension(this.backstore.getHeight(), this.backstore.getWidth());
 		this.rw = new RectWindow(this, dim);
+		this.toFront();
 	}
 
 	protected void lockMouseEvents() {
