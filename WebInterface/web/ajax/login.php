@@ -95,6 +95,7 @@ if (! is_object($session_node)) {
 	echo return_error(1, 'Invalid XML: No session node');
 	die();
 }
+$_SESSION['session_id'] = $session_node->getAttribute('id');
 $_SESSION['session_mode'] = $session_node->getAttribute('mode');
 
 $user_node = $session_node->getElementsByTagName('user');
