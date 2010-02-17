@@ -1,5 +1,6 @@
 SUBDIRS = admin \
           classes \
+          client \
           events \
           includes \
           media \

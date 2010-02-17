@@ -89,8 +89,7 @@ class Session {
 		}
 
 		$ret = $server->getSessionStatus($this->id);
-
-		if (! is_numeric($ret) || $ret === '') {
+		if (! $ret) {
 			Logger::error('main', 'Session::getStatus('.$this->id.') - ApS answer is incorrect');
 			return false;
 		}
@@ -103,32 +102,12 @@ class Session {
 	public function setStatus($status_) {
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
-		//Matching between new OvdServer session statuses and SessionManager ones
-		switch ($status_) {
-			case 'ready':
-			case 'logged': //ready + client inside
-				$status_ = 2;
-				break;
-			case 'wait_destroy':
-			case 'disconnected': //sending destruction order (and what about session suspend/resume?)
-			case 'error': //sending destruction order (?)
-				$status_ = 3;
-				break;
-			case 'destroyed':
-			case 'unknown':
-				$status_ = 4;
-				break;
-			case 'init': //default status for a newly created session (?)
-			default:
-				$status_ = -1;
-				break;
-		}
-
-		if ($status_ == 1) {
+		//$status_ == 'init'
+		if ($status_ == 'ready') { // || $status_ == 'logged'
 			Logger::info('main', 'Session start : \''.$this->id.'\'');
 
 			$this->setAttribute('start_time', time());
-		} elseif ($status_ == 3 || $status_ == 4) {
+		} elseif ($status_ == 'wait_destroy' || $status_ == 'destroyed' || $status_ == 'error' || $status_ == 'unknown') { // || $status_ == 'disconnected'
 			Logger::info('main', 'Session end : \''.$this->id.'\'');
 
 			$plugins = new Plugins();
@@ -139,7 +118,7 @@ class Session {
 				'session'	=>	$this->id
 			));
 
-			if (! $this->orderDeletion((($status_ == 4)?false:true)))
+			if (! $this->orderDeletion((($status_ == 'wait_destroy')?true:false)))
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
 
 			Abstract_Session::delete($this);
@@ -160,39 +139,35 @@ class Session {
 		return true;
 	}
 
-	public function textStatus($status_=4) {
+	public function textStatus($status_='unknown') {
 // 		Logger::debug('main', 'Starting Session::textStatus for \''.$this->id.'\'');
 
 		$states = array(
-			-1	=>	_('To create'),
-			0	=>	_('Created'),
-			1	=>	_('To start'),
-			22	=>	_('Initializing'),
-			2	=>	_('Active'),
-			9	=>	_('Suspending'),
-			10	=>	_('Suspended'),
-			11	=>	_('Resuming'),
-			3	=>	_('To destroy'),
-			4	=>	_('Destroyed')
+			'init'			=>	_('Initializing'),
+			'ready'			=>	_('Ready'),
+			'logged'		=>	_('Logged'),
+			'disconnected'	=>	_('Disconnected'),
+			'wait_destroy'	=>	_('To destroy'),
+			'destroyed'		=>	_('Destroyed'),
+			'error'			=>	_('Error'),
+			'unknown'		=>	_('Unknown')
 		);
 
 		return $states[$status_];
 	}
 
-	public function colorStatus($status_=4) {
+	public function colorStatus($status_='unknown') {
 // 		Logger::debug('main', 'Starting Session::colorStatus for \''.$this->id.'\'');
 
 		$states = array(
-			-1	=>	'warn',
-			0	=>	'warn',
-			1	=>	'warn',
-			22	=>	'warn',
-			2	=>	'ok',
-			9	=>	'warn',
-			10	=>	'ok',
-			11	=>	'warn',
-			3	=>	'error',
-			4	=>	'error'
+			'init'			=>	'warn',
+			'ready'			=>	'ok',
+			'logged'		=>	'ok',
+			'disconnected'	=>	'ok',
+			'wait_destroy'	=>	'warn',
+			'destroyed'		=>	'error',
+			'error'			=>	'error',
+			'unknown'		=>	'error'
 		);
 
 		return $states[$status_];
