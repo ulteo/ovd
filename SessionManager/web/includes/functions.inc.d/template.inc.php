@@ -86,21 +86,21 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 
 		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />
 
-		<link rel="stylesheet" type="text/css" href="'.$base_url.'media/script/lib/nifty/niftyCorners.css" />
-		<script type="text/javascript" src="'.$base_url.'media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.css" />
+		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 			NiftyLoad = function() {
 				Nifty(\'div.rounded\');
 			}
 		</script>
 
-		<script type="text/javascript" src="'.$base_url.'media/script/lib/prototype/prototype.js" charset="utf-8"></script>
-		<script type="text/javascript" src="'.$base_url.'media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
-		<script type="text/javascript" src="'.$base_url.'media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/prototype/prototype.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
 
-		<script type="text/javascript" src="'.$base_url.'media/script/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'admin/media/script/common-regular.js" charset="utf-8"></script>
 
-		<script type="text/javascript" src="'.$base_url.'media/script/sortable.js" charset="utf-8"></script>
+		<script type="text/javascript" src="'.$base_url.'admin/media/script/sortable.js" charset="utf-8"></script>
 
 		<script type="text/javascript" src="'.$base_url.'admin/media/script/common.js" charset="utf-8"></script>
 		<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/configuration.js" charset="utf-8"></script>

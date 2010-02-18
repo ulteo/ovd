@@ -153,12 +153,6 @@ web/Makefile
 web/client/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
-web/media/script/Makefile
-web/media/script/lib/calendarpopup/Makefile
-web/media/script/lib/nifty/Makefile
-web/media/script/lib/prototype/Makefile
-web/media/script/lib/scriptaculous/Makefile
-web/media/script/lib/Makefile
 web/media/Makefile
 web/plugins/Makefile
 web/plugins/FS/Makefile
@@ -172,6 +166,11 @@ web/admin/ajax/Makefile
 web/admin/init/Makefile
 web/admin/media/script/Makefile
 web/admin/media/script/ajax/Makefile
+web/admin/media/script/lib/calendarpopup/Makefile
+web/admin/media/script/lib/nifty/Makefile
+web/admin/media/script/lib/prototype/Makefile
+web/admin/media/script/lib/scriptaculous/Makefile
+web/admin/media/script/lib/Makefile
 web/admin/media/style/Makefile
 web/admin/media/image/loadbalancing/Makefile
 web/admin/media/image/menu/Makefile

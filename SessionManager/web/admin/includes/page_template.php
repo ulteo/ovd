@@ -264,22 +264,22 @@ function page_header($params_=array()) {
   echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
 
   echo '<link rel="shortcut icon" type="image/png" href="'.$base_url.'admin/media/image/favicon.ico" />';
-  echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'media/style/common.css" />';
+  echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common-regular.css" />';
   echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />';
 
-  echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'media/script/lib/nifty/niftyCorners.css" />';
-  echo '<script type="text/javascript" src="'.$base_url.'media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>';
+  echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.css" />';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" charset="utf-8">';
   echo '		NiftyLoad = function() {';
   echo '			Nifty("div.rounded");';
   echo '		}';
   echo '</script>';
 
-  echo '<script type="text/javascript" src="'.$base_url.'media/script/lib/prototype/prototype.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="'.$base_url.'media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="'.$base_url.'media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="'.$base_url.'media/script/common.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="'.$base_url.'media/script/sortable.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/prototype/prototype.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/common-regular.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/sortable.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/common.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/configuration.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/add_del_rows.js" charset="utf-8"></script>';
