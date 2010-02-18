@@ -42,8 +42,8 @@ var Daemon = Class.create({
 
 	persistent: false,
 
-	session_state: -1,
-	old_session_state: -1,
+	session_status: '',
+	session_status_old: '',
 
 	started: false,
 	stopped: false,
@@ -155,7 +155,7 @@ var Daemon = Class.create({
 			this.start();
 
 			this.started = true;
-		} else if (this.stopped) {
+		} else if (this.stopped || this.session_status == 'unknown') {
 			this.push_log('info', '[daemon] loop() - Now ending session');
 
 			if (! this.started) {
@@ -212,19 +212,23 @@ var Daemon = Class.create({
 		}
 	},
 
+	get_session_status: function() {
+		this.push_log('debug', '[daemon] get_session_status()');
+
+		this.check_status();
+
+		return this.session_status;
+	},
+
 	check_status: function() {
 		this.push_log('debug', '[daemon] check_status()');
-this.old_session_state = 2;
-this.session_state = 2;
-this.push_log('error', '[daemon] check_status() - RETURN');
-return;
+
 		new Ajax.Request(
-			'whatsup.php',
+			'session_status.php',
 			{
 				method: 'get',
 				asynchronous: false,
 				parameters: {
-					application_id: this.access_id,
 					differentiator: Math.floor(Math.random()*50000)
 				},
 				onSuccess: this.parse_check_status.bind(this)
@@ -234,18 +238,30 @@ return;
 
 	parse_check_status: function(transport) {
 		this.push_log('debug', '[daemon] parse_check_status(transport@check_status())');
-this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - RETURN');
-return;
+
 		var xml = transport.responseXML;
 
 		var buffer = xml.getElementsByTagName('session');
 
-		if (buffer.length != 1)
+		if (buffer.length != 1) {
+			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Invalid XML (No "session" node)');
 			return;
+		}
 
 		var sessionNode = buffer[0];
 
-		this.old_session_state = this.session_state;
+		try { // IE does not have hasAttribute in DOM API...
+			this.session_status_old = this.session_status;
+			this.session_status = sessionNode.getAttribute('status');
+
+			if (this.session_status_old != this.session_status)
+				this.push_log('info', '[daemon] parse_check_status(transport@check_status()) - Session status is now "'+this.session_status+'"');
+			else
+				this.push_log('debug', '[daemon] parse_check_status(transport@check_status()) - Session status is "'+this.session_status+'"');
+		} catch(e) {
+			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Invalid XML (Missing argument for "session" node)');
+			return;
+		}
 	},
 
 	start: function() {
@@ -268,6 +284,8 @@ return;
 
 	parse_do_started: function(transport) {
 		this.push_log('debug', '[daemon] parse_do_started(transport@do_started())');
+
+		this.started = true;
 	},
 
 	list_servers: function() {
@@ -411,5 +429,7 @@ return;
 			else
 				$('endMessage').innerHTML = this.i18n['session_end_ok'];
 		}
+
+		this.stopped = true;
 	}
 });
