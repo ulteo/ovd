@@ -92,7 +92,6 @@ lmessage/Makefile
 po/Makefile.in
 cups2all/Makefile
 desktopfiles2xml/Makefile
-start-ovd/Makefile
 ])
 
 echo
