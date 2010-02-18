@@ -153,7 +153,6 @@ web/Makefile
 web/client/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
-web/media/Makefile
 web/plugins/Makefile
 web/plugins/FS/Makefile
 web/modules/Makefile
