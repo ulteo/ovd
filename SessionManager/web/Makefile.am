@@ -3,7 +3,6 @@ SUBDIRS = admin \
           client \
           events \
           includes \
-          media \
           modules \
           PEAR \
           plugins \
