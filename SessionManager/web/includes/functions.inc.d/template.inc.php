@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -82,7 +82,7 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 		';/*<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />*/echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<link rel="shortcut icon" type="image/png" href="'.$base_url.'media/image/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="'.$base_url.'admin/media/image/favicon.ico" />
 
 		<link rel="stylesheet" type="text/css" href="'.$base_url.'media/style/common.css" />
 		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />
@@ -145,7 +145,7 @@ echo '		</div>
 			<div class="spacer"></div>
 
 			<div id="footerWrap">
-				'._('powered by').' <a href="http://www.ulteo.com"><img src="'.$base_url.'media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
+				'._('powered by').' <a href="http://www.ulteo.com"><img src="'.$base_url.'admin/media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
 			</div>
 		</div>
 	</body>

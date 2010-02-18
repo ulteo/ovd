@@ -6,9 +6,15 @@ scripts_DATA = server-linux.png \
                submenu_bg.png \
                download.png \
                error.png \
+               favicon.ico \
+               header.png \
                hide.png \
+               less.png \
                loader.gif \
+               more.png \
+               password.png \
                show.png \
+               ulteo.png \
                view.png \
                server-weblink.png
 

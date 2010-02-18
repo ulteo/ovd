@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -35,7 +35,7 @@ class ConfigElement_list extends ConfigElement {
 				$html .= '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$i.'" size="40" />';
 				$html .= '<div id="'.$html_id.$this->formSeparator.$key1.'_divb">';
 					$html .= '<input type="text" id="'.$label3.'value" name="'.$label3.'value" value="'.$value1.'" size="25" />';
-					$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/hide.png"/></a>';
+					$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="media/image/less.png"/></a>';
 				$html .= '</div>';
 				$html .= '</td>';
 			$html .= '</tr>';
@@ -48,7 +48,7 @@ class ConfigElement_list extends ConfigElement {
 			$html .= '<input type="hidden" id="'.$label3.'key" name="'.$label3.'key" value="'.$i.'"  />';
 			$html .= '<div id="'.$html_id.$this->formSeparator.$i.'_divaddb">';
 					$html .= '<input type="text" id="'.$label3.'value" name="'.$label3.'value" value="" size="25" />';
-				$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="../media/image/show.png"/></a>';
+				$html .= '<a href="javascript:;" onclick="configuration4_mod(this); return false"><img src="media/image/more.png"/></a>';
 				$html .= '</div>';
 			$html .= '</td>';
 		$html .= '</tr>';

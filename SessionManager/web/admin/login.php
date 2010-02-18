@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -122,7 +122,7 @@ Event.observe(window, 'load', function() {
 			<table class="centered" border="0" cellspacing="1" cellpadding="5">
 				<tr>
 					<td>
-						<img src="../media/image/password.png" width="64" height="64" alt="" title="" />
+						<img src="media/image/password.png" width="64" height="64" alt="" title="" />
 					</td>
 					<td>
 						<table class="main_login centered" border="0" cellspacing="1" cellpadding="5">

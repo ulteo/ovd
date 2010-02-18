@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -305,7 +305,7 @@ function page_header($params_=array()) {
   //echo '</td>';
 
   echo '<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
-  echo '<a href="index.php"><img src="'.$base_url.'media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
+  echo '<a href="index.php"><img src="'.$base_url.'admin/media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
   echo '</td>';
 
   echo '</tr>';
@@ -368,7 +368,7 @@ function page_footer() {
   echo '<div class="spacer"></div>';
 
   echo '<div id="footerWrap">'._('powered by');
-  echo ' <a href="http://www.ulteo.com"><img src="'.$base_url.'media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD v'.OVD_SM_VERSION.'&nbsp;&nbsp;&nbsp;';
+  echo ' <a href="http://www.ulteo.com"><img src="'.$base_url.'admin/media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD v'.OVD_SM_VERSION.'&nbsp;&nbsp;&nbsp;';
   echo '</div>';
   echo '</div>';
   echo '</body>';

@@ -153,7 +153,6 @@ web/Makefile
 web/client/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
-web/media/image/Makefile
 web/media/script/Makefile
 web/media/script/lib/calendarpopup/Makefile
 web/media/script/lib/nifty/Makefile

@@ -72,7 +72,7 @@ function configuration4_mod(js) {
 		if ((new_row = tr.cloneNode(true)) && new_row.getElementsByTagName) {
 			if (copy_and_init(tr, new_row) == true) {
 				table.appendChild(new_row);
-				$(js).innerHTML = '<img src="../media/image/hide.png"/>';
+				$(js).innerHTML = '<img src="media/image/less.png"/>';
 				changeNames(new_row, table.rows.length - 1);
 			}
 		}
