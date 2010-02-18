@@ -84,7 +84,6 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 
 		<link rel="shortcut icon" type="image/png" href="'.$base_url.'admin/media/image/favicon.ico" />
 
-		<link rel="stylesheet" type="text/css" href="'.$base_url.'media/style/common.css" />
 		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />
 
 		<link rel="stylesheet" type="text/css" href="'.$base_url.'media/script/lib/nifty/niftyCorners.css" />
