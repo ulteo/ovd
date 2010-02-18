@@ -32,7 +32,17 @@ function return_error($errno_, $errstr_) {
 $session = Abstract_Session::load($_GET['session_id']);
 if (! $session) {
 	header('Content-Type: text/xml; charset=utf-8');
-	echo return_error(0, 'No such session "'.$_GET['session_id'].'"');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$session_node = $dom->createElement('session');
+	$session_node->setAttribute('id', $_GET['session_id']);
+	$session_node->setAttribute('status', 'unknown');
+	$dom->appendChild($session_node);
+
+	$xml = $dom->saveXML();
+
+	echo $xml;
+
 	die();
 }
 
