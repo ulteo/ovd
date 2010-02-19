@@ -144,9 +144,6 @@ class Abstract_Session {
 		foreach ($session_->servers as $server)
 			Abstract_Liaison::save('ServerSession', $server, $session_->id);
 
-		if (isset($session_->settings['windows_server']))
-			Abstract_Liaison::save('ServerSession', $session_->settings['windows_server'], $session_->id);
-
 		return true;
 	}
 

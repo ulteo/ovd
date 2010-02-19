@@ -220,20 +220,6 @@ class Session {
 			return false;
 		}
 
-		if (isset($this->settings['windows_server']) && $request_aps_) {
-			$windows_server = Abstract_Server::load($this->settings['windows_server']);
-			if (! $windows_server) {
-				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\' server \''.$this->settings['windows_server'].'\' not found');
-				return false;
-			}
-
-			$buf = $windows_server->orderWindowsSessionDeletion($this->id);
-			if (! $buf) {
-				Logger::error('main', 'Session::orderDeletion Unable to delete windows session \''.$this->id.'\'');
-				return false;
-			}
-		}
-
 		if ($request_aps_) {
 			$buf = $server->orderSessionDeletion($this->id);
 

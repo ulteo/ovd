@@ -335,46 +335,6 @@ if (isset($allow_proxy) && $allow_proxy != '0') {
 	}
 }
 
-/*if (count($user->applications('windows')) > 0) {
-	$windows_server = $user->getAvailableServer('windows');
-	if (! is_object($windows_server)) {
-		Logger::error('main', '(startsession) No windows server available for user \''.$user->getAttribute('login').'\'');
-		die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
-	}
-	$optional_args['windows_server'] = $windows_server->fqdn;
-
-	$optional_args['windows_manage_session'] = false;
-
-	$user_profile_mode = $prefs->get('UserDB', 'enable');
-	$prefs_ldap = $prefs->get('UserDB', 'ldap');
-	if ($user_profile_mode == 'activedirectory') {
-		$prefs_ad = $prefs->get('UserDB', 'activedirectory');
-		$optional_args['windows_login'] = $user->getAttribute('real_login').'@'.$prefs_ad['domain'];
-	} elseif ($user_profile_mode == 'ldap' && $prefs_ldap['ad'] == 1) {
-		$buf = $prefs_ldap['suffix'];
-		$suffix = suffix2domain($buf);
-		if (! is_string($suffix)) {
-			Logger::error('main', 'LDAP suffix is invalid for AD usage : '.$buf);
-			die_error('LDAP suffix is invalid for AD usage', __FILE__, __LINE__);
-		}
-		$optional_args['windows_login'] = $user->getAttribute('login').'@'.$suffix;
-	} else {
-		$optional_args['windows_manage_session'] = true;
-		$optional_args['windows_login'] = $user->getAttribute('login');
-	}
-
-	if ($optional_args['windows_manage_session'] === true) {
-		$optional_args['windows_password'] = gen_string(8);
-
-		$buf = $windows_server->orderWindowsSessionCreation($session->id, &$optional_args['windows_login'], $optional_args['windows_password'], $user->getAttribute('displayname'));
-		if (! $buf) {
-			Logger::error('main', '(startsession) Unable to create windows session for user \''.$user->getAttribute('login').'\' on server \''.$optional_args['windows_server'].'\'');
-			die_error(_('You don\'t have access to a windows server for now'), __FILE__, __LINE__);
-		}
-	} else
-		$optional_args['windows_password'] = $_SESSION['password'];
-}*/
-
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
 	'session'	=>	$session->id
