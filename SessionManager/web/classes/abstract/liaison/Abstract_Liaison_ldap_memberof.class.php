@@ -72,6 +72,11 @@ class Abstract_Liaison_ldap_memberof {
 			$id_ = $group->id;
 		
 		$userDBldap = new UserDB_ldap();
+		$userDBldap2 = UserDB::getInstance();
+		if ( get_class($userDBldap) == get_class($userDBldap2)) {
+			$userDBldap = $userDBldap2; // for cache
+		}
+		
 		$config_ldap = $prefs->get('UserDB','ldap');
 		
 		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');

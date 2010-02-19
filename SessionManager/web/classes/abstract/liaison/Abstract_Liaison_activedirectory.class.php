@@ -63,39 +63,48 @@ class Abstract_Liaison_activedirectory {
 		$id_ = $group->id;
 		
 		$userDBAD = new UserDB_activedirectory();
+		$userDBAD2 = UserDB::getInstance();
+		if ( get_class($userDBAD) == get_class($userDBAD2)) {
+			$userDBAD = $userDBAD2; // for cache
+		}
 		$config_ldap = $userDBAD->makeLDAPconfig();
 		
-		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
-		if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
-			$id2 = substr($id_,0, -1*strlen($config_ldap['suffix']) -1);
+		if (isset($group->extras) && is_array($group->extras) && isset($group->extras['member'])) {
+			$buf = $group->extras;
 		}
-		else
-		{
-			$id2 = $id_;
-		}
-		$expl = explode(',',$id2,2);
-		if (count($expl) < 2) {
-			Logger::error('main', "Abstract_Liaison_activedirectory::loadElements($type_,$group_) count(expl) != 2 (count=".count($expl).")(id2=".$id2.")");
-			return NULL;
-		}
-		$config_ldap['userbranch'] = $expl[1];
+		else {
+			$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
+			if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
+				$id2 = substr($id_,0, -1*strlen($config_ldap['suffix']) -1);
+			}
+			else
+			{
+				$id2 = $id_;
+			}
+			$expl = explode(',',$id2,2);
+			if (count($expl) < 2) {
+				Logger::error('main', "Abstract_Liaison_activedirectory::loadElements($type_,$group_) count(expl) != 2 (count=".count($expl).")(id2=".$id2.")");
+				return NULL;
+			}
+			$config_ldap['userbranch'] = $expl[1];
 
-		$buf = array();
-		$buf['id'] = $id_;
-		$ldap = new LDAP($config_ldap);
-		$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
-		if ($sr === false) {
-			Logger::error('main',"Abstract_Liaison_activedirectory::loadElements search failed for ($id_)");
-			return NULL;
-		}
-		$infos = $ldap->get_entries($sr);
-		$keys = array_keys($infos);
-		$dn = $keys[0];
-		$info = $infos[$dn];
-		foreach ($config_ldap['match'] as $attribut => $match_ldap){
-			if (isset($info[$match_ldap])) {
-				unset($info[$match_ldap]['count']);
-				$buf[$attribut] = $info[$match_ldap];
+			$buf = array();
+			$buf['id'] = $id_;
+			$ldap = new LDAP($config_ldap);
+			$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
+			if ($sr === false) {
+				Logger::error('main',"Abstract_Liaison_activedirectory::loadElements search failed for ($id_)");
+				return NULL;
+			}
+			$infos = $ldap->get_entries($sr);
+			$keys = array_keys($infos);
+			$dn = $keys[0];
+			$info = $infos[$dn];
+			foreach ($config_ldap['match'] as $attribut => $match_ldap){
+				if (isset($info[$match_ldap])) {
+					unset($info[$match_ldap]['count']);
+					$buf[$attribut] = $info[$match_ldap];
+				}
 			}
 		}
 		if (isset($buf['member']) && is_array($buf['member'])) {

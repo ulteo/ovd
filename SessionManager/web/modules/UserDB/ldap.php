@@ -23,16 +23,35 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class UserDB_ldap  extends UserDB {
 	public $config;
 	protected $cache_userlist=NULL;
+	protected $cache_users=NULL;
+	protected $cache_userlist_dn=NULL;
+	
 	public function __construct () {
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		$this->config = $prefs->get('UserDB','ldap');
-
+		
+		$this->cache_users = array();
+		$this->cache_userlist_dn = array();
+		
 	}
 	public function import($login_){
 		Logger::debug('main','UserDB::ldap::import('.$login_.')');
-
+		if (is_array($this->cache_userlist) && isset($this->cache_userlist[$login_])) {
+			if ($this->isOK($this->cache_userlist[$login_]))
+				return $this->cache_userlist[$login_];
+			else
+				return NULL;
+		}
+		
+		if (is_array($this->cache_users) && isset($this->cache_users[$login_])) {
+			if ($this->isOK($this->cache_users[$login_]))
+				return $this->cache_users[$login_];
+			else
+				return NULL;
+		}
+		
 		$ldap = new LDAP($this->config);
 		$sr = $ldap->search($this->config['match']['login'].'='.$login_, NULL);
 		if ($sr === false) {
@@ -54,6 +73,7 @@ class UserDB_ldap  extends UserDB {
 		$u = $this->generateUserFromRow($info);
 		$u->setAttribute('dn',  $dn);
 		$u = $this->cleanupUser($u);
+		$this->cache_users[$login_] = $u;
 		if ($this->isOK($u))
 			return $u;
 		else
@@ -62,6 +82,13 @@ class UserDB_ldap  extends UserDB {
 
 	public function importFromDN($dn_) {
 		Logger::debug('main','UserDB::ldap::fromDN('.$dn_.')');
+		
+		if (is_array($this->cache_userlist_dn) && isset($this->cache_userlist_dn[$dn_])) {
+			if ($this->isOK($this->cache_userlist_dn[$dn_]))
+				return $this->cache_userlist_dn[$dn_];
+			else
+				return NULL;
+		}
 
 		$config = $this->config;
 		$ldap = new LDAP($config);
@@ -77,8 +104,10 @@ class UserDB_ldap  extends UserDB {
 		$u = $this->generateUserFromRow($info);
 		$u->setAttribute('dn',  $dn);
 		$u = $this->cleanupUser($u);
-		if ($this->isOK($u))
+		$this->cache_userlist_dn[$dn_] = $u;
+		if ($this->isOK($u)) {
 			return $u;
+		}
 		else
 			return NULL;
 	}
@@ -117,7 +146,7 @@ class UserDB_ldap  extends UserDB {
 			
 			$u = $this->cleanupUser($u);
 			if ($this->isOK($u))
-				$users []= $u;
+				$users[$u->getAttribute('login')]= $u;
 			else {
 				if ($u->hasAttribute('login'))
 					Logger::info('main', 'UserDB::ldap::getList_nocache user \''.$u->getAttribute('login').'\' not ok');

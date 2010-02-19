@@ -19,7 +19,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserGroupDB_ldap_memberof {
+	public $cache;
+	
 	public function __construct() {
+		$this->cache = array();
 	}
 	
 	public function __toString() {

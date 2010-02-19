@@ -26,6 +26,7 @@ class UsersGroup {
 	public $description; // (ex: People from the basement)
 	public $published; //(yes/no)
 	public $type; // static
+	public $extras;
 
 	public function __construct($id_='', $name_=NULL, $description_='', $published_=false) {
 		Logger::debug('main', "USERSGROUP::contructor from_scratch (id_='$id_', name_='$name_', description_='$description_', published_=$published_)");
@@ -34,6 +35,7 @@ class UsersGroup {
 		$this->name = $name_;
 		$this->description = $description_;
 		$this->published = (bool)$published_;
+		$this->extras = NULL;
 	}
 	
 	public function __toString() {

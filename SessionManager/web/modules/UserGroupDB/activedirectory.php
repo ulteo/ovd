@@ -19,12 +19,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
-	protected $cache;
-	
-	public function __construct() {
-		parent::__construct();
-		$this->cache = array();
-	}
 
 	public function import($id_) {
 		Logger::debug('main',"UserGroupDB::activedirectory::import (id = $id_)");
@@ -34,12 +28,19 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		}
 		// cache end
 		
+		if (isset($this->cache[$id_]))
+			return $this->cache[$id_];
+		
 		$userGroupDB = UserGroupDB::getInstance();
 		
 		$userDBAD = new UserDB_activedirectory();
+		$userDBAD2 = UserDB::getInstance();
+		if ( get_class($userDBAD) == get_class($userDBAD2)) {
+			$userDBAD = $userDBAD2; // for cache
+		}
 		$config_ldap = $userDBAD->makeLDAPconfig();
 		
-		$config_ldap['match'] =  array('description' => 'description','name' => 'name');
+		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
 		if (str_endswith(strtolower($id_),strtolower($config_ldap['suffix'])) === true) {
 			$id2 = substr($id_,0, -1*strlen($config_ldap['suffix']) -1);
 		}
@@ -69,8 +70,14 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			if (isset($info[$match_ldap][0])) {
 				$buf[$attribut] = $info[$match_ldap][0];
 			}
+			if (is_array($info[$match_ldap])) {
+					if (isset($info[$match_ldap]['count']))
+						unset($info[$match_ldap]['count']);
+					$extras[$attribut] = $info[$match_ldap];
+			}
 		}
 		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
+		$ug->extras = $extras;
 		$this->cache[$buf['id']] = $ug;
 		return $ug;
 	}
