@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class UserDB_activedirectory  extends UserDB_ldap{
 	public $config_ad;
 	public function __construct(){
+		parent::__construct();
 		$prefs = Preferences::getInstance();
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
