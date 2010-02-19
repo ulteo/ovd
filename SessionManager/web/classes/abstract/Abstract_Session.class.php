@@ -33,7 +33,7 @@ class Abstract_Session {
 			'server'			=>	'varchar(255) NOT NULL',
 			'mode'				=>	'varchar(32) NOT NULL',
 			'type'				=>	'varchar(32) NOT NULL',
-			'status'			=>	'int(8) NOT NULL',
+			'status'			=>	'varchar(32) NOT NULL',
 			'settings'			=>	'text NOT NULL',
 			'user_login'		=>	'varchar(255) NOT NULL',
 			'user_displayname'	=>	'varchar(255) NOT NULL',
@@ -92,7 +92,7 @@ class Abstract_Session {
 		$buf->server = (string)$server;
 		$buf->mode = (string)$mode;
 		$buf->type = (string)$type;
-		$buf->status = (int)$status;
+		$buf->status = (string)$status;
 		$buf->settings = unserialize($settings);
 		$buf->user_login = (string)$user_login;
 		$buf->user_displayname = (string)$user_displayname;
