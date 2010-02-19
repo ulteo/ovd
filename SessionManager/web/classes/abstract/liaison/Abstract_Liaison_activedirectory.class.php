@@ -143,8 +143,8 @@ class Abstract_Liaison_activedirectory {
 			}
 			return $groups;
 		}
-		Logger::error('main', "Abstract_Liaison_activedirectory::loadGroups($type_,$element_) end of function");
-		return NULL;
+		// no group found
+		return array();
 	}
 	
 	public static function loadAll($type_) {
