@@ -1,0 +1,87 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+# Copyright (C) 2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Julien LANGLOIS <julien@ulteo.com> 2010
+# Author Samuel BOVEE    <samuel@ulteo.com> 2010
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import os, sys, shutil
+from distutils.core import setup,Extension
+
+"""
+copy and use the right code for the present platform
+
+if sys.platform == "win32":
+   diros = "Windows"
+elif sys.platform == "linux2":
+   diros = "Linux"
+else:
+   raise Exception("No supported platform")
+
+platform_path = os.path.join("ovd", "Platform.%s"%diros)
+new_path      = os.path.join("ovd", "Platform")
+if os.path.exists(platform_path):
+   if os.path.exists(new_path):
+      shutil.rmtree(new_path)
+   shutil.copytree(platform_path, new_path)
+"""
+
+"""
+setup()
+"""
+
+if sys.platform is "win32":
+
+   import py2exe
+   sys.argv.append("py2exe")
+
+   try:
+      import modulefinder
+      import win32com,sys
+      for p in win32com.__path__[1:]:
+         modulefinder.AddPackagePath("win32com", p)
+      for extra in ["win32com.shell","win32com.mapi"]:
+         __import__(extra)
+         m = sys.modules[extra]
+         for p in m.__path__[1:]:
+            modulefinder.AddPackagePath(extra, p)
+   except ImportError:
+      # no build path setup, no worries.
+      pass
+
+   setup(
+      zipfile = "lib/shared.zip",
+      console = ["simpleServer.py"],
+   )
+
+elif sys.platform == "linux2":
+
+   setup(name='ovd-slaveserver',
+         version='99.99~trunk+svn@REVISION@',
+         description='OVD slaveserver',
+         author='Julien Langlois',
+         author_email='julient@ulteo.com',
+         url='http://www.ulteo.com/',
+         packages=['ovd', 'ovd.Communication', 'ovd.Role', 
+                   'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
+                   'ovd.Platform', 'ovd.Platform.Linux'],
+         data_files=[('/usr/bin',['simpleServer'])]
+   )
+
+else:
+   raise Exception("No supported platform")
