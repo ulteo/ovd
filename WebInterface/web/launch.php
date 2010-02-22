@@ -141,8 +141,8 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			</div>
 		</div>
 
-		<div id="portalModeContainer" style="display: none;">
-			<div id="portalHeaderWrap">
+		<div id="applicationsModeContainer" style="display: none;">
+			<div id="applicationsHeaderWrap">
 				<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="width: 175px; text-align: left; border-bottom: 1px solid #ccc;" class="logo">
@@ -169,7 +169,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 				</table>
 			</div>
 
-			<table id="portalContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
+			<table id="applicationsContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
 				<tr>
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
 						<div class="container rounded" style="background: #fff; width: 98%; margin-left: auto; margin-right: auto;">
@@ -208,7 +208,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 				</tr>
 			</table>
 
-			<div id="portalAppletContainer" style="display: none;">
+			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
 		</div>
 

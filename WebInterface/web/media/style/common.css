@@ -148,14 +148,14 @@ div.rounded {
 	left: 0px;
 }
 
-#portalAppletContainer {
+#applicationsAppletContainer {
 	position: absolute;
 
 	top: 0px;
 	left: 0px;
 }
 
-#portalHeaderWrap {
+#applicationsHeaderWrap {
 	background: #fff;
 	color: #333;
 	/*border-bottom: 1px solid #ccc;*/
@@ -166,7 +166,7 @@ div.rounded {
 	text-align: center;
 }
 
-#portalContainer {
+#applicationsContainer {
 	width: 100%;
 	margin-left: auto;
 	margin-right: auto;

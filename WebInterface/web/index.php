@@ -97,7 +97,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 												<td style="text-align: center; vertical-align: middle;">
 													<select id="session_mode">
 														<option value="desktop" selected="selected"><?php echo _('Desktop'); ?></option>
-														<option value="portal"><?php echo _('Portal'); ?></option>
+														<option value="applications"><?php echo _('Applications'); ?></option>
 													</select>
 												</td>
 											</tr>
