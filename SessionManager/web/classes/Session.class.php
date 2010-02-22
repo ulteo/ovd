@@ -21,6 +21,18 @@
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Session {
+	const SESSION_STATUS_UNKNOWN = "unknown";
+	const SESSION_STATUS_ERROR = "error";
+	const SESSION_STATUS_INIT = "init";
+	const SESSION_STATUS_INITED = "ready";
+	const SESSION_STATUS_ACTIVE = "logged";
+	const SESSION_STATUS_INACTIVE = "disconnected";
+	const SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
+	const SESSION_STATUS_DESTROYED = "destroyed";
+
+	const MODE_DESKTOP = "desktop";
+	const MODE_APPLICATIONS = "portal";
+
 	public $id = NULL;
 
 	public $server = NULL;
@@ -102,12 +114,11 @@ class Session {
 	public function setStatus($status_) {
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
-		//$status_ == 'init'
-		if ($status_ == 'ready') { // || $status_ == 'logged'
+		if ($status_ == Session::SESSION_STATUS_INITED) {
 			Logger::info('main', 'Session start : \''.$this->id.'\'');
 
 			$this->setAttribute('start_time', time());
-		} elseif ($status_ == 'wait_destroy' || $status_ == 'destroyed' || $status_ == 'error' || $status_ == 'unknown') { // || $status_ == 'disconnected'
+		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY || $status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
 			Logger::info('main', 'Session end : \''.$this->id.'\'');
 
 			$plugins = new Plugins();
@@ -118,7 +129,7 @@ class Session {
 				'session'	=>	$this->id
 			));
 
-			if (! $this->orderDeletion((($status_ == 'wait_destroy')?true:false)))
+			if (! $this->orderDeletion((($status_ == Session::SESSION_STATUS_WAIT_DESTROY)?true:false)))
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
 
 			Abstract_Session::delete($this);
