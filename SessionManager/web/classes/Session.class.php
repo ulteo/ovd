@@ -150,43 +150,69 @@ class Session {
 		return true;
 	}
 
-	public function textStatus($status_='unknown') {
-// 		Logger::debug('main', 'Starting Session::textStatus for \''.$this->id.'\'');
+	public function textStatus($status_=Session::SESSION_STATUS_UNKNOWN) {
+		switch ($status_) {
+			case Session::SESSION_STATUS_UNKNOWN:
+				return _('Unknown');
+				break;
+			case Session::SESSION_STATUS_ERROR:
+				return _('Error');
+				break;
+			case Session::SESSION_STATUS_INIT:
+				return _('Initializing');
+				break;
+			case Session::SESSION_STATUS_INITED:
+				return _('Ready');
+				break;
+			case Session::SESSION_STATUS_ACTIVE:
+				return _('Logged');
+				break;
+			case Session::SESSION_STATUS_INACTIVE:
+				return _('Disconnected');
+				break;
+			case Session::SESSION_STATUS_WAIT_DESTROY:
+				return _('To destroy');
+				break;
+			case Session::SESSION_STATUS_DESTROYED:
+				return _('Destroyed');
+				break;
+		}
 
-		$states = array(
-			'init'			=>	_('Initializing'),
-			'ready'			=>	_('Ready'),
-			'logged'		=>	_('Logged'),
-			'disconnected'	=>	_('Disconnected'),
-			'wait_destroy'	=>	_('To destroy'),
-			'destroyed'		=>	_('Destroyed'),
-			'error'			=>	_('Error'),
-			'unknown'		=>	_('Unknown')
-		);
-
-		return $states[$status_];
+		return _('Unknown');
 	}
 
-	public function colorStatus($status_='unknown') {
-// 		Logger::debug('main', 'Starting Session::colorStatus for \''.$this->id.'\'');
+	public function colorStatus($status_=Session::SESSION_STATUS_UNKNOWN) {
+		switch ($status_) {
+			case Session::SESSION_STATUS_UNKNOWN:
+				return 'error';
+				break;
+			case Session::SESSION_STATUS_ERROR:
+				return 'error';
+				break;
+			case Session::SESSION_STATUS_INIT:
+				return 'warn';
+				break;
+			case Session::SESSION_STATUS_INITED:
+				return 'ok';
+				break;
+			case Session::SESSION_STATUS_ACTIVE:
+				return 'ok';
+				break;
+			case Session::SESSION_STATUS_INACTIVE:
+				return 'warn';
+				break;
+			case Session::SESSION_STATUS_WAIT_DESTROY:
+				return 'warn';
+				break;
+			case Session::SESSION_STATUS_DESTROYED:
+				return 'error';
+				break;
+		}
 
-		$states = array(
-			'init'			=>	'warn',
-			'ready'			=>	'ok',
-			'logged'		=>	'ok',
-			'disconnected'	=>	'ok',
-			'wait_destroy'	=>	'warn',
-			'destroyed'		=>	'error',
-			'error'			=>	'error',
-			'unknown'		=>	'error'
-		);
-
-		return $states[$status_];
+		return 'error';
 	}
 
 	public function stringStatus() {
-// 		Logger::debug('main', 'Starting Session::stringStatus for \''.$this->id.'\'');
-
 		$buf = $this->getAttribute('status');
 
 		return '<span class="msg_'.$this->colorStatus($buf).'">'.$this->textStatus($buf).'</span>';
