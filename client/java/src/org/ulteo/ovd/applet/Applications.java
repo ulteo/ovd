@@ -91,7 +91,7 @@ class Connection {
 }
 
 
-public class Portal extends Applet implements Runnable, Observer, OvdAppListener {
+public class Applications extends Applet implements Runnable, Observer, OvdAppListener {
 	private HashMap<Integer, Connection> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
