@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008,2009,2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -68,20 +68,20 @@ function print_array($data_, $n_=0) {
 		foreach ($data_ as $k => $v) {
 			for ($i = 0; $i < $n_; $i++)
 				echo '.';
-			echo $k.' => { ';
+			echo "<strong>$k</strong> => { ";
 			if (is_array($v)) {
-				echo '<br />';
+				echo "<br />\n";
 				print_array($v,$n_+4);
 				for ($i = 0; $i < $n_; $i++)
 					echo '.';
-				echo ' }<br />';
+				echo " }<br />\n";
 			} else
-				echo $v.' }<br />';
+				echo $v." }<br />\n";
 		}
 	} else {
 		for ($i = 0; $i < $n_; $i++)
 			echo '.';
-		echo $data_.'<br>';
+		echo $data_."<br>\n";
 	}
 }
 
