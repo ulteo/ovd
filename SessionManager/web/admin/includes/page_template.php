@@ -379,12 +379,8 @@ function get_menu_entry() {
 	global $menu;
 	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
-	$matches = array();
-	$buf = preg_match('/admin\/(.+)/', $_SERVER['REQUEST_URI'], $matches);
-	if (is_array($matches) && array_key_exists(1, $matches))
-		$page = str_replace('/', '%2F', $matches[1]);
-	else
-		$page = basename($_SERVER['REQUEST_URI']);
+	$dirname_php_self = dirname($_SERVER['PHP_SELF']);
+	$page = substr($_SERVER['REQUEST_URI'], strlen($dirname_php_self) + 1);
 
 	$buffer_id = Null;
 	$buffer_len = 0;
