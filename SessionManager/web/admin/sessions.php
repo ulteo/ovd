@@ -41,7 +41,7 @@ if (isset($_POST['join'])) {
 	$invite->settings = array(
 		'invite_email'	=>	'admin',
 		'view_only'		=>	($view_only == 'Yes')?1:0,
-		'access_id'		=>	((isset($_POST['access_id']) && $_POST['access_id'] != '')?$_POST['access_id']:'desktop')
+		'access_id'		=>	((isset($_POST['access_id']) && $_POST['access_id'] != '')?$_POST['access_id']:Session::MODE_DESKTOP)
 	);
 	$invite->email = 'none';
 	$invite->valid_until = (time()+(60*30));
@@ -87,10 +87,10 @@ if (isset($_POST['join'])) {
 	echo '<li><strong>'._('Server:').'</strong> <a href="servers.php?action=manage&fqdn='.$session->getAttribute('server').'">'.$session->getAttribute('server').'</a></li>';
 	echo '<li><strong>'._('User:').'</strong> <a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</a></li>';
 	echo '<li><strong>'._('Type:').'</strong> ';
-	if ($session->getAttribute('mode') == 'desktop')
+	if ($session->getAttribute('mode') == Session::MODE_DESKTOP)
 		echo _('Desktop');
-	elseif ($session->getAttribute('mode') == 'portal')
-		echo _('Portal');
+	elseif ($session->getAttribute('mode') == Session::MODE_APPLICATIONS)
+		echo _('Applications');
 	else
 		echo _('Unknown');
 	echo '</li>';
@@ -127,7 +127,7 @@ if (isset($_POST['join'])) {
 				echo '<tr><td>';
 				echo '<img src="media/image/cache.php?id='.$myapp->getAttribute('id').'" alt="" title="" /> <a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
 				echo '</td><td>';
-				if ($session->getAttribute('mode') == 'portal' && $session->getAttribute('status') == 2) {
+				if ($session->getAttribute('mode') == Session::MODE_APPLICATIONS && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
 					echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 					echo '	<input type="hidden" id="desktop_size" value="auto" />';
 					echo '	<input type="hidden" id="session_debug_true" value="0" />';
@@ -144,13 +144,13 @@ if (isset($_POST['join'])) {
 		}
 	}
 
-	if ($session->getAttribute('mode') == 'desktop' && $session->getAttribute('status') == 2) {
+	if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
 		echo '<h2>'._('Connect to or observe this session').'</h2>';
 		echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 		echo '	<input type="hidden" id="desktop_size" value="auto" />';
 		echo '	<input type="hidden" id="session_debug_true" value="0" />';
 		echo '	<input type="hidden" name="join" value="'.$session->id.'" />';
-		echo '	<input type="hidden" name="access_id" value="desktop" />';
+		echo '	<input type="hidden" name="access_id" value="'.Session::MODE_DESKTOP.'" />';
 		echo '	<input type="submit" name="passive" value="'._('Observe this session').'" />';
 		echo '	<input type="submit" name="active" value="'._('Join this session').'" />';
 		echo '</form>';

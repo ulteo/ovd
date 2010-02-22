@@ -31,7 +31,7 @@ class Session {
 	const SESSION_STATUS_DESTROYED = "destroyed";
 
 	const MODE_DESKTOP = "desktop";
-	const MODE_APPLICATIONS = "portal";
+	const MODE_APPLICATIONS = "applications";
 
 	public $id = NULL;
 

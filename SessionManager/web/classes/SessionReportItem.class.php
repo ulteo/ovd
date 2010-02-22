@@ -89,7 +89,7 @@ class SessionReportItem {
 			$tmp[$app_pid] = $app_id;
 		}
 
-		if ($session->getAttribute('mode') == 'portal') {
+		if ($session->getAttribute('mode') == Session::MODE_APPLICATIONS) {
 			$this->current_apps = array();
 			foreach ($user_node->childNodes as $sid_node) {
 				if ($sid_node->nodeType != XML_ELEMENT_NODE ||

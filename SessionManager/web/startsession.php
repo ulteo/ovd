@@ -189,7 +189,7 @@ if ($sessions > 0) {
 				$invite->settings = array(
 					'invite_email'	=>	$user->getAttribute('displayname'),
 					'view_only'		=>	0,
-					'access_id'		=>	'desktop'
+					'access_id'		=>	Session::MODE_DESKTOP
 				);
 				$invite->email = 'none';
 				$invite->valid_until = (time()+(60*30));
@@ -395,7 +395,7 @@ $dom = new DomDocument('1.0', 'utf-8');
 
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
-$session_node->setAttribute('mode', (($session->mode == 'desktop')?'desktop':'applications'));
+$session_node->setAttribute('mode', (($session->mode == Session::MODE_DESKTOP)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
 foreach (array('desktop_icons') as $parameter) {
 	$parameter_node = $dom->createElement('parameter');
 	$parameter_node->setAttribute('name', $parameter);
