@@ -18,29 +18,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import xrdp
+from xrdp.Vchannel import VirtualChannel as XrdpChannel
 
 from ovd_shells.VirtualChannel import VirtualChannel as AbstractVirtualChannel
 
 class VirtualChannel(AbstractVirtualChannel):
 	def __init__(self, name_):
 		AbstractVirtualChannel.__init__(self, name_)
-		self._handle = None
+		self._handle = XrdpChannel(self.name)
 	
 	
 	def Open(self):
-		self._handle = xrdp.VchannelOpen(self.name)
-		return self._handle != False
-	
+		return self._handle.Open()
+		
 	
 	def Close(self):
-		if self._handle is not None:
-			xrdp.VchannelClose(self._handle)
+		return self._handle.Close()
 	
 	
 	def Read(self, size):
-		return xrdp.VchannelRead(self._handle)
+		return self._handle.Read()
 	
 	
 	def Write(self, message):
-		return xrdp.VchannelWrite(self._handle, message)
+		return self._handle.Write(message)
