@@ -1,3 +1,4 @@
-include OvdDesktop  OvdRemoteApps startovdapp
+include OvdDesktop OvdRemoteApps startovdapp MANIFEST.in
+include manpages/*
 include ovd_shells/*.py
 include ovd_shells/Platform/*.py
