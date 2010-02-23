@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009,2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -137,7 +137,7 @@ class Abstract_Liaison_activedirectory {
 			foreach ($memberof as $id_group) {
 				$g = $userGroupDB->import($id_group);
 				if (is_object($g)) {
-					$l = new Liaison($element_,$g->id);
+					$l = new Liaison($element_,$g->getUniqueID());
 					$groups[$l->group] = $l;
 				}
 			}
