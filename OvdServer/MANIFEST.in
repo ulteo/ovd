@@ -1,5 +1,5 @@
+include simpleServer MANIFEST.in
 include *.py
 include manpages/*
-include simpleServer
 include config/*.conf
 include ovd/Platform/Windows/*.py
