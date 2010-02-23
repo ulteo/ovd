@@ -106,7 +106,7 @@ class User {
 	public function appsGroups(){
 		Logger::debug('main','USER::appsGroups');
 		$apps_group_list = array();
-		$users_grps = $this->UsersGroups();
+		$users_grps = $this->usersGroups();
 		foreach ($users_grps as $ugrp){
 			if ($ugrp->published){
 				$app_group_s = $ugrp->appsGroups();
