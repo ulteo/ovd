@@ -7,6 +7,6 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-shells
 Architecture: all
-Depends: python (>= 2.5), python-xrdp
+Depends: python (>= 2.5), python-xrdp, xrdp-seamrdp
 Description:  Ulteo OVD shells
  These scripts handle the Open Virtual Desktop user sessions.
