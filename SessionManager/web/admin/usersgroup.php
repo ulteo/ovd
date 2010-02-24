@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -306,19 +306,29 @@ function show_manage($id) {
   $userDB = UserDB::getInstance();
   $applicationsGroupDB = ApplicationsGroupDB::getInstance();
 
-  $users_all = $userDB->getList(true);
-  if (is_null($users_all))
-    $users_all = array();
-  $users_available = array();
-  foreach($users_all as $user) {
-    $found = false;
-    foreach($users as $user2) {
-      if ($user2 == $user->getAttribute('login'))
-	$found = true;
-    }
+  if ($userDB->isWriteable()) {
+    $users_all = $userDB->getList(true);
+    if (is_null($users_all))
+      $users_all = array();
+    $users_available = array();
+    foreach($users_all as $user) {
+      $found = false;
+      foreach($users as $user2) {
+        if ($user2 == $user->getAttribute('login'))
+          $found = true;
+      }
 
-    if (! $found)
-      $users_available[]= $user->getAttribute('login');
+      if (! $found)
+        $users_available[]= $user->getAttribute('login');
+    }
+  }
+  else {
+    $users_available = array();
+    $users_all = array();
+    foreach($users as $a_login) {
+      $users_all [] = $userDB->import($a_login);
+    }
+    usort($users_all, "user_cmp");
   }
 
   // Default usergroup
