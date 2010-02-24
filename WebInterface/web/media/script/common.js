@@ -87,6 +87,8 @@ function onStartSessionFailure(transport) {
 
 	enableLogin();
 
+	startsession = false;
+
 	return false;
 }
 

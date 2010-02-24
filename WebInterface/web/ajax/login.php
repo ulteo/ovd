@@ -21,6 +21,8 @@
 
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
+$_SESSION = array();
+
 function return_error($errno_, $errstr_) {
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
