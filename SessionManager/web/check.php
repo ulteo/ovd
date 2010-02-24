@@ -54,10 +54,10 @@ if ($sessions) {
 	foreach ($sessions as $session) {
 		$buf = $session->getStatus();
 
-		if (! $buf || (int)$buf == 4) {
+		if (! $buf || $buf == Session::SESSION_STATUS_WAIT_DESTROY || $buf == Session::SESSION_STATUS_DESTROYED || $buf == Session::SESSION_STATUS_ERROR || $buf == Session::SESSION_STATUS_UNKNOWN) {
 			Logger::warning('main', '(check) Session \''.$session->id.'\' is no longer existing, deleting');
 
-			if (! $session->orderDeletion())
+			if (! $session->orderDeletion((($buf == Session::SESSION_STATUS_WAIT_DESTROY)?true:false)))
 				Logger::error('main', '(check) Unable to delete session \''.$session->id.'\'');
 		}
 	}
