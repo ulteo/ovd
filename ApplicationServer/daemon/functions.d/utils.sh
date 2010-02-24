@@ -100,3 +100,7 @@ pid_alive() {
     local pid=$1
     ps ax | mawk '{ print $1 }' |grep -q $pid
 }
+
+get_pid() {
+    python -c "import os; print os.getppid()"
+}

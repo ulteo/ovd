@@ -58,6 +58,7 @@ fi
 [ $nb_line -eq 3 ] && doc=$(head -n 3 $file |tail -n 1)
 
 install -d -o www-data -g www-data -m 770 $dir
+get_pid >$dir/pid
 application_switch_status $SESSID $job 1
 echo $app_id > $dir/app_id
 [ -n "$doc" ] && echo "$doc" > $dir/doc

@@ -191,6 +191,12 @@ application_purge() {
     local rfb_port=$(cat $dir/rfb_port)
     local app_id=$(cat $dir/app_id)
 
+    local pid=$(cat $dir/pid)
+    pid_alive $pid
+    if [ $? -eq 0 ]; then
+        kill $pid >/dev/null
+    fi
+
     if windows_is_application $app_id; then
         windows_purge_app $rfb_port
     fi
