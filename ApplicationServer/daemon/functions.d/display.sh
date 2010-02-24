@@ -24,8 +24,7 @@ display_init() {
     local xauth_file=/tmp/.tmp${VNC_UID}.Xauthority
 
     # Install the MIT_MAGIC_COOKIE
-    echo "$VNC_USER -c xauth -f $xauth_file add :$rfb_port"
-    su -s "/bin/bash" $VNC_USER -c "xauth -f $xauth_file add :$rfb_port . $(/usr/bin/mcookie)"
+    su -s "/bin/bash" $VNC_USER -c "xauth -f $xauth_file add :$rfb_port . $(/usr/bin/mcookie)" 2>/dev/null
 
     # Install the MIT_MAGIC_COOKIE into the real user env
     cp $xauth_file $SPOOL_USERS/$sessid/.Xauthority

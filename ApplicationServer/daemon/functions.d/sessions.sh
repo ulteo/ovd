@@ -235,7 +235,7 @@ session_purge() {
     killall -s 9 -u VNC$i
 
     log_DEBUG "removing user's files from /tmp"
-    find /tmp/ -user $USER_LOGIN -exec rm -rf {} \;
+    find /tmp/ -user $USER_LOGIN -exec rm -rf {} \; 2>/dev/null
 
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
     HOME_DIR_TYPE=$HOME_DIR_TYPE \
