@@ -91,7 +91,8 @@ class Session(AbstractSession):
 			if os.path.islink(dst_dir):
 				os.remove(dst_dir)
 		
-		shutil.rmtree(d)
+		if os.path.exists(d):
+			shutil.rmtree(d)
 
 #user_set_env() {
 #    LC_ALL=$LOC
