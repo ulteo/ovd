@@ -31,14 +31,26 @@ import java.awt.Window;
 
 public class RectWindow extends Component {
 	private static final int BORDER_SIZE = 5;
+	
+	public static final int MODE_NONE=0;
+	public static final int MODE_MOVE=1;
+	public static final int MODE_RESIZE=2;
 
 	private LineWindow left = null;
 	private LineWindow right = null;
 	private LineWindow top = null;
 	private LineWindow bottom = null;
 
-	private int maxWidth = 0;
-	private int maxHeight = 0;
+	private int minX = 0;
+	private int minY = 0;
+	private int maxX = 0;
+	private int maxY = 0;
+	private int minWidth = 0;
+	private int minHeight = 0;
+	
+	private Frame refFrame = null;
+	
+	private int mode = 0;
 
 	public RectWindow(Frame f, Dimension dim) {
 		this.left = new LineWindow(f);
@@ -46,19 +58,60 @@ public class RectWindow extends Component {
 		this.top = new LineWindow(f);
 		this.bottom = new LineWindow(f);
 
-		this.maxWidth = dim.width;
-		this.maxHeight = dim.height;
+		this.maxX = dim.width;
+		this.maxY = dim.height;
+		this.refFrame = f;
+		
+		this.minWidth = 2*RectWindow.BORDER_SIZE;
+		this.minHeight = 2*RectWindow.BORDER_SIZE;
 	}
 
-	@Override
-	public void setBounds(int x, int y, int width, int height) {
-		x = Math.max(x, 0);
-		y = Math.max(y, 0);
+	protected Rectangle fixBounds(Rectangle r) {
+		if (this.mode == MODE_MOVE) {
+			if (r.x < this.minX)
+				r.x = this.minX;
 
-		Rectangle r_left = new Rectangle(x, y, RectWindow.BORDER_SIZE, height);
-		Rectangle r_right = new Rectangle(x+width-RectWindow.BORDER_SIZE, y, RectWindow.BORDER_SIZE, height);
-		Rectangle r_top = new Rectangle(x, y, width, RectWindow.BORDER_SIZE);
-		Rectangle r_bottom = new Rectangle(x, y+height-RectWindow.BORDER_SIZE, width, RectWindow.BORDER_SIZE);
+			if (r.y < this.minY)
+				r.y = this.minY;
+
+			if (r.x+r.width > this.maxX)
+				r.x =  this.maxX - r.width;
+			
+			if (r.y+r.height > this.maxY)
+				r.y = this.maxY - r.height;
+		}
+		else if (this.mode == MODE_RESIZE) {
+			if (r.width < this.minWidth) {
+				Rectangle ref = this.refFrame.getBounds();
+				
+				if (r.x != ref.x)
+					r.x = ref.x+ref.width - this.minWidth;
+
+				r.width = this.minWidth;
+			}
+			
+			if (r.height < this.minHeight) {
+				Rectangle ref = this.refFrame.getBounds();
+				
+				if (r.y != ref.y)
+					r.y = ref.y+ref.height - this.minHeight;
+
+				r.height = this.minHeight;
+			}
+		}
+		
+		return r;
+	}
+	
+	
+	@Override
+	public void setBounds(Rectangle r) {
+		r = this.fixBounds(r);
+
+		Rectangle r_left = new Rectangle(r.x, r.y, RectWindow.BORDER_SIZE, r.height);
+		Rectangle r_right = new Rectangle(r.x+r.width-RectWindow.BORDER_SIZE, r.y, RectWindow.BORDER_SIZE, r.height);
+		Rectangle r_top = new Rectangle(r.x, r.y, r.width, RectWindow.BORDER_SIZE);
+		Rectangle r_bottom = new Rectangle(r.x, r.y+r.height-RectWindow.BORDER_SIZE, r.width, RectWindow.BORDER_SIZE);
 
 		this.left.setBounds(r_left);
 		this.right.setBounds(r_right);
@@ -67,10 +120,24 @@ public class RectWindow extends Component {
 	}
 
 	@Override
-	public void setBounds(Rectangle r) {
-		this.setBounds(r.x, r.y, r.width, r.height);
+	public Rectangle getBounds() {
+		Rectangle r = new Rectangle();
+		r.x = this.left.getX();
+		r.width = this.right.getX() + this.right.getWidth() - r.x;
+		r.y = this.top.getY();
+		r.height = this.bottom.getY() + this.bottom.getHeight() - r.y;
+		return r;
 	}
-
+	
+	public int getMode() {
+		return this.mode;
+	}
+	
+	public void setMode(int mode) {
+		this.mode = mode;
+	}
+	
+	
 	@Override
 	public void setVisible(boolean b) {
 		this.left.setVisible(b);

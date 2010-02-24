@@ -62,7 +62,7 @@ public class SeamlessFrame extends SeamFrame {
 	public SeamlessFrame(int id_, int group_, Common common_) {
 		super(id_, group_, common_);
 
-		Dimension dim = new Dimension(this.backstore.getHeight(), this.backstore.getWidth());
+		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim);
 		this.toFront();
 	}
@@ -216,7 +216,7 @@ public class SeamlessFrame extends SeamFrame {
 		if (r == null)
 			return;
 				
-		this.rw.setBounds(r.x, r.y, r.width, r.height);
+		this.rw.setBounds(r);
 	}
 
 	@Override
@@ -238,6 +238,7 @@ public class SeamlessFrame extends SeamFrame {
 				this.resizeClick = e;
 				this.corner = this.detectCorner(this.resizeClick);
 				
+				this.rw.setMode(RectWindow.MODE_RESIZE);
 				this.offsetResize(e);
 				this.resizeRW(e);
 				this.lockMouseEvents();
@@ -251,7 +252,8 @@ public class SeamlessFrame extends SeamFrame {
 				this.xOffset = e.getXOnScreen() - this.getX();
 				this.yOffset = e.getYOnScreen() - this.getY();
 
-				this.rw.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+				this.rw.setMode(RectWindow.MODE_MOVE);
+				this.rw.setBounds(this.getBounds());
 				
 				this.moveClick = e;
 				this.lockMouseEvents();
@@ -264,23 +266,11 @@ public class SeamlessFrame extends SeamFrame {
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if (this.lockMouseEvents) {
-			Rectangle r = null;
-			if (this.resizeClick != null) {
-				r = this.getRWSize(e);
-			}
-			else if (this.moveClick != null) {
-				r = new Rectangle();
-				
-				r.x = e.getXOnScreen() - this.xOffset;
-				r.y = e.getYOnScreen() - this.yOffset;
-				r.width = this.getWidth();
-				r.height = this.getHeight();
-			}
-
 			super.mouseReleased(e);
 			this.unlockMouseEvents();
 			
-			if (r != null && ! this.getBounds().equals(r)) {
+			Rectangle r = this.rw.getBounds();
+			if (! this.getBounds().equals(r)) {
 				try {
 					this.common.seamlessChannelInstance.send_position(this.id, r.x, r.y, r.width, r.height, 0);
 				} catch (RdesktopException ex) {
@@ -311,10 +301,10 @@ public class SeamlessFrame extends SeamFrame {
 			if (this.resizeClick != null) {
 				this.resizeRW(e);
 			}
-			else if (this.moveClick != null) {
+			else if (this.moveClick != null) {				
 				int x_rw = e.getXOnScreen() - this.xOffset;
 				int y_rw = e.getYOnScreen() - this.yOffset;
-				this.rw.setBounds(x_rw, y_rw, this.width, this.height);
+				this.rw.setBounds(new Rectangle(x_rw, y_rw, this.width, this.height));
 			}
 			return;
 		}
