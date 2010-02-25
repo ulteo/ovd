@@ -63,10 +63,7 @@ var Daemon = Class.create({
 		if (this.port == '')
 			this.port = 80;
 
-		if (typeof(window.innerWidth) == 'number' || typeof(window.innerHeight) == 'number') {
-			this.my_width  = window.innerWidth;
-			this.my_height = window.innerHeight;
-		} else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+		if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
 			this.my_width  = document.documentElement.clientWidth;
 			this.my_height = document.documentElement.clientHeight;
 		} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
