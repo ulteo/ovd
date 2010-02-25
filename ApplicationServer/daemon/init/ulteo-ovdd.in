@@ -14,11 +14,13 @@ waitpid() {
     while [ -d /proc/$1 ]; do
         sleep 0.5
 
-        if [ $timeout ]; then
+        if [ -n "$timeout" ]; then
             local t1=$(date +"%s")
             [ $(($t1-$t0)) -gt $2 ] && return 1
         fi
     done
+
+    return 0
 }
 
 CONF_FILE=@SYSCONFDIR@/ulteo-ovd.conf
