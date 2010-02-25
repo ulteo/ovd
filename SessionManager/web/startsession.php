@@ -444,6 +444,8 @@ foreach ($session->servers as $server) {
 	}
 }
 
+$_SESSION['session_id'] = $session->id;
+
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
 
