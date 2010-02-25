@@ -29,13 +29,18 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-$session = Abstract_Session::load($_GET['session_id']);
+if (! array_key_exists('session_id', $_SESSION)) {
+	echo return_error(1, 'Usage: missing "session_id" $_SESSION parameter');
+	die();
+}
+
+$session = Abstract_Session::load($_SESSION['session_id']);
 if (! $session) {
 	header('Content-Type: text/xml; charset=utf-8');
 
 	$dom = new DomDocument('1.0', 'utf-8');
 	$session_node = $dom->createElement('session');
-	$session_node->setAttribute('id', $_GET['session_id']);
+	$session_node->setAttribute('id', $_SESSION['session_id']);
 	$session_node->setAttribute('status', 'unknown');
 	$dom->appendChild($session_node);
 
