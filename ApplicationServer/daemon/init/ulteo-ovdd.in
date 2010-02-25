@@ -74,11 +74,31 @@ do_start () {
 do_stop () {
     log_begin_msg "Stopping ulteo-ovd daemon..."
 
-    # Kill apps
-    if [ -f $PIDFILE ]; then
-        local pid=$(cat $PIDFILE)
+    if [ ! -f $PIDFILE ]; then
+        log_warning_msg "NOT RUNNING"
+        return 1
+    fi
+
+    if [ ! -f /proc/mounts ]; then
+        log_warning_msg "/proc not mounted"
+        return 1
+    fi
+
+
+    pidofproc -p $PIDFILE >/dev/null
+    if [ $? -ne 0 ]; then
+        log_warning_msg "NOT RUNNING"
+        rm $PIDFILE
+
+    else
+        # Kill apps
+        local pid=$(pidofproc -p $PIDFILE)
         kill $pid
-        waitpid $pid 5 && rm $PIDFILE || true
+        waitpid $pid 5
+        if [ $? -eq 1 ]; then
+            log_action_cont_msg "purging sessions"
+            waitpid $pid 
+        fi
     fi
 
     # Stop services
