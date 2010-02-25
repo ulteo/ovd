@@ -22,6 +22,7 @@ package org.ulteo.ovd.applet;
 
 import net.propero.rdp.RdpConnection;
 import java.applet.Applet;
+import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 import net.propero.rdp.Common;
@@ -81,6 +82,9 @@ public class Desktop extends Applet implements Observer {
 		this.rc = null;
 				
 		this.finished_init = true;
+		
+		BorderLayout layout = new BorderLayout();
+		this.setLayout(layout);
 	}
 	
 	@Override
