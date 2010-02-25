@@ -21,11 +21,15 @@
 
 require_once(dirname(__FILE__).'/core.inc.php');
 
-function query_url($url_) {
+function query_sm($url_) {
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
+
+	curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['sessionmanager']['session_var'].'='.$_SESSION['sessionmanager']['session_id']);
+
 	$string = curl_exec($socket);
 	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	curl_close($socket);

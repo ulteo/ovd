@@ -38,8 +38,27 @@ function query_url_post_xml($url_, $xml_) {
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
+
+	curl_setopt($socket, CURLOPT_HEADER, 1);
+	curl_setopt($socket, CURLOPT_NOBODY, 1);
+
+	$ret = curl_exec($socket);
+
+	preg_match('@Set-Cookie: (.*)=(.*);@', $ret, $matches);
+	if (count($matches) != 3)
+		return false;
+
+	$_SESSION['sessionmanager'] = array();
+	$_SESSION['sessionmanager']['session_var'] = $matches[1];
+	$_SESSION['sessionmanager']['session_id'] = $matches[2];
+
+	curl_setopt($socket, CURLOPT_HEADER, 0);
+	curl_setopt($socket, CURLOPT_NOBODY, 0);
+
 	curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
 	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
+	curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['sessionmanager']['session_var'].'='.$_SESSION['sessionmanager']['session_id']);
+
 	$ret = curl_exec($socket);
 
 	curl_close($socket);
