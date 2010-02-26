@@ -26,6 +26,9 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 	$window_title = 'Ulteo Open Virtual Desktop';
 
 	try {
+		if (! isset($_GET['app_id']))
+			throw new Exception('No Application ID');
+
 		$application = query_url(SESSIONMANAGER_URL.'/webservices/application.php?id='.$_GET['app_id'].'&fqdn='.SERVERNAME);
 
 		$dom = new DomDocument('1.0', 'utf-8');
