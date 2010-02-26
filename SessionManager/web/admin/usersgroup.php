@@ -898,7 +898,7 @@ echo '<br />';
 		}
 		echo '</tr>';
 	}
-	if ($can_manage_usersgroups && count($policy_rules_disable)>0) {
+	if ($can_manage_usersgroups && count($policy_rules_disable)>0 && (array_search(false, $policy) !== false)) {
 		echo '<tr><form action="actions.php" method="post"><td>';
 		echo '<input type="hidden" name="name" value="UserGroup_PolicyRule" />';
 		echo '<input type="hidden" name="action" value="add" />';
