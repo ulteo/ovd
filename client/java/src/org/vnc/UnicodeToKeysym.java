@@ -1524,6 +1524,7 @@ public class UnicodeToKeysym {
   public static int translate(int unicode) {
 
     if ((unicode >= 0x20 && unicode <= 0x7e) ||
+        (unicode >= 0x09 && unicode <= 0x0D) ||
         (unicode >= 0xa0 && unicode <= 0xff))
       return unicode;
 
@@ -1549,6 +1550,7 @@ public class UnicodeToKeysym {
   public static int inverseTranslate(int keysym) {
 
 	  if ((keysym >= 0x20 && keysym <= 0x7e) ||
+			  (keysym >= 0x09 && keysym <= 0x0D) ||
 			  (keysym >= 0xa0 && keysym <= 0xff))
 		  return keysym;
 
