@@ -101,7 +101,10 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 				daemon.loop();
 
-				Effect.ShakeUp($('app_icon'), {'distance': 5, 'duration': 1.5, 'continue_statement': $('splashContainer')});
+				<?php
+					if (! is_null($_GET['app_id']))
+						echo 'Effect.ShakeUp($(\'app_icon\'), {\'distance\': 5, \'duration\': 1.5, \'continue_statement\': $(\'splashContainer\')});';
+				?>
 			});
 		</script>
 	</head>
