@@ -25,6 +25,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 	$window_title = 'Ulteo Open Virtual Desktop';
 
+	$throw_js_error = false;
 	try {
 		if (! isset($_GET['app_id']))
 			throw new Exception('No Application ID');
@@ -46,6 +47,9 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		$window_title = $name;
 	} catch (Exception $e) {
+		$_GET['app_id'] = NULL;
+		$throw_js_error = true;
+		$js_error = 'Error: '.str_replace("'", "\'", $e->getMessage());
 	}
 
 	$doc = '';
@@ -87,6 +91,13 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.i18n['application_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your application has ended unexpectedly')); ?>';
 				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
 				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
+
+				<?php
+					if ($throw_js_error) {
+						echo 'daemon.error_message = \''.$js_error.'\';';
+						echo 'daemon.do_ended();';
+					}
+				?>
 
 				daemon.loop();
 
