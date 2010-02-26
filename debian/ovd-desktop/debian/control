@@ -7,7 +7,7 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-desktop
 Architecture: all
-Depends: xfce4, xinit, xfce4-restricted-menu-plugin, gnome-icon-theme, gnome-icon-theme-crystal, gtk2-engines-mythbuntu, gtk2-engines-xfce, dmz-cursor-theme
+Depends: xfce4, xinit, xfce4-restricted-menu-plugin, gnome-icon-theme, gnome-icon-theme-crystal, gtk2-engines-mythbuntu, dmz-cursor-theme
 Conflicts: ulteo-ovd-xfce-default-settings, xubuntu-default-settings, thunar-data (<< 0.9.0-4ulteo2)
 Description: Startup script and default settings for the Ulteo OVD
  This package provides :
