@@ -71,6 +71,7 @@ public class VncClient implements Runnable{
 			e.printStackTrace();
 		}
 		this.container.add(this.vc);
+		this.vc.requestFocusInWindow();
 		if (this.clip!=null)
 			this.clip.registerEvents(this.vc);
 
