@@ -392,13 +392,11 @@ require_once('header.php');
 						</td>
 						<td>
 							<select id="force" name="force">
+								<option value="" selected="selected"><?php echo _('Use load balancing'); ?></option>
 								<?php
 									foreach ($servers as $server) {
 										if ($server->getNbAvailableSessions() > 0) {
-											echo '<option value="'.$server->fqdn.'"';
-											if ($random_server->fqdn == $server->fqdn)
-												echo ' selected="selected"';
-											echo '>'.$server->fqdn.' ('.$server->getNbAvailableSessions().')</option>'."\n";
+											echo '<option value="'.$server->fqdn.'">'.$server->fqdn.' ('.$server->getNbAvailableSessions().')</option>'."\n";
 										}
 									}
 								?>
