@@ -29,3 +29,6 @@
 
 * ulteo-07_bugfix-01.patch:
   * Fix a SegFault with windows in portal mode
+
+* ulteo-08_clipboard_for_xdisplay.patch
+  * Implements copy/cut/paste for xdisplays
