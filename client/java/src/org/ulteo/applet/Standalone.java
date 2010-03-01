@@ -23,11 +23,13 @@
 package org.ulteo.applet;
 
 import java.awt.BorderLayout;
+import java.awt.KeyboardFocusManager;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.URL;
+import java.util.Collections;
 
 import com.sshtools.j2ssh.SshErrorResolver;
 import com.sshtools.j2ssh.SshDialog;
@@ -136,6 +138,10 @@ public class Standalone extends java.applet.Applet implements SshErrorResolver, 
 		SshDialog.registerResolver(this);
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
+		
+		// Change the focus traversal keys behavior to not forward the tab key (\t) to the browser and lost te focus
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().setDefaultFocusTraversalKeys (KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().setDefaultFocusTraversalKeys (KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, Collections.EMPTY_SET);
     }
 
 
