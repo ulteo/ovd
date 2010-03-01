@@ -40,7 +40,7 @@ sys.argv.append("py2exe")
 class Target:
 	def __init__(self, **kw):
 		self.__dict__.update(kw)
-		self.version = "1.0rc2"
+		self.version = "2.5"
 		self.company_name = "Ulteo"
 		self.copyright = "GPL"
 		self.name = "OVD Agent"
