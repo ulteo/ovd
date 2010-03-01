@@ -21,8 +21,6 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-include_once(dirname(__FILE__).'/check.php');
-
 $prefs = Preferences::getInstance();
 if (! $prefs)
 	die_error(_('get Preferences failed'),__FILE__,__LINE__);

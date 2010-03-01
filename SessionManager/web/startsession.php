@@ -21,6 +21,8 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+include_once(dirname(__FILE__).'/check.php');
+
 $plugins = new Plugins();
 $plugins->doLoad();
 
