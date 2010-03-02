@@ -343,7 +343,7 @@ if ($_REQUEST['name'] == 'ApplicationsGroup') {
 			$g = new AppsGroup(NULL, $name, $description, 1);
 			$res = $applicationsGroupDB->add($g);
 			if (!$res)
-				die_error(_("Unable to create applications group '%s'"), $name, __FILE__, __LINE__);
+				die_error(sprintf(_("Unable to create applications group '%s'"), $name), __FILE__, __LINE__);
 			
 			popup_info(sprintf(_("Applications group '%s' successfully added"), $name));
 			redirect('appsgroup.php?action=manage&id='.$g->id);
