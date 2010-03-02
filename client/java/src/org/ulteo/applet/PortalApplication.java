@@ -28,6 +28,8 @@ import java.awt.event.FocusListener;
 public class PortalApplication extends Standalone implements FocusListener {
 	public void start() {
 		super.start();
+		if (this.stopped || ! this.continue2run)
+			return;
 		this.addFocusListener(this);
 		this.vnc.vc.addFocusListener(this);
 	}
