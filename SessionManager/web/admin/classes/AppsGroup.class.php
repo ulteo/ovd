@@ -68,21 +68,21 @@ class AppsGroup {
 		// 	false :  problem, true : ok
 		Logger::debug('main', 'APPSGROUP::insertDB');
 		$sql2 = MySQL::getInstance();
-		$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (NULL,%6,%7,%8)',APPSGROUP_TABLE, 'id'  , 'name', 'description', 'published', $this->name, $this->description, $this->published);
-		if ($res !== false) {
-			$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3=%4 AND @5=%6 AND @7=%8', 'id', APPSGROUP_TABLE, 'name', $this->name, 'description', $this->description, 'published', $this->published);
-			if ($sql2->NumRows($res) == 1){
-				$row = $sql2->FetchResult($res);
-				$this->id = $row['id'];
+		$res = $sql2->DoQuery('SELECT @1 FROM @2 WHERE @3=%4', 'id', APPSGROUP_TABLE, 'name', $this->name);
+		if ($sql2->NumRows($res) == 0) {
+			$res = $sql2->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (NULL,%6,%7,%8)',APPSGROUP_TABLE, 'id'  , 'name', 'description', 'published', $this->name, $this->description, $this->published);
+			if ($res !== false) {
+				$id = $sql2->InsertId();
+				$this->id = $id;
 				return true;
 			}
 			else {
-				Logger::error('main', 'AppsGroup::insertDB  select NumRows != 1 ('.$sql2->NumRows($res).')');
+				Logger::error('main', 'AppsGroup::insertDB Insert (of '.$this.') failed (DoQuery return false)');
 				return false;
 			}
 		}
 		else {
-			Logger::error('main', 'AppsGroup::insertDB Insert (of '.$this.') failed (DoQuery return false)');
+			Logger::error('main', 'AppsGroup::insertDB Select NumRows != 0 ('.$sql2->NumRows($res).')');
 			return false;
 		}
 	}
