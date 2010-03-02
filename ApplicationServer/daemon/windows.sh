@@ -41,6 +41,7 @@ dir=$SESSID_DIR/sessions/$job
 log_INFO "Session $SESSID detect job $job"
 
 install -d -o www-data -g www-data -m 770 $dir
+get_pid >$dir/pid
 
 geometry=$(cat $SESSID_DIR/parameters/geometry)
 
