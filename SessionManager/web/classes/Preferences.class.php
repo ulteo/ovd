@@ -303,7 +303,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'document' => _('document'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop'), 'start_app' => _('Launch an application when the desktop is starting')));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop'), 'start_app' => _('Launch an application when the desktop is starting'), 'start_app_args' => _('Launch an application with extra arguments')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
