@@ -28,9 +28,13 @@ var StartApp = Class.create(Daemon, {
 
 		this.check_status();
 
-		if (this.session_state == 2 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
+		if (this.session_state == 2 && this.application_state == -1 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
 			if (! this.started)
 				this.start_app();
+		} else if (this.session_state == 2 && this.application_state == 2 && $('splashContainer').visible() && ! $('appletContainer').visible()) {
+			this.do_started();
+
+			this.focus_watch();
 
 			this.started = true;
 		} else if ((this.old_session_state == 2 && this.session_state != 2) || this.session_state == 3 || this.session_state == 4 || this.session_state == 9 || (this.old_application_state == 2 && this.application_state != 2) || this.application_state == 3 || this.application_state == 4 || this.application_state == 9) {
@@ -81,10 +85,6 @@ var StartApp = Class.create(Daemon, {
 			this.push_log('[start_app] bad xml format 2', 'error');
 			return;
 		}
-
-		this.do_started();
-
-		this.focus_watch();
 	},
 
 	focus_watch: function() {
