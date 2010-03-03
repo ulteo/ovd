@@ -103,6 +103,7 @@ $quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
 $timeout_message = $default_settings['session_timeout_msg'];
 $start_app = '';
+$start_app_args = '';
 $persistent = $default_settings['persistent'];
 $shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
@@ -151,7 +152,7 @@ if (! is_object($user))
 
 $language = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'document', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug', 'start_app');
+$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug', 'start_app', 'start_app_args');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
 		$$protocol_var = $_REQUEST[$protocol_var];
@@ -303,8 +304,8 @@ if (isset($start_app) && $start_app != '') {
 
 	$optional_args['start_app_id'] = $start_app;
 }
-if (isset($open_doc) && $open_doc != '')
-	$optional_args['open_doc'] = $open_doc;
+if (isset($start_app_args) && $start_app_args != '')
+	$optional_args['start_app_args'] = $start_app_args;
 if (isset($popup))
 	$optional_args['popup'] = (int)$popup;
 if (isset($debug) && $debug != '0')
