@@ -1,7 +1,3 @@
 #!/usr/bin/make -f
 
-include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
-
-install/ulteo-ovd-desktop:: 
-	chmod +x debian/ulteo-ovd-desktop/etc/xdg/ulteo/xinitrc
