@@ -7,9 +7,9 @@ Build-Depends: cdbs, debhelper (>= 5)
 
 Package: ulteo-ovd-desktop
 Architecture: all
-Depends: ulteo-ovd-desktop-settings, xfce4-restricted-menu-plugin
- xfce4-icon-theme, thunar, gtk2-engines-xfce, xfwm4, xfce4-session
- xfdesktop4, xfce4-mcs-plugins, xfce4-utils, xfce4-panel,
+Depends: ulteo-ovd-desktop-settings, xfce4-restricted-menu-plugin,
+ xfce4-icon-theme, thunar, gtk2-engines-xfce, xfwm4, xfce4-session,
+ xfdesktop4, xfce4-mcs-plugins, xfce4-utils, xfce4-panel
 Recommends: xorg, app-install-data
 Conflicts: xfce (>= 4.6)
 Description: Ulteo OVD desktop
