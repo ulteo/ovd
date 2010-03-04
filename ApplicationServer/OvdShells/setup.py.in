@@ -21,58 +21,49 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-import shutil
 import sys
-from distutils.core import setup,Extension
+from distutils.core import setup
 
-if sys.platform is "win32":
+setup_args = {}
+setup_args["name"] = "ovd-shells"
+setup_args["description"] = "OVD shell"
+setup_args["author"] = "Julien Langlois"
+setup_args["author_email"] = "julient@ulteo.com"
+setup_args["url"] = "http://www.ulteo.com/"
+setup_args["version"] = "@VERSION@"
 
-   import py2exe
-   sys.argv.append("py2exe")
 
-   try:
-      import modulefinder
-      import win32com,sys
-      for p in win32com.__path__[1:]:
-			modulefinder.AddPackagePath("win32com", p)
-      for extra in ["win32com.shell","win32com.mapi"]:
-         __import__(extra)
-         m = sys.modules[extra]
-         for p in m.__path__[1:]:
-            modulefinder.AddPackagePath(extra, p)
-   except ImportError:
-      # no build path setup, no worries.
-      pass
+# OS detection
+if sys.platform == "linux2":
+    setup_args["packages"] = ['ovd_shells', 'ovd_shells.Platform']
+    setup_args["data_files"] = [('/usr/bin', ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
 
-   path = os.path.join("ovd_shells", "Platform")
-   if os.path.exists(path):
-      shutil.rmtree(path)
-   shutil.copytree(os.path.join("ovd_shells", "Platform.Windows"), path)
-  
-   setup(
-      zipfile = "lib/shared.zip",
-      windows = ["OvdDesktop", "OvdRemoteApps", "startovdapp"],
-   )
-   
-elif sys.platform == "linux2":
+elif sys.platform == "win32":
+    import py2exe
+    sys.argv.append("py2exe")
 
-   path      = os.path.join("ovd_shells", "Platform")
-   linuxpath = os.path.join("ovd_shells", "Platform.Linux")
+    try:
+        import modulefinder
+        import win32com,sys
+        for p in win32com.__path__[1:]:
+            modulefinder.AddPackagePath("win32com", p)
+        for extra in ["win32com.shell","win32com.mapi"]:
+            __import__(extra)
+            m = sys.modules[extra]
+            for p in m.__path__[1:]:
+                modulefinder.AddPackagePath(extra, p)
+    except ImportError:
+        # no build path setup, no worries.
+        pass
 
-   if os.path.exists(linuxpath):
-      if os.path.exists(path):
-         shutil.rmtree(path)
-      shutil.copytree(linuxpath, path)
 
-   dist = setup(name='ovd-shells',
-         version='99.99~trunk+svn@REVISION@',
-         description='OVD shell',
-         author='Julien Langlois',
-         author_email='julient@ulteo.com',
-         url='http://www.ulteo.com/',
-         packages=['ovd_shells', 'ovd_shells.Platform'],
-         data_files=[('/usr/bin', ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
-   )
+    setup_args["zipfile"] = "lib/shared.zip"
+    setup_args["windows"] = ["OvdDesktop", "OvdRemoteApps", "startovdapp"]
+
 
 else:
    raise Exception("No supported platform")
+
+
+# Make the setup
+setup(**setup_args)
