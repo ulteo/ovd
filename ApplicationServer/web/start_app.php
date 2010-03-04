@@ -44,10 +44,10 @@ $dom = new DomDocument('1.0', 'utf-8');
 
 $buf = gen_string(5);
 
-$doc = '';
-if (isset($_GET['doc']) && $_GET['doc'] != '')
-	$doc = $_GET['doc']."\n";
-put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id']."\n".$_GET['size']."\n".$doc);
+$app_args = '';
+if (isset($_GET['app_args']) && $_GET['app_args'] != '')
+	$app_args = $_GET['app_args']."\n";
+put_to_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'.txt', $_GET['app_id']."\n".$_GET['size']."\n".$app_args);
 
 $error = false;
 
