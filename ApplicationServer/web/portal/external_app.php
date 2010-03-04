@@ -51,10 +51,6 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		$throw_js_error = true;
 		$js_error = 'Error: '.str_replace("'", "\'", $e->getMessage());
 	}
-
-	$doc = '';
-	if (isset($_GET['doc']) && $_GET['doc'] != '')
-		$doc = $_GET['doc'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -83,7 +79,6 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			Event.observe(window, 'load', function() {
 				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
-				daemon.doc = '<?php echo $doc; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
 				daemon.i18n['unknown_application'] = '<?php echo str_replace("'", "\'", _('Server: unable to start application')); ?>';

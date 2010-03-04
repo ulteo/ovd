@@ -59,7 +59,6 @@ var StartApp = Class.create(Daemon, {
 				method: 'get',
 				parameters: {
 					app_id: this.app_id,
-					doc: this.doc,
 					size: this.my_width+'x'+this.my_height
 				},
 				onSuccess: this.parse_start_app.bind(this)
