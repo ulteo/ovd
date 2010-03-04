@@ -2,7 +2,8 @@ Source: ovd-shells
 Section: net
 Priority: extra
 Maintainer: Samuel Bovée <samuel@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 5), python (>= 2.5), python-central
+Build-Depends: cdbs, debhelper (>= 5),
+ python (>= 2.5), python-central, python-svn
 Standards-Version: 3.7.3
 
 Package: ulteo-ovd-shells
