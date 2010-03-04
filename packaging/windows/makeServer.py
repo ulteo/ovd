@@ -38,9 +38,11 @@ def main(basepath, distpath):
 	
 	
 	os.chdir(os.path.join(basepath, "ApplicationServer", "OvdShells"))
+	s = my_exec("autogen.py")
 	s = my_exec("python setup.py")
 	
 	os.chdir(os.path.join(basepath, "OvdServer"))
+	s = my_exec("autogen.py")
 	s = my_exec("python setup.py")
 	
 	os.chdir(os.path.join(basepath, "windows-apps", "iconExtractor"))
@@ -164,7 +166,7 @@ def my_exec(cmd, debug = False):
 	
 	s = os.system(cmd)
 	if s != 0:
-		print >> sys.stderr, "Following command %s return status %d"%(cmd, s)
+		print >> sys.stderr, "Following command %s return status %d in directory '%s'"%(cmd, s, os.path.abspath(os.curdir))
 		if not debug:
 			if os.path.isfile(err):
 				f = file(err, "r")
