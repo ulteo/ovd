@@ -20,32 +20,24 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import os, sys, shutil
-from distutils.core import setup,Extension
+import sys
+from distutils.core import setup
 
-"""
-copy and use the right code for the present platform
+setup_args = {}
+setup_args["name"] = "ovd-slaveserver"
+setup_args["description"] = "OVD slaveserver"
+setup_args["author"] = "Julien Langlois"
+setup_args["author_email"] = "julient@ulteo.com"
+setup_args["url"] = "http://www.ulteo.com/"
+setup_args["version"] = "@VERSION@"
 
-if sys.platform == "win32":
-   diros = "Windows"
-elif sys.platform == "linux2":
-   diros = "Linux"
-else:
-   raise Exception("No supported platform")
 
-platform_path = os.path.join("ovd", "Platform.%s"%diros)
-new_path      = os.path.join("ovd", "Platform")
-if os.path.exists(platform_path):
-   if os.path.exists(new_path):
-      shutil.rmtree(new_path)
-   shutil.copytree(platform_path, new_path)
-"""
 
 """
 setup()
 """
 
-if sys.platform is "win32":
+if sys.platform == "win32":
 
    import py2exe
    sys.argv.append("py2exe")
@@ -64,24 +56,19 @@ if sys.platform is "win32":
       # no build path setup, no worries.
       pass
 
-   setup(
-      zipfile = "lib/shared.zip",
-      console = ["simpleServer.py"],
-   )
+   setup_args["zipfile"] = "lib/shared.zip"
+   setup_args["console"] = ["simpleServer"]
+
 
 elif sys.platform == "linux2":
-
-   setup(name='ovd-slaveserver',
-         version='99.99~trunk+svn@REVISION@',
-         description='OVD slaveserver',
-         author='Julien Langlois',
-         author_email='julient@ulteo.com',
-         url='http://www.ulteo.com/',
-         packages=['ovd', 'ovd.Communication', 'ovd.Role', 
+   setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role', 
                    'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
-                   'ovd.Platform', 'ovd.Platform.Linux'],
-         data_files=[('/usr/bin',['simpleServer'])]
-   )
+                   'ovd.Platform', 'ovd.Platform.Linux']
+   setup_args["data_files"] = [('/usr/bin',['simpleServer'])]
+
 
 else:
    raise Exception("No supported platform")
+
+# Make the setup
+setup(**setup_args)
