@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Antoine Walter <anw@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
+ * Author Antoine WALTER <anw@ulteo.com> 2008
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -175,7 +175,7 @@ class LDAP {
 		return @ldap_error($this->link);
 	}
 
-	public function search($filter_, $attribs_=NULL) {
+	public function search($filter_, $attribs_=NULL, $limit_=0) {
 		$this->check_link();
 		$searchbase =$this->userbranch.','.$this->suffix;
 		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
@@ -183,7 +183,7 @@ class LDAP {
 		if (is_null($attribs_))
 			$attribs_ = $this->attribs;
 
-		$ret = @ldap_search($this->link, $searchbase, $filter_, $attribs_);
+		$ret = @ldap_search($this->link, $searchbase, $filter_, $attribs_, 0, $limit_);
 
 		if (is_resource($ret))
 			return $ret;

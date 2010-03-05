@@ -128,6 +128,44 @@ class UserDB_ldap  extends UserDB {
 		return $users;
 	}
 	
+	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
+		$users = array();
+		$ldap = new LDAP($this->config);
+		$contains = '*';
+		if ( $contains_ != '')
+			$contains .= $contains_.'*';
+		
+		$filter = '(&'.$this->generateFilter().'(|';
+		foreach ($attributes_ as $attribute) {
+			$filter .= '('.$this->config['match'][$attribute].'='.$contains.')';
+		}
+		$filter .= '))'; 
+		$sr = $ldap->search($filter, NULL, $limit_);
+		if ($sr === false) {
+			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
+			return NULL;
+		}
+		$sizelimit_exceeded = $ldap->errno() === 4; // LDAP_SIZELIMIT_EXCEEDED => 0x04 
+		
+		$infos = $ldap->get_entries($sr);
+		foreach ($infos as $dn => $info) {
+			$u = $this->generateUserFromRow($info);
+			$u->setAttribute('dn',  $dn);
+			
+			$u = $this->cleanupUser($u);
+			if ($this->isOK($u))
+				$users []= $u;
+			else {
+				if ($u->hasAttribute('login'))
+					Logger::info('main', 'UserDB::ldap::getUsersContaint user \''.$u->getAttribute('login').'\' not ok');
+				else
+					Logger::info('main', 'UserDB::ldap::getUsersContaint user does not have login');
+			}
+		}
+		usort($users, "user_cmp");
+		return array($users, $sizelimit_exceeded);
+	}
+	
 	public function generateFilter() {
 		$filter = '('.$this->config['match']['login'].'=*)';
 		if (isset($this->config['filter'])) {
