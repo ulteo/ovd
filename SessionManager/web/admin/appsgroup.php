@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -36,7 +36,11 @@ if (isset($_REQUEST['action'])) {
 
   if ($_REQUEST['action']=='add') {
     $id = action_add();
-    redirect('appsgroup.php?action=manage&id='.$id);
+    if ($id == false)
+      redirect('appsgroup.php');
+    else
+      redirect('appsgroup.php?action=manage&id='.$id);
+    
   }
   elseif ($_REQUEST['action']=='del') {
     if (isset($_REQUEST['id'])) {
@@ -60,6 +64,11 @@ show_default();
 function action_add() {
   if (! (isset($_REQUEST['name']) && isset($_REQUEST['description'])))
     return false;
+  
+  if ($_REQUEST['name'] == '') {
+    popup_error(_('You must define a name to your application group'));
+    return false;
+  }
 
   $g = new AppsGroup(NULL,$_REQUEST['name'], $_REQUEST['description'], 1);
   $res = $g->insertDB();
