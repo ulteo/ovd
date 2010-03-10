@@ -90,6 +90,10 @@ if (isset($_REQUEST['mass_action']) && $_REQUEST['mass_action'] == 'maintenance'
 
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'install_line' && isset($_REQUEST['fqdn']) && isset($_REQUEST['line'])) {
 //FIX ME ?
+	if ($_REQUEST['line'] == '') {
+		popup_error(_('You must give a package name.'));
+		redirect();
+	}
 	$t = new Task_install_from_line(0, $_REQUEST['fqdn'], $_REQUEST['line']);
 
 	$tm = new Tasks_Manager();
