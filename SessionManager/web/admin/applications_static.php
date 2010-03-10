@@ -304,6 +304,14 @@ function show_default($prefs, $applicationDB) {
 function add_application($applicationDB, $data_) {
   if (! isset($data_['type']))
     return false;
+  if (isset($data_['name']) && $data_['name'] == '') {
+    popup_error(_('You must give a name to your application'));
+    return false;
+  }
+  if (isset($data_['executable_path']) && $data_['executable_path'] == '') {
+    popup_error(_('You must give a command to your application'));
+    return false;
+  }
 
   unset($data_['action']);
   $data_['id'] = 666; // little hack
