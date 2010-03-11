@@ -278,7 +278,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
-		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français'));
+		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français','ru_RU'=>'Русский'));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('windows_keymap', _('Default windows keymap for session'), _('Default windows keymap for session'), _('Default windows keymap for session'), 'en-us');
 		$c->setContentAvailable(array('ar' => 'ar', 'cs' => 'cs', 'da' => 'da', 'de' => 'de', 'de-ch' => 'de-ch', 'en-dv' => 'en-dv', 'en-gb' => 'en-gb', 'en-us' => 'en-us', 'es' => 'es', 'et' => 'et', 'fi' => 'fi', 'fo' => 'fo', 'fr' => 'fr', 'fr-be' => 'fr-be', 'fr-ca' => 'fr-ca', 'fr-ch' => 'fr-ch', 'he' => 'he', 'hr' => 'hr', 'hu' => 'hu', 'is' => 'is', 'it' => 'it', 'ja' => 'ja', 'ko' => 'ko', 'lt' => 'lt', 'lv' => 'lv', 'mk' => 'mk', 'nl' => 'nl', 'nl-be' => 'nl-be', 'no' => 'no', 'pl' => 'pl', 'pt' => 'pt', 'pt-br' => 'pt-br', 'ru' => 'ru', 'sl' => 'sl', 'sv' => 'sv', 'th' => 'th', 'tr' => 'tr'));
