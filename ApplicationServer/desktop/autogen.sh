@@ -20,3 +20,4 @@ fi
 sed -e "s/@REVISION@/${revision}/g" < configure.ac.in > configure.in
 
 autoreconf -fvi
+./configure $@
