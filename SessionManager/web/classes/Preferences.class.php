@@ -151,7 +151,7 @@ class Preferences {
 		$this->addPrettyName('general',_('General configuration'));
 
 		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'en_GB');
-		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français'));
+		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français','ru_RU'=>'Русский'));
 		$this->add($c,'general');
 
 		$c = new ConfigElement_multiselect('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'));
