@@ -7,7 +7,8 @@ scripts_DATA = UsersGroup.class.php \
                Configuration_mode_internal.class.php \
                Configuration_mode_ldap.class.php \
                Liaison.class.php \
-               Preferences_admin.class.php
+               Preferences_admin.class.php \
+               UsersList.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin/classes
 
