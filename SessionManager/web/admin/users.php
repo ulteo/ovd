@@ -134,7 +134,10 @@ function modify_user($userDB, $login) {
 }
 
 function show_default($userDB) {
-  $us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
+	$usersList = new UsersList($_REQUEST);
+	$us = $usersList->search();
+	$searchDiv = $usersList->getForm();
+
   $total_us = count($us);
 
   $users_list_empty = (is_null($us) or count($us)==0);
@@ -145,6 +148,8 @@ function show_default($userDB) {
   page_header();
   echo '<div id="users_div">';
   echo '<h1>'._('Users').'</h1>';
+
+  echo $searchDiv;
 
   echo '<div id="users_list_div">';
 

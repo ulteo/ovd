@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Copyright (C) 2008-2010 Ulteo SAS
@@ -25,15 +26,11 @@ if (! checkAuthorization('viewSummary'))
 	redirect('index.php');
 
 
-page_header();
-
 function my_own_callback($matches) {
 	return '<span class="'.strtolower($matches[1]).'">'.trim($matches[0]).'</span>';
 }
 
 
-
-echo'<h2>'._('List of users').'</h2>';
 
 $prefs = Preferences::getInstance();
 if (! $prefs)
@@ -47,7 +44,17 @@ $userDB = new $mod_user_name();
 
 $userGroupDB = UserGroupDB::getInstance();
 
-$us = $userDB->getList(true);  // in admin, getList is always present (even if canShowList is false)
+$usersList = new UsersList($_REQUEST);
+$us = $usersList->search();
+$searchDiv = $usersList->getForm();
+
+
+page_header();
+echo'<h2>'._('List of users').'</h2>';
+
+echo $searchDiv;
+
+		
 if (is_null($us)){
 }
 else{

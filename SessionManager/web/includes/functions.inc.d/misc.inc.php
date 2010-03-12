@@ -399,3 +399,13 @@ function explode_with_escape($pattern_, $string_, $limit_=NULL) {
 	return $ret;
 }
 
+function array_keys_exists_not_empty($keys_, $array_) {
+	foreach ($keys_ as $key) {
+		if (! array_key_exists($key, $array_))
+			return false;
+		if (strlen($array_[$key]) == 0)
+			return false;
+	}
+	
+	return true;
+}

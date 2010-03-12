@@ -568,7 +568,10 @@ function show_manage($id) {
 
   $userDB = UserDB::getInstance();
 
-  $users_all = $userDB->getList(true);
+  $usersList = new UsersList($_REQUEST);
+  $users_all = $usersList->search();
+  $search_form = $usersList->getForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
+
   if (is_null($users_all))
     $users_all = array();
   $users_available = array();
@@ -787,7 +790,7 @@ echo '<br />';
   }
 
   // Users list
-  if (count($users_all) > 0) {
+if (count($users_all) > 0 || count($users) > 0) {
     echo '<div>';
     echo '<h2>'._('List of users in this group').'</h2>';
     echo '<table border="0" cellspacing="1" cellpadding="3">';
@@ -825,6 +828,11 @@ echo '<br />';
     }
 
     echo '</table>';
+
+    if ($usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
+      echo '<br/>';
+      echo $search_form;
+    }
     echo '</div>';
     echo '<br/>';
   }
