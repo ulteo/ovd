@@ -5,13 +5,13 @@
 # might need to change is the location of the ulteo-ovd.conf file.
 #
 ### BEGIN INIT INFO
-# Provides:
+# Provides:          ulteo-ovd
 # Required-Start:
 # Required-Stop:
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: Start Ulteo OD daemon at boot time
-# Description:       Start Ulteo OD daemon and needed services
+# Short-Description: Start Ulteo OVD daemon at boot time
+# Description:       Start Ulteo OVD daemon and needed services
 ### END INIT INFO
 
 CNF=/etc/ulteo-ovd.conf
