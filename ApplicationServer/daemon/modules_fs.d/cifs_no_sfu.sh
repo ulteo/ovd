@@ -38,7 +38,36 @@ cifs_no_sfu_daemon() {
     while read buf; do
         event=$(echo "$buf" | cut -d/ -f1)
         file=${buf#$event/$CIFS_NO_SFU_TMP_BR/}
+        local basename=$(basename "$file")
         log_DEBUG "$buf"
+
+        echo "$basename" | grep -q "^.wh."
+        if [ $? -eq 0 ]; then
+            case $event in
+                CREATE)
+                    # This case is about the files/directories existing in
+                    # the RO branch marked hidden in the RW branch by
+                    # creating a '.wh.FILENAME' in the RW branch
+                    #
+
+                    local dirname=$(dirname "$file")
+                    log_DEBUG "Detect file/directory to remove in the RO branch '$file'"
+                    local file_name_orig=$(echo "$basename" |mawk '{ print substr($0, 5) }')
+
+                    local path="$CIFS_MOUNT_POINT/$dirname/$file_name_orig"
+                    if [ ! -e "$path" ]; then
+                        log_WARN "weird behavior '$file' created but '$path' does not exist"
+                        continue
+                    fi
+
+                    log_DEBUG "Delete file '$path'"
+                    rm -rf "$path"
+                    ;;
+            esac
+
+            continue
+        fi
+
 
         case $event in
             CLOSE_WRITE,CLOSE|MOVED_TO*)
