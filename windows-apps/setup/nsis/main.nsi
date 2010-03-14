@@ -18,7 +18,7 @@
 
 !define PRODUCT_NAME "Open Virtual Desktop"
 !define PRODUCT_VERSION "2.0"
-!define PRODUCT_LONGVERSION "2.0.2.0"
+!define PRODUCT_LONGVERSION "2.0.3.0"
 !define PRODUCT_PUBLISHER "Ulteo"
 !define PRODUCT_WEB_SITE "http://www.ulteo.com"
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
