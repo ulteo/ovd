@@ -1,3 +1,9 @@
+ovd-applets (2.0.3-0ulteo0) 2-0-staging; urgency=low
+
+  * New bugfix release
+
+ -- Laurent Clouet <laurent@ulteo.com>  Sun, 14 Jan 2010 22:34:36 +0100
+
 ovd-applets (2.0.2-0ulteo0) 2-0-staging; urgency=low
 
   * New bugfix release
