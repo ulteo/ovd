@@ -773,7 +773,7 @@ msgstr "Utilisation CPU"
 #: ../web/admin/reporting.php:316 ../web/admin/servers.php:353
 #: ../web/admin/servers.php:709
 msgid "RAM usage"
-msgstr "utilisation RAM"
+msgstr "Utilisation RAM"
 
 #: ../web/admin/reporting.php:324 ../web/admin/includes/page_template.php:217
 msgid "Reporting"
@@ -1008,7 +1008,7 @@ msgstr "FQDN"
 #: ../web/admin/servers.php:310 ../web/admin/servers.php:686
 #: ../web/admin/servers.php:693
 msgid "Monitoring"
-msgstr "Monitoring"
+msgstr "Supervision"
 
 #: ../web/admin/servers.php:322 ../web/admin/servers.php:395
 #: ../web/admin/servers.php:662
@@ -1062,7 +1062,7 @@ msgstr "Etes-vous certain de vouloir supprimer ce serveur ?"
 
 #: ../web/admin/servers.php:521
 msgid "No unregistered server"
-msgstr "Pas de serveur non enregistrés"
+msgstr "Pas de serveur non enregistré"
 
 #: ../web/admin/servers.php:552
 msgid "Cannot get server monitoring"
@@ -1661,7 +1661,7 @@ msgstr "Configuration serveur"
 
 #: ../web/admin/includes/page_template.php:173
 msgid "Profile settings"
-msgstr "Profile"
+msgstr "Configuration des profils"
 
 #: ../web/admin/includes/page_template.php:179
 msgid "Session settings"
@@ -1826,7 +1826,7 @@ msgstr "Groupe d'utilisateurs modifié"
 
 #: ../web/admin/usersgroup.php:322
 msgid "User groups"
-msgstr "Groupe d'utilisateurs"
+msgstr "Groupes d'utilisateurs"
 
 #: ../web/admin/usersgroup.php:327
 msgid "No available user group"
