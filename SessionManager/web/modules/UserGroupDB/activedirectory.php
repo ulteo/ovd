@@ -101,6 +101,10 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			$ug->extras = $extras;
 			$groups[$dn] = $ug;
 		}
+		if ($sort_) {
+			usort($groups, "usergroup_cmp");
+		}
+		
 		return $groups;
 	}
 	
