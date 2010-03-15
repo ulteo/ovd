@@ -438,7 +438,7 @@ function show_default() {
 				echo ' checked="checked"';
 
 			echo ' />';
-			echo $type;
+			echo $name;
 		}
 
 		foreach ($usergroup_types as $type => $name) {
