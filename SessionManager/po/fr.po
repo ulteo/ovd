@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: i 18n-2.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-02-16 11:35+0100\n"
-"PO-Revision-Date: 2010-03-11 18:06+0100\n"
+"PO-Revision-Date: 2010-03-15 15:00+0100\n"
 "Last-Translator: Julien LANGLOIS <julien@ulteo.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1504,7 +1504,7 @@ msgstr "Configuration de module invalide"
 #: ../web/admin/servers.php:678
 #: ../web/admin/servers.php:685
 msgid "Monitoring"
-msgstr "Monitoring"
+msgstr "Supervision"
 
 #: ../web/modules/ApplicationDB/sql.php:175
 #: ../web/modules/UserDB/sql.php:173
@@ -1672,7 +1672,7 @@ msgstr "Pas de serveur disponible"
 
 #: ../web/admin/servers.php:513
 msgid "No unregistered server"
-msgstr "Pas de serveur non enregistrés"
+msgstr "Pas de serveur non enregistré"
 
 #: ../web/admin/wizard.php:38
 msgid "No user group selected"
@@ -1858,7 +1858,7 @@ msgstr "Précédent"
 
 #: ../web/admin/includes/page_template.php:173
 msgid "Profile settings"
-msgstr "Profile"
+msgstr "Configuration des profils"
 
 #: ../web/modules/UserDB/ldap.php:228
 msgid "Protocol version"
@@ -1932,7 +1932,7 @@ msgstr "RAM"
 #: ../web/admin/servers.php:349
 #: ../web/admin/servers.php:701
 msgid "RAM usage"
-msgstr "utilisation RAM"
+msgstr "Utilisation RAM"
 
 #: ../web/admin/servers.php:734
 msgid "Redirection name of this server"
@@ -2875,7 +2875,7 @@ msgstr "L'utilisateur peut utiliser une console dans sa session"
 
 #: ../web/admin/usersgroup.php:329
 msgid "User groups"
-msgstr "Groupe d'utilisateurs"
+msgstr "Groupes d'utilisateurs"
 
 #: ../web/admin/usersgroup.php:613
 msgid "User groups management"
