@@ -63,6 +63,48 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 		return $ug;
 	}
 	
+	public function getList($sort_=false) {
+		Logger::debug('main','UserGroupDB::activedirectory::getList');
+		$userDBAD = UserDB::getInstance();
+		
+		$config_ldap = $userDBAD->makeLDAPconfig();
+		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
+
+		$ldap = new LDAP($config_ldap);
+		$sr = $ldap->search('(objectClass=group)', array_keys($config_ldap['match']));
+		if ($sr === false) {
+			Logger::error('main',"UserGroupDB::activedirectory::getList search failed");
+			return NULL;
+		}
+		$infos = $ldap->get_entries($sr);
+		
+		$groups = array();
+		
+		foreach ($infos as $dn => $info) {
+			foreach ($config_ldap['match'] as $attribut => $match_ldap) {
+				if (isset($info[$match_ldap][0])) {
+					$buf[$attribut] = $info[$match_ldap][0];
+				}
+				if (isset($info[$match_ldap]) && is_array($info[$match_ldap])) {
+					if (isset($info[$match_ldap]['count']))
+						unset($info[$match_ldap]['count']);
+					$extras[$attribut] = $info[$match_ldap];
+				}
+				else {
+					$extras[$attribut] = array();
+				}
+			}
+			if (!isset($buf['description']))
+				$buf['description'] = '';
+			
+			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
+			$ug->extras = $extras;
+			$groups[$dn] = $ug;
+		}
+		return $groups;
+	}
+	
+	
 	public static function prettyName() {
 		return _('Active Directory');
 	}
