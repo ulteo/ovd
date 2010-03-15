@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Copyright (C) 2008-2010 Ulteo SAS
