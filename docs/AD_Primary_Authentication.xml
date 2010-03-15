@@ -23,7 +23,7 @@
   <para>
     The use case is simple. A user is logged on his Windows machine
     (linked on a Domain Controller). He want to start an external
-    application. It jsut have to click on his desktop shortcut. That
+    application. He just have to click on his desktop shortcut. That
     launch a Ulteo session into his browser. The user didn't type any
     password.
   </para>
