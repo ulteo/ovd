@@ -155,6 +155,8 @@ echo '		</div>
 }
 
 function popup_error($msg_) {
+	$msg_ = secure_html($msg_);
+
 	if (! isset($_SESSION['errormsg']))
 		$_SESSION['errormsg'] = array();
 
@@ -168,6 +170,8 @@ function popup_error($msg_) {
 }
 
 function popup_info($msg_) {
+	$msg_ = secure_html($msg_);
+
 	if (! isset($_SESSION['infomsg']))
 		$_SESSION['infomsg'] = array();
 
