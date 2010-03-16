@@ -238,6 +238,29 @@ class UserGroupDBDynamic {
 	public static function prettyName() {
 		return 'UserGroupDBDynamic';
 	}
+	
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+		$groups = array();
+		$count = 0;
+		$sizelimit_exceeded = false;
+		$list = $this->getList(true);
+		foreach ($list as $a_group) {
+			foreach ($attributes_ as $an_attribute) {
+				if ($contains_ == '' or (isset($a_group->$an_attribute) and is_string(strstr($a_group->$an_attribute, $contains_)))) {
+					$groups []= $a_group;
+					$count++;
+					if ($limit_ > 0 && $count >= $limit_) {
+						$sizelimit_exceeded = next($list) !== false; // is it the last element ?
+						return array($users, $sizelimit_exceeded);
+					}
+					break;
+				}
+			}
+		}
+		
+		return array($groups, $sizelimit_exceeded);
+	}
+	
 // 	public static function isDefault() {} // TODO
 	public static function liaisonType() {} // TODO
 }
