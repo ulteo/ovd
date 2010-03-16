@@ -44,7 +44,6 @@ class Servers {
 			if ($server->getAttribute('locked'))
 				unset($servers[$k]);
 
-			$server->getStatus();
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
