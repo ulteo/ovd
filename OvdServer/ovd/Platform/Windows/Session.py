@@ -59,10 +59,10 @@ class Session(AbstractSession):
 			f.write(cmd)
 			f.close()
 			
-			final_file = os.path.join(buf, "shortcuts", os.path.basename(app_target))
-			
-			LnkFile.clone(app_target, final_file, "startovdapp", app_id)
-			lnk_files.append(final_file)
+			#final_file = os.path.join(buf, "shortcuts", os.path.basename(app_target))
+			#print "install_client %s %s %s"%(str(app_target), str(final_file), str(app_id))
+			#LnkFile.clone(app_target, final_file, "startovdapp", app_id)
+			#lnk_files.append(final_file)
 		
 		instances_dir = os.path.join(buf, "instances")
 		os.mkdir(instances_dir)
@@ -103,7 +103,7 @@ class Session(AbstractSession):
 		for (app_id, app_target) in self.applications:
 			final_file = os.path.join(programsDir, os.path.basename(app_target))
 
-			self.cloneShortcut(app_target, final_file, "startovdapp", app_id)
+			#self.cloneShortcut(app_target, final_file, "startovdapp", app_id)
 			lnk_files.append(final_file)
 	
 	

@@ -200,7 +200,11 @@ class ApplicationsDetection:
 	
 	@staticmethod	
 	def execute(cmd, wait=False):
-		(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
+		try:
+			(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, cmd, None , None, False, 0 , None, None, win32process.STARTUPINFO())
+		except Exception, err:
+			Logger.error("Unable to exec '%s': %s"%(cmd, str(err)))
+			return 255
 		
 		if wait:
 			win32event.WaitForSingleObject(hProcess, win32event.INFINITE)

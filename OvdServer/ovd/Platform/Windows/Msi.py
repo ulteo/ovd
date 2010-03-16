@@ -41,14 +41,14 @@ class Msi:
 			return None
 		
 		path_len = ctypes.c_uint(4096)
-		path = ctypes.create_unicode_buffer(4096)
+		path_buffer = ctypes.create_unicode_buffer(4096)
 		
-		status = self.dll.MsiGetComponentPathW(szProductCode.value, szComponentCode.value, ctypes.byref(path), ctypes.byref(path_len))
+		status = self.dll.MsiGetComponentPathW(szProductCode.value, szComponentCode.value, ctypes.byref(path_buffer), ctypes.byref(path_len))
 		if status != self.INSTALLSTATE_LOCAL:
 			Logger.debug("MsiGetComponentPathW return %d on '%s'"%(status, path))
 			return None
 		
-		return path.value
+		return path_buffer.value
 
 
 if __name__=='__main__':

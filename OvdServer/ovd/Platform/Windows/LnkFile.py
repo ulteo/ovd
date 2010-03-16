@@ -22,6 +22,7 @@ import pythoncom
 from win32com.shell import shell
 
 from Msi import Msi
+from ovd.Logger import Logger
 
 def clone(srcFile, dstFile, path, args):
 	pythoncom.CoInitialize()
