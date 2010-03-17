@@ -126,9 +126,9 @@ class Abstract_Liaison_activedirectory {
 			if (is_string($memberof))
 				$memberof = array($memberof);
 			foreach ($memberof as $id_group) {
-				$g = $userGroupDB->import($id_group);
+				$g = $userGroupDB->import('static_'.$id_group);
 				if (is_object($g)) {
-					$l = new Liaison($element_,$g->id);
+					$l = new Liaison($element_,$g->getUniqueID());
 					$groups[$l->group] = $l;
 				}
 			}
