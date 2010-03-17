@@ -359,7 +359,10 @@ if ($_REQUEST['name'] == 'News') {
 if ($_REQUEST['name'] == 'password') {
 	if ($_REQUEST['action'] == 'change') {
 		if (isset($_REQUEST['password']) && isset($_REQUEST['password_confirm'])) {
-			if ($_REQUEST['password'] != $_REQUEST['password_confirm']) {
+			if ($_REQUEST['password'] == '') {
+				popup_error(_('Password is empty'));
+			}
+			else if ($_REQUEST['password'] != $_REQUEST['password_confirm']) {
 				popup_error(_('Passwords are not identical'));
 			}
 			else {
