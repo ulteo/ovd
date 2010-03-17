@@ -47,7 +47,8 @@ $_POST = secure_html($_POST);
 $_REQUEST = secure_html($_REQUEST);
 
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-	$buf = split('[,;]', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+	$buf = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+	$buf = explode(';', $buf[0]);
 	$buf = $buf[0];
 } else
 	$buf = 'en_GB';
