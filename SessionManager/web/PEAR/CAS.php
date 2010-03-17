@@ -472,7 +472,7 @@ class phpCAS
 		if ( is_array($dbg) ) {
 			for ( $i=1; $i<sizeof($dbg); $i++) {
 				if ( is_array($dbg[$i]) ) {
-					if ( $dbg[$i]['class'] == __CLASS__ ) {
+					if ( array_key_exists($i, $dbg) && array_key_exists('class', $dbg[$i]) && $dbg[$i]['class'] == __CLASS__ ) {
 						$function = $dbg[$i]['function'];
 						$file = $dbg[$i]['file'];
 						$line = $dbg[$i]['line'];
