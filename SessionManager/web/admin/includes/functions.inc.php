@@ -291,7 +291,7 @@ function formToArray($form_) {
 	}
 	$elements_form = array();
 	foreach ($form_ as $key1 => $value1){
-		$expl = split($sep, $key1);
+		$expl = explode($sep, $key1);
 		$expl = array_reverse ($expl);
 		$element2 = &$elements_form;
 		while (count($expl)>0){

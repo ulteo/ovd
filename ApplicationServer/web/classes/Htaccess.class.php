@@ -31,14 +31,14 @@ class Htaccess {
 			return false;
 
 		$new_contents = '';
-		$lines = split("\n",$contents);
+		$lines = explode("\n",$contents);
 		$found = false;
 		foreach ($lines as $line) {
 			$line = preg_replace('/ +/', ' ', trim($line));
 			if (!$line)
 				continue;
 
-			$words = split(' ', $line);
+			$words = explode(' ', $line);
 			if ((count($words) != 3) ||($words[0] != 'php_value') || ($words[1] != $key_)) {
 				$new_contents .= "$line\n";
 				continue;

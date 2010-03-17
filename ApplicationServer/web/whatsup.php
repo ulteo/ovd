@@ -82,7 +82,7 @@ function getNextFile($basetime, $dir) {
   $files = glob("$dir/*.pdf");
   foreach ($files as $filename) {
     $file = basename ($filename);
-    $ar = split("-", $file, 2);
+    $ar = explode("-", $file, 2);
     if (count($ar) == 0)
       continue;
 

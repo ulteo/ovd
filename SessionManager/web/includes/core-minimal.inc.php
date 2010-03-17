@@ -44,7 +44,8 @@ require_once(dirname(__FILE__).'/load_balancing.inc.php');
 require_once(dirname(__FILE__).'/defaults.inc.php');
 
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-	$buf = split('[,;]', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+	$buf = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+	$buf = explode(';', $buf[0]);
 	$buf = $buf[0];
 } else
 	$buf = 'en_GB';
