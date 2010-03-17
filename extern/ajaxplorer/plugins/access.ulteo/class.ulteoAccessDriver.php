@@ -216,7 +216,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 
 		// FILTER DIR PAGINATION ANCHOR
 		if (isset($dir) && strstr($dir, '#') !== false) {
-			$parts = split('#', $dir);
+			$parts = explode('#', $dir);
 			$dir = $parts[0];
 			$page = $parts[1];
 		}
