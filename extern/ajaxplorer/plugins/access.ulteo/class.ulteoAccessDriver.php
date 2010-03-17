@@ -552,8 +552,8 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 				}
 
 				$rep_source = '';
-				if ($dir != '')
-					$rep_source = '/'.$dir;
+				if ($dir != '/')
+					$rep_source = $dir.'/';
 
 				$destination = SystemTextEncoding::fromUTF8($rep_source);
 
