@@ -533,6 +533,11 @@ function show_manage($id) {
   $userGroupDB = UserGroupDB::getInstance();
 
   $group = $userGroupDB->import($id);
+  
+  if (! is_object($group)) {
+    die_error(_('Failed to load usergroup'));
+  }
+  
   $usergroupdb_rw = $userGroupDB->isWriteable();
 
   $policy = $group->getPolicy();
