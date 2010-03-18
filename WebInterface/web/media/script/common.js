@@ -162,6 +162,8 @@ function hideLock() {
 }
 
 function showError(errormsg) {
+	hideError();
+
 	hideOk();
 	hideInfo();
 
@@ -185,6 +187,8 @@ function hideError() {
 }
 
 function showOk(okmsg) {
+	hideOK();
+
 	hideInfo();
 
 	showLock();
@@ -207,6 +211,8 @@ function hideOk() {
 }
 
 function showInfo(infomsg) {
+	hideInfo();
+
 	showLock();
 
 	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideInfo(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+infomsg;
