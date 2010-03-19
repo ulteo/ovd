@@ -309,8 +309,10 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 				$dirname = Utils::processFileName(SystemTextEncoding::fromUTF8($dirname));
 
 				$error = $this->mkdir($dir, $dirname);
-				if (isset($error))
-					$errorMessage = $error; break;
+				if (isset($error)) {
+					$errorMessage = $error;
+					break;
+				}
 
 				$messtmp .= $mess[38].' '.SystemTextEncoding::toUTF8($dirname).' '.$mess[39];
 				if ($dir == '')
@@ -337,8 +339,10 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 				$filename = Utils::processFileName(SystemTextEncoding::fromUTF8($filename));
 
 				$error = $this->createEmptyFile($dir, $filename);
-				if (isset($error))
-					$errorMessage = $error; break;
+				if (isset($error)) {
+					$errorMessage = $error;
+					break;
+				}
 
 				$messtmp .= $mess[34].' '.SystemTextEncoding::toUTF8($filename).' '.$mess[39];
 				if ($dir == '')
