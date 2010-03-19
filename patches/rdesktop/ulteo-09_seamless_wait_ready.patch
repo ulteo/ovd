@@ -1,0 +1,123 @@
+diff -Naur origin/rdesktop.c rdesktop-1.6.0/rdesktop.c
+--- origin/rdesktop.c	2010-03-19 16:57:14.000000000 +0100
++++ rdesktop-1.6.0/rdesktop.c	2010-03-19 17:05:53.000000000 +0100
+@@ -931,6 +931,27 @@
+ 			return 1;
+ 		}
+ 
++		snprintf(buf, 4096, "%s.hello", master_socket);
++		if (seamless_exists_hello_file(buf) == 0) {
++			char *wait_launch = getenv("WAIT_LAUNCHING");
++			int wait = 0;
++			
++			if (wait_launch != NULL) {
++				wait = atoi(wait_launch);
++				
++				if (wait>65535)
++					wait = 0;
++			}
++			
++			for (; wait>0 && seamless_exists_hello_file(buf) == 0; wait--)
++				sleep(1);
++			
++			if (seamless_exists_hello_file(buf) == 0) {
++				error("Cannot start application, seamless channel not ready");
++				return 2;
++			}
++		}
++		
+ 		startup_id = getenv("DESKTOP_STARTUP_ID");
+ 
+ 		if (startup_id && startup_id != '\0')
+diff -Naur origin/seamless.c rdesktop-1.6.0/seamless.c
+--- origin/seamless.c	2010-03-19 16:57:14.000000000 +0100
++++ rdesktop-1.6.0/seamless.c	2010-03-19 16:58:22.000000000 +0100
+@@ -46,6 +46,10 @@
+ static unsigned int seamless_serial;
+ static char icon_buf[1024];
+ 
++static char* seamless_hello_file = NULL;
++void seamless_write_hello_file();
++void seamless_remove_hello_file();
++
+ static char *
+ seamless_get_token(char **s)
+ {
+@@ -330,6 +334,7 @@
+ 			return False;
+ 
+ 		ui_seamless_begin(!!(flags & SEAMLESSRDP_HELLO_HIDDEN));
++		seamless_write_hello_file();
+ 	}
+ 	else if (!strcmp("ACK", tok1))
+ 	{
+@@ -818,6 +823,11 @@
+ 		perror("Error listening on socket: listen");
+ 		exit(1);
+ 	}
++
++        seamless_hello_file = xmalloc(sizeof(char) * (strlen(socket_name) + strlen(".hello")+ 1));
++        sprintf(seamless_hello_file, "%s.hello", socket_name);
++        seamless_remove_hello_file();
++        // xfree(seamless_hello_file);
+ }
+ 
+ /* Close control socket */
+@@ -956,3 +966,48 @@
+ 	for(sa = g_seamless_application; sa; sa = sa->next)
+ 		seamless_application_remove(sa);
+ }
++
++void
++seamless_write_hello_file()
++{
++	FILE* f;
++	char buffer[64];
++	
++	if (seamless_hello_file == NULL) {
++		fprintf(stderr, "Seamless: unable to write hello file");
++		return;
++	}
++	
++	f = fopen(seamless_hello_file, "w");
++	if (f==NULL) {
++		fprintf(stderr, "Seamless: unable to write hello file '%s'", seamless_hello_file);
++		return;
++	}
++	
++	snprintf(buffer, 64, "%d", getpid());
++	fwrite (buffer , sizeof(char), strlen(buffer) , f);
++	fclose(f);
++}
++
++void
++seamless_remove_hello_file()
++{
++	if (seamless_hello_file == NULL) {
++		fprintf(stderr, "Seamless: unable to remove hello file");
++		return;
++	}
++	
++	unlink(seamless_hello_file);
++}
++
++int
++seamless_exists_hello_file(const char* hello_file)
++{
++	FILE* f;
++	f = fopen(hello_file, "r");
++	if (f==NULL)
++		return 0;
++
++	fclose(f);
++	return 1;
++}
+diff -Naur origin/seamless.h rdesktop-1.6.0/seamless.h
+--- origin/seamless.h	2010-03-19 16:57:14.000000000 +0100
++++ rdesktop-1.6.0/seamless.h	2010-03-19 16:58:22.000000000 +0100
+@@ -55,4 +55,5 @@
+ 
+ void seamless_register_pid(unsigned int token, unsigned int pid);
+ 
++int seamless_exists_hello_file(const char* hello_file);
+ #endif
