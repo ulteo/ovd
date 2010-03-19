@@ -42,7 +42,16 @@ application_switch_status $SESSID $job 1
 
 if [ -f $SESSID_DIR/parameters/start_app_id ]; then
     APP_ID=$(cat $SESSID_DIR/parameters/start_app_id)
+
+    if [ ! -f ${SESSID_DIR}/parameters/app_with_desktop ]; then
+        MODE_APPLICATION="application"
+
+        if [ -f $SESSID_DIR/parameters/start_app_args ]; then
+            APP_ARGS=$(cat $SESSID_DIR/parameters/start_app_args)
+        fi
+    fi
 fi
+
 geometry=$(cat $SESSID_DIR/parameters/geometry)
 
 if [ -z "$geometry" ]; then
@@ -63,7 +72,11 @@ windows_init_connection ${SESSID_DIR} $rfb_port&
 
 # Todo: DOC, desktop
 application_switch_status $SESSID $job 2
-user_exec "desktop" $rfb_port 1
+if [ -n "$MODE_APPLICATION" ]; then
+    user_exec $APP_ID $rfb_port "$APP_ARGS"
+else
+    user_exec "desktop" $rfb_port 1
+fi
 # If application already killed
 [ -d $dir ] || exit 0
 application_switch_status $SESSID $job 3
