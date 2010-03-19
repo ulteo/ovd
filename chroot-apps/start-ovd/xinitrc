@@ -62,6 +62,12 @@ if [ -n "$DOC" ] || [ -n "$APP_ID" ]; then
   xfsm-compat start
   xfwm4 --daemon
 
+  export WAIT_LAUNCHING=30
+  # For windows applications: if this var is set, rdesktop is going to
+  # try to launch the application each second until
+  # WAIT_LAUNCHING. The is necessary because rdesktop could be started
+  # but the seamless channel not initialized
+
   if [ -n "$APP_ID" ] && [ -n "$OVD_APPS_DIR" ]; then
     CMD=$(grep "^Exec=" "$OVD_APPS_DIR/$APP_ID.desktop" | sed -e "s/^Exec=//")
   else
