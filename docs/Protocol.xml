@@ -1447,10 +1447,6 @@
                 for the session (in Unix format)</para>
             </listitem>
             <listitem>
-              <para>open_doc:
-                /some/file/path... A document path to open inside the OVD</para>
-            </listitem>
-            <listitem>
               <para>quality:
                 lowest|medium|high|highest
               </para>
@@ -1467,6 +1463,10 @@
               <para>start_app:
                 1|2... An application id to launch at
                 session start</para>
+            </listitem>
+            <listitem>
+              <para>start_app_args:
+                /some/file/path... A document path to open inside the OVD</para>
             </listitem>
             <listitem>
               <para>timezone:
