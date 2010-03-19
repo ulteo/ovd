@@ -581,7 +581,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 						$userfile_name = SystemTextEncoding::fromUTF8($userfile_name);
 
 					$userfile_name = Utils::processFileName($userfile_name);
-					$userfile_name = $destination.'/'.$userfile_name;
+					$userfile_name = $destination.$userfile_name;
 					while ($userfile_name{0} == '/')
 						$userfile_name = substr($userfile_name, 1);
 
