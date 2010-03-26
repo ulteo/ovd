@@ -24,6 +24,7 @@
 
 #include <dirent.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "Utils.h"
 

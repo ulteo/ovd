@@ -120,9 +120,11 @@ while [ -z "$SM_URL" ]; do
 done
 
 # where to uncompress the chroot
+CHROOT_PATH_PROPOSAL="/opt/ulteo"
 while [ -z "$CHROOT_PATH" ]; do
-    echo -n "Chroot installation path: "
+    echo -n "Chroot installation path [$CHROOT_PATH_PROPOSAL]: "
     read CHROOT_PATH
+    if [ -z "$CHROOT_PATH" ]; then CHROOT_PATH=$CHROOT_PATH_PROPOSAL; fi
 done
 
 # try to guess the apache group, if we can't, ask if to the admin

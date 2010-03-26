@@ -27,6 +27,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 #include "Utils.h"
 #include "Action.h"
