@@ -47,7 +47,7 @@ if (! $token) {
 	die('No such token file');
 }
 
-if ($token->getAttribute('type') == 'start' || $token->getAttribute('type') == 'resume') {
+if ($token->getAttribute('type') == 'start' || $token->getAttribute('type') == 'resume' || $token->getAttribute('type') == 'reuse') {
 	$session_id = $token->getAttribute('link_to');
 } elseif ($token->getAttribute('type') == 'invite') {
 	$invite = Abstract_Invite::load($token->getAttribute('link_to'));

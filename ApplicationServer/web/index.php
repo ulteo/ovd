@@ -69,7 +69,7 @@ if ($session_node->hasAttribute('mode'))
 if ($session_node->hasAttribute('type'))
 	$_SESSION['type'] = $session_node->getAttribute('type');
 $_SESSION['owner'] = false;
-if ($_SESSION['type'] == 'start' || $_SESSION['type'] == 'resume')
+if ($_SESSION['type'] == 'start' || $_SESSION['type'] == 'resume' || $_SESSION['type'] == 'reuse')
 	$_SESSION['owner'] = true;
 
 $parameters = array();
@@ -156,6 +156,14 @@ if ($_SESSION['type'] == 'invite') {
 	$_SESSION['tokens'][$_GET['token']] = array(
 		'session_id'	=>	$_SESSION['session'],
 		'access_id'		=>	$buf_access_id
+	);
+}
+
+if ($_SESSION['mode'] == 'external') {
+	$_SESSION['tokens'][$_GET['token']] = array(
+		'session_id'		=>	$_SESSION['session'],
+		'start_app_id'	=>	((isset($_SESSION['parameters']['start_app_id']) && $_SESSION['parameters']['start_app_id'] != '')?$_SESSION['parameters']['start_app_id']:NULL,
+		'start_app_args'	=>	((isset($_SESSION['parameters']['start_app_args']) && $_SESSION['parameters']['start_app_args'] != '')?$_SESSION['parameters']['start_app_args']:NULL)
 	);
 }
 

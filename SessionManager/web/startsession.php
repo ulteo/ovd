@@ -112,35 +112,42 @@ if ($sessions > 0) {
 		if ($session->isSuspended()) {
 			$old_session_id = $session->id;
 			$old_session_server = $session->server;
+			$old_session_mode = $session->mode;
 		} elseif ($session->isAlive()) {
 			$already_online = 1;
 
-			$buf = $prefs->get('general', 'session_settings_defaults');
-			$buf = $buf['action_when_active_session'];
+			if ($session->mode == 'external') {
+				$old_session_id = $session->id;
+				$old_session_server = $session->server;
+				$old_session_mode = $session->mode;
+			} else {
+				$buf = $prefs->get('general', 'session_settings_defaults');
+				$buf = $buf['action_when_active_session'];
 
-			if ($buf == 0)
-				die_error(_('You already have an active session'), __FILE__, __LINE__, true);
-			elseif ($buf == 1) {
-				$invite = new Invite(gen_string(5));
-				$invite->session = $session->id;
-				$invite->settings = array(
-					'invite_email'	=>	$user->getAttribute('displayname'),
-					'view_only'		=>	0,
-					'access_id'		=>	'desktop'
-				);
-				$invite->email = 'none';
-				$invite->valid_until = (time()+(60*30));
-				Abstract_Invite::save($invite);
+				if ($buf == 0)
+					die_error(_('You already have an active session'), __FILE__, __LINE__, true);
+				elseif ($buf == 1) {
+					$invite = new Invite(gen_string(5));
+					$invite->session = $session->id;
+					$invite->settings = array(
+						'invite_email'	=>	$user->getAttribute('displayname'),
+						'view_only'		=>	0,
+						'access_id'		=>	'desktop'
+					);
+					$invite->email = 'none';
+					$invite->valid_until = (time()+(60*30));
+					Abstract_Invite::save($invite);
 
-				$token = new Token(gen_string(5));
-				$token->type = 'invite';
-				$token->link_to = $invite->id;
-				$token->valid_until = (time()+(60*30));
-				Abstract_Token::save($token);
+					$token = new Token(gen_string(5));
+					$token->type = 'invite';
+					$token->link_to = $invite->id;
+					$token->valid_until = (time()+(60*30));
+					Abstract_Token::save($token);
 
-				$server = Abstract_Server::load($session->server);
+					$server = Abstract_Server::load($session->server);
 
-				redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
+					redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
+				}
 			}
 		} else
 			die_error(_('You already have a session, please contact your administrator'), __FILE__, __LINE__, true);
@@ -166,11 +173,15 @@ else {
 if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
 
-	$session_type = 'resume';
+	if ($old_session_mode == 'external') {
+		$session_type = 'reuse';
+		Logger::info('main', '(startsession) Reusing session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
+	} else {
+		$session_type = 'resume';
+		Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
+	}
 
 	$ret = true;
-
-	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
 } else {
 	$random_session_id = gen_string(5);
 
@@ -328,6 +339,13 @@ foreach ($optional_args as $k => $v)
 	$data[$k] = $v;
 foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;
+
+if ($session->mode == 'external') {
+	if (isset($data['persistent']))
+		unset($data['persistent']);
+	if (isset($data['shareable']))
+		unset($data['shareable']);
+}
 
 $session->setAttribute('settings', $data);
 $session->setAttribute('start_time', time());
