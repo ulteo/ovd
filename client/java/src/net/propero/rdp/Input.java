@@ -59,10 +59,9 @@ public abstract class Input {
 	protected static final int MOUSE_FLAG_BUTTON2 = 0x2000;
 	protected static final int MOUSE_FLAG_BUTTON3 = 0x4000;
 
-	protected static final int MOUSE_FLAG_BUTTON4 = 0x0280; // wheel up -
-	                                                        // rdesktop 1.2.0
-	protected static final int MOUSE_FLAG_BUTTON5 = 0x0380; // wheel down -
-															// rdesktop 1.2.0
+	protected static final int MOUSE_FLAG_BUTTON4 = 0x0280; // wheel up
+	protected static final int MOUSE_FLAG_BUTTON5 = 0x0380; // wheel down
+															
 	protected static final int MOUSE_FLAG_DOWN = 0x8000;
 
     protected static final int RDP_INPUT_SYNCHRONIZE = 0;
@@ -125,7 +124,9 @@ public abstract class Input {
      * Add all relevant input listeners to the canvas
     */
 	public void addInputListeners() {
-		canvas.addMouseListener(new RdesktopMouseAdapter());
+		RdesktopMouseAdapter mouseAdapter = new RdesktopMouseAdapter();
+		canvas.addMouseListener(mouseAdapter);
+		canvas.addMouseWheelListener(mouseAdapter);
 		canvas.addMouseMotionListener(new RdesktopMouseMotionAdapter());
 		canvas.addKeyListener(new RdesktopKeyAdapter());
 	}
@@ -684,6 +685,16 @@ public abstract class Input {
 					middleButtonReleased(e);
 				}
 			}
+		}
+
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			int flag;
+			if (e.getWheelRotation() < 0) 
+				flag = MOUSE_FLAG_BUTTON4;
+			else
+				flag = MOUSE_FLAG_BUTTON5;
+
+			rdp.sendInput(time, RDP_INPUT_MOUSE, flag, 1, 1);
 		}
 	}
 
