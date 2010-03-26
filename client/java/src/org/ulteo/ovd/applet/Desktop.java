@@ -201,7 +201,9 @@ public class Desktop extends Applet implements Observer {
 		catch(Exception e) {
 			return false;
 		}
-		this.sound_enabled = this.getParameter("sound").equalsIgnoreCase("true");
+		String soundParameter = this.getParameter("sound");
+		if (soundParameter != null)
+			this.sound_enabled = soundParameter.equalsIgnoreCase("true");
 		
 		return true;
     }
