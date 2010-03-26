@@ -32,6 +32,7 @@ import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.rdp5.rdpdr.Printer;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
+import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import netscape.javascript.JSObject;
 
 public class Desktop extends Applet implements Observer {
@@ -39,6 +40,7 @@ public class Desktop extends Applet implements Observer {
 	private String server = null;
 	private String username = null;
 	private String password = null;
+	private boolean sound_enabled = false;
 	
 	private Options rdp_opt = null;
 	private RdpConnection rc = null;
@@ -80,7 +82,6 @@ public class Desktop extends Applet implements Observer {
 		this.rdp_opt.height = this.getHeight();
 		this.rdp_opt.set_bpp(24);
 		this.rc = null;
-				
 		this.finished_init = true;
 		
 		BorderLayout layout = new BorderLayout();
@@ -101,6 +102,13 @@ public class Desktop extends Applet implements Observer {
 		}
 
 		this.rc.addObserver(this);
+		
+		if(this.sound_enabled) {
+			System.out.println("Sound enabled");
+			SoundChannel sndChannel = new SoundChannel(this.rc.opt, this.rc.common);
+			if (! this.rc.addChannel(sndChannel))
+				System.err.println("Unable to ass sound channel, continue anyway");
+		}
 		
 		String[] printers = Printer.getAllAvailable();
 		if (printers.length > 0) {
@@ -193,6 +201,7 @@ public class Desktop extends Applet implements Observer {
 		catch(Exception e) {
 			return false;
 		}
+		this.sound_enabled = this.getParameter("sound").equalsIgnoreCase("true");
 		
 		return true;
     }
