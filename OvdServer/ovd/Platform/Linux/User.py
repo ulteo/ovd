@@ -31,8 +31,11 @@ class User(AbstractUser):
 		cmd = "useradd -m -k /dev/null"
 		if self.infos.has_key("displayName"):
 			cmd+= " --comment '%s,,,'"%(self.infos["displayName"])
+		
+		groups = ["video", "audio", "pulse", "pulse-rt", "pulse-access"]
 		if self.infos.has_key("groups"):
-			cmd+= " --groups %s"%(",".join(self.infos["groups"]))
+			groups+= self.infos["groups"]
+		cmd+= " --groups %s"%(",".join(groups))
 		
 		cmd+= " "+self.name
 		
