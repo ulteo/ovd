@@ -1,7 +1,7 @@
 Source: ovd-applets
 Section: utils
 Priority: optional
-Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Maintainer: Samuel Bovée <samuel@ulteo.com>
 Build-Depends: debhelper (>= 5), cdbs, sun-java6-jdk, ant, ant-optional, ulteo-ovd-cert
 Standards-Version: 3.8.2
 

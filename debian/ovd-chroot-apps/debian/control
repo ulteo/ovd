@@ -1,7 +1,7 @@
 Source: ovd-chroot-apps
 Section: x11
 Priority: extra
-Maintainer: Jeremy Desvages <jeremy@ulteo.com>
+Maintainer: Samuel Bovée <samuel@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 5), autotools-dev, libthunar-vfs-1-dev, xfce4-panel-dev (>= 4.4), libxml-parser-perl, libcupsys2-dev, libgconf2-dev
 Standards-Version: 3.7.3
 
