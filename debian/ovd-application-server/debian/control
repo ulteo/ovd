@@ -1,7 +1,7 @@
 Source: ovd-application-server
 Section: net
 Priority: extra
-Maintainer: Jeremy Desvages <jeremy@ulteo.com>
+Maintainer: Samuel Bovée <samuel@ulteo.com>
 Build-Depends: cdbs, debhelper (>= 5), ulteo-ovd-applets, intltool
 Standards-Version: 3.7.3
 
