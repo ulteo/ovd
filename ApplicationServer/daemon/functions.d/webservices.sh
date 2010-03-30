@@ -28,7 +28,7 @@ webservices_session_request() {
 }
 
 webservices_server_request() {
-    local args="status=$1&fqdn=${SERVERNAME}"
+    local args="status=$1&fqdn=${SERVERNAME}&web_port=${SERVER_HTTP_PORT}"
     local request="${SESSION_MANAGER_URL}/webservices/server_status.php?${args}"
 
     log_INFO "webservices_server_request: doing $request"

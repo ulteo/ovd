@@ -447,6 +447,7 @@ SPOOL=/var/spool/ulteo-ovd
 SPOOL_USERS=/var/spool/sessions
 SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"
 SERVERNAME=localhost
+SERVER_HTTP_PORT=80
 CONNECTION_TIMEOUT=20
 USE_CPULIMIT=1
 # end of default configuration
@@ -502,6 +503,7 @@ export BIN_DIR SPOOL
 export SPOOL_USERS
 export LOG_FILE LOG_FLAGS
 export SESSION_MANAGER_URL SERVERNAME
+export SERVER_HTTP_PORT
 export CONF_FILE
 export CONNECTION_TIMEOUT
 
