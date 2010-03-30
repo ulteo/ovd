@@ -183,6 +183,7 @@ daemon/Makefile
 daemon/init/Makefile
 daemon/log.d/Makefile
 daemon/modules_fs.d/Makefile
+daemon/modules_fs.d/shares.d/Makefile
 daemon/functions.d/Makefile
 tools/Makefile
 tools/portal/Makefile
