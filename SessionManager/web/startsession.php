@@ -341,6 +341,11 @@ foreach ($plugins_args as $k => $v)
 	$data[$k] = $v;
 
 if ($session->mode == 'external') {
+	if (! isset($data['start_app_id']) || $data['start_app_id'] == '') {
+		Logger::error('main', '(startsession) Missing parameter "start_app" which is required in "external" session mode');
+		die_error('Missing parameter "start_app" which is required in "external" session mode', __FILE__, __LINE__);
+	}
+
 	if (isset($data['persistent']))
 		unset($data['persistent']);
 	if (isset($data['shareable']))
