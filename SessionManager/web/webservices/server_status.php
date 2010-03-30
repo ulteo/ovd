@@ -66,22 +66,26 @@ if (! $exists) {
 
 	if (! $buf->isAuthorized()) {
 		Logger::error('main', '(webservices/server_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
+		header('HTTP/1.1 401 Unauthorized');
 		die('Server not authorized');
 	}
 
 	if (! $buf->isOnline()) {
 		Logger::error('main', '(webservices/server_status) Server not "ready" : \''.$_GET['fqdn'].'\'');
+		header('HTTP/1.1 405 Method Not Allowed');
 		die('Server not "ready"');
 	}
 
 	if (! $buf->isOK()) {
 		Logger::error('main', '(webservices/server_status) Server not OK : \''.$_GET['fqdn'].'\'');
+		header('HTTP/1.1 405 Method Not Allowed');
 		die('Server not OK');
 	}
 } else {
 	$buf = Abstract_Server::load($_GET['fqdn']);
 	if (! $buf->isAuthorized()) {
 		Logger::error('main', '(webservices/server_status) Server not authorized : \''.$_GET['fqdn'].'\' == \''.@gethostbyname($_GET['fqdn']).'\' ?');
+		header('HTTP/1.1 401 Unauthorized');
 		die('Server not authorized');
 	}
 }
