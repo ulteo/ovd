@@ -162,7 +162,7 @@ if ($_SESSION['type'] == 'invite') {
 if ($_SESSION['mode'] == 'external') {
 	$_SESSION['tokens'][$_GET['token']] = array(
 		'session_id'		=>	$_SESSION['session'],
-		'start_app_id'	=>	((isset($_SESSION['parameters']['start_app_id']) && $_SESSION['parameters']['start_app_id'] != '')?$_SESSION['parameters']['start_app_id']:NULL,
+		'start_app_id'	=>	((isset($_SESSION['parameters']['start_app_id']) && $_SESSION['parameters']['start_app_id'] != '')?$_SESSION['parameters']['start_app_id']:NULL),
 		'start_app_args'	=>	((isset($_SESSION['parameters']['start_app_args']) && $_SESSION['parameters']['start_app_args'] != '')?$_SESSION['parameters']['start_app_args']:NULL)
 	);
 }
