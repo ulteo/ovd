@@ -143,7 +143,7 @@ if (isset($_POST['join'])) {
 				echo '<tr><td>';
 				echo '<li><a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
 				echo '</td><td>';
-				if ($session->getAttribute('mode') == 'portal' && $session->getAttribute('status') == 2) {
+				if (in_array($session->getAttribute('mode'), array('portal', 'external')) && $session->getAttribute('status') == 2) {
 					echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 					echo '	<input type="hidden" id="desktop_size" value="auto" />';
 					echo '	<input type="hidden" id="session_debug_true" value="0" />';
