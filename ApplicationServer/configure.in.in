@@ -192,6 +192,7 @@ config/users/admin/Makefile
 examples/Makefile
 web/desktop/Makefile
 web/error/Makefile
+web/external/Makefile
 web/share/Makefile
 web/portal/Makefile
 web/portal/media/Makefile
