@@ -67,6 +67,11 @@ local_do_umount() {
     fi
 
     rmdir $USER_HOME
+
+    # Reset the access right to avoid another user be able to access
+    # to another user's file (same uid, different user)
+    chown root:root $LOCAL_HOME_BASE/$USER_LOGIN
+    chmod 000 $LOCAL_HOME_BASE/$USER_LOGIN
 }
 
 
