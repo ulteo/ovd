@@ -27,11 +27,15 @@ class AuthMethod_Token extends AuthMethod {
 		$user_node_name = $buf['user_node_name'];
 		$login_attribute_name = $buf['login_attribute_name'];
 
-		if (! isset($token_url) or $token_url=='')
+		if (! isset($token_url) or $token_url=='') {
+			Logger::error('main', 'Token URL is not defined');
 			return NULL;
+		}
 
-		if (! isset($_REQUEST['token']))
+		if (! isset($_REQUEST['token'])) {
+			Logger::warning('main', 'Missing parameter : token');
 			return NULL;
+		}
 
 		$token_url = str_replace('%TOKEN%', $_REQUEST['token'], $token_url);
 
