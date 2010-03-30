@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+/etc/init.d/ulteo-ovd stop
+
+#DEBHELPER#
+
+exit 0
