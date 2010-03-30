@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_session']['parameters']['client'] == 'browser') {
 	load_gettext();
 
 	$window_title = 'Ulteo Open Virtual Desktop';
@@ -30,11 +30,11 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 		if (! isset($_GET['token']))
 			throw new Exception('No Token');
 
-		if (isset($_SESSION['tokens'][$_GET['token']]['start_app_id']))
-			$app_id = $_SESSION['tokens'][$_GET['token']]['start_app_id'];
+		if (isset($_SESSION['ovd_session']['tokens'][$_GET['token']]['start_app_id']))
+			$app_id = $_SESSION['ovd_session']['tokens'][$_GET['token']]['start_app_id'];
 
-		if (isset($_SESSION['tokens'][$_GET['token']]['start_app_args']))
-			$app_args = $_SESSION['tokens'][$_GET['token']]['start_app_args'];
+		if (isset($_SESSION['ovd_session']['tokens'][$_GET['token']]['start_app_args']))
+			$app_args = $_SESSION['ovd_session']['tokens'][$_GET['token']]['start_app_args'];
 
 		if (! isset($app_id) || $app_id == NULL)
 			throw new Exception('No Application ID');
@@ -87,7 +87,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new External('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new External('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
 				daemon.app_id = '<?php echo $app_id; ?>';
 				daemon.app_args = '<?php echo $app_args; ?>';
 

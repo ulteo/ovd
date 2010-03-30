@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 Logger::debug('main', 'Starting webservices/print.php');
 
-if (!isset($_SESSION['session'])) {
+if (!isset($_SESSION['ovd_session']['session'])) {
 	Logger::error('main', 'Request not coming from Application Server');
 	header('HTTP/1.1 400 Bad Request');
 	die('ERROR - Request not coming from Application Server');
@@ -70,7 +70,7 @@ if (!isset($_GET["timestamp"]))
 if (!is_numeric($_GET["timestamp"]))
   return ret400("invalid arg time");
 
-$dir = getPathFromMagic($_SESSION['session']);
+$dir = getPathFromMagic($_SESSION['ovd_session']['session']);
 if (! (isset($dir) && $dir !== ''))
   return ret400("unknown user");
 

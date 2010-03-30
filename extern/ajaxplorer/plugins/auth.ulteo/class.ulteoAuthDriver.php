@@ -18,10 +18,10 @@ class ulteoAuthDriver extends serialAuthDriver  {
 	}
 
 	public function preLogUser($sessionId) {
-		if (! isset($_SESSION['parameters']['user_login']))
+		if (! isset($_SESSION['ovd_session']['parameters']['user_login']))
 			return;
 
-		$user_login = $_SESSION['parameters']['user_login'];
+		$user_login = $_SESSION['ovd_session']['parameters']['user_login'];
 
 		if (! isset($user_login))
 			return;

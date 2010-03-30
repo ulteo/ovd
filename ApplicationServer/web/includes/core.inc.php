@@ -39,5 +39,5 @@ function __autoload($class_name) {
 	}
 }
 
-if (! isset($_SESSION))
+if (! isset($_SESSION['ovd_session']))
 	session_start();

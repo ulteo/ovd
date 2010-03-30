@@ -45,13 +45,13 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
 
 				daemon.in_popup = false;
 				daemon.error_message = '<?php echo str_replace("'", "\'", _('Server: invalid token')); ?>';
 				daemon.i18n['session_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your session has ended unexpectedly')); ?>';
 				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
-				daemon.i18n['start_another_session'] = '<?php printf (str_replace("'", "\'", _('If you want to start another session, click <a href="%s">here</a>')), $_SESSION['sessionmanager_url']); ?>';
+				daemon.i18n['start_another_session'] = '<?php printf (str_replace("'", "\'", _('If you want to start another session, click <a href="%s">here</a>')), $_SESSION['ovd_session']['sessionmanager_url']); ?>';
 
 				daemon.do_ended();
 			});

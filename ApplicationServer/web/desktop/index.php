@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_session']['parameters']['client'] == 'browser') {
 	load_gettext();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -48,18 +48,18 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = 'desktop';
-				daemon.shareable = <?php echo (isset($_SESSION['parameters']['shareable']))?'true':'false'; ?>;
-				daemon.persistent = <?php echo (isset($_SESSION['parameters']['persistent']))?'true':'false'; ?>;
-				daemon.in_popup = <?php echo (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)?'true':'false'; ?>;
+				daemon.shareable = <?php echo (isset($_SESSION['ovd_session']['parameters']['shareable']))?'true':'false'; ?>;
+				daemon.persistent = <?php echo (isset($_SESSION['ovd_session']['parameters']['persistent']))?'true':'false'; ?>;
+				daemon.in_popup = <?php echo (isset($_SESSION['ovd_session']['popup']) && $_SESSION['ovd_session']['popup'] == 1)?'true':'false'; ?>;
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
 				daemon.i18n['session_end_ok'] = '<?php echo str_replace("'", "\'", _('Your session has ended, you can now close the window')); ?>';
 				daemon.i18n['session_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your session has ended unexpectedly')); ?>';
 				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
 				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
-				daemon.i18n['start_another_session'] = '<?php printf (str_replace("'", "\'", _('If you want to start another session, click <a href="%s">here</a>')), $_SESSION['sessionmanager_url']); ?>';
+				daemon.i18n['start_another_session'] = '<?php printf (str_replace("'", "\'", _('If you want to start another session, click <a href="%s">here</a>')), $_SESSION['ovd_session']['sessionmanager_url']); ?>';
 
 				daemon.loop();
 			});
@@ -68,7 +68,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 	<body>
 <?php
-if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
+if ($_SESSION['ovd_session']['owner'] && isset($_SESSION['ovd_session']['parameters']['shareable'])) {
 ?>
 		<div id="menuContainer" style="display: none;">
 			<div id="menuShareWarning"></div>
@@ -152,7 +152,7 @@ if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable'])) {
 		</div>
 
 		<div id="appletContainer" style="<?php
-if ($_SESSION['owner'] && isset($_SESSION['parameters']['shareable']))
+if ($_SESSION['ovd_session']['owner'] && isset($_SESSION['ovd_session']['parameters']['shareable']))
 	echo 'top: 18px; ';
 ?>display: none;">
 		</div>

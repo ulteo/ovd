@@ -159,11 +159,11 @@ function share_refresh_alive($dir_) {
 
 
 
-if (! isset($_SESSION['session']))
+if (! isset($_SESSION['ovd_session']['session']))
   die2(400, 'ERROR - No $session');
 
-$session = $_SESSION['session'];
-$session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
+$session = $_SESSION['ovd_session']['session'];
+$session_owner = (isset($_SESSION['ovd_session']['owner']) && $_SESSION['ovd_session']['owner']);
 
 
 $dom = new DomDocument('1.0', 'utf-8');
@@ -176,11 +176,11 @@ if ($status === false)
   $status = 4;
 
 //user_login can be changed by the daemon if it already exists in the chroot /etc/passwd (ex: root becomes root1)...
-if (! isset($_SESSION['previous_status']))
-	$_SESSION['previous_status'] = -1;
-if ($_SESSION['previous_status'] != 2 && $status == 2)
-	$_SESSION['parameters']['user_login'] = get_from_file(SESSION_PATH.'/'.$session.'/parameters/user_login');
-$_SESSION['previous_status'] = $status;
+if (! isset($_SESSION['ovd_session']['previous_status']))
+	$_SESSION['ovd_session']['previous_status'] = -1;
+if ($_SESSION['ovd_session']['previous_status'] != 2 && $status == 2)
+	$_SESSION['ovd_session']['parameters']['user_login'] = get_from_file(SESSION_PATH.'/'.$session.'/parameters/user_login');
+$_SESSION['ovd_session']['previous_status'] = $status;
 
 $session_node->setAttribute('status', $status);
 
@@ -220,21 +220,21 @@ if ($status == 2) {
     if (file_exists($session_dir.'/infos/keepmealive'))
       @touch($session_dir.'/infos/keepmealive');
 
-    if ($_SESSION['mode'] == 'desktop')
+    if ($_SESSION['ovd_session']['mode'] == 'desktop')
       @touch($session_dir.'/sessions/desktop/keepmealive');
     elseif (isset($_GET['application_id']) && $_GET['application_id'] != '')
       @touch($session_dir.'/sessions/'.$_GET['application_id'].'/keepmealive');
   }
 
   // Check print file
-  $r = getNextPrintFile($session, $_SESSION['print_timestamp']);
+  $r = getNextPrintFile($session, $_SESSION['ovd_session']['print_timestamp']);
   if ($r !== false) {
     $item = $dom->createElement('print');
     $item->setAttribute('path', $r[2]);
     $item->setAttribute('time', $r[1]);
     $session_node->appendChild($item);
 
-    $_SESSION['print_timestamp'] = $r[1] +1;
+    $_SESSION['ovd_session']['print_timestamp'] = $r[1] +1;
   }
 
   // Check Sharing
@@ -262,10 +262,10 @@ if ($status == 2) {
     $session_node->appendChild($item);
   }
   else {
-    if (! isset($_SESSION['current_token']))
+    if (! isset($_SESSION['ovd_session']['current_token']))
       die2(400, 'ERROR - no current token');
 
-    $file = $share_dir.'/'.$_SESSION['current_token'];
+    $file = $share_dir.'/'.$_SESSION['ovd_session']['current_token'];
     share_refresh_alive($file);
   }
 }

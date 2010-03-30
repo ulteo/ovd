@@ -20,11 +20,11 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-if (! isset($_SESSION) || ! isset($_SESSION['session']))
+if (! isset($_SESSION['ovd_session']) || ! isset($_SESSION['ovd_session']['session']))
 	die('CRITICAL ERROR'); // That's odd !
 
 $server = $_SERVER['SERVER_NAME'];
-$session = $_SESSION['session'];
+$session = $_SESSION['ovd_session']['session'];
 
 if (! isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
@@ -35,10 +35,10 @@ if (! isset($_GET['application_id']) || $_GET['application_id'] == '')
 $sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
 $sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
 
-$width = @$_SESSION['width'];
-$height = @$_SESSION['height'];
+$width = @$_SESSION['ovd_session']['width'];
+$height = @$_SESSION['ovd_session']['height'];
 
-if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
+if ($_SESSION['ovd_session']['mode'] != 'portal' || ($_SESSION['ovd_session']['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
 	$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
 	$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
@@ -59,7 +59,7 @@ $dom->appendChild($session_node);
 $parameters_node = $dom->createElement('parameters');
 $parameters_node->setAttribute('width', $width);
 $parameters_node->setAttribute('height', $height);
-$parameters_node->setAttribute('view_only', $_SESSION['parameters']['view_only']);
+$parameters_node->setAttribute('view_only', $_SESSION['ovd_session']['parameters']['view_only']);
 $session_node->appendChild($parameters_node);
 
 $ssh_node = $dom->createElement('ssh');
@@ -75,21 +75,21 @@ foreach ($ports as $port) {
 }
 $session_node->appendChild($ssh_node);
 
-if ($_SESSION['mode'] != 'portal' || ($_SESSION['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
+if ($_SESSION['ovd_session']['mode'] != 'portal' || ($_SESSION['ovd_session']['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
 	$vnc_node = $dom->createElement('vnc');
 	$vnc_node->setAttribute('port', $rfbport);
 	$vnc_node->setAttribute('passwd', $vncpass);
-	$vnc_node->setAttribute('quality', $_SESSION['parameters']['quality']);
+	$vnc_node->setAttribute('quality', $_SESSION['ovd_session']['parameters']['quality']);
 	$session_node->appendChild($vnc_node);
 }
 
-if (isset($_SESSION['parameters']['enable_proxy']) && $_SESSION['parameters']['enable_proxy'] == 1) {
+if (isset($_SESSION['ovd_session']['parameters']['enable_proxy']) && $_SESSION['ovd_session']['parameters']['enable_proxy'] == 1) {
 	$proxy_node = $dom->createElement('proxy');
-	$proxy_node->setAttribute('type', $_SESSION['parameters']['proxy_type']);
-	$proxy_node->setAttribute('host', $_SESSION['parameters']['proxy_host']);
-	$proxy_node->setAttribute('port', $_SESSION['parameters']['proxy_port']);
-	$proxy_node->setAttribute('username', $_SESSION['parameters']['proxy_username']);
-	$proxy_node->setAttribute('password', $_SESSION['parameters']['proxy_password']);
+	$proxy_node->setAttribute('type', $_SESSION['ovd_session']['parameters']['proxy_type']);
+	$proxy_node->setAttribute('host', $_SESSION['ovd_session']['parameters']['proxy_host']);
+	$proxy_node->setAttribute('port', $_SESSION['ovd_session']['parameters']['proxy_port']);
+	$proxy_node->setAttribute('username', $_SESSION['ovd_session']['parameters']['proxy_username']);
+	$proxy_node->setAttribute('password', $_SESSION['ovd_session']['parameters']['proxy_password']);
 	$session_node->appendChild($proxy_node);
 }
 

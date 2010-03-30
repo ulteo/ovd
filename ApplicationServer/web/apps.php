@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-$session = $_SESSION['session'];
+$session = $_SESSION['ovd_session']['session'];
 
 if (!isset($session) || $session == '') {
 	Logger::critical('main', '(portal/apps) No SESSION');
@@ -28,7 +28,7 @@ if (!isset($session) || $session == '') {
 }
 
 $ids = array();
-foreach ($_SESSION['parameters']['applications'] as $buf) {
+foreach ($_SESSION['ovd_session']['parameters']['applications'] as $buf) {
 	if ($buf == '')
 		continue;
 

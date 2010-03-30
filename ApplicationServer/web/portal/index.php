@@ -20,9 +20,9 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-$_SESSION['connected_since'] = time();
+$_SESSION['ovd_session']['connected_since'] = time();
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_session']['parameters']['client'] == 'browser') {
 	load_gettext();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -59,11 +59,11 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new Portal('ulteo-applet.jar', 'org.ulteo.applet.Portal', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new Portal('ulteo-applet.jar', 'org.ulteo.applet.Portal', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
 				daemon.access_id = 'portal';
-				daemon.shareable = <?php echo (isset($_SESSION['parameters']['shareable']))?'true':'false'; ?>;
-				daemon.persistent = <?php echo (isset($_SESSION['parameters']['persistent']))?'true':'false'; ?>;
-				daemon.in_popup = <?php echo (isset($_SESSION['popup']) && $_SESSION['popup'] == 1)?'true':'false'; ?>;
+				daemon.shareable = <?php echo (isset($_SESSION['ovd_session']['parameters']['shareable']))?'true':'false'; ?>;
+				daemon.persistent = <?php echo (isset($_SESSION['ovd_session']['parameters']['persistent']))?'true':'false'; ?>;
+				daemon.in_popup = <?php echo (isset($_SESSION['ovd_session']['popup']) && $_SESSION['ovd_session']['popup'] == 1)?'true':'false'; ?>;
 
 				daemon.i18n['share'] = '<?php echo str_replace("'", "\'", _('share')); ?>';
 				daemon.i18n['suspend'] = '<?php echo str_replace("'", "\'", _('suspend')); ?>';
@@ -73,7 +73,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				daemon.i18n['session_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your session has ended unexpectedly')); ?>';
 				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
 				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
-				daemon.i18n['start_another_session'] = '<?php printf (str_replace("'", "\'", _('If you want to start another session, click <a href="%s">here</a>')), $_SESSION['sessionmanager_url']); ?>';
+				daemon.i18n['start_another_session'] = '<?php printf (str_replace("'", "\'", _('If you want to start another session, click <a href="%s">here</a>')), $_SESSION['ovd_session']['sessionmanager_url']); ?>';
 
 				daemon.loop();
 			});
@@ -96,10 +96,10 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 				<table style="width: 100%;" border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="logo">
-							<img src="<?php echo $_SESSION['sessionmanager_url'].'/webservices/get_logo.php'; ?>" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
+							<img src="<?php echo $_SESSION['ovd_session']['sessionmanager_url'].'/webservices/get_logo.php'; ?>" height="80" alt="Ulteo Open Virtual Desktop" title="Ulteo Open Virtual Desktop" />
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc;" class="title centered">
-							<h1><?php printf(_('Welcome %s!'), $_SESSION['parameters']['user_displayname']); ?></h1>
+							<h1><?php printf(_('Welcome %s!'), $_SESSION['ovd_session']['parameters']['user_displayname']); ?></h1>
 						</td>
 						<td style="text-align: left; border-bottom: 1px solid #ccc; width: 60%;" class="title centered">
 							<div id="newsContainer" style="padding-left: 5px; padding-right: 5px; height: 70px; overflow: auto;">
@@ -109,7 +109,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 							<table border="0" cellspacing="0" cellpadding="10">
 								<tr>
 									<?php
-										if (isset($_SESSION['parameters']['persistent'])) {
+										if (isset($_SESSION['ovd_session']['parameters']['persistent'])) {
 									?>
 									<td style="text-align: center; vertical-align: middle;"><a href="#" onclick="daemon.suspend(); return false;"><img src="../media/image/suspend.png" width="32" height="32" alt="suspend" title="<?php echo _('Suspend'); ?>" /><br /><?php echo _('Suspend'); ?></a></td>
 									<?php

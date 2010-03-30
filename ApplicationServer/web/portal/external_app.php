@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_session']['parameters']['client'] == 'browser') {
 	load_gettext();
 
 	$window_title = 'Ulteo Open Virtual Desktop';
@@ -77,7 +77,7 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
+				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';

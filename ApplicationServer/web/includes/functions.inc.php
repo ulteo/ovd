@@ -196,7 +196,7 @@ function chroot_realpath($path_, $chroot_=CHROOT) {
 
 function load_gettext() {
 	/* set the locale */
-	$language = $_SESSION['parameters']['locale'];
+	$language = $_SESSION['ovd_session']['parameters']['locale'];
 	setlocale(LC_ALL, $language);
 	$domain = 'uovdaps';
 	bindtextdomain($domain, LOCALE_DIR);

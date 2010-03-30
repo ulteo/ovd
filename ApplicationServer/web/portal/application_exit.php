@@ -23,11 +23,11 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 Logger::debug('main', 'Starting portal/application_exit.php');
 
-if (! isset($_SESSION['session']))
+if (! isset($_SESSION['ovd_session']['session']))
   die2(400, 'ERROR - No $session');
 
-$session = $_SESSION['session'];
-$session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
+$session = $_SESSION['ovd_session']['session'];
+$session_owner = (isset($_SESSION['ovd_session']['owner']) && $_SESSION['ovd_session']['owner']);
 
 $application_dir = SESSION_PATH.'/'.$session.'/sessions/'.$_GET['access_id'];
 

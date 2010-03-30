@@ -73,7 +73,7 @@ class AJXP_User extends AbstractAjxpUser
 	}
 		
 	function getPref($prefName){
-		if ($prefName == 'lang') return strtolower(substr($_SESSION['parameters']['locale'], 0, 2));
+		if ($prefName == 'lang') return strtolower(substr($_SESSION['ovd_session']['parameters']['locale'], 0, 2));
 		if(isSet($this->prefs[$prefName])) return $this->prefs[$prefName];
 		return "";
 	}

@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $server = $_SERVER['SERVER_NAME'];
-$session = $_SESSION['session'];
+$session = $_SESSION['ovd_session']['session'];
 
 if (!isset($session) || $session == '') {
 	Logger::critical('main', '(start_app) No SESSION');

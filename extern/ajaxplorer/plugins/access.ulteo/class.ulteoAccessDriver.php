@@ -204,7 +204,7 @@ class ulteoAccessDriver extends AbstractAccessDriver {
 		$this->wrapper_cmd = 'aps-shell '.$this->wrapper_login;
 		$this->wrapper_homedir = $this->true_pwd();
 
-		$this->initXmlActionsFile(SESSION_PATH.'/'.$_SESSION['session'].'/parameters/ajaxplorerActions.xml');
+		$this->initXmlActionsFile(SESSION_PATH.'/'.$_SESSION['ovd_session']['session'].'/parameters/ajaxplorerActions.xml');
 		$this->xmlFilePath = INSTALL_PATH.'/plugins/access.ulteo/ulteoActions.xml';
 	}
 

@@ -34,13 +34,12 @@ if (!isset($_GET['token']) || $_GET['token'] == '')
 	redirect($sessionmanager_url);
 $token = $_GET['token'];
 
-if (!isset($_SESSION['current_token']) || $_SESSION['current_token'] != $token) {
-	session_destroy();
-	session_start();
+if (!isset($_SESSION['ovd_session']) ||  !isset($_SESSION['ovd_session']['current_token']) || $_SESSION['ovd_session']['current_token'] != $token) {
+	$_SESSION['ovd_session'] = array();
 }
-$_SESSION['current_token'] = $token;
+$_SESSION['ovd_session']['current_token'] = $token;
 
-$_SESSION['sessionmanager_url'] = $sessionmanager_url;
+$_SESSION['ovd_session']['sessionmanager_url'] = $sessionmanager_url;
 
 $xml = query_url(SESSIONMANAGER_URL.'/webservices/session_token.php?fqdn='.SERVERNAME.'&token='.$token);
 
@@ -63,14 +62,14 @@ if (is_null($session_node)) {
 }
 
 if ($session_node->hasAttribute('id'))
-	$_SESSION['session'] = $session_node->getAttribute('id');
+	$_SESSION['ovd_session']['session'] = $session_node->getAttribute('id');
 if ($session_node->hasAttribute('mode'))
-	$_SESSION['mode'] = $session_node->getAttribute('mode');
+	$_SESSION['ovd_session']['mode'] = $session_node->getAttribute('mode');
 if ($session_node->hasAttribute('type'))
-	$_SESSION['type'] = $session_node->getAttribute('type');
-$_SESSION['owner'] = false;
-if ($_SESSION['type'] == 'start' || $_SESSION['type'] == 'resume' || $_SESSION['type'] == 'reuse')
-	$_SESSION['owner'] = true;
+	$_SESSION['ovd_session']['type'] = $session_node->getAttribute('type');
+$_SESSION['ovd_session']['owner'] = false;
+if ($_SESSION['ovd_session']['type'] == 'start' || $_SESSION['ovd_session']['type'] == 'resume' || $_SESSION['ovd_session']['type'] == 'reuse')
+	$_SESSION['ovd_session']['owner'] = true;
 
 $parameters = array();
 foreach ($session_node->childNodes as $node) {
@@ -89,14 +88,14 @@ foreach ($settings as $setting) {
 	}
 }
 
-$_SESSION['parameters'] = $parameters;
-$_SESSION['parameters']['session_mode'] = $_SESSION['mode'];
+$_SESSION['ovd_session']['parameters'] = $parameters;
+$_SESSION['ovd_session']['parameters']['session_mode'] = $_SESSION['ovd_session']['mode'];
 
-$_SESSION['popup'] = $_SESSION['parameters']['popup'];
-$_SESSION['debug'] = (isset($_SESSION['parameters']['debug']))?1:0;
+$_SESSION['ovd_session']['popup'] = $_SESSION['ovd_session']['parameters']['popup'];
+$_SESSION['ovd_session']['debug'] = (isset($_SESSION['ovd_session']['parameters']['debug']))?1:0;
 
-if ($_SESSION['owner'])
-	$_SESSION['parameters']['view_only'] = 'No';
+if ($_SESSION['ovd_session']['owner'])
+	$_SESSION['ovd_session']['parameters']['view_only'] = 'No';
 
 $module_fs_node = $session_node->getElementsByTagname('module_fs')->item(0);
 if (is_null($module_fs_node)) {
@@ -104,13 +103,13 @@ if (is_null($module_fs_node)) {
 	redirect('error/');
 }
 
-$_SESSION['parameters']['module_fs'] = array();
-$_SESSION['parameters']['module_fs']['type'] = $module_fs_node->getAttribute('type');
+$_SESSION['ovd_session']['parameters']['module_fs'] = array();
+$_SESSION['ovd_session']['parameters']['module_fs']['type'] = $module_fs_node->getAttribute('type');
 
 $param_nodes = $module_fs_node->getElementsByTagname('param');
 foreach ($param_nodes as $param_node)
 	if ($param_node->hasAttribute('key') && $param_node->hasAttribute('value'))
-		$_SESSION['parameters']['module_fs'][$param_node->getAttribute('key')] = $param_node->getAttribute('value');
+		$_SESSION['ovd_session']['parameters']['module_fs'][$param_node->getAttribute('key')] = $param_node->getAttribute('value');
 
 $menu_node = $session_node->getElementsByTagname('menu')->item(0);
 if (is_null($menu_node)) {
@@ -119,67 +118,67 @@ if (is_null($menu_node)) {
 }
 
 $application_nodes = $menu_node->getElementsByTagname('application');
-$_SESSION['parameters']['applications'] = array();
+$_SESSION['ovd_session']['parameters']['applications'] = array();
 foreach ($application_nodes as $application_node) {
-	$_SESSION['parameters']['applications'][$application_node->getAttribute('id')] = '';
+	$_SESSION['ovd_session']['parameters']['applications'][$application_node->getAttribute('id')] = '';
 	if ($application_node->hasAttribute('id'))
-		$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= $application_node->getAttribute('id');
+		$_SESSION['ovd_session']['parameters']['applications'][$application_node->getAttribute('id')].= $application_node->getAttribute('id');
 	if ($application_node->hasAttribute('mode')) {
-		$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|'.$application_node->getAttribute('mode');
+		$_SESSION['ovd_session']['parameters']['applications'][$application_node->getAttribute('id')].= '|'.$application_node->getAttribute('mode');
 
 		if ($application_node->getAttribute('mode') == 'local') {
 			if ($application_node->hasAttribute('desktopfile'))
-				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|'.$application_node->getAttribute('desktopfile');
+				$_SESSION['ovd_session']['parameters']['applications'][$application_node->getAttribute('id')].= '|'.$application_node->getAttribute('desktopfile');
 		} elseif ($application_node->getAttribute('mode') == 'virtual') {
 			if ($application_node->hasAttribute('reload') && $application_node->getAttribute('reload') == 1)
-				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|reload';
+				$_SESSION['ovd_session']['parameters']['applications'][$application_node->getAttribute('id')].= '|reload';
 			else
-				$_SESSION['parameters']['applications'][$application_node->getAttribute('id')].= '|cache';
+				$_SESSION['ovd_session']['parameters']['applications'][$application_node->getAttribute('id')].= '|cache';
 		}
 	}
 }
 
-$_SESSION['print_timestamp'] = time();
+$_SESSION['ovd_session']['print_timestamp'] = time();
 
-if ($_SESSION['type'] == 'invite') {
-	$session_dir = SESSION_PATH.'/'.$_SESSION['session'];
+if ($_SESSION['ovd_session']['type'] == 'invite') {
+	$session_dir = SESSION_PATH.'/'.$_SESSION['ovd_session']['session'];
 
 	$buf = $session_dir.'/infos/share/'.$token;
 	@mkdir($buf);
-	@file_put_contents($buf.'/email', $_SESSION['parameters']['invite_email']);
-	@file_put_contents($buf.'/mode', ($_SESSION['parameters']['view_only'] == 'No')?'active':'passive');
-	if (isset($_SESSION['parameters']['access_id']) && $_SESSION['parameters']['access_id'] != '')
-		@file_put_contents($buf.'/access_id', $_SESSION['parameters']['access_id']);
+	@file_put_contents($buf.'/email', $_SESSION['ovd_session']['parameters']['invite_email']);
+	@file_put_contents($buf.'/mode', ($_SESSION['ovd_session']['parameters']['view_only'] == 'No')?'active':'passive');
+	if (isset($_SESSION['ovd_session']['parameters']['access_id']) && $_SESSION['ovd_session']['parameters']['access_id'] != '')
+		@file_put_contents($buf.'/access_id', $_SESSION['ovd_session']['parameters']['access_id']);
 
 	$buf_access_id = @file_get_contents($buf.'/access_id');
 
-	$_SESSION['tokens'][$_GET['token']] = array(
-		'session_id'	=>	$_SESSION['session'],
+	$_SESSION['ovd_session']['tokens'][$_GET['token']] = array(
+		'session_id'	=>	$_SESSION['ovd_session']['session'],
 		'access_id'		=>	$buf_access_id
 	);
 }
 
-if ($_SESSION['mode'] == 'external') {
-	$_SESSION['tokens'][$_GET['token']] = array(
-		'session_id'		=>	$_SESSION['session'],
-		'start_app_id'	=>	((isset($_SESSION['parameters']['start_app_id']) && $_SESSION['parameters']['start_app_id'] != '')?$_SESSION['parameters']['start_app_id']:NULL),
-		'start_app_args'	=>	((isset($_SESSION['parameters']['start_app_args']) && $_SESSION['parameters']['start_app_args'] != '')?$_SESSION['parameters']['start_app_args']:NULL)
+if ($_SESSION['ovd_session']['mode'] == 'external') {
+	$_SESSION['ovd_session']['tokens'][$_GET['token']] = array(
+		'session_id'		=>	$_SESSION['ovd_session']['session'],
+		'start_app_id'	=>	((isset($_SESSION['ovd_session']['parameters']['start_app_id']) && $_SESSION['ovd_session']['parameters']['start_app_id'] != '')?$_SESSION['ovd_session']['parameters']['start_app_id']:NULL),
+		'start_app_args'	=>	((isset($_SESSION['ovd_session']['parameters']['start_app_args']) && $_SESSION['ovd_session']['parameters']['start_app_args'] != '')?$_SESSION['ovd_session']['parameters']['start_app_args']:NULL)
 	);
 }
 
-if ($_SESSION['type'] == 'start')
-	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['session']);
+if ($_SESSION['ovd_session']['type'] == 'start')
+	@touch(SESSION2CREATE_PATH.'/'.$_SESSION['ovd_session']['session']);
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser')
-	redirect($_SESSION['mode'].'/?token='.$_GET['token']);
+if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_session']['parameters']['client'] == 'browser')
+	redirect($_SESSION['ovd_session']['mode'].'/?token='.$_GET['token']);
 
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
-$session_node->setAttribute('mode', $_SESSION['mode']);
-$session_node->setAttribute('shareable', ((isset($_SESSION['parameters']['shareable']))?'true':'false'));
-$session_node->setAttribute('persistent', ((isset($_SESSION['parameters']['persistent']))?'true':'false'));
+$session_node->setAttribute('mode', $_SESSION['ovd_session']['mode']);
+$session_node->setAttribute('shareable', ((isset($_SESSION['ovd_session']['parameters']['shareable']))?'true':'false'));
+$session_node->setAttribute('persistent', ((isset($_SESSION['ovd_session']['parameters']['persistent']))?'true':'false'));
 $aps_node = $dom->createElement('aps');
 $aps_node->setAttribute('protocol', ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')?'https':'http'));
 $aps_node->setAttribute('server', $_SERVER['SERVER_NAME']);

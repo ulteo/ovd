@@ -22,15 +22,15 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 Logger::debug('main', 'Starting exit.php');
 
-if (! isset($_SESSION['session']))
+if (! isset($_SESSION['ovd_session']['session']))
   die2(400, 'ERROR - No $session');
 
-if (! isset($_SESSION['current_token']))
+if (! isset($_SESSION['ovd_session']['current_token']))
   die2(400, 'ERROR - no current token');
 
-$session = $_SESSION['session'];
-$session_owner = (isset($_SESSION['owner']) && $_SESSION['owner']);
-$token = $_SESSION['current_token'];
+$session = $_SESSION['ovd_session']['session'];
+$session_owner = (isset($_SESSION['ovd_session']['owner']) && $_SESSION['ovd_session']['owner']);
+$token = $_SESSION['ovd_session']['current_token'];
 
 $session_dir = SESSION_PATH.'/'.$session;
 
@@ -46,6 +46,6 @@ else {
     @touch($file);
 }
 
-unset($_SESSION);
+unset($_SESSION['ovd_session']);
 
 die();

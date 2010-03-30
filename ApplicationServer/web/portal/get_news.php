@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-$xml = query_url(SESSIONMANAGER_URL.'/webservices/get_news.php?fqdn='.SERVERNAME.'&login='.$_SESSION['parameters']['user_login']);
+$xml = query_url(SESSIONMANAGER_URL.'/webservices/get_news.php?fqdn='.SERVERNAME.'&login='.$_SESSION['ovd_session']['parameters']['user_login']);
 
 if (! $xml) {
 	Logger::error('main', '(get_news) Unable to fetch news from the SessionManager');
@@ -41,7 +41,7 @@ echo '<table style="width: 100%; margin-left: auto; margin-right: auto;" border=
 foreach ($new_nodes as $new_node) {
 	echo '<tr><td style="text-align: left;">';
 	$color = 'black';
-	if ($new_node->getAttribute('timestamp') > $_SESSION['connected_since'])
+	if ($new_node->getAttribute('timestamp') > $_SESSION['ovd_session']['connected_since'])
 		$color = 'red';
 	echo '<span style="font-size: 1.1em; color: '.$color.';"><em>'.date('d/m/Y', $new_node->getAttribute('timestamp')).'</em> - <strong>'.$new_node->getAttribute('title').'</strong> - '.$new_node->firstChild->nodeValue.'</span>';
 	echo '</td></tr>';

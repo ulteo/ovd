@@ -20,7 +20,7 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'] == 'browser') {
+if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_session']['parameters']['client'] == 'browser') {
 	load_gettext();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -48,8 +48,8 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new SharedApp('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['debug'] == 1)?'1':'0'; ?>);
-				daemon.access_id = '<?php if (isset($_SESSION['tokens']) && isset($_SESSION['tokens'][$_GET['token']])) echo $_SESSION['tokens'][$_GET['token']]['access_id']; ?>';
+				daemon = new SharedApp('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
+				daemon.access_id = '<?php if (isset($_SESSION['ovd_session']['tokens']) && isset($_SESSION['ovd_session']['tokens'][$_GET['token']])) echo $_SESSION['ovd_session']['tokens'][$_GET['token']]['access_id']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
 				daemon.i18n['share_end_ok'] = '<?php echo str_replace("'", "\'", _('Shared application has ended, you can now close the window')); ?>';

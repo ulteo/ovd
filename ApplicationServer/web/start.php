@@ -32,7 +32,7 @@ function generateAjaxplorerActionsXML() {
 	$driver_node->appendChild($actions_node);
 
 	$actions = array();
-	foreach ($_SESSION['parameters']['applications'] as $app_line) {
+	foreach ($_SESSION['ovd_session']['parameters']['applications'] as $app_line) {
 		$buf = explode('|', $app_line);
 
 		$app_id = $buf[0];
@@ -41,7 +41,7 @@ function generateAjaxplorerActionsXML() {
 		if ($app_desktopfile == 'cache')
 			$app_desktopfile = '/var/spool/ulteo-ovd/virtual_apps/'.$app_id.'.desktop';
 
-		$buf = new DesktopFile(CHROOT.'/'.$app_desktopfile, $_SESSION['parameters']['locale']);
+		$buf = new DesktopFile(CHROOT.'/'.$app_desktopfile, $_SESSION['ovd_session']['parameters']['locale']);
 		$buf->parse();
 
 		if (count($buf->getMimeType()) == 0)
@@ -147,47 +147,47 @@ EOF;
 
 	$xml = $dom->saveXML();
 
-	put_to_file(SESSION_PATH.'/'.$_SESSION['session'].'/parameters/ajaxplorerActions.xml', $xml);
+	put_to_file(SESSION_PATH.'/'.$_SESSION['ovd_session']['session'].'/parameters/ajaxplorerActions.xml', $xml);
 
 	return true;
 }
 
-$session = $_SESSION['session'];
+$session = $_SESSION['ovd_session']['session'];
 
 if (!isset($session) || $session == '')
 	die('CRITICAL ERROR'); // That's odd !
 
-$_SESSION['width'] = @$_REQUEST['width'];
-$_SESSION['height'] = @$_REQUEST['height'];
+$_SESSION['ovd_session']['width'] = @$_REQUEST['width'];
+$_SESSION['ovd_session']['height'] = @$_REQUEST['height'];
 
-if ($_SESSION['type'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
-	put_to_file(SESSION_PATH.'/'.$session.'/parameters/geometry', $_SESSION['width'].'x'.$_SESSION['height']);
+if ($_SESSION['ovd_session']['type'] == 'start' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 0) {
+	put_to_file(SESSION_PATH.'/'.$session.'/parameters/geometry', $_SESSION['ovd_session']['width'].'x'.$_SESSION['ovd_session']['height']);
 
-	foreach ($_SESSION['parameters'] as $k => $v)
+	foreach ($_SESSION['ovd_session']['parameters'] as $k => $v)
 		put_to_file(SESSION_PATH.'/'.$session.'/parameters/'.$k, $v);
 
 	@unlink(SESSION_PATH.'/'.$session.'/parameters/module_fs');
 	@mkdir(SESSION_PATH.'/'.$session.'/parameters/module_fs', 0750);
-	foreach ($_SESSION['parameters']['module_fs'] as $k => $v)
+	foreach ($_SESSION['ovd_session']['parameters']['module_fs'] as $k => $v)
 		put_to_file(SESSION_PATH.'/'.$session.'/parameters/module_fs/'.$k, $v);
 
 	$buf = '';
-	foreach ($_SESSION['parameters']['applications'] as $app)
+	foreach ($_SESSION['ovd_session']['parameters']['applications'] as $app)
 		$buf .= $app."\n";
 	put_to_file(SESSION_PATH.'/'.$session.'/parameters/applications', $buf);
 
-	if ($_SESSION['mode'] == 'desktop')
+	if ($_SESSION['ovd_session']['mode'] == 'desktop')
 		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-	if ($_SESSION['mode'] == 'portal')
+	if ($_SESSION['ovd_session']['mode'] == 'portal')
 		generateAjaxplorerActionsXML();
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 1);
-} elseif ($_SESSION['type'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
-	if ($_SESSION['mode'] == 'desktop')
+} elseif ($_SESSION['ovd_session']['type'] == 'resume' && get_from_file(SESSION_PATH.'/'.$session.'/infos/status') == 10) {
+	if ($_SESSION['ovd_session']['mode'] == 'desktop')
 		@touch(SESSION_PATH.'/'.$session.'/infos/keepmealive');
 
-	if ($_SESSION['mode'] == 'portal')
+	if ($_SESSION['ovd_session']['mode'] == 'portal')
 		generateAjaxplorerActionsXML();
 
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 11);
