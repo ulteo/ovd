@@ -37,7 +37,8 @@ class Application(dict):
                                        'name'], # Non standard but used by IBM Lotus Symphony
                              'Icon' : ['Icon'],
                              'Categories' : ['Categories'],
-                             'Comment' : ['Comment','GenericName[en]', 'GenericName']
+                             'Comment' : ['Comment','GenericName[en]', 'GenericName'],
+                             'MimeType': ['MimeType']
                              }
 
         # Default values
@@ -57,6 +58,8 @@ class Application(dict):
         node_exe = doc.createElement("executable")
         if self.has_key("Icon"):
             node_exe.setAttribute("icon", self["Icon"])
+        if self.has_key("MimeType"):
+            node_exe.setAttribute("mimetypes", self["MimeType"])
         node_exe.setAttribute("command", self["Exec"])
  
         node_app.appendChild(node_exe)
