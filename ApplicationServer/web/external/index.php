@@ -166,6 +166,9 @@ if (isset($_SESSION['parameters']['client']) && $_SESSION['parameters']['client'
 
 		<div id="appletContainer" style="display: none;">
 		</div>
+
+		<div id="printerContainer">
+		</div>
 	</body>
 </html>
 <?php
