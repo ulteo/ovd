@@ -48,7 +48,7 @@ shares_do_mount() {
         local type=$(head -n 2 $share| tail -n 1)
 
         if [ "$type" != "cifs" ] && [ "$type" != "webdav" ]; then
-            log_WARN "Unkonw type '$type' for share $share"
+            log_WARN "Unknown type '$type' for share $share"
             continue
         fi
         
