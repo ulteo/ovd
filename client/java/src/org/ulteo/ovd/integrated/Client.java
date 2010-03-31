@@ -24,13 +24,17 @@ import gnu.getopt.Getopt;
 import java.util.Observable;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.rdp.Connection;
+import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.OvdAppListener;
+
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.propero.rdp.RdpConnection;
 
-public class Client implements Observer {
+public class Client implements Observer, OvdAppListener{
 	public static final String productName = "Ulteo OVD Integrated Client";
 
 	public static void usage() {
@@ -76,7 +80,7 @@ public class Client implements Observer {
 	}
 
 	private SessionManagerCommunication smComm = null;
-	private ArrayList<RdpConnection> connections = null;
+	private ArrayList<Connection> connections = null;
 	private Spool spool = null;
 	private SystemAbstract sys = null;
 
@@ -104,11 +108,13 @@ public class Client implements Observer {
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, "This Operating System is not supported");
 			}
 
-			for (RdpConnection rc : this.connections) {
-				rc.addObserver(this);
-				new Thread(rc).start();
+			for (Connection co : this.connections) {
+				co.connection.addObserver(this);
+				co.channel.addOvdAppListener(this);
+				co.thread = new Thread(co.connection);
+				co.thread.start();
 			}
-			
+
 			Thread fileListener = new Thread(this.spool);
 			fileListener.start();
 			while (fileListener.isAlive()) {
@@ -130,9 +136,7 @@ public class Client implements Observer {
 	}
 
 	private void addAvailableConnection(RdpConnection rc) {
-		for (Application app : rc.getAppsList()) {
-			this.sys.install(app);
-		}
+
 		this.spool.addConnection(rc);
 	}
 
@@ -161,5 +165,34 @@ public class Client implements Observer {
 			Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+rc.opt.hostname);
 			this.removeAvailableConnection(rc);
 		}
+	}
+
+	@Override
+	public void ovdInited(OvdAppChannel o) {
+		for (Connection co : this.connections) {
+			if (co.channel == o) {
+				if (! co.inited) {
+					for (Application app : co.connection.getAppsList()) {
+						this.sys.install(app);
+					}
+					co.inited = true;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void ovdInstanceError(int instance) {
+		
+	}
+
+	@Override
+	public void ovdInstanceStarted(int instance) {
+		
+	}
+
+	@Override
+	public void ovdInstanceStopped(int instance) {
+		
 	}
 }

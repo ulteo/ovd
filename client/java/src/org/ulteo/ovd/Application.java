@@ -5,30 +5,31 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import javax.swing.ImageIcon;
-import net.propero.rdp.RdpConnection;
+
+import org.ulteo.rdp.Connection;
 
 public class Application implements Comparator<Object>{
 	private int id = -1;
 	private String cmd = "";
 	private String name = "";
 	private ArrayList<String> supportedMime = null;
-	private RdpConnection connection = null;
+	private Connection connection = null;
 	private ImageIcon icon = null;
 	//private JMenuItem menuItem = null;
 	
 	public Application() {}
 
-	public Application(RdpConnection connection_, int id_, String name_, String cmd_, URL icon_) {
+	public Application(Connection connection_, int id_, String name_, String cmd_, URL icon_) {
 		this.supportedMime = new ArrayList<String>();
 		this.init(connection_, id_, name_, cmd_, icon_);
 	}
 
-	public Application(RdpConnection connection_, int id_, String name_, String cmd_, ArrayList<String> mimeType_, URL icon_) {
+	public Application(Connection connection_, int id_, String name_, String cmd_, ArrayList<String> mimeType_, URL icon_) {
 		this.supportedMime = mimeType_;
 		this.init(connection_, id_, name_, cmd_, icon_);
 	}
 
-	private void init(RdpConnection connection_, int id_, String name_, String cmd_, URL icon_) {
+	private void init(Connection connection_, int id_, String name_, String cmd_, URL icon_) {
 		this.connection = connection_;
 		this.id = id_;
 		this.name = name_;
@@ -77,11 +78,11 @@ public class Application implements Comparator<Object>{
 		this.name = name_;
 	}
 
-	public RdpConnection getConnection() {
+	public Connection getConnection() {
 		return this.connection;
 	}
 
-	public void setConnection(RdpConnection connection_) {
+	public void setConnection(Connection connection_) {
 		this.connection = connection_;
 	}
 

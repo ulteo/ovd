@@ -54,10 +54,7 @@ public class ApplicationInstance {
 			System.err.println("You have to set the application token before execute startapp().");
 		}
 
-		/* ToDo: use OVDapp channel instead of SPAWN
-		 * this.app.getConnection().common.seamlessChannelInstance.send_startapp(this.token, this.app.getCmd(), null);
-		 */
-		this.app.getConnection().common.seamlessChannelInstance.send_spawn(this.app.getCmd());
+		this.app.getConnection().channel.sendStartApp((int) this.token, this.app.getId());
 	}
 
 	public void startApp(long token_) throws RdesktopException, IOException, CryptoException {
