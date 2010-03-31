@@ -64,7 +64,8 @@ elif sys.platform == "linux2":
    setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role', 
                    'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
                    'ovd.Platform', 'ovd.Platform.Linux']
-   setup_args["data_files"] = [('/usr/bin',['simpleServer'])]
+   setup_args["data_files"] = [('/usr/bin',['simpleServer']),
+                               ('/etc',['config/ovd-slaveserver.conf'])]
 
 
 else:
