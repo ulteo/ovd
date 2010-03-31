@@ -41,7 +41,7 @@ shares_do_mount() {
 
     mkdir -p $SHARES_MOUNT_POINT
 
-    for share in ${SESSID_DIR}/parameters/module_fs/shares_*; do
+    for share in $(find ${SESSID_DIR}/parameters/module_fs/ -name 'shares_*'); do
         local id=$(basename $share |mawk '{ print substr($1, 8) }')
 
         local name=$(head -n 1 $share| tail -n 1)
@@ -74,8 +74,8 @@ shares_do_mount() {
 }
 
 shares_do_umount() {
-    for share in ${SESSID_DIR}/parameters/module_fs/shares_*; do
-        local id=$(basename $share |mawk '{ print substr($1, 7) }')
+    for share in $(find ${SESSID_DIR}/parameters/module_fs/ -name 'shares_*'); do
+        local id=$(basename $share |mawk '{ print substr($1, 8) }')
         local name=$(head -n 1 $share)
         
         local dir="$USER_HOME/$name"
@@ -86,8 +86,9 @@ shares_do_umount() {
             rmdir "$dir"
         fi
 
-        local dir=$SHARES_MOUNT_POINT/$id
+        local dir="$SHARES_MOUNT_POINT/$id"
         if is_mount_point "$dir"; then
+            log_INFO "shares: umounting $dir"
             umount "$dir" || log_ERROR "shares: Failed to umount $dir"
 
             rmdir "$dir"
