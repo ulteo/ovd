@@ -60,7 +60,7 @@ var Daemon = Class.create({
 		this.debug = debug_;
 
 		this.protocol = window.location.protocol;
-		this.server = window.location.host;
+		this.server = window.location.hostname;
 		this.port = window.location.port;
 		if (this.port == '')
 			this.port = 80;
