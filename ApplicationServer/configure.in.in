@@ -189,23 +189,6 @@ config/Makefile
 config/users/Makefile
 config/users/admin/Makefile
 examples/Makefile
-web/desktop/Makefile
-web/error/Makefile
-web/share/Makefile
-web/portal/Makefile
-web/portal/media/Makefile
-web/portal/media/image/Makefile
-web/webservices/Makefile
-web/media/image/Makefile
-web/media/script/Makefile
-web/media/script/lib/prototype/Makefile
-web/media/script/lib/scriptaculous/Makefile
-web/media/script/lib/nifty/Makefile
-web/media/script/lib/Makefile
-web/media/Makefile
-web/includes/Makefile
-web/classes/Makefile
-web/Makefile
 ])
 AC_OUTPUT
 
