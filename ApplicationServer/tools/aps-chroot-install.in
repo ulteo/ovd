@@ -223,7 +223,7 @@ sed -i "s/^www-data.*$/www-data:x:$APACHE_GID:/" $CHROOT_PATH/etc/group
 
 # set the main vhost
 ALIASFILE=@SYSCONFDIR@/ulteo/applicationserver/apache2.conf
-ln -sf $ALIASFILE $APACHE_DIR/application-server.conf
+ln -sf $ALIASFILE $APACHE_DIR/applicationserver
 
 # give write permissions to apache for the htaccess file
 HTACCESS=@SYSCONFDIR@/ulteo/applicationserver/dot.htaccess

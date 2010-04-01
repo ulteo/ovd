@@ -72,7 +72,7 @@ set_apache () {
     chmod 660 $CONFFILE
 
     mkdir -p $APACHE_DIR
-    ln -sf $ALIASFILE $APACHE_DIR/session-manager.conf
+    ln -sf $ALIASFILE $APACHE_DIR/sessionmanager
 }
 
 set_admin_credentials () {
