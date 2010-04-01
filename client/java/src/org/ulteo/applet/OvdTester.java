@@ -522,7 +522,7 @@ public class OvdTester extends java.applet.Applet implements java.lang.Runnable 
 			"('" + this.proxyType + "', '" +
 			this.proxyHost + "', '" +
 			this.proxyPort + "', '" +
-			this.proxyUsername + "', " +
+			this.proxyUsername + "', '" +
 			this.proxyPassword + "');";
 		System.out.println("JS command: "+buffer);
 
