@@ -124,11 +124,6 @@ function toggleContent(container) {
 }
 
 Event.observe(window, 'load', function() {
-	if ($('loginBox')) {
-		Effect.Center($('loginBox'));
-		$('loginBox').style.top = (parseInt($('loginBox').style.top)-50)+'px';
-	}
-
 	$('lockWrap').hide();
 	$('lockWrap').style.width = document.body.clientWidth+'px';
 	$('lockWrap').style.height = document.body.clientHeight+'px';
@@ -236,4 +231,14 @@ function hideInfo() {
 
 function updateFlag(id_) {
 	$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
+}
+
+function switchSettings() {
+	if ($('advanced_settings').visible()) {
+		$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="9" height="9" alt="" title="" />';
+		Effect.SlideUp($('advanced_settings'));
+	} else {
+		$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="9" height="9" alt="" title="" />';
+		Effect.SlideDown($('advanced_settings'));
+	}
 }

@@ -34,6 +34,24 @@ div.rounded {
 	padding: 10px;
 }
 
+#loginBox {
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	background: #fff;
+}
+
+#loginForm {
+	width: 95%;
+	min-height: 191px;
+	margin-left: auto;
+	margin-right: 0px;
+	padding: 10px;
+	background: #eee;
+}
+
 #splashContainer {
 	border: 0px;
 
