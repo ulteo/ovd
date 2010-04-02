@@ -1,3 +1,6 @@
+SUBDIRS = flags \
+          icons
+
 scripts_DATA = cross.png \
                loader.gif \
                logo.png \

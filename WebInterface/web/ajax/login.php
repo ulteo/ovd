@@ -67,6 +67,7 @@ function query_url_post_xml($url_, $xml_) {
 }
 
 $_SESSION['interface'] = array();
+$_SESSION['interface']['keymap'] = $_POST['keymap'];
 $_SESSION['interface']['in_popup'] = $_POST['use_popup'];
 $_SESSION['interface']['debug'] = $_POST['debug'];
 
@@ -86,6 +87,8 @@ $dom = new DomDocument('1.0', 'utf-8');
 
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('mode', $_POST['mode']);
+if (array_key_exists('language', $_POST))
+	$session_node->setAttribute('language', $_POST['language']);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('login', $_POST['login']);
 $user_node->setAttribute('password', $_POST['password']);
@@ -118,6 +121,7 @@ if (! is_object($session_node)) {
 }
 $_SESSION['session_id'] = $session_node->getAttribute('id');
 $_SESSION['session_mode'] = $session_node->getAttribute('mode');
+$_SESSION['session_language'] = $_POST['language'];
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {

@@ -4,7 +4,7 @@ var window_;
 
 var startsession = false;
 
-function startSession(login_, password_, mode_) {
+function startSession() {
 	disableLogin();
 
 	var use_popup = false;
@@ -20,9 +20,11 @@ function startSession(login_, password_, mode_) {
 		{
 			method: 'post',
 			parameters: {
-				login: login_,
-				password: password_,
-				mode: mode_,
+				login: $('user_login').value,
+				password: $('user_password').value,
+				mode: $('session_mode').value,
+				language: $('session_language').value,
+				keymap: $('session_keymap').value,
 				use_popup: use_popup,
 				debug: debug
 			},
@@ -230,4 +232,8 @@ function hideInfo() {
 	$('infoWrap').innerHTML = '';
 	$('infoWrap').style.width = '';
 	$('infoWrap').style.height = '';
+}
+
+function updateFlag(id_) {
+	$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
 }

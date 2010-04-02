@@ -58,6 +58,8 @@ web/applet/Makefile
 web/includes/Makefile
 web/media/Makefile
 web/media/image/Makefile
+web/media/image/flags/Makefile
+web/media/image/icons/Makefile
 web/media/script/Makefile
 web/media/script/lib/Makefile
 web/media/script/lib/nifty/Makefile

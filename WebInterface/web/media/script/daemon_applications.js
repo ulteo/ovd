@@ -76,6 +76,8 @@ var Applications = Class.create(Daemon, {
 			<param name="cache_archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
 			<param name="cache_archive_ex" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" /> \
 			<param name="mayscript" value="true" /> \
+			\
+			<param name="keymap" value="'+this.keymap+'" /> \
 		</applet>';
 
 		$('applicationsAppletContainer').show();

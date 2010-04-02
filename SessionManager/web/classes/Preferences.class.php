@@ -280,9 +280,6 @@ class Preferences {
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
 		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français','ru_RU'=>'Русский'));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('windows_keymap', _('Default windows keymap for session'), _('Default windows keymap for session'), _('Default windows keymap for session'), 'en-us');
-		$c->setContentAvailable(array('ar' => 'ar', 'cs' => 'cs', 'da' => 'da', 'de' => 'de', 'de-ch' => 'de-ch', 'en-dv' => 'en-dv', 'en-gb' => 'en-gb', 'en-us' => 'en-us', 'es' => 'es', 'et' => 'et', 'fi' => 'fi', 'fo' => 'fo', 'fr' => 'fr', 'fr-be' => 'fr-be', 'fr-ca' => 'fr-ca', 'fr-ch' => 'fr-ch', 'he' => 'he', 'hr' => 'hr', 'hu' => 'hu', 'is' => 'is', 'it' => 'it', 'ja' => 'ja', 'ko' => 'ko', 'lt' => 'lt', 'lv' => 'lv', 'mk' => 'mk', 'nl' => 'nl', 'nl-be' => 'nl-be', 'no' => 'no', 'pl' => 'pl', 'pt' => 'pt', 'pt-br' => 'pt-br', 'ru' => 'ru', 'sl' => 'sl', 'sv' => 'sv', 'th' => 'th', 'tr' => 'tr'));
-		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 'high');
 		$c->setContentAvailable(array('lowest'=>_('8-bits'),'medium'=>_('Medium'),'high'=>_('High'),'highest'=>_('Highest')));
 		$this->add($c,'general','session_settings_defaults');
@@ -315,7 +312,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'windows_keymap' => _('windows keymap'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop'), 'start_app' => _('Launch an application when the desktop is starting'), 'start_app_args' => _('Launch an application with extra arguments')));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop'), 'start_app' => _('Launch an application when the desktop is starting'), 'start_app_args' => _('Launch an application with extra arguments')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));

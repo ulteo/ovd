@@ -20,6 +20,9 @@
  **/
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
+
+$languages = get_available_languages();
+$keymaps = get_available_keymaps();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -72,10 +75,13 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 							</td>
 							<td style="text-align: center; vertical-align: middle;">
 								<div id="loginForm" style="width: 90%; margin-left: auto; margin-right: 0px; padding: 10px; background: #eee;" class="rounded">
-									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession($('user_login').value, $('user_password').value, $('session_mode').value);">
+									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/user_login.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
@@ -84,6 +90,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 											</tr>
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/user_password.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Password'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
@@ -92,6 +101,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 											</tr>
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/session_mode.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Mode'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
@@ -103,6 +115,41 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 											</tr>
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/session_language.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
+													<strong><?php echo _('Language'); ?></strong>
+												</td>
+												<td style="text-align: center; vertical-align: middle;">
+													<select id="session_language" onchange="updateFlag($('session_language').value);" onkeyup="updateFlag($('session_language').value);">
+														<?php
+															foreach ($languages as $language)
+																echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == 'en-us')?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
+														?>
+													</select><span> <img id="session_language_flag" /> </span><script type="text/javascript">Event.observe(window, 'load', updateFlag('en-us'));</script>
+												</td>
+											</tr>
+											<tr>
+												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/keyboard_layout.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
+													<strong><?php echo _('Keyboard layout'); ?></strong>
+												</td>
+												<td style="text-align: center; vertical-align: middle;">
+													<select id="session_keymap">
+														<?php
+															foreach ($keymaps as $keymap)
+																echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == 'en-us')?' selected="selected"':'').'>'.$keymap['name'].'</option>';
+														?>
+													</select>
+												</td>
+											</tr>
+											<tr>
+												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/use_popup.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Use pop-up'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
@@ -112,6 +159,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 											</tr>
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">
+													<img src="media/image/icons/debug.png" alt="" title="" />
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Debug'); ?></strong>
 												</td>
 												<td style="text-align: center; vertical-align: middle;">
@@ -120,7 +170,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 												</td>
 											</tr>
 											<tr>
-												<td style="height: 40px; text-align: center; vertical-align: bottom;" colspan="2">
+												<td style="height: 40px; text-align: center; vertical-align: bottom;" colspan="3">
 													<span id="submitButton"><input type="submit" value="<?php echo _('Log in!'); ?>" /></span>
 													<span id="submitLoader" style="display: none;"><img src="media/image/loader.gif" width="24" height="24" alt="" title="" /></span>
 												</td>

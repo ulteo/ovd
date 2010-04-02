@@ -36,6 +36,7 @@ var Daemon = Class.create({
 	my_height: 0,
 
 	mode: '',
+	keymap: 'en-us',
 
 	servers: new Hash(),
 	liaison_server_applications: new Hash(),

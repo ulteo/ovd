@@ -43,8 +43,15 @@ function parse_login_XML($xml_) {
 	if (! $session_node->hasAttribute('mode'))
 		return false;
 
+	if (! $session_node->hasAttribute('language'))
+		return false;
+
 	// It's not a login process to handle the session mode... should be moved somewhere else...
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
+
+	// It's not a login process to handle the session language... should be moved somewhere else...
+	if ($session_node->hasAttribute('language'))
+		$_REQUEST['language'] = $session_node->getAttribute('language');
 
 	$user_node = $dom->getElementsByTagname('user')->item(0);
 	if (is_null($user_node))
@@ -97,7 +104,6 @@ if ($system_in_maintenance == '1')
 
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
-$windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
@@ -152,7 +158,7 @@ if (! is_object($user))
 
 $language = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'windows_keymap', 'quality', 'timeout', 'application', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug', 'start_app', 'start_app_args');
+$protocol_vars = array('session_mode', 'language', 'quality', 'timeout', 'application', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug', 'start_app', 'start_app_args');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
 		$$protocol_var = $_REQUEST[$protocol_var];
@@ -267,7 +273,6 @@ $default_args = array(
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	locale2unix($language),
-	'windows_keymap'	=>	$windows_keymap,
 	'quality'			=>	$quality
 );
 

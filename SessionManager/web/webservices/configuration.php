@@ -35,9 +35,6 @@ if ($system_in_maintenance == '1') {
 if (isset($prefs->elements['general']['session_settings_defaults']['language']))
 	$list_languages = $prefs->elements['general']['session_settings_defaults']['language']->content_available;
 
-if (isset($prefs->elements['general']['session_settings_defaults']['windows_keymap']))
-	$list_windows_keymaps = $prefs->elements['general']['session_settings_defaults']['windows_keymap']->content_available;
-
 $list_desktop_sizes = array(
 	'auto'	=>	_('Maximum')
 );
@@ -56,7 +53,6 @@ $session_settings_defaults = $default_settings;
 
 $session_mode = $default_settings['session_mode'];
 $language = $default_settings['language'];
-$windows_keymap = $default_settings['windows_keymap'];
 $desktop_size = 'auto';
 $default_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
@@ -110,7 +106,6 @@ $forceable_parameters = array();
 
 $forceable_parameters['session_mode'] = $list_session_modes;
 $forceable_parameters['language'] = $list_languages;
-$forceable_parameters['windows_keymap'] = $list_windows_keymaps;
 // $forceable_parameters['server'] = ... ;
 $forceable_parameters['size'] = $list_desktop_sizes;
 $forceable_parameters['quality'] = $list_qualities;

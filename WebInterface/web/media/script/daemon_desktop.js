@@ -43,6 +43,8 @@ var Desktop = Class.create(Daemon, {
 			<param name="port" value="3389" /> \
 			<param name="username" value="'+server.username+'" /> \
 			<param name="password" value="'+server.password+'" /> \
+			\
+			<param name="keymap" value="'+this.keymap+'" /> \
 		</applet>';
 
 		$('desktopAppletContainer').show();
