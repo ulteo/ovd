@@ -206,10 +206,10 @@ public class Portal extends java.applet.Applet {
 			if (buffer!=null)
 				this.proxyPort = Integer.parseInt(buffer);
 			this.proxyUsername = super.getParameter("proxyUsername");
-			if (this.proxyUsername == null || !this.proxyUsername.equals(""))
+			if (this.proxyUsername == null || this.proxyUsername.equals(""))
 				this.proxyUsername = "dummy"; // even if the proxy is anonymous, the ssh applet needs a login and password
 			this.proxyPassword = super.getParameter("proxyPassword");
-			if (this.proxyPassword == null || !this.proxyPassword.equals(""))
+			if (this.proxyPassword == null || this.proxyPassword.equals(""))
 				this.proxyPassword = "dummy"; // even if the proxy is anonymous, the ssh applet needs a login and password
 		} catch(NumberFormatException e) {
 			System.err.println("Invalid proxyPort ("+this.getParameter("proxyPort")+")");
