@@ -92,6 +92,7 @@ class Connection {
 
 
 public class Applications extends Applet implements Runnable, Observer, OvdAppListener {
+	public String rdp_keymap = null;
 	private HashMap<Integer, Connection> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
@@ -120,6 +121,8 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 			this.stop();
 			return;
 		}
+		
+		this.rdp_keymap = this.getParameter("keymap");
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
@@ -275,9 +278,11 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				try {
 					co.connection = new RdpConnection(co.options, co.common, new org.ulteo.rdp.seamless.SeamlessChannel(co.options, co.common));
 				} catch (RdesktopException e) {
-					System.out.println(this.getClass().toString()+" Unable to inti connection to "+co.options.hostname);
+					System.out.println(this.getClass().toString()+" Unable to init connection to "+co.options.hostname);
 					continue;
 				}
+				
+				co.connection.setKeymap(rdp_keymap);
 				co.connection.addObserver(this);
 				co.thread = new Thread(co.connection);
 				

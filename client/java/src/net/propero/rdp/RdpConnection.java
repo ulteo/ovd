@@ -103,6 +103,10 @@ public class RdpConnection extends Observable implements Runnable {
 		this.appsList.add(app_);
 	}
 
+	public void setKeymap(String keymap) {
+		this.mapFile = keymap;
+	}
+	
 	protected void detectKeymap() {
 		String language = System.getProperty("user.language");
 		String country = System.getProperty("user.country");

@@ -40,6 +40,7 @@ public class Desktop extends Applet implements Observer {
 	private String server = null;
 	private String username = null;
 	private String password = null;
+	private String keymap = null;
 	private boolean sound_enabled = false;
 	
 	private Options rdp_opt = null;
@@ -102,6 +103,7 @@ public class Desktop extends Applet implements Observer {
 		}
 
 		this.rc.addObserver(this);
+		this.rc.setKeymap(this.keymap);
 		
 		if(this.sound_enabled) {
 			System.out.println("Sound enabled");
@@ -197,6 +199,7 @@ public class Desktop extends Applet implements Observer {
 			this.server = this.getParameterNonEmpty("server");
 			this.username = this.getParameterNonEmpty("username");
 			this.password = this.getParameterNonEmpty("password");
+			this.keymap = this.getParameterNonEmpty("keymap");
 		}
 		catch(Exception e) {
 			return false;
