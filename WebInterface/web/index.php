@@ -44,7 +44,7 @@ $keymaps = get_available_keymaps();
 			}
 		</script>
 
-		<link rel="shortcut icon" type="image/png" href="favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 	</head>

@@ -2,6 +2,7 @@ SUBDIRS = flags \
           icons
 
 scripts_DATA = cross.png \
+               favicon.ico \
                loader.gif \
                logo.png \
                logout.png \
