@@ -264,7 +264,6 @@ function page_header($params_=array()) {
   echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
 
   echo '<link rel="shortcut icon" type="image/png" href="'.$base_url.'admin/media/image/favicon.ico" />';
-  echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common-regular.css" />';
   echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />';
 
   echo '<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.css" />';
