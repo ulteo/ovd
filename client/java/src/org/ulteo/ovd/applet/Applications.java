@@ -40,6 +40,7 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.rdp5.rdpdr.Printer;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
+import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 
 
 abstract class Order {
@@ -92,7 +93,10 @@ class Connection {
 
 
 public class Applications extends Applet implements Runnable, Observer, OvdAppListener {
-	public String rdp_keymap = null;
+	public String keymap = null;
+	private boolean multimedia_mode = false;
+	private boolean map_local_printers = false;
+	
 	private HashMap<Integer, Connection> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
@@ -122,7 +126,11 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 			return;
 		}
 		
-		this.rdp_keymap = this.getParameter("keymap");
+		if (! this.readParameters()) {
+			System.err.println(this.getClass().toString() +"  usage error");
+			this.stop();
+			return;
+		}
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
@@ -166,7 +174,24 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 	}
 	// End extends Applet
 	
-	
+	public boolean readParameters() {
+		String buf = this.getParameter("keymap");
+		if (buf == null || buf.equals("")) {
+			System.err.println("Parameter "+buf+": empty value");
+			return false;
+		}
+		this.keymap = buf;
+		
+		buf = this.getParameter("multimedia");
+		if (buf != null)
+			this.multimedia_mode = buf.equalsIgnoreCase("true");
+		
+		buf = this.getParameter("redirect_client_printers");
+		if (buf != null)
+			this.map_local_printers = buf.equalsIgnoreCase("true");
+		
+		return true;
+	}
 	
 	public boolean checkSecurity() {
 		try {
@@ -282,7 +307,32 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 					continue;
 				}
 				
-				co.connection.setKeymap(rdp_keymap);
+				co.connection.setKeymap(keymap);
+				
+				if(this.multimedia_mode) {
+					System.out.println("Multimedia channels enabled");
+					SoundChannel sndChannel = new SoundChannel(co.connection.opt, co.connection.common);
+					if (! co.connection.addChannel(sndChannel))
+						System.err.println("Unable to add sound channel, continue anyway");
+				}
+		
+				if (this.map_local_printers) {
+					String[] printers = Printer.getAllAvailable();
+					if (printers.length > 0) {
+						RdpdrChannel rdpdrChannel = new RdpdrChannel(co.connection.opt, co.connection.common);
+				
+						for(int i=0; i<printers.length; i++) {
+							Printer p = new Printer(printers[i], i);
+							rdpdrChannel.register(p);
+						}
+				
+						if (! co.connection.addChannel(rdpdrChannel))
+							System.err.println("Unable to ass rdpdr channel, continue anyway");
+					}
+					else
+						System.out.println("Have to map local printers but no printer found ....");
+				}
+				
 				co.connection.addObserver(this);
 				co.thread = new Thread(co.connection);
 				

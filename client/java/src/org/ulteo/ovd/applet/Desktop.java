@@ -41,7 +41,8 @@ public class Desktop extends Applet implements Observer {
 	private String username = null;
 	private String password = null;
 	private String keymap = null;
-	private boolean sound_enabled = false;
+	private boolean multimedia_mode = false;
+	private boolean map_local_printers = false;
 	
 	private Options rdp_opt = null;
 	private RdpConnection rc = null;
@@ -105,26 +106,29 @@ public class Desktop extends Applet implements Observer {
 		this.rc.addObserver(this);
 		this.rc.setKeymap(this.keymap);
 		
-		if(this.sound_enabled) {
-			System.out.println("Sound enabled");
+		if(this.multimedia_mode) {
+			System.out.println("Multimedia channels enabled");
 			SoundChannel sndChannel = new SoundChannel(this.rc.opt, this.rc.common);
 			if (! this.rc.addChannel(sndChannel))
-				System.err.println("Unable to ass sound channel, continue anyway");
+				System.err.println("Unable to add sound channel, continue anyway");
 		}
 		
-		String[] printers = Printer.getAllAvailable();
-		if (printers.length > 0) {
-			RdpdrChannel rdpdrChannel = new RdpdrChannel(this.rc.opt, this.rc.common);
-		 	
-			for(int i=0; i<printers.length; i++) {
-				Printer p = new Printer(printers[i], i);
-				rdpdrChannel.register(p);
+		if (this.map_local_printers) {
+			String[] printers = Printer.getAllAvailable();
+			if (printers.length > 0) {
+				RdpdrChannel rdpdrChannel = new RdpdrChannel(this.rc.opt, this.rc.common);
+				
+				for(int i=0; i<printers.length; i++) {
+					Printer p = new Printer(printers[i], i);
+					rdpdrChannel.register(p);
+				}
+				
+				if (! this.rc.addChannel(rdpdrChannel))
+					System.err.println("Unable to ass rdpdr channel, continue anyway");
 			}
-			
-			if (! this.rc.addChannel(rdpdrChannel))
-				System.err.println("Unable to ass rdpdr channel, continue anyway");
+			else
+				System.out.println("Have to map local printers but no printer found ....");
 		}
-		
 		this.rdp_th = new Thread(this.rc);
 		this.rdp_th.start();
 
@@ -204,9 +208,13 @@ public class Desktop extends Applet implements Observer {
 		catch(Exception e) {
 			return false;
 		}
-		String soundParameter = this.getParameter("sound");
-		if (soundParameter != null)
-			this.sound_enabled = soundParameter.equalsIgnoreCase("true");
+		String buf = this.getParameter("multimedia");
+		if (buf != null)
+			this.multimedia_mode = buf.equalsIgnoreCase("true");
+		
+		buf = this.getParameter("redirect_client_printers");
+		if (buf != null)
+			this.map_local_printers = buf.equalsIgnoreCase("true");
 		
 		return true;
     }
