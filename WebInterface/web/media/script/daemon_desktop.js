@@ -45,6 +45,8 @@ var Desktop = Class.create(Daemon, {
 			<param name="password" value="'+server.password+'" /> \
 			\
 			<param name="keymap" value="'+this.keymap+'" /> \
+			<param name="multimedia" value="'+this.multimedia+'" /> \
+			<param name="redirect_client_printers" value="'+this.redirect_client_printers+'" /> \
 		</applet>';
 
 		$('desktopAppletContainer').show();

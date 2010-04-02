@@ -78,6 +78,8 @@ var Applications = Class.create(Daemon, {
 			<param name="mayscript" value="true" /> \
 			\
 			<param name="keymap" value="'+this.keymap+'" /> \
+			<param name="multimedia" value="'+this.multimedia+'" /> \
+			<param name="redirect_client_printers" value="'+this.redirect_client_printers+'" /> \
 		</applet>';
 
 		$('applicationsAppletContainer').show();

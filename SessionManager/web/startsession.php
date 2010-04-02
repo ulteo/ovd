@@ -113,6 +113,8 @@ $persistent = $default_settings['persistent'];
 //$shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $allow_shell = $default_settings['allow_shell'];
+$multimedia = $default_settings['multimedia'];
+$redirect_client_printers = $default_settings['redirect_client_printers'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
@@ -453,6 +455,8 @@ $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
+$session_node->setAttribute('multimedia', $multimedia);
+$session_node->setAttribute('redirect_client_printers', $redirect_client_printers);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);

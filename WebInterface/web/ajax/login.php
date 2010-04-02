@@ -67,7 +67,6 @@ function query_url_post_xml($url_, $xml_) {
 }
 
 $_SESSION['interface'] = array();
-$_SESSION['interface']['keymap'] = $_POST['keymap'];
 $_SESSION['interface']['in_popup'] = $_POST['use_popup'];
 $_SESSION['interface']['debug'] = $_POST['debug'];
 
@@ -122,6 +121,9 @@ if (! is_object($session_node)) {
 $_SESSION['session_id'] = $session_node->getAttribute('id');
 $_SESSION['session_mode'] = $session_node->getAttribute('mode');
 $_SESSION['session_language'] = $_POST['language'];
+$_SESSION['keyboard_layout'] = $_POST['keymap'];
+$_SESSION['multimedia'] = $session_node->getAttribute('multimedia');
+$_SESSION['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {
