@@ -280,9 +280,6 @@ class Preferences {
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
 		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français','ru_RU'=>'Русский'));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('quality', _('Default quality for session'), _('Default quality for session'), _('Default quality for session'), 'high');
-		$c->setContentAvailable(array('lowest'=>_('8-bits'),'medium'=>_('Medium'),'high'=>_('High'),'highest'=>_('Highest')));
-		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400);
 		$c->setContentAvailable(array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')));
 		$this->add($c,'general','session_settings_defaults');
@@ -297,22 +294,19 @@ class Preferences {
 		$c = new ConfigElement_select('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1);
+		/*$c = new ConfigElement_select('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');
+		$this->add($c,'general','session_settings_defaults');*/
 		$c = new ConfigElement_select('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('app_with_desktop', _('Launch forced application with a desktop'), _('Launch forced application with a desktop'), _('Launch forced application with a desktop'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_select('action_when_active_session', _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), 0);
-		$c->setContentAvailable(array(0=>_('Forbid access'),1=>_('Invite into the session')));
+		$c->setContentAvailable(array(0=>_('Forbid access')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'size' => _('size'), 'quality' => _('quality'), 'timeout' => _('timeout'), 'application' => _('application'), 'persistent' => _('persistent'), 'shareable' => _('shareable'), 'desktop_icons' => _('desktop icons'), 'app_with_desktop' => _('app with desktop'), 'start_app' => _('Launch an application when the desktop is starting'), 'start_app_args' => _('Launch an application with extra arguments')));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), 'persistent' => _('persistent'), /*'shareable' => _('shareable'), */'desktop_icons' => _('desktop icons')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));

@@ -39,9 +39,6 @@ $list_desktop_sizes = array(
 	'auto'	=>	_('Maximum')
 );
 
-if (isset($prefs->elements['general']['session_settings_defaults']['quality']))
-	$list_qualities = $prefs->elements['general']['session_settings_defaults']['quality']->content_available;
-
 if (isset($prefs->elements['general']['session_settings_defaults']['timeout']))
 	$list_desktop_timeouts = $prefs->elements['general']['session_settings_defaults']['timeout']->content_available;
 
@@ -54,10 +51,9 @@ $session_settings_defaults = $default_settings;
 $session_mode = $default_settings['session_mode'];
 $language = $default_settings['language'];
 $desktop_size = 'auto';
-$default_quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
 $persistent = $default_settings['persistent'];
-$shareable = $default_settings['shareable'];
+//$shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $debug = 0;
 
@@ -108,10 +104,9 @@ $forceable_parameters['session_mode'] = $list_session_modes;
 $forceable_parameters['language'] = $list_languages;
 // $forceable_parameters['server'] = ... ;
 $forceable_parameters['size'] = $list_desktop_sizes;
-$forceable_parameters['quality'] = $list_qualities;
 $forceable_parameters['timeout'] = $list_desktop_timeouts; // $seconds => $text
 $forceable_parameters['persistent'] = array('0' => _('No'), '1' => _('Yes'));
-$forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
+//$forceable_parameters['shareable'] = array('0' => _('No'), '1' => _('Yes'));
 $forceable_parameters['desktop_icons'] = array('0' => _('No'), '1' => _('Yes'));
 $forceable_parameters['popup'] = array('0' => _('No'), '1' => _('Yes'));
 $forceable_parameters['debug'] = array('0' => _('No'), '1' => _('Yes'));

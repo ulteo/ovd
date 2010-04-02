@@ -105,16 +105,14 @@ if ($system_in_maintenance == '1')
 $default_settings = $prefs->get('general', 'session_settings_defaults');
 $session_mode = $default_settings['session_mode'];
 $desktop_size = 'auto';
-$quality = $default_settings['quality'];
 $desktop_timeout = $default_settings['timeout'];
 $timeout_message = $default_settings['session_timeout_msg'];
 $start_app = '';
 $start_app_args = '';
 $persistent = $default_settings['persistent'];
-$shareable = $default_settings['shareable'];
+//$shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $allow_shell = $default_settings['allow_shell'];
-$app_with_desktop = $default_settings['app_with_desktop'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
@@ -158,7 +156,7 @@ if (! is_object($user))
 
 $language = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'quality', 'timeout', 'application', 'persistent', 'shareable', 'desktop_icons', 'app_with_desktop', 'popup', 'debug', 'start_app', 'start_app_args');
+$protocol_vars = array('session_mode', 'language', 'timeout', 'persistent', /*'shareable', */'desktop_icons', 'popup', 'debug');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
 		$$protocol_var = $_REQUEST[$protocol_var];
@@ -272,8 +270,7 @@ $default_args = array(
 	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
-	'locale'			=>	locale2unix($language),
-	'quality'			=>	$quality
+	'locale'			=>	locale2unix($language)
 );
 
 $optional_args = array();
@@ -317,14 +314,12 @@ if (isset($debug) && $debug != '0')
 	$optional_args['debug'] = 1;
 if (isset($persistent) && $persistent != '0')
 	$optional_args['persistent'] = 1;
-if (isset($shareable) && $shareable != '0')
-	$optional_args['shareable'] = 1;
+/*if (isset($shareable) && $shareable != '0')
+	$optional_args['shareable'] = 1;*/
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 if (isset($allow_shell) && $allow_shell != '0')
 	$optional_args['allow_shell'] = 1;
-if (isset($app_with_desktop) && $app_with_desktop != '0')
-	$optional_args['app_with_desktop'] = 1;
 if (isset($allow_proxy) && $allow_proxy != '0') {
 	if (isset($_REQUEST['proxy_host']) && $_REQUEST['proxy_host'] != '') {
 		$optional_args['enable_proxy'] = 1;
