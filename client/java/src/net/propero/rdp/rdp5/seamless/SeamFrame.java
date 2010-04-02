@@ -282,9 +282,17 @@ public class SeamFrame extends Frame
 		}
 	}
 
-	public void mouseWheelMoved(MouseWheelEvent evt) {
-		//evt.translatePoint(x,y);
-		//vnc.vc.processLocalMouseWheelEvent(evt);
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		int flag;
+		int time = net.propero.rdp.Input.getTime();
+		
+		if (e.getWheelRotation() < 0) 
+			flag = MOUSE_FLAG_BUTTON4;
+		else
+			flag = MOUSE_FLAG_BUTTON5;
+		if (this.common.rdp != null) {
+			this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, flag, 1, 1);
+		}
 	}
 
 
