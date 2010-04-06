@@ -38,6 +38,7 @@ import net.propero.rdp.Rdesktop;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.BasicConfigurator;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.rdp.Connection;
 
 public class Client extends JFrame implements WindowListener, WindowStateListener, Runnable, Observer {
 	private AuthenticationPanel panel_auth = null;
@@ -45,7 +46,7 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 	private JPanel panel_session = null;
 	private JPanel current_panel = null;
 	private SessionManagerCommunication c = null;
-	private ArrayList<RdpConnection> connections = null;
+	private ArrayList<Connection> connections = null;
 	private String session_mode = "";
 	private Thread sessionThread = null;
 	
@@ -55,7 +56,7 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 		BasicConfigurator.configure();
 		Rdesktop.logger.setLevel(org.apache.log4j.Level.INFO);
 
-		this.connections = new ArrayList<RdpConnection>();
+		this.connections = new ArrayList<Connection>();
 
 		this.setSize(480, 320);
 		this.setLocationRelativeTo(null);
@@ -135,11 +136,11 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 			} else if (this.session_mode.equalsIgnoreCase("desktop")) {
 				if (this.connections.size() < 1)
 					return;
-				RdpConnection rc = this.connections.get(0);
-				rc.addObserver(this);
+				Connection co = this.connections.get(0);
+				co.connection.addObserver(this);
 
-				Desktop desk = new Desktop(this, rc);
-				new Thread(rc).start();
+				Desktop desk = new Desktop(this, co.connection);
+				new Thread(co.connection).start();
 				
 				this.panel_session = desk;
 			}
