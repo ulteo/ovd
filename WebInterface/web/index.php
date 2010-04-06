@@ -115,7 +115,7 @@ $keymaps = get_available_keymaps();
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="session_mode">
 															<option value="desktop" selected="selected"><?php echo _('Desktop'); ?></option>
-															<option value="applications"><?php echo _('Applications'); ?></option>
+															<option value="applications"><?php echo _('Portal'); ?></option>
 														</select>
 													</td>
 												</tr>
