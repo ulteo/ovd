@@ -126,7 +126,7 @@ class UserDB_sql extends UserDB  {
 						$users []= $a_user;
 						$count++;
 						if ($limit_ > 0 && $count >= $limit_) {
-							$sizelimit_exceeded = next($list) !== false; // is it the last element ?
+							$sizelimit_exceeded = next($rows) !== false; // is it the last element ?
 							return array($users, $sizelimit_exceeded);
 						}
 						break;
