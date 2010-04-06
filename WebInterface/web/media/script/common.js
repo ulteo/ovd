@@ -233,7 +233,16 @@ function updateFlag(id_) {
 	$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
 }
 
+switchsettings_lock = false;
 function switchSettings() {
+	if (switchsettings_lock)
+		return;
+
+	switchsettings_lock = true;
+	setTimeout(function() {
+		switchsettings_lock = false;
+	}, 1200);
+
 	if ($('advanced_settings').visible()) {
 		$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="9" height="9" alt="" title="" />';
 		Effect.SlideUp($('advanced_settings'));
