@@ -164,7 +164,7 @@ session_check_status() {
         local candidate2=$(stat -c "%Z" $KMA)
         local diffg2=$(( $ctg2 - $candidate2 ))
 
-        if [ $diffg2 -gt 20 ]; then
+        if [ $diffg2 -gt $CONNECTION_TIMEOUT ]; then
             log_WARN "KMA expired diff:$diffg2"
             # Suspend the session if the sesion was running and it's setup to suspend
             if [ -f ${SESSID_DIR}/private/running ] && [ -f ${SESSID_DIR}/parameters/persistent ]; then
@@ -305,7 +305,7 @@ garbage_collector() {
         local runasap=$(stat -c "%Z" ${SESSID_DIR}/infos/status)
         local diff=$(( $now - $runasap ))
 
-        if [ $diff -gt 60 ]; then
+        if [ $diff -gt $(( 3 * $CONNECTION_TIMEOUT )) ]; then
             log_WARN "garbage_collector: found non-used session '$SESSID' -> remove it"
             session_remove $SESSID
         fi

@@ -104,7 +104,7 @@ application_check_status() {
             local t1=$(date +%s)
             local diff=$(( $t1 - $t0 ))
 
-            if [ $diff -gt 20 ]; then
+            if [ $diff -gt $CONNECTION_TIMEOUT ]; then
                 log_WARN "session $sessid KEEPMEALIVE expired application $job_id"
                 application_switch_status $sessid $job_id $next_status
                 application_check_status $sessid $job_id
