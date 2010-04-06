@@ -85,7 +85,7 @@ $keymaps = get_available_keymaps();
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="user_login" value="" />
+													<input type="text" id="user_login" value="" /><script type="text/javascript">Event.observe(window, 'load', $('user_login').focus());</script>
 												</td>
 											</tr>
 											<tr>
