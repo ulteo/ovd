@@ -115,9 +115,9 @@
             <para>The first step is to configure yum to enable the Ulteo rpm repository.
             Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
             <screen><![CDATA[
-[ovd-2.0]
-name=Ulteo OVD 2.0
-baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/2.0
+[ovd-2.5]
+name=Ulteo OVD 2.5
+baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/2.5
 enabled=1
 gpgcheck=1
 gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
@@ -145,12 +145,12 @@ gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
 Admin login: admin
 Password:
 Retype password:
-Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0]:
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.5]:
 Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]:
 
 Options:
 * chroot download:  yes
-* chroot URL:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0
+* chroot URL:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.5
 * chroot directory: /usr/share/ulteo/sessionmanager/base.tar.gz
 * apache group:     apache
 * apache dir:       /etc/httpd/conf.d
@@ -186,9 +186,9 @@ Is this correct? [Y/n] ]]>
             yum to enable the Ulteo rpm repository.
             Create the file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:</para>
             <screen><![CDATA[
-[ovd-2.0]
-name=Ulteo OVD 2.0
-baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/2.0
+[ovd-2.5]
+name=Ulteo OVD 2.5
+baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/2.5
 enabled=1
 gpgcheck=1
 gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>

@@ -112,7 +112,7 @@
         <listitem>
             <para>The first step is to enable the Ulteo RPM repository.</para>
             <screen><![CDATA[
-# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/2.0 ovd]]>
+# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/2.5 ovd]]>
             </screen>
         </listitem>
         <listitem>
@@ -137,12 +137,12 @@
 Admin login: admin
 Password:
 Retype password:
-Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0]:
+Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.5]:
 Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]:
 
 Options:
 * chroot download:  yes
-* chroot URL:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0
+* chroot URL:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.5
 * chroot directory: /usr/share/ulteo/sessionmanager/base.tar.gz
 * apache group:     apache
 * apache dir:       /etc/httpd/conf.d
@@ -177,7 +177,7 @@ Is this correct? [Y/n] ]]>
             <para>If you have not done it yet for the Session Manager, 
             enable the Ulteo RPM repository.</para>
             <screen><![CDATA[
-# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/2.0 ovd]]>
+# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/2.5 ovd]]>
             </screen>
         </listitem>
         <listitem>

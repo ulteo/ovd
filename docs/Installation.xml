@@ -130,7 +130,7 @@ mysql> exit]]>
 	</para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ulteo/ovd 2.5 main" >> /etc/apt/sources.list
 # apt-get update]]>
 	</screen>
     <note>
@@ -260,7 +260,7 @@ mysql> exit]]>
 
       <para>
 	For instance, you can download an archive from <ulink
-	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0" />
+	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.5" />
 	from another computer which have access to Internet and copy
 	it on a usb stick.  Then, you have to copy it on the Session
 	Manager at
@@ -386,7 +386,7 @@ mysql> exit]]>
         </para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ulteo/ovd 2.5 main" >> /etc/apt/sources.list
 # apt-get update]]>
         </screen>
       </listitem>
