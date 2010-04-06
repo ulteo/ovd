@@ -43,8 +43,8 @@ if ($_SESSION['ovd_session']['mode'] != 'portal' || ($_SESSION['ovd_session']['m
 	$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
 	$geometry = @file_get_contents(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
-	$geometry = trim($geometry);
 	if ($geometry !== false) {
+		$geometry = trim($geometry);
 		$buf = explode('x', $geometry);
 		$width = $buf[0];
 		$height = $buf[1];
