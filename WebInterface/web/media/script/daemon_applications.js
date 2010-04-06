@@ -31,6 +31,11 @@ var Applications = Class.create(Daemon, {
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, in_popup_, debug_]);
 
+		$('applicationsContainer').style.height = parseInt(this.my_height)-154+'px';
+		$('appsContainer').style.height = parseInt(this.my_height)-154+'px';
+		$('runningAppsContainer').style.height = parseInt(this.my_height)-154+'px';
+		$('fileManagerContainer').style.height = parseInt(this.my_height)-154+'px';
+
 		this.applicationsPanel = new ApplicationsPanel($('appsContainer'));
 		this.runningApplicationsPanel = new ApplicationsPanel($('runningAppsContainer'));
 	},
