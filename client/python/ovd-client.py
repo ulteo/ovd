@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
@@ -25,11 +25,7 @@ import cookielib
 import getopt
 import getpass
 import os
-import random
-import re
-import signal
 import sys
-import tempfile
 import threading
 import time
 import urllib
@@ -103,113 +99,6 @@ class Logger:
         Logger._instance.log_debug(message)
 
 
-def str2hex(str_):
-    return str_.encode('hex')
-
-def hex2str(hex_):
-    try:
-        return hex_.decode('hex')
-    except TypeError:
-        Logger.error("Cant decode this string '%s'"%(str(hex_)))
-        sys.exit(1)
-
-
-def parse_access(data):
-    
-    res = {}
-    dom = minidom.parseString(data)
-
-    node = dom.getElementsByTagName('ssh')
-    if len(node) != 1:
-        Logger.warn("Bad xml result")
-        return False
-
-    node = node[0]
-    for (attr, m) in [('host','host'), ('user', 'login'), ('passwd', 'pass') ]:
-        if not node.hasAttribute(attr):
-            Logger.warn("Bad xml result")
-            return False
-
-        res['ssh_'+m] = node.getAttribute(attr)
-
-
-    res['ssh_port'] = node.getElementsByTagName('port')[0].firstChild.data
-
-    node = dom.getElementsByTagName('vnc')
-    if len(node) != 1:
-        Logger.warn("Bad xml result")
-        return False
-
-    node = node[0]
-    for (attr, m) in [('passwd', 'pass'), ('port', 'port')]:
-        if not node.hasAttribute(attr):
-            Logger.warn("Bad xml result")
-            return False
-
-        res['vnc_'+m] = node.getAttribute(attr)
-
-    if node.hasAttribute('quality'):
-        buf = node.getAttribute('quality')
-        if buf not in ['lowest', 'medium', 'high', 'highest']:
-            Logger.warn("Warning: doesn't support quality '%s'"%(buf))
-        res['vnc_quality'] = buf
-
-    res["vnc_pass"] = hex2str(res["vnc_pass"])
-    res["ssh_pass"] = hex2str(res["ssh_pass"])
-    return res
-
-
-def launch_ssh(host, user, password, extra):
-    cmd_args = ["/usr/bin/ssh", "-l", user]
-    for arg in extra:
-        cmd_args.append(arg)
-    cmd_args.append(host)
-    Logger.debug("SSH command '%s'"%(" ".join(cmd_args)))
-    
-    # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
-    pid, fd = os.forkpty()
-    # If Child; execute external process
-    if pid == 0:
-        os.execv(cmd_args[0], cmd_args)
-        # Should not appear
-        sys.exit(0)
-     
-    # if parent, read/write with child through file descriptor
-    buf = os.read(fd, 1000)
-
-    while "password:" not in buf:
-        # Logger.debug("new ssh output: '%s'"%(buf))
-        time.sleep(0.3)
-        buf += os.read(fd, 1)
-
-    # write password
-    os.write(fd, password + "\n")
-    
-    # Get password prompt; ignore
-    for line in buf.splitlines():
-        Logger.debug("SSH out: %s"%(line))
-
-    pid2 = os.fork()
-    if pid2 == 0:
-        # read response from child process
-        res = ""
-        s = os.read(fd,1 )
-        while s:
-            res += s
-            try:
-                s = os.read(fd, 1)
-            except:
-                # if we can't read the fd the subprocess ended,
-                # and the session is likely to be ended
-                break
-        sys.exit(0)
-
-    return pid,pid2
-
-def isAliveProcess(pid):
-    f = os.path.join("/proc", str(pid))
-    return os.path.isdir(f)
-
 class Dialog:
     def __init__(self, conf):
         self.conf = conf
@@ -222,34 +111,9 @@ class Dialog:
         self.desktopStatus = -1
         self.sessionStatus = -1
 
-    def doLogin(self):
-        url = self.base_url+"/ajax/login.php"
-
-        values =  {'do_login': 1, 'login'  : self.conf['login'], 'password' : self.conf['password']}
-        data = urllib.urlencode(values)
-        request = urllib2.Request(url, data)
-        
-        try:
-            url = self.urlOpener.open(request)
-
-        except urllib2.HTTPError, exc:
-            if exc.code == 500:
-                Logger.info("The service is not available")
-                return False
-
-            Logger.debug("HTTP request return code %d (%s)"%(exc.code, exc.msg))
-            Logger.debug(" * return: %s"%(str(exc.read())))
-            return False
-
-        except urllib2.URLError, exc:
-            Logger.warn("Login failure: %s"%(str(exc.reason)))
-            return False
-
-        return True
-
     def doStartSession(self, args = {}):
         url = self.base_url+"/startsession.php"
-        values = {"session_mode":"desktop"}
+        values = {"session_mode":"desktop", 'login'  : self.conf['login'], 'password' : self.conf['password']}
         for (k,v) in args.items():
             if not values.has_key(k):
                 values[k] = v
@@ -291,67 +155,54 @@ class Dialog:
             return False
 
         node = node[0]
-        for attr in ['mode', 'shareable', 'persistent']:
-            if not node.hasAttribute(attr):
-                Logger.warn("Missing attribute %s"%(str(attr)))
+        if not node.hasAttribute("mode"):
+                Logger.warn("Missing attribute mode")
                 return False
-            buf = node.getAttribute(attr)
-            if attr in ['shareable', 'persistent']:
-                if buf == 'true':
-                    buf = True
-                elif buf == 'false':
-                    buf = False
-                else:
-                    Logger.warn("Invalid attrbiture %s value (%s)"%(attr, buf))
-                    return False
+        self.sessionProperties["mode"] = node.getAttribute("mode")
+        
+        for attr in ['shareable', 'persistent', 'multimedia', 'redirect_client_printers']:
+            if node.hasAttribute(attr):
+                buf = node.getAttribute(attr)
+            else:
+                buf = "false"
+
+            if buf == 'true' or buf == '1':
+                buf = True
+            elif buf == 'false':
+                buf = False
+            else:
+                Logger.warn("Invalid attribure %s value (%s)"%(attr, buf))
+                return False
 
             self.sessionProperties[attr] = buf
 
-        node = node.getElementsByTagName('aps')
-        if len(node) != 1:
-            Logger.warn("No aps child node from root node")
+        userNode = node.getElementsByTagName('user')
+        if len(userNode) != 1:
+            Logger.warn("Missing node user")
+            return False
+        userNode = userNode[0]
+        if not userNode.hasAttribute("displayName"):
+            Logger.warn("Missing attribute displayName on node user")
+            return False
+        self.sessionProperties["user_dn"] = userNode.getAttribute("displayName")
+
+        node = node.getElementsByTagName('server')
+        if len(node) < 1:
+            Logger.warn("No server child node from root node")
             return False
 
         node = node[0]
-        for attr in ['protocol', 'server', 'port', 'location']:
+        self.access = {}
+        for attr in ['fqdn', 'login', 'password']:
             if not node.hasAttribute(attr):
                 Logger.warn("Missing attribute %s"%(str(attr)))
                 return False
+            self.access[attr] = node.getAttribute(attr)
 
-        self.aps_url = "%s://%s:%s%s"%(node.getAttribute('protocol'),
-                                      node.getAttribute('server'),
-                                      node.getAttribute('port'),
-                                      node.getAttribute('location'))
-        return True
-
-    def doInitSession(self):
-        values =  {'width': self.conf["geometry"][0], 'height': self.conf["geometry"][1]}
-        url = "%s/start.php?%s"%(self.aps_url, urllib.urlencode(values))
-        request = urllib2.Request(url, urllib.urlencode(values))
-
-        try:
-            url = self.urlOpener.open(request)
-
-        except urllib2.HTTPError, exc:
-            if exc.code == 500:
-                Logger.warn("Service failure")
-                return False
-            
-            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
-            Logger.debug(" * return: %s"%(str(exc.read())))
-            return False
-
-        except urllib2.URLError, exc:
-            Logger.warn("Init session failure %s"%(str(exc.reason)))
-            return False
-
-        #print url.geturl()
-        #print url.read()
         return True
 
     def doSessionStatus(self):
-        values =  {'application_id': 'desktop'}
-        url = "%s/whatsup.php?%s"%(self.aps_url, urllib.urlencode(values))
+        url = "%s/client/session_status.php"%(self.base_url)
         request = urllib2.Request(url)
         
         try:
@@ -392,66 +243,16 @@ class Dialog:
             Logger.warn("Bad xml result")
             return False
 
-        buf = sessionNode.getAttribute('status')
-
-        try:
-            self.sessionStatus = int(buf)
-        except exceptions.ValueError, err:
-            Logger.warn("Bad xml result")
-            return False
-
-        node = sessionNode.getElementsByTagName('application')
-        if len(node) != 1:
-            Logger.warn("missing child node application")
-            return False
-
-        node = node[0]
-        if not node.hasAttribute('status'):
-            Logger.warn("Missing attribute status to application node")
-            return False
-
-        buf = node.getAttribute('status')
-        try:
-            self.desktopStatus = int(buf)
-        except exceptions.ValueError, err:
-            Logger.warn("Invalid application status %s"%(str(buf)))
-            return False
+        self.sessionStatus = sessionNode.getAttribute('status')
 
         return self.sessionStatus
-
-    def getSessionAccess(self):
-        url = "%s/access.php?application_id=desktop"%(self.aps_url)
-        request = urllib2.Request(url)
-        
-        try:
-            url = self.urlOpener.open(request)
-
-        except urllib2.HTTPError, exc:
-            if exc.code == 500:
-                Logger.warn("Service failure")
-                return False
-            
-            Logger.debug("HTTP request return code %d (%s)" % (exc.code, exc.msg))
-            Logger.debug(" * return: %s"%(str(exc.read())))
-            return False
-
-        except urllib2.URLError, exc:
-            Logger.warn("Failure: %s"%(str(exc.reason)))
-            return False
-
-
-        self.infos = parse_access(url.read())
-        if self.infos == None:
-            return False
-
-        return True
 
 
     def do_call_exit(self):
         if d.sessionProperties["persistent"]:
-            url = "%s/suspend.php"%(self.aps_url)
+            url = "%s/suspend.php"%(self.base_url)
         else:
-            url = "%s/exit.php"%(self.aps_url)
+            url = "%s/exit.php"%(self.base_url)
         request = urllib2.Request(url)
         
         try:
@@ -474,139 +275,115 @@ class Dialog:
 
 
     def check_whatsup(self):
-        Logger.debug("Begin check print")
+        Logger.debug("Begin check")
 
         old_status = 2
         while 1==1:
             status = self.doSessionStatus()
             if status != old_status:
-                Logger.info("Status changed: %d -> %d"%(old_status, status))
+                Logger.info("Status changed: %s -> %s"%(old_status, status))
                 old_status = status
-            time.sleep(2)
+            time.sleep(5)
 
+    def launch(self):
+        cmd = []
+        cmd.append("rdesktop")
+        cmd.append("-u")
+        cmd.append(self.access["login"])
+        cmd.append("-p")
+        cmd.append(self.access["password"])
+        if self.conf['fullscreen']:
+            cmd.append("-f")
+        else:
+            cmd.append("-g")
+            cmd.append("x".join(self.conf["geometry"]))
+        cmd.append("-z")
+        cmd.append("-T")
+        cmd.append('"Ulteo OVD - %s"'%(self.sessionProperties["user_dn"]))
 
-    def get_vnc_extra_parameters(self):
-        compress = 9
-        quality = None
-        color8bits = None
+        if self.sessionProperties["multimedia"]:
+             cmd.append("-r")
+             cmd.append("sound:local")
+        
+        if self.sessionProperties["redirect_client_printers"]:
+            status, out = commands.getstatusoutput("LANG= lpstat -d -p")
+            print "printer status: ",status
+            print "out: ",out
+            print "=="
+
+            
+            if status in [127, 32512]:
+                Logger.warn("Missing cupsys-client, unable to detect local printers")
+            else:
+                printers = []
+                lines = out.splitlines()
+
+                line = lines[0]
+                if line.startswith("system default destination:"):
+                    buf = line[len("system default destination:"):].strip()
+                    printers.append(buf)
+
+                for line in lines[1:]:
+                    buf = line.split(" ")
+                    if buf[0] != "printer":
+                        continue
+                    buf = buf[1]
+                    if buf not in printers:
+                        printers.append(buf)
+
+                for printer in printers:
+                    cmd.append("-r")            
+                    cmd.append("printer:%s"%(printer))
 
         if self.conf.has_key('quality'):
             if self.conf['quality'] == 'lowest':
-                quality = 8
-                color8bits = True
+                bpp = 8
 
             elif self.conf['quality'] == 'medium':
-                quality = 7
+                bpp = 16
 
             elif self.conf['quality'] == 'high':
-                quality = 8
-
+                bpp = 24
             elif self.conf['quality'] == 'highest':
-                quality = 9
-        else:
-            if self.infos['vnc_quality'] == 'lowest':
-                quality = 8
-                color8bits = True
+                bpp = 32
+                
+            cmd.append("-a")
+            cmd.append(str(bpp))
 
-            elif self.infos['vnc_quality'] == 'medium':
-                quality = 7
-
-            elif self.infos['vnc_quality'] == 'high':
-                quality = 8
-
-            elif self.infos['vnc_quality'] == 'highest':
-                quality = 9
-
-
-        return (compress, quality, color8bits)
-
-    def launch(self):
-        self.infos["ssh_port"] = self.infos["ssh_port"].split(",")[0]
-        local_port = random.randrange(1024, 65536)
-
-        pid,pid2 = launch_ssh(self.infos["ssh_host"], self.infos["ssh_login"], self.infos["ssh_pass"], 
-                         ["-N", "-o", "StrictHostKeyChecking=no",
-                          "-L", "%d:localhost:%s"%(local_port, self.infos["vnc_port"]),
-                          '-p', self.infos["ssh_port"]])
-        if pid<=0 or pid2<=0:
-            Logger.warn("Error: ssh pid is %d"%(pid))
-            return False
+        cmd.append(self.access["fqdn"])
 
         t = threading.Thread(target=self.check_whatsup)
         t.start()
 
-        # Vnc managment
-        vnc_file = tempfile.mktemp()
-
-        vnc_args = []
-        vnc_args.append("xtightvncviewer")
-        vnc_args.append("-passwd")
-        vnc_args.append(vnc_file)
-
-        vnc_args.append("-encodings")
-        vnc_args.append("Tight")
-
-        if self.conf['fullscreen']:
-            vnc_args.append("-fullscreen")
-
-
-        (compress, quality, color8bits) = self.get_vnc_extra_parameters()
-        
-        if compress is not None:
-            vnc_args.append("-compresslevel")
-            vnc_args.append(str(compress))
-
-        if quality is not None:
-            vnc_args.append("-quality")
-            vnc_args.append(str(quality))
-
-        if color8bits is not None and color8bits is True:
-            vnc_args.append("-bgr233")
-            vnc_args.append("-x11cursor")
-            
-        vnc_args.append("localhost::%s"%(local_port))
-
-        vnc_cmd = " ".join(vnc_args)
-
-        f = file(vnc_file, "w")
-        f.write(self.infos["vnc_pass"])
-        f.close()
-        os.chmod(vnc_file, 0400)
-
-        Logger.debug("VNC command: '%s'"%(vnc_cmd))
+        cmd = " ".join(cmd)
+        Logger.debug("RDP command: '%s'"%(cmd))
 
         flag_continue = True
-        vnc_try = 0
+        try_ = 0
 
-        while vnc_try<5 and flag_continue:
+        while try_<5 and flag_continue:
             t0 = time.time()
             try:
-                status, out = commands.getstatusoutput(vnc_cmd)
+                status, out = commands.getstatusoutput(cmd)
             except KeyboardInterrupt: # ctrl+c of the user
                 Logger.info("Interrupt from user")
                 status = 0
-            status = 256
+
             t1 = time.time()
 
-            if t1-t0<2 and status == 256 and isAliveProcess(pid):
-                Logger.warn("Unable to connect to VNC server, sleep and try again (%d/5)"%(vnc_try+1))
+            if t1-t0<2 and status == 256:
+                Logger.warn("Unable to connect to RDP server, sleep and try again (%d/5)"%(try_+1))
                 time.sleep(0.3)
-                vnc_try+= 1
+                try_+= 1
             else:
                 flag_continue = False
 
         if status!=0:
-            Logger.info("vnc return status %d and \n%s\n==="%(status, out))
+            Logger.info("rdesktop return status %d and \n%s\n==="%(status, out))
             self.do_call_exit()
-
-        os.remove(vnc_file)
-        # end of vnc
 
         if t.isAlive():
             t._Thread__stop()
-
-        os.kill(pid2, signal.SIGTERM)
-        os.kill(pid, signal.SIGTERM)
 
         Logger.debug("end")
         return True
@@ -720,9 +497,6 @@ if not conf.has_key("password"):
     conf["password"] = getpass.getpass("Password please: ")
 
 d = Dialog(conf)
-if not d.doLogin():
-    Logger.error("Unable to login")
-    sys.exit(1)
 
 if not d.doStartSession(extra_args):
     Logger.error("Unable to startsession")
@@ -735,7 +509,7 @@ if d.sessionProperties["mode"] != 'desktop':
 
 
 status = -1
-while status not in [0,10]:
+while status not in ["ready"]:
     status = d.doSessionStatus()
     Logger.debug("status %s"%(str(status)))
 
@@ -744,32 +518,9 @@ while status not in [0,10]:
         sys.exit(5)
     
     time.sleep(0.5)
-    if not status in [-1, 0, 10]:
-        Logger.error("Session not 0 or -1 (%d) => exit"%(status))
+    if not status in ["init", "ready"]:
+        Logger.error("Session not 'init' or 'ready' (%s) => exit"%(status))
         sys.exit(4)
-
-
-if not d.doInitSession():
-    Logger.error("Unable to init session on aps")
-    sys.exit(3)
-
-
-status = 0
-while status != 2 or d.desktopStatus != 2:
-    status = d.doSessionStatus()
-    Logger.debug("status %s"%(str(status)))
-    if type(0) == type(False):
-        Logger.error("Error in get status")
-        sys.exit(5)
-
-    time.sleep(0.5)
-    if status == 3 or status == -1:
-        Logger.error("Session not exist anymore (%d)"%(status))
-        sys.exit(4)
-
-if not d.getSessionAccess():
-    Logger.error("Unable to get session parameters")
-    sys.exit(5)
 
 d.launch()
 

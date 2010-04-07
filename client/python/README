@@ -7,8 +7,8 @@ Launch a session using Ulteo Open Virtual Desktop protocol
 
  * Linux
  * Python >=2.4
- * openssh-client
- * xtightvncviewer
+ * rdesktop
+ * Optional: cupsys-client for local printers detection
 
 
 == Compatibility ==
