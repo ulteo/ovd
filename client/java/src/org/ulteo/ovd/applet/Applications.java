@@ -41,6 +41,7 @@ import net.propero.rdp.RdpConnection;
 import net.propero.rdp.rdp5.rdpdr.Printer;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
+import org.ulteo.rdp.Connection;
 
 
 abstract class Order {
@@ -82,15 +83,6 @@ class OrderApplication extends Order {
 		return "Application (id: "+this.id+", application: "+this.application_id+", server: "+this.server_id;
 	}
 }
-
-class Connection {
-	public Options options = null;
-	public Common common = null;
-	public Thread thread = null;
-	public RdpConnection connection = null;
-	public OvdAppChannel channel = null;
-}
-
 
 public class Applications extends Applet implements Runnable, Observer, OvdAppListener {
 	public String keymap = null;
