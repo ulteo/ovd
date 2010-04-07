@@ -168,7 +168,7 @@ class Dialog:
 
             if buf == 'true' or buf == '1':
                 buf = True
-            elif buf == 'false':
+            elif buf == 'false' or buf == '0':
                 buf = False
             else:
                 Logger.warn("Invalid attribure %s value (%s)"%(attr, buf))
