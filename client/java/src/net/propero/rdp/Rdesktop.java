@@ -623,9 +623,16 @@ public class Rdesktop {
 				return;
 			}
 
+			GraphicsConfiguration gc = new Frame().getGraphicsConfiguration();
+			Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gc);
+			logger.debug("insects:::"+insets);
+
 			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			opt.width = (int)dim.getWidth();
-			opt.height = (int)dim.getHeight();
+			// Ensure that width is multiple of 4
+			// Prevent artifact on screen with a with resolution
+			// not divisible by 4
+			opt.width = (int)(dim.getWidth() - insets.left -insets.right) & ~3;
+			opt.height = (int)(dim.getHeight() - insets.bottom - insets.top);
 
 
 			opt.grab_keyboard = false;

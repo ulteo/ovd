@@ -80,7 +80,11 @@ public class Desktop extends Applet implements Observer {
 		this.rdp_opt.hostname = this.server;
 		this.rdp_opt.username = this.username;
 		this.rdp_opt.password = this.password;
-		this.rdp_opt.width = this.getWidth();
+
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4 
+		this.rdp_opt.width = this.getWidth() & ~3;
 		this.rdp_opt.height = this.getHeight();
 		this.rdp_opt.set_bpp(24);
 		this.rc = null;

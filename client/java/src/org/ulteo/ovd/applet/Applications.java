@@ -289,7 +289,11 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				Connection co = new Connection();
 				
 				co.options = new Options();
-				co.options.width = dim.width;
+
+				// Ensure that width is multiple of 4
+				// Prevent artifact on screen with a with resolution
+				// not divisible by 4
+				co.options.width = dim.width & ~3;
 				co.options.height = dim.height;
 				co.options.set_bpp(24);
 							

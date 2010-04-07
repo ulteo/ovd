@@ -222,7 +222,11 @@ public class SessionManagerCommunication {
 			opt.hostname = server.getAttribute("fqdn");
 			opt.username = server.getAttribute("login");
 			opt.password = server.getAttribute("password");
-			opt.width = (int)dim.width;
+
+			// Ensure that width is multiple of 4
+			// Prevent artifact on screen with a with resolution
+			// not divisible by 4
+			opt.width = (int)(dim.width & ~3);
 			opt.height = (int)dim.height;
 			opt.set_bpp(24);
 
