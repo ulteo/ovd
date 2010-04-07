@@ -54,7 +54,7 @@ public class VChannels {
 
     public static final int STATUS_ACCESS_DENIED = 0xc0000022;
 
-    public static final int MAX_CHANNELS = 4;
+    public static final int MAX_CHANNELS = 30;
 
     public static final int CHANNEL_CHUNK_LENGTH = 1600;
 
