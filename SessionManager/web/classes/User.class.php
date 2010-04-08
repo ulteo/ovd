@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -195,13 +195,17 @@ class User {
 		}
 
 		while (count($server_val)>0) {
-			$max_value = -1;
+			$max_value = -1*PHP_INT_MAX; // less possible int value
 			$max_fqdn = 0;
 			foreach ($server_val as $fqdn1 => $val1) {
 				if ( $max_value < $val1) {
 					$max_value = $val1;
 					$max_fqdn = $fqdn1;
 				}
+			}
+			if (! isset($list_servers[$max_fqdn])) {
+				Logger::error('main' , "USER::getAvailableServer($type) no server found for user '".$this->getAttribute('login')."' failed to find the best server");
+				return NULL;
 			}
 			$buf = $list_servers[$max_fqdn];
 			unset($server_val[$max_fqdn]);
