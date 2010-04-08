@@ -304,6 +304,16 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				}
 				
 				co.connection.setKeymap(keymap);
+
+				co.connection.addObserver(this);
+				co.thread = new Thread(co.connection);
+
+				co.channel = new OvdAppChannel(co.connection.opt, co.connection.common);
+				co.channel.addOvdAppListener(this);
+				if (! co.connection.addChannel(co.channel)) {
+					System.err.println("Can't add channel ovdapp ...");
+					continue;
+				}
 				
 				if(this.multimedia_mode) {
 					System.out.println("Multimedia channels enabled");
@@ -323,34 +333,10 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 						}
 				
 						if (! co.connection.addChannel(rdpdrChannel))
-							System.err.println("Unable to ass rdpdr channel, continue anyway");
+							System.err.println("Unable to add rdpdr channel, continue anyway");
 					}
 					else
 						System.out.println("Have to map local printers but no printer found ....");
-				}
-				
-				co.connection.addObserver(this);
-				co.thread = new Thread(co.connection);
-				
-				co.channel = new OvdAppChannel(co.connection.opt, co.connection.common);
-				co.channel.addOvdAppListener(this);
-				if (! co.connection.addChannel(co.channel)) {
-					System.err.println("Can't add channel ovdapp ...");
-					continue;
-				}
-				
-				
-				String[] printers = Printer.getAllAvailable();
-				if (printers.length > 0) {
-					RdpdrChannel rdpdrChannel = new RdpdrChannel(co.connection.opt, co.connection.common);
-				 	
-					for(int i=0; i<printers.length; i++) {
-						Printer p = new Printer(printers[i], i);
-						rdpdrChannel.register(p);
-					}
-					
-					if (! co.connection.addChannel(rdpdrChannel))
-						System.err.println("Unable to ass rdpdr channel, continue anyway");
 				}
 				
 				this.connections.put(new Integer(order.id), co);
