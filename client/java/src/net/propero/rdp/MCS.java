@@ -24,6 +24,7 @@ public class MCS {
     private ISO IsoLayer=null;
     private int McsUserID;
     private Common common = null;
+    private Options opt = null;
 
     /* this for the MCS Layer */
     private static final int CONNECT_INITIAL = 0x7f65;
@@ -55,6 +56,7 @@ public class MCS {
      */
     public MCS(VChannels channels, Options opt_, Common common_) {
         this.channels = channels;
+	this.opt = opt_;
         this.common = common_;
     	IsoLayer = new ISO_Localised(opt_, this.common);
     }
@@ -165,9 +167,13 @@ public class MCS {
     public RdpPacket_Localised receive(int[] channel) throws IOException, RdesktopException, OrderException, CryptoException {
     	logger.debug("receive");
     	int opcode=0, appid=0, length=0;
-	RdpPacket_Localised buffer=IsoLayer.receive();
+	RdpPacket_Localised buffer=IsoLayer.receive(true);
 	if(buffer==null) return null;
 	buffer.setHeader(RdpPacket_Localised.MCS_HEADER);
+
+	if (this.opt.server_rdp_version != 3)
+		return buffer;
+
 	opcode = buffer.get8();
 
 	appid = opcode>>2;
@@ -422,7 +428,7 @@ public class MCS {
     int result=0;
 	int length=0;
 	
-	RdpPacket_Localised buffer = IsoLayer.receive();
+	RdpPacket_Localised buffer = IsoLayer.receive(false);
     logger.debug("Received buffer"); 
 	length=berParseHeader(buffer, CONNECT_RESPONSE);
 	length=berParseHeader(buffer, BER_TAG_RESULT);
@@ -519,7 +525,7 @@ public class MCS {
     public void receive_cjcf() throws IOException, RdesktopException, OrderException, CryptoException {
     	logger.debug("receive_cjcf");
     int opcode=0, result=0;
-	RdpPacket_Localised buffer = IsoLayer.receive();
+	RdpPacket_Localised buffer = IsoLayer.receive(false);
 	
 	opcode=buffer.get8();
 	if ((opcode >>2) != CJCF) {
@@ -553,7 +559,7 @@ public class MCS {
     public int receive_aucf() throws IOException, RdesktopException, OrderException, CryptoException {
 	logger.debug("receive_aucf");
     int opcode=0, result=0, UserID=0;
-	RdpPacket_Localised buffer = IsoLayer.receive();
+	RdpPacket_Localised buffer = IsoLayer.receive(false);
 	
 	opcode=buffer.get8();
 	if ((opcode >>2) != AUCF) {

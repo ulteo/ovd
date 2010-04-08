@@ -205,7 +205,7 @@ public class Rdp {
 
     private Cache cache = null;
 
-    private int next_packet = 0;
+    protected int next_packet = 0;
 
     private int rdp_shareid = 0;
 
@@ -424,7 +424,7 @@ public class Rdp {
         CommunicationMonitor.lock(this);
 
         int length;
-
+	
         data.setPosition(data.getHeader(RdpPacket_Localised.RDP_HEADER));
         length = data.getEnd() - data.getPosition();
 
@@ -462,6 +462,18 @@ public class Rdp {
             this.stream = SecureLayer.receive();
             if (stream == null)
                 return null;
+
+	    if (this.opt.server_rdp_version == 0xff) {
+		this.next_packet = this.stream.getEnd();
+		type[0] = 0;
+		return this.stream;
+	    }
+	    else if (this.opt.server_rdp_version != 3) {
+		/* rdp5_process should move g_next_packet ok */
+		this.common.rdp.rdp5_process(this.stream, (this.opt.server_rdp_version & 0x80) != 0);
+		type[0] = 0;
+		return this.stream;
+	    }
             this.next_packet = this.stream.getPosition();
         } else {
             this.stream.setPosition(this.next_packet);
@@ -986,10 +998,9 @@ public class Rdp {
         this.sendBitmapCaps(data);
         this.sendOrderCaps(data);
 
-        if (this.opt.use_rdp5 && this.opt.persistent_bitmap_caching) {
-            logger.info("Persistent caching enabled");
-            this.sendBitmapcache2Caps(data);
-        } else
+        if (this.opt.use_rdp5)
+	    this.sendBitmapcache2Caps(data);
+        else
             this.sendBitmapcacheCaps(data);
 
         this.sendColorcacheCaps(data);
@@ -1028,6 +1039,8 @@ public class Rdp {
         data.setLittleEndian16(1); /* OS major type */
         data.setLittleEndian16(3); /* OS minor type */
         data.setLittleEndian16(0x200); /* Protocol version */
+        data.setLittleEndian16(0); /* Pad */
+        data.setLittleEndian16(0); /* Compression types */
         data.setLittleEndian16(this.opt.use_rdp5 ? 0x40d : 0);
         // data.setLittleEndian16(Options.use_rdp5 ? 0x1d04 : 0); // this seems
         /*
@@ -1036,8 +1049,6 @@ public class Rdp {
          * NT4MS. Hmm.. Anyway, thankyou, Microsoft, for sending such
          * information in a padding field..
          */
-        data.setLittleEndian16(0); /* Compression types */
-        data.setLittleEndian16(0); /* Pad */
         data.setLittleEndian16(0); /* Update capability */
         data.setLittleEndian16(0); /* Remote unshare capability */
         data.setLittleEndian16(0); /* Compression level */

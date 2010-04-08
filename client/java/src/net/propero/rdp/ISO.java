@@ -91,8 +91,7 @@ public abstract class ISO {
     this.in = new DataInputStream(new BufferedInputStream(rdpsock.getInputStream()));
 	this.out= new DataOutputStream(new BufferedOutputStream(rdpsock.getOutputStream()));
 	send_connection_request();
-	
-	receiveMessage(code);
+	receiveMessage(code, false);
 	if (code[0] != CONNECTION_CONFIRM) {
 	    throw new RdesktopException("Expected CC got:" + Integer.toHexString(code[0]).toUpperCase());
 	}
@@ -172,10 +171,14 @@ public abstract class ISO {
      * @throws OrderException
      * @throws CryptoException
      */
- 	public RdpPacket_Localised receive() throws IOException, RdesktopException, OrderException, CryptoException {
+ 	public RdpPacket_Localised receive(boolean save_version) throws IOException, RdesktopException, OrderException, CryptoException {
 		int[] type = new int[1];
-		RdpPacket_Localised buffer = receiveMessage(type);
+		RdpPacket_Localised buffer = receiveMessage(type, true);
 		if(buffer==null) return null;
+
+		if (save_version && this.opt.server_rdp_version != 3)
+			return buffer;
+
 		if (type[0] != DATA_TRANSFER) {
 			throw new RdesktopException("Expected DT got:" + type[0]);
 		}
@@ -198,9 +201,6 @@ public abstract class ISO {
 
  		in.readFully(packet,0,length);
         
-        
-        // try{ }
-		// catch(IOException e){ logger.warn("IOException: " + e.getMessage()); return null;	}
 		if(this.opt.debug_hexdump) dump.encode(packet, "RECEIVE" /*System.out*/);
 			
  		if(p == null){
@@ -229,44 +229,45 @@ public abstract class ISO {
      * @throws OrderException
      * @throws CryptoException
      */
- 	private RdpPacket_Localised receiveMessage(int[] type) throws IOException, RdesktopException, OrderException, CryptoException {
+ 	private RdpPacket_Localised receiveMessage(int[] type, boolean save_version) throws IOException, RdesktopException, OrderException, CryptoException {
  		logger.debug("ISO.receiveMessage");
  		RdpPacket_Localised s = null;
  		int length, version;
+
+		s = tcp_recv(null,4);
+		if(s == null) {
+			System.err.println("Packet lost!");
+			return null;
+		}
+
+		version = s.get8();
+		if (save_version) {
+			this.opt.server_rdp_version = version;
+		}
+
+		if(version == 3){
+			s.incrementPosition(1); // pad
+			length = s.getBigEndian16();
+		}else{
+			length = s.get8();
+			if((length & 0x80) != 0){
+				length &= ~0x80;
+				length = (length << 8) + s.get8();
+			}
+		}
+
+		if (length < 4) {
+			logger.error("Bad packet header");
+			return null;
+		}
+
+		s = tcp_recv(s, length - 4);
+		if(s == null) return null;
+
+		if (version != 3)
+			return s;
  		
- 		
- 		next_packet:
- 			while(true){
- 				logger.debug("next_packet");
- 				s = tcp_recv(null,4);
- 				if(s == null) {
- 					System.err.println("Packet lost!");
- 					return null;
- 				}
- 			
- 				version = s.get8();
- 				
- 				if(version == 3){
- 					s.incrementPosition(1); // pad
-					length = s.getBigEndian16();
- 				}else{
- 					length = s.get8();
-					if((length & 0x80) != 0){
-						length &= ~0x80;
-						length = (length << 8) + s.get8();
-					}
- 				}
- 				
- 				s = tcp_recv(s, length - 4);
- 				if(s == null) return null;
- 				if((version & 3) == 0){
- 					logger.debug("Processing rdp5 packet");
- 					this.common.rdp.rdp5_process(s, (version & 0x80) != 0);
- 					continue next_packet;
- 				}else break;
- 			}
- 		
- 		s.get8();
+ 		s.incrementPosition(1);
  		type[0] = s.get8();
  		 		
  		if(type[0] == DATA_TRANSFER){

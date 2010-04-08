@@ -238,7 +238,8 @@ public class Orders {
 
             processed++;
         }
-        if (data.getPosition() != next_packet) {
+
+        if (! this.opt.bitmap_compression && (data.getPosition() != next_packet)) {
             throw new OrderException("End not reached!");
         }
     }
@@ -479,6 +480,7 @@ public class Orders {
      */
     private void process_bmpcache2(RdpPacket_Localised data, int flags,
             boolean compressed) throws RdesktopException, IOException {
+	    
         Bitmap bitmap;
         Bitmap bmp = new Bitmap(this.opt);
         int y;

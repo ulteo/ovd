@@ -16,6 +16,9 @@ import net.propero.rdp.*;
 import net.propero.rdp.crypto.*;
 
 public class Rdp5 extends Rdp {
+	private static final int RDP5_COMPRESSED = 0x80;
+
+	private static final int RDP_MPPC_COMPRESSED = 0x20;
 
     private VChannels channels;
 
@@ -65,49 +68,56 @@ public class Rdp5 extends Rdp {
         logger.debug("Processing RDP 5 order");
 
         int length, count;
-        int type;
+        int type, ctype;
         int next;
-
-        if (encryption) {
-            s.incrementPosition(shortform ? 6 : 7 /* XXX HACK */); /* signature */
-            byte[] data = new byte[s.size() - s.getPosition()];
-            s.copyToByteArray(data, 0, s.getPosition(), data.length);
-            byte[] packet = SecureLayer.decrypt(data);
-        }
-
-        // printf("RDP5 data:\n");
-        // hexdump(s->p, s->end - s->p);
+        RdpPacket_Localised ts = null;
 
         while (s.getPosition() < s.getEnd()) {
             type = s.get8();
-            length = s.getLittleEndian16();
-            /* next_packet = */next = s.getPosition() + length;
+
+            if ((type & RDP5_COMPRESSED) != 0) {
+                ctype = s.get8();
+                length = s.getLittleEndian16();
+                type ^= RDP5_COMPRESSED;
+            }
+            else {
+                ctype = 0;
+                length = s.getLittleEndian16();
+            }
+            this.next_packet = next = s.getPosition() + length;
+
+            if ((ctype & RDP_MPPC_COMPRESSED) != 0) {
+                logger.info("MPPC compressed message");
+            }
+            else
+                ts = s;
+
             logger.debug("RDP5: type = " + type);
             switch (type) {
             case 0: /* orders */
-                count = s.getLittleEndian16();
-                orders.processOrders(s, next, count);
+                count = ts.getLittleEndian16();
+                orders.processOrders(ts, next, count);
                 break;
             case 1: /* bitmap update (???) */
-                s.incrementPosition(2); /* part length */
-                processBitmapUpdates(s);
+                ts.incrementPosition(2); /* part length */
+                processBitmapUpdates(ts);
                 break;
             case 2: /* palette */
-                s.incrementPosition(2);
-                processPalette(s);
+                ts.incrementPosition(2);
+                processPalette(ts);
                 break;
             case 3: /* probably an palette with offset 3. Weird */
                 break;
             case 5:
-                process_null_system_pointer_pdu(s);
+                process_null_system_pointer_pdu(ts);
                 break;
             case 6: // default pointer
                 break;
             case 9:
-                process_colour_pointer_pdu(s);
+                process_colour_pointer_pdu(ts);
                 break;
             case 10:
-                process_cached_pointer_pdu(s);
+                process_cached_pointer_pdu(ts);
                 break;
             default:
                 logger.warn("Unimplemented RDP5 opcode " + type);

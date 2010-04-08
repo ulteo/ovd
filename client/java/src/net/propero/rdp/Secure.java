@@ -951,6 +951,19 @@ public class Secure {
 		int[] channel = new int[1];
 		buffer=McsLayer.receive(channel);
 		if(buffer==null) return null;
+
+		if (this.opt.server_rdp_version != 3) {
+			if ((this.opt.server_rdp_version & 0x80) != 0) {
+				buffer.incrementPosition(8);
+				byte[] data = new byte[buffer.size() - buffer.getPosition()];
+				buffer.copyToByteArray(data, 0, buffer.getPosition(), data.length);
+				byte[] packet = this.decrypt(data);
+
+				buffer.copyFromByteArray(packet, 0, buffer.getPosition(), packet.length);
+			}
+			return buffer;
+    		}
+
 		buffer.setHeader(RdpPacket_Localised.SECURE_HEADER);
 		if (Constants.encryption || (! this.licenceIssued)) {
 
@@ -967,16 +980,14 @@ public class Secure {
 				byte[] packet = this.decrypt(data);
 				
 				buffer.copyFromByteArray(packet, 0, buffer.getPosition(), packet.length);
-
-				//buffer.setStart(buffer.getPosition());
-				//return buffer;
 			}
 		}
 	    
     		if (channel[0] != MCS.MCS_GLOBAL_CHANNEL)
     		{
     			channels.channel_process(buffer, channel[0]);
-    			continue;
+			this.opt.server_rdp_version = 0xff;
+    			return buffer;
     		}
     		
     		buffer.setStart(buffer.getPosition());
