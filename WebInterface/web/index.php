@@ -85,7 +85,7 @@ $keymaps = get_available_keymaps();
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="user_login" value="" /><script type="text/javascript">Event.observe(window, 'load', $('user_login').focus());</script>
+													<input type="text" id="user_login" value="" /><script type="text/javascript">Event.observe(window, 'load', function() { $('user_login').focus(); });</script>
 												</td>
 											</tr>
 											<tr>
@@ -127,7 +127,7 @@ $keymaps = get_available_keymaps();
 														<strong><?php echo _('Language'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<span><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', updateFlag('en-us'));</script>&nbsp;
+														<span><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { updateFlag('en-us'); });</script>&nbsp;
 														<select id="session_language" onchange="updateFlag($('session_language').value);" onkeyup="updateFlag($('session_language').value);">
 															<?php
 																foreach ($languages as $language)
