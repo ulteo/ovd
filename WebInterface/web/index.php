@@ -47,6 +47,12 @@ $keymaps = get_available_keymaps();
 		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
+
+		<script type="text/javascript">
+			Event.observe(window, 'load', function() {
+				new Effect.Move($('loginBox'), { x: 0, y: 350 });
+			});
+		</script>
 	</head>
 
 	<body style="margin: 50px; background: #ddd; color: #333;">

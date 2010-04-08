@@ -41,6 +41,8 @@ div.rounded {
 	margin-top: 50px;
 	margin-bottom: 50px;
 	background: #fff;
+	position: relative;
+	top: -300px;
 }
 
 #loginForm {
