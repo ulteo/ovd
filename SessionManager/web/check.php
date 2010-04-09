@@ -54,7 +54,7 @@ if ($sessions) {
 	foreach ($sessions as $session) {
 		$buf = $session->getStatus();
 
-		if (! $buf || (int)$buf == 4) {
+		if ((! $buf || (int)$buf == 4) && $session->getAttribute('start_time') < (time()-10)) {
 			Logger::warning('main', '(check) Session \''.$session->id.'\' is no longer existing, deleting');
 
 			Abstract_Session::delete($session->id);
