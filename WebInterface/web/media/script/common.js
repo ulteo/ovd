@@ -13,16 +13,18 @@ var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
 
+var use_popup = false;
+var debug = false;
 var startsession = false;
 
 function startSession() {
 	disableLogin();
 
-	var use_popup = false;
+	use_popup = false;
 	if ($('use_popup_true') && $('use_popup_true').checked)
 		use_popup = true;
 
-	var debug = false;
+	debug = false;
 	if ($('debug_true') && $('debug_true').checked)
 		debug = true;
 
@@ -51,7 +53,7 @@ function startSession() {
 	if (! startsession)
 		return false;
 
-	if ($('use_popup_true') && $('use_popup_true').checked) {
+	if (use_popup) {
 		window_ = popupOpen(rand);
 		$('startsession').target = 'Ulteo'+rand;
 	}
