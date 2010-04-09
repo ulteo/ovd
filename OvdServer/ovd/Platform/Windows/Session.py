@@ -282,7 +282,7 @@ class Session(AbstractSession):
 		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\Software\Microsoft\Active Setup"%(hiveName), 0, win32con.KEY_ALL_ACCESS)
 		
 		Reg.CopyTree(hkey_src, "Installed Components", hkey_dst)
-	
+		Reg.UpdateActiveSetup(hkey_dst, self.user.name)
 		win32api.RegCloseKey(hkey_src)
 		win32api.RegCloseKey(hkey_dst)
 		

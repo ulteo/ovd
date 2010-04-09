@@ -105,6 +105,37 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	win32api.RegCloseKey(hkey_dst)
 
 
+def ProcessActiveSetupEntry(BaseKey, Entry, Username):
+	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
+	print Entry
+	try:
+		(string, type) = win32api.RegQueryValueEx(hkey, "IsInstalled")
+		if not (string == 1 or string == '\x01\x00\x00\x00'):
+			win32api.RegDeleteKey(BaseKey, Entry)
+	except:
+		pass
+	try:
+		(string, type) = win32api.RegQueryValueEx(hkey, "CloneUser")
+		if string == 1 or string == '\x01\x00\x00\x00' :
+			win32api.RegSetValueEx(hkey, 'Username', 0, win32con.REG_SZ, Username)
+	except :
+		pass
+
+	win32api.RegCloseKey(hkey)
+
+def UpdateActiveSetup(KeySrc, Username):
+	hkey_src = win32api.RegOpenKey(KeySrc, "Installed Components", 0, win32con.KEY_ALL_ACCESS)
+
+	index = 0
+	while True:
+		try:
+			buf = win32api.RegEnumKey(hkey_src, index)
+			ProcessActiveSetupEntry(hkey_src, buf, Username)
+			index+= 1
+		except:
+			win32api.RegCloseKey(hkey_src)
+			break
+	win32api.RegCloseKey(hkey_src)
 
 def DeleteTree(key, subkey, deleteRoot = True):
 	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
