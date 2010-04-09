@@ -89,7 +89,7 @@ class SessionReportItem {
 			$tmp[$app_pid] = $app_id;
 		}
 
-		if (in_array($session->getAttribute('mode'), array('portal', 'external'))) {
+		if (is_object($session) && in_array($session->getAttribute('mode'), array('portal', 'external'))) {
 			$this->current_apps = array();
 			foreach ($user_node->childNodes as $sid_node) {
 				if ($sid_node->nodeType != XML_ELEMENT_NODE ||
