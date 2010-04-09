@@ -40,6 +40,18 @@ display_start() {
 
     local vnc_tmp=/tmp/.tmp${VNC_UID} 
 
+    # If previous X11 socket still exist for this display
+    if [ -e /tmp/.X11-unix/X${rfb_port} ]; then
+        local owner=$(stat -c "%U" /tmp/.X11-unix/X${rfb_port})
+        if [ "$owner" = "UNKNOWN" ]; then
+            log_INFO "Clean old X11 socket (X${rfb_port})"
+            rm -f $VNC_USER /tmp/.X11-unix/X${rfb_port}
+        else
+            log_WARN "Cannot start Xserver, file '/tmp/.X11-unix/X${rfb_port}' exists"
+            return 1
+        fi
+    fi
+
     # Start the VNC server
     /bin/su -s "/bin/bash" $VNC_USER -c "XAUTHORITY=${vnc_tmp}.Xauthority /usr/bin/Xtightvnc ${display_vnc_opts} :${rfb_port} -desktop X${rfb_port} -nolock -once -interface 127.0.0.1 -localhost -lf 1024 -geometry ${geometry} -depth 24 -rfbwait 240000 -rfbauth ${vnc_tmp}encvncpasswd -rfbport ${rfb_port} -fp /usr/share/fonts/X11/Type1/,/usr/share/fonts/X11/misc/,/usr/share/fonts/X11/75dpi/,/usr/share/fonts/X11/100dpi/ -co /etc/X11/rgb -ac -auth ${vnc_tmp}.Xauthority" >/dev/null 2>&1 &
     echo $! >$pid_file
@@ -86,4 +98,15 @@ display_alive() {
     fi
 
     return 1
+}
+
+display_clean() {
+    local user=$1
+
+    # remove X11 sockets still exists
+    for file in $(find /tmp/.X11-unix -user $user); do
+        local name=$(basename "$file")
+        log_INFO "Clean old X11 socket ($name)"
+        rm -f "$file"
+    done
 }

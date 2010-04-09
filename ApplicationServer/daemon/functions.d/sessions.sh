@@ -94,6 +94,7 @@ session_init() {
     log_INFO "useradd $VNC_USER"
     useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER
 
+    display_clean $VNC_USER
 
     UUID=$(id -u $VNC_USER)
     UGID=$(id -g $VNC_USER)
@@ -236,6 +237,8 @@ session_purge() {
 
     log_DEBUG "removing user's files from /tmp"
     find /tmp/ -user $USER_LOGIN -exec rm -rf {} \; 2>/dev/null
+
+    display_clean $VNC_USER
 
     SESSID=$SESSID SESSID_DIR=$SESSID_DIR \
     HOME_DIR_TYPE=$HOME_DIR_TYPE \
