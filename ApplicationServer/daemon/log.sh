@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
@@ -33,7 +33,7 @@ log_INFO() {
 }
 
 log_push_basic() {
-    echo $(date +"%F-%T") $@ >> $LOG_FILE
+    echo $(date +"%F-%T") [$PNAME] $@ >> $LOG_FILE
 }
 
 LOG_D=$(dirname $0)/log.d

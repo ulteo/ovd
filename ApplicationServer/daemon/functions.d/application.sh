@@ -256,6 +256,11 @@ application_startdisplay() {
     local app_dir=$sessid_dir/sessions/$app_instance
 
     local rfb_port=$(spool_get_rfbport)
+    if [ -z "$rfb_port" ]; then
+        log_ERROR "Unable to get RFB port ($rfb_port)"
+        return 1
+    fi
+    
     echo $rfb_port > $app_dir/rfb_port
 
     local try=0

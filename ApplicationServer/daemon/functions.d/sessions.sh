@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2009
 # Author Julien LANGLOIS <julien@ulteo.com>
@@ -22,7 +22,7 @@ sessions_get_active() {
 }
 
 sessions_get_to_create() {
-    find $SPOOL/sessions2create -maxdepth 1 -mindepth 1 -type f -exec basename {} \;
+    find $SPOOL/sessions2create -maxdepth 1 -mindepth 1 -type f ! -name "*-lock*" -exec basename {} \;
 }
 
 
@@ -58,7 +58,10 @@ session_init() {
 
     # Choose a number for this session
     local i=$(spool_get_id)
-    [ $? -eq 0 ] || return 1
+    if [ -z "$i" ]; then
+	log_ERROR "Unable to get free ID for session $SESSID"
+	return 1
+    fi
 
     log_INFO "session_init: '$SESSID' => $i"
     [ $? -eq 0 ] || return 1

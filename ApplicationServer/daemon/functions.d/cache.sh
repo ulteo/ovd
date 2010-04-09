@@ -20,10 +20,20 @@
 ## Cache function
 #
 cache_build() {
-    netstat -n --tcp > $SPOOL/cache/netstat
-    ps aux |tail -n +2 > $SPOOL/cache/ps
-    grep "cpulimit" $SPOOL/cache/ps | mawk '{ print $13 }' > $SPOOL/cache/ps_cpulimit
-    ps axo ruser,pid,pcpu |tail -n +2 |grep -v "^root" > $SPOOL/cache/ps_chroot
+    local old=$(find $SPOOL -maxdepth 1 -mindepth 1 -type d -name "cache.*")
+    local dest="cache.$RANDOM$(date +%s)"
+
+    mkdir -p $SPOOL/$dest
+
+    netstat -n --tcp > $SPOOL/$dest/netstat
+    ps aux |tail -n +2 > $SPOOL/$dest/ps
+    grep "cpulimit" $SPOOL/$dest/ps | mawk '{ print $13 }' > $SPOOL/$dest/ps_cpulimit
+    ps axo ruser,pid,pcpu |tail -n +2 |grep -v "^root" > $SPOOL/$dest/ps_chroot
+
+    $(cd $SPOOL && ln -sfT $dest cache)
+    if [ -n "$old" ]; then
+	rm -rf $old
+    fi
 }
 
 cache_net_display() {

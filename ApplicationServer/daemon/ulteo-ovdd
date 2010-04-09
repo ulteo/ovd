@@ -1,10 +1,11 @@
 #!/bin/bash
-# Copyright (C) 2006-2008 Ulteo SAS
+# Copyright (C) 2006-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Gaël DUVAL <gduval@ulteo.com>
 # Author Gauvain POCENTEK <gauvain@ulteo.com>
 # Author Julien LANGLOIS <julien@ulteo.com>
 # Author Jonathan LESTRELIN <jonathan@ulteo.com>
+# Author Laurent CLOUET <laurent@ulteo.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License 
@@ -99,16 +100,29 @@ session_check_status() {
         return $?
     fi
 
-    # if a session is required to stop asap
-    if [ $RUNASAP -eq 3 ]; then
-        log_INFO "Killing Session $SESSID"
-        application_purge_all ${SESSID}
-        session_purge ${SESSID}
-        return 1
-    fi
+#     # if a session is required to stop asap
+#     if [ $RUNASAP -eq 3 ]; then
+#         log_INFO "Killing Session $SESSID"
+#         application_purge_all ${SESSID}
+#         session_purge ${SESSID}
+#         return 1
+#     fi
 
     # If sesion is not initialize yet
     if [ $RUNASAP -eq 0 ]; then 
+        #
+        # Clean active non-used session 
+        # (runasap=0) since 3*CONNECTION_TIMEOUT seconds
+        #
+        local now=$(date +%s)
+        local runasap=$(stat -c "%Z" ${SESSID_DIR}/infos/status)
+        local diff=$(( $now - $runasap ))
+
+        if [ $diff -gt $(( 3 * $CONNECTION_TIMEOUT )) ]; then
+            log_WARN "garbage_collector: found non-used session '$SESSID' -> remove it"
+            return 1
+        fi
+
         return 0
     fi
 
@@ -288,31 +302,72 @@ session_check_status() {
     fi
 }
 
-## Garbage Collector
-# clean possibly remaining user dirs, only if they are umounted
-#
-garbage_collector() {
-    #
-    # Clean active session non-used 
-    # (runasap=0) since 60 second
-    #
-    for SESSID in $(sessions_get_active); do
-        local SESSID_DIR=$SPOOL/sessions/$SESSID
-        local RUNASAP=$(cat ${SESSID_DIR}/infos/status)
-        [ $RUNASAP -ne 0 ] && continue
+session_process() {
+    export PID=$(get_pid)
+    export PNAME="pid $PID"
+    log_INFO "session_process pid $PID"
+    local my_sessions=""
 
-        local now=$(date +%s)
-        local runasap=$(stat -c "%Z" ${SESSID_DIR}/infos/status)
-        local diff=$(( $now - $runasap ))
+    while [ 1 -eq 1 ]; do
+        # first step: get new session if possible
+        for SESSID in $(sessions_get_to_create); do
+            log_INFO "session_process (dans le for) $SESSID"
 
-        if [ $diff -gt $(( 3 * $CONNECTION_TIMEOUT )) ]; then
-            log_WARN "garbage_collector: found non-used session '$SESSID' -> remove it"
-            session_remove $SESSID
-        fi
+            local nb=$(find $SPOOL/sessions2create -name "$SESSID-lock-*" |wc -l)
+            if [ $nb -ne 0 ]; then
+                continue
+            fi
+
+            touch $SPOOL/sessions2create/$SESSID-lock-$PID
+        
+            local nb=$(find $SPOOL/sessions2create -name "$SESSID-lock-*" |wc -l)
+            if [ $nb -ne 1 ] || [ ! -f $SPOOL/sessions2create/$SESSID ]; then
+                rm $SPOOL/sessions2create/$SESSID-lock-$PID
+                continue
+            fi
+
+            log_INFO "creating session $SESSID"
+
+            session_init $SESSID
+            local ret=$?
+
+            rm $SPOOL/sessions2create/$SESSID
+            rm $SPOOL/sessions2create/$SESSID-lock-$PID
+
+	    if [ $ret -ne 0 ]; then
+		log_ERROR "this session $SESSID will never continue :("
+		break
+	    fi
+
+            local my_sessions="$my_sessions $SESSID"
+
+            # Create only one session per loop
+	    break;
+	done
+
+        # For each session we manage...
+	for SESSID in $my_sessions; do
+	    log_DEBUG "Session "$SESSID
+
+	    session_check_status $SESSID
+	    ret=$?
+
+	    if [ $ret -eq 1 ]; then
+                # we are not managing this session anymore
+		local my_sessions=$(array_del "$my_sessions" $SESSID)
+		session_remove $SESSID
+	    fi
+	done
+
+	sleep 1s
     done
 }
 
+
+
 loop() {
+    export PNAME="main"
+
     # check if the system is clean before to start
     system_clean
     if [ $? -ne 0 ]; then
@@ -321,7 +376,6 @@ loop() {
         exit 1
     fi
 
-    trap 'stop' KILL EXIT
     spool_clean
     spool_init
 
@@ -344,6 +398,24 @@ loop() {
     fi
     apt_daemon &
     PID_WATCH=$!
+
+    cache_build
+
+    PIDS_SESSION=""
+
+    if [ -n "$NB_SUB_PROCESS" ]; then
+        local nb=$NB_SUB_PROCESS
+    else
+        local nb=$(( $(get_ram) / 1024 / 1024  ))
+        local nb=$(( ( $nb + $(get_nb_core) ) / 2 +1 ))
+    fi
+    log_INFO "Start $nb sessions spoolers"
+    for i in $(seq $nb); do
+        session_process "thread$i" &
+        PIDS_SESSION="$PIDS_SESSION $!"
+    done
+
+    trap 'stop' KILL EXIT
 
     local t0=$(date +%s)
     while [ 1 ]; do
@@ -369,23 +441,6 @@ loop() {
             check_cpulimit
         fi
 
-        # Check session to create
-        for SESSID in $(sessions_get_to_create); do
-            log_INFO "creating session $SESSID"
-            session_init $SESSID
-            rm $SPOOL/sessions2create/$SESSID
-        done
-
-        # For each session ...
-        for SESSID in $(sessions_get_active); do
-            log_DEBUG "Ses "$SESSID
-            session_check_status $SESSID
-            ret=$?
-
-            [ $ret -eq 1 ] && session_remove $SESSID
-        done
-
-        garbage_collector
         sleep 1
     done
 }
@@ -396,6 +451,11 @@ stop() {
     killall -q cpulimit
 
     [ $PID_WATCH ] && kill $PID_WATCH && wait $PID_WATCH
+
+    for pid in $PIDS_SESSION; do
+        kill $pid && wait $pid
+    done
+
     for VNC in $(egrep ^VNC[0-9]+: /etc/passwd | cut -d ':' -f1); do
         for pid in $(ps -U $VNC | grep Xtightvnc | cut -d' ' -f 1); do
             kill $pid; kill -s 9 $pid
@@ -450,6 +510,7 @@ SERVERNAME=localhost
 SERVER_HTTP_PORT=80
 CONNECTION_TIMEOUT=20
 USE_CPULIMIT=1
+NB_SUB_PROCESS=
 # end of default configuration
 
 # turn off job control to avoid unwanted log messages
@@ -506,6 +567,7 @@ export SESSION_MANAGER_URL SERVERNAME
 export SERVER_HTTP_PORT
 export CONF_FILE
 export CONNECTION_TIMEOUT
+export NB_SUB_PROCESS
 
 # Set PATH to BIN_DIR in priority
 export PATH=$BIN_DIR:$PATH

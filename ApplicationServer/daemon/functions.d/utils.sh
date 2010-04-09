@@ -1,4 +1,4 @@
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Gauvain POCENTEK <gauvain@ulteo.com>
 # Author Julien LANGLOIS <julien@ulteo.com>
@@ -103,4 +103,23 @@ pid_alive() {
 
 get_pid() {
     python -c "import os; print os.getppid()"
+}
+
+array_del() {
+    local array="$1"
+    local item=$2
+
+    for i in $array; do
+        if [ "$i" != "$item" ]; then
+            echo $i
+        fi
+    done
+}
+
+get_ram() {
+    grep "MemTotal:" /proc/meminfo |tr -s " "| cut -d " " -f2
+}
+
+get_nb_core() {
+    grep "processor" /proc/cpuinfo |wc -l
 }

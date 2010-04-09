@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
@@ -20,9 +20,9 @@
 spool_init() {
     [ -d $SPOOL ] || mkdir -p $SPOOL
     [ -d $SPOOL/apt ] || mkdir $SPOOL/apt
-    [ -d $SPOOL/cache ] || mkdir $SPOOL/cache
     [ -d $SPOOL/files ] || mkdir $SPOOL/files
     [ -d $SPOOL/id ] || mkdir $SPOOL/id
+    [ -d $SPOOL/id/locks ] || mkdir $SPOOL/id/locks
     [ -d $SPOOL/sessions ] || mkdir $SPOOL/sessions
     [ -d $SPOOL/sessions2create ] || mkdir $SPOOL/sessions2create
 
@@ -39,6 +39,8 @@ spool_clean() {
         done
     fi
 
+    rm -rf $SPOOL/cache*
+
     if [ -n "$SPOOL_USERS" ]; then
         rm -rf $SPOOL_USERS/*
     fi
@@ -46,21 +48,52 @@ spool_clean() {
 
 spool_get_id() {
     local buf=0
-    while [ -f $SPOOL/id/id_$buf ]; do
+    while [ 1 -eq 1 ]; do
         [ $buf -ge 1000 ] && return 1
+
+	local nb=$(find $SPOOL/id/locks -name "id_${buf}_*" |wc -l)
+	if [ $nb -eq 0 ] && [ ! -f $SPOOL/id/id_$buf ]; then
+	    touch $SPOOL/id/locks/id_${buf}_$PID
+	    
+	    local nb=$(find $SPOOL/id/locks -name "id_${buf}_*" |wc -l)
+	    if [ $nb -eq 1 ] && [ ! -f $SPOOL/id/id_$buf ]; then
+		break;
+	    fi
+	    
+	    rm $SPOOL/id/locks/id_${buf}_$PID
+	fi
+
         buf=$(( $buf + 1 ))
     done
+
     echo $SESSID> $SPOOL/id/id_$buf
+    rm $SPOOL/id/locks/id_${buf}_$PID
     echo $buf
 }
 
 spool_get_rfbport() {
     local buf=5900
-    while [ -f $SPOOL/id/vnc_$buf ]; do
-        [ $buf -ge 6900 ] && return 1
+
+    while [ 1 -eq 1 ]; do
+        [ $buf -ge 8900 ] && return 1
+
+	local nb=$(find $SPOOL/id/locks -name "vnc_${buf}_*" |wc -l)
+	if [ $nb -eq 0 ] && [ ! -f $SPOOL/id/vnc_${buf} ]; then
+	    touch $SPOOL/id/locks/vnc_${buf}_$PID
+		
+	    local nb=$(find $SPOOL/id/locks -name "vnc_${buf}_*" |wc -l)
+	    if [ $nb -eq 1 ] && [ ! -f $SPOOL/id/vnc_${buf} ]; then
+		break;
+	    fi
+
+	    rm $SPOOL/id/locks/vnc_${buf}_$PID
+	fi
+
         buf=$(( $buf + 1 ))
     done
+
     echo $SESSID> $SPOOL/id/vnc_$buf
+    rm $SPOOL/id/locks/vnc_${buf}_$PID
     echo $buf
 }
 
