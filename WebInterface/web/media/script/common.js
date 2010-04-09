@@ -1,3 +1,14 @@
+var my_width;
+var my_height;
+
+if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+	my_width  = document.documentElement.clientWidth;
+	my_height = document.documentElement.clientHeight;
+} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+	my_width  = document.body.clientWidth;
+	my_height = document.body.clientHeight;
+}
+
 var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
@@ -125,8 +136,8 @@ function toggleContent(container) {
 
 Event.observe(window, 'load', function() {
 	$('lockWrap').hide();
-	$('lockWrap').style.width = document.body.clientWidth+'px';
-	$('lockWrap').style.height = document.body.clientHeight+'px';
+	$('lockWrap').style.width = my_width+'px';
+	$('lockWrap').style.height = my_height+'px';
 
 	$('errorWrap').hide();
 	$('okWrap').hide();
@@ -146,8 +157,8 @@ Event.observe(window, 'load', function() {
 
 function showLock() {
 	if (! $('lockWrap').visible()) {
-		$('lockWrap').style.width = document.body.clientWidth+'px';
-		$('lockWrap').style.height = document.body.clientHeight+'px';
+		$('lockWrap').style.width = my_width+'px';
+		$('lockWrap').style.height = my_height+'px';
 
 		$('lockWrap').show();
 	}
