@@ -40,7 +40,8 @@ if (isset($_POST['join'])) {
 	$invite->settings = array(
 		'invite_email'	=>	'admin',
 		'view_only'		=>	($view_only == 'Yes')?1:0,
-		'access_id'		=>	((isset($_POST['access_id']) && $_POST['access_id'] != '')?$_POST['access_id']:'desktop')
+		'access_id'		=>	((isset($_POST['access_id']) && $_POST['access_id'] != '')?$_POST['access_id']:'desktop'),
+		'client'		=>	'browser'
 	);
 	$invite->email = 'none';
 	$invite->valid_until = (time()+(60*30));
