@@ -43,8 +43,6 @@ div.rounded {
 	margin-top: 50px;
 	margin-bottom: 50px;
 	background: #fff;
-	position: relative;
-	top: -300px;
 }
 
 #loginForm {
@@ -57,12 +55,18 @@ div.rounded {
 }
 
 #splashContainer {
+	background: #fff;
+
 	border: 0px;
 
 	position: absolute;
 
 	width: 406px;
-	height: 255px;
+
+	text-align: left;
+	vertical-align: middle;
+
+	padding: 5px;
 }
 
 #debugContainer {
@@ -128,15 +132,18 @@ div.rounded {
 }
 
 #endContainer {
+	background: #fff;
+
 	border: 0px;
 
 	position: absolute;
 
 	width: 400px;
-	height: 150px;
 
 	text-align: center;
 	vertical-align: middle;
+
+	padding: 5px;
 }
 
 #errorContainer {

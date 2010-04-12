@@ -48,9 +48,26 @@ $keymaps = get_available_keymaps();
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 
+		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_desktop.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/daemon_applications.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/application.js?<?php echo time(); ?>" charset="utf-8"></script>
+
 		<script type="text/javascript">
+			var daemon;
+
 			Event.observe(window, 'load', function() {
-				new Effect.Move($('loginBox'), { x: 0, y: 350 });
+				if ($('splashContainer'))
+					new Effect.Center($('splashContainer'));
+
+				if ($('endContainer'))
+					new Effect.Center($('endContainer'));
+
+				if ($('desktopModeContainer'))
+					$('desktopModeContainer').hide();
+				if ($('desktopAppletContainer'))
+					$('desktopAppletContainer').hide();
 			});
 		</script>
 	</head>
@@ -64,6 +81,44 @@ $keymaps = get_available_keymaps();
 		<div id="okWrap" style="display: none;">
 		</div>
 		<div id="infoWrap" style="display: none;">
+		</div>
+
+		<div id="splashContainer" class="rounded" style="display: none;">
+			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center;" colspan="3">
+						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: left; vertical-align: middle;">
+						<span style="font-size: 1.35em; font-weight: bold; color: #686868;"><?php echo _('Loading:'); ?> Open Virtual Desktop</span>
+					</td>
+					<td style="width: 20px"></td>
+					<td style="text-align: left; vertical-align: middle;">
+						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="endContainer" class="rounded" style="display: none;">
+			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td style="text-align: center;">
+						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center; vertical-align: middle;" id="endContent">
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="desktopModeContainer" style="display: none;">
+			<div id="desktopAppletContainer" style="display: none;">
+			</div>
 		</div>
 
 		<div id="mainWrap">
@@ -166,8 +221,8 @@ $keymaps = get_available_keymaps();
 														<strong><?php echo _('Use pop-up'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1" checked="checked" /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0" /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1" /> <?php echo _('Yes'); ?>
+														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0" checked="checked" /> <?php echo _('No'); ?>
 													</td>
 												</tr>
 												<tr>

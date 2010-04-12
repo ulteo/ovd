@@ -56,9 +56,34 @@ function startSession() {
 	if (use_popup) {
 		window_ = popupOpen(rand);
 		$('startsession').target = 'Ulteo'+rand;
-	}
+	} else
+		return false;
 
 	return true;
+}
+
+function hideSplash() {
+	new Effect.Fade($('splashContainer'));
+}
+
+function showSplash() {
+	new Effect.Appear($('splashContainer'));
+}
+
+function hideEnd() {
+	new Effect.Fade($('endContainer'));
+}
+
+function showEnd() {
+	new Effect.Appear($('endContainer'));
+}
+
+function hideLogin() {
+	new Effect.Move($('loginBox'), { x: 0, y: -500 });
+}
+
+function showLogin() {
+	new Effect.Move($('loginBox'), { x: 0, y: 500 });
 }
 
 function disableLogin() {
@@ -90,9 +115,49 @@ function onStartSessionSuccess(transport) {
 	}
 
 	$('user_password').value = '';
-	enableLogin();
 
 	startsession = true;
+
+	if (! use_popup) {
+		hideLogin();
+		showSplash();
+
+		if ($('desktopAppletContainer')) {
+			new Effect.Move($('desktopAppletContainer'), { x: 0, y: -this.my_height });
+			$('desktopAppletContainer').show();
+		}
+
+		setTimeout(function() {
+			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, false);
+			daemon.keymap = 'fr';
+			daemon.multimedia = true;
+			daemon.redirect_client_printers = false;
+
+			daemon.i18n['session_close_unexpected'] = 'Server: session closed unexpectedly';
+			daemon.i18n['session_end_ok'] = 'Your session has ended, you can now close the window';
+			daemon.i18n['session_end_unexpected'] = 'Your session has ended unexpectedly';
+			daemon.i18n['error_details'] = 'error details';
+			daemon.i18n['close_this_window'] = 'Close this window';
+			daemon.i18n['start_another_session'] = 'Click <a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">here</a> to start a new session';
+
+			daemon.i18n['suspend'] = 'suspend';
+			daemon.i18n['resume'] = 'resume';
+
+			daemon.loop();
+		}, 2500);
+
+		setTimeout(function() {
+			if ($('desktopAppletContainer'))
+				new Effect.Move($('desktopAppletContainer'), { x: 0, y: this.my_height });
+		}, 3000);
+
+		setTimeout(function() {
+			hideSplash();
+			enableLogin();
+		}, 5000);
+	} else {
+		enableLogin();
+	}
 
 	return true;
 }
