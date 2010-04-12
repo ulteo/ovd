@@ -140,7 +140,7 @@ $keymaps = get_available_keymaps();
 										<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 											<tr>
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
-													<img src="media/image/icons/user_login.png" alt="" title="" />
+													<!--<img src="media/image/icons/user_login.png" alt="" title="" />-->
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Login'); ?></strong>
@@ -151,7 +151,7 @@ $keymaps = get_available_keymaps();
 											</tr>
 											<tr>
 												<td style="text-align: right; vertical-align: middle;">
-													<img src="media/image/icons/user_password.png" alt="" title="" />
+													<!--<img src="media/image/icons/user_password.png" alt="" title="" />-->
 												</td>
 												<td style="text-align: left; vertical-align: middle;">
 													<strong><?php echo _('Password'); ?></strong>
@@ -168,7 +168,7 @@ $keymaps = get_available_keymaps();
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 												<tr>
 													<td style="width: 22px; text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/session_mode.png" alt="" title="" />
+														<!--<img src="media/image/icons/session_mode.png" alt="" title="" />-->
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><?php echo _('Mode'); ?></strong>
@@ -215,7 +215,7 @@ $keymaps = get_available_keymaps();
 												</tr>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/use_popup.png" alt="" title="" />
+														<!--<img src="media/image/icons/use_popup.png" alt="" title="" />-->
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><?php echo _('Use pop-up'); ?></strong>
@@ -227,7 +227,7 @@ $keymaps = get_available_keymaps();
 												</tr>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
-														<img src="media/image/icons/debug.png" alt="" title="" />
+														<!--<img src="media/image/icons/debug.png" alt="" title="" />-->
 													</td>
 													<td style="text-align: left; vertical-align: middle;">
 														<strong><?php echo _('Debug'); ?></strong>
