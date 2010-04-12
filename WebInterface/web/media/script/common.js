@@ -319,13 +319,13 @@ function switchSettings() {
 	switchsettings_lock = true;
 	setTimeout(function() {
 		switchsettings_lock = false;
-	}, 1200);
+	}, 400);
 
 	if ($('advanced_settings').visible()) {
 		$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="9" height="9" alt="" title="" />';
-		Effect.SlideUp($('advanced_settings'));
+		new Effect.SlideUp($('advanced_settings'), { duration: 0.4 });
 	} else {
 		$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="9" height="9" alt="" title="" />';
-		Effect.SlideDown($('advanced_settings'));
+		new Effect.SlideDown($('advanced_settings'), { duration: 0.4 });
 	}
 }
