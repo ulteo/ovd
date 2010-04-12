@@ -276,13 +276,13 @@ function show_manage($id) {
     $obj = $userGroupDB->import($group_liaison->element);
 
     if (is_object($obj))
-      $groups_users[]= $obj;
+      $groups_users[$obj->getUniqueID()]= $obj;
   }
 
   $groups_users_all = $userGroupDB->getList(true);
   $groups_users_available = array();
   foreach($groups_users_all as $group_users) {
-    if (! in_array($group_users, $groups_users))
+    if (! array_key_exists($group_users->getUniqueID(), $groups_users))
       $groups_users_available[]= $group_users;
   }
 
