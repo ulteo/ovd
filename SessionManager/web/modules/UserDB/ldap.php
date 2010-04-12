@@ -134,6 +134,7 @@ class UserDB_ldap  extends UserDB {
 		$contains = '*';
 		if ( $contains_ != '')
 			$contains .= $contains_.'*';
+		$contains = preg_replace('/\*\*+/', '*', $contains); // ldap does not handle multiple star characters
 		
 		$filter = '(&'.$this->generateFilter().'(|';
 		foreach ($attributes_ as $attribute) {
