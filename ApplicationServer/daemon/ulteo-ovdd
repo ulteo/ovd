@@ -100,13 +100,13 @@ session_check_status() {
         return $?
     fi
 
-#     # if a session is required to stop asap
-#     if [ $RUNASAP -eq 3 ]; then
-#         log_INFO "Killing Session $SESSID"
-#         application_purge_all ${SESSID}
-#         session_purge ${SESSID}
-#         return 1
-#     fi
+    # if a session is required to stop asap
+    if [ $RUNASAP -eq 3 ]; then
+        log_INFO "Killing Session $SESSID"
+        application_purge_all ${SESSID}
+        session_purge ${SESSID}
+        return 1
+    fi
 
     # If sesion is not initialize yet
     if [ $RUNASAP -eq 0 ]; then 
