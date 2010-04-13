@@ -21,10 +21,8 @@
 
 define('WEBINTERFACE_CONF_FILE', '/etc/ulteo/webinterface/config.inc.php');
 
-if (! file_exists(WEBINTERFACE_CONF_FILE))
-	die(_('Configuration file missing: '.WEBINTERFACE_CONF_FILE));
-
-require_once(WEBINTERFACE_CONF_FILE);
+if (file_exists(WEBINTERFACE_CONF_FILE))
+	include_once(WEBINTERFACE_CONF_FILE);
 
 require_once(dirname(__FILE__).'/functions.inc.php');
 
