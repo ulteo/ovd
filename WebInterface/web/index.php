@@ -136,8 +136,27 @@ $keymaps = get_available_keymaps();
 							</td>
 							<td style="text-align: center; vertical-align: middle;">
 								<div id="loginForm" class="rounded">
+									<script type="text/javascript">Event.observe(window, 'load', function() {
+<?php
+if (! defined('SESSIONMANAGER_URL'))
+	echo '$(\'sessionmanager_url\').focus();';
+else
+	echo '$(\'user_login\').focus();';
+?>
+									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
+											<tr style="<?php echo ((defined('SESSIONMANAGER_URL'))?'display: none;':'') ?>">
+												<td style="width: 22px; text-align: right; vertical-align: middle;">
+													<!--<img src="media/image/icons/sessionmanager.png" alt="" title="" />-->
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
+													<strong><?php echo _('Session Manager'); ?></strong>
+												</td>
+												<td style="text-align: right; vertical-align: middle;">
+													<input type="text" id="sessionmanager_url" value="" />
+												</td>
+											</tr>
 											<tr>
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
 													<!--<img src="media/image/icons/user_login.png" alt="" title="" />-->
@@ -146,7 +165,7 @@ $keymaps = get_available_keymaps();
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="user_login" value="" /><script type="text/javascript">Event.observe(window, 'load', function() { $('user_login').focus(); });</script>
+													<input type="text" id="user_login" value="" />
 												</td>
 											</tr>
 											<tr>

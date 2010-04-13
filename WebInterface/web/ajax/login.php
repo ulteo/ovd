@@ -94,7 +94,12 @@ $user_node->setAttribute('password', $_POST['password']);
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
-$xml = query_url_post_xml(SESSIONMANAGER_URL.'/startsession.php', $dom->saveXML());
+if (! defined('SESSIONMANAGER_URL')) {
+	$_SESSION['webinterface']['sessionmanager_url'] = 'http://'.$_POST['sessionmanager_url'].'/sessionmanager/';
+	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
+}
+
+$xml = query_url_post_xml($sessionmanager_url.'/startsession.php', $dom->saveXML());
 
 $dom = new DomDocument('1.0', 'utf-8');
 $buf = @$dom->loadXML($xml);

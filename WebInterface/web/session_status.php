@@ -33,7 +33,7 @@ function return_error($errno_, $errstr_) {
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML(query_sm(SESSIONMANAGER_URL.'/client/session_status.php'));
+$buf = @$dom->loadXML(query_sm($sessionmanager_url.'/client/session_status.php'));
 if (! $buf) {
 	echo return_error(0, 'Invalid XML');
 	die();

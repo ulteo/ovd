@@ -33,6 +33,7 @@ function startSession() {
 		{
 			method: 'post',
 			parameters: {
+				sessionmanager_url: $('sessionmanager_url').value,
 				login: $('user_login').value,
 				password: $('user_password').value,
 				mode: $('session_mode').value,
