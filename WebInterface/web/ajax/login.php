@@ -100,6 +100,10 @@ if (! defined('SESSIONMANAGER_URL')) {
 }
 
 $xml = query_url_post_xml($sessionmanager_url.'/startsession.php', $dom->saveXML());
+if (! $xml) {
+	echo return_error(0, 'Unable to reach the Session Manager');
+	die();
+}
 
 $dom = new DomDocument('1.0', 'utf-8');
 $buf = @$dom->loadXML($xml);
