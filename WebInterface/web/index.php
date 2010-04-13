@@ -225,11 +225,11 @@ else
 														<strong><?php echo _('Language'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<span><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { updateFlag('en-us'); });</script>&nbsp;
+														<span><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { updateFlag('<?php echo $user_language; ?>'); });</script>&nbsp;
 														<select id="session_language" onchange="updateFlag($('session_language').value);" onkeyup="updateFlag($('session_language').value);">
 															<?php
 																foreach ($languages as $language)
-																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == 'en-us')?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
+																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language)?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';
 															?>
 														</select>
 													</td>
@@ -245,7 +245,7 @@ else
 														<select id="session_keymap">
 															<?php
 																foreach ($keymaps as $keymap)
-																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == 'en-us')?' selected="selected"':'').'>'.$keymap['name'].'</option>';
+																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == $user_language)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
 															?>
 														</select>
 													</td>

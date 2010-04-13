@@ -33,3 +33,10 @@ if (defined('SESSIONMANAGER_URL'))
 	$sessionmanager_url = SESSIONMANAGER_URL;
 elseif (array_key_exists('webinterface', $_SESSION) && array_key_exists('sessionmanager_url', $_SESSION['webinterface']))
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
+
+if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+	$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
+	$buf = explode(';', $buf[0]);
+	$user_language = $buf[0];
+} else
+	$user_language = 'en-us';
