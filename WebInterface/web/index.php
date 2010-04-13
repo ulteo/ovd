@@ -145,7 +145,7 @@ else
 ?>
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
-										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-bottom: 20px; " border="0" cellspacing="0" cellpadding="5">
+										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px; margin-bottom: 25px; " border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_URL'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
 													<!--<img src="media/image/icons/sessionmanager.png" alt="" title="" />-->
@@ -276,7 +276,7 @@ else
 												</tr>
 											</table>
 										</div>
-										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 20px;" border="0" cellspacing="0" cellpadding="5">
+										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 25px; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr>
 												<td style="text-align: left; vertical-align: bottom;">
 													<span id="advanced_settings_status" style="position: relative; left: 22px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span> <input style="padding-left: 18px;" type="button" value="<?php echo _('Advanced settings'); ?>" onclick="switchSettings(); return false;" />
