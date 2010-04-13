@@ -1,10 +1,11 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Gauvain POCENTEK <gauvain@ulteo.com>
-# Author Julien LANGLOIS <julien@ulteo.com>
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
+# Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -76,7 +77,8 @@ def getFinalCommand(cmd_, args_):
             win_home = os.environ["CIFS_HOME_DIR"]
             for arg in args_:
                 b.append("--start-app-arg")
-                b.append(os.path.abspath(arg).replace(local_home, win_home))
+                windows_path = os.path.abspath(arg).replace(local_home, win_home)
+                b.append(windows_path.replace("/", "\\\\"))  # two \\ for python and two \\ for rdesktop
 
         return cmd_.replace("%W", list2cmdline(b))
 
