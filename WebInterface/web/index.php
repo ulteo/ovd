@@ -226,7 +226,7 @@ else
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<span><img id="session_language_flag" /></span><script type="text/javascript">Event.observe(window, 'load', function() { updateFlag('<?php echo $user_language; ?>'); });</script>&nbsp;
-														<select id="session_language" onchange="updateFlag($('session_language').value);" onkeyup="updateFlag($('session_language').value);">
+														<select id="session_language" onchange="updateFlag($('session_language').value); updateKeymap($('session_language').value);" onkeyup="updateFlag($('session_language').value); updateKeymap($('session_language').value);">
 															<?php
 																foreach ($languages as $language)
 																	echo '<option value="'.$language['id'].'" style="background: url(\'media/image/flags/'.$language['id'].'.png\') no-repeat right;"'.(($language['id'] == $user_language)?' selected="selected"':'').'>'.$language['english_name'].((array_key_exists('local_name', $language))?' - '.$language['local_name']:'').'</option>';

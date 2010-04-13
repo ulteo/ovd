@@ -312,6 +312,13 @@ function updateFlag(id_) {
 	$('session_language_flag').src = 'media/image/flags/'+id_+'.png';
 }
 
+function updateKeymap(id_) {
+	for (var i = 0; i < $('session_keymap').length; i++) {
+		if ($('session_keymap')[i].value == id_)
+			$('session_keymap')[i].selected = 'selected';
+	}
+}
+
 switchsettings_lock = false;
 function switchSettings() {
 	if (switchsettings_lock)
