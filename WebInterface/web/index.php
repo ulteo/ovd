@@ -155,6 +155,27 @@ else
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<input type="text" id="sessionmanager_url" value="" />
+													<script type="text/javascript">
+														var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
+														if ($('sessionmanager_url').value == '') {
+															$('sessionmanager_url').style.color = 'grey';
+															$('sessionmanager_url').value = sessionmanager_url_example;
+															setCaretPosition($('sessionmanager_url'), 0);
+														}
+														Event.observe($('sessionmanager_url'), 'keypress', function() {
+															if ($('sessionmanager_url').value == sessionmanager_url_example) {
+																$('sessionmanager_url').style.color = 'black';
+																$('sessionmanager_url').value = '';
+															}
+														});
+														Event.observe($('sessionmanager_url'), 'keyup', function() {
+															if ($('sessionmanager_url').value == '') {
+																$('sessionmanager_url').style.color = 'grey';
+																$('sessionmanager_url').value = sessionmanager_url_example;
+																setCaretPosition($('sessionmanager_url'), 0);
+															}
+														});
+													</script>
 												</td>
 											</tr>
 											<tr>
