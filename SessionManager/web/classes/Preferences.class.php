@@ -505,7 +505,12 @@ class Preferences {
 							$ret[basename($pathinfo["dirname"])] = array();
 						}
 						if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
-							$pretty_name = call_user_func(array(basename($pathinfo["dirname"]).'_'.$pathinfo["filename"],'prettyName'));
+							$object_class = basename($pathinfo["dirname"]).'_'.$pathinfo["filename"];
+							if (! method_exists($object_class, 'prettyName')) {
+								Logger::error('main', "Preferences::getAvailableModule method '$object_class::prettyName' does not exist, please check your configuration.");
+								continue;
+							}
+							$pretty_name = call_user_func(array($object_class, 'prettyName'));
 							if ( is_null($pretty_name))
 								$pretty_name = $pathinfo["filename"];
 							$ret[basename($pathinfo["dirname"])][$pathinfo["filename"]] = $pretty_name;

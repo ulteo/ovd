@@ -130,6 +130,10 @@ class Plugins {
 
 				if (array_key_exists('extension', $pathinfo) && ($pathinfo['extension'] == 'php')) {
 					$plugin_name = 'Plugin_'.$pathinfo['filename'];
+					if (! class_exists($plugin_name)) {
+						Logger::error('main', "Plugins::getAvailablePlugins class '$plugin_name' not found, please check your configuration.");
+						continue;
+					}
 					$p = new $plugin_name();
 
 					$ret['plugins'][$pathinfo['filename']] = $p->requirements();
