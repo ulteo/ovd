@@ -323,10 +323,10 @@ function switchSettings() {
 	}, 400);
 
 	if ($('advanced_settings').visible()) {
-		$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="9" height="9" alt="" title="" />';
+		$('advanced_settings_status').innerHTML = '<img src="media/image/show.png" width="12" height="12" alt="" title="" />';
 		new Effect.SlideUp($('advanced_settings'), { duration: 0.4 });
 	} else {
-		$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="9" height="9" alt="" title="" />';
+		$('advanced_settings_status').innerHTML = '<img src="media/image/hide.png" width="12" height="12" alt="" title="" />';
 		new Effect.SlideDown($('advanced_settings'), { duration: 0.4 });
 	}
 }
@@ -342,4 +342,11 @@ function setCaretPosition(ctrl, pos) {
 		range.moveStart('character', pos);
 		range.select();
 	}
+}
+
+function checkLogin() {
+	if ($('sessionmanager_url').value != '' && $('user_login').value != '')
+		$('submitLogin').disabled = false;
+	else
+		$('submitLogin').disabled = true;
 }

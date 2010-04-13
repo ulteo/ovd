@@ -134,7 +134,7 @@ $keymaps = get_available_keymaps();
 							<td style="width: 376px; text-align: center; vertical-align: top;">
 								<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
 							</td>
-							<td style="text-align: center; vertical-align: middle;">
+							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
 									<script type="text/javascript">Event.observe(window, 'load', function() {
 <?php
@@ -154,7 +154,7 @@ else
 													<strong><?php echo _('Session Manager'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_url" value="" />
+													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':'') ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
 													<script type="text/javascript">
 														var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 														if ($('sessionmanager_url').value == '') {
@@ -186,7 +186,7 @@ else
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="user_login" value="" />
+													<input type="text" id="user_login" value="" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
 												</td>
 											</tr>
 											<tr>
@@ -201,9 +201,6 @@ else
 												</td>
 											</tr>
 										</table>
-										<div class="centered" style="margin-top: 15px; margin-bottom: 15px;">
-											<a href="javascript:;" onclick="switchSettings(); return false;"><span id="advanced_settings_status"><img src="media/image/show.png" width="9" height="9" alt="" title="" /></span> <?php echo _('Advanced settings'); ?></a>
-										</div>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 												<tr>
@@ -279,10 +276,13 @@ else
 												</tr>
 											</table>
 										</div>
-										<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
+										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 40px;" border="0" cellspacing="0" cellpadding="5">
 											<tr>
-												<td style="height: 40px; text-align: center; vertical-align: bottom;">
-													<span id="submitButton"><input type="submit" value="<?php echo _('Connect'); ?>" /></span>
+												<td style="text-align: left; vertical-align: bottom;">
+													<span id="advanced_settings_status" style="position: relative; left: 22px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span> <input style="padding-left: 18px;" type="button" value="<?php echo _('Advanced settings'); ?>" onclick="switchSettings(); return false;" />
+												</td>
+												<td style="text-align: right; vertical-align: bottom;">
+													<span id="submitButton"><input type="submit" id="submitLogin" value="<?php echo _('Connect'); ?>" disabled="disabled" /></span>
 													<span id="submitLoader" style="display: none;"><img src="media/image/loader.gif" width="24" height="24" alt="" title="" /></span>
 												</td>
 											</tr>
