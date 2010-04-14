@@ -17,6 +17,8 @@ var use_popup = false;
 var debug = false;
 var startsession = false;
 
+var session_mode = false;
+
 function startSession() {
 	disableLogin();
 
@@ -27,6 +29,9 @@ function startSession() {
 	debug = false;
 	if ($('debug_true') && $('debug_true').checked)
 		debug = true;
+
+	session_mode = $('session_mode').value;
+	session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
 
 	var ret = new Ajax.Request(
 		'ajax/login.php',
@@ -123,13 +128,27 @@ function onStartSessionSuccess(transport) {
 		hideLogin();
 		showSplash();
 
-		if ($('desktopAppletContainer')) {
-			new Effect.Move($('desktopAppletContainer'), { x: 0, y: -this.my_height });
-			$('desktopAppletContainer').show();
+		if (session_mode == 'Desktop') {
+			if ($('desktopModeContainer')) {
+				new Effect.Move($('desktopModeContainer'), { x: 0, y: -this.my_height });
+				setTimeout(function() {
+					$('desktopModeContainer').show();
+				}, 2000);
+			}
+		} else {
+			if ($('applicationsModeContainer')) {
+				new Effect.Move($('applicationsModeContainer'), { x: 0, y: -this.my_height });
+				setTimeout(function() {
+					$('applicationsModeContainer').show();
+				}, 2000);
+			}
 		}
 
 		setTimeout(function() {
-			daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, false);
+			if (session_mode == 'Desktop')
+				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, false);
+			else
+				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, false);
 			daemon.keymap = 'fr';
 			daemon.multimedia = true;
 			daemon.redirect_client_printers = false;
@@ -148,8 +167,13 @@ function onStartSessionSuccess(transport) {
 		}, 2500);
 
 		setTimeout(function() {
-			if ($('desktopAppletContainer'))
-				new Effect.Move($('desktopAppletContainer'), { x: 0, y: this.my_height });
+			if (session_mode == 'Desktop') {
+				if ($('desktopModeContainer'))
+					new Effect.Move($('desktopModeContainer'), { x: 0, y: this.my_height });
+			} else {
+				if ($('applicationsModeContainer'))
+					new Effect.Move($('applicationsModeContainer'), { x: 0, y: this.my_height });
+			}
 		}, 3000);
 
 		setTimeout(function() {

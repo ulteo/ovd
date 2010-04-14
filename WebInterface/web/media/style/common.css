@@ -170,18 +170,35 @@ div.rounded {
 	font-weight: bold;
 }
 
-#desktopAppletContainer {
+#desktopModeContainer {
 	position: absolute;
+
+	top: 0px;
+	left: 0px;
+
+	width: 100%;
+
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#desktopAppletContainer {
+	position: relative;
 
 	top: 0px;
 	left: 0px;
 }
 
-#applicationsAppletContainer {
+#applicationsModeContainer {
 	position: absolute;
 
 	top: 0px;
 	left: 0px;
+
+	width: 100%;
+
+	margin-left: 0px;
+	margin-right: 0px;
 }
 
 #applicationsHeaderWrap {
@@ -197,9 +214,21 @@ div.rounded {
 
 #applicationsContainer {
 	width: 100%;
-	margin-left: auto;
-	margin-right: auto;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding: 0px;
+	position: relative;
+	top: 0px;
+	left: 0px;
+	right: 0px;
 	border-bottom: 1px solid #ccc;
+}
+
+#applicationsAppletContainer {
+	position: relative;
+
+	top: 0px;
+	left: 0px;
 }
 
 div#lockWrap {
