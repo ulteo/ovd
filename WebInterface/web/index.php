@@ -363,7 +363,7 @@ else
 											</table>
 										</div>
 										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 25px; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">
-											<tr>
+											<tr style="height: 40px;">
 												<td style="text-align: left; vertical-align: bottom;">
 													<span id="advanced_settings_status" style="position: relative; left: 22px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span> <input style="padding-left: 18px;" type="button" value="<?php echo _('Advanced settings'); ?>" onclick="switchSettings(); return false;" />
 												</td>
