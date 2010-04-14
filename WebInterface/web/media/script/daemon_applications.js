@@ -71,8 +71,6 @@ var Applications = Class.create(Daemon, {
 	parse_do_started: function(transport) {
 		this.push_log('debug', '[applications] parse_do_started(transport@do_started())');
 
-		$('splashContainer').hide();
-
 		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="1" height="1"> \
 			<param name="name" value="ulteoapplet" /> \
 			<param name="code" value="'+this.applet_main_class+'" /> \
