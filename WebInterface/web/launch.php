@@ -53,9 +53,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 		<script type="text/javascript" charset="utf-8">
 			Event.observe(window, 'load', function() {
 				if ($('splashContainer'))
-					Effect.Center($('splashContainer'));
+					new Effect.Center($('splashContainer'));
 				if ($('endContainer')) {
-					Effect.Center($('endContainer'));
+					new Effect.Center($('endContainer'));
 					$('endContainer').style.top = parseInt($('endContainer').style.top)-50+'px';
 				}
 
@@ -72,7 +72,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', <?php echo $_SESSION['interface']['in_popup']; ?>, <?php echo $_SESSION['interface']['debug']; ?>);
+				daemon = new <?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>('ulteo-applet.jar', 'org.ulteo.ovd.applet.<?php echo strtoupper(substr($_SESSION['session_mode'], 0, 1)).substr($_SESSION['session_mode'], 1); ?>', true, <?php echo $_SESSION['interface']['debug']; ?>);
 				daemon.keymap = '<?php echo $_SESSION['keyboard_layout']; ?>';
 				daemon.multimedia = <?php echo (($_SESSION['multimedia'] == 1)?'true':'false'); ?>;
 				daemon.redirect_client_printers = <?php echo (($_SESSION['redirect_client_printers'] == 1)?'true':'false'); ?>;

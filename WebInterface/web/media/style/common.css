@@ -70,6 +70,8 @@ div.rounded {
 }
 
 #debugContainer {
+	background: #fff;
+
 	position: absolute;
 
 	left: 0px;
@@ -79,8 +81,6 @@ div.rounded {
 	height: 149px;
 
 	overflow: auto;
-
-	display: inline;
 }
 
 #debugContainer.no_debug .debug {
@@ -100,6 +100,8 @@ div.rounded {
 }
 
 #debugLevels {
+	background: #fff;
+
 	position: absolute;
 
 	right: 0px;
@@ -107,8 +109,6 @@ div.rounded {
 
 	width: 15%;
 	height: 149px;
-
-	display: inline;
 }
 
 .debug {

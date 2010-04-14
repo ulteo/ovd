@@ -67,7 +67,6 @@ function query_url_post_xml($url_, $xml_) {
 }
 
 $_SESSION['interface'] = array();
-$_SESSION['interface']['in_popup'] = $_POST['use_popup'];
 $_SESSION['interface']['debug'] = $_POST['debug'];
 
 header('Content-Type: text/xml; charset=utf-8');

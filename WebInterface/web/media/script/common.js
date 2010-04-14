@@ -44,7 +44,6 @@ function startSession() {
 				mode: $('session_mode').value,
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
-				use_popup: use_popup,
 				debug: debug
 			},
 			asynchronous: false,
@@ -90,6 +89,12 @@ function hideLogin() {
 
 function showLogin() {
 	new Effect.Move($('loginBox'), { x: 0, y: 500 });
+
+	if (debug) {
+		$('debugContainer').hide();
+		$('debugLevels').hide();
+		debug = false;
+	}
 }
 
 function disableLogin() {
@@ -129,26 +134,22 @@ function onStartSessionSuccess(transport) {
 		showSplash();
 
 		if (session_mode == 'Desktop') {
-			if ($('desktopModeContainer')) {
-				new Effect.Move($('desktopModeContainer'), { x: 0, y: -this.my_height });
-				setTimeout(function() {
-					$('desktopModeContainer').show();
-				}, 2000);
-			}
+			new Effect.Move($('desktopModeContainer'), { x: 0, y: -my_height });
+			setTimeout(function() {
+				$('desktopModeContainer').show();
+			}, 2000);
 		} else {
-			if ($('applicationsModeContainer')) {
-				new Effect.Move($('applicationsModeContainer'), { x: 0, y: -this.my_height });
-				setTimeout(function() {
-					$('applicationsModeContainer').show();
-				}, 2000);
-			}
+			new Effect.Move($('applicationsModeContainer'), { x: 0, y: -my_height });
+			setTimeout(function() {
+				$('applicationsModeContainer').show();
+			}, 2000);
 		}
 
 		setTimeout(function() {
 			if (session_mode == 'Desktop')
-				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, false);
+				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, debug);
 			else
-				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, false);
+				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, debug);
 			daemon.keymap = 'fr';
 			daemon.multimedia = true;
 			daemon.redirect_client_printers = false;
@@ -163,17 +164,21 @@ function onStartSessionSuccess(transport) {
 			daemon.i18n['suspend'] = 'suspend';
 			daemon.i18n['resume'] = 'resume';
 
+			if (debug) {
+				if (session_mode == 'Desktop')
+					$('desktopModeContainer').style.height = daemon.my_height+'px';
+				else
+					$('applicationsModeContainer').style.height = daemon.my_height+'px';
+			}
+
 			daemon.loop();
 		}, 2500);
 
 		setTimeout(function() {
-			if (session_mode == 'Desktop') {
-				if ($('desktopModeContainer'))
-					new Effect.Move($('desktopModeContainer'), { x: 0, y: this.my_height });
-			} else {
-				if ($('applicationsModeContainer'))
-					new Effect.Move($('applicationsModeContainer'), { x: 0, y: this.my_height });
-			}
+			if (session_mode == 'Desktop')
+					new Effect.Move($('desktopModeContainer'), { x: 0, y: my_height });
+			else
+					new Effect.Move($('applicationsModeContainer'), { x: 0, y: my_height });
 		}, 3000);
 
 		setTimeout(function() {
@@ -271,9 +276,9 @@ function showError(errormsg) {
 
 	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideError(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+errormsg;
 
-	Effect.Center($('errorWrap'));
+	new Effect.Center($('errorWrap'));
 
-	Effect.Appear($('errorWrap'));
+	new Effect.Appear($('errorWrap'));
 }
 
 function hideError() {
@@ -295,9 +300,9 @@ function showOk(okmsg) {
 
 	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideOk(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+okmsg;
 
-	Effect.Center($('okWrap'));
+	new Effect.Center($('okWrap'));
 
-	Effect.Appear($('okWrap'));
+	new Effect.Appear($('okWrap'));
 }
 
 function hideOk() {
@@ -317,9 +322,9 @@ function showInfo(infomsg) {
 
 	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideInfo(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+infomsg;
 
-	Effect.Center($('infoWrap'));
+	new Effect.Center($('infoWrap'));
 
-	Effect.Appear($('infoWrap'));
+	new Effect.Appear($('infoWrap'));
 }
 
 function hideInfo() {

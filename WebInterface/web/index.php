@@ -58,20 +58,20 @@ $keymaps = get_available_keymaps();
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				if ($('splashContainer'))
-					new Effect.Center($('splashContainer'));
+				new Effect.Center($('splashContainer'));
+				new Effect.Move($('splashContainer'), { x: 0, y: -75 });
 
-				if ($('endContainer'))
-					new Effect.Center($('endContainer'));
+				new Effect.Center($('endContainer'));
+				new Effect.Move($('endContainer'), { x: 0, y: -75 });
 
-				if ($('desktopModeContainer'))
-					$('desktopModeContainer').hide();
-				if ($('desktopAppletContainer'))
-					$('desktopAppletContainer').hide();
-				if ($('applicationsModeContainer'))
-					$('applicationsModeContainer').hide();
-				if ($('applicationsAppletContainer'))
-					$('applicationsAppletContainer').hide();
+				$('desktopModeContainer').hide();
+				$('desktopAppletContainer').hide();
+
+				$('applicationsModeContainer').hide();
+				$('applicationsAppletContainer').hide();
+
+				$('debugContainer').hide();
+				$('debugLevels').hide();
 			});
 		</script>
 	</head>
@@ -194,6 +194,17 @@ $keymaps = get_available_keymaps();
 
 			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
+		</div>
+
+		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
+		</div>
+
+		<div id="debugLevels" style="display: none;">
+			<span class="debug"><input type="checkbox" id="level_debug" onclick="daemon.switch_debug('debug');" value="10" /> Debug</span>
+			<span class="info"><input type="checkbox" id="level_info" onclick="daemon.switch_debug('info');" value="20" checked="checked" /> Info</span>
+			<span class="warning"><input type="checkbox" id="level_warning" onclick="daemon.switch_debug('warning');" value="30" checked="checked" /> Warning</span>
+			<span class="error"><input type="checkbox" id="level_error" onclick="daemon.switch_debug('error');" value="40" checked="checked" /> Error</span><br />
+			<input type="button" onclick="daemon.clear_debug(); return false;" value="Clear" />
 		</div>
 
 		<div id="mainWrap">
