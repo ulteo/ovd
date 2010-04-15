@@ -116,6 +116,25 @@ if (! $dom->hasChildNodes()) {
 	die();
 }
 
+$response_node = $dom->getElementsByTagName('response');
+if (count($response_node) == 1) {
+	$response_node = $response_node->item(0);
+	$response_code = $response_node->getAttribute('code');
+
+	$ret = _('Unknown error');
+	switch ($response_code) {
+		case 'unauthorized_session_mode':
+			$ret = _('You are not authorized to launch a session with this mode');
+			break;
+		default:
+			$ret = _('Unknown error');
+			break;
+	}
+
+	echo return_error(-1, $ret);
+	die();
+}
+
 $session_node = $dom->getElementsByTagName('session');
 if (count($session_node) != 1) {
 	echo return_error(1, 'Invalid XML: No session node');
