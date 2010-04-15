@@ -3,7 +3,7 @@
 
 # Copyright (C) 2008-2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2009
 #
 # This program is free software; you can redistribute it and/or 
@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from Msi import Msi
+from Logger import Logger
 import sessionmanager
 from BaseHTTPServer import HTTPServer
 from win32com.shell import shell, shellcon
@@ -47,22 +48,19 @@ import mime
 from ctypes import *
 from ctypes.wintypes import DWORD
 SIZE_T = c_ulong
-
-def log_debug(msg_):
-	servicemanager.LogInfoMsg(str(msg_))
 	
 def is_conf_valid(conf):
 	dirname = os.path.dirname(conf["log_file"])
 	if len(dirname)>0 and not os.path.isdir(dirname):
-		print >>sys.stderr, "No such directory '%s'"%(dirname)
+		Logger.error("No such directory '%s'"%(dirname))
 		return False
 	
 	if conf["session_manager"] is None:
-		print >>sys.stderr, "No Session manager specified"
+		Logger.error("No Session manager specified")
 		return False
 	
 	if conf["hostname"] is None:
-		print >>sys.stderr, "No hostname specified"
+		Logger.error("No hostname specified")
 		return False
 	
 	return True
@@ -112,6 +110,11 @@ def load_shell_config_file(conf):
 				raise Exception("Invalid value for key '%s'"%(key))
 		value = out
 		if key == "LOG_FLAGS":
+			if value.startswith('"'):
+				value = value[1:]
+			if value.endswith('"'):
+				value = value[:-1]
+			
 			value = value.split(" ")
 		elif key in ["MAXLUCK", "MINLUCK"]:
 			value = int(value)
@@ -167,39 +170,49 @@ class OVD(win32serviceutil.ServiceFramework):
 		conf["log_flags"] = ["info", "warn", "error"]
 		conf["hostname"] = None
 		conf["web_port"] = None
-		log_debug("main 004 log_file "+conf["log_file"])
+		
+		# Init the logger instance
+		Logger.initialize(name, Logger.INFO | Logger.WARN | Logger.ERROR, None, False, True)
+		
+		Logger.debug("main 004 log_file "+conf["log_file"])
 		
 		try:
 			conf = load_shell_config_file(conf)
 		except Exception, err:
 			print >> sys.stderr, "invalid config file: "+str(err)
-			log_debug("invalid config file: "+str(err))
-			log_debug("exit 22")
+			Logger.debug("invalid config file: "+str(err))
+			Logger.debug("exit 22")
 			sys.exit(2)
 		
 		if not is_conf_valid(conf):
-			print >> sys.stderr, "invalid configuration"
-			log_debug("exit 23")
+			Logger.error("invalid configuration")
+			Logger.debug("exit 23")
 			sys.exit(2)
-	
-		log_debug("init 01 "+str(conf))
+			
+		# ReInit the logger instance with flags from config
+		match_log = [("info", Logger.INFO), ("warn", Logger.WARN), ("error", Logger.ERROR), ("debug", Logger.DEBUG)]
+		lflags = 0
+		for (key, flag) in match_log:
+			if key in conf["log_flags"]:
+				Logger.debug("Add log-level %s"%(key))
+				lflags|= flag
+		Logger.initialize(name, lflags, conf["log_file"], False, True)
+		Logger.debug("init 01 "+str(conf))
 		self.conf = conf
 		self.monitoring_cpu_name = 'Unknow'
 		self.monitoring_cpu_load = 0
 		self.monitoring_cpu_number = 0
 		
-		self.init_log()
-		self.log.info("init")
+		Logger.info("init")
 		pythoncom.CoInitialize()
 		self.objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
 		self.objSWbemServices = self.objWMIService.ConnectServer(".")
-		self.smr = sessionmanager.SessionManagerRequest(self.conf, self.log)
+		self.smr = sessionmanager.SessionManagerRequest(self.conf)
 		self.broken = False
 		self.isAlive = True
 		self.applicationsXML = None
 		self.webserver = HTTPServer( ("", int(self.conf["web_port"])), communication.Web)
 		self.webserver.daemon = self
-		self.webserver.log = self.log
 		self.thread_web = threading.Thread(target=self.webserver.serve_forever)
 
 		self.mimetypes = mime.MimeInfos()
@@ -226,34 +239,20 @@ class OVD(win32serviceutil.ServiceFramework):
 		self.thread_web.start()
 		if not self.smr.ready():
 			self.broken = True
-			servicemanager.LogInfoMsg("SessionManager does not get a 'ready', stopping agent")
+			Logger.info("SessionManager does not get a 'ready', stopping agent")
 			self.SvcStop()
 		while self.isAlive:
 			time.sleep(60)
 			self.updateMonitoring()
 			self.smr.monitoring(self.xmlMonitoring().toxml())
 		
-		servicemanager.LogInfoMsg("SvcDoRun 04 Stopped")
 	
 	def SvcStop(self):
-		self.log.debug("OVD::SvcStop")
-		servicemanager.LogInfoMsg("Stopping agent")
+		Logger.info("Stopping agent")
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
 		self.isAlive = False #this will make SvcDoRun() break the while loop at the next iteration.
 		#self.webserver.shutdown()
 		self.smr.down()
-
-	def init_log(self):
-		formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
-	
-		self.log = logging.getLogger('ovd')
-		self.log.setLevel(logging.DEBUG)
-
-		if self.conf["log_file"]:
-			handler = logging.handlers.RotatingFileHandler(self.conf["log_file"], maxBytes=1000000, backupCount=2)
-			handler.setFormatter(formatter)
-			#logging.getLogger().addHandler(handler)
-			self.log.addHandler(handler)
 	
 	def isSessionManagerRequest(self, client_ip):
 		url_split = urlparse.urlsplit(self.conf['session_manager'])
@@ -265,7 +264,7 @@ class OVD(win32serviceutil.ServiceFramework):
 				return client_ip == socket.gethostbyname(sm_host)
 			except Exception, err:
 				# exception if the getaddrinfo failed
-				self.log.error("fail to get address info for '%s'"%(sm_host))
+				Logger.error("fail to get address info for '%s'"%(sm_host))
 				return False
 	
 	def getStatusString(self):
@@ -288,7 +287,7 @@ class OVD(win32serviceutil.ServiceFramework):
 		return False
 
 	def getApplicationsXML_nocache(self):
-		self.log.debug("getApplicationsXML_nocache")
+		Logger.debug("getApplicationsXML_nocache")
 		def find_lnk(base_):
 			ret = []
 			for root, dirs, files in os.walk(base_):
@@ -374,7 +373,7 @@ class OVD(win32serviceutil.ServiceFramework):
 			pass
 	
 	def xmlMonitoring(self):
-		self.log.debug("OVD::xmlMonitoring")
+		Logger.debug("OVD::xmlMonitoring")
 		doc = Document()
 		monitoring = doc.createElement('monitoring')
 		doc.appendChild(monitoring)
