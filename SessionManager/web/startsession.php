@@ -23,6 +23,22 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 include_once(dirname(__FILE__).'/check.php');
 
+define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
+
+function throw_response($response_code_) {
+	header('Content-Type: text/xml; charset=utf-8');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$response_node = $dom->createElement('response');
+	$response_node->setAttribute('code', $response_code_);
+	$dom->appendChild($response_node);
+
+	echo $dom->saveXML();
+
+	die();
+}
+
 function parse_login_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
@@ -138,7 +154,7 @@ $ret = parse_login_XML(@file_get_contents('php://input'));
 
 if (isset($_SESSION['mode'])) {
 	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
-		die_error(sprintf(_('You don\'t have access to a %s session mode for now'), $_SESSION['mode']));
+		throw_response(UNAUTHORIZED_SESSION_MODE);
 
 	$session_mode = $_SESSION['mode'];
 }
