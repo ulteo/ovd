@@ -287,6 +287,17 @@ else
 												</td>
 											</tr>
 										</table>
+<?php
+	if ($debug_mode) {
+?>
+										<script type="text/javascript">
+											Event.observe(window, 'load', function() {
+												switchSettings();
+											});
+										</script>
+<?php
+	}
+?>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
 												<tr>
@@ -348,6 +359,9 @@ else
 														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0" checked="checked" /> <?php echo _('No'); ?>
 													</td>
 												</tr>
+<?php
+	if ($debug_mode) {
+?>
 												<tr>
 													<td style="text-align: right; vertical-align: middle;">
 														<!--<img src="media/image/icons/debug.png" alt="" title="" />-->
@@ -356,10 +370,13 @@ else
 														<strong><?php echo _('Debug'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1" /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0" checked="checked" /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1" checked="checked" /> <?php echo _('Yes'); ?>
+														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0" /> <?php echo _('No'); ?>
 													</td>
 												</tr>
+<?php
+	}
+?>
 											</table>
 										</div>
 										<table style="width: 100%; margin-left: auto; margin-right: auto; margin-top: 25px; padding-bottom: 10px;" border="0" cellspacing="0" cellpadding="5">

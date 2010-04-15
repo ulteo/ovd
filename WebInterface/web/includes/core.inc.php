@@ -34,6 +34,10 @@ if (defined('SESSIONMANAGER_URL'))
 elseif (array_key_exists('webinterface', $_SESSION) && array_key_exists('sessionmanager_url', $_SESSION['webinterface']))
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
 
+$debug_mode = false;
+if (defined('DEBUG_MODE') && DEBUG_MODE == 1)
+	$debug_mode = true;
+
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 	$buf = explode(';', $buf[0]);
