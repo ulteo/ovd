@@ -132,6 +132,9 @@ if (count($response_nodes) == 1) {
 		case 'unauthorized_session_mode':
 			$ret = _('You are not authorized to launch a session with this mode');
 			break;
+		case 'user_with_active_session':
+			$ret = _('You already have an active session');
+			break;
 		default:
 			$ret = _('Unknown error');
 			break;

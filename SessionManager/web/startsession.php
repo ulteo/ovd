@@ -25,6 +25,7 @@ include_once(dirname(__FILE__).'/check.php');
 
 define('INVALID_USER', 'invalid_user');
 define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
+define('USER_WITH_ACTIVE_SESSION', 'user_with_active_session');
 
 function throw_response($response_code_) {
 	header('Content-Type: text/xml; charset=utf-8');
@@ -210,7 +211,7 @@ if ($sessions > 0) {
 			$buf = $buf['action_when_active_session'];
 
 			if ($buf == 0)
-				die_error(_('You already have an active session'), __FILE__, __LINE__, true);
+				throw_response(USER_WITH_ACTIVE_SESSION);
 			/*elseif ($buf == 1) {
 				$invite = new Invite(gen_string(5));
 				$invite->session = $session->id;
