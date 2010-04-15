@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
-# Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2008-2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -581,7 +581,7 @@ class Dialog:
             status = 0
         if status!=0:
             Logger.info("vnc return status %d and \n%s\n==="%(status, out))
-            self.do_call_exit()
+        self.do_call_exit()
 
         os.remove(vnc_file)
         # end of vnc
