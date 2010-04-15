@@ -116,10 +116,13 @@ if (! $dom->hasChildNodes()) {
 	die();
 }
 
-$response_node = $dom->getElementsByTagName('response');
-if (count($response_node) == 1) {
-	$response_node = $response_node->item(0);
-	$response_code = $response_node->getAttribute('code');
+$response_nodes = $dom->getElementsByTagName('response');
+if (count($response_nodes) == 1) {
+	$response_node = $response_nodes->item(0);
+
+	$response_code = NULL;
+	if (! is_null($response_node))
+		$response_code = $response_node->getAttribute('code');
 
 	$ret = _('Unknown error');
 	switch ($response_code) {
