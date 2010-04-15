@@ -42,7 +42,7 @@ class SessionManagerRequest:
 			f = urllib2.urlopen(req)
 		except IOError, e:
 			Logger.debug("SessionManagerRequest::server_status error"+str(e))
-			Logger.errot("SessionManagerRequest error when said %s"%(status))
+			Logger.error("SessionManagerRequest error when said %s"%(status))
 			return False
 		
 		return True
