@@ -271,6 +271,24 @@ class Preferences {
 		$c = new ConfigElement_sliders_loadbalancing('load_balancing', _('Load Balancing policy'), _('Load Balancing policy'), _('Load Balancing policy'), $content_load_balancing);
 		$this->add($c,'general', 'application_server_settings');
 
+		$this->addPrettyName('remote_desktop_settings', _('Remote Desktop settings'));
+
+		$c = new ConfigElement_select('enable', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','remote_desktop_settings');
+		$c = new ConfigElement_select('allow_external_applications', _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','remote_desktop_settings');
+		$c = new ConfigElement_select('desktop_type', _('Desktop type'), _('Desktop type'), _('Desktop type'), 'any');
+		$c->setContentAvailable(array('any'=>_('Any'),'linux'=>_('Linux'),'windows'=>_('Windows')));
+		$this->add($c,'general','remote_desktop_settings');
+
+		$this->addPrettyName('remote_applications_settings', _('Remote Applications settings'));
+
+		$c = new ConfigElement_select('enable', _('Enable Remote Applications'), _('Enable Remote Applications'), _('Enable Remote Applications'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','remote_applications_settings');
+
 		$this->addPrettyName('session_settings_defaults',_('Sessions settings'));
 
 		$c = new ConfigElement_select('session_mode', _('Default mode for session'), _('Default mode for session'), _('Default mode for session'), Session::MODE_APPLICATIONS);
