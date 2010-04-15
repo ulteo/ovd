@@ -235,9 +235,9 @@ if ($sessions > 0) {
 				redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
 			}*/
 
-			die_error(_('You already have a session, please contact your administrator'), __FILE__, __LINE__, true);
+			throw_response(USER_WITH_ACTIVE_SESSION);
 		} else
-			die_error(_('You already have a session, please contact your administrator'), __FILE__, __LINE__, true);
+			throw_response(USER_WITH_ACTIVE_SESSION);
 	}
 }
 
