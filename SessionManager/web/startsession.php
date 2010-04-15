@@ -136,8 +136,12 @@ if (! is_array($advanced_settings))
 // The "user" node of this XML should be handled by do_login();
 $ret = parse_login_XML(@file_get_contents('php://input'));
 
-if (isset($_SESSION['mode']) && in_array('session_mode', $advanced_settings))
+if (isset($_SESSION['mode'])) {
+	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
+		die_error(sprintf(_('You don\'t have access to a %s session mode for now'), $_SESSION['mode']));
+
 	$session_mode = $_SESSION['mode'];
+}
 
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
