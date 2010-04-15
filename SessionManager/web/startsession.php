@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 include_once(dirname(__FILE__).'/check.php');
 
+define('INVALID_USER', 'invalid_user');
 define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
 
 function throw_response($response_code_) {
@@ -174,7 +175,7 @@ $userDB = UserDB::getInstance();
 
 $user = $userDB->import($user_login);
 if (! is_object($user))
-	die_error('User importation failed',__FILE__,__LINE__);
+	throw_response(INVALID_USER);
 
 $language = $user->getLocale();
 

@@ -123,6 +123,9 @@ if (count($response_node) == 1) {
 
 	$ret = _('Unknown error');
 	switch ($response_code) {
+		case 'invalid_user':
+			$ret = _('You specified an invalid login, please double-check and try again');
+			break;
 		case 'unauthorized_session_mode':
 			$ret = _('You are not authorized to launch a session with this mode');
 			break;
