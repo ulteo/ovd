@@ -5,6 +5,7 @@ scripts_DATA =  domain.php \
                 get_logo.php \
                 get_news.php \
                 server_monitoring.php \
+                session_end_status.php \
                 session_token.php \
                 session_status.php \
                 server_status.php \
