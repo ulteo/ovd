@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -81,6 +82,12 @@ if (! $exists) {
 		header('HTTP/1.1 405 Method Not Allowed');
 		die('Server not OK');
 	}
+
+	$ram_total = $buf->getAttribute('ram_total');
+	if ($ram_total > 0) {
+		$buf->max_sessions = ceil($ram_total/1024/1024*20); // 20 sessions / Giga Bytes of RAM
+	}
+	
 } else {
 	$buf = Abstract_Server::load($_GET['fqdn']);
 	if (! $buf->isAuthorized()) {
