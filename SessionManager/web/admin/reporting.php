@@ -142,6 +142,7 @@ class ReportMode_hour extends ReportMode {
 function get_session_history($t0, $t1, $mode_) {
 	$result = build_array($t0, $t1, $mode_);
 	$res_server = array();
+	$end_status = array();
 
 	$sql = MySQL::getInstance();
 	$res = $sql->DoQuery('SELECT * FROM @1 WHERE @2 BETWEEN %3 AND %4;',
@@ -152,6 +153,17 @@ function get_session_history($t0, $t1, $mode_) {
 	foreach($g as $p) {
 		$y = strtotime($p['start_stamp']);
 		$buf = date($mode_->get_prefix(), $y);
+		
+		if ($p['stop_why'] == '' || is_null($p['stop_why']))
+			$p['stop_why'] = 'unknown';
+		
+		if (is_null($p['stop_stamp'])) {
+			if (! isset($end_status[$p['stop_why']]))
+				$end_status[$p['stop_why']] = 0;
+			
+			$end_status[$p['stop_why']] += 1;
+		}
+		
 
 		if (! isset($result[$buf]))
 			continue;
@@ -164,7 +176,7 @@ function get_session_history($t0, $t1, $mode_) {
 	}
 	$session_number = count($g);
 
-	return array($session_number, $result, $res_server);
+	return array($session_number, $result, $res_server, $end_status);
 }
 
 
@@ -190,7 +202,24 @@ function get_server_history($t0, $t1, $mode_) {
 	return $infos;
 }
 
+function get_session_end_status_for_server($t0_, $t1_, $fqdn_) {
+	$end_status = array();
+	$sql = MySQL::getInstance();
+	$res = $sql->DoQuery('SELECT  @1, count(@1) FROM @2 WHERE @3 = %4 AND @5 IS NOT NULL AND @6 BETWEEN %7 AND %8 GROUP BY @1', 'stop_why', SESSIONS_HISTORY_TABLE, 'server', $fqdn_,  'stop_stamp','start_stamp', date('c', $t0_), date('c', $t1_));
 
+	$rows = $sql->FetchAllResults();
+	foreach ($rows as $row) {
+		$why = $row['stop_why'];
+		unset($row['stop_why']);
+		$nb = array_shift($row);  // to get the $row[count(`stop_why`)]
+		if ($why == '' || is_null($why))
+			$why = 'unknown';
+		if ($nb != 0)
+			$end_status[$why] = $nb;
+	}
+	
+	return $end_status;
+}
 
 function build_array($t0, $t1, $mode_, $flag=false) {
 	$result = array();
@@ -229,7 +258,7 @@ function show_page($mode_) {
 	$t2 = strtotime($mode_->get_next(), $t1);
 
 	/* General system */
-	list($session_number, $result, $res_server) = get_session_history($t0, $t2, $mode_);
+	list($session_number, $result, $res_server, $end_status) = get_session_history($t0, $t2, $mode_);
 		$info2 = get_server_history($t0, $t2, $mode_);
 
 
@@ -265,6 +294,21 @@ function show_page($mode_) {
 		$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
 		$file_id2 = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 		$chart->render($tmpfile);
+		
+		if (count($end_status) > 0) {
+			$dataSet = new XYDataSet();
+			foreach($end_status as $status_session => $number_status) {
+				$dataSet->addPoint(new Point(SessionReportItem::getStatusPrettyName($status_session), $number_status));
+			}
+			
+			$chart = new PieChart();
+			$chart->getPlot()->setLogoFileName('');
+			$chart->setTitle(_('Session end status'));
+			$chart->setDataSet($dataSet);
+			$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
+			$file_id3 = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
+			$chart->render($tmpfile);
+		}
 	}
 
 
@@ -285,6 +329,22 @@ function show_page($mode_) {
 		$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
 		$servers[$fqdn]['session_file'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
 		$chart->render($tmpfile);
+		
+		$dataSet = new XYDataSet();
+		$end_status2 = get_session_end_status_for_server($t0, $t2, $fqdn);
+		if (count($end_status2) > 0) {
+			foreach($end_status2 as $status_session => $number_status) {
+				$dataSet->addPoint(new Point(SessionReportItem::getStatusPrettyName($status_session), $number_status));
+			}
+			
+			$chart = new PieChart();
+			$chart->getPlot()->setLogoFileName('');
+			$chart->setTitle(_('Session end status'));
+			$chart->setDataSet($dataSet);
+			$tmpfile = tempnam(TMP_DIR, REPORT_PREFIX);
+			$servers[$fqdn]['session_end_status'] = substr($tmpfile, strlen(TMP_DIR.'/'.REPORT_PREFIX));
+			$chart->render($tmpfile);
+		}
 
 		if (! isset($info2[$fqdn]))
 			continue;
@@ -421,8 +481,13 @@ function show_page($mode_) {
 	echo '</i></td></tr>';
 	echo '</table>';
 
-	if ($session_number>0)
-		echo '<img src="?img=1&file='.$file_id2.'" />';
+	if ($session_number>0) {
+		if (isset($file_id2))
+			echo '<img src="?img=1&file='.$file_id2.'" />';
+		echo ' ';
+		if (isset($file_id3))
+			echo '<img src="?img=1&file='.$file_id3.'" />';
+	}
 
 
 	foreach($servers as $fqdn => $value) {
@@ -442,6 +507,12 @@ function show_page($mode_) {
 			echo '</i></td></tr>';
 		}
 
+		if (isset($value['session_end_status'])) {
+			echo '<tr><td>';
+			echo '<img src="?img=1&file='.$value['session_end_status'].'" />';
+			echo '</td><td></td></tr>';
+		}
+		
 		if (isset($value['cpu_file'])) {
 			echo '<tr><td>';
 			echo '<img src="?img=1&file='.$value['cpu_file'].'" />';

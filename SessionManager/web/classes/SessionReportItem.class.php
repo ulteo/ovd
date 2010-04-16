@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,30 +23,22 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 require_once(CLASSES_DIR.'/ReportItems.class.php');
 
 class SessionReportItem {
-	private $token;
-	private $sql_id = -1;
-	private $server;
-	private $node;
-	private $current_apps = array();
-	private $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
+	public $token;
+	public $sql_id = -1;
+	public $server;
+	public $user;
+	public $node;
+	public $current_apps = array();
+	public $apps_raw_data = array(); /* pid, id, running (ReportRunningItem) */
+	public $stop_why;
 
-	/* Session items are stored in the db before computing anything else
-	 * because the sql_id is an auto-incremented int. We need to know this id
-	 * so that the server reports can be linked to it */
 	public function __construct($token_) {
 		$this->token = $token_;
 		$session = Abstract_Session::load($token_);
 		$this->server = $session->getAttribute('server');
 		$this->user = $session->getAttribute('user_login');
 		$this->current_apps = array();
-
-		$sql = MySQL::getInstance();
-		$res = $sql->DoQuery(
-			'INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)',
-			SESSIONS_HISTORY_TABLE,'user','server','data',
-			$this->user,$this->server,'');
-		if ($res !== false)
-			$this->sql_id = $sql->InsertId();
+		$this->sql_id = $token_;
 	}
 
 	public function getId() {
@@ -153,6 +145,26 @@ class SessionReportItem {
 	public function test() {
 		print $this->toXml();
 	}
+	
+	public static function getStatusPrettyName($status_) {
+		$statusPrettyName = array(
+			'exit' => _('No error'), 
+			'adminkill' => _('Killed by administrator'),
+			'internal' => _('Internal error: wrong session status'),
+			'internal2' => _('Internal error: failed to initialize session'),
+			'internal3' => _('Internal error: failed to suspend session'),
+			'timeout' => _('timeout'),
+			'shutdown' => _('Shutdown of the Application Server'),
+			'kma' => _('KMA expirated'),
+			'ssh' => _('Never connected to SSH server')
+		);
+	
+		if (array_key_exists($status_, $statusPrettyName))
+			return $statusPrettyName[$status_];
+		
+		return $status_;
+	}
+
 	/*
 	 * private methods
 	 */

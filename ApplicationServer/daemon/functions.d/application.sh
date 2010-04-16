@@ -74,6 +74,7 @@ application_check_status() {
         application_purge $job_id $dir
         if [ "$job_id" = "desktop" ]; then
             session_switch_status $sessid 3
+            webservices_session_end_status $sessid "exit"
             return 2
         fi
 

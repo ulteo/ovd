@@ -27,6 +27,14 @@ webservices_session_request() {
     $webservices_get "$request" >/dev/null 2>&1
 }
 
+webservices_session_end_status() {
+    local args="session=$1&status=$2&fqdn=${SERVERNAME}"
+    local request="${SESSION_MANAGER_URL}/webservices/session_end_status.php?${args}"
+
+    log_INFO "webservices_session_end_status: doing $request"
+    $webservices_get "$request" >/dev/null 2>&1
+}
+
 webservices_server_request() {
     local args="status=$1&fqdn=${SERVERNAME}&web_port=${SERVER_HTTP_PORT}"
     local request="${SESSION_MANAGER_URL}/webservices/server_status.php?${args}"

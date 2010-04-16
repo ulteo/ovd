@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +32,17 @@ class SessionStatusChangedReport extends EventCallback {
 				if (! is_array ($sql_sessions))
 					$sql_sessions = array ();
 				if (! array_key_exists($token, $sql_sessions)) {
-					$sessitem = new SessionReportItem($token);
+					if (Abstract_Report::existsSession($token)) {
+						$sessitem = Abstract_Report::loadSession($token);
+					}
+					else {
+						$sessitem = new SessionReportItem($token);
+						$ret = Abstract_Report::createSession($sessitem);
+						if (! $ret) {
+							Logger::error('main', "SessionStatusChangedReport::run failed to save SessionReportItem($token)");
+							return false;
+						}
+					}
 					if ($sessitem->getId() >= 0) {
 						$sql_sessions[$token] = $sessitem;
 					}

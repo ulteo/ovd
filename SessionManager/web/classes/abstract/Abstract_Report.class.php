@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Gauvain Pocentek <gauvain@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Gauvain Pocentek <gauvain@ulteo.com> 2009
+ * Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,10 +49,10 @@ class Abstract_Report {
 		}
 
 		$sessions_history_table_structure = array(
-			'id' => 'INT(16) NOT NULL auto_increment',
+			'id' => 'VARCHAR(255) NOT NULL', // same as session id
 			'start_stamp' => 'TIMESTAMP NOT NULL default CURRENT_TIMESTAMP',
 			'stop_stamp' => 'TIMESTAMP NULL default NULL',
-			'stop_why' => 'VARCHAR(16) default NULL',
+			'stop_why' => "VARCHAR(16) default 'unknown'",
 			'user' => 'VARCHAR(255) NOT NULL',
 			'server' => 'VARCHAR(255) NOT NULL',
 			'data' => 'LONGTEXT NOT NULL');
@@ -65,5 +65,49 @@ class Abstract_Report {
 		}
 
 		return true;
+	}
+	
+	public static function loadSession($id_) {
+		Logger::debug('main', "Abstract_Report::loadSession($id_)");
+		
+		$report = new SessionReportItem($id_); // hoho...
+		return $report;
+	}
+	
+	public static function existsSession($id_) {
+		$SQL = MySQL::getInstance();
+		
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions_history', 'id', $id_);
+		$total = $SQL->NumRows();
+		return ($total == 1);
+	}
+	
+	public static function createSession($report_) {
+		Logger::debug('main', 'Abstract_Report::saveSession');
+		
+		$sql = MySQL::getInstance();
+		$res = $sql->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', SESSIONS_HISTORY_TABLE, 'id', 'user', 'server', 'data',  $report_->sql_id, $report_->user, $report_->server, '');
+		return $res;
+	}
+	
+	public static function updateSession($report_) {
+		Logger::debug('main', "Abstract_Report::updateSession");
+		
+		$SQL = MySQL::getInstance();
+		$report = Abstract_Report::loadSession($report_->sql_id);
+		if (! is_object($report)) {
+			Logger::debug('main', "Abstract_Report::updateSession failed to load report ".$report_->sql_id);
+			return false;
+		}
+		
+		$ret = $SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7 WHERE @8 = %9 LIMIT 1', $SQL->prefix.'sessions_history',
+// 			'start_stamp',
+// 			'stop_stamp',
+			'stop_why',  $report_->stop_why,
+			'user', $report_->user,
+			'server', $report_->server,
+// 			'data',
+			'id', $report_->sql_id);
+		return $ret;
 	}
 }

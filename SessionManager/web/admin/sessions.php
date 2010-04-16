@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008-2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -75,6 +76,13 @@ if (isset($_POST['join'])) {
 	$session = Abstract_Session::load($_POST['session']);
 
 	if (is_object($session)) {
+		$report = Abstract_Report::loadSession($session->id);
+		if ($report) {
+			$report->stop_why = 'adminkill';
+			Abstract_Report::updateSession($report);
+			$report->end();
+		}
+
 		if (! $session->orderDeletion()) {
 			Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\'... purging');
 			Abstract_Session::delete($session->id);
