@@ -157,7 +157,7 @@ function get_session_history($t0, $t1, $mode_) {
 		if ($p['stop_why'] == '' || is_null($p['stop_why']))
 			$p['stop_why'] = 'unknown';
 		
-		if (is_null($p['stop_stamp'])) {
+		if (! is_null($p['stop_stamp'])) {
 			if (! isset($end_status[$p['stop_why']]))
 				$end_status[$p['stop_why']] = 0;
 			
