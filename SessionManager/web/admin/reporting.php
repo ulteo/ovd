@@ -477,7 +477,7 @@ function show_page($mode_) {
 	else
 		echo _('Abscissa: hour of the day');
 	echo '<br/>';
-	echo _('Ordinate: number of session');
+	echo _('Ordinate: number of sessions');
 	echo '</i></td></tr>';
 	echo '</table>';
 
@@ -503,7 +503,7 @@ function show_page($mode_) {
 			else
 				echo _('Abscissa: hour of the day');
 			echo '<br/>';
-			echo _('Ordinate: number of session');
+			echo _('Ordinate: number of sessions');
 			echo '</i></td></tr>';
 		}
 
