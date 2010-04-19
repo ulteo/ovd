@@ -196,9 +196,13 @@ if (isset($_POST['join'])) {
 else {
 	page_header();
 
-	echo '<h1>'._('Sessions').'</h1>';
-
 	$sessions = Sessions::getAll();
+	$nbsessions = 0;
+	if (is_array($sessions))
+		$nbsessions = count($sessions);
+
+	echo '<h1>'.sprintf(_('Sessions (total: %s)'), $nbsessions).'</h1>';
+
 	if (is_array($sessions) && count($sessions) > 0) {
 	        $buf = array();
 	        foreach ($sessions as $session)
