@@ -200,6 +200,12 @@ else {
 
 	$sessions = Sessions::getAll();
 	if (is_array($sessions) && count($sessions) > 0) {
+	        $buf = array();
+	        foreach ($sessions as $session)
+	                $buf[$session->getAttribute('user_login')] = $session;
+	        ksort($buf);
+	        $sessions = $buf;
+
 		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
 		echo '	<tr class="title">';
 		if (count($sessions) > 1)

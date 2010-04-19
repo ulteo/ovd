@@ -653,6 +653,14 @@ function show_manage($fqdn) {
   else
     $has_sessions = false;
 
+  if ($has_sessions) {
+    $buf = array();
+    foreach ($sessions as $session)
+      $buf[$session->getAttribute('start_time')] = $session;
+    ksort($buf);
+    $sessions = $buf;
+  }
+
   if ($server_online) {
     if ($server_lock) {
       $switch_button = _('Switch to production');
