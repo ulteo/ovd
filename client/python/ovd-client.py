@@ -176,10 +176,14 @@ def launch_ssh(host, user, password, extra):
      
     # if parent, read/write with child through file descriptor
     buf = os.read(fd, 1000)
+    old_len_buf = 0
 
     while "password:" not in buf:
         # Logger.debug("new ssh output: '%s'"%(buf))
-        time.sleep(0.3)
+        if old_len_buf == len(buf):
+            time.sleep(0.3)
+        else:
+            old_len_buf = len(buf)
         buf += os.read(fd, 1)
 
     # write password

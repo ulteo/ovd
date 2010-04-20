@@ -28,7 +28,7 @@ import urllib2
 
 
 def launch_client(user, password, url):
-    cmd_args = ["xterm", "-e", "./ovd-client.py -l %s -p \"%s\" %s; sleep 1h"%(user, password, url)]
+    cmd_args = ["xterm", "-e", "./ovd-client.py --verbose -l %s -p \"%s\" %s; sleep 1h"%(user, password, url)]
 
     # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
     pid =  os.fork()
