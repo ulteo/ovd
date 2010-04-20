@@ -23,6 +23,7 @@ package org.ulteo.ovd.applet;
 
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
+
 import java.applet.Applet;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
@@ -38,7 +39,7 @@ import netscape.javascript.JSObject;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
-import net.propero.rdp.rdp5.rdpdr.Printer;
+import net.propero.rdp.rdp5.rdpdr.PrinterManager;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import org.ulteo.rdp.Connection;
@@ -88,6 +89,8 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 	public String keymap = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
+
+	private PrinterManager printerManager = null; 
 	
 	private HashMap<Integer, Connection> connections = null;
 	private List<Order> spoolOrder = null;
@@ -127,7 +130,8 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
 		this.connections = new HashMap<Integer, Connection>();
-		
+
+		this.printerManager = new PrinterManager();
 		this.finished_init = true;
 	}
 	
@@ -323,14 +327,10 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				}
 		
 				if (this.map_local_printers) {
-					String[] printers = Printer.getAllAvailable();
-					if (printers.length > 0) {
+					this.printerManager.searchAllPrinter();
+					if (this.printerManager.hasPrinter()) {
 						RdpdrChannel rdpdrChannel = new RdpdrChannel(co.connection.opt, co.connection.common);
-				
-						for(int i=0; i<printers.length; i++) {
-							Printer p = new Printer(printers[i], i);
-							rdpdrChannel.register(p);
-						}
+						this.printerManager.registerAll(rdpdrChannel);
 				
 						if (! co.connection.addChannel(rdpdrChannel))
 							System.err.println("Unable to add rdpdr channel, continue anyway");

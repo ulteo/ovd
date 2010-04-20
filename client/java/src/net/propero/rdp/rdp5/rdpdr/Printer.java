@@ -45,9 +45,15 @@ import javax.print.attribute.PrintRequestAttributeSet;
 
 import net.propero.rdp.RdpPacket;
 import net.propero.rdp.RdpPacket_Localised;
+import org.apache.log4j.Logger;
 
 public class Printer extends RdpdrDevice{
 	//parameter
+	private static int printerCount = 0;
+	private String display_name; 
+
+	protected static Logger logger = Logger.getLogger(Printer.class);
+
 	public static final int DEVICE_TYPE = 0x04;//DEVICE_TYPE_PRINTER
 	public String driver;
 	public boolean default_printer = true;
@@ -61,20 +67,27 @@ public class Printer extends RdpdrDevice{
 	//status
 	public final int STATUS_SUCCESS			= 0x00000000;
 	
-	public Printer(String printerName, int index){//temp data for test
-		this.name = "PRN" + index;
-		this.printer_name = printerName;
+	public Printer(String name, String display_name, boolean is_default){//temp data for test
+		this.name = "PRN" + printerCount;
+		printerCount++;
+		this.printer_name = name;
+		this.display_name = display_name;
 		this.device_type = 0x04;
-		//this.driver = "hp LaserJet 1320 PCL 6";
 		this.driver = "HP Color LaserJet 8500 PS";//use this driver for default
-		this.default_printer = true;
+		this.default_printer = is_default;
 		this.pdevice_data.put("PRINTER", this);
 		this.path = System.getProperty("java.io.tmpdir") + File.separator;
 		this.path += "uprinter.ps";
 		Printer.only_printer_file = path;
-		//System.out.print("tmp path & file = "+path+"\n");
 	}
 
+	/* on Windows, with network printer, the printer name is the printer location in the network 
+	 * This location is unusable by Windows client
+	 * */
+	public String get_display_name(){
+		return display_name;
+	}
+	
 	public int create(int device, int desired_access, int share_mode, int disposition, int flags_and_attributes, String filename,int[] result){
 		Printer.ps_buffer = null;
 		return STATUS_SUCCESS;
@@ -202,10 +215,11 @@ public class Printer extends RdpdrDevice{
 			
 			if(myPrinter != null){
 				if (!myPrinter.isDocFlavorSupported(flavor)){
-					System.err.println("The printer does not support the appropriate DocFlavor\n");
+					logger.warn("The printer does not support the appropriate DocFlavor\n");
 					return;
 				}
 			}else{
+				logger.warn("Unable to find printer");
 				return;
 			}
 			
@@ -230,44 +244,5 @@ public class Printer extends RdpdrDevice{
 			}
 		}
 	}
-	
-	public static String[] getAllAvailable() {
-		//define DocFlavor case
-		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-		
-		//select printer
-		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
-		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
-		
 
-		String defaultPrinterName = null;
-		try{
-			PrintService default_p = PrintServiceLookup.lookupDefaultPrintService();
-			defaultPrinterName = default_p.getName();
-		}catch(Exception e){}
-
-
-		String[] names = new String[printService.length];
-
-		for(int i=0;i<printService.length;i++) {
-			System.out.println("getall: "+printService[i].getName());
-			names[printService.length-1-i] = printService[i].getName();
-		}
-
-		return names;
-	}
-	
-	public static boolean getPrinterByName(String printerName){
- 		//define DocFlavor case
- 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
- 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
- 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
- 		
- 		PrintService myPrinter = null;
-		for(int i=0;i<printService.length;i++){
-			if(printService[i].getName().trim().equalsIgnoreCase(printerName))
-				myPrinter = printService[i];
- 		}
- 		return myPrinter!=null?true:false;
- 	}
 }

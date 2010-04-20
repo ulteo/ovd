@@ -272,8 +272,9 @@ public class RdpdrChannel extends VChannel {
 			switch (g_rdpdr_device[i].device_type){
 				case DEVICE_TYPE_PRINTER:
 					Printer printerinfo = (Printer) g_rdpdr_device[i].pdevice_data.get("PRINTER");
+					String printerName = printerinfo.get_display_name();
 					int driverlen = 2 * printerinfo.driver.length() + 2;
-					int printerlen = 2 * printerinfo.printer_name.length() + 2;
+					int printerlen = 2 * printerName.length() + 2;
 					int bloblen = printerinfo.bloblen;
 
 					s.setLittleEndian32(24 + driverlen + printerlen + bloblen);
@@ -283,7 +284,7 @@ public class RdpdrChannel extends VChannel {
 					s.setLittleEndian32(printerlen);
 					s.setLittleEndian32(bloblen);
 					s.outUnicodeString(printerinfo.driver, driverlen - 2);
-					s.outUnicodeString(printerinfo.printer_name, printerlen - 2);
+					s.outUnicodeString(printerName, printerlen - 2);
 					//s.out_uint8p(null, bloblen);
 					byte[] tmp = new byte[s.size()];
 					s.copyToByteArray(tmp, 0, 0, s.size());

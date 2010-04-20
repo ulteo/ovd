@@ -25,12 +25,14 @@ import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
+
+
 import net.propero.rdp.Common;
 
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
-import net.propero.rdp.rdp5.rdpdr.Printer;
+import net.propero.rdp.rdp5.rdpdr.PrinterManager;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import netscape.javascript.JSObject;
@@ -43,6 +45,8 @@ public class Desktop extends Applet implements Observer {
 	private String keymap = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
+	
+	private PrinterManager printerManager = null;
 	
 	private Options rdp_opt = null;
 	private RdpConnection rc = null;
@@ -118,14 +122,10 @@ public class Desktop extends Applet implements Observer {
 		}
 		
 		if (this.map_local_printers) {
-			String[] printers = Printer.getAllAvailable();
-			if (printers.length > 0) {
+			this.printerManager.searchAllPrinter();
+			if (this.printerManager.hasPrinter()) {
 				RdpdrChannel rdpdrChannel = new RdpdrChannel(this.rc.opt, this.rc.common);
-				
-				for(int i=0; i<printers.length; i++) {
-					Printer p = new Printer(printers[i], i);
-					rdpdrChannel.register(p);
-				}
+				this.printerManager.registerAll(rdpdrChannel);
 				
 				if (! this.rc.addChannel(rdpdrChannel))
 					System.err.println("Unable to ass rdpdr channel, continue anyway");
