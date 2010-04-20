@@ -151,11 +151,25 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
+$enabled_session_modes = array();
+$sessmodes = array('desktop', 'applications');
+foreach ($sessmodes as $sessmode) {
+	$buf = $prefs->get('general', 'remote_'.$sessmode.'_settings');
+	if (! $buf)
+		continue;
+
+	if ($buf['enabled'] == 1)
+		$enabled_session_modes[] = $sessmode;
+}
+
 // The "user" node of this XML should be handled by do_login();
 $ret = parse_login_XML(@file_get_contents('php://input'));
 
 if (isset($_SESSION['mode'])) {
 	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
+		throw_response(UNAUTHORIZED_SESSION_MODE);
+
+	if (in_array('session_mode', $advanced_settings) && ! in_array($_SESSION['mode'], $enabled_session_modes))
 		throw_response(UNAUTHORIZED_SESSION_MODE);
 
 	$session_mode = $_SESSION['mode'];
