@@ -45,7 +45,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 			var daemon;
 
 			Event.observe(window, 'load', function() {
-				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
+				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.applet.Standalone', 'ulteo-printing.jar', 0);
 
 				daemon.in_popup = false;
 				daemon.error_message = '<?php echo str_replace("'", "\'", _('Server: invalid token')); ?>';
