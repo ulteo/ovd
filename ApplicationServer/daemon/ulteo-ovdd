@@ -96,8 +96,8 @@ session_check_status() {
     if ! session_valid_runasap $RUNASAP; then
         log_WARN "Unsupported runasap value for session $SESSID"
         session_switch_status $SESSID 3
-        session_check_status $SESSID 3
         webservices_session_end_status $SESSID "internal1"
+        session_check_status $SESSID 3
         return $?
     fi
 
@@ -162,8 +162,8 @@ session_check_status() {
         if [ $diff -gt 0 ]; then
             log_INFO "Session expired => Timeout:$ct, EXPIRE:$EXPIRE, diff:$diff"
             session_switch_status $SESSID 3
-            session_check_status $SESSID 3
             webservices_session_end_status $SESSID "timeout"
+            session_check_status $SESSID 3
             return $?
         fi
     fi
@@ -188,8 +188,8 @@ session_check_status() {
                 [ $? -eq 0 ] && return 0
             fi
             session_switch_status $SESSID 3
-            session_check_status $SESSID 3
             webservices_session_end_status $SESSID "kma"
+            session_check_status $SESSID 3
             return $?
         fi
     fi
@@ -228,8 +228,8 @@ session_check_status() {
         set_user_env.sh $SESSID
         if [  $? -ne 0 ]; then
             session_switch_status $SESSID 3
-            session_check_status $SESSID 3
             webservices_session_end_status $SESSID "internal2"
+            session_check_status $SESSID 3
             return 1
         fi
         session_switch_status $SESSID 2
@@ -257,14 +257,14 @@ session_check_status() {
                 session_suspend $SESSID
                 if [ $? -ne 0 ]; then
                     session_switch_status $SESSID 3
-                    session_check_status $SESSID 3
                     webservices_session_end_status $SESSID "internal3"
+                    session_check_status $SESSID 3
                     return $?
                 fi
             else
                 session_switch_status $SESSID 3
-                session_check_status $SESSID 3
                 webservices_session_end_status $SESSID "exit"
+                session_check_status $SESSID 3
                 return $?
             fi
         fi
@@ -289,18 +289,18 @@ session_check_status() {
                     session_suspend $SESSID
                     if [ $? -ne 0 ]; then
                         session_switch_status $SESSID 3
-                        session_check_status $SESSID 3
                         webservices_session_end_status $SESSID "internal3"
+                        session_check_status $SESSID 3
                         return $?
                     fi
                 else
                     session_switch_status $SESSID 3
-                    session_check_status $SESSID 3
                     if [ -f ${SESSID_DIR}/private/running ]; then
                         webservices_session_end_status $SESSID "exit"
                     else
                         webservices_session_end_status $SESSID "ssh"
                     fi
+                    session_check_status $SESSID 3
                     return $?
                 fi
             fi
