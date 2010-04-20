@@ -160,7 +160,7 @@ def parse_access(data):
 
 
 def launch_ssh(host, user, password, extra):
-    cmd_args = ["/usr/bin/ssh", "-l", user]
+    cmd_args = ["ssh", "-l", user]
     for arg in extra:
         cmd_args.append(arg)
     cmd_args.append(host)
@@ -170,7 +170,7 @@ def launch_ssh(host, user, password, extra):
     pid, fd = os.forkpty()
     # If Child; execute external process
     if pid == 0:
-        os.execv(cmd_args[0], cmd_args)
+        os.execvp(cmd_args[0], cmd_args)
         # Should not appear
         sys.exit(0)
      

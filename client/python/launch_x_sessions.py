@@ -28,13 +28,13 @@ import urllib2
 
 
 def launch_client(user, password, url):
-    cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py -l %s -p \"%s\" %s; sleep 1h"%(user, password, url)]
+    cmd_args = ["xterm", "-e", "./ovd-client.py -l %s -p \"%s\" %s; sleep 1h"%(user, password, url)]
 
     # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
     pid =  os.fork()
     # If Child; execute external process
     if pid == 0:
-        os.execv(cmd_args[0], cmd_args)
+        os.execvp(cmd_args[0], cmd_args)
         # Should not appear
         sys.exit(0)
 
