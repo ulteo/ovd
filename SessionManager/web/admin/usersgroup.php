@@ -1,10 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Laurent CLOUET <laurent@ulteo.com>
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009,2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009,2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -585,7 +585,7 @@ function show_manage($id) {
 
   $usersList = new UsersList($_REQUEST);
   $users_all = $usersList->search();
-  $search_form = $usersList->getForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
+  $search_form = $usersList->getFilterForm(array('action' => 'manage', 'id' => $id, 'search_user' => true));
 
   if (is_null($users_all))
     $users_all = array();
@@ -830,6 +830,8 @@ if (count($users_all) > 0 || count($users) > 0) {
     }
 
     if ((count ($users_available) >0) && $usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
+      if ($usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups)
+        echo '<tr><td colspan="2">'.$search_form.'</td></tr>';
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
@@ -844,10 +846,6 @@ if (count($users_all) > 0 || count($users) > 0) {
 
     echo '</table>';
 
-    if ($usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
-      echo '<br/>';
-      echo $search_form;
-    }
     echo '</div>';
     echo '<br/>';
   }
