@@ -128,8 +128,7 @@ if ($show_configuration) {
 <?php
 if ($show_status) {
 	echo '<ul>';
-	$active_sessions = Sessions::getAll();
-	$count_active_sessions = count($active_sessions);
+	$count_active_sessions = Abstract_Session::countByStatus(2);
 
 	$online_servers = Servers::getOnline();
 	$count_online_servers = count($online_servers);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -212,5 +212,15 @@ class Abstract_Session {
 			return false;
 
 		return true;
+	}
+
+	public static function countByStatus($status_) {
+		Logger::debug('main', "Starting Abstract_Session::countByStatus($status_)");
+		
+		$SQL = MySQL::getInstance();
+		$ret = $SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4', 'id', $SQL->prefix.'sessions', 'status', $status_);
+		
+		$total = $SQL->NumRows();
+		return $total;
 	}
 }
