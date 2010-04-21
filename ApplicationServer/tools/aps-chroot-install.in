@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PROGRAM=$(basename $0)
-CURLOPTS="--retry 3 --connect-timeout 60"
+CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
 
 # helper functions
 die () {

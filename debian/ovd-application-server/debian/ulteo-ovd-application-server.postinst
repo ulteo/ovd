@@ -4,7 +4,7 @@
 
 . /usr/share/debconf/confmodule
 
-CURLOPTS="--retry 3 --connect-timeout 60"
+CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
 
 set_conf () {
     # $1: configfile
