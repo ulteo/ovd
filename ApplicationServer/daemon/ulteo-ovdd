@@ -324,8 +324,6 @@ session_process() {
     while [ 1 -eq 1 ]; do
         # first step: get new session if possible
         for SESSID in $(sessions_get_to_create); do
-            log_INFO "session_process (dans le for) $SESSID"
-
             local nb=$(find $SPOOL/sessions2create -name "$SESSID-lock-*" |wc -l)
             if [ $nb -ne 0 ]; then
                 continue
