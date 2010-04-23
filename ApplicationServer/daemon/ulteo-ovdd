@@ -520,7 +520,7 @@ SPOOL_USERS=/var/spool/sessions
 SESSION_MANAGER_URL="http://fire.ulteo.com/sessionmanager"
 SERVERNAME=localhost
 SERVER_HTTP_PORT=80
-CONNECTION_TIMEOUT=20
+CONNECTION_TIMEOUT=100
 USE_CPULIMIT=1
 NB_SUB_PROCESS=
 # end of default configuration

@@ -36,7 +36,7 @@ EOF
 # When a session is initialise (runasap=2), the user has
 # $CONNECTION_TIMEOUT seconds to join the session
 # after this delay, the session is destroyed
-CONNECTION_TIMEOUT=20
+CONNECTION_TIMEOUT=100
 EOF
         mv $CONFIGFILE.tmp $CONFIGFILE
     fi
