@@ -35,6 +35,9 @@ class SessionReportItem {
 	public function __construct($token_) {
 		$this->token = $token_;
 		$session = Abstract_Session::load($token_);
+		if (! is_object($session)) {
+			Logger::error('main', "SessionReportItem failed to load $token_");
+		}
 		$this->server = $session->getAttribute('server');
 		$this->user = $session->getAttribute('user_login');
 		$this->current_apps = array();
