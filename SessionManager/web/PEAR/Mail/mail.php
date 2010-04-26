@@ -14,6 +14,7 @@
 // | license@php.net so we can mail you a copy immediately.               |
 // +----------------------------------------------------------------------+
 // | Author: Chuck Hagenbuch <chuck@horde.org>                            |
+// | Author: Jeremy Desvages <jeremy@ulteo.com>                           |
 // +----------------------------------------------------------------------+
 //
 // $Id: mail.php,v 1.18 2006/09/13 05:32:08 jon Exp $
@@ -121,6 +122,7 @@ class Mail_mail extends Mail {
          * We only use mail()'s optional fifth parameter if the additional
          * parameters have been provided and we're not running in safe mode.
          */
+        $this->_params = NULL;
         if (empty($this->_params) || ini_get('safe_mode')) {
             $result = mail($recipients, $subject, $body, $text_headers);
         } else {
