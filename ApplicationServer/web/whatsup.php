@@ -159,8 +159,18 @@ function share_refresh_alive($dir_) {
 
 
 
-if (! isset($_SESSION['ovd_session']['session']))
-  die2(400, 'ERROR - No $session');
+if (! isset($_SESSION['ovd_session']['session'])) {
+	header('Content-Type: text/xml; charset=utf-8');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$session_node = $dom->createElement('session');
+	$session_node->setAttribute('status', 4);
+	$applications_node = $dom->createElement('applications');
+	$session_node->appendChild($applications_node);
+	$dom->appendChild($session_node);
+
+	die($dom->saveXML());
+}
 
 $session = $_SESSION['ovd_session']['session'];
 $session_owner = (isset($_SESSION['ovd_session']['owner']) && $_SESSION['ovd_session']['owner']);
