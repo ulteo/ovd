@@ -3,42 +3,33 @@
 . /usr/share/debconf/confmodule
 db_version 2.0
 
-# Do nothing if we're not installing
-if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
-    exit 0
+CONFFILE="/etc/ulteo/webinterface/config.inc.php"
+DEFAULTDIR="/usr/share/ulteo/webinterface/default"
+DEFAULT_CONFFILE="$DEFAULTDIR/config.inc.php"
+
+cp $DEFAULT_CONFFILE $CONFFILE
+
+db_get ulteo-ovd-webinterface/session_manager_ip || true
+sed -r -i "s,@SESSION_MANAGER@,$RET," $CONFFILE
+
+db_get ulteo-ovd-webinterface/link_session_manager
+if [ $RET = 'false' ]; then
+     sed -i '/SESSIONMANAGER_URL/ s/^/\/\//' $CONFFILE
 fi
 
-CONFFILE="/etc/ulteo/webinterface/config.inc.php"
+if [ ! -e /etc/apache2/conf.d/webinterface ]; then
+    ln -s /etc/ulteo/webinterface/apache2.conf \
+        /etc/apache2/conf.d/webinterface
 
-apache_config()
-{
-    if [ ! -e /etc/apache2/conf.d/webinterface ]; then
-        ln -s /etc/ulteo/webinterface/apache2.conf \
-            /etc/apache2/conf.d/webinterface
-
-        if apache2ctl configtest 2>/dev/null; then
-            invoke-rc.d apache2 reload || true
-        else
-            echo "Your apache2 configuration is broken, so we're not restarting it for you."
-        fi
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
     fi
-}
-
-gen_conf()
-{
-    db_get ulteo-ovd-webinterface/session_manager || true
-    SESSION_MANAGER="$RET"
-
-    sed -r -i "s,@SESSION_MANAGER@,$SESSION_MANAGER," $CONFFILE
-}
-
-# set the configuration if we install
-gen_conf
-
-apache_config
-
-db_stop
+fi
 
 #DEBHELPER#
+
+db_stop
 
 exit 0
