@@ -1,7 +1,8 @@
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -32,7 +33,7 @@ std::vector<std::string>
 Utils::StringExplode(const std::string &input, const std::string &separator) {
     std::string str(input);
     std::vector<std::string> results;
-    unsigned int found = str.find_first_of(separator);
+    std::string::size_type found = str.find_first_of(separator);
 
     while(found != std::string::npos){
         if(found >=0)
