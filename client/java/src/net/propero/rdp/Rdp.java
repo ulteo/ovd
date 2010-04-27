@@ -387,8 +387,8 @@ public class Rdp {
         this.common = common_;
         this.SecureLayer = new Secure(channels, this.opt, this.common);
         this.common.secure = SecureLayer;
-        this.orders = new Orders(this.opt);
-        this.cache = new Cache();
+        this.orders = new Orders(this.opt, this.common);
+        this.cache = new Cache(this.common, this.opt);
         orders.registerCache(cache);
     }
 
@@ -846,8 +846,14 @@ public class Rdp {
             throws RdesktopException, IOException, CryptoException,
             OrderException {
         int type[] = new int[1];
+	int len_src_descriptor, len_combined_caps;
 
         this.rdp_shareid = data.getLittleEndian32();
+	len_src_descriptor = data.getLittleEndian16();
+	len_combined_caps = data.getLittleEndian16();
+	data.incrementPosition(len_combined_caps);
+
+	this.processServerCaps(data, len_combined_caps);
 
         this.sendConfirmActive();
 
@@ -860,8 +866,14 @@ public class Rdp {
         this.receive(type); // Receive RDP_CTL_GRANT_CONTROL
 
         this.sendInput(0, RDP_INPUT_SYNCHRONIZE, 0, 0, 0);
-        this.sendFonts(1);
-        this.sendFonts(2);
+
+	if (this.opt.use_rdp5) {
+		this.sendFonts(3);
+	}
+	else {
+		this.sendFonts(1);
+		this.sendFonts(2);
+	}
 
         this.receive(type); // Receive an unknown PDU Code = 0x28
 
@@ -1158,7 +1170,9 @@ public class Rdp {
         // (BMPCACHE2_NUM_PSTCELLS | BMPCACHE2_FLAG_PERSIST) :
         // BMPCACHE2_C2_CELLS);
 
-        if (new PstCache(this.opt).pstcache_init(2)) {
+	this.common.persistent_cache = new PstCache(this.opt, this.common);
+
+        if (this.common.persistent_cache.pstcache_init(2)) {
             logger.info("Persistent cache initialized");
             data.setLittleEndian32(BMPCACHE2_NUM_PSTCELLS
                     | BMPCACHE2_FLAG_PERSIST);

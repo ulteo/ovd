@@ -26,6 +26,7 @@ public class Orders {
     private RdesktopCanvas surface = null;
     
     private Options opt = null;
+    private Common common = null;
 
     /* RDP_BMPCACHE2_ORDER */
     private static final int ID_MASK = 0x0007;
@@ -70,8 +71,9 @@ public class Orders {
     private static final int TEXT2_VERTICAL = 0x04;
     private static final int TEXT2_IMPLICIT_X = 0x20;
 
-    public Orders(Options opt_) {
+    public Orders(Options opt_, Common common_) {
     	this.opt = opt_;
+	this.common = common_;
         os = new OrderState();
     }
 
@@ -260,7 +262,7 @@ public class Orders {
      */
     public void registerDrawingSurface(RdesktopCanvas surface) {
         this.surface = surface;
-        surface.registerCache(this.opt.cache);
+        surface.registerCache(this.common.cache);
     }
 
     /**
@@ -305,6 +307,7 @@ public class Orders {
             break;
 
         case RDP_ORDER_RAW_BMPCACHE2:
+            logger.debug("Raw Bitmapcache V2 Order");
             try {
                 this.process_bmpcache2(data, flags, false);
             } catch (IOException e) {
@@ -313,6 +316,7 @@ public class Orders {
             break;
 
         case RDP_ORDER_BMPCACHE2:
+            logger.debug("Bitmapcache V2 Order");
             try {
                 this.process_bmpcache2(data, flags, true);
             } catch (IOException e) {
@@ -355,7 +359,7 @@ public class Orders {
             pdata += width * Bpp;
         }
 
-        this.opt.cache.putBitmap(cache_id, cache_idx, new Bitmap(new Bitmap(this.opt).convertImage(
+        this.common.cache.putBitmap(cache_id, cache_idx, new Bitmap(new Bitmap(this.opt).convertImage(
                 inverted, Bpp), width, height, 0, 0, this.opt), 0);
     }
 
@@ -391,7 +395,7 @@ public class Orders {
             j += 4;
         }
         IndexColorModel cm = new IndexColorModel(8, n_colors, red, green, blue);
-        this.opt.cache.put_colourmap(cache_id, cm);
+        this.common.cache.put_colourmap(cache_id, cm);
         // surface.registerPalette(cm);
     }
 
@@ -453,14 +457,14 @@ public class Orders {
         if (Bpp == 1) {
             byte[] pixel = Bitmap.decompress(width, height, size, data, Bpp);
             if (pixel != null)
-                this.opt.cache.putBitmap(cache_id, cache_idx, new Bitmap(bmp
+                this.common.cache.putBitmap(cache_id, cache_idx, new Bitmap(bmp
                         .convertImage(pixel, Bpp), width, height, 0, 0, this.opt), 0);
             else
                 logger.warn("Failed to decompress bitmap");
         } else {
             int[] pixel = bmp.decompressInt(width, height, size, data, Bpp);
             if (pixel != null)
-            	this.opt.cache.putBitmap(cache_id, cache_idx, new Bitmap(pixel, width,
+            	this.common.cache.putBitmap(cache_id, cache_idx, new Bitmap(pixel, width,
                         height, 0, 0, this.opt), 0);
             else
                 logger.warn("Failed to decompress bitmap");
@@ -491,10 +495,9 @@ public class Orders {
         bitmap_id = new byte[8]; /* prevent compiler warning */
         cache_id = flags & ID_MASK;
         Bpp = ((flags & MODE_MASK) >> MODE_SHIFT) - 2;
-        Bpp = this.opt.Bpp;
         if ((flags & PERSIST) != 0) {
-            bitmap_id = new byte[8];
             data.copyToByteArray(bitmap_id, 0, data.getPosition(), 8);
+	    data.incrementPosition(8);
         }
 
         if ((flags & SQUARE) != 0) {
@@ -538,34 +541,28 @@ public class Orders {
             }
             bitmap = new Bitmap(bmpdataInt, width, height, 0, 0, this.opt);
         } else {
-            for (y = 0; y < height; y++)
-                data.copyToByteArray(bmpdata, y * (width * Bpp),
-                        (height - y - 1) * (width * Bpp), width * Bpp); // memcpy(&bmpdata[(height
-                                                                        // - y -
-                                                                        // 1) *
-                                                                        // (width
-                                                                        // *
-                                                                        // Bpp)],
-                                                                        // &data[y
-                                                                        // *
-                                                                        // (width
-                                                                        // *
-                                                                        // Bpp)],
-                                                                        // width
-                                                                        // *
-                                                                        // Bpp);
+		int pos_data = data.getPosition();
+		int offset;
+		for (y = 0; y < height; y++) {
+			offset = pos_data + ((height - y - 1) * (width * Bpp));
 
-            bitmap = new Bitmap(bmp.convertImage(bmpdata, Bpp), width,
-                    height, 0, 0, this.opt);
+			data.copyToByteArray(
+				bmpdata,		// dest
+				y * (width * Bpp),	// dest offset
+				offset,			// mem offset
+				width * Bpp);		// size
+		}
+
+		bitmap = new Bitmap(bmp.convertImage(bmpdata, Bpp), width, height, 0, 0, this.opt);
         }
 
         // bitmap = ui_create_bitmap(width, height, bmpdata);
 
         if (bitmap != null) {
-        	this.opt.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
+        	this.common.cache.putBitmap(cache_id, cache_idx, bitmap, 0);
             // cache_put_bitmap(cache_id, cache_idx, bitmap, 0);
-            if ((flags & PERSIST) != 0)
-                new PstCache(this.opt).pstcache_put_bitmap(cache_id, cache_idx, bitmap_id,
+            if ((flags & PERSIST) != 0 && this.opt.persistent_bitmap_caching)
+                this.common.persistent_cache.pstcache_put_bitmap(cache_id, cache_idx, bitmap_id,
                         width, height, width * height * Bpp, bmpdata);
         } else {
             logger.debug("process_bmpcache2: ui_create_bitmap failed");
@@ -604,7 +601,7 @@ public class Orders {
             data.incrementPosition(datasize);
             glyph = new Glyph(font, character, offset, baseline, width, height,
                     fontdata);
-            this.opt.cache.putFont(glyph);
+            this.common.cache.putFont(glyph);
         }
     }
 
@@ -823,9 +820,9 @@ public class Orders {
         if (desksave.getAction() == 0) {
             int[] pixel = surface.getImage(desksave.getLeft(), desksave
                     .getTop(), width, height);
-            this.opt.cache.putDesktop((int) desksave.getOffset(), width, height, pixel);
+            this.common.cache.putDesktop((int) desksave.getOffset(), width, height, pixel);
         } else {
-            int[] pixel = this.opt.cache.getDesktopInt((int) desksave.getOffset(),
+            int[] pixel = this.common.cache.getDesktopInt((int) desksave.getOffset(),
                     width, height);
             surface.putImage(desksave.getLeft(), desksave.getTop(), width,
                     height, pixel);
@@ -1159,7 +1156,7 @@ public class Orders {
      * @param cache Cache object to set as current global cache
      */
     public void registerCache(Cache cache) {
-        this.opt.cache = cache;
+        this.common.cache = cache;
     }
 
     /**
@@ -1233,7 +1230,7 @@ private void drawText(Text2Order text2, int clipcx, int clipcy, int boxcx, int b
 			    byte[] data = new byte[text[ptext + i + 2]&0x000000ff];
 			    System.arraycopy(text ,ptext , data, 0, text[ptext + i + 2]&0x000000ff);
 			    DataBlob db = new DataBlob(text[ptext + i + 2]&0x000000ff, data);
-			    this.opt.cache.putText(text[ptext + i + 1]&0x000000ff, db);
+			    this.common.cache.putText(text[ptext + i + 1]&0x000000ff, db);
 			} else {
 			    throw new RdesktopException();
 			}
@@ -1243,7 +1240,7 @@ private void drawText(Text2Order text2, int clipcx, int clipcy, int boxcx, int b
 			break;
 		
 	    case (0xfe):
-			entry = this.opt.cache.getText(text[ptext + i + 1]&0x000000ff);
+			entry = this.common.cache.getText(text[ptext + i + 1]&0x000000ff);
 			if(entry != null){
 			    if((entry.getData()[1] == 0) && ((text2.getFlags() & TEXT2_IMPLICIT_X) == 0)) {
 			        if((text2.getFlags() & 0x04) != 0) {
@@ -1265,7 +1262,7 @@ private void drawText(Text2Order text2, int clipcx, int clipcy, int boxcx, int b
             
 			byte[] data = entry.getData();
 			for(int j = 0; j < entry.getSize(); j++) {
-			    glyph = this.opt.cache.getFont(text2.getFont(), data[j]&0x000000ff);
+			    glyph = this.common.cache.getFont(text2.getFont(), data[j]&0x000000ff);
 			    if((text2.getFlags() & TEXT2_IMPLICIT_X) == 0) {
 				offset = data[++j]&0x000000ff;
 				if((offset & 0x80) !=0) {
@@ -1301,7 +1298,7 @@ private void drawText(Text2Order text2, int clipcx, int clipcy, int boxcx, int b
 			break;
 
 	    default:
-			glyph = this.opt.cache.getFont(text2.getFont(), text[ptext + i]&0x000000ff);
+			glyph = this.common.cache.getFont(text2.getFont(), text[ptext + i]&0x000000ff);
 			if((text2.getFlags() & TEXT2_IMPLICIT_X) == 0) {
 			    offset = text[ptext + (++i)]&0x000000ff;
 			    if((offset & 0x80) !=0) {

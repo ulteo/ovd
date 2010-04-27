@@ -27,6 +27,8 @@ public class Common {
 	public RdesktopCanvas canvas;
 	public SeamlessChannel seamlessChannelInstance = null;
 	public SoundChannel soundChannel;
+	public Cache cache = null;
+	public PstCache persistent_cache = null;
 
     /**
      * Quit the application

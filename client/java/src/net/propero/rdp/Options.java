@@ -110,7 +110,7 @@ public class Options {
 	public int win_button_size = 0;	/* If zero, disable single app mode */
 	public boolean bitmap_compression = true; /* Must to be true if we use RDP v5 or later */
 	public boolean persistent_bitmap_caching = false;
-	public boolean bitmap_caching = false;
+	public boolean bitmap_caching = true;
 	public boolean precache_bitmaps = false;
 	public boolean polygon_ellipse_orders = false;
 	public boolean sendmotion = true;
@@ -131,6 +131,4 @@ public class Options {
 						Rdp.RDP5_NO_FULLWINDOWDRAG | Rdp.RDP5_NO_MENUANIMATIONS |
 						/*Rdp.RDP5_NO_THEMING |*/ Rdp.RDP5_NO_WALLPAPER;
 	public boolean save_graphics = false;
-	
-	public Cache cache = null;
 }

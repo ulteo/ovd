@@ -24,7 +24,9 @@ public class Cache {
 
 	private static final int RDPCACHE_COLOURMAPSIZE = 0x06; // unified patch
 
-	private Bitmap[][] bitmapcache = new Bitmap[3][600];
+	private Bitmap[][] bitmapcache = new Bitmap[3][0xa00];
+
+	private Bitmap[] volatile_bc = new Bitmap[3];
 
 	private Cursor[] cursorcache = new Cursor[32];
 
@@ -38,11 +40,16 @@ public class Cache {
 
 	private IndexColorModel[] colourcache = new IndexColorModel[RDPCACHE_COLOURMAPSIZE];
 
-	public Cache() {
+	private Common common = null;
+	private Options opt = null;
+
+	public Cache(Common common_, Options opt_) {
+		this.common = common_;
+		this.opt = opt_;
 	}
 
     void TOUCH(int id, int idx){
-        bitmapcache[id][idx].usage = ++PstCache.g_stamp;
+        bitmapcache[id][idx].usage = ++this.common.persistent_cache.g_stamp;
     }
     
     /**
@@ -109,6 +116,7 @@ public class Cache {
      * @throws RdesktopException
      */
 	public Bitmap getBitmap(int cache_id, int cache_idx) throws RdesktopException {
+		logger.debug("Cache.getBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache[0].length: "+bitmapcache[0].length);
 
 		Bitmap bitmap = null;
 
@@ -128,6 +136,9 @@ public class Cache {
 			if (bitmap != null)
 				return bitmap;
 		}
+		else if ((cache_id < this.volatile_bc.length) && (cache_idx == 0x7fff)) {
+			return this.volatile_bc[cache_id];
+		}
 
 		throw new RdesktopException("Could not get Bitmap!");
 	}
@@ -144,17 +155,21 @@ public class Cache {
 			throws RdesktopException {
 
         //Bitmap old;
+		logger.debug("Cache.putBitmap: cache_id: "+cache_id+" cache_idx: "+cache_idx+" bitmapcache.length: "+bitmapcache.length+" bitmapcache[0].length: "+bitmapcache[0].length);
         
 		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
-            bitmapcache[cache_id][cache_idx] = bitmap;
-            /*if (Options.use_rdp5)
-            {
-                if (++num_bitmaps_in_memory[cache_id] > Rdp.BMPCACHE2_C2_CELLS)
-                    removeLRUBitmap(cache_id);
-            }
-            
-            bitmapcache[cache_id][cache_idx] = bitmap;
-            bitmapcache[cache_id][cache_idx].usage = stamp;*/
+			bitmapcache[cache_id][cache_idx] = bitmap;
+
+			if (this.opt.use_rdp5) {
+				if (++num_bitmaps_in_memory[cache_id] > Rdp.BMPCACHE2_C2_CELLS)
+				removeLRUBitmap(cache_id);
+			}
+
+			bitmapcache[cache_id][cache_idx] = bitmap;
+			bitmapcache[cache_id][cache_idx].usage = stamp;
+		}
+		else if ((cache_id < this.volatile_bc.length) && (cache_idx == 0x7fff)) {
+			this.volatile_bc[cache_id] = bitmap;
 		} else {
 			throw new RdesktopException("Could not put Bitmap!");
 		}
@@ -216,9 +231,9 @@ public class Cache {
         int id, idx;
 
         for (id = 0; id < bitmapcache.length; id++)
-            if (PstCache.IS_PERSISTENT(id))
+            if (this.common.persistent_cache.IS_PERSISTENT(id))
                 for (idx = 0; idx < bitmapcache[id].length; idx++)
-                    PstCache.touchBitmap(id, idx, bitmapcache[id][idx].usage);
+                    this.common.persistent_cache.touchBitmap(id, idx, bitmapcache[id][idx].usage);
     }
 
     /**

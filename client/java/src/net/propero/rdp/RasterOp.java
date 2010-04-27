@@ -65,18 +65,17 @@ public class RasterOp {
 			int[] src, int srcwidth, int srcx, int srcy, int Bpp) {
 
 		if (src == null) { // special case - copy to self
-            int[] imgSec = null;
-            biDst.getGraphics().copyArea(srcx,srcy,cx,cy,x-srcx,y-srcy);
+		    int[] imgSec = null;
+		    biDst.getGraphics().copyArea(srcx,srcy,cx,cy,x-srcx,y-srcy);
 		} else {
-                biDst.setRGB(
-                        x,
-                        y,
-                        cx,
-                        cy,
-                        src,
-                        0,
-                        srcwidth
-                    );
+			int[] rgbArray = new int[cx * cy];
+
+			for (int i = 0; i < cy; i++) {
+				for (int j = 0; j < cx; j++) {
+					rgbArray[i * cx + j] = src[(srcy + i) * srcwidth + (srcx + j)];
+				}
+			}
+			biDst.setRGB(x, y, cx, cy, rgbArray, 0, cx);
 		}
 	}
 
