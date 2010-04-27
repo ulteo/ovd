@@ -154,7 +154,7 @@ class Preferences {
 		$this->add($c,'general');
 
 		$c = new ConfigElement_select('admin_language', _('Administration console language'), _('Administration console language'), _('Administration console language'), 'auto');
-		$c->setContentAvailable(array('auto'=>_('Autodetect'),'en_GB'=>'English','fr_FR'=>'Français','ru_RU'=>'Русский'));
+		$c->setContentAvailable(array('auto'=>_('Autodetect'),'en_GB'=>'English','fr_FR'=>'Français','ja_JP'=>'日本語','ru_RU'=>'Русский'));
 		$this->add($c,'general');
 
 		$c = new ConfigElement_multiselect('log_flags', _('Debug options list'), _('Select debug options you want to enable.'), _('Select debug options you want to enable.'), array('info','warning','error','critical'));
@@ -296,7 +296,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_select('language', _('Default language for session'), _('Default language for session'), _('Default language for session'), 'en_GB');
-		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français','ru_RU'=>'Русский'));
+		$c->setContentAvailable(array('en_GB'=>'English','fr_FR'=>'Français','ja_JP'=>'日本語','ru_RU'=>'Русский'));
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('timeout', _('Default timeout for session'), _('Default timeout for session'), _('Default timeout for session'), 86400);
 		$c->setContentAvailable(array(60 => _('1 minute'),120 => _('2 minutes'),300 => _('5 minutes'),600 => _('10 minutes'),900 => _('15 minutes'),1800 => _('30 minutes'),3600 => _('1 hour'),7200 => _('2 hours'),18000 => _('5 hours'),43200 => _('12 hours'),86400 => _('1 day'),172800 => _('2 days'),604800 => _('1 week'),2764800 => _('1 month'),-1 => _('Never')));
