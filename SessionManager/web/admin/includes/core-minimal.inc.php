@@ -26,6 +26,14 @@ $buf = 'en_GB';
 $prefs = Preferences::getInstance();
 if (is_object($prefs))
 	$buf = $prefs->get('general', 'admin_language');
+if ($buf == 'auto') {
+	if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$buf = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+		$buf = explode(';', $buf[0]);
+		$buf = $buf[0];
+	} else
+		$buf = 'en_GB';
+}
 $language = locale2unix($buf);
 setlocale(LC_ALL, $language);
 $domain = 'uovdsm';
