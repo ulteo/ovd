@@ -85,7 +85,12 @@ cache_set_monitoring() {
 
     echo '<sessions>'                                      >>$file
     for s in $(sessions_get_active); do
-        session_load $s
+        session_load $s 2>/dev/null
+        if [ $? -ne 0 ]; then
+            log_WARN "Session $s does not exist anymore or status is not 1"
+            continue
+        fi
+ 
         echo '<session id="'$s'" i="'$i'">'                >>$file
 
         echo '<vnc login="'$VNC_USER'">'                   >>$file
