@@ -120,7 +120,7 @@ function show_default() {
 	  echo _('RAM usage').': '.$s->getRamUsage().'%<br />';
 	  echo display_loadbar($s->getRamUsage());
 	  echo _('Sessions usage').': '.$s->getSessionUsage().'%<br />';
-	  echo display_loadbar($s->getSessionUsage());
+	  echo display_loadbar((($s->getSessionUsage() > 100)?100:$s->getSessionUsage()));
 	}
 	echo '</td>';
       }
@@ -470,7 +470,7 @@ function show_manage($fqdn) {
         echo _('RAM usage').': '.$server->getRamUsage().'%<br />';
         echo display_loadbar($server->getRamUsage());
         echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
-        echo display_loadbar($server->getSessionUsage());
+        echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
     echo '</td>';
   }
 
