@@ -29,6 +29,12 @@ class UserDB_sql extends UserDB  {
 		}
 	}
 	
+	public function exists($login_) {
+		$sql2 = MySQL::getInstance();
+		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
+		return ($sql2->NumRows() == 1);
+	}
+	
 	public function import($login_){
 		$sql2 = MySQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3', $this->table, 'login', $login_);
