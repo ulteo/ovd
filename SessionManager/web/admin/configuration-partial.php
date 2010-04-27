@@ -41,6 +41,10 @@ if (isset($_POST['submit'])) {
 	if ( $ret === true) {
 		$ret = $prefs->backup();
 		if ($ret > 0){
+			$buf = $prefs->get('general', 'admin_language');
+			$language = locale2unix($buf);
+			setlocale(LC_ALL, $language);
+
 			// configuration saved
 			popup_info(_('Configuration successfully saved'));
 			redirect();
