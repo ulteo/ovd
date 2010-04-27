@@ -831,7 +831,7 @@ if (count($users_all) > 0 || count($users) > 0) {
 
     if ((count ($users_available) >0) && $usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups) {
       if ($usergroupdb_rw && $group->type == 'static' and $can_manage_usersgroups)
-        echo '<tr><td colspan="2">'.$search_form.'</td></tr>';
+        echo $search_form;
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';

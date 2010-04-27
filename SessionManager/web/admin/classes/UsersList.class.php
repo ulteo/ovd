@@ -104,34 +104,33 @@ class UsersList {
 
 	function getFilterForm($form_params_ = array('action' => 'search')) {
 		$str = '';
-		$str.= '<div>';
 		$str.= '<form action="" method="GET">';
 		foreach ($form_params_ as $k => $v) {
 			$str.= '<input type="hidden" name="'.$k.'" value="'.$v.'"/>';
 		}
 		$str.= '<input type="hidden" name="search_fields[]" value="login" />';
 		$str.= '<input type="hidden" name="search_fields[]" value="displayname" />';
-		$str.= '<table><tr>';
-		$str.= '<td>'._('Filter add list: ').'</td>';
-		$str.= '<td><input type="text" name="search_item" value="'.$this->search_item.'" /> ';
-		$str.= '<input type="submit" value="'._('Search').'" /><td>';
+		$str.= '<tr>';
+		$str.= '<td>'._('Filter add list: ').' <input type="text" name="search_item" value="'.$this->search_item.'" /></td>';
+		$str.= '<td><input type="submit" value="'._('Search').'" /></td>';
 		$str.= '</tr>';
 
-		$str.= '<tr><td></td>';
-		$str.= '<td>';
+		$str.= '<tr><td colspan="2">';
 		if ($this->partial_result == true) {
 			$str.= '<span class="error">';
-			$str.= sprintf(ngettext("<strong>Partial content:</strong> Only <strong>%d result</strong> displayed but there are more. Please restrict your search field.", "<strong>Partial content:</strong> Only <strong>%d results</strong> displayed but there are more. Please restrict your search field.", $this->search_limit), $this->search_limit);
+			$str.= '<table><tr><td style="vertical-align: top;">';
+			$str.= '<strong>'._('Partial content:').'</strong>';
+			$str.= '</td><td>';
+			$str.= sprintf(ngettext("Only <strong>%d result</strong> displayed but there are more.", "Only <strong>%d results</strong> displayed but there are more.", $this->search_limit), $this->search_limit).'<br />';
+			$str.= _('Please restrict your search field.');
+			$str.= '</td></tr></table>';
 			$str.= '</span>';
 		}
 		else if (strlen($this->search_item)>0)
 			$str.= sprintf(ngettext('<strong>%d</strong> result for "%s".', '<strong>%d</strong> results for "%s".', count($this->result)), count($this->result), $this->search_item);
-
 		$str.= '</td></tr>';
 
-		$str.= '</table>';
 		$str.= '</form>';
-		$str.= '</div>';
 
 		return $str;
 	}
