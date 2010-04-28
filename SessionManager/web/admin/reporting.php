@@ -284,7 +284,7 @@ function show_page($mode_) {
 				$tot+= $v;
 			$value = ($tot*100)/$session_number;
 
-			$dataSet->addPoint(new Point($fqdn, $value));
+			$dataSet->addPoint(new Point($fqdn." ($tot)", $value));
 		}
 
 		$chart = new PieChart();
@@ -298,7 +298,7 @@ function show_page($mode_) {
 		if (count($end_status) > 0) {
 			$dataSet = new XYDataSet();
 			foreach($end_status as $status_session => $number_status) {
-				$dataSet->addPoint(new Point(SessionReportItem::getStatusPrettyName($status_session), $number_status));
+				$dataSet->addPoint(new Point(SessionReportItem::getStatusPrettyName($status_session)." ($number_status)", $number_status));
 			}
 			
 			$chart = new PieChart();
@@ -334,7 +334,7 @@ function show_page($mode_) {
 		$end_status2 = get_session_end_status_for_server($t0, $t2, $fqdn);
 		if (count($end_status2) > 0) {
 			foreach($end_status2 as $status_session => $number_status) {
-				$dataSet->addPoint(new Point(SessionReportItem::getStatusPrettyName($status_session), $number_status));
+				$dataSet->addPoint(new Point(SessionReportItem::getStatusPrettyName($status_session)." ($number_status)", $number_status));
 			}
 			
 			$chart = new PieChart();
