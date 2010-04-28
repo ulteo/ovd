@@ -1,7 +1,7 @@
-# Copyright (C) 2006-2008 Ulteo SAS
+# Copyright (C) 2006-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Gaël DUVAL <gduval@ulteo.com>
-# Author Julien LANGLOIS <julien@ulteo.com>
+# Author GaÃ«l DUVAL <gduval@ulteo.com> 2006
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2009, 2010
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,8 +20,8 @@
 ## Cache function
 #
 cache_build() {
-    local old=$(find $SPOOL -maxdepth 1 -mindepth 1 -type d -name "cache.*")
-    local dest="cache.$RANDOM$(date +%s)"
+    local old=$(find $SPOOL -maxdepth 1 -mindepth 1 -type d -name "cache.*"  | sort | head -n -1)
+    local dest="cache.$(date +%s)$RANDOM"
 
     mkdir -p $SPOOL/$dest
 
@@ -30,30 +30,33 @@ cache_build() {
     grep "cpulimit" $SPOOL/$dest/ps | mawk '{ print $13 }' > $SPOOL/$dest/ps_cpulimit
     ps axo ruser,pid,pcpu |tail -n +2 |grep -v "^root" > $SPOOL/$dest/ps_chroot
 
-    $(cd $SPOOL && ln -sfT $dest cache)
     if [ -n "$old" ]; then
 	rm -rf $old
     fi
 }
 
+cache_get_latest() {
+    find $SPOOL -maxdepth 1 -mindepth 1 -type d -name "cache.*" | sort | tail -n 2 | head -n 1 2>/dev/null
+}
+
 cache_net_display() {
-    cat $SPOOL/cache/netstat
+    cat $(cache_get_latest)/netstat
 }
 
 cache_ps_display() {
-    cat $SPOOL/cache/ps
+    cat $(cache_get_latest)/ps 2>/dev/null
 }
 
 cache_ps_chroot_display() {
-    cat $SPOOL/cache/ps_chroot
+    cat $(cache_get_latest)/ps_chroot
 }
 
 cache_ps_pid_for_user() {
-    grep "^$1" $SPOOL/cache/ps | mawk '{ print $2 }'
+    grep "^$1" $(cache_get_latest)/ps | mawk '{ print $2 }'
 }
 
 cache_is_cpulimited() {
-    grep -q "$1" $SPOOL/cache/ps_cpulimit
+    grep -q "$1" $(cache_get_latest)/ps_cpulimit
 }
 
 cache_set_monitoring() {
