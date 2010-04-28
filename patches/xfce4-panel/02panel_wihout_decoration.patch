@@ -1,0 +1,23 @@
+--- a/libxfce4panel/xfce-panel-window.c	2007-11-17 20:30:57.000000000 +0100
++++ b/libxfce4panel/xfce-panel-window.c	2010-04-28 18:08:09.000000000 +0200
+@@ -320,15 +320,12 @@
+ 
+     GTK_WIDGET_SET_FLAGS (GTK_WIDGET (panel_window), GTK_CAN_FOCUS);
+ 
+-    g_object_set (G_OBJECT (panel_window),
+-                  "type", GTK_WINDOW_TOPLEVEL,
+-                  "decorated", FALSE,
+-                  "resizable", FALSE,
+-                  "type-hint", GDK_WINDOW_TYPE_HINT_DOCK,
+-                  NULL);
+-
++    gtk_window_set_type_hint (GTK_WINDOW (panel_window), GDK_WINDOW_TYPE_HINT_DOCK);
++    gtk_window_set_decorated (GTK_WINDOW (panel_window), FALSE);
++    gtk_window_set_resizable (GTK_WINDOW (panel_window), FALSE);
++    gtk_window_set_title (GTK_WINDOW (panel_window), PACKAGE_NAME);
+     gtk_window_stick (GTK_WINDOW (panel_window));
+-    
++
+     priv = XFCE_PANEL_WINDOW_GET_PRIVATE (panel_window);
+ 
+     priv->handle_style      = DEFAULT_HANDLE_STYLE;

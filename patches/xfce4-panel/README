@@ -1,0 +1,7 @@
+* 01_kiosk_hide_restart.patch
+  hide the 'Restart' button in kiosk mode
+
+* 02_panel_wihout_decoration.patch
+ construct property "type" for object `XfcePanelWindow' can't be set after
+ construction and shows a window with decorations. Use the normal gtk
+ functions for setting the properties.
