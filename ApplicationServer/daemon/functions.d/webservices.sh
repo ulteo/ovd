@@ -1,5 +1,6 @@
-# Copyright (C) 2006-2008 Ulteo SAS
+# Copyright (C) 2006-2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com>
 # Author Gaël DUVAL <gduval@ulteo.com>
 # Author Julien LANGLOIS <julien@ulteo.com>
 #
@@ -78,8 +79,8 @@ webservices_available_application() {
 
 webservices_system_monitoring() {
     local url="${SESSION_MANAGER_URL}/webservices/server_monitoring.php"
-    cache_set_monitoring $SPOOL/cache/monitoring.xml || return 1
-    curl --form xml=@$SPOOL/cache/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>&1
+    cache_set_monitoring $SPOOL/monitoring.xml || return 1
+    curl --form xml=@$SPOOL/monitoring.xml --form fqdn=${SERVERNAME} --insecure $url >/dev/null 2>&1
 }
 
 webservices_get_application() {
