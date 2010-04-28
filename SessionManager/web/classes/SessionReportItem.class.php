@@ -153,7 +153,7 @@ class SessionReportItem {
 		$statusPrettyName = array(
 			'exit' => _('No error'), 
 			'adminkill' => _('Killed by administrator'),
-			'internal' => _('Internal error: wrong session status'),
+			'internal1' => _('Internal error: wrong session status'),
 			'internal2' => _('Internal error: failed to initialize session'),
 			'internal3' => _('Internal error: failed to suspend session'),
 			'timeout' => _('timeout'),
