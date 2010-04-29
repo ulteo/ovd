@@ -137,7 +137,7 @@ function isSessionManagerRequest() {
   if ($reverse == $name)
     return true;
 
-  Logger::error('main', 'isSessionManagerRequest() - IP: '.$address.' / Name: '.$name.' / Reverse: '.$reverse);
+  Logger::error('main', 'isSessionManagerRequest() - IP: '.$address.' / Name: '.$name.' / Reverse: '.$reverse.' (should be '.$name.' => DNS issue)');
 
   return false;
 }
