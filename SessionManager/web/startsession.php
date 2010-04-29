@@ -227,7 +227,7 @@ if ($sessions > 0) {
 			if ($buf == 0)
 				throw_response(USER_WITH_ACTIVE_SESSION);
 			/*elseif ($buf == 1) {
-				$invite = new Invite(gen_string(5));
+				$invite = new Invite(gen_unique_string());
 				$invite->session = $session->id;
 				$invite->settings = array(
 					'invite_email'	=>	$user->getAttribute('displayname'),
@@ -238,7 +238,7 @@ if ($sessions > 0) {
 				$invite->valid_until = (time()+(60*30));
 				Abstract_Invite::save($invite);
 
-				$token = new Token(gen_string(5));
+				$token = new Token(gen_unique_string());
 				$token->type = 'invite';
 				$token->link_to = $invite->id;
 				$token->valid_until = (time()+(60*30));
@@ -278,7 +278,7 @@ $random_server = $servers[0];
 
 	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
 } else {*/
-	$random_session_id = gen_string(5);
+	$random_session_id = gen_unique_string();
 
 	$session_type = 'start';
 
@@ -408,7 +408,7 @@ else {
 	die_error(_('Internal error'), __FILE__, __LINE__);
 }
 
-$token = new Token(gen_string(5));
+$token = new Token(gen_unique_string());
 $token->type = $session_type;
 $token->link_to = $session->id;
 $token->valid_until = (time()+(60*5));

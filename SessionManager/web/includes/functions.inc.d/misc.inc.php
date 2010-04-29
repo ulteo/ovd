@@ -204,6 +204,10 @@ function gen_string($nc, $st='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWX
 	return $ret;
 }
 
+function gen_unique_string() {
+	return time().gen_string(5);
+}
+
 function get_needed_attributes_user_from_module_plugin() {
 	$prefs = Preferences::getInstance();
 	if (! $prefs)

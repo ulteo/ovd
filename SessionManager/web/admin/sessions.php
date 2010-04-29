@@ -36,7 +36,7 @@ if (isset($_POST['join'])) {
 	if (isset($_POST['active']))
 		$view_only = 'No';
 
-	$invite = new Invite(gen_string(5));
+	$invite = new Invite(gen_unique_string());
 	$invite->session = $session->id;
 	$invite->settings = array(
 		'invite_email'	=>	'admin',
@@ -47,7 +47,7 @@ if (isset($_POST['join'])) {
 	$invite->valid_until = (time()+(60*30));
 	Abstract_Invite::save($invite);
 
-	$token = new Token(gen_string(5));
+	$token = new Token(gen_unique_string());
 	$token->type = 'invite';
 	$token->link_to = $invite->id;
 	$token->valid_until = (time()+(60*30));
