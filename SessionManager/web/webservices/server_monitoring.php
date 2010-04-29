@@ -47,7 +47,7 @@ if (! $_FILES['xml']) {
 	die('No XML sent');
 }
 
-$xml = trim(@file_get_contents($_FILES['xml']['tmp_name']));
+$xml = trim(@file_get_contents($_FILES['xml']['tmp_name'], LOCK_EX));
 
 $dom = new DomDocument('1.0', 'utf-8');
 $buf = @$dom->loadXML($xml);

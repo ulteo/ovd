@@ -28,7 +28,7 @@ class Tasks_Manager {
 		$task_files = glob(TASKS_DIR.'/*');
 
 		foreach ($task_files as $task_file)
-			$this->tasks []= unserialize(@file_get_contents($task_file));
+			$this->tasks []= unserialize(@file_get_contents($task_file, LOCK_EX));
 	}
 
 	public function load_from_server($fqdn_) {
@@ -79,7 +79,7 @@ class Tasks_Manager {
 	}
 
 	public static function save($task_) {
-		@file_put_contents(TASKS_DIR.'/'.$task_->id, serialize($task_));
+		@file_put_contents(TASKS_DIR.'/'.$task_->id, serialize($task_), LOCK_EX);
 	}
 
 	public function save_all() {

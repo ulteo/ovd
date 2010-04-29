@@ -136,7 +136,7 @@ class Application {
 			return false;
 		}
 
-		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf);
+		@file_put_contents(CACHE_DIR.'/image/application/'.$this->getAttribute('id').'.png', $buf, LOCK_EX);
 
 		return true;
 	}

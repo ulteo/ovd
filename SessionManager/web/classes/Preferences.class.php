@@ -100,7 +100,7 @@ class Preferences {
 			throw new Exception('Unable to read config file');
 			return array();
 		}
-		return unserialize(file_get_contents($this->conf_file));
+		return unserialize(file_get_contents($this->conf_file, LOCK_EX));
 	}
 
 	public function getPrettyName($key_) {

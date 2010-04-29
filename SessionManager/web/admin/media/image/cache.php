@@ -48,12 +48,12 @@ if (!file_exists($app->getIconPath())) {
 	}
 	else {
 		header('Content-Type: image/png');
-		echo @file_get_contents($app->getIconPath());
+		echo @file_get_contents($app->getIconPath(), LOCK_EX);
 	}
 }
 else {
 	header('Content-Type: image/png');
-	echo @file_get_contents($app->getIconPath());
+	echo @file_get_contents($app->getIconPath(), LOCK_EX);
 }
 
 

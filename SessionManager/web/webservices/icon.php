@@ -65,7 +65,7 @@ if (! is_object($app)) {
 $path = $app->getIconPath();
 if (file_exists($path)) {
 	header('Content-Type: image/png');
-	die(@file_get_contents($path));
+	die(@file_get_contents($path, LOCK_EX));
 }
 
 header('HTTP/1.1 404 Not Found');

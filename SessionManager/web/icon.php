@@ -63,5 +63,5 @@ if (! file_exists($path)) {
 }
 
 header('Content-Type: image/png');
-echo @file_get_contents($path);
+echo @file_get_contents($path, LOCK_EX);
 die();
