@@ -38,7 +38,7 @@ if (! checkAuthorization('viewStatus'))
 	redirect('index.php');
 
 
-define('REPORT_PREFIX', 'report_');
+define('REPORT_PREFIX', 'rp_'); // windows tempnam prefix max length is 3
 
 function clean_cache() {
 	foreach(glob(TMP_DIR.'/'.REPORT_PREFIX.'*') as $name) {
