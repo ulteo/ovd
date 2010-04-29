@@ -273,7 +273,7 @@ class Preferences {
 
 		$this->addPrettyName('remote_desktop_settings', _('Remote Desktop settings'));
 
-		$c = new ConfigElement_select('enable', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
+		$c = new ConfigElement_select('enabled', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('allow_external_applications', _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), 1);
@@ -285,7 +285,7 @@ class Preferences {
 
 		$this->addPrettyName('remote_applications_settings', _('Remote Applications settings'));
 
-		$c = new ConfigElement_select('enable', _('Enable Remote Applications'), _('Enable Remote Applications'), _('Enable Remote Applications'), 1);
+		$c = new ConfigElement_select('enabled', _('Enable Remote Applications'), _('Enable Remote Applications'), _('Enable Remote Applications'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','remote_applications_settings');
 
