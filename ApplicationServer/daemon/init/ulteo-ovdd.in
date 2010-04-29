@@ -1,8 +1,8 @@
 #!/bin/sh
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Gauvain POCENTEK <gauvain@ulteo.com>
-# Author Julien LANGLOIS <julien@ulteo.com>
+# Author Gauvain POCENTEK <gauvain@ulteo.com> 2008
+# Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
 #
 # All rights reserved.
 
@@ -22,6 +22,30 @@ waitpid() {
 
     return 0
 }
+
+wait_stop() {
+    local pid=$1
+    local limit=100
+
+    SPOOL=/var/spool/ulteo-ovd
+    . $CONF_FILE
+
+    local cnt=0
+    while kill -0 $pid 2>/dev/null
+    do
+	cnt=`expr $cnt + 1`
+	if [ $cnt -gt $limit ] || [ -n "$zero_session" ]; then
+            return 1
+        fi
+
+        local nb_sessions=$(find $SPOOL/sessions -maxdepth 1 -mindepth 1 -type d -printf "%f\n" 2>/dev/null |wc -l)
+        [ $nb_sessions -eq 0 ] && local zero_session=1
+        log_action_cont_msg "$nb_sessions remaining"
+
+	sleep 5
+    done
+}
+
 
 CONF_FILE=@SYSCONFDIR@/ulteo-ovd.conf
 BIN_DIR=@DATADIR@/ulteo-ovd
@@ -96,8 +120,9 @@ do_stop () {
         kill $pid
         waitpid $pid 5
         if [ $? -eq 1 ]; then
-            log_action_cont_msg "purging sessions"
-            waitpid $pid 
+            log_action_begin_msg "Purging sessions"
+            wait_stop $pid
+            log_action_end_msg $?
         fi
     fi
 
