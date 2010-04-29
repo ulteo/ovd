@@ -317,7 +317,7 @@ session_check_status() {
 
 session_process() {
     export PID=$(get_pid)
-    export PNAME="pid $PID"
+    export PNAME="$1"
     log_INFO "session_process pid $PID"
     local my_sessions=""
 
@@ -422,7 +422,11 @@ loop() {
     fi
     log_INFO "Start $nb sessions spoolers"
     for i in $(seq $nb); do
-        session_process "thread$i" &
+        if [ $i -lt 10 ]; then
+            local i="0$i"
+        fi
+
+        session_process "thread $i" &
         PIDS_SESSION="$PIDS_SESSION $!"
     done
 
