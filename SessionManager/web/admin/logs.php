@@ -52,29 +52,29 @@ function parse_daemon($str_) {
 }
 
 function get_lines_from_file($file_, $nb_lines, $allowed_types) {
-	$spec_lines = array();
 	// Add false to the array to get mismatch log lines
 	// $allowed_types[]= false;
-	$max_lines = shell_exec('wc -l '.$file_.'|cut -d " " -f1');
+	$lines = array();
 
-	for($pos=0; count($spec_lines)<$nb_lines && $pos<$max_lines; $pos+=$nb_lines) {
-		$cmd = 'tail -n '.($nb_lines+$pos).' '.$file_.' |head -n '.$nb_lines;
-		$buf = shell_exec($cmd);
-		$lines = explode("\n", $buf);
+	$obj = new FileTailer($file_);
 
-		$lines = array_reverse($lines);
-		foreach($lines as $line) {
-			$type = parse_linux($line);
-			if (! in_array($type, $allowed_types))
-				continue;
+	$qty = 0;
+	while ($obj->hasLines()) {
+		$ret = $obj->tail(1);
+		$line = $ret[0];
 
-			$spec_lines[]= '<span class="'.$type.'">'.trim($line).'</span>';
-			if (count($spec_lines)>$nb_lines)
-				break;
-		}
+		$type = parse_linux($line);
+		if (! in_array($type, $allowed_types))
+			continue;
+
+		array_unshift($lines, '<span class="'.$type.'">'.trim($line).'</span>');
+		$qty++;
+
+		if ($qty >= $nb_lines)
+			break;
 	}
-	$spec_lines = array_reverse($spec_lines);
-	return $spec_lines;
+
+	return $lines;
 }
 
 function get_lines_from_string($server_type_, $type_, $string_, $nb_lines, $allowed_types) {

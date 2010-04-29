@@ -119,15 +119,19 @@ class Server_Logs {
 	public function getWebLog($nb_lines_=NULL) {
 		if (is_null($nb_lines_) || ! is_numeric($nb_lines_) || $nb_lines_ == 0)
 			return @file_get_contents($this->logsdir.'/web-'.date('Ymd').'.log');
-		else
-			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/web-'.date('Ymd').'.log');
+		else {
+			$obj = new FileTailer($this->logsdir.'/web-'.date('Ymd').'.log');
+			return $obj->tail_str($nb_lines_);
+		}
 	}
 
 	public function getDaemonLog($nb_lines_=NULL) {
 		if (is_null($nb_lines_) || ! is_numeric($nb_lines_) || $nb_lines_ == 0)
 			return @file_get_contents($this->logsdir.'/daemon-'.date('Ymd').'.log');
-		else
-			return shell_exec('tail -n '.$nb_lines_.' '.$this->logsdir.'/daemon-'.date('Ymd').'.log');
+		else {
+			$obj = new FileTailer($this->logsdir.'/daemon-'.date('Ymd').'.log');
+			return $obj->tail_str($nb_lines_);
+		}
 	}
 
 	public function getContent($type_) {
