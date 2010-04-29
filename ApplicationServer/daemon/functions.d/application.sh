@@ -50,7 +50,6 @@ application_check_status() {
 
     local dir=$SPOOL/sessions/$sessid/sessions/$job_id
     local status=$(cat $dir/status)
-    local rfb_port=$(cat $dir/rfb_port)
     local app_id=$(cat $dir/app_id)
 
     if [ $PERSISTENT -eq 1 ]; then
@@ -79,6 +78,8 @@ application_check_status() {
         fi
 
     elif [ $status -eq 2 ]; then
+        local rfb_port=$(cat $dir/rfb_port)
+
         # if the owner_exit file exist, kill the application
         if [ -f $dir/owner_exit ]; then
             log_INFO "session $sessid kill application $job_id"
