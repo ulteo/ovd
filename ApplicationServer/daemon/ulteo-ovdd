@@ -321,7 +321,9 @@ session_process() {
     log_INFO "session_process pid $PID"
     local my_sessions=""
 
-    while [ 1 -eq 1 ]; do
+    trap 'session_process_stop' KILL EXIT
+
+    while [ -z "$STOP" ]; do
         # first step: get new session if possible
         for SESSID in $(sessions_get_to_create); do
             local nb=$(find $SPOOL/sessions2create -name "$SESSID-lock-*" |wc -l)
@@ -372,8 +374,14 @@ session_process() {
 
 	sleep 1s
     done
+
+    log_INFO "session_process end pid $PID"
 }
 
+session_process_stop() {
+    log_WARN "session_process_stop"
+    STOP=1
+}
 
 
 loop() {
@@ -476,8 +484,9 @@ stop() {
     [ $PID_WATCH ] && kill $PID_WATCH && wait $PID_WATCH
 
     for pid in $PIDS_SESSION; do
-        kill $pid && wait $pid
+        kill $pid
     done
+    wait $PIDS_SESSION
 
     for VNC in $(egrep ^VNC[0-9]+: /etc/passwd | cut -d ':' -f1); do
         for pid in $(ps -U $VNC | grep Xtightvnc | cut -d' ' -f 1); do
