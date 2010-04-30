@@ -34,6 +34,16 @@ system_clean() {
             local fail=1
         fi
     done
+
+    for group in $(get_real_group); do
+        log_INFO "system_clean: existing group '$group': groupdel it"
+        groupdel $group
+        if [ $? !=  0 ]; then
+            log_ERROR "system_clean: unable to remove group '$group'"
+            local fail=1
+        fi
+    done
+
     [ $fail = 0 ] || return $fail
 
     # Ensure no user homes are left:

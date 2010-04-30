@@ -82,6 +82,10 @@ get_real_user() {
     mawk '{ split($1, buf, ":"); if (buf[3]>1000) print buf[1] }' < /etc/passwd
 }
 
+get_real_group() {
+    mawk '{ split($1, buf, ":"); if (buf[3]>1000 && buf[3]<65534) print buf[1] }' < /etc/group
+}
+
 pid_alive() {
     local pid=$1
     ps ax | mawk '{ print $1 }' |grep -q $pid
