@@ -418,7 +418,7 @@ loop() {
         local nb=$NB_SUB_PROCESS
     else
         local nb=$(( $(get_ram) / 1024 / 1024  ))
-        local nb=$(( ( $nb + $(get_nb_core) ) / 2 +1 ))
+        local nb=$(( ( $nb + $(get_nb_core) * 2 ) / 3 +1 ))
     fi
     log_INFO "Start $nb sessions spoolers"
     for i in $(seq $nb); do
