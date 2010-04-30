@@ -5,7 +5,6 @@ scripts_DATA = apt.sh \
 		   menu.sh \
 		   sessions.sh \
 		   spool.sh \
-		   tmp.sh \
 		   user.sh \
 		   utils.sh \
 		   webservices.sh \
