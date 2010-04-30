@@ -286,7 +286,7 @@ application_startdisplay() {
                 return 1
             fi
 
-            log_WARN "Unable to start a VNC server on port $rfb_port (tried $try)"
+            log_WARN "Unable to start a VNC server on port $rfb_port (tried $(( $try + 1 )))"
             echo $rfb_port >> $sessid_dir/private/failed_rfbports
             local rfb_port=$(spool_get_rfbport)
             echo $rfb_port > $app_dir/rfb_port
