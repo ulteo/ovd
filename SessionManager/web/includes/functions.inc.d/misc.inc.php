@@ -261,8 +261,17 @@ function application_cmp($o1, $o2) {
 function get_from_cache($subdir_, $id_) {
 	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;
 
-	if (is_readable($file))
-		$ret = unserialize(file_get_contents($file, LOCK_EX));
+	if (is_readable($file)) {
+		$try = 5;
+		while ($try > 0) {
+			$ret = @unserialize(file_get_contents($file, LOCK_EX));
+			if ($ret !== false)
+				return $ret;
+			usleep(rand(300000, 1000000));
+			$try--;
+		}
+		return NULL;
+	}
 	else
 		$ret = NULL;
 
