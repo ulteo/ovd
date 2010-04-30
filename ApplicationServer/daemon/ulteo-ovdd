@@ -425,8 +425,16 @@ loop() {
         if [ $i -lt 10 ]; then
             local i="0$i"
         fi
+        local name="thread $i"
 
-        session_process "thread $i" &
+        if [ $LOG_SPLIT_THREAD -eq 0 ]; then
+            session_process "$name" &
+        else
+            local log_file=$LOG_FILE.thread$i
+
+            LOG_FILE=$log_file session_process "$name" >>$log_file 2>&1 &
+        fi
+
         PIDS_SESSION="$PIDS_SESSION $!"
     done
 
@@ -518,6 +526,7 @@ DAEMON=0
 
 LOG_FILE=/var/log/ulteo-ovd.log
 LOG_FLAGS="info warn error"
+LOG_SPLIT_THREAD=0
 BIN_DIR=/usr/share/ulteo-ovd
 SPOOL=/var/spool/ulteo-ovd
 SPOOL_USERS=/var/spool/sessions
@@ -579,6 +588,7 @@ done
 export BIN_DIR SPOOL
 export SPOOL_USERS
 export LOG_FILE LOG_FLAGS
+export LOG_SPLIT_THREAD
 export SESSION_MANAGER_URL SERVERNAME
 export SERVER_HTTP_PORT
 export CONF_FILE
