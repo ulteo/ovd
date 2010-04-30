@@ -25,7 +25,8 @@ fi
 
 case $1 in
     start)
-        log_daemon_msg "Starting Ulteo OVD daemon"
+        log_daemon_msg "Starting Ulteo OVD Application Server"
+        echo ""
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
 
         # This will only happen after an installation using our iso
@@ -37,12 +38,14 @@ case $1 in
         log_end_msg 0
         ;;
     stop)
-        log_daemon_msg "Stopping Ulteo OVD daemon"
+        log_daemon_msg "Stopping Ulteo OVD Application Server"
+        echo ""
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
         log_end_msg 0
         ;;
     restart|reload|force-reload)
-        log_daemon_msg "Re-starting Ulteo OVD daemon"
+        log_daemon_msg "Re-starting Ulteo OVD Application Server"
+        echo ""
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
         sleep 2
         chroot $CHROOT /etc/init.d/ulteo-ovdd start

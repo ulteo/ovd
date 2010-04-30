@@ -25,16 +25,17 @@ fi
 
 case $1 in
     start)
-        echo "Starting ulteo-ovdd daemon"
+        echo "Starting Ulteo OVD Application Server"
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
         ;;
     stop)
-        echo "Stopping ulteo-ovdd daemon"
+        echo "Stopping Ulteo OVD Application Server"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
         ;;
     restart|reload|force-reload)
-        echo "Re-starting ulteo-ovdd daemon"
+        echo "Re-starting Ulteo OVD Application Server"
         chroot $CHROOT /etc/init.d/ulteo-ovdd stop
+        sleep 2
         chroot $CHROOT /etc/init.d/ulteo-ovdd start
         ;;
     *)
