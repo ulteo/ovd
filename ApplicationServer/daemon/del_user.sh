@@ -40,6 +40,10 @@ fi
 
 # Delete the user from the system
 userdel $USER_LOGIN
+if [ $? -eq 1 ] || [ $? -eq 10 ]; then
+    log_WARN "Session $SESSID, del_user $USER_LOGIN: unable to lock passwd file, switch to random procedure"
+    retry_with_random "userdel $USER_LOGIN"
+fi
 
 # Clean the menu
 menu_clean $SPOOL_USERS/$SESSID/xdg

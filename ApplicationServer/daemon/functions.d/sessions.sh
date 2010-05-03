@@ -77,6 +77,12 @@ session_init() {
     fi
     log_INFO "useradd $SSH_USER"
     useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER 
+    if [ $? -eq 1 ] || [ $? -eq 10 ]; then
+        log_WARN "Session $SESSID init: unable to lock passwd file, switch to random procedure"
+
+        retry_with_random "useradd -K UID_MIN=2000 --shell /bin/false $SSH_USER"
+        [ $? -ne 0 ] && return 1
+    fi
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
     if grep -q -e "$VNC_USER\:x" /etc/group; then
@@ -86,7 +92,12 @@ session_init() {
     fi
     log_INFO "groupadd -K GID_MAX=70000 $VNC_USER"
     groupadd -K GID_MAX=70000 $VNC_USER
+    if [ $? -eq 10 ]; then
+        log_WARN "Session $SESSID init: unable to lock passwd file, switch to random procedure"
 
+        retry_with_random "groupadd -K GID_MAX=70000 $VNC_USER"
+        [ $? -ne 0 ] && return 1
+    fi
 
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
     if grep -q -e "$VNC_USER\:x" /etc/passwd; then
@@ -96,6 +107,12 @@ session_init() {
     fi
     log_INFO "useradd $VNC_USER"
     useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER
+    if [ $? -eq 1 ]; then
+        log_WARN "Session $SESSID init: unable to lock passwd file, switch to random procedure"
+
+        retry_with_random "useradd -K UID_MIN=2000 --shell /bin/false -g $VNC_USER $VNC_USER"
+        [ $? -ne 0 ] && return 1
+    fi
 
     display_clean $VNC_USER
 
@@ -139,6 +156,12 @@ session_init() {
     # we set new shadow pass for this session
     # just be paranoid by default
     echo "$SSH_USER:$SSH_PASS" | chpasswd
+    if [ $? -ne 0 ]; then
+        log_WARN "Session $SESSID init: unable to lock passwd file, switch to random procedure"
+
+        retry_with_random "echo \"$SSH_USER:$SSH_PASS\" | chpasswd"
+        [ $? -ne 0 ] && return 1
+    fi
 
     #
     # we encode the encrypted pass in hexa because the sshvnc 
@@ -175,6 +198,11 @@ session_remove() {
     if grep -q -e "$SSH_USER\:x" /etc/passwd; then
         log_INFO "userdel $SSH_USER"
         userdel $SSH_USER
+        if [ $? -eq 1 ] || [ $? -eq 10 ]; then
+            log_WARN "Session $SESSID remove: unable to lock passwd file, switch to random procedure"
+
+            retry_with_random "userdel $SSH_USER"
+        fi
     fi
 
     log_DEBUG "seeking VNC user $VNC_USER in /etc/passwd"
@@ -182,12 +210,22 @@ session_remove() {
         local VNC_UID=$(id -u $VNC_USER)
         log_INFO "userdel $VNC_USER"
         userdel $VNC_USER
+        if [ $? -eq 1 ] || [ $? -eq 10 ]; then
+            log_WARN "Session $SESSID remove: unable to lock passwd file, switch to random procedure"
+
+            retry_with_random "userdel $VNC_USER"
+        fi
     fi
 
     log_DEBUG "seeking VNC group $VNC_USER in /etc/group"
     if grep -e "$VNC_USER\:x" /etc/group; then
         log_INFO "groupedel $VNC_USER"
         groupdel $VNC_USER
+        if [ $? -eq 10 ]; then
+            log_WARN "Session $SESSID remove: unable to lock passwd file, switch to random procedure"
+
+            retry_with_random "groupdel $VNC_USER"
+        fi
     fi
 
     log_INFO "session_remove: removing '$SESSID_DIR' ($i)"

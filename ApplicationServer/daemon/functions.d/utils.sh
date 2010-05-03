@@ -46,6 +46,29 @@ retry() {
     return $SUCCESS
 }
 
+retry_with_random() {
+    local limit=50
+
+    local i=0
+    local ret=1
+    while [ $ret -ne 0 ]; do
+        sleep 0.$RANDOM
+
+        log_DEBUG "retry_with_random BEFORE '$1'"
+        eval $1
+        local ret=$?
+        log_DEBUG "retry_with_random AFTER '$1'"
+        local i=$(( $i + 1 ))
+        if [ $i -gt $limit ]; then
+            log_ERROR "retry_with_random on cmd '$1' unable in $i tried"
+            return 1
+        fi
+
+    done
+    
+    log_INFO "retry_with_random on cmd '$1' succeed after $i try"
+}
+
 check_variables() {
     for key in $@; do
         eval content=\$$key
