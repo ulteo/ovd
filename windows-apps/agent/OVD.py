@@ -312,13 +312,13 @@ class OVD(win32serviceutil.ServiceFramework):
 		if os.environ.has_key('ALLUSERSPROFILE'):
 			shortcut_list = find_lnk( os.environ['ALLUSERSPROFILE'])
 		else:
-			self.log.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
+			Logger.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
 			shortcut_list = find_lnk( os.path.join('c:\\', 'Documents and Settings', 'All Users'))
 		
 		try:
 			msi = Msi()
 		except WindowsError,e:
-			log_debug("getApplicationsXML_nocache: Unable to init Msi")
+			Logger.debug("getApplicationsXML_nocache: Unable to init Msi")
 			msi = None
 		
 		for filename in shortcut_list:

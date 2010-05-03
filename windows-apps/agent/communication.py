@@ -88,7 +88,7 @@ class Web(SimpleHTTPRequestHandler):
 		except Exception, err:
 			exception_type, exception_string, tb = sys.exc_info()
 			trace_exc = "".join(traceback.format_tb(tb))
-			self.server.daemon.log.debug("do_POST error '%s' '%s'"%(trace_exc, str(exception_string)))
+			Logger.debug("do_POST error '%s' '%s'"%(trace_exc, str(exception_string)))
 	
 	def response_error(self, code):
 		self.send_response(code)
@@ -234,27 +234,27 @@ class Web(SimpleHTTPRequestHandler):
 					self.end_headers()
 					self.wfile.write('')
 			else :
-				self.server.daemon.log.debug("webservices_server_log errorA 400")
+				Logger.debug("webservices_server_log errorA 400")
 				self.send_response(400)
 		else :
-			self.server.daemon.log.debug("webservices_server_log errorB 400")
+			Logger.debug("webservices_server_log errorB 400")
 			self.send_response(400)
 	
 	def webservices_loggedin(self, arg):
 		try:
 			_, login, domain = arg.split("/", 3)
 		except:
-			self.server.daemon.log.debug("webservices_loggedin: usage error not enough argument")
+			Logger.debug("webservices_loggedin: usage error not enough argument")
 			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(login) == 0:
-			self.server.daemon.log.debug("webservices_loggedin: usage error empty login")
+			Logger.debug("webservices_loggedin: usage error empty login")
 			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(domain) == 0:
 			domain = "local"
 		
-		self.server.daemon.log.debug("webservices_loggedin: login '%s'"%(login))
+		Logger.debug("webservices_loggedin: login '%s'"%(login))
 		found = False
 		sessions = win32ts.WTSEnumerateSessions(None)
 		for session in sessions:
@@ -288,17 +288,17 @@ class Web(SimpleHTTPRequestHandler):
 		try:
 			_, login, domain = arg.split("/", 3)
 		except:
-			self.server.daemon.log.debug("webservices_loggedin: usage error not enough argument")
+			Logger.debug("webservices_loggedin: usage error not enough argument")
 			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(login) == 0:
-			self.server.daemon.log.debug("webservices_loggedin: usage error empty login")
+			Logger.debug("webservices_loggedin: usage error empty login")
 			return self.webservices_answer(self.error2xml("usage"))
 		
 		if len(domain) == 0:
 			domain = "local"
 		
-		self.server.daemon.log.debug("webservices_logoff: login '%s'"%(login))
+		Logger.debug("webservices_logoff: login '%s'"%(login))
 		found = None
 		sessions = win32ts.WTSEnumerateSessions(None)
 		for session in sessions:
@@ -328,7 +328,7 @@ class Web(SimpleHTTPRequestHandler):
 		rootNode = doc.createElement("session")
 		rootNode.setAttribute("id", str(found))
 		
-		self.server.daemon.log.debug("webservices_logoffADUser: start thread logoff")
+		Logger.debug("webservices_logoffADUser: start thread logoff")
 		th = threading.Thread(target=self.perform_logoff, args=[session["SessionId"]])
 		th.start()
 		rootNode.setAttribute("status", "logged off")
@@ -339,9 +339,9 @@ class Web(SimpleHTTPRequestHandler):
 	
 	def perform_logoff(self, session_id):
 		try:
-			self.server.daemon.log.debug("perform_logoff: start logoff %d"%(session_id))
+			Logger.debug("perform_logoff: start logoff %d"%(session_id))
 			ret = win32ts.WTSLogoffSession(None, session_id, True)
-			self.server.daemon.log.debug("perform_logoff: finish logoff %d ret: %s"%(session_id, str(ret)))
+			Logger.debug("perform_logoff: finish logoff %d ret: %s"%(session_id, str(ret)))
 		except Exception, e:
-			self.server.daemon.log.debug("perform_logoff: exception %s"%(e))
+			Logger.debug("perform_logoff: exception %s"%(e))
 
