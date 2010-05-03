@@ -118,10 +118,10 @@ if (isset($_POST['join'])) {
 	echo '<h2>'._('Information').'</h2>';
 
 	echo '<ul>';
-	echo '<li><strong>'._('User:').'</strong> '.$session->getAttribute('user_displayname').'</li>';
-	echo '<li><strong>'._('Server:').'</strong> '.$session->getAttribute('server').'</li>';
+	echo '<li><strong>'._('User:').'</strong> <a href="users.php?action=manage&id='.$session->getAttribute('user_login').'">'.$session->getAttribute('user_displayname').'</a></li>';
+	echo '<li><strong>'._('Server:').'</strong> <a href="servers.php?action=manage&fqdn='.$session->getAttribute('server').'">'.$session->getAttribute('server').'</a></li>';
 	if (array_key_exists('windows_server', $session->settings))
-		echo '<li><strong>'._('Windows server:').'</strong> '.$session->settings['windows_server'].'</li>';
+		echo '<li><strong>'._('Windows server:').'</strong> <a href="servers.php?action=manage&fqdn='.$session->settings['windows_server'].'">'.$session->settings['windows_server'].'</a></li>';
 	echo '<li><strong>'._('Started:').'</strong> ';
 	$buf = $session->getAttribute('start_time');
 	if (! $buf)
