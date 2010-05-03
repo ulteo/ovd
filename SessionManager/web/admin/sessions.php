@@ -120,6 +120,8 @@ if (isset($_POST['join'])) {
 	echo '<ul>';
 	echo '<li><strong>'._('User:').'</strong> '.$session->getAttribute('user_displayname').'</li>';
 	echo '<li><strong>'._('Server:').'</strong> '.$session->getAttribute('server').'</li>';
+	if (array_key_exists('windows_server', $session->settings))
+		echo '<li><strong>'._('Windows server:').'</strong> '.$session->settings['windows_server'].'</li>';
 	echo '<li><strong>'._('Started:').'</strong> ';
 	$buf = $session->getAttribute('start_time');
 	if (! $buf)
