@@ -119,6 +119,7 @@ if (isset($_POST['join'])) {
 
 	echo '<ul>';
 	echo '<li><strong>'._('User:').'</strong> '.$session->getAttribute('user_displayname').'</li>';
+	echo '<li><strong>'._('Server:').'</strong> '.$session->getAttribute('server').'</li>';
 	echo '<li><strong>'._('Started:').'</strong> ';
 	$buf = $session->getAttribute('start_time');
 	if (! $buf)
