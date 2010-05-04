@@ -86,7 +86,7 @@ public class Options {
 				this.bpp_mask = 0xFF;
 				break;
 			case 15:
-				this.bpp_mask = 0xFFFF;
+				this.bpp_mask = 0x7FFF;
 				break;
 			case 16:
 				this.bpp_mask = 0xFFFF;

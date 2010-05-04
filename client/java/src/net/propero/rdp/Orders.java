@@ -527,13 +527,40 @@ public class Orders {
         int[] bmpdataInt = new int[width * height];
 
         if (compressed) {
-            if (Bpp == 1)
-                bmpdataInt = bmp.convertImage(Bitmap.decompress(width,
-                        height, bufsize, data, Bpp), Bpp);
-            else
+            if (Bpp == 1) {
+		    bmpdata = Bitmap.decompress(width, height, bufsize, data, Bpp);
+		    bmpdataInt = bmp.convertImage(bmpdata, Bpp);
+	    }
+            else {
                 bmpdataInt = bmp.decompressInt(width, height, bufsize, data,
                         Bpp);
+		
+		for (int i = 0; i < bmpdataInt.length; i ++) {
+			if (Bpp == 1)
+				bmpdata[i * Bpp] = (byte) (bmpdataInt[i] & 0x000000FF);
+			else if (Bpp == 2) {
+				int r, g, b;
+				b = bmpdataInt[i] & 0x000000FF;
+				g = (bmpdataInt[i] & 0x0000FF00) >> 8;
+				r = (bmpdataInt[i] & 0x00FF0000) >> 16;
 
+				int pixel = 0x00000000;
+				if (this.opt.server_bpp == 15)
+					pixel = ((r & 0xF8) << 7) | ((g & 0xF8) << 2) | ((b & 0xF8) >> 3);
+				else // 16 bits
+					pixel = ((r & 0xF8) << 8) | ((g & 0xF8) << 3) | ((b & 0xF8) >> 3);
+
+				bmpdata[i * Bpp+1] = (byte) ((pixel & 0x0000FF00) >> 8);
+				bmpdata[i * Bpp] = (byte) (pixel & 0x000000FF);
+			}
+			else if (Bpp == 3) {
+				bmpdata[i * Bpp] = (byte) (bmpdataInt[i] & 0x000000FF);
+				bmpdata[i * Bpp + 1] = (byte) ((bmpdataInt[i] & 0x0000FF00) >> 8);
+				bmpdata[i * Bpp + 2] = (byte) ((bmpdataInt[i] & 0x00FF0000) >> 16);
+			}
+		}
+	    }
+		
             if (bmpdataInt == null) {
                 logger.debug("Failed to decompress bitmap data");
                 // xfree(bmpdata);

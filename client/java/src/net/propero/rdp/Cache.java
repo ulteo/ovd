@@ -14,6 +14,7 @@ package net.propero.rdp;
 
 import java.awt.Cursor;
 import java.awt.image.IndexColorModel;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
@@ -122,22 +123,25 @@ public class Cache {
 
 		if ((cache_id < bitmapcache.length) && (cache_idx < bitmapcache[0].length)) {
 			bitmap = bitmapcache[cache_id][cache_idx];
-			/*try {
-                if (bitmap != null || PstCache.pstcache_load_bitmap(cache_id, cache_idx)){
-                    if (PstCache.IS_PERSISTENT(cache_id))
-                        TOUCH(cache_id, cache_idx);
-                    return bitmap;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (RdesktopException e) {
-                e.printStackTrace();
-            }*/
+			try {
+				if (bitmap != null || (this.opt.persistent_bitmap_caching && this.common.persistent_cache.pstcache_load_bitmap(cache_id, cache_idx))){
+					bitmap = bitmapcache[cache_id][cache_idx];
+					if (this.opt.persistent_bitmap_caching && this.common.persistent_cache.IS_PERSISTENT(cache_id))
+						TOUCH(cache_id, cache_idx);
+					return bitmap;
+				}
+			} catch (IOException e) {
+				logger.warn("Unable to get a bitmap from the cache");
+				if (logger.isDebugEnabled())
+					e.printStackTrace();
+			}
+
 			if (bitmap != null)
 				return bitmap;
 		}
 		else if ((cache_id < this.volatile_bc.length) && (cache_idx == 0x7fff)) {
-			return this.volatile_bc[cache_id];
+			if (this.volatile_bc[cache_id] != null)
+				return this.volatile_bc[cache_id];
 		}
 
 		throw new RdesktopException("Could not get Bitmap!");

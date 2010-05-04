@@ -188,6 +188,11 @@ public class Rdp {
 
     private static final int RDP5_FLAG = 0x0030;
 
+    private static final int PDU_FLAG_FIRST = 0x01;
+
+    private static final int PDU_FLAG_LAST = 0x02;
+
+
     private static final byte[] RDP_SOURCE = { (byte) 0x4D, (byte) 0x53,
             (byte) 0x54, (byte) 0x53, (byte) 0x43, (byte) 0x00 }; // string
                                                                     // MSTSC
@@ -389,6 +394,8 @@ public class Rdp {
         this.common.secure = SecureLayer;
         this.orders = new Orders(this.opt, this.common);
         this.cache = new Cache(this.common, this.opt);
+	if (this.opt.persistent_bitmap_caching)
+		this.common.persistent_cache = new PstCache(this.opt, this.common);
         orders.registerCache(cache);
     }
 
@@ -861,19 +868,22 @@ public class Rdp {
         this.sendControl(RDP_CTL_COOPERATE);
         this.sendControl(RDP_CTL_REQUEST_CONTROL);
 
-        this.receive(type); // Receive RDP_PDU_SYNCHRONIZE
-        this.receive(type); // Receive RDP_CTL_COOPERATE
-        this.receive(type); // Receive RDP_CTL_GRANT_CONTROL
-
-        this.sendInput(0, RDP_INPUT_SYNCHRONIZE, 0, 0, 0);
-
 	if (this.opt.use_rdp5) {
+		if (this.opt.persistent_bitmap_caching)
+			this.enum_bmpcache2();
+		
 		this.sendFonts(3);
 	}
 	else {
 		this.sendFonts(1);
 		this.sendFonts(2);
 	}
+
+        this.receive(type); // Receive RDP_PDU_SYNCHRONIZE
+        this.receive(type); // Receive RDP_CTL_COOPERATE
+        this.receive(type); // Receive RDP_CTL_GRANT_CONTROL
+
+        this.sendInput(0, RDP_INPUT_SYNCHRONIZE, 0, 0, 0);
 
         this.receive(type); // Receive an unknown PDU Code = 0x28
 
@@ -1156,7 +1166,7 @@ public class Rdp {
         data.setLittleEndian16(RDP_CAPLEN_BMPCACHE2); // out_uint16_le(s,
                                                         // RDP_CAPLEN_BMPCACHE2);
 
-        data.setLittleEndian16(this.opt.persistent_bitmap_caching ? 2 : 0); /* version */
+        data.setLittleEndian16(this.opt.persistent_bitmap_caching ? 1 : 0); /* version */
 
         data.setBigEndian16(3); /* number of caches in this set */
 
@@ -1170,9 +1180,7 @@ public class Rdp {
         // (BMPCACHE2_NUM_PSTCELLS | BMPCACHE2_FLAG_PERSIST) :
         // BMPCACHE2_C2_CELLS);
 
-	this.common.persistent_cache = new PstCache(this.opt, this.common);
-
-        if (this.common.persistent_cache.pstcache_init(2)) {
+        if (this.opt.persistent_bitmap_caching && this.common.persistent_cache.pstcache_init(2)) {
             logger.info("Persistent cache initialized");
             data.setLittleEndian32(BMPCACHE2_NUM_PSTCELLS
                     | BMPCACHE2_FLAG_PERSIST);
@@ -1243,6 +1251,68 @@ public class Rdp {
                 length - 4);
         data.incrementPosition(/* RDP_CAPLEN_UNKNOWN */length - 4);
     }
+
+    /* Send persistent bitmap cache enumeration PDU's */
+    private void enum_bmpcache2() {
+	RdpPacket_Localised s;
+	byte[][] keylist = new byte[Rdp.BMPCACHE2_NUM_PSTCELLS][8];
+	int num_keys, offset, count, flags;
+
+	offset = 0;
+	num_keys = 0;
+
+	try {
+		num_keys = this.common.persistent_cache.pstcache_enumerate(2, keylist);
+	} catch (IOException ex) {
+		logger.warn("Unable to access to the persistent cache");
+
+	} catch (RdesktopException ex) {
+		logger.error("RDP caching error");
+	}
+
+	while (offset < num_keys)
+	{
+		count = Math.min(num_keys - offset, 169);
+		try {
+			s = this.initData(24 + count * 8);
+		} catch (RdesktopException ex) {
+			offset += 169;
+			continue;
+		}
+
+		flags = 0;
+		if (offset == 0)
+			flags |= Rdp.PDU_FLAG_FIRST;
+		if (num_keys - offset <= 169)
+			flags |= Rdp.PDU_FLAG_LAST;
+
+		/* header */
+		s.setLittleEndian32(0);
+		s.setLittleEndian16(count);
+		s.setLittleEndian16(0);
+		s.setLittleEndian16(0);
+		s.setLittleEndian16(0);
+		s.setLittleEndian16(0);
+		s.setLittleEndian16(num_keys);
+		s.setLittleEndian32(0);
+		s.setLittleEndian32(flags);
+
+		/* list */
+		for (int i = 0; i < count; i++) {
+			s.copyFromByteArray(keylist[offset + i], 0, s.getPosition(), keylist[offset + i].length);
+			s.incrementPosition(keylist[offset + i].length);
+		}
+
+		s.markEnd();
+		try {
+			this.sendData(s, 0x2b);
+		} catch (Exception ex) {
+			logger.warn("Unable to send some persistent cache content part to the server");
+		}
+
+		offset += 169;
+	}
+}
 
     private void sendSynchronize() throws RdesktopException, IOException,
             CryptoException {
