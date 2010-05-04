@@ -43,6 +43,12 @@
   !define MUI_ABORTWARNING
   !define MUI_UNABORTWARNING
 
+;Include GetParameters/GetOptions
+  !include "FileFunc.nsh"
+
+  !insertmacro GetParameters
+  !insertmacro GetOptions
+
 ;General
 
   ;Name and file
@@ -109,6 +115,32 @@
 
   !include nsis\ActiveDirectory.nsh
 
+Function .onInit
+  ; Get parameters
+    var /GLOBAL cmdLineParams
+    Push $R0
+    ${GetParameters} $cmdLineParams
+
+  ; /noad param (without active directory mode)
+    var /GLOBAL use_ad
+    StrCpy $use_ad "true"
+
+    ClearErrors
+    ${GetOptions} $cmdLineParams '/noad' $R0
+    IfErrors +2 0
+      StrCpy $use_ad "false"
+
+    Pop $R0
+
+  ; to install for all user
+    SetShellVarContext all
+FunctionEnd
+
+Function un.onInit
+  ; to uninstall for all user
+    SetShellVarContext all
+FunctionEnd
+
 ## First Dialog
 Function InputBoxPageShow
   ReadRegStr $R0 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name"
@@ -140,21 +172,13 @@ Function InputBoxPageLeave
   WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name" $ovd_servname
   WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_url" $ovd_smurl
 
-  Push $ovd_smurl
-  Call .DomainVerification
+  ${If} $use_ad == "true"
+    Push $ovd_smurl
+    Call .DomainVerification
+  ${EndIf}
 FunctionEnd
 
 !include nsis\WindowsVersion.nsh
-
-Function .onInit
-  ; to install for all user
-    SetShellVarContext all
-FunctionEnd
-
-Function un.onInit
-  ; to uninstall for all user
-    SetShellVarContext all
-FunctionEnd
 
 Section "Main Section" SecMain
   SetOutPath "$INSTDIR"
