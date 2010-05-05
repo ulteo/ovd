@@ -29,6 +29,7 @@ public class Secure {
 
     static final int SEC_RANDOM_SIZE = 32;
     static final int SEC_MODULUS_SIZE = 64;
+    static final int SEC_MAX_MODULUS_SIZE = 256;
     static final int SEC_PADDING_SIZE = 8;
     private static final int SEC_EXPONENT_SIZE = 4;
 
@@ -59,6 +60,7 @@ public class Secure {
     private RC4 rc4_update = null;
     private BlockMessageDigest sha1 = null;
     private BlockMessageDigest md5 = null;
+    private int server_pubkey_length = SEC_MODULUS_SIZE;
     private int keylength = 0;
     private int enc_count = 0;
     private int dec_count = 0;
@@ -328,14 +330,14 @@ public class Secure {
 	}
 
     public void establishKey()throws RdesktopException, IOException, CryptoException {
-	int length = SEC_MODULUS_SIZE + SEC_PADDING_SIZE;
+	int length = this.server_pubkey_length + SEC_PADDING_SIZE;
 	int flags = SEC_CLIENT_RANDOM;
-	RdpPacket_Localised buffer = this.init(flags, 76);
+	RdpPacket_Localised buffer = this.init(flags, length + 4);
 
 	buffer.setLittleEndian32(length);
 
-	buffer.copyFromByteArray(this.sec_crypted_random, 0, buffer.getPosition(), SEC_MODULUS_SIZE);
-	buffer.incrementPosition(SEC_MODULUS_SIZE);
+	buffer.copyFromByteArray(this.sec_crypted_random, 0, buffer.getPosition(), this.server_pubkey_length);
+	buffer.incrementPosition(this.server_pubkey_length);
 	buffer.incrementPosition(SEC_PADDING_SIZE);
 	buffer.markEnd();
 	this.send(buffer, flags);
@@ -714,7 +716,7 @@ public class Secure {
     }
 
     public void RSAEncrypt(int length) throws RdesktopException {
-	byte[] inr = new byte[length];
+	byte[] inr = new byte[SEC_MAX_MODULUS_SIZE];
 	//int outlength = 0;
 	BigInteger mod = null;
 	BigInteger exp = null;
@@ -762,7 +764,7 @@ public class Secure {
 	}
 	this.reverse(this.sec_crypted_random);
 
-	byte[] temp = new byte[SEC_MODULUS_SIZE];
+	byte[] temp = new byte[this.server_pubkey_length];
 
 	if (this.sec_crypted_random.length < SEC_MODULUS_SIZE) {
 	    System.arraycopy(this.sec_crypted_random, 0, temp, 0, this.sec_crypted_random.length);
@@ -795,7 +797,8 @@ public class Secure {
 
 	modulus_length = data.getLittleEndian32();
 	
-	if (modulus_length != SEC_MODULUS_SIZE + SEC_PADDING_SIZE) {
+	modulus_length -= SEC_PADDING_SIZE;
+	if (modulus_length < SEC_MODULUS_SIZE || modulus_length > SEC_MAX_MODULUS_SIZE) {
 	    throw new RdesktopException("Wrong modulus size! Expected" + SEC_MODULUS_SIZE + "+" + SEC_PADDING_SIZE + "got:" + modulus_length);
 	}
 	
@@ -803,11 +806,12 @@ public class Secure {
 	this.exponent = new byte[SEC_EXPONENT_SIZE];
 	data.copyToByteArray(this.exponent, 0, data.getPosition(), SEC_EXPONENT_SIZE);	
 	data.incrementPosition(SEC_EXPONENT_SIZE);
-	this.modulus = new byte[SEC_MODULUS_SIZE];
-	data.copyToByteArray(this.modulus, 0, data.getPosition(), SEC_MODULUS_SIZE);
-	data.incrementPosition(SEC_MODULUS_SIZE);
+	this.modulus = new byte[modulus_length];
+	data.copyToByteArray(this.modulus, 0, data.getPosition(), modulus_length);
+	data.incrementPosition(modulus_length);
 	data.incrementPosition(SEC_PADDING_SIZE);
 
+	this.server_pubkey_length = modulus_length;
 	if (data.getPosition() <= data.getEnd()) {
 	    return true;
 	} else {
