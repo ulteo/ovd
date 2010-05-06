@@ -127,7 +127,7 @@ if ($sessions > 0) {
 				if ($buf == 0)
 					die_error(_('You already have an active session'), __FILE__, __LINE__, true);
 				elseif ($buf == 1) {
-					$invite = new Invite(gen_string(5));
+					$invite = new Invite(gen_unique_string());
 					$invite->session = $session->id;
 					$invite->settings = array(
 						'invite_email'	=>	$user->getAttribute('displayname'),
@@ -138,7 +138,7 @@ if ($sessions > 0) {
 					$invite->valid_until = (time()+(60*30));
 					Abstract_Invite::save($invite);
 
-					$token = new Token(gen_string(5));
+					$token = new Token(gen_unique_string());
 					$token->type = 'invite';
 					$token->link_to = $invite->id;
 					$token->valid_until = (time()+(60*30));
@@ -183,7 +183,7 @@ if (isset($old_session_id) && isset($old_session_server)) {
 
 	$ret = true;
 } else {
-	$random_session_id = gen_string(5);
+	$random_session_id = gen_unique_string();
 
 	$session_type = 'start';
 
@@ -363,7 +363,7 @@ else {
 	die_error(_('Internal error'), __FILE__, __LINE__);
 }
 
-$token = new Token(gen_string(5));
+$token = new Token(gen_unique_string());
 $token->type = $session_type;
 $token->link_to = $session->id;
 $token->valid_until = (time()+(60*5));
