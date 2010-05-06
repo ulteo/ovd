@@ -22,6 +22,7 @@
 
 import commands
 import cookielib
+import datetime
 import getopt
 import getpass
 import os
@@ -52,25 +53,25 @@ class Logger:
         if self.loglevel&Logger.INFO != Logger.INFO:
             return
 
-        print "[INFO]",message
+        print str(datetime.datetime.now().ctime()), "[INFO]", message
 
     def log_warn(self, message):
         if self.loglevel&Logger.WARN != Logger.WARN:
             return
 
-        print "[WARN]",message
+        print str(datetime.datetime.now().ctime()), "[WARN]", message
 
     def log_error(self, message):
         if self.loglevel&Logger.ERROR != Logger.ERROR:
             return
 
-        print "[ERROR]",message
+        print str(datetime.datetime.now().ctime()), "[ERROR]", message
 
     def log_debug(self, message):
         if self.loglevel&Logger.DEBUG != Logger.DEBUG:
             return
 
-        print "[DEBUG]",message
+        print str(datetime.datetime.now().ctime()), "[DEBUG]", message
 
     # Static methods
     @staticmethod 
