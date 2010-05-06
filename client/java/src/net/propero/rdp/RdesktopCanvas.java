@@ -14,6 +14,8 @@ package net.propero.rdp;
 
 import java.awt.*;
 import java.awt.image.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.propero.rdp.keymapping.KeyCode;
 import net.propero.rdp.keymapping.KeyCode_FileBased;
@@ -88,6 +90,8 @@ public abstract class RdesktopCanvas extends Canvas {
     protected Options opt = null;
     protected Common common = null;
 
+    protected List<Component> repaintListener = null;
+
     /**
      * Initialise this canvas to specified width and height, also initialise
      * backstore
@@ -118,6 +122,7 @@ public abstract class RdesktopCanvas extends Canvas {
         backstore = new WrappedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         // now do input listeners in registerCommLayer() / registerKeyboard()
+        this.repaintListener = new ArrayList<Component>();
     }
 
     public Dimension getMinimumSize()
@@ -131,13 +136,19 @@ public abstract class RdesktopCanvas extends Canvas {
     }
 
 
+    public void addRepaintListener(Component c){
+    	this.repaintListener.add(c);
+    }
+
+    public void delRepaintListener(Component c) {
+    	this.repaintListener.remove(c);
+    }
+
 	public void repaint(int x, int y, int width, int height) {
 		super.repaint(x, y, width, height);
 		
-		if (this.opt.seamlessEnabled &&
-			this.common.seamlessChannelInstance != null) {
-			this.common.seamlessChannelInstance.repaint_frames();
-		}
+		for (Component c: this.repaintListener)
+			c.repaint(x, y, width, height);
 	}
 
 

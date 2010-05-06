@@ -86,15 +86,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		logger.debug("Seamless Channel created");		
 		this.windows = new Hashtable<String, SeamFrame>();
 	}
-
-	public void repaint_frames() {
-		Iterator<SeamFrame> it = windows.values().iterator();
-		while(it.hasNext()) {
-			SeamFrame f = it.next();
-			f.repaint();
-		}
-	}
-
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
 	}

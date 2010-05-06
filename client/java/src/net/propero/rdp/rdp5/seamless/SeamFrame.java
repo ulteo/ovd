@@ -94,10 +94,17 @@ public class SeamFrame extends Frame
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
+		
+		this.common.canvas.addRepaintListener(this);
 
 		this.setUndecorated(true);
 		this.setMyPosition(-1, -1, 1, 1);
 		this.setVisible(true);
+	}
+	
+	protected void finalize() throws Throwable {
+		this.common.canvas.delRepaintListener(this);
+		super.finalize();
 	}
 
 	public int getID() {
@@ -162,6 +169,13 @@ public class SeamFrame extends Frame
 		paint(g);
 	}
 
+	public void repaint(int x, int y, int width, int height) {
+		Rectangle bounds = new Rectangle(x, y, width, height);
+		
+		if (this.getBounds().intersects(bounds))
+			super.repaint();
+	}
+	
 	public void paint(Graphics g) {
 		int x = Math.max(this.x,0);
 		int y = Math.max(this.y,0);
