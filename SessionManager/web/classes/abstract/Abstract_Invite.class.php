@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -52,26 +52,17 @@ class Abstract_Invite {
 
 		$SQL = SQL::getInstance();
 
-		$id = $id_;
-
-		$SQL->DoQuery('SELECT @1,@2,@3,@4 FROM @5 WHERE @6 = %7 LIMIT 1', 'session', 'settings', 'email', 'valid_until', $SQL->prefix.'invites', 'id', $id);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'invites', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Invite::load($id_) invite does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Invite::load($id_) failed: NumRows == 0");
 			return false;
 		}
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new Invite($id);
-		$buf->session = (string)$session;
-		$buf->settings = unserialize($settings);
-		$buf->email = (string)$email;
-		$buf->valid_until = (int)$valid_until;
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -141,20 +132,31 @@ class Abstract_Invite {
 		return true;
 	}
 
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new Invite((string)$id);
+		$buf->session = (string)$session;
+		$buf->settings = unserialize($settings);
+		$buf->email = (string)$email;
+		$buf->valid_until = (int)$valid_until;
+
+		return $buf;
+	}
+
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Invite::load_all');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'invites');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'invites');
 		$rows = $SQL->FetchAllResults();
 
 		$invites = array();
 		foreach ($rows as $row) {
-			$id = $row['id'];
-
-			$invite = Abstract_Invite::load($id);
-			if (! $invite)
+			$invite = self::generateFromRow($row);
+			if (! is_object($invite))
 				continue;
 
 			$invites[] = $invite;

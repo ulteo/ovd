@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -49,24 +49,17 @@ class Abstract_DAV_User {
 
 		$SQL = SQL::getInstance();
 
-		$login = $login_;
-
-		$SQL->DoQuery('SELECT @1,@2 FROM @3 WHERE @4 = %5 LIMIT 1', 'login', 'password', $SQL->prefix.'dav_users', 'login', $login);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_DAV_User::load($login_) failed: NumRow == 0");
+			Logger::error('main', "Abstract_DAV_User::load($login_) failed: NumRows == 0");
 			return false;
 		}
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new DAV_User($login);
-		$buf->login = (string)$login;
-		$buf->password = (string)$password;
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -127,5 +120,16 @@ class Abstract_DAV_User {
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'dav_users', 'login', $login);
 
 		return true;
+	}
+
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new DAV_User((string)$login);
+		$buf->login = (string)$login;
+		$buf->password = (string)$password;
+
+		return $buf;
 	}
 }

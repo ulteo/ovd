@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,16 +47,31 @@ class Abstract_UserGroup_Rule {
 		return true;
 	}
 
+	public static function exists($attribute_, $type_, $value_, $usergroup_id_) {
+		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with attribute \''.$attribute_.'\' type \''.$type_.'\' value \''.$value_.'\' usergroup_id \''.$usergroup_id_.'\'');
+
+		$SQL = SQL::getInstance();
+
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $SQL->prefix.'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
+			return false;
+
+		$row = $SQL->FetchResult();
+		return $row['id'];
+	}
+
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load for \''.$id_.'\'');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6 WHERE @7 = %8 LIMIT 1', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules', 'id', $id_);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'usergroup_rules', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', 'Abstract_UserGroup_Rule::load no rule (id='.$id_.')found');
+			Logger::error('main', "Abstract_UserGroup_Rule::load($id_) failed: NumRows == 0");
 			return false;
 		}
 
@@ -140,12 +155,25 @@ class Abstract_UserGroup_Rule {
 		return true;
 	}
 
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new UserGroup_Rule((int)$id);
+		$buf->attribute = (string)$attribute;
+		$buf->type = (string)$type;
+		$buf->value = (string)$value;
+		$buf->usergroup_id = (string)$usergroup_id;
+
+		return $buf;
+	}
+
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::load_all');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5 FROM @6', 'id', 'attribute', 'type', 'value', 'usergroup_id', $SQL->prefix.'usergroup_rules');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'usergroup_rules');
 
 		$rows = $SQL->FetchAllResults();
 
@@ -180,33 +208,5 @@ class Abstract_UserGroup_Rule {
 		}
 
 		return $usergroup_rules;
-	}
-
-	public static function exists($attribute_, $type_, $value_, $usergroup_id_) {
-		Logger::debug('main', 'Starting Abstract_UserGroup_Rule::exists with attribute \''.$attribute_.'\' type \''.$type_.'\' value \''.$value_.'\' usergroup_id \''.$usergroup_id_.'\'');
-
-		$SQL = SQL::getInstance();
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 AND @5 = %6 AND @7 = %8 AND @9 = %10 LIMIT 1', 'id', $SQL->prefix.'usergroup_rules', 'attribute', $attribute_, 'type', $type_, 'value', $value_, 'usergroup_id', $usergroup_id_);
-		$total = $SQL->NumRows();
-
-		if ($total == 0)
-			return false;
-
-		$row = $SQL->FetchResult();
-		return $row['id'];
-	}
-	
-	protected static function generateFromRow($row_) {
-		foreach ($row_ as $k => $v)
-			$$k = $v;
-
-		$buf = new UserGroup_Rule($id);
-		$buf->attribute = (string)$attribute;
-		$buf->type = (string)$type;
-		$buf->value = (string)$value;
-		$buf->usergroup_id = (string)$usergroup_id;
-		
-		return $buf;
 	}
 }

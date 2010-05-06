@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -74,34 +74,37 @@ class Abstract_SharedFolder {
 		return true;
 	}
 
+	public static function exists($name_) {
+		Logger::debug('main', 'Starting Abstract_SharedFolder::exists with name \''.$name_.'\'');
+
+		$SQL = SQL::getInstance();
+
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'id', $SQL->prefix.'sharedfolders', 'name', $name_);
+		$total = $SQL->NumRows();
+
+		if ($total == 0)
+			return false;
+
+		$row = $SQL->FetchResult();
+		return $row['id'];
+	}
+
 	public static function load($id_) {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::load for \''.$id_.'\'');
 
 		$SQL = SQL::getInstance();
 
-		$id = $id_;
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'name', $SQL->prefix.'sharedfolders', 'id', $id);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sharedfolders', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_SharedFolder::load($id_) ShareFolder does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_SharedFolder::load($id_) failed: NumRows == 0");
 			return false;
 		}
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new SharedFolder($id);
-		$buf->name = (string)$name;
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4', 'usergroup_id', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $id);
-		$rows = $SQL->FetchAllResults();
-
-		foreach ($rows as $row)
-			$buf->acls[$row['usergroup_id']] = 'rw';
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -196,41 +199,40 @@ class Abstract_SharedFolder {
 		return true;
 	}
 
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new SharedFolder((int)$id);
+		$buf->name = (string)$name;
+
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4', 'usergroup_id', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $buf->id);
+		$rows = $SQL->FetchAllResults();
+
+		foreach ($rows as $row)
+			$buf->acls[$row['usergroup_id']] = 'rw';
+
+		return $buf;
+	}
+
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_SharedFolder::load_all');
 
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'sharedfolders');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'sharedfolders');
 		$rows = $SQL->FetchAllResults();
 
 		$sharedfolders = array();
 		foreach ($rows as $row) {
-			$id = $row['id'];
-
-			$sharedfolder = Abstract_SharedFolder::load($id);
-			if (! $sharedfolder)
+			$sharedfolder = self::generateFromRow($row);
+			if (! is_object($sharedfolder))
 				continue;
 
 			$sharedfolders[$sharedfolder->id] = $sharedfolder;
 		}
 
 		return $sharedfolders;
-	}
-
-	public static function exists($name_) {
-		Logger::debug('main', 'Starting Abstract_SharedFolder::exists with name \''.$name_.'\'');
-
-		$SQL = SQL::getInstance();
-
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4 LIMIT 1', 'id', $SQL->prefix.'sharedfolders', 'name', $name_);
-		$total = $SQL->NumRows();
-
-		if ($total == 0)
-			return false;
-
-		$row = $SQL->FetchResult();
-		return $row['id'];
 	}
 
 	public static function add_acl($sharedfolder, $usergroup_id_) {
