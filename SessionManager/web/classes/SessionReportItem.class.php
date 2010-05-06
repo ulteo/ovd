@@ -151,7 +151,7 @@ class SessionReportItem {
 	
 	public static function getStatusPrettyName($status_) {
 		$statusPrettyName = array(
-			'exit' => _('No error'), 
+			'exit' => _('Normally ended'), 
 			'adminkill' => _('Killed by administrator'),
 			'internal1' => _('Internal error: wrong session status'),
 			'internal2' => _('Internal error: failed to initialize session'),
