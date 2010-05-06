@@ -15,3 +15,14 @@ Description: Startup scripts and default settings for the Ulteo OVD
  * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.
  * script that can be used to start an X session on an Open Virtual 
  Desktop application server.
+
+Package: ulteo-plymouth-theme-vdi
+Architecture: all
+Depends: ${misc:Depends}, plymouth, plymouth-label
+Provides: plymouth-theme
+Description: graphical boot animation and logger - ulteo-vdi theme
+ Plymouth is an application that runs very early in the boot process
+ (even before the root filesystem is mounted!) that provides a graphical
+ boot animation while the boot process happens in the background.
+ .
+ This package contains the default ulteo-vdi-logo theme.

@@ -8,15 +8,17 @@ AC_INIT([ovd-desktop-settings], [uovddesktop_version], [http://bugs.ulteo.com])
 AM_INIT_AUTOMAKE([1.6 foreign])
 
 if test "x${prefix}" = "xNONE" ; then
-sysconfdir="/etc"
-datarootdir="/usr/share"
-localstatedir="/var"
+    sysconfdir="/etc"
+    datarootdir="/usr/share"
+    localstatedir="/var"
+    libdir="/lib"
 fi
 
 AC_CONFIG_FILES([Makefile
                  pictures/Makefile
                  config/Makefile
-                 config/xfce4/Makefile
+                 config/plymouth/Makefile
                  config/thunar/Makefile
+                 config/xfce4/Makefile
 ])
 AC_OUTPUT

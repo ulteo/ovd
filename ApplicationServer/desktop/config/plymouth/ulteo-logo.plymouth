@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=Ulteo Logo
+Description=A theme that features an unicolor background with the Ulteo logo.
+ModuleName=script
+
+[script]
+ImageDir=/lib/plymouth/themes/ulteo-logo
+ScriptFile=/lib/plymouth/themes/ulteo-logo/ulteo-logo.script

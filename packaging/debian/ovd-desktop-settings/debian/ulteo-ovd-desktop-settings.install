@@ -1,0 +1,3 @@
+debian/tmp/etc
+debian/tmp/var
+debian/tmp/usr/share

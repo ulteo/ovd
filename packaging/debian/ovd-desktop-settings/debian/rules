@@ -2,6 +2,3 @@
 
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
-
-install/ulteo-ovd-desktop-settings:: 
-	chmod +x $(CURDIR)/debian/ulteo-ovd-desktop-settings/etc/xdg/ulteo/xinitrc

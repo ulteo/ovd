@@ -1,4 +1,4 @@
-SUBDIRS = thunar xfce4
+SUBDIRS = plymouth thunar xfce4
 
 conf_DATA = restricted-menu.cfg
 confdir = $(sysconfdir)
