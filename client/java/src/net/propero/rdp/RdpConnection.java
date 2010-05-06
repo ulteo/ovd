@@ -43,6 +43,7 @@ public class RdpConnection extends Observable implements Runnable {
 
 	private VChannels channels = null;
 	private ClipChannel clipChannel = null;
+	private SeamlessChannel seamChannel = null;
 	private Rdp5 RdpLayer = null;
 	public Options opt = null;
 	public Common common = null;
@@ -66,9 +67,9 @@ public class RdpConnection extends Observable implements Runnable {
 			return;
 		}
 		this.opt.seamlessEnabled = true;
-		this.common.seamlessChannelInstance  = seamChan;
-		this.common.seamlessChannelInstance.setClip(this.clipChannel);
-		this.channels.register(this.common.seamlessChannelInstance);
+		this.seamChannel = seamChan;
+		seamChan.setClip(this.clipChannel);
+		this.channels.register(seamChan);
 	}
 
 	private void init(Options opt_, Common common_) throws RdesktopException {
@@ -252,6 +253,10 @@ public class RdpConnection extends Observable implements Runnable {
 	
 	public Common getCommon() {
 		return this.common;
+	}
+	
+	public SeamlessChannel getSeamlessChannel() {
+		return this.seamChannel;
 	}
 	
 	public void disconnect() {

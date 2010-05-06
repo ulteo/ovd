@@ -49,7 +49,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		    return false;
 		}
 
-		this.addFrame(new SeamlessFrame((int)id, (int)group, this.common), name);
+		this.addFrame(new SeamlessFrame((int)id, (int)group, this, this.common), name);
 
 		return true;
 	}

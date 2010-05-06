@@ -290,7 +290,7 @@ public class Rdesktop {
 				"bc:d:f::g:k:l:m:n:p:s:A:VP:D:t:T:u:o:r:", alo);
 
 		ClipChannel clipChannel = new ClipChannel(common, opt);
-		SeamlessChannel seamChannel;
+		SeamlessChannel seamChannel = null;
 		SoundChannel soundChannel;
 		RdpdrChannel rdpdrChannel;
 		RdpdrChannel rdpdrChannelDisk;
@@ -646,7 +646,6 @@ public class Rdesktop {
 			if (opt.seamlessEnabled) {
 				seamChannel = new SeamlessChannel(opt, common);
 				seamChannel.setClip(clipChannel);
-				common.seamlessChannelInstance  = seamChannel;
 				channels.register(seamChannel);
 			}
 			if (opt.soundEnabled) {
@@ -706,8 +705,8 @@ public class Rdesktop {
 		RdesktopFrame window = new RdesktopFrame_Localised(opt, common);
 		window.setClip(clipChannel);
 
-		if (common.seamlessChannelInstance != null)
-			common.seamlessChannelInstance.setMainFrame(window);
+		if (seamChannel != null)
+			seamChannel.setMainFrame(window);
 
 		window.show();
 		

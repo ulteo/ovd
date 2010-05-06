@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Hashtable;
-import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 

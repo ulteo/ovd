@@ -95,7 +95,7 @@ public class SeamFrame extends Frame
 		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		
-		this.common.canvas.addRepaintListener(this);
+		this.common.canvas.addComponentListener(this);
 
 		this.setUndecorated(true);
 		this.setMyPosition(-1, -1, 1, 1);
@@ -103,7 +103,7 @@ public class SeamFrame extends Frame
 	}
 	
 	protected void finalize() throws Throwable {
-		this.common.canvas.delRepaintListener(this);
+		this.common.canvas.delComponentListener(this);
 		super.finalize();
 	}
 

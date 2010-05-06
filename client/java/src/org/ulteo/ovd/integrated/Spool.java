@@ -223,7 +223,7 @@ public class Spool implements Runnable {
 	private void doLogoff() {
 		for (RdpConnection rc : this.connections) {
 			try {
-				rc.common.seamlessChannelInstance.send_spawn("logoff");
+				rc.getSeamlessChannel().send_spawn("logoff");
 			} catch (RdesktopException ex) {
 				Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
 			} catch (IOException ex) {

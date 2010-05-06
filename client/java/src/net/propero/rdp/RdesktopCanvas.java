@@ -90,7 +90,7 @@ public abstract class RdesktopCanvas extends Canvas {
     protected Options opt = null;
     protected Common common = null;
 
-    protected List<Component> repaintListener = null;
+    protected List<Component> ComponentListener = null;
 
     /**
      * Initialise this canvas to specified width and height, also initialise
@@ -122,7 +122,7 @@ public abstract class RdesktopCanvas extends Canvas {
         backstore = new WrappedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
         // now do input listeners in registerCommLayer() / registerKeyboard()
-        this.repaintListener = new ArrayList<Component>();
+        this.ComponentListener = new ArrayList<Component>();
     }
 
     public Dimension getMinimumSize()
@@ -136,18 +136,18 @@ public abstract class RdesktopCanvas extends Canvas {
     }
 
 
-    public void addRepaintListener(Component c){
-    	this.repaintListener.add(c);
+    public void addComponentListener(Component c){
+    	this.ComponentListener.add(c);
     }
 
-    public void delRepaintListener(Component c) {
-    	this.repaintListener.remove(c);
+    public void delComponentListener(Component c) {
+    	this.ComponentListener.remove(c);
     }
 
 	public void repaint(int x, int y, int width, int height) {
 		super.repaint(x, y, width, height);
 		
-		for (Component c: this.repaintListener)
+		for (Component c: this.ComponentListener)
 			c.repaint(x, y, width, height);
 	}
 
@@ -382,8 +382,8 @@ public abstract class RdesktopCanvas extends Canvas {
     public void setCursor(Cursor cursor) {
     	super.setCursor(cursor);
 
-    	if (this.common.seamlessChannelInstance != null)
-    		this.common.seamlessChannelInstance.setCursor(cursor);
+        for (Component c: this.ComponentListener)
+            c.setCursor(cursor);
     }
     /**
      * Move the mouse pointer (only available in Java 1.3+)

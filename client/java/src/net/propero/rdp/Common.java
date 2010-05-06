@@ -15,7 +15,6 @@ package net.propero.rdp;
 
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
-import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 
 public class Common {
 
@@ -25,7 +24,6 @@ public class Common {
 	public MCS mcs;
 	public RdesktopFrame frame;
 	public RdesktopCanvas canvas;
-	public SeamlessChannel seamlessChannelInstance = null;
 	public SoundChannel soundChannel;
 	public Cache cache = null;
 	public PstCache persistent_cache = null;

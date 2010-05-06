@@ -35,6 +35,8 @@ import net.propero.rdp.rdp5.seamless.SeamFrame;
 
 
 public class SeamlessFrame extends SeamFrame {
+	protected SeamlessChannel instance = null;
+	
 	protected static int SEAMLESS_BORDER_SIZE = 4;
 	protected static int SEAMLESS_TOP_BORDER_SIZE = 20;
 	protected static int SEAMLESS_CORNER_SIZE = 20;
@@ -59,8 +61,10 @@ public class SeamlessFrame extends SeamFrame {
 	protected MouseEvent resizeClick = null;
 	protected int corner = SeamlessFrame.NO_CORNER;
 
-	public SeamlessFrame(int id_, int group_, Common common_) {
+	public SeamlessFrame(int id_, int group_, SeamlessChannel instance_, Common common_) {
 		super(id_, group_, common_);
+		
+		this.instance = instance_;
 
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim);
@@ -272,7 +276,7 @@ public class SeamlessFrame extends SeamFrame {
 			Rectangle r = this.rw.getBounds();
 			if (! this.getBounds().equals(r)) {
 				try {
-					this.common.seamlessChannelInstance.send_position(this.id, r.x, r.y, r.width, r.height, 0);
+					this.instance.send_position(this.id, r.x, r.y, r.width, r.height, 0);
 				} catch (RdesktopException ex) {
 					Logger.getLogger(SeamlessFrame.class.getName()).log(Level.SEVERE, null, ex);
 				} catch (IOException ex) {
