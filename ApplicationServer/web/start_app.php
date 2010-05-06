@@ -53,7 +53,7 @@ $error = false;
 
 if ($error === false) {
 	for ($i = 0; (! is_dir(SESSION_PATH.'/'.$session.'/sessions/'.$buf) || get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$buf.'/status') != 2); $i++) {
-		if ($i >= 20) {
+		if ($i >= TIMEOUT) {
 			$errno = 1;
 			$errstr = 'Unable to start external application';
 			break;

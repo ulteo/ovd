@@ -32,6 +32,7 @@ $keys_conf_inside_chroot = array(
 	'SESSION_MANAGER_URL' => 'SESSIONMANAGER_URL', 
 	'LOG_FILE' => 'LOG_FILE', 
 	'LOG_FLAGS' => 'LOG_FLAGS', 
+	'CONNECTION_TIMEOUT' => 'TIMEOUT', // CONNECTION_TIMEOUT is a reserved PHP variable
 	'SPOOL' => 'SPOOL');  // key_bash => key_php
 
 // read the conf file outside the chroot
