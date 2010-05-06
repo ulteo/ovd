@@ -255,6 +255,12 @@ function show_page($mode_) {
 		$t0 = $t1;
 		$t1 = $buf;
 	}
+	
+	if ($t1 > time()) {
+		popup_error(_('Error: "to" field is in the future, switch to the current time'));
+		$t1 = $mode_->transform_date(time());
+	}
+	
 	$t2 = strtotime($mode_->get_next(), $t1);
 
 	/* General system */
