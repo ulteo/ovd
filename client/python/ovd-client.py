@@ -232,15 +232,16 @@ class Dialog:
         request = urllib2.Request(url, data)
         
         try:
-            url = self.urlOpener.open(request)
+            data = self.urlOpener.open(request)
 
         except urllib2.HTTPError, exc:
             if exc.code == 500:
                 Logger.info("The service is not available")
+                Logger.debug("The service is not available, data: %s"%(data.read()))
                 return False
 
             Logger.debug("HTTP request return code %d (%s)"%(exc.code, exc.msg))
-            Logger.debug(" * return: %s"%(str(exc.read())))
+            Logger.debug(" * return: %s"%(str(data.read())))
             return False
 
         except urllib2.URLError, exc:
@@ -278,6 +279,7 @@ class Dialog:
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
             Logger.warn("Invalid response format")
+            Logger.debug("Invalid response format, data: %s"%(url.read()))
             return False
 
         data = url.read()
@@ -375,23 +377,24 @@ class Dialog:
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
             Logger.warn("Invalid response format")
+            Logger.debug("Invalid response format, data: %s"%(url.read()))
             return False
 
         data = url.read()
         try:
             dom = minidom.parseString(data)
         except ExpatError:
-            Logger.warn("Invalid XML result")
+            Logger.warn("Invalid XML result %s"%(data))
             return False
 
         sessionNode = dom.getElementsByTagName('session')
         if len(sessionNode) != 1:
-            Logger.warn("Bad xml result")
+            Logger.warn("Bad xml result %s"%(data))
             return False
 
         sessionNode = sessionNode[0]
         if not sessionNode.hasAttribute('status'):
-            Logger.warn("Bad xml result")
+            Logger.warn("Bad xml result %s"%(data))
             return False
 
         buf = sessionNode.getAttribute('status')
@@ -399,12 +402,13 @@ class Dialog:
         try:
             self.sessionStatus = int(buf)
         except exceptions.ValueError, err:
-            Logger.warn("Bad xml result")
+            Logger.warn("Bad xml result %s"%(data))
             return False
 
         node = sessionNode.getElementsByTagName('application')
         if len(node) != 1:
             Logger.warn("missing child node application")
+            Logger.debug("missing child node application, data: %s"%(data))
             return False
 
         node = node[0]
