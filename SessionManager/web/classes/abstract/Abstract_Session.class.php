@@ -2,8 +2,8 @@
 /**
  * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -72,31 +72,17 @@ class Abstract_Session {
 
 		$SQL = MySQL::getInstance();
 
-		$id = $id_;
-
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9 FROM @10 WHERE @11 = %12 LIMIT 1', 'server', 'mode', 'type', 'status', 'settings', 'user_login', 'user_displayname', 'applications', 'start_time', $SQL->prefix.'sessions', 'id', $id);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'sessions', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Session::load($id_) session does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Session::load($id_) failed: NumRows == 0");
 			return false;
 		}
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new Session($id);
-		$buf->server = (string)$server;
-		$buf->mode = (string)$mode;
-		$buf->type = (string)$type;
-		$buf->status = (int)$status;
-		$buf->settings = unserialize($settings);
-		$buf->user_login = (string)$user_login;
-		$buf->user_displayname = (string)$user_displayname;
-		$buf->applications = unserialize($applications);
-		$buf->start_time = (string)$start_time;
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -172,20 +158,36 @@ class Abstract_Session {
 		return true;
 	}
 
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new Session((string)$id);
+		$buf->server = (string)$server;
+		$buf->mode = (string)$mode;
+		$buf->type = (string)$type;
+		$buf->status = (string)$status;
+		$buf->settings = unserialize($settings);
+		$buf->user_login = (string)$user_login;
+		$buf->user_displayname = (string)$user_displayname;
+		$buf->applications = unserialize($applications);
+		$buf->start_time = (string)$start_time;
+
+		return $buf;
+	}
+
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Session::load_all');
 		
 		$SQL = MySQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'sessions');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'sessions');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
 		foreach ($rows as $row) {
-			$id = $row['id'];
-
-			$session = Abstract_Session::load($id);
-			if (! $session)
+			$session = self::generateFromRow($row);
+			if (! is_object($session))
 				continue;
 
 			$sessions[] = $session;

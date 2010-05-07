@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,25 +65,17 @@ class Abstract_Token {
 
 		$SQL = MySQL::getInstance();
 
-		$id = $id_;
-
-		$SQL->DoQuery('SELECT @1,@2,@3 FROM @4 WHERE @5 = %6 LIMIT 1', 'type', 'link_to', 'valid_until', $SQL->prefix.'tokens', 'id', $id);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'tokens', 'id', $id_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Token::load($id_) token does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Token::load($id_) failed: NumRows == 0");
 			return false;
 		}
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new Token($id);
-		$buf->type = (string)$type;
-		$buf->link_to = (string)$link_to;
-		$buf->valid_until = (int)$valid_until;
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -149,20 +141,30 @@ class Abstract_Token {
 		return true;
 	}
 
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new Token((string)$id);
+		$buf->type = (string)$type;
+		$buf->link_to = (string)$link_to;
+		$buf->valid_until = (int)$valid_until;
+
+		return $buf;
+	}
+
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Token::load_all');
 
 		$SQL = MySQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'id', $SQL->prefix.'tokens');
+		$SQL->DoQuery('SELECT * FROM @1', $SQL->prefix.'tokens');
 		$rows = $SQL->FetchAllResults();
 
 		$tokens = array();
 		foreach ($rows as $row) {
-			$id = $row['id'];
-
-			$token = Abstract_Token::load($id);
-			if (! $token)
+			$token = self::generateFromRow($row);
+			if (! is_object($token))
 				continue;
 
 			$tokens[] = $token;

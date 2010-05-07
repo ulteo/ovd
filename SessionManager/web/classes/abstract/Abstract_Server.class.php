@@ -1,9 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -80,35 +80,17 @@ class Abstract_Server {
 
 		$SQL = MySQL::getInstance();
 
-		$fqdn = $fqdn_;
-
-		$SQL->DoQuery('SELECT @1,@2,@3,@4,@5,@6,@7,@8,@9,@10,@11,@12,@13 FROM @14 WHERE @15 = %16 LIMIT 1', 'status', 'registered', 'locked', 'type', 'version', 'external_name', 'web_port', 'max_sessions', 'cpu_model', 'cpu_nb_cores', 'cpu_load', 'ram_total', 'ram_used', $SQL->prefix.'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn_);
 		$total = $SQL->NumRows();
 
 		if ($total == 0) {
-			Logger::error('main', "Abstract_Server::load($fqdn_) server does not exist (NumRows == 0)");
+			Logger::error('main', "Abstract_Server::load($fqdn_) failed: NumRows == 0");
 			return false;
 		}
 
 		$row = $SQL->FetchResult();
 
-		foreach ($row as $k => $v)
-			$$k = $v;
-
-		$buf = new Server($fqdn);
-		$buf->status = (string)$status;
-		$buf->registered = (bool)$registered;
-		$buf->locked = (bool)$locked;
-		$buf->type = (string)$type;
-		$buf->version = (string)$version;
-		$buf->external_name = (string)$external_name;
-		$buf->web_port = (int)$web_port;
-		$buf->max_sessions = (int)$max_sessions;
-		$buf->cpu_model = (string)$cpu_model;
-		$buf->cpu_nb_cores = (int)$cpu_nb_cores;
-		$buf->cpu_load = (float)($cpu_load/100);
-		$buf->ram_total = (int)$ram_total;
-		$buf->ram_used = (int)$ram_used;
+		$buf = self::generateFromRow($row);
 
 		return $buf;
 	}
@@ -240,6 +222,28 @@ class Abstract_Server {
 		return true;
 	}
 
+	private static function generateFromRow($row_) {
+		foreach ($row_ as $k => $v)
+			$$k = $v;
+
+		$buf = new Server((string)$fqdn);
+		$buf->status = (string)$status;
+		$buf->registered = (bool)$registered;
+		$buf->locked = (bool)$locked;
+		$buf->type = (string)$type;
+		$buf->version = (string)$version;
+		$buf->external_name = (string)$external_name;
+		$buf->web_port = (int)$web_port;
+		$buf->max_sessions = (int)$max_sessions;
+		$buf->cpu_model = (string)$cpu_model;
+		$buf->cpu_nb_cores = (int)$cpu_nb_cores;
+		$buf->cpu_load = (float)($cpu_load/100);
+		$buf->ram_total = (int)$ram_total;
+		$buf->ram_used = (int)$ram_used;
+
+		return $buf;
+	}
+
 	public static function load_all() {
 		Logger::debug('main', 'Starting Abstract_Server::load_all');
 
@@ -252,15 +256,13 @@ class Abstract_Server {
 		$mysql_conf = $prefs->get('general', 'mysql');
 		$SQL = MySQL::getInstance();
 
-		$SQL->DoQuery('SELECT @1 FROM @2', 'fqdn', $mysql_conf['prefix'].'servers');
+		$SQL->DoQuery('SELECT * FROM @1', $mysql_conf['prefix'].'servers');
 		$rows = $SQL->FetchAllResults();
 
 		$servers = array();
 		foreach ($rows as $row) {
-			$fqdn = $row['fqdn'];
-
-			$server = Abstract_Server::load($fqdn);
-			if (! $server)
+			$server = self::generateFromRow($row);
+			if (! is_object($server))
 				continue;
 
 			$servers[] = $server;
