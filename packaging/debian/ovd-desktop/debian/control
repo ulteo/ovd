@@ -11,7 +11,7 @@ Depends: ulteo-ovd-desktop-settings, xfce4-restricted-menu-plugin,
  xfce4-icon-theme, thunar, gtk2-engines-xfce, xfwm4, xfce4-session,
  xfdesktop4, xfce4-mcs-plugins, xfce4-utils, xfce4-panel
 Recommends: xserver-xorg, xinit, xfonts-base, app-install-data
-Suggests: slim
+Suggests: gdm
 Conflicts: xfce (>= 4.6)
 Description: Ulteo OVD desktop
  A desktop based on Xfce 4.4 for Ulteo OVD solution
