@@ -24,32 +24,38 @@ var Desktop = Class.create(Daemon, {
 	parse_do_started: function(transport) {
 		this.push_log('debug', '[desktop] parse_do_started(transport@do_started())');
 
+		var server = false;
+
 		var servers = this.servers.values();
 		for (var i=0; i < servers.length; i++)
-			var server = servers[i];
+			server = servers[i];
 
-		var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
-			<param name="name" value="ulteoapplet" /> \
-			<param name="code" value="'+this.applet_main_class+'" /> \
-			<param name="codebase" value="applet/" /> \
-			<param name="archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
-			<param name="cache_archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
-			<param name="cache_archive_ex" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" /> \
-			<param name="mayscript" value="true" /> \
-			\
-			<param name="server" value="'+server.fqdn+'" /> \
-			<param name="port" value="3389" /> \
-			<param name="username" value="'+server.username+'" /> \
-			<param name="password" value="'+server.password+'" /> \
-			\
-			<param name="keymap" value="'+this.keymap+'" /> \
-			<param name="multimedia" value="'+this.multimedia+'" /> \
-			<param name="redirect_client_printers" value="'+this.redirect_client_printers+'" /> \
-		</applet>';
+		if (! server)
+			setTimeout(this.parse_do_started.bind(this, transport), 1000);
+		else {
+			var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+this.my_width+'" height="'+this.my_height+'"> \
+				<param name="name" value="ulteoapplet" /> \
+				<param name="code" value="'+this.applet_main_class+'" /> \
+				<param name="codebase" value="applet/" /> \
+				<param name="archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
+				<param name="cache_archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
+				<param name="cache_archive_ex" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" /> \
+				<param name="mayscript" value="true" /> \
+				\
+				<param name="server" value="'+server.fqdn+'" /> \
+				<param name="port" value="3389" /> \
+				<param name="username" value="'+server.username+'" /> \
+				<param name="password" value="'+server.password+'" /> \
+				\
+				<param name="keymap" value="'+this.keymap+'" /> \
+				<param name="multimedia" value="'+this.multimedia+'" /> \
+				<param name="redirect_client_printers" value="'+this.redirect_client_printers+'" /> \
+			</applet>';
 
-		$('desktopAppletContainer').show();
-		$('desktopAppletContainer').innerHTML = applet_html_string;
+			$('desktopAppletContainer').show();
+			$('desktopAppletContainer').innerHTML = applet_html_string;
 
-		return true;
+			return true;
+		}
 	}
 });
