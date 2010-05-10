@@ -77,7 +77,7 @@ if (window.actionArguments && window.actionArguments.length > 0) {
 var window_ = window.open('about:blank', 'Ulteo'+Math.round(Math.random()*100), 'toolbar=no,status=no,top=0,left=0,width='+screen.width+',height='+screen.height+',scrollbars=no,resizable=no,resizeable=no,fullscreen=no');
 
 setTimeout(function() {
-	window_.location.href = '../external_app.php?app_id=$app_id&doc='+path;
+	window_.location.href = '../external_app.php?app_id=$app_id&app_args='+path;
 }, 1000);
 EOF;
 

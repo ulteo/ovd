@@ -79,6 +79,7 @@ if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_se
 			Event.observe(window, 'load', function() {
 				daemon = new StartApp('ulteo-applet.jar', 'org.ulteo.applet.PortalApplication', 'ulteo-printing.jar', <?php echo ($_SESSION['ovd_session']['debug'] == 1)?'1':'0'; ?>);
 				daemon.app_id = '<?php echo $_GET['app_id']; ?>';
+				daemon.app_args = '<?php echo $_GET['app_args']; ?>';
 
 				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
 				daemon.i18n['unknown_application'] = '<?php echo str_replace("'", "\'", _('Server: unable to start application')); ?>';
