@@ -21,6 +21,9 @@
 
 package org.ulteo.ovd.applet;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.ulteo.ovd.OvdException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
@@ -32,17 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import net.propero.rdp.Common;
 
 import netscape.javascript.JSObject;
 
-import net.propero.rdp.Options;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.RdpConnection;
-import net.propero.rdp.rdp5.rdpdr.PrinterManager;
-import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
-import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
-import org.ulteo.rdp.Connection;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 
 abstract class Order {
@@ -89,10 +85,8 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 	public String keymap = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
-
-	private PrinterManager printerManager = null; 
 	
-	private HashMap<Integer, Connection> connections = null;
+	private HashMap<Integer, RdpConnectionOvd> connections = null;
 	private List<Order> spoolOrder = null;
 	private Thread spoolThread = null;
 
@@ -129,9 +123,7 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 		
 		this.spoolOrder = new ArrayList<Order>();
 		this.spoolThread = new Thread(this);
-		this.connections = new HashMap<Integer, Connection>();
-
-		this.printerManager = new PrinterManager();
+		this.connections = new HashMap<Integer, RdpConnectionOvd>();
 		this.finished_init = true;
 	}
 	
@@ -154,11 +146,13 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 		if (this.spoolThread.isAlive())
 			this.spoolThread.interrupt();
 		
-		for (Connection co: this.connections.values()) {
-			co.connection.disconnect();
-		
-			if (co.thread.isAlive())
-				co.thread.interrupt();
+		for (RdpConnectionOvd co: this.connections.values()) {
+			co.disconnect();
+			try {
+				co.interruptConnection();
+			} catch (OvdException ex) {
+				System.out.println(ex.getMessage());
+			}
 		}
 	}
 	
@@ -216,7 +210,7 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 		Integer server_id = null;
 		
 		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i).connection == obj) {
+			if (this.connections.get(i) == obj) {
 				server_id = i;
 				break;
 			}
@@ -226,29 +220,29 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 			System.err.println("Observable event not for us");
 			return;
 		}
-		Connection co = this.connections.get(server_id);
+		RdpConnectionOvd co = this.connections.get(server_id);
 		
 		/* Connecting */
 		if (state.equals("connecting"))
-			System.out.println("Connecting to "+co.options.hostname);
+			System.out.println("Connecting to "+co.opt.hostname);
 		
 		/* Connected */
 		else if (state.equals("connected")) {
-			System.out.println("Connected to "+co.options.hostname);
+			System.out.println("Connected to "+co.opt.hostname);
 			
 			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_CONNECTED);
 		}
 		
 		/* Disconnected */
 		else if (state.equals("disconnected")) {
-			System.out.println("Disconneted from "+co.options.hostname);
+			System.out.println("Disconneted from "+co.opt.hostname);
 			
 			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
 		}
 		
 		/* Connection failed */
 		else if (state.equals("failed"))
-			System.out.println("Connection failed: removing rdpConnection to "+co.options.hostname);
+			System.out.println("Connection failed: removing rdpConnection to "+co.opt.hostname);
 		
 		/* Undefined status */
 		else
@@ -281,67 +275,47 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();	
 				System.out.println("Width: "+dim.width);
 				System.out.println("Height: "+dim.height);
-				
-				Connection co = new Connection();
-				
-				co.options = new Options();
 
+				byte flags = RdpConnectionOvd.MODE_APPLICATION;
+				if(this.multimedia_mode)
+					flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+				if (this.map_local_printers)
+					flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+				RdpConnectionOvd rc;
+				try {
+					rc = new RdpConnectionOvd(flags);
+				} catch (OvdException ex) {
+					System.err.println("ERROR: "+ex.getMessage());
+					continue;
+				}
+				try {
+					rc.initSecondaryChannels();
+				} catch (OvdException ex) {
+					System.err.println("WARNING: "+ex.getMessage());
+				}
+
+				rc.setServer(order.host, order.port);
+				rc.setCredentials(order.login, order.password);
 				// Ensure that width is multiple of 4
 				// Prevent artifact on screen with a with resolution
 				// not divisible by 4
-				co.options.width = dim.width & ~3;
-				co.options.height = dim.height;
-				co.options.set_bpp(24);
-							
-				co.options.hostname = order.host;
-				co.options.port = order.port;
-				co.options.username = order.login;
-				co.options.password = order.password;
+				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
+				rc.setKeymap(keymap);
 
-				co.common = new Common();
-
+				rc.addObserver(this);
 				try {
-					co.connection = new RdpConnection(co.options, co.common, new org.ulteo.rdp.seamless.SeamlessChannel(co.options, co.common));
-				} catch (RdesktopException e) {
-					System.out.println(this.getClass().toString()+" Unable to init connection to "+co.options.hostname);
-					continue;
+					rc.addOvdAppListener(this);
+				} catch (OvdException ex) {
+					System.err.println("WARNING: "+ex.getMessage());
 				}
 				
-				co.connection.setKeymap(keymap);
-
-				co.connection.addObserver(this);
-				co.thread = new Thread(co.connection);
-
-				co.channel = new OvdAppChannel(co.connection.opt, co.connection.common);
-				co.channel.addOvdAppListener(this);
-				if (! co.connection.addChannel(co.channel)) {
-					System.err.println("Can't add channel ovdapp ...");
-					continue;
+				this.connections.put(new Integer(order.id), rc);
+				try {
+					rc.connect();
+				} catch (OvdException ex) {
+					Logger.getLogger(Applications.class.getName()).log(Level.SEVERE, null, ex);
 				}
-				
-				if(this.multimedia_mode) {
-					System.out.println("Multimedia channels enabled");
-					SoundChannel sndChannel = new SoundChannel(co.connection.opt, co.connection.common);
-					if (! co.connection.addChannel(sndChannel))
-						System.err.println("Unable to add sound channel, continue anyway");
-				}
-		
-				if (this.map_local_printers) {
-					this.printerManager.searchAllPrinter();
-					if (this.printerManager.hasPrinter()) {
-						RdpdrChannel rdpdrChannel = new RdpdrChannel(co.connection.opt, co.connection.common);
-						this.printerManager.registerAll(rdpdrChannel);
-				
-						if (! co.connection.addChannel(rdpdrChannel))
-							System.err.println("Unable to add rdpdr channel, continue anyway");
-					}
-					else
-						System.out.println("Have to map local printers but no printer found ....");
-				}
-				
-				this.connections.put(new Integer(order.id), co);
-				
-				co.thread.start();
 			}
 			
 			else if (o instanceof OrderApplication) {
@@ -363,15 +337,16 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				}
 				System.out.println("Server "+server_id);
 				
-				Connection co = this.connections.get(server_id);
-				System.out.println("channel got "+co.channel);
-				if (! co.channel.isReady()) {
+				RdpConnectionOvd co = this.connections.get(server_id);
+				OvdAppChannel chan = co.getOvdAppChannel();
+				System.out.println("channel got "+chan);
+				if (! chan.isReady()) {
 					System.err.println("Channel not ready for order "+order);
 					continue;
 				}
 					
 				
-				co.channel.sendStartApp(order.id, order.application_id);	
+				chan.sendStartApp(order.id, order.application_id);
 			}
 		}
 	}
@@ -417,7 +392,7 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 	@Override
 	public void ovdInited(OvdAppChannel channel) {
 		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i).channel == channel) {
+			if (this.connections.get(i).getOvdAppChannel() == channel) {
 				this.forwardJS(JS_API_F_SERVER, i, JS_API_O_SERVER_READY);
 				return;
 			}

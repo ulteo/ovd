@@ -38,14 +38,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import net.propero.rdp.Common;
-import net.propero.rdp.Options;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
-import org.ulteo.rdp.Connection;
-import org.ulteo.rdp.OvdAppChannel;
-import org.ulteo.rdp.seamless.SeamlessChannel;
+import org.ulteo.ovd.OvdException;
+import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -57,14 +52,14 @@ public class SessionManagerCommunication {
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
 	private String sm = null;
-	private ArrayList<Connection> connections = null;
+	private ArrayList<RdpConnectionOvd> connections = null;
 	private String sessionMode = null;
 	private String requestMode = null;
 	private String sessionId = null;
 	private String base_url;
 
 	public SessionManagerCommunication(String sm_) throws Exception {
-		this.connections = new ArrayList<Connection>();
+		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.sm = sm_;
 		this.base_url = "http://"+this.sm+"/sessionmanager/";
 	}
@@ -208,7 +203,7 @@ public class SessionManagerCommunication {
 		}
 		Element server;
 		for (int i = 0; i < ns.getLength(); i++) {
-			RdpConnection rc = null;
+			RdpConnectionOvd rc = null;
 
 			server = (Element)ns.item(i);
 			NodeList appsList = server.getElementsByTagName("application");
@@ -218,40 +213,25 @@ public class SessionManagerCommunication {
 			}
 			Element appItem = null;
 
-			Options opt = new Options();
-			opt.hostname = server.getAttribute("fqdn");
-			opt.username = server.getAttribute("login");
-			opt.password = server.getAttribute("password");
+			byte flags = 0x00;
+			if (this.sessionMode.equalsIgnoreCase("desktop"))
+				flags |= RdpConnectionOvd.MODE_DESKTOP;
+			else if (this.sessionMode.equalsIgnoreCase("portal"))
+				flags |= RdpConnectionOvd.MODE_APPLICATION;
+			try {
+				rc = new RdpConnectionOvd(flags);
+			} catch (OvdException ex) {
+				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, ex.getMessage());
+				continue;
+			}
+
+			rc.setServer(server.getAttribute("fqdn"));
+			rc.setCredentials(server.getAttribute("login"), server.getAttribute("password"));
 
 			// Ensure that width is multiple of 4
 			// Prevent artifact on screen with a with resolution
 			// not divisible by 4
-			opt.width = (int)(dim.width & ~3);
-			opt.height = (int)dim.height;
-			opt.set_bpp(24);
-
-			Common common = new Common();
-			OvdAppChannel appChannel = null;
-
-			try {
-				if (this.sessionMode.equalsIgnoreCase("desktop")) {
-					rc = new RdpConnection(opt, common);
-				}
-				else if (this.sessionMode.equalsIgnoreCase("portal")) {
-					rc = new RdpConnection(opt, common, new org.ulteo.rdp.seamless.SeamlessChannel(opt, common));
-					appChannel = new OvdAppChannel(opt, common);
-					rc.addChannel(appChannel);
-				}
-			} catch (RdesktopException e) {
-				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Unable to prepare an RDP connection to "+server.getAttribute("hostname"));
-				return false;
-			}
-			
-			Connection co = new Connection();
-			co.common = common;
-			co.options = opt;
-			co.connection = rc;
-			co.channel = appChannel;
+			rc.setGraphic((dim.width & ~3), dim.height, RdpConnectionOvd.DEFAULT_BPP);
 
 			for (int j = 0; j < appsList.getLength(); j++) {
 				appItem = (Element)appsList.item(j);
@@ -269,7 +249,7 @@ public class SessionManagerCommunication {
 				Application app = null;
 				try {
 					String iconWebservice = "http://"+this.sm+":1111/icon.php?id="+appItem.getAttribute("id");
-					app = new Application(co, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, new URL(iconWebservice));
+					app = new Application(rc, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, new URL(iconWebservice));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 					return false;
@@ -281,12 +261,12 @@ public class SessionManagerCommunication {
 					rc.addApp(app);
 			}
 
-			this.connections.add(co);
+			this.connections.add(rc);
 		}
 		return true;
 	}
 
-	public ArrayList<Connection> getConnections() {
+	public ArrayList<RdpConnectionOvd> getConnections() {
 		return this.connections;
 	}
 }

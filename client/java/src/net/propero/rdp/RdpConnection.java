@@ -32,18 +32,19 @@ import java.util.Observable;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
-import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
+import org.apache.log4j.Logger;
 
 public class RdpConnection extends Observable implements Runnable {
-	private static final String keyMapPath = "ressources/keymaps/";
+	public static final int RDP_PORT = 3389;
+
+	protected String keyMapPath = "/ressources/keymaps/";
 
 	private VChannels channels = null;
-	private ClipChannel clipChannel = null;
-	private SeamlessChannel seamChannel = null;
+	protected SeamlessChannel seamChannel = null;
 	private Rdp5 RdpLayer = null;
 	public Options opt = null;
 	public Common common = null;
@@ -51,37 +52,19 @@ public class RdpConnection extends Observable implements Runnable {
 	private ArrayList<Application> appsList = null;
 	private String state = "disconnected";
 	private String mapFile = null;
+	private Logger logger = Logger.getLogger(RdpConnection.class);
 	
-	public RdpConnection(Options opt_, Common common_) throws RdesktopException {
-		this.init(opt_, common_);
-		
-		this.opt.seamlessEnabled = false;
-		
-	}
-
-	public RdpConnection(Options opt_, Common common_, SeamlessChannel seamChan) throws RdesktopException {
-		this.init(opt_, common_);
-
-		if (seamChan == null) {
-			this.opt.seamlessEnabled = false;
-			return;
-		}
-		this.opt.seamlessEnabled = true;
-		this.seamChannel = seamChan;
-		seamChan.setClip(this.clipChannel);
-		this.channels.register(seamChan);
-	}
-
-	private void init(Options opt_, Common common_) throws RdesktopException {
+	public RdpConnection(Options opt_, Common common_) {
 		this.common = common_;
 		this.opt = opt_;
 
 		this.channels = new VChannels(this.opt);
 		this.appsList = new ArrayList<Application>();
+	}
 
-		this.clipChannel = new ClipChannel(common, opt);
-		this.channels.register(this.clipChannel);
-
+	private void initCanvas() throws RdesktopException {
+		if (this.opt.width <= 0 || this.opt.height <= 0)
+			throw new RdesktopException("Unable to init canvas: The desktop size is negative or nil");
 		this.canvas = new RdesktopCanvas_Localised(this.opt, this.common);
 	}
 	
@@ -123,14 +106,14 @@ public class RdpConnection extends Observable implements Runnable {
 		if (this.mapFile == null)
 			this.detectKeymap();
 
-		istr = RdpConnection.class.getResourceAsStream("/" + RdpConnection.keyMapPath + this.mapFile);
+		istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
 
 		if (istr == null) {
 			this.mapFile = this.mapFile.substring(0, this.mapFile.indexOf('-'));
-			istr = RdpConnection.class.getResourceAsStream("/" + RdpConnection.keyMapPath + this.mapFile);
+			istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
 			if (istr == null) {
 				this.mapFile = "en-gb";
-				istr = RdpConnection.class.getResourceAsStream("/" + RdpConnection.keyMapPath + this.mapFile);
+				istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
 			}
 		}
 
@@ -164,6 +147,12 @@ public class RdpConnection extends Observable implements Runnable {
 		int[] ext_disc_reason = new int[1];
 		
 		logonflags |= Rdp.RDP_LOGON_AUTO;
+		try {
+			this.initCanvas();
+		} catch (RdesktopException ex) {
+			this.logger.fatal(ex.getMessage());
+			return;
+		}
 
 		// Configure a keyboard layout
 		this.loadKeymap();

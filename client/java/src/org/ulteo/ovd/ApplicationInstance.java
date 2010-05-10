@@ -54,7 +54,7 @@ public class ApplicationInstance {
 			System.err.println("You have to set the application token before execute startapp().");
 		}
 
-		this.app.getConnection().channel.sendStartApp((int) this.token, this.app.getId());
+		this.app.getConnection().getOvdAppChannel().sendStartApp((int) this.token, this.app.getId());
 	}
 
 	public void startApp(long token_) throws RdesktopException, IOException, CryptoException {

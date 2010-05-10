@@ -20,22 +20,17 @@
 
 package org.ulteo.ovd.applet;
 
-import net.propero.rdp.RdpConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.applet.Applet;
 import java.awt.BorderLayout;
 import java.util.Observable;
 import java.util.Observer;
 
-
-import net.propero.rdp.Common;
-
-import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopCanvas;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.rdp5.rdpdr.PrinterManager;
-import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
-import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import netscape.javascript.JSObject;
+import org.ulteo.ovd.OvdException;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Desktop extends Applet implements Observer {
 
@@ -46,11 +41,7 @@ public class Desktop extends Applet implements Observer {
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
 	
-	private PrinterManager printerManager = null;
-	
-	private Options rdp_opt = null;
-	private RdpConnection rc = null;
-	private Thread rdp_th = null;
+	private RdpConnectionOvd rc = null;
 	
 	private boolean finished_init = false;
 	private boolean finished_start = false;
@@ -79,19 +70,33 @@ public class Desktop extends Applet implements Observer {
 			return;
 		}
 
-		
-		this.rdp_opt = new Options();
-		this.rdp_opt.hostname = this.server;
-		this.rdp_opt.username = this.username;
-		this.rdp_opt.password = this.password;
+		byte flags = RdpConnectionOvd.MODE_DESKTOP;
+		if(this.multimedia_mode)
+			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+		if (this.map_local_printers)
+			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+		try {
+			this.rc = new RdpConnectionOvd(flags);
+		} catch (OvdException ex) {
+			System.err.println("ERROR: "+ex.getMessage());
+			return;
+		}
+		try {
+			this.rc.initSecondaryChannels();
+		} catch (OvdException ex) {
+			System.err.println("WARNING: "+ex.getMessage());
+		}
+		this.rc.setKeymap(this.keymap);
+
+		this.rc.setServer(this.server);
+		this.rc.setCredentials(this.username, this.password);
 
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
-		// not divisible by 4 
-		this.rdp_opt.width = this.getWidth() & ~3;
-		this.rdp_opt.height = this.getHeight();
-		this.rdp_opt.set_bpp(24);
-		this.rc = null;
+		// not divisible by 4
+		this.rc.setGraphic(this.getWidth() & ~3, this.getHeight(), RdpConnectionOvd.DEFAULT_BPP);
+		
 		this.finished_init = true;
 		
 		BorderLayout layout = new BorderLayout();
@@ -104,37 +109,12 @@ public class Desktop extends Applet implements Observer {
 			return;	
 		System.out.println(this.getClass().toString() +" start");
 
-		try {
-			this.rc = new RdpConnection(this.rdp_opt, new Common());
-		} catch (RdesktopException e) {
-
-			System.out.println(this.getClass().toString()+" Unable to connect to "+this.server);
-		}
-
 		this.rc.addObserver(this);
-		this.rc.setKeymap(this.keymap);
-		
-		if(this.multimedia_mode) {
-			System.out.println("Multimedia channels enabled");
-			SoundChannel sndChannel = new SoundChannel(this.rc.opt, this.rc.common);
-			if (! this.rc.addChannel(sndChannel))
-				System.err.println("Unable to add sound channel, continue anyway");
+		try {
+			this.rc.connect();
+		} catch (OvdException ex) {
+			Logger.getLogger(Desktop.class.getName()).log(Level.SEVERE, null, ex);
 		}
-		
-		if (this.map_local_printers) {
-			this.printerManager.searchAllPrinter();
-			if (this.printerManager.hasPrinter()) {
-				RdpdrChannel rdpdrChannel = new RdpdrChannel(this.rc.opt, this.rc.common);
-				this.printerManager.registerAll(rdpdrChannel);
-				
-				if (! this.rc.addChannel(rdpdrChannel))
-					System.err.println("Unable to ass rdpdr channel, continue anyway");
-			}
-			else
-				System.out.println("Have to map local printers but no printer found ....");
-		}
-		this.rdp_th = new Thread(this.rc);
-		this.rdp_th.start();
 
 		this.finished_start = true;
 
@@ -147,9 +127,14 @@ public class Desktop extends Applet implements Observer {
 			return;
 		this.started_stop = true;
 		System.out.println(this.getClass().toString()+" stop");
-		
-		if (this.rdp_th.isAlive())
-			this.rdp_th.interrupt();
+
+		if (this.rc != null) {
+			try {
+				this.rc.interruptConnection();
+			} catch (OvdException ex) {
+				System.out.println(ex.getMessage());
+			}
+		}
 		
 		this.removeAll();
 	}
@@ -161,9 +146,7 @@ public class Desktop extends Applet implements Observer {
 		this.username = null;
 		this.password = null;
 		
-		this.rdp_opt = null;
 		this.rc = null;
-		this.rdp_th = null;
 		
 		System.gc();
 	}
