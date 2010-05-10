@@ -179,7 +179,6 @@ var Daemon = Class.create({
 		new Ajax.Request(
 			'suspend.php',
 			{
-				asynchronous: false,
 				method: 'get'
 			}
 		);
@@ -193,7 +192,6 @@ var Daemon = Class.create({
 		new Ajax.Request(
 			'logout.php',
 			{
-				asynchronous: false,
 				method: 'get'
 			}
 		);
@@ -228,7 +226,6 @@ var Daemon = Class.create({
 			'session_status.php',
 			{
 				method: 'get',
-				asynchronous: false,
 				parameters: {
 					differentiator: Math.floor(Math.random()*50000)
 				},
