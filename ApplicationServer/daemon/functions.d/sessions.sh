@@ -39,6 +39,12 @@ sessions_get_to_create() {
 #
 session_valid_runasap() {
     local i=0
+    
+    if [ -z "$1" ]; then
+        log_WARN "session_valid_runasap $SESSID: empty session status"
+        return 1
+    fi
+
     for i in 0 1 22 2 3 9 10 11; do
         [ $i -eq $1 ] && return 0
     done
