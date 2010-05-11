@@ -21,7 +21,6 @@
 package org.ulteo.rdp;
 
 import net.propero.rdp.Common;
-import net.propero.rdp.HexDump;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
@@ -41,6 +40,7 @@ public class RdpConnectionOvd extends RdpConnection {
 
 	private byte flags = 0x00;
 	private OvdAppChannel ovdAppChannel = null;
+	private boolean ovdAppChannelInitialized = false;
 	private Thread connectionThread = null;
 
 	/**
@@ -305,5 +305,13 @@ public class RdpConnectionOvd extends RdpConnection {
 
 		if (this.connectionThread.isAlive())
 			this.connectionThread.interrupt();
+	}
+
+	public boolean isOvdAppChannelInitialized() {
+		return this.ovdAppChannelInitialized;
+	}
+
+	public void setOvdAppChannelInitialized(boolean isInitialized) {
+		this.ovdAppChannelInitialized = isInitialized;
 	}
 }
