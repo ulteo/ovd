@@ -432,7 +432,7 @@ public class Secure {
      * @throws IOException
      * @throws CryptoException
      */
-    public void send_to_channel(RdpPacket_Localised sec_data, int flags, int channel) throws RdesktopException, IOException, CryptoException {
+    public synchronized void send_to_channel(RdpPacket_Localised sec_data, int flags, int channel) throws RdesktopException, IOException, CryptoException {
 	int datalength=0;
 	byte[] signature = null;
 	byte[] data;
