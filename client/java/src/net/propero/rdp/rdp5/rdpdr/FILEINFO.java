@@ -25,7 +25,7 @@ public class FILEINFO {
 	NOTIFY notify;
 	int info_class;
 	public File file;
-	Map file_searched = new HashMap();
+	Map<String,String> file_searched = new HashMap<String, String>();
 	
 	public int get_device_id(){
 		return device_id;
@@ -105,6 +105,6 @@ public class FILEINFO {
 	}
 	
 	public void reset_file_searched_map(){
-		this.file_searched = new HashMap();
+		this.file_searched = new HashMap<String,String>();
 	}
 }
