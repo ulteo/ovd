@@ -740,8 +740,8 @@ public class Disk extends RdpdrDevice{
 			raf.seek(offset);
 			n = raf.read(data, 0, length);
 			if(n==-1){
-				n = n;
-				return STATUS_INVALID_PARAMETER;
+				n = 0;
+				return STATUS_SUCCESS;
 			}
 			raf.close();
 		}catch(Exception e){
