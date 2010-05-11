@@ -25,8 +25,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import java.util.Observable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observer;
@@ -34,8 +32,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import net.propero.rdp.Rdesktop;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -48,12 +47,14 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 	private ArrayList<RdpConnectionOvd> connections = null;
 	private String session_mode = "";
 	private Thread sessionThread = null;
+	private Logger logger = null;
 	
 	public Client() {
 		super("Ulteo OVD Standalone Client");
 
 		BasicConfigurator.configure();
-		Rdesktop.logger.setLevel(org.apache.log4j.Level.INFO);
+		this.logger = Logger.getLogger(Client.class.getName());
+		this.logger.setLevel(Level.INFO);
 
 		this.connections = new ArrayList<RdpConnectionOvd>();
 
@@ -144,7 +145,7 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 				this.panel_session = desk;
 			}
 		} catch (Exception ex) {
-			Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			this.logger.error(ex.getMessage());
 		}
 	}
 
