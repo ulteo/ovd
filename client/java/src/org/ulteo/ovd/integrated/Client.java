@@ -24,7 +24,6 @@ import gnu.getopt.Getopt;
 import java.util.Observable;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
-import org.ulteo.rdp.Connection;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
@@ -32,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.propero.rdp.RdpConnection;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Client implements Observer, OvdAppListener{
 	public static final String productName = "Ulteo OVD Integrated Client";
@@ -80,7 +79,7 @@ public class Client implements Observer, OvdAppListener{
 	}
 
 	private SessionManagerCommunication smComm = null;
-	private ArrayList<Connection> connections = null;
+	private ArrayList<RdpConnectionOvd> connections = null;
 	private Spool spool = null;
 	private SystemAbstract sys = null;
 
@@ -108,11 +107,10 @@ public class Client implements Observer, OvdAppListener{
 				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, "This Operating System is not supported");
 			}
 
-			for (Connection co : this.connections) {
-				co.connection.addObserver(this);
-				co.channel.addOvdAppListener(this);
-				co.thread = new Thread(co.connection);
-				co.thread.start();
+			for (RdpConnectionOvd co : this.connections) {
+				co.addObserver(this);
+				co.addOvdAppListener(this);
+				co.connect();
 			}
 
 			Thread fileListener = new Thread(this.spool);
@@ -135,12 +133,11 @@ public class Client implements Observer, OvdAppListener{
 		System.exit(i);
 	}
 
-	private void addAvailableConnection(RdpConnection rc) {
-
+	private void addAvailableConnection(RdpConnectionOvd rc) {
 		this.spool.addConnection(rc);
 	}
 
-	private void removeAvailableConnection(RdpConnection rc) {
+	private void removeAvailableConnection(RdpConnectionOvd rc) {
 		this.spool.removeConnection(rc);
 		for (Application app : rc.getAppsList()) {
 			this.sys.uninstall(app);
@@ -148,7 +145,7 @@ public class Client implements Observer, OvdAppListener{
 	}
 
 	public void update(Observable o, Object o1) {
-		RdpConnection rc = (RdpConnection) o;
+		RdpConnectionOvd rc = (RdpConnectionOvd) o;
 		String state = (String)o1;
 
 		if (state.equals("connecting")) {
@@ -169,13 +166,13 @@ public class Client implements Observer, OvdAppListener{
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
-		for (Connection co : this.connections) {
-			if (co.channel == o) {
-				if (! co.inited) {
-					for (Application app : co.connection.getAppsList()) {
+		for (RdpConnectionOvd co : this.connections) {
+			if (co.getOvdAppChannel() == o) {
+				if (! co.isOvdAppChannelInitialized()) {
+					for (Application app : co.getAppsList()) {
 						this.sys.install(app);
 					}
-					co.inited = true;
+					co.setOvdAppChannelInitialized(true);
 				}
 			}
 		}
