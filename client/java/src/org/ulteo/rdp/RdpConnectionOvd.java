@@ -278,6 +278,17 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 
 	/**
+	 * Unregister an OvdAppListener
+	 * @param listener
+	 * @throws OvdException
+	 */
+	public void removeOvdAppListener(OvdAppListener listener) throws OvdException {
+		if (this.ovdAppChannel == null)
+			throw new OvdException("Could not remove an OvdAppListener: OvdAppChannel does not exist");
+		this.ovdAppChannel.removeOvdAppListener(listener);
+	}
+
+	/**
 	 * Launch a RdpConnection thread
 	 */
 	public void connect() throws OvdException {
