@@ -646,20 +646,24 @@ function show_manage($fqdn) {
     }
   }
 
-  $sessions = Abstract_Session::getByServer($_GET['fqdn']);
+  $total = Abstract_Session::countByServer($_GET['fqdn']);
 
-  if (count($sessions) > 0)
+  if ($total > 0) {
     $has_sessions = true;
-  else
-    $has_sessions = false;
 
-  if ($has_sessions) {
-    $buf = array();
-    foreach ($sessions as $session)
-      $buf[$session->getAttribute('start_time')] = $session;
-    ksort($buf);
-    $sessions = $buf;
-  }
+	if ($total > $prefs->get('general', 'max_items_per_page')) {
+		if (! isset($_GET['start']) || (! is_numeric($_GET['start']) || $_GET['start'] >= $total))
+			$start = 0;
+		else
+			$start = $_GET['start'];
+
+		$pagechanger = get_pagechanger('servers.php?action=manage&fqdn='.$_GET['fqdn'].'&', $prefs->get('general', 'max_items_per_page'), $total);
+
+		$sessions = Abstract_Session::getByServer($_GET['fqdn'], $prefs->get('general', 'max_items_per_page'), $start);
+	} else
+		$sessions = Abstract_Session::getByServer($_GET['fqdn']);
+  } else
+    $has_sessions = false;
 
   if ($server_online) {
     if ($server_lock) {
@@ -973,6 +977,9 @@ function show_manage($fqdn) {
   if ($has_sessions) {
     echo '<div>';
     echo '<h2>'._('Active sessions').'</h2>';
+    echo '<div>';
+    if (isset($pagechanger))
+        echo $pagechanger;
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     foreach($sessions as $session) {
       echo '<form action="sessions.php"><tr>';
@@ -991,6 +998,9 @@ function show_manage($fqdn) {
       echo '</tr></form>';
     }
     echo '</table>';
+    if (isset($pagechanger))
+        echo $pagechanger;
+    echo '</div>';
     echo '</div>';
   }
 
