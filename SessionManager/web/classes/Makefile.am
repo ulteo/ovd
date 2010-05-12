@@ -20,7 +20,6 @@ scripts_DATA = Application.class.php \
                Servers.class.php \
                ServerReportItem.class.php \
                Session.class.php \
-               Sessions.class.php \
                SessionReportItem.class.php \
                Token.class.php \
                Tokens.class.php \

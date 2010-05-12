@@ -239,7 +239,7 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'delete' && isset($_REQ
 	if (! checkAuthorization('manageServers'))
 		redirect();
 
-	$sessions = Sessions::getByServer($_REQUEST['fqdn']);
+	$sessions = Abstract_Session::getByServer($_REQUEST['fqdn']);
 	if (count($sessions) > 0) {
 		popup_error(_('Unable to delete a server when there are active sessions on it!'));
 		redirect();
@@ -646,7 +646,7 @@ function show_manage($fqdn) {
     }
   }
 
-  $sessions = Sessions::getByServer($_GET['fqdn']);
+  $sessions = Abstract_Session::getByServer($_GET['fqdn']);
 
   if (count($sessions) > 0)
     $has_sessions = true;

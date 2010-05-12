@@ -253,4 +253,37 @@ class Abstract_Session {
 		
 		return $SQL->NumRows();
 	}
+
+	public static function getByServer($fqdn_) {
+		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
+
+		$sessions = array();
+		foreach ($sessions_liaisons as $sessions_liaison) {
+			$session = Abstract_Session::load($sessions_liaison->group);
+			if (! $session)
+				continue;
+
+			$sessions[] = $session;
+		}
+
+		return $sessions;
+	}
+
+	public static function getByUser($user_login_) {
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'user_login', $user_login_);
+		$rows = $SQL->FetchAllResults();
+
+		$sessions = array();
+		foreach ($rows as $row) {
+			$session = self::generateFromRow($row);
+			if (! is_object($session))
+				continue;
+
+			$sessions[] = $session;
+		}
+
+		return $sessions;
+	}
 }

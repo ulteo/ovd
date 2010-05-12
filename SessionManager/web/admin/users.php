@@ -272,7 +272,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       $groups_available[]= $group;
 
   // Sessions
-  $sessions = Sessions::getByUser($login);
+  $sessions = Abstract_Session::getByUser($login);
   $has_sessions = count($sessions);
 
 	$can_manage_users = isAuthorized('manageUsers');

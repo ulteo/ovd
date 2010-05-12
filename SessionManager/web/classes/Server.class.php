@@ -229,7 +229,7 @@ class Server {
 			return false;
 		}
 
-		$sessions = Sessions::getByServer($this->fqdn);
+		$sessions = Abstract_Session::getByServer($this->fqdn);
 		foreach ($sessions as $session) {
 			if (! is_object($session))
 				continue;
@@ -423,7 +423,7 @@ class Server {
 	}
 
 	public function getNbUsedSessions() {
-  		$buf = Sessions::getByServer($this->fqdn);
+		$buf = Abstract_Session::getByServer($this->fqdn);
 
 		return count($buf);
 	}
