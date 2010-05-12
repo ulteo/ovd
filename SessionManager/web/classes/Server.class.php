@@ -49,8 +49,6 @@ class Server {
 	}
 
 	public function hasAttribute($attrib_) {
-// 		Logger::debug('main', 'Starting Server::hasAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
-
 		if (! isset($this->$attrib_) || is_null($this->$attrib_))
 			return false;
 
@@ -58,8 +56,6 @@ class Server {
 	}
 
 	public function getAttribute($attrib_) {
-// 		Logger::debug('main', 'Starting Server::getAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
-
 		if (! $this->hasAttribute($attrib_))
 			return false;
 
@@ -67,24 +63,18 @@ class Server {
 	}
 
 	public function setAttribute($attrib_, $value_) {
-// 		Logger::debug('main', 'Starting Server::setAttribute for \''.$this->fqdn.'\' attribute '.$attrib_.' value '.$value_);
-
 		$this->$attrib_ = $value_;
 
 		return true;
 	}
 
 	public function uptodateAttribute($attrib_) {
-// 		Logger::debug('main', 'Starting Server::uptodateAttribute for \''.$this->fqdn.'\' attribute '.$attrib_);
-
 		$buf = Abstract_Server::uptodate($this);
 
 		return $buf;
 	}
 
 	public function getBaseURL($redir_ = false) {
-		Logger::debug('main', 'Starting Server::getBaseURL for \''.$this->fqdn.'\'');
-
 		$name = $redir_ ? $this->external_name : $this->fqdn;
 		return 'http://'.$name.':'.$this->web_port.'/applicationserver';
 	}
@@ -96,8 +86,6 @@ class Server {
 	}
 
 	public function isOK() {
-		Logger::debug('main', 'Starting Server::isOK for \''.$this->fqdn.'\'');
-
 		$buf_type = $this->getType();
 		if (! $buf_type) {
 			Logger::error('main', '"'.$this->fqdn.'": does not send a valid type');
@@ -192,8 +180,6 @@ class Server {
 	}
 
 	public function isOnline() {
-		Logger::debug('main', 'Starting Server::isOnline for \''.$this->fqdn.'\'');
-
 		$warn = false;
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status')) {
@@ -215,8 +201,6 @@ class Server {
 	}
 
 	public function isUnreachable() {
-		Logger::debug('main', 'Starting Server::isUnreachable for \''.$this->fqdn.'\'');
-
 		if ($this->getAttribute('status') == 'broken') {
 			Logger::debug('main', 'Server::isUnreachable server "'.$this->fqdn.':'.$this->web_port.'" is already "broken"');
 			return false;
@@ -240,8 +224,6 @@ class Server {
 	}
 
 	public function isNotReady() {
-		Logger::debug('main', 'Starting Server::isNotReady for \''.$this->fqdn.'\'');
-
 		if ($this->getAttribute('status') == 'ready') {
 			Logger::debug('main', 'Server::isNotReady server "'.$this->fqdn.':'.$this->web_port.'" is "ready"');
 			return false;
@@ -274,8 +256,6 @@ class Server {
 	}
 
 	public function returnedError() {
-		Logger::debug('main', 'Starting Server::returnedError for \''.$this->fqdn.'\'');
-
 		if ($this->getAttribute('status') == 'broken') {
 			Logger::debug('main', 'Server::returnedError server "'.$this->fqdn.':'.$this->web_port.'" is already "broken"');
 			return false;
@@ -354,8 +334,6 @@ class Server {
 	}
 
 	public function stringStatus() {
-// 		Logger::debug('main', 'Starting Server::stringStatus for \''.$this->fqdn.'\'');
-
 		$string = '';
 
 		if ($this->getAttribute('locked'))
@@ -401,8 +379,6 @@ class Server {
 	}
 
 	public function stringType() {
-// 		Logger::debug('main', 'Starting Server::stringType for \''.$this->fqdn.'\'');
-
 		if ($this->hasAttribute('type'))
 			return $this->getAttribute('type');
 
@@ -436,8 +412,6 @@ class Server {
 	}
 
 	public function stringVersion() {
-// 		Logger::debug('main', 'Starting Server::stringVersion for \''.$this->fqdn.'\'');
-
 		if ($this->hasAttribute('version'))
 			return $this->getAttribute('version');
 
@@ -445,22 +419,16 @@ class Server {
 	}
 
 	public function getNbMaxSessions() {
-		Logger::debug('main', 'Starting Server::getNbMaxSessions for \''.$this->fqdn.'\'');
-
 		return $this->getAttribute('max_sessions');
 	}
 
 	public function getNbUsedSessions() {
-		Logger::debug('main', 'Starting Server::getNbUsedSessions for \''.$this->fqdn.'\'');
-
   		$buf = Sessions::getByServer($this->fqdn);
 
 		return count($buf);
 	}
 
 	public function getNbAvailableSessions() {
-		Logger::debug('main', 'Starting Server::getNbAvailableSessions for \''.$this->fqdn.'\'');
-
 		$max_sessions = $this->getNbMaxSessions();
 		$used_sessions = $this->getNbUsedSessions();
 
@@ -532,8 +500,6 @@ class Server {
 	}
 
 	public function getCpuUsage() {
-		Logger::debug('main', 'Starting Server::getCpuUsage for \''.$this->fqdn.'\'');
-
 		$cpu_load = $this->getAttribute('cpu_load');
 		$cpu_nb_cores = $this->getAttribute('cpu_nb_cores');
 
@@ -544,8 +510,6 @@ class Server {
 	}
 
 	public function getRamUsage() {
-		Logger::debug('main', 'Starting Server::getRamUsage for \''.$this->fqdn.'\'');
-
 		$ram_used = $this->getAttribute('ram_used');
 		$ram_total = $this->getAttribute('ram_total');
 
@@ -556,8 +520,6 @@ class Server {
 	}
 
 	public function getSessionUsage() {
-		Logger::debug('main', 'Starting Server::getSessionUsage for \''.$this->fqdn.'\'');
-
 		$max_sessions = $this->getNbMaxSessions();
 		$used_sessions = $this->getNbUsedSessions();
 
@@ -592,8 +554,6 @@ class Server {
 	}
 
 	public function getWebLog($nb_lines_=NULL) {
-		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
-
 		if ($nb_lines_ === NULL)
 			$ret = query_url($this->getWebservicesBaseURL().'/server_log.php?type=web', false);
 		else
@@ -603,8 +563,6 @@ class Server {
 	}
 
 	public function getDaemonLog($nb_lines_=NULL) {
-		Logger::debug('main', 'Starting Server::getLog for server \''.$this->fqdn.'\'');
-
 		if ($this->getAttribute('type') == 'windows') {
 			Logger::error('main', 'Server::getDaemonLog - No daemon log for windows server');
 			return false;
@@ -619,8 +577,6 @@ class Server {
 	}
 
 	public function getWebLogFile() {
-		Logger::debug('main', 'Starting Server::getWebLogFile for server \''.$this->fqdn.'\'');
-
 		$ret = query_url_request($this->getWebservicesBaseURL().'/server_log.php?type=web', false, true);
 		if (is_array($ret)) {
 			return $ret['data'];
@@ -631,8 +587,6 @@ class Server {
 	}
 
 	public function getDaemonLogFile() {
-		Logger::debug('main', 'Starting Server::getDaemonLogFile for server \''.$this->fqdn.'\'');
-
 		if ($this->getAttribute('type') == 'windows') {
 			Logger::error('main', 'Server::getDaemonLogFile - No daemon log for windows server');
 			return false;

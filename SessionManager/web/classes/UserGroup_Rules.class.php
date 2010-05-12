@@ -36,8 +36,6 @@ class UserGroup_Rules {
 	}
 
 	public static function getByUserGroupId($usergroup_id_) {
-		Logger::debug('main', "UserGroup_Rules::getByUserGroupId($usergroup_id_)");
-		
 		$usergroup_rules = Abstract_UserGroup_Rule::loadByUserGroupId($usergroup_id_);
 		return $usergroup_rules;
 	}
