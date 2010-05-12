@@ -202,17 +202,15 @@ class Abstract_Session {
 		$SQL = MySQL::getInstance();
 
 		if (! is_null($offset_))
-			$SQL->DoQuery('SELECT @1 FROM @2 ORDER BY @3 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, 'id', $SQL->prefix.'sessions', 'timestamp');
+			$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, $SQL->prefix.'sessions', 'timestamp');
 		else
-			$SQL->DoQuery('SELECT @1 FROM @2 ORDER BY @3 DESC', 'id', $SQL->prefix.'sessions', 'timestamp');
+			$SQL->DoQuery('SELECT * FROM @1 ORDER BY @2 DESC', $SQL->prefix.'sessions', 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
 		foreach ($rows as $row) {
-			$id = $row['id'];
-
-			$session = Abstract_Session::load($id);
-			if (! $session)
+			$session = self::generateFromRow($row);
+			if (! is_object($session))
 				continue;
 
 			$sessions[] = $session;
