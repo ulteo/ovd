@@ -423,7 +423,7 @@ class Server {
 	}
 
 	public function getNbUsedSessions() {
-		$buf = Abstract_Session::getByServer($this->fqdn);
+		$buf = Abstract_Session::countByServer($this->fqdn);
 
 		return count($buf);
 	}

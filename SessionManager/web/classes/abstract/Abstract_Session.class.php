@@ -254,13 +254,24 @@ class Abstract_Session {
 		return $SQL->NumRows();
 	}
 
+	public static function countByServer($fqdn_) {
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'server', $fqdn_);
+
+		return $SQL->NumRows();
+	}
+
 	public static function getByServer($fqdn_) {
-		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
+		$SQL = MySQL::getInstance();
+
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'server', $fqdn_);
+		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();
-		foreach ($sessions_liaisons as $sessions_liaison) {
-			$session = Abstract_Session::load($sessions_liaison->group);
-			if (! $session)
+		foreach ($rows as $row) {
+			$session = self::generateFromRow($row);
+			if (! is_object($session))
 				continue;
 
 			$sessions[] = $session;
