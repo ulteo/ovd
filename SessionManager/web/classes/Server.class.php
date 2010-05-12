@@ -234,7 +234,7 @@ class Server {
 			if (! is_object($session))
 				continue;
 
-			$session->setStatus(3);
+			$session->setStatus(4);
 
 			Abstract_Session::save($session);
 		}
