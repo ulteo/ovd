@@ -22,6 +22,7 @@ package org.ulteo.rdp;
 
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
+import net.propero.rdp.PstCache;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.rdpdr.PrinterManager;
@@ -246,16 +247,21 @@ public class RdpConnectionOvd extends RdpConnection {
 	 * @param persistentCachingPath
 	 */
 	public void setPersistentCachingPath(String persistentCachingPath) {
-		throw new UnsupportedOperationException();
+		String separator = System.getProperty("file.separator");
+
+		if (persistentCachingPath.lastIndexOf(separator) != persistentCachingPath.length()-1)
+			persistentCachingPath = persistentCachingPath.concat(separator);
+
+		this.opt.persistent_caching_path = persistentCachingPath;
 	}
 
 	/**
 	 * Not implemented yet
-	 * Specify the maximum size of persistent bitmap cache
-	 * @param persistentCachingMaxSize
+	 * Specify the maximum size of persistent bitmap cache in MegaByte
+	 * @param persistentCachingMaxSize (MB)
 	 */
 	public void setPersistentCachingMaxSize(int persistentCachingMaxSize) {
-		throw new UnsupportedOperationException();
+		this.opt.persistent_caching_max_cells = (persistentCachingMaxSize * 1024 * 1024) / PstCache.MAX_CELL_SIZE;
 	}
 
 	/**

@@ -47,7 +47,7 @@ public class PstCache {
         logger.debug("PstCache.touchBitmap");
     FileOutputStream fd;
 
-    if (!IS_PERSISTENT(cache_id) || cache_idx >= Rdp.BMPCACHE2_NUM_PSTCELLS)
+    if (!IS_PERSISTENT(cache_id) || cache_idx >= this.opt.persistent_caching_max_cells)
         return;
 
     try {
@@ -83,7 +83,7 @@ public class PstCache {
     if (!this.opt.persistent_bitmap_caching)
         return false;
 
-    if (!IS_PERSISTENT(cache_id) || cache_idx >= Rdp.BMPCACHE2_NUM_PSTCELLS)
+    if (!IS_PERSISTENT(cache_id) || cache_idx >= this.opt.persistent_caching_max_cells)
         return false;
 
         fd = new RandomAccessFile(g_pstcache_fd[cache_id], "r");
@@ -113,7 +113,7 @@ public class PstCache {
     RandomAccessFile fd;
     CELLHEADER cellhdr = new CELLHEADER();
 
-    if (!IS_PERSISTENT(cache_id) || cache_idx >= Rdp.BMPCACHE2_NUM_PSTCELLS)
+    if (!IS_PERSISTENT(cache_id) || cache_idx >= this.opt.persistent_caching_max_cells)
         return false;
 
     for(int i = 0; i < bitmap_id.length; i++)
@@ -156,7 +156,7 @@ public class PstCache {
     logger.debug("pstcache enumeration... ");
     fd = new RandomAccessFile(g_pstcache_fd[cache_id], "r");
 
-    for (idx = 0; idx < Rdp.BMPCACHE2_NUM_PSTCELLS; idx++)
+    for (idx = 0; idx < this.opt.persistent_caching_max_cells; idx++)
     {
         fd.seek(idx * (g_pstcache_Bpp * MAX_CELL_SIZE + CELLHEADER.SIZE));
         
@@ -213,10 +213,10 @@ public class PstCache {
         return false;
 
     g_pstcache_Bpp = this.opt.Bpp;
-    filename = "./cache/pstcache_" + cache_id + "_" + g_pstcache_Bpp;
+    filename = this.opt.persistent_caching_path + "pstcache_" + cache_id + "_" + g_pstcache_Bpp;
     logger.debug("persistent bitmap cache file: " + filename);
     
-    File cacheDir = new File("./cache/");
+    File cacheDir = new File(this.opt.persistent_caching_path);
     if(!cacheDir.exists() && !cacheDir.mkdir()){
         logger.warn("failed to get/make cache directory");
         return false;

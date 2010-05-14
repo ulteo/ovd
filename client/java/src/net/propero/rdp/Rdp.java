@@ -1182,7 +1182,7 @@ public class Rdp {
 
         if (this.opt.persistent_bitmap_caching && this.common.persistent_cache.pstcache_init(2)) {
             logger.info("Persistent cache initialized");
-            data.setLittleEndian32(BMPCACHE2_NUM_PSTCELLS
+            data.setLittleEndian32(this.opt.persistent_caching_max_cells
                     | BMPCACHE2_FLAG_PERSIST);
         } else {
             logger.info("Persistent cache not initialized");
@@ -1255,7 +1255,7 @@ public class Rdp {
     /* Send persistent bitmap cache enumeration PDU's */
     private void enum_bmpcache2() {
 	RdpPacket_Localised s;
-	byte[][] keylist = new byte[Rdp.BMPCACHE2_NUM_PSTCELLS][8];
+	byte[][] keylist = new byte[this.opt.persistent_caching_max_cells][8];
 	int num_keys, offset, count, flags;
 
 	offset = 0;
