@@ -239,6 +239,12 @@ public class RdpConnectionOvd extends RdpConnection {
 		if (persistentCaching && (! this.opt.bitmap_caching))
 			this.setVolatileCaching(true);
 		this.opt.persistent_bitmap_caching = persistentCaching;
+		this.setPersistentCachingMaxSize(100);
+		String separator = System.getProperty("file.separator");
+		String cacheDir = System.getProperty("user.home")+separator+
+			((System.getProperty("os.name").startsWith("Windows")) ? "Application Data"+separator : ".")+
+			"ulteo"+separator+"ovd"+separator+"cache"+separator;
+		this.setPersistentCachingPath(cacheDir);
 	}
 
 	/**
