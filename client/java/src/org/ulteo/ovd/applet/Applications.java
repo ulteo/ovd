@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+import net.propero.rdp.RdpConnection;
+import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
 
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -81,7 +83,7 @@ class OrderApplication extends Order {
 	}
 }
 
-public class Applications extends Applet implements Runnable, Observer, OvdAppListener {
+public class Applications extends Applet implements Runnable, RdpListener, OvdAppListener {
 	public String keymap = null;
 	private boolean multimedia_mode = false;
 	private boolean map_local_printers = false;
@@ -203,53 +205,7 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 	
 	public synchronized void pushOrder(Order o) {
 		this.spoolOrder.add(o);
-	}	
-	
-	// Begin implements Observer
-	public void update(Observable obj, Object state) {
-		Integer server_id = null;
-		
-		for (Integer i: this.connections.keySet()) {
-			if (this.connections.get(i) == obj) {
-				server_id = i;
-				break;
-			}
-		}
-		
-		if (server_id == null) {
-			System.err.println("Observable event not for us");
-			return;
-		}
-		RdpConnectionOvd co = this.connections.get(server_id);
-		
-		/* Connecting */
-		if (state.equals("connecting"))
-			System.out.println("Connecting to "+co.opt.hostname);
-		
-		/* Connected */
-		else if (state.equals("connected")) {
-			System.out.println("Connected to "+co.opt.hostname);
-			
-			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_CONNECTED);
-		}
-		
-		/* Disconnected */
-		else if (state.equals("disconnected")) {
-			System.out.println("Disconneted from "+co.opt.hostname);
-			
-			this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
-		}
-		
-		/* Connection failed */
-		else if (state.equals("failed"))
-			System.out.println("Connection failed: removing rdpConnection to "+co.opt.hostname);
-		
-		/* Undefined status */
-		else
-			System.out.println("Undefined state : "+state);
 	}
-	// End implements Observer
-
 	
 	// Begin implements Runnable
 	public void run() {
@@ -303,7 +259,7 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
 				rc.setKeymap(keymap);
 
-				rc.addObserver(this);
+				rc.addRdpListener(this);
 				try {
 					rc.addOvdAppListener(this);
 				} catch (OvdException ex) {
@@ -414,4 +370,42 @@ public class Applications extends Applet implements Runnable, Observer, OvdAppLi
 		this.forwardJS(JS_API_F_INSTANCE, new Integer(instance), JS_API_O_INSTANCE_STOPPED);	
 	}
 	// End implements OvdAppListener
+
+	@Override
+	public void connected(RdpConnection co) {
+		System.out.println("Connected to "+co.opt.hostname);
+		
+		Integer server_id = null;
+		for (Integer i: this.connections.keySet()) {
+			if (this.connections.get(i) == co) {
+				server_id = i;
+				break;
+			}
+		}
+		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_CONNECTED);
+	}
+
+	@Override
+	public void connecting(RdpConnection co) {
+		System.out.println("Connecting to "+co.opt.hostname);
+	}
+
+	@Override
+	public void disconnected(RdpConnection co) {
+		System.out.println("Disconneted from "+co.opt.hostname);
+		
+		Integer server_id = null;
+		for (Integer i: this.connections.keySet()) {
+			if (this.connections.get(i) == co) {
+				server_id = i;
+				break;
+			}
+		}
+		this.forwardJS(JS_API_F_SERVER, server_id, JS_API_O_SERVER_DISCONNECTED);
+	}
+
+	@Override
+	public void failed(RdpConnection co) {
+		System.out.println("Connection failed: removing rdpConnection to "+co.opt.hostname);
+	}
 }

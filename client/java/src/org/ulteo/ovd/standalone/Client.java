@@ -32,13 +32,17 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import net.propero.rdp.RdpConnection;
+import net.propero.rdp.RdpListener;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class Client extends JFrame implements WindowListener, WindowStateListener, Runnable, Observer {
+public class Client extends JFrame implements WindowListener, WindowStateListener, Runnable, RdpListener {
 	private AuthenticationPanel panel_auth = null;
 	private LoadingPanel panel_load = null;
 	private JPanel panel_session = null;
@@ -137,7 +141,7 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 				if (this.connections.size() < 1)
 					return;
 				RdpConnectionOvd co = this.connections.get(0);
-				co.addObserver(this);
+				co.addRdpListener(this);
 
 				Desktop desk = new Desktop(this, co);
 				co.connect();
@@ -207,19 +211,23 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 		}
 	}
 
-	public void update(Observable o, Object o1) {
-		RdpConnectionOvd rc = (RdpConnectionOvd) o;
-		String status = (String) o1;
-
-		if (status.equalsIgnoreCase("connected")) {
-			if (this.session_mode.equalsIgnoreCase("desktop")) {
-				this.switch2Session();
-			}
-		}
-		else if (status.equalsIgnoreCase("disconnected")) {
-			if (this.session_mode.equalsIgnoreCase("desktop")) {
-				this.exit();
-			}
+	@Override
+	public void connected(RdpConnection co) {
+		if (this.session_mode.equalsIgnoreCase("desktop")) {
+			this.switch2Session();
 		}
 	}
+
+	@Override
+	public void connecting(RdpConnection co) {}
+
+	@Override
+	public void disconnected(RdpConnection co) {
+		if (this.session_mode.equalsIgnoreCase("desktop")) {
+			this.exit();
+		}
+	}
+
+	@Override
+	public void failed(RdpConnection co) {}
 }

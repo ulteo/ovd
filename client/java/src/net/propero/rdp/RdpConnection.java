@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -28,7 +29,6 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Observable;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
@@ -38,7 +38,7 @@ import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 import org.apache.log4j.Logger;
 
-public class RdpConnection extends Observable implements Runnable {
+public class RdpConnection implements Runnable{
 	public static final int RDP_PORT = 3389;
 
 	protected String keyMapPath = "/ressources/keymaps/";
@@ -52,6 +52,7 @@ public class RdpConnection extends Observable implements Runnable {
 	private ArrayList<Application> appsList = null;
 	private String state = "disconnected";
 	private String mapFile = null;
+	private ArrayList<RdpListener> listener = new ArrayList<RdpListener>();
 	private Logger logger = Logger.getLogger(RdpConnection.class);
 	
 	public RdpConnection(Options opt_, Common common_) {
@@ -249,10 +250,12 @@ public class RdpConnection extends Observable implements Runnable {
 	}
 	
 	public void disconnect() {
-		Rdesktop.exit(0, this.RdpLayer, null, true);
+		this.RdpLayer.disconnect();
+		this.exit(0);
 	}
 	
 	private void exit(int n) {
+		this.RdpLayer = null;
 		if (this.common.rdp != null && this.common.rdp.isConnected()) {
 			this.common.rdp.disconnect();
 			this.common.rdp = null;
@@ -266,33 +269,75 @@ public class RdpConnection extends Observable implements Runnable {
 			this.setFailed();
 	}
 	
+	public void addRdpListener(RdpListener l) {
+		this.listener.add(l);
+	}
+	
+	public void removeRdpListener(RdpListener l) {
+		this.listener.remove(l);
+	}
+	
+	protected void fireConnected() {
+		for(RdpListener list : listener) {
+			list.connected(this);
+		}
+	}
+	
+	protected void fireConnecting() {
+		for(RdpListener list : listener) {
+			list.connecting(this);
+		}
+	}
+	
+	protected void fireFailed() {
+		for(RdpListener list : listener) {
+			list.failed(this);
+		}
+	}
+	
+	protected void fireDisconnected() {
+		for(RdpListener list : listener) {
+			list.disconnected(this);
+		}
+	}
+	
 	private void setState(String state_) {
 		this.state = state_;
-		setChanged();
-		notifyObservers(state_);
 	}
 	
 	private void setConnecting() {
-		if (!this.state.equals("connecting"))
+		if (!this.state.equals("connecting")) {
 			this.setState("connecting");
+			fireConnecting();
+		}
 	}
 	
 	private void setFailed() {
-		if (!this.state.equals("failed"))
+		if (!this.state.equals("failed")) {
 			this.setState("failed");
+			fireFailed();
+		}
 	}
 	
 	public void setConnected() {
-		if (!this.state.equals("connected"))
+		if (!this.state.equals("connected")) {
 			this.setState("connected");
+			fireConnected();
+		}
 	}
 	
 	private void setDisconnected() {
-		if (!this.state.equals("disconnected"))
+		if (!this.state.equals("disconnected")) {
 			this.setState("disconnected");
+			fireDisconnected();
+		}
 	}
 	
 	public String getState() {
 		return this.state;
+	}
+	
+	public boolean isConnected() {
+		return this.state.equals("connected");
 	}
 }

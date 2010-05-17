@@ -28,11 +28,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 import net.propero.rdp.RdesktopCanvas;
+import net.propero.rdp.RdpConnection;
+import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class Desktop extends Applet implements Observer {
+public class Desktop extends Applet implements RdpListener {
 
 	private String server = null;
 	private String username = null;
@@ -109,7 +111,7 @@ public class Desktop extends Applet implements Observer {
 			return;	
 		System.out.println(this.getClass().toString() +" start");
 
-		this.rc.addObserver(this);
+		this.rc.addRdpListener(this);
 		try {
 			this.rc.connect();
 		} catch (OvdException ex) {
@@ -206,40 +208,6 @@ public class Desktop extends Applet implements Observer {
 		return true;
     }
 	
-	
-	public void update(Observable obj, Object state) {
-		if (obj != this.rc) {
-			System.err.println("Observable event not for us");
-			return;
-		}
-		
-		/* Connecting */
-		if (state.equals("connecting"))
-			System.out.println("Connecting to "+this.rc.opt.hostname);
-		
-		/* Connected */
-		else if (state.equals("connected")) {
-			System.out.println("Connected to "+this.rc.opt.hostname);
-			this.switch2session();
-			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_CONNECTED);
-		}
-		
-		/* Disconnected */
-		else if (state.equals("disconnected")) {
-			System.out.println("Disconneted from "+this.rc.opt.hostname);
-			this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_DISCONNECTED);
-			this.stop();
-		}
-		
-		/* Connection failed */
-		else if (state.equals("failed"))
-			System.out.println("Connection failed: removing rdpConnection to "+this.rc.opt.hostname);
-		
-		/* Undefined status */
-		else
-			System.out.println("Undefined state : "+state);
-	}
-	
 	private void switch2session() {
 		this.removeAll();
 		RdesktopCanvas canvas = this.rc.getCanvas();
@@ -268,5 +236,29 @@ public class Desktop extends Applet implements Observer {
 			
 			System.err.println(this.getClass()+" error while execute '"+buffer+"' =>"+e.getMessage());
 		}
+	}
+
+	@Override
+	public void connected(RdpConnection co) {
+		System.out.println("Connected to "+this.rc.opt.hostname);
+		this.switch2session();
+		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_CONNECTED);
+	}
+
+	@Override
+	public void connecting(RdpConnection co) {
+		System.out.println("Connecting to "+this.rc.opt.hostname);
+	}
+
+	@Override
+	public void disconnected(RdpConnection co) {
+		System.out.println("Disconneted from "+this.rc.opt.hostname);
+		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_DISCONNECTED);
+		this.stop();
+	}
+
+	@Override
+	public void failed(RdpConnection co) {
+		System.out.println("Connection failed: removing rdpConnection to "+this.rc.opt.hostname);
 	}
 }

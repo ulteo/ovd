@@ -21,19 +21,21 @@
 package org.ulteo.ovd.integrated;
 
 import gnu.getopt.Getopt;
-import java.util.Observable;
+
+import net.propero.rdp.RdpConnection;
+import net.propero.rdp.RdpListener;
+
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
 import java.util.ArrayList;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class Client implements Observer, OvdAppListener{
+public class Client implements RdpListener, OvdAppListener{
 	public static final String productName = "Ulteo OVD Integrated Client";
 
 	public static void usage() {
@@ -108,7 +110,7 @@ public class Client implements Observer, OvdAppListener{
 			}
 
 			for (RdpConnectionOvd co : this.connections) {
-				co.addObserver(this);
+				co.addRdpListener(this);
 				co.addOvdAppListener(this);
 				co.connect();
 			}
@@ -133,34 +135,14 @@ public class Client implements Observer, OvdAppListener{
 		System.exit(i);
 	}
 
-	private void addAvailableConnection(RdpConnectionOvd rc) {
+	private void addAvailableConnection(RdpConnection rc) {
 		this.spool.addConnection(rc);
 	}
 
-	private void removeAvailableConnection(RdpConnectionOvd rc) {
+	private void removeAvailableConnection(RdpConnection rc) {
 		this.spool.removeConnection(rc);
 		for (Application app : rc.getAppsList()) {
 			this.sys.uninstall(app);
-		}
-	}
-
-	public void update(Observable o, Object o1) {
-		RdpConnectionOvd rc = (RdpConnectionOvd) o;
-		String state = (String)o1;
-
-		if (state.equals("connecting")) {
-			Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+rc.opt.hostname);
-		}
-		else if (state.equals("failed")) {
-			Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+rc.opt.hostname+" failed");
-		}
-		else if (state.equals("connected")) {
-			Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+rc.opt.hostname);
-			this.addAvailableConnection(rc);
-		}
-		else if (state.equals("disconnected")) {
-			Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+rc.opt.hostname);
-			this.removeAvailableConnection(rc);
 		}
 	}
 
@@ -191,5 +173,27 @@ public class Client implements Observer, OvdAppListener{
 	@Override
 	public void ovdInstanceStopped(int instance) {
 		
+	}
+
+	@Override
+	public void connected(RdpConnection co) {
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+co.opt.hostname);
+		this.addAvailableConnection(co);
+	}
+
+	@Override
+	public void connecting(RdpConnection co) {
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.opt.hostname);
+	}
+
+	@Override
+	public void disconnected(RdpConnection co) {
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.opt.hostname);
+		this.removeAvailableConnection(co);
+	}
+
+	@Override
+	public void failed(RdpConnection co) {
+		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.opt.hostname+" failed");
 	}
 }
