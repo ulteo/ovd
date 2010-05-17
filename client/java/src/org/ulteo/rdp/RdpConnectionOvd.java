@@ -20,6 +20,7 @@
 
 package org.ulteo.rdp;
 
+import java.io.File;
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.PstCache;
@@ -33,6 +34,7 @@ import org.ulteo.rdp.seamless.SeamlessChannel;
 
 public class RdpConnectionOvd extends RdpConnection {
 	public static final int DEFAULT_BPP = 24;
+	public static final int DEFAULT_PERSISTENT_CACHE_SIZE = 100;
 
 	public static final byte MODE_DESKTOP = 0x01;
 	public static final byte MODE_APPLICATION = 0x02;
@@ -239,7 +241,12 @@ public class RdpConnectionOvd extends RdpConnection {
 		if (persistentCaching && (! this.opt.bitmap_caching))
 			this.setVolatileCaching(true);
 		this.opt.persistent_bitmap_caching = persistentCaching;
-		this.setPersistentCachingMaxSize(100);
+
+		if (! persistentCaching)
+			return;
+
+		this.setPersistentCachingMaxSize(DEFAULT_PERSISTENT_CACHE_SIZE);
+
 		String separator = System.getProperty("file.separator");
 		String cacheDir = System.getProperty("user.home")+separator+
 			((System.getProperty("os.name").startsWith("Windows")) ? "Application Data"+separator : ".")+
@@ -267,6 +274,13 @@ public class RdpConnectionOvd extends RdpConnection {
 	 * @param persistentCachingMaxSize (MB)
 	 */
 	public void setPersistentCachingMaxSize(int persistentCachingMaxSize) {
+		if(! System.getProperty("os.name").startsWith("Mac OS X")) {
+			int maxSize = (int) ((new File(System.getProperty("user.home")).getFreeSpace()) / 1024 /1024); // convert bytes to megabytes
+			if (maxSize > (persistentCachingMaxSize * 1.25))
+				maxSize = persistentCachingMaxSize;
+			else
+				persistentCachingMaxSize = (int) (maxSize * 0.8);
+		}
 		this.opt.persistent_caching_max_cells = (persistentCachingMaxSize * 1024 * 1024) / PstCache.MAX_CELL_SIZE;
 	}
 
