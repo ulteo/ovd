@@ -241,6 +241,8 @@ var ApplicationsPanel = Class.create({
 	applications: null,
 
 	initialize: function(node_) {
+		node_.innerHTML = '';
+
 		var table = new Element('table');
 		var tbody = new Element('tbody');
 		table.appendChild(tbody);
