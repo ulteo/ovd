@@ -39,16 +39,14 @@ import servicemanager
 import sys
 import threading
 import time
+import win32api
 import win32service
 import win32serviceutil
 import win32com.client
 from string import atoi
 import utils
 import mime
-from ctypes import *
-from ctypes.wintypes import DWORD
-SIZE_T = c_ulong
-	
+
 def is_conf_valid(conf):
 	dirname = os.path.dirname(conf["log_file"])
 	if len(dirname)>0 and not os.path.isdir(dirname):
@@ -123,33 +121,27 @@ def load_shell_config_file(conf):
 	
 	return conf
 
-class _MEMORYSTATUS(Structure):
-	_fields_ = [("dwLength", DWORD),
-				("dwMemoryLength", DWORD),
-				("dwTotalPhys", SIZE_T),
-				("dwAvailPhys", SIZE_T),
-				("dwTotalPageFile", SIZE_T),
-				("dwAvailPageFile", SIZE_T),
-				("dwTotalVirtual", SIZE_T),
-				("dwAvailVirtualPhys", SIZE_T)]
-	def show(self):
-		for field_name, field_type in self._fields_:
-			print field_name, getattr(self, field_name)
-	
-	def TotalPhys(self):
-		for field_name, field_type in self._fields_:
-			if 'dwTotalPhys' == field_name:
-				return int(getattr(self, field_name))/1024
+
+class MemoryStatus:
+	@staticmethod
+	def TotalPhys():
+		infos = win32api.GlobalMemoryStatusEx()
+		try:
+			return infos["TotalPhys"]/1024
+		except Exception, e:
+			pass
+		
 		return 0
 	
-	def AvailPhys(self):
-		for field_name, field_type in self._fields_:
-			if 'dwAvailPhys' == field_name:
-				return int(getattr(self, field_name))/1024
+	@staticmethod
+	def UsedPhys():
+		infos = win32api.GlobalMemoryStatusEx()
+		try:
+			return (infos["TotalPhys"] - infos["AvailPhys"])/1024
+		except Exception, e:
+			pass
+		
 		return 0
-	
-	def UsedPhys(self):
-		return self.TotalPhys() - self.AvailPhys()
 
 class OVD(win32serviceutil.ServiceFramework):
 	_svc_name_ = "OVD"
@@ -382,15 +374,11 @@ class OVD(win32serviceutil.ServiceFramework):
 		text = doc.createTextNode(self.monitoring_cpu_name)
 		cpu.appendChild(text)
 		cpu.setAttribute('load', str(self.monitoring_cpu_load))
-		
 		monitoring.appendChild(cpu)
 		
-		memstatus = _MEMORYSTATUS()
-		windll.kernel32.GlobalMemoryStatus(byref(memstatus))
-		
 		ram = doc.createElement('ram')
-		ram.setAttribute('total', str(memstatus.TotalPhys()))
-		ram.setAttribute('used', str(memstatus.UsedPhys()))
+		ram.setAttribute('total', str(MemoryStatus.TotalPhys()))
+		ram.setAttribute('used', str(MemoryStatus.UsedPhys()))
 		monitoring.appendChild(ram)
 		
 		return doc
