@@ -36,3 +36,6 @@
 * ulteo-09_seamless_wait_ready.patch:
   * add a .hello file when the seamless channel is initialized
   * when START_APP, if the seamless channel is not ready and there is WAIT_LAUNCHING env var defined, test every second untill WAIT_LAUNCHING to start the application (while seamless channel not ready)
+
+* ulteo-10_bugfix_maximized_windows.patch:
+  * BugFix: Flush orders for windows which didn't be maximized after a maximize order

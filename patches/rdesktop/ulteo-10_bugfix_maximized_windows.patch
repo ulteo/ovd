@@ -1,0 +1,36 @@
+=== modified file 'xwin.c'
+--- a/xwin.c	2010-05-12 13:20:36 +0000
++++ b/xwin.c	2010-05-12 14:51:42 +0000
+@@ -4252,8 +4252,12 @@
+ 	{
+ 		case SEAMLESSRDP_NORMAL:
+ 		case SEAMLESSRDP_MAXIMIZED:
++			XUnmapWindow(g_display, sw->wnd);
++			XFlush(g_display);
++			XMapWindow(g_display, sw->wnd);
++			XFlush(g_display);
+ 			ewmh_change_state(sw->wnd, state);
+-			XMapWindow(g_display, sw->wnd);
++			XFlush(g_display);
+ 			break;
+ 		case SEAMLESSRDP_MINIMIZED:
+ 			/* EWMH says: "if an Application asks to toggle _NET_WM_STATE_HIDDEN
+
+=== modified file 'xwindow.c'
+--- a/xwindow.c	2010-05-12 14:09:23 +0000
++++ b/xwindow.c	2010-05-12 14:49:48 +0000
+@@ -228,8 +228,12 @@
+ 	{
+ 		case SEAMLESSRDP_NORMAL:
+ 		case SEAMLESSRDP_MAXIMIZED:
++			XUnmapWindow(sw->sa->dis->display, sw->wnd);
++			XFlush(sw->sa->dis->display);
++			XMapWindow(sw->sa->dis->display, sw->wnd);	
++			XFlush(sw->sa->dis->display);
+ 			xdisplay_ewmh_change_state(sw->sa->dis, sw->wnd, state);
+-			XMapWindow(sw->sa->dis->display, sw->wnd);
++			XFlush(sw->sa->dis->display);
+ 			break;
+ 		case SEAMLESSRDP_MINIMIZED:
+ 			/* EWMH says: "if an Application asks to toggle _NET_WM_STATE_HIDDEN
+
