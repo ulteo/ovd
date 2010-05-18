@@ -123,7 +123,7 @@ if (isset($_SESSION['ovd_session']['parameters']['client']) && $_SESSION['ovd_se
 					</td>
 					<td style="width: 20px"></td>
 					<td style="text-align: left; vertical-align: middle">
-						<img src="../media/image/rotate.gif" width="32" height="32" alt="" title="" />
+						<img style="margin-left: 10px;" src="../media/image/rotate.gif" width="32" height="32" alt="" title="" />
 					</td>
 				</tr>
 			</table>
