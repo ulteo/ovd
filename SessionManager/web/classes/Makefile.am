@@ -6,6 +6,7 @@ scripts_DATA = Application.class.php \
                Application_weblink.class.php \
                AppsGroup.class.php \
                ConfigElement.class.php \
+               FileTailer.class.php \
                Invite.class.php \
                Invites.class.php \
                LDAP.class.php \
