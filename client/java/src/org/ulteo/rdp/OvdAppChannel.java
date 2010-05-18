@@ -102,7 +102,7 @@ public class OvdAppChannel extends VChannel {
 				break;
 			
 			default:
-				System.err.println("ovdapp channel unknown oreder "+order);	
+				System.err.println("ovdapp channel unknown order "+order);	
 		}
 	}
 	

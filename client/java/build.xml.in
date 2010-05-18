@@ -102,7 +102,73 @@
         </copy>
     </target>
 
+    <!-- Ovd client part -->
      
+     <target name="ovdClient" depends="clean,precompile">
+       <javac srcdir="./src;./src1.4"
+                destdir="classes"
+                encoding="UTF8"
+                target="1.5"
+                source="1.5"
+                classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;"
+                includes="org/ulteo/ovd/client/StartConnection.java"/>
+
+
+       <copy todir="classes/">
+         <fileset dir="ressources">
+           <include name="*" />
+	 </fileset>
+       </copy>
+
+       <copy todir="classes/gnu">
+	 <fileset dir="external_jars/gnu-getopt/gnu">
+	   <include name="**/**"/>
+	   </fileset>
+	 </copy>
+
+       <copy todir="classes/org">
+	 <fileset dir="external_jars/swingx/org">
+	   <include name="**/**"/>
+	 </fileset>
+       </copy>
+       
+       <copy todir="classes/org">
+	 <fileset dir="external_jars/log4j-1.2/org">
+	   <include name="**/**"/>
+	 </fileset>
+       </copy>
+       
+       <copy todir="classes/pics">
+	 <fileset dir="icons">
+	   <include name="*"/>
+	 </fileset>
+       </copy>
+
+
+       <jar destfile="libs/UlteoOVDClient.jar" basedir="classes/">
+         <include name="**"/>
+	 
+         <manifest>
+           <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+           <attribute name="Class-Path" value="libs/log4j-1.2 libs/gnu-getopt libs/swingx registry.jar jshortcut.jar image4j.jar"/>
+         </manifest>
+       </jar>
+     </target>
+
+     <target name="ovdClient.install" depends="ovdClient">
+       <mkdir dir="OvdClient"/>
+
+       <copy todir="OvdClient">
+         <fileset dir="./libs">
+           <include name="UlteoOVDClient.jar" />
+         </fileset>
+         <fileset dir="./required_libraries">
+           <include name="registry.jar" />
+	   <include name="jshortcut.jar"/>
+	   <include name="image4j.jar"/>
+         </fileset>
+       </copy>
+     </target>     
 
      <!-- Standalone client part -->
 

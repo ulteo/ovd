@@ -20,8 +20,10 @@
 
 package org.ulteo.ovd.sm;
 
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 //import java.io.BufferedReader;
 //import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -36,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.ulteo.ovd.Application;
@@ -58,7 +62,7 @@ public class SessionManagerCommunication {
 	private String sessionId = null;
 	private String base_url;
 
-	public SessionManagerCommunication(String sm_) throws Exception {
+	public SessionManagerCommunication(String sm_) {
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.sm = sm_;
 		this.base_url = "http://"+this.sm+"/sessionmanager/";
@@ -155,10 +159,10 @@ public class SessionManagerCommunication {
 		/* END DEBUG */
 
 		Document document = null;
-
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Rectangle dim = null;
 		dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.INFO, "ScreenSize: "+dim);
+		Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.INFO, "ScreenSize: "+screenSize);
 
 		try {
 			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
@@ -178,6 +182,7 @@ public class SessionManagerCommunication {
 		if (ns.getLength() == 1) {
 			ovd_node = (Element)ns.item(0);
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "("+ovd_node.getAttribute("id")+") "+ovd_node.getAttribute("message"));
+			JOptionPane.showMessageDialog(null, ovd_node.getAttribute("message"), "Warning", JOptionPane.WARNING_MESSAGE);
 			return false;
 		}
 
@@ -231,7 +236,7 @@ public class SessionManagerCommunication {
 			// Ensure that width is multiple of 4
 			// Prevent artifact on screen with a with resolution
 			// not divisible by 4
-			rc.setGraphic((dim.width & ~3), dim.height, RdpConnectionOvd.DEFAULT_BPP);
+			rc.setGraphic(((int)screenSize.width & ~3), (int)screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
 
 			for (int j = 0; j < appsList.getLength(); j++) {
 				appItem = (Element)appsList.item(j);

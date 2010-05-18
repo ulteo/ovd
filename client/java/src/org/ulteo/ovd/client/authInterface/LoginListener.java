@@ -1,0 +1,145 @@
+/*
+ * Copyright (C) 2010 Ulteo SAS
+ * http://www.ulteo.com
+ * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ *
+ * This program is free software; you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; version 2
+ * of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
+
+package org.ulteo.ovd.client.authInterface;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.PrintWriter;
+
+import javax.swing.JOptionPane;
+
+import org.ulteo.ovd.client.Client;
+import org.ulteo.ovd.client.I18n;
+
+public class LoginListener implements ActionListener{
+
+	private ButtonPanel bp = null;
+	private AuthFrame frame = null;
+	private Client cli = null;
+	private File connectionInfo = null;
+	private String username = null;
+	private String host = null;
+	private String pass = null;
+	private String list = "";
+	private int mode = 0;
+	private int resolution = 0;
+	public LoadingFrame loader = null;
+
+	public LoginListener(ButtonPanel bp, AuthFrame frame) {
+		this.bp=bp;
+		this.frame=frame;
+		connectionInfo = new File("./usersInfo.ovd");
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		char[] password = null;
+
+		username = bp.getLoginPan().getUsername().getText();
+		password = bp.getPasswordPan().getPwd().getPassword();
+		host = bp.getHostPan().getHostname().getText();
+		mode = bp.getOpt().getComboMode().getSelectedIndex();
+		resolution = bp.getOpt().getScreenSizeSelecter().getValue();
+
+		try{
+			FileInputStream fis = new FileInputStream(connectionInfo);
+			LineNumberReader l = new LineNumberReader(       
+					new BufferedReader(new InputStreamReader(fis)));
+			int count=0;
+			while (l.readLine()!=null)
+			{
+				count = l.getLineNumber();
+			}
+			InputStreamReader reader = new InputStreamReader(new  FileInputStream(connectionInfo));
+			LineNumberReader lineReader = new LineNumberReader(reader);
+			for(int i=0;i<count;i++) {
+				if(i != count-1) {
+					list+=lineReader.readLine()+'\n';
+				}
+				else {
+					list+=lineReader.readLine();
+				}
+			}
+		}
+		catch(IOException ie) {
+			// If the file does not exist it will be created automatically
+			System.out.println("auto complete created with success");
+		}
+
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(connectionInfo);
+		}catch (FileNotFoundException fe) {}
+
+		pass="";
+		for (char each : password){
+			pass = pass+each;
+		}
+
+		if (host.equals("") || username.equals("") || pass.equals("")) {
+			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+		}
+		else {
+			getInfo(writer, list, username, host);
+			changeFrame(frame);
+		}
+	}
+
+	public void changeFrame(AuthFrame frame) {
+		if(cli != null){
+			if(cli.isAlive()) {
+				cli.interrupt();
+				cli = null;
+			}
+		}
+		cli = new Client(host, username, pass, mode, frame, resolution, this);
+		cli.start();
+	}
+
+	public void getInfo(PrintWriter writer, String list, String username, String hostname) {
+		writer.println(" === This file is used for autocompletion ===");
+		writer.println(list);
+		if(! list.contains(username)){
+			writer.println("login="+username);
+		}
+		if(! list.contains(hostname)){
+			writer.println("host="+hostname);
+		}
+		writer.flush();
+	}
+	
+	public void initLoader() {
+		loader = new LoadingFrame(cli, frame);
+		Thread load = new Thread(loader);
+		load.start();
+	}
+	
+	public LoadingFrame getLoader() {
+		return loader;
+	}
+}

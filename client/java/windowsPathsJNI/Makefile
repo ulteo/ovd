@@ -26,12 +26,13 @@ LDFLAGS=
 EXEC=libWindowsPaths.dll
 
 
-org_ulteo_ovd_integrated_WindowsPaths.h:
-	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsPaths
+all: clean org_ulteo_ovd_integrated_WindowsPaths.h $(EXEC)
 
-all: $(EXEC)
 $(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def org_ulteo_ovd_integrated_WindowsPaths.h
 	$(CC) org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def $(LDFLAGS) -shared -o ${EXEC}
+
+org_ulteo_ovd_integrated_WindowsPaths.h:
+	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsPaths
 
 clean:
 	$(RM) *.o $(EXEC)
