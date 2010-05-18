@@ -30,70 +30,83 @@
 
 !include nsis\String.nsh
 
-!macro WindowsVersionDetection un
+;Detecting if the OS is a 2008 version
+!macro Differentiate2008 un
+Function ${un}Differentiate2008
 
-  !ifndef ${un}WINVERSION_SET
-    !define ${un}WINVERSION_SET
+    ReadRegStr $0 HKLM "Software\Microsoft\Windows NT\CurrentVersion" ProductName
 
-    Var /GLOBAL ${un}WinVersionNum
-    Var /GLOBAL ${un}WinVersionLbl
-
-    ReadRegStr $${un}WinVersionNum HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
-
-    ${Switch} $${un}WinVersionNum
-      ;Windows XP
-      ${Case} '5.1'
-        StrCpy $${un}WinVersionLbl "XP"
-        ${Break}
-
-      ;Windows 2003
-      ${Case} '5.2'
-        StrCpy $${un}WinVersionLbl "2003"
-        ${Break}
-
-      ${Case} 6.0
-        !insertmacro DifferenciateVistaAnd2008 "${un}"
-        Pop $R0
-        ${If} $R0 == '0'
-          ;Windows Vista
-          StrCpy $${un}WinVersionLbl "Vista"
-        ${Else}
-          ;Windows 2008
-          StrCpy $${un}WinVersionLbl "2008"
-        ${EndIf}
-        ${Break}
-
-      ${Default}
-        ${Break}
-    ${EndSwitch}
-
-  !endif
-
-!macroend
-
-;Detecting the OS version between Vista and 2008
-!macro DifferenciateVistaAnd2008 un
-
-    Var /GLOBAL ${un}prodName
-    Var /GLOBAL ${un}strSize
-
-    ReadRegStr $${un}prodName HKLM "Software\Microsoft\Windows NT\CurrentVersion" ProductName
-
-    Push $${un}prodName
+    Push $0
     Push "2008"
     !insertmacro SubStr
     Pop $R0
-    StrLen $${un}strSize $R0
-    Push $${un}strSize
+    StrLen $0 $R0
+    Push $0
 
+FunctionEnd
 !macroend
+
+!insertmacro Differentiate2008 ""
+!insertmacro Differentiate2008 "un."
+
+!macro WindowsVersionDetection un
+Function ${un}WindowsVersionDetection
+
+  ReadRegStr $1 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+
+  ${Switch} $1
+    ;Windows XP
+    ${Case} '5.1'
+      StrCpy $2 "XP"
+      ${Break}
+
+    ;Windows 2003
+    ${Case} '5.2'
+      StrCpy $2 "2003"
+      ${Break}
+
+    ${Case} 6.0
+      Call ${un}Differentiate2008
+      Pop $R0
+      ${If} $R0 == '0'
+        ;Windows Vista
+        StrCpy $2 "Vista"
+      ${Else}
+        ;Windows 2008
+        StrCpy $2 "2008"
+      ${EndIf}
+      ${Break}
+
+    ${Case} 6.1
+      Call ${un}Differentiate2008
+      Pop $R0
+      ${If} $R0 == '0'
+        ;Windows Seven
+        StrCpy $2 "Seven"
+      ${Else}
+        ;Windows 2008 R2
+        StrCpy $2 "2008"
+      ${EndIf}
+      ${Break}
+
+    ${Default}
+      StrCmp ${un} "" 0 +3
+      MessageBox MB_YESNO|MB_TOPMOST|MB_ICONEXCLAMATION "Warning :$\nUnknow operating system (Version: $1). The service may not work properly.$\n$\nInstall anyway?" /SD IDNO IDYES continue
+        Abort
+      continue:
+        StrCpy $2 "Other"
+      ${Break}
+  ${EndSwitch}
+  Push $2
+
+FunctionEnd
+!macroend
+
+!insertmacro WindowsVersionDetection ""
+!insertmacro WindowsVersionDetection "un."
 
 ;; changes setup
 Function .WindowsInstall
-
-  !ifndef WINVERSION_SET
-    !insertmacro WindowsVersionDetection ""
-  !endif
 
   ${Switch} $WinVersionLbl
     ${Case} "XP"
@@ -137,11 +150,7 @@ Function un.WindowsInstall
 
   SetRebootFlag true
 
-  !ifndef UNWINVERSION_SET
-    !insertmacro WindowsVersionDetection "UN"
-  !endif
-
-  ${Switch} $UNWinVersionLbl
+  ${Switch} $WinVersionLbl
     ${Case} "XP"
       ;Change the default Shell for Windows XP
       DetailPrint "Restore Default Shell"

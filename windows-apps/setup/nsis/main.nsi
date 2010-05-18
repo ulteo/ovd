@@ -115,7 +115,15 @@
 
   !include nsis\ActiveDirectory.nsh
 
+;--------------------------------
+;Installer and uninstaller global vars
+  Var /GLOBAL WinVersionLbl
+
 Function .onInit
+  ; Check Windows version
+    Call WindowsVersionDetection
+    Pop $WinVersionLbl
+
   ; Get parameters
     var /GLOBAL cmdLineParams
     Push $R0
@@ -137,6 +145,10 @@ Function .onInit
 FunctionEnd
 
 Function un.onInit
+  ; Check Windows version
+    Call un.WindowsVersionDetection
+    Pop $WinVersionLbl
+
   ; to uninstall for all user
     SetShellVarContext all
 FunctionEnd
