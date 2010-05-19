@@ -2,3 +2,7 @@
 
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
+
+# hack to remove /etc/xdg/ulteo/xinitrc to the conffiles
+binary-predeb/ulteo-ovd-desktop-settings::
+	sed -i '/\/etc\/xdg\/ulteo\/xinitrc/d' debian/ulteo-ovd-desktop-settings/DEBIAN/conffiles
