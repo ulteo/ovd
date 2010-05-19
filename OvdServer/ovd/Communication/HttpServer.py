@@ -30,6 +30,9 @@ from ovd.Logger import Logger
 from ovd.Config import Config
 from ovd.Communication import Communication as AbstractCommunication
 
+from threading import Thread
+from Queue import Queue
+
 class HttpServer(AbstractCommunication):
 	def __init__(self, dialogInterfaces):
 		AbstractCommunication.__init__(self, dialogInterfaces)
@@ -39,7 +42,7 @@ class HttpServer(AbstractCommunication):
 	
 	def initialize(self):
 		try:
-			self.webserver = HTTPServer( ("", self.tcp_port), HttpRequestHandler)
+			self.webserver = ThreadPoolingHttpServer( ("", self.tcp_port), HttpRequestHandler, 5)
 		except socket.error, e:
 			Logger.error("Unable to initialize Communication: %s"%(str(e)))
 			return False
@@ -55,6 +58,40 @@ class HttpServer(AbstractCommunication):
 			self.webserver.server_close()
 
 
+class ThreadPoolingHttpServer(HTTPServer):
+	def __init__(self, server_address, RequestHandlerClass, numberOfThread):
+		HTTPServer.__init__(self, server_address, RequestHandlerClass)
+		self.threadNumber = numberOfThread
+		
+		self.spooler = Queue()
+		self.threads = []
+		
+		for _ in xrange(self.threadNumber):
+			t = Thread(target = self.thread_run)
+			self.threads.append(t)
+			t.start()
+	
+	def thread_run(self):
+		while True:
+			(request, client_address) = self.spooler.get()
+			self.process_request_thread(request, client_address)
+	
+	def process_request_thread(self, request, client_address):
+		try:
+			self.finish_request(request, client_address)
+			self.close_request(request)
+		except:
+			self.handle_error(request, client_address)
+			self.close_request(request)
+	
+	def process_request(self, request, client_address):
+		self.spooler.put((request, client_address))
+	
+	def server_close(self):
+		HTTPServer.server_close(self)
+		for t in self.threads:
+			if t.isAlive():
+				t._Thread__stop()
 
 class HttpRequestHandler(SimpleHTTPRequestHandler):
 	def log_request(self, l):
