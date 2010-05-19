@@ -329,19 +329,7 @@ class OVD(win32serviceutil.ServiceFramework):
 					
 					if unicode(shortcut.GetIconLocation()[0], output_encoding) != '':
 						exe.setAttribute("icon", unicode(shortcut.GetIconLocation()[0], output_encoding))
-
-					# Find the mime types linked to the application
-					# TODO: there is probably a faster way to handle this
-					mimetypes = []
-					cmd = unicode(shortcut.GetPath(0)[0], output_encoding)
-					for extension in self.mimetypes.extensions:
-						for app_path in self.mimetypes.ext_keys[extension]["apps"]:
-							if self._compare_commands(unicode(app_path, output_encoding), cmd) and \
-							        self.mimetypes.ext_keys[extension]["type"] not in mimetypes:
-								mimetypes.append(self.mimetypes.ext_keys[extension]["type"])
-					if mimetypes:
-						exe.setAttribute("mimetypes", ";".join(mimetypes)+";");
-
+					
 					command = None
 					if msi is not None:
 						command = msi.getTargetFromShortcut(filename)
@@ -349,6 +337,19 @@ class OVD(win32serviceutil.ServiceFramework):
 						command = unicode(shortcut.GetPath(0)[0], output_encoding)+" "+unicode(shortcut.GetArguments(), output_encoding)
 					
 					exe.setAttribute("command", command)
+					
+					# Find the mime types linked to the application
+					# TODO: there is probably a faster way to handle this
+					mimetypes = []
+					cmd = unicode(shortcut.GetPath(0)[0], output_encoding)
+					for extension in self.mimetypes.extensions:
+						for app_path in self.mimetypes.ext_keys[extension]["apps"]:
+							if (self._compare_commands(unicode(app_path, output_encoding), cmd) or  self._compare_commands(unicode(app_path, output_encoding), command)) and self.mimetypes.ext_keys[extension]["type"] not in mimetypes:
+								mimetypes.append(self.mimetypes.ext_keys[extension]["type"])
+					if mimetypes:
+						exe.setAttribute("mimetypes", ";".join(mimetypes)+";");
+
+					
 					app.appendChild(exe)
 		
 		return doc.toxml(output_encoding)
