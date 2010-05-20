@@ -94,9 +94,13 @@ class ThreadPoolingHttpServer(HTTPServer):
 				t._Thread__stop()
 
 class HttpRequestHandler(SimpleHTTPRequestHandler):
-	def log_request(self, l):
+	def log_message(self, format, *args):
 		""" Override the parent log function"""
-		Logger.debug("HTTPRequestHandler %s path %s"%(str(l), str(self.path)))
+		pass
+		
+	def log_error(self, format, *args):
+		""" Override the parent log function"""
+		Logger.debug("HTTPRequestHandler Error: %s"%(format%args))
 	
 	def do_GET(self):
 		req = {}
