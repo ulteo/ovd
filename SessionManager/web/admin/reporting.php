@@ -138,6 +138,35 @@ class ReportMode_hour extends ReportMode {
 	}
 }
 
+class ReportMode_minute extends ReportMode {
+	public static function get_prefix() {
+		return 'Y-m-d H:i';
+	}
+	
+	public static function get_next() {
+		return '+1 minute';
+	}
+
+	public static function get_default_from() {
+		return '-60 minutes';
+	}
+	
+	public static function transform_date($date_) {
+		return mktime(date('H', $date_),
+				date('i', $date_), 0,
+				date('m', $date_),
+				date('d', $date_),
+				date('Y', $date_));
+	}
+
+	public static function get_name() {
+		return _('Minute');
+	}
+
+	public static function get_value() {
+		return 'minute';
+	}
+}
 
 function get_session_history($t0, $t1, $mode_) {
 	$result = build_array($t0, $t1, $mode_);
@@ -461,6 +490,10 @@ function show_page($mode_) {
 
 	echo '<strong>'._('step').'</strong>';
 	echo '<select name="mode">';
+	echo '<option value="minute"';
+	if ($mode_->get_value() == 'minute')
+		echo ' selected="selected"';
+	echo '>'.ReportMode_minute::get_name().'</option>';
 	echo '<option value="hour"';
 	if ($mode_->get_value() == 'hour')
 		echo ' selected="selected"';
@@ -558,11 +591,20 @@ if (isset($_GET['img']) && isset($_GET['file']))
 
 clean_cache();
 
-if (! isset($_GET['mode']) ||
-    ! in_array($_GET['mode'], array('hour', 'day')) ||
-    $_GET['mode'] == 'day')
-	$mode = new ReportMode_day();
-else
-	$mode = new ReportMode_hour();
+if (! isset($_GET['mode']))
+	$_GET['mode'] = '';
+	
+switch($_GET['mode']) {
+	case 'minute':
+		$mode = new ReportMode_minute();
+		break;
+	case 'hour':
+		$mode = new ReportMode_hour();
+		break;
+	case 'day':
+	default:
+		$mode = new ReportMode_day();
+		break;
+}
 
 show_page($mode);
