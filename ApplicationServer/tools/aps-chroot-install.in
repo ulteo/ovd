@@ -232,8 +232,7 @@ chmod 660 $HTACCESS
 
 # set cups
 if [ -z "$NOCUPS" -a -e "$CHROOT_PATH/var/spool/cups2all" ]; then
-    chown -R $APACHE_USER $CHROOT_PATH/var/spool/cups2all
-    chroot $CHROOT_PATH chown -R lp /var/spool/cups2all
+    chroot $CHROOT_PATH chown -R lp:www-data /var/spool/cups2all
     chmod -R 2770 $CHROOT_PATH/var/spool/cups2all
 fi
 
