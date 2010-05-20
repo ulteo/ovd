@@ -27,6 +27,13 @@
          <mkdir dir="classes"/>
          <mkdir dir="classes/ressources"/>
          <mkdir dir="classes/ressources/keymaps"/>
+	 <mkdir dir="external_jars"/>
+	 <mkdir dir="external_jars/swingx"/>
+	 <mkdir dir="external_jars/gnu-getopt"/>
+	 <mkdir dir="external_jars/log4j-1.2"/>
+	 <mkdir dir="external_jars/registry"/>
+	 <mkdir dir="external_jars/jshortcut"/>
+	 <mkdir dir="external_jars/image4j"/>
          <copy todir="classes/ressources/keymaps">
            <fileset dir="keymaps"/>
          </copy>
@@ -113,6 +120,12 @@
                 classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;"
                 includes="org/ulteo/ovd/client/StartConnection.java"/>
 
+      <unjar src="required_libraries/gnu-getopt.jar" dest="external_jars/gnu-getopt"/>
+      <unjar src="required_libraries/log4j-1.2.jar" dest="external_jars/log4j-1.2"/>
+      <unjar src="required_libraries/swingx.jar" dest="external_jars/swingx"/>
+      <unjar src="required_libraries/registry.jar" dest="external_jars/registry"/>
+      <unjar src="required_libraries/jshortcut.jar" dest="external_jars/jshortcut"/>
+      <unjar src="required_libraries/image4j.jar" dest="external_jars/image4j"/>
 
        <copy todir="classes/">
          <fileset dir="ressources">
@@ -138,6 +151,24 @@
 	 </fileset>
        </copy>
        
+       <copy todir="classes/com">
+	 <fileset dir="external_jars/registry/com">
+	   <include name="**/**"/>
+	 </fileset>
+       </copy>
+
+        <copy todir="classes/net">
+	 <fileset dir="external_jars/image4j/net">
+	   <include name="**/**"/>
+	 </fileset>
+       </copy>
+
+	 <copy todir="classes/net">
+	 <fileset dir="external_jars/jshortcut/net">
+	   <include name="**/**"/>
+	 </fileset>
+       </copy>
+
        <copy todir="classes/pics">
 	 <fileset dir="icons">
 	   <include name="*"/>
@@ -153,6 +184,7 @@
            <attribute name="Class-Path" value="libs/log4j-1.2 libs/gnu-getopt libs/swingx registry.jar jshortcut.jar image4j.jar"/>
          </manifest>
        </jar>
+       <delete dir="external_jars"/>
      </target>
 
      <target name="ovdClient.install" depends="ovdClient">
@@ -161,11 +193,6 @@
        <copy todir="OvdClient">
          <fileset dir="./libs">
            <include name="UlteoOVDClient.jar" />
-         </fileset>
-         <fileset dir="./required_libraries">
-           <include name="registry.jar" />
-	   <include name="jshortcut.jar"/>
-	   <include name="image4j.jar"/>
          </fileset>
        </copy>
      </target>     
