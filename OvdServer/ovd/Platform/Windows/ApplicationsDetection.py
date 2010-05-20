@@ -150,7 +150,7 @@ class ApplicationsDetection:
 		
 		if len(iconLocation) == 0 or not os.path.exists(iconLocation):
 			Logger.debug("ApplicationsDetection::getIcon No IconLocation, use shortcut target")
-			iconLocation = self.evalPath(shortcut.GetPath(0)[0])
+			iconLocation = self.evalPath(shortcut.GetPath(shell.SLGP_RAWPATH)[0])
 			
 			if len(iconLocation) == 0 or not os.path.exists(iconLocation):
 				Logger.warn("ApplicationsDetection::getIcon Neither IconLocation nor shortcut target on %s (%s)"%(filename, iconLocation))
