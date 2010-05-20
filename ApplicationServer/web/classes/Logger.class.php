@@ -26,7 +26,7 @@ class Logger {
 		if ($data_ === '')
 			return;
 
-		$level_flags = array($level_);
+		$level_flags = explode(' ', LOG_FLAGS); // even if LOG_FLAGS have more than one space caracter between two levels, it will work
 
 		if (in_array($level_, $level_flags))
 			@file_put_contents(APS_LOGS.'/'.strtolower($module_).'.log', @date('M j H:i:s').' - '.$_SERVER['REMOTE_ADDR'].' - '.strtoupper($level_).' - '.$data_."\r\n", FILE_APPEND);
