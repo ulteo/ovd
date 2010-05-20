@@ -25,8 +25,9 @@
 
      <target name="precompile">
          <mkdir dir="classes"/>
-         <mkdir dir="classes/ressources"/>
-         <mkdir dir="classes/ressources/keymaps"/>
+	 <mkdir dir="jar"/>
+	 <mkdir dir="jar/ressources"/>
+	 <mkdir dir="jar/ressources/keymaps"/>
 	 <mkdir dir="external_jars"/>
 	 <mkdir dir="external_jars/swingx"/>
 	 <mkdir dir="external_jars/gnu-getopt"/>
@@ -35,7 +36,7 @@
 	 <mkdir dir="external_jars/jshortcut"/>
 	 <mkdir dir="external_jars/image4j"/>
 	 <mkdir dir="ressources"/>
-         <copy todir="classes/ressources/keymaps">
+         <copy todir="jar/ressources/keymaps">
            <fileset dir="keymaps"/>
          </copy>
 
@@ -131,56 +132,62 @@
       <!-- Auto-generated exec ant command for i18n fonctionality -->
       @MESSAGE_LANGS@
 
-       <copy todir="classes/">
+      <copy todir="jar">
+	<fileset dir="classes">
+	  <include name="**/**"/>
+	</fileset>
+      </copy>
+
+       <copy todir="jar/">
          <fileset dir="ressources">
            <include name="*" />
 	 </fileset>
        </copy>
 
-       <copy todir="classes/gnu">
+       <copy todir="jar/gnu">
 	 <fileset dir="external_jars/gnu-getopt/gnu">
 	   <include name="**/**"/>
 	   </fileset>
 	 </copy>
 
-       <copy todir="classes/org">
+       <copy todir="jar/org">
 	 <fileset dir="external_jars/swingx/org">
 	   <include name="**/**"/>
 	 </fileset>
        </copy>
        
-       <copy todir="classes/org">
+       <copy todir="jar/org">
 	 <fileset dir="external_jars/log4j-1.2/org">
 	   <include name="**/**"/>
 	 </fileset>
        </copy>
        
-       <copy todir="classes/com">
+       <copy todir="jar/com">
 	 <fileset dir="external_jars/registry/com">
 	   <include name="**/**"/>
 	 </fileset>
        </copy>
 
-        <copy todir="classes/net">
+        <copy todir="jar/net">
 	 <fileset dir="external_jars/image4j/net">
 	   <include name="**/**"/>
 	 </fileset>
        </copy>
 
-	 <copy todir="classes/net">
+	 <copy todir="jar/net">
 	 <fileset dir="external_jars/jshortcut/net">
 	   <include name="**/**"/>
 	 </fileset>
        </copy>
 
-       <copy todir="classes/pics">
+       <copy todir="jar/pics">
 	 <fileset dir="icons">
 	   <include name="*"/>
 	 </fileset>
        </copy>
 
 
-       <jar destfile="libs/UlteoOVDClient.jar" basedir="classes/">
+       <jar destfile="libs/UlteoOVDClient.jar" basedir="jar/">
          <include name="**"/>
 	 
          <manifest>
@@ -200,6 +207,7 @@
            <include name="UlteoOVDClient.jar" />
          </fileset>
        </copy>
+       <delete dir="libs"/>
      </target>     
 
      <!-- Standalone client part -->
