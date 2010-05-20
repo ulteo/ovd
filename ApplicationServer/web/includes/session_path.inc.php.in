@@ -48,7 +48,8 @@ foreach ($lines as $line) {
 	if (count($values) == 2) {
 		if (array_key_exists($values[0], $keys_conf_outside_chroot)) {
 			if (! defined($keys_conf_outside_chroot[$values[0]])) {
-				define($keys_conf_outside_chroot[$values[0]], $values[1]);
+				$value = preg_replace('/"(.*)"/', '\\1', trim($values[1])); // remove useless quotes
+				define($keys_conf_outside_chroot[$values[0]], $value); 
 			}
 		}
 	}
