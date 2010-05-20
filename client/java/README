@@ -1,13 +1,20 @@
 
 == Depends ==
 
-ant
+ant, GNU gettext
 
 == To compile on Linux ==
 
 $ export CLASSPATH="/usr/lib/jvm/java-6-sun/jre/lib/:.:/usr/lib/jvm/java-6-sun/jre/:/usr/lib/jvm/java-6-sun/jre/lib/plugin.jar"
 $ ant
 
+== To generate new .pot file ==
+
+ * Generate .pot file
+   xgettext -k_ -o po/messages.pot src/Translatable.java
+
+ * Merge an existing .po file with a new .pot file
+   msgmerge -U po/de/messages.po po/messages.pot
 
 == External code licences ==
 
