@@ -34,6 +34,7 @@
 	 <mkdir dir="external_jars/registry"/>
 	 <mkdir dir="external_jars/jshortcut"/>
 	 <mkdir dir="external_jars/image4j"/>
+	 <mkdir dir="ressources"/>
          <copy todir="classes/ressources/keymaps">
            <fileset dir="keymaps"/>
          </copy>
@@ -127,6 +128,9 @@
       <unjar src="required_libraries/jshortcut.jar" dest="external_jars/jshortcut"/>
       <unjar src="required_libraries/image4j.jar" dest="external_jars/image4j"/>
 
+      <!-- Auto-generated exec ant command for i18n fonctionality -->
+      @MESSAGE_LANGS@
+
        <copy todir="classes/">
          <fileset dir="ressources">
            <include name="*" />
@@ -185,6 +189,7 @@
          </manifest>
        </jar>
        <delete dir="external_jars"/>
+       <delete dir="ressources"/>
      </target>
 
      <target name="ovdClient.install" depends="ovdClient">
