@@ -193,4 +193,4 @@ if ($_SESSION['ovd_session']['type'] == 'start' && get_from_file(SESSION_PATH.'/
 	put_to_file(SESSION_PATH.'/'.$session.'/infos/status', 11);
 }
 
-Logger::info('main', 'Session starting');
+Logger::info('main', 'Session (id='.$session.') starting');
