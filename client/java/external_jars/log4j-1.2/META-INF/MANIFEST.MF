@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Ant-Version: Apache Ant 1.7.0
-Created-By: 4.3.1 (Free Software Foundation, Inc.)
-
-Name: org/apache/log4j
-Implementation-Title: log4j
-Implementation-Version: 1.2.15
-Implementation-Vendor: "Apache Software Foundation"
-
