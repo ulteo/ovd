@@ -34,6 +34,8 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 include(SESSIONMANAGER_ROOT.'/extra/libchart/classes/libchart.php');
 
+define('MAX_STEPS', 20);
+
 if (! checkAuthorization('viewStatus'))
 	redirect('index.php');
 
@@ -306,8 +308,15 @@ function show_page($mode_) {
 	$chart = new LineChart();
 	$chart->getPlot()->setLogoFileName('');
 	$dataSet = new XYDataSet();
-	foreach ($result as $day => $num)
-		$dataSet->addPoint(new Point(substr($day, -2), $num));
+	
+	$step = max(round(count($result)/MAX_STEPS), 1);
+	$step_i = 0;
+	foreach ($result as $day => $num) {
+		$text = ($step_i%$step == 0?substr($day, -2):'');
+		$step_i++;
+		
+		$dataSet->addPoint(new Point($text, $num));
+	}
 
 
 	$chart->setDataSet($dataSet);
@@ -361,8 +370,15 @@ function show_page($mode_) {
 		$chart = new LineChart();
 		$chart->getPlot()->setLogoFileName('');
 		$dataSet = new XYDataSet();
-		foreach ($value as $day => $num)
-			$dataSet->addPoint(new Point(substr($day, -2), $num));
+		
+		$step = max(round(count($value)/MAX_STEPS), 1);
+		$step_i = 0;
+		foreach ($value as $day => $num) {
+			$text = ($step_i%$step == 0?substr($day, -2):'');
+			$step_i++;
+			
+			$dataSet->addPoint(new Point($text, $num));
+		}
 
 
 		$chart->setDataSet($dataSet);
@@ -391,9 +407,14 @@ function show_page($mode_) {
 			continue;
 
 		$dataSet_cpu = new XYDataSet();
+		$step = max(round(count($info2[$fqdn]['cpu'])/MAX_STEPS), 1);
+		$step_i = 0;
 		foreach ($info2[$fqdn]['cpu'] as $day => $num) {
+			$text = ($step_i%$step == 0?substr($day, -2):'');
+			$step_i++;
+			
 			$b = get_avg_value($num);
-			$dataSet_cpu->addPoint(new Point(substr($day, -2), $b));
+			$dataSet_cpu->addPoint(new Point($text, $b));
 		}
 
 		$chart = new LineChart();
@@ -406,9 +427,14 @@ function show_page($mode_) {
 
 
 		$dataSet_ram = new XYDataSet();
+		$step = max(round(count($info2[$fqdn]['ram'])/MAX_STEPS), 1);
+		$step_i = 0;
 		foreach ($info2[$fqdn]['ram'] as $day => $num) {
+			$text = ($step_i%$step == 0?substr($day, -2):'');
+			$step_i++;
+			
 			$b = get_avg_value($num);
-			$dataSet_ram->addPoint(new Point(substr($day, -2), $b));
+			$dataSet_ram->addPoint(new Point($text, $b));
 		}
 
 
@@ -618,13 +644,20 @@ function show_page($mode_) {
 
 function show_img_nb_session($mode_) {
 	$ret =  getNB_SESSION($mode_);
-
+	
 	// Number of session chart
 	$chart = new LineChart();
 	$chart->getPlot()->setLogoFileName('');
 	$dataSet = new XYDataSet();
-	foreach ($ret as $day => $num)
-		$dataSet->addPoint(new Point(substr($day, -2), $num));
+	
+	$step = max(round(count($ret)/MAX_STEPS), 1);
+	$step_i = 0;
+	foreach ($ret as $day => $num) {
+		$text = ($step_i%$step == 0?substr($day, -2):'');
+		$step_i++;
+		
+		$dataSet->addPoint(new Point($text, $num));
+	}
 
 	$chart->setDataSet($dataSet);
 	$chart->setTitle(_('Number of active sessions'));
