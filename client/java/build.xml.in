@@ -10,7 +10,10 @@
   <property name="compile.version" value="1.5"/>
   <property name="compile.release" value="0.5.0"/>
 
-  <property name="rdesktop.dist"  value="dist" />
+  <property name="rdesktop.dist"  value="rdesktop" />
+  <property name="integrated.dist"  value="integrated" />
+  <property name="ovdClient.dist"  value="OvdClient" />
+  <property name="standalone.dist"  value="standalone" />
 
   <property name="prefix"      location="/usr/local" />
   <property name="datadir"     location="${prefix}/share" />
@@ -28,14 +31,6 @@
     <mkdir dir="jar"/>
     <mkdir dir="jar/ressources"/>
     <mkdir dir="jar/ressources/keymaps"/>
-    <mkdir dir="external_jars"/>
-    <mkdir dir="external_jars/swingx"/>
-    <mkdir dir="external_jars/gnu-getopt"/>
-    <mkdir dir="external_jars/log4j-1.2"/>
-    <mkdir dir="external_jars/registry"/>
-    <mkdir dir="external_jars/jshortcut"/>
-    <mkdir dir="external_jars/image4j"/>
-    <mkdir dir="ressources"/>
     <copy todir="jar/ressources/keymaps">
       <fileset dir="keymaps"/>
     </copy>
@@ -43,8 +38,20 @@
     <mkdir dir="libs"/>
   </target>
 
+  <target name="classes2jar" description="copy classes/** to jar/">
+    <copy todir="jar/">
+      <fileset dir="classes">
+	<include name="**/**"/>
+      </fileset>
+    </copy>
+  </target>
+
   <!-- Rdesktop part -->
-  <target name="rdesktop" depends="clean,precompile" description="compile the Java source code to class files">
+  <target name="rdesktop.clean" depends="clean">
+    <delete dir="${rdesktop.dist}"/>
+  </target>
+
+  <target name="rdesktop" depends="rdesktop.clean,precompile" description="compile the Java source code to class files">
     <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
@@ -52,7 +59,10 @@
            source="1.5"
            classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;"
            includes="net/propero/rdp/Rdesktop.java"/>
-    <jar destfile="libs/rdesktop.jar" basedir="classes/">
+  </target>
+
+  <target name="rdesktop.jar" depends="rdesktop,classes2jar" description="create jar file">
+    <jar destfile="libs/rdesktop.jar" basedir="jar/">
       <include name="**"/>
       <manifest>
         <attribute name="Main-Class" value="net.propero.rdp.Rdesktop"/>
@@ -61,7 +71,7 @@
     </jar>
   </target>
 
-  <target name="rdesktop.install" depends="rdesktop">
+  <target name="rdesktop.install" depends="rdesktop.jar">
     <mkdir dir="${rdesktop.dist}"/>
 
     <copy todir="${rdesktop.dist}">
@@ -78,7 +88,11 @@
 
   <!-- Integrated client part -->
 
-  <target name="integrated" depends="clean,precompile">
+  <target name="integrated.clean" depends="clean">
+    <delete dir="${integrated.dist}"/>
+  </target>
+
+  <target name="integrated" depends="integrated.clean,precompile">
     <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
@@ -86,8 +100,10 @@
            source="1.5"
            classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar"
            includes="org/ulteo/ovd/integrated/Client.java"/>
+  </target>
 
-    <jar destfile="libs/UlteoOVDIntegratedClient.jar" basedir="classes/">
+  <target name="integrated.jar" depends="integrated,classes2jar">
+    <jar destfile="libs/UlteoOVDIntegratedClient.jar" basedir="jar/">
       <include name="**"/>
 
       <manifest>
@@ -97,10 +113,10 @@
     </jar>
   </target>
 
-  <target name="integrated.install" depends="integrated">
-    <mkdir dir="${dist}"/>
+  <target name="integrated.install" depends="integrated.jar">
+    <mkdir dir="${integrated.dist}"/>
 
-    <copy todir="${dist}">
+    <copy todir="${integrated.dist}">
       <fileset dir="./libs">
         <include name="UlteoOVDIntegratedClient.jar" />
       </fileset>
@@ -113,7 +129,11 @@
 
   <!-- Ovd client part -->
   
-  <target name="ovdClient" depends="clean,precompile">
+  <target name="ovdClient.clean" depends="clean">
+    <delete dir="${ovdClient.dist}"/>
+  </target>
+
+  <target name="ovdClient" depends="ovdClient.clean,precompile">
     <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
@@ -121,6 +141,17 @@
            source="1.5"
            classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;"
            includes="org/ulteo/ovd/client/StartConnection.java"/>
+  </target>
+
+  <target name="ovdClient.jar" depends="ovdClient,classes2jar">
+    <mkdir dir="external_jars"/>
+    <mkdir dir="external_jars/swingx"/>
+    <mkdir dir="external_jars/gnu-getopt"/>
+    <mkdir dir="external_jars/log4j-1.2"/>
+    <mkdir dir="external_jars/registry"/>
+    <mkdir dir="external_jars/jshortcut"/>
+    <mkdir dir="external_jars/image4j"/>
+    <mkdir dir="ressources"/>
 
     <unjar src="required_libraries/gnu-getopt.jar" dest="external_jars/gnu-getopt"/>
     <unjar src="required_libraries/log4j-1.2.jar" dest="external_jars/log4j-1.2"/>
@@ -131,12 +162,6 @@
 
     <!-- Auto-generated exec ant command for i18n fonctionality -->
     @MESSAGE_LANGS@
-
-    <copy todir="jar">
-      <fileset dir="classes">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
 
     <copy todir="jar/">
       <fileset dir="ressources">
@@ -195,37 +220,40 @@
         <attribute name="Class-Path" value="libs/log4j-1.2 libs/gnu-getopt libs/swingx registry.jar jshortcut.jar image4j.jar"/>
       </manifest>
     </jar>
-    <delete dir="external_jars"/>
-    <delete dir="ressources"/>
   </target>
 
-  <target name="ovdClient.install" depends="ovdClient">
-    <mkdir dir="OvdClient"/>
+  <target name="ovdClient.install" depends="ovdClient.jar">
+    <mkdir dir="${ovdClient.dist}"/>
 
-    <copy todir="OvdClient">
+    <copy todir="${ovdClient.dist}">
       <fileset dir="./libs">
         <include name="UlteoOVDClient.jar" />
       </fileset>
     </copy>
-    <delete dir="libs"/>
-  </target>     
+  </target>
 
   <!-- Standalone client part -->
 
-  <target name="standalone" depends="clean,precompile">
-    <javac srcdir="./src;./src1.4" 
+  <target name="standalone.clean" depends="clean">
+    <delete dir="${standalone.dist}"/>
+  </target>
+
+  <target name="standalone" depends="standalone.clean,precompile">
+    <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
-           target="1.5" 
-           source="1.5" 
+           target="1.5"
+           source="1.5"
            classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
            includes="org/ulteo/ovd/standalone/Client.java" />
-    
-    <copy todir="classes/ressources">
+  </target>
+
+  <target name="standalone.jar" depends="standalone,classes2jar">
+    <copy todir="jar/ressources">
       <fileset dir="icons"/>
     </copy>
 
-    <jar destfile="libs/OVDStandalone.jar"  basedir="classes/">
+    <jar destfile="${standalone.dist}/OVDStandalone.jar"  basedir="jar/">
       <include name="**" />
 
       <manifest>
@@ -235,10 +263,10 @@
     </jar>
   </target>
 
-  <target name="standalone.install" depends="standalone">
-    <mkdir dir="${dist}"/>
+  <target name="standalone.install" depends="standalone.jar">
+    <mkdir dir="${standalone.dist}"/>
 
-    <copy todir="${dist}">
+    <copy todir="${standalone.dist}">
       <fileset dir="./libs">
         <include name="OVDStandalone.jar" />
       </fileset>
@@ -259,8 +287,10 @@
            source="1.5" 
            classpath="required_libraries/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
            includes="org/ulteo/ovd/applet/**.java" />
-    
-    <jar destfile="libs/UlteoOVD.jar"  basedir="classes/">
+  </target>
+
+  <target name="applet.jar" description="sign applets"  depends="applet,classes2jar" >
+    <jar destfile="libs/UlteoOVD.jar"  basedir="jar/">
       <include name="**" />
     </jar>
 
@@ -291,7 +321,7 @@
 
   <target name="applet.install"
           description="install applets"
-          depends="applet">
+          depends="applet.jar">
     <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
 
     <copy todir="${destdir}${datadir}/ulteo/applets">
