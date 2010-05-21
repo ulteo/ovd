@@ -58,6 +58,7 @@ if [ -z "$geometry" ]; then
     log_WARN "Unable to perform job: missing arguments"
     exit 1
 fi
+echo $geometry > $dir/geometry
 
 echo desktop >$dir/app_id
 
