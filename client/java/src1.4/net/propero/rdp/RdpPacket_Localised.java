@@ -53,7 +53,7 @@ public class RdpPacket_Localised extends RdpPacket {
 	if (where < 0 || where >= bb.capacity()) { 
 		throw new ArrayIndexOutOfBoundsException("memory accessed out of Range!"); 
 	}
-	return bb.get(where)&0xff; // treat as unsigned byte
+	return (int) (bb.get(where)&0xff); // treat as unsigned byte
 	}
 
 	// where is a 8-bit offset
@@ -61,7 +61,7 @@ public class RdpPacket_Localised extends RdpPacket {
 	if (bb.position() >= bb.capacity()) { 
 		throw new ArrayIndexOutOfBoundsException("memory accessed out of Range!"); 
 	}
-	return bb.get()&0xff; // treat as unsigned byte
+	return (int) (bb.get()&0xff); // treat as unsigned byte
 	}
 
 	public void copyFromByteArray(byte[] array, int array_offset, int mem_offset, int len){

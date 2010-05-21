@@ -13,6 +13,7 @@
  */
 package net.propero.rdp;
 
+import net.propero.rdp.compress.RdpCompression;
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 
@@ -27,6 +28,8 @@ public class Common {
 	public SoundChannel soundChannel;
 	public Cache cache = null;
 	public PstCache persistent_cache = null;
+
+	public RdpCompression compressor = null;
 
     /**
      * Quit the application

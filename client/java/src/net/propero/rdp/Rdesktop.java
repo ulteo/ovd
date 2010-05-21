@@ -41,6 +41,8 @@ import net.propero.rdp.tools.SendEvent;
 import org.apache.log4j.*;
 
 import gnu.getopt.*;
+import net.propero.rdp.compress.MPPC;
+import net.propero.rdp.compress.RdpCompression;
 
 public class Rdesktop {
     
@@ -287,7 +289,7 @@ public class Rdesktop {
 		String progname = "UlteoRDP";
 
 		Getopt g = new Getopt("properJavaRDP", args,
-				"bc:d:f::g:k:l:m:n:p:s:A:VP:D:t:T:u:o:r:", alo);
+				"bc:d:f::g:k:l:m:n:p:s:A:VP:D:t:T:u:o:r:z", alo);
 
 		ClipChannel clipChannel = new ClipChannel(common, opt);
 		SeamlessChannel seamChannel = null;
@@ -353,6 +355,9 @@ public class Rdesktop {
 				}
 				break;
 
+			case 'z':
+				opt.packet_compression = true;
+				break;
 			case 'o':
 				opt.set_bpp(Integer.parseInt(g.getOptarg()));
 				break;

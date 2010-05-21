@@ -13,6 +13,7 @@
 package net.propero.rdp.rdp5;
 
 import net.propero.rdp.*;
+import net.propero.rdp.compress.RdpCompressionException;
 import net.propero.rdp.crypto.*;
 
 public class Rdp5 extends Rdp {
@@ -87,7 +88,12 @@ public class Rdp5 extends Rdp {
             this.next_packet = next = s.getPosition() + length;
 
             if ((ctype & RDP_MPPC_COMPRESSED) != 0) {
-                logger.info("MPPC compressed message");
+                try {
+                    ts = this.common.compressor.decompress(s, length, ctype);
+                } catch (RdpCompressionException ex) {
+                    logger.error(ex.getMessage());
+		    continue;
+                }
             }
             else
                 ts = s;

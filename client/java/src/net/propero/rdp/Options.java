@@ -108,6 +108,7 @@ public class Options {
 	public int server_rdp_version;
 	
 	public int win_button_size = 0;	/* If zero, disable single app mode */
+	public boolean packet_compression = false;
 	public boolean bitmap_compression = true; /* Must to be true if we use RDP v5 or later */
 	public boolean persistent_bitmap_caching = false;
 	public int persistent_caching_max_cells = Rdp.BMPCACHE2_NUM_PSTCELLS;

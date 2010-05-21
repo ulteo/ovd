@@ -224,6 +224,14 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 
 	/**
+	 * Enable/disable MPPC-BULK compression with a history buffer of 64k
+	 * @param packetCompression
+	 */
+	public void setPacketCompression(boolean packetCompression) {
+		this.opt.packet_compression = packetCompression;
+	}
+
+	/**
 	 * Enable/disable volatile bitmap caching
 	 * @param volatileCaching
 	 */

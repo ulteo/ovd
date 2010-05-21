@@ -19,6 +19,9 @@ import net.propero.rdp.rdp5.VChannels;
 
 import java.awt.*;
 import java.awt.image.*;
+import net.propero.rdp.compress.MPPC;
+import net.propero.rdp.compress.RdpCompression;
+import net.propero.rdp.compress.RdpCompressionException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.NDC;
@@ -50,6 +53,8 @@ public class Rdp {
     public static final int RDP_LOGON_AUTO = 0x8;
 
     public static final int RDP_LOGON_BLOB = 0x100;
+
+    public static final int RDP_LOGON_COMPRESSION = 0x80;
 
     // PDU Types
     private static final int RDP_PDU_DEMAND_ACTIVE = 1;
@@ -199,6 +204,8 @@ public class Rdp {
                                                                     // encoded
                                                                     // as 7 byte
                                                                     // US-Ascii
+
+    protected static final int PACKET_COMPRESSED = 0x20;
 
     protected Secure SecureLayer = null;
 
@@ -503,6 +510,20 @@ public class Rdp {
         return stream;
     }
 
+    private int configureCompression(int flags) {
+	if (this.opt.packet_compression) {
+		try {
+			this.common.compressor = new MPPC(RdpCompression.TYPE_64K);
+			flags |= Rdp.RDP_LOGON_COMPRESSION;
+			flags |= RdpCompression.FLAG_TYPE_64K;
+		} catch (RdpCompressionException ex) {
+			this.logger.warn("Can not use compression: "+ex.getMessage());
+		}
+	}
+
+	return flags;
+    }
+
     /**
      * Connect to a server
      * @param username Username for log on
@@ -517,6 +538,8 @@ public class Rdp {
     public void connect(String username, InetAddress server, int flags,
             String domain, String password, String command, String directory)
             throws ConnectionException {
+        flags = this.configureCompression(flags);
+
         try {
             SecureLayer.connect(server);
             this.connected = true;
@@ -909,6 +932,15 @@ public class Rdp {
         ctype = data.get8(); // compression type
         clen = data.getLittleEndian16(); // compression length
         clen -= 18;
+
+	if ((ctype & PACKET_COMPRESSED) != 0) {
+		try {
+                    data = this.common.compressor.decompress(data, clen, ctype);
+                } catch (RdpCompressionException ex) {
+                    logger.error(ex.getMessage());
+		    return false;
+                }
+	}
 
         switch (data_type) {
 
