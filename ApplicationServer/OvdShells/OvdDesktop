@@ -24,10 +24,13 @@ import os
 import sys
 
 from ovd_shells.Platform import _platform as Platform
+from ovd_shells import Util
 
 
 def main():
 	user_sdir = Platform.getUserSessionDir()
+	
+	Util.loadUserEnv(user_sdir)
 	#if user_sdir is None:
 		#sys.exit(1)
 	

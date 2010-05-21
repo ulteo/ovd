@@ -32,6 +32,7 @@ from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
 from Platform import Platform
+import Langs
 import Reg
 
 class User(AbstractUser):
@@ -54,6 +55,8 @@ class User(AbstractUser):
 		userData['primary_group_id'] = ntsecuritycon.DOMAIN_GROUP_RID_USERS
 		userData['password_expired'] = 0 # password never expire
 		userData['acct_expires'] =  win32netcon.TIMEQ_FOREVER
+		if self.infos.has_key("lang"):
+			userData['country_code'] =  Langs.getLCID(self.infos["locale"])
 
 		try:
 			win32net.NetUserAdd(None, 3, userData)

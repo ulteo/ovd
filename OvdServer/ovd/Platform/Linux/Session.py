@@ -81,6 +81,17 @@ class Session(AbstractSession):
 			f = file(path, "w")
 			f.close()
 		
+		
+		env_file_lines = []
+		# Set the language
+		if self.parameters.has_key("locale"):
+			env_file_lines.append("LANG=%s.UTF-8\n"%(self.parameters["locale"]))
+			env_file_lines.append("LC_ALL=%s.UTF-8\n"%(self.parameters["locale"]))
+			env_file_lines.append("LANGUAGE=%s.UTF-8\n"%(self.parameters["locale"]))
+		
+		f = file(os.path.join(d, "env"), "w")
+		f.writelines(env_file_lines)
+		f.close()
 	
 	def uninstall_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
@@ -93,30 +104,3 @@ class Session(AbstractSession):
 		
 		if os.path.exists(d):
 			shutil.rmtree(d)
-
-#user_set_env() {
-#    LC_ALL=$LOC
-#    LANG=$LOC
-#    LANGUAGE=$LOC
-#
-#    XAUTHORITY=$SPOOL_USERS/$SESSID/.Xauthority
-#
-#    OVD_SESSID_DIR=$SPOOL_USERS/$SESSID
-#    XDG_DATA_DIRS=$OVD_SESSID_DIR/xdg
-#    OVD_APPS_DIR=$XDG_DATA_DIRS/applications
-#
-#    if [ -f ${SESSID_DIR}/parameters/timezone ]; then
-#        tz=$(cat ${SESSID_DIR}/parameters/timezone)
-#        if [ -f /usr/share/zoneinfo/$tz ]; then
-#            log_INFO "set TZ to $tz"
-#            TZ="/usr/share/zoneinfo/$tz"
-#        else
-#            log_WARN "invalid TZ to '/usr/share/zoneinfo/$tz'"
-#        fi
-#    fi
-#
-#    session_create_env_file
-#
-#    menu_spool $XDG_DATA_DIRS ${SESSID_DIR}
-#    # windows_init_connection ${SESSID_DIR}
-#}

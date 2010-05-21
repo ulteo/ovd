@@ -34,6 +34,7 @@ import _winreg
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
+import Langs
 import LnkFile
 from Msi import Msi
 from Platform import Platform
@@ -160,6 +161,14 @@ class Session(AbstractSession):
 		
 		# Load the hive
 		_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
+		
+		# Set the language
+		if self.parameters.has_key("locale"):
+			path = r"%s\Control Panel\Desktop"%(hiveName)
+			key = win32api.RegOpenKey(_winreg.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "MUILanguagePending", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
+			win32api.RegSetValueEx(key, "MultiUILanguageId", 0, win32con.REG_DWORD, Langs.getLCID(self.parameters["locale"]))
+			win32api.RegCloseKey(key)
 		
 		# Policies update
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer"%(hiveName)

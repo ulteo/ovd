@@ -180,7 +180,12 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
+		session["parameters"]["lang"] = "fr_FR"
+		
 		user = User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
+		if session["parameters"].has_key("locale"):
+			user.infos["locale"] = session["parameters"]["locale"]
+		
 		session = Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
 		
 		self.role_instance.sessions[session.id] = session
