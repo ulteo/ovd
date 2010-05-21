@@ -32,7 +32,7 @@ from Dialog import Dialog
 
 class SlaveServer:
 	def __init__(self, CommunicationClass):
-		Logger.info("SlaveServer init")
+		Logger.debug("SlaveServer construct")
 		
 		self.stopped = False
 		
@@ -97,7 +97,7 @@ class SlaveServer:
 	
 	
 	def loop(self):
-		Logger.debug("SlaveServer loop")
+		Logger.debug("SlaveServer started")
 		while True:
 			for thread in self.threads:
 				if not thread.isAlive():
