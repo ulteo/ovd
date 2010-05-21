@@ -129,8 +129,8 @@ class ApplicationServer(AbstractRole):
 		return None
 		
 	def session_switch_status(self, session, status):
-		session.status = status
-		Logger.info("Session switch status")
+		session.switch_status(status)
+		Logger.info("Session %s switch status %s"%(session.id, session.status))
 		self.send_session_status(session)
 	
 	

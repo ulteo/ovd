@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import time
 
 class Session:
 	SESSION_STATUS_UNKNOWN = "unknown"
@@ -39,10 +40,15 @@ class Session:
 		self.parameters = parameters_
 		self.applications = applications_
 		
-		self.status = Session.SESSION_STATUS_INIT
+		self.log = []
+		self.switch_status(Session.SESSION_STATUS_INIT)
 	
 	def install_client(self):
 		pass
 	
 	def uninstall_client(self):
 		pass
+
+	def switch_status(self, status_):
+		self.log.append((time.time(), status_))
+		self.status = status_
