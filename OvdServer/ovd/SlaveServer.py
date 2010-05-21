@@ -107,7 +107,7 @@ class SlaveServer:
 				try:
 					thread.join(20)
 				except Exception, e:
-					Logger.warn("youpla %s"%(str(e)))
+					Logger.warn("Main thread interruption %s"%(str(e)))
 					
 				self.updateMonitoring()
 		
