@@ -254,6 +254,30 @@ var Daemon = Class.create({
 				this.applet_width = parametersNode.getAttribute('width');
 			if (this.applet_height == -1)
 				this.applet_height = parametersNode.getAttribute('height');
+
+			var vnc_width = parametersNode.getAttribute('width');
+			var vnc_height = parametersNode.getAttribute('height');
+			if (vnc_width >= this.applet_width && vnc_height >= this.applet_height) { // more vnc than applet
+				if ((this.applet_width/vnc_width) < (this.applet_height/vnc_height)) { // more ratio on width
+					this.applet_height = (vnc_height*(this.applet_width/vnc_width));
+					this.applet_width = (vnc_width*(this.applet_width/vnc_width));
+				} else { // more ratio on height
+					this.applet_width = (vnc_width*(this.applet_height/vnc_height));
+					this.applet_height = (vnc_height*(this.applet_height/vnc_height));
+				}
+			} else if (vnc_width > this.applet_width && vnc_height <= this.applet_height) { // more vnc width than applet width
+				this.applet_width = (vnc_width*(this.applet_width/vnc_width));
+				this.applet_height = (vnc_height*(this.applet_width/vnc_width));
+			} else if (vnc_width <= this.applet_width && vnc_height > this.applet_height) { // more vnc height than applet height
+				this.applet_height = (vnc_height*(this.applet_height/vnc_height));
+				this.applet_width = (vnc_width*(this.applet_height/vnc_height));
+			} else { // less vnc than applet
+				this.applet_width = vnc_width;
+				this.applet_height = vnc_height;
+			}
+			this.applet_width = parseInt(this.applet_width);
+			this.applet_height = parseInt(this.applet_height);
+			
 			applet_view_only = parametersNode.getAttribute('view_only');
 
 			buffer = sessionNode.getElementsByTagName('ssh');
