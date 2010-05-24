@@ -9,94 +9,93 @@ msgstr ""
 "Project-Id-Version: ovd-i 18n\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-19 09:36+0200\n"
-"PO-Revision-Date: 2010-04-19 09:57+0200\n"
+"PO-Revision-Date: 2010-05-23 20:00+0900\n"
 "Last-Translator: Satoshi Yuza <satoshi.yuza@gmail.com>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: ../web/admin/usersgroup.php:33
 #: ../web/classes/Preferences.class.php:281
 msgid "1 day"
-msgstr "1日"
+msgstr "１日"
 
 #: ../web/admin/usersgroup.php:32
 #: ../web/classes/Preferences.class.php:281
 msgid "1 hour"
-msgstr "1時間"
+msgstr "１時間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "1 minute"
-msgstr "1分"
+msgstr "１分"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "1 month"
-msgstr "1ヶ月"
+msgstr "１ヶ月"
 
 #: ../web/admin/usersgroup.php:34
 #: ../web/classes/Preferences.class.php:281
 msgid "1 week"
-msgstr "1週間"
+msgstr "１週間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "10 minutes"
-msgstr "10分"
+msgstr "１０分"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "12 hours"
-msgstr "12時間"
+msgstr "１２時間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "15 minutes"
-msgstr "15分"
+msgstr "１５分"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "2 days"
-msgstr "2日間"
+msgstr "２日間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "2 hours"
-msgstr "2時間"
+msgstr "２時間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "2 minutes"
-msgstr "2分"
+msgstr "２分"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "30 minutes"
-msgstr "30分間"
+msgstr "３０分間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "5 hours"
-msgstr "5時間"
+msgstr "５時間"
 
 #: ../web/classes/Preferences.class.php:281
 msgid "5 minutes"
-msgstr "5分間"
+msgstr "５分間"
 
 #: ../web/classes/Preferences.class.php:278
 msgid "8-bits"
 msgstr "8ビット"
 
 #: ../web/admin/classes/UsersGroupsList.class.php:91
-#: ../web/admin/classes/UsersList.class.php:92
+#: ../web/admin/classes/UsersList.class.php:93
+#: ../web/admin/classes/UsersList.class.php:130
 #, php-format
 msgid "<strong>%d</strong> result for \"%s\"."
 msgid_plural "<strong>%d</strong> results for \"%s\"."
-msgstr[0] ""
+msgstr[0] "\"%s\"の結果は、<strong>%d件</strong>です。"
+msgstr[1] "\"%s\"の結果は、<strong>%d件</strong>です。"
 
 #: ../web/admin/classes/UsersGroupsList.class.php:87
-#: ../web/admin/classes/UsersList.class.php:88
+#: ../web/admin/classes/UsersList.class.php:89
 #, php-format
-msgid ""
-"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
-"but there are more. Please restrict your search field."
-msgid_plural ""
-"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
-"but there are more. Please restrict your search field."
-msgstr[0] ""
+msgid "<strong>Partial content:</strong> Only <strong>%d result</strong> displayed but there are more. Please restrict your search field."
+msgid_plural "<strong>Partial content:</strong> Only <strong>%d results</strong> displayed but there are more. Please restrict your search field."
+msgstr[0] "<strong>不完全なコンテンツ:</strong>  検索対象が多いため、<strong>%d件</strong>のみ表示されています。検索条件で絞り込みを行ってください。"
+msgstr[1] "<strong>不完全なコンテンツ:</strong>  検索対象が多いため、<strong>%d件</strong>のみ表示されています。検索条件で絞り込みを行ってください。"
 
 #: ../web/admin/sharedfolders.php:43
 msgid "A shared folder with that name already exists!"
@@ -110,17 +109,17 @@ msgstr "同じ名前の共有フォルダが既に存在しています"
 msgid "ACL"
 msgstr "ACL"
 
-#: ../web/admin/reporting.php:476
-#: ../web/admin/reporting.php:502
-#: ../web/admin/reporting.php:521
-#: ../web/admin/reporting.php:534
+#: ../web/admin/reporting.php:482
+#: ../web/admin/reporting.php:508
+#: ../web/admin/reporting.php:527
+#: ../web/admin/reporting.php:540
 msgid "Abscissa: day of the month"
 msgstr "横軸: 日"
 
-#: ../web/admin/reporting.php:478
-#: ../web/admin/reporting.php:504
-#: ../web/admin/reporting.php:523
-#: ../web/admin/reporting.php:536
+#: ../web/admin/reporting.php:484
+#: ../web/admin/reporting.php:510
+#: ../web/admin/reporting.php:529
+#: ../web/admin/reporting.php:542
 msgid "Abscissa: hour of the day"
 msgstr "横軸: 時間"
 
@@ -152,10 +151,10 @@ msgstr "Active Directory User Groups"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:236
 msgid "Active Directory integration"
-msgstr "Active Directoryを統合"
+msgstr "Active Directoryへの接続"
 
-#: ../web/admin/servers.php:967
-#: ../web/admin/users.php:438
+#: ../web/admin/users.php:420
+#: ../web/admin/servers.php:979
 msgid "Active sessions"
 msgstr "アクティブなセッション"
 
@@ -163,57 +162,57 @@ msgstr "アクティブなセッション"
 msgid "Active tasks on this application"
 msgstr "このアプリケーションのアクティブなタスク"
 
-#: ../web/admin/servers.php:935
+#: ../web/admin/servers.php:947
 msgid "Active tasks on this server"
 msgstr "このサーバーのアクティブなタスク"
 
-#: ../web/admin/applications_static.php:244
 #: ../web/admin/appsgroup.php:224
-#: ../web/admin/publications.php:132
-#: ../web/admin/users.php:233
-#: ../web/admin/users.php:252
 #: ../web/admin/usersgroup.php:524
+#: ../web/admin/publications.php:132
+#: ../web/admin/applications_static.php:244
+#: ../web/admin/users.php:215
+#: ../web/admin/users.php:234
 msgid "Add"
 msgstr "追加"
 
 #: ../web/admin/applications_static.php:180
 msgid "Add a static application"
-msgstr "固定アプリケーションの追加"
+msgstr "特定アプリケーションの追加"
 
+#: ../web/admin/usersgroup.php:985
 #: ../web/admin/sharedfolders.php:212
-#: ../web/admin/usersgroup.php:987
 msgid "Add access to this shared folder"
-msgstr "共有フォルダにアクセス権を追加する"
+msgstr "この共有フォルダにアクセス権を追加"
 
 #: ../web/admin/news.php:90
 msgid "Add news"
-msgstr "ニュースを追加する。"
+msgstr "ニュースを追加"
 
 #: ../web/admin/news.php:101
 msgid "Add this news"
-msgstr "ニュースを追加"
+msgstr "このニュースを追加"
 
 #: ../web/admin/appsgroup.php:465
-#: ../web/admin/usersgroup.php:889
+#: ../web/admin/usersgroup.php:887
 msgid "Add this publication"
-msgstr "このパブリケーションを追加する。"
+msgstr "この公開設定を追加"
 
-#: ../web/admin/usersgroup.php:938
+#: ../web/admin/usersgroup.php:936
 msgid "Add this rule"
-msgstr "このルールを追加する。"
+msgstr "このルールを追加"
 
-#: ../web/admin/applications.php:461
-#: ../web/admin/applications_static.php:577
 #: ../web/admin/appsgroup.php:378
-#: ../web/admin/users.php:428
-#: ../web/admin/usersgroup.php:841
+#: ../web/admin/usersgroup.php:843
+#: ../web/admin/applications_static.php:577
+#: ../web/admin/users.php:410
+#: ../web/admin/applications.php:461
 msgid "Add to this group"
-msgstr "このグループを追加する。"
+msgstr "このグループに追加"
 
-#: ../web/admin/includes/page_template.php:242
 #: ../web/admin/login.php:99
-#: ../web/includes/functions.inc.d/template.inc.php:124
+#: ../web/admin/includes/page_template.php:242
 #: ../web/includes/functions.inc.d/template.inc.php:79
+#: ../web/includes/functions.inc.d/template.inc.php:124
 msgid "Administration"
 msgstr "Administration"
 
@@ -225,9 +224,9 @@ msgstr "管理コンソールの言語"
 msgid "Administrator DN"
 msgstr "管理者名（DN）"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:261
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:255
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:361
+#: ../web/admin/classes/Configuration_mode_ad.class.php:261
 msgid "Administrator account"
 msgstr "管理者アカウント"
 
@@ -256,7 +255,7 @@ msgstr "プロクシ経由での接続を許可する (SSH/ping applet test requ
 msgid "Anonymous bind"
 msgstr "匿名ユーザーの追加"
 
-#: ../web/admin/servers.php:822
+#: ../web/admin/servers.php:834
 msgid "Application"
 msgstr "アプリケーション"
 
@@ -283,19 +282,19 @@ msgstr "アプリケーションは存在しません。"
 
 #: ../web/admin/publications.php:80
 msgid "Application group"
-msgstr "アプリケーション・グループ"
+msgstr "アプリグループ"
 
 #: ../web/admin/appsgroup.php:137
 msgid "Application groups"
-msgstr "アプリケーション・グループ"
+msgstr "アプリグループ"
 
 #: ../web/admin/index.php:112
 msgid "Application groups list"
-msgstr "アプリケーション・グループ"
+msgstr "アプリグループ"
 
 #: ../web/admin/appsgroup.php:295
 msgid "Application groups management"
-msgstr "アプリケーション・グループの管理"
+msgstr "アプリグループ管理"
 
 #: ../web/admin/index.php:110
 msgid "Application list"
@@ -313,25 +312,25 @@ msgstr "アプリケーションDBは、書込み不可能です。"
 #: ../web/admin/actions.php:138
 #, php-format
 msgid "ApplicationGroup '%s' successfully modified"
-msgstr "アプリケーション・グループ '%s' を修正しました。"
+msgstr "アプリグループ '%s' を修正しました。"
 
 #. general div
-#: ../web/admin/applications.php:112
-#: ../web/admin/includes/page_template.php:114
 #: ../web/admin/includes/page_template.php:47
+#: ../web/admin/includes/page_template.php:114
 #: ../web/admin/sumup.php:193
+#: ../web/admin/applications.php:112
 msgid "Applications"
 msgstr "アプリケーション"
 
 #: ../web/admin/includes/page_template.php:121
 msgid "Applications Groups"
-msgstr "アプリケーション・グループ"
+msgstr "アプリグループ"
 
 #: ../web/admin/index.php:105
 msgid "Applications and Appgroups"
 msgstr "アプリケーション関連"
 
-#: ../web/admin/servers.php:845
+#: ../web/admin/servers.php:857
 msgid "Applications available on this server"
 msgstr "このサーバーで利用できるアプリケーション"
 
@@ -345,76 +344,76 @@ msgstr "アプリケーション:"
 
 #: ../web/admin/appsgroup.php:78
 msgid "AppsGroup successfully added"
-msgstr "アプリケーション・グループを追加しました。"
+msgstr "アプリグループを追加しました。"
 
 #: ../web/admin/appsgroup.php:91
 msgid "AppsGroup successfully deleted"
-msgstr "アプリケーション・グループを削除しました。"
+msgstr "アプリグループを削除しました。"
 
 #: ../web/admin/appsgroup.php:124
 msgid "AppsGroup successfully modified"
-msgstr "アプリケーション・グループを修正しました。"
+msgstr "アプリグループを修正しました。"
 
 #: ../web/admin/wizard.php:447
 msgid "Are you sure that you want to create this publication?"
-msgstr "このパブリケーションを生成しますか？"
+msgstr "この公開設定を作成しますか？"
 
-#: ../web/admin/users.php:221
+#: ../web/admin/users.php:203
 msgid "Are you sure you want to delete selected users?"
-msgstr "本当に、この選択したユーザーを削除しますか？"
+msgstr "このユーザーを削除しますか？"
 
 #: ../web/admin/appsgroup.php:187
 #: ../web/admin/usersgroup.php:410
 msgid "Are you sure you want to delete these groups?"
-msgstr "本当に、このグループを削除しますか？"
+msgstr "このグループを削除しますか？"
 
 #: ../web/admin/applications_static.php:167
 msgid "Are you sure you want to delete these static applications?"
-msgstr "これらの固定アプリケーションを削除しますか？"
+msgstr "これらの特定アプリケーションを削除しますか？"
 
-#: ../web/admin/applications.php:440
 #: ../web/admin/applications_static.php:557
+#: ../web/admin/applications.php:440
 msgid "Are you sure you want to delete this application from this group?"
 msgstr "このグループから、アプリケーションを削除しますか？"
 
+#: ../web/admin/appsgroup.php:356
 #: ../web/admin/applications_static.php:148
 #: ../web/admin/applications_static.php:461
-#: ../web/admin/appsgroup.php:356
 msgid "Are you sure you want to delete this application?"
-msgstr "本当に、このアプリケーションを削除しますか？"
+msgstr "このアプリケーションを削除しますか？"
 
 #: ../web/admin/appsgroup.php:174
 #: ../web/admin/appsgroup.php:311
 #: ../web/admin/usersgroup.php:393
 #: ../web/admin/usersgroup.php:666
 msgid "Are you sure you want to delete this group?"
-msgstr "本当に、このグループを削除しますか？"
+msgstr "このグループを削除しますか？"
 
 #: ../web/admin/applications_static.php:524
 msgid "Are you sure you want to delete this icon?"
-msgstr "本当に、このアイコンを削除しますか？"
+msgstr "このアイコンを削除しますか？"
 
 #: ../web/admin/news.php:76
 msgid "Are you sure you want to delete this news?"
-msgstr "本当に、このニュースを削除しますか？"
+msgstr "このニュースを削除しますか？"
 
 #: ../web/admin/appsgroup.php:443
+#: ../web/admin/usersgroup.php:865
 #: ../web/admin/publications.php:97
-#: ../web/admin/usersgroup.php:867
 msgid "Are you sure you want to delete this publication?"
-msgstr "本当に、このパブリケーションを削除しますか？"
+msgstr "この公開設定を削除しますか？"
 
-#: ../web/admin/usersgroup.php:913
+#: ../web/admin/usersgroup.php:911
 msgid "Are you sure you want to delete this rule?"
-msgstr "本当に、このルールを削除しますか？"
+msgstr "このルールを削除しますか？"
 
 #: ../web/admin/servers.php:479
-#: ../web/admin/servers.php:785
+#: ../web/admin/servers.php:797
 msgid "Are you sure you want to delete this server?"
-msgstr "本当に、このサーバーを削除しますか？"
+msgstr "このサーバーを削除しますか？"
 
+#: ../web/admin/usersgroup.php:965
 #: ../web/admin/sharedfolders.php:192
-#: ../web/admin/usersgroup.php:967
 msgid "Are you sure you want to delete this shared folder access?"
 msgstr "共有フォルダのアクセス権を削除しますか？"
 
@@ -422,29 +421,29 @@ msgstr "共有フォルダのアクセス権を削除しますか？"
 msgid "Are you sure you want to delete this shared folder?"
 msgstr "この共有フォルダを削除しますか？"
 
-#: ../web/admin/users.php:408
+#: ../web/admin/users.php:390
 msgid "Are you sure you want to delete this user from this group?"
-msgstr "このグループから、ユーザを削除しますか？"
+msgstr "このグループからユーザを削除しますか？"
 
-#: ../web/admin/users.php:204
-#: ../web/admin/users.php:334
 #: ../web/admin/usersgroup.php:819
+#: ../web/admin/users.php:186
+#: ../web/admin/users.php:316
 msgid "Are you sure you want to delete this user?"
-msgstr "本当に、このユーザーを削除しますか？"
+msgstr "このユーザーを削除しますか？"
 
-#: ../web/admin/sessions.php:239
+#: ../web/admin/sessions.php:264
 msgid "Are you sure you want to kill selected sessions?"
-msgstr "選択したセッションを切断しますか？"
+msgstr "このセッションを切断しますか？"
 
-#: ../web/admin/sessions.php:186
-#: ../web/admin/sessions.php:225
+#: ../web/admin/sessions.php:189
+#: ../web/admin/sessions.php:250
 msgid "Are you sure you want to kill this session?"
 msgstr "このセッションを切断しますか？"
 
+#: ../web/admin/servers.php:876
 #: ../web/admin/applications.php:362
-#: ../web/admin/servers.php:864
 msgid "Are you sure you want to remove this application from this server?"
-msgstr "このサーバーから、アプリケーションを削除しますか？"
+msgstr "このサーバーからアプリケーションを削除しますか？"
 
 #: ../web/admin/applications.php:314
 msgid "Are you sure you want to remove this application?"
@@ -481,6 +480,10 @@ msgstr "新規サーバーの自動登録"
 msgid "Auto switch new servers to production mode"
 msgstr "新規サーバー追加時に自動的にプロダクションモードへ切替"
 
+#: ../web/classes/Preferences.class.php:154
+msgid "Autodetect"
+msgstr "自動検出"
+
 #: ../web/admin/applications.php:212
 msgid "Available"
 msgstr "利用可能"
@@ -500,15 +503,15 @@ msgstr "Base DN:"
 
 #: ../web/admin/wizard.php:460
 msgid "Between these usergroups"
-msgstr "ユーザー・グループ"
+msgstr "ユーザーグループ"
 
 #: ../web/admin/wizard.php:478
 msgid "Between this newly created usergroup"
-msgstr "ユーザー・グループを新しく作成する。"
+msgstr "ユーザーグループを新しく作成する。"
 
 #: ../web/admin/wizard.php:458
 msgid "Between this usergroup"
-msgstr "ユーザー・グループ"
+msgstr "ユーザーグループ"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:263
 msgid "Bind DN (without suffix):"
@@ -518,17 +521,17 @@ msgstr "Bind DN (without suffix):"
 msgid "Bind password:"
 msgstr "Bind password:"
 
-#: ../web/admin/applications.php:213
 #: ../web/admin/appsgroup.php:244
 #: ../web/admin/usersgroup.php:571
+#: ../web/admin/applications.php:213
 msgid "Block"
 msgstr "ブロック"
 
-#: ../web/admin/applications.php:216
 #: ../web/admin/appsgroup.php:158
 #: ../web/admin/appsgroup.php:248
 #: ../web/admin/usersgroup.php:370
 #: ../web/admin/usersgroup.php:575
+#: ../web/admin/applications.php:216
 msgid "Blocked"
 msgstr "ブロック"
 
@@ -536,7 +539,7 @@ msgstr "ブロック"
 msgid "Both CPU and RAM are used as criterias, with a little randomization..."
 msgstr "CPUとRAMの利用率により分散"
 
-#: ../web/classes/Server.class.php:370
+#: ../web/classes/Server.class.php:348
 msgid "Broken"
 msgstr "壊れています。"
 
@@ -550,15 +553,15 @@ msgstr "CAS サーバー URL"
 
 #: ../web/admin/servers.php:342
 #: ../web/admin/servers.php:461
-#: ../web/admin/servers.php:697
+#: ../web/admin/servers.php:709
 msgid "CPU"
 msgstr "CPU"
 
-#: ../web/admin/reporting.php:361
+#: ../web/admin/reporting.php:367
 #: ../web/admin/servers.php:351
-#: ../web/admin/servers.php:703
+#: ../web/admin/servers.php:715
 msgid "CPU usage"
-msgstr "CPU 使用率"
+msgstr "CPU利用率"
 
 #: ../web/admin/usersgroup.php:477
 msgid "Cached"
@@ -566,11 +569,11 @@ msgstr "キャッシュ"
 
 #: ../web/admin/wizard.php:607
 msgid "Cannot create application group"
-msgstr "アプリケーション・グループを作成できません。"
+msgstr "アプリグループを作成できません。"
 
 #: ../web/admin/wizard.php:587
 msgid "Cannot create usergroup"
-msgstr "ユーザー・グループを作成できません。"
+msgstr "ユーザーグループを作成できません。"
 
 #: ../web/admin/servers.php:548
 msgid "Cannot get server monitoring"
@@ -578,9 +581,9 @@ msgstr "サーバーの監視状況を取得できません。"
 
 #: ../web/admin/servers.php:563
 msgid "Cannot list available applications"
-msgstr "有効なアプリケーション・リストを表示できません。"
+msgstr "有効なアプリケーションリストを表示できません。"
 
-#: ../web/admin/servers.php:817
+#: ../web/admin/servers.php:829
 msgid "Category"
 msgstr "カテゴリ"
 
@@ -588,16 +591,14 @@ msgstr "カテゴリ"
 msgid "Change"
 msgstr "変更"
 
-#: ../web/admin/includes/page_template.php:197
 #: ../web/admin/password.php:36
+#: ../web/admin/includes/page_template.php:197
 msgid "Change Administrator password"
 msgstr "管理者パスワード"
 
 #: ../web/classes/Preferences.class.php:308
 #: ../web/classes/Preferences.class.php:332
-msgid ""
-"Choose Advanced Settings options you want to make available to users before "
-"they launch a session."
+msgid "Choose Advanced Settings options you want to make available to users before they launch a session."
 msgstr "セッション起動の前に利用可能にしたいユーザーの拡張オプションを選択してください。"
 
 #: ../web/classes/Preferences.class.php:416
@@ -627,14 +628,14 @@ msgid "Common Internet File System (CIFS) without services for unix"
 msgstr "Common Internet File System (CIFS) without services for unix"
 
 #. conf not valid
-#: ../web/admin/configuration-partial.php:49
-#: ../web/admin/configuration-partial.php:56
-#: ../web/admin/configuration.php:65
-#: ../web/admin/configuration.php:77
-#: ../web/admin/includes/page_template.php:53
 #: ../web/admin/index.php:83
-#: ../web/admin/servers.php:717
+#: ../web/admin/configuration-partial.php:53
+#: ../web/admin/configuration-partial.php:60
+#: ../web/admin/includes/page_template.php:53
+#: ../web/admin/servers.php:729
 #: ../web/admin/sharedfolders.php:160
+#: ../web/admin/configuration.php:69
+#: ../web/admin/configuration.php:81
 msgid "Configuration"
 msgstr "設定"
 
@@ -647,9 +648,9 @@ msgid "Configuration not valid"
 msgstr "設定が無効です。"
 
 #. configuration saved
-#: ../web/admin/configuration-partial.php:45
-#: ../web/admin/configuration.php:61
+#: ../web/admin/configuration-partial.php:49
 #: ../web/admin/sharedfolders.php:64
+#: ../web/admin/configuration.php:65
 msgid "Configuration successfully saved"
 msgstr "設定が保存されました。"
 
@@ -661,9 +662,9 @@ msgstr "確認"
 msgid "Confirmation"
 msgstr "確認"
 
-#: ../web/admin/sessions.php:174
+#: ../web/admin/sessions.php:177
 msgid "Connect to or observe this session"
-msgstr "このセッションへ接続する"
+msgstr "このセッションへ接続"
 
 #: ../web/admin/news.php:63
 msgid "Content"
@@ -671,11 +672,11 @@ msgstr "内容"
 
 #: ../web/admin/wizard.php:324
 msgid "Create a group with applications"
-msgstr "アプリケーション・グループを作成する"
+msgstr "アプリグループを作成"
 
 #: ../web/admin/wizard.php:179
 msgid "Create a group with users"
-msgstr "ユーザー・グループを作成"
+msgstr "ユーザーグループを作成"
 
 #: ../web/admin/appsgroup.php:200
 #: ../web/admin/usersgroup.php:433
@@ -684,7 +685,7 @@ msgstr "新規グループを作成"
 
 #: ../web/admin/wizard.php:402
 msgid "Create appgroup"
-msgstr "アプリケーション・グループを作成"
+msgstr "アプリグループを作成"
 
 #: ../web/admin/sharedfolders.php:113
 msgid "Create this shared folder"
@@ -692,7 +693,7 @@ msgstr "共有フォルダーを作成"
 
 #: ../web/admin/wizard.php:253
 msgid "Create usergroup"
-msgstr "ユーザー・グループを作成"
+msgstr "ユーザーグループを作成"
 
 #: ../web/classes/Session.class.php:123
 msgid "Created"
@@ -719,9 +720,9 @@ msgstr "データベース"
 msgid "Database host address"
 msgstr "ホストアドレス"
 
-#: ../web/classes/Preferences.class.php:208
 #: ../web/modules/UserDB/sql_external.php:201
 #: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
 msgid "Database name"
 msgstr "データベース名"
 
@@ -759,11 +760,11 @@ msgstr "デバッグのオプションリスト"
 
 #: ../web/classes/Preferences.class.php:170
 msgid "Default browser"
-msgstr "デフォルト・ブラウザ"
+msgstr "デフォルトブラウザ"
 
 #: ../web/admin/applications_static.php:259
 msgid "Default browser for :"
-msgstr ""
+msgstr "デフォルトブラウザ:"
 
 #: ../web/classes/Preferences.class.php:271
 msgid "Default language for session"
@@ -775,7 +776,7 @@ msgstr "既定モード"
 
 #: ../web/classes/Preferences.class.php:173
 msgid "Default policy"
-msgstr "デフォルト・ポリシー"
+msgstr "デフォルトポリシー"
 
 #: ../web/classes/Preferences.class.php:277
 msgid "Default quality for session"
@@ -783,7 +784,7 @@ msgstr "品 質"
 
 #: ../web/classes/Preferences.class.php:280
 msgid "Default timeout for session"
-msgstr "セッション・タイムアウト"
+msgstr "セッションタイムアウト"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:275
 msgid "Default user branch"
@@ -798,7 +799,7 @@ msgstr "Default user branch (Users)"
 #. $this->add('general',$c);
 #: ../web/classes/Preferences.class.php:164
 msgid "Default user group"
-msgstr "デフォルトのユーザー・グループ"
+msgstr "デフォルトのユーザーグループ"
 
 #: ../web/classes/Preferences.class.php:274
 msgid "Default windows keymap for session"
@@ -806,83 +807,83 @@ msgstr "キーマップ既定値"
 
 #: ../web/admin/usersgroup.php:656
 msgid "Define as default"
-msgstr "デフォルトとして定義"
+msgstr "デフォルトとして設定"
 
+#: ../web/admin/appsgroup.php:175
+#: ../web/admin/appsgroup.php:189
+#: ../web/admin/usersgroup.php:394
+#: ../web/admin/usersgroup.php:412
+#: ../web/admin/publications.php:102
 #: ../web/admin/applications_static.php:151
 #: ../web/admin/applications_static.php:169
 #: ../web/admin/applications_static.php:464
-#: ../web/admin/appsgroup.php:175
-#: ../web/admin/appsgroup.php:189
-#: ../web/admin/publications.php:102
-#: ../web/admin/servers.php:482
-#: ../web/admin/servers.php:506
-#: ../web/admin/servers.php:788
+#: ../web/admin/users.php:187
+#: ../web/admin/users.php:205
 #: ../web/admin/tasks.php:146
 #: ../web/admin/tasks.php:215
-#: ../web/admin/users.php:205
-#: ../web/admin/users.php:223
-#: ../web/admin/usersgroup.php:394
-#: ../web/admin/usersgroup.php:412
+#: ../web/admin/servers.php:482
+#: ../web/admin/servers.php:506
+#: ../web/admin/servers.php:800
 msgid "Delete"
 msgstr "削除"
 
+#: ../web/admin/usersgroup.php:970
 #: ../web/admin/sharedfolders.php:197
-#: ../web/admin/usersgroup.php:972
 msgid "Delete access to this shared folder"
-msgstr "共有フォルダへのアクセス権を削除する"
+msgstr "この共有フォルダへのアクセス権を削除"
 
-#: ../web/admin/applications.php:445
-#: ../web/admin/applications_static.php:562
 #: ../web/admin/appsgroup.php:361
-#: ../web/admin/users.php:413
 #: ../web/admin/usersgroup.php:824
+#: ../web/admin/applications_static.php:562
+#: ../web/admin/users.php:395
+#: ../web/admin/applications.php:445
 msgid "Delete from this group"
-msgstr "このグループから削除します。"
+msgstr "このグループから削除"
 
 #: ../web/admin/appsgroup.php:312
 #: ../web/admin/usersgroup.php:667
 msgid "Delete this group"
-msgstr "このグループを削除します。"
+msgstr "このグループを削除"
 
 #: ../web/admin/applications_static.php:524
 msgid "Delete this icon"
-msgstr "このアイコンを削除します。"
+msgstr "このアイコンを削除"
 
 #: ../web/admin/news.php:80
 msgid "Delete this news"
-msgstr "このニュースを削除します。"
+msgstr "このニュースを削除"
 
 #: ../web/admin/appsgroup.php:448
-#: ../web/admin/usersgroup.php:872
+#: ../web/admin/usersgroup.php:870
 msgid "Delete this publication"
-msgstr "このパブリケーションを削除します。"
+msgstr "この公開設定を削除"
 
-#: ../web/admin/usersgroup.php:918
+#: ../web/admin/usersgroup.php:916
 msgid "Delete this rule"
-msgstr "このルールを削除します。"
+msgstr "このルールを削除"
 
 #: ../web/admin/sharedfolders.php:102
 msgid "Delete this shared folder"
-msgstr "共有フォルダーを削除"
+msgstr "この共有フォルダーを削除"
 
-#: ../web/admin/users.php:335
+#: ../web/admin/users.php:317
 msgid "Delete this user"
-msgstr "このユーザーを削除します。"
+msgstr "このユーザーを削除"
 
 #. echo '<th>'._('Status').'</th>';
-#: ../web/admin/applications.php:125
-#: ../web/admin/applications.php:298
-#: ../web/admin/applications_static.php:112
-#: ../web/admin/applications_static.php:436
 #: ../web/admin/appsgroup.php:148
 #: ../web/admin/appsgroup.php:211
 #: ../web/admin/appsgroup.php:298
-#: ../web/admin/classes/UsersGroupsList.class.php:80
 #: ../web/admin/usersgroup.php:359
 #: ../web/admin/usersgroup.php:471
 #: ../web/admin/usersgroup.php:635
 #: ../web/admin/wizard.php:266
 #: ../web/admin/wizard.php:415
+#: ../web/admin/applications_static.php:112
+#: ../web/admin/applications_static.php:436
+#: ../web/admin/classes/UsersGroupsList.class.php:80
+#: ../web/admin/applications.php:125
+#: ../web/admin/applications.php:298
 msgid "Description"
 msgstr "説明"
 
@@ -900,13 +901,13 @@ msgid "Destroyed"
 msgstr "破棄する"
 
 #. echo '<th>'._('Version').'</th>';
-#: ../web/admin/applications.php:407
-#: ../web/admin/servers.php:308
-#: ../web/admin/servers.php:437
-#: ../web/admin/servers.php:687
-#: ../web/admin/servers.php:941
 #: ../web/admin/tasks.php:121
 #: ../web/admin/tasks.php:189
+#: ../web/admin/servers.php:308
+#: ../web/admin/servers.php:437
+#: ../web/admin/servers.php:699
+#: ../web/admin/servers.php:953
+#: ../web/admin/applications.php:407
 msgid "Details"
 msgstr "詳細"
 
@@ -914,9 +915,9 @@ msgstr "詳細"
 msgid "Disable reverse FQDN checking"
 msgstr "FQDNのチェックをしない"
 
-#: ../web/admin/classes/UsersList.class.php:81
 #: ../web/admin/users.php:164
-#: ../web/admin/users.php:351
+#: ../web/admin/users.php:333
+#: ../web/admin/classes/UsersList.class.php:82
 msgid "Display name"
 msgstr "表示名"
 
@@ -925,14 +926,12 @@ msgid "Display name field:"
 msgstr "表示名:"
 
 #: ../web/classes/Preferences.class.php:320
-msgid ""
-"Display the list of users from the corporate directory in the login box. If "
-"the list is not displayed, the user must enter his login name."
-msgstr "ログイン画面にユーザー・リストを表示しない。ユーザー・リストが表示されないため、ログイン名を自分で入れる必要があります。"
+msgid "Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name."
+msgstr "ログイン画面にユーザーリストを表示しない。ユーザーリストが表示されないため、ログイン名を自分で入れる必要があります。"
 
 #: ../web/classes/Preferences.class.php:320
 msgid "Display users list"
-msgstr "ユーザー・リストの表示"
+msgstr "ユーザーリストの表示"
 
 #. Not yet Implemented
 #. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
@@ -989,9 +988,7 @@ msgid "Enable Internal WebDAV filesystem"
 msgstr "内部 WebDAV ファイルシステムを有効化"
 
 #: ../web/classes/Preferences.class.php:240
-msgid ""
-"Enable this option if you don't want to check that the result of the reverse "
-"FQDN address fits the one that was registered."
+msgid "Enable this option if you don't want to check that the result of the reverse FQDN address fits the one that was registered."
 msgstr "FQDNアドレスの確認を無効にしたい場合、有効を選択してください。"
 
 #: ../web/admin/appsgroup.php:156
@@ -1002,31 +999,32 @@ msgid "Enabled"
 msgstr "有効"
 
 #: ../web/classes/Preferences.class.php:238
-msgid ""
-"Enter a private addresses you wish to associate to a specific IP in case of "
-"issue with the DNS configuration or to override a reverse address result. "
-"Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgid "Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
 msgstr ""
 "DNSの設定に問題がある場合、DNS名とプライベート・アドレスを関連付けてください。\n"
 "例: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
 
-#: ../web/admin/applications.php:414
-#: ../web/admin/configuration-profile.php:235
-#: ../web/admin/servers.php:948
 #: ../web/admin/tasks.php:130
 #: ../web/admin/tasks.php:199
+#: ../web/admin/configuration-profile.php:235
+#: ../web/admin/servers.php:960
+#: ../web/admin/applications.php:414
 #: ../web/includes/functions.inc.d/template.inc.php:44
 #: ../web/includes/functions.inc.d/template.inc.php:49
 msgid "Error"
 msgstr "エラー"
 
-#: ../web/admin/users.php:284
+#: ../web/admin/users.php:266
 msgid "Error while requesting usergroups"
-msgstr "ユーザー・グループをリクエスト中にエラー"
+msgstr "ユーザーグループをリクエスト中にエラー"
 
 #: ../web/admin/reporting.php:253
 msgid "Error: \"from\" date is after \"to\" date, switching"
-msgstr ""
+msgstr "Error: \"from\" の日付と \"to\" の日付を切り替えてください。"
+
+#: ../web/admin/reporting.php:260
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "エラー: \"to\" が、未来の時刻です。現在の時刻に設定してください。"
 
 #. Events settings
 #: ../web/admin/includes/page_template.php:185
@@ -1036,7 +1034,7 @@ msgstr "イベント"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:113
 msgid "Examples"
-msgstr "Examples"
+msgstr "設定例"
 
 #: ../web/admin/applications.php:299
 msgid "Executable"
@@ -1044,7 +1042,7 @@ msgstr "起動"
 
 #: ../web/classes/Preferences.class.php:268
 msgid "External"
-msgstr ""
+msgstr "外部"
 
 #: ../web/admin/servers.php:306
 #: ../web/admin/servers.php:435
@@ -1062,15 +1060,19 @@ msgstr "FQDNプライベートアドレス"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:31
 msgid "Factor impact"
-msgstr "Factor impact"
+msgstr "指標設定"
 
 #: ../web/admin/usersgroup.php:548
 msgid "Failed to load usergroup"
-msgstr ""
+msgstr "ユーザーグループのロードに失敗しました。"
 
 #: ../web/modules/UserDB/ldap.php:272
 msgid "Filter (optional)"
 msgstr "フィルター(オプション)"
+
+#: ../web/admin/classes/UsersList.class.php:114
+msgid "Filter add list: "
+msgstr "フィルターを追加:"
 
 #: ../web/modules/UserDB/ldap.php:272
 msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
@@ -1099,10 +1101,10 @@ msgstr "アクセス禁止"
 msgid "Forceable paramaters by users"
 msgstr "ユーザー毎にパラメーターを強制付加"
 
-#: ../web/admin/reporting.php:432
+#: ../web/admin/reporting.php:438
 #: ../web/classes/Preferences.class.php:217
 msgid "From"
-msgstr "From"
+msgstr "開始"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
 msgid ""
@@ -1117,7 +1119,7 @@ msgstr "全般設定"
 
 #: ../web/index.php:75
 msgid "Getting userlist failed"
-msgstr "ユーザー・リストの取得に失敗しました。"
+msgstr "ユーザーリストの取得に失敗しました。"
 
 #: ../web/modules/UserGroupDB/ldap_posix.php:134
 msgid "Group Branch DN"
@@ -1127,8 +1129,8 @@ msgstr "Group Branch DN"
 msgid "Group Branch DN:"
 msgstr "Group Branch DN:"
 
-#: ../web/admin/applications.php:432
 #: ../web/admin/applications_static.php:550
+#: ../web/admin/applications.php:432
 msgid "Groups with this application"
 msgstr "このアプリケーションをグループ化"
 
@@ -1138,7 +1140,7 @@ msgstr "ハッシュ方法"
 
 #: ../web/classes/Preferences.class.php:314
 msgid "Heading title"
-msgstr "ウィンドウ・タイトル"
+msgstr "ウィンドウ タイトル"
 
 #: ../web/classes/Preferences.class.php:278
 msgid "High"
@@ -1148,14 +1150,14 @@ msgstr "高"
 msgid "Highest"
 msgstr "最高"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:301
-#: ../web/admin/classes/Configuration_mode_internal.class.php:99
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:291
+#: ../web/admin/classes/Configuration_mode_internal.class.php:99
+#: ../web/admin/classes/Configuration_mode_ad.class.php:301
 msgid "Home Directory"
 msgstr "ホームディレクトリー"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:368
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:373
+#: ../web/admin/classes/Configuration_mode_ad.class.php:368
 msgid "Home Directory:"
 msgstr "ホームディレクトリー"
 
@@ -1175,9 +1177,9 @@ msgstr "時間"
 msgid "I want to create my own users"
 msgstr "ユーザーを作成"
 
-#: ../web/admin/applications.php:404
-#: ../web/admin/servers.php:938
 #: ../web/admin/tasks.php:184
+#: ../web/admin/servers.php:950
+#: ../web/admin/applications.php:404
 msgid "ID"
 msgstr "ID"
 
@@ -1186,13 +1188,8 @@ msgid "Icon"
 msgstr "アイコン"
 
 #: ../web/modules/AuthMethod/Token.php:95
-msgid ""
-"If a token argument is sent to startsession, the system tries to get an user "
-"login by requesting the token validation url.<br /><br />Put here the url to "
-"request if a token argument is sent to <i>startsession</i> instead of login/"
-"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
-"because it's replaced by the token argument when the URL is requested."
-msgstr ""
+msgid "If a token argument is sent to startsession, the system tries to get an user login by requesting the token validation url.<br /><br />Put here the url to request if a token argument is sent to <i>startsession</i> instead of login/password.<br /><br />The special string <b>%TOKEN%</b> needs to be set because it's replaced by the token argument when the URL is requested."
+msgstr "もし、セッション開始時にトークンが送られてくる場合、トークンのURLの要求によりシステムへのログインを試みます。<br /><br />ログイン/パスワードの替わりにトークンを利用したい場合は、ここに設定してください。<br /><br />特殊な文字列：<b>%TOKEN%</b>に置き換える必要があります。"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:315
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:380
@@ -1207,8 +1204,8 @@ msgstr "インデックス"
 msgid "Information"
 msgstr "情報"
 
-#: ../web/admin/servers.php:981
-#: ../web/admin/users.php:452
+#: ../web/admin/users.php:434
+#: ../web/admin/servers.php:996
 msgid "Informations about this session"
 msgstr "このセッションの情報"
 
@@ -1220,27 +1217,27 @@ msgstr "初期化に失敗しました。"
 msgid "Initializing"
 msgstr "初期化しています。"
 
-#: ../web/admin/servers.php:824
 #: ../web/admin/tasks.php:236
+#: ../web/admin/servers.php:836
 msgid "Install"
 msgstr "インストール"
 
-#: ../web/admin/servers.php:796
+#: ../web/admin/servers.php:808
 msgid "Install an application"
 msgstr "アプリケーションをインストール"
 
 #: ../web/admin/tasks.php:226
 msgid "Install an application from a package name"
-msgstr "パッケージ名でアプリケーションをインストール"
+msgstr "パッケージ名からアプリケーションをインストール"
 
-#: ../web/admin/servers.php:801
+#: ../web/admin/servers.php:813
 msgid "Install from a package name"
-msgstr "パッケージ名からインストールします。"
+msgstr "パッケージ名からインストール"
 
+#: ../web/admin/servers.php:915
 #: ../web/admin/applications.php:392
-#: ../web/admin/servers.php:903
 msgid "Install on this server"
-msgstr "このサーバーにインストールします。"
+msgstr "このサーバーにインストール"
 
 #: ../web/admin/classes/Configuration_mode_internal.class.php:26
 msgid "Internal"
@@ -1259,59 +1256,59 @@ msgstr "内部 WebDAV"
 msgid "Internal error"
 msgstr "内部エラー"
 
-#: ../web/classes/SessionReportItem.class.php:154
+#: ../web/classes/SessionReportItem.class.php:157
 msgid "Internal error: failed to initialize session"
-msgstr ""
+msgstr "Internal error: セッションの初期化に失敗しました。"
 
-#: ../web/classes/SessionReportItem.class.php:155
+#: ../web/classes/SessionReportItem.class.php:158
 msgid "Internal error: failed to suspend session"
-msgstr ""
+msgstr "Internal error: セッションの中断に失敗しました。"
 
-#: ../web/classes/SessionReportItem.class.php:153
+#: ../web/classes/SessionReportItem.class.php:156
 msgid "Internal error: wrong session status"
-msgstr ""
+msgstr "Internal error: セッションのステータスに誤りがあります。"
 
 #: ../web/webservices/session_invite.php:93
 msgid "Invitation"
-msgstr "招待"
+msgstr "招待状"
 
 #: ../web/events/SessionAddInvite.class.php:26
 msgid "Invitation sent"
-msgstr "招待状を送信する。"
+msgstr "招待状を送信"
 
 #: ../web/classes/Preferences.class.php:305
 msgid "Invite into the session"
-msgstr "このセッションに招待する。"
+msgstr "このセッションに招待"
 
 #: ../web/admin/tasks.php:122
 msgid "Job id"
 msgstr "ジョブ ID"
 
-#: ../web/admin/sessions.php:162
+#: ../web/admin/sessions.php:165
 msgid "Join this application"
 msgstr "このアプリケーションを追加"
 
-#: ../web/admin/sessions.php:181
+#: ../web/admin/sessions.php:184
 msgid "Join this session"
 msgstr "このセッションを追加"
 
-#: ../web/classes/SessionReportItem.class.php:158
+#: ../web/classes/SessionReportItem.class.php:161
 msgid "KMA expirated"
-msgstr ""
+msgstr "KMA expirated"
 
-#: ../web/admin/sessions.php:228
-#: ../web/admin/sessions.php:241
+#: ../web/admin/sessions.php:253
+#: ../web/admin/sessions.php:266
 msgid "Kill"
 msgstr "強制終了"
 
-#: ../web/admin/sessions.php:185
-#: ../web/admin/sessions.php:189
+#: ../web/admin/sessions.php:188
+#: ../web/admin/sessions.php:192
 msgid "Kill this session"
 msgstr "このセッションを強制終了"
 
-#: ../web/classes/SessionReportItem.class.php:152
+#: ../web/classes/SessionReportItem.class.php:155
 msgid "Killed by administrator"
-msgstr ""
+msgstr "管理者によって切断"
 
 #: ../web/modules/UserGroupDB/ldap_memberof.php:182
 msgid "LDAP using memberOf"
@@ -1335,7 +1332,7 @@ msgstr "デスクトップが開始される時に、アプリケーションを
 
 #: ../web/classes/Preferences.class.php:309
 msgid "Launch an application with extra arguments"
-msgstr ""
+msgstr "引数を利用してアプリケーションを起動"
 
 #: ../web/classes/Preferences.class.php:300
 msgid "Launch forced application with a desktop"
@@ -1345,20 +1342,20 @@ msgstr "デスクトップと共にアプリケーションを起動"
 msgid "Launch session in a popup"
 msgstr "ポップアップでセッション起動"
 
-#: ../web/admin/classes/Configuration_mode_ldap.class.php:222
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:222
 #: ../web/modules/UserDB/ldap.php:309
 msgid "Lightweight Directory Access Protocol (LDAP)"
 msgstr "Lightweight Directory Access Protocol (LDAP)"
 
 #: ../web/admin/appsgroup.php:346
 msgid "List of applications in this group"
-msgstr "このグループのアプリケーションリスト"
+msgstr "このグループのアプリケーション一覧"
 
 #: ../web/admin/appsgroup.php:433
-#: ../web/admin/usersgroup.php:858
+#: ../web/admin/usersgroup.php:856
 msgid "List of publications for this group"
-msgstr "このグループのパブリケーション一覧"
+msgstr "このグループの公開設定一覧"
 
 #: ../web/admin/sumup.php:177
 msgid "List of servers"
@@ -1389,7 +1386,7 @@ msgstr "読み込み中"
 msgid "Local"
 msgstr "ローカル"
 
-#: ../web/admin/users.php:311
+#: ../web/admin/users.php:293
 msgid "Locale"
 msgstr "ロケール"
 
@@ -1397,17 +1394,17 @@ msgstr "ロケール"
 msgid "Locale field"
 msgstr "Locale field"
 
+#: ../web/index.php:131
 #: ../web/admin/login.php:107
 #: ../web/admin/login.php:147
-#: ../web/index.php:131
 msgid "Log in"
 msgstr "ログイン"
 
-#: ../web/admin/classes/UsersList.class.php:77
-#: ../web/admin/login.php:131
-#: ../web/admin/users.php:163
-#: ../web/admin/users.php:306
 #: ../web/index.php:244
+#: ../web/admin/users.php:163
+#: ../web/admin/users.php:288
+#: ../web/admin/classes/UsersList.class.php:78
+#: ../web/admin/login.php:131
 msgid "Login"
 msgstr "ログイン"
 
@@ -1427,16 +1424,16 @@ msgstr "ロゴのURL"
 msgid "Logout"
 msgstr "ログアウト"
 
-#: ../web/admin/configuration-sumup.php:73
-#: ../web/admin/includes/page_template.php:211
 #: ../web/admin/logs.php:131
 #: ../web/admin/logs.php:205
 #: ../web/admin/logs.php:209
+#: ../web/admin/configuration-sumup.php:73
+#: ../web/admin/includes/page_template.php:211
 msgid "Logs"
 msgstr "ログ"
 
 #: ../web/admin/servers.php:345
-#: ../web/admin/servers.php:699
+#: ../web/admin/servers.php:711
 msgid "MB"
 msgstr "MB"
 
@@ -1452,31 +1449,31 @@ msgstr "アラート送信先のメールアドレス"
 msgid "Mail server type"
 msgstr "メールサーバーのタイプ"
 
-#: ../web/admin/applications.php:155
-#: ../web/admin/applications_static.php:142
 #: ../web/admin/appsgroup.php:168
-#: ../web/admin/servers.php:362
-#: ../web/admin/users.php:198
 #: ../web/admin/usersgroup.php:387
+#: ../web/admin/applications_static.php:142
+#: ../web/admin/users.php:180
+#: ../web/admin/servers.php:362
+#: ../web/admin/applications.php:155
 msgid "Manage"
 msgstr "管理"
 
-#: ../web/admin/applications_static.php:163
 #: ../web/admin/appsgroup.php:185
-#: ../web/admin/servers.php:391
-#: ../web/admin/servers.php:496
-#: ../web/admin/sessions.php:237
-#: ../web/admin/users.php:217
 #: ../web/admin/usersgroup.php:408
 #: ../web/admin/wizard.php:211
 #: ../web/admin/wizard.php:230
 #: ../web/admin/wizard.php:355
 #: ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:163
+#: ../web/admin/users.php:199
+#: ../web/admin/sessions.php:262
+#: ../web/admin/servers.php:391
+#: ../web/admin/servers.php:496
 msgid "Mark all"
 msgstr "すべてを選択"
 
-#: ../web/modules/UserDB/ldap.php:269
 #: ../web/modules/UserDB/sql_external.php:205
+#: ../web/modules/UserDB/ldap.php:269
 #: ../web/modules/UserGroupDB/sql_external.php:115
 msgid "Matching"
 msgstr "マッチング"
@@ -1487,7 +1484,7 @@ msgstr "最大値"
 
 #: ../web/classes/Preferences.class.php:167
 msgid "Maximum items per page"
-msgstr ""
+msgstr "ページあたりの最大アイテム数"
 
 #: ../web/classes/Preferences.class.php:278
 msgid "Medium"
@@ -1504,30 +1501,30 @@ msgstr "MimeTypes"
 msgid "Modify"
 msgstr "編集"
 
+#: ../web/admin/actions.php:55
 #: ../web/admin/actions.php:105
 #: ../web/admin/actions.php:260
 #: ../web/admin/actions.php:287
-#: ../web/admin/actions.php:55
-#: ../web/admin/applications.php:35
 #: ../web/admin/applications_static.php:36
 #: ../web/admin/servers.php:604
-#: ../web/classes/Application_weblink.class.php:38
-#: ../web/classes/Server.class.php:773
-#: ../web/classes/abstract/Abstract_Server.class.php:220
+#: ../web/admin/applications.php:35
 #: ../web/modules/ApplicationDB.php:32
+#: ../web/classes/Application_weblink.class.php:38
+#: ../web/classes/Server.class.php:727
+#: ../web/classes/abstract/Abstract_Server.class.php:202
 msgid "Module ApplicationDB must be enabled"
 msgstr "ApplicationDB モジュールを有効にする必要があります。"
 
-#: ../web/admin/sumup.php:39
-#: ../web/admin/users.php:35
 #: ../web/index.php:64
-#: ../web/modules/UserDB.php:32
+#: ../web/admin/users.php:35
+#: ../web/admin/sumup.php:39
 #: ../web/modules/UserGroupDB/ldap_memberof.php:99
+#: ../web/modules/UserDB.php:32
 msgid "Module UserDB must be enabled"
 msgstr "UserDB モジュールを有効にする必要があります。"
 
-#: ../web/modules/UserGroupDB.php:144
 #: ../web/modules/UserGroupDB.php:32
+#: ../web/modules/UserGroupDB.php:144
 #: ../web/modules/UserGroupDB/ldap_posix.php:32
 #: ../web/modules/UserGroupDB/ldap_posix.php:69
 msgid "Module UserGroupDB must be enabled"
@@ -1543,13 +1540,13 @@ msgid "Modules configuration not valid"
 msgstr "モジュールの設定が無効です。"
 
 #: ../web/admin/servers.php:310
-#: ../web/admin/servers.php:682
-#: ../web/admin/servers.php:689
+#: ../web/admin/servers.php:694
+#: ../web/admin/servers.php:701
 msgid "Monitoring"
 msgstr "モニタリング"
 
+#: ../web/modules/UserDB/sql.php:219
 #: ../web/modules/ApplicationDB/sql.php:175
-#: ../web/modules/UserDB/sql.php:213
 #: ../web/modules/UserGroupDB/sql.php:144
 msgid "MySQL"
 msgstr "MySQL"
@@ -1565,16 +1562,16 @@ msgstr "外部 MySQL"
 
 #. if ($is_rw)
 #. echo '<th class="unsortable"></th>';
-#: ../web/admin/applications.php:124
-#: ../web/admin/applications_static.php:111
 #: ../web/admin/appsgroup.php:147
 #: ../web/admin/appsgroup.php:206
-#: ../web/admin/classes/UsersGroupsList.class.php:76
-#: ../web/admin/sharedfolders.php:165
 #: ../web/admin/usersgroup.php:358
 #: ../web/admin/usersgroup.php:466
 #: ../web/admin/wizard.php:261
 #: ../web/admin/wizard.php:410
+#: ../web/admin/applications_static.php:111
+#: ../web/admin/classes/UsersGroupsList.class.php:76
+#: ../web/admin/sharedfolders.php:165
+#: ../web/admin/applications.php:124
 msgid "Name"
 msgstr "名前"
 
@@ -1596,17 +1593,17 @@ msgstr "Network File System (NFS)"
 msgid "Never"
 msgstr "無制限"
 
-#: ../web/classes/SessionReportItem.class.php:159
+#: ../web/classes/SessionReportItem.class.php:162
 msgid "Never connected to SSH server"
-msgstr ""
+msgstr "SSHサーバーに接続しません"
 
+#: ../web/admin/users.php:346
 #: ../web/admin/password.php:43
-#: ../web/admin/users.php:364
 msgid "New password"
 msgstr "新しいパスワード"
 
-#: ../web/admin/includes/page_template.php:225
 #: ../web/admin/news.php:59
+#: ../web/admin/includes/page_template.php:225
 msgid "News"
 msgstr "ニュース"
 
@@ -1632,14 +1629,14 @@ msgstr "ニュースを修正しました。"
 msgid "Next"
 msgstr "次へ"
 
-#: ../web/admin/sumup.php:115
-#: ../web/admin/sumup.php:90
-#: ../web/admin/usersgroup.php:479
 #: ../web/index.php:482
 #: ../web/index.php:496
 #: ../web/index.php:510
 #: ../web/index.php:524
 #: ../web/index.php:543
+#: ../web/admin/usersgroup.php:479
+#: ../web/admin/sumup.php:90
+#: ../web/admin/sumup.php:115
 #: ../web/modules/UserDB/ldap.php:276
 msgid "No"
 msgstr "いいえ"
@@ -1648,19 +1645,19 @@ msgstr "いいえ"
 msgid "No action found"
 msgstr "アクションが見つかりません。"
 
-#: ../web/admin/sessions.php:248
+#: ../web/admin/sessions.php:276
 msgid "No active session"
 msgstr "アクティブなセッションがありません。"
 
 #: ../web/admin/wizard.php:87
 msgid "No application group selected"
-msgstr "アプリケーション・グループが選択されていません。"
+msgstr "アプリグループが選択されていません。"
 
 #: ../web/admin/appsgroup.php:141
 msgid "No application groups available"
-msgstr "アプリケーション・グループが利用できません。"
+msgstr "アプリグループが利用できません。"
 
-#: ../web/admin/sessions.php:136
+#: ../web/admin/sessions.php:139
 msgid "No application running"
 msgstr "稼働中のアプリケーションがありません。"
 
@@ -1668,10 +1665,10 @@ msgstr "稼働中のアプリケーションがありません。"
 msgid "No application selected"
 msgstr "アプリケーションが選択されていません。"
 
-#: ../web/admin/applications.php:116
-#: ../web/admin/applications_static.php:102
 #: ../web/admin/wizard.php:159
 #: ../web/admin/wizard.php:308
+#: ../web/admin/applications_static.php:102
+#: ../web/admin/applications.php:116
 msgid "No available application"
 msgstr "利用可能なアプリケーションが存在しません。"
 
@@ -1679,8 +1676,8 @@ msgstr "利用可能なアプリケーションが存在しません。"
 msgid "No available filesystem"
 msgstr "利用可能なファイルシステムが存在しません。"
 
-#: ../web/index.php:103
 #: ../web/index.php:98
+#: ../web/index.php:103
 #: ../web/startsession.php:166
 msgid "No available server"
 msgstr "利用可能なサーバーが存在しません。"
@@ -1689,32 +1686,28 @@ msgstr "利用可能なサーバーが存在しません。"
 msgid "No available session"
 msgstr "利用可能なセッションが存在しません。"
 
-#: ../web/admin/users.php:157
-#: ../web/admin/wizard.php:157
 #: ../web/index.php:77
+#: ../web/admin/wizard.php:157
+#: ../web/admin/users.php:157
 msgid "No available user"
 msgstr "利用可能なユーザーが存在しません。"
 
 #: ../web/admin/usersgroup.php:344
 msgid "No available user group"
-msgstr "利用可能なユーザー・グループが存在しません。"
-
-#: ../web/classes/SessionReportItem.class.php:151
-msgid "No error"
-msgstr ""
+msgstr "利用可能なユーザーグループが存在しません。"
 
 #: ../web/events/callbacks/SessionStart/Mail.class.php:56
 msgid "No error given"
 msgstr "エラーが取得できませんでした。"
 
-#: ../web/admin/wizard.php:109
 #: ../web/admin/wizard.php:63
+#: ../web/admin/wizard.php:109
 msgid "No group name"
 msgstr "グループ名がありません。"
 
 #: ../web/admin/publications.php:85
 msgid "No publication"
-msgstr "パブリケーションがありません。"
+msgstr "公開設定がありません。"
 
 #: ../web/admin/sumup.php:181
 #: ../web/admin/sumup.php:185
@@ -1727,7 +1720,7 @@ msgstr "未登録のサーバは、存在しません。"
 
 #: ../web/admin/wizard.php:39
 msgid "No user group selected"
-msgstr "ユーザー・グループが選択されていません。"
+msgstr "ユーザーグループが選択されていません。"
 
 #: ../web/admin/wizard.php:49
 msgid "No user selected"
@@ -1737,18 +1730,22 @@ msgstr "ユーザーが選択されていません。"
 msgid "None"
 msgstr "なし"
 
-#: ../web/admin/servers.php:974
-#: ../web/admin/sessions.php:125
-#: ../web/admin/users.php:445
+#: ../web/classes/SessionReportItem.class.php:154
+msgid "Normally ended"
+msgstr "正常終了しました。"
+
+#: ../web/admin/users.php:427
+#: ../web/admin/sessions.php:128
+#: ../web/admin/servers.php:989
 msgid "Not started yet"
 msgstr "開始されていません。"
 
-#: ../web/admin/servers.php:721
+#: ../web/admin/servers.php:733
 msgid "Number of available sessions on this server"
 msgstr "このサーバーの利用可能セッション数"
 
-#: ../web/admin/reporting.php:273
-#: ../web/admin/reporting.php:328
+#: ../web/admin/reporting.php:279
+#: ../web/admin/reporting.php:334
 msgid "Number of sessions"
 msgstr "セッション数"
 
@@ -1769,27 +1766,27 @@ msgstr "OVD アラート: MySQL %s が、オフラインです。"
 #: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:48
 #, php-format
 msgid "OVD End Alert: %s is up again"
-msgstr ""
+msgstr "OVD End Alert: %s is up again"
 
 #: ../web/events/callbacks/SqlFailure/Mail.class.php:49
 #, php-format
 msgid "OVD End Alert: MySQL %s is up again"
-msgstr ""
+msgstr "OVD End Alert: MySQL %s is up again"
 
 #: ../web/events/callbacks/SessionStart/Mail.class.php:50
 #, php-format
 msgid "OVD Session alert: %s (uid %s) couldn't log in"
 msgstr "OVD セッションアラート: %s (uid %s) が、ログインできませんでした。"
 
-#: ../web/admin/sessions.php:161
+#: ../web/admin/sessions.php:164
 msgid "Observe this application"
 msgstr "このアプリケーションを監視"
 
-#: ../web/admin/sessions.php:180
+#: ../web/admin/sessions.php:183
 msgid "Observe this session"
 msgstr "このセッションを監視"
 
-#: ../web/classes/Server.class.php:368
+#: ../web/classes/Server.class.php:346
 msgid "Offline"
 msgstr "オフライン"
 
@@ -1797,39 +1794,46 @@ msgstr "オフライン"
 msgid "On system alerts, mails will be sent to these addresses"
 msgstr "システムアラートは、このメールアドレスに送信されます。"
 
-#: ../web/classes/Server.class.php:366
+#: ../web/classes/Server.class.php:344
 msgid "Online"
 msgstr "オンライン"
 
-#: ../web/admin/reporting.php:480
-#: ../web/admin/reporting.php:506
-msgid "Ordinate: number of session"
+#: ../web/admin/classes/UsersList.class.php:124
+#, php-format
+msgid "Only <strong>%d result</strong> displayed but there are more."
+msgid_plural "Only <strong>%d results</strong> displayed but there are more."
+msgstr[0] "件数が多いため、<strong>%d 件</strong>のみ、表示しています。"
+msgstr[1] "件数が多いため、<strong>%d 件</strong>のみ、表示しています。"
+
+#: ../web/admin/reporting.php:486
+#: ../web/admin/reporting.php:512
+msgid "Ordinate: number of sessions"
 msgstr "縦軸: セッション数"
 
-#: ../web/admin/reporting.php:525
+#: ../web/admin/reporting.php:531
 msgid "Ordinate: usage of CPU in percent"
 msgstr "縦軸: CPU利用率"
 
-#: ../web/admin/reporting.php:538
+#: ../web/admin/reporting.php:544
 msgid "Ordinate: usage of RAM in percent"
 msgstr "縦軸: RAM利用率"
-
-#: ../web/admin/users.php:165
-msgid "Others"
-msgstr "その他"
 
 #: ../web/admin/applications.php:295
 msgid "Package"
 msgstr "パッケージ"
 
-#: ../web/admin/login.php:139
+#: ../web/admin/classes/UsersList.class.php:122
+msgid "Partial content:"
+msgstr "一部のコンテンツ:"
+
 #: ../web/index.php:270
+#: ../web/admin/login.php:139
 msgid "Password"
 msgstr "パスワード"
 
 #: ../web/admin/actions.php:363
 msgid "Password is empty"
-msgstr ""
+msgstr "パスワードが入力されていません。"
 
 #: ../web/admin/actions.php:375
 msgid "Password not changed"
@@ -1861,11 +1865,15 @@ msgstr "Please install CURL support for PHP"
 
 #: ../web/index.php:225
 msgid "Please login with your username"
-msgstr "ユーザー名でログインしてください。"
+msgstr "ユーザーを選択しログインしてください。"
 
 #: ../web/index.php:223
 msgid "Please login with your username and password"
 msgstr "ユーザー名とパスワードでログインしてください。"
+
+#: ../web/admin/classes/UsersList.class.php:125
+msgid "Please restrict your search field."
+msgstr "検索対象を制限してください。"
 
 #: ../web/classes/Preferences.class.php:365
 msgid "Plugins activation"
@@ -1883,7 +1891,7 @@ msgstr "プラグインの設定が無効です。"
 msgid "Policy for administration delegation"
 msgstr "管理者権限の委譲ポリシー"
 
-#: ../web/admin/usersgroup.php:899
+#: ../web/admin/usersgroup.php:897
 msgid "Policy of this group"
 msgstr "このグループのポリシー"
 
@@ -1895,8 +1903,8 @@ msgstr "ポート番号"
 msgid "Portal"
 msgstr "ポータル"
 
-#: ../web/admin/configuration-partial.php:115
-#: ../web/admin/configuration.php:127
+#: ../web/admin/configuration-partial.php:119
+#: ../web/admin/configuration.php:131
 msgid "Preferences not loaded"
 msgstr "Preferences not loaded"
 
@@ -1917,31 +1925,31 @@ msgstr "プロファイル"
 
 #: ../web/modules/UserDB/ldap.php:267
 msgid "Protocol version"
-msgstr "プロトコル・バージョン"
+msgstr "プロトコル バージョン"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:229
 msgid "Protocol version:"
-msgstr "プロトコル・バージョン:"
+msgstr "プロトコル バージョン:"
 
 #: ../web/index.php:578
 msgid "Proxy host"
-msgstr "プロキシー・ホスト"
+msgstr "プロキシーホスト"
 
 #: ../web/index.php:602
 msgid "Proxy password"
-msgstr "プロキシー・パスワード"
+msgstr "プロキシーパスワード"
 
 #: ../web/index.php:586
 msgid "Proxy port"
-msgstr "プロキシー・ポート"
+msgstr "プロキシーポート"
 
 #: ../web/index.php:567
 msgid "Proxy type"
-msgstr "プロキシー・タイプ"
+msgstr "プロキシータイプ"
 
 #: ../web/index.php:594
 msgid "Proxy username"
-msgstr "プロキシー・ユーザー名"
+msgstr "プロキシーユーザー名"
 
 #: ../web/admin/wizard.php:167
 #: ../web/admin/wizard.php:253
@@ -1949,29 +1957,29 @@ msgstr "プロキシー・ユーザー名"
 #: ../web/admin/wizard.php:402
 #: ../web/admin/wizard.php:445
 msgid "Publication Wizard"
-msgstr "パブリケーション・ウィザード"
+msgstr "公開設定ウィザード"
 
 #: ../web/admin/index.php:114
 msgid "Publication list"
-msgstr "パブリケーション・リスト"
+msgstr "公開設定リスト"
 
 #: ../web/admin/actions.php:190
 msgid "Publication successfully added"
-msgstr "パブリケーションが追加されました。"
+msgstr "公開設定が追加されました。"
 
 #: ../web/admin/actions.php:203
 msgid "Publication successfully deleted"
-msgstr "パブリケーションが削除されました。"
+msgstr "公開設定が削除されました。"
 
-#: ../web/admin/includes/page_template.php:142
 #: ../web/admin/index.php:115
+#: ../web/admin/includes/page_template.php:142
 msgid "Publication wizard"
-msgstr "パブリケーション・ウィザード"
+msgstr "公開設定ウィザード"
 
-#: ../web/admin/includes/page_template.php:135
 #: ../web/admin/publications.php:75
+#: ../web/admin/includes/page_template.php:135
 msgid "Publications"
-msgstr "パブリケーション"
+msgstr "公開設定"
 
 #: ../web/index.php:434
 msgid "Quality"
@@ -1979,21 +1987,21 @@ msgstr "品質"
 
 #: ../web/admin/servers.php:345
 #: ../web/admin/servers.php:464
-#: ../web/admin/servers.php:699
+#: ../web/admin/servers.php:711
 msgid "RAM"
 msgstr "RAM"
 
-#: ../web/admin/reporting.php:377
+#: ../web/admin/reporting.php:383
 #: ../web/admin/servers.php:353
-#: ../web/admin/servers.php:705
+#: ../web/admin/servers.php:717
 msgid "RAM usage"
 msgstr "RAM 使用率"
 
-#: ../web/admin/servers.php:738
+#: ../web/admin/servers.php:750
 msgid "Redirection name of this server"
 msgstr "このサーバーのリダイレクション名"
 
-#: ../web/admin/reporting.php:468
+#: ../web/admin/reporting.php:474
 msgid "Refresh"
 msgstr "更新"
 
@@ -2014,8 +2022,8 @@ msgstr "RemoteUser authentication"
 msgid "Remove from default"
 msgstr "デフォルトから削除"
 
+#: ../web/admin/servers.php:881
 #: ../web/admin/applications.php:367
-#: ../web/admin/servers.php:869
 msgid "Remove from this server"
 msgstr "このサーバーから削除"
 
@@ -2031,16 +2039,16 @@ msgstr "このアプリケーションを削除"
 msgid "Rename"
 msgstr "リネーム"
 
-#: ../web/admin/servers.php:926
+#: ../web/admin/servers.php:938
 msgid "Replicate on those servers"
 msgstr "これらのサーバーを複製"
 
-#: ../web/admin/servers.php:915
+#: ../web/admin/servers.php:927
 msgid "Replication"
 msgstr "複製"
 
+#: ../web/admin/reporting.php:391
 #: ../web/admin/includes/page_template.php:217
-#: ../web/admin/reporting.php:385
 msgid "Reporting"
 msgstr "レポーティング"
 
@@ -2061,7 +2069,7 @@ msgstr "ルール"
 msgid "Rules of '%s' successfully modified"
 msgstr "ルール '%s' は、変更されました。"
 
-#: ../web/admin/sessions.php:133
+#: ../web/admin/sessions.php:136
 msgid "Running applications"
 msgstr "稼働中のアプリケーション"
 
@@ -2119,7 +2127,7 @@ msgstr "SMTP ユーザー名"
 
 #: ../web/admin/classes/Preferences_admin.class.php:99
 msgid "SQL configuration not valid"
-msgstr "SQL 設定が、無効です。"
+msgstr "SQL 設定が無効です。"
 
 #: ../web/admin/classes/Preferences_admin.class.php:93
 msgid "SQL configuration not valid(2)"
@@ -2133,14 +2141,14 @@ msgstr "SSH/ping アプレットテスト"
 msgid "Same as Users, "
 msgstr "Same as Users, "
 
-#: ../web/admin/configuration-partial.php:108
-#: ../web/admin/configuration-profile.php:226
-#: ../web/admin/configuration.php:105
+#: ../web/admin/configuration-partial.php:112
 #: ../web/admin/includes/functions.inc.php:282
+#: ../web/admin/configuration-profile.php:226
+#: ../web/admin/configuration.php:109
 msgid "Save"
 msgstr "保存"
 
-#: ../web/admin/users.php:383
+#: ../web/admin/users.php:365
 msgid "Save the modifications"
 msgstr "変更を保存"
 
@@ -2149,29 +2157,30 @@ msgid "Saved successfully"
 msgstr "保存しました。"
 
 #: ../web/admin/classes/UsersGroupsList.class.php:70
-#: ../web/admin/classes/UsersList.class.php:71
+#: ../web/admin/classes/UsersList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:115
 msgid "Search"
-msgstr ""
+msgstr "検 索"
 
-#: ../web/admin/classes/UsersList.class.php:69
+#: ../web/admin/classes/UsersList.class.php:70
 msgid "Search for user pattern: "
-msgstr ""
+msgstr "検索パターン:"
 
 #: ../web/admin/classes/UsersGroupsList.class.php:68
 msgid "Search for users groups pattern: "
-msgstr ""
+msgstr "検索パターン:"
 
 #: ../web/admin/classes/UsersGroupsList.class.php:72
-#: ../web/admin/classes/UsersList.class.php:73
+#: ../web/admin/classes/UsersList.class.php:74
 msgid "Search in: "
-msgstr ""
+msgstr "検索対象: "
 
 #: ../web/classes/Preferences.class.php:157
 msgid "Select debug options you want to enable."
 msgstr "有効にしたいデバッグ・オプションを選択"
 
-#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
 #: ../web/events/callbacks/SqlFailure/Mail.class.php:59
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
 msgid "Send a mail"
 msgstr "メールを送信"
 
@@ -2179,10 +2188,10 @@ msgstr "メールを送信"
 msgid "Send a mail on login problem"
 msgstr "ログイン障害時にメールを送信"
 
-#: ../web/admin/reporting.php:495
-#: ../web/admin/sessions.php:208
-#: ../web/admin/tasks.php:187
 #: ../web/index.php:389
+#: ../web/admin/reporting.php:501
+#: ../web/admin/sessions.php:233
+#: ../web/admin/tasks.php:187
 msgid "Server"
 msgstr "サーバー"
 
@@ -2191,11 +2200,11 @@ msgstr "サーバー"
 msgid "Server '%s' successfully deleted"
 msgstr "サーバー '%s'は、削除されました。"
 
+#: ../web/admin/servers.php:83
 #: ../web/admin/servers.php:190
 #: ../web/admin/servers.php:204
 #: ../web/admin/servers.php:218
 #: ../web/admin/servers.php:232
-#: ../web/admin/servers.php:83
 #, php-format
 msgid "Server '%s' successfully modified"
 msgstr "サーバー '%s'は、変更されました。"
@@ -2205,25 +2214,25 @@ msgstr "サーバー '%s'は、変更されました。"
 msgid "Server '%s' successfully registered"
 msgstr "サーバー '%s'は、登録されました。"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:241
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:227
+#: ../web/admin/classes/Configuration_mode_ad.class.php:241
 msgid "Server Host:"
 msgstr "サーバー名:"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:228
 msgid "Server Port:"
-msgstr "サーバー・ポート:"
+msgstr "サーバーポート:"
 
+#: ../web/modules/UserDB/sql_external.php:195
 #: ../web/modules/UserDB/activedirectory.php:81
 #: ../web/modules/UserDB/ldap.php:253
-#: ../web/modules/UserDB/sql_external.php:195
 #: ../web/modules/UserGroupDB/sql_external.php:105
 msgid "Server host address"
-msgstr "サーバー・ホストアドレス"
+msgstr "サーバーホストアドレス"
 
 #: ../web/modules/UserDB/ldap.php:255
 msgid "Server port"
-msgstr "サーバー・ポート"
+msgstr "サーバーポート"
 
 #: ../web/admin/includes/page_template.php:167
 msgid "Server settings"
@@ -2231,54 +2240,55 @@ msgstr "サーバー"
 
 #: ../web/events/ServerStatusChanged.class.php:30
 msgid "Server status changed"
-msgstr "サーバー・ステータスの変更"
+msgstr "サーバーステータスの変更"
 
 #: ../web/admin/servers.php:111
 msgid "Server upgrading"
 msgstr "サーバーをアップグレード"
 
+#: ../web/admin/sessions.php:122
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:360
 msgid "Server:"
 msgstr "サーバー:"
 
+#: ../web/admin/index.php:64
+#: ../web/admin/tasks.php:119
 #: ../web/admin/includes/page_template.php:35
 #: ../web/admin/includes/page_template.php:73
-#: ../web/admin/index.php:64
 #: ../web/admin/servers.php:297
-#: ../web/admin/tasks.php:119
 msgid "Servers"
 msgstr "サーバー"
 
 #: ../web/admin/index.php:69
 msgid "Servers list"
-msgstr "サーバー・リスト"
+msgstr "サーバーリスト"
 
 #: ../web/admin/applications.php:349
 msgid "Servers with this application"
 msgstr "Servers with this application"
 
-#: ../web/admin/sessions.php:207
+#: ../web/admin/sessions.php:232
 msgid "Session"
 msgstr "セッション"
 
 #: ../web/admin/logs.php:135
 msgid "Session Manager"
-msgstr "セッション・マネージャー"
+msgstr "セッションマネージャー"
 
-#: ../web/admin/reporting.php:306
-#: ../web/admin/reporting.php:342
+#: ../web/admin/reporting.php:312
+#: ../web/admin/reporting.php:348
 msgid "Session end status"
-msgstr ""
+msgstr "セッションは終了しています。"
 
 #: ../web/index.php:323
 msgid "Session mode"
-msgstr "セッション・モード"
+msgstr "セッションモード"
 
 #: ../web/classes/Preferences.class.php:294
 msgid "Session owner can share his session"
 msgstr "セッション所有者はセッションを共有可能"
 
-#: ../web/admin/reporting.php:292
+#: ../web/admin/reporting.php:298
 msgid "Session repartition"
 msgstr "セッションの配分"
 
@@ -2298,11 +2308,15 @@ msgstr "セッションのステータスを変更"
 msgid "Session timeout message"
 msgstr "タイムアウト時のメッセージ"
 
-#: ../web/admin/includes/page_template.php:205
 #: ../web/admin/sessions.php:116
-#: ../web/admin/sessions.php:199
+#: ../web/admin/includes/page_template.php:205
 msgid "Sessions"
 msgstr "セッション"
+
+#: ../web/admin/sessions.php:204
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "セッション数 (合計: %s)"
 
 #: ../web/classes/Preferences.class.php:285
 msgid "Sessions are persistent"
@@ -2313,19 +2327,17 @@ msgid "Sessions settings"
 msgstr "セッション"
 
 #: ../web/admin/servers.php:355
-#: ../web/admin/servers.php:707
+#: ../web/admin/servers.php:719
 msgid "Sessions usage"
 msgstr "セッション使用量"
 
 #: ../web/modules/UserDB/ldap.php:275
-msgid ""
-"Set this to Yes when you use LDAP profile to connect to an ActiveDirectory "
-"environment instead of using the ActiveDirectory profile"
+msgid "Set this to Yes when you use LDAP profile to connect to an ActiveDirectory environment instead of using the ActiveDirectory profile"
 msgstr "ActiveDirectory のプロファイルを利用する代わりに、LDAPのプロファイルを利用する場合は、Yes を選択"
 
 #: ../web/admin/appsgroup.php:310
-#: ../web/admin/users.php:331
 #: ../web/admin/usersgroup.php:648
+#: ../web/admin/users.php:313
 msgid "Settings"
 msgstr "設定"
 
@@ -2333,9 +2345,9 @@ msgstr "設定"
 msgid "Shareable session"
 msgstr "共有可能なセッション"
 
+#: ../web/admin/usersgroup.php:958
 #: ../web/admin/includes/page_template.php:93
 #: ../web/admin/sharedfolders.php:89
-#: ../web/admin/usersgroup.php:960
 msgid "Shared folders"
 msgstr "共有フォルダー"
 
@@ -2364,14 +2376,14 @@ msgstr "共有フォルダーを修正しました。"
 msgid "SharedFolder successfully renamed"
 msgstr "共有フォルダーをリネームしました。"
 
-#: ../web/classes/Preferences.class.php:288
 #: ../web/index.php:506
+#: ../web/classes/Preferences.class.php:288
 msgid "Show icons on user desktop"
 msgstr "デスクトップ上にアイコンを表示"
 
-#: ../web/classes/SessionReportItem.class.php:157
+#: ../web/classes/SessionReportItem.class.php:160
 msgid "Shutdown of the Application Server"
-msgstr ""
+msgstr "アプリケーションサーバーのシャットダウン"
 
 #: ../web/index.php:411
 msgid "Size"
@@ -2390,42 +2402,42 @@ msgstr "Specific Organization Unit:"
 msgid "Sql failure"
 msgstr "SQLの失敗"
 
-#: ../web/admin/sessions.php:122
+#: ../web/admin/sessions.php:125
 msgid "Started:"
 msgstr "開始:"
 
 #: ../web/admin/usersgroup.php:424
 msgid "Static"
-msgstr "スタティック"
+msgstr "特定"
 
 #. general div
 #: ../web/admin/applications_static.php:98
 msgid "Static Applications"
-msgstr "固定アプリケーション"
+msgstr "特定アプリケーション"
 
 #: ../web/admin/includes/page_template.php:128
 msgid "Static applications"
-msgstr "固定アプリケーション"
+msgstr "特定アプリケーション"
 
 #. echo '<th>'._('Version').'</th>';
-#: ../web/admin/applications.php:406
 #: ../web/admin/appsgroup.php:149
 #: ../web/admin/appsgroup.php:299
-#: ../web/admin/includes/page_template.php:59
-#: ../web/admin/index.php:127
-#: ../web/admin/servers.php:308
-#: ../web/admin/servers.php:686
-#: ../web/admin/servers.php:940
-#: ../web/admin/sessions.php:210
-#: ../web/admin/sumup.php:194
-#: ../web/admin/tasks.php:120
-#: ../web/admin/tasks.php:188
 #: ../web/admin/usersgroup.php:360
 #: ../web/admin/usersgroup.php:636
+#: ../web/admin/index.php:127
+#: ../web/admin/sessions.php:235
+#: ../web/admin/tasks.php:120
+#: ../web/admin/tasks.php:188
+#: ../web/admin/includes/page_template.php:59
+#: ../web/admin/servers.php:308
+#: ../web/admin/servers.php:698
+#: ../web/admin/servers.php:952
+#: ../web/admin/sumup.php:194
+#: ../web/admin/applications.php:406
 msgid "Status"
 msgstr "ステータス"
 
-#: ../web/admin/sessions.php:129
+#: ../web/admin/sessions.php:132
 msgid "Status:"
 msgstr "ステータス:"
 
@@ -2451,14 +2463,14 @@ msgstr "サスペンド中"
 
 #: ../web/admin/servers.php:326
 #: ../web/admin/servers.php:398
-#: ../web/admin/servers.php:662
+#: ../web/admin/servers.php:674
 #: ../web/classes/Preferences.class.php:244
 msgid "Switch to maintenance"
 msgstr "メンテナンスモードへ切替"
 
 #: ../web/admin/servers.php:322
 #: ../web/admin/servers.php:397
-#: ../web/admin/servers.php:658
+#: ../web/admin/servers.php:670
 msgid "Switch to production"
 msgstr "プロダクションモードに切替"
 
@@ -2468,11 +2480,11 @@ msgstr "システム"
 
 #: ../web/modules/UserDB/sql_external.php:203
 msgid "Table of users"
-msgstr "ユーザー・テーブル"
+msgstr "ユーザー テーブル"
 
 #: ../web/classes/Preferences.class.php:210
 msgid "Table prefix"
-msgstr "テーブル・プレフィックス"
+msgstr "テーブル プレフィックス"
 
 #: ../web/admin/actions.php:71
 #: ../web/admin/servers.php:101
@@ -2481,13 +2493,13 @@ msgid "Task successfully added"
 msgstr "タスクを追加しました。"
 
 #: ../web/admin/actions.php:73
-#: ../web/admin/servers.php:148
 #: ../web/admin/tasks.php:89
+#: ../web/admin/servers.php:148
 msgid "Task successfully deleted"
 msgstr "タスクを削除しました。"
 
-#: ../web/admin/includes/page_template.php:85
 #: ../web/admin/tasks.php:176
+#: ../web/admin/includes/page_template.php:85
 msgid "Tasks"
 msgstr "タスク"
 
@@ -2513,15 +2525,11 @@ msgid "The address of your MySQL server."
 msgstr "MySQLサーバーのアドレス"
 
 #: ../web/classes/Preferences.class.php:202
-msgid ""
-"The address of your database host. This database contains adminstration "
-"console data. Example: localhost or db.mycorporate.com."
+msgid "The address of your database host. This database contains adminstration console data. Example: localhost or db.mycorporate.com."
 msgstr "DBサーバーのアドレス (管理者コンソールのデータが登録されているデータベース)"
 
 #: ../web/classes/Preferences.class.php:202
-msgid ""
-"The address of your database host. This database contains adminstrations "
-"console data. Example: localhost or db.mycorporate.com."
+msgid "The address of your database host. This database contains adminstrations console data. Example: localhost or db.mycorporate.com."
 msgstr "DBサーバーのアドレス (管理者コンソールのデータが登録されているデータベース)"
 
 #: ../web/events/callbacks/SessionStart/Mail.class.php:54
@@ -2530,21 +2538,19 @@ msgstr "エラーが発生しました。\n"
 
 #: ../web/modules/AuthMethod/Token.php:96
 msgid "The id of the XML node which contains the user login"
-msgstr ""
+msgstr "The id of the XML node which contains the user login"
 
 #: ../web/classes/Preferences.class.php:167
 msgid "The maximum number of items that can be displayed."
-msgstr ""
+msgstr "アイテムの最大表示数"
 
 #: ../web/modules/AuthMethod/Token.php:97
-msgid ""
-"The name of the XML attribute which contains the user login (in the node "
-"\"user_node_name\")"
-msgstr ""
+msgid "The name of the XML attribute which contains the user login (in the node \"user_node_name\")"
+msgstr "The name of the XML attribute which contains the user login (in the node \"user_node_name\")"
 
-#: ../web/classes/Preferences.class.php:208
 #: ../web/modules/UserDB/sql_external.php:201
 #: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
 msgid "The name of the database."
 msgstr "データベース名"
 
@@ -2566,66 +2572,58 @@ msgstr "サービスは利用できません。時間を置いてから再度接
 
 #: ../web/classes/Preferences.class.php:210
 msgid "The table prefix for the database."
-msgstr "データベースのテーブル・プレフィックス"
+msgstr "データベースのテーブルプレフィックス"
 
+#: ../web/modules/UserDB/sql_external.php:197
 #: ../web/modules/UserDB/activedirectory.php:85
 #: ../web/modules/UserDB/ldap.php:257
-#: ../web/modules/UserDB/sql_external.php:197
-msgid ""
-"The user login that must be used to access the database (to list users "
-"accounts)."
-msgstr ""
+msgid "The user login that must be used to access the database (to list users accounts)."
+msgstr "The user login that must be used to access the database (to list users accounts)."
 
 #: ../web/modules/UserGroupDB/sql_external.php:107
-msgid ""
-"The user login that must be used to access the database (to list users "
-"groups accounts)."
-msgstr ""
+msgid "The user login that must be used to access the database (to list users groups accounts)."
+msgstr "The user login that must be used to access the database (to list users groups accounts)."
 
 #: ../web/classes/Preferences.class.php:204
 msgid "The user name that must be used to access the database."
-msgstr ""
+msgstr "The user name that must be used to access the database."
 
+#: ../web/modules/UserDB/sql_external.php:199
 #: ../web/modules/UserDB/activedirectory.php:87
 #: ../web/modules/UserDB/ldap.php:259
-#: ../web/modules/UserDB/sql_external.php:199
 #: ../web/modules/UserGroupDB/sql_external.php:109
-msgid ""
-"The user password that must be used to access the database (to list users "
-"accounts)."
-msgstr ""
+msgid "The user password that must be used to access the database (to list users accounts)."
+msgstr "The user password that must be used to access the database (to list users accounts)."
 
 #: ../web/classes/Preferences.class.php:206
 msgid "The user password that must be used to access the database."
-msgstr ""
+msgstr "The user password that must be used to access the database."
 
 #: ../web/classes/Preferences.class.php:204
 msgid "The username that must be used to access the database."
-msgstr ""
+msgstr "データベースに接続可能なユーザー名"
 
 #. the user does not exist
 #: ../web/admin/login.php:38
 #: ../web/admin/login.php:45
 msgid "There was an error with your authentication"
-msgstr "認証方式にエラーがあります。"
+msgstr "認証に失敗しました。"
 
 #: ../web/admin/applications.php:318
 msgid "This application is orphan"
 msgstr "This application is orphan"
 
 #: ../web/admin/classes/Configuration_mode_internal.class.php:82
-msgid ""
-"This is the default Profile manager. This profile manager saves all the data "
-"into a the same SQL database as you defined it in the system configuration."
+msgid "This is the default Profile manager. This profile manager saves all the data into a the same SQL database as you defined it in the system configuration."
 msgstr "これは、既定のプロファイル管理方法です。すべてのプロファイルは、システムで設定されたデータベースサーバーに保存されます。"
 
 #: ../web/admin/actions.php:195
 msgid "This publication already exists"
-msgstr "このパブリケーションは、すでに存在しています。"
+msgstr "この公開設定は、すでに存在しています。"
 
 #: ../web/admin/actions.php:208
 msgid "This publication does not exist"
-msgstr "パブリケーションが存在しません。"
+msgstr "公開設定が存在しません。"
 
 #: ../web/admin/usersgroup.php:481
 msgid "Time between two updates:"
@@ -2668,19 +2666,19 @@ msgid "Token validation URL"
 msgstr "Token validation URL"
 
 #. echo '<th>'._('Package').'</th>';
+#: ../web/admin/usersgroup.php:361
+#: ../web/admin/applications_static.php:113
+#: ../web/admin/applications_static.php:435
+#: ../web/admin/tasks.php:118
+#: ../web/admin/tasks.php:186
+#: ../web/admin/servers.php:306
+#: ../web/admin/servers.php:435
+#: ../web/admin/servers.php:698
+#: ../web/admin/servers.php:951
+#: ../web/admin/sumup.php:192
 #: ../web/admin/applications.php:126
 #: ../web/admin/applications.php:296
 #: ../web/admin/applications.php:405
-#: ../web/admin/applications_static.php:113
-#: ../web/admin/applications_static.php:435
-#: ../web/admin/servers.php:306
-#: ../web/admin/servers.php:435
-#: ../web/admin/servers.php:686
-#: ../web/admin/servers.php:939
-#: ../web/admin/sumup.php:192
-#: ../web/admin/tasks.php:118
-#: ../web/admin/tasks.php:186
-#: ../web/admin/usersgroup.php:361
 msgid "Type"
 msgstr "タイプ"
 
@@ -2690,8 +2688,8 @@ msgstr "タイプ"
 msgid "URL"
 msgstr "URL"
 
-#: ../web/admin/users.php:307
-#: ../web/admin/users.php:357
+#: ../web/admin/users.php:289
+#: ../web/admin/users.php:339
 msgid "Uid"
 msgstr "Uid"
 
@@ -2705,7 +2703,7 @@ msgstr "セッションが接続されているためサーバーを削除でき
 
 #: ../web/admin/actions.php:205
 msgid "Unable to delete the publication"
-msgstr "パブリケーションを削除できません。"
+msgstr "公開設定を削除できません。"
 
 #: ../web/admin/actions.php:351
 msgid "Unable to delete this news"
@@ -2721,11 +2719,11 @@ msgstr "共有フォルダへのアクセス権を削除できませんでした
 
 #: ../web/admin/wizard.php:161
 msgid "Unable to display users list: too many users"
-msgstr ""
+msgstr "ユーザーリストを表示できません。ユーザ数が多すぎます。"
 
 #: ../web/admin/actions.php:192
 msgid "Unable to save the publication"
-msgstr "パブリケーションを保存できませんでした。"
+msgstr "公開設定を保存できませんでした。"
 
 #: ../web/admin/login.php:57
 msgid "Unauthorized access"
@@ -2735,27 +2733,27 @@ msgstr "許可されないアクセス"
 msgid "Unblock"
 msgstr "アンブロック"
 
-#: ../web/classes/Server.class.php:362
+#: ../web/classes/Server.class.php:340
 msgid "Under maintenance"
 msgstr "メンテナンスモード"
 
-#: ../web/classes/Server.class.php:372
-#: ../web/classes/Server.class.php:409
-#: ../web/classes/Server.class.php:444
+#: ../web/classes/Server.class.php:350
+#: ../web/classes/Server.class.php:385
+#: ../web/classes/Server.class.php:418
 msgid "Unknown"
 msgstr "不明"
 
-#: ../web/admin/applications_static.php:164
 #: ../web/admin/appsgroup.php:185
-#: ../web/admin/servers.php:392
-#: ../web/admin/servers.php:497
-#: ../web/admin/sessions.php:237
-#: ../web/admin/users.php:218
 #: ../web/admin/usersgroup.php:408
 #: ../web/admin/wizard.php:211
 #: ../web/admin/wizard.php:230
 #: ../web/admin/wizard.php:355
 #: ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:164
+#: ../web/admin/users.php:200
+#: ../web/admin/sessions.php:262
+#: ../web/admin/servers.php:392
+#: ../web/admin/servers.php:497
 msgid "Unmark all"
 msgstr "すべてを未選択"
 
@@ -2794,13 +2792,13 @@ msgstr "名称を更新"
 msgid "Update the schedule"
 msgstr "スケジュールを更新"
 
-#: ../web/admin/servers.php:831
 #: ../web/admin/tasks.php:249
+#: ../web/admin/servers.php:843
 msgid "Upgrade"
 msgstr "アップグレード"
 
-#: ../web/admin/servers.php:835
 #: ../web/admin/tasks.php:239
+#: ../web/admin/servers.php:847
 msgid "Upgrade the internal system and applications"
 msgstr "内部システムとアプリケーションをアップグレード"
 
@@ -2826,25 +2824,25 @@ msgstr "LDAPフィールドを使って、CIFSを利用"
 msgid "Use CIFS link using the LDAP field:"
 msgstr "LDAPフィールドを使って、CIFSを利用"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:297
-#: ../web/admin/classes/Configuration_mode_ad.class.php:365
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:287
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:370
+#: ../web/admin/classes/Configuration_mode_ad.class.php:297
+#: ../web/admin/classes/Configuration_mode_ad.class.php:365
 msgid "Use Internal User Groups"
-msgstr "Internal ユーザー・グループを利用"
+msgstr "Internal ユーザーグループを利用"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:306
-#: ../web/admin/classes/Configuration_mode_ad.class.php:370
-#: ../web/admin/classes/Configuration_mode_internal.class.php:104
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:296
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:375
+#: ../web/admin/classes/Configuration_mode_internal.class.php:104
+#: ../web/admin/classes/Configuration_mode_ad.class.php:306
+#: ../web/admin/classes/Configuration_mode_ad.class.php:370
 msgid "Use Internal home directory (no server replication)"
 msgstr "ホームディレクトリを利用"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:278
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:368
 msgid "Use LDAP User Groups using Posix group"
-msgstr "LDAP ユーザー・グループを利用 (Posix group)"
+msgstr "LDAP ユーザーグループを利用 (Posix group)"
 
 #: ../web/modules/UserGroupDB/ldap_posix.php:134
 msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
@@ -2869,7 +2867,7 @@ msgstr "テスト用ユーザリストを利用"
 
 #: ../web/admin/wizard.php:328
 msgid "Use appgroups"
-msgstr "アプリケーショングループを使用"
+msgstr "アプリグループを使用"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:231
 msgid "Use as Active Directory server:"
@@ -2887,9 +2885,9 @@ msgstr "ロードバランスを使う"
 msgid "Use pop-up"
 msgstr "ポップアップを使用"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:313
-#: ../web/admin/classes/Configuration_mode_internal.class.php:111
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:303
+#: ../web/admin/classes/Configuration_mode_internal.class.php:111
+#: ../web/admin/classes/Configuration_mode_ad.class.php:313
 msgid "Use shared folders"
 msgstr "共有フォルダを使用"
 
@@ -2899,19 +2897,19 @@ msgstr "テスト用ユーザーを利用"
 
 #: ../web/admin/wizard.php:185
 msgid "Use usergroups"
-msgstr "既存ユーザー・グループを使用"
+msgstr "既存ユーザーグループを使用"
 
-#: ../web/admin/sessions.php:209
+#: ../web/admin/sessions.php:234
 msgid "User"
 msgstr "ユーザー"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:288
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:269
+#: ../web/admin/classes/Configuration_mode_ad.class.php:288
 msgid "User Groups"
 msgstr "ユーザーグループ"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:361
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:364
+#: ../web/admin/classes/Configuration_mode_ad.class.php:361
 msgid "User Groups:"
 msgstr "ユーザーグループ:"
 
@@ -2944,16 +2942,16 @@ msgstr "ユーザーグループ"
 msgid "User groups management"
 msgstr "ユーザーグループ管理"
 
-#: ../web/admin/users.php:395
+#: ../web/admin/users.php:377
 msgid "User groups with this user"
-msgstr "このユーザーをユーザー・グループに追加"
+msgstr "このユーザーをユーザーグループに追加"
 
 #: ../web/admin/index.php:51
 msgid "User list"
 msgstr "ユーザーリスト"
 
-#: ../web/modules/UserDB/ldap.php:257
 #: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/ldap.php:257
 #: ../web/modules/UserGroupDB/sql_external.php:107
 msgid "User login"
 msgstr "ユーザーログイン"
@@ -2962,8 +2960,8 @@ msgstr "ユーザーログイン"
 msgid "User not authorize to manage configuration"
 msgstr "利用者に設定管理の権限を委任しない"
 
-#: ../web/modules/UserDB/ldap.php:259
 #: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/ldap.php:259
 #: ../web/modules/UserGroupDB/sql_external.php:109
 msgid "User password"
 msgstr "ユーザーパスワード"
@@ -3007,12 +3005,12 @@ msgstr "ユーザーグループを削除しました。"
 msgid "UserGroup successfully modified"
 msgstr "ユーザーグループを修正しました。"
 
-#: ../web/admin/classes/Configuration_mode_ad.class.php:247
-#: ../web/admin/classes/Configuration_mode_internal.class.php:86
-#: ../web/admin/classes/Configuration_mode_ldap.class.php:239
-#: ../web/admin/includes/page_template.php:100
-#: ../web/admin/includes/page_template.php:41
 #: ../web/admin/users.php:150
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:239
+#: ../web/admin/classes/Configuration_mode_internal.class.php:86
+#: ../web/admin/classes/Configuration_mode_ad.class.php:247
+#: ../web/admin/includes/page_template.php:41
+#: ../web/admin/includes/page_template.php:100
 msgid "Users"
 msgstr "ユーザー"
 
@@ -3058,19 +3056,19 @@ msgstr "ユーザーグループ '%s' の編集に成功しました。"
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:325
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:384
 msgid "Using global login/password to authenticate"
-msgstr ""
+msgstr "Using global login/password to authenticate"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:320
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:382
 msgid "Using user login/password to authenticate"
-msgstr ""
+msgstr "Using user login/password to authenticate"
 
 #: ../web/admin/usersgroup.php:488
 #: ../web/admin/usersgroup.php:730
 msgid "Validation type"
 msgstr "Validation type"
 
-#: ../web/admin/servers.php:686
+#: ../web/admin/servers.php:698
 msgid "Version"
 msgstr "バージョン"
 
@@ -3109,32 +3107,34 @@ msgstr "ウエブリンク設定"
 msgid "Web log"
 msgstr "Web log"
 
-#: ../web/admin/servers.php:753
+#: ../web/admin/servers.php:765
 msgid "Web port of this server"
 msgstr "このサーバーのポート番号"
 
 #: ../web/classes/Preferences.class.php:329
-msgid ""
-"When set to yes, the session will start in a new browser window, and when "
-"set to no, the session will start in the current browser window"
+msgid "When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window"
 msgstr "”はい”を選択した場合、セッションは新規ウィンドウで開始されます。”いいえ”を選択した場合、現在利用しているウインドウで開始されます。"
 
 #: ../web/index.php:367
 msgid "Windows keymap"
-msgstr "ウィンドウ・キーマップ"
+msgstr "Windows キーマップ"
+
+#: ../web/admin/sessions.php:124
+msgid "Windows server:"
+msgstr "Windows サーバー:"
 
 #: ../web/index.php:132
 msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
 msgstr "あなたは、既に接続中です。"
 
-#: ../web/admin/sumup.php:113
-#: ../web/admin/sumup.php:88
-#: ../web/admin/usersgroup.php:480
 #: ../web/index.php:481
 #: ../web/index.php:495
 #: ../web/index.php:509
 #: ../web/index.php:523
 #: ../web/index.php:542
+#: ../web/admin/usersgroup.php:480
+#: ../web/admin/sumup.php:88
+#: ../web/admin/sumup.php:113
 #: ../web/modules/UserDB/ldap.php:276
 msgid "Yes"
 msgstr "はい"
@@ -3157,9 +3157,7 @@ msgid "You are not allowed to perform this action"
 msgstr "このアクションの権限がありません。"
 
 #: ../web/admin/sharedfolders.php:84
-msgid ""
-"You are not using Internal WebDAV filesystem, \"Shared folders\" are "
-"disabled!"
+msgid "You are not using Internal WebDAV filesystem, \"Shared folders\" are disabled!"
 msgstr "Internal の WebDAV ファイルシステムが利用できません。\"Shared folders\"  は、利用できません。"
 
 #: ../web/ajax/login.php:30
@@ -3171,10 +3169,7 @@ msgid "You can customize the heading title here."
 msgstr "タイトルヘッダを変更できます。"
 
 #: ../web/classes/Preferences.class.php:317
-msgid ""
-"You can customize the logo by entering a new path or replacing the "
-"corresponding image. Use a 90 pixels high image in png or jpeg format. "
-"Example: sessionmanager/media/image/header.png"
+msgid "You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png"
 msgstr "ロゴをカスタマイズできます。高解像度 90 ピクセル (png または jpeg) 例: sessionmanager/media/image/header.png"
 
 #: ../web/startsession.php:169
@@ -3187,7 +3182,7 @@ msgstr "ただいま、Windowsサーバーに接続できません。"
 
 #: ../web/admin/appsgroup.php:69
 msgid "You must define a name to your application group"
-msgstr "アプリケーショングループ名を定義する必要があります。"
+msgstr "アプリグループ名を定義する必要があります。"
 
 #: ../web/admin/usersgroup.php:112
 #: ../web/admin/usersgroup.php:134
@@ -3213,7 +3208,7 @@ msgstr "パッケージ名が必要です。"
 #: ../web/admin/usersgroup.php:143
 #: ../web/admin/usersgroup.php:239
 msgid "You must give a value to each rule of your usergroup"
-msgstr "ユーザー・グループのルールを定義する必要があります。"
+msgstr "ユーザーグループのルールを定義する必要があります。"
 
 #: ../web/webservices/session_invite.php:95
 msgid "You received an invitation from"
@@ -3223,25 +3218,25 @@ msgstr "招待メールの From アドレス"
 msgid "access to these applications"
 msgstr "利用可能アプリケーション"
 
-#: ../web/admin/index.php:147
+#: ../web/admin/index.php:146
 msgid "active session"
 msgstr "アクティブセッション"
 
-#: ../web/admin/index.php:145
+#: ../web/admin/index.php:144
 msgid "active sessions"
 msgstr "アクティブセッション"
 
 #: ../web/admin/wizard.php:510
 msgid "and these applications groups"
-msgstr "アプリケーション・グループ"
+msgstr "アプリグループ"
 
 #: ../web/admin/wizard.php:508
 msgid "and this applications group"
-msgstr "アプリケーション・グループ"
+msgstr "アプリグループ"
 
 #: ../web/admin/wizard.php:524
 msgid "and this newly created applications group"
-msgstr "アプリケーショングループを再作成します。"
+msgstr "アプリグループを再作成します。"
 
 #: ../web/classes/Preferences.class.php:309
 msgid "app with desktop"
@@ -3251,35 +3246,35 @@ msgstr "デスクトップと共にアプリケーションを起動"
 msgid "application"
 msgstr "アプリケーション"
 
-#: ../web/admin/index.php:177
+#: ../web/admin/index.php:176
 msgid "broken server"
 msgstr "壊れたサーバー"
 
-#: ../web/admin/index.php:175
+#: ../web/admin/index.php:174
 msgid "broken servers"
 msgstr "壊れたサーバー"
 
-#: ../web/admin/servers.php:732
-#: ../web/admin/servers.php:747
-#: ../web/admin/servers.php:762
+#: ../web/admin/servers.php:744
+#: ../web/admin/servers.php:759
+#: ../web/admin/servers.php:774
 msgid "change"
 msgstr "変更"
 
 #: ../web/admin/servers.php:343
 #: ../web/admin/servers.php:462
-#: ../web/admin/servers.php:698
+#: ../web/admin/servers.php:710
 msgid "core"
 msgstr "コア"
 
 #: ../web/admin/servers.php:343
 #: ../web/admin/servers.php:462
-#: ../web/admin/servers.php:698
+#: ../web/admin/servers.php:710
 msgid "cores"
 msgstr "コア"
 
 #: ../web/classes/Preferences.class.php:158
 msgid "critical"
-msgstr "critical"
+msgstr "重要"
 
 #: ../web/classes/Preferences.class.php:158
 #: ../web/classes/Preferences.class.php:333
@@ -3290,15 +3285,15 @@ msgstr "デバッグ"
 msgid "desktop icons"
 msgstr "デスクトップアイコン"
 
-#: ../web/classes/Server.class.php:118
+#: ../web/classes/Server.class.php:106
 msgid "does not send a valid monitoring"
 msgstr "does not send a valid monitoring"
 
-#: ../web/classes/Server.class.php:104
+#: ../web/classes/Server.class.php:92
 msgid "does not send a valid type"
 msgstr "does not send a valid type"
 
-#: ../web/classes/Server.class.php:111
+#: ../web/classes/Server.class.php:99
 msgid "does not send a valid version"
 msgstr "does not send a valid version"
 
@@ -3306,7 +3301,7 @@ msgstr "does not send a valid version"
 msgid "error"
 msgstr "エラー"
 
-#: ../web/admin/usersgroup.php:907
+#: ../web/admin/usersgroup.php:905
 msgid "extend from default"
 msgstr "デフォルトから拡張"
 
@@ -3314,9 +3309,9 @@ msgstr "デフォルトから拡張"
 msgid "fake"
 msgstr "疑似"
 
-#: ../web/admin/configuration-sumup.php:35
 #: ../web/index.php:26
 #: ../web/webservices/server_status.php:48
+#: ../web/admin/configuration-sumup.php:35
 msgid "get Preferences failed"
 msgstr "初期設定に失敗しました。"
 
@@ -3332,11 +3327,11 @@ msgstr "ユーザーグループ"
 msgid "info"
 msgstr "情報"
 
-#: ../web/admin/servers.php:887
+#: ../web/admin/servers.php:899
 msgid "install in progress"
 msgstr "インストール状況"
 
-#: ../web/classes/Server.class.php:208
+#: ../web/classes/Server.class.php:194
 msgid "is NOT online!"
 msgstr "オンラインでありません!"
 
@@ -3363,7 +3358,7 @@ msgstr "ログイン:"
 
 #: ../web/classes/Preferences.class.php:187
 msgid "manage Application groups"
-msgstr "アプリケーショングループの管理"
+msgstr "アプリグループの管理"
 
 #: ../web/classes/Preferences.class.php:185
 msgid "manage Applications"
@@ -3379,7 +3374,7 @@ msgstr "ニュースの管理"
 
 #: ../web/classes/Preferences.class.php:189
 msgid "manage Publications"
-msgstr "パブリケーションの管理"
+msgstr "公開設定の管理"
 
 #: ../web/classes/Preferences.class.php:177
 msgid "manage Servers"
@@ -3403,9 +3398,9 @@ msgstr "マッチ条件"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
 msgid "more"
-msgstr "more"
+msgstr "さらに"
 
-#: ../web/admin/servers.php:806
+#: ../web/admin/servers.php:818
 msgid "more options"
 msgstr "拡張オプション"
 
@@ -3432,25 +3427,25 @@ msgstr "名前"
 msgid "no"
 msgstr "いいえ"
 
-#: ../web/admin/index.php:167
+#: ../web/admin/index.php:166
 msgid "offline server"
 msgstr "オフラインサーバー"
 
-#: ../web/admin/index.php:165
+#: ../web/admin/index.php:164
 msgid "offline servers"
 msgstr "オフラインサーバー"
 
-#: ../web/admin/index.php:157
+#: ../web/admin/index.php:156
 msgid "online server"
 msgstr "オンラインサーバー"
 
-#: ../web/admin/index.php:155
+#: ../web/admin/index.php:154
 msgid "online servers"
 msgstr "オンラインサーバー"
 
-#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
 #: ../web/index.php:594
 #: ../web/index.php:602
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
 msgid "optional"
 msgstr "オプション"
 
@@ -3474,15 +3469,15 @@ msgstr "オンラインのセッションに参加するために以下のリン
 msgid "popup"
 msgstr "ポップアップ"
 
-#: ../web/admin/includes/page_template.php:370
 #: ../web/footer.php:31
+#: ../web/admin/includes/page_template.php:370
 #: ../web/includes/functions.inc.d/template.inc.php:150
 msgid "powered by"
 msgstr "Powered by"
 
 #: ../web/admin/classes/Preferences_admin.class.php:128
 msgid "prefs is not valid for FS plugin"
-msgstr ""
+msgstr "prefs is not valid for FS plugin"
 
 #: ../web/admin/classes/Preferences_admin.class.php:149
 #: ../web/admin/classes/Preferences_admin.class.php:159
@@ -3523,7 +3518,7 @@ msgstr "共有可能"
 msgid "size"
 msgstr "サイズ"
 
-#: ../web/admin/reporting.php:456
+#: ../web/admin/reporting.php:462
 msgid "step"
 msgstr "ステップ"
 
@@ -3532,13 +3527,13 @@ msgid "table of usersgroup"
 msgstr "ユーザーグループの表示"
 
 #: ../web/classes/Preferences.class.php:309
-#: ../web/classes/SessionReportItem.class.php:156
+#: ../web/classes/SessionReportItem.class.php:159
 msgid "timeout"
 msgstr "タイムアウト"
 
-#: ../web/admin/reporting.php:444
+#: ../web/admin/reporting.php:450
 msgid "to"
-msgstr "to"
+msgstr "終了"
 
 #: ../web/classes/Preferences.class.php:175
 msgid "use Admin panel"
@@ -3546,7 +3541,7 @@ msgstr "管理者パネルを使う"
 
 #: ../web/classes/Preferences.class.php:186
 msgid "view Application groups"
-msgstr "アプリケーショングループを表示"
+msgstr "アプリグループを表示"
 
 #: ../web/classes/Preferences.class.php:184
 msgid "view Applications"
@@ -3562,7 +3557,7 @@ msgstr "ニュースを表示"
 
 #: ../web/classes/Preferences.class.php:188
 msgid "view Publications"
-msgstr "パブリケーションを表示"
+msgstr "公開設定を表示"
 
 #: ../web/classes/Preferences.class.php:176
 msgid "view Servers"
@@ -3594,7 +3589,7 @@ msgstr "警告"
 
 #: ../web/classes/Preferences.class.php:309
 msgid "windows keymap"
-msgstr "ウィンドウズ・ "
+msgstr "windows キーマップ"
 
 #: ../web/classes/Preferences.class.php:224
 #: ../web/classes/Preferences.class.php:227
@@ -3614,3 +3609,9 @@ msgstr "ウィンドウズ・ "
 #: ../web/classes/Preferences.class.php:330
 msgid "yes"
 msgstr "はい"
+
+#~ msgid "No error"
+#~ msgstr "エラーはありません。"
+
+#~ msgid "Others"
+#~ msgstr "その他"

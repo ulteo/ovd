@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: ovd-i 18n\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-04-19 09:36+0200\n"
-"PO-Revision-Date: 2010-04-19 09:57+0200\n"
+"PO-Revision-Date: 2010-05-23 15:14+0900\n"
 "Last-Translator: Satoshi Yuza <satoshi.yuza@gmail.com>\n"
 "Language-Team: none\n"
 "MIME-Version: 1.0\n"
@@ -19,62 +19,62 @@ msgstr ""
 
 #: ../web/portal/share_app.php:27
 msgid "Application sharing"
-msgstr ""
+msgstr "アプリケーション共有"
 
 #: ../web/desktop/index.php:61
-#: ../web/external/index.php:99
-#: ../web/portal/external_app.php:88
-#: ../web/portal/index.php:75
 #: ../web/portal/resume.php:58
+#: ../web/portal/index.php:75
+#: ../web/portal/external_app.php:89
+#: ../web/external/index.php:99
 msgid "Close this window"
-msgstr ""
+msgstr "ウインドウを閉じる"
 
 #: ../web/desktop/index.php:91
 msgid "Desktop sharing"
-msgstr ""
+msgstr "デスクトップ共有"
 
 #: ../web/desktop/index.php:96
 #: ../web/portal/share_app.php:31
 msgid "Email address"
-msgstr ""
+msgstr "Eメールアドレス"
 
 #: ../web/desktop/index.php:62
-#: ../web/error/index.php:54
 #: ../web/portal/index.php:76
+#: ../web/error/index.php:54
 #, php-format
 msgid "If you want to start another session, click <a href=\"%s\">here</a>"
-msgstr ""
+msgstr "別のセッションを開始したい場合、 <a href=\"%s\">ここ</a>をクリックしてください。"
 
 #: ../web/desktop/index.php:99
 #: ../web/portal/share_app.php:32
 msgid "Invite"
-msgstr ""
+msgstr "招待"
 
+#: ../web/portal/external_app.php:122
 #: ../web/external/index.php:132
-#: ../web/portal/external_app.php:121
 #, php-format
 msgid "Loading %s"
-msgstr ""
+msgstr "%sを読み込み中"
 
 #: ../web/portal/resume.php:75
 msgid "Loading Application"
-msgstr ""
+msgstr "アプリケーション起動"
 
 #: ../web/desktop/index.php:119
 msgid "Loading Desktop"
-msgstr ""
+msgstr "デスクトップ起動"
 
 #: ../web/error/index.php:71
 msgid "Loading Error"
-msgstr ""
+msgstr "起動時エラー"
 
 #: ../web/portal/index.php:179
 msgid "Loading Portal"
-msgstr ""
+msgstr "ポータル起動"
 
 #: ../web/share/index.php:74
 msgid "Loading Share"
-msgstr ""
+msgstr "共有起動"
 
 #: ../web/portal/index.php:118
 msgid "Logout"
@@ -82,11 +82,11 @@ msgstr "ログアウト"
 
 #: ../web/portal/index.php:134
 msgid "My applications"
-msgstr ""
+msgstr "アプリケーション"
 
 #: ../web/portal/index.php:158
 msgid "My files"
-msgstr ""
+msgstr "ファイル"
 
 #: ../web/portal/index.php:146
 msgid "Running applications"
@@ -95,91 +95,92 @@ msgstr "稼働中のアプリケーション"
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/error/index.php:51
 msgid "Server: invalid token"
-msgstr ""
+msgstr "Server: トークンに誤りがあります。"
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/desktop/index.php:57
-#: ../web/external/index.php:94
-#: ../web/portal/external_app.php:83
-#: ../web/portal/index.php:71
 #: ../web/portal/resume.php:54
+#: ../web/portal/index.php:71
+#: ../web/portal/external_app.php:84
+#: ../web/external/index.php:94
 #: ../web/share/index.php:54
 msgid "Server: session closed unexpectedly"
-msgstr ""
+msgstr "Server: セッションが不正終了しました。"
 
+#: ../web/portal/external_app.php:85
 #: ../web/external/index.php:95
-#: ../web/portal/external_app.php:84
 msgid "Server: unable to start application"
-msgstr ""
+msgstr "Server: アプリケーションを開始できません。"
 
 #: ../web/desktop/index.php:77
 msgid "Share desktop"
-msgstr ""
+msgstr "デスクトップ共有"
 
 #: ../web/share/index.php:56
 msgid "Shared application has ended unexpectedly"
-msgstr ""
+msgstr "共有アプリケーションが不正終了しました。"
 
 #: ../web/share/index.php:55
 msgid "Shared application has ended, you can now close the window"
-msgstr ""
+msgstr "共有アプリケーションが終了しました。ウィンドウを閉じてください。"
 
 #: ../web/portal/index.php:114
 msgid "Suspend"
-msgstr ""
+msgstr "サスペンド"
 
 #: ../web/portal/index.php:102
 #, php-format
 msgid "Welcome %s!"
-msgstr ""
+msgstr "ようこそ %s さん！"
 
-#: ../web/external/index.php:97
-#: ../web/portal/external_app.php:86
 #: ../web/portal/resume.php:56
+#: ../web/portal/external_app.php:87
+#: ../web/external/index.php:97
 msgid "Your application has ended unexpectedly"
-msgstr ""
+msgstr "アプリケーションが不正終了しました。"
 
-#: ../web/external/index.php:96
-#: ../web/portal/external_app.php:85
 #: ../web/portal/resume.php:55
+#: ../web/portal/external_app.php:86
+#: ../web/external/index.php:96
 msgid "Your application has ended, you can now close the window"
-msgstr ""
+msgstr "アプリケーションが終了しました。ウィンドウを閉じてください。"
 
 #: ../web/desktop/index.php:59
-#: ../web/error/index.php:52
 #: ../web/portal/index.php:73
+#: ../web/error/index.php:52
 msgid "Your session has ended unexpectedly"
-msgstr ""
+msgstr "セッションが不正終了しました。"
 
 #: ../web/desktop/index.php:58
 #: ../web/portal/index.php:72
 msgid "Your session has ended, you can now close the window"
-msgstr ""
+msgstr "セッションは終了しました。ウィンドウを閉じてください。"
 
 #: ../web/desktop/index.php:97
 #: ../web/portal/share_app.php:31
 msgid "active mode"
-msgstr ""
+msgstr "アクティブモード"
 
 #: ../web/desktop/index.php:60
+#: ../web/portal/resume.php:57
+#: ../web/portal/index.php:74
+#: ../web/portal/external_app.php:88
 #: ../web/error/index.php:53
 #: ../web/external/index.php:98
-#: ../web/portal/external_app.php:87
-#: ../web/portal/index.php:74
-#: ../web/portal/resume.php:57
 #: ../web/share/index.php:57
 msgid "error details"
-msgstr ""
+msgstr "エラー詳細"
 
 #: ../web/portal/index.php:70
 msgid "resume"
-msgstr ""
+msgstr "リジューム"
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/portal/index.php:68
 msgid "share"
-msgstr ""
+msgstr "共有"
 
 #: ../web/portal/index.php:69
 msgid "suspend"
-msgstr ""
+msgstr "サスペンド"
+
