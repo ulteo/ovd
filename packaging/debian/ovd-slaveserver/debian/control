@@ -9,6 +9,6 @@ Standards-Version: 3.7.3
 Package: ulteo-ovd-slaveserver
 Architecture: all
 Depends: python (>= 2.5), ulteo-ovd-shells, xrdp-sound, xrdp-python,
- debconf, tightvncserver, imagemagick, passwd, adduser
+ xrdp-printer, debconf, tightvncserver, imagemagick, passwd, adduser
 Description: Ulteo OVD slave server
  This daemon manages the Open Virtual Desktop servers.
