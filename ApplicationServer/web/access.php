@@ -32,15 +32,15 @@ if (! isset($session) || $session == '')
 if (! isset($_GET['application_id']) || $_GET['application_id'] == '')
 	die('CRITICAL ERROR'); // That's odd !
 
-$sshuser = get_from_file(SESSION_PATH.'/'.$session.'/clients/ssh_user');
-$sshpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
+$sshuser = @file_get_contents(SESSION_PATH.'/'.$session.'/clients/ssh_user');
+$sshpass = @file_get_contents(SESSION_PATH.'/'.$session.'/clients/hexasshpasswd');
 
 $width = @$_SESSION['ovd_session']['width'];
 $height = @$_SESSION['ovd_session']['height'];
 
 if ($_SESSION['ovd_session']['mode'] != 'portal' || ($_SESSION['ovd_session']['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
-	$vncpass = get_from_file(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
-	$rfbport = get_from_file(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
+	$vncpass = @file_get_contents(SESSION_PATH.'/'.$session.'/clients/hexavncpasswd');
+	$rfbport = @file_get_contents(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/rfb_port');
 
 	$geometry = @file_get_contents(SESSION_PATH.'/'.$session.'/sessions/'.$_GET['application_id'].'/geometry');
 	if ($geometry !== false) {
