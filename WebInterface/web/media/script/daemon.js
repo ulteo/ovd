@@ -49,8 +49,12 @@ var Daemon = Class.create({
 	session_status: '',
 	session_status_old: '',
 
+	ready: false,
+	ready_lock: false,
 	started: false,
+	started_lock: false,
 	stopped: false,
+	stopped_lock: false,
 
 	error_message: '',
 
@@ -83,8 +87,6 @@ var Daemon = Class.create({
 
 			this.my_height = parseInt(this.my_height)-149;
 		}
-
-		this.list_servers();
 
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
@@ -145,21 +147,56 @@ var Daemon = Class.create({
 		$('debugContainer').innerHTML = '';
 	},
 
+	is_ready: function() {
+		return this.ready;
+	},
+
+	is_started: function() {
+		return this.started;
+	},
+
+	is_stopped: function() {
+		return (this.stopped || this.session_status == 'unknown');
+	},
+
 	loop: function() {
 		this.push_log('debug', '[daemon] loop()');
 
-		this.check_status();
+		if (! this.is_stopped())
+			this.check_status();
 
-		if (! this.started) {
+		if (! this.is_ready()) {
+			if (this.ready_lock) {
+				this.push_log('debug', '[daemon] loop() - Already in "is_ready" state');
+				return;
+			}
+			this.ready_lock = true;
+
+			this.push_log('info', '[daemon] loop() - Now preparing session');
+
+			this.list_servers();
+		} else if (! this.is_started()) {
+			if (this.started_lock) {
+				this.push_log('debug', '[daemon] loop() - Already in "is_started" state');
+				return;
+			}
+			this.started_lock = true;
+
 			this.push_log('info', '[daemon] loop() - Now starting session');
 
 			this.start();
 
 			this.started = true;
-		} else if (this.stopped || this.session_status == 'unknown') {
+		} else if (this.is_stopped()) {
+			if (this.stopped_lock) {
+				this.push_log('debug', '[daemon] loop() - Already in "is_stopped" state');
+				return;
+			}
+			this.stopped_lock = true;
+
 			this.push_log('info', '[daemon] loop() - Now ending session');
 
-			if (! this.started) {
+			if (! this.is_started()) {
 				this.push_log('warning', '[daemon] loop() - Session end is unexpected (session was never started)');
 				this.error_message = this.i18n['session_close_unexpected'];
 			}
@@ -169,7 +206,7 @@ var Daemon = Class.create({
 			this.stopped = true;
 		}
 
-		if (! this.stopped)
+		if (! this.is_stopped())
 			setTimeout(this.loop.bind(this), 2000);
 	},
 
@@ -324,6 +361,8 @@ var Daemon = Class.create({
 				return;
 			}
 		}
+
+		this.ready = true;
 	},
 
 	do_ended: function() {
