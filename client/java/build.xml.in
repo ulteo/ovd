@@ -341,14 +341,6 @@
              resource="CheckJava-${compile.release}.jar"/>
 
     <copy todir="${destdir}${datadir}/ulteo/applets">
-      <fileset dir="./">
-        <include name="ulteo-printing-0.5.1.jar" />
-      </fileset>
-    </copy>
-    <symlink link="${destdir}${datadir}/ulteo/applets/ulteo-printing.jar"
-             resource="ulteo-printing-0.5.1.jar"/>
-
-    <copy todir="${destdir}${datadir}/ulteo/applets">
       <fileset dir="./required_libraries">
         <include name="gnu-getopt.jar" />
         <include name="log4j-1.2.jar" />
@@ -362,7 +354,6 @@
     <copy todir="${tar.dir}">
       <fileset file="build.xml" />
       <fileset file="README" />
-      <fileset file="ulteo-printing-0.5.1.jar" />
     </copy>
     <mkdir dir="${tar.dir}/required_libraries" />
     <copy todir="${tar.dir}/required_libraries">
