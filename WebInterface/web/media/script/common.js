@@ -124,6 +124,7 @@ function onStartSessionSuccess(transport) {
 		enableLogin();
 		return false;
 	}
+	session_node = buffer[0];
 
 	$('user_password').value = '';
 
@@ -150,9 +151,9 @@ function onStartSessionSuccess(transport) {
 				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, debug);
 			else
 				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, debug);
-			daemon.keymap = 'fr';
-			daemon.multimedia = true;
-			daemon.redirect_client_printers = false;
+			daemon.keymap = $('session_keymap').value;
+			daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
+			daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
 
 			daemon.i18n['session_close_unexpected'] = 'Server: session closed unexpectedly';
 			daemon.i18n['session_end_ok'] = 'Your session has ended, you can now close the window';
