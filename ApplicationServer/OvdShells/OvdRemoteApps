@@ -62,9 +62,6 @@ def main():
 		
 		order = struct.unpack('>B', packet[0])[0]
 		if order == OvdAppChannel.ORDER_START:
-			print "len: ",len(packet)
-			print repr(packet)
-			
 			token = struct.unpack('<I', packet[1:5])[0]
 			app_id = struct.unpack('<I', packet[5:9])[0]
 			
