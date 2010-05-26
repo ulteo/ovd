@@ -67,6 +67,7 @@ public class RdpConnection implements Runnable{
 		if (this.opt.width <= 0 || this.opt.height <= 0)
 			throw new RdesktopException("Unable to init canvas: The desktop size is negative or nil");
 		this.canvas = new RdesktopCanvas_Localised(this.opt, this.common);
+		this.canvas.addFocusListener(new RdesktopFocusListener(this.canvas, this.opt));
 	}
 	
 	public boolean addChannel(VChannel channel) {
