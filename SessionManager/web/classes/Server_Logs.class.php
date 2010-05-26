@@ -73,6 +73,11 @@ class Server_Logs {
 			$since_=time();
 
 		$ret = query_url($this->server->getWebservicesBaseURL().'/server_log.php?since='.$since_, false);
+		if (! $ret) {
+			$this->server->isUnreachable();
+			Logger::error('main', 'Server_Logs::fetchLogs server \''.$this->server->fqdn.'\' is unreachable');
+			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 		$buf = @$dom->loadXML($ret);

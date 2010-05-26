@@ -85,7 +85,8 @@ class Server {
 	public function getConfiguration() {
 		$xml = query_url($this->getBaseURL().'/server/configuration');
 		if (! $xml) {
-			Logger::error('main', 'Server::getConfiguration - query_url failed');
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getConfiguration server \''.$this->fqdn.'\' is unreachable');
 			return false;
 		}
 
@@ -342,8 +343,11 @@ class Server {
 		}
 
 		$xml = query_url($this->getBaseURL().'/server/status');
-		if (! $xml)
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getStatus server \''.$this->fqdn.'\' is unreachable');
 			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -470,8 +474,11 @@ class Server {
 		}
 
 		$xml = query_url($this->getBaseURL().'/server/monitoring');
-		if (! $xml)
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getMonitoring server \''.$this->fqdn.'\' is unreachable');
 			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -550,8 +557,11 @@ class Server {
 		Logger::debug('main', 'Starting Server::getSessionStatus for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
 		$xml = query_url($this->getBaseURL().'/aps/session/status/'.$session_id_);
-		if (! $xml)
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getSessionStatus server \''.$this->fqdn.'\' is unreachable');
 			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -581,6 +591,11 @@ class Server {
 		Logger::debug('main', 'Starting Server::orderSessionDeletion for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
 		$xml = query_url($this->getBaseURL().'/aps/session/destroy/'.$session_id_);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::orderSessionDeletion server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -619,8 +634,11 @@ class Server {
 		$xml = $dom->saveXML();
 
 		$xml = query_url_post_xml($this->getBaseURL().'/aps/user/loggedin', $xml);
-		if (! $xml)
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::userIsLoggedIn server \''.$this->fqdn.'\' is unreachable');
 			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -658,8 +676,11 @@ class Server {
 		$xml = $dom->saveXML();
 
 		$xml = query_url_post_xml($this->getBaseURL().'/aps/user/logout', $xml);
-		if (! $xml)
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::userLogout server \''.$this->fqdn.'\' is unreachable');
 			return false;
+		}
 
 		$dom = new DomDocument('1.0', 'utf-8');
 
@@ -691,6 +712,11 @@ class Server {
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$ret = query_url_post($this->getWebservicesBaseURL().'/domain', false);
+		if (! $ret) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getWindowsADDomain server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
 
 		$buf = @$dom->loadXML($ret);
 		if (! $buf) {
@@ -724,6 +750,11 @@ class Server {
 
 	public function getApplicationIcon($id_, $real_id_) {
 		$ret = query_url($this->getBaseURL().'/aps/application/icon/'.$real_id_);
+		if (! $ret) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server:: server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
 
 		if (! $ret || $ret == '')
 			return false;
@@ -778,7 +809,6 @@ if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
 		$applicationDB = ApplicationDB::getInstance();
 
 		$xml = query_url($this->getBaseURL().'/aps/applications');
-
 		if (! $xml) {
 			$this->isUnreachable();
 			Logger::error('main', 'Server::updateApplications server \''.$this->fqdn.'\' is unreachable');
