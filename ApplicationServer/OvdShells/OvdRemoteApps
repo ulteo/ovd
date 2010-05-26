@@ -28,6 +28,7 @@ from ovd_shells import OvdAppChannel
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells.Platform.InstancesManager import InstancesManager
 from ovd_shells.Platform.VirtualChannel import VirtualChannel
+from ovd_shells import Util
 
 
 def main():
