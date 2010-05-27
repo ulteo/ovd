@@ -1,7 +1,0 @@
-ovd-application-server for Debian
----------------------------------
-
-The daemon is supposed to be used *inside* the application chroot. But it will
-eventually get out of the chroot.
-
- -- Gauvain Pocentek <gauvain@ulteo.com>  Sat, 06 Dec 2008 17:05:28 +0100

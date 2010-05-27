@@ -19,38 +19,23 @@ set_conf () {
 
 set_host_conf () {
     set_conf $HOSTCONF "CHROOT" $CHROOTPATH
-    set_conf $HOSTCONF "WWW_USER" "www-data"
 }
 
 set_chroot_conf () {
-    # fqdn
-    db_get ulteo-ovd-application-server/fqdn || true
-    FQDN="$RET"
-    if [ -z "$FQDN" ]; then
-        FQDN=`hostname`.`dnsdomainname`
-    fi
-    set_conf $CHROOTCONF "SERVERNAME" $FQDN
+
+    set_conf $CHROOTCONF "ROLES" "aps"
+    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
 
     # session manager url
-    db_get ulteo-ovd-application-server/sm_url || true
+    db_get ulteo-ovd-application-server/sm_address || true
     URL="$RET"
-    set_conf $CHROOTCONF "SESSION_MANAGER_URL" "$URL"
+    set_conf $CHROOTCONF "session_manager" "$URL"
 
     # resolv.conf
     [ -f /etc/resolv.conf ] && cp /etc/resolv.conf \
         $CHROOTPATH/etc/resolv.conf
     [ -f /etc/hosts ] && cp /etc/hosts \
         $CHROOTPATH/etc/hosts
-
-    # permissions on the file
-    chown www-data $CHROOTCONF
-}
-
-set_cups () {
-    if [ -d $CHROOTPATH/var/spool/cups2all ]; then
-        chroot $CHROOTPATH chown -R lp:www-data /var/spool/cups2all
-        chroot $CHROOTPATH chmod -R 2770 /var/spool/cups2all
-    fi
 }
 
 set_tz () {
@@ -63,25 +48,15 @@ set_tz () {
     fi
 }
 
-reload_apache()
-{
-    if apache2ctl configtest 2>/dev/null; then
-        invoke-rc.d apache2 reload || true
-    else
-        echo "Your apache2 configuration is broken, so we're not restarting it for you."
-    fi
-}
-
-
 CHROOTPATH="/opt/ulteo"
 
-CHROOTCONF=$CHROOTPATH/etc/ulteo-ovd.conf
+CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd-slaveserver.conf
 HOSTCONF=/etc/ulteo-ovd.conf
 
 DOWNLOAD_OK="yes"
 # download the chroot if needed
 if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
-    db_get ulteo-ovd-application-server/sm_url || true
+    db_get ulteo-ovd-application-server/sm_address || true
     SM="$RET"
     URI="$SM/base.tar.gz"
 
@@ -112,7 +87,6 @@ if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); the
         echo "You can either reconfigure this package or use the aps-chroot-install script to set up the server."
         exit 0
     else
-        set_cups
         set_tz
     fi
 fi
@@ -125,47 +99,10 @@ if [ ! -e $CHROOTCONF ]; then
 else
     set_chroot_conf
 fi
+
 set_host_conf
 
 db_stop
-
-# setup apache
-LOGDIR=/var/log/ulteo/applicationserver
-if ! dpkg-statoverride --list $LOGDIR >/dev/null 2>&1; then
-    dpkg-statoverride --update --add www-data www-data 0770 $LOGDIR
-fi
-
-HTACCESS=/etc/ulteo/applicationserver/dot.htaccess
-if ! dpkg-statoverride --list $HTACCESS >/dev/null 2>&1; then
-    dpkg-statoverride --update --add www-data www-data 0660 $HTACCESS
-fi
-
-if [ ! -e /etc/apache2/conf.d/applicationserver ]; then
-    ln -s /etc/ulteo/applicationserver/apache2.conf \
-        /etc/apache2/conf.d/applicationserver
-
-    # make sure that we don't have old configs enabled
-    if [ -e /etc/apache2/sites-available/application-server ]; then
-        a2dissite application-server 2>/dev/null
-    fi
-    if [ -e /etc/apache2/sites-available/applicationserver ]; then
-        a2dissite applicationserver 2>/dev/null
-    fi
-
-    # try to restore the default site
-    a2ensite default 2>/dev/null || true
-
-    reload_apache
-fi
-
-SPOOLDIR=/var/spool/ulteo/applicationserver
-for f in $SPOOLDIR; do
-    if ! dpkg-statoverride --list $SPOOLDIR >/dev/null 2>&1; then
-        dpkg-statoverride --update --add www-data www-data 0770 $SPOOLDIR
-    fi
-done
-
-chown -R www-data:www-data $SPOOLDIR
 
 #DEBHELPER#
 

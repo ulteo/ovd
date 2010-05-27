@@ -1,0 +1,6 @@
+ovd-subsystem for Debian
+---------------------------------
+
+This package provides a complete application system for OVD, including OVD slaveser.
+
+ -- Samuel Bovée <samuel@ulteo.com>  Sat, 27 May 2010 17:05:28 +0100

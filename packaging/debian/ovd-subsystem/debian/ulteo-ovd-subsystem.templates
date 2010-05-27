@@ -1,15 +1,11 @@
-Template: ulteo-ovd-application-server/fqdn
+Template: ulteo-ovd-application-server/sm_address
 Type: string
-_Description: Full qualified domain name of this server:
-
-Template: ulteo-ovd-application-server/sm_url
-Type: string
-Default: http://sm.ulteo.com/sessionmanager
-_Description: Url used to access the session manager:
+Default: sm.ulteo.com
+_Description: Session manager address/hostname
 
 Template: ulteo-ovd-application-server/tarball_uri
 Type: string
-Default: 
+Default:
 _Description: Retrieve the chroot tarball from this location:
  If you want to use a tarball application not located on the session manager
  you can define its location here.

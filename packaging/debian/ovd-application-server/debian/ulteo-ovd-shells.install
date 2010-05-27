@@ -1,4 +1,0 @@
-debian/tmp/usr/bin/OvdDesktop usr/bin/
-debian/tmp/usr/bin/OvdRemoteApps usr/bin/
-debian/tmp/usr/bin/startovdapp usr/bin/
-debian/tmp/usr/lib/python2.5/site-packages/ovd_shells/* usr/lib/python2.5/site-packages/ovd_shells/
