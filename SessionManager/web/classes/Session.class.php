@@ -118,6 +118,9 @@ class Session {
 			Logger::info('main', 'Session start : \''.$this->id.'\'');
 
 			$this->setAttribute('start_time', time());
+		} elseif ($status_ == Session::SESSION_STATUS_INACTIVE) {
+			if (! array_key_exists('persistent', $this->settings) || $this->settings['persistent'] == 0)
+				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
 		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY || $status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
 			Logger::info('main', 'Session end : \''.$this->id.'\'');
 
