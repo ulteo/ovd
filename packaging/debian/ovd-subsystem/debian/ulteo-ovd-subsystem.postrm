@@ -14,8 +14,6 @@ if [ -e /opt/ulteo/etc/ulteo/ovd-slaveserver.conf ]; then
     [ "$RET" = "true" ] && rm -rf /opt/ulteo
 fi
 
-db_stop
-
 #DEBHELPER#
 
 exit 0

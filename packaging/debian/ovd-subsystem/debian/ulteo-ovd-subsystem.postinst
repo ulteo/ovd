@@ -10,8 +10,8 @@ set_conf () {
     # $1: configfile
     # $2: field
     # $3: value
-    if grep -q "^$2=" $1 2>/dev/null; then
-        sed -i "s#^$2=.*#$2=$3#" $1
+    if grep -q "^$2 *=" $1 2>/dev/null; then
+        sed -i "s#^$2 *=.*#$2=$3#" $1
     else
         echo "$2=$3" >> $1
     fi
@@ -58,7 +58,7 @@ DOWNLOAD_OK="yes"
 if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
     db_get ulteo-ovd-subsystem/sm_address || true
     SM="$RET"
-    URI="$SM/base.tar.gz"
+    URI="http://$SM/sessionmanager/base.tar.gz"
 
     db_get ulteo-ovd-subsystem/tarball_uri || true
     if [ -n "$RET" ]; then
