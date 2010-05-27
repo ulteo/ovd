@@ -301,7 +301,7 @@ class Server {
 			if (! is_object($session))
 				continue;
 
-			if ($session->setStatus(3))
+			if ($session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY))
 				Abstract_Session::save($session);
 		}
 

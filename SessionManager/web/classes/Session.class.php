@@ -261,7 +261,7 @@ class Session {
 			$buf = $server->orderSessionDeletion($this->id);
 
 			if ($buf) {
-				$this->setStatus(3);
+				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
 				return true;
 			} else
 				Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on ApS side');
