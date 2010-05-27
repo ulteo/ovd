@@ -27,7 +27,7 @@ set_chroot_conf () {
     set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
 
     # session manager url
-    db_get ulteo-ovd-application-server/sm_address || true
+    db_get ulteo-ovd-subsystem/sm_address || true
     URL="$RET"
     set_conf $CHROOTCONF "session_manager" "$URL"
 
@@ -56,11 +56,11 @@ HOSTCONF=/etc/ulteo-ovd.conf
 DOWNLOAD_OK="yes"
 # download the chroot if needed
 if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
-    db_get ulteo-ovd-application-server/sm_address || true
+    db_get ulteo-ovd-subsystem/sm_address || true
     SM="$RET"
     URI="$SM/base.tar.gz"
 
-    db_get ulteo-ovd-application-server/tarball_uri || true
+    db_get ulteo-ovd-subsystem/tarball_uri || true
     if [ -n "$RET" ]; then
         case "$RET" in
             # curl needs file://, make sure we have it if we deal with a file path
