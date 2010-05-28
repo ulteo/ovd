@@ -26,7 +26,7 @@ from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
 from ApplicationsDetection import ApplicationsDetection
-from Platform import Platform
+from ovd.Platform import Platform
 
 class Session(AbstractSession):
 	
@@ -35,7 +35,7 @@ class Session(AbstractSession):
 	def install_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		if os.path.exists(d):
-			Platform.DeleteDirectory(d)
+			Platform.System.DeleteDirectory(d)
 		os.makedirs(d)
 		
 		os.mkdir(os.path.join(d, "matching"))

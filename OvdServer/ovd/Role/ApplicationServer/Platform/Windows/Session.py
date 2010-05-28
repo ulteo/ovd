@@ -37,7 +37,7 @@ from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 import Langs
 import LnkFile
 from Msi import Msi
-from Platform import Platform
+from ovd.Platform import Platform
 import Reg
 
 class Session(AbstractSession):
@@ -72,7 +72,7 @@ class Session(AbstractSession):
 		print "startmenu: ",programsDir
 		# remove default startmenu
 		if os.path.exists(programsDir):
-			Platform.DeleteDirectory(programsDir)
+			Platform.System.DeleteDirectory(programsDir)
 		os.makedirs(programsDir)
 		
 		

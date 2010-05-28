@@ -22,8 +22,8 @@ from threading import Thread
 
 from ovd.Logger import Logger
 from ovd.Platform import Platform
-from ovd.Platform import Session
-from ovd.Platform import TS
+
+from Platform import Platform as RolePlatform
 
 
 class SessionManagement(Thread):
@@ -52,9 +52,9 @@ class SessionManagement(Thread):
 	def create_session(self, session):
 		Logger.info("SessionManagement::create %s"%(session.id))
 		
-		if Platform.getInstance().userExist(session.user.name):
+		if Platform.System.userExist(session.user.name):
 			Logger.error("unable to create session: user already exist")
-			self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
+			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ACTIVE)
 			return
 		
 		
@@ -68,19 +68,19 @@ class SessionManagement(Thread):
 		rr = session.user.create()
 		if rr is False:
 			Logger.error("unable to create session")
-			self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
+			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ACTIVE)
 			return
 		
 		session.install_client()
 		
-		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_INITED)
+		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_INITED)
 	
 	
 	def destroy_session(self, session):
 		Logger.info("SessionManagement::destroy %s"%(session.id))
 		
 		try:
-			sessid = TS.getSessionID(session.user.name)
+			sessid = RolePlatform.TS.getSessionID(session.user.name)
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("SessionManagement::destroy_session: %s"%(str(err)))
@@ -94,7 +94,7 @@ class SessionManagement(Thread):
 		
 		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])
-		self.aps_instance.session_switch_status(session, Session.SESSION_STATUS_DESTROYED)
+		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_DESTROYED)
 	
 	
 	def destroy_user(self, user):
@@ -104,17 +104,17 @@ class SessionManagement(Thread):
 			sessid = user.infos["tsid"]
 			
 			try:
-				status = TS.getState(sessid)
+				status = RolePlatform.TS.getState(sessid)
 			except Exception,err:
 				Logger.error("RDP server dialog failed ... ")
 				Logger.debug("SessionManagement::destroy_user: %s"%(str(err)))
 				return
 			
-			if status in [TS.STATUS_LOGGED, TS.STATUS_DISCONNECTED]:
+			if status in [RolePlatform.TS.STATUS_LOGGED, RolePlatform.TS.STATUS_DISCONNECTED]:
 				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
 				
 				try:
-					TS.logoff(sessid)
+					RolePlatform.TS.logoff(sessid)
 				except Exception,err:
 					Logger.error("RDP server dialog failed ... ")
 					Logger.debug("SessionManagement::destroy_user: %s"%(str(err)))

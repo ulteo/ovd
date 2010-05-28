@@ -32,12 +32,10 @@ import win32netcon
 import win32net
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform as AbstractPlatform
-
-from ApplicationsDetection import ApplicationsDetection
+from ovd.Platform.System import System as AbstractSystem
 
 
-class Platform(AbstractPlatform):
+class System(AbstractSystem):
 	@staticmethod
 	def getName():
 		return "windows"
@@ -140,17 +138,7 @@ class Platform(AbstractPlatform):
 			return False
 			
 		return domain
-	
-	@staticmethod
-	def detectAvailableApplications():
-		appsdetect = ApplicationsDetection()
-		return appsdetect.get()
-	
-	@staticmethod
-	def getApplicationIcon(filename):
-		appsdetect = ApplicationsDetection()
-		return appsdetect.getIcon(filename)
-	
+
 	
 	@staticmethod
 	def DeleteDirectory(path):
@@ -158,7 +146,7 @@ class Platform(AbstractPlatform):
 			filename = os.path.join(path, file)
 			win32api.SetFileAttributes(filename, win32con.FILE_ATTRIBUTE_NORMAL)
 			if os.path.isdir(filename):
-				Platform.DeleteDirectory(filename)
+				System.DeleteDirectory(filename)
 			else:
 				os.remove(filename)
 		win32api.SetFileAttributes(path, win32con.FILE_ATTRIBUTE_NORMAL)

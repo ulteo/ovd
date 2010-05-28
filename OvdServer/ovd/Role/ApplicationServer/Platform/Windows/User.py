@@ -31,7 +31,6 @@ from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 from ovd.Role.ApplicationServer.User import User as AbstractUser
 
-from Platform import Platform
 import Langs
 import Reg
 

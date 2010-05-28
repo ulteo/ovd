@@ -28,12 +28,10 @@ import time
 
 from ovd.Logger import Logger
 
-from ovd.Platform import Platform as AbstractPlatform
-
-from ApplicationsDetection import ApplicationsDetection
+from ovd.Platform.System import System as AbstractSystem
 
 
-class Platform(AbstractPlatform):
+class System(AbstractSystem):
 	@staticmethod
 	def getName():
 		return "linux"
@@ -82,9 +80,9 @@ class Platform(AbstractPlatform):
 	
 	@staticmethod
 	def getCPULoad():
-		(load1, total1) = Platform._getCPULoad()
+		(load1, total1) = System._getCPULoad()
 		time.sleep(1)
-		(load2, total2) = Platform._getCPULoad()
+		(load2, total2) = System._getCPULoad()
 	
 		if total2 - total1 == 0:
 			return 0.0
@@ -114,7 +112,7 @@ class Platform(AbstractPlatform):
 	
 	@staticmethod
 	def getCPUInfos():
-		infos = Platform.parseProcFile("/proc/cpuinfo")
+		infos = System.parseProcFile("/proc/cpuinfo")
 		
 		try:
 			name = infos["model name"]
@@ -154,7 +152,7 @@ class Platform(AbstractPlatform):
 	
 	@staticmethod
 	def getRAMUsed():
-		infos = Platform._getMeminfo()
+		infos = System._getMeminfo()
 		
 		try:
 			total = int(infos["MemTotal"])
@@ -170,7 +168,7 @@ class Platform(AbstractPlatform):
 	
 	@staticmethod
 	def getRAMTotal():
-		infos = Platform._getMeminfo()
+		infos = System._getMeminfo()
 		
 		try:
 			total = int(infos["MemTotal"])
@@ -186,15 +184,6 @@ class Platform(AbstractPlatform):
 	def getADDomain():
 		return False
 	
-	@staticmethod
-	def detectAvailableApplications():
-		appsdetect = ApplicationsDetection()
-		return appsdetect.get()
-	
-	@staticmethod
-	def getApplicationIcon(filename):
-		appsdetect = ApplicationsDetection()
-		return appsdetect.getIcon(filename)
 	
 	@staticmethod
 	def logoff(user, domain):

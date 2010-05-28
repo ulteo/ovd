@@ -201,14 +201,14 @@ class Dialog(AbstractDialog):
 		return self.req_answer(doc)
 	
 	def req_server_conf(self, request):
-		cpuInfos = Platform.getInstance().getCPUInfos()
-		ram_total = Platform.getInstance().getRAMTotal()
+		cpuInfos = Platform.System.getCPUInfos()
+		ram_total = Platform.System.getRAMTotal()
 
 		doc = Document()
 		rootNode = doc.createElement('configuration')
 		
-		rootNode.setAttribute("type", Platform.getInstance().getName())
-		rootNode.setAttribute("version", Platform.getInstance().getVersion())
+		rootNode.setAttribute("type", Platform.System.getName())
+		rootNode.setAttribute("version", Platform.System.getVersion())
 		rootNode.setAttribute("ram", str(ram_total))
 		
 		cpuNode = doc.createElement('cpu')

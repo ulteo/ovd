@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008-2009 Ulteo SAS
+# Copyright (C) 2009 - 2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2008
-# Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -19,30 +18,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import platform
-import socket
 
-
-def isIP(address):
-	try:
-		socket.inet_ntoa(address)
-	except Exception:
-		return False
-	return True
-
-
-
-
-def array_flush(array):
-	array.reverse()
-	for _ in xrange(len(array)):
-		yield array.pop()
-
-
-def get_platform():
-	platform_ = platform.system().lower()
-	for key in ["windows","microsoft","microsoft windows"]:
-		if key in platform_:
-			return "windows"
+class Role:
+	def __init__(self, main_instance):
+		self.main_instance = main_instance
 		
-	return "linux"
+	def init(self):
+		raise NotImplementedError()
+	
+	def run(self):
+		raise NotImplementedError()
+	
+	def stop(self):
+		raise NotImplementedError()
+	
+	@staticmethod
+	def getName():
+		raise NotImplementedError()

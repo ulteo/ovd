@@ -27,13 +27,10 @@ from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
-from ovd.Platform import Platform
-from ovd.Platform import Session
-from ovd.Platform import TS
-from ovd.Platform import User
 from ovd import util
-
 from ovd.Communication.Dialog import Dialog as AbstractDialog
+
+from Platform import Platform
 
 class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
@@ -111,7 +108,9 @@ class Dialog(AbstractDialog):
 		
 		app =  self.role_instance.applications[app_id]
 		
-		data = Platform.getInstance().getApplicationIcon(app["filename"])
+
+		appsdetect = Platform.ApplicationsDetection()
+		data = appsdetect.getIcon(app["filename"])
 		if data is None:
 			print "test3"
 			return None
@@ -144,9 +143,9 @@ class Dialog(AbstractDialog):
 				raise Exception("Missing attribute id")
 			
 			if session["mode"] == "desktop":
-				session["mode"] = Session.MODE_DESKTOP
+				session["mode"] = Platform.Session.MODE_DESKTOP
 			elif session["mode"] == "applications":
-				session["mode"] = Session.MODE_APPLICATIONS
+				session["mode"] = Platform.Session.MODE_APPLICATIONS
 			else:
 				raise Exception("Missing attribute id")
 			
@@ -182,11 +181,11 @@ class Dialog(AbstractDialog):
 		
 		session["parameters"]["lang"] = "fr_FR"
 		
-		user = User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
+		user = Platform.User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
 		if session["parameters"].has_key("locale"):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
-		session = Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
+		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
 		
 		self.role_instance.sessions[session.id] = session
 		self.role_instance.sessions_spooler.put(("create", session))
@@ -198,7 +197,7 @@ class Dialog(AbstractDialog):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
 		else:
-			session = Session(session_id, None, None, None, None)
+			session = Platform.Session(session_id, None, None, None, None)
 			session.status = "unknown"
 		
 		return self.req_answer(self.session2xmlstatus(session))
@@ -207,12 +206,12 @@ class Dialog(AbstractDialog):
 	def req_session_destroy(self, session_id):
 		if self.role_instance.sessions.has_key(session_id):
 			session = self.role_instance.sessions[session_id]
-			if session.status not in [Session.SESSION_STATUS_WAIT_DESTROY, Session.SESSION_STATUS_DESTROYED]:
-				self.role_instance.session_switch_status(session, Session.SESSION_STATUS_WAIT_DESTROY)
+			if session.status not in [Platform.Session.SESSION_STATUS_WAIT_DESTROY, Platform.Session.SESSION_STATUS_DESTROYED]:
+				self.role_instance.session_switch_status(session, Platform.Session.SESSION_STATUS_WAIT_DESTROY)
 				self.role_instance.sessions_spooler.put(("destroy", session))
 		else:
-			session = Session(session_id, None, None, None, None)
-			session.status = Session.SESSION_STATUS_UNKNOWN
+			session = Platform.Session(session_id, None, None, None, None)
+			session.status = Platform.Session.SESSION_STATUS_UNKNOWN
 		
 		return self.req_answer(self.session2xmlstatus(session))
 	
@@ -240,7 +239,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		try:
-			ret = TS.getSessionID(login)
+			ret = Platform.TS.getSessionID(login)
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("Dialog::req_user_loggedin: %s"%(str(err)))
@@ -274,7 +273,7 @@ class Dialog(AbstractDialog):
 		
 		
 		try:
-			ret = TS.getSessionID(login)
+			ret = Platform.TS.getSessionID(login)
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("Dialog::req_user_logout: %s"%(str(err)))
@@ -288,7 +287,7 @@ class Dialog(AbstractDialog):
 			
 			return self.req_answer(doc)
 		
-		user = User(login, {"tsid": ret})
+		user = Platform.User(login, {"tsid": ret})
 		self.role_instance.sessions_spooler.put(("logoff", user))
 		
 		return self.req_answer(document)

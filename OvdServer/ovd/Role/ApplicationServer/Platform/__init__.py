@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2009 - 2010 Ulteo SAS
+# Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -25,15 +25,23 @@ if Platform is None:
 	p = util.get_platform()
 	
 	if p == "linux":
-		from Linux.System import System
-	
+		from Linux.ApplicationsDetection import ApplicationsDetection
+		from Linux.Session import Session
+		from Linux.TS import TS
+		from Linux.User import User
 	elif p == "windows":
-		from Windows.System import System
-		
+		from Windows.ApplicationsDetection import ApplicationsDetection
+		from Windows.Session import Session
+		from Windows.TS import TS
+		from Windows.User import User
+	
 	else:
 		raise Exception("Not supported platform")
 		
 	class _Platform:
 		pass
 	Platform = _Platform()
-	Platform.System = System
+	Platform.ApplicationsDetection = ApplicationsDetection
+	Platform.Session = Session
+	Platform.TS = TS
+	Platform.User = User

@@ -24,8 +24,7 @@ from xml.dom.minidom import Document
 
 from ovd.Config import Config
 from ovd.Logger import Logger
-from ovd.Role.ApplicationServer import ApplicationServer
-from ovd.Role.FileServer import FileServer
+
 from ovd.Platform import Platform
 
 from Dialog import Dialog
@@ -44,9 +43,15 @@ class SlaveServer:
 		
 		for role in Config.role:
 			if role == "aps":
-				self.roles.append(ApplicationServer(self))
+				from ovd.Role.ApplicationServer import Role
+				#from ovd.Role.ApplicationServer import Role as RoleApS
+				#self.roles.append(RoleApS(self))
 			elif role == "fs":
-				self.roles.append(FileServer(self))
+				from ovd.Role.FileServer import Role
+				#from ovd.Role.FileServer import Role as RoleFS
+				#self.roles.append(RoleFS(self))
+			
+			self.roles.append(Role.Role(self))
 		
 		dialogInstances = []
 		dialogInstances.append(self.dialog)
@@ -147,8 +152,8 @@ class SlaveServer:
 	
 	
 	def updateMonitoring(self):
-		cpu_load = Platform.getInstance().getCPULoad()
-		ram_used = Platform.getInstance().getRAMUsed()
+		cpu_load = Platform.System.getCPULoad()
+		ram_used = Platform.System.getRAMUsed()
 
 		doc = Document()
 		monitoring = doc.createElement('monitoring')
