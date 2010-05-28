@@ -750,11 +750,8 @@ class Server {
 
 	public function getApplicationIcon($id_, $real_id_) {
 		$ret = query_url($this->getBaseURL().'/aps/application/icon/'.$real_id_);
-		if (! $ret) {
-			$this->isUnreachable();
-			Logger::error('main', 'Server:: server \''.$this->fqdn.'\' is unreachable');
+		if (! $ret)
 			return false;
-		}
 
 		if (! $ret || $ret == '')
 			return false;
