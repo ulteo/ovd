@@ -27,6 +27,7 @@ from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 
+from Apt import Apt
 from Dialog import Dialog
 from Session import Session
 from SessionManagement import SessionManagement
@@ -82,6 +83,11 @@ class Role(AbstractRole):
 		
 		for _ in xrange(5):
 			self.threads.append(SessionManagement(self, self.sessions_spooler))
+		
+		if self.canManageApplications():
+			self.apt = Apt()
+			self.apt.init()
+			self.threads.append(self.apt)
 		
 		return True
 	

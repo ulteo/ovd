@@ -74,6 +74,9 @@ class Dialog(AbstractDialog):
 			elif path == "/user/logout":
 				return self.req_user_logout(request)
 			
+			elif  path == "/debian" and self.role_instance.canManageApplications():
+				return self.req_debian(request)
+			
 			return None
 		
 		return None
@@ -291,3 +294,50 @@ class Dialog(AbstractDialog):
 		self.role_instance.sessions_spooler.put(("logoff", user))
 		
 		return self.req_answer(document)
+	
+	def req_debian(self, request):
+		try:
+			document = minidom.parseString(request["data"])
+			rootNode = document.documentElement
+			if rootNode.nodeName != "debian":
+				raise Exception("invalid root node")
+			
+			request = rootNode.getAttribute("request")
+			if request not in ["upgrade", "install", "remove"]:
+				raise Exception("usage")
+			
+			packetNodes = rootNode.getElementsByTagName("packet")
+			if request in ["install", "remove"] and len(packetNodes)==0:
+				raise Exception("usage")
+			
+			packets = []
+			for packetNode in packetNodes:
+				packets.append(packetNode.getAttribute("name"))
+		
+		except Exception, err:
+			Logger.warn("Invalid xml input: "+str(err))
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "usage")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
+		
+		
+		deb_req = self.role_instance.apt.createRequest()
+		deb_req["order"] = request
+		deb_req["packets"] = packets
+		
+		self.role_instance.apt.pushRequest(deb_req)
+		
+		return self.req_answer(self.debian_request2xml(deb_req, "created"))
+
+
+	@staticmethod
+	def debian_request2xml(request, status):
+		doc = Document()
+		rootNode = doc.createElement('debian_request')
+		rootNode.setAttribute("id", request["id"])
+		rootNode.setAttribute("status", status)
+		doc.appendChild(rootNode)
+		
+		return doc
