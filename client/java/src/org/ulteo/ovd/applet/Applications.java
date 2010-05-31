@@ -21,8 +21,6 @@
 
 package org.ulteo.ovd.applet;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
@@ -33,8 +31,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import net.propero.rdp.RdesktopException;
 
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
@@ -152,7 +149,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			co.disconnect();
 			try {
 				co.interruptConnection();
-			} catch (OvdException ex) {
+			} catch (RdesktopException ex) {
 				System.out.println(ex.getMessage());
 			}
 		}
@@ -241,13 +238,13 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				RdpConnectionOvd rc;
 				try {
 					rc = new RdpConnectionOvd(flags);
-				} catch (OvdException ex) {
+				} catch (RdesktopException ex) {
 					System.err.println("ERROR: "+ex.getMessage());
 					continue;
 				}
 				try {
 					rc.initSecondaryChannels();
-				} catch (OvdException ex) {
+				} catch (RdesktopException ex) {
 					System.err.println("WARNING: "+ex.getMessage());
 				}
 
@@ -260,18 +257,17 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				rc.setKeymap(keymap);
 
 				rc.addRdpListener(this);
+
 				try {
 					rc.addOvdAppListener(this);
 				} catch (OvdException ex) {
-					System.err.println("WARNING: "+ex.getMessage());
+					System.err.println("ERROR: "+ex.getMessage());
+					continue;
 				}
 				
 				this.connections.put(new Integer(order.id), rc);
-				try {
-					rc.connect();
-				} catch (OvdException ex) {
-					Logger.getLogger(Applications.class.getName()).log(Level.SEVERE, null, ex);
-				}
+				rc.connect();
+				
 			}
 			
 			else if (o instanceof OrderApplication) {
@@ -373,7 +369,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 
 	@Override
 	public void connected(RdpConnection co) {
-		System.out.println("Connected to "+co.opt.hostname);
+		System.out.println("Connected to "+co.getServer());
 		
 		Integer server_id = null;
 		for (Integer i: this.connections.keySet()) {
@@ -387,12 +383,12 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 
 	@Override
 	public void connecting(RdpConnection co) {
-		System.out.println("Connecting to "+co.opt.hostname);
+		System.out.println("Connecting to "+co.getServer());
 	}
 
 	@Override
 	public void disconnected(RdpConnection co) {
-		System.out.println("Disconneted from "+co.opt.hostname);
+		System.out.println("Disconneted from "+co.getServer());
 		
 		Integer server_id = null;
 		for (Integer i: this.connections.keySet()) {
@@ -406,6 +402,6 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 
 	@Override
 	public void failed(RdpConnection co) {
-		System.out.println("Connection failed: removing rdpConnection to "+co.opt.hostname);
+		System.out.println("Connection failed: removing rdpConnection to "+co.getServer());
 	}
 }

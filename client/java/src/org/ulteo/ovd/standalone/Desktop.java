@@ -20,6 +20,7 @@
 
 package org.ulteo.ovd.standalone;
 
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Rectangle;
@@ -38,9 +39,10 @@ public class Desktop extends JPanel {
 		this.connection = connection_;
 		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		Insets insets = this.parent.getInsets();
-		this.connection.opt.width = dim.width - (insets.left + insets.right);
-		this.connection.opt.height = dim.height - (insets.top + insets.bottom);
-		this.setSize(this.connection.opt.width, this.connection.opt.height);
+		Dimension canvasDim = this.connection.getGraphics();
+		canvasDim.width = dim.width - (insets.left + insets.right);
+		canvasDim.height = dim.height - (insets.top + insets.bottom);
+		this.setSize(canvasDim.width, canvasDim.height);
 	}
 
 	public RdesktopCanvas getCanvas() {

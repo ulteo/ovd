@@ -135,11 +135,11 @@ public class Client implements RdpListener, OvdAppListener{
 		System.exit(i);
 	}
 
-	private void addAvailableConnection(RdpConnection rc) {
+	private void addAvailableConnection(RdpConnectionOvd rc) {
 		this.spool.addConnection(rc);
 	}
 
-	private void removeAvailableConnection(RdpConnection rc) {
+	private void removeAvailableConnection(RdpConnectionOvd rc) {
 		this.spool.removeConnection(rc);
 		for (Application app : rc.getAppsList()) {
 			this.sys.uninstall(app);
@@ -177,23 +177,23 @@ public class Client implements RdpListener, OvdAppListener{
 
 	@Override
 	public void connected(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+co.opt.hostname);
-		this.addAvailableConnection(co);
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+co.getServer());
+		this.addAvailableConnection((RdpConnectionOvd) co);
 	}
 
 	@Override
 	public void connecting(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.opt.hostname);
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.getServer());
 	}
 
 	@Override
 	public void disconnected(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.opt.hostname);
-		this.removeAvailableConnection(co);
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.getServer());
+		this.removeAvailableConnection((RdpConnectionOvd) co);
 	}
 
 	@Override
 	public void failed(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.opt.hostname+" failed");
+		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.getServer()+" failed");
 	}
 }

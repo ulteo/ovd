@@ -20,18 +20,14 @@
 
 package org.ulteo.ovd.applet;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.applet.Applet;
 import java.awt.BorderLayout;
-import java.util.Observable;
-import java.util.Observer;
 
 import net.propero.rdp.RdesktopCanvas;
+import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Desktop extends Applet implements RdpListener {
@@ -80,13 +76,13 @@ public class Desktop extends Applet implements RdpListener {
 
 		try {
 			this.rc = new RdpConnectionOvd(flags);
-		} catch (OvdException ex) {
+		} catch (RdesktopException ex) {
 			System.err.println("ERROR: "+ex.getMessage());
 			return;
 		}
 		try {
 			this.rc.initSecondaryChannels();
-		} catch (OvdException ex) {
+		} catch (RdesktopException ex) {
 			System.err.println("WARNING: "+ex.getMessage());
 		}
 		this.rc.setKeymap(this.keymap);
@@ -112,12 +108,8 @@ public class Desktop extends Applet implements RdpListener {
 		System.out.println(this.getClass().toString() +" start");
 
 		this.rc.addRdpListener(this);
-		try {
-			this.rc.connect();
-		} catch (OvdException ex) {
-			Logger.getLogger(Desktop.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
+		this.rc.connect();
+		
 		this.finished_start = true;
 
 		System.out.println(this.getClass().toString() +" started");
@@ -133,7 +125,7 @@ public class Desktop extends Applet implements RdpListener {
 		if (this.rc != null) {
 			try {
 				this.rc.interruptConnection();
-			} catch (OvdException ex) {
+			} catch (RdesktopException ex) {
 				System.out.println(ex.getMessage());
 			}
 		}
@@ -240,25 +232,25 @@ public class Desktop extends Applet implements RdpListener {
 
 	@Override
 	public void connected(RdpConnection co) {
-		System.out.println("Connected to "+this.rc.opt.hostname);
+		System.out.println("Connected to "+this.rc.getServer());
 		this.switch2session();
 		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_CONNECTED);
 	}
 
 	@Override
 	public void connecting(RdpConnection co) {
-		System.out.println("Connecting to "+this.rc.opt.hostname);
+		System.out.println("Connecting to "+this.rc.getServer());
 	}
 
 	@Override
 	public void disconnected(RdpConnection co) {
-		System.out.println("Disconneted from "+this.rc.opt.hostname);
+		System.out.println("Disconneted from "+this.rc.getServer());
 		this.forwardJS(JS_API_F_SERVER, 0, JS_API_O_SERVER_DISCONNECTED);
 		this.stop();
 	}
 
 	@Override
 	public void failed(RdpConnection co) {
-		System.out.println("Connection failed: removing rdpConnection to "+this.rc.opt.hostname);
+		System.out.println("Connection failed: removing rdpConnection to "+this.rc.getServer());
 	}
 }

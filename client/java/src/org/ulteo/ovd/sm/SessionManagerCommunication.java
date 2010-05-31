@@ -42,8 +42,8 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.OvdException;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -225,7 +225,7 @@ public class SessionManagerCommunication {
 				flags |= RdpConnectionOvd.MODE_APPLICATION;
 			try {
 				rc = new RdpConnectionOvd(flags);
-			} catch (OvdException ex) {
+			} catch (RdesktopException ex) {
 				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, ex.getMessage());
 				continue;
 			}

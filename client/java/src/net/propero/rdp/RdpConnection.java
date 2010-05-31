@@ -21,6 +21,8 @@
 
 package net.propero.rdp;
 
+import java.awt.Dimension;
+import java.io.File;
 import org.ulteo.ovd.Application;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,31 +38,108 @@ import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
+import net.propero.rdp.rdp5.cliprdr.ClipChannel;
+import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
+import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import org.apache.log4j.Logger;
 
 public class RdpConnection implements Runnable{
 	public static final int RDP_PORT = 3389;
+	public static final int DEFAULT_BPP = 24;
+	public static final int DEFAULT_WIDTH = 800;
+	public static final int DEFAULT_HEIGHT = 600;
+	public static final int DEFAULT_PERSISTENT_CACHE_SIZE = 100;
 
 	protected String keyMapPath = "/ressources/keymaps/";
 
-	private VChannels channels = null;
+	protected VChannels channels = null;
+	protected RdpdrChannel rdpdrChannel = null;
+	protected SoundChannel soundChannel = null;
+	protected ClipChannel clipChannel = null;
 	protected SeamlessChannel seamChannel = null;
-	private Rdp5 RdpLayer = null;
-	public Options opt = null;
-	public Common common = null;
+	protected Rdp5 RdpLayer = null;
+	protected Options opt = null;
+	protected Common common = null;
 	private RdesktopCanvas_Localised canvas = null;
-	private ArrayList<Application> appsList = null;
-	private String state = "disconnected";
-	private String mapFile = null;
+	protected String mapFile = null;
 	private ArrayList<RdpListener> listener = new ArrayList<RdpListener>();
+	private Thread connectionThread = null;
 	private Logger logger = Logger.getLogger(RdpConnection.class);
 	
 	public RdpConnection(Options opt_, Common common_) {
 		this.common = common_;
 		this.opt = opt_;
 
+		this.opt.width = DEFAULT_WIDTH;
+		this.opt.height = DEFAULT_HEIGHT;
+		this.opt.set_bpp(DEFAULT_BPP);
+
 		this.channels = new VChannels(this.opt);
-		this.appsList = new ArrayList<Application>();
+	}
+
+	public String getServer() {
+		return this.opt.hostname;
+	}
+
+	public Dimension getGraphics() {
+		return new Dimension(this.opt.width, this.opt.height);
+	}
+
+	public int getBpp() {
+		return this.opt.server_bpp;
+	}
+
+	/**
+	 * Set the host to connect on default port
+	 * @param address
+	 *	The RDP server address
+	 */
+	public void setServer(String address) {
+		this.setServer(address, RDP_PORT);
+	}
+
+	/**
+	 * Set the host and the port to connect
+	 * @param host
+	 *	The RDP server address
+	 * @param port
+	 *	The port to use
+	 */
+	public void setServer(String host, int port) {
+		this.opt.hostname = host;
+		this.opt.port = port;
+	}
+
+	/**
+	 * Set credentials
+	 * @param username
+	 * @param password
+	 */
+	public void setCredentials(String username, String password) {
+		this.opt.username = username;
+		this.opt.password = password;
+	}
+
+	/**
+	 * Set informations about display
+	 * The default bpp is 24 bits
+	 * @param width
+	 * @param height
+	 */
+	public void setGraphic(int width, int height) {
+		this.setGraphic(width, height, DEFAULT_BPP);
+	}
+
+	/**
+	 * Set informations about display
+	 * @param width
+	 * @param height
+	 * @param bpp
+	 */
+	public void setGraphic(int width, int height, int bpp) {
+		this.opt.width = width;
+		this.opt.height = height;
+		this.opt.set_bpp(bpp);
 	}
 
 	private void initCanvas() throws RdesktopException {
@@ -70,7 +149,7 @@ public class RdpConnection implements Runnable{
 		this.canvas.addFocusListener(new RdesktopFocusListener(this.canvas, this.opt));
 	}
 	
-	public boolean addChannel(VChannel channel) {
+	protected boolean addChannel(VChannel channel) {
 		try {
 			this.channels.register(channel);
 		} catch (RdesktopException e) {
@@ -81,32 +160,127 @@ public class RdpConnection implements Runnable{
 		return true;
 	}
 
-	public ArrayList<Application> getAppsList() {
-		return this.appsList;
+	protected void initSoundChannel() throws RdesktopException {
+		if (this.soundChannel != null)
+			return;
+
+		this.soundChannel = new SoundChannel(this.opt, this.common);
+		if (! this.addChannel(this.soundChannel))
+			throw new RdesktopException("Unable to add sound channel");
 	}
 
-	public void addApp(Application app_) {
-		this.appsList.add(app_);
+	protected void initRdpdrChannel() throws RdesktopException {
+		if (this.rdpdrChannel != null)
+			return;
+
+		this.rdpdrChannel = new RdpdrChannel(this.opt, this.common);
+		if (! this.addChannel(this.rdpdrChannel))
+			throw new RdesktopException("Unable to add rdpdr channel");
+	}
+
+	/**
+	 * Add clip channel
+	 */
+	protected void initClipChannel() throws RdesktopException {
+		if (this.clipChannel != null)
+			return;
+
+		this.clipChannel = new ClipChannel(this.common, this.opt);
+		if (! this.addChannel(this.clipChannel))
+			throw new RdesktopException("Unable to add clip channel");
+		if (this.seamChannel != null)
+			this.seamChannel.setClip(clipChannel);
+	}
+
+	protected void initSeamlessChannel() throws RdesktopException {
+		this.opt.seamlessEnabled = true;
+		if (this.seamChannel != null)
+			return;
+
+		this.seamChannel = new SeamlessChannel(this.opt, this.common);
+		if (! this.addChannel(this.seamChannel))
+			throw new RdesktopException("Unable to add seamless channel");
+	}
+
+	/**
+	 * Enable/disable MPPC-BULK compression with a history buffer of 64k
+	 * @param packetCompression
+	 */
+	public void setPacketCompression(boolean packetCompression) {
+		this.opt.packet_compression = packetCompression;
+	}
+
+	/**
+	 * Enable/disable volatile bitmap caching
+	 * @param volatileCaching
+	 */
+	public void setVolatileCaching(boolean volatileCaching) {
+		if ((! volatileCaching) && this.opt.persistent_bitmap_caching)
+			this.setPersistentCaching(false);
+		this.opt.bitmap_caching = volatileCaching;
+	}
+
+	/**
+	 * Enable/disable persistent bitmap caching
+	 * @param persistentCaching
+	 */
+	public void setPersistentCaching(boolean persistentCaching) {
+		this.opt.persistent_bitmap_caching = persistentCaching;
+
+		if (! persistentCaching)
+			return;
+
+		if (! this.opt.bitmap_caching)
+			this.setVolatileCaching(true);
+
+		this.setPersistentCachingMaxSize(DEFAULT_PERSISTENT_CACHE_SIZE);
+	}
+
+	/**
+	 * Not implemented yet
+	 * Specify the path where the persistent bitmap cache is
+	 * @param persistentCachingPath
+	 */
+	public void setPersistentCachingPath(String persistentCachingPath) {
+		String separator = System.getProperty("file.separator");
+
+		if (persistentCachingPath.lastIndexOf(separator) != persistentCachingPath.length()-1)
+			persistentCachingPath = persistentCachingPath.concat(separator);
+
+		this.opt.persistent_caching_path = persistentCachingPath;
+	}
+
+	/**
+	 * Not implemented yet
+	 * Specify the maximum size of persistent bitmap cache in MegaByte
+	 * @param persistentCachingMaxSize (MB)
+	 */
+	public void setPersistentCachingMaxSize(int persistentCachingMaxSize) {
+		if(! System.getProperty("os.name").startsWith("Mac OS X")) {
+			int maxSize = (int) ((new File(System.getProperty("user.home")).getFreeSpace()) / 1024 /1024); // convert bytes to megabytes
+			if (maxSize > (persistentCachingMaxSize * 1.25))
+				maxSize = persistentCachingMaxSize;
+			else
+				persistentCachingMaxSize = (int) (maxSize * 0.8);
+		}
+		this.opt.persistent_caching_max_cells = (persistentCachingMaxSize * 1024 * 1024) / PstCache.MAX_CELL_SIZE;
+	}
+
+	/**
+	 * Specify the path where keymaps are
+	 * @param keymapPath
+	 */
+	public void setKeymapPath(String keymapPath_) {
+		this.keyMapPath = keymapPath_;
 	}
 
 	public void setKeymap(String keymap) {
 		this.mapFile = keymap;
 	}
-	
-	protected void detectKeymap() {
-		String language = System.getProperty("user.language");
-		String country = System.getProperty("user.country");
-
-		this.mapFile =  new Locale(language, country).toString().toLowerCase();
-		this.mapFile = this.mapFile.replace('_', '-');
-	}
 
 	protected boolean loadKeymap() {
 		InputStream istr = null;
 		KeyCode_FileBased keyMap = null;
-
-		if (this.mapFile == null)
-			this.detectKeymap();
 
 		istr = RdpConnection.class.getResourceAsStream(this.keyMapPath + this.mapFile);
 
@@ -169,7 +343,7 @@ public class RdpConnection implements Runnable{
 		this.opt.grab_keyboard = false;
 		if(this.opt.hostname.equalsIgnoreCase("localhost")) this.opt.hostname = "127.0.0.1";
 		
-		this.setConnecting();
+		this.fireConnecting();
 		
 		boolean keep_running = true;
 		int exit = 0;
@@ -181,7 +355,7 @@ public class RdpConnection implements Runnable{
 					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname), logonflags, this.opt.domain, this.opt.password, this.opt.command, this.opt.directory);
 					
 					if (keep_running) {
-						this.setConnected();
+						this.fireConnected();
 						
 						this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
 						if (! deactivated[0]) {
@@ -220,7 +394,7 @@ public class RdpConnection implements Runnable{
 						
 						if (this.RdpLayer != null && this.RdpLayer.isConnected())
 							this.RdpLayer.disconnect();
-						this.setDisconnected();
+						this.fireDisconnected();
 						System.out.println("Retrying connection...");
 						keep_running = true; // retry
 						continue;
@@ -236,6 +410,25 @@ public class RdpConnection implements Runnable{
 				System.out.println("The communications layer could not be initiated!");
 		}
 		exit(exit);
+	}
+
+	/**
+	 * Launch a RdpConnection thread
+	 */
+	public void connect() {
+		this.connectionThread = new Thread(this);
+		this.connectionThread.start();
+	}
+
+	/**
+	 * Interrupt the thread launched by the connect() method
+	 */
+	public void interruptConnection() throws RdesktopException {
+		if (this.connectionThread == null)
+			throw new RdesktopException("Unable to interrupt the connection: The connection thread is not started");
+
+		if (this.connectionThread.isAlive())
+			this.connectionThread.interrupt();
 	}
 	
 	public RdesktopCanvas getCanvas() {
@@ -265,9 +458,9 @@ public class RdpConnection implements Runnable{
 		System.gc();
 		
 		if (n == 0)
-			this.setDisconnected();
+			this.fireDisconnected();
 		else
-			this.setFailed();
+			this.fireFailed();
 	}
 	
 	public void addRdpListener(RdpListener l) {
@@ -300,45 +493,5 @@ public class RdpConnection implements Runnable{
 		for(RdpListener list : listener) {
 			list.disconnected(this);
 		}
-	}
-	
-	private void setState(String state_) {
-		this.state = state_;
-	}
-	
-	private void setConnecting() {
-		if (!this.state.equals("connecting")) {
-			this.setState("connecting");
-			fireConnecting();
-		}
-	}
-	
-	private void setFailed() {
-		if (!this.state.equals("failed")) {
-			this.setState("failed");
-			fireFailed();
-		}
-	}
-	
-	public void setConnected() {
-		if (!this.state.equals("connected")) {
-			this.setState("connected");
-			fireConnected();
-		}
-	}
-	
-	private void setDisconnected() {
-		if (!this.state.equals("disconnected")) {
-			this.setState("disconnected");
-			fireDisconnected();
-		}
-	}
-	
-	public String getState() {
-		return this.state;
-	}
-	
-	public boolean isConnected() {
-		return this.state.equals("connected");
 	}
 }

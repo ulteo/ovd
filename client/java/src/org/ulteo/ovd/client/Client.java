@@ -106,11 +106,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 				co.addRdpListener(this);
 				if(!desktopLaunched)
 					initDesktop(co);
-				try {
-					co.connect();
-				} catch (OvdException e) {
-					e.printStackTrace();
-				}
+				co.connect();
 				desktopLaunched = true;
 			}
 		}
@@ -242,7 +238,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 
 	@Override
 	public void connecting(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.opt.hostname);
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.getServer());
 	}
 
 	@Override
@@ -254,7 +250,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 			}
 		}
 
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.opt.hostname);
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.getServer());
 		if(graphic) {
 			Container cp = frame.getContentPane();
 			cp.removeAll();
@@ -289,6 +285,6 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 
 	@Override
 	public void failed(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.opt.hostname+" failed");
+		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.getServer()+" failed");
 	}
 }

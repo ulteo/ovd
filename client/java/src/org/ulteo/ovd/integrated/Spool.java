@@ -32,16 +32,17 @@ import java.util.logging.Logger;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.RdpConnection;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Spool implements Runnable {
-	private ArrayList<RdpConnection> connections = null;
+	private ArrayList<RdpConnectionOvd> connections = null;
 	private String os = null;
 	private File instancesDir = null;
 	private File toLaunchDir = null;
 	private ArrayList<ApplicationInstance> appInstances = null;
 
 	public Spool() {
-		this.connections = new ArrayList<RdpConnection>();
+		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.appInstances = new ArrayList<ApplicationInstance>();
 	}
 
@@ -49,11 +50,11 @@ public class Spool implements Runnable {
 		new File(Constants.iconsPath).mkdirs();
 	}
 
-	public void addConnection(RdpConnection rc) {
+	public void addConnection(RdpConnectionOvd rc) {
 		this.connections.add(rc);
 	}
 
-	public void removeConnection(RdpConnection rc) {
+	public void removeConnection(RdpConnectionOvd rc) {
 		this.connections.remove(rc);
 	}
 
@@ -160,7 +161,7 @@ public class Spool implements Runnable {
 	}
 
 	private Application findAppById(long id_) {
-		for (RdpConnection rc : this.connections) {
+		for (RdpConnectionOvd rc : this.connections) {
 			for (Application app : rc.getAppsList()) {
 				if (app.getId() == id_) {
 					return app;

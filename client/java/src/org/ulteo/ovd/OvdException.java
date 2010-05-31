@@ -20,7 +20,9 @@
 
 package org.ulteo.ovd;
 
-public class OvdException extends Exception {
+import net.propero.rdp.RdesktopException;
+
+public class OvdException extends RdesktopException {
 
 	public OvdException() {
 		super();
