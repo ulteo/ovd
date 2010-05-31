@@ -54,7 +54,13 @@ class Config:
 			return False
 		
 		if Config.infos.has_key("ROLES"):
-			Config.role = Config.infos["ROLES"].split(' ')
+			Config.role = []
+			buf = Config.infos["ROLES"].split(' ')
+			for b in buf:
+				if len(b.strip())==0:
+					continue
+				
+				Config.role.append(b.strip())
 		
 		if Config.infos.has_key("session_manager"):
 			Config.session_manager = Config.infos["session_manager"]
