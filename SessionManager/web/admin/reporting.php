@@ -321,7 +321,7 @@ function show_page($mode_) {
 	}
 
 
-	page_header(array('js_files' => array('admin/media/script/lib/calendarpopup/CalendarPopup.js')));
+	page_header(array('js_files' => array('media/script/lib/calendarpopup/CalendarPopup.js')));
 	echo '<h1>'._('Reporting').'</h1>';
 
 	echo '<div id="calendar_day_from" style="position: absolute; visibility: hidden; background: white;"></div>';
