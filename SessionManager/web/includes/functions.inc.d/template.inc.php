@@ -55,10 +55,6 @@ function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 }
 
 function header_static($title_=false) {
-	global $base_url;
-	if ($base_url == '//')
-		$base_url = '/';
-
 	$prefs = Preferences::getInstance();
 	if (! $prefs) {
 		$title_ = DEFAULT_PAGE_TITLE;
@@ -82,28 +78,28 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 		';/*<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />*/echo '
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-		<link rel="shortcut icon" type="image/png" href="'.$base_url.'admin/media/image/favicon.ico" />
+		<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />
 
-		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/style/common.css" />
+		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 
-		<link rel="stylesheet" type="text/css" href="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.css" />
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />
+		<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
 			NiftyLoad = function() {
 				Nifty(\'div.rounded\');
 			}
 		</script>
 
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/prototype/prototype.js" charset="utf-8"></script>
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>
 
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/common-regular.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/common-regular.js" charset="utf-8"></script>
 
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/sortable.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/sortable.js" charset="utf-8"></script>
 
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/common.js" charset="utf-8"></script>
-		<script type="text/javascript" src="'.$base_url.'admin/media/script/ajax/configuration.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>
+		<script type="text/javascript" src="media/script/ajax/configuration.js" charset="utf-8"></script>
 	</head>
 
 	<body>
@@ -135,16 +131,12 @@ echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xh
 }
 
 function footer_static() {
-	global $base_url;
-	if ($base_url == '//')
-		$base_url = '/';
-
 echo '		</div>
 
 			<div class="spacer"></div>
 
 			<div id="footerWrap">
-				'._('powered by').' <a href="http://www.ulteo.com"><img src="'.$base_url.'admin/media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
+				'._('powered by').' <a href="http://www.ulteo.com"><img src="media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a>&nbsp;&nbsp;&nbsp;
 			</div>
 		</div>
 	</body>
