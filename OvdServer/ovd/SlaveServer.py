@@ -18,6 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
 import time
 import threading
 from xml.dom.minidom import Document
@@ -39,17 +40,23 @@ class SlaveServer:
 		self.threads = []
 		self.monitoring = None
 		
+		self.ulteo_system = False
+		if os.path.exists("/etc/debian_chroot"):
+			f = file("/etc/debian_chroot", 'r')
+			buf = f.read()
+			f.close()
+			
+			if "OVD" in buf:
+				self.ulteo_system = True
+		
+		
 		self.dialog = Dialog(self)
 		
 		for role in Config.role:
 			if role == "aps":
 				from ovd.Role.ApplicationServer import Role
-				#from ovd.Role.ApplicationServer import Role as RoleApS
-				#self.roles.append(RoleApS(self))
 			elif role == "fs":
 				from ovd.Role.FileServer import Role
-				#from ovd.Role.FileServer import Role as RoleFS
-				#self.roles.append(RoleFS(self))
 			
 			self.roles.append(Role.Role(self))
 		

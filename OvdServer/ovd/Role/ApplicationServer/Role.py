@@ -222,7 +222,11 @@ class Role(AbstractRole):
 			time.sleep(0.2)
 			
 		return self.applicationsXML
-
+	
+	def canManageApplications(self):
+		return self.main_instance.ulteo_system
+	
+	
 	def updateApplications(self):
 		appsdetect = RolePlatform.ApplicationsDetection()
 		self.applications = appsdetect.get()

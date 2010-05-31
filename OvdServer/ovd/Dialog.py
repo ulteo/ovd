@@ -203,13 +203,14 @@ class Dialog(AbstractDialog):
 	def req_server_conf(self, request):
 		cpuInfos = Platform.System.getCPUInfos()
 		ram_total = Platform.System.getRAMTotal()
-
+		
 		doc = Document()
 		rootNode = doc.createElement('configuration')
 		
 		rootNode.setAttribute("type", Platform.System.getName())
 		rootNode.setAttribute("version", Platform.System.getVersion())
 		rootNode.setAttribute("ram", str(ram_total))
+		rootNode.setAttribute("ulteo_system", str(self.server.ulteo_system).lower())
 		
 		cpuNode = doc.createElement('cpu')
 		cpuNode.setAttribute('nb_cores', str(cpuInfos[0]))
