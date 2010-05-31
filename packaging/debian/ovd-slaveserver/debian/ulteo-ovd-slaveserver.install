@@ -1,0 +1,6 @@
+debian/tmp/etc
+debian/tmp/usr/bin
+debian/tmp/usr/lib/python2.5/site-packages/ovd/*.py
+debian/tmp/usr/lib/python2.5/site-packages/ovd/Role/*.py
+debian/tmp/usr/lib/python2.5/site-packages/ovd/Platform/*
+debian/tmp/usr/lib/python2.5/site-packages/ovd/Communication/*

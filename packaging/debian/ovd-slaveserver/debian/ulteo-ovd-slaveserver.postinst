@@ -3,23 +3,16 @@
 . /usr/share/debconf/confmodule
 db_version 2.0
 
-# Do nothing if we're not installing
-if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
-    exit 0
-fi
-
 CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
 
-gen_conf()
-{
-    db_get ulteo-ovd-slaveserver/session_manager || true
-    SESSION_MANAGER="$RET"
-
-    sed -r -i "s,^(session_manager = )(.*)$,\1$SESSION_MANAGER," $CONFFILE
-}
+if [ ! -f $CONFFILE ]; then
+    echo "Config file $CONFFILE not found"
+    exit 1
+fi
 
 # set the configuration if we install
-gen_conf
+db_get ulteo-ovd-slaveserver/session_manager || true
+sed -i "s/^session_manager.*/session_manager = $RET/" $CONFFILE
 
 db_stop
 

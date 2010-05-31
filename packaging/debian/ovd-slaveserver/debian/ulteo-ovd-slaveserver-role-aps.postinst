@@ -1,0 +1,13 @@
+#!/bin/sh
+
+CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
+
+if ! grep -q 'ROLES' $CONFFILE; then
+    echo "ROLES = aps" >> $CONFFILE
+elif ! grep -q "^ROLES.*aps" $CONFFILE; then
+    sed -i -r "s/^ROLES *= *(.*)/ROLES = \1 aps/" $CONFFILE
+fi
+
+#DEBHELPER#
+
+exit 0

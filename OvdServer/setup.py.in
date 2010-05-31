@@ -6,7 +6,7 @@
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 # Author Samuel BOVEE    <samuel@ulteo.com> 2010
 #
-# This program is free software; you can redistribute it and/or 
+# This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; version 2
 # of the License
@@ -30,8 +30,6 @@ setup_args["author"] = "Julien Langlois"
 setup_args["author_email"] = "julient@ulteo.com"
 setup_args["url"] = "http://www.ulteo.com/"
 setup_args["version"] = "@VERSION@"
-
-
 
 """
 setup()
@@ -61,8 +59,10 @@ if sys.platform == "win32":
 
 
 elif sys.platform == "linux2":
-   setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role', 
+   setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role',
                    'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
+                   'ovd.Role.ApplicationServer.Platform',
+                   'ovd.Role.ApplicationServer.Platform.Linux',
                    'ovd.Platform', 'ovd.Platform.Linux']
    setup_args["data_files"] = [('/usr/bin',['simpleServer']),
                                ('/etc/ulteo',['config/ovd-slaveserver.conf'])]
