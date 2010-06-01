@@ -62,6 +62,10 @@ class Dialog(AbstractDialog):
 				buf = path[len("/session/destroy/"):]
 				return self.req_session_destroy(buf)
 			
+			elif path.startswith("/debian/") and self.role_instance.canManageApplications():
+				buf = path[len("/debian/"):]
+				return self.req_debian_id(buf)
+			
 			return None
 		
 		elif request["method"] == "POST":
@@ -306,13 +310,13 @@ class Dialog(AbstractDialog):
 			if request not in ["upgrade", "install", "remove"]:
 				raise Exception("usage")
 			
-			packetNodes = rootNode.getElementsByTagName("packet")
-			if request in ["install", "remove"] and len(packetNodes)==0:
+			packageNodes = rootNode.getElementsByTagName("package")
+			if request in ["install", "remove"] and len(packageNodes)==0:
 				raise Exception("usage")
 			
-			packets = []
-			for packetNode in packetNodes:
-				packets.append(packetNode.getAttribute("name"))
+			package = []
+			for packageNode in packageNodes:
+				package.append(packageNode.getAttribute("name"))
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -325,18 +329,45 @@ class Dialog(AbstractDialog):
 		
 		deb_req = self.role_instance.apt.createRequest()
 		deb_req["order"] = request
-		deb_req["packets"] = packets
+		deb_req["package"] = package
 		
 		self.role_instance.apt.pushRequest(deb_req)
 		
-		return self.req_answer(self.debian_request2xml(deb_req, "created"))
+		return self.req_answer(self.debian_request2xml(deb_req["id"], "created"))
+	
+		
+	def req_debian_id(self, req):
+		try:
+			(rid, request) = req.split("/", 2)
+			
+			if request == "status":
+				status = self.role_instance.apt.getRequestStatus(rid)
+				return self.req_answer(self.debian_request2xml(rid, status))
+			
+			elif request in ["stdout", "stderr"]:
+				response = {}
+				response["code"] = httplib.OK
+				response["Content-Type"] = "image/png"
+				response["data"] = self.role_instance.apt.getRequestLog(rid, request)
+				return response	
+			
+			else:
+				raise Exception("usage")
+			
+		except Exception, err:
+			Logger.warn("Invalid xml input: "+str(err))
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "usage")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
 
 
 	@staticmethod
-	def debian_request2xml(request, status):
+	def debian_request2xml(rid, status):
 		doc = Document()
 		rootNode = doc.createElement('debian_request')
-		rootNode.setAttribute("id", request["id"])
+		rootNode.setAttribute("id", rid)
 		rootNode.setAttribute("status", status)
 		doc.appendChild(rootNode)
 		

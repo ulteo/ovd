@@ -54,6 +54,35 @@ class Apt(Thread):
 		
 		return request
 	
+	def getRequestStatus(self, rid):
+		d = self.directory+"/"+rid
+		if not os.path.exists(d):
+			return "unknown"
+		
+		f = d+"/status"
+		if not os.path.exists(f):
+			return "in progress"
+		
+		f = file(f, "r")
+		buf = f.read().strip()
+		f.close()
+		
+		if buf != "0":
+			return "error"
+		
+		return "success"
+	
+	def getRequestLog(self, rid, log):
+		f = self.directory+"/"+rid+"/"+log
+		if not os.path.exists(f):
+			return None
+		
+		f = file(f, "r")
+		buf = f.read()
+		f.close()
+		
+		return buf
+	
 	
 	def run(self):
 		while True:
@@ -64,10 +93,10 @@ class Apt(Thread):
 				command = "dist-upgrade"
 			
 			elif request["order"] == "install":
-				command = "install "+" ".join(request["packets"])
+				command = "install "+" ".join(request["packages"])
 			
 			elif request["order"] == "remove":
-				command = "autoremove --purge "+" ".join(request["packets"])
+				command = "autoremove --purge "+" ".join(request["packages"])
 			
 			ret = self.perform(request, command)
 			if not ret:
