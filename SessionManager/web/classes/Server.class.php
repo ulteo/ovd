@@ -128,6 +128,10 @@ class Server {
 		$this->version = $node->getAttribute('version');
 		$this->ram_total = $node->getAttribute('ram');
 
+		$this->ulteo_system = false;
+		if ($node->hasAttribute('ulteo_system') && $node->getAttribute('ulteo_system') == 'true')
+			$this->ulteo_system = true;
+
 		$node = $node->getElementsByTagname('cpu')->item(0);
 		if (is_null($node)) {
 			Logger::error('main', 'Server::getConfiguration - Invalid XML (no cpu node)');

@@ -24,6 +24,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class Abstract_Server {
 	public static $server_properties = array(
 		'roles'				=>	'roles',
+		'ulteo_system'		=>	'ulteo_system',
 		'windows_domain'	=>	'windows_domain'
 	);
 
