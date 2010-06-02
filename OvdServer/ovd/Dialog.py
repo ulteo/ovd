@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008
 # Author Laurent CLOUET <laurent@ulteo.com> 2009,2010
+# Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -69,6 +70,8 @@ class Dialog(AbstractDialog):
 			elif path == "/status":
 				return self.req_server_status(request)
 
+			elif path == "/logs":
+				return self.req_server_logs(request)
 			
 			return None
 		
@@ -191,6 +194,13 @@ class Dialog(AbstractDialog):
 		
 		doc.appendChild(rootNode)
 		return self.req_answer(doc)
+
+	def req_server_logs(self, request):
+		response = {}
+		response["code"] = httplib.OK
+		response["Content-Type"] = "text/plain"
+		response["data"] = ""
+		return response
 	
 	
 	def req_server_monitoring(self, request):
