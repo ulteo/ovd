@@ -43,6 +43,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("Usage: java -jar UlteoRdpClient.jar [options] server");
 		System.err.println("	-u USERNAME");
 		System.err.println("	-p PASSWORD");
+		System.err.println("	-s SHELL		Set the shell to launch at session start");
+		System.err.println("	-A			Enable seamless");
 		System.err.println("Example: java -jar OVDIntegratedClient.jar -u username -p password server");
 
 		System.exit(0);
