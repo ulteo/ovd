@@ -53,7 +53,9 @@ public class Options {
 	public boolean caps_sends_up_and_down = true;
 	public boolean remap_hash = true;
 	public boolean useLockingKeyState = true;
-	
+
+	public boolean seamformEnabled = false;
+
 	public boolean seamlessEnabled = false;
 	public boolean soundEnabled = false;
 	

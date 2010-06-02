@@ -14,6 +14,7 @@
   <property name="integrated.dist"  value="integrated" />
   <property name="ovdClient.dist"  value="OvdClient" />
   <property name="standalone.dist"  value="standalone" />
+  <property name="rdpClient.dist"  value="rdpClient" />
 
   <property name="prefix"      location="/usr/local" />
   <property name="datadir"     location="${prefix}/share" />
@@ -86,6 +87,48 @@
   </target>
 
 
+  <!-- RDP Client part -->
+
+  <target name="rdpClient.clean" depends="clean">
+    <delete dir="${rdpClient.dist}"/>
+  </target>
+
+  <target name="rdpClient" depends="rdpClient.clean,precompile">
+    <javac srcdir="./src;./src1.4"
+           destdir="classes"
+           encoding="UTF8"
+           target="1.5"
+           source="1.5"
+           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;"
+           includes="org/ulteo/rdp/RdpClient.java"/>
+  </target>
+
+  <target name="rdpClient.jar" depends="rdpClient,classes2jar">
+    <jar destfile="libs/RDPClient.jar" basedir="jar/">
+      <include name="**"/>
+
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.rdp.RdpClient"/>
+        <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="rdpClient.install" depends="rdpClient.jar">
+    <mkdir dir="${rdpClient.dist}"/>
+
+    <copy todir="${rdpClient.dist}">
+      <fileset dir="./libs">
+        <include name="RDPClient.jar" />
+      </fileset>
+      <fileset dir="./required_libraries">
+        <include name="gnu-getopt.jar" />
+        <include name="log4j-1.2.jar" />
+      </fileset>
+    </copy>
+  </target>
+
+
   <!-- Integrated client part -->
 
   <target name="integrated.clean" depends="clean">
@@ -126,6 +169,7 @@
       </fileset>
     </copy>
   </target>
+
 
   <!-- Ovd client part -->
   

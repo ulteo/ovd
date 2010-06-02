@@ -202,6 +202,14 @@ public class RdpConnection implements Runnable{
 			throw new RdesktopException("Unable to add seamless channel");
 	}
 
+	public void setShell(String shell) {
+		this.opt.command = shell;
+	}
+
+	public void setSeamForm(boolean enabled) {
+		this.opt.seamformEnabled = enabled;
+	}
+
 	/**
 	 * Enable/disable MPPC-BULK compression with a history buffer of 64k
 	 * @param packetCompression
@@ -353,10 +361,10 @@ public class RdpConnection implements Runnable{
 				// Attempt to connect to server on port Options.port
 				try {
 					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname), logonflags, this.opt.domain, this.opt.password, this.opt.command, this.opt.directory);
-					
+
 					if (keep_running) {
 						this.fireConnected();
-						
+
 						this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
 						if (! deactivated[0]) {
 							String reason = Rdesktop.textDisconnectReason(ext_disc_reason[0]);
@@ -380,9 +388,9 @@ public class RdpConnection implements Runnable{
 					if(this.RdpLayer.isConnected()){
 						System.out.println(s.getClass().getName() + " " + s.getMessage());
 						s.printStackTrace();
-						keep_running = false;
 						exit = 1;
 					}
+					keep_running = false;
 				}catch (RdesktopException e) {
 					System.out.println(e.getClass().getName() + " " + e.getMessage());
 					e.printStackTrace(System.err);
@@ -442,19 +450,19 @@ public class RdpConnection implements Runnable{
 	public SeamlessChannel getSeamlessChannel() {
 		return this.seamChannel;
 	}
-	
-	public void disconnect() {
-		this.RdpLayer.disconnect();
-		this.exit(0);
+
+	public boolean isConnected() {
+		return (this.RdpLayer != null && this.RdpLayer.isConnected());
 	}
 	
-	private void exit(int n) {
-		this.RdpLayer = null;
+	public void disconnect() {
 		if (this.common.rdp != null && this.common.rdp.isConnected()) {
 			this.common.rdp.disconnect();
 			this.common.rdp = null;
 		}
-		
+	}
+	
+	private void exit(int n) {
 		System.gc();
 		
 		if (n == 0)
