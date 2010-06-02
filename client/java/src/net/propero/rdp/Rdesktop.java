@@ -31,7 +31,6 @@ import net.propero.rdp.rdp5.VChannels;
 import net.propero.rdp.rdp5.cliprdr.ClipChannel;
 import net.propero.rdp.rdp5.rdpdr.Disk;
 import net.propero.rdp.rdp5.rdpdr.Printer;
-import net.propero.rdp.rdp5.rdpdr.PrinterManager;
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
@@ -39,7 +38,6 @@ import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 import net.propero.rdp.tools.SendEvent;
 
 import org.apache.log4j.*;
-
 import gnu.getopt.*;
 import net.propero.rdp.compress.MPPC;
 import net.propero.rdp.compress.RdpCompression;
@@ -189,7 +187,6 @@ public class Rdesktop {
 	public static Options opt = new Options();
 	public static Common common = new Common();
 	
-	public static PrinterManager printerManager = null;
 
 	/**
 	 * Outputs version and usage information via System.err
@@ -527,18 +524,27 @@ public class Rdesktop {
 				break;
  			case 'P':
  				String buffer = g.getOptarg();
- 				Rdesktop.printerManager = new PrinterManager();
  				if (buffer.equalsIgnoreCase("auto-detect")) {
- 					Rdesktop.printerManager.searchAllPrinter();
+ 					opt.printers = Printer.getAllAvailable();
  				}
+ 				if (opt.printers.length > 0){
+						opt.printerEnabled = true;
+				}
  				else {
  					ArrayList<String> list = new ArrayList<String>(Arrays.asList(buffer.split(",")));
- 					Rdesktop.printerManager.addPrinterList(list);
+ 					Iterator<String> iterator = list.iterator();
+ 					while (iterator.hasNext()) {
+ 						String name = iterator.next();
+ 						if (! Printer.getPrinterByName(name))
+ 							list.remove(name);
+ 					}
+ 				
+					if (list.size() > 0) {
+						opt.printerEnabled = true;
+						opt.printers = list.toArray(new String[list.size()]);
+					}
 				}
-				if (Rdesktop.printerManager.hasPrinter()) {
-					opt.rdpdrEnabled = true;
-					opt.printerEnabled = true;
-				}
+
 
  				break;				
 			case 's':
@@ -668,12 +674,14 @@ public class Rdesktop {
 						rdpdrChannel.register(disk);
 					}
 				}
-			 	if (opt.printerEnabled){
-			 		System.out.println("register printer");
-					Rdesktop.printerManager.registerAll(rdpdrChannel);
-			 	}
-			 	
-			 	channels.register(rdpdrChannel);
+				if (opt.printerEnabled) {
+					rdpdrChannel = new RdpdrChannel(opt, common);
+					for(int i=0; i<opt.printers.length; i++) {
+						Printer p = new Printer(opt.printers[i],opt.printers[i] ,true);
+						rdpdrChannel.register(p);
+					}
+					channels.register(rdpdrChannel);
+				}
 			}
 		}
 

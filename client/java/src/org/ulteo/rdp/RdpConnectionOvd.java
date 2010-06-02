@@ -26,9 +26,9 @@ import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
-import net.propero.rdp.rdp5.rdpdr.PrinterManager;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.printer.OVDPrinterManager;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 
 public class RdpConnectionOvd extends RdpConnection {
@@ -141,7 +141,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	 *	- Use a PrinterManager instance in order to register all local printers
 	 */
 	private void mountLocalPrinters() throws OvdException, RdesktopException {
-		PrinterManager printerManager = new PrinterManager();
+		OVDPrinterManager printerManager = new OVDPrinterManager();
 		printerManager.searchAllPrinter();
 		if (printerManager.hasPrinter()) {
 			this.initRdpdrChannel();

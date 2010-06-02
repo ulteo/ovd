@@ -21,6 +21,7 @@
 package org.ulteo.ovd.applet;
 
 import java.applet.Applet;
+import java.applet.AppletContext;
 import java.awt.BorderLayout;
 
 import net.propero.rdp.RdesktopCanvas;
@@ -28,7 +29,9 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
+import org.ulteo.ovd.printer.OVDAppletPrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class Desktop extends Applet implements RdpListener {
 
@@ -53,7 +56,6 @@ public class Desktop extends Applet implements RdpListener {
 	@Override
 	public void init() {
 		System.out.println(this.getClass().toString() +"  init");
-		
 		boolean status = this.checkSecurity();
 		if (! status) {
 			System.err.println(this.getClass().toString() +"  init: Not enought privileges, unable to continue");
@@ -71,8 +73,13 @@ public class Desktop extends Applet implements RdpListener {
 		byte flags = RdpConnectionOvd.MODE_DESKTOP;
 		if(this.multimedia_mode)
 			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-		if (this.map_local_printers)
+
+		if (this.map_local_printers){
+			System.out.println("Printer detection active");
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+			AppletContext appletContext= getAppletContext();
+			OVDPrinter.setPrinterThread(new OVDAppletPrinterThread(appletContext));
+		}
 
 		try {
 			this.rc = new RdpConnectionOvd(flags);

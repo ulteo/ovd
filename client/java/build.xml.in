@@ -13,6 +13,7 @@
   <property name="rdesktop.dist"  value="rdesktop" />
   <property name="integrated.dist"  value="integrated" />
   <property name="ovdClient.dist"  value="OvdClient" />
+  <property name="PDFPrinter.dist"  value="PDFPrinter" />
   <property name="standalone.dist"  value="standalone" />
   <property name="rdpClient.dist"  value="rdpClient" />
 
@@ -39,6 +40,18 @@
     <mkdir dir="libs"/>
   </target>
 
+ <target name="precompile_printing">
+   <mkdir dir="classes"/>
+   <mkdir dir="jar"/>
+   <mkdir dir="jar/org"/>
+   <mkdir dir="jar/org/jpedal"/>
+   <mkdir dir="jar/org/jpedal/res"/>
+   <copy todir="jar/org/jpedal/res">
+     <fileset dir="src/org/jpedal/res"/>
+   </copy>
+     <mkdir dir="libs"/>
+   </target>
+
   <target name="classes2jar" description="copy classes/** to jar/">
     <copy todir="jar/">
       <fileset dir="classes">
@@ -47,6 +60,13 @@
     </copy>
   </target>
 
+ <target name="classes2jarPrinter" description="copy classes/** to jar/">
+   <copy todir="jar/">
+     <fileset dir="classes">
+       <include name="**/**"/>
+     </fileset>
+   </copy>
+ </target>
   <!-- Rdesktop part -->
   <target name="rdesktop.clean" depends="clean">
     <delete dir="${rdesktop.dist}"/>
@@ -128,6 +148,50 @@
     </copy>
   </target>
 
+  <!-- PDFPrinter part -->
+
+ <target name="PDFPrinter.clean" >
+   <delete dir="${PDFPrinter.dist}"/>
+   <delete dir="classes"/>
+   <delete dir="libs"/>
+   <delete dir="jar"/>
+ </target>
+
+ <target name="PDFPrinter" depends="PDFPrinter.clean,precompile_printing" description="compile the Java source code to class files">
+   <javac srcdir="./src"
+          destdir="classes"
+          encoding="UTF8"
+          target="1.5"
+          source="1.5"
+          classpath="required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
+          includes="org/ulteo/ovd/printer/PrinterApplet.java"/>
+ </target>
+ <target name="PDFPrinter.jar" depends="PDFPrinter,classes2jarPrinter" description="create jar file">
+   <jar destfile="libs/PDFPrinter.jar" basedir="jar/">
+     <include name="**"/>
+     <manifest>
+       <attribute name="Main-Class" value="org.ulteo.ovd.printer.PrinterApplet"/>
+     </manifest>
+   </jar>
+   <signjar jar="libs/PDFPrinter.jar"
+            alias="ulteo"
+            storepass="${keystore.password}"
+            keystore="${build.cert}/keystore"
+            signedjar="libs/PDFPrinter-${compile.release}.jar"/>
+ </target>
+
+ <target name="PDFPrinter.install"
+         description="install applets"
+         depends="PDFPrinter.jar">
+   <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
+   <copy todir="${destdir}${datadir}/ulteo/applets">
+     <fileset dir="./libs">
+       <include name="PDFPrinter-${compile.release}.jar" />
+     </fileset>
+   </copy>
+   <symlink link="${destdir}${datadir}/ulteo/applets/PDFPrinter.jar"
+            resource="PDFPrinter-${compile.release}.jar"/>
+ </target>
 
   <!-- Integrated client part -->
 
@@ -141,7 +205,7 @@
            encoding="UTF8"
            target="1.5"
            source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar"
+           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
            includes="org/ulteo/ovd/integrated/Client.java"/>
   </target>
 
@@ -183,7 +247,7 @@
            encoding="UTF8"
            target="1.5"
            source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;"
+           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
            includes="org/ulteo/ovd/client/StartConnection.java"/>
   </target>
 
@@ -288,7 +352,7 @@
            encoding="UTF8"
            target="1.5"
            source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
+           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
            includes="org/ulteo/ovd/standalone/Client.java" />
   </target>
 
@@ -365,7 +429,7 @@
 
   <target name="applet.install"
           description="install applets"
-          depends="applet.jar">
+          depends="PDFPrinter.install, applet.jar">
     <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
 
     <copy todir="${destdir}${datadir}/ulteo/applets">
@@ -428,6 +492,7 @@
   <target name="clean" description="clean files">
     <delete dir="classes"/>
     <delete dir="libs"/>
+    <delete dir="jar"/>
   </target>
 </project>
 

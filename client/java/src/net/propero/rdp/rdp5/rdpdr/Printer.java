@@ -126,6 +126,46 @@ public class Printer extends RdpdrDevice{
 		return 0;
 	}
 	
+	public static String[] getAllAvailable() {
+		//define DocFlavor case
+		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+		
+		//select printer
+		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+		
+
+		String defaultPrinterName = null;
+		try{
+			PrintService default_p = PrintServiceLookup.lookupDefaultPrintService();
+			defaultPrinterName = default_p.getName();
+		}catch(Exception e){}
+
+
+		String[] names = new String[printService.length];
+
+		for(int i=0;i<printService.length;i++) {
+			System.out.println("getall: "+printService[i].getName());
+			names[printService.length-1-i] = printService[i].getName();
+		}
+
+		return names;
+	}
+	public static boolean getPrinterByName(String printerName){
+ 		//define DocFlavor case
+ 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+ 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+ 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+ 		
+ 		PrintService myPrinter = null;
+		for(int i=0;i<printService.length;i++){
+			if(printService[i].getName().trim().equalsIgnoreCase(printerName))
+				myPrinter = printService[i];
+ 		}
+ 		return myPrinter!=null?true:false;
+ 	}
+	
+	
 	/* Real printer thread */
 	public class PrinterThread extends Thread{
 		FileWriter tmpOut = null;

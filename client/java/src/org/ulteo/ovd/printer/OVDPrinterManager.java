@@ -18,8 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package net.propero.rdp.rdp5.rdpdr;
+package org.ulteo.ovd.printer;
 
+import java.net.URL;
 import java.util.ArrayList;
 
 import javax.print.DocFlavor;
@@ -28,29 +29,34 @@ import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 
+import net.propero.rdp.rdp5.rdpdr.Printer;
+import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
+import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
+
 import org.apache.log4j.Logger;
+import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 
 
 
-public class PrinterManager {
-	private static Logger logger = Logger.getLogger(PrinterManager.class);
-	private ArrayList<Printer> printerList;
+public class OVDPrinterManager {
+	private static Logger logger = Logger.getLogger(OVDPrinterManager.class);
+	private ArrayList<OVDPrinter> printerList;
 	private String defaultPrinterName;
+	public static URL URLPrintingApplet = null;
 	
-	
-	public PrinterManager(){
-		this.printerList = new ArrayList<Printer>();
+	public OVDPrinterManager(){
+		this.printerList = new ArrayList<OVDPrinter>();
 		this.defaultPrinterName = "";
 	}
 	
-
+	
 	/*
 	 * search all known printer on the system
 	 */
 	public void searchAllPrinter() {
 		boolean isDefault;
-		
 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
@@ -72,9 +78,12 @@ public class PrinterManager {
 				isDefault = true;
 
 			String displayName = getValideDisplayName(printerName);
-			printerList.add(i, new Printer(printerName, displayName,  isDefault));
+			printerList.add(i, new OVDPrinter(printerName, displayName,  isDefault));
 			isDefault = false;
 		}
+		if (printerList.isEmpty()){
+			printerList.add(0, new OVDPrinter(Constants.filePrinterName, Constants.filePrinterName, true));
+		}		
 	}
 	
 	/*
@@ -84,7 +93,7 @@ public class PrinterManager {
 		for (String printerName : pList) {
 			if ( isExist(printerName) ){
 				String displayName = getValideDisplayName(printerName);
-				printerList.add(new Printer(printerName, displayName, true));
+				printerList.add(new OVDPrinter(printerName, displayName, true));
 			}
 		}
 	}

@@ -22,10 +22,12 @@
 package org.ulteo.ovd.applet;
 
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.printer.OVDAppletPrinterThread;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
 import java.applet.Applet;
+import java.applet.AppletContext;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -38,6 +40,7 @@ import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
 
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 
 abstract class Order {
@@ -176,8 +179,11 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			this.multimedia_mode = buf.equalsIgnoreCase("true");
 		
 		buf = this.getParameter("redirect_client_printers");
-		if (buf != null)
+		if (buf != null){
+			AppletContext appletContext= getAppletContext();
+			OVDPrinter.setPrinterThread(new OVDAppletPrinterThread(appletContext));
 			this.map_local_printers = buf.equalsIgnoreCase("true");
+		}
 		
 		return true;
 	}
