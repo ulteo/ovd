@@ -21,10 +21,10 @@
 package org.ulteo.rdp;
 
 import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
-import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
@@ -35,6 +35,21 @@ import org.apache.log4j.Logger;
 import org.ulteo.ovd.OvdException;
 
 public class RdpClient extends JFrame implements WindowListener, RdpListener {
+	public static class Params {
+		public String username = null;
+		public String password = null;
+		public String server = null;
+		public int height = RdpConnection.DEFAULT_HEIGHT;
+		public int width = RdpConnection.DEFAULT_WIDTH;
+		public String shell = null;
+		public int bpp = RdpConnection.DEFAULT_BPP;
+		public boolean seamless = false;
+		public boolean packetCompression = false;
+		public boolean persistentCache = false;
+		public int persistentCacheMaxSize = RdpConnection.DEFAULT_PERSISTENT_CACHE_SIZE;
+		public String persistentCachePath = null;
+	}
+
 	public static final String productName = "Ulteo RDP Client";
 	public static final String seamlessShell = "seamlessrdpshell";
 
@@ -43,56 +58,87 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("Usage: java -jar UlteoRdpClient.jar [options] server");
 		System.err.println("	-u USERNAME");
 		System.err.println("	-p PASSWORD");
-		System.err.println("	-s SHELL		Set the shell to launch at session start");
-		System.err.println("	-A			Enable seamless");
+		System.err.println("	-g WIDTHxHEIGTH				Set the screen geometry");
+		System.err.println("	-s SHELL				Set the shell to launch at session start");
+		System.err.println("	-A					Enable seamless");
+		System.err.println("	-o BPP					Bits-per-pixel for display");
+		System.err.println("	-z					Enable packet compression (MPPC 64K)");
+		System.err.println("	-P					Enable persistent bitmap cache");
+		System.err.println("	  --persistent-cache-location		Set the persistent cache location");
+		System.err.println("	  --persistent-cache-maxsize		Set the persistent cache maximum size");
 		System.err.println("Example: java -jar OVDIntegratedClient.jar -u username -p password server");
 
 		System.exit(0);
 	}
 
 	public static void main(String[] args) {
-		Options options = new Options();
+		Params params = new Params();
 
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(Level.INFO);
 
 		RdpClient.logger = Logger.getLogger(RdpClient.class);
 
-		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:As:");
+		LongOpt[] alo = new LongOpt[2];
+		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
+		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 0);
+		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:As:o:zP", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
 			switch (c) {
+				case 0: // --persistent-cache-location
+					params.persistentCachePath = opt.getOptarg();
+					break;
+				case 1: // --persistent-cache-maxsize
+					params.persistentCacheMaxSize = Integer.parseInt(opt.getOptarg());
+					break;
 				case 'u':
-					options.username = new String(opt.getOptarg());
+					params.username = new String(opt.getOptarg());
 					break;
 				case 'p':
-					options.password = new String(opt.getOptarg());
+					params.password = new String(opt.getOptarg());
+					break;
+				case 'g':
+					String geometry = opt.getOptarg();
+					int index = geometry.indexOf('x');
+					if (index == -1) {
+						RdpClient.logger.warn("Bad geometry, keep default geometry: "+RdpConnection.DEFAULT_WIDTH+"x"+RdpConnection.DEFAULT_HEIGHT);
+						break;
+					}
+					params.width = Integer.parseInt(geometry.substring(0, index)) & ~3;
+					params.height = Integer.parseInt(geometry.substring(index+1, geometry.length()));
 					break;
 				case 'A':
-					options.seamlessEnabled = true;
+					params.seamless = true;
 					break;
 				case 's':
-					options.command = new String(opt.getOptarg());
-					if (options.command.equalsIgnoreCase(seamlessShell) || options.command.equalsIgnoreCase(seamlessShell.concat(".exe")))
-						options.seamformEnabled = true;
+					params.shell = new String(opt.getOptarg());
 					break;
+				case 'o':
+					params.bpp = Integer.parseInt(opt.getOptarg());
+					break;
+				case 'z':
+					params.packetCompression = true;
+					break;
+				case 'P':
+					params.persistentCache = true;
 				default:
 					break;
 			}
 		}
 
-		if (options.username == null || options.password == null)
+		if (params.username == null || params.password == null)
 			usage();
 
 		if (opt.getOptind() < args.length)
-			options.hostname = new String(args[args.length - 1]);
+			params.server = new String(args[args.length - 1]);
 		else
 			usage();
 
 		
 		try {
-			RdpClient client = new RdpClient(options);
+			RdpClient client = new RdpClient(params);
 
 			client.connect();
 		} catch (RdesktopException ex) {
@@ -105,33 +151,38 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	private RdpConnectionOvd co = null;
 	private RdesktopCanvas canvas = null;
 
-	public RdpClient(Options opt_) throws RdesktopException {
+	public RdpClient(Params params) throws RdesktopException {
 		super(RdpClient.productName);
 
-		this.parseOptions(opt_);
+		this.parseOptions(params);
 		this.initWindow();
 	}
 
-	private void parseOptions(Options opt) throws RdesktopException {
+	private void parseOptions(Params params) throws RdesktopException {
 		byte flags = 0x00;
 
-		if (opt.seamlessEnabled)
+		if (params.seamless)
 			flags |= RdpConnectionOvd.MODE_APPLICATION;
 		else
 			flags |= RdpConnectionOvd.MODE_DESKTOP;
 
 		this.co = new RdpConnectionOvd(flags);
 
-		if (! opt.command.isEmpty())
-			this.co.setShell(opt.command);
-		if (opt.seamlessEnabled) {
-			this.co.setSeamForm(opt.seamformEnabled);
+		if (params.shell != null)
+			this.co.setShell(params.shell);
+		if (params.seamless) {
+			if (params.shell.equalsIgnoreCase(seamlessShell) || params.shell.equalsIgnoreCase(seamlessShell.concat(".exe")))
+				this.co.setSeamForm(true);
 			this.co.getSeamlessChannel().setMainFrame(this);
 		}
 
-		this.co.setServer(opt.hostname, opt.port);
-		this.co.setCredentials(opt.username, opt.password);
-		this.co.setGraphic(opt.width, opt.height, opt.server_bpp);
+		this.co.setServer(params.server, RdpConnection.RDP_PORT);
+		this.co.setCredentials(params.username, params.password);
+		this.co.setGraphic(params.width, params.height, params.bpp);
+
+		this.co.setPacketCompression(params.packetCompression);
+
+		this.co.setPersistentCaching(params.persistentCache);
 
 		this.co.addRdpListener(this);
 	}
