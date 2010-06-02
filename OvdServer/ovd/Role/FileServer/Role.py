@@ -30,6 +30,7 @@ from ovd.Platform import Platform
 from ovd.Role.Role import Role as AbstractRole
 
 from Dialog import Dialog
+from Share import Share
 
 
 class Role(AbstractRole):
@@ -40,6 +41,7 @@ class Role(AbstractRole):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
 		self.has_run = False
+		self.shares = {}
 	
 	def init(self):
 		Logger.info("FileServer init")
@@ -68,13 +70,6 @@ class Role(AbstractRole):
 			Logger.debug("FileServer run loop")
 	
 	
-	def get_enabled_usershares(self):
-		s, o = commands.getstatusoutput("net usershare list")
-		if s is not 0:
-			Logger.error("FS: unable to 'net usershare list': %d => %s"%(s, o))
-			return []
-		
-		return [s.strip() for s in o.splitlines()]
 	
 	def cleanup_samba(self):
 		# check samba conf
@@ -86,56 +81,40 @@ class Role(AbstractRole):
 				Logger.error("FS: unable to 'net usershare delete': %d => %s"%(s, o))
 				ret = False
 		
+		# todo: remove /etc/passwd accounts
+		
 		return ret
 	
-	def get_profiles(self):
-		profiles = []
-		
-		for f in glob.glob(self.spool+"/*"):
-			name = os.path.basename(f)
-			if name.startswith("p_"):
-				profiles.append(name[2:])
-			
-		return profiles
 	
-	def exists_profile(self, name):
-		return os.path.isdir(self.spool+"/p_"+name)
-	
-	def enable_profile(self, name, user, passwd):
-		s, o = commands.getstatusoutput('net usershare add %s "%s"'%("p_"+name, self.spool+"/p_"+name))
-		if s is not 0:
-			Logger.error("FS: unable to 'net usershare add': %d => %s"%(s, o))
-		
-		return s==0
-		
-	def disable_profile(self, name):
-		s, o = commands.getstatusoutput("net usershare delete p_%s"%(name))
-		if s is not 0:
-			Logger.error("FS: unable to 'net usershare delete': %d => %s"%(s, o))
-		
-		return s==0
-		
-	
-	def create_profile(self, name):
-		try:
-			os.mkdir(self.spool+"/p_"+name)
-		except:
-			Logger.warn("FS: unable to create profile '%s'"%(name))
-			return False
-		
-		return True
-	
-	def get_shares(self):
+	def get_existing_shares(self):
 		shares = []
 		
 		for f in glob.glob(self.spool+"/*"):
 			name = os.path.basename(f)
-			if name.startswith("s_"):
-				shares.append(name[2:])
 			
+			if name in self.shares.keys():
+				continue
+			
+			share = Share(name, self.spool)
+			shares.append(share)
+			
+		return shares + self.shares.values()
+	
+	
+	def get_enabled_usershares(self):
+		exisings = self.get_existing_shares()
+		
+		s, o = commands.getstatusoutput("net usershare list")
+		if s is not 0:
+			Logger.error("FS: unable to 'net usershare list': %d => %s"%(s, o))
+			return []
+		
+		names = [s.strip() for s in o.splitlines()]
+		
+		
+		shares = []
+		for share in exisings:
+			if share.name in names:
+				shares.append(share)
+		
 		return shares
-	
-	def exists_share(self, name):
-		return os.path.isdir(self.spool+"/s_"+name)
-	
-

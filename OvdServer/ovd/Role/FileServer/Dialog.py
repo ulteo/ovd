@@ -27,6 +27,7 @@ from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Logger import Logger
+from Share import Share
 from ovd import util
 
 from ovd.Communication.Dialog import Dialog as AbstractDialog
@@ -46,88 +47,119 @@ class Dialog(AbstractDialog):
 		if request["method"] == "GET":
 			Logger.debug("do_GET "+path)
 			
-			if path == "/list/all":
+			if path == "/shares":
 				return self.req_list_all(request)
-			
-			elif path.startswith("/profile/create"):
-				buf = path[len("/profile/create/"):]
+		
+			#elif path.startswith("/share/"):
+				#buf = path[len("/share/"):]
 				
-				doc = Document()
-				rootNode = doc.createElement('profile')
-				rootNode.setAttribute("id", buf)
-				doc.appendChild(rootNode)
-				request["data"] = doc.toxml()
+				#buf = buf.split("/")
+				#if buf[0] == "create":
+					#if len(buf) != 2:
+						#return None
+					
+					#doc = Document()
+					#rootNode = doc.createElement('share')
+					#rootNode.setAttribute("id", buf[1])
+					#doc.appendChild(rootNode)
+					#request["data"] = doc.toxml()
+					
+					#return self.req_share_create(request)
 				
-				return self.req_profile_create(request)
-			
-			elif path.startswith("/profile/enable"):
-				buf = path[len("/profile/enable/"):]
+				#elif buf[0] == "delete":
+					#if len(buf) != 2:
+						#return None
+					
+					#doc = Document()
+					#rootNode = doc.createElement('share')
+					#rootNode.setAttribute("id", buf[1])
+					#doc.appendChild(rootNode)
+					#request["data"] = doc.toxml()
+					
+					#return self.req_share_delete(request)
 				
-				doc = Document()
-				rootNode = doc.createElement('profile')
-				rootNode.setAttribute("id", buf)
-				rootNode.setAttribute("user", "toto")
-				rootNode.setAttribute("password", "tata")
-				doc.appendChild(rootNode)
-				request["data"] = doc.toxml()
+				#elif buf[0] == "users":
+					
+					#if len(buf) < 4:
+						#return None
+					
+					#if buf[1] == "add":
+						#doc = Document()
+						#rootNode = doc.createElement('share')
+						#rootNode.setAttribute("id", buf[2])
+						#doc.appendChild(rootNode)
+						
+						#for user in buf[3:]:
+							#(login, passwd) = user.split(":", 2)
+							
+							#node = doc.createElement('user')
+							#node.setAttribute("login", login)
+							#node.setAttribute("password", passwd)
+							#rootNode.appendChild(node)
+						
+						#request["data"] = doc.toxml()
+						#return self.req_share_add_users(request)
+					
+					#elif buf[1] == "del":
+						#doc = Document()
+						#rootNode = doc.createElement('share')
+						#rootNode.setAttribute("id", buf[2])
+						#doc.appendChild(rootNode)
+						
+						#for user in buf[3:]:
+							#node = doc.createElement('user')
+							#node.setAttribute("login", user)
+							#rootNode.appendChild(node)
+						
+						#request["data"] = doc.toxml()
+						
+						#return self.req_share_del_users(request)
 				
-				return self.req_profile_enable(request)
-			
-			elif path.startswith("/profile/disable"):
-				buf = path[len("/profile/disable/"):]
-				
-				doc = Document()
-				rootNode = doc.createElement('profile')
-				rootNode.setAttribute("id", buf)
-				doc.appendChild(rootNode)
-				request["data"] = doc.toxml()
-				
-				return self.req_profile_disable(request)
-	
-			
-			
+				return None
 			
 		
 		elif request["method"] == "POST":
-			if path == "/profile/create":
-				return self.req_profile_create(request)
+			if path == "/share/create":
+				return self.req_share_create(request)
+			
+			elif path == "/share/delete":
+				return self.req_share_delete(request)
+			
+			elif path == "/share/users/add":
+				return self.req_share_add_users(request)
+			
+			elif path == "/share/users/del":
+				return self.req_share_del_users(request)
 		
 		return None
 	
 	def req_list_all(self, request):
-		profiles = self.role_instance.get_profiles()
-		shares = self.role_instance.get_shares()
+		shares = self.role_instance.get_existing_shares()
 		
 		doc = Document()
-		rootNode = doc.createElement('fs')
+		rootNode = doc.createElement('shares')
 		doc.appendChild(rootNode)
 		
-		for profile in profiles:
-			node = doc.createElement('profile')
-			node.setAttribute("id", profile)
-			rootNode.appendChild(node)
 		for share in shares:
 			node = doc.createElement('share')
-			node.setAttribute("id", share)
+			node.setAttribute("id", share.name)
+			node.setAttribute("status", str(share.status()))
 			rootNode.appendChild(node)
 		
 		return self.req_answer(doc)
 	
-	def req_profile_create(self, request):
+	
+	def req_share_create(self, request):
 		try:
 			document = minidom.parseString(request["data"])
 			roodNode = document.documentElement
-			
-			if roodNode.nodeName != "profile":
+			if roodNode.nodeName != "share":
 				raise Exception("invalid root node")
 			
-			if not roodNode.hasAttribute("id"):
+			share_id = roodNode.getAttribute("id")
+			if len(share_id)==0 or "/" in share_id:
 				raise Exception("invalid root node")
-			
-			profile = roodNode.getAttribute("id")
-			if len(profile)==0 or "/" in profile:
-				raise Exception("invalid root node")
-			
+		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
 			doc = Document()
@@ -136,48 +168,35 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if self.role_instance.exists_profile(profile):
+		
+		share = Share(share_id, self.role_instance.spool)
+		if self.role_instance.shares.has_key(share_id) or share.status() is not Share.STATUS_NOT_EXISTS:
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "already_exists")
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if not self.role_instance.create_profile(profile):
+		if not share.create():
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "system_error")
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		
-		doc = Document()
-		rootNode = doc.createElement('profile')
-		rootNode.setAttribute("id", profile)
-		doc.appendChild(rootNode)
-		return self.req_answer(doc)
-
-	def req_profile_enable(self, request):
+		return self.share2xml(share)
+	
+	def req_share_delete(self, request):
 		try:
 			document = minidom.parseString(request["data"])
 			roodNode = document.documentElement
-			
-			if roodNode.nodeName != "profile":
+			if roodNode.nodeName != "share":
 				raise Exception("invalid root node")
 			
-			if not roodNode.hasAttribute("id"):
+			share_id = roodNode.getAttribute("id")
+			if len(share_id)==0 or "/" in share_id:
 				raise Exception("invalid root node")
-			
-			elements = {}
-			for item in ["id", "user", "password"]:
-				if not roodNode.hasAttribute(item):
-					raise Exception("invalid root node")
-				elements[item] = roodNode.getAttribute(item)
-				if len(elements[item])==0:
-					raise Exception("invalid root node")
-			
-			profile = elements["id"]
-			
+		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
 			doc = Document()
@@ -186,47 +205,45 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if not self.role_instance.exists_profile(profile):
-			doc = Document()
-			rootNode = doc.createElement('error')
-			rootNode.setAttribute("id", "not_exists")
-			doc.appendChild(rootNode)
-			return self.req_answer(doc)
+		if self.role_instance.shares.has_key(share_id):
+			share = self.role_instance.shares[share_id]
+		else:
+			share = Share(share_id, self.role_instance.spool)
+			share.delete()
 		
-		if not self.role_instance.enable_profile(profile, elements["user"], elements["password"]):
-			doc = Document()
-			rootNode = doc.createElement('error')
-			rootNode.setAttribute("id", "system_error")
-			doc.appendChild(rootNode)
-			return self.req_answer(doc)
-		
-		
+		return self.share2xml(share)
+	
+	
+	def share2xml(self, share):
 		doc = Document()
-		rootNode = doc.createElement('profile')
-		rootNode.setAttribute("id", profile)
-		rootNode.setAttribute("status", "enable")
+		rootNode = doc.createElement('share')
+		rootNode.setAttribute("id", share.name)
+		rootNode.setAttribute("status", str(share.status()))
 		doc.appendChild(rootNode)
 		return self.req_answer(doc)
-
-
-	def req_profile_disable(self, request):
+	
+	
+	def req_share_add_users(self, request):
 		try:
 			document = minidom.parseString(request["data"])
-			roodNode = document.documentElement
 			
-			if roodNode.nodeName != "profile":
+			rootNode = document.documentElement
+			if rootNode.nodeName != "share":
 				raise Exception("invalid root node")
 			
-			if not roodNode.hasAttribute("id"):
-				raise Exception("invalid root node")
+			share_id = rootNode.getAttribute("id")
 			
-			if not roodNode.hasAttribute("id"):
-				raise Exception("invalid root node")
+			userNodes = rootNode.getElementsByTagName("user")
+			if len(userNodes)==0:
+				raise Exception("usage")
 			
-			profile = roodNode.getAttribute("id")
-			if len(profile)==0 or "/" in profile:
-				raise Exception("invalid root node")
-			
+			users = []
+			for node in userNodes:
+				login = node.getAttribute("login")
+				password = node.getAttribute("password")
+				
+				users.append((login, password))
+		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
 			doc = Document()
@@ -235,14 +252,78 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if not self.role_instance.exists_profile(profile):
+		if self.role_instance.shares.has_key(share_id):
+			share = self.role_instance.shares[share_id]
+		else:
+			share = Share(share_id, self.role_instance.spool)
+			if share.status is Share.STATUS_NOT_EXISTS:
+				doc = Document()
+				rootNode = doc.createElement('error')
+				rootNode.setAttribute("id", "not_exists")
+				doc.appendChild(rootNode)
+				return self.req_answer(doc)
+			
+			self.role_instance.shares[share_id] = share
+		
+		for (user,password) in users:
+			if not share.add_user(user, password):
+				doc = Document()
+				rootNode = doc.createElement('error')
+				rootNode.setAttribute("id", "system_error")
+				doc.appendChild(rootNode)
+				return self.req_answer(doc)
+		
+		share.enable()
+		return self.share2xml(share)
+	
+	
+	def req_share_del_users(self, request):
+		try:
+			document = minidom.parseString(request["data"])
+			
+			rootNode = document.documentElement
+			if rootNode.nodeName != "share":
+				raise Exception("invalid root node")
+			
+			share_id = rootNode.getAttribute("id")
+			
+			userNodes = rootNode.getElementsByTagName("user")
+			if len(userNodes)==0:
+				raise Exception("usage")
+			
+			users = []
+			for node in userNodes:
+				login = node.getAttribute("login")
+				
+				users.append(login)
+		
+		except Exception, err:
+			Logger.warn("Invalid xml input: "+str(err))
 			doc = Document()
 			rootNode = doc.createElement('error')
-			rootNode.setAttribute("id", "not_exists")
+			rootNode.setAttribute("id", "usage")
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		if not self.role_instance.disable_profile(profile):
+		
+		if not self.role_instance.shares.has_key(share_id):
+			return self.share2xml(Share(share_id, self.role_instance.spool))
+			
+		share = self.role_instance.shares[share_id]
+		
+		ret = True
+		for user in users:
+			if not share.del_user(user):
+				ret = False
+		
+		
+		if len(share.users) == 0:
+			if not share.disable():
+				ret = False
+			
+			del(self.role_instance.shares[share_id])
+		
+		if not ret:
 			doc = Document()
 			rootNode = doc.createElement('error')
 			rootNode.setAttribute("id", "system_error")
@@ -250,9 +331,4 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		doc = Document()
-		rootNode = doc.createElement('profile')
-		rootNode.setAttribute("id", profile)
-		rootNode.setAttribute("status", "disable")
-		doc.appendChild(rootNode)
-		return self.req_answer(doc)
+		return self.share2xml(share)
