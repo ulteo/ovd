@@ -68,7 +68,7 @@ public class Options {
 	public int server_bpp = 24;				// Bits per pixel
 	public int Bpp = (server_bpp + 7) / 8;			// Bytes per pixel
 	
-	public int bpp_mask =  0xFFFFFF >> 8 * (3 - Bpp);	// Correction value to ensure only the relevant
+	public int bpp_mask =  0x00FFFFFF;	// Correction value to ensure only the relevant
 								// number of bytes are used for a pixel
 	
 	public int imgCount = 0;
@@ -83,26 +83,6 @@ public class Options {
 	public void set_bpp(int server_bpp_){
 		this.server_bpp = server_bpp_;
 		this.Bpp = (server_bpp_ + 7) / 8;
-		switch (server_bpp_) {
-			case 8:
-				this.bpp_mask = 0xFF;
-				break;
-			case 15:
-				this.bpp_mask = 0x7FFF;
-				break;
-			case 16:
-				this.bpp_mask = 0xFFFF;
-				break;
-			case 24:
-				this.bpp_mask = 0xFFFFFF;
-				break;
-			case 32:
-				this.bpp_mask = 0xFFFFFFFF;
-				break;
-			default:
-				System.err.println("The color depth "+ server_bpp_ +" is not available.");
-				break;
-		}
 		this.colour_model = new DirectColorModel(24,0xFF0000,0x00FF00,0x0000FF);
 	}
 	
