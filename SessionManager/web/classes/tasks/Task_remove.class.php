@@ -21,15 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Task_remove extends Task_install {
-	public $request = NULL;
-
-	public function __construct($task_id_, $server_, $applications_) {
-		Logger::debug('main', 'Starting TASK_remove::__construct for task '.$task_id_);
-
-		parent::__construct($task_id_, $server_, $applications_);
-	}
-
 	public function getRequest() {
-		return 'remove --purge '.$this->applications_line;
+		return 'remove';
 	}
 }

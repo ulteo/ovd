@@ -47,15 +47,41 @@ class Task {
 			return false;
 		}
 
-		$job_id = query_url($server->getWebservicesBaseURL().'/apt-get.php?action=request&request='.urlencode($this->getRequest()));
-		if ($job_id === false) {
-			$this->status = 'error';
-			$this->status_code = -4;
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('debian');
+		$node->setAttribute('request', $this->getRequest());
+
+		foreach ($this->getPackages() as $package) {
+			$buf = $dom->createElement('package');
+			$buf->setAttribute('name', $package);
+			$node->appendChild($buf);
+		}
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($server->getBaseURL().'/aps/debian', $xml);
+		if (! $xml) {
+			popup_error(sprintf(_("Unable to submit Task to server '%s'"), $server->fqdn));
 			return false;
 		}
 
-		$this->job_id = $job_id;
-		$this->status = 'in progress';
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('debian_request')->item(0);
+		if (is_null($node))
+			return false;
+
+		$this->job_id = $node->getAttribute('id');
+		$this->status = $node->getAttribute('status');
 		return true;	
 	}
 
@@ -66,34 +92,51 @@ class Task {
 			return false;
 		}
 
-		$buf = query_url($server->getWebservicesBaseURL().'/apt-get.php?action=status&job='.$this->job_id);
-		if ($buf === false) {
+		$xml = query_url($server->getBaseURL().'/aps/debian/'.$this->job_id.'/status');
+		if (! $xml) {
+			Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' returned an error');
 			$this->status = 'error';
 			return true;
 		}
 
-		$this->status_code = $buf;
-		if ($buf < 0 || $buf > 2) {
-			Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' returned an error ('.$buf.')');
+		$dom = new DomDocument('1.0', 'utf-8');
 
-			$this->status = 'error';
-			return true;
-		}	
-
-		if ($buf == 0 || $buf == 1) {
-			Logger::warning('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' is in progress ('.$buf.')');
-
-			$this->status = 'in progress';
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
 			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('debian_request')->item(0);
+		if (is_null($node))
+			return false;
+
+		$this->status = $node->getAttribute('status');
+
+		$ret = true;
+		switch ($this->status) {
+			case 'created':
+				Logger::warning('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' is created');
+				$ret = false;
+				break;
+			case 'in progress':
+				Logger::warning('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' is in progress');
+				$ret = false;
+				break;
+			case 'success':
+				Logger::info('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' is now finished');
+				$this->t_end = time();
+				$server->updateApplications();
+				$ret = true;
+				break;
+			case 'error':
+				Logger::error('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' returned an error');
+				$ret = true;
+				break;
 		}
-			
-		Logger::info('apt-get', 'TASK::refresh for task '.$this->id.' on server '.$this->server.' is now finished ('.$buf.')');
 
-		$this->status = 'finished';
-		$this->t_end = time();
-
-		$server->updateApplications();
-		return true;
+		return $ret;
 	}
 	
 	public function get_AllInfos() {
@@ -104,17 +147,21 @@ class Task {
 		}
 
 		$infos = array();
-		foreach (array('status', 'stdout', 'stderr') as $elem)
-			$infos[$elem] = query_url_no_error($server->getWebservicesBaseURL().'/apt-get.php?action=show&job='.$this->job_id.'&show='.$elem);
+		foreach (array('stdout', 'stderr') as $elem)
+			$infos[$elem] = query_url_no_error($server->getBaseURL().'/aps/debian/'.$this->job_id.'/'.$elem);
 		
 		return $infos;
 	}
 
 	public function succeed() {
-		return $this->status == 'finished';
+		return $this->status == 'success';
 	}
 	
 	public function failed() {
 		return $this->status == 'error';
+	}
+
+	public function getPackages() {
+		return array();
 	}
 }

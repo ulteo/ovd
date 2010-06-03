@@ -20,18 +20,23 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Task_install_from_line extends Task {
+class Task_install_from_line extends Task_install {
 	public $applications_line = NULL;
 
 	public function __construct($task_id_, $server_, $applications_line_) {
 		Logger::debug('main', 'Starting TASK_install::__construct for task '.$task_id_);
 
-		parent::__construct($task_id_, $server_);
+		parent::__construct($task_id_, $server_, array());
 		$this->applications_line = $applications_line_;
 	}
 
-	public function getRequest() {
-		return 'install '.$this->applications_line;
+	public function getPackages() {
+		$buf = explode(' ', $this->applications_line);
+		foreach ($buf as $k => $v) {
+			if ($v == '')
+				unset($buf[$k]);
+		}
+
+		return $buf;
 	}
 }
-

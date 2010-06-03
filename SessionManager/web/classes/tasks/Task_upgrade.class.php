@@ -21,15 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Task_upgrade extends Task {
-	public $request = NULL;
-
-	public function __construct($task_id_, $server_) {
-		Logger::debug('main', 'Starting Task_upgrade::__construct for task '.$task_id_);
-
-		parent::__construct($task_id_, $server_);
-	}
-
 	public function getRequest() {
-		return 'dist-upgrade ';
+		return 'upgrade';
 	}
 }

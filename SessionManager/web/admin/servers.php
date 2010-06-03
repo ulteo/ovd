@@ -737,7 +737,7 @@ function show_manage($fqdn) {
       echo '<td><a href="tasks.php?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
       echo '<td>'.get_class($task).'</td>';
       echo '<td>'.$status.'</td>';
-      echo '<td>'.$task->getRequest().', '.$task->status_code.'</td>';
+      echo '<td>'.$task->getRequest().'</td>';
       echo '</tr>';
     }
     echo '</table>';

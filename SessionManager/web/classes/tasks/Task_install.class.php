@@ -20,26 +20,27 @@
  **/
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
-class Task_install extends Task_install_from_line {
+class Task_install extends Task {
 	public $applications = NULL;
-	public $packages = NULL;
 
 	public function __construct($task_id_, $server_, $applications_) {
 		Logger::debug('main', 'Starting TASK_remove::__construct for task '.$task_id_);
 
+		parent::__construct($task_id_, $server_);
 		$this->applications = $applications_;
-		$packages = array();
-		foreach($applications_ as $app) {
-			if (! in_array($app->getAttribute('package'), $packages))
-				$packages[]= $app->getAttribute('package');
-		}
-		$apps_line = implode(' ', $packages);
-		
-		parent::__construct($task_id_, $server_, $apps_line);
-		$this->applications = $applications_;
-		$this->packages = $packages;
-		
 	}
 	
+	public function getRequest() {
+		return 'install';
+	}
 
+	public function getPackages() {
+		$packages = array();
+		foreach ($this->applications as $app) {
+			if (! in_array($app->getAttribute('package'), $packages))
+				$packages []= $app->getAttribute('package');
+		}
+
+		return $packages;
+	}
 }

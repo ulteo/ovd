@@ -79,7 +79,7 @@ function show_manage($id, $tm) {
 	elseif ($task->failed())
 		$status = '<span class="msg_error">'._('Error').'</span>';
 	else
-		$status = $task->status.' ('.$task->status_code.')';
+		$status = $task->status;
 
 	echo '<tr class="content1">';
 	echo '<td>'.date('Y-m-d H:i:s', $task->t_begin).'</td>';
