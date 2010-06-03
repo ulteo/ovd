@@ -25,6 +25,7 @@ class Config:
 	infos = {}
 	
 	role = []
+	ROLES_ALIASES = {"aps":"ApplicationServer", "fs":"FileServer"}
 	log_file = None
 	log_level = ["warn", "error"]
 	
@@ -57,10 +58,14 @@ class Config:
 			Config.role = []
 			buf = Config.infos["ROLES"].split(' ')
 			for b in buf:
-				if len(b.strip())==0:
+				b = b.strip()
+				if len(b)==0:
 					continue
 				
-				Config.role.append(b.strip())
+				if Config.ROLES_ALIASES.has_key(b):
+					b = Config.ROLES_ALIASES[b]
+				
+				Config.role.append(b)
 		
 		if Config.infos.has_key("session_manager"):
 			Config.session_manager = Config.infos["session_manager"]
@@ -81,8 +86,12 @@ class Config:
 			return False
 		
 		for role in Config.role:
-			if role not in ["aps", "fs"]:
-				print >>sys.stderr, "Invalid role '%s'"%(role)
+			try:
+				__import__("ovd.Role.%s.Role"%(role))
+			
+			except ImportError:
+				print >>sys.stderr, "Unsupported role '%s'."%(role)
+				print >>sys.stderr, "Please be sure this role exist and is correclty installed"
 				return False
 		
 		

@@ -53,10 +53,12 @@ class SlaveServer:
 		self.dialog = Dialog(self)
 		
 		for role in Config.role:
-			if role == "aps":
-				from ovd.Role.ApplicationServer import Role
-			elif role == "fs":
-				from ovd.Role.FileServer import Role
+			try:
+				Role = __import__("ovd.Role.%s.Role"%(role), {}, {}, "Role")
+			
+			except ImportError:
+				Logger.error("Unsupported role '%s'"%(role))
+				sys.exit(2)
 			
 			self.roles.append(Role.Role(self))
 		
