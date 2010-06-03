@@ -1,4 +1,0 @@
-* think about dropping the DAEMON option, we have a --daemon flag anyway
-* try to move connectmed outside the chroot
-* remove DAEMON and DOES_RUN from config file and --nodaemon arg
-* try to use inotify and auto wakeup instead of check file all the time
