@@ -152,8 +152,6 @@ class HttpRequestHandler(SimpleHTTPRequestHandler):
 		if length > 0:
 			req["data"] = self.rfile.read(length)
 			
-		print req
-	
 		response = self.server.comm_instance.process(req)
 		if response is None:
 			self.send_error(httplib.NOT_FOUND)

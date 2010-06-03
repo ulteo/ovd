@@ -106,11 +106,9 @@ class Dialog(AbstractDialog):
 	
 	def req_icon(self, app_id):
 		if self.role_instance.applications is None:
-			print "test1"
 			return None
 		
 		if not self.role_instance.applications.has_key(app_id):
-			print "test2"
 			return None
 		
 		app =  self.role_instance.applications[app_id]
@@ -119,7 +117,6 @@ class Dialog(AbstractDialog):
 		appsdetect = Platform.ApplicationsDetection()
 		data = appsdetect.getIcon(app["filename"])
 		if data is None:
-			print "test3"
 			return None
 		
 		response = {}
