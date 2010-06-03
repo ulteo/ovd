@@ -45,6 +45,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		public int bpp = RdpConnection.DEFAULT_BPP;
 		public boolean seamless = false;
 		public boolean packetCompression = false;
+		public boolean volatileCache = true;
 		public boolean persistentCache = false;
 		public int persistentCacheMaxSize = RdpConnection.DEFAULT_PERSISTENT_CACHE_SIZE;
 		public String persistentCachePath = null;
@@ -66,6 +67,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("	-P					Enable persistent bitmap cache");
 		System.err.println("	  --persistent-cache-location		Set the persistent cache location");
 		System.err.println("	  --persistent-cache-maxsize		Set the persistent cache maximum size");
+		System.err.println("	  --disable-all-cache			Disable volatile and persistent cache");
 		System.err.println("Example: java -jar OVDIntegratedClient.jar -u username -p password server");
 
 		System.exit(0);
@@ -79,9 +81,10 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		RdpClient.logger = Logger.getLogger(RdpClient.class);
 
-		LongOpt[] alo = new LongOpt[2];
+		LongOpt[] alo = new LongOpt[3];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 0);
+		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 0);
 		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:As:o:zP", alo);
 
 		int c;
@@ -92,6 +95,9 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 					break;
 				case 1: // --persistent-cache-maxsize
 					params.persistentCacheMaxSize = Integer.parseInt(opt.getOptarg());
+					break;
+				case 2: // --disable-all-cache
+					params.volatileCache = false;
 					break;
 				case 'u':
 					params.username = new String(opt.getOptarg());
@@ -182,7 +188,12 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		this.co.setPacketCompression(params.packetCompression);
 
-		this.co.setPersistentCaching(params.persistentCache);
+		this.co.setVolatileCaching(params.volatileCache);
+		if (params.volatileCache && params.persistentCache) {
+			this.co.setPersistentCaching(true);
+			this.co.setPersistentCachingPath(params.persistentCachePath);
+			this.co.setPersistentCachingMaxSize(params.persistentCacheMaxSize);
+		}
 
 		this.co.addRdpListener(this);
 	}
