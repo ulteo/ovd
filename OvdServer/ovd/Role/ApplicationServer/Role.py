@@ -35,7 +35,7 @@ from Platform import Platform as RolePlatform
 
 
 class Role(AbstractRole):
-	ts_group_name = Platform.System.get_default_ts_users_group()
+	ts_group_name = RolePlatform.TS.getUsersGroup()
 	ovd_group_name = "OVDUsers"
 	session_manager = None
 	

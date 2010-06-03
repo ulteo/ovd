@@ -33,6 +33,11 @@ class TS (AbstractTS):
 	
 	
 	@staticmethod
+	def getUsersGroup():
+		return "tsusers"
+	
+	
+	@staticmethod
 	def getSessionID(username_):
 		sessions = xrdp.SessionGetList()
 		for session in sessions.values():

@@ -28,6 +28,10 @@ from ovd.Role.ApplicationServer.TS import TS as AbstractTS
 
 class TS(AbstractTS):
 	@staticmethod
+	def getUsersGroup():
+		return "Remote Desktop Users"
+	
+	@staticmethod
 	def getList():
 		l = []
 		

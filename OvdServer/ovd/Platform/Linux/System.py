@@ -49,10 +49,6 @@ class System(AbstractSystem):
 		return "/var/lib/ovd"
 	
 	@staticmethod
-	def get_default_ts_users_group():
-		return "tsusers"
-	
-	@staticmethod
 	def getVersion():
 		try:
 			f = file("/etc/issue", "r")

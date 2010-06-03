@@ -56,10 +56,6 @@ class System(AbstractSystem):
 		return os.path.join(d, "ovd", "data")
 	
 	@staticmethod
-	def get_default_ts_users_group():
-		return "Remote Desktop Users"
-	
-	@staticmethod
 	def getVersion():
 		try:
 			pythoncom.CoInitialize()

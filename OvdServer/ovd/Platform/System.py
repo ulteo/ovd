@@ -33,10 +33,6 @@ class System:
 		raise NotImplementedError()
 	
 	@staticmethod
-	def get_default_ts_users_group():
-		raise NotImplementedError()
-	
-	@staticmethod
 	def getVersion():
 		raise NotImplementedError()
 	
