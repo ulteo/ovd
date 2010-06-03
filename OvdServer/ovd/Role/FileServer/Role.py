@@ -34,19 +34,18 @@ from Share import Share
 
 
 class Role(AbstractRole):
-	spool = "/var/lib/ulteo/ovd/fs"
-	shares_dir = "/var/lib/samba/usershares"
-	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
 		self.has_run = False
 		self.shares = {}
+		self.spool = os.path.join(Platform.System.get_default_data_dir(), "fs")
 	
 	def init(self):
 		Logger.info("FileServer init")
 		
 		if not os.path.isdir(self.spool):
+			Logger.info("FileServer never initialized, creating repository on '%s'"%(self.spool))
 			os.makedirs(self.spool)
 		
 		self.cleanup_samba()

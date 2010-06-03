@@ -42,7 +42,18 @@ class System(AbstractSystem):
 
 	@staticmethod
 	def get_default_config_dir():
-		return shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		return os.path.join(d, "ovd")
+	
+	@staticmethod
+	def get_default_spool_dir():
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		return os.path.join(d, "ovd", "spool")
+	
+	@staticmethod
+	def get_default_data_dir():
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		return os.path.join(d, "ovd", "data")
 	
 	@staticmethod
 	def get_default_ts_users_group():

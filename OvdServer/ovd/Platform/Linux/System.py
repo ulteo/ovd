@@ -41,6 +41,14 @@ class System(AbstractSystem):
 		return "/etc/ulteo"
 	
 	@staticmethod
+	def get_default_spool_dir():
+		return "/var/spool/ovd"
+	
+	@staticmethod
+	def get_default_data_dir():
+		return "/var/lib/ovd"
+	
+	@staticmethod
 	def get_default_ts_users_group():
 		return "tsusers"
 	

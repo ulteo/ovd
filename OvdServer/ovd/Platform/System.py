@@ -25,6 +25,14 @@ class System:
 		raise NotImplementedError()
 	
 	@staticmethod
+	def get_default_spool_dir():
+		raise NotImplementedError()
+	
+	@staticmethod
+	def get_default_data_dir():
+		raise NotImplementedError()
+	
+	@staticmethod
 	def get_default_ts_users_group():
 		raise NotImplementedError()
 	
