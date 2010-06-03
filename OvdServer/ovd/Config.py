@@ -91,7 +91,7 @@ class Config:
 			
 			except ImportError:
 				print >>sys.stderr, "Unsupported role '%s'."%(role)
-				print >>sys.stderr, "Please be sure this role exist and is correclty installed"
+				print >>sys.stderr, "Please be sure this role exists and is correctly installed"
 				return False
 		
 		
