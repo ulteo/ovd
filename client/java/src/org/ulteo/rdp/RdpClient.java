@@ -83,8 +83,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		LongOpt[] alo = new LongOpt[3];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
-		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 0);
-		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 0);
+		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
+		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 2);
 		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:As:o:zP", alo);
 
 		int c;
