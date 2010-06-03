@@ -150,9 +150,13 @@ function init($host_, $database_, $prefix_, $user_, $password_) {
 }
 
 function print_element($key_name,$container,$element_key,$element) {
+	if (is_object($element) == false) {
+		return false;
+	}
 	$element->setFormSeparator('___');  // global $sep
 	$element->setPath(array('key_name' => $key_name, 'container' => $container, 'element_id' => $element->id));
 	echo $element->toHTML();
+	return true;
 }
 
 function print_prefs5($prefs,$key_name, $container) {
