@@ -314,9 +314,9 @@ class Dialog(AbstractDialog):
 			if request in ["install", "remove"] and len(packageNodes)==0:
 				raise Exception("usage")
 			
-			package = []
+			packages = []
 			for packageNode in packageNodes:
-				package.append(packageNode.getAttribute("name"))
+				packages.append(packageNode.getAttribute("name"))
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -329,7 +329,7 @@ class Dialog(AbstractDialog):
 		
 		deb_req = self.role_instance.apt.createRequest()
 		deb_req["order"] = request
-		deb_req["package"] = package
+		deb_req["packages"] = packages
 		
 		self.role_instance.apt.pushRequest(deb_req)
 		
