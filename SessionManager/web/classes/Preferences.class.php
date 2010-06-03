@@ -58,6 +58,22 @@ class Preferences {
 	public function getKeys(){
 		return array_keys($this->elements);
 	}
+	
+	public function getElements($container_,$container_sub_) {
+		if (isset($this->elements[$container_])) {
+			if (isset($this->elements[$container_][$container_sub_])) {
+				return $this->elements[$container_][$container_sub_];
+			}
+			else {
+				Logger::error('main',"Preferences::getElements($container_,$container_sub_), '$container_' found but '$container_sub_' not found");
+				return NULL;
+			}
+		}
+		else {
+			Logger::error('main',"Preferences::getElements($container_,$container_sub_), '$container_'  not found");
+			return NULL;
+		}
+	}
 
 	public function get($container_,$container_sub_,$sub_sub_=NULL){
 		if (isset($this->elements[$container_])) {

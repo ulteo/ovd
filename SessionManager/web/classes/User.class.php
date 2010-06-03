@@ -275,7 +275,13 @@ class User {
 		$prefs = Preferences::getInstance();
 		$policies = $prefs->get('general', 'policy');
 		$default_policy = $policies['default_policy'];
-		$result = $prefs->elements['general']['policy']['default_policy']->content_available;
+		$elements = $prefs->getElements('general', 'policy');
+		if (array_key_exists('default_policy', $elements) == false) {
+			Logger::error('main', 'User::getPolicy, default_policy not found on general policy');
+			return array();
+		}
+		$result = $elements['default_policy']->content_available;
+		
 		foreach ($result as $k => $v) {
 				if (in_array($k, $default_policy))
 						$result[$k] = true;
