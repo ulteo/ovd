@@ -56,6 +56,11 @@ class System(AbstractSystem):
 		return os.path.join(d, "ovd", "data")
 	
 	@staticmethod
+	def get_default_log_dir():
+		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
+		return os.path.join(d, "ovd", "log")
+	
+	@staticmethod
 	def getVersion():
 		try:
 			pythoncom.CoInitialize()

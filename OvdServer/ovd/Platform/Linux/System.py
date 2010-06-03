@@ -49,6 +49,10 @@ class System(AbstractSystem):
 		return "/var/lib/ovd"
 	
 	@staticmethod
+	def get_default_log_dir():
+		return "/var/log/ovd"
+	
+	@staticmethod
 	def getVersion():
 		try:
 			f = file("/etc/issue", "r")

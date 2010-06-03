@@ -37,6 +37,8 @@ class Logger:
 		self.fileHandler = None
 		self.consoleHandler = None
 		
+		self.file = file
+		
 		if file is not None or stdout is not False:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
 			self.logging = logging.getLogger(name)

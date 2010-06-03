@@ -200,6 +200,20 @@ class Dialog(AbstractDialog):
 		response["code"] = httplib.OK
 		response["Content-Type"] = "text/plain"
 		response["data"] = ""
+		
+		if Logger._instance is None or Logger._instance.file is None:
+			return response
+		
+		try:
+			f = file(Logger._instance.file, 'rb')
+		except Exception, err:
+			Logger.warn("Unable to open log file to send it to SM")
+			Logger.debug("Unable to open file: %s"+str(err))
+			return response
+			
+		response["data"] = f.read()
+		f.close()
+		
 		return response
 	
 	

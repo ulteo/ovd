@@ -18,7 +18,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
 import sys
+
+from ovd.Platform import Platform
 
 class Config:
 	# generic
@@ -26,7 +29,7 @@ class Config:
 	
 	role = []
 	ROLES_ALIASES = {"aps":"ApplicationServer", "fs":"FileServer"}
-	log_file = None
+	log_file = os.path.join(Platform.System.get_default_log_dir(), "slaveserver.log")
 	log_level = ["warn", "error"]
 	
 	# ApS	

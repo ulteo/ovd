@@ -33,6 +33,10 @@ class System:
 		raise NotImplementedError()
 	
 	@staticmethod
+	def get_default_log_dir():
+		raise NotImplementedError()
+	
+	@staticmethod
 	def getVersion():
 		raise NotImplementedError()
 	
