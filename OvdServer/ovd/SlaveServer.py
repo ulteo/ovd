@@ -75,7 +75,8 @@ class SlaveServer:
 		
 		# Initialisation
 		try:
-			self.dialog.initialize()
+			if not self.dialog.initialize():
+				raise Exception()
 		except Exception, e:
 			Logger.error("SlaveServer: unable to initialize dialog class %s"%(str(e)))
 			return False
@@ -91,7 +92,8 @@ class SlaveServer:
 		
 		for role in self.roles:
 			try:
-				role.init()
+				if not role.init():
+					raise Exception()
 			except Exception, e:
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
