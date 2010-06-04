@@ -75,6 +75,9 @@ static HINSTANCE g_instance = NULL;
 
 static HANDLE g_mutex = NULL;
 
+static int g_screen_width = 0;
+static int g_screen_height = 0;
+
 static BOOL
 is_toplevel(HWND hwnd)
 {
@@ -120,6 +123,12 @@ get_parent(HWND hwnd)
 }
 
 static void
+getScreenSize() {
+	g_screen_width = GetSystemMetrics(SM_CXSCREEN);
+	g_screen_height = GetSystemMetrics(SM_CYSCREEN);
+}
+
+static void
 update_position(HWND hwnd)
 {
 	RECT rect, blocked;
@@ -143,6 +152,19 @@ update_position(HWND hwnd)
 	if ((hwnd == blocked_hwnd) && (rect.left == blocked.left) && (rect.top == blocked.top)
 	    && (rect.right == blocked.right) && (rect.bottom == blocked.bottom))
 		goto end;
+
+	if ((! IsZoomed(hwnd)) && (rect.left < 0 || rect.top < 0 || rect.bottom > g_screen_height || rect.right > g_screen_width)) {
+		int w = rect.right - rect.left;
+		int h = rect.bottom - rect.top;
+		int x = ((g_screen_width - rect.left) < w) ? (g_screen_width - w) : rect.left;
+		int y = ((g_screen_height - rect.top) < h) ? (g_screen_height - h) : rect.top;
+		x = (rect.left < 0) ? 0 : x;
+		y = (rect.top < 0) ? 0 : y;
+
+		SetWindowPos(hwnd, NULL, x, y, w, h, SWP_NOACTIVATE | SWP_NOZORDER);
+
+		goto end;
+	}
 
 	vchannel_write("POSITION", "0x%08lx,%d,%d,%d,%d,0x%08x",
 		       hwnd,
@@ -826,6 +848,7 @@ DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpReserved)
 			g_wm_seamless_focus = RegisterWindowMessage(FOCUS_MSG_NAME);
 
 			vchannel_open();
+			getScreenSize();
 
 			break;
 
