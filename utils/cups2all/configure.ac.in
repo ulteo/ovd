@@ -1,0 +1,36 @@
+m4_define([cups2all_version_major], [2])
+m4_define([cups2all_version_minor], [5])
+m4_define([cups2all_version_build], [~+svn@REVISION@])
+m4_define([cups2all_version], [cups2all_version_major().cups2all_version_minor()cups2all_version_build()])
+
+AC_PREREQ([2.59])
+AC_COPYRIGHT([Copyright (c) Samuel Bovée])
+AC_INIT([cups2all], [cups2all_version], [http://bugs.ulteo.com])
+AM_INIT_AUTOMAKE([1.8])
+AM_PATH_PYTHON
+
+AC_PATH_PROG(CUPS_CONFIG, cups-config)
+if test "x$CUPS_CONFIG" = x; then
+    AC_MSG_ERROR(You need to install cups-config.)
+fi
+
+CUPSSERVERBIN=`$CUPS_CONFIG --serverbin`
+CUPSSERVERROOT=`$CUPS_CONFIG --serverroot`
+CUPSDATADIR=`$CUPS_CONFIG --datadir`
+
+if test "x${prefix}" != "xNONE" ; then
+    CUPSSERVERBIN="${prefix}$CUPSSERVERBIN"
+    CUPSSERVERROOT="${prefix}$CUPSSERVERROOT"
+    CUPSDATADIR="${prefix}$CUPSDATADIR"
+fi
+
+AC_SUBST(CUPSSERVERBIN)
+AC_SUBST(CUPSSERVERROOT)
+AC_SUBST(CUPSDATADIR)
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
+
+echo
+echo "Configuration:"
+echo "* cups2all: $enable_cups2all"

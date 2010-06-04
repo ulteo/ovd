@@ -7,4 +7,6 @@ confdir = $(CUPSSERVERROOT)
 ppd_DATA = PostscriptColor.ppd
 ppddir = $(CUPSDATADIR)
 
-EXTRA_DIST = $(cups2all_DATA) $(conf_DATA) $(ppd_DATA) README
+EXTRA_DIST = \
+	$(cups2all_DATA) $(conf_DATA) $(ppd_DATA) \
+	README INSTALL NEWS AUTHORS ChangeLog COPYING
