@@ -22,6 +22,8 @@ package org.ulteo.rdp;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JFrame;
@@ -177,6 +179,10 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		if (params.shell != null)
 			this.co.setShell(params.shell);
 		if (params.seamless) {
+			Rectangle maxWindowSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+			params.width = maxWindowSize.width - maxWindowSize.x;
+			params.height = maxWindowSize.height - maxWindowSize.y;
+
 			if (params.shell.equalsIgnoreCase(seamlessShell) || params.shell.equalsIgnoreCase(seamlessShell.concat(".exe")))
 				this.co.setSeamForm(true);
 			this.co.getSeamlessChannel().setMainFrame(this);
