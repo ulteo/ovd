@@ -55,7 +55,7 @@ if sys.platform == "win32":
       pass
 
    setup_args["zipfile"] = "lib/shared.zip"
-   setup_args["console"] = ["simpleServer"]
+   setup_args["console"] = ["ovdSlaveServer"]
 
 
 elif sys.platform == "linux2":
@@ -64,7 +64,7 @@ elif sys.platform == "linux2":
                    'ovd.Role.ApplicationServer.Platform',
                    'ovd.Role.ApplicationServer.Platform.Linux',
                    'ovd.Platform', 'ovd.Platform.Linux']
-   setup_args["data_files"] = [('/usr/bin',['simpleServer']),
+   setup_args["data_files"] = [('/usr/bin',['ovdSlaveServer']),
                                ('/etc/ulteo',['config/ovd-slaveserver.conf'])]
 
 

@@ -1,4 +1,4 @@
-include simpleServer MANIFEST.in
+include ovdSlaveServer MANIFEST.in
 include *.py
 include manpages/*
 include config/*.conf
