@@ -433,6 +433,7 @@ function show_manage($fqdn) {
   $web_port = $server->getAttribute('web_port');
 
 	$can_do_action = isAuthorized('manageServers');
+	$can_use_apt = ((isset($server->ulteo_system) && $server->ulteo_system == 1)?true:false);
 
   page_header();
   echo '<script type="text/javascript" src="media/script/ajax/servers.js" charset="utf-8"></script>';
@@ -569,7 +570,7 @@ function show_manage($fqdn) {
   echo '</table>';
   echo '</div>';
 
-	if ($server_online && $server->getAttribute('type') == 'linux' && $can_do_action) {
+	if ($server_online && $server->getAttribute('type') == 'linux' && $can_do_action && $can_use_apt) {
     echo '<div class="section">';
     echo '<h2>'._('Install an application').'</h2>';
     echo '<form action="actions.php" method="post">';
@@ -639,7 +640,7 @@ function show_manage($fqdn) {
 	echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 	echo $app->getAttribute('name').'</a>';
 	echo '</td>';
-	if ($server_online && $server->type == 'linux' && $can_do_action) {
+	if ($server_online && $server->type == 'linux' && $can_do_action && $can_use_apt) {
 	  echo '<td>';
 	  if ($remove_in_progress)
 	    echo 'remove in progress';
