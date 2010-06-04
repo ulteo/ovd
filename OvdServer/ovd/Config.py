@@ -28,7 +28,7 @@ class Config:
 	# generic
 	infos = {}
 	
-	role = []
+	roles = []
 	ROLES_ALIASES = {"aps":"ApplicationServer", "fs":"FileServer"}
 	
 	LOGS_FLAGS_ALIASES = {
@@ -43,21 +43,11 @@ class Config:
 	log_level = Logger.INFO | Logger.WARN | Logger.ERROR
 	log_file = os.path.join(Platform.System.get_default_log_dir(), "slaveserver.log")
 	
-	# ApS	
-	socket = "/var/spool/ulteo/ds.sock"
-	www_user = None
-	group = "Ulteousers"
-	
+	# OVD servers communication
 	session_manager = None
-	
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
 	
-	# SM
-	# todo
-	
-	# FS
-	# todo
 	
 	@staticmethod
 	def read(filename):
@@ -69,7 +59,7 @@ class Config:
 			return False
 		
 		if Config.infos.has_key("ROLES"):
-			Config.role = []
+			Config.roles = []
 			buf = Config.infos["ROLES"].split(' ')
 			for b in buf:
 				b = b.strip()
@@ -79,7 +69,7 @@ class Config:
 				if Config.ROLES_ALIASES.has_key(b):
 					b = Config.ROLES_ALIASES[b]
 				
-				Config.role.append(b)
+				Config.roles.append(b)
 		
 		if Config.infos.has_key("session_manager"):
 			Config.session_manager = Config.infos["session_manager"]
@@ -99,11 +89,11 @@ class Config:
 	
 	@staticmethod
 	def is_valid():
-		if len(Config.role) == 0:
+		if len(Config.roles) == 0:
 			print >>sys.stderr, "No role given"
 			return False
 		
-		for role in Config.role:
+		for role in Config.roles:
 			try:
 				__import__("ovd.Role.%s.Role"%(role))
 			
@@ -130,19 +120,6 @@ class Config:
 				print >>sys.stderr, "Unable to write into '%s'"%(Config.log_file)
 				return False
 		
-		#if os.path.exists(Config.socket):
-			#try:
-				#os.remove(Config.socket)
-			#except:
-				#print >>sys.stderr, "Unable to remove existing socket file '%s'"%(Config.socket)
-				#return False
-		#try:
-			#f = file(Config.socket, "w")
-			#f.close()
-		#except IOError:
-			#print >>sys.stderr, "Unable to write into '%s'"%(Config.socket)
-			#return False
-	
 		return True
 	
 	

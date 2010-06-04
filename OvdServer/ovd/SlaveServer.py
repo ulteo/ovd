@@ -52,7 +52,7 @@ class SlaveServer:
 		
 		self.dialog = Dialog(self)
 		
-		for role in Config.role:
+		for role in Config.roles:
 			try:
 				Role = __import__("ovd.Role.%s.Role"%(role), {}, {}, "Role")
 			
