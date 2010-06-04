@@ -117,11 +117,11 @@ j = 1
 for i in p[start:]:
     if j>number:
         break
-    j+=1
 
     print "launch session %d a session for %s"%(j, i)
 #    launch_client(i, "", url)
     launch_client(i, i, url)
+    j+=1
 
 print "end"
 
