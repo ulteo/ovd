@@ -111,22 +111,16 @@ class Win32Logger(Logger):
 	
 	
 	def log_info(self, message):
-		if Logger.log_info(self, message) is False:
-			return False
-
+		Logger.log_info(self, message)
 		servicemanager.LogInfoMsg(message)
 
 	
 	def log_warn(self, message):
-		if Logger.log_warn(self, message) is False:
-			return False
-
+		Logger.log_warn(self, message)
 		servicemanager.LogWarningMsg(message)
 	
 	def log_error(self, message):
-		if Logger.log_error(self, message) is False:
-			return False
-		
+		Logger.log_error(self, message)
 		servicemanager.LogErrorMsg(message)
 
 	# Static methods

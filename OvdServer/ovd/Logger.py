@@ -63,30 +63,18 @@ class Logger:
 				self.logging.removeHandler(self.consoleHandler)
 
 	def log_info(self, message):
-		if self.loglevel&Logger.INFO != Logger.INFO:
-			return False
-		
 		if self.logging is not None:
 			self.logging.info(message)
 	
 	def log_warn(self, message):
-		if self.loglevel&Logger.WARN != Logger.WARN:
-			return False
-		
 		if self.logging is not None:
 			self.logging.warn(message)
 	
 	def log_error(self, message):
-		if self.loglevel&Logger.ERROR != Logger.ERROR:
-			return False
-		
 		if self.logging is not None:
 			self.logging.error(message)
 	
 	def log_debug(self, message):
-		if self.loglevel&Logger.DEBUG != Logger.DEBUG:
-			return False
-		
 		if self.logging is not None:
 			self.logging.debug(message)
 	
@@ -103,29 +91,41 @@ class Logger:
 	
 	@staticmethod
 	def info(message):
-		#print "LOG",message
 		if not Logger._instance:
 			return
+		
+		if Logger._instance.loglevel&Logger.INFO != Logger.INFO:
+			return
+		
 		Logger._instance.log_info(message)
 	
 	@staticmethod
 	def warn(message):
-		#print "LOG",message
 		if not Logger._instance:
 			return
+		
+		if Logger._instance.loglevel&Logger.WARN != Logger.WARN:
+			return
+		
 		Logger._instance.log_warn(message)
 	
 	@staticmethod
 	def error(message):
-		#print "LOG",message
 		if not Logger._instance:
 			return
+		
+		if Logger._instance.loglevel&Logger.ERROR != Logger.ERROR:
+			return
+		
 		Logger._instance.log_error(message)
 	
 	
 	@staticmethod
 	def debug(message):
-		#print "LOG",message
 		if not Logger._instance:
 			return
+		
+		if Logger._instance.loglevel&Logger.DEBUG != Logger.DEBUG:
+			return
+		
 		Logger._instance.log_debug(message)
