@@ -110,19 +110,7 @@ def main():
 			print >> sys.stderr, "Unable to write pid-file '%s'"%(pidFile)
 			sys.exit(1)
 	
-	
-	log_flags = 0
-	for item in Config.log_level:
-		if item == "info":
-			log_flags|= Logger.INFO
-		elif item == "warn":
-			log_flags|= Logger.WARN
-		elif item == "error":
-			log_flags|= Logger.ERROR
-		elif item == "debug":
-			log_flags|= Logger.DEBUG
-
-	Logger.initialize("OVD", log_flags, Config.log_file, (not daemonize))
+	Logger.initialize("OVD", Config.log_level, Config.log_file, (not daemonize))
 	
 	
 	server = SlaveServer(Communication)

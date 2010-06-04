@@ -38,7 +38,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		win32serviceutil.ServiceFramework.__init__(self, args)
 		
 		# Init the logger instance
-		Win32Logger.initialize("OVD", Logger.INFO | Logger.WARN | Logger.ERROR, None)
+		Win32Logger.initialize("OVD", Config.log_level, None)
 		
 		config_file = os.path.join(Platform.System.get_default_config_dir(), "ovd-slaveserver.conf")
 		if not Config.read(config_file):
@@ -49,18 +49,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 			Logger.error("invalid config")
 			sys.exit(1)
 		
-		
-		self.log_flags = 0
-		for item in Config.log_level:
-			if item == "info":
-				self.log_flags|= Logger.INFO
-			elif item == "warn":
-				self.log_flags|= Logger.WARN
-			elif item == "error":
-				self.log_flags|= Logger.ERROR
-			elif item == "debug":
-				self.log_flags|= Logger.DEBUG
-		Win32Logger.initialize("OVD", self.log_flags, Config.log_file)
+		Win32Logger.initialize("OVD", Config.log_level, Config.log_file)
 		
 		
 		SlaveServer.__init__(self, Communication)
@@ -98,7 +87,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	
 	def SvcShutdown(self):
 		# Reinit Logger because the Windows service manager logging system is already down
-		Logger.initialize("OVD", self.log_flags, Config.log_file, False)
+		Logger.initialize("OVD", Config.log_level, Config.log_file, False)
 		Logger.info("Stopping SlaveServer (shutdown)")
 
 		win32event.SetEvent(self.hWaitStop)

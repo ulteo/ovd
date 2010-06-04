@@ -21,6 +21,7 @@
 import os
 import sys
 
+from ovd.Logger import Logger
 from ovd.Platform import Platform
 
 class Config:
@@ -29,8 +30,18 @@ class Config:
 	
 	role = []
 	ROLES_ALIASES = {"aps":"ApplicationServer", "fs":"FileServer"}
+	
+	LOGS_FLAGS_ALIASES = {
+			"error" : Logger.ERROR,
+			"warn"  : Logger.WARN,
+			"info"  : Logger.INFO,
+			"debug" : Logger.DEBUG,
+			"normal": Logger.INFO | Logger.WARN | Logger.ERROR,
+			"*"     : Logger.INFO | Logger.WARN | Logger.ERROR | Logger.DEBUG,
+		}	
+	
+	log_level = Logger.INFO | Logger.WARN | Logger.ERROR
 	log_file = os.path.join(Platform.System.get_default_log_dir(), "slaveserver.log")
-	log_level = ["warn", "error"]
 	
 	# ApS	
 	socket = "/var/spool/ulteo/ds.sock"
@@ -77,7 +88,11 @@ class Config:
 			Config.log_level = Config.infos["LOG_FILE"]
 			
 		if Config.infos.has_key("LOG_LEVEL"):
-			Config.log_level = Config.infos["LOG_LEVEL"].split(' ')
+			Config.log_level = 0
+			
+			for item in Config.infos["LOG_LEVEL"].split(' '):
+				if Config.LOGS_FLAGS_ALIASES.has_key(item):
+					Config.log_level|= Config.LOGS_FLAGS_ALIASES[item]
 		
 		return True
 	
@@ -114,12 +129,6 @@ class Config:
 			except IOError:
 				print >>sys.stderr, "Unable to write into '%s'"%(Config.log_file)
 				return False
-		
-		for item in Config.log_level:
-			if item not in ["info", "warn", "error", "debug"]:
-				print >>sys.stderr, "Invalid log level '%s'"%(item)
-				return False 
-		
 		
 		#if os.path.exists(Config.socket):
 			#try:
