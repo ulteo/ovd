@@ -45,7 +45,7 @@ def main(basepath, distpath):
 	s = my_exec("autogen.py")
 	s = my_exec("python setup.py")
 	
-	os.chdir(os.path.join(basepath, "windows-apps", "iconExtractor"))
+	os.chdir(os.path.join(basepath, "ApplicationServer", "windows", "iconExtractor"))
 	s = my_exec("make")
 
 
@@ -75,7 +75,7 @@ def clean(basepath, distpath):
 	os.chdir(os.path.join(basepath, "client", "java", "OVDIntegratedLauncher"))
 	s = my_exec("make -f Makefile.WIN32 clean")
 	
-	os.chdir(os.path.join(basepath, "windows-apps", "iconExtractor"))
+	os.chdir(os.path.join(basepath, "ApplicationServer", "windows", "iconExtractor"))
 	s = my_exec("make clean")
 
 
@@ -92,7 +92,7 @@ def install(basepath, distpath):
 	CopyContentIntoDir(os.path.join(basepath, "client", "java", "windowsPathsJNI"), plus_dir, "*.dll")
 	CopyContentIntoDir(os.path.join(basepath, "client", "java", "OVDIntegratedLauncher"), plus_dir, "*.exe")
 	
-	CopyContentIntoDir(os.path.join(basepath, "windows-apps", "iconExtractor"), plus_dir, "*.exe")
+	CopyContentIntoDir(os.path.join(basepath, "ApplicationServer", "windows", "iconExtractor"), plus_dir, "*.exe")
 	
 	libs = [
 		"gnu-getopt.jar",
