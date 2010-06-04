@@ -710,6 +710,76 @@ if ($_REQUEST['name'] == 'UserGroup_PolicyRule') {
 	redirect();
 }
 
+if ($_REQUEST['name'] == 'UserGroup_settings') {
+	$prefs = Preferences::getInstance();
+	$userGroupDB = UserGroupDB::getInstance();
+	if (isset($_REQUEST['unique_id']) && isset($_REQUEST['action'])) {
+		$unique_id = $_REQUEST['unique_id'];
+		$group = $userGroupDB->import($unique_id);
+		if (! is_object($group)) {
+			popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+			redirect();
+		}
+		$ret = null;
+		if ($_REQUEST['action'] == 'add' && isset($_REQUEST['element_id'])) {
+			$setting_to_add = $_REQUEST['element_id'];
+			$session_settings_defaults = $prefs->getElements('general', 'session_settings_defaults');
+			if (array_key_exists($setting_to_add, $session_settings_defaults) == false) {
+				Logger::error('main', "(action.php) UserGroup_settings, add unable to find '$setting_to_add' in defaults session settings");
+				popup_error(_("unable to find '$setting_to_add' in defaults session settings"));
+				redirect();
+			}
+			
+			$config_element = clone $session_settings_defaults[$setting_to_add];
+			$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', 'session_settings_defaults', $setting_to_add, $config_element->content);
+			$ret = Abstract_UserGroup_Preferences::save($ugp);
+		}
+		else if ($_REQUEST['action'] == 'del' && isset($_REQUEST['element_id'])) {
+			$element_id = $_REQUEST['element_id'];
+			$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', 'session_settings_defaults', $element_id);
+		}
+		else if ($_REQUEST['action'] == 'modify') {
+			$formdata = array();
+			$sep = '___';
+			$sepkey = 'general'.$sep.'session_settings_defaults';
+			foreach ($_REQUEST as $key2 =>  $value2) {
+				if ( substr($key2, 0, strlen($sepkey)) == $sepkey) {
+					$formdata[$key2] = $value2;
+				}
+			}
+			$formarray = formToArray($formdata);
+			if (isset($formarray['general']['session_settings_defaults'])) {
+				$data = $formarray['general']['session_settings_defaults'];
+				
+				// TODO: to be better...
+				$ret = null;
+				$todel = Abstract_UserGroup_Preferences::loadByUserGroupId($group->getUniqueID(), 'general', 'session_settings_defaults');
+				foreach ($todel as $key2 => $value2) {
+					$ret = Abstract_UserGroup_Preferences::delete($group->getUniqueID(), 'general', 'session_settings_defaults', $value2->element_id);
+					if ( $ret !== true) {
+						break;
+					}
+				}
+				
+				foreach ($data as $element_id => $value) {
+					$ugp = new UserGroup_Preferences($group->getUniqueID(), 'general', 'session_settings_defaults', $element_id, $value);
+					$ret = Abstract_UserGroup_Preferences::save($ugp);
+					if ( $ret !== true) {
+						break;
+					}
+				}
+			}
+		}
+		
+		if ($ret === true) {
+			popup_info(_('Usergroup successfully modified'));
+		}
+		else if ($ret === false) {
+			popup_error(_('Failed to modify usergroup'));
+		}
+	}
+}
+
 if ($_REQUEST['name'] == 'User') {
 	if (! checkAuthorization('manageUsers')) {
 		redirect('users.php');

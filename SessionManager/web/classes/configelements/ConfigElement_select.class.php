@@ -21,11 +21,15 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_select extends ConfigElement { // list of text (r) (fixed length) (only one can be selected)
-	public function toHTML() {
+	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
 		$html = '';
+		$disabled = '';
+		if ($readonly) {
+			$disabled = 'disabled="disabled"';
+		}
 		if (is_array($this->content_available)) {
-			$html .= '<select id="'.$html_id.'"  name="'.$html_id.'"  onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');">';
+			$html .= '<select id="'.$html_id.'"  name="'.$html_id.'" '.$disabled.' onchange="configuration_switch(this,\''.$this->path['key_name'].'\',\''.$this->path['container'].'\',\''.$this->id.'\');">';
 			foreach ($this->content_available as $mykey => $myval){
 				if ( $mykey == $this->content)
 					$html .= '<option value="'.$mykey.'" selected="selected" >'.$myval.'</option>';

@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_text extends ConfigElement {
-	public function toHTML() {
+	public function toHTML($readonly=false) {
 		return $this->content;
 	}
 }

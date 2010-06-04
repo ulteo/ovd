@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_sliders_loadbalancing extends ConfigElement {
-	public function toHTML() {
+	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
 		$html = '';
 
@@ -60,8 +60,12 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 				var slider'.$i.';
 				Event.observe(window, \'load\', function() {
 					slider'.$i.' = new Control.Slider(\'handle'.$i.'\', \'track'.$i.'\', {
-						range: $R(0,100),
-						values: [';
+						range: $R(0,100),';
+						if ($readonly == true) {
+							$html .=  'disabled: true,';
+						}
+						
+						$html .=  'values: [';
 
 						for($buf5=0;$buf5<100;$buf5++) {
 							$html .= $buf5.',';

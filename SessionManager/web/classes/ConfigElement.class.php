@@ -31,7 +31,7 @@ abstract class ConfigElement{
 	public $formSeparator='';
 	public $path=array();
 
-	abstract public function toHTML();
+	abstract public function toHTML($readonly=false);
 
 	public function __construct($id_, $label_, $description_, $description_detailed_, $content_){
 		$this->id = $id_;

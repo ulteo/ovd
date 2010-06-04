@@ -21,8 +21,12 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class configElement_textarea extends ConfigElement {  // text area
-	public function toHTML() {
+	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
-		return '<textarea rows="7" cols="60" id="'.$html_id.'" name="'.$html_id.'">'.$this->content.'</textarea>';
+		$disabled = '';
+		if ($readonly) {
+			$disabled = 'disabled="disabled"';
+		}
+		return '<textarea '.$disabled.' rows="7" cols="60" id="'.$html_id.'" name="'.$html_id.'">'.$this->content.'</textarea>';
 	}
 }

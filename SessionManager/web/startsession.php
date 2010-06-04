@@ -120,7 +120,27 @@ $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1')
 	die_error(_('The system is in maintenance mode'), __FILE__, __LINE__, true);
 
-$default_settings = $prefs->get('general', 'session_settings_defaults');
+// The "user" node of this XML should be handled by do_login();
+$ret = parse_login_XML(@file_get_contents('php://input'));
+
+if (! isset($_SESSION['login'])) {
+	$ret = do_login();
+	if (! $ret)
+		die_error(_('Authentication failed'),__FILE__,__LINE__);
+}
+
+if (! isset($_SESSION['login']))
+	die_error(_('Authentication failed'),__FILE__,__LINE__);
+
+$user_login = $_SESSION['login'];
+
+$userDB = UserDB::getInstance();
+
+$user = $userDB->import($user_login);
+if (! is_object($user))
+	throw_response(INVALID_USER);
+
+$default_settings = $user->getSessionSettings();
 $session_mode = $default_settings['session_mode'];
 $desktop_size = 'auto';
 $desktop_timeout = $default_settings['timeout'];
@@ -162,9 +182,6 @@ foreach ($sessmodes as $sessmode) {
 		$enabled_session_modes[] = $sessmode;
 }
 
-// The "user" node of this XML should be handled by do_login();
-$ret = parse_login_XML(@file_get_contents('php://input'));
-
 if (isset($_SESSION['mode'])) {
 	if (! in_array('session_mode', $advanced_settings) && $_SESSION['mode'] != $session_mode)
 		throw_response(UNAUTHORIZED_SESSION_MODE);
@@ -174,23 +191,6 @@ if (isset($_SESSION['mode'])) {
 
 	$session_mode = $_SESSION['mode'];
 }
-
-if (! isset($_SESSION['login'])) {
-	$ret = do_login();
-	if (! $ret)
-		die_error(_('Authentication failed'),__FILE__,__LINE__);
-}
-
-if (! isset($_SESSION['login']))
-	die_error(_('Authentication failed'),__FILE__,__LINE__);
-
-$user_login = $_SESSION['login'];
-
-$userDB = UserDB::getInstance();
-
-$user = $userDB->import($user_login);
-if (! is_object($user))
-	throw_response(INVALID_USER);
 
 $language = $user->getLocale();
 

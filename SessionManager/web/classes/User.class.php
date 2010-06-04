@@ -305,4 +305,23 @@ class User {
 		}
 		return $result;
 	}
+	
+	public function getSessionSettings() {
+		$prefs = Preferences::getInstance();
+		$overriden = array();
+		$default_settings = $prefs->get('general', 'session_settings_defaults');
+		$groups = $this->usersGroups();
+		foreach ($groups as $a_group) {
+			$prefs_of_a_group_unsort = Abstract_UserGroup_Preferences::loadByUserGroupId($a_group->getUniqueID(), 'general',  'session_settings_defaults');
+			foreach ($prefs_of_a_group_unsort as $key => $pref) {
+				$element = $pref->toConfigElement();
+				if (isset($overriden[$key]) && ($overriden[$key] == true) && ($element->content != $default_settings[$key])) {
+					popup_error(sprintf(_("User '%s' have at least two groups with the same overriden rule but with differents value, the result will be unpredictable."), $this->getAttribute('login')));
+				}
+				$default_settings[$key] = $element->content;
+				$overriden[$key] = true;
+			}
+		}
+		return $default_settings;
+	}
 }

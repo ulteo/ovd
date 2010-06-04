@@ -21,8 +21,12 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_input extends ConfigElement {
-	public function toHTML() {
+	public function toHTML($readonly=false) {
 		$html_id = $this->htmlID();
-		return '<input type="text" id="'.$html_id.'" name="'.$html_id.'" value="'.$this->content.'" size="25" />';
+		$disabled = '';
+		if ($readonly) {
+			$disabled = 'disabled="disabled"';
+		}
+		return '<input type="text" '.$disabled.' id="'.$html_id.'" name="'.$html_id.'" value="'.$this->content.'" size="25" />';
 	}
 }
