@@ -23,6 +23,7 @@ import getopt
 import os
 import signal
 import sys
+import time
 
 from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
@@ -121,26 +122,51 @@ def main():
 		elif item == "debug":
 			log_flags|= Logger.DEBUG
 
-	Logger.initialize("simpleServer", log_flags, Config.log_file, (not daemonize))
+	Logger.initialize("OVD", log_flags, Config.log_file, (not daemonize))
 	
 	
 	server = SlaveServer(Communication)
-	signal.signal(signal.SIGINT, server.stop)
-	signal.signal(signal.SIGTERM, server.stop)
-	ret = server.init()
-	if not ret:
-		print >> sys.stderr, "Server initialization failed"
-		if pidFile is not None and os.path.exists(pidFile):
-			os.remove(pidFile)
-		sys.exit(3)
+	signal.signal(signal.SIGINT, stop)
+	signal.signal(signal.SIGTERM, stop)
+	try:
+		ret = server.init()
+		if not ret:
+			print >> sys.stderr, "Server initialization failed"
+			if pidFile is not None and os.path.exists(pidFile):
+				os.remove(pidFile)
+			sys.exit(3)
 		
-		
-	server.loop()
+	
+		Logger.info("SlaveServer started")
+		while not server.stopped:
+			server.loop_procedure()
+			
+			time.sleep(30)
+
+	except InterruptException, err:
+		Logger.info("SlaveServer interruption")
+	
+	
 	if not server.stopped:
 		server.stop()
 	
+	Logger.info("SlaveServer stopped")
 	if pidFile is not None and os.path.exists(pidFile):
 		os.remove(pidFile)
+
+
+def stop(Signum, Frame):
+	signal.signal(signal.SIGINT, stopping)
+	signal.signal(signal.SIGTERM, stopping)
+	
+	Logger.info("Signal receive")
+	raise InterruptException()
+
+def stopping(Signum, Frame):
+	Logger.info("Signal previously received, do nothing")
+
+class InterruptException(Exception):
+	pass
 
 
 if __name__ == "__main__":

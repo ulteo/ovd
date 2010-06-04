@@ -21,19 +21,18 @@
 
 import os
 import sys
+import servicemanager
 
 from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
 from ovd.Platform import Platform
-from Win32Logger import Win32Logger
-
 
 class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	_svc_name_ = "OVD"
-	_svc_display_name_ = "Ulteo OVD slave server"
-	_svc_description_ = "Ulteo OVD slave server"
+	_svc_display_name_ = "Ulteo OVD Slave Server"
+	_svc_description_ = "Ulteo OVD Slave Server"
 	
 	def __init__(self,args):
 		win32serviceutil.ServiceFramework.__init__(self, args)
@@ -41,7 +40,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		# Init the logger instance
 		Win32Logger.initialize("OVD", Logger.INFO | Logger.WARN | Logger.ERROR, None)
 		
-		config_file = os.path.join(Platform.getInstance().get_default_config_dir(), "ovd-slaveserver.conf")
+		config_file = os.path.join(Platform.System.get_default_config_dir(), "ovd-slaveserver.conf")
 		if not Config.read(config_file):
 			Logger.error("invalid configuration file '%s'"%(config_file))
 			sys.exit(1)
@@ -72,30 +71,27 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
 		
 		if not SlaveServer.init(self):
-			Win32Logger.initialize("OVD", log_flags, Config.log_file)
-		
-		
-		server.loop()
+			Logger.error("Unable to initialize SlaveServer")
+			self.ReportServiceStatus(win32service.SERVICE_STOPPED)
+			return
 		
 		self.ReportServiceStatus(win32service.SERVICE_RUNNING)
-		timeout = 60 * 1000
-		rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
+		Logger.info("SlaveServer started")
+		
+		rc = win32event.WAIT_TIMEOUT
 		while rc == win32event.WAIT_TIMEOUT:
-			for thread in self.threads:
-				if not thread.isAlive():
-					Logger.warn("One thread stop")
-					return False
-				
-			self.updateMonitoring()
+			SlaveServer.loop_procedure(self)
 			
-			rc = win32event.WaitForSingleObject(self.hWaitStop, timeout)
+			rc = win32event.WaitForSingleObject(self.hWaitStop, 30 * 1000)
 		
+		if not self.stopped:
+			SlaveServer.stop(self)
 		
-		SlaveServer.stop(self)
+		Logger.info("SlaveServer stopped")
 		self.ReportServiceStatus(win32service.SERVICE_STOPPED)
 	
 	def SvcStop(self):
-		Logger.info("Stopping agent")
+		Logger.info("Stopping SlaveServer")
 		self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
 		
 		win32event.SetEvent(self.hWaitStop)
@@ -103,9 +99,41 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	def SvcShutdown(self):
 		# Reinit Logger because the Windows service manager logging system is already down
 		Logger.initialize("OVD", self.log_flags, Config.log_file, False)
-		Logger.info("Stopping agent (shutdown)")
+		Logger.info("Stopping SlaveServer (shutdown)")
 
 		win32event.SetEvent(self.hWaitStop)
+
+
+
+class Win32Logger(Logger):
+	def __init__(self, name, loglevel, file = None):
+		Logger.__init__(self, name, loglevel, file, False)
+	
+	
+	def log_info(self, message):
+		if Logger.log_info(self, message) is False:
+			return False
+
+		servicemanager.LogInfoMsg(message)
+
+	
+	def log_warn(self, message):
+		if Logger.log_warn(self, message) is False:
+			return False
+
+		servicemanager.LogWarningMsg(message)
+	
+	def log_error(self, message):
+		if Logger.log_error(self, message) is False:
+			return False
+		
+		servicemanager.LogErrorMsg(message)
+
+	# Static methods
+	@staticmethod 
+	def initialize(name, loglevel, file=None, stdout=False, win32LogService=False):
+		instance = Logger(name, loglevel, file, stdout, win32LogService)
+		Logger._instance = instance
 
 
 

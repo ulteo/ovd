@@ -112,23 +112,14 @@ class SlaveServer:
 		return True
 	
 	
-	def loop(self):
-		Logger.debug("SlaveServer started")
-		while True:
-			for thread in self.threads:
-				if not thread.isAlive():
-					Logger.warn("One thread stop")
-					return False
-				
-				try:
-					thread.join(20)
-				except Exception, e:
-					Logger.warn("Main thread interruption %s"%(str(e)))
-					
-				self.updateMonitoring()
-		
-		Logger.debug("loop end")
-		return True
+	def loop_procedure(self):
+		for thread in self.threads:
+			if not thread.isAlive():
+				Logger.warn("One thread stop")
+				Logger.debug("ToDo: be more specific. Make difference between Roles and main threads")
+				return False
+			
+			self.updateMonitoring()
 	
 	
 	def stop(self, Signum=None, Frame=None):
