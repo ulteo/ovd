@@ -12,6 +12,8 @@ I. Software dependencies
 	* Mingw gcc
 		* make
 	* nsis
+	
+	* GNU Gettext
 
 	All the software directories have to be defined in the %PATH% 
 	variable in order to be able to launch gcc, make, python, 
