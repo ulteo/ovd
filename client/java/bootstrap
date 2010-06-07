@@ -1,23 +1,44 @@
-#!/bin/sh
+#! /usr/bin/python
 
-if [ -d .svn ]; then
-    revision=$(LC_ALL=C svn info build.xml.in | awk '/^Revision: / {printf "%05d\n", $2}')
-elif [ -n "OVD_VERSION" ]; then
-    revision="$OVD_VERSION"
-else
-    revision="99.99"
-fi
+import os
+import pysvn
+import glob
 
-LANG_STR=""
-for i in po/*.po; do
-    p=$(basename $i .po)
-    
-    LANG_STR="$LANG_STR <exec executable=\"msgfmt\" dir=\"${PWD}\"> <arg value=\"--java2\"/> <arg value=\"-d\"/> <arg value=\"ressources\"/> <arg value=\"-r\"/> <arg value=\"Messages\"/> <arg value=\"-l\"/> <arg value=\"$p\"/> <arg value=\"$i\"/> </exec>"
-done
+# Detect the version
+if os.environ.has_key("OVD_VERSION"):
+	version = os.environ["OVD_VERSION"]
+
+else:
+	c = pysvn.Client()
+	revision = c.info(".")["revision"].number
+	
+	version = "99.99~trunk+svn%05d"%(revision)
+
+langs = []
+for pofile in glob.glob("po/*.po"):
+	name = os.path.basename(pofile)[:-3]
+	
+	node = '<exec executable="msgfmt" dir="%s">'%(os.path.abspath(os.path.curdir))
+	node+= '<arg value="--java2"/>'
+	node+= '<arg value="-d"/>'
+	node+= '<arg value="ressources"/>'
+ 	node+= '<arg value="-r"/>'
+ 	node+= '<arg value="Messages"/>'
+ 	node+= '<arg value="-l"/>'
+ 	node+= '<arg value="%s"/>'%(name)
+ 	node+= '<arg value="%s"/>'%(pofile)
+ 	node+= '</exec>'
+	
+	langs.append(node)
 
 
-sed -e "s/@REVISION@/${revision}/g" \
-    -e "s#@MESSAGE_LANGS@#${LANG_STR}#g" \
-        < "build.xml.in" > "build.xml"
+f = file("build.xml.in", "r")
+content = f.read()
+f.close()
 
+content = content.replace("@VERSION@", str(version))
+content = content.replace("@MESSAGE_LANGS@", "\n".join(langs))
 
+f = file("build.xml", "w")
+f.write(content)
+f.close()
