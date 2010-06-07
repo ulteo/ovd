@@ -1,0 +1,26 @@
+#! /bin/sh -e
+
+case "$1" in
+    configure)
+        if [ ! -d /var/spool/cups2all/SPOOL ]; then
+            mkdir -p /var/spool/cups2all/SPOOL
+            chown -R lp /var/spool/cups2all
+        fi
+        chmod a+x /usr/lib/cups/backend/cups2all
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0
+
+
