@@ -2,7 +2,8 @@ Source: ovd-desktop-settings
 Section: x11
 Priority: extra
 Maintainer: Samuel Bovée <samuel@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 5)
+Build-Depends: cdbs, debhelper (>= 5), libthunar-vfs-1-dev,
+ xfce4-panel-dev (>= 4.4), xfce4-dev-tools (=4.7.2-1ulteo1)
 Standards-Version: 3.7.3
 
 Package: ulteo-ovd-desktop-settings
@@ -13,7 +14,7 @@ Conflicts: ulteo-ovd-xfce-default-settings, xubuntu-default-settings, thunar-set
 Description: Startup scripts and default settings for the Ulteo OVD
  This package provides :
  * default settings for the Xfce desktop on an Ulteo Open Virtual Desktop.
- * script that can be used to start an X session on an Open Virtual 
+ * script that can be used to start an X session on an Open Virtual
  Desktop application server.
 
 Package: ulteo-plymouth-theme-vdi
@@ -26,3 +27,10 @@ Description: graphical boot animation and logger - ulteo-vdi theme
  boot animation while the boot process happens in the background.
  .
  This package contains the default ulteo-vdi-logo theme.
+
+Package: ulteo-xfce4-restricted-menu-plugin
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Restricted menu for the xfce4 panel
+ This plugin for the Xfce panel allows the administrateur to restrict the
+ access to the available applications.
