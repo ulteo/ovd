@@ -20,7 +20,7 @@ I. Software dependencies
 
 
 II. Download the code and binaries
-	lftp -e "mirror seamlessrdpshell; quit" http://devel.ulteo.com/~laurent/OVD/windows/
+	mkdir seamlessrdpshell; cd seamlessrdpshell && lftp -e "mirror .; quit" http://devel.ulteo.com/~laurent/OVD/windows/seamlessrdpshell/3.0/; cd ..
 	lftp -e "mirror bmp2png; quit" http://devel.ulteo.com/~laurent/OVD/windows/
 
 
