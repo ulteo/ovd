@@ -7,7 +7,7 @@ Build-Depends: cdbs, debhelper (>= 5)
 
 Package: ulteo-ovd-desktop
 Architecture: all
-Depends: ulteo-ovd-desktop-settings, xfce4-restricted-menu-plugin,
+Depends: ulteo-ovd-desktop-settings, ulteo-xfce4-restricted-menu-plugin,
  xfce4-icon-theme, thunar, gtk2-engines-xfce, xfwm4, xfce4-session,
  xfdesktop4, xfce4-mcs-plugins, xfce4-utils, xfce4-panel
 Recommends: xserver-xorg, xinit, xfonts-base, app-install-data
