@@ -21,10 +21,8 @@
 import getopt
 import glob
 import os
-import shutil
 import sys
 import tempfile
-import zipfile
 import pysvn
 
 import util
@@ -224,8 +222,12 @@ if __name__ == "__main__":
 	if targets is None:
 		targets = []
 		for f in glob.glob(os.path.join(base_path, "*")):
+			name = os.path.basename(f)
+			if name.startswith("setup-"):
+				continue
+			
 			if os.path.exists(os.path.join(f, "config.py")):
-				targets.append(os.path.basename(f))
+				targets.append(name)
 	
 	
 	for target in targets:
