@@ -208,6 +208,8 @@ class Abstract_SharedFolder {
 		$buf = new SharedFolder((int)$id);
 		$buf->name = (string)$name;
 
+		$SQL = MySQL::getInstance();
+
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @3 = %4', 'usergroup_id', $SQL->prefix.'sharedfolders_acl', 'sharedfolder_id', $buf->id);
 		$rows = $SQL->FetchAllResults();
 
