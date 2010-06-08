@@ -20,19 +20,23 @@
 
 package org.ulteo.vdi;
 
-import org.apache.log4j.*;
-import gnu.getopt.Getopt;
-import java.io.*;
-import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
-
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
-import org.ulteo.ovd.OvdException;
+
+import org.apache.log4j.*;
+import gnu.getopt.Getopt;
+
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class Client implements RdpListener {
+
+	private static Logger logger;
 	
-	private RdpConnectionVDI rc;
+	private RdpConnectionVDI rc = null;
 	
 	public Client(String fqdn_, String login_, String password_) {
 		
@@ -40,28 +44,27 @@ public class Client implements RdpListener {
 		(Logger.getLogger("net.propero.rdp")).setLevel(Level.INFO);
 		logger = Logger.getLogger(Client.class.getName());
 		
-		this.rc = null;
 		try {
-			rc = new RdpConnectionVDI(RdpConnectionVDI.MODE_APPLICATION);
-		} catch (Exception e) {
-			logger.error("Unable to prepare an RDP connection to "+fqdn_);
-		}
-		rc.setServer(fqdn_);
-		rc.setKeymap("fr");
-		rc.setCredentials(login_, password_);
-		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		rc.setGraphic((int)(dim.width & ~3), (int)dim.height);
-		rc.addRdpListener(this);
-		try {
-			rc.connect();
-		} catch (Exception e) {
-			logger.error("Can't connect to the server");
+			rc = new RdpConnectionVDI();
+		} catch (VdiException e) {
+			logger.error("Can't create an RDP connexion");
 		}
 		
+		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+
+		rc.setGraphic((int)(dim.width & ~3), (int)dim.height);
+		rc.setServer(fqdn_);
+		rc.setCredentials(login_, password_);
+		rc.setVolatileCaching(true);
+		rc.setPersistentCaching(false);
+		rc.setShell("seamlessrdpshell");
+		
+		rc.addRdpListener(this);
+		rc.connect();
 	}
 
 	private void sendCmd(String cmd) {
-		if(isConnected())
+		if(rc.isConnected())
 			try {
 				rc.getSeamlessChannel().send_spawn(cmd);
 				logger.info("Commande seamless exécutée: " + cmd); 
@@ -71,11 +74,6 @@ public class Client implements RdpListener {
 			}
 	}
 
-	public boolean isConnected() {
-		if (rc.isConnected()) return true;
-		else return false;
-	}
-	
 	public void connected(RdpConnection co) {
 		logger.info("Connected to " + rc.getUsername() + "@" + rc.getServer());
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
@@ -88,7 +86,6 @@ public class Client implements RdpListener {
         		}
             }
         }));
-        //new SeamForm(rc);
 	}
 
 	public void connecting(RdpConnection co) {
@@ -108,8 +105,6 @@ public class Client implements RdpListener {
 	/************************* STATIC *******************************/
 	
 	private static final String productName = "Ulteo VDI Client";
-
-	private static Logger logger;
 
 	private static String fifodir = "/var/cache/vdiserver/fifo/";
 
@@ -167,7 +162,7 @@ public class Client implements RdpListener {
 					if (cmd != null) client.sendCmd(cmd);
 				} catch (IOException e) {
 					logger.error("Problème de lecture du tube nommé");
-					throw new OvdException("Problème de lecture du tube nommé");
+					throw new Exception("Problème de lecture du tube nommé");
 				}
 			}
 		}
