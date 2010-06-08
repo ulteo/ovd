@@ -11,13 +11,12 @@ if os.environ.has_key("OVD_VERSION"):
 else:
 	c = pysvn.Client()
 	revision = c.info(".")["revision"].number
-	
 	version = "99.99~trunk+svn%05d"%(revision)
 
 langs = []
 for pofile in glob.glob("po/*.po"):
 	name = os.path.basename(pofile)[:-3]
-	
+
 	node = '<exec executable="msgfmt" dir="%s">'%(os.path.abspath(os.path.curdir))
 	node+= '<arg value="--java2"/>'
 	node+= '<arg value="-d"/>'
@@ -28,7 +27,7 @@ for pofile in glob.glob("po/*.po"):
  	node+= '<arg value="%s"/>'%(name)
  	node+= '<arg value="%s"/>'%(pofile)
  	node+= '</exec>'
-	
+
 	langs.append(node)
 
 

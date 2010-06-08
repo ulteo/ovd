@@ -21,10 +21,9 @@
   <property name="datadir"     location="${prefix}/share" />
   <property name="destdir"     location="" />
 
-  <property name="version.base" value="99.99~trunk+svn" />
-  <property name="version.svn.revno" value="@REVISION@" />
+  <property name="version" value="@VERSION@" />
 
-  <property name="tar.dir" value="ovd-applets-${version.base}${version.svn.revno}" />
+  <property name="tar.dir" value="ovd-applets-${version}" />
   <property name="tar"     value="${tar.dir}.tar" />
   <property name="tar.gz"  value="${tar}.gz" />
 
