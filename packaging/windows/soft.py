@@ -30,7 +30,7 @@ import pysvn
 import util
 
 def make_source_archive(target, context, config, destfile):
-	d = destfile[: -4]
+	d = os.path.join(context["PWD"], target, "%s-src-%s"%(target, context["VERSION"]))
 	
 	if os.path.exists(d):
 		if not util.DeleteR(d):
@@ -79,7 +79,7 @@ def perform_target(target, context):
 		return False
 	
 	
-	src_archive = os.path.join(context["PWD"], target, "%s-src-%s.zip"%(target, context["VERSION"]))
+	src_archive = os.path.join(context["PWD"], "%s-src-%s.zip"%(target, context["VERSION"]))
 	if os.path.exists(src_archive):
 		os.remove(src_archive)
 	
@@ -117,10 +117,10 @@ def perform_target(target, context):
 		
 		dirname = bdir
 	
-	f = "%s.zip"%(d)
-	util.zip(f, dirname, "%s-%s"%(target, context["VERSION"]))
-	#if not util.DeleteR(d):
-		#return False
+	bin_archive = os.path.join(context["PWD"], "%s-%s.zip"%(target, context["VERSION"]))
+	util.zip(bin_archive, dirname, "%s-%s"%(target, context["VERSION"]))
+	if not util.DeleteR(d):
+		return False
 	if Config.__dict__.has_key("binary_files"):
 		if not util.DeleteR(bdir):
 			return False
