@@ -17,7 +17,7 @@ langs = []
 for pofile in glob.glob("po/*.po"):
 	name = os.path.basename(pofile)[:-3]
 
-	node = '<exec executable="msgfmt" dir="%s">'%(os.path.abspath(os.path.curdir))
+	node = '<exec executable="msgfmt" dir=".">'
 	node+= '<arg value="--java2"/>'
 	node+= '<arg value="-d"/>'
 	node+= '<arg value="ressources"/>'
