@@ -29,9 +29,8 @@ import pysvn
 
 import util
 
-def make_source_archive(target, context, config, destfile):
-	d = os.path.join(context["PWD"], target, "%s-src-%s"%(target, context["VERSION"]))
-	
+def make_source_archive(context, config, destfile):
+	d = os.path.join(context["SPOOL"], "src-%s"%(context["VERSION"]))
 	if os.path.exists(d):
 		if not util.DeleteR(d):
 			return False
@@ -40,13 +39,13 @@ def make_source_archive(target, context, config, destfile):
 	c.export(os.path.join(context["SVN_ROOT"], config.getSVNRoot()), d)
 	
 	if config.__dict__.has_key("pre_sources_commads"):
-		os.chdir(os.path.join(context["PWD"], target, d))
+		os.chdir(d)
 		for cmd in config.pre_sources_commads():
 			for key in context.keys():
 				if "@%s@"%(key) in cmd:
 					cmd = cmd.replace("@%s@"%(key), context[key])
 			
-			print cmd
+			#print cmd
 			r = os.system(cmd)
 			if r is not 0:
 				return False
@@ -60,10 +59,53 @@ def make_source_archive(target, context, config, destfile):
 	if os.path.exists(destfile):
 		util.DeleteR(destfile)
 
-	util.zip(destfile, d, os.path.basename(d))
+	util.zip(destfile, d, os.path.basename(destfile)[:-4])
 	if not util.DeleteR(d):
 		return False
 	
+	return True
+
+
+
+def make_binary_archive(context, config, src_archive, bin_archive):
+	d = os.path.join(context["SPOOL"], "bin-%s"%(context["VERSION"]))
+	if os.path.exists(d):
+		if not util.DeleteR(d):
+			return False
+	
+	print "unzip"
+	util.unzip(src_archive, d, 1)
+	
+	print "compil"
+	os.chdir(d)
+	for cmd in config.compile_commands():
+		r = os.system(cmd)
+		if r is not 0:
+			return False
+	os.chdir(context["PWD"])
+	
+	
+	if config.__dict__.has_key("binary_dir"):
+		dirname = os.path.join(d, config.binary_dir())
+	elif config.__dict__.has_key("binary_files"):
+		bdir = os.path.join(context["SPOOL"], "buf")
+		if os.path.exists(bdir):
+			util.DeleteR(bdir)
+		
+		os.mkdir(bdir)
+		for f in config.binary_files():
+			for f2 in glob.glob(os.path.join(d, f)):
+				os.rename(os.path.join(d, f2), os.path.join(bdir, os.path.basename(f2)))
+		
+		dirname = bdir
+	
+	util.zip(bin_archive, dirname, os.path.basename(bin_archive)[:-4])
+	if not util.DeleteR(d):
+		return False
+	if config.__dict__.has_key("binary_files"):
+		if not util.DeleteR(bdir):
+			return False
+		
 	return True
 
 
@@ -79,60 +121,54 @@ def perform_target(target, context):
 		return False
 	
 	
+	if not context.has_key("VERSION"):
+		c = pysvn.Client()
+		
+		r1 = c.info(os.path.join(context["PWD"], target))["commit_revision"].number
+		r2 = c.info(os.path.join(context["SVN_ROOT"], Config.getSVNRoot()))["commit_revision"].number
+		revision = max(r1, r2)
+		
+		context["VERSION"] = "99.99~+svn%05d"%(revision)
+		os.environ["OVD_VERSION"] = context["VERSION"]
+	
+	
+	context["TARGET"] = target
+	context["SPOOL"]  = os.path.join(context["PWD"], target)
+	
 	src_archive = os.path.join(context["PWD"], "%s-src-%s.zip"%(target, context["VERSION"]))
 	if os.path.exists(src_archive):
-		os.remove(src_archive)
+		if context["FORCE"]:
+			print "Remove existing ",src_archive
+			os.remove(src_archive)
+		else:
+			print "nothing to do"
+			return True
 	
-	if not make_source_archive(target, context, Config, src_archive):
+	if not make_source_archive(context, Config, src_archive):
 		return False
 	
-	
-	d = os.path.join(context["PWD"], target, "%s-%s"%(target, context["VERSION"]))
-	
-	print "unzip"
-	util.unzip(src_archive, d, 1)
-	
-	print "compil"
-	os.chdir(d)
-	for cmd in Config.compile_commands():
-		r = os.system(cmd)
-		if r is not 0:
-			return False
-	os.chdir(context["PWD"])
-	
-	
-	
-	
-	if Config.__dict__.has_key("binary_dir"):
-		dirname = os.path.join(d, Config.binary_dir())
-	elif Config.__dict__.has_key("binary_files"):
-		bdir = os.path.join(context["PWD"], target, "buf")
-		if os.path.exists(bdir):
-			util.DeleteR(bdir)
-		
-		os.mkdir(bdir)
-		for f in Config.binary_files():
-			for f2 in glob.glob(os.path.join(d, f)):
-				os.rename(os.path.join(d, f2), os.path.join(bdir, os.path.basename(f2)))
-		
-		dirname = bdir
 	
 	bin_archive = os.path.join(context["PWD"], "%s-%s.zip"%(target, context["VERSION"]))
-	util.zip(bin_archive, dirname, "%s-%s"%(target, context["VERSION"]))
-	if not util.DeleteR(d):
+	if os.path.exists(bin_archive):
+		if context["FORCE"]:
+			print "Remove existing ",bin_archive
+			os.remove(bin_archive)
+		else:
+			print "nothing to do"
+			return True
+	
+	if not make_binary_archive(context, Config, src_archive, bin_archive):
 		return False
-	if Config.__dict__.has_key("binary_files"):
-		if not util.DeleteR(bdir):
-			return False
-		
+	
 	return True
 
 
-
 def usage():
-	print "Usage: %s [-h|--help] [-t|--targets= target1[target2[,target3...]]]"%(sys.argv[0])
+	print "Usage: %s [-h|--help] [-t|--targets= target1[target2[,target3...]]] [--set-version=VERSION]"%(sys.argv[0])
+	print "\t-f|--force-build: Force the rebuild of the package even if already exists"
 	print "\t-h|--help: print this help"
 	print "\t-t|--targets targets1[,...]: Perform only target listed, default is all"
+	print "\t--set-version=VERSION: Set the version instead of detect from SVN"
 	print
 
 
@@ -144,9 +180,13 @@ if __name__ == "__main__":
 	
 	targets = None
 	
+	context = {}
+	context["PWD"] = base_path
+	context["SVN_ROOT"] = svn_path
+	context["FORCE"] = False
 	
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], 'ht:', ['help', 'targets='])
+		opts, args = getopt.getopt(sys.argv[1:], "fht:", ["force-build", "help", "targets=", "set-version="])
 	
 	except getopt.GetoptError, err:
 		print >> sys.stderr, str(err)
@@ -157,6 +197,10 @@ if __name__ == "__main__":
 		if o in ("-h", "--help"):
 			usage()
 			sys.exit()
+		
+		elif o in ("-f", "--force-build"):
+			context["FORCE"] = True
+		
 		elif o in ("-t", "--targets"):
 			targets = []
 			for elem in a.split(","):
@@ -165,6 +209,10 @@ if __name__ == "__main__":
 					continue
 				
 				targets.append(elem)
+		
+		elif o in ("--set-version"):
+			context["VERSION"] = a.strip()
+			os.environ["OVD_VERSION"] = context["VERSION"]
 	
 	
 	if len(args) > 0:
@@ -180,15 +228,5 @@ if __name__ == "__main__":
 				targets.append(os.path.basename(f))
 	
 	
-	c = pysvn.Client()
-	revision = c.info(base_path)["revision"].number
-	version = "99.99~trunk+svn%05d"%(revision)
-	os.environ["OVD_VERSION"] = version
-	
-	context = {}
-	context["PWD"] = base_path
-	context["SVN_ROOT"] = svn_path
-	context["VERSION"] = version	
-	
 	for target in targets:
-		perform_target(target, context)
+		perform_target(target, context.copy())
