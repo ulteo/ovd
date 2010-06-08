@@ -23,14 +23,12 @@ package net.propero.rdp;
 
 import java.awt.Dimension;
 import java.io.File;
-import org.ulteo.ovd.Application;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
@@ -79,6 +77,10 @@ public class RdpConnection implements Runnable{
 
 	public String getServer() {
 		return this.opt.hostname;
+	}
+	
+	public String getUsername() {
+		return this.opt.username;
 	}
 
 	public Dimension getGraphics() {
