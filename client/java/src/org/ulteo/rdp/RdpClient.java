@@ -26,6 +26,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
@@ -35,9 +36,12 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	public static class Params {
+		public boolean ovd_environnement = false;
+		public String ovd_mode = SessionManagerCommunication.SESSION_MODE_DESKTOP;
 		public String username = null;
 		public String password = null;
 		public String server = null;
@@ -70,6 +74,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("	  --persistent-cache-location		Set the persistent cache location");
 		System.err.println("	  --persistent-cache-maxsize		Set the persistent cache maximum size");
 		System.err.println("	  --disable-all-cache			Disable volatile and persistent cache");
+		System.err.println("	--ovd_mode=MODE				Enable the OVD environnement with mode \"desktop\"/\"portal\" (default is \"desktop\")");
 		System.err.println("Example: java -jar OVDIntegratedClient.jar -u username -p password server");
 
 		System.exit(0);
@@ -83,10 +88,11 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 		RdpClient.logger = Logger.getLogger(RdpClient.class);
 
-		LongOpt[] alo = new LongOpt[3];
+		LongOpt[] alo = new LongOpt[4];
 		alo[0] = new LongOpt("persistent-cache-location", LongOpt.REQUIRED_ARGUMENT, null, 0);
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 2);
+		alo[3] = new LongOpt("ovd_mode", LongOpt.OPTIONAL_ARGUMENT, null, 3);
 		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:As:o:zP", alo);
 
 		int c;
@@ -100,6 +106,12 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 					break;
 				case 2: // --disable-all-cache
 					params.volatileCache = false;
+					break;
+				case 3: //--ovd_mode
+					params.ovd_environnement = true;
+					String mode = opt.getOptarg();
+					if ((mode != null) && (opt.getOptarg().equalsIgnoreCase(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)))
+						params.ovd_mode = SessionManagerCommunication.SESSION_MODE_REMOTEAPPS;
 					break;
 				case 'u':
 					params.username = new String(opt.getOptarg());
@@ -156,14 +168,40 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 	public static Logger logger = null;
 
-	private RdpConnectionOvd co = null;
+	private ArrayList<RdpConnectionOvd> co = null;
 	private RdesktopCanvas canvas = null;
+	private boolean ovd_mode_application;
 
 	public RdpClient(Params params) throws RdesktopException {
 		super(RdpClient.productName);
 
+		if (params.ovd_environnement)
+			this.initOVDSession(params);
+		else
+			this.initRDPSession(params);
+	}
+
+	private void initRDPSession(Params params) throws RdesktopException {
+		this.ovd_mode_application = false;
+		this.co = new ArrayList<RdpConnectionOvd>();
+
 		this.parseOptions(params);
 		this.initWindow();
+	}
+	
+	private void initOVDSession(Params params) throws RdesktopException {
+		if (params.ovd_mode.equalsIgnoreCase(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS))
+			this.ovd_mode_application = true;
+		
+		SessionManagerCommunication sm = new SessionManagerCommunication(params.server);
+		sm.askForSession(params.username, params.password, params.ovd_mode);
+
+		this.co = sm.getConnections();
+		for (RdpConnectionOvd rc : this.co) {
+			if (! this.ovd_mode_application)
+				rc.setGraphic(params.width, params.height);
+			rc.addRdpListener(this);
+		}
 	}
 
 	private void parseOptions(Params params) throws RdesktopException {
@@ -174,34 +212,36 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		else
 			flags |= RdpConnectionOvd.MODE_DESKTOP;
 
-		this.co = new RdpConnectionOvd(flags);
+		RdpConnectionOvd connection = new RdpConnectionOvd(flags);
 
 		if (params.shell != null)
-			this.co.setShell(params.shell);
+			connection.setShell(params.shell);
 		if (params.seamless) {
 			Rectangle maxWindowSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 			params.width = maxWindowSize.width - maxWindowSize.x;
 			params.height = maxWindowSize.height - maxWindowSize.y;
 
 			if (params.shell.equalsIgnoreCase(seamlessShell) || params.shell.equalsIgnoreCase(seamlessShell.concat(".exe")))
-				this.co.setSeamForm(true);
-			this.co.getSeamlessChannel().setMainFrame(this);
+				connection.setSeamForm(true);
+			connection.getSeamlessChannel().setMainFrame(this);
 		}
 
-		this.co.setServer(params.server, RdpConnection.RDP_PORT);
-		this.co.setCredentials(params.username, params.password);
-		this.co.setGraphic(params.width, params.height, params.bpp);
+		connection.setServer(params.server, RdpConnection.RDP_PORT);
+		connection.setCredentials(params.username, params.password);
+		connection.setGraphic(params.width, params.height, params.bpp);
 
-		this.co.setPacketCompression(params.packetCompression);
+		connection.setPacketCompression(params.packetCompression);
 
-		this.co.setVolatileCaching(params.volatileCache);
+		connection.setVolatileCaching(params.volatileCache);
 		if (params.volatileCache && params.persistentCache) {
-			this.co.setPersistentCaching(true);
-			this.co.setPersistentCachingPath(params.persistentCachePath);
-			this.co.setPersistentCachingMaxSize(params.persistentCacheMaxSize);
+			connection.setPersistentCaching(true);
+			connection.setPersistentCachingPath(params.persistentCachePath);
+			connection.setPersistentCachingMaxSize(params.persistentCacheMaxSize);
 		}
 
-		this.co.addRdpListener(this);
+		connection.addRdpListener(this);
+
+		this.co.add(connection);
 	}
 
 	private void initWindow() {
@@ -210,12 +250,15 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	}
 
 	public void connect() throws OvdException {
-		this.co.connect();
+		for (RdpConnectionOvd connection : this.co)
+			connection.connect();
 	}
 
 	public void disconnect() {
-		if (this.co != null && this.co.isConnected())
-			this.co.disconnect();
+		for (RdpConnectionOvd connection : this.co) {
+			if (connection != null && connection.isConnected())
+				connection.disconnect();
+		}
 	}
 
 	private void quit(int status) {
@@ -224,12 +267,20 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.exit(status);
 	}
 
-	private void initPane() {
-		this.canvas = co.getCanvas();
-		this.add(this.canvas);
-		this.pack();
-		this.setLocationRelativeTo(null);
-		this.setVisible(true);
+	private void initPane(RdpConnection rc) {
+		if (this.ovd_mode_application) {
+			JFrame f = new JFrame();
+			f.setVisible(false);
+			f.add(rc.getCanvas());
+			f.pack();
+		}
+		else {
+			this.canvas = rc.getCanvas();
+			this.add(this.canvas);
+			this.pack();
+			this.setLocationRelativeTo(null);
+			this.setVisible(true);
+		}
 	}
 
 	/*RDP connection events*/
@@ -239,7 +290,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 	public void connecting(RdpConnection co) {
 		RdpClient.logger.info("Connecting to "+co.getServer());
-		this.initPane();
+		this.initPane(co);
 	}
 
 	public void failed(RdpConnection co) {
