@@ -32,6 +32,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.JFrame;
+
 public class Client implements RdpListener {
 
 	private static Logger logger;
@@ -90,6 +92,10 @@ public class Client implements RdpListener {
 
 	public void connecting(RdpConnection co) {
 		logger.info("Connecting to " + rc.getUsername() + "@" + rc.getServer());
+		JFrame f = new JFrame();
+		f.setVisible(false);
+		f.add(co.getCanvas());
+		f.pack();
 	}
 
 	public void disconnected(RdpConnection co) {
