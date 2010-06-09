@@ -65,6 +65,7 @@ public class Disk extends RdpdrDevice{
 		this.local_path = path;
 		this.name = name_;
 		this.device_type = 8;
+		this.slotIsFree = false;
 	}
 	
 	public int get_device_type(){

@@ -28,7 +28,12 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.disk.LinuxDiskManager;
+import org.ulteo.ovd.disk.WindowsDiskManager;
+import org.ulteo.ovd.disk.DiskManager;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDPrinterManager;
+import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 
 public class RdpConnectionOvd extends RdpConnection {
@@ -42,6 +47,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	private ArrayList<Application> appsList = null;
 	private OvdAppChannel ovdAppChannel = null;
 	private boolean ovdAppChannelInitialized = false;
+	private DiskManager diskManager = null;
 
 	/**
 	 * Instanciate a new RdpConnectionOvd with default options:
@@ -86,6 +92,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	public void initSecondaryChannels() throws OvdException, RdesktopException {
 		this.initClipChannel();
 		
+		this.mountLocalDrive();
 		if ((this.flags & MODE_MULTIMEDIA) != 0) {
 			this.setMultimediaMode();
 		}
@@ -136,6 +143,18 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 
 	/**
+	 * Init rdpdr channel
+	 *	- Add device redirection channel
+	 */
+	protected void initRdpdrChannel() throws RdesktopException {
+		if (this.rdpdrChannel != null)
+			return;
+		this.rdpdrChannel = new OVDRdpdrChannel(this.opt, this.common);
+		if (! this.addChannel(this.rdpdrChannel))
+			throw new RdesktopException("Unable to add rdpdr channel");
+	}
+	
+	/**
 	 * Mount local printers
 	 *	- Add rdpdr channel
 	 *	- Use a PrinterManager instance in order to register all local printers
@@ -152,6 +171,23 @@ public class RdpConnectionOvd extends RdpConnection {
 			throw new OvdException("Have to map local printers but no printer found ....");
 	}
 
+	/**
+	 * Mount local drive
+	 *	- Add rdpdr channel
+	 *	- Use a diskmanager instance in order to register all local disks
+	 */
+	private void mountLocalDrive() throws OvdException, RdesktopException {
+		this.initRdpdrChannel();
+		if (OSTools.isWindows()) {
+			diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel);
+		}
+		else {
+			diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel);
+		}
+		diskManager.init();
+		diskManager.launch();		
+	}
+	
 	@Override
 	public void setPersistentCaching(boolean persistentCaching) {
 		super.setPersistentCaching(persistentCaching);
