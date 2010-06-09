@@ -360,6 +360,8 @@
       <fileset dir="icons"/>
     </copy>
 
+    <mkdir dir="${standalone.dist}"/>
+
     <jar destfile="${standalone.dist}/OVDStandalone.jar"  basedir="jar/">
       <include name="**" />
 
@@ -371,8 +373,6 @@
   </target>
 
   <target name="standalone.install" depends="standalone.jar">
-    <mkdir dir="${standalone.dist}"/>
-
     <copy todir="${standalone.dist}">
       <fileset dir="./libs">
         <include name="OVDStandalone.jar" />
