@@ -39,13 +39,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.OvdException;
-import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -63,12 +62,12 @@ public class SessionManagerCommunication {
 	private String requestMode = null;
 	private String sessionId = null;
 	private String base_url;
-	private LoadingFrame loadFrame = null;
+	private JDialog loadFrame = null;
 	private boolean graphic = false;
 	private String multimedia = null;
 	private String printers = null;
 
-	public SessionManagerCommunication(String sm_, LoadingFrame loadFrame) {
+	public SessionManagerCommunication(String sm_, JDialog loadFrame) {
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.sm = sm_;
 		this.base_url = "http://"+this.sm+"/sessionmanager/";
