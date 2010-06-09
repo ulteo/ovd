@@ -24,6 +24,8 @@ import com.ice.jni.registry.RegStringValue;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
+import com.ice.jni.registry.RegistryValue;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.logging.Level;
@@ -78,8 +80,10 @@ public class WindowsRegistry extends FileAssociate {
 					if (!valueStr.equals("Extension"))
 						continue;
 
-					if (mime_.equals(keyStr))
-						exts.add(subKey.getStringValue("Content Type"));
+					if (mime_.equals(keyStr)){
+						String ext = subKey.getStringValue("Extension");
+						exts.add(ext);
+					}
 				}
 			}
 		} catch ( RegistryException ex ) {
@@ -110,16 +114,29 @@ public class WindowsRegistry extends FileAssociate {
 				}
 
 				try {
-					String target = key.getStringValue("");
-					key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes", RegistryKey.ACCESS_WRITE);
-
-					key = key.createSubKey(target, "");
-					key = key.createSubKey("shell", "");
-					RegistryKey ovdShell = key.createSubKey("ovdShell_" + app.getId(), "");
-					ovdShell.setValue(new RegStringValue(ovdShell, "", "Open with "+app.getName()));
-					ovdShell = ovdShell.createSubKey("command", "");
-					ovdShell.setValue(new RegStringValue(ovdShell, "", "Y:\\UlteoOVDIntegratedLauncher.exe "+app.getId()+" \"%1\""));
-
+					boolean hasDefaultValue = false;
+					Enumeration values = key.valueElements();
+					while (values.hasMoreElements()) {
+						if (((String)values.nextElement()).equals(""))
+							hasDefaultValue = true;
+					}
+					
+					if (hasDefaultValue) {
+						System.out.println("extension : "+ext);
+						String target = key.getStringValue("");
+						key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes", RegistryKey.ACCESS_WRITE);
+	
+						key = key.createSubKey(target, "");
+						key = key.createSubKey("shell", "");
+						RegistryKey ovdShell = key.createSubKey("ovdShell_" + app.getId(), "");
+						ovdShell.setValue(new RegStringValue(ovdShell, "", "Open with "+app.getName()));
+						ovdShell = ovdShell.createSubKey("command", "");
+						ovdShell.setValue(new RegStringValue(ovdShell, "", "UlteoOVDIntegratedLauncher.exe "+app.getId()+" \"%1\""));
+					}
+					else {
+						System.err.println(key.getFullName()+" doesn't exist");
+					}
+					
 				} catch (RegistryException ex) {
 					Logger.getLogger(WindowsRegistry.class.getName()).log(Level.SEVERE, null, ex);
 				}
@@ -150,13 +167,12 @@ public class WindowsRegistry extends FileAssociate {
 				try {
 					String target = key.getStringValue("");
 					key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes\\"+target+"\\shell", RegistryKey.ACCESS_ALL);
-
 					Enumeration enumKeys = key.keyElements();
 					while (enumKeys.hasMoreElements()) {
 						String subKeyStr = (String) enumKeys.nextElement();
 						if (! subKeyStr.startsWith("ovdShell_"))
 							continue;
-
+						
 						this.removeKey(key, subKeyStr);
 					}
 

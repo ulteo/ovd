@@ -22,6 +22,7 @@ package org.ulteo.ovd.client;
 
 import java.awt.Container;
 import java.awt.Insets;
+import java.awt.SystemTray;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,8 +37,14 @@ import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.client.authInterface.OptionPanel;
 import org.ulteo.ovd.client.desktop.DesktopFrame;
+import org.ulteo.ovd.client.integrated.IntegratedTrayIcon;
 import org.ulteo.ovd.client.portal.Menu;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.Spool;
+import org.ulteo.ovd.integrated.SystemAbstract;
+import org.ulteo.ovd.integrated.SystemLinux;
+import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
@@ -48,6 +55,8 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 
 	private SessionManagerCommunication smComm = null;
 	private ArrayList<RdpConnectionOvd> connections = null;
+	private Spool spool = null;
+	private SystemAbstract sys = null;
 	private String fqdn = null;
 	private String login = null;
 	private String password = null;
@@ -88,19 +97,35 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 	public void run() {
 		/*BasicConfigurator.configure();
 			(Logger.getLogger("net.propero.rdp")).setLevel(org.apache.log4j.Level.INFO);*/
-		if(graphic) 
+		if (graphic) 
 			logList.initLoader();
-		this.smComm = new SessionManagerCommunication(fqdn);
+		this.spool = new Spool();
+		this.spool.createIconsDir();
+		this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader());
 		String session_mode = (mode == 0) ? SessionManagerCommunication.SESSION_MODE_DESKTOP : SessionManagerCommunication.SESSION_MODE_REMOTEAPPS;  
 		if (! this.smComm.askForSession(login, password, session_mode))
 			return;
 
 		if (this.isCancelled) {
 			this.smComm = null;
+			this.spool.deleteTree();
+			this.spool = null;
 			return;
 		}
 
 		this.connections = smComm.getConnections();
+		
+		if(mode == 2) {
+			if (OSTools.isWindows()) {
+				this.sys = new SystemWindows();
+			}
+			else if (OSTools.isLinux()) {
+				this.sys = new SystemLinux();
+			}
+			else {
+				Logger.getLogger(Client.class.getName()).log(Level.WARNING, "This Operating System is not supported");
+			}
+		}
 		
 		if( mode == 0) {
 			for (RdpConnectionOvd co : this.connections) {
@@ -122,8 +147,23 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 				}
 			}
 		}
+		Thread fileListener = new Thread(this.spool);
+		fileListener.start();
+		while (fileListener.isAlive()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		this.quit(0);
 	}
 
+	private void quit(int i) {
+		this.spool.deleteTree();
+		System.exit(i);
+	}
+	
 	public void disconnectAll() {
 		this.isCancelled = true;
 		if(this.connections != null) {
@@ -133,6 +173,20 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 		}
 	}
 
+	private void addAvailableConnection(RdpConnectionOvd rc) {
+
+		this.spool.addConnection(rc);
+	}
+
+	private void removeAvailableConnection(RdpConnectionOvd rc) {
+		this.spool.removeConnection(rc);
+		if( mode == 2) {
+			for (Application app : rc.getAppsList()) {
+				this.sys.uninstall(app);
+			}
+		}
+	}
+	
 	public void initDesktop(RdpConnectionOvd co) {
 		switch (resolution) {
 		case 0 :
@@ -182,6 +236,10 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 							menu.install(app, co.getOvdAppChannel());
 						}
 						menu.addScroller();
+					}else {
+						for (Application app : co.getAppsList()) {
+							this.sys.install(app);
+						}
 					}
 					co.setOvdAppChannelInitialized(true);
 				}
@@ -235,6 +293,13 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 		else if (mode == 1) {
 			initPortal(startedAppList, smComm);
 		}
+		else {
+			if (SystemTray.isSupported()) {
+				new IntegratedTrayIcon();
+			}
+		}
+		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+co.getServer());
+		this.addAvailableConnection((RdpConnectionOvd)co);
 	}
 
 	@Override
@@ -257,7 +322,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 				logList.getLoader().dispose();
 			}
 		}
-
+		this.removeAvailableConnection((RdpConnectionOvd)co);
 		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.getServer());
 		if(graphic) {
 			Container cp = frame.getContentPane();
@@ -278,9 +343,6 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 						e.printStackTrace();
 					}
 				}
-			}
-			else {
-				
 			}
 		}
 		if(graphic) {
