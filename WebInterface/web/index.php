@@ -229,6 +229,8 @@ if (! defined('SESSIONMANAGER_URL'))
 else
 	echo '$(\'user_login\').focus();';
 ?>
+
+checkLogin();
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px; margin-bottom: 25px; " border="0" cellspacing="0" cellpadding="5">
@@ -384,7 +386,7 @@ else
 													<span id="advanced_settings_status" style="position: relative; left: 20px;"><img src="media/image/show.png" width="12" height="12" alt="" title="" /></span><input style="padding-left: 18px;" type="button" value="<?php echo _('Advanced settings'); ?>" onclick="switchSettings(); return false;" />
 												</td>
 												<td style="text-align: right; vertical-align: bottom;">
-													<span id="submitButton"><input type="submit" id="submitLogin" value="<?php echo _('Connect'); ?>" disabled="disabled" /></span>
+													<span id="submitButton"><input type="submit" id="submitLogin" value="<?php echo _('Connect'); ?>" /></span>
 													<span id="submitLoader" style="display: none;"><img src="media/image/loader.gif" width="24" height="24" alt="" title="" /></span>
 												</td>
 											</tr>
