@@ -33,6 +33,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.JFrame;
 import net.propero.rdp.RdesktopException;
 
 import net.propero.rdp.RdpConnection;
@@ -390,6 +391,11 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	@Override
 	public void connecting(RdpConnection co) {
 		System.out.println("Connecting to "+co.getServer());
+
+		JFrame f = new JFrame();
+		f.setVisible(false);
+		f.add(co.getCanvas());
+		f.pack();
 	}
 
 	@Override
