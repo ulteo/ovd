@@ -44,6 +44,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,13 +63,24 @@ public class SessionManagerCommunication {
 	private String requestMode = null;
 	private String sessionId = null;
 	private String base_url;
+	private LoadingFrame loadFrame = null;
+	private boolean graphic = false;
+	private String multimedia = null;
+	private String printers = null;
+
+	public SessionManagerCommunication(String sm_, LoadingFrame loadFrame) {
+		this.connections = new ArrayList<RdpConnectionOvd>();
+		this.sm = sm_;
+		this.base_url = "http://"+this.sm+"/sessionmanager/";
+		this.loadFrame = loadFrame;
+		this.graphic = true;
+	}
 
 	public SessionManagerCommunication(String sm_) {
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.sm = sm_;
 		this.base_url = "http://"+this.sm+"/sessionmanager/";
 	}
-
 	public String getSessionMode() {
 		return this.sessionMode;
 	}
@@ -182,28 +195,45 @@ public class SessionManagerCommunication {
 		if (ns.getLength() == 1) {
 			ovd_node = (Element)ns.item(0);
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "("+ovd_node.getAttribute("id")+") "+ovd_node.getAttribute("message"));
-			JOptionPane.showMessageDialog(null, ovd_node.getAttribute("message"), "Warning", JOptionPane.WARNING_MESSAGE);
+			if (graphic) {
+				loadFrame.setVisible(false);
+				JOptionPane.showMessageDialog(null, ovd_node.getAttribute("message"), "Warning", JOptionPane.WARNING_MESSAGE);
+			}
 			return false;
 		}
 
 		ns = document.getElementsByTagName("session");
 		if (ns.getLength() == 0) {
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 1");
+			if (graphic) {
+				loadFrame.setVisible(false);
+				JOptionPane.showMessageDialog(null, "Bad XML: err 1", "Warning", JOptionPane.WARNING_MESSAGE);
+			}
 			return false;
 		}
 		ovd_node = (Element)ns.item(0);
 
 		this.sessionId = ovd_node.getAttribute("id");
 		this.sessionMode = ovd_node.getAttribute("mode");
+		this.multimedia = ovd_node.getAttribute("multimedia");
+		this.printers = ovd_node.getAttribute("redirect_client_printers");
 
 		if (! this.sessionMode.equalsIgnoreCase(this.requestMode)) {
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager do not authorize "+this.requestMode+" session mode.");
+			if (graphic) {
+				loadFrame.setVisible(false);
+				JOptionPane.showMessageDialog(null, "The session manager do not authorize "+this.requestMode, "Warning", JOptionPane.WARNING_MESSAGE);
+			}
 			return false;
 		}
 
 		ns = ovd_node.getElementsByTagName("server");
 		if (ns.getLength() == 0) {
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 2");
+			if (graphic) {
+				loadFrame.setVisible(false);
+				JOptionPane.showMessageDialog(null, "Bad XML: err 2", "Warning", JOptionPane.WARNING_MESSAGE);
+			}
 			return false;
 		}
 		Element server;
@@ -223,11 +253,22 @@ public class SessionManagerCommunication {
 				flags |= RdpConnectionOvd.MODE_DESKTOP;
 			else if (this.sessionMode.equalsIgnoreCase("portal"))
 				flags |= RdpConnectionOvd.MODE_APPLICATION;
+			if (this.multimedia.equals("1"))
+				flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+			if (this.printers.equals("1"))
+				flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+			
 			try {
 				rc = new RdpConnectionOvd(flags);
 			} catch (RdesktopException ex) {
 				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, ex.getMessage());
 				continue;
+			}
+			
+			try {
+				rc.initSecondaryChannels();
+			} catch (RdesktopException e1) {
+				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, e1.getMessage());
 			}
 
 			rc.setServer(server.getAttribute("fqdn"));
