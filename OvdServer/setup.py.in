@@ -36,42 +36,41 @@ setup()
 """
 
 if sys.platform == "win32":
-
-   import py2exe
-   sys.argv.append("py2exe")
-   sys.argv.append("-p")
-   sys.argv.append("ovd.Role.ApplicationServer")
-
-   try:
-      import modulefinder
-      import win32com,sys
-      for p in win32com.__path__[1:]:
-         modulefinder.AddPackagePath("win32com", p)
-      for extra in ["win32com.shell","win32com.mapi"]:
-         __import__(extra)
-         m = sys.modules[extra]
-         for p in m.__path__[1:]:
-            modulefinder.AddPackagePath(extra, p)
-   except ImportError:
-      # no build path setup, no worries.
-      pass
-
-   setup_args["zipfile"] = "lib/shared.zip"
-   setup_args["console"] = ["ovdSlaveServer"]
+	import py2exe
+	sys.argv.append("py2exe")
+	sys.argv.append("-p")
+	sys.argv.append("ovd.Role.ApplicationServer")
+	
+	try:
+		import modulefinder
+		import win32com,sys
+		for p in win32com.__path__[1:]:
+			modulefinder.AddPackagePath("win32com", p)
+		for extra in ["win32com.shell","win32com.mapi"]:
+			__import__(extra)
+			m = sys.modules[extra]
+			for p in m.__path__[1:]:
+				modulefinder.AddPackagePath(extra, p)
+	
+	except ImportError:
+		# no build path setup, no worries.
+		pass
+	
+	setup_args["zipfile"] = "lib/shared.zip"
+	setup_args["console"] = ["ovdSlaveServer"]
 
 
 elif sys.platform == "linux2":
-   setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role',
-                   'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
-                   'ovd.Role.ApplicationServer.Platform',
-                   'ovd.Role.ApplicationServer.Platform.Linux',
-                   'ovd.Platform', 'ovd.Platform.Linux']
-   setup_args["data_files"] = [('/usr/bin',['ovdSlaveServer']),
-                               ('/etc/ulteo',['config/ovd-slaveserver.conf'])]
-
+	setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role',
+			'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
+			'ovd.Role.ApplicationServer.Platform',
+			'ovd.Role.ApplicationServer.Platform.Linux',
+			'ovd.Platform', 'ovd.Platform.Linux']
+	setup_args["data_files"] = [('/usr/bin',['ovdSlaveServer']),
+				('/etc/ulteo',['config/ovd-slaveserver.conf'])]
 
 else:
-   raise Exception("No supported platform")
+	raise Exception("No supported platform")
 
 # Make the setup
 setup(**setup_args)

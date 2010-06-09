@@ -7,24 +7,24 @@ import sys
 
 # Detect the version
 if os.environ.has_key("OVD_VERSION"):
-    version = os.environ["OVD_VERSION"]
+	version = os.environ["OVD_VERSION"]
 
 else:
-    c = pysvn.Client()
-    revision = c.info(".")["revision"].number
-
-    version = "99.99~trunk+svn%05d"%(revision)
+	c = pysvn.Client()
+	revision = c.info(".")["revision"].number
+	
+	version = "99.99~trunk+svn%05d"%(revision)
 
 
 # OS detection
 if sys.platform == "linux2":
-    platform_dir = "Linux"
+	platform_dir = "Linux"
 
 elif sys.platform == "win32":
-    platform_dir = "Windows"
+	platform_dir = "Windows"
 
 else:
-   raise Exception("No supported platform")
+	raise Exception("No supported platform")
 
 
 f = file("setup.py.in", "r")
