@@ -27,6 +27,7 @@ import win32service
 import win32serviceutil
 
 from ovd.Communication.HttpServer import HttpServer as Communication
+from ovd import Config as ConfigModule
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
@@ -42,6 +43,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 		
 		# Init the logger instance
 		Win32Logger.initialize("OVD", Config.log_level, None)
+		ConfigModule.report_error = WinReport_error
 		
 		config_file = os.path.join(Platform.System.get_default_config_dir(), "ovd-slaveserver.conf")
 		if not Config.read(config_file):
@@ -122,6 +124,8 @@ class Win32Logger(Logger):
 		instance = Win32Logger(name, loglevel, file)
 		Logger._instance = instance
 
+def WinReport_error(message):
+	Logger.error(message)
 
 
 if __name__=='__main__':

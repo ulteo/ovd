@@ -24,6 +24,10 @@ import sys
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 
+def report_error(message):
+	print >>sys.stderr, message
+
+
 class Config:
 	# generic
 	infos = {}
@@ -48,14 +52,13 @@ class Config:
 	SM_SERVER_PORT = 1111
 	SLAVE_SERVER_PORT = 1112
 	
-	
 	@staticmethod
 	def read(filename):
 		try:
 			Config.infos = Config.parse_file(filename)
 		except Exception, err:
-			print >> sys.stderr, "invalid configuration file '%s'"%(filename)
-			print >> sys.stderr, err
+			report_error("invalid configuration file '%s'"%(filename))
+			report_error(str(err))
 			return False
 		
 		if Config.infos.has_key("ROLES"):
@@ -90,7 +93,7 @@ class Config:
 	@staticmethod
 	def is_valid():
 		if len(Config.roles) == 0:
-			print >>sys.stderr, "No role given"
+			report_error("No role given")
 			return False
 		
 		for role in Config.roles:
@@ -98,16 +101,16 @@ class Config:
 				__import__("ovd.Role.%s.Role"%(role))
 			
 			except ImportError:
-				print >>sys.stderr, "Unsupported role '%s'."%(role)
-				print >>sys.stderr, "Please be sure this role exists and is correctly installed"
+				report_error("Unsupported role '%s'."%(role))
+				report_error("Please be sure this role exists and is correctly installed")
 				return False
 		
 		
 		if Config.session_manager is None:
-			print >>sys.stderr, "No session manager given"
+			report_error("No session manager given")
 			return False
 		if " " in Config.session_manager:
-			print >>sys.stderr, "Invlid session manager given"
+			report_error("Invlid session manager given")
 			return False
 	#	if not is_host(Config.session_manager):
 	#		return False
@@ -117,7 +120,7 @@ class Config:
 				f = file(Config.log_file, "w")
 				f.close()
 			except IOError:
-				print >>sys.stderr, "Unable to write into '%s'"%(Config.log_file)
+				report_error("Unable to write into '%s'"%(Config.log_file))
 				return False
 		
 		return True
@@ -182,3 +185,4 @@ class Config:
 			infos[key] = value
 		
 		return infos
+
