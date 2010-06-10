@@ -26,28 +26,36 @@ import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 
-public class PrinterApplet extends Applet{
 
+public class PrinterApplet extends Applet {
 	private static final long serialVersionUID = 1L;
 	private BlockingQueue<OVDJob> spool;
 	private boolean running = true;
 
-	public void init(){
+	public void init() {
 		System.out.println("Initilise PDF Printer");
 		spool = new LinkedBlockingQueue<OVDJob>() ;
+		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
+		PrintServiceLookup.lookupPrintServices(flavor, pras);
 	}
 	
-	public void start(){
+	public void start() {
 		System.out.println("Start PDF Printer");
-		while(running){
+		while (running) {
 			OVDJob job = null;
-			try{
+			try {
 				job = (OVDJob)spool.take();
 			}
-			catch (InterruptedException e){
+			catch (InterruptedException e) {
 			}
-			if (job != null){
+			if (job != null) {
 				job.print();
 			}
 			else
@@ -57,13 +65,13 @@ public class PrinterApplet extends Applet{
 	
 
 	//it is the only method, we can use for inter-applet communication
-	public Component add(String spoolPath, Component component){
-		if(component != null){
+	public Component add(String spoolPath, Component component) {
+		if(component != null) {
 			return super.add(spoolPath, component);
 		}
 			
 		File spoolFile = new File(spoolPath);
-		if (! spoolFile.exists()){
+		if (! spoolFile.exists()) {
 			System.out.println("The spool file ["+spoolPath+"] can not be found");
 		}
 		String printerName = spoolFile.getParentFile().getName();
@@ -75,12 +83,12 @@ public class PrinterApplet extends Applet{
 		return null;
 	}
 	
-	public void stop(){
+	public void stop() {
 		System.out.println("Stopping the applet");
 		this.running = false;
 	}
 		
-	public void spoolJob(String printerName, String pdfFilename){
+	public void spoolJob(String printerName, String pdfFilename) {
 		this.spool.add(new OVDJob(pdfFilename, printerName));
 	}
 	

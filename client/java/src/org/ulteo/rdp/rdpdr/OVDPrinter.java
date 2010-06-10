@@ -51,9 +51,9 @@ public class OVDPrinter extends Printer {
 	}
 
 	public int create(int device, int desired_access, int share_mode, int disposition, int flags_and_attributes, String filename,int[] result){
-		System.out.println("create");
+		logger.debug("Create action");
 		UUID uuid = UUID.randomUUID();
-		OVDPrinter.jobs.add(device,uuid);
+		int handle = 0;
 		String pdf_filename = System.getProperty("java.io.tmpdir") + File.separator + uuid + ".pdf";
 		File pdf_file = new File(pdf_filename);
 		// Make sure the file or directory exists and isn't write protected
@@ -68,12 +68,28 @@ public class OVDPrinter extends Printer {
 			logger.warn("The temporary file["+pdf_filename+"] can not be created");
 			return RdpdrChannel.STATUS_INVALID_PARAMETER;
 		}
+		OVDPrinter.jobs.add(uuid);
+		handle = OVDPrinter.jobs.indexOf(uuid);
+		logger.debug("handle : "+handle);
+		if (handle == -1) {
+			logger.warn("Handle ["+handle+"] is not a valid handle");
+			return RdpdrChannel.STATUS_INVALID_PARAMETER;
+		}
+		result[0] = handle;
 		return RdpdrChannel.STATUS_SUCCESS;
 	}
 	
 	public int write(int handle, byte[] data, int length, int offset, int[] result){
-		System.out.println("write");
-		UUID uuid = (UUID)OVDPrinter.jobs.get(handle);
+		logger.debug("Write action on " + handle);
+		UUID uuid = null;
+		try {
+			uuid = (UUID)OVDPrinter.jobs.get(handle);
+		}
+		catch (IndexOutOfBoundsException e) {
+			logger.warn("The job with the handle " + handle + " dis not exist");
+			return RdpdrChannel.STATUS_INVALID_PARAMETER;
+		}
+
 		String pdf_filename = System.getProperty("java.io.tmpdir") + File.separator + uuid + ".pdf";
 		File pdf_file = new File(pdf_filename);
 		result[0] = 0;
@@ -102,10 +118,18 @@ public class OVDPrinter extends Printer {
 	
 	public int close(int file)
 	{
-		System.out.println("close");
-		UUID uuid = (UUID)OVDPrinter.jobs.get(handle);
+		logger.debug("Close action on "+file);
+		UUID uuid = null;
+		try {
+			uuid = (UUID)OVDPrinter.jobs.get(file);
+		}
+		catch (IndexOutOfBoundsException e) {
+			logger.warn("The job with the handle " + handle + " dis not exist");
+			return RdpdrChannel.STATUS_INVALID_PARAMETER;
+		}
 		String pdfFilename = System.getProperty("java.io.tmpdir") + File.separator + uuid + ".pdf";
 		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename);
+		OVDPrinter.jobs.remove(file);
 		return RdpdrChannel.STATUS_SUCCESS;
 	}
 }

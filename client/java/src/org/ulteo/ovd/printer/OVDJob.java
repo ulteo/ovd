@@ -19,7 +19,6 @@
  */
 package org.ulteo.ovd.printer;
 
-import java.awt.Component;
 import java.awt.print.PageFormat;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -41,10 +40,8 @@ import javax.swing.JOptionPane;
 
 import org.jpedal.PdfDecoder;
 import org.jpedal.objects.PrinterOptions;
-//import org.ulteo.rdp.rdpdr.OVDPrinter;
-import org.ulteo.ovd.integrated.Constants;
 
-public class OVDJob extends Component{
+public class OVDJob{
 	private static final long serialVersionUID = 1L;
 	private String pdfFilename = null;
 	private String printerName = null;
@@ -58,21 +55,21 @@ public class OVDJob extends Component{
 	private int pageCount;
 
 	
-	public OVDJob(String pdfFilename, String printerName){
+	public OVDJob(String pdfFilename, String printerName) {
 		this.printerName = printerName;
 		this.pdfFilename = pdfFilename;
-		if(this.printerName != null && ! this.printerName.equals(Constants.filePrinterName))
+		if (this.printerName != null && ! this.printerName.equals(OVDPrinterThread.filePrinterName))
 			return;
 		
 		this.printerName = null;
 		//Create a file chooser
 		int returnVal = 0;
 		JFileChooser fc = null;
-		try{
+		try {
 			fc = new JFileChooser();
 			returnVal = fc.showOpenDialog(null);
 		}
-		catch(Exception e){
+		catch (Exception e){
 			e.printStackTrace();
 		}
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -90,7 +87,7 @@ public class OVDJob extends Component{
 				if (ret == JOptionPane.YES_OPTION){
 					file.delete();
 				}
-				else{
+				else {
 					System.out.println("Nothing to do, the user abort printing");
 					return;
 				}
@@ -107,17 +104,17 @@ public class OVDJob extends Component{
 		return;
 	}
 	
-	public String toString(){
+	public String toString() {
 		return "["+this.printerName+","+this.pdfFilename+"]";
 	}
 	
-	private static PrintService getPrintService(String printerName){
+	private static PrintService getPrintService(String printerName) {
 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintService printServices[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
 		for (PrintService printService : printServices) {
 			String printer_name = printService.getName();
-			if( printerName.equals(printer_name) ){
+			if (printerName.equals(printer_name)) {
 				return printService;
 			}
 		}
@@ -126,12 +123,12 @@ public class OVDJob extends Component{
 
 	
 	public boolean print(){
-		if (this.printerName == null){
+		if (this.printerName == null) {
 			return true;
 		}
 		
 		PrintService printService = OVDJob.getPrintService(this.printerName);
-		if (printService == null){
+		if (printService == null) {
 			System.out.println("Unable to find the printer");
 			return false;
 		}
@@ -144,18 +141,18 @@ public class OVDJob extends Component{
 		} catch (Exception e) {
 			System.out.println("Exception " + e + " in pdf code");
 		}
-		if ((decode_pdf.isEncrypted())&& (!decode_pdf.isExtractionAllowed())){
+		if ((decode_pdf.isEncrypted()) && (!decode_pdf.isExtractionAllowed())) {
 			System.out.println("Encrypted settings");
 			return false;
 		}
-		try{
+		try {
 			// Set the Document length so the user can know it in advance
 			PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
 			PageRanges pr = new PageRanges(1,pageCount);
 			attributeSet.add(pr);
 	
 			Attribute[] attribs=attributeSet.toArray();
-			for(int i=0;i<attribs.length;i++){
+			for (int i=0; i<attribs.length; i++) {
 				System.out.println(i+" "+attribs[i].getName()+ ' ' +attribs[i].toString());
 			}
 			//Select all pages here, the printer will choose which ones to print
@@ -176,17 +173,18 @@ public class OVDJob extends Component{
 			printJob.print(attributeSet);
 			//new File(this.pdfFile).delete();
 			return true;
-		}catch(PrinterException ee){
+		} 
+		catch (PrinterException ee) {
 			System.err.println(ee.getMessage());
 		}
-		catch(Exception ee){
+		catch (Exception ee) {
 			System.err.println(ee.getMessage());
 		}
 		return false;
 	}
 	
 	
-	private boolean moveTo(File src, File dest){
+	private boolean moveTo(File src, File dest) {
 		FileInputStream srcBuf = null;
 		FileOutputStream destBuf = null;
 		try {
@@ -204,19 +202,20 @@ public class OVDJob extends Component{
 		}
 		try {
 			destBuf = new FileOutputStream(dest);
-		} catch (FileNotFoundException e) {
+		} 
+		catch (FileNotFoundException e) {
 			System.out.println("Unable to find file ["+dest.getAbsolutePath()+"]");
 		}
 		byte[] buf = new byte[1024];
 		int len;
-		try{
-			while ((len = srcBuf.read(buf)) > 0){
+		try {
+			while ((len = srcBuf.read(buf)) > 0) {
 				destBuf.write(buf, 0, len);
 			}
 			srcBuf.close();
 			destBuf.close();
 		}
-		catch (IOException e){
+		catch (IOException e) {
 			System.out.println("Error while copying file from ["+src.getAbsolutePath()+"] to ["+dest.getAbsolutePath()+"]");
 			return false;
 		}
@@ -225,12 +224,12 @@ public class OVDJob extends Component{
 	}
 
 	
-	public static void main(String[] args){
-		if (args.length != 1){
+	public static void main (String[] args) {
+		if (args.length != 1) {
 			System.err.println("This sample take one argument : the PDF file to print");
 		}
 		File pdfFile= new File(args[0]);
-		if (! pdfFile.exists()){
+		if (! pdfFile.exists()) {
 			System.err.println("The file : ["+pdfFile.getPath()+"] did not exist");
 			return ;
 		}
@@ -239,7 +238,7 @@ public class OVDJob extends Component{
 			OVDJob printer = new OVDJob(args[0], null);
 			printer.print();
 		}
-		catch(Exception e){
+		catch(Exception e) {
 			System.err.println("Error while printing the file["+pdfFile+"] : "+e.getMessage());
 		}		
 	}

@@ -23,6 +23,7 @@ package org.ulteo.ovd.printer;
 public interface OVDPrinterThread{
 	public String printerName = "";
 	public String pdfFilename = "";
+	public static final String filePrinterName = "OVD_File_Printer";	
 	
 	public abstract void printPages(String printerName, String pdfFilename);
 	

@@ -25,10 +25,9 @@ import java.applet.AppletContext;
 import java.io.File;
 
 import org.apache.log4j.Logger;
-import org.ulteo.ovd.integrated.Constants;
 
 
-public class OVDAppletPrinterThread implements OVDPrinterThread{
+public class OVDAppletPrinterThread implements OVDPrinterThread {
 	protected static Logger logger = Logger.getLogger(OVDPrinterThread.class);
 	
 	private final int maxRetry = 5;
@@ -44,55 +43,55 @@ public class OVDAppletPrinterThread implements OVDPrinterThread{
 		super();
 		this.appletContext = appletContext;
 		//create spooldir
-		this.spoolPath = System.getProperty("java.io.tmpdir")+ Constants.separator + this.spoolDir;
+		this.spoolPath = System.getProperty("java.io.tmpdir")+ File.separator + this.spoolDir;
 		File spoolFile = new File(this.spoolPath);
 		spoolFile.mkdir();
-		if (! spoolFile.exists() && ! spoolFile.isDirectory()){
+		if (! spoolFile.exists() && ! spoolFile.isDirectory()) {
 			logger.error("Unable to initialize the spool Dir ["+this.spoolPath+"]");
 		}
 	}
 	
 	
-	public void run(){
+	public void run() {
 	}
 
 
 	public void printPages(String printerName, String pdfFilename) {
-		if (printerName == null || printerName.equals("")){
-			printerName = Constants.filePrinterName;
+		if (printerName == null || printerName.equals("")) {
+			printerName = OVDAppletPrinterThread.filePrinterName;
 		}
 		File pdfFile = new File(pdfFilename);
-		if (! pdfFile.exists()){
+		if (! pdfFile.exists()) {
 			logger.error("Unable to spool the pdf file, the file ["+pdfFile.getAbsolutePath()+"] did not exist");
 			return;
 		}
 		int count = maxRetry;
 		Applet applet = null;
-		while (count > 0){
+		while (count > 0) {
 			applet = appletContext.getApplet(this.printerAppletName); 
-			if (applet != null){
+			if (applet != null) {
 				break;
 			}
 		}
-		if (applet == null){
+		if (applet == null) {
 			logger.error("Unable to get the printing applet "+this.printerAppletName);
 			return;
 		}
-		File printerDir = new File(this.spoolPath+Constants.separator+printerName);
+		File printerDir = new File(this.spoolPath + File.separator + printerName);
 		printerDir.mkdir();
-		if (! printerDir.exists() && !printerDir.isDirectory()){
+		if (! printerDir.exists() && !printerDir.isDirectory()) {
 			logger.error("Unable to spool the pdf file, the directory ["+printerDir.getAbsolutePath()+"] can not be created");
 			return;
 		}
-		File spoolFile = new File(printerDir.getAbsolutePath()+Constants.separator+pdfFile.getName());
-		if (spoolFile.exists()){
+		File spoolFile = new File(printerDir.getAbsolutePath()+ File.separator + pdfFile.getName());
+		if (spoolFile.exists()) {
 			logger.error("Unable to spool the pdf file, the file ["+spoolFile.getAbsolutePath()+"] already exist");
 			return;			
 		}
-		if (pdfFile.renameTo(spoolFile)){
+		if (pdfFile.renameTo(spoolFile)) {
 			applet.add(spoolFile.getAbsolutePath(), null);
 		}
-		else{
+		else {
 			logger.error("Unable to move pdf ["+pdfFile.getAbsolutePath()+"] file to spool dir  ["+spoolFile.getAbsolutePath());
 			return;			
 		}
