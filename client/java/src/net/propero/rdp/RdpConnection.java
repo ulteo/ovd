@@ -29,6 +29,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
@@ -353,6 +354,12 @@ public class RdpConnection implements Runnable{
 		this.opt.grab_keyboard = false;
 		if(this.opt.hostname.equalsIgnoreCase("localhost")) this.opt.hostname = "127.0.0.1";
 		
+		if (this.opt.seamlessEnabled) {
+			JFrame f = new JFrame();
+			f.setVisible(false);
+			f.add(this.canvas);
+			f.pack();
+		}
 		this.fireConnecting();
 		
 		boolean keep_running = true;

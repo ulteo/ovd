@@ -26,7 +26,6 @@ import java.awt.SystemTray;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
@@ -305,13 +304,6 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 	@Override
 	public void connecting(RdpConnection co) {
 		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.getServer());
-
-		if (this.mode != 0) {
-			JFrame f = new JFrame();
-			f.setVisible(false);
-			f.add(co.getCanvas());
-			f.pack();
-		}
 	}
 
 	@Override

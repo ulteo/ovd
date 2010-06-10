@@ -268,13 +268,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	}
 
 	private void initPane(RdpConnection rc) {
-		if (this.ovd_mode_application) {
-			JFrame f = new JFrame();
-			f.setVisible(false);
-			f.add(rc.getCanvas());
-			f.pack();
-		}
-		else {
+		if (! this.ovd_mode_application) {
 			this.canvas = rc.getCanvas();
 			this.add(this.canvas);
 			this.pack();
