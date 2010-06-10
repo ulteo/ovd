@@ -22,6 +22,9 @@
 import os
 import sys
 import servicemanager
+import win32event
+import win32service
+import win32serviceutil
 
 from ovd.Communication.HttpServer import HttpServer as Communication
 from ovd.Config import Config
@@ -34,7 +37,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	_svc_display_name_ = "Ulteo OVD Slave Server"
 	_svc_description_ = "Ulteo OVD Slave Server"
 	
-	def __init__(self,args):
+	def __init__(self, args):
 		win32serviceutil.ServiceFramework.__init__(self, args)
 		
 		# Init the logger instance
@@ -58,6 +61,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 	
 	def SvcDoRun(self):
 		self.ReportServiceStatus(win32service.SERVICE_START_PENDING)
+		#win32evtlogutil.ReportEvent(self.log_type, 2, eventType=win32evtlog.EVENTLOG_INFORMATION_TYPE, strings=["Message d'arret"])
 		
 		if not SlaveServer.init(self):
 			Logger.error("Unable to initialize SlaveServer")
@@ -96,7 +100,7 @@ class OVD(win32serviceutil.ServiceFramework, SlaveServer):
 
 class Win32Logger(Logger):
 	def __init__(self, name, loglevel, file = None):
-		Logger.__init__(self, name, loglevel, file, False)
+		Logger.__init__(self, name, loglevel, file)
 	
 	
 	def log_info(self, message):
@@ -114,8 +118,8 @@ class Win32Logger(Logger):
 
 	# Static methods
 	@staticmethod 
-	def initialize(name, loglevel, file=None, stdout=False, win32LogService=False):
-		instance = Logger(name, loglevel, file, stdout, win32LogService)
+	def initialize(name, loglevel, file=None):
+		instance = Win32Logger(name, loglevel, file)
 		Logger._instance = instance
 
 

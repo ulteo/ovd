@@ -38,6 +38,7 @@ setup()
 if sys.platform == "win32":
 	import py2exe
 	sys.argv.append("py2exe")
+	# Force the include of ApS because of dynamic imports
 	sys.argv.append("-p")
 	sys.argv.append("ovd.Role.ApplicationServer")
 	
@@ -56,8 +57,18 @@ if sys.platform == "win32":
 		# no build path setup, no worries.
 		pass
 	
+	class ServiceTarget:
+		def __init__(self, **kw):
+			self.version = setup_args["version"]
+			self.company_name = "Ulteo"
+			self.copyright = "GPLv2"
+			self.name = setup_args["name"]
+			self.description = setup_args["description"]
+			self.modules = ["OVDWin32Service"]
+	
 	setup_args["zipfile"] = "lib/shared.zip"
 	setup_args["console"] = ["ovdSlaveServer"]
+	setup_args["service"] = [ServiceTarget()]
 
 
 elif sys.platform == "linux2":
