@@ -22,6 +22,7 @@
 package org.ulteo.rdp.seamless;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -230,7 +231,7 @@ public class SeamlessFrame extends SeamFrame {
 			return;
 		}
 
-		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+		if ((this.getExtendedState() != Frame.MAXIMIZED_BOTH) && ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)) {
 			int xClick = e.getX();
 			int yClick = e.getY();
 
