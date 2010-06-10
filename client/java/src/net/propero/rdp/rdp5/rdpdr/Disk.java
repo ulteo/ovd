@@ -531,13 +531,16 @@ public class Disk extends RdpdrDevice{
 			case 3://FileBothDirectoryInformation:
 				DEBUG("disk_query_directory---FileBothDirectoryInformation");
 				/* If a search pattern is received, remember this pattern, and restart search */
-				if (pattern != "" && pattern != null) {
+				if (pattern != null && ! pattern.equals("")) {
 					pattern = pattern.replace("\\", "/");
 					pfinfo.pattern = pattern.substring(pattern.lastIndexOf('/')+1);
 					pfinfo.reset_file_searched_map();
 				}
 				File tmp_dir = new File(pdir);
-			    String[] children = tmp_dir.list();
+				String[] children = tmp_dir.list();
+				if (children == null)
+					return STATUS_ACCESS_DENIED;
+				
 			    boolean match_flag = false;
 			    for (int i=0; i<children.length; i++) {
 		            // Get filename of file or directory
