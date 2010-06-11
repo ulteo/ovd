@@ -29,9 +29,11 @@ import java.io.LineNumberReader;
 import gnu.getopt.Getopt;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
+import org.ulteo.ovd.client.Client;
 
 
 public class StartConnection {
+	public static final String productName = "Ulteo OVD Client";
 
 	/**
 	 * @param args
@@ -52,6 +54,10 @@ public class StartConnection {
 					password = new String(opt.getOptarg());
 				}
 			}while ((c = opt.getopt()) != -1); 
+			
+			if (profile == null || password == null)
+				usage();
+			
 			InputStreamReader reader = null;
 			LineNumberReader lineReader = null;
 			File profileInfo = new File("./"+profile);
@@ -85,6 +91,7 @@ public class StartConnection {
 							mode=0;
 						else if (current.substring("mode=".length()).equals("portal"))
 							mode=1;
+						else mode=2;
 					} else if (current.startsWith("resolution=")) {
 						if(current.substring("resolution=".length()).equals("800x600"))
 							resolution=0;
@@ -107,5 +114,14 @@ public class StartConnection {
 		else
 			new AuthFrame();
 	}
+	
+	public static void usage() {
+		System.err.println(StartConnection.productName);
+		System.err.println("Usage: java -jar OVDIntegratedClient.jar [options]");
+		System.err.println("	-c CONFIGFILE");
+		System.err.println("	-p PASSWORD");
+		System.err.println("Example: java -jar OVDIntegratedClient.jar -c config.ovd -p password");
 
+		System.exit(0);
+	}
 }
