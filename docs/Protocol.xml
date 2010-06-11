@@ -1454,7 +1454,7 @@
             </listitem>
             <listitem>
               <para>session_mode:
-                desktop|portal Request for a desktop or a portal session</para>
+                desktop|portal|external Request for a desktop session, a portal session, or to launch an application from an external web site/web portal</para>
             </listitem>
             <listitem>
               <para>size:
@@ -1463,11 +1463,11 @@
             <listitem>
               <para>start_app:
                 1|2... An application id to launch at
-                session start</para>
+                session start (required for "external" mode)</para>
             </listitem>
             <listitem>
               <para>start_app_args:
-                /some/file/path... A document path to open inside the OVD</para>
+                /some/file/path... A document path to open inside the OVD (optional)</para>
             </listitem>
             <listitem>
               <para>timezone:
