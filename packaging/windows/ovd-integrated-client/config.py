@@ -31,4 +31,4 @@ def compile_commands():
 	return ["ant ovdClient.install"]
 
 def binary_files():
-	return [r"OvdClientlibs\*.jar"]
+	return [r"OvdClient\*.jar", r"required_libraries\*.dll"]
