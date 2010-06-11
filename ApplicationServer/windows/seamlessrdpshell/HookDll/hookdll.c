@@ -429,6 +429,9 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 					flags = 0;
 					if (style & DS_MODALFRAME)
 						flags |= SEAMLESS_CREATE_MODAL;
+					if (style & WS_POPUP)
+						flags |= SEAMLESS_CREATE_POPUP;
+
 					// handle always on top
 					if (exstyle & WS_EX_TOPMOST)
 						flags |= SEAMLESS_CREATE_TOPMOST;
