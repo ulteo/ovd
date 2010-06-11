@@ -1,4 +1,5 @@
 debian/tmp/usr/share/ulteo
+debian/tmp/usr/share/locale
 debian/tmp/etc/ulteo
 debian/tmp/var/spool
 debian/ulteo-ovd.conf etc/
