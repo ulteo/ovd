@@ -54,14 +54,14 @@ public class SaveAsListener implements ActionListener{
 
 	public void launchSave() {
 		JFileChooser saveChooser = new JFileChooser();
-		FileFilter ovd = new SimpleFilter("Ovd config", ".ini");
+		FileFilter ovd = new SimpleFilter("Ovd config", ".ovd");
 		saveChooser.setAcceptAllFileFilterUsed(false);
 		saveChooser.addChoosableFileFilter(ovd);
 
 		switch(saveChooser.showSaveDialog(bp)) {
 		case JFileChooser.APPROVE_OPTION :
 			try {
-				writer = new PrintWriter(saveChooser.getSelectedFile()+".ini");
+				writer = new PrintWriter(saveChooser.getSelectedFile()+".ovd");
 			}catch (FileNotFoundException fe) {
 				fe.printStackTrace();
 			}
@@ -74,8 +74,6 @@ public class SaveAsListener implements ActionListener{
 	}
 
 	public void getProfile(PrintWriter writer, String username, String hostname, int mode, int resolution) {
-		writer.println(" === Configuration file ===");
-		writer.println();
 		writer.println("[user]");
 		writer.println("login="+username);
 		writer.println("");

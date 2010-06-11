@@ -39,7 +39,7 @@ public class SaveListener implements ActionListener{
 
 	public SaveListener(ButtonPanel bp, AuthFrame frame, MainPanel mp) {
 		this.bp = bp;
-		profileInfo = new File("./profileInfo.ini");
+		profileInfo = new File("./profileInfo.ovd");
 	}
 
 	@Override
@@ -58,8 +58,6 @@ public class SaveListener implements ActionListener{
 	}
 	
 	public void getProfile(PrintWriter writer, String username, String hostname, int mode, int resolution) {
-		writer.println(" === Configuration file ===");
-		writer.println();
 		writer.println("[user]");
 		writer.println("login="+username);
 		writer.println("");
