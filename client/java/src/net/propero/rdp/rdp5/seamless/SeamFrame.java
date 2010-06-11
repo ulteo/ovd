@@ -29,7 +29,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class SeamFrame extends Frame
-    implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+    implements SeamlessWindow, KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
 	protected static boolean capsLockOn = false;
 	protected static boolean numLockOn = false;
@@ -91,14 +91,12 @@ public class SeamFrame extends Frame
 		this.backstore = this.common.canvas.backstore;
 
 		addKeyListener(this);
-		addMouseListener(this);
-		addMouseMotionListener(this);
 		addMouseWheelListener(this);
 		
 		this.common.canvas.addComponentListener(this);
 
 		this.setUndecorated(true);
-		this.setMyPosition(-1, -1, 1, 1);
+		this.sw_setMyPosition(-1, -1, 1, 1);
 		this.setVisible(true);
 	}
 	
@@ -107,31 +105,31 @@ public class SeamFrame extends Frame
 		super.finalize();
 	}
 
-	public int getID() {
+	public int sw_getId() {
 		return this.id;
 	}
 	
-	public int getGroup() {
+	public int sw_getGroup() {
 		return this.group;
 	}
 	
-	public int getIconSize() {
+	public int sw_getIconSize() {
 		return this.icon_size;
 	}
 	
-	public int getIconOffset() {
+	public int sw_getIconOffset() {
 		return this.icon_offset;
 	}
 	
-	public byte[] getIconBuffer() {
+	public byte[] sw_getIconBuffer() {
 		return this.icon_buffer;
 	}
 	
-	public void setIconBuffer(byte[] icon_buffer_) {
+	public void sw_setIconBuffer(byte[] icon_buffer_) {
 		this.icon_buffer = icon_buffer_;
 	}
 	
-	public boolean setIconSize(int icon_size_) {
+	public boolean sw_setIconSize(int icon_size_) {
 		if(icon_size_ > 32 * 32 * 4) {
 			this.icon_size = 0;
 			return false;
@@ -141,12 +139,12 @@ public class SeamFrame extends Frame
 		return true;
 	}
 
-	public void setIconOffset(int icon_offset_) {
+	public void sw_setIconOffset(int icon_offset_) {
 		if(icon_offset_ >= 0)
 			this.icon_offset = icon_offset_;
 	}
 
-	public void setMyPosition(int x, int y, int width, int height) {
+	public void sw_setMyPosition(int x, int y, int width, int height) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -189,7 +187,7 @@ public class SeamFrame extends Frame
 	}
 
 
-	public void destroy() {
+	public void sw_destroy() {
 		this.setVisible(false);
 		this.dispose();
 	}
@@ -316,5 +314,27 @@ public class SeamFrame extends Frame
 
 	public void mouseClicked(MouseEvent evt) {}
 	public void mouseEntered(MouseEvent evt) {}
-	public void mouseExited(MouseEvent evt) {}	
+	public void mouseExited(MouseEvent evt) {}
+
+	public void sw_setCursor(Cursor cursor) {
+		this.setCursor(cursor);
+	}
+	public void sw_setTitle(String title) {
+		this.setTitle(title);
+	}
+	public int sw_getExtendedState() {
+		return this.getExtendedState();
+	}
+	public void sw_setExtendedState(int state) {
+		this.setExtendedState(state);
+	}
+	public void sw_setIconImage(Image image) {
+		this.setIconImage(image);
+	}
+	public void sw_addWindowStateListener(WindowStateListener l) {
+		this.addWindowStateListener(l);
+	}
+	public void sw_addFocusListener(FocusListener l) {
+		this.addFocusListener(l);
+	}
 }

@@ -26,15 +26,27 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.event.MouseEvent;
 
 public class RectWindow extends Component {
 	private static final int BORDER_SIZE = 5;
 	
-	public static final int MODE_NONE=0;
-	public static final int MODE_MOVE=1;
-	public static final int MODE_RESIZE=2;
+	public static int SEAMLESS_BORDER_SIZE = 4;
+	public static int SEAMLESS_TOP_BORDER_SIZE = 20;
+	public static int SEAMLESS_CORNER_SIZE = 20;
+
+	public static final int NO_CORNER = -1;
+	public static final int CORNER_TOP_LEFT = 0;
+	public static final int CORNER_BOTTOM_LEFT = 1;
+	public static final int CORNER_TOP_RIGHT = 2;
+	public static final int CORNER_BOTTOM_RIGHT = 3;
+	public static final int CORNER_LEFT = 4;
+	public static final int CORNER_BOTTOM = 5;
+	public static final int CORNER_RIGHT = 6;
+	public static final int CORNER_TOP = 7;
 
 	private LineWindow left = null;
 	private LineWindow right = null;
@@ -47,10 +59,16 @@ public class RectWindow extends Component {
 	private int maxY = 0;
 	private int minWidth = 0;
 	private int minHeight = 0;
+
+	private int xOffset = 0;
+	private int yOffset = 0;
+
+	private int corner = RectWindow.NO_CORNER;
+
+	private MouseEvent moveClick = null;
+	private MouseEvent resizeClick = null;
 	
 	private Frame refFrame = null;
-	
-	private int mode = 0;
 
 	public RectWindow(Frame f, Dimension dim) {
 		this.left = new LineWindow(f);
@@ -66,8 +84,141 @@ public class RectWindow extends Component {
 		this.minHeight = 2*RectWindow.BORDER_SIZE;
 	}
 
-	protected Rectangle fixBounds(Rectangle r) {
-		if (this.mode == MODE_MOVE) {
+	public void setCorner(int corner_) {
+		this.corner = corner_;
+	}
+
+	public void resetClicks() {
+		if (this.resizeClick != null)
+			this.resizeClick = null;
+		if(this.moveClick != null)
+			this.moveClick = null;
+	}
+
+	public void setResizeClick(MouseEvent me) {
+		this.resizeClick = me;
+	}
+
+	public void setMoveClick(MouseEvent me) {
+		this.moveClick = me;
+	}
+
+	public boolean isResizing() {
+		return (this.resizeClick != null);
+	}
+
+	public boolean isMoving() {
+		return (this.moveClick != null);
+	}
+
+	public Point getOffsets() {
+		return new Point(this.xOffset, this.yOffset);
+	}
+
+	public void setOffsets(Point offsets) {
+		this.xOffset = offsets.x;
+		this.yOffset = offsets.y;
+	}
+
+	public void setOffsets(int x, int y) {
+		this.xOffset = x;
+		this.yOffset = y;
+	}
+
+	public void offsetsResize(MouseEvent me, Rectangle bounds) {
+		if (me == null || bounds == null)
+			return;
+
+		int x, y;
+
+		switch (this.corner) {
+			case RectWindow.CORNER_TOP_LEFT:
+				x = bounds.x - me.getXOnScreen();
+				y = bounds.y - me.getYOnScreen();
+				break;
+			case RectWindow.CORNER_BOTTOM_LEFT:
+				x = bounds.x - me.getXOnScreen();
+				y = bounds.height - me.getY();
+				break;
+			case RectWindow.CORNER_BOTTOM_RIGHT:
+				x = bounds.width - me.getX();
+				y = bounds.height - me.getY();
+				break;
+			case RectWindow.CORNER_TOP_RIGHT:
+				x = bounds.width - me.getX();
+				y = bounds.y - me.getYOnScreen();
+				break;
+			default:
+				x = 0;
+				y = 0;
+				break;
+		}
+		this.setOffsets(x, y);
+	}
+
+	public void resize() {
+		if (this.resizeClick == null)
+			return;
+
+		Rectangle r = new Rectangle();
+		Rectangle bounds = this.refFrame.getBounds();
+		switch (this.corner) {
+			case RectWindow.CORNER_TOP_LEFT:
+				r.x = this.resizeClick.getXOnScreen() + this.xOffset;
+				r.y = this.resizeClick.getYOnScreen() + this.yOffset;
+				r.width = bounds.x + bounds.width - r.x;
+				r.height = bounds.y + bounds.height - r.y;
+				break;
+			case RectWindow.CORNER_BOTTOM_LEFT:
+				r.x = this.resizeClick.getXOnScreen() + this.xOffset;
+				r.y = bounds.y;
+				r.width = bounds.x + bounds.width - r.x;
+				r.height = this.resizeClick.getYOnScreen() - bounds.y + this.yOffset;
+				break;
+			case RectWindow.CORNER_BOTTOM_RIGHT:
+				r.x = bounds.x;
+				r.y = bounds.y;
+				r.width = this.resizeClick.getXOnScreen() - r.x + this.xOffset;
+				r.height = this.resizeClick.getYOnScreen() - r.y + this.yOffset;
+				break;
+			case RectWindow.CORNER_TOP_RIGHT:
+				r.x = bounds.x;
+				r.y = this.resizeClick.getYOnScreen() + this.yOffset;
+				r.width = this.resizeClick.getXOnScreen() - bounds.x + this.xOffset;
+				r.height = bounds.y + bounds.height - r.y;
+				break;
+			case RectWindow.CORNER_LEFT:
+				r.x = this.resizeClick.getXOnScreen();
+				r.y = bounds.y;
+				r.width = bounds.x + bounds.width - r.x;
+				r.height = bounds.height;
+				break;
+			case RectWindow.CORNER_BOTTOM:
+				r.x = bounds.x;
+				r.y = bounds.y;
+				r.width = bounds.width;
+				r.height = this.resizeClick.getYOnScreen() - r.y;
+				break;
+			case RectWindow.CORNER_RIGHT:
+				r.x = bounds.x;
+				r.y = bounds.y;
+				r.width = this.resizeClick.getXOnScreen() - r.x;
+				r.height = bounds.height;
+				break;
+			case RectWindow.CORNER_TOP:
+				r.x = bounds.x;
+				r.y = this.resizeClick.getYOnScreen();
+				r.width = bounds.width;
+				r.height = bounds.y + bounds.height - r.y;
+				break;
+			default:
+				return;
+		}
+		this.setBounds(r);
+	}
+
+	private Rectangle fixBounds(Rectangle r) {
+		if (this.isMoving()) {
 			if (r.x < this.minX)
 				r.x = this.minX;
 
@@ -80,7 +231,7 @@ public class RectWindow extends Component {
 			if (r.y+r.height > this.maxY)
 				r.y = this.maxY - r.height;
 		}
-		else if (this.mode == MODE_RESIZE) {
+		else if (this.isResizing()) {
 			if (r.width < this.minWidth) {
 				Rectangle ref = this.refFrame.getBounds();
 				
@@ -128,15 +279,6 @@ public class RectWindow extends Component {
 		r.height = this.bottom.getY() + this.bottom.getHeight() - r.y;
 		return r;
 	}
-	
-	public int getMode() {
-		return this.mode;
-	}
-	
-	public void setMode(int mode) {
-		this.mode = mode;
-	}
-	
 	
 	@Override
 	public void setVisible(boolean b) {

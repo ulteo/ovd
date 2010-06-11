@@ -73,7 +73,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	
 	protected int seamlessSerial = 0;
 	
-    protected Hashtable<String, SeamFrame> windows;
+    protected Hashtable<String, SeamlessWindow> windows;
 
 	protected static Logger logger = Logger.getLogger("net.propero.rdp");
 
@@ -83,19 +83,19 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
 		logger.debug("Seamless Channel created");		
-		this.windows = new Hashtable<String, SeamFrame>();
+		this.windows = new Hashtable<String, SeamlessWindow>();
 	}
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
 	}
-	
+
 	public void setClip(ClipChannel c_) {
 		this.clipChannel = c_;
 	}
 	
 	public void setCursor(Cursor cursor) {
-		for(SeamFrame sf : this.windows.values()) {
-			sf.setCursor(cursor);
+		for(SeamlessWindow sf : this.windows.values()) {
+			sf.sw_setCursor(cursor);
 		}
 	}
 
@@ -360,10 +360,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		return true;
 	}
 
-	protected void addFrame(SeamFrame f, String name) {
-		f.addWindowStateListener(this);
+	protected void addFrame(SeamlessWindow f, String name) {
+		f.sw_addWindowStateListener(this);
 		if (this.clipChannel != null)
-			f.addFocusListener(this.clipChannel);
+			f.sw_addFocusListener(this.clipChannel);
 		else
 			logger.debug("Unable to add a focus listener to the window "+name);
 		this.windows.put(name, f);
@@ -383,8 +383,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		    return false;
 		}
 
-		SeamFrame f = this.windows.remove(name);
-		f.destroy();
+		SeamlessWindow f = this.windows.remove(name);
+		f.sw_destroy();
 
 		return true;
 	}
@@ -397,10 +397,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		{
 			try
 			{
-				SeamFrame sf = this.windows.get(key);
-				if(sf.getGroup() == id)
+				SeamlessWindow sf = this.windows.get(key);
+				if(sf.sw_getGroup() == id)
 				{
-					sf.destroy();
+					sf.sw_destroy();
 					keys.remove(key);
 				}
 			} catch (Exception e) {
@@ -425,8 +425,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		    return false;
 		}
 
-		SeamFrame f = this.windows.get(name);
-		f.setMyPosition((int)x, (int)y, (int)width, (int)height);
+		SeamlessWindow f = this.windows.get(name);
+		f.sw_setMyPosition((int)x, (int)y, (int)width, (int)height);
 
 		return true;
 	}
@@ -439,8 +439,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		    return false;
 		}
 
-		SeamFrame f = this.windows.get(name);
-		f.setTitle(title);
+		SeamlessWindow f = this.windows.get(name);
+		f.sw_setTitle(title);
 
 		return true;
 	}
@@ -459,7 +459,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		    return false;
 		}
 
-		SeamFrame f = this.windows.get(name);
+		SeamlessWindow f = this.windows.get(name);
 		int frame_state = Frame.NORMAL;
 		switch((int)state) {
 			case SeamlessChannel.WINDOW_MINIMIZED:
@@ -471,15 +471,15 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				frame_state = Frame.NORMAL;
 		}
 
-		f.setExtendedState(frame_state);
+		f.sw_setExtendedState(frame_state);
 
 		return true;
 	}
 
 	protected boolean processSyncBegin() {
 		//TODO: ui_seamless_syncbegin(flags);
-		for(SeamFrame sf : this.windows.values()) {
-			sf.destroy();
+		for(SeamlessWindow sf : this.windows.values()) {
+			sf.sw_destroy();
 		}
 		this.windows.clear();
 
@@ -512,11 +512,11 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		    return false;
 		}
 
-		SeamFrame f = this.windows.get(name);
+		SeamlessWindow f = this.windows.get(name);
 
 		if (chunk == 0)
 		{
-			if (f.getIconSize() > 0)
+			if (f.sw_getIconSize() > 0)
 				logger.debug("New icon started before previous completed");
 			
 			if (! format.equals("RGBA"))
@@ -526,37 +526,37 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 			}
 			
 			int icon_size = width * height * 4;
-			if(! f.setIconSize(icon_size))
+			if(! f.sw_setIconSize(icon_size))
 			{
 				logger.error("Icon too large (" + icon_size + " bytes)");
 				return false;
 			}
 			
-			f.setIconOffset(0);
+			f.sw_setIconOffset(0);
 		}
 		else
 		{
-			if (f.getIconSize() == 0)
+			if (f.sw_getIconSize() == 0)
 				return false;
 		}
 		
-		if (bitmap.length > (f.getIconSize() - f.getIconOffset()))
+		if (bitmap.length > (f.sw_getIconSize() - f.sw_getIconOffset()))
 		{
-			logger.error("Too large chunk received (" + bitmap.length + " bytes > " + (f.getIconSize() - f.getIconOffset()) + " bytes)\n");
-			f.setIconSize(0);
+			logger.error("Too large chunk received (" + bitmap.length + " bytes > " + (f.sw_getIconSize() - f.sw_getIconOffset()) + " bytes)\n");
+			f.sw_setIconSize(0);
 			return false;
 		}
 		
-		byte[] icon_buffer = f.getIconBuffer();
+		byte[] icon_buffer = f.sw_getIconBuffer();
 		for(int i = 0; i < bitmap.length; i++)
 		{
-			icon_buffer[f.getIconOffset() + i] = bitmap[i]; 
+			icon_buffer[f.sw_getIconOffset() + i] = bitmap[i];
 		}
-		f.setIconBuffer(icon_buffer);
-		f.setIconOffset(f.getIconOffset() + bitmap.length);
+		f.sw_setIconBuffer(icon_buffer);
+		f.sw_setIconOffset(f.sw_getIconOffset() + bitmap.length);
 		
-		logger.debug("icon_offset: "+f.getIconOffset()+" icon_size: "+f.getIconSize());
-		if (f.getIconOffset() == f.getIconSize())
+		logger.debug("icon_offset: "+f.sw_getIconOffset()+" icon_size: "+f.sw_getIconSize());
+		if (f.sw_getIconOffset() == f.sw_getIconSize())
 		{
 			BufferedImage icon = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			
@@ -576,9 +576,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 					icon.setRGB(x, y, argb);
 				}
 			}
-			f.setIconImage(icon);
+			f.sw_setIconImage(icon);
 			
-			f.setIconSize(0);
+			f.sw_setIconSize(0);
 		}
 
 		return true;
@@ -760,7 +760,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	}
 
 	public void windowStateChanged(WindowEvent ev) {
-		SeamFrame f = (SeamFrame)ev.getWindow();
+		SeamlessWindow f = (SeamlessWindow)ev.getWindow();
 
 		if (ev.getOldState() == Frame.ICONIFIED) {
 			int state = SeamlessChannel.WINDOW_NORMAL;
@@ -773,7 +773,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 			}
 
 			try {
-				this.send_state(f.getID(), state, 0);
+				this.send_state(f.sw_getId(), state, 0);
 			} catch(Exception e) {
 				System.out.println("send failed: "+e);
 			}
