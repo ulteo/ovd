@@ -61,7 +61,7 @@
   VIAddVersionKey ProductVersion "${PRODUCT_VERSION}"
   VIAddVersionKey FileVersion "${PRODUCT_VERSION}"
   VIAddVersionKey FileDescription "An agent to plug a Windows TS on an Ulteo OVD architecture"
-  VIAddVersionKey LegalCopyright "Copyright @ 2009 ${PRODUCT_PUBLISHER}"
+  VIAddVersionKey LegalCopyright "Copyright @ 2010 ${PRODUCT_PUBLISHER}"
   VIProductVersion "${PRODUCT_LONGVERSION}"
 
 ;--------------------------------
@@ -109,36 +109,27 @@
 
 ## First Dialog
 Function InputBoxPageShow
-  ReadRegStr $R0 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name"
-  ReadRegStr $R1 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_url"
+  ReadRegStr $R1 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address"
 
   ${IF} $R0 == ""
-    StrCpy $R0 "aps.ulteo.com"
-  ${ENDIF}
-  ${IF} $R1 == ""
-    StrCpy $R1 "http://sm.ulteo.com/sessionmanager"
+    StrCpy $R0 "sm.ulteo.com"
   ${ENDIF}
 
- !insertmacro MUI_HEADER_TEXT "Configuration" "Give your server name and the Session Manager url."
+ !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
 
  PassDialog::InitDialog /NOUNLOAD InputBox \
             /HEADINGTEXT "Caution: give full name or ip address" \
-            /BOX "Servername:" $R0 0 \
-            /BOX "Session Manager URL:" $R1 0
+            /BOX "Session Manager URL:" $R0 0
  PassDialog::Show
 FunctionEnd
 
 Function InputBoxPageLeave
-  Var /GLOBAL ovd_servname
-  Var /GLOBAL ovd_smurl
+  Var /GLOBAL sm_address
 
-  Pop $ovd_servname
-  Pop $ovd_smurl
+  Pop $sm_address
 
-  WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "server_name" $ovd_servname
-  WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_url" $ovd_smurl
+  WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address" $sm_address
 
-  Push $ovd_smurl
 FunctionEnd
 
 !include WindowsVersion.nsh
@@ -158,7 +149,7 @@ Section "Main Section" SecMain
 
   ;Store installation folder
   WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}" "${PRODUCT_NAME}" $INSTDIR
-  
+
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
@@ -188,26 +179,24 @@ Section "un.pre" UnPostCmd
   ${un.EnvVarUpdate} $0 "PATH" "D" "HKLM" "$INSTDIR\plus"
 
   Detailprint "Removing Configuration file"
-  Delete "$INSTDIR\ulteo-ovd.conf"
-  ;RMDir  "$APPDATA\${PRODUCT_PUBLISHER}\ovd\log"
-  RMDir  "$APPDATA\${PRODUCT_PUBLISHER}\ovd"
-  RMDir  "$APPDATA\${PRODUCT_PUBLISHER}"
+  Delete "$APPDATA\ovd\ovd-slaveserver.conf"
+  RMDir  "$APPDATA\ovd\log"
+  RMDir  "$APPDATA\ovd"
 SectionEnd
 
   !include dist.nsh
 
 Section "post" PostCmd
-  SetOutPath "$APPDATA\${PRODUCT_PUBLISHER}\ovd"
+  SetOutPath "$APPDATA\ovd"
 
   DetailPrint "Generating Config file"
-  FileOpen $4 "$INSTDIR\ulteo-ovd.conf" w
-  FileWrite $4 "SERVERNAME=$ovd_servname"
+  FileOpen $4 "$APPDATA\ovd\ovd-slaveserver.conf" w
+  FileWrite $4 "session_manager = $sm_address"
   FileWrite $4 "$\r$\n" 
-  FileWrite $4 "SESSION_MANAGER_URL=$ovd_smurl"
+  FileWrite $4 "ROLES = aps"
   FileWrite $4 "$\r$\n" 
-  FileWrite $4 'LOG_FLAGS="info warn error"'
-  FileWrite $4 "$\r$\n" 
-  FileWrite $4 "WEBPORT=8082"
+  FileWrite $4 'LOG_LEVEL = *'
+  FileWrite $4 "$\r$\n"
   FileClose $4
 
   DetailPrint "Change PATH Environment variable"
@@ -216,7 +205,7 @@ Section "post" PostCmd
   Call .WindowsInstall
 
   DetailPrint "Creating Service"
-  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVD.exe" DisplayName= "Ulteo Open Virtual Desktop agent" depend= EventLog/winmgmt start= auto'
+  nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVDWin32Service.exe" DisplayName= "Ulteo Open Virtual Desktop agent" depend= EventLog/winmgmt start= auto'
 
   DetailPrint "Launch service"
   nsExec::execToStack 'sc start OVD'
