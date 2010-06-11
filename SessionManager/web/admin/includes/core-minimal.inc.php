@@ -41,3 +41,4 @@ bindtextdomain($domain, LOCALE_DIR);
 textdomain($domain);
 
 require_once(dirname(__FILE__).'/functions.inc.php');
+require_once(dirname(__FILE__).'/template_server.inc.php');
