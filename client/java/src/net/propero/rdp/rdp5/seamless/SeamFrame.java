@@ -85,7 +85,7 @@ public class SeamFrame extends Frame
 
 		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
-		this.setVisible(true);
+		this.setVisible(false);
 	}
 	
 	protected void finalize() throws Throwable {
@@ -314,6 +314,9 @@ public class SeamFrame extends Frame
 		return this.getExtendedState();
 	}
 	public void sw_setExtendedState(int state) {
+		if (! this.isVisible()) {
+			this.setVisible(true);
+		}
 		this.setExtendedState(state);
 	}
 	public void sw_setIconImage(Image image) {

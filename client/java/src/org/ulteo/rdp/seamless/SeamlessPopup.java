@@ -83,7 +83,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 		this.setUndecorated(true);
 		this.sw_setMyPosition(-1, -1, 1, 1);
-		this.setVisible(true);
+		this.setVisible(false);
 	}
 
 	private void parseFlags(int flags) {
@@ -179,7 +179,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.setTitle(title);
 	}
 	public void sw_setExtendedState(int state) {
-		System.out.println("SeamlessPopup.sw_setExtendedState "+state);
+		if (! this.isVisible())
+			this.setVisible(true);
 	}
 	public void sw_setIconImage(Image image) {
 		this.setIconImage(image);

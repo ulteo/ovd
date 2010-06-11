@@ -36,7 +36,6 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 		
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim);
-		this.toFront();
 	}
 
 	public boolean isMouseEventsLocked() {
