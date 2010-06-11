@@ -50,6 +50,10 @@ import net.propero.rdp.rdp5.seamless.SeamlessWindow;
 
 
 public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChannel implements MouseListener, MouseMotionListener {
+	public static final int WINDOW_CREATE_MODAL	= 0x0001;
+	public static final int WINDOW_CREATE_TOPMOST	= 0x0002;
+	public static final int WINDOW_CREATE_POPUP	= 0x0004;
+
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
 	}
@@ -62,12 +66,26 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		    return false;
 		}
 
-		SeamlessFrame sf = new SeamlessFrame((int)id, (int)group, this.common);
+		Window sf;
+
+		if ((flags & WINDOW_CREATE_POPUP) != 0) {
+			String parentName = "w_"+parent;
+			if(! this.windows.containsKey(parentName)) {
+			    logger.error("Parent window ID '"+parent+"' does not exist");
+			    return false;
+			}
+			sf = new SeamlessPopup((int)id, (int)group, this.windows.get(parentName), (int)flags, this.common);
+		}
+		else
+			sf = new SeamlessFrame((int)id, (int)group, this.common);
+		
 		sf.setName(name);
 		sf.addMouseListener(this);
 		sf.addMouseMotionListener(this);
+		if ((flags & SeamlessChannel.WINDOW_CREATE_TOPMOST) != 0)
+			sf.setAlwaysOnTop(true);
 
-		this.addFrame(sf, name);
+		this.addFrame((SeamlessWindow)sf, name);
 
 		return true;
 	}

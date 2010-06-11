@@ -64,9 +64,6 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	public static final int WINDOW_MAXIMIZED = 2;
 	public static final int WINDOW_POSITION_TIMER = 200000;
 
-	public static final int WINDOW_CREATE_MODAL	= 0x0001;
-	public static final int WINDOW_CREATE_TOPMOST	= 0x0002;
-
 	public static final int WINDOW_HELLO_RECONNECT	= 0x0001;
 	public static final int WINDOW_HELLO_HIDDEN	= 0x0002;
 	

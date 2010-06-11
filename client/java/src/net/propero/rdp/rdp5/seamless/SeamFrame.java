@@ -54,23 +54,11 @@ public class SeamFrame extends Frame
 
 	protected static final int RDP_KEYPRESS = 0;
 	protected static final int RDP_KEYRELEASE = KBD_FLAG_DOWN | KBD_FLAG_UP;
-	protected static final int MOUSE_FLAG_MOVE = 0x0800;
-
-	protected static final int MOUSE_FLAG_BUTTON1 = 0x1000;
-	protected static final int MOUSE_FLAG_BUTTON2 = 0x2000;
-	protected static final int MOUSE_FLAG_BUTTON3 = 0x4000;
-
-	protected static final int MOUSE_FLAG_BUTTON4 = 0x0280; // wheel up -
-	                                                        // rdesktop 1.2.0
-	protected static final int MOUSE_FLAG_BUTTON5 = 0x0380; // wheel down -
-
-	protected static final int MOUSE_FLAG_DOWN = 0x8000;
 
     protected static final int RDP_INPUT_SYNCHRONIZE = 0;
 	protected static final int RDP_INPUT_CODEPOINT = 1;
 	protected static final int RDP_INPUT_VIRTKEY = 2;
 	protected static final int RDP_INPUT_SCANCODE = 4;
-	protected static final int RDP_INPUT_MOUSE = 0x8001;
 
 	protected int id,x,y,width,height;
 	protected int group;

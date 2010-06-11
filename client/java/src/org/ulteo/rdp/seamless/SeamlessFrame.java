@@ -51,8 +51,6 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 	public void unlockMouseEvents() {
 		this.lockMouseEvents = false;
 		this.rw.setVisible(false);
-		this.rw.setOffsets(0, 0);
-		this.rw.resetClicks();
 	}
 
 	public RectWindow getRectWindow() {

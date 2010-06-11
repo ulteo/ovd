@@ -24,7 +24,6 @@ package org.ulteo.rdp.seamless;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -68,9 +67,9 @@ public class RectWindow extends Component {
 	private MouseEvent moveClick = null;
 	private MouseEvent resizeClick = null;
 	
-	private Frame refFrame = null;
+	private Window refWindow = null;
 
-	public RectWindow(Frame f, Dimension dim) {
+	public RectWindow(Window f, Dimension dim) {
 		this.left = new LineWindow(f);
 		this.right = new LineWindow(f);
 		this.top = new LineWindow(f);
@@ -78,7 +77,7 @@ public class RectWindow extends Component {
 
 		this.maxX = dim.width;
 		this.maxY = dim.height;
-		this.refFrame = f;
+		this.refWindow = f;
 		
 		this.minWidth = 2*RectWindow.BORDER_SIZE;
 		this.minHeight = 2*RectWindow.BORDER_SIZE;
@@ -88,7 +87,7 @@ public class RectWindow extends Component {
 		this.corner = corner_;
 	}
 
-	public void resetClicks() {
+	private void resetClicks() {
 		if (this.resizeClick != null)
 			this.resizeClick = null;
 		if(this.moveClick != null)
@@ -161,7 +160,7 @@ public class RectWindow extends Component {
 			return;
 
 		Rectangle r = new Rectangle();
-		Rectangle bounds = this.refFrame.getBounds();
+		Rectangle bounds = this.refWindow.getBounds();
 		switch (this.corner) {
 			case RectWindow.CORNER_TOP_LEFT:
 				r.x = this.resizeClick.getXOnScreen() + this.xOffset;
@@ -233,7 +232,7 @@ public class RectWindow extends Component {
 		}
 		else if (this.isResizing()) {
 			if (r.width < this.minWidth) {
-				Rectangle ref = this.refFrame.getBounds();
+				Rectangle ref = this.refWindow.getBounds();
 				
 				if (r.x != ref.x)
 					r.x = ref.x+ref.width - this.minWidth;
@@ -242,7 +241,7 @@ public class RectWindow extends Component {
 			}
 			
 			if (r.height < this.minHeight) {
-				Rectangle ref = this.refFrame.getBounds();
+				Rectangle ref = this.refWindow.getBounds();
 				
 				if (r.y != ref.y)
 					r.y = ref.y+ref.height - this.minHeight;
@@ -286,11 +285,16 @@ public class RectWindow extends Component {
 		this.right.setVisible(b);
 		this.top.setVisible(b);
 		this.bottom.setVisible(b);
+
+		if (! b) {
+			this.setOffsets(0, 0);
+			this.resetClicks();
+		}
 	}
 
 	class LineWindow extends Window {
 
-		public LineWindow(Frame f) {
+		public LineWindow(Window f) {
 			super(f);
 
 			this.setAlwaysOnTop(true);

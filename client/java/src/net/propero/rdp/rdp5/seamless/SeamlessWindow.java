@@ -26,6 +26,17 @@ import java.awt.event.FocusListener;
 import java.awt.event.WindowStateListener;
 
 public interface SeamlessWindow {
+	public static final int RDP_INPUT_MOUSE = 0x8001;
+
+	public static final int MOUSE_FLAG_MOVE = 0x0800;
+	public static final int MOUSE_FLAG_DOWN = 0x8000;
+
+	public static final int MOUSE_FLAG_BUTTON1 = 0x1000;
+	public static final int MOUSE_FLAG_BUTTON2 = 0x2000;
+	public static final int MOUSE_FLAG_BUTTON3 = 0x4000;
+	public static final int MOUSE_FLAG_BUTTON4 = 0x0280;
+	public static final int MOUSE_FLAG_BUTTON5 = 0x0380;
+
 	void sw_destroy();
 	int sw_getId();
 	int sw_getGroup();
