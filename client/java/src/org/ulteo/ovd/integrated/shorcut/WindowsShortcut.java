@@ -26,10 +26,19 @@ import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
 
 public class WindowsShortcut extends Shortcut {
+	
+	private String appName = null;
+	private String[] forbiddenChars = {"/", "\\", ":", "*", "?", "\"", "<", ">", "|"};
 
 	@Override
 	public void create(Application app) {
-		JShellLink shortcut = new JShellLink(Constants.desktopPath, app.getName());
+		appName = app.getName();
+		for (int i=0; i<forbiddenChars.length; i++) {
+			if (appName.contains(forbiddenChars[i])) {
+				appName = appName.replaceAll(forbiddenChars[i], "_");				
+			}
+		}
+		JShellLink shortcut = new JShellLink(Constants.desktopPath, appName);
 		shortcut.setWorkingDirectory("");
 		shortcut.setPath(System.getProperty("user.dir")+Constants.separator+Constants.launcher);
 		shortcut.setArguments(""+app.getId());
