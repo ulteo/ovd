@@ -86,7 +86,8 @@ msgstr "8 bits"
 #, php-format
 msgid "<strong>%d</strong> result for \"%s\"."
 msgid_plural "<strong>%d</strong> results for \"%s\"."
-msgstr "<strong>%d</strong> resultado para \"%s\"."
+msgstr[0] "<strong>%d</strong> resultado para \"%s\"."
+msgstr[1] "<strong>%d</strong> resultados para \"%s\"."
 
 #: ../web/admin/classes/UsersGroupsList.class.php:87
 #: ../web/admin/classes/UsersList.class.php:89
@@ -782,7 +783,7 @@ msgstr "Modo de sesión predeterminado"
 
 #: ../web/classes/Preferences.class.php:173
 msgid "Default policy"
-msgstr "Pol;itica predeterminada"
+msgstr "Politica predeterminada"
 
 #: ../web/classes/Preferences.class.php:277
 msgid "Default quality for session"
@@ -1819,7 +1820,8 @@ msgstr "En línea"
 #, php-format
 msgid "Only <strong>%d result</strong> displayed but there are more."
 msgid_plural "Only <strong>%d results</strong> displayed but there are more."
-msgstr "Sólo se muestra <strong>%d resultado</strong>  pero hay más."
+msgstr[0] "Sólo se muestra <strong>%d resultado</strong>  pero hay más."
+msgstr[1] "Sólo se muestra <strong>%d resultados</strong>  pero hay más."
 
 #: ../web/admin/reporting.php:486
 #: ../web/admin/reporting.php:512
