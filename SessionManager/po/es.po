@@ -1,0 +1,3659 @@
+# Spanish translations for ovd-i package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Cooperativa de trabajo gcoop ltda <info@gcoop.coop>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ovd-i 18n\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-06-11 08:59+0200\n"
+"Last-Translator: Cooperativa de trabajo gcoop ltda <info@gcoop.coop>\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../web/admin/usersgroup.php:33
+#: ../web/classes/Preferences.class.php:281
+msgid "1 day"
+msgstr "1 día"
+
+#: ../web/admin/usersgroup.php:32
+#: ../web/classes/Preferences.class.php:281
+msgid "1 hour"
+msgstr "1 hora"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "1 minute"
+msgstr "1 minuto"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "1 month"
+msgstr "1 mes"
+
+#: ../web/admin/usersgroup.php:34
+#: ../web/classes/Preferences.class.php:281
+msgid "1 week"
+msgstr "1 semana"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "10 minutes"
+msgstr "10 minutos"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "12 hours"
+msgstr "12 horas"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "15 minutes"
+msgstr "15 minutos"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 days"
+msgstr "2 días"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 hours"
+msgstr "2 horas"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "2 minutes"
+msgstr "2 minutos"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "30 minutes"
+msgstr "30 minutos"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "5 hours"
+msgstr "5 horas"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "5 minutes"
+msgstr "5 minutos"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "8-bits"
+msgstr "8 bits"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:91
+#: ../web/admin/classes/UsersList.class.php:130
+#: ../web/admin/classes/UsersList.class.php:93
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr "<strong>%d</strong> resultado para \"%s\"."
+
+#: ../web/admin/classes/UsersGroupsList.class.php:87
+#: ../web/admin/classes/UsersList.class.php:89
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../web/admin/sharedfolders.php:43
+msgid "A shared folder with that name already exists!"
+msgstr "Ya existe una carpeta compartida con ese nombre!"
+
+#: ../web/admin/actions.php:393
+msgid "A shared folder with this name already exists"
+msgstr "Ya existe una carpeta compartida con ese nombre"
+
+#: ../web/admin/sharedfolders.php:184
+msgid "ACL"
+msgstr "ACL"
+
+#: ../web/admin/reporting.php:482
+#: ../web/admin/reporting.php:508
+#: ../web/admin/reporting.php:527
+#: ../web/admin/reporting.php:540
+msgid "Abscissa: day of the month"
+msgstr "Abscissa: día del mes"
+
+#: ../web/admin/reporting.php:484
+#: ../web/admin/reporting.php:510
+#: ../web/admin/reporting.php:529
+#: ../web/admin/reporting.php:542
+msgid "Abscissa: hour of the day"
+msgstr "Abscissa: hora del día"
+
+#: ../web/classes/Preferences.class.php:304
+msgid "Action to do when an user already have an active session"
+msgstr "Acción a realizar cuando un usuario ya tiene una sesión activa"
+
+#: ../web/classes/Preferences.class.php:243
+msgid "Action when an ApS status is not ready anymore"
+msgstr "Acción cuando un estado  ApS no está disponible más"
+
+#: ../web/classes/Preferences.class.php:491
+msgid "Activated callbacks"
+msgstr "Devoluciones de llamada actividas"
+
+#: ../web/classes/Session.class.php:126
+msgid "Active"
+msgstr "Activo"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:26
+#: ../web/modules/UserDB/activedirectory.php:151
+#: ../web/modules/UserGroupDB/activedirectory.php:113
+msgid "Active Directory"
+msgstr "Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:363
+msgid "Active Directory User Groups"
+msgstr "Grupo de Usuarios de Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:236
+msgid "Active Directory integration"
+msgstr "Integración con Active Directory"
+
+#: ../web/admin/servers.php:979
+#: ../web/admin/users.php:420
+msgid "Active sessions"
+msgstr "Sesiones Activas"
+
+#: ../web/admin/applications.php:401
+msgid "Active tasks on this application"
+msgstr "Tareas activas en esta aplicación"
+
+#: ../web/admin/servers.php:947
+msgid "Active tasks on this server"
+msgstr "Tareas activas en este servidor"
+
+#: ../web/admin/applications_static.php:244
+#: ../web/admin/appsgroup.php:224
+#: ../web/admin/publications.php:132
+#: ../web/admin/users.php:215
+#: ../web/admin/users.php:234
+#: ../web/admin/usersgroup.php:524
+msgid "Add"
+msgstr "Agregar"
+
+#: ../web/admin/applications_static.php:180
+msgid "Add a static application"
+msgstr "Agregar una aplicación estática"
+
+#: ../web/admin/sharedfolders.php:212
+#: ../web/admin/usersgroup.php:985
+msgid "Add access to this shared folder"
+msgstr "Agregar acceso a este directorio compartido"
+
+#: ../web/admin/news.php:90
+msgid "Add news"
+msgstr "Agregar Noticias"
+
+#: ../web/admin/news.php:101
+msgid "Add this news"
+msgstr "Agregar esta noticia"
+
+#: ../web/admin/appsgroup.php:465
+#: ../web/admin/usersgroup.php:887
+msgid "Add this publication"
+msgstr "Agregar esta publicación"
+
+#: ../web/admin/usersgroup.php:936
+msgid "Add this rule"
+msgstr "Agregar esta regla"
+
+#: ../web/admin/applications.php:461
+#: ../web/admin/applications_static.php:577
+#: ../web/admin/appsgroup.php:378
+#: ../web/admin/users.php:410
+#: ../web/admin/usersgroup.php:843
+msgid "Add to this group"
+msgstr "Agregar a este grupo"
+
+#: ../web/admin/includes/page_template.php:242
+#: ../web/admin/login.php:99
+#: ../web/includes/functions.inc.d/template.inc.php:124
+#: ../web/includes/functions.inc.d/template.inc.php:79
+msgid "Administration"
+msgstr "Administración"
+
+#: ../web/classes/Preferences.class.php:153
+msgid "Administration console language"
+msgstr "Administrar consola de lenguaje"
+
+#: ../web/modules/UserDB/activedirectory.php:85
+msgid "Administrator DN"
+msgstr "Administrador DN"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:261
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:255
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:361
+msgid "Administrator account"
+msgstr "Cuenta del Administrador"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:359
+msgid "Administrator account:"
+msgstr "Cuenta del Administrador"
+
+#: ../web/modules/UserDB/activedirectory.php:87
+msgid "Administrator password"
+msgstr "Contraseña del Administrador"
+
+#: ../web/index.php:312
+msgid "Advanced settings"
+msgstr "Configuración avanzada"
+
+#: ../web/admin/usersgroup.php:489
+#: ../web/admin/usersgroup.php:734
+msgid "All"
+msgstr "Todo"
+
+#: ../web/classes/Preferences.class.php:326
+msgid "Allow connections through proxy (SSH/ping applet test required)"
+msgstr "Permitir todas las conexiones a través del proxy (requiere SSH/ping applet test)"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:261
+msgid "Anonymous bind"
+msgstr "Unir Usuarios Anónimos"
+
+#: ../web/admin/servers.php:834
+msgid "Application"
+msgstr "Aplicación"
+
+#: ../web/admin/actions.php:294
+#, php-format
+msgid "Application '%s' successfully deleted"
+msgstr "Aplicación '%s' borrada correctamente"
+
+#: ../web/admin/configuration-sumup.php:95
+msgid "Application Server"
+msgstr "Servidor de aplicación"
+
+#: ../web/classes/Preferences.class.php:234
+msgid "Application Server settings"
+msgstr "Configuración del Application Server"
+
+#: ../web/admin/logs.php:149
+msgid "Application Servers"
+msgstr "Servidores de Aplicación"
+
+#: ../web/startsession.php:237
+msgid "Application does not exist"
+msgstr "La aplicación no existe"
+
+#: ../web/admin/publications.php:80
+msgid "Application group"
+msgstr "Grupo de Aplicación"
+
+#: ../web/admin/appsgroup.php:137
+msgid "Application groups"
+msgstr "Grupos de Aplicación"
+
+#: ../web/admin/index.php:112
+msgid "Application groups list"
+msgstr "Lista de grupos de la aplicación"
+
+#: ../web/admin/appsgroup.php:295
+msgid "Application groups management"
+msgstr "Administración de grupos de la aplicación"
+
+#: ../web/admin/index.php:110
+msgid "Application list"
+msgstr "Lista de la aplicación"
+
+#: ../web/startsession.php:252
+msgid "Application not available"
+msgstr "Aplicaci;on no disponible"
+
+#: ../web/admin/actions.php:115
+msgid "ApplicationDB is not writeable"
+msgstr "La base de datos de la aplicación no tiene permisos de escritura"
+
+#: ../web/admin/actions.php:129
+#: ../web/admin/actions.php:138
+#, php-format
+msgid "ApplicationGroup '%s' successfully modified"
+msgstr "Grupo'%s' de la aplicación modificado satisfactoriamente"
+
+#. general div
+#: ../web/admin/applications.php:112
+#: ../web/admin/includes/page_template.php:114
+#: ../web/admin/includes/page_template.php:47
+#: ../web/admin/sumup.php:193
+msgid "Applications"
+msgstr "Aplicaciones"
+
+#: ../web/admin/includes/page_template.php:121
+msgid "Applications Groups"
+msgstr "Grupos de aplicaciones"
+
+#: ../web/admin/index.php:105
+msgid "Applications and Appgroups"
+msgstr "Aplicaciones y grupos App "
+
+#: ../web/admin/servers.php:857
+msgid "Applications available on this server"
+msgstr "Aplicaciones disponibles en este servidor"
+
+#: ../web/admin/wizard.php:312
+msgid "Applications/groups selection"
+msgstr "Selección de Aplicaciones/grupos"
+
+#: ../web/admin/wizard.php:530
+msgid "Applications:"
+msgstr "Aplicaciones:"
+
+#: ../web/admin/appsgroup.php:78
+msgid "AppsGroup successfully added"
+msgstr "Grupos Apps agregado satisfactoriamente"
+
+#: ../web/admin/appsgroup.php:91
+msgid "AppsGroup successfully deleted"
+msgstr "Grupo de Apps fue satisfactoriamente borrado"
+
+#: ../web/admin/appsgroup.php:124
+msgid "AppsGroup successfully modified"
+msgstr "Grupo de Apps modificado satisfactoriamente"
+
+#: ../web/admin/wizard.php:447
+msgid "Are you sure that you want to create this publication?"
+msgstr "¿Esta seguro que desea crear esta publicación?"
+
+#: ../web/admin/users.php:203
+msgid "Are you sure you want to delete selected users?"
+msgstr "¿Está seguro que desea borrar los usuarios seleccionados?"
+
+#: ../web/admin/appsgroup.php:187
+#: ../web/admin/usersgroup.php:410
+msgid "Are you sure you want to delete these groups?"
+msgstr "¿Está seguro que desea borrar estos grupos?"
+
+#: ../web/admin/applications_static.php:167
+msgid "Are you sure you want to delete these static applications?"
+msgstr "¿Está seguro que desea borrar esta aplicación estática?"
+
+#: ../web/admin/applications.php:440
+#: ../web/admin/applications_static.php:557
+msgid "Are you sure you want to delete this application from this group?"
+msgstr "¿Está seguro que desea borrar esta aplicación de este grupo?"
+
+#: ../web/admin/applications_static.php:148
+#: ../web/admin/applications_static.php:461
+#: ../web/admin/appsgroup.php:356
+msgid "Are you sure you want to delete this application?"
+msgstr "¿Está seguro que desea borrar esta aplicación?"
+
+#: ../web/admin/appsgroup.php:174
+#: ../web/admin/appsgroup.php:311
+#: ../web/admin/usersgroup.php:393
+#: ../web/admin/usersgroup.php:666
+msgid "Are you sure you want to delete this group?"
+msgstr "¿Está seguro que desea borrar este grupo?"
+
+#: ../web/admin/applications_static.php:524
+msgid "Are you sure you want to delete this icon?"
+msgstr "¿Está seguro que desea borrar este ícono?"
+
+#: ../web/admin/news.php:76
+msgid "Are you sure you want to delete this news?"
+msgstr "¿Está seguro que desea borrar esta noticia?"
+
+#: ../web/admin/appsgroup.php:443
+#: ../web/admin/publications.php:97
+#: ../web/admin/usersgroup.php:865
+msgid "Are you sure you want to delete this publication?"
+msgstr "¿Está seguro que desea borrar esta publicación?"
+
+#: ../web/admin/usersgroup.php:911
+msgid "Are you sure you want to delete this rule?"
+msgstr "¿Está seguro que desea borrar esta regla?"
+
+#: ../web/admin/servers.php:479
+#: ../web/admin/servers.php:797
+msgid "Are you sure you want to delete this server?"
+msgstr "¿Está seguro que desea borrar este servidor?"
+
+#: ../web/admin/sharedfolders.php:192
+#: ../web/admin/usersgroup.php:965
+msgid "Are you sure you want to delete this shared folder access?"
+msgstr "¿Está seguro que desea borrar este directorio de acceso compartido?"
+
+#: ../web/admin/sharedfolders.php:98
+msgid "Are you sure you want to delete this shared folder?"
+msgstr "¿Está seguro que desea borrar este directorio compartido?"
+
+#: ../web/admin/users.php:390
+msgid "Are you sure you want to delete this user from this group?"
+msgstr "¿Está seguro que desea borrar este usuario de este grupo?"
+
+#: ../web/admin/users.php:186
+#: ../web/admin/users.php:316
+#: ../web/admin/usersgroup.php:819
+msgid "Are you sure you want to delete this user?"
+msgstr "¿Está seguro que desea borrar este usuario?"
+
+#: ../web/admin/sessions.php:264
+msgid "Are you sure you want to kill selected sessions?"
+msgstr "¿Está seguro que desea matar la sesión seleccionada?"
+
+#: ../web/admin/sessions.php:189
+#: ../web/admin/sessions.php:250
+msgid "Are you sure you want to kill this session?"
+msgstr "¿Está seguro que desea matar esta sesión?"
+
+#: ../web/admin/applications.php:362
+#: ../web/admin/servers.php:876
+msgid "Are you sure you want to remove this application from this server?"
+msgstr "¿Está seguro que desea remover esta aplicación de este servidor?"
+
+#: ../web/admin/applications.php:314
+msgid "Are you sure you want to remove this application?"
+msgstr "¿Está seguro que desea remover esta aplicación?"
+
+#: ../web/admin/usersgroup.php:489
+#: ../web/admin/usersgroup.php:737
+msgid "At least one"
+msgstr "Al menos uno"
+
+#: ../web/classes/Preferences.class.php:226
+msgid "Authentication"
+msgstr "Autentificación"
+
+#: ../web/ajax/login.php:26
+#: ../web/startsession.php:70
+#: ../web/startsession.php:74
+msgid "Authentication failed"
+msgstr "Fallo de autentificación "
+
+#: ../web/admin/configuration-sumup.php:100
+msgid "Authorized FQDN"
+msgstr "Autorizado FQDN"
+
+#: ../web/classes/Preferences.class.php:235
+msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
+msgstr "Maquinas autorizadas (FQDN o IP - el uso the comodines (*.) está autorizado)"
+
+#: ../web/classes/Preferences.class.php:249
+msgid "Auto register new servers"
+msgstr "Registrar automáticamente nuevos servidores"
+
+#: ../web/classes/Preferences.class.php:252
+msgid "Auto switch new servers to production mode"
+msgstr "Cambiar automáticamente los nuevos servidores a modo productivo"
+
+#: ../web/classes/Preferences.class.php:154
+msgid "Autodetect"
+msgstr "Auto detectar"
+
+#: ../web/admin/applications.php:212
+msgid "Available"
+msgstr "Disponible"
+
+#. <th>'._('Desktop File').'</th>
+#: ../web/admin/sumup.php:65
+msgid "Available servers"
+msgstr "Servidores disponibles"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:107
+msgid "Back to default"
+msgstr "Volver a los valores predeterminados"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:230
+msgid "Base DN:"
+msgstr "Base DN"
+
+#: ../web/admin/wizard.php:460
+msgid "Between these usergroups"
+msgstr "Entre los usuarios de este grupo"
+
+#: ../web/admin/wizard.php:478
+msgid "Between this newly created usergroup"
+msgstr "Entre este grupo de usuarios recien creado"
+
+#: ../web/admin/wizard.php:458
+msgid "Between this usergroup"
+msgstr "Entre este grupo de usuarios"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:263
+msgid "Bind DN (without suffix):"
+msgstr "Enlazar DN (sin sufijo):"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:264
+msgid "Bind password:"
+msgstr "Enlazar contraseña"
+
+#: ../web/admin/applications.php:213
+#: ../web/admin/appsgroup.php:244
+#: ../web/admin/usersgroup.php:571
+msgid "Block"
+msgstr "Bloquear"
+
+#: ../web/admin/applications.php:216
+#: ../web/admin/appsgroup.php:158
+#: ../web/admin/appsgroup.php:248
+#: ../web/admin/usersgroup.php:370
+#: ../web/admin/usersgroup.php:575
+msgid "Blocked"
+msgstr "Bloqueado"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:137
+msgid "Both CPU and RAM are used as criterias, with a little randomization..."
+msgstr "El CPU y la RAM son usados como criterios, con una pequeña aleatoreidad"
+
+#: ../web/classes/Server.class.php:348
+msgid "Broken"
+msgstr "Roto"
+
+#: ../web/modules/AuthMethod/CAS.php:71
+msgid "CAS authentication"
+msgstr "Autentificación CAS "
+
+#: ../web/modules/AuthMethod/CAS.php:85
+msgid "CAS server URL"
+msgstr "URL del servidor CAS "
+
+#: ../web/admin/servers.php:342
+#: ../web/admin/servers.php:461
+#: ../web/admin/servers.php:709
+msgid "CPU"
+msgstr "CPU"
+
+#: ../web/admin/reporting.php:367
+#: ../web/admin/servers.php:351
+#: ../web/admin/servers.php:715
+msgid "CPU usage"
+msgstr "Uso del CPU"
+
+#: ../web/admin/usersgroup.php:477
+msgid "Cached"
+msgstr "En caché"
+
+#: ../web/admin/wizard.php:607
+msgid "Cannot create application group"
+msgstr "No se puede crear un grupo de aplicación"
+
+#: ../web/admin/wizard.php:587
+msgid "Cannot create usergroup"
+msgstr "No se puede crear el grupo de usuarios"
+
+#: ../web/admin/servers.php:548
+msgid "Cannot get server monitoring"
+msgstr "No se puede obtener la monitorización del servidor"
+
+#: ../web/admin/servers.php:563
+msgid "Cannot list available applications"
+msgstr "No se puede listar las aplicaciones disponibles"
+
+#: ../web/admin/servers.php:829
+msgid "Category"
+msgstr "Categoría"
+
+#: ../web/admin/password.php:53
+msgid "Change"
+msgstr "Modificar"
+
+#: ../web/admin/includes/page_template.php:197
+#: ../web/admin/password.php:36
+msgid "Change Administrator password"
+msgstr "Modificar la contraseña del administrador"
+
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
+msgid ""
+"Choose Advanced Settings options you want to make available to users before "
+"they launch a session."
+msgstr "Seleccione las \"Opciones avanzadas de configuración\" que desea poner a disposición de los usuarios antes de"
+"que inicien una sesión."
+
+#: ../web/classes/Preferences.class.php:416
+msgid "Choose the modules you want to enable."
+msgstr "Seleccione los módulos que desea habilitar"
+
+#: ../web/classes/Preferences.class.php:365
+msgid "Choose the plugins you want to enable."
+msgstr "Seleccione los complementos que desea habilitar"
+
+#: ../web/events/callbacks/ServerStatusChanged/Task.class.php:53
+msgid "Cleanup tasks"
+msgstr "Limpieza de tareas"
+
+#: ../web/admin/applications_static.php:220
+#: ../web/admin/applications_static.php:438
+#: ../web/admin/applications_static.php:502
+msgid "Command"
+msgstr "Comando"
+
+#: ../web/plugins/FS/cifs.php:94
+msgid "Common Internet File System (CIFS)"
+msgstr "Common Internet File System (CIFS)"
+
+#: ../web/plugins/FS/cifs_no_sfu.php:35
+msgid "Common Internet File System (CIFS) without services for unix"
+msgstr "Common Internet File System (CIFS) sin servicios para UNIX"
+
+#. conf not valid
+#: ../web/admin/configuration-partial.php:53
+#: ../web/admin/configuration-partial.php:60
+#: ../web/admin/configuration.php:69
+#: ../web/admin/configuration.php:81
+#: ../web/admin/includes/page_template.php:53
+#: ../web/admin/index.php:83
+#: ../web/admin/servers.php:729
+#: ../web/admin/sharedfolders.php:160
+msgid "Configuration"
+msgstr "Configuración"
+
+#: ../web/includes/core-minimal.inc.php:61
+msgid "Configuration file missing"
+msgstr "Archivo de configuración faltante"
+
+#: ../web/includes/core-minimal.inc.php:68
+msgid "Configuration not valid"
+msgstr "Configuración no válida"
+
+#. configuration saved
+#: ../web/admin/configuration-partial.php:49
+#: ../web/admin/configuration.php:65
+#: ../web/admin/sharedfolders.php:64
+msgid "Configuration successfully saved"
+msgstr "Configuración guardada satisfactoriamente"
+
+#: ../web/admin/wizard.php:559
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: ../web/admin/wizard.php:445
+msgid "Confirmation"
+msgstr "Confirmación"
+
+#: ../web/admin/sessions.php:177
+msgid "Connect to or observe this session"
+msgstr "Conectarse u observar esta sesión"
+
+#: ../web/admin/news.php:63
+msgid "Content"
+msgstr "Contenido"
+
+#: ../web/admin/wizard.php:324
+msgid "Create a group with applications"
+msgstr "Crear un grupo on aplicaciones"
+
+#: ../web/admin/wizard.php:179
+msgid "Create a group with users"
+msgstr "Crear un grupo con usuarios"
+
+#: ../web/admin/appsgroup.php:200
+#: ../web/admin/usersgroup.php:433
+msgid "Create a new group"
+msgstr "Crear un nuevo grupo"
+
+#: ../web/admin/wizard.php:402
+msgid "Create appgroup"
+msgstr "Crear un grupo de app"
+
+#: ../web/admin/sharedfolders.php:113
+msgid "Create this shared folder"
+msgstr "Crear este directorio compartido"
+
+#: ../web/admin/wizard.php:253
+msgid "Create usergroup"
+msgstr "Crear grupos de usuarios"
+
+#: ../web/classes/Session.class.php:123
+msgid "Created"
+msgstr "Creado"
+
+#: ../web/admin/tasks.php:117
+#: ../web/admin/tasks.php:185
+msgid "Creation time"
+msgstr "Hora de creación"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "Crypt"
+msgstr "Clave"
+
+#: ../web/admin/logs.php:166
+msgid "Daemon log"
+msgstr "Registro del demonio"
+
+#: ../web/admin/configuration-sumup.php:56
+msgid "Database"
+msgstr "Base de datos"
+
+#: ../web/classes/Preferences.class.php:202
+msgid "Database host address"
+msgstr "Dirección del host de la Base de Datos"
+
+#: ../web/classes/Preferences.class.php:208
+#: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+msgid "Database name"
+msgstr "Nombre de la Base de Datos"
+
+#: ../web/classes/Preferences.class.php:206
+msgid "Database password"
+msgstr "Contraseña de la Base de Datos"
+
+#: ../web/admin/includes/page_template.php:155
+msgid "Database settings"
+msgstr "Configuración de la Base de Datos"
+
+#: ../web/classes/Preferences.class.php:204
+msgid "Database username"
+msgstr "Usuario de la Base de Datos"
+
+#: ../web/admin/configuration-sumup.php:63
+msgid "Database: "
+msgstr "Base de Datos:"
+
+#: ../web/admin/news.php:63
+msgid "Date"
+msgstr "Fecha"
+
+#: ../web/admin/reporting.php:104
+msgid "Day"
+msgstr "Día"
+
+#: ../web/index.php:539
+msgid "Debug"
+msgstr "Depuración"
+
+#: ../web/classes/Preferences.class.php:157
+msgid "Debug options list"
+msgstr "Lista de opciones de depuración"
+
+#: ../web/classes/Preferences.class.php:170
+msgid "Default browser"
+msgstr "Navegador por defecto"
+
+#: ../web/admin/applications_static.php:259
+msgid "Default browser for :"
+msgstr "Navegador por defecto para:"
+
+#: ../web/classes/Preferences.class.php:271
+msgid "Default language for session"
+msgstr "Idioma de sesión predeterminado"
+
+#: ../web/classes/Preferences.class.php:267
+msgid "Default mode for session"
+msgstr "Modo de sesión predeterminado"
+
+#: ../web/classes/Preferences.class.php:173
+msgid "Default policy"
+msgstr "Pol;itica predeterminada"
+
+#: ../web/classes/Preferences.class.php:277
+msgid "Default quality for session"
+msgstr "Calidad predeterminada para la sesión"
+
+#: ../web/classes/Preferences.class.php:280
+msgid "Default timeout for session"
+msgstr "Tiempo de deslogueo predeterminado para la sesión"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:275
+msgid "Default user branch"
+msgstr "Rama de usuarios predeterminada"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:251
+#: ../web/admin/classes/Configuration_mode_ad.class.php:352
+msgid "Default user branch (Users)"
+msgstr "Rama predetermina de usuario (usuarios)"
+
+#. $c = new ConfigElement_input('start_app','start_app','start_app_des','');
+#. $this->add('general',$c);
+#: ../web/classes/Preferences.class.php:164
+msgid "Default user group"
+msgstr "Grupo de usuarios predeterminado"
+
+#: ../web/classes/Preferences.class.php:274
+msgid "Default windows keymap for session"
+msgstr "Mapa de teclado predeterminado de Windows para la sesión"
+
+#: ../web/admin/usersgroup.php:656
+msgid "Define as default"
+msgstr "Definir como predeterminado"
+
+#: ../web/admin/applications_static.php:151
+#: ../web/admin/applications_static.php:169
+#: ../web/admin/applications_static.php:464
+#: ../web/admin/appsgroup.php:175
+#: ../web/admin/appsgroup.php:189
+#: ../web/admin/publications.php:102
+#: ../web/admin/servers.php:482
+#: ../web/admin/servers.php:506
+#: ../web/admin/servers.php:800
+#: ../web/admin/tasks.php:146
+#: ../web/admin/tasks.php:215
+#: ../web/admin/users.php:187
+#: ../web/admin/users.php:205
+#: ../web/admin/usersgroup.php:394
+#: ../web/admin/usersgroup.php:412
+msgid "Delete"
+msgstr "Eliminar"
+
+#: ../web/admin/sharedfolders.php:197
+#: ../web/admin/usersgroup.php:970
+msgid "Delete access to this shared folder"
+msgstr "Eliminar acceso a este directorio compartido"
+
+#: ../web/admin/applications.php:445
+#: ../web/admin/applications_static.php:562
+#: ../web/admin/appsgroup.php:361
+#: ../web/admin/users.php:395
+#: ../web/admin/usersgroup.php:824
+msgid "Delete from this group"
+msgstr "Eliminar de este grupo"
+
+#: ../web/admin/appsgroup.php:312
+#: ../web/admin/usersgroup.php:667
+msgid "Delete this group"
+msgstr "Eliminar este grupo"
+
+#: ../web/admin/applications_static.php:524
+msgid "Delete this icon"
+msgstr "Eliminar este ícono"
+
+#: ../web/admin/news.php:80
+msgid "Delete this news"
+msgstr "Eliminar esta noticia"
+
+#: ../web/admin/appsgroup.php:448
+#: ../web/admin/usersgroup.php:870
+msgid "Delete this publication"
+msgstr "Eliminar esta publicación"
+
+#: ../web/admin/usersgroup.php:916
+msgid "Delete this rule"
+msgstr "Eliminar esta regla"
+
+#: ../web/admin/sharedfolders.php:102
+msgid "Delete this shared folder"
+msgstr "Eliminar este directorio compartido"
+
+#: ../web/admin/users.php:317
+msgid "Delete this user"
+msgstr "Eliminar este usuario"
+
+#. echo '<th>'._('Status').'</th>';
+#: ../web/admin/applications.php:125
+#: ../web/admin/applications.php:298
+#: ../web/admin/applications_static.php:112
+#: ../web/admin/applications_static.php:436
+#: ../web/admin/appsgroup.php:148
+#: ../web/admin/appsgroup.php:211
+#: ../web/admin/appsgroup.php:298
+#: ../web/admin/classes/UsersGroupsList.class.php:80
+#: ../web/admin/usersgroup.php:359
+#: ../web/admin/usersgroup.php:471
+#: ../web/admin/usersgroup.php:635
+#: ../web/admin/wizard.php:266
+#: ../web/admin/wizard.php:415
+msgid "Description"
+msgstr "Descripción"
+
+#: ../web/admin/wizard.php:483
+#: ../web/admin/wizard.php:529
+msgid "Description: "
+msgstr "Descripción: "
+
+#: ../web/classes/Preferences.class.php:268
+msgid "Desktop"
+msgstr "Escritorio"
+
+#: ../web/classes/Session.class.php:131
+msgid "Destroyed"
+msgstr "Destruído"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../web/admin/applications.php:407
+#: ../web/admin/servers.php:308
+#: ../web/admin/servers.php:437
+#: ../web/admin/servers.php:699
+#: ../web/admin/servers.php:953
+#: ../web/admin/tasks.php:121
+#: ../web/admin/tasks.php:189
+msgid "Details"
+msgstr "Detalles"
+
+#: ../web/classes/Preferences.class.php:240
+msgid "Disable reverse FQDN checking"
+msgstr "Deshabilitar el chequeo reverso de FQDN"
+
+#: ../web/admin/classes/UsersList.class.php:82
+#: ../web/admin/users.php:164
+#: ../web/admin/users.php:333
+msgid "Display name"
+msgstr "Mostrar nombre"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:248
+msgid "Display name field:"
+msgstr "Mostrar nombre del campo"
+
+#: ../web/classes/Preferences.class.php:320
+msgid ""
+"Display the list of users from the corporate directory in the login box. If "
+"the list is not displayed, the user must enter his login name."
+msgstr "Mostrar la lista de usuarios desde el directorio corporativo en la sección de registarción. Si la lista no se muestra el usuario debe ingresar su nombre de ingreso"
+
+#: ../web/classes/Preferences.class.php:320
+msgid "Display users list"
+msgstr "Mostrar la lista de usuarios"
+
+#. Not yet Implemented
+#. $str.= '<tr><td style="text-align: right;"><input class="input_checkbox" type="checkbox" name="user_branch_recursive"/></td>';
+#. $str.= '<td>'._('Recursive Mode').'</td></tr>';
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:247
+msgid "Distinguished name field:"
+msgstr "Nombre del campo completo:"
+
+#: ../web/classes/Preferences.class.php:244
+msgid "Do nothing"
+msgstr "No hacer nada"
+
+#: ../web/modules/UserDB/activedirectory.php:83
+msgid "Domain name"
+msgstr "Nombre del dominio"
+
+#: ../web/modules/UserDB/activedirectory.php:83
+msgid "Domain name used by Active Directory"
+msgstr "Nombre de dominio usado por Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:242
+#: ../web/admin/classes/Configuration_mode_ad.class.php:347
+msgid "Domain:"
+msgstr "Dominio:"
+
+#: ../web/admin/logs.php:140
+#: ../web/admin/logs.php:158
+#: ../web/admin/logs.php:168
+#: ../web/admin/logs.php:206
+#: ../web/admin/logs.php:210
+msgid "Download full log file"
+msgstr "Descargar el archivo de log completo"
+
+#: ../web/admin/usersgroup.php:424
+#: ../web/admin/usersgroup.php:427
+msgid "Dynamic"
+msgstr "Dinámico"
+
+#: ../web/index.php:134
+msgid "ERROR"
+msgstr "Error"
+
+#: ../web/classes/Preferences.class.php:213
+msgid "Email settings"
+msgstr "Configuración del correo electrónico"
+
+#: ../web/admin/appsgroup.php:249
+#: ../web/admin/usersgroup.php:576
+msgid "Enable"
+msgstr "Habilitar"
+
+#: ../web/admin/sharedfolders.php:120
+msgid "Enable Internal WebDAV filesystem"
+msgstr "Habilitar el sistema de archivos WebDAV"
+
+#: ../web/classes/Preferences.class.php:240
+msgid ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
+msgstr "Habilitar esta opción si usted no desea revisar si el resultado del reverso FQDN se ajusta a lo que está registrado"
+
+#: ../web/admin/appsgroup.php:156
+#: ../web/admin/appsgroup.php:243
+#: ../web/admin/usersgroup.php:368
+#: ../web/admin/usersgroup.php:570
+msgid "Enabled"
+msgstr "Habilitado"
+
+#: ../web/classes/Preferences.class.php:238
+msgid ""
+"Enter a private addresses you wish to associate to a specific IP in case of "
+"issue with the DNS configuration or to override a reverse address result. "
+"Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+msgstr "Ingresar una dirección privada que desea asociar a una IP específica en caso de problemas con la configuración del DNS o para anular un resultado de dirección inversa."
+"Ejemplo: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)"
+
+#: ../web/admin/applications.php:414
+#: ../web/admin/configuration-profile.php:235
+#: ../web/admin/servers.php:960
+#: ../web/admin/tasks.php:130
+#: ../web/admin/tasks.php:199
+#: ../web/includes/functions.inc.d/template.inc.php:44
+#: ../web/includes/functions.inc.d/template.inc.php:49
+msgid "Error"
+msgstr "Error"
+
+#: ../web/admin/users.php:266
+msgid "Error while requesting usergroups"
+msgstr "Error al solicitar los grupos de usuarios"
+
+#: ../web/admin/reporting.php:253
+msgid "Error: \"from\" date is after \"to\" date, switching"
+msgstr "Error: la fecha \"desde\" es posterior a la fecha \"hasta\", modificarla"
+
+#: ../web/admin/reporting.php:260
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "Error: el campo \"hasta\" está en el futuro, modifíquelo a la fecha actual"
+
+#. Events settings
+#: ../web/admin/includes/page_template.php:185
+#: ../web/classes/Preferences.class.php:464
+msgid "Events settings"
+msgstr "Configuración de eventos"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:113
+msgid "Examples"
+msgstr "Ejemplos"
+
+#: ../web/admin/applications.php:299
+msgid "Executable"
+msgstr "Ejecutables"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "External"
+msgstr "Externo"
+
+#: ../web/admin/servers.php:306
+#: ../web/admin/servers.php:435
+#: ../web/admin/sumup.php:191
+msgid "FQDN"
+msgstr "FQDN"
+
+#: ../web/admin/configuration-sumup.php:116
+msgid "FQDN check"
+msgstr "Chequeo de FQDN"
+
+#: ../web/admin/configuration-sumup.php:108
+msgid "FQDN private address"
+msgstr "Dirección privada de FQDN"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:31
+msgid "Factor impact"
+msgstr "Factor de Impacto"
+
+#: ../web/admin/usersgroup.php:548
+msgid "Failed to load usergroup"
+msgstr "Fallo al cargar el grupo de usuarios"
+
+#: ../web/modules/UserDB/ldap.php:272
+msgid "Filter (optional)"
+msgstr "Filtro (opcional)"
+
+#: ../web/admin/classes/UsersList.class.php:114
+msgid "Filter add list: "
+msgstr "Filtro para agregar lista"
+
+#: ../web/modules/UserDB/ldap.php:272
+msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
+msgstr "Filtro, ejemplo (&(distinguishedname=mike*)(uid=42*))"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:250
+msgid "Filter:"
+msgstr "Filtro:"
+
+#: ../web/admin/usersgroup.php:493
+#: ../web/admin/usersgroup.php:741
+msgid "Filters"
+msgstr "Filtros"
+
+#: ../web/admin/tasks.php:128
+#: ../web/admin/tasks.php:197
+msgid "Finished"
+msgstr "Terminado"
+
+#: ../web/classes/Preferences.class.php:305
+msgid "Forbid access"
+msgstr "Acceso prohibido"
+
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
+msgid "Forceable paramaters by users"
+msgstr "Parametros forzables por los usuarios"
+
+#: ../web/admin/reporting.php:438
+#: ../web/classes/Preferences.class.php:217
+msgid "From"
+msgstr "De"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:123
+msgid ""
+"Full CPU: only CPU usage is used as a criteria to choose the best\n"
+"server to use for an incoming user."
+msgstr "CPU completa: solo el uso de la CPU es utilizado como criterio para elegir el mejor servidor para usar para un usuario entrante"
+
+#: ../web/admin/index.php:88
+#: ../web/classes/Preferences.class.php:151
+msgid "General configuration"
+msgstr "Configuración general"
+
+#: ../web/index.php:75
+msgid "Getting userlist failed"
+msgstr "Falla al obtener la lista de usuarios"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Group Branch DN"
+msgstr "Rama de grupo DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:280
+msgid "Group Branch DN:"
+msgstr "Rama de grupo DN"
+
+#: ../web/admin/applications.php:432
+#: ../web/admin/applications_static.php:550
+msgid "Groups with this application"
+msgstr "Grupos con esta aplicación"
+
+#: ../web/modules/UserDB/sql_external.php:207
+msgid "Hash method"
+msgstr "Método hash"
+
+#: ../web/classes/Preferences.class.php:314
+msgid "Heading title"
+msgstr "Título de encabezado"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "High"
+msgstr "Alto"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "Highest"
+msgstr "Más alta"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:301
+#: ../web/admin/classes/Configuration_mode_internal.class.php:99
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:291
+msgid "Home Directory"
+msgstr "Directorio de inicio"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:368
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:373
+msgid "Home Directory:"
+msgstr "Directorio Local:"
+
+#: ../web/classes/Preferences.class.php:219
+msgid "Host"
+msgstr "Host"
+
+#: ../web/admin/configuration-sumup.php:61
+msgid "Host: "
+msgstr "Host: "
+
+#: ../web/admin/reporting.php:133
+msgid "Hour"
+msgstr "Hora"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:95
+msgid "I want to create my own users"
+msgstr "Quiero crear mis propios usuarios"
+
+#: ../web/admin/applications.php:404
+#: ../web/admin/servers.php:950
+#: ../web/admin/tasks.php:184
+msgid "ID"
+msgstr "ID"
+
+#: ../web/admin/applications_static.php:520
+msgid "Icon"
+msgstr "Ícono"
+
+#: ../web/modules/AuthMethod/Token.php:95
+msgid ""
+"If a token argument is sent to startsession, the system tries to get an user "
+"login by requesting the token validation url.<br /><br />Put here the url to "
+"request if a token argument is sent to <i>startsession</i> instead of login/"
+"password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
+"because it's replaced by the token argument when the URL is requested."
+msgstr "Si un argumento \"símbolo (token) se envía al inicio de sesión, el sistema trata de obtener un ingreso de usuario solicitando la url de validación de la ficha. <br /> Ponga aquí la ruta de solicitud si un argumento símbolo se envía a <i> startsession / i> en lugar de la contraseña de ingreso. <br /> La cadena% <b> TOKEN especiales <% / b> se tiene que establecer porque es sustituido por el argumento de marca cuando se solicita la dirección."
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:315
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:380
+msgid "In guest mode"
+msgstr "En Modo invitado"
+
+#: ../web/admin/includes/page_template.php:28
+msgid "Index"
+msgstr "Index"
+
+#: ../web/admin/sessions.php:118
+msgid "Information"
+msgstr "Información"
+
+#: ../web/admin/servers.php:996
+#: ../web/admin/users.php:434
+msgid "Informations about this session"
+msgstr "Informaciones acerca de esta sesión"
+
+#: ../web/admin/classes/Preferences_admin.class.php:105
+msgid "Initialization failed"
+msgstr "Fallo de inicialización"
+
+#: ../web/classes/Session.class.php:125
+msgid "Initializing"
+msgstr "Iniciando"
+
+#: ../web/admin/servers.php:836
+#: ../web/admin/tasks.php:236
+msgid "Install"
+msgstr "Instalar"
+
+#: ../web/admin/servers.php:808
+msgid "Install an application"
+msgstr "Instalar una aplicación"
+
+#: ../web/admin/tasks.php:226
+msgid "Install an application from a package name"
+msgstr "Instalar una aplicación desde el nombre de un paquete"
+
+#: ../web/admin/servers.php:813
+msgid "Install from a package name"
+msgstr "Instalar desde el nombre de un paquete"
+
+#: ../web/admin/applications.php:392
+#: ../web/admin/servers.php:915
+msgid "Install on this server"
+msgstr "Instalar en este servidor"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:26
+msgid "Internal"
+msgstr "Interno"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:79
+msgid "Internal Database Profiles"
+msgstr "Perfiles internos de la Base de datos"
+
+#: ../web/plugins/FS/dav.php:78
+msgid "Internal WebDAV"
+msgstr "WebDAV Interno"
+
+#: ../web/startsession.php:363
+#: ../web/startsession.php:373
+msgid "Internal error"
+msgstr "Error interno"
+
+#: ../web/classes/SessionReportItem.class.php:157
+msgid "Internal error: failed to initialize session"
+msgstr "Error interno: fallo al iniciar sesión"
+
+#: ../web/classes/SessionReportItem.class.php:158
+msgid "Internal error: failed to suspend session"
+msgstr "Error interno: fallo al suspender la sesión"
+
+#: ../web/classes/SessionReportItem.class.php:156
+msgid "Internal error: wrong session status"
+msgstr "Error interno: estatus de sesión incorrecto"
+
+#: ../web/webservices/session_invite.php:93
+msgid "Invitation"
+msgstr "Invitación"
+
+#: ../web/events/SessionAddInvite.class.php:26
+msgid "Invitation sent"
+msgstr "Invitación enviada"
+
+#: ../web/classes/Preferences.class.php:305
+msgid "Invite into the session"
+msgstr "Invitar a esta sesión"
+
+#: ../web/admin/tasks.php:122
+msgid "Job id"
+msgstr "Id de trabajo"
+
+#: ../web/admin/sessions.php:165
+msgid "Join this application"
+msgstr "Unirse a esta aplicación"
+
+#: ../web/admin/sessions.php:184
+msgid "Join this session"
+msgstr "Unirse a esta sesión"
+
+#: ../web/classes/SessionReportItem.class.php:161
+msgid "KMA expirated"
+msgstr "KMA expirado"
+
+#: ../web/admin/sessions.php:253
+#: ../web/admin/sessions.php:266
+msgid "Kill"
+msgstr "Matar"
+
+#: ../web/admin/sessions.php:188
+#: ../web/admin/sessions.php:192
+msgid "Kill this session"
+msgstr "Matar esta sesión"
+
+#: ../web/classes/SessionReportItem.class.php:155
+msgid "Killed by administrator"
+msgstr "Salida forzada por el administrado"
+
+#: ../web/modules/UserGroupDB/ldap_memberof.php:182
+msgid "LDAP using memberOf"
+msgstr "LDAP usando miembro de"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:139
+msgid "LDAP using posix group"
+msgstr "LDAP usando grupo posix"
+
+#: ../web/index.php:345
+msgid "Language"
+msgstr "Idioma"
+
+#: ../web/admin/configuration-sumup.php:45
+msgid "Last save"
+msgstr "Última versión guardada"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application when the desktop is starting"
+msgstr "Lanzar una aplicación cuando el escritorio está comenzando"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application with extra arguments"
+msgstr "Lanzar una aplicación con argumentos extras"
+
+#: ../web/classes/Preferences.class.php:300
+msgid "Launch forced application with a desktop"
+msgstr "Lanzar forzadamente una aplicación con el escritorio"
+
+#: ../web/classes/Preferences.class.php:329
+msgid "Launch session in a popup"
+msgstr "Lanzar la sesión en una ventana emergente"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:222
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:27
+#: ../web/modules/UserDB/ldap.php:309
+msgid "Lightweight Directory Access Protocol (LDAP)"
+msgstr "Lightweight Directory Access Protocol (LDAP)"
+
+#: ../web/admin/appsgroup.php:346
+msgid "List of applications in this group"
+msgstr "Lista de aplicaciones en este grupo"
+
+#: ../web/admin/appsgroup.php:433
+#: ../web/admin/usersgroup.php:856
+msgid "List of publications for this group"
+msgstr "Lista de publicaciones para este grupo"
+
+#: ../web/admin/sumup.php:177
+msgid "List of servers"
+msgstr "Lista de servidores"
+
+#: ../web/admin/tasks.php:180
+msgid "List of tasks"
+msgstr "Lista de tareas"
+
+#: ../web/admin/sumup.php:52
+msgid "List of users"
+msgstr "Lista de usuarios"
+
+#: ../web/admin/usersgroup.php:810
+msgid "List of users in this group"
+msgstr "Lista de usuarios en este grupo"
+
+#: ../web/classes/Preferences.class.php:262
+msgid "Load Balancing policy"
+msgstr "Política de balanceo"
+
+#: ../web/index.php:127
+msgid "Loading"
+msgstr "Cargando"
+
+#: ../web/classes/Preferences.class.php:215
+#: ../web/plugins/FS/local.php:35
+msgid "Local"
+msgstr "Local"
+
+#: ../web/admin/users.php:293
+msgid "Locale"
+msgstr "Lugar"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
+msgid "Locale field"
+msgstr "Archivo local"
+
+#: ../web/admin/login.php:107
+#: ../web/admin/login.php:147
+#: ../web/index.php:131
+msgid "Log in"
+msgstr "Acceder"
+
+#: ../web/admin/classes/UsersList.class.php:78
+#: ../web/admin/login.php:131
+#: ../web/admin/users.php:163
+#: ../web/admin/users.php:288
+#: ../web/index.php:244
+msgid "Login"
+msgstr "Acceso"
+
+#: ../web/modules/AuthMethod/Password.php:47
+msgid "Login/Password authentication"
+msgstr "Acceso/Contraseña de autentificación"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:328
+msgid "Login: "
+msgstr "Acceso:"
+
+#: ../web/classes/Preferences.class.php:317
+msgid "Logo URL"
+msgstr "Dirección URL del Logo"
+
+#: ../web/admin/includes/page_template.php:65
+msgid "Logout"
+msgstr "Salir"
+
+#: ../web/admin/configuration-sumup.php:73
+#: ../web/admin/includes/page_template.php:211
+#: ../web/admin/logs.php:131
+#: ../web/admin/logs.php:205
+#: ../web/admin/logs.php:209
+msgid "Logs"
+msgstr "Registros"
+
+#: ../web/admin/servers.php:345
+#: ../web/admin/servers.php:711
+msgid "MB"
+msgstr "MB"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "MD5"
+msgstr "MD5"
+
+#: ../web/classes/Preferences.class.php:466
+msgid "Mail addresses to send alerts to"
+msgstr "Dirección de correo electrónico para enviar alertas"
+
+#: ../web/classes/Preferences.class.php:214
+msgid "Mail server type"
+msgstr "Tipo de servidor de correo"
+
+#: ../web/admin/applications.php:155
+#: ../web/admin/applications_static.php:142
+#: ../web/admin/appsgroup.php:168
+#: ../web/admin/servers.php:362
+#: ../web/admin/users.php:180
+#: ../web/admin/usersgroup.php:387
+msgid "Manage"
+msgstr "Manejar"
+
+#: ../web/admin/applications_static.php:163
+#: ../web/admin/appsgroup.php:185
+#: ../web/admin/servers.php:391
+#: ../web/admin/servers.php:496
+#: ../web/admin/sessions.php:262
+#: ../web/admin/users.php:199
+#: ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211
+#: ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355
+#: ../web/admin/wizard.php:374
+msgid "Mark all"
+msgstr "Marcar todo"
+
+#: ../web/modules/UserDB/ldap.php:269
+#: ../web/modules/UserDB/sql_external.php:205
+#: ../web/modules/UserGroupDB/sql_external.php:115
+msgid "Matching"
+msgstr "Comparando"
+
+#: ../web/index.php:35
+msgid "Maximum"
+msgstr "Máximo"
+
+#: ../web/classes/Preferences.class.php:167
+msgid "Maximum items per page"
+msgstr "Cantidad máxima de items por página"
+
+#: ../web/classes/Preferences.class.php:278
+msgid "Medium"
+msgstr "Medio"
+
+#: ../web/admin/applications_static.php:236
+msgid "MimeTypes"
+msgstr "Tipos Mime"
+
+#: ../web/admin/applications_static.php:474
+#: ../web/admin/applications_static.php:538
+#: ../web/admin/news.php:126
+#: ../web/admin/news.php:135
+msgid "Modify"
+msgstr "Modificar"
+
+#: ../web/admin/actions.php:105
+#: ../web/admin/actions.php:260
+#: ../web/admin/actions.php:287
+#: ../web/admin/actions.php:55
+#: ../web/admin/applications.php:35
+#: ../web/admin/applications_static.php:36
+#: ../web/admin/servers.php:604
+#: ../web/classes/Application_weblink.class.php:38
+#: ../web/classes/Server.class.php:727
+#: ../web/classes/abstract/Abstract_Server.class.php:202
+#: ../web/modules/ApplicationDB.php:32
+msgid "Module ApplicationDB must be enabled"
+msgstr "El módulo Applcation DB debe estar habilitado"
+
+#: ../web/admin/sumup.php:39
+#: ../web/admin/users.php:35
+#: ../web/index.php:64
+#: ../web/modules/UserDB.php:32
+#: ../web/modules/UserGroupDB/ldap_memberof.php:99
+msgid "Module UserDB must be enabled"
+msgstr "El módulo UserDB debe estar habilitado"
+
+#: ../web/modules/UserGroupDB.php:144
+#: ../web/modules/UserGroupDB.php:32
+#: ../web/modules/UserGroupDB/ldap_posix.php:32
+#: ../web/modules/UserGroupDB/ldap_posix.php:69
+msgid "Module UserGroupDB must be enabled"
+msgstr "El módulo UserGroupDB debe estar habilitado"
+
+#: ../web/classes/Preferences.class.php:416
+msgid "Modules activation"
+msgstr "Módulos de activación"
+
+#: ../web/admin/classes/Preferences_admin.class.php:171
+#: ../web/admin/classes/Preferences_admin.class.php:177
+msgid "Modules configuration not valid"
+msgstr "Módulos de configuración no válidos"
+
+#: ../web/admin/servers.php:310
+#: ../web/admin/servers.php:694
+#: ../web/admin/servers.php:701
+msgid "Monitoring"
+msgstr "Monitoreo"
+
+#: ../web/modules/ApplicationDB/sql.php:175
+#: ../web/modules/UserDB/sql.php:219
+#: ../web/modules/UserGroupDB/sql.php:144
+msgid "MySQL"
+msgstr "MySQL"
+
+#: ../web/classes/Preferences.class.php:201
+msgid "MySQL configuration"
+msgstr "Configuración MySQL"
+
+#: ../web/modules/UserDB/sql_external.php:230
+#: ../web/modules/UserGroupDB/sql_external.php:137
+msgid "MySQL external"
+msgstr "MySQL esterno"
+
+#. if ($is_rw)
+#. echo '<th class="unsortable"></th>';
+#: ../web/admin/applications.php:124
+#: ../web/admin/applications_static.php:111
+#: ../web/admin/appsgroup.php:147
+#: ../web/admin/appsgroup.php:206
+#: ../web/admin/classes/UsersGroupsList.class.php:76
+#: ../web/admin/sharedfolders.php:165
+#: ../web/admin/usersgroup.php:358
+#: ../web/admin/usersgroup.php:466
+#: ../web/admin/wizard.php:261
+#: ../web/admin/wizard.php:410
+msgid "Name"
+msgstr "Nombre"
+
+#. fqdn_private_address : array('dns' => ip);
+#: ../web/classes/Preferences.class.php:238
+msgid "Name/IP Address association (name <-> ip)"
+msgstr "Nombre/Dirección de asociación IP (name <-> ip)"
+
+#: ../web/admin/wizard.php:482
+#: ../web/admin/wizard.php:528
+msgid "Name:"
+msgstr "Nombre:"
+
+#: ../web/plugins/FS/nfs.php:50
+msgid "Network File System (NFS)"
+msgstr "Network File System (NFS)"
+
+#: ../web/classes/Preferences.class.php:281
+msgid "Never"
+msgstr "Nunca"
+
+#: ../web/classes/SessionReportItem.class.php:162
+msgid "Never connected to SSH server"
+msgstr "Nunca conectar por ssh al servidor"
+
+#: ../web/admin/password.php:43
+#: ../web/admin/users.php:346
+msgid "New password"
+msgstr "Nueva Contraseña"
+
+#: ../web/admin/includes/page_template.php:225
+#: ../web/admin/news.php:59
+msgid "News"
+msgstr "Noticias"
+
+#: ../web/admin/actions.php:344
+msgid "News successfully added"
+msgstr "Noticia agregada satisfactoriamente"
+
+#: ../web/admin/actions.php:353
+msgid "News successfully deleted"
+msgstr "Noticia eliminada satisfactoriamente"
+
+#: ../web/admin/news.php:39
+msgid "News successfully modified"
+msgstr "Noticia modificada satisfactoriamente"
+
+#: ../web/admin/wizard.php:237
+#: ../web/admin/wizard.php:257
+#: ../web/admin/wizard.php:278
+#: ../web/admin/wizard.php:317
+#: ../web/admin/wizard.php:387
+#: ../web/admin/wizard.php:406
+#: ../web/admin/wizard.php:427
+msgid "Next"
+msgstr "Siguiente"
+
+#: ../web/admin/sumup.php:115
+#: ../web/admin/sumup.php:90
+#: ../web/admin/usersgroup.php:479
+#: ../web/index.php:482
+#: ../web/index.php:496
+#: ../web/index.php:510
+#: ../web/index.php:524
+#: ../web/index.php:543
+#: ../web/modules/UserDB/ldap.php:276
+msgid "No"
+msgstr "No"
+
+#: ../web/admin/password.php:30
+msgid "No action found"
+msgstr "Acción no encontrada"
+
+#: ../web/admin/sessions.php:276
+msgid "No active session"
+msgstr "Sesión no activa"
+
+#: ../web/admin/wizard.php:87
+msgid "No application group selected"
+msgstr "Grupo de aplicación no seleccionado"
+
+#: ../web/admin/appsgroup.php:141
+msgid "No application groups available"
+msgstr "Grupos de aplicación no disponible"
+
+#: ../web/admin/sessions.php:139
+msgid "No application running"
+msgstr "No hay aplicación corriendo"
+
+#: ../web/admin/wizard.php:95
+msgid "No application selected"
+msgstr "No hay aplicación seleccionada"
+
+#: ../web/admin/applications.php:116
+#: ../web/admin/applications_static.php:102
+#: ../web/admin/wizard.php:159
+#: ../web/admin/wizard.php:308
+msgid "No available application"
+msgstr "Aplicación no disponible"
+
+#: ../web/startsession.php:210
+msgid "No available filesystem"
+msgstr "Sistema de archivo no disponible"
+
+#: ../web/index.php:103
+#: ../web/index.php:98
+#: ../web/startsession.php:166
+msgid "No available server"
+msgstr "Servidor no disponible"
+
+#: ../web/startsession.php:204
+msgid "No available session"
+msgstr "Sesión no disponible"
+
+#: ../web/admin/users.php:157
+#: ../web/admin/wizard.php:157
+#: ../web/index.php:77
+msgid "No available user"
+msgstr "Usuario no disponible"
+
+#: ../web/admin/usersgroup.php:344
+msgid "No available user group"
+msgstr "Grupo de usuario no disponible"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:56
+msgid "No error given"
+msgstr "No da error"
+
+#: ../web/admin/wizard.php:109
+#: ../web/admin/wizard.php:63
+msgid "No group name"
+msgstr "No hay nombre de grupo"
+
+#: ../web/admin/publications.php:85
+msgid "No publication"
+msgstr "No publicado"
+
+#: ../web/admin/sumup.php:181
+#: ../web/admin/sumup.php:185
+msgid "No server available"
+msgstr "Servidor no disponible"
+
+#: ../web/admin/servers.php:517
+msgid "No unregistered server"
+msgstr "No existe \"Servidor no registrado\""
+
+#: ../web/admin/wizard.php:39
+msgid "No user group selected"
+msgstr "Grupo de usuario no seleccionado "
+
+#: ../web/admin/wizard.php:49
+msgid "No user selected"
+msgstr "No existe el usuario seleccionado"
+
+#: ../web/admin/applications_static.php:278
+msgid "None"
+msgstr "Ninguno"
+
+#: ../web/classes/SessionReportItem.class.php:154
+msgid "Normally ended"
+msgstr "Terminó normalmente"
+
+#: ../web/admin/servers.php:989
+#: ../web/admin/sessions.php:128
+#: ../web/admin/users.php:427
+msgid "Not started yet"
+msgstr "No se ha iniciado todavía"
+
+#: ../web/admin/servers.php:733
+msgid "Number of available sessions on this server"
+msgstr "Número de sesiones disponibles en este servidor"
+
+#: ../web/admin/reporting.php:279
+#: ../web/admin/reporting.php:334
+msgid "Number of sessions"
+msgstr "Número de sesiones"
+
+#: ../web/admin/configuration-profile.php:235
+msgid "OK"
+msgstr "Ok"
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: %s is offline"
+msgstr "Alerta OVD: %s está fuera de linea"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:46
+#, php-format
+msgid "OVD Alert: MySQL %s is offline"
+msgstr "Alerta OVD: MySQL está fuera de linea "
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:48
+#, php-format
+msgid "OVD End Alert: %s is up again"
+msgstr "OVD Alerta de Finalización: %s está nuevamente levantado"
+
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:49
+#, php-format
+msgid "OVD End Alert: MySQL %s is up again"
+msgstr "OVD Alerta de finalización: MySQL %s está nuevamente arriba"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:50
+#, php-format
+msgid "OVD Session alert: %s (uid %s) couldn't log in"
+msgstr "OVD Alerta de sesión: %s (uid %s) no puede ingresar"
+
+#: ../web/admin/sessions.php:164
+msgid "Observe this application"
+msgstr "Observe esta aplicación"
+
+#: ../web/admin/sessions.php:183
+msgid "Observe this session"
+msgstr "Observar esta sesión"
+
+#: ../web/classes/Server.class.php:346
+msgid "Offline"
+msgstr "Fuera de linea"
+
+#: ../web/classes/Preferences.class.php:466
+msgid "On system alerts, mails will be sent to these addresses"
+msgstr "En el sistema de alertas, los mensajes serán enviados a estas direcciones"
+
+#: ../web/classes/Server.class.php:344
+msgid "Online"
+msgstr "En línea"
+
+#: ../web/admin/classes/UsersList.class.php:124
+#, php-format
+msgid "Only <strong>%d result</strong> displayed but there are more."
+msgid_plural "Only <strong>%d results</strong> displayed but there are more."
+msgstr "Sólo se muestra <strong>%d resultado</strong>  pero hay más."
+
+#: ../web/admin/reporting.php:486
+#: ../web/admin/reporting.php:512
+msgid "Ordinate: number of sessions"
+msgstr "Ordinario: número de sesiones"
+
+#: ../web/admin/reporting.php:531
+msgid "Ordinate: usage of CPU in percent"
+msgstr "Ordenada: el uso del CPU está en procentaje"
+
+#: ../web/admin/reporting.php:544
+msgid "Ordinate: usage of RAM in percent"
+msgstr "Ordenada: el uso del RAM está en porcentaje"
+
+#: ../web/admin/applications.php:295
+msgid "Package"
+msgstr "Paquete"
+
+#: ../web/admin/classes/UsersList.class.php:122
+msgid "Partial content:"
+msgstr "Contenido parcial:"
+
+#: ../web/admin/login.php:139
+#: ../web/index.php:270
+msgid "Password"
+msgstr "Contraseña"
+
+#: ../web/admin/actions.php:363
+msgid "Password is empty"
+msgstr "La Contraseña está vacía"
+
+#: ../web/admin/actions.php:375
+msgid "Password not changed"
+msgstr "La Contraseña no ha cambiado"
+
+#: ../web/admin/actions.php:371
+msgid "Password successfully changed"
+msgstr "La Contraseña se modificó correctamente"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:330
+msgid "Password: "
+msgstr "Contraseña: "
+
+#: ../web/admin/actions.php:366
+msgid "Passwords are not identical"
+msgstr "Las Contraseñas no son idénticas"
+
+#: ../web/index.php:478
+msgid "Persistent session"
+msgstr "Sesión persistente"
+
+#: ../web/modules/UserDB/sql_external.php:208
+msgid "Plain"
+msgstr "Plano"
+
+#: ../web/admin/classes/Preferences_admin.class.php:88
+msgid "Please install CURL support for PHP"
+msgstr "Por favor instale soporte CURL para PHP"
+
+#: ../web/index.php:225
+msgid "Please login with your username"
+msgstr "Por favor ingrese con su nombre de usuario"
+
+#: ../web/index.php:223
+msgid "Please login with your username and password"
+msgstr "Por favor ingrese con su nombre de usuario y contraseña"
+
+#: ../web/admin/classes/UsersList.class.php:125
+msgid "Please restrict your search field."
+msgstr "Por favor restrinja los criterios de búsqueda"
+
+#: ../web/classes/Preferences.class.php:365
+msgid "Plugins activation"
+msgstr "Activación de complementos"
+
+#: ../web/classes/Preferences.class.php:367
+msgid "Plugins configuration"
+msgstr "Configuración de complementos"
+
+#: ../web/admin/classes/Preferences_admin.class.php:135
+msgid "Plugins configuration not valid"
+msgstr "Configuración de completos no válida"
+
+#: ../web/classes/Preferences.class.php:199
+msgid "Policy for administration delegation"
+msgstr "Política para la delegación de la administración"
+
+#: ../web/admin/usersgroup.php:897
+msgid "Policy of this group"
+msgstr "Política de este grupo"
+
+#: ../web/classes/Preferences.class.php:221
+msgid "Port"
+msgstr "Puerto"
+
+#: ../web/classes/Preferences.class.php:268
+msgid "Portal"
+msgstr "Portal"
+
+#: ../web/admin/configuration-partial.php:119
+#: ../web/admin/configuration.php:131
+msgid "Preferences not loaded"
+msgstr "Preferencias no cargadas"
+
+#: ../web/admin/configuration-sumup.php:64
+msgid "Prefix: "
+msgstr "Prefijo"
+
+#: ../web/admin/wizard.php:275
+#: ../web/admin/wizard.php:383
+#: ../web/admin/wizard.php:424
+#: ../web/admin/wizard.php:556
+msgid "Previous"
+msgstr "Anterior"
+
+#: ../web/admin/includes/page_template.php:173
+msgid "Profile settings"
+msgstr "Ajustes del perfil"
+
+#: ../web/modules/UserDB/ldap.php:267
+msgid "Protocol version"
+msgstr "Versión del protocolo"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:229
+msgid "Protocol version:"
+msgstr "Versión del protocolo:"
+
+#: ../web/index.php:578
+msgid "Proxy host"
+msgstr "Host del proxy"
+
+#: ../web/index.php:602
+msgid "Proxy password"
+msgstr "Contraseña del proxy"
+
+#: ../web/index.php:586
+msgid "Proxy port"
+msgstr "Puerto del proxy"
+
+#: ../web/index.php:567
+msgid "Proxy type"
+msgstr "Tipo de Proxy"
+
+#: ../web/index.php:594
+msgid "Proxy username"
+msgstr "Nombre de usuario del proxy"
+
+#: ../web/admin/wizard.php:167
+#: ../web/admin/wizard.php:253
+#: ../web/admin/wizard.php:312
+#: ../web/admin/wizard.php:402
+#: ../web/admin/wizard.php:445
+msgid "Publication Wizard"
+msgstr "Asistente de publicación"
+
+#: ../web/admin/index.php:114
+msgid "Publication list"
+msgstr "Lista de publicación"
+
+#: ../web/admin/actions.php:190
+msgid "Publication successfully added"
+msgstr "Publicación agregada satisfactoriamente"
+
+#: ../web/admin/actions.php:203
+msgid "Publication successfully deleted"
+msgstr "Publicación eliminada satisfactoriamente"
+
+#: ../web/admin/includes/page_template.php:142
+#: ../web/admin/index.php:115
+msgid "Publication wizard"
+msgstr "Asistente de publicación"
+
+#: ../web/admin/includes/page_template.php:135
+#: ../web/admin/publications.php:75
+msgid "Publications"
+msgstr "Publicaciones"
+
+#: ../web/index.php:434
+msgid "Quality"
+msgstr "Calidad"
+
+#: ../web/admin/servers.php:345
+#: ../web/admin/servers.php:464
+#: ../web/admin/servers.php:711
+msgid "RAM"
+msgstr "RAM"
+
+#: ../web/admin/reporting.php:383
+#: ../web/admin/servers.php:353
+#: ../web/admin/servers.php:717
+msgid "RAM usage"
+msgstr "Uso de RAM"
+
+#: ../web/admin/servers.php:750
+msgid "Redirection name of this server"
+msgstr "Nombre de redirección de este servidor"
+
+#: ../web/admin/reporting.php:474
+msgid "Refresh"
+msgstr "Refrescar"
+
+#: ../web/admin/servers.php:473
+#: ../web/admin/servers.php:501
+msgid "Register"
+msgstr "Registrarse"
+
+#: ../web/index.php:610
+msgid "Remember proxy"
+msgstr "Recordar Proxy"
+
+#: ../web/modules/AuthMethod/RemoteUser.php:46
+msgid "RemoteUser authentication"
+msgstr "Autentificación de Usuario Remoto"
+
+#: ../web/admin/usersgroup.php:653
+msgid "Remove from default"
+msgstr "Remover como predeterminado"
+
+#: ../web/admin/applications.php:367
+#: ../web/admin/servers.php:881
+msgid "Remove from this server"
+msgstr "Remover de este servidor"
+
+#: ../web/classes/Preferences.class.php:246
+msgid "Remove orphan applications when the server is deleted"
+msgstr "Remover aplciación huérfanas cuando el servidor es eliminado"
+
+#: ../web/admin/applications.php:318
+msgid "Remove this application"
+msgstr "Remover esta aplicación"
+
+#: ../web/admin/sharedfolders.php:174
+msgid "Rename"
+msgstr "Renombrar"
+
+#: ../web/admin/servers.php:938
+msgid "Replicate on those servers"
+msgstr "Replicar en esos servidores"
+
+#: ../web/admin/servers.php:927
+msgid "Replication"
+msgstr "Replicar"
+
+#: ../web/admin/includes/page_template.php:217
+#: ../web/admin/reporting.php:391
+msgid "Reporting"
+msgstr "Reportes"
+
+#: ../web/classes/Session.class.php:129
+msgid "Resuming"
+msgstr "Resumen"
+
+#: ../web/admin/password.php:48
+msgid "Retype password"
+msgstr "Reescriba se contraseña"
+
+#: ../web/admin/usersgroup.php:721
+msgid "Rules"
+msgstr "Reglas"
+
+#: ../web/admin/usersgroup.php:258
+#, php-format
+msgid "Rules of '%s' successfully modified"
+msgstr "Las reglas de '%s' fue modificada satisfactoriamente"
+
+#: ../web/admin/sessions.php:136
+msgid "Running applications"
+msgstr "Aplicaciones corriendo"
+
+#: ../web/modules/AuthMethod/RemoteUser.php:62
+msgid "SERVER variable for SSO"
+msgstr "Variable para SSO SERVER"
+
+#: ../web/index.php:135
+msgid "SESSION IS STARTED"
+msgstr "LA SESIÓN HA COMENZADO"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:170
+msgid "SESSIONMANAGER_ADMIN_LOGIN is not defined"
+msgstr "SESSIONMANAGER_ADMIN_LOGIN no está definido"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:173
+msgid "SESSIONMANAGER_ADMIN_PASSWORD is not defined"
+msgstr "SESSIONMANAGER_ADMIN_PASSWORD no está definido"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:167
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not defined"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED no está definido"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:182
+msgid "SESSIONMANAGER_CONFFILE_SERIALIZED is not writable"
+msgstr "SESSIONMANAGER_CONFFILE_SERIALIZED no tiene permiso de escritura"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:164
+msgid "SESSIONMANAGER_LOGS is not defined"
+msgstr "SESSIONMANAGER_LOGS no está definido"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:179
+msgid "SESSIONMANAGER_LOGS is not writable"
+msgstr "SESSIONMANAGER_LOGS no tiene permiso de escritura"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:161
+msgid "SESSIONMANAGER_SPOOL is not defined"
+msgstr "SESSIONMANAGER_SPOOL no está definido"
+
+#: ../web/includes/functions.inc.d/misc.inc.php:176
+msgid "SESSIONMANAGER_SPOOL is not writable"
+msgstr "SESSIONMANAGER_SPOOL no tiene permiso de escritura"
+
+#: ../web/classes/Preferences.class.php:231
+msgid "SMTP password"
+msgstr "contraseña de SMTP"
+
+#: ../web/classes/Preferences.class.php:215
+msgid "SMTP server"
+msgstr "Servidor de SMTP"
+
+#: ../web/classes/Preferences.class.php:229
+msgid "SMTP username"
+msgstr "Nombre de usuario de SMTP"
+
+#: ../web/admin/classes/Preferences_admin.class.php:99
+msgid "SQL configuration not valid"
+msgstr "Configuración de SQL no válida"
+
+#: ../web/admin/classes/Preferences_admin.class.php:93
+msgid "SQL configuration not valid(2)"
+msgstr "Configuración de SQL no válida(2)"
+
+#: ../web/classes/Preferences.class.php:323
+msgid "SSH/ping applet test"
+msgstr "SSH/ping applet para test"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:270
+msgid "Same as Users, "
+msgstr "Igual que el usuario"
+
+#: ../web/admin/configuration-partial.php:112
+#: ../web/admin/configuration-profile.php:226
+#: ../web/admin/configuration.php:109
+#: ../web/admin/includes/functions.inc.php:282
+msgid "Save"
+msgstr "Guardar"
+
+#: ../web/admin/users.php:365
+msgid "Save the modifications"
+msgstr "Guardar los cambios"
+
+#: ../web/admin/configuration-profile.php:220
+msgid "Saved successfully"
+msgstr "Guardado satisfatoriamente"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:70
+#: ../web/admin/classes/UsersList.class.php:115
+#: ../web/admin/classes/UsersList.class.php:72
+msgid "Search"
+msgstr "Buscar"
+
+#: ../web/admin/classes/UsersList.class.php:70
+msgid "Search for user pattern: "
+msgstr "Buscar por usuario"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Buscar por el grupo de usuarios"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:74
+msgid "Search in: "
+msgstr "Buscar en: "
+
+#: ../web/classes/Preferences.class.php:157
+msgid "Select debug options you want to enable."
+msgstr "Seleccionar la opción de "
+
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
+#: ../web/events/callbacks/SqlFailure/Mail.class.php:59
+msgid "Send a mail"
+msgstr "Enviar un correo electrónico"
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:65
+msgid "Send a mail on login problem"
+msgstr "Enviar un correo ante un problema de ingreso"
+
+#: ../web/admin/reporting.php:501
+#: ../web/admin/sessions.php:233
+#: ../web/admin/tasks.php:187
+#: ../web/index.php:389
+msgid "Server"
+msgstr "Server"
+
+#: ../web/admin/servers.php:252
+#, php-format
+msgid "Server '%s' successfully deleted"
+msgstr "Servidor '%s'  eliminado satisfactoriamente"
+
+#: ../web/admin/servers.php:190
+#: ../web/admin/servers.php:204
+#: ../web/admin/servers.php:218
+#: ../web/admin/servers.php:232
+#: ../web/admin/servers.php:83
+#, php-format
+msgid "Server '%s' successfully modified"
+msgstr "Servidor '%s'  modificado satisfactoriamente"
+
+#: ../web/admin/servers.php:169
+#, php-format
+msgid "Server '%s' successfully registered"
+msgstr "Servidor '%s' registardo satisfactoriamente"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:241
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:227
+msgid "Server Host:"
+msgstr "Host del servidor"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:228
+msgid "Server Port:"
+msgstr "Puerto del Servidor"
+
+#: ../web/modules/UserDB/activedirectory.php:81
+#: ../web/modules/UserDB/ldap.php:253
+#: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserGroupDB/sql_external.php:105
+msgid "Server host address"
+msgstr "Dirección del host del servidor"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "Server port"
+msgstr "Puerto del servidor"
+
+#: ../web/admin/includes/page_template.php:167
+msgid "Server settings"
+msgstr "Ajustes del servidor"
+
+#: ../web/events/ServerStatusChanged.class.php:30
+msgid "Server status changed"
+msgstr "El estado del servidor ha sido modificado"
+
+#: ../web/admin/servers.php:111
+msgid "Server upgrading"
+msgstr "Actualización del Servidor "
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:360
+#: ../web/admin/sessions.php:122
+msgid "Server:"
+msgstr "Servidor:"
+
+#: ../web/admin/includes/page_template.php:35
+#: ../web/admin/includes/page_template.php:73
+#: ../web/admin/index.php:64
+#: ../web/admin/servers.php:297
+#: ../web/admin/tasks.php:119
+msgid "Servers"
+msgstr "Servidores"
+
+#: ../web/admin/index.php:69
+msgid "Servers list"
+msgstr "Lista de servidores"
+
+#: ../web/admin/applications.php:349
+msgid "Servers with this application"
+msgstr "Servidores con esta aplicación"
+
+#: ../web/admin/sessions.php:232
+msgid "Session"
+msgstr "Sesión"
+
+#: ../web/admin/logs.php:135
+msgid "Session Manager"
+msgstr "Manejador de sesiones"
+
+#: ../web/admin/reporting.php:312
+#: ../web/admin/reporting.php:348
+msgid "Session end status"
+msgstr "Estado de fin de sesión"
+
+#: ../web/index.php:323
+msgid "Session mode"
+msgstr "Modo de sesión"
+
+#: ../web/classes/Preferences.class.php:294
+msgid "Session owner can share his session"
+msgstr "El dueño de la sesión puede compartir la misma"
+
+#: ../web/admin/reporting.php:298
+msgid "Session repartition"
+msgstr "Reparto de sesiones"
+
+#: ../web/admin/includes/page_template.php:179
+msgid "Session settings"
+msgstr "Ajustes de la sesión"
+
+#: ../web/events/SessionStart.class.php:26
+msgid "Session startup"
+msgstr "Inicio de sesión"
+
+#: ../web/events/SessionStatusChanged.class.php:26
+msgid "Session status changed"
+msgstr "El estado de la sesión ha cambiado"
+
+#: ../web/classes/Preferences.class.php:283
+msgid "Session timeout message"
+msgstr "Mensaje de tiempo de espera"
+
+#: ../web/admin/includes/page_template.php:205
+#: ../web/admin/sessions.php:116
+msgid "Sessions"
+msgstr "Sesiones"
+
+#: ../web/admin/sessions.php:204
+#, php-format
+msgid "Sessions (total: %s)"
+msgstr "Sesiones (total: %s)"
+
+#: ../web/classes/Preferences.class.php:285
+msgid "Sessions are persistent"
+msgstr "Las sesiones son persistentes"
+
+#: ../web/classes/Preferences.class.php:265
+msgid "Sessions settings"
+msgstr "Configuración de las sesiones"
+
+#: ../web/admin/servers.php:355
+#: ../web/admin/servers.php:719
+msgid "Sessions usage"
+msgstr "Sesiones en uso"
+
+#: ../web/modules/UserDB/ldap.php:275
+msgid ""
+"Set this to Yes when you use LDAP profile to connect to an ActiveDirectory "
+"environment instead of using the ActiveDirectory profile"
+msgstr ""
+"Ponga la opción Sí, cuando utilice el perfil LDAP para conectar a un entorno de ActiveDirectory en vez de utilizar el perfil de ActiveDirectory "
+
+#: ../web/admin/appsgroup.php:310
+#: ../web/admin/users.php:313
+#: ../web/admin/usersgroup.php:648
+msgid "Settings"
+msgstr "Ajustes"
+
+#: ../web/index.php:492
+msgid "Shareable session"
+msgstr "Sesión compartible"
+
+#: ../web/admin/includes/page_template.php:93
+#: ../web/admin/sharedfolders.php:89
+#: ../web/admin/usersgroup.php:958
+msgid "Shared folders"
+msgstr "Camperta compartible"
+
+#: ../web/admin/actions.php:402
+#, php-format
+msgid "SharedFolder '%s' successfully added"
+msgstr "Directorio compartido '%s' añadido satisfactoriamente"
+
+#: ../web/admin/actions.php:306
+msgid "SharedFolder successfully added"
+msgstr "Directorio compartido añadido satisfactoriamente"
+
+#: ../web/admin/actions.php:312
+#: ../web/admin/actions.php:414
+msgid "SharedFolder successfully deleted"
+msgstr "Directorio compartido eliminado satisfactoriamente"
+
+#: ../web/admin/actions.php:324
+#: ../web/admin/actions.php:329
+#: ../web/admin/actions.php:428
+#: ../web/admin/actions.php:442
+msgid "SharedFolder successfully modified"
+msgstr "Directorio compartido modificado satisfactoriamente"
+
+#: ../web/admin/sharedfolders.php:41
+msgid "SharedFolder successfully renamed"
+msgstr "Directorio compartido renombrado satisfactoriamente"
+
+#: ../web/classes/Preferences.class.php:288
+#: ../web/index.php:506
+msgid "Show icons on user desktop"
+msgstr "Mostrar este ícono en el escritorio del usuario"
+
+#: ../web/classes/SessionReportItem.class.php:160
+msgid "Shutdown of the Application Server"
+msgstr "Apagar el servidor de aplicación"
+
+#: ../web/index.php:411
+msgid "Size"
+msgstr "tamaño"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:354
+msgid "Specific Organization Unit"
+msgstr "Espicificar undiad de organización"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:256
+#: ../web/admin/classes/Configuration_mode_ad.class.php:280
+msgid "Specific Organization Unit:"
+msgstr "Espicificar undiad de organización:"
+
+#: ../web/events/SqlFailure.class.php:26
+msgid "Sql failure"
+msgstr "Fallo SQL"
+
+#: ../web/admin/sessions.php:125
+msgid "Started:"
+msgstr "Inicio:"
+
+#: ../web/admin/usersgroup.php:424
+msgid "Static"
+msgstr "Estático"
+
+#. general div
+#: ../web/admin/applications_static.php:98
+msgid "Static Applications"
+msgstr "Aplicaciones estáticas"
+
+#: ../web/admin/includes/page_template.php:128
+msgid "Static applications"
+msgstr "Aplicaciones estáticas"
+
+#. echo '<th>'._('Version').'</th>';
+#: ../web/admin/applications.php:406
+#: ../web/admin/appsgroup.php:149
+#: ../web/admin/appsgroup.php:299
+#: ../web/admin/includes/page_template.php:59
+#: ../web/admin/index.php:127
+#: ../web/admin/servers.php:308
+#: ../web/admin/servers.php:698
+#: ../web/admin/servers.php:952
+#: ../web/admin/sessions.php:235
+#: ../web/admin/sumup.php:194
+#: ../web/admin/tasks.php:120
+#: ../web/admin/tasks.php:188
+#: ../web/admin/usersgroup.php:360
+#: ../web/admin/usersgroup.php:636
+msgid "Status"
+msgstr "Estado"
+
+#: ../web/admin/sessions.php:132
+msgid "Status:"
+msgstr "Estado:"
+
+#: ../web/admin/configuration-profile.php:241
+msgid "Success"
+msgstr "Éxitoso"
+
+#: ../web/admin/includes/page_template.php:149
+msgid "Sum up"
+msgstr "Resumir"
+
+#: ../web/admin/includes/page_template.php:232
+msgid "Summary"
+msgstr "Sumario"
+
+#: ../web/classes/Session.class.php:128
+msgid "Suspended"
+msgstr "Suspendido"
+
+#: ../web/classes/Session.class.php:127
+msgid "Suspending"
+msgstr "Suspendiendo"
+
+#: ../web/admin/servers.php:326
+#: ../web/admin/servers.php:398
+#: ../web/admin/servers.php:674
+#: ../web/classes/Preferences.class.php:244
+msgid "Switch to maintenance"
+msgstr "Cambio a mantenimiento"
+
+#: ../web/admin/servers.php:322
+#: ../web/admin/servers.php:397
+#: ../web/admin/servers.php:670
+msgid "Switch to production"
+msgstr "Cambio a producción"
+
+#: ../web/admin/includes/page_template.php:161
+msgid "System settings"
+msgstr "Ajustes del sistema"
+
+#: ../web/modules/UserDB/sql_external.php:203
+msgid "Table of users"
+msgstr "Tabla de usuarios"
+
+#: ../web/classes/Preferences.class.php:210
+msgid "Table prefix"
+msgstr "Prefijo de tabla"
+
+#: ../web/admin/actions.php:71
+#: ../web/admin/servers.php:101
+#: ../web/admin/servers.php:154
+msgid "Task successfully added"
+msgstr "Tarea agregada satisfactoriamente"
+
+#: ../web/admin/actions.php:73
+#: ../web/admin/servers.php:148
+#: ../web/admin/tasks.php:89
+msgid "Task successfully deleted"
+msgstr "Tarea borrada satisfactoriamente"
+
+#: ../web/admin/includes/page_template.php:85
+#: ../web/admin/tasks.php:176
+msgid "Tasks"
+msgstr "Tareas"
+
+#: ../web/admin/tasks.php:113
+msgid "Tasks managment"
+msgstr "Administrador de tareas"
+
+#: ../web/admin/configuration-profile.php:227
+msgid "Test"
+msgstr "Test"
+
+#: ../web/modules/UserDB/activedirectory.php:81
+msgid "The address of your Active Directory server."
+msgstr "La dirección de su servidor ActiveDirectory"
+
+#: ../web/modules/UserDB/ldap.php:253
+msgid "The address of your LDAP server."
+msgstr "La dirección de su servidor LDAP"
+
+#: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserGroupDB/sql_external.php:105
+msgid "The address of your MySQL server."
+msgstr "La dirección de su servidor MySQL"
+
+#: ../web/classes/Preferences.class.php:202
+msgid ""
+"The address of your database host. This database contains adminstration "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr "La dirección del host de su base de datos. Esta base de datos contiene la administración de los datos de la consola. Ejemplo: localhost o db.mycorporate.com."
+
+#: ../web/classes/Preferences.class.php:202
+msgid ""
+"The address of your database host. This database contains adminstrations "
+"console data. Example: localhost or db.mycorporate.com."
+msgstr "La dirección del host de su base de datos. Esta base de datos contiene los datos de administración de los datos de consola. Ejemplo: localhost o db.mycorporate.com."
+
+#: ../web/events/callbacks/SessionStart/Mail.class.php:54
+msgid "The following error happened:\n"
+msgstr "El siguiente error ocurrió:\n"
+
+#: ../web/modules/AuthMethod/Token.php:96
+msgid "The id of the XML node which contains the user login"
+msgstr "el id del nodo XML que contiene el ingreso del usuario"
+
+#: ../web/classes/Preferences.class.php:167
+msgid "The maximum number of items that can be displayed."
+msgstr "El número máximo de temas que se pueden mostrar"
+
+#: ../web/modules/AuthMethod/Token.php:97
+msgid ""
+"The name of the XML attribute which contains the user login (in the node "
+"\"user_node_name\")"
+msgstr ""
+"El nombre del atributo de  XML que contiene el ingreso de usuario (en el nodo \"user_node_name\")"
+
+#: ../web/classes/Preferences.class.php:208
+#: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+msgid "The name of the database."
+msgstr "El nombre de la base de datos"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "The port number used by your LDAP server."
+msgstr "El número de puerto utilizado por su servidor LDAP"
+
+#: ../web/modules/UserDB/ldap.php:255
+msgid "The port use by your LDAP server."
+msgstr "El puerto utilizado por su servidor LDAP"
+
+#: ../web/modules/UserDB/ldap.php:267
+msgid "The protocol version used by your LDAP server."
+msgstr "La versión del protocolo utilizado por su servidor LDAP"
+
+#: ../web/includes/functions.inc.d/template.inc.php:52
+msgid "The service is not available, please try again later"
+msgstr "El servicio no está disponible, por favor intente más tarde"
+
+#: ../web/classes/Preferences.class.php:210
+msgid "The table prefix for the database."
+msgstr "El prefijo de la tabla para la base de datos"
+
+#: ../web/modules/UserDB/activedirectory.php:85
+#: ../web/modules/UserDB/ldap.php:257
+#: ../web/modules/UserDB/sql_external.php:197
+msgid ""
+"The user login that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"El ingreso de usuario que se debe utilizar para acceder a la base de datos (para listar las cuentas de los usuarios)"
+
+#: ../web/modules/UserGroupDB/sql_external.php:107
+msgid ""
+"The user login that must be used to access the database (to list users "
+"groups accounts)."
+msgstr ""
+"El ingreso de usuario que se debe utilizar para acceder a la base de datos (para listar las cuentas de los usuarios)."
+
+#: ../web/classes/Preferences.class.php:204
+msgid "The user name that must be used to access the database."
+msgstr "El nombre de usuario que se debe utilizar para acceder a la base de datos"
+
+#: ../web/modules/UserDB/activedirectory.php:87
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserGroupDB/sql_external.php:109
+msgid ""
+"The user password that must be used to access the database (to list users "
+"accounts)."
+msgstr ""
+"La contraseña del usuario que debe ser usada para acceder a la base de datos (para listas las cuentas de usuario)."
+
+#: ../web/classes/Preferences.class.php:206
+msgid "The user password that must be used to access the database."
+msgstr "La contraseña del usuario que debe ser usada para acceder a la base de datos"
+
+#: ../web/classes/Preferences.class.php:204
+msgid "The username that must be used to access the database."
+msgstr "La contraseña del usuario que debe ser usada para acceder a la base de datos"
+
+#. the user does not exist
+#: ../web/admin/login.php:38
+#: ../web/admin/login.php:45
+msgid "There was an error with your authentication"
+msgstr "Hubo un error en su autentificación"
+
+#: ../web/admin/applications.php:318
+msgid "This application is orphan"
+msgstr "Esta aplicación es huérfana"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:82
+msgid ""
+"This is the default Profile manager. This profile manager saves all the data "
+"into a the same SQL database as you defined it in the system configuration."
+msgstr ""
+"Este es el perfil de administración predefinido. este perfil de administración guarda todos los datos en una misma base SQL que usted definió en la configuración del sistema."
+
+#: ../web/admin/actions.php:195
+msgid "This publication already exists"
+msgstr "Esta aplicación ya existe"
+
+#: ../web/admin/actions.php:208
+msgid "This publication does not exist"
+msgstr "Esta publicación  no existe"
+
+#: ../web/admin/usersgroup.php:481
+msgid "Time between two updates:"
+msgstr "Tiempo entre dos actualizaciones:"
+
+#: ../web/index.php:456
+msgid "Timeout"
+msgstr "Fuera de tiempo"
+
+#: ../web/admin/news.php:63
+msgid "Title"
+msgstr "Título"
+
+#: ../web/classes/Session.class.php:122
+msgid "To create"
+msgstr "Para crear"
+
+#: ../web/classes/Session.class.php:130
+msgid "To destroy"
+msgstr "Para destruir"
+
+#: ../web/classes/Session.class.php:124
+msgid "To start"
+msgstr "Para comenzar"
+
+#: ../web/modules/AuthMethod/Token.php:97
+msgid "Token XML login attribute name"
+msgstr "Nombre de atributo de Ingreso Token XML "
+
+#: ../web/modules/AuthMethod/Token.php:96
+msgid "Token XML user node name"
+msgstr "Nombre del nodo del usuario Token XML"
+
+#: ../web/modules/AuthMethod/Token.php:69
+msgid "Token authentication"
+msgstr "Autentificación Token"
+
+#: ../web/modules/AuthMethod/Token.php:95
+msgid "Token validation URL"
+msgstr "Validación URL Token "
+
+#. echo '<th>'._('Package').'</th>';
+#: ../web/admin/applications.php:126
+#: ../web/admin/applications.php:296
+#: ../web/admin/applications.php:405
+#: ../web/admin/applications_static.php:113
+#: ../web/admin/applications_static.php:435
+#: ../web/admin/servers.php:306
+#: ../web/admin/servers.php:435
+#: ../web/admin/servers.php:698
+#: ../web/admin/servers.php:951
+#: ../web/admin/sumup.php:192
+#: ../web/admin/tasks.php:118
+#: ../web/admin/tasks.php:186
+#: ../web/admin/usersgroup.php:361
+msgid "Type"
+msgstr "Tipo"
+
+#: ../web/admin/applications_static.php:222
+#: ../web/admin/applications_static.php:440
+#: ../web/admin/applications_static.php:505
+msgid "URL"
+msgstr "URL"
+
+#: ../web/admin/users.php:289
+#: ../web/admin/users.php:339
+msgid "Uid"
+msgstr "Uid"
+
+#: ../web/admin/actions.php:421
+msgid "Unable to create this shared folder access"
+msgstr "No se puede crear el acceso a esta carpeta compartida"
+
+#: ../web/admin/servers.php:244
+msgid "Unable to delete a server when there are active sessions on it!"
+msgstr "No se puede eliminar un servidor donde existen sesiones activas"
+
+#: ../web/admin/actions.php:205
+msgid "Unable to delete the publication"
+msgstr "No se puede eliminar esta publicación"
+
+#: ../web/admin/actions.php:351
+msgid "Unable to delete this news"
+msgstr "No se puede eliminar esta noticia"
+
+#: ../web/admin/actions.php:410
+msgid "Unable to delete this shared folder"
+msgstr "No se puede eliminar este directorio compartido"
+
+#: ../web/admin/actions.php:436
+msgid "Unable to delete this shared folder access"
+msgstr "No se puede eliminar el acceso a este directorio compartido"
+
+#: ../web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "No se puede mostrar la lista de usuarios: demasiados usuarios"
+
+#: ../web/admin/actions.php:192
+msgid "Unable to save the publication"
+msgstr "No se puede guardar esta publicación"
+
+#: ../web/admin/login.php:57
+msgid "Unauthorized access"
+msgstr "Acceso no autorizado"
+
+#: ../web/admin/applications.php:217
+msgid "Unblock"
+msgstr "Desbloqueado"
+
+#: ../web/classes/Server.class.php:340
+msgid "Under maintenance"
+msgstr "En mantenimiento"
+
+#: ../web/classes/Server.class.php:350
+#: ../web/classes/Server.class.php:385
+#: ../web/classes/Server.class.php:418
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: ../web/admin/applications_static.php:164
+#: ../web/admin/appsgroup.php:185
+#: ../web/admin/servers.php:392
+#: ../web/admin/servers.php:497
+#: ../web/admin/sessions.php:262
+#: ../web/admin/users.php:200
+#: ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211
+#: ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355
+#: ../web/admin/wizard.php:374
+msgid "Unmark all"
+msgstr "Desmarcar todo"
+
+#: ../web/admin/includes/page_template.php:79
+#: ../web/admin/servers.php:425
+msgid "Unregistered servers"
+msgstr "Servidores no registrados"
+
+#: ../web/admin/index.php:70
+msgid "Unregistered servers list"
+msgstr "Lista de servidores no registrados"
+
+#: ../web/admin/actions.php:339
+msgid "Untitled"
+msgstr "Sin nombre"
+
+#: ../web/admin/applications_static.php:291
+msgid "Update"
+msgstr "Actualizar"
+
+#: ../web/admin/usersgroup.php:799
+msgid "Update rules"
+msgstr "Actualizar reglas"
+
+#: ../web/admin/appsgroup.php:338
+#: ../web/admin/usersgroup.php:693
+msgid "Update the description"
+msgstr "Actualizace la descripción"
+
+#: ../web/admin/appsgroup.php:330
+#: ../web/admin/usersgroup.php:685
+msgid "Update the name"
+msgstr "Actualice el nombre"
+
+#: ../web/admin/usersgroup.php:710
+msgid "Update the schedule"
+msgstr "Actualice el horario"
+
+#: ../web/admin/servers.php:843
+#: ../web/admin/tasks.php:249
+msgid "Upgrade"
+msgstr "Actualización"
+
+#: ../web/admin/servers.php:847
+#: ../web/admin/tasks.php:239
+msgid "Upgrade the internal system and applications"
+msgstr "Actualizar el sistema interno y las aplicaciones"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:326
+#: ../web/admin/classes/Configuration_mode_ad.class.php:374
+msgid "Use Active Directory Home dir"
+msgstr "Use el directorio de Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:292
+msgid "Use Active Directory User Groups"
+msgstr "Usar los grupos de usuarios de Active Directory"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:320
+#: ../web/admin/classes/Configuration_mode_ad.class.php:372
+msgid "Use Active Directory User profiles as Home directory"
+msgstr "Utilizar los perfiles de usuarios de Active Directory como directorio principal"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:377
+msgid "Use CIFS link using the LDAP field"
+msgstr "Usar CIFS utilizando como vínculo el campo LDAP"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:310
+msgid "Use CIFS link using the LDAP field:"
+msgstr "Usar CIFS utilizando como vínculo el campo LDAP:"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:297
+#: ../web/admin/classes/Configuration_mode_ad.class.php:365
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:287
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:370
+msgid "Use Internal User Groups"
+msgstr "Utilizar grupo de usurios interno"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:306
+#: ../web/admin/classes/Configuration_mode_ad.class.php:370
+#: ../web/admin/classes/Configuration_mode_internal.class.php:104
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:296
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:375
+msgid "Use Internal home directory (no server replication)"
+msgstr "Utilizar el directorio local interno (no la replicación del servidor)"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:278
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:368
+msgid "Use LDAP User Groups using Posix group"
+msgstr "Utilizar los grupos de usuarios LDAP utilizando los grupos Posix"
+
+#: ../web/modules/UserGroupDB/ldap_posix.php:134
+msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
+msgstr "Utilizar grupos de usuarios de LDAP usando Posix group, Group Branch DN:"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:273
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:366
+msgid "Use LDAP User Groups using the MemberOf field"
+msgstr "Utilizar grupos de usuarios de LDAP usando el MemberOf field"
+
+#: ../web/classes/Preferences.class.php:223
+msgid "Use SSL with SMTP"
+msgstr "Utilizar SSL con SMTP"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:123
+msgid "Use a dynamic internal user list"
+msgstr "Utilizar una lista interna dinámica de usuarios "
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:90
+msgid "Use a static user list (useful for test)"
+msgstr "Utilizar una lista de usuarios estática (útil para test)"
+
+#: ../web/admin/wizard.php:328
+msgid "Use appgroups"
+msgstr "Utilizar grupos app"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:231
+msgid "Use as Active Directory server:"
+msgstr "Usar como servidor Active Directory"
+
+#: ../web/modules/UserDB/ldap.php:275
+msgid "Use as an Active Directory server?"
+msgstr "¿utilizar como un servidor de Active Directory?"
+
+#: ../web/index.php:393
+msgid "Use load balancing"
+msgstr "Utilizar balanceo de carga"
+
+#: ../web/index.php:520
+msgid "Use pop-up"
+msgstr "Utilizar pantalla emergente"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:313
+#: ../web/admin/classes/Configuration_mode_internal.class.php:111
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:303
+msgid "Use shared folders"
+msgstr "Utilizar directorio compartido"
+
+#: ../web/admin/classes/Configuration_mode_internal.class.php:125
+msgid "Use the static user list"
+msgstr "Utilizar la lista estática de usuarios"
+
+#: ../web/admin/wizard.php:185
+msgid "Use usergroups"
+msgstr "Utilizar el grupo de usuarios"
+
+#: ../web/admin/sessions.php:234
+msgid "User"
+msgstr "Usuario"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:288
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:269
+msgid "User Groups"
+msgstr "Grupo de usuarios"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:361
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:364
+msgid "User Groups:"
+msgstr "Grupos de usuarios:"
+
+#: ../web/admin/modules/UserDB/sql.php:33
+msgid "User already exists"
+msgstr "El usuario ya existe"
+
+#: ../web/modules/UserDB/activedirectory.php:89
+msgid "User branch DN"
+msgstr "Rama de usuario DN"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:241
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:362
+msgid "User branch:"
+msgstr "Rama de usuario:"
+
+#: ../web/classes/Preferences.class.php:291
+msgid "User can launch a session with no application"
+msgstr "El usuario puede lanzar una sesión no aplicación"
+
+#: ../web/classes/Preferences.class.php:297
+msgid "User can use a console in the session"
+msgstr "El usuario puede utilizar una consola en esta sesión"
+
+#: ../web/admin/usersgroup.php:337
+msgid "User groups"
+msgstr "Grupos de usuarios"
+
+#: ../web/admin/usersgroup.php:631
+msgid "User groups management"
+msgstr "Manejo de "
+
+#: ../web/admin/users.php:377
+msgid "User groups with this user"
+msgstr "Grupos de usuarios con este usuario"
+
+#: ../web/admin/index.php:51
+msgid "User list"
+msgstr "Lista de usuario"
+
+#: ../web/modules/UserDB/ldap.php:257
+#: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserGroupDB/sql_external.php:107
+msgid "User login"
+msgstr "Ingreso de usuario"
+
+#: ../web/admin/password.php:25
+msgid "User not authorize to manage configuration"
+msgstr "El usuario no está autorizado a manejar la configuración"
+
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserGroupDB/sql_external.php:109
+msgid "User password"
+msgstr "Utilizar contraseña"
+
+#: ../web/admin/users.php:105
+msgid "User successfully added"
+msgstr "El usuario fue añadido con éxito"
+
+#: ../web/admin/users.php:115
+msgid "User successfully deleted"
+msgstr "Usuario eliminado satisfactoriamente"
+
+#: ../web/admin/users.php:132
+msgid "User successfully modified"
+msgstr "Usuario modificado satisfactoriamente"
+
+#: ../web/admin/wizard.php:167
+msgid "User/group selection"
+msgstr "Selección de Usuario/Grupo"
+
+#: ../web/admin/sessions.php:121
+msgid "User:"
+msgstr "Usuario:"
+
+#: ../web/admin/configuration-sumup.php:62
+msgid "User: "
+msgstr "Usuario: "
+
+#: ../web/admin/usersgroup.php:125
+#: ../web/admin/usersgroup.php:162
+msgid "UserGroup successfully added"
+msgstr "Grupo de Usuarios agregado satisfactoriamente"
+
+#: ../web/admin/usersgroup.php:181
+msgid "UserGroup successfully deleted"
+msgstr "Grupo de Usuarios eliminado satisfactoriamente"
+
+#: ../web/admin/usersgroup.php:225
+#: ../web/admin/usersgroup.php:284
+#: ../web/admin/usersgroup.php:317
+msgid "UserGroup successfully modified"
+msgstr "Grupo de Usuarios modificado satisfactoriamente"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:247
+#: ../web/admin/classes/Configuration_mode_internal.class.php:86
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:239
+#: ../web/admin/includes/page_template.php:100
+#: ../web/admin/includes/page_template.php:41
+#: ../web/admin/users.php:150
+msgid "Users"
+msgstr "Usuarios"
+
+#: ../web/admin/includes/page_template.php:107
+msgid "Users Groups"
+msgstr "Grupos de usuarios"
+
+#: ../web/admin/index.php:46
+msgid "Users and Users groups"
+msgstr "Usuarios y grupos de usuarios"
+
+#. User
+#: ../web/admin/classes/Configuration_mode_ad.class.php:350
+msgid "Users branch:"
+msgstr "Rama de usuarios:"
+
+#: ../web/admin/publications.php:79
+msgid "Users group"
+msgstr "Grupo de usuarios"
+
+#: ../web/admin/modules/UserGroupDB/sql.php:32
+msgid "Users group already exists"
+msgstr "El grupo de usuarios ya existe"
+
+#: ../web/admin/index.php:53
+msgid "Users groups list"
+msgstr "Lista de grupos de usuarios"
+
+#: ../web/admin/wizard.php:484
+msgid "Users:"
+msgstr "Usuarios:"
+
+#. problem, what to do ?
+#: ../web/admin/actions.php:153
+#: ../web/admin/actions.php:157
+#: ../web/admin/actions.php:168
+#: ../web/admin/actions.php:172
+#: ../web/admin/actions.php:243
+#, php-format
+msgid "UsersGroup '%s' successfully modified"
+msgstr "Grupo de usuarios '%s' modificados satisfactoriamente"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:325
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:384
+msgid "Using global login/password to authenticate"
+msgstr "Utilizando ingreso y contraseña global para autentificar"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:320
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:382
+msgid "Using user login/password to authenticate"
+msgstr "Utilizando ingreso y contraseña para autentificar"
+
+#: ../web/admin/usersgroup.php:488
+#: ../web/admin/usersgroup.php:730
+msgid "Validation type"
+msgstr "Tipo de Validación"
+
+#: ../web/admin/servers.php:698
+msgid "Version"
+msgstr "Versión"
+
+#: ../web/admin/logs.php:139
+#: ../web/admin/logs.php:157
+#: ../web/admin/logs.php:167
+msgid "View full log file online"
+msgstr "Ver versión completa del registro en linea"
+
+#: ../web/index.php:133
+msgid "WARNING, START ANYWAY"
+msgstr "ADVERTENCIA, INICIO DE TODAS MANERAS"
+
+#: ../web/admin/servers.php:556
+msgid "Warning: server is broken"
+msgstr "Advertencia: el servidor está roto"
+
+#: ../web/admin/servers.php:554
+msgid "Warning: server is offline"
+msgstr "Advertencia: el servidor está fuera de linea"
+
+#: ../web/admin/applications_static.php:27
+msgid "Web"
+msgstr "Web"
+
+#: ../web/admin/includes/page_template.php:191
+#: ../web/classes/Preferences.class.php:312
+msgid "Web interface settings"
+msgstr "Configuración de la interface web"
+
+#: ../web/admin/applications_static.php:258
+msgid "Web link configuration"
+msgstr "Enlace a la configuración web"
+
+#: ../web/admin/logs.php:156
+msgid "Web log"
+msgstr "Registro Web"
+
+#: ../web/admin/servers.php:765
+msgid "Web port of this server"
+msgstr "Puerto web para este servidor"
+
+#: ../web/classes/Preferences.class.php:329
+msgid ""
+"When set to yes, the session will start in a new browser window, and when "
+"set to no, the session will start in the current browser window"
+msgstr ""
+"Cuando pone Sí la sesión comenzará en una nueva ventana del navegador, y cuando pone No, la sesión comenzará en la misma ventana."
+
+#: ../web/index.php:367
+msgid "Windows keymap"
+msgstr "Mapa de teclado de windows"
+
+#: ../web/admin/sessions.php:124
+msgid "Windows server:"
+msgstr "Servidor Windows"
+
+#: ../web/index.php:132
+msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
+msgstr "USTED YA TIENE UNA SESIÓN ACTIVA"
+
+#: ../web/admin/sumup.php:113
+#: ../web/admin/sumup.php:88
+#: ../web/admin/usersgroup.php:480
+#: ../web/index.php:481
+#: ../web/index.php:495
+#: ../web/index.php:509
+#: ../web/index.php:523
+#: ../web/index.php:542
+#: ../web/modules/UserDB/ldap.php:276
+msgid "Yes"
+msgstr "Si"
+
+#: ../web/startsession.php:153
+msgid "You already have a session, please contact your administrator"
+msgstr "Usted ya tiene una sesión activa, por favor contactese con su administrador"
+
+#: ../web/startsession.php:128
+msgid "You already have an active session"
+msgstr "Usted ya tiene una seesión activa"
+
+#: ../web/index.php:227
+#, php-format
+msgid "You are authenticated as %s"
+msgstr "Usted está registardo como %s"
+
+#: ../web/admin/includes/functions.inc.php:437
+msgid "You are not allowed to perform this action"
+msgstr "Usted no tiene permiso para realizar esa acción"
+
+#: ../web/admin/sharedfolders.php:84
+msgid ""
+"You are not using Internal WebDAV filesystem, \"Shared folders\" are "
+"disabled!"
+msgstr ""
+"Usted no está utilizando el sistema de archivos WebDAV, los \"Archivos compartidos\" están de deshabilitados"
+
+#: ../web/ajax/login.php:30
+msgid "You are now logged in"
+msgstr "Ahora usted ingresó al sistema"
+
+#: ../web/classes/Preferences.class.php:314
+msgid "You can customize the heading title here."
+msgstr "Puede personalizar el título aqui"
+
+#: ../web/classes/Preferences.class.php:317
+msgid ""
+"You can customize the logo by entering a new path or replacing the "
+"corresponding image. Use a 90 pixels high image in png or jpeg format. "
+"Example: sessionmanager/media/image/header.png"
+msgstr ""
+"Puede personalizar el logo ingresando una nueva ruta o reemplazando la correspondiente imagen. Utilice imágenes de 90 pixeles como máximo en formato png o jpeg. Ejemplo: sessionmanager/media/image/header.png"
+
+#: ../web/startsession.php:169
+msgid "You don't have access to a linux server for now"
+msgstr "Usted no tiene acceso al servidor linux por ahora"
+
+#: ../web/startsession.php:316
+msgid "You don't have access to a windows server for now"
+msgstr "Usted no tiene acceso a un servidor windows por ahora"
+
+#: ../web/admin/appsgroup.php:69
+msgid "You must define a name to your application group"
+msgstr "Usted debe definir un nombre para su grupo de aplicación"
+
+#: ../web/admin/usersgroup.php:112
+#: ../web/admin/usersgroup.php:134
+msgid "You must define a name to your usergroup"
+msgstr "Debe definir un nombre para el grupo de usuarios"
+
+#: ../web/admin/applications_static.php:312
+msgid "You must give a command to your application"
+msgstr "Debe dar una comando para su aplicación"
+
+#: ../web/admin/applications_static.php:308
+msgid "You must give a name to your application"
+msgstr "Debe dar un nombre a su aplicación"
+
+#: ../web/admin/actions.php:387
+msgid "You must give a name to your shared folder"
+msgstr "Debe dar un nombre a su directorio compartido"
+
+#: ../web/admin/servers.php:94
+msgid "You must give a package name."
+msgstr "Debe dar un nombre al paquete"
+
+#: ../web/admin/usersgroup.php:143
+#: ../web/admin/usersgroup.php:239
+msgid "You must give a value to each rule of your usergroup"
+msgstr "Debe dar un valor a cada regla de su grupo de usuarios"
+
+#: ../web/webservices/session_invite.php:95
+msgid "You received an invitation from"
+msgstr "Usted recibió una invitación de"
+
+#: ../web/admin/sumup.php:63
+msgid "access to these applications"
+msgstr "Acceder a estas aplicaciones"
+
+#: ../web/admin/index.php:146
+msgid "active session"
+msgstr "Sesiones activas"
+
+#: ../web/admin/index.php:144
+msgid "active sessions"
+msgstr "Sesiones activas"
+
+#: ../web/admin/wizard.php:510
+msgid "and these applications groups"
+msgstr "y estos grupos de aplicaciones"
+
+#: ../web/admin/wizard.php:508
+msgid "and this applications group"
+msgstr "y este grupo de aplicación"
+
+#: ../web/admin/wizard.php:524
+msgid "and this newly created applications group"
+msgstr "y este grupo de aplicación recién creado"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "app with desktop"
+msgstr "App con escritorio"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "application"
+msgstr "Aplicación"
+
+#: ../web/admin/index.php:176
+msgid "broken server"
+msgstr "Servidor roto"
+
+#: ../web/admin/index.php:174
+msgid "broken servers"
+msgstr "Servidores rotos"
+
+#: ../web/admin/servers.php:744
+#: ../web/admin/servers.php:759
+#: ../web/admin/servers.php:774
+msgid "change"
+msgstr "Modificar"
+
+#: ../web/admin/servers.php:343
+#: ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
+msgid "core"
+msgstr "core"
+
+#: ../web/admin/servers.php:343
+#: ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
+msgid "cores"
+msgstr "cores"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "critical"
+msgstr "Crítico"
+
+#: ../web/classes/Preferences.class.php:158
+#: ../web/classes/Preferences.class.php:333
+msgid "debug"
+msgstr "depurar"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "desktop icons"
+msgstr "íconos de escritorio"
+
+#: ../web/classes/Server.class.php:106
+msgid "does not send a valid monitoring"
+msgstr "no envía un monitoreo válido"
+
+#: ../web/classes/Server.class.php:92
+msgid "does not send a valid type"
+msgstr "no envía un tipo válido"
+
+#: ../web/classes/Server.class.php:99
+msgid "does not send a valid version"
+msgstr "no envía una versión válida"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "error"
+msgstr "error"
+
+#: ../web/admin/usersgroup.php:905
+msgid "extend from default"
+msgstr "extendidas por defecto"
+
+#: ../web/modules/UserDB/fake.php:108
+msgid "fake"
+msgstr "falso"
+
+#: ../web/admin/configuration-sumup.php:35
+#: ../web/index.php:26
+#: ../web/webservices/server_status.php:48
+msgid "get Preferences failed"
+msgstr "Fallo al obtener preferencias"
+
+#: ../web/admin/sumup.php:63
+msgid "in this application group"
+msgstr "en este grupo de aplicación"
+
+#: ../web/admin/sumup.php:63
+msgid "in this user group"
+msgstr "en este grupo de usuario"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "info"
+msgstr "información"
+
+#: ../web/admin/servers.php:899
+msgid "install in progress"
+msgstr "la instalación está en progreso"
+
+#: ../web/classes/Server.class.php:194
+msgid "is NOT online!"
+msgstr "No está en linea!"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "language"
+msgstr "idioma"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
+msgid "less"
+msgstr "menos"
+
+#: ../web/modules/UserDB/unix.php:116
+msgid "local"
+msgstr "local"
+
+#: ../web/admin/sumup.php:63
+#: ../web/plugins/FS/cifs.php:106
+msgid "login"
+msgstr "acceder"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:263
+msgid "login:"
+msgstr "acceder:"
+
+#: ../web/classes/Preferences.class.php:187
+msgid "manage Application groups"
+msgstr "manejo de grupos de Aplicaciones"
+
+#: ../web/classes/Preferences.class.php:185
+msgid "manage Applications"
+msgstr "manejar Aplicaciones"
+
+#: ../web/classes/Preferences.class.php:191
+msgid "manage Configuration"
+msgstr "manejar Configuración"
+
+#: ../web/classes/Preferences.class.php:195
+msgid "manage News"
+msgstr "Manejar Noticias"
+
+#: ../web/classes/Preferences.class.php:189
+msgid "manage Publications"
+msgstr "manejar Publicaciones"
+
+#: ../web/classes/Preferences.class.php:177
+msgid "manage Servers"
+msgstr "manejar Servidores"
+
+#: ../web/classes/Preferences.class.php:179
+msgid "manage Shared folders"
+msgstr "manejar directorios compartidos"
+
+#: ../web/classes/Preferences.class.php:183
+msgid "manage Usergroups"
+msgstr "manejar Grupos de usuarios"
+
+#: ../web/classes/Preferences.class.php:181
+msgid "manage Users"
+msgstr "manejar Usuarios"
+
+#: ../web/modules/UserDB/activedirectory.php:91
+msgid "match"
+msgstr "comparar"
+
+#: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
+msgid "more"
+msgstr "Más"
+
+#: ../web/admin/servers.php:818
+msgid "more options"
+msgstr "más opciones"
+
+#: ../web/admin/sumup.php:63
+msgid "name"
+msgstr "nombre"
+
+#: ../web/classes/Preferences.class.php:224
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:247
+#: ../web/classes/Preferences.class.php:250
+#: ../web/classes/Preferences.class.php:253
+#: ../web/classes/Preferences.class.php:286
+#: ../web/classes/Preferences.class.php:289
+#: ../web/classes/Preferences.class.php:292
+#: ../web/classes/Preferences.class.php:295
+#: ../web/classes/Preferences.class.php:298
+#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:321
+#: ../web/classes/Preferences.class.php:324
+#: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
+msgid "no"
+msgstr "no"
+
+#: ../web/admin/index.php:166
+msgid "offline server"
+msgstr "servidor fuera de linea"
+
+#: ../web/admin/index.php:164
+msgid "offline servers"
+msgstr "servidores fuera de linea"
+
+#: ../web/admin/index.php:156
+msgid "online server"
+msgstr "servidor en linea"
+
+#: ../web/admin/index.php:154
+msgid "online servers"
+msgstr "servidores en línea"
+
+#: ../web/admin/classes/Configuration_mode_ldap.class.php:249
+#: ../web/index.php:594
+#: ../web/index.php:602
+msgid "optional"
+msgstr "opcional"
+
+#: ../web/plugins/FS/cifs.php:108
+msgid "password"
+msgstr "contraseña"
+
+#: ../web/admin/classes/Configuration_mode_ad.class.php:264
+msgid "password:"
+msgstr "contraseña:"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "persistent"
+msgstr "persistente"
+
+#: ../web/webservices/session_invite.php:95
+msgid "please click on the link below to join the online session"
+msgstr "por favor, presione en el enlace para unirse a una sesión en linea"
+
+#: ../web/classes/Preferences.class.php:333
+msgid "popup"
+msgstr "Ventana emergente"
+
+#: ../web/admin/includes/page_template.php:370
+#: ../web/footer.php:31
+#: ../web/includes/functions.inc.d/template.inc.php:150
+msgid "powered by"
+msgstr "realizado por"
+
+#: ../web/admin/classes/Preferences_admin.class.php:128
+msgid "prefs is not valid for FS plugin"
+msgstr "Preferencias no válidas para el complemento FS"
+
+#: ../web/admin/classes/Preferences_admin.class.php:149
+#: ../web/admin/classes/Preferences_admin.class.php:159
+msgid "prefs is not valid for module"
+msgstr "Las preferencias no sn válidas para el módulo"
+
+#: ../web/admin/classes/Preferences_admin.class.php:116
+msgid "prefs is not valid for plugin"
+msgstr "Las preferencias no son válidas para el complemento"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "quality"
+msgstr "Calidad"
+
+#: ../web/admin/servers.php:286
+#: ../web/admin/servers.php:537
+msgid "redirection name cannot be empty!"
+msgstr "El nombre de redirección no puede estar vacio"
+
+#: ../web/admin/servers.php:284
+#: ../web/admin/servers.php:535
+msgid "redirection name may be invalid!"
+msgstr "El nombre de la redirección quizás es inválido"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "server"
+msgstr "servidor"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "session mode"
+msgstr "Modo de sesión"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "shareable"
+msgstr "compatible"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "size"
+msgstr "Tamaño"
+
+#: ../web/admin/reporting.php:462
+msgid "step"
+msgstr "paso"
+
+#: ../web/modules/UserGroupDB/sql_external.php:113
+msgid "table of usersgroup"
+msgstr "Tabla de grupo de usuarios"
+
+#: ../web/classes/Preferences.class.php:309
+#: ../web/classes/SessionReportItem.class.php:159
+msgid "timeout"
+msgstr "Fuera de tiempo"
+
+#: ../web/admin/reporting.php:450
+msgid "to"
+msgstr "para"
+
+#: ../web/classes/Preferences.class.php:175
+msgid "use Admin panel"
+msgstr "Usar panel de administración"
+
+#: ../web/classes/Preferences.class.php:186
+msgid "view Application groups"
+msgstr "Ver grupos de la aplicación"
+
+#: ../web/classes/Preferences.class.php:184
+msgid "view Applications"
+msgstr "ver Aplicaciones"
+
+#: ../web/classes/Preferences.class.php:190
+msgid "view Configuration"
+msgstr "ver Configuración"
+
+#: ../web/classes/Preferences.class.php:194
+msgid "view News"
+msgstr "ver Noticias"
+
+#: ../web/classes/Preferences.class.php:188
+msgid "view Publications"
+msgstr "ver Noticias"
+
+#: ../web/classes/Preferences.class.php:176
+msgid "view Servers"
+msgstr "ver Servidores"
+
+#: ../web/classes/Preferences.class.php:178
+msgid "view Shared folders"
+msgstr "ver directorios compartidos"
+
+#: ../web/classes/Preferences.class.php:192
+msgid "view Status"
+msgstr "ver Estado"
+
+#: ../web/classes/Preferences.class.php:193
+msgid "view Summary"
+msgstr "ver Resumen"
+
+#: ../web/classes/Preferences.class.php:182
+msgid "view Usergroups"
+msgstr "ver Grupos de usuarios"
+
+#: ../web/classes/Preferences.class.php:180
+msgid "view Users"
+msgstr "Ver Usuarios"
+
+#: ../web/classes/Preferences.class.php:158
+msgid "warning"
+msgstr "Advertencia"
+
+#: ../web/classes/Preferences.class.php:309
+msgid "windows keymap"
+msgstr "Mapa de teclado de windows"
+
+#: ../web/classes/Preferences.class.php:224
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:247
+#: ../web/classes/Preferences.class.php:250
+#: ../web/classes/Preferences.class.php:253
+#: ../web/classes/Preferences.class.php:286
+#: ../web/classes/Preferences.class.php:289
+#: ../web/classes/Preferences.class.php:292
+#: ../web/classes/Preferences.class.php:295
+#: ../web/classes/Preferences.class.php:298
+#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:321
+#: ../web/classes/Preferences.class.php:324
+#: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
+msgid "yes"
+msgstr "Si"
