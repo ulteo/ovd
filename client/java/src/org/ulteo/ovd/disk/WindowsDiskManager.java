@@ -22,11 +22,12 @@ package org.ulteo.ovd.disk;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
 public class WindowsDiskManager extends DiskManager {
-	
+	private static Logger logger = Logger.getLogger(WindowsDiskManager.class);
 
 	/**************************************************************************/
 	public WindowsDiskManager(OVDRdpdrChannel diskChannel) {
@@ -47,14 +48,11 @@ public class WindowsDiskManager extends DiskManager {
 		File []drives = File.listRoots();
 		String driveString;
 		for (File drive : drives) {
-			System.out.println("new Drive "+drive);
 			driveString = drive.getAbsolutePath();
-			System.out.println("new DriveString "+driveString);
 			if (driveString.equalsIgnoreCase("A:\\") || driveString.equalsIgnoreCase("D:\\"))
 				continue;
 			newDrives.add(driveString);
 		}
-		System.out.println(newDrives);
 		return newDrives;
 	}
 	
@@ -63,9 +61,10 @@ public class WindowsDiskManager extends DiskManager {
 		ArrayList<String> newDrives = new ArrayList<String>();
 		String dirPath;
 		File dir = null;
-		
+
+		logger.debug("Searching for new drive");
 		for (String drive : getLogicalDrive()) {
-			System.out.println("drive "+drive);
+			logger.debug("Drive "+drive);
 			dir = new File(drive);
 			if (! dir.exists() || !dir.isDirectory())
 				continue;
@@ -90,7 +89,6 @@ public class WindowsDiskManager extends DiskManager {
 
 	/**************************************************************************/
 	public String getShareName(String path) {
-		System.out.println("path "+path);
 		String share = super.getShareName(path);
 		if (path.length() == 3) {
 			return path.replace("\\", "");

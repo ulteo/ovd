@@ -23,10 +23,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Timer;
 
+import org.apache.log4j.Logger;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
 public abstract class DiskManager {
+	private static Logger logger = Logger.getLogger(DiskManager.class);
+
 	protected OVDRdpdrChannel rdpdrChannel;
 	protected ArrayList<String> staticShares;
 	protected ArrayList<String> directoryToInspect;
@@ -129,9 +132,9 @@ public abstract class DiskManager {
 
 	/**************************************************************************/
 	public boolean mountStaticShare() {
-		System.out.println("process static share");
+		logger.debug("Mount static share");
 		for (String share : staticShares) {
-			System.out.println("mount "+share);
+			logger.debug("Static share mounted: "+share);
 			mount(share);
 		}
 		this.isStaticShareMounted = true;

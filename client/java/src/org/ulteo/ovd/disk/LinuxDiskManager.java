@@ -26,10 +26,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
 public class LinuxDiskManager extends DiskManager {
+	private static Logger logger = Logger.getLogger(LinuxDiskManager.class);
 	private Properties xdgProperties = null;
 	
 	
@@ -41,14 +43,12 @@ public class LinuxDiskManager extends DiskManager {
 	/**************************************************************************/
 	public boolean init() {
 		if (!xdgOpen()) {
-			System.err.println("Unable to init DiskManager");
+			logger.error("Unable to init DiskManager");
 		}
 		addStaticDirectory(getXdgDir("XDG_DOCUMENTS_DIR", "Documents"));
 		addStaticDirectory(getXdgDir("XDG_DESKTOP_DIR", "Desktop"));
 		addDirectoryToInspect("/media");
 		addDirectoryToInspect("/mnt");
-		System.out.println(staticShares);
-		System.out.println(directoryToInspect);
 		return true;
 	}
 
@@ -59,10 +59,10 @@ public class LinuxDiskManager extends DiskManager {
 		try {
 			xdgProperties.load(new FileInputStream(xdgFile));
 		} catch (FileNotFoundException e) {
-			System.err.println("Unable to find the xdg file: "+xdgFile);
+			logger.error("Unable to find the xdg file: "+xdgFile);
 			return false;
 		} catch (IOException e) {
-			System.err.println("Error while reading xdg file: "+xdgFile);
+			logger.error("Error while reading xdg file: "+xdgFile);
 			return false;
 		}
 		return true;
@@ -88,14 +88,14 @@ public class LinuxDiskManager extends DiskManager {
 		String dirPath;
 		File dir = null;
 		
+		logger.debug("Searching for new drive");
 		for (String toInspect : this.directoryToInspect) {
-			System.out.println("inspect "+toInspect);
 			dir = new File(toInspect);
 			if (! dir.exists() || !dir.isDirectory())
 				continue;
 			for (String dir2 : dir.list()) {
 				dirPath = toInspect+"/"+dir2;
-				System.out.println("path "+dirPath);
+				logger.debug("Drive "+dirPath);
 				if (! this.isMounted(dirPath) && this.testDir(dirPath)) {
 					newDrives.add(dirPath);
 				}

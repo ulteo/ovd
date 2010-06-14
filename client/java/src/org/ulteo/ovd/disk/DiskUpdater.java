@@ -23,10 +23,13 @@ package org.ulteo.ovd.disk;
 import java.io.File;
 import java.util.TimerTask;
 
+import org.apache.log4j.Logger;
+
 import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 public class DiskUpdater extends TimerTask {
+	Logger logger = Logger.getLogger(DiskUpdater.class);
 	private DiskManager diskManager = null;
 	
 	/**************************************************************************/
@@ -36,44 +39,39 @@ public class DiskUpdater extends TimerTask {
 	
 	/**************************************************************************/
 	public void run() {
-		System.out.println("Update drive list");
 		if (! diskManager.rdpdrChannel.isReady())
 			return;
-		System.out.println("Update drive list");
-
 		String sharePath;
 		
+		logger.debug("Update drive list");
 		if( !diskManager.isStaticShareMounted()) {
 			diskManager.mountStaticShare();
 		}
-		System.out.println("Update drive list");
 
 		for (RdpdrDevice device : RdpdrChannel.g_rdpdr_device) {
 			if (device == null) {
-				System.out.println("device is null");
 				continue;
 			}
 			if (device.get_device_type() != RdpdrChannel.DEVICE_TYPE_DISK) {
-				System.out.println("not a disk");
+				logger.debug(device.get_name()+" is not a disk");
 				continue;
 			}
 			if ( device.slotIsFree) {
-				System.out.println("slot is free");
+				logger.debug(device.get_name()+" slot is free");
 				continue;
 			}
 			
 			sharePath = device.get_local_path();
-			System.out.println("share path : "+sharePath);
+			logger.debug("Share path : "+sharePath);
 			if (! diskManager.testDir(sharePath)) {
-				System.out.println("unmount");
+				logger.debug("Unmount : "+sharePath);
 				diskManager.unmount(device.get_local_path());
 			}
 		}
-		System.out.println("Update drive list");
 
 		//search new drive to mount
 		for (String drivePath : diskManager.getNewDrive()) {
-			System.out.println("mount "+drivePath);
+			logger.debug("Mount "+drivePath);
 			if (! diskManager.isMounted(drivePath))
 				diskManager.mount(drivePath);
 		}

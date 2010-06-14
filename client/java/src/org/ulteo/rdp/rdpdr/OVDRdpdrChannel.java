@@ -19,6 +19,8 @@
  */
 package org.ulteo.rdp.rdpdr;
 
+import org.apache.log4j.Logger;
+
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdpPacket_Localised;
@@ -27,7 +29,7 @@ import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 public class OVDRdpdrChannel extends RdpdrChannel {
-
+	private static Logger logger = Logger.getLogger(OVDRdpdrChannel.class);
 	private boolean ready = false;	
 
 	public OVDRdpdrChannel(Options opt, Common common) {
@@ -56,7 +58,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	}
 	
 	public boolean mountNewDrive(String name, String path) {
-		System.out.println("mount a new drive "+name+" => "+path);
+		logger.info("mount a new drive "+name+" => "+path);
 		String magic = "rDAD";
 		int index = getNextFreeSlot();
 		Disk d = new Disk(path, name);
@@ -84,7 +86,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	}
 	
 	public boolean unmountDrive(String name, String path) {
-		System.out.println("unmount the drive "+name+ " => "+path);
+		logger.info("unmount the drive "+name+ " => "+path);
 		String magic = "rDMD";
 		int id = -1;
 
@@ -95,7 +97,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			}
 		}
 		if (id == -1) {
-			System.err.println("Unable to find the share name");
+			logger.warn("Unable to find the share name");
 			return false;
 		}
 
@@ -129,11 +131,10 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	}
 
  	public boolean register(RdpdrDevice v) {
-		this.g_rdpdr_device[g_num_devices] = v;
+		OVDRdpdrChannel.g_rdpdr_device[g_num_devices] = v;
 		//this.g_rdpdr_device[g_num_devices].set_local_path("c:\\temp\\");
 		//this.g_rdpdr_device[g_num_devices].set_name("fo");
 		g_num_devices++;
-		System.out.println("devic is:"+v.get_device_type());
 		this.ready = true;
 		return true;
  	}
