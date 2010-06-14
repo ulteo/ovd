@@ -29,9 +29,7 @@ class Server {
 	public $locked = NULL;
 	public $type = NULL;
 	public $version = NULL;
-	public $external_name = NULL;
 	public $web_port = 1112;
-	public $max_sessions = NULL;
 	public $cpu_model = NULL;
 	public $cpu_nb_cores = NULL;
 	public $cpu_load = NULL;
@@ -45,7 +43,7 @@ class Server {
 	}
 
 	public function __toString() {
-		return 'Server(\''.$this->fqdn.'\', \''.$this->status.'\', \''.$this->registered.'\', \''.$this->locked.'\', \''.$this->type.'\', \''.$this->version.'\', \''.$this->external_name.'\', \''.$this->web_port.'\', \''.$this->max_sessions.'\', \''.$this->cpu_model.'\', \''.$this->cpu_nb_cores.'\', \''.$this->cpu_load.'\', \''.$this->ram_total.'\', \''.$this->ram_used.'\')';
+		return 'Server(\''.$this->fqdn.'\', \''.$this->status.'\', \''.$this->registered.'\', \''.$this->locked.'\', \''.$this->type.'\', \''.$this->version.'\', \''.$this->web_port.'\', \''.$this->cpu_model.'\', \''.$this->cpu_nb_cores.'\', \''.$this->cpu_load.'\', \''.$this->ram_total.'\', \''.$this->ram_used.'\')';
 	}
 
 	public function hasAttribute($attrib_) {

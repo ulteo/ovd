@@ -24,6 +24,8 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class Abstract_Server {
 	public static $server_properties = array(
 		'roles'				=>	'roles',
+		'external_name'		=>	'external_name',
+		'max_sessions'		=>	'max_sessions',
 		'ulteo_system'		=>	'ulteo_system',
 		'windows_domain'	=>	'windows_domain'
 	);
@@ -41,8 +43,6 @@ class Abstract_Server {
 			'locked'		=>	'int(8) NOT NULL',
 			'type'			=>	'varchar(255) NOT NULL',
 			'version'		=>	'varchar(255) NOT NULL',
-			'external_name'	=>	'varchar(255) NOT NULL',
-			'max_sessions'	=>	'int(8) NOT NULL',
 			'cpu_model'		=>	'varchar(255) NOT NULL',
 			'cpu_nb_cores'	=>	'int(8) NOT NULL',
 			'cpu_load'		=>	'int(8) NOT NULL',
@@ -131,7 +131,7 @@ class Abstract_Server {
 			}
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27 WHERE @28 = %29 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
 		$properties = Abstract_Server::loadProperties($server_);
@@ -207,7 +207,7 @@ class Abstract_Server {
 			return false;
 		}
 
-		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23,@24=%25,@26=%27 WHERE @28 = %29 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'external_name', $server_->external_name, 'max_sessions', $server_->max_sessions, 'cpu_model', $server_->cpu_model,
+		$SQL->DoQuery('UPDATE @1 SET @2=%3,@4=%5,@6=%7,@8=%9,@10=%11,@12=%13,@14=%15,@16=%17,@18=%19,@20=%21,@22=%23 WHERE @24 = %25 LIMIT 1', $SQL->prefix.'servers', 'status', $server_->status, 'registered', (int)$server_->registered, 'locked', (int)$server_->locked, 'type', $server_->type, 'version', $server_->version, 'cpu_model', $server_->cpu_model,
 		'cpu_nb_cores', $server_->cpu_nb_cores, 'cpu_load', (int)($server_->cpu_load*100), 'ram_total', $server_->ram_total, 'ram_used', $server_->ram_used, 'timestamp', time(), 'fqdn', $fqdn);
 
 		$properties = Abstract_Server::loadProperties($server_);
@@ -293,8 +293,6 @@ class Abstract_Server {
 		$buf->locked = (bool)$locked;
 		$buf->type = (string)$type;
 		$buf->version = (string)$version;
-		$buf->external_name = (string)$external_name;
-		$buf->max_sessions = (int)$max_sessions;
 		$buf->cpu_model = (string)$cpu_model;
 		$buf->cpu_nb_cores = (int)$cpu_nb_cores;
 		$buf->cpu_load = (float)($cpu_load/100);
