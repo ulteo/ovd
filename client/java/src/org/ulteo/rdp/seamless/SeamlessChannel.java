@@ -34,6 +34,7 @@ package org.ulteo.rdp.seamless;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
@@ -70,11 +71,21 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 		if ((flags & WINDOW_CREATE_POPUP) != 0) {
 			String parentName = "w_"+parent;
-			if(! this.windows.containsKey(parentName)) {
+			Window sf_parent;
+
+			// Special case for transient windows
+			if (parent == 0xffffffffL) {
+				logger.debug("Transient window: "+id);
+				sf_parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+			}
+			else if(! this.windows.containsKey(parentName)) {
 			    logger.error("Parent window ID '"+parent+"' does not exist");
 			    return false;
 			}
-			sf = new SeamlessPopup((int)id, (int)group, this.windows.get(parentName), (int)flags, this.common);
+			else
+				sf_parent = (Window)this.windows.get(parentName);
+			
+			sf = new SeamlessPopup((int)id, (int)group, sf_parent, (int)flags, this.common);
 		}
 		else
 			sf = new SeamlessFrame((int)id, (int)group, this.common);

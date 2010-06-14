@@ -47,7 +47,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private Common common = null;
 	private int id;
 	private int group;
-	private SeamlessWindow parent;
+	private Window parent;
 	private int x;
 	private int y;
 	private int width;
@@ -60,8 +60,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private boolean lockMouseEvents = false;
 	private RectWindow rw = null;
 
-	public SeamlessPopup(int id_, int group_, SeamlessWindow parent_, int flags, Common common_) {
-		super((Window)parent_);
+	public SeamlessPopup(int id_, int group_, Window parent_, int flags, Common common_) {
+		super(parent_);
 		
 		this.common = common_;
 		this.id = id_;
