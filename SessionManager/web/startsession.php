@@ -212,7 +212,7 @@ Logger::debug('main', '(startsession) Now checking for old session');
 $ev = new SessionStart(array('user' => $user));
 
 $already_online = 0;
-$sessions = Sessions::getByUser($user->getAttribute('login'));
+$sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	foreach ($sessions as $session) {
 		/*if ($session->isSuspended()) {

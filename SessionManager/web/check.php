@@ -49,7 +49,7 @@ if ($invites) {
 	}
 }
 
-$sessions = Sessions::getAll();
+$sessions = Abstract_Session::load_all();
 if ($sessions) {
 	foreach ($sessions as $session) {
 		$buf = $session->getStatus();

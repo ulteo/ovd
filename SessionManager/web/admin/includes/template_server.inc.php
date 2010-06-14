@@ -86,7 +86,7 @@ function server_display_role_preparation_aps($server) {
 		}
 	}
 		
-	$sessions = Sessions::getByServer($_GET['fqdn']);
+	$sessions = Abstract_Session::getByServer($_GET['fqdn']);
 	
 	if (count($sessions) > 0)
 		$has_sessions = true;
