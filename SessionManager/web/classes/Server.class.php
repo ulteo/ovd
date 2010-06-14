@@ -455,7 +455,7 @@ class Server {
 	public function getNbUsedSessions() {
 		Logger::debug('main', 'Starting Server::getNbUsedSessions for \''.$this->fqdn.'\'');
 
-  		$buf = Abstract_Session::getByServer($this->fqdn);
+  		$buf = Abstract_Session::countByServer($this->fqdn);
 
 		return count($buf);
 	}
