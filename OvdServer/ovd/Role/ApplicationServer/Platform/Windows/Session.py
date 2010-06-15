@@ -56,6 +56,10 @@ class Session(AbstractSession):
 		
 		for (app_id, app_target) in self.applications:
 			cmd = LnkFile.getTarget(app_target)
+			if cmd is None:
+				Logger.error("Unable to get command from shortcut '%s'"%(app_target))
+				continue
+			
 			f = file(os.path.join(buf, "matching", app_id), "w")
 			f.write(cmd)
 			f.close()
