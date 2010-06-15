@@ -119,7 +119,7 @@ Function InputBoxPageShow
 
  PassDialog::InitDialog /NOUNLOAD InputBox \
             /HEADINGTEXT "Caution: give full name or ip address" \
-            /BOX "Session Manager URL:" $R0 0
+            /BOX "Session Manager host/address:" $R0 0
  PassDialog::Show
 FunctionEnd
 
