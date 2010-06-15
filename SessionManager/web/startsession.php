@@ -41,7 +41,7 @@ function throw_response($response_code_) {
 	die();
 }
 
-function parse_login_XML($xml_) {
+function parse_client_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
 
@@ -64,10 +64,8 @@ function parse_login_XML($xml_) {
 	if (! $session_node->hasAttribute('language'))
 		return false;
 
-	// It's not a login process to handle the session mode... should be moved somewhere else...
 	$_SESSION['mode'] = $session_node->getAttribute('mode');
 
-	// It's not a login process to handle the session language... should be moved somewhere else...
 	if ($session_node->hasAttribute('language'))
 		$_REQUEST['language'] = $session_node->getAttribute('language');
 
@@ -75,11 +73,11 @@ function parse_login_XML($xml_) {
 	if (is_null($user_node))
 		return false;
 
-	if (! $user_node->hasAttribute('login'))
+	if (! $user_node->hasAttribute('login') || ! $user_node->hasAttribute('password'))
 		return false;
 
-	// Maybe we should authenticate the user? see do_login();
-	$_SESSION['login'] = $user_node->getAttribute('login');
+	$_POST['login'] = $user_node->getAttribute('login');
+	$_POST['password'] = $user_node->getAttribute('password');
 
 	return true;
 }
@@ -120,8 +118,7 @@ $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1')
 	die_error(_('The system is in maintenance mode'), __FILE__, __LINE__, true);
 
-// The "user" node of this XML should be handled by do_login();
-$ret = parse_login_XML(@file_get_contents('php://input'));
+$ret = parse_client_XML(@file_get_contents('php://input'));
 
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
