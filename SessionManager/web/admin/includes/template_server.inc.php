@@ -53,18 +53,6 @@ function server_display_role_preparation_aps($server) {
 	usort($applications, 'application_cmp');
 	
 	$applications_available = array();
-	if ($server_online) {
-		foreach($applications_all as $app) {
-			if (in_array($app, $applications))
-				continue;
-			if (in_array($app, $apps_in_install))
-				continue;
-			if ($app->getAttribute('type') != $server->getAttribute('type'))
-				continue;
-		
-		$applications_available[]= $app;
-		}
-	}
 	
 	if (!$server_online && count($applications) == 0)
 		$applications_all = array();
@@ -133,6 +121,17 @@ function server_display_role_preparation_aps($server) {
 							$apps_in_remove[]= $app;
 					}
 				}
+			}
+			
+			foreach($applications_all as $app) {
+			if (in_array($app, $applications))
+				continue;
+			if (in_array($app, $apps_in_install))
+				continue;
+			if ($app->getAttribute('type') != $server->getAttribute('type'))
+				continue;
+			
+			$applications_available[]= $app;
 			}
 		}
 		$ret['tasks'] = $tasks;
