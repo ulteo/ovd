@@ -173,7 +173,7 @@ else {
 
 	echo '<h1>'._('Sessions').'</h1>';
 
-	$sessions = Sessions::getAll();
+	$sessions = Abstract_Session::load_all();
 	if (is_array($sessions) && count($sessions) > 0) {
 		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
 		echo '	<tr class="title">';

@@ -159,7 +159,7 @@ if ($show_configuration) {
 <?php
 if ($show_status) {
 	echo '<ul>';
-	$active_sessions = Sessions::getAll();
+	$active_sessions = Abstract_Session::load_all();
 	$count_active_sessions = count($active_sessions);
 
 	$online_servers = Servers::getOnline();
