@@ -507,10 +507,21 @@ foreach ($session->servers as $server) {
 	$server_node->setAttribute('login', $user_login);
 	$server_node->setAttribute('password', $user_password);
 	foreach ($user->applications() as $application) {
+		$server_applications = $server->getApplications();
+		if (! is_array($server_applications))
+			$server_applications = array();
+
+		$available_applications = array();
+		foreach ($server_applications as $server_application)
+			$available_applications[] = $server_application->getAttribute('id');
+
 		if ($application->getAttribute('static'))
 			continue;
 
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
+			continue;
+
+		if (! in_array($application->getAttribute('id'), $available_applications))
 			continue;
 
 		$application_node = $dom->createElement('application');
