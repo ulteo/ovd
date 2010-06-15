@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import org.ulteo.ovd.Application;
+import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.OvdAppChannel;
 
 public class SouthPanel extends JPanel {
@@ -39,8 +40,8 @@ public class SouthPanel extends JPanel {
 		this.setLayout(new BorderLayout());
 	}
 	
-	public void initButtonPan(OvdAppChannel chan) {
-		buttonPan = new SouthEastPanel(chan, apps, selectedApps);
+	public void initButtonPan(RdpActions rdpActions) {
+		buttonPan = new SouthEastPanel(rdpActions, apps, selectedApps);
 		this.add(BorderLayout.EAST,buttonPan);
 	}
 }

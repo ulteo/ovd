@@ -223,6 +223,15 @@ public class RdpConnectionOvd extends RdpConnection {
 		return this.ovdAppChannel;
 	}
 
+	public void sendLogoff() throws OvdException {
+		if (this.ovdAppChannel == null)
+			throw new OvdException("Unable to send logoff: OvdAppChannel does not exist");
+		if (! this.ovdAppChannelInitialized)
+			throw new OvdException("Unable to send logoff: OvdAppChannel is not initialized");
+
+		this.ovdAppChannel.sendLogoff();
+	}
+
 	/**
 	 * Register an OvdAppListener
 	 * @param listener

@@ -130,6 +130,26 @@ public class OvdAppChannel extends VChannel {
 			e.printStackTrace();
 		}
 	}
+
+	public void sendLogoff() {
+		System.out.println("OvdAppChannel.sendLogoff");
+		RdpPacket_Localised out = new RdpPacket_Localised(1);
+		out.set8(ORDER_LOGOFF);
+		out.markEnd();
+		
+		try {
+			this.send_packet(out);
+		} catch (RdesktopException e) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		} catch (CryptoException e) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		}
+	}
 	
 	public void addOvdAppListener(OvdAppListener listener) {
 		this.listener.add(listener);

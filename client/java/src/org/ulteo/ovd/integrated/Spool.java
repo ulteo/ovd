@@ -58,6 +58,10 @@ public class Spool implements Runnable {
 		this.connections.remove(rc);
 	}
 
+	public int countConnections() {
+		return this.connections.size();
+	}
+
 	public void createTree() {
 		this.instancesDir = new File(Constants.instancesPath);
 		this.instancesDir.mkdirs();

@@ -32,12 +32,15 @@ import javax.swing.JOptionPane;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.RdpActions;
 
 
 public class PortalFrame extends JFrame implements WindowListener{
 
 	private Image logo = null;
 	private MainPanel main = null;
+	private RdpActions rdpActions = null;
 	
 	public PortalFrame(ArrayList<Application> apps, SessionManagerCommunication sm) {
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
@@ -65,7 +68,10 @@ public class PortalFrame extends JFrame implements WindowListener{
 		this.main = main;
 	}
 
-
+	public void initButtonPan(RdpActions rdpActions_) {
+		this.rdpActions = rdpActions_;
+		this.main.getSouth().initButtonPan(this.rdpActions);
+	}
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {}
@@ -74,14 +80,16 @@ public class PortalFrame extends JFrame implements WindowListener{
 	public void windowClosed(WindowEvent arg0) {}
 
 	@Override
-	public void windowClosing(WindowEvent arg0) {			
-		int option = JOptionPane.showConfirmDialog(null, I18n._("Do you really want to close the window ?"), I18n._("Warning !"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+	public void windowClosing(WindowEvent arg0) {
+		if (this.rdpActions != null) {
+			int option = JOptionPane.showConfirmDialog(null, I18n._("Do you really want to close the window ?"), I18n._("Warning !"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
-		if(option == JOptionPane.OK_OPTION) {
-			System.exit(0);
-		}
-		else {
-			this.setVisible(true);
+			if(option == JOptionPane.OK_OPTION) {
+				this.rdpActions.exit(0);
+			}
+			else {
+				this.setVisible(true);
+			}
 		}
 	}
 

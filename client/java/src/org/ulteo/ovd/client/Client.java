@@ -45,12 +45,13 @@ import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 
-public class Client extends Thread implements OvdAppListener, RdpListener {
+public class Client extends Thread implements OvdAppListener, RdpListener, RdpActions {
 
 	private SessionManagerCommunication smComm = null;
 	private ArrayList<RdpConnectionOvd> connections = null;
@@ -167,7 +168,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 		this.isCancelled = true;
 		if(this.connections != null) {
 			for(RdpConnectionOvd co : connections) {
-				co.disconnect();
+				this.disconnect(co);
 			}
 		}
 	}
@@ -244,7 +245,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 				}
 			}
 			if( mode == 1 ) 
-				portal.getMain().getSouth().initButtonPan(co.getOvdAppChannel());
+				portal.initButtonPan(this);
 		}
 
 	}
@@ -294,7 +295,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 		}
 		else {
 			if (SystemTray.isSupported()) {
-				new IntegratedTrayIcon();
+				new IntegratedTrayIcon(this);
 			}
 		}
 		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+co.getServer());
@@ -348,5 +349,26 @@ public class Client extends Thread implements OvdAppListener, RdpListener {
 	@Override
 	public void failed(RdpConnection co) {
 		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.getServer()+" failed");
+	}
+
+	public void disconnect(RdpConnection rc) {
+		try {
+			((RdpConnectionOvd) rc).sendLogoff();
+		} catch (OvdException ex) {
+			Logger.getLogger(Client.class.getName()).log(Level.WARNING, rc.getServer()+": "+ex.getMessage());
+		}
+	}
+
+	public void exit(int return_code) {
+		this.disconnectAll();
+
+		while (this.spool.countConnections() > 0) {
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException ex) {
+				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+		this.quit(return_code);
 	}
 }

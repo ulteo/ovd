@@ -25,16 +25,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import org.ulteo.ovd.Application;
-import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.RdpActions;
 
 public class KillListener implements ActionListener {
 
-	private OvdAppChannel chan = null;
+	private RdpActions rdpActions = null;
 	public static int[] selectedApp = null;
 	public static ArrayList<Application> apps = null;
 	
-	public KillListener(OvdAppChannel chan, ArrayList<Application> apps, int[] selectedApp) {
-		this.chan = chan;
+	public KillListener(RdpActions rdpActions_, ArrayList<Application> apps, int[] selectedApp) {
+		this.rdpActions = rdpActions_;
 		this.apps = apps;
 		this.selectedApp = selectedApp;
 	}
