@@ -396,6 +396,13 @@ foreach ($plugins_args as $k => $v)
 
 $session->setAttribute('settings', $data);
 $session->setAttribute('start_time', time());
+
+$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
+$user_password = gen_string(8);
+
+$session->settings['aps_access_login'] = $user_login;
+$session->settings['aps_access_password'] = $user_password;
+
 $save_session = Abstract_Session::save($session);
 if ($save_session === true) {
 	Logger::info('main', '(startsession) session \''.$session->id.'\' actually saved on DB for user \''.$user->getAttribute('login').'\'');
@@ -423,9 +430,6 @@ $ev->setAttributes(array(
 	'sessid'	=>	$session->id
 ));
 $ev->emit();
-
-$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
-$user_password = gen_string(8);
 
 $dom = new DomDocument('1.0', 'utf-8');
 
