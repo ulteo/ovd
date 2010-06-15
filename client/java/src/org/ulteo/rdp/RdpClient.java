@@ -239,6 +239,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			connection.setPersistentCachingMaxSize(params.persistentCacheMaxSize);
 		}
 
+		connection.initSecondaryChannels();
+
 		connection.addRdpListener(this);
 
 		this.co.add(connection);
