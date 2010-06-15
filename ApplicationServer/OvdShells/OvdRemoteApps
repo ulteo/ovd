@@ -104,14 +104,12 @@ def tryOpenChannel(vchannel):
 
 
 if __name__ == "__main__":
-	if False:
+	if True:
 		import sys
 		
-		path = os.path.join(os.path.expanduser('~'), "dump.txt")
-		buf = file(path, "a")
-		sys.stderr.close()
+		path = os.path.join(os.path.expanduser('~'), "ovd-dump.txt")
+		buf = file(path, "a", 0)
 		sys.stderr = buf
-		sys.stdout.close()
 		sys.stdout = buf
 		print "#################################################"
 	main()
