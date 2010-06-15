@@ -34,7 +34,12 @@ def clone(srcFile, dstFile, path, args):
 	if len(icon) == 0:
 		icon = shortcut.GetPath(0)[0]
 	
-	shortcut.SetPath(path)
+	try:
+		shortcut.SetPath(path)
+	except:
+		Logger.warn("LnkFile::clone: unable to setPath. Check that the following command is available on the system: '%s'"%(path))	
+		return None
+	
 	shortcut.SetArguments(args)
 	shortcut.SetIconLocation(icon, 0)
 	
