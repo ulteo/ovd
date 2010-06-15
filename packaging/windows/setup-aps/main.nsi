@@ -199,6 +199,10 @@ Section "post" PostCmd
   FileWrite $4 "$\r$\n"
   FileClose $4
 
+  SetOutPath "$APPDATA\ovd\log"
+  SetOverwrite ifnewer
+  SetOutPath "$APPDATA\ovd"
+
   DetailPrint "Change PATH Environment variable"
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\plus"
 
