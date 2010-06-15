@@ -220,7 +220,7 @@ class Abstract_Session {
 	}
 
 	public static function countByServer($fqdn_) {
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'server', $fqdn_);
 
@@ -228,7 +228,7 @@ class Abstract_Session {
 	}
 
 	public static function getByServer($fqdn_) {
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'server', $fqdn_);
 		$rows = $SQL->FetchAllResults();
@@ -246,7 +246,7 @@ class Abstract_Session {
 	}
 
 	public static function getByUser($user_login_) {
-		$SQL = MySQL::getInstance();
+		$SQL = SQL::getInstance();
 
 		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'user_login', $user_login_);
 		$rows = $SQL->FetchAllResults();
