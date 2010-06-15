@@ -20,6 +20,8 @@
 
 import os
 from win32com.shell import shell, shellcon
+import win32api
+import win32con
 import win32event
 import win32file
 import win32process
@@ -39,6 +41,17 @@ def launch(cmd, wait=False):
 	win32file.CloseHandle(hThread)
 	
 	return dwProcessId
+
+def kill(pid):
+	hProcess = win32api.OpenProcess(win32con.PROCESS_TERMINATE, False, pid)
+	if hProcess is None:
+		 print "doesn't exist pid"
+		 return False
+	
+	ret = win32process.TerminateProcess(hProcess, 0)
+	
+	win32file.CloseHandle(hProcess);
+	return ret
 
 def getUserSessionDir():
 	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)

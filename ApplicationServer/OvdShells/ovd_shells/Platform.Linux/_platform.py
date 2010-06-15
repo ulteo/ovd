@@ -21,6 +21,7 @@
 import glob
 import os
 import re
+import signal
 
 
 def findProcessWithEnviron(pattern):
@@ -76,6 +77,11 @@ def launch(cmd, wait=False):
 	# Child process
 	os.execl("/bin/sh", "sh", "-c" , cmd)
 	sys.exit(1)
+
+def kill(pid):
+	os.kill(pid, signal.SIGTERM)
+	return True
+
 
 #
 # the subprocess.list2cmdline function doesn't

@@ -40,7 +40,7 @@ def main():
 	os.environ["OVD_SESSION_DIR"] = user_sdir
 	Util.loadUserEnv(user_sdir)
 	
-	Platform.launch("seamlessrdpshell", False)
+	seamlessPid = Platform.launch("seamlessrdpshell", False)
 	
 	vchannel = VirtualChannel(OvdAppChannel.NAME)
 	tryOpenChannel(vchannel)
@@ -80,6 +80,12 @@ def main():
 	im.stop()
 	
 	vchannel.Close()
+	
+	if seamlessPid is not None:
+		print "Killing seamless process"
+		Platform.kill(seamlessPid)
+	
+	
 	sys.exit(0)
 
 
