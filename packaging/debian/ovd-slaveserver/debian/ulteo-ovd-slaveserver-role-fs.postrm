@@ -1,9 +1,21 @@
-#!/bin/sh
+#!/bin/sh -e
+
+if [ -f /usr/share/debconf/confmodule ]; then
+  . /usr/share/debconf/confmodule
+fi
+
 
 CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
 
-if grep "^ROLES.*fs" $CONFFILE; then
+if grep -q "^ROLES.*fs" $CONFFILE; then
     sed -i -r "s/^ROLES *= *(.*)fs(.*)$/ROLES = \1 \2/" $CONFFILE
+fi
+
+if [ "$1" = "purge" ] ; then
+    db_input high ulteo-ovd-slaveserver-role-fs/purge_cache || true
+    db_go
+    db_get ulteo-ovd-slaveserver-role-fs/purge_cache || true
+    [ "$RET" = "true" ] && rm -rf /var/lib/ovd/fs
 fi
 
 #DEBHELPER#
