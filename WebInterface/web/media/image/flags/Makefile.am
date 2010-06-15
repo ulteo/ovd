@@ -81,6 +81,7 @@ scripts_DATA = ad.png \
                fr-be.png \
                fr-ca.png \
                fr-ch.png \
+               fr-fr.png \
                fr-lu.png \
                fr.png \
                ga.png \
