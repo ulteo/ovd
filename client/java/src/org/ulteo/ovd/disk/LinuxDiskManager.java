@@ -43,7 +43,7 @@ public class LinuxDiskManager extends DiskManager {
 	/**************************************************************************/
 	public boolean init() {
 		if (!xdgOpen()) {
-			logger.error("Unable to init DiskManager");
+			logger.warn("Xdg is absent, the system use default value");
 		}
 		addStaticDirectory(getXdgDir("XDG_DOCUMENTS_DIR", "Documents"));
 		addStaticDirectory(getXdgDir("XDG_DESKTOP_DIR", "Desktop"));
@@ -59,10 +59,10 @@ public class LinuxDiskManager extends DiskManager {
 		try {
 			xdgProperties.load(new FileInputStream(xdgFile));
 		} catch (FileNotFoundException e) {
-			logger.error("Unable to find the xdg file: "+xdgFile);
+			logger.warn("Unable to find the xdg file: "+xdgFile);
 			return false;
 		} catch (IOException e) {
-			logger.error("Error while reading xdg file: "+xdgFile);
+			logger.warn("Unable to read xdg file: "+xdgFile);
 			return false;
 		}
 		return true;

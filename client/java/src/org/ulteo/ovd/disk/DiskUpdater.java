@@ -39,8 +39,6 @@ public class DiskUpdater extends TimerTask {
 	
 	/**************************************************************************/
 	public void run() {
-		if (! diskManager.rdpdrChannel.isReady())
-			return;
 		String sharePath;
 		
 		logger.debug("Update drive list");
