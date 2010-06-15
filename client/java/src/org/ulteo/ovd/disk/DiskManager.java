@@ -50,6 +50,10 @@ public abstract class DiskManager {
 		
 	}
 	
+	public void stop() {
+		diskAction.cancel();
+	}
+
 	/**************************************************************************/
 	abstract public boolean init();
 	abstract public ArrayList<String> getNewDrive();

@@ -155,6 +155,15 @@ public class RdpConnectionOvd extends RdpConnection {
 	}
 	
 	/**
+	 * process the disconnected step
+	 *	- stop the disk timer task
+	 */
+	protected void fireDisconnected() {
+		super.fireDisconnected();
+		diskManager.stop();
+	}
+	
+	/**
 	 * Mount local printers
 	 *	- Add rdpdr channel
 	 *	- Use a PrinterManager instance in order to register all local printers
