@@ -101,7 +101,10 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 			logList.initLoader();
 		this.spool = new Spool();
 		this.spool.createIconsDir();
-		this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader());
+		if (graphic)
+			this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader());
+		else
+			this.smComm = new SessionManagerCommunication(fqdn);
 		String session_mode = (mode == 0) ? SessionManagerCommunication.SESSION_MODE_DESKTOP : SessionManagerCommunication.SESSION_MODE_REMOTEAPPS;  
 		if (! this.smComm.askForSession(login, password, session_mode))
 			return;
