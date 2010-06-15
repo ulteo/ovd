@@ -31,8 +31,6 @@ import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.ovd.sm.SessionManagerCommunication;
-import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpActions;
 
 
@@ -42,9 +40,9 @@ public class PortalFrame extends JFrame implements WindowListener{
 	private MainPanel main = null;
 	private RdpActions rdpActions = null;
 	
-	public PortalFrame(ArrayList<Application> apps, SessionManagerCommunication sm) {
+	public PortalFrame(ArrayList<Application> apps) {
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		main = new MainPanel(apps, sm);
+		main = new MainPanel(apps);
 		setIconImage(logo);
 		this.setTitle("Portal");
 		this.setSize(800, 600);

@@ -26,15 +26,14 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 public class MainPanel extends JPanel {
 	
 	private CenterPanel center = null;
 	private SouthPanel south = null;
 	
-	public MainPanel(ArrayList<Application> apps, SessionManagerCommunication sm) {
-		center = new CenterPanel(apps, sm);
+	public MainPanel(ArrayList<Application> apps) {
+		center = new CenterPanel(apps);
 		south = new SouthPanel(apps, center.getCurrent().getSelectedApp());
 		setLayout(new BorderLayout());
 		this.add(BorderLayout.CENTER, center);

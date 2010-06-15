@@ -33,7 +33,6 @@ import javax.swing.JScrollPane;
 
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 
 
@@ -45,7 +44,7 @@ public class Menu extends JPanel {
 	private ArrayList<Application> apps = null;
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 
-	public Menu(CurrentApps currentApps, ArrayList<Application> apps, SessionManagerCommunication sm) {
+	public Menu(CurrentApps currentApps, ArrayList<Application> apps) {
 		this.apps = apps;
 		this.currentApps = currentApps;
 		buttonPan = new JPanel();

@@ -26,16 +26,15 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 public class CenterPanel extends JPanel {
 	
 	private Menu menu = null;
 	private CurrentApps current = null;
 	
-	public CenterPanel(ArrayList<Application> apps, SessionManagerCommunication sm) {
+	public CenterPanel(ArrayList<Application> apps) {
 		current = new CurrentApps();
-		menu = new Menu(current, apps, sm);
+		menu = new Menu(current, apps);
 		setLayout(new GridLayout(1,2));
 		this.add(menu);
 		this.add(current);

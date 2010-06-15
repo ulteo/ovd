@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -24,11 +25,10 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.SystemTray;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
+import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
@@ -53,6 +53,7 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Client extends Thread implements OvdAppListener, RdpListener, RdpActions {
 
+	private Logger logger = Logger.getLogger(Client.class.getName());
 	private SessionManagerCommunication smComm = null;
 	private ArrayList<RdpConnectionOvd> connections = null;
 	private Spool spool = null;
@@ -94,9 +95,8 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 		this.graphic = false;
 	}
 
+	@Override
 	public void run() {
-		/*BasicConfigurator.configure();
-			(Logger.getLogger("net.propero.rdp")).setLevel(org.apache.log4j.Level.INFO);*/
 		if (graphic) 
 			logList.initLoader();
 		this.spool = new Spool();
@@ -123,7 +123,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 				this.sys = new SystemLinux();
 			}
 			else {
-				Logger.getLogger(Client.class.getName()).log(Level.WARNING, "This Operating System is not supported");
+				this.logger.warn("This Operating System is not supported");
 			}
 		}
 		
@@ -153,24 +153,10 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
-				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+				this.logger.error(ex);
 			}
 		}
 		this.quit(0);
-	}
-
-	private void quit(int i) {
-		this.spool.deleteTree();
-		System.exit(i);
-	}
-	
-	public void disconnectAll() {
-		this.isCancelled = true;
-		if(this.connections != null) {
-			for(RdpConnectionOvd co : connections) {
-				this.disconnect(co);
-			}
-		}
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
@@ -221,8 +207,8 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 		desktop.pack();
 	}
 
-	public void initPortal(ArrayList<Application> apps, SessionManagerCommunication sm) {
-		portal = new PortalFrame(apps, sm);
+	public void initPortal(ArrayList<Application> apps) {
+		portal = new PortalFrame(apps);
 	}
 
 	@Override
@@ -291,20 +277,21 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 		if (mode == 0)
 			showDesktop(co);
 		else if (mode == 1) {
-			initPortal(startedAppList, smComm);
+			initPortal(startedAppList);
 		}
 		else {
 			if (SystemTray.isSupported()) {
 				new IntegratedTrayIcon(this);
 			}
 		}
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connected to "+co.getServer());
+		this.logger.info("Connected to "+co.getServer());
 		this.addAvailableConnection((RdpConnectionOvd)co);
 	}
 
 	@Override
 	public void connecting(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Connecting to "+co.getServer());
+		this.logger.info("Connecting to "+co.getServer());
+
 	}
 
 	@Override
@@ -316,7 +303,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 			}
 		}
 		this.removeAvailableConnection((RdpConnectionOvd)co);
-		Logger.getLogger(Client.class.getName()).log(Level.INFO, "Disconnected from "+co.getServer());
+		this.logger.info("Disconnected from "+co.getServer());
 		if(graphic) {
 			Container cp = frame.getContentPane();
 			cp.removeAll();
@@ -348,14 +335,28 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 
 	@Override
 	public void failed(RdpConnection co) {
-		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.getServer()+" failed");
+		this.logger.error("Connection to "+co.getServer()+" failed");
+	}
+
+	private void quit(int i) {
+		this.spool.deleteTree();
+		System.exit(i);
+	}
+
+	public void disconnectAll() {
+		this.isCancelled = true;
+		if(this.connections != null) {
+			for(RdpConnectionOvd co : connections) {
+				this.disconnect(co);
+			}
+		}
 	}
 
 	public void disconnect(RdpConnection rc) {
 		try {
 			((RdpConnectionOvd) rc).sendLogoff();
 		} catch (OvdException ex) {
-			Logger.getLogger(Client.class.getName()).log(Level.WARNING, rc.getServer()+": "+ex.getMessage());
+			this.logger.warn(rc.getServer()+": "+ex.getMessage());
 		}
 	}
 
@@ -366,7 +367,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 			try {
 				Thread.sleep(300);
 			} catch (InterruptedException ex) {
-				Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+				this.logger.error(ex);
 			}
 		}
 		this.quit(return_code);

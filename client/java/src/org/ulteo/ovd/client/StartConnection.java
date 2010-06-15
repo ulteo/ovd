@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -27,9 +28,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import gnu.getopt.Getopt;
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.Client;
 
 
 public class StartConnection {
@@ -39,7 +42,10 @@ public class StartConnection {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		I18n.init();		
+		I18n.init();
+		BasicConfigurator.configure();
+		Logger.getRootLogger().setLevel(Level.INFO);
+
 		String profile = null;
 		String password = null;
 		Getopt opt = new Getopt(Client.productName, args, "c:p:");
