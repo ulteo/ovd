@@ -502,19 +502,19 @@ foreach ($session->servers as $server) {
 	if (! $server)
 		continue;
 
+	$server_applications = $server->getApplications();
+	if (! is_array($server_applications))
+		$server_applications = array();
+
+	$available_applications = array();
+	foreach ($server_applications as $server_application)
+		$available_applications[] = $server_application->getAttribute('id');
+
 	$server_node = $dom->createElement('server');
 	$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
 	$server_node->setAttribute('login', $user_login);
 	$server_node->setAttribute('password', $user_password);
 	foreach ($user->applications() as $application) {
-		$server_applications = $server->getApplications();
-		if (! is_array($server_applications))
-			$server_applications = array();
-
-		$available_applications = array();
-		foreach ($server_applications as $server_application)
-			$available_applications[] = $server_application->getAttribute('id');
-
 		if ($application->getAttribute('static'))
 			continue;
 
