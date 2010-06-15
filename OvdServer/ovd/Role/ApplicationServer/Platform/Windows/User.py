@@ -113,7 +113,7 @@ class User(AbstractUser):
 			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid)
 			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid+'_Classes')
 		except Exception, e:
-			print "Unable to unload user reg: ",str(e)
+			Logger.warn("Unable to unload user reg: %s"%(str(e)))
 			return False
 	
 	

@@ -47,7 +47,7 @@ class Session(AbstractSession):
 		lnk_files = []
 		
 		buf = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
-		print "appdata: ",buf
+		Logger.debug("appdata: '%s'"%(buf))
 		buf = os.path.join(buf, "ovd")
 		if not os.path.isdir(buf):
 			os.makedirs(buf)
@@ -65,7 +65,7 @@ class Session(AbstractSession):
 			f.close()
 			
 			final_file = os.path.join(buf, "shortcuts", os.path.basename(app_target))
-			print "install_client %s %s %s"%(str(app_target), str(final_file), str(app_id))
+			Logger.debug("install_client %s %s %s"%(str(app_target), str(final_file), str(app_id)))
 			LnkFile.clone(app_target, final_file, "startovdapp", app_id)
 			lnk_files.append(final_file)
 		
@@ -73,17 +73,18 @@ class Session(AbstractSession):
 		os.mkdir(instances_dir)
 		
 		programsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
-		print "startmenu: ",programsDir
+		Logger.debug("startmenu: %s"%(programsDir))
 		# remove default startmenu
 		if os.path.exists(programsDir):
 			Platform.System.DeleteDirectory(programsDir)
 		os.makedirs(programsDir)
 		
 		
-		#desktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
+		desktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
+		Logger.debug("desktop dir1: '%s'"%(desktopDir))
 		# bug: this return the Administrator desktop dir path ...
 		desktopDir = os.path.join(profileDir, "Desktop")
-		print "desktop dir",desktopDir
+		Logger.debug("desktop dir2: '%s'"%(desktopDir))
 		if self.parameters.has_key("desktop_icons") and not os.path.exists(desktopDir):
 			os.makedirs(desktopDir)
 		
@@ -124,7 +125,7 @@ class Session(AbstractSession):
 		
 		profileDir = win32profile.GetUserProfileDirectory(logon)
 		
-		print "profiledir:",profileDir
+		Logger.debug("profiledir: '%s'"%(profileDir))
 		self.overwriteDefaultRegistry(profileDir)
 		
 		return (logon, profileDir)
@@ -137,7 +138,7 @@ class Session(AbstractSession):
 			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid)
 			win32api.RegUnLoadKey(win32con.HKEY_USERS, sid+'_Classes')
 		except Exception, e:
-			print "Unable to unload user reg: ",str(e)
+			Logger.warn("Unable to unload user reg: %s"%(str(e)))
 			return False
 		
 		return True

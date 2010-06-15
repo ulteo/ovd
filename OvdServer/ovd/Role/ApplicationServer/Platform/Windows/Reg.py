@@ -20,9 +20,9 @@
 
 import win32api
 import win32con
-
 import win32security
 
+from ovd.Logger import Logger
 
 
 def testMe():
@@ -69,8 +69,7 @@ def disableActiveSetup(rootPath):
 		import sys
 		exception_type, exception_string, tb = sys.exc_info()
 		trace_exc = "".join(traceback.format_tb(tb))
-		print trace_exc
-		print exception_string
+		Logger.error("disableActiveSetup: %s => %s"%(exception_string, trace_exc))
 	
 	win32api.RegCloseKey(hkey_src)
 	win32api.RegCloseKey(hkey_dst)
@@ -107,7 +106,7 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 
 def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
-	print Entry
+	
 	try:
 		(string, type) = win32api.RegQueryValueEx(hkey, "IsInstalled")
 		if not (string == 1 or string == '\x01\x00\x00\x00'):
@@ -182,7 +181,7 @@ def getActiveSetupKeys():
 		try:
 			(version, _) = win32api.RegQueryValueEx(hkey, "Version")
 		except Exception,e:
-			print "error: ",e
+			Logger.error("getActiveSetupKeys: %s"%(str(e)))
 			win32api.RegCloseKey(hkey)
 			continue
 		
