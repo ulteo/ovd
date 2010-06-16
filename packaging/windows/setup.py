@@ -21,6 +21,7 @@
 import getopt
 import glob
 import os
+import pysvn
 import sys
 import tempfile
 
@@ -66,6 +67,11 @@ def perform_target(target, context):
 	
 	
 	versions = []
+	if not context.has_key("VERSION"):
+		c = pysvn.Client()
+		r = c.info(context["SPOOL"])["commit_revision"].number
+		versions.append("99.99~+svn%05d"%(r))
+	
 	
 	r = Config.getArch()
 	r[0] = distDir
