@@ -23,6 +23,7 @@ import win32file
 import win32process
 
 from ovd_shells.InstancesManager import InstancesManager as AbstractInstancesManager
+import _platform as Platform
 
 class InstancesManager(AbstractInstancesManager):
 	def launch(self, cmd):
@@ -54,6 +55,13 @@ class InstancesManager(AbstractInstancesManager):
 		return True
 	
 	def kill(self, handle):
+		ppid = win32process.GetProcessId(handle)
+		
+		#print "kill1 ",ppid
+		for pid in Platform.getSubProcess(ppid):
+			#print "killind pid",pid
+			Platform.kill(pid)
+		#print "kill2"
 		ret = win32process.TerminateProcess(handle, 0)
 		
 		win32file.CloseHandle(handle)

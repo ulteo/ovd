@@ -19,8 +19,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-from win32com.shell import shell, shellcon
+
+import pythoncom
 import win32api
+import win32com.client
+from win32com.shell import shell, shellcon
 import win32con
 import win32event
 import win32file
@@ -68,3 +71,19 @@ def transformCommand(cmd_, args_):
 			return cmd_.replace("%1", args[0])
 		
 		return cmd_
+
+def getSubProcess(ppid):
+	pythoncom.CoInitialize()
+	WMI = win32com.client.GetObject('winmgmts:')
+	processes = WMI.InstancesOf('Win32_Process')
+	
+	pids = []
+	
+	for process in processes:
+		pid = process.Properties_('ProcessID').Value
+		parent = process.Properties_('ParentProcessId').Value
+		
+		if parent == ppid:
+			pids.append(pid)
+	
+	return pids	
