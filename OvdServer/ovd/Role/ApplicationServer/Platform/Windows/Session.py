@@ -69,8 +69,8 @@ class Session(AbstractSession):
 			LnkFile.clone(app_target, final_file, "startovdapp", app_id)
 			lnk_files.append(final_file)
 		
-		instances_dir = os.path.join(buf, "instances")
-		os.mkdir(instances_dir)
+		self.instanceDirectory = os.path.join(buf, "instances")
+		os.mkdir(self.instanceDirectory)
 		
 		programsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
 		Logger.debug("startmenu: %s"%(programsDir))

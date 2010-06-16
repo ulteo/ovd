@@ -18,6 +18,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import locale
+import os
 import time
 
 class Session:
@@ -39,6 +41,8 @@ class Session:
 		self.mode = mode_
 		self.parameters = parameters_
 		self.applications = applications_
+		self.instanceDirectory = None
+		self.used_applications = {}
 		
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
@@ -52,3 +56,25 @@ class Session:
 	def switch_status(self, status_):
 		self.log.append((time.time(), status_))
 		self.status = status_
+	
+	
+	def getUsedApplication(self):
+		if self.status in [Session.SESSION_STATUS_ACTIVE, Session.SESSION_STATUS_INACTIVE] and self.instanceDirectory is not None:
+			(_, encoding) = locale.getdefaultlocale()
+			
+			for name in os.listdir(self.instanceDirectory):
+				name = unicode(name, encoding)
+				if self.used_applications.has_key(name):
+					continue
+				
+				path = os.path.join(self.instanceDirectory, f)
+				if not os.path.isfile(path):
+					continue
+				
+				f = file(path, "r")
+				data = f.read().strip()
+				f.close()
+				
+				self.used_applications[name] = unicode(data, encoding)
+		
+		return self.used_applications

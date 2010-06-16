@@ -48,9 +48,9 @@ class Session(AbstractSession):
 			f.write(cmd)
 			f.close()
 		
-		instances_dir = os.path.join(d, "instances")
-		os.mkdir(instances_dir, 0770)
-		os.chown(instances_dir, pwd.getpwnam(self.user.name)[2], -1)
+		self.instanceDirectory = os.path.join(d, "instances")
+		os.mkdir(self.instanceDirectory, 0770)
+		os.chown(self.instanceDirectory, pwd.getpwnam(self.user.name)[2], -1)
 		
 		xdg_dir = os.path.join(d, "xdg")
 		os.mkdir(xdg_dir)
