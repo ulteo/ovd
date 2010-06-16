@@ -218,19 +218,16 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd co : this.connections) {
 			if (co.getOvdAppChannel() == o) {
-				if (! co.isOvdAppChannelInitialized()) {
-					if( mode == 1) {
-						Menu menu = portal.getMain().getCenter().getMenu();
-						for (Application app : co.getAppsList()) {
-							menu.install(app, co.getOvdAppChannel());
-						}
-						menu.addScroller();
-					}else {
-						for (Application app : co.getAppsList()) {
-							this.sys.install(app);
-						}
+				if( mode == 1) {
+					Menu menu = portal.getMain().getCenter().getMenu();
+					for (Application app : co.getAppsList()) {
+						menu.install(app, co.getOvdAppChannel());
 					}
-					co.setOvdAppChannelInitialized(true);
+					menu.addScroller();
+				}else {
+					for (Application app : co.getAppsList()) {
+						this.sys.install(app);
+					}
 				}
 			}
 			if( mode == 1 ) 

@@ -150,11 +150,8 @@ public class Client implements RdpListener, OvdAppListener{
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd co : this.connections) {
 			if (co.getOvdAppChannel() == o) {
-				if (! co.isOvdAppChannelInitialized()) {
-					for (Application app : co.getAppsList()) {
-						this.sys.install(app);
-					}
-					co.setOvdAppChannelInitialized(true);
+				for (Application app : co.getAppsList()) {
+					this.sys.install(app);
 				}
 			}
 		}

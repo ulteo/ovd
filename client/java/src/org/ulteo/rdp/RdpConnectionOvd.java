@@ -46,7 +46,6 @@ public class RdpConnectionOvd extends RdpConnection {
 	private byte flags = 0x00;
 	private ArrayList<Application> appsList = null;
 	private OvdAppChannel ovdAppChannel = null;
-	private boolean ovdAppChannelInitialized = false;
 	private DiskManager diskManager = null;
 
 	/**
@@ -235,7 +234,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	public void sendLogoff() throws OvdException {
 		if (this.ovdAppChannel == null)
 			throw new OvdException("Unable to send logoff: OvdAppChannel does not exist");
-		if (! this.ovdAppChannelInitialized)
+		if (! this.ovdAppChannel.isReady())
 			throw new OvdException("Unable to send logoff: OvdAppChannel is not initialized");
 
 		this.ovdAppChannel.sendLogoff();
@@ -261,13 +260,5 @@ public class RdpConnectionOvd extends RdpConnection {
 		if (this.ovdAppChannel == null)
 			throw new OvdException("Could not remove an OvdAppListener: OvdAppChannel does not exist");
 		this.ovdAppChannel.removeOvdAppListener(listener);
-	}
-
-	public boolean isOvdAppChannelInitialized() {
-		return this.ovdAppChannelInitialized;
-	}
-
-	public void setOvdAppChannelInitialized(boolean isInitialized) {
-		this.ovdAppChannelInitialized = isInitialized;
 	}
 }
