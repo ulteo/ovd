@@ -1,0 +1,3 @@
+LIBRARY		ULTEOPS
+EXPORTS        DllGetClassObject   PRIVATE
+               DllCanUnloadNow     PRIVATE
