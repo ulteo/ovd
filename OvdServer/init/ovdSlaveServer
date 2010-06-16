@@ -51,7 +51,7 @@ do_stop () {
 	
 	if [ ! -f $PIDFILE ]; then
 		log_warning_msg "NOT RUNNING"
-		return 1
+		return 0
 	fi
 	
 	pidofproc -p $PIDFILE >/dev/null
@@ -89,7 +89,4 @@ case $1 in
 	*)
 		log_success_msg "Usage: $0 {start|stop|force-reload|restart}";;
 esac
-
-
-
 
