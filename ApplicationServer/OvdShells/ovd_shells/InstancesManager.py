@@ -96,16 +96,13 @@ class InstancesManager(threading.Thread):
 		self.instances = []
 	
 	def wait(self):
-		"""must be redeclared
-		
-		wait for all self.instances
-		
 		"""
-		pass
+		wait for all self.instances
+		"""
+		raise NotImplementedError("must be redeclared")
 	
 	def launch(self, cmd):
-		"""must be redeclared"""
-		pass
+		raise NotImplementedError("must be redeclared")
 	
 	def onInstanceNotAvailable(self, token):
 		buf = struct.pack("<B", OvdAppChannel.ORDER_CANT_START)
