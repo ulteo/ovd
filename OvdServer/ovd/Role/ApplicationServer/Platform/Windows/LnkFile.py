@@ -27,23 +27,30 @@ from ovd.Logger import Logger
 def clone(srcFile, dstFile, path, args):
 	pythoncom.CoInitialize()
 	
-	shortcut = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
-	shortcut.QueryInterface(pythoncom.IID_IPersistFile).Load(srcFile)
+	shortcut_src = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
+	shortcut_src.QueryInterface(pythoncom.IID_IPersistFile).Load(srcFile)
 	
-	icon = shortcut.GetIconLocation()[0]
-	if len(icon) == 0:
-		icon = shortcut.GetPath(0)[0]
+	iconLocation = shortcut_src.GetIconLocation()[0]
+	if len(iconLocation) == 0:
+		iconLocation = shortcut_src.GetPath(0)[0]
 	
+	workingDirectory = shortcut_src.GetWorkingDirectory()
+	description = shortcut_src.GetDescription()	
+	
+	
+	shortcut_dst = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 	try:
-		shortcut.SetPath(path)
+		shortcut_dst.SetPath(path)
 	except:
 		Logger.warn("LnkFile::clone: unable to setPath. Check that the following command is available on the system: '%s'"%(path))	
 		return None
 	
-	shortcut.SetArguments(args)
-	shortcut.SetIconLocation(icon, 0)
+	shortcut_dst.SetArguments(args)
+	shortcut_dst.SetIconLocation(iconLocation, 0)
+	shortcut_dst.SetWorkingDirectory(workingDirectory)
+	shortcut_dst.SetDescription(description)
 	
-	shortcut.QueryInterface(pythoncom.IID_IPersistFile).Save(dstFile, 0)
+	shortcut_dst.QueryInterface(pythoncom.IID_IPersistFile).Save(dstFile, 0)
 
 
 def getTarget(filename):
