@@ -33,9 +33,9 @@ class InstancesManager(threading.Thread):
 		self.instances = []
 
 
-	def pushJob(self, app_id, token):
+	def pushJob(self, job):
 		# todo mutex lock
-		self.jobs.append((token, app_id))
+		self.jobs.append(job)
 		# todo mutex unlock
 	
 	
@@ -46,6 +46,12 @@ class InstancesManager(threading.Thread):
 		# todo mutex unlock
 		return self.jobs.pop()
 	
+	def getInstanceByToken(self, token):
+		for instance in self.instances:
+			if instance[1] == token:
+				return instance
+		
+		return None
 	
 	def run(self):
 		t_init = 0
@@ -54,19 +60,33 @@ class InstancesManager(threading.Thread):
 			job = self.popJob()
 			if job is not None:
 				print "IM got job",job
-				(token, app) = job
-				cmd = "startovdapp %d"%(app)
 				
-				instance = self.launch(cmd)
+				order = job[0]
+				if order == OvdAppChannel.ORDER_START:
+					(token, app) = job[1:3]
+					cmd = "startovdapp %d"%(app)
+					
+					instance = self.launch(cmd)
+					
+					# ToDo: sleep 0.5s and check if the process exist
+					# with startovdapp return status, get the error
+					
+					buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
+					buf+= struct.pack("<I", token)
+					self.vchannel.Write(buf)
+					
+					self.instances.append((instance, token))
 				
-				# ToDo: sleep 0.5s and check if the process exist
-				# with startovdapp return status, get the error
-				
-				buf = struct.pack("<B", OvdAppChannel.ORDER_STARTED)
-				buf+= struct.pack("<I", token)
-				self.vchannel.Write(buf)
-				
-				self.instances.append((instance, token))
+				elif order == OvdAppChannel.ORDER_STOP:
+					token = job[1]
+					instance = self.getInstanceByToken(token)
+					
+					if instance is None:
+						print "Not existing token",token
+						continue
+					
+					self.kill(instance[0])
+					self.onInstanceExited(instance)
 			
 			ret = self.wait()
 			
