@@ -54,6 +54,6 @@ class InstancesManager(AbstractInstancesManager):
 		return True
 	
 	def kill(self, handle):
-		TerminateProcess(handle, 0)
+		ret = win32process.TerminateProcess(handle, 0)
 		
 		win32file.CloseHandle(handle)
