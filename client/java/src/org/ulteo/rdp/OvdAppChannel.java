@@ -34,11 +34,12 @@ import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
 public class OvdAppChannel extends VChannel {
-	public static final int	ORDER_INIT		= 0x00;
-	public static final int	ORDER_START		= 0x01;
+	public static final int	ORDER_INIT	= 0x00;
+	public static final int	ORDER_START	= 0x01;
 	public static final int	ORDER_STARTED	= 0x02;
 	public static final int	ORDER_STOPPED	= 0x03;
 	public static final int	ORDER_LOGOFF	= 0x04;
+	public static final int ORDER_STOP	= 0x05;
 	public static final int ORDER_CANT_START= 0x06;
 	
 	private boolean channel_open = false;
@@ -134,7 +135,23 @@ public class OvdAppChannel extends VChannel {
 	}
 
 	public void sendStopApp(int token) {
-		System.out.println("OvdAppChannel.sendStopApp token: "+token);
+		RdpPacket_Localised out = new RdpPacket_Localised(9);
+		out.set8(ORDER_STOP);
+		out.setLittleEndian32(token);
+		out.markEnd();
+		
+		try {
+			this.send_packet(out);
+		} catch( RdesktopException e ) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		} catch( IOException e ) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		} catch( CryptoException e ) {
+			System.err.println( e.getMessage() );
+			e.printStackTrace();
+		}
 	}
 
 	public void sendLogoff() {

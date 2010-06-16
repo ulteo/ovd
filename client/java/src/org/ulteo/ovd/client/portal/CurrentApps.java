@@ -35,6 +35,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.client.I18n;
@@ -43,6 +44,7 @@ import org.ulteo.rdp.OvdAppListener;
 
 public class CurrentApps extends JPanel implements OvdAppListener {
 	
+	private Logger logger = Logger.getLogger(CurrentApps.class);
 	private JList list = null;
 	private ArrayList<ApplicationInstance> currentApps = null;
 	private JScrollPane listScroller = null;
@@ -135,6 +137,10 @@ public class CurrentApps extends JPanel implements OvdAppListener {
 	@Override
 	public void ovdInstanceStarted(int instance) {
 		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
+		if (ai == null) {
+			this.logger.error("Can't find ApplicationInstance "+instance);
+			return;
+		}
 		ai.setState(ApplicationInstance.STARTED);
 
 		this.add(ai);
@@ -143,12 +149,14 @@ public class CurrentApps extends JPanel implements OvdAppListener {
 	@Override
 	public void ovdInstanceStopped(int instance) {
 		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
+		if (ai == null) {
+			this.logger.error("Can't find ApplicationInstance "+instance);
+			return;
+		}
 		ai.setState(ApplicationInstance.STOPPED);
 
 		this.remove(ai);
 	}
 
-	public void ovdInited(OvdAppChannel o) {
-		
-	}
+	public void ovdInited(OvdAppChannel o) {}
 }
