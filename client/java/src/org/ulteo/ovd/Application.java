@@ -36,7 +36,6 @@ public class Application implements Comparator<Object>{
 	private ArrayList<String> supportedMime = null;
 	private RdpConnectionOvd connection = null;
 	private ImageIcon icon = null;
-	private int instanceNum;
 	//private JMenuItem menuItem = null;
 
 	public Application() {}
@@ -110,13 +109,5 @@ public class Application implements Comparator<Object>{
 
 	public int compare(Object o1, Object o2) {
 		return ((Application)o1).name.compareToIgnoreCase(((Application)o2).name);
-	}
-
-	public int getInstanceNum() {
-		return instanceNum;
-	}
-
-	public void setInstanceNum(int instanceNum) {
-		this.instanceNum = instanceNum;
 	}
 }

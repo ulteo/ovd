@@ -133,8 +133,11 @@ public class OvdAppChannel extends VChannel {
 		}
 	}
 
+	public void sendStopApp(int token) {
+		System.out.println("OvdAppChannel.sendStopApp token: "+token);
+	}
+
 	public void sendLogoff() {
-		System.out.println("OvdAppChannel.sendLogoff");
 		RdpPacket_Localised out = new RdpPacket_Localised(1);
 		out.set8(ORDER_LOGOFF);
 		out.markEnd();

@@ -21,20 +21,17 @@
 package org.ulteo.ovd.client.portal;
 
 import java.awt.GridLayout;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
-
-import org.ulteo.ovd.Application;
 
 public class CenterPanel extends JPanel {
 	
 	private Menu menu = null;
 	private CurrentApps current = null;
 	
-	public CenterPanel(ArrayList<Application> apps) {
+	public CenterPanel() {
 		current = new CurrentApps();
-		menu = new Menu(current, apps);
+		menu = new Menu(current);
 		setLayout(new GridLayout(1,2));
 		this.add(menu);
 		this.add(current);

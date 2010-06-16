@@ -21,27 +21,20 @@
 package org.ulteo.ovd.client.portal;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import org.ulteo.ovd.Application;
 import org.ulteo.rdp.RdpActions;
-import org.ulteo.rdp.OvdAppChannel;
 
 public class SouthPanel extends JPanel {
 	private SouthEastPanel buttonPan = null;
-	private ArrayList<Application> apps = null;
-	private int[] selectedApps = null;
 	
-	public SouthPanel(ArrayList<Application> apps, int[] selectedApps) {
-		this.selectedApps = selectedApps;
-		this.apps = apps;
+	public SouthPanel() {
 		this.setLayout(new BorderLayout());
 	}
 	
-	public void initButtonPan(RdpActions rdpActions) {
-		buttonPan = new SouthEastPanel(rdpActions, apps, selectedApps);
+	public void initButtonPan(RdpActions rdpActions, CurrentApps currentAppsPanel) {
+		buttonPan = new SouthEastPanel(rdpActions, currentAppsPanel);
 		this.add(BorderLayout.EAST,buttonPan);
 	}
 }

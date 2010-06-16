@@ -30,84 +30,125 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.rdp.OvdAppListener;
 
-public class CurrentApps extends JPanel {
+public class CurrentApps extends JPanel implements OvdAppListener {
 	
 	private JList list = null;
-	private ArrayList<Application> currentApps = null;
-	private DefaultListModel listModel = new DefaultListModel();
+	private ArrayList<ApplicationInstance> currentApps = null;
 	private JScrollPane listScroller = null;
 	private int[] selectedApp = null;
 	
 	public CurrentApps() {
+		this.currentApps = new ArrayList<ApplicationInstance>();
+
 		this.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(),
 				I18n._("Running applications"),0,0,new Font("Dialog", 1, 12),Color.BLACK));
-		list = new JList(listModel);
-		list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setVisibleRowCount(-1);
-		listScroller = new JScrollPane(list);
-		listScroller.setPreferredSize(new Dimension(350, getHeight()-20));
-		listScroller.revalidate();
-		this.add(listScroller);
-		revalidate();
-	}
-	
-	public void update(ArrayList<Application> apps) {
-		if(currentApps != null)
-			currentApps=null;
-		if(listModel.size() != 0) {
-			listModel.clear();
-		}
-		if(list != null) {
-			listScroller.remove(list);
-			list.removeAll();
-			list = null;			
-		}
-		if(listScroller != null) {
-			this.remove(listScroller);
-			listScroller = null;
-		}
-		currentApps = apps;
-		this.removeAll();
-		for (Application app : currentApps){
-			listModel.addElement(app.getName());
-		}
-		list = new JList(listModel);
-		list.addListSelectionListener(new ListSelectionListener() {
-			
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				KillListener.selectedApp = null;
-				System.out.println("action !");
-				int[] indices = list.getSelectedIndices();
-				for(int i=0;i<indices.length;i++) {
-					System.out.println("selectedIndice "+i+" : "+indices[i]);
-				}
-				KillListener.selectedApp = indices;
-			}
-		});
-		listScroller = new JScrollPane(list);
-		listScroller.getVerticalScrollBar().setUnitIncrement(10);
-		listScroller.setPreferredSize(new Dimension(350, getHeight()-50));
-		this.add(listScroller);
-		list.revalidate();
-		listScroller.revalidate();
-		revalidate();
+
+		this.initList(null);
 	}
 
-	public int[] getSelectedApp() {
-		return selectedApp;
+	private void initList(ListModel listModel) {
+		this.removeAll();
+
+		if (listModel == null)
+			this.list = new JList();
+		else
+			this.list = new JList(listModel);
+		this.list.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		this.list.setLayoutOrientation(JList.VERTICAL);
+		this.list.setVisibleRowCount(-1);
+
+		this.listScroller = new JScrollPane(this.list);
+		this.listScroller.getVerticalScrollBar().setUnitIncrement(10);
+		this.listScroller.setPreferredSize(new Dimension(350, getHeight()-50));
+
+		this.list.revalidate();
+		this.listScroller.revalidate();
+		this.add(this.listScroller);
+		this.revalidate();
+	}
+
+	public void addInstance(ApplicationInstance ai) {
+		this.currentApps.add(ai);
+	}
+
+	private void add(ApplicationInstance new_ai) {
+		DefaultListModel listModel = new DefaultListModel();
+		ListModel previousListModel = list.getModel();
+		for (int i = 0; i < previousListModel.getSize(); i++) {
+			ApplicationInstance ai = (ApplicationInstance) previousListModel.getElementAt(i);
+			System.out.println(ai);
+			listModel.addElement(ai);
+		}
+		listModel.addElement(new_ai);
+		this.initList(listModel);
+	}
+
+	private void remove(ApplicationInstance old_ai) {
+		this.currentApps.remove(old_ai);
+		DefaultListModel listModel = new DefaultListModel();
+		ListModel previousListModel = list.getModel();
+		for (int i = 0; i < previousListModel.getSize(); i++) {
+			ApplicationInstance ai = (ApplicationInstance) previousListModel.getElementAt(i);
+			if (ai == old_ai)
+				continue;
+			listModel.addElement(ai);
+		}
+		this.initList(listModel);
+	}
+
+	private ApplicationInstance findApplicationInstanceByToken(int token) {
+		for (ApplicationInstance ai : this.currentApps) {
+			if (ai.getToken() == token)
+				return ai;
+		}
+		return null;
+	}
+
+	public ApplicationInstance[] getSelectedApps() {
+		Object[] objs = this.list.getSelectedValues();
+		ApplicationInstance[] appsInst = new ApplicationInstance[objs.length];
+		for (int i = 0; i < objs.length; i++) {
+			appsInst[i] = (ApplicationInstance) objs[i];
+		}
+		return appsInst;
 	}
 
 	public void setSelectedApp(int[] selectedApp) {
 		this.selectedApp = selectedApp;
+	}
+
+	@Override
+	public void ovdInstanceError(int instance) {}
+
+	@Override
+	public void ovdInstanceStarted(int instance) {
+		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
+		ai.setState(ApplicationInstance.STARTED);
+
+		this.add(ai);
+	}
+
+	@Override
+	public void ovdInstanceStopped(int instance) {
+		ApplicationInstance ai = this.findApplicationInstanceByToken(instance);
+		ai.setState(ApplicationInstance.STOPPED);
+
+		this.remove(ai);
+	}
+
+	public void ovdInited(OvdAppChannel o) {
+		
 	}
 }

@@ -20,12 +20,9 @@
 
 package org.ulteo.ovd.client.portal;
 
-import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.rdp.RdpActions;
 
@@ -35,9 +32,9 @@ public class SouthEastPanel extends JPanel{
 	private JButton disconnect = new JButton(I18n._("Disconnect"));
 	private JButton killApp = new JButton(I18n._("Kill"));
 	
-	public SouthEastPanel(RdpActions rdpActions, ArrayList<Application> apps, int[] selectedApps) {
+	public SouthEastPanel(RdpActions rdpActions, CurrentApps currentAppsPanel) {
 		disconnect.addActionListener(new LogoutListener(rdpActions));
-		killApp.addActionListener(new KillListener(rdpActions, apps, selectedApps));
+		killApp.addActionListener(new KillListener(rdpActions, currentAppsPanel));
 		this.add(killApp);
 		this.add(disconnect);
 	}

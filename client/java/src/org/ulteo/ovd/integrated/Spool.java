@@ -175,14 +175,6 @@ public class Spool implements Runnable {
 		return null;
 	}
 
-	private ApplicationInstance findAppInstanceByPid(long pid_) {
-		for (ApplicationInstance ai : this.appInstances) {
-			if (ai.getPid() == pid_)
-				return ai;
-		}
-		return null;
-	}
-
 	private ApplicationInstance findAppInstanceByToken(long token_) {
 		for (ApplicationInstance ai : this.appInstances) {
 			if (ai.getToken() == token_)
@@ -198,10 +190,10 @@ public class Spool implements Runnable {
 			System.err.println("Can not start application (id: "+appId_+")");
 			return;
 		}
-		ApplicationInstance ai = new ApplicationInstance(app);
+		ApplicationInstance ai = new ApplicationInstance(app, Integer.parseInt(token_));
 		this.appInstances.add(ai);
 		try {
-			ai.startApp(Long.parseLong(token_));
+			ai.startApp();
 		} catch (RdesktopException ex) {
 			Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
 		} catch (IOException ex) {

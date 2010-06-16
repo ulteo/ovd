@@ -33,7 +33,6 @@ import javax.swing.JScrollPane;
 
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.rdp.OvdAppChannel;
 
 
 public class Menu extends JPanel {
@@ -41,11 +40,9 @@ public class Menu extends JPanel {
 	private JScrollPane scroller = null;
 	private JPanel buttonPan = null;
 	private CurrentApps currentApps = null;
-	private ArrayList<Application> apps = null;
 	private ArrayList<JButton> buttons = new ArrayList<JButton>();
 
-	public Menu(CurrentApps currentApps, ArrayList<Application> apps) {
-		this.apps = apps;
+	public Menu(CurrentApps currentApps) {
 		this.currentApps = currentApps;
 		buttonPan = new JPanel();
 		buttonPan.setLayout(new BoxLayout(buttonPan, BoxLayout.Y_AXIS));
@@ -56,9 +53,9 @@ public class Menu extends JPanel {
 		revalidate();
 	}
 
-	public void install (Application app, OvdAppChannel chann) {
+	public void install (Application app) {
 		ApplicationButton appButton = new ApplicationButton(app.getName(), app.getIcon());
-			appButton.addActionListener(new ApplicationListener(app, chann, currentApps, apps));
+			appButton.addActionListener(new ApplicationListener(app, currentApps));
 			buttonPan.add(appButton);
 			buttonPan.revalidate();
 	}

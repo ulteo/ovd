@@ -45,13 +45,13 @@ import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
-import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
+import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 
-public class Client extends Thread implements OvdAppListener, RdpListener, RdpActions {
+public class Client extends Thread implements RdpListener, RdpActions, OvdAppListener {
 
 	private Logger logger = Logger.getLogger(Client.class.getName());
 	private SessionManagerCommunication smComm = null;
@@ -70,7 +70,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 	private int language = 0;
 	private int keymap = 0;
 	private boolean graphic = true;
-	private ArrayList<Application> startedAppList = new ArrayList<Application>();
+	//private ArrayList<ApplicationInstance> startedAppList = new ArrayList<ApplicationInstance>();
 	private boolean isCancelled = false;
 	private LoginListener logList = null;
 
@@ -139,17 +139,19 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 				desktopLaunched = true;
 			}
 		}
-		else {
+		else if (mode == 1) {
 			for (RdpConnectionOvd co : this.connections) {
 				co.addRdpListener(this);
 				try {
 					co.addOvdAppListener(this);
-					co.connect();
-				} catch (OvdException e) {
-					e.printStackTrace();
+				} catch (OvdException ex) {
+					this.logger.error("Unable to add an OvdApp channel listener");
 				}
+				co.connect();
 			}
 		}
+		else
+			throw new UnsupportedOperationException("OvdAppListener not implemented for intergrated mode");
 		Thread fileListener = new Thread(this.spool);
 		fileListener.start();
 		while (fileListener.isAlive()) {
@@ -210,53 +212,40 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 		desktop.pack();
 	}
 
-	public void initPortal(ArrayList<Application> apps) {
-		portal = new PortalFrame(apps);
+	public void initPortal() {
+		portal = new PortalFrame();
+		for (RdpConnectionOvd rc : this.connections) {
+			try {
+				rc.addOvdAppListener(this.portal.getMain().getCenter().getCurrent());
+			} catch (OvdException ex) {
+				this.logger.error(ex);
+			}
+		}
 	}
 
 	@Override
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd co : this.connections) {
-			if (co.getOvdAppChannel() == o) {
-				if( mode == 1) {
-					Menu menu = portal.getMain().getCenter().getMenu();
-					for (Application app : co.getAppsList()) {
-						menu.install(app, co.getOvdAppChannel());
-					}
-					menu.addScroller();
-				}else {
-					for (Application app : co.getAppsList()) {
-						this.sys.install(app);
-					}
+			if( mode == 1) {
+				Menu menu = portal.getMain().getCenter().getMenu();
+				for (Application app : co.getAppsList()) {
+					menu.install(app);
+				}
+				menu.addScroller();
+
+				portal.initButtonPan(this);
+			}else {
+				for (Application app : co.getAppsList()) {
+					this.sys.install(app);
 				}
 			}
-			if( mode == 1 ) 
-				portal.initButtonPan(this);
 		}
 
 	}
 
-	@Override
-	public void ovdInstanceError(int instance) {
-
-	}
-
-	@Override
-	public void ovdInstanceStarted(int instance) {
-
-	}
-
-	@Override
-	public void ovdInstanceStopped(int instance) {
-		for (Application app : startedAppList) {
-			if(instance == app.getInstanceNum()) {
-				startedAppList.remove(app);
-				portal.getMain().getCenter().getCurrent().update(startedAppList);
-				portal.getMain().getCenter().getCurrent().revalidate();
-				break;
-			}
-		}
-	}
+	public void ovdInstanceError(int instance) {}
+	public void ovdInstanceStarted(int instance) {}
+	public void ovdInstanceStopped(int instance) {}
 
 	public SessionManagerCommunication getSmComm() {
 		return smComm;
@@ -277,7 +266,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 		if (mode == 0)
 			showDesktop(co);
 		else if (mode == 1) {
-			initPortal(startedAppList);
+			initPortal();
 		}
 		else {
 			if (SystemTray.isSupported()) {
@@ -318,7 +307,7 @@ public class Client extends Thread implements OvdAppListener, RdpListener, RdpAc
 				portal.dispose();
 				for(RdpConnectionOvd con : this.connections) {
 					try {
-						con.removeOvdAppListener(this);
+						con.removeOvdAppListener(this.portal.getMain().getCenter().getCurrent());
 					} catch (OvdException e) {
 						e.printStackTrace();
 					}

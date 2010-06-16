@@ -25,40 +25,50 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 
 public class ApplicationInstance {
+	public static final int STOPPING = 0;
+	public static final int STOPPED = 1;
+	public static final int STARTING = 2;
+	public static final int STARTED = 3;
+	private static final int MIN_STATE = 0;
+	private static final int MAX_STATE = 3;
+
 	private Application app = null;
-	private long pid = -1;
-	private long token = -1;
+	private int token = -1;
+	private int state = STOPPED;
 
-	public ApplicationInstance(Application app_) {
+	public ApplicationInstance(Application app_, int token_) {
 		this.app = app_;
+		this.token = token_;
 	}
 
-	public long getPid() {
-		return this.pid;
-	}
-
-	public void setPid(long pid_) {
-		this.pid = pid_;
-	}
-
-	public long getToken() {
+	public int getToken() {
 		return this.token;
 	}
 
-	public void setToken(long token_) {
-		this.token = token_;
+	public int getState() {
+		return this.state;
+	}
+
+	public void setState(int state_) {
+		if ((state < MIN_STATE) || (state > MAX_STATE)) {
+			this.state = STOPPED;
+			return;
+		}
+		this.state = state_;
 	}
 
 	public void startApp() throws RdesktopException, IOException, CryptoException {
-		if (this.token == -1) {
-			System.err.println("You have to set the application token before execute startapp().");
-		}
-
-		this.app.getConnection().getOvdAppChannel().sendStartApp((int) this.token, this.app.getId());
+		this.app.getConnection().getOvdAppChannel().sendStartApp(this.token, this.app.getId());
+		this.state = STARTING;
 	}
 
-	public void startApp(long token_) throws RdesktopException, IOException, CryptoException {
-		this.token = token_;
-		this.startApp();
+	public void stopApp() throws RdesktopException, IOException, CryptoException {
+		this.app.getConnection().getOvdAppChannel().sendStopApp(this.token);
+		this.state = STOPPING;
+	}
+
+	@Override
+	public String toString() {
+		return this.app.getName();
 	}
 }

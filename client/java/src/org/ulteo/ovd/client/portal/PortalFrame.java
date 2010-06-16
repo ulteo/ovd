@@ -24,12 +24,10 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.rdp.RdpActions;
 
@@ -40,9 +38,9 @@ public class PortalFrame extends JFrame implements WindowListener{
 	private MainPanel main = null;
 	private RdpActions rdpActions = null;
 	
-	public PortalFrame(ArrayList<Application> apps) {
+	public PortalFrame() {
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		main = new MainPanel(apps);
+		main = new MainPanel();
 		setIconImage(logo);
 		this.setTitle("Portal");
 		this.setSize(800, 600);
@@ -68,7 +66,7 @@ public class PortalFrame extends JFrame implements WindowListener{
 
 	public void initButtonPan(RdpActions rdpActions_) {
 		this.rdpActions = rdpActions_;
-		this.main.getSouth().initButtonPan(this.rdpActions);
+		this.main.getSouth().initButtonPan(this.rdpActions, this.main.getCenter().getCurrent());
 	}
 
 	@Override

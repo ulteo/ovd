@@ -22,28 +22,39 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.io.IOException;
+import net.propero.rdp.RdesktopException;
+import net.propero.rdp.crypto.CryptoException;
+import org.apache.log4j.Logger;
+import org.ulteo.ovd.ApplicationInstance;
 
-import org.ulteo.ovd.Application;
 import org.ulteo.rdp.RdpActions;
 
 public class KillListener implements ActionListener {
 
+	private Logger logger = Logger.getLogger(KillListener.class);
 	private RdpActions rdpActions = null;
-	public static int[] selectedApp = null;
-	public static ArrayList<Application> apps = null;
+	private CurrentApps currentAppsPanel = null;
 	
-	public KillListener(RdpActions rdpActions_, ArrayList<Application> apps, int[] selectedApp) {
+	public KillListener(RdpActions rdpActions_, CurrentApps currentAppsPanel_) {
 		this.rdpActions = rdpActions_;
-		this.apps = apps;
-		this.selectedApp = selectedApp;
+		this.currentAppsPanel = currentAppsPanel_;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("action kill !");
-		System.out.println("selectedApp : "+selectedApp);
-		System.out.println("selectedApp.length : "+selectedApp.length);
+		ApplicationInstance[] appsInstList = this.currentAppsPanel.getSelectedApps();
+		for (ApplicationInstance ai : appsInstList) {
+			try {
+				ai.stopApp();
+			} catch (RdesktopException ex) {
+				this.logger.warn(ex);
+			} catch (IOException ex) {
+				this.logger.warn(ex);
+			} catch (CryptoException ex) {
+				this.logger.warn(ex);
+			}
+		}
 	}
 
 }

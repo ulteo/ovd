@@ -22,33 +22,43 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.io.IOException;
+import net.propero.rdp.RdesktopException;
+import net.propero.rdp.crypto.CryptoException;
+import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.Application;
-import org.ulteo.rdp.OvdAppChannel;
+import org.ulteo.ovd.ApplicationInstance;
 
 public class ApplicationListener implements ActionListener{
+	private Logger logger = Logger.getLogger(ApplicationListener.class);
 	Application app = null;
-	OvdAppChannel chan = null;
 	CurrentApps currentApps = null;
-	ArrayList<Application> apps = null;
 	
-	public ApplicationListener(Application app, OvdAppChannel chan, CurrentApps currentApps, ArrayList<Application> apps) {
+	public ApplicationListener(Application app, CurrentApps currentApps) {
 		this.app = app;
-		this.chan = chan;
 		this.currentApps = currentApps;
-		this.apps = apps;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		long a = ((long)((Math.random()+1)*1000000));
 		long b = ((long)((Math.random()+1)*100000));
-		long token = (a/b)*(long)((Math.random()+1)*10000);
-		app.setInstanceNum((int)token);
-		apps.add(app);
-		KillListener.apps = apps;
-		currentApps.update(apps);
-		chan.sendStartApp((int)token, app.getId());
+		int token = (int)((a/b)*(long)((Math.random()+1)*10000));
+
+		ApplicationInstance ai = new ApplicationInstance(this.app, token);
+
+		this.currentApps.addInstance(ai);
+
+		try {
+			ai.startApp();
+		} catch (RdesktopException ex) {
+			this.logger.warn(ex);
+		} catch (IOException ex) {
+			this.logger.warn(ex);
+		} catch (CryptoException ex) {
+			this.logger.warn(ex);
+		}
+
 	}
 }

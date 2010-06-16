@@ -32,9 +32,9 @@ public class MainPanel extends JPanel {
 	private CenterPanel center = null;
 	private SouthPanel south = null;
 	
-	public MainPanel(ArrayList<Application> apps) {
-		center = new CenterPanel(apps);
-		south = new SouthPanel(apps, center.getCurrent().getSelectedApp());
+	public MainPanel() {
+		center = new CenterPanel();
+		south = new SouthPanel();
 		setLayout(new BorderLayout());
 		this.add(BorderLayout.CENTER, center);
 		this.add(BorderLayout.SOUTH, south);
