@@ -2,6 +2,7 @@
 
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
 #
 # This program is free software; you can redistribute it and/or 
@@ -286,7 +287,7 @@ class Role(AbstractRole):
 				appNode.setAttribute("application", app_id)
 				sessionNode.appendChild(appNode)
 			
-			rootNode.appendChild(appNode)
+			rootNode.appendChild(sessionNode)
 			
 		doc.appendChild(rootNode)
 		return doc
