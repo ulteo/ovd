@@ -53,7 +53,7 @@ import org.xml.sax.SAXException;
 
 
 public class SessionManagerCommunication {
-	public static final String SESSION_MODE_REMOTEAPPS = "portal";
+	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
 	private String sm = null;
@@ -248,9 +248,9 @@ public class SessionManagerCommunication {
 			Element appItem = null;
 
 			byte flags = 0x00;
-			if (this.sessionMode.equalsIgnoreCase("desktop"))
+			if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_DESKTOP))
 				flags |= RdpConnectionOvd.MODE_DESKTOP;
-			else if (this.sessionMode.equalsIgnoreCase("portal"))
+			else if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_REMOTEAPPS))
 				flags |= RdpConnectionOvd.MODE_APPLICATION;
 			if (this.multimedia.equals("1"))
 				flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
