@@ -33,14 +33,17 @@ import java.io.PrintWriter;
 
 import javax.swing.JOptionPane;
 
-import org.ulteo.ovd.client.Client;
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.client.desktop.OvdClientDesktop;
+import org.ulteo.ovd.client.integrated.OvdClientIntegrated;
+import org.ulteo.ovd.client.portal.OvdClientPortal;
 
 public class LoginListener implements ActionListener{
 
 	private ButtonPanel bp = null;
 	private AuthFrame frame = null;
-	private Client cli = null;
+	private OvdClient cli = null;
 	private File connectionInfo = null;
 	private String username = null;
 	private String host = null;
@@ -117,7 +120,20 @@ public class LoginListener implements ActionListener{
 				cli = null;
 			}
 		}
-		cli = new Client(host, username, pass, mode, frame, resolution, this);
+		switch (this.mode) {
+			case 0:
+				this.cli = new OvdClientDesktop(host, username, pass, frame, resolution, this);
+				break;
+			case 1:
+				this.cli = new OvdClientPortal(host, username, pass, frame, resolution, this);
+				break;
+			case 2:
+				this.cli = new OvdClientIntegrated(host, username, pass, frame, resolution, this);
+				break;
+			default:
+				throw new UnsupportedOperationException("mode "+this.mode+" is not supported");
+		}
+		
 		cli.start();
 	}
 

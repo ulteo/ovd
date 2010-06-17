@@ -31,16 +31,16 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
-import org.ulteo.ovd.client.Client;
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.OvdClient;
 
 public class LoadingFrame extends JDialog implements Runnable{
 
-	private Client cli = null;
+	private OvdClient cli = null;
 	private Image logo = null;
 	private AuthFrame frame = null;
 
-	public LoadingFrame(Client cli, AuthFrame frame) {
+	public LoadingFrame(OvdClient cli, AuthFrame frame) {
 		this.cli = cli;
 		this.frame = frame;
 

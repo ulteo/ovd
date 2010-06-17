@@ -32,34 +32,23 @@ import java.util.logging.Logger;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.RdpConnection;
+import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Spool implements Runnable {
-	private ArrayList<RdpConnectionOvd> connections = null;
+	private OvdClient client = null;
 	private String os = null;
 	private File instancesDir = null;
 	private File toLaunchDir = null;
 	private ArrayList<ApplicationInstance> appInstances = null;
 
-	public Spool() {
-		this.connections = new ArrayList<RdpConnectionOvd>();
+	public Spool(OvdClient client_) {
+		this.client = client_;
 		this.appInstances = new ArrayList<ApplicationInstance>();
 	}
 
 	public void createIconsDir() {
 		new File(Constants.iconsPath).mkdirs();
-	}
-
-	public void addConnection(RdpConnectionOvd rc) {
-		this.connections.add(rc);
-	}
-
-	public void removeConnection(RdpConnectionOvd rc) {
-		this.connections.remove(rc);
-	}
-
-	public int countConnections() {
-		return this.connections.size();
 	}
 
 	public void createTree() {
@@ -165,7 +154,7 @@ public class Spool implements Runnable {
 	}
 
 	private Application findAppById(long id_) {
-		for (RdpConnectionOvd rc : this.connections) {
+		for (RdpConnectionOvd rc : this.client.getAvailableConnections()) {
 			for (Application app : rc.getAppsList()) {
 				if (app.getId() == id_) {
 					return app;
@@ -218,7 +207,7 @@ public class Spool implements Runnable {
 	}
 
 	private void doLogoff() {
-		for (RdpConnection rc : this.connections) {
+		for (RdpConnection rc : this.client.getAvailableConnections()) {
 			try {
 				rc.getSeamlessChannel().send_spawn("logoff");
 			} catch (RdesktopException ex) {

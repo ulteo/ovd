@@ -42,6 +42,7 @@ public class PortalFrame extends JFrame implements WindowListener{
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		main = new MainPanel();
 		setIconImage(logo);
+		this.setVisible(false);
 		this.setTitle("Portal");
 		this.setSize(800, 600);
 		this.setPreferredSize(new Dimension(800,600));
@@ -49,7 +50,6 @@ public class PortalFrame extends JFrame implements WindowListener{
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.addWindowListener(this);
 		this.setContentPane(main);
-		this.setVisible(true);
 		this.setLocationRelativeTo(null);
 		this.pack();
 	}

@@ -33,6 +33,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
+import org.ulteo.ovd.client.desktop.OvdClientDesktop;
+import org.ulteo.ovd.client.integrated.OvdClientIntegrated;
+import org.ulteo.ovd.client.portal.OvdClientPortal;
 
 
 public class StartConnection {
@@ -48,7 +51,7 @@ public class StartConnection {
 
 		String profile = null;
 		String password = null;
-		Getopt opt = new Getopt(Client.productName, args, "c:p:");
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:");
 
 		int c;
 		if ((c = opt.getopt()) != -1) {
@@ -111,7 +114,20 @@ public class StartConnection {
 								resolution=4;
 					}
 				}
-				Client cli = new Client(server, username, password, mode, resolution);
+				OvdClient cli = null;
+				switch (mode) {
+					case 0:
+						cli = new OvdClientDesktop(server, username, password, resolution);
+						break;
+					case 1:
+						cli = new OvdClientPortal(server, username, password, resolution);
+						break;
+					case 2:
+						cli = new OvdClientIntegrated(server, username, password, resolution);
+						break;
+					default:
+						throw new UnsupportedOperationException("mode "+mode+" is not supported");
+				}
 				cli.start();
 			}catch(IOException ioe){
 				ioe.printStackTrace();
