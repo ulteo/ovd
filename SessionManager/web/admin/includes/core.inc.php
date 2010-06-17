@@ -25,6 +25,22 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 require_once(dirname(__FILE__).'/functions.inc.php');
 
+function get_root_admin_url() {
+	// Retrieve the admin root URL
+			$root_admin_dir = dirname(dirname(__FILE__));
+	$root_admin_url = '';
+	
+	$buffer = explode('/', $root_admin_dir);
+	foreach(array_reverse($buffer) as $elem) {
+		$root_admin_url = '/'.$elem.$root_admin_url;
+		
+		if (str_startswith($_SERVER['REQUEST_URI'], $root_admin_url))
+			break;
+	}
+	
+	return $root_admin_url;
+}
+
 if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {
 	$_SESSION['redirect'] = base64_encode($_SERVER['REQUEST_URI']);
 	redirect('login.php');
@@ -37,3 +53,6 @@ if (! $prefs)
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1')
 	popup_error(_('The system is in maintenance mode'));
+
+
+define('ROOT_ADMIN_URL', get_root_admin_url());

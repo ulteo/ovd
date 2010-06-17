@@ -259,30 +259,30 @@ function page_header($params_=array()) {
   //echo '<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />';
   echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />';
 
-  echo '<link rel="shortcut icon" type="image/png" href="media/image/favicon.ico" />';
-  echo '<link rel="stylesheet" type="text/css" href="media/style/common.css" />';
+  echo '<link rel="shortcut icon" type="image/png" href="'.ROOT_ADMIN_URL.'/media/image/favicon.ico" />';
+  echo '<link rel="stylesheet" type="text/css" href="'.ROOT_ADMIN_URL.'/media/style/common.css" />';
 
-  echo '<link rel="stylesheet" type="text/css" href="media/script/lib/nifty/niftyCorners.css" />';
-  echo '<script type="text/javascript" src="media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>';
+  echo '<link rel="stylesheet" type="text/css" href="'.ROOT_ADMIN_URL.'/media/script/lib/nifty/niftyCorners.css" />';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/nifty/niftyCorners.js" charset="utf-8"></script>';
   echo '<script type="text/javascript" charset="utf-8">';
   echo '		NiftyLoad = function() {';
   echo '			Nifty("div.rounded");';
   echo '		}';
   echo '</script>';
 
-  echo '<script type="text/javascript" src="media/script/lib/prototype/prototype.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/common-regular.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/sortable.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/common.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/ajax/configuration.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/ajax/usergroup.js" charset="utf-8"></script>';
-  echo '<script type="text/javascript" src="media/script/ajax/add_del_rows.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/prototype/prototype.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/scriptaculous/scriptaculous.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/lib/scriptaculous/slider.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/common-regular.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/sortable.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/common.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/configuration.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/usergroup.js" charset="utf-8"></script>';
+  echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/media/script/ajax/add_del_rows.js" charset="utf-8"></script>';
 
   if (is_array($params_) && isset($params_['js_files']) && is_array($params_['js_files']))
     foreach ($params_['js_files'] as $js_file)
-      echo '<script type="text/javascript" src="'.$js_file.'" charset="utf-8"></script>';
+      echo '<script type="text/javascript" src="'.ROOT_ADMIN_URL.'/'.$js_file.'" charset="utf-8"></script>';
 
   echo '</head>';
   echo '<body>';
@@ -301,7 +301,7 @@ function page_header($params_=array()) {
   //echo '</td>';
 
   echo '<td style="text-align: right; padding-right: 10px; border-bottom: 1px solid #ccc;" class="logo">';
-  echo '<a href="index.php"><img src="media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
+  echo '<a href="index.php"><img src="'.ROOT_ADMIN_URL.'/media/image/header.png" alt="'.$title.'" title="'.$title.'" /></a>';
   echo '</td>';
 
   echo '</tr>';
@@ -362,7 +362,7 @@ function page_footer() {
   echo '<div class="spacer"></div>';
 
   echo '<div id="footerWrap">'._('powered by');
-  echo ' <a href="http://www.ulteo.com"><img src="media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD v'.OVD_SM_VERSION.'&nbsp;&nbsp;&nbsp;';
+  echo ' <a href="http://www.ulteo.com"><img src="'.ROOT_ADMIN_URL.'/media/image/ulteo.png" width="22" height="22" alt="Ulteo" title="Ulteo" /> Ulteo</a> OVD v'.OVD_SM_VERSION.'&nbsp;&nbsp;&nbsp;';
   echo '</div>';
   echo '</div>';
   echo '</body>';
@@ -450,7 +450,7 @@ function page_menu(){
 //		if ($id == $parent)
 //			echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
 
-		echo '" class="menu"><a href="'.get_target($id).'"><img src="media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
+		echo '" class="menu"><a href="'.ROOT_ADMIN_URL.'/'.get_target($id).'"><img src="'.ROOT_ADMIN_URL.'/media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
 		echo '<span class="menulink';
 		if ($id == $parent)
 			echo '_active';
@@ -474,7 +474,7 @@ function page_sub_menu() {
 
 	echo '<table style="width: 98.5%; margin-left: 10px; margin-right: 10px;" border="0" cellspacing="0" cellpadding="0">';
 	echo '<tr>';
-	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\'media/image/submenu_bg.png\') repeat-y right;">';
+	echo '<td style="width: 150px; text-align: center; vertical-align: top; background: url(\''.ROOT_ADMIN_URL.'/media/image/submenu_bg.png\') repeat-y right;">';
 
 	foreach($menu2 as $id => $entrie) {
 		if (is_array($entrie['parent'])) {
