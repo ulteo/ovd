@@ -193,8 +193,22 @@ $language = $user->getLocale();
 
 $protocol_vars = array('session_mode', 'language', 'timeout', 'persistent', /*'shareable', */'desktop_icons', 'popup', 'debug');
 foreach ($protocol_vars as $protocol_var) {
-	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '')
-		$$protocol_var = $_REQUEST[$protocol_var];
+	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '') {
+		switch ($protocol_var) {
+			case 'session_mode':
+				if (! in_array('session_mode', $advanced_settings) && $_REQUEST['session_mode'] != $session_mode)
+					throw_response(UNAUTHORIZED_SESSION_MODE);
+
+				if (in_array('session_mode', $advanced_settings) && ! in_array($_REQUEST['session_mode'], $enabled_session_modes))
+					throw_response(UNAUTHORIZED_SESSION_MODE);
+
+				$session_mode = $_REQUEST['session_mode'];
+				break;
+			default:
+				$$protocol_var = $_REQUEST[$protocol_var];
+				break;
+		}
+	}
 }
 
 $client = 'unknown';
