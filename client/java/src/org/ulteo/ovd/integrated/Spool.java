@@ -192,7 +192,7 @@ public class Spool implements Runnable {
 		}
 	}
 
-	private void destroyInstance(long token) {
+	public void destroyInstance(int token) {
 		File instanceFile = new File(Constants.instancesPath+Constants.separator+token);
 		if (! instanceFile.exists()) {
 			System.err.println("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : does not exist");

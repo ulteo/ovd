@@ -118,4 +118,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	@Override
 	protected void hide(RdpConnection co) {}
+
+	@Override
+	public void ovdInstanceStopped(int instance_) {
+		this.spool.destroyInstance(instance_);
+	}
 }
