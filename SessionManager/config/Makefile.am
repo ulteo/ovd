@@ -1,12 +1,22 @@
-EXTRA_DIST = apache2.conf.in config.inc.php.in cron.php.in
+EXTRA_DIST = apache2.conf.in \
+			 apache2-vhost-server.conf.in \
+			 apache2-vhost-ssl.conf \
+			 config.inc.php.in \
+			 cron.php.in
 
 conf_SCRIPTS = cron.php
-conf_DATA = apache2.conf config.inc.php
+conf_DATA = apache2.conf \
+			apache2-vhost-server.conf \
+			apache2-vhost-ssl.conf \
+			config.inc.php
 
 confdir = $(sysconfdir)/ulteo/sessionmanager
 
 apache2.conf:
 	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2.conf.in > $@
+
+apache2-vhost-server.conf:
+	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2-vhost-server.conf.in > $@
 
 config.inc.php:
 	sed "s,@LOCALSTATEDIR@,$(localstatedir)," < $(srcdir)/config.inc.php.in > $@

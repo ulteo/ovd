@@ -4,20 +4,17 @@ if [ -f /usr/share/debconf/confmodule ]; then
   . /usr/share/debconf/confmodule
 fi
 
-reload_apache()
-{
-    if apache2ctl configtest 2>/dev/null; then
-        invoke-rc.d apache2 reload || true
-    else
-        echo "Your apache2 configuration is broken, so we're not restarting it for you."
-    fi
-}
-
 if [ "$1" = "purge" ]; then
+    # remove spool files
     rm -rf /var/spool/ulteo/sessionmanager/*
+
+    # remove all log files
     rm -f /var/log/ulteo/sessionmanager/main.log*
     rm -f /var/log/ulteo/sessionmanager/apt-get.log*
     rm -f /var/log/ulteo/sessionmanager/admin.log*
+
+    # remove keys and certificates SSL files generated
+    rm -rf /etc/ulteo/sessionmanager/ovd.*
 
     CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
     if dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
@@ -39,10 +36,6 @@ if [ "$1" = "purge" ]; then
             rm -f /usr/share/ulteo/sessionmanager/base.tar.gz
         fi
     fi
-
-    # apache2 link
-    rm -f /etc/apache2/conf.d/sessionmanager
-    reload_apache
 fi
 
 #DEBHELPER#

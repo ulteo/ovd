@@ -9,14 +9,3 @@ Alias /sessionmanager @DATADIR@/ulteo/sessionmanager
     DirectoryIndex index.php
     php_admin_flag magic_quotes_gpc Off
 </Directory>
-
-NameVirtualHost *:1111
-Listen 1111
-<VirtualHost *:1111>
-	RewriteEngine on
-
-	RewriteCond %{REQUEST_URI} ^/(.+)/(.+)$
-	RewriteRule . /%1_%2.php [L]
-
-	DocumentRoot @DATADIR@/ulteo/sessionmanager/webservices
-</VirtualHost>
