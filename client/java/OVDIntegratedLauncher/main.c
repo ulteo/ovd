@@ -55,7 +55,7 @@ BOOL launch(const LPSTR appId, LPSTR path);
 BOOL getRemoteAppsPath(LPSTR path);
 BOOL getInstancesPath(LPSTR path);
 BOOL getToLaunchPath(LPSTR path);
-unsigned int generateFileId();
+int generateFileId();
 void waitEndApp(LPSTR filename);
 
 
@@ -118,7 +118,7 @@ BOOL launch(const LPSTR appId, LPSTR path) {
     if (getToLaunchPath(path) == FALSE)
         return FALSE;
 
-    snprintf(filename, sizeof(filename), "%u", generateFileId());
+    snprintf(filename, sizeof(filename), "%d", generateFileId());
 
     if (PathAppend(path, filename) == FALSE)
         return FALSE;
@@ -174,8 +174,8 @@ BOOL getToLaunchPath(LPSTR path) {
  * le seamlessrdpshell reçoit un int64 mais ne stocke qu'un int32
  * NE PAS ENVOYER PLUS QU'UN INT32
  */
-unsigned int generateFileId() {
-    return (unsigned int)(time(NULL) * rand());
+int generateFileId() {
+    return (int)(time(NULL) * rand());
 }
 
 void waitEndApp(LPSTR filename) {
