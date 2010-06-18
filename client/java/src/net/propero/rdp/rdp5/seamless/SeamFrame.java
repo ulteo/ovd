@@ -72,6 +72,7 @@ public class SeamFrame extends Frame
 	public SeamFrame(int id_, int group_, Common common_) {
 		this.common = common_;
 		this.id = id_;
+		this.group = group_;
 		this.icon_size = 0;
 		this.icon_buffer = new byte[32 * 32 * 4];
 
