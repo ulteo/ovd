@@ -613,8 +613,8 @@ $session_node->setAttribute('redirect_client_printers', $redirect_client_printer
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
-foreach ($session->servers as $server) {
-	$server = Abstract_Server::load($server);
+if ($session->mode == Session::MODE_DESKTOP) {
+	$server = Abstract_Server::load($session->server);
 	if (! $server)
 		continue;
 
@@ -655,6 +655,50 @@ foreach ($session->servers as $server) {
 		$server_node->appendChild($application_node);
 	}
 	$session_node->appendChild($server_node);
+} elseif ($session->mode == Session::MODE_APPLICATIONS) {
+	foreach ($session->servers as $server) {
+		$server = Abstract_Server::load($server);
+		if (! $server)
+			continue;
+
+		$server_applications = $server->getApplications();
+		if (! is_array($server_applications))
+			$server_applications = array();
+
+		$available_applications = array();
+		foreach ($server_applications as $server_application)
+			$available_applications[] = $server_application->getAttribute('id');
+
+		$server_node = $dom->createElement('server');
+		$server_node->setAttribute('fqdn', $server->getAttribute('external_name'));
+		$server_node->setAttribute('login', $user_login);
+		$server_node->setAttribute('password', $user_password);
+		foreach ($user->applications() as $application) {
+			if ($application->getAttribute('static'))
+				continue;
+
+			if ($application->getAttribute('type') != $server->getAttribute('type'))
+				continue;
+
+			if (! in_array($application->getAttribute('id'), $available_applications))
+				continue;
+
+			$application_node = $dom->createElement('application');
+			$application_node->setAttribute('id', $application->getAttribute('id'));
+			$application_node->setAttribute('name', $application->getAttribute('name'));
+			$application_node->setAttribute('server', $server->getAttribute('external_name'));
+			foreach (explode(';', $application->getAttribute('mimetypes')) as $mimetype) {
+				if ($mimetype == '')
+					continue;
+
+				$mimetype_node = $dom->createElement('mime');
+				$mimetype_node->setAttribute('type', $mimetype);
+				$application_node->appendChild($mimetype_node);
+			}
+			$server_node->appendChild($application_node);
+		}
+		$session_node->appendChild($server_node);
+	}
 }
 $dom->appendChild($session_node);
 
