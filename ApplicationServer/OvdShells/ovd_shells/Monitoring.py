@@ -2,6 +2,7 @@
 
 # Copyright (C) 2009, 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
 #
@@ -36,4 +37,5 @@ class Monitoring(Module):
 	
 	def afterStartApp(self):
 		path = os.path.join(os.environ['OVD_SESSION_DIR'], "instances", "%d"%(os.getpid()))
-		os.remove(path)
+		if os.path.exists(path):
+			os.remove(path)
