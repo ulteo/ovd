@@ -297,6 +297,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		RdpClient.logger.info("Disconnected from "+co.getServer());
 		this.quit(0);
 	}
+	
+	public void seamlessEnabled(RdpConnection co) {}
 
 	/* Window events */
 	public void windowClosing(WindowEvent we) {
@@ -309,4 +311,5 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	public void windowDeiconified(WindowEvent we) {}
 	public void windowActivated(WindowEvent we) {}
 	public void windowDeactivated(WindowEvent we) {}
+
 }

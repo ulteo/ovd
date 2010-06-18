@@ -16,6 +16,7 @@
   <property name="PDFPrinter.dist"  value="PDFPrinter" />
   <property name="standalone.dist"  value="standalone" />
   <property name="rdpClient.dist"  value="rdpClient" />
+  <property name="vdi.dist"  value="vdi" />
 
   <property name="prefix"      location="/usr/local" />
   <property name="datadir"     location="${prefix}/share" />
@@ -455,7 +456,50 @@
     </copy>
   </target>
 
+  <!-- VDI part -->
+
+  <target name="vdi.clean" depends="clean">
+    <delete dir="${vdi.dist}"/>
+  </target>
+
+  <target name="vdi" depends="vdi.clean,precompile" >
+    <javac srcdir="./src;./src1.4"
+           destdir="classes"
+           encoding="UTF8"
+           target="1.5"
+           source="1.5"
+           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
+           includes="org/ulteo/vdi/Client.java org/ulteo/vdi/fifoclient.java"/>
+  </target>
+
+  <target name="vdi.jar" depends="vdi,classes2jar">
+    <copy todir="jar/ressources">
+      <fileset dir="icons"/>
+    </copy>
+    <jar destfile="${vdi.dist}/UlteoVDI.jar"  basedir="jar">
+      <include name="**" />
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.vdi.Client"/>
+        <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="vdi.install" depends="vdi.jar">
+    <mkdir dir="${vdi.dist}"/>
+    <copy todir="${vdi.dist}">
+      <fileset dir="./libs">
+        <include name="UlteoVDI.jar" />
+      </fileset>
+      <fileset dir="./required_libraries">
+        <include name="gnu-getopt.jar" />
+        <include name="log4j-1.2.jar" />
+      </fileset>
+    </copy>
+  </target>
+
   <!-- Source tarball part -->
+
   <target name="dist" description="create a source tarball">
     <mkdir dir="${tar.dir}" />
     <copy todir="${tar.dir}">

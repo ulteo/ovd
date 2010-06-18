@@ -193,4 +193,7 @@ public class Client implements RdpListener, OvdAppListener{
 	public void failed(RdpConnection co) {
 		Logger.getLogger(Client.class.getName()).log(Level.WARNING, "Connection to "+co.getServer()+" failed");
 	}
+
+	@Override
+	public void seamlessEnabled(RdpConnection co) {}
 }

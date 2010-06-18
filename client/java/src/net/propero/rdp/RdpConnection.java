@@ -33,6 +33,7 @@ import javax.swing.JFrame;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
+import net.propero.rdp.rdp5.seamless.SeamListener;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
 import net.propero.rdp.rdp5.Rdp5;
 import net.propero.rdp.rdp5.VChannel;
@@ -42,7 +43,7 @@ import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpsnd.SoundChannel;
 import org.apache.log4j.Logger;
 
-public class RdpConnection implements Runnable{
+public class RdpConnection implements SeamListener, Runnable{
 	public static final int RDP_PORT = 3389;
 	public static final int DEFAULT_BPP = 24;
 	public static final int DEFAULT_WIDTH = 800;
@@ -201,7 +202,9 @@ public class RdpConnection implements Runnable{
 			return;
 
 		this.seamChannel = new SeamlessChannel(this.opt, this.common);
-		if (! this.addChannel(this.seamChannel))
+		if (this.addChannel(this.seamChannel))
+			this.seamChannel.addSeamListener(this);
+		else
 			throw new RdesktopException("Unable to add seamless channel");
 	}
 
@@ -510,5 +513,15 @@ public class RdpConnection implements Runnable{
 		for(RdpListener list : listener) {
 			list.disconnected(this);
 		}
+	}
+	
+	protected void fireSeamlessEnabled() {
+		for(RdpListener list : listener) {
+			list.seamlessEnabled(this);
+		}
+	}
+
+	public void ackHello(SeamlessChannel channel) {
+		this.fireSeamlessEnabled();
 	}
 }

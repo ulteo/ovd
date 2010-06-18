@@ -260,4 +260,7 @@ public class Desktop extends Applet implements RdpListener {
 	public void failed(RdpConnection co) {
 		System.out.println("Connection failed: removing rdpConnection to "+this.rc.getServer());
 	}
+
+	@Override
+	public void seamlessEnabled(RdpConnection co) {}
 }

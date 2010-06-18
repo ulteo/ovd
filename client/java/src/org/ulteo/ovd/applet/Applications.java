@@ -410,4 +410,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 	public void failed(RdpConnection co) {
 		System.out.println("Connection failed: removing rdpConnection to "+co.getServer());
 	}
+
+	@Override
+	public void seamlessEnabled(RdpConnection co) {}
 }

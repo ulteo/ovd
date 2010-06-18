@@ -70,7 +70,9 @@ public class RdpConnectionVDI extends RdpConnection {
 			return;
 
 		this.seamChannel = new SeamlessChannel(this.opt, this.common);
-		if (! this.addChannel(this.seamChannel))
+		if (this.addChannel(this.seamChannel))
+			this.seamChannel.addSeamListener(this);
+		else
 			throw new RdesktopException("Unable to add seamless channel");
 	}
 	

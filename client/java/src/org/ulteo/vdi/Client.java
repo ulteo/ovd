@@ -22,6 +22,8 @@ package org.ulteo.vdi;
 
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
+import net.propero.rdp.rdp5.seamless.SeamlessChannel;
+import net.propero.rdp.rdp5.seamless.SeamListener;
 
 import org.apache.log4j.*;
 import gnu.getopt.Getopt;
@@ -32,25 +34,32 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class Client implements RdpListener {
+public class Client implements RdpListener, Runnable {
 
 	private static Logger logger;
+	private RdpConnectionVDI rc;
+	private String namedpipe;
+	private Thread readingpipe;
+	private SeamlessChannel seamchannel;
 	
-	private RdpConnectionVDI rc = null;
-	
-	public Client(String fqdn_, String login_, String password_) {
+	public Client(String fqdn_, String login_, String password_, String namedpipe_) {
 		
 		BasicConfigurator.configure();
 		(Logger.getLogger("net.propero.rdp")).setLevel(Level.INFO);
 		logger = Logger.getLogger(Client.class.getName());
+		logger.setLevel(Level.DEBUG);
+		
+		namedpipe = namedpipe_;
 		
 		try {
 			rc = new RdpConnectionVDI();
+			seamchannel = rc.getSeamlessChannel();
 		} catch (VdiException e) {
 			logger.error("Can't create an RDP connexion");
 		}
 		
-		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment()
+										   .getMaximumWindowBounds();
 
 		rc.setGraphic((int)(dim.width & ~3), (int)dim.height);
 		rc.setServer(fqdn_);
@@ -63,24 +72,13 @@ public class Client implements RdpListener {
 		rc.connect();
 	}
 
-	private void sendCmd(String cmd) {
-		if(rc.isConnected())
-			try {
-				rc.getSeamlessChannel().send_spawn(cmd);
-				logger.info("Commande seamless exécutée: " + cmd); 
-			} catch (Exception e) {
-				logger.warn("Impossibilité de lancer cette commande : " + cmd);
-				e.printStackTrace();
-			}
-	}
-
 	public void connected(RdpConnection co) {
 		logger.info("Connected to " + rc.getUsername() + "@" + rc.getServer());
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
         		try {
         			logger.info("Logoff from " + rc.getServer());
-        			rc.getSeamlessChannel().send_spawn("logoff");
+        			seamchannel.send_spawn("logoff");
         		} catch (Exception e1) {
         			logger.error("logoff from" + rc.getServer() + "failed");
         		}
@@ -94,12 +92,45 @@ public class Client implements RdpListener {
 
 	public void disconnected(RdpConnection co) {
 		logger.info("Disconnected from " + rc.getUsername() + "@" + rc.getServer());
+		if (readingpipe != null) readingpipe.interrupt();
 		System.exit(0);
 	}
 
 	public void failed(RdpConnection co) {
 		logger.info("Connection to "+rc.getUsername() + "@" + rc.getServer() + "failed");
 		System.exit(0);
+	}
+
+	public void seamlessEnabled(RdpConnection co) {
+		logger.info("SeamlessChannel OK");
+		readingpipe = new Thread(this);
+		readingpipe.start();
+	}
+	
+	public void run() {
+		try {
+			String pipe = fifodir + namedpipe;
+			FileReader f = new FileReader(pipe);
+			BufferedReader in = new BufferedReader(f);
+			
+			while (true) {
+				if (!in.ready()) {
+					Thread.sleep(100);
+				} else { 
+					String cmd = in.readLine();
+					if (cmd != null) {
+						seamchannel.send_spawn(cmd);
+						logger.debug("Commande seamless exécutée: " + cmd); 
+					}
+				}
+			}
+		} catch (IOException e) {
+			logger.error("named pipe" + namedpipe + "error");
+		} catch (Exception e) {
+			logger.error("untreated error");
+		} finally {
+			this.disconnected(rc);
+		}
 	}
 	
 	/************************* STATIC *******************************/
@@ -117,7 +148,7 @@ public class Client implements RdpListener {
 		System.exit(0);
 	} // usage()
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		String username = null;
 		String password = null;
 		String server = null;
@@ -147,25 +178,8 @@ public class Client implements RdpListener {
 			usage();
 		}
 		
-		Client client = new Client(server, username, password);
-		String pipe = fifodir + namedpipe;
-		logger.info("Lecture dans le tube nommé: " + pipe);
-		FileReader f = new FileReader(pipe);
-		BufferedReader in = new BufferedReader(f);
-
-		while (true) {
-			if (!in.ready()) {
-				Thread.sleep(100);
-			} else { 
-				try {
-					String cmd = in.readLine();
-					if (cmd != null) client.sendCmd(cmd);
-				} catch (IOException e) {
-					logger.error("Problème de lecture du tube nommé");
-					throw new Exception("Problème de lecture du tube nommé");
-				}
-			}
-		}
+		new Client(server, username, password, namedpipe);
+		
 	} // main 
-	
+
 }

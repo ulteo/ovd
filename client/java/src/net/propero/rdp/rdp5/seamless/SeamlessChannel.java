@@ -38,6 +38,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Hashtable;
@@ -47,6 +48,7 @@ import org.apache.log4j.Logger;
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
+import net.propero.rdp.RdpListener;
 import net.propero.rdp.RdpPacket;
 import net.propero.rdp.RdpPacket_Localised;
 import net.propero.rdp.crypto.CryptoException;
@@ -76,6 +78,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 
 	private Frame main_window = null;
 	private ClipChannel clipChannel = null;
+	private ArrayList<SeamListener> listener = new ArrayList<SeamListener>();
     
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -484,13 +487,12 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	}
 
 	protected boolean processHello() {
-		logger.info("Going to ack the HELLO");
 		try {
 		    this.send_sync();
 		} catch(Exception e) {
 		    logger.error("Unable to send_sync !!!");
 		}
-		logger.info("succeed to ack the HELLO");
+		this.fireAckHello();
 
 		if (this.main_window != null)
 			this.main_window.setVisible(false);
@@ -776,4 +778,19 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 			}
 		}
 	}
+	
+	public void addSeamListener(SeamListener l) {
+		this.listener.add(l);
+	}
+	
+	public void removeSeamListener(SeamListener l) {
+		this.listener.remove(l);
+	}
+	
+	protected void fireAckHello() {
+		logger.debug("ACK hello received");
+		for(SeamListener list : listener)
+			list.ackHello(this);
+	}
+	
 }

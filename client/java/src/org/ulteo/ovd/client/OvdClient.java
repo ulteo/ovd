@@ -202,6 +202,8 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		}
 	}
 
+	public void seamlessEnabled(RdpConnection co) {}
+
 	public void disconnectAll() {
 		this.isCancelled = true;
 		if(this.availableConnections != null) {
@@ -223,4 +225,5 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		}
 		this.quit(return_code);
 	}
+
 }

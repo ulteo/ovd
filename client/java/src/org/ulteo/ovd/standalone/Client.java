@@ -230,4 +230,7 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 
 	@Override
 	public void failed(RdpConnection co) {}
+
+	@Override
+	public void seamlessEnabled(RdpConnection co) {}
 }
