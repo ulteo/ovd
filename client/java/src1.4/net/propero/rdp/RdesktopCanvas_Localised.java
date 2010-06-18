@@ -79,6 +79,18 @@ public class RdesktopCanvas_Localised extends RdesktopCanvas {
 	public void update(Graphics g) {
 		        
   		Rectangle r = g.getClipBounds();
+
+		if ((r.x < 0) || (r.x >= this.opt.width) || (r.y < 0) || (r.y >= this.opt.height) || (r.width > this.opt.width) || (r.height > this.opt.height)) {
+			String msg = new String("[RdesktopCanvas_Localised.update] old: "+r);
+			r.x = Math.max(r.x, 0);
+			r.x = Math.min(r.x, this.opt.width - 1);
+			r.y = Math.max(r.y, 0);
+			r.y = Math.min(r.y, this.opt.height - 1);
+			r.width = Math.min(r.width, this.opt.width);
+			r.height = Math.min(r.height, this.opt.height);
+			RdesktopCanvas_Localised.logger.warn(msg+"\tnew: "+r);
+		}
+
 	    g.drawImage(backstore.getSubimage(r.x,r.y,r.width,r.height),r.x,r.y,null);
         
         if(this.opt.save_graphics){

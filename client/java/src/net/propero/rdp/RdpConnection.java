@@ -151,6 +151,8 @@ public class RdpConnection implements SeamListener, Runnable{
 			throw new RdesktopException("Unable to init canvas: The desktop size is negative or nil");
 		this.canvas = new RdesktopCanvas_Localised(this.opt, this.common);
 		this.canvas.addFocusListener(new RdesktopFocusListener(this.canvas, this.opt));
+
+		this.logger.info("Desktop size: "+this.opt.width+"x"+this.opt.height);
 	}
 	
 	protected boolean addChannel(VChannel channel) {
@@ -344,6 +346,15 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 		}
 
+		if (this.opt.seamlessEnabled) {
+			JFrame f = new JFrame();
+			f.setVisible(false);
+			f.add(this.canvas);
+			f.pack();
+		}
+		
+		this.fireConnecting();
+
 		// Configure a keyboard layout
 		this.loadKeymap();
 		
@@ -356,14 +367,6 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.readytosend = false;
 		this.opt.grab_keyboard = false;
 		if(this.opt.hostname.equalsIgnoreCase("localhost")) this.opt.hostname = "127.0.0.1";
-		
-		if (this.opt.seamlessEnabled) {
-			JFrame f = new JFrame();
-			f.setVisible(false);
-			f.add(this.canvas);
-			f.pack();
-		}
-		this.fireConnecting();
 		
 		boolean keep_running = true;
 		int exit = 0;

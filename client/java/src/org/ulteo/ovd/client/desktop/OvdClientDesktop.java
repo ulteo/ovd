@@ -72,9 +72,7 @@ public class OvdClientDesktop extends OvdClient {
 
 	@Override
 	public void display(RdpConnection co) {
-		this.desktop.getContentPane().add(co.getCanvas());
-		co.getCanvas().validate();
-		this.desktop.pack();
+		this.desktop.setVisible(true);
 	}
 
 	@Override
@@ -109,5 +107,14 @@ public class OvdClientDesktop extends OvdClient {
 			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2), (this.desktop.getHeight()-(inset.bottom+inset.top)+2));
 		}
 		this.desktopLaunched = true;
+	}
+
+	@Override
+	public void connecting(RdpConnection co) {
+		super.connecting(co);
+
+		this.desktop.getContentPane().add(co.getCanvas());
+		co.getCanvas().validate();
+		this.desktop.pack();
 	}
 }

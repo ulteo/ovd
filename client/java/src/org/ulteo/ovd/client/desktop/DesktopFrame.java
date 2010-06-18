@@ -45,7 +45,7 @@ public class DesktopFrame extends JFrame implements WindowListener {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setLocation(0, 0);
-		setVisible(true);
+		setVisible(false);
 		this.addWindowListener(this);
 		pack();
 	}
