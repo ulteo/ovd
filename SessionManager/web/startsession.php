@@ -168,6 +168,9 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 if (! is_array($advanced_settings))
 	$advanced_settings = array();
 
+$remote_desktop_settings = $prefs->get('general', 'remote_desktop_settings');
+$remote_applications_settings = $prefs->get('general', 'remote_applications_settings');
+
 $enabled_session_modes = array();
 $sessmodes = array('desktop', 'applications');
 foreach ($sessmodes as $sessmode) {
