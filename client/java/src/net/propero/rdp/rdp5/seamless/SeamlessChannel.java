@@ -48,7 +48,6 @@ import org.apache.log4j.Logger;
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
-import net.propero.rdp.RdpListener;
 import net.propero.rdp.RdpPacket;
 import net.propero.rdp.RdpPacket_Localised;
 import net.propero.rdp.crypto.CryptoException;
@@ -654,11 +653,13 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		
 		String order = firstWord+",";
 		
-		while (data.getPosition() < data.size()) {
-			char r = (char)data.get8();
-			order+=r;
-		}
-		
+		byte[] utf8Bytes = new byte[data.size() - data.getPosition()];
+		data.copyToByteArray(utf8Bytes, 0, data.getPosition(), utf8Bytes.length);
+
+		String utf8Str = new String(utf8Bytes, "UTF8");
+
+		order += utf8Str;
+
 		this.processLine(order);
 	}
 	
