@@ -25,7 +25,7 @@ def getSVNRoot():
 def pre_sources_commads():
 	return [
 		"javac -sourcepath @SVN_ROOT@/client/java/src @SVN_ROOT@/client/java/src/org/ulteo/ovd/integrated/WindowsPaths.java",
-		"javah -classpath @SVN_ROOT@/client/java/classes/ -d . org.ulteo.ovd.integrated.WindowsPaths"
+		"javah -classpath @SVN_ROOT@/client/java/src -d . org.ulteo.ovd.integrated.WindowsPaths"
 	]
 
 
