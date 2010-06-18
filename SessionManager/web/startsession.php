@@ -489,41 +489,41 @@ $ev->setAttributes(array(
 ));
 $ev->emit();
 
-$dom = new DomDocument('1.0', 'utf-8');
+if ($session->mode == Session::MODE_DESKTOP) {
+	$dom = new DomDocument('1.0', 'utf-8');
 
-$session_node = $dom->createElement('session');
-$session_node->setAttribute('id', $session->id);
-$session_node->setAttribute('mode', (($session->mode == Session::MODE_DESKTOP)?Session::MODE_DESKTOP:Session::MODE_APPLICATIONS));
-foreach (array('desktop_icons') as $parameter) {
-	$parameter_node = $dom->createElement('parameter');
-	$parameter_node->setAttribute('name', $parameter);
-	$parameter_node->setAttribute('value', true);
-	$session_node->appendChild($parameter_node);
-}
-$user_node = $dom->createElement('user');
-$user_node->setAttribute('login', $user_login);
-$user_node->setAttribute('password', $user_password);
-$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
-$session_node->appendChild($user_node);
+	$session_node = $dom->createElement('session');
+	$session_node->setAttribute('id', $session->id);
+	$session_node->setAttribute('mode', Session::MODE_DESKTOP);
+	foreach (array('desktop_icons') as $parameter) {
+		$parameter_node = $dom->createElement('parameter');
+		$parameter_node->setAttribute('name', $parameter);
+		$parameter_node->setAttribute('value', true);
+		$session_node->appendChild($parameter_node);
+	}
+	$user_node = $dom->createElement('user');
+	$user_node->setAttribute('login', $user_login);
+	$user_node->setAttribute('password', $user_password);
+	$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+	$session_node->appendChild($user_node);
 
-foreach ($user->applications() as $application) {
-	if ($application->getAttribute('static'))
-		continue;
+	foreach ($user->applications() as $application) {
+		if ($application->getAttribute('static'))
+			continue;
 
-	$application_node = $dom->createElement('application');
-	$application_node->setAttribute('id', $application->getAttribute('id'));
-	$application_node->setAttribute('mode', 'local');
-	$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+		$application_node = $dom->createElement('application');
+		$application_node->setAttribute('id', $application->getAttribute('id'));
+		$application_node->setAttribute('mode', 'local');
+		$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
 
-	$session_node->appendChild($application_node);
-}
+		$session_node->appendChild($application_node);
+	}
 
-$dom->appendChild($session_node);
+	$dom->appendChild($session_node);
 
-$xml = $dom->saveXML();
+	$xml = $dom->saveXML();
 
-foreach ($session->servers as $server) {
-	$server = Abstract_Server::load($server);
+	$server = Abstract_Server::load($session->server);
 	if (! $server)
 		continue;
 
@@ -539,6 +539,64 @@ foreach ($session->servers as $server) {
 
 		echo $dom->saveXML();
 		exit(1);
+	}
+}
+
+if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$session_node = $dom->createElement('session');
+	$session_node->setAttribute('id', $session->id);
+	$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
+	foreach (array('desktop_icons') as $parameter) {
+		$parameter_node = $dom->createElement('parameter');
+		$parameter_node->setAttribute('name', $parameter);
+		$parameter_node->setAttribute('value', true);
+		$session_node->appendChild($parameter_node);
+	}
+	$user_node = $dom->createElement('user');
+	$user_node->setAttribute('login', $user_login);
+	$user_node->setAttribute('password', $user_password);
+	$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+	$session_node->appendChild($user_node);
+
+	foreach ($user->applications() as $application) {
+		if ($application->getAttribute('static'))
+			continue;
+
+		$application_node = $dom->createElement('application');
+		$application_node->setAttribute('id', $application->getAttribute('id'));
+		$application_node->setAttribute('mode', 'local');
+		$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+
+		$session_node->appendChild($application_node);
+	}
+
+	$dom->appendChild($session_node);
+
+	$xml = $dom->saveXML();
+
+	foreach ($session->servers as $server) {
+		$server = Abstract_Server::load($server);
+		if (! $server)
+			continue;
+
+		if ($server->fqdn == $session->server)
+			continue;
+
+		$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
+		if (! $ret) {
+			header('Content-Type: text/xml; charset=utf-8');
+			$dom = new DomDocument('1.0', 'utf-8');
+
+			$node = $dom->createElement('error');
+			$node->setAttribute('id', 1);
+			$node->setAttribute('message', 'Server does not send a valid XML');
+			$dom->appendChild($node);
+
+			echo $dom->saveXML();
+			exit(1);
+		}
 	}
 }
 
