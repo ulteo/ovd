@@ -1,20 +1,17 @@
 #! /bin/sh -e
 
 . /usr/share/debconf/confmodule
-db_version 2.0
 
 CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
-
 if [ ! -f $CONFFILE ]; then
     echo "Config file $CONFFILE not found"
     exit 1
 fi
 
-# set the configuration if we install
-db_get ulteo-ovd-slaveserver/session_manager || true
-sed -i "s/^session_manager.*/session_manager = $RET/" $CONFFILE
-
-db_stop
+if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]; then
+    db_get ulteo-ovd-slaveserver/session_manager || true
+    sed -i "s/^session_manager.*/session_manager = $RET/" $CONFFILE
+fi
 
 #DEBHELPER#
 
