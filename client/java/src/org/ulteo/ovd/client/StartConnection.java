@@ -69,7 +69,7 @@ public class StartConnection {
 			
 			InputStreamReader reader = null;
 			LineNumberReader lineReader = null;
-			File profileInfo = new File("./"+profile);
+			File profileInfo = new File(profile);
 			try{
 				FileInputStream fis = new FileInputStream(profileInfo);
 				LineNumberReader l = new LineNumberReader(       
