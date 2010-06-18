@@ -431,6 +431,8 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 						flags |= SEAMLESS_CREATE_MODAL;
 					if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
 						flags |= SEAMLESS_CREATE_POPUP;
+					if (! (style & WS_SIZEBOX))
+						flags |= SEAMLESS_CREATE_FIXEDSIZE;
 
 					// handle always on top
 					if (exstyle & WS_EX_TOPMOST)
