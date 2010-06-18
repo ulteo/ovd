@@ -54,6 +54,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	public static final int WINDOW_CREATE_MODAL	= 0x0001;
 	public static final int WINDOW_CREATE_TOPMOST	= 0x0002;
 	public static final int WINDOW_CREATE_POPUP	= 0x0004;
+	public static final int WINDOW_CREATE_FIXEDSIZE	= 0x0008;
 
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -88,7 +89,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			sf = new SeamlessPopup((int)id, (int)group, sf_parent, (int)flags, this.common);
 		}
 		else
-			sf = new SeamlessFrame((int)id, (int)group, this.common);
+			sf = new SeamlessFrame((int)id, (int)group, (int)flags, this.common);
 		
 		sf.setName(name);
 		sf.addMouseListener(this);
@@ -166,13 +167,15 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 				yClick < RectWindow.SEAMLESS_BORDER_SIZE ||
 				yClick > (bounds.height - RectWindow.SEAMLESS_BORDER_SIZE)
 			) {
-				rw.setResizeClick(e);
-				int corner = this.detectCorner(e, bounds);
-				rw.setCorner(corner);
+				if (sw._isResizable()) {
+					rw.setResizeClick(e);
+					int corner = this.detectCorner(e, bounds);
+					rw.setCorner(corner);
 
-				rw.offsetsResize(e, bounds);
-				rw.resize();
-				sw.lockMouseEvents();
+					rw.offsetsResize(e, bounds);
+					rw.resize();
+					sw.lockMouseEvents();
+				}
 			}
 			else if (
 				yClick >= RectWindow.SEAMLESS_BORDER_SIZE &&

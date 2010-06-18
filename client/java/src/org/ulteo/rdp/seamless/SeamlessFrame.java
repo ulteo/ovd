@@ -31,11 +31,18 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 	protected boolean lockMouseEvents = false;
 	protected RectWindow rw = null;
 
-	public SeamlessFrame(int id_, int group_, Common common_) {
+	public SeamlessFrame(int id_, int group_, int flags, Common common_) {
 		super(id_, group_, common_);
+		
+		this.parseFlags(flags);
 		
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
 		this.rw = new RectWindow(this, dim);
+	}
+
+	private void parseFlags(int flags) {
+		if ((flags & SeamlessChannel.WINDOW_CREATE_FIXEDSIZE) != 0)
+			this.setResizable(false);
 	}
 
 	public boolean isMouseEventsLocked() {
@@ -54,6 +61,10 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 
 	public RectWindow getRectWindow() {
 		return this.rw;
+	}
+
+	public boolean _isResizable() {
+		return this.isResizable();
 	}
 
 	public void processMouseEvent(MouseEvent e, int type) {

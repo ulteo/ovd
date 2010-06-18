@@ -89,6 +89,8 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private void parseFlags(int flags) {
 		if ((flags & SeamlessChannel.WINDOW_CREATE_MODAL) != 0)
 			this.modal = true;
+		if ((flags & SeamlessChannel.WINDOW_CREATE_FIXEDSIZE) != 0)
+			this.setResizable(false);
 	}
 
 	@Override
@@ -310,6 +312,10 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 
 	public RectWindow getRectWindow() {
 		return this.rw;
+	}
+
+	public boolean _isResizable() {
+		return this.isResizable();
 	}
 
 	public boolean isMouseEventsLocked() {

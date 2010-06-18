@@ -30,6 +30,8 @@ public interface SeamlessMovingResizing {
 
 	RectWindow getRectWindow();
 
+	boolean _isResizable();
+
 	boolean isMouseEventsLocked();
 	void lockMouseEvents();
 	void unlockMouseEvents();
