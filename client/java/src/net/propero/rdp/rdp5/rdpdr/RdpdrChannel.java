@@ -32,6 +32,10 @@ package net.propero.rdp.rdp5.rdpdr;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
+import org.apache.log4j.Logger;
+
+import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 import net.propero.rdp.Common;
 import net.propero.rdp.RdesktopException;
@@ -75,6 +79,7 @@ public class RdpdrChannel extends VChannel {
 	public int g_num_devices = 0;
 	LinkedList g_iorequest = new LinkedList();
 	public static RdpdrDevice[] g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
+	protected static Logger logger = Logger.getLogger(RdpdrChannel.class);
 	
 	public RdpdrChannel(Options opt, Common common) {
 		super(opt, common);
@@ -251,7 +256,7 @@ public class RdpdrChannel extends VChannel {
 	}
 	
 	public void rdpdr_send_available() {
-		System.out.println("rdpdr_send_available");
+		logger.debug("Rdpdr channel is ready");
 		String magic = "rDAD";
 		//uint32 driverlen, printerlen, bloblen;
 		int i;

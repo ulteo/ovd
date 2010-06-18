@@ -130,12 +130,16 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		return g_num_devices;
 	}
 
+	public void rdpdr_send_available() {
+		this.ready = true;
+		super.rdpdr_send_available();
+	}
+	
  	public boolean register(RdpdrDevice v) {
 		OVDRdpdrChannel.g_rdpdr_device[g_num_devices] = v;
 		//this.g_rdpdr_device[g_num_devices].set_local_path("c:\\temp\\");
 		//this.g_rdpdr_device[g_num_devices].set_name("fo");
 		g_num_devices++;
-		this.ready = true;
 		return true;
  	}
 

@@ -41,6 +41,9 @@ public class DiskUpdater extends TimerTask {
 	public void run() {
 		String sharePath;
 		
+ 		if (! diskManager.rdpdrChannel.isReady()) {
+ 			return;
+ 		}
 		logger.debug("Update drive list");
 		if( !diskManager.isStaticShareMounted()) {
 			diskManager.mountStaticShare();
