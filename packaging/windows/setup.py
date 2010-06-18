@@ -37,14 +37,21 @@ def getArchive(name, context):
 		
 		return (path, context["VERSION"])
 	
-	for f in glob.glob(os.path.join(context["PWD"], "%s-*.zip"%(name))):
+	files = glob.glob(os.path.join(context["PWD"], "%s-*.zip"%(name)))
+	files.sort()
+	
+	files2 = []
+	for f in files:
 		extra = os.path.basename(f)[len("%s-"%(name)):-len(".zip")]
 		if extra.startswith("src-"):
 			continue
 		
-		return (f, extra)
+		files2.append((f, extra))
 	
-	return None
+	if len(files2)==0:
+		return None
+	
+	return files2[-1]
 
 
 def perform_target(target, context):
