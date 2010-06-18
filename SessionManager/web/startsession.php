@@ -281,7 +281,48 @@ if (is_null($buf_servers) || count($buf_servers) == 0) {
 $servers = array();
 foreach ($buf_servers as $buf_server)
 	$servers[] = $buf_server->fqdn;
-$random_server = $servers[0];
+$random_server = false;
+if (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings)) {
+	switch ($remote_desktop_settings['desktop_type']) {
+		case 'linux':
+			foreach ($servers as $k => $server) {
+				$server = Abstract_Server::load($server);
+				if (! $server)
+					continue;
+
+				if ($server->getAttribute('type') == 'linux') {
+					$random_server = $servers[$k];
+					break;
+				}
+			}
+			if (! $random_server) {
+				Logger::error('main', '(startsession) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
+				die_error(_('You don\'t have access to a "linux" desktop server for now'),__FILE__,__LINE__);
+			}
+			break;
+		case 'windows':
+			foreach ($servers as $k => $server) {
+				$server = Abstract_Server::load($server);
+				if (! $server)
+					continue;
+
+				if ($server->getAttribute('type') == 'windows') {
+					$random_server = $servers[$k];
+					break;
+				}
+			}
+			if (! $random_server) {
+				Logger::error('main', '(startsession) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
+				die_error(_('You don\'t have access to a "windows" desktop server for now'),__FILE__,__LINE__);
+			}
+			break;
+		case 'any':
+		default:
+			$random_server = $servers[0];
+			break;
+	}
+} else
+	$random_server = $servers[0];
 
 /*if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
