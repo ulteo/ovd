@@ -749,7 +749,6 @@ public class Disk extends RdpdrDevice{
 			}
 			raf.close();
 		}catch(Exception e){
-			e.printStackTrace();
 			return STATUS_INVALID_PARAMETER;
 		}
 		result[0] = n;
