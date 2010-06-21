@@ -24,10 +24,9 @@ import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
-import java.util.Observable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Observer;
+import java.util.HashMap;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -126,8 +125,13 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 	public void run() {
 		try {
 			this.c = new SessionManagerCommunication(this.panel_auth.getServer());
+
+			HashMap<String,String> mapParams = new HashMap<String, String>();
+			mapParams.put(SessionManagerCommunication.FIELD_LOGIN, this.panel_auth.getLogin());
+			mapParams.put(SessionManagerCommunication.FIELD_PASSWORD, this.panel_auth.getPassword());
+			mapParams.put(SessionManagerCommunication.FIELD_SESSION_MODE, this.panel_auth.getMode());
 			
-			if (!c.askForSession(this.panel_auth.getLogin(), this.panel_auth.getPassword(), this.panel_auth.getMode())) {
+			if (!c.askForSession(mapParams)) {
 				this.switch2Auth();
 				return;
 			}

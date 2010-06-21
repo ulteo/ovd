@@ -64,7 +64,7 @@ public class StartConnection {
 				}
 			}while ((c = opt.getopt()) != -1); 
 			
-			if (profile == null || password == null)
+			if (profile == null && password != null)
 				usage();
 			
 			InputStreamReader reader = null;
@@ -88,6 +88,7 @@ public class StartConnection {
 				String current = null;
 				int mode = 0;
 				int resolution = 0;
+				String token = null;
 				
 				for(int i=0;i<count;i++) {
 					current = lineReader.readLine();
@@ -113,20 +114,29 @@ public class StartConnection {
 							else
 								resolution=4;
 					}
+					else if (current.startsWith("token=")) {
+						token = current.substring("token=".length());
+					}
 				}
 				OvdClient cli = null;
-				switch (mode) {
-					case 0:
-						cli = new OvdClientDesktop(server, username, password, resolution);
-						break;
-					case 1:
-						cli = new OvdClientPortal(server, username, password, resolution);
-						break;
-					case 2:
-						cli = new OvdClientIntegrated(server, username, password, resolution);
-						break;
-					default:
-						throw new UnsupportedOperationException("mode "+mode+" is not supported");
+				if (token != null) {
+					System.out.println("Token Auth");
+					cli = new OvdClientIntegrated(server, token);
+				}
+				else {
+					switch (mode) {
+						case 0:
+							cli = new OvdClientDesktop(server, username, password, resolution);
+							break;
+						case 1:
+							cli = new OvdClientPortal(server, username, password);
+							break;
+						case 2:
+							cli = new OvdClientIntegrated(server, username, password);
+							break;
+						default:
+							throw new UnsupportedOperationException("mode "+mode+" is not supported");
+					}
 				}
 				cli.start();
 			}catch(IOException ioe){

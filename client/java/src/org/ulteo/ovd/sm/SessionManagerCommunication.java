@@ -35,6 +35,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,6 +56,14 @@ import org.xml.sax.SAXException;
 public class SessionManagerCommunication {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
+
+	public static final String WEBSERVICE_START_SESSION = "startsession.php";
+	public static final String WEBSERVICE_EXTERNAL_APPS = "client/remote_apps.php";
+
+	public static final String FIELD_LOGIN = "login";
+	public static final String FIELD_PASSWORD = "password";
+	public static final String FIELD_TOKEN = "token";
+	public static final String FIELD_SESSION_MODE = "session_mode";
 
 	private String sm = null;
 	private ArrayList<RdpConnectionOvd> connections = null;
@@ -96,13 +105,44 @@ public class SessionManagerCommunication {
 		return listConcat;
 	}
 
-	public boolean askForSession(String login, String password, String mode) {
-		this.requestMode = mode;
+	public boolean askForSession(HashMap<String,String> params) {
+		if (params == null)
+			return false;
+
+		if ((! params.containsKey(FIELD_LOGIN)) || (! params.containsKey(FIELD_PASSWORD)) || (! params.containsKey(FIELD_SESSION_MODE))) {
+			System.err.println("ERROR: some askForSession required arguments are missing");
+			return false;
+		}
+
+		this.requestMode = params.get(FIELD_SESSION_MODE);
+
+		return this.askWebservice(WEBSERVICE_START_SESSION, params);
+	}
+
+	public boolean askForApplications(HashMap<String,String> params) {
+		this.requestMode = SESSION_MODE_REMOTEAPPS;
+
+		if (! params.containsKey(FIELD_TOKEN)) {
+			System.err.println("ERROR: some askForApplications required arguments are missing");
+			return false;
+		}
+
+		if (params.containsKey(FIELD_SESSION_MODE) && (! params.get(FIELD_SESSION_MODE).equals(SESSION_MODE_REMOTEAPPS))) {
+			System.out.println("Overriding session mode");
+			params.remove(FIELD_SESSION_MODE);
+		}
+		if (! params.containsKey(FIELD_SESSION_MODE))
+			params.put(FIELD_SESSION_MODE, this.requestMode);
+
+		return this.askWebservice(WEBSERVICE_EXTERNAL_APPS, params);
+	}
+
+	private boolean askWebservice(String webservice, HashMap<String,String> params) {
 		boolean ret = false;
 		HttpURLConnection connexion = null;
 		
 		try {
-			URL url = new URL(this.base_url+"startsession.php");
+			URL url = new URL(this.base_url+webservice);
 
 			System.out.println("Connexion a l'url ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
@@ -116,9 +156,9 @@ public class SessionManagerCommunication {
 			OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 
 			List<String> listParameter = new ArrayList<String>();
-			listParameter.add("login="+login);
-			listParameter.add("password="+password);
-			listParameter.add("session_mode="+this.requestMode);
+			for (String name : params.keySet()) {
+				listParameter.add(name+"="+params.get(name));
+			}
 
 			out.write(makeStringForPost(listParameter));
 			out.flush();
@@ -137,7 +177,6 @@ public class SessionManagerCommunication {
 			else {
 				System.err.println("Invalid response");
 			}
-
 		}
 		catch (Exception e) {
 			System.err.println("Invalid session initialisation format");
@@ -272,7 +311,7 @@ public class SessionManagerCommunication {
 
 			rc.setServer(server.getAttribute("fqdn"));
 			rc.setCredentials(server.getAttribute("login"), server.getAttribute("password"));
-
+			
 			// Ensure that width is multiple of 4
 			// Prevent artifact on screen with a with resolution
 			// not divisible by 4

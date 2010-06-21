@@ -22,6 +22,7 @@
 package org.ulteo.ovd.client.desktop;
 
 import java.awt.Insets;
+import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.client.OvdClient;
@@ -34,20 +35,22 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientDesktop extends OvdClient {
 	private DesktopFrame desktop = null;
 	private boolean desktopLaunched = false;
+	private int resolution = 0;
 
-	public OvdClientDesktop(String fqdn_, String login_, String password_, int resolution_) {
-		super(fqdn_, login_, password_, resolution_);
+	public OvdClientDesktop(String fqdn_, String login_, String password_, int resolution) {
+		super(fqdn_, OvdClient.toMap(login_, password_));
 
-		this.init();
+		this.init(resolution);
 	}
 
 	public OvdClientDesktop(String fqdn_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
-		super(fqdn_, login_, password_, frame_, resolution, logList_);
+		super(fqdn_, OvdClient.toMap(login_, password_), frame_, logList_);
 
-		this.init();
+		this.init(resolution);
 	}
 
-	private void init() {
+	private void init(int resolution_) {
+		this.resolution = resolution_;
 		this.logger = Logger.getLogger(OvdClientDesktop.class);
 		this.setSessionMode(SessionManagerCommunication.SESSION_MODE_DESKTOP);
 	}

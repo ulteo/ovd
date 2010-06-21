@@ -23,6 +23,7 @@ package org.ulteo.ovd.client;
 
 import java.awt.Container;
 import java.util.ArrayList;
+import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.apache.log4j.Logger;
@@ -35,14 +36,20 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClient extends Thread implements RdpListener, RdpActions {
 	public static final String productName = "OVD Client";
-	
+
+	public static HashMap<String,String> toMap(String login_, String password_) {
+		HashMap<String,String> map = new HashMap<String, String>();
+
+		map.put(SessionManagerCommunication.FIELD_LOGIN, login_);
+		map.put(SessionManagerCommunication.FIELD_PASSWORD, password_);
+
+		return map;
+	}
 
 	protected Logger logger = Logger.getLogger(OvdClient.class);
 
 	protected String fqdn = null;
-	protected String login = null;
-	protected String password = null;
-	protected int resolution = 0;
+	protected HashMap<String,String> params = null;
 	protected boolean graphic = false;
 
 	protected AuthFrame frame = null;
@@ -50,31 +57,28 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	protected boolean isCancelled = false;
 
 	protected SessionManagerCommunication smComm = null;
-	protected String sessionMode = null;
 	protected ArrayList<RdpConnectionOvd> availableConnections = null;
 
-	public OvdClient(String fqdn_, String login_, String password_, int resolution) {
-		this.initMembers(fqdn_, login_, password_, resolution, false);
+	public OvdClient(String fqdn_, HashMap<String,String> params_) {
+		this.initMembers(fqdn_, params_, false);
 	}
 
-	public OvdClient(String fqdn_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
-		this.initMembers(fqdn_, login_, password_, resolution, true);
+	public OvdClient(String fqdn_, HashMap<String,String> params_, AuthFrame frame_, LoginListener logList_) {
+		this.initMembers(fqdn_, params_, true);
 		this.frame = frame_;
 		this.logList = logList_;
 	}
 
-	private void initMembers(String fqdn_, String login_, String password_, int resolution_, boolean graphic_) {
+	private void initMembers(String fqdn_, HashMap<String,String> params_, boolean graphic_) {
 		this.fqdn = fqdn_;
-		this.login = login_;
-		this.password = password_;
-		this.resolution = resolution_;
+		this.params = params_;
 		this.graphic = graphic_;
 
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
 	}
 
 	protected void setSessionMode(String sessionMode_) {
-		this.sessionMode = sessionMode_;
+		this.params.put(SessionManagerCommunication.FIELD_SESSION_MODE, sessionMode_);
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
@@ -93,6 +97,10 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		return this.availableConnections;
 	}
 
+	protected boolean askSM() {
+		return this.smComm.askForSession(this.params);
+	}
+
 	@Override
 	public void run() {
 		if (graphic)
@@ -104,7 +112,8 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 			this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader());
 		else
 			this.smComm = new SessionManagerCommunication(fqdn);
-		if (! this.smComm.askForSession(this.login, this.password, this.sessionMode))
+		
+		if (! this.askSM())
 			return;
 
 		if (this.isCancelled) {

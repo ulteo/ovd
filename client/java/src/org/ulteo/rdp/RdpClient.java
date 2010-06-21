@@ -27,6 +27,7 @@ import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
@@ -194,7 +195,11 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			this.ovd_mode_application = true;
 		
 		SessionManagerCommunication sm = new SessionManagerCommunication(params.server);
-		sm.askForSession(params.username, params.password, params.ovd_mode);
+		HashMap<String,String> mapParams = new HashMap<String, String>();
+		mapParams.put(SessionManagerCommunication.FIELD_LOGIN, params.username);
+		mapParams.put(SessionManagerCommunication.FIELD_PASSWORD, params.password);
+		mapParams.put(SessionManagerCommunication.FIELD_SESSION_MODE, params.ovd_mode);
+		sm.askForSession(mapParams);
 
 		this.co = sm.getConnections();
 		for (RdpConnectionOvd rc : this.co) {

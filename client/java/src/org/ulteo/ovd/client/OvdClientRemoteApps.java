@@ -21,6 +21,7 @@
 
 package org.ulteo.ovd.client;
 
+import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
@@ -32,14 +33,20 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
-	public OvdClientRemoteApps(String fqdn_, String login_, String password_, int resolution) {
-		super(fqdn_, login_, password_, resolution);
+	public OvdClientRemoteApps(String fqdn_, HashMap<String,String> params_) {
+		super(fqdn_, params_);
+		
+		this.init();
+	}
+
+	public OvdClientRemoteApps(String fqdn_, String login_, String password_) {
+		super(fqdn_, OvdClient.toMap(login_, password_));
 
 		this.init();
 	}
 
-	public OvdClientRemoteApps(String fqdn_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
-		super(fqdn_, login_, password_, frame_, resolution, logList_);
+	public OvdClientRemoteApps(String fqdn_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
+		super(fqdn_, OvdClient.toMap(login_, password_), frame_, logList_);
 
 		this.init();
 	}

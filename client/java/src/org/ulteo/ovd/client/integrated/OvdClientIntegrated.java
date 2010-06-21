@@ -22,6 +22,7 @@
 package org.ulteo.ovd.client.integrated;
 
 import java.awt.SystemTray;
+import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
@@ -33,21 +34,41 @@ import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientIntegrated extends OvdClientRemoteApps {
+
+	protected static HashMap<String, String> toMap(String token) {
+		HashMap<String, String> map = new HashMap<String, String>();
+
+		map.put(SessionManagerCommunication.FIELD_TOKEN, token);
+
+		return map;
+	}
+
 	private Spool spool = null;
 	private SystemAbstract system = null;
 
-	public OvdClientIntegrated(String fqdn_, String login_, String password_, int resolution) {
-		super(fqdn_, login_, password_, resolution);
+	private boolean authByToken = false;
+
+	public OvdClientIntegrated(String fqdn_, String token_) {
+		super(fqdn_, OvdClientIntegrated.toMap(token_));
+
+		this.authByToken = true;
 
 		this.init();
 	}
 
-	public OvdClientIntegrated(String fqdn_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
-		super(fqdn_, login_, password_, frame_, resolution, logList_);
+	public OvdClientIntegrated(String fqdn_, String login_, String password_) {
+		super(fqdn_, login_, password_);
+
+		this.init();
+	}
+
+	public OvdClientIntegrated(String fqdn_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
+		super(fqdn_, login_, password_, frame_, logList_);
 
 		this.init();
 	}
@@ -69,6 +90,14 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		else {
 			this.logger.warn("This Operating System is not supported");
 		}
+	}
+
+	@Override
+	protected boolean askSM() {
+		if (this.authByToken)
+			return this.smComm.askForApplications(this.params);
+		else
+			return super.askSM();
 	}
 
 	@Override

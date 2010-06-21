@@ -125,10 +125,10 @@ public class LoginListener implements ActionListener{
 				this.cli = new OvdClientDesktop(host, username, pass, frame, resolution, this);
 				break;
 			case 1:
-				this.cli = new OvdClientPortal(host, username, pass, frame, resolution, this);
+				this.cli = new OvdClientPortal(host, username, pass, frame, this);
 				break;
 			case 2:
-				this.cli = new OvdClientIntegrated(host, username, pass, frame, resolution, this);
+				this.cli = new OvdClientIntegrated(host, username, pass, frame, this);
 				break;
 			default:
 				throw new UnsupportedOperationException("mode "+this.mode+" is not supported");
