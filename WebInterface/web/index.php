@@ -266,6 +266,17 @@ checkLogin();
 													</script>
 												</td>
 											</tr>
+											<tr style="<?php echo ((defined('SESSIONMANAGER_URL'))?'display: none;':'') ?>">
+												<td style="width: 22px; text-align: right; vertical-align: middle;">
+													<!--<img src="media/image/icons/ssl.png" alt="" title="" />-->
+												</td>
+												<td style="text-align: left; vertical-align: middle;">
+													<strong><?php echo _('Use HTTPS'); ?></strong>
+												</td>
+												<td style="text-align: right; vertical-align: middle;">
+													<input type="checkbox" id="use_https" value="1" checked="checked" />
+												</td>
+											</tr>
 											<tr>
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
 													<!--<img src="media/image/icons/user_login.png" alt="" title="" />-->
