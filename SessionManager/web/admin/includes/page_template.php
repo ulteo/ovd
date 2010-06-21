@@ -369,13 +369,21 @@ function page_footer() {
   echo '</html>';
 }
 
+function get_current_page() {
+	$buf = strpos($_SERVER['REQUEST_URI'], ROOT_ADMIN_URL);
+	if ($buf === FALSE)
+		return '';
+	
+	return substr($_SERVER['REQUEST_URI'], $buf + strlen(ROOT_ADMIN_URL) + 1);
+}
+
 function get_menu_entry() {
 	global $menu;
 	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
 	$dirname_php_self = dirname($_SERVER['PHP_SELF']);
-	$page = substr($_SERVER['REQUEST_URI'], strlen($dirname_php_self) + 1);
-
+	$page = get_current_page();
+	
 	$buffer_id = Null;
 	$buffer_len = 0;
 	foreach($menu2 as $id => $entrie) {
@@ -490,7 +498,7 @@ function page_sub_menu() {
 		else
 			echo '<div class="container">';
 
-		echo '<a href="'.$entrie['page'].'">'.$entrie['name'].'</a>';
+		echo '<a href="'.ROOT_ADMIN_URL.'/'.$entrie['page'].'">'.$entrie['name'].'</a>';
 		echo '</div>';
 	}
 
