@@ -1,4 +1,5 @@
-scripts_DATA = session_status.php
+scripts_DATA = remote_apps.php \
+               session_status.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/client
 
