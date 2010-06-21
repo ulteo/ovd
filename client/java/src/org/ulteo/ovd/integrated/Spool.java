@@ -27,15 +27,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.RdpConnection;
+import org.apache.log4j.Logger;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class Spool implements Runnable {
+	private Logger logger = Logger.getLogger(Spool.class);
 	private OvdClient client = null;
 	private String os = null;
 	private File instancesDir = null;
@@ -111,6 +111,8 @@ public class Spool implements Runnable {
 		if (! this.existTree()) {
 			this.createTree();
 		}
+
+		this.logger.info("Spool thread started");
 		
 		while (true) {
 			File[] children = this.toLaunchDir.listFiles();
@@ -126,18 +128,18 @@ public class Spool implements Runnable {
 					}
 					scanner.close();
 				} catch (FileNotFoundException ex) {
-					System.err.println("No read file '" + todo.getAbsolutePath() + "'");
+					this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
 				}
 
 				File instance = new File(Constants.instancesPath+Constants.separator+todo.getName());
 				try {
 					instance.createNewFile();
 				} catch (IOException ex) {
-					Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+					this.logger.error(ex);
 				}
 
 				if (!todo.delete()) {
-					System.err.println("No delete file '" + todo.getAbsolutePath() + "'");
+					this.logger.error("No delete file '" + todo.getAbsolutePath() + "'");
 				}
 
 				if (todo.getName().equals("quit")) {
@@ -148,7 +150,7 @@ public class Spool implements Runnable {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
-				Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+				this.logger.error(ex);
 			}
 		}
 	}
@@ -174,9 +176,10 @@ public class Spool implements Runnable {
 
 	private void startApp(String appId_, String token_) {
 		int appId = Integer.parseInt(appId_);
+		this.logger.info("Start application "+appId+"("+token_+")");
 		Application app = this.findAppById(appId);
 		if (app == null) {
-			System.err.println("Can not start application (id: "+appId_+")");
+			this.logger.error("Can not start application (id: "+appId_+")");
 			return;
 		}
 		ApplicationInstance ai = new ApplicationInstance(app, Integer.parseInt(token_));
@@ -184,22 +187,22 @@ public class Spool implements Runnable {
 		try {
 			ai.startApp();
 		} catch (RdesktopException ex) {
-			Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+			this.logger.error(ex);
 		} catch (IOException ex) {
-			Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+			this.logger.error(ex);
 		} catch (CryptoException ex) {
-			Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+			this.logger.error(ex);
 		}
 	}
 
 	public void destroyInstance(int token) {
 		File instanceFile = new File(Constants.instancesPath+Constants.separator+token);
 		if (! instanceFile.exists()) {
-			System.err.println("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : does not exist");
+			this.logger.error("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : does not exist");
 			return;
 		}
 		if (! instanceFile.isFile()) {
-			System.err.println("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : is not a file");
+			this.logger.error("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : is not a file");
 			return;
 		}
 
@@ -211,11 +214,11 @@ public class Spool implements Runnable {
 			try {
 				rc.getSeamlessChannel().send_spawn("logoff");
 			} catch (RdesktopException ex) {
-				Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+				this.logger.error(ex);
 			} catch (IOException ex) {
-				Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+				this.logger.error(ex);
 			} catch (CryptoException ex) {
-				Logger.getLogger(Spool.class.getName()).log(Level.SEVERE, null, ex);
+				this.logger.error(ex);
 			}
 		}
 	}
