@@ -34,11 +34,20 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -66,6 +75,7 @@ public class SessionManagerCommunication {
 	public static final String FIELD_SESSION_MODE = "session_mode";
 
 	private String sm = null;
+	private boolean use_https = false;
 	private ArrayList<RdpConnectionOvd> connections = null;
 	private String sessionMode = null;
 	private String requestMode = null;
@@ -76,19 +86,28 @@ public class SessionManagerCommunication {
 	private String multimedia = null;
 	private String printers = null;
 
-	public SessionManagerCommunication(String sm_, JDialog loadFrame) {
-		this.connections = new ArrayList<RdpConnectionOvd>();
-		this.sm = sm_;
-		this.base_url = "http://"+this.sm+"/sessionmanager/";
+	public SessionManagerCommunication(String sm_, JDialog loadFrame, boolean use_https_) {
+		this.init(sm_, use_https_);
 		this.loadFrame = loadFrame;
 		this.graphic = true;
 	}
 
-	public SessionManagerCommunication(String sm_) {
+	public SessionManagerCommunication(String sm_, boolean use_https_) {
+		this.init(sm_, use_https_);
+	}
+
+	private void init(String sm_, boolean use_https_) {
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.sm = sm_;
-		this.base_url = "http://"+this.sm+"/sessionmanager/";
+		this.use_https = use_https_;
+
+		this.base_url = "http";
+		if (this.use_https)
+			this.base_url += "s";
+		this.base_url += "://"+this.sm+"/sessionmanager/";
+
 	}
+
 	public String getSessionMode() {
 		return this.sessionMode;
 	}
@@ -146,6 +165,38 @@ public class SessionManagerCommunication {
 
 			System.out.println("Connexion a l'url ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
+
+			if (this.use_https) {
+				// An all-trusting TrustManager for SSL URL validation
+				TrustManager[] trustAllCerts = new TrustManager[] {
+					new X509TrustManager() {
+						public X509Certificate[] getAcceptedIssuers() {
+							return null;
+						}
+						public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+							return;
+						}
+						public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
+							return;
+						}
+					}
+				};
+
+				// An all-trusting HostnameVerifier for SSL URL validation
+				HostnameVerifier trustAllHosts = new HostnameVerifier() {
+					public boolean verify(String hostname, SSLSession session) {
+						return true;
+					}
+				};
+				
+				SSLContext sc = SSLContext.getInstance("SSL");
+				sc.init(null, trustAllCerts, null);
+				SSLSocketFactory factory = sc.getSocketFactory();
+				((HttpsURLConnection)connexion).setSSLSocketFactory(factory);
+
+				((HttpsURLConnection)connexion).setHostnameVerifier(trustAllHosts);
+			}
+
 			connexion.setDoInput(true);
 			connexion.setDoOutput(true);
 			connexion.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
@@ -179,8 +230,7 @@ public class SessionManagerCommunication {
 			}
 		}
 		catch (Exception e) {
-			System.err.println("Invalid session initialisation format");
-			e.printStackTrace();
+			System.err.println("ERROR: "+e.getMessage());
 		}
 		finally {
 			connexion.disconnect();

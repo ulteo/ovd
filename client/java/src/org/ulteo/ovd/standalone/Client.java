@@ -124,7 +124,7 @@ public class Client extends JFrame implements WindowListener, WindowStateListene
 
 	public void run() {
 		try {
-			this.c = new SessionManagerCommunication(this.panel_auth.getServer());
+			this.c = new SessionManagerCommunication(this.panel_auth.getServer(), true);
 
 			HashMap<String,String> mapParams = new HashMap<String, String>();
 			mapParams.put(SessionManagerCommunication.FIELD_LOGIN, this.panel_auth.getLogin());

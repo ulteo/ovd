@@ -49,24 +49,28 @@ public class StartConnection {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(Level.INFO);
 
+		boolean use_https = true;
 		String profile = null;
 		String password = null;
-		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:");
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:s:");
 
 		int c;
-		if ((c = opt.getopt()) != -1) {
-			do {
-				if(c == 'c') {
-					profile = new String(opt.getOptarg());
-				}
-				else if(c == 'p') {
-					password = new String(opt.getOptarg());
-				}
-			}while ((c = opt.getopt()) != -1); 
-			
-			if (profile == null && password != null)
-				usage();
-			
+		while ((c = opt.getopt()) != -1) {
+			if(c == 'c') {
+				profile = new String(opt.getOptarg());
+			}
+			else if(c == 'p') {
+				password = new String(opt.getOptarg());
+			}
+			else if (c == 's') {
+				use_https = (opt.getOptarg().equalsIgnoreCase("off")) ? false : true;
+			}
+		}
+
+		if (profile == null && password != null)
+			usage();
+
+		if (profile != null) {
 			InputStreamReader reader = null;
 			LineNumberReader lineReader = null;
 			File profileInfo = new File(profile);
@@ -121,18 +125,18 @@ public class StartConnection {
 				OvdClient cli = null;
 				if (token != null) {
 					System.out.println("Token Auth");
-					cli = new OvdClientIntegrated(server, token);
+					cli = new OvdClientIntegrated(server, use_https, token);
 				}
 				else {
 					switch (mode) {
 						case 0:
-							cli = new OvdClientDesktop(server, username, password, resolution);
+							cli = new OvdClientDesktop(server, use_https, username, password, resolution);
 							break;
 						case 1:
-							cli = new OvdClientPortal(server, username, password);
+							cli = new OvdClientPortal(server, use_https, username, password);
 							break;
 						case 2:
-							cli = new OvdClientIntegrated(server, username, password);
+							cli = new OvdClientIntegrated(server, use_https, username, password);
 							break;
 						default:
 							throw new UnsupportedOperationException("mode "+mode+" is not supported");
@@ -144,7 +148,7 @@ public class StartConnection {
 			}
 		}
 		else
-			new AuthFrame();
+			new AuthFrame(use_https);
 	}
 	
 	public static void usage() {

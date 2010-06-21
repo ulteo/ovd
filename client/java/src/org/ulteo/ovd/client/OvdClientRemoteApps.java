@@ -33,20 +33,20 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
-	public OvdClientRemoteApps(String fqdn_, HashMap<String,String> params_) {
-		super(fqdn_, params_);
+	public OvdClientRemoteApps(String fqdn_, boolean use_https_, HashMap<String,String> params_) {
+		super(fqdn_, use_https_, params_);
 		
 		this.init();
 	}
 
-	public OvdClientRemoteApps(String fqdn_, String login_, String password_) {
-		super(fqdn_, OvdClient.toMap(login_, password_));
+	public OvdClientRemoteApps(String fqdn_, boolean use_https_, String login_, String password_) {
+		super(fqdn_, use_https_, OvdClient.toMap(login_, password_));
 
 		this.init();
 	}
 
-	public OvdClientRemoteApps(String fqdn_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
-		super(fqdn_, OvdClient.toMap(login_, password_), frame_, logList_);
+	public OvdClientRemoteApps(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
+		super(fqdn_, use_https_, OvdClient.toMap(login_, password_), frame_, logList_);
 
 		this.init();
 	}

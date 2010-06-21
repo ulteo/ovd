@@ -37,8 +37,11 @@ public class AuthFrame extends JFrame implements WindowListener {
 	private MainPanel mp = null;
 	private Connection connection = null;
 	private boolean desktopLaunched = false;
+	private boolean use_https = true;
 
-	public AuthFrame() {
+	public AuthFrame(boolean use_https_) {
+		this.use_https = use_https_;
+
 		init();
 	}
 
@@ -67,6 +70,10 @@ public class AuthFrame extends JFrame implements WindowListener {
 		setLocationRelativeTo(null);
 		mp.setFocusOnLogin();
 		pack();
+	}
+
+	public boolean isHttps() {
+		return this.use_https;
 	}
 
 	public Connection getConnection() {

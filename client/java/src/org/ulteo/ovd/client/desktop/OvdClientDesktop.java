@@ -37,14 +37,14 @@ public class OvdClientDesktop extends OvdClient {
 	private boolean desktopLaunched = false;
 	private int resolution = 0;
 
-	public OvdClientDesktop(String fqdn_, String login_, String password_, int resolution) {
-		super(fqdn_, OvdClient.toMap(login_, password_));
+	public OvdClientDesktop(String fqdn_, boolean use_https_, String login_, String password_, int resolution) {
+		super(fqdn_, use_https_, OvdClient.toMap(login_, password_));
 
 		this.init(resolution);
 	}
 
-	public OvdClientDesktop(String fqdn_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
-		super(fqdn_, OvdClient.toMap(login_, password_), frame_, logList_);
+	public OvdClientDesktop(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
+		super(fqdn_, use_https_, OvdClient.toMap(login_, password_), frame_, logList_);
 
 		this.init(resolution);
 	}

@@ -53,22 +53,22 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	private boolean authByToken = false;
 
-	public OvdClientIntegrated(String fqdn_, String token_) {
-		super(fqdn_, OvdClientIntegrated.toMap(token_));
+	public OvdClientIntegrated(String fqdn_, boolean use_https_, String token_) {
+		super(fqdn_, use_https_, OvdClientIntegrated.toMap(token_));
 
 		this.authByToken = true;
 
 		this.init();
 	}
 
-	public OvdClientIntegrated(String fqdn_, String login_, String password_) {
-		super(fqdn_, login_, password_);
+	public OvdClientIntegrated(String fqdn_, boolean use_https_, String login_, String password_) {
+		super(fqdn_, use_https_, login_, password_);
 
 		this.init();
 	}
 
-	public OvdClientIntegrated(String fqdn_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
-		super(fqdn_, login_, password_, frame_, logList_);
+	public OvdClientIntegrated(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
+		super(fqdn_, use_https_, login_, password_, frame_, logList_);
 
 		this.init();
 	}

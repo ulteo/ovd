@@ -34,14 +34,14 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public class OvdClientPortal extends OvdClientRemoteApps {
 	private PortalFrame portal = null;
 
-	public OvdClientPortal(String fqdn_, String login_, String password_) {
-		super(fqdn_, login_, password_);
+	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_) {
+		super(fqdn_, use_https_, login_, password_);
 
 		this.init();
 	}
 
-	public OvdClientPortal(String fqdn_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
-		super(fqdn_, login_, password_, frame_, logList_);
+	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
+		super(fqdn_, use_https_, login_, password_, frame_, logList_);
 
 		this.init();
 	}

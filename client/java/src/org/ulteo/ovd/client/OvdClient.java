@@ -49,6 +49,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	protected Logger logger = Logger.getLogger(OvdClient.class);
 
 	protected String fqdn = null;
+	protected boolean use_https = true;
 	protected HashMap<String,String> params = null;
 	protected boolean graphic = false;
 
@@ -59,18 +60,19 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	protected SessionManagerCommunication smComm = null;
 	protected ArrayList<RdpConnectionOvd> availableConnections = null;
 
-	public OvdClient(String fqdn_, HashMap<String,String> params_) {
-		this.initMembers(fqdn_, params_, false);
+	public OvdClient(String fqdn_, boolean use_https_, HashMap<String,String> params_) {
+		this.initMembers(fqdn_, use_https_, params_, false);
 	}
 
-	public OvdClient(String fqdn_, HashMap<String,String> params_, AuthFrame frame_, LoginListener logList_) {
-		this.initMembers(fqdn_, params_, true);
+	public OvdClient(String fqdn_, boolean use_https_, HashMap<String,String> params_, AuthFrame frame_, LoginListener logList_) {
+		this.initMembers(fqdn_, use_https_, params_, true);
 		this.frame = frame_;
 		this.logList = logList_;
 	}
 
-	private void initMembers(String fqdn_, HashMap<String,String> params_, boolean graphic_) {
+	private void initMembers(String fqdn_, boolean use_https_, HashMap<String,String> params_, boolean graphic_) {
 		this.fqdn = fqdn_;
+		this.use_https = use_https_;
 		this.params = params_;
 		this.graphic = graphic_;
 
@@ -109,9 +111,9 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		this.runInit();
 
 		if (graphic)
-			this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader());
+			this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader(), this.use_https);
 		else
-			this.smComm = new SessionManagerCommunication(fqdn);
+			this.smComm = new SessionManagerCommunication(fqdn, this.use_https);
 		
 		if (! this.askSM())
 			return;

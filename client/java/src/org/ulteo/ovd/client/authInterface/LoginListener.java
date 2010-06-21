@@ -120,15 +120,16 @@ public class LoginListener implements ActionListener{
 				cli = null;
 			}
 		}
+		boolean use_https = this.frame.isHttps();
 		switch (this.mode) {
 			case 0:
-				this.cli = new OvdClientDesktop(host, username, pass, frame, resolution, this);
+				this.cli = new OvdClientDesktop(host, use_https, username, pass, frame, resolution, this);
 				break;
 			case 1:
-				this.cli = new OvdClientPortal(host, username, pass, frame, this);
+				this.cli = new OvdClientPortal(host, use_https, username, pass, frame, this);
 				break;
 			case 2:
-				this.cli = new OvdClientIntegrated(host, username, pass, frame, this);
+				this.cli = new OvdClientIntegrated(host, use_https, username, pass, frame, this);
 				break;
 			default:
 				throw new UnsupportedOperationException("mode "+this.mode+" is not supported");
