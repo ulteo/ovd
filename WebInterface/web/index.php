@@ -354,7 +354,7 @@ checkLogin();
 														<select id="session_keymap">
 															<?php
 																foreach ($keymaps as $keymap)
-																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == $user_language)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
+																	echo '<option value="'.$keymap['id'].'"'.(($keymap['id'] == $user_keymap)?' selected="selected"':'').'>'.$keymap['name'].'</option>';
 															?>
 														</select>
 													</td>

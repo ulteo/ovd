@@ -42,5 +42,8 @@ if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 	$buf = explode(';', $buf[0]);
 	$user_language = $buf[0];
-} else
+	$user_keymap = $user_language;
+} else {
 	$user_language = 'en-us';
+	$user_keymap = $user_language;
+}
