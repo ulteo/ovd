@@ -32,7 +32,7 @@ class User(AbstractUser):
 		if self.infos.has_key("displayName"):
 			cmd+= " --comment '%s,,,'"%(self.infos["displayName"])
 		
-		groups = ["video", "audio", "pulse", "pulse-rt", "pulse-access"]
+		groups = ["video", "audio", "pulse", "pulse-rt", "pulse-access", "fuse"]
 		if self.infos.has_key("groups"):
 			groups+= self.infos["groups"]
 		cmd+= " --groups %s"%(",".join(groups))
