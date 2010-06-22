@@ -84,6 +84,7 @@ class Config:
 			Config.log_level = 0
 			
 			for item in Config.infos["LOG_LEVEL"].split(' '):
+				item = item.lower()
 				if Config.LOGS_FLAGS_ALIASES.has_key(item):
 					Config.log_level|= Config.LOGS_FLAGS_ALIASES[item]
 		
