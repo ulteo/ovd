@@ -20,7 +20,13 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
 fi
 
 if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
-    sed -i -r "s/^( *ServerName).*$/\1 $(hostname -f)/" \
+    serverName=$(hostname -f 2>/dev/null)
+    if [ $? -ne 0 ]; then
+        # Bad /etc/hosts configuration
+        serverName=$(hostname)
+    fi
+    
+    sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
         $CONFDIR/apache2-vhost-ssl.conf
     ln -s /etc/ulteo/sessionmanager/apache2-vhost-ssl.conf \
         $A2SITESDIR/sessionmanager-vhost-ssl
