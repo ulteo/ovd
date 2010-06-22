@@ -27,7 +27,7 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 
 function get_root_admin_url() {
 	// Retrieve the admin root URL
-			$root_admin_dir = dirname(dirname(__FILE__));
+	$root_admin_dir = dirname(dirname(__FILE__));
 	$root_admin_url = '';
 	
 	$buffer = explode('/', $root_admin_dir);
