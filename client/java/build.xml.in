@@ -473,6 +473,7 @@
   </target>
 
   <target name="vdi.jar" depends="vdi,classes2jar">
+    <mkdir dir="${vdi.dist}"/>
     <copy todir="jar/ressources">
       <fileset dir="icons"/>
     </copy>
@@ -486,7 +487,6 @@
   </target>
 
   <target name="vdi.install" depends="vdi.jar">
-    <mkdir dir="${vdi.dist}"/>
     <copy todir="${vdi.dist}">
       <fileset dir="./libs">
         <include name="UlteoVDI.jar" />
