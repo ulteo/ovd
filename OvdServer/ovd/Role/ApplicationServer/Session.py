@@ -65,8 +65,12 @@ class Session:
 			if encoding is None:
 				encoding = "UTF8"
 			
-			for name in os.listdir(self.instanceDirectory):
-				name = unicode(name, encoding)
+			for basename in os.listdir(self.instanceDirectory):
+				if type(basename) is unicode:
+					name = basename
+				else:
+					name = unicode(basename, encoding)
+				
 				if self.used_applications.has_key(name):
 					continue
 				
