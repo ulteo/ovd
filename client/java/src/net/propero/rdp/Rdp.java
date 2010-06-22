@@ -19,8 +19,8 @@ import net.propero.rdp.rdp5.VChannels;
 
 import java.awt.*;
 import java.awt.image.*;
-import net.propero.rdp.compress.MPPC;
-import net.propero.rdp.compress.RdpCompression;
+import net.propero.rdp.compress.MPPCDecompressor;
+import net.propero.rdp.compress.RdpCompressionConstants;
 import net.propero.rdp.compress.RdpCompressionException;
 
 import org.apache.log4j.Logger;
@@ -513,9 +513,9 @@ public class Rdp {
     private int configureCompression(int flags) {
 	if (this.opt.packet_compression) {
 		try {
-			this.common.compressor = new MPPC(RdpCompression.TYPE_64K);
+			this.common.compressor = new MPPCDecompressor(RdpCompressionConstants.TYPE_64K);
 			flags |= Rdp.RDP_LOGON_COMPRESSION;
-			flags |= RdpCompression.FLAG_TYPE_64K;
+			flags |= RdpCompressionConstants.FLAG_TYPE_64K;
 		} catch (RdpCompressionException ex) {
 			this.logger.warn("Can not use compression: "+ex.getMessage());
 		}

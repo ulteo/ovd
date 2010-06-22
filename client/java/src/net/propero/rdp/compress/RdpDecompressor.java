@@ -22,16 +22,6 @@ package net.propero.rdp.compress;
 
 import net.propero.rdp.RdpPacket_Localised;
 
-public abstract class RdpCompression {
-	public static final int TYPE_8K = 0x0;
-	public static final int TYPE_64K = 0x1;
-	public static final int TYPE_RDP6 = 0x2;
-	public static final int TYPE_RDP61 = 0x3;
-
-	public static final int FLAG_TYPE_8K = 0x0;
-	public static final int FLAG_TYPE_64K = 0x200;
-	public static final int FLAG_TYPE_RDP6 = 0x400;
-	public static final int FLAG_TYPE_RDP61 = 0x600;
-
+public abstract class RdpDecompressor {
 	public abstract RdpPacket_Localised decompress(RdpPacket_Localised compressedPacket, int length, int compressionType) throws RdpCompressionException;
 }

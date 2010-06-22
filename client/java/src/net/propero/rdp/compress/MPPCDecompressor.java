@@ -22,7 +22,7 @@ package net.propero.rdp.compress;
 
 import net.propero.rdp.RdpPacket_Localised;
 
-public class MPPC extends RdpCompression {
+public class MPPCDecompressor extends RdpDecompressor {
 	private static final int MPPC_BIG = 0x01;
 	private static final int MPPC_COMPRESSED = 0x20;
 	private static final int MPPC_RESET = 0x40;
@@ -39,14 +39,14 @@ public class MPPC extends RdpCompression {
 	private int walker;
 	private int match_off;
 
-	public MPPC(int type) throws RdpCompressionException {
+	public MPPCDecompressor(int type) throws RdpCompressionException {
 		int dictSize;
 
 		switch (type) {
-			case TYPE_8K:
+			case RdpCompressionConstants.TYPE_8K:
 				dictSize = MPPC_8K_DICT_SIZE;
 				break;
-			case TYPE_64K:
+			case RdpCompressionConstants.TYPE_64K:
 				dictSize = MPPC_64K_DICT_SIZE;
 				break;
 			default:
