@@ -39,8 +39,6 @@ import net.propero.rdp.tools.SendEvent;
 
 import org.apache.log4j.*;
 import gnu.getopt.*;
-import net.propero.rdp.compress.MPPCDecompressor;
-import net.propero.rdp.compress.RdpCompression;
 
 public class Rdesktop {
     
