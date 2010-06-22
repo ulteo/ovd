@@ -176,5 +176,14 @@ if (count($server_nodes) < 1) {
 
 $_SESSION['xml'] = $xml;
 
+setcookie('webinterface[sessionmanager_url]', $_POST['sessionmanager_url'], (time()+(60*60*24*7)));
+setcookie('webinterface[use_https]', $_POST['use_https'], (time()+(60*60*24*7)));
+setcookie('webinterface[user_login]', $_POST['login'], (time()+(60*60*24*7)));
+setcookie('webinterface[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
+setcookie('webinterface[session_language]', $_POST['language'], (time()+(60*60*24*7)));
+setcookie('webinterface[session_keymap]', $_POST['keymap'], (time()+(60*60*24*7)));
+setcookie('webinterface[use_popup]', $_POST['use_popup'], (time()+(60*60*24*7)));
+setcookie('webinterface[debug]', $_POST['debug'], (time()+(60*60*24*7)));
+
 echo $_SESSION['xml'];
 die();

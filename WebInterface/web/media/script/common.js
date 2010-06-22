@@ -45,7 +45,8 @@ function startSession() {
 				mode: $('session_mode').value,
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
-				debug: debug
+				use_popup: ((use_popup)?1:0),
+				debug: ((debug)?1:0)
 			},
 			asynchronous: false,
 			onSuccess: onStartSessionSuccess,

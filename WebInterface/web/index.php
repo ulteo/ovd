@@ -23,6 +23,40 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
+
+$wi_sessionmanager_url = '';
+if (isset($_COOKIE['webinterface']['sessionmanager_url']))
+	$wi_sessionmanager_url = (string)$_COOKIE['webinterface']['sessionmanager_url'];
+
+$wi_use_https = 1;
+if (isset($_COOKIE['webinterface']['use_https']))
+	$wi_use_https = (int)$_COOKIE['webinterface']['use_https'];
+
+$wi_user_login = '';
+if (isset($_COOKIE['webinterface']['user_login']))
+	$wi_user_login = (string)$_COOKIE['webinterface']['user_login'];
+
+$wi_session_mode = 'desktop';
+if (isset($_COOKIE['webinterface']['session_mode']))
+	$wi_session_mode = (string)$_COOKIE['webinterface']['session_mode'];
+
+if (isset($_COOKIE['webinterface']['session_language']) && $_COOKIE['webinterface']['session_language'] != $user_language) {
+	$wi_session_language = (string)$_COOKIE['webinterface']['session_language'];
+	$user_language = $wi_session_language;
+}
+
+if (isset($_COOKIE['webinterface']['session_keymap']) && $_COOKIE['webinterface']['session_keymap'] != $user_keymap) {
+	$wi_session_keymap = (string)$_COOKIE['webinterface']['session_keymap'];
+	$user_language = $wi_session_keymap;
+}
+
+$wi_use_popup = 0;
+if (isset($_COOKIE['webinterface']['use_popup']))
+	$wi_use_popup = (int)$_COOKIE['webinterface']['use_popup'];
+
+$wi_debug = 1;
+if (isset($_COOKIE['webinterface']['debug']))
+	$wi_debug = (int)$_COOKIE['webinterface']['debug'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -224,8 +258,10 @@ $keymaps = get_available_keymaps();
 								<div id="loginForm" class="rounded">
 									<script type="text/javascript">Event.observe(window, 'load', function() {
 <?php
-if (! defined('SESSIONMANAGER_URL'))
+if (! defined('SESSIONMANAGER_URL') && (! isset($wi_sessionmanager_url) || $wi_sessionmanager_url == ''))
 	echo '$(\'sessionmanager_url\').focus();';
+elseif (isset($wi_user_login) && $wi_user_login != '')
+	echo '$(\'user_password\').focus();';
 else
 	echo '$(\'user_login\').focus();';
 ?>
@@ -242,7 +278,7 @@ checkLogin();
 													<strong><?php echo _('Session Manager'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':'') ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
+													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':$wi_sessionmanager_url) ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
 													<script type="text/javascript">
 														var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 														if ($('sessionmanager_url').value == '') {
@@ -274,7 +310,7 @@ checkLogin();
 													<strong><?php echo _('Use HTTPS'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="checkbox" id="use_https" value="1" checked="checked" />
+													<input type="checkbox" id="use_https" value="1"<?php if ($wi_use_https == 1) echo ' checked="checked"'; ?> />
 												</td>
 											</tr>
 											<tr>
@@ -285,7 +321,7 @@ checkLogin();
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="user_login" value="" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
+													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
 												</td>
 											</tr>
 											<tr>
@@ -322,8 +358,8 @@ checkLogin();
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
 														<select id="session_mode">
-															<option value="desktop" selected="selected"><?php echo _('Desktop'); ?></option>
-															<option value="applications"><?php echo _('Portal'); ?></option>
+															<option value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>><?php echo _('Desktop'); ?></option>
+															<option value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>><?php echo _('Portal'); ?></option>
 														</select>
 													</td>
 												</tr>
@@ -367,8 +403,8 @@ checkLogin();
 														<strong><?php echo _('Use pop-up'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1" /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0" checked="checked" /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="use_popup_true" name="popup" value="1"<?php if ($wi_use_popup == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+														<input class="input_radio" type="radio" id="use_popup_false" name="popup" value="0"<?php if ($wi_use_popup == 0) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
 													</td>
 												</tr>
 <?php
@@ -382,8 +418,8 @@ checkLogin();
 														<strong><?php echo _('Debug'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1" checked="checked" /> <?php echo _('Yes'); ?>
-														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0" /> <?php echo _('No'); ?>
+														<input class="input_radio" type="radio" id="debug_true" name="debug" value="1"<?php if ($wi_debug == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+														<input class="input_radio" type="radio" id="debug_false" name="debug" value="0"<?php if ($wi_debug == 0) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
 													</td>
 												</tr>
 <?php
