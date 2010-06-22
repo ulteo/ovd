@@ -39,7 +39,7 @@ function startSession() {
 			method: 'post',
 			parameters: {
 				sessionmanager_url: $('sessionmanager_url').value,
-				use_https: (($('use_https').checked())?1:0),
+				use_https: (($('use_https').checked)?1:0),
 				login: $('user_login').value,
 				password: $('user_password').value,
 				mode: $('session_mode').value,
