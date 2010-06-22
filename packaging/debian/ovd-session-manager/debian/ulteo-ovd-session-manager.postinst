@@ -32,8 +32,22 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
         $A2SITESDIR/sessionmanager-vhost-ssl
 fi
 
-# SSL disable
+# SSL self-signed key generation
+if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
+    || [! -f $CONFDIR/ovd.crt ]; then
+
+    echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
+    openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
+    openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
+    openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
+        -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
+    chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+# Apache SSL configuration
 if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
+    # SSL already enable
 
     db_input high ulteo-ovd-session-manager/ssl_disable_warning
     db_go
@@ -41,22 +55,7 @@ if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
     if [ ! -e $A2CONFDIR/sessionmanager ]; then
         ln -s $CONFDIR/apache2.conf $A2CONFDIR/sessionmanager
     fi
-
-# SSL enable
 else
-    echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
-
-    # SSL key generation
-    if [ ! \( -f $CONFDIR/ovd.key -a -f $CONFDIR/ovd.csr \
-        -a -f $CONFDIR/ovd.crt \) ]; then
-        openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
-        openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
-        openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
-            -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
-        chown root:root $CONFDIR/ovd.*
-        chmod 600 $CONFDIR/ovd.*
-    fi
-
     # activate SSL apache module
     a2enmod ssl > /dev/null
     a2ensite sessionmanager-vhost-ssl > /dev/null
