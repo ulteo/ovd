@@ -486,12 +486,12 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	}
 
 	protected boolean processHello() {
+		this.fireAckHello();
 		try {
 		    this.send_sync();
 		} catch(Exception e) {
 		    logger.error("Unable to send_sync !!!");
 		}
-		this.fireAckHello();
 
 		if (this.main_window != null)
 			this.main_window.setVisible(false);
