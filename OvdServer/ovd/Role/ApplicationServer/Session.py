@@ -74,7 +74,7 @@ class Session:
 				if self.used_applications.has_key(name):
 					continue
 				
-				path = os.path.join(self.instanceDirectory, f)
+				path = os.path.join(self.instanceDirectory, basename)
 				if not os.path.isfile(path):
 					continue
 				
