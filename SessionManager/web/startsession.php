@@ -192,7 +192,7 @@ if (isset($_SESSION['mode'])) {
 	$session_mode = $_SESSION['mode'];
 }
 
-$language = $user->getLocale();
+$locale = $user->getLocale();
 
 $protocol_vars = array('session_mode', 'language', 'timeout', 'persistent', /*'shareable', */'desktop_icons', 'popup', 'debug');
 foreach ($protocol_vars as $protocol_var) {
@@ -206,6 +206,9 @@ foreach ($protocol_vars as $protocol_var) {
 					throw_response(UNAUTHORIZED_SESSION_MODE);
 
 				$session_mode = $_REQUEST['session_mode'];
+				break;
+			case 'language':
+				$locale = locale2unix($_REQUEST['language']);
 				break;
 			default:
 				$$protocol_var = $_REQUEST[$protocol_var];
@@ -363,7 +366,7 @@ $default_args = array(
 	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
-	'locale'			=>	locale2unix($language)
+	'locale'			=>	$locale
 );
 
 $optional_args = array();
@@ -507,10 +510,10 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$session_node = $dom->createElement('session');
 	$session_node->setAttribute('id', $session->id);
 	$session_node->setAttribute('mode', Session::MODE_DESKTOP);
-	foreach (array('desktop_icons') as $parameter) {
+	foreach (array('desktop_icons', 'locale') as $parameter) {
 		$parameter_node = $dom->createElement('parameter');
 		$parameter_node->setAttribute('name', $parameter);
-		$parameter_node->setAttribute('value', true);
+		$parameter_node->setAttribute('value', $$parameter);
 		$session_node->appendChild($parameter_node);
 	}
 	$user_node = $dom->createElement('user');
@@ -578,10 +581,10 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 		$session_node = $dom->createElement('session');
 		$session_node->setAttribute('id', $session->id);
 		$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
-		foreach (array('desktop_icons') as $parameter) {
+		foreach (array('desktop_icons', 'locale') as $parameter) {
 			$parameter_node = $dom->createElement('parameter');
 			$parameter_node->setAttribute('name', $parameter);
-			$parameter_node->setAttribute('value', true);
+			$parameter_node->setAttribute('value', $$parameter);
 			$session_node->appendChild($parameter_node);
 		}
 		$user_node = $dom->createElement('user');

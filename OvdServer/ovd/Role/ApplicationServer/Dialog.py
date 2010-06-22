@@ -182,9 +182,6 @@ class Dialog(AbstractDialog):
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
 		
-		
-		session["parameters"]["lang"] = "fr_FR"
-		
 		user = Platform.User(session["login"], {"displayName": session["displayName"], "password": session["password"]})
 		if session["parameters"].has_key("locale"):
 			user.infos["locale"] = session["parameters"]["locale"]
