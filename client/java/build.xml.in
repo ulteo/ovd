@@ -2,7 +2,7 @@
 
 <project name="ulteo" default="applet">
   <property name="build.cert" value="/usr/share/ulteo/ovd-cert/"/>
-  <property name="keystore.password" value="123456"/>
+  <property name="keystore.password" value="@PASSWD@"/>
 
   <property name="compile.debug" value="false"/>
   <property name="compile.deprecation" value="false"/>
@@ -10,47 +10,37 @@
   <property name="compile.version" value="1.5"/>
   <property name="compile.release" value="0.5.0"/>
 
-  <property name="rdesktop.dist"  value="rdesktop" />
-  <property name="integrated.dist"  value="integrated" />
-  <property name="ovdClient.dist"  value="OvdClient" />
-  <property name="PDFPrinter.dist"  value="PDFPrinter" />
-  <property name="standalone.dist"  value="standalone" />
-  <property name="rdpClient.dist"  value="rdpClient" />
-  <property name="vdi.dist"  value="vdi" />
-
   <property name="prefix"      location="/usr/local" />
   <property name="datadir"     location="${prefix}/share" />
   <property name="destdir"     location="" />
 
-  <property name="version" value="@VERSION@" />
+  <property name="applets.dir"  value="${destdir}${datadir}/ulteo/applets" />
+  <property name="install.dir"  value="${destdir}${datadir}/java" />
 
-  <property name="tar.dir" value="ovd-applets-${version}" />
-  <property name="tar"     value="${tar.dir}.tar" />
-  <property name="tar.gz"  value="${tar}.gz" />
+  <property name="rdesktop.dist"  value="rdesktop" />
+  <property name="integrated.dist"  value="integrated" />
+  <property name="standalone.dist"  value="standalone" />
+  <property name="rdpClient.dist"  value="rdpClient" />
+
+  <property name="sdist.name" value="ovd-java-clients-@VERSION@.tar" />
+  <property name="sdist.dir"  value="sdist" />
+
 
   <target name="precompile">
     <mkdir dir="classes"/>
-    <mkdir dir="jar"/>
-    <mkdir dir="jar/ressources"/>
+    <mkdir dir="libs"/>
     <mkdir dir="jar/ressources/keymaps"/>
     <copy todir="jar/ressources/keymaps">
       <fileset dir="keymaps"/>
     </copy>
-
-    <mkdir dir="libs"/>
   </target>
 
- <target name="precompile_printing">
-   <mkdir dir="classes"/>
-   <mkdir dir="jar"/>
-   <mkdir dir="jar/org"/>
-   <mkdir dir="jar/org/jpedal"/>
-   <mkdir dir="jar/org/jpedal/res"/>
-   <copy todir="jar/org/jpedal/res">
-     <fileset dir="src/org/jpedal/res"/>
-   </copy>
-     <mkdir dir="libs"/>
-   </target>
+  <target name="clean" description="clean files">
+    <delete dir="classes"/>
+    <delete dir="libs"/>
+    <delete dir="jar"/>
+    <delete dir="dist"/>
+  </target>
 
   <target name="classes2jar" description="copy classes/** to jar/">
     <copy todir="jar/">
@@ -60,14 +50,8 @@
     </copy>
   </target>
 
- <target name="classes2jarPrinter" description="copy classes/** to jar/">
-   <copy todir="jar/">
-     <fileset dir="classes">
-       <include name="**/**"/>
-     </fileset>
-   </copy>
- </target>
   <!-- Rdesktop part -->
+
   <target name="rdesktop.clean" depends="clean">
     <delete dir="${rdesktop.dist}"/>
   </target>
@@ -150,14 +134,14 @@
 
   <!-- PDFPrinter part -->
 
- <target name="PDFPrinter.clean" >
-   <delete dir="${PDFPrinter.dist}"/>
-   <delete dir="classes"/>
-   <delete dir="libs"/>
-   <delete dir="jar"/>
+ <target name="precompile_printing" depends="precompile">
+   <mkdir dir="jar/org/jpedal/res"/>
+   <copy todir="jar/org/jpedal/res">
+     <fileset dir="src/org/jpedal/res"/>
+   </copy>
  </target>
 
- <target name="PDFPrinter" depends="PDFPrinter.clean,precompile_printing" description="compile the Java source code to class files">
+ <target name="PDFPrinter" depends="clean,precompile_printing" description="compile the Java source code to class files">
    <javac srcdir="./src"
           destdir="classes"
           encoding="UTF8"
@@ -166,7 +150,7 @@
           classpath="required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
           includes="org/ulteo/ovd/printer/PrinterApplet.java"/>
  </target>
- <target name="PDFPrinter.jar" depends="PDFPrinter,classes2jarPrinter" description="create jar file">
+ <target name="PDFPrinter.jar" depends="PDFPrinter,classes2jar" description="create jar file">
    <jar destfile="libs/PDFPrinter.jar" basedir="jar/">
      <include name="**"/>
      <manifest>
@@ -183,13 +167,13 @@
  <target name="PDFPrinter.install"
          description="install applets"
          depends="PDFPrinter.jar">
-   <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
-   <copy todir="${destdir}${datadir}/ulteo/applets">
+   <mkdir dir="${applets.dir}"/>
+   <copy todir="${applets.dir}">
      <fileset dir="./libs">
        <include name="PDFPrinter-${compile.release}.jar" />
      </fileset>
    </copy>
-   <symlink link="${destdir}${datadir}/ulteo/applets/PDFPrinter.jar"
+   <symlink link="${applets.dir}/PDFPrinter.jar"
             resource="PDFPrinter-${compile.release}.jar"/>
  </target>
 
@@ -236,12 +220,8 @@
 
 
   <!-- Ovd client part -->
-  
-  <target name="ovdClient.clean" depends="clean">
-    <delete dir="${ovdClient.dist}"/>
-  </target>
 
-  <target name="ovdClient" depends="ovdClient.clean,precompile">
+  <target name="ovdclient" depends="precompile">
     <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
@@ -251,7 +231,11 @@
            includes="org/ulteo/ovd/client/StartConnection.java"/>
   </target>
 
-  <target name="ovdClient.jar" depends="ovdClient,classes2jar">
+  <target name="ovdclient.jar" depends="ovdclient,classes2jar">
+    <!-- TODO -->
+  </target>
+
+  <target name="ovdclient_all.jar" depends="ovdclient,classes2jar">
     <mkdir dir="external_jars"/>
     <mkdir dir="external_jars/swingx"/>
     <mkdir dir="external_jars/gnu-getopt"/>
@@ -288,13 +272,13 @@
 	<include name="**/**"/>
       </fileset>
     </copy>
-    
+
     <copy todir="jar/org">
       <fileset dir="external_jars/log4j-1.2/org">
 	<include name="**/**"/>
       </fileset>
     </copy>
-    
+
     <copy todir="jar/com">
       <fileset dir="external_jars/registry/com">
 	<include name="**/**"/>
@@ -319,10 +303,8 @@
       </fileset>
     </copy>
 
-
     <jar destfile="libs/UlteoOVDClient.jar" basedir="jar/">
       <include name="**"/>
-      
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
         <attribute name="Class-Path" value="libs/log4j-1.2 libs/gnu-getopt libs/swingx registry.jar jshortcut.jar image4j.jar"/>
@@ -330,10 +312,9 @@
     </jar>
   </target>
 
-  <target name="ovdClient.install" depends="ovdClient.jar">
-    <mkdir dir="${ovdClient.dist}"/>
-
-    <copy todir="${ovdClient.dist}">
+  <target name="ovdclient.install" depends="ovdclient_all.jar">
+    <mkdir dir="${install.dir}"/>
+    <copy todir="${install.dir}">
       <fileset dir="./libs">
         <include name="UlteoOVDClient.jar" />
       </fileset>
@@ -430,25 +411,25 @@
   <target name="applet.install"
           description="install applets"
           depends="PDFPrinter.install, applet.jar">
-    <mkdir dir="${destdir}${datadir}/ulteo/applets"/>
+    <mkdir dir="${applets.dir}"/>
 
-    <copy todir="${destdir}${datadir}/ulteo/applets">
+    <copy todir="${applets.dir}">
       <fileset dir="./libs">
         <include name="ulteo-applet-${compile.release}.jar" />
       </fileset>
     </copy>
-    <symlink link="${destdir}${datadir}/ulteo/applets/ulteo-applet.jar"
+    <symlink link="${applets.dir}/ulteo-applet.jar"
              resource="ulteo-applet-${compile.release}.jar"/>
 
-    <copy todir="${destdir}${datadir}/ulteo/applets">
+    <copy todir="${applets.dir}">
       <fileset dir="./libs">
         <include name="CheckJava-${compile.release}.jar" />
       </fileset>
     </copy>
-    <symlink link="${destdir}${datadir}/ulteo/applets/CheckJava.jar"
+    <symlink link="${applets.dir}/CheckJava.jar"
              resource="CheckJava-${compile.release}.jar"/>
 
-    <copy todir="${destdir}${datadir}/ulteo/applets">
+    <copy todir="${applets.dir}">
       <fileset dir="./required_libraries">
         <include name="gnu-getopt.jar" />
         <include name="log4j-1.2.jar" />
@@ -458,11 +439,7 @@
 
   <!-- VDI part -->
 
-  <target name="vdi.clean" depends="clean">
-    <delete dir="${vdi.dist}"/>
-  </target>
-
-  <target name="vdi" depends="vdi.clean,precompile" >
+  <target name="vdi" depends="precompile" >
     <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
@@ -473,11 +450,10 @@
   </target>
 
   <target name="vdi.jar" depends="vdi,classes2jar">
-    <mkdir dir="${vdi.dist}"/>
     <copy todir="jar/ressources">
       <fileset dir="icons"/>
     </copy>
-    <jar destfile="${vdi.dist}/UlteoVDI.jar"  basedir="jar">
+    <jar destfile="libs/UlteoVDI.jar"  basedir="jar">
       <include name="**" />
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.vdi.Client"/>
@@ -487,7 +463,8 @@
   </target>
 
   <target name="vdi.install" depends="vdi.jar">
-    <copy todir="${vdi.dist}">
+    <mkdir dir="${install.dir}"/>
+    <copy todir="${install.dir}">
       <fileset dir="./libs">
         <include name="UlteoVDI.jar" />
       </fileset>
@@ -501,41 +478,43 @@
   <!-- Source tarball part -->
 
   <target name="dist" description="create a source tarball">
-    <mkdir dir="${tar.dir}" />
-    <copy todir="${tar.dir}">
+    <mkdir dir="${sdist.dir}" />
+    <copy todir="${sdist.dir}">
       <fileset file="build.xml" />
       <fileset file="README" />
     </copy>
-    <mkdir dir="${tar.dir}/required_libraries" />
-    <copy todir="${tar.dir}/required_libraries">
+    <mkdir dir="${sdist.dir}/required_libraries" />
+    <copy todir="${sdist.dir}/required_libraries">
       <fileset dir="required_libraries" />
     </copy>
-    <mkdir dir="${tar.dir}/src" />
-    <copy todir="${tar.dir}/src">
+    <mkdir dir="${sdist.dir}/src" />
+    <copy todir="${sdist.dir}/src">
       <fileset dir="src" />
     </copy>
-    <mkdir dir="${tar.dir}/src1.4" />
-    <copy todir="${tar.dir}/src1.4">
+    <mkdir dir="${sdist.dir}/src1.4" />
+    <copy todir="${sdist.dir}/src1.4">
       <fileset dir="src1.4" />
     </copy>
-
-    <mkdir dir="${tar.dir}/keymaps" />
-    <copy todir="${tar.dir}/keymaps">
+    <mkdir dir="${sdist.dir}/keymaps" />
+    <copy todir="${sdist.dir}/keymaps">
       <fileset dir="keymaps" />
     </copy>
+    <mkdir dir="${sdist.dir}/icons" />
+    <copy todir="${sdist.dir}/icons">
+      <fileset dir="icons" />
+    </copy>
+    <mkdir dir="${sdist.dir}/po" />
+    <copy todir="${sdist.dir}/po">
+      <fileset dir="po" />
+    </copy>
 
-    <tar longfile="gnu" tarfile="${tar}" basedir="./"
-         includes="${tar.dir}/**" />
-    <gzip zipfile="${tar.gz}" src="${tar}" />
+    <tar longfile="gnu" tarfile="${sdist.name}" basedir="./"
+         includes="${sdist.dir}/**" />
+    <gzip zipfile="${sdist.name}.gz" src="${sdist.name}" />
 
-    <delete file="${tar}" />
-    <delete dir="${tar.dir}" />
+    <delete file="${sdist.name}" />
+    <delete dir="${sdist.dir}" />
   </target>
 
-  <target name="clean" description="clean files">
-    <delete dir="classes"/>
-    <delete dir="libs"/>
-    <delete dir="jar"/>
-  </target>
 </project>
 
