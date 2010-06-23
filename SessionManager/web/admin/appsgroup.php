@@ -221,9 +221,11 @@ function show_manage($id) {
 	if ($can_manage_applicationsgroups) {
 		echo '<div>';
 		echo '<h2>'._('Settings').'</h2>';
-		echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this group?').'\');">';
 		echo '<input type="submit" value="'._('Delete this group').'"/>';
+		echo '<input type="hidden" name="name" value="ApplicationsGroup" />';
 		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="checked_groups[]" value="'.$id.'" />';
 		echo '<input type="hidden" name="id" value="'.$id.'" />';
 		echo '</form>';
 		echo '<br/>';
