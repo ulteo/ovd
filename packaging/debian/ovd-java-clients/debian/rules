@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+
+include /usr/share/cdbs/1/class/ant.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+JAVA_HOME = /usr/lib/jvm/java-6-sun
+DEB_ANT_INSTALL_TARGET = applet.install ovdclient.install
+DEB_ANT_BUILD_TARGET = applet ovdclient
+DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR)
+DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
+
+configure/ulteo-ovd-applets::
+	PASSWD=$(shell cat /usr/share/ulteo/ovd-cert/password); \
+sed -i "s/@PASSWD@/$$PASSWD/" build.xml
+
+configure/ulteo-ovd-integrated-client::
+	clientbindir=$(DEB_DESTDIR)/usr/bin; \
+clientbin=$$clientbindir/ovdclient; \
+mkdir -p $$clientbindir; \
+echo "java -jar /usr/share/java/UlteoOVDClient.jar" > $$clientbin; \
+chmod +x $$clientbin
