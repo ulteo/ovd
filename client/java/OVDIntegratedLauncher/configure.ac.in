@@ -1,0 +1,21 @@
+m4_define([uovdintegrated_version_major], [99])
+m4_define([uovdintegrated_version_minor], [99])
+m4_define([uovdintegrated_version_build], [~trunk+svn@REVISION@])
+m4_define([uovdintegrated_version], [uovdintegrated_version_major().uovdintegrated_version_minor()uovdintegrated_version_build()])
+
+AC_PREREQ(2.59)
+AC_INIT([integrated], [uovdintegrated_version], [http://bugs.ulteo.com])
+AM_INIT_AUTOMAKE([1.6 foreign])
+AC_PROG_CC
+AC_C_CONST
+
+if test "x${prefix}" = "xNONE" ; then
+   prefix="/usr"
+   sysconfdir="/etc";
+   bindir="/usr/bin";
+   datarootdir="/usr/share";
+   localstatedir="/var";
+fi
+
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
