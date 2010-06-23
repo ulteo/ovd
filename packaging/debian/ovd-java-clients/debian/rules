@@ -19,5 +19,5 @@ configure/ulteo-ovd-integrated-client::
 	clientbindir=$(DEB_DESTDIR)/usr/bin; \
 clientbin=$$clientbindir/ovdclient; \
 mkdir -p $$clientbindir; \
-echo "java -jar /usr/share/java/UlteoOVDClient.jar" > $$clientbin; \
+echo '#!/bin/sh\n\njava -jar /usr/share/java/UlteoOVDClient.jar "$$@"' > $$clientbin; \
 chmod +x $$clientbin

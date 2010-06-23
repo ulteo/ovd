@@ -22,8 +22,8 @@
   <property name="standalone.dist"  value="standalone" />
   <property name="rdpClient.dist"  value="rdpClient" />
 
-  <property name="sdist.name" value="ovd-java-clients-@VERSION@.tar" />
-  <property name="sdist.dir"  value="sdist" />
+  <property name="sdist.dir" value="ovd-java-clients-@VERSION@" />
+  <property name="sdist.name"  value="${sdist.dir}.tar" />
 
 
   <target name="precompile">

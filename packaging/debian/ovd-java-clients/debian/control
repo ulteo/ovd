@@ -14,7 +14,8 @@ Description: Ulteo Open Virtual Desktop applet
 
 Package: ulteo-ovd-integrated-client
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}, ulteo-ovd-integrated-launcher
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: ulteo-ovd-integrated-launcher
 Description: Ulteo Open Virtual Desktop integrated client
  This applet is used in the Open Virtual Desktop to display the user session and
  launch applications via an all integrated client
