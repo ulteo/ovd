@@ -60,6 +60,10 @@ public class OVDPrinterManager {
 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintService printService[] = PrintServiceLookup.lookupPrintServices(flavor, pras);
+		/* On Linux, the first call to PrintServiceLookup.lookupPrintServices failed randomly */
+		if (printService.length == 0) {
+			printService = PrintServiceLookup.lookupPrintServices(flavor, pras);
+		}
 
 		try{
 			PrintService default_p = PrintServiceLookup.lookupDefaultPrintService();
