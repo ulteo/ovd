@@ -142,7 +142,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 				handle_data_request(data);
 				break;
 			case CLIPRDR_DATA_RESPONSE:
-				handle_data_response(data, length);
+				//handle_data_response(data, length);
 				break;
 			case 7:
 				break;
