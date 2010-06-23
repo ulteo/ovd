@@ -49,7 +49,7 @@ fi
 if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
     # SSL already enable
 
-    db_input high ulteo-ovd-session-manager/ssl_disable_warning
+    db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
     db_go
 
     if [ ! -e $A2CONFDIR/sessionmanager ]; then
