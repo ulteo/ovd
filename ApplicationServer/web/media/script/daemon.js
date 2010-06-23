@@ -384,8 +384,15 @@ var Daemon = Class.create({
 		if (appletNode.length > 0) {
 			appletNode = appletNode[0];
 
-			appletNode.width = this.applet_width;
-			appletNode.height = this.applet_height;
+			if (this.applet_width > 0)
+				appletNode.width = this.applet_width;
+			else
+				appletNode.width = 1;
+
+			if (this.applet_height > 0)
+				appletNode.height = this.applet_height;
+			else
+				appletNode.height = 1;
 		}
 
 		if ($('mainWrap'))
