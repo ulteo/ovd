@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
 # Automatically generated, 2010.
 # Author: Alexander Haidukov <ahaidukov@gmail.com>, 2010.
+# Author: Vitalyi Goreslavets <admin@gorets.pp.ua>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: i 18n-2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-11 18:41+0100\n"
-"PO-Revision-Date: 2010-02-08 16:33+0300\n"
-"Last-Translator: Alexander Haidukov <ahaidukov@gmail.com>\n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-06-24 09:00+0100\n"
+"Last-Translator: Vitalyi Goreslavets <admin@gorets.pp.ua>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,63 +23,54 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: ../web/portal/share_app.php:27
-#, fuzzy
 msgid "Application sharing"
-msgstr "Приложения"
+msgstr "Общие приложения"
 
-#: ../web/portal/resume.php:58 ../web/portal/external_app.php:86
-#: ../web/portal/index.php:75 ../web/desktop/index.php:61
-#, fuzzy
+#: ../web/desktop/index.php:61 ../web/portal/resume.php:58
+#: ../web/portal/index.php:75 ../web/portal/external_app.php:89
+#: ../web/external/index.php:99
 msgid "Close this window"
-msgstr "Удалить"
+msgstr "Закрыть окно"
 
 #: ../web/desktop/index.php:91
-#, fuzzy
 msgid "Desktop sharing"
-msgstr "значки рабочего стола"
+msgstr "Общий рабочий стол"
 
-#: ../web/portal/share_app.php:31 ../web/desktop/index.php:96
+#: ../web/desktop/index.php:96 ../web/portal/share_app.php:31
 msgid "Email address"
-msgstr ""
+msgstr "Email адрес"
 
-#: ../web/error/index.php:54 ../web/portal/index.php:76
-#: ../web/desktop/index.php:62
+#: ../web/desktop/index.php:62 ../web/portal/index.php:76
+#: ../web/error/index.php:54
 #, php-format
 msgid "If you want to start another session, click <a href=\"%s\">here</a>"
-msgstr ""
+msgstr "Если хотите начать новею сессию, нажмите <a href=\"%s\">здесь</a>"
 
-#: ../web/portal/share_app.php:32 ../web/desktop/index.php:99
-#, fuzzy
+#: ../web/desktop/index.php:99 ../web/portal/share_app.php:32
 msgid "Invite"
 msgstr "Приглашение"
 
-#: ../web/portal/external_app.php:109
-#, fuzzy, php-format
+#: ../web/portal/external_app.php:122 ../web/external/index.php:132
 msgid "Loading %s"
-msgstr "Загрузка"
+msgstr "Загрузка %s"
 
 #: ../web/portal/resume.php:75
-#, fuzzy
 msgid "Loading Application"
-msgstr "Приложения (управление)"
+msgstr "Загрузка приложения"
 
 #: ../web/desktop/index.php:119
-#, fuzzy
 msgid "Loading Desktop"
-msgstr "Загрузка"
+msgstr "Загрузка рабочего стола"
 
 #: ../web/error/index.php:71
-#, fuzzy
 msgid "Loading Error"
-msgstr "Загрузка"
+msgstr "Ошибка загрузки"
 
 #: ../web/portal/index.php:179
-#, fuzzy
 msgid "Loading Portal"
-msgstr "Загрузка"
+msgstr "Загрузка Портала"
 
 #: ../web/share/index.php:74
-#, fuzzy
 msgid "Loading Share"
 msgstr "Загрузка"
 
@@ -87,13 +79,12 @@ msgid "Logout"
 msgstr "Выход"
 
 #: ../web/portal/index.php:134
-#, fuzzy
 msgid "My applications"
-msgstr "приложение"
+msgstr "Мои приложения"
 
 #: ../web/portal/index.php:158
 msgid "My files"
-msgstr ""
+msgstr "Мои файлы"
 
 #: ../web/portal/index.php:146
 msgid "Running applications"
@@ -101,85 +92,80 @@ msgstr "Запущенные приложения"
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/error/index.php:51
-#, fuzzy
 msgid "Server: invalid token"
-msgstr "Список серверов"
+msgstr "Сервер: неверный маркер безопасности"
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-#: ../web/portal/resume.php:54 ../web/portal/external_app.php:81
-#: ../web/portal/index.php:71 ../web/share/index.php:54
-#: ../web/desktop/index.php:57
+#: ../web/desktop/index.php:57 ../web/portal/resume.php:54
+#: ../web/portal/index.php:71 ../web/portal/external_app.php:84
+#: ../web/external/index.php:94 ../web/share/index.php:54
 msgid "Server: session closed unexpectedly"
-msgstr ""
+msgstr "Снрвер: сессия неожиданно завершена"
 
-#: ../web/portal/external_app.php:82
-#, fuzzy
+#: ../web/portal/external_app.php:85 ../web/external/index.php:95
 msgid "Server: unable to start application"
-msgstr "Серверы на которых установлено это приложение"
+msgstr "Сервер: ошибка запуска приложения"
 
 #: ../web/desktop/index.php:77
-#, fuzzy
 msgid "Share desktop"
-msgstr "Общие папки"
+msgstr "Общий рабочий стол"
 
 #: ../web/share/index.php:56
-#, fuzzy
 msgid "Shared application has ended unexpectedly"
-msgstr "Приложение не выбрано"
+msgstr "Общее приложение неожиданно завершено"
 
 #: ../web/share/index.php:55
 msgid "Shared application has ended, you can now close the window"
-msgstr ""
+msgstr "Общее приложение завершено, можете закрыть окно"
 
 #: ../web/portal/index.php:114
 msgid "Suspend"
-msgstr ""
+msgstr "Прекратить"
 
 #: ../web/portal/index.php:102
 #, php-format
 msgid "Welcome %s!"
-msgstr ""
+msgstr "Добро пожаловать %s!"
 
-#: ../web/portal/resume.php:56 ../web/portal/external_app.php:84
-#, fuzzy
+#: ../web/portal/resume.php:56 ../web/portal/external_app.php:87
+#: ../web/external/index.php:97
 msgid "Your application has ended unexpectedly"
-msgstr "Приложение не выбрано"
+msgstr "Приложение неожиданно завершено"
 
-#: ../web/portal/resume.php:55 ../web/portal/external_app.php:83
+#: ../web/portal/resume.php:55 ../web/portal/external_app.php:86
+#: ../web/external/index.php:96
 msgid "Your application has ended, you can now close the window"
-msgstr ""
+msgstr "Ваше приложение завершено, можете закрыть окно"
 
-#: ../web/error/index.php:52 ../web/portal/index.php:73
-#: ../web/desktop/index.php:59
+#: ../web/desktop/index.php:59 ../web/portal/index.php:73
+#: ../web/error/index.php:52
 msgid "Your session has ended unexpectedly"
-msgstr ""
+msgstr "Ваша сессия неожиданно завершилась"
 
-#: ../web/portal/index.php:72 ../web/desktop/index.php:58
+#: ../web/desktop/index.php:58 ../web/portal/index.php:72
 msgid "Your session has ended, you can now close the window"
-msgstr ""
+msgstr "Ваша сессия завершена, можете закрыть окно"
 
-#: ../web/portal/share_app.php:31 ../web/desktop/index.php:97
-#, fuzzy
+#: ../web/desktop/index.php:97 ../web/portal/share_app.php:31
 msgid "active mode"
-msgstr "активный сеанс"
+msgstr "активный режим"
 
-#: ../web/error/index.php:53 ../web/portal/resume.php:57
-#: ../web/portal/external_app.php:85 ../web/portal/index.php:74
-#: ../web/share/index.php:57 ../web/desktop/index.php:60
-#, fuzzy
+#: ../web/desktop/index.php:60 ../web/portal/resume.php:57
+#: ../web/portal/index.php:74 ../web/portal/external_app.php:88
+#: ../web/error/index.php:53 ../web/external/index.php:98
+#: ../web/share/index.php:57
 msgid "error details"
-msgstr "Подробности"
+msgstr "Подробности ошибки"
 
 #: ../web/portal/index.php:70
 msgid "resume"
-msgstr ""
+msgstr "продолжить"
 
 #. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 #: ../web/portal/index.php:68
-#, fuzzy
 msgid "share"
-msgstr "разделяемая"
+msgstr "расшарить"
 
 #: ../web/portal/index.php:69
 msgid "suspend"
-msgstr ""
+msgstr "приостановить"

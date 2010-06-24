@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
 # Automatically generated, 2010.
 # Author: Alexander Haidukov <ahaidukov@gmail.com>, 2010.
+# Author: Vitalyi Goreslavets <admin@gorets.pp.ua>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: i 18n-2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-02-16 11:35+0100\n"
-"PO-Revision-Date: 2010-02-08 16:33+0300\n"
-"Last-Translator: Alexander Haidukov <ahaidukov@gmail.com>\n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-06-24 09:00+0100\n"
+"Last-Translator: Vitalyi Goreslavets <admin@gorets.pp.ua>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,71 +22,97 @@ msgstr ""
 "X-Poedit-Country: RUSSIAN FEDERATION\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: ../web/admin/usersgroup.php:32 ../web/classes/Preferences.class.php:278
+#: ../web/admin/usersgroup.php:33 ../web/classes/Preferences.class.php:281
 msgid "1 day"
 msgstr "1 день"
 
-#: ../web/admin/usersgroup.php:31 ../web/classes/Preferences.class.php:278
+#: ../web/admin/usersgroup.php:32 ../web/classes/Preferences.class.php:281
 msgid "1 hour"
 msgstr "1 час"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "1 minute"
 msgstr "1 минута"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "1 month"
 msgstr "1 месяц"
 
-#: ../web/admin/usersgroup.php:33 ../web/classes/Preferences.class.php:278
+#: ../web/admin/usersgroup.php:34 ../web/classes/Preferences.class.php:281
 msgid "1 week"
 msgstr "1 неделя"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "10 minutes"
 msgstr "10 минут"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "12 hours"
 msgstr "12 часов"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "15 minutes"
 msgstr "15 минут"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "2 days"
 msgstr "2 дня"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "2 hours"
 msgstr "2 часа"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "2 minutes"
 msgstr "2 минуты"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "30 minutes"
 msgstr "30 минут"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "5 hours"
 msgstr "5 часов"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "5 minutes"
 msgstr "5 минут"
 
-#: ../web/classes/Preferences.class.php:275
+#: ../web/classes/Preferences.class.php:278
 msgid "8-bits"
 msgstr "8-бит"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:91
+#: ../web/admin/classes/UsersList.class.php:93
+#: ../web/admin/classes/UsersList.class.php:130
+#, php-format
+msgid "<strong>%d</strong> result for \"%s\"."
+msgid_plural "<strong>%d</strong> results for \"%s\"."
+msgstr[0] "<strong>%d</strong> результатов для \"%s\"."
+msgstr[1] "<strong>%d</strong> результат для \"%s\"."
+msgstr[2] "<strong>%d</strong> результа для \"%s\"."
+
+#: ../web/admin/classes/UsersGroupsList.class.php:87
+#: ../web/admin/classes/UsersList.class.php:89
+#, php-format
+msgid ""
+"<strong>Partial content:</strong> Only <strong>%d result</strong> displayed "
+"but there are more. Please restrict your search field."
+msgid_plural ""
+"<strong>Partial content:</strong> Only <strong>%d results</strong> displayed "
+"but there are more. Please restrict your search field."
+msgstr[0] "<strong>Не все содержимое:</strong> Только <strong>%d результатов</strong> показано,"
+"всего их больше. Ограничте область поиска."
+msgstr[1] "<strong>Не все содержимое:</strong> Только <strong>%d результат</strong> показано,"
+"всего их больше. Ограничте область поиска."
+msgstr[2] "<strong>Не все содержимое:</strong> Только <strong>%d результата</strong> показано,"
+"всего их больше. Ограничте область поиска."
 
 #: ../web/admin/sharedfolders.php:43
 msgid "A shared folder with that name already exists!"
 msgstr "Папка с таким именем уже существует!"
 
-#: ../web/admin/actions.php:390
+#: ../web/admin/actions.php:393
 msgid "A shared folder with this name already exists"
 msgstr "Общая папка с таким именем уже существует"
 
@@ -93,27 +120,25 @@ msgstr "Общая папка с таким именем уже существу
 msgid "ACL"
 msgstr "Правила доступа"
 
-#: ../web/admin/reporting.php:416 ../web/admin/reporting.php:437
-#: ../web/admin/reporting.php:450 ../web/admin/reporting.php:463
+#: ../web/admin/reporting.php:482 ../web/admin/reporting.php:508
+#: ../web/admin/reporting.php:527 ../web/admin/reporting.php:540
 msgid "Abscissa: day of the month"
 msgstr "X: дни месяца"
 
-#: ../web/admin/reporting.php:418 ../web/admin/reporting.php:439
-#: ../web/admin/reporting.php:452 ../web/admin/reporting.php:465
+#: ../web/admin/reporting.php:484 ../web/admin/reporting.php:510
+#: ../web/admin/reporting.php:529 ../web/admin/reporting.php:542
 msgid "Abscissa: hour of the day"
 msgstr "Y: часы"
 
-#: ../web/classes/Preferences.class.php:301
+#: ../web/classes/Preferences.class.php:304
 msgid "Action to do when an user already have an active session"
-msgstr ""
-"Действие которое необходимо выполнить в случае если пользователь уже имеет "
-"активный сеанс"
+msgstr "Действие которое необходимо выполнить в случае если пользователь уже имеет активный сеанс"
 
-#: ../web/classes/Preferences.class.php:240
+#: ../web/classes/Preferences.class.php:243
 msgid "Action when an ApS status is not ready anymore"
 msgstr "Выполнять в случае если сервер приложений (ApS) не доступен"
 
-#: ../web/classes/Preferences.class.php:488
+#: ../web/classes/Preferences.class.php:491
 msgid "Activated callbacks"
 msgstr "Обработчики событий"
 
@@ -122,8 +147,8 @@ msgid "Active"
 msgstr "Активный"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:26
-#: ../web/modules/UserGroupDB/activedirectory.php:67
 #: ../web/modules/UserDB/activedirectory.php:151
+#: ../web/modules/UserGroupDB/activedirectory.php:113
 msgid "Active Directory"
 msgstr "Active Directory"
 
@@ -135,7 +160,7 @@ msgstr "Группы пользователей Active Directory"
 msgid "Active Directory integration"
 msgstr "Интеграция с Active Directory"
 
-#: ../web/admin/servers.php:963 ../web/admin/users.php:433
+#: ../web/admin/users.php:420 ../web/admin/servers.php:979
 msgid "Active sessions"
 msgstr "Активные сессии"
 
@@ -143,13 +168,13 @@ msgstr "Активные сессии"
 msgid "Active tasks on this application"
 msgstr "Активные задания для этого приложения"
 
-#: ../web/admin/servers.php:931
+#: ../web/admin/servers.php:947
 msgid "Active tasks on this server"
-msgstr "Активные задания"
+msgstr "Активные задания на сервере"
 
+#: ../web/admin/appsgroup.php:224 ../web/admin/usersgroup.php:524
 #: ../web/admin/publications.php:132 ../web/admin/applications_static.php:244
-#: ../web/admin/users.php:228 ../web/admin/users.php:247
-#: ../web/admin/usersgroup.php:514 ../web/admin/appsgroup.php:215
+#: ../web/admin/users.php:215 ../web/admin/users.php:234
 msgid "Add"
 msgstr "Добавить"
 
@@ -157,9 +182,9 @@ msgstr "Добавить"
 msgid "Add a static application"
 msgstr "Добавить статическое приложение"
 
-#: ../web/admin/usersgroup.php:964 ../web/admin/sharedfolders.php:212
+#: ../web/admin/usersgroup.php:985 ../web/admin/sharedfolders.php:212
 msgid "Add access to this shared folder"
-msgstr "Предоставить доступ"
+msgstr "Предоставить доступ к этой папке"
 
 #: ../web/admin/news.php:90
 msgid "Add news"
@@ -169,29 +194,29 @@ msgstr "Добавить новость"
 msgid "Add this news"
 msgstr "Добавить"
 
-#: ../web/admin/usersgroup.php:866 ../web/admin/appsgroup.php:456
+#: ../web/admin/appsgroup.php:465 ../web/admin/usersgroup.php:887
 msgid "Add this publication"
 msgstr "Добавить публикацию"
 
-#: ../web/admin/usersgroup.php:915
+#: ../web/admin/usersgroup.php:936
 msgid "Add this rule"
 msgstr "Добавить правило"
 
-#: ../web/admin/applications_static.php:569 ../web/admin/users.php:423
-#: ../web/admin/usersgroup.php:823 ../web/admin/appsgroup.php:369
+#: ../web/admin/appsgroup.php:378 ../web/admin/usersgroup.php:843
+#: ../web/admin/applications_static.php:577 ../web/admin/users.php:410
 #: ../web/admin/applications.php:461
 msgid "Add to this group"
 msgstr "Добавить в группу"
 
-#: ../web/admin/includes/page_template.php:242 ../web/admin/login.php:99
+#: ../web/admin/login.php:99 ../web/admin/includes/page_template.php:242
 #: ../web/includes/functions.inc.d/template.inc.php:79
 #: ../web/includes/functions.inc.d/template.inc.php:124
 msgid "Administration"
-msgstr "Интерфейс администратора"
+msgstr "Панель администрирования"
 
 #: ../web/classes/Preferences.class.php:153
 msgid "Administration console language"
-msgstr "Язык интерфейса управления"
+msgstr "Язык панели управления"
 
 #: ../web/modules/UserDB/activedirectory.php:85
 msgid "Administrator DN"
@@ -211,24 +236,23 @@ msgstr "Учетная запись администратора:"
 msgid "Administrator password"
 msgstr "Пароль администратора"
 
-#: ../web/index.php:314
+#: ../web/index.php:312
 msgid "Advanced settings"
 msgstr "Расширенные настроки"
 
-#: ../web/admin/usersgroup.php:479 ../web/admin/usersgroup.php:716
+#: ../web/admin/usersgroup.php:489 ../web/admin/usersgroup.php:734
 msgid "All"
 msgstr "Все"
 
-#: ../web/classes/Preferences.class.php:323
+#: ../web/classes/Preferences.class.php:326
 msgid "Allow connections through proxy (SSH/ping applet test required)"
-msgstr ""
-"Разрешить соединения через прокси (SSH/ping applet test должен быть включен)"
+msgstr "Разрешить соединения через прокси (SSH/ping applet test должен быть включен)"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:261
 msgid "Anonymous bind"
 msgstr "Анонимно"
 
-#: ../web/admin/servers.php:818
+#: ../web/admin/servers.php:834
 msgid "Application"
 msgstr "Приложение"
 
@@ -238,11 +262,10 @@ msgid "Application '%s' successfully deleted"
 msgstr "Приложение '%s' успешно удалено"
 
 #: ../web/admin/configuration-sumup.php:95
-#, fuzzy
 msgid "Application Server"
 msgstr "Серверы приложений"
 
-#: ../web/classes/Preferences.class.php:231
+#: ../web/classes/Preferences.class.php:234
 msgid "Application Server settings"
 msgstr "Настройки серверов приложений"
 
@@ -250,7 +273,7 @@ msgstr "Настройки серверов приложений"
 msgid "Application Servers"
 msgstr "Серверы приложений"
 
-#: ../web/startsession.php:223
+#: ../web/startsession.php:237
 msgid "Application does not exist"
 msgstr "Приложение не существует"
 
@@ -258,7 +281,7 @@ msgstr "Приложение не существует"
 msgid "Application group"
 msgstr "Группа приложений"
 
-#: ../web/admin/appsgroup.php:128
+#: ../web/admin/appsgroup.php:137
 msgid "Application groups"
 msgstr "Группы приложений"
 
@@ -266,7 +289,7 @@ msgstr "Группы приложений"
 msgid "Application groups list"
 msgstr "Группы приложений"
 
-#: ../web/admin/appsgroup.php:286
+#: ../web/admin/appsgroup.php:295
 msgid "Application groups management"
 msgstr "Управление группой приложений"
 
@@ -274,13 +297,13 @@ msgstr "Управление группой приложений"
 msgid "Application list"
 msgstr "Приложения"
 
-#: ../web/startsession.php:238
+#: ../web/startsession.php:252
 msgid "Application not available"
 msgstr "Приложение не доступно"
 
 #: ../web/admin/actions.php:115
 msgid "ApplicationDB is not writeable"
-msgstr "ApplicationDB "
+msgstr "Нет прав на запись в ApplicationDB"
 
 #: ../web/admin/actions.php:129 ../web/admin/actions.php:138
 #, php-format
@@ -289,7 +312,7 @@ msgstr "Группа приложений '%s' успешно модифицир
 
 #. general div
 #: ../web/admin/includes/page_template.php:47
-#: ../web/admin/includes/page_template.php:114 ../web/admin/sumup.php:190
+#: ../web/admin/includes/page_template.php:114 ../web/admin/sumup.php:193
 #: ../web/admin/applications.php:112
 msgid "Applications"
 msgstr "Приложения"
@@ -302,39 +325,39 @@ msgstr "Группы приложений"
 msgid "Applications and Appgroups"
 msgstr "Приложения и группы приложений"
 
-#: ../web/admin/servers.php:841
+#: ../web/admin/servers.php:857
 msgid "Applications available on this server"
 msgstr "Доступные приложения"
 
-#: ../web/admin/wizard.php:305
+#: ../web/admin/wizard.php:312
 msgid "Applications/groups selection"
 msgstr "Выбор приложений и групп приложений"
 
-#: ../web/admin/wizard.php:523
+#: ../web/admin/wizard.php:530
 msgid "Applications:"
 msgstr "Приложения:"
 
-#: ../web/admin/appsgroup.php:69
+#: ../web/admin/appsgroup.php:78
 msgid "AppsGroup successfully added"
 msgstr "Группа приложений успешно добавлена"
 
-#: ../web/admin/appsgroup.php:82
+#: ../web/admin/appsgroup.php:91
 msgid "AppsGroup successfully deleted"
 msgstr "Группа приложений успешно удалена"
 
-#: ../web/admin/appsgroup.php:115
+#: ../web/admin/appsgroup.php:124
 msgid "AppsGroup successfully modified"
 msgstr "Группа приложений успешно модифицирована"
 
-#: ../web/admin/wizard.php:440
+#: ../web/admin/wizard.php:447
 msgid "Are you sure that you want to create this publication?"
 msgstr "Вы действительно хотите создать публикацию?"
 
-#: ../web/admin/users.php:216
+#: ../web/admin/users.php:203
 msgid "Are you sure you want to delete selected users?"
 msgstr "Вы действительно хотите удалить выбранных пользователей?"
 
-#: ../web/admin/usersgroup.php:400 ../web/admin/appsgroup.php:178
+#: ../web/admin/appsgroup.php:187 ../web/admin/usersgroup.php:410
 msgid "Are you sure you want to delete these groups?"
 msgstr "Вы действительно хотите удалить эти группы?"
 
@@ -342,21 +365,21 @@ msgstr "Вы действительно хотите удалить эти гр�
 msgid "Are you sure you want to delete these static applications?"
 msgstr "Вы действительно хотите удалить эти приложения?"
 
-#: ../web/admin/applications_static.php:549 ../web/admin/applications.php:440
+#: ../web/admin/applications_static.php:557 ../web/admin/applications.php:440
 msgid "Are you sure you want to delete this application from this group?"
 msgstr "Вы действительно хотите удалить это приложение из группы?"
 
-#: ../web/admin/applications_static.php:148
-#: ../web/admin/applications_static.php:453 ../web/admin/appsgroup.php:347
+#: ../web/admin/appsgroup.php:356 ../web/admin/applications_static.php:148
+#: ../web/admin/applications_static.php:461
 msgid "Are you sure you want to delete this application?"
 msgstr "Вы действительно хотите удалить это приложение?"
 
-#: ../web/admin/usersgroup.php:383 ../web/admin/usersgroup.php:648
-#: ../web/admin/appsgroup.php:165 ../web/admin/appsgroup.php:302
+#: ../web/admin/appsgroup.php:174 ../web/admin/appsgroup.php:311
+#: ../web/admin/usersgroup.php:393 ../web/admin/usersgroup.php:666
 msgid "Are you sure you want to delete this group?"
 msgstr "Вы действительно хотите удалить эту группу?"
 
-#: ../web/admin/applications_static.php:516
+#: ../web/admin/applications_static.php:524
 msgid "Are you sure you want to delete this icon?"
 msgstr "Вы действительно хотите удалить этот значок?"
 
@@ -364,45 +387,45 @@ msgstr "Вы действительно хотите удалить этот з�
 msgid "Are you sure you want to delete this news?"
 msgstr "Вы действительно хотите удалить эту новость?"
 
-#: ../web/admin/publications.php:97 ../web/admin/usersgroup.php:844
-#: ../web/admin/appsgroup.php:434
+#: ../web/admin/appsgroup.php:443 ../web/admin/usersgroup.php:865
+#: ../web/admin/publications.php:97
 msgid "Are you sure you want to delete this publication?"
 msgstr "Вы действительно хотите удалить эту публикацию?"
 
-#: ../web/admin/usersgroup.php:890
+#: ../web/admin/usersgroup.php:911
 msgid "Are you sure you want to delete this rule?"
 msgstr "Вы действительно хотите удалить это правило?"
 
-#: ../web/admin/servers.php:475 ../web/admin/servers.php:781
+#: ../web/admin/servers.php:479 ../web/admin/servers.php:797
 msgid "Are you sure you want to delete this server?"
 msgstr "Вы действительно хотите удалить этот сервер?"
 
-#: ../web/admin/usersgroup.php:944 ../web/admin/sharedfolders.php:192
+#: ../web/admin/usersgroup.php:965 ../web/admin/sharedfolders.php:192
 msgid "Are you sure you want to delete this shared folder access?"
 msgstr "Вы действительно хотите удать правило доступа для этой папки?"
 
 #: ../web/admin/sharedfolders.php:98
 msgid "Are you sure you want to delete this shared folder?"
-msgstr "Вы действительно хотите удалить эту папку?"
+msgstr "Вы действительно хотите удалить эту общую папку?"
 
-#: ../web/admin/users.php:403
+#: ../web/admin/users.php:390
 msgid "Are you sure you want to delete this user from this group?"
 msgstr "Вы дествительно хотите удалить пользователя из группы?"
 
-#: ../web/admin/users.php:199 ../web/admin/users.php:329
-#: ../web/admin/usersgroup.php:801
+#: ../web/admin/usersgroup.php:819 ../web/admin/users.php:186
+#: ../web/admin/users.php:316
 msgid "Are you sure you want to delete this user?"
 msgstr "Вы действительно хотите удалить этого пользователя?"
 
-#: ../web/admin/sessions.php:230
+#: ../web/admin/sessions.php:264
 msgid "Are you sure you want to kill selected sessions?"
 msgstr "Вы действительно хотите уничтожить выбранные сеансы?"
 
-#: ../web/admin/sessions.php:177 ../web/admin/sessions.php:216
+#: ../web/admin/sessions.php:189 ../web/admin/sessions.php:250
 msgid "Are you sure you want to kill this session?"
 msgstr "Вы действительно хотите уничтожить этот сеанс?"
 
-#: ../web/admin/servers.php:860 ../web/admin/applications.php:362
+#: ../web/admin/servers.php:876 ../web/admin/applications.php:362
 msgid "Are you sure you want to remove this application from this server?"
 msgstr "Вы действительно хотите удалить это приложение с этого сервера?"
 
@@ -410,45 +433,47 @@ msgstr "Вы действительно хотите удалить это пр�
 msgid "Are you sure you want to remove this application?"
 msgstr "Вы действительно хотите удалить это приложение?"
 
-#: ../web/admin/usersgroup.php:479 ../web/admin/usersgroup.php:719
+#: ../web/admin/usersgroup.php:489 ../web/admin/usersgroup.php:737
 msgid "At least one"
 msgstr "Как минимум одна"
 
-#: ../web/classes/Preferences.class.php:223
+#: ../web/classes/Preferences.class.php:226
 msgid "Authentication"
 msgstr "Аутентификация"
 
-#: ../web/ajax/login.php:26 ../web/startsession.php:67
-#: ../web/startsession.php:71
+#: ../web/ajax/login.php:26 ../web/startsession.php:70
+#: ../web/startsession.php:74
 msgid "Authentication failed"
-msgstr ""
+msgstr "Ошибка Аутентификации"
 
 #: ../web/admin/configuration-sumup.php:100
 msgid "Authorized FQDN"
-msgstr ""
+msgstr "Авторизация FQDN"
 
-#: ../web/classes/Preferences.class.php:232
+#: ../web/classes/Preferences.class.php:235
 msgid "Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)"
-msgstr ""
-"Авторизованные серверы (Полное доменное имя или IP-адрес. Допускается "
-"использование подстановочных знаков (*.))"
+msgstr "Авторизованные серверы (Полное доменное имя или IP-адрес. Допускается использование подстановочных знаков (*.))"
 
-#: ../web/classes/Preferences.class.php:246
+#: ../web/classes/Preferences.class.php:249
 msgid "Auto register new servers"
 msgstr "Автоматически регистрировать новые серверы"
 
-#: ../web/classes/Preferences.class.php:249
+#: ../web/classes/Preferences.class.php:252
 msgid "Auto switch new servers to production mode"
 msgstr "Автоматически переключать новые серверы в продуктивный режим"
 
+#: ../web/classes/Preferences.class.php:154
+msgid "Autodetect"
+msgstr "Автообнаружение"
+
 #: ../web/admin/applications.php:212
 msgid "Available"
-msgstr ""
+msgstr "Доступен"
 
 #. <th>'._('Desktop File').'</th>
-#: ../web/admin/sumup.php:59
+#: ../web/admin/sumup.php:65
 msgid "Available servers"
-msgstr "доступные серверы"
+msgstr "Доступные серверы"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:107
 msgid "Back to default"
@@ -456,19 +481,19 @@ msgstr "Восстановить настройки по-умолчанию"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:230
 msgid "Base DN:"
-msgstr ""
+msgstr "Базовое DN"
 
-#: ../web/admin/wizard.php:453
+#: ../web/admin/wizard.php:460
 msgid "Between these usergroups"
-msgstr "Группы пользователей"
+msgstr "Между этими группами пользователей"
 
-#: ../web/admin/wizard.php:471
+#: ../web/admin/wizard.php:478
 msgid "Between this newly created usergroup"
-msgstr "группа пользователей"
+msgstr "Между созданными группами пользователей"
 
-#: ../web/admin/wizard.php:451
+#: ../web/admin/wizard.php:458
 msgid "Between this usergroup"
-msgstr "Группа пользователей"
+msgstr "Мужду этой группой"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:263
 msgid "Bind DN (without suffix):"
@@ -478,66 +503,64 @@ msgstr "Bind DN (без суффикса):"
 msgid "Bind password:"
 msgstr "Пароль:"
 
-#: ../web/admin/usersgroup.php:556 ../web/admin/appsgroup.php:235
+#: ../web/admin/appsgroup.php:244 ../web/admin/usersgroup.php:571
 #: ../web/admin/applications.php:213
 msgid "Block"
 msgstr "Заблокировать"
 
-#: ../web/admin/usersgroup.php:360 ../web/admin/usersgroup.php:560
-#: ../web/admin/appsgroup.php:149 ../web/admin/appsgroup.php:239
+#: ../web/admin/appsgroup.php:158 ../web/admin/appsgroup.php:248
+#: ../web/admin/usersgroup.php:370 ../web/admin/usersgroup.php:575
 #: ../web/admin/applications.php:216
 msgid "Blocked"
 msgstr "Заблокировано"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:137
 msgid "Both CPU and RAM are used as criterias, with a little randomization..."
-msgstr ""
-"В качестве критериев для оценки используются и доступность ресурсов "
-"процессора и доступность ресурсов оперативной памяти..."
+msgstr "В качестве критериев используются и доступность ресурсов ЦП и ОЗУ..."
 
-#: ../web/classes/Server.class.php:370
+#: ../web/classes/Server.class.php:348
 msgid "Broken"
 msgstr "Неисправен"
 
 #: ../web/modules/AuthMethod/CAS.php:71
 msgid "CAS authentication"
-msgstr ""
+msgstr "CAS аутентификация"
 
 #: ../web/modules/AuthMethod/CAS.php:85
 msgid "CAS server URL"
-msgstr ""
+msgstr "Адрес CAS сервера"
 
-#: ../web/admin/servers.php:338 ../web/admin/servers.php:457
-#: ../web/admin/servers.php:693
+#: ../web/admin/servers.php:342 ../web/admin/servers.php:461
+#: ../web/admin/servers.php:709
 msgid "CPU"
-msgstr "CPU"
+msgstr "ЦП"
 
-#: ../web/admin/servers.php:347 ../web/admin/servers.php:699
-#: ../web/admin/reporting.php:301
+#: ../web/admin/reporting.php:367 ../web/admin/servers.php:351
+#: ../web/admin/servers.php:715
 msgid "CPU usage"
-msgstr "Использование CPU"
+msgstr "Использование ЦП"
 
-#: ../web/admin/usersgroup.php:467
+#: ../web/admin/usersgroup.php:477
 msgid "Cached"
 msgstr "В кеше"
 
-#: ../web/admin/wizard.php:600
+#: ../web/admin/wizard.php:607
 msgid "Cannot create application group"
 msgstr "Невозможно создать группу"
 
-#: ../web/admin/wizard.php:580
+#: ../web/admin/wizard.php:587
 msgid "Cannot create usergroup"
 msgstr "Невозможно создать группу"
 
-#: ../web/admin/servers.php:544
+#: ../web/admin/servers.php:548
 msgid "Cannot get server monitoring"
-msgstr ""
+msgstr "Не могу получить мониторинг сервера"
 
-#: ../web/admin/servers.php:559
+#: ../web/admin/servers.php:563
 msgid "Cannot list available applications"
 msgstr "Не возможно вывести список доступных приложений"
 
-#: ../web/admin/servers.php:813
+#: ../web/admin/servers.php:829
 msgid "Category"
 msgstr "Категория"
 
@@ -545,32 +568,34 @@ msgstr "Категория"
 msgid "Change"
 msgstr "Изменить"
 
-#: ../web/admin/includes/page_template.php:197 ../web/admin/password.php:36
+#: ../web/admin/password.php:36 ../web/admin/includes/page_template.php:197
 msgid "Change Administrator password"
 msgstr "Пароль администратора"
 
-#: ../web/classes/Preferences.class.php:305
-#: ../web/classes/Preferences.class.php:329
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
 msgid ""
 "Choose Advanced Settings options you want to make available to users before "
 "they launch a session."
 msgstr ""
+"Выберите расширенные настройки если хотите сделать доступными для пользователей до начала "
+"их сессии."
 
-#: ../web/classes/Preferences.class.php:413
+#: ../web/classes/Preferences.class.php:416
 msgid "Choose the modules you want to enable."
-msgstr "Выберите модели, которые хотите включить."
+msgstr "Выберите модули, которые хотите включить."
 
-#: ../web/classes/Preferences.class.php:362
+#: ../web/classes/Preferences.class.php:365
 msgid "Choose the plugins you want to enable."
 msgstr "Выберите плагины, которые хотите включить."
 
 #: ../web/events/callbacks/ServerStatusChanged/Task.class.php:53
 msgid "Cleanup tasks"
-msgstr ""
+msgstr "Очистить список задач"
 
 #: ../web/admin/applications_static.php:220
-#: ../web/admin/applications_static.php:430
-#: ../web/admin/applications_static.php:494
+#: ../web/admin/applications_static.php:438
+#: ../web/admin/applications_static.php:502
 msgid "Command"
 msgstr "Команда"
 
@@ -583,37 +608,37 @@ msgid "Common Internet File System (CIFS) without services for unix"
 msgstr "Common Internet File System (CIFS) без сервисов для unix"
 
 #. conf not valid
-#: ../web/admin/includes/page_template.php:53 ../web/admin/servers.php:713
-#: ../web/admin/configuration-partial.php:49
-#: ../web/admin/configuration-partial.php:56 ../web/admin/index.php:83
-#: ../web/admin/configuration.php:65 ../web/admin/configuration.php:77
-#: ../web/admin/sharedfolders.php:160
+#: ../web/admin/index.php:83 ../web/admin/configuration-partial.php:53
+#: ../web/admin/configuration-partial.php:60
+#: ../web/admin/includes/page_template.php:53 ../web/admin/servers.php:729
+#: ../web/admin/sharedfolders.php:160 ../web/admin/configuration.php:69
+#: ../web/admin/configuration.php:81
 msgid "Configuration"
 msgstr "Настройки"
 
-#: ../web/includes/core-minimal.inc.php:64
+#: ../web/includes/core-minimal.inc.php:61
 msgid "Configuration file missing"
 msgstr "Не найден файл конфигурации"
 
-#: ../web/includes/core-minimal.inc.php:71
+#: ../web/includes/core-minimal.inc.php:68
 msgid "Configuration not valid"
 msgstr "Конфигурация содержит ошибки"
 
 #. configuration saved
-#: ../web/admin/configuration-partial.php:45 ../web/admin/configuration.php:61
-#: ../web/admin/sharedfolders.php:64
+#: ../web/admin/configuration-partial.php:49 ../web/admin/sharedfolders.php:64
+#: ../web/admin/configuration.php:65
 msgid "Configuration successfully saved"
 msgstr "Конфигурация успешно сохранена"
 
-#: ../web/admin/wizard.php:552
+#: ../web/admin/wizard.php:559
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: ../web/admin/wizard.php:438
+#: ../web/admin/wizard.php:445
 msgid "Confirmation"
 msgstr "Подтверждение"
 
-#: ../web/admin/sessions.php:165
+#: ../web/admin/sessions.php:177
 msgid "Connect to or observe this session"
 msgstr "Подключиться или наблюдать за этом сеансом"
 
@@ -621,19 +646,19 @@ msgstr "Подключиться или наблюдать за этом сеа�
 msgid "Content"
 msgstr "Содержимое"
 
-#: ../web/admin/wizard.php:317
+#: ../web/admin/wizard.php:324
 msgid "Create a group with applications"
-msgstr "Создать группу приложений"
+msgstr "Создать группу с приложениями"
 
-#: ../web/admin/wizard.php:172
+#: ../web/admin/wizard.php:179
 msgid "Create a group with users"
-msgstr "Создать группу"
+msgstr "Создать группу с пользователями"
 
-#: ../web/admin/usersgroup.php:423 ../web/admin/appsgroup.php:191
+#: ../web/admin/appsgroup.php:200 ../web/admin/usersgroup.php:433
 msgid "Create a new group"
 msgstr "Создать новую группу"
 
-#: ../web/admin/wizard.php:395
+#: ../web/admin/wizard.php:402
 msgid "Create appgroup"
 msgstr "Создание группы приложений"
 
@@ -641,13 +666,13 @@ msgstr "Создание группы приложений"
 msgid "Create this shared folder"
 msgstr "Создать папку"
 
-#: ../web/admin/wizard.php:246
+#: ../web/admin/wizard.php:253
 msgid "Create usergroup"
 msgstr "Создать группу"
 
 #: ../web/classes/Session.class.php:123
 msgid "Created"
-msgstr ""
+msgstr "Создано"
 
 #: ../web/admin/tasks.php:117 ../web/admin/tasks.php:185
 msgid "Creation time"
@@ -655,43 +680,41 @@ msgstr "Время создания"
 
 #: ../web/modules/UserDB/sql_external.php:208
 msgid "Crypt"
-msgstr ""
+msgstr "Шифрование"
 
 #: ../web/admin/logs.php:166
 msgid "Daemon log"
-msgstr ""
+msgstr "Лог демона"
 
 #: ../web/admin/configuration-sumup.php:56
-#, fuzzy
 msgid "Database"
 msgstr "База данных"
 
-#: ../web/classes/Preferences.class.php:199
+#: ../web/classes/Preferences.class.php:202
 msgid "Database host address"
 msgstr "Адрес сервера"
 
-#: ../web/classes/Preferences.class.php:205
-#: ../web/modules/UserGroupDB/sql_external.php:111
 #: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
 msgid "Database name"
 msgstr "База данных"
 
-#: ../web/classes/Preferences.class.php:203
+#: ../web/classes/Preferences.class.php:206
 msgid "Database password"
 msgstr "Пароль"
 
 #: ../web/admin/includes/page_template.php:155
 msgid "Database settings"
-msgstr "База данных"
+msgstr "Настройки Базы данных"
 
-#: ../web/classes/Preferences.class.php:201
+#: ../web/classes/Preferences.class.php:204
 msgid "Database username"
 msgstr "Пользователь"
 
 #: ../web/admin/configuration-sumup.php:63
-#, fuzzy
 msgid "Database: "
-msgstr "База данных"
+msgstr "База данных:"
 
 #: ../web/admin/news.php:63
 msgid "Date"
@@ -701,35 +724,39 @@ msgstr "Дата"
 msgid "Day"
 msgstr "День"
 
-#: ../web/index.php:543
+#: ../web/index.php:539
 msgid "Debug"
 msgstr "Отладка"
 
 #: ../web/classes/Preferences.class.php:157
 msgid "Debug options list"
-msgstr ""
+msgstr "Список опций отладки"
 
-#: ../web/classes/Preferences.class.php:167
+#: ../web/classes/Preferences.class.php:170
 msgid "Default browser"
 msgstr "Браузер по-умолчанию"
 
-#: ../web/classes/Preferences.class.php:268
+#: ../web/admin/applications_static.php:259
+msgid "Default browser for :"
+msgstr "Браузер по-умолчанию"
+
+#: ../web/classes/Preferences.class.php:271
 msgid "Default language for session"
 msgstr "Язык для сеанса по-умолчанию"
 
-#: ../web/classes/Preferences.class.php:264
+#: ../web/classes/Preferences.class.php:267
 msgid "Default mode for session"
 msgstr "Режим сеанса по-умолчанию"
 
-#: ../web/classes/Preferences.class.php:170
+#: ../web/classes/Preferences.class.php:173
 msgid "Default policy"
 msgstr "Политика по-умолчанию"
 
-#: ../web/classes/Preferences.class.php:274
+#: ../web/classes/Preferences.class.php:277
 msgid "Default quality for session"
 msgstr "Качество изображения для сеанса по-умолчанию"
 
-#: ../web/classes/Preferences.class.php:277
+#: ../web/classes/Preferences.class.php:280
 msgid "Default timeout for session"
 msgstr "Таймаут для сеанса по-умолчанию"
 
@@ -748,41 +775,40 @@ msgstr "Контейнер по умолчанию"
 msgid "Default user group"
 msgstr "Группа пользователей по-умолчанию"
 
-#: ../web/classes/Preferences.class.php:271
+#: ../web/classes/Preferences.class.php:274
 msgid "Default windows keymap for session"
 msgstr "Раскладка клавиатуры для сеанса по-умолчанию"
 
-#: ../web/admin/usersgroup.php:638
+#: ../web/admin/usersgroup.php:656
 msgid "Define as default"
 msgstr "Сделать группой по-умолчанию"
 
-#: ../web/admin/publications.php:102 ../web/admin/servers.php:478
-#: ../web/admin/servers.php:502 ../web/admin/servers.php:784
-#: ../web/admin/applications_static.php:151
+#: ../web/admin/appsgroup.php:175 ../web/admin/appsgroup.php:189
+#: ../web/admin/usersgroup.php:394 ../web/admin/usersgroup.php:412
+#: ../web/admin/publications.php:102 ../web/admin/applications_static.php:151
 #: ../web/admin/applications_static.php:169
-#: ../web/admin/applications_static.php:456 ../web/admin/users.php:200
-#: ../web/admin/users.php:218 ../web/admin/usersgroup.php:384
-#: ../web/admin/usersgroup.php:402 ../web/admin/appsgroup.php:166
-#: ../web/admin/appsgroup.php:180 ../web/admin/tasks.php:146
-#: ../web/admin/tasks.php:215
+#: ../web/admin/applications_static.php:464 ../web/admin/users.php:187
+#: ../web/admin/users.php:205 ../web/admin/tasks.php:146
+#: ../web/admin/tasks.php:215 ../web/admin/servers.php:482
+#: ../web/admin/servers.php:506 ../web/admin/servers.php:800
 msgid "Delete"
 msgstr "Удалить"
 
-#: ../web/admin/usersgroup.php:949 ../web/admin/sharedfolders.php:197
+#: ../web/admin/usersgroup.php:970 ../web/admin/sharedfolders.php:197
 msgid "Delete access to this shared folder"
 msgstr "Удалить правило"
 
-#: ../web/admin/applications_static.php:554 ../web/admin/users.php:408
-#: ../web/admin/usersgroup.php:806 ../web/admin/appsgroup.php:352
+#: ../web/admin/appsgroup.php:361 ../web/admin/usersgroup.php:824
+#: ../web/admin/applications_static.php:562 ../web/admin/users.php:395
 #: ../web/admin/applications.php:445
 msgid "Delete from this group"
 msgstr "Удалить из группы"
 
-#: ../web/admin/usersgroup.php:649 ../web/admin/appsgroup.php:303
+#: ../web/admin/appsgroup.php:312 ../web/admin/usersgroup.php:667
 msgid "Delete this group"
 msgstr "Удалить группу"
 
-#: ../web/admin/applications_static.php:516
+#: ../web/admin/applications_static.php:524
 msgid "Delete this icon"
 msgstr "Удалить этот значок"
 
@@ -790,11 +816,11 @@ msgstr "Удалить этот значок"
 msgid "Delete this news"
 msgstr "Удалить"
 
-#: ../web/admin/usersgroup.php:849 ../web/admin/appsgroup.php:439
+#: ../web/admin/appsgroup.php:448 ../web/admin/usersgroup.php:870
 msgid "Delete this publication"
 msgstr "Удалить публикацию"
 
-#: ../web/admin/usersgroup.php:895
+#: ../web/admin/usersgroup.php:916
 msgid "Delete this rule"
 msgstr "Удалить правило"
 
@@ -802,62 +828,64 @@ msgstr "Удалить правило"
 msgid "Delete this shared folder"
 msgstr "Удалить папку"
 
-#: ../web/admin/users.php:330
+#: ../web/admin/users.php:317
 msgid "Delete this user"
-msgstr "Удалить"
+msgstr "Удалить пользователя"
 
 #. echo '<th>'._('Status').'</th>';
+#: ../web/admin/appsgroup.php:148 ../web/admin/appsgroup.php:211
+#: ../web/admin/appsgroup.php:298 ../web/admin/usersgroup.php:359
+#: ../web/admin/usersgroup.php:471 ../web/admin/usersgroup.php:635
+#: ../web/admin/wizard.php:266 ../web/admin/wizard.php:415
 #: ../web/admin/applications_static.php:112
-#: ../web/admin/applications_static.php:428 ../web/admin/wizard.php:259
-#: ../web/admin/wizard.php:408 ../web/admin/usersgroup.php:349
-#: ../web/admin/usersgroup.php:461 ../web/admin/usersgroup.php:617
-#: ../web/admin/appsgroup.php:139 ../web/admin/appsgroup.php:202
-#: ../web/admin/appsgroup.php:289 ../web/admin/applications.php:125
-#: ../web/admin/applications.php:298
+#: ../web/admin/applications_static.php:436
+#: ../web/admin/classes/UsersGroupsList.class.php:80
+#: ../web/admin/applications.php:125 ../web/admin/applications.php:298
 msgid "Description"
 msgstr "Общая информация"
 
-#: ../web/admin/wizard.php:476 ../web/admin/wizard.php:522
+#: ../web/admin/wizard.php:483 ../web/admin/wizard.php:529
 msgid "Description: "
 msgstr "Описание"
 
-#: ../web/classes/Preferences.class.php:265
-#, fuzzy
+#: ../web/classes/Preferences.class.php:268
 msgid "Desktop"
-msgstr "значки рабочего стола"
+msgstr "Рабочий стол"
 
 #: ../web/classes/Session.class.php:131
 msgid "Destroyed"
-msgstr ""
+msgstr "Уничтожена"
 
 #. echo '<th>'._('Version').'</th>';
-#: ../web/admin/servers.php:304 ../web/admin/servers.php:433
-#: ../web/admin/servers.php:683 ../web/admin/servers.php:937
 #: ../web/admin/tasks.php:121 ../web/admin/tasks.php:189
+#: ../web/admin/servers.php:308 ../web/admin/servers.php:437
+#: ../web/admin/servers.php:699 ../web/admin/servers.php:953
 #: ../web/admin/applications.php:407
 msgid "Details"
 msgstr "Подробности"
 
-#: ../web/classes/Preferences.class.php:237
+#: ../web/classes/Preferences.class.php:240
 msgid "Disable reverse FQDN checking"
-msgstr ""
-"Отключить проверку на существование доменного имени в обратной ДНС зоне"
+msgstr "Отключить проверку на существование доменного имени в обратной ДНС зоне"
 
-#: ../web/admin/users.php:159 ../web/admin/users.php:346
+#: ../web/admin/users.php:164 ../web/admin/users.php:333
+#: ../web/admin/classes/UsersList.class.php:82
 msgid "Display name"
 msgstr "Полное имя"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:248
 msgid "Display name field:"
-msgstr ""
+msgstr "Отображаемые поля:"
 
-#: ../web/classes/Preferences.class.php:317
+#: ../web/classes/Preferences.class.php:320
 msgid ""
 "Display the list of users from the corporate directory in the login box. If "
 "the list is not displayed, the user must enter his login name."
 msgstr ""
+"Показывать список пользователей с корпоративной директории в поле логина. Если "
+"список не отображается, пользователь должен сам ввести логин."
 
-#: ../web/classes/Preferences.class.php:317
+#: ../web/classes/Preferences.class.php:320
 msgid "Display users list"
 msgstr "Показать список пользователей"
 
@@ -866,9 +894,9 @@ msgstr "Показать список пользователей"
 #. $str.= '<td>'._('Recursive Mode').'</td></tr>';
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:247
 msgid "Distinguished name field:"
-msgstr ""
+msgstr "Отображаемые названия полей:"
 
-#: ../web/classes/Preferences.class.php:241
+#: ../web/classes/Preferences.class.php:244
 msgid "Do nothing"
 msgstr "Ничего не делать"
 
@@ -891,19 +919,19 @@ msgstr "Домен:"
 msgid "Download full log file"
 msgstr "Скачать полный файл журнала"
 
-#: ../web/admin/usersgroup.php:414 ../web/admin/usersgroup.php:417
+#: ../web/admin/usersgroup.php:424 ../web/admin/usersgroup.php:427
 msgid "Dynamic"
 msgstr "Динамическая"
 
-#: ../web/index.php:136
+#: ../web/index.php:134
 msgid "ERROR"
 msgstr "ОШИБКА"
 
-#: ../web/classes/Preferences.class.php:210
+#: ../web/classes/Preferences.class.php:213
 msgid "Email settings"
 msgstr "Настройки электронной почты"
 
-#: ../web/admin/usersgroup.php:561 ../web/admin/appsgroup.php:240
+#: ../web/admin/appsgroup.php:249 ../web/admin/usersgroup.php:576
 msgid "Enable"
 msgstr "Включить"
 
@@ -911,18 +939,20 @@ msgstr "Включить"
 msgid "Enable Internal WebDAV filesystem"
 msgstr "Включить файловую систему Internal WebDAV"
 
-#: ../web/classes/Preferences.class.php:237
+#: ../web/classes/Preferences.class.php:240
 msgid ""
 "Enable this option if you don't want to check that the result of the reverse "
 "FQDN address fits the one that was registered."
 msgstr ""
+"Enable this option if you don't want to check that the result of the reverse "
+"FQDN address fits the one that was registered."
 
-#: ../web/admin/usersgroup.php:358 ../web/admin/usersgroup.php:555
-#: ../web/admin/appsgroup.php:147 ../web/admin/appsgroup.php:234
+#: ../web/admin/appsgroup.php:156 ../web/admin/appsgroup.php:243
+#: ../web/admin/usersgroup.php:368 ../web/admin/usersgroup.php:570
 msgid "Enabled"
 msgstr "Включено"
 
-#: ../web/classes/Preferences.class.php:235
+#: ../web/classes/Preferences.class.php:238
 msgid ""
 "Enter a private addresses you wish to associate to a specific IP in case of "
 "issue with the DNS configuration or to override a reverse address result. "
@@ -933,27 +963,31 @@ msgstr ""
 "обратного резолвинга. Пример: pong.office.ulteo.com (поле 1) 192.168.0.113 "
 "(поле 2)"
 
-#: ../web/admin/servers.php:944 ../web/admin/configuration-profile.php:235
 #: ../web/admin/tasks.php:130 ../web/admin/tasks.php:199
+#: ../web/admin/configuration-profile.php:235 ../web/admin/servers.php:960
 #: ../web/admin/applications.php:414
 #: ../web/includes/functions.inc.d/template.inc.php:44
 #: ../web/includes/functions.inc.d/template.inc.php:49
 msgid "Error"
 msgstr "Ошибка"
 
-#: ../web/admin/users.php:279
+#: ../web/admin/users.php:266
 msgid "Error while requesting usergroups"
 msgstr "Произошла ошибка при получении групп польователей"
 
-#: ../web/admin/reporting.php:224
+#: ../web/admin/reporting.php:253
 msgid "Error: \"from\" date is after \"to\" date, switching"
-msgstr ""
+msgstr "Ошибка: \"от\" даты \"до\" "
+
+#: ../web/admin/reporting.php:260
+msgid "Error: \"to\" field is in the future, switch to the current time"
+msgstr "Ошибка: \"до\" поле из будущего, выберите текущую дату"
 
 #. Events settings
 #: ../web/admin/includes/page_template.php:185
-#: ../web/classes/Preferences.class.php:461
+#: ../web/classes/Preferences.class.php:464
 msgid "Events settings"
-msgstr "События"
+msgstr "Настройки Событий"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:113
 msgid "Examples"
@@ -963,28 +997,40 @@ msgstr "Примеры"
 msgid "Executable"
 msgstr "Команда"
 
-#: ../web/admin/servers.php:302 ../web/admin/servers.php:431
-#: ../web/admin/sumup.php:188
+#: ../web/classes/Preferences.class.php:268
+msgid "External"
+msgstr "Внешний"
+
+#: ../web/admin/servers.php:306 ../web/admin/servers.php:435
+#: ../web/admin/sumup.php:191
 msgid "FQDN"
 msgstr "FQDN"
 
 #: ../web/admin/configuration-sumup.php:116
 msgid "FQDN check"
-msgstr ""
+msgstr "Проверка FQDN"
 
 #: ../web/admin/configuration-sumup.php:108
 msgid "FQDN private address"
-msgstr ""
+msgstr "Адрес FQDN"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:31
 msgid "Factor impact"
-msgstr "Текущие настройки"
+msgstr "Параметры показателей"
 
-#: ../web/modules/UserDB/ldap.php:233
+#: ../web/admin/usersgroup.php:548
+msgid "Failed to load usergroup"
+msgstr "Сбой загрузки группы пользователей"
+
+#: ../web/modules/UserDB/ldap.php:272
 msgid "Filter (optional)"
 msgstr "Фильтр (опционально)"
 
-#: ../web/modules/UserDB/ldap.php:233
+#: ../web/admin/classes/UsersList.class.php:114
+msgid "Filter add list: "
+msgstr "Фильтр"
+
+#: ../web/modules/UserDB/ldap.php:272
 msgid "Filter, example (&(distinguishedname=mike*)(uid=42*))"
 msgstr "Фильтр, пример (&(distinguishedname=mike*)(uid=42*)) "
 
@@ -992,7 +1038,7 @@ msgstr "Фильтр, пример (&(distinguishedname=mike*)(uid=42*)) "
 msgid "Filter:"
 msgstr "Фильтр:"
 
-#: ../web/admin/usersgroup.php:483 ../web/admin/usersgroup.php:723
+#: ../web/admin/usersgroup.php:493 ../web/admin/usersgroup.php:741
 msgid "Filters"
 msgstr "Фильтры"
 
@@ -1000,16 +1046,16 @@ msgstr "Фильтры"
 msgid "Finished"
 msgstr "Завершено"
 
-#: ../web/classes/Preferences.class.php:302
+#: ../web/classes/Preferences.class.php:305
 msgid "Forbid access"
 msgstr "Запретить доступ"
 
-#: ../web/classes/Preferences.class.php:305
-#: ../web/classes/Preferences.class.php:329
+#: ../web/classes/Preferences.class.php:308
+#: ../web/classes/Preferences.class.php:332
 msgid "Forceable paramaters by users"
 msgstr "Параметры сеанса изменяемые пользователями"
 
-#: ../web/admin/reporting.php:372 ../web/classes/Preferences.class.php:214
+#: ../web/admin/reporting.php:438 ../web/classes/Preferences.class.php:217
 msgid "From"
 msgstr "Отправитель"
 
@@ -1025,40 +1071,40 @@ msgstr ""
 msgid "General configuration"
 msgstr "Общие настройки"
 
-#: ../web/index.php:77
+#: ../web/index.php:75
 msgid "Getting userlist failed"
 msgstr "Не возможно получить поле \"список пользователей\""
 
 #: ../web/modules/UserGroupDB/ldap_posix.php:134
 msgid "Group Branch DN"
-msgstr ""
+msgstr "Дополнительное DN групы"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:280
 msgid "Group Branch DN:"
-msgstr ""
+msgstr "Дополнительное DN групы"
 
-#: ../web/admin/applications_static.php:542 ../web/admin/applications.php:432
+#: ../web/admin/applications_static.php:550 ../web/admin/applications.php:432
 msgid "Groups with this application"
-msgstr "Группы приложений"
+msgstr "Группы с этим приложением"
 
 #: ../web/modules/UserDB/sql_external.php:207
 msgid "Hash method"
 msgstr "Hash метод"
 
-#: ../web/classes/Preferences.class.php:311
+#: ../web/classes/Preferences.class.php:314
 msgid "Heading title"
 msgstr "Заголовок"
 
-#: ../web/classes/Preferences.class.php:275
+#: ../web/classes/Preferences.class.php:278
 msgid "High"
 msgstr "Высокий"
 
-#: ../web/classes/Preferences.class.php:275
+#: ../web/classes/Preferences.class.php:278
 msgid "Highest"
 msgstr "Наивысший"
 
-#: ../web/admin/classes/Configuration_mode_internal.class.php:99
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:291
+#: ../web/admin/classes/Configuration_mode_internal.class.php:99
 #: ../web/admin/classes/Configuration_mode_ad.class.php:301
 msgid "Home Directory"
 msgstr "Домашняя директория"
@@ -1068,12 +1114,11 @@ msgstr "Домашняя директория"
 msgid "Home Directory:"
 msgstr "Домашняя директория:"
 
-#: ../web/classes/Preferences.class.php:216
+#: ../web/classes/Preferences.class.php:219
 msgid "Host"
 msgstr "Имя или IP-адрес"
 
 #: ../web/admin/configuration-sumup.php:61
-#, fuzzy
 msgid "Host: "
 msgstr "Имя или IP-адрес"
 
@@ -1085,16 +1130,16 @@ msgstr "Час"
 msgid "I want to create my own users"
 msgstr "Создать пользователей"
 
-#: ../web/admin/servers.php:934 ../web/admin/tasks.php:184
+#: ../web/admin/tasks.php:184 ../web/admin/servers.php:950
 #: ../web/admin/applications.php:404
 msgid "ID"
 msgstr "ID"
 
-#: ../web/admin/applications_static.php:512
+#: ../web/admin/applications_static.php:520
 msgid "Icon"
 msgstr "Значок"
 
-#: ../web/modules/AuthMethod/Token.php:91
+#: ../web/modules/AuthMethod/Token.php:95
 msgid ""
 "If a token argument is sent to startsession, the system tries to get an user "
 "login by requesting the token validation url.<br /><br />Put here the url to "
@@ -1102,6 +1147,11 @@ msgid ""
 "password.<br /><br />The special string <b>%TOKEN%</b> needs to be set "
 "because it's replaced by the token argument when the URL is requested."
 msgstr ""
+"Если маркер безопасности посылается сессии, система пытается получить логин пользователя "
+"по предоставленному ключу в URL.<br /><br />Вставте сюда URL запроса "
+"если аргумента посылается <i>сессии</i> вместо логина/"
+"и пароля.<br /><br />Специальная переменная <b>%TOKEN%</b> должна быть установлена "
+"так как она заменяет аргумент когда URL запрошен."
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:315
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:380
@@ -1112,27 +1162,27 @@ msgstr "В гостевом режиме"
 msgid "Index"
 msgstr "Главная"
 
-#: ../web/admin/sessions.php:109
+#: ../web/admin/sessions.php:118
 msgid "Information"
 msgstr "Информация"
 
-#: ../web/admin/servers.php:977 ../web/admin/users.php:447
+#: ../web/admin/users.php:434 ../web/admin/servers.php:996
 msgid "Informations about this session"
 msgstr "Информация о сессии"
 
 #: ../web/admin/classes/Preferences_admin.class.php:105
 msgid "Initialization failed"
-msgstr ""
+msgstr "Ошибка инициализации"
 
 #: ../web/classes/Session.class.php:125
 msgid "Initializing"
-msgstr ""
+msgstr "Инициализация"
 
-#: ../web/admin/servers.php:820 ../web/admin/tasks.php:236
+#: ../web/admin/tasks.php:236 ../web/admin/servers.php:836
 msgid "Install"
 msgstr "Установить"
 
-#: ../web/admin/servers.php:792
+#: ../web/admin/servers.php:808
 msgid "Install an application"
 msgstr "Установить приложение"
 
@@ -1140,17 +1190,17 @@ msgstr "Установить приложение"
 msgid "Install an application from a package name"
 msgstr "Установить приложение из пакета"
 
-#: ../web/admin/servers.php:797
+#: ../web/admin/servers.php:813
 msgid "Install from a package name"
 msgstr "Установить приложение из пакета"
 
-#: ../web/admin/servers.php:899 ../web/admin/applications.php:392
+#: ../web/admin/servers.php:915 ../web/admin/applications.php:392
 msgid "Install on this server"
 msgstr "Установить на этом сервере"
 
 #: ../web/admin/classes/Configuration_mode_internal.class.php:26
 msgid "Internal"
-msgstr ""
+msgstr "Внутренний"
 
 #: ../web/admin/classes/Configuration_mode_internal.class.php:79
 msgid "Internal Database Profiles"
@@ -1158,11 +1208,23 @@ msgstr "Внутренняя база данных пользователей"
 
 #: ../web/plugins/FS/dav.php:78
 msgid "Internal WebDAV"
-msgstr "Internal WebDAV"
+msgstr "Внешний WebDAV"
 
-#: ../web/startsession.php:337 ../web/startsession.php:347
+#: ../web/startsession.php:363 ../web/startsession.php:373
 msgid "Internal error"
 msgstr "Внутренняя ошибка"
+
+#: ../web/classes/SessionReportItem.class.php:157
+msgid "Internal error: failed to initialize session"
+msgstr "Внутренняя ошибка: сессия не инициализирована"
+
+#: ../web/classes/SessionReportItem.class.php:158
+msgid "Internal error: failed to suspend session"
+msgstr "Внутренняя ошибка: невозможно приостановить сессию"
+
+#: ../web/classes/SessionReportItem.class.php:156
+msgid "Internal error: wrong session status"
+msgstr "Внутренняя ошибка: неправильный статус сессии"
 
 #: ../web/webservices/session_invite.php:93
 msgid "Invitation"
@@ -1172,7 +1234,7 @@ msgstr "Приглашение"
 msgid "Invitation sent"
 msgstr "Приглашение отправлено"
 
-#: ../web/classes/Preferences.class.php:302
+#: ../web/classes/Preferences.class.php:305
 msgid "Invite into the session"
 msgstr "Пригласить в сессию"
 
@@ -1180,65 +1242,77 @@ msgstr "Пригласить в сессию"
 msgid "Job id"
 msgstr "идентификатор задачи"
 
-#: ../web/admin/sessions.php:153
+#: ../web/admin/sessions.php:165
 msgid "Join this application"
 msgstr "Подключиться к приложению"
 
-#: ../web/admin/sessions.php:172
+#: ../web/admin/sessions.php:184
 msgid "Join this session"
 msgstr "Подключиться к сеансу"
 
-#: ../web/admin/sessions.php:219 ../web/admin/sessions.php:232
+#: ../web/classes/SessionReportItem.class.php:161
+msgid "KMA expirated"
+msgstr "Время жизни сессии"
+
+#: ../web/admin/sessions.php:253 ../web/admin/sessions.php:266
 msgid "Kill"
 msgstr "Уничтожить"
 
-#: ../web/admin/sessions.php:176 ../web/admin/sessions.php:180
+#: ../web/admin/sessions.php:188 ../web/admin/sessions.php:192
 msgid "Kill this session"
 msgstr "Уничтожить сеанс"
 
-#: ../web/modules/UserGroupDB/ldap_memberof.php:135
+#: ../web/classes/SessionReportItem.class.php:155
+msgid "Killed by administrator"
+msgstr "Завершено Администратором"
+
+#: ../web/modules/UserGroupDB/ldap_memberof.php:182
 msgid "LDAP using memberOf"
-msgstr ""
+msgstr "Использовать LDAP с пользователями"
 
 #: ../web/modules/UserGroupDB/ldap_posix.php:139
 msgid "LDAP using posix group"
-msgstr ""
+msgstr "LDAP использовать posix группу"
 
-#: ../web/index.php:347
+#: ../web/index.php:345
 msgid "Language"
 msgstr "Язык"
 
 #: ../web/admin/configuration-sumup.php:45
 msgid "Last save"
-msgstr ""
+msgstr "Последнее сохранение"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "Launch an application when the desktop is starting"
 msgstr "запуск приложения в момент инициализации рабочего стола"
 
-#: ../web/classes/Preferences.class.php:297
+#: ../web/classes/Preferences.class.php:309
+msgid "Launch an application with extra arguments"
+msgstr "Запуск приложений с дополнительными аргументами"
+
+#: ../web/classes/Preferences.class.php:300
 msgid "Launch forced application with a desktop"
 msgstr "Принудительно запускать приложение вместе с рабочим столом"
 
-#: ../web/classes/Preferences.class.php:326
+#: ../web/classes/Preferences.class.php:329
 msgid "Launch session in a popup"
 msgstr "Запуск сессии в отдельном окне"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:27
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:222
-#: ../web/modules/UserDB/ldap.php:270
+#: ../web/modules/UserDB/ldap.php:309
 msgid "Lightweight Directory Access Protocol (LDAP)"
-msgstr ""
+msgstr "LDAP"
 
-#: ../web/admin/appsgroup.php:337
+#: ../web/admin/appsgroup.php:346
 msgid "List of applications in this group"
 msgstr "Список приложений в этой группе"
 
-#: ../web/admin/usersgroup.php:835 ../web/admin/appsgroup.php:424
+#: ../web/admin/appsgroup.php:433 ../web/admin/usersgroup.php:856
 msgid "List of publications for this group"
 msgstr "Список публикаций"
 
-#: ../web/admin/sumup.php:174
+#: ../web/admin/sumup.php:177
 msgid "List of servers"
 msgstr "Список серверов"
 
@@ -1246,27 +1320,27 @@ msgstr "Список серверов"
 msgid "List of tasks"
 msgstr "Список заданий"
 
-#: ../web/admin/sumup.php:36
+#: ../web/admin/sumup.php:52
 msgid "List of users"
 msgstr "Список пользователей"
 
-#: ../web/admin/usersgroup.php:792
+#: ../web/admin/usersgroup.php:810
 msgid "List of users in this group"
 msgstr "Пользователи группы"
 
-#: ../web/classes/Preferences.class.php:259
+#: ../web/classes/Preferences.class.php:262
 msgid "Load Balancing policy"
 msgstr "Политика балансировки нагрузки"
 
-#: ../web/index.php:129
+#: ../web/index.php:127
 msgid "Loading"
 msgstr "Загрузка"
 
-#: ../web/plugins/FS/local.php:35 ../web/classes/Preferences.class.php:212
+#: ../web/classes/Preferences.class.php:215 ../web/plugins/FS/local.php:35
 msgid "Local"
 msgstr "Локальный"
 
-#: ../web/admin/users.php:306
+#: ../web/admin/users.php:293
 msgid "Locale"
 msgstr "Локаль"
 
@@ -1274,24 +1348,24 @@ msgstr "Локаль"
 msgid "Locale field"
 msgstr "Поле определяющее локаль"
 
-#: ../web/admin/login.php:107 ../web/admin/login.php:147 ../web/index.php:133
+#: ../web/index.php:131 ../web/admin/login.php:107 ../web/admin/login.php:147
 msgid "Log in"
-msgstr "Зарегистрироваться"
+msgstr "Войти"
 
-#: ../web/admin/users.php:158 ../web/admin/users.php:301
-#: ../web/admin/login.php:131 ../web/index.php:246
+#: ../web/index.php:244 ../web/admin/users.php:163 ../web/admin/users.php:288
+#: ../web/admin/classes/UsersList.class.php:78 ../web/admin/login.php:131
 msgid "Login"
 msgstr "Логин"
 
 #: ../web/modules/AuthMethod/Password.php:47
 msgid "Login/Password authentication"
-msgstr ""
+msgstr "Аутентификация по логину/паролю"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:328
 msgid "Login: "
 msgstr "Логин: "
 
-#: ../web/classes/Preferences.class.php:314
+#: ../web/classes/Preferences.class.php:317
 msgid "Logo URL"
 msgstr "Логотип (URL)"
 
@@ -1299,54 +1373,58 @@ msgstr "Логотип (URL)"
 msgid "Logout"
 msgstr "Выход"
 
-#: ../web/admin/includes/page_template.php:211 ../web/admin/logs.php:131
-#: ../web/admin/logs.php:205 ../web/admin/logs.php:209
-#: ../web/admin/configuration-sumup.php:73
+#: ../web/admin/logs.php:131 ../web/admin/logs.php:205
+#: ../web/admin/logs.php:209 ../web/admin/configuration-sumup.php:73
+#: ../web/admin/includes/page_template.php:211
 msgid "Logs"
 msgstr "Журналы"
 
-#: ../web/admin/servers.php:341 ../web/admin/servers.php:695
+#: ../web/admin/servers.php:345 ../web/admin/servers.php:711
 msgid "MB"
 msgstr "MB"
 
 #: ../web/modules/UserDB/sql_external.php:208
 msgid "MD5"
-msgstr ""
+msgstr "MD5"
 
-#: ../web/classes/Preferences.class.php:463
+#: ../web/classes/Preferences.class.php:466
 msgid "Mail addresses to send alerts to"
 msgstr "Адреса электронной почты для отправки уведомлений"
 
-#: ../web/classes/Preferences.class.php:211
+#: ../web/classes/Preferences.class.php:214
 msgid "Mail server type"
 msgstr "Тип сервера"
 
-#: ../web/admin/servers.php:358 ../web/admin/applications_static.php:142
-#: ../web/admin/users.php:193 ../web/admin/usersgroup.php:377
-#: ../web/admin/appsgroup.php:159 ../web/admin/applications.php:155
+#: ../web/admin/appsgroup.php:168 ../web/admin/usersgroup.php:387
+#: ../web/admin/applications_static.php:142 ../web/admin/users.php:180
+#: ../web/admin/servers.php:362 ../web/admin/applications.php:155
 msgid "Manage"
 msgstr "Настроить"
 
-#: ../web/admin/servers.php:387 ../web/admin/servers.php:492
-#: ../web/admin/applications_static.php:163 ../web/admin/wizard.php:204
-#: ../web/admin/wizard.php:223 ../web/admin/wizard.php:348
-#: ../web/admin/wizard.php:367 ../web/admin/users.php:212
-#: ../web/admin/sessions.php:228 ../web/admin/usersgroup.php:398
-#: ../web/admin/appsgroup.php:176
+#: ../web/admin/appsgroup.php:185 ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211 ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355 ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:163 ../web/admin/users.php:199
+#: ../web/admin/sessions.php:262 ../web/admin/servers.php:391
+#: ../web/admin/servers.php:496
 msgid "Mark all"
 msgstr "Выделить всё"
 
-#: ../web/modules/UserGroupDB/sql_external.php:115
-#: ../web/modules/UserDB/ldap.php:230
 #: ../web/modules/UserDB/sql_external.php:205
+#: ../web/modules/UserDB/ldap.php:269
+#: ../web/modules/UserGroupDB/sql_external.php:115
 msgid "Matching"
-msgstr ""
+msgstr "Согласование"
 
-#: ../web/index.php:37
+#: ../web/index.php:35
 msgid "Maximum"
 msgstr "Максимум"
 
-#: ../web/classes/Preferences.class.php:275
+#: ../web/classes/Preferences.class.php:167
+msgid "Maximum items per page"
+msgstr "Максимум записей на странице"
+
+#: ../web/classes/Preferences.class.php:278
 msgid "Medium"
 msgstr "Средний"
 
@@ -1354,36 +1432,35 @@ msgstr "Средний"
 msgid "MimeTypes"
 msgstr "MimeTypes"
 
-#: ../web/admin/applications_static.php:466
-#: ../web/admin/applications_static.php:530 ../web/admin/news.php:126
+#: ../web/admin/applications_static.php:474
+#: ../web/admin/applications_static.php:538 ../web/admin/news.php:126
 #: ../web/admin/news.php:135
 msgid "Modify"
 msgstr "Изменить"
 
-#: ../web/admin/servers.php:600 ../web/admin/applications_static.php:36
 #: ../web/admin/actions.php:55 ../web/admin/actions.php:105
 #: ../web/admin/actions.php:260 ../web/admin/actions.php:287
-#: ../web/admin/applications.php:35
-#: ../web/classes/abstract/Abstract_Server.class.php:220
-#: ../web/classes/Server.class.php:773
+#: ../web/admin/applications_static.php:36 ../web/admin/servers.php:604
+#: ../web/admin/applications.php:35 ../web/modules/ApplicationDB.php:32
 #: ../web/classes/Application_weblink.class.php:38
-#: ../web/modules/ApplicationDB.php:32
+#: ../web/classes/Server.class.php:727
+#: ../web/classes/abstract/Abstract_Server.class.php:202
 msgid "Module ApplicationDB must be enabled"
 msgstr "Модуль ApplicationDB должен быть включен"
 
-#: ../web/admin/users.php:35 ../web/admin/sumup.php:43
+#: ../web/index.php:64 ../web/admin/users.php:35 ../web/admin/sumup.php:39
 #: ../web/modules/UserGroupDB/ldap_memberof.php:99
-#: ../web/modules/UserDB.php:32 ../web/index.php:66
+#: ../web/modules/UserDB.php:32
 msgid "Module UserDB must be enabled"
-msgstr "Модель UserDB должен быть включен"
+msgstr "Модуль UserDB должен быть включен"
 
+#: ../web/modules/UserGroupDB.php:32 ../web/modules/UserGroupDB.php:144
 #: ../web/modules/UserGroupDB/ldap_posix.php:32
 #: ../web/modules/UserGroupDB/ldap_posix.php:69
-#: ../web/modules/UserGroupDB.php:32 ../web/modules/UserGroupDB.php:144
 msgid "Module UserGroupDB must be enabled"
 msgstr "Модуль UserGroupDB должен быть включен"
 
-#: ../web/classes/Preferences.class.php:413
+#: ../web/classes/Preferences.class.php:416
 msgid "Modules activation"
 msgstr "Модули"
 
@@ -1392,41 +1469,42 @@ msgstr "Модули"
 msgid "Modules configuration not valid"
 msgstr "Не валидная конфигурация для модулей "
 
-#: ../web/admin/servers.php:306 ../web/admin/servers.php:678
-#: ../web/admin/servers.php:685
+#: ../web/admin/servers.php:310 ../web/admin/servers.php:694
+#: ../web/admin/servers.php:701
 msgid "Monitoring"
 msgstr "Мониторинг"
 
-#: ../web/modules/UserGroupDB/sql.php:144 ../web/modules/UserDB/sql.php:173
-#: ../web/modules/ApplicationDB/sql.php:175
+#: ../web/modules/UserDB/sql.php:219 ../web/modules/ApplicationDB/sql.php:175
+#: ../web/modules/UserGroupDB/sql.php:144
 msgid "MySQL"
 msgstr "MySQL"
 
-#: ../web/classes/Preferences.class.php:198
+#: ../web/classes/Preferences.class.php:201
 msgid "MySQL configuration"
 msgstr "Конфигурация MySQL"
 
-#: ../web/modules/UserGroupDB/sql_external.php:137
 #: ../web/modules/UserDB/sql_external.php:230
+#: ../web/modules/UserGroupDB/sql_external.php:137
 msgid "MySQL external"
-msgstr ""
+msgstr "внешняя база MySQL"
 
 #. if ($is_rw)
 #. echo '<th class="unsortable"></th>';
-#: ../web/admin/applications_static.php:111 ../web/admin/wizard.php:254
-#: ../web/admin/wizard.php:403 ../web/admin/usersgroup.php:348
-#: ../web/admin/usersgroup.php:456 ../web/admin/appsgroup.php:138
-#: ../web/admin/appsgroup.php:197 ../web/admin/sharedfolders.php:165
-#: ../web/admin/applications.php:124
+#: ../web/admin/appsgroup.php:147 ../web/admin/appsgroup.php:206
+#: ../web/admin/usersgroup.php:358 ../web/admin/usersgroup.php:466
+#: ../web/admin/wizard.php:261 ../web/admin/wizard.php:410
+#: ../web/admin/applications_static.php:111
+#: ../web/admin/classes/UsersGroupsList.class.php:76
+#: ../web/admin/sharedfolders.php:165 ../web/admin/applications.php:124
 msgid "Name"
 msgstr "Название"
 
 #. fqdn_private_address : array('dns' => ip);
-#: ../web/classes/Preferences.class.php:235
+#: ../web/classes/Preferences.class.php:238
 msgid "Name/IP Address association (name <-> ip)"
 msgstr "Связь имени и IP-адреса <br />(имя &rarr; ip)"
 
-#: ../web/admin/wizard.php:475 ../web/admin/wizard.php:521
+#: ../web/admin/wizard.php:482 ../web/admin/wizard.php:528
 msgid "Name:"
 msgstr "Имя"
 
@@ -1434,15 +1512,19 @@ msgstr "Имя"
 msgid "Network File System (NFS)"
 msgstr "Network File System (NFS)"
 
-#: ../web/classes/Preferences.class.php:278
+#: ../web/classes/Preferences.class.php:281
 msgid "Never"
 msgstr "Никогда"
 
-#: ../web/admin/users.php:359 ../web/admin/password.php:43
+#: ../web/classes/SessionReportItem.class.php:162
+msgid "Never connected to SSH server"
+msgstr "Никогда не соединялся с SSH сервером"
+
+#: ../web/admin/users.php:346 ../web/admin/password.php:43
 msgid "New password"
 msgstr "Новый пароль"
 
-#: ../web/admin/includes/page_template.php:225 ../web/admin/news.php:59
+#: ../web/admin/news.php:59 ../web/admin/includes/page_template.php:225
 msgid "News"
 msgstr "Новости"
 
@@ -1458,17 +1540,17 @@ msgstr "Новость успешна удалена"
 msgid "News successfully modified"
 msgstr "Новость успешно отредактирована"
 
-#: ../web/admin/wizard.php:230 ../web/admin/wizard.php:250
-#: ../web/admin/wizard.php:271 ../web/admin/wizard.php:310
-#: ../web/admin/wizard.php:380 ../web/admin/wizard.php:399
-#: ../web/admin/wizard.php:420
+#: ../web/admin/wizard.php:237 ../web/admin/wizard.php:257
+#: ../web/admin/wizard.php:278 ../web/admin/wizard.php:317
+#: ../web/admin/wizard.php:387 ../web/admin/wizard.php:406
+#: ../web/admin/wizard.php:427
 msgid "Next"
 msgstr "Далее"
 
-#: ../web/admin/usersgroup.php:469 ../web/admin/sumup.php:85
-#: ../web/admin/sumup.php:111 ../web/modules/UserDB/ldap.php:237
-#: ../web/index.php:486 ../web/index.php:500 ../web/index.php:514
-#: ../web/index.php:528 ../web/index.php:547
+#: ../web/index.php:482 ../web/index.php:496 ../web/index.php:510
+#: ../web/index.php:524 ../web/index.php:543 ../web/admin/usersgroup.php:479
+#: ../web/admin/sumup.php:90 ../web/admin/sumup.php:115
+#: ../web/modules/UserDB/ldap.php:276
 msgid "No"
 msgstr "Нет"
 
@@ -1476,48 +1558,48 @@ msgstr "Нет"
 msgid "No action found"
 msgstr "Действие не найдено"
 
-#: ../web/admin/sessions.php:239
+#: ../web/admin/sessions.php:276
 msgid "No active session"
 msgstr "Нет активных сеансов"
 
-#: ../web/admin/wizard.php:86
+#: ../web/admin/wizard.php:87
 msgid "No application group selected"
 msgstr "Не задана группа приложений"
 
-#: ../web/admin/appsgroup.php:132
+#: ../web/admin/appsgroup.php:141
 msgid "No application groups available"
-msgstr "нет доступных групп приложений"
+msgstr "Нет доступных групп приложений"
 
-#: ../web/admin/sessions.php:127
+#: ../web/admin/sessions.php:139
 msgid "No application running"
 msgstr "Нет запущенных приложений"
 
-#: ../web/admin/wizard.php:94
+#: ../web/admin/wizard.php:95
 msgid "No application selected"
 msgstr "Приложение не выбрано"
 
-#: ../web/admin/applications_static.php:102 ../web/admin/wizard.php:156
-#: ../web/admin/wizard.php:301 ../web/admin/applications.php:116
+#: ../web/admin/wizard.php:159 ../web/admin/wizard.php:308
+#: ../web/admin/applications_static.php:102 ../web/admin/applications.php:116
 msgid "No available application"
 msgstr "Нет доступных приложений"
 
-#: ../web/startsession.php:196
+#: ../web/startsession.php:210
 msgid "No available filesystem"
-msgstr "нет доступных файловых систем"
+msgstr "Нет доступных файловых систем"
 
-#: ../web/startsession.php:156 ../web/index.php:100 ../web/index.php:105
+#: ../web/index.php:98 ../web/index.php:103 ../web/startsession.php:166
 msgid "No available server"
-msgstr ""
+msgstr "Нет доступных серверов"
 
-#: ../web/startsession.php:190
+#: ../web/startsession.php:204
 msgid "No available session"
 msgstr "Нет достпных сеансов"
 
-#: ../web/admin/wizard.php:154 ../web/admin/users.php:152 ../web/index.php:79
+#: ../web/index.php:77 ../web/admin/wizard.php:157 ../web/admin/users.php:157
 msgid "No available user"
-msgstr "Пользователь отсутсвует"
+msgstr "Пользователи отсутсвуют"
 
-#: ../web/admin/usersgroup.php:334
+#: ../web/admin/usersgroup.php:344
 msgid "No available user group"
 msgstr "Нет доступных групп пользователей"
 
@@ -1525,7 +1607,7 @@ msgstr "Нет доступных групп пользователей"
 msgid "No error given"
 msgstr "Неизвестная ошибка"
 
-#: ../web/admin/wizard.php:62 ../web/admin/wizard.php:108
+#: ../web/admin/wizard.php:63 ../web/admin/wizard.php:109
 msgid "No group name"
 msgstr "Не задано имя группы"
 
@@ -1533,36 +1615,40 @@ msgstr "Не задано имя группы"
 msgid "No publication"
 msgstr "Нет публикаций"
 
-#: ../web/admin/sumup.php:178 ../web/admin/sumup.php:182
+#: ../web/admin/sumup.php:181 ../web/admin/sumup.php:185
 msgid "No server available"
 msgstr "Нет доступных серверов"
 
-#: ../web/admin/servers.php:513
+#: ../web/admin/servers.php:517
 msgid "No unregistered server"
 msgstr "Нет незарегистрированных серверов"
 
-#: ../web/admin/wizard.php:38
+#: ../web/admin/wizard.php:39
 msgid "No user group selected"
 msgstr "Не задана группа пользователей"
 
-#: ../web/admin/wizard.php:48
+#: ../web/admin/wizard.php:49
 msgid "No user selected"
 msgstr "Не задан пользователь"
 
 #: ../web/admin/applications_static.php:278
 msgid "None"
-msgstr ""
+msgstr "Нет"
 
-#: ../web/admin/servers.php:970 ../web/admin/users.php:440
-#: ../web/admin/sessions.php:116
+#: ../web/classes/SessionReportItem.class.php:154
+msgid "Normally ended"
+msgstr "Нормально завершен"
+
+#: ../web/admin/users.php:427 ../web/admin/sessions.php:128
+#: ../web/admin/servers.php:989
 msgid "Not started yet"
-msgstr ""
+msgstr "Пока не запущен"
 
-#: ../web/admin/servers.php:717
+#: ../web/admin/servers.php:733
 msgid "Number of available sessions on this server"
-msgstr "Максимальное количество сеансов"
+msgstr "Максимальное количество сеансов на сервере"
 
-#: ../web/admin/reporting.php:244 ../web/admin/reporting.php:284
+#: ../web/admin/reporting.php:279 ../web/admin/reporting.php:334
 msgid "Number of sessions"
 msgstr "Количество сеансов"
 
@@ -1595,55 +1681,67 @@ msgstr "OVD End Alert: MySQL %s вновь доступен"
 msgid "OVD Session alert: %s (uid %s) couldn't log in"
 msgstr "OVD Session alert: %s (uid %s) не возможно зарегистрироваться"
 
-#: ../web/admin/sessions.php:152
+#: ../web/admin/sessions.php:164
 msgid "Observe this application"
-msgstr ""
+msgstr "Наблюдать за приложением"
 
-#: ../web/admin/sessions.php:171
+#: ../web/admin/sessions.php:183
 msgid "Observe this session"
 msgstr "Наблюдать за этим сеансом"
 
-#: ../web/classes/Server.class.php:368
+#: ../web/classes/Server.class.php:346
 msgid "Offline"
 msgstr "Недоступен"
 
-#: ../web/classes/Preferences.class.php:463
+#: ../web/classes/Preferences.class.php:466
 msgid "On system alerts, mails will be sent to these addresses"
-msgstr ""
+msgstr "Системные сообщения будут отправлены по этим адресам"
 
-#: ../web/classes/Server.class.php:366
+#: ../web/classes/Server.class.php:344
 msgid "Online"
 msgstr "Доступен"
 
-#: ../web/admin/reporting.php:420 ../web/admin/reporting.php:441
-msgid "Ordinate: number of session"
+#: ../web/admin/classes/UsersList.class.php:124
+#, php-format
+msgid "Only <strong>%d result</strong> displayed but there are more."
+msgid_plural "Only <strong>%d results</strong> displayed but there are more."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: ../web/admin/reporting.php:486 ../web/admin/reporting.php:512
+msgid "Ordinate: number of sessions"
 msgstr "Y: количество сеансов"
 
-#: ../web/admin/reporting.php:454
+#: ../web/admin/reporting.php:531
 msgid "Ordinate: usage of CPU in percent"
 msgstr "Y: процент использования CPU"
 
-#: ../web/admin/reporting.php:467
+#: ../web/admin/reporting.php:544
 msgid "Ordinate: usage of RAM in percent"
 msgstr "Y: процент использования RAM"
-
-#: ../web/admin/users.php:160
-msgid "Others"
-msgstr "Другие"
 
 #: ../web/admin/applications.php:295
 msgid "Package"
 msgstr "Пакет"
 
-#: ../web/admin/login.php:139 ../web/index.php:272
+#: ../web/admin/classes/UsersList.class.php:122
+msgid "Partial content:"
+msgstr "Часть содержания"
+
+#: ../web/index.php:270 ../web/admin/login.php:139
 msgid "Password"
 msgstr "Пароль"
 
-#: ../web/admin/actions.php:372
+#: ../web/admin/actions.php:363
+msgid "Password is empty"
+msgstr "Поле Пароль пустое"
+
+#: ../web/admin/actions.php:375
 msgid "Password not changed"
 msgstr "Пароль не изменен"
 
-#: ../web/admin/actions.php:368
+#: ../web/admin/actions.php:371
 msgid "Password successfully changed"
 msgstr "Пароль успешно изменен"
 
@@ -1651,35 +1749,39 @@ msgstr "Пароль успешно изменен"
 msgid "Password: "
 msgstr "Пароль: "
 
-#: ../web/admin/actions.php:363
+#: ../web/admin/actions.php:366
 msgid "Passwords are not identical"
 msgstr "Палоли не совпадают"
 
-#: ../web/index.php:482
+#: ../web/index.php:478
 msgid "Persistent session"
 msgstr "Постоянная сессия"
 
 #: ../web/modules/UserDB/sql_external.php:208
 msgid "Plain"
-msgstr ""
+msgstr "Простой"
 
 #: ../web/admin/classes/Preferences_admin.class.php:88
 msgid "Please install CURL support for PHP"
 msgstr "Необходимо добавить поддержку CURL в PHP"
 
-#: ../web/index.php:227
+#: ../web/index.php:225
 msgid "Please login with your username"
 msgstr "Пожалуйста зарегистрируйтесь"
 
-#: ../web/index.php:225
+#: ../web/index.php:223
 msgid "Please login with your username and password"
-msgstr "Пожалуйста зарегистрируйтесь"
+msgstr "Пожалуйста залогинитесь"
 
-#: ../web/classes/Preferences.class.php:362
+#: ../web/admin/classes/UsersList.class.php:125
+msgid "Please restrict your search field."
+msgstr "Пожалуйста, ограничте область поиска"
+
+#: ../web/classes/Preferences.class.php:365
 msgid "Plugins activation"
 msgstr "Активация плагинов"
 
-#: ../web/classes/Preferences.class.php:364
+#: ../web/classes/Preferences.class.php:367
 msgid "Plugins configuration"
 msgstr "Конфигурация плагинов"
 
@@ -1687,34 +1789,33 @@ msgstr "Конфигурация плагинов"
 msgid "Plugins configuration not valid"
 msgstr "Не валидная конфигурация для плагинов"
 
-#: ../web/classes/Preferences.class.php:196
+#: ../web/classes/Preferences.class.php:199
 msgid "Policy for administration delegation"
 msgstr "Политика делегирования административных привелегий"
 
-#: ../web/admin/usersgroup.php:876
+#: ../web/admin/usersgroup.php:897
 msgid "Policy of this group"
 msgstr "Политики группы"
 
-#: ../web/classes/Preferences.class.php:218
+#: ../web/classes/Preferences.class.php:221
 msgid "Port"
 msgstr "Порт"
 
-#: ../web/classes/Preferences.class.php:265
-#, fuzzy
+#: ../web/classes/Preferences.class.php:268
 msgid "Portal"
-msgstr "Порт"
+msgstr "Портал"
 
-#: ../web/admin/configuration-partial.php:115
-#: ../web/admin/configuration.php:127
+#: ../web/admin/configuration-partial.php:119
+#: ../web/admin/configuration.php:131
 msgid "Preferences not loaded"
 msgstr "Настройки не загружены"
 
 #: ../web/admin/configuration-sumup.php:64
 msgid "Prefix: "
-msgstr ""
+msgstr "Префикс:"
 
-#: ../web/admin/wizard.php:268 ../web/admin/wizard.php:376
-#: ../web/admin/wizard.php:417 ../web/admin/wizard.php:549
+#: ../web/admin/wizard.php:275 ../web/admin/wizard.php:383
+#: ../web/admin/wizard.php:424 ../web/admin/wizard.php:556
 msgid "Previous"
 msgstr "Назад"
 
@@ -1722,7 +1823,7 @@ msgstr "Назад"
 msgid "Profile settings"
 msgstr "Профили пользователей"
 
-#: ../web/modules/UserDB/ldap.php:228
+#: ../web/modules/UserDB/ldap.php:267
 msgid "Protocol version"
 msgstr "Версия протокола"
 
@@ -1730,29 +1831,29 @@ msgstr "Версия протокола"
 msgid "Protocol version:"
 msgstr "Версия протокола:"
 
-#: ../web/index.php:582
+#: ../web/index.php:578
 msgid "Proxy host"
-msgstr "Хост"
+msgstr "Хост прокси"
 
-#: ../web/index.php:606
+#: ../web/index.php:602
 msgid "Proxy password"
-msgstr "Пароль"
+msgstr "Пароль прокси"
 
-#: ../web/index.php:590
+#: ../web/index.php:586
 msgid "Proxy port"
 msgstr "Порт"
 
-#: ../web/index.php:571
+#: ../web/index.php:567
 msgid "Proxy type"
-msgstr "Тип"
+msgstr "Тип прокси"
 
-#: ../web/index.php:598
+#: ../web/index.php:594
 msgid "Proxy username"
 msgstr "Имя пользователя"
 
-#: ../web/admin/wizard.php:160 ../web/admin/wizard.php:246
-#: ../web/admin/wizard.php:305 ../web/admin/wizard.php:395
-#: ../web/admin/wizard.php:438
+#: ../web/admin/wizard.php:167 ../web/admin/wizard.php:253
+#: ../web/admin/wizard.php:312 ../web/admin/wizard.php:402
+#: ../web/admin/wizard.php:445
 msgid "Publication Wizard"
 msgstr "Мастер публикаций"
 
@@ -1768,59 +1869,59 @@ msgstr "Публикация успешно добавлена"
 msgid "Publication successfully deleted"
 msgstr "Публикация успешно удалена"
 
-#: ../web/admin/includes/page_template.php:142 ../web/admin/index.php:115
+#: ../web/admin/index.php:115 ../web/admin/includes/page_template.php:142
 msgid "Publication wizard"
 msgstr "Мастер публикации"
 
-#: ../web/admin/includes/page_template.php:135
 #: ../web/admin/publications.php:75
+#: ../web/admin/includes/page_template.php:135
 msgid "Publications"
 msgstr "Публикации"
 
-#: ../web/index.php:438
+#: ../web/index.php:434
 msgid "Quality"
 msgstr "Качество"
 
-#: ../web/admin/servers.php:341 ../web/admin/servers.php:460
-#: ../web/admin/servers.php:695
+#: ../web/admin/servers.php:345 ../web/admin/servers.php:464
+#: ../web/admin/servers.php:711
 msgid "RAM"
 msgstr "RAM"
 
-#: ../web/admin/servers.php:349 ../web/admin/servers.php:701
-#: ../web/admin/reporting.php:317
+#: ../web/admin/reporting.php:383 ../web/admin/servers.php:353
+#: ../web/admin/servers.php:717
 msgid "RAM usage"
 msgstr "Использование RAM"
 
-#: ../web/admin/servers.php:734
+#: ../web/admin/servers.php:750
 msgid "Redirection name of this server"
-msgstr "Имя для перенаправления"
+msgstr "Адрес перенаправления"
 
-#: ../web/admin/reporting.php:408
+#: ../web/admin/reporting.php:474
 msgid "Refresh"
-msgstr ""
+msgstr "Обновить"
 
-#: ../web/admin/servers.php:469 ../web/admin/servers.php:497
+#: ../web/admin/servers.php:473 ../web/admin/servers.php:501
 msgid "Register"
 msgstr "Зарегистрировать"
 
-#: ../web/index.php:614
+#: ../web/index.php:610
 msgid "Remember proxy"
 msgstr "Запомнить прокси"
 
 #: ../web/modules/AuthMethod/RemoteUser.php:46
 msgid "RemoteUser authentication"
-msgstr ""
+msgstr "Аутентификация удаленного пользователя"
 
-#: ../web/admin/usersgroup.php:635
+#: ../web/admin/usersgroup.php:653
 msgid "Remove from default"
 msgstr "Группа по-умолчанию: Отменить"
 
-#: ../web/admin/servers.php:865 ../web/admin/applications.php:367
+#: ../web/admin/servers.php:881 ../web/admin/applications.php:367
 msgid "Remove from this server"
 msgstr "Удалить с сервера"
 
 # не понятно как перевести orphan ... пока пусть будет "одиночный".
-#: ../web/classes/Preferences.class.php:243
+#: ../web/classes/Preferences.class.php:246
 msgid "Remove orphan applications when the server is deleted"
 msgstr "В случае удаления сервера, удалить одиночные приложения "
 
@@ -1832,44 +1933,43 @@ msgstr "Удалить это приложение"
 msgid "Rename"
 msgstr "Переименовать"
 
-#: ../web/admin/servers.php:922
+#: ../web/admin/servers.php:938
 msgid "Replicate on those servers"
 msgstr "Реплицировать"
 
-#: ../web/admin/servers.php:911
+#: ../web/admin/servers.php:927
 msgid "Replication"
 msgstr "Репликация"
 
-#: ../web/admin/includes/page_template.php:217 ../web/admin/reporting.php:325
+#: ../web/admin/reporting.php:391 ../web/admin/includes/page_template.php:217
 msgid "Reporting"
 msgstr "Отчеты"
 
 #: ../web/classes/Session.class.php:129
 msgid "Resuming"
-msgstr ""
+msgstr "Возобновление"
 
 #: ../web/admin/password.php:48
 msgid "Retype password"
 msgstr "Повторите пароль"
 
-#: ../web/admin/usersgroup.php:703
+#: ../web/admin/usersgroup.php:721
 msgid "Rules"
 msgstr "Правила"
 
-#: ../web/admin/usersgroup.php:253
-#, fuzzy, php-format
+#: ../web/admin/usersgroup.php:258
 msgid "Rules of '%s' successfully modified"
-msgstr "Группа '%s' успешно изменена"
+msgstr "Правило '%s' успешно изменено"
 
-#: ../web/admin/sessions.php:124
+#: ../web/admin/sessions.php:136
 msgid "Running applications"
 msgstr "Запущенные приложения"
 
 #: ../web/modules/AuthMethod/RemoteUser.php:62
 msgid "SERVER variable for SSO"
-msgstr ""
+msgstr "Переменная SERVER для SSO"
 
-#: ../web/index.php:137
+#: ../web/index.php:135
 msgid "SESSION IS STARTED"
 msgstr "СЕССИЯ ЗАПУЩЕНА"
 
@@ -1905,15 +2005,15 @@ msgstr "SESSIONMANAGER_SPOOL не задана"
 msgid "SESSIONMANAGER_SPOOL is not writable"
 msgstr "SESSIONMANAGER_SPOOL не доступен для записи"
 
-#: ../web/classes/Preferences.class.php:228
+#: ../web/classes/Preferences.class.php:231
 msgid "SMTP password"
 msgstr "Пароль"
 
-#: ../web/classes/Preferences.class.php:212
+#: ../web/classes/Preferences.class.php:215
 msgid "SMTP server"
 msgstr "SMTP сервер"
 
-#: ../web/classes/Preferences.class.php:226
+#: ../web/classes/Preferences.class.php:229
 msgid "SMTP username"
 msgstr "Пользователь"
 
@@ -1925,22 +2025,22 @@ msgstr "Не валидная SQL конфигурация"
 msgid "SQL configuration not valid(2)"
 msgstr "Не валидная SQL конфигурация (2)"
 
-#: ../web/classes/Preferences.class.php:320
+#: ../web/classes/Preferences.class.php:323
 msgid "SSH/ping applet test"
-msgstr ""
+msgstr "SSH/ping тест"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:270
 msgid "Same as Users, "
 msgstr "Такой же как и Users,"
 
+#: ../web/admin/configuration-partial.php:112
 #: ../web/admin/includes/functions.inc.php:282
-#: ../web/admin/configuration-partial.php:108
 #: ../web/admin/configuration-profile.php:226
-#: ../web/admin/configuration.php:105
+#: ../web/admin/configuration.php:109
 msgid "Save"
 msgstr "Сохранить"
 
-#: ../web/admin/users.php:378
+#: ../web/admin/users.php:365
 msgid "Save the modifications"
 msgstr "Сохранить инменения"
 
@@ -1948,12 +2048,31 @@ msgstr "Сохранить инменения"
 msgid "Saved successfully"
 msgstr "Сохранено"
 
+#: ../web/admin/classes/UsersGroupsList.class.php:70
+#: ../web/admin/classes/UsersList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:115
+msgid "Search"
+msgstr "Поиск"
+
+#: ../web/admin/classes/UsersList.class.php:70
+msgid "Search for user pattern: "
+msgstr "Поиск по пользователям:"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:68
+msgid "Search for users groups pattern: "
+msgstr "Поиск по группе:"
+
+#: ../web/admin/classes/UsersGroupsList.class.php:72
+#: ../web/admin/classes/UsersList.class.php:74
+msgid "Search in: "
+msgstr "Поиск по"
+
 #: ../web/classes/Preferences.class.php:157
 msgid "Select debug options you want to enable."
-msgstr ""
+msgstr "Выберите опции для отладки"
 
-#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
 #: ../web/events/callbacks/SqlFailure/Mail.class.php:59
+#: ../web/events/callbacks/ServerStatusChanged/Mail.class.php:57
 msgid "Send a mail"
 msgstr "Отправить сообщение"
 
@@ -1961,24 +2080,24 @@ msgstr "Отправить сообщение"
 msgid "Send a mail on login problem"
 msgstr "Отправить сообщение в случае неудачной аутентификации"
 
-#: ../web/admin/reporting.php:430 ../web/admin/sessions.php:199
-#: ../web/admin/tasks.php:187 ../web/index.php:391
+#: ../web/index.php:389 ../web/admin/reporting.php:501
+#: ../web/admin/sessions.php:233 ../web/admin/tasks.php:187
 msgid "Server"
 msgstr "Сервер приложений"
 
-#: ../web/admin/servers.php:248
+#: ../web/admin/servers.php:252
 #, php-format
 msgid "Server '%s' successfully deleted"
 msgstr "Сервер '%s' успешно удален"
 
-#: ../web/admin/servers.php:83 ../web/admin/servers.php:186
-#: ../web/admin/servers.php:200 ../web/admin/servers.php:214
-#: ../web/admin/servers.php:228
+#: ../web/admin/servers.php:83 ../web/admin/servers.php:190
+#: ../web/admin/servers.php:204 ../web/admin/servers.php:218
+#: ../web/admin/servers.php:232
 #, php-format
 msgid "Server '%s' successfully modified"
 msgstr "Сервер '%s' успешно модифицирован"
 
-#: ../web/admin/servers.php:165
+#: ../web/admin/servers.php:169
 #, php-format
 msgid "Server '%s' successfully registered"
 msgstr "Сервер '%s' успешно зарегистрирован"
@@ -1992,14 +2111,14 @@ msgstr "Хост:"
 msgid "Server Port:"
 msgstr "Порт"
 
-#: ../web/modules/UserGroupDB/sql_external.php:105
-#: ../web/modules/UserDB/ldap.php:214
-#: ../web/modules/UserDB/activedirectory.php:81
 #: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserDB/activedirectory.php:81
+#: ../web/modules/UserDB/ldap.php:253
+#: ../web/modules/UserGroupDB/sql_external.php:105
 msgid "Server host address"
-msgstr ""
+msgstr "Адрес хоста"
 
-#: ../web/modules/UserDB/ldap.php:216
+#: ../web/modules/UserDB/ldap.php:255
 msgid "Server port"
 msgstr "Порт"
 
@@ -2011,17 +2130,18 @@ msgstr "Серверы приложений"
 msgid "Server status changed"
 msgstr "Статус сервера изменен"
 
-#: ../web/admin/servers.php:107
+#: ../web/admin/servers.php:111
 msgid "Server upgrading"
 msgstr "Обновление сервера"
 
+#: ../web/admin/sessions.php:122
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:360
 msgid "Server:"
 msgstr "Сервер: "
 
-#: ../web/admin/includes/page_template.php:35
-#: ../web/admin/includes/page_template.php:73 ../web/admin/servers.php:293
 #: ../web/admin/index.php:64 ../web/admin/tasks.php:119
+#: ../web/admin/includes/page_template.php:35
+#: ../web/admin/includes/page_template.php:73 ../web/admin/servers.php:297
 msgid "Servers"
 msgstr "Серверы приложений"
 
@@ -2033,7 +2153,7 @@ msgstr "Список серверов"
 msgid "Servers with this application"
 msgstr "Серверы на которых установлено это приложение"
 
-#: ../web/admin/sessions.php:198
+#: ../web/admin/sessions.php:232
 msgid "Session"
 msgstr "Сеанс"
 
@@ -2041,17 +2161,21 @@ msgstr "Сеанс"
 msgid "Session Manager"
 msgstr "Менеджер сеансов"
 
-#: ../web/index.php:325
+#: ../web/admin/reporting.php:312 ../web/admin/reporting.php:348
+msgid "Session end status"
+msgstr "Конечный статус сессии"
+
+#: ../web/index.php:323
 msgid "Session mode"
 msgstr "Режим сессии"
 
-#: ../web/classes/Preferences.class.php:291
+#: ../web/classes/Preferences.class.php:294
 msgid "Session owner can share his session"
 msgstr "Владелец сеанса может предоставить общий доступ к своему сеансу"
 
-#: ../web/admin/reporting.php:263
+#: ../web/admin/reporting.php:298
 msgid "Session repartition"
-msgstr ""
+msgstr "Распределение сессий"
 
 #: ../web/admin/includes/page_template.php:179
 msgid "Session settings"
@@ -2065,48 +2189,53 @@ msgstr "Запуск сеанса"
 msgid "Session status changed"
 msgstr "Статус сеанса изменен"
 
-#: ../web/classes/Preferences.class.php:280
+#: ../web/classes/Preferences.class.php:283
 msgid "Session timeout message"
 msgstr "Сообщение пользователю при завершении сеанса"
 
-#: ../web/admin/includes/page_template.php:205 ../web/admin/sessions.php:107
-#: ../web/admin/sessions.php:190
+#: ../web/admin/sessions.php:116 ../web/admin/includes/page_template.php:205
 msgid "Sessions"
 msgstr "Сеансы"
 
-#: ../web/classes/Preferences.class.php:282
+#: ../web/admin/sessions.php:204
+msgid "Sessions (total: %s)"
+msgstr "Сессии (всего: %s) "
+
+#: ../web/classes/Preferences.class.php:285
 msgid "Sessions are persistent"
 msgstr "Сеансы пользователей являются постоянными (persistent)"
 
-#: ../web/classes/Preferences.class.php:262
+#: ../web/classes/Preferences.class.php:265
 msgid "Sessions settings"
 msgstr "Настройка параметров сеансов"
 
-#: ../web/admin/servers.php:351 ../web/admin/servers.php:703
+#: ../web/admin/servers.php:355 ../web/admin/servers.php:719
 msgid "Sessions usage"
 msgstr "Сеансы"
 
-#: ../web/modules/UserDB/ldap.php:236
+#: ../web/modules/UserDB/ldap.php:275
 msgid ""
 "Set this to Yes when you use LDAP profile to connect to an ActiveDirectory "
 "environment instead of using the ActiveDirectory profile"
 msgstr ""
+"Установите Да, если вы используете LDAP профиль для ActiveDirectory "
+"вместо профиля ActiveDirectory"
 
-#: ../web/admin/users.php:326 ../web/admin/usersgroup.php:630
-#: ../web/admin/appsgroup.php:301
+#: ../web/admin/appsgroup.php:310 ../web/admin/usersgroup.php:648
+#: ../web/admin/users.php:313
 msgid "Settings"
 msgstr "Настройки"
 
-#: ../web/index.php:496
+#: ../web/index.php:492
 msgid "Shareable session"
 msgstr "Разделяемая сессия"
 
-#: ../web/admin/includes/page_template.php:93 ../web/admin/usersgroup.php:937
+#: ../web/admin/usersgroup.php:958 ../web/admin/includes/page_template.php:93
 #: ../web/admin/sharedfolders.php:89
 msgid "Shared folders"
 msgstr "Общие папки"
 
-#: ../web/admin/actions.php:399
+#: ../web/admin/actions.php:402
 #, php-format
 msgid "SharedFolder '%s' successfully added"
 msgstr "Общая папка '%s' успешно добавлена"
@@ -2115,12 +2244,12 @@ msgstr "Общая папка '%s' успешно добавлена"
 msgid "SharedFolder successfully added"
 msgstr "Общая папка успешно добавлена"
 
-#: ../web/admin/actions.php:312 ../web/admin/actions.php:411
+#: ../web/admin/actions.php:312 ../web/admin/actions.php:414
 msgid "SharedFolder successfully deleted"
 msgstr "Общая папка успешно удалена"
 
 #: ../web/admin/actions.php:324 ../web/admin/actions.php:329
-#: ../web/admin/actions.php:425 ../web/admin/actions.php:439
+#: ../web/admin/actions.php:428 ../web/admin/actions.php:442
 msgid "SharedFolder successfully modified"
 msgstr "Общая папка успешно изменена"
 
@@ -2128,17 +2257,21 @@ msgstr "Общая папка успешно изменена"
 msgid "SharedFolder successfully renamed"
 msgstr "Папка успешно переименована"
 
-#: ../web/classes/Preferences.class.php:285 ../web/index.php:510
+#: ../web/index.php:506 ../web/classes/Preferences.class.php:288
 msgid "Show icons on user desktop"
 msgstr "Показывать значки на рабочем столе"
 
-#: ../web/index.php:415
+#: ../web/classes/SessionReportItem.class.php:160
+msgid "Shutdown of the Application Server"
+msgstr "Серверы приложений"
+
+#: ../web/index.php:411
 msgid "Size"
 msgstr "Размер"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:354
 msgid "Specific Organization Unit"
-msgstr ""
+msgstr "Определите подразделения организации"
 
 #: ../web/admin/classes/Configuration_mode_ad.class.php:256
 #: ../web/admin/classes/Configuration_mode_ad.class.php:280
@@ -2149,11 +2282,11 @@ msgstr "Определенная единица подразделения (OU):
 msgid "Sql failure"
 msgstr "Неудачное выполнение SQL запросов"
 
-#: ../web/admin/sessions.php:113
+#: ../web/admin/sessions.php:125
 msgid "Started:"
 msgstr "Запущен:"
 
-#: ../web/admin/usersgroup.php:414
+#: ../web/admin/usersgroup.php:424
 msgid "Static"
 msgstr "Статическая"
 
@@ -2167,23 +2300,23 @@ msgid "Static applications"
 msgstr "Статические приложения"
 
 #. echo '<th>'._('Version').'</th>';
-#: ../web/admin/includes/page_template.php:59 ../web/admin/servers.php:304
-#: ../web/admin/servers.php:682 ../web/admin/servers.php:936
-#: ../web/admin/sessions.php:201 ../web/admin/index.php:127
-#: ../web/admin/usersgroup.php:350 ../web/admin/usersgroup.php:618
-#: ../web/admin/sumup.php:191 ../web/admin/appsgroup.php:140
-#: ../web/admin/appsgroup.php:290 ../web/admin/tasks.php:120
-#: ../web/admin/tasks.php:188 ../web/admin/applications.php:406
+#: ../web/admin/appsgroup.php:149 ../web/admin/appsgroup.php:299
+#: ../web/admin/usersgroup.php:360 ../web/admin/usersgroup.php:636
+#: ../web/admin/index.php:127 ../web/admin/sessions.php:235
+#: ../web/admin/tasks.php:120 ../web/admin/tasks.php:188
+#: ../web/admin/includes/page_template.php:59 ../web/admin/servers.php:308
+#: ../web/admin/servers.php:698 ../web/admin/servers.php:952
+#: ../web/admin/sumup.php:194 ../web/admin/applications.php:406
 msgid "Status"
 msgstr "Состояние"
 
-#: ../web/admin/sessions.php:120
+#: ../web/admin/sessions.php:132
 msgid "Status:"
 msgstr "Статус:"
 
 #: ../web/admin/configuration-profile.php:241
 msgid "Success"
-msgstr ""
+msgstr "Готово"
 
 #: ../web/admin/includes/page_template.php:149
 msgid "Sum up"
@@ -2195,21 +2328,21 @@ msgstr "Информация о системе"
 
 #: ../web/classes/Session.class.php:128
 msgid "Suspended"
-msgstr ""
+msgstr "Остановлена"
 
 #: ../web/classes/Session.class.php:127
 msgid "Suspending"
-msgstr ""
+msgstr "Остановка"
 
-#: ../web/admin/servers.php:322 ../web/admin/servers.php:394
-#: ../web/admin/servers.php:658 ../web/classes/Preferences.class.php:241
+#: ../web/admin/servers.php:326 ../web/admin/servers.php:398
+#: ../web/admin/servers.php:674 ../web/classes/Preferences.class.php:244
 msgid "Switch to maintenance"
-msgstr "Переключить в режим обслуживания"
+msgstr "В режим обслуживания"
 
-#: ../web/admin/servers.php:318 ../web/admin/servers.php:393
-#: ../web/admin/servers.php:654
+#: ../web/admin/servers.php:322 ../web/admin/servers.php:397
+#: ../web/admin/servers.php:670
 msgid "Switch to production"
-msgstr "Переключить в рабочий режим"
+msgstr "В рабочий режим"
 
 #: ../web/admin/includes/page_template.php:161
 msgid "System settings"
@@ -2219,21 +2352,21 @@ msgstr "Система"
 msgid "Table of users"
 msgstr "Таблица пользователей"
 
-#: ../web/classes/Preferences.class.php:207
+#: ../web/classes/Preferences.class.php:210
 msgid "Table prefix"
 msgstr "Префикс для таблиц"
 
-#: ../web/admin/servers.php:97 ../web/admin/servers.php:150
-#: ../web/admin/actions.php:71
+#: ../web/admin/actions.php:71 ../web/admin/servers.php:101
+#: ../web/admin/servers.php:154
 msgid "Task successfully added"
 msgstr "Задание успешно добавлено"
 
-#: ../web/admin/servers.php:144 ../web/admin/actions.php:73
-#: ../web/admin/tasks.php:89
+#: ../web/admin/actions.php:73 ../web/admin/tasks.php:89
+#: ../web/admin/servers.php:148
 msgid "Task successfully deleted"
 msgstr "Задание успешно удалено"
 
-#: ../web/admin/includes/page_template.php:85 ../web/admin/tasks.php:176
+#: ../web/admin/tasks.php:176 ../web/admin/includes/page_template.php:85
 msgid "Tasks"
 msgstr "Задания"
 
@@ -2249,56 +2382,66 @@ msgstr "Тестировать"
 msgid "The address of your Active Directory server."
 msgstr "Адрес Active Directory сервера."
 
-#: ../web/modules/UserDB/ldap.php:214
+#: ../web/modules/UserDB/ldap.php:253
 msgid "The address of your LDAP server."
 msgstr "Адрес LDAP сервера"
 
-#: ../web/modules/UserGroupDB/sql_external.php:105
 #: ../web/modules/UserDB/sql_external.php:195
+#: ../web/modules/UserGroupDB/sql_external.php:105
 msgid "The address of your MySQL server."
 msgstr "Адрес MySQL сервера"
 
-#: ../web/classes/Preferences.class.php:199
+#: ../web/classes/Preferences.class.php:202
 msgid ""
 "The address of your database host. This database contains adminstration "
 "console data. Example: localhost or db.mycorporate.com."
 msgstr ""
+"Адрес хоста Базы Даных. Она содержит данные консоли"
+"администратора. Например: localhost or db.mycorporate.com."
 
-#: ../web/classes/Preferences.class.php:199
+#: ../web/classes/Preferences.class.php:202
 msgid ""
 "The address of your database host. This database contains adminstrations "
 "console data. Example: localhost or db.mycorporate.com."
 msgstr ""
+"Адрес хоста Базы Даных. Она содержит данные консоли"
+"администратора. Например: localhost or db.mycorporate.com."
 
 #: ../web/events/callbacks/SessionStart/Mail.class.php:54
 msgid "The following error happened:\n"
 msgstr "Произошла обшибка:\n"
 
-#: ../web/modules/AuthMethod/Token.php:92
+#: ../web/modules/AuthMethod/Token.php:96
 msgid "The id of the XML node which contains the user login"
-msgstr ""
+msgstr "ID XML узла, который содержит логин"
 
-#: ../web/modules/AuthMethod/Token.php:93
+#: ../web/classes/Preferences.class.php:167
+msgid "The maximum number of items that can be displayed."
+msgstr "Максимально отображаемое число"
+
+#: ../web/modules/AuthMethod/Token.php:97
 msgid ""
 "The name of the XML attribute which contains the user login (in the node "
 "\"user_node_name\")"
 msgstr ""
+"Название XML атрибута который содержит логин(в узле "
+"\"user_node_name\")"
 
-#: ../web/classes/Preferences.class.php:205
-#: ../web/modules/UserGroupDB/sql_external.php:111
 #: ../web/modules/UserDB/sql_external.php:201
+#: ../web/modules/UserGroupDB/sql_external.php:111
+#: ../web/classes/Preferences.class.php:208
 msgid "The name of the database."
 msgstr "Имя базы данных"
 
-#: ../web/modules/UserDB/ldap.php:216
+#: ../web/modules/UserDB/ldap.php:255
 msgid "The port number used by your LDAP server."
 msgstr "Номер порта LDAP сервера"
 
-#: ../web/modules/UserDB/ldap.php:216
+#: ../web/modules/UserDB/ldap.php:255
 msgid "The port use by your LDAP server."
-msgstr ""
+msgstr "Порт используемый LDAP сервером"
 
-#: ../web/modules/UserDB/ldap.php:228
+#: ../web/modules/UserDB/ldap.php:267
 msgid "The protocol version used by your LDAP server."
 msgstr "Версия протокола используемая LDAP сервером"
 
@@ -2306,42 +2449,48 @@ msgstr "Версия протокола используемая LDAP серве
 msgid "The service is not available, please try again later"
 msgstr "Сервис не доступен"
 
-#: ../web/classes/Preferences.class.php:207
+#: ../web/classes/Preferences.class.php:210
 msgid "The table prefix for the database."
 msgstr "Префикс таблиц в для базы данных."
 
-#: ../web/modules/UserDB/ldap.php:218
-#: ../web/modules/UserDB/activedirectory.php:85
 #: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/activedirectory.php:85
+#: ../web/modules/UserDB/ldap.php:257
 msgid ""
 "The user login that must be used to access the database (to list users "
 "accounts)."
 msgstr ""
+"Логин пользователя для доступа к базе даных (для просмотра "
+"списка аккаунтов)."
 
 #: ../web/modules/UserGroupDB/sql_external.php:107
 msgid ""
 "The user login that must be used to access the database (to list users "
 "groups accounts)."
 msgstr ""
+"Логин пользователя для доступа к базе даных (для просмотра "
+"списка групп)."
 
-#: ../web/classes/Preferences.class.php:201
+#: ../web/classes/Preferences.class.php:204
 msgid "The user name that must be used to access the database."
 msgstr "Имя пользователя для доступа к базе данных."
 
-#: ../web/modules/UserGroupDB/sql_external.php:109
-#: ../web/modules/UserDB/ldap.php:220
-#: ../web/modules/UserDB/activedirectory.php:87
 #: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/activedirectory.php:87
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserGroupDB/sql_external.php:109
 msgid ""
 "The user password that must be used to access the database (to list users "
 "accounts)."
 msgstr ""
+"Логин пользователя для доступа к базе даных (для просмотра "
+"списка аккаунтов)."
 
-#: ../web/classes/Preferences.class.php:203
+#: ../web/classes/Preferences.class.php:206
 msgid "The user password that must be used to access the database."
 msgstr "Пароль пользователя"
 
-#: ../web/classes/Preferences.class.php:201
+#: ../web/classes/Preferences.class.php:204
 msgid "The username that must be used to access the database."
 msgstr "Имя пользователя для доступа к базе данных"
 
@@ -2352,7 +2501,7 @@ msgstr "Ошибка. Неудачная попытка аутентификац
 
 #: ../web/admin/applications.php:318
 msgid "This application is orphan"
-msgstr ""
+msgstr "Это единственное приложение"
 
 #: ../web/admin/classes/Configuration_mode_internal.class.php:82
 msgid ""
@@ -2371,11 +2520,11 @@ msgstr "Публикация уже существует"
 msgid "This publication does not exist"
 msgstr "Публикация не существует"
 
-#: ../web/admin/usersgroup.php:471
+#: ../web/admin/usersgroup.php:481
 msgid "Time between two updates:"
 msgstr "Время между двумя обновлениями:"
 
-#: ../web/index.php:460
+#: ../web/index.php:456
 msgid "Timeout"
 msgstr "Таймаут"
 
@@ -2385,58 +2534,58 @@ msgstr "Заголовок"
 
 #: ../web/classes/Session.class.php:122
 msgid "To create"
-msgstr ""
+msgstr "Чтобы создать"
 
 #: ../web/classes/Session.class.php:130
 msgid "To destroy"
-msgstr ""
+msgstr "На уничтожение"
 
 #: ../web/classes/Session.class.php:124
 msgid "To start"
-msgstr ""
+msgstr "Для начала"
 
-#: ../web/modules/AuthMethod/Token.php:93
+#: ../web/modules/AuthMethod/Token.php:97
 msgid "Token XML login attribute name"
-msgstr ""
+msgstr "Маркер безопасности атрибута XML с логином"
 
-#: ../web/modules/AuthMethod/Token.php:92
+#: ../web/modules/AuthMethod/Token.php:96
 msgid "Token XML user node name"
-msgstr ""
+msgstr "Маркер безопасности XML узла"
 
-#: ../web/modules/AuthMethod/Token.php:65
+#: ../web/modules/AuthMethod/Token.php:69
 msgid "Token authentication"
-msgstr ""
+msgstr "Аутентификация по маркеру безопасности"
 
-#: ../web/modules/AuthMethod/Token.php:91
+#: ../web/modules/AuthMethod/Token.php:95
 msgid "Token validation URL"
-msgstr ""
+msgstr "Маркер проверки URL"
 
 #. echo '<th>'._('Package').'</th>';
-#: ../web/admin/servers.php:302 ../web/admin/servers.php:431
-#: ../web/admin/servers.php:682 ../web/admin/servers.php:935
-#: ../web/admin/applications_static.php:113
-#: ../web/admin/applications_static.php:427 ../web/admin/usersgroup.php:351
-#: ../web/admin/sumup.php:189 ../web/admin/tasks.php:118
-#: ../web/admin/tasks.php:186 ../web/admin/applications.php:126
-#: ../web/admin/applications.php:296 ../web/admin/applications.php:405
+#: ../web/admin/usersgroup.php:361 ../web/admin/applications_static.php:113
+#: ../web/admin/applications_static.php:435 ../web/admin/tasks.php:118
+#: ../web/admin/tasks.php:186 ../web/admin/servers.php:306
+#: ../web/admin/servers.php:435 ../web/admin/servers.php:698
+#: ../web/admin/servers.php:951 ../web/admin/sumup.php:192
+#: ../web/admin/applications.php:126 ../web/admin/applications.php:296
+#: ../web/admin/applications.php:405
 msgid "Type"
 msgstr "Тип"
 
 #: ../web/admin/applications_static.php:222
-#: ../web/admin/applications_static.php:432
-#: ../web/admin/applications_static.php:497
+#: ../web/admin/applications_static.php:440
+#: ../web/admin/applications_static.php:505
 msgid "URL"
 msgstr "URL"
 
-#: ../web/admin/users.php:302 ../web/admin/users.php:352
+#: ../web/admin/users.php:289 ../web/admin/users.php:339
 msgid "Uid"
 msgstr "Идентификатор"
 
-#: ../web/admin/actions.php:418
+#: ../web/admin/actions.php:421
 msgid "Unable to create this shared folder access"
-msgstr ""
+msgstr "Ошибка открытия доступа к папке"
 
-#: ../web/admin/servers.php:240
+#: ../web/admin/servers.php:244
 msgid "Unable to delete a server when there are active sessions on it!"
 msgstr "Невозможно удалить сервер. Необходимо остановить все активные сеансы!"
 
@@ -2448,13 +2597,17 @@ msgstr "Невозможно удалить публикацию"
 msgid "Unable to delete this news"
 msgstr "Не возможно удалить новость"
 
-#: ../web/admin/actions.php:407
+#: ../web/admin/actions.php:410
 msgid "Unable to delete this shared folder"
 msgstr "Не возможно удалить эту общую папку"
 
-#: ../web/admin/actions.php:433
+#: ../web/admin/actions.php:436
 msgid "Unable to delete this shared folder access"
-msgstr ""
+msgstr "Невозможно удалить общий доступ к папке"
+
+#: ../web/admin/wizard.php:161
+msgid "Unable to display users list: too many users"
+msgstr "Невозможно показать список пользователей: слишком много пользователей"
 
 #: ../web/admin/actions.php:192
 msgid "Unable to save the publication"
@@ -2462,31 +2615,31 @@ msgstr "Не удалось сохранить публикацию"
 
 #: ../web/admin/login.php:57
 msgid "Unauthorized access"
-msgstr ""
+msgstr "Неавторизированый доступ"
 
 #: ../web/admin/applications.php:217
 msgid "Unblock"
 msgstr "Разблокировать"
 
-#: ../web/classes/Server.class.php:362
+#: ../web/classes/Server.class.php:340
 msgid "Under maintenance"
 msgstr "Обслуживается"
 
-#: ../web/classes/Server.class.php:372 ../web/classes/Server.class.php:409
-#: ../web/classes/Server.class.php:444
+#: ../web/classes/Server.class.php:350 ../web/classes/Server.class.php:385
+#: ../web/classes/Server.class.php:418
 msgid "Unknown"
-msgstr ""
+msgstr "Неизвесно"
 
-#: ../web/admin/servers.php:388 ../web/admin/servers.php:493
-#: ../web/admin/applications_static.php:164 ../web/admin/wizard.php:204
-#: ../web/admin/wizard.php:223 ../web/admin/wizard.php:348
-#: ../web/admin/wizard.php:367 ../web/admin/users.php:213
-#: ../web/admin/sessions.php:228 ../web/admin/usersgroup.php:398
-#: ../web/admin/appsgroup.php:176
+#: ../web/admin/appsgroup.php:185 ../web/admin/usersgroup.php:408
+#: ../web/admin/wizard.php:211 ../web/admin/wizard.php:230
+#: ../web/admin/wizard.php:355 ../web/admin/wizard.php:374
+#: ../web/admin/applications_static.php:164 ../web/admin/users.php:200
+#: ../web/admin/sessions.php:262 ../web/admin/servers.php:392
+#: ../web/admin/servers.php:497
 msgid "Unmark all"
 msgstr "Снять выделение"
 
-#: ../web/admin/includes/page_template.php:79 ../web/admin/servers.php:421
+#: ../web/admin/includes/page_template.php:79 ../web/admin/servers.php:425
 msgid "Unregistered servers"
 msgstr "Незарегистрированные серверы"
 
@@ -2502,27 +2655,27 @@ msgstr "Без названия"
 msgid "Update"
 msgstr "Обновить"
 
-#: ../web/admin/usersgroup.php:781
+#: ../web/admin/usersgroup.php:799
 msgid "Update rules"
 msgstr "Обновить правила"
 
-#: ../web/admin/usersgroup.php:675 ../web/admin/appsgroup.php:329
+#: ../web/admin/appsgroup.php:338 ../web/admin/usersgroup.php:693
 msgid "Update the description"
 msgstr "Обновить описание"
 
-#: ../web/admin/usersgroup.php:667 ../web/admin/appsgroup.php:321
+#: ../web/admin/appsgroup.php:330 ../web/admin/usersgroup.php:685
 msgid "Update the name"
 msgstr "Обновить имя"
 
-#: ../web/admin/usersgroup.php:692
+#: ../web/admin/usersgroup.php:710
 msgid "Update the schedule"
 msgstr "Обновить расписание"
 
-#: ../web/admin/servers.php:827 ../web/admin/tasks.php:249
+#: ../web/admin/tasks.php:249 ../web/admin/servers.php:843
 msgid "Upgrade"
 msgstr "Обновить"
 
-#: ../web/admin/servers.php:831 ../web/admin/tasks.php:239
+#: ../web/admin/tasks.php:239 ../web/admin/servers.php:847
 msgid "Upgrade the internal system and applications"
 msgstr "Обновить систему и приложения"
 
@@ -2538,8 +2691,7 @@ msgstr "Использовать группы пльзователей из Acti
 #: ../web/admin/classes/Configuration_mode_ad.class.php:320
 #: ../web/admin/classes/Configuration_mode_ad.class.php:372
 msgid "Use Active Directory User profiles as Home directory"
-msgstr ""
-"Брать домашнюю директорию пользователя из профиля пользователя в Active "
+msgstr "Брать домашнюю директорию пользователя из профиля пользователя в Active "
 "Directory"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:377
@@ -2557,9 +2709,9 @@ msgstr "CIFS ссылка полученная из поля LDAP каталог
 msgid "Use Internal User Groups"
 msgstr "Инспользовать внутренние группы пользователей"
 
-#: ../web/admin/classes/Configuration_mode_internal.class.php:104
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:296
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:375
+#: ../web/admin/classes/Configuration_mode_internal.class.php:104
 #: ../web/admin/classes/Configuration_mode_ad.class.php:306
 #: ../web/admin/classes/Configuration_mode_ad.class.php:370
 msgid "Use Internal home directory (no server replication)"
@@ -2572,14 +2724,14 @@ msgstr "Получать из каталога LDAP с использовани�
 
 #: ../web/modules/UserGroupDB/ldap_posix.php:134
 msgid "Use LDAP User Groups using Posix group, Group Branch DN:"
-msgstr ""
+msgstr "Получать из каталога LDAP с использованием Posix группы, DN группы"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:273
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:366
 msgid "Use LDAP User Groups using the MemberOf field"
 msgstr "Получить из LDAP каталога используя поле MemberOf "
 
-#: ../web/classes/Preferences.class.php:220
+#: ../web/classes/Preferences.class.php:223
 msgid "Use SSL with SMTP"
 msgstr "Использовать SSL с SMTP"
 
@@ -2591,7 +2743,7 @@ msgstr "Использовать внутренний динамический �
 msgid "Use a static user list (useful for test)"
 msgstr "Использовать статический список пользователей"
 
-#: ../web/admin/wizard.php:321
+#: ../web/admin/wizard.php:328
 msgid "Use appgroups"
 msgstr "Использовать существующие группы приложений"
 
@@ -2599,16 +2751,20 @@ msgstr "Использовать существующие группы прил�
 msgid "Use as Active Directory server:"
 msgstr "Использовать в качестве сервера Active Directory:"
 
-#: ../web/modules/UserDB/ldap.php:236
+#: ../web/modules/UserDB/ldap.php:275
 msgid "Use as an Active Directory server?"
 msgstr "Использовать AD сервер?"
 
-#: ../web/index.php:524
+#: ../web/index.php:393
+msgid "Use load balancing"
+msgstr "Политика балансировки нагрузки"
+
+#: ../web/index.php:520
 msgid "Use pop-up"
 msgstr "Использовать pop-up"
 
-#: ../web/admin/classes/Configuration_mode_internal.class.php:111
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:303
+#: ../web/admin/classes/Configuration_mode_internal.class.php:111
 #: ../web/admin/classes/Configuration_mode_ad.class.php:313
 msgid "Use shared folders"
 msgstr "Использовать общие папки"
@@ -2617,11 +2773,11 @@ msgstr "Использовать общие папки"
 msgid "Use the static user list"
 msgstr "Используется статический список пользователей"
 
-#: ../web/admin/wizard.php:178
+#: ../web/admin/wizard.php:185
 msgid "Use usergroups"
 msgstr "Использовать существующие группы"
 
-#: ../web/admin/sessions.php:200
+#: ../web/admin/sessions.php:234
 msgid "User"
 msgstr "Пользователь"
 
@@ -2633,7 +2789,7 @@ msgstr "Группы"
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:364
 #: ../web/admin/classes/Configuration_mode_ad.class.php:361
 msgid "User Groups:"
-msgstr ""
+msgstr "Группы:"
 
 #: ../web/admin/modules/UserDB/sql.php:33
 msgid "User already exists"
@@ -2641,30 +2797,30 @@ msgstr "Пользователь уже существует"
 
 #: ../web/modules/UserDB/activedirectory.php:89
 msgid "User branch DN"
-msgstr ""
+msgstr "DN дерева пользователей"
 
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:241
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:362
 msgid "User branch:"
-msgstr ""
+msgstr "Дерево пользователя:"
 
-#: ../web/classes/Preferences.class.php:288
+#: ../web/classes/Preferences.class.php:291
 msgid "User can launch a session with no application"
 msgstr "Пользователь может запускать сеанс без приложений"
 
-#: ../web/classes/Preferences.class.php:294
+#: ../web/classes/Preferences.class.php:297
 msgid "User can use a console in the session"
 msgstr "Пользователь может использовать консоль в сеансе"
 
-#: ../web/admin/usersgroup.php:329
+#: ../web/admin/usersgroup.php:337
 msgid "User groups"
 msgstr "Группы"
 
-#: ../web/admin/usersgroup.php:613
+#: ../web/admin/usersgroup.php:631
 msgid "User groups management"
 msgstr "Управление группами"
 
-#: ../web/admin/users.php:390
+#: ../web/admin/users.php:377
 msgid "User groups with this user"
 msgstr "Группы в которые включен пользователь"
 
@@ -2672,20 +2828,19 @@ msgstr "Группы в которые включен пользователь"
 msgid "User list"
 msgstr "Пользователи"
 
-#: ../web/modules/UserGroupDB/sql_external.php:107
-#: ../web/modules/UserDB/ldap.php:218
 #: ../web/modules/UserDB/sql_external.php:197
+#: ../web/modules/UserDB/ldap.php:257
+#: ../web/modules/UserGroupDB/sql_external.php:107
 msgid "User login"
 msgstr "Имя пользователя"
 
 #: ../web/admin/password.php:25
 msgid "User not authorize to manage configuration"
-msgstr ""
-"Пользователь не имеет достаточных привелегий для управления конфигурацией"
+msgstr "Пользователь не имеет достаточных привелегий для управления конфигурацией"
 
-#: ../web/modules/UserGroupDB/sql_external.php:109
-#: ../web/modules/UserDB/ldap.php:220
 #: ../web/modules/UserDB/sql_external.php:199
+#: ../web/modules/UserDB/ldap.php:259
+#: ../web/modules/UserGroupDB/sql_external.php:109
 msgid "User password"
 msgstr "Пароль"
 
@@ -2701,37 +2856,37 @@ msgstr "Пользователь успешно удалён"
 msgid "User successfully modified"
 msgstr "Пользователь успешно изменён"
 
-#: ../web/admin/wizard.php:160
+#: ../web/admin/wizard.php:167
 msgid "User/group selection"
 msgstr "Выбор пользователей и групп"
 
-#: ../web/admin/sessions.php:112
+#: ../web/admin/sessions.php:121
 msgid "User:"
 msgstr "Пользователь:"
 
 #: ../web/admin/configuration-sumup.php:62
-#, fuzzy
 msgid "User: "
 msgstr "Пользователь:"
 
-#: ../web/admin/usersgroup.php:120 ../web/admin/usersgroup.php:157
+#: ../web/admin/usersgroup.php:125 ../web/admin/usersgroup.php:162
 msgid "UserGroup successfully added"
 msgstr "Группа успешно добавлена"
 
-#: ../web/admin/usersgroup.php:176
+#: ../web/admin/usersgroup.php:181
 msgid "UserGroup successfully deleted"
 msgstr "Группа успешно удалена"
 
-#: ../web/admin/usersgroup.php:220 ../web/admin/usersgroup.php:279
-#: ../web/admin/usersgroup.php:312
+#: ../web/admin/usersgroup.php:225 ../web/admin/usersgroup.php:284
+#: ../web/admin/usersgroup.php:317
 msgid "UserGroup successfully modified"
 msgstr "Группа успешно изменена"
 
-#: ../web/admin/classes/Configuration_mode_internal.class.php:86
+#: ../web/admin/users.php:150
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:239
+#: ../web/admin/classes/Configuration_mode_internal.class.php:86
 #: ../web/admin/classes/Configuration_mode_ad.class.php:247
 #: ../web/admin/includes/page_template.php:41
-#: ../web/admin/includes/page_template.php:100 ../web/admin/users.php:147
+#: ../web/admin/includes/page_template.php:100
 msgid "Users"
 msgstr "Пользователи"
 
@@ -2746,7 +2901,7 @@ msgstr "Пользователи и группы"
 #. User
 #: ../web/admin/classes/Configuration_mode_ad.class.php:350
 msgid "Users branch:"
-msgstr ""
+msgstr "Дерево пользователей"
 
 #: ../web/admin/publications.php:79
 msgid "Users group"
@@ -2760,7 +2915,7 @@ msgstr "Группа уже существует"
 msgid "Users groups list"
 msgstr "Группы"
 
-#: ../web/admin/wizard.php:477
+#: ../web/admin/wizard.php:484
 msgid "Users:"
 msgstr "Пользователи:"
 
@@ -2782,11 +2937,11 @@ msgstr "Использовать глобальный аккаунт для ау
 msgid "Using user login/password to authenticate"
 msgstr "Использовать логин/пароль пользователя для аутентификации"
 
-#: ../web/admin/usersgroup.php:478 ../web/admin/usersgroup.php:712
+#: ../web/admin/usersgroup.php:488 ../web/admin/usersgroup.php:730
 msgid "Validation type"
 msgstr "Тип проверки"
 
-#: ../web/admin/servers.php:682
+#: ../web/admin/servers.php:698
 msgid "Version"
 msgstr "Версия"
 
@@ -2795,24 +2950,24 @@ msgstr "Версия"
 msgid "View full log file online"
 msgstr "Посмотреть полный файл журнала"
 
-#: ../web/index.php:135
+#: ../web/index.php:133
 msgid "WARNING, START ANYWAY"
-msgstr ""
+msgstr "ВНИМАНИЕ, ВСЕРАВНО ЗАПУСТИТЬ"
 
-#: ../web/admin/servers.php:552
+#: ../web/admin/servers.php:556
 msgid "Warning: server is broken"
 msgstr "Внимание: сервер неисправен"
 
-#: ../web/admin/servers.php:550
+#: ../web/admin/servers.php:554
 msgid "Warning: server is offline"
 msgstr "Внимание: сервер недоступен"
 
 #: ../web/admin/applications_static.php:27
 msgid "Web"
-msgstr ""
+msgstr "Веб"
 
 #: ../web/admin/includes/page_template.php:191
-#: ../web/classes/Preferences.class.php:309
+#: ../web/classes/Preferences.class.php:312
 msgid "Web interface settings"
 msgstr "Веб-интерфейс"
 
@@ -2822,42 +2977,47 @@ msgstr "Веб-ссылка"
 
 #: ../web/admin/logs.php:156
 msgid "Web log"
-msgstr ""
+msgstr "Журнал"
 
-#: ../web/admin/servers.php:749
+#: ../web/admin/servers.php:765
 msgid "Web port of this server"
 msgstr "Порт веб-сервера"
 
-#: ../web/classes/Preferences.class.php:326
+#: ../web/classes/Preferences.class.php:329
 msgid ""
 "When set to yes, the session will start in a new browser window, and when "
 "set to no, the session will start in the current browser window"
 msgstr ""
-
-#: ../web/index.php:369
+"Если установить Да, сиссия стартует в новом окне, а если НЕТ "
+"сессия откроется в этом окне"
+#: ../web/index.php:367
 msgid "Windows keymap"
 msgstr "Раскладка"
 
-#: ../web/index.php:134
+#: ../web/admin/sessions.php:124
+msgid "Windows server:"
+msgstr "Windows сервер:"
+
+#: ../web/index.php:132
 msgid "YOU ALREADY HAVE AN ACTIVE SESSION"
 msgstr "У ВАС УЖЕ ЕСТЬ АКТИВНАЯ СЕССИЯ"
 
-#: ../web/admin/usersgroup.php:470 ../web/admin/sumup.php:83
-#: ../web/admin/sumup.php:109 ../web/modules/UserDB/ldap.php:237
-#: ../web/index.php:485 ../web/index.php:499 ../web/index.php:513
-#: ../web/index.php:527 ../web/index.php:546
+#: ../web/index.php:481 ../web/index.php:495 ../web/index.php:509
+#: ../web/index.php:523 ../web/index.php:542 ../web/admin/usersgroup.php:480
+#: ../web/admin/sumup.php:88 ../web/admin/sumup.php:113
+#: ../web/modules/UserDB/ldap.php:276
 msgid "Yes"
 msgstr "Да"
 
-#: ../web/startsession.php:143
+#: ../web/startsession.php:153
 msgid "You already have a session, please contact your administrator"
 msgstr "Ваша сессия уже запущена. Пожалуйста, обратитесь администратору"
 
-#: ../web/startsession.php:119
+#: ../web/startsession.php:128
 msgid "You already have an active session"
 msgstr "У Вас уже есть активная сессия"
 
-#: ../web/index.php:229
+#: ../web/index.php:227
 #, php-format
 msgid "You are authenticated as %s"
 msgstr "Вы зарегистрированы как %s"
@@ -2878,148 +3038,162 @@ msgstr ""
 msgid "You are now logged in"
 msgstr "Вы не зарегистрированы"
 
-#: ../web/classes/Preferences.class.php:311
-msgid "You can customize the heading title here."
-msgstr ""
-
 #: ../web/classes/Preferences.class.php:314
+msgid "You can customize the heading title here."
+msgstr "Здесь вы можете изменить заголовок"
+
+#: ../web/classes/Preferences.class.php:317
 msgid ""
 "You can customize the logo by entering a new path or replacing the "
 "corresponding image. Use a 90 pixels high image in png or jpeg format. "
 "Example: sessionmanager/media/image/header.png"
 msgstr ""
+"Вы можете изменить лого, указав путь к новому файлу."
+"Используйте картинку высотой 90 пикселей, формата png или jpeg. "
+"Например: sessionmanager/media/image/header.png"
 
-#: ../web/startsession.php:159
+#: ../web/startsession.php:169
 msgid "You don't have access to a linux server for now"
 msgstr "У Вас нет доступа к linux серверу"
 
-#: ../web/startsession.php:302
+#: ../web/startsession.php:316
 msgid "You don't have access to a windows server for now"
 msgstr "У Вас нет доступа к windows серверу "
 
-#: ../web/admin/usersgroup.php:107 ../web/admin/usersgroup.php:129
+#: ../web/admin/appsgroup.php:69
+msgid "You must define a name to your application group"
+msgstr "Необходимо задать имя группы приложений"
+
+#: ../web/admin/usersgroup.php:112 ../web/admin/usersgroup.php:134
 msgid "You must define a name to your usergroup"
 msgstr "Необходимо задать имя группы пользователей"
 
-#: ../web/admin/actions.php:384
+#: ../web/admin/applications_static.php:312
+msgid "You must give a command to your application"
+msgstr "Необходимо задать команду для приложения"
+
+#: ../web/admin/applications_static.php:308
+msgid "You must give a name to your application"
+msgstr "Необходимо задать имя для приложения"
+
+#: ../web/admin/actions.php:387
 msgid "You must give a name to your shared folder"
 msgstr "необходимо задать имя для общей папки"
 
-#: ../web/admin/usersgroup.php:138 ../web/admin/usersgroup.php:234
+#: ../web/admin/servers.php:94
+msgid "You must give a package name."
+msgstr "Необходимо задать имя пакета"
+
+#: ../web/admin/usersgroup.php:143 ../web/admin/usersgroup.php:239
 msgid "You must give a value to each rule of your usergroup"
-msgstr ""
-"Необходимо задать значения для каждого правила в пользовательской группе"
+msgstr "Необходимо задать значения для каждого правила в пользовательской группе"
 
 #: ../web/webservices/session_invite.php:95
 msgid "You received an invitation from"
 msgstr "Вы получили приглашение от"
 
-#: ../web/admin/sumup.php:57
+#: ../web/admin/sumup.php:63
 msgid "access to these applications"
 msgstr "доступные приложения"
 
-#: ../web/admin/index.php:147
+#: ../web/admin/index.php:146
 msgid "active session"
 msgstr "активный сеанс"
 
-#: ../web/admin/index.php:145
+#: ../web/admin/index.php:144
 msgid "active sessions"
 msgstr "активные сеансы"
 
-#: ../web/admin/wizard.php:503
+#: ../web/admin/wizard.php:510
 msgid "and these applications groups"
 msgstr "группы приложений"
 
-#: ../web/admin/wizard.php:501
+#: ../web/admin/wizard.php:508
 msgid "and this applications group"
 msgstr "группа приложений"
 
-#: ../web/admin/wizard.php:517
+#: ../web/admin/wizard.php:524
 msgid "and this newly created applications group"
 msgstr "группа приложений"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "app with desktop"
 msgstr "приложения доступные на рабочем столе"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "application"
 msgstr "приложение"
 
-#: ../web/admin/index.php:177
+#: ../web/admin/index.php:176
 msgid "broken server"
 msgstr "неисправный сервер"
 
-#: ../web/admin/index.php:175
+#: ../web/admin/index.php:174
 msgid "broken servers"
 msgstr "неисправные серверы"
 
-#: ../web/admin/servers.php:728 ../web/admin/servers.php:743
-#: ../web/admin/servers.php:758
+#: ../web/admin/servers.php:744 ../web/admin/servers.php:759
+#: ../web/admin/servers.php:774
 msgid "change"
 msgstr "изменить"
 
-#: ../web/admin/servers.php:339 ../web/admin/servers.php:458
-#: ../web/admin/servers.php:694
+#: ../web/admin/servers.php:343 ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
 msgid "core"
 msgstr "ядро"
 
-#: ../web/admin/servers.php:339 ../web/admin/servers.php:458
-#: ../web/admin/servers.php:694
+#: ../web/admin/servers.php:343 ../web/admin/servers.php:462
+#: ../web/admin/servers.php:710
 msgid "cores"
 msgstr "ядер"
 
 #: ../web/classes/Preferences.class.php:158
 msgid "critical"
-msgstr ""
+msgstr "критический"
 
 #: ../web/classes/Preferences.class.php:158
-#: ../web/classes/Preferences.class.php:330
+#: ../web/classes/Preferences.class.php:333
 msgid "debug"
 msgstr "отладка"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "desktop icons"
 msgstr "значки рабочего стола"
 
-#: ../web/classes/Preferences.class.php:306
-msgid "document"
-msgstr "документ"
-
-#: ../web/classes/Server.class.php:118
+#: ../web/classes/Server.class.php:106
 msgid "does not send a valid monitoring"
-msgstr ""
+msgstr "не отправлять валидный мониторинг"
 
-#: ../web/classes/Server.class.php:104
+#: ../web/classes/Server.class.php:92
 msgid "does not send a valid type"
-msgstr ""
+msgstr "не отправлять валидный тип"
 
-#: ../web/classes/Server.class.php:111
+#: ../web/classes/Server.class.php:99
 msgid "does not send a valid version"
-msgstr ""
+msgstr "не отправлять валидную версию "
 
 #: ../web/classes/Preferences.class.php:158
 msgid "error"
 msgstr "ошибка"
 
-#: ../web/admin/usersgroup.php:884
+#: ../web/admin/usersgroup.php:905
 msgid "extend from default"
-msgstr ""
+msgstr "установить по умолчанию"
 
 #: ../web/modules/UserDB/fake.php:108
 msgid "fake"
-msgstr ""
+msgstr "фальшивый"
 
-#: ../web/webservices/server_status.php:47
-#: ../web/admin/configuration-sumup.php:35 ../web/index.php:28
+#: ../web/index.php:26 ../web/webservices/server_status.php:48
+#: ../web/admin/configuration-sumup.php:35
 msgid "get Preferences failed"
 msgstr "Не возможно получить параметры"
 
-#: ../web/admin/sumup.php:57
+#: ../web/admin/sumup.php:63
 msgid "in this application group"
 msgstr "группа приложений"
 
-#: ../web/admin/sumup.php:57
+#: ../web/admin/sumup.php:63
 msgid "in this user group"
 msgstr "группа пользователей"
 
@@ -3027,15 +3201,15 @@ msgstr "группа пользователей"
 msgid "info"
 msgstr "информация"
 
-#: ../web/admin/servers.php:883
+#: ../web/admin/servers.php:899
 msgid "install in progress"
 msgstr "идет установка..."
 
-#: ../web/classes/Server.class.php:208
+#: ../web/classes/Server.class.php:194
 msgid "is NOT online!"
 msgstr "недоступен!"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "language"
 msgstr "язык"
 
@@ -3045,9 +3219,9 @@ msgstr "меньше"
 
 #: ../web/modules/UserDB/unix.php:116
 msgid "local"
-msgstr ""
+msgstr "локальный"
 
-#: ../web/plugins/FS/cifs.php:106 ../web/admin/sumup.php:57
+#: ../web/admin/sumup.php:63 ../web/plugins/FS/cifs.php:106
 msgid "login"
 msgstr "логин"
 
@@ -3055,95 +3229,95 @@ msgstr "логин"
 msgid "login:"
 msgstr "Логин:"
 
-#: ../web/classes/Preferences.class.php:184
+#: ../web/classes/Preferences.class.php:187
 msgid "manage Application groups"
 msgstr "Группы приложений (управление)"
 
-#: ../web/classes/Preferences.class.php:182
+#: ../web/classes/Preferences.class.php:185
 msgid "manage Applications"
 msgstr "Приложения (управление)"
 
-#: ../web/classes/Preferences.class.php:188
+#: ../web/classes/Preferences.class.php:191
 msgid "manage Configuration"
 msgstr "Настройки (управление)"
 
-#: ../web/classes/Preferences.class.php:192
+#: ../web/classes/Preferences.class.php:195
 msgid "manage News"
 msgstr "Новости (управление)"
 
-#: ../web/classes/Preferences.class.php:186
+#: ../web/classes/Preferences.class.php:189
 msgid "manage Publications"
 msgstr "Публикации (управление)"
 
-#: ../web/classes/Preferences.class.php:174
+#: ../web/classes/Preferences.class.php:177
 msgid "manage Servers"
 msgstr "Серверы (управление)"
 
-#: ../web/classes/Preferences.class.php:176
+#: ../web/classes/Preferences.class.php:179
 msgid "manage Shared folders"
 msgstr "Общие папки (управление)"
 
-#: ../web/classes/Preferences.class.php:180
+#: ../web/classes/Preferences.class.php:183
 msgid "manage Usergroups"
 msgstr "Группы пользователей (управление)"
 
-#: ../web/classes/Preferences.class.php:178
+#: ../web/classes/Preferences.class.php:181
 msgid "manage Users"
 msgstr "Пользователи (управление)"
 
 #: ../web/modules/UserDB/activedirectory.php:91
 msgid "match"
-msgstr ""
+msgstr "совпадают"
 
 #: ../web/classes/configelements/ConfigElement_sliders_loadbalancing.class.php:37
 msgid "more"
 msgstr "больше"
 
-#: ../web/admin/servers.php:802
+#: ../web/admin/servers.php:818
 msgid "more options"
 msgstr "еще опции"
 
-#: ../web/admin/sumup.php:57
+#: ../web/admin/sumup.php:63
 msgid "name"
 msgstr "имя"
 
-#: ../web/classes/Preferences.class.php:221
 #: ../web/classes/Preferences.class.php:224
-#: ../web/classes/Preferences.class.php:238
-#: ../web/classes/Preferences.class.php:244
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
 #: ../web/classes/Preferences.class.php:247
 #: ../web/classes/Preferences.class.php:250
-#: ../web/classes/Preferences.class.php:283
+#: ../web/classes/Preferences.class.php:253
 #: ../web/classes/Preferences.class.php:286
 #: ../web/classes/Preferences.class.php:289
 #: ../web/classes/Preferences.class.php:292
 #: ../web/classes/Preferences.class.php:295
 #: ../web/classes/Preferences.class.php:298
-#: ../web/classes/Preferences.class.php:318
+#: ../web/classes/Preferences.class.php:301
 #: ../web/classes/Preferences.class.php:321
 #: ../web/classes/Preferences.class.php:324
 #: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
 msgid "no"
 msgstr "нет"
 
-#: ../web/admin/index.php:167
+#: ../web/admin/index.php:166
 msgid "offline server"
 msgstr "недоступный сервер"
 
-#: ../web/admin/index.php:165
+#: ../web/admin/index.php:164
 msgid "offline servers"
 msgstr "недоступные серверы"
 
-#: ../web/admin/index.php:157
+#: ../web/admin/index.php:156
 msgid "online server"
 msgstr "доступный сервер"
 
-#: ../web/admin/index.php:155
+#: ../web/admin/index.php:154
 msgid "online servers"
 msgstr "доступные серверы"
 
+#: ../web/index.php:594 ../web/index.php:602
 #: ../web/admin/classes/Configuration_mode_ldap.class.php:249
-#: ../web/index.php:598 ../web/index.php:606
 msgid "optional"
 msgstr "опционально"
 
@@ -3155,7 +3329,7 @@ msgstr "пароль"
 msgid "password:"
 msgstr "Пароль:"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "persistent"
 msgstr "постоянство (persistent)"
 
@@ -3163,14 +3337,14 @@ msgstr "постоянство (persistent)"
 msgid "please click on the link below to join the online session"
 msgstr "Для подключения к сеансу нажмите ссылку"
 
-#: ../web/classes/Preferences.class.php:330
+#: ../web/classes/Preferences.class.php:333
 msgid "popup"
-msgstr ""
+msgstr "вслывающее окно"
 
-#: ../web/admin/includes/page_template.php:370
-#: ../web/includes/functions.inc.d/template.inc.php:150 ../web/footer.php:31
+#: ../web/footer.php:31 ../web/admin/includes/page_template.php:370
+#: ../web/includes/functions.inc.d/template.inc.php:150
 msgid "powered by"
-msgstr "с использованием технологий"
+msgstr "Работает на"
 
 #: ../web/admin/classes/Preferences_admin.class.php:128
 msgid "prefs is not valid for FS plugin"
@@ -3185,35 +3359,35 @@ msgstr "не валидные параметры для модуля"
 msgid "prefs is not valid for plugin"
 msgstr "невалидные параметры для плагина"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "quality"
 msgstr "качество"
 
-#: ../web/admin/servers.php:282 ../web/admin/servers.php:533
+#: ../web/admin/servers.php:286 ../web/admin/servers.php:537
 msgid "redirection name cannot be empty!"
-msgstr ""
+msgstr "название перенаправления не может быть пустым"
 
-#: ../web/admin/servers.php:280 ../web/admin/servers.php:531
+#: ../web/admin/servers.php:284 ../web/admin/servers.php:535
 msgid "redirection name may be invalid!"
-msgstr ""
+msgstr "перенаправление может быть неверным!"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "server"
 msgstr "сервер"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "session mode"
 msgstr "режим сессии"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "shareable"
 msgstr "разделяемая"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "size"
 msgstr "размер"
 
-#: ../web/admin/reporting.php:396
+#: ../web/admin/reporting.php:462
 msgid "step"
 msgstr "шаг"
 
@@ -3221,59 +3395,60 @@ msgstr "шаг"
 msgid "table of usersgroup"
 msgstr "таблица групп пользователей"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
+#: ../web/classes/SessionReportItem.class.php:159
 msgid "timeout"
 msgstr "таймаут"
 
-#: ../web/admin/reporting.php:384
+#: ../web/admin/reporting.php:450
 msgid "to"
-msgstr ""
+msgstr "к"
 
-#: ../web/classes/Preferences.class.php:172
+#: ../web/classes/Preferences.class.php:175
 msgid "use Admin panel"
 msgstr "Доступ к панели администратора"
 
-#: ../web/classes/Preferences.class.php:183
+#: ../web/classes/Preferences.class.php:186
 msgid "view Application groups"
 msgstr "Группы приложений (просмотр)"
 
-#: ../web/classes/Preferences.class.php:181
+#: ../web/classes/Preferences.class.php:184
 msgid "view Applications"
 msgstr "Приложения (просмотр)"
 
-#: ../web/classes/Preferences.class.php:187
+#: ../web/classes/Preferences.class.php:190
 msgid "view Configuration"
 msgstr "Настройки (просмотр)"
 
-#: ../web/classes/Preferences.class.php:191
+#: ../web/classes/Preferences.class.php:194
 msgid "view News"
 msgstr "Новости (просмотр)"
 
-#: ../web/classes/Preferences.class.php:185
+#: ../web/classes/Preferences.class.php:188
 msgid "view Publications"
 msgstr "Публикации (просмотр)"
 
-#: ../web/classes/Preferences.class.php:173
+#: ../web/classes/Preferences.class.php:176
 msgid "view Servers"
 msgstr "Серверы (просмотр)"
 
-#: ../web/classes/Preferences.class.php:175
+#: ../web/classes/Preferences.class.php:178
 msgid "view Shared folders"
 msgstr "Общие папки (просмотр)"
 
-#: ../web/classes/Preferences.class.php:189
+#: ../web/classes/Preferences.class.php:192
 msgid "view Status"
 msgstr "Состояние (просмотр)"
 
-#: ../web/classes/Preferences.class.php:190
+#: ../web/classes/Preferences.class.php:193
 msgid "view Summary"
 msgstr "Общая информация (просмотр)"
 
-#: ../web/classes/Preferences.class.php:179
+#: ../web/classes/Preferences.class.php:182
 msgid "view Usergroups"
 msgstr "Группы пользователей (просмотр)"
 
-#: ../web/classes/Preferences.class.php:177
+#: ../web/classes/Preferences.class.php:180
 msgid "view Users"
 msgstr "Пользователи (просмотр)"
 
@@ -3281,25 +3456,34 @@ msgstr "Пользователи (просмотр)"
 msgid "warning"
 msgstr "предупреждение"
 
-#: ../web/classes/Preferences.class.php:306
+#: ../web/classes/Preferences.class.php:309
 msgid "windows keymap"
 msgstr "раскладка клавиатуры"
 
-#: ../web/classes/Preferences.class.php:221
 #: ../web/classes/Preferences.class.php:224
-#: ../web/classes/Preferences.class.php:238
-#: ../web/classes/Preferences.class.php:244
+#: ../web/classes/Preferences.class.php:227
+#: ../web/classes/Preferences.class.php:241
 #: ../web/classes/Preferences.class.php:247
 #: ../web/classes/Preferences.class.php:250
-#: ../web/classes/Preferences.class.php:283
+#: ../web/classes/Preferences.class.php:253
 #: ../web/classes/Preferences.class.php:286
 #: ../web/classes/Preferences.class.php:289
 #: ../web/classes/Preferences.class.php:292
 #: ../web/classes/Preferences.class.php:295
 #: ../web/classes/Preferences.class.php:298
-#: ../web/classes/Preferences.class.php:318
+#: ../web/classes/Preferences.class.php:301
 #: ../web/classes/Preferences.class.php:321
 #: ../web/classes/Preferences.class.php:324
 #: ../web/classes/Preferences.class.php:327
+#: ../web/classes/Preferences.class.php:330
 msgid "yes"
 msgstr "да"
+
+#~ msgid "No error"
+#~ msgstr "Без ошибок"
+
+#~ msgid "Others"
+#~ msgstr "Другие"
+
+#~ msgid "document"
+#~ msgstr "документ"
