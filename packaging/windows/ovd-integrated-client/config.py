@@ -28,7 +28,7 @@ def source_remove_files():
 	return ["boostrap", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]
 
 def compile_commands():
-	return ["ant ovdClient.jar"]
+	return ["ant ovdclient.jar"]
 
 def binary_files():
 	return [r"lib\UlteoOVDClient.jar", r"required_libraries\*.dll"]
