@@ -26,7 +26,6 @@ require_once(dirname(__FILE__).'/includes/page_template.php');
 if (! checkAuthorization('viewStatus'))
 		redirect('index.php');
 
-
 function parse_linux($str_) {
 	$buf = preg_match('/[^-]*\ -\ [^-]*\ -\ ([^-]*)\ -\ .*/', $str_, $matches);
 	if (! $buf)
@@ -35,16 +34,8 @@ function parse_linux($str_) {
 	return strtolower($matches[1]);
 }
 
-function parse_windows($str_) {
-	$buf = preg_match('/[^\ ]*\ [^\ ]*\ \[([^\ ]*)\]:\ .*/', $str_, $matches);
-	if (! $buf)
-		return false;
-
-	return strtolower($matches[1]);
-}
-
-function parse_daemon($str_) {
-	$buf = preg_match('/[^\ ]*\ \[([^\ ]*)\]\ .*/', $str_, $matches);
+function parse_ovdserver($str_) {
+	$buf = preg_match('/[^\ ]*\ [^\ ]*\ \[(.*)\]:\ .*/', $str_, $matches);
 	if (! $buf)
 		return false;
 
@@ -77,19 +68,13 @@ function get_lines_from_file($file_, $nb_lines, $allowed_types) {
 	return $lines;
 }
 
-function get_lines_from_string($server_type_, $type_, $string_, $nb_lines, $allowed_types) {
+function get_lines_from_string($string_, $nb_lines, $allowed_types) {
 	$spec_lines = array();
 
 	$lines = explode("\n", $string_);
 	$lines = array_reverse($lines);
 	foreach($lines as $line) {
-		if ($type_ == 'web') {
-			if ($server_type_ == 'linux')
-				$type = parse_linux($line);
-			elseif ($server_type_ == 'windows')
-				$type = parse_windows($line);
-		} elseif ($type_ == 'daemon')
-			$type = parse_daemon($line);
+		$type = parse_ovdserver($line);
 
 		$spec_lines[]= '<span class="'.$type.'">'.trim($line).'</span>';
 		if (count($spec_lines)>$nb_lines)
@@ -116,18 +101,12 @@ function show_all($flags_) {
 		$buf = new Server_Logs($server);
 		$buf->process();
 
-		$lines = $buf->getWebLog(20);
-		$lines2 = false;
-		if ($server->getAttribute('type') != 'windows')
-			$lines2 = $buf->getDaemonLog(20);
-		if ($lines !== false || $lines2 !== false)
+		$lines = $buf->getLog(20);
+		if ($lines !== false)
 			$display2[$server->getAttribute('fqdn')] = array();
 
 		if ($lines !== false)
-			$display2[$server->getAttribute('fqdn')]['web'] = get_lines_from_string($server->getAttribute('type'), 'web', $lines, 20, $flags_);
-
-		if ($lines2 !== false)
-			$display2[$server->getAttribute('fqdn')]['daemon'] = get_lines_from_string($server->getAttribute('type'), 'daemon', $lines2, 20, $flags_);
+			$display2[$server->getAttribute('fqdn')]['web'] = get_lines_from_string($lines, 20, $flags_);
 	}
 
 	page_header();
@@ -156,25 +135,13 @@ function show_all($flags_) {
 
 		echo '<h2><img src="media/image/server-'.$server->stringType().'.png" alt="'.$server->stringType().'" title="'.$server->stringType().'" /> <a href="servers.php?action=manage&amp;fqdn='.$fqdn.'">'.$fqdn.'</a></h2>';
 		echo '<div class="section">';
-		if (array_key_exists('web', $logs)) {
-			echo '<h4>'._('Web log');
-			echo ' <a href="?show=1&amp;where=aps&amp;name=web&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
-			echo ' <a href="?download=1&amp;where=aps&amp;name=web&amp;server='.$fqdn.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
-			echo '</h4>';
-			echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
-			echo implode("<br />\n", $logs['web']);
-			echo '</div>';
-		}
-
-		if (array_key_exists('daemon', $logs)) {
-			echo '<h4>'._('Daemon log');
-			echo ' <a href="?show=1&amp;where=aps&amp;name=daemon&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
-			echo ' <a href="?download=1&amp;where=aps&amp;name=daemon&amp;server='.$fqdn.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
-			echo '</h4>';
-			echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
-			echo implode("<br />\n", $logs['daemon']);
-			echo '</div>';
-		}
+		echo '<h4>'._('Log');
+		echo ' <a href="?show=1&amp;where=aps&amp;server='.$fqdn.'"><img src="media/image/view.png" width="22" height="22" alt="view" onmouseover="showInfoBulle(\''._('View full log file online').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo ' <a href="?download=1&amp;where=aps&amp;server='.$fqdn.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo '</h4>';
+		echo '<div style="border: 1px solid #ccc; background: #fff; padding: 5px; text-align: left;" class="section">';
+		echo implode("<br />\n", $logs['web']);
+		echo '</div>';
 		echo '</div>';
 	}
 	echo '</div>';
@@ -206,8 +173,8 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 		echo ' <a href="?download=1&amp;where='.$where_.'&amp;name='.$name_.'&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 		echo '</h1>';
 	} elseif ($where_ == 'aps') {
-		echo '<h1><a href="?">'._('Logs').'</a> - '.$server_.' - '.$name_;
-		echo ' <a href="?download=1&amp;where=aps&amp;name='.$name_.'&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
+		echo '<h1><a href="?">'._('Logs').'</a> - '.$server_;
+		echo ' <a href="?download=1&amp;where=aps&amp;server='.$server_.'"><img src="media/image/download.png" width="22" height="22" alt="download" onmouseover="showInfoBulle(\''._('Download full log file').'\'); return false;" onmouseout="hideInfoBulle(); return false;" /></a>';
 		echo '</h1>';
 	}
 
@@ -220,7 +187,7 @@ function show_specific($where_, $name_, $server_=NULL, $flags_) {
 			fclose($fp);
 		}
 	} elseif ($where_ == 'aps') {
-		while ($str = $buf->getContent($name_))
+		while ($str = $buf->getContent())
 			echo $str.'<br />'."\n";
 	}
 	echo '</div>';
@@ -236,9 +203,17 @@ function download_log($where_, $name_, $server_=NULL) {
 		header('Content-Disposition: attachment; filename=sm_'.$name_);
 
 		$filename = SESSIONMANAGER_LOGS.'/main.log';
+
+		$fp = @fopen($filename, 'r');
+
+		if ($fp !== false)
+			while ($str = fgets($fp, 4096))
+				echo $str;
+
+		@fclose($fp);
 	} elseif ($where_ == 'aps') {
 		header('Content-Type: application/octet-stream');
-		header('Content-Disposition: attachment; filename=aps_'.$server_.'_'.$name_.'.log');
+		header('Content-Disposition: attachment; filename=aps_'.$server_.'.log');
 
 		$server = Abstract_Server::load($server_);
 
@@ -249,11 +224,11 @@ function download_log($where_, $name_, $server_=NULL) {
 
 		$buf = new Server_Logs($server);
 		$buf->process();
+
+		while ($str = $buf->getContent())
+			echo $str;
 	}
 	
-	while ($str = $buf->getContent($name_))
-		echo $str;
-
 	die();
 }
 
@@ -264,9 +239,9 @@ else
 	$log_flags = array();
 
 if (isset($_GET['show']))
-	show_specific($_GET['where'], $_GET['name'], (isset($_GET['server'])?$_GET['server']:NULL), $log_flags);
+	show_specific($_GET['where'], (isset($_GET['name'])?$_GET['name']:NULL), (isset($_GET['server'])?$_GET['server']:NULL), $log_flags);
 
 if (isset($_GET['download']))
-	download_log($_GET['where'], $_GET['name'], (isset($_GET['server'])?$_GET['server']:NULL));
+	download_log($_GET['where'], (isset($_GET['name'])?$_GET['name']:NULL), (isset($_GET['server'])?$_GET['server']:NULL));
 
 show_all($log_flags);

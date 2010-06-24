@@ -25,11 +25,7 @@ class Server_Logs {
 
 	public $logsdir = NULL;
 
-	public $since = NULL;
-	public $last = NULL;
-
-	public $weblog = NULL; //pointer to the fopen resource
-	public $daemonlog = NULL; //pointer to the fopen resource
+	public $log = NULL; //pointer to the fopen resource
 
 	public function __construct($server_) {
 // 		Logger::debug('main', 'Starting Server_Logs::__construct for \''.$server_->fqdn.'\'');
@@ -56,99 +52,42 @@ class Server_Logs {
 	}
 
 	public function __destruct() {
-		if (is_resource($this->weblog))
-			@fclose($this->weblog);
-		if (is_resource($this->daemonlog))
-			@fclose($this->daemonlog);
+		if (is_resource($this->log))
+			@fclose($this->log);
 	}
 
 	public function __toString() {
 		return 'Server_Logs(\''.$this->server->fqdn.'\')';
 	}
 
-	public function fetchLogs($since_=NULL) {
+	public function fetchLogs() {
 		Logger::debug('main', 'Starting Server_Logs::fetchLogs for server \''.$this->server->fqdn.'\'');
 
-		if (is_null($since_))
-			$since_=time();
-
 		$ret = query_url($this->server->getWebservicesBaseURL().'/server/logs', false); //since = $since_
-		if ($ret === false) { // ! $ret
+		if (! $ret) {
 			$this->server->isUnreachable();
 			Logger::error('main', 'Server_Logs::fetchLogs server \''.$this->server->fqdn.'\' is unreachable');
 			return false;
 		}
 
-		$dom = new DomDocument('1.0', 'utf-8');
-		$buf = @$dom->loadXML($ret);
-		if (! $buf) {
-			Logger::error('main', 'Server_Logs::fetchLogs Invalid XML');
-			return false;
-		}
-
-		if (! $dom->hasChildNodes()) {
-			Logger::error('main', 'Server_Logs::fetchLogs Invalid XML');
-			return false;
-		}
-
-		$log_node = $dom->getElementsByTagname('log')->item(0);
-		if (is_null($log_node)) {
-			Logger::error('main', 'Server_Logs::fetchLogs Missing element \'log\'');
-			return false;
-		}
-
-		$log_web_node = $log_node->getElementsByTagname('web')->item(0);
-		if (is_null($log_web_node)) {
-			Logger::error('main', 'Server_Logs::fetchLogs Missing element \'web\'');
-			return false;
-		}
-
-		$log_daemon_node = $log_node->getElementsByTagname('daemon')->item(0);
-		if (is_null($log_daemon_node)) {
-			Logger::error('main', 'Server_Logs::fetchLogs Missing element \'daemon\'');
-			return false;
-		}
-
-		@file_put_contents($this->logsdir.'/since', time());
-		@file_put_contents($this->logsdir.'/last', $log_node->getAttribute('last'));
-
-		$buf = base64_decode($log_web_node->firstChild->nodeValue);
-		@file_put_contents($this->logsdir.'/web-'.date('Ymd').'.log', $buf, FILE_APPEND);
-
-		$buf = base64_decode($log_daemon_node->firstChild->nodeValue);
-		@file_put_contents($this->logsdir.'/daemon-'.date('Ymd').'.log', $buf, FILE_APPEND);
+		@file_put_contents($this->logsdir.'/'.date('Ymd').'.log', $ret);
 
 		return true;
 	}
 
-	public function getWebLog($nb_lines_=NULL) {
+	public function getLog($nb_lines_=NULL) {
 		if (is_null($nb_lines_) || ! is_numeric($nb_lines_) || $nb_lines_ == 0)
-			return @file_get_contents($this->logsdir.'/web-'.date('Ymd').'.log');
+			return @file_get_contents($this->logsdir.'/'.date('Ymd').'.log');
 		else {
-			$obj = new FileTailer($this->logsdir.'/web-'.date('Ymd').'.log');
+			$obj = new FileTailer($this->logsdir.'/'.date('Ymd').'.log');
 			return $obj->tail_str($nb_lines_);
 		}
 	}
 
-	public function getDaemonLog($nb_lines_=NULL) {
-		if (is_null($nb_lines_) || ! is_numeric($nb_lines_) || $nb_lines_ == 0)
-			return @file_get_contents($this->logsdir.'/daemon-'.date('Ymd').'.log');
-		else {
-			$obj = new FileTailer($this->logsdir.'/daemon-'.date('Ymd').'.log');
-			return $obj->tail_str($nb_lines_);
-		}
-	}
-
-	public function getContent($type_) {
-		if ($type_ == 'web') {
-			if (! is_resource($this->weblog))
-				$this->weblog = @fopen($this->logsdir.'/web-'.date('Ymd').'.log', 'r');
-			$fp = $this->weblog;
-		} elseif ($type_ == 'daemon') {
-			if (! is_resource($this->daemonlog))
-				$this->daemonlog = @fopen($this->logsdir.'/daemon-'.date('Ymd').'.log', 'r');
-			$fp = $this->daemonlog;
-		}
+	public function getContent() {
+		if (! is_resource($this->log))
+			$this->log = @fopen($this->logsdir.'/'.date('Ymd').'.log', 'r');
+		$fp = $this->log;
 
 		if ($fp !== false)
 			return fgets($fp, 4096);
