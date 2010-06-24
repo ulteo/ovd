@@ -66,7 +66,8 @@
            includes="net/propero/rdp/Rdesktop.java"/>
   </target>
 
-  <target name="rdesktop.jar" depends="rdesktop,classes2jar" description="create jar file">
+  <target name="rdesktop.jar" depends="rdesktop" description="create jar file">
+    <antcall target="classes2jar" />
     <jar destfile="libs/rdesktop.jar" basedir="jar/">
       <include name="**"/>
       <manifest>
@@ -107,7 +108,8 @@
            includes="org/ulteo/rdp/RdpClient.java"/>
   </target>
 
-  <target name="rdpClient.jar" depends="rdpClient,classes2jar">
+  <target name="rdpClient.jar" depends="rdpClient">
+    <antcall target="classes2jar" />
     <jar destfile="libs/RDPClient.jar" basedir="jar/">
       <include name="**"/>
 
@@ -150,7 +152,9 @@
           classpath="required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
           includes="org/ulteo/ovd/printer/PrinterApplet.java"/>
  </target>
- <target name="PDFPrinter.jar" depends="PDFPrinter,classes2jar" description="create jar file">
+
+ <target name="PDFPrinter.jar" depends="PDFPrinter" description="create jar file">
+   <antcall target="classes2jar" />
    <jar destfile="libs/PDFPrinter.jar" basedir="jar/">
      <include name="**"/>
      <manifest>
@@ -193,7 +197,8 @@
            includes="org/ulteo/ovd/integrated/Client.java"/>
   </target>
 
-  <target name="integrated.jar" depends="integrated,classes2jar">
+  <target name="integrated.jar" depends="integrated">
+    <antcall target="classes2jar" />
     <jar destfile="libs/UlteoOVDIntegratedClient.jar" basedir="jar/">
       <include name="**"/>
 
@@ -231,11 +236,13 @@
            includes="org/ulteo/ovd/client/StartConnection.java"/>
   </target>
 
-  <target name="ovdclient.jar" depends="ovdclient,classes2jar">
+  <target name="ovdclient.jar" depends="ovdclient">
+    <antcall target="classes2jar" />
     <!-- TODO -->
   </target>
 
-  <target name="ovdclient_all.jar" depends="ovdclient,classes2jar">
+  <target name="ovdclient_all.jar" depends="ovdclient">
+    <antcall target="classes2jar" />
     <mkdir dir="external_jars"/>
     <mkdir dir="external_jars/swingx"/>
     <mkdir dir="external_jars/gnu-getopt"/>
@@ -337,7 +344,8 @@
            includes="org/ulteo/ovd/standalone/Client.java" />
   </target>
 
-  <target name="standalone.jar" depends="standalone,classes2jar">
+  <target name="standalone.jar" depends="standalone">
+    <antcall target="classes2jar" />
     <copy todir="jar/ressources">
       <fileset dir="icons"/>
     </copy>
@@ -378,7 +386,8 @@
            includes="org/ulteo/ovd/applet/**.java" />
   </target>
 
-  <target name="applet.jar" description="sign applets"  depends="applet,classes2jar" >
+  <target name="applet.jar" description="sign applets"  depends="applet" >
+    <antcall target="classes2jar" />
     <jar destfile="libs/UlteoOVD.jar"  basedir="jar/">
       <include name="**" />
     </jar>
@@ -449,7 +458,8 @@
            includes="org/ulteo/vdi/Client.java org/ulteo/vdi/fifoclient.java"/>
   </target>
 
-  <target name="vdi.jar" depends="vdi,classes2jar">
+  <target name="vdi.jar" depends="vdi">
+    <antcall target="classes2jar" />
     <copy todir="jar/ressources">
       <fileset dir="icons"/>
     </copy>
