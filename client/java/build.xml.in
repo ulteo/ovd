@@ -2,7 +2,7 @@
 
 <project name="ulteo" default="applet">
   <property name="build.cert" value="/usr/share/ulteo/ovd-cert/"/>
-  <property name="keystore.password" value="@PASSWD@"/>
+  <property name="keystore.password" value="123456"/>
 
   <property name="compile.debug" value="false"/>
   <property name="compile.deprecation" value="false"/>

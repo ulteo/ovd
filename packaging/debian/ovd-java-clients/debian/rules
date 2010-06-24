@@ -13,7 +13,7 @@ DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
 
 configure/ulteo-ovd-applets::
 	PASSWD=$(shell cat /usr/share/ulteo/ovd-cert/password); \
-sed -i "s/@PASSWD@/$$PASSWD/" build.xml
+sed -i "s/123456/$$PASSWD/" build.xml
 
 configure/ulteo-ovd-integrated-client::
 	clientbindir=$(DEB_DESTDIR)/usr/bin; \
