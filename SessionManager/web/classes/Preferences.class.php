@@ -265,7 +265,7 @@ class Preferences {
 		$c = new ConfigElement_select('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general', 'application_server_settings');
-		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 1);
+		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 0);
 		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
 		$this->add($c,'general', 'application_server_settings');
 		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), 0);
