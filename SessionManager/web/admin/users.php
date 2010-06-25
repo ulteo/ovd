@@ -167,11 +167,36 @@ function show_default($userDB) {
     echo '<br />';
     echo '<h2>'._('Populate').'</h2>';
     echo '<div id="user_populate">';
-    echo _('Populate with sample users').'<br />'._("The default password is 'test'").'<br />';
+    echo '<p>';
+    echo _('This feature is useful to create default accounts. It is mainly used when you want to test the system quickly. It is not recommended to use thoses default accounts in a production system because it is very easy to delete them by mistake using this "populate" feature.');
+    echo '</p>';
+    
     echo '<form action="actions.php" method="post">';
     echo '<input type="hidden" name="name" value="User" />';
     echo '<input type="hidden" name="action" value="populate" />';
-    echo '<input type="submit" value="'._('Populate').'"/><br />';
+    
+    echo '<table border="0" cellspacing="1" cellpadding="3">';
+    echo '<tr>';
+    echo '<td>'._('Override existings: ').'</td>';
+    echo '<td><select name="override">';
+    echo '<option value="1">'._('Yes').'</option>';
+    echo '<option value="0" selected="selected">'._('No').'</option>';
+    echo '</select></td>';
+    echo '</tr><tr>';
+    echo '<td>'._('Password management:').'</td>';
+    echo '<td><select name="password" id="password_management_select" onchange="';
+    echo '  if( $(\'password_str\').style.visibility== \'hidden\' )';
+    echo '    $(\'password_str\').style.visibility = \'\';';
+    echo '  else';
+    echo '    $(\'password_str\').style.visibility = \'hidden\';';
+    echo '">';
+    echo '<option value="login">'._('Same as the login').'</option>';
+    echo '<option value="custom">'._('Custom:').'</option>';
+    echo '</select></td>';
+    echo '<td><input type="text" name="password_str" value="" id="password_str" style="visibility: hidden"/></td>';
+    echo '</tr><tr>';
+    echo '<td></td><td><input type="submit" value="'._('Populate').'"/></td>';
+    echo '</tr></table>';
     echo '</form>';
     echo '</div>';
   }

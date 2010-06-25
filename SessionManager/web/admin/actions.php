@@ -848,7 +848,19 @@ if ($_REQUEST['name'] == 'User') {
 	}
 	
 	if ($_REQUEST['action'] == 'populate') {
-		$ret = $userDB->populate();
+		$override = ($_REQUEST['override'] == '1');
+		if ($_REQUEST['password'] == 'custom') {
+			if (strlen($_REQUEST['password_str']) == 0) {
+				popup_error(_('No custom password given at populate.'));
+				redirect();
+			}
+			
+			$password = $_REQUEST['password_str'];
+		}
+		else
+			$password = NULL;
+		
+		$ret = $userDB->populate($override, $password);
 		if ($ret) {
 			popup_info(_('User database populated.'));
 		}

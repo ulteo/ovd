@@ -262,7 +262,7 @@ class UserDB_sql extends UserDB  {
 		return false;
 	}
 	
-	public function populate() {
+	public function populate($override, $password = NULL) {
 		$users = array(
 			array('login' => 'mwilson', 'displayname' => 'Marvin Wilson',),
 			array('login' => 'jdoten', 'displayname' => 'John Doten'),
@@ -282,12 +282,20 @@ class UserDB_sql extends UserDB  {
 		
 		foreach ($users as $row) {
 			$user = $this->generateUserFromRow($row);
-			$user->setAttribute('password', 'test');
+			if ($password == NULL)
+				$password = $row['login'];
+			$user->setAttribute('password', $password);
 			$user_on_db = $this->import($user->getAttribute('login'));
 			if (!is_object($user_on_db)) {
 				$ret = $this->add($user);
 				if ($ret !== true) {
 					Logger::error('main', 'UserDB::sql::populate failed to add user \''.$user->getAttribute('login').'\'');
+				}
+			}
+			else if ($override) {
+				$ret = $this->update($user);
+				if ($ret !== true) {
+					Logger::error('main', 'UserDB::sql::populate failed to update user \''.$user->getAttribute('login').'\'');
 				}
 			}
 		}
