@@ -185,45 +185,43 @@ function server_display_role_aps($server, $var) {
 // 		echo '</td></tr>';
 // 	}
 	
-	if ($server->type == 'linux') {
-		echo '<table>';
-		echo '<tr><td>';
-		echo _('Number of available sessions on this server').': ';
-		echo '</td><td>';
-		if ($can_do_action) {
-			echo '<form action="actions.php" method="post">';
-			echo '<input type="hidden" name="name" value="Server" />';
-			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-			echo '<input type="hidden" name="action" value="available_sessions" />';
-			echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
-		}
-		echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
-		if ($var['can_do_action']) {
-			echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
-			echo ' <input type="submit" value="'._('change').'" />';
-			echo '</form>';
-		}
-		echo '</td></tr>';
-
-		echo '<tr><td>';
-		echo _('Redirection name of this server').': ';
-		echo '</td><td>';
-		if ($can_do_action) {
-			echo '<form action="actions.php" method="post">';
-			echo '<input type="hidden" name="name" value="Server" />';
-			echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-			echo '<input type="hidden" name="action" value="external_name" />';
-		}
-		echo '<input type="text" name="external_name" value="'.$external_name.'" />';
-		if ($can_do_action) {
-			echo ' <input type="submit" value="'._('change').'" />';
-			echo '</form>';
-		}
-		echo "</td></tr>\n";
-		echo '</table>';
+	echo '<table>';
+	echo '<tr><td>';
+	echo _('Number of available sessions on this server').': ';
+	echo '</td><td>';
+	if ($can_do_action) {
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="action" value="available_sessions" />';
+		echo '<input type="button" value="-" onclick="field_increase(\'number\', -1);" /> ';
 	}
+	echo '<input type="text" id="number" name="max_sessions" value="'.$server->getNbMaxSessions().'" size="3" onchange="field_check_integer(this);" />';
+	if ($var['can_do_action']) {
+		echo ' <input type="button" value="+" onclick="field_increase(\'number\', 1);" />';
+		echo ' <input type="submit" value="'._('change').'" />';
+		echo '</form>';
+	}
+	echo '</td></tr>';
+
+	echo '<tr><td>';
+	echo _('Redirection name of this server').': ';
+	echo '</td><td>';
+	if ($can_do_action) {
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Server" />';
+		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+		echo '<input type="hidden" name="action" value="external_name" />';
+	}
+	echo '<input type="text" name="external_name" value="'.$external_name.'" />';
+	if ($can_do_action) {
+		echo ' <input type="submit" value="'._('change').'" />';
+		echo '</form>';
+	}
+	echo "</td></tr>\n";
+	echo '</table>';
 	
-	if ($server_online && $server->getAttribute('type') == 'linux' && $can_do_action && $can_use_apt) {
+	if ($server_online && $can_do_action && $can_use_apt) {
 		echo '<div class="section">';
 		echo '<h2>'._('Install an application').'</h2>';
 		echo '<form action="actions.php" method="post">';
@@ -292,7 +290,7 @@ function server_display_role_aps($server, $var) {
 				echo '<a href="applications.php?action=manage&id='.$app->getAttribute('id').'">';
 				echo $app->getAttribute('name').'</a>';
 				echo '</td>';
-				if ($server_online && $server->type == 'linux' && $can_do_action && $can_use_apt) {
+				if ($server_online && $can_do_action && $can_use_apt) {
 					echo '<td>';
 					if ($remove_in_progress)
 						echo 'remove in progress';
@@ -347,7 +345,7 @@ function server_display_role_aps($server, $var) {
 	}
 
 	// Server Replication part
-	if (count($servers_replication)>0 && $server->getAttribute('type') == 'linux' && $can_do_action) {
+	if (count($servers_replication)>0 && $can_use_apt && $can_do_action) {
 		echo '<div class="section">'; // div replication
 		echo '<h2>'._('Replication').'</h2>';
 		echo '<form action="actions.php" method="post">';
