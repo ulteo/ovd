@@ -322,7 +322,7 @@ function server_display_role_aps($server, $var) {
 			echo '</tr>';
 			}
 		
-		if (count($applications_available) > 0 && $can_do_action) {
+		if (count($applications_available) > 0 && $can_do_action && $can_use_apt) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'"><form action="actions.php" method="post">';
 			echo '<input type="hidden" name="action" value="add" />';

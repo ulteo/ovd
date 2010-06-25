@@ -117,7 +117,12 @@ function show_manage($id, $tm) {
 }
 
 function show_default($tm) {
-  $servers = Servers::getOnline();
+	$servers_  = Servers::getOnline();
+	$servers = array();
+	foreach($servers_ as $server) {
+		if (isset($server->ulteo_system) && $server->ulteo_system == 1)
+			$servers[]= $server;
+	}
 
 	$can_do_action = isAuthorized('manageServers');
 
