@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -31,6 +32,7 @@ import win32profile
 import win32security
 import _winreg
 
+from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
@@ -103,6 +105,14 @@ class Session(AbstractSession):
 				if os.path.exists(dstFile):
 					os.remove(dstFile)
 				win32file.CopyFile(srcFile, dstFile, True)
+		
+		f = open(os.path.join(buf, "sm"), "w")
+		f.write(Config.session_manager+"\n")
+		f.close()
+		
+		f = open(os.path.join(buf, "token"), "w")
+		f.write(self.id+"\n")
+		f.close()
 	
 	def uninstall_client(self):
 		self.user.destroy()

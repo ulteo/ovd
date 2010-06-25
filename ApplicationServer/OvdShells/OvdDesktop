@@ -3,8 +3,9 @@
 
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Gauvain POCENTEK <gauvain@ulteo.com>
-# Author Julien LANGLOIS <julien@ulteo.com>
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Gauvain POCENTEK <gauvain@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -20,12 +21,39 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import ConfigParser
 import os
 import sys
 
 from ovd_shells.Platform import _platform as Platform
 from ovd_shells import Util
 
+def generateConfFile(path_file_, sm_, token_):
+	# for now the java client does not support a regular ini file
+	#try:
+			#configP = ConfigParser.ConfigParser()
+	
+			#configP.add_section('user')
+			#configP.add_section('server')
+	
+			#configP.set("user", "token", token_)
+			#configP.set("server", "host", sm_)
+	
+			#f = open(path_file_,'w')
+			#configP.write(f)
+			#f.close() # ..??
+			#return True
+	#except Exception, err:
+			#return False
+	try:
+			f = open(path_file_,'w')
+			f.write("[token]\ntoken=%s\n\n[server]\nhost=%s\n\n"%(token_, sm_))
+			f.close()
+	except Exception, err:
+			print "err ",err
+			return False
+	
+	return True
 
 def main():
 	user_sdir = Platform.getUserSessionDir()
@@ -38,6 +66,38 @@ def main():
 		#sys.exit(1)
 	
 	os.environ["OVD_SESSION_DIR"] = user_sdir
+	
+	# launch the integrated client
+	sm_file = os.path.join(user_sdir, "sm")
+	token_file = os.path.join(user_sdir, "token")
+	configuration_file = os.path.join(os.path.expanduser('~'), ".integrateclient.conf")
+	
+	everything_is_fine = True
+	
+	if os.path.exists(sm_file) == False:
+		# TODO: do a log error sm_file
+		everything_is_fine = False
+	else:
+		f = open(sm_file, "r")
+		sm_value = f.read().strip()
+		f.close()
+	
+	if os.path.exists(token_file) == False:
+		# TODO: do a log : error token_file
+		everything_is_fine = False
+	else:
+		f = open(token_file, "r")
+		token_value = f.read().strip()
+		f.close()
+	
+	if everything_is_fine:
+		if generateConfFile(configuration_file, sm_value, token_value) == False:
+			# TODO: do a log error configuration_files
+			everything_is_fine = False
+		
+	if everything_is_fine:
+		# actually launch the client
+		Platform.launchIntegratedClient(configuration_file)
 	
 	Platform.startDesktop()
 	

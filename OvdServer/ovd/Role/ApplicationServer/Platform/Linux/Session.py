@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -91,6 +92,14 @@ class Session(AbstractSession):
 		
 		f = file(os.path.join(d, "env"), "w")
 		f.writelines(env_file_lines)
+		f.close()
+		
+		f = open(os.path.join(d, "sm"), "w")
+		f.write(Config.session_manager+"\n")
+		f.close()
+		
+		f = open(os.path.join(d, "token"), "w")
+		f.write(self.id+"\n")
 		f.close()
 	
 	def uninstall_client(self):

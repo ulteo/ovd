@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -59,6 +60,15 @@ def kill(pid):
 def getUserSessionDir():
 	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)
 	return os.path.join(d, "ovd")
+
+def launchIntegratedClient(configuration_file_):                                                                                   
+	if os.path.exists(configuration_file_) == False:                                                                            
+		return False                                                                                                        
+	
+	# TODO: remove harcoded paths
+	os.system("""copy "c:\\Program Files\\Ulteo\\Open Virtual Desktop Client\\libWindowsPaths.dll" "%s" """%(os.path.expanduser('~')))
+	launch(""""c:\\Program Files\\Java\\jre6\\bin\\javaw.exe" -jar "c:\\Program Files\\Ulteo\\Open Virtual Desktop Client\\UlteoOVDClient.jar" -c "%s" """%(configuration_file_), False)
+	return True 
 
 def startDesktop():
 	launch("explorer", True)
