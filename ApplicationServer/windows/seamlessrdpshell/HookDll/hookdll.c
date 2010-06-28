@@ -75,6 +75,65 @@ static HINSTANCE g_instance = NULL;
 
 static HANDLE g_mutex = NULL;
 
+typedef struct node_{
+	HWND windows;
+	struct node_* next;
+}node;
+
+static node* hwdHistory = NULL;
+
+static HWND getHWNDFromHistory(HWND hwnd){
+	node* currentNode = hwdHistory;
+	if (currentNode == NULL){
+		return (HWND)NULL;
+	}
+	while(currentNode){
+		if( currentNode->windows == hwnd)
+			return hwnd;
+		currentNode = currentNode->next;
+	}
+	return (HWND)NULL;
+}
+
+static void addHWDNToHistory(HWND hwnd){
+	node* currentNode = hwdHistory;
+	node* newNode = hwdHistory;
+
+	if( getHWNDFromHistory(hwnd) == hwnd){
+		return;
+	}
+	if (hwdHistory == NULL){
+		hwdHistory = malloc(sizeof(node));
+		hwdHistory->windows = hwnd;
+		hwdHistory->next = NULL;
+		return;
+	}
+	while(currentNode->next){
+		currentNode = currentNode->next;
+	}
+	newNode = malloc(sizeof(node));
+	newNode->windows = hwnd;
+	newNode->next = NULL;
+	currentNode->next = newNode;
+}
+
+static void removeHWNDFromHistory(HWND hwnd){
+	node* currentNode = hwdHistory;
+	node* previousNode = NULL;
+
+	while(currentNode && currentNode->windows != hwnd){
+		previousNode = currentNode;
+		currentNode = currentNode->next;
+	}
+	if (! currentNode)
+		return;
+	if (previousNode == NULL)
+		hwdHistory = currentNode->next;
+	else
+		previousNode->next = currentNode->next;
+	free(currentNode);
+}
+
 static int g_screen_width = 0;
 static int g_screen_height = 0;
 
@@ -383,6 +442,67 @@ update_icon(HWND hwnd, HICON icon, int large)
 	}
 }
 
+static void create_window(HWND hwnd){
+		unsigned short title[150];
+		int state;
+		DWORD pid;
+		int flags;
+		HICON icon;
+		LONG exstyle;
+		LONG style;
+		style = GetWindowLong(hwnd, GWL_STYLE);
+		vchannel_write("DEBUG","NEW WINDOWS");
+
+		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+		GetWindowThreadProcessId(hwnd, &pid);
+
+		flags = 0;
+		if (style & DS_MODALFRAME)
+			flags |= SEAMLESS_CREATE_MODAL;
+		if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
+			flags |= SEAMLESS_CREATE_POPUP;
+		if (! (style & WS_SIZEBOX))
+			flags |= SEAMLESS_CREATE_FIXEDSIZE;
+
+		// handle always on top
+		if (exstyle & WS_EX_TOPMOST)
+			flags |= SEAMLESS_CREATE_TOPMOST;
+
+		vchannel_write("CREATE", "0x%08lx,0x%08lx,0x%08lx,0x%08x",
+					   (long) hwnd, (long) pid,
+					   (long) get_parent(hwnd), flags);
+
+		GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
+
+		vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd,
+				   vchannel_strfilter_unicode(title), 0);
+
+		icon = get_icon(hwnd, 1);
+		if (icon)
+		{
+			update_icon(hwnd, icon, 1);
+			DeleteObject(icon);
+		}
+
+		icon = get_icon(hwnd, 0);
+		if (icon)
+		{
+			update_icon(hwnd, icon, 0);
+			DeleteObject(icon);
+		}
+
+		if (style & WS_MAXIMIZE)
+			state = 2;
+		else if (style & WS_MINIMIZE)
+			state = 1;
+		else
+			state = 0;
+
+		update_position(hwnd);
+		vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd,
+				   state, 0);
+}
+
 static LRESULT CALLBACK
 wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 {
@@ -410,68 +530,23 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 	switch (msg)
 	{
+		case WM_SHOWWINDOW:
+			{
+				addHWDNToHistory(hwnd);
+				create_window(hwnd);
+				break;
+			}
 		case WM_WINDOWPOSCHANGED:
 			{
 				WINDOWPOS *wp = (WINDOWPOS *) lparam;
 
 				if (wp->flags & SWP_SHOWWINDOW)
 				{
-					unsigned short title[150];
-					int state;
-					DWORD pid;
-					int flags;
-					HICON icon;
-					LONG exstyle;
-
-					exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-					GetWindowThreadProcessId(hwnd, &pid);
-
-					flags = 0;
-					if (style & DS_MODALFRAME)
-						flags |= SEAMLESS_CREATE_MODAL;
-					if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
-						flags |= SEAMLESS_CREATE_POPUP;
-					if (! (style & WS_SIZEBOX))
-						flags |= SEAMLESS_CREATE_FIXEDSIZE;
-
-					// handle always on top
-					if (exstyle & WS_EX_TOPMOST)
-						flags |= SEAMLESS_CREATE_TOPMOST;
-
-					vchannel_write("CREATE", "0x%08lx,0x%08lx,0x%08lx,0x%08x",
-						       (long) hwnd, (long) pid,
-						       (long) get_parent(hwnd), flags);
-
-					GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
-
-					vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd,
-						       vchannel_strfilter_unicode(title), 0);
-
-					icon = get_icon(hwnd, 1);
-					if (icon)
-					{
-						update_icon(hwnd, icon, 1);
-						DeleteObject(icon);
+					LONG exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+					if (exstyle & WS_EX_TOPMOST){
+						addHWDNToHistory(hwnd);
+						create_window(hwnd);
 					}
-
-					icon = get_icon(hwnd, 0);
-					if (icon)
-					{
-						update_icon(hwnd, icon, 0);
-						DeleteObject(icon);
-					}
-
-					if (style & WS_MAXIMIZE)
-						state = 2;
-					else if (style & WS_MINIMIZE)
-						state = 1;
-					else
-						state = 0;
-
-					update_position(hwnd);
-
-					vchannel_write("STATE", "0x%08lx,0x%08x,0x%08x", hwnd,
-						       state, 0);
 				}
 
 				if (wp->flags & SWP_HIDEWINDOW)
@@ -528,6 +603,7 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 		case WM_DESTROY:
 			if (!(style & WS_VISIBLE))
 				break;
+			removeHWNDFromHistory(hwnd);
 			vchannel_write("DESTROY", "0x%08lx,0x%08x", hwnd, 0);
 			break;
 
@@ -574,7 +650,8 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 					break;
 
 				if (!(wp->flags & SWP_NOZORDER))
-					update_zorder(hwnd);
+					//update_zorder(hwnd) --> WinDev applications bring if we do that;
+					break;
 
 				break;
 			}
@@ -587,9 +664,15 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 					break;
 				/* We cannot use the string in lparam because
 				   we need unicode. */
-				GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
-				vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd,
-					       vchannel_strfilter_unicode(title), 0);
+				if (getHWNDFromHistory(hwnd) == NULL){
+					addHWDNToHistory(hwnd);
+					create_window(hwnd);
+				}
+				else{
+					GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
+					vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd,
+						     vchannel_strfilter_unicode(title), 0);
+				}
 				break;
 			}
 
