@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-if [ "$1" != "configure" ] || \( [ -n "$2" ] && [ "$1" != "reconfigure" ] \); then
+if [ "$1" != "configure" ] || ( [ -n "$2" ] && [ "$1" != "reconfigure" ] ); then
     exit 0
 fi
 
