@@ -23,6 +23,7 @@ import os
 import pwd
 import shutil
 
+from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
