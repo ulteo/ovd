@@ -24,11 +24,13 @@ import httplib
 import urllib2
 import cgi
 import base64
+import time
 from xml.dom import minidom
 from xml.dom.minidom import Document
 
 from ovd.Communication.Dialog import Dialog as AbstractDialog
 from ovd.Config import Config
+from ovd.FileTailer import FileTailer
 from ovd.Logger import Logger
 from ovd.Platform import Platform
 
@@ -70,8 +72,17 @@ class Dialog(AbstractDialog):
 			elif path == "/status":
 				return self.req_server_status(request)
 
-			elif path == "/logs":
-				return self.req_server_logs(request)
+			elif path.startswith("/logs"):
+				since = 0
+				extra = path[len("/logs"):]
+				if extra.startswith("/since/"):
+					since_str = extra[len("/since/"):]
+					if since_str.isdigit():
+						since = int(since_str)
+				elif len(extra) > 0:
+					return None  
+				
+				return self.req_server_logs(request, since)
 			
 			return None
 		
@@ -195,7 +206,7 @@ class Dialog(AbstractDialog):
 		doc.appendChild(rootNode)
 		return self.req_answer(doc)
 
-	def req_server_logs(self, request):
+	def req_server_logs(self, request, since):
 		response = {}
 		response["code"] = httplib.OK
 		response["Content-Type"] = "text/plain"
@@ -204,16 +215,22 @@ class Dialog(AbstractDialog):
 		if Logger._instance is None or Logger._instance.file is None:
 			return response
 		
-		try:
-			f = file(Logger._instance.file, 'rb')
-		except Exception, err:
-			Logger.warn("Unable to open log file to send it to SM")
-			Logger.debug("Unable to open file: %s"+str(err))
-			return response
-			
-		response["data"] = f.read()
-		f.close()
+		lines = []
+		t = time.time()
 		
+		tailer = FileTailer(Logger._instance.file)
+		while t > since and tailer.hasLines():
+			buf = tailer.tail(20)
+			buf.reverse()
+			
+			for line in buf:
+				t = Logger._instance.get_time_from_line(line)
+				if t<since:
+					break  
+				
+				lines.insert(0, line)
+		
+		response["data"] = "\n".join(lines)
 		return response
 	
 	

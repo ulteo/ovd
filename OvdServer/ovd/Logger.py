@@ -21,6 +21,7 @@
 
 import logging.handlers
 import sys
+import time
 
 class Logger:
 	_instance = None
@@ -129,3 +130,16 @@ class Logger:
 			return
 		
 		Logger._instance.log_debug(message)
+		
+		
+		
+	def get_time_from_line(self, line):
+		l = len("2010-01-01 01:01:01")
+		
+		if len(line) < l:
+			return 0
+		
+		buf = line[:l]
+		t = time.strptime(buf, "%Y-%m-%d %H:%M:%S")
+		
+		return time.mktime(t)
