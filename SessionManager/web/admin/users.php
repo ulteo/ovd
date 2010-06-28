@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Julien LANGLOIS <julien@ulteo.com>
@@ -265,7 +265,8 @@ function show_manage($login, $userDB, $userGroupDB) {
   if (is_null($groups_mine))
     die_error(_('Error while requesting usergroups'),__FILE__,__LINE__);
 
-  $groups_all = $userGroupDB->getList(true);
+  $usersgroupsList = new UsersGroupsList(array());
+  $groups_all = $usersgroupsList->search();
   $groups_available = array();
   foreach($groups_all as $group)
     if (! in_array($group, $groups_mine))
