@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -30,6 +30,11 @@ class UserDB_ldap  extends UserDB {
 		$this->config = $prefs->get('UserDB','ldap');
 
 	}
+	
+	public function makeLDAPconfig() {
+		return $this->config;
+	}
+	
 	public function import($login_){
 		Logger::debug('main','UserDB::ldap::import('.$login_.')');
 

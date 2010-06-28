@@ -125,6 +125,10 @@ class UserGroupDB_ldap_memberof {
 	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
 		$groups = array();
 		$userDBAD = UserDB::getInstance();
+		if (! method_exists(get_class($userDBAD), 'makeLDAPconfig')) {
+			Logger::error('main', "UserGroupDB::ldap_memberof::getGroupsContains userdb is not compatible");
+			return array();
+		}
 		$config_ldap = $userDBAD->makeLDAPconfig();
 		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
 		$ldap = new LDAP($config_ldap);
