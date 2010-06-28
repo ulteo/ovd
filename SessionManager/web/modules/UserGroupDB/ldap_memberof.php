@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -139,7 +139,7 @@ class UserGroupDB_ldap_memberof {
 		$filter .= '))';
 		$sr = $ldap->search($filter, NULL, $limit_);
 		if ($sr === false) {
-			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
+			Logger::error('main', 'UserGroupDB::ldap_memberof::getGroupsContains search failed');
 			return NULL;
 		}
 		$sizelimit_exceeded = $ldap->errno() === 4; // LDAP_SIZELIMIT_EXCEEDED => 0x04 
