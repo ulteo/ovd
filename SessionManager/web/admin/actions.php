@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
@@ -303,13 +303,11 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 
 	if ($_REQUEST['action']=='add') {
 		action_add_sharedfolder();
-		popup_info(_('SharedFolder successfully added'));
 		redirect();
 	}
 	elseif ($_REQUEST['action']=='del') {
 		if (isset($_REQUEST['id'])) {
 			action_del_sharedfolder($_REQUEST['id']);
-			popup_info(_('SharedFolder successfully deleted'));
 			redirect();
 		}
 	}
