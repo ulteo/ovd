@@ -283,8 +283,10 @@ class UserDB_sql extends UserDB  {
 		foreach ($users as $row) {
 			$user = $this->generateUserFromRow($row);
 			if ($password == NULL)
-				$password = $row['login'];
-			$user->setAttribute('password', $password);
+				$pass = $row['login'];
+			else
+				$pass = $password;
+			$user->setAttribute('password', $pass);
 			$user_on_db = $this->import($user->getAttribute('login'));
 			if (!is_object($user_on_db)) {
 				$ret = $this->add($user);
