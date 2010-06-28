@@ -83,10 +83,12 @@ var Applications = Class.create(Daemon, {
 			<param name="keymap" value="'+this.keymap+'" /> \
 			<param name="multimedia" value="'+this.multimedia+'" /> \
 			<param name="redirect_client_printers" value="'+this.redirect_client_printers+'" /> \
-		</applet>';
+		</applet><div id="ulteoprintingappletcontainer"></div>';
 
 		$('applicationsAppletContainer').show();
 		$('applicationsAppletContainer').innerHTML = applet_html_string;
+
+		this.load_printing_applet();
 
 		return true;
 	},

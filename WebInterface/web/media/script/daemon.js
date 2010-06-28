@@ -468,5 +468,27 @@ var Daemon = Class.create({
 		}
 
 		this.stopped = true;
+	},
+
+	load_printing_applet: function() {
+		if (! $('ulteoapplet') || ! $('ulteoapplet').isActive())
+			setTimeout(this.load_printing_applet.bind(this), 5000);
+
+		this.push_log('debug', '[daemon] load_printing_applet()');
+
+		setTimeout(function() {
+			var applet_html_string = '<applet id="PrinterApplet" name="PrinterApplet" code="org.ulteo.ovd.printer.PrinterApplet" codebase="applet/" archive="PDFPrinter.jar" cache_archive="PDFPrinter.jar" cache_archive_ex="PDFPrinter.jar;preload" mayscript="true" width="1" height="1"> \
+				<param name="name" value="ulteoprintingapplet" /> \
+				<param name="code" value="org.ulteo.ovd.printer.PrinterApplet" /> \
+				<param name="codebase" value="applet/" /> \
+				<param name="archive" value="PDFPrinter.jar" /> \
+				<param name="cache_archive" value="PDFPrinter.jar" /> \
+				<param name="cache_archive_ex" value="PDFPrinter.jar;preload" /> \
+				<param name="mayscript" value="true" /> \
+			</applet>';
+
+			$('ulteoprintingappletcontainer').show();
+			$('ulteoprintingappletcontainer').innerHTML = applet_html_string;
+		}, 20000);
 	}
 });
