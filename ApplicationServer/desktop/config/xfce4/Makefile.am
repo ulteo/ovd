@@ -3,7 +3,7 @@ XFCE4DIR = $(sysconfdir)/xdg/xfce4
 xfce4conf_DATA = Xcursor.xrdb  Xft.xrdb
 xfce4confdir = $(XFCE4DIR)
 
-xfce4kioskconf_DATA = kioskrc
+xfce4kioskconf_DATA = kioskrc kiosk_restriction.conf
 xfce4kioskconfdir = $(XFCE4DIR)/kiosk
 
 xfce4mcsconf_DATA = desktop.xml gtk.xml workspaces.xml xfwm4_keys.xml xfwm4.xml
