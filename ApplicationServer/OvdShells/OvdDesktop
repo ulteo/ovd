@@ -97,7 +97,10 @@ def main():
 		
 	if everything_is_fine:
 		# actually launch the client
-		Platform.launchIntegratedClient(configuration_file)
+		try:
+			Platform.launchIntegratedClient(configuration_file)
+		except Exception, err:
+			print "Unable to start external apps", err
 	
 	Platform.startDesktop()
 	
