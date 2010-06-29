@@ -1,3 +1,9 @@
+ovd-chroot-apps (2.5-1) 2-5-staging; urgency=low
+
+  * New stable release
+
+ -- Samuel Bovée <samuel@ulteo.com>  Tue, 29 Jun 2010 16:19:31 +0200
+
 ovd-chroot-apps (2.0.2-0ulteo0) 2-0-staging; urgency=low
 
   * New bugfix release
