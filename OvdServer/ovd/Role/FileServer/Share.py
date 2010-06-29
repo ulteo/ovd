@@ -102,7 +102,7 @@ class Share:
 			return False
 		
 		
-		cmd = 'echo -e "%s\n%s" | smbpasswd -s -a %s'%(password, password, user)
+		cmd = 'echo "%s\\n%s" | smbpasswd -s -a %s'%(password, password, user)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.error("FS: unable to set samba password")
