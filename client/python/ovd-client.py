@@ -241,7 +241,6 @@ class Dialog:
                 return False
 
             Logger.debug("HTTP request return code %d (%s)"%(exc.code, exc.msg))
-            Logger.debug(" * return: %s"%(str(data.read())))
             return False
 
         except urllib2.URLError, exc:
