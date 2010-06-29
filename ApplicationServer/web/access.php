@@ -65,8 +65,8 @@ $session_node->appendChild($parameters_node);
 
 $ssh_node = $dom->createElement('ssh');
 $ssh_node->setAttribute('host', $server);
-$ssh_node->setAttribute('user', $sshuser);
-$ssh_node->setAttribute('passwd', $sshpass);
+$ssh_node->setAttribute('user', trim($sshuser));
+$ssh_node->setAttribute('passwd', trim($sshpass));
 $ports = array(443, 993, 995);
 foreach ($ports as $port) {
 	$port_node = $dom->createElement('port');
@@ -78,8 +78,8 @@ $session_node->appendChild($ssh_node);
 
 if ($_SESSION['ovd_session']['mode'] != 'portal' || ($_SESSION['ovd_session']['mode'] == 'portal' && $_GET['application_id'] != 'portal')) {
 	$vnc_node = $dom->createElement('vnc');
-	$vnc_node->setAttribute('port', $rfbport);
-	$vnc_node->setAttribute('passwd', $vncpass);
+	$vnc_node->setAttribute('port', trim($rfbport));
+	$vnc_node->setAttribute('passwd', trim($vncpass));
 	$vnc_node->setAttribute('quality', $_SESSION['ovd_session']['parameters']['quality']);
 	$session_node->appendChild($vnc_node);
 }
