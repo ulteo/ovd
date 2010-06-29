@@ -226,13 +226,13 @@
 
   <!-- Ovd client part -->
 
-  <target name="ovdclient" depends="precompile">
+  <target name="ovdclient" depends="clean, precompile">
     <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
            target="1.5"
            source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
+           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/swingx.jar;required_libraries/registry.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;required_libraries/ini4j.jar;"
            includes="org/ulteo/ovd/client/StartConnection.java"/>
   </target>
 
@@ -250,6 +250,7 @@
     <mkdir dir="external_jars/registry"/>
     <mkdir dir="external_jars/jshortcut"/>
     <mkdir dir="external_jars/image4j"/>
+    <mkdir dir="external_jars/ini4j"/>
     <mkdir dir="ressources"/>
 
     <unjar src="required_libraries/gnu-getopt.jar" dest="external_jars/gnu-getopt"/>
@@ -258,6 +259,7 @@
     <unjar src="required_libraries/registry.jar" dest="external_jars/registry"/>
     <unjar src="required_libraries/jshortcut.jar" dest="external_jars/jshortcut"/>
     <unjar src="required_libraries/image4j.jar" dest="external_jars/image4j"/>
+    <unjar src="required_libraries/ini4j.jar" dest="external_jars/ini4j"/>
 
     <!-- Auto-generated exec ant command for i18n fonctionality -->
     @MESSAGE_LANGS@
@@ -304,6 +306,12 @@
       </fileset>
     </copy>
 
+    <copy todir="jar/org">
+      <fileset dir="external_jars/ini4j/org">
+	<include name="**/**"/>
+      </fileset>
+    </copy>
+
     <copy todir="jar/pics">
       <fileset dir="icons">
 	<include name="*"/>
@@ -314,7 +322,7 @@
       <include name="**"/>
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
-        <attribute name="Class-Path" value="libs/log4j-1.2 libs/gnu-getopt libs/swingx registry.jar jshortcut.jar image4j.jar"/>
+        <attribute name="Class-Path" value="libs/log4j-1.2 libs/gnu-getopt libs/swingx registry.jar jshortcut.jar image4j.jar ini4j.jar"/>
       </manifest>
     </jar>
   </target>
