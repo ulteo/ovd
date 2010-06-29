@@ -27,7 +27,6 @@ from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
-from ApplicationsDetection import ApplicationsDetection
 from ovd.Platform import Platform
 
 class Session(AbstractSession):
@@ -36,29 +35,14 @@ class Session(AbstractSession):
 	
 	def install_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
-		if os.path.exists(d):
-			Platform.System.DeleteDirectory(d)
-		os.makedirs(d)
+		self.init_user_session_dir(d)
 		
-		os.mkdir(os.path.join(d, "matching"))
-		for (app_id, app_target) in self.applications:
-			cmd = ApplicationsDetection.getExec(app_target)
-			if cmd is None:
-				Logger.error("Session::install_client unable to extract command from app_id %s (%s)"%(app_id, app_target))
-				continue
-			f = file(os.path.join(d, "matching", app_id), "w")
-			f.write(cmd)
-			f.close()
-		
-		self.instanceDirectory = os.path.join(d, "instances")
-		os.mkdir(self.instanceDirectory, 0770)
 		os.chown(self.instanceDirectory, pwd.getpwnam(self.user.name)[2], -1)
 		
 		xdg_dir = os.path.join(d, "xdg")
-		os.mkdir(xdg_dir)
-		
 		xdg_app_d = os.path.join(xdg_dir, "applications")
-		os.mkdir(xdg_app_d)
+		if not os.path.isdir(xdg_app_d):
+			os.makedirs(xdg_app_d)
 		
 		for p in ["icons", "pixmaps", "mime", "themes"]:
 			src_dir = os.path.join("/usr/share/", p)
@@ -66,15 +50,6 @@ class Session(AbstractSession):
 			
 			os.symlink(src_dir, dst_dir)
 		
-		
-		for (app_id, app_target) in self.applications:
-			target = os.path.join(xdg_app_d, "%s.desktop"%(app_id))
-			
-			cmd = """sed -r "s#^Exec=(.*)#Exec=startovdapp %s#" <"%s" >"%s" """%(app_id, app_target, target)
-			ret = os.system(cmd)
-			if ret != 0:
-				Logger.warn("Following cmd return status %d: %s"%(ret, cmd))
-				
 		
 		os.system('update-desktop-database "%s"'%(xdg_app_d))
 	
@@ -94,14 +69,6 @@ class Session(AbstractSession):
 		f = file(os.path.join(d, "env"), "w")
 		f.writelines(env_file_lines)
 		f.close()
-		
-		f = open(os.path.join(d, "sm"), "w")
-		f.write(Config.session_manager+"\n")
-		f.close()
-		
-		f = open(os.path.join(d, "token"), "w")
-		f.write(self.id+"\n")
-		f.close()
 	
 	def uninstall_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
@@ -114,3 +81,34 @@ class Session(AbstractSession):
 		
 		if os.path.exists(d):
 			shutil.rmtree(d)
+	
+	def get_target_file(self, app_id, app_target):
+		  return "%s.desktop"%(str(app_id))
+	
+	
+	
+	def clone_shortcut(self, src, dst, command, args):
+		f = file(src, "r")
+		lines = f.readlines()
+		f.close()
+		
+		for i in xrange(len(lines)):
+			if lines[i].startswith("Exec="):
+				lines[i] = "Exec=%s %s\n"%(command, " ".join(args))  
+		
+		f = file(dst, "w")
+		f.writelines(lines)
+		f.close()
+	
+	
+	def install_shortcut(self, shortcut):
+		xdg_app_d = os.path.join(self.user_session_dir, "xdg", "applications")
+		if not os.path.isdir(xdg_app_d):
+			os.makedirs(xdg_app_d)
+		
+		dstFile = os.path.join(xdg_app_d, os.path.basename(shortcut))
+		if os.path.exists(dstFile):
+			os.remove(dstFile)
+		
+		shutil.copyfile(shortcut, dstFile)
+

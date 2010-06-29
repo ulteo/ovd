@@ -23,6 +23,11 @@ import locale
 import os
 import time
 
+from ovd.Config import Config
+from ovd.Logger import Logger
+import Platform as RolePlatform
+print "meuh: ",RolePlatform.Platform
+
 class Session:
 	SESSION_STATUS_UNKNOWN = "unknown"
 	SESSION_STATUS_ERROR = "error"
@@ -48,12 +53,65 @@ class Session:
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
 	
+	def init_user_session_dir(self, user_session_dir):
+		self.user_session_dir = user_session_dir
+		if os.path.isdir(self.user_session_dir):
+			Platform.System.DeleteDirectory(d)
+		
+		os.makedirs(self.user_session_dir)  
+		
+		self.instanceDirectory = os.path.join(self.user_session_dir, "instances")
+		self.matchingDirectory = os.path.join(self.user_session_dir, "matching")
+		self.shortcutDirectory = os.path.join(self.user_session_dir, "shortcuts")
+		
+		os.mkdir(self.instanceDirectory)
+		os.mkdir(self.matchingDirectory)
+		os.mkdir(self.shortcutDirectory)
+
+		for (app_id, app_target) in self.applications:
+			cmd = RolePlatform.Platform.ApplicationsDetection.getExec(app_target)
+			if cmd is None:
+				Logger.error("Session::install_client unable to extract command from app_id %s (%s)"%(app_id, app_target))
+				continue
+			
+			f = file(os.path.join(self.matchingDirectory, app_id), "w")
+			f.write(cmd)
+			f.close()
+		
+		
+		for (app_id, app_target) in self.applications:
+			final_file = os.path.join(self.shortcutDirectory, self.get_target_file(app_id, app_target))
+			Logger.debug("install_client %s %s %s"%(str(app_target), str(final_file), str(app_id)))
+			
+			self.clone_shortcut(app_target, final_file, "startovdapp", [app_id])
+			
+			self.install_shortcut(final_file)
+		
+		
+		f = open(os.path.join(self.user_session_dir, "sm"), "w")
+		f.write(Config.session_manager+"\n")
+		f.close()
+		
+		f = open(os.path.join(self.user_session_dir, "token"), "w")
+		f.write(self.id+"\n")
+		f.close()
+	
+	
 	def install_client(self):
 		pass
 	
 	def uninstall_client(self):
 		pass
-
+	
+	def clone_shortcut(self, src, dst, command, args):
+		pass
+	
+	def install_shortcut(self, shortcut):
+		pass
+	
+	def get_target_file(self, app_id, app_target):
+		pass
+	
 	def switch_status(self, status_):
 		self.log.append((time.time(), status_))
 		self.status = status_

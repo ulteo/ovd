@@ -32,7 +32,6 @@ import win32profile
 import win32security
 import _winreg
 
-from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Session import Session as AbstractSession
 
@@ -44,102 +43,70 @@ import Reg
 
 class Session(AbstractSession):
 	def install_client(self):
-		(logon, profileDir) = self.init()
+		logon = win32security.LogonUser(self.user.name, None, self.user.infos["password"], win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
 		
-		lnk_files = []
+		data = {}
+		data["UserName"] = self.user.name
+		hkey = win32profile.LoadUserProfile(logon, data)
+		win32profile.UnloadUserProfile(logon, hkey)
+		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
 		
-		buf = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
-		Logger.debug("appdata: '%s'"%(buf))
-		buf = os.path.join(buf, "ovd")
-		if not os.path.isdir(buf):
-			os.makedirs(buf)
-		os.mkdir(os.path.join(buf, "shortcuts"))
-		os.mkdir(os.path.join(buf, "matching"))
-		
-		for (app_id, app_target) in self.applications:
-			cmd = LnkFile.getTarget(app_target)
-			if cmd is None:
-				Logger.error("Unable to get command from shortcut '%s'"%(app_target))
-				continue
-			
-			f = file(os.path.join(buf, "matching", app_id), "w")
-			f.write(cmd)
-			f.close()
-			
-			final_file = os.path.join(buf, "shortcuts", os.path.basename(app_target))
-			Logger.debug("install_client %s %s %s"%(str(app_target), str(final_file), str(app_id)))
-			LnkFile.clone(app_target, final_file, "startovdapp", app_id)
-			lnk_files.append(final_file)
-		
-		self.instanceDirectory = os.path.join(buf, "instances")
-		os.mkdir(self.instanceDirectory)
-		
-		programsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
-		Logger.debug("startmenu: %s"%(programsDir))
+		self.windowsProgramsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
+		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
 		# remove default startmenu
-		if os.path.exists(programsDir):
-			Platform.System.DeleteDirectory(programsDir)
-		os.makedirs(programsDir)
+		if os.path.exists(self.windowsProgramsDir):
+			Platform.System.DeleteDirectory(self.windowsProgramsDir)
+		os.makedirs(self.windowsProgramsDir)
+		
+		self.windowsDesktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
+		desktopDir = os.path.join(self.windowsProfileDir, "Desktop")
+		if self.windowsDesktopDir != desktopDir:
+			# bug: this return the Administrator desktop dir path ...
+			Logger.warn("desktop dir bug#1: v1: '%s', v2: '%s'"%(self.windowsDesktopDir, desktopDir))
+			self.windowsDesktopDir = desktopDir
 		
 		
-		desktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
-		Logger.debug("desktop dir1: '%s'"%(desktopDir))
-		# bug: this return the Administrator desktop dir path ...
-		desktopDir = os.path.join(profileDir, "Desktop")
-		Logger.debug("desktop dir2: '%s'"%(desktopDir))
-		if self.parameters.has_key("desktop_icons") and not os.path.exists(desktopDir):
-			os.makedirs(desktopDir)
+		appDataDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
+		Logger.debug("appdata: '%s'"%(appDataDir))
 		
-		# close our logon instance
 		win32api.CloseHandle(logon)
 		
-		for srcFile in lnk_files:
-			dstFile = os.path.join(programsDir, os.path.basename(srcFile))
+		
+		self.init_user_session_dir(os.path.join(appDataDir, "ovd"))
+		
+		self.overwriteDefaultRegistry(self.windowsProfileDir)
+	
+	
+	def install_shortcut(self, shortcut):
+		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
+		if os.path.exists(dstFile):
+			os.remove(dstFile)
+		
+		win32file.CopyFile(shortcut, dstFile, True)
+		
+		if self.parameters.has_key("desktop_icons"):
+			if  not os.path.exists(self.windowsDesktopDir):
+				os.makedirs(self.windowsDesktopDir)
+			  
+			dstFile = os.path.join(self.windowsDesktopDir, os.path.basename(shortcut))
 			if os.path.exists(dstFile):
 				os.remove(dstFile)
-			win32file.CopyFile(srcFile, dstFile, True)
 			
-			
-			if self.parameters.has_key("desktop_icons"):
-				dstFile = os.path.join(desktopDir, os.path.basename(srcFile))
-				if os.path.exists(dstFile):
-					os.remove(dstFile)
-				win32file.CopyFile(srcFile, dstFile, True)
-		
-		f = open(os.path.join(buf, "sm"), "w")
-		f.write(Config.session_manager+"\n")
-		f.close()
-		
-		f = open(os.path.join(buf, "token"), "w")
-		f.write(self.id+"\n")
-		f.close()
+			win32file.CopyFile(shortcut, dstFile, True)
+	
+	
+	def get_target_file(self, app_id, app_target):
+		return os.path.basename(app_target)
+	
+	
+	def clone_shortcut(self, src, dst, command, args):
+		LnkFile.clone(src, dst, command, " ".join(args))
+	
 	
 	def uninstall_client(self):
 		self.user.destroy()
 		
 		return True
-	
-	
-	def init(self):
-		"""Init profile repo"""
-	
-		logon = win32security.LogonUser(self.user.name, None, self.user.infos["password"], win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
-		
-		data = {}
-		data["UserName"] = self.user.name
-		
-		hkey = win32profile.LoadUserProfile(logon, data)
-		#self.init_ulteo_registry(sid)
-		#self.init_redirection_shellfolders(sid)
-		win32profile.UnloadUserProfile(logon, hkey)
-		
-		profileDir = win32profile.GetUserProfileDirectory(logon)
-		
-		Logger.debug("profiledir: '%s'"%(profileDir))
-		self.overwriteDefaultRegistry(profileDir)
-		
-		return (logon, profileDir)
-		
 	
 	
 	def unload(self, sid):
@@ -152,8 +119,6 @@ class Session(AbstractSession):
 			return False
 		
 		return True
-	
-
 	
 	
 	def overwriteDefaultRegistry(self, directory):

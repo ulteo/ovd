@@ -30,6 +30,7 @@ import win32process
 
 from ovd.Logger import Logger
 import mime
+import LnkFile
 from Msi import Msi
 
 
@@ -132,6 +133,15 @@ class ApplicationsDetection:
 		
 		return applications
 	
+	@staticmethod
+	def getExec(filename):
+		Logger.debug("ApplicationsDetection::getExec %s"%(filename))
+		cmd = LnkFile.getTarget(filename)
+		if cmd is None:
+			Logger.error("Unable to get command from shortcut '%s'"%(filename))
+			return None
+		
+		return cmd
 	
 	def getIcon(self, filename):
 		Logger.debug("ApplicationsDetection::getIcon %s"%(filename))
