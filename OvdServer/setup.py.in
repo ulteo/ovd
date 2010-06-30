@@ -41,7 +41,7 @@ if sys.platform == "win32":
 	# Force the include of ApS because of dynamic imports
 	sys.argv.append("-p")
 	sys.argv.append("ovd.Role.ApplicationServer")
-	
+
 	try:
 		import modulefinder
 		import win32com,sys
@@ -52,11 +52,11 @@ if sys.platform == "win32":
 			m = sys.modules[extra]
 			for p in m.__path__[1:]:
 				modulefinder.AddPackagePath(extra, p)
-	
+
 	except ImportError:
 		# no build path setup, no worries.
 		pass
-	
+
 	class ServiceTarget:
 		def __init__(self, **kw):
 			self.version = setup_args["version"]
@@ -65,7 +65,7 @@ if sys.platform == "win32":
 			self.name = setup_args["name"]
 			self.description = setup_args["description"]
 			self.modules = ["OVDWin32Service"]
-	
+
 	setup_args["zipfile"] = "lib/shared.zip"
 	setup_args["console"] = ["ovdSlaveServer"]
 	setup_args["service"] = [ServiceTarget()]
@@ -83,5 +83,5 @@ elif sys.platform == "linux2":
 else:
 	raise Exception("No supported platform")
 
-# Make the setup
-setup(**setup_args)
+if __name__ == "__main__":
+	setup(**setup_args)

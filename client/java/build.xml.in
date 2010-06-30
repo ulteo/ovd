@@ -22,9 +22,8 @@
   <property name="standalone.dist"  value="standalone" />
   <property name="rdpClient.dist"  value="rdpClient" />
 
-  <property name="sdist.dir" value="ovd-java-clients-@VERSION@" />
-  <property name="sdist.name"  value="${sdist.dir}.tar" />
-
+  <property name="version" value="@VERSION@" />
+  <property name="sdist.name" value="ovd-java-clients-${version}" />
 
   <target name="precompile">
     <mkdir dir="classes"/>
@@ -243,23 +242,17 @@
 
   <target name="ovdclient_all.jar" depends="ovdclient">
     <antcall target="classes2jar" />
-    <mkdir dir="external_jars"/>
-    <mkdir dir="external_jars/swingx"/>
-    <mkdir dir="external_jars/gnu-getopt"/>
-    <mkdir dir="external_jars/log4j-1.2"/>
-    <mkdir dir="external_jars/registry"/>
-    <mkdir dir="external_jars/jshortcut"/>
-    <mkdir dir="external_jars/image4j"/>
-    <mkdir dir="external_jars/ini4j"/>
+    <delete dir="jar"/>
+    <mkdir dir="jar"/>
     <mkdir dir="ressources"/>
 
-    <unjar src="required_libraries/gnu-getopt.jar" dest="external_jars/gnu-getopt"/>
-    <unjar src="required_libraries/log4j-1.2.jar" dest="external_jars/log4j-1.2"/>
-    <unjar src="required_libraries/swingx.jar" dest="external_jars/swingx"/>
-    <unjar src="required_libraries/registry.jar" dest="external_jars/registry"/>
-    <unjar src="required_libraries/jshortcut.jar" dest="external_jars/jshortcut"/>
-    <unjar src="required_libraries/image4j.jar" dest="external_jars/image4j"/>
-    <unjar src="required_libraries/ini4j.jar" dest="external_jars/ini4j"/>
+    <unjar src="required_libraries/gnu-getopt.jar" dest="jar"/>
+    <unjar src="required_libraries/log4j-1.2.jar" dest="jar"/>
+    <unjar src="required_libraries/swingx.jar" dest="jar"/>
+    <unjar src="required_libraries/registry.jar" dest="jar"/>
+    <unjar src="required_libraries/jshortcut.jar" dest="jar"/>
+    <unjar src="required_libraries/image4j.jar" dest="jar"/>
+    <unjar src="required_libraries/ini4j.jar" dest="jar"/>
 
     <!-- Auto-generated exec ant command for i18n fonctionality -->
     @MESSAGE_LANGS@
@@ -270,51 +263,9 @@
       </fileset>
     </copy>
 
-    <copy todir="jar/gnu">
-      <fileset dir="external_jars/gnu-getopt/gnu">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="jar/org">
-      <fileset dir="external_jars/swingx/org">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="jar/org">
-      <fileset dir="external_jars/log4j-1.2/org">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="jar/com">
-      <fileset dir="external_jars/registry/com">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="jar/net">
-      <fileset dir="external_jars/image4j/net">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="jar/net">
-      <fileset dir="external_jars/jshortcut/net">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
-    <copy todir="jar/org">
-      <fileset dir="external_jars/ini4j/org">
-	<include name="**/**"/>
-      </fileset>
-    </copy>
-
     <copy todir="jar/pics">
       <fileset dir="icons">
-	<include name="*"/>
+    	<include name="*"/>
       </fileset>
     </copy>
 
@@ -496,42 +447,42 @@
   <!-- Source tarball part -->
 
   <target name="dist" description="create a source tarball">
-    <mkdir dir="${sdist.dir}" />
-    <copy todir="${sdist.dir}">
+    <mkdir dir="${sdist.name}" />
+    <copy todir="${sdist.name}">
       <fileset file="build.xml" />
       <fileset file="README" />
     </copy>
-    <mkdir dir="${sdist.dir}/required_libraries" />
-    <copy todir="${sdist.dir}/required_libraries">
+    <mkdir dir="${sdist.name}/required_libraries" />
+    <copy todir="${sdist.name}/required_libraries">
       <fileset dir="required_libraries" />
     </copy>
-    <mkdir dir="${sdist.dir}/src" />
-    <copy todir="${sdist.dir}/src">
+    <mkdir dir="${sdist.name}/src" />
+    <copy todir="${sdist.name}/src">
       <fileset dir="src" />
     </copy>
-    <mkdir dir="${sdist.dir}/src1.4" />
-    <copy todir="${sdist.dir}/src1.4">
+    <mkdir dir="${sdist.name}/src1.4" />
+    <copy todir="${sdist.name}/src1.4">
       <fileset dir="src1.4" />
     </copy>
-    <mkdir dir="${sdist.dir}/keymaps" />
-    <copy todir="${sdist.dir}/keymaps">
+    <mkdir dir="${sdist.name}/keymaps" />
+    <copy todir="${sdist.name}/keymaps">
       <fileset dir="keymaps" />
     </copy>
-    <mkdir dir="${sdist.dir}/icons" />
-    <copy todir="${sdist.dir}/icons">
+    <mkdir dir="${sdist.name}/icons" />
+    <copy todir="${sdist.name}/icons">
       <fileset dir="icons" />
     </copy>
-    <mkdir dir="${sdist.dir}/po" />
-    <copy todir="${sdist.dir}/po">
+    <mkdir dir="${sdist.name}/po" />
+    <copy todir="${sdist.name}/po">
       <fileset dir="po" />
     </copy>
 
-    <tar longfile="gnu" tarfile="${sdist.name}" basedir="./"
-         includes="${sdist.dir}/**" />
-    <gzip zipfile="${sdist.name}.gz" src="${sdist.name}" />
+    <tar longfile="gnu" tarfile="${sdist.name}.tar" basedir="./"
+         includes="${sdist.name}/**" />
+    <gzip zipfile="${sdist.name}.tar.gz" src="${sdist.name}.tar" />
 
-    <delete file="${sdist.name}" />
-    <delete dir="${sdist.dir}" />
+    <delete file="${sdist.name}.tar" />
+    <delete dir="${sdist.name}" />
   </target>
 
 </project>

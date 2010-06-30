@@ -23,7 +23,6 @@ package org.ulteo.vdi;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import net.propero.rdp.rdp5.seamless.SeamlessChannel;
-import net.propero.rdp.rdp5.seamless.SeamListener;
 
 import org.apache.log4j.*;
 import gnu.getopt.Getopt;
@@ -43,7 +42,7 @@ public class Client implements RdpListener, Runnable {
 	private SeamlessChannel seamchannel;
 	
 	public Client(String fqdn_, String login_, String password_, String namedpipe_) {
-		
+		 
 		BasicConfigurator.configure();
 		(Logger.getLogger("net.propero.rdp")).setLevel(Level.INFO);
 		logger = Logger.getLogger(Client.class.getName());
@@ -67,7 +66,6 @@ public class Client implements RdpListener, Runnable {
 		rc.setVolatileCaching(true);
 		rc.setPersistentCaching(false);
 		rc.setShell("seamlessrdpshell");
-		
 		rc.addRdpListener(this);
 		rc.connect();
 	}
@@ -112,16 +110,13 @@ public class Client implements RdpListener, Runnable {
 			String pipe = fifodir + namedpipe;
 			FileReader f = new FileReader(pipe);
 			BufferedReader in = new BufferedReader(f);
-			
 			while (true) {
 				if (!in.ready()) {
 					Thread.sleep(100);
 				} else { 
 					String cmd = in.readLine();
-					if (cmd != null) {
-						seamchannel.send_spawn(cmd);
-						logger.debug("Commande seamless exécutée: " + cmd); 
-					}
+					seamchannel.send_spawn(cmd);
+					logger.debug("Commande seamless exécutée: " + cmd); 
 				}
 			}
 		} catch (IOException e) {

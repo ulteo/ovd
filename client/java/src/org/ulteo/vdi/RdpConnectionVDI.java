@@ -27,38 +27,41 @@ import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 
-import org.ulteo.ovd.printer.OVDPrinterManager;
+import org.ulteo.ovd.disk.DiskManager;
+import org.ulteo.ovd.disk.LinuxDiskManager;
+import org.ulteo.ovd.disk.WindowsDiskManager;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 
 public class RdpConnectionVDI extends RdpConnection {
 	
-	public static final byte MODE_DESKTOP = 0x01;
-	public static final byte MODE_APPLICATION = 0x02;
-	public static final byte MODE_MULTIMEDIA = 0x04;
-	public static final byte MOUNT_PRINTERS = 0x08;
-	
-	private byte flags = 0x00;
+	private DiskManager diskManager = null;
 
-	/**
-	 * Instanciate a new RdpConnectionVDI with default options:
-	 *	- bitmap compression
-	 *	- volatile bitmap caching
-	 *	- persistent bitmap caching
-	 *	- Clip channel
-	 */
 	public RdpConnectionVDI() throws VdiException {
 		
 		super(new Options(), new Common());
-
-		this.opt.bitmap_compression = true;
-
+		
 		String language = System.getProperty("user.language");
 		String country = System.getProperty("user.country");
 		this.mapFile =  new Locale(language, country).toString().toLowerCase();
 		this.mapFile = this.mapFile.replace('_', '-');
+		this.opt.bitmap_compression = true;
 
 		try {
 			this.initSeamlessChannel();
+			this.initSoundChannel();
+			this.initRdpdrChannel();
+			this.initClipChannel();
+			if (OSTools.isWindows()) {
+				diskManager = new WindowsDiskManager((OVDRdpdrChannel)rdpdrChannel);
+			} else if (OSTools.isLinux()) {
+				diskManager = new LinuxDiskManager((OVDRdpdrChannel)rdpdrChannel);
+			} else {
+				throw new RdesktopException("No supported system for mounting point");
+			}
+			diskManager.init();
+			diskManager.launch();
 		} catch (RdesktopException e) {
 			e.printStackTrace();
 		}
@@ -76,29 +79,8 @@ public class RdpConnectionVDI extends RdpConnection {
 			throw new RdesktopException("Unable to add seamless channel");
 	}
 	
-	/**
-	 * Register all secondary channels requested. They could be:
-	 *	- sound channel
-	 *	- rdpdr channel
-	 * @throws RdesktopException 
-	 * @throws VdiException 
-	 */
-	public void initSecondaryChannels() throws RdesktopException, VdiException {
-		this.initClipChannel();
-		
-		if ((this.flags & MODE_MULTIMEDIA) != 0) {
-			this.initSoundChannel();
-		}
-		if ((this.flags & MOUNT_PRINTERS) != 0) {
-			OVDPrinterManager printerManager = new OVDPrinterManager();
-			printerManager.searchAllPrinter();
-			if (printerManager.hasPrinter()) {
-				this.initRdpdrChannel();
-				System.out.println("Rdpdr channel added");
-				printerManager.registerAll(this.rdpdrChannel);
-			}
-			else
-				throw new VdiException("Have to map local printers but no printer found ....");
-		}
+	protected void fireDisconnected() {
+		super.fireDisconnected();
+		diskManager.stop();
 	}
 }

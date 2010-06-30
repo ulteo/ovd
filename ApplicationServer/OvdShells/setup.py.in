@@ -33,10 +33,12 @@ setup_args["url"] = "http://www.ulteo.com/"
 setup_args["version"] = "@VERSION@"
 
 
+
 # OS detection
 if sys.platform == "linux2":
     setup_args["packages"] = ['ovd_shells', 'ovd_shells.Platform']
-    setup_args["data_files"] = [('/usr/bin', ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
+    setup_args["data_files"] = [('/usr/bin', \
+        ['OvdDesktop', 'OvdRemoteApps', 'startovdapp'])]
 
 elif sys.platform == "win32":
     import py2exe
@@ -56,14 +58,11 @@ elif sys.platform == "win32":
         # no build path setup, no worries.
         pass
 
-
     setup_args["zipfile"] = "lib/shared.zip"
     setup_args["windows"] = ["OvdDesktop", "OvdRemoteApps", "startovdapp"]
-
 
 else:
    raise Exception("No supported platform")
 
-
-# Make the setup
-setup(**setup_args)
+if __name__ == "__main__":
+    setup(**setup_args)
