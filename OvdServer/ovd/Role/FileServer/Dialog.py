@@ -266,7 +266,7 @@ class Dialog(AbstractDialog):
 			self.role_instance.shares[share_id] = share
 		
 		for (user,password) in users:
-			if not share.add_user(user, password, self.role_instance.group_name):
+			if not share.add_user(user, password):
 				doc = Document()
 				rootNode = doc.createElement('error')
 				rootNode.setAttribute("id", "system_error")

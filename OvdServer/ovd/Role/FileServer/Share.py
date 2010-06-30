@@ -20,8 +20,12 @@
 
 import commands
 import os
+import pwd
 
 from ovd.Logger import Logger
+
+from Config import Config
+
 
 class Share:
 	STATUS_NOT_EXISTS = 1
@@ -52,7 +56,8 @@ class Share:
 	
 	def create(self):
 		try:
-			os.mkdir(self.directory)
+			os.mkdir(self.directory, 0700)
+			os.chown(self.directory, pwd.getpwnam(Config.user_name)[2], -1)
 		except:
 			Logger.warn("FS: unable to create profile '%s'"%(self.name))
 			return False
@@ -98,8 +103,8 @@ class Share:
 		return ret
 	
 	
-	def add_user(self, user, password, group):
-		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(group, user)
+	def add_user(self, user, password):
+		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Role.group_name, user)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.error("FS: unable to create user")

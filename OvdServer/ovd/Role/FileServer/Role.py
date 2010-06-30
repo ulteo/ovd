@@ -29,13 +29,12 @@ from ovd.Logger import Logger
 from ovd.Platform import Platform
 from ovd.Role.Role import Role as AbstractRole
 
+from Config import Config
 from Dialog import Dialog
 from Share import Share
 
 
 class Role(AbstractRole):
-	group_name = "ovd-fs"
-	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
@@ -50,8 +49,12 @@ class Role(AbstractRole):
 			Logger.info("FileServer never initialized, creating repository on '%s'"%(self.spool))
 			os.makedirs(self.spool)
 		
-		if not Platform.System.groupExist(self.group_name):
-			Logger.error("FileServer: group '%s' doesn't exists"%(self.group_name))
+		if not Platform.System.userExist(Config.user_name):
+			Logger.error("FileServer: user '%s' doesn't exists"%(Config.user_name))
+			return False
+		
+		if not Platform.System.groupExist(Config.group_name):
+			Logger.error("FileServer: group '%s' doesn't exists"%(Config.group_name))
 			return False
 		
 		if not self.cleanup_samba():
@@ -96,7 +99,7 @@ class Role(AbstractRole):
 	
 	
 	def purgeGroup(self):
-		users = Platform.System.groupMember(self.group_name)
+		users = Platform.System.groupMember(Config.group_name)
 		if users is None:
 			return False
 		
