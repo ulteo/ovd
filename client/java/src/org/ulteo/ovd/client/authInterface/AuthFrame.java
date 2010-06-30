@@ -51,6 +51,7 @@ public class AuthFrame extends JFrame implements WindowListener {
 
 		setSize(400,600);
 		setPreferredSize(new Dimension(400,600));
+		setLocationRelativeTo(null);
 
 		setTitle("Ulteo Remote Desktop");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -67,7 +68,6 @@ public class AuthFrame extends JFrame implements WindowListener {
 				mp.getLogPan().getUsername().requestFocusInWindow();
 			}
 		});
-		setLocationRelativeTo(null);
 		mp.setFocusOnLogin();
 		pack();
 	}
