@@ -383,7 +383,7 @@ mysql> exit]]>
     <itemizedlist>
       <listitem>
         <para>
-	  Add the Ulteo repositoriy to the Ubuntu repository list:
+         If you haven't done it yet for the Session Manager, add the Ulteo repositoriy to the Ubuntu repository list:
         </para>
         <screen>
 	  <![CDATA[
@@ -393,7 +393,7 @@ mysql> exit]]>
       </listitem>
     <listitem>
     <para>
-      Install the keyring package to validate the repository using gpg:
+      If you haven't done it yet for the Session Manager, install the keyring package to validate the repository using gpg:
     </para>
     <screen>
 	  <![CDATA[
