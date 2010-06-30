@@ -42,6 +42,7 @@
   </target>
 
   <target name="classes2jar" description="copy classes/** to jar/">
+    <mkdir dir="jar"/>
     <copy todir="jar/">
       <fileset dir="classes">
 	<include name="**/**"/>
@@ -241,9 +242,8 @@
   </target>
 
   <target name="ovdclient_all.jar" depends="ovdclient">
-    <antcall target="classes2jar" />
     <delete dir="jar"/>
-    <mkdir dir="jar"/>
+    <antcall target="classes2jar" />
     <mkdir dir="ressources"/>
 
     <unjar src="required_libraries/gnu-getopt.jar" dest="jar"/>
