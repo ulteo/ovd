@@ -26,7 +26,6 @@ import time
 from ovd.Config import Config
 from ovd.Logger import Logger
 import Platform as RolePlatform
-print "meuh: ",RolePlatform.Platform
 
 class Session:
 	SESSION_STATUS_UNKNOWN = "unknown"
