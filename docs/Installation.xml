@@ -82,34 +82,6 @@
 	</para>
       </listitem>
     </itemizedlist>
-
-    <section id="pre_mysql">
-      <title id="sql_title">Installation of MySQL</title>
-      <para id="mysql_install">
-	If you don't have any available MySQL database, you have to
-	install MySQL on your Session Manager.
-      </para>
-      <itemizedlist>
-	<listitem>
-	  <para>Install the <emphasis>mysql-server</emphasis> package:</para>
-          <screen># apt-get install mysql-server</screen>
-          <para>A password for <literal>root</literal> will be asked.</para>
-        </listitem>
-        <listitem>
-	  <para id="mysql_db_create">
-	    Now log in mysql and create a database:
-	  <screen><![CDATA[
-# mysql -u root -p
-Enter password:
-mysql> create database ulteo_sm;
- Query OK, 1 row affected (0.02 sec)
-mysql> exit]]>
-          </screen>
-	</para>
-        </listitem>
-      </itemizedlist>
-      <beginpage />
-    </section>
   </section>
 
   <section id="sm">

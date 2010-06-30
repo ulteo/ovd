@@ -3,6 +3,7 @@
 SRC=AccountsIntegration.xml \
 	AdminConsole.xml \
 	AD_Primary_Authentication.xml \
+	common.xml \
 	FAQ.xml \
 	Installation.xml \
 	Installation_Iso.xml \
@@ -29,16 +30,16 @@ ANW=$(SRC:.xml=.anw)
 all: $(DST) $(PDF)
 
 # Add the depends between sources
-Installation_RedHat.html: Installation.xml
-Installation_RedHat.anw:  Installation.xml
-Installation_RedHat.pdf:  Installation.xml
-Installation_Suse.pdf:  Installation.xml
-Installation_Sources.html: Installation_RedHat.xml Installation.xml
-Installation_Sources.anw:  Installation_RedHat.xml Installation.xml
-Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
-Installation_Iso.html: Installation.xml
-Installation_Iso.anw: Installation.xml
-Installation_Iso.pdf: Installation.xml
+Installation_RedHat.html: common.xml
+Installation_RedHat.anw:  common.xml
+Installation_RedHat.pdf:  common.xml
+Installation_Suse.pdf:  common.xml
+Installation_Sources.html: Installation_RedHat.xml common.xml
+Installation_Sources.anw:  Installation_RedHat.xml common.xml
+Installation_Sources.pdf:  Installation_RedHat.xml common.xml
+Installation_Iso.html: common.xml
+Installation_Iso.anw: common.xml
+Installation_Iso.pdf: common.xml
 
 
 %.html: %.xml

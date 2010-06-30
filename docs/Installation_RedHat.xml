@@ -49,8 +49,8 @@
 
 
    <section>
-      <xi:include href="Installation.xml" xpointer="sql_title" />
-      <xi:include href="Installation.xml" xpointer="mysql_install" />
+      <xi:include href="common.xml" xpointer="sql_title" />
+      <xi:include href="common.xml" xpointer="mysql_install" />
 
       <itemizedlist>
 	<listitem>
@@ -94,7 +94,7 @@
 	</listitem>
 
         <listitem>
-	  <xi:include href="Installation.xml" xpointer="mysql_db_create" />
+	  <xi:include href="common.xml" xpointer="mysql_db_create" />
         </listitem>
       </itemizedlist>
       <beginpage />
