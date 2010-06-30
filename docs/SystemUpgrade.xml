@@ -18,7 +18,28 @@
     This documentation aims to provide a way to upgrade an existing
     Ulteo OVD architecture from minor version.
   </para>
-    
+
+  <para>
+    There are three kind of releases:
+    <itemizedlist>
+      <listitem>
+	<para>
+          Major releases: 1.0, 2.0. This documentation does not describe the upgrade from major releases.
+        </para>
+      </listitem>
+      <listitem>
+	<para>
+          Minor releases: 2.1, 2.5.
+        </para>
+      </listitem>
+      <listitem>
+	<para>
+          Bugfix releases: 2.0.1, 2.0.2
+        </para>
+      </listitem>
+    </itemizedlist>
+  </para>
+
   <important>
     <para>
       This documentation doesn't provide a way to upgrade major
@@ -26,6 +47,16 @@
       instance, <emphasis role="strong">from 1.0 to 2.0</emphasis>).
     </para>
   </important>
+
+  <important>
+    <para>
+      For minor version upgrades, it's required to add the new release
+      repository. In the next of the documentation, the version number
+      is written <emphasis role="strong">%VERSION%</emphasis>. You
+      have to change that by the version you want to upgrade to.
+    </para>
+  </important>
+
 
   <section id="sm">
     <title id="sm_title">Session Manager</title>
@@ -36,8 +67,25 @@
       </para>
     </note>
 
+    <important>
+      <para>
+        The upgrade of the Session Manager may change some settings in
+        the Administration Console. Please check your settings once
+        you completed the upgrade.
+      </para>
+    </important>
+
     <simplesect>
       <title>Using Debian or Ubuntu packages (standard installation)</title>
+
+      <para>
+        If you perform an upgrade on minor version (not bugfix
+        release), you have to add the new repository:
+        <screen>
+	  <![CDATA[
+# echo "deb http://archive.ulteo.com/ulteo/ovd %VERSION% main" >> /etc/apt/sources.list]]>
+	</screen>
+      </para>
 
       <itemizedlist>
         <listitem>
@@ -64,6 +112,21 @@
     <simplesect>
       <title>Using Red Hat packages</title>
 
+      <para>
+        If you perform an upgrade on minor version (not bugfix
+        release), you have to add the new repository in the
+        file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis>
+        with:
+      </para>
+      <screen><![CDATA[
+[ovd-%VERSION%]
+name=Ulteo OVD %VERSION%
+baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/%VERSION%
+enabled=1
+gpgcheck=1
+gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+      </screen>
+
       <itemizedlist>
         <listitem>
           <para>
@@ -75,7 +138,48 @@
           </screen>
         </listitem>
       </itemizedlist>
+    </simplesect>
 
+
+    <simplesect>
+      <title>Using Novell SUSE packages</title>
+
+      <para>
+        If you perform an upgrade on minor version (not bugfix
+        release), you have to add the new repository in the
+        file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis>
+        with:
+      </para>
+      <screen>
+        <![CDATA[
+# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/%VERSION% ovd]]>
+      </screen>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            Order an upgrade:
+          </para>
+          <screen>
+	    <![CDATA[
+# zypper update]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </simplesect>
+
+
+   <simplesect>
+      <title>Merge the database structure</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            Log-in on the administration console. Go on Settings ->
+            Database settings and Save without changing anything
+          </para>
+         </listitem>
+      </itemizedlist>
     </simplesect>
   </section>
 
@@ -95,6 +199,15 @@
 
       <simplesect>
         <title>Using Debian packages (standard installation)</title>
+
+        <para>
+          If you perform an upgrade on minor release (not a bugfix's
+          one), you have to add the new repository:
+          <screen>
+	    <![CDATA[
+# echo "deb http://archive.ulteo.com/ulteo/ovd %VERSION% main" >> /etc/apt/sources.list]]>
+	  </screen>
+        </para>
 
         <itemizedlist>
           <listitem>
@@ -121,6 +234,20 @@
       <simplesect>
         <title>Using Red Hat packages</title>
 
+      <para>
+        If you perform an upgrade on minor release (not a bugfix's
+        one), you have to add the new repository in the
+        file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis> with:
+      </para>
+      <screen><![CDATA[
+[ovd-%VERSION%]
+name=Ulteo OVD %VERSION%
+baseurl=http://archive.ulteo.com/ulteo/rpm/rhel5/%VERSION%
+enabled=1
+gpgcheck=1
+gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+      </screen>
+
         <itemizedlist>
           <listitem>
             <para>
@@ -133,22 +260,95 @@
           </listitem>
         </itemizedlist>
       </simplesect>
-    </section>
 
+
+      <simplesect>
+        <title>Using Novell SUSE packages</title>
+
+        <para>
+          If you perform an upgrade on minor release (not a bugfix's
+          one), you have to add the new repository in the
+          file <emphasis>/etc/yum.repos.d/ovd.repo</emphasis>
+          with:
+        </para>
+        <screen>
+          <![CDATA[
+# zypper ar http://archive.ulteo.com/ulteo/rpm/opensuse11/%VERSION% ovd]]>
+        </screen>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              Order an upgrade:
+            </para>
+            <screen>
+	      <![CDATA[
+# zypper update]]>
+            </screen>
+          </listitem>
+        </itemizedlist>
+      </simplesect>
+    </section>
     <section>
       <title>Application System</title>
 
-      <para>
-        From the Session Manager administration console, go to the
-        Server page, select <emphasis>manage</emphasis> and click
-        on <emphasis>Upgrade the internal system and
-        applications</emphasis>.
-      </para>
+      <simplesect>
+        <title>For bugfix releases</title>
 
-      <screenshot>
-        <screeninfo>Upgrade the ApS system</screeninfo>
-        <graphic fileref="img/admin-console/upgrade.png"></graphic>
-      </screenshot>
+        <para>
+          From the Session Manager administration console, go to the
+          Server page, select <emphasis>manage</emphasis> and click
+          on <emphasis>Upgrade the internal system and
+            applications</emphasis>.
+        </para>
+
+        <screenshot>
+          <screeninfo>Upgrade the ApS system</screeninfo>
+          <graphic fileref="img/admin-console/upgrade.png"></graphic>
+        </screenshot>
+      </simplesect>
+
+      <simplesect>
+        <title>For minor realeases</title>
+
+        <para>Log into each Application server and chroot into the Ulteo system</para>
+        <screen>
+	  <![CDATA[
+# chroot /opt/ulteo]]>
+	</screen>
+
+        <itemizedlist>
+          <listitem>
+            <para>
+              If you perform an upgrade on minor version (not bugfix
+              release), you have to add the new repository:
+            </para>
+            <screen>
+	      <![CDATA[
+# echo "deb http://archive.ulteo.com/ulteo/ovd %VERSION% main" >> /etc/apt/sources.list]]>
+	    </screen>
+          </listitem>
+
+          <listitem>
+	    <para>
+	      Update the package list:
+	    </para>
+            <screen>
+	      <![CDATA[
+# apt-get update]]>
+	    </screen>
+          </listitem>
+          <listitem>
+            <para>
+              Upgrade the system:
+            </para>
+            <screen>
+	      <![CDATA[
+# apt-get upgrade]]>
+	    </screen>
+          </listitem>
+        </itemizedlist>
+      </simplesect>
     </section>
   </section>
 </article>
