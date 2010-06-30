@@ -22,6 +22,7 @@ package org.ulteo.ovd.client.authInterface;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -46,6 +47,7 @@ public class AuthFrame extends JFrame implements WindowListener {
 	}
 
 	public void init() {
+		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		setIconImage(logo);
 
