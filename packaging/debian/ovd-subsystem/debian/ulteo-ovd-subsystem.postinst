@@ -7,7 +7,7 @@ fi
 . /usr/share/debconf/confmodule
 
 CHROOTPATH="/opt/ulteo"
-CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd-slaveserver.conf
+CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd/slaveserver.conf
 HOSTCONF=/etc/ulteo-ovd.conf
 
 set_conf () {

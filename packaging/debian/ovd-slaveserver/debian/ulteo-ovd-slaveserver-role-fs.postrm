@@ -5,7 +5,7 @@ if [ -f /usr/share/debconf/confmodule ]; then
 fi
 
 
-CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
 
 if grep -q "^ROLES.*fs" $CONFFILE; then
     sed -i -r "s/^ROLES *= *(.*)fs(.*)$/ROLES = \1 \2/" $CONFFILE

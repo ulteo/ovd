@@ -6,7 +6,7 @@ if [ -f /usr/share/debconf/confmodule ]; then
   . /usr/share/debconf/confmodule
 fi
 
-if [ -e /opt/ulteo/etc/ulteo/ovd-slaveserver.conf ]; then
+if [ -e /opt/ulteo/etc/ulteo/ovd/slaveserver.conf ]; then
     # ask the user if he wants to remove the chroot
     db_input high ulteo-ovd-subsystem/postrm_remove_chroot || true
     db_go || true

@@ -179,18 +179,19 @@ Section "un.pre" UnPostCmd
   ${un.EnvVarUpdate} $0 "PATH" "D" "HKLM" "$INSTDIR\plus"
 
   Detailprint "Removing Configuration file"
-  Delete "$APPDATA\ovd\ovd-slaveserver.conf"
-  RMDir  "$APPDATA\ovd\log"
-  RMDir  "$APPDATA\ovd"
+  Delete "$APPDATA\ulteo\ovd\slaveserver.conf"
+  RMDir  "$APPDATA\ulteo\ovd\log"
+  RMDir  "$APPDATA\ulteo\ovd"
+  RMDir  "$APPDATA\ulteo"
 SectionEnd
 
   !include dist.nsh
 
 Section "post" PostCmd
-  SetOutPath "$APPDATA\ovd"
+  SetOutPath "$APPDATA\ulteo\ovd"
 
   DetailPrint "Generating Config file"
-  FileOpen $4 "$APPDATA\ovd\ovd-slaveserver.conf" w
+  FileOpen $4 "$APPDATA\ulteo\ovd\slaveserver.conf" w
   FileWrite $4 "session_manager = $sm_address"
   FileWrite $4 "$\r$\n" 
   FileWrite $4 "ROLES = aps"
@@ -199,9 +200,9 @@ Section "post" PostCmd
   FileWrite $4 "$\r$\n"
   FileClose $4
 
-  SetOutPath "$APPDATA\ovd\log"
+  SetOutPath "$APPDATA\ulteo\ovd\log"
   SetOverwrite ifnewer
-  SetOutPath "$APPDATA\ovd"
+  SetOutPath "$APPDATA\ulteo\ovd"
 
   DetailPrint "Change PATH Environment variable"
   ${EnvVarUpdate} $0 "PATH" "A" "HKLM" "$INSTDIR\plus"

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
 
 if ! grep -q 'ROLES' $CONFFILE; then
     echo "ROLES = aps" >> $CONFFILE

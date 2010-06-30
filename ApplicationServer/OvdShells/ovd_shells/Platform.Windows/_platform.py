@@ -59,7 +59,7 @@ def kill(pid):
 
 def getUserSessionDir():
 	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)
-	return os.path.join(d, "ovd")
+	return os.path.join(d, "ulteo", "ovd")
 
 def launchIntegratedClient(configuration_file_):                                                                                   
 	if os.path.exists(configuration_file_) == False:                                                                            

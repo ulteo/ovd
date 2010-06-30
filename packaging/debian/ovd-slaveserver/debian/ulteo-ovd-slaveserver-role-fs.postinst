@@ -5,7 +5,7 @@ db_version 2.0
 
 mkdir -p /var/lib/ovd/fs
 
-CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
 if ! grep -q 'ROLES' $CONFFILE; then
     echo "ROLES = fs" >> $CONFFILE
 elif ! grep -q "^ROLES.*fs" $CONFFILE; then

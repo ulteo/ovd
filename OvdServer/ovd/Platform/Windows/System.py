@@ -43,22 +43,22 @@ class System(AbstractSystem):
 	@staticmethod
 	def get_default_config_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
-		return os.path.join(d, "ovd")
+		return os.path.join(d, "ulteo", "ovd")
 	
 	@staticmethod
 	def get_default_spool_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
-		return os.path.join(d, "ovd", "spool")
+		return os.path.join(d, "ulteo", "ovd", "spool")
 	
 	@staticmethod
 	def get_default_data_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
-		return os.path.join(d, "ovd", "data")
+		return os.path.join(d, "ulteo", "ovd", "data")
 	
 	@staticmethod
 	def get_default_log_dir():
 		d = shell.SHGetFolderPath(0, shellcon.CSIDL_COMMON_APPDATA, 0, 0)
-		return os.path.join(d, "ovd", "log")
+		return os.path.join(d, "ulteo", "ovd", "log")
 	
 	@staticmethod
 	def getVersion():

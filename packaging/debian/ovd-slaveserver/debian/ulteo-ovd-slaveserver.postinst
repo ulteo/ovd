@@ -2,7 +2,7 @@
 
 . /usr/share/debconf/confmodule
 
-CONFFILE="/etc/ulteo/ovd-slaveserver.conf"
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
 if [ ! -f $CONFFILE ]; then
     echo "Config file $CONFFILE not found"
     exit 1

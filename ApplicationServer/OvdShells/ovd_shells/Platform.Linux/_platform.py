@@ -57,7 +57,7 @@ def findProcessWithEnviron(pattern):
 	return None
 
 def getUserSessionDir():
-	return os.path.join("/var/spool/ovd/", os.environ["USER"])
+	return os.path.join("/var/spool/ulteo/ovd/", os.environ["USER"])
 	
 
 def startDesktop():

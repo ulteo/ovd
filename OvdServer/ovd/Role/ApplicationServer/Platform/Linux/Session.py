@@ -31,7 +31,7 @@ from ovd.Platform import Platform
 
 class Session(AbstractSession):
 	
-	SPOOL_USER = "/var/spool/ovd/"
+	SPOOL_USER = "/var/spool/ulteo/ovd/"
 	
 	def install_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)

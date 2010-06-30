@@ -29,7 +29,7 @@ class Apt(Thread):
 	def __init__(self):
 		Thread.__init__(self)
 		
-		self.directory = "/var/spool/ulteo/apt"
+		self.directory = "/var/spool/ulteo/ovd/apt"
 		self.queue = Queue()
 		
 		self.i = 0
