@@ -3,7 +3,6 @@
 SRC=AccountsIntegration.xml \
 	AdminConsole.xml \
 	AD_Primary_Authentication.xml \
-	common.xml \
 	FAQ.xml \
 	Installation.xml \
 	Installation_Iso.xml \
