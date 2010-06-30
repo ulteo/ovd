@@ -253,6 +253,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 	private void initWindow() {
 		this.setVisible(false);
+		this.setResizable(false);
 		this.addWindowListener(this);
 	}
 
