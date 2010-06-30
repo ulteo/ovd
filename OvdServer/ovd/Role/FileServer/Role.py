@@ -34,6 +34,8 @@ from Share import Share
 
 
 class Role(AbstractRole):
+	group_name = "ovd-fs"
+	
 	def __init__(self, main_instance):
 		AbstractRole.__init__(self, main_instance)
 		self.dialog = Dialog(self)
@@ -48,7 +50,13 @@ class Role(AbstractRole):
 			Logger.info("FileServer never initialized, creating repository on '%s'"%(self.spool))
 			os.makedirs(self.spool)
 		
-		self.cleanup_samba()
+		if not Platform.System.groupExist(self.group_name):
+			Logger.error("FileServer: group '%s' doesn't exists"%(self.group_name))
+			return False
+		
+		if not self.cleanup_samba():
+			Logger.error("FileServer: unable to cleanup samba users")
+			return False
 		
 		return True
 
@@ -59,7 +67,8 @@ class Role(AbstractRole):
 	
 	
 	def stop(self):
-		pass
+		Logger.info("FileServer:: stopping")
+		self.cleanup_samba()
 	
 	
 	def run(self):
@@ -75,12 +84,38 @@ class Role(AbstractRole):
 		ret = True
 		
 		for share in self.get_enabled_usershares():
-			s, o = commands.getstatusoutput("net usershare delete %s"%(share))
+			Logging.debug("FileServer:: Removing share '%s'"%(share.name))
+			s, o = commands.getstatusoutput("net usershare delete %s"%(share.name))
 			if s is not 0:
 				Logger.error("FS: unable to 'net usershare delete': %d => %s"%(s, o))
 				ret = False
 		
-		# todo: remove /etc/passwd accounts
+		ret2 = self.purgeGroup()
+		
+		return ret and ret2
+	
+	
+	def purgeGroup(self):
+		users = Platform.System.groupMember(self.group_name)
+		if users is None:
+			return False
+		
+		ret = True
+		for user in users:
+			Logger.debug("FileServer:: deleting user '%s'"%(user))
+			cmd = 'smbpasswd -x %s'%(user)
+			s,o = commands.getstatusoutput(cmd)
+			if s != 0:
+				Logger.error("FS: unable to del smb password")
+				Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			
+			
+			cmd = "userdel %s"%(user)
+			s,o = commands.getstatusoutput(cmd)
+			if s != 0:
+				Logger.error("FS: unable to create user")
+				Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+				ret =  False
 		
 		return ret
 	

@@ -35,8 +35,10 @@ class Share:
 		
 		self.active = False
 	
+	
 	def exists(self):
 		return os.path.isdir(self.directory)
+	
 	
 	def status(self):
 		if not self.exists():
@@ -56,6 +58,7 @@ class Share:
 			return False
 		
 		return True
+	
 	
 	def delete(self):
 		cmd = "rm -rf %s"%(self.directory)
@@ -80,8 +83,9 @@ class Share:
 		
 		self.active = True
 		return True
-		
-	def disable(self):		
+	
+	
+	def disable(self):
 		cmd = "net usershare delete %s"%(self.name)
 		s, o = commands.getstatusoutput(cmd)
 		if s is not 0:
@@ -92,9 +96,10 @@ class Share:
 
 		self.active = False
 		return ret
-		
-	def add_user(self, user, password):
-		cmd = "useradd -d /dev/null -s /bin/false %s"%(user)
+	
+	
+	def add_user(self, user, password, group):
+		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(group, user)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.error("FS: unable to create user")
