@@ -183,6 +183,23 @@
 	<beginpage />
       </listitem>
 
+	<listitem>
+		<para>
+			Next question is about MySQL creation. Will aptitude create user and database for OVD on MySQL ?
+		</para>
+		<para>
+			<inlinemediaobject>
+				<imageobject>
+					<imagedata fileref="img/sm_install_create_mysql.png"/>
+				</imageobject>
+				<textobject>
+					<phrase>Session Manager installation mysql data creation</phrase>
+				</textobject>
+			</inlinemediaobject>
+		</para>
+<!-- 		<beginpage /> -->
+	</listitem>
+
       <listitem>
 	<para>
 	  Application servers are using an application system that will be the same for all your application servers:
