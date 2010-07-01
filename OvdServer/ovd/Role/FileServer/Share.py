@@ -56,8 +56,8 @@ class Share:
 	
 	def create(self):
 		try:
-			os.mkdir(self.directory, 0700)
-			os.chown(self.directory, pwd.getpwnam(Config.user_name)[2], -1)
+			os.mkdir(self.directory, 2770)
+			os.chown(self.directory, -1, pwd.getpwnam(Config.user_name)[3])
 		except:
 			Logger.warn("FS: unable to create profile '%s'"%(self.name))
 			return False
