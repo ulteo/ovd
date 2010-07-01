@@ -20,6 +20,7 @@
 
 import commands
 import os
+import stat
 
 from ovd.Logger import Logger
 
@@ -55,8 +56,9 @@ class Share:
 	
 	def create(self):
 		try:
-			os.mkdir(self.directory, 2770)
+			os.mkdir(self.directory, 0700)
 			os.chown(self.directory, -1, Config.gid)
+			os.chmod(self.directory, stat.S_IRWXU | stat.S_IRWXG | stat.S_ISGID)
 		except:
 			Logger.warn("FS: unable to create profile '%s'"%(self.name))
 			return False
