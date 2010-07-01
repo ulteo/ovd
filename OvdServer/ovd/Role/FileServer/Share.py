@@ -104,7 +104,7 @@ class Share:
 	
 	
 	def add_user(self, user, password):
-		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Role.group_name, user)
+		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Config.group_name, user)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.error("FS: unable to create user")
