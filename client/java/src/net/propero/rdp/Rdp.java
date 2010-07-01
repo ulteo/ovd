@@ -1062,22 +1062,15 @@ public class Rdp {
         this.sendControlCaps(data);
         this.sendPointerCaps(data);
         this.sendShareCaps(data);
-        // this.sendUnknownCaps(data);
 
-        this.sendUnknownCaps(data, 0x0d, 0x58, caps_0x0d); // rdp_out_unknown_caps(s,
-                                                            // 0x0d, 0x58,
-                                                            // caps_0x0d); /*
-                                                            // international? */
-        this.sendUnknownCaps(data, 0x0c, 0x08, caps_0x0c); // rdp_out_unknown_caps(s,
-                                                            // 0x0c, 0x08,
-                                                            // caps_0x0c);
-        this.sendUnknownCaps(data, 0x0e, 0x08, caps_0x0e); // rdp_out_unknown_caps(s,
-                                                            // 0x0e, 0x08,
-                                                            // caps_0x0e);
-        this.sendUnknownCaps(data, 0x10, 0x34, caps_0x10); // rdp_out_unknown_caps(s,
-                                                            // 0x10, 0x34,
-                                                            // caps_0x10); /*
-                                                            // glyph cache? */
+	// Input capabilities
+        this.sendUnknownCaps(data, 0x0d, 0x58, caps_0x0d);
+	// Sound capabilities
+        this.sendUnknownCaps(data, 0x0c, 0x08, caps_0x0c);
+	// Font capabilities
+        this.sendUnknownCaps(data, 0x0e, 0x08, caps_0x0e);
+	// Glyph capabilities
+        this.sendUnknownCaps(data, 0x10, 0x34, caps_0x10);
 
         data.markEnd();
         logger.debug("confirm active");
