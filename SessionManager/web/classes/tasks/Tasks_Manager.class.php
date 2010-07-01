@@ -66,10 +66,6 @@ class Tasks_Manager {
 		$this->tasks = $tasks;
 	}
 
-	public function load_from_type($class_str) {
-		// TBD
-	}
-
 	public function add($task_) {
 		$task_->id = gen_string(5);
 		$task_->init();
