@@ -25,11 +25,9 @@ class Task {
 	public $id = NULL;
 	public $t_begin = NULL;
 	public $t_end = NULL;
-	public $request = NULL;
 	public $server = NULL;
 	public $job_id = NULL;
 	public $status = NULL;
-	public $status_code = NULL;
 
 	public function __construct($task_id_, $server_) {
 		Logger::debug('main', 'Starting TASK::__construct for task '.$task_id_);
