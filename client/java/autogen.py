@@ -18,7 +18,7 @@ for pofile in glob.glob(path+"/po/*.po"):
 	node = '<exec executable="msgfmt" dir=".">'
 	node+= '<arg value="--java2"/>'
 	node+= '<arg value="-d"/>'
-	node+= '<arg value="ressources"/>'
+	node+= '<arg value="jar/ressources"/>'
  	node+= '<arg value="-r"/>'
  	node+= '<arg value="Messages"/>'
  	node+= '<arg value="-l"/>'

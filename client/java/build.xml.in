@@ -28,6 +28,7 @@
   <target name="precompile">
     <mkdir dir="classes"/>
     <mkdir dir="libs"/>
+    <delete dir="jar"/>
     <mkdir dir="jar/ressources/keymaps"/>
     <copy todir="jar/ressources/keymaps">
       <fileset dir="keymaps"/>
@@ -44,9 +45,7 @@
   <target name="classes2jar" description="copy classes/** to jar/">
     <mkdir dir="jar"/>
     <copy todir="jar/">
-      <fileset dir="classes">
-	<include name="**/**"/>
-      </fileset>
+      <fileset dir="classes" />
     </copy>
   </target>
 
@@ -242,10 +241,7 @@
   </target>
 
   <target name="ovdclient_all.jar" depends="ovdclient">
-    <delete dir="jar"/>
     <antcall target="classes2jar" />
-    <mkdir dir="ressources"/>
-
     <unjar src="required_libraries/gnu-getopt.jar" dest="jar"/>
     <unjar src="required_libraries/log4j-1.2.jar" dest="jar"/>
     <unjar src="required_libraries/swingx.jar" dest="jar"/>
@@ -257,16 +253,8 @@
     <!-- Auto-generated exec ant command for i18n fonctionality -->
     @MESSAGE_LANGS@
 
-    <copy todir="jar/">
-      <fileset dir="ressources">
-        <include name="*" />
-      </fileset>
-    </copy>
-
     <copy todir="jar/pics">
-      <fileset dir="icons">
-    	<include name="*"/>
-      </fileset>
+      <fileset dir="icons" />
     </copy>
 
     <jar destfile="libs/UlteoOVDClient.jar" basedir="jar/">
@@ -333,14 +321,14 @@
     </copy>
   </target>
 
-
   <!-- Applet part -->
+
   <target name="applet" description="sign applets"  depends="clean,precompile" >
-    <javac srcdir="./src;./src1.4" 
+    <javac srcdir="./src;./src1.4"
            destdir="classes"
            encoding="UTF8"
-           target="1.5" 
-           source="1.5" 
+           target="1.5"
+           source="1.5"
            classpath="required_libraries/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
            includes="org/ulteo/ovd/applet/**.java" />
   </target>
