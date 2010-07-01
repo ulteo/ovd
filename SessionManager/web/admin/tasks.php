@@ -153,8 +153,8 @@ function show_default($tm) {
 	      $status = '<span class="msg_ok">'._('Finished').'</span>';
       elseif ($task->failed())
 	      $status = '<span class="msg_error">'._('Error').'</span>';
-      else
-	      $status = $task->status.' ('.$task->status_code.')';
+      elseif ($task->status == 'in progress')
+	      $status = '<span class="msg_warn">'._('In progress').'</span>';
 
       echo '<tr class="'.$content.'">';
       echo '<td><a href="?action=manage&id='.$task->id.'">'.$task->id.'</a></td>';
@@ -163,16 +163,16 @@ function show_default($tm) {
       echo '<td><a href="servers.php?action=manage&fqdn='.$task->server.'">'.$task->server.'</a></td>';
       echo '<td>'.$status.'</td>';
       echo '<td>'.$task->getRequest().'</td>';
-      echo '<td>';
       if ($can_remove && $can_do_action) {
-    	echo '<form action="actions.php" method="post">';
-	echo '<input type="hidden" name="name" value="Task" />';
-	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="checked_tasks[]" value="'.$task->id.'" />';
-	echo '<input type="submit" value="'._('Delete').'" />';
-    	echo '</form>';
+		echo '<td>';
+		echo '<form action="actions.php" method="post">';
+		echo '<input type="hidden" name="name" value="Task" />';
+		echo '<input type="hidden" name="action" value="del" />';
+		echo '<input type="hidden" name="checked_tasks[]" value="'.$task->id.'" />';
+		echo '<input type="submit" value="'._('Delete').'" />';
+		echo '</form>';
+		echo '</td>';
       }
-      echo '</td>';
       echo '</tr>';
     }
     echo '</table>';
