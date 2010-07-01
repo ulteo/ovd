@@ -411,42 +411,22 @@
   <!-- Source tarball part -->
 
   <target name="dist" description="create a source tarball">
+    <delete dir="${sdist.name}" />
     <mkdir dir="${sdist.name}" />
     <copy todir="${sdist.name}">
-      <fileset file="build.xml" />
-      <fileset file="README" />
+      <fileset dir="." includes="build.xml README">
+        <include name="src*/**" />
+        <include name="required_libraries/*" />
+        <include name="keymaps/*" />
+        <include name="srcipts/*" />
+        <include name="icons/*" />
+        <include name="po/*" />
+      </fileset>
     </copy>
-    <mkdir dir="${sdist.name}/required_libraries" />
-    <copy todir="${sdist.name}/required_libraries">
-      <fileset dir="required_libraries" />
-    </copy>
-    <mkdir dir="${sdist.name}/src" />
-    <copy todir="${sdist.name}/src">
-      <fileset dir="src" />
-    </copy>
-    <mkdir dir="${sdist.name}/src1.4" />
-    <copy todir="${sdist.name}/src1.4">
-      <fileset dir="src1.4" />
-    </copy>
-    <mkdir dir="${sdist.name}/keymaps" />
-    <copy todir="${sdist.name}/keymaps">
-      <fileset dir="keymaps" />
-    </copy>
-    <mkdir dir="${sdist.name}/icons" />
-    <copy todir="${sdist.name}/icons">
-      <fileset dir="icons" />
-    </copy>
-    <mkdir dir="${sdist.name}/po" />
-    <copy todir="${sdist.name}/po">
-      <fileset dir="po" />
-    </copy>
-
     <tar longfile="gnu" tarfile="${sdist.name}.tar" basedir="./"
          includes="${sdist.name}/**" />
     <gzip zipfile="${sdist.name}.tar.gz" src="${sdist.name}.tar" />
-
     <delete file="${sdist.name}.tar" />
-    <delete dir="${sdist.name}" />
   </target>
 
 </project>
