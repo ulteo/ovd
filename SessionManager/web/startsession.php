@@ -459,7 +459,7 @@ $session->setAttribute('settings', $data);
 $session->setAttribute('start_time', time());
 
 $user_login = $user->getAttribute('login').'_OVD'; //hardcoded
-$user_password = gen_string(8);
+$user_password = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 $session->settings['aps_access_login'] = $user_login;
 $session->settings['aps_access_password'] = $user_password;
