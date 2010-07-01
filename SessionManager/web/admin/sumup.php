@@ -174,6 +174,7 @@ else{
 		<tr class="title">
 			<th><?php echo _('FQDN');?></th>
 			<th><?php echo _('Type');?></th>
+			<th><?php echo _('Roles');?></th>
 			<th><?php echo _('Applications');?></th>
 			<th><?php echo _('Status');?></th>
 		</tr>
@@ -201,6 +202,13 @@ else{
 			
 			echo '<td><a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a></td>';
 			echo '<td>'.$server->stringType().'</td>';
+			echo '<td><ul>';
+			foreach ($roles as $a_role => $role_enable) {
+				if ($role_enable) {
+					echo "<li>$a_role</li>";
+				}
+			}
+			echo '</ul></td>';
 			echo '<td>';
 			if ((is_array($applications))&& (count($applications)>0) ){
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
