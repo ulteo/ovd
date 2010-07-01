@@ -40,22 +40,13 @@ class Role(AbstractRole):
 		self.dialog = Dialog(self)
 		self.has_run = False
 		self.shares = {}
-		self.spool = os.path.join(Platform.System.get_default_data_dir(), "fs")
 	
 	def init(self):
 		Logger.info("FileServer init")
 		
-		if not os.path.isdir(self.spool):
-			Logger.info("FileServer never initialized, creating repository on '%s'"%(self.spool))
-			os.makedirs(self.spool)
-		
-		if not Platform.System.userExist(Config.user_name):
-			Logger.error("FileServer: user '%s' doesn't exists"%(Config.user_name))
-			return False
-		
-		if not Platform.System.groupExist(Config.group_name):
-			Logger.error("FileServer: group '%s' doesn't exists"%(Config.group_name))
-			return False
+		if not Config.init():
+			Logger.info("FileServer never initialized, creating repository on '%s'"%(Config.spool))
+			os.makedirs(Config.spool)
 		
 		if not self.cleanup_samba():
 			Logger.error("FileServer: unable to cleanup samba users")
@@ -99,7 +90,7 @@ class Role(AbstractRole):
 	
 	
 	def purgeGroup(self):
-		users = Platform.System.groupMember(Config.group_name)
+		users = Platform.System.groupMember(Config.group)
 		if users is None:
 			return False
 		
@@ -126,13 +117,13 @@ class Role(AbstractRole):
 	def get_existing_shares(self):
 		shares = []
 		
-		for f in glob.glob(self.spool+"/*"):
+		for f in glob.glob(Config.spool+"/*"):
 			name = os.path.basename(f)
 			
 			if name in self.shares.keys():
 				continue
 			
-			share = Share(name, self.spool)
+			share = Share(name, Config.spool)
 			shares.append(share)
 			
 		return shares + self.shares.values()

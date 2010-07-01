@@ -18,7 +18,41 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import grp
+import os
+import pwd
+
+from ovd.Logger import Logger
 
 class Config:
-	user_name  = "ovd-fs"
-	group_name = "ovd-fs"
+	user  = "ovd-fs"
+	group = None
+	uid = None
+	gid = None
+	spool = None
+	
+	@staticmethod
+	def init():
+		try:
+			infos = pwd.getpwnam(Config.user)
+		except KeyError, err:
+			Logger.info("FileServer Config failed: no such user '%s'"%(Config.user))
+			return False
+		
+		Config.uid = infos[2]
+		Config.gid = infos[3]
+		Config.spool = infos[5]
+		
+		if not os.path.isdir(Config.spool):
+			Logger.info("FileServer Config failed: no such directory '%s'"%(Config.spool))
+			return False
+		
+		try:
+			infos = grp.getgrgid(Config.gid)
+		except KeyError, err:
+			Logger.info("FileServer Config failed: no such group '%d'"%(Config.gid))
+			return False
+		
+		Config.group = infos[0]
+		
+		return True

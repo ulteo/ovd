@@ -26,11 +26,13 @@ import socket
 from xml.dom import minidom
 from xml.dom.minidom import Document
 
+from ovd.Communication.Dialog import Dialog as AbstractDialog
 from ovd.Logger import Logger
-from Share import Share
 from ovd import util
 
-from ovd.Communication.Dialog import Dialog as AbstractDialog
+from Config import Config
+from Share import Share
+
 
 class Dialog(AbstractDialog):
 	def __init__(self, role_instance):
@@ -169,7 +171,7 @@ class Dialog(AbstractDialog):
 			return self.req_answer(doc)
 		
 		
-		share = Share(share_id, self.role_instance.spool)
+		share = Share(share_id, Config.spool)
 		if self.role_instance.shares.has_key(share_id) or share.status() is not Share.STATUS_NOT_EXISTS:
 			doc = Document()
 			rootNode = doc.createElement('error')
@@ -208,7 +210,7 @@ class Dialog(AbstractDialog):
 		if self.role_instance.shares.has_key(share_id):
 			share = self.role_instance.shares[share_id]
 		else:
-			share = Share(share_id, self.role_instance.spool)
+			share = Share(share_id, Config.spool)
 			share.delete()
 		
 		return self.share2xml(share)
@@ -255,7 +257,7 @@ class Dialog(AbstractDialog):
 		if self.role_instance.shares.has_key(share_id):
 			share = self.role_instance.shares[share_id]
 		else:
-			share = Share(share_id, self.role_instance.spool)
+			share = Share(share_id, Config.spool)
 			if share.status is Share.STATUS_NOT_EXISTS:
 				doc = Document()
 				rootNode = doc.createElement('error')
@@ -307,7 +309,7 @@ class Dialog(AbstractDialog):
 		
 		
 		if not self.role_instance.shares.has_key(share_id):
-			return self.share2xml(Share(share_id, self.role_instance.spool))
+			return self.share2xml(Share(share_id, Config.spool))
 			
 		share = self.role_instance.shares[share_id]
 		
