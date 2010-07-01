@@ -67,7 +67,7 @@ class Tasks_Manager {
 	}
 
 	public function add($task_) {
-		$task_->id = gen_string(5);
+		$task_->id = gen_string(8);
 		$task_->init();
 
 		$this->tasks []= $task_;
