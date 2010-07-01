@@ -26,7 +26,7 @@
 
 require_once(dirname(__FILE__).'/core-minimal.inc.php');
 
-$folders = array('tasks', 'reporting', 'tmp', 'cache', 'sharedfolders');
+$folders = array('reporting', 'tmp', 'cache', 'sharedfolders');
 foreach ($folders as $folder) {
 	$buf = strtoupper($folder).'_DIR';
 	define($buf, SESSIONMANAGER_SPOOL.'/'.$folder);

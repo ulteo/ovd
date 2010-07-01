@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Task_install_from_line extends Task_install {
+	public $type = 'install_from_line';
+
 	public $applications_line = NULL;
 
 	public function __construct($task_id_, $server_, $applications_line_) {

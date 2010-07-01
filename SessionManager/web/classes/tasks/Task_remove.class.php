@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Task_remove extends Task_install {
+	public $type = 'remove';
+
 	public function getRequest() {
 		return 'remove';
 	}

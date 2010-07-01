@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Task_install extends Task {
+	public $type = 'install';
+
 	public $applications = NULL;
 
 	public function __construct($task_id_, $server_, $applications_) {

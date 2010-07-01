@@ -24,24 +24,15 @@ class Tasks_Manager {
 	public $tasks = array();
 
 	public function load_all() {
-		$this->tasks = array();
-		$task_files = glob(TASKS_DIR.'/*');
-
-		foreach ($task_files as $task_file)
-			$this->tasks []= unserialize(@file_get_contents($task_file));
+		$this->tasks = Abstract_Task::load_all();
 	}
 
 	public function load_from_server($fqdn_) {
-		$this->load_all();
-
-		foreach ($this->tasks as $k => $task) {
-			if ($fqdn_ != $task->server)
-				unset($this->tasks[$k]);
-		}
+		$this->tasks = Abstract_Task::load_by_server($fqdn_);
 	}
 
 	public function load_from_application($app_id_) {
-		$this->load_all();
+		$this->tasks = Abstract_Task::load_all();
 		$tasks = array();
 		foreach ($this->tasks as $task) {
 			if (get_class($task) == 'Task_install_from_line')
@@ -74,8 +65,8 @@ class Tasks_Manager {
 		$this->save($task_);
 	}
 
-	public static function save($task_) {
-		@file_put_contents(TASKS_DIR.'/'.$task_->id, serialize($task_));
+	public function save($task_) {
+		Abstract_Task::save($task_);
 	}
 
 	public function save_all() {
@@ -83,10 +74,8 @@ class Tasks_Manager {
 			$this->save($task);
 	}
 
-
-
 	public static function remove($task_id_) {
-		@unlink(TASKS_DIR.'/'.$task_id_);
+		Abstract_Task::delete($task_id_);
 	}
 
 	public function refresh_all() {
@@ -97,7 +86,7 @@ class Tasks_Manager {
 				continue;*/
 
 			$task->refresh();
-			$this->save($task);
+			Abstract_Task::save($task);
 		}
 	}
 }

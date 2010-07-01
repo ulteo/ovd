@@ -38,6 +38,10 @@ class Task {
 		$this->server = $server_;
 	}
 
+	public function __toString() {
+		return get_class($this).'('.$this->id.')';
+	}
+
 	public function init() {
 		$server = Abstract_Server::load($this->server);
 		if (! is_object($server)) {

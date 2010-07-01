@@ -21,6 +21,8 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class Task_upgrade extends Task {
+	public $type = 'upgrade';
+
 	public function getRequest() {
 		return 'upgrade';
 	}
