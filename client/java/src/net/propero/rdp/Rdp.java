@@ -180,6 +180,10 @@ public class Rdp {
 
     private static final int RDP_CAPLEN_BMPCACHE2 = 0x28;
 
+    private static final int RDP_CAPSET_VIRTUALCHANNEL = 20;
+
+    private static final int RDP_CAPLEN_VIRTUALCHANNEL = 0x0C;
+
     private static final int BMPCACHE2_FLAG_PERSIST = (1 << 31);
 
     /* RDP bitmap cache (version 2) constants */
@@ -1018,7 +1022,7 @@ public class Rdp {
         int caplen = RDP_CAPLEN_GENERAL + RDP_CAPLEN_BITMAP + RDP_CAPLEN_ORDER
                 + RDP_CAPLEN_BMPCACHE + RDP_CAPLEN_COLCACHE
                 + RDP_CAPLEN_ACTIVATE + RDP_CAPLEN_CONTROL + RDP_CAPLEN_POINTER
-                + RDP_CAPLEN_SHARE + RDP_CAPLEN_UNKNOWN + 4; // this is a fix
+                + RDP_CAPLEN_SHARE + RDP_CAPLEN_VIRTUALCHANNEL + RDP_CAPLEN_UNKNOWN + 4; // this is a fix
                                                                 // for W2k.
                                                                 // Purpose
                                                                 // unknown
@@ -1062,6 +1066,7 @@ public class Rdp {
         this.sendControlCaps(data);
         this.sendPointerCaps(data);
         this.sendShareCaps(data);
+	this.sendVirtualChannelCaps(data);
 
 	// Input capabilities
         this.sendUnknownCaps(data, 0x0d, 0x58, caps_0x0d);
@@ -1264,6 +1269,15 @@ public class Rdp {
 
         data.setLittleEndian16(0); /* userid */
         data.setLittleEndian16(0); /* pad */
+    }
+
+    private void sendVirtualChannelCaps(RdpPacket_Localised data) {
+
+        data.setLittleEndian16(RDP_CAPSET_VIRTUALCHANNEL);
+        data.setLittleEndian16(RDP_CAPLEN_VIRTUALCHANNEL);
+
+        data.setLittleEndian32(VChannels.VCCAPS_NO_COMPR); /* flags */
+        data.setLittleEndian32(0); /* VirtualChannel chunk size, ignored by the server */
     }
 
     private void sendUnknownCaps(RdpPacket_Localised data, int id, int length,

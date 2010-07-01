@@ -27,6 +27,17 @@ public class VChannels {
 
     protected static Logger logger = Logger.getLogger(Input.class);
 
+    /* VirtualChannel capabilities constants */
+    public static final int VCCAPS_NO_COMPR = 0x00000000; // Virtual channel compression is not supported
+
+    public static final int VCCAPS_COMPR_SC = 0x00000001; /* Indicates to the server that virtual channel compression is supported by
+                                                             the client for server-to-client traffic. The highest compression level
+                                                             supported by the client is advertised in the Client Info PDU (section
+                                                             2.2.1.11). */
+    public static final int VCCAPS_COMPR_CS_8K = 0x00000002; /* Indicates to the client that virtual channel compression is supported by
+                                                                the server for client-to-server traffic (the compression level is limited to
+                                                                RDP 4.0 bulk compression). */
+
     /* Sound format constants */
     public static final int WAVE_FORMAT_PCM = 1;
 
