@@ -83,6 +83,14 @@
       </listitem>
     </itemizedlist>
   </section>
+  
+  <section id="mysql_installation_apt">
+   <xi:include href="common.xml" xpointer="sql_title" />
+    <xi:include href="common.xml" xpointer="mysql_install" />
+    <xi:include href="common.xml" xpointer="mysql_install_apt_1" />
+    <xi:include href="common.xml" xpointer="mysql_install_apt_2" />
+    <xi:include href="common.xml" xpointer="mysql_install_apt_3" />
+   </section>
 
   <section id="sm">
     <title id="sm_title">Session Manager (sm.ulteo.com)</title>

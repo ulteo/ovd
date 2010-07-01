@@ -10,9 +10,9 @@
 	</para>
 	<itemizedlist>
 		<listitem>
-			<para>Install the <emphasis>mysql-server</emphasis> package:</para>
-			<screen># apt-get install mysql-server</screen>
-			<para>A password for <literal>root</literal> will be asked.</para>
+			<para id="mysql_install_apt_1">Install the <emphasis>mysql-server</emphasis> package:</para>
+			<screen id="mysql_install_apt_2"># apt-get install mysql-server</screen>
+			<para id="mysql_install_apt_3">A password for <literal>root</literal> will be asked.</para>
 		</listitem>
 		<listitem>
 			<para id="mysql_db_create">
