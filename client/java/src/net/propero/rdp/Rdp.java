@@ -517,7 +517,7 @@ public class Rdp {
     private int configureCompression(int flags) {
 	if (this.opt.packet_compression) {
 		try {
-			this.common.compressor = new MPPCDecompressor(RdpCompressionConstants.TYPE_64K);
+			this.common.decompressor = new MPPCDecompressor(RdpCompressionConstants.TYPE_64K);
 			flags |= Rdp.RDP_LOGON_COMPRESSION;
 			flags |= RdpCompressionConstants.FLAG_TYPE_64K;
 		} catch (RdpCompressionException ex) {
@@ -939,7 +939,7 @@ public class Rdp {
 
 	if ((ctype & PACKET_COMPRESSED) != 0) {
 		try {
-                    data = this.common.compressor.decompress(data, clen, ctype);
+                    data = this.common.decompressor.decompress(data, clen, ctype);
                 } catch (RdpCompressionException ex) {
                     logger.error(ex.getMessage());
 		    return false;

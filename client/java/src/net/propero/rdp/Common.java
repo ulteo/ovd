@@ -29,7 +29,7 @@ public class Common {
 	public Cache cache = null;
 	public PstCache persistent_cache = null;
 
-	public RdpDecompressor compressor = null;
+	public RdpDecompressor decompressor = null;
 
     /**
      * Quit the application
