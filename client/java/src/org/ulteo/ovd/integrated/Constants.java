@@ -37,5 +37,4 @@ public final class Constants {
 	public static final String iconsPath = Constants.confRemoteAppsPath+Constants.separator+"icons";
 	public static final String toLaunchPath = Constants.confRemoteAppsPath+Constants.separator+"to_launch";
 	public static final String xfceMenuEntriesPath = Constants.homedir+Constants.separator+".local/share/applications";
-	public static final String filePrinterName = "OVD_File_Printer";	
 }

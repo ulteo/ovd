@@ -34,7 +34,6 @@ import net.propero.rdp.rdp5.rdpdr.RdpdrChannel;
 import net.propero.rdp.rdp5.rdpdr.RdpdrDevice;
 
 import org.apache.log4j.Logger;
-import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 
@@ -86,7 +85,7 @@ public class OVDPrinterManager {
 			isDefault = false;
 		}
 		if (printerList.isEmpty()){
-			printerList.add(0, new OVDPrinter(Constants.filePrinterName, Constants.filePrinterName, true));
+			printerList.add(0, new OVDPrinter(OVDPrinterThread.filePrinterName, OVDPrinterThread.filePrinterName, true));
 		}		
 	}
 	
