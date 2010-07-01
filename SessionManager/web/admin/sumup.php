@@ -180,8 +180,18 @@ else{
 		<?php
 		$count = 0;
 		foreach($servs_all as $server){
-			$applications = $server->getApplications();
-			usort($applications, "application_cmp");
+			$roles = $server->getAttribute('roles');
+			if (array_key_exists('aps', $roles) && $roles['aps'] === true) {
+				$applications = $server->getApplications();
+				if (! is_array($applications)) {
+					$applications = array();
+				}
+				usort($applications, "application_cmp");
+			}
+			else {
+				$applications = array();
+			}
+			
 			echo '<tr class="content';
 			if ($count % 2 == 0)
 				echo '1';
