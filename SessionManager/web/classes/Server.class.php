@@ -768,12 +768,12 @@ class Server {
 
 	// ? unclean?
 	public function getApplications() {
-if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
-	Logger::critical('main', 'SERVER IS NOT AN APS');
-	return NULL;
-}
-
 		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
+
+		if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
+			Logger::critical('main', 'SERVER::getApplications - Not an ApS');
+			return NULL;
+		}
 
 		$applicationDB = ApplicationDB::getInstance();
 
@@ -793,12 +793,12 @@ if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
 	}
 
 	public function updateApplications(){
-if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
-	Logger::critical('main', 'SERVER IS NOT AN APS');
-	return false;
-}
-
 		Logger::debug('main', 'Server::updateApplications');
+
+		if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
+			Logger::critical('main', 'SERVER::updateApplications - Not an ApS');
+			return false;
+		}
 
 		if (! $this->isOnline()) {
 			Logger::debug('main', 'Server::updateApplications server "'.$this->fqdn.':'.$this->web_port.'" is not online');
