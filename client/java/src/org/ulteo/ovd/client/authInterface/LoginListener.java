@@ -38,6 +38,7 @@ import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.integrated.OvdClientIntegrated;
 import org.ulteo.ovd.client.portal.OvdClientPortal;
+import org.ulteo.ovd.integrated.Constants;
 
 public class LoginListener implements ActionListener{
 
@@ -45,6 +46,7 @@ public class LoginListener implements ActionListener{
 	private AuthFrame frame = null;
 	private OvdClient cli = null;
 	private File connectionInfo = null;
+	private File connectionRepInfo = null;
 	private String username = null;
 	private String host = null;
 	private String pass = null;
@@ -56,7 +58,7 @@ public class LoginListener implements ActionListener{
 	public LoginListener(ButtonPanel bp, AuthFrame frame) {
 		this.bp=bp;
 		this.frame=frame;
-		connectionInfo = new File("./usersInfo.ovd");
+		connectionRepInfo = new File(Constants.confPath+Constants.separator+"OVDClient");
 	}
 
 	@Override
@@ -70,6 +72,8 @@ public class LoginListener implements ActionListener{
 		resolution = bp.getOpt().getScreenSizeSelecter().getValue();
 
 		try{
+			connectionRepInfo.mkdirs();
+			connectionInfo = new File(connectionRepInfo.getAbsolutePath()+Constants.separator+"usersInfo.ovd");
 			FileInputStream fis = new FileInputStream(connectionInfo);
 			LineNumberReader l = new LineNumberReader(       
 					new BufferedReader(new InputStreamReader(fis)));
