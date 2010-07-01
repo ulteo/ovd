@@ -22,13 +22,17 @@ package org.ulteo.ovd.client.authInterface;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.ini4j.Wini;
 import org.ulteo.ovd.client.I18n;
 
 public class SaveAsListener implements ActionListener{
@@ -57,15 +61,16 @@ public class SaveAsListener implements ActionListener{
 		FileFilter ovd = new SimpleFilter("Ovd config", ".ovd");
 		saveChooser.setAcceptAllFileFilterUsed(false);
 		saveChooser.addChoosableFileFilter(ovd);
-
 		switch(saveChooser.showSaveDialog(bp)) {
 		case JFileChooser.APPROVE_OPTION :
 			try {
-				writer = new PrintWriter(saveChooser.getSelectedFile()+".ovd");
-			}catch (FileNotFoundException fe) {
-				fe.printStackTrace();
+				File profileInfo = new File(saveChooser.getSelectedFile()+".ovd");
+				PrintWriter out = new PrintWriter(new FileWriter(profileInfo));
+				out.println();
+				getProfile(profileInfo);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			getProfile(writer, username, host, mode, resolution);
 			break;
 		case JFileChooser.ERROR_OPTION:
 			JOptionPane.showMessageDialog(null, I18n._("An error has occured"),I18n._("Error"),JOptionPane.ERROR_MESSAGE);
@@ -73,40 +78,34 @@ public class SaveAsListener implements ActionListener{
 		}
 	}
 
-	public void getProfile(PrintWriter writer, String username, String hostname, int mode, int resolution) {
-		writer.println("[user]");
-		writer.println("login="+username);
-		writer.println("");
-		writer.println("[server]");
-		writer.println("host="+hostname);
-		writer.println("");
-		writer.println("[mode]");
+	public void getProfile(File filename) throws IOException {
+		Wini ini = new Wini(filename);
+		ini.put("user", "login", this.username);
+		ini.put("server", "host", this.host);
 		if (mode == 0)
-			writer.println("mode=desktop");
+			ini.put("sessionMode", "ovdSessionMode", "desktop");
 		else if (mode == 1)
-			writer.println("mode=portal");
+			ini.put("sessionMode", "ovdSessionMode", "portal");
 		else
-			writer.println("mode=integrated");
+			ini.put("sessionMode", "ovdSessionMode", "integrated");
 		
-		writer.println("");
-		writer.println("[screen]");
 		switch(resolution) {
 		case 0 :
-			writer.println("resolution=800x600");
+			ini.put("screen", "size", "800x600");
 			break;
 		case 1 :
-			writer.println("resolution=1024x768");
+			ini.put("screen", "size", "1024x768");
 			break;
 		case 2 : 
-			writer.println("resolution=1280x678");
+			ini.put("screen", "size", "1280x678");
 			break;
 		case 3 : 
-			writer.println("resolution=maximized");
+			ini.put("screen", "size", "maximized");
 			break;
 		case 4 : 
-			writer.println("resolution=fullscreen");
+			ini.put("screen", "size", "fullscreen");
 			break;
 		}
-		writer.flush();
+		ini.store();
 	}
 }

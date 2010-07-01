@@ -93,7 +93,6 @@ public class LoginListener implements ActionListener{
 			// If the file does not exist it will be created automatically
 			System.out.println("auto complete created with success");
 		}
-
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(connectionInfo);
@@ -139,7 +138,6 @@ public class LoginListener implements ActionListener{
 	}
 
 	public void getInfo(PrintWriter writer, String list, String username, String hostname) {
-		writer.println(" === This file is used for autocompletion ===");
 		writer.println(list);
 		if(! list.contains(username)){
 			writer.println("login="+username);

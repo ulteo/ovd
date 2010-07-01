@@ -21,16 +21,13 @@
 
 package org.ulteo.ovd.client;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import gnu.getopt.Getopt;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.ini4j.Wini;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
@@ -40,7 +37,6 @@ import org.ulteo.ovd.client.portal.OvdClientPortal;
 
 public class StartConnection {
 	public static final String productName = "Ulteo OVD Client";
-
 	/**
 	 * @param args
 	 */
@@ -71,86 +67,68 @@ public class StartConnection {
 			usage();
 
 		if (profile != null) {
-			InputStreamReader reader = null;
-			LineNumberReader lineReader = null;
-			File profileInfo = new File(profile);
-			try{
-				FileInputStream fis = new FileInputStream(profileInfo);
-				LineNumberReader l = new LineNumberReader(       
-						new BufferedReader(new InputStreamReader(fis)));
-				int count=0;
-				String str;
-				while ((str=l.readLine())!=null)
-				{
-					count = l.getLineNumber();
-				}
-				reader = new InputStreamReader(new  FileInputStream(profileInfo));
-				lineReader = new LineNumberReader(reader);
-				
+			try {
 				String username = null;
-				String server = null;
-				String current = null;
+				String ovdServer = null;
+				String initMode = null;
 				int mode = 0;
+				String initRes = null;
 				int resolution = 0;
 				String token = null;
-				
-				for(int i=0;i<count;i++) {
-					current = lineReader.readLine();
-					if(current.startsWith("login=")) {
-						username = current.substring("login=".length());
-					} else if (current.startsWith("host=")) {
-						server = current.substring("host=".length());
-					} else if (current.startsWith("mode=")) {
-						if (current.substring("mode=".length()).equals("desktop"))
-							mode=0;
-						else if (current.substring("mode=".length()).equals("portal"))
-							mode=1;
-						else mode=2;
-					} else if (current.startsWith("resolution=")) {
-						if(current.substring("resolution=".length()).equals("800x600"))
-							resolution=0;
-							else if(current.substring("resolution=".length()).equals("1024x768"))
-								resolution=1;
-							else if(current.substring("resolution=".length()).equals("1280x678"))
-								resolution=2;
-							else if(current.substring("resolution=".length()).equals("maximized"))
-								resolution=3;
-							else
-								resolution=4;
-					}
-					else if (current.startsWith("token=")) {
-						token = current.substring("token=".length());
-					}
-				}
+
+				Wini ini = new Wini(new File(profile));
+				username = ini.get("user", "login");
+				ovdServer = ini.get("server", "host");
+				initMode = ini.get("sessionMode", "ovdSessionMode");
+				if (initMode.equals("desktop"))
+					mode = 0;
+				else if (initMode.equals("portal"))
+					mode = 1;
+				else
+					mode = 2;
+
+				initRes = ini.get("screen", "size");
+				if(initRes.equals("800x600"))
+					resolution=0;
+				else if(initRes.equals("1024x768"))
+					resolution=1;
+				else if(initRes.equals("1280x678"))
+					resolution=2;
+				else if(initRes.equals("maximized"))
+					resolution=3;
+				else
+					resolution=4;				
+
+				token = ini.get("token", "token");
 				OvdClient cli = null;
 				if (token != null) {
 					System.out.println("Token Auth");
-					cli = new OvdClientIntegrated(server, use_https, token);
+					cli = new OvdClientIntegrated(ovdServer, use_https, token);
 				}
 				else {
 					switch (mode) {
-						case 0:
-							cli = new OvdClientDesktop(server, use_https, username, password, resolution);
-							break;
-						case 1:
-							cli = new OvdClientPortal(server, use_https, username, password);
-							break;
-						case 2:
-							cli = new OvdClientIntegrated(server, use_https, username, password);
-							break;
-						default:
-							throw new UnsupportedOperationException("mode "+mode+" is not supported");
+					case 0:
+						cli = new OvdClientDesktop(ovdServer, use_https, username, password, resolution);
+						break;
+					case 1:
+						cli = new OvdClientPortal(ovdServer, use_https, username, password);
+						break;
+					case 2:
+						cli = new OvdClientIntegrated(ovdServer, use_https, username, password);
+						break;
+					default:
+						throw new UnsupportedOperationException("mode "+mode+" is not supported");
 					}
 				}
 				cli.start();
-			}catch(IOException ioe){
+			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
 		else
 			new AuthFrame(use_https);
 	}
-	
+
 	public static void usage() {
 		System.err.println(StartConnection.productName);
 		System.err.println("Usage: java -jar OVDIntegratedClient.jar [options]");
