@@ -67,8 +67,6 @@ public class VChannels {
 
     public static final int MAX_CHANNELS = 30;
 
-    public static final int CHANNEL_CHUNK_LENGTH = 1600;
-
     public static final int CHANNEL_FLAG_FIRST = 0x01;
 
     public static final int CHANNEL_FLAG_LAST = 0x02;

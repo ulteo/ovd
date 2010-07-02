@@ -54,6 +54,9 @@ public class Options {
 	public boolean remap_hash = true;
 	public boolean useLockingKeyState = true;
 
+	public int VCChunkMaxSize = 1600;
+	public boolean VCCompressionIsSupported = false;
+
 	public boolean seamformEnabled = false;
 
 	public boolean seamlessEnabled = false;

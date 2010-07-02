@@ -105,12 +105,12 @@ public abstract class VChannel {
 		
 		int data_offset = 0;
 		int packets_sent = 0;
-		int num_packets = (length/VChannels.CHANNEL_CHUNK_LENGTH);
-		num_packets += length - (VChannels.CHANNEL_CHUNK_LENGTH)*num_packets;
+		int num_packets = (length/this.opt.VCChunkMaxSize);
+		num_packets += length - (this.opt.VCChunkMaxSize)*num_packets;
 		
 		while(data_offset < length){
 		
-			int thisLength = Math.min(VChannels.CHANNEL_CHUNK_LENGTH, length - data_offset);
+			int thisLength = Math.min(this.opt.VCChunkMaxSize, length - data_offset);
 			
 			RdpPacket_Localised s = this.common.secure.init(Constants.encryption ? Secure.SEC_ENCRYPT : 0, 8 + thisLength);
 			s.setLittleEndian32(length);
