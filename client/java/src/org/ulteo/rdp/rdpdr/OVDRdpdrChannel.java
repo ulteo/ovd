@@ -58,6 +58,10 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	}
 	
 	public boolean mountNewDrive(String name, String path) {
+		if (getDeviceFromPath(path) != null) {
+			return false;
+		}
+
 		logger.info("mount a new drive "+name+" => "+path);
 		String magic = "rDAD";
 		int index = getNextFreeSlot();
