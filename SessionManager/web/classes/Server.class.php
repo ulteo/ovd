@@ -307,6 +307,10 @@ class Server {
 				Abstract_Session::save($session);
 		}
 
+		$tasks = Abstract_Task::load_by_server($this->fqdn);
+		foreach ($tasks as $task)
+			Abstract_Task::delete($task->id);
+
 		$prefs = Preferences::getInstance();
 		if (! $prefs) {
 			Logger::critical('main', 'get Preferences failed in '.__FILE__.' line '.__LINE__);
