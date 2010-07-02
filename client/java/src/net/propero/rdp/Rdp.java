@@ -885,7 +885,7 @@ public class Rdp {
         this.rdp_shareid = data.getLittleEndian32();
 	len_src_descriptor = data.getLittleEndian16();
 	len_combined_caps = data.getLittleEndian16();
-	data.incrementPosition(len_combined_caps);
+	data.incrementPosition(len_src_descriptor);
 
 	this.processServerCaps(data, len_combined_caps);
 
