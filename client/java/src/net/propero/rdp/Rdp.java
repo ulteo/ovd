@@ -1076,7 +1076,10 @@ public class Rdp {
         this.sendControlCaps(data);
         this.sendPointerCaps(data);
         this.sendShareCaps(data);
-	this.sendVirtualChannelCaps(data);
+
+	if (this.opt.use_rdp5) {
+		this.sendVirtualChannelCaps(data);
+	}
 
 	// Input capabilities
         this.sendUnknownCaps(data, 0x0d, 0x58, caps_0x0d);
