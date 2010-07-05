@@ -58,6 +58,9 @@ def generateConfFile(path_file_, sm_, token_):
 def main():
 	user_sdir = Platform.getUserSessionDir()
 	
+	# Load profile share
+	Platform.mountShares()
+	
 	Util.loadUserEnv(user_sdir)
 	#if user_sdir is None:
 		#sys.exit(1)

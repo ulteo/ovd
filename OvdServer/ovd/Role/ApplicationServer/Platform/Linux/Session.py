@@ -69,8 +69,15 @@ class Session(AbstractSession):
 		f = file(os.path.join(d, "env"), "w")
 		f.writelines(env_file_lines)
 		f.close()
+		
+		if self.profile is not None:
+			self.profile.mount()
+	
 	
 	def uninstall_client(self):
+		if self.profile is not None:
+			self.profile.umount()
+		
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		xdg_dir = os.path.join(d, "xdg")
 		

@@ -47,6 +47,7 @@ class Session:
 		self.user = user_
 		self.mode = mode_
 		self.parameters = parameters_
+		self.profile = None
 		self.applications = applications_
 		self.instanceDirectory = None
 		self.used_applications = {}

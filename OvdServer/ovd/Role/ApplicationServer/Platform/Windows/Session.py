@@ -75,6 +75,9 @@ class Session(AbstractSession):
 		self.init_user_session_dir(os.path.join(appDataDir, "ovd"))
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
+		
+		if self.profile is not None:
+			self.profile.mount()
 	
 	
 	def install_shortcut(self, shortcut):
@@ -104,6 +107,9 @@ class Session(AbstractSession):
 	
 	
 	def uninstall_client(self):
+		if self.profile is not None:
+			self.profile.umount()
+		
 		self.user.destroy()
 		
 		return True
@@ -250,47 +256,4 @@ class Session(AbstractSession):
 		
 		# Unload the hive
 		win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
-	
-	
-	
-	def init_ulteo_registry(self, sid):
-		#		# Set settings to OVDShell be able to mount remote profile
-		path = sid+r"\Software"
-		subkey = r"Ulteo Session"
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-		win32api.RegCreateKey(key, subkey)
-		win32api.RegCloseKey(key)
-		
-		profile = r"\\10.42.1.254\julien\profile"
-		
-		path+= r"\%s"%(subkey)
-		data = {}
-		data["shell"] = "explorer" # seamlessrdpshell
-		data["profile"] = r"%s\common"%(profile)
-		data["profile_local"] = r"Z:"
-		data["profile_username"] = "julien"
-		data["profile_password"] = "test"
-	
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-		
-		for (k,v) in data.items():
-			win32api.RegSetValueEx(key, k, 0, win32con.REG_SZ, v)
-		
-		win32api.RegCloseKey(key)
-		
-	def init_redirection_shellfolders(self, sid):
-		# Rediect the Shell Folders to the remote profile
-		path = sid+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
-		data = [
-			"Desktop",
-			"AppData",
-			"Start Menu",
-			"Personal",
-			"Recent",
-		]
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-		
-		for item in data:
-			win32api.RegSetValueEx(key, item, 0, win32con.REG_SZ, r"Z:\%s"%(item))
-		
-		win32api.RegCloseKey(key)
+

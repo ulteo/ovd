@@ -26,11 +26,13 @@ if Platform is None:
 	
 	if p == "linux":
 		from Linux.ApplicationsDetection import ApplicationsDetection
+		from Linux.Profile import Profile
 		from Linux.Session import Session
 		from Linux.TS import TS
 		from Linux.User import User
 	elif p == "windows":
 		from Windows.ApplicationsDetection import ApplicationsDetection
+		from Windows.Profile import Profile
 		from Windows.Session import Session
 		from Windows.TS import TS
 		from Windows.User import User
@@ -42,6 +44,7 @@ if Platform is None:
 		pass
 	Platform = _Platform()
 	Platform.ApplicationsDetection = ApplicationsDetection
+	Platform.Profile = Profile
 	Platform.Session = Session
 	Platform.TS = TS
 	Platform.User = User

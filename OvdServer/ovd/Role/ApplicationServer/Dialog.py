@@ -173,6 +173,17 @@ class Dialog(AbstractDialog):
 			session["parameters"] = {}
 			for node in sessionNode.getElementsByTagName("parameter"):
 				session["parameters"][node.getAttribute("name")] = node.getAttribute("value")
+			
+			
+			nodes = sessionNode.getElementsByTagName("profile")
+			if len(nodes)>0:
+				profileNode = nodes[0]
+				profileNode.getAttribute("server")
+				profileNode.getAttribute("dir")
+				profileNode.getAttribute("login")
+				profileNode.getAttribute("password")
+			else:
+				profileNode = None
 		
 		except Exception, err:
 			Logger.warn("Invalid xml input: "+str(err))
@@ -187,6 +198,9 @@ class Dialog(AbstractDialog):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
 		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
+		
+		if profileNode is not None:
+			profile = Platform.Profile(profileNode.getAttribute("server"), profileNode.getAttribute("dir"), profileNode.getAttribute("login"), profileNode.getAttribute("password"), session)
 		
 		self.role_instance.sessions[session.id] = session
 		self.role_instance.sessions_spooler.put(("create", session))

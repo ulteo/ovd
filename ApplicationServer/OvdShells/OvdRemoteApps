@@ -37,6 +37,9 @@ def main():
 	if user_sdir is None or not os.path.isdir(user_sdir):
 		sys.exit(1)
 	
+	# Load profile share
+	Platform.mountShares()
+	
 	os.environ["OVD_SESSION_DIR"] = user_sdir
 	Util.loadUserEnv(user_sdir)
 	

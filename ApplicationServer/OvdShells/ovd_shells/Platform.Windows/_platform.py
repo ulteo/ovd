@@ -96,4 +96,22 @@ def getSubProcess(ppid):
 		if parent == ppid:
 			pids.append(pid)
 	
-	return pids	
+	return pids
+
+
+def mountShares():
+	key = None
+	try:
+		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd", 0, win32con.KEY_READ)
+		(profile, type_) = win32api.RegQueryValueEx(key, "profile")
+		if type_ is win32con.REG_SZ:
+			print "Profile command: ",profile
+			ret = os.system(profile)
+			print "Profile command result: ",ret
+	except Exception, err:
+		print "Oups: error",err
+	
+	finally:
+		if key is not None:
+			win32api.RegCloseKey(key)
+
