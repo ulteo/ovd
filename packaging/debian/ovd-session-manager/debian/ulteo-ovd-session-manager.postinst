@@ -20,8 +20,8 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
 fi
 
 if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
-    serverName=$(hostname -f 2>/dev/null)
-    if [ $? -ne 0 ]; then
+    serverName=$(hostname -f 2>/dev/null || true)
+    if [ -z "$serverName" ]; then
         # Bad /etc/hosts configuration
         serverName=$(hostname)
     fi
