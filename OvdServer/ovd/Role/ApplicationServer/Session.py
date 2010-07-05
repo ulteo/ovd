@@ -25,6 +25,8 @@ import time
 
 from ovd.Config import Config
 from ovd.Logger import Logger
+from ovd.Platform import Platform
+
 import Platform as RolePlatform
 
 class Session:
@@ -55,7 +57,7 @@ class Session:
 	def init_user_session_dir(self, user_session_dir):
 		self.user_session_dir = user_session_dir
 		if os.path.isdir(self.user_session_dir):
-			RolePlatform.Platform.System.DeleteDirectory(d)
+			Platform.System.DeleteDirectory(d)
 		
 		os.makedirs(self.user_session_dir)  
 		
