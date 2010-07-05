@@ -88,9 +88,10 @@ class SessionManagement(Thread):
 		
 		if sessid is not None:
 			session.user.infos["tsid"] = sessid
-		self.destroy_user(session.user)
 		
 		session.uninstall_client()
+		
+		self.destroy_user(session.user)
 		
 		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])
