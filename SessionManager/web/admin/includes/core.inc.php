@@ -28,14 +28,22 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 function get_root_admin_url() {
 	// Retrieve the admin root URL
 	$root_admin_dir = dirname(dirname(__FILE__));
-	$root_admin_url = '';
+	$root_admin_url = $_SERVER['REQUEST_URI'];
 	
-	$buffer = explode('/', $root_admin_dir);
-	foreach(array_reverse($buffer) as $elem) {
-		$root_admin_url = '/'.$elem.$root_admin_url;
+	$len1 = count(explode('/', $root_admin_dir));
+	$len2 = count(explode('/', realpath($_SERVER['SCRIPT_FILENAME'])));
+	if ($len1 > $len2) {
+		// Error: not possible !
+		return $root_admin_url;
+	}
+	
+	for ($i=$len2 - $len1; $i>0; $i--) {
+		$pos = strrpos ($root_admin_url, '/');
+		if ($pos === False)
+			// Error: not possible !
+			return $root_admin_url;
 		
-		if (str_startswith($_SERVER['REQUEST_URI'], $root_admin_url))
-			break;
+		$root_admin_url = substr($root_admin_url, 0, $pos);
 	}
 	
 	return $root_admin_url;
