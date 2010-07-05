@@ -21,7 +21,13 @@
 package org.ulteo.ovd.client.authInterface;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+
+import org.ulteo.ovd.client.I18n;
 
 
 public class IdPanel extends JPanel {
@@ -30,8 +36,17 @@ public class IdPanel extends JPanel {
 	private PasswordPanel passwordPan = null;
 	private HostPanel hostPan = null;
 	private OptionPanel opt = null;
-	
+	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
+	private boolean checked = false;
+
 	public IdPanel() {
+		rememberMe.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				checked=(checked) ? false : true;
+			}
+		});
 		loginPan = new LoginPanel();
 		passwordPan = new PasswordPanel();
 		hostPan = new HostPanel();
@@ -42,6 +57,7 @@ public class IdPanel extends JPanel {
 		this.add(loginPan);
 		this.add(passwordPan);
 		this.add(hostPan);
+		this.add(rememberMe);
 		validate();
 		revalidate();
 	}
@@ -76,5 +92,17 @@ public class IdPanel extends JPanel {
 
 	public void setOpt(OptionPanel opt) {
 		this.opt = opt;
+	}
+	
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public JCheckBox getRememberMe() {
+		return rememberMe;
+	}
+
+	public void setRememberMe(JCheckBox rememberMe) {
+		this.rememberMe = rememberMe;
 	}
 }

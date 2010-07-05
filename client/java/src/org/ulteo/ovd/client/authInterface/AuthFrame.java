@@ -26,10 +26,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.ini4j.Wini;
+import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.rdp.Connection;
 
 public class AuthFrame extends JFrame implements WindowListener {
@@ -39,6 +44,13 @@ public class AuthFrame extends JFrame implements WindowListener {
 	private Connection connection = null;
 	private boolean desktopLaunched = false;
 	private boolean use_https = true;
+	private String username = null;
+	private String ovdServer = null;
+	private String initMode = null;
+	private int mode = 0;
+	private String initRes = null;
+	private int resolution = 1;
+	private String token = null;
 
 	public AuthFrame(boolean use_https_) {
 		this.use_https = use_https_;
@@ -50,7 +62,6 @@ public class AuthFrame extends JFrame implements WindowListener {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		setIconImage(logo);
-
 		setSize(400,600);
 		setPreferredSize(new Dimension(400,600));
 		setLocationRelativeTo(null);
@@ -70,8 +81,63 @@ public class AuthFrame extends JFrame implements WindowListener {
 				mp.getLogPan().getUsername().requestFocusInWindow();
 			}
 		});
+		
 		mp.setFocusOnLogin();
 		pack();
+		
+		boolean defaultProfileIsPresent = true;
+		File defaultProfile = new File(Constants.homedir+Constants.separator+".ulteo"+Constants.separator+"OVDClient"+Constants.separator+"defaultInfo.ovd");
+		try {
+			parseProfileFile(defaultProfile);
+		} catch (FileNotFoundException e) {
+			defaultProfileIsPresent = false;
+			System.out.println("no default profile");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(defaultProfileIsPresent) {
+			mp.getIds().getRememberMe().setSelected(true);
+			this.getMp().getLogPan().getUsername().setText(username);
+			this.getMp().getHostPan().getHostname().setText(ovdServer);
+			this.getMp().getOptionPanel().getComboMode().setSelectedIndex(mode);
+			this.getMp().getOptionPanel().getScreenSizeSelecter().setValue(resolution);
+		}
+	}
+
+	public void parseProfileFile(File profile) throws IOException, FileNotFoundException {
+		Wini ini = new Wini(profile);
+		username = ini.get("user", "login");
+		ovdServer = ini.get("server", "host");
+		initMode = ini.get("sessionMode", "ovdSessionMode");
+		if (initMode.equals("desktop"))
+			mode = 0;
+		else if (initMode.equals("portal"))
+			mode = 1;
+		else
+			mode = 2;
+
+		initRes = ini.get("screen", "size");
+		if(initRes.equals("800x600"))
+			resolution=0;
+		else if(initRes.equals("1024x768"))
+			resolution=1;
+		else if(initRes.equals("1280x678"))
+			resolution=2;
+		else if(initRes.equals("maximized"))
+			resolution=3;
+		else
+			resolution=4;				
+
+		token = ini.get("token", "token");
+	}
+
+	public MainPanel getMp() {
+		return mp;
+	}
+
+	public void setMp(MainPanel mp) {
+		this.mp = mp;
 	}
 
 	public boolean isHttps() {
@@ -107,7 +173,6 @@ public class AuthFrame extends JFrame implements WindowListener {
 			int option = JOptionPane.showConfirmDialog(null, "Do you really want to close the window ?", "Warning !", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 			if(option == JOptionPane.OK_OPTION) {
-				// TODO close connection
 				System.exit(0);
 			}
 			else {

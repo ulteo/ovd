@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
@@ -33,6 +34,7 @@ import java.io.PrintWriter;
 
 import javax.swing.JOptionPane;
 
+import org.ini4j.Wini;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
@@ -45,6 +47,7 @@ public class LoginListener implements ActionListener{
 	private ButtonPanel bp = null;
 	private AuthFrame frame = null;
 	private OvdClient cli = null;
+	private File profileInfo = null;
 	private File connectionInfo = null;
 	private File connectionRepInfo = null;
 	private String username = null;
@@ -52,14 +55,14 @@ public class LoginListener implements ActionListener{
 	private String pass = null;
 	private String list = "";
 	private int mode = 0;
-	private int resolution = 0;
+	private int resolution = 1;
 	public LoadingFrame loader = null;
 
 	public LoginListener(ButtonPanel bp, AuthFrame frame) {
 		this.bp=bp;
 		this.frame=frame;
 		connectionRepInfo = new File(Constants.confPath+Constants.separator+"OVDClient");
-	}
+		}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -111,6 +114,9 @@ public class LoginListener implements ActionListener{
 			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 		}
 		else {
+			if (bp.getIds().isChecked()) {
+				saveDefault();
+			}
 			getInfo(writer, list, username, host);
 			changeFrame(frame);
 		}
@@ -150,6 +156,49 @@ public class LoginListener implements ActionListener{
 			writer.println("host="+hostname);
 		}
 		writer.flush();
+	}
+	
+	public void saveDefault() {
+		try {
+			connectionRepInfo.mkdirs();
+			profileInfo = new File(connectionRepInfo.getAbsolutePath()+(Constants.separator+"defaultInfo.ovd"));
+			PrintWriter out = new PrintWriter(new FileWriter(profileInfo));
+			out.println();
+			getProfile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	public void getProfile() throws IOException {
+		Wini ini = new Wini(this.profileInfo);
+		ini.put("user", "login", this.username);
+		ini.put("server", "host", this.host);
+		if (mode == 0)
+			ini.put("sessionMode", "ovdSessionMode", "desktop");
+		else if (mode == 1)
+			ini.put("sessionMode", "ovdSessionMode", "portal");
+		else
+			ini.put("sessionMode", "ovdSessionMode", "integrated");
+		
+		switch(resolution) {
+		case 0 :
+			ini.put("screen", "size", "800x600");
+			break;
+		case 1 :
+			ini.put("screen", "size", "1024x768");
+			break;
+		case 2 : 
+			ini.put("screen", "size", "1280x678");
+			break;
+		case 3 : 
+			ini.put("screen", "size", "maximized");
+			break;
+		case 4 : 
+			ini.put("screen", "size", "fullscreen");
+			break;
+		}
+		ini.store();
 	}
 	
 	public void initLoader() {

@@ -38,25 +38,22 @@ public class ButtonPanel extends JPanel {
 	private Font font = new Font("Arial", Font.BOLD, 11);
 	private HostPanel hostPan = null;
 	private OptionPanel opt = null;
-	private JButton saveButton = new JButton(I18n._("Save"));
 	private JButton saveAsButton = new JButton(I18n._("Save as ..."));
+	private IdPanel ids = null;
 	
-	public ButtonPanel(LoginPanel loginPan, PasswordPanel passwordPan, HostPanel hostPan, OptionPanel opt, AuthFrame frame, MainPanel mp) {
-		this.loginPan = loginPan;
-		this.passwordPan = passwordPan;
-		this.hostPan = hostPan;
+	public ButtonPanel(IdPanel ids, OptionPanel opt, AuthFrame frame, MainPanel mp) {
+		this.ids = ids;
+		this.loginPan = ids.getLoginPan();
+		this.passwordPan = ids.getPasswordPan();
+		this.hostPan = ids.getHostPan();
 		this.opt = opt;
 		loginButton.setFont(font);
-		saveButton.setFont(font);
 		saveAsButton.setFont(font);
 		loginButton.addActionListener(new LoginListener(this, frame));
-		saveButton.addActionListener(new SaveListener(this,frame,mp));
 		saveAsButton.addActionListener(new SaveAsListener(this, frame, mp));
 		enterPressesWhenFocused(loginButton);
-		enterPressesWhenFocused(saveButton);
 		enterPressesWhenFocused(saveAsButton);
 		this.add(loginButton);
-		this.add(saveButton);
 		this.add(saveAsButton);
 		revalidate();
 	}
@@ -75,6 +72,10 @@ public class ButtonPanel extends JPanel {
 	            JComponent.WHEN_FOCUSED);
 	}
 
+	public IdPanel getIds() {
+		return ids;
+	}
+	
 	public LoginPanel getLoginPan() {
 		return loginPan;
 	}

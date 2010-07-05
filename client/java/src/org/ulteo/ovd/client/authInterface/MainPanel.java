@@ -36,7 +36,7 @@ public class MainPanel extends JPanel {
 		this.frame=frame;
 		
 		center = new CenterPanel();
-		buttonPanel = new ButtonPanel(getLogPan(), getPassPan(), getHostPan(), getOptionPanel(), frame, this);
+		buttonPanel = new ButtonPanel(getIds(), getOptionPanel(), frame, this);
 		BorderLayout layout = new BorderLayout();
 		this.setLayout(layout);
 		this.add(center);
@@ -65,5 +65,8 @@ public class MainPanel extends JPanel {
 	
 	public OptionPanel getOptionPanel() {
 		return center.getOpt();
+	}
+	public IdPanel getIds() {
+		return center.getIds();
 	}
 }
