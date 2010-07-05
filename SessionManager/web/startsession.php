@@ -522,13 +522,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 	$session_node->appendChild($user_node);
 	
-	$profile_node = $dom->createElement('profile');
-	$profile_node->setAttribute('server', '10.42.1.219');
-	$profile_node->setAttribute('dir', 'profile1');
-	$profile_node->setAttribute('login', 'jane_OVD');
-	$profile_node->setAttribute('password', 'doegg');
-	$session_node->appendChild($profile_node);
-
 	foreach ($user->applications() as $application) {
 		if ($application->getAttribute('static'))
 			continue;
