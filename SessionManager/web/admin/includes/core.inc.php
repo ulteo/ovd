@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -48,6 +48,7 @@ function get_root_admin_url() {
 	
 	return $root_admin_url;
 }
+define('ROOT_ADMIN_URL', get_root_admin_url());
 
 if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {
 	$_SESSION['redirect'] = base64_encode($_SERVER['REQUEST_URI']);
@@ -61,6 +62,3 @@ if (! $prefs)
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
 if ($system_in_maintenance == '1')
 	popup_error(_('The system is in maintenance mode'));
-
-
-define('ROOT_ADMIN_URL', get_root_admin_url());

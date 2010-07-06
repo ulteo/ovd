@@ -31,12 +31,13 @@ function secure_html($data_) {
 }
 
 function in_admin() {
-	$buf = basename(dirname('http://'.@$_SERVER['SERVER_NAME'].@$_SERVER['PHP_SELF']));
-
-	if ($buf == 'admin')
-		return true;
-
-	return false;
+	if (! defined('ROOT_ADMIN_URL'))
+		return false;
+	
+	if (! str_startswith($_SERVER['REQUEST_URI'], ROOT_ADMIN_URL))
+		return false;
+	
+	return true;
 }
 
 function check_folder($folder_) {
