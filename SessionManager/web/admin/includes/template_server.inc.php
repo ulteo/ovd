@@ -420,3 +420,56 @@ function server_display_role_aps($server, $var) {
 		echo '</div>'; // div 1 has_sessions
 	}
 }
+
+function server_display_role_preparation_fs($server_) {
+	$ret = array();
+	
+	$ret['NetworkFolders'] = Abstract_NetworkFolder::load_from_server($server_->getAttribute('fqdn'));
+	$ret['used by'] = array();
+	
+	foreach ($ret['NetworkFolders'] as $a_networkfolder) {
+		$ret['used by'][$a_networkfolder->id] = $a_networkfolder->getUsers();
+	}
+	return $ret;
+}
+
+function server_display_role_fs($server_, $var_) {
+	$networkfolders_on_server = $var_['NetworkFolders'];
+	$usedby = $var_['used by'];
+	
+	if (is_array($networkfolders_on_server) && count($networkfolders_on_server) > 0 && is_array($usedby)) {
+		echo '<h3>'._('Network folders in the server').'</h3>';
+		$count = 0;
+		echo '<table id="available_networkfolder_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+		echo '<tr class="title">';
+		echo '<th>'._('Name').'</th>';
+		echo '<th>'._('Status').'</th>';
+		echo '<th class="unsortable">'._('Used by').'</th>';
+		
+		echo '</tr>';
+		foreach ($networkfolders_on_server as $a_networkfolder) {
+			$content = 'content'.(($count++%2==0)?1:2);
+			echo '<tr class="'.$content.'">';
+			echo '<td>';
+			echo $a_networkfolder->path;
+			echo '</td>';
+			echo '<td>';
+			echo $a_networkfolder->status;
+			echo '</td>';
+			echo '<td>';
+			if (array_key_exists($a_networkfolder->id, $usedby)) {
+				$users = $usedby[$a_networkfolder->id];
+				echo '<ul>';
+				foreach ($users as $a_user) {
+					echo '<li>';
+					echo '<a href="users.php?action=manage&id='.$a_user->getAttribute('login').'">'.$a_user->getAttribute('displayname');
+					echo '</li>';
+				}
+				echo '</ul>';
+			}
+			echo '</td>';
+			echo '</tr>';
+		}
+		echo '</table>';
+	}
+}

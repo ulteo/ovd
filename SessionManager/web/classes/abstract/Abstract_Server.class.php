@@ -279,6 +279,11 @@ class Abstract_Server {
 		foreach ($tm->tasks as $a_task) {
 			$tm->remove($a_task->id);
 		}
+		
+		$folders = Abstract_NetworkFolder::load_from_server($fqdn_);
+		foreach ($folders as $a_folder) {
+			Abstract_NetworkFolder::delete($a_folder);
+		}
 
 		return true;
 	}

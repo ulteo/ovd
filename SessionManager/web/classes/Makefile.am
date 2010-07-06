@@ -13,6 +13,7 @@ scripts_DATA = Application.class.php \
                Liaison.class.php \
                Logger.class.php \
                Module.class.php \
+               NetworkFolder.class.php \
                SQL.class.php \
                News.class.php \
                Plugin.class.php \
