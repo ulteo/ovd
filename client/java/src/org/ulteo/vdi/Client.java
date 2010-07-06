@@ -125,6 +125,7 @@ public class Client implements RdpListener, Runnable {
 		} catch (Exception e) {
 			logger.error("untreated error");
 		} finally {
+			System.out.println("################");
 			this.disconnected(rc);
 		}
 	}
@@ -133,7 +134,7 @@ public class Client implements RdpListener, Runnable {
 	
 	private static final String productName = "Ulteo VDI Client";
 
-	private static String fifodir = "/var/cache/vdiserver/fifo/";
+	private static String fifodir = "/var/cache/ulteo/vdi/host/fifo";
 
 	private static void usage() {
 		System.err.println(Client.productName);
