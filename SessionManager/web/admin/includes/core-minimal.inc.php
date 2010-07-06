@@ -36,6 +36,7 @@ if ($buf == 'auto') {
 }
 $language = locale2unix($buf);
 setlocale(LC_ALL, $language);
+putenv('LANGUAGE='.$language);
 $domain = 'uovdsm';
 bindtextdomain($domain, LOCALE_DIR);
 textdomain($domain);
