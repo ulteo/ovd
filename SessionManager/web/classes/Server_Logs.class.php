@@ -78,9 +78,9 @@ class Server_Logs {
 		$obj = new FileTailer($this->logsdir.'/'.date('Ymd').'.log');
 		$buf = $obj->tail_str(1);
 		if ($buf != '') {
-				$buf = preg_match('/^([0-9]+)-([0-9]+)-([0-9]+) ([0-9+]):([0-9]+):([0-9]+),/', $buf, $matches);
-				if (is_array($matches) && count($matches) == 7)
-					$last = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
+			$buf = preg_match('/^([0-9]+)-([0-9]+)-([0-9]+) ([0-9+]):([0-9]+):([0-9]+),/', $buf, $matches);
+			if (is_array($matches) && count($matches) == 7)
+				$last = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
 		}
 
 		@file_put_contents($this->logsdir.'/last', ((isset($last))?$last:time()));
