@@ -60,13 +60,6 @@ $menu['status'] =
 		  'page' => 'sessions.php',
 		  'parent' => array());
 
-$menu['logout'] =
-	array('id' => 'logout',
-		  'name' => _('Logout').(isset($_SESSION['admin_ovd_user'])?' ('.$_SESSION['admin_login'].')':''),
-		  'page' => 'logout.php',
-		  'parent' => array(),
-		  'always_display' => true);
-
 if (isAuthorized('viewServers')) {
 	$menu['servers_child'] =
 		array('id' => 'servers_child',
@@ -232,6 +225,35 @@ if (isAuthorized('viewSummary'))
 			  'name' => _('Summary'),
 			  'page' => 'sumup.php',
 			  'parent' => array('status'));
+
+// extra modules
+foreach (glob(dirname(dirname(__FILE__)).'/*/menu.inc.php') as $path) {
+	$mod_name = basename(dirname($path));
+	
+	include_once($path);
+	global $mod_menu;
+	foreach($mod_menu as $item) {
+		$item['mod'] = $mod_name;
+		$item['mod_id'] = $item['id'];
+		$item['id'] = $mod_name.'_'.$item['id'];
+		$item['page'] = $mod_name.'/'.$item['page'];
+		for ($i=0; $i<count($item['parent']); $i++) {
+			if (str_startswith($item['parent'][$i], '@'))
+				$item['parent'][$i] = substr($item['parent'][$i], 1);
+			else
+				$item['parent'][$i] = $mod_name.'_'.$item['parent'][$i];
+		}
+		
+		$menu[$item['id']] = $item;
+	}
+}
+
+$menu['logout'] =
+	array('id' => 'logout',
+		  'name' => _('Logout').(isset($_SESSION['admin_ovd_user'])?' ('.$_SESSION['admin_login'].')':''),
+		  'page' => 'logout.php',
+		  'parent' => array(),
+		  'always_display' => true);
 
 
 function page_header($params_=array()) {
@@ -457,7 +479,12 @@ function page_menu(){
 //		if ($id == $parent)
 //			echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
 		
-		echo '" class="menu"><a href="'.ROOT_ADMIN_URL.'/'.get_target($id).'"><img src="'.ROOT_ADMIN_URL.'/media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
+		if (isset($entrie['mod']))
+			$img = ''.$entrie['mod'].'/media/image/menu_'.$entrie['mod_id'].'.png';
+		else
+			$img = 'media/image/menu/'.$id.'.png';
+		
+		echo '" class="menu"><a href="'.ROOT_ADMIN_URL.'/'.get_target($id).'"><img src="'.ROOT_ADMIN_URL.'/'.$img.'" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
 		echo '<span class="menulink';
 		if ($id == $parent)
 			echo '_active';
