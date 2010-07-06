@@ -86,7 +86,7 @@ public class AuthFrame extends JFrame implements WindowListener {
 		pack();
 		
 		boolean defaultProfileIsPresent = true;
-		File defaultProfile = new File(Constants.homedir+Constants.separator+".ulteo"+Constants.separator+"OVDClient"+Constants.separator+"defaultInfo.ovd");
+		File defaultProfile = new File(Constants.clientConfigFilePath+Constants.separator+"default.conf");
 		try {
 			parseProfileFile(defaultProfile);
 		} catch (FileNotFoundException e) {

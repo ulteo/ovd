@@ -61,7 +61,7 @@ public class LoginListener implements ActionListener{
 	public LoginListener(ButtonPanel bp, AuthFrame frame) {
 		this.bp=bp;
 		this.frame=frame;
-		connectionRepInfo = new File(Constants.confPath+Constants.separator+"OVDClient");
+		connectionRepInfo = new File(Constants.clientConfigFilePath);
 		}
 
 	@Override
@@ -76,7 +76,7 @@ public class LoginListener implements ActionListener{
 
 		try{
 			connectionRepInfo.mkdirs();
-			connectionInfo = new File(connectionRepInfo.getAbsolutePath()+Constants.separator+"usersInfo.ovd");
+			connectionInfo = new File(Constants.clientConfigFilePath+Constants.separator+"history.conf");
 			FileInputStream fis = new FileInputStream(connectionInfo);
 			LineNumberReader l = new LineNumberReader(       
 					new BufferedReader(new InputStreamReader(fis)));
@@ -161,7 +161,7 @@ public class LoginListener implements ActionListener{
 	public void saveDefault() {
 		try {
 			connectionRepInfo.mkdirs();
-			profileInfo = new File(connectionRepInfo.getAbsolutePath()+(Constants.separator+"defaultInfo.ovd"));
+			profileInfo = new File(Constants.clientConfigFilePath+(Constants.separator+"default.conf"));
 			PrintWriter out = new PrintWriter(new FileWriter(profileInfo));
 			out.println();
 			getProfile();

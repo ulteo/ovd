@@ -37,6 +37,7 @@ import javax.swing.JTextField;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.integrated.Constants;
 
 public class LoginPanel extends JPanel {
 
@@ -56,7 +57,7 @@ public class LoginPanel extends JPanel {
 		login.setForeground(new Color(106,106,106));
 		this.add(login);
 		this.add(username);
-		logInfo = new File("./usersInfo.ovd");
+		logInfo = new File(Constants.clientConfigFilePath+Constants.separator+"history.conf");
 		try{
 			FileInputStream fis = new FileInputStream(logInfo);
 			LineNumberReader l = new LineNumberReader(       
