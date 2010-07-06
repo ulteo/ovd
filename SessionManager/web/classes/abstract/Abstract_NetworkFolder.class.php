@@ -44,7 +44,7 @@ class Abstract_NetworkFolder {
 		Logger::debug('main', "Abstract_NetworkFolder::exists($id_)");
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @2 = %3 LIMIT 1', 'id', $SQL->prefix.'NetworkFolder', $id_);
+		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $SQL->prefix.'NetworkFolder', $id_);
 		$total = $SQL->NumRows();
 		
 		return ($total == 0);
