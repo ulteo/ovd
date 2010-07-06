@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -94,6 +95,7 @@ class Share:
 	def disable(self):
 		cmd = "net usershare delete %s"%(self.name)
 		s, o = commands.getstatusoutput(cmd)
+		ret = True
 		if s is not 0:
 			ret = False
 			Logger.error("FS: unable to del share")
