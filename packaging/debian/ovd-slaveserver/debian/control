@@ -25,6 +25,6 @@ Description: Application server role for the Ulteo OVD slave server
 
 Package: ulteo-ovd-slaveserver-role-fs
 Architecture: all
-Depends: python (>= 2.5), ulteo-ovd-slaveserver, samba, debconf
+Depends: python (>= 2.5), python-pyinotify (>= 0.7.1), ulteo-ovd-slaveserver, samba, debconf
 Description: File server role for the Ulteo OVD slave server
  File server role for the Ulteo OVD slave server

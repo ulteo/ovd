@@ -23,6 +23,7 @@ import glob
 import os
 import time
 from xml.dom.minidom import Document
+from pyinotify import WatchManager, ThreadedNotifier
 
 from ovd.Config import Config
 from ovd.Logger import Logger
@@ -31,6 +32,7 @@ from ovd.Role.Role import Role as AbstractRole
 
 from Config import Config
 from Dialog import Dialog
+from Rec import Rec
 from Share import Share
 
 
@@ -52,6 +54,9 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup samba users")
 			return False
 		
+		self.inotify = ThreadedNotifier(WatchManager())
+		self.wm.add_watch(path=Config.spool, mask=r.mask, proc_fun=Rec(), rec=True, auto_add=True)
+		
 		return True
 
 	
@@ -63,10 +68,13 @@ class Role(AbstractRole):
 	def stop(self):
 		Logger.info("FileServer:: stopping")
 		self.cleanup_samba()
+		self.inotify.stop()
 	
 	
 	def run(self):
 		self.has_run = True
+		self.inotify.start()
+		
 		while 1:
 			time.sleep(30)
 			Logger.debug("FileServer run loop")
