@@ -174,8 +174,8 @@ class Abstract_NetworkFolder {
 		return $networkfolders;
 	}
 	
-	public static function modify($NetworkFolder_) {
-		Logger::debug('main', 'Abstract_NetworkFolder::modify for \''.$NetworkFolder_->id.'\'');
+	public static function update($NetworkFolder_) {
+		Logger::debug('main', 'Abstract_NetworkFolder::update for \''.$NetworkFolder_->id.'\'');
 		$SQL = SQL::getInstance();
 		
 		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7) WHERE @8=%9 LIMIT 1', $SQL->prefix.'NetworkFolder', 'path', $NetworkFolder_->path, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
