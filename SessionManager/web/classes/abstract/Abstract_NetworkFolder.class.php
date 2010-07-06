@@ -42,6 +42,10 @@ class Abstract_NetworkFolder {
 	
 	public static function exists($id_) {
 		Logger::debug('main', "Abstract_NetworkFolder::exists($id_)");
+		if (is_null($id_)) {
+			return false;
+		}
+		
 		$SQL = SQL::getInstance();
 		
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $SQL->prefix.'NetworkFolder', $id_);
