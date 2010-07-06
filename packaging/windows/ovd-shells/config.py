@@ -22,10 +22,10 @@ def getSVNRoot():
 	return r"ApplicationServer\OvdShells"
 
 def pre_sources_commads():
-	return ["python autogen.py"]
+	return ["python autogen"]
 
 def source_remove_files():
-	return ["autogen.py", "MANIFEST.in", "manpages", "setup.py.in"]
+	return ["autogen", "MANIFEST.in", "manpages", "setup.py.in"]
 
 def compile_commands():
 	return ["python setup.py"]

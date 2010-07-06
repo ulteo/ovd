@@ -22,7 +22,7 @@ def getSVNRoot():
 	return r"client\java"
 
 def pre_sources_commads():
-	return ["python autogen.py"]
+	return ["python autogen"]
 
 def source_remove_files():
 	return ["boostrap", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]

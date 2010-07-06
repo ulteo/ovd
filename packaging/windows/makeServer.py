@@ -38,11 +38,11 @@ def main(basepath, distpath):
 	
 	
 	os.chdir(os.path.join(basepath, "ApplicationServer", "OvdShells"))
-	s = my_exec("autogen.py")
+	s = my_exec("autogen")
 	s = my_exec("python setup.py")
 	
 	os.chdir(os.path.join(basepath, "OvdServer"))
-	s = my_exec("autogen.py")
+	s = my_exec("autogen")
 	s = my_exec("python setup.py")
 	
 	os.chdir(os.path.join(basepath, "ApplicationServer", "windows", "iconExtractor"))
