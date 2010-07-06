@@ -97,6 +97,10 @@ public class IdPanel extends JPanel {
 	public boolean isChecked() {
 		return checked;
 	}
+	
+	public void setChecked(boolean ch) {
+		this.checked = ch;
+	}
 
 	public JCheckBox getRememberMe() {
 		return rememberMe;

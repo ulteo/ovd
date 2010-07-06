@@ -98,6 +98,7 @@ public class AuthFrame extends JFrame implements WindowListener {
 		
 		if(defaultProfileIsPresent) {
 			mp.getIds().getRememberMe().setSelected(true);
+			mp.getIds().setChecked(true);
 			this.getMp().getLogPan().getUsername().setText(username);
 			this.getMp().getHostPan().getHostname().setText(ovdServer);
 			this.getMp().getOptionPanel().getComboMode().setSelectedIndex(mode);
