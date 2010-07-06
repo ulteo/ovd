@@ -54,8 +54,9 @@ class Role(AbstractRole):
 			Logger.error("FileServer: unable to cleanup samba users")
 			return False
 		
-		self.inotify = ThreadedNotifier(WatchManager())
-		self.wm.add_watch(path=Config.spool, mask=r.mask, proc_fun=Rec(), rec=True, auto_add=True)
+		wm = WatchManager()
+		self.inotify = ThreadedNotifier(wm)
+		wm.add_watch(path=Config.spool, mask=Rec.mask, proc_fun=Rec(), rec=True, auto_add=True)
 		
 		return True
 
