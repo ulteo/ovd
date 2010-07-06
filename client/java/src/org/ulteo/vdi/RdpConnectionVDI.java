@@ -79,6 +79,14 @@ public class RdpConnectionVDI extends RdpConnection {
 			throw new RdesktopException("Unable to add seamless channel");
 	}
 	
+	protected void initRdpdrChannel() throws RdesktopException {
+		if (this.rdpdrChannel != null)
+			return;
+		this.rdpdrChannel = new OVDRdpdrChannel(this.opt, this.common);
+		if (! this.addChannel(this.rdpdrChannel))
+			throw new RdesktopException("Unable to add rdpdr channel");
+	}
+	
 	protected void fireDisconnected() {
 		super.fireDisconnected();
 		diskManager.stop();

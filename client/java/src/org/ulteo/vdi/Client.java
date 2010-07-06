@@ -45,6 +45,7 @@ public class Client implements RdpListener, Runnable {
 		 
 		BasicConfigurator.configure();
 		(Logger.getLogger("net.propero.rdp")).setLevel(Level.INFO);
+		(Logger.getLogger("org.ulteo.ovd.disk")).setLevel(Level.INFO);
 		logger = Logger.getLogger(Client.class.getName());
 		logger.setLevel(Level.DEBUG);
 		
@@ -106,8 +107,8 @@ public class Client implements RdpListener, Runnable {
 	}
 	
 	public void run() {
+		String pipe = fifodir + namedpipe;
 		try {
-			String pipe = fifodir + namedpipe;
 			FileReader f = new FileReader(pipe);
 			BufferedReader in = new BufferedReader(f);
 			while (true) {
@@ -120,7 +121,7 @@ public class Client implements RdpListener, Runnable {
 				}
 			}
 		} catch (IOException e) {
-			logger.error("named pipe" + namedpipe + "error");
+			logger.error("named pipe " + pipe + " error");
 		} catch (Exception e) {
 			logger.error("untreated error");
 		} finally {

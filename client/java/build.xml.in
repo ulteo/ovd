@@ -395,8 +395,7 @@
       <include name="**" />
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.vdi.Client"/>
-        <attribute name="Class-Path" value="${install.dir}/log4j-1.2.jar
-                                            ${install.dir}/gnu-getopt.jar"/>
+        <attribute name="Class-Path" value="/usr/share/java/log4j-1.2.jar /usr/share/java/gnu-getopt.jar"/>
       </manifest>
     </jar>
   </target>
@@ -408,6 +407,7 @@
     <copy file="scripts/vdiclient" todir="${bindir}" />
   </target>
 
+
   <!-- Source tarball part -->
 
   <target name="dist" description="create a source tarball">
@@ -418,7 +418,7 @@
         <include name="src*/**" />
         <include name="required_libraries/*" />
         <include name="keymaps/*" />
-        <include name="srcipts/*" />
+        <include name="scripts/*" />
         <include name="icons/*" />
         <include name="po/*" />
       </fileset>
