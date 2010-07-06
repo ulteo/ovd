@@ -381,7 +381,6 @@ function get_menu_entry() {
 	global $menu;
 	$menu2 = $menu; // bug in php 5.1.6 (redhat 5.2)
 
-	$dirname_php_self = dirname($_SERVER['PHP_SELF']);
 	$page = get_current_page();
 	
 	$buffer_id = Null;
@@ -411,7 +410,7 @@ function get_target($id_) {
 	
 	foreach($menu2 as $id => $entrie) {
 		if (! in_array($id_, $entrie['parent']))
-				continue;		   
+			continue;
 
 		return $entrie['page'];
 	}
@@ -450,19 +449,19 @@ function page_menu(){
 	foreach($menu2 as $id => $entrie) {
 		if (count($entrie['parent'])>0)
 			continue;
-
+		
 		if (! isset($entrie['always_display']) && get_nb_child($id) == 0)
 			continue;
-
+		
 		echo '<td style="min-width: 60px; height: 81px; text-align: center; vertical-align: middle;';
 //		if ($id == $parent)
 //			echo ' background: #eee; border-left: 1px solid  #ccc; border-right: 1px solid #ccc;';
-
+		
 		echo '" class="menu"><a href="'.ROOT_ADMIN_URL.'/'.get_target($id).'"><img src="'.ROOT_ADMIN_URL.'/media/image/menu/'.$id.'.png" width="32" height="32" alt="'.$entrie['name'].'" title="'.$entrie['name'].'" /><br />';
 		echo '<span class="menulink';
 		if ($id == $parent)
 			echo '_active';
-
+		
 		echo '">'.$entrie['name'].'</span></a></td>'."\n";
 	}
 	echo '</tr>';
