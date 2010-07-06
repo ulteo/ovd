@@ -21,6 +21,7 @@
 import commands
 import glob
 import os
+import statvfs
 import time
 from xml.dom.minidom import Document
 from pyinotify import WatchManager, ThreadedNotifier
@@ -155,3 +156,13 @@ class Role(AbstractRole):
 				shares.append(share)
 		
 		return shares
+	
+	
+	def get_disk_size_infos(self):
+		stats = os.statvfs(Config.spool)
+		free_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BFREE] 
+		#avail_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BAVAIL]
+		total_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BLOCKS]
+		
+		return (total_bytes/1024, free_bytes/1024)
+

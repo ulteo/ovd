@@ -137,9 +137,12 @@ class Dialog(AbstractDialog):
 	
 	def req_list_all(self, request):
 		shares = self.role_instance.get_existing_shares()
+		infos  = self.role_instance.get_disk_size_infos()
 		
 		doc = Document()
 		rootNode = doc.createElement('shares')
+		rootNode.setAttribute("total_size", str(infos[0]))
+		rootNode.setAttribute("free_size", str(infos[1]))
 		doc.appendChild(rootNode)
 		
 		for share in shares:
