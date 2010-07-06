@@ -245,6 +245,10 @@ class User {
 		}
 		return $my_applications;
 	}
+	
+	public function getNetworkFolders() {
+		return Abstract_NetworkFolder::load_from_user($this->getAttribute('login'));
+	}
 
 	public function getAttributesList(){
 		return array_keys($this->attributes);
