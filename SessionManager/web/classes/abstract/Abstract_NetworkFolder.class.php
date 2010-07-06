@@ -208,6 +208,6 @@ class Abstract_NetworkFolder {
 			Logger::error('main', "Abstract_NetworkFolder::delete_user_from_NetworkFolder, parameter 'NetworkFolder_' is not correct, NetworkFolder_: ".serialize($NetworkFolder_));
 			return false;
 		}
-		return Abstract_Liaison::delete('UserNetworkFolder', $user_->getAttribute('login', $NetworkFolder_->id));
+		return Abstract_Liaison::delete('UserNetworkFolder', $user_->getAttribute('login'), $NetworkFolder_->id);
 	}
 }
