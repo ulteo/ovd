@@ -24,7 +24,7 @@ class NetworkFolder {
 	public $id = NULL;
 	public $path = NULL;
 	public $server = NULL; // FQDN/ID of the server
-	public $status = NULL;
+	public $status = '';
 
 	public function __construct() {
 	}
