@@ -272,6 +272,9 @@ if ($sessions > 0) {
 	}
 }
 
+$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
+$user_password = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
 $buf_servers = $user->getAvailableServers();
 if (is_null($buf_servers) || count($buf_servers) == 0) {
 	$ev->setAttribute('ok', false);
@@ -458,9 +461,6 @@ foreach ($plugins_args as $k => $v)
 $session->setAttribute('settings', $data);
 $session->setAttribute('start_time', time());
 
-$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
-$user_password = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-
 $session->settings['aps_access_login'] = $user_login;
 $session->settings['aps_access_password'] = $user_password;
 
@@ -521,7 +521,7 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$user_node->setAttribute('password', $user_password);
 	$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 	$session_node->appendChild($user_node);
-	
+
 	foreach ($user->applications() as $application) {
 		if ($application->getAttribute('static'))
 			continue;
