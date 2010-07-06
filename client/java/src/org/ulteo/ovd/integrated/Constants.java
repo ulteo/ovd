@@ -30,11 +30,13 @@ public final class Constants {
 	public static final String installPath = (OSTools.isWindows()) ? "Y:" : Constants.homedir+Constants.separator+"svn/ovd-lab/rdp-applet/dist";
 	public static final String launcher = "UlteoOVDIntegratedLauncher"+((OSTools.isWindows()) ? ".exe" : "");
 	public static final String launcherPath = Constants.installPath+Constants.separator+Constants.launcher;
-
+ 
 	public static final String confPath = Constants.homedir+Constants.separator+((OSTools.isWindows()) ? "Application Data"+Constants.separator : ".")+"ulteo";
 	public static final String confRemoteAppsPath = Constants.confPath+Constants.separator+"remoteApps";
 	public static final String instancesPath = Constants.confRemoteAppsPath+Constants.separator+"instances";
 	public static final String iconsPath = Constants.confRemoteAppsPath+Constants.separator+"icons";
 	public static final String toLaunchPath = Constants.confRemoteAppsPath+Constants.separator+"to_launch";
 	public static final String xfceMenuEntriesPath = Constants.homedir+Constants.separator+".local/share/applications";
+	
+	public static final String clientConfigFilePath = Constants.homedir+Constants.separator+".ulteo"+Constants.separator+"ovd"+Constants.separator+"client";
 }
