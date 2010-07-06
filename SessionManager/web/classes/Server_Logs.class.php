@@ -60,17 +60,31 @@ class Server_Logs {
 		return 'Server_Logs(\''.$this->server->fqdn.'\')';
 	}
 
-	public function fetchLogs() {
+	public function fetchLogs($since_=NULL) {
 		Logger::debug('main', 'Starting Server_Logs::fetchLogs for server \''.$this->server->fqdn.'\'');
 
-		$ret = query_url($this->server->getWebservicesBaseURL().'/server/logs', false); //since = $since_
+		if (is_null($since_))
+			$since_ = time();
+
+		$ret = query_url($this->server->getWebservicesBaseURL().'/server/logs/since/'.$since_, false);
 		if (! $ret) {
 			$this->server->isUnreachable();
 			Logger::error('main', 'Server_Logs::fetchLogs server \''.$this->server->fqdn.'\' is unreachable');
 			return false;
 		}
 
-		@file_put_contents($this->logsdir.'/'.date('Ymd').'.log', $ret);
+		@file_put_contents($this->logsdir.'/'.date('Ymd').'.log', $ret."\n", FILE_APPEND);
+
+		$obj = new FileTailer($this->logsdir.'/'.date('Ymd').'.log');
+		$buf = $obj->tail_str(1);
+		if ($buf != '') {
+				$buf = preg_match('/^([0-9]+)-([0-9]+)-([0-9]+) ([0-9+]):([0-9]+):([0-9]+),/', $buf, $matches);
+				if (is_array($matches) && count($matches) == 7)
+					$last = mktime($matches[4], $matches[5], $matches[6], $matches[2], $matches[3], $matches[1]);
+		}
+
+		@file_put_contents($this->logsdir.'/last', ((isset($last))?$last:time()));
+		@file_put_contents($this->logsdir.'/since', time());
 
 		return true;
 	}
