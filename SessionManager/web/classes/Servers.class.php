@@ -22,6 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class Servers {
 	public static $role_aps = 'aps';
+	public static $role_fs = 'fs';
 
 	public static function getAll() {
 // 		Logger::debug('main', 'Starting Servers::getAll');

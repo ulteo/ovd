@@ -707,6 +707,153 @@ class Server {
 		return true;
 	}
 
+	public function createNetworkFolder($name_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('share');
+		$node->setAttribute('id', $name_);
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/share/create', $xml);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::createNetworkFolder server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('share')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('id'))
+			return false;
+
+		return true;
+	}
+
+	public function deleteNetworkFolder($name_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('share');
+		$node->setAttribute('id', $name_);
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/share/delete', $xml);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::deleteNetworkFolder server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('share')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('id'))
+			return false;
+
+		return true;
+	}
+
+	public function addUserToNetworkFolder($name_, $login_, $password_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('share');
+		$node->setAttribute('id', $name_);
+		$user_node = $dom->createElement('user');
+		$user_node->setAttribute('login', $login_);
+		$user_node->setAttribute('password', $password_);
+		$node->appendChild($user_node);
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/share/users/add', $xml);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::addUserToNetworkFolder server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('share')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('id'))
+			return false;
+
+		return true;
+	}
+
+	public function delUserFromNetworkFolder($name_, $login_) {
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$node = $dom->createElement('share');
+		$node->setAttribute('id', $name_);
+		$user_node = $dom->createElement('user');
+		$user_node->setAttribute('login', $login_);
+		$node->appendChild($user_node);
+		$dom->appendChild($node);
+
+		$xml = $dom->saveXML();
+
+		$xml = query_url_post_xml($this->getBaseURL().'/fs/share/users/del', $xml);
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::delUserFromNetworkFolder server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('share')->item(0);
+		if (is_null($node))
+			return false;
+
+		if (! $node->hasAttribute('id'))
+			return false;
+
+		return true;
+	}
+
 	public function getWindowsADDomain() {
 		Logger::debug('main', 'Starting Server::getWindowsADDomain for server \''.$this->fqdn.'\'');
 
