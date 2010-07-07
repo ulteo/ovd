@@ -61,14 +61,46 @@ def getUserSessionDir():
 	d = shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_APPDATA)
 	return os.path.join(d, "ulteo", "ovd")
 
+
 def launchIntegratedClient(configuration_file_):                                                                                   
 	if os.path.exists(configuration_file_) == False:                                                                            
-		return False                                                                                                        
+		return False
 	
 	# TODO: remove harcoded paths
 	os.system("""copy "c:\\Program Files\\Ulteo\\Open Virtual Desktop Client\\libWindowsPaths.dll" "%s" """%(os.path.expanduser('~')))
-	launch(""""c:\\Program Files\\Java\\jre6\\bin\\javaw.exe" -jar "c:\\Program Files\\Ulteo\\Open Virtual Desktop Client\\UlteoOVDClient.jar" -c "%s" """%(configuration_file_), False)
+	
+	java_cmd = detectJavaw()
+	if java_cmd is None:
+		print "No java installed on the system"
+		return False
+	
+	jar_location = r"C:\Program Files\Ulteo\Open Virtual Desktop Client\UlteoOVDClient.jar"
+	if not os.path.isfile(jar_location):
+		print "No OVD integrated client installed on the system"
+		return None
+	
+	java_cmd = java_cmd.replace("%1", jar_location)
+	java_cmd = java_cmd.replace("%*", '-c "%s"'%(configuration_file_))
+	
+	launch(java_cmd, False)
 	return True 
+
+
+def detectJavaw():
+	key = None
+	
+	try:
+		key = win32api.RegOpenKey(win32con.HKEY_CLASSES_ROOT, r"Applications\javaw.exe\shell\open\command", 0, win32con.KEY_READ)
+		data = win32api.RegQueryValue(key, None)
+	except Exception, err:
+		return None
+	
+	finally:
+		if key is not None:
+			win32api.RegCloseKey(key)
+	
+	return data
+
 
 def startDesktop():
 	launch("explorer", True)
