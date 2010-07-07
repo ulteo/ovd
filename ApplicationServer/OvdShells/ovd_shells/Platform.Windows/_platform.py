@@ -100,18 +100,22 @@ def getSubProcess(ppid):
 
 
 def mountShares():
+	profileCmd = None
 	key = None
 	try:
 		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd", 0, win32con.KEY_READ)
 		(profile, type_) = win32api.RegQueryValueEx(key, "profile")
 		if type_ is win32con.REG_SZ:
-			print "Profile command: ",profile
-			ret = os.system(profile)
-			print "Profile command result: ",ret
+			profileCmd = profile
 	except Exception, err:
-		print "Oups: error",err
+		print "No profile to mount"
+		return
 	
 	finally:
 		if key is not None:
 			win32api.RegCloseKey(key)
-
+	
+	if type_ is win32con.REG_SZ:
+		print "Profile command: ",profileCmd
+		ret = os.system(profileCmd)
+		print "Profile command result: ",ret
