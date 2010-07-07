@@ -72,7 +72,7 @@ class Session(AbstractSession):
 		win32api.CloseHandle(logon)
 		
 		
-		self.init_user_session_dir(os.path.join(appDataDir, "ovd"))
+		self.init_user_session_dir(os.path.join(appDataDir, "ulteo", "ovd"))
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
 		
