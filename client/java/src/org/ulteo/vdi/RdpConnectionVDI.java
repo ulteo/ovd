@@ -35,13 +35,13 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 import org.ulteo.rdp.seamless.SeamlessChannel;
 
 public class RdpConnectionVDI extends RdpConnection {
-	
+
 	private DiskManager diskManager = null;
 
 	public RdpConnectionVDI() throws VdiException {
-		
+
 		super(new Options(), new Common());
-		
+
 		String language = System.getProperty("user.language");
 		String country = System.getProperty("user.country");
 		this.mapFile =  new Locale(language, country).toString().toLowerCase();
@@ -66,7 +66,7 @@ public class RdpConnectionVDI extends RdpConnection {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void initSeamlessChannel() throws RdesktopException {
 		this.opt.seamlessEnabled = true;
 		if (this.seamChannel != null)
@@ -78,7 +78,7 @@ public class RdpConnectionVDI extends RdpConnection {
 		else
 			throw new RdesktopException("Unable to add seamless channel");
 	}
-	
+
 	protected void initRdpdrChannel() throws RdesktopException {
 		if (this.rdpdrChannel != null)
 			return;
@@ -86,7 +86,7 @@ public class RdpConnectionVDI extends RdpConnection {
 		if (! this.addChannel(this.rdpdrChannel))
 			throw new RdesktopException("Unable to add rdpdr channel");
 	}
-	
+
 	protected void fireDisconnected() {
 		super.fireDisconnected();
 		diskManager.stop();

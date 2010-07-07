@@ -40,24 +40,25 @@ public class Client implements RdpListener, Runnable {
 	private String namedpipe;
 	private Thread readingpipe;
 	private SeamlessChannel seamchannel;
-	
+	private String fifodir = "/var/cache/ulteo/vdi/host/fifo/";
+
 	public Client(String fqdn_, String login_, String password_, String namedpipe_) {
-		 
+
 		BasicConfigurator.configure();
 		(Logger.getLogger("net.propero.rdp")).setLevel(Level.INFO);
 		(Logger.getLogger("org.ulteo.ovd.disk")).setLevel(Level.INFO);
 		logger = Logger.getLogger(Client.class.getName());
 		logger.setLevel(Level.DEBUG);
-		
+
 		namedpipe = namedpipe_;
-		
+
 		try {
 			rc = new RdpConnectionVDI();
 			seamchannel = rc.getSeamlessChannel();
 		} catch (VdiException e) {
 			logger.error("Can't create an RDP connexion");
 		}
-		
+
 		Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment()
 										   .getMaximumWindowBounds();
 
@@ -79,7 +80,7 @@ public class Client implements RdpListener, Runnable {
         			logger.info("Logoff from " + rc.getServer());
         			seamchannel.send_spawn("logoff");
         		} catch (Exception e1) {
-        			logger.error("logoff from" + rc.getServer() + "failed");
+        			logger.error("logoff from " + rc.getServer() + " failed");
         		}
             }
         }));
@@ -96,7 +97,7 @@ public class Client implements RdpListener, Runnable {
 	}
 
 	public void failed(RdpConnection co) {
-		logger.info("Connection to "+rc.getUsername() + "@" + rc.getServer() + "failed");
+		logger.info("Connection to "+rc.getUsername() + "@" + rc.getServer() + " failed");
 		System.exit(0);
 	}
 
@@ -105,7 +106,7 @@ public class Client implements RdpListener, Runnable {
 		readingpipe = new Thread(this);
 		readingpipe.start();
 	}
-	
+
 	public void run() {
 		String pipe = fifodir + namedpipe;
 		try {
@@ -114,7 +115,7 @@ public class Client implements RdpListener, Runnable {
 			while (true) {
 				if (!in.ready()) {
 					Thread.sleep(100);
-				} else { 
+				} else {
 					String cmd = in.readLine();
 					seamchannel.send_spawn(cmd);
 					logger.debug("Commande seamless exécutée: " + cmd); 
@@ -125,16 +126,13 @@ public class Client implements RdpListener, Runnable {
 		} catch (Exception e) {
 			logger.error("untreated error");
 		} finally {
-			System.out.println("################");
 			this.disconnected(rc);
 		}
 	}
-	
-	/************************* STATIC *******************************/
-	
-	private static final String productName = "Ulteo VDI Client";
 
-	private static String fifodir = "/var/cache/ulteo/vdi/host/fifo";
+	/************************* STATIC *******************************/
+
+	private static final String productName = "Ulteo VDI Client";
 
 	private static void usage() {
 		System.err.println(Client.productName);
@@ -150,7 +148,7 @@ public class Client implements RdpListener, Runnable {
 		String password = null;
 		String server = null;
 		String namedpipe = null;
-		
+
 		Getopt opt = new Getopt(Client.productName, args, "u:p:");
 
 		int c;
@@ -167,16 +165,16 @@ public class Client implements RdpListener, Runnable {
 			}
 		}
 		if (username == null || password == null) usage();
-		
+
 		if ( (opt.getOptind()+2) <= args.length) {
 			server = new String(args[args.length - 2]);
 			namedpipe = new String(args[args.length - 1]);
 		} else {
 			usage();
 		}
-		
+
 		new Client(server, username, password, namedpipe);
-		
-	} // main 
+
+	} // main
 
 }
