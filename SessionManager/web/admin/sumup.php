@@ -182,7 +182,7 @@ else{
 		$count = 0;
 		foreach($servs_all as $server){
 			$roles = $server->getAttribute('roles');
-			if (array_key_exists('aps', $roles) && $roles['aps'] === true) {
+			if (is_array($roles) && array_key_exists('aps', $roles) && $roles['aps'] === true) {
 				$applications = $server->getApplications();
 				if (! is_array($applications)) {
 					$applications = array();
@@ -202,13 +202,17 @@ else{
 			
 			echo '<td><a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a></td>';
 			echo '<td>'.$server->stringType().'</td>';
-			echo '<td><ul>';
-			foreach ($roles as $a_role => $role_enable) {
-				if ($role_enable) {
-					echo "<li>$a_role</li>";
+			echo '<td>';
+			if (is_array($roles)) {
+				echo '<ul>';
+				foreach ($roles as $a_role => $role_enable) {
+					if ($role_enable) {
+						echo "<li>$a_role</li>";
+					}
 				}
+				echo '</ul>';
 			}
-			echo '</ul></td>';
+			echo '</td>';
 			echo '<td>';
 			if ((is_array($applications))&& (count($applications)>0) ){
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
