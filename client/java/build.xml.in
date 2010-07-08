@@ -18,8 +18,9 @@
   <property name="applets.dir"  location="${datadir}/ulteo/applets" />
   <property name="install.dir"  location="${datadir}/java" />
 
+  <property name="distdir"      value="dist" />
   <property name="sdist.name"   value="ovd-java-clients-${version}" />
-  <property name="sdist.dir"    location="dist/${sdist.name}" />
+  <property name="sdist.dir"    location="${distdir}/${sdist.name}" />
 
   <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
                                 required_libraries/gnu-getopt.jar"/>
@@ -335,9 +336,10 @@
       </fileset>
     </copy>
     <tar longfile="gnu" tarfile="${sdist.dir}.tar" basedir="${sdist.dir}" />
-    <gzip zipfile="dist/${sdist.name}.tar.gz" src="dist/${sdist.name}.tar" />
+    <gzip zipfile="${distdir}/${sdist.name}.tar.gz"
+          src="${distdir}/${sdist.name}.tar" />
     <delete dir="${sdist.dir}" />
-    <delete file="dist/${sdist.name}.tar" />
+    <delete file="${distdir}/${sdist.name}.tar" />
   </target>
 
 </project>
