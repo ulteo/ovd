@@ -19,7 +19,7 @@ Package: ulteo-ovd-slaveserver-role-aps
 Architecture: all
 Depends: python (>= 2.5), ulteo-ovd-slaveserver, ulteo-ovd-shells,
  xrdp-sound, xrdp-python, xrdp-printer, tightvncserver,
- imagemagick, passwd, adduser
+ ulteo-ovd-externalapps-client, imagemagick, passwd, adduser
 Description: Application server role for the Ulteo OVD slave server
  Application server role for the Ulteo OVD slave server
 

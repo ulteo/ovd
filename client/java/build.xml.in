@@ -3,6 +3,7 @@
 <project name="ulteo" default="applet">
   <property name="build.cert" value="/usr/share/ulteo/ovd-cert/"/>
   <property name="keystore.password" value="123456"/>
+  <property name="version" value="@VERSION@" />
 
   <property name="compile.debug" value="false"/>
   <property name="compile.deprecation" value="false"/>
@@ -17,17 +18,16 @@
   <property name="applets.dir"  location="${datadir}/ulteo/applets" />
   <property name="install.dir"  location="${datadir}/java" />
 
-  <property name="rdesktop.dist"  value="rdesktop" />
-  <property name="integrated.dist"  value="integrated" />
-  <property name="standalone.dist"  value="standalone" />
-  <property name="rdpClient.dist"  value="rdpClient" />
+  <property name="sdist.name"   value="ovd-java-clients-${version}" />
+  <property name="sdist.dir"    location="dist/${sdist.name}" />
 
-  <property name="version" value="@VERSION@" />
-  <property name="sdist.name" value="ovd-java-clients-${version}" />
+  <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
+                                required_libraries/gnu-getopt.jar"/>
 
   <target name="precompile">
     <mkdir dir="classes"/>
     <mkdir dir="libs"/>
+    <mkdir dir="dist"/>
     <delete dir="jar"/>
     <mkdir dir="jar/ressources/keymaps"/>
     <copy todir="jar/ressources/keymaps">
@@ -48,26 +48,20 @@
     </copy>
   </target>
 
+
   <!-- Rdesktop part -->
 
-  <target name="rdesktop.clean" depends="clean">
-    <delete dir="${rdesktop.dist}"/>
-  </target>
-
-  <target name="rdesktop" depends="rdesktop.clean,precompile" description="compile the Java source code to class files">
-    <javac srcdir="./src;./src1.4"
-           destdir="classes"
-           encoding="UTF8"
-           target="1.5"
-           source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;"
-           includes="net/propero/rdp/Rdesktop.java"/>
+  <target name="rdesktop" depends="clean,precompile"
+          description="compile the Java source code to class files">
+    <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
+           target="1.5" source="1.5" includes="net/propero/rdp/Rdesktop.java" >
+      <classpath refid="minimal.path" />
+    </javac>
   </target>
 
   <target name="rdesktop.jar" depends="rdesktop" description="create jar file">
     <antcall target="classes2jar" />
     <jar destfile="libs/rdesktop.jar" basedir="jar/">
-      <include name="**"/>
       <manifest>
         <attribute name="Main-Class" value="net.propero.rdp.Rdesktop"/>
         <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar"/>
@@ -76,41 +70,24 @@
   </target>
 
   <target name="rdesktop.install" depends="rdesktop.jar">
-    <mkdir dir="${rdesktop.dist}"/>
-
-    <copy todir="${rdesktop.dist}">
-      <fileset dir="./libs">
-        <include name="rdesktop.jar" />
-      </fileset>
-      <fileset dir="./required_libraries">
-        <include name="gnu-getopt.jar" />
-        <include name="log4j-1.2.jar" />
-      </fileset>
+    <copy file="libs/rdesktop.jar" todir="${install.dir}">
+      <filelist dir="required_libraries" files="gnu-getopt.jar log4j-1.2.jar" />
     </copy>
   </target>
 
 
   <!-- RDP Client part -->
 
-  <target name="rdpClient.clean" depends="clean">
-    <delete dir="${rdpClient.dist}"/>
-  </target>
-
-  <target name="rdpClient" depends="rdpClient.clean,precompile">
-    <javac srcdir="./src;./src1.4"
-           destdir="classes"
-           encoding="UTF8"
-           target="1.5"
-           source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;"
-           includes="org/ulteo/rdp/RdpClient.java"/>
+  <target name="rdpClient" depends="clean,precompile">
+    <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
+           target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java">
+      <classpath refid="minimal.path" />
+    </javac>
   </target>
 
   <target name="rdpClient.jar" depends="rdpClient">
     <antcall target="classes2jar" />
     <jar destfile="libs/RDPClient.jar" basedir="jar/">
-      <include name="**"/>
-
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.rdp.RdpClient"/>
         <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar"/>
@@ -119,16 +96,8 @@
   </target>
 
   <target name="rdpClient.install" depends="rdpClient.jar">
-    <mkdir dir="${rdpClient.dist}"/>
-
-    <copy todir="${rdpClient.dist}">
-      <fileset dir="./libs">
-        <include name="RDPClient.jar" />
-      </fileset>
-      <fileset dir="./required_libraries">
-        <include name="gnu-getopt.jar" />
-        <include name="log4j-1.2.jar" />
-      </fileset>
+    <copy file="libs/RDPClient.jar" todir="${install.dir}">
+      <filelist dir="required_libraries" files="gnu-getopt.jar log4j-1.2.jar" />
     </copy>
   </target>
 
@@ -142,17 +111,21 @@
    </copy>
  </target>
 
- <target name="PDFPrinter" depends="clean,precompile_printing" description="compile the Java source code to class files">
-   <javac srcdir="./src"
-          destdir="classes"
-          encoding="UTF8"
-          target="1.5"
-          source="1.5"
-          classpath="required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
-          includes="org/ulteo/ovd/printer/PrinterApplet.java"/>
+ <target name="PDFPrinter" depends="clean,precompile_printing"
+         description="compile the Java source code to class files">
+   <javac srcdir="src" destdir="classes" encoding="UTF8"
+          target="1.5" source="1.5"
+          includes="org/ulteo/ovd/printer/PrinterApplet.java">
+     <classpath>
+       <pathelement location="required_libraries/jai_codec.jar"/>
+       <pathelement location="required_libraries/jai_core.jar"/>
+       <pathelement location="required_libraries/js.jar"/>
+     </classpath>
+   </javac>
  </target>
 
- <target name="PDFPrinter.jar" depends="PDFPrinter" description="create jar file">
+ <target name="PDFPrinter.jar" depends="PDFPrinter"
+         description="create jar file">
    <antcall target="classes2jar" />
    <jar destfile="libs/PDFPrinter.jar" basedir="jar/">
      <include name="**"/>
@@ -172,7 +145,7 @@
          depends="PDFPrinter.jar">
    <mkdir dir="${applets.dir}"/>
    <copy todir="${applets.dir}">
-     <fileset dir="./libs">
+     <fileset dir="libs">
        <include name="PDFPrinter-${compile.release}.jar" />
      </fileset>
    </copy>
@@ -181,52 +154,10 @@
  </target>
 
 
-  <!-- Integrated client part -->
-
-  <target name="integrated.clean" depends="clean">
-    <delete dir="${integrated.dist}"/>
-  </target>
-
-  <target name="integrated" depends="integrated.clean,precompile">
-    <javac srcdir="./src;./src1.4"
-           destdir="classes"
-           encoding="UTF8"
-           target="1.5"
-           source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jshortcut.jar;required_libraries/image4j.jar;required_libraries/registry.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
-           includes="org/ulteo/ovd/integrated/Client.java"/>
-  </target>
-
-  <target name="integrated.jar" depends="integrated">
-    <antcall target="classes2jar" />
-    <jar destfile="libs/UlteoOVDIntegratedClient.jar" basedir="jar/">
-      <include name="**"/>
-
-      <manifest>
-        <attribute name="Main-Class" value="org.ulteo.ovd.integrated.Client"/>
-        <attribute name="Class-Path" value="log4j-1.2.jar gnu-getopt.jar jshortcut.jar image4j.jar registry.jar"/>
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="integrated.install" depends="integrated.jar">
-    <mkdir dir="${integrated.dist}"/>
-
-    <copy todir="${integrated.dist}">
-      <fileset dir="./libs">
-        <include name="UlteoOVDIntegratedClient.jar" />
-      </fileset>
-      <fileset dir="./required_libraries">
-        <include name="gnu-getopt.jar" />
-        <include name="log4j-1.2.jar" />
-      </fileset>
-    </copy>
-  </target>
-
   <!-- Ovd External Apps Client -->
 
-   <target name="ovdExternalAppsCompile" depends="clean, precompile">
-    <javac srcdir="./src; ./src1.4" destdir="classes" encoding="UTF8" 
+   <target name="ovdExternalAppsClient" depends="clean, precompile">
+    <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
 	   target="1.5" source="1.5"
 	   includes="org/ulteo/ovd/client/StartTokenAuth.java">
       <classpath>
@@ -236,31 +167,33 @@
         </fileset>
       </classpath>
     </javac>
-  </target> 
+  </target>
 
-   <target name="ovdExternalAppsClient" depends="ovdExternalAppsCompile">
+   <target name="ovdExternalAppsClient.jar" depends="ovdExternalAppsClient">
      <antcall target="classes2jar" />
      <unjar src="required_libraries/gnu-getopt.jar" dest="jar">
        <filelist dir="required_libraries"
-                 files="log4j-1.2.jar,swingx.jar,registry.jar
-			jshortcut.jar,image4j.jar,ini4j.jar" />
+                 files="log4j-1.2.jar,registry.jar
+			            jshortcut.jar,image4j.jar,ini4j.jar" />
      </unjar>
-     
-     <copy todir="jar/pics">
-       <fileset dir="icons" />
-     </copy>
-     
      <jar destfile="libs/OVDExternalAppsClient.jar" basedir="jar/">
        <manifest>
-         <attribute name="Main-Class" value="org.ulteo.ovd.client.StartTokenAuth"/>
+         <attribute name="Main-Class"
+                    value="org.ulteo.ovd.client.StartTokenAuth"/>
        </manifest>
      </jar>
+   </target>
+
+   <target name="ovdExternalAppsClient.install"
+           depends="ovdExternalAppsClient.jar">
+     <copy file="libs/OVDExternalAppsClient.jar" todir="${install.dir}" />
+     <copy file="scripts/OVDExternalAppsClient" todir="${bindir}" />
    </target>
 
   <!-- Ovd client part -->
 
   <target name="ovdclient" depends="clean, precompile">
-    <javac srcdir="./src;./src1.4" destdir="classes" encoding="UTF8"
+    <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/StartConnection.java">
       <classpath>
@@ -300,70 +233,20 @@
   </target>
 
   <target name="ovdclient.install" depends="ovdclient_all.jar">
-    <mkdir dir="${install.dir}"/>
-    <mkdir dir="${bindir}"/>
     <copy file="libs/UlteoOVDClient.jar" todir="${install.dir}" />
-    <copy file="scripts/ovdclient" todir="${bindir}" />
-  </target>
-
-
-  <!-- Standalone client part -->
-
-  <target name="standalone.clean" depends="clean">
-    <delete dir="${standalone.dist}"/>
-  </target>
-
-  <target name="standalone" depends="standalone.clean,precompile">
-    <javac srcdir="./src;./src1.4"
-           destdir="classes"
-           encoding="UTF8"
-           target="1.5"
-           source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar;required_libraries/jai_codec.jar;required_libraries/jai_core.jar;required_libraries/js.jar;"
-           includes="org/ulteo/ovd/standalone/Client.java" />
-  </target>
-
-  <target name="standalone.jar" depends="standalone">
-    <antcall target="classes2jar" />
-    <copy todir="jar/ressources">
-      <fileset dir="icons"/>
-    </copy>
-
-    <mkdir dir="${standalone.dist}"/>
-
-    <jar destfile="${standalone.dist}/OVDStandalone.jar"  basedir="jar/">
-      <include name="**" />
-
-      <manifest>
-	<attribute name="Main-Class" value="org.ulteo.ovd.standalone.Client" />
-	<attribute name="Class-Path" value="gnu-getopt.jar log4j-1.2.jar"/>
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="standalone.install" depends="standalone.jar">
-    <copy todir="${standalone.dist}">
-      <fileset dir="./libs">
-        <include name="OVDStandalone.jar" />
-      </fileset>
-      <fileset dir="./required_libraries">
-        <include name="gnu-getopt.jar" />
-        <include name="log4j-1.2.jar" />
-      </fileset>
-    </copy>
   </target>
 
 
   <!-- Applet part -->
 
   <target name="applet" description="sign applets"  depends="clean,precompile" >
-    <javac srcdir="./src;./src1.4"
-           destdir="classes"
-           encoding="UTF8"
-           target="1.5"
-           source="1.5"
-           classpath="required_libraries/plugin.jar;required_libraries/log4j-1.2.jar;required_libraries/gnu-getopt.jar"
-           includes="org/ulteo/ovd/applet/**.java" />
+    <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
+           target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java" >
+      <classpath>
+        <path refid="minimal.path" />
+        <pathelement location="required_libraries/plugin.jar" />
+      </classpath>
+    </javac>
   </target>
 
   <target name="applet.jar" description="sign applets"  depends="applet" >
@@ -416,10 +299,9 @@
 
   <target name="vdi" depends="precompile" >
     <javac srcdir="src:src1.4" destdir="classes" encoding="UTF8"
-           target="1.5" source="1.5"
-           classpath="required_libraries/log4j-1.2.jar;
-                      required_libraries/gnu-getopt.jar"
-           includes="org/ulteo/vdi/Client.java"/>
+           target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
+      <classpath refid="minimal.path" />
+    </javac>
   </target>
 
   <target name="vdi.jar" depends="vdi">
@@ -434,19 +316,15 @@
   </target>
 
   <target name="vdi.install" depends="vdi.jar">
-    <mkdir dir="${install.dir}"/>
-    <mkdir dir="${bindir}"/>
     <copy file="libs/UlteoVDI.jar" todir="${install.dir}" />
-    <copy file="scripts/vdiclient" todir="${bindir}" />
   </target>
 
 
   <!-- Source tarball part -->
 
   <target name="dist" description="create a source tarball">
-    <delete dir="${sdist.name}" />
-    <mkdir dir="${sdist.name}" />
-    <copy todir="${sdist.name}">
+    <delete dir="${sdist.dir}" />
+    <copy todir="${sdist.dir}">
       <fileset dir="." includes="build.xml README">
         <include name="src*/**" />
         <include name="required_libraries/*" />
@@ -456,10 +334,10 @@
         <include name="po/*" />
       </fileset>
     </copy>
-    <tar longfile="gnu" tarfile="${sdist.name}.tar" basedir="./"
-         includes="${sdist.name}/**" />
-    <gzip zipfile="${sdist.name}.tar.gz" src="${sdist.name}.tar" />
-    <delete file="${sdist.name}.tar" />
+    <tar longfile="gnu" tarfile="${sdist.dir}.tar" basedir="${sdist.dir}" />
+    <gzip zipfile="dist/${sdist.name}.tar.gz" src="dist/${sdist.name}.tar" />
+    <delete dir="${sdist.dir}" />
+    <delete file="dist/${sdist.name}.tar" />
   </target>
 
 </project>

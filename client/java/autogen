@@ -13,7 +13,7 @@ else:
 	version = "99.99~trunk+svn%05d"%(revision)
 
 langs = []
-for pofile in glob.glob(path+"/po/*.po"):
+for pofile in glob.glob(os.path.join("po", "*.po")):
 	name = os.path.basename(pofile)[:-3]
 	node = '<exec executable="msgfmt" dir=".">'
 	node+= '<arg value="--java2"/>'

@@ -12,7 +12,7 @@ Description: Ulteo Open Virtual Desktop applet
  This applet is used in the Open Virtual Desktop to display the user session in
  a browser.
 
-Package: ulteo-ovd-integrated-client
+Package: ulteo-ovd-externalapps-client
 Architecture: all
 Depends: openjdk-6-jre, ulteo-ovd-shells
 Recommends: ulteo-ovd-integrated-launcher

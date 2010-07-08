@@ -1,4 +1,0 @@
-#!/bin/sh
-
-JARDIR=/usr/share/java
-java -jar $JARDIR/UlteoVDI.jar "$@"
