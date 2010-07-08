@@ -1048,7 +1048,7 @@ if ($_REQUEST['name'] == 'Server') {
 			foreach ($_REQUEST['checked_servers'] as $fqdn) {
 				$sessions = Abstract_Session::getByServer($fqdn);
 				if (count($sessions) > 0) {
-					popup_error(sprintf_("Unable to delete the server '%s' because there are active sessions on it."), $fqdn);
+					popup_error(sprintf(_("Unable to delete the server '%s' because there are active sessions on it."), $fqdn));
 					continue; 
 				}
 			
