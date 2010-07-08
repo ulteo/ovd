@@ -1,12 +1,14 @@
 var my_width;
 var my_height;
 
-if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-	my_width  = document.documentElement.clientWidth;
-	my_height = document.documentElement.clientHeight;
-} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
-	my_width  = document.body.clientWidth;
-	my_height = document.body.clientHeight;
+function refresh_body_size() {
+	if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+		my_width  = document.documentElement.clientWidth;
+		my_height = document.documentElement.clientHeight;
+	} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+		my_width  = document.body.clientWidth;
+		my_height = document.body.clientHeight;
+	}
 }
 
 var date = new Date();
@@ -235,6 +237,8 @@ function toggleContent(container) {
 }
 
 Event.observe(window, 'load', function() {
+	refresh_body_size();
+
 	$('lockWrap').hide();
 	$('lockWrap').style.width = my_width+'px';
 	$('lockWrap').style.height = my_height+'px';
@@ -256,6 +260,8 @@ Event.observe(window, 'load', function() {
 });
 
 function showLock() {
+	refresh_body_size();
+
 	if (! $('lockWrap').visible()) {
 		$('lockWrap').style.width = my_width+'px';
 		$('lockWrap').style.height = my_height+'px';
@@ -265,7 +271,7 @@ function showLock() {
 }
 
 function hideLock() {
-	if ($('lockWrap').visible())
+	if ($('lockWrap').visible() && (! $('errorWrap').visible() && ! $('okWrap').visible() && ! $('infoWrap').visible()))
 		$('lockWrap').hide();
 }
 
@@ -297,6 +303,7 @@ function hideError() {
 function showOk(okmsg) {
 	hideOK();
 
+	hideError();
 	hideInfo();
 
 	showLock();
@@ -320,6 +327,9 @@ function hideOk() {
 
 function showInfo(infomsg) {
 	hideInfo();
+
+	hideError();
+	hideOk();
 
 	showLock();
 
