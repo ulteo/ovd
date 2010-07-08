@@ -102,7 +102,7 @@ class Abstract_NetworkFolder {
 	public static function delete($NetworkFolder_) {
 		Abstract_Liaison::delete('UserNetworkFolder', NULL, $NetworkFolder_->id);
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'NetworkFolder', 'id', $id);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'NetworkFolder', 'id', $NetworkFolder_->id);
 		
 		return true;
 	}
