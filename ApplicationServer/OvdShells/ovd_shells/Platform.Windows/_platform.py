@@ -20,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import sys
 
 import pythoncom
 import win32api
@@ -62,27 +63,39 @@ def getUserSessionDir():
 	return os.path.join(d, "ulteo", "ovd")
 
 
-def launchIntegratedClient(configuration_file_):                                                                                   
+def launchIntegratedClient(configuration_file_):
 	if os.path.exists(configuration_file_) == False:                                                                            
 		return False
-	
-	# TODO: remove harcoded paths
-	os.system("""copy "c:\\Program Files\\Ulteo\\Open Virtual Desktop Client\\libWindowsPaths.dll" "%s" """%(os.path.expanduser('~')))
 	
 	java_cmd = detectJavaw()
 	if java_cmd is None:
 		print "No java installed on the system"
 		return False
 	
-	jar_location = r"C:\Program Files\Ulteo\Open Virtual Desktop Client\UlteoOVDClient.jar"
-	if not os.path.isfile(jar_location):
+	
+	jar_location = r"OVDExternalAppsClient.jar"
+	folder = None
+	
+	dirs = os.environ["PATH"].split(";")
+	dirs.insert(0, os.path.abspath(os.path.curdir))
+	
+	for d in dirs:
+		path = os.path.join(d, jar_location)
+		if os.path.exists(path):
+			folder = d
+			break
+	
+	if folder is None:
 		print "No OVD integrated client installed on the system"
 		return None
 	
 	java_cmd = java_cmd.replace("%1", jar_location)
-	java_cmd = java_cmd.replace("%*", '-c "%s"'%(configuration_file_))
+	java_cmd = java_cmd.replace("%*", '-c "%s" -o "%s"'%(configuration_file_, os.path.join(os.path.expanduser('~'), "ovd-externalapps-dump.txt")))
 	
-	launch(java_cmd, False)
+	(hProcess, hThread, dwProcessId, dwThreadId) = win32process.CreateProcess(None, java_cmd, None , None, False, 0 , None, folder, win32process.STARTUPINFO())
+	win32file.CloseHandle(hProcess)
+	win32file.CloseHandle(hThread)
+	  
 	return True 
 
 
