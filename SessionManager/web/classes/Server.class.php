@@ -410,6 +410,8 @@ class Server {
 
 		$ev->emit();
 
+		Abstract_Server::save($this);
+
 		return true;
 	}
 
