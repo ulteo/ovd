@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 include_once(dirname(__FILE__).'/check.php');
 
+define('INTERNAL_ERROR', 'internal_error');
 define('INVALID_USER', 'invalid_user');
 define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
 define('USER_WITH_ACTIVE_SESSION', 'user_with_active_session');
@@ -150,6 +151,8 @@ $desktop_icons = $default_settings['desktop_icons'];
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
+$auto_create_profile = $default_settings['auto_create_profile'];
+$start_without_profile = $default_settings['start_without_profile'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
@@ -329,6 +332,103 @@ if (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_
 	}
 } else
 	$random_server = $servers[0];
+
+$fileservers = Servers::getAvailableByRole(Servers::$role_fs);
+if (count($fileservers) > 0) {
+	$netfolders = $user->getNetworkFolders();
+
+	if (! is_array($netfolders))
+		throw_response(INTERNAL_ERROR);
+
+	$profile_available = false;
+	if (count($netfolders) == 1) {
+		Logger::debug('main', '(startsession) User "'.$user_login.'" already have a profile, using it');
+
+		$netfolder = array_pop($netfolders);
+
+		foreach ($fileservers as $fileserver) {
+			if ($fileserver->fqdn != $netfolder->server)
+				continue;
+
+			$profile_available = true;
+
+			if (! $netfolder->delUser($user)) {
+				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 1)');
+				throw_response(INTERNAL_ERROR);
+			}
+			if (! $fileserver->delUserFromNetworkFolder($netfolder->path, $user_login)) {
+				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
+				throw_response(INTERNAL_ERROR);
+			}
+
+			if (! $netfolder->addUser($user)) {
+				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 3)');
+				throw_response(INTERNAL_ERROR);
+			}
+			if (! $fileserver->addUserToNetworkFolder($netfolder->path, $user_login, $user_password)) {
+				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 4)');
+				throw_response(INTERNAL_ERROR);
+			}
+
+			$profile_server = $netfolder->server;
+			$profile_name = $netfolder->path;
+		}
+	} else {
+		Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
+
+		if (isset($auto_create_profile) && $auto_create_profile == 1) {
+			Logger::debug('main', '(startsession) User "'.$user_login.'" profile will be auto-created, and used');
+
+			$fileserver = array_pop($fileservers);
+			$profile = new NetworkFolder();
+			$profile->path = md5($user->getAttribute('login'));
+			$profile->server = $fileserver->getAttribute('fqdn');
+			Abstract_NetworkFolder::save($profile);
+
+			if (! $fileserver->createNetworkFolder($profile->path)) {
+				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
+				throw_response(INTERNAL_ERROR);
+			}
+
+			if (! $profile->addUser($user)) {
+				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
+				throw_response(INTERNAL_ERROR);
+			}
+			if (! $fileserver->addUserToNetworkFolder($profile->path, $user_login, $user_password)) {
+				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 3)');
+				throw_response(INTERNAL_ERROR);
+			}
+
+			$profile_available = true;
+			$profile_server = $profile->server;
+			$profile_name = $profile->path;
+		} else {
+			Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
+
+			if (isset($start_without_profile) && $start_without_profile == 1) {
+				Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+
+				$profile_available = false;
+			} else {
+				Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+
+				throw_response(INTERNAL_ERROR);
+			}
+		}
+	}
+} else {
+	Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login.'", checking for session without profile');
+
+	if (isset($start_without_profile) && $start_without_profile == 1) {
+		Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+
+		$profile_available = false;
+	} else {
+		Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+
+		throw_response(INTERNAL_ERROR);
+	}
+}
 
 /*if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
@@ -522,6 +622,15 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 	$session_node->appendChild($user_node);
 
+	if (isset($profile_available) && $profile_available === true) {
+		$profile_node = $dom->createElement('profile');
+		$profile_node->setAttribute('server', $profile_server);
+		$profile_node->setAttribute('dir', $profile_name);
+		$profile_node->setAttribute('login', $user_login);
+		$profile_node->setAttribute('password', $user_password);
+		$session_node->appendChild($profile_node);
+	}
+
 	foreach ($user->applications() as $application) {
 		if ($application->getAttribute('static'))
 			continue;
@@ -592,6 +701,15 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 		$user_node->setAttribute('password', $user_password);
 		$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 		$session_node->appendChild($user_node);
+
+		if (isset($profile_available) && $profile_available === true) {
+			$profile_node = $dom->createElement('profile');
+			$profile_node->setAttribute('server', $profile_server);
+			$profile_node->setAttribute('dir', $profile_name);
+			$profile_node->setAttribute('login', $user_login);
+			$profile_node->setAttribute('password', $user_password);
+			$session_node->appendChild($profile_node);
+		}
 
 		foreach ($user->applications() as $application) {
 			if ($application->getAttribute('static'))
