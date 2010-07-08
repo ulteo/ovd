@@ -305,10 +305,6 @@ function show_manage($fqdn) {
   if (! $server)
     redirect('servers.php');
 
-//FIX ME?
-  if ($server->getAttribute('status') == 'ready')
-    $server->getStatus();
-
   $server_online = $server->isOnline();
 
   if ($server_online) {
