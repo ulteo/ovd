@@ -19,7 +19,7 @@ DIRS=xsl2 \
      img \
      style
 
-VERSION=2.5
+VERSION=2.5.1
 RELEASE_DIR=ovd-documentation-$(VERSION)
 
 DST=$(SRC:.xml=.html)
