@@ -73,6 +73,7 @@ function show_default() {
     if ($av_servers > 1 and $can_do_action)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
+    echo '<th>'._('Roles').'</th>';
     // echo '<th>'._('Version').'</th>';
     echo '<th>'._('Status').'</th><th>'._('Details').'</th>';
     if ($nb_a_servs_online > 0)
@@ -104,6 +105,15 @@ function show_default() {
       echo '</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
       // echo '<td>'.$s->stringVersion().'</td>';
+      echo '<td>';
+      echo '<ul>';
+      foreach ($s->roles as $a_role => $role_enabled) {
+        if ($role_enabled) {
+          echo "<li>$a_role</li>";
+        }
+      }
+      echo '</ul>';
+      echo '</td>';
       echo '<td>'.$s->stringStatus().'</td>';
       echo '<td>';
       echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
@@ -159,7 +169,7 @@ function show_default() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="'.(($nb_a_servs_online > 0)?7:6).'">';
+      echo '<td colspan="'.(($nb_a_servs_online > 0)?8:7).'">';
       echo '<a href="javascript:;" onclick="markAllRows(\'available_servers_table\'); return false">'._('Mark all').'</a>';
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'available_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
@@ -206,6 +216,7 @@ function show_unregistered() {
     if (count($u_servs) > 1)
       echo '<th class="unsortable"></th>';
     echo '<th>'._('FQDN').'</th><th>'._('Type').'</th>';
+    echo '<th>'._('Roles').'</th>';
 //     echo '<th>'._('Version').'</th>';
     echo '<th>'._('Details').'</th>';
     echo '</tr>';
@@ -226,6 +237,15 @@ function show_unregistered() {
       echo '<td>'.$s->fqdn.'</td>';
       echo '<td style="text-align: center;"><img src="media/image/server-'.$s->stringType().'.png" alt="'.$s->stringType().'" title="'.$s->stringType().'" /><br />'.$s->stringType().'</td>';
 //       echo '<td>'.$s->stringVersion().'</td>';
+      echo '<td>';
+      echo '<ul>';
+      foreach ($s->roles as $a_role => $role_enabled) {
+        if ($role_enabled) {
+          echo "<li>$a_role</li>";
+        }
+      }
+      echo '</ul>';
+      echo '</td>';
       echo '<td>';
       echo _('CPU').': '.$s->getAttribute('cpu_model').' ('.$s->getAttribute('cpu_nb_cores').' ';
       echo ($s->getAttribute('cpu_nb_cores') > 1)?_('cores'):_('core');
@@ -263,7 +283,7 @@ function show_unregistered() {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="4">';
+      echo '<td colspan="5">';
       echo '<a href="javascript:;" onclick="markAllRows(\'unregistered_servers_table\'); return false">'._('Mark all').'</a>';
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'unregistered_servers_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
