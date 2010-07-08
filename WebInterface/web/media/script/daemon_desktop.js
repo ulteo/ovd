@@ -33,6 +33,8 @@ var Desktop = Class.create(Daemon, {
 		if (! server)
 			setTimeout(this.parse_do_started.bind(this, transport), 1000);
 		else {
+			this.refresh_body_size();
+
 			var applet_width = (this.my_width-(this.my_width % 4));
 			var applet_height = (this.my_height*applet_width/this.my_width);
 

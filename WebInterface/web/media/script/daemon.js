@@ -71,13 +71,7 @@ var Daemon = Class.create({
 		if (this.port == '')
 			this.port = 80;
 
-		if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
-			this.my_width  = document.documentElement.clientWidth;
-			this.my_height = document.documentElement.clientHeight;
-		} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
-			this.my_width  = document.body.clientWidth;
-			this.my_height = document.body.clientHeight;
-		}
+		this.refresh_body_size();
 
 		if (this.debug) {
 			$('debugContainer').show();
@@ -89,6 +83,16 @@ var Daemon = Class.create({
 		}
 
 		Event.observe(window, 'unload', this.client_exit.bind(this));
+	},
+
+	refresh_body_size: function() {
+		if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight)) {
+			this.my_width  = document.documentElement.clientWidth;
+			this.my_height = document.documentElement.clientHeight;
+		} else if (document.body && (document.body.clientWidth || document.body.clientHeight)) {
+			this.my_width  = document.body.clientWidth;
+			this.my_height = document.body.clientHeight;
+		}
 	},
 
 	initContext: function() {
