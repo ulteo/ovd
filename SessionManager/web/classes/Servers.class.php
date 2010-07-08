@@ -61,6 +61,9 @@ class Servers {
 		$servers = Servers::getAll();
 
 		foreach ($servers as $k => $server) {
+			if (! $server->getAttribute('registered'))
+				unset($servers[$k]);
+
 			if (! $server->isOnline())
 				unset($servers[$k]);
 		}
