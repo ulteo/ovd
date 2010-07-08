@@ -18,7 +18,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-def getArch():
-	plusNode = ["plus",["ovd-icon-extractor", "ovd-externalapps-client", "ovd-integrated-launcher", "ovd-java-jni", "ovd-shells"], ["bmp2png", "seamlessrdpshell"], []]
-	
-	return ["root", ["ovd-slaveserver"], [], [plusNode]]
+def getSVNRoot():
+	return r"client\java"
+
+def pre_sources_commads():
+	return ["python autogen"]
+
+def source_remove_files():
+	return ["autogen", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]
+
+def compile_commands():
+	return ["ant ovdExternalAppsClient.jar"]
+
+def binary_files():
+	return [r"libs\OVDExternalAppsClient.jar", r"required_libraries\*.dll"]

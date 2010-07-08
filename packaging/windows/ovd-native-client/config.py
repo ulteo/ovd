@@ -25,7 +25,7 @@ def pre_sources_commads():
 	return ["python autogen"]
 
 def source_remove_files():
-	return ["boostrap", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]
+	return ["autogen", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]
 
 def compile_commands():
 	return ["ant ovdclient_all.jar"]
