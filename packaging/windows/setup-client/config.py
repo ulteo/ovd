@@ -19,4 +19,4 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 def getArch():
-	return ["root", ["ovd-integrated-client", "ovd-integrated-launcher", "ovd-java-jni"], [], []]
+	return ["root", ["ovd-native-client", "ovd-integrated-launcher", "ovd-java-jni"], [], []]
