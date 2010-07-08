@@ -223,6 +223,39 @@
     </copy>
   </target>
 
+  <!-- Ovd External Apps Client -->
+
+   <target name="ovdExternalAppsCompile" depends="clean, precompile">
+    <javac srcdir="./src; ./src1.4" destdir="classes" encoding="UTF8" 
+	   target="1.5" source="1.5"
+	   includes="org/ulteo/ovd/client/StartTokenAuth.java">
+      <classpath>
+        <fileset dir="required_libraries">
+          <include name="*.jar" />
+          <exclude name="plugin.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+  </target> 
+
+   <target name="ovdExternalAppsClient" depends="ovdExternalAppsCompile">
+     <antcall target="classes2jar" />
+     <unjar src="required_libraries/gnu-getopt.jar" dest="jar">
+       <filelist dir="required_libraries"
+                 files="log4j-1.2.jar,swingx.jar,registry.jar
+			jshortcut.jar,image4j.jar,ini4j.jar" />
+     </unjar>
+     
+     <copy todir="jar/pics">
+       <fileset dir="icons" />
+     </copy>
+     
+     <jar destfile="libs/OVDExternalAppsClient.jar" basedir="jar/">
+       <manifest>
+         <attribute name="Main-Class" value="org.ulteo.ovd.client.StartTokenAuth"/>
+       </manifest>
+     </jar>
+   </target>
 
   <!-- Ovd client part -->
 
