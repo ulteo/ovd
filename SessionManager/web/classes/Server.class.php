@@ -36,6 +36,8 @@ class Server {
 	public $ram_total = NULL;
 	public $ram_used = NULL;
 
+	public $roles = array();
+
 	public function __construct($fqdn_) {
 // 		Logger::debug('main', 'Starting Server::__construct for \''.$fqdn_.'\'');
 

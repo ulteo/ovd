@@ -306,8 +306,10 @@ class Abstract_Server {
 
 		$properties = Abstract_Server::loadProperties($buf);
 
-		foreach (Abstract_Server::$server_properties as $object_property => $db_property)
-			$buf->$object_property = ((isset($properties[$db_property]))?$properties[$db_property]:NULL);
+		foreach (Abstract_Server::$server_properties as $object_property => $db_property) {
+			if (isset($properties[$db_property]))
+				$buf->$object_property = $properties[$db_property];
+		}
 
 		return $buf;
 	}
