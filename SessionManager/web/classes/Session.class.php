@@ -151,6 +151,8 @@ class Session {
 
 		$ev->emit();
 
+		Abstract_Session::save($this);
+
 		return true;
 	}
 
