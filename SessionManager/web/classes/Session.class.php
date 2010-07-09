@@ -140,7 +140,7 @@ class Session {
 			return false;
 		}
 
-		Logger::info('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for session \''.$this->id.'\'');
+		Logger::debug('main', 'Status set to "'.$status_.'" ('.$this->textStatus($status_).') for session \''.$this->id.'\'');
 		$this->setAttribute('status', $status_);
 
 		$ev = new SessionStatusChanged(array(
