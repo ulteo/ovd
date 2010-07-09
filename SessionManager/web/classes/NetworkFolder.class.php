@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
 class NetworkFolder {
 	public $id = NULL;
-	public $path = NULL;
+	public $name = '';
 	public $server = NULL; // FQDN/ID of the server
 	public $status = '';
 
@@ -58,6 +58,6 @@ class NetworkFolder {
 	}
 	
 	public function __toString() {
-		return get_class($this).'(id \''.$this->id.'\' path \''.$this->path.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
+		return get_class($this).'(id \''.$this->id.'\' name \''.$this->name.'\' server \''.$this->server.'\' status \''.$this->status.'\' )';
 	}
 }

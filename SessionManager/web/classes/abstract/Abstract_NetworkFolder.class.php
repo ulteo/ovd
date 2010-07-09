@@ -29,7 +29,7 @@ class Abstract_NetworkFolder {
 		
 		$NetworkFolder_table_structure = array(
 			'id'			=>	'int(8) NOT NULL auto_increment',
-			'path'			=>	'varchar(255) NOT NULL',
+			'name'			=>	'varchar(255) NOT NULL',
 			'server'		=>	'varchar(255) NOT NULL',
 			'status'		=>	'varchar(255) NOT NULL',
 		);
@@ -92,10 +92,12 @@ class Abstract_NetworkFolder {
 	
 	private static function create($NetworkFolder_) {
 		$SQL = SQL::getInstance();
-		
-		$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.'NetworkFolder', 'path', 'server', 'status', $NetworkFolder_->path, $NetworkFolder_->server,  $NetworkFolder_->status);
+		$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.'NetworkFolder', 'name', 'server', 'status', $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
 		
 		$NetworkFolder_->id = $SQL->InsertId();
+		if (is_null($NetworkFolder_->name) || $NetworkFolder_->name === '') {
+			$NetworkFolder_->name = $NetworkFolder_->id;
+		}
 		return $NetworkFolder_->id;
 	}
 	
@@ -108,16 +110,19 @@ class Abstract_NetworkFolder {
 	}
 	
 	private static function generateFromRow($row_) {
-		if (array_key_exists('id', $row_) == false || array_key_exists('path', $row_) == false || array_key_exists('server', $row_) == false || array_key_exists('status', $row_) == false) {
+		if (array_key_exists('id', $row_) == false || array_key_exists('name', $row_) == false || array_key_exists('server', $row_) == false || array_key_exists('status', $row_) == false) {
 			Logger::error('main', 'Abstract_NetworkFolder::generateFromRow row not ok, row '.serialize($row_));
 			return NULL;
 		}
 		
 		$obj = new NetworkFolder();
 		$obj->id = $row_['id'];
-		$obj->path = $row_['path'];
+		$obj->name = $row_['name'];
 		$obj->server = $row_['server'];
 		$obj->status = $row_['status'];
+		if ($obj->name === '') {
+			$obj->name = $obj->id;
+		}
 		
 		return $obj;
 	}
@@ -182,7 +187,7 @@ class Abstract_NetworkFolder {
 		Logger::debug('main', 'Abstract_NetworkFolder::update for \''.$NetworkFolder_->id.'\'');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7) WHERE @8=%9 LIMIT 1', $SQL->prefix.'NetworkFolder', 'path', $NetworkFolder_->path, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7) WHERE @8=%9 LIMIT 1', $SQL->prefix.'NetworkFolder', 'name', $NetworkFolder_->name, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
 		
 		return true;
 	}

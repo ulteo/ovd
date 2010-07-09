@@ -356,7 +356,7 @@ if (count($fileservers) > 0) {
 				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 1)');
 				throw_response(INTERNAL_ERROR);
 			}
-			if (! $fileserver->delUserFromNetworkFolder($netfolder->path, $user_login)) {
+			if (! $fileserver->delUserFromNetworkFolder($netfolder->id, $user_login)) {
 				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
 				throw_response(INTERNAL_ERROR);
 			}
@@ -365,13 +365,13 @@ if (count($fileservers) > 0) {
 				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 3)');
 				throw_response(INTERNAL_ERROR);
 			}
-			if (! $fileserver->addUserToNetworkFolder($netfolder->path, $user_login, $user_password)) {
+			if (! $fileserver->addUserToNetworkFolder($netfolder->id, $user_login, $user_password)) {
 				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 4)');
 				throw_response(INTERNAL_ERROR);
 			}
 
 			$profile_server = $netfolder->server;
-			$profile_name = $netfolder->path;
+			$profile_name = $netfolder->id;
 		}
 	} else {
 		Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
@@ -381,11 +381,10 @@ if (count($fileservers) > 0) {
 
 			$fileserver = array_pop($fileservers);
 			$profile = new NetworkFolder();
-			$profile->path = md5($user->getAttribute('login'));
 			$profile->server = $fileserver->getAttribute('fqdn');
 			Abstract_NetworkFolder::save($profile);
 
-			if (! $fileserver->createNetworkFolder($profile->path)) {
+			if (! $fileserver->createNetworkFolder($profile->id)) {
 				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
 				throw_response(INTERNAL_ERROR);
 			}
@@ -394,14 +393,14 @@ if (count($fileservers) > 0) {
 				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
 				throw_response(INTERNAL_ERROR);
 			}
-			if (! $fileserver->addUserToNetworkFolder($profile->path, $user_login, $user_password)) {
+			if (! $fileserver->addUserToNetworkFolder($profile->id, $user_login, $user_password)) {
 				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 3)');
 				throw_response(INTERNAL_ERROR);
 			}
 
 			$profile_available = true;
 			$profile_server = $profile->server;
-			$profile_name = $profile->path;
+			$profile_name = $profile->id;
 		} else {
 			Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
 

@@ -451,7 +451,7 @@ function server_display_role_fs($server_, $var_) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
 			echo '<td>';
-			echo $a_networkfolder->path;
+			echo $a_networkfolder->name;
 			echo '</td>';
 			echo '<td>';
 			echo $a_networkfolder->status;
