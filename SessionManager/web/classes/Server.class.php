@@ -711,6 +711,42 @@ class Server {
 		return true;
 	}
 
+	public function getSharesList() {
+		$xml = query_url($this->getBaseURL().'/fs/shares');
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getSharesList server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('shares')->item(0);
+		if (is_null($node))
+			return false;
+
+		$share_nodes = $dom->getElementsByTagname('share');
+		$shares = array();
+		foreach ($share_nodes as $share_node) {
+			if (is_null($share_node))
+				return false;
+
+			if (! $share_node->hasAttribute('id'))
+				return false;
+
+			$shares[] = $share_node->getAttribute('id');
+		}
+
+		return $shares;
+	}
+
 	public function createNetworkFolder($name_) {
 		$dom = new DomDocument('1.0', 'utf-8');
 
