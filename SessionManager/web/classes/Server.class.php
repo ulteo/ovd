@@ -373,7 +373,8 @@ class Server {
 		if (! $node->hasAttribute('status'))
 			return false;
 
-		$this->setStatus($node->getAttribute('status'));
+		if ($node->getAttribute('status') != $this->getAttribute('status'))
+			$this->setStatus($node->getAttribute('status'));
 
 		return true;
 	}

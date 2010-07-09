@@ -106,7 +106,8 @@ class Session {
 			return false;
 		}
 
-		$this->setStatus($ret);
+		if ($ret != $this->getAttribute('status'))
+			$this->setStatus($ret);
 
 		return $ret;
 	}
