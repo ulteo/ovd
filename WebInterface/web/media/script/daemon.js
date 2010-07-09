@@ -78,8 +78,6 @@ var Daemon = Class.create({
 			$('debugContainer').style.display = 'inline';
 			$('debugLevels').show();
 			$('debugLevels').style.display = 'inline';
-
-			this.my_height = parseInt(this.my_height)-149;
 		}
 
 		Event.observe(window, 'unload', this.client_exit.bind(this));
@@ -93,6 +91,9 @@ var Daemon = Class.create({
 			this.my_width  = document.body.clientWidth;
 			this.my_height = document.body.clientHeight;
 		}
+
+		if (this.debug)
+			this.my_height = parseInt(this.my_height)-149;
 	},
 
 	initContext: function() {
