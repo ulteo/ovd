@@ -680,7 +680,7 @@ class Server {
 	public function getApplicationIcon($icon_path_, $desktopfile_) {
 		Logger::debug('main', 'Starting Server::getApplicationIcon for path \''.$icon_path_.'\', desktop_file \''.$desktopfile_.'\' on server \''.$this->fqdn.'\'');
 
-		$ret = query_url($this->getWebservicesBaseURL().'/icon.php?path='.base64_encode($icon_path_).'&desktopfile='.base64_encode($desktopfile_));
+		$ret = query_url($this->getWebservicesBaseURL().'/icon.php?path='.rawurlencode(base64_encode($icon_path_)).'&desktopfile='.rawurlencode(base64_encode($desktopfile_)));
 
 		if ($ret == '')
 			return false;
