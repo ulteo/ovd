@@ -713,6 +713,11 @@ class Server {
 	}
 
 	public function getSharesList() {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'SERVER::getSharesList - Not an FS');
+			return false;
+		}
+
 		$xml = query_url($this->getBaseURL().'/fs/shares');
 		if (! $xml) {
 			$this->isUnreachable();
@@ -749,6 +754,11 @@ class Server {
 	}
 
 	public function createNetworkFolder($name_) {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'SERVER::createNetworkFolder - Not an FS');
+			return false;
+		}
+
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$node = $dom->createElement('share');
@@ -784,6 +794,11 @@ class Server {
 	}
 
 	public function deleteNetworkFolder($name_) {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'SERVER::deleteNetworkFolder - Not an FS');
+			return false;
+		}
+
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$node = $dom->createElement('share');
@@ -819,6 +834,11 @@ class Server {
 	}
 
 	public function addUserToNetworkFolder($name_, $login_, $password_) {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'SERVER::addUserToNetworkFolder - Not an FS');
+			return false;
+		}
+
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$node = $dom->createElement('share');
@@ -858,6 +878,11 @@ class Server {
 	}
 
 	public function delUserFromNetworkFolder($name_, $login_) {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'SERVER::delUserFromNetworkFolder - Not an FS');
+			return false;
+		}
+
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$node = $dom->createElement('share');
