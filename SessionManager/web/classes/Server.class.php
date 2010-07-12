@@ -962,7 +962,7 @@ class Server {
 	public function getApplications() {
 		Logger::debug('main', 'SERVER::getApplications for server '.$this->fqdn);
 
-		if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_aps, $this->roles)) {
 			Logger::critical('main', 'SERVER::getApplications - Not an ApS');
 			return NULL;
 		}
@@ -987,7 +987,7 @@ class Server {
 	public function updateApplications(){
 		Logger::debug('main', 'Server::updateApplications');
 
-		if (! is_array($this->roles) || ! array_key_exists('aps', $this->roles)) {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_aps, $this->roles)) {
 			Logger::critical('main', 'SERVER::updateApplications - Not an ApS');
 			return false;
 		}
