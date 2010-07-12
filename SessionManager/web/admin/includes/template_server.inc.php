@@ -462,7 +462,7 @@ function server_display_role_fs($server_, $var_) {
 				echo '<ul>';
 				foreach ($users as $a_user) {
 					echo '<li>';
-					echo '<a href="users.php?action=manage&id='.$a_user->getAttribute('login').'">'.$a_user->getAttribute('displayname');
+					echo '<a href="users.php?action=manage&id='.$a_user->getAttribute('login').'">'.$a_user->getAttribute('displayname').'</a>';
 					echo '</li>';
 				}
 				echo '</ul>';
