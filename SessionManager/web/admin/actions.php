@@ -535,7 +535,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			foreach ($_REQUEST['checked_groups'] as $id) {
 				$group = $userGroupDB->import($id);
 				if (! is_object($group)) {
-					popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+					popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
 					redirect();
 				}
 				
@@ -564,7 +564,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			
 			$group = $userGroupDB->import($id);
 			if (! is_object($group)) {
-				popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+				popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
 				redirect();
 			}
 			
@@ -643,7 +643,7 @@ if ($_REQUEST['name'] == 'UserGroup') {
 			$id = $_REQUEST['id'];
 			$group = $userGroupDB->import($id);
 			if (! is_object($group)) {
-				popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+				popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
 				redirect();
 			}
 			
@@ -717,7 +717,7 @@ if ($_REQUEST['name'] == 'UserGroup_settings') {
 		$unique_id = $_REQUEST['unique_id'];
 		$group = $userGroupDB->import($unique_id);
 		if (! is_object($group)) {
-			popup_error(sprintf_("Failed to import Usergroup '%s'"), $id);
+			popup_error(sprintf(_("Failed to import Usergroup '%s'"), $id));
 			redirect();
 		}
 		$ret = null;
@@ -1046,7 +1046,7 @@ if ($_REQUEST['name'] == 'Session') {
 					if (! $session->orderDeletion()) {
 						Logger::error('main', 'Unable to order deletion of session \''.$session->id.'\': purging');
 						Abstract_Session::delete($session->id);
-						popup_error(sprintf_("Unable to delete session '%s'"), $session->id);
+						popup_error(sprintf(_("Unable to delete session '%s'"), $session->id));
 						continue;
 					}
 					else {
