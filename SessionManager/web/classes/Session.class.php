@@ -136,7 +136,7 @@ class Session {
 			if (! $this->orderDeletion((($status_ == Session::SESSION_STATUS_WAIT_DESTROY)?true:false)))
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
 
-			Abstract_Session::delete($this);
+			Abstract_Session::delete($this->id);
 
 			return false;
 		}
