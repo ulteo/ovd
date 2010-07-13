@@ -92,12 +92,23 @@ class Abstract_NetworkFolder {
 	
 	private static function create($NetworkFolder_) {
 		$SQL = SQL::getInstance();
-		$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.'NetworkFolder', 'name', 'server', 'status', $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
 		
-		$NetworkFolder_->id = $SQL->InsertId();
+		if (is_null($NetworkFolder_->id)) {
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4) VALUES (%5,%6,%7)', $SQL->prefix.'NetworkFolder', 'name', 'server', 'status', $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
+			
+			$NetworkFolder_->id = $SQL->InsertId();
+			if (is_null($NetworkFolder_->name) || $NetworkFolder_->name === '') {
+				$NetworkFolder_->name = $NetworkFolder_->id;
+			}
+		}
+		else {
+			$SQL->DoQuery('INSERT INTO @1 (@2,@3,@4,@5) VALUES (%6,%7,%8,%9)', $SQL->prefix.'NetworkFolder', 'id', 'name', 'server', 'status', $NetworkFolder_->id, $NetworkFolder_->name, $NetworkFolder_->server,  $NetworkFolder_->status);
+		}
+		
 		if (is_null($NetworkFolder_->name) || $NetworkFolder_->name === '') {
 			$NetworkFolder_->name = $NetworkFolder_->id;
 		}
+		
 		return $NetworkFolder_->id;
 	}
 	
