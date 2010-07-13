@@ -83,6 +83,11 @@ class Server {
 	}
 
 	public function getConfiguration() {
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::getConfiguration server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
 		$xml = query_url($this->getBaseURL().'/server/configuration');
 		if (! $xml) {
 			$this->isUnreachable();
@@ -562,6 +567,11 @@ class Server {
 	public function getSessionStatus($session_id_) {
 		Logger::debug('main', 'Starting Server::getSessionStatus for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
 
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::getSessionStatus for session \''.$session_id_.'\' server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
 		$xml = query_url($this->getBaseURL().'/aps/session/status/'.$session_id_);
 		if (! $xml) {
 			$this->isUnreachable();
@@ -595,6 +605,11 @@ class Server {
 
 	public function orderSessionDeletion($session_id_) {
 		Logger::debug('main', 'Starting Server::orderSessionDeletion for session \''.$session_id_.'\' on server \''.$this->fqdn.'\'');
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::orderSessionDeletion for session \''.$session_id_.'\' server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
 
 		$xml = query_url($this->getBaseURL().'/aps/session/destroy/'.$session_id_);
 		if (! $xml) {
@@ -713,6 +728,11 @@ class Server {
 			return false;
 		}
 
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::getNetworkFoldersList server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
 		$xml = query_url($this->getBaseURL().'/fs/shares');
 		if (! $xml) {
 			$this->isUnreachable();
@@ -792,6 +812,11 @@ class Server {
 			return false;
 		}
 
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::createNetworkFolder("'.$name_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$node = $dom->createElement('share');
@@ -829,6 +854,11 @@ class Server {
 	public function deleteNetworkFolder($name_, $force_=false) {
 		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
 			Logger::critical('main', 'SERVER::deleteNetworkFolder - Not an FS');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::deleteNetworkFolder("'.$name_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 
@@ -873,6 +903,11 @@ class Server {
 			return false;
 		}
 
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::addUserToNetworkFolder("'.$name_.'", "'.$login_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
 		$dom = new DomDocument('1.0', 'utf-8');
 
 		$node = $dom->createElement('share');
@@ -914,6 +949,11 @@ class Server {
 	public function delUserFromNetworkFolder($name_, $login_) {
 		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
 			Logger::critical('main', 'SERVER::delUserFromNetworkFolder - Not an FS');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::delUserFromNetworkFolder("'.$name_.'", "'.$login_.'") server "'.$this->fqdn.':'.$this->web_port.'" is not online');
 			return false;
 		}
 
