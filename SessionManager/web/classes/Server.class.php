@@ -301,13 +301,8 @@ class Server {
 		}
 
 		$sessions = Abstract_Session::getByServer($this->fqdn);
-		foreach ($sessions as $session) {
-			if (! is_object($session))
-				continue;
-
-			if ($session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY))
-				Abstract_Session::save($session);
-		}
+		foreach ($sessions as $session)
+			Abstract_Session::delete($session->id);
 
 		$tasks = Abstract_Task::load_by_server($this->fqdn);
 		foreach ($tasks as $task)
