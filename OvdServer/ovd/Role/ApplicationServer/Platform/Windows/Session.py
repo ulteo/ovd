@@ -85,6 +85,7 @@ class Session(AbstractSession):
 		if os.path.exists(dstFile):
 			os.remove(dstFile)
 		
+		print "Copy: ",shortcut, "on", dstFile
 		win32file.CopyFile(shortcut, dstFile, True)
 		
 		if self.parameters.has_key("desktop_icons"):

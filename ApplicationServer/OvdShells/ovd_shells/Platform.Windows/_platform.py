@@ -29,7 +29,9 @@ from win32com.shell import shell, shellcon
 import win32con
 import win32event
 import win32file
+import win32netcon
 import win32process
+import win32wnet
 
 
 def findProcessWithEnviron(pattern):
@@ -145,13 +147,25 @@ def getSubProcess(ppid):
 
 
 def mountShares():
-	profileCmd = None
 	key = None
 	try:
 		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd", 0, win32con.KEY_READ)
-		(profile, type_) = win32api.RegQueryValueEx(key, "profile")
-		if type_ is win32con.REG_SZ:
-			profileCmd = profile
+		(host, type_) = win32api.RegQueryValueEx(key, "profile_host")
+		if type_ is not win32con.REG_SZ:
+			raise Exception()
+		
+		(directory, type_) = win32api.RegQueryValueEx(key, "profile_directory")
+		if type_ is not win32con.REG_SZ:
+			raise Exception()
+			
+		(login, type_) = win32api.RegQueryValueEx(key, "profile_login")
+		if type_ is not win32con.REG_SZ:
+			raise Exception()
+			
+		(password, type_) = win32api.RegQueryValueEx(key, "profile_password")
+		if type_ is not win32con.REG_SZ:
+			raise Exception()
+		
 	except Exception, err:
 		print "No profile to mount"
 		return
@@ -160,7 +174,10 @@ def mountShares():
 		if key is not None:
 			win32api.RegCloseKey(key)
 	
-	if type_ is win32con.REG_SZ:
-		print "Profile command: ",profileCmd
-		ret = os.system(profileCmd)
-		print "Profile command result: ",ret
+	try:
+		win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(host, directory), None, login, password)
+		
+	except Exception, err:
+		cmd = "net use U: \\\\%s\\%s %s /user:%s"%(host, directory, password, login)
+		print "Unable to mount share: ",err
+		print "Try with this command: ",cmd

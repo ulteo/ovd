@@ -60,10 +60,11 @@ class Profile(AbstractProfile):
 		win32api.RegCreateKey(key, r"ovd")
 		win32api.RegCloseKey(key)
 		
-		cmd = "net use U: \\\\%s\\%s %s /user:%s"%(self.host, self.directory, self.password, self.login)
-		
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
-		win32api.RegSetValueEx(key, "profile", 0, win32con.REG_SZ, cmd)
+		win32api.RegSetValueEx(key, "profile_host", 0, win32con.REG_SZ, self.host)
+		win32api.RegSetValueEx(key, "profile_directory", 0, win32con.REG_SZ, self.directory)
+		win32api.RegSetValueEx(key, "profile_login", 0, win32con.REG_SZ, self.login)
+		win32api.RegSetValueEx(key, "profile_password", 0, win32con.REG_SZ, self.password)
 		win32api.RegCloseKey(key)
 		
 		
