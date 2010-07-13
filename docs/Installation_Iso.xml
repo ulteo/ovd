@@ -27,7 +27,9 @@
     Insert the Ulteo OVD DVD-ROM into your computer and restart it.
     If you selected the DVD-ROM as first boot device you'll see the
     bootloader interface:
+  </para>
 
+  <para>
     <screenshot>
       <screeninfo>DVDrom Boot</screeninfo>
       <graphic fileref="img/iso/gfxboot.png"></graphic>
