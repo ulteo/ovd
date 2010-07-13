@@ -712,16 +712,16 @@ class Server {
 		return true;
 	}
 
-	public function getSharesList() {
+	public function getNetworkFoldersList() {
 		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
-			Logger::critical('main', 'SERVER::getSharesList - Not an FS');
+			Logger::critical('main', 'SERVER::getNetworkFoldersList - Not an FS');
 			return false;
 		}
 
 		$xml = query_url($this->getBaseURL().'/fs/shares');
 		if (! $xml) {
 			$this->isUnreachable();
-			Logger::error('main', 'Server::getSharesList server \''.$this->fqdn.'\' is unreachable');
+			Logger::error('main', 'Server::getNetworkFoldersList server \''.$this->fqdn.'\' is unreachable');
 			return false;
 		}
 
