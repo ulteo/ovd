@@ -51,7 +51,7 @@ class Abstract_NetworkFolder {
 		$SQL->DoQuery('SELECT @1 FROM @2 WHERE @1 = %3 LIMIT 1', 'id', $SQL->prefix.'NetworkFolder', $id_);
 		$total = $SQL->NumRows();
 		
-		return ($total == 0);
+		return ($total == 1);
 	}
 	
 	public static function load($id_) {
