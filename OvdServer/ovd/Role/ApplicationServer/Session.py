@@ -58,7 +58,7 @@ class Session:
 	def init_user_session_dir(self, user_session_dir):
 		self.user_session_dir = user_session_dir
 		if os.path.isdir(self.user_session_dir):
-			Platform.System.DeleteDirectory(d)
+			Platform.System.DeleteDirectory(self.user_session_dir)
 		
 		os.makedirs(self.user_session_dir)  
 		
