@@ -7,14 +7,14 @@ Standards-Version: 3.8.2
 
 Package: ulteo-ovd-applets
 Architecture: all
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: sun-java6-jre
 Description: Ulteo Open Virtual Desktop applet
  This applet is used in the Open Virtual Desktop to display the user session in
  a browser.
 
 Package: ulteo-ovd-externalapps-client
 Architecture: all
-Depends: openjdk-6-jre, ulteo-ovd-shells
+Depends: sun-java6-jre, ulteo-ovd-shells
 Recommends: ulteo-ovd-integrated-launcher
 Description: Ulteo Open Virtual Desktop integrated client
  This application is used in the Open Virtual Desktop to display the user
@@ -22,7 +22,7 @@ Description: Ulteo Open Virtual Desktop integrated client
 
 Package: ulteo-vdi-rdp-client
 Architecture: all
-Depends: openjdk-6-jre, libgetopt-java, liblog4j1.2-java
+Depends: sun-java6-jre, libgetopt-java, liblog4j1.2-java
 Description: Ulteo VDI java RDP client
  This application is used in the VDI project to display seamless applications
  from vitual machines.
