@@ -753,6 +753,44 @@ class Server {
 		return $shares;
 	}
 
+	public function updateNetworkFolders() {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'Server::updateNetworkFolders - Not an FS');
+			return false;
+		}
+		
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::updateNetworkFolders server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+		
+		$forders_on_server = $this->getNetworkFoldersList();
+		if (is_array($forders_on_server) === false) {
+			Logger::error('main', 'Server::updateNetworkFolders getNetworkFoldersList failed for fqdn='.$this->fqdn);
+			return false;
+		}
+		
+		$folders_on_sm = Abstract_NetworkFolder::load_from_server($this->fqdn);
+		if (is_array($folders_on_sm) === false) {
+			Logger::error('main', 'Server::updateNetworkFolders Abstract_NetworkFolder::load_from_server failed for fqdn='.$this->fqdn);
+			return false;
+		}
+		
+		foreach ($forders_on_server as $folder_id) {
+			$folder = Abstract_NetworkFolder::load($folder_id);
+			if (is_object($folder) === false) {
+				// networkfolder does not exist -> create it
+				$folder = new NetworkFolder();
+				$folder->id = $folder_id;
+				$folder->name = $folder_id;
+				$folder->server = $this->fqdn;
+				Abstract_NetworkFolder::save($folder);
+			}
+		}
+		
+		return true;
+	}
+	
 	public function createNetworkFolder($name_) {
 		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
 			Logger::critical('main', 'SERVER::createNetworkFolder - Not an FS');
