@@ -190,7 +190,7 @@ class Abstract_NetworkFolder {
 		Logger::debug('main', 'Abstract_NetworkFolder::update for \''.$NetworkFolder_->id.'\'');
 		$SQL = SQL::getInstance();
 		
-		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7) WHERE @8=%9 LIMIT 1', $SQL->prefix.'NetworkFolder', 'name', $NetworkFolder_->name, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
+		$SQL->DoQuery('UPDATE @1 SET @2=%3, @4=%5, @6=%7 WHERE @8=%9 LIMIT 1', $SQL->prefix.'NetworkFolder', 'name', $NetworkFolder_->name, 'server', $NetworkFolder_->server, 'status', $NetworkFolder_->status, 'id', $NetworkFolder_->id);
 		
 		return true;
 	}
