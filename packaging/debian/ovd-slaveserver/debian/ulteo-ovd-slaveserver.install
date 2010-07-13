@@ -1,6 +1,6 @@
 /etc
 /usr/bin
-/usr/lib/python2.5/site-packages/ovd/*.py
-/usr/lib/python2.5/site-packages/ovd/Role/*.py
-/usr/lib/python2.5/site-packages/ovd/Platform/*
-/usr/lib/python2.5/site-packages/ovd/Communication/*
+/usr/lib/python*/site-packages/ovd/*.py
+/usr/lib/python*/site-packages/ovd/Role/*.py
+/usr/lib/python*/site-packages/ovd/Platform/*
+/usr/lib/python*/site-packages/ovd/Communication/*
