@@ -322,7 +322,7 @@ function show_unregistered() {
 function show_manage($fqdn) {
   $server = Abstract_Server::load($fqdn);
 
-  if (! $server)
+  if (! $server || $server->getAttribute('registered') === false)
     redirect('servers.php');
 
   $server_online = $server->isOnline();
