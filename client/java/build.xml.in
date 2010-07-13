@@ -335,7 +335,8 @@
         <include name="po/*" />
       </fileset>
     </copy>
-    <tar longfile="gnu" tarfile="${sdist.dir}.tar" basedir="${sdist.dir}" />
+    <tar destfile="${distdir}/${sdist.name}.tar"
+         basedir="${distdir}" includes="${sdist.name}/**" />
     <gzip zipfile="${distdir}/${sdist.name}.tar.gz"
           src="${distdir}/${sdist.name}.tar" />
     <delete dir="${sdist.dir}" />
