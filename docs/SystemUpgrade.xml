@@ -70,8 +70,8 @@
     <important>
       <para>
         The upgrade of the Session Manager may change some settings in
-        the Administration Console. Please check your settings once
-        you completed the upgrade.
+        the Administration Console. After you completed the upgrade, you 
+         must save the settings.
       </para>
     </important>
 
