@@ -793,7 +793,7 @@ class Server {
 		return true;
 	}
 
-	public function deleteNetworkFolder($name_) {
+	public function deleteNetworkFolder($name_, $force_=false) {
 		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
 			Logger::critical('main', 'SERVER::deleteNetworkFolder - Not an FS');
 			return false;
@@ -803,6 +803,7 @@ class Server {
 
 		$node = $dom->createElement('share');
 		$node->setAttribute('id', $name_);
+		$node->setAttribute('force', $force_);
 		$dom->appendChild($node);
 
 		$xml = $dom->saveXML();

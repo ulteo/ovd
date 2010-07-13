@@ -966,6 +966,26 @@ if ($_REQUEST['name'] == 'SharedFolder_ACL') {
 	}
 }
 
+if ($_REQUEST['name'] == 'NetworkFolders') {
+	if (! checkAuthorization('manageServers'))
+		redirect();
+
+	if ($_REQUEST['action'] == 'del') {
+		foreach ($_REQUEST['ids'] as $id) {
+			$network_folder = Abstract_NetworkFolder::load($id);
+			if (is_object($network_folder))
+				$buf = Abstract_NetworkFolder::delete($network_folder);
+
+			if (! $buf)
+				popup_error(sprintf(_("Unable to delete network folder '%s'"), $network_folder->name));
+			else
+				popup_info(sprintf(_("Network folder '%s' successfully deleted"), $network_folder->name));
+		}
+
+		redirect();
+	}
+}
+
 if ($_REQUEST['name'] == 'News') {
 	if ($_REQUEST['action'] == 'add' && isset($_REQUEST['news_title']) && isset($_REQUEST['news_content'])) {
 		$news = new News('');

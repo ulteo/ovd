@@ -445,8 +445,9 @@ function server_display_role_fs($server_, $var_) {
 		echo '<th>'._('Name').'</th>';
 		echo '<th>'._('Status').'</th>';
 		echo '<th class="unsortable">'._('Used by').'</th>';
-		
+		echo '<th class="unsortable"></th>';
 		echo '</tr>';
+
 		foreach ($networkfolders_on_server as $a_networkfolder) {
 			$content = 'content'.(($count++%2==0)?1:2);
 			echo '<tr class="'.$content.'">';
@@ -468,6 +469,12 @@ function server_display_role_fs($server_, $var_) {
 				echo '</ul>';
 			}
 			echo '</td>';
+			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this network folder?').'\');">';
+			echo '<input type="hidden" name="name" value="NetworkFolders" />';
+			echo '<input type="hidden" name="action" value="del" />';
+			echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
+			echo '<input type="submit" value="'._('Delete this network folder').'" />';
+			echo '</form></td>';
 			echo '</tr>';
 		}
 		echo '</table>';
