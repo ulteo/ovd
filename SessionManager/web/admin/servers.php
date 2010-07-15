@@ -310,7 +310,6 @@ function show_unregistered() {
     echo '<br />';
   } else {
     echo _('No unregistered server');
-    echo '<br /><br />';
   }
 
   echo '</div>';
