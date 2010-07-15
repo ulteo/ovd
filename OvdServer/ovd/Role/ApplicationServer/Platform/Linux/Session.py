@@ -33,6 +33,10 @@ class Session(AbstractSession):
 	
 	SPOOL_USER = "/var/spool/ulteo/ovd/"
 	
+	def init(self):
+		pass
+	
+	
 	def install_client(self):
 		d = os.path.join(self.SPOOL_USER, self.user.name)
 		self.init_user_session_dir(d)

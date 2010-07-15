@@ -49,7 +49,7 @@ class Profile(AbstractProfile):
 		
 		
 		home = pwd.getpwnam(self.session.user.name)[5]
-		for d in ["Desktop", "My Documents"]:
+		for d in [self.DesktopDir, self.DocumentsDir]:
 			src = os.path.join(self.cifs_dst, d)
 			dst = os.path.join(home, d)
 			

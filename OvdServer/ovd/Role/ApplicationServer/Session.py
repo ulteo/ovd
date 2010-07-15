@@ -55,6 +55,9 @@ class Session:
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
 	
+	def init(self):
+		raise NotImplementedError()
+	
 	def init_user_session_dir(self, user_session_dir):
 		self.user_session_dir = user_session_dir
 		if os.path.isdir(self.user_session_dir):

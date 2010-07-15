@@ -20,6 +20,9 @@
 
 
 class Profile:
+	DesktopDir = "Desktop"
+	DocumentsDir = "Documents"
+	
 	def __init__(self, host, directory, login, password, session):
 		self.host = host
 		self.directory = directory

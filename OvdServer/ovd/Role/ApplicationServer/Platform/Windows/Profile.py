@@ -22,7 +22,9 @@ import os
 import random
 import win32api
 import win32con
+import win32netcon
 import win32security
+import win32wnet
 import _winreg
 
 from ovd.Logger import Logger
@@ -30,27 +32,75 @@ from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 
 class Profile(AbstractProfile):	
 	def init(self):
-		pass
+		self.mountPoint = None
 	
 	def mount(self):
-		registryFile = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
+		buf = self.getFreeLetter()
+		if buf is None:
+			Logger.warn("No drive letter available: unable to init profile")
+			return
 		
-		# Get some privileges to load the hive
-		priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY
-		hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
-		backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
-		restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
-		win32security.AdjustTokenPrivileges (
-			hToken, 0, [
-			(backup_privilege_id, win32security.SE_PRIVILEGE_ENABLED),
-			(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
-			]
-		)
+		self.mountPoint = "%s:"%(buf)
 		
-		hiveName = "OVD_%d"%(random.randrange(10000, 50000))
+		try:
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, self.mountPoint, r"\\%s\%s"%(self.host, self.directory), None, self.login, self.password)
 		
-		# Load the hive
-		_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
+		except Exception, err:
+			Logger.error("Unable to mount drive")
+			Logger.debug("Unable to mount drive, '%s', try the net use command equivalent: '%s'"%(str(err), "net use %s \\\\%s\\%s %s /user:%s"%(self.mountPoint, self.host, self.directory, self.password, self.login)))
+			
+			self.mountPoint = None
+			return False
+		
+		return True
+	
+	
+	def umount(self):
+		if self.mountPoint is None:
+			return
+		
+		try:
+			win32wnet.WNetCancelConnection2(self.mountPoint, 0, True)
+		
+		except Exception, err:
+			Logger.error("Unable to umount drive")
+			Logger.debug("Unable to umount drive, net use command equivalent: '%s'"%("net use %s: /delete"%(self.mountPoint)))
+	
+	
+	def copySessionStart(self):
+		#ToDo: copy NTuser.dat AppData ...
+		
+		for f in [self.DesktopDir, self.DocumentsDir]:
+			d = os.path.join(self.mountPoint, f)
+			if not os.path.exists(d):
+				os.makedirs(d)
+		
+		print "Should copy NTUSER.DAT and AppData"
+	
+	
+	def copySessionStop(self):
+		print "Should sync NTUSER.DAT and AppData"
+	
+	
+	def overrideRegistry(self, hiveName):
+		#registryFile = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
+		
+		## Get some privileges to load the hive
+		#priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY
+		#hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
+		#backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
+		#restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
+		#win32security.AdjustTokenPrivileges (
+			#hToken, 0, [
+			#(backup_privilege_id, win32security.SE_PRIVILEGE_ENABLED),
+			#(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
+			#]
+		#)
+		
+		#hiveName = "OVD_%d"%(random.randrange(10000, 50000))
+		
+		## Load the hive
+		#_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
 	
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software", 0, win32con.KEY_SET_VALUE)
 		win32api.RegCreateKey(key, r"Ulteo")
@@ -72,14 +122,24 @@ class Profile(AbstractProfile):
 		path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
 		
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-		win32api.RegSetValueEx(key, "Desktop", 0, win32con.REG_SZ, r"U:\Desktop")
-		win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, r"U:\My Documents")
+		win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, os.path.join("U:\\", self.DesktopDir))
+		win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, os.path.join("U:\\", self.DocumentsDir))
 		win32api.RegCloseKey(key)
 		
 		# Unload the hive
-		win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
+		#win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
+		
 	
+	def getFreeLetter(self):
+		# ToDo: manage a global LOCK system to avoid two threads get the same result
+		
+		drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
 	
-	def umount(self):
-		pass
+		for i in "ZYXWVUTSRQPONMLKJIHGFEDCBA":
+			letter = "%s:\\"%(i.upper())
+			#print letter
+			if letter not in drives:
+				return i
+		
+		return None
 

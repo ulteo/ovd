@@ -42,6 +42,10 @@ from ovd.Platform import Platform
 import Reg
 
 class Session(AbstractSession):
+	def init(self):
+		self.installedShortcut = []
+	
+	
 	def install_client(self):
 		logon = win32security.LogonUser(self.user.name, None, self.user.infos["password"], win32security.LOGON32_LOGON_INTERACTIVE, win32security.LOGON32_PROVIDER_DEFAULT)
 		
@@ -71,28 +75,39 @@ class Session(AbstractSession):
 		
 		win32api.CloseHandle(logon)
 		
+		if self.profile is not None:
+			if not self.profile.mount():
+				Logger.warn("Session is going to continue without profile")  
+				self.profile = None
+			else:
+				self.profile.copySessionStart()
 		
 		self.init_user_session_dir(os.path.join(appDataDir, "ulteo", "ovd"))
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
 		
 		if self.profile is not None:
-			self.profile.mount()
+			self.profile.umount()
 	
 	
 	def install_shortcut(self, shortcut):
+		self.installedShortcut.append(os.path.basename(shortcut))
+		
 		dstFile = os.path.join(self.windowsProgramsDir, os.path.basename(shortcut))
 		if os.path.exists(dstFile):
 			os.remove(dstFile)
 		
-		print "Copy: ",shortcut, "on", dstFile
 		win32file.CopyFile(shortcut, dstFile, True)
 		
 		if self.parameters.has_key("desktop_icons"):
-			if  not os.path.exists(self.windowsDesktopDir):
-				os.makedirs(self.windowsDesktopDir)
+			if self.profile is not None and self.profile.mountPoint is not None:
+				d = os.path.join(self.profile.mountPoint, self.profile.DesktopDir)
+			else:
+				d = self.windowsDesktopDir
+				if  not os.path.exists(self.windowsDesktopDir):
+					os.makedirs(self.windowsDesktopDir)
 			  
-			dstFile = os.path.join(self.windowsDesktopDir, os.path.basename(shortcut))
+			dstFile = os.path.join(d, os.path.basename(shortcut))
 			if os.path.exists(dstFile):
 				os.remove(dstFile)
 			
@@ -109,6 +124,15 @@ class Session(AbstractSession):
 	
 	def uninstall_client(self):
 		if self.profile is not None:
+			self.profile.mount()
+			
+			self.profile.copySessionStop()
+			
+			for shortcut in self.installedShortcut:
+				dstFile = os.path.join(self.profile.mountPoint, self.profile.DesktopDir, shortcut)
+				if os.path.exists(dstFile):
+					os.remove(dstFile)
+			
 			self.profile.umount()
 		
 		self.user.destroy()
@@ -253,6 +277,9 @@ class Session(AbstractSession):
 		Reg.UpdateActiveSetup(hkey_dst, self.user.name)
 		win32api.RegCloseKey(hkey_src)
 		win32api.RegCloseKey(hkey_dst)
+		
+		if self.profile is not None:
+			self.profile.overrideRegistry(hiveName)
 		
 		
 		# Unload the hive

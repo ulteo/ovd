@@ -198,6 +198,7 @@ class Dialog(AbstractDialog):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
 		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
+		session.init()
 		
 		if profileNode is not None:
 			profile = Platform.Profile(profileNode.getAttribute("server"), profileNode.getAttribute("dir"), profileNode.getAttribute("login"), profileNode.getAttribute("password"), session)
