@@ -22,6 +22,7 @@ import os
 import random
 import win32api
 import win32con
+import win32file
 import win32netcon
 import win32security
 import win32wnet
@@ -68,40 +69,53 @@ class Profile(AbstractProfile):
 	
 	
 	def copySessionStart(self):
-		#ToDo: copy NTuser.dat AppData ...
-		
 		for f in [self.DesktopDir, self.DocumentsDir]:
 			d = os.path.join(self.mountPoint, f)
 			if not os.path.exists(d):
 				os.makedirs(d)
 		
-		print "Should copy NTUSER.DAT and AppData"
+		
+		d = os.path.join(self.mountPoint, "conf.Windows")
+		if os.path.exists(d):
+			# Copy user registry
+			src = os.path.join(d, "NTUSER.DAT")
+			
+			if os.path.exists(src):
+				dst = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
+				
+				try:
+					win32file.CopyFile(src, dst, False)
+				except:
+					Logger.error("Unable to copy registry from profile")
+		
+		
+		print "Should copy AppData"
 	
 	
 	def copySessionStop(self):
-		print "Should sync NTUSER.DAT and AppData"
+		# etre sur que le type est logoff !
+		
+		
+		d = os.path.join(self.mountPoint, "conf.Windows")
+		if not os.path.exists(d):
+			os.makedirs(d)
+		
+		# Copy user registry
+		src = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
+		dst = os.path.join(d, "NTUSER.DAT")
+		
+		if os.path.exists(src):
+			try:
+				win32file.CopyFile(src, dst, False)
+			except:
+				Logger.error("Unable to copy registry to profile")
+		else:
+			Logger.warn("Weird: no NTUSER.DAT in user home dir ...")
+		
+		print "Should sync AppData"
 	
 	
 	def overrideRegistry(self, hiveName):
-		#registryFile = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
-		
-		## Get some privileges to load the hive
-		#priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY
-		#hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
-		#backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
-		#restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
-		#win32security.AdjustTokenPrivileges (
-			#hToken, 0, [
-			#(backup_privilege_id, win32security.SE_PRIVILEGE_ENABLED),
-			#(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
-			#]
-		#)
-		
-		#hiveName = "OVD_%d"%(random.randrange(10000, 50000))
-		
-		## Load the hive
-		#_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)
-	
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software", 0, win32con.KEY_SET_VALUE)
 		win32api.RegCreateKey(key, r"Ulteo")
 		win32api.RegCloseKey(key)
@@ -125,10 +139,7 @@ class Profile(AbstractProfile):
 		win32api.RegSetValueEx(key, "Desktop",  0, win32con.REG_SZ, os.path.join("U:\\", self.DesktopDir))
 		win32api.RegSetValueEx(key, "Personal", 0, win32con.REG_SZ, os.path.join("U:\\", self.DocumentsDir))
 		win32api.RegCloseKey(key)
-		
-		# Unload the hive
-		#win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
-		
+	
 	
 	def getFreeLetter(self):
 		# ToDo: manage a global LOCK system to avoid two threads get the same result
