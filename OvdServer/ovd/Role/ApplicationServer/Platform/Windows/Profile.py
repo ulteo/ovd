@@ -31,6 +31,8 @@ import _winreg
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 
+import Util
+
 class Profile(AbstractProfile):	
 	def init(self):
 		self.mountPoint = None
@@ -79,7 +81,6 @@ class Profile(AbstractProfile):
 		if os.path.exists(d):
 			# Copy user registry
 			src = os.path.join(d, "NTUSER.DAT")
-			
 			if os.path.exists(src):
 				dst = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
 				
@@ -87,9 +88,17 @@ class Profile(AbstractProfile):
 					win32file.CopyFile(src, dst, False)
 				except:
 					Logger.error("Unable to copy registry from profile")
-		
-		
-		print "Should copy AppData"
+			
+			# Copy AppData
+			src = os.path.join(d, "AppData")
+			if os.path.exists(src):
+				dst = self.session.appDataDir
+				
+				try:
+					Util.copyDirOverride(src, dst)
+				except Exception, err:
+					Logger.error("Unable to copy appData from profile")
+					Logger.debug("Unable to copy appData from profile: %s"%(str(err)))
 	
 	
 	def copySessionStop(self):
@@ -112,7 +121,14 @@ class Profile(AbstractProfile):
 		else:
 			Logger.warn("Weird: no NTUSER.DAT in user home dir ...")
 		
-		print "Should sync AppData"
+		# Copy AppData
+		src = self.session.appDataDir
+		dst = os.path.join(d, "AppData")
+		try:
+			Util.copyDirOverride(src, dst)
+		except Exception, err:
+			Logger.error("Unable to copy appData to profile")
+			Logger.debug("Unable to copy appData to profile: %s"%(str(err)))
 	
 	
 	def overrideRegistry(self, hiveName):
@@ -153,4 +169,3 @@ class Profile(AbstractProfile):
 				return i
 		
 		return None
-

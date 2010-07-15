@@ -70,8 +70,8 @@ class Session(AbstractSession):
 			self.windowsDesktopDir = desktopDir
 		
 		
-		appDataDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
-		Logger.debug("appdata: '%s'"%(appDataDir))
+		self.appDataDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
+		Logger.debug("appdata: '%s'"%(self.appDataDir))
 		
 		win32api.CloseHandle(logon)
 		
@@ -82,7 +82,7 @@ class Session(AbstractSession):
 			else:
 				self.profile.copySessionStart()
 		
-		self.init_user_session_dir(os.path.join(appDataDir, "ulteo", "ovd"))
+		self.init_user_session_dir(os.path.join(self.appDataDir, "ulteo", "ovd"))
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
 		
