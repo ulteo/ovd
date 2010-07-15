@@ -144,6 +144,7 @@ function show_manage($sharedfolder_id_) {
 	echo '</table>';
 
 	echo '</div>';
+	echo '<br />';
 
 	echo '<div>';
 	echo '<h2>'._('ACL').'</h2>';
