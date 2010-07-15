@@ -82,6 +82,8 @@ class Session(AbstractSession):
 			else:
 				self.profile.copySessionStart()
 		
+		
+		
 		self.init_user_session_dir(os.path.join(self.appDataDir, "ulteo", "ovd"))
 		
 		self.overwriteDefaultRegistry(self.windowsProfileDir)
@@ -152,11 +154,9 @@ class Session(AbstractSession):
 		return True
 	
 	
-	def overwriteDefaultRegistry(self, directory):
-		registryFile = os.path.join(directory, "NTUSER.DAT")
-		
+	def obainPrivileges(self):
 		# Get some privileges to load the hive
-		priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY
+		priv_flags = win32security.TOKEN_ADJUST_PRIVILEGES | win32security.TOKEN_QUERY 
 		hToken = win32security.OpenProcessToken (win32api.GetCurrentProcess (), priv_flags)
 		backup_privilege_id = win32security.LookupPrivilegeValue (None, "SeBackupPrivilege")
 		restore_privilege_id = win32security.LookupPrivilegeValue (None, "SeRestorePrivilege")
@@ -166,8 +166,13 @@ class Session(AbstractSession):
 			(restore_privilege_id, win32security.SE_PRIVILEGE_ENABLED)
 			]
 		)
-
-
+	
+	
+	def overwriteDefaultRegistry(self, directory):
+		registryFile = os.path.join(directory, "NTUSER.DAT")
+		
+		self.obainPrivileges()
+		
 		hiveName = "OVD_%d"%(random.randrange(10000, 50000))
 		
 		# Load the hive

@@ -31,6 +31,7 @@ import _winreg
 from ovd.Logger import Logger
 from ovd.Role.ApplicationServer.Profile import Profile as AbstractProfile
 
+import Reg
 import Util
 
 class Profile(AbstractProfile):	
@@ -80,14 +81,29 @@ class Profile(AbstractProfile):
 		d = os.path.join(self.mountPoint, "conf.Windows")
 		if os.path.exists(d):
 			# Copy user registry
+			self.session.obainPrivileges()
+			
 			src = os.path.join(d, "NTUSER.DAT")
 			if os.path.exists(src):
 				dst = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
 				
-				try:
-					win32file.CopyFile(src, dst, False)
-				except:
-					Logger.error("Unable to copy registry from profile")
+				hiveName_src = "OVD_%d"%(random.randrange(10000, 50000))
+				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_src, src)
+				
+				hiveName_dst = "OVD_%d"%(random.randrange(10000, 50000))
+				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_dst, dst)
+				
+				hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_src), 0, win32con.KEY_ALL_ACCESS)
+				hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_dst), 0, win32con.KEY_ALL_ACCESS)
+				
+				Reg.CopyTree(hkey_src, "Software", hkey_dst)
+				
+				win32api.RegCloseKey(hkey_src)
+				win32api.RegCloseKey(hkey_dst)
+				
+				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_src)
+				win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName_dst)
+				
 			
 			# Copy AppData
 			src = os.path.join(d, "AppData")
@@ -108,6 +124,8 @@ class Profile(AbstractProfile):
 		d = os.path.join(self.mountPoint, "conf.Windows")
 		if not os.path.exists(d):
 			os.makedirs(d)
+		
+		self.session.obainPrivileges()
 		
 		# Copy user registry
 		src = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")

@@ -43,10 +43,15 @@ def copyDirOverride(src, dst):
 		if os.path.isdir(path_src):
 			copyDirOverride(path_src, path_dst) 
 		else:
+			attr = None
+			if os.path.exists(path_dst):
+				attr = win32file.GetFileAttributes(path_dst)
+				os.remove(path_dst)
+			
 			win32file.CopyFile(path_src, path_dst, False)
 			try:
-				attr = win32file.GetFileAttributes(path_src)
-				win32file.SetFileAttributes(path_dst, attr)
+				if attr is not None:
+					win32file.SetFileAttributes(path_dst, attr)
 			except:
 				#print "Unable to setAttribute of",path_dst
 				pass
