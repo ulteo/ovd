@@ -154,7 +154,7 @@ class Abstract_NetworkFolder {
 			if (! is_object($networkfolder))
 				continue;
 			
-			$networkfolders[$NetworkFolder->id] = $networkfolder;
+			$networkfolders[$networkfolder->id] = $networkfolder;
 		}
 		
 		return $networkfolders;
