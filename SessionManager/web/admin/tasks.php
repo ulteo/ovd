@@ -188,8 +188,8 @@ function show_default($tm) {
     	echo '<select name="server">';
     	foreach ($servers as $server)
 		echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
-    	echo '</select>';
-    	echo '<input type="text" name="request" value="" />';
+    	echo '</select> &nbsp; ';
+    	echo '<input type="text" name="request" value="" /> &nbsp; ';
     	echo '<input type="hidden" name="type" value="install_from_line" />';
     	echo '<input type="submit" name="submit" value="'._('Install').'" />';
     	echo '</form>';
@@ -204,7 +204,7 @@ function show_default($tm) {
         echo '<select name="server">';
         foreach ($servers as $server)
             echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
-        echo '</select>';
+        echo '</select> &nbsp; ';
         echo '<input type="submit" name="submit" value="'._('Upgrade').'" />';
         echo '</form>';
     }
