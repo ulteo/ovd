@@ -1094,8 +1094,6 @@ if ($_REQUEST['name'] == 'Server') {
 				$res = $buf->register();
 				if ($res) {
 					Abstract_Server::save($buf);
-					$buf->updateApplications();
-					$buf->updateNetworkFolders();
 					popup_info(sprintf(_("Server '%s' successfully registered"), $buf->getAttribute('fqdn')));
 				}
 				else {

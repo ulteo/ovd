@@ -246,6 +246,9 @@ class Server {
 
 		$this->setAttribute('registered', true);
 
+		$this->updateApplications();
+		$this->updateNetworkFolders();
+
 		return true;
 	}
 
