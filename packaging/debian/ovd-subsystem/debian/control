@@ -2,7 +2,7 @@ Source: ovd-subsystem
 Section: net
 Priority: extra
 Maintainer: Samuel Bovée <samuel@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 5), intltool
+Build-Depends: cdbs, debhelper (>= 6), intltool
 Standards-Version: 3.7.3
 
 Package: ulteo-ovd-subsystem

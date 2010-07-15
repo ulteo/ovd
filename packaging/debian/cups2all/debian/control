@@ -2,7 +2,7 @@ Source: cups2all
 Section: x11
 Priority: extra
 Maintainer: Samuel Bovée <samuel@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 5), libcupsys2-dev
+Build-Depends: cdbs, debhelper (>= 6), libcupsys2-dev
 Standards-Version: 3.7.3
 
 Package: ulteo-cups2all
