@@ -902,14 +902,12 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 
 	if ($_REQUEST['action']=='add') {
 		action_add_sharedfolder();
-		popup_info(_('SharedFolder successfully added'));
 		redirect();
 	}
 	
 	if ($_REQUEST['action']=='del') {
 		if (isset($_REQUEST['id'])) {
 			action_del_sharedfolder($_REQUEST['id']);
-			popup_info(_('SharedFolder successfully deleted'));
 			redirect();
 		}
 	}
