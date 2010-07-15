@@ -687,11 +687,11 @@ echo '<br />';
 	echo '</div>';
 	echo '<br/>';
 
-    $all_sharedfolders = SharedFolders::getAll();
+    $all_sharedfolders = Abstract_NetworkFolder::load_all();
 
     if (count($all_sharedfolders) > 0) {
 		$available_sharedfolders = array();
-		$used_sharedfolders = Abstract_SharedFolder::load_by_usergroup_id($group->getUniqueID());
+		$used_sharedfolders = Abstract_NetworkFolder::load_from_usergroup($group->getUniqueID());
 		foreach ($all_sharedfolders as $sharedfolder) {
 			if (in_array($sharedfolder->id, array_keys($used_sharedfolders)))
 				continue;

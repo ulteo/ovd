@@ -917,11 +917,11 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 			$id = $_REQUEST['id'];
 			$new_name = $_REQUEST['sharedfolder_name'];
 			
-			$sharedfolder = Abstract_SharedFolder::load($id);
+			$sharedfolder = Abstract_NetworkFolder::load($id);
 			if (is_object($sharedfolder)) {
-				if (! Abstract_SharedFolder::exists($new_name) || $new_name == $sharedfolder->name) {
+				if (! Abstract_NetworkFolder::exists($new_name) || $new_name == $sharedfolder->name) {
 					$sharedfolder->name = $new_name;
-					$ret = Abstract_SharedFolder::modify($sharedfolder);
+					$ret = Abstract_NetworkFolder::save($sharedfolder);
 					if ($ret === true)
 						popup_info(_('SharedFolder successfully renamed'));
 				} else
@@ -1280,15 +1280,24 @@ function action_add_sharedfolder() {
 		return false;
 	}
 
-	$buf = SharedFolders::getByName($sharedfolder_name);
+	$buf = Abstract_NetworkFolder::load_from_name($sharedfolder_name);
 	if (count($buf) > 0) {
 		popup_error(_('A shared folder with this name already exists'));
 		return false;
 	}
 
-	$buf = new SharedFolder(NULL);
+	$buf = new NetworkFolder();
 	$buf->name = $sharedfolder_name;
-	$ret = Abstract_SharedFolder::save($buf);
+	
+	$a_server = $buf->chooseFileServer();
+	if (is_object($a_server) === false) {
+		popup_error(_('No server avalaible for sharedFolder'));
+		return false;
+	}
+	
+	$buf->server = $a_server->fqdn;
+	
+	$ret = Abstract_NetworkFolder::save($buf);
 
 	if ($ret === true)
 		popup_info(sprintf(_('SharedFolder \'%s\' successfully added'), $buf->name));
@@ -1296,7 +1305,13 @@ function action_add_sharedfolder() {
 }
 
 function action_del_sharedfolder($sharedfolder_id) {
-	$buf = Abstract_SharedFolder::delete($sharedfolder_id);
+	$sharedfolder = Abstract_NetworkFolder::load($sharedfolder_id);
+	if (! $sharedfolder) {
+		popup_error(_('Unable to delete this shared folder'));
+		return false;
+	}
+
+	$buf = Abstract_NetworkFolder::delete($sharedfolder);
 
 	if (! $buf) {
 		popup_error(_('Unable to delete this shared folder'));
@@ -1308,14 +1323,20 @@ function action_del_sharedfolder($sharedfolder_id) {
 }
 
 function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
-	$sharedfolder = Abstract_SharedFolder::load($sharedfolder_id_);
+	$sharedfolder = Abstract_NetworkFolder::load($sharedfolder_id_);
 	if (! $sharedfolder) {
 		popup_error(_('Unable to create this shared folder access'));
 		return false;
 	}
 
-	$ret = Abstract_SharedFolder::add_acl($sharedfolder, $usergroup_id_);
+	$usergroupDB = UserGroupDB::getInstance();
+	$group = $usergroupDB->import($usergroup_id_);
+	if (is_object($group) === false) {
+		popup_error(_('Unable to load usergroup'));
+		return false;
+	}
 	
+	$ret = $sharedfolder->addUserGroup($group);
 	if ($ret === true)
 		popup_info(_('SharedFolder successfully modified'));
 	
@@ -1323,13 +1344,20 @@ function action_add_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
 }
 
 function action_del_sharedfolder_acl($sharedfolder_id_, $usergroup_id_) {
-	$sharedfolder = Abstract_SharedFolder::load($sharedfolder_id_);
+	$sharedfolder = Abstract_NetworkFolder::load($sharedfolder_id_);
 	if (! $sharedfolder) {
 		popup_error(_('Unable to delete this shared folder access'));
 		return false;
 	}
 
-	$ret = Abstract_SharedFolder::del_acl($sharedfolder, $usergroup_id_);
+	$usergroupDB = UserGroupDB::getInstance();
+	$group = $usergroupDB->import($usergroup_id_);
+	if (is_object($group) === false) {
+		popup_error(_('Unable to load usergroup'));
+		return false;
+	}
+	
+	$ret = $sharedfolder->delUserGroup($group);
 	if ($ret === true)
 		popup_info(_('SharedFolder successfully modified'));
 	return true;

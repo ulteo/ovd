@@ -1,8 +1,9 @@
 <?php
 /**
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,19 +33,17 @@ if (isset($_REQUEST['action'])) {
 	show_default();
 
 function show_default() {
-	$sharedfolders = SharedFolders::getAll();
-
+	$sharedfolders = Abstract_NetworkFolder::load_all();
+	foreach ($sharedfolders as $key => $value) {
+		// if the networkfolder is link to a user it's not a networkfolder but a profile
+		$users = $value->getUsers();
+		if (($users === false) || (is_array($users) && count($users) > 0)) {
+			unset($sharedfolders[$key]);
+		}
+	}
+	
 	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
 	$can_manage_configuration = isAuthorized('manageConfiguration');
-
-	$prefs = Preferences::getInstance();
-	if (! $prefs)
-		die_error('get Preferences failed',__FILE__,__LINE__);
-
-	$using_dav_fs = ($prefs->get('plugins', 'FS') == 'dav');
-
-	if (! $using_dav_fs)
-		popup_error(_('You are not using Internal WebDAV filesystem, "Shared folders" are disabled!'));
 
 	page_header();
 
@@ -77,14 +76,6 @@ function show_default() {
 		echo '</form></tr>';
 	}
 
-	if (! $using_dav_fs && $can_manage_configuration) {
-		echo '<tr><form action="actions.php" method="post"><td colspan="2">';
-		echo '<input type="hidden" name="name" value="SharedFolder" />';
-		echo '<input type="hidden" name="action" value="enable_dav_fs" />';
-		echo '<input type="submit" value="'._('Enable Internal WebDAV filesystem').'" /></td>';
-		echo '</form></tr>';
-	}
-
 	echo '</table>';
 	echo '</div>';
 
@@ -96,7 +87,7 @@ function show_default() {
 }
 
 function show_manage($sharedfolder_id_) {
-	$sharedfolder = Abstract_SharedFolder::load($sharedfolder_id_);
+	$sharedfolder = Abstract_NetworkFolder::load($sharedfolder_id_);
 
 	if (! is_object($sharedfolder))
 		redirect('sharedfolders.php');
@@ -105,12 +96,11 @@ function show_manage($sharedfolder_id_) {
 	$all_groups = $userGroupDB->getList(true);
 
 	$available_groups = array();
-	$used_groups = array();
+	$used_groups = $sharedfolder->getUserGroups();
 	foreach ($all_groups as $group) {
-		if (in_array($group->getUniqueID(), array_keys($sharedfolder->acls)))
-			$used_groups[] = $group;
-		else
-			$available_groups[] = $group;
+		if (array_key_exists($group->getUniqueID(), $used_groups) === false) {
+			$available_groups[$group->getUniqueID()] = $group;
+		}
 	}
 
 	$can_manage_sharedfolders = isAuthorized('manageSharedFolders');
@@ -119,6 +109,12 @@ function show_manage($sharedfolder_id_) {
 
 	echo '<div id="sharedfolders_div">';
 	echo '<h1>'.$sharedfolder->name.'</h1>';
+
+	echo '<div>';
+	echo '<h2>'.('Server').'</h2>';
+	echo '<a href="servers.php?action=manage&fqdn='.$sharedfolder->server.'"> '.$sharedfolder->server.'</a>';
+	echo '</div>';
+	echo '<br />';
 
 	echo '<div>';
 	echo '<h2>'._('Configuration').'</h2>';

@@ -424,59 +424,125 @@ function server_display_role_aps($server, $var) {
 function server_display_role_preparation_fs($server_) {
 	$ret = array();
 	
-	$ret['NetworkFolders'] = Abstract_NetworkFolder::load_from_server($server_->getAttribute('fqdn'));
-	$ret['used by'] = array();
+	$networkfolders = Abstract_NetworkFolder::load_from_server($server_->getAttribute('fqdn'));
+	$ret['NetworkFolders'] =  array();
+	$ret['profiles'] =  array();
+	$ret['sharedfolders'] =  array();
+	$ret['used by profiles'] = array();
+	$ret['used by sharedfolders'] = array();
 	
-	foreach ($ret['NetworkFolders'] as $a_networkfolder) {
-		$ret['used by'][$a_networkfolder->id] = $a_networkfolder->getUsers();
+	foreach ($networkfolders as $a_networkfolder) {
+		
+		$users = $a_networkfolder->getUsers();
+		if (is_array($users) && count($users) > 0) {
+			$ret['profiles'][$a_networkfolder->id] = $a_networkfolder;
+			if (isset($ret['used by profiles'][$a_networkfolder->id]) === false) {
+				$ret['used by profiles'][$a_networkfolder->id] = array();
+			}
+			
+			foreach ($users as $a_user) {
+				$buf = array();
+				$buf['id'] =  $a_user->getAttribute('login');
+				$buf['name'] = $a_user->getAttribute('displayname');
+				$ret['used by profiles'][$a_networkfolder->id] []= $buf;
+			}
+		}
+		else {
+			$groups = $a_networkfolder->getUserGroups();
+			
+			if (is_array($groups) && count($groups) > 0) {
+				$ret['sharedfolders'][$a_networkfolder->id] = $a_networkfolder;
+				if (isset($ret['used by sharedfolders'][$a_networkfolder->id]) === false) {
+					$ret['used by sharedfolders'][$a_networkfolder->id] = array();
+				}
+				
+				foreach ($groups as $a_group) {
+					$buf = array();
+					$buf['id'] = $a_group->getUniqueID();
+					$buf['name'] = $a_group->name;
+					$ret['used by sharedfolders'][$a_networkfolder->id] []= $buf;
+				}
+				
+			}
+			else {
+				$ret['NetworkFolders'][$a_networkfolder->id] = $a_networkfolder;
+			}
+		}
 	}
 	return $ret;
 }
 
 function server_display_role_fs($server_, $var_) {
-	$networkfolders_on_server = $var_['NetworkFolders'];
-	$usedby = $var_['used by'];
+	$datas = array(
+		0 => array(
+			'name' => _('User profiles in the server'),
+			'folder' => $var_['profiles'],
+			'usedby' => $var_['used by profiles'],
+			'page' => 'users',
+		),
+		1 => array(
+			'name' => _('Shared folders in the server'),
+			'folder' => $var_['sharedfolders'],
+			'usedby' => $var_['used by sharedfolders'],
+			'page' => 'usersgroup',
+		),
+		2 => array(
+			'name' => _('NetworkFolders in the server'),
+			'folder' => $var_['NetworkFolders'],
+			'usedby' => array(),
+			'page' => NULL,
+		)
+	);
 	
-	if (is_array($networkfolders_on_server) && count($networkfolders_on_server) > 0 && is_array($usedby)) {
-		echo '<h3>'._('Network folders in the server').'</h3>';
-		$count = 0;
-		echo '<table id="available_networkfolder_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
-		echo '<tr class="title">';
-		echo '<th>'._('Name').'</th>';
-		echo '<th>'._('Status').'</th>';
-		echo '<th class="unsortable">'._('Used by').'</th>';
-		echo '<th class="unsortable"></th>';
-		echo '</tr>';
-
-		foreach ($networkfolders_on_server as $a_networkfolder) {
-			$content = 'content'.(($count++%2==0)?1:2);
-			echo '<tr class="'.$content.'">';
-			echo '<td>';
-			echo $a_networkfolder->name;
-			echo '</td>';
-			echo '<td>';
-			echo $a_networkfolder->status;
-			echo '</td>';
-			echo '<td>';
-			if (array_key_exists($a_networkfolder->id, $usedby)) {
-				$users = $usedby[$a_networkfolder->id];
-				echo '<ul>';
-				foreach ($users as $a_user) {
-					echo '<li>';
-					echo '<a href="users.php?action=manage&id='.$a_user->getAttribute('login').'">'.$a_user->getAttribute('displayname').'</a>';
-					echo '</li>';
-				}
-				echo '</ul>';
-			}
-			echo '</td>';
-			echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this network folder?').'\');">';
-			echo '<input type="hidden" name="name" value="NetworkFolders" />';
-			echo '<input type="hidden" name="action" value="del" />';
-			echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
-			echo '<input type="submit" value="'._('Delete this network folder').'" />';
-			echo '</form></td>';
+	foreach ($datas as $data) {
+		if (is_array($data['folder']) && count($data['folder']) > 0 && is_array($data['usedby'])) {
+			echo '<h3>'.$data['name'].'</h3>';
+			$count = 0;
+			echo '<table id="available_networkfolder_table" class="main_sub sortable" border="0" cellspacing="1" cellpadding="3">';
+			echo '<tr class="title">';
+			echo '<th>'._('Name').'</th>';
+			echo '<th>'._('Status').'</th>';
+			echo '<th class="unsortable">'._('Used by').'</th>';
+			echo '<th class="unsortable"></th>';
 			echo '</tr>';
+			
+			foreach ($data['folder'] as $a_networkfolder) {
+				
+				$content = 'content'.(($count++%2==0)?1:2);
+				echo '<tr class="'.$content.'">';
+				echo '<td>';
+				if ($data['page'] !== 'users') {
+					echo '<a href="sharedfolders.php?action=manage&id='.$a_networkfolder->id.'">'.$a_networkfolder->name.'</a>';
+				}
+				else {
+					echo $a_networkfolder->name;
+				}
+				echo '</td>';
+				echo '<td>';
+				echo $a_networkfolder->status;
+				echo '</td>';
+				echo '<td>';
+				if (array_key_exists($a_networkfolder->id, $data['usedby']) &&  (is_null($data['page']) === false)) {
+					$objs = $data['usedby'][$a_networkfolder->id];
+					echo '<ul>';
+					foreach ($objs as $a_obj) {
+						echo '<li>';
+						echo '<a href="'.$data['page'].'.php?action=manage&id='.$a_obj['id'].'">'.$a_obj['name'].'</a>';
+						echo '</li>';
+					}
+					echo '</ul>';
+				}
+				echo '</td>';
+				echo '<td><form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this network folder?').'\');">';
+				echo '<input type="hidden" name="name" value="NetworkFolders" />';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="ids[]" value="'.$a_networkfolder->id.'" />';
+				echo '<input type="submit" value="'._('Delete this network folder').'" />';
+				echo '</form></td>';
+				echo '</tr>';
+			}
+			echo '</table>';
+			echo '<br />';
 		}
-		echo '</table>';
 	}
 }

@@ -126,7 +126,6 @@ function init_db($prefs_) {
 	Abstract_Report::init($prefs_);
 	Abstract_UserGroup_Preferences::init($prefs_);
 	Abstract_UserGroup_Rule::init($prefs_);
-	Abstract_SharedFolder::init($prefs_);
 	Abstract_DAV_User::init($prefs_);
 	
 	UserGroupDBDynamic::init($prefs_);

@@ -114,6 +114,7 @@ class Abstract_NetworkFolder {
 	
 	public static function delete($NetworkFolder_) {
 		Abstract_Liaison::delete('UserNetworkFolder', NULL, $NetworkFolder_->id);
+		Abstract_Liaison::delete('UserGroupNetworkFolder', NULL, $NetworkFolder_->id);
 		$SQL = SQL::getInstance();
 		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'NetworkFolder', 'id', $NetworkFolder_->id);
 
@@ -177,6 +178,23 @@ class Abstract_NetworkFolder {
 		return $networkfolders;
 	}
 	
+	public static function load_from_usergroup($group_id_) {
+		$liaisons = Abstract_Liaison::load('UserGroupNetworkFolder', $group_id_, NULL);
+		if (is_array($liaisons) == false) {
+			Logger::error('main', "Abstract_NetworkFolder::load_from_usergroup($group_id_) problem with liaison");
+			return false;
+		}
+		$networkfolders = array();
+		foreach ($liaisons as $liaison) {
+			$networkfolder = self::load($liaison->group);
+			if (! is_object($networkfolder))
+				continue;
+			
+			$networkfolders[$networkfolder->id] = $networkfolder;
+		}
+		return $networkfolders;
+	}
+	
 	public static function load_from_server($fqdn_) {
 		Logger::debug('main', "Abstract_NetworkFolder::load_from_server($fqdn_)");
 		
@@ -191,6 +209,25 @@ class Abstract_NetworkFolder {
 			if (! is_object($networkfolder))
 				continue;
 				
+			$networkfolders[$networkfolder->id] = $networkfolder;
+		}
+		
+		return $networkfolders;
+	}
+	
+	public static function load_from_name($name_) {
+		Logger::debug('main', "Abstract_NetworkFolder::load_from_name($name_)");
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2=%3', $SQL->prefix.'NetworkFolder', 'name', $name_);
+		$rows = $SQL->FetchAllResults();
+		
+		$networkfolders = array();
+		foreach ($rows as $row) {
+			$networkfolder = self::generateFromRow($row);
+			if (! is_object($networkfolder))
+				continue;
+			
 			$networkfolders[$networkfolder->id] = $networkfolder;
 		}
 		
@@ -228,5 +265,29 @@ class Abstract_NetworkFolder {
 			return false;
 		}
 		return Abstract_Liaison::delete('UserNetworkFolder', $user_->getAttribute('login'), $NetworkFolder_->id);
+	}
+	
+	public static function add_usergroup_to_NetworkFolder($usergroup_, $NetworkFolder_) {
+		if (! is_object($usergroup_)) {
+			Logger::error('main', "Abstract_NetworkFolder::add_usergroup_to_NetworkFolder, parameter 'usergroup' is not correct, usergroup: ".serialize($usergroup_));
+			return false;
+		}
+		if (! is_object($NetworkFolder_)) {
+			Logger::error('main', "Abstract_NetworkFolder::add_usergroup_to_NetworkFolder, parameter 'NetworkFolder' is not correct, NetworkFolder: ".serialize($NetworkFolder_));
+			return false;
+		}
+		return Abstract_Liaison::save('UserGroupNetworkFolder', $usergroup_->getUniqueID(), $NetworkFolder_->id);
+	}
+	
+	public static function delete_usergroup_from_NetworkFolder($usergroup_, $NetworkFolder_) {
+		if (! is_object($usergroup_)) {
+			Logger::error('main', "Abstract_NetworkFolder::delete_usergroup_from_NetworkFolder, parameter 'usergroup' is not correct, usergroup: ".serialize($usergroup_));
+			return false;
+		}
+		if (! is_object($NetworkFolder_)) {
+			Logger::error('main', "Abstract_NetworkFolder::delete_usergroup_from_NetworkFolder, parameter 'networkfolder_' is not correct, networkfolder_: ".serialize($networkfolder_));
+			return false;
+		}
+		return Abstract_Liaison::delete('UserGroupNetworkFolder', $usergroup_->getUniqueID(), $NetworkFolder_->id);
 	}
 }

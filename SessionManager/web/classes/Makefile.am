@@ -36,10 +36,7 @@ scripts_DATA = Application.class.php \
                UsersGroup_dynamic_cached.class.php \
                UserGroup_Preferences.class.php \
                UserGroup_Rule.class.php \
-               UserGroup_Rules.class.php \
-               SharedFolders.class.php \
-               SharedFolder.class.php \
-               DAV_User.class.php
+               UserGroup_Rules.class.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/classes
 

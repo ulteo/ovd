@@ -49,12 +49,50 @@ class NetworkFolder {
 		return $users;
 	}
 	
+	public function getUserGroups() {
+		$liaisons = Abstract_Liaison::load('UserGroupNetworkFolder', NULL, $this->id);
+		if (is_array($liaisons) == false) {
+			Logger::error('main', 'NetworkFolder::getUserGroups()');
+			return false;
+		}
+		
+		$usergroupDB = UserGroupDB::getInstance();
+		
+		$usergroups = array();
+		foreach ($liaisons as $liaison) {
+			$usergroup = $usergroupDB->import($liaison->element);
+			if (! is_object($usergroup))
+				continue;
+			
+			$usergroups[$usergroup->getUniqueID()] = $usergroup;
+		}
+		return $usergroups;
+	}
+	
 	public function addUser($user_) {
 		return Abstract_NetworkFolder::add_user_to_NetworkFolder($user_, $this);
 	}
 	
 	public function delUser($user_) {
 		return Abstract_NetworkFolder::delete_user_from_NetworkFolder($user_, $this);
+	}
+	
+	public function addUserGroup($usergroup_) {
+		return Abstract_NetworkFolder::add_usergroup_to_NetworkFolder($usergroup_, $this);
+	}
+	
+	public function delUserGroup($usergroup_) {
+		return Abstract_NetworkFolder::delete_usergroup_from_NetworkFolder($usergroup_, $this);
+	}
+	
+	public function chooseFileServer() {
+		// todo: use load balancing
+		$fileservers = Servers::getAvailableByRole(Servers::$role_fs);
+		if (is_array($fileservers) && count($fileservers) > 0) {
+			$server = array_pop($fileservers); // very ugly
+			return $server;
+		}
+		return false;
 	}
 	
 	public function __toString() {

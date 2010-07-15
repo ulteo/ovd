@@ -249,6 +249,23 @@ class User {
 	public function getNetworkFolders() {
 		return Abstract_NetworkFolder::load_from_user($this->getAttribute('login'));
 	}
+	
+	public function getSharedFolders() {
+		$sharedfolders = array();
+		$usergroups = $this->usersGroups();
+		if (is_array($usergroups) === false) {
+			Logger::error('main', 'User::getSharedFolders usersGroups failed for user (login='.$this->getAttribute('login').')');
+		}
+		else {
+			foreach ($usergroups as $group) {
+				$networkfolders = Abstract_NetworkFolder::load_from_usergroup($group->getUniqueID());
+				foreach ($networkfolders as $a_networkfolder) {
+					$sharedfolders[] = $a_networkfolder;
+				}
+			}
+		}
+		return array_unique($sharedfolders);
+	}
 
 	public function getAttributesList(){
 		return array_keys($this->attributes);
