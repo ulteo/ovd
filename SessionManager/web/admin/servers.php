@@ -186,6 +186,8 @@ function show_default() {
     }
 
     echo '</table>';
+  } else {
+    echo _('No server');
   }
 
   echo '</div>';
