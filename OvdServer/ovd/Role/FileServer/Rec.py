@@ -17,7 +17,17 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
-from pyinotify import ProcessEvent, EventsCodes
+from pyinotify import ProcessEvent
+import pyinotify as EventsCodes
+try:
+	# Pyinotify API changed between v0.7 and v0.8
+	#
+	# events codes was in sub package 'EventsCodes' in v0.7
+	# and is now in main package since v0.8
+	EventsCodes.IN_CREATE
+except AttributeError, err:
+	from pyinotify import EventsCodes
+
 import stat
 
 from ovd.Logger import Logger
