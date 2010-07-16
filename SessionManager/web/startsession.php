@@ -153,6 +153,7 @@ $multimedia = $default_settings['multimedia'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
 $auto_create_profile = $default_settings['auto_create_profile'];
 $start_without_profile = $default_settings['start_without_profile'];
+$start_without_all_sharedfolders = $default_settings['start_without_all_sharedfolders'];
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
@@ -429,6 +430,36 @@ if (count($fileservers) > 0) {
 	}
 }
 
+$sharedfolders = $user->getSharedFolders();
+$netshares = array();
+if (is_array($sharedfolders) && count($sharedfolders) > 0) {
+	foreach ($sharedfolders as $sharedfolder) {
+		$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
+		if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
+			Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
+
+			if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
+				Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without all shared folders available, proceeding');
+
+				continue;
+			} else {
+				Logger::error('main', '(startsession) User "'.$user_login.'" does not have all shared folders available, aborting');
+
+				throw_response(INTERNAL_ERROR);
+			}
+		}
+
+		$sharedfolder_login = $user_login.'_'.$sharedfolder->id;
+		$sharedfolder_server->delUserFromNetworkFolder($sharedfolder->id, $sharedfolder_login);
+		if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $sharedfolder_login, $user_password)) {
+			Logger::error('main', '(startsession) Access creation for User "'.$sharedfolder_login.'" on shared folder "'.$sharedfolder->id.'" failed');
+			throw_response(INTERNAL_ERROR);
+		}
+
+		$netshares[] = $sharedfolder;
+	}
+}
+
 /*if (isset($old_session_id) && isset($old_session_server)) {
 	$session = Abstract_Session::load($old_session_id);
 
@@ -630,6 +661,20 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$session_node->appendChild($profile_node);
 	}
 
+	if (isset($netshares) && count($netshares) > 0) {
+		$sharedfolders_node = $dom->createElement('sharedfolders');
+		$session_node->appendChild($sharedfolders_node);
+
+		foreach ($netshares as $netshare) {
+			$sharedfolder_node = $dom->createElement('sharedfolder');
+			$sharedfolder_node->setAttribute('server', $netshare->server);
+			$sharedfolder_node->setAttribute('dir', $netshare->id);
+			$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
+			$sharedfolder_node->setAttribute('password', $user_password);
+			$sharedfolders_node->appendChild($sharedfolder_node);
+		}
+	}
+
 	foreach ($user->applications() as $application) {
 		if ($application->getAttribute('static'))
 			continue;
@@ -708,6 +753,20 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 			$profile_node->setAttribute('login', $user_login);
 			$profile_node->setAttribute('password', $user_password);
 			$session_node->appendChild($profile_node);
+		}
+
+		if (isset($netshares) && count($netshares) > 0) {
+			$sharedfolders_node = $dom->createElement('sharedfolders');
+			$session_node->appendChild($sharedfolders_node);
+
+			foreach ($netshares as $netshare) {
+				$sharedfolder_node = $dom->createElement('sharedfolder');
+				$sharedfolder_node->setAttribute('server', $netshare->server);
+				$sharedfolder_node->setAttribute('dir', $netshare->id);
+				$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
+				$sharedfolder_node->setAttribute('password', $user_password);
+				$sharedfolders_node->appendChild($sharedfolder_node);
+			}
 		}
 
 		foreach ($user->applications() as $application) {
