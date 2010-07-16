@@ -17,8 +17,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import hashlib
 import locale
-import md5
 import os
 import pythoncom
 import re
@@ -96,7 +96,7 @@ class ApplicationsDetection:
 				continue
 			
 			application = {}
-			application["id"] = md5.md5(filename).hexdigest()
+			application["id"] = hashlib.md5(filename).hexdigest()
 			application["name"] = unicode(name, encoding)
 			application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
 			application["filename"] = unicode(filename, encoding)

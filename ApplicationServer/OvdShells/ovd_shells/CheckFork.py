@@ -18,7 +18,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import md5
+import hashlib
 import os
 import random
 import time
@@ -29,7 +29,7 @@ from Platform import _platform as Platform
 class CheckFork(Module):
 	def __init__(self, application):
 		Module.__init__(self, application)
-		self.token = md5.md5("%f%f"%(random.random(), time.time())).hexdigest()
+		self.token = hashlib.md5("%f%f"%(random.random(), time.time())).hexdigest()
 	
 	def beforeStartApp(self):
 		os.environ["OVD_INSTANCE_TOKEN"] = self.token

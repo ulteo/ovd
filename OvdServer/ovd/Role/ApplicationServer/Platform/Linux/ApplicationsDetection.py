@@ -18,9 +18,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-import md5
 import commands
 import ConfigParser
+import hashlib
 import os
 import re
 import tempfile
@@ -101,7 +101,7 @@ class ApplicationsDetection():
 			
 			
 			application = {}
-			application["id"] = md5.md5(filename).hexdigest()
+			application["id"] = hashlib.md5(filename).hexdigest()
 			application["name"] = parser.get('Desktop Entry', "Name")
 			application["command"] = parser.get('Desktop Entry', "Exec")
 			application["filename"] = filename
