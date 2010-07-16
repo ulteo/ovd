@@ -89,7 +89,8 @@ class NetworkFolder {
 		// todo: use load balancing
 		$fileservers = Servers::getAvailableByRole(Servers::$role_fs);
 		if (is_array($fileservers) && count($fileservers) > 0) {
-			$server = array_pop($fileservers); // very ugly
+			$key = array_rand($fileservers, 1);
+			$server = $fileservers[$key];
 			return $server;
 		}
 		return false;
