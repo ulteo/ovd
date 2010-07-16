@@ -248,9 +248,6 @@ class Abstract_Server {
 			return false;
 		}
 
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
-		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'servers_properties', 'fqdn', $fqdn);
-
 		$sessions_liaisons = Abstract_Liaison::load('ServerSession', $fqdn_, NULL);
 		foreach ($sessions_liaisons as $sessions_liaison) {
 			Abstract_Session::delete($sessions_liaison->group);
@@ -284,6 +281,9 @@ class Abstract_Server {
 		foreach ($folders as $a_folder) {
 			Abstract_NetworkFolder::delete($a_folder);
 		}
+
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3 LIMIT 1', $SQL->prefix.'servers', 'fqdn', $fqdn);
+		$SQL->DoQuery('DELETE FROM @1 WHERE @2 = %3', $SQL->prefix.'servers_properties', 'fqdn', $fqdn);
 
 		return true;
 	}
