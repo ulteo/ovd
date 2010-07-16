@@ -33,6 +33,7 @@ class Profile(AbstractProfile):
 		self.folderRedirection = []
 		
 		self.cifs_dst = os.path.join(self.MOUNT_POINT, self.session.id)
+		self.homeDir = None
 	
 	
 	def mount(self):
@@ -48,10 +49,10 @@ class Profile(AbstractProfile):
 			self.profileMounted = True
 		
 		
-		home = pwd.getpwnam(self.session.user.name)[5]
+		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
 		for d in [self.DesktopDir, self.DocumentsDir]:
 			src = os.path.join(self.cifs_dst, d)
-			dst = os.path.join(home, d)
+			dst = os.path.join(self.homeDir, d)
 			
 			if not os.path.exists(src):
 				os.makedirs(src)
@@ -67,9 +68,13 @@ class Profile(AbstractProfile):
 				Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
 			else:
 				self.folderRedirection.append(dst)
+		
+		self.copySessionStart()
 	
 	
 	def umount(self):
+		self.copySessionStop()
+		
 		while len(self.folderRedirection)>0:
 			d = self.folderRedirection.pop()
 			
@@ -92,3 +97,38 @@ class Profile(AbstractProfile):
 				Logger.debug("Profile umount failed (status: %d) => %s"%(s, o))
 			
 			os.rmdir(self.cifs_dst)
+	
+	def copySessionStart(self):
+		if self.homeDir is None or not os.path.isdir(self.homeDir):
+			return
+		
+		d = os.path.join(self.cifs_dst, "conf.Linux")
+		if not os.path.exists(d):
+			return
+		
+		# Copy conf files
+		cmd = 'rsync -a $(find "%s" -maxdepth 1) "%s/"'%(d, self.homeDir)
+		Logger.debug("rsync cmd '%s'"%(cmd))
+		
+		s,o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.error("Unable to copy conf from profile")
+			Logger.debug("Unable to copy conf from profile, cmd '%s' return %d: %s"%(cmd, s, o))
+	
+	
+	def copySessionStop(self):
+		if self.homeDir is None or not os.path.isdir(self.homeDir):
+			return
+		
+		d = os.path.join(self.cifs_dst, "conf.Linux")
+		if not os.path.exists(d):
+			os.makedirs(d)
+		
+		# Copy conf files
+		cmd = 'rsync -a $(find "%s" -maxdepth 1 -name ".*") "%s/"'%(self.homeDir, d)
+		Logger.debug("rsync cmd '%s'"%(cmd))
+		
+		s,o = commands.getstatusoutput(cmd)
+		if s is not 0:
+			Logger.error("Unable to copy conf to profile")
+			Logger.debug("Unable to copy conf to profile, cmd '%s' return %d: %s"%(cmd, s, o))
