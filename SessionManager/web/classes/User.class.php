@@ -158,8 +158,10 @@ class User {
 				foreach ($criterions as $criterion_name  => $criterion_value ) {
 					$name_class1 = 'DecisionCriterion_'.$criterion_name;
 					$d1 = new $name_class1($server);
-					$r1 = $d1->get();
-					$val += $r1* $criterion_value;
+					if ($d1->applyOnRole(Servers::$role_aps)) {
+						$r1 = $d1->get();
+						$val += $r1* $criterion_value;
+					}
 				}
 				$servers[$server->fqdn] = $val;
 				$server_object[$server->fqdn] = $server;
