@@ -21,13 +21,13 @@ do_start() {
 	mount -t proc none $CHROOT/proc
 	mount -t devpts none $CHROOT/dev/pts
 
-    chroot $CHROOT /etc/init.d/cupsys start
+    chroot $CHROOT /etc/init.d/cups start
     chroot $CHROOT /etc/init.d/xrdp start
 }
 
 do_stop() {
     chroot $CHROOT /etc/init.d/xrdp stop
-    chroot $CHROOT /etc/init.d/cupsys stop
+    chroot $CHROOT /etc/init.d/cups stop
 
     umount $CHROOT/dev/pts
     umount $CHROOT/proc
