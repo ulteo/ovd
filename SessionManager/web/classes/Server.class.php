@@ -246,8 +246,18 @@ class Server {
 
 		$this->setAttribute('registered', true);
 
-		$this->updateApplications();
-		$this->updateNetworkFolders();
+		if (is_array($this->roles)) {
+			foreach ($this->roles as $role) {
+				switch ($role) {
+					case Servers::$role_aps:
+						$this->updateApplications();
+						break;
+					case Servers::$role_fs:
+						$this->updateNetworkFolders();
+						break;
+				}
+			}
+		}
 
 		return true;
 	}

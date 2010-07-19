@@ -100,3 +100,16 @@ class DecisionCriterion_random extends DecisionCriterion {
 		return true;
 	}
 }
+
+class DecisionCriterion_disk extends DecisionCriterion {
+	public function get() {
+		return (float)(rand(0, 100)) / 100.0;
+	}
+	public function default_value() {
+		return 60;
+	}
+	public function applyOnRole($role_) {
+		// it can be applied on any role
+		return (Servers::$role_fs === $role_);
+	}
+}
