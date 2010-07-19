@@ -211,6 +211,20 @@ public class Rdp {
 
     protected static final int PACKET_COMPRESSED = 0x20;
 
+    protected static final int RDP_FALSE = 0x00;
+
+    protected static final int RDP_TRUE = 0x01;
+
+    protected static final int FASTPATH_OUTPUT_SUPPORTED = 0x0001;
+
+    protected static final int NO_BITMAP_COMPRESSION_HDR = 0x0400;
+
+    protected static final int LONG_CREDENTIALS_SUPPORTED = 0x0004;
+
+    protected static final int AUTORECONNECT_SUPPORTED = 0x0008;
+
+    protected static final int ENC_SALTED_CHECKSUM = 0x0010;
+
     protected Secure SecureLayer = null;
 
     private RdesktopFrame frame = null;
@@ -302,13 +316,44 @@ public class Rdp {
      * @param data Packet containing capability set data at current read position
      */
     protected void processGeneralCaps(RdpPacket_Localised data) {
-        int pad2octetsB; /* rdp5 flags? */
+        data.incrementPosition(2); // capabilitiesSetType
+	data.incrementPosition(2); // lengthCapability
+	data.incrementPosition(2); // osMajorType
+	data.incrementPosition(2); // osMinorType
+	data.incrementPosition(2); // protocolVersion = 0x0200
+	data.incrementPosition(2); // pad2octetsA
+	data.incrementPosition(2); // generalCompressionTypes = 0
 
-        data.incrementPosition(10); // in_uint8s(s, 10);
-        pad2octetsB = data.getLittleEndian16(); // in_uint16_le(s, pad2octetsB);
+	int extraFlags = data.getLittleEndian16();
+	if ((extraFlags & FASTPATH_OUTPUT_SUPPORTED) != 0) {
+		this.opt.server_support_fastpath_output = true;
+	}
+	if ((extraFlags & NO_BITMAP_COMPRESSION_HDR) != 0) {
+		this.opt.server_no_bitmap_compression_hdr = true;
+	}
+	if ((extraFlags & LONG_CREDENTIALS_SUPPORTED) != 0) {
+		this.opt.server_support_long_credentials = true;
+	}
+	if ((extraFlags & AUTORECONNECT_SUPPORTED) != 0) {
+		this.opt.server_support_autoreconnect = true;
+	}
+	if ((extraFlags & ENC_SALTED_CHECKSUM) != 0) {
+		this.opt.server_enc_salted_checksum = true;
+	}
 
-        if (pad2octetsB != 0)
-            this.opt.use_rdp5 = false;
+	data.incrementPosition(2); // updateCapabilityFlag = 0
+	data.incrementPosition(2); // remoteUnshareFlag = 0
+	data.incrementPosition(2); // generalCompressionLevel = 0
+
+	int refreshRectSupport = data.get8();
+	if ((refreshRectSupport & RDP_TRUE) != 0) {
+		this.opt.server_support_refresh_rect = true;
+	}
+
+	int suppressOutputSupport = data.get8();
+	if ((suppressOutputSupport & RDP_TRUE) != 0) {
+		this.opt.server_support_suppress_output = true;
+	}
     }
 
     /**

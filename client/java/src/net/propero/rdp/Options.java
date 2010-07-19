@@ -119,4 +119,12 @@ public class Options {
 						Rdp.RDP5_NO_FULLWINDOWDRAG | Rdp.RDP5_NO_MENUANIMATIONS |
 						/*Rdp.RDP5_NO_THEMING |*/ Rdp.RDP5_NO_WALLPAPER;
 	public boolean save_graphics = false;
+
+	public boolean server_support_fastpath_output = false;
+	public boolean server_no_bitmap_compression_hdr = false;
+	public boolean server_support_long_credentials = false;
+	public boolean server_support_autoreconnect = false;
+	public boolean server_enc_salted_checksum = false;
+	public boolean server_support_refresh_rect = false;
+	public boolean server_support_suppress_output = false;
 }
