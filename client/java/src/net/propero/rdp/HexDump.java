@@ -33,6 +33,9 @@ public class HexDump {
     public static void encode(byte[] data, String msg) {
     	int i, thisline, offset = 0;
 
+	if (msg != null)
+		System.out.println(msg);
+
     	while (offset < data.length)
     	{
     		System.out.print(String.format("%04x ", offset));
