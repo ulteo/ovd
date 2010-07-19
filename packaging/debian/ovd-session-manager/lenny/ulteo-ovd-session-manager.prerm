@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+
+A2CONFDIR=/etc/apache2/conf.d
+A2SITESDIR=/etc/apache2/sites-available
+
+# remove apache2 config link
+a2dissite sessionmanager-vhost-server > /dev/null 2>&1 || true
+rm -f $A2SITESDIR/sessionmanager-vhost-server
+if [ -e $A2CONFDIR/sessionmanager ]; then
+    rm -f $A2CONFDIR/sessionmanager
+else
+    a2dissite sessionmanager-vhost-ssl > /dev/null 2>&1 || true
+    rm -f $A2SITESDIR/sessionmanager-vhost-ssl
+fi
+
+# reload apache
+if apache2ctl configtest 2>/dev/null; then
+    invoke-rc.d apache2 reload || true
+else
+    echo "Your apache2 configuration is broken, so we're not restarting it for you."
+fi
+
+#DEBHELPER#
+
+exit 0

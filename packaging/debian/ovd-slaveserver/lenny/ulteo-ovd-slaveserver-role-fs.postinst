@@ -1,0 +1,22 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+db_version 2.0
+
+HOMEDIR=/var/lib/ulteo/ovd/fs
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
+
+# update conf file
+if ! grep -q 'ROLES' $CONFFILE; then
+    echo "ROLES = fs" >> $CONFFILE
+elif ! grep -q "^ROLES.*fs" $CONFFILE; then
+    sed -i -r "s/^ROLES *= *(.*)/ROLES = \1 fs/" $CONFFILE
+fi
+
+# add user ovd-fs
+getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null
+chown ovd-fs:ovd-fs $HOMEDIR
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,10 @@
+# This file can be installed in /etc/logrotate.d/ to use the log rotation
+# system.
+/var/log/ulteo/sessionmanager/*.log {
+	daily
+	missingok
+	rotate 4
+	compress
+	notifempty
+	create 660 www-data www-data
+}

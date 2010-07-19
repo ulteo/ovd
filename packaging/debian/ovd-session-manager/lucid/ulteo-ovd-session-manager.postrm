@@ -1,0 +1,43 @@
+#!/bin/sh -e
+
+if [ -f /usr/share/debconf/confmodule ]; then
+  . /usr/share/debconf/confmodule
+fi
+
+if [ "$1" = "purge" ]; then
+    # remove spool files
+    rm -rf /var/spool/ulteo/sessionmanager/*
+
+    # remove all log files
+    rm -f /var/log/ulteo/sessionmanager/main.log*
+    rm -f /var/log/ulteo/sessionmanager/apt-get.log*
+    rm -f /var/log/ulteo/sessionmanager/admin.log*
+
+    # remove keys and certificates SSL files generated
+    rm -rf /etc/ulteo/sessionmanager/ovd.*
+
+    CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
+    if dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
+        dpkg-statoverride --remove $CONFFILE
+    fi
+
+    for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
+        if dpkg-statoverride --list $f >/dev/null 2>&1; then
+            dpkg-statoverride --remove $f
+        fi
+    done
+
+    # ask the user if he wants to remove base.tar.gz (if it's there)
+    if [ -e /usr/share/ulteo/sessionmanager/base.tar.gz ]; then
+        db_input high ulteo-ovd-session-manager/postrm_remove_tarball || true
+        db_go || true
+        db_get ulteo-ovd-session-manager/postrm_remove_tarball || true
+        if [ "$RET" = "true" ]; then
+            rm -f /usr/share/ulteo/sessionmanager/base.tar.gz
+        fi
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0

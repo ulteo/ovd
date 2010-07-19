@@ -1,0 +1,28 @@
+Source: ovd-java-clients
+Section: utils
+Priority: optional
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: debhelper (>= 6), cdbs, ulteo-ovd-cert,
+ default-jdk, ant, ant-optional
+Standards-Version: 3.8.2
+
+Package: ulteo-ovd-applets
+Architecture: all
+Description: Ulteo Open Virtual Desktop applet
+ This applet is used in the Open Virtual Desktop to display the user session in
+ a browser.
+
+Package: ulteo-ovd-externalapps-client
+Architecture: all
+Depends: default-jre, ulteo-ovd-shells
+Recommends: ulteo-ovd-integrated-launcher
+Description: Ulteo Open Virtual Desktop integrated client
+ This application is used in the Open Virtual Desktop to display the user
+ session and launch applications via an all integrated client.
+
+Package: ulteo-vdi-rdp-client
+Architecture: all
+Depends: default-jre, libgetopt-java, liblog4j1.2-java
+Description: Ulteo VDI java RDP client
+ This application is used in the VDI project to display seamless applications
+ from vitual machines.

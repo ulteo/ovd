@@ -1,0 +1,11 @@
+ovd-slaveserver (99.99~trunk-0ulteo1) trunk; urgency=low
+
+  * NMU Remove the depends to Autotools
+
+ -- Samuel Bovée <samuel@ulteo.com>  Thu, 18 Feb 2010 09:57:03 +0100
+
+ovd-slaveserver (99.99~trunk-0ulteo0) 2-0-staging; urgency=low
+
+  * Initial release
+
+ -- Jeremy Desvages <jeremy@ulteo.com>  Tue, 19 Jan 2010 16:10:49 +0100

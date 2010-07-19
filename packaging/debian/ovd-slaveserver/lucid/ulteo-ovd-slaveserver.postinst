@@ -1,0 +1,18 @@
+#! /bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
+if [ ! -f $CONFFILE ]; then
+    echo "Config file $CONFFILE not found"
+    exit 1
+fi
+
+if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]; then
+    db_get ulteo-ovd-slaveserver/session_manager || true
+    sed -i "s/^session_manager.*/session_manager = $RET/" $CONFFILE
+fi
+
+#DEBHELPER#
+
+exit 0

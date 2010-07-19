@@ -1,0 +1,107 @@
+#!/bin/sh -e
+
+if [ "$1" != "configure" ] || ( [ -n "$2" ] && [ "$1" != "reconfigure" ] ); then
+    exit 0
+fi
+
+. /usr/share/debconf/confmodule
+
+CHROOTPATH="/opt/ulteo"
+CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd/slaveserver.conf
+HOSTCONF=/etc/ulteo-ovd.conf
+
+set_conf () {
+    # $1: configfile
+    # $2: field
+    # $3: value
+    if grep -q "^$2 *=" $1 2>/dev/null; then
+        sed -i "s#^$2 *=.*#$2=$3#" $1
+    else
+        echo "$2=$3" >> $1
+    fi
+}
+
+set_host_conf () {
+    set_conf $HOSTCONF "CHROOT" $CHROOTPATH
+}
+
+set_chroot_conf () {
+
+    set_conf $CHROOTCONF "ROLES" "aps"
+    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
+
+    # session manager url
+    db_get ulteo-ovd-subsystem/sm_address || true
+    URL="$RET"
+    set_conf $CHROOTCONF "session_manager" "$URL"
+
+    # resolv.conf
+    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf \
+        $CHROOTPATH/etc/resolv.conf
+    [ -f /etc/hosts ] && cp /etc/hosts \
+        $CHROOTPATH/etc/hosts
+}
+
+set_tz () {
+    if [ -f /etc/timezone ]; then
+        HOSTTZ=$(head -n 1 /etc/timezone)
+    fi
+    if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
+        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
+        echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
+    fi
+}
+
+# download the chroot if needed
+if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
+    db_get ulteo-ovd-subsystem/sm_address || true
+    SM="$RET"
+    URI="https://$SM/sessionmanager/base.tar.gz"
+
+    db_get ulteo-ovd-subsystem/tarball_uri || true
+    if [ -n "$RET" ]; then
+        case "$RET" in
+            # curl needs file://, make sure we have it if we deal with a file path
+            /*)
+                URI="file://$RET"
+                ;;
+            *)
+                URI="$RET"
+                ;;
+        esac
+    fi
+    echo "Retrieving and uncompressing the chroot tarball..."
+
+    mkdir -p "$CHROOTPATH"
+
+    DOWNLOAD_OK="yes"
+    CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
+    curl $CURLOPTS -f -s -I "$URI" || DOWNLOAD_OK="no"
+    if [ "$DOWNLOAD_OK" = "yes" ]; then
+        curl $CURLOPTS "$URI" | tar zx --numeric-owner --preserve -C "$CHROOTPATH" -f - || DOWNLOAD_OK="no"
+    fi
+    [ -n $HTTPPASSWD ] && unset HTTPPASSWD
+
+    if [ "$DOWNLOAD_OK" = "no" ]; then
+        echo "An error occured while downloading and installing the chroot, the server is not ready to be used."
+        echo "You can either reconfigure this package or use the aps-chroot-install script to set up the server."
+        exit 0
+    else
+        set_tz
+    fi
+fi
+
+# if we reinstall the ApS and the chroot is already there, the configs need to
+# be written again
+if [ ! -e $CHROOTCONF ]; then
+    echo "Warning: the chroot configuration file is missing, the configuration will have"
+    echo "         to be done manually in $CHROOTCONF."
+else
+    set_chroot_conf
+fi
+
+set_host_conf
+
+#DEBHELPER#
+
+exit 0

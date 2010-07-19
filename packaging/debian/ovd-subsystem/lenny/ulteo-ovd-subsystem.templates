@@ -1,0 +1,24 @@
+Template: ulteo-ovd-subsystem/sm_address
+Type: string
+Default: sm.ulteo.com
+_Description: Session manager address/hostname
+
+Template: ulteo-ovd-subsystem/tarball_uri
+Type: string
+Default:
+_Description: Retrieve the chroot tarball from this location:
+ If you want to use a tarball application not located on the session manager
+ you can define its location here.
+ .
+ Supported URIs are file://, http:// and ftp://.
+ .
+ Leave this field blank to get the tarball from the session manager.
+
+Template: ulteo-ovd-subsystem/postrm_remove_chroot
+Type: boolean
+Default: false
+_Description: Remove the system chroot?
+ The chroot containing the system can be removed for you.
+ .
+ If you intend to reinstall the Application Server, keeping this chroot would
+ avoid to download and uncompress it again.

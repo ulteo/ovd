@@ -1,0 +1,2 @@
+var/spool/ulteo/sessionmanager
+var/log/ulteo/sessionmanager

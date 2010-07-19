@@ -1,0 +1,205 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: ovd-session-manager@packages.debian.org\n"
+"POT-Creation-Date: 2009-08-31 12:10+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:1001
+msgid "Administrator login:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:1001
+msgid ""
+"Ulteo Session Manager needs to register an administrator. You can define the "
+"login of this user here."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../ulteo-ovd-session-manager.templates:2001
+msgid "Administrator password:"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../ulteo-ovd-session-manager.templates:2001
+msgid "Password of the session manager administrator."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../ulteo-ovd-session-manager.templates:3001
+msgid "Repeat password for the administrator:"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../ulteo-ovd-session-manager.templates:4001
+msgid "Password input error"
+msgstr ""
+
+#. Type: error
+#. Description
+#: ../ulteo-ovd-session-manager.templates:4001
+msgid "The two passwords you entered were not the same. Please try again."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:5001
+msgid "Applications chroot URL:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:5001
+msgid ""
+"Application servers will need to retrieve an applications tarball, hosted on "
+"this session manager. A default tarball can be downloaded and stored for you."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:5001
+msgid "Leave this field empty if you don't want to download the archive now."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:6001
+msgid "Are we on the install CD?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:7001
+msgid "Configure the MySQL server?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:7001
+msgid ""
+"A connection to a MySQL server is needed by the Session Manager. This script "
+"can configure a server automatically."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:7001
+msgid ""
+"If you don't have a MySQL server ready to be used, choose 'no' here. The "
+"Session Manager interface will let you configure the MySQL settings later."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:8001
+msgid "MySQL host:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:8001
+msgid ""
+"Please enter the name or IP address of the MySQL database server that will "
+"store the Ulteo Session Manager database."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:9001
+msgid "Ulteo Session Manager database name:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:9001
+msgid ""
+"Please enter the name of the database that will host data for Ulteo Session "
+"Manager."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../ulteo-ovd-session-manager.templates:10001
+msgid "Database server administrator password:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:11001
+msgid "Database user for Ulteo Session Manager:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:11001
+msgid ""
+"Please choose the MySQL account that will be used to access the database "
+"hosting Ulteo Session Manager data."
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../ulteo-ovd-session-manager.templates:12001
+msgid "Database user password:"
+msgstr ""
+
+#. Type: password
+#. Description
+#: ../ulteo-ovd-session-manager.templates:12001
+msgid ""
+"Please choose the password for the account that will be used to access the "
+"database hosting Ulteo Session Manager data."
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:13001
+msgid "Database server administrator username:"
+msgstr ""
+
+#. Type: string
+#. Description
+#: ../ulteo-ovd-session-manager.templates:13001
+msgid ""
+"Please enter the username of the database server administrator. This account "
+"must have database creation privileges."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:14001
+msgid "Remove the application tarball?"
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:14001
+msgid "The tarball containing the system archive can be removed for you."
+msgstr ""
+
+#. Type: boolean
+#. Description
+#: ../ulteo-ovd-session-manager.templates:14001
+msgid ""
+"If you intend to reinstall the Session Manager, keeping this archive will "
+"avoid to download it again."
+msgstr ""

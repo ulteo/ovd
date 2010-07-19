@@ -1,0 +1,17 @@
+#!/bin/sh -e
+
+if [ "$1" = "remove" ]; then
+    # remove apache2 link
+    rm -f /etc/apache2/conf.d/webinterface
+
+    # reload apache
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
+fi
+
+#DEBHELPER#
+
+exit 0

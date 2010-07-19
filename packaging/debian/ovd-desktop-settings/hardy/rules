@@ -1,0 +1,12 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/xfce.mk
+
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+
+# change libexecdir for xfce4 plugins
+DEB_CONFIGURE_LIBEXECDIR = /usr/lib
+
+# hack to remove /etc/xdg/ulteo/xinitrc to the conffiles
+binary-predeb/ulteo-ovd-desktop-settings::
+	sed -i '/\/etc\/xdg\/ulteo\/xinitrc/d' debian/ulteo-ovd-desktop-settings/DEBIAN/conffiles

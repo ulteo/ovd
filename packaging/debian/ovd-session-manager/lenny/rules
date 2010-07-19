@@ -1,0 +1,9 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+DEB_CONFIGURE_EXTRA_FLAGS = --with-libchartdir=/usr/share/php/libphp-chart/libchart
+
+clean::
+	debconf-updatepo

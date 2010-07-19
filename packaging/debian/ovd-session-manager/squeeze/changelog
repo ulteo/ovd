@@ -1,0 +1,73 @@
+ovd-session-manager (99.99~trunk-0ulteo0) 2-0-staging; urgency=low
+
+  * Trunk versioning
+
+ -- Jeremy Desvages <jeremy@ulteo.com>  Mon, 25 Jan 2010 13:29:53 +0100
+
+ovd-session-manager (2.0~rc1-0ulteo0) 2-0-staging; urgency=low
+
+  * New release: 2.0 RC1
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Fri, 13 Nov 2009 11:35:23 +0100
+
+ovd-session-manager (2.0~beta3-0ulteo0) 2-0-staging; urgency=low
+
+  * New release: 2.0 beta3
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 04 Nov 2009 15:25:16 +0100
+
+ovd-session-manager (2.0~beta2-0ulteo0) 2-0-staging; urgency=low
+
+  * New release: 2.0 beta2
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Fri, 16 Oct 2009 20:33:05 +0200
+
+ovd-session-manager (2.0~beta1-0ulteo0) 2-0-staging; urgency=low
+
+  * New release: 2.0 beta1
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Thu, 08 Oct 2009 12:25:38 +0200
+
+ovd-session-manager (1.0-0ulteo0) ovd-polaris-experimental; urgency=low
+
+  * New release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 21 Apr 2009 17:25:03 +0200
+
+ovd-session-manager (1.0~rc2-0ulteo0) ovd-polaris-testing; urgency=low
+
+  * New development release (RC 2)
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Mon, 30 Mar 2009 18:14:31 +0200
+
+ovd-session-manager (1.0~rc1-0ulteo2) ovd-polaris-testing; urgency=low
+
+  * Use dpkg-reconfigure -pcritical for the first boot script
+
+ -- Daniele Favara <dfavara@ulteo.com>  Thu, 19 Mar 2009 08:11:56 +0000
+
+ovd-session-manager (1.0~rc1-0ulteo1) ovd-polaris-testing; urgency=low
+
+  * add od/sessionmanager/oem in debconf, default value is false, if true
+    create the mysql db
+
+ -- Daniele Favara <dfavara@ulteo.com>  Wed,  4 Mar 2009 08:12:12 +0000
+
+ovd-session-manager (1.0~rc1-0ulteo0) ovd-polaris-testing; urgency=low
+
+  * New development release (RC 1)
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Wed, 25 Feb 2009 09:04:51 +0100
+
+ovd-session-manager (1.0~beta2+svn510) ovd-polaris-testing; urgency=low
+
+  * Added debconf template entries to configure mysql database
+  * Added postinst commands to create mysql database and user
+
+ -- Daniele Favara <dfavara@ulteo.com>  Wed, 11 Feb 2009 13:22:29 +0000
+
+ovd-session-manager (1.0~beta2-0ulteo0) ovd-polaris-testing; urgency=low
+
+  * Initial release
+
+ -- Gauvain Pocentek <gauvain@ulteo.com>  Tue, 03 Feb 2009 16:23:47 +0100

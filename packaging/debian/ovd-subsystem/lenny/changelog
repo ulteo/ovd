@@ -1,0 +1,6 @@
+ovd-subsystem (3.0-1) ovd-3.0; urgency=low
+
+  * Initial release
+
+ -- Samuel Bovée <samuel@ulteo.com>  Fri, 27 May 2010 17:05:28 +0100
+

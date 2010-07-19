@@ -1,0 +1,165 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+
+CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
+CONFDIR=/etc/ulteo/sessionmanager
+
+############################# APACHE CONFIGURATION #############################
+
+A2SITESDIR=/etc/apache2/sites-available
+A2CONFDIR=/etc/apache2/conf.d
+
+# VHost server config
+if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
+    ln -s $CONFDIR/apache2-vhost-server.conf \
+        $A2SITESDIR/sessionmanager-vhost-server
+    a2ensite sessionmanager-vhost-server > /dev/null
+    a2enmod rewrite >/dev/null
+fi
+
+if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
+    serverName=$(hostname -f 2>/dev/null || true)
+    if [ -z "$serverName" ]; then
+        # Bad /etc/hosts configuration
+        serverName=$(hostname)
+    fi
+    
+    sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
+        $CONFDIR/apache2-vhost-ssl.conf
+    ln -s /etc/ulteo/sessionmanager/apache2-vhost-ssl.conf \
+        $A2SITESDIR/sessionmanager-vhost-ssl
+fi
+
+# SSL self-signed key generation
+if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
+    || [ ! -f $CONFDIR/ovd.crt ]; then
+
+    echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
+    openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
+    openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
+    openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
+        -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
+    chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+# Apache SSL configuration
+if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
+    # SSL already enable
+
+    db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
+    db_go
+
+    if [ ! -e $A2CONFDIR/sessionmanager ]; then
+        ln -s $CONFDIR/apache2.conf $A2CONFDIR/sessionmanager
+    fi
+else
+    # activate SSL apache module
+    a2enmod ssl > /dev/null
+    a2ensite sessionmanager-vhost-ssl > /dev/null
+fi
+
+# restart apache server
+if apache2ctl configtest 2>/dev/null; then
+    invoke-rc.d apache2 restart || true
+else
+    echo "Your apache2 configuration is broken, so we're not restarting it for you."
+fi
+
+###############################################################################
+
+# exit if we're not installing
+if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
+    db_stop
+    exit 0
+fi
+
+gen_conf()
+{
+    db_get ulteo-ovd-session-manager/admin_login || true
+    LOGIN="$RET"
+    db_get ulteo-ovd-session-manager/admin_password || true
+    PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1)
+    # clear the password
+    unset RET
+    db_reset ulteo-ovd-session-manager/admin_password
+    db_reset ulteo-ovd-session-manager/admin_password_again
+
+    CONFFILE=$CONFDIR/config.inc.php
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
+
+    if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
+        dpkg-statoverride --update --add www-data www-data 0660 $CONFFILE
+    fi
+}
+
+mysql_config()
+{
+    db_get ulteo-ovd-session-manager/mysql_setup || true
+    [ "$RET" != "true" ] && return
+
+    # let's configure mysql
+    db_get ulteo-ovd-session-manager/mysql_dbserver
+    dbserver=$RET
+    db_get ulteo-ovd-session-manager/mysql_dbadmin
+    dbadmin=$RET
+    db_get ulteo-ovd-session-manager/mysql_dbadmpass
+    dbadmpass=$RET
+    db_reset ulteo-ovd-session-manager/mysql_dbadmpass
+    db_get ulteo-ovd-session-manager/mysql_dbname
+    dbname=$RET
+    db_get ulteo-ovd-session-manager/mysql_dbuser
+    dbuser=$RET
+    db_get ulteo-ovd-session-manager/mysql_dbpass
+    dbpass=$RET
+    db_reset ulteo-ovd-session-manager/mysql_dbpass
+
+    # create the database
+    . /usr/share/wwwconfig-common/mysql-createdb.sh
+    # create user
+    . /usr/share/wwwconfig-common/mysql-createuser.sh
+
+    php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
+        "$dbserver" \
+        "$dbname" \
+        ulteo_ \
+        "$dbuser" \
+        "$dbpass"
+}
+
+# set the configuration if we install
+gen_conf
+
+# get the chroot
+db_get ulteo-ovd-session-manager/download_tarball || true
+URL="$RET"
+if [ ! -e $CHROOT_TARGET ]; then
+	if [ x"$URL" != x"" ]; then
+        CURLOPTS="--retry 3 --connect-timeout 60 -L"
+    	if ! curl $CURLOPTS -f "$URL" > $CHROOT_TARGET; then
+            rm -f $CHROOT_TARGET
+            echo "Unable to retrieve the chroot archive."
+            echo "You need to download it manually as $CHROOT_TARGET, or use the 'sm-config' script."
+        fi
+	fi
+fi
+
+mysql_config
+
+for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
+    if ! dpkg-statoverride --list $f >/dev/null 2>&1; then
+        dpkg-statoverride --update --add www-data www-data 0770 $f
+    fi
+done
+
+# make sure that the data created by the postinst are owned by www-data
+chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+
+db_stop
+
+#DEBHELPER#
+
+exit 0
