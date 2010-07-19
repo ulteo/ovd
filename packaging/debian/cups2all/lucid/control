@@ -1,0 +1,16 @@
+Source: cups2all
+Section: x11
+Priority: extra
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: cdbs, debhelper (>= 6), python (>= 2.6), libcups2-dev
+Standards-Version: 3.7.3
+
+Package: ulteo-cups2all
+Architecture: all
+Depends: python, gs-esp
+Conflicts: cups-pdf
+Pre-Depends: cupsys
+Enhances: cupsys
+Description: Ulteo Open Virtual Desktop - cups2all
+ cups2all provides a pdf/ps printer. It is used in Open Virtual Desktop
+ application servers to provide data to the printing applet.

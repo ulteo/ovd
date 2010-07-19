@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+binary-install/cups2all::
+	mkdir -p debian/cups2all/usr/share/ppd
+	mv debian/cups2all/usr/share/cups/*.ppd \
+		debian/cups2all/usr/share/ppd
+	rmdir debian/cups2all/usr/share/cups
