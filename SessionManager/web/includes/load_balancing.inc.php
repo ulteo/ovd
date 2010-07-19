@@ -124,3 +124,24 @@ class DecisionCriterion_disk extends DecisionCriterion {
 		return (Servers::$role_fs === $role_);
 	}
 }
+
+class DecisionCriterion_networkfolder extends DecisionCriterion {
+	public function get() {
+		$total = Abstract_NetworkFolder::count_all();
+		$used = Abstract_NetworkFolder::count_from_server($this->server->fqdn);
+		
+		if ($total == 0) {
+			return 0;
+		}
+		else {
+			return 1.0 - ((float)($used) / (float)($total));
+		}
+	}
+	public function default_value() {
+		return 60;
+	}
+	public function applyOnRole($role_) {
+		// it can be applied on any role
+		return (Servers::$role_fs === $role_);
+	}
+}

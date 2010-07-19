@@ -161,6 +161,17 @@ class Abstract_NetworkFolder {
 		return $networkfolders;
 	}
 	
+	public static function count_all() {
+		Logger::debug('main', 'Abstract_NetworkFolder::count_all()');
+		
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT 1 FROM @1', $SQL->prefix.'NetworkFolder');
+		$nb_rows = $SQL->NumRows();
+		
+		return $nb_rows;
+	}
+	
 	public static function load_from_user($login_) {
 		$liaisons = Abstract_Liaison::load('UserNetworkFolder', $login_, NULL);
 		if (is_array($liaisons) == false) {
@@ -213,6 +224,17 @@ class Abstract_NetworkFolder {
 		}
 		
 		return $networkfolders;
+	}
+	
+	public static function count_from_server($fqdn_) {
+		Logger::debug('main', "Abstract_NetworkFolder::count_from_server($fqdn_)");
+		
+		$SQL = SQL::getInstance();
+		
+		$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2=%3', $SQL->prefix.'NetworkFolder', 'server', $fqdn_);
+		$nb_rows = $SQL->NumRows();
+		
+		return $nb_rows;
 	}
 	
 	public static function load_from_name($name_) {
