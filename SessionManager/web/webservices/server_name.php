@@ -2,6 +2,7 @@
 /**
  * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2009
  *
  * This program is free software; you can redistribute it and/or
@@ -32,7 +33,7 @@ if (! $server) {
 	if (! $prefs)
 		die_error(_('get Preferences failed'), __FILE__, __LINE__);
 
-	$buf = $prefs->get('general', 'application_server_settings');
+	$buf = $prefs->get('general', 'slave_server_settings');
 
 	if ($buf['auto_register_new_servers'] == 1)
 		$server->registered = true;

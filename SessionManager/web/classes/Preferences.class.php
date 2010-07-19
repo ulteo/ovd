@@ -255,27 +255,27 @@ class Preferences {
 		$c = new ConfigElement_password('send_password', _('SMTP password'), _('SMTP password'), _('SMTP password'), '');
 		$this->add($c,'general','mails_settings');
 
-		$this->addPrettyName('application_server_settings',_('Application Server settings'));
+		$this->addPrettyName('slave_server_settings',_('Slave Server settings'));
 		$c = new ConfigElement_list('authorized_fqdn', _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), _('Authorized machines (FQDN or IP - the use of wildcards (*.) is allowed)'), array('*'));
-		$this->add($c,'general', 'application_server_settings');
+		$this->add($c,'general', 'slave_server_settings');
 		//fqdn_private_address : array('dns' => ip);
 		$c = new ConfigElement_dictionary('fqdn_private_address', _('Name/IP Address association (name <-> ip)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), _('Enter a private addresses you wish to associate to a specific IP in case of issue with the DNS configuration or to override a reverse address result. Example: pong.office.ulteo.com (field 1) 192.168.0.113 (field 2)'), array());
-		$this->add($c,'general', 'application_server_settings');
+		$this->add($c,'general', 'slave_server_settings');
 		$c = new ConfigElement_select('disable_fqdn_check', _('Disable reverse FQDN checking'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), _('Enable this option if you don\'t want to check that the result of the reverse FQDN address fits the one that was registered.'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general', 'application_server_settings');
-		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), _('Action when an ApS status is not ready anymore'), 0);
+		$this->add($c,'general', 'slave_server_settings');
+		$c = new ConfigElement_select('action_when_as_not_ready', _('Action when an server status is not ready anymore'), _('Action when an server status is not ready anymore'), _('Action when an server status is not ready anymore'), 0);
 		$c->setContentAvailable(array(0=>_('Do nothing'),1=>_('Switch to maintenance')));
-		$this->add($c,'general', 'application_server_settings');
-		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), _('Remove orphan applications when the server is deleted'), 0);
+		$this->add($c,'general', 'slave_server_settings');
+		$c = new ConfigElement_select('remove_orphan', _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), _('Remove orphan applications when the application server is deleted'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','application_server_settings');
+		$this->add($c,'general','slave_server_settings');
 		$c = new ConfigElement_select('auto_register_new_servers', _('Auto register new servers'), _('Auto register new servers'), _('Auto register new servers'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','application_server_settings');
+		$this->add($c,'general','slave_server_settings');
 		$c = new ConfigElement_select('auto_switch_new_servers_to_production', _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), _('Auto switch new servers to production mode'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','application_server_settings');
+		$this->add($c,'general','slave_server_settings');
 
 		$roles = array(Servers::$role_aps => _('Load Balancing policy for Application Server'), Servers::$role_fs => _('Load Balancing policy for File Server'));
 		foreach ($roles as $role => $text) {
@@ -288,7 +288,7 @@ class Preferences {
 				}
 			}
 			$c = new ConfigElement_sliders_loadbalancing('load_balancing_'.$role, $text, $text, $text, $content_load_balancing);
-			$this->add($c,'general', 'application_server_settings');
+			$this->add($c,'general', 'slave_server_settings');
 		}
 
 		$this->addPrettyName('remote_desktop_settings', _('Remote Desktop settings'));

@@ -190,7 +190,7 @@ class Server {
 			return false;
 		}
 
-		$buf = $prefs->get('general', 'application_server_settings');
+		$buf = $prefs->get('general', 'slave_server_settings');
 		$authorized_fqdn = $buf['authorized_fqdn'];
 		$fqdn_private_address = $buf['fqdn_private_address'];
 		$disable_fqdn_check = $buf['disable_fqdn_check'];
@@ -322,7 +322,7 @@ class Server {
 			return false;
 		}
 
-		$buf = $prefs->get('general', 'application_server_settings');
+		$buf = $prefs->get('general', 'slave_server_settings');
 		if ($buf['action_when_as_not_ready'] == 1)
 			if ($this->getAttribute('locked') === false)
 				$this->setAttribute('locked', true);

@@ -228,8 +228,8 @@ class Abstract_Server {
 		if (! $prefs)
 			die_error('get Preferences failed',__FILE__,__LINE__);
 		
-		$application_server_settings = $prefs->get('general', 'application_server_settings');
-		$remove_orphan = (bool)$application_server_settings['remove_orphan'];
+		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
+		$remove_orphan = (bool)$slave_server_settings['remove_orphan'];
 
 		$SQL = SQL::getInstance();
 

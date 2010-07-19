@@ -135,14 +135,14 @@ class User {
 
 		// get the list of server who the user can launch his applications
 		
-		$application_server_settings = $prefs->get('general', 'application_server_settings');
+		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
 		$default_settings = $prefs->get('general', 'session_settings_defaults');
 		
-		if (!isset($application_server_settings['load_balancing'])) {
-			Logger::error('main' , 'USER::getAvailableServer $application_server_settings[\'load_balancing\'] not set');
+		if (!isset($slave_server_settings['load_balancing'])) {
+			Logger::error('main' , 'USER::getAvailableServer $slave_server_settings[\'load_balancing\'] not set');
 			return NULL;
 		}
-		$criterions = $application_server_settings['load_balancing'];
+		$criterions = $slave_server_settings['load_balancing'];
 		if (is_null($criterions)) {
 			Logger::error('main' , 'USER::getAvailableServer criterions is null');
 			return NULL;

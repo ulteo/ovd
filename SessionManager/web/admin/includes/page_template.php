@@ -158,7 +158,7 @@ if (isAuthorized('viewConfiguration')) {
 	$menu['configuration_server'] = 
 		array('id' => 'configuration_server',
 			  'name' => _('Server settings'),
-			  'page' => 'configuration-partial.php?mode=application_server_settings',
+			  'page' => 'configuration-partial.php?mode=slave_server_settings',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_profiles'] = 

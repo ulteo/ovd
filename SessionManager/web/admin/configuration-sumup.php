@@ -92,30 +92,30 @@ if (is_array($log_flags) && count($log_flags) > 0)
   <td style="padding: 20px; vertical-align: top;">
   <div class="container rounded" style="background: #eee; width: 98%; margin-left: auto; margin-right: auto;">
   <div>
-  <h2><a href="configuration-partial.php?mode=application_server_settings"><?php echo _('Application Server'); ?></a></h2>
+  <h2><a href="configuration-partial.php?mode=slave_server_settings"><?php echo _('Slave Server'); ?></a></h2>
   <ul>
 <?php
-$application_server_settings = $prefs->get('general', 'application_server_settings');
+$slave_server_settings = $prefs->get('general', 'slave_server_settings');
 ?>
     <li><strong><?php echo _('Authorized FQDN'); ?></strong>:<ul>
 <?php
-if (is_array($application_server_settings['authorized_fqdn']) && count($application_server_settings['authorized_fqdn']) > 0)
-	foreach ($application_server_settings['authorized_fqdn'] as $authorized_fqdn)
+if (is_array($slave_server_settings['authorized_fqdn']) && count($slave_server_settings['authorized_fqdn']) > 0)
+	foreach ($slave_server_settings['authorized_fqdn'] as $authorized_fqdn)
 		echo '<li>'.$authorized_fqdn.'</li>';
 ?>
     </ul></li>
 
     <li><strong><?php echo _('FQDN private address'); ?></strong>:<ul>
 <?php
-if (is_array($application_server_settings['fqdn_private_address']) && count($application_server_settings['fqdn_private_address']) > 0)
-	foreach ($application_server_settings['fqdn_private_address'] as $name => $ip)
+if (is_array($slave_server_settings['fqdn_private_address']) && count($slave_server_settings['fqdn_private_address']) > 0)
+	foreach ($slave_server_settings['fqdn_private_address'] as $name => $ip)
 		echo '<li>'.$name.' => '.$ip.'</li>';
 ?>
     </ul></li>
 
 	<li><strong><?php echo _('FQDN check'); ?></strong>:
 <?php
-if ($application_server_settings['disable_fqdn_check'] == 1)
+if ($slave_server_settings['disable_fqdn_check'] == 1)
 	echo 'disabled';
 else
 	echo 'enabled';
