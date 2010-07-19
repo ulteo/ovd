@@ -86,12 +86,12 @@ class NetworkFolder {
 	}
 	
 	public function chooseFileServer() {
-		// todo: use load balancing
-		$fileservers = Servers::getAvailableByRole(Servers::$role_fs);
-		if (is_array($fileservers) && count($fileservers) > 0) {
-			$key = array_rand($fileservers, 1);
-			$server = $fileservers[$key];
-			return $server;
+		$available_servers = Servers::getAvailableByRoleSortedByLoadBalancing(Servers::$role_fs);
+		if (is_array($available_servers)) {
+			$server = array_shift($available_servers);
+			if (is_object($server)) {
+				return $server;
+			}
 		}
 		return false;
 	}
