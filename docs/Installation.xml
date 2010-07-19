@@ -10,6 +10,7 @@
     <copyright>
       <year>2008</year>
       <year>2009</year>
+      <year>2010</year>
       <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
     </copyright>
   </articleinfo>
@@ -63,9 +64,9 @@
 
     <para>
       The servers used by Ulteo OVD need to be installed with <emphasis
-      role="strong">Ubuntu 8.04.3 (Hardy Heron) Server for x86/32
-      bits</emphasis> (it can be downloaded from <ulink
-      url="http://releases.ubuntu.com/8.04/ubuntu-8.04.3-server-i386.iso">this
+      role="strong">Ubuntu 10.04 (Lucid Lynx) Server for x86/32
+      bits or amd64</emphasis> (it can be downloaded from <ulink
+      url="http://releases.ubuntu.com/10.04/ubuntu-10.04-server-i386.iso">this
       link</ulink>).
     </para>
 
@@ -130,7 +131,7 @@ mysql> exit]]>
 	</para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ovd/3.0/debian lucid main" >> /etc/apt/sources.list
 # apt-get update]]>
 	</screen>
     <note>
@@ -212,6 +213,23 @@ mysql> exit]]>
 
       <listitem>
 	<para>
+	  we don't want to configure MySQL for now:
+	</para>
+    	<para>
+	  <inlinemediaobject>
+	    <imageobject>
+              <imagedata fileref="img//sm_install_config_sql.png"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Session Manager installation - No MySQL configuration for now</phrase>
+	    </textobject>
+	  </inlinemediaobject>
+	</para>
+	<beginpage />
+      </listitem>
+
+      <listitem>
+	<para>
 	  Application servers are using an application system that will be the same for all your application servers:
 	</para>
     	<para>
@@ -234,14 +252,14 @@ mysql> exit]]>
 
     <para id="sm_install_browse">
       The server is now installed but not configured yet. You have to
-      open <ulink url="http://sm.ulteo.com/sessionmanager" /> with a
+      open <ulink url="https://sm.ulteo.com/sessionmanager/admin" /> with a
       web browser.It should display this page:
     </para>
 
     <para id="sm_install_browse_pic">
       <inlinemediaobject>
 	<imageobject>
-	  <imagedata fileref="img/sm_www_service_not_available.png"/>
+	  <imagedata fileref="img/sm_www_admin_before_login.png"/>
 	</imageobject>
 	<textobject>
 	  <phrase>Session Manager into a web browser</phrase>
@@ -260,7 +278,7 @@ mysql> exit]]>
 
       <para>
 	For instance, you can download an archive from <ulink
-	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0" />
+	url="http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0" />
 	from another computer which have access to Internet and copy
 	it on a usb stick.  Then, you have to copy it on the Session
 	Manager at
@@ -276,7 +294,7 @@ mysql> exit]]>
 
     <para>
       The first step is to go to <ulink
-      url="http://sm.ulteo.com/sessionmanager/admin" /> and
+      url="https://sm.ulteo.com/sessionmanager/admin" /> and
       autenticate yourself with the login and password you provided
       during the installation.
     </para>
@@ -386,7 +404,7 @@ mysql> exit]]>
         </para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ulteo/ovd 2.0 main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ovd/3.0/debian lucid main" >> /etc/apt/sources.list
 # apt-get update]]>
         </screen>
       </listitem>
@@ -409,54 +427,20 @@ mysql> exit]]>
     </listitem>
       <listitem>
         <para>
-	  Install the package <emphasis>ulteo-ovd-application-server</emphasis>:
+	  Install the package <emphasis>ulteo-ovd-subsystem</emphasis>:
         </para>
         <screen>
 	  <![CDATA[
-# apt-get install ulteo-ovd-application-server]]>
+# apt-get install ulteo-ovd-subsystem]]>
 	</screen>
       </listitem>
 
       <listitem>
         <para>
-	  The first question is about the FQDN (Fully Qualified Domain
-	  Name) hostname of the machine you are using as an
-	  Application Server.  This <emphasis>FQDN</emphasis> is used
-	  by the Session Manager server to manage Application Servers.
-	  If the FQDN is not defined well, this Application Server
-	  will never register on the Main server.  Here we are using
-	  <emphasis>aps.ulteo.com</emphasis>.
-	</para>
-
-	<important>
-	  <para>
-	    If you are going to install an Application server on the
-	    same machine as your Session Manager, it's adviced to use
-	    <emphasis role="strong">127.0.0.1</emphasis> as FQDN.
-	  </para>
-	</important>
-
-	<para>
-	  <inlinemediaobject>
-            <imageobject>
-              <imagedata fileref="img/cm_install_fqdn.png"/>
-            </imageobject>
-            <textobject>
-	      <phrase>debconf FQDN question</phrase>
-            </textobject>
-	  </inlinemediaobject>
-        </para>
-	<beginpage />
-      </listitem>
-
-      <listitem>
-        <para>
-	  The next question is about the URL/path where the session
-	  manager can be accessed. Provide the URL that was used
-	  previously (we use <ulink
-	  url="http://sm.ulteo.com/sessionmanager" /> here for the
-	  example, but of course, you have to set your own domain
-	  name).
+	  The only question is about the host/IP address where the
+	  session manager can be accessed. (we use
+	  <ulink url="sm.ulteo.com" /> here for the example, but of
+	  course, you have to set your own domain name).
 	</para>
 
 	<important>
@@ -464,7 +448,7 @@ mysql> exit]]>
 	    If you are going to install an Application server on the
 	    same machine as your Session Manager, it's adviced to use
 	    <emphasis role="strong"><ulink
-	    url="http://127.0.0.1/sessionmanager" /></emphasis> as
+	    url="127.0.0.1" /></emphasis> as
 	    URL.
 	  </para>
 	</important>
@@ -472,10 +456,10 @@ mysql> exit]]>
 	<para>
           <inlinemediaobject>
             <imageobject>
-              <imagedata fileref="img/cm_install_sm_url.png"/>
+              <imagedata fileref="img/subsystem_install_sm_host.png"/>
             </imageobject>
             <textobject>
-              <phrase>debconf session manager base url question</phrase>
+              <phrase>debconf Session Manager host/address</phrase>
             </textobject>
           </inlinemediaobject>
         </para>
@@ -492,7 +476,7 @@ mysql> exit]]>
     </para>
     <screen>
       <![CDATA[
-# /etc/init.d/ulteo-ovd restart]]>
+# /etc/init.d/ulteo-ovd-subsystem restart]]>
     </screen>
 
 
@@ -600,6 +584,21 @@ mysql> exit]]>
 	configuration).
       </para>
 
+      <simplesect>
+        <title>Create users</title>
+        <para>
+          First, you have to create users in
+          the <emphasis role="strong">users</emphasis> page. If you
+          just want to test the system quickly, you can create dummies
+          users using the <emphasis>populate</emphasis> feature at the
+          bottom of the page.
+          <screenshot>
+	    <screeninfo>Session Manager - populate users</screeninfo>
+	    <graphic fileref="img/sm_admin_populate.png"></graphic>
+          </screenshot>
+        </para>
+      </simplesect>
+
       <para>
 	To simplify the process, you can use the <emphasis
 	role="strong">Publication wizard</emphasis> by going on
@@ -621,32 +620,131 @@ mysql> exit]]>
 
   <section id="launch_session">
     <title>Launch a session</title>
+
+    <para>
+      To start a session, we are going to use the Ulteo OVD Web client
+      called WebInterface. You just have to use you web browser to
+      connect to.
+    </para>
+
     <important>
       <para>
         Client prerequisites:
-         <itemizedlist>
-           <listitem>
-             Java 1.5/1.6 (Sun or OpenJDK)
-           </listitem>
-           <listitem>
-             browser: Firefox 2+ or Internet Explorer 7+
-           </listitem>
-         </itemizedlist>
+        <itemizedlist>
+          <listitem>
+            Java 1.5/1.6 (Sun or OpenJDK)
+          </listitem>
+          <listitem>
+            browser: Firefox 2+ or Internet Explorer 7+
+          </listitem>
+        </itemizedlist>
       </para>
     </important>
+
+    <section id="wi">
+      <title id="wi_title">
+        Web Interface installation (wi.ulteo.com)
+      </title>
+      
+      <para>
+        The Ulteo OVD Web client is no longer install on the session
+        manager as it was on previous version (&lt; v3.0). So you have to
+        install it manually on any server you want. Of course, it's
+        possible to install on the same machine as the Session
+        Manager.
+      </para>
+      <para>
+        In this example, we are using <emphasis>wi.ulteo.com</emphasis>
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+	    Add the Ulteo repositoriy to the Ubuntu repository list:
+          </para>
+          <screen>
+	    <![CDATA[
+# echo "deb http://archive.ulteo.com/ovd/3.0/debian lucid main" >> /etc/apt/sources.list
+# apt-get update]]>
+          </screen>
+        </listitem>
+        <listitem>
+          <para>
+            Install the keyring package to validate the repository using gpg:
+          </para>
+          <screen>
+	    <![CDATA[
+# apt-get install ulteo-keyring
+# apt-get update]]>
+	  </screen>
+          <note>
+            <para>
+	      GPG errors given by the previous command will be fixed in the
+	      next installation steps. They won't prevent the installation
+	      to be successful.
+            </para>
+          </note>
+        </listitem>
+        <listitem>
+          <para>
+	    Install the package <emphasis>ulteo-ovd-application-server</emphasis>:
+          </para>
+          <screen>
+	    <![CDATA[
+# apt-get install ulteo-ovd-webinterface]]>
+          </screen>
+        </listitem>
+
+        <listitem>
+	  <para>
+	    The installer asks if you want to plug the WebInterface with
+	    an existing Session Manager. Anwer yes.
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/wi_install_plug_sm.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>WebInterface install question #1</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+        </listitem>
+
+        <listitem>
+	  <para>
+	    Then, you hae to give the Session Manager host/IP
+	    address. In our example: <ulink url="sm.ulteo.com" />.
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/wi_install_sm_host.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>WebInterface install question #2</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+        </listitem>
+
+      </itemizedlist>
+    </section>
+
     <itemizedlist>
       <listitem>
 	<para>
-	  Back to <ulink url="http://sm.ulteo.com/sessionmanager/" />
+	  Back to <ulink url="http://wi.ulteo.com/webinterface/" />
 	  with your browser, you should see a login page:
 	</para>
 	<para>
 	  <inlinemediaobject>
             <imageobject>
-	      <imagedata fileref="img/sm_login.png"/>
+	      <imagedata fileref="img/wi_login.png"/>
             </imageobject>
             <textobject>
-	      <phrase>Session Manager login</phrase>
+	      <phrase>WebInterface login</phrase>
             </textobject>
 	  </inlinemediaobject>
 	</para>
@@ -661,7 +759,7 @@ mysql> exit]]>
 	<para>
 	  <inlinemediaobject>
             <imageobject>
-	      <imagedata fileref="img/cm_session_launching.png"/>
+	      <imagedata fileref="img/wi_loading.png"/>
             </imageobject>
             <textobject>
 	      <phrase>Session launching</phrase>
@@ -679,7 +777,7 @@ mysql> exit]]>
 	<para>
 	  <inlinemediaobject>
             <imageobject>
-	      <imagedata fileref="img/cm_session.png"/>
+	      <imagedata fileref="img/wi_session_desktop_started.png"/>
             </imageobject>
             <textobject>
 	      <phrase>Session launched</phrase>
