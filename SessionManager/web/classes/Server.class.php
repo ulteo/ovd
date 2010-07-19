@@ -250,6 +250,13 @@ class Server {
 			foreach ($this->roles as $role) {
 				switch ($role) {
 					case Servers::$role_aps:
+						$stats = $this->getStatisticsForFS();
+						if (is_array($stats)) {
+							if (array_key_exists('size', $stats)) {
+								$this->setAttribute('disk_total', $stats['size']['total']);
+								$this->setAttribute('disk_free',  $stats['size']['free']);
+							}
+						}
 						$this->updateApplications();
 						break;
 					case Servers::$role_fs:
@@ -733,6 +740,52 @@ class Server {
 			return false;
 
 		return true;
+	}
+
+	public function getStatisticsForFS() {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_fs, $this->roles)) {
+			Logger::critical('main', 'SERVER::getStatisticsForFS - Not an FS');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::getStatisticsForFS server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
+		$xml = query_url($this->getBaseURL().'/fs/statistics');
+		if (! $xml) {
+			$this->isUnreachable();
+			Logger::error('main', 'Server::getStatisticsForFS server \''.$this->fqdn.'\' is unreachable');
+			return false;
+		}
+
+		$dom = new DomDocument('1.0', 'utf-8');
+
+		$buf = @$dom->loadXML($xml);
+		if (! $buf)
+			return false;
+
+		if (! $dom->hasChildNodes())
+			return false;
+
+		$node = $dom->getElementsByTagname('statistics')->item(0);
+		if (is_null($node))
+			return false;
+
+		$size_node = $dom->getElementsByTagname('size')->item(0);
+		if (is_null($size_node))
+			return false;
+		
+		if (! $size_node->hasAttribute('total'))
+				return false;
+		
+		if (! $size_node->hasAttribute('free'))
+				return false;
+		
+		$stats = array('size' => array('free' => (float)($size_node->getAttribute('free')), 'total' => (float)($size_node->getAttribute('total'))));
+		
+		return $stats;
 	}
 
 	public function getNetworkFoldersList() {

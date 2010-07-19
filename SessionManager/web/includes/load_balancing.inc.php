@@ -103,7 +103,18 @@ class DecisionCriterion_random extends DecisionCriterion {
 
 class DecisionCriterion_disk extends DecisionCriterion {
 	public function get() {
-		return (float)(rand(0, 100)) / 100.0;
+		if ($this->server->hasAttribute('disk_total') == false || $this->server->hasAttribute('disk_free') == false) {
+			return 0;
+		}
+		
+		$max = (float)($this->server->getAttribute('disk_total'));
+		$free = (float)($this->server->getAttribute('disk_free'));
+		if ($max == 0.0) {
+			return 0;
+		}
+		else {
+			return $free / $max;
+		}
 	}
 	public function default_value() {
 		return 60;

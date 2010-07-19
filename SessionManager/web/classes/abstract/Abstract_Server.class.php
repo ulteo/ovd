@@ -27,7 +27,9 @@ class Abstract_Server {
 		'external_name'		=>	'external_name',
 		'max_sessions'		=>	'max_sessions',
 		'ulteo_system'		=>	'ulteo_system',
-		'windows_domain'	=>	'windows_domain'
+		'windows_domain'	=>	'windows_domain',
+		'disk_total'		=>	'disk_total',
+		'disk_free'		=>	'disk_free'
 	);
 
 	public static function init($prefs_) {
