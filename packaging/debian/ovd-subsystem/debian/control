@@ -8,6 +8,6 @@ Standards-Version: 3.7.3
 Package: ulteo-ovd-subsystem
 Architecture: all
 Pre-Depends: debconf, po-debconf, curl
-Conflicts: ulteo-ovd-application-server (<< 3)
+Conflicts: ulteo-ovd-application-server (<< 3), ulteo-ovd-slaveserver
 Description: Ulteo Open Virtual Desktop - Subsystem
  This package provides the subsystem for the Ulteo Open Virtual Desktop.
