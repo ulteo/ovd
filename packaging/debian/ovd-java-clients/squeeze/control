@@ -14,7 +14,7 @@ Description: Ulteo Open Virtual Desktop applet
 
 Package: ulteo-ovd-externalapps-client
 Architecture: all
-Depends: default-jre, ulteo-ovd-shells
+Depends: default-jre
 Recommends: ulteo-ovd-integrated-launcher
 Description: Ulteo Open Virtual Desktop integrated client
  This application is used in the Open Virtual Desktop to display the user
