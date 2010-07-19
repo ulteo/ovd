@@ -60,6 +60,7 @@ function get_available_languages() {
 		array('id' => 'fr-be', 'english_name' => 'French (Belgium)', 'local_name' => 'Français (Belgique)'),
 		array('id' => 'fr-ca', 'english_name' => 'French (Canada)', 'local_name' => 'Français'),
 		array('id' => 'fr-ch', 'english_name' => 'French (Switzerland)', 'local_name' => 'Français (Suisse)'),
+		array('id' => 'fr-fr', 'english_name' => 'French (France)', 'local_name' => 'Français'),
 		array('id' => 'fr-lu', 'english_name' => 'French (Luxembourg)', 'local_name' => 'Français'),
 		array('id' => 'de', 'english_name' => 'German', 'local_name' => 'Deutsch'),
 		array('id' => 'el', 'english_name' => 'Greek'),
