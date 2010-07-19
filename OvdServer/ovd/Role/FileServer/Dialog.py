@@ -52,6 +52,9 @@ class Dialog(AbstractDialog):
 			if path == "/shares":
 				return self.req_list_all(request)
 		
+			elif path == "/statistics":
+				return self.req_statistics(request)
+			
 			#elif path.startswith("/share/"):
 				#buf = path[len("/share/"):]
 				
@@ -153,6 +156,18 @@ class Dialog(AbstractDialog):
 		
 		return self.req_answer(doc)
 	
+	def req_statistics(self, request):
+		infos  = self.role_instance.get_disk_size_infos()
+		
+		doc = Document()
+		rootNode = doc.createElement('statistics')
+		sizeNode = doc.createElement('size')
+		sizeNode.setAttribute("total", str(infos[0]))
+		sizeNode.setAttribute("free", str(infos[1]))
+		rootNode.appendChild(sizeNode)
+		doc.appendChild(rootNode)
+		
+		return self.req_answer(doc)
 	
 	def req_share_create(self, request):
 		try:
