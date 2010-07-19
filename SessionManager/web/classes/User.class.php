@@ -138,42 +138,12 @@ class User {
 		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
 		$default_settings = $prefs->get('general', 'session_settings_defaults');
 		
-		if (!isset($slave_server_settings['load_balancing'])) {
-			Logger::error('main' , 'USER::getAvailableServer $slave_server_settings[\'load_balancing\'] not set');
-			return NULL;
-		}
-		$criterions = $slave_server_settings['load_balancing'];
-		if (is_null($criterions)) {
-			Logger::error('main' , 'USER::getAvailableServer criterions is null');
-			return NULL;
-		}
-		
-		$available_servers = Servers::getAvailableByRole(Servers::$role_aps);
-		$server_object = array();
-		$servers = array();
-		
-		foreach($available_servers as $server) {
-			if ($server->isOnline()) {
-				$val = 0;
-				foreach ($criterions as $criterion_name  => $criterion_value ) {
-					$name_class1 = 'DecisionCriterion_'.$criterion_name;
-					$d1 = new $name_class1($server);
-					if ($d1->applyOnRole(Servers::$role_aps)) {
-						$r1 = $d1->get();
-						$val += $r1* $criterion_value;
-					}
-				}
-				$servers[$server->fqdn] = $val;
-				$server_object[$server->fqdn] = $server;
-			}
-		}
-		arsort($servers);
+		$available_servers = Servers::getAvailableByRoleSortedByLoadBalancing(Servers::$role_aps);
 		
 		$applications = $this->applications(NULL, false);
 		$servers_to_use = array();
 		
-		foreach($servers as $fqdn => $val) {
-			$server = $server_object[$fqdn];
+		foreach($available_servers as $fqdn => $server) {
 			if (count($applications) == 0)
 				break;
 			$applications_from_server = $server->getApplications();

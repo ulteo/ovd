@@ -147,4 +147,48 @@ class Servers {
 
 		return $servers;
 	}
+
+	public static function getAvailableByRoleSortedByLoadBalancing($role_) {
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
+		
+		$slave_server_settings = $prefs->get('general', 'slave_server_settings');
+		$key = 'load_balancing_'.$role_;
+		if (!array_key_exists($key, $slave_server_settings)) {
+			Logger::error('main' , 'USER::getAvailableServer $slave_server_settings[\''.$key.'\'] not set');
+			return array();
+		}
+		$criterions = $slave_server_settings[$key];
+		if (is_null($criterions)) {
+			Logger::error('main' , 'USER::getAvailableServer criterions is null');
+			return array();
+		}
+		
+		$available_servers = Servers::getAvailableByRole($role_);
+		$server_object = array();
+		$servers = array();
+		$servers2 = array();
+		if (is_array($available_servers)) {
+			foreach($available_servers as $server) {
+				$val = 0;
+				foreach ($criterions as $criterion_name  => $criterion_value ) {
+					$name_class1 = 'DecisionCriterion_'.$criterion_name;
+					$d1 = new $name_class1($server);
+					if ($d1->applyOnRole($role_)) {
+						$r1 = $d1->get();
+						$val += $r1* $criterion_value;
+					}
+				}
+				$servers[$server->fqdn] = $val;
+				$server_object[$server->fqdn] = $server;
+			}
+			arsort($servers);
+			
+			foreach ($servers as $fqdn => $val) {
+				$servers2[$fqdn] = $server_object[$fqdn];
+			}
+		}
+		return $servers2;
+	}
 }
