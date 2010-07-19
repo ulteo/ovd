@@ -19,7 +19,8 @@
   <property name="install.dir"  location="${datadir}/java" />
 
   <property name="distdir"      value="dist" />
-  <property name="sdist.name"   value="ovd-java-clients-${version}" />
+  <property name="sdist.source" value="ovd-java-clients" />
+  <property name="sdist.name"   value="${sdist.source}-${version}" />
   <property name="sdist.dir"    location="${distdir}/${sdist.name}" />
 
   <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
@@ -207,18 +208,18 @@
     </javac>
   </target>
 
-  <target name="ovdNativeClient-nodep.jar">
+  <target name="ovdNativeClient_jar">
     <antcall target="classes2jar" />
     <!-- Auto-generated exec ant command for i18n fonctionality -->
     @MESSAGE_LANGS@
     <copy todir="jar/pics">
       <fileset dir="icons" />
     </copy>
-    <jar destfile="libs/UlteoOVDnativeClient.jar" basedir="jar/">
-      <manifest>
-        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
-      </manifest>
-    </jar>
+  </target>
+
+  <target name="ovdNativeClient_install">
+    <copy file="libs/OVDNativeClient.jar" todir="${install.dir}" />
+    <copy file="scripts/OVDNativeClient" todir="${bindir}" />
   </target>
 
   <target name="ovdNativeClient.jar" depends="ovdNativeClient">
@@ -227,18 +228,16 @@
                 files="gnu-getopt.jar, log4j-1.2.jar, swingx.jar, registry.jar,
                        jshortcut.jar, image4j.jar, ini4j.jar" />
     </unjar>
-    <antcall target="ovdNativeClient-nodep.jar" />
+    <antcall target="ovdNativeClient_jar" />
+    <jar destfile="libs/OVDNativeClient.jar" basedir="jar/">
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+      </manifest>
+    </jar>
   </target>
 
   <target name="ovdNativeClient.install" depends="ovdNativeClient.jar">
-    <copy file="libs/UlteoOVDnativeClient.jar" todir="${install.dir}" />
-  </target>
-
-  <target name="ovdNativeClient.ubuntu" depends="ovdNativeClient">
-    <unjar src="required_libraries/jshortcut.jar" dest="jar" />
-    <unjar src="required_libraries/image4j.jar" dest="jar" />
-    <antcall target="ovdNativeClient-nodep.jar" />
-    <copy file="libs/UlteoOVDnativeClient.jar" todir="${install.dir}" />
+    <antcall target="ovdNativeClient_install" />
   </target>
 
   <target name="ovdNativeClient.debian" depends="ovdNativeClient">
@@ -246,8 +245,46 @@
       <filelist dir="required_libraries"
                 files="jshortcut.jar, image4j.jar, ini4j.jar" />
     </unjar>
-    <antcall target="ovdNativeClient-nodep.jar" />
-    <copy file="libs/UlteoOVDnativeClient.jar" todir="${install.dir}" />
+    <antcall target="ovdNativeClient_jar" />
+    <jar destfile="libs/OVDNativeClient.jar" basedir="jar/">
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+        <attribute name="Class-Path" value="/usr/share/java/gnu-getopt.jar
+        /usr/share/java/log4j-1.2.jar /usr/share/java/swingx.jar"/>
+      </manifest>
+    </jar>
+    <antcall target="ovdNativeClient_install" />
+  </target>
+
+  <target name="ovdNativeClient.hardy" depends="ovdNativeClient">
+    <unjar dest="jar">
+      <filelist dir="required_libraries"
+                files="swingx.jar, jshortcut.jar, image4j.jar" />
+    </unjar>
+    <antcall target="ovdNativeClient_jar" />
+    <jar destfile="libs/OVDNativeClient.jar" basedir="jar/">
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+        <attribute name="Class-Path" value="/usr/share/java/gnu-getopt.jar
+        /usr/share/java/log4j-1.2.jar /usr/share/java/ini4j.jar"/>
+      </manifest>
+    </jar>
+    <antcall target="ovdNativeClient_install" />
+  </target>
+
+  <target name="ovdNativeClient.lucid" depends="ovdNativeClient">
+    <unjar src="required_libraries/jshortcut.jar" dest="jar" />
+    <unjar src="required_libraries/image4j.jar" dest="jar" />
+    <antcall target="ovdNativeClient_jar" />
+    <jar destfile="libs/OVDNativeClient.jar" basedir="jar/">
+      <manifest>
+        <attribute name="Main-Class" value="org.ulteo.ovd.client.StartConnection"/>
+        <attribute name="Class-Path"
+            value="/usr/share/java/gnu-getopt.jar /usr/share/java/log4j-1.2.jar
+                   /usr/share/java/swingx.jar /usr/share/java/ini4j.jar" />
+      </manifest>
+    </jar>
+    <antcall target="ovdNativeClient_install" />
   </target>
 
 
@@ -348,7 +385,7 @@
         <include name="po/*" />
       </fileset>
     </copy>
-    <tar destfile="${distdir}/${sdist.name}.tar"
+    <tar destfile="${distdir}/${sdist.name}.tar" longfile="gnu"
          basedir="${distdir}" includes="${sdist.name}/**" />
     <gzip zipfile="${distdir}/${sdist.name}.tar.gz"
           src="${distdir}/${sdist.name}.tar" />
@@ -357,4 +394,3 @@
   </target>
 
 </project>
-
