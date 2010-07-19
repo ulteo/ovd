@@ -22,15 +22,23 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ConfigElement_sliders_loadbalancing extends ConfigElement {
 	public function toHTML($readonly=false) {
+		$sliders = array();
 		$html_id = $this->htmlID();
 		$html = '';
 
+		$html .= '<script type="text/javascript">
+			function setSlider(slider_name_, value_) {
+				slider_name_.setValue(value_);
+			}
+		</script>';
+		
 		$html .= '<table border="0" cellspacing="1" cellpadding="3">';
 		$html .= '<tr>';
 		$html .= '<td>';
 		$html .= '<h2 style="text-align: center;">'._('Factor impact').'</h2>';
 		$html .= '<table border="0" cellspacing="1" cellpadding="3">';
-		$i = 0;
+		$i_init = 100*str2num($this->id);
+		$i = $i_init;
 		$html .= '<tr>';
 		$html .= '<td></td>';
 		$html .= '<td>';
@@ -40,11 +48,15 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 		$html .= '</tr>';
 		$content_load_balancing = array();
 		foreach ($this->content as $key1 => $value1) {
+			if (array_key_exists($i, $sliders)) {
+				$sliders[$i] = array();
+			}
 			$label3 = $html_id.$this->formSeparator.$i.$this->formSeparator;
 
 			$criterion_class_name = 'DecisionCriterion_'.$key1;
 			$c = new $criterion_class_name(NULL); // ugly
 			$content_load_balancing[] = $c->default_value();
+			$sliders[$i_init][$i] = $c->default_value();
 
 			$html .= '<tr>';
 			$html .= '<td>';
@@ -101,14 +113,14 @@ class ConfigElement_sliders_loadbalancing extends ConfigElement {
 		$html .= '</table>';
 
 $html .= '<script type="text/javascript">
-function resetLoadBalancing() {';
-foreach ($content_load_balancing as $k => $v) {
-	$html .= 'slider'.$k.'.setValue('.$v.');';
+function resetLoadBalancing'.$i_init.'() {'."\n";
+foreach ($sliders[$i_init] as $r2 => $d2) {
+	$html .= '	setSlider(slider'.$r2.','.$d2.');'."\n";
 }
 $html .= '}
 </script>';
 
-		$html .= '<br /><input type="button" id="reset_loadbalancing" value="'._('Back to default').'" onclick="resetLoadBalancing(); return false;" />';
+		$html .= '<br /><input type="button" id="reset_loadbalancing" value="'._('Back to default').'" onclick="resetLoadBalancing'.$i_init.'(); return false;" />';
 		$html .= '</td>';
 		$html .= '<td style="width: 100%; vertical-align: top; border-left: 1px solid #999;">';
 		$html .= '<table style="width: 50%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">';
