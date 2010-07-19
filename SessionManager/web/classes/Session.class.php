@@ -257,20 +257,19 @@ class Session {
 	public function orderDeletion($request_aps_=true) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
-		$server = Abstract_Server::load($this->server);
-		if (! $server) {
-			Logger::error('main', 'Session::orderDeletion Unable to load server \''.$this->server.'\'');
-			return false;
-		}
+		foreach ($this->servers as $server) {
+			$session_server = Abstract_Server::load($server);
+			if (! $session_server) {
+				Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server.'\'');
+				return false;
+			}
 
-		if ($request_aps_) {
-			$buf = $server->orderSessionDeletion($this->id);
+			if ($request_aps_) {
+				$buf = $session_server->orderSessionDeletion($this->id);
 
-			if ($buf) {
-				$this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
-				return true;
-			} else
-				Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on ApS side');
+				if (! $buf)
+					Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
+			}
 		}
 
 		Abstract_Session::delete($this->id);
