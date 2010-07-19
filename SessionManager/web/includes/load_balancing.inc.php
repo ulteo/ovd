@@ -27,6 +27,9 @@ class DecisionCriterion {
 	public function default_value() {
 		return 0;
 	}
+	public function applyOnRole($role_) {
+		return false;
+	}
 }
 
 class DecisionCriterion_ram extends DecisionCriterion {
@@ -43,6 +46,10 @@ class DecisionCriterion_ram extends DecisionCriterion {
 		else
 			return 1.0 - (float)($ram_used)/(float)($ram_total);
 	}
+	public function applyOnRole($role_) {
+		// it can be applied on any role
+		return true;
+	}
 }
 
 class DecisionCriterion_cpu extends DecisionCriterion {
@@ -52,6 +59,10 @@ class DecisionCriterion_cpu extends DecisionCriterion {
 			return 0;
 		}
 		return 1.0 -$this->server->getAttribute('cpu_load');
+	}
+	public function applyOnRole($role_) {
+		// it can be applied on any role
+		return true;
 	}
 }
 
@@ -72,6 +83,9 @@ class DecisionCriterion_session extends DecisionCriterion {
 	public function default_value() {
 		return 100;
 	}
+	public function applyOnRole($role_) {
+		return (Servers::$role_aps === $role_);
+	}
 }
 
 class DecisionCriterion_random extends DecisionCriterion {
@@ -80,5 +94,9 @@ class DecisionCriterion_random extends DecisionCriterion {
 	}
 	public function default_value() {
 		return 20;
+	}
+	public function applyOnRole($role_) {
+		// it can be applied on any role
+		return true;
 	}
 }

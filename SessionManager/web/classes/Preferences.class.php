@@ -277,14 +277,19 @@ class Preferences {
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','application_server_settings');
 
-		$decisionCriterion = get_classes_startwith('DecisionCriterion_');
-		$content_load_balancing = array();
-		foreach ($decisionCriterion as $criterion_class_name) {
+		$roles = array(Servers::$role_aps => _('Load Balancing policy for Application Server'), Servers::$role_fs => _('Load Balancing policy for File Server'));
+		foreach ($roles as $role => $text) {
+			$decisionCriterion = get_classes_startwith('DecisionCriterion_');
+			$content_load_balancing = array();
+			foreach ($decisionCriterion as $criterion_class_name) {
 				$c = new $criterion_class_name(NULL); // ugly
-				$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
+				if ($c->applyOnRole($role)) {
+					$content_load_balancing[substr($criterion_class_name, strlen('DecisionCriterion_'))] = $c->default_value();
+				}
+			}
+			$c = new ConfigElement_sliders_loadbalancing('load_balancing_'.$role, $text, $text, $text, $content_load_balancing);
+			$this->add($c,'general', 'application_server_settings');
 		}
-		$c = new ConfigElement_sliders_loadbalancing('load_balancing', _('Load Balancing policy'), _('Load Balancing policy'), _('Load Balancing policy'), $content_load_balancing);
-		$this->add($c,'general', 'application_server_settings');
 
 		$this->addPrettyName('remote_desktop_settings', _('Remote Desktop settings'));
 
