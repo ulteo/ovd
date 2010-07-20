@@ -10,6 +10,6 @@ Architecture: all
 Depends: default-jre, libgetopt-java, liblog4j1.2-java,
  libswingx-java, libini4j-java
 Recommends: ulteo-ovd-integrated-launcher
-Description: Ulteo Open Virtual Desktop native client
+Description: Ulteo Open Virtual Desktop - native client
  This application is used in the Open Virtual Desktop to display the user
  session and launch applications via a native client.

@@ -12,7 +12,7 @@ Architecture: all
 Pre-Depends: debconf
 Depends: ${python:Depends}
 XB-Python-Version: ${python:Versions}
-Description: Ulteo OVD slave server
+Description: Ulteo Open Virtual Desktop - slave server
  This daemon manages the Open Virtual Desktop servers.
 
 Package: ulteo-ovd-slaveserver-role-aps
@@ -21,7 +21,7 @@ Depends: ${python:Depends}, ulteo-ovd-slaveserver, ulteo-ovd-shells,
  xrdp-sound, xrdp-python, xrdp-printer, tightvncserver,
  ulteo-ovd-externalapps-client, imagemagick, passwd, adduser, rsync
 XB-Python-Version: ${python:Versions}
-Description: Application server role for the Ulteo OVD slave server
+Description: Ulteo Open Virtual Desktop - application server role for slave server
  Application server role for the Ulteo OVD slave server
 
 Package: ulteo-ovd-slaveserver-role-fs
@@ -29,5 +29,5 @@ Architecture: all
 Depends: ${python:Depends}, python-pyinotify (>= 0.7.1),
  ulteo-ovd-slaveserver, samba, debconf
 XB-Python-Version: ${python:Versions}
-Description: File server role for the Ulteo OVD slave server
+Description: Ulteo Open Virtual Desktop - file server role for slave server
  File server role for the Ulteo OVD slave server
