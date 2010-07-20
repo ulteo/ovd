@@ -40,6 +40,28 @@ function query_sm($url_) {
 	return $string;
 }
 
+function query_sm_post_xml($url_, $xml_) {
+	$socket = curl_init($url_);
+	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
+	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($socket, CURLOPT_TIMEOUT, (10+5));
+
+	curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['sessionmanager']['session_var'].'='.$_SESSION['sessionmanager']['session_id']);
+
+	curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
+	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
+
+	$string = curl_exec($socket);
+	$buf = curl_getinfo($socket, CURLINFO_HTTP_CODE);
+	curl_close($socket);
+
+	if ($buf != 200)
+		return false;
+
+	return $string;
+}
+
 function get_available_languages() {
 	return array(array('id' => 'af', 'english_name' => 'Afrikaans'),
 		array('id' => 'sq', 'english_name' => 'Albanian'),

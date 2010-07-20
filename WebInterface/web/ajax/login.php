@@ -30,7 +30,7 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-function query_url_post_xml($url_, $xml_) {
+function query_sm_start($url_, $xml_) {
 	$socket = curl_init($url_);
 	curl_setopt($socket, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($socket, CURLOPT_SSL_VERIFYPEER, 0);
@@ -41,6 +41,7 @@ function query_url_post_xml($url_, $xml_) {
 	curl_setopt($socket, CURLOPT_NOBODY, 1);
 
 	$ret = curl_exec($socket);
+	curl_close($socket);
 
 	preg_match('@Set-Cookie: (.*)=(.*);@', $ret, $matches);
 	if (count($matches) != 3)
@@ -50,18 +51,7 @@ function query_url_post_xml($url_, $xml_) {
 	$_SESSION['sessionmanager']['session_var'] = $matches[1];
 	$_SESSION['sessionmanager']['session_id'] = $matches[2];
 
-	curl_setopt($socket, CURLOPT_HEADER, 0);
-	curl_setopt($socket, CURLOPT_NOBODY, 0);
-
-	curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
-	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
-	curl_setopt($socket, CURLOPT_COOKIE, $_SESSION['sessionmanager']['session_var'].'='.$_SESSION['sessionmanager']['session_id']);
-
-	$ret = curl_exec($socket);
-
-	curl_close($socket);
-
-	return $ret;
+	return query_sm_post_xml($url_, $xml_);
 }
 
 $_SESSION['interface'] = array();
@@ -97,7 +87,7 @@ if (! defined('SESSIONMANAGER_URL')) {
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
 }
 
-$xml = query_url_post_xml($sessionmanager_url.'/startsession.php', $dom->saveXML());
+$xml = query_sm_start($sessionmanager_url.'/startsession.php', $dom->saveXML());
 if (! $xml) {
 	echo return_error(0, 'Unable to reach the Session Manager');
 	die();

@@ -219,9 +219,12 @@ var Daemon = Class.create({
 		this.push_log('debug', '[daemon] suspend()');
 
 		new Ajax.Request(
-			'suspend.php',
+			'logout.php',
 			{
-				method: 'get'
+				method: 'post',
+				parameters: {
+					mode: 'suspend'
+				}
 			}
 		);
 
@@ -234,7 +237,10 @@ var Daemon = Class.create({
 		new Ajax.Request(
 			'logout.php',
 			{
-				method: 'get'
+				method: 'post',
+				parameters: {
+					mode: 'logout'
+				}
 			}
 		);
 
