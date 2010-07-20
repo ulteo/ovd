@@ -250,6 +250,9 @@ class Server {
 			foreach ($this->roles as $role) {
 				switch ($role) {
 					case Servers::$role_aps:
+						$this->updateApplications();
+						break;
+					case Servers::$role_fs:
 						$stats = $this->getStatisticsForFS();
 						if (is_array($stats)) {
 							if (array_key_exists('size', $stats)) {
@@ -257,9 +260,6 @@ class Server {
 								$this->setAttribute('disk_free',  $stats['size']['free']);
 							}
 						}
-						$this->updateApplications();
-						break;
-					case Servers::$role_fs:
 						$this->updateNetworkFolders();
 						break;
 				}
