@@ -39,7 +39,7 @@ class Configuration_mode_internal extends Configuration_mode {
   }
 
   public function form_valid($form) {
-	if (! in_array($form['homedir'], array('local', 'dav')))
+	if (! in_array($form['homedir'], array('local')))
 		return False;
 
     return True;
@@ -83,14 +83,7 @@ class Configuration_mode_internal extends Configuration_mode {
 		$str.= ' checked="checked"';
 	$str.= '/>';
 	$str.= _('Use Internal home directory (no server replication)');
-	$str.= '<br/>';
 
-	$str.= '<input class="input_radio" type="radio" name="homedir" value="dav" ';
-	if ($form['homedir'] == 'dav')
-		$str.= ' checked="checked"';
-	$str.= '/>';
-	$str.= _('Use shared folders');
-	$str.= '<br/>';
 	$str.= '</div>';
 
     return $str;

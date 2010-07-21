@@ -130,8 +130,6 @@ class Configuration_mode_ad extends Configuration_mode {
     // plugins fs ...
     if ($form['homedir'] == 'local')
       $plugin_fs = 'local';
-	elseif ($form['homedir'] == 'dav')
-		$plugin_fs = 'dav';
     elseif ($form['homedir'] == 'ad_profile') {
       $plugin_fs = 'cifs_no_sfu';
       $ad_ar['match']['homedir'] = 'profilePath';
@@ -224,8 +222,6 @@ class Configuration_mode_ad extends Configuration_mode {
       else
 	$form['homedir'] = 'ad_homedir';
     }
-	elseif ($buf == 'dav')
-		$form['homedir'] = 'dav';
     else
       $form['homedir'] = 'local';
 
@@ -305,13 +301,6 @@ class Configuration_mode_ad extends Configuration_mode {
     $str.= '/>';
     $str.= _('Use Internal home directory (no server replication)');
     $str.= '<br/>';
-
-	$str.= '<input class="input_radio" type="radio" name="homedir" value="dav" ';
-	if ($form['homedir'] == 'dav')
-		$str.= ' checked="checked"';
-	$str.= '/>';
-	$str.= _('Use shared folders');
-	$str.= '<br/>';
 
     $str.= '<input class="input_radio" type="radio" name="homedir" value="ad_profile" ';
     if ($form['homedir'] == 'ad_profile')

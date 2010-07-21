@@ -70,7 +70,7 @@ class Configuration_mode_ldap extends Configuration_mode {
     if (! in_array($form['user_group'], array('ldap_memberof', 'ldap_posix', 'sql')))
       return False;
 
-	if (! in_array($form['homedir'], array('local', 'dav', 'cifs')))
+	if (! in_array($form['homedir'], array('local', 'cifs')))
 		return False;
 
     if (! in_array($form['cifs_auth'], array('anonymous', 'user', 'global_user')))
@@ -113,8 +113,6 @@ class Configuration_mode_ldap extends Configuration_mode {
       $plugin_fs = 'cifs_no_sfu';
       $config['match']['homedir'] = $form['homedir_field'];
 	} 
-	elseif ($form['homedir'] == 'dav')
-		$plugin_fs = 'dav';
 	else
 		$plugin_fs = 'local';
 
@@ -295,13 +293,6 @@ class Configuration_mode_ldap extends Configuration_mode {
     $str.= '/>';
     $str.= _('Use Internal home directory (no server replication)');
     $str.= '<br/>';
-
-	$str.= '<input class="input_radio" type="radio" name="homedir" value="dav" ';
-	if ($form['homedir'] == 'dav')
-		$str.= ' checked="checked"';
-	$str.= '/>';
-	$str.= _('Use shared folders');
-	$str.= '<br/>';
 
     $str.= '<input class="input_radio" type="radio" name="homedir" value="cifs"';
     if ($form['homedir'] == 'cifs')
