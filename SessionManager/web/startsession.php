@@ -292,7 +292,7 @@ $servers = array();
 foreach ($buf_servers as $buf_server)
 	$servers[] = $buf_server->fqdn;
 $random_server = false;
-if (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings)) {
+if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
 	switch ($remote_desktop_settings['desktop_type']) {
 		case 'linux':
 			foreach ($servers as $k => $server) {
