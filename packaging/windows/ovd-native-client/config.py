@@ -28,7 +28,7 @@ def source_remove_files():
 	return ["autogen", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]
 
 def compile_commands():
-	return ["ant ovdclient_all.jar"]
+	return ["ant ovdNativeClient.jar"]
 
 def binary_files():
-	return [r"libs\UlteoOVDClient.jar", r"required_libraries\*.dll"]
+	return [r"libs\OVDNativeClient.jar", r"required_libraries\*.dll"]
