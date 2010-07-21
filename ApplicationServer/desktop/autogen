@@ -1,8 +1,18 @@
 #!/bin/sh -e
 
-#####
-# Please install the Ulteo xfce4-dev-tools package to run this script
-#####
+# get version
+if [ -n "$OVD_VERSION" ]; then
+    version="$OVD_VERSION"
+else
+    if [ -d .svn ]; then
+      revision=$(LC_ALL=C svn info . | awk '/^Revision: / {printf "%05d\n", $2}')
+    else
+      revision=0
+    fi
+    version="99.99+svn$revison"
+fi
+
+sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.in
 
 xdt-autogen $@
 

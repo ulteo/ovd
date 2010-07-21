@@ -10,6 +10,7 @@ if os.environ.has_key("OVD_VERSION"):
 else:
 	c = pysvn.Client()
 	revision = c.info(path)["revision"].number
+	version = "99.99+svn%05d"%(revision)
 
 
 # OS detection
@@ -25,7 +26,7 @@ f = file(os.path.join(path, "setup.py.in"), "r")
 content = f.read()
 f.close()
 
-content = content.replace("@REVISION@", "%05d"%revision)
+content = content.replace("@VERSION@", str(version))
 
 f = file(os.path.join(path, "setup.py"), "w")
 f.write(content)

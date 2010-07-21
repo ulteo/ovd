@@ -1,15 +1,17 @@
-#!/bin/sh -e
+#!/bin/sh
 
-# build configure.in using svn revno
-if [ -d .svn ]; then
-    revision=$(LC_ALL=C svn info $0 | awk '/^Revision: / {printf "%05d\n", $2}')
-    sed -e "s/@REVISION@/${revision}/g" \
-        < "configure.in.in" > "configure.in"
+# get version
+if [ -n "$OVD_VERSION" ]; then
+    version="$OVD_VERSION"
+else
+    if [ -d .svn ]; then
+      revision=$(LC_ALL=C svn info . | awk '/^Revision: / {printf "%05d\n", $2}')
+    else
+      revision=0
+    fi
+    version="99.99+svn$revison"
 fi
 
-aclocal
-autoconf
-automake --add-missing --gnu --copy
+sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.in
 
-
-./configure $@
+autoreconf -vfi && ./configure $@

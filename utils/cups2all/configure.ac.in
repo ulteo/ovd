@@ -1,11 +1,6 @@
-m4_define([cups2all_version_major], [99])
-m4_define([cups2all_version_minor], [99])
-m4_define([cups2all_version_build], [~trunk+svn@REVISION@])
-m4_define([cups2all_version], [cups2all_version_major().cups2all_version_minor()cups2all_version_build()])
-
+AC_INIT([cups2all], [@VERSION@], [http://bugs.ulteo.com])
 AC_PREREQ([2.59])
 AC_COPYRIGHT([Copyright (c) Samuel Bovée])
-AC_INIT([cups2all], [cups2all_version], [http://bugs.ulteo.com])
 AM_INIT_AUTOMAKE([1.8])
 AM_PATH_PYTHON
 

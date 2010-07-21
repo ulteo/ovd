@@ -10,6 +10,7 @@ if os.environ.has_key("OVD_VERSION"):
 else:
 	c = pysvn.Client()
 	revision = c.info(path)["revision"].number
+	version = "99.99+svn%05d"%(revision)
 
 langs = []
 for pofile in glob.glob(os.path.join("po", "*.po")):
@@ -30,7 +31,7 @@ f = file(os.path.join(path, "build.xml.in"), "r")
 content = f.read()
 f.close()
 
-content = content.replace("@REVISION@", "%05d"%revision)
+content = content.replace("@VERSION@", str(version))
 content = content.replace("@MESSAGE_LANGS@", "\n".join(langs))
 
 f = file(os.path.join(path, "build.xml"), "w")
