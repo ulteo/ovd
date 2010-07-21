@@ -19,6 +19,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+define('WEBINTERFACE_ROOT', realpath(dirname(__FILE__).'/..'));
+
+$buf = @ini_get('include_path');
+@ini_set('include_path', $buf.':'.WEBINTERFACE_ROOT.'/PEAR');
+
 define('WEBINTERFACE_CONF_FILE', '/etc/ulteo/webinterface/config.inc.php');
 
 if (file_exists(WEBINTERFACE_CONF_FILE))
