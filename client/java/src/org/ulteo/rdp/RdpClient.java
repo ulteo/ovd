@@ -51,6 +51,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		public String shell = null;
 		public int bpp = RdpConnection.DEFAULT_BPP;
 		public boolean seamless = false;
+		public boolean multimedia = false;
 		public boolean packetCompression = false;
 		public boolean volatileCache = true;
 		public boolean persistentCache = false;
@@ -69,6 +70,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		System.err.println("	-g WIDTHxHEIGHT				Set the screen geometry");
 		System.err.println("	-s SHELL				Set the shell to launch at session start");
 		System.err.println("	-A					Enable seamless");
+		System.err.println("	-m					Enable multimedia mode");
 		System.err.println("	-o BPP					Bits-per-pixel for display");
 		System.err.println("	-z					Enable packet compression (MPPC 64K)");
 		System.err.println("	-P					Enable persistent bitmap cache");
@@ -94,7 +96,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 		alo[1] = new LongOpt("persistent-cache-maxsize", LongOpt.REQUIRED_ARGUMENT, null, 1);
 		alo[2] = new LongOpt("disable-all-cache", LongOpt.NO_ARGUMENT, null, 2);
 		alo[3] = new LongOpt("ovd_mode", LongOpt.OPTIONAL_ARGUMENT, null, 3);
-		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:As:o:zP", alo);
+		Getopt opt = new Getopt(RdpClient.productName, args, "u:p:g:Ams:o:zP", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
@@ -132,6 +134,9 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 					break;
 				case 'A':
 					params.seamless = true;
+					break;
+				case 'm':
+					params.multimedia = true;
 					break;
 				case 's':
 					params.shell = new String(opt.getOptarg());
@@ -216,6 +221,9 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 			flags |= RdpConnectionOvd.MODE_APPLICATION;
 		else
 			flags |= RdpConnectionOvd.MODE_DESKTOP;
+
+		if (params.multimedia)
+			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
 
 		RdpConnectionOvd connection = new RdpConnectionOvd(flags);
 
