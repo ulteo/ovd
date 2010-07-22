@@ -120,6 +120,13 @@ Pin-Priority: 1002]]>
 	  <![CDATA[
 # apt-get update]]>
         </screen>
+        <note>
+          <para>
+	    GPG errors given by the previous command will be fixed in
+            the next installation steps. They won't prevent the
+            installation to be successful.
+          </para>
+        </note>
       </listitem>
 
       <listitem>
@@ -132,13 +139,6 @@ Pin-Priority: 1002]]>
 # apt-get install ulteo-keyring
 # apt-get update]]>
         </screen>
-        <note>
-          <para>
-	    GPG errors given by the previous command will be fixed in
-            the next installation steps. They won't prevent the
-            installation to be successful.
-          </para>
-        </note>
       </listitem>
     </itemizedlist>
   </section>
