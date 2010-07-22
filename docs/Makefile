@@ -65,6 +65,12 @@ install: all
 
 	svn export --force img  dist/img
 
+	# Make the tarball
+	rm -rf doc/ doc.tar.gz
+	cp -R  dist doc
+	rm -f doc/doc.tar.gz
+	tar czf doc.tar.gz doc
+	install doc.tar.gz dist
 
 uninstall:
 	rm -rf dist
