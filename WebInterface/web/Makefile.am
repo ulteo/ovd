@@ -4,6 +4,7 @@ scripts_DATA = apps.php \
                icon.php \
                index.php \
                launch.php \
+               logout.php \
                servers.php \
                session_status.php
 
