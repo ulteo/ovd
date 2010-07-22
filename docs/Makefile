@@ -5,12 +5,14 @@ SRC=AccountsIntegration.xml \
 	AD_Primary_Authentication.xml \
 	FAQ.xml \
 	Installation.xml \
+	Installation_ApS_Lenny.xml \
+	Installation_ApS_Lucid.xml \
+	Installation_ApS_Windows.xml \
 	Installation_Iso.xml \
 	Installation_Suse.xml \
 	Installation_RedHat.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
-	ServerWindows.xml \
 	SystemUpgrade.xml \
 	Vpn.xml
 
