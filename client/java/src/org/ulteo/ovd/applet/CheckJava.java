@@ -21,5 +21,28 @@
 package org.ulteo.ovd.applet;
 
 import java.applet.Applet;
+import netscape.javascript.JSObject;
 
-public class CheckJava extends Applet {}
+public class CheckJava extends Applet {
+	private String jsFunction = null;
+
+	@Override
+	public void init() {
+		this.jsFunction = this.getParameter("jsFunction");
+	}
+
+	@Override
+	public void start() {
+		if (this.jsFunction != null) {
+			try {
+				JSObject win = JSObject.getWindow(this);
+				Object[] args = new Object[0];
+				
+				win.call(this.jsFunction, args);
+			}
+			catch (netscape.javascript.JSException e) {
+				System.err.println(this.getClass()+" error while execute javascript function '"+this.jsFunction+"' =>"+e.getMessage());
+			}
+		}
+	}
+}
