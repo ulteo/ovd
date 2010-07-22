@@ -18,7 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-def getArch():
-	plusNode = ["plus",["ovd-icon-extractor", "ovd-externalapps-client", "ovd-integrated-launcher", "ovd-java-jni", "ovd-shells", "seamlessrdpshell"], ["bmp2png"], []]
-	
-	return ["root", ["ovd-slaveserver"], [], [plusNode]]
+def getSVNRoot():
+	return r"ApplicationServer\windows\seamlessrdpshell"
+
+def compile_commands():
+	return ["build.bat"]
+
+def binary_files():
+	return [r"build\*"]

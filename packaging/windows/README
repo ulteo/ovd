@@ -15,6 +15,9 @@ I. Software dependencies
 		* nsis PassDialog plugin (http://nsis.sourceforge.net/PassDialog_plug-in)
 	
 	* GNU Gettext
+	
+	* Visual Studio 2008
+		* map C:\Program Files\Microsoft Visual Studio 9.0\VC\vcpackages
 
 	All the software directories have to be defined in the %PATH% 
 	variable in order to be able to launch gcc, make, python, 
@@ -23,7 +26,6 @@ I. Software dependencies
 
 
 II. Download the code and binaries
-	lftp -e "mirror seamlessrdpshell; quit"  http://devel.ulteo.com/~thomas/OVD/3.0/ApplicationServer/windows/
 	lftp -e "mirror bmp2png; quit" http://devel.ulteo.com/~laurent/OVD/windows/
 
 
