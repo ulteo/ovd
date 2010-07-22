@@ -32,6 +32,7 @@ import time
 import urllib
 import urllib2
 from xml.dom import minidom
+from xml.dom.minidom import Document
 from xml.parsers.expat import ExpatError
 
 class Logger:
@@ -251,10 +252,19 @@ class Dialog:
 
     def do_call_exit(self):
         if d.sessionProperties["persistent"]:
-            url = "%s/suspend.php"%(self.base_url)
+            mode = "suspend"
         else:
-            url = "%s/exit.php"%(self.base_url)
+            mode = "logout"
+        
+        document = Document()
+        rootNode = document.createElement('logout')
+        rootNode.setAttribute("mode", mode)
+        document.appendChild(rootNode)
+        
+        url = "%s/client/logout.php"%(self.base_url)
         request = urllib2.Request(url)
+        request.add_header("Content-type", "text/xml; charset=UTF-8")
+        request.add_data(document.toxml())
         
         try:
             url = self.urlOpener.open(request)
