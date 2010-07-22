@@ -236,5 +236,4 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		}
 		this.quit(return_code);
 	}
-
 }

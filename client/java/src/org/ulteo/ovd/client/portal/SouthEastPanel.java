@@ -20,10 +20,14 @@
 
 package org.ulteo.ovd.client.portal;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.rdp.RdpActions;
 
 
@@ -31,10 +35,21 @@ public class SouthEastPanel extends JPanel{
 	
 	private JButton disconnect = new JButton(I18n._("Disconnect"));
 	private JButton killApp = new JButton(I18n._("Kill"));
+	private JButton publishingButton = new JButton("publish");
+	private RdpActions actions = null;
 	
 	public SouthEastPanel(RdpActions rdpActions, CurrentApps currentAppsPanel) {
+		this.actions = rdpActions;
 		disconnect.addActionListener(new LogoutListener(rdpActions));
 		killApp.addActionListener(new KillListener(rdpActions, currentAppsPanel));
+		publishingButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				publishingButton.setText((((OvdClientPortal)actions).togglePublications()) ? "unpublish" : "publish");
+			}
+		});
+		this.add(publishingButton);
 		this.add(killApp);
 		this.add(disconnect);
 	}

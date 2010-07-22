@@ -38,8 +38,8 @@ import org.ini4j.Wini;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
-import org.ulteo.ovd.client.integrated.OvdClientIntegrated;
-import org.ulteo.ovd.client.portal.OvdClientPortal;
+import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
+import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.ovd.integrated.Constants;
 
 public class LoginListener implements ActionListener{

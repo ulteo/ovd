@@ -31,8 +31,8 @@ import org.ini4j.Wini;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
-import org.ulteo.ovd.client.integrated.OvdClientIntegrated;
-import org.ulteo.ovd.client.portal.OvdClientPortal;
+import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
+import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 
 
 public class StartConnection {

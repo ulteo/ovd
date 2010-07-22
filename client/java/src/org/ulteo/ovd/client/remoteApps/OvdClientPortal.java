@@ -19,20 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client.portal;
+package org.ulteo.ovd.client.remoteApps;
 
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
-import org.ulteo.ovd.client.OvdClientRemoteApps;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
+import org.ulteo.ovd.client.portal.Menu;
+import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.integrated.OSTools;
+import org.ulteo.ovd.integrated.Spool;
+import org.ulteo.ovd.integrated.SystemAbstract;
+import org.ulteo.ovd.integrated.SystemLinux;
+import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientPortal extends OvdClientRemoteApps {
 	private PortalFrame portal = null;
+	private boolean publicated = false;
+	private SystemAbstract system = null;
+	private Spool spool = null;
+	private Thread spoolThread = null;
 
 	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_) {
 		super(fqdn_, use_https_, login_, password_);
@@ -42,11 +52,12 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 
 	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
 		super(fqdn_, use_https_, login_, password_, frame_, logList_);
-
+	
 		this.init();
 	}
 
 	private void init() {
+		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows() : new SystemLinux();
 		this.logger = Logger.getLogger(OvdClientPortal.class);
 		this.portal = new PortalFrame();
 	}
@@ -102,4 +113,44 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		this.portal.dispose();
 	}
 	
+	public boolean togglePublications() {
+		if (publicated) {
+			this.unpublish();
+		}
+		else {
+			this.publish();
+		}
+		return publicated;
+	}
+	
+	public void publish() {
+		this.spool = new Spool(this);
+		this.spool.createIconsDir();
+		this.spoolThread = new Thread(this.spool);
+		this.spoolThread.start();
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
+			for (Application app : rc.getAppsList()) {
+				this.system.install(app);
+			}
+		}
+		this.publicated = true;
+	}
+	
+	public void unpublish() {
+		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
+			for (Application app : rc.getAppsList()) {
+					this.system.uninstall(app);
+			}
+		}
+		this.spoolThread.interrupt();
+		while (spoolThread.isAlive()) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException ex) {
+				this.logger.error(ex);
+			}
+		}
+		this.spool = null;
+		this.publicated = false;
+	}
 }

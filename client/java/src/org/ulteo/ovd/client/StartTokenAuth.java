@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.ini4j.Wini;
-import org.ulteo.ovd.client.integrated.OvdClientIntegrated;
+import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;

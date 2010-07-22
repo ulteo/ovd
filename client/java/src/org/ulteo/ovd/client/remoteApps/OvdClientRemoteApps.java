@@ -19,11 +19,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client;
+package org.ulteo.ovd.client.remoteApps;
 
 import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
