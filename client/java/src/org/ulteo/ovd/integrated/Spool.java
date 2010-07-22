@@ -150,7 +150,8 @@ public class Spool implements Runnable {
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
-				this.logger.error(ex);
+				this.logger.info("Spool thread stopped");
+				return;
 			}
 		}
 	}
