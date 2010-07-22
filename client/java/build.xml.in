@@ -298,10 +298,9 @@
 
   <target name="applet.jar" description="sign applets"  depends="applet" >
     <antcall target="classes2jar" />
-    <jar destfile="libs/UlteoOVD.jar"  basedir="jar/">
+    <jar destfile="libs/ulteo-applet-${compile.release}.jar"  basedir="jar/">
       <include name="**" />
     </jar>
-
     <jar destfile="libs/CheckJava-${compile.release}.jar"
          basedir="classes/">
       <include name="org/ulteo/ovd/applet/CheckJava.class"/>
@@ -309,36 +308,24 @@
         <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
       </manifest>
     </jar>
-
-    <signjar jar="libs/UlteoOVD.jar"
-             alias="ulteo"
-             storepass="${keystore.password}"
-             keystore="${build.cert}/keystore"
-             signedjar="libs/ulteo-applet-${compile.release}.jar"/>
-    <signjar jar="required_libraries/log4j-1.2.jar"
-             alias="ulteo"
-             storepass="${keystore.password}"
-             keystore="${build.cert}/keystore"
-             signedjar="libs/log4j-signed.jar"/>
-    <signjar jar="required_libraries/gnu-getopt.jar"
-             alias="ulteo"
-             storepass="${keystore.password}"
-             keystore="${build.cert}/keystore"
-             signedjar="libs/getopt-signed.jar"/>
+    <signjar destDir="libs" alias="ulteo" storepass="${keystore.password}"
+             keystore="${build.cert}/keystore" >
+        <fileset dir="required_libraries" includes="gnu-getopt.jar log4j-1.2.jar" />
+        <fileset dir="libs" includes="ulteo-applet-${compile.release}.jar" />
+    </signjar>
   </target>
 
   <target name="applet.install"
           description="install applets"
           depends="PDFPrinter.install, applet.jar">
-    <mkdir dir="${applets.dir}"/>
-    <copy file="libs/ulteo-applet-${compile.release}.jar" todir="${applets.dir}" />
+    <copy todir="${applets.dir}">
+      <filelist dir="libs" files="gnu-getopt.jar log4j-1.2.jar
+         ulteo-applet-${compile.release}.jar CheckJava-${compile.release}.jar" />
+    </copy>
     <symlink link="${applets.dir}/ulteo-applet.jar"
              resource="ulteo-applet-${compile.release}.jar"/>
-    <copy file="libs/CheckJava-${compile.release}.jar" todir="${applets.dir}" />
     <symlink link="${applets.dir}/CheckJava.jar"
              resource="CheckJava-${compile.release}.jar"/>
-    <copy file="required_libraries/gnu-getopt.jar" todir="${applets.dir}" />
-    <copy file="required_libraries/log4j-1.2.jar" todir="${applets.dir}" />
   </target>
 
 
