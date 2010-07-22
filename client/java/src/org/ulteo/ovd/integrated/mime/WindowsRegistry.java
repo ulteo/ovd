@@ -28,6 +28,7 @@ import com.ice.jni.registry.RegistryValue;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ulteo.ovd.Application;
@@ -168,13 +169,18 @@ public class WindowsRegistry extends FileAssociate {
 					String target = key.getStringValue("");
 					key = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Classes\\"+target+"\\shell", RegistryKey.ACCESS_ALL);
 					Enumeration enumKeys = key.keyElements();
+					List<String> subkeysToRemove = new ArrayList<String>();
 					while (enumKeys.hasMoreElements()) {
 						String subKeyStr = (String) enumKeys.nextElement();
 						if (! subKeyStr.startsWith("ovdShell_"))
 							continue;
 						
+						subkeysToRemove.add(subKeyStr);
+					}
+					for (String subKeyStr : subkeysToRemove) {
 						this.removeKey(key, subKeyStr);
 					}
+					subkeysToRemove.clear();
 
 				} catch (RegistryException ex) {
 					Logger.getLogger(WindowsRegistry.class.getName()).log(Level.SEVERE, null, ex);
@@ -191,15 +197,26 @@ public class WindowsRegistry extends FileAssociate {
 		Enumeration enumKeys;
 		try {
 			enumKeys = subKey.keyElements();
+			List<String> toRemove = new ArrayList<String>();
 			while (enumKeys.hasMoreElements()) {
 				String subKeyStr = (String) enumKeys.nextElement();
+				toRemove.add(subKeyStr);
+			}
+			for (String subKeyStr : toRemove) {
 				this.removeKey(subKey, subKeyStr);
 			}
+			toRemove.clear();
+
 			enumKeys = key.valueElements();
 			while (enumKeys.hasMoreElements()) {
 				String valueStr = (String) enumKeys.nextElement();
+				toRemove.add(valueStr);
+			}
+			for (String valueStr : toRemove) {
 				key.deleteValue(valueStr);
 			}
+			toRemove.clear();
+
 			key.deleteSubKey(keyStr);
 		} catch (RegistryException ex) {
 			Logger.getLogger(WindowsRegistry.class.getName()).log(Level.SEVERE, null, ex);
