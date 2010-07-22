@@ -220,6 +220,10 @@
   <target name="ovdNativeClient_install">
     <copy file="libs/OVDNativeClient.jar" todir="${install.dir}" />
     <copy file="scripts/OVDNativeClient" todir="${bindir}" />
+    <copy todir="${datadir}/ulteo/nativeclient">
+      <fileset dir="misc" includes="native-ulteo.desktop" />
+      <fileset dir="icons" includes="ulteo-logo.png" />
+    </copy>
   </target>
 
   <target name="ovdNativeClient.jar" depends="ovdNativeClient">

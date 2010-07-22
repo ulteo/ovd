@@ -1,0 +1,12 @@
+#!/bin/sh
+
+DATADIR=/usr/share/ulteo/nativeclient
+DESKTOPFILE=$DATADIR/native-ulteo.desktop
+ICONFILE=$DATADIR/ulteo-logo.png
+
+xdg-icon-resource install --size 128 --mode system $ICONFILE icon-ulteo
+xdg-desktop-icon install $DESKTOPFILE
+
+#DEBHELPER#
+
+exit 0

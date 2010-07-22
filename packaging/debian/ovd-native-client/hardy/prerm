@@ -1,0 +1,8 @@
+#!/bin/sh
+
+xdg-desktop-icon uninstall native-ulteo.desktop
+xdg-icon-resource uninstall --size 128 --mode system icon-ulteo
+
+#DEBHELPER#
+
+exit 0
