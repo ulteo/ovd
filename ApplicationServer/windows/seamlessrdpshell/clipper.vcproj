@@ -74,7 +74,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wtsapi32.lib vchannel.lib"
+				AdditionalDependencies="wtsapi32.lib Release\vchannel.lib"
 				OutputFile="Debug/seamlessrdpshell.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -166,7 +166,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wtsapi32.lib"
+				AdditionalDependencies="wtsapi32.lib Release\vchannel.lib"
 				OutputFile=".\Release/seamlessrdpshell.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
