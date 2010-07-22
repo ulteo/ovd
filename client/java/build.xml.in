@@ -379,6 +379,7 @@
         <include name="scripts/*" />
         <include name="icons/*" />
         <include name="po/*" />
+        <include name="misc/*" />
       </fileset>
     </copy>
     <tar destfile="${distdir}/${sdist.name}.tar" longfile="gnu"
