@@ -63,8 +63,7 @@ install: all
 	install $(DST) 		dist
 	install $(PDF) 		dist
 
-	install -d 		dist/img
-	install img/*.png 	dist/img
+	svn export --force img  dist/img
 
 
 uninstall:
