@@ -5,18 +5,22 @@
 <article>
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
-    <subtitle><trademark class="registered">Microsoft Windows</trademark> Applications</subtitle>
+    <subtitle><trademark class="registered">Microsoft Windows</trademark> server installation</subtitle>
     <graphic fileref="img/ovd.png" align="center"/>
 
     <copyright>
       <year>2009</year>
+      <year>2010</year>
       <holder>Ulteo SAS</holder>
     </copyright>
   </articleinfo>
 
   <para>
-    This documentation describes how to use <trademark>Windows</trademark> applications on an
-    existing and running <emphasis>Ulteo Open Virtual Desktop</emphasis>.
+    This documentation describes how to install an <emphasis>Ulteo
+    Open Virtual
+    Desktop</emphasis> <emphasis role="strong">Application
+    Server</emphasis> on a <trademark class="registered">Microsoft
+    Windows</trademark> server system.
   </para>
   <para>
     This documention <emphasis role="strong">does not
@@ -29,37 +33,55 @@
   <section>
     <title>Prerequisites</title>
     <para>
-      To use <trademark>Windows</trademark> applications, you need to plug your Session
-      Manager to a <trademark
-      class="registered">Microsoft</trademark> Domain Controler
-      (Active Directory).
+      The supported operating systems are:
+      <itemizedlist>
+        <listitem>
+          <para>
+            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2003 x86/x64
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> Server 2008 x86/x64
+          </para>
+        </listitem>
+      </itemizedlist>
     </para>
 
     <para>
-      You also need to have at least one <emphasis
-      role="strong"><trademark
-      class="registered">Microsoft</trademark> <trademark><trademark>Windows</trademark>
-      Server 2003 or 2008</trademark></emphasis> system with <emphasis
-      role="strong"><trademark>Terminal services</trademark></emphasis> installed and
-      configured.
+      You also have <trademark>Terminal services</trademark>(2003)
+      or <trademark>Remote Desktop services</trademark>(2008)
+      installed and configured.  Members of the <emphasis>Remote
+      Desktop users</emphasis> group have to be authorize to start a
+      TS session.
     </para>
 
     <para>
-      The <trademark>Windows</trademark> Server machines have to be plugged to the same domain
-      controler as the Session Manager. To plug a Session Manager to a
-      <trademark class="registered">Microsoft Active</trademark>
-      Directory, please refer to the <emphasis>Administration
-      Console</emphasis> documentation.
+      An Ulteo OVD Session Manager installed and configured.
     </para>
+
+    <para>
+      The <emphasis>Ulteo OVD
+      ApS</emphasis> <emphasis role="strong">setup</emphasis>. It can
+      be download from <ulink url="http://www.ulteo.com" />.
+    </para>
+
   </section>
 
   <section>
-    <title>Installation of the <trademark>Windows</trademark> agent</title>
+    <title>Installation of the Application Server</title>
 
     <para>
-      Download the Ulteo Open Virtual Desktop <trademark>Windows</trademark> agent setup software from
-      <ulink url="http://www.ulteo.com/main/downloads/ulteo-ovd-win.php?suite=2.0">this place at
-      www.ulteo.com</ulink> on your <trademark>Windows</trademark> machine and execute it.
+      Copy the setup setup on the <trademark>Windows</trademark> machine.
+    </para>
+
+    <screenshot>
+      <screeninfo>put the installer on the desktop</screeninfo>
+      <graphic fileref="img/windows/copy_setup.png"></graphic>
+    </screenshot>
+
+    <para>
+      Execute it.
     </para>
 
     <screenshot>
@@ -68,12 +90,10 @@
     </screenshot>
 
     <para>
-      In the configuration frame, you have to set the <trademark>Windows</trademark> server
-      name. To get the <trademark>Windows</trademark> FQDN, go to <emphasis>Start</emphasis>,
-      then right-click on <emphasis>My Computer</emphasis>:
-      <emphasis>Properties</emphasis>.
-      In the <emphasis>Computer Name</emphasis> tab, the FQDN is
-      displayed as <emphasis role="strong">Full computer name</emphasis>.
+      The only question is about the host/IP address where the session
+      manager can be accessed. (we use <ulink url="sm.ulteo.com" />
+      here for the example, but of course, you have to set your own
+      domain name).
     </para>
 
     <screenshot>
@@ -129,16 +149,7 @@
       authorized to run those your <trademark>Windows</trademark>
       applications. If you don't have an existing application group
       please refer to the Ulteo Open Virtual Desktop <emphasis
-      role="strong">Installation documentation</emphasis> first.
-    </para>
-
-    <para>
-      Now you just have to perform a <trademark>Windows</trademark>
-      application publication as you probably did previously with
-      Linux applications.  To have a global view of which user has
-      access to which applications, you can browse the <emphasis
-      role="strong">Summary</emphasis> page from the
-      <emphasis>Status</emphasis> menu.
+      role="strong">Publication documentation</emphasis> first.
     </para>
   </section>
 
@@ -154,7 +165,7 @@
 
     <screenshot>
       <screeninfo>Session Manager - server page</screeninfo>
-      <graphic fileref="img/aps-session-win-appps.png"></graphic>
+      <graphic fileref="img/wi-session-desktop-windows.png"></graphic>
     </screenshot>
 
   </section>
@@ -184,38 +195,6 @@
       </screenshot>
 
     </simplesect>
-
-    <simplesect>
-      <title>Automaticaly start the service at boot</title>
-      <para>
-	At the moment, the <trademark>Windows</trademark> service is not configured to be
-	started automaticaly at boot.
-      </para>
-
-      <para>
-	To set it up, go to <emphasis>Administrative Tools</emphasis>,
-	<emphasis>Services</emphasis> and find the <emphasis>Ulteo
-	Open Virtual Desktop</emphasis> service.
-      </para>
-
-      <screenshot>
-	<screeninfo><trademark>Windows</trademark> - services managment</screeninfo>
-	<graphic fileref="img/aps_win_services.png"></graphic>
-      </screenshot>
-
-      <para>
-	Edit the <emphasis>Properties</emphasis> of services, set
-	the <emphasis role="strong">Startup type</emphasis> to
-	<emphasis>Automatic</emphasis>, and apply.
-      </para>
-
-      <screenshot>
-	<screeninfo><trademark>Windows</trademark> - services set to start as boot</screeninfo>
-	<graphic fileref="img/aps_win_services_set_boot.png"></graphic>
-      </screenshot>
-    </simplesect>
-
-
   </section>
 
 

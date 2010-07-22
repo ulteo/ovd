@@ -10,9 +10,9 @@ SRC=AccountsIntegration.xml \
 	Installation_RedHat.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
+	ServerWindows.xml \
 	SystemUpgrade.xml \
-	Vpn.xml \
-	Windows_Applications.xml
+	Vpn.xml
 
 DIRS=xsl2 \
      media \
