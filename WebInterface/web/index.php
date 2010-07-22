@@ -225,7 +225,7 @@ if (isset($_COOKIE['webinterface']['debug']))
 						<div>
 							<h2><?php echo _('My files'); ?></h2>
 
-							<div id="fileManagerContainer" style="overflow: auto;">
+							<div id="fileManagerContainer">
 							</div>
 						</div>
 						</div>

@@ -63,6 +63,8 @@ var Applications = Class.create(Daemon, {
 
 		this.list_apps();
 
+		this.load_explorer();
+
 		Daemon.prototype.do_started.apply(this);
 
 		setTimeout(this.connect_servers.bind(this), 1000);
@@ -215,6 +217,10 @@ var Applications = Class.create(Daemon, {
 		}
 
 		return true;
+	},
+
+	load_explorer: function() {
+		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
 	}
 });
 
