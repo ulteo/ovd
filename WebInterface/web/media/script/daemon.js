@@ -58,6 +58,8 @@ var Daemon = Class.create({
 
 	error_message: '',
 
+	progressbar_value: 0,
+
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		this.applet_version = applet_version_;
 		this.applet_main_class = applet_main_class_;
@@ -79,6 +81,9 @@ var Daemon = Class.create({
 			$('debugLevels').show();
 			$('debugLevels').style.display = 'inline';
 		}
+
+		if ($('progressBar') && $('progressBarContent'))
+			this.progressBar();
 
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
@@ -162,6 +167,21 @@ var Daemon = Class.create({
 
 	is_stopped: function() {
 		return (this.stopped || this.session_status == 'unknown');
+	},
+
+	progressBar: function() {
+		if (! $('progressBar') || ! $('progressBarContent'))
+			return false;
+
+		if (this.progressbar_value > 100)
+			this.progressbar_value = 100;
+
+		this.progressbar_value += 20;
+
+		$('progressBarContent').style.width = this.progressbar_value+'%';
+
+		if (this.progressbar_value < 100)
+			setTimeout(this.progressBar.bind(this), 500);
 	},
 
 	loop: function() {

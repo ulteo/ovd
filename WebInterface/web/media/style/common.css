@@ -273,6 +273,21 @@ div#infoWrap {
 	z-index: 100;
 }
 
+div#progressBar {
+	background: #fff;
+	border: 1px solid #ccc;
+	height: 10px;
+	margin-top: 10px;
+}
+
+div#progressBarContent {
+	background: #ddd;
+	width: 0%;
+	height: 10px;
+	margin-left: 0px;
+	margin-right: auto;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	padding: 0;

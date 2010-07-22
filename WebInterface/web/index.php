@@ -137,6 +137,13 @@ if (isset($_COOKIE['webinterface']['debug']))
 						<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
 					</td>
 				</tr>
+				<tr>
+					<td style="text-align: left; vertical-align: middle;" colspan="3">
+						<div id="progressBar">
+							<div id="progressBarContent"></div>
+						</div>
+					</td>
+				</tr>
 			</table>
 		</div>
 
