@@ -86,8 +86,8 @@ public class AuthFrame {
 	private JLabel resolution = new JLabel(I18n._("Resolution"));
 	private JLabel language = new JLabel(I18n._("Language"));
 	private JLabel keyboard = new JLabel(I18n._("Keybord"));
-	private JRadioButton desktopButton = new JRadioButton();
-	private JRadioButton portalButton = new JRadioButton();
+	private JRadioButton desktopButton = new JRadioButton(I18n._("Desktop"));
+	private JRadioButton portalButton = new JRadioButton(I18n._("Applications"));
 	private ButtonGroup radioGroup = new ButtonGroup();
 	private JSlider resBar = new JSlider(0, 4, 4);
 	private JLabel resolutionValue = new JLabel(I18n._("Fullscreen"));
@@ -148,7 +148,7 @@ public class AuthFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (! desktopMode) {
 					desktopMode = true;
-					gbc.gridx = 3;
+					gbc.gridx = 2;
 					gbc.gridy = 10;
 					gbc.gridwidth = 2;
 					mainFrame.add(resBar, gbc);
@@ -245,17 +245,19 @@ public class AuthFrame {
 					gbc.gridy = 13;
 					mainFrame.add(keyboard, gbc);
 					
+					gbc.gridwidth = 1;
 					gbc.gridx = 2;
 					gbc.gridy = 9;
 					mainFrame.add(desktopButton,gbc);
 					
-					gbc.gridx = 4;
+					gbc.gridx = 3;
 					mainFrame.add(portalButton,gbc);
 					
+					
 					if(desktopMode) {
-						gbc.gridx = 3;
-						gbc.gridy = 10;
+						gbc.gridx = 2;
 						gbc.gridwidth = 2;
+						gbc.gridy = 10;
 						mainFrame.add(resBar, gbc);
 
 						gbc.gridy = 11;
@@ -263,6 +265,8 @@ public class AuthFrame {
 						mainFrame.add(resolutionValue, gbc);
 					}
 					
+					gbc.gridx = 2;
+					gbc.gridwidth = 2;
 					gbc.gridy = 12;
 					gbc.fill = GridBagConstraints.HORIZONTAL;
 					mainFrame.add(languageBox, gbc);
@@ -368,7 +372,7 @@ public class AuthFrame {
 		gbc.anchor = GridBagConstraints.CENTER;
 		mainFrame.add(rememberMe, gbc);
 		
-		gbc.gridx = 5;
+		gbc.gridx = 3;
 		gbc.gridy = 7;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridwidth = 1;
@@ -399,10 +403,11 @@ public class AuthFrame {
 			this.hostTextField.setText(ovdServer);
 			if (profileMode == 0) {
 				this.desktopButton.setSelected(true);
-				this.desktopMode = true;
 			}
-			else
+			else {
 				this.portalButton.setSelected(true);
+				desktopMode = false;
+			}
 			resBar.setValue(profileResolution);
 		}
 		else 
