@@ -38,8 +38,12 @@ public class I18n {
 	public static String _(String s) {
 		if (catalog == null)
 			return s;
-
-		return catalog.getString(s);
+		try {
+			return catalog.getString(s);
+		}
+		catch (Exception e) {}
+		
+		return s;
 	}
 
 }
