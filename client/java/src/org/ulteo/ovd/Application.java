@@ -23,13 +23,12 @@ package org.ulteo.ovd;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 import javax.swing.ImageIcon;
 
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class Application implements Comparator<Object>{
+public class Application implements Comparable<Application> {
 	private int id = -1;
 	private String cmd = "";
 	private String name = "";
@@ -107,7 +106,7 @@ public class Application implements Comparator<Object>{
 		this.connection = connection_;
 	}
 
-	public int compare(Object o1, Object o2) {
-		return ((Application)o1).name.compareToIgnoreCase(((Application)o2).name);
+	public int compareTo(Application t) {
+		return this.name.compareToIgnoreCase(t.name);
 	}
 }

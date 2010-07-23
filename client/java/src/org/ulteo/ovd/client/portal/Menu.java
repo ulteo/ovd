@@ -24,6 +24,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -53,28 +54,51 @@ public class Menu extends JPanel {
 		revalidate();
 	}
 
-	public void install (Application app) {
-		ApplicationButton appButton = new ApplicationButton(app);
+	public void initButtons(List<Application> appsList) {
+		if (this.buttonPan.getComponentCount() > 0)
+			return;
+
+		if (appsList == null)
+			return;
+
+		for (Application app : appsList) {
+			ApplicationButton appButton = new ApplicationButton(app);
 			appButton.addActionListener(new ApplicationListener(app, currentApps));
-			buttonPan.add(appButton);
-			buttonPan.revalidate();
+			appButton.setEnabled(false);
+			this.buttonPan.add(appButton);
+			this.buttonPan.revalidate();
+			this.buttonPan.repaint();
+		}
+	}
+
+	public void install (Application app) {
+		ApplicationButton appButton = this.findButtonByApp(app);
+
+		if (appButton == null)
+			return;
+
+		appButton.setEnabled(true);
 	}
 
 	public void uninstall (Application app) {
+		ApplicationButton appButton = this.findButtonByApp(app);
+
+		if (appButton == null)
+			return;
+
+		appButton.setEnabled(false);
+	}
+
+	private ApplicationButton findButtonByApp(Application app) {
 		int appCount = this.buttonPan.getComponentCount();
-		
+
 		for (int i = 0; i < appCount; i++) {
 			ApplicationButton appButton = (ApplicationButton) this.buttonPan.getComponent(i);
 
-			if (app.getName().equals(appButton.getText()) && (app.getConnection() == appButton.getConnection())) {
-				this.buttonPan.remove(appButton);
-
-				this.buttonPan.revalidate();
-				this.buttonPan.repaint();
-
-				break;
-			}
+			if (app.getName().equals(appButton.getText()) && (app.getConnection() == appButton.getConnection()))
+				return appButton;
 		}
+		return null;
 	}
 	
 	public void addScroller() {

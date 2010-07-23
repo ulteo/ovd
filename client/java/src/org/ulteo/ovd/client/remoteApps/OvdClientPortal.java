@@ -21,6 +21,9 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import net.propero.rdp.RdpConnection;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
@@ -29,7 +32,6 @@ import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.client.portal.Menu;
 import org.ulteo.ovd.client.portal.PortalFrame;
-import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
@@ -43,6 +45,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	private SystemAbstract system = null;
 	private Spool spool = null;
 	private Thread spoolThread = null;
+	private List<Application> appsList = null;
 
 	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_) {
 		super(fqdn_, use_https_, login_, password_);
@@ -59,6 +62,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	private void init() {
 		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows() : new SystemLinux();
 		this.logger = Logger.getLogger(OvdClientPortal.class);
+		this.appsList = new ArrayList<Application>();
 		this.portal = new PortalFrame();
 	}
 
@@ -66,7 +70,11 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	protected void runInit() {}
 
 	@Override
-	protected void runExit() {}
+	protected void runExit() {
+		Collections.sort(this.appsList);
+		
+		this.portal.getMain().getCenter().getMenu().initButtons(this.appsList);
+	}
 
 	@Override
 	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {
@@ -74,6 +82,10 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 			co.addOvdAppListener(this.portal.getMain().getCenter().getCurrent());
 		} catch (OvdException ex) {
 			this.logger.error(ex);
+		}
+
+		for (Application app : co.getAppsList()) {
+			this.appsList.add(app);
 		}
 	}
 
