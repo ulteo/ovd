@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=OVD native client
-Type=Application
-Icon=icon-ulteo
-Exec=java -jar /usr/share/java/OVDNativeClient.jar
