@@ -54,10 +54,27 @@ public class Menu extends JPanel {
 	}
 
 	public void install (Application app) {
-		ApplicationButton appButton = new ApplicationButton(app.getName(), app.getIcon());
+		ApplicationButton appButton = new ApplicationButton(app);
 			appButton.addActionListener(new ApplicationListener(app, currentApps));
 			buttonPan.add(appButton);
 			buttonPan.revalidate();
+	}
+
+	public void uninstall (Application app) {
+		int appCount = this.buttonPan.getComponentCount();
+		
+		for (int i = 0; i < appCount; i++) {
+			ApplicationButton appButton = (ApplicationButton) this.buttonPan.getComponent(i);
+
+			if (app.getName().equals(appButton.getText()) && (app.getConnection() == appButton.getConnection())) {
+				this.buttonPan.remove(appButton);
+
+				this.buttonPan.revalidate();
+				this.buttonPan.repaint();
+
+				break;
+			}
+		}
 	}
 	
 	public void addScroller() {
@@ -66,10 +83,14 @@ public class Menu extends JPanel {
 		scroller.revalidate();
 		this.revalidate();
 	}
-	public JScrollPane scrollerInit() {
+	private JScrollPane scrollerInit() {
 		scroller = new JScrollPane();
 		scroller.setViewportView(buttonPan);
 		return scroller;
+	}
+
+	public boolean isScollerInited() {
+		return (this.scroller == null);
 	}
 	
 	public ArrayList<JButton> getButtons() {

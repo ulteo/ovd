@@ -89,11 +89,16 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	@Override
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd rc : this.availableConnections) {
-			Menu menu = this.portal.getMain().getCenter().getMenu();
-			for (Application app : rc.getAppsList()) {
-				menu.install(app);
+			if (rc.getOvdAppChannel() == o) {
+				Menu menu = this.portal.getMain().getCenter().getMenu();
+				for (Application app : rc.getAppsList()) {
+					System.out.println("install "+app.getName());
+					menu.install(app);
+				}
+				System.out.println("availableConnections.size(): "+this.availableConnections.size());
+				if (menu.isScollerInited())
+					menu.addScroller();
 			}
-			menu.addScroller();
 
 			this.portal.initButtonPan(this);
 		}
@@ -104,13 +109,22 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 
 	@Override
 	protected void display(RdpConnection co) {
-		this.portal.setVisible(true);
+		if (! this.portal.isVisible())
+			this.portal.setVisible(true);
 	}
 
 	@Override
 	protected void hide(RdpConnection co) {
-		this.portal.setVisible(false);
-		this.portal.dispose();
+		Menu menu = this.portal.getMain().getCenter().getMenu();
+
+		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
+			menu.uninstall(app);
+		}
+
+		if (this.countAvailableConnection() == 0) {
+			this.portal.setVisible(false);
+			this.portal.dispose();
+		}
 	}
 	
 	public boolean togglePublications() {

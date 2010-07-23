@@ -20,15 +20,22 @@
 
 package org.ulteo.ovd.client.portal;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import org.ulteo.ovd.Application;
+import org.ulteo.rdp.RdpConnectionOvd;
 
 public class ApplicationButton extends JButton {
+	private Application app = null;
 	
-	public ApplicationButton (String appName, ImageIcon appIcon) {
-		setIcon(appIcon);
-		setText(appName);
+	public ApplicationButton (Application app_) {
+		this.app = app_;
+		setIcon(this.app.getIcon());
+		setText(this.app.getName());
 		validate();
 		revalidate();
+	}
+
+	public RdpConnectionOvd getConnection() {
+		return this.app.getConnection();
 	}
 }

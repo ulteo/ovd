@@ -91,7 +91,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		this.availableConnections.remove(rc);
 	}
 
-	private int countAvailableConnection() {
+	protected int countAvailableConnection() {
 		return this.availableConnections.size();
 	}
 
@@ -157,7 +157,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {
-		if(graphic) {
+		if(graphic && (this.logList.getLoader().isVisible() || this.frame.isVisible())) {
 			logList.getLoader().setVisible(false);
 			logList.getLoader().dispose();
 			frame.setVisible(false);
@@ -176,7 +176,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	}
 
 	public void disconnected(RdpConnection co) {
-		if (graphic) {
+		if (graphic && this.countAvailableConnection() == 0) {
 			if (logList.getLoader().isVisible()) {
 				logList.getLoader().setVisible(false);
 				logList.getLoader().dispose();
@@ -192,11 +192,13 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 		this.hide(co);
 
-		if(graphic) {
-			frame.init();
-			frame.setDesktopLaunched(false);
-		} else {
-			System.exit(0);
+		if (this.countAvailableConnection() == 0) {
+			if(graphic) {
+				frame.init();
+				frame.setDesktopLaunched(false);
+			} else {
+				System.exit(0);
+			}
 		}
 	}
 
