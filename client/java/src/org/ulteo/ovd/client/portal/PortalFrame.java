@@ -43,7 +43,7 @@ public class PortalFrame extends JFrame implements WindowListener{
 		main = new MainPanel();
 		setIconImage(logo);
 		this.setVisible(false);
-		this.setTitle("Portal");
+		this.setTitle("Ulteo OVD - Remote Applications Session");
 		this.setSize(800, 600);
 		this.setPreferredSize(new Dimension(800,600));
 		this.setResizable(false);
