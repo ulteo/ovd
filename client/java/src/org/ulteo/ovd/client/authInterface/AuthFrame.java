@@ -79,7 +79,7 @@ public class AuthFrame {
 	private JLabel userLogoLabel = new JLabel();
 	private JLabel passwordLogoLabel = new JLabel();
 	private JLabel hostLogoLabel = new JLabel();
-	private boolean desktopMode;
+	private boolean desktopMode = true;
 	private boolean optionClicked;
 	private JLabel optionLogoLabel = new JLabel();
 	private JLabel mode = new JLabel(I18n._("Mode"));
