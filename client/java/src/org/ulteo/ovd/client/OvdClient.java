@@ -157,11 +157,10 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 	/* RdpListener */
 	public void connected(RdpConnection co) {
-		if(graphic && (this.logList.getLoader().isVisible() || this.frame.isVisible())) {
+		if(graphic && (this.logList.getLoader().isVisible() || this.frame.getMainFrame().isVisible())) {
 			logList.getLoader().setVisible(false);
 			logList.getLoader().dispose();
-			frame.setVisible(false);
-			frame.dispose();
+			frame.hideWindow();
 		}
 
 		this.logger.info("Connected to "+co.getServer());
@@ -181,7 +180,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 				logList.getLoader().setVisible(false);
 				logList.getLoader().dispose();
 			}
-			Container cp = frame.getContentPane();
+			Container cp = frame.getMainFrame().getContentPane();
 			cp.removeAll();
 		}
 

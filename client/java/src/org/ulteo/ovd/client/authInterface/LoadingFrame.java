@@ -74,7 +74,7 @@ public class LoadingFrame extends JDialog implements Runnable{
 		});
 		this.add(BorderLayout.NORTH, aJProgressBar);
 		this.add(BorderLayout.EAST, cancel);
-		this.setLocationRelativeTo(frame);
+		this.setLocationRelativeTo(frame.getMainFrame());
 		this.setVisible(true);
 		this.pack();
 	}

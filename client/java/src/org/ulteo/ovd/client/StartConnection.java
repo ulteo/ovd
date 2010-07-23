@@ -23,6 +23,10 @@ package org.ulteo.ovd.client;
 
 import java.io.File;
 import java.io.IOException;
+
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
 import gnu.getopt.Getopt;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
@@ -34,13 +38,26 @@ import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 
-
 public class StartConnection {
 	public static final String productName = "Ulteo OVD Client";
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		try {
+			UIManager.put("Slider.paintValue", Boolean.FALSE);
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
+		
 		I18n.init();
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(Level.INFO);
@@ -134,7 +151,7 @@ public class StartConnection {
 		System.err.println("Usage: java -jar OVDIntegratedClient.jar [options]");
 		System.err.println("	-c CONFIGFILE");
 		System.err.println("	-p PASSWORD");
-		System.err.println("Example: java -jar OVDIntegratedClient.jar -c config.ovd -p password");
+		System.err.println("Example: java -jar OVDNativeClient.jar -c config.ovd -p password");
 
 		System.exit(0);
 	}

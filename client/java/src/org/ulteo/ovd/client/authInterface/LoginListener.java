@@ -44,7 +44,8 @@ import org.ulteo.ovd.integrated.Constants;
 
 public class LoginListener implements ActionListener{
 
-	private ButtonPanel bp = null;
+	private static final int DESKTOP_MODE = 0;
+	private static final int PORTAL_MODE = 1;
 	private AuthFrame frame = null;
 	private OvdClient cli = null;
 	private File profileInfo = null;
@@ -58,8 +59,7 @@ public class LoginListener implements ActionListener{
 	private int resolution = 1;
 	public LoadingFrame loader = null;
 
-	public LoginListener(ButtonPanel bp, AuthFrame frame) {
-		this.bp=bp;
+	public LoginListener(AuthFrame frame) {
 		this.frame=frame;
 		connectionRepInfo = new File(Constants.clientConfigFilePath);
 		}
@@ -68,11 +68,11 @@ public class LoginListener implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		char[] password = null;
 
-		username = bp.getLoginPan().getUsername().getText();
-		password = bp.getPasswordPan().getPwd().getPassword();
-		host = bp.getHostPan().getHostname().getText();
-		mode = bp.getOpt().getComboMode().getSelectedIndex();
-		resolution = bp.getOpt().getScreenSizeSelecter().getValue();
+		username = frame.getLogin().getText();
+		password = frame.getPassword().getPassword();
+		host = frame.getHost().getText();
+		mode = (frame.getDesktopButton().isSelected()) ? DESKTOP_MODE : PORTAL_MODE;
+		resolution = frame.getResBar().getValue();
 
 		try{
 			connectionRepInfo.mkdirs();
@@ -106,7 +106,7 @@ public class LoginListener implements ActionListener{
 		}catch (FileNotFoundException fe) {}
 
 		pass="";
-		for (char each : password){
+		for (char each : password) {
 			pass = pass+each;
 		}
 
@@ -114,7 +114,7 @@ public class LoginListener implements ActionListener{
 			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 		}
 		else {
-			if (bp.getIds().isChecked()) {
+			if (frame.isChecked()) {
 				saveDefault();
 			}
 			getInfo(writer, list, username, host);
