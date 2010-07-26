@@ -121,6 +121,61 @@ if (isset($_COOKIE['webinterface']['debug']))
 		<div id="infoWrap" style="display: none;">
 		</div>
 
+		<div id="testJava">
+			<applet id="CheckJava" code="org.ulteo.ovd.applet.CheckJava" codebase="applet/" archive="CheckJava.jar" mayscript="true" width="1" height="1">
+				<param name="code" value="org.ulteo.ovd.applet.CheckJava" />
+				<param name="codebase" value="applet/" />
+				<param name="archive" value="CheckJava.jar" />
+				<param name="mayscript" value="true" />
+			</applet>
+		</div>
+
+		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+			<div id="systemTestWrap" class="rounded" style="display: none;">
+				<div id="systemTest" class="rounded">
+					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
+						<tr>
+							<td style="text-align: left; vertical-align: top;">
+								<strong><?php echo _('Checking for system compatibility'); ?></strong>
+								<div style="margin-top: 15px;">
+									<p><?php echo _('If this is your first time here, a Java security window will show up and you have to accept it to use the service.'); ?></p>
+									<p><?php echo _('You are advised to check the "<i>Always trust content from this publisher</i>" checkbox.'); ?></p>
+								</div>
+							</td>
+							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<img src="media/image/rotate.gif" width="32" height="32" alt="" title="" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+
+			<div id="systemTestErrorWrap" class="rounded" style="display: none;">
+				<div id="systemTestError" class="rounded">
+					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
+						<tr>
+							<td style="text-align: left; vertical-align: middle;">
+								<strong><?php echo _('System compatibility error'); ?></strong>
+								<div id="systemTestError1" style="margin-top: 15px; display: none;">
+									<p><?php echo _('Java is not available on your system or in your web browser.'); ?></p>
+									<p><?php echo _('Please install Java extension for your web browser or contact your administrator.'); ?></p>
+								</div>
+
+								<div id="systemTestError2" style="margin-top: 15px; display: none;">
+									<p><?php echo _('You have not accepted the Java security window.'); ?></p>
+								</div>
+
+								<p>You <strong>cannot</strong> have access to this service.</p>
+							</td>
+							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top;">
+								<img src="media/image/error.png" width="32" height="32" alt="" title="" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
 		<div id="splashContainer" class="rounded" style="display: none;">
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
@@ -255,7 +310,7 @@ if (isset($_COOKIE['webinterface']['debug']))
 			<div class="spacer"></div>
 
 			<div id="pageWrap">
-				<div id="loginBox" class="rounded">
+				<div id="loginBox" class="rounded" style="display: none;">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
 							<td style="width: 376px; text-align: center; vertical-align: top;">

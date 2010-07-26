@@ -239,6 +239,8 @@ function toggleContent(container) {
 Event.observe(window, 'load', function() {
 	refresh_body_size();
 
+	$('loginBox').hide();
+
 	$('lockWrap').hide();
 	$('lockWrap').style.width = my_width+'px';
 	$('lockWrap').style.height = my_height+'px';
@@ -257,7 +259,103 @@ Event.observe(window, 'load', function() {
 		if ($('infoWrap').visible())
 			hideInfo();
 	});
+
+	testJava();
+
+	setTimeout(function() {
+		new Effect.Appear($('loginBox'));
+	}, 1000);
 });
+
+function showSystemTest() {
+	showLock();
+
+	new Effect.Center($('systemTestWrap'));
+
+	new Effect.Appear($('systemTestWrap'));
+}
+
+function hideSystemTest() {
+	$('systemTestWrap').hide();
+
+	hideLock();
+}
+
+function showSystemTestError(error_id_) {
+	hideError();
+
+	hideOk();
+	hideInfo();
+
+	hideSystemTest();
+
+	showLock();
+
+	$(error_id_).show();
+
+	new Effect.Center($('systemTestErrorWrap'));
+
+	new Effect.Appear($('systemTestErrorWrap'));
+}
+
+function testJava() {
+	showSystemTest();
+
+	setTimeout(function() {
+		try {
+			$('CheckJava').isActive();
+		} catch(e) {
+			showSystemTestError('systemTestError1');
+			return;
+		}
+
+		$('testJava').innerHTML = '<applet id="ulteoapplet" code="org.ulteo.ovd.applet.CheckJava" codebase="applet/" archive="ulteo-applet.jar" cache_archive="ulteo-applet.jar" cache_archive_ex="ulteo-applet.jar;preload" mayscript="true" width="1" height="1"> \
+			<param name="code" value="org.ulteo.ovd.applet.CheckJava" /> \
+			<param name="codebase" value="applet/" /> \
+			<param name="archive" value="ulteo-applet.jar" /> \
+			<param name="cache_archive" value="ulteo-applet.jar" /> \
+			<param name="cache_archive_ex" value="ulteo-applet.jar;preload" /> \
+			<param name="mayscript" value="true" /> \
+			\
+			<param name="onSuccess" value="appletSuccess" /> \
+			<param name="onFailure" value="appletFailure" /> \
+			</applet>';
+		testUlteoApplet();
+	}, 2000);
+}
+
+var ulteo_applet_inited;
+function appletSuccess() {
+	ulteo_applet_inited = true;
+}
+function appletFailure() {
+	ulteo_applet_inited = false;
+}
+
+var ti = 0;
+function testUlteoApplet() {
+	try {
+		if (ulteo_applet_inited == true) {
+			hideSystemTest();
+			return;
+		} else if (ulteo_applet_inited == false) {
+			showSystemTestError('systemTestError2');
+			return;
+		}
+
+		go_to_the_catch_please(); //call a function which does not exist to throw an exception and go to the catch()
+	} catch(e) {
+		ti += 1;
+		setTimeout(function() {
+			if (ti < 60) {
+				testUlteoApplet();
+			} else {
+				showSystemTestError('systemTestError2');
+				return;
+			}
+		}, 1000);
+	}
+}
 
 function showLock() {
 	refresh_body_size();
