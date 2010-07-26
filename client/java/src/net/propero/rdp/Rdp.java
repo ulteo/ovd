@@ -394,7 +394,7 @@ public class Rdp {
      * Process a bitmap capability set
      * @param data Packet containing capability set data at current read position
      */
-    protected void processVirtualChannelCaps(RdpPacket_Localised data) {
+    protected void processVirtualChannelCaps(RdpPacket_Localised data, int capsLength) {
     }
 
     /**
@@ -431,7 +431,7 @@ public class Rdp {
                 processBitmapCaps(data);
                 break;
             case RDP_CAPSET_VIRTUALCHANNEL:
-                processVirtualChannelCaps(data);
+                processVirtualChannelCaps(data, capset_length - 4);
                 break;
             }
 

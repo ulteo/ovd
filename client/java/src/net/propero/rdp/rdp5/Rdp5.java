@@ -149,15 +149,16 @@ public class Rdp5 extends Rdp {
     }
 
 	@Override
-    protected void processVirtualChannelCaps(RdpPacket_Localised data) {
+    protected void processVirtualChannelCaps(RdpPacket_Localised data, int capsLength) {
 	int flags;
-	int chunkSize;
 
 	flags = data.getLittleEndian32();
-	chunkSize = data.getLittleEndian32();
+	if (capsLength == 8)
+	{
+		this.opt.VCChunkMaxSize = data.getLittleEndian32();
+	}
 
 	this.opt.VCCompressionIsSupported = ((flags & VChannels.VCCAPS_COMPR_CS_8K) != 0);
-	this.opt.VCChunkMaxSize = chunkSize;
 
 	logger.debug("processVirtualChannelCaps: VChannel compression is "+(this.opt.VCCompressionIsSupported ? "" : "not ")+"supported");
 	logger.debug("processVirtualChannelCaps: Chunk maximum size: "+this.opt.VCChunkMaxSize);
