@@ -24,24 +24,40 @@ import java.applet.Applet;
 import netscape.javascript.JSObject;
 
 public class CheckJava extends Applet {
-	private String jsFunction = null;
+	private String jsCallBack_onSuccess = null;
+	private String jsCallBack_onFailure = null;
+	private boolean hasCallbacks = false;
 
 	@Override
 	public void init() {
-		this.jsFunction = this.getParameter("jsFunction");
+		this.jsCallBack_onSuccess = this.getParameter("onSuccess");
+		this.jsCallBack_onFailure = this.getParameter("onFailure");
+
+		if (this.jsCallBack_onSuccess != null && this.jsCallBack_onSuccess.length() >0 &&
+			this.jsCallBack_onFailure != null && this.jsCallBack_onFailure.length() >0)
+			this.hasCallbacks = true;
 	}
 
 	@Override
 	public void start() {
-		if (this.jsFunction != null) {
+		if (this.hasCallbacks) {
+			String callback = this.jsCallBack_onFailure;
+
+			try {
+				System.getProperty("user.home");
+				callback = this.jsCallBack_onSuccess;
+			} catch(java.security.AccessControlException e) {
+				System.err.println("AccessControl issue");
+			}
+			
 			try {
 				JSObject win = JSObject.getWindow(this);
 				Object[] args = new Object[0];
 				
-				win.call(this.jsFunction, args);
+				win.call(callback, args);
 			}
 			catch (netscape.javascript.JSException e) {
-				System.err.println(this.getClass()+" error while execute javascript function '"+this.jsFunction+"' =>"+e.getMessage());
+				System.err.println(this.getClass()+" error while execute javascript function '"+callback+"' =>"+e.getMessage());
 			}
 		}
 	}
