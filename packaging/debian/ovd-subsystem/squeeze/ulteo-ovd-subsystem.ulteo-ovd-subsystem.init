@@ -23,9 +23,11 @@ do_start() {
 
     chroot $CHROOT /etc/init.d/cups start
     chroot $CHROOT /etc/init.d/xrdp start
+    chroot $CHROOT /etc/init.d/ovdSlaveServer start
 }
 
 do_stop() {
+    chroot $CHROOT /etc/init.d/ovdSlaveServer stop
     chroot $CHROOT /etc/init.d/xrdp stop
     chroot $CHROOT /etc/init.d/cups stop
 
