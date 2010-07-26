@@ -110,6 +110,8 @@ public class Rdp {
     private static final int RDP_POINTER_COLOR = 6;
 
     private static final int RDP_POINTER_CACHED = 7;
+    
+    private static final int RDP_POINTER_NEW = 8;
 
     // System Pointer Types
     private static final int RDP_NULL_POINTER = 0;
@@ -163,6 +165,8 @@ public class Rdp {
     private static final int RDP_CAPSET_POINTER = 8;
 
     private static final int RDP_CAPLEN_POINTER = 0x08;
+    
+    private static final int RDP_CAPLEN_NEWPOINTER = 0x0a;
 
     private static final int RDP_CAPSET_SHARE = 9;
 
@@ -1075,12 +1079,19 @@ public class Rdp {
     private void sendConfirmActive() throws RdesktopException, IOException,
             CryptoException {
         int caplen = RDP_CAPLEN_GENERAL + RDP_CAPLEN_BITMAP + RDP_CAPLEN_ORDER
-                + RDP_CAPLEN_BMPCACHE + RDP_CAPLEN_COLCACHE
-                + RDP_CAPLEN_ACTIVATE + RDP_CAPLEN_CONTROL + RDP_CAPLEN_POINTER
+                + RDP_CAPLEN_COLCACHE + RDP_CAPLEN_ACTIVATE + RDP_CAPLEN_CONTROL
                 + RDP_CAPLEN_SHARE + RDP_CAPLEN_VIRTUALCHANNEL + RDP_CAPLEN_UNKNOWN + 4; // this is a fix
                                                                 // for W2k.
                                                                 // Purpose
                                                                 // unknown
+        if (this.opt.use_rdp5) {
+    		caplen += RDP_CAPLEN_BMPCACHE2;
+    		caplen += RDP_CAPLEN_NEWPOINTER;
+    	}
+    	else {
+    		caplen += RDP_CAPLEN_BMPCACHE;
+    		caplen += RDP_CAPLEN_POINTER;
+    	}
 
         int sec_flags = this.opt.encryption ? (RDP5_FLAG | Secure.SEC_ENCRYPT)
                 : RDP5_FLAG;
@@ -1111,15 +1122,18 @@ public class Rdp {
         this.sendBitmapCaps(data);
         this.sendOrderCaps(data);
 
-        if (this.opt.use_rdp5)
-	    this.sendBitmapcache2Caps(data);
-        else
+        if (this.opt.use_rdp5) {
+        	this.sendBitmapcache2Caps(data);
+        	this.sendNewPointerCaps(data);
+        }
+        else { 
             this.sendBitmapcacheCaps(data);
+            this.sendPointerCaps(data);
+        }
 
         this.sendColorcacheCaps(data);
         this.sendActivateCaps(data);
         this.sendControlCaps(data);
-        this.sendPointerCaps(data);
         this.sendShareCaps(data);
 
 	if (this.opt.use_rdp5) {
@@ -1319,6 +1333,17 @@ public class Rdp {
         data.setLittleEndian16(0); /* Colour pointer */
         data.setLittleEndian16(20); /* Cache size */
     }
+
+    private void sendNewPointerCaps(RdpPacket_Localised data) {
+
+    	data.setLittleEndian16(RDP_CAPSET_POINTER);
+    	data.setLittleEndian16(RDP_CAPLEN_NEWPOINTER);
+    
+    	data.setLittleEndian16(1);	/* Colour pointer */
+    	data.setLittleEndian16(20);	/* Cache size */
+    	data.setLittleEndian16(20);	/* Cache size for new pointers */
+    }
+
 
     private void sendShareCaps(RdpPacket_Localised data) {
 
@@ -1522,6 +1547,10 @@ public class Rdp {
             process_system_pointer_pdu(data);
             break;
 
+        case RDP_POINTER_NEW:
+            process_new_pointer_pdu(data);
+            break;
+
         default:
             break;
         }
@@ -1701,10 +1730,18 @@ public class Rdp {
         // like the X window system base cursor or something.
         surface.setCursor(cache.getCursor(0));
     }
-
-    protected void process_colour_pointer_pdu(RdpPacket_Localised data)
+ 
+    protected void process_cached_pointer_pdu(RdpPacket_Localised data)
             throws RdesktopException {
-        logger.debug("Rdp.RDP_POINTER_COLOR");
+        logger.debug("Rdp.RDP_POINTER_CACHED");
+        int cache_idx = data.getLittleEndian16();
+        // logger.info("Setting cursor "+cache_idx);
+        surface.setCursor(cache.getCursor(cache_idx));
+    }
+    
+    /* Process a colour pointer PDU */
+    protected void process_colour_pointer_common(RdpPacket_Localised data, int bpp)
+    		throws RdesktopException {
         int x = 0, y = 0, width = 0, height = 0, cache_idx = 0, masklen = 0, datalen = 0;
         byte[] mask = null, pixel = null;
         Cursor cursor = null;
@@ -1722,18 +1759,34 @@ public class Rdp {
         data.incrementPosition(datalen);
         data.copyToByteArray(mask, 0, data.getPosition(), masklen);
         data.incrementPosition(masklen);
+        if ((width != 32) || (height != 32)) {
+        	logger.warn("process_colour_pointer_common: " +
+        			"width "+width+" height "+height);
+        }
+        /* sometimes x or y is out of bounds */
+        x = Math.max(x, 0);
+        x = Math.min(x, width - 1);
+        y = Math.max(y, 0);
+        y = Math.min(y, height - 1);
+
         cursor = surface.createCursor(x, y, width, height, mask, pixel,
-                cache_idx);
+                cache_idx, bpp);
         // logger.info("Creating and setting cursor " + cache_idx);
         surface.setCursor(cursor);
         cache.putCursor(cache_idx, cursor);
     }
-
-    protected void process_cached_pointer_pdu(RdpPacket_Localised data)
-            throws RdesktopException {
-        logger.debug("Rdp.RDP_POINTER_CACHED");
-        int cache_idx = data.getLittleEndian16();
-        // logger.info("Setting cursor "+cache_idx);
-        surface.setCursor(cache.getCursor(cache_idx));
+    
+    
+    protected void process_colour_pointer_pdu(RdpPacket_Localised data)
+    		throws RdesktopException {
+    	process_colour_pointer_common(data, 24);
     }
+
+    protected void process_new_pointer_pdu(RdpPacket_Localised data)
+    		throws RdesktopException {
+    	logger.debug("Rdp.RDP_POINTER_NEW");
+    	int xor_bpp = data.getLittleEndian16();
+    	process_colour_pointer_common(data, xor_bpp);
+    }
+    
 }

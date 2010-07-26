@@ -125,6 +125,9 @@ public class Rdp5 extends Rdp {
             case 10:
                 process_cached_pointer_pdu(ts);
                 break;
+            case 11:
+                process_new_pointer_pdu(ts);
+                break;                
             default:
                 logger.warn("Unimplemented RDP5 opcode " + type);
             }

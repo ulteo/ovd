@@ -1180,6 +1180,74 @@ public abstract class RdesktopCanvas extends Canvas {
     }
 
     /**
+     * get next cursor pixel from xor mask 
+     * @param xormask
+     * @param pxormask
+     * @param bpp
+     * @param k
+     * @return pixel
+     */
+    private int get_next_xor_pixel(byte[] xormask, int pxormask, int bpp, int[] k)
+    {
+    	int rv = 0;
+    	int color = 0;
+    	int red = 0;
+    	int green = 0;
+    	int blue = 0;
+
+    	switch (bpp) {
+    		case 1:
+    			rv = xormask[pxormask+k[0]/8] & (0x80 >> (k[0] % 8));
+    			rv = rv != 0 ? 0xffffff : 0;
+    			k[0] += 1;
+    			break;
+    		case 8:
+    			rv = xormask[pxormask + k[0]];
+    			rv = rv != 0 ? 0xffffff : 0;
+    			k[0] += 1;
+    			break;
+    		case 15:
+    			color = xormask[pxormask + k[0]];
+    			red = ((color >> 7) & 0xf8) | ((color >> 12) & 0x7); 
+    			green = ((color >> 2) & 0xf8) | ((color >> 8) & 0x7);
+    			blue = ((color << 3) & 0xf8) | ((color >> 2) & 0x7);
+    			
+    			rv = ((red << 16) & 0x00ff0000) | 
+    			     ((green << 8) & 0x0000ff00) | 
+    			     blue & 0x000000ff;
+    			k[0] += 1;
+    			break;
+    		case 16:
+    			color = xormask[pxormask + k[0]];
+    			red = ((color >> 7) & 0xf8) | ((color >> 12) & 0x7); 
+    			green = ((color >> 2) & 0xfc) | ((color >> 8) & 0x3);
+    			blue = ((color << 3) & 0xf8) | ((color >> 2) & 0x7);
+    			
+    			rv = ((red << 16) & 0x00ff0000) | 
+    			     ((green << 8) & 0x0000ff00) | 
+    			     blue & 0x000000ff;
+    			k[0] += 1;
+    			break;
+    		case 24:
+                rv = ((xormask[pxormask + k[0] + 2] << 16) & 0x00ff0000) |
+                     ((xormask[pxormask + k[0] + 1] << 8) & 0x0000ff00) |
+                      (xormask[pxormask + k[0]] & 0x000000ff);
+    			k[0] += 3;
+    			break;
+    		case 32:
+    			rv = (xormask[pxormask + k[0]+1] << 16) | 
+    			     (xormask[pxormask + k[0] + 2] << 8) | 
+    			     xormask[pxormask + k[0] + 3];
+    			k[0] += 4;
+    			break;
+    		default:
+    			logger.warn("unknown bpp in get_next_xor_pixel " + bpp);
+    			break;
+    	}
+    	return rv;
+    }
+
+    /**
      * Create an AWT Cursor object
      * @param x
      * @param y
@@ -1191,58 +1259,53 @@ public abstract class RdesktopCanvas extends Canvas {
      * @return Created Cursor
      */
     public Cursor createCursor(int x, int y, int w, int h, byte[] andmask,
-            byte[] xormask, int cache_idx) {
+            byte[] xormask, int cache_idx, int bpp) {
         int pxormask = 0;
         int pandmask = 0;
-        Point p = new Point(x, y);
+        Point p = new Point(x, y);        
         int size = w * h;
-        int scanline = w / 8;
         int offset = 0;
         byte[] mask = new byte[size];
         int[] cursor = new int[size];
-        int pcursor = 0, pmask = 0;
-
+        int pcursor = 0;
+        int pmask = 0;
+        int k[] = new int[1];
+        k[0] = 0;
+        int pmask2;
         offset = size;
-
-        for (int i = 0; i < h; i++) {
-            offset -= w;
-            pmask = offset;
-            for (int j = 0; j < scanline; j++) {
-                for (int bit = 0x80; bit > 0; bit >>= 1) {
-                    if ((andmask[pandmask] & bit) != 0) {
-                        mask[pmask] = 0;
-                    } else {
-                        mask[pmask] = 1;
-                    }
-                    pmask++;
-                }
-                pandmask++;
-            }
+        int delta = 0;
+        
+        if (bpp == 1) {
+        	offset = 0;
+        	delta = w;
+        }
+        else {
+        	offset = w*h - w;
+        	delta = -w;
         }
 
-        offset = size;
-        pcursor = 0;
 
         for (int i = 0; i < h; i++) {
-            offset -= w;
+            pmask = offset;
+            pmask2 = offset;
             pcursor = offset;
             for (int j = 0; j < w; j++) {
-                cursor[pcursor] = ((xormask[pxormask + 2] << 16) & 0x00ff0000)
-                        | ((xormask[pxormask + 1] << 8) & 0x0000ff00)
-                        | (xormask[pxormask] & 0x000000ff);
-                pxormask += 3;
-                pcursor++;
-            }
+                if (j%8 == 0)
+                {
+	                for (int bit = 0x80; bit > 0; bit >>= 1) {
+	                    if ((andmask[pandmask] & bit) != 0) {
+	                        mask[pmask2] = 0;
+	                    } else {
+	                        mask[pmask2] = 1;
+	                    }
+	                    pmask2++;
+	                }
+	                pandmask++;
 
-        }
+                }
 
-        offset = size;
-        pmask = 0;
-        pcursor = 0;
-        pxormask = 0;
-
-        for (int i = 0; i < h; i++) {
-            for (int j = 0; j < w; j++) {
+                cursor[pcursor] = get_next_xor_pixel(xormask, pxormask, bpp, k);
+                
                 if ((mask[pmask] == 0) && (cursor[pcursor] != 0)) {
                     cursor[pcursor] = ~(cursor[pcursor]);
                     cursor[pcursor] |= 0xff000000;
@@ -1252,6 +1315,7 @@ public abstract class RdesktopCanvas extends Canvas {
                 pcursor++;
                 pmask++;
             }
+            offset += delta;
         }
 
         Image wincursor = this.createImage(new MemoryImageSource(w, h, cursor,
