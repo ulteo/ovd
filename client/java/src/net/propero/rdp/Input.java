@@ -51,6 +51,11 @@ public abstract class Input {
 	protected static final int KBD_FLAG_DOWN = 0x4000;
 	protected static final int KBD_FLAG_UP = 0x8000;
 
+	protected static int SCANCODE_EXTENDED = 0x80;
+
+	protected static final int KBD_ALT_KEY = 0x38;
+	protected static final int KBD_ALTGR_KEY = SCANCODE_EXTENDED | KBD_ALT_KEY;
+	
 	protected static final int RDP_KEYPRESS = 0;
 	protected static final int RDP_KEYRELEASE = KBD_FLAG_DOWN | KBD_FLAG_UP;
 	protected static final int MOUSE_FLAG_MOVE = 0x0800;
@@ -257,7 +262,8 @@ public abstract class Input {
             //sendScancode(getTime(), RDP_KEYPRESS | KBD_FLAG_QUIET, 0x1d); // Ctrl
             //sendScancode(getTime(), RDP_KEYRELEASE | KBD_FLAG_QUIET, 0x1d); // ctrl
         }
-		
+		if (lastKeyEvent.isAltGraphDown())
+			sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altgr    
 	}
 
     /**
@@ -276,6 +282,8 @@ public abstract class Input {
 			sendScancode(getTime(), RDP_KEYPRESS, 0x38); // l.alt
 		if (lastKeyEvent.isControlDown())
 			sendScancode(getTime(), RDP_KEYPRESS, 0x1d); // l.ctrl
+		if (lastKeyEvent.isAltGraphDown())
+			sendScancode(getTime(), RDP_KEYPRESS, KBD_ALTGR_KEY); // altGr
 	}
 
 	class RdesktopKeyAdapter extends KeyAdapter {
@@ -360,6 +368,8 @@ public abstract class Input {
 					sendKeyPresses(newKeyMapper.getKeyStrokes(e));
 				// sendScancode(time, RDP_KEYRELEASE, keys.getScancode(e));
 			}
+			if (lastKeyEvent.isAltGraphDown())
+				sendScancode(getTime(), RDP_KEYRELEASE, KBD_ALTGR_KEY); // altgr    
 		}
 
 	}
