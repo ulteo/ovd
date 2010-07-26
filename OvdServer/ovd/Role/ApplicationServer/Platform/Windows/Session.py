@@ -52,7 +52,6 @@ class Session(AbstractSession):
 		data = {}
 		data["UserName"] = self.user.name
 		hkey = win32profile.LoadUserProfile(logon, data)
-		win32profile.UnloadUserProfile(logon, hkey)
 		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
 		
 		self.windowsProgramsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
@@ -73,6 +72,7 @@ class Session(AbstractSession):
 		self.appDataDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
 		Logger.debug("appdata: '%s'"%(self.appDataDir))
 		
+		win32profile.UnloadUserProfile(logon, hkey)
 		win32api.CloseHandle(logon)
 		
 		if self.profile is not None:
