@@ -101,7 +101,7 @@
 	  <screen><![CDATA[
 # mysql -u root -p
 Enter password:
-mysql> create database ulteo_sm;
+mysql> create database ovd;
  Query OK, 1 row affected (0.02 sec)
 mysql> exit]]>
           </screen>
