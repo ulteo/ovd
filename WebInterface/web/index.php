@@ -57,6 +57,36 @@ if (isset($_COOKIE['webinterface']['use_popup']))
 $wi_debug = 1;
 if (isset($_COOKIE['webinterface']['debug']))
 	$wi_debug = (int)$_COOKIE['webinterface']['debug'];
+
+function get_users_list() {
+	if (! defined('SESSIONMANAGER_URL'))
+		return false;
+
+	global $sessionmanager_url;
+
+	$ret = query_sm($sessionmanager_url.'/webservices/userlist.php');
+
+	$dom = new DomDocument('1.0', 'utf-8');
+	$buf = @$dom->loadXML($ret);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$users_node = $dom->getElementsByTagname('users')->item(0);
+	if (is_null($users_node))
+		return false;
+
+	$users = array();
+	foreach ($users_node->childNodes as $user_node) {
+		if ($user_node->hasAttribute('login'))
+			$users[$user_node->getAttribute('login')] = $user_node->getAttribute('displayname');
+	}
+	natsort($users);
+
+	return $users;
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -383,7 +413,25 @@ checkLogin();
 													<strong><?php echo _('Login'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
+													<?php
+														if (defined('SESSIONMANAGER_URL'))
+															$users = get_users_list();
+
+														if (! defined('SESSIONMANAGER_URL') || $users === false) {
+													?>
 													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
+													<?php
+														} else {
+													?>
+													<select id="user_login" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;">
+													<?php
+														foreach ($users as $login => $displayname)
+															echo '<option value="'.$login.'"'.(($login == $wi_user_login)?'selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
+													?>
+													</select>
+													<?php
+														}
+													?>
 												</td>
 											</tr>
 											<tr>
