@@ -21,7 +21,11 @@
 package org.ulteo.ovd.client.desktop;
 
 import java.awt.Dimension;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
@@ -32,7 +36,16 @@ import org.ulteo.ovd.client.I18n;
 
 public class DesktopFrame extends JFrame implements WindowListener {
 
-	private Image logo = null; 
+	private Image logo = null;
+	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+	private static GraphicsConfiguration gconf = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+	private static Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(gconf);
+	public static Dimension SMALL_RES = new Dimension(800,600);
+	public static Dimension MEDUIM_RES = new Dimension(1024,768);
+	public static Dimension HIGH_RES = new Dimension(1280,678);
+	public static Dimension MAXIMISED = new Dimension(screenWidth-insets.left-insets.right, screenHeight-insets.top-insets.bottom);
+	public static Dimension FULLSCREEN = new Dimension(screenWidth, screenHeight);
 	
 	public DesktopFrame(Dimension dim, boolean undecorated) {
 		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));

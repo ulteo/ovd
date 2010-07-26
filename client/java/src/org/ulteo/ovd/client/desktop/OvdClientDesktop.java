@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
-import org.ulteo.ovd.client.authInterface.OptionPanel;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -87,19 +86,19 @@ public class OvdClientDesktop extends OvdClient {
 	private void initDesktop(RdpConnectionOvd co) {
 		switch (this.resolution) {
 			case 0 :
-				this.desktop = new DesktopFrame(OptionPanel.SMALL_RES, false);
+				this.desktop = new DesktopFrame(DesktopFrame.SMALL_RES, false);
 				break;
 			case 1 :
-				this.desktop = new DesktopFrame(OptionPanel.MEDUIM_RES, false);
+				this.desktop = new DesktopFrame(DesktopFrame.MEDUIM_RES, false);
 				break;
 			case 2 :
-				this.desktop = new DesktopFrame(OptionPanel.HIGH_RES, false);
+				this.desktop = new DesktopFrame(DesktopFrame.HIGH_RES, false);
 				break;
 			case 3 :
-				this.desktop = new DesktopFrame(OptionPanel.MAXIMISED, false);
+				this.desktop = new DesktopFrame(DesktopFrame.MAXIMISED, false);
 				break;
 			case 4 :
-				this.desktop = new DesktopFrame(OptionPanel.FULLSCREEN, true);
+				this.desktop = new DesktopFrame(DesktopFrame.FULLSCREEN, true);
 				break;
 		}
 
