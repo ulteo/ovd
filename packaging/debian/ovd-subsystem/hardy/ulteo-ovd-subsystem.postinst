@@ -102,6 +102,8 @@ fi
 
 set_host_conf
 
+db_stop
+
 #DEBHELPER#
 
 exit 0
