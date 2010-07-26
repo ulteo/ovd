@@ -24,7 +24,7 @@
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
 
 !define BASENAME "${PRODUCT_NAME}"
-!define EXE_NAME "UlteoOVDClient.jar"
+!define EXE_NAME "OVDNativeClient.jar"
 !define SHORTCUT "${BASENAME}.lnk"
 
 !define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo\ovd-client"
