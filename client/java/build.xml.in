@@ -26,25 +26,24 @@
   <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
                                 required_libraries/gnu-getopt.jar"/>
 
+  <target name="clean" description="clean files">
+    <delete dir="classes"/>
+    <delete dir="jar"/>
+    <delete dir="libs"/>
+  </target>
+
   <target name="precompile">
+    <antcall target="clean" />
     <mkdir dir="classes"/>
     <mkdir dir="libs"/>
     <mkdir dir="dist"/>
-    <delete dir="jar"/>
     <mkdir dir="jar/ressources/keymaps"/>
     <copy todir="jar/ressources/keymaps">
       <fileset dir="keymaps"/>
     </copy>
   </target>
 
-  <target name="clean" description="clean files">
-    <delete dir="classes"/>
-    <delete dir="libs"/>
-    <delete dir="jar"/>
-  </target>
-
   <target name="classes2jar" description="copy classes/** to jar/">
-    <mkdir dir="jar"/>
     <copy todir="jar/">
       <fileset dir="classes" />
     </copy>
@@ -53,8 +52,8 @@
 
   <!-- Rdesktop part -->
 
-  <target name="rdesktop" depends="clean,precompile"
-          description="compile the Java source code to class files">
+  <target name="rdesktop" description="compile all RDesktop class">
+    <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5" includes="net/propero/rdp/Rdesktop.java" >
       <classpath refid="minimal.path" />
@@ -80,7 +79,8 @@
 
   <!-- RDP Client part -->
 
-  <target name="rdpClient" depends="clean,precompile">
+  <target name="rdpClient">
+    <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/rdp/RdpClient.java">
       <classpath refid="minimal.path" />
@@ -106,17 +106,12 @@
 
   <!-- PDFPrinter part -->
 
- <target name="precompile_printing" depends="precompile">
-   <mkdir dir="jar/org/jpedal/res"/>
+ <target name="PDFPrinter" description="compile all PDFPrinter class">
+   <antcall target="precompile" />
    <copy todir="jar/org/jpedal/res">
      <fileset dir="src/org/jpedal/res"/>
    </copy>
- </target>
-
- <target name="PDFPrinter" depends="clean,precompile_printing"
-         description="compile the Java source code to class files">
-   <javac srcdir="src" destdir="classes" encoding="UTF8"
-          target="1.5" source="1.5"
+   <javac srcdir="src" destdir="classes" encoding="UTF8" target="1.5" source="1.5"
           includes="org/ulteo/ovd/printer/PrinterApplet.java">
      <classpath>
        <pathelement location="required_libraries/jai_codec.jar"/>
@@ -126,8 +121,7 @@
    </javac>
  </target>
 
- <target name="PDFPrinter.jar" depends="PDFPrinter"
-         description="create jar file">
+ <target name="PDFPrinter.jar" depends="PDFPrinter" description="create jar file">
    <antcall target="classes2jar" />
    <jar destfile="libs/PDFPrinter.jar" basedir="jar/">
      <include name="**"/>
@@ -142,10 +136,8 @@
             signedjar="libs/PDFPrinter-${compile.release}.jar"/>
  </target>
 
- <target name="PDFPrinter.install"
-         description="install applets"
+ <target name="PDFPrinter.install" description="install applets"
          depends="PDFPrinter.jar">
-   <mkdir dir="${applets.dir}"/>
    <copy todir="${applets.dir}">
      <fileset dir="libs">
        <include name="PDFPrinter-${compile.release}.jar" />
@@ -158,7 +150,8 @@
 
   <!-- Ovd External Apps Client -->
 
-   <target name="ovdExternalAppsClient" depends="clean, precompile">
+   <target name="ovdExternalAppsClient">
+   <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
 	   target="1.5" source="1.5"
 	   includes="org/ulteo/ovd/client/StartTokenAuth.java">
@@ -195,7 +188,8 @@
 
   <!-- OVD native client part -->
 
-  <target name="ovdNativeClient" depends="clean, precompile">
+  <target name="ovdNativeClient">
+    <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/StartConnection.java">
@@ -271,7 +265,8 @@
 
   <!-- Applet part -->
 
-  <target name="applet" description="sign applets"  depends="clean,precompile" >
+  <target name="applet">
+    <antcall target="precompile" />
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/ovd/applet/**.java" >
       <classpath>
@@ -281,13 +276,12 @@
     </javac>
   </target>
 
-  <target name="applet.jar" description="sign applets"  depends="applet" >
+  <target name="applet.jar" description="sign jar applets" depends="applet" >
     <antcall target="classes2jar" />
-    <jar destfile="libs/ulteo-applet-${compile.release}.jar"  basedir="jar/">
+    <jar destfile="libs/ulteo-applet-${compile.release}.jar" basedir="jar/">
       <include name="**" />
     </jar>
-    <jar destfile="libs/CheckJava-${compile.release}.jar"
-         basedir="classes/">
+    <jar destfile="libs/CheckJava-${compile.release}.jar" basedir="classes/">
       <include name="org/ulteo/ovd/applet/CheckJava.class"/>
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
@@ -300,8 +294,7 @@
     </signjar>
   </target>
 
-  <target name="applet.install"
-          description="install applets"
+  <target name="applet.install" description="install applets"
           depends="PDFPrinter.install, applet.jar">
     <copy todir="${applets.dir}">
       <filelist dir="libs" files="gnu-getopt.jar log4j-1.2.jar
@@ -316,7 +309,8 @@
 
   <!-- VDI part -->
 
-  <target name="vdi" depends="precompile" >
+  <target name="vdi">
+    <antcall target="precompile" />
     <javac srcdir="src:src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
       <classpath refid="minimal.path" />
