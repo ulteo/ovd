@@ -50,6 +50,7 @@ DriverVer=17/05/2008,1.0.0.0
 [INSTALL_ULTEOPS]
 CopyFiles=@ULTEO.PPD
 CopyFiles=@ULTEOPS.INI
+CopyFiles=@GSDLL32.DLL
 CopyFiles=ULTEOPS
 DataFile=ULTEO.PPD
 DataSection=PSCRIPT_DATA
@@ -88,18 +89,12 @@ ULTEOPS.DLL
 [SourceDisksNames]
 100 = %ULTEOSOURCES%
 
-[SourceDisksFiles.x86]
-ulteops.dll      = 100,\x86
-
-[SourceDisksFiles.amd64]
-ulteops.dll      = 100,\amd64
-
-[SourceDisksFiles.ia64]
-ulteops.dll      = 100,\ia64
 
 [SourceDisksFiles]
 ULTEOPS.INI   = 100
 ULTEO.PPD     = 100
+ULTEOPS.DLL   = 100
+GSDLL32.DLL   = 100
 
 ;
 ; Call SetupSetDirectoryId with 66000 to set the target directory at runtime
