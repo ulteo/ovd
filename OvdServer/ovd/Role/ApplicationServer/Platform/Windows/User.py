@@ -3,6 +3,7 @@
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -19,6 +20,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import ntsecuritycon
+import sys
 import win32api
 import win32con
 import win32net
@@ -81,7 +83,14 @@ class User(AbstractUser):
 		
 		
 		if self.infos.has_key("shell"):
-			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, self.infos["shell"])
+			shell = self.infos["shell"]
+			osVersion = 5
+			if getattr(sys, "getwindowsversion", None) is not None:
+				 osVersion = sys.getwindowsversion()[0]
+			if osVersion > 5:
+				shell = "start %s"%(self.infos["shell"])
+
+			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
 	
 	
