@@ -54,14 +54,14 @@ class Session(AbstractSession):
 		hkey = win32profile.LoadUserProfile(logon, data)
 		self.windowsProfileDir = win32profile.GetUserProfileDirectory(logon)
 		
-		self.windowsProgramsDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_PROGRAMS)
+		self.windowsProgramsDir = shell.SHGetFolderPath(0, shellcon.CSIDL_PROGRAMS, logon, 0)
 		Logger.debug("startmenu: %s"%(self.windowsProgramsDir))
 		# remove default startmenu
 		if os.path.exists(self.windowsProgramsDir):
 			Platform.System.DeleteDirectory(self.windowsProgramsDir)
 		os.makedirs(self.windowsProgramsDir)
 		
-		self.windowsDesktopDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_DESKTOPDIRECTORY)
+		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, logon, 0)
 		desktopDir = os.path.join(self.windowsProfileDir, "Desktop")
 		if self.windowsDesktopDir != desktopDir:
 			# bug: this return the Administrator desktop dir path ...
@@ -69,7 +69,7 @@ class Session(AbstractSession):
 			self.windowsDesktopDir = desktopDir
 		
 		
-		self.appDataDir = shell.SHGetSpecialFolderPath(logon, shellcon.CSIDL_APPDATA)
+		self.appDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, logon, 0)
 		Logger.debug("appdata: '%s'"%(self.appDataDir))
 		
 		win32profile.UnloadUserProfile(logon, hkey)

@@ -47,7 +47,7 @@ class ApplicationsDetection:
 		pythoncom.CoInitialize()
 
 		try:
-			self.path = str(shell.SHGetSpecialFolderPath(None, shellcon.CSIDL_COMMON_STARTMENU))
+			self.path = str(shell.SHGetFolderPath(None, shellcon.CSIDL_COMMON_STARTMENU, 0, 0))
 		except:
 			Logger.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
 			self.path = os.path.join('c:\\', 'Documents and Settings', 'All Users', 'Start Menu')
