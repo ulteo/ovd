@@ -127,7 +127,7 @@ if (isset($_POST['join'])) {
 				echo '<tr><td>';
 				echo '<img src="media/image/cache.php?id='.$myapp->getAttribute('id').'" alt="" title="" /> <a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
 				echo '</td><td>';
-				if ($session->getAttribute('mode') == Session::MODE_APPLICATIONS && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
+				/*if ($session->getAttribute('mode') == Session::MODE_APPLICATIONS && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
 					echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 					echo '	<input type="hidden" id="desktop_size" value="auto" />';
 					echo '	<input type="hidden" id="session_debug_true" value="0" />';
@@ -136,7 +136,7 @@ if (isset($_POST['join'])) {
 					echo '	<input type="submit" name="passive" value="'._('Observe this application').'" />';
 					echo '	<input type="submit" name="active" value="'._('Join this application').'" />';
 					echo '</form>';
-				}
+				}*/
 				echo '</td></tr>';
 			}
 			echo '</table>';
@@ -144,7 +144,7 @@ if (isset($_POST['join'])) {
 		}
 	}
 
-	if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
+	/*if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
 		echo '<h2>'._('Connect to or observe this session').'</h2>';
 		echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
 		echo '	<input type="hidden" id="desktop_size" value="auto" />';
@@ -154,7 +154,7 @@ if (isset($_POST['join'])) {
 		echo '	<input type="submit" name="passive" value="'._('Observe this session').'" />';
 		echo '	<input type="submit" name="active" value="'._('Join this session').'" />';
 		echo '</form>';
-	}
+	}*/
 
 	echo '<h2>'._('Kill this session').'</h2>';
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';
