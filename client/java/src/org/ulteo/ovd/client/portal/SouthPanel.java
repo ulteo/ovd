@@ -36,5 +36,6 @@ public class SouthPanel extends JPanel {
 	public void initButtonPan(RdpActions rdpActions, CurrentApps currentAppsPanel) {
 		buttonPan = new SouthEastPanel(rdpActions, currentAppsPanel);
 		this.add(BorderLayout.EAST,buttonPan);
+		this.revalidate();
 	}
 }
