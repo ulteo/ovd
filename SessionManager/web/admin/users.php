@@ -177,7 +177,7 @@ function show_default($userDB) {
     
     echo '<table border="0" cellspacing="1" cellpadding="3">';
     echo '<tr>';
-    echo '<td>'._('Override existings: ').'</td>';
+    echo '<td>'._('Overwrite existent: ').'</td>';
     echo '<td><select name="override">';
     echo '<option value="1">'._('Yes').'</option>';
     echo '<option value="0" selected="selected">'._('No').'</option>';
