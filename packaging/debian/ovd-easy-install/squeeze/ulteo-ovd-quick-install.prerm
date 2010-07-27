@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+case "$1" in
+
+  remove)
+    exit 0
+  ;;
+
+  *)
+    exit 0
+  ;;
+
+esac
+
+#DEBHELPER#
