@@ -359,10 +359,10 @@ public class SessionManagerCommunication {
 		this.multimedia = ovd_node.getAttribute("multimedia");
 		this.printers = ovd_node.getAttribute("redirect_client_printers");
 		if (!this.sessionMode.equalsIgnoreCase(this.requestMode)) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager do not authorize " + this.requestMode + " session mode.");
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager does not authorize " + this.requestMode + " session mode.");
 			if (graphic) {
 				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, I18n._("The session manager do not authorize " + this.requestMode), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("The session manager does not authorize " + this.requestMode), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 			}
 			return false;
 		}
