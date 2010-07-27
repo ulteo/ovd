@@ -21,8 +21,6 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
-include_once(dirname(__FILE__).'/check.php');
-
 define('INTERNAL_ERROR', 'internal_error');
 define('INVALID_USER', 'invalid_user');
 define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');

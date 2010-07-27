@@ -8,8 +8,7 @@ SUBDIRS = admin \
           plugins \
           webservices
 
-scripts_DATA = check.php \
-               startsession.php \
+scripts_DATA = startsession.php \
                webdav.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager
