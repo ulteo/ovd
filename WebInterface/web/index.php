@@ -349,6 +349,7 @@ function get_users_list() {
 							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
 									<script type="text/javascript">Event.observe(window, 'load', function() {
+										setTimeout(function() {
 <?php
 if (! defined('SESSIONMANAGER_URL') && (! isset($wi_sessionmanager_url) || $wi_sessionmanager_url == ''))
 	echo '$(\'sessionmanager_url\').focus();';
@@ -359,6 +360,7 @@ else
 ?>
 
 checkLogin();
+										}, 1000);
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px; margin-bottom: 25px; " border="0" cellspacing="0" cellpadding="5">
