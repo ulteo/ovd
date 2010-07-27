@@ -289,8 +289,8 @@ public class SessionManagerCommunication {
 							if (value.equalsIgnoreCase(cookie))
 								cookieIsPresent = true;
 						}
-					/*	if (! cookieIsPresent)
-							this.cookies.add(cookie);*/
+						if (! cookieIsPresent)
+							this.cookies.add(cookie);
 					}
 				}
 				InputStream in = connexion.getInputStream();
