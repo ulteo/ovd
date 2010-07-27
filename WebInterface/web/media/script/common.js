@@ -313,7 +313,7 @@ function testJava() {
 		applet_params.set('onSuccess', 'appletSuccess');
 		applet_params.set('onFailure', 'appletFailure');
 
-		var applet = buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.CheckJava', 'ulteo-applet.jar', applet_params);
+		var applet = buildAppletNode('CheckSignedJava', 'org.ulteo.ovd.applet.CheckJava', 'ulteo-applet.jar', applet_params);
 		$('testJava').appendChild(applet);
 
 		testUlteoApplet();
