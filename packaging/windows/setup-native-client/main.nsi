@@ -17,17 +17,19 @@
 ;; along with this program; if not, write to the Free Software
 ;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-!define PRODUCT_NAME "Open Virtual Desktop Client"
+!define PRODUCT_NAME "OVD Native Client"
 !define PRODUCT_LONGVERSION "${PRODUCT_VERSION}.0.0"
 !define PRODUCT_PUBLISHER "Ulteo"
 !define PRODUCT_WEB_SITE "http://www.ulteo.com"
 !define PRODUCT_FULL_NAME "${PRODUCT_PUBLISHER} ${PRODUCT_NAME}"
 
-!define BASENAME "${PRODUCT_NAME}"
+!define BASENAME "${PRODUCT_FULL_NAME}"
 !define EXE_NAME "OVDNativeClient.jar"
-!define SHORTCUT "${BASENAME}.lnk"
+!define SHORTCUT "${PRODUCT_NAME}.lnk"
+!define SHORTCUT_ICON "ulteo.ico"
+!define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
 
-!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo\ovd-client"
+!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo\ovd-native-client"
 
 ;Include Modern UI
   !include "MUI.nsh"
@@ -37,8 +39,8 @@
   !define MUI_HEADERIMAGE_UNBITMAP  "media\header.bmp"
   !define MUI_WELCOMEFINISHPAGE_BITMAP "media\startlogo.bmp"
   !define MUI_UNWELCOMEFINISHPAGE_BITMAP "media\startlogo.bmp"
-  !define MUI_ICON "media\ulteo.ico"
-  !define MUI_UNICON "media\ulteo.ico"
+  !define MUI_ICON "media\ulteo-package.ico"
+  !define MUI_UNICON ${MUI_ICON}
 
   !define MUI_ABORTWARNING
   !define MUI_UNABORTWARNING
@@ -46,7 +48,7 @@
 ;General
 
   ;Name and file
-  Name "${PRODUCT_NAME}"
+  Name "${PRODUCT_FULL_NAME}"
   OutFile "${OUT_DIR}\${SETUP_NAME}.exe"
 
   BrandingText "Copyright Ulteo"
@@ -75,7 +77,12 @@
   !define MUI_LICENSEPAGE_RADIOBUTTONS
   !define MUI_FINISHPAGE_LINK "Visit our web site"
   !define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
-
+  !define MUI_FINISHPAGE_TEXT "${PRODUCT_FULL_NAME} has been installed on your computer.\n\nClick Finish to close this wizard.\n\n\nWarning: please be sure that you have correctly installed Sun Java before using this software"
+  !define MUI_FINISHPAGE_TEXT_LARGE
+  !define MUI_FINISHPAGE_RUN "javaw"
+  !define MUI_FINISHPAGE_RUN_PARAMETERS "-jar $\"$INSTDIR/${EXE_NAME}$\""
+  !define MUI_FINISHPAGE_RUN_NOTCHECKED
+  
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "media/LICENCE.txt"
   !insertmacro MUI_PAGE_DIRECTORY
@@ -84,6 +91,7 @@
 
   ; Uninstaller Parameters and pages order
   !define MUI_WELCOMEPAGE_TITLE_3LINES
+  !define MUI_FINISHPAGE_TITLE_3LINES
   
   !insertmacro MUI_UNPAGE_WELCOME
   !insertmacro MUI_UNPAGE_CONFIRM
@@ -136,6 +144,16 @@ Section "Main Section" SecMain
 ;  SetOverwrite ifnewer
 SectionEnd
 
+Section "SecMedia" SecMedia
+  SetOutPath "$INSTDIR\"
+  SetOverwrite ifnewer
+
+  File "media\ulteo.ico"
+SectionEnd
+
+Section "un.SecMedia" SecUnMedia
+  Delete "$INSTDIR\ulteo.ico"
+SectionEnd
 
   !include dist.nsh
 
@@ -144,15 +162,16 @@ Section "Shortcut Section" SecShortcut
   CreateDirectory "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
   WriteIniStr "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
 
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${SHORTCUT}" "$INSTDIR\${EXE_NAME}"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${UNINSTALL_SHORTCUT}" "$INSTDIR\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${SHORTCUT}" "$INSTDIR\${EXE_NAME}" "" "$INSTDIR\ulteo.ico"
 SectionEnd
 
 Section "un.Shortcut Section" SecUnShortcut
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${UNINSTALL_SHORTCUT}"
   Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${SHORTCUT}"
-  RMDir  "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
+  
+  ;Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url"
+  ;RMDir  "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
 SectionEnd
 
 Section "Uninstall"
