@@ -142,6 +142,11 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 	private void quit(int i) {
 		this.quitProperly(i);
+		while (this.countAvailableConnection() > 0) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {}
+		}
 		System.exit(i);
 	}
 
@@ -186,10 +191,10 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 		this.uncustomizeConnection((RdpConnectionOvd) co);
 
+		this.hide(co);
+		
 		this.removeAvailableConnection((RdpConnectionOvd)co);
 		this.logger.info("Disconnected from "+co.getServer());
-
-		this.hide(co);
 
 		if (this.countAvailableConnection() == 0) {
 			if(graphic) {

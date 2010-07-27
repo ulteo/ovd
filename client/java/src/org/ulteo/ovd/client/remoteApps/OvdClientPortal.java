@@ -131,6 +131,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 
 		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
 			menu.uninstall(app);
+			this.system.uninstall(app);
 		}
 
 		if (this.countAvailableConnection() == 0) {
@@ -180,5 +181,9 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		this.spool = null;
 		portal.getMain().getCenter().getCurrent().setSpool(spool);
 		this.publicated = false;
+	}
+	
+	public SystemAbstract getSystem() {
+		return this.system;
 	}
 }
