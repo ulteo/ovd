@@ -240,7 +240,6 @@ public class SessionManagerCommunication {
 
 				((HttpsURLConnection)connexion).setHostnameVerifier(trustAllHosts);
 			}
-
 			connexion.setDoInput(true);
 			connexion.setDoOutput(true);
 			connexion.setRequestProperty("Content-type", content_type);
@@ -250,7 +249,6 @@ public class SessionManagerCommunication {
 
 			connexion.setAllowUserInteraction(true);
 			connexion.setRequestMethod("POST");
-
 			OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 
 			if (data instanceof String) {
@@ -290,8 +288,8 @@ public class SessionManagerCommunication {
 							if (value.equalsIgnoreCase(cookie))
 								cookieIsPresent = true;
 						}
-						if (! cookieIsPresent)
-							this.cookies.add(cookie);
+					/*	if (! cookieIsPresent)
+							this.cookies.add(cookie);*/
 					}
 				}
 				InputStream in = connexion.getInputStream();
@@ -311,6 +309,9 @@ public class SessionManagerCommunication {
 		}
 		catch (Exception e) {
 			System.err.println("ERROR: "+e.getMessage());
+			JOptionPane.showMessageDialog(null, "ERROR: "+e.getMessage()+". Please check your authentication informations", "Error", JOptionPane.ERROR_MESSAGE);
+			loadFrame.setVisible(false);
+			loadFrame.dispose();
 		}
 		finally {
 			connexion.disconnect();
