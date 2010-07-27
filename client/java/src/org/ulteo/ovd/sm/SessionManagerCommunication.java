@@ -20,16 +20,15 @@
 
 package org.ulteo.ovd.sm;
 
+import com.sun.org.apache.xerces.internal.dom.DOMImplementationImpl;
+import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
-//import java.io.BufferedReader;
-//import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-//import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -51,15 +50,19 @@ import javax.net.ssl.X509TrustManager;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
 import org.ulteo.rdp.RdpConnectionOvd;
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
 
 
 public class SessionManagerCommunication {
@@ -68,11 +71,15 @@ public class SessionManagerCommunication {
 
 	public static final String WEBSERVICE_START_SESSION = "startsession.php";
 	public static final String WEBSERVICE_EXTERNAL_APPS = "client/remote_apps.php";
+	public static final String WEBSERVICE_LOGOUT = "client/logout.php";
 
 	public static final String FIELD_LOGIN = "login";
 	public static final String FIELD_PASSWORD = "password";
 	public static final String FIELD_TOKEN = "token";
 	public static final String FIELD_SESSION_MODE = "session_mode";
+
+	public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+	public static final String CONTENT_TYPE_XML = "text/xml";
 
 	private String sm = null;
 	private boolean use_https = false;
@@ -86,6 +93,8 @@ public class SessionManagerCommunication {
 	private String multimedia = null;
 	private String printers = null;
 
+	private List<String> cookies = null;
+
 	public SessionManagerCommunication(String sm_, JDialog loadFrame, boolean use_https_) {
 		this.init(sm_, use_https_);
 		this.loadFrame = loadFrame;
@@ -98,6 +107,7 @@ public class SessionManagerCommunication {
 
 	private void init(String sm_, boolean use_https_) {
 		this.connections = new ArrayList<RdpConnectionOvd>();
+		this.cookies = new ArrayList<String>();
 		this.sm = sm_;
 		this.use_https = use_https_;
 
@@ -124,6 +134,15 @@ public class SessionManagerCommunication {
 		return listConcat;
 	}
 
+	private static String concatParams(HashMap<String,String> params) {
+		List<String> listParameter = new ArrayList<String>();
+		for (String name : params.keySet()) {
+			listParameter.add(name+"="+params.get(name));
+		}
+
+		return makeStringForPost(listParameter);
+	}
+
 	public boolean askForSession(HashMap<String,String> params) {
 		if (params == null)
 			return false;
@@ -135,7 +154,12 @@ public class SessionManagerCommunication {
 
 		this.requestMode = params.get(FIELD_SESSION_MODE);
 
-		return this.askWebservice(WEBSERVICE_START_SESSION, params);
+		Document response = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, concatParams(params));
+
+		if (response == null)
+			return false;
+
+		return this.parseStartSessionResponse(response);
 	}
 
 	public boolean askForApplications(HashMap<String,String> params) {
@@ -153,11 +177,31 @@ public class SessionManagerCommunication {
 		if (! params.containsKey(FIELD_SESSION_MODE))
 			params.put(FIELD_SESSION_MODE, this.requestMode);
 
-		return this.askWebservice(WEBSERVICE_EXTERNAL_APPS, params);
+		Document response = this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, concatParams(params));
+
+		if (response == null)
+			return false;
+
+		return this.parseStartSessionResponse(response);
 	}
 
-	private boolean askWebservice(String webservice, HashMap<String,String> params) {
-		boolean ret = false;
+	public boolean askForLogout() {
+		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
+		Document request = domImpl.createDocument(null, "logout", null);
+
+		Element logout = request.getDocumentElement();
+		logout.setAttribute("mode", "logout");
+
+		Document response = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, request.toString());
+
+		if (response == null)
+			return false;
+
+		return this.parseLogoutResponse(response);
+	}
+
+	private Document askWebservice(String webservice, String content_type, Object data) {
+		Document document = null;
 		HttpURLConnection connexion = null;
 		
 		try {
@@ -199,19 +243,33 @@ public class SessionManagerCommunication {
 
 			connexion.setDoInput(true);
 			connexion.setDoOutput(true);
-			connexion.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+			connexion.setRequestProperty("Content-type", content_type);
+			for (String cookie : this.cookies) {
+				connexion.setRequestProperty("Cookie", cookie);
+			}
 
 			connexion.setAllowUserInteraction(true);
 			connexion.setRequestMethod("POST");
 
 			OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 
-			List<String> listParameter = new ArrayList<String>();
-			for (String name : params.keySet()) {
-				listParameter.add(name+"="+params.get(name));
+			if (data instanceof String) {
+				out.write((String) data);
+			}
+			else if (data instanceof Document) {
+				Document request = (Document) data;
+
+				OutputFormat outFormat = new OutputFormat(request);
+				XMLSerializer serializer = new XMLSerializer(out, outFormat);
+				serializer.serialize(request);
+
+				this.dumpXML(request, "Receiving XML:");
+			}
+			else if (data != null) {
+				System.err.println("Cannot send "+ data.getClass().getName() +" data to session manager webservices");
+				return document;
 			}
 
-			out.write(makeStringForPost(listParameter));
 			out.flush();
 			out.close();
 
@@ -221,12 +279,34 @@ public class SessionManagerCommunication {
 
 			System.out.println("Response "+r+ " ==> "+res+ " type: "+contentType);
 
-			if (r == HttpURLConnection.HTTP_OK && contentType.startsWith("text/xml")) {
-				DataInputStream in = new DataInputStream(connexion.getInputStream());
-				ret = this.parse(in);
+			if (r == HttpURLConnection.HTTP_OK && contentType.startsWith(CONTENT_TYPE_XML)) {
+				String headerName=null;
+				for (int i=1; (headerName = connexion.getHeaderFieldKey(i))!=null; i++) {
+					if (headerName.equals("Set-Cookie")) {
+						String cookie = connexion.getHeaderField(i);
+
+						boolean cookieIsPresent = false;
+						for (String value : this.cookies) {
+							if (value.equalsIgnoreCase(cookie))
+								cookieIsPresent = true;
+						}
+						if (! cookieIsPresent)
+							this.cookies.add(cookie);
+					}
+				}
+				InputStream in = connexion.getInputStream();
+
+				DOMParser parser = new DOMParser();
+				InputSource source = new InputSource(in);
+				parser.parse(source);
+				in.close();
+
+				document = parser.getDocument();
+
+				this.dumpXML(document, "Receiving XML:");
 			}
 			else {
-				System.err.println("Invalid response");
+				System.err.println("Invalid response:\n\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType);
 			}
 		}
 		catch (Exception e) {
@@ -236,60 +316,32 @@ public class SessionManagerCommunication {
 			connexion.disconnect();
 		}
 
-		return ret;
+		return document;
 	}
 
-	private boolean parse(InputStream in) {
-		/* BEGIN DEBUG
-		BufferedReader b = new BufferedReader(new InputStreamReader(in));
+	private boolean parseLogoutResponse(Document in) {
+		
 
-		String line;
-		String content = "";
-		try {
-			while ((line = b.readLine()) != null) {
-				content += line;
-			}
-		} catch (IOException ex) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		return true;
+	}
 
-		content = content.replaceFirst(".*<?xml", "<?xml");
-		System.out.println("XML content: "+content);
-
-		in = new ByteArrayInputStream(content.getBytes());
-		/* END DEBUG */
-
-		Document document = null;
+	private boolean parseStartSessionResponse(Document document) {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Rectangle dim = null;
 		dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.INFO, "ScreenSize: "+screenSize);
-
-		try {
-			document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(in);
-		} catch (SAXException e) {
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			return false;
-		}
+		Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.INFO, "ScreenSize: " + screenSize);
 
 		NodeList ns = document.getElementsByTagName("error");
 		Element ovd_node;
 		if (ns.getLength() == 1) {
-			ovd_node = (Element)ns.item(0);
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "("+ovd_node.getAttribute("id")+") "+ovd_node.getAttribute("message"));
+			ovd_node = (Element) ns.item(0);
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "(" + ovd_node.getAttribute("id") + ") " + ovd_node.getAttribute("message"));
 			if (graphic) {
 				loadFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null, ovd_node.getAttribute("message"), "Warning", JOptionPane.WARNING_MESSAGE);
 			}
 			return false;
 		}
-
 		ns = document.getElementsByTagName("session");
 		if (ns.getLength() == 0) {
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 1");
@@ -299,22 +351,19 @@ public class SessionManagerCommunication {
 			}
 			return false;
 		}
-		ovd_node = (Element)ns.item(0);
-
+		ovd_node = (Element) ns.item(0);
 		this.sessionId = ovd_node.getAttribute("id");
 		this.sessionMode = ovd_node.getAttribute("mode");
 		this.multimedia = ovd_node.getAttribute("multimedia");
 		this.printers = ovd_node.getAttribute("redirect_client_printers");
-
-		if (! this.sessionMode.equalsIgnoreCase(this.requestMode)) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager do not authorize "+this.requestMode+" session mode.");
+		if (!this.sessionMode.equalsIgnoreCase(this.requestMode)) {
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager do not authorize " + this.requestMode + " session mode.");
 			if (graphic) {
 				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, "The session manager do not authorize "+this.requestMode, "Warning", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "The session manager do not authorize " + this.requestMode, "Warning", JOptionPane.WARNING_MESSAGE);
 			}
 			return false;
 		}
-
 		ns = ovd_node.getElementsByTagName("server");
 		if (ns.getLength() == 0) {
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 2");
@@ -327,62 +376,56 @@ public class SessionManagerCommunication {
 		Element server;
 		for (int i = 0; i < ns.getLength(); i++) {
 			RdpConnectionOvd rc = null;
-
-			server = (Element)ns.item(i);
+			server = (Element) ns.item(i);
 			NodeList appsList = server.getElementsByTagName("application");
 			if (appsList.getLength() == 0) {
 				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 3");
 				return false;
 			}
 			Element appItem = null;
-
 			byte flags = 0x00;
-			if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_DESKTOP))
+			if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_DESKTOP)) {
 				flags |= RdpConnectionOvd.MODE_DESKTOP;
-			else if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_REMOTEAPPS))
+			} else if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_REMOTEAPPS)) {
 				flags |= RdpConnectionOvd.MODE_APPLICATION;
-			if (this.multimedia.equals("1"))
+			}
+			if (this.multimedia.equals("1")) {
 				flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-			if (this.printers.equals("1"))
+			}
+			if (this.printers.equals("1")) {
 				flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-			
+			}
 			try {
 				rc = new RdpConnectionOvd(flags);
 			} catch (RdesktopException ex) {
 				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, ex.getMessage());
 				continue;
 			}
-			
 			try {
 				rc.initSecondaryChannels();
 			} catch (RdesktopException e1) {
 				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, e1.getMessage());
 			}
-
 			rc.setServer(server.getAttribute("fqdn"));
 			rc.setCredentials(server.getAttribute("login"), server.getAttribute("password"));
-			
 			// Ensure that width is multiple of 4
 			// Prevent artifact on screen with a with resolution
 			// not divisible by 4
-			rc.setGraphic(((int)screenSize.width & ~3), (int)screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
-
+			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
 			for (int j = 0; j < appsList.getLength(); j++) {
-				appItem = (Element)appsList.item(j);
+				appItem = (Element) appsList.item(j);
 				NodeList mimeList = appItem.getElementsByTagName("mime");
 				ArrayList<String> mimeTypes = new ArrayList<String>();
-
 				if (mimeList.getLength() > 0) {
 					Element mimeItem = null;
 					for (int k = 0; k < mimeList.getLength(); k++) {
-						mimeItem = (Element)mimeList.item(k);
+						mimeItem = (Element) mimeList.item(k);
 						mimeTypes.add(mimeItem.getAttribute("type"));
 					}
 				}
-
 				Application app = null;
 				try {
-					String iconWebservice = "http://"+this.sm+":1111/icon.php?id="+appItem.getAttribute("id");
+					String iconWebservice = "http://" + this.sm + ":1111/icon.php?id=" + appItem.getAttribute("id");
 					app = new Application(rc, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, new URL(iconWebservice));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
@@ -391,13 +434,28 @@ public class SessionManagerCommunication {
 					e.printStackTrace();
 					return false;
 				}
-				if (app != null)
+				if (app != null) {
 					rc.addApp(app);
+				}
 			}
-
 			this.connections.add(rc);
 		}
 		return true;
+	}
+
+	private void dumpXML(Document document, String msg) {
+		if (msg != null)
+			System.out.println(msg);
+		
+		try {
+			TransformerFactory tFactory = TransformerFactory.newInstance();
+			Transformer transformer = tFactory.newTransformer();
+			DOMSource source = new DOMSource(document);
+			StreamResult result = new StreamResult(System.out);
+			transformer.transform(source, result);
+		} catch (TransformerException ex) {
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 
 	public ArrayList<RdpConnectionOvd> getConnections() {

@@ -33,10 +33,12 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.rdp.RdpActions;
 
 public class DesktopFrame extends JFrame implements WindowListener {
 
 	private Image logo = null;
+	private RdpActions actions = null;
 	public static int screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	public static int screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static GraphicsConfiguration gconf = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
@@ -47,8 +49,9 @@ public class DesktopFrame extends JFrame implements WindowListener {
 	public static Dimension MAXIMISED = new Dimension(screenWidth-insets.left-insets.right, screenHeight-insets.top-insets.bottom);
 	public static Dimension FULLSCREEN = new Dimension(screenWidth, screenHeight);
 	
-	public DesktopFrame(Dimension dim, boolean undecorated) {
-		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+	public DesktopFrame(Dimension dim, boolean undecorated, RdpActions actions_) {
+		this.actions = actions_;
+		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
 		setIconImage(logo);
 		setSize(dim);
 		setPreferredSize(dim);
@@ -74,7 +77,7 @@ public class DesktopFrame extends JFrame implements WindowListener {
 		int option = JOptionPane.showConfirmDialog(null, I18n._("Do you really want to close the window ?"), I18n._("Warning !"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 		if(option == JOptionPane.OK_OPTION) {
-			System.exit(0);
+			this.actions.exit(0);
 		}
 		else {
 			this.setVisible(true);

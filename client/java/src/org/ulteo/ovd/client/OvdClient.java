@@ -156,7 +156,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	protected abstract void hide(RdpConnection co);
 
 	/* RdpListener */
-	public void connected(RdpConnection co) {
+	public synchronized void connected(RdpConnection co) {
 		if(graphic && (this.logList.getLoader().isVisible() || this.frame.getMainFrame().isVisible())) {
 			logList.getLoader().setVisible(false);
 			logList.getLoader().dispose();
@@ -174,7 +174,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 	}
 
-	public void disconnected(RdpConnection co) {
+	public synchronized void disconnected(RdpConnection co) {
 		if (graphic && this.countAvailableConnection() == 0) {
 			if (logList.getLoader().isVisible()) {
 				logList.getLoader().setVisible(false);
@@ -216,25 +216,54 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 	public void seamlessEnabled(RdpConnection co) {}
 
-	public void disconnectAll() {
+	public synchronized void disconnectAll() {
 		this.isCancelled = true;
-		if(this.availableConnections != null) {
-			for(RdpConnectionOvd co : this.availableConnections) {
-				this.disconnect(co);
+		Runnable runLogout = new Runnable() {
+			public void run() {
+				try {
+					if (! smComm.askForLogout()) {
+						if(availableConnections != null) {
+							for(RdpConnectionOvd co : availableConnections) {
+								disconnect(co);
+							}
+						}
+					}
+
+					while (countAvailableConnection() > 0) {
+						Thread.sleep(100);
+					}
+				} catch (InterruptedException e) {
+					return;
+				}
 			}
+		};
+		Thread logoutThread = new Thread(runLogout);
+		long startTime = System.currentTimeMillis();
+		logoutThread.start();
+
+		this.logger.info("Wait "+ RdpActions.DELAY_LOGOUT_MILLIS +" ms to disconnect");
+		while (logoutThread.isAlive() && ((System.currentTimeMillis() - startTime) < RdpActions.DELAY_LOGOUT_MILLIS)) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
+		}
+		
+		this.logger.debug("Interrupting logout thread");
+		logoutThread.interrupt();
+		while (logoutThread.isAlive()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
+		}
+		
+		for (RdpConnectionOvd co : this.availableConnections) {
+			co.disconnect();
 		}
 	}
 
 	public void exit(int return_code) {
 		this.disconnectAll();
-
-		while (this.countAvailableConnection() > 0) {
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException ex) {
-				this.logger.error(ex);
-			}
-		}
+		
 		this.quit(return_code);
 	}
 }
