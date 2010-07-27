@@ -38,13 +38,13 @@ var Desktop = Class.create(Daemon, {
 			var applet_width = (this.my_width-(this.my_width % 4));
 			var applet_height = (this.my_height*applet_width/this.my_width);
 
-			var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
+			var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="log4j-1.2.jar,'+this.applet_version+'" cache_archive="log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
 				<param name="name" value="ulteoapplet" /> \
 				<param name="code" value="'+this.applet_main_class+'" /> \
 				<param name="codebase" value="applet/" /> \
-				<param name="archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
-				<param name="cache_archive" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+'" /> \
-				<param name="cache_archive_ex" value="gnu-getopt.jar,log4j-1.2.jar,'+this.applet_version+';preload" /> \
+				<param name="archive" value="log4j-1.2.jar,'+this.applet_version+'" /> \
+				<param name="cache_archive" value="log4j-1.2.jar,'+this.applet_version+'" /> \
+				<param name="cache_archive_ex" value="log4j-1.2.jar,'+this.applet_version+';preload" /> \
 				<param name="mayscript" value="true" /> \
 				\
 				<param name="server" value="'+server.fqdn+'" /> \
