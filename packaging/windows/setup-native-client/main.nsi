@@ -51,7 +51,7 @@
   Name "${PRODUCT_FULL_NAME}"
   OutFile "${OUT_DIR}\${SETUP_NAME}.exe"
 
-  BrandingText "Copyright Ulteo"
+  BrandingText "Copyright Ulteo SAS"
   ;Default installation folder
   InstallDir "$PROGRAMFILES\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}"
 
