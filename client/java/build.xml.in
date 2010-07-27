@@ -289,7 +289,7 @@
     </jar>
     <signjar destDir="libs" alias="ulteo" storepass="${keystore.password}"
              keystore="${build.cert}/keystore" >
-        <fileset dir="required_libraries" includes="gnu-getopt.jar log4j-1.2.jar" />
+        <fileset dir="required_libraries" includes="log4j-1.2.jar" />
         <fileset dir="libs" includes="ulteo-applet-${compile.release}.jar" />
     </signjar>
   </target>
@@ -297,7 +297,7 @@
   <target name="applet.install" description="install applets"
           depends="PDFPrinter.install, applet.jar">
     <copy todir="${applets.dir}">
-      <filelist dir="libs" files="gnu-getopt.jar log4j-1.2.jar
+      <filelist dir="libs" files="log4j-1.2.jar
          ulteo-applet-${compile.release}.jar CheckJava-${compile.release}.jar" />
     </copy>
     <symlink link="${applets.dir}/ulteo-applet.jar"
