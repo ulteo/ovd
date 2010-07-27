@@ -309,17 +309,13 @@ function testJava() {
 			return;
 		}
 
-		$('testJava').innerHTML = '<applet id="ulteoapplet" code="org.ulteo.ovd.applet.CheckJava" codebase="applet/" archive="ulteo-applet.jar" cache_archive="ulteo-applet.jar" cache_archive_ex="ulteo-applet.jar;preload" mayscript="true" width="1" height="1"> \
-			<param name="code" value="org.ulteo.ovd.applet.CheckJava" /> \
-			<param name="codebase" value="applet/" /> \
-			<param name="archive" value="ulteo-applet.jar" /> \
-			<param name="cache_archive" value="ulteo-applet.jar" /> \
-			<param name="cache_archive_ex" value="ulteo-applet.jar;preload" /> \
-			<param name="mayscript" value="true" /> \
-			\
-			<param name="onSuccess" value="appletSuccess" /> \
-			<param name="onFailure" value="appletFailure" /> \
-			</applet>';
+		var applet_params = new Hash();
+		applet_params.set('onSuccess', 'appletSuccess');
+		applet_params.set('onFailure', 'appletFailure');
+
+		var applet = buildAppletNode('ulteoapplet', 'org.ulteo.ovd.applet.CheckJava', 'ulteo-applet.jar', applet_params);
+		$('testJava').appendChild(applet);
+
 		testUlteoApplet();
 	}, 2000);
 }
@@ -496,4 +492,48 @@ function checkLogin() {
 		$('submitLogin').disabled = false;
 	else
 		$('submitLogin').disabled = true;
+}
+
+function buildAppletNode(name, code, archive, extra_params) {
+	var applet_node = document.createElement('applet');
+	applet_node.setAttribute('id', name);
+	applet_node.setAttribute('width', '1');
+	applet_node.setAttribute('height', '1');
+
+	var params = new Hash();
+	params.set('name', name);
+	params.set('code', code);
+	params.set('codebase', 'applet/');
+	params.set('archive', archive);
+	params.set('cache_archive', archive);
+	params.set('cache_archive_ex', archive+';preload');
+	params.set('mayscript', 'true');
+
+	var keys;
+	var i;
+
+	keys = params.keys();
+	for (i=0; i<keys.length; i++) {
+		var key = keys[i];
+		var value = params.get(key);
+
+		var param_node = document.createElement('param');
+		param_node.setAttribute('name', key);
+		param_node.setAttribute('value', value);
+		applet_node.appendChild(param_node);
+		applet_node.setAttribute(key, value);
+	}
+
+	keys = extra_params.keys();
+	for (i=0; i<keys.length; i++) {
+		var key = keys[i];
+		var value = extra_params.get(key);
+
+		var param_node = document.createElement('param');
+		param_node.setAttribute('name', key);
+		param_node.setAttribute('value', value);
+		applet_node.appendChild(param_node);
+	}
+
+	return applet_node;
 }

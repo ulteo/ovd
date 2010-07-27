@@ -23,6 +23,8 @@ var Desktop = Class.create(Daemon, {
 
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, in_popup_, debug_]);
+
+		$('desktopAppletContainer').innerHTML = '';
 	},
 
 	parse_do_started: function(transport) {
@@ -42,27 +44,20 @@ var Desktop = Class.create(Daemon, {
 			var applet_width = (this.my_width-(this.my_width % 4));
 			var applet_height = (this.my_height*applet_width/this.my_width);
 
-			var applet_html_string = '<applet id="ulteoapplet" name="ulteoapplet" code="'+this.applet_main_class+'" codebase="applet/" archive="log4j-1.2.jar,'+this.applet_version+'" cache_archive="log4j-1.2.jar,'+this.applet_version+'" cache_archive_ex="log4j-1.2.jar,'+this.applet_version+';preload" mayscript="true" width="'+applet_width+'" height="'+applet_height+'"> \
-				<param name="name" value="ulteoapplet" /> \
-				<param name="code" value="'+this.applet_main_class+'" /> \
-				<param name="codebase" value="applet/" /> \
-				<param name="archive" value="log4j-1.2.jar,'+this.applet_version+'" /> \
-				<param name="cache_archive" value="log4j-1.2.jar,'+this.applet_version+'" /> \
-				<param name="cache_archive_ex" value="log4j-1.2.jar,'+this.applet_version+';preload" /> \
-				<param name="mayscript" value="true" /> \
-				\
-				<param name="server" value="'+server.fqdn+'" /> \
-				<param name="port" value="3389" /> \
-				<param name="username" value="'+server.username+'" /> \
-				<param name="password" value="'+server.password+'" /> \
-				\
-				<param name="keymap" value="'+this.keymap+'" /> \
-				<param name="multimedia" value="'+this.multimedia+'" /> \
-				<param name="redirect_client_printers" value="'+this.redirect_client_printers+'" /> \
-			</applet><div id="ulteoprintingappletcontainer"></div>';
+			var applet_params = new Hash();
+			applet_params.set('server', server.fqdn);
+			applet_params.set('port', '3389');
+			applet_params.set('username', server.username);
+			applet_params.set('password', server.password);
+			applet_params.set('keymap', this.keymap);
+			applet_params.set('multimedia', this.multimedia);
+			applet_params.set('redirect_client_printers', this.redirect_client_printers);
 
+			var applet =  buildAppletNode('ulteoapplet', this.applet_main_class, 'log4j-1.2.jar,'+this.applet_version, applet_params);
+			applet.setAttribute('width', applet_width);
+			applet.setAttribute('height', applet_height);
 			$('desktopAppletContainer').show();
-			$('desktopAppletContainer').innerHTML = applet_html_string;
+			$('desktopAppletContainer').appendChild(applet);
 
 			this.load_printing_applet();
 
