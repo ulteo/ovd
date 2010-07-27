@@ -454,7 +454,7 @@ function updateFlag(id_) {
 
 function updateKeymap(id_) {
 	for (var i = 0; i < $('session_keymap').length; i++) {
-		if ($('session_keymap')[i].value == id_)
+		if ($('session_keymap')[i].value == id_ || $('session_keymap')[i].value == id_.substr(0, 2))
 			$('session_keymap')[i].selected = 'selected';
 	}
 }
