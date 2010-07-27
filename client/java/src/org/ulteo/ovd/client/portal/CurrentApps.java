@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 
@@ -49,6 +50,7 @@ public class CurrentApps extends JPanel implements OvdAppListener {
 	private ArrayList<ApplicationInstance> currentApps = null;
 	private JScrollPane listScroller = null;
 	private int[] selectedApp = null;
+	private Spool spool = null;
 	
 	public CurrentApps() {
 		this.currentApps = new ArrayList<ApplicationInstance>();
@@ -115,6 +117,10 @@ public class CurrentApps extends JPanel implements OvdAppListener {
 			if (ai.getToken() == token)
 				return ai;
 		}
+		for (ApplicationInstance ai : this.spool.getAppInstance()) {
+			if (ai.getToken() == token)
+				return ai;
+		}
 		return null;
 	}
 
@@ -159,4 +165,8 @@ public class CurrentApps extends JPanel implements OvdAppListener {
 	}
 
 	public void ovdInited(OvdAppChannel o) {}
+	
+	public void setSpool(Spool spool) {
+		this.spool = spool;
+	}
 }

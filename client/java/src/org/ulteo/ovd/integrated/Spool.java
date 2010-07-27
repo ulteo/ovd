@@ -223,4 +223,8 @@ public class Spool implements Runnable {
 			}
 		}
 	}
+	
+	public ArrayList<ApplicationInstance> getAppInstance() {
+		return this.appInstances;
+	}
 }

@@ -151,6 +151,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	
 	public void publish() {
 		this.spool = new Spool(this);
+		portal.getMain().getCenter().getCurrent().setSpool(spool);
 		this.spool.createIconsDir();
 		this.spoolThread = new Thread(this.spool);
 		this.spoolThread.start();
@@ -177,6 +178,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 			}
 		}
 		this.spool = null;
+		portal.getMain().getCenter().getCurrent().setSpool(spool);
 		this.publicated = false;
 	}
 }
