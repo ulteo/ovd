@@ -57,6 +57,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.client.I18n;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -309,7 +310,7 @@ public class SessionManagerCommunication {
 		}
 		catch (Exception e) {
 			System.err.println("ERROR: "+e.getMessage());
-			JOptionPane.showMessageDialog(null, "ERROR: "+e.getMessage()+". Please check your authentication informations", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Connection failed. Please check your authentication informations", "Error", JOptionPane.ERROR_MESSAGE);
 			loadFrame.setVisible(false);
 			loadFrame.dispose();
 		}
@@ -345,10 +346,10 @@ public class SessionManagerCommunication {
 		}
 		ns = document.getElementsByTagName("session");
 		if (ns.getLength() == 0) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 1");
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "User already connected");
 			if (graphic) {
 				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, "Bad XML: err 1", "Warning", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("User already connected"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 			}
 			return false;
 		}
@@ -361,16 +362,16 @@ public class SessionManagerCommunication {
 			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager do not authorize " + this.requestMode + " session mode.");
 			if (graphic) {
 				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, "The session manager do not authorize " + this.requestMode, "Warning", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("The session manager do not authorize " + this.requestMode), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 			}
 			return false;
 		}
 		ns = ovd_node.getElementsByTagName("server");
 		if (ns.getLength() == 0) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 2");
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "No application server available");
 			if (graphic) {
 				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, "Bad XML: err 2", "Warning", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("No application server available"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 			}
 			return false;
 		}
@@ -380,7 +381,11 @@ public class SessionManagerCommunication {
 			server = (Element) ns.item(i);
 			NodeList appsList = server.getElementsByTagName("application");
 			if (appsList.getLength() == 0) {
-				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "Bad XML: err 3");
+				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "No applications available");
+				if (graphic) {
+					loadFrame.setVisible(false);
+					JOptionPane.showMessageDialog(null, I18n._("No applications available"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+				}
 				return false;
 			}
 			Element appItem = null;
