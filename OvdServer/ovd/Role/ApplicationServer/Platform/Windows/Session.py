@@ -62,12 +62,6 @@ class Session(AbstractSession):
 		os.makedirs(self.windowsProgramsDir)
 		
 		self.windowsDesktopDir = shell.SHGetFolderPath(0, shellcon.CSIDL_DESKTOPDIRECTORY, logon, 0)
-		desktopDir = os.path.join(self.windowsProfileDir, "Desktop")
-		if self.windowsDesktopDir != desktopDir:
-			# bug: this return the Administrator desktop dir path ...
-			Logger.warn("desktop dir bug#1: v1: '%s', v2: '%s'"%(self.windowsDesktopDir, desktopDir))
-			self.windowsDesktopDir = desktopDir
-		
 		
 		self.appDataDir = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, logon, 0)
 		Logger.debug("appdata: '%s'"%(self.appDataDir))
