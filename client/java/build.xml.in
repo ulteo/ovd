@@ -190,6 +190,9 @@
 
   <target name="ovdNativeClient">
     <antcall target="precompile" />
+    <copy todir="jar/org/jpedal/res">
+      <fileset dir="src/org/jpedal/res"/>
+    </copy>
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/StartConnection.java">
@@ -311,6 +314,9 @@
 
   <target name="vdi">
     <antcall target="precompile" />
+    <copy todir="jar/org/jpedal/res">
+      <fileset dir="src/org/jpedal/res"/>
+    </copy>
     <javac srcdir="src:src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
       <classpath refid="minimal.path" />
