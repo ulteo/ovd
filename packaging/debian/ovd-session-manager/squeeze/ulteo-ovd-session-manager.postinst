@@ -138,7 +138,7 @@ db_get ulteo-ovd-session-manager/download_tarball || true
 URL="$RET"
 if [ ! -e $CHROOT_TARGET ]; then
 	if [ x"$URL" != x"" ]; then
-        CURLOPTS="--retry 3 --connect-timeout 60 -L"
+        CURLOPTS="--retry 3 --connect-timeout 60  --insecure -L"
     	if ! curl $CURLOPTS -f "$URL" > $CHROOT_TARGET; then
             rm -f $CHROOT_TARGET
             echo "Unable to retrieve the chroot archive."
