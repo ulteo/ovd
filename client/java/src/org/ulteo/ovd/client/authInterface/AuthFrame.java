@@ -85,7 +85,7 @@ public class AuthFrame {
 	private JLabel mode = new JLabel(I18n._("Mode"));
 	private JLabel resolution = new JLabel(I18n._("Resolution"));
 	private JLabel language = new JLabel(I18n._("Language"));
-	private JLabel keyboard = new JLabel(I18n._("Keybord"));
+	private JLabel keyboard = new JLabel(I18n._("Keyboard"));
 	private JRadioButton desktopButton = new JRadioButton(I18n._("Desktop"));
 	private JRadioButton portalButton = new JRadioButton(I18n._("Applications"));
 	private ButtonGroup radioGroup = new ButtonGroup();
