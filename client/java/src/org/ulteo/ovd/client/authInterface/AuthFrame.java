@@ -47,7 +47,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ini4j.Wini;
+import org.ini4j.Ini;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.integrated.Constants;
@@ -425,7 +425,7 @@ public class AuthFrame {
 	}
 	
 	public void parseProfileFile(File profile) throws IOException, FileNotFoundException {
-		Wini ini = new Wini(profile);
+		Ini ini = new Ini(profile);
 		username = ini.get("user", "login");
 		ovdServer = ini.get("server", "host");
 		initMode = ini.get("sessionMode", "ovdSessionMode");

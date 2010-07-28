@@ -34,7 +34,7 @@ import java.io.PrintWriter;
 
 import javax.swing.JOptionPane;
 
-import org.ini4j.Wini;
+import org.ini4j.Ini;
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
@@ -171,7 +171,7 @@ public class LoginListener implements ActionListener{
 	}
 	
 	public void getProfile() throws IOException {
-		Wini ini = new Wini(this.profileInfo);
+		Ini ini = new Ini(this.profileInfo);
 		ini.put("user", "login", this.username);
 		ini.put("server", "host", this.host);
 		if (mode == 0)

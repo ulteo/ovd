@@ -23,7 +23,6 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,6 +31,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.ini4j.Ini;
 import org.ini4j.Wini;
 import org.ulteo.ovd.client.I18n;
 
@@ -79,7 +79,7 @@ public class SaveAsListener implements ActionListener{
 	}
 
 	public void getProfile(File filename) throws IOException {
-		Wini ini = new Wini(filename);
+		Ini ini = new Ini(filename);
 		ini.put("user", "login", this.username);
 		ini.put("server", "host", this.host);
 		if (mode == 0)
