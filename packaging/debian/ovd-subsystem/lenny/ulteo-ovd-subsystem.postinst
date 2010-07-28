@@ -8,7 +8,7 @@ fi
 
 CHROOTPATH="/opt/ulteo"
 CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd/slaveserver.conf
-HOSTCONF=/etc/ulteo-ovd.conf
+HOSTCONF=/etc/ulteo/subsystem.conf
 
 set_conf () {
     # $1: configfile

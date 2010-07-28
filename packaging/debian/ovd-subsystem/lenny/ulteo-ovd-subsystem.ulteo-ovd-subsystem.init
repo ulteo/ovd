@@ -15,7 +15,7 @@
 [ "$START" = no ] && exit 0
 
 CHROOT=/opt/ulteo
-CNF=/etc/ulteo-ovd.conf
+CNF=/etc/ulteo/subsystem.conf
 
 do_start() {
 	mount -t proc none $CHROOT/proc
