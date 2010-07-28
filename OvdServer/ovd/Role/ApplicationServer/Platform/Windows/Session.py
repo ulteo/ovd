@@ -257,14 +257,14 @@ class Session(AbstractSession):
 		
 		# Rediect the Shell Folders to the remote profile
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"%(hiveName)
-		data = [
-			"Desktop",
-		]
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
+		data = {
+			"Desktop" : os.path.basename(self.windowsDesktopDir) # desktop directory name is translated
+		}
 		
-		for item in data:
+		for (keyname,item) in data.items():
 			dst = os.path.join(directory, item)
-			win32api.RegSetValueEx(key, item, 0, win32con.REG_SZ, dst)
+			win32api.RegSetValueEx(key, keyname, 0, win32con.REG_SZ, dst)
 		win32api.RegCloseKey(key)
 		
 		
