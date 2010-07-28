@@ -3,7 +3,6 @@ SUBDIRS =  admin
 scripts_DATA =  configuration.php \
                 domain.php \
                 icon.php \
-                get_logo.php \
                 get_news.php \
                 server_monitoring.php \
                 server_name.php \
