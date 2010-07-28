@@ -41,6 +41,8 @@ import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class LoginListener implements ActionListener{
 
@@ -130,6 +132,7 @@ public class LoginListener implements ActionListener{
 			}
 		}
 		boolean use_https = this.frame.isHttps();
+		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 		switch (this.mode) {
 			case 0:
 				this.cli = new OvdClientDesktop(host, use_https, username, pass, frame, resolution, this);

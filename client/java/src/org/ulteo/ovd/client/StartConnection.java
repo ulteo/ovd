@@ -37,6 +37,8 @@ import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
+import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class StartConnection {
 	public static final String productName = "Ulteo OVD Client";
@@ -123,6 +125,7 @@ public class StartConnection {
 					cli = new OvdClientIntegrated(ovdServer, use_https, token);
 				}
 				else {
+					OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 					switch (mode) {
 					case 0:
 						cli = new OvdClientDesktop(ovdServer, use_https, username, password, resolution);

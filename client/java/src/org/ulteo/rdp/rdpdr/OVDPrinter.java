@@ -128,6 +128,10 @@ public class OVDPrinter extends Printer {
 			return RdpdrChannel.STATUS_INVALID_PARAMETER;
 		}
 		String pdfFilename = System.getProperty("java.io.tmpdir") + File.separator + uuid + ".pdf";
+		if (OVDPrinter.printerThread == null) {
+			logger.warn("No printer to process the job " + uuid + ".pdf");
+			return RdpdrChannel.STATUS_CANCELLED;
+		}
 		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename);
 		OVDPrinter.jobs.remove(file);
 		return RdpdrChannel.STATUS_SUCCESS;
