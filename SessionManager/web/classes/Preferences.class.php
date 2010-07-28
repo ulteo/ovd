@@ -372,9 +372,6 @@ class Preferences {
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
 
-		$c = new ConfigElement_input('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE);
-		$this->add($c,'general','web_interface_settings');
-
 		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');

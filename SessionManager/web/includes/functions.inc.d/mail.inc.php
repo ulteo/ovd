@@ -53,7 +53,7 @@ function sendamail($to_, $subject_, $message_) {
 	$subject = $subject_;
 	$message = wordwrap($message_, 72);
 	$headers = array(
-		'From'		=>	$title. '<'.$from.'>',
+		'From'		=>	$from.' <'.$from.'>',
 		'To'			=>	$to,
 		'Subject'		=>	$subject,
 		'Content-Type'		=>	'text/plain; charset=UTF-8',

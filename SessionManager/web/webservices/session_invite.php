@@ -83,12 +83,7 @@ $redir = $buf->getBaseURL(true).'/index.php?token='.$token->id;
 
 $email = $_REQUEST['email'];
 
-$prefs = Preferences::getInstance();
-if (! $prefs)
-	die_error('get Preferences failed',__FILE__,__LINE__);
-
-$web_interface_settings = $prefs->get('general', 'web_interface_settings');
-$main_title = $web_interface_settings['main_title'];
+$main_title = DEFAULT_PAGE_TITLE;
 
 $subject = _('Invitation').' from '.$main_title;
 
