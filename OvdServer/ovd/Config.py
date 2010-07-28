@@ -3,6 +3,7 @@
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -118,7 +119,7 @@ class Config:
 		
 		if Config.log_file is not None:
 			try:
-				f = file(Config.log_file, "w")
+				f = file(Config.log_file, "a")
 				f.close()
 			except IOError:
 				report_error("Unable to write into '%s'"%(Config.log_file))
