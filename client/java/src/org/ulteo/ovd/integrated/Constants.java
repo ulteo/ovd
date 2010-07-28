@@ -39,4 +39,6 @@ public final class Constants {
 	public static final String xfceMenuEntriesPath = Constants.homedir+Constants.separator+".local/share/applications";
 	
 	public static final String clientConfigFilePath = Constants.homedir+Constants.separator+".ulteo"+Constants.separator+"ovd"+Constants.separator+"client";
+	public static final String clientShortcutsPath = clientConfigFilePath+Constants.separator+"Shortcuts";
+	public static final String shortcutExtension = (OSTools.isWindows() ? ".lnk" : ".desktop");
 }

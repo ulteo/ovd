@@ -21,6 +21,11 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,6 +37,7 @@ import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.client.portal.Menu;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
@@ -55,7 +61,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 
 	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
 		super(fqdn_, use_https_, login_, password_, frame_, logList_);
-	
+
 		this.init();
 	}
 
@@ -64,6 +70,13 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		this.logger = Logger.getLogger(OvdClientPortal.class);
 		this.appsList = new ArrayList<Application>();
 		this.portal = new PortalFrame();
+		this.spool = new Spool(this);
+		portal.getMain().getCenter().getCurrent().setSpool(spool);
+		this.spool.createIconsDir();
+		this.spool.createShortcutDir();
+		this.spoolThread = new Thread(this.spool);
+		this.spoolThread.start();
+		this.unpublish();
 	}
 
 	@Override
@@ -72,7 +85,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	@Override
 	protected void runExit() {
 		Collections.sort(this.appsList);
-		
+
 		this.portal.getMain().getCenter().getMenu().initButtons(this.appsList);
 	}
 
@@ -106,6 +119,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 				for (Application app : rc.getAppsList()) {
 					System.out.println("install "+app.getName());
 					menu.install(app);
+					this.system.install(app);
 				}
 				System.out.println("availableConnections.size(): "+this.availableConnections.size());
 				if (menu.isScollerInited())
@@ -139,7 +153,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 			this.portal.dispose();
 		}
 	}
-	
+
 	public boolean togglePublications() {
 		if (publicated) {
 			this.unpublish();
@@ -149,40 +163,61 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		}
 		return publicated;
 	}
-	
+
 	public void publish() {
-		this.spool = new Spool(this);
-		portal.getMain().getCenter().getCurrent().setSpool(spool);
-		this.spool.createIconsDir();
-		this.spoolThread = new Thread(this.spool);
-		this.spoolThread.start();
-		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
-			for (Application app : rc.getAppsList()) {
-				this.system.install(app);
+		File shortcut = new File(Constants.clientShortcutsPath);
+		String[] shortcutList = shortcut.list();
+		if (shortcutList != null) {
+			for (String each : shortcutList) {
+				System.out.println("file : "+each);
+				copyShortcut(each);
 			}
 		}
+		
 		this.publicated = true;
 	}
-	
+
 	public void unpublish() {
-		for (RdpConnectionOvd rc : this.getAvailableConnections()) {
-			for (Application app : rc.getAppsList()) {
-					this.system.uninstall(app);
+		File shortcut = new File(Constants.clientShortcutsPath);
+		String[] shortcutList = shortcut.list();
+		for (String each : shortcutList) {
+			File desktopShortcut = new File(Constants.desktopPath+Constants.separator+each);
+			if (desktopShortcut.exists()) {
+				desktopShortcut.delete();
+			}
+			
+			File startMenuShortcut = new File(Constants.startmenuPath+Constants.separator+each);
+			if (startMenuShortcut.exists()) {
+				startMenuShortcut.delete();
 			}
 		}
-		this.spoolThread.interrupt();
-		while (spoolThread.isAlive()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				this.logger.error(ex);
-			}
-		}
-		this.spool = null;
-		portal.getMain().getCenter().getCurrent().setSpool(spool);
+		
 		this.publicated = false;
 	}
-	
+
+	public void copyShortcut(String shortcut) {
+		try {
+			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(Constants.clientShortcutsPath+Constants.separator+shortcut), 4096);
+			File desktopShortcut = new File(Constants.desktopPath+Constants.separator+shortcut);
+			File startMenuShortcut = new File(Constants.startmenuPath+Constants.separator+shortcut);
+			
+			BufferedOutputStream desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
+			BufferedOutputStream startMenuStream = new BufferedOutputStream(new FileOutputStream(startMenuShortcut), 4096);
+			
+			int currentChar;
+			while ((currentChar = shortcutReader.read()) != -1) {
+				desktopStream.write(currentChar);
+				startMenuStream.write(currentChar);
+			}
+			
+			desktopStream.close();
+			startMenuStream.close();
+			shortcutReader.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public SystemAbstract getSystem() {
 		return this.system;
 	}

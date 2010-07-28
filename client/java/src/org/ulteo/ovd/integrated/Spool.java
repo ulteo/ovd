@@ -51,6 +51,10 @@ public class Spool implements Runnable {
 		new File(Constants.iconsPath).mkdirs();
 	}
 
+	public void createShortcutDir() {
+		new File(Constants.clientShortcutsPath).mkdirs();
+	}
+	
 	public void createTree() {
 		this.instancesDir = new File(Constants.instancesPath);
 		this.instancesDir.mkdirs();

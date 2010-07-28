@@ -38,14 +38,12 @@ public class WindowsShortcut extends Shortcut {
 				appName = appName.replaceAll(forbiddenChars[i], "_");				
 			}
 		}
-		JShellLink shortcut = new JShellLink(Constants.desktopPath, appName);
+		JShellLink shortcut = new JShellLink(Constants.clientShortcutsPath, appName);
 		shortcut.setWorkingDirectory("");
 		shortcut.setPath(System.getProperty("user.dir")+Constants.separator+Constants.launcher);
 		shortcut.setArguments(""+app.getId());
 		shortcut.setIconLocation(Constants.iconsPath+Constants.separator+app.getId()+".ico");
 		shortcut.setIconIndex(0);
-		shortcut.save();
-		shortcut.setFolder(Constants.startmenuPath);
 		shortcut.save();
 	}
 
@@ -56,6 +54,10 @@ public class WindowsShortcut extends Shortcut {
 			shortcut.delete();
 
 		shortcut = new File(Constants.startmenuPath+Constants.separator+app.getName()+".lnk");
+		if (shortcut.exists())
+			shortcut.delete();
+		
+		shortcut = new File(Constants.clientShortcutsPath+Constants.separator+app.getName()+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
 	}
