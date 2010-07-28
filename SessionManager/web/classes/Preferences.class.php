@@ -329,9 +329,9 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_textarea('session_timeout_msg', _('Session timeout message'), _('Session timeout message'), _('Session timeout message'), "Dear user,\n\nYour session is going to end in 3 minutes.\n\nPLEASE SAVE ALL YOUR DATA NOW!");
 		$this->add($c,'general','session_settings_defaults');
-		$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 1);
+		/*$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');
+		$this->add($c,'general','session_settings_defaults');*/
 		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
@@ -367,7 +367,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('testapplet', 'session_mode', 'language'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), 'persistent' => _('persistent'), /*'shareable' => _('shareable'), */'desktop_icons' => _('desktop icons')));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), /*'persistent' => _('persistent'), 'shareable' => _('shareable'), */'desktop_icons' => _('desktop icons')));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
