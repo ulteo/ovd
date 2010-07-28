@@ -97,6 +97,7 @@ public class AuthFrame {
 	private boolean checked = false;
 	private ActionListener optionListener = null;
 	private LoginListener loginListener = null;
+	private KeyLoginListener keyLog = null;
 	
 	private String username = null;
 	private String ovdServer = null;
@@ -111,11 +112,13 @@ public class AuthFrame {
 	public AuthFrame(boolean use_https) {
 		this.use_https = use_https;
 		
+		this.keyLog = new KeyLoginListener(this);
 		this.init();
 	}
 	
 	public void init() {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
+		KeyLoginListener.PUSHED = false;
 		this.optionClicked = false;
 		
 		mainFrame.setTitle("OVD Native Client");
@@ -141,7 +144,7 @@ public class AuthFrame {
 		moreOption.setIcon(showOption);
 		moreOption.setText(I18n._("More options ..."));
 		
-		
+		desktopButton.addKeyListener(keyLog);
 		desktopButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -162,6 +165,7 @@ public class AuthFrame {
 			}
 		});
 		
+		portalButton.addKeyListener(keyLog);
 		portalButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -175,6 +179,8 @@ public class AuthFrame {
 				}
 			}
 		});
+		
+		rememberMe.addKeyListener(keyLog);
 		rememberMe.addActionListener(new ActionListener() {
 
 			@Override
@@ -186,6 +192,7 @@ public class AuthFrame {
 		resBar.setMajorTickSpacing(1);
 		resBar.setPaintTicks(true);
 		resBar.setSnapToTicks(true);
+		resBar.addKeyListener(keyLog);
 		resBar.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -360,12 +367,15 @@ public class AuthFrame {
 		gbc.weightx = 0;
 		gbc.weighty = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
+		loginTextField.addKeyListener(keyLog);
 		mainFrame.add(loginTextField, gbc);
 		
 		gbc.gridy = 4;
+		passwordTextField.addKeyListener(keyLog);
 		mainFrame.add(passwordTextField, gbc);
 		
 		gbc.gridy = 5;
+		hostTextField.addKeyListener(keyLog);
 		mainFrame.add(hostTextField, gbc);
 		
 		gbc.gridy = 6;

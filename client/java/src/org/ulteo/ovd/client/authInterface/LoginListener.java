@@ -44,7 +44,7 @@ import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
-public class LoginListener implements ActionListener{
+public class LoginListener implements ActionListener {
 
 	private static final int DESKTOP_MODE = 0;
 	private static final int PORTAL_MODE = 1;
@@ -68,60 +68,7 @@ public class LoginListener implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		char[] password = null;
-
-		username = frame.getLogin().getText();
-		password = frame.getPassword().getPassword();
-		host = frame.getHost().getText();
-		mode = (frame.getDesktopButton().isSelected()) ? DESKTOP_MODE : PORTAL_MODE;
-		resolution = frame.getResBar().getValue();
-
-		try{
-			connectionRepInfo.mkdirs();
-			connectionInfo = new File(Constants.clientConfigFilePath+Constants.separator+"history.conf");
-			FileInputStream fis = new FileInputStream(connectionInfo);
-			LineNumberReader l = new LineNumberReader(       
-					new BufferedReader(new InputStreamReader(fis)));
-			int count=0;
-			while (l.readLine()!=null)
-			{
-				count = l.getLineNumber();
-			}
-			InputStreamReader reader = new InputStreamReader(new  FileInputStream(connectionInfo));
-			LineNumberReader lineReader = new LineNumberReader(reader);
-			for(int i=0;i<count;i++) {
-				if(i != count-1) {
-					list+=lineReader.readLine()+'\n';
-				}
-				else {
-					list+=lineReader.readLine();
-				}
-			}
-		}
-		catch(IOException ie) {
-			// If the file does not exist it will be created automatically
-			System.out.println("auto complete created with success");
-		}
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter(connectionInfo);
-		}catch (FileNotFoundException fe) {}
-
-		pass="";
-		for (char each : password) {
-			pass = pass+each;
-		}
-
-		if (host.equals("") || username.equals("") || pass.equals("")) {
-			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
-		}
-		else {
-			if (frame.isChecked()) {
-				saveDefault();
-			}
-			getInfo(writer, list, username, host);
-			changeFrame(frame);
-		}
+		this.launchConnection();
 	}
 
 	public void changeFrame(AuthFrame frame) {
@@ -204,6 +151,63 @@ public class LoginListener implements ActionListener{
 		ini.store();
 	}
 	
+	public void launchConnection() {
+		char[] password = null;
+
+		username = frame.getLogin().getText();
+		password = frame.getPassword().getPassword();
+		host = frame.getHost().getText();
+		mode = (frame.getDesktopButton().isSelected()) ? DESKTOP_MODE : PORTAL_MODE;
+		resolution = frame.getResBar().getValue();
+
+		try{
+			connectionRepInfo.mkdirs();
+			connectionInfo = new File(Constants.clientConfigFilePath+Constants.separator+"history.conf");
+			FileInputStream fis = new FileInputStream(connectionInfo);
+			LineNumberReader l = new LineNumberReader(       
+					new BufferedReader(new InputStreamReader(fis)));
+			int count=0;
+			while (l.readLine()!=null)
+			{
+				count = l.getLineNumber();
+			}
+			InputStreamReader reader = new InputStreamReader(new  FileInputStream(connectionInfo));
+			LineNumberReader lineReader = new LineNumberReader(reader);
+			for(int i=0;i<count;i++) {
+				if(i != count-1) {
+					list+=lineReader.readLine()+'\n';
+				}
+				else {
+					list+=lineReader.readLine();
+				}
+			}
+		}
+		catch(IOException ie) {
+			// If the file does not exist it will be created automatically
+			System.out.println("auto complete created with success");
+		}
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(connectionInfo);
+		}catch (FileNotFoundException fe) {}
+
+		pass="";
+		for (char each : password) {
+			pass = pass+each;
+		}
+
+		if (host.equals("") || username.equals("") || pass.equals("")) {
+			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+			KeyLoginListener.PUSHED = false;
+		}
+		else {
+			if (frame.isChecked()) {
+				saveDefault();
+			}
+			getInfo(writer, list, username, host);
+			changeFrame(frame);
+		}
+	}
 	public void initLoader() {
 		loader = new LoadingFrame(cli, frame);
 		Thread load = new Thread(loader);

@@ -58,6 +58,7 @@ import javax.xml.transform.stream.StreamResult;
 import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.authInterface.KeyLoginListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -311,6 +312,7 @@ public class SessionManagerCommunication {
 		catch (Exception e) {
 			System.err.println("ERROR: "+e.getMessage());
 			JOptionPane.showMessageDialog(null, "Cannot access to Session Manager", "Error", JOptionPane.ERROR_MESSAGE);
+			KeyLoginListener.PUSHED = false;
 			loadFrame.setVisible(false);
 			loadFrame.dispose();
 		}
@@ -341,6 +343,7 @@ public class SessionManagerCommunication {
 			if (graphic) {
 				loadFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null, ovd_node.getAttribute("message"), "Warning", JOptionPane.WARNING_MESSAGE);
+				KeyLoginListener.PUSHED = false;
 			}
 			return false;
 		}
@@ -350,6 +353,7 @@ public class SessionManagerCommunication {
 			if (graphic) {
 				loadFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null, I18n._("User already connected"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+				KeyLoginListener.PUSHED = false;
 			}
 			return false;
 		}
@@ -363,6 +367,7 @@ public class SessionManagerCommunication {
 			if (graphic) {
 				loadFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null, I18n._("The session manager does not authorize " + this.requestMode), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+				KeyLoginListener.PUSHED = false;
 			}
 			return false;
 		}
@@ -372,6 +377,7 @@ public class SessionManagerCommunication {
 			if (graphic) {
 				loadFrame.setVisible(false);
 				JOptionPane.showMessageDialog(null, I18n._("No application server available"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+				KeyLoginListener.PUSHED = false;
 			}
 			return false;
 		}
@@ -385,6 +391,7 @@ public class SessionManagerCommunication {
 				if (graphic) {
 					loadFrame.setVisible(false);
 					JOptionPane.showMessageDialog(null, I18n._("No applications available"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+					KeyLoginListener.PUSHED = false;
 				}
 				return false;
 			}
