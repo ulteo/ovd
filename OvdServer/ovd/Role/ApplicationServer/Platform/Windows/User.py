@@ -124,6 +124,8 @@ class User(AbstractUser):
 		except Exception, e:
 			Logger.warn("Unable to unload user reg: %s"%(str(e)))
 			return False
+		
+		return True
 	
 	
 	def destroy(self):
