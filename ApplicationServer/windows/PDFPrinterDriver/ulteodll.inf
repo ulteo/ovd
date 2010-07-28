@@ -11,6 +11,7 @@ Signature="$Windows NT$"
 Provider="Ulteo"
 LayoutFile=ntprint.inf
 Class=Printer
+ClassGUID={4D36E979-E325-11CE-BFC1-08002BE10318}
 DriverVer=17/05/2008,1.0.0.0
 
 ;
