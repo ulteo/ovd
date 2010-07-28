@@ -88,13 +88,7 @@ if (isset($_SESSION['admin_login'])) {
     redirect('index.php');
 }
 
-$prefs = Preferences::getInstance();
-if (! $prefs)
-	$main_title = DEFAULT_PAGE_TITLE;
-else {
-	$web_interface_settings = $prefs->get('general', 'web_interface_settings');
-	$main_title = $web_interface_settings['main_title'];
-}
+$main_title = DEFAULT_PAGE_TITLE;
 
 header_static($main_title.' - '._('Administration'));
 ?>

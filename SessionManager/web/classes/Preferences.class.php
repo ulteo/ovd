@@ -375,9 +375,6 @@ class Preferences {
 		$c = new ConfigElement_input('main_title', _('Heading title'), _('You can customize the heading title here.'), _('You can customize the heading title here.'), DEFAULT_PAGE_TITLE);
 		$this->add($c,'general','web_interface_settings');
 
-		$c = new ConfigElement_input('logo_url',_('Logo URL'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),_('You can customize the logo by entering a new path or replacing the corresponding image. Use a 90 pixels high image in png or jpeg format. Example: sessionmanager/media/image/header.png'),DEFAULT_LOGO_URL);
-		$this->add($c,'general','web_interface_settings');
-
 		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');

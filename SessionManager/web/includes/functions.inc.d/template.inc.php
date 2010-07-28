@@ -57,15 +57,8 @@ function die_error($error_=false, $file_=NULL, $line_=NULL, $display_=false) {
 }
 
 function header_static($title_=false) {
-	$prefs = Preferences::getInstance();
-	if (! $prefs) {
-		$title_ = DEFAULT_PAGE_TITLE;
-		$logo_url = DEFAULT_LOGO_URL;
-	} else {
-		$web_interface_settings = $prefs->get('general', 'web_interface_settings');
-		$title_ = $web_interface_settings['main_title'];
-		$logo_url = $web_interface_settings['logo_url'];
-	}
+	$title_ = DEFAULT_PAGE_TITLE;
+	$logo_url = DEFAULT_LOGO_URL;
 
 echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
