@@ -53,7 +53,7 @@ var Desktop = Class.create(Daemon, {
 			applet_params.set('multimedia', this.multimedia);
 			applet_params.set('redirect_client_printers', this.redirect_client_printers);
 
-			var applet =  buildAppletNode('ulteoapplet', this.applet_main_class, 'log4j-1.2.jar,'+this.applet_version, applet_params);
+			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'log4j-1.2.jar,'+this.applet_version, applet_params);
 			applet.setAttribute('width', applet_width);
 			applet.setAttribute('height', applet_height);
 			$('desktopAppletContainer').show();
