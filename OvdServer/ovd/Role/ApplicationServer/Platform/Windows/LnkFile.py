@@ -43,7 +43,7 @@ def clone(srcFile, dstFile, path, args):
 		shortcut_dst.SetPath(path)
 	except:
 		Logger.warn("LnkFile::clone: unable to setPath. Check that the following command is available on the system: '%s'"%(path))	
-		return None
+		return False
 	
 	shortcut_dst.SetArguments(args)
 	shortcut_dst.SetIconLocation(iconLocation, 0)
@@ -51,6 +51,7 @@ def clone(srcFile, dstFile, path, args):
 	shortcut_dst.SetDescription(description)
 	
 	shortcut_dst.QueryInterface(pythoncom.IID_IPersistFile).Save(dstFile, 0)
+	return True
 
 
 def getTarget(filename):

@@ -99,7 +99,11 @@ class Session(AbstractSession):
 	
 	
 	def clone_shortcut(self, src, dst, command, args):
-		f = file(src, "r")
+		try:
+			f = file(src, "r")
+		except:
+			return False
+		
 		lines = f.readlines()
 		f.close()
 		
@@ -107,9 +111,14 @@ class Session(AbstractSession):
 			if lines[i].startswith("Exec="):
 				lines[i] = "Exec=%s %s\n"%(command, " ".join(args))  
 		
-		f = file(dst, "w")
+		try:
+			f = file(dst, "w")
+		except:
+			return False
+		
 		f.writelines(lines)
 		f.close()
+		return True
 	
 	
 	def install_shortcut(self, shortcut):

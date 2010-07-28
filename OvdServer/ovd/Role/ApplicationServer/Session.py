@@ -88,7 +88,9 @@ class Session:
 			final_file = os.path.join(self.shortcutDirectory, self.get_target_file(app_id, app_target))
 			Logger.debug("install_client %s %s %s"%(str(app_target), str(final_file), str(app_id)))
 			
-			self.clone_shortcut(app_target, final_file, "startovdapp", [app_id])
+			ret = self.clone_shortcut(app_target, final_file, "startovdapp", [app_id])
+			if not ret:
+				continue
 			
 			self.install_shortcut(final_file)
 		

@@ -115,7 +115,7 @@ class Session(AbstractSession):
 	
 	
 	def clone_shortcut(self, src, dst, command, args):
-		LnkFile.clone(src, dst, command, " ".join(args))
+		return LnkFile.clone(src, dst, command, " ".join(args))
 	
 	
 	def uninstall_client(self):
