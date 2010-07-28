@@ -25,23 +25,6 @@ set_host_conf () {
     set_conf $HOSTCONF "CHROOT" $CHROOTPATH
 }
 
-set_chroot_conf () {
-
-    set_conf $CHROOTCONF "ROLES" "aps"
-    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
-
-    # session manager url
-    db_get ulteo-ovd-subsystem/sm_address || true
-    URL="$RET"
-    set_conf $CHROOTCONF "session_manager" "$URL"
-
-    # resolv.conf
-    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf \
-        $CHROOTPATH/etc/resolv.conf
-    [ -f /etc/hosts ] && cp /etc/hosts \
-        $CHROOTPATH/etc/hosts
-}
-
 set_tz () {
     if [ -f /etc/timezone ]; then
         HOSTTZ=$(head -n 1 /etc/timezone)
@@ -83,8 +66,8 @@ if [ ! -e "$CHROOTCONF" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); the
     [ -n $HTTPPASSWD ] && unset HTTPPASSWD
 
     if [ "$DOWNLOAD_OK" = "no" ]; then
-        echo "An error occured while downloading and installing the chroot, the server is not ready to be used."
-        echo "You can either reconfigure this package or use the aps-chroot-install script to set up the server."
+        db_input ulteo-ovd-subsystem/download_error
+        db_go
         exit 0
     else
         set_tz
@@ -97,7 +80,17 @@ if [ ! -e $CHROOTCONF ]; then
     echo "Warning: the chroot configuration file is missing, the configuration will have"
     echo "         to be done manually in $CHROOTCONF."
 else
-    set_chroot_conf
+    set_conf $CHROOTCONF "ROLES" "aps"
+    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
+
+    # session manager url
+    db_get ulteo-ovd-subsystem/sm_address || true
+    URL="$RET"
+    set_conf $CHROOTCONF "session_manager" "$URL"
+
+    # resolv.conf
+    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
+    [ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
 fi
 
 set_host_conf
