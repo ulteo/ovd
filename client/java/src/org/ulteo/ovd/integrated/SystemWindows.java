@@ -22,8 +22,11 @@ package org.ulteo.ovd.integrated;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.ulteo.ovd.Application;
@@ -64,9 +67,12 @@ public class SystemWindows extends SystemAbstract {
 		Graphics2D graph = buf.createGraphics();
 		graph.drawImage(app.getIcon().getImage(), 0, 0, null);
 		graph.dispose();
-
+		
+		
 		try {
-			net.sf.image4j.codec.ico.ICOEncoder.write(buf, output);
+			BufferedOutputStream os = new BufferedOutputStream(new FileOutputStream(output));
+			net.sf.image4j.codec.ico.ICOEncoder.write(buf, os);
+			os.close();
 		} catch (IOException ex) {
 			Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, ex);
 		}
