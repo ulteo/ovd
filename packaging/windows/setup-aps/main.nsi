@@ -17,7 +17,7 @@
 ;; along with this program; if not, write to the Free Software
 ;; Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-!define PRODUCT_NAME "Open Virtual Desktop"
+!define PRODUCT_NAME "OVD Application Server"
 !define PRODUCT_LONGVERSION "${PRODUCT_VERSION}.0.0"
 !define PRODUCT_PUBLISHER "Ulteo"
 !define PRODUCT_WEB_SITE "http://www.ulteo.com"
@@ -26,8 +26,9 @@
 !define BASENAME "${PRODUCT_NAME}"
 !define EXE_NAME "ovdSlaveServer.exe"
 !define SHORTCUT "${BASENAME}.lnk"
+!define UNINSTALL_SHORTCUT "Uninstall - ${PRODUCT_NAME}.lnk"
 
-!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo"
+!define UNINSTALL_REGKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Ulteo\ovd-application-server"
 
 ;Include Modern UI
   !include "MUI.nsh"
@@ -37,8 +38,8 @@
   !define MUI_HEADERIMAGE_UNBITMAP  "media\header.bmp"
   !define MUI_WELCOMEFINISHPAGE_BITMAP "media\startlogo.bmp"
   !define MUI_UNWELCOMEFINISHPAGE_BITMAP "media\startlogo.bmp"
-  !define MUI_ICON "media\ulteo.ico"
-  !define MUI_UNICON "media\ulteo.ico"
+  !define MUI_ICON "media\ulteo-package.ico"
+  !define MUI_UNICON ${MUI_ICON}
 
   !define MUI_ABORTWARNING
   !define MUI_UNABORTWARNING
@@ -46,7 +47,7 @@
 ;General
 
   ;Name and file
-  Name "${PRODUCT_NAME}"
+  Name "${PRODUCT_FULL_NAME}"
   OutFile "${OUT_DIR}\${SETUP_NAME}.exe"
 
   BrandingText "Copyright Ulteo SAS"
@@ -75,6 +76,7 @@
   !define MUI_LICENSEPAGE_RADIOBUTTONS
   !define MUI_FINISHPAGE_LINK "Visit our web site"
   !define MUI_FINISHPAGE_LINK_LOCATION ${PRODUCT_WEB_SITE}
+  !define MUI_FINISHPAGE_TEXT "${PRODUCT_FULL_NAME} has been installed on your computer.\n\nClick Finish to close this wizard.\n\n\nThe software is installed as a service and is automatically started at computer boot."
 
   !insertmacro MUI_PAGE_WELCOME
   !insertmacro MUI_PAGE_LICENSE "media/LICENCE.txt"
@@ -109,26 +111,32 @@
 
 ## First Dialog
 Function InputBoxPageShow
-  ReadRegStr $R1 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address"
+  ;ReadRegStr $R1 HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address"
 
-  ${IF} $R0 == ""
-    StrCpy $R0 "sm.ulteo.com"
-  ${ENDIF}
+  ;${IF} $R0 == ""
+  ;  StrCpy $R0 "sm.ulteo.com"
+  ;${ENDIF}
+  
+  Var /GLOBAL sm_address
+  again:
+    !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
 
- !insertmacro MUI_HEADER_TEXT "Configuration" "Give the Session Manager address."
-
- PassDialog::InitDialog /NOUNLOAD InputBox \
-            /HEADINGTEXT "Caution: give full name or ip address" \
-            /BOX "Session Manager host/address:" $R0 0
- PassDialog::Show
+    PassDialog::InitDialog /NOUNLOAD InputBox \
+                           /HEADINGTEXT "Caution: give full name or ip address" \
+                           /GROUPTEXT "Session Manager host/address" \
+                           /BOX "Example: sm.ulteo.com" "" 0
+    PassDialog::Show
+    Pop $0
+  
+    Pop $sm_address
+    ${IF} $sm_address == ""
+      MessageBox MB_OK|MB_TOPMOST|MB_ICONEXCLAMATION "Session Manager host/address required"
+      Goto again
+    ${ENDIF}
 FunctionEnd
 
 Function InputBoxPageLeave
-  Var /GLOBAL sm_address
-
-  Pop $sm_address
-
-  WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address" $sm_address
+  ;WriteRegStr HKLM "Software\${PRODUCT_PUBLISHER}\${PRODUCT_NAME}" "sm_address" $sm_address
 
 FunctionEnd
 
@@ -221,13 +229,13 @@ Section "Shortcut Section" SecShortcut
   CreateDirectory "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
   WriteIniStr "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
 
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall.lnk" "$INSTDIR\Uninstall.exe" 
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${UNINSTALL_SHORTCUT}" "$INSTDIR\Uninstall.exe" 
 SectionEnd
 
 Section "un.Shortcut Section" SecUnShortcut
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Uninstall.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url"
-  RMDir  "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
+  Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\${UNINSTALL_SHORTCUT}"
+  ;Delete "$SMPROGRAMS\${PRODUCT_PUBLISHER}\Website.url"
+  ;RMDir  "$SMPROGRAMS\${PRODUCT_PUBLISHER}"
 SectionEnd
 
 Section "Uninstall"
