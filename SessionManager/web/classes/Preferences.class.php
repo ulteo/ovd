@@ -114,7 +114,13 @@ class Preferences {
 		if (!is_readable($this->conf_file)) {
 			return array();
 		}
-		return unserialize(file_get_contents($this->conf_file));
+		
+		$ret = @unserialize(@file_get_contents($this->conf_file));
+		if ($ret === false) {
+			return array();
+		}
+		
+		return $ret;
 	}
 
 	public function getPrettyName($key_) {
