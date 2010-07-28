@@ -239,11 +239,11 @@ public class AuthFrame {
 						mainFrame.add(resolution, gbc);
 					}
 					
-					gbc.gridy = 12;
+					/*gbc.gridy = 12;
 					mainFrame.add(language, gbc);
 					
 					gbc.gridy = 13;
-					mainFrame.add(keyboard, gbc);
+					mainFrame.add(keyboard, gbc);*/
 					
 					gbc.gridwidth = 1;
 					gbc.gridx = 2;
@@ -265,14 +265,14 @@ public class AuthFrame {
 						mainFrame.add(resolutionValue, gbc);
 					}
 					
-					gbc.gridx = 2;
+					/*gbc.gridx = 2;
 					gbc.gridwidth = 2;
 					gbc.gridy = 12;
 					gbc.fill = GridBagConstraints.HORIZONTAL;
 					mainFrame.add(languageBox, gbc);
 					
 					gbc.gridy = 13;
-					mainFrame.add(keyboardBox, gbc);
+					mainFrame.add(keyboardBox, gbc);*/
 					
 					gbc.fill = GridBagConstraints.NONE;
 					moreOption.setIcon(hideOption);
