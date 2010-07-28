@@ -214,6 +214,7 @@ var Applications = Class.create(Daemon, {
 	},
 
 	load_explorer: function() {
+		return;
 		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
 	}
 });
