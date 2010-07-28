@@ -211,6 +211,9 @@ class Server {
 			return false;
 		}
 
+		if ($disable_fqdn_check == 1)
+			return true;
+
 		if (preg_match('/[0-9]{1,3}(\.[0-9]{1,3}){3}/', $name)) {// if IP?
 			$ret = ($name == $address);
 			if (! $ret) {
@@ -218,9 +221,6 @@ class Server {
 			}
 			return $ret;
 		}
-
-		if ($disable_fqdn_check == 1)
-			return true;
 
 		$reverse = @gethostbyaddr($address);
 		if (($reverse == $name) || (isset($fqdn_private_address[$name]) && $fqdn_private_address[$name] == $address))
