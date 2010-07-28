@@ -510,7 +510,7 @@ var Daemon = Class.create({
 		this.push_log('debug', '[daemon] load_printing_applet()');
 
 		setTimeout(function() {
-			var applet = buildAppletNode('PrinterApplet', 'org.ulteo.ovd.printer.PrinterApplet', 'PDFPrinter.jar');
+			var applet = buildAppletNode('PrinterApplet', 'org.ulteo.ovd.printer.PrinterApplet', 'PDFPrinter.jar', new Hash());
 			applet.setAttribute('id', 'PrinterApplet');
 
 			$(this.mode+'AppletContainer').appendChild(applet);
