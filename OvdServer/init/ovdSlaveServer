@@ -8,7 +8,7 @@
 
 . /lib/lsb/init-functions
 
-NAME=OvdSlaveServer
+NAME="Ulteo OVD SlaveServer"
 PROGRAM=ovdSlaveServer
 PIDFILE=/var/run/ovd-slaveserver.pid
 
@@ -30,7 +30,7 @@ waitpid() {
 }
 
 do_start () {
-	log_begin_msg "Starting Ulteo OVD SlaveServer"
+	log_begin_msg "Starting $NAME"
 	
 	if [ -f $PIDFILE ]; then
 		if ps $(cat $PIDFILE); then
@@ -47,7 +47,7 @@ do_start () {
 }
 
 do_stop () {
-	log_begin_msg "Stopping Ulteo OVD SlaveServer"
+	log_begin_msg "Stopping $NAME"
 	
 	if [ ! -f $PIDFILE ]; then
 		log_warning_msg "NOT RUNNING"
