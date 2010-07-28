@@ -81,7 +81,7 @@ function get_users_list() {
 	$users = array();
 	foreach ($users_node->childNodes as $user_node) {
 		if ($user_node->hasAttribute('login'))
-			$users[$user_node->getAttribute('login')] = $user_node->getAttribute('displayname');
+			$users[$user_node->getAttribute('login')] = ((strlen($user_node->getAttribute('displayname')) > 32)?substr($user_node->getAttribute('displayname'), 0, 32).'...':$user_node->getAttribute('displayname'));
 	}
 	natsort($users);
 
