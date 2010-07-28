@@ -108,9 +108,6 @@
 
  <target name="PDFPrinter" description="compile all PDFPrinter class">
    <antcall target="precompile" />
-   <copy todir="jar/org/jpedal/res">
-     <fileset dir="src/org/jpedal/res"/>
-   </copy>
    <javac srcdir="src" destdir="classes" encoding="UTF8" target="1.5" source="1.5"
           includes="org/ulteo/ovd/printer/PrinterApplet.java">
      <classpath>
@@ -123,6 +120,9 @@
 
  <target name="PDFPrinter.jar" depends="PDFPrinter" description="create jar file">
    <antcall target="classes2jar" />
+   <copy todir="jar/org/jpedal/res">
+     <fileset dir="src/org/jpedal/res"/>
+   </copy>
    <jar destfile="libs/PDFPrinter.jar" basedir="jar/">
      <include name="**"/>
      <manifest>
@@ -166,6 +166,9 @@
 
    <target name="ovdExternalAppsClient.jar" depends="ovdExternalAppsClient">
      <antcall target="classes2jar" />
+     <copy todir="jar/org/jpedal/res">
+       <fileset dir="src/org/jpedal/res"/>
+     </copy>
      <unjar src="required_libraries/gnu-getopt.jar" dest="jar">
        <filelist dir="required_libraries"
                  files="log4j-1.2.jar,registry.jar
@@ -190,9 +193,6 @@
 
   <target name="ovdNativeClient">
     <antcall target="precompile" />
-    <copy todir="jar/org/jpedal/res">
-      <fileset dir="src/org/jpedal/res"/>
-    </copy>
     <javac srcdir="src;src1.4" destdir="classes" encoding="UTF8"
            target="1.5" source="1.5"
            includes="org/ulteo/ovd/client/StartConnection.java">
@@ -211,6 +211,9 @@
     @MESSAGE_LANGS@
     <copy todir="jar/pics">
       <fileset dir="icons" />
+    </copy>
+    <copy todir="jar/org/jpedal/res">
+      <fileset dir="src/org/jpedal/res"/>
     </copy>
   </target>
 
