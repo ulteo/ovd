@@ -360,7 +360,7 @@ else
 ?>
 
 checkLogin();
-										}, 1000);
+										}, 1500);
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px; margin-bottom: 25px; " border="0" cellspacing="0" cellpadding="5">
@@ -373,27 +373,29 @@ checkLogin();
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':$wi_sessionmanager_url) ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
-													<script type="text/javascript">
-														var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
-														if ($('sessionmanager_url').value == '') {
-															$('sessionmanager_url').style.color = 'grey';
-															$('sessionmanager_url').value = sessionmanager_url_example;
-															setCaretPosition($('sessionmanager_url'), 0);
-														}
-														Event.observe($('sessionmanager_url'), 'keypress', function() {
-															if ($('sessionmanager_url').value == sessionmanager_url_example) {
-																$('sessionmanager_url').style.color = 'black';
-																$('sessionmanager_url').value = '';
-															}
-														});
-														Event.observe($('sessionmanager_url'), 'keyup', function() {
+													<script type="text/javascript">Event.observe(window, 'load', function() {
+														setTimeout(function() {
+															var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 															if ($('sessionmanager_url').value == '') {
 																$('sessionmanager_url').style.color = 'grey';
 																$('sessionmanager_url').value = sessionmanager_url_example;
 																setCaretPosition($('sessionmanager_url'), 0);
 															}
-														});
-													</script>
+															Event.observe($('sessionmanager_url'), 'keypress', function() {
+																if ($('sessionmanager_url').value == sessionmanager_url_example) {
+																	$('sessionmanager_url').style.color = 'black';
+																	$('sessionmanager_url').value = '';
+																}
+															});
+															Event.observe($('sessionmanager_url'), 'keyup', function() {
+																if ($('sessionmanager_url').value == '') {
+																	$('sessionmanager_url').style.color = 'grey';
+																	$('sessionmanager_url').value = sessionmanager_url_example;
+																	setCaretPosition($('sessionmanager_url'), 0);
+																}
+															});
+														}, 1500);
+													});</script>
 												</td>
 											</tr>
 											<tr style="<?php echo ((defined('SESSIONMANAGER_URL'))?'display: none;':'') ?>">
