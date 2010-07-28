@@ -372,7 +372,7 @@ checkLogin();
 													<strong><?php echo _('Session Manager'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':$wi_sessionmanager_url) ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
+													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':$wi_sessionmanager_url) ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<script type="text/javascript">
 														var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 														if ($('sessionmanager_url').value == '') {
@@ -421,11 +421,11 @@ checkLogin();
 
 														if (! defined('SESSIONMANAGER_URL') || $users === false) {
 													?>
-													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;" />
+													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<?php
 														} else {
 													?>
-													<select id="user_login" onchange="checkLogin(); return false;" onkeyup="checkLogin(); return false;">
+													<select id="user_login" onchange="checkLogin();" onkeyup="checkLogin();">
 													<?php
 														foreach ($users as $login => $displayname)
 															echo '<option value="'.$login.'"'.(($login == $wi_user_login)?'selected="selected"':'').'>'.$login.' ('.$displayname.')</option>'."\n";
