@@ -255,7 +255,7 @@ class Session(AbstractSession):
 		_winreg.CloseKey(key)
 		
 		
-		# Rediect the Shell Folders to the remote profile
+		# Redirect the Shell Folders to the remote profile
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"%(hiveName)
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
 		data = {
