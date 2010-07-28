@@ -310,7 +310,7 @@ public class SessionManagerCommunication {
 		}
 		catch (Exception e) {
 			System.err.println("ERROR: "+e.getMessage());
-			JOptionPane.showMessageDialog(null, "Connection failed. Please check your authentication informations", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Cannot access to Session Manager", "Error", JOptionPane.ERROR_MESSAGE);
 			loadFrame.setVisible(false);
 			loadFrame.dispose();
 		}
