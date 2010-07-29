@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Laurent CLOUET <laurent@ulteo.com>
@@ -29,7 +29,7 @@ function query_url_request($url_, $log_returned_data_=true, $data_in_file_=false
 	curl_setopt($socket, CURLOPT_CONNECTTIMEOUT, DEFAULT_REQUEST_TIMEOUT);
 	curl_setopt($socket, CURLOPT_TIMEOUT, (DEFAULT_REQUEST_TIMEOUT+5));
 	if ( $data_in_file_ === true) {
-		$data_file = tempnam(sys_get_temp_dir(), "curl_");
+		$data_file = tempnam(NULL, 'curl_');
 		$fp = fopen($data_file, 'w');
 		curl_setopt($socket, CURLOPT_FILE, $fp);
 	}
