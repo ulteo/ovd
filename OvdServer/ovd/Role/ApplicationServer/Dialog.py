@@ -358,7 +358,7 @@ class Dialog(AbstractDialog):
 				response["code"] = httplib.OK
 				response["Content-Type"] = "image/png"
 				response["data"] = self.role_instance.apt.getRequestLog(rid, request)
-				return response	
+				return response
 			
 			else:
 				raise Exception("usage")
