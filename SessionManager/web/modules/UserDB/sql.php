@@ -111,7 +111,7 @@ class UserDB_sql extends UserDB  {
 		$limit = '';
 		if ($limit_ != 0)
 			$limit = 'LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
-		$sql2 = MySQL::getInstance();
+		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 '.$limit, $this->table);
 		if ($res === false) {
 			Logger::error('main', 'USERDB::MYSQL::getUsersContains failed (sql query failed)');
