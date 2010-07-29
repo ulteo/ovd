@@ -259,7 +259,11 @@ class Dialog(AbstractDialog):
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("Dialog::req_user_loggedin: %s"%(str(err)))
-			return
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "internalerror")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
 		
 		rootNode.setAttribute("loggedin", str((ret is not None)).lower())
 		
@@ -293,7 +297,11 @@ class Dialog(AbstractDialog):
 		except Exception,err:
 			Logger.error("RDP server dialog failed ... ")
 			Logger.debug("Dialog::req_user_logout: %s"%(str(err)))
-			return
+			doc = Document()
+			rootNode = doc.createElement('error')
+			rootNode.setAttribute("id", "internalerror")
+			doc.appendChild(rootNode)
+			return self.req_answer(doc)
 		
 		if ret is None:
 			doc = Document()
