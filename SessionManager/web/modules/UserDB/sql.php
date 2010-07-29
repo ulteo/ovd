@@ -119,8 +119,8 @@ class UserDB_sql extends UserDB  {
 		}
 		$rows = $sql2->FetchAllResults($res);
 		foreach ($rows as $row){
-			$u = $this->generateUserFromRow($row);
-			if ($this->isOK($u)) {
+			$a_user = $this->generateUserFromRow($row);
+			if ($this->isOK($a_user)) {
 				foreach ($attributes_ as $an_attribute) {
 					if ($contains_ == '' or is_string(strstr($a_user->getAttribute($an_attribute), $contains_))) {
 						$users []= $a_user;
