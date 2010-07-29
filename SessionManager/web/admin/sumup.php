@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Laurent CLOUET <laurent@ulteo.com>
  *
@@ -68,7 +68,6 @@ else{
 				echo '<table border="0" cellspacing="1" cellpadding="3">';
 				foreach ($users_grps as $ugrp){
 					echo '<tr>';
-					echo '<td>('.$ugrp->getUniqueID().')</td>';
 					echo '<td>
 					<a href="usersgroup.php?action=manage&id='.$ugrp->getUniqueID().'">'.$ugrp->name.'</a></td>';
 					if ($ugrp->published)
@@ -90,7 +89,6 @@ else{
 					$agrp = $applicationsGroupDB->import($agrp_id);
 					if (is_object($agrp)) {
 						echo '<tr>';
-						echo '<td>('.$agrp->id.')</td>';
 						echo '<td><a href="appsgroup.php?action=manage&id='.$agrp->id.'">'.$agrp->name.'</a></td>';
 						
 						
@@ -115,7 +113,6 @@ else{
 				foreach ($apps_s as $aaa) {
 					echo '<tr>';
 					echo '<td>'.$aaa->getAttribute('type').'</td>';
-					echo '<td>('.$aaa->getAttribute('id').')</td>';
 					echo '<td><a href="applications.php?action=manage&id='.$aaa->getAttribute('id').'">'.$aaa->getAttribute('name').'</a></td>';
 					
 					if (in_array($aaa->getAttribute('type'), $apps_type) == false)
