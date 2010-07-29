@@ -21,8 +21,11 @@
  **/
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
+define('AUTH_FAILED', 'auth_failed');
+define('IN_MAINTENANCE', 'in_maintenance');
 define('INTERNAL_ERROR', 'internal_error');
 define('INVALID_USER', 'invalid_user');
+define('SERVICE_NOT_AVAILABLE', 'service_not_available');
 define('UNAUTHORIZED_SESSION_MODE', 'unauthorized_session_mode');
 define('USER_WITH_ACTIVE_SESSION', 'user_with_active_session');
 
@@ -110,31 +113,41 @@ $plugins->doLoad();
 $plugins->doInit();
 
 $prefs = Preferences::getInstance();
-if (! $prefs)
-	die_error('get Preferences failed',__FILE__,__LINE__);
+if (! $prefs) {
+	Logger::error('main', '(startsession) get Preferences failed');
+	throw_response(INTERNAL_ERROR);
+}
 
 $system_in_maintenance = $prefs->get('general', 'system_in_maintenance');
-if ($system_in_maintenance == '1')
-	die_error(_('The system is in maintenance mode'), __FILE__, __LINE__, true);
+if ($system_in_maintenance == '1') {
+	Logger::error('main', '(startsession) The system is in maintenance mode');
+	throw_response(IN_MAINTENANCE);
+}
 
 $ret = parse_client_XML(@file_get_contents('php://input'));
 
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
-	if (! $ret)
-		die_error(_('Authentication failed'),__FILE__,__LINE__);
+	if (! $ret) {
+		Logger::error('main', '(startsession) Authentication failed');
+		throw_response(AUTH_FAILED);
+	}
 }
 
-if (! isset($_SESSION['login']))
-	die_error(_('Authentication failed'),__FILE__,__LINE__);
+if (! isset($_SESSION['login'])) {
+	Logger::error('main', '(startsession) Authentication failed');
+	throw_response(AUTH_FAILED);
+}
 
 $user_login = $_SESSION['login'];
 
 $userDB = UserDB::getInstance();
 
 $user = $userDB->import($user_login);
-if (! is_object($user))
+if (! is_object($user)) {
+	Logger::error('main', '(startsession) User importation failed');
 	throw_response(INVALID_USER);
+}
 
 $default_settings = $user->getSessionSettings();
 $session_mode = $default_settings['session_mode'];
@@ -243,8 +256,10 @@ if ($sessions > 0) {
 			$buf = $prefs->get('general', 'session_settings_defaults');
 			$buf = $buf['action_when_active_session'];
 
-			if ($buf == 0)
+			if ($buf == 0) {
+				Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 				throw_response(USER_WITH_ACTIVE_SESSION);
+			}
 			/*elseif ($buf == 1) {
 				$invite = new Invite(gen_unique_string());
 				$invite->session = $session->id;
@@ -268,9 +283,12 @@ if ($sessions > 0) {
 				redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
 			}*/
 
+			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
-		} else
+		} else {
+			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
+		}
 	}
 }
 
@@ -283,7 +301,7 @@ if (is_null($buf_servers) || count($buf_servers) == 0) {
 	$ev->setAttribute('error', _('No available server'));
 	$ev->emit();
 	Logger::error('main', '(startsession) no server found for \''.$user->getAttribute('login').'\' -> abort');
-	die_error(_('You don\'t have access to a server for now'),__FILE__,__LINE__);
+	throw_response(SERVICE_NOT_AVAILABLE);
 }
 
 $servers = array();
@@ -305,7 +323,7 @@ if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) &
 			}
 			if (! $random_server) {
 				Logger::error('main', '(startsession) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
-				die_error(_('You don\'t have access to a "linux" desktop server for now'),__FILE__,__LINE__);
+				throw_response(SERVICE_NOT_AVAILABLE);
 			}
 			break;
 		case 'windows':
@@ -321,7 +339,7 @@ if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) &
 			}
 			if (! $random_server) {
 				Logger::error('main', '(startsession) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
-				die_error(_('You don\'t have access to a "windows" desktop server for now'),__FILE__,__LINE__);
+				throw_response(SERVICE_NOT_AVAILABLE);
 			}
 			break;
 		case 'any':
@@ -336,8 +354,10 @@ $fileservers = Servers::getAvailableByRole(Servers::$role_fs);
 if (count($fileservers) > 0) {
 	$netfolders = $user->getNetworkFolders();
 
-	if (! is_array($netfolders))
+	if (! is_array($netfolders)) {
+		Logger::error('main', '(startsession) User::getNetworkFolders() failed');
 		throw_response(INTERNAL_ERROR);
+	}
 
 	$profile_available = false;
 	if (count($netfolders) == 1) {
@@ -486,11 +506,11 @@ if (is_array($sharedfolders) && count($sharedfolders) > 0) {
 //}
 
 if ($ret === false)
-	die_error(_('No available session'),__FILE__,__LINE__);
+	throw_response(INTERNAL_ERROR);
 
 $fs = $prefs->get('plugins', 'FS');
 if (is_null($fs))
-	die_error(_('No available filesystem'),__FILE__,__LINE__);
+	throw_response(INTERNAL_ERROR);
 $module_fs = $fs;
 
 $default_args = array(
@@ -513,7 +533,7 @@ if (isset($start_app) && $start_app != '') {
 
 	if (! is_object($app)) {
 		Logger::error('main', '(startsession) No such application for id \''.$start_app.'\'');
-		die_error(_('Application does not exist'), __FILE__, __LINE__);
+		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 
 	$apps = $user->applications();
@@ -528,7 +548,7 @@ if (isset($start_app) && $start_app != '') {
 
 	if ($ok === false) {
 		Logger::error('main', '(startsession) Application not available for user \''.$user->getAttribute('login').'\' id \''.$start_app.'\'');
-		die_error(_('Application not available'), __FILE__, __LINE__);
+		throw_response(SERVICE_NOT_AVAILABLE);
 	}
 
 	$optional_args['start_app_id'] = $start_app;
@@ -598,7 +618,7 @@ if ($save_session === true) {
 }
 else {
 	Logger::error('main', '(startsession) failed to save session \''.$session->id.'\' for user \''.$user->getAttribute('login').'\'');
-	die_error(_('Internal error'), __FILE__, __LINE__);
+	throw_response(INTERNAL_ERROR);
 }
 
 $token = new Token(gen_unique_string());
@@ -608,7 +628,7 @@ $token->valid_until = (time()+(60*5));
 $save_token = Abstract_Token::save($token);
 if ($save_token === false) {
 	Logger::error('main', '(startsession) failed to save token \''.$token.'\' for session \''.$session->id.'\'');
-	die_error(_('Internal error'), __FILE__, __LINE__);
+	throw_response(INTERNAL_ERROR);
 }
 
 $ev->setAttributes(array(
