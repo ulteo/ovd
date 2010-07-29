@@ -404,11 +404,11 @@ function show_page($mode_) {
 	echo '<option value="hour"';
 	if ($mode_->get_value() == 'hour')
 		echo ' selected="selected"';
-	echo '>hour</option>';
+	echo '>'.ReportMode_hour::get_name().'</option>';
 	echo '<option value="day"';
 	if ($mode_->get_value() == 'day')
 		echo ' selected="selected"';
-	echo '>day</option>';
+	echo '>'.ReportMode_day::get_name().'</option>';
 	echo '</select> ';
 
 	echo '<input type="submit" value="'._('Refresh').'" />';
