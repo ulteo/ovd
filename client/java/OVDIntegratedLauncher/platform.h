@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,17 +19,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.integrated.shorcut;
+#ifndef PLATFORM_H
+#define PLATFORM_H
 
-import org.ulteo.ovd.Application;
+#ifdef WIN32 //WINDOWS
 
-public abstract class Shortcut {
-	protected String token = null;
-	
-	public abstract void create(Application app);
-	public abstract void remove(Application app);
-	
-	public final void setToken(String token) {
-		this.token = token;
-	}
-}
+#include <windows.h>
+#include <shlwapi.h>
+
+#else //POSIX
+
+#define LPSTR char * 
+#define TCHAR char
+#define MAX_PATH 4096
+
+enum BOOL_t {FALSE=0, TRUE=1};
+typedef enum BOOL_t BOOL;
+
+#endif //WINDOWS/POSIX
+
+#ifndef WIN32 //POSIX
+
+BOOL PathFileExists(LPSTR path);
+BOOL PathAppend(LPSTR path, LPSTR suffix);
+
+#endif //POSIX
+
+#endif //PLATFORM_H

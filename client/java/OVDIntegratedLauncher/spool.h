@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,17 +18,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.integrated.shorcut;
+#ifndef SPOOL_H
+#define SPOOL_H
 
-import org.ulteo.ovd.Application;
+#include "platform.h"
+#define SPOOL_DIR_INSTANCE "instances"
+#define SPOOL_DIR_TOSTART "to_launch"
 
-public abstract class Shortcut {
-	protected String token = null;
-	
-	public abstract void create(Application app);
-	public abstract void remove(Application app);
-	
-	public final void setToken(String token) {
-		this.token = token;
-	}
-}
+typedef struct _SPOOL {
+    LPSTR path;
+    int pid;
+} SPOOL, *P_SPOOL;
+
+P_SPOOL spool_create(const LPSTR);
+void spool_free(P_SPOOL);
+
+BOOL spool_still_running(P_SPOOL);
+
+int spool_instance_create(P_SPOOL, const LPSTR, const LPSTR);
+BOOL spool_instance_isAlive(P_SPOOL, int);
+
+#endif //SPOOL_H

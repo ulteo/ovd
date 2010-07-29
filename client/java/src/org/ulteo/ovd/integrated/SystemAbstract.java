@@ -33,6 +33,10 @@ public abstract class SystemAbstract {
 	public abstract void uninstall(Application app);
 
 	protected abstract void saveIcon(Application app);
+	
+	public final void setShortcutArgumentInstance(String token) {
+		this.shortcut.setToken(token);
+	}
 
 	/*private void saveIcon() {
 		File output = new File(Constants.iconsPath+Constants.separator+this.id+"."+((OSTools.isWindows()) ? "ico" : "png"));

@@ -41,7 +41,7 @@ public class WindowsShortcut extends Shortcut {
 		JShellLink shortcut = new JShellLink(Constants.clientShortcutsPath, appName);
 		shortcut.setWorkingDirectory("");
 		shortcut.setPath(System.getProperty("user.dir")+Constants.separator+Constants.launcher);
-		shortcut.setArguments(""+app.getId());
+		shortcut.setArguments(""+this.token+" "+app.getId());
 		shortcut.setIconLocation(Constants.iconsPath+Constants.separator+app.getId()+".ico");
 		shortcut.setIconIndex(0);
 		shortcut.save();

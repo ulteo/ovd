@@ -76,6 +76,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		portal.getMain().getCenter().getCurrent().setSpool(spool);
 		this.spool.createIconsDir();
 		this.spool.createShortcutDir();
+		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 		this.spoolThread = new Thread(this.spool);
 		this.spoolThread.start();
 		this.unpublish();

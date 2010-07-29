@@ -44,7 +44,7 @@ public class LinuxShortcut extends Shortcut {
 			pw.println("Encoding=UTF-8");
 			pw.println("StartupNotify=false");
 			pw.println("Name="+app.getName());
-			pw.println("Exec="+Constants.launcher+" "+app.getId());
+			pw.println("Exec="+Constants.launcher+" "+this.token+" "+app.getId());
 			pw.println("Icon="+Constants.iconsPath+Constants.separator+app.getId()+".png");
 			pw.print("MimeType=");
 			for (String mime : app.getSupportedMimeTypes()) {

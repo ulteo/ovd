@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.crypto.CryptoException;
@@ -41,10 +42,14 @@ public class Spool implements Runnable {
 	private File instancesDir = null;
 	private File toLaunchDir = null;
 	private ArrayList<ApplicationInstance> appInstances = null;
+	private String instance = null;
+	private File baseDirectory = null;
 
 	public Spool(OvdClient client_) {
 		this.client = client_;
 		this.appInstances = new ArrayList<ApplicationInstance>();
+		this.instance = this.randomString();
+		this.baseDirectory = new File(Constants.confRemoteAppsPath+Constants.separator+this.instance);
 	}
 
 	public void createIconsDir() {
@@ -56,10 +61,10 @@ public class Spool implements Runnable {
 	}
 	
 	public void createTree() {
-		this.instancesDir = new File(Constants.instancesPath);
+		this.instancesDir = new File(this.baseDirectory.getAbsolutePath()+Constants.separator+Constants.instancesPath);
 		this.instancesDir.mkdirs();
 
-		this.toLaunchDir = new File(Constants.toLaunchPath);
+		this.toLaunchDir = new File(this.baseDirectory.getAbsolutePath()+Constants.separator+Constants.toLaunchPath);
 		this.toLaunchDir.mkdirs();
 	}
 
@@ -78,17 +83,9 @@ public class Spool implements Runnable {
 	}
 
 	public void deleteTree() {
-		if (this.instancesDir != null) {
+		if (this.baseDirectory.exists()) {
 			try {
-				this.delete(this.instancesDir);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-
-		if (this.toLaunchDir != null) {
-			try {
-				this.delete(this.toLaunchDir);
+				this.delete(this.baseDirectory);
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
@@ -135,7 +132,7 @@ public class Spool implements Runnable {
 					this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
 				}
 
-				File instance = new File(Constants.instancesPath+Constants.separator+todo.getName());
+				File instance = new File(this.instancesDir.getAbsolutePath()+Constants.separator+todo.getName());
 				try {
 					instance.createNewFile();
 				} catch (IOException ex) {
@@ -230,5 +227,22 @@ public class Spool implements Runnable {
 	
 	public ArrayList<ApplicationInstance> getAppInstance() {
 		return this.appInstances;
+	}
+	
+	public String getInstanceName() {
+		return this.instance;
+	}
+	
+	private String randomString() {
+		String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		Random randomGenerator = new Random();
+		
+		String ret = new String();
+		for (int i = 0; i < 5; i++){
+			int r = randomGenerator.nextInt(base.length());
+			ret+= (new Integer(r)).toString();
+		}
+		
+		return ret;
 	}
 }

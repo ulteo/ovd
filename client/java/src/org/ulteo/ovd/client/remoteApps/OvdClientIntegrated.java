@@ -89,6 +89,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		else {
 			this.logger.warn("This Operating System is not supported");
 		}
+		
+		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 	}
 
 	@Override
