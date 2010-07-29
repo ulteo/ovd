@@ -166,7 +166,7 @@ class Profile(AbstractProfile):
 		win32api.RegCloseKey(key)
 		
 		
-		# Rediect the Shell Folders to the remote profile
+		# Redirect the Shell Folders to the remote profile
 		path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
 		
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)

@@ -254,20 +254,6 @@ class Session(AbstractSession):
 			_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
 		_winreg.CloseKey(key)
 		
-		
-		# Redirect the Shell Folders to the remote profile
-		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"%(hiveName)
-		key = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_SET_VALUE)
-		data = {
-			"Desktop" : os.path.basename(self.windowsDesktopDir) # desktop directory name is translated
-		}
-		
-		for (keyname,item) in data.items():
-			dst = os.path.join(directory, item)
-			win32api.RegSetValueEx(key, keyname, 0, win32con.REG_SZ, dst)
-		win32api.RegCloseKey(key)
-		
-		
 		# Overwrite Active Setup: works partially
 		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, "Software\Microsoft\Active Setup", 0, win32con.KEY_ALL_ACCESS)
 		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\Software\Microsoft\Active Setup"%(hiveName), 0, win32con.KEY_ALL_ACCESS)
