@@ -19,7 +19,7 @@ conf_mysql()
     . /usr/share/wwwconfig-common/mysql-createdb.sh
 
     php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
-        "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" || true
+        "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" 2> /dev/null || true
 }
 
 case "$1" in

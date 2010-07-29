@@ -123,11 +123,7 @@ mysql_config()
     . /usr/share/wwwconfig-common/mysql-createuser.sh
 
     php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
-        "$dbserver" \
-        "$dbname" \
-        ulteo_ \
-        "$dbuser" \
-        "$dbpass"
+        "$dbserver" "$dbname" ulteo_ "$dbuser" "$dbpass" 2> /dev/null
 }
 
 # set the configuration if we install
