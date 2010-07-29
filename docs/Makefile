@@ -3,6 +3,7 @@
 SRC=AccountsIntegration.xml \
 	AdminConsole.xml \
 	AD_Primary_Authentication.xml \
+	Easy_Installation.xml \
 	FAQ.xml \
 	Installation.xml \
 	Installation_ApS_Lenny.xml \

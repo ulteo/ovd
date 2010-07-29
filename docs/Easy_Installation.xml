@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Easy Installation</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2008</year>
+      <year>2009</year>
+      <year>2010</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <section id="pre">
+    <title id="pre_title">Prerequisites</title>
+
+    <para>
+      This documentation will help you to install a complete Ulteo OVD
+      infrastructure in only one server. This mode is not recommanded
+      for production, it's only to install a demo quickly.
+    </para>
+
+    <para>
+      The installation is going to be full automatic. The system auto
+      generate MySQL root password and create a user and database
+      named <emphasis>ovd</emphasis>.
+    </para>
+
+    <para>
+      This installation have to be done on
+      a <emphasis role="strong">Ubuntu 10.04 (Lucid Lynx) Server for
+      x86/32 bits or amd64</emphasis> system. It can be downloaded
+      from <ulink url="http://releases.ubuntu.com/10.04/ubuntu-10.04-server-i386.iso">this
+      link</ulink>.
+    </para>
+
+    <para>
+      All operations need to be done as <emphasis>super
+      user</emphasis>.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>To log in as root:
+	  <screen><![CDATA[$ sudo -s]]></screen>
+	</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="sm">
+    <title id="sm_title">Installation</title>
+ 
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Add the Ulteo repository to the repository list:
+	</para>
+        <screen>
+	  <![CDATA[
+# echo "deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main" >> /etc/apt/sources.list
+# apt-get update]]>
+	</screen>
+        <note>
+	  <para>
+	    GPG errors given by the previous command will be fixed in
+            the next installation steps. They won't prevent the
+            installation to be successful.
+	  </para>
+        </note>
+      </listitem>
+
+      <listitem>
+        <para>
+          Install the keyring package to validate the repository using
+          gpg:
+        </para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-keyring
+# apt-get update]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>Install the <emphasis>ulteo-ovd-debconf-database</emphasis> package:</para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-ovd-debconf-database]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+	<para>Install the <emphasis>ulteo-ovd-easy-install</emphasis> package:</para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-ovd-easy-install]]>
+	</screen>
+        <important>
+	  <para>
+	    Do not install
+	    both <emphasis>ulteo-ovd-easy-install</emphasis>
+	    and <emphasis>ulteo-ovd-debconf-database</emphasis> in the
+	    same command line or your install will failed.
+	  </para>
+        </important>
+
+        <note>
+	  <para>
+            This installation can take some minutes. As default, it
+            automatically download the Ulteo OVD susbsystem from
+            <ulink url="ulteo.com"/>, it's a 600MB file.
+	  </para>
+        </note>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+
+  <section id="sessionmanager_configuration">
+    <title>Access to the Administration Console</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>
+          The first step is to connect to you Session Manager
+          Administration Console by browsing at
+          <ulink url="https://localhost/sessionmanager/admin" />.
+        </para>
+        <note>
+          <para>
+            Of course, if you can't start a web browser from the same
+            machine as your Ulteo OVD install,
+            replace <emphasis>localhost</emphasis> by the IP of the
+            remote machine.
+          </para>
+        </note>
+        
+        <para id="sm_install_browse_pic">
+          <inlinemediaobject>
+	    <imageobject>
+	      <imagedata fileref="img/sm_www_admin_before_login.png"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Session Manager into a web browser</phrase>
+	    </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+          As the system has noticed to you at install, the
+          Administrator login and password
+          are <emphasis role="strong">admin</emphasis>. I'ts strongly
+          recommanded to change them.
+        </para>
+
+        <para>
+          <inlinemediaobject>
+	    <imageobject>
+	      <imagedata fileref="img/sm_www_admin_login.png"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Session Manager admin login</phrase>
+	    </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+
+      <listitem>
+        <para>
+          Then, you should be redirected to the main page:
+        </para>
+        <para>
+          <inlinemediaobject>
+	    <imageobject>
+	      <imagedata fileref="img/sm_admin_main.png"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>Session Manager admin main page</phrase>
+	    </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="aps_manage_sm">
+    <title>Setup the server</title>
+      
+    <para>
+      An Application server has been installed and is now
+      ready. First, we have to register it, and switch it from
+      <emphasis>maintenance</emphasis> mode to
+      <emphasis>production</emphasis> mode.
+    </para>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Your server should appear in the <emphasis
+	  role="strong">Unregistered server</emphasis> page.
+	</para>
+
+	<screenshot>
+	  <screeninfo>Session Manager - server page</screeninfo>
+	  <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
+	</screenshot>
+      </listitem>
+
+      <listitem>
+	<para>
+          Click on <emphasis>register</emphasis>.
+	</para>
+      </listitem>
+
+      <listitem>
+	<para>
+	  Now, click on <emphasis>Switch to production</emphasis> to
+	  switch it to Production mode.
+	</para>
+      </listitem>
+
+      <listitem>
+        <para>
+          Setup the redirection name by
+          changing <emphasis role="strong">127.0.0.1</emphasis> by the
+          IP adress of your Ulteo OVD system.
+        </para>
+
+        <screenshot>
+	  <screeninfo>Session Manager - server redirection name</screeninfo>
+	  <graphic fileref="img/sm_admin_external_name.png"></graphic>
+        </screenshot>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="publication">
+    <title>Perform a "Publication"</title>
+ 
+      <para>
+	A publication is an association between a users group and an
+	applications group. It's an authorization for a users group to
+	launch the applications include in the group.
+      </para>
+
+      <para>
+	By default, there is no users or applications group installed
+	so you have to create it to launch sessions (it's not possible
+	to launch session without application in the default
+	configuration).
+      </para>
+
+      <simplesect>
+        <title>Create users</title>
+        <para>
+          First, you have to create users in
+          the <emphasis role="strong">users</emphasis> page. If you
+          just want to test the system quickly, you can create dummies
+          users using the <emphasis>populate</emphasis> feature at the
+          bottom of the page.
+          <screenshot>
+	    <screeninfo>Session Manager - populate users</screeninfo>
+	    <graphic fileref="img/sm_admin_populate.png"></graphic>
+          </screenshot>
+        </para>
+      </simplesect>
+
+      <para>
+	To simplify the process, you can use the <emphasis
+	role="strong">Publication wizard</emphasis> by going on
+	<emphasis>Applications</emphasis> page.
+      </para>
+
+      <screenshot>
+	<screeninfo>Session manager - publication page</screeninfo>
+	<graphic fileref="img/sm_admin_publication.png"></graphic>
+      </screenshot>
+
+    <para>
+      Go to the Publications page, select and follow the
+      <emphasis>wizard</emphasis> steps.
+    </para>
+    <beginpage />
+  </section>
+
+
+  <section id="launch_session">
+    <title>Launch a session</title>
+
+    <para>
+      To start a session, we are going to use the Ulteo OVD Web client
+      called WebInterface. You just have to use you web browser to
+      connect to.
+    </para>
+
+    <important>
+      <para>
+        Client prerequisites:
+        <itemizedlist>
+          <listitem>
+            Java 1.5/1.6 (Sun or OpenJDK)
+          </listitem>
+          <listitem>
+            browser: Firefox 2+ or Internet Explorer 7+
+          </listitem>
+        </itemizedlist>
+      </para>
+    </important>
+
+    <itemizedlist>
+      <listitem>
+	<para>
+	  Back to <ulink url="http://localhost/webinterface/" /> with
+	  your web browser.
+	</para>
+        <note>
+          <para>
+            Of course, if you can't start a web browser from the same
+            machine as your Ulteo OVD install,
+            replace <emphasis>localhost</emphasis> by the IP of the
+            remote machine.
+          </para>
+        </note>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/wi_login.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>WebInterface login</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+	<beginpage />
+      </listitem>
+
+
+      <listitem>
+	<para>
+	  Once logged in, the session is launching:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/wi_loading.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launching</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+	<beginpage />
+      </listitem>
+
+      <listitem>
+	<para>
+	  The session is launched and is ready to use with
+	  applications that have been published for the user:
+	</para>
+	<para>
+	  <inlinemediaobject>
+            <imageobject>
+	      <imagedata fileref="img/wi_session_desktop_started.png"/>
+            </imageobject>
+            <textobject>
+	      <phrase>Session launched</phrase>
+            </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist> 
+  </section>
+</article>
