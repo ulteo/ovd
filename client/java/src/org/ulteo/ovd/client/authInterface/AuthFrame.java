@@ -106,7 +106,7 @@ public class AuthFrame {
 	private String initMode = null;
 	private int profileMode = 0;
 	private String initRes = null;
-	private String autoPubishProfile = null;
+	private String autoPublishProfile = null;
 	private int profileResolution = 1;
 	private String token = null;
 	
@@ -434,20 +434,33 @@ public class AuthFrame {
 		}
 		
 		if(defaultProfileIsPresent) {
-			this.passwordTextField.requestFocusInWindow();
 			this.rememberMe.setSelected(true);
 			this.checkedRemember = true;
-			this.loginTextField.setText(username);
-			this.hostTextField.setText(ovdServer);
-			if (profileMode == 0) {
-				this.desktopButton.setSelected(true);
-			}
-			else {
-				this.portalButton.setSelected(true);
-				desktopMode = false;
-			}
-			resBar.setValue(profileResolution);
 		}
+		
+		if (this.username != null)
+			this.loginTextField.setText(this.username);
+		
+		if (this.ovdServer != null)
+			this.hostTextField.setText(this.ovdServer);
+		
+		if (this.profileMode == 0) {
+			this.desktopButton.setSelected(true);
+		}
+		else {
+			this.portalButton.setSelected(true);
+			desktopMode = false;
+		}
+
+		if (this.autoPublishProfile != null && this.autoPublishProfile.equals("true")) {
+			this.autoPublish.setSelected(true);
+			this.checkedPublished = true;
+		}
+		
+		this.resBar.setValue(this.profileResolution);
+		
+		if (this.username != null)
+			this.passwordTextField.requestFocusInWindow();
 		else 
 			this.loginTextField.requestFocusInWindow();
 	}
@@ -464,32 +477,50 @@ public class AuthFrame {
 	
 	public void parseProfileFile(File profile) throws IOException, FileNotFoundException {
 		Ini ini = new Ini(profile);
-		username = ini.get("user", "login");
-		ovdServer = ini.get("server", "host");
-		initMode = ini.get("sessionMode", "ovdSessionMode");
-		if (initMode.equals("desktop"))
-			profileMode = 0;
-		else 
-			profileMode = 1;
-		
-		autoPubishProfile = ini.get("publication", "auto-publish");
-		if (autoPubishProfile.equals("true")) {
-			autoPublish.setSelected(true);
-			checkedPublished = true;
+		try {
+			this.username = ini.get("user", "login");
 		}
-		initRes = ini.get("screen", "size");
-		if(initRes.equals("800x600"))
-			profileResolution = 0;
-		else if(initRes.equals("1024x768"))
-			profileResolution = 1;
-		else if(initRes.equals("1280x678"))
-			profileResolution = 2;
-		else if(initRes.equals("maximized"))
-			profileResolution = 3;
-		else
-			profileResolution = 4;				
-
-		token = ini.get("token", "token");
+		catch(NullPointerException err) {}
+		
+		try {
+			this.ovdServer = ini.get("server", "host");
+		}
+		catch(NullPointerException err) {}
+		
+		try {
+			this.initMode = ini.get("sessionMode", "ovdSessionMode");
+			if (initMode.equals("desktop"))
+				profileMode = 0;
+			else 
+				profileMode = 1;
+		}
+		catch(NullPointerException err) {}
+		
+		try {
+			this.autoPublishProfile = ini.get("publication", "auto-publish");
+		}
+		catch(NullPointerException err) {}		
+		
+		
+		try {
+			this.initRes = ini.get("screen", "size");
+			if(this.initRes.equals("800x600"))
+				this.profileResolution = 0;
+			else if(this.initRes.equals("1024x768"))
+				this.profileResolution = 1;
+			else if(this.initRes.equals("1280x678"))
+				this.profileResolution = 2;
+			else if(this.initRes.equals("maximized"))
+				this.profileResolution = 3;
+			else
+				this.profileResolution = 4;
+		}
+		catch(NullPointerException err) {}
+		
+		try {
+			this.token = ini.get("token", "token");
+		}
+		catch(NullPointerException err) {}
 	}
 	
 	public JTextField getLogin() {
