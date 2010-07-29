@@ -9,7 +9,7 @@
 . /lib/lsb/init-functions
 
 NAME="Ulteo OVD SlaveServer"
-PROGRAM=ovdSlaveServer
+PROGRAM=ulteo-ovd-slaveserver
 PIDFILE=/var/run/ovd-slaveserver.pid
 
 waitpid() {
