@@ -8,7 +8,7 @@ ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_setup	boolean	false
 ulteo-ovd-session-manager	ulteo-ovd-session-manager/download_tarball	string	http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
 ulteo-ovd-webinterface	ulteo-ovd-webinterface/link_session_manager	boolean	true
 ulteo-ovd-webinterface	ulteo-ovd-webinterface/session_manager_ip	string	127.0.0.1
-ulteo-ovd-subsystem	ulteo-ovd-subsystem/tarball_uri	string	
+ulteo-ovd-subsystem	ulteo-ovd-subsystem/tarball_uri	string	file:///usr/share/ulteo/sessionmanager/base.tar.gz
 ulteo-ovd-subsystem	ulteo-ovd-subsystem/sm_address	string	localhost
 ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbuser	string	ovd
 ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbpass	password	
