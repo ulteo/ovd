@@ -34,14 +34,12 @@ import org.ulteo.rdp.RdpActions;
 public class SouthEastPanel extends JPanel {
 	
 	private JButton disconnect = new JButton(I18n._("Disconnect"));
-	private JButton killApp = new JButton(I18n._("Kill"));
 	private JButton publishingButton = new JButton("Publish");
 	private RdpActions actions = null;
 	
 	public SouthEastPanel(RdpActions rdpActions, CurrentApps currentAppsPanel) {
 		this.actions = rdpActions;
 		disconnect.addActionListener(new LogoutListener(rdpActions));
-		killApp.addActionListener(new KillListener(rdpActions, currentAppsPanel));
 		publishingButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -50,7 +48,6 @@ public class SouthEastPanel extends JPanel {
 			}
 		});
 		this.add(publishingButton);
-		this.add(killApp);
 		this.add(disconnect);
 	}
 	
