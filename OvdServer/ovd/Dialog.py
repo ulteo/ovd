@@ -61,7 +61,7 @@ class Dialog(AbstractDialog):
 		path = request["path"]
 		
 		if request["method"] == "GET":
-			#Logger.debug("do_GET "+path)
+			Logger.debug("do_GET "+path)
 			
 			if path == "/configuration":
 				return self.req_server_conf(request)
@@ -80,19 +80,15 @@ class Dialog(AbstractDialog):
 					if since_str.isdigit():
 						since = int(since_str)
 				elif len(extra) > 0:
-					print "RETURN A"
 					return None  
 				
 				return self.req_server_logs(request, since)
 			
-			print "RETURN B"
 			return None
 		
 		elif request["method"] == "POST":
-			print "RETURN C"
 			return None
 		
-		print "RETURN D"
 		return None
 	
 	def stop(self):
@@ -102,13 +98,11 @@ class Dialog(AbstractDialog):
 	@staticmethod
 	def get_response_xml(stream):
 		if not stream.headers.has_key("Content-Type"):
-			print "RETURN D"
 			return None
 		
 		contentType = stream.headers["Content-Type"].split(";")[0]
 		if not contentType == "text/xml":
 			Logger.error("content type: %s"%(contentType))
-			print "RETURN E"
 			print stream.read()
 			return None
 		

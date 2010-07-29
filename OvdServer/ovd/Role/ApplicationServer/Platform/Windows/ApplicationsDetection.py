@@ -38,10 +38,6 @@ class ApplicationsDetection:
 	def __init__(self):
 		self.mimetypes = mime.MimeInfos()
 		
-		(_, encoding) = locale.getdefaultlocale()
-		if encoding is None:
-			encoding = "utf8"
-		
 		try:
 			self.msi = Msi()
 		except WindowsError,e:
@@ -51,7 +47,7 @@ class ApplicationsDetection:
 		pythoncom.CoInitialize()
 
 		try:
-			self.path = shell.SHGetFolderPath(None, shellcon.CSIDL_COMMON_STARTMENU, 0, 0)
+			self.path = str(shell.SHGetFolderPath(None, shellcon.CSIDL_COMMON_STARTMENU, 0, 0))
 		except:
 			Logger.error("getApplicationsXML_nocache : no  ALLUSERSPROFILE key in environnement")
 			self.path = os.path.join('c:\\', 'Documents and Settings', 'All Users', 'Start Menu')
@@ -84,8 +80,6 @@ class ApplicationsDetection:
 		applications = {}
 		
 		(_, encoding) = locale.getdefaultlocale()
-		if encoding is None:
-			encoding = "utf8"
 		
 		files = self.find_lnk()
 		
@@ -102,10 +96,10 @@ class ApplicationsDetection:
 				continue
 			
 			application = {}
-			application["id"] = hashlib.md5(filename.encode(encoding)).hexdigest()
-			application["name"] = name
+			application["id"] = hashlib.md5(filename).hexdigest()
+			application["name"] = unicode(name, encoding)
 			application["command"] = unicode(shortcut.GetPath(0)[0], encoding)
-			application["filename"] = filename
+			application["filename"] = unicode(filename, encoding)
 			
 			if len(shortcut.GetDescription())>0:
 				application["description"] = unicode(shortcut.GetDescription(), encoding)
