@@ -136,7 +136,21 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void quitProperly(int i) {}
+	public void ovdInstanceStopped(int instance_) {
+		this.spool.destroyInstance(instance_);
+	}
+	
+	@Override
+	protected void quitProperly(int i) {
+		this.spool.deleteTree();
+		this.spoolThread.interrupt();
+		while (this.spoolThread.isAlive()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
+		}
+		this.spool = null;
+	}
 
 	@Override
 	protected void display(RdpConnection co) {

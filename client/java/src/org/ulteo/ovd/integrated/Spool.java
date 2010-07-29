@@ -59,7 +59,7 @@ public class Spool implements Runnable {
 	public void createShortcutDir() {
 		new File(Constants.clientShortcutsPath).mkdirs();
 	}
-	
+
 	public void createTree() {
 		this.instancesDir = new File(this.baseDirectory.getAbsolutePath()+Constants.separator+Constants.instancesPath);
 		this.instancesDir.mkdirs();
@@ -114,41 +114,41 @@ public class Spool implements Runnable {
 		}
 
 		this.logger.info("Spool thread started");
-		
+
 		while (true) {
-			File[] children = this.toLaunchDir.listFiles();
-			for (File todo : children) {
-				try {
-					Scanner scanner = new Scanner(todo);
-					while (scanner.hasNextLine()) {
-						String line = scanner.nextLine().trim();
-						if(line.isEmpty())
-							continue;
-
-						this.startApp(line, todo.getName());
-					}
-					scanner.close();
-				} catch (FileNotFoundException ex) {
-					this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
-				}
-
-				File instance = new File(this.instancesDir.getAbsolutePath()+Constants.separator+todo.getName());
-				try {
-					instance.createNewFile();
-				} catch (IOException ex) {
-					this.logger.error(ex);
-				}
-
-				if (!todo.delete()) {
-					this.logger.error("No delete file '" + todo.getAbsolutePath() + "'");
-				}
-
-				if (todo.getName().equals("quit")) {
-					this.doLogoff();
-					return;
-				}
-			}
 			try {
+				File[] children = this.toLaunchDir.listFiles();
+				for (File todo : children) {
+					try {
+						Scanner scanner = new Scanner(todo);
+						while (scanner.hasNextLine()) {
+							String line = scanner.nextLine().trim();
+							if(line.isEmpty())
+								continue;
+
+							this.startApp(line, todo.getName());
+						}
+						scanner.close();
+					} catch (FileNotFoundException ex) {
+						this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
+					}
+
+					File instance = new File(this.instancesDir.getAbsolutePath()+Constants.separator+todo.getName());
+					try {
+						instance.createNewFile();
+					} catch (IOException ex) {
+						this.logger.error(ex);
+					}
+
+					if (!todo.delete()) {
+						this.logger.error("No delete file '" + todo.getAbsolutePath() + "'");
+					}
+
+					if (todo.getName().equals("quit")) {
+						this.doLogoff();
+						return;
+					}
+				}
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
 				this.logger.info("Spool thread stopped");
@@ -198,13 +198,13 @@ public class Spool implements Runnable {
 	}
 
 	public void destroyInstance(int token) {
-		File instanceFile = new File(Constants.instancesPath+Constants.separator+token);
+		File instanceFile = new File(this.instancesDir.getAbsolutePath()+Constants.separator+token);
 		if (! instanceFile.exists()) {
-			this.logger.error("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : does not exist");
+			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.separator+token+") : does not exist");
 			return;
 		}
 		if (! instanceFile.isFile()) {
-			this.logger.error("Unable to remove instance file ("+Constants.instancesPath+Constants.separator+token+") : is not a file");
+			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.separator+token+") : is not a file");
 			return;
 		}
 
@@ -224,25 +224,25 @@ public class Spool implements Runnable {
 			}
 		}
 	}
-	
+
 	public ArrayList<ApplicationInstance> getAppInstance() {
 		return this.appInstances;
 	}
-	
+
 	public String getInstanceName() {
 		return this.instance;
 	}
-	
+
 	private String randomString() {
 		String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		Random randomGenerator = new Random();
-		
+
 		String ret = new String();
 		for (int i = 0; i < 5; i++){
 			int r = randomGenerator.nextInt(base.length());
 			ret+= (new Integer(r)).toString();
 		}
-		
+
 		return ret;
 	}
 }
