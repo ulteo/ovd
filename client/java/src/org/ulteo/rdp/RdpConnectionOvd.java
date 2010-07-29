@@ -145,6 +145,7 @@ public class RdpConnectionOvd extends RdpConnection {
 	 * Init rdpdr channel
 	 *	- Add device redirection channel
 	 */
+	@Override
 	protected void initRdpdrChannel() throws RdesktopException {
 		if (this.rdpdrChannel != null)
 			return;
@@ -157,9 +158,12 @@ public class RdpConnectionOvd extends RdpConnection {
 	 * process the disconnected step
 	 *	- stop the disk timer task
 	 */
+	@Override
 	protected void fireDisconnected() {
 		super.fireDisconnected();
-		diskManager.stop();
+
+		if (this.diskManager != null)
+			this.diskManager.stop();
 	}
 	
 	/**
