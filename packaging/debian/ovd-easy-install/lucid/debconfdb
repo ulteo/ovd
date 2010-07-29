@@ -1,18 +1,20 @@
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password_again	password	
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_dbadmpass	password	
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password	password	
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_dbpass	password	
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_setup	boolean	false
-ulteo-ovd-subsystem	ulteo-ovd-subsystem/sm_address	string	localhost
+mysql-server-5.0	mysql-server/root_password_again	password	
+mysql-server-5.0	mysql-server/root_password	password	
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_login	string	admin
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password_again	password	admin
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_password	password	admin
 ulteo-ovd-session-manager	ulteo-ovd-session-manager/ssl_disable_warning	note	
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_dbserver	string	localhost
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/postrm_remove_tarball	boolean	false
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_setup	boolean	false
+ulteo-ovd-session-manager	ulteo-ovd-session-manager/download_tarball	string	http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
 ulteo-ovd-webinterface	ulteo-ovd-webinterface/link_session_manager	boolean	true
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_dbadmin	string	root
 ulteo-ovd-webinterface	ulteo-ovd-webinterface/session_manager_ip	string	127.0.0.1
 ulteo-ovd-subsystem	ulteo-ovd-subsystem/tarball_uri	string	
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_dbuser	string	ulteoadmin
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/mysql_dbname	string	ulteo_sm
 ulteo-ovd-subsystem	ulteo-ovd-subsystem/postrm_remove_chroot	boolean	false
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/admin_login	string	admin
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/postrm_remove_tarball	boolean	false
-ulteo-ovd-session-manager	ulteo-ovd-session-manager/download_tarball	string	http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
+ulteo-ovd-subsystem	ulteo-ovd-subsystem/sm_address	string	localhost
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbuser	string	ovd
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbpass	password	admin
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbserver	string	localhost
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbname	string	ovd
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbprefix	string	ulteo_
+ulteo-ovd-debconf-database	ulteo-ovd-debconf-database/mysql_root_password	password	

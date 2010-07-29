@@ -1,0 +1,30 @@
+Template: ulteo-ovd-easy-install/mysql_dbserver
+Type: string
+Default: localhost
+_Description: MySQL host:
+ Please enter the name or IP address of the MySQL database server
+ that will store the Ulteo Session Manager database.
+
+Template: ulteo-ovd-easy-install/mysql_dbname
+Type: string
+Default: ovd
+_Description: Ulteo Session Manager database name:
+ Please enter the name of the database that will host data for
+ Ulteo Session Manager.
+
+Template: ulteo-ovd-easy-install/mysql_dbuser
+Type: string
+Default: ovd
+_Description: Database user for Ulteo Session Manager:
+ Please choose the MySQL account that will be used to access the
+ database hosting Ulteo Session Manager data.
+
+Template: ulteo-ovd-easy-install/mysql_dbpass
+Type: password
+_Description: Database user password:
+ Please choose the password for the account that will be used to
+ access the database hosting Ulteo Session Manager data.
+
+Template: ulteo-ovd-easy-install/mysql_dbadmpass
+Type: password
+_Description: Database server administrator password:

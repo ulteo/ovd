@@ -1,0 +1,28 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+case "$1" in
+
+    purge)
+        db_get ulteo-ovd-easy-install/mysql_dbuser   && dbuser=$RET
+        db_get ulteo-ovd-easy-install/mysql_dbname   && dbname=$RET
+        db_get ulteo-ovd-easy-install/mysql_dbpass   && dbpass=$RET
+        db_get ulteo-ovd-easy-install/mysql_dbserver && dbserver=$RET
+        dbadmin=root
+        db_get ulteo-ovd-debconf-database/mysql_root_password && dbadmpass=$RET
+
+        . /usr/share/wwwconfig-common/mysql-dropdb.sh
+        . /usr/share/wwwconfig-common/mysql-dropuser.sh
+    ;;
+
+    abort-*)
+        exit 1
+    ;;
+
+    *) ;;
+esac
+
+#DEBHELPER#
+
+exit 0

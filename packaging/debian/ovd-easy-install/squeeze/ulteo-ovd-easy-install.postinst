@@ -1,0 +1,40 @@
+#!/bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+conf_mysql()
+{
+    db_get ulteo-ovd-easy-install/mysql_dbserver && dbserver=$RET
+    db_get ulteo-ovd-easy-install/mysql_dbprefix && dbprefix=$RET
+    db_get ulteo-ovd-easy-install/mysql_dbname   && dbname=$RET
+
+    dbadmin=root
+    db_get ulteo-ovd-debconf-database/mysql_root_password && dbadmpass=$RET
+
+    db_get ulteo-ovd-easy-install/mysql_dbuser   && dbuser=$RET
+    dbpass=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
+    db_set ulteo-ovd-easy-install/mysql_dbpass $dbpass
+
+    . /usr/share/wwwconfig-common/mysql-createuser.sh
+    . /usr/share/wwwconfig-common/mysql-createdb.sh
+
+    php /usr/share/ulteo/sessionmanager/admin/init/setup.php \
+        "$dbserver" "$dbname" "$dbprefix" "$dbuser" "$dbpass" || true
+}
+
+case "$1" in
+
+    configure)
+        conf_mysql
+    ;;
+
+    abort-*)
+        exit 1
+    ;;
+
+    *) ;;
+esac
+
+#DEBHELPER#
+
+exit 0
