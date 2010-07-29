@@ -23,7 +23,7 @@ LDFLAGS=
 
 RM=rm -f
 
-SRC1=main.c
+SRC1=main.c spool.c platform.c
 OBJ1=$(SRC1:.c=.o)
 EXE1=UlteoOVDIntegratedLauncher
 
