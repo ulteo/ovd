@@ -24,6 +24,8 @@ var session_mode = false;
 function startSession() {
 	disableLogin();
 
+	startsession = false;
+
 	use_popup = false;
 	if ($('use_popup_true') && $('use_popup_true').checked)
 		use_popup = true;
@@ -198,8 +200,6 @@ function onStartSessionSuccess(transport) {
 }
 
 function onStartSessionFailure(transport) {
-	alert('onStartSessionFailure');
-
 	enableLogin();
 
 	startsession = false;
