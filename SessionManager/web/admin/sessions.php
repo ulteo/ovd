@@ -175,9 +175,22 @@ if (isset($_POST['join'])) {
 else {
 	page_header();
 
-	echo '<h1>'._('Sessions').'</h1>';
+	$total = Abstract_Session::countByStatus();
 
-	$sessions = Abstract_Session::load_all();
+	echo '<h1>'.sprintf(_('Sessions (total: %s)'), $total).'</h1>';
+
+	if ($total > $prefs->get('general', 'max_items_per_page')) {
+		if (! isset($_GET['start']) || (! is_numeric($_GET['start']) || $_GET['start'] >= $total))
+			$start = 0;
+		else
+			$start = $_GET['start'];
+
+		$pagechanger = get_pagechanger('sessions.php?', $prefs->get('general', 'max_items_per_page'), $total);
+
+		$sessions = Abstract_Session::load_partial($prefs->get('general', 'max_items_per_page'), $start);
+	} else
+		$sessions = Abstract_Session::load_all();
+
 	if (is_array($sessions) && count($sessions) > 0) {
 	        $buf = array();
 	        foreach ($sessions as $session)
@@ -185,6 +198,9 @@ else {
 	        ksort($buf);
 	        $sessions = $buf;
 
+		echo '<div>';
+		if (isset($pagechanger))
+			echo $pagechanger;
 		echo '<table class="main_sub sortable" id="sessions_list_table" border="0" cellspacing="1" cellpadding="3">';
 		echo '	<tr class="title">';
 		if (count($sessions) > 1)
@@ -231,6 +247,9 @@ else {
 			echo '</tfoot>';
 		}
 		echo '</table>';
+		if (isset($pagechanger))
+			echo $pagechanger;
+		echo '</div>';
 	} else {
 		echo _('No active session');
 		echo '<br /><br />';

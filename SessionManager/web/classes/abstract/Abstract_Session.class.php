@@ -199,6 +199,31 @@ class Abstract_Session {
 		return $sessions;
 	}
 
+	public static function load_partial($offset_=NULL, $start_=NULL) {
+		Logger::debug('main', 'Starting Abstract_Session::load_partial('.$offset_.', '.$start_.')');
+
+		$SQL = SQL::getInstance();
+
+		if (! is_null($offset_))
+			$SQL->DoQuery('SELECT @1 FROM @2 ORDER BY @3 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, 'id', $SQL->prefix.'sessions', 'timestamp');
+		else
+			$SQL->DoQuery('SELECT @1 FROM @2 ORDER BY @3 DESC', 'id', $SQL->prefix.'sessions', 'timestamp');
+		$rows = $SQL->FetchAllResults();
+
+		$sessions = array();
+		foreach ($rows as $row) {
+			$id = $row['id'];
+
+			$session = Abstract_Session::load($id);
+			if (! $session)
+				continue;
+
+			$sessions[] = $session;
+		}
+
+		return $sessions;
+	}
+
 	public static function uptodate($session_) {
 		Logger::debug('main', 'Starting Abstract_Session::uptodate for \''.$session_->id.'\'');
 		
@@ -217,6 +242,19 @@ class Abstract_Session {
 			return false;
 
 		return true;
+	}
+
+	public static function countByStatus($status_=NULL) {
+		Logger::debug('main', "Starting Abstract_Session::countByStatus($status_)");
+
+		$SQL = SQL::getInstance();
+
+		if (! is_null($status_))
+			$SQL->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'status', $status_);
+		else
+			$SQL->DoQuery('SELECT 1 FROM @1', $SQL->prefix.'sessions');
+
+		return $SQL->NumRows();
 	}
 
 	public static function countByServer($fqdn_) {

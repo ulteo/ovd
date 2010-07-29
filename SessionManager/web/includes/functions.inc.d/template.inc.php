@@ -163,3 +163,55 @@ function popup_info($msg_) {
 
 	return true;
 }
+
+function get_pagechanger($link, $number, $total) {
+	if (! isset($_GET['start']) || (! is_numeric($_GET['start']) || $_GET['start'] >= $total))
+		$start = 0;
+	else
+		$start = $_GET['start'];
+
+	$totalpage = ceil($total/$number);
+
+	$pagechanger = '';
+
+	$pagechanger .= '<div style="margin-top: 5px; margin-bottom: 5px;">';
+	if ($totalpage > 1) {
+		$next_start = ($start+$number);
+		$previous_start = ($start-$number);
+		$thispage = (($start/$number)+1);
+
+		if ($totalpage > 1) {
+			if ($thispage > 6)
+				$pagechanger .= '<span style="background: #ecedee; border: 1px solid #b4bac0; padding: 1px;"><a href="'.$link.'start=0" title="Page 1">1</a></span>'."\r\n";
+			if ($thispage > 7)
+				$pagechanger .= ' ... ';
+
+			if ($total > $number) {
+				$forpage = ($total/$number);
+
+				for ($i = 0; $i < $forpage; $i++) {
+					$p = ($i*$number);
+					$n = ($i+1);
+
+					if ($n >= ($thispage-5) && $n <= ($thispage+5)) {
+						if ($n != $thispage)
+							$pagechanger .= '<span style="background: #ecedee; border: 1px solid #b4bac0; padding: 1px;"><a href="'.$link.'start='.$p.'" title="Page '.$n.'">'.$n.'</a></span>'."\r\n";
+						else
+							$pagechanger .= '<span style="background: #004985; border: 1px solid #004985; color: #fff; padding: 1px;"><strong>'.$n.'</strong></span>'."\r\n";
+					}
+				}
+			}
+
+			if ($thispage < ($totalpage-5)) {
+				$last_start = (($totalpage-1)*$number);
+
+				if ($thispage < ($totalpage-6))
+					$pagechanger .= ' ... ';
+				$pagechanger .= '<span style="background: #ecedee; border: 1px solid #b4bac0; padding: 1px;"><a href="'.$link.'start='.$last_start.'" title="Page '.$totalpage.'">'.$totalpage.'</a></span>'."\r\n";
+			}
+		}
+	}
+	$pagechanger .= '</div>';
+
+	return $pagechanger;
+}
