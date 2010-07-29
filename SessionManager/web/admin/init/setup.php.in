@@ -33,7 +33,6 @@ if (count($_SERVER['argv']) != 6) {
 }
 
 // If we don't have a valid session, auth module will reject the request
-session_start();
 $_SESSION['admin_login'] = 'admin';
 
 $host = $_SERVER['argv'][1];
