@@ -109,19 +109,30 @@ $response_node = $dom->getElementsByTagName('response')->item(0);
 if (! is_null($response_node)) {
 	$response_code = $response_node->getAttribute('code');
 
-	$ret = _('Unknown error');
 	switch ($response_code) {
+		case 'auth_failed':
+			$ret = _('Authentication failed, please double-check your password and try again');
+			break;
+		case 'in_maintenance':
+			$ret = _('The system is in maintenance mode, please contact your administrator for more information');
+			break;
+		case 'internal_error':
+			$ret = _('An internal error occured, please contact your administrator');
+			break;
 		case 'invalid_user':
 			$ret = _('You specified an invalid login, please double-check and try again');
 			break;
+		case 'service_not_available':
+			$ret = _('The service is not available, please contact your administrator for more information');
+			break;
 		case 'unauthorized_session_mode':
-			$ret = _('You are not authorized to launch a session with this mode');
+			$ret = _('You are not authorized to launch a session in this mode');
 			break;
 		case 'user_with_active_session':
 			$ret = _('You already have an active session');
 			break;
 		default:
-			$ret = _('Unknown error');
+			$ret = _('An error occured, please contact your administrator');
 			break;
 	}
 
