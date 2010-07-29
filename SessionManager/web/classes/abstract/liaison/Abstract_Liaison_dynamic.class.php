@@ -82,12 +82,9 @@ class Abstract_Liaison_dynamic {
 	public static function loadGroups($type_, $element_) {
 		Logger::debug('main',"Abstract_Liaison_dynamic::loadGroups ($type_,$element_)");
 		
-		$userGroupDB = UserGroupDB::getInstance();
 		$userGroupDB_dynamic = new UserGroupDBDynamic();
 		$groups = array();
-		$usergroup_list_static = $userGroupDB->getList();
-		$usergroup_list_dynamic = $userGroupDB_dynamic->getList();
-		$usergroup_list = array_unique(array_merge($usergroup_list_dynamic, $usergroup_list_static));
+		$usergroup_list = $userGroupDB_dynamic->getList();
 		foreach ($usergroup_list as $group) {
 			if (in_array($element_, $group->usersLogin())){
 				$l = new Liaison($element_,$group->getUniqueID());
