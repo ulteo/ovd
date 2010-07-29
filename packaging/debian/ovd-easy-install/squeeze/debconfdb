@@ -13,7 +13,7 @@ ulteo-ovd-subsystem	ulteo-ovd-subsystem/tarball_uri	string
 ulteo-ovd-subsystem	ulteo-ovd-subsystem/postrm_remove_chroot	boolean	false
 ulteo-ovd-subsystem	ulteo-ovd-subsystem/sm_address	string	localhost
 ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbuser	string	ovd
-ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbpass	password	admin
+ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbpass	password	
 ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbserver	string	localhost
 ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbname	string	ovd
 ulteo-ovd-easy-install	ulteo-ovd-easy-install/mysql_dbprefix	string	ulteo_
