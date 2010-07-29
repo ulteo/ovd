@@ -104,6 +104,46 @@ class UserDB_sql extends UserDB  {
 		return $result;
 	}
 	
+	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
+		$users = array();
+		$sizelimit_exceeded = false;
+		$count = 0;
+		$limit = '';
+		if ($limit_ != 0)
+			$limit = 'LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
+		$sql2 = MySQL::getInstance();
+		$res = $sql2->DoQuery('SELECT * FROM @1 '.$limit, $this->table);
+		if ($res === false) {
+			Logger::error('main', 'USERDB::MYSQL::getUsersContains failed (sql query failed)');
+			return NULL;
+		}
+		$rows = $sql2->FetchAllResults($res);
+		foreach ($rows as $row){
+			$u = $this->generateUserFromRow($row);
+			if ($this->isOK($u)) {
+				foreach ($attributes_ as $an_attribute) {
+					if ($contains_ == '' or is_string(strstr($a_user->getAttribute($an_attribute), $contains_))) {
+						$users []= $a_user;
+						$count++;
+						if ($limit_ > 0 && $count >= $limit_) {
+							$sizelimit_exceeded = next($list) !== false; // is it the last element ?
+							return array($users, $sizelimit_exceeded);
+						}
+						break;
+					}
+				}
+			}
+			else {
+				if (isset($row['login']))
+					Logger::info('main', 'USERDB::MYSQL::getUsersContains user \''.$row['login'].'\' not ok');
+				else
+					Logger::info('main', 'USERDB::MYSQL::getUsersContains user does not have login');
+			}
+		}
+		usort($users, "user_cmp");
+		return array($users, $sizelimit_exceeded);
+	}
+	
 	public function authenticate($user_,$password_){
 		if (!($user_->hasAttribute('login')))
 			return false;
