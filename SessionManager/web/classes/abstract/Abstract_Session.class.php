@@ -263,10 +263,13 @@ class Abstract_Session {
 		return $SQL->NumRows();
 	}
 
-	public static function getByServer($fqdn_) {
+	public static function getByServer($fqdn_, $offset_=NULL, $start_=NULL) {
 		$SQL = SQL::getInstance();
 
-		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'sessions', 'server', $fqdn_);
+		if (! is_null($offset_))
+			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 ORDER BY @4 DESC LIMIT '.((! is_null($start_))?$start_.',':'').$offset_, $SQL->prefix.'sessions', 'server', $fqdn_, 'timestamp');
+		else
+			$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3 ORDER BY @4 DESC', $SQL->prefix.'sessions', 'server', $fqdn_, 'timestamp');
 		$rows = $SQL->FetchAllResults();
 
 		$sessions = array();

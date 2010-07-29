@@ -74,11 +74,23 @@ function server_display_role_preparation_aps($server) {
 		}
 	}
 		
-	$sessions = Abstract_Session::getByServer($_GET['fqdn']);
+	$total = Abstract_Session::countByServer($_GET['fqdn']);
 	
-	if (count($sessions) > 0)
+	if ($total > 0) {
 		$has_sessions = true;
-	else
+
+		if ($total > $prefs->get('general', 'max_items_per_page')) {
+			if (! isset($_GET['start']) || (! is_numeric($_GET['start']) || $_GET['start'] >= $total))
+				$start = 0;
+			else
+				$start = $_GET['start'];
+
+			$pagechanger = get_pagechanger('servers.php?action=manage&fqdn='.$_GET['fqdn'].'&', $prefs->get('general', 'max_items_per_page'), $total);
+
+			$sessions = Abstract_Session::getByServer($_GET['fqdn'], $prefs->get('general', 'max_items_per_page'), $start);
+		} else
+			$sessions = Abstract_Session::getByServer($_GET['fqdn']);
+	} else
 		$has_sessions = false;
 
 	$external_name_checklist = array('localhost', '127.0.0.1');
@@ -399,6 +411,9 @@ function server_display_role_aps($server, $var) {
 	if ($has_sessions) {
 		echo '<div>'; // div 1 has_sessions
 		echo '<h2>'._('Active sessions').'</h2>';
+		echo '<div>';
+		if (isset($pagechanger))
+			echo $pagechanger;
 		echo '<table border="0" cellspacing="1" cellpadding="3">';
 		foreach($sessions as $session) {
 			echo '<form action="sessions.php"><tr>';
@@ -417,7 +432,10 @@ function server_display_role_aps($server, $var) {
 			echo '</tr></form>';
 		}
 		echo '</table>';
-		echo '</div>'; // div 1 has_sessions
+		if (isset($pagechanger))
+			echo $pagechanger;
+		echo '</div>';
+		echo '</div>';
 	}
 }
 
