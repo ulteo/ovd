@@ -69,11 +69,13 @@ public class SoundDriver {
 
 	private boolean			reopened;
 	private boolean			dspBusy;
+	private boolean 		soundDown;		
 
 	private byte[]				buffer, outBuffer;
 	private GregorianCalendar	prevTime;
 
 	public SoundDriver( SoundChannel sndChannel ) {
+		soundDown = false;
 		soundChannel = sndChannel;
 		packetQueue = new AudioPacket[ MAX_QUEUE ];
 		for( int i = 0; i < MAX_QUEUE; i++ )
@@ -107,6 +109,8 @@ public class SoundDriver {
 	}
 
 	public boolean waveOutSetFormat( WaveFormatEx fmt ) {
+		if (soundDown)
+			return false;
 		format = fmt;
 
 		WaveFormatEx trFormat = SoundDecoder.translateFormatForDevice( fmt );
@@ -124,7 +128,8 @@ public class SoundDriver {
 			oDevice.open( audioFormat );
 			oDevice.start();
 		} catch( Exception e ) {
-			e.printStackTrace();
+			System.out.println("Unable to play sound");
+			this.soundDown = true;
 			return false;
 		}
 
