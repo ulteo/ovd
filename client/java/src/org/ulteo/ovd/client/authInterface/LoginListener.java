@@ -85,7 +85,7 @@ public class LoginListener implements ActionListener {
 				this.cli = new OvdClientDesktop(host, use_https, username, pass, frame, resolution, this);
 				break;
 			case 1:
-				this.cli = new OvdClientPortal(host, use_https, username, pass, frame, this);
+				this.cli = new OvdClientPortal(host, use_https, username, pass, frame, this, frame.isPublishedChecked());
 				break;
 			case 2:
 				this.cli = new OvdClientIntegrated(host, use_https, username, pass, frame, this);
@@ -130,6 +130,12 @@ public class LoginListener implements ActionListener {
 			ini.put("sessionMode", "ovdSessionMode", "portal");
 		else
 			ini.put("sessionMode", "ovdSessionMode", "integrated");
+		if (frame.isPublishedChecked()) {
+			ini.put("publication", "auto-publish", "true");
+		}
+		else {
+			ini.put("publication", "auto-publish", "false");
+		}
 		
 		switch(resolution) {
 		case 0 :

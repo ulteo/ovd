@@ -94,7 +94,9 @@ public class AuthFrame {
 	private JComboBox languageBox = new JComboBox();
 	private JComboBox keyboardBox = new JComboBox();
 	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
-	private boolean checked = false;
+	private JCheckBox autoPublish = new JCheckBox(I18n._("Auto-publish shortcuts"));
+	private boolean checkedRemember = false;
+	private boolean checkedPublished = false;
 	private ActionListener optionListener = null;
 	private LoginListener loginListener = null;
 	private KeyLoginListener keyLog = null;
@@ -104,6 +106,7 @@ public class AuthFrame {
 	private String initMode = null;
 	private int profileMode = 0;
 	private String initRes = null;
+	private String autoPubishProfile = null;
 	private int profileResolution = 1;
 	private String token = null;
 	
@@ -151,6 +154,7 @@ public class AuthFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (! desktopMode) {
 					desktopMode = true;
+					mainFrame.remove(autoPublish);
 					gbc.gridx = 2;
 					gbc.gridy = 10;
 					gbc.gridwidth = 2;
@@ -175,6 +179,11 @@ public class AuthFrame {
 					mainFrame.remove(resolutionValue);
 					mainFrame.remove(resolution);
 					mainFrame.remove(resBar);
+					gbc.gridx = 2;
+					gbc.gridy = 10;
+					gbc.anchor = GridBagConstraints.CENTER;
+					gbc.fill = GridBagConstraints.NONE;
+					mainFrame.add(autoPublish, gbc);
 					mainFrame.pack();
 				}
 			}
@@ -185,7 +194,16 @@ public class AuthFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				checked = (checked) ? false : true;
+				checkedRemember = (checkedRemember) ? false : true;
+			}
+		});
+		
+		autoPublish.addKeyListener(keyLog);
+		autoPublish.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				checkedPublished = (checkedPublished) ? false : true;
 			}
 		});
 		
@@ -242,6 +260,7 @@ public class AuthFrame {
 					mainFrame.add(mode, gbc);
 					
 					if (desktopMode) {
+						gbc.gridx = 1;
 						gbc.gridy = 10;
 						mainFrame.add(resolution, gbc);
 					}
@@ -271,6 +290,14 @@ public class AuthFrame {
 						gbc.anchor = GridBagConstraints.CENTER;
 						mainFrame.add(resolutionValue, gbc);
 					}
+					else {
+						gbc.gridx = 2;
+						gbc.gridy = 10;
+						gbc.gridwidth = 2;
+						gbc.fill = GridBagConstraints.NONE;
+						gbc.anchor = GridBagConstraints.CENTER;
+						mainFrame.add(autoPublish, gbc);
+					}
 					
 					/*gbc.gridx = 2;
 					gbc.gridwidth = 2;
@@ -299,6 +326,7 @@ public class AuthFrame {
 					mainFrame.remove(resolutionValue);
 					mainFrame.remove(languageBox);
 					mainFrame.remove(keyboardBox);
+					mainFrame.remove(autoPublish);
 					
 					moreOption.setIcon(showOption);
 					moreOption.setText(I18n._("More options ..."));
@@ -408,7 +436,7 @@ public class AuthFrame {
 		if(defaultProfileIsPresent) {
 			this.passwordTextField.requestFocusInWindow();
 			this.rememberMe.setSelected(true);
-			this.checked = true;
+			this.checkedRemember = true;
 			this.loginTextField.setText(username);
 			this.hostTextField.setText(ovdServer);
 			if (profileMode == 0) {
@@ -444,6 +472,11 @@ public class AuthFrame {
 		else 
 			profileMode = 1;
 		
+		autoPubishProfile = ini.get("publication", "auto-publish");
+		if (autoPubishProfile.equals("true")) {
+			autoPublish.setSelected(true);
+			checkedPublished = true;
+		}
 		initRes = ini.get("screen", "size");
 		if(initRes.equals("800x600"))
 			profileResolution = 0;
@@ -496,7 +529,11 @@ public class AuthFrame {
 	}
 	
 	public boolean isChecked() {
-		return checked;
+		return checkedRemember;
+	}
+	
+	public boolean isPublishedChecked() {
+		return checkedPublished;
 	}
 	
 	public JButton getOptionButton() {

@@ -34,11 +34,12 @@ import org.ulteo.rdp.RdpActions;
 public class SouthEastPanel extends JPanel {
 	
 	private JButton disconnect = new JButton(I18n._("Disconnect"));
-	private JButton publishingButton = new JButton("Publish");
+	private JButton publishingButton = null;;
 	private RdpActions actions = null;
 	
 	public SouthEastPanel(RdpActions rdpActions, CurrentApps currentAppsPanel) {
 		this.actions = rdpActions;
+		publishingButton = (((OvdClientPortal)actions).isAutoPublish() ?  new JButton(I18n._("Unpublish")) : new JButton(I18n._("Publish")));
 		disconnect.addActionListener(new LogoutListener(rdpActions));
 		publishingButton.addActionListener(new ActionListener() {
 			

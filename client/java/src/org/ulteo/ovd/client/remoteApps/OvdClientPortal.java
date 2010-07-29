@@ -52,16 +52,18 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	private Spool spool = null;
 	private Thread spoolThread = null;
 	private List<Application> appsList = null;
-
+	private boolean autoPublish;
+	
 	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_) {
 		super(fqdn_, use_https_, login_, password_);
 
 		this.init();
 	}
 
-	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
+	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_, boolean autoPublish) {
 		super(fqdn_, use_https_, login_, password_, frame_, logList_);
-
+		this.autoPublish = autoPublish;
+		
 		this.init();
 	}
 
@@ -121,6 +123,8 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 					menu.install(app);
 					this.system.install(app);
 				}
+				if (autoPublish)
+					this.publish();
 				System.out.println("availableConnections.size(): "+this.availableConnections.size());
 				if (menu.isScollerInited())
 					menu.addScroller();
@@ -169,7 +173,6 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		String[] shortcutList = shortcut.list();
 		if (shortcutList != null) {
 			for (String each : shortcutList) {
-				System.out.println("file : "+each);
 				copyShortcut(each);
 			}
 		}
@@ -220,5 +223,9 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 
 	public SystemAbstract getSystem() {
 		return this.system;
+	}
+	
+	public boolean isAutoPublish() {
+		return this.autoPublish;
 	}
 }
