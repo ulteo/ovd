@@ -377,11 +377,14 @@ function showError(errormsg) {
 
 	showLock();
 
-	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideError(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+errormsg;
+	$('errorWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideError(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+errormsg;
+	$('errorWrap').style.padding = '10px';
 
 	new Effect.Center($('errorWrap'));
 
 	new Effect.Appear($('errorWrap'));
+
+	Nifty('div#errorWrap');
 }
 
 function hideError() {
@@ -402,11 +405,18 @@ function showOk(okmsg) {
 
 	showLock();
 
-	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideOk(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+okmsg;
+	$('okWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideOk(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+okmsg;
+	$('okWrap').style.padding = '10px';
 
 	new Effect.Center($('okWrap'));
 
 	new Effect.Appear($('okWrap'));
+
+	Nifty('div#okWrap');
+
+	setTimeout(function() {
+		hideOk();
+	}, 5000);
 }
 
 function hideOk() {
@@ -427,11 +437,14 @@ function showInfo(infomsg) {
 
 	showLock();
 
-	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right"><a href="javascript:;" onclick="hideInfo(); return false"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+infomsg;
+	$('infoWrap').innerHTML = '<div style="width: 16px; height: 16px; float: right;"><a href="javascript:;" onclick="hideInfo(); return false;"><img src="media/image/cross.png" width="16" height="16" alt="" title="" /></a></div>'+infomsg;
+	$('infoWrap').style.padding = '10px';
 
 	new Effect.Center($('infoWrap'));
 
 	new Effect.Appear($('infoWrap'));
+
+	Nifty('div#infoWrap');
 }
 
 function hideInfo() {

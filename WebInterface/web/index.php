@@ -144,11 +144,13 @@ function get_users_list() {
 		<div id="lockWrap" style="display: none;">
 		</div>
 
-		<div id="errorWrap" style="display: none;">
-		</div>
-		<div id="okWrap" style="display: none;">
-		</div>
-		<div id="infoWrap" style="display: none;">
+		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+			<div id="errorWrap" class="rounded" style="display: none;">
+			</div>
+			<div id="okWrap" class="rounded" style="display: none;">
+			</div>
+			<div id="infoWrap" class="rounded" style="display: none;">
+			</div>
 		</div>
 
 		<div id="testJava">
