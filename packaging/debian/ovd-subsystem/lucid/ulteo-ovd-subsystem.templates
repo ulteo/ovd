@@ -28,8 +28,7 @@ _Description: Subsystem download error!
  An error occured while downloading and installing the chroot at this address
  %URL%, the session manager server is not ready to be used.
  .
- You can reconfigure this package to set up the server later if you
- don't want to get the subsystem tarball now.
+ You can reconfigure this package to get the subsystem tarball later.
 
 Template: ulteo-ovd-subsystem/no_chroot_conf
 Type: note
