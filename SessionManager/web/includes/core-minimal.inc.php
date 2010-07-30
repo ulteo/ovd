@@ -42,10 +42,6 @@ require_once(dirname(__FILE__).'/load_balancing.inc.php');
 
 require_once(dirname(__FILE__).'/defaults.inc.php');
 
-$_GET = secure_html($_GET);
-$_POST = secure_html($_POST);
-$_REQUEST = secure_html($_REQUEST);
-
 if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
 	$buf = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 	$buf = explode(';', $buf[0]);
