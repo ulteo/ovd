@@ -196,9 +196,15 @@ BOOL IOemPS::isTSPrinter(HANDLE hPrinter){
     }
   
     if (p2->Attributes & PRINTER_ATTRIBUTE_TS){
-    	 GlobalFree(p2);
+       GlobalFree(p2);
        return TRUE;
     }
+    /* on Windows XP, no support for PRINTER_ATTRIBUTE_TS attribute*/
+    if ( wcsncmp(p2->pPortName, L"TS", 2) == 0){
+       GlobalFree(p2);
+       return TRUE;
+    }
+
     GlobalFree(p2);
     return FALSE;     
 }
