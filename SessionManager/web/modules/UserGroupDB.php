@@ -151,4 +151,29 @@ class UserGroupDB extends Module {
 		$a_userGroupDB = new $mod_usergroup_name();
 		return $a_userGroupDB->$method_name_($prefs, $log);
 	}
+	
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+		$groups = array();
+		
+		$groups1 = array();
+		$sizelimit_exceeded = false;
+		$limit_to_get = $limit_;
+		foreach ($this->instance_type as $key => $value) {
+			list($groups1, $sizelimit_exceeded1) = $value->getGroupsContains($contains_, $attributes_, $limit_to_get);
+			$groups = array_merge($groups, $groups1);
+			
+			$sizelimit_exceeded = $sizelimit_exceeded or $sizelimit_exceeded1;
+			if ( $sizelimit_exceeded == true)
+				break;
+			
+			$limit_to_get = $limit_to_get - count($groups1);
+			if ( $limit_to_get == 0) {
+				break;
+			}
+			else if ( $limit_to_get < 0) {
+				$limit_to_get = $limit_to_get + count($groups1); // revert
+			}
+		}
+		return array(array_unique($groups), $sizelimit_exceeded);
+	}
 }

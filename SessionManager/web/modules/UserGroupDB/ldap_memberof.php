@@ -125,6 +125,53 @@ class UserGroupDB_ldap_memberof {
 		return $groups;
 	}
 	
+	public function getGroupsContains($contains_, $attributes_=array('name', 'description'), $limit_=0) {
+		$groups = array();
+		$userDBAD = UserDB::getInstance();
+		$config_ldap = $userDBAD->makeLDAPconfig();
+		$config_ldap['match'] =  array('description' => 'description','name' => 'name', 'member' => 'member');
+		$ldap = new LDAP($config_ldap);
+		$contains = '*';
+		if ( $contains_ != '')
+			$contains .= $contains_.'*';
+		
+		$filter = '(&(objectClass=group)(|';
+		foreach ($attributes_ as $attribute) {
+			$filter .= '('.$config_ldap['match'][$attribute].'='.$contains.')';
+		}
+		$filter .= '))';
+		$sr = $ldap->search($filter, NULL, $limit_);
+		if ($sr === false) {
+			Logger::error('main', 'UserDB::ldap::getUsersContaint search failed');
+			return NULL;
+		}
+		$sizelimit_exceeded = $ldap->errno() === 4; // LDAP_SIZELIMIT_EXCEEDED => 0x04 
+		
+		$infos = $ldap->get_entries($sr);
+		foreach ($infos as $dn => $info) {
+			foreach ($config_ldap['match'] as $attribut => $match_ldap) {
+				if (isset($info[$match_ldap][0])) {
+					$buf[$attribut] = $info[$match_ldap][0];
+				}
+				if (isset($info[$match_ldap]) && is_array($info[$match_ldap])) {
+					if (isset($info[$match_ldap]['count']))
+						unset($info[$match_ldap]['count']);
+					$extras[$attribut] = $info[$match_ldap];
+				}
+				else {
+					$extras[$attribut] = array();
+				}
+			}
+			if (!isset($buf['description']))
+				$buf['description'] = '';
+			
+			$ug = new UsersGroup($dn, $buf['name'], $buf['description'], true);
+			$ug->extras = $extras;
+			$groups[$dn] = $ug;
+		}
+		return array($groups, $sizelimit_exceeded);
+	}
+	
 	public static function configuration() {
 		return array();
 	}
