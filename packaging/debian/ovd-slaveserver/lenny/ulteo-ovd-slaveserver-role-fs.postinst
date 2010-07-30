@@ -1,17 +1,21 @@
 #!/bin/sh -e
 
 . /usr/share/debconf/confmodule
-db_version 2.0
 
 HOMEDIR=/var/lib/ulteo/ovd/fs
-CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
+SLAVECONF=/etc/ulteo/ovd/slaveserver.conf
+SAMBACONF=/usr/share/ulteo/slaveserver/samba.conf
 
 # update conf file
-if ! grep -q 'ROLES' $CONFFILE; then
-    echo "ROLES = fs" >> $CONFFILE
-elif ! grep -q "^ROLES.*fs" $CONFFILE; then
-    sed -i -r "s/^ROLES *= *(.*)/ROLES = \1 fs/" $CONFFILE
+if ! grep -q 'ROLES' $SLAVECONF; then
+    echo "ROLES = fs" >> $SLAVECONF
+elif ! grep -q "^ROLES.*fs" $SLAVECONF; then
+    sed -i -r "s/^ROLES *= *(.*)/ROLES = \1 fs/" $SLAVECONF
 fi
+
+# override samba conf
+ID=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
+sed -e "s/@RANDOM@/$ID/" $SAMBACONF > /etc/samba/smb.conf
 
 # add user ovd-fs
 getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null

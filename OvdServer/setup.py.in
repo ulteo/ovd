@@ -77,8 +77,12 @@ elif sys.platform == "linux2":
 			'ovd.Role.ApplicationServer.Platform',
 			'ovd.Role.ApplicationServer.Platform.Linux',
 			'ovd.Platform', 'ovd.Platform.Linux']
-	setup_args["data_files"] = [('/usr/bin',['ulteo-ovd-slaveserver']),
-				('/etc/ulteo/ovd',['config/slaveserver.conf'])]
+	setup_args["data_files"] = [
+		('/usr/bin',['ulteo-ovd-slaveserver']),
+		('/etc/ulteo/ovd',['examples/slaveserver.conf']),
+		('/usr/share/ulteo/slaveserver',['examples/samba.conf'])
+	]
+
 
 else:
 	raise Exception("No supported platform")
