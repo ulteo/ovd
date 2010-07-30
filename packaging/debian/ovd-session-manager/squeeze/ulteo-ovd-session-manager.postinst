@@ -101,7 +101,7 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
 
         # get the chroot
         CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
-        if curl $CURLOPTS -f -s -I "$URL" ; then
+        if curl $CURLOPTS -f -s -I "$URL" > /dev/null ; then
             echo "Retrieving the chroot tarball..."
             mkdir -p $CHROOTDIR
             curl $CURLOPTS "$URL" > $CHROOT && continue

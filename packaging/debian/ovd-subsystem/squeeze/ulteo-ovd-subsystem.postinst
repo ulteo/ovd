@@ -28,8 +28,8 @@ while [ ! -e "$CHROOTCONF" ]; do
     [ $(echo $URI | cut -c 1) = '/' ] && URI="file://$URI"
 
     # get the chroot
-    CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
-    if curl $CURLOPTS -f -s -I "$URI" ; then
+    CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
+    if curl $CURLOPTS -f -s -I "$URI" > /dev/null; then
         echo "Retrieving and uncompressing the chroot tarball..."
         mkdir -p "$CHROOTPATH"
         curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTPATH" -f - && continue
