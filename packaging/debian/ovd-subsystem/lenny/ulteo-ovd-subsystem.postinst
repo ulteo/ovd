@@ -36,15 +36,16 @@ while [ ! -e "$CHROOTCONF" ]; do
     fi
 
     # chroot download failed
-    rm -rf $CHROOTPATH
     db_input critical ulteo-ovd-subsystem/download_error || true
     db_go
+    rm -rf $CHROOTPATH
+
     db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
     db_input high ulteo-ovd-subsystem/tarball_uri || true
     db_go
 done
 
-if [ ! -e "$CHROOTCONF" ]; then
+if [ -e "$CHROOTCONF" ]; then
 
     # set timezone
     if [ -f /etc/timezone ]; then
@@ -71,6 +72,7 @@ if [ ! -e "$CHROOTCONF" ]; then
     set_conf $HOSTCONF "CHROOT" $CHROOTPATH
 else
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
+    db_go
 fi
 
 db_stop
