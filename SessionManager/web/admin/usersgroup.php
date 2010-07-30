@@ -20,6 +20,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
+
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
 
@@ -38,6 +39,10 @@ if (isset($_REQUEST['action'])) {
     if (isset($_REQUEST['id']))
       show_manage($_REQUEST['id']);
   }
+  elseif ($_REQUEST['action']=='search') {
+    show_default();
+  }
+
   redirect();
 }
 
@@ -52,7 +57,10 @@ function show_default() {
 
   $userGroupDB = UserGroupDB::getInstance();
   $userDB = UserDB::getInstance();
-  $groups = $userGroupDB->getList(true);
+  $usersgroupsList = new UsersGroupsList($_REQUEST);
+  $groups = $usersgroupsList->search();
+  $searchDiv = $usersgroupsList->getForm();
+
   $has_group = ! (is_null($groups) or (count($groups) == 0));
 
   $can_manage_usersgroups = isAuthorized('manageUsersGroups');
@@ -62,6 +70,8 @@ function show_default() {
   echo '<div id="usersgroup_div" >';
   echo '<h1>'._('User groups').'</h1>';
 
+  echo $searchDiv;
+  
   echo '<div id="usersgroup_list">';
 
   if (! $has_group)
@@ -258,6 +268,7 @@ function show_default() {
 
   echo '</div>';
   page_footer();
+  die();
 }
 
 function show_manage($id) {
