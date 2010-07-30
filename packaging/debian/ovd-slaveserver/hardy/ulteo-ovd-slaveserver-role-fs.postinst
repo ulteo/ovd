@@ -16,6 +16,7 @@ fi
 # override samba conf
 ID=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
 sed -e "s/@RANDOM@/$ID/" $SAMBACONF > /etc/samba/smb.conf
+service smbd restart
 
 # add user ovd-fs
 getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null
