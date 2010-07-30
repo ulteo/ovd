@@ -175,6 +175,15 @@ if (count($server_nodes) < 1) {
 	die();
 }
 
+$profile_node = $session_node->getElementsByTagName('profile')->item(0);
+if (is_object($profile_node)) {
+	$_SESSION['profile'] = array();
+	$_SESSION['profile']['server'] = $profile_node->getAttribute('server');
+	$_SESSION['profile']['dir'] = $profile_node->getAttribute('dir');
+	$_SESSION['profile']['login'] = $profile_node->getAttribute('login');
+	$_SESSION['profile']['password'] = $profile_node->getAttribute('password');
+}
+
 $_SESSION['xml'] = $xml;
 
 setcookie('webinterface[sessionmanager_url]', $_POST['sessionmanager_url'], (time()+(60*60*24*7)));
