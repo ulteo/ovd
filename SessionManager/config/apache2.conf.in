@@ -1,5 +1,7 @@
 # Ulteo session manager alias
 
+Alias /sessionmanager/base.tar.gz /var/cache/ulteo/ovd/sessionmanager/base.tar.gz
+
 Alias /sessionmanager @DATADIR@/ulteo/sessionmanager
 <Directory @DATADIR@/ulteo/sessionmanager>
     Options FollowSymLinks

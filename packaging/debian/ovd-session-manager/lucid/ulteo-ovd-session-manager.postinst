@@ -3,8 +3,9 @@
 . /usr/share/debconf/confmodule
 
 
-CHROOT_TARGET=/usr/share/ulteo/sessionmanager/base.tar.gz
+CHROOTDIR=/var/cache/ulteo/sessionmanager
 CONFDIR=/etc/ulteo/sessionmanager
+CHROOT=$CHROOTDIR/base.tar.gz
 
 ############################# APACHE CONFIGURATION #############################
 
@@ -92,21 +93,22 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
     fi
 
     # download the chroot if needed
-    while [ ! -e "$CHROOT_TARGET" ]; do
+    while [ ! -e "$CHROOT" ]; do
 
         # get the tarball url and quit if empty
         db_get ulteo-ovd-session-manager/tarball_url && URL=$RET
         [ -z $URL ] && break
 
         # get the chroot
-        CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
+        CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
         if curl $CURLOPTS -f -s -I "$URL" ; then
             echo "Retrieving the chroot tarball..."
-            curl $CURLOPTS "$URL" > $CHROOT_TARGET && continue
+            mkdir -p $CHROOTDIR
+            curl $CURLOPTS "$URL" > $CHROOT && continue
         fi
 
         # chroot download failed
-        rm -f $CHROOT_TARGET
+        rm -f $CHROOT
         db_input critical ulteo-ovd-session-manager/download_error || true
         db_go
         db_fset ulteo-session-manager/tarball_url seen false || true
