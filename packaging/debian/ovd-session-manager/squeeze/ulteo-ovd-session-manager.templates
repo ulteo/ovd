@@ -19,61 +19,14 @@ Type: error
 _Description: Password input error
  The two passwords you entered were not the same. Please try again.
 
-Template: ulteo-ovd-session-manager/download_tarball
+Template: ulteo-ovd-session-manager/tarball_url
 Type: string
 Default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
 _Description: Applications chroot URL:
  Application servers will need to retrieve an applications tarball, hosted on
  this session manager. A default tarball can be downloaded and stored for you.
  .
- Leave this field empty if you don't want to download the archive now.
-
-Template: ulteo-ovd-session-manager/mysql_setup
-Type: boolean
-Default: true
-_Description: Configure the MySQL server?
- A connection to a MySQL server is needed by the Session Manager. This script
- can configure a server automatically.
- .
- If you don't have a MySQL server ready to be used, choose 'no' here. The
- Session Manager interface will let you configure the MySQL settings later.
-
-Template: ulteo-ovd-session-manager/mysql_dbserver
-Type: string
-Default: localhost
-_Description: MySQL host:
- Please enter the name or IP address of the MySQL database server
- that will store the Ulteo Session Manager database.
-
-Template: ulteo-ovd-session-manager/mysql_dbname
-Type: string
-Default: ulteo_sm
-_Description: Ulteo Session Manager database name:
- Please enter the name of the database that will host data for Ulteo Session Manager.
-
-Template: ulteo-ovd-session-manager/mysql_dbadmpass
-Type: password
-_Description: Database server administrator password:
-
-Template: ulteo-ovd-session-manager/mysql_dbuser
-Type: string
-Default: ulteoadmin
-_Description: Database user for Ulteo Session Manager:
- Please choose the MySQL account that will be used to access the
- database hosting Ulteo Session Manager data.
-
-Template: ulteo-ovd-session-manager/mysql_dbpass
-Type: password
-_Description: Database user password:
- Please choose the password for the account that will be used to
- access the database hosting Ulteo Session Manager data.
-
-Template: ulteo-ovd-session-manager/mysql_dbadmin
-Type: string
-Default: root
-_Description: Database server administrator username:
- Please enter the username of the database server administrator. This
- account must have database creation privileges.
+ Leave this field empty to pass the archive download.
 
 Template: ulteo-ovd-session-manager/postrm_remove_tarball
 Type: boolean
@@ -89,3 +42,11 @@ Type: note
 Description: SSL disabled
  Cannot verify that the https://hostname/sessionmanager/ alias is correctly
  installed. If not, you won't start OVD sessions.
+
+Template: ulteo-ovd-session-manager/download_error
+Type: error
+_Description: chroot tarball error
+ An error occured while downloading the chroot tarball from this address %URL%.
+ .
+ You need to download it manually as /usr/share/ulteo/sessionmanager/base.tar.gz
+ or can reconfigure this package to get the subsystem tarball later.

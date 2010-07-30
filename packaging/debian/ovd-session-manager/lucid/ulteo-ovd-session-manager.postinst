@@ -70,54 +70,61 @@ fi
 
 ############################ / APACHE CONFIGURATION ############################
 
-# exit if we're not installing
+# only during the first install
 if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
-    db_stop
-    exit 0
-fi
 
-# set the configuration
-CONFFILE=$CONFDIR/config.inc.php
-db_get ulteo-ovd-session-manager/admin_login || true
-LOGIN="$RET"
-db_get ulteo-ovd-session-manager/admin_password || true
-PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1)
-sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
-sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
+    # set the configuration
+    CONFFILE=$CONFDIR/config.inc.php
+    db_get ulteo-ovd-session-manager/admin_login && LOGIN="$RET"
+    db_get ulteo-ovd-session-manager/admin_password
+    PASSWD=$(echo -n $RET | md5sum | cut -d " " -f 1)
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
+    sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
 
-# clear the password
-unset RET
-db_reset ulteo-ovd-session-manager/admin_password
-db_reset ulteo-ovd-session-manager/admin_password_again
+    # clear the password
+    unset RET
+    db_reset ulteo-ovd-session-manager/admin_password
+    db_reset ulteo-ovd-session-manager/admin_password_again
 
-# change conffile permission
-if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
-    dpkg-statoverride --update --add www-data www-data 0660 $CONFFILE
-fi
-
-# get the chroot
-db_get ulteo-ovd-session-manager/download_tarball || true
-URL="$RET"
-if [ ! -e $CHROOT_TARGET ]; then
-	if [ x"$URL" != x"" ]; then
-        CURLOPTS="--retry 3 --connect-timeout 60  --insecure -L"
-    	if ! curl $CURLOPTS -f "$URL" > $CHROOT_TARGET; then
-            rm -f $CHROOT_TARGET
-            echo "Unable to retrieve the chroot archive."
-            echo "You need to download it manually as $CHROOT_TARGET, or use the 'sm-config' script."
-        fi
-	fi
-fi
-
-# change log and spool file permissions
-for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
-    if ! dpkg-statoverride --list $f >/dev/null 2>&1; then
-        dpkg-statoverride --update --add www-data www-data 0770 $f
+    # change conffile permission
+    if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
+        dpkg-statoverride --update --add www-data www-data 0660 $CONFFILE
     fi
-done
 
-# make sure that the data created by the postinst are owned by www-data
-chown -R www-data:www-data /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager
+    # download the chroot if needed
+    while [ ! -e "$CHROOT_TARGET" ]; do
+
+        # get the tarball url and quit if empty
+        db_get ulteo-ovd-session-manager/tarball_url && URL=$RET
+        [ -z $URL ] && break
+
+        # get the chroot
+        CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
+        if curl $CURLOPTS -f -s -I "$URL" ; then
+            echo "Retrieving the chroot tarball..."
+            curl $CURLOPTS "$URL" > $CHROOT_TARGET && continue
+        fi
+
+        # chroot download failed
+        rm -f $CHROOT_TARGET
+        db_input critical ulteo-ovd-session-manager/download_error || true
+        db_go
+        db_fset ulteo-session-manager/tarball_url seen false || true
+        db_input high ulteo-ovd-session-manager/tarball_url || true
+        db_go
+    done
+
+    # change log and spool file permissions
+    for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
+        if ! dpkg-statoverride --list $f >/dev/null 2>&1; then
+            dpkg-statoverride --update --add www-data www-data 0770 $f
+        fi
+    done
+
+    # make sure that the data created by the postinst are owned by www-data
+    chown -R www-data:www-data /var/spool/ulteo/sessionmanager \
+                               /var/log/ulteo/sessionmanager
+fi
 
 db_stop
 

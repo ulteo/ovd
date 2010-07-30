@@ -19,14 +19,14 @@ Type: error
 _Description: Password input error
  The two passwords you entered were not the same. Please try again.
 
-Template: ulteo-ovd-session-manager/download_tarball
+Template: ulteo-ovd-session-manager/tarball_url
 Type: string
 Default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
 _Description: Applications chroot URL:
  Application servers will need to retrieve an applications tarball, hosted on
  this session manager. A default tarball can be downloaded and stored for you.
  .
- Leave this field empty if you don't want to download the archive now.
+ Leave this field empty to pass the archive download.
 
 Template: ulteo-ovd-session-manager/postrm_remove_tarball
 Type: boolean
@@ -42,3 +42,11 @@ Type: note
 Description: SSL disabled
  Cannot verify that the https://hostname/sessionmanager/ alias is correctly
  installed. If not, you won't start OVD sessions.
+
+Template: ulteo-ovd-session-manager/download_error
+Type: error
+_Description: chroot tarball error
+ An error occured while downloading the chroot tarball from this address %URL%.
+ .
+ You need to download it manually as /usr/share/ulteo/sessionmanager/base.tar.gz
+ or can reconfigure this package to get the subsystem tarball later.

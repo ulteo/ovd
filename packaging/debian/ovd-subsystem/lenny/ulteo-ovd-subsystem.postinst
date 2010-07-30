@@ -18,43 +18,33 @@ set_conf () {
 }
 
 # download the chroot if needed
-if [ ! -e "$CHROOTCONF" ]; then
-    echo "Retrieving and uncompressing the chroot tarball..."
+while [ ! -e "$CHROOTCONF" ]; do
 
-    while true; do
-        db_get ulteo-ovd-subsystem/tarball_uri || true
-        if [ -n "$RET" ]; then
-            case "$RET" in
-                # curl needs file://, make sure we have it if we deal with a file path
-                /*)
-                    URI="file://$RET"
-                    ;;
-                *)
-                    URI="$RET"
-                    ;;
-            esac
-        else
-            break
-        fi
+    # get the tarball uri and quit if empty
+    db_get ulteo-ovd-subsystem/tarball_uri && URI=$RET
+    [ -z $URI ] && break
 
+    # curl needs file://, make sure we have it if we deal with a file path
+    [ $(echo $URI | cut -c 1) = '/' ] && URI="file://$URI"
+
+    # get the chroot
+    CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
+    if curl $CURLOPTS -f -s -I "$URI" ; then
+        echo "Retrieving and uncompressing the chroot tarball..."
         mkdir -p "$CHROOTPATH"
+        curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTPATH" -f - && continue
+    fi
 
-        DOWNLOAD_OK="yes"
-        CURLOPTS="--retry 3 --connect-timeout 60 --insecure"
-        curl $CURLOPTS -f -s -I "$URI" || DOWNLOAD_OK="no"
-        if [ "$DOWNLOAD_OK" = "yes" ]; then
-            curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTPATH" -f - && break
-        fi
+    # chroot download failed
+    rm -rf $CHROOTPATH
+    db_input critical ulteo-ovd-subsystem/download_error || true
+    db_go
+    db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
+    db_input high ulteo-ovd-subsystem/tarball_uri || true
+    db_go
+done
 
-        # the chroot download failed
-        db_input critical ulteo-ovd-subsystem/download_error || true
-        db_go
-        db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
-        db_input high ulteo-ovd-subsystem/tarball_uri || true
-        db_go
-    done
-
-    [ -n $HTTPPASSWD ] && unset HTTPPASSWD
+if [ ! -e "$CHROOTCONF" ]; then
 
     # set timezone
     if [ -f /etc/timezone ]; then
@@ -64,11 +54,9 @@ if [ ! -e "$CHROOTCONF" ]; then
         cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
         echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
     fi
-fi
 
-# if we reinstall the ApS and the chroot is already there, the configs need to
-# be written again
-if [ -e $CHROOTCONF ]; then
+    # if we reinstall the ApS and the chroot is already there, the configs need to
+    # be written again
     set_conf $CHROOTCONF "ROLES" "aps"
     set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
 
@@ -79,11 +67,11 @@ if [ -e $CHROOTCONF ]; then
     # resolv.conf
     [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
     [ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
+
+    set_conf $HOSTCONF "CHROOT" $CHROOTPATH
 else
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
 fi
-
-set_conf $HOSTCONF "CHROOT" $CHROOTPATH
 
 db_stop
 
