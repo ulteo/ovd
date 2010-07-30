@@ -28,7 +28,8 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JFrame;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
@@ -62,7 +63,7 @@ public class RdpConnection implements SeamListener, Runnable{
 	protected Common common = null;
 	private RdesktopCanvas_Localised canvas = null;
 	protected String mapFile = null;
-	private ArrayList<RdpListener> listener = new ArrayList<RdpListener>();
+	private CopyOnWriteArrayList<RdpListener> listener = new CopyOnWriteArrayList<RdpListener>();
 	private Thread connectionThread = null;
 	private Logger logger = Logger.getLogger(RdpConnection.class);
 	
@@ -480,13 +481,13 @@ public class RdpConnection implements SeamListener, Runnable{
 	
 	private void exit(int n) {
 		System.gc();
-		
+
 		if (n == 0)
 			this.fireDisconnected();
 		else
 			this.fireFailed();
 	}
-	
+
 	public void addRdpListener(RdpListener l) {
 		this.listener.add(l);
 	}
@@ -496,31 +497,31 @@ public class RdpConnection implements SeamListener, Runnable{
 	}
 	
 	protected void fireConnected() {
-		for(RdpListener list : listener) {
+		for(RdpListener list : this.listener) {
 			list.connected(this);
 		}
 	}
 	
 	protected void fireConnecting() {
-		for(RdpListener list : listener) {
+		for(RdpListener list : this.listener) {
 			list.connecting(this);
 		}
 	}
 	
 	protected void fireFailed() {
-		for(RdpListener list : listener) {
+		for(RdpListener list : this.listener) {
 			list.failed(this);
 		}
 	}
 	
-	protected void fireDisconnected() {
-		for(RdpListener list : listener) {
+	protected synchronized void fireDisconnected() {
+		for(RdpListener list : this.listener) {
 			list.disconnected(this);
 		}
 	}
 	
 	protected void fireSeamlessEnabled() {
-		for(RdpListener list : listener) {
+		for(RdpListener list : this.listener) {
 			list.seamlessEnabled(this);
 		}
 	}

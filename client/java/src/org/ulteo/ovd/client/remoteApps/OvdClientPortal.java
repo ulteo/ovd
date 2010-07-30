@@ -21,6 +21,8 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -42,10 +44,11 @@ import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
+import org.ulteo.ovd.integrated.shorcut.WindowsShortcut;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public class OvdClientPortal extends OvdClientRemoteApps {
+public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener {
 	private PortalFrame portal = null;
 	private boolean publicated = false;
 	private SystemAbstract system = null;
@@ -71,14 +74,15 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows() : new SystemLinux();
 		this.logger = Logger.getLogger(OvdClientPortal.class);
 		this.appsList = new ArrayList<Application>();
-		this.portal = new PortalFrame();
 		this.spool = new Spool(this);
-		portal.getMain().getCenter().getCurrent().setSpool(spool);
 		this.spool.createIconsDir();
 		this.spool.createShortcutDir();
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 		this.spoolThread = new Thread(this.spool);
 		this.spoolThread.start();
+		this.portal = new PortalFrame();
+		this.portal.addComponentListener(this);
+		this.portal.getMain().getCenter().getCurrent().setSpool(spool);
 		this.unpublish();
 	}
 
@@ -86,10 +90,22 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	protected void runInit() {}
 
 	@Override
-	protected void runExit() {
-		Collections.sort(this.appsList);
+	protected void runSessionReady(String sessionId) {
+		this.portal.initButtonPan(this);
+		
+		if (this.portal.getMain().getCenter().getMenu().isScollerInited())
+			this.portal.getMain().getCenter().getMenu().addScroller();
 
-		this.portal.getMain().getCenter().getMenu().initButtons(this.appsList);
+		this.portal.setVisible(true);
+	}
+
+	@Override
+	protected void runExit() {}
+
+	@Override
+	protected void runSessionTerminated(String sessionId) {
+		this.portal.setVisible(false);
+		this.portal.dispose();
 	}
 
 	@Override
@@ -120,18 +136,13 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 			if (rc.getOvdAppChannel() == o) {
 				Menu menu = this.portal.getMain().getCenter().getMenu();
 				for (Application app : rc.getAppsList()) {
-					System.out.println("install "+app.getName());
-					menu.install(app);
+					this.logger.info("Installing application \""+app.getName()+"\"");
 					this.system.install(app);
+					menu.install(app);
+					if (this.autoPublish)
+						this.publish(app);
 				}
-				if (autoPublish)
-					this.publish();
-				System.out.println("availableConnections.size(): "+this.availableConnections.size());
-				if (menu.isScollerInited())
-					menu.addScroller();
 			}
-
-			this.portal.initButtonPan(this);
 		}
 	}
 
@@ -153,10 +164,7 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void display(RdpConnection co) {
-		if (! this.portal.isVisible())
-			this.portal.setVisible(true);
-	}
+	protected void display(RdpConnection co) {}
 
 	@Override
 	protected void hide(RdpConnection co) {
@@ -165,11 +173,6 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
 			menu.uninstall(app);
 			this.system.uninstall(app);
-		}
-
-		if (this.countAvailableConnection() == 0) {
-			this.portal.setVisible(false);
-			this.portal.dispose();
 		}
 	}
 
@@ -181,6 +184,15 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 			this.publish();
 		}
 		return publicated;
+	}
+
+	public void publish(Application app) {
+		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName()).concat(".lnk");
+
+		if (new File(Constants.clientShortcutsPath+Constants.separator+shortcutName).exists())
+			this.copyShortcut(shortcutName);
+		else
+			this.logger.error("Unable to copy "+shortcutName+": The shortcut does not exist.");
 	}
 
 	public void publish() {
@@ -239,6 +251,17 @@ public class OvdClientPortal extends OvdClientRemoteApps {
 	public SystemAbstract getSystem() {
 		return this.system;
 	}
+
+	public void componentShown(ComponentEvent ce) {
+		if (ce.getComponent() == this.portal) {
+			Collections.sort(this.appsList);
+			this.portal.getMain().getCenter().getMenu().initButtons(this.appsList);
+		}
+	}
+
+	public void componentResized(ComponentEvent ce) {}
+	public void componentMoved(ComponentEvent ce) {}
+	public void componentHidden(ComponentEvent ce) {}
 	
 	public boolean isAutoPublish() {
 		return this.autoPublish;

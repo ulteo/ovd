@@ -31,10 +31,11 @@ import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionStatusListener;
 import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
 
-public abstract class OvdClient extends Thread implements RdpListener, RdpActions {
+public abstract class OvdClient extends Thread implements RdpListener, RdpActions, SessionStatusListener {
 	public static final String productName = "OVD Client";
 
 	public static HashMap<String,String> toMap(String login_, String password_) {
@@ -58,7 +59,10 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	protected boolean isCancelled = false;
 
 	protected SessionManagerCommunication smComm = null;
+	protected Thread getStatus = null;
+	protected ArrayList<RdpConnectionOvd> connections = null;
 	protected ArrayList<RdpConnectionOvd> availableConnections = null;
+	protected ArrayList<String> availableSessions = null;
 
 	public OvdClient(String fqdn_, boolean use_https_, HashMap<String,String> params_) {
 		this.initMembers(fqdn_, use_https_, params_, false);
@@ -77,6 +81,7 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		this.graphic = graphic_;
 
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
+		this.availableSessions = new ArrayList<String>();
 	}
 
 	protected void setSessionMode(String sessionMode_) {
@@ -88,7 +93,10 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	}
 
 	private void removeAvailableConnection(RdpConnectionOvd rc) {
+		System.out.println("removeAvailableConnection");
+		System.out.println("before availableconnection.size: "+this.countAvailableConnection());
 		this.availableConnections.remove(rc);
+		System.out.println("after availableconnection.size: "+this.countAvailableConnection());
 	}
 
 	protected int countAvailableConnection() {
@@ -114,9 +122,12 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 			this.smComm = new SessionManagerCommunication(fqdn, logList.getLoader(), this.use_https);
 		else
 			this.smComm = new SessionManagerCommunication(fqdn, this.use_https);
-		
+
 		if (! this.askSM())
 			return;
+
+		this.smComm.addSessionStatusListener(this);
+		this.smComm.startSessionStatusMonitoring();
 
 		if (this.isCancelled) {
 			this.smComm = null;
@@ -124,25 +135,74 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 			return;
 		}
 
-		ArrayList<RdpConnectionOvd> connections = this.smComm.getConnections();
-		for (RdpConnectionOvd rc : connections) {
+		this.connections = this.smComm.getConnections();
+		for (RdpConnectionOvd rc : this.connections) {
 			rc.addRdpListener(this);
 
 			this.customizeConnection(rc);
+		}
 
+		for (RdpConnectionOvd rc : this.connections) {
 			rc.connect();
 		}
+	}
+
+	public void sessionReady(String sessionId) {
+		if (this.availableSessions.contains(sessionId))
+			return;
+		
+		this.availableSessions.add(sessionId);
+
+		if (this.graphic && (this.logList.getLoader().isVisible() || this.frame.getMainFrame().isVisible())) {
+			this.logList.getLoader().setVisible(false);
+			this.logList.getLoader().dispose();
+			this.frame.hideWindow();
+		}
+
+		this.runSessionReady(sessionId);
 
 		this.runExit();
 	}
 
 	protected abstract void runInit();
 
+	protected abstract void runSessionReady(String sessionId);
+
 	protected abstract void runExit();
+
+	public void sessionTerminated(String sessionId) {
+		if (! this.availableSessions.contains(sessionId))
+			return;
+		System.out.println("sessionTerminated");
+		this.availableSessions.remove(sessionId);
+
+		this.smComm.stopSessionStatusMonitoring();
+		this.smComm.removeSessionStatusListener(this);
+
+		this.runSessionTerminated(sessionId);
+
+		if (this.graphic) {
+			if (this.logList.getLoader().isVisible()) {
+				this.logList.getLoader().setVisible(false);
+				this.logList.getLoader().dispose();
+			}
+			Container cp = this.frame.getMainFrame().getContentPane();
+			cp.removeAll();
+
+			this.frame.init();
+			this.frame.setDesktopLaunched(false);
+		}
+		else {
+			System.exit(0);
+		}
+	}
+
+	protected abstract void runSessionTerminated(String sessionId);
 
 	private void quit(int i) {
 		this.quitProperly(i);
 		while (this.countAvailableConnection() > 0) {
+			System.out.println("countAvailableConnection: "+this.countAvailableConnection());
 			try {
 				Thread.sleep(100);
 			} catch (InterruptedException e) {}
@@ -162,12 +222,6 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 
 	/* RdpListener */
 	public synchronized void connected(RdpConnection co) {
-		if(graphic && (this.logList.getLoader().isVisible() || this.frame.getMainFrame().isVisible())) {
-			logList.getLoader().setVisible(false);
-			logList.getLoader().dispose();
-			frame.hideWindow();
-		}
-
 		this.logger.info("Connected to "+co.getServer());
 		this.addAvailableConnection((RdpConnectionOvd)co);
 
@@ -180,30 +234,13 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 	}
 
 	public synchronized void disconnected(RdpConnection co) {
-		if (graphic && this.countAvailableConnection() == 0) {
-			if (logList.getLoader().isVisible()) {
-				logList.getLoader().setVisible(false);
-				logList.getLoader().dispose();
-			}
-			Container cp = frame.getMainFrame().getContentPane();
-			cp.removeAll();
-		}
+		co.removeRdpListener(this);
 
 		this.uncustomizeConnection((RdpConnectionOvd) co);
 
 		this.hide(co);
-		
 		this.removeAvailableConnection((RdpConnectionOvd)co);
 		this.logger.info("Disconnected from "+co.getServer());
-
-		if (this.countAvailableConnection() == 0) {
-			if(graphic) {
-				frame.init();
-				frame.setDesktopLaunched(false);
-			} else {
-				System.exit(0);
-			}
-		}
 	}
 
 	public void failed(RdpConnection co) {
@@ -257,10 +294,10 @@ public abstract class OvdClient extends Thread implements RdpListener, RdpAction
 		logoutThread.interrupt();
 		while (logoutThread.isAlive()) {
 			try {
-				Thread.sleep(10);
+				Thread.sleep(100);
 			} catch (InterruptedException ex) {}
 		}
-		
+
 		for (RdpConnectionOvd co : this.availableConnections) {
 			co.disconnect();
 		}

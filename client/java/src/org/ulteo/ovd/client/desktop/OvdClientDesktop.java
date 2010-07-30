@@ -57,7 +57,15 @@ public class OvdClientDesktop extends OvdClient {
 	protected void runInit() {}
 
 	@Override
+	protected void runSessionReady(String sessionId) {
+		this.desktop.setVisible(true);
+	}
+
+	@Override
 	protected void runExit() {}
+
+	@Override
+	protected void runSessionTerminated(String sessionId) {}
 
 	@Override
 	protected void quitProperly(int i) {}
@@ -72,14 +80,11 @@ public class OvdClientDesktop extends OvdClient {
 	protected void uncustomizeConnection(RdpConnectionOvd co) {}
 
 	@Override
-	public void display(RdpConnection co) {
-		this.desktop.setVisible(true);
-	}
+	public void display(RdpConnection co) {}
 
 	@Override
 	public void hide(RdpConnection co) {
 		desktop.setVisible(false);
-		desktop.dispose();
 	}
 
 	private void initDesktop(RdpConnectionOvd co) {

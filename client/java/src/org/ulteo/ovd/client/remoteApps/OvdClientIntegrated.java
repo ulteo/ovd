@@ -94,6 +94,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
+	protected void runSessionReady(String sessionId) {}
+
+	@Override
 	protected boolean askSM() {
 		if (this.authByToken)
 			return this.smComm.askForApplications(this.params);
@@ -114,6 +117,9 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 		}
 		this.exit(0);
 	}
+
+	@Override
+	protected void runSessionTerminated(String sessionId) {}
 
 	@Override
 	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {}

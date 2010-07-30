@@ -38,6 +38,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.HostnameVerifier;
@@ -67,21 +68,34 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 
-public class SessionManagerCommunication {
+public class SessionManagerCommunication implements Runnable {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
-	public static final String WEBSERVICE_START_SESSION = "startsession.php";
-	public static final String WEBSERVICE_EXTERNAL_APPS = "client/remote_apps.php";
-	public static final String WEBSERVICE_LOGOUT = "client/logout.php";
+	private static final String WEBSERVICE_START_SESSION = "startsession.php";
+	private static final String WEBSERVICE_EXTERNAL_APPS = "client/remote_apps.php";
+	private static final String WEBSERVICE_SESSION_STATUS = "client/session_status.php";
+	private static final String WEBSERVICE_LOGOUT = "client/logout.php";
 
 	public static final String FIELD_LOGIN = "login";
 	public static final String FIELD_PASSWORD = "password";
 	public static final String FIELD_TOKEN = "token";
 	public static final String FIELD_SESSION_MODE = "session_mode";
 
-	public static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
-	public static final String CONTENT_TYPE_XML = "text/xml";
+	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+	private static final String CONTENT_TYPE_XML = "text/xml";
+
+	private static final String SESSION_STATUS_UNKNOWN = "unknown";
+	private static final String SESSION_STATUS_ERROR = "error";
+	private static final String SESSION_STATUS_INIT = "init";
+	private static final String SESSION_STATUS_INITED = "ready";
+	private static final String SESSION_STATUS_ACTIVE = "logged";
+	private static final String SESSION_STATUS_INACTIVE = "disconnected";
+	private static final String SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
+	private static final String SESSION_STATUS_DESTROYED = "destroyed";
+
+	private static final long REQUEST_TIME_FREQUENTLY = 2000;
+	private static final long REQUEST_TIME_OCCASIONALLY = 5000;
 
 	private String sm = null;
 	private boolean use_https = false;
@@ -89,6 +103,8 @@ public class SessionManagerCommunication {
 	private String sessionMode = null;
 	private String requestMode = null;
 	private String sessionId = null;
+	private String sessionStatus = SESSION_STATUS_INIT;
+	private boolean sessionIsActive = false;
 	private String base_url;
 	private JDialog loadFrame = null;
 	private boolean graphic = false;
@@ -96,6 +112,10 @@ public class SessionManagerCommunication {
 	private String printers = null;
 
 	private List<String> cookies = null;
+
+	private CopyOnWriteArrayList<SessionStatusListener> sessionStatusListeners = null;
+	private boolean sessionStatusMonitoring = false;
+	private long sessionStatusRequestTime = REQUEST_TIME_FREQUENTLY;
 
 	public SessionManagerCommunication(String sm_, JDialog loadFrame, boolean use_https_) {
 		this.init(sm_, use_https_);
@@ -108,6 +128,7 @@ public class SessionManagerCommunication {
 	}
 
 	private void init(String sm_, boolean use_https_) {
+		this.sessionStatusListeners = new CopyOnWriteArrayList<SessionStatusListener>();
 		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.cookies = new ArrayList<String>();
 		this.sm = sm_;
@@ -156,7 +177,7 @@ public class SessionManagerCommunication {
 
 		this.requestMode = params.get(FIELD_SESSION_MODE);
 
-		Document response = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, concatParams(params));
+		Document response = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, concatParams(params), true);
 
 		if (response == null)
 			return false;
@@ -179,7 +200,7 @@ public class SessionManagerCommunication {
 		if (! params.containsKey(FIELD_SESSION_MODE))
 			params.put(FIELD_SESSION_MODE, this.requestMode);
 
-		Document response = this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, concatParams(params));
+		Document response = this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, concatParams(params), true);
 
 		if (response == null)
 			return false;
@@ -194,7 +215,7 @@ public class SessionManagerCommunication {
 		Element logout = request.getDocumentElement();
 		logout.setAttribute("mode", "logout");
 
-		Document response = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, request.toString());
+		Document response = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, request, true);
 
 		if (response == null)
 			return false;
@@ -202,14 +223,31 @@ public class SessionManagerCommunication {
 		return this.parseLogoutResponse(response);
 	}
 
-	private Document askWebservice(String webservice, String content_type, Object data) {
+	public boolean askForSessionStatus() {
+		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
+		Document request = domImpl.createDocument(null, "session", null);
+
+		Element session = request.getDocumentElement();
+		session.setAttribute("id", "");
+		session.setAttribute("status", "");
+
+		Document response = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, request, false);
+
+		if (response == null)
+			return false;
+
+		return this.parseSessionStatusResponse(response);
+	}
+
+	private Document askWebservice(String webservice, String content_type, Object data, boolean showLog) {
 		Document document = null;
 		HttpURLConnection connexion = null;
 		
 		try {
 			URL url = new URL(this.base_url+webservice);
 
-			System.out.println("Connexion a l'url ... "+url);
+			if (showLog)
+				System.out.println("Connexion a l'url ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
 
 			if (this.use_https) {
@@ -263,7 +301,8 @@ public class SessionManagerCommunication {
 				XMLSerializer serializer = new XMLSerializer(out, outFormat);
 				serializer.serialize(request);
 
-				this.dumpXML(request, "Receiving XML:");
+				if (showLog)
+					this.dumpXML(request, "Receiving XML:");
 			}
 			else if (data != null) {
 				System.err.println("Cannot send "+ data.getClass().getName() +" data to session manager webservices");
@@ -277,7 +316,8 @@ public class SessionManagerCommunication {
 			String res = connexion.getResponseMessage();
 			String contentType = connexion.getContentType();
 
-			System.out.println("Response "+r+ " ==> "+res+ " type: "+contentType);
+			if (showLog)
+				System.out.println("Response "+r+ " ==> "+res+ " type: "+contentType);
 
 			if (r == HttpURLConnection.HTTP_OK && contentType.startsWith(CONTENT_TYPE_XML)) {
 				String headerName=null;
@@ -303,7 +343,8 @@ public class SessionManagerCommunication {
 
 				document = parser.getDocument();
 
-				this.dumpXML(document, "Receiving XML:");
+				if (showLog)
+					this.dumpXML(document, "Receiving XML:");
 			}
 			else {
 				System.err.println("Invalid response:\n\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType);
@@ -325,6 +366,37 @@ public class SessionManagerCommunication {
 
 	private boolean parseLogoutResponse(Document in) {
 		
+
+		return true;
+	}
+
+	private boolean parseSessionStatusResponse(Document in) {
+		NodeList ns = in.getElementsByTagName("session");
+
+		if (ns.getLength() != 1) {
+			System.err.println("Session status webservice does not return session node");
+			return false;
+		}
+
+		Element sessionNode = (Element) ns.item(0);
+
+		String newSessionStatus = sessionNode.getAttribute("status");
+
+		if (! newSessionStatus.equals(this.sessionStatus)) {
+			this.sessionStatus = newSessionStatus;
+			System.out.println("session status switch to "+this.getSessionStatus());
+
+			if (this.sessionStatus.equalsIgnoreCase(SESSION_STATUS_INITED) || this.sessionStatus.equalsIgnoreCase(SESSION_STATUS_ACTIVE)) {
+				if (! this.sessionIsActive) {
+					this.sessionIsActive = true;
+					this.fireSessionReady();
+				}
+			}
+			else {
+				this.sessionIsActive = false;
+				this.fireSessionTerminated();
+			}
+		}
 
 		return true;
 	}
@@ -473,5 +545,59 @@ public class SessionManagerCommunication {
 
 	public ArrayList<RdpConnectionOvd> getConnections() {
 		return this.connections;
+	}
+
+	public boolean isSessionFinished() {
+		return false;
+	}
+
+	public void startSessionStatusMonitoring() {
+		if (this.sessionStatusMonitoring)
+			return;
+
+		this.sessionStatusMonitoring = true;
+		new Thread(this).start();
+	}
+
+	public void stopSessionStatusMonitoring() {
+		this.sessionStatusMonitoring = false;
+	}
+
+	public void run() {
+		// session status monitoring
+		this.sessionStatusRequestTime = REQUEST_TIME_FREQUENTLY;
+
+		while (this.sessionStatusMonitoring) {
+			this.askForSessionStatus();
+			
+			try {
+				Thread.sleep(this.sessionStatusRequestTime);
+			} catch (InterruptedException ex) {}
+		}
+	}
+
+	public String getSessionStatus() {
+		return this.sessionStatus;
+	}
+
+	public void addSessionStatusListener(SessionStatusListener l) {
+		this.sessionStatusListeners.add(l);
+	}
+
+	public void removeSessionStatusListener(SessionStatusListener l) {
+		this.sessionStatusListeners.remove(l);
+	}
+
+	private void fireSessionReady() {
+		this.sessionStatusRequestTime = REQUEST_TIME_OCCASIONALLY;
+		for (SessionStatusListener listener : this.sessionStatusListeners) {
+			listener.sessionReady(this.sessionId);
+		}
+	}
+
+	private void fireSessionTerminated() {
+		for (SessionStatusListener listener : this.sessionStatusListeners) {
+			listener.sessionTerminated(this.sessionId);
+		}
 	}
 }
