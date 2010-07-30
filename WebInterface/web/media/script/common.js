@@ -26,6 +26,8 @@ var session_mode = false;
 function startSession() {
 	disableLogin();
 
+	explorer = false;
+
 	startsession = false;
 
 	use_popup = false;
