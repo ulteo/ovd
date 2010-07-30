@@ -209,7 +209,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 						<div>
 							<h2><?php echo _('My files'); ?></h2>
 
-							<div id="fileManagerContainer" style="overflow: auto;">
+							<div id="fileManagerContainer">
 							</div>
 						</div>
 						</div>
