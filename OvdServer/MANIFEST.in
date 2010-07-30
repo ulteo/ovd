@@ -1,5 +1,5 @@
 include MANIFEST.in ulteo-ovd-slaveserver
 include *.py
 include manpages/*
-include config/*.conf
+include examples/*
 include ovd/Platform/Windows/*.py
