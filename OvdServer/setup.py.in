@@ -67,7 +67,7 @@ if sys.platform == "win32":
 			self.modules = ["OVDWin32Service"]
 
 	setup_args["zipfile"] = "lib/shared.zip"
-	setup_args["console"] = ["ovdSlaveServer"]
+	setup_args["console"] = ["ulteo-ovd-slaveserver"]
 	setup_args["service"] = [ServiceTarget()]
 
 
