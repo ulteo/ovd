@@ -838,6 +838,16 @@ $session_node->setAttribute('redirect_client_printers', $redirect_client_printer
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
+
+if (isset($profile_available) && $profile_available === true) {
+	$profile_node = $dom->createElement('profile');
+	$profile_node->setAttribute('server', $profile_server);
+	$profile_node->setAttribute('dir', $profile_name);
+	$profile_node->setAttribute('login', $user_login);
+	$profile_node->setAttribute('password', $user_password);
+	$session_node->appendChild($profile_node);
+}
+
 if ($session->mode == Session::MODE_DESKTOP) {
 	$server = Abstract_Server::load($session->server);
 	if (! $server)
