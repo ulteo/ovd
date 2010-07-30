@@ -31,6 +31,10 @@ class Config:
 	gid = None
 	spool = None
 	
+	dav_user = "www-data"
+	dav_uid = None
+	dav_passwd_file = "/var/spool/ulteo/ovd/fs.dav.passwd"
+	
 	@staticmethod
 	def init():
 		try:
@@ -54,5 +58,26 @@ class Config:
 			return False
 		
 		Config.group = infos[0]
+		
+		try:
+			infos = pwd.getpwnam(Config.dav_user)
+		except KeyError, err:
+			Logger.info("FileServer Config failed: no such user '%s'"%(Config.dav_user))
+			return False
+		
+		Config.dav_uid = infos[2]
+		
+		if not os.path.isdir(os.path.dirname(Config.dav_passwd_file)):
+			Logger.info("FileServer Config failed: no such directory '%s'"%(os.path.dirname(Config.dav_passwd_file)))
+			return False
+		
+		try:
+			f = file(Config.dav_passwd_file, "w")
+			f.close()
+			os.chown(Config.dav_passwd_file, Config.dav_uid, -1)
+		except Exception, err:
+			Logger.info("FileServer unable to write in '%s': %s"%(Config.dav_passwd_file, str(err)))
+			return False
+		
 		
 		return True

@@ -1,0 +1,26 @@
+
+
+  * Install Apache et mod_dav
+
+  * adduser www-data ovd-fs
+  
+  * mkdir /var/spool/ulteo/ovd/
+  * chown ovd-fs:ovd-fs /var/spool/ulteo/ovd/
+
+  * push config apache <<EOF
+DAVMinTimeout 600
+DAVDepthInfinity On
+
+Alias /ovd/fs /var/lib/ulteo/ovd/fs
+<Directory /var/lib/ulteo/ovd/fs>
+     DAV on
+     AuthNAme "WebDAV Storage"
+     AuthType Basic
+     AuthUserFile /var/spool/ulteo/ovd/fs.dav.passwd
+     Require valid-user
+     AllowOverride AuthConfig Limit
+</Directory>
+EOF
+
+  * restart apache
+  

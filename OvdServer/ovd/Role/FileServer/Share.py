@@ -88,11 +88,36 @@ class Share:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
 		
+		path = os.path.join(self.directory, ".htaccess")
+		try:
+			f = file(path, "w")
+		except IOError, err:
+			Logger.error("FS: unable to wrtite .htaccess")
+			Logger.debug("FS: unable to wrtite .htaccess '%s' return: %s"%(path, str(err)))
+			return False
+		for user in self.users:
+			f.write("Require user %s\n"%(user))
+		f.close()
+		
 		self.active = True
 		return True
 	
 	
 	def disable(self):
+		path = os.path.join(self.directory, ".htaccess")
+		if not os.path.exists(path):
+			ret = False
+			Logger.error("FS: no .htaccess")
+			Logger.debug("FS: no .htaccess '%s'"%(path))
+		else:
+			try:
+				os.remove(path)
+			except Exception, err:
+				ret = False
+				Logger.error("FS: unable to remove .htaccess")
+				Logger.debug("FS: unable to remove .htaccess '%s' return: %s"%(path, str(err)))
+		
+		
 		cmd = "net usershare delete %s"%(self.name)
 		s, o = commands.getstatusoutput(cmd)
 		ret = True
@@ -122,12 +147,28 @@ class Share:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
 		
+		cmd = 'htpasswd -b %s "%s" "%s"'%(Config.dav_passwd_file, user, password)
+		s,o = commands.getstatusoutput(cmd)
+		if s != 0:
+			Logger.error("FS: unable to update apache auth file")
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			return False
+		
+		
 		self.users.append(user)
 		return True
 	
 	
 	def del_user(self, user):
 		ret = True
+		
+		cmd = 'htpasswd -D %s "%s"'%(Config.dav_passwd_file, user)
+		s,o = commands.getstatusoutput(cmd)
+		if s != 0:
+			Logger.error("FS: unable to update apache auth file")
+			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
+			return False
+		
 		
 		cmd = 'smbpasswd -x %s'%(user)
 		s,o = commands.getstatusoutput(cmd)

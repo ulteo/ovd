@@ -106,6 +106,9 @@ class Role(AbstractRole):
 		
 		ret = True
 		for user in users:
+			if user == Config.dav_user:
+				continue
+			
 			Logger.debug("FileServer:: deleting user '%s'"%(user))
 			cmd = 'smbpasswd -x %s'%(user)
 			s,o = commands.getstatusoutput(cmd)
