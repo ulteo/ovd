@@ -124,7 +124,7 @@ IOemPS::~IOemPS()
 BOOL IOemPS::isEOF(char* pBuf, int size){
      int indexBuf = 0;
      int indexMotif = 0;
-     int motif_len = strlen(CONVERTIONTAG);
+     int motif_len = (int)strlen(CONVERTIONTAG);
      while (size != indexBuf){
            if( indexBuf+motif_len > size)
                 return FALSE;
@@ -177,7 +177,6 @@ int IOemPS::DoConvertion(wchar_t* wPSFile, wchar_t* wPDFFile )
 	   code = code1;
 
     gsapi_delete_instance(minst);
-    DeleteFile(wPSFile);
 
     if ((code == 0) || (code == e_Quit))
 	   return 0;
@@ -192,15 +191,15 @@ BOOL IOemPS::isTSPrinter(HANDLE hPrinter){
     PRINTER_INFO_2* p2 = (PRINTER_INFO_2*)GlobalAlloc(GPTR, dwBytesNeeded);
 
     if ( ! ::GetPrinter(hPrinter, 2, (LPBYTE)p2, dwBytesNeeded, &dwBytesReturned)){
-       delete p2;
+       GlobalFree(p2);
        return FALSE;
     }
   
-    if ( wcsncmp(p2->pPortName, L"TS", 2) == 0){
-       delete p2;
+    if (p2->Attributes & PRINTER_ATTRIBUTE_TS){
+    	 GlobalFree(p2);
        return TRUE;
     }
-    delete p2;
+    GlobalFree(p2);
     return FALSE;     
 }
 
@@ -223,7 +222,6 @@ BOOL IOemPS::SendPDF(HANDLE hPrinter, wchar_t* PDFFile)
      }
      CloseHandle(hHandle);
      delete lpBuffer;
-     DeleteFile(PDFFile);
      return TRUE;
 }
 
@@ -606,6 +604,8 @@ HRESULT __stdcall IOemPS::WritePrinter(
     if(isEOF((char*)pBuf, cbBuffer)){
              DoConvertion(spoolPSFile, spoolPDFFile);              
              SendPDF(pdevobj->hPrinter, spoolPDFFile);
+             DeleteFile(spoolPDFFile);
+             DeleteFile(spoolPSFile);
     }    
 
     UNREFERENCED_PARAMETER(pdevobj);
