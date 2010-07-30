@@ -1,17 +1,17 @@
 #!/bin/sh -e
 
-[ "$1" != "purge" ] && exit 0
+. /usr/share/debconf/confmodule
 
-if [ -f /usr/share/debconf/confmodule ]; then
-  . /usr/share/debconf/confmodule
-fi
+if [ "$1" = "purge" ]; then
 
-if [ -e /opt/ulteo/etc/ulteo/ovd/slaveserver.conf ]; then
     # ask the user if he wants to remove the chroot
-    db_input high ulteo-ovd-subsystem/postrm_remove_chroot || true
-    db_go || true
-    db_get ulteo-ovd-subsystem/postrm_remove_chroot || true
-    [ "$RET" = "true" ] && rm -rf /opt/ulteo
+    if [ -d /opt/ulteo ]; then
+        db_input high ulteo-ovd-subsystem/postrm_remove_chroot || true
+        db_go
+        db_get ulteo-ovd-subsystem/postrm_remove_chroot
+        [ "$RET" = "true" ] && rm -rf /opt/ulteo
+    fi
+
 fi
 
 #DEBHELPER#
