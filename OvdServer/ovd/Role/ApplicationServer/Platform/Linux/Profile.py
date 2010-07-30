@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import commands
+import hashlib
 import os
 import pwd
 
@@ -48,7 +49,40 @@ class Profile(AbstractProfile):
 		else:
 			self.profileMounted = True
 		
-		
+		for sharedFolder in self.sharedFolders:
+			dest = os.path.join(self.MOUNT_POINT, self.session.id, "sharedFolder_"+ hashlib.md5(sharedFolder["server"]+ sharedFolder["dir"]).hexdigest())
+			if not os.path.exists(dest):
+				os.makedirs(dest)
+			
+			print "mount dest ",dest
+			cmd = "mount -t cifs -o username=%s,password=%s,uid=%s,gid=0,umask=077 //%s/%s %s"%(sharedFolder["login"], sharedFolder["password"], self.session.user.name, sharedFolder["server"], sharedFolder["dir"], dest)
+			Logger.debug("Profile, sharedFolder mount command: '%s'"%(cmd))
+			s,o = commands.getstatusoutput(cmd)
+			if s != 0:
+				Logger.error("Profile sharedFolder mount failed")
+				Logger.debug("Profile sharedFolder mount failed (status: %d) => %s"%(s, o))
+			else:
+				sharedFolder["mountdest"] = dest
+				home = pwd.getpwnam(self.session.user.name)[5]
+				dst = os.path.join(home, sharedFolder["dir"])
+				i = 0
+				while os.path.exists("%s%s"%(dst, i)):
+					i += 1
+				dst = "%s%s"%(dst, i)
+				
+				if not os.path.exists(dst):
+					os.makedirs(dst)
+				
+				cmd = "mount -o bind \"%s\" \"%s\""%(dest, dst)
+				Logger.debug("Profile bind dir command '%s'"%(cmd))
+				s,o = commands.getstatusoutput(cmd)
+				if s != 0:
+					Logger.error("Profile bind dir failed")
+					Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
+				else:
+					self.folderRedirection.append(dst)
+				
+				
 		self.homeDir = pwd.getpwnam(self.session.user.name)[5]
 		for d in [self.DesktopDir, self.DocumentsDir]:
 			src = os.path.join(self.cifs_dst, d)
@@ -87,6 +121,15 @@ class Profile(AbstractProfile):
 			if s != 0:
 				Logger.error("Profile bind dir failed")
 				Logger.error("Profile bind dir failed (status: %d) %s"%(s, o))
+		
+		for sharedFolder in self.sharedFolders:
+			if sharedFolder.has_key("mountdest"):
+				cmd = """umount "%s" """%(sharedFolder["mountdest"])
+				Logger.debug("Profile sharedFolder umount dir command: '%s'"%(cmd))
+				s,o = commands.getstatusoutput(cmd)
+				if s != 0:
+					Logger.error("Profile sharedFolder umount dir failed")
+					Logger.error("Profile sharedFolder umount dir failed (status: %d) %s"%(s, o))
 		
 		if self.profileMounted:
 			cmd = "umount %s"%(self.cifs_dst)

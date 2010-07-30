@@ -30,6 +30,8 @@ class Profile:
 		self.password = password
 		self.session = session
 		
+		self.sharedFolders = []
+		
 		self.session.profile = self
 		self.init()
 	

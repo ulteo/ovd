@@ -148,36 +148,61 @@ def getSubProcess(ppid):
 
 def mountShares():
 	key = None
+	profile = {}
 	try:
-		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd", 0, win32con.KEY_READ)
-		(host, type_) = win32api.RegQueryValueEx(key, "profile_host")
-		if type_ is not win32con.REG_SZ:
-			raise Exception()
+		key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd\profile", 0, win32con.KEY_READ)
 		
-		(directory, type_) = win32api.RegQueryValueEx(key, "profile_directory")
-		if type_ is not win32con.REG_SZ:
-			raise Exception()
-			
-		(login, type_) = win32api.RegQueryValueEx(key, "profile_login")
-		if type_ is not win32con.REG_SZ:
-			raise Exception()
-			
-		(password, type_) = win32api.RegQueryValueEx(key, "profile_password")
-		if type_ is not win32con.REG_SZ:
-			raise Exception()
+		for item in ["host", "directory", "login", "password"]: 
+			(profile[item], type_) = win32api.RegQueryValueEx(key, item)
+			if type_ is not win32con.REG_SZ:
+				raise Exception()
 		
 	except Exception, err:
 		print "No profile to mount"
-		return
+		profile = None
 	
 	finally:
 		if key is not None:
 			win32api.RegCloseKey(key)
 	
-	try:
-		win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(host, directory), None, login, password)
+	if profile is not None:
+		try:
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(share["host"], share["directory"]), None, share["login"], share["password"])
+		  
+		except Exception, err:
+			cmd = "net use U: \\\\%s\\%s %s /user:%s"%(profile["host"], profile["directory"], profile["password"], profile["login"])
+			print "Unable to mount share: ",err
+			print "Try with this command: ",cmd
+	
+	
+	shareNum = 0
+	while True:
+		key = None
+		share = {}
+		try:
+			key = win32api.RegOpenKey(win32con.HKEY_CURRENT_USER, r"Software\ulteo\ovd\share_%d"%(shareNum), 0, win32con.KEY_READ)
+			
+			for item in ["host", "directory", "login", "password"]: 
+				(share[item], type_) = win32api.RegQueryValueEx(key, item)
+				if type_ is not win32con.REG_SZ:
+					raise Exception()
 		
-	except Exception, err:
-		cmd = "net use U: \\\\%s\\%s %s /user:%s"%(host, directory, password, login)
-		print "Unable to mount share: ",err
-		print "Try with this command: ",cmd
+		except Exception, err:
+			print "No share_%d defined"%(shareNum)
+			share = None
+		finally:
+			if key is not None:
+				win32api.RegCloseKey(key)
+		
+		if share is None:
+			break
+		
+		try:
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, None, r"\\%s\%s"%(share["host"], share["directory"]), None, share["login"], share["password"])
+		
+		except Exception, err:
+			cmd = "net use * \\\\%s\\%s %s /user:%s"%(share["host"], share["directory"], share["password"], share["login"])
+			print "Unable to mount share: ",err
+			print "Try with this command: ",cmd
+		
+		shareNum+= 1

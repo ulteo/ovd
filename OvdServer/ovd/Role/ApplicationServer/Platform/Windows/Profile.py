@@ -159,13 +159,32 @@ class Profile(AbstractProfile):
 		win32api.RegCloseKey(key)
 		
 		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
-		win32api.RegSetValueEx(key, "profile_host", 0, win32con.REG_SZ, self.host)
-		win32api.RegSetValueEx(key, "profile_directory", 0, win32con.REG_SZ, self.directory)
-		win32api.RegSetValueEx(key, "profile_login", 0, win32con.REG_SZ, self.login)
-		win32api.RegSetValueEx(key, "profile_password", 0, win32con.REG_SZ, self.password)
+		win32api.RegCreateKey(key, r"profile")
 		win32api.RegCloseKey(key)
 		
+		key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\profile", 0, win32con.KEY_SET_VALUE)
+		win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, self.host)
+		win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, self.directory)
+		win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, self.login)
+		win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, self.password)
+		win32api.RegCloseKey(key)
+
+		shareNum = 0
+		for share in self.sharedFolders:
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd", 0, win32con.KEY_SET_VALUE)
+			win32api.RegCreateKey(key, r"share_%d"%(shareNum))
+			win32api.RegCloseKey(key)
+			
+			key = win32api.RegOpenKey(win32con.HKEY_USERS, hiveName+r"\Software\Ulteo\ovd\share_%d"%(shareNum), 0, win32con.KEY_SET_VALUE)
+			win32api.RegSetValueEx(key, "host", 0, win32con.REG_SZ, share["server"])
+			win32api.RegSetValueEx(key, "directory", 0, win32con.REG_SZ, share["dir"])
+			win32api.RegSetValueEx(key, "login", 0, win32con.REG_SZ, share["login"])
+			win32api.RegSetValueEx(key, "password", 0, win32con.REG_SZ, share["password"])
+			win32api.RegCloseKey(key)
+			
+			shareNum+= 1
 		
+
 		# Redirect the Shell Folders to the remote profile
 		path = hiveName+r"\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
 		
