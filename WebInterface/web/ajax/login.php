@@ -175,8 +175,10 @@ if (count($server_nodes) < 1) {
 	die();
 }
 
+$_SESSION['explorer'] = false;
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
 if (is_object($profile_node)) {
+	$_SESSION['explorer'] = true;
 	$_SESSION['profile'] = array();
 	$_SESSION['profile']['server'] = $profile_node->getAttribute('server');
 	$_SESSION['profile']['dir'] = $profile_node->getAttribute('dir');

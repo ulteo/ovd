@@ -17,6 +17,8 @@ var window_;
 
 var use_popup = false;
 var debug = false;
+var explorer = false;
+
 var startsession = false;
 
 var session_mode = false;
@@ -134,6 +136,10 @@ function onStartSessionSuccess(transport) {
 
 	$('user_password').value = '';
 
+	var buffer = xml.getElementsByTagName('profile');
+	if (buffer.length == 1)
+		explorer = true;
+
 	startsession = true;
 
 	if (! use_popup) {
@@ -157,6 +163,8 @@ function onStartSessionSuccess(transport) {
 				daemon = new Desktop('ulteo-applet.jar', 'org.ulteo.ovd.applet.Desktop', false, debug);
 			else
 				daemon = new Applications('ulteo-applet.jar', 'org.ulteo.ovd.applet.Applications', false, debug);
+			daemon.explorer = explorer;
+
 			daemon.keymap = $('session_keymap').value;
 			daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 			daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);

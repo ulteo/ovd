@@ -27,6 +27,7 @@ var Daemon = Class.create({
 
 	in_popup: true,
 	debug: false,
+	explorer: false,
 
 	protocol: '',
 	server: '',
