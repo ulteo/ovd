@@ -7,6 +7,7 @@ I. Software dependencies
 		* py2exe
 		* pywin32
 		* pysvn
+		* twisted
 	* Java 2.5 jdk
 		* ant
 	* Mingw gcc

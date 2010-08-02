@@ -9,7 +9,7 @@ XS-Python-Version: >= 2.5
 
 Package: ulteo-ovd-slaveserver
 Architecture: all
-Depends: ${python:Depends}, debconf
+Depends: ${python:Depends}, debconf, python-twisted-web
 Description: Ulteo Open Virtual Desktop - slave server
  This daemon manages the Open Virtual Desktop servers.
 

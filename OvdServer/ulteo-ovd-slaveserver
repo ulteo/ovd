@@ -25,7 +25,7 @@ import signal
 import sys
 import time
 
-from ovd.Communication.HttpServer import HttpServer as Communication
+from ovd.Communication.TwistedHttpServer import TwistedHttpServer as Communication
 from ovd.Config import Config
 from ovd.Logger import Logger
 from ovd.SlaveServer import SlaveServer
