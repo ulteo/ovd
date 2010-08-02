@@ -148,7 +148,7 @@ class User(AbstractUser):
 				win32profile.DeleteProfile(sid)
 				succefulDelete = True
 			except Exception, e:
-				Logger.warn("Unable to unload user reg: "%(str(e)))
+				Logger.warn("Unable to unload user reg: %s"%(str(e)))
 				
 				try:
 					path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\%s"%(sid)
