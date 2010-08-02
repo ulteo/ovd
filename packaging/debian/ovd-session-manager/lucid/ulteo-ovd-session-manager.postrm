@@ -1,17 +1,12 @@
 #!/bin/sh -e
 
-if [ -f /usr/share/debconf/confmodule ]; then
-  . /usr/share/debconf/confmodule
-fi
+. /usr/share/debconf/confmodule
 
 if [ "$1" = "purge" ]; then
-    # remove spool files
-    rm -rf /var/spool/ulteo/sessionmanager/*
 
-    # remove all log files
-    rm -f /var/log/ulteo/sessionmanager/main.log*
-    rm -f /var/log/ulteo/sessionmanager/apt-get.log*
-    rm -f /var/log/ulteo/sessionmanager/admin.log*
+    # remove log and spool dir
+    rm -rf /var/log/ulteo/sessionmanager
+    rm -rf /var/spool/ulteo/sessionmanager
 
     # remove keys and certificates SSL files generated
     rm -rf /etc/ulteo/sessionmanager/ovd.*

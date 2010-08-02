@@ -82,15 +82,20 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_LOGIN.*').*('.*)$,\1$LOGIN\2," $CONFFILE
     sed -r -i "s,^(.*SESSIONMANAGER_ADMIN_PASSWORD.*').*('.*)$,\1$PASSWD\2," $CONFFILE
 
+    # create spool and log folder
+    mkdir -p /var/spool/ulteo/sessionmanager/reporting \
+             /var/log/ulteo/sessionmanager
+
+    # change user and group permission folders
+    chown www-data:www-data /var/spool/ulteo/sessionmanager \
+                            /var/spool/ulteo/sessionmanager/reporting \
+                            /var/log/ulteo/sessionmanager \
+                            $CONFFILE
+
     # clear the password
     unset RET
     db_reset ulteo-ovd-session-manager/admin_password
     db_reset ulteo-ovd-session-manager/admin_password_again
-
-    # change conffile permission
-    if ! dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
-        dpkg-statoverride --update --add www-data www-data 0660 $CONFFILE
-    fi
 
     # download the chroot if needed
     while [ ! -e "$CHROOT" ]; do
@@ -116,16 +121,6 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
         db_go
     done
 
-    # change log and spool file permissions
-    for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
-        if ! dpkg-statoverride --list $f >/dev/null 2>&1; then
-            dpkg-statoverride --update --add www-data www-data 0770 $f
-        fi
-    done
-
-    # make sure that the data created by the postinst are owned by www-data
-    chown -R www-data:www-data /var/spool/ulteo/sessionmanager \
-                               /var/log/ulteo/sessionmanager
 fi
 
 db_stop
