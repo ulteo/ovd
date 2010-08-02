@@ -3,6 +3,7 @@
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -108,9 +109,16 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
 	
 	try:
+		win32api.RegQueryValueEx(hkey, "StubPath")
+	except:
+		win32api.RegCloseKey(hkey)
+		return False
+
+	try:
 		(string, type) = win32api.RegQueryValueEx(hkey, "IsInstalled")
 		if not (string == 1 or string == '\x01\x00\x00\x00'):
-			win32api.RegDeleteKey(BaseKey, Entry)
+			win32api.RegCloseKey(hkey)
+			return False
 	except:
 		pass
 	try:
@@ -121,19 +129,27 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 		pass
 
 	win32api.RegCloseKey(hkey)
+	return True
 
 def UpdateActiveSetup(KeySrc, Username):
 	hkey_src = win32api.RegOpenKey(KeySrc, "Installed Components", 0, win32con.KEY_ALL_ACCESS)
+	keyToRemove = []
 
 	index = 0
 	while True:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
 			ProcessActiveSetupEntry(hkey_src, buf, Username)
+			if ProcessActiveSetupEntry(hkey_src, buf, Username) == False:
+				keyToRemove.append(buf)
+
 			index+= 1
 		except:
 			win32api.RegCloseKey(hkey_src)
 			break
+
+	for key in keyToRemove:
+		DeleteTree(hkey_src, key)
 	win32api.RegCloseKey(hkey_src)
 
 def DeleteTree(key, subkey, deleteRoot = True):
