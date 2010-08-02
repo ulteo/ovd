@@ -40,7 +40,7 @@ $dom->appendChild($logout_node);
 $xml = $dom->saveXML();
 
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML(query_sm_post_xml($sessionmanager_url.'/client/logout.php', $xml));
+$buf = @$dom->loadXML(query_sm_post_xml($sessionmanager_url.'/logout.php', $xml));
 if (! $buf) {
 	echo return_error(0, 'Invalid XML');
 	die();

@@ -114,7 +114,7 @@ class Dialog:
         self.sessionStatus = -1
 
     def doStartSession(self, args = {}):
-        url = self.base_url+"/startsession.php"
+        url = self.base_url+"/start.php"
         values = {"session_mode":"desktop", 'login'  : self.conf['login'], 'password' : self.conf['password']}
         for (k,v) in args.items():
             if not values.has_key(k):
@@ -204,7 +204,7 @@ class Dialog:
         return True
 
     def doSessionStatus(self):
-        url = "%s/client/session_status.php"%(self.base_url)
+        url = "%s/session_status.php"%(self.base_url)
         request = urllib2.Request(url)
         
         try:
@@ -261,7 +261,7 @@ class Dialog:
         rootNode.setAttribute("mode", mode)
         document.appendChild(rootNode)
         
-        url = "%s/client/logout.php"%(self.base_url)
+        url = "%s/logout.php"%(self.base_url)
         request = urllib2.Request(url)
         request.add_header("Content-type", "text/xml; charset=UTF-8")
         request.add_data(document.toxml())

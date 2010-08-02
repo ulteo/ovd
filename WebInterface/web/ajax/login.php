@@ -87,7 +87,7 @@ if (! defined('SESSIONMANAGER_URL')) {
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
 }
 
-$xml = query_sm_start($sessionmanager_url.'/startsession.php', $dom->saveXML());
+$xml = query_sm_start($sessionmanager_url.'/start.php', $dom->saveXML());
 if (! $xml) {
 	echo return_error(0, 'Unable to reach the Session Manager');
 	die();
