@@ -80,7 +80,8 @@ elif sys.platform == "linux2":
 	setup_args["data_files"] = [
 		('/usr/bin',['ulteo-ovd-slaveserver']),
 		('/etc/ulteo/ovd',['examples/slaveserver.conf']),
-		('/usr/share/ulteo/slaveserver',['examples/samba.conf'])
+		('/usr/share/ulteo/slaveserver',
+            ['examples/samba.conf', 'examples/apache2.conf']),
 	]
 
 
