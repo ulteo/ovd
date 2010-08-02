@@ -46,8 +46,7 @@ function startSession() {
 		{
 			method: 'post',
 			parameters: {
-				sessionmanager_url: $('sessionmanager_url').value,
-				use_https: (($('use_https').checked)?1:0),
+				sessionmanager_host: $('sessionmanager_host').value,
 				login: $('user_login').value,
 				password: $('user_password').value,
 				mode: $('session_mode').value,
@@ -511,7 +510,7 @@ function setCaretPosition(ctrl, pos) {
 }
 
 function checkLogin() {
-	if ($('sessionmanager_url').value != '' && $('user_login').value != '')
+	if ($('sessionmanager_host').value != '' && $('user_login').value != '')
 		$('submitLogin').disabled = false;
 	else
 		$('submitLogin').disabled = true;

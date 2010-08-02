@@ -81,9 +81,8 @@ $user_node->setAttribute('password', $_POST['password']);
 $session_node->appendChild($user_node);
 $dom->appendChild($session_node);
 
-if (! defined('SESSIONMANAGER_URL')) {
-	$http_protocol = ((isset($_POST['use_https']) && $_POST['use_https'] == 1)?'https':'http');
-	$_SESSION['webinterface']['sessionmanager_url'] = $http_protocol.'://'.$_POST['sessionmanager_url'].'/ovd/client/';
+if (! defined('SESSIONMANAGER_HOST')) {
+	$_SESSION['webinterface']['sessionmanager_url'] = 'https://'.$_POST['sessionmanager_host'].'/ovd/client/';
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
 }
 
@@ -189,7 +188,6 @@ if (is_object($profile_node)) {
 $_SESSION['xml'] = $xml;
 
 setcookie('webinterface[sessionmanager_url]', $_POST['sessionmanager_url'], (time()+(60*60*24*7)));
-setcookie('webinterface[use_https]', $_POST['use_https'], (time()+(60*60*24*7)));
 setcookie('webinterface[user_login]', $_POST['login'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_language]', $_POST['language'], (time()+(60*60*24*7)));

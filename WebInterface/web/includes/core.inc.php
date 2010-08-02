@@ -34,8 +34,8 @@ require_once(dirname(__FILE__).'/functions.inc.php');
 session_start();
 
 $sessionmanager_url = NULL;
-if (defined('SESSIONMANAGER_URL'))
-	$sessionmanager_url = SESSIONMANAGER_URL;
+if (defined('SESSIONMANAGER_HOST'))
+	$sessionmanager_url = 'https://'.SESSIONMANAGER_HOST.'/ovd/client/';
 elseif (array_key_exists('webinterface', $_SESSION) && array_key_exists('sessionmanager_url', $_SESSION['webinterface']))
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
 

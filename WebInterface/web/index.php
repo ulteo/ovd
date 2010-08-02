@@ -24,13 +24,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 $languages = get_available_languages();
 $keymaps = get_available_keymaps();
 
-$wi_sessionmanager_url = '';
-if (isset($_COOKIE['webinterface']['sessionmanager_url']))
-	$wi_sessionmanager_url = (string)$_COOKIE['webinterface']['sessionmanager_url'];
-
-$wi_use_https = 1;
-if (isset($_COOKIE['webinterface']['use_https']))
-	$wi_use_https = (int)$_COOKIE['webinterface']['use_https'];
+$wi_sessionmanager_host = '';
+if (isset($_COOKIE['webinterface']['sessionmanager_host']))
+	$wi_sessionmanager_host = (string)$_COOKIE['webinterface']['sessionmanager_host'];
 
 $wi_user_login = '';
 if (isset($_COOKIE['webinterface']['user_login']))
@@ -59,12 +55,12 @@ if (isset($_COOKIE['webinterface']['debug']))
 	$wi_debug = (int)$_COOKIE['webinterface']['debug'];
 
 function get_users_list() {
-	if (! defined('SESSIONMANAGER_URL'))
+	if (! defined('SESSIONMANAGER_HOST'))
 		return false;
 
 	global $sessionmanager_url;
 
-	$ret = query_sm($sessionmanager_url.'/webservices/userlist.php');
+	$ret = query_sm($sessionmanager_url.'/userlist.php');
 
 	$dom = new DomDocument('1.0', 'utf-8');
 	$buf = @$dom->loadXML($ret);
@@ -353,8 +349,8 @@ function get_users_list() {
 									<script type="text/javascript">Event.observe(window, 'load', function() {
 										setTimeout(function() {
 <?php
-if (! defined('SESSIONMANAGER_URL') && (! isset($wi_sessionmanager_url) || $wi_sessionmanager_url == ''))
-	echo '$(\'sessionmanager_url\').focus();';
+if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
+	echo '$(\'sessionmanager_host\').focus();';
 elseif (isset($wi_user_login) && $wi_user_login != '')
 	echo '$(\'user_password\').focus();';
 else
@@ -366,7 +362,7 @@ checkLogin();
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
 										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px; margin-bottom: 25px; " border="0" cellspacing="0" cellpadding="5">
-											<tr style="<?php echo ((defined('SESSIONMANAGER_URL'))?'display: none;':'') ?>">
+											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
 													<img src="media/image/icons/sessionmanager.png" alt="" title="" />
 												</td>
@@ -374,41 +370,30 @@ checkLogin();
 													<strong><?php echo _('Session Manager'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_url" value="<?php echo ((defined('SESSIONMANAGER_URL'))?'null':$wi_sessionmanager_url) ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
+													<input type="text" id="sessionmanager_host" value="<?php echo ((defined('SESSIONMANAGER_HOST'))?'null':$wi_sessionmanager_host) ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<script type="text/javascript">Event.observe(window, 'load', function() {
 														setTimeout(function() {
-															var sessionmanager_url_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
-															if ($('sessionmanager_url').value == '') {
-																$('sessionmanager_url').style.color = 'grey';
-																$('sessionmanager_url').value = sessionmanager_url_example;
-																setCaretPosition($('sessionmanager_url'), 0);
+															var sessionmanager_host_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
+															if ($('sessionmanager_host').value == '') {
+																$('sessionmanager_host').style.color = 'grey';
+																$('sessionmanager_host').value = sessionmanager_host_example;
+																setCaretPosition($('sessionmanager_host'), 0);
 															}
-															Event.observe($('sessionmanager_url'), 'keypress', function() {
-																if ($('sessionmanager_url').value == sessionmanager_url_example) {
-																	$('sessionmanager_url').style.color = 'black';
-																	$('sessionmanager_url').value = '';
+															Event.observe($('sessionmanager_host'), 'keypress', function() {
+																if ($('sessionmanager_host').value == sessionmanager_host_example) {
+																	$('sessionmanager_host').style.color = 'black';
+																	$('sessionmanager_host').value = '';
 																}
 															});
-															Event.observe($('sessionmanager_url'), 'keyup', function() {
-																if ($('sessionmanager_url').value == '') {
-																	$('sessionmanager_url').style.color = 'grey';
-																	$('sessionmanager_url').value = sessionmanager_url_example;
-																	setCaretPosition($('sessionmanager_url'), 0);
+															Event.observe($('sessionmanager_host'), 'keyup', function() {
+																if ($('sessionmanager_host').value == '') {
+																	$('sessionmanager_host').style.color = 'grey';
+																	$('sessionmanager_host').value = sessionmanager_host_example;
+																	setCaretPosition($('sessionmanager_host'), 0);
 																}
 															});
 														}, 1500);
 													});</script>
-												</td>
-											</tr>
-											<tr style="<?php echo ((defined('SESSIONMANAGER_URL'))?'display: none;':'') ?>">
-												<td style="width: 22px; text-align: right; vertical-align: middle;">
-													<img src="media/image/icons/ssl.png" alt="" title="" />
-												</td>
-												<td style="text-align: left; vertical-align: middle;">
-													<strong><?php echo _('Use HTTPS'); ?></strong>
-												</td>
-												<td style="text-align: right; vertical-align: middle;">
-													<input type="checkbox" id="use_https" value="1"<?php if ($wi_use_https == 1) echo ' checked="checked"'; ?> />
 												</td>
 											</tr>
 											<tr>
@@ -420,10 +405,10 @@ checkLogin();
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
 													<?php
-														if (defined('SESSIONMANAGER_URL'))
+														if (defined('SESSIONMANAGER_HOST'))
 															$users = get_users_list();
 
-														if (! defined('SESSIONMANAGER_URL') || $users === false) {
+														if (! defined('SESSIONMANAGER_HOST') || $users === false) {
 													?>
 													<input type="text" id="user_login" value="<?php echo $wi_user_login; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<?php
