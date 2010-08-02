@@ -134,7 +134,7 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 def UpdateActiveSetup(KeySrc, Username):
 	hkey_src = win32api.RegOpenKey(KeySrc, "Installed Components", 0, win32con.KEY_ALL_ACCESS)
 	keyToRemove = []
-
+	
 	index = 0
 	while True:
 		try:
