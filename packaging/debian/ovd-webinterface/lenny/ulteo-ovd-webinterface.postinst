@@ -14,7 +14,7 @@ sed -r -i "s,@SESSION_MANAGER@,$RET," $CONFFILE
 
 db_get ulteo-ovd-webinterface/link_session_manager
 if [ $RET = 'false' ]; then
-     sed -i '/SESSIONMANAGER_URL/ s/^/\/\//' $CONFFILE
+     sed -i '/SESSIONMANAGER_HOST/ s/^/\/\//' $CONFFILE
 fi
 
 if [ ! -e /etc/apache2/conf.d/webinterface ]; then
