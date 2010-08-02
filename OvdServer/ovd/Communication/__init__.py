@@ -37,7 +37,7 @@ class Communication:
 	
 	def process(self, request):
 		if not self.isSessionManagerRequest(request):
-			return False		
+			return False
 		
 		try:
 			_, domain, path = request["path"].split("/", 2)
