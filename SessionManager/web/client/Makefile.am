@@ -1,7 +1,8 @@
 scripts_DATA = logout.php \
                remote_apps.php \
                session_status.php \
-               start.php
+               start.php \
+               userlist.php
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/client
 

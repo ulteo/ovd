@@ -9,7 +9,6 @@ scripts_DATA =  configuration.php \
                 session_token.php \
                 session_status.php \
                 server_status.php \
-                userlist.php \
                 session_invite.php \
                 application.php
 
