@@ -464,11 +464,41 @@ OEMStartDoc(
 {
     PDEVOBJ     pdevobj;
     POEMPDEV    poempdev;
+    BYTE sysconfdir[MAX_PATH + 1];
+    HKEY hkey;
+    DWORD len;
+    DWORD type;
+    HRESULT err;
+    wchar_t* spoolDir = new wchar_t[MAX_PATH]
 
     VERBOSE("OEMStartDoc() entry.\r\n");
 
     pdevobj = (PDEVOBJ)pso->dhpdev;
     poempdev = (POEMPDEV)pdevobj->pdevOEM;
+    
+    err = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+          L"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\"
+          L"Shell Folders", 0, KEY_READ, &hkey);
+    if (err != ERROR_SUCCESS)
+    {
+       delete spoolDir;
+       spoolDir = NULL;
+    } 
+    else {
+       len = MAX_PATH;
+       err = RegQueryValueEx(hkey, L"Common AppData", NULL, &type, sysconfdir, &len);
+       if (err != ERROR_SUCCESS || len >= MAX_PATH)
+       {
+          delete spoolDir;
+          spoolDir = NULL;
+       }
+       else {
+          swprintf_s(spoolDir, MAX_PATH, L"%s\\ulteo\\ovd\\spool", sysconfdir);
+       }
+       RegCloseKey(hkey);
+    }
+
+    poempdev->spoolDir = spoolDir;
     poempdev->jobId = dwJobId;
 
     //

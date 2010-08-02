@@ -28,12 +28,12 @@
 #include "intrface.h"
 #include <winspool.h>
 #include <string.h>
+#include <winreg.h>
 //for gs library
 #include "ierrors.h"
 #include "iapi.h"
 
 const CHAR CONVERTIONTAG[]                   = "%%EOF";
-const CHAR SPOOLDIR[]                        = "C:\\spool";
 
 // This indicates to Prefast that this is a usermode driver file.
 __user_driver;
@@ -182,8 +182,6 @@ int IOemPS::DoConvertion(wchar_t* wPSFile, wchar_t* wPDFFile )
 	   return 0;
     return 1;
 }
-
-
 
 BOOL IOemPS::isTSPrinter(HANDLE hPrinter){
     DWORD dwBytesReturned, dwBytesNeeded;
@@ -412,10 +410,15 @@ HRESULT __stdcall IOemPS::DisablePDEV(
     PDEVOBJ         pdevobj)
 {
     VERBOSE("IOemPS::DisablePDEV() entry.\r\n");
+    POEMPDEV    poempdev;
     //
     // Free memory for OEMPDEV and any memory block that hangs off OEMPDEV.
     //
     assert(NULL != pdevobj->pdevOEM);
+    poempdev = (POEMPDEV)pdevobj->pdevOEM;
+    if (poempdev->spoolDir != NULL) {
+        delete poempdev->spoolDir;
+    }
     delete pdevobj->pdevOEM;
 
     return S_OK;
@@ -506,6 +509,7 @@ HRESULT __stdcall IOemPS::ResetPDEV(
     poempdevOld = (POEMPDEV)pdevobjOld->pdevOEM;
     poempdevNew = (POEMPDEV)pdevobjNew->pdevOEM;
     poempdevNew-> jobId = poempdevOld->jobId;
+    poempdevNew-> spoolDir = poempdevOld->spoolDir;
     //
     // If any information from the previous PDEV needs to be preserved,
     // copy it in this function.
@@ -595,13 +599,21 @@ HRESULT __stdcall IOemPS::WritePrinter(
     POEMPDEV    poempdev;
 
     poempdev = (POEMPDEV)pdevobj->pdevOEM;
-    swprintf_s(spoolPDFFile, 256, L"%S\\%i.pdf", SPOOLDIR, poempdev->jobId);
-    swprintf_s(spoolPSFile, 256,  L"%S\\%i.ps", SPOOLDIR, poempdev->jobId);
+    if (poempdev->spoolDir == NULL) {
+        return E_NOTIMPL; 
+    }
+
+    swprintf_s(spoolPDFFile, MAX_PATH, L"%s\\%i.pdf", poempdev->spoolDir, poempdev->jobId);
+    swprintf_s(spoolPSFile, MAX_PATH,  L"%s\\%i.ps", poempdev->spoolDir, poempdev->jobId);
 
     HANDLE hHandle = CreateFile(spoolPSFile, FILE_APPEND_DATA, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0); 
     if (hHandle == INVALID_HANDLE_VALUE){
-                hHandle = CreateFile(spoolPSFile, GENERIC_ALL, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0); 
+        hHandle = CreateFile(spoolPSFile, GENERIC_ALL, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0); 
     }
+    if (hHandle == INVALID_HANDLE_VALUE){
+        return E_NOTIMPL; 
+    }
+
     WriteFile(hHandle, pBuf, cbBuffer, pcbWritten, 0);
     CloseHandle(hHandle);
     

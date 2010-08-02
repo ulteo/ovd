@@ -62,6 +62,7 @@ typedef struct _OEMPDEV {
     //
     PFN     pfnPS[MAX_DDI_HOOKS];
     DWORD   jobId;
+    wchar_t* spoolDir;
     //
     // define whatever needed, such as working buffers, tracking information,
     // etc.

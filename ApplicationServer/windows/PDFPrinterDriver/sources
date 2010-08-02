@@ -29,6 +29,7 @@ TARGETLIBS=  $(TARGETLIBS)                      \
              $(SDK_LIB_PATH)\user32.lib         \
              $(SDK_LIB_PATH)\winspool.lib       \
              $(SDK_LIB_PATH)\ole32.lib          \
+             $(SDK_LIB_PATH)\advapi32.lib       \
              $(SDK_LIB_PATH)\gsdll32.lib
 
 !IF "$(BUILD_PASS)" == "PASS2" || "$(BUILD_PASS)" == "PASSALL"
