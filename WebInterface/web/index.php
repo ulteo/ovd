@@ -279,9 +279,6 @@ function get_users_list() {
 				</table>
 			</div>
 
-			<div id="printingAppletContainer" style="display: none;">
-			</div>
-
 			<table id="applicationsContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">
 				<tr>
 					<td style="width: 15%; text-align: left; vertical-align: top; background: #eee;">
@@ -323,6 +320,9 @@ function get_users_list() {
 
 			<div id="applicationsAppletContainer" style="display: none;">
 			</div>
+		</div>
+
+		<div id="printingAppletContainer" style="display: none;">
 		</div>
 
 		<div id="debugContainer" class="no_debug info warning error" style="display: none;">

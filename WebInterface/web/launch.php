@@ -223,6 +223,9 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			</div>
 		</div>
 
+		<div id="printingAppletContainer" style="display: none;">
+		</div>
+
 		<div id="debugContainer" class="no_debug info warning error" style="display: none;">
 		</div>
 
