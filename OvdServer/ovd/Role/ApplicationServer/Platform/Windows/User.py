@@ -86,7 +86,7 @@ class User(AbstractUser):
 			shell = self.infos["shell"]
 			osVersion = 5
 			if getattr(sys, "getwindowsversion", None) is not None:
-				 osVersion = sys.getwindowsversion()[0]
+				osVersion = sys.getwindowsversion()[0]
 			if osVersion > 5:
 				shell = "start %s"%(self.infos["shell"])
 
