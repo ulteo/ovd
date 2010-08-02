@@ -142,7 +142,7 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 				handle_data_request(data);
 				break;
 			case CLIPRDR_DATA_RESPONSE:
-				//handle_data_response(data, length);
+				handle_data_response(data, length);
 				break;
 			case 7:
 				break;
@@ -311,10 +311,18 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 	public void focusGained(FocusEvent arg0) {
 		// synchronise the clipboard types here, so the server knows what's available	
 		if(this.opt.use_rdp5){
-			try { send_format_announce(); } 
-			catch (RdesktopException e) {} 
-			catch (IOException e) {}
-			catch (CryptoException e) {}
+			TypeHandler handler;
+			for(Iterator i = allHandlers.iterator(); i.hasNext(); ) {
+				handler = (TypeHandler) i.next();
+				if (handler.hasNewData(clipboard)) {
+					System.out.println("new Data of type "+handler.name());
+					try { send_format_announce(); } 
+					catch (RdesktopException e) {} 
+					catch (IOException e) {}
+					catch (CryptoException e) {}
+					return;
+				}
+			}
 		}
 	}
 

@@ -11,6 +11,7 @@
  */
 package net.propero.rdp.rdp5.cliprdr;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
@@ -18,6 +19,7 @@ import net.propero.rdp.RdpPacket;
 
 public abstract class TypeHandler {
 	
+	protected int hash = 0;
 	/* Clipboard constants, "borrowed" from GCC system headers in 
 	   the w32 cross compiler */
 	
@@ -54,6 +56,7 @@ public abstract class TypeHandler {
 	public abstract int preferredFormat();
 	public abstract boolean formatValid(int format);
 	public abstract boolean mimeTypeValid(String mimeType);
+	public abstract Boolean hasNewData(Clipboard clip);
 
 	public abstract void send_data(Transferable in, ClipInterface c);	
 	

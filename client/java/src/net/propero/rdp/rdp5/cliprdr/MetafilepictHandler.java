@@ -129,4 +129,10 @@ public class MetafilepictHandler extends TypeHandler {
 		c.send_null(ClipChannel.CLIPRDR_DATA_RESPONSE,ClipChannel.CLIPRDR_ERROR);
 	}
 
+	@Override
+	public Boolean hasNewData() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

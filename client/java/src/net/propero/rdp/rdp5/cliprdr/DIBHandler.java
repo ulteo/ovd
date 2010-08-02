@@ -14,6 +14,8 @@ package net.propero.rdp.rdp5.cliprdr;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.ImageObserver;
@@ -94,6 +96,31 @@ public class DIBHandler extends TypeHandler implements ImageObserver {
 	}
 
 	public boolean imageUpdate(Image arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
+		return false;
+	}
+
+	@Override
+	public Boolean hasNewData(Clipboard clip) {
+		if (! clip.isDataFlavorAvailable(DataFlavor.imageFlavor))
+			return false;
+		int newHash;
+		try {
+			Image img = (Image)clip.getData(DataFlavor.imageFlavor);
+			//TODO find better method to get hash for the img
+			newHash = img.getHeight(null) + 1000*img.getWidth(null);
+			if (newHash == this.hash) {
+				return false;
+			}
+			else {
+				this.hash = newHash;
+				return true;
+			}
+		} catch (UnsupportedFlavorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		return false;
 	}
 

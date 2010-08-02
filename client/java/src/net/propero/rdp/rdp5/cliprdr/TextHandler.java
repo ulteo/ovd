@@ -11,9 +11,12 @@
  */
 package net.propero.rdp.rdp5.cliprdr;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 import net.propero.rdp.RdpPacket;
 import net.propero.rdp.Utilities_Localised;
@@ -101,6 +104,30 @@ public class TextHandler extends TypeHandler {
             //return s.getBytes();
 			c.send_data(s.getBytes(),s.length());
 		}
+	}
+
+	@Override
+	public Boolean hasNewData(Clipboard clip) {
+		if (! clip.isDataFlavorAvailable(DataFlavor.stringFlavor))
+			return false;
+		int newHash;
+		try {
+			String text = (String)clip.getData(DataFlavor.stringFlavor);
+			newHash = text.hashCode();
+			if (newHash == this.hash) {
+				return false;
+			}
+			else {
+				this.hash = newHash;
+				return true;
+			}
+		} catch (UnsupportedFlavorException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 
 }
