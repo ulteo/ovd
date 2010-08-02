@@ -83,7 +83,7 @@ $dom->appendChild($session_node);
 
 if (! defined('SESSIONMANAGER_URL')) {
 	$http_protocol = ((isset($_POST['use_https']) && $_POST['use_https'] == 1)?'https':'http');
-	$_SESSION['webinterface']['sessionmanager_url'] = $http_protocol.'://'.$_POST['sessionmanager_url'].'/sessionmanager/';
+	$_SESSION['webinterface']['sessionmanager_url'] = $http_protocol.'://'.$_POST['sessionmanager_url'].'/ovd/client/';
 	$sessionmanager_url = $_SESSION['webinterface']['sessionmanager_url'];
 }
 

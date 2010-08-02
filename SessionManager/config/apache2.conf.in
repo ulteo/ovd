@@ -1,8 +1,6 @@
 # Ulteo session manager alias
 
-Alias /sessionmanager/base.tar.gz /var/cache/ulteo/sessionmanager/base.tar.gz
-
-Alias /sessionmanager @DATADIR@/ulteo/sessionmanager/client
+Alias /ovd/client @DATADIR@/ulteo/sessionmanager/client
 <Directory @DATADIR@/ulteo/sessionmanager/client>
     Options FollowSymLinks
     AllowOverride None
@@ -12,7 +10,9 @@ Alias /sessionmanager @DATADIR@/ulteo/sessionmanager/client
     php_admin_flag magic_quotes_gpc Off
 </Directory>
 
-Alias /sessionmanager/admin @DATADIR@/ulteo/sessionmanager/admin
+Alias /ovd/admin/base.tar.gz /var/cache/ulteo/sessionmanager/base.tar.gz
+
+Alias /ovd/admin @DATADIR@/ulteo/sessionmanager/admin
 <Directory @DATADIR@/ulteo/sessionmanager/admin>
     Options FollowSymLinks
     AllowOverride None

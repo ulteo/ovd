@@ -104,7 +104,7 @@ class Logger:
 class Dialog:
     def __init__(self, conf):
         self.conf = conf
-        self.base_url = conf["url"]
+        self.base_url = "https://%s/ovd/client"%(conf["host"])
         self.sessionProperties = {}
 
         cookiejar = cookielib.CookieJar()
@@ -401,7 +401,7 @@ class Dialog:
 
 
 def usage():
-    print "Usage: %s [options] ovd_sm_url"%(sys.argv[0])
+    print "Usage: %s [options] ovd_sm_host"%(sys.argv[0])
     print
     print "Options:"
     print "\t--extra-startsession-opt=key:value[,key1:value1...]"
@@ -441,11 +441,11 @@ except getopt.GetoptError, err:
     sys.exit(2)
 
 if not len(args)>0:
-    print >> sys.stderr, "Missing sm_url"
+    print >> sys.stderr, "Missing host"
     usage()
     sys.exit(2)
 
-conf["url"] = args[0]
+conf["host"] = args[0]
 for o, a in opts:
     if o in ("-l", "--login"):
         conf["login"] = a
@@ -504,7 +504,7 @@ else:
 Logger.initialize(logger_flags)
 
 if not conf.has_key("password"):
-    Logger.info("Connect to '%s' with user '%s'"%(conf["url"], conf["login"]))
+    Logger.info("Connect to '%s' with user '%s'"%(conf["host"], conf["login"]))
     conf["password"] = getpass.getpass("Password please: ")
 
 d = Dialog(conf)

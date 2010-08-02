@@ -137,7 +137,7 @@ public class SessionManagerCommunication implements Runnable {
 		this.base_url = "http";
 		if (this.use_https)
 			this.base_url += "s";
-		this.base_url += "://"+this.sm+"/sessionmanager/";
+		this.base_url += "://"+this.sm+"/ovd/client/";
 
 	}
 
