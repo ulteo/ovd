@@ -95,12 +95,12 @@ if (! $xml) {
 $dom = new DomDocument('1.0', 'utf-8');
 $buf = @$dom->loadXML($xml);
 if (! $buf) {
-	echo return_error(0, 'Invalid XML');
+	echo return_error(0, 'An internal error occured, please contact your administrator');
 	die();
 }
 
 if (! $dom->hasChildNodes()) {
-	echo return_error(0, 'Invalid XML');
+	echo return_error(0, 'An internal error occured, please contact your administrator');
 	die();
 }
 
@@ -141,12 +141,12 @@ if (! is_null($response_node)) {
 
 $session_node = $dom->getElementsByTagName('session');
 if (count($session_node) != 1) {
-	echo return_error(1, 'Invalid XML: No session node');
+	echo return_error(1, 'An internal error occured, please contact your administrator');
 	die();
 }
 $session_node = $session_node->item(0);
 if (! is_object($session_node)) {
-	echo return_error(1, 'Invalid XML: No session node');
+	echo return_error(1, 'An internal error occured, please contact your administrator');
 	die();
 }
 $_SESSION['session_id'] = $session_node->getAttribute('id');
@@ -158,19 +158,19 @@ $_SESSION['redirect_client_printers'] = $session_node->getAttribute('redirect_cl
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {
-	echo return_error(2, 'Invalid XML: No user node');
+	echo return_error(2, 'An internal error occured, please contact your administrator');
 	die();
 }
 $user_node = $user_node->item(0);
 if (! is_object($user_node)) {
-	echo return_error(2, 'Invalid XML: No user node');
+	echo return_error(2, 'An internal error occured, please contact your administrator');
 	die();
 }
 $_SESSION['session_displayname'] = $user_node->getAttribute('displayName');
 
 $server_nodes = $session_node->getElementsByTagName('server');
 if (count($server_nodes) < 1) {
-	echo return_error(3, 'Invalid XML: No server node');
+	echo return_error(3, 'An internal error occured, please contact your administrator');
 	die();
 }
 
