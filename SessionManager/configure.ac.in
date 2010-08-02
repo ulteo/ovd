@@ -189,10 +189,6 @@ web/PEAR/CAS/PGTStorage/Makefile
 web/PEAR/CAS/languages/Makefile
 web/PEAR/Mail/Makefile
 web/PEAR/Net/Makefile
-web/PEAR/HTTP/Makefile
-web/PEAR/HTTP/WebDAV/Makefile
-web/PEAR/HTTP/WebDAV/Server/Makefile
-web/PEAR/HTTP/WebDAV/Tools/Makefile
 web/events/Makefile
 web/events/callbacks/Makefile
 web/events/callbacks/SessionStart/Makefile
