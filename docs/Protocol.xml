@@ -1388,7 +1388,7 @@
       </simplesect>
     </section>
 
-    <section id="startsession">
+    <section id="start">
       <title>Startsession</title>
 
       <para>
@@ -1504,7 +1504,7 @@
 	  <![CDATA[
 <html>
   <body>
-<form action="http://sm.ulteo.com/sessionmanager/startsession.php" method="post">
+<form action="http://sm.ulteo.com/ovd/client/start.php" method="post">
  <input type="hidden" name="client" value="browser" />
 
  Login: 

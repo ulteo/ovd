@@ -139,7 +139,7 @@
         <para>
           The first step is to connect to you Session Manager
           Administration Console by browsing at
-          <ulink url="https://localhost/sessionmanager/admin" />.
+          <ulink url="https://localhost/ovd/admin" />.
         </para>
         <note>
           <para>

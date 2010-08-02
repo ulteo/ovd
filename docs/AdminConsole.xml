@@ -37,7 +37,7 @@
     <para>
       As you probably noticed at installation time, the console is
       available using a web browser by entering the following
-      URL <ulink>http://ip.or.host/sessionmanager/admin/</ulink> where
+      URL <ulink>http://ip.or.host/ovd/admin/</ulink> where
       <emphasis>ip.or.host</emphasis> is the name or IP address of the
       machine where you installed the Session Manager.
     </para>

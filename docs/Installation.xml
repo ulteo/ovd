@@ -252,7 +252,7 @@ mysql> exit]]>
 
     <para id="sm_install_browse">
       The server is now installed but not configured yet. You have to
-      open <ulink url="https://sm.ulteo.com/sessionmanager/admin" /> with a
+      open <ulink url="https://sm.ulteo.com/ovd/admin" /> with a
       web browser.It should display this page:
     </para>
 
@@ -273,7 +273,7 @@ mysql> exit]]>
       <para>
 	If you didn't specify an URL at the last question, you have to
 	copy an application system archive into <emphasis
-	role="strong">/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>.
+	role="strong">/var/cache/ulteo/sessionmanager/base.tar.gz</emphasis>.
       </para>
 
       <para>
@@ -282,7 +282,7 @@ mysql> exit]]>
 	from another computer which have access to Internet and copy
 	it on a usb stick.  Then, you have to copy it on the Session
 	Manager at
-	<emphasis>/usr/share/ulteo/sessionmanager/base.tar.gz</emphasis>
+	<emphasis>/var/cache/ulteo/sessionmanager/base.tar.gz</emphasis>
       </para>
       <beginpage />
     </section>
@@ -294,7 +294,7 @@ mysql> exit]]>
 
     <para>
       The first step is to go to <ulink
-      url="https://sm.ulteo.com/sessionmanager/admin" /> and
+      url="https://sm.ulteo.com/ovd/admin" /> and
       autenticate yourself with the login and password you provided
       during the installation.
     </para>

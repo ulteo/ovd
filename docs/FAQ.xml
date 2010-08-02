@@ -193,7 +193,7 @@
 	</para></listitem>
 	<listitem><para>
 	  Did you publish at least one application? (check the summary:
-	  <ulink url="http://myserver/sessionmanager/admin/sumup.php"/>)
+	  <ulink url="http://myserver/ovd/admin/sumup.php"/>)
 	</para></listitem>
       </itemizedlist>
     </para>

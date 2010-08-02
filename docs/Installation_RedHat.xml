@@ -146,12 +146,12 @@ Admin login: admin
 Password:
 Retype password:
 Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0]:
-Chroot destination [/usr/share/ulteo/sessionmanager/base.tar.gz]:
+Chroot destination [/var/cache/ulteo/sessionmanager/base.tar.gz]:
 
 Options:
 * chroot download:  yes
 * chroot URL:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0
-* chroot directory: /usr/share/ulteo/sessionmanager/base.tar.gz
+* chroot directory: /var/cache/ulteo/sessionmanager/base.tar.gz
 * apache group:     apache
 * apache dir:       /etc/httpd/conf.d
 
@@ -230,13 +230,11 @@ gpgkey=http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
        <screen>
 	 <![CDATA[
 # aps-chroot-install 
-Full Qualified Domain Name [aps.ulteo.com]: aps.ulteo.com
-Session Manager URL: http://sm.ulteo.com/sessionmanager
+Session Manager: sm.ulteo.com
 Chroot installation path: /opt/ulteo
 
 Options:
-* FQDN: aps.ulteo.com
-* SM URL: http://sm.ulteo.com/sessionmanager
+* SM: sm.ulteo.com
 * chroot path: /opt/ulteo
 * chroot download: yes
 * apache group: apache

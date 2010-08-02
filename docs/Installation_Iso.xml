@@ -225,10 +225,10 @@ $ ifconfig eth0
     <important>
       <para>
 	From now on the Session Manager url we are going to use is
-	<emphasis role="strong">http://192.168.0.180/sessionmanager</emphasis>
+	<emphasis role="strong">http://192.168.0.180/ovd</emphasis>
 	and you can access the administrator console
 	from: <emphasis role="strong">
-	  http://192.168.0.180/sessionmanager/admin</emphasis>
+	  http://192.168.0.180/ovd/admin</emphasis>
       </para>
     </important>
 
@@ -250,7 +250,7 @@ $ ifconfig eth0
     <para>
       Once you can access the Ulteo system from your browser, go
       to the administration console:
-      <ulink url="http://192.168.0.180/sessionmanager/admin" /> and authenticate yourself.
+      <ulink url="http://192.168.0.180/ovd/admin" /> and authenticate yourself.
     </para>
 
     <important>
