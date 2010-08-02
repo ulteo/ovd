@@ -29,51 +29,40 @@ function return_error($errno_, $errstr_) {
 	return $dom->saveXML();
 }
 
-if (! array_key_exists('session_id', $_SESSION)) {
-	echo return_error(1, 'Usage: missing "session_id" $_SESSION parameter');
-	die();
-}
-
 if (! array_key_exists('id', $_GET)) {
 	echo return_error(1, 'Usage: missing "id" $_GET parameter');
 	die();
 }
 
+if (! array_key_exists('session_id', $_SESSION)) {
+	echo return_error(1, 'Usage: missing "session_id" $_SESSION parameter');
+	die();
+}
 
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (! $session) {
-	header('Content-Type: text/xml; charset=utf-8');
-
-	$dom = new DomDocument('1.0', 'utf-8');
-	$session_node = $dom->createElement('session');
-	$session_node->setAttribute('id', $_SESSION['session_id']);
-	$session_node->setAttribute('status', 'unknown');
-	$dom->appendChild($session_node);
-
-	$xml = $dom->saveXML();
-
-	echo $xml;
-
+	echo return_error(1, 'No such session "'.$_SESSION['session_id'].'"');
 	die();
 }
 
-if (! in_array($_GET['id'], $session->applications)) {
+/*if (! in_array($_GET['id'], $session->applications)) {
 	echo return_error(1, 'Unauthorized application');
 	die();
-}
+}*/
 
 $applicationDB = ApplicationDB::getInstance();
 
 $app = $applicationDB->import($_GET['id']);
 if (! is_object($app)) {
-	echo return_error(1, 'Internal error #1');
+	echo return_error(1, 'No such application "'.$_GET['id'].'"');
 	die();
 }
 
 $path = $app->getIconPath();
-if (file_exists($path)) {
-	header('Content-Type: image/png');
-	die(@file_get_contents($path));
+if (! file_exists($path)) {
+	echo return_error(1, 'No icon available for application "'.$_GET['id'].'"');
+	die();
 }
 
-header('HTTP/1.1 404 Not Found');
+header('Content-Type: image/png');
+echo @file_get_contents($path);
