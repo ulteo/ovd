@@ -2,7 +2,8 @@
 
 # Copyright (C) 2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 # Author David LECHEVALIER <david@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -19,9 +20,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import os
 import win32api
 import win32con
 import win32security
+import _winreg
 
 from ovd.Logger import Logger
 
@@ -104,6 +107,35 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	win32api.RegCloseKey(hkey_src)
 	win32api.RegCloseKey(hkey_dst)
 
+def OpenKeyCreateIfDoesntExist(root, path):
+	try:
+		key = _winreg.OpenKey(root, path,0, _winreg.KEY_SET_VALUE)
+	except Exception, err:
+		key = None
+	
+	if key is not None:
+		return key
+	else:
+		keyName = os.path.basename(path)
+		parentPath = os.path.dirname(path)
+		if len(parentPath) == 0:
+			parentPath = None
+		
+		need_to_create_son = False
+		if parentPath is not None:
+			key = OpenKeyCreateIfDoesntExist(root, parentPath)
+			if key is not None:
+				need_to_create_son = True
+			else:
+				return None
+		
+		if need_to_create_son:
+			try:
+				_winreg.CreateKey(key, keyName)
+			except Exception, err:
+				return None
+		
+		return key
 
 def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)

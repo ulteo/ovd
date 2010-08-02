@@ -40,6 +40,7 @@ import LnkFile
 from Msi import Msi
 from ovd.Platform import Platform
 import Reg
+from Reg import OpenKeyCreateIfDoesntExist
 
 class Session(AbstractSession):
 	def init(self):
@@ -220,16 +221,15 @@ class Session(AbstractSession):
 				#"StartMenuLogOff",
 				]
 		
+		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
 		key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, _winreg.KEY_SET_VALUE)
-		for item in restrictions:
-			_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
-		_winreg.CloseKey(key)
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			for item in restrictions:
+				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
+			_winreg.CloseKey(key)
 		
-		
-		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies"%(hiveName)
-		key = _winreg.OpenKey( _winreg.HKEY_USERS, path, 0, _winreg.KEY_SET_VALUE)
-		_winreg.CreateKey(key, "System")
-		_winreg.CloseKey(key)
 		
 		path = r"%s\Software\Microsoft\Windows\CurrentVersion\Policies\System"%(hiveName)
 		restrictions = ["DisableRegistryTools",
@@ -237,31 +237,37 @@ class Session(AbstractSession):
 				"NoDispCPL",
 				]
 		
-		key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, _winreg.KEY_SET_VALUE)
-		for item in restrictions:
-			_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
-		_winreg.CloseKey(key)
-		
-		
-		
+		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			for item in restrictions:
+				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 1)
+			_winreg.CloseKey(key)
 		
 		# Desktop customization
 		path = r"%s\Control Panel\Desktop"%(hiveName)
 		items = ["ScreenSaveActive", "ScreenSaverIsSecure"]
 		
-		key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, _winreg.KEY_SET_VALUE)
-		for item in items:
-			_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
-		_winreg.CloseKey(key)
+		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
+		if key is None:
+			Logger.error("Unable to open key '%s'"%(path))
+		else:
+			for item in items:
+				_winreg.SetValueEx(key, item, 0, _winreg.REG_DWORD, 0)
+			_winreg.CloseKey(key)
 		
 		# Overwrite Active Setup: works partially
-		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, "Software\Microsoft\Active Setup", 0, win32con.KEY_ALL_ACCESS)
-		hkey_dst = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\Software\Microsoft\Active Setup"%(hiveName), 0, win32con.KEY_ALL_ACCESS)
+		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, r"Software\Microsoft\Active Setup", 0, win32con.KEY_ALL_ACCESS)
+		hkey_dst = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, r"%s\Software\Microsoft\Active Setup"%(hiveName))
 		
-		Reg.CopyTree(hkey_src, "Installed Components", hkey_dst)
-		Reg.UpdateActiveSetup(hkey_dst, self.user.name)
-		win32api.RegCloseKey(hkey_src)
-		win32api.RegCloseKey(hkey_dst)
+		try:
+			Reg.CopyTree(hkey_src, "Installed Components", hkey_dst)
+			Reg.UpdateActiveSetup(hkey_dst, self.user.name)
+			win32api.RegCloseKey(hkey_src)
+			win32api.RegCloseKey(hkey_dst)
+		except Exception, err:
+			return False
 		
 		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName)
