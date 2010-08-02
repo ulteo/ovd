@@ -1,0 +1,31 @@
+TO COMPILE:
+Download gs 32 bits : http://downloads.sourceforge.net/project/ghostscript/GPL%20Ghostscript/8.71/gs871w32.exe
+Download gs 64 bits : http://downloads.sourceforge.net/project/ghostscript/GPL%20Ghostscript/8.71/gs871w64.exe
+Extract each archive and retrive the lib on path gs8.71/bin/gs32.lib
+Copy gsdll32.lib(32bits) in %DDK_PATH%\lib\wxp\i386
+Copy gsdll32.lib(64bits) in %DDK_PATH%\lib\wnet\amd64
+
+After that, start the script make.bat
+The directory AMD64 and x86 contain compilation result
+
+
+TO PACKAGE
+Firstly, compile the project
+Download gs 32 bits : http://downloads.sourceforge.net/project/ghostscript/GPL%20Ghostscript/8.71/gs871w32.exe
+Download gs 64 bits : http://downloads.sourceforge.net/project/ghostscript/GPL%20Ghostscript/8.71/gs871w64.exe
+Extract each archive and get the lib on path gs8.71/bin/gs32.dll
+Copy gsdll32.dll(32bits) in x86 directory of the compilation directory
+Copy gsdll32.dll(64bits) in AMD64 directory of the compilation directory
+
+TO INSTALL
+Firstly package the project
+Download the gs installer that match your architecture
+ - 32 bits : http://downloads.sourceforge.net/project/ghostscript/GPL%20Ghostscript/8.71/gs871w32.exe
+ - 64 bits : http://downloads.sourceforge.net/project/ghostscript/GPL%20Ghostscript/8.71/gs871w64.exe
+Install it
+Go to compilation result directory (directory AMD64 or x86)
+Do the command "rundll32 printui.dll,PrintUIEntry /ia /m "Ulteo TS Printer Driver" /f ulteodll.inf"
+Create the directory %CSIDL_COMMON_APPDATA%\ulteo\ovd\spool
+
+
+
