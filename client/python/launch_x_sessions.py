@@ -25,10 +25,13 @@ import os
 import sys
 import urllib
 import urllib2
+from xml.dom import minidom
+from xml.dom.minidom import Document
+from xml.parsers.expat import ExpatError
 
 
-def launch_client(user, password, url):
-    cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py -l %s -p \"%s\" %s; sleep 1h"%(user, password, url)]
+def launch_client(user, password, host):
+    cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py -l %s -p \"%s\" %s; sleep 1h"%(user, password, host)]
 
     # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
     pid =  os.fork()
@@ -41,8 +44,8 @@ def launch_client(user, password, url):
     return pid
 
 
-def getUserList(url):
-        url = url+"/webservices/userlist.php"
+def getUserList(host):
+        url = "https://%s/ovd/client/userlist.php"%(host)
         cookiejar = cookielib.CookieJar()
         urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
 
@@ -66,11 +69,33 @@ def getUserList(url):
             print "Echec. Cause:", exc.reason
             return False
 
-        return [i.strip() for i in url.readlines()]
+
+        headers = url.info()
+        if not headers['Content-Type'].startswith('text/xml'):
+            Logger.warn("Invalid response format")
+            return False
+
+        data = url.read()
+        users = []
+        try:
+            dom = minidom.parseString(data)
+        except ExpatError:
+            Logger.warn("Invalid XML result")
+            return False
+
+        nodes = dom.getElementsByTagName('user')
+        for node in nodes:
+            if not node.hasAttribute('login'):
+                Logger.warn("Bad xml result")
+                return False
+
+            users.append(node.getAttribute('login'))
+        
+        return users
 
 
 def usage():
-    print "Usage: %s [-h|--help] sm_url Number"%(sys.argv[0])
+    print "Usage: %s [-h|--help] sm_host Number"%(sys.argv[0])
     print
 
 
@@ -85,11 +110,11 @@ except getopt.GetoptError, err:
     sys.exit(2)
 
 if not len(args)>1:
-    print >> sys.stderr, "Missing sm_url"
+    print >> sys.stderr, "Missing sm_host"
     usage()
     sys.exit(2)
 
-url = args[0]
+host = args[0]
 number = args[1]
 start = 0
 
@@ -111,7 +136,7 @@ if not number.isdigit():
 
 number=int(number)
 
-p = getUserList(url)
+p = getUserList(host)
 
 j = 1
 for i in p[start:]:
@@ -120,7 +145,7 @@ for i in p[start:]:
 
     print "launch session %d a session for %s"%(j, i)
 #    launch_client(i, "", url)
-    launch_client(i, i, url)
+    launch_client(i, i, host)
     j+=1
 
 print "end"
