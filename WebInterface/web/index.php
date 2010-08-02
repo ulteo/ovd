@@ -130,6 +130,8 @@ function get_users_list() {
 				$('applicationsModeContainer').hide();
 				$('applicationsAppletContainer').hide();
 
+				$('printingAppletContainer').hide();
+
 				$('debugContainer').hide();
 				$('debugLevels').hide();
 			});
@@ -275,6 +277,9 @@ function get_users_list() {
 						</td>
 					</tr>
 				</table>
+			</div>
+
+			<div id="printingAppletContainer" style="display: none;">
 			</div>
 
 			<table id="applicationsContainer" style="width: 100%; background: #eee;" border="0" cellspacing="0" cellpadding="5">

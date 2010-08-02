@@ -231,6 +231,13 @@ div.rounded {
 	left: 0px;
 }
 
+#printingAppletContainer {
+	position: relative;
+
+	top: 0px;
+	left: 0px;
+}
+
 div#lockWrap {
 	width: 100%;
 	height: 100%;

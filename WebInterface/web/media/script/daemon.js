@@ -86,6 +86,8 @@ var Daemon = Class.create({
 		if ($('progressBar') && $('progressBarContent'))
 			this.progressBar();
 
+		$('printingAppletContainer').innerHTML = '';
+
 		Event.observe(window, 'unload', this.client_exit.bind(this));
 	},
 
@@ -513,7 +515,8 @@ var Daemon = Class.create({
 		setTimeout(function() {
 			var applet = buildAppletNode('PrinterApplet', 'org.ulteo.ovd.printer.PrinterApplet', 'PDFPrinter.jar', new Hash());
 			applet.setAttribute('id', 'PrinterApplet');
-			$(this.mode+'AppletContainer').appendChild(applet);
+			$('printingAppletContainer').show();
+			$('printingAppletContainer').appendChild(applet);
 		}, 20000);
 	}
 });
