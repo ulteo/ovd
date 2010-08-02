@@ -22,4 +22,4 @@
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 
 header('Content-Type: image/png');
-die(query_sm($sessionmanager_url.'/webservices/icon.php?id='.$_GET['id']));
+die(query_sm($sessionmanager_url.'/icon.php?id='.$_GET['id']));

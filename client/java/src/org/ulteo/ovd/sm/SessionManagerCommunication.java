@@ -72,6 +72,7 @@ public class SessionManagerCommunication implements Runnable {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
+	private static final String WEBSERVICE_ICON = "icon.php";
 	private static final String WEBSERVICE_START_SESSION = "start.php";
 	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps.php";
 	private static final String WEBSERVICE_SESSION_STATUS = "session_status.php";
@@ -510,7 +511,7 @@ public class SessionManagerCommunication implements Runnable {
 				}
 				Application app = null;
 				try {
-					String iconWebservice = "http://" + this.sm + ":1111/icon.php?id=" + appItem.getAttribute("id");
+					String iconWebservice = this.base_url+WEBSERVICE_ICON+"?id=" + appItem.getAttribute("id");
 					app = new Application(rc, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, new URL(iconWebservice));
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
