@@ -1,9 +1,10 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com>
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
+ * Author Laurent CLOUET <laurent@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -143,7 +144,9 @@ function show_step1() {
     $usergroup_selected = true;
 
   $userDB = UserDB::getInstance();
-  $users = $userDB->getList(true);
+  $prefs = Preferences::getInstance();
+  $search_limit = $prefs->get('general', 'max_items_per_page');
+  list($users, $sizelimit_exceeded) = $userDB->getUsersContains('', array('login'), $search_limit);
   if (! is_array($users))
     $users = array();
 
@@ -154,6 +157,10 @@ function show_step1() {
     popup_error(_('No available user'));
   if (!count($applications))
     popup_error(_('No available application'));
+  if ($sizelimit_exceeded) {
+    popup_error(_('Unable to display users list: too many users'));
+    $users = array();
+  }
 
   page_header();
   echo '<div>';
