@@ -92,6 +92,9 @@ class Session {
 	}
 
 	public function getStatus() {
+		if ($this->uptodateAttribute('status'))
+			return $this->getAttribute('status');
+
 		Logger::debug('main', 'Starting Session::getStatus for \''.$this->id.'\'');
 
 		$server = Abstract_Server::load($this->server);
