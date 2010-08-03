@@ -187,7 +187,7 @@ if (is_object($profile_node)) {
 
 $_SESSION['xml'] = $xml;
 
-setcookie('webinterface[sessionmanager_url]', $_POST['sessionmanager_url'], (time()+(60*60*24*7)));
+setcookie('webinterface[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
 setcookie('webinterface[user_login]', $_POST['login'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_language]', $_POST['language'], (time()+(60*60*24*7)));
