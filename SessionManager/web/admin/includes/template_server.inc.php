@@ -78,6 +78,9 @@ function server_display_role_preparation_aps($server) {
 	
 	if ($total > 0) {
 		$has_sessions = true;
+		$prefs = Preferences::getInstance();
+		if (! $prefs)
+			die_error('get Preferences failed',__FILE__,__LINE__);
 
 		if ($total > $prefs->get('general', 'max_items_per_page')) {
 			if (! isset($_GET['start']) || (! is_numeric($_GET['start']) || $_GET['start'] >= $total))
