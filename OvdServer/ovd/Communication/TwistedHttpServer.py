@@ -111,7 +111,7 @@ class HttpRequestHandler(resource.Resource):
 		
 		response = self.comm_instance.process(req)
 		if response is None:
-			self.send_error(httplib.NOT_FOUND)
+			self.send_error(request, httplib.NOT_FOUND)
 			return
 		
 		request.setResponseCode(httplib.OK)
