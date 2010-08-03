@@ -73,7 +73,7 @@ function server_display_role_preparation_aps($server) {
 			}
 		}
 	}
-		
+	$sessions = array();
 	$total = Abstract_Session::countByServer($_GET['fqdn']);
 	
 	if ($total > 0) {
