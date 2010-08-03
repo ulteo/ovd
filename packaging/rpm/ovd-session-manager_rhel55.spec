@@ -1,12 +1,12 @@
 Summary: Ulteo OVD - Session Manager
 Name: ovd-session-manager
-Version: @PKG_VERSION@
+Version: @VERSION@
 Release: 1
 License: GPL2
 Group: Applications/System
 Source0: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Requires: apache2, apache2-mod_php5, curl, php5, php5-ldap, php5-mysql, php5-mbstring, php5-xmlwriter, php5-gettext, php5-curl, ovd-applets
+Requires: httpd, curl, php, php-ldap, php-mysql, php-xml, php-mbstring, php-pear, php-gd, php-pecl-imagick, ovd-applets
 
 %description
 Ulteo OVD Session Manager is Ulteo OVD portal.
@@ -33,9 +33,9 @@ rm -rf $RPM_BUILD_ROOT
 %config /etc/ulteo/sessionmanager/apache2.conf
 %config /etc/ulteo/sessionmanager/cron.php
 %config /etc/logrotate.d/sessionmanager
-%defattr(0660,wwwrun,root)
+%defattr(0660,apache,root)
 %config /etc/ulteo/sessionmanager/config.inc.php
-%defattr(2770,wwwrun,root)
+%defattr(2770,apache,root)
 /var/log/ulteo/*
 /var/spool/ulteo/*
 
