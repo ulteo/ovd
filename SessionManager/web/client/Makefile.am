@@ -1,4 +1,5 @@
-scripts_DATA = logout.php \
+scripts_DATA = icon.php \
+               logout.php \
                remote_apps.php \
                session_status.php \
                start.php \
