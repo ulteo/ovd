@@ -27,7 +27,7 @@ define('DEFAULT_PAGE_TITLE', _('Open Virtual Desktop'));
 
 $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 
-define('DEFAULT_LOGO_URL', '/sessionmanager/admin/media/image/header.png');
+define('DEFAULT_LOGO_URL', '/ovd/admin/media/image/header.png');
 
 define('DEFAULT_REQUEST_TIMEOUT', 10);
 
