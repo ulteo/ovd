@@ -4,7 +4,7 @@
 # Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2008, 2010
-# Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -149,16 +149,19 @@ class Dialog:
             dom = minidom.parseString(data)
         except ExpatError:
             Logger.warn("Invalid XML result")
+            Logger.debug("data received %s"%(data))
             return False
 
         node = dom.getElementsByTagName('session')
         if len(node) != 1:
             Logger.warn("No session root node")
+            Logger.debug("data received %s"%(data))
             return False
 
         node = node[0]
         if not node.hasAttribute("mode"):
                 Logger.warn("Missing attribute mode")
+                Logger.debug("data received %s"%(data))
                 return False
         self.sessionProperties["mode"] = node.getAttribute("mode")
         
@@ -181,16 +184,19 @@ class Dialog:
         userNode = node.getElementsByTagName('user')
         if len(userNode) != 1:
             Logger.warn("Missing node user")
+            Logger.debug("data received %s"%(data))
             return False
         userNode = userNode[0]
         if not userNode.hasAttribute("displayName"):
             Logger.warn("Missing attribute displayName on node user")
+            Logger.debug("data received %s"%(data))
             return False
         self.sessionProperties["user_dn"] = userNode.getAttribute("displayName")
 
         node = node.getElementsByTagName('server')
         if len(node) < 1:
             Logger.warn("No server child node from root node")
+            Logger.debug("data received %s"%(data))
             return False
 
         node = node[0]
@@ -198,6 +204,7 @@ class Dialog:
         for attr in ['fqdn', 'login', 'password']:
             if not node.hasAttribute(attr):
                 Logger.warn("Missing attribute %s"%(str(attr)))
+                Logger.debug("data received %s"%(data))
                 return False
             self.access[attr] = node.getAttribute(attr)
 
@@ -233,16 +240,19 @@ class Dialog:
             dom = minidom.parseString(data)
         except ExpatError:
             Logger.warn("Invalid XML result")
+            Logger.debug("data received %s"%(data))
             return False
 
         sessionNode = dom.getElementsByTagName('session')
         if len(sessionNode) != 1:
             Logger.warn("Bad xml result")
+            Logger.debug("data received %s"%(data))
             return False
 
         sessionNode = sessionNode[0]
         if not sessionNode.hasAttribute('status'):
             Logger.warn("Bad xml result")
+            Logger.debug("data received %s"%(data))
             return False
 
         self.sessionStatus = sessionNode.getAttribute('status')
