@@ -2,7 +2,7 @@
 
 # Copyright (C) 2008,2009 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2008,2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -84,10 +84,10 @@ class HttpRequestHandler(resource.Resource):
 	
 		response = self.comm_instance.process(req)
 		if response is None:
-			return self.send_error(httplib.NOT_FOUND)
+			return self.send_error(request, httplib.NOT_FOUND)
 		
 		if response is False:
-			return self.send_error(httplib.UNAUTHORIZED)
+			return self.send_error(request, httplib.UNAUTHORIZED)
 		
 		request.setResponseCode(httplib.OK)
 		request.setHeader("content-type", response["Content-Type"])
