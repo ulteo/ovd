@@ -7,7 +7,7 @@ CHROOTDIR=/var/cache/ulteo/sessionmanager
 CONFDIR=/etc/ulteo/sessionmanager
 CHROOT=$CHROOTDIR/base.tar.gz
 
-############################# APACHE CONFIGURATION #############################
+############################# APACHE CONFIGURATION #############################
 
 A2SITESDIR=/etc/apache2/sites-available
 A2CONFDIR=/etc/apache2/conf.d
@@ -87,9 +87,9 @@ if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); th
              /var/log/ulteo/sessionmanager
 
     # change user and group permission folders
-    chown www-data:www-data /var/spool/ulteo/sessionmanager \
+    chown www-data:www-data /var/spool/ulteo/sessionmanager \
                             /var/spool/ulteo/sessionmanager/reporting \
-                            /var/log/ulteo/sessionmanager \
+                            /var/log/ulteo/sessionmanager \
                             $CONFFILE
 
     # clear the password
