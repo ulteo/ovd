@@ -86,10 +86,17 @@ class System(AbstractSystem):
 	
 		try:
 			name = cpus[0].Name
-			nb_core = len(cpus)
 		except Exception, e:
 			Logger.error("getCPUInfos %s"%(str(e)))
 			return (1, "Unknown")
+
+		nb_core = 0
+		for cpu in cpus:
+			try:
+				nb_core += cpu.NumberOfLogicalProcessors
+			except Exception, e:
+				#On Windows Server 2003, Windows XP, and Windows 2000:  This property is not available
+				nb_core +=1
 		
 		return (nb_core, name)
 	
