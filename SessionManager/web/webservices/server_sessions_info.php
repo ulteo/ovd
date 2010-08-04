@@ -47,10 +47,19 @@ function parse_monitoring_XML($xml_) {
 
 	$session_nodes = $dom->getElementsByTagname('session');
 	foreach ($session_nodes as $session_node) {
-		$ret['sessions'][] = array(
+		$ret['sessions'][$session_node->getAttribute('id')] = array(
 			'id'		=>	$session_node->getAttribute('id'),
-			'status'	=>	$session_node->getAttribute('status')
+			'status'	=>	$session_node->getAttribute('status'),
+			'instances'	=>	array()
 		);
+
+		$childnodes = $session_node->childNodes;
+		foreach ($childnodes as $childnode) {
+			if ($childnode->nodeName != 'instance')
+				continue;
+
+			$ret['sessions'][$session_node->getAttribute('id')]['instances'][$childnode->getAttribute('id')] = $childnode->getAttribute('application');
+		}
 	}
 
 	return $ret;
@@ -103,6 +112,8 @@ foreach ($ret['sessions'] as $session) {
 		continue;
 
 	$buf->setStatus($session['status']);
+
+	$buf->applications = $session['instances'];
 
 	Abstract_Session::save($buf);
 }
