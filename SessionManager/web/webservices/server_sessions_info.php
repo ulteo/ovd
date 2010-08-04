@@ -84,6 +84,19 @@ if (! $server) {
 	exit(1);
 }
 
+if (! $server->isAuthorized()) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', 2);
+	$node->setAttribute('message', 'Server not authorized');
+	$dom->appendChild($node);
+
+	echo $dom->saveXML();
+	exit(2);
+}
+
 foreach ($ret['sessions'] as $session) {
 	$buf = Abstract_Session::load($session['id']);
 	if (! $buf)
