@@ -8,6 +8,7 @@ scripts_DATA =  configuration.php \
                 server_name.php \
                 session_token.php \
                 session_status.php \
+                server_sessions_info.php \
                 server_status.php \
                 session_invite.php \
                 application.php
