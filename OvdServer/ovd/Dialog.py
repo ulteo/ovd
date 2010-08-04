@@ -225,6 +225,9 @@ class Dialog(AbstractDialog):
 			
 			for line in buf:
 				t = Logger._instance.get_time_from_line(line)
+				if t is None:
+					continue
+				
 				if t<since:
 					break  
 				
