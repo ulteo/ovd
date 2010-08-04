@@ -411,6 +411,23 @@ function show_manage($fqdn) {
   echo '<div class="section">';
   echo '<h2>'._('Configuration').'</h2>';
   echo '<table>';
+  
+  echo '<tr><td>';
+  echo _('Redirection name of this server').': ';
+  echo '</td><td>';
+  if ($can_do_action) {
+    echo '<form action="actions.php" method="post">';
+    echo '<input type="hidden" name="name" value="Server" />';
+    echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
+    echo '<input type="hidden" name="action" value="external_name" />';
+  }
+  echo '<input type="text" name="external_name" value="'.$server->getAttribute('external_name').'" />';
+  if ($can_do_action) {
+    echo ' <input type="submit" value="'._('change').'" />';
+    echo '</form>';
+  }
+  echo "</td></tr>\n";
+  
 
 	if ($can_do_action) {
 		if ($server_online || $switch_value == 1) {

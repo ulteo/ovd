@@ -155,7 +155,6 @@ function server_display_role_preparation_aps($server) {
 	}
 	
 	$ret['can_do_action'] = isAuthorized('manageServers');
-	$ret['external_name'] = $server->getAttribute('external_name');
 	$ret['web_port'] = $server->getAttribute('web_port');
 	$ret['can_use_apt'] = ((isset($server->ulteo_system) && $server->ulteo_system == 1)?true:false);
 	$ret['server_online'] = $server_online;
@@ -173,7 +172,6 @@ function server_display_role_preparation_aps($server) {
 function server_display_role_aps($server, $var) {
 	$can_do_action = $var['can_do_action'];
 	$can_use_apt = $var['can_use_apt'];
-	$external_name = $var['external_name'];
 	$server_online = $var['server_online'];
 	$applications = $var['applications'];
 	$applications_available = $var['applications_available'];
@@ -219,21 +217,6 @@ function server_display_role_aps($server, $var) {
 	}
 	echo '</td></tr>';
 
-	echo '<tr><td>';
-	echo _('Redirection name of this server').': ';
-	echo '</td><td>';
-	if ($can_do_action) {
-		echo '<form action="actions.php" method="post">';
-		echo '<input type="hidden" name="name" value="Server" />';
-		echo '<input type="hidden" name="fqdn" value="'.$server->fqdn.'" />';
-		echo '<input type="hidden" name="action" value="external_name" />';
-	}
-	echo '<input type="text" name="external_name" value="'.$external_name.'" />';
-	if ($can_do_action) {
-		echo ' <input type="submit" value="'._('change').'" />';
-		echo '</form>';
-	}
-	echo "</td></tr>\n";
 	echo '</table>';
 	
 	if ($server_online && $can_do_action && $can_use_apt) {
