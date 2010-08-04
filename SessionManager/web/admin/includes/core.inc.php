@@ -30,8 +30,8 @@ function get_root_admin_url() {
 	$root_admin_dir = dirname(dirname(__FILE__));
 	$root_admin_url = $_SERVER['REQUEST_URI'];
 	
-	$len1 = count(explode('/', $root_admin_dir));
-	$len2 = count(explode('/', realpath($_SERVER['SCRIPT_FILENAME'])));
+	$len1 = count(explode(DIRECTORY_SEPARATOR, $root_admin_dir));
+	$len2 = count(explode(DIRECTORY_SEPARATOR, realpath($_SERVER['SCRIPT_FILENAME'])));
 	if ($len1 > $len2) {
 		// Error: not possible !
 		return $root_admin_url;
