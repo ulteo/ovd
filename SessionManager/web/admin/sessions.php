@@ -108,15 +108,16 @@ if (isset($_POST['join'])) {
 	echo '<li><strong>'._('Status:').'</strong> '.$session->stringStatus().'</li>';
 	echo '</ul>';
 
-	if ($show_apps && $session->hasAttribute('applications')) {
+	if ($show_apps) {
 		echo '<h2>'._('Running applications').'</h2>';
 
-		if (count($session->getAttribute('applications')) == 0) {
+		$running_apps = $session->getRunningApplications();
+		if (count($running_apps) == 0) {
 			echo _('No application running');
 		} else {
 			echo '<ul>';
 			echo '<table>';
-			foreach ($session->getAttribute('applications') as $access_id => $app_id) {
+			foreach ($running_apps as $access_id => $app_id) {
 				if (is_null($app_id)) {
 					Logger::warning('main', '(admin/sessions) Application ID is NULL for access_id \''.$access_id.'\', session \''.$session->getAttribute('id').'\'');
 					continue;

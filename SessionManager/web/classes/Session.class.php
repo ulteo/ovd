@@ -279,4 +279,20 @@ class Session {
 
 		return true;
 	}
+
+	public function getRunningApplications() {
+		$running_apps = array();
+		foreach ($this->applications as $server => $running_app) {
+			foreach ($running_app as $k => $v)
+				$running_apps[$k] = $v;
+		}
+
+		return $running_apps;
+	}
+
+	public function setRunningApplications($fqdn_, $running_apps_) {
+		$this->applications[$fqdn_] = $running_apps_;
+
+		return true;
+	}
 }

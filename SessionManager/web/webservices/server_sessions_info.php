@@ -112,8 +112,7 @@ foreach ($ret['sessions'] as $session) {
 		continue;
 
 	$buf->setStatus($session['status']);
-
-	$buf->applications = $session['instances'];
+	$buf->setRunningApplications($ret['server'], $session['instances']);
 
 	Abstract_Session::save($buf);
 }
