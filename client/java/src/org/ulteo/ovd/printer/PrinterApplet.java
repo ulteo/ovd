@@ -54,6 +54,7 @@ public class PrinterApplet extends Applet {
 				job = (OVDJob)spool.take();
 			}
 			catch (InterruptedException e) {
+				job = null;
 			}
 			if (job != null) {
 				job.print();
