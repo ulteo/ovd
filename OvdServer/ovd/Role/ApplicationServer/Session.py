@@ -147,5 +147,5 @@ class Session:
 				
 				applications[name] = unicode(data, encoding)
 
-		self.used_applications = applications
+			self.used_applications = applications
 		return self.used_applications
