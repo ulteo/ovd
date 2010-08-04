@@ -130,14 +130,12 @@ class Session:
 			if encoding is None:
 				encoding = "UTF8"
 			
+			applications = {}
 			for basename in os.listdir(self.instanceDirectory):
 				if type(basename) is unicode:
 					name = basename
 				else:
 					name = unicode(basename, encoding)
-				
-				if self.used_applications.has_key(name):
-					continue
 				
 				path = os.path.join(self.instanceDirectory, basename)
 				if not os.path.isfile(path):
@@ -147,6 +145,7 @@ class Session:
 				data = f.read().strip()
 				f.close()
 				
-				self.used_applications[name] = unicode(data, encoding)
-		
+				applications[name] = unicode(data, encoding)
+
+		self.used_applications = applications
 		return self.used_applications
