@@ -59,7 +59,7 @@ public class PrinterApplet extends Applet {
 				job.print();
 			}
 			else
-				System.out.println("Unvalid job");
+				System.out.println("Invalid job");
 		}
 	}
 	
