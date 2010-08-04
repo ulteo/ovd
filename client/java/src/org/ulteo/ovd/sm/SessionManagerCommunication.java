@@ -26,12 +26,12 @@ import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -48,6 +48,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import javax.swing.ImageIcon;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -66,6 +67,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import sun.awt.image.URLImageSource;
 
 
 public class SessionManagerCommunication implements Runnable {
@@ -82,9 +84,14 @@ public class SessionManagerCommunication implements Runnable {
 	public static final String FIELD_PASSWORD = "password";
 	public static final String FIELD_TOKEN = "token";
 	public static final String FIELD_SESSION_MODE = "session_mode";
+	public static final String FIELD_ICON_ID = "id";
 
 	private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
 	private static final String CONTENT_TYPE_XML = "text/xml";
+	private static final String CONTENT_TYPE_PNG = "image/png";
+
+	private static final String REQUEST_METHOD_POST = "POST";
+	private static final String REQUEST_METHOD_GET = "GET";
 
 	private static final String SESSION_STATUS_UNKNOWN = "unknown";
 	private static final String SESSION_STATUS_ERROR = "error";
@@ -135,11 +142,12 @@ public class SessionManagerCommunication implements Runnable {
 		this.sm = sm_;
 		this.use_https = use_https_;
 
-		this.base_url = "http";
-		if (this.use_https)
-			this.base_url += "s";
-		this.base_url += "://"+this.sm+"/ovd/client/";
+		this.base_url = makeUrl(this.sm, "/ovd/client", "", this.use_https);
 
+	}
+
+	private static String makeUrl(String host, String suffix, String service, boolean useHttps) {
+		return (useHttps ? "https" : "http") + "://" + host + suffix + "/" + service;
 	}
 
 	public String getSessionMode() {
@@ -178,7 +186,7 @@ public class SessionManagerCommunication implements Runnable {
 
 		this.requestMode = params.get(FIELD_SESSION_MODE);
 
-		Document response = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, concatParams(params), true);
+		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
 
 		if (response == null)
 			return false;
@@ -201,7 +209,7 @@ public class SessionManagerCommunication implements Runnable {
 		if (! params.containsKey(FIELD_SESSION_MODE))
 			params.put(FIELD_SESSION_MODE, this.requestMode);
 
-		Document response = this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, concatParams(params), true);
+		Document response = (Document) this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
 
 		if (response == null)
 			return false;
@@ -216,7 +224,7 @@ public class SessionManagerCommunication implements Runnable {
 		Element logout = request.getDocumentElement();
 		logout.setAttribute("mode", "logout");
 
-		Document response = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, request, true);
+		Document response = (Document) this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, true);
 
 		if (response == null)
 			return false;
@@ -232,7 +240,7 @@ public class SessionManagerCommunication implements Runnable {
 		session.setAttribute("id", "");
 		session.setAttribute("status", "");
 
-		Document response = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, request, false);
+		Document response = (Document) this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, false);
 
 		if (response == null)
 			return false;
@@ -240,8 +248,15 @@ public class SessionManagerCommunication implements Runnable {
 		return this.parseSessionStatusResponse(response);
 	}
 
-	private Document askWebservice(String webservice, String content_type, Object data, boolean showLog) {
-		Document document = null;
+	public ImageIcon askForIcon(String appId) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(FIELD_ICON_ID, appId);
+
+		return (ImageIcon) this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, false);
+	}
+
+	private Object askWebservice(String webservice, String content_type, String method, Object data, boolean showLog) {
+		Object obj = null;
 		HttpURLConnection connexion = null;
 		
 		try {
@@ -289,7 +304,7 @@ public class SessionManagerCommunication implements Runnable {
 			}
 
 			connexion.setAllowUserInteraction(true);
-			connexion.setRequestMethod("POST");
+			connexion.setRequestMethod(method);
 			OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 
 			if (data instanceof String) {
@@ -307,7 +322,7 @@ public class SessionManagerCommunication implements Runnable {
 			}
 			else if (data != null) {
 				System.err.println("Cannot send "+ data.getClass().getName() +" data to session manager webservices");
-				return document;
+				return obj;
 			}
 
 			out.flush();
@@ -320,7 +335,27 @@ public class SessionManagerCommunication implements Runnable {
 			if (showLog)
 				System.out.println("Response "+r+ " ==> "+res+ " type: "+contentType);
 
-			if (r == HttpURLConnection.HTTP_OK && contentType.startsWith(CONTENT_TYPE_XML)) {
+			if (r == HttpURLConnection.HTTP_OK) {
+				InputStream in = connexion.getInputStream();
+
+				if (contentType.startsWith(CONTENT_TYPE_XML)) {
+					DOMParser parser = new DOMParser();
+					InputSource source = new InputSource(in);
+
+					parser.parse(source);
+					in.close();
+
+					obj = parser.getDocument();
+
+					if (showLog)
+						this.dumpXML((Document) obj, "Receiving XML:");
+				}
+				else if (contentType.startsWith(CONTENT_TYPE_PNG)) {
+					URLImageSource imgSrc = (URLImageSource) connexion.getContent();
+					Image img = Toolkit.getDefaultToolkit().createImage(imgSrc);
+					obj = new ImageIcon(img);
+				}
+
 				String headerName=null;
 				for (int i=1; (headerName = connexion.getHeaderFieldKey(i))!=null; i++) {
 					if (headerName.equals("Set-Cookie")) {
@@ -335,17 +370,6 @@ public class SessionManagerCommunication implements Runnable {
 							this.cookies.add(cookie);
 					}
 				}
-				InputStream in = connexion.getInputStream();
-
-				DOMParser parser = new DOMParser();
-				InputSource source = new InputSource(in);
-				parser.parse(source);
-				in.close();
-
-				document = parser.getDocument();
-
-				if (showLog)
-					this.dumpXML(document, "Receiving XML:");
 			}
 			else {
 				System.err.println("Invalid response:\n\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType);
@@ -362,7 +386,7 @@ public class SessionManagerCommunication implements Runnable {
 			connexion.disconnect();
 		}
 
-		return document;
+		return obj;
 	}
 
 	private boolean parseLogoutResponse(Document in) {
@@ -509,17 +533,7 @@ public class SessionManagerCommunication implements Runnable {
 						mimeTypes.add(mimeItem.getAttribute("type"));
 					}
 				}
-				Application app = null;
-				try {
-					String iconWebservice = this.base_url+WEBSERVICE_ICON+"?id=" + appItem.getAttribute("id");
-					app = new Application(rc, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, new URL(iconWebservice));
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-					return false;
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-					return false;
-				}
+				Application app = new Application(rc, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, this.askForIcon(appItem.getAttribute("id")));
 				if (app != null) {
 					rc.addApp(app);
 				}

@@ -21,7 +21,6 @@
 
 package org.ulteo.ovd;
 
-import java.net.URL;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -39,22 +38,22 @@ public class Application implements Comparable<Application> {
 
 	public Application() {}
 
-	public Application(RdpConnectionOvd connection_, int id_, String name_, String cmd_, URL icon_) {
+	public Application(RdpConnectionOvd connection_, int id_, String name_, String cmd_, ImageIcon icon_) {
 		this.supportedMime = new ArrayList<String>();
 		this.init(connection_, id_, name_, cmd_, icon_);
 	}
 
-	public Application(RdpConnectionOvd connection_, int id_, String name_, String cmd_, ArrayList<String> mimeType_, URL icon_) {
+	public Application(RdpConnectionOvd connection_, int id_, String name_, String cmd_, ArrayList<String> mimeType_, ImageIcon icon_) {
 		this.supportedMime = mimeType_;
 		this.init(connection_, id_, name_, cmd_, icon_);
 	}
 
-	private void init(RdpConnectionOvd connection_, int id_, String name_, String cmd_, URL icon_) {
+	private void init(RdpConnectionOvd connection_, int id_, String name_, String cmd_, ImageIcon icon_) {
 		this.connection = connection_;
 		this.id = id_;
 		this.name = name_;
 		this.cmd = cmd_;
-		this.icon = new ImageIcon(icon_);
+		this.icon = icon_;
 		//this.menuItem = new JMenuItem(this.name, this.icon);
 	}
 
