@@ -52,7 +52,7 @@ class TwistedHttpServer(AbstractCommunication):
 	
 	def run(self):
 		reactor.listenTCP(self.tcp_port, self.site)
-		reactor.run()
+		reactor.run(installSignalHandlers=0)
 		
 	def stop(self):
 		reactor.stop()
