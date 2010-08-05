@@ -111,11 +111,11 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center" colspan="3">
-						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+						<img src="media/image/ulteo.png" alt="" title="" />
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: left; vertical-align: middle">
+					<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
 						<span style="font-size: 1.35em; font-weight: bold; color: #686868"><?php echo _('Loading:'); ?> Open Virtual Desktop</span>
 					</td>
 					<td style="width: 20px"></td>
@@ -137,11 +137,11 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center">
-						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+						<img src="media/image/ulteo.png" alt="" title="" />
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: center; vertical-align: middle" id="endContent">
+					<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
 					</td>
 				</tr>
 			</table>

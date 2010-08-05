@@ -210,11 +210,11 @@ function get_users_list() {
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;" colspan="3">
-						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+						<img src="media/image/ulteo.png" alt="" title="" />
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: left; vertical-align: middle;">
+					<td style="text-align: left; vertical-align: middle; margin-top: 15px;">
 						<span style="font-size: 1.35em; font-weight: bold; color: #686868;"><?php echo _('Loading:'); ?> Open Virtual Desktop</span>
 					</td>
 					<td style="width: 20px"></td>
@@ -236,11 +236,11 @@ function get_users_list() {
 			<table style="width: 100%; padding: 10px;" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td style="text-align: center;">
-						<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+						<img src="media/image/ulteo.png" alt="" title="" />
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: center; vertical-align: middle;" id="endContent">
+					<td style="text-align: center; vertical-align: middle; margin-top: 15px;" id="endContent">
 					</td>
 				</tr>
 			</table>
@@ -346,8 +346,10 @@ function get_users_list() {
 				<div id="loginBox" class="rounded" style="display: none;">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="0">
 						<tr>
-							<td style="width: 376px; text-align: center; vertical-align: top;">
-								<img src="media/image/ulteo.png" width="376" height="188" alt="" title="" />
+							<td style="width: 300px; text-align: left; vertical-align: top;">
+								<img src="media/image/ulteo.png" alt="" title="" />
+							</td>
+							<td style="width: 10px;">
 							</td>
 							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
@@ -366,7 +368,7 @@ checkLogin();
 										}, 1500);
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
-										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px; margin-bottom: 25px; " border="0" cellspacing="0" cellpadding="5">
+										<table style="width: 100%; margin-left: auto; margin-right: auto; padding-top: 10px;" border="0" cellspacing="0" cellpadding="5">
 											<tr style="<?php echo ((defined('SESSIONMANAGER_HOST'))?'display: none;':'') ?>">
 												<td style="width: 22px; text-align: right; vertical-align: middle;">
 													<img src="media/image/icons/sessionmanager.png" alt="" title="" />
