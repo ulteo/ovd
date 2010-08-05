@@ -7,7 +7,6 @@ EXTRA_DIST = apache2.conf.in \
 conf_SCRIPTS = cron.php
 conf_DATA = apache2.conf \
 			apache2-vhost-server.conf \
-			apache2-vhost-ssl.conf \
 			config.inc.php
 
 confdir = $(sysconfdir)/ulteo/sessionmanager
