@@ -671,8 +671,9 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$session_node->appendChild($user_node);
 
 	if (isset($profile_available) && $profile_available === true) {
+		$profile_fileserver = Abstract_Server::load($profile_server);
 		$profile_node = $dom->createElement('profile');
-		$profile_node->setAttribute('server', $profile_server);
+		$profile_node->setAttribute('server', $profile_fileserver->external_name);
 		$profile_node->setAttribute('dir', $profile_name);
 		$profile_node->setAttribute('login', $user_login);
 		$profile_node->setAttribute('password', $user_password);
@@ -684,8 +685,9 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$session_node->appendChild($sharedfolders_node);
 
 		foreach ($netshares as $netshare) {
+			$netshare_fileserver = Abstract_Server::load($netshare->server);
 			$sharedfolder_node = $dom->createElement('sharedfolder');
-			$sharedfolder_node->setAttribute('server', $netshare->server);
+			$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
 			$sharedfolder_node->setAttribute('dir', $netshare->id);
 			$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
 			$sharedfolder_node->setAttribute('password', $user_password);
@@ -765,8 +767,9 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 		$session_node->appendChild($user_node);
 
 		if (isset($profile_available) && $profile_available === true) {
+			$profile_fileserver = Abstract_Server::load($profile_server);
 			$profile_node = $dom->createElement('profile');
-			$profile_node->setAttribute('server', $profile_server);
+			$profile_node->setAttribute('server', $profile_fileserver->external_name);
 			$profile_node->setAttribute('dir', $profile_name);
 			$profile_node->setAttribute('login', $user_login);
 			$profile_node->setAttribute('password', $user_password);
@@ -778,8 +781,9 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 			$session_node->appendChild($sharedfolders_node);
 
 			foreach ($netshares as $netshare) {
+				$netshare_fileserver = Abstract_Server::load($netshare->server);
 				$sharedfolder_node = $dom->createElement('sharedfolder');
-				$sharedfolder_node->setAttribute('server', $netshare->server);
+				$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
 				$sharedfolder_node->setAttribute('dir', $netshare->id);
 				$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
 				$sharedfolder_node->setAttribute('password', $user_password);
