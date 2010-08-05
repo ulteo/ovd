@@ -71,8 +71,7 @@ fi
 
 ############################ / APACHE CONFIGURATION ############################
 
-# only during the first install
-if [ "$1" != "configure" ] || ([ -n "$2" ] && [ -z "$DEBCONF_RECONFIGURE" ]); then
+if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
 
     # set the configuration
     CONFFILE=$CONFDIR/config.inc.php
