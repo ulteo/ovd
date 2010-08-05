@@ -84,10 +84,19 @@ class Config:
 		if Config.infos.has_key("LOG_LEVEL"):
 			Config.log_level = 0
 			
+			debug_count = 0
 			for item in Config.infos["LOG_LEVEL"].split(' '):
 				item = item.lower()
+				if item == "debug":
+					debug_count+= 1
 				if Config.LOGS_FLAGS_ALIASES.has_key(item):
 					Config.log_level|= Config.LOGS_FLAGS_ALIASES[item]
+			
+			if debug_count>1:
+				if debug_count<3:
+					Config.log_level|= Logger.DEBUG_2
+				else:
+					Config.log_level|= Logger.DEBUG_3
 		
 		return True
 	

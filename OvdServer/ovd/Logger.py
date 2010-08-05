@@ -27,10 +27,12 @@ import time
 class Logger:
 	_instance = None
 	
-	ERROR = 8
-	WARN = 4
-	INFO = 2
-	DEBUG = 1
+	ERROR = 1
+	WARN = 2
+	INFO = 4
+	DEBUG = 8
+	DEBUG_2 = 16
+	DEBUG_3 = 32
 	
 	def __init__(self, name, loglevel, file = None, stdout = False):
 		self.logging = None
@@ -77,6 +79,14 @@ class Logger:
 			self.logging.error(message)
 	
 	def log_debug(self, message):
+		if self.logging is not None:
+			self.logging.debug(message)
+	
+	def log_debug2(self, message):
+		if self.logging is not None:
+			self.logging.debug(message)
+	
+	def log_debug3(self, message):
 		if self.logging is not None:
 			self.logging.debug(message)
 	
@@ -131,9 +141,30 @@ class Logger:
 			return
 		
 		Logger._instance.log_debug(message)
+	
+	
+	@staticmethod
+	def debug2(message):
+		if not Logger._instance:
+			return
 		
+		if Logger._instance.loglevel&Logger.DEBUG_2 != Logger.DEBUG_2:
+			return
 		
+		Logger._instance.log_debug2(message)
+	
+	
+	@staticmethod
+	def debug3(message):
+		if not Logger._instance:
+			return
 		
+		if Logger._instance.loglevel&Logger.DEBUG_3 != Logger.DEBUG_3:
+			return
+		
+		Logger._instance.log_debug3(message)
+	
+	
 	def get_time_from_line(self, line):
 		l = len("2010-01-01 01:01:01")
 		

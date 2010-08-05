@@ -37,7 +37,7 @@ class Msi:
 		
 		status = self.dll.MsiGetShortcutTargetW(szShortcutTarget, ctypes.byref(szProductCode), ctypes.byref(szFeatureId), ctypes.byref(szComponentCode))
 		if status != self.SUCCESS:
-			#Logger.debug("MsiGetShortcutTargetW return %d on '%s'"%(status, path))
+			Logger.debug3("MsiGetShortcutTargetW return %d on '%s'"%(status, path))
 			return None
 		
 		path_len = ctypes.c_uint(4096)
@@ -45,7 +45,7 @@ class Msi:
 		
 		status = self.dll.MsiGetComponentPathW(szProductCode.value, szComponentCode.value, ctypes.byref(path_buffer), ctypes.byref(path_len))
 		if status != self.INSTALLSTATE_LOCAL:
-			Logger.debug("MsiGetComponentPathW return %d on '%s'"%(status, path))
+			Logger.debug2("MsiGetComponentPathW return %d on '%s'"%(status, path))
 			return None
 		
 		return path_buffer.value
