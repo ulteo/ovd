@@ -1,11 +1,12 @@
 #!/usr/bin/make -f
 
-DEB_DH_INSTALL_SOURCEDIR = debian/ulteo-ovd-session-manager
-
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 
 DEB_CONFIGURE_EXTRA_FLAGS = --with-libchartdir=/usr/share/php/libphp-chart/libchart
+
+install/ulteo-ovd-session-manager::
+	rm -rf debian/ulteo-ovd-session-manager/var
 
 clean::
 	debconf-updatepo
