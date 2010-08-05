@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../includes/core.inc.php');
 class Session {
 	const SESSION_STATUS_UNKNOWN = "unknown";
 	const SESSION_STATUS_ERROR = "error";
+	const SESSION_STATUS_CREATED = "created";
 	const SESSION_STATUS_INIT = "init";
 	const SESSION_STATUS_INITED = "ready";
 	const SESSION_STATUS_ACTIVE = "logged";

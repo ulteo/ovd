@@ -51,12 +51,16 @@ if (! $session) {
 	die();
 }
 
+$session_status = $session->getStatus();
+if ($session_status == Session::SESSION_STATUS_CREATED)
+	$session_status = Session::SESSION_STATUS_INIT;
+
 header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('id', $session->id);
-$session_node->setAttribute('status', $session->getStatus());
+$session_node->setAttribute('status', $session_status);
 $dom->appendChild($session_node);
 
 $xml = $dom->saveXML();

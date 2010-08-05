@@ -495,7 +495,7 @@ if (is_array($sharedfolders) && count($sharedfolders) > 0) {
 	$session->server = $random_server;
 	$session->mode = $session_mode;
 	$session->type = $session_type;
-	$session->status = -1;
+	$session->status = Session::SESSION_STATUS_CREATED;
 	$session->user_login = $user->getAttribute('login');
 	$session->user_displayname = $user->getAttribute('displayname');
 	$session->servers = $servers;
