@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+DEB_DH_INSTALL_SOURCEDIR = debian/ulteo-ovd-session-manager
+
 include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 
