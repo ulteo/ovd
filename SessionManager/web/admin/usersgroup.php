@@ -94,8 +94,9 @@ if (isset($_REQUEST['action'])) {
   elseif ($_REQUEST['action']=='search') {
     show_default();
   }
-
-  redirect();
+  else {
+    redirect();
+  }
 }
 
 if (! isset($_GET['view']))
