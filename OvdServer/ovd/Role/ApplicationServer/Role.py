@@ -125,7 +125,7 @@ class Role(AbstractRole):
 		doc.appendChild(rootNode)
 		
 		response = self.main_instance.dialog.send_packet("/session/status", doc)
-		Logger.debug("ApplicationServer: send_session_status: %s"%(response))
+		Logger.debug2("ApplicationServer: send_session_status: %s"%(response))
 	
 	
 	def get_session_from_login(self, login_):

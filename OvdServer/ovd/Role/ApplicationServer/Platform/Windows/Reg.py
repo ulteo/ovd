@@ -81,6 +81,7 @@ def disableActiveSetup(rootPath):
 
 def CopyTree(KeySrc, SubKey, KeyDest):
 	win32api.RegCreateKey(KeyDest, SubKey)
+	
 	hkey_src = win32api.RegOpenKey(KeySrc, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	hkey_dst = win32api.RegOpenKey(KeyDest, SubKey, 0, win32con.KEY_ALL_ACCESS)
 	
@@ -89,37 +90,39 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 		try:
 			(string, object, type) = win32api.RegEnumValue(hkey_src, index)
 			index+= 1
-			
+#			print "CopyValue",string
 			win32api.RegSetValueEx(hkey_dst, string, 0, type, object)
-		except:
+		except Exception, err:
+#			print "enum value except",err
 			break
-	
 	
 	index = 0
 	while True:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
 			index+= 1
-			
+#			print "CopyKey",buf
 			CopyTree(hkey_src, buf, hkey_dst)
-		except:
+		except Exception, err:
+#			print "enum key except",err
 			break
+	
 	win32api.RegCloseKey(hkey_src)
 	win32api.RegCloseKey(hkey_dst)
 
+
 def OpenKeyCreateIfDoesntExist(root, path):
 	try:
-		key = _winreg.OpenKey(root, path,0, _winreg.KEY_SET_VALUE)
+		key = _winreg.OpenKey(root, path, 0, _winreg.KEY_SET_VALUE)
 	except Exception, err:
 		key = None
 	
-	if key is not None:
-		return key
-	else:
+	if key is None:
 		keyName = os.path.basename(path)
 		parentPath = os.path.dirname(path)
 		if len(parentPath) == 0:
 			parentPath = None
+		
 		
 		need_to_create_son = False
 		if parentPath is not None:
@@ -131,11 +134,20 @@ def OpenKeyCreateIfDoesntExist(root, path):
 		
 		if need_to_create_son:
 			try:
+#				print "Create key:",keyName
 				_winreg.CreateKey(key, keyName)
 			except Exception, err:
+#				print "create key error 1",keyName,err
 				return None
-		
-		return key
+			
+		try:
+#			print "Finally open key",path
+			key = _winreg.OpenKey(root, path, 0, _winreg.KEY_SET_VALUE)
+		except Exception, err:
+#			print "open key error 2",path,err
+			return None
+	
+	return key
 
 def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
