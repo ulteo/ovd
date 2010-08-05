@@ -30,6 +30,7 @@ service smbd restart
 # override apache2 config and restart it
 A2CONFDIR=/etc/apache2/conf.d
 if [ ! -e $A2CONFDIR/slaveserver-fs ]; then
+    sudo a2enmod dav_fs dav > /dev/null
     ln -s $CONFDIR/apache2.conf $A2CONFDIR/slaveserver-fs
     if apache2ctl configtest 2>/dev/null; then
         invoke-rc.d apache2 restart || true
