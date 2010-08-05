@@ -168,7 +168,8 @@ def UpdateActiveSetup(KeySrc, Username):
 	keyToRemove = []
 	
 	index = 0
-	while True:
+	flag_continue = True
+	while flag_continue:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
 			ProcessActiveSetupEntry(hkey_src, buf, Username)
@@ -176,9 +177,8 @@ def UpdateActiveSetup(KeySrc, Username):
 				keyToRemove.append(buf)
 
 			index+= 1
-		except:
-			win32api.RegCloseKey(hkey_src)
-			break
+		except Exception, err:
+			flag_continue = False
 
 	for key in keyToRemove:
 		DeleteTree(hkey_src, key)
@@ -188,14 +188,28 @@ def DeleteTree(key, subkey, deleteRoot = True):
 	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
 	
 	index = 0
-	while True:
+	flag_continue = True
+	while flag_continue:
 		try:
-			buf = win32api.RegEnumKey(hkey, index)
+			subsubKey = win32api.RegEnumKey(hkey, index)
 			index+= 1
+#			print "delete key: ",subsubKey
+			DeleteTree(hkey, subsubKey)
+		except Exception, err:
+#			print "enum key except",err
+			flag_continue = False
 	
-			Session.RegDeleteTree(hkey, buf)
-		except:
-			break
+	index = 0
+	flag_continue = True
+	while flag_continue:
+		try:
+			(value, _, _) = win32api.RegEnumValue(hkey, index)
+			index+= 1
+#			print "delete value: ",value
+			win32api.RegDeleteValue(hkey, value)
+		except Exception, err:
+#			print "enum value except",err
+			flag_continue = False
 		
 	win32api.RegCloseKey(hkey)
 	
