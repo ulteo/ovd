@@ -258,16 +258,25 @@ class Session(AbstractSession):
 			_winreg.CloseKey(key)
 		
 		# Overwrite Active Setup: works partially
-		hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, r"Software\Microsoft\Active Setup", 0, win32con.KEY_ALL_ACCESS)
-		hkey_dst = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, r"%s\Software\Microsoft\Active Setup"%(hiveName))
+		active_setup_path = r"Software\Microsoft\Active Setup"
+		hkey_src = None
+		hkey_dst = None
 		
 		try:
+			hkey_src = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, active_setup_path, 0, win32con.KEY_ALL_ACCESS)
+			hkey_dst = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path))
+			
 			Reg.CopyTree(hkey_src, "Installed Components", hkey_dst)
 			Reg.UpdateActiveSetup(hkey_dst, self.user.name)
-			win32api.RegCloseKey(hkey_src)
-			win32api.RegCloseKey(hkey_dst)
+			
 		except Exception, err:
-			return False
+			Logger.warn("Unable to reset ActiveSetup")
+			Logger.debug("Unable to reset ActiveSetup: "+str(err))
+		finally:
+			if hkey_src is not None:
+				win32api.RegCloseKey(hkey_src)
+			if hkey_dst is not None:
+				win32api.RegCloseKey(hkey_dst)
 		
 		if self.profile is not None:
 			self.profile.overrideRegistry(hiveName)
