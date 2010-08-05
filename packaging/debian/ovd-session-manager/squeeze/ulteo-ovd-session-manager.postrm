@@ -2,33 +2,27 @@
 
 . /usr/share/debconf/confmodule
 
+CONFDIR=/etc/ulteo/sessionmanager
+SPOOLDIR=/var/spool/ulteo/sessionmanager
+LOGDIR=/var/log/ulteo/sessionmanager
+CHROOT=/var/cache/ulteo/sessionmanager/base.tar.gz
+
 if [ "$1" = "purge" ]; then
 
     # remove log and spool dir
-    rm -rf /var/log/ulteo/sessionmanager
-    rm -rf /var/spool/ulteo/sessionmanager
+    rm -rf $LOGDIR
+    rm -rf $SPOOLDIR
 
     # remove keys and certificates SSL files generated
-    rm -rf /etc/ulteo/sessionmanager/ovd.*
-
-    CONFFILE="/etc/ulteo/sessionmanager/config.inc.php"
-    if dpkg-statoverride --list $CONFFILE >/dev/null 2>&1; then
-        dpkg-statoverride --remove $CONFFILE
-    fi
-
-    for f in /var/spool/ulteo/sessionmanager /var/log/ulteo/sessionmanager; do
-        if dpkg-statoverride --list $f >/dev/null 2>&1; then
-            dpkg-statoverride --remove $f
-        fi
-    done
+    rm -rf $CONFDIR/ovd.*
 
     # ask the user if he wants to remove base.tar.gz (if it's there)
-    if [ -e /usr/share/ulteo/sessionmanager/base.tar.gz ]; then
+    if [ -e $CHROOT ]; then
         db_input high ulteo-ovd-session-manager/postrm_remove_tarball || true
         db_go || true
         db_get ulteo-ovd-session-manager/postrm_remove_tarball || true
         if [ "$RET" = "true" ]; then
-            rm -f /usr/share/ulteo/sessionmanager/base.tar.gz
+            rm -f $CHROOT
         fi
     fi
 fi
