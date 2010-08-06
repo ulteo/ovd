@@ -27,7 +27,13 @@ mfversion="`$MSGFMT --version|grep '(GNU ' 2> /dev/null`"
 if test -z "$xgversion" -o -z "$mmversion" -o -z "$mfversion"; then
     AC_MSG_ERROR([GNU gettext tools not found; required for intltool])
 fi
+GETTEXT_PACKAGE=uovdsm
+AC_SUBST(GETTEXT_PACKAGE)
+ALL_LINGUAS=$(sed -r -e "/^#/d" -e "s/#.*//" "po/LINGUAS")
+AC_SUBST(ALL_LINGUAS)
 
+#################################################
+###             INTLTOOL_PERL                 ###
 AC_PATH_PROG(INTLTOOL_PERL, [perl])
 if test -z "$INTLTOOL_PERL"; then
    AC_MSG_ERROR([perl not found; required for intltool])
@@ -43,16 +49,13 @@ if test "x$2" != "xno-xml"; then
        AC_MSG_ERROR([XML::Parser perl module is required for intltool])
    fi
 fi
-GETTEXT_PACKAGE=uovdsm
-AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS=$(sed -r -e "/^#/d" -e "s/#.*//" "po/LINGUAS")
-AC_SUBST(ALL_LINGUAS)
 
+#################################################
+###                  prototype                ###
 # Allow use of already installed javascript libraries
 AC_ARG_WITH([prototypedir],
     [AC_HELP_STRING([--with-prototypedir],
-        [use a local installation of the Prototype javascript library])],
-    ,
+        [use a local installation of the Prototype javascript library])], ,
     [with_prototypedir=no])
 if test x"$with_prototypedir" != xno; then
     if test -f "$with_prototypedir/prototype.js"; then
@@ -66,10 +69,11 @@ if test x"$with_prototypedir" != xno; then
 fi
 AM_CONDITIONAL(PROTOTYPE, [test -n "$PROTOTYPEDIR"])
 
+#################################################
+###              scriptaculous                ###
 AC_ARG_WITH([scriptaculousdir],
     [AC_HELP_STRING([--with-scriptaculousdir],
-        [use a local installation of the Scriptaculous javascript library])],
-    ,
+        [use a local installation of the Scriptaculous javascript library])], ,
     [with_scriptaculousdir=no])
 if test x"$with_scriptaculousdir" != xno; then
     if test -f "$with_scriptaculousdir/scriptaculous.js"; then
@@ -83,10 +87,11 @@ if test x"$with_scriptaculousdir" != xno; then
 fi
 AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
 
+#################################################
+###                 libchart                  ###
 AC_ARG_WITH([libchartdir],
     [AC_HELP_STRING([--with-libchartdir],
-        [use a local installation of the libchart PHP library])],
-    ,
+        [use a local installation of the libchart PHP library])], ,
     [with_libchartdir=no])
 if test x"$with_libchartdir" != xno; then
     if test -f "$with_libchartdir/classes/libchart.php"; then
@@ -99,44 +104,6 @@ if test x"$with_libchartdir" != xno; then
     fi
 fi
 AM_CONDITIONAL(LIBCHART, [test -n "$LIBCHARTDIR"])
-
-AC_ARG_WITH([ulteo-applet],
-    [AC_HELP_STRING([--with-ulteo-applet],
-        [where is installed the ulteo OVD applet])],
-    ,
-    [with_ulteo_applet=])
-if test x"$with_ulteo_applet" = x""; then
-    for p in /usr /usr/local /opt; do
-        if test -e $p/share/ulteo/applets/ulteo-applet.jar; then
-            with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
-        fi
-    done
-fi
-if test x"$with_ulteo_applet" = x""; then
-    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
-else
-    ULTEOAPPLET="$with_ulteo_applet"
-fi
-AC_SUBST(ULTEOAPPLET)
-
-AC_ARG_WITH([check-applet],
-    [AC_HELP_STRING([--with-check-applet],
-        [where is installed the java test applet])],
-    ,
-    [with_check_applet=])
-if test x"$with_check_applet" = x""; then
-    for p in /usr /usr/local /opt; do
-        if test -e $p/share/ulteo/applets/CheckJava.jar; then
-            with_check_applet=$p/share/ulteo/applets/CheckJava.jar
-        fi
-    done
-fi
-if test x"$with_check_applet" = x""; then
-    AC_MSG_ERROR([No java test applet found. Install it first or specify its path with the --with-check-applet option])
-else
-    CHECKAPPLET="$with_check_applet"
-fi
-AC_SUBST(CHECKAPPLET)
 
 
 AC_CONFIG_FILES([

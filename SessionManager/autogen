@@ -12,6 +12,6 @@ else
     version="99.99+svn$revison"
 fi
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.in
+sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
 
 autoreconf -vfi && ./configure $@
