@@ -21,8 +21,10 @@
 
 
 import logging.handlers
+from Queue import Queue
 import sys
 import time
+import threading
 
 class Logger:
 	_instance = None
@@ -43,6 +45,8 @@ class Logger:
 		
 		self.filename = filename
 		
+		self.threaded = False
+		
 		if filename is not None or stdout is not False:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
 			self.logging = logging.getLogger(name)
@@ -57,7 +61,8 @@ class Logger:
 			self.consoleHandler = logging.StreamHandler(sys.stdout)
 			self.consoleHandler.setFormatter(formatter)
 			self.logging.addHandler(self.consoleHandler)
-			
+	
+	
 	def __del__(self):
 		if self.logging is not None:
 			if self.fileHandler is not None:
@@ -65,6 +70,30 @@ class Logger:
 
 			if self.consoleHandler is not None:
 				self.logging.removeHandler(self.consoleHandler)
+		
+		if self.threaded:
+			self.thread._Thread__stop()
+	
+	
+	def setThreadedMode(self):
+		self.queue = Queue()
+		self.thread = threading.Thread(target=self.run)
+		self.threaded = True
+		self.thread.start()
+	
+	
+	def run(self):
+		while self.threaded:
+			(func, obj) = self.queue.get()
+			func(self, obj)
+	
+	
+	def process(self, func, obj):
+		if self.threaded:
+			self.queue.put_nowait((func, obj))
+		else:
+			func(self, obj)
+	
 
 	def log_info(self, message):
 		if self.logging is not None:
@@ -93,8 +122,11 @@ class Logger:
 	# Static methods
 
 	@staticmethod 
-	def initialize(name, loglevel, filename=None, stdout=False):
+	def initialize(name, loglevel, filename=None, stdout=False, threaded=False):
 		instance = Logger(name, loglevel, filename, stdout)
+		if threaded:
+			instance.setThreadedMode()
+		
 		Logger.setInstance(instance)
 		
 	@staticmethod 
@@ -109,7 +141,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.INFO != Logger.INFO:
 			return
 		
-		Logger._instance.log_info(message)
+		Logger._instance.process(Logger.log_info, message)
 	
 	@staticmethod
 	def warn(message):
@@ -119,7 +151,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.WARN != Logger.WARN:
 			return
 		
-		Logger._instance.log_warn(message)
+		Logger._instance.process(Logger.log_warn, message)
 	
 	@staticmethod
 	def error(message):
@@ -129,7 +161,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.ERROR != Logger.ERROR:
 			return
 		
-		Logger._instance.log_error(message)
+		Logger._instance.process(Logger.log_error, message)
 	
 	
 	@staticmethod
@@ -140,7 +172,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG != Logger.DEBUG:
 			return
 		
-		Logger._instance.log_debug(message)
+		Logger._instance.process(Logger.log_debug, message)
 	
 	
 	@staticmethod
@@ -151,7 +183,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG_2 != Logger.DEBUG_2:
 			return
 		
-		Logger._instance.log_debug2(message)
+		Logger._instance.process(Logger.log_debug2, message)
 	
 	
 	@staticmethod
@@ -162,7 +194,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG_3 != Logger.DEBUG_3:
 			return
 		
-		Logger._instance.log_debug3(message)
+		Logger._instance.process(Logger.log_debug3, message)
 	
 	
 	def get_time_from_line(self, line):
