@@ -29,7 +29,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JFrame;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
@@ -66,6 +65,8 @@ public class RdpConnection implements SeamListener, Runnable{
 	private CopyOnWriteArrayList<RdpListener> listener = new CopyOnWriteArrayList<RdpListener>();
 	private Thread connectionThread = null;
 	private Logger logger = Logger.getLogger(RdpConnection.class);
+
+	private boolean keep_running = false;
 	
 	public RdpConnection(Options opt_, Common common_) {
 		this.common = common_;
@@ -370,16 +371,16 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.grab_keyboard = false;
 		if(this.opt.hostname.equalsIgnoreCase("localhost")) this.opt.hostname = "127.0.0.1";
 		
-		boolean keep_running = true;
+		this.keep_running = true;
 		int exit = 0;
 		
-		while (keep_running) {
+		while (this.keep_running) {
 			if (this.RdpLayer != null) {
 				// Attempt to connect to server on port Options.port
 				try {
 					this.RdpLayer.connect(this.opt.username, InetAddress.getByName(this.opt.hostname), logonflags, this.opt.domain, this.opt.password, this.opt.command, this.opt.directory);
 
-					if (keep_running) {
+					if (this.keep_running) {
 						this.fireConnected();
 
 						this.RdpLayer.mainLoop(deactivated, ext_disc_reason);
@@ -388,18 +389,18 @@ public class RdpConnection implements SeamListener, Runnable{
 							System.out.println("Connection terminated: " + reason);
 						}
 						
-						keep_running = false; // exited main loop
+						this.keep_running = false; // exited main loop
 						
 						if (!this.opt.readytosend)
 							System.out.println("The terminal server disconnected before licence negotiation completed.\nPossible cause: terminal server could not issue a licence.");
 					}
 				}catch(ConnectionException e){
 					System.out.println("ConnectionException - "+e.getMessage());
-					keep_running = false;
+					this.keep_running = false;
 					exit = 1;
 				} catch (UnknownHostException e) {
 					System.out.println(e.getClass().getName() + " " + e.getMessage());
-					keep_running = false;
+					this.keep_running = false;
 					exit = 1;
 				}catch(SocketException s){
 					if(this.RdpLayer.isConnected()){
@@ -407,7 +408,7 @@ public class RdpConnection implements SeamListener, Runnable{
 						s.printStackTrace();
 						exit = 1;
 					}
-					keep_running = false;
+					this.keep_running = false;
 				}catch (RdesktopException e) {
 					System.out.println(e.getClass().getName() + " " + e.getMessage());
 					e.printStackTrace(System.err);
@@ -421,10 +422,10 @@ public class RdpConnection implements SeamListener, Runnable{
 							this.RdpLayer.disconnect();
 						this.fireDisconnected();
 						System.out.println("Retrying connection...");
-						keep_running = true; // retry
+						this.keep_running = true; // retry
 						continue;
 					} else {
-						keep_running = false;
+						this.keep_running = false;
 						exit = 1;
 					}
 				}catch (Exception e) {
@@ -478,8 +479,14 @@ public class RdpConnection implements SeamListener, Runnable{
 			this.common.rdp = null;
 		}
 	}
+
+	public void stop() {
+		this.keep_running = false;
+	}
 	
 	private void exit(int n) {
+		this.disconnect();
+
 		System.gc();
 
 		if (n == 0)

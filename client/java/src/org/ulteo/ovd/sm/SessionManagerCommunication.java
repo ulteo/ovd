@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
@@ -29,9 +29,11 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -50,8 +52,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.ImageIcon;
 
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -60,7 +60,6 @@ import javax.xml.transform.stream.StreamResult;
 import net.propero.rdp.RdesktopException;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.ovd.client.authInterface.KeyLoginListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -105,6 +104,8 @@ public class SessionManagerCommunication implements Runnable {
 	private static final long REQUEST_TIME_FREQUENTLY = 2000;
 	private static final long REQUEST_TIME_OCCASIONALLY = 5000;
 
+	private static final int TIMEOUT = 2000;
+
 	private String sm = null;
 	private boolean use_https = false;
 	private ArrayList<RdpConnectionOvd> connections = null;
@@ -114,8 +115,6 @@ public class SessionManagerCommunication implements Runnable {
 	private String sessionStatus = SESSION_STATUS_INIT;
 	private boolean sessionIsActive = false;
 	private String base_url;
-	private JDialog loadFrame = null;
-	private boolean graphic = false;
 	private String multimedia = null;
 	private String printers = null;
 
@@ -124,12 +123,6 @@ public class SessionManagerCommunication implements Runnable {
 	private CopyOnWriteArrayList<SessionStatusListener> sessionStatusListeners = null;
 	private boolean sessionStatusMonitoring = false;
 	private long sessionStatusRequestTime = REQUEST_TIME_FREQUENTLY;
-
-	public SessionManagerCommunication(String sm_, JDialog loadFrame, boolean use_https_) {
-		this.init(sm_, use_https_);
-		this.loadFrame = loadFrame;
-		this.graphic = true;
-	}
 
 	public SessionManagerCommunication(String sm_, boolean use_https_) {
 		this.init(sm_, use_https_);
@@ -144,6 +137,17 @@ public class SessionManagerCommunication implements Runnable {
 
 		this.base_url = makeUrl(this.sm, "/ovd/client", "", this.use_https);
 
+	}
+
+	private boolean isReachable() {
+		try {
+			InetAddress target = InetAddress.getByName(this.sm);
+
+			return target.isReachable(TIMEOUT);
+		} catch (IOException ex) {
+			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return false;
 	}
 
 	private static String makeUrl(String host, String suffix, String service, boolean useHttps) {
@@ -175,7 +179,7 @@ public class SessionManagerCommunication implements Runnable {
 		return makeStringForPost(listParameter);
 	}
 
-	public boolean askForSession(HashMap<String,String> params) {
+	public boolean askForSession(HashMap<String,String> params) throws SessionManagerException {
 		if (params == null)
 			return false;
 
@@ -190,11 +194,12 @@ public class SessionManagerCommunication implements Runnable {
 
 		if (response == null)
 			return false;
+		this.fireSessionManagerIsOnline();
 
 		return this.parseStartSessionResponse(response);
 	}
 
-	public boolean askForApplications(HashMap<String,String> params) {
+	public boolean askForApplications(HashMap<String,String> params) throws SessionManagerException {
 		this.requestMode = SESSION_MODE_REMOTEAPPS;
 
 		if (! params.containsKey(FIELD_TOKEN)) {
@@ -217,7 +222,7 @@ public class SessionManagerCommunication implements Runnable {
 		return this.parseStartSessionResponse(response);
 	}
 
-	public boolean askForLogout() {
+	public boolean askForLogout() throws SessionManagerException {
 		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
 		Document request = domImpl.createDocument(null, "logout", null);
 
@@ -232,7 +237,7 @@ public class SessionManagerCommunication implements Runnable {
 		return this.parseLogoutResponse(response);
 	}
 
-	public boolean askForSessionStatus() {
+	public boolean askForSessionStatus() throws SessionManagerException {
 		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
 		Document request = domImpl.createDocument(null, "session", null);
 
@@ -248,16 +253,20 @@ public class SessionManagerCommunication implements Runnable {
 		return this.parseSessionStatusResponse(response);
 	}
 
-	public ImageIcon askForIcon(String appId) {
+	public ImageIcon askForIcon(String appId) throws SessionManagerException {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(FIELD_ICON_ID, appId);
 
 		return (ImageIcon) this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, false);
 	}
 
-	private Object askWebservice(String webservice, String content_type, String method, Object data, boolean showLog) {
+	private Object askWebservice(String webservice, String content_type, String method, Object data, boolean showLog) throws SessionManagerException {
 		Object obj = null;
 		HttpURLConnection connexion = null;
+
+		if (! this.isReachable()) {
+			throw new SessionManagerException("Host is unreachable");
+		}
 		
 		try {
 			URL url = new URL(this.base_url+webservice);
@@ -376,11 +385,7 @@ public class SessionManagerCommunication implements Runnable {
 			}
 		}
 		catch (Exception e) {
-			System.err.println("ERROR: "+e.getMessage());
-			JOptionPane.showMessageDialog(null, "Cannot access to Session Manager", "Error", JOptionPane.ERROR_MESSAGE);
-			KeyLoginListener.PUSHED = false;
-			loadFrame.setVisible(false);
-			loadFrame.dispose();
+			throw new SessionManagerException(e.getMessage());
 		}
 		finally {
 			connexion.disconnect();
@@ -426,7 +431,7 @@ public class SessionManagerCommunication implements Runnable {
 		return true;
 	}
 
-	private boolean parseStartSessionResponse(Document document) {
+	private boolean parseStartSessionResponse(Document document) throws SessionManagerException {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Rectangle dim = null;
 		dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -436,23 +441,11 @@ public class SessionManagerCommunication implements Runnable {
 		Element ovd_node;
 		if (ns.getLength() == 1) {
 			ovd_node = (Element) ns.item(0);
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "(" + ovd_node.getAttribute("id") + ") " + ovd_node.getAttribute("message"));
-			if (graphic) {
-				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, ovd_node.getAttribute("message"), "Warning", JOptionPane.WARNING_MESSAGE);
-				KeyLoginListener.PUSHED = false;
-			}
-			return false;
+			throw new SessionManagerException(ovd_node.getAttribute("message"));
 		}
 		ns = document.getElementsByTagName("session");
 		if (ns.getLength() == 0) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "User already connected");
-			if (graphic) {
-				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, I18n._("User already connected"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
-				KeyLoginListener.PUSHED = false;
-			}
-			return false;
+			throw new SessionManagerException(I18n._("User already connected"));
 		}
 		ovd_node = (Element) ns.item(0);
 		this.sessionId = ovd_node.getAttribute("id");
@@ -460,23 +453,11 @@ public class SessionManagerCommunication implements Runnable {
 		this.multimedia = ovd_node.getAttribute("multimedia");
 		this.printers = ovd_node.getAttribute("redirect_client_printers");
 		if (!this.sessionMode.equalsIgnoreCase(this.requestMode)) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "The session manager does not authorize " + this.requestMode + " session mode.");
-			if (graphic) {
-				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, I18n._("The session manager does not authorize " + this.requestMode), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
-				KeyLoginListener.PUSHED = false;
-			}
-			return false;
+			throw new SessionManagerException(I18n._("The session manager does not authorize " + this.requestMode));
 		}
 		ns = ovd_node.getElementsByTagName("server");
 		if (ns.getLength() == 0) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "No application server available");
-			if (graphic) {
-				loadFrame.setVisible(false);
-				JOptionPane.showMessageDialog(null, I18n._("No application server available"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
-				KeyLoginListener.PUSHED = false;
-			}
-			return false;
+			throw new SessionManagerException(I18n._("No application server available"));
 		}
 		Element server;
 		for (int i = 0; i < ns.getLength(); i++) {
@@ -484,13 +465,7 @@ public class SessionManagerCommunication implements Runnable {
 			server = (Element) ns.item(i);
 			NodeList appsList = server.getElementsByTagName("application");
 			if (appsList.getLength() == 0) {
-				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, "No applications available");
-				if (graphic) {
-					loadFrame.setVisible(false);
-					JOptionPane.showMessageDialog(null, I18n._("No applications available"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
-					KeyLoginListener.PUSHED = false;
-				}
-				return false;
+				throw new SessionManagerException(I18n._("No application available"));
 			}
 			Element appItem = null;
 			byte flags = 0x00;
@@ -583,7 +558,11 @@ public class SessionManagerCommunication implements Runnable {
 		this.sessionStatusRequestTime = REQUEST_TIME_FREQUENTLY;
 
 		while (this.sessionStatusMonitoring) {
-			this.askForSessionStatus();
+			try {
+				this.askForSessionStatus();
+			} catch (SessionManagerException ex) {
+				System.err.println("Session status monitoring: "+ex.getMessage());
+			}
 			
 			try {
 				Thread.sleep(this.sessionStatusRequestTime);
@@ -601,6 +580,12 @@ public class SessionManagerCommunication implements Runnable {
 
 	public void removeSessionStatusListener(SessionStatusListener l) {
 		this.sessionStatusListeners.remove(l);
+	}
+
+	private void fireSessionManagerIsOnline() {
+		for (SessionStatusListener listener : this.sessionStatusListeners) {
+			listener.sessionManagerIsOnline();
+		}
 	}
 
 	private void fireSessionReady() {

@@ -39,6 +39,7 @@ public class LoadingFrame extends JDialog implements Runnable{
 	private OvdClient cli = null;
 	private Image logo = null;
 	private AuthFrame frame = null;
+	private JButton cancel = null;
 
 	public LoadingFrame(OvdClient cli, AuthFrame frame) {
 		this.cli = cli;
@@ -49,6 +50,8 @@ public class LoadingFrame extends JDialog implements Runnable{
 	}
 
 	public void cancelConnection() {
+		this.cancel.setEnabled(false);
+		this.cancel.setText(I18n._("Cancelling ..."));
 		cli.disconnectAll();
 	}
 
@@ -63,19 +66,27 @@ public class LoadingFrame extends JDialog implements Runnable{
 		aJProgressBar.setIndeterminate(true);
 		aJProgressBar.setPreferredSize(new Dimension(280, 20));
 		aJProgressBar.setLocation(10,45);
-		JButton cancel = new JButton(I18n._("Cancel"));
-		cancel.setPreferredSize(new Dimension(120, 10));
-		cancel.addActionListener(new ActionListener() {
+		this.cancel = new JButton(I18n._("Cancel"));
+		this.cancel.setPreferredSize(new Dimension(120, 10));
+		this.cancel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cancelConnection();
 			}
 		});
+		this.setCancelButtonEnabled(false);
 		this.add(BorderLayout.NORTH, aJProgressBar);
-		this.add(BorderLayout.EAST, cancel);
+		this.add(BorderLayout.EAST, this.cancel);
 		this.setLocationRelativeTo(frame.getMainFrame());
 		this.setVisible(true);
 		this.pack();
+	}
+
+	public void setCancelButtonEnabled(boolean enabled) {
+		if (this.cancel == null)
+			return;
+
+		this.cancel.setEnabled(enabled);
 	}
 }

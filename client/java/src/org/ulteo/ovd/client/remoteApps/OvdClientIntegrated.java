@@ -34,6 +34,7 @@ import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -99,7 +100,12 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	@Override
 	protected boolean askSM() {
 		if (this.authByToken)
-			return this.smComm.askForApplications(this.params);
+			try {
+				return this.smComm.askForApplications(this.params);
+			} catch (SessionManagerException ex) {
+				this.logger.error(ex.getMessage());
+				return false;
+			}
 		else
 			return super.askSM();
 	}

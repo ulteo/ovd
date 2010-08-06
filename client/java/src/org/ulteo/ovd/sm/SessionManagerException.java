@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
@@ -20,8 +20,13 @@
 
 package org.ulteo.ovd.sm;
 
-public interface SessionStatusListener {
-	public void sessionManagerIsOnline();
-	public void sessionReady(String sessionId);
-	public void sessionTerminated(String sessionId);
+public class SessionManagerException extends Exception {
+
+	public SessionManagerException() {
+		super();
+	}
+
+	SessionManagerException(String msg) {
+		super(msg);
+	}
 }
