@@ -34,22 +34,22 @@ class Logger:
 	DEBUG_2 = 16
 	DEBUG_3 = 32
 	
-	def __init__(self, name, loglevel, file = None, stdout = False):
+	def __init__(self, name, loglevel, filename = None, stdout = False):
 		self.logging = None
 		self.loglevel = loglevel
 		
 		self.fileHandler = None
 		self.consoleHandler = None
 		
-		self.file = file
+		self.filename = filename
 		
-		if file is not None or stdout is not False:	
+		if filename is not None or stdout is not False:	
 			formatter = logging.Formatter('%(asctime)s [%(levelname)s]: %(message)s')
 			self.logging = logging.getLogger(name)
 			self.logging.setLevel(logging.DEBUG)
 		
-		if file is not None:
-			self.fileHandler = logging.handlers.RotatingFileHandler(file, maxBytes=1000000, backupCount=2)
+		if filename is not None:
+			self.fileHandler = logging.handlers.RotatingFileHandler(filename, maxBytes=1000000, backupCount=2)
 			self.fileHandler.setFormatter(formatter)
 			self.logging.addHandler(self.fileHandler)
 	
@@ -93,8 +93,8 @@ class Logger:
 	# Static methods
 
 	@staticmethod 
-	def initialize(name, loglevel, file=None, stdout=False):
-		instance = Logger(name, loglevel, file, stdout)
+	def initialize(name, loglevel, filename=None, stdout=False):
+		instance = Logger(name, loglevel, filename, stdout)
 		Logger.setInstance(instance)
 		
 	@staticmethod 
