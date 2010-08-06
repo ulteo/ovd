@@ -55,7 +55,7 @@ def generateConfFile(path_file_, sm_, token_):
 	
 	return True
 
-def main():
+def main(startExplorer):
 	user_sdir = Platform.getUserSessionDir()
 	
 	# Load profile share
@@ -104,8 +104,9 @@ def main():
 			Platform.launchIntegratedClient(configuration_file)
 		except Exception, err:
 			print "Unable to start external apps", err
+	if startExplorer:
+		Platform.startDesktop()
 	
-	Platform.startDesktop()
 	
 	sys.exit(0)
 
@@ -117,4 +118,10 @@ if __name__ == "__main__":
 		sys.stderr = buf
 		sys.stdout = buf
 		print "#################################################"
-	main()
+	
+	noExplorer = False
+	for arg in sys.argv:
+		noExplorer = ("--NoExplorer" in arg)
+		if noExplorer:
+			break;
+	main(! noExplorer)	
