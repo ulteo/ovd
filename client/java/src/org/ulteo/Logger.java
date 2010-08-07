@@ -26,10 +26,14 @@ import java.io.FileWriter;
 import java.util.Calendar;
 
 public class Logger {
-	private static String filename = null;
+//	private static String filename = null;
 	private static Logger instance = null;
-
-	public Logger(String filename) {
+	
+	private String filename = null;
+	private boolean stdout = false;
+	
+	public Logger(boolean stdout, String filename) {
+		this.stdout = stdout;
 		this.filename = filename;
 		System.out.println("org.ulteo.Logger init '"+this.filename+"'");
 		write("org.ulteo.Logger init '"+this.filename+"'", "info");
@@ -72,7 +76,7 @@ public class Logger {
 			if ( !(tempdir.endsWith("/") || tempdir.endsWith("\\")) )
 				tempdir = tempdir + System.getProperty("file.separator");
 			
-			instance = new Logger(tempdir+"ulteo-ovd-"+getDate()+".log");
+			instance = new Logger(true, tempdir+"ulteo-ovd-"+getDate()+".log");
 		}
 
 		return instance;
