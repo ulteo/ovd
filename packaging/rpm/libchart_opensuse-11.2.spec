@@ -33,18 +33,24 @@ Libchart is a free chart creation PHP library, that is easy to use.
 %patch1 -p1
 
 %install -n php5-libchart
-PHP5DIR=$RPM_BUILD_ROOT/usr/share/php5
-mkdir -p $PHP5DIR
-cp -r libchart $PHP5DIR
-cp -r demo $PHP5DIR/libchart
-rmdir $PHP5DIR/libchart/demo/generated
-rm -rf $PHP5DIR/libchart/images
+PHPDIR=$RPM_BUILD_ROOT/usr/share/php5
+LIBCHARTDIR=$PHPDIR/libchart
+mkdir -p $PHPDIR
+cp -r libchart $PHPDIR
+cp -r demo $LIBCHARTDIR
+
+rmdir $LIBCHARTDIR/demo/generated
+rm -rf $LIBCHARTDIR/images
+rm $LIBCHARTDIR/COPYING $LIBCHARTDIR/ChangeLog $LIBCHARTDIR/README
 
 %clean -n php5-libchart
 rm -rf $RPM_BUILD_ROOT
 
 %files -n php5-libchart
 %defattr(-,root,root)
+%doc libchart/COPYING
+%doc libchart/ChangeLog
+%doc libchart/README
 /usr
 
 %changelog -n php5-libchart
