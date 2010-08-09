@@ -6,7 +6,6 @@ man_MANS = sm-config.8
 sm-config:
 	sed -e "s,@CONFDIR@,$(sysconfdir)/ulteo/sessionmanager," \
 		-e "s,@LOCALSTATEDIR@,$(localstatedir)," \
-		-e "s,@WEBDIR@,$(datadir)/ulteo/sessionmanager," \
 		-e "s,@PKG_VERSION@,$(PACKAGE_VERSION)," \
 			< $(srcdir)/sm-config.in > $@
 

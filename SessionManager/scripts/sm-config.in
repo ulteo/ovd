@@ -23,7 +23,7 @@ CONFFILE=$CONFDIR/config.inc.php
 ALIASFILE=$CONFDIR/apache2.conf
 LOGDIR=@LOCALSTATEDIR@/log/ulteo
 SPOOLDIR=@LOCALSTATEDIR@/spool/ulteo
-WEBDIR=@WEBDIR@
+WEBDIR=@LOCALSTATEDIR@/cache/ulteo/sessionmanager
 CRON_DIR=/etc/cron.hourly
 CRON_SCRIPT=$CONFDIR/cron.php
 
@@ -45,7 +45,7 @@ usage ()
     echo "  --no-download        don't get the chroot, assume it is already installed"
     echo "  --chroot-uri url     get the chroot from 'uri'"
     echo "                       recognised protocoles are http://, ftp:// and file://"
-    echo "                       (default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0)"
+    echo "                       (default: http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0)"
     echo "  --chroot-url url     same as --chroot-uri, for backward compatibility"
     echo "  --copy               if the chroot is a file, copy it in the Session Manager dir"
     echo "                       (a symlink is created by default)"
@@ -64,15 +64,59 @@ usage ()
 }
 
 set_apache () {
-    chown $APACHE_USER $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
-    chmod 755 $LOGDIR $SPOOLDIR
-    chmod 2770 $LOGDIR/sessionmanager $SPOOLDIR/sessionmanager
 
-    chown $APACHE_USER $CONFFILE
-    chmod 660 $CONFFILE
+    A2CONFDIR=/etc/apache2/conf.d
 
-    mkdir -p $APACHE_DIR
-    ln -sf $ALIASFILE $APACHE_DIR/session-manager.conf
+    # VHost server config
+    if [ ! -e $A2CONFDIR/sessionmanager-vhost-server ]; then
+        ln -s $CONFDIR/apache2-vhost-server.conf \
+            $A2CONFDIR/sessionmanager-vhost-server
+        a2enmod rewrite >/dev/null
+    fi
+
+    if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl ]; then
+        serverName=$(hostname -f 2>/dev/null || true)
+        if [ -z "$serverName" ]; then
+            # Bad /etc/hosts configuration
+            serverName=$(hostname)
+        fi
+
+        sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
+            $CONFDIR/apache2-vhost-ssl.conf
+        ln -s /etc/ulteo/sessionmanager/apache2-vhost-ssl.conf \
+            $A2CONFDIR/sessionmanager-vhost-ssl
+    fi
+
+    # SSL self-signed key generation
+    if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
+        || [ ! -f $CONFDIR/ovd.crt ]; then
+
+        echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
+        openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
+        openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
+        openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
+            -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
+        chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+        chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    fi
+
+    # Apache SSL configuration
+    if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
+        echo " Cannot verify that the https://hostname/sessionmanager/ alias is correctly installed. If not, you won't start OVD sessions."
+        if [ ! -e $A2CONFDIR/sessionmanager ]; then
+            ln -s $CONFDIR/apache2.conf $A2CONFDIR/sessionmanager
+        fi
+    else
+        # activate SSL apache module
+        a2enmod ssl > /dev/null
+    fi
+
+    # restart apache server
+    if apache2ctl configtest 2>/dev/null; then
+        service apache2 restart || true
+    else
+        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    fi
 }
 
 set_admin_credentials () {
@@ -279,7 +323,7 @@ set_apache
 
 chmod a+x $CRON_SCRIPT
 if [ -d "$CRON_DIR" ] && [ ! -e "$CRON_DIR/sessionmanager" ]; then
-    ln -s $CRON_SCRIPT $CRON_DIR/session-manager.php
+    ln -sf $CRON_SCRIPT $CRON_DIR/session-manager.php
 fi
 
 echo "Configuration done."

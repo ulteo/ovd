@@ -7,6 +7,7 @@ DEB_CONFIGURE_EXTRA_FLAGS = --with-libchartdir=/usr/share/php/libphp-chart/libch
 
 install/ulteo-ovd-session-manager::
 	rm -rf debian/ulteo-ovd-session-manager/var
+	rm -rf debian/ulteo-ovd-session-manager/usr/bin
 
 clean::
 	debconf-updatepo
