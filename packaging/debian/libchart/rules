@@ -3,9 +3,8 @@
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/rules/patchsys-quilt.mk
 
-binary-install/libphp-chart::
-	rm debian/libphp-chart/usr/share/php/libphp-chart/libchart/COPYING
-	rmdir debian/libphp-chart/usr/share/php/libphp-chart/demo/generated
-
-	# we don't need the image
-	rm -rf debian/libphp-chart/usr/share/php/libphp-chart/libchart/images
+binary-install/php-libchart::
+	LIBCHARTDIR=debian/php-libchart/usr/share/php/libchart ;\
+	rm $$LIBCHARTDIR/COPYING $$LIBCHARTDIR/ChangeLog $$LIBCHARTDIR/README ;\
+	rmdir $$LIBCHARTDIR/demo/generated ;\
+	rm -rf $$LIBCHARTDIR/images/
