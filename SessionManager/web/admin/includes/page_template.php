@@ -166,6 +166,12 @@ if (isAuthorized('viewConfiguration')) {
 			  'name' => _('Profile settings'),
 			  'page' => 'configuration-profile.php',
 			  'parent' => array('configuration'));
+	
+	$menu['configuration_auth'] = 
+		array('id' => 'configuration_auth',
+			  'name' => _('Authentication settings'),
+			  'page' => 'configuration-partial.php?mode=auth',
+			  'parent' => array('configuration'));
 
 	$menu['configuration_sessions'] = 
 		array('id' => 'configuration_sessions',

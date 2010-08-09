@@ -100,6 +100,10 @@ else {
 				echo '<br />';
 				print_prefs4($prefs, 'plugins', true);
 				break;
+			case 'auth':
+				if (array_key_exists('AuthMethod',$prefs->elements))
+					print_prefs4($prefs, 'AuthMethod');
+				break;
 			case 'events':
 				if (array_key_exists('events',$prefs->elements))
 					print_prefs4($prefs, 'events');
