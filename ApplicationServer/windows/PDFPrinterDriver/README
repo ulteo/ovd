@@ -28,4 +28,7 @@ Do the command "rundll32 printui.dll,PrintUIEntry /ia /m "Ulteo TS Printer Drive
 Create the directory %CSIDL_COMMON_APPDATA%\ulteo\ovd\spool
 
 
+TO UNINSTALL
+uninstall gs
+Do the command "RUNDLL32 PRINTUI.DLL,PrintUIEntry /dd /m "Ulteo TS Printer Driver""
 
