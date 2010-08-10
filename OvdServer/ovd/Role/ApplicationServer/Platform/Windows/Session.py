@@ -168,7 +168,7 @@ class Session(AbstractSession):
 		
 		self.obainPrivileges()
 		
-		hiveName = "OVD_%d"%(random.randrange(10000, 50000))
+		hiveName = "OVD_%s_%d"%(str(self.id), random.randrange(10000, 50000))
 		
 		# Load the hive
 		_winreg.LoadKey(win32con.HKEY_USERS, hiveName, registryFile)

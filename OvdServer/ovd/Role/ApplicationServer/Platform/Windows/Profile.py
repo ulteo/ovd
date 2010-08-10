@@ -87,10 +87,12 @@ class Profile(AbstractProfile):
 			if os.path.exists(src):
 				dst = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
 				
-				hiveName_src = "OVD_%d"%(random.randrange(10000, 50000))
+				rand = random.randrange(10000, 50000))
+				
+				hiveName_src = "OVD_%s_%d"%(str(self.session.id), rand)
 				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_src, src)
 				
-				hiveName_dst = "OVD_%d"%(random.randrange(10000, 50000))
+				hiveName_dst = "OVD_%s_%d"%(str(self.session.id), rand+1)
 				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_dst, dst)
 				
 				hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s"%(hiveName_src), 0, win32con.KEY_ALL_ACCESS)
