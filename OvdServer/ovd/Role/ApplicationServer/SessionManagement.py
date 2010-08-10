@@ -1,8 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (C) 2009 Ulteo SAS
+# Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Julien LANGLOIS <julien@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -53,7 +54,7 @@ class SessionManagement(Thread):
 		Logger.info("SessionManagement::create %s"%(session.id))
 		
 		if Platform.System.userExist(session.user.name):
-			Logger.error("unable to create session: user already exist")
+			Logger.error("unable to create session: user %s already exists"%(session.user.name))
 			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ACTIVE)
 			return
 		
@@ -67,7 +68,7 @@ class SessionManagement(Thread):
 		
 		rr = session.user.create()
 		if rr is False:
-			Logger.error("unable to create session")
+			Logger.error("unable to create session for user %s"%(session.user.name))
 			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ACTIVE)
 			return
 		
