@@ -167,7 +167,7 @@ def mountShares():
 	
 	if profile is not None:
 		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(share["host"], share["directory"]), None, share["login"], share["password"])
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, "U:", r"\\%s\%s"%(profile["host"], profile["directory"]), None, profile["login"], profile["password"])
 		  
 		except Exception, err:
 			cmd = "net use U: \\\\%s\\%s %s /user:%s"%(profile["host"], profile["directory"], profile["password"], profile["login"])
