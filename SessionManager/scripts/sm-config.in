@@ -74,17 +74,18 @@ set_apache () {
         a2enmod rewrite >/dev/null
     fi
 
+    # VHost SSL config
     if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl ]; then
         serverName=$(hostname -f 2>/dev/null || true)
         if [ -z "$serverName" ]; then
             # Bad /etc/hosts configuration
             serverName=$(hostname)
         fi
-
         sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
             $CONFDIR/apache2-vhost-ssl.conf
-        ln -s /etc/ulteo/sessionmanager/apache2-vhost-ssl.conf \
+        ln -s $CONFDIR/apache2-vhost-ssl.conf \
             $A2CONFDIR/sessionmanager-vhost-ssl
+        a2enmod ssl > /dev/null
     fi
 
     # SSL self-signed key generation
@@ -100,22 +101,17 @@ set_apache () {
         chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
     fi
 
-    # Apache SSL configuration
-    if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
-        echo " Cannot verify that the https://hostname/sessionmanager/ alias is correctly installed. If not, you won't start OVD sessions."
-        if [ ! -e $A2CONFDIR/sessionmanager ]; then
-            ln -s $CONFDIR/apache2.conf $A2CONFDIR/sessionmanager
-        fi
-    else
-        # activate SSL apache module
-        a2enmod ssl > /dev/null
-    fi
 
     # restart apache server
     if apache2ctl configtest 2>/dev/null; then
         service apache2 restart || true
     else
-        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+        echo << EOF
+Apache configuration error after enable OVD virtual hosts. Please remove your
+old SSL configuration or be sure that the following URL are valid:
+https://hostname/ovd/admin, https://hostname/ovd/client.
+If you don't change anything, you won't start OVD sessions.
+EOF
     fi
 }
 

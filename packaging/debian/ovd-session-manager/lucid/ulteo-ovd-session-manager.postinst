@@ -20,23 +20,24 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
     a2enmod rewrite >/dev/null
 fi
 
+# VHost SSL config
 if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
     serverName=$(hostname -f 2>/dev/null || true)
     if [ -z "$serverName" ]; then
         # Bad /etc/hosts configuration
         serverName=$(hostname)
     fi
-
     sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
         $CONFDIR/apache2-vhost-ssl.conf
     ln -s /etc/ulteo/sessionmanager/apache2-vhost-ssl.conf \
         $A2SITESDIR/sessionmanager-vhost-ssl
+    a2ensite sessionmanager-vhost-ssl > /dev/null
+    a2enmod ssl > /dev/null
 fi
 
 # SSL self-signed key generation
 if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
     || [ ! -f $CONFDIR/ovd.crt ]; then
-
     echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
     openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
     openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
@@ -46,27 +47,12 @@ if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
     chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
 fi
 
-# Apache SSL configuration
-
-a2ensite sessionmanager-vhost-ssl > /dev/null
-
-if [ ! -e /etc/apache2/mods-enabled/ssl.conf ]; then
-    #activate SSL apache module
-    a2enmod ssl > /dev/null
-else
-    # SSL already enable
-    apache2ctl configtest 2>/dev/null
-    if [ $? -ne 0 ]; then
-        db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
-        db_go
-    fi
-fi
-
 # restart apache server
 if apache2ctl configtest 2>/dev/null; then
     invoke-rc.d apache2 restart || true
 else
-    echo "Your apache2 configuration is broken, so we're not restarting it for you."
+    db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
+    db_go
 fi
 
 ############################ / APACHE CONFIGURATION ############################
