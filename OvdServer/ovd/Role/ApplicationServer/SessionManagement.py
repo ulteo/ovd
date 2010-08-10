@@ -2,7 +2,7 @@
 
 # Copyright (C) 2009-2010 Ulteo SAS
 # http://www.ulteo.com
-# Author Laurent CLOUET <laurent@ulteo.com> 2009
+# Author Laurent CLOUET <laurent@ulteo.com> 2009-2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009-2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -51,7 +51,7 @@ class SessionManagement(Thread):
 	
 	
 	def create_session(self, session):
-		Logger.info("SessionManagement::create %s"%(session.id))
+		Logger.info("SessionManagement::create %s for user %s"%(session.id, session.user.name))
 		
 		if Platform.System.userExist(session.user.name):
 			Logger.error("unable to create session: user %s already exists"%(session.user.name))
