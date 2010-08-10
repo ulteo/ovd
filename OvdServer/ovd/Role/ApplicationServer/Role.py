@@ -57,7 +57,7 @@ class Role(AbstractRole):
 	
 	
 	def init(self):
-		Logger.info("ApplicationServer init")
+		Logger.debug("ApplicationServer init")
 		
 		if not self.init_config():
 			return False
