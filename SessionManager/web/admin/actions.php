@@ -117,9 +117,14 @@ if ($_REQUEST['name'] == 'Application') {
 	if ($_REQUEST['action'] == 'del') {
 		if (isset($_REQUEST['id'])) {
 			$app = $applicationDB->import($_REQUEST['id']);
+			if (! is_object($app)) {
+				popup_error(sprintf(_("Failed to delete application '%s'"), $_REQUEST['id']));
+				redirect();
+			}
 			$ret = $applicationDB->remove($app);
 			if (! $ret) {
 				popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
+				redirect();
 			}
 			popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
 		}
