@@ -47,19 +47,19 @@ if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
 fi
 
 # Apache SSL configuration
-if [ -e /etc/apache2/mods-enabled/ssl.conf ]; then
-    # SSL already enable
 
-    db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
-    db_go
+a2ensite sessionmanager-vhost-ssl > /dev/null
 
-    if [ ! -e $A2CONFDIR/sessionmanager ]; then
-        ln -s $CONFDIR/apache2.conf $A2CONFDIR/sessionmanager
-    fi
-else
-    # activate SSL apache module
+if [ ! -e /etc/apache2/mods-enabled/ssl.conf ]; then
+    #activate SSL apache module
     a2enmod ssl > /dev/null
-    a2ensite sessionmanager-vhost-ssl > /dev/null
+else
+    # SSL already enable
+    apache2ctl configtest 2>/dev/null
+    if [ $? -ne 0 ]; then
+        db_input high ulteo-ovd-session-manager/ssl_disable_warning || true
+        db_go
+    fi
 fi
 
 # restart apache server

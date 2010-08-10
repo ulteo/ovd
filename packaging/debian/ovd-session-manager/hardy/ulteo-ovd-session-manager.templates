@@ -39,9 +39,11 @@ _Description: Remove the application tarball?
 
 Template: ulteo-ovd-session-manager/ssl_disable_warning
 Type: note
-Description: SSL disabled
- Cannot verify that the https://hostname/sessionmanager/ alias is correctly
- installed. If not, you won't start OVD sessions.
+Description: SSL configuration error
+ Apache configuration error after enable OVD virtual hosts. Please remove your
+ old SSL configuration or be sure that the following URL are valid:
+ https://hostname/ovd/admin, https://hostname/ovd/client.
+ If you don't change anything, you won't start OVD sessions.
 
 Template: ulteo-ovd-session-manager/download_error
 Type: error
