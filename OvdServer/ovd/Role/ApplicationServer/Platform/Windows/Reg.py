@@ -77,7 +77,7 @@ def disableActiveSetup(rootPath):
 	
 	if hkey_src is not None:
 		win32api.RegCloseKey(hkey_src)
-	if hkey_dst is not None
+	if hkey_dst is not None:
 		win32api.RegCloseKey(hkey_dst)
 
 
