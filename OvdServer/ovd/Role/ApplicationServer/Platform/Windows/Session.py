@@ -222,7 +222,6 @@ class Session(AbstractSession):
 				]
 		
 		key = OpenKeyCreateIfDoesntExist(_winreg.HKEY_USERS, path)
-		key = _winreg.OpenKey(_winreg.HKEY_USERS, path, 0, _winreg.KEY_SET_VALUE)
 		if key is None:
 			Logger.error("Unable to open key '%s'"%(path))
 		else:

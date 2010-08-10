@@ -57,23 +57,29 @@ class MimeInfos():
 		return cmd
 
 	def _get_app_path(self, app):
+		key = None
 		try:
 			key = OpenKey(ROOT, r"%s\shell\open\command"%app)
 			value = QueryValue(key, None)
-			CloseKey(key)
 			return self._replace(value)
 		except:
 			return
+		finally:
+			if key is not None:
+				CloseKey(key)
 
 	def _get_command(self, extension, k, action):
+		key = None
 		try:
 			key = OpenKey(ROOT, r"%s\shell\%s\command"%(k,action))
 			ret = ExpandEnvironmentStrings(EnumValue(key, 0)[1])#.split('"')[1]
 			if ret and ret not in self.ext_keys[extension]["apps"]:
 				self.ext_keys[extension]["apps"].append(self._replace(ret))
-			CloseKey(key)
 		except:
 			return
+		finally:
+			if key is not None:
+				CloseKey(key)
 
 	def get_all_extensions(self):
 		i = 0
@@ -106,6 +112,7 @@ class MimeInfos():
 			CloseKey(key)
 
 	def get_progids_for_ext(self, extension):
+		key = None
 		try:
 			key = OpenKey(ROOT, r"%s\OpenWithProgids"%extension)
 			i = 0
@@ -121,8 +128,12 @@ class MimeInfos():
 			CloseKey(key)
 		except:
 			pass
+		finally:
+			if key is not None:
+				CloseKey(key)
 
 	def get_openwithlist_for_ext(self, extension):
+		key = None
 		try:
 			key = OpenKey(ROOT, r"%s\OpenWithList"%extension)
 			i = 0
@@ -138,6 +149,9 @@ class MimeInfos():
 			CloseKey(key)
 		except:
 			pass
+		finally:
+			if key is not None:
+				CloseKey(key)
 
 	def append_mime_apps_for_ext(self, extension):
 		try:
@@ -165,6 +179,7 @@ class MimeInfos():
 		CloseKey(key)
 
 	def get_mime_ext_assoc(self, mimetype):
+		key = None
 		try:
 			key = OpenKey(ROOT, r"MIME\Database\Content Type\%s"%mimetype)
 			value = QueryValueEx(key,"Extension")[0]
@@ -173,6 +188,9 @@ class MimeInfos():
 			self.mime_keys[mimetype] = [x for x in self.ext_keys[value]["apps"]]
 		except:
 			pass
+		finally:
+			if key is not None:
+				CloseKey(key)
 
 
 if __name__ == "__main__":
