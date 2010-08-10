@@ -183,10 +183,15 @@ Section "un.pre" UnPostCmd
   DetailPrint "Removing Service"
   nsExec::execToStack 'sc delete OVD'
 
+  DetailPrint "Remove PDF printer driver"
+  nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /dd /m "Ulteo TS Printer Driver"'
+  DeleteRegKey HKLM "SOFTWARE\GPL Ghostscript\8.71"
+
   DetailPrint "Remove PATH Environment variable"
   ${un.EnvVarUpdate} $0 "PATH" "D" "HKLM" "$INSTDIR\plus"
 
   Detailprint "Removing Configuration file"
+  RMDir /r "$APPDATA\ulteo\ovd\spool"
   Delete "$APPDATA\ulteo\ovd\slaveserver.conf"
   RMDir  "$APPDATA\ulteo\ovd\log"
   RMDir  "$APPDATA\ulteo\ovd"
@@ -210,6 +215,8 @@ Section "post" PostCmd
 
   SetOutPath "$APPDATA\ulteo\ovd\log"
   SetOverwrite ifnewer
+  SetOutPath "$APPDATA\ulteo\ovd\spool"
+  SetOverwrite ifnewer
   SetOutPath "$APPDATA\ulteo\ovd"
 
   DetailPrint "Change PATH Environment variable"
@@ -217,6 +224,27 @@ Section "post" PostCmd
 
   Call .WindowsInstall
 
+  DetailPrint "Installing PDF printer driver"
+  Var /GLOBAL printerDir
+  
+  ClearErrors
+  ReadEnvStr $0 "PROGRAMW6432"
+  IfErrors x86 amd64
+
+  x86:
+    DetailPrint "Running on x86"
+    StrCpy $printerDir "$INSTDIR\printer\i386"
+    GOTO Done
+  amd64:
+    DetailPrint "Running on amd64"
+    StrCpy $printerDir "$INSTDIR\printer\amd64"
+    GOTO Done
+  Done:
+    WriteRegStr HKLM "SOFTWARE\GPL Ghostscript\8.71" "GS_DLL" "$printerDir\gsdll32.dll"
+    WriteRegStr HKLM "SOFTWARE\GPL Ghostscript\8.71" "GS_LIB" "$printerDir\lib"
+    SetOutPath "$printerDir"
+    nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /ia /m "Ulteo TS Printer Driver" /f ulteodll.inf'
+ 
   DetailPrint "Creating Service"
   nsExec::execToStack 'sc create OVD BinPath= "$INSTDIR\OVDWin32Service.exe" DisplayName= "Ulteo Open Virtual Desktop agent" depend= EventLog/winmgmt start= auto'
 

@@ -18,12 +18,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-def getArch():
-	plusNode = ["plus",["ovd-icon-extractor", "ovd-externalapps-client", "ovd-integrated-launcher", "ovd-java-jni", "ovd-shells", "seamlessrdpshell"], ["bmp2png"], []]
-	
-	printerx86Node = ["i386", ["pdf-printer-driver-x86"], ["gs-x86"], []]
-	printeramd64Node = ["amd64", ["pdf-printer-driver-amd64"], ["gs-amd64"], []]
-	printerNode = ["printer",[], [], [printerx86Node, printeramd64Node]]
-	
-	
-	return ["root", ["ovd-slaveserver"], [], [plusNode, printerNode]]
+def getSVNRoot():
+	return r"ApplicationServer\windows\PDFPrinterDriver"
+
+def compile_commands():
+	return ["call make64.bat"]
+
+def binary_files():
+	return [r"ulteo.ppd", r"ulteodll.inf", "ulteops.ini", r"objfre_wnet_amd64\amd64\ULTEOPS.dll"]
