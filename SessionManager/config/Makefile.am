@@ -28,6 +28,7 @@ cron.php:
 install-exec-hook:
 	mkdir -p $(DESTDIR)$(localstatedir)/log/ulteo/sessionmanager
 	mkdir -p $(DESTDIR)$(localstatedir)/spool/ulteo/sessionmanager
+	mkdir -p $(DESTDIR)$(localstatedir)/cache/ulteo/sessionmanager
 
 clean-local:
 	rm -f $(generate_conf) $(conf_SCRIPTS)
