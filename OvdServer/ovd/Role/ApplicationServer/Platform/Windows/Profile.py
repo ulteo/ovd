@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -87,7 +88,7 @@ class Profile(AbstractProfile):
 			if os.path.exists(src):
 				dst = os.path.join(self.session.windowsProfileDir, "NTUSER.DAT")
 				
-				rand = random.randrange(10000, 50000))
+				rand = random.randrange(10000, 50000)
 				
 				hiveName_src = "OVD_%s_%d"%(str(self.session.id), rand)
 				_winreg.LoadKey(win32con.HKEY_USERS, hiveName_src, src)
