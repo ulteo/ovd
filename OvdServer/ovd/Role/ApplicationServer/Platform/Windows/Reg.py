@@ -92,12 +92,11 @@ def CopyTree(KeySrc, SubKey, KeyDest):
 	except Exception, err:
 		Logger.warn("Unable to open key in order to proceed CopyTree")
 		Logger.error("Unable to open key in order to proceed CopyTree: %s"%(str(e)))
-		return
-	finally:
 		if hkey_src is not None:
 			win32api.RegCloseKey(hkey_src)
 		if hkey_dst is not None:
 			win32api.RegCloseKey(hkey_dst)
+		return
 	
 	index = 0
 	while True:
