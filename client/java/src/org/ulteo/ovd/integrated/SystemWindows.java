@@ -55,7 +55,7 @@ public class SystemWindows extends SystemAbstract {
 
 	@Override
 	protected void saveIcon(Application app) {
-		File output = new File(Constants.iconsPath+Constants.separator+app.getId()+"."+((OSTools.isWindows()) ? "ico" : "png"));
+		File output = new File(Constants.iconsPath+Constants.separator+app.getIconName()+".ico");
 		if (! output.exists()) {
 			try {
 				output.createNewFile();

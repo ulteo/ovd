@@ -22,6 +22,7 @@
 package org.ulteo.ovd;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import javax.swing.ImageIcon;
 
@@ -34,6 +35,7 @@ public class Application implements Comparable<Application> {
 	private ArrayList<String> supportedMime = null;
 	private RdpConnectionOvd connection = null;
 	private ImageIcon icon = null;
+	private String iconName = "";
 	//private JMenuItem menuItem = null;
 
 	public Application() {}
@@ -54,6 +56,8 @@ public class Application implements Comparable<Application> {
 		this.name = name_;
 		this.cmd = cmd_;
 		this.icon = icon_;
+		this.iconName = UUID.randomUUID().toString()+"-"+this.id;
+		
 		//this.menuItem = new JMenuItem(this.name, this.icon);
 	}
 
@@ -79,6 +83,14 @@ public class Application implements Comparable<Application> {
 
 	public void setId(int id_) {
 		this.id = id_;
+	}
+	
+	public void setIconName(String iconName) {
+		this.iconName = iconName;
+	}
+
+	public String getIconName() {
+		return this.iconName;
 	}
 
 	public String getCmd() {

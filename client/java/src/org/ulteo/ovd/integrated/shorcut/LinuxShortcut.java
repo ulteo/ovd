@@ -45,7 +45,7 @@ public class LinuxShortcut extends Shortcut {
 			pw.println("StartupNotify=false");
 			pw.println("Name="+app.getName());
 			pw.println("Exec="+Constants.launcher+" "+this.token+" "+app.getId());
-			pw.println("Icon="+Constants.iconsPath+Constants.separator+app.getId()+".png");
+			pw.println("Icon="+Constants.iconsPath+Constants.separator+app.getIconName()+".png");
 			pw.print("MimeType=");
 			for (String mime : app.getSupportedMimeTypes()) {
 				if (first)
@@ -64,6 +64,12 @@ public class LinuxShortcut extends Shortcut {
 	@Override
 	public void remove(Application app) {
 		File shortcut = new File(Constants.xfceMenuEntriesPath+Constants.separator+app.getId()+".desktop");
-		shortcut.delete();
+		if (shortcut.exists())
+			shortcut.delete();
+
+		File icon = new File(Constants.xfceMenuEntriesPath+Constants.separator+app.getIconName()+".png");
+		if (icon.exists())
+			icon.delete();
+		
 	}
 }

@@ -48,7 +48,7 @@ public class SystemLinux extends SystemAbstract {
 
 	@Override
 	protected void saveIcon(Application app) {
-		File output = new File(Constants.iconsPath+Constants.separator+app.getId()+".png");
+		File output = new File(Constants.iconsPath+Constants.separator+app.getIconName()+".png");
 		if (! output.exists()) {
 			try {
 				output.createNewFile();

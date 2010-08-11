@@ -50,13 +50,17 @@ public class WindowsShortcut extends Shortcut {
 		shortcut.setWorkingDirectory("");
 		shortcut.setPath(System.getProperty("user.dir")+Constants.separator+Constants.launcher);
 		shortcut.setArguments(""+this.token+" "+app.getId());
-		shortcut.setIconLocation(Constants.iconsPath+Constants.separator+app.getId()+".ico");
+		shortcut.setIconLocation(Constants.iconsPath+Constants.separator+app.getIconName()+".ico");
 		shortcut.setIconIndex(0);
 		shortcut.save();
 	}
 
 	@Override
 	public void remove(Application app) {
+		File icon = new File(Constants.iconsPath+Constants.separator+app.getIconName()+".ico");
+		if (icon.exists())
+			icon.delete();
+
 		File shortcut = new File(Constants.desktopPath+Constants.separator+app.getName()+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
