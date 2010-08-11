@@ -1303,9 +1303,12 @@ function action_add_sharedfolder() {
 	$buf->server = $a_server->fqdn;
 	
 	$ret = Abstract_NetworkFolder::save($buf);
+	if (! $ret) {
+		popup_error(_('Unable to add shared folder'));
+		return false;
+	}
 
-	if ($ret === true)
-		popup_info(sprintf(_('SharedFolder \'%s\' successfully added'), $buf->name));
+	popup_info(sprintf(_('SharedFolder \'%s\' successfully added'), $buf->name));
 	return true;
 }
 
