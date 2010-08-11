@@ -1,7 +1,6 @@
 Name: ovd-session-manager
 Version: @VERSION@
 Release: @RELEASE@
-Epoch: @EPOCH@
 
 Summary: Ulteo Open Virtual Desktop - Session Manager
 License: GPL2
