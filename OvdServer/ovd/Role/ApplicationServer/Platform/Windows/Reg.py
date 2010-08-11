@@ -223,7 +223,6 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	while flag_continue:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
-			ProcessActiveSetupEntry(hkey_src, buf, Username)
 			if ProcessActiveSetupEntry(hkey_src, buf, Username) == False:
 				keyToRemove.append(buf)
 
