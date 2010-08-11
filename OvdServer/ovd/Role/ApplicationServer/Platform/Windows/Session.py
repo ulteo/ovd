@@ -122,16 +122,18 @@ class Session(AbstractSession):
 	
 	def uninstall_client(self):
 		if self.profile is not None:
-			self.profile.mount()
-			
-			self.profile.copySessionStop()
-			
-			for shortcut in self.installedShortcut:
-				dstFile = os.path.join(self.profile.mountPoint, self.profile.DesktopDir, shortcut)
-				if os.path.exists(dstFile):
-					os.remove(dstFile)
-			
-			self.profile.umount()
+			if not self.profile.mount():
+				Logger.warn("Unable to mount profile at uninstall_client of session "+self.id)
+			else:
+				self.profile.copySessionStop()
+				
+				for shortcut in self.installedShortcut:
+					dstFile = os.path.join(self.profile.mountPoint, self.profile.DesktopDir, shortcut)
+					if os.path.exists(dstFile):
+						os.remove(dstFile)
+				
+				if not self.profile.umount():
+					Logger.error("Unable to umount profile at uninstall_client of session "+self.id)
 		
 		self.user.destroy()
 		
