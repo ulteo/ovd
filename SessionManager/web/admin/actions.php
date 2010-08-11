@@ -1125,7 +1125,7 @@ if ($_REQUEST['name'] == 'Server') {
 				popup_info(sprintf(_("Server '%s' successfully modified"), $a_server->getAttribute('fqdn')));
 			}
 		}
-		redirect('servers.php');
+		redirect();
 	}
 	
 	if ($_REQUEST['action'] == 'available_sessions') {
