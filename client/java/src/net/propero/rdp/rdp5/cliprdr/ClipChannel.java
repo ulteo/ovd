@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import net.propero.rdp.Common;
 import net.propero.rdp.CommunicationMonitor;
 import net.propero.rdp.Constants;
-import net.propero.rdp.Input;
 import net.propero.rdp.Options;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpPacket;
@@ -59,7 +58,8 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 			"CF_MAX"
 	};
 	
-	protected static Logger logger = Logger.getLogger(Input.class);
+	protected static Logger logger = Logger.getLogger(ClipChannel.class);
+	protected static boolean isOk = true;
 		
 	// Message types
 	public static final int CLIPRDR_CONNECT = 1;
@@ -313,15 +313,22 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 		if(this.opt.use_rdp5){
 			TypeHandler handler;
 			for(Iterator i = allHandlers.iterator(); i.hasNext(); ) {
-				handler = (TypeHandler) i.next();
-				if (handler.hasNewData(clipboard)) {
-					System.out.println("new Data of type "+handler.name());
-					try { send_format_announce(); } 
-					catch (RdesktopException e) {} 
-					catch (IOException e) {}
-					catch (CryptoException e) {}
-					return;
+				try {
+					handler = (TypeHandler) i.next();
+					if (handler.hasNewData(clipboard)) {
+						logger.debug("new Data of type "+handler.name());
+						send_format_announce();
+						return;
+					}
 				}
+				catch (Exception e) {
+					logger.debug(e.getMessage());
+					if (ClipChannel.isOk) {
+						ClipChannel.isOk = false;
+						logger.info("Unable to monitor clipboard data");
+					}
+					
+				} 
 			}
 		}
 	}
