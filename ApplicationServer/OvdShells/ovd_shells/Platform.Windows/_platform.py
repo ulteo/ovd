@@ -197,12 +197,25 @@ def mountShares():
 		if share is None:
 			break
 		
+		letter = getFreeLetter()+":"
+		
 		try:
-			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, None, r"\\%s\%s"%(share["host"], share["directory"]), None, share["login"], share["password"])
+			win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, letter, r"\\%s\%s"%(share["host"], share["directory"]), None, share["login"], share["password"])
 		
 		except Exception, err:
-			cmd = "net use * \\\\%s\\%s %s /user:%s"%(share["host"], share["directory"], share["password"], share["login"])
+			cmd = "net use %s \\\\%s\\%s %s /user:%s"%(letter, share["host"], share["directory"], share["password"], share["login"])
 			print "Unable to mount share: ",err
 			print "Try with this command: ",cmd
 		
 		shareNum+= 1
+
+def getFreeLetter():
+	drives = win32api.GetLogicalDriveStrings().split('\x00')[:-1]
+	
+	for i in "ZYXWVUTSRQPONMLKJIHGFEDCBA":
+		letter = "%s:\\"%(i.upper())
+		#print letter
+		if letter not in drives:
+			return i
+	
+	return None
