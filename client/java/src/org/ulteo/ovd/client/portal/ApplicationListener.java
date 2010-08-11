@@ -33,11 +33,11 @@ import org.ulteo.ovd.ApplicationInstance;
 public class ApplicationListener implements ActionListener{
 	private Logger logger = Logger.getLogger(ApplicationListener.class);
 	Application app = null;
-	CurrentApps currentApps = null;
+	RunningApplicationPanel runningApps = null;
 	
-	public ApplicationListener(Application app, CurrentApps currentApps) {
+	public ApplicationListener(Application app, RunningApplicationPanel runningApps) {
 		this.app = app;
-		this.currentApps = currentApps;
+		this.runningApps = runningApps;
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class ApplicationListener implements ActionListener{
 
 		ApplicationInstance ai = new ApplicationInstance(this.app, token);
 
-		this.currentApps.addInstance(ai);
+		this.runningApps.addInstance(ai);
 
 		try {
 			ai.startApp();

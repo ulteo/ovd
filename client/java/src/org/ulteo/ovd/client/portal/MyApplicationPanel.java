@@ -22,39 +22,40 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
-import java.util.ArrayList;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.client.I18n;
 
+public class MyApplicationPanel extends JPanel {
 
-public class Menu extends JPanel {
-	
-	private JScrollPane scroller = null;
 	private JPanel buttonPan = null;
-	private CurrentApps currentApps = null;
-	private ArrayList<JButton> buttons = new ArrayList<JButton>();
-
-	public Menu(CurrentApps currentApps) {
-		this.currentApps = currentApps;
-		buttonPan = new JPanel();
-		buttonPan.setLayout(new BoxLayout(buttonPan, BoxLayout.Y_AXIS));
-		this.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createEtchedBorder(),
-				I18n._("Applications"),0,0,new Font("Dialog", 1, 12),Color.BLACK));
+	private JScrollPane scroller = null;
+	private RunningApplicationPanel runningApps = null;
+	private GridBagConstraints gbc = null;
+	private int y = 0;
+	
+	public MyApplicationPanel(RunningApplicationPanel runningApps) {
+		this.buttonPan = new JPanel();
+		this.runningApps = runningApps;
 		this.setLayout(new BorderLayout());
-		revalidate();
+		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		this.buttonPan.setLayout(new GridBagLayout());
+		this.setPreferredSize(new Dimension(300, 194));
+		this.gbc = new GridBagConstraints();
+		this.revalidate();	
 	}
-
+	
 	public void initButtons(List<Application> appsList) {
+		System.out.println("pouet");
 		if (this.buttonPan.getComponentCount() > 0)
 			return;
 
@@ -62,62 +63,72 @@ public class Menu extends JPanel {
 			return;
 
 		for (Application app : appsList) {
+			JLabel appIcon = new JLabel(app.getIcon());
+			JLabel appName = new JLabel(app.getName());
 			ApplicationButton appButton = new ApplicationButton(app);
-			appButton.addActionListener(new ApplicationListener(app, currentApps));
+			appButton.addActionListener(new ApplicationListener(app, this.runningApps));
 			appButton.setEnabled(false);
-			this.buttonPan.add(appButton);
+			gbc.gridx = 0;
+			gbc.gridy = y;
+			gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.insets.right = 5;
+			this.buttonPan.add(appIcon, gbc);
+			
+			gbc.gridx = 1;
+			gbc.fill = GridBagConstraints.HORIZONTAL;
+			this.buttonPan.add(appName, gbc);
+			
+			gbc.gridx = 2;
+			gbc.fill = GridBagConstraints.NONE;
+			gbc.anchor = GridBagConstraints.CENTER;
+			this.buttonPan.add(appButton, gbc);
 			this.buttonPan.revalidate();
 			this.buttonPan.repaint();
+			y++;
+			
+			this.repaint();
+			this.revalidate();
 		}
 	}
-
-	public void install (Application app) {
+	
+	public void toggleAppButton (Application app, boolean enable) {
 		ApplicationButton appButton = this.findButtonByApp(app);
-
+		
 		if (appButton == null)
 			return;
-
-		appButton.setEnabled(true);
-	}
-
-	public void uninstall (Application app) {
-		ApplicationButton appButton = this.findButtonByApp(app);
-
-		if (appButton == null)
-			return;
-
-		appButton.setEnabled(false);
+		
+		appButton.setEnabled(enable);
 	}
 
 	private ApplicationButton findButtonByApp(Application app) {
 		int appCount = this.buttonPan.getComponentCount();
 
 		for (int i = 0; i < appCount; i++) {
-			ApplicationButton appButton = (ApplicationButton) this.buttonPan.getComponent(i);
+			
+			if (this.buttonPan.getComponent(i) instanceof JButton) {
+				ApplicationButton appButton = (ApplicationButton) this.buttonPan.getComponent(i);
 
-			if (app.getName().equals(appButton.getText()) && (app.getConnection() == appButton.getConnection()))
-				return appButton;
+				if (app.getName().equals(appButton.getName()) && (app.getConnection() == appButton.getConnection()))
+					return appButton;
+			}
 		}
 		return null;
 	}
 	
 	public void addScroller() {
-		this.add(BorderLayout.CENTER, scrollerInit());
+		this.add(scrollerInit());
 		scroller.getVerticalScrollBar().setUnitIncrement(10);
 		scroller.revalidate();
 		this.revalidate();
 	}
+	
 	private JScrollPane scrollerInit() {
 		scroller = new JScrollPane();
 		scroller.setViewportView(buttonPan);
 		return scroller;
 	}
-
+	
 	public boolean isScollerInited() {
 		return (this.scroller == null);
-	}
-	
-	public ArrayList<JButton> getButtons() {
-		return buttons;
 	}
 }

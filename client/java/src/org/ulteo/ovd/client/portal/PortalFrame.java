@@ -20,60 +20,122 @@
 
 package org.ulteo.ovd.client.portal;
 
-import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.rdp.RdpActions;
 
+public class PortalFrame extends JFrame implements WindowListener {
 
-public class PortalFrame extends JFrame implements WindowListener{
-
-	private Image logo = null;
-	private MainPanel main = null;
 	private RdpActions rdpActions = null;
+	private JLabel user = null;
+	private JLabel application = new JLabel(I18n._("My applications"));
+	private JLabel runningApps = new JLabel(I18n._("Running applications"));
+	private MyApplicationPanel appsPanel = null;
+	private RunningApplicationPanel runningAppsPanel = null;
+	private GridBagConstraints gbc = null;
+	private SouthEastPanel sep = null;	
+	private Image frameLogo = null;
+	private Font font = new Font("Dialog", 1, 12);
 	
-	public PortalFrame() {
-		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		main = new MainPanel();
-		setIconImage(logo);
-		this.setVisible(false);
-		this.setTitle("Ulteo OVD - Remote Applications Session");
-		this.setSize(800, 600);
-		this.setPreferredSize(new Dimension(800,600));
-		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	public PortalFrame(String username) {
+		String displayName = I18n._("Welcome {user}");
+		displayName = displayName.replaceAll("\\{user\\}", username);
 		this.addWindowListener(this);
-		this.setContentPane(main);
+		this.user = new JLabel(displayName);
+		this.init();
+	}
+	
+	
+	public void init() {
+		
+		this.setTitle("OVD Remote Applications");
+		this.setSize(700,400);
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
-		this.pack();
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		this.setIconImage(frameLogo);
+		
+		this.user.setFont(new Font("Dialog", 1, 18));
+		this.user.setForeground(new Color(97, 99, 102));
+		this.application.setFont(font);
+		this.runningApps.setFont(font);
+		
+		this.runningAppsPanel = new RunningApplicationPanel();
+		this.appsPanel = new MyApplicationPanel(this.runningAppsPanel);
+		
+		this.setLayout(new GridBagLayout());
+		this.gbc = new GridBagConstraints();
+		
+		gbc.insets = new Insets(0, 0, 5, 20);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		this.add(application, gbc);
+		
+		gbc.gridy = 2;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.insets.bottom = 20;
+		this.add(appsPanel, gbc);
+		
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.fill = GridBagConstraints.NONE;
+		this.add(user, gbc);
+		
+		gbc.gridy = 1;
+		gbc.insets.bottom = 5;
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		this.add(runningApps, gbc);
+		
+		gbc.gridy = 2;
+		gbc.anchor = GridBagConstraints.CENTER;
+		gbc.insets.bottom = 20;
+		gbc.insets.right = 5;
+		this.add(runningAppsPanel, gbc);
+		this.validate();
+	}
+	
+	public void initButtonPan(RdpActions _rdpActions) {
+		this.rdpActions = _rdpActions;
+		this.gbc.gridy = 4;
+		this.gbc.gridx = 1;
+		this.gbc.insets.bottom = 10;
+		this.gbc.anchor = GridBagConstraints.SOUTHEAST;
+		this.sep = new SouthEastPanel(_rdpActions);
+		this.add(sep, gbc);
+		this.validate();
+	}
+		
+	public MyApplicationPanel getApplicationPanel() {
+		return this.appsPanel;
+	}
+	
+	public RunningApplicationPanel getRunningApplicationPanel() {
+		return runningAppsPanel;
 	}
 
-	public MainPanel getMain() {
-		return main;
-	}
-
-
-
-	public void setMain(MainPanel main) {
-		this.main = main;
-	}
-
-	public void initButtonPan(RdpActions rdpActions_) {
-		this.rdpActions = rdpActions_;
-		this.main.getSouth().initButtonPan(this.rdpActions, this.main.getCenter().getCurrent());
-	}
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {}
 
+
 	@Override
 	public void windowClosed(WindowEvent arg0) {}
+
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
@@ -89,14 +151,18 @@ public class PortalFrame extends JFrame implements WindowListener{
 		}
 	}
 
+
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {}
+
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {}
 
+
 	@Override
 	public void windowIconified(WindowEvent arg0) {}
+
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {}

@@ -37,7 +37,6 @@ import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.LoginListener;
-import org.ulteo.ovd.client.portal.Menu;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.Spool;
@@ -50,6 +49,7 @@ import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientPortal extends OvdClientRemoteApps implements ComponentListener {
 	private PortalFrame portal = null;
+	private String username = null;
 	private boolean publicated = false;
 	private SystemAbstract system = null;
 	private Spool spool = null;
@@ -65,6 +65,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_, boolean autoPublish) {
 		super(fqdn_, use_https_, login_, password_, frame_, logList_);
+		this.username = login_;
 		this.autoPublish = autoPublish;
 		
 		this.init();
@@ -80,9 +81,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 		this.spoolThread = new Thread(this.spool);
 		this.spoolThread.start();
-		this.portal = new PortalFrame();
+		this.portal = new PortalFrame(this.username);
 		this.portal.addComponentListener(this);
-		this.portal.getMain().getCenter().getCurrent().setSpool(spool);
+		this.portal.getRunningApplicationPanel().setSpool(spool);
 		this.unpublish();
 	}
 
@@ -92,10 +93,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	protected void runSessionReady(String sessionId) {
 		this.portal.initButtonPan(this);
-		
-		if (this.portal.getMain().getCenter().getMenu().isScollerInited())
-			this.portal.getMain().getCenter().getMenu().addScroller();
 
+		if (this.portal.getApplicationPanel().isScollerInited())
+			this.portal.getApplicationPanel().addScroller();
+		
 		this.portal.setVisible(true);
 	}
 
@@ -111,7 +112,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {
 		try {
-			co.addOvdAppListener(this.portal.getMain().getCenter().getCurrent());
+			co.addOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException ex) {
 			this.logger.error(ex);
 		}
@@ -124,7 +125,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	protected void uncustomizeRemoteAppsConnection(RdpConnectionOvd co) {
 		try {
-			co.removeOvdAppListener(this.portal.getMain().getCenter().getCurrent());
+			co.removeOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException e) {
 			e.printStackTrace();
 		}
@@ -134,11 +135,10 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	public void ovdInited(OvdAppChannel o) {
 		for (RdpConnectionOvd rc : this.availableConnections) {
 			if (rc.getOvdAppChannel() == o) {
-				Menu menu = this.portal.getMain().getCenter().getMenu();
 				for (Application app : rc.getAppsList()) {
 					this.logger.info("Installing application \""+app.getName()+"\"");
 					this.system.install(app);
-					menu.install(app);
+					this.portal.getApplicationPanel().toggleAppButton(app, true);
 					if (this.autoPublish)
 						this.publish(app);
 				}
@@ -168,10 +168,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void hide(RdpConnection co) {
-		Menu menu = this.portal.getMain().getCenter().getMenu();
 
 		for (Application app : ((RdpConnectionOvd)co).getAppsList()) {
-			menu.uninstall(app);
+			this.portal.getApplicationPanel().toggleAppButton(app, false);
 			this.system.uninstall(app);
 		}
 	}
@@ -255,7 +254,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	public void componentShown(ComponentEvent ce) {
 		if (ce.getComponent() == this.portal) {
 			Collections.sort(this.appsList);
-			this.portal.getMain().getCenter().getMenu().initButtons(this.appsList);
+			this.portal.getApplicationPanel().initButtons(this.appsList);
 		}
 	}
 

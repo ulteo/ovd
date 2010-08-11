@@ -20,6 +20,8 @@
 
 package org.ulteo.ovd.client.portal;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -36,20 +38,29 @@ public class SouthEastPanel extends JPanel {
 	private JButton disconnect = new JButton(I18n._("Disconnect"));
 	private JButton publishingButton = null;;
 	private RdpActions actions = null;
+	private GridBagConstraints gbc = null;
+	private static final String DISPLAY = I18n._("Display icons");
+	private static final String HIDE = I18n._("Hide icons");
 	
-	public SouthEastPanel(RdpActions rdpActions, CurrentApps currentAppsPanel) {
+	public SouthEastPanel(RdpActions rdpActions) {
+		this.setLayout(new GridBagLayout());
+		this.gbc = new GridBagConstraints();
 		this.actions = rdpActions;
-		publishingButton = (((OvdClientPortal)actions).isAutoPublish() ?  new JButton(I18n._("Unpublish")) : new JButton(I18n._("Publish")));
+		publishingButton = (((OvdClientPortal)actions).isAutoPublish() ?  new JButton(HIDE) : new JButton(DISPLAY));
 		disconnect.addActionListener(new LogoutListener(rdpActions));
 		publishingButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				publishingButton.setText((((OvdClientPortal)actions).togglePublications()) ? "Unpublish" : "Publish");
+				publishingButton.setText((((OvdClientPortal)actions).togglePublications()) ? HIDE : DISPLAY);
 			}
 		});
-		this.add(publishingButton);
-		this.add(disconnect);
+		this.gbc.anchor = GridBagConstraints.LINE_END;
+		this.gbc.gridx = this.gbc.gridy = 0;
+		this.add(publishingButton, gbc);
+		
+		this.gbc.gridx = 1;
+		this.add(disconnect, gbc);
 	}
 	
 }

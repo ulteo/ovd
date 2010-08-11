@@ -201,6 +201,7 @@ public class LoginListener implements ActionListener {
 		for (char each : password) {
 			pass = pass+each;
 		}
+		
 
 		if (host.equals("") || username.equals("") || pass.equals("")) {
 			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);

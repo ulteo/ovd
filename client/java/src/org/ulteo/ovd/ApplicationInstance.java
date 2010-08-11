@@ -71,4 +71,8 @@ public class ApplicationInstance {
 	public String toString() {
 		return this.app.getName();
 	}
+	
+	public Application getApplication() {
+		return this.app;
+	}
 }
