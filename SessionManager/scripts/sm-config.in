@@ -69,7 +69,7 @@ set_apache () {
 
     # VHost server config
     if [ ! -e $A2CONFDIR/sessionmanager-vhost-server ]; then
-        ln -s $CONFDIR/apache2-vhost-server.conf \
+        ln -sf $CONFDIR/apache2-vhost-server.conf \
             $A2CONFDIR/sessionmanager-vhost-server.conf
         a2enmod rewrite >/dev/null
     fi
@@ -83,7 +83,7 @@ set_apache () {
         fi
         sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
             $CONFDIR/apache2-vhost-ssl.conf
-        ln -s $CONFDIR/apache2-vhost-ssl.conf \
+        ln -sf $CONFDIR/apache2-vhost-ssl.conf \
             $A2CONFDIR/sessionmanager-vhost-ssl.conf
         a2enmod ssl > /dev/null
     fi
@@ -129,7 +129,7 @@ get_chroot () {
     http://*|ftp://*)
         curl $CURLOPTS -f "$URI" > $TARGET || die An error occured while downloading the chroot. Aborting.
         # Create a symlink to $WEBDIR/base.tar.gz if this file doesn't exist
-        [ ! -e "$WEBDIR/base.tar.gz" ] && ln -s "$TARGET" "$WEBDIR/base.tar.gz"
+        [ ! -e "$WEBDIR/base.tar.gz" ] && ln -sf "$TARGET" "$WEBDIR/base.tar.gz"
         ;;
 
     file://*)

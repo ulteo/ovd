@@ -1,40 +1,55 @@
-Summary: Ulteo Open Virtual Desktop - Session Manager
 Name: ovd-session-manager
 Version: @VERSION@
 Release: 1
+Epoch: 1
+
+Summary: Ulteo Open Virtual Desktop - Session Manager
 License: GPL2
 Group: Applications/System
-Source: %{name}-%{version}.tar.gz
-BuildArch: noarch
-Distribution: OpenSUSE 11.3
-Requires: apache2, apache2-mod_php5, curl, php5, php5-ldap, php5-mysql, php5-mbstring, php5-xmlwriter, php5-gettext, php5-curl, ovd-applets
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
 Packager: Samuel Bovée <samuel@ulteo.com>
+Distribution: OpenSUSE 11.3
+
+Source: %{name}-%{version}.tar.gz
+BuildArch: noarch
+Buildrequires: intltool
 
 %description
+This source package provides the Session Manager web services for the Ulteo
+Open Virtual Desktop.
+
+###########################################
+%package -n ulteo-ovd-session-manager
+###########################################
+
+Summary: Ulteo Open Virtual Desktop - Session Manager
+Requires: apache2, apache2-mod_php5, php5, php5-ldap, php5-curl, php5-mysql, php5-mbstring, php5-gettext, php5-pear, php5-ldap, php5-libchart, php5-imagick, curl, openssl
+
+%description -n ulteo-ovd-session-manager
 This package provides the Session Manager web services for the Ulteo
 Open Virtual Desktop.
 
-%prep
+%prep -n ulteo-ovd-session-manager
 %setup -q
 
-%build
+%build -n ulteo-ovd-session-manager
 ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
 make
 
-%install
+%install -n ulteo-ovd-session-manager
 make DESTDIR=$RPM_BUILD_ROOT install
 # install the logrotate example
 mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
 install -m 0644 examples/ulteo-sm.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/sessionmanager
 
-%clean
+%clean -n ulteo-ovd-session-manager
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -n ulteo-ovd-session-manager
 %defattr(-,root,root)
 /usr/*
+/etc/*
 %config /etc/ulteo/sessionmanager/apache2.conf
 %config /etc/ulteo/sessionmanager/cron.php
 %config /etc/logrotate.d/sessionmanager
@@ -44,6 +59,6 @@ rm -rf $RPM_BUILD_ROOT
 /var/log/ulteo/*
 /var/spool/ulteo/*
 
-%changelog
+%changelog -n ulteo-ovd-session-manager
 * Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> 1.0~svn00130-1
 - Initial release
