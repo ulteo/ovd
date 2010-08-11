@@ -22,12 +22,14 @@ package org.ulteo.rdp;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 import javax.swing.JFrame;
 import net.propero.rdp.RdesktopCanvas;
 import net.propero.rdp.RdesktopException;
@@ -36,13 +38,17 @@ import net.propero.rdp.RdpListener;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionManagerException;
 
 public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	public static class Params {
 		public boolean ovd_environnement = false;
-		public String ovd_mode = SessionManagerCommunication.SESSION_MODE_DESKTOP;
+		public int ovd_mode = Properties.MODE_DESKTOP;
 		public String username = null;
 		public String password = null;
 		public String server = null;
@@ -114,7 +120,7 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 					params.ovd_environnement = true;
 					String mode = opt.getOptarg();
 					if ((mode != null) && (opt.getOptarg().equalsIgnoreCase(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)))
-						params.ovd_mode = SessionManagerCommunication.SESSION_MODE_REMOTEAPPS;
+						params.ovd_mode = Properties.MODE_REMOTEAPPS;
 					break;
 				case 'u':
 					params.username = new String(opt.getOptarg());
@@ -181,6 +187,8 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 	public RdpClient(Params params) throws RdesktopException {
 		super(RdpClient.productName);
 
+		this.co = new ArrayList<RdpConnectionOvd>();
+
 		if (params.ovd_environnement)
 			this.initOVDSession(params);
 		else
@@ -189,24 +197,84 @@ public class RdpClient extends JFrame implements WindowListener, RdpListener {
 
 	private void initRDPSession(Params params) throws RdesktopException {
 		this.ovd_mode_application = false;
-		this.co = new ArrayList<RdpConnectionOvd>();
 
 		this.parseOptions(params);
 		this.initWindow();
 	}
 	
 	private void initOVDSession(Params params) throws RdesktopException {
-		if (params.ovd_mode.equalsIgnoreCase(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS))
+		if (params.ovd_mode == Properties.MODE_REMOTEAPPS)
 			this.ovd_mode_application = true;
 		
 		SessionManagerCommunication sm = new SessionManagerCommunication(params.server, true);
-		HashMap<String,String> mapParams = new HashMap<String, String>();
-		mapParams.put(SessionManagerCommunication.FIELD_LOGIN, params.username);
-		mapParams.put(SessionManagerCommunication.FIELD_PASSWORD, params.password);
-		mapParams.put(SessionManagerCommunication.FIELD_SESSION_MODE, params.ovd_mode);
-		sm.askForSession(mapParams);
+		try {
+			sm.askForSession(params.username, params.password, new Properties(params.ovd_mode));
+		} catch (SessionManagerException ex) {
+			RdpClient.logger.error("Unable to ask session: "+ex.getMessage());
+		}
 
-		this.co = sm.getConnections();
+		Properties response = sm.getResponseProperties();
+		int mode = response.getMode();
+		if (mode != params.ovd_mode) {
+			RdpClient.logger.error("Unable to get the request session mode");
+			return;
+		}
+
+		byte flags = 0x00;
+		Dimension screenSize = null;
+
+		if (mode == Properties.MODE_DESKTOP) {
+			flags |= RdpConnectionOvd.MODE_DESKTOP;
+			screenSize = new Dimension(params.width, params.height);
+		}
+		else {
+			flags |= RdpConnectionOvd.MODE_APPLICATION;
+			screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		}
+
+		if (response.isMultimedia())
+			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+
+		if (response.isPrinters())
+			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+
+
+		for (ServerAccess server : sm.getServers()) {
+			RdpConnectionOvd rc = null;
+
+			try {
+				rc = new RdpConnectionOvd(flags);
+			} catch (RdesktopException ex) {
+				RdpClient.logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
+				return;
+			}
+
+			try {
+				rc.initSecondaryChannels();
+			} catch (RdesktopException ex) {
+				RdpClient.logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
+			}
+
+			rc.setServer(server.getHost());
+			rc.setCredentials(server.getLogin(), server.getPassword());
+			// Ensure that width is multiple of 4
+			// Prevent artifact on screen with a with resolution
+			// not divisible by 4
+			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+
+			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+				try {
+					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), sm.askForIcon(Integer.toString(appItem.getId())));
+					rc.addApp(app);
+				} catch (SessionManagerException ex) {
+					RdpClient.logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
+				}
+			}
+
+			this.co.add(rc);
+		}
+
+		List<ServerAccess> servers = sm.getServers();
 		for (RdpConnectionOvd rc : this.co) {
 			if (! this.ovd_mode_application)
 				rc.setGraphic(params.width, params.height);
