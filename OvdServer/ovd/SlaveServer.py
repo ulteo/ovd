@@ -129,8 +129,13 @@ class SlaveServer:
 		for thread in self.threads:
 			if thread.isAlive():
 				thread._Thread__stop()
-				
-				
+		
+		Logger.info("Waiting for thread stop")
+		time.sleep(2)
+		for thread in self.threads:
+			if thread.isAlive():
+				thread._Thread__delete()
+		
 		for role in self.roles:
 			if role.has_run:
 				Logger.info("Stopping role %s"%(role.getName()))
