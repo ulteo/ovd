@@ -72,10 +72,9 @@ class Session(AbstractSession):
 		
 		if self.profile is not None:
 			if not self.profile.mount():
-				Logger.warn("Session is going to continue without profile")  
-				self.profile = None
-			else:
-				self.profile.copySessionStart()
+				return False
+			
+			self.profile.copySessionStart()
 		
 		
 		
@@ -85,6 +84,8 @@ class Session(AbstractSession):
 		
 		if self.profile is not None:
 			self.profile.umount()
+		
+		return True
 	
 	
 	def install_shortcut(self, shortcut):

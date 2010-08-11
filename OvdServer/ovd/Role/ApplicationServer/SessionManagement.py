@@ -55,8 +55,8 @@ class SessionManagement(Thread):
 		
 		if Platform.System.userExist(session.user.name):
 			Logger.error("unable to create session: user %s already exists"%(session.user.name))
-			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ACTIVE)
-			return
+			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+			return self.destroy_session(session)
 		
 		
 		session.user.infos["groups"] = [self.aps_instance.ts_group_name, self.aps_instance.ovd_group_name]
@@ -69,10 +69,20 @@ class SessionManagement(Thread):
 		rr = session.user.create()
 		if rr is False:
 			Logger.error("unable to create session for user %s"%(session.user.name))
-			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ACTIVE)
-			return
+			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+			return self.destroy_session(session)
 		
-		session.install_client()
+		try:
+			rr = session.install_client()
+		except Exception,err:
+			Logger.debug("Unable to initialize session %s: %s"%(session.id, str(err)))
+			rr = False
+		
+		if rr is False:
+			Logger.error("unable to initialize session %s"%(session.id))
+			self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_ERROR)
+			return self.destroy_session(session)
+		
 		
 		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_INITED)
 	

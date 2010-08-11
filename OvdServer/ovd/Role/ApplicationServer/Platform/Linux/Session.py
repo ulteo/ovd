@@ -76,6 +76,8 @@ class Session(AbstractSession):
 		
 		if self.profile is not None:
 			self.profile.mount()
+		
+		return True
 	
 	
 	def uninstall_client(self):
