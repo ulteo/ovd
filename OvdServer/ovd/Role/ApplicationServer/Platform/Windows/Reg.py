@@ -167,14 +167,17 @@ def OpenKeyCreateIfDoesntExist(root, path):
 	
 	return key
 
-def ProcessActiveSetupEntry(BaseKey, Entry, Username):
+def ProcessActiveSetupEntry(BaseKey, Entry, Username, LocaleValue):
 	hkey = win32api.RegOpenKey(BaseKey, Entry, 0, win32con.KEY_ALL_ACCESS)
 	
+	version = False
 	try:
-		win32api.RegQueryValueEx(hkey, "StubPath")
+		win32api.RegQueryValueEx(hkey, "Version")
+		version=True
+		win32api.RegQueryValueEx(hkey, "Locale")
 	except:
-		win32api.RegCloseKey(hkey)
-		return False
+		if version :
+			win32api.RegSetValueEx(hkey, 'Locale', 0, win32con.REG_SZ, LocaleValue)
 
 	try:
 		(string, type) = win32api.RegQueryValueEx(hkey, "IsInstalled")
@@ -192,6 +195,28 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 
 	win32api.RegCloseKey(hkey)
 	return True
+
+def GetLocaleValue(hkey_src):
+	index = 0
+	flag_continue = True
+	while flag_continue:
+		try:
+			entry = win32api.RegEnumKey(hkey_src, index)
+			hkey = win32api.RegOpenKey(hkey_src, entry, 0, win32con.KEY_ALL_ACCESS)
+			try:
+				(string, type) = win32api.RegQueryValueEx(hkey, "Locale")
+				if not (string == "*" ):
+					return string
+			except:
+				pass
+			finally:
+				if hkey is not None:
+					win32api.RegCloseKey(hkey)
+			index+= 1
+		except Exception, err:
+			flag_continue = False
+
+	return "EN"
 
 def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	# Overwrite Active Setup: works partially
@@ -218,12 +243,14 @@ def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, components_path, 0, win32con.KEY_ALL_ACCESS)
 	keyToRemove = []
 	
+	localeValue = GetLocaleValue(hkey_src)
+
 	index = 0
 	flag_continue = True
 	while flag_continue:
 		try:
 			buf = win32api.RegEnumKey(hkey_src, index)
-			if ProcessActiveSetupEntry(hkey_src, buf, Username) == False:
+			if ProcessActiveSetupEntry(hkey_src, buf, Username, localeValue) == False:
 				keyToRemove.append(buf)
 
 			index+= 1
