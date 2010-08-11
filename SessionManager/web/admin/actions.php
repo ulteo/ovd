@@ -1308,6 +1308,13 @@ function action_add_sharedfolder() {
 		return false;
 	}
 
+	$ret = $a_server->createNetworkFolder($buf->id);
+	if (! $ret) {
+		popup_error(sprintf(_("Unable to create shared folder on file server '%s'"), $buf->server));
+		Abstract_NetworkFolder::delete($buf);
+		return false;
+	}
+
 	popup_info(sprintf(_('SharedFolder \'%s\' successfully added'), $buf->name));
 	return true;
 }
@@ -1316,6 +1323,18 @@ function action_del_sharedfolder($sharedfolder_id) {
 	$sharedfolder = Abstract_NetworkFolder::load($sharedfolder_id);
 	if (! $sharedfolder) {
 		popup_error(_('Unable to delete this shared folder'));
+		return false;
+	}
+
+	$a_server = Abstract_Server::load($sharedfolder->server);
+	if (! $a_server) {
+		popup_error(sprintf(_("Unable to delete shared folder on file server '%s'"), $sharedfolder->server));
+		return false;
+	}
+
+	$ret = $a_server->deleteNetworkFolder($sharedfolder->id);
+	if (! $ret) {
+		popup_error(sprintf(_("Unable to delete shared folder on file server '%s'"), $sharedfolder->server));
 		return false;
 	}
 
