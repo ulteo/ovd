@@ -9,4 +9,8 @@ Listen 1111
 	RewriteRule . /%1_%2.php [L]
 
 	DocumentRoot @DATADIR@/ulteo/sessionmanager/webservices
+	<Directory @DATADIR@/ulteo/sessionmanager/webservices>
+		Order allow,deny
+		allow from all
+	</Directory>
 </VirtualHost>
