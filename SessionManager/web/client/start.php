@@ -467,10 +467,9 @@ if (is_array($sharedfolders) && count($sharedfolders) > 0) {
 			}
 		}
 
-		$sharedfolder_login = $user_login.'_'.$sharedfolder->id;
-		$sharedfolder_server->delUserFromNetworkFolder($sharedfolder->id, $sharedfolder_login);
-		if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $sharedfolder_login, $user_password)) {
-			Logger::error('main', '(startsession) Access creation for User "'.$sharedfolder_login.'" on shared folder "'.$sharedfolder->id.'" failed');
+		$sharedfolder_server->delUserFromNetworkFolder($sharedfolder->id, $user_login);
+		if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $user_login, $user_password)) {
+			Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" on shared folder "'.$sharedfolder->id.'" failed');
 			throw_response(INTERNAL_ERROR);
 		}
 
