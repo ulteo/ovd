@@ -22,7 +22,6 @@ package org.ulteo.ovd.client;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
 import org.ini4j.Wini;
@@ -30,6 +29,11 @@ import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
+import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionManagerException;
+import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class StartTokenAuth {
 	public static String name = "OvdExternalAppsClient";
@@ -109,7 +113,30 @@ public class StartTokenAuth {
 			System.exit(1);
 		}
 		
-		OvdClient cli = new OvdClientIntegrated(ovdServer, true, token);
-		cli.start();
+		SessionManagerCommunication dialog = new SessionManagerCommunication(ovdServer, true);
+		
+		Properties request = new Properties(Properties.MODE_REMOTEAPPS);
+		try {
+			if (!dialog.askForSession(token, request)) {
+				return;
+			}
+		} catch (SessionManagerException ex) {
+			System.err.println(ex.getMessage());
+			return;
+		}
+
+		Properties response = dialog.getResponseProperties();
+
+		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
+
+
+		if (response.getMode() != Properties.MODE_REMOTEAPPS) {
+			System.err.println("Error: No valid session mode received");
+			usage();
+			System.exit(1);
+		}
+
+		OvdClient cli = new OvdClientIntegrated(dialog);
+		cli.perform();
 	}
 }

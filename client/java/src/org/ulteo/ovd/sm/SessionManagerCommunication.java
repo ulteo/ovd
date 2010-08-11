@@ -2,6 +2,7 @@
  * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,10 +25,7 @@ import com.sun.org.apache.xerces.internal.dom.DOMImplementationImpl;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,10 +55,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import net.propero.rdp.RdesktopException;
-import org.ulteo.ovd.Application;
-import org.ulteo.ovd.client.I18n;
-import org.ulteo.rdp.RdpConnectionOvd;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -69,7 +63,7 @@ import org.xml.sax.InputSource;
 import sun.awt.image.URLImageSource;
 
 
-public class SessionManagerCommunication implements Runnable {
+public class SessionManagerCommunication {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
@@ -92,56 +86,45 @@ public class SessionManagerCommunication implements Runnable {
 	private static final String REQUEST_METHOD_POST = "POST";
 	private static final String REQUEST_METHOD_GET = "GET";
 
-	private static final String SESSION_STATUS_UNKNOWN = "unknown";
-	private static final String SESSION_STATUS_ERROR = "error";
-	private static final String SESSION_STATUS_INIT = "init";
-	private static final String SESSION_STATUS_INITED = "ready";
-	private static final String SESSION_STATUS_ACTIVE = "logged";
-	private static final String SESSION_STATUS_INACTIVE = "disconnected";
-	private static final String SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
-	private static final String SESSION_STATUS_DESTROYED = "destroyed";
-
-	private static final long REQUEST_TIME_FREQUENTLY = 2000;
-	private static final long REQUEST_TIME_OCCASIONALLY = 5000;
+	public static final String SESSION_STATUS_UNKNOWN = "unknown";
+	public static final String SESSION_STATUS_ERROR = "error";
+	public static final String SESSION_STATUS_INIT = "init";
+	public static final String SESSION_STATUS_INITED = "ready";
+	public static final String SESSION_STATUS_ACTIVE = "logged";
+	public static final String SESSION_STATUS_INACTIVE = "disconnected";
+	public static final String SESSION_STATUS_WAIT_DESTROY = "wait_destroy";
+	public static final String SESSION_STATUS_DESTROYED = "destroyed";
 
 	private static final int TIMEOUT = 2000;
 
-	private String sm = null;
+	private String host = null;
 	private boolean use_https = false;
-	private ArrayList<RdpConnectionOvd> connections = null;
-	private String sessionMode = null;
-	private String requestMode = null;
-	private String sessionId = null;
-	private String sessionStatus = SESSION_STATUS_INIT;
-	private boolean sessionIsActive = false;
-	private String base_url;
-	private String multimedia = null;
-	private String printers = null;
+
+	private String base_url = null;
+
+	private Properties requestProperties = null;
+	private Properties responseProperties = null;
+	private List<ServerAccess> servers = null;
+
+	private CopyOnWriteArrayList<Callback> callbacks = null;
 
 	private List<String> cookies = null;
 
-	private CopyOnWriteArrayList<SessionStatusListener> sessionStatusListeners = null;
-	private boolean sessionStatusMonitoring = false;
-	private long sessionStatusRequestTime = REQUEST_TIME_FREQUENTLY;
+	public SessionManagerCommunication(String host_, boolean use_https_) {
+		this.servers = new  ArrayList<ServerAccess>();
+		this.callbacks = new CopyOnWriteArrayList<Callback>();
 
-	public SessionManagerCommunication(String sm_, boolean use_https_) {
-		this.init(sm_, use_https_);
-	}
-
-	private void init(String sm_, boolean use_https_) {
-		this.sessionStatusListeners = new CopyOnWriteArrayList<SessionStatusListener>();
-		this.connections = new ArrayList<RdpConnectionOvd>();
 		this.cookies = new ArrayList<String>();
-		this.sm = sm_;
+		this.host = host_;
 		this.use_https = use_https_;
 
-		this.base_url = makeUrl(this.sm, "/ovd/client", "", this.use_https);
+		this.base_url = this.makeUrl("");
 
 	}
 
 	private boolean isReachable() {
 		try {
-			InetAddress target = InetAddress.getByName(this.sm);
+			InetAddress target = InetAddress.getByName(this.host);
 
 			return target.isReachable(TIMEOUT);
 		} catch (IOException ex) {
@@ -150,12 +133,8 @@ public class SessionManagerCommunication implements Runnable {
 		return false;
 	}
 
-	private static String makeUrl(String host, String suffix, String service, boolean useHttps) {
-		return (useHttps ? "https" : "http") + "://" + host + suffix + "/" + service;
-	}
-
-	public String getSessionMode() {
-		return this.sessionMode;
+	private String makeUrl(String service) {
+		return (this.use_https ? "https" : "http") + "://" + this.host + "/ovd/client/" + service;
 	}
 
 	private static String makeStringForPost(List<String> listParameter) {
@@ -179,47 +158,49 @@ public class SessionManagerCommunication implements Runnable {
 		return makeStringForPost(listParameter);
 	}
 
-	public boolean askForSession(HashMap<String,String> params) throws SessionManagerException {
-		if (params == null)
-			return false;
+	public boolean askForSession(String login, String password, Properties request) throws SessionManagerException {
+		if (login == null || password == null || request == null || this.requestProperties != null)
+ 			return false;
+		
+		this.requestProperties = request;
 
-		if ((! params.containsKey(FIELD_LOGIN)) || (! params.containsKey(FIELD_PASSWORD)) || (! params.containsKey(FIELD_SESSION_MODE))) {
-			System.err.println("ERROR: some askForSession required arguments are missing");
-			return false;
-		}
+		HashMap<String,String> params = new HashMap<String,String>();
+		if (request.getMode() == Properties.MODE_DESKTOP)
+			params.put(FIELD_SESSION_MODE, SESSION_MODE_DESKTOP);
+		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
+			params.put(FIELD_SESSION_MODE, SESSION_MODE_REMOTEAPPS);
 
-		this.requestMode = params.get(FIELD_SESSION_MODE);
+		params.put(FIELD_LOGIN, login);
+		params.put(FIELD_PASSWORD, password);
+		// todo : other options
 
-		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
+ 		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
+ 		if (response == null)
+ 			return false;
 
-		if (response == null)
-			return false;
-		this.fireSessionManagerIsOnline();
-
-		return this.parseStartSessionResponse(response);
+ 		return this.parseStartSessionResponse(response);
 	}
 
-	public boolean askForApplications(HashMap<String,String> params) throws SessionManagerException {
-		this.requestMode = SESSION_MODE_REMOTEAPPS;
-
-		if (! params.containsKey(FIELD_TOKEN)) {
-			System.err.println("ERROR: some askForApplications required arguments are missing");
+	public boolean askForSession(String token, Properties request) throws SessionManagerException {
+		if (token == null || request == null || this.requestProperties != null)
 			return false;
-		}
 
-		if (params.containsKey(FIELD_SESSION_MODE) && (! params.get(FIELD_SESSION_MODE).equals(SESSION_MODE_REMOTEAPPS))) {
-			System.out.println("Overriding session mode");
-			params.remove(FIELD_SESSION_MODE);
-		}
-		if (! params.containsKey(FIELD_SESSION_MODE))
-			params.put(FIELD_SESSION_MODE, this.requestMode);
+		this.requestProperties = request;
+
+		HashMap<String,String> params = new HashMap<String,String>();
+		if (request.getMode() == Properties.MODE_DESKTOP)
+			params.put(FIELD_SESSION_MODE, SESSION_MODE_DESKTOP);
+		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
+			params.put(FIELD_SESSION_MODE, SESSION_MODE_REMOTEAPPS);
+
+		params.put(FIELD_TOKEN, token);
 
 		Document response = (Document) this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
 
 		if (response == null)
 			return false;
 
-		return this.parseStartSessionResponse(response);
+ 		return this.parseStartSessionResponse(response);
 	}
 
 	public boolean askForLogout() throws SessionManagerException {
@@ -237,7 +218,7 @@ public class SessionManagerCommunication implements Runnable {
 		return this.parseLogoutResponse(response);
 	}
 
-	public boolean askForSessionStatus() throws SessionManagerException {
+	public String askForSessionStatus() throws SessionManagerException {
 		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
 		Document request = domImpl.createDocument(null, "session", null);
 
@@ -248,7 +229,7 @@ public class SessionManagerCommunication implements Runnable {
 		Document response = (Document) this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, false);
 
 		if (response == null)
-			return false;
+			return null;
 
 		return this.parseSessionStatusResponse(response);
 	}
@@ -272,7 +253,7 @@ public class SessionManagerCommunication implements Runnable {
 			URL url = new URL(this.base_url+webservice);
 
 			if (showLog)
-				System.out.println("Connexion a l'url ... "+url);
+				System.out.println("Connecting URL ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
 
 			if (this.use_https) {
@@ -400,121 +381,113 @@ public class SessionManagerCommunication implements Runnable {
 		return true;
 	}
 
-	private boolean parseSessionStatusResponse(Document in) {
-		NodeList ns = in.getElementsByTagName("session");
+	private String parseSessionStatusResponse(Document in) throws SessionManagerException {
+		Element rootNode = in.getDocumentElement();
 
-		if (ns.getLength() != 1) {
-			System.err.println("Session status webservice does not return session node");
-			return false;
+		if (! rootNode.getNodeName().equals("session")) {
+			for (Callback c : this.callbacks)
+				c.reportBadXml("");
+
+			throw new SessionManagerException("bad xml");
+ 		}
+
+		String status = null;
+		try {
+			status = rootNode.getAttribute("status");
+ 		}
+		catch (Exception err) {
+			for (Callback c : this.callbacks)
+				c.reportBadXml("");
+
+			throw new SessionManagerException("bad xml");
 		}
 
-		Element sessionNode = (Element) ns.item(0);
-
-		String newSessionStatus = sessionNode.getAttribute("status");
-
-		if (! newSessionStatus.equals(this.sessionStatus)) {
-			this.sessionStatus = newSessionStatus;
-			System.out.println("session status switch to "+this.getSessionStatus());
-
-			if (this.sessionStatus.equalsIgnoreCase(SESSION_STATUS_INITED) || this.sessionStatus.equalsIgnoreCase(SESSION_STATUS_ACTIVE)) {
-				if (! this.sessionIsActive) {
-					this.sessionIsActive = true;
-					this.fireSessionReady();
-				}
-			}
-			else {
-				this.sessionIsActive = false;
-				this.fireSessionTerminated();
-			}
-		}
-
-		return true;
+		return status;
 	}
 
 	private boolean parseStartSessionResponse(Document document) throws SessionManagerException {
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Rectangle dim = null;
-		dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.INFO, "ScreenSize: " + screenSize);
+		Element rootNode = document.getDocumentElement();
 
-		NodeList ns = document.getElementsByTagName("error");
-		Element ovd_node;
-		if (ns.getLength() == 1) {
-			ovd_node = (Element) ns.item(0);
-			throw new SessionManagerException(ovd_node.getAttribute("message"));
-		}
-		ns = document.getElementsByTagName("session");
-		if (ns.getLength() == 0) {
-			throw new SessionManagerException(I18n._("User already connected"));
-		}
-		ovd_node = (Element) ns.item(0);
-		this.sessionId = ovd_node.getAttribute("id");
-		this.sessionMode = ovd_node.getAttribute("mode");
-		this.multimedia = ovd_node.getAttribute("multimedia");
-		this.printers = ovd_node.getAttribute("redirect_client_printers");
-		if (!this.sessionMode.equalsIgnoreCase(this.requestMode)) {
-			throw new SessionManagerException(I18n._("The session manager does not authorize " + this.requestMode));
-		}
-		ns = ovd_node.getElementsByTagName("server");
-		if (ns.getLength() == 0) {
-			throw new SessionManagerException(I18n._("No application server available"));
-		}
-		Element server;
-		for (int i = 0; i < ns.getLength(); i++) {
-			RdpConnectionOvd rc = null;
-			server = (Element) ns.item(i);
-			NodeList appsList = server.getElementsByTagName("application");
-			if (appsList.getLength() == 0) {
-				throw new SessionManagerException(I18n._("No application available"));
-			}
-			Element appItem = null;
-			byte flags = 0x00;
-			if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_DESKTOP)) {
-				flags |= RdpConnectionOvd.MODE_DESKTOP;
-			} else if (this.sessionMode.equalsIgnoreCase(SESSION_MODE_REMOTEAPPS)) {
-				flags |= RdpConnectionOvd.MODE_APPLICATION;
-			}
-			if (this.multimedia.equals("1")) {
-				flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
-			}
-			if (this.printers.equals("1")) {
-				flags |= RdpConnectionOvd.MOUNT_PRINTERS;
-			}
-			try {
-				rc = new RdpConnectionOvd(flags);
-			} catch (RdesktopException ex) {
-				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, ex.getMessage());
-				continue;
-			}
-			try {
-				rc.initSecondaryChannels();
-			} catch (RdesktopException e1) {
-				Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, e1.getMessage());
-			}
-			rc.setServer(server.getAttribute("fqdn"));
-			rc.setCredentials(server.getAttribute("login"), server.getAttribute("password"));
-			// Ensure that width is multiple of 4
-			// Prevent artifact on screen with a with resolution
-			// not divisible by 4
-			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
-			for (int j = 0; j < appsList.getLength(); j++) {
-				appItem = (Element) appsList.item(j);
-				NodeList mimeList = appItem.getElementsByTagName("mime");
-				ArrayList<String> mimeTypes = new ArrayList<String>();
-				if (mimeList.getLength() > 0) {
-					Element mimeItem = null;
-					for (int k = 0; k < mimeList.getLength(); k++) {
-						mimeItem = (Element) mimeList.item(k);
-						mimeTypes.add(mimeItem.getAttribute("type"));
-					}
+		if (! rootNode.getNodeName().equals("session")) {
+			if (rootNode.getNodeName().equals("response")) {
+				try {
+					String code = rootNode.getAttribute("code");
+
+					for (Callback c : this.callbacks)
+						c.reportErrorStartSession(code);
+
+					return false;
 				}
-				Application app = new Application(rc, Integer.parseInt(appItem.getAttribute("id")), appItem.getAttribute("name"), appItem.getAttribute("command"), mimeTypes, this.askForIcon(appItem.getAttribute("id")));
-				if (app != null) {
-					rc.addApp(app);
+				catch(Exception err) {
+					System.out.println("Error: bad XML #1");
 				}
-			}
-			this.connections.add(rc);
+
+				for (Callback c : this.callbacks)
+					c.reportBadXml("");
+
+				return false;
+ 			}
 		}
+
+		try {
+			int mode = Properties.MODE_ANY;
+			if (rootNode.getAttribute("mode").equals(SESSION_MODE_DESKTOP))
+				mode = Properties.MODE_DESKTOP;
+			else if (rootNode.getAttribute("mode").equals(SESSION_MODE_REMOTEAPPS))
+				mode = Properties.MODE_REMOTEAPPS;
+			if (mode == Properties.MODE_ANY)
+				throw new Exception("bad xml: no valid session mode");
+
+			Properties response = new Properties(mode);
+
+			if (rootNode.hasAttribute("multimedia"))
+				response.setMultimedia(true);
+			if (rootNode.hasAttribute("redirect_client_printers"))
+				response.setMultimedia(true);
+
+			NodeList usernameNodeList = rootNode.getElementsByTagName("user");
+			if (usernameNodeList.getLength() == 1) {
+				response.setUsername(((Element) usernameNodeList.item(0)).getAttribute("displayName"));
+			}
+
+			this.responseProperties = response;
+
+			NodeList serverNodes = rootNode.getElementsByTagName("server");
+			if (serverNodes.getLength() == 0)
+				throw new Exception("bad xml: no server node");
+
+
+			for (int i = 0; i < serverNodes.getLength(); i++) {
+				Element serverNode = (Element) serverNodes.item(i);
+
+				ServerAccess server = new ServerAccess(serverNode.getAttribute("fqdn"), 3389,
+							serverNode.getAttribute("login"), serverNode.getAttribute("password"));
+
+				NodeList applicationsNodes = serverNode.getElementsByTagName("application");
+				for (int j = 0; j < applicationsNodes.getLength(); j++) {
+					Element applicationNode = (Element) applicationsNodes.item(j);
+
+					Application application = new Application(Integer.parseInt(applicationNode.getAttribute("id")),
+							applicationNode.getAttribute("name"));
+
+					NodeList mimeNodes = applicationNode.getElementsByTagName("mime");
+					for (int k = 0; k < mimeNodes.getLength(); k++) {
+						Element mimeNode = (Element) mimeNodes.item(k);
+
+						application.addMime(mimeNode.getAttribute("type"));
+ 					}
+
+					server.addApplication(application);
+ 				}
+				this.servers.add(server);
+ 			}
+ 		}
+		catch(Exception err) {
+			for (Callback c : this.callbacks)
+				c.reportBadXml(err.toString());
+			return false;
+		}
+
 		return true;
 	}
 
@@ -529,75 +502,23 @@ public class SessionManagerCommunication implements Runnable {
 			StreamResult result = new StreamResult(System.out);
 			transformer.transform(source, result);
 		} catch (TransformerException ex) {
-			Logger.getLogger(SessionManagerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
-	public ArrayList<RdpConnectionOvd> getConnections() {
-		return this.connections;
+	public void addCallbackListener(Callback c) {
+		this.callbacks.add(c);
 	}
 
-	public boolean isSessionFinished() {
-		return false;
+	public void removeCallbackListener(Callback c) {
+		this.callbacks.remove(c);
 	}
 
-	public void startSessionStatusMonitoring() {
-		if (this.sessionStatusMonitoring)
-			return;
-
-		this.sessionStatusMonitoring = true;
-		new Thread(this).start();
+	public Properties getResponseProperties() {
+		return this.responseProperties;
 	}
 
-	public void stopSessionStatusMonitoring() {
-		this.sessionStatusMonitoring = false;
-	}
-
-	public void run() {
-		// session status monitoring
-		this.sessionStatusRequestTime = REQUEST_TIME_FREQUENTLY;
-
-		while (this.sessionStatusMonitoring) {
-			try {
-				this.askForSessionStatus();
-			} catch (SessionManagerException ex) {
-				System.err.println("Session status monitoring: "+ex.getMessage());
-			}
-			
-			try {
-				Thread.sleep(this.sessionStatusRequestTime);
-			} catch (InterruptedException ex) {}
-		}
-	}
-
-	public String getSessionStatus() {
-		return this.sessionStatus;
-	}
-
-	public void addSessionStatusListener(SessionStatusListener l) {
-		this.sessionStatusListeners.add(l);
-	}
-
-	public void removeSessionStatusListener(SessionStatusListener l) {
-		this.sessionStatusListeners.remove(l);
-	}
-
-	private void fireSessionManagerIsOnline() {
-		for (SessionStatusListener listener : this.sessionStatusListeners) {
-			listener.sessionManagerIsOnline();
-		}
-	}
-
-	private void fireSessionReady() {
-		this.sessionStatusRequestTime = REQUEST_TIME_OCCASIONALLY;
-		for (SessionStatusListener listener : this.sessionStatusListeners) {
-			listener.sessionReady(this.sessionId);
-		}
-	}
-
-	private void fireSessionTerminated() {
-		for (SessionStatusListener listener : this.sessionStatusListeners) {
-			listener.sessionTerminated(this.sessionId);
-		}
+	public List<ServerAccess> getServers() {
+		return this.servers;
 	}
 }

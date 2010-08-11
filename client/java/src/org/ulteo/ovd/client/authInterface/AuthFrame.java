@@ -29,9 +29,6 @@ import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -47,15 +44,12 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ini4j.Ini;
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.ovd.client.authInterface.LoginListener;
-import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
 
 public class AuthFrame {
 	
 	private JFrame mainFrame = new JFrame();
-	private boolean use_https = true;
 	private boolean desktopLaunched = false;
 	
 	private JLabel login = new JLabel(I18n._("Login"));
@@ -98,22 +92,14 @@ public class AuthFrame {
 	private boolean checkedRemember = false;
 	private boolean checkedPublished = false;
 	private ActionListener optionListener = null;
-	private LoginListener loginListener = null;
 	private KeyLoginListener keyLog = null;
 	
-	private String username = null;
-	private String ovdServer = null;
-	private String initMode = null;
-	private int profileMode = 0;
-	private String initRes = null;
-	private String autoPublishProfile = null;
-	private int profileResolution = 1;
-	private String token = null;
+	private ActionListener obj = null;
 	
 	private GridBagConstraints gbc = null;
 	
-	public AuthFrame(boolean use_https) {
-		this.use_https = use_https;
+	public AuthFrame(ActionListener obj_) {
+		this.obj = obj_;
 		
 		this.keyLog = new KeyLoginListener(this);
 		this.init();
@@ -123,7 +109,8 @@ public class AuthFrame {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		KeyLoginListener.PUSHED = false;
 		this.optionClicked = false;
-		
+
+		this.mainFrame.setVisible(false);
 		mainFrame.setTitle("OVD Native Client");
 		mainFrame.setSize(500,450);
 		mainFrame.setResizable(false);
@@ -337,13 +324,12 @@ public class AuthFrame {
 			}
 		};
 		
-		loginListener = new LoginListener(this);
 		moreOption.addActionListener(optionListener);
 		
 		mainFrame.setLayout(new GridBagLayout());
 		gbc = new GridBagConstraints();
 		startButton.setPreferredSize(new Dimension(150, 25));
-		startButton.addActionListener(loginListener);
+		startButton.addActionListener(this.obj);
 		
 		gbc.gridx = gbc.gridy = 0;
 		gbc.insets = new Insets(0, 0, 25, 0);
@@ -421,110 +407,21 @@ public class AuthFrame {
 		mainFrame.setLocationRelativeTo(null);
 		mainFrame.setVisible(true);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		boolean defaultProfileIsPresent = true;
-		File defaultProfile = new File(Constants.clientConfigFilePath+Constants.separator+"default.conf");
-		try {
-			parseProfileFile(defaultProfile);
-		} catch (FileNotFoundException e) {
-			defaultProfileIsPresent = false;
-			System.out.println("no default profile");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(defaultProfileIsPresent) {
-			this.rememberMe.setSelected(true);
-			this.checkedRemember = true;
-		}
-		
-		if (this.username != null)
-			this.loginTextField.setText(this.username);
-		
-		if (this.ovdServer != null)
-			this.hostTextField.setText(this.ovdServer);
-		
-		if (this.profileMode == 0) {
-			this.desktopButton.setSelected(true);
-		}
-		else {
-			this.portalButton.setSelected(true);
-			desktopMode = false;
-		}
-
-		if (this.autoPublishProfile != null && this.autoPublishProfile.equals("true")) {
-			this.autoPublish.setSelected(true);
-			this.checkedPublished = true;
-		}
-		
-		this.resBar.setValue(this.profileResolution);
-		
-		if (this.username != null)
-			this.passwordTextField.requestFocusInWindow();
-		else 
-			this.loginTextField.requestFocusInWindow();
 	}
 	
 	public void hideWindow() {
-		mainFrame.getContentPane().removeAll();
-		moreOption.removeActionListener(optionListener);
-		startButton.removeActionListener(loginListener);
-		desktopButton.removeAll();
-		portalButton.removeAll();
 		mainFrame.setVisible(false);
-		mainFrame.dispose();
-	}
-	
-	public void parseProfileFile(File profile) throws IOException, FileNotFoundException {
-		Ini ini = new Ini(profile);
-		try {
-			this.username = ini.get("user", "login");
-		}
-		catch(NullPointerException err) {}
-		
-		try {
-			this.ovdServer = ini.get("server", "host");
-		}
-		catch(NullPointerException err) {}
-		
-		try {
-			this.initMode = ini.get("sessionMode", "ovdSessionMode");
-			if (initMode.equals("desktop"))
-				profileMode = 0;
-			else 
-				profileMode = 1;
-		}
-		catch(NullPointerException err) {}
-		
-		try {
-			this.autoPublishProfile = ini.get("publication", "auto-publish");
-		}
-		catch(NullPointerException err) {}		
-		
-		
-		try {
-			this.initRes = ini.get("screen", "size");
-			if(this.initRes.equals("800x600"))
-				this.profileResolution = 0;
-			else if(this.initRes.equals("1024x768"))
-				this.profileResolution = 1;
-			else if(this.initRes.equals("1280x678"))
-				this.profileResolution = 2;
-			else if(this.initRes.equals("maximized"))
-				this.profileResolution = 3;
-			else
-				this.profileResolution = 4;
-		}
-		catch(NullPointerException err) {}
-		
-		try {
-			this.token = ini.get("token", "token");
-		}
-		catch(NullPointerException err) {}
 	}
 	
 	public JTextField getLogin() {
 		return loginTextField;
+	}
+
+	public void setLogin(String login_) {
+		if (login_ == null)
+			return;
+
+		this.loginTextField.setText(login_);
 	}
 
 	public JPasswordField getPassword() {
@@ -535,6 +432,13 @@ public class AuthFrame {
 		return hostTextField;
 	}
 
+	public void setHost(String host_) {
+		if (host_ == null)
+			return;
+		
+		this.hostTextField.setText(host_);
+	}
+
 	public JRadioButton getDesktopButton() {
 		return desktopButton;
 	}
@@ -542,9 +446,25 @@ public class AuthFrame {
 	public JSlider getResBar() {
 		return resBar;
 	}
-	
-	public boolean isHttps() {
-		return use_https;
+
+	public void setResolution(int resolution_) {
+		this.resBar.setValue(resolution_);
+	}
+
+	public String getSessionMode() {
+		return (this.desktopButton.isSelected()) ? SessionManagerCommunication.SESSION_MODE_DESKTOP : SessionManagerCommunication.SESSION_MODE_REMOTEAPPS;
+	}
+
+	public void setSessionMode(String sessionMode_) {
+		if (sessionMode_ == null)
+			return;
+
+		if (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_DESKTOP)) {
+			this.desktopButton.setSelected(true);
+		}
+		else if (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)) {
+			this.portalButton.setSelected(true);
+		}
 	}
 	
 	public JFrame getMainFrame() {
@@ -562,12 +482,24 @@ public class AuthFrame {
 	public boolean isChecked() {
 		return checkedRemember;
 	}
+
+	public void setChecked(boolean checked_) {
+		this.rememberMe.setSelected(checked_);
+	}
 	
 	public boolean isPublishedChecked() {
 		return checkedPublished;
 	}
+
+	public void setAutoPublish(boolean autoPublish_) {
+		this.autoPublish.setSelected(autoPublish_);
+	}
 	
 	public JButton getOptionButton() {
 		return moreOption;
+	}
+	
+	public JButton GetStartButton() {
+		return this.startButton;
 	}
 }

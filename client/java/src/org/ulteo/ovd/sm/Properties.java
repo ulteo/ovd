@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client.session;
+package org.ulteo.ovd.sm;
 
 public class Properties {
 	public static final int MODE_ANY = 0;
@@ -27,6 +27,7 @@ public class Properties {
 	
 	private int mode = 0;
 	private String lang = null;
+	private String username = null;
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
@@ -49,6 +50,14 @@ public class Properties {
 	
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+
+	public String getUsername() {
+		return this.username;
+	}
+
+	public void setUsername(String username_) {
+		this.username = username_;
 	}
 	
 	public boolean isMultimedia() {

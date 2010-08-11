@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client.session;
+package org.ulteo.ovd.sm;
 
 import java.util.ArrayList;
 import java.util.List;

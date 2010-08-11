@@ -21,6 +21,7 @@
 
 package org.ulteo.ovd.client;
 
+import org.ulteo.ovd.client.profile.ProfileIni;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,19 +29,29 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import gnu.getopt.Getopt;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
+import javax.swing.JOptionPane;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.ini4j.Wini;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
+import org.ulteo.ovd.client.authInterface.KeyLoginListener;
+import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
-import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
+import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
+import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
 
-public class StartConnection {
+public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.sm.Callback {
 	public static final String productName = "Ulteo OVD Client";
 	/**
 	 * @param args
@@ -119,34 +130,47 @@ public class StartConnection {
 					resolution=4;				
 
 				token = ini.get("token", "token");
-				OvdClient cli = null;
-				if (token != null) {
-					System.out.println("Token Auth");
-					cli = new OvdClientIntegrated(ovdServer, use_https, token);
-				}
-				else {
-					OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
-					switch (mode) {
-					case 0:
-						cli = new OvdClientDesktop(ovdServer, use_https, username, password, resolution);
-						break;
-					case 1:
-						cli = new OvdClientPortal(ovdServer, use_https, username, password);
-						break;
-					case 2:
-						cli = new OvdClientIntegrated(ovdServer, use_https, username, password);
-						break;
-					default:
-						throw new UnsupportedOperationException("mode "+mode+" is not supported");
+
+				SessionManagerCommunication dialog = new SessionManagerCommunication(ovdServer, true);
+
+				Properties request = new Properties((mode == Properties.MODE_ANY) ? Properties.MODE_DESKTOP : Properties.MODE_REMOTEAPPS);
+				try {
+					if (!dialog.askForSession(username, password, request)) {
+						return;
 					}
+				} catch (SessionManagerException ex) {
+					System.err.println(ex.getMessage());
+					return;
 				}
+
+				Properties response = dialog.getResponseProperties();
+
+				OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
+
+				OvdClient cli = null;
+
+				switch (response.getMode()) {
+					case Properties.MODE_DESKTOP:
+						cli = new OvdClientDesktop(dialog, resolution);
+ 						break;
+					case Properties.MODE_REMOTEAPPS:
+						cli = new OvdClientPortal(dialog);
+ 						break;
+ 					default:
+						throw new UnsupportedOperationException("mode "+response.getMode()+" is not supported");
+ 				}
+
 				cli.start();
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
-		else
-			new AuthFrame(use_https);
+		else {
+			StartConnection s = new StartConnection();
+			s.waitThread();
+		}
+		System.gc();
+		System.exit(0);
 	}
 
 	public static void usage() {
@@ -157,5 +181,240 @@ public class StartConnection {
 		System.err.println("Example: java -jar OVDNativeClient.jar -c config.ovd -p password");
 
 		System.exit(0);
+	}
+
+
+	private LoadingFrame loadingFrame = null;
+	private AuthFrame authFrame = null;
+
+	private Thread thread = null;
+
+	private HashMap<String, String> responseHandler = null;
+	private OvdClient client = null;
+
+	public StartConnection() {
+
+		this.responseHandler = new HashMap<String, String>();
+		this.responseHandler.put("auth_failed", I18n._("Authentication error. Please check your login and password"));
+		this.responseHandler.put("in_maintenance", I18n._("The system is in maintenance, please contact your administrator"));
+		this.responseHandler.put("internal_error", I18n._("The system is broken, please contact your administratord"));
+		this.responseHandler.put("invalid_user", I18n._("This user don't have privileges to start a session"));
+		this.responseHandler.put("service_not_available", I18n._("This user don't have privileges to start a session"));
+		this.responseHandler.put("unauthorized_session_mode", I18n._("You cannot force that session type. Please change the requested type."));
+		this.responseHandler.put("user_with_active_session", I18n._("You already have an active session. Please close it before to launch another one."));
+
+		this.loadingFrame = new LoadingFrame(this);
+		this.authFrame = new AuthFrame(this);
+		this.loadProfile();
+		this.authFrame.getMainFrame().setVisible(true);
+		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+	}
+
+
+	public static int JOB_NOTHING = 0;
+	public static int JOB_DISCONNECT_CLI = 1;
+
+	private int jobMainThread = 0;
+	private boolean continueMainThread = true;
+	
+	public synchronized void setJobMainThread(int job) {
+		this.jobMainThread = job;
+
+	}
+	private synchronized int getJobMainThread() {
+		int job = this.jobMainThread;
+		this.jobMainThread = JOB_NOTHING;
+		return job;
+	}
+
+	public void waitThread() {
+		while(this.continueMainThread) {
+			int job = this.getJobMainThread();
+
+			if (job == JOB_DISCONNECT_CLI)
+				this.client.disconnectAll();
+
+			else {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {}
+			}
+		}
+	}
+
+	public void run() {
+		System.out.println("coucou ...");
+		this.launchConnection();
+		this.thread = null;
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == this.loadingFrame.getCancelButton()) {
+			if (this.thread == null) {
+				System.err.println("Very weird: thread should exist !");
+			}
+			else {
+				System.out.println("this.setJobMainThread(JOB_DISCONNECT_CLI);");
+				this.setJobMainThread(JOB_DISCONNECT_CLI);
+			}
+
+			this.loadingFrame.getCancelButton().setEnabled(false);
+		}
+		else if (e.getSource() == this.authFrame.GetStartButton()) {
+			if (this.thread != null) {
+				System.err.println("Very weird: thread should not exist anymore !");
+				this.thread.interrupt();
+				this.thread = null;
+			}
+
+			this.thread = new Thread(this);
+			this.thread.start();
+
+			this.loadingFrame.setVisible(true);
+		}
+	}
+
+	public void disableLoadingMode() {
+		KeyLoginListener.PUSHED = false;
+		this.loadingFrame.setVisible(false);
+	}
+
+
+	public void launchConnection() {
+		// Get form values
+		String username = this.authFrame.getLogin().getText();
+		String host = this.authFrame.getHost().getText();
+		int mode = (this.authFrame.getDesktopButton().isSelected()) ? Properties.MODE_DESKTOP : Properties.MODE_REMOTEAPPS;
+		int resolution = this.authFrame.getResBar().getValue();
+
+		String password = "";
+		for (char each : this.authFrame.getPassword().getPassword()) {
+			password = password+each;
+		}
+		this.authFrame.getPassword().setText("");
+		
+		if (host.equals("") || username.equals("") || password.equals("")) {
+			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+			this.disableLoadingMode();
+			return;
+		}
+		
+		// Backup entries
+		if (this.authFrame.isChecked()) {
+			try {
+				this.saveProfile();
+			} catch (IOException ex) {
+				System.err.println("Unable to save profile: "+ex.getMessage());
+			}
+		}
+
+		// Start OVD session
+		SessionManagerCommunication dialog = new SessionManagerCommunication(host, true);
+		dialog.addCallbackListener(this);
+
+		Properties request = new Properties(mode);
+		try {
+			if (!dialog.askForSession(username, password, request)) {
+				this.disableLoadingMode();
+				return;
+			}
+		} catch (SessionManagerException ex) {
+			System.err.println(ex.getMessage());
+			this.disableLoadingMode();
+			return;
+		}
+		Properties response = dialog.getResponseProperties();
+
+		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
+		
+		this.client = null;
+
+		switch (response.getMode()) {
+			case Properties.MODE_DESKTOP:
+				this.client = new OvdClientDesktop(dialog, resolution, this);
+				break;
+			case Properties.MODE_REMOTEAPPS:
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.authFrame.isPublishedChecked(), this);
+				break;
+			default:
+				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+				this.disableLoadingMode();
+				return;
+		}
+
+		boolean exit = this.client.perform();
+		this.client = null;
+
+		if (exit) {
+			this.continueMainThread = false;
+		}
+		else {
+			this.authFrame.getMainFrame().setVisible(true);
+		}
+	}
+
+	@Override
+	public void reportBadXml(String data) {
+		JOptionPane.showMessageDialog(null, I18n._("Protocol xml error: ")+data, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+	}
+
+	@Override
+	public void reportErrorStartSession(String code) {
+
+		if (this.responseHandler.containsKey(code)) {
+			JOptionPane.showMessageDialog(null, this.responseHandler.get(code), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		this.reportBadXml(code);
+	}
+
+	public void sessionConnected() {
+		if (this.loadingFrame.isVisible() || this.authFrame.getMainFrame().isVisible()) {
+			this.disableLoadingMode();
+			this.authFrame.hideWindow();
+		}
+	}
+
+	private void saveProfile() throws IOException {
+		String login = this.authFrame.getLogin().getText();
+		String host = this.authFrame.getHost().getText();
+		String sessionMode = this.authFrame.getSessionMode();
+		boolean autoPublish = this.authFrame.isPublishedChecked();
+		int screensize = this.authFrame.getResBar().getValue();
+
+		ProfileIni ini = new ProfileIni();
+		ini.setProfile(null);
+		ini.loadProfile(new ProfileProperties(login, host, sessionMode, autoPublish, screensize));
+	}
+
+	private void loadProfile() {
+		ProfileIni ini = new ProfileIni();
+		List<String> profiles = ini.listProfiles();
+		String profile = ProfileIni.DEFAULT_PROFILE;
+		
+		if (! profiles.contains(profile))
+			return;
+		
+		ProfileProperties properties = null;
+		try {
+			properties = ini.loadProfile(profile);
+		} catch (IOException ex) {
+			System.err.println("Unable to load \""+profile+"\" profile: "+ex.getMessage());
+			return;
+		}
+
+		if (properties == null)
+			return;
+
+		this.authFrame.setLogin(properties.getLogin());
+		this.authFrame.setHost(properties.getHost());
+		this.authFrame.setSessionMode(properties.getSessionMode());
+		this.authFrame.setAutoPublish(properties.getAutoPublish());
+		this.authFrame.setResolution(properties.getScreenSize());
+
+		this.authFrame.setChecked(true);
 	}
 }

@@ -24,7 +24,6 @@ import com.ice.jni.registry.RegStringValue;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
-import com.ice.jni.registry.RegistryValue;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -104,7 +103,7 @@ public class WindowsRegistry extends FileAssociate {
 	}*/
 
 	public void createAppAction(Application app) {
-		ArrayList<String> mimeList = app.getSupportedMimeTypes();
+		List<String> mimeList = app.getSupportedMimeTypes();
 		for (String mime : mimeList) {
 			ArrayList<String> extList = this.findExtByMimeType(mime);
 			for (String ext : extList) {
@@ -155,7 +154,7 @@ public class WindowsRegistry extends FileAssociate {
 	}*/
 
 	public void removeAppAction(Application app) {
-		ArrayList<String> mimeList = app.getSupportedMimeTypes();
+		List<String> mimeList = app.getSupportedMimeTypes();
 		for (String mime : mimeList) {
 			ArrayList<String> extList = this.findExtByMimeType(mime);
 			for (String ext : extList) {

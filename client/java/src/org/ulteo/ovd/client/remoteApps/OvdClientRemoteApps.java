@@ -21,41 +21,32 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.util.HashMap;
-import org.apache.log4j.Logger;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+
+import net.propero.rdp.RdesktopException;
+
+import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.OvdClient;
-import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.authInterface.LoginListener;
+import org.ulteo.ovd.Application;
+import org.ulteo.ovd.sm.Callback;
+import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
-	public OvdClientRemoteApps(String fqdn_, boolean use_https_, HashMap<String,String> params_) {
-		super(fqdn_, use_https_, params_);
-		
-		this.init();
+	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
+		super(smComm);
 	}
 
-	public OvdClientRemoteApps(String fqdn_, boolean use_https_, String login_, String password_) {
-		super(fqdn_, use_https_, OvdClient.toMap(login_, password_));
-
-		this.init();
-	}
-
-	public OvdClientRemoteApps(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
-		super(fqdn_, use_https_, OvdClient.toMap(login_, password_), frame_, logList_);
-
-		this.init();
-	}
-
-	private void init() {
-		this.logger = Logger.getLogger(OvdClientRemoteApps.class);
-
-		this.setSessionMode(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS);
+	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {
+		super(smComm, obj);
 	}
 
 	@Override
@@ -87,4 +78,58 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	public void ovdInstanceStarted(int instance_) {}
 	public void ovdInstanceStopped(int instance_) {}
 	public void ovdInstanceError(int instance_) {}
+	
+
+	@Override
+	protected boolean createRDPConnections() {
+		Properties properties = this.smComm.getResponseProperties();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		byte flags = 0x00;
+		flags |= RdpConnectionOvd.MODE_APPLICATION;
+		
+		if (properties.isMultimedia())
+			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+		
+		if (properties.isPrinters())
+			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+		
+		
+		for (ServerAccess server : this.smComm.getServers()) {
+			RdpConnectionOvd rc = null;
+			
+			try {
+				rc = new RdpConnectionOvd(flags);
+			} catch (RdesktopException ex) {
+				Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
+				return false;
+			}
+			
+			try {
+				rc.initSecondaryChannels();
+			} catch (RdesktopException ex) {
+				Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
+			}
+			
+			rc.setServer(server.getHost());
+			rc.setCredentials(server.getLogin(), server.getPassword());
+			// Ensure that width is multiple of 4
+			// Prevent artifact on screen with a with resolution
+			// not divisible by 4
+			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+
+			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+				try {
+					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
+					rc.addApp(app);
+				} catch (SessionManagerException ex) {
+					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
+				}
+			}
+			
+			this.connections.add(rc);
+		}
+		
+		return true;
+	}
 }

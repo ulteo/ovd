@@ -41,7 +41,7 @@ public class KeyLoginListener implements KeyListener{
 	public void keyTyped(KeyEvent ke) {
 		if(ke.getKeyChar() == ke.VK_ENTER && PUSHED == false) {
 			PUSHED = true;
-			new LoginListener(frame).launchConnection();
+			//new LoginListener(frame).launchConnection();
 		}
 	}
 }

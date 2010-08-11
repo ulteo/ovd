@@ -31,19 +31,19 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import net.propero.rdp.RdpConnection;
-import org.apache.log4j.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
-import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.client.portal.PortalFrame;
+import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.integrated.shorcut.WindowsShortcut;
+import org.ulteo.ovd.sm.Callback;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -55,16 +55,16 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private Spool spool = null;
 	private Thread spoolThread = null;
 	private List<Application> appsList = null;
-	private boolean autoPublish;
+	private boolean autoPublish = false;
 	
-	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_) {
-		super(fqdn_, use_https_, login_, password_);
+	public OvdClientPortal(SessionManagerCommunication smComm) {
+		super(smComm);
 
 		this.init();
 	}
 
-	public OvdClientPortal(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_, boolean autoPublish) {
-		super(fqdn_, use_https_, login_, password_, frame_, logList_);
+	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, Callback obj) {
+		super(smComm, obj);
 		this.username = login_;
 		this.autoPublish = autoPublish;
 		
@@ -73,8 +73,8 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	private void init() {
 		this.system = (System.getProperty("os.name").startsWith("Windows")) ? new SystemWindows() : new SystemLinux();
-		this.logger = Logger.getLogger(OvdClientPortal.class);
 		this.appsList = new ArrayList<Application>();
+
 		this.spool = new Spool(this);
 		this.spool.createIconsDir();
 		this.spool.createShortcutDir();
@@ -91,7 +91,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	protected void runInit() {}
 
 	@Override
-	protected void runSessionReady(String sessionId) {
+	protected void runSessionReady() {
 		this.portal.initButtonPan(this);
 
 		if (this.portal.getApplicationPanel().isScollerInited())
@@ -104,7 +104,16 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	protected void runExit() {}
 
 	@Override
-	protected void runSessionTerminated(String sessionId) {
+	protected void runSessionTerminated() {
+		this.spool.deleteTree();
+		this.spoolThread.interrupt();
+		while (this.spoolThread.isAlive()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
+		}
+		this.spool = null;
+		
 		this.portal.setVisible(false);
 		this.portal.dispose();
 	}
@@ -149,18 +158,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	@Override
 	public void ovdInstanceStopped(int instance_) {
 		this.spool.destroyInstance(instance_);
-	}
-	
-	@Override
-	protected void quitProperly(int i) {
-		this.spool.deleteTree();
-		this.spoolThread.interrupt();
-		while (this.spoolThread.isAlive()) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {}
-		}
-		this.spool = null;
 	}
 
 	@Override

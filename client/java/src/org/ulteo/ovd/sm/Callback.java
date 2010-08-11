@@ -18,9 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-package org.ulteo.ovd.client.session;
+package org.ulteo.ovd.sm;
 
 public interface Callback {
 	public void reportErrorStartSession(String code);
 	public void reportBadXml(String data);
+	public void sessionConnected();
 }

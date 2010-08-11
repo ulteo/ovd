@@ -24,17 +24,14 @@ package org.ulteo.ovd.client.remoteApps;
 import java.awt.SystemTray;
 import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
-import org.apache.log4j.Logger;
+import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.authInterface.LoginListener;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
 import org.ulteo.ovd.integrated.SystemLinux;
 import org.ulteo.ovd.integrated.SystemWindows;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
-import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.RdpConnectionOvd;
 
@@ -51,30 +48,12 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	private Spool spool = null;
 	private SystemAbstract system = null;
 
-	private boolean authByToken = false;
-
-	public OvdClientIntegrated(String fqdn_, boolean use_https_, String token_) {
-		super(fqdn_, use_https_, OvdClientIntegrated.toMap(token_));
-
-		this.authByToken = true;
-
-		this.init();
-	}
-
-	public OvdClientIntegrated(String fqdn_, boolean use_https_, String login_, String password_) {
-		super(fqdn_, use_https_, login_, password_);
-
-		this.init();
-	}
-
-	public OvdClientIntegrated(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, LoginListener logList_) {
-		super(fqdn_, use_https_, login_, password_, frame_, logList_);
-
+	public OvdClientIntegrated(SessionManagerCommunication smComm) {
+		super(smComm);
 		this.init();
 	}
 
 	private void init() {
-		this.logger = Logger.getLogger(OvdClientIntegrated.class);
 		this.spool = new Spool(this);
 	}
 
@@ -88,27 +67,14 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 			this.system = new SystemLinux();
 		}
 		else {
-			this.logger.warn("This Operating System is not supported");
+			Logger.warn("This Operating System is not supported");
 		}
 		
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
 	}
 
 	@Override
-	protected void runSessionReady(String sessionId) {}
-
-	@Override
-	protected boolean askSM() {
-		if (this.authByToken)
-			try {
-				return this.smComm.askForApplications(this.params);
-			} catch (SessionManagerException ex) {
-				this.logger.error(ex.getMessage());
-				return false;
-			}
-		else
-			return super.askSM();
-	}
+	protected void runSessionReady() {}
 
 	@Override
 	protected void runExit() {
@@ -125,7 +91,10 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 	}
 
 	@Override
-	protected void runSessionTerminated(String sessionId) {}
+	protected void runSessionTerminated() {
+		this.spool.deleteTree();
+		this.spool = null;
+	}
 
 	@Override
 	protected void customizeRemoteAppsConnection(RdpConnectionOvd co) {}
@@ -143,12 +112,6 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 				this.system.install(app);
 			}
 		}
-	}
-
-	@Override
-	protected void quitProperly(int i) {
-		this.spool.deleteTree();
-		this.spool = null;
 	}
 
 	@Override

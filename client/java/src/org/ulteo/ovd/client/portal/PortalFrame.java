@@ -50,6 +50,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private Font font = new Font("Dialog", 1, 12);
 	
 	public PortalFrame(String username) {
+		if (username == null)
+			username = "";
 		String displayName = I18n._("Welcome {user}");
 		displayName = displayName.replaceAll("\\{user\\}", username);
 		this.addWindowListener(this);

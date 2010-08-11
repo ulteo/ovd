@@ -21,13 +21,20 @@
 
 package org.ulteo.ovd.client.desktop;
 
+import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.Window;
+
+import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
-import org.apache.log4j.Logger;
+import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.authInterface.LoginListener;
+import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.Properties;
+import org.ulteo.ovd.sm.ServerAccess;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public class OvdClientDesktop extends OvdClient {
@@ -35,29 +42,33 @@ public class OvdClientDesktop extends OvdClient {
 	private boolean desktopLaunched = false;
 	private int resolution = 0;
 
-	public OvdClientDesktop(String fqdn_, boolean use_https_, String login_, String password_, int resolution) {
-		super(fqdn_, use_https_, OvdClient.toMap(login_, password_));
+	public OvdClientDesktop(SessionManagerCommunication smComm, int resolution) {
+		super(smComm, null);
 
 		this.init(resolution);
 	}
 
-	public OvdClientDesktop(String fqdn_, boolean use_https_, String login_, String password_, AuthFrame frame_, int resolution, LoginListener logList_) {
-		super(fqdn_, use_https_, OvdClient.toMap(login_, password_), frame_, logList_);
+	public OvdClientDesktop(SessionManagerCommunication smComm, int resolution, Callback obj) {
+		super(smComm, obj);
+
+		this.init(resolution);
+	}
+
+	public OvdClientDesktop(SessionManagerCommunication smComm, AuthFrame frame_, int resolution, Window loadingWindow_) {
+		super(smComm);
 
 		this.init(resolution);
 	}
 
 	private void init(int resolution_) {
 		this.resolution = resolution_;
-		this.logger = Logger.getLogger(OvdClientDesktop.class);
-		this.setSessionMode(SessionManagerCommunication.SESSION_MODE_DESKTOP);
 	}
 
 	@Override
 	protected void runInit() {}
 
 	@Override
-	protected void runSessionReady(String sessionId) {
+	protected void runSessionReady() {
 		this.desktop.setVisible(true);
 	}
 
@@ -65,10 +76,7 @@ public class OvdClientDesktop extends OvdClient {
 	protected void runExit() {}
 
 	@Override
-	protected void runSessionTerminated(String sessionId) {}
-
-	@Override
-	protected void quitProperly(int i) {}
+	protected void runSessionTerminated() {}
 
 	@Override
 	protected void customizeConnection(RdpConnectionOvd co) {
@@ -113,6 +121,49 @@ public class OvdClientDesktop extends OvdClient {
 			co.setGraphic((this.desktop.getWidth()-(inset.left+inset.right)+2), (this.desktop.getHeight()-(inset.bottom+inset.top)+2));
 		}
 		this.desktopLaunched = true;
+	}
+
+	@Override
+	protected boolean createRDPConnections() {	
+		Properties properties = this.smComm.getResponseProperties();
+		ServerAccess server = this.smComm.getServers().get(0);
+		
+		
+		byte flags = 0x00;
+		flags |= RdpConnectionOvd.MODE_DESKTOP;
+		
+		if (properties.isMultimedia())
+			flags |= RdpConnectionOvd.MODE_MULTIMEDIA;
+		
+		if (properties.isPrinters())
+			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
+		
+		RdpConnectionOvd rc = null;
+		
+		try {
+			rc = new RdpConnectionOvd(flags);
+		} catch (RdesktopException ex) {
+			Logger.error("Unable to create RdpConnectionOvd object: "+ex.getMessage());
+			return false;
+		}
+		
+		try {
+			rc.initSecondaryChannels();
+		} catch (RdesktopException ex) {
+			Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
+		}
+		
+		rc.setServer(server.getHost());
+		rc.setCredentials(server.getLogin(), server.getPassword());
+		// Ensure that width is multiple of 4
+		// Prevent artifact on screen with a with resolution
+		// not divisible by 4
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+		
+		this.connections.add(rc);
+		
+		return true;
 	}
 
 	@Override

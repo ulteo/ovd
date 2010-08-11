@@ -23,7 +23,6 @@ package org.ulteo.ovd.client.authInterface;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -32,61 +31,41 @@ import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.ovd.client.OvdClient;
 
-public class LoadingFrame extends JDialog implements Runnable{
+public class LoadingFrame extends JDialog {
 
-	private OvdClient cli = null;
 	private Image logo = null;
-	private AuthFrame frame = null;
+	private ActionListener obj = null;
 	private JButton cancel = null;
 
-	public LoadingFrame(OvdClient cli, AuthFrame frame) {
-		this.cli = cli;
-		this.frame = frame;
+	public LoadingFrame(ActionListener obj_) {
+		this.obj = obj_;
 
-		logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		setIconImage(logo);
-	}
+		this.cancel = new JButton(I18n._("Cancel"));
+		this.cancel.setPreferredSize(new Dimension(120, 10));
+		this.cancel.addActionListener(this.obj);
 
-	public void cancelConnection() {
-		this.cancel.setEnabled(false);
-		this.cancel.setText(I18n._("Cancelling ..."));
-		cli.disconnectAll();
-	}
-
-	@Override
-	public void run() {
+		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		this.setIconImage(this.logo);
 		this.setTitle(I18n._("Now loading"));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.setSize(300, 80);
 		this.setPreferredSize(new Dimension(300,80));
-		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+		this.setResizable(false);
 		this.setModal(true);
+
+		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setIndeterminate(true);
 		aJProgressBar.setPreferredSize(new Dimension(280, 20));
 		aJProgressBar.setLocation(10,45);
-		this.cancel = new JButton(I18n._("Cancel"));
-		this.cancel.setPreferredSize(new Dimension(120, 10));
-		this.cancel.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				cancelConnection();
-			}
-		});
-		this.setCancelButtonEnabled(false);
+		
 		this.add(BorderLayout.NORTH, aJProgressBar);
 		this.add(BorderLayout.EAST, this.cancel);
-		this.setLocationRelativeTo(frame.getMainFrame());
-		this.setVisible(true);
+		
 		this.pack();
 	}
 
-	public void setCancelButtonEnabled(boolean enabled) {
-		if (this.cancel == null)
-			return;
-
-		this.cancel.setEnabled(enabled);
+	public JButton getCancelButton() {
+		return this.cancel;
 	}
 }
