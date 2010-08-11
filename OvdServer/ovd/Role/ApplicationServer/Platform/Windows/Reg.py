@@ -193,9 +193,8 @@ def ProcessActiveSetupEntry(BaseKey, Entry, Username):
 	win32api.RegCloseKey(hkey)
 	return True
 
-def UpdateActiveSetup(Username, hiveName):
+def UpdateActiveSetup(Username, hiveName, active_setup_path):
 	# Overwrite Active Setup: works partially
-	active_setup_path = r"Software\Microsoft\Active Setup"
 	hkey_src = None
 	hkey_dst = None
 	
@@ -235,28 +234,6 @@ def UpdateActiveSetup(Username, hiveName):
 	for key in keyToRemove:
 		DeleteTree(hkey_src, key)
 	win32api.RegCloseKey(hkey_src)
-
-	# On 64 bits architecture, Active Setup is already present in path "Software\Wow6432Node\Microsoft\Active Setup"
-	if "PROGRAMW6432" in os.environ.keys():
-		hkey_src = None
-		hkey_dst = None
-		
-		try:
-			active_setup_path = r"Software\Microsoft\Active Setup"
-			hkey_src = win32api.RegOpenKey(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path), 0, win32con.KEY_ALL_ACCESS)
-			active_setup_path = r"Software\Wow6432Node\Microsoft\Active Setup"
-			hkey_dst = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, r"%s\%s"%(hiveName,active_setup_path))
-			CopyTree(hkey_src, "Installed Components", hkey_dst)
-			
-		except Exception, err:
-			Logger.warn("Unable to copy tree")
-			Logger.debug("Unable to copy tree: "+str(err))
-			return
-		finally:
-			if hkey_dst is not None:
-				win32api.RegCloseKey(hkey_dst)
-			if hkey_src is not None:
-				win32api.RegCloseKey(hkey_src)
 
 def DeleteTree(key, subkey, deleteRoot = True):
 	hkey = win32api.RegOpenKey(key, subkey, 0, win32con.KEY_ALL_ACCESS)
