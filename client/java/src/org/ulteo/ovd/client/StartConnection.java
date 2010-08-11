@@ -40,7 +40,6 @@ import org.apache.log4j.Logger;
 import org.ini4j.Wini;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
-import org.ulteo.ovd.client.authInterface.KeyLoginListener;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.profile.ProfileProperties;
@@ -206,7 +205,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.loadingFrame = new LoadingFrame(this);
 		this.authFrame = new AuthFrame(this);
 		this.loadProfile();
-		this.authFrame.getMainFrame().setVisible(true);
+		this.authFrame.showWindow();
 		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
 
@@ -243,8 +242,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void run() {
-		System.out.println("coucou ...");
-		this.launchConnection();
+		if (this.launchConnection()) {
+			this.continueMainThread = false;
+		}
+		else {
+			this.authFrame.showWindow();
+		}
 		this.thread = null;
 	}
 
@@ -277,12 +280,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void disableLoadingMode() {
-		KeyLoginListener.PUSHED = false;
 		this.loadingFrame.setVisible(false);
 	}
 
 
-	public void launchConnection() {
+	public boolean launchConnection() {
+		boolean exit = false;
+
 		// Get form values
 		String username = this.authFrame.getLogin().getText();
 		String host = this.authFrame.getHost().getText();
@@ -298,7 +302,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (host.equals("") || username.equals("") || password.equals("")) {
 			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 			this.disableLoadingMode();
-			return;
+			return exit;
 		}
 		
 		// Backup entries
@@ -318,12 +322,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		try {
 			if (!dialog.askForSession(username, password, request)) {
 				this.disableLoadingMode();
-				return;
+				return exit;
 			}
 		} catch (SessionManagerException ex) {
 			System.err.println(ex.getMessage());
 			this.disableLoadingMode();
-			return;
+			return exit;
 		}
 		Properties response = dialog.getResponseProperties();
 
@@ -341,18 +345,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
-				return;
+				return exit;
 		}
 
-		boolean exit = this.client.perform();
+		exit = this.client.perform();
 		this.client = null;
 
-		if (exit) {
-			this.continueMainThread = false;
-		}
-		else {
-			this.authFrame.getMainFrame().setVisible(true);
-		}
+		return exit;
 	}
 
 	@Override

@@ -21,6 +21,7 @@
 package org.ulteo.ovd.client.authInterface;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -29,6 +30,8 @@ import java.awt.Insets;
 import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -61,6 +64,7 @@ public class AuthFrame {
 	
 	private JTextField hostTextField = new JTextField();
 	private JButton startButton = new JButton(I18n._("Start !"));
+	private boolean startButtonClicked = false;
 	private JButton moreOption = new JButton();
 	private Image frameLogo = null;
 	private ImageIcon ulteoLogo = null;
@@ -93,7 +97,6 @@ public class AuthFrame {
 	private boolean checkedRemember = false;
 	private boolean checkedPublished = false;
 	private ActionListener optionListener = null;
-	private KeyLoginListener keyLog = null;
 	
 	private ActionListener obj = null;
 	
@@ -102,13 +105,10 @@ public class AuthFrame {
 	public AuthFrame(ActionListener obj_) {
 		this.obj = obj_;
 		
-		this.keyLog = new KeyLoginListener(this);
 		this.init();
 	}
 	
 	public void init() {
-		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
-		KeyLoginListener.PUSHED = false;
 		this.optionClicked = false;
 
 		this.mainFrame.setVisible(false);
@@ -135,7 +135,6 @@ public class AuthFrame {
 		moreOption.setIcon(showOption);
 		moreOption.setText(I18n._("More options ..."));
 		
-		desktopButton.addKeyListener(keyLog);
 		desktopButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -157,7 +156,6 @@ public class AuthFrame {
 			}
 		});
 		
-		portalButton.addKeyListener(keyLog);
 		portalButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -177,7 +175,6 @@ public class AuthFrame {
 			}
 		});
 		
-		rememberMe.addKeyListener(keyLog);
 		rememberMe.addActionListener(new ActionListener() {
 
 			@Override
@@ -186,7 +183,6 @@ public class AuthFrame {
 			}
 		});
 		
-		autoPublish.addKeyListener(keyLog);
 		autoPublish.addActionListener(new ActionListener() {
 			
 			@Override
@@ -198,7 +194,6 @@ public class AuthFrame {
 		resBar.setMajorTickSpacing(1);
 		resBar.setPaintTicks(true);
 		resBar.setSnapToTicks(true);
-		resBar.addKeyListener(keyLog);
 		resBar.addChangeListener(new ChangeListener() {
 			
 			@Override
@@ -382,15 +377,12 @@ public class AuthFrame {
 		gbc.weightx = 0;
 		gbc.weighty = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		loginTextField.addKeyListener(keyLog);
 		mainFrame.add(loginTextField, gbc);
 		
 		gbc.gridy = 4;
-		passwordTextField.addKeyListener(keyLog);
 		mainFrame.add(passwordTextField, gbc);
 		
 		gbc.gridy = 5;
-		hostTextField.addKeyListener(keyLog);
 		mainFrame.add(hostTextField, gbc);
 		
 		gbc.gridy = 6;
@@ -404,10 +396,35 @@ public class AuthFrame {
 		gbc.fill = GridBagConstraints.NONE;
 		mainFrame.add(startButton, gbc);
 		
+		KeyListener keyListener = new KeyListener() {
+
+			public synchronized void keyTyped(KeyEvent ke) {
+				if ((ke.getKeyChar() == KeyEvent.VK_ENTER) && (! startButtonClicked)) {
+					startButtonClicked = true;
+					startButton.doClick();
+				}
+			}
+
+			public void keyPressed(KeyEvent ke) {}
+			public void keyReleased(KeyEvent ke) {}
+
+		};
+		for (Component c : this.mainFrame.getContentPane().getComponents()) {
+			if (c.getClass() != JLabel.class) {
+				c.addKeyListener(keyListener);
+			}
+		}
+		
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setVisible(true);
+		this.showWindow();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+
+	public void showWindow() {
+		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
+		this.startButtonClicked = false;
+		mainFrame.setVisible(true);
 	}
 	
 	public void hideWindow() {
