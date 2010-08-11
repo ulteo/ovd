@@ -14,8 +14,6 @@ Source: %{name}-%{version}.tar.gz
 Patch1: 01_no-image.diff
 BuildArch: noarch
 
-Requires: php5, php5-gd
-
 %description
 Libchart is a free chart creation PHP library, that is easy to use.
 
@@ -24,6 +22,7 @@ Libchart is a free chart creation PHP library, that is easy to use.
 ###############################
 
 Summary: Simple PHP chart drawing library
+Requires: php5, php5-gd
 
 %description -n php5-libchart
 Libchart is a free chart creation PHP library, that is easy to use.
