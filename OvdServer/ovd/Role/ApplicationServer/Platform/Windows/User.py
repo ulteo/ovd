@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Julien LANGLOIS <julien@ulteo.com> 2009
 # Author David LECHEVALIER <david@ulteo.com> 2010
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -142,7 +143,7 @@ class User(AbstractUser):
 		
 		if not succefulDelete:
 			if not self.unload(sid):
-				Logger.error("Unable to unload User reg key")
+				Logger.error("Unable to unload User reg key for user %s"%(self.name))
 				return False
 			try:
 				win32profile.DeleteProfile(sid)
