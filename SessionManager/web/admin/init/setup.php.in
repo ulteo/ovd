@@ -1,4 +1,4 @@
-#! /usr/bin/php
+#!/usr/bin/php
 <?php
 /**
  * Copyright (C) 2009 Ulteo SAS
