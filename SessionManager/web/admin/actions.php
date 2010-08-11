@@ -1320,7 +1320,6 @@ function action_del_sharedfolder($sharedfolder_id) {
 	}
 
 	$buf = Abstract_NetworkFolder::delete($sharedfolder);
-
 	if (! $buf) {
 		popup_error(_('Unable to delete this shared folder'));
 		return false;
