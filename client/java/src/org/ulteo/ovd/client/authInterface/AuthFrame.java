@@ -31,6 +31,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -459,12 +460,19 @@ public class AuthFrame {
 		if (sessionMode_ == null)
 			return;
 
+		ButtonModel model = null;
 		if (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_DESKTOP)) {
-			this.desktopButton.setSelected(true);
+			model = this.desktopButton.getModel();
+			this.desktopMode = true;
 		}
 		else if (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)) {
-			this.portalButton.setSelected(true);
+			model = this.portalButton.getModel();
+			this.desktopMode = false;
 		}
+		else {
+			return;
+		}
+		this.radioGroup.setSelected(model, true);
 	}
 	
 	public JFrame getMainFrame() {

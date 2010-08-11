@@ -387,7 +387,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		ProfileIni ini = new ProfileIni();
 		ini.setProfile(null);
-		ini.loadProfile(new ProfileProperties(login, host, sessionMode, autoPublish, screensize));
+		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, screensize));
 	}
 
 	private void loadProfile() {

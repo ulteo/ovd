@@ -66,8 +66,9 @@ public class ProfileProperties {
 	}
 
 	public void setSessionMode(String sessionMode_) {
-		if ((! sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_DESKTOP)) || (! sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)))
+		if (! (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_DESKTOP) || sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)))
 			return;
+		
 		this.sessionMode = sessionMode_;
 	}
 

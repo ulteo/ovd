@@ -85,7 +85,7 @@ public class ProfileIni {
 		return profilesList;
 	}
 
-	public void loadProfile(ProfileProperties properties) throws IOException {
+	public void saveProfile(ProfileProperties properties) throws IOException {
 		if (this.file == null)
 			return;
 		
