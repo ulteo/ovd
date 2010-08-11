@@ -212,13 +212,13 @@ class Dialog(AbstractDialog):
 		response["Content-Type"] = "text/plain"
 		response["data"] = ""
 		
-		if Logger._instance is None or Logger._instance.file is None:
+		if Logger._instance is None or Logger._instance.filename is None:
 			return response
 		
 		lines = []
 		t = time.time()
 		
-		tailer = FileTailer(Logger._instance.file)
+		tailer = FileTailer(Logger._instance.filename)
 		while t > since and tailer.hasLines():
 			buf = tailer.tail(20)
 			buf.reverse()
