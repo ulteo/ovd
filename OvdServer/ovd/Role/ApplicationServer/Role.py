@@ -82,7 +82,7 @@ class Role(AbstractRole):
 			Logger.error("Unable to purge group")
 			return False
 		
-		for _ in xrange(5):
+		for _ in xrange(1):
 			self.threads.append(SessionManagement(self, self.sessions_spooler))
 		
 		if self.canManageApplications():
