@@ -224,9 +224,8 @@ Section "post" PostCmd
 
   Call .WindowsInstall
 
-  DetailPrint "Installing PDF printer driver"
-  Var /GLOBAL printerDir
   
+  Var /GLOBAL printerDir
   ClearErrors
   ReadEnvStr $0 "PROGRAMW6432"
   IfErrors x86 amd64
@@ -243,6 +242,7 @@ Section "post" PostCmd
     WriteRegStr HKLM "SOFTWARE\GPL Ghostscript\8.71" "GS_DLL" "$printerDir\gsdll32.dll"
     WriteRegStr HKLM "SOFTWARE\GPL Ghostscript\8.71" "GS_LIB" "$printerDir\lib"
     SetOutPath "$printerDir"
+    DetailPrint "Installing PDF printer driver"
     nsExec::execToStack 'rundll32 printui.dll,PrintUIEntry /ia /m "Ulteo TS Printer Driver" /f ulteodll.inf'
  
   DetailPrint "Creating Service"
