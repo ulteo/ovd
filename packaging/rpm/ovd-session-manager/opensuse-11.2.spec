@@ -132,6 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(2770,wwwrun,root)
 /var/log/ulteo/*
 /var/spool/ulteo/*
+/var/cache/ulteo/*
 
 %changelog -n ulteo-ovd-session-manager
 * Fri Jan 02 2009 Gauvain Pocentek <gauvain@ulteo.com> 1.0~svn00130-1
