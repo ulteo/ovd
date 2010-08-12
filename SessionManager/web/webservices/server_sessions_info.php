@@ -20,6 +20,16 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
+function return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	Logger::error('main', "(webservices/server_sessions_info) return_error($errno_, $errstr_)");
+	return $dom->saveXML();
+}
+
 function parse_monitoring_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
@@ -67,43 +77,19 @@ function parse_monitoring_XML($xml_) {
 
 $ret = parse_monitoring_XML(@file_get_contents('php://input'));
 if (! $ret) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 1);
-	$node->setAttribute('message', 'Server does not send a valid XML');
-	$dom->appendChild($node);
-
-	echo $dom->saveXML();
-	exit(1);
+	echo return_error(1, 'Server does not send a valid XML');
+	die();
 }
 
 $server = Abstract_Server::load($ret['server']);
 if (! $server) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 1);
-	$node->setAttribute('message', 'Server does not send a valid XML');
-	$dom->appendChild($node);
-
-	echo $dom->saveXML();
-	exit(1);
+	echo return_error(2, 'Server does not exist');
+	die();
 }
 
 if (! $server->isAuthorized()) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 2);
-	$node->setAttribute('message', 'Server not authorized');
-	$dom->appendChild($node);
-
-	echo $dom->saveXML();
-	exit(2);
+	echo return_error(3, 'Server is not authorized');
+	die();
 }
 
 foreach ($ret['sessions'] as $session) {

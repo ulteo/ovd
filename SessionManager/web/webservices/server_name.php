@@ -21,6 +21,16 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
+function return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	Logger::error('main', "(webservices/server_name) return_error($errno_, $errstr_)");
+	return $dom->saveXML();
+}
+
 $server_name = $_SERVER['REMOTE_ADDR'];
 $server = Abstract_Server::load($server_name);
 if (! $server) {
@@ -30,8 +40,10 @@ if (! $server) {
 	$server->locked = true;
 
 	$prefs = Preferences::getInstance();
-	if (! $prefs)
-		die_error(_('get Preferences failed'), __FILE__, __LINE__);
+	if (! $prefs) {
+		echo return_error(0, 'Internal error');
+		die();
+	}
 
 	$buf = $prefs->get('general', 'slave_server_settings');
 
@@ -44,6 +56,21 @@ if (! $server) {
 	$server->external_name = $server->fqdn;
 
 	$server->max_sessions = 20;
+
+	if (! $server->isAuthorized()) {
+		echo return_error(1, 'Server is not authorized');
+		die();
+	}
+
+	if (! $server->isOnline()) {
+		echo return_error(2, 'Server is not OK');
+		die();
+	}
+
+	if (! $server->isOK()) {
+		echo return_error(3, 'Server is not online');
+		die();
+	}
 
 	Abstract_Server::save($server);
 }

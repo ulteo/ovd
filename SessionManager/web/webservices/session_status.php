@@ -21,6 +21,16 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
+function return_error($errno_, $errstr_) {
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	Logger::error('main', "(webservices/session_status) return_error($errno_, $errstr_)");
+	return $dom->saveXML();
+}
+
 function parse_session_status_XML($xml_) {
 	if (! $xml_ || strlen($xml_) == 0)
 		return false;
@@ -52,30 +62,14 @@ function parse_session_status_XML($xml_) {
 
 $ret = parse_session_status_XML(@file_get_contents('php://input'));
 if (! $ret) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 1);
-	$node->setAttribute('message', 'Server does not send a valid XML');
-	$dom->appendChild($node);
-
-	echo $dom->saveXML();
-	exit(1);
+	echo return_error(1, 'Server does not send a valid XML');
+	die();
 }
 
 $session = Abstract_Session::load($ret['id']);
 if (! $session) {
-	header('Content-Type: text/xml; charset=utf-8');
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$node = $dom->createElement('error');
-	$node->setAttribute('id', 2);
-	$node->setAttribute('message', 'Session does not exist');
-	$dom->appendChild($node);
-
-	echo $dom->saveXML();
-	exit(2);
+	echo return_error(2, 'Session does not exist');
+	die();
 }
 
 if ($session->setStatus($ret['status']))
