@@ -38,7 +38,7 @@
 #include <windows.h>
 #include <shlobj.h>
 
-#define OVDIntegratedClientPath "ulteo\\remoteApps"
+#define OVDIntegratedClientPath "ulteo\\ovd\\remoteApps"
 
 #else //POSIX
 
@@ -46,7 +46,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#define OVDIntegratedClientPath ".ulteo/remoteApps"
+#define OVDIntegratedClientPath ".ulteo/ovd/remoteApps"
 
 #endif //WINDOWS/POSIX
 
