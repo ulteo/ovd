@@ -94,7 +94,7 @@ class TS(AbstractTS):
 	
 	
 	@staticmethod
-	def getState(session_id):		
+	def getState(session_id):
 		state = win32ts.WTSQuerySessionInformation(None, session_id, win32ts.WTSConnectState)
 		if state in [win32ts.WTSActive, win32ts.WTSConnected, win32ts.WTSInit]:
 			return TS.STATUS_LOGGED
