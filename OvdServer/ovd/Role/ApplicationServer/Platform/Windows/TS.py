@@ -113,4 +113,5 @@ class TS(AbstractTS):
 			Logger.debug("perform_logoff: finish logoff %d ret: %s"%(session_id, str(ret)))
 		except Exception, e:
 			Logger.warn("perform_logoff: exception %s"%(e))
+			return False
 		return True
