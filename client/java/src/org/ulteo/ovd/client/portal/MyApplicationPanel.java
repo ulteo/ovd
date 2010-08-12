@@ -22,6 +22,7 @@ package org.ulteo.ovd.client.portal;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -55,7 +56,6 @@ public class MyApplicationPanel extends JPanel {
 	}
 	
 	public void initButtons(List<Application> appsList) {
-		System.out.println("pouet");
 		if (this.buttonPan.getComponentCount() > 0)
 			return;
 
@@ -64,10 +64,14 @@ public class MyApplicationPanel extends JPanel {
 
 		for (Application app : appsList) {
 			JLabel appIcon = new JLabel(app.getIcon());
+			appIcon.setName(app.getName());
 			JLabel appName = new JLabel(app.getName());
+			appName.setName(app.getName());
 			ApplicationButton appButton = new ApplicationButton(app);
+			appButton.setName(app.getName());
 			appButton.addActionListener(new ApplicationListener(app, this.runningApps));
-			appButton.setEnabled(false);
+			
+			
 			gbc.gridx = 0;
 			gbc.gridy = y;
 			gbc.anchor = GridBagConstraints.LINE_START;
@@ -88,6 +92,9 @@ public class MyApplicationPanel extends JPanel {
 			
 			this.repaint();
 			this.revalidate();
+			
+			appName.setEnabled(false);
+			appButton.setEnabled(false);
 		}
 	}
 	
@@ -97,7 +104,10 @@ public class MyApplicationPanel extends JPanel {
 		if (appButton == null)
 			return;
 		
-		appButton.setEnabled(enable);
+		for (Component cmp : this.buttonPan.getComponents()) {
+			if (cmp.getName().equals(app.getName()))
+				cmp.setEnabled(enable);
+		}
 	}
 
 	private ApplicationButton findButtonByApp(Application app) {
