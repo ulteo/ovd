@@ -462,5 +462,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.authFrame.setResolution(properties.getScreenSize());
 
 		this.authFrame.setRememberMeChecked(true);
+
+		this.authFrame.getPassword().requestFocus();
 	}
 }
