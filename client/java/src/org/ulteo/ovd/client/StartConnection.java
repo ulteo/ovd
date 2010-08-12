@@ -306,7 +306,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		}
 		
 		// Backup entries
-		if (this.authFrame.isChecked()) {
+		if (this.authFrame.isRememberMeChecked()) {
 			try {
 				this.saveProfile();
 			} catch (IOException ex) {
@@ -340,7 +340,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.client = new OvdClientDesktop(dialog, resolution, this);
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.authFrame.isPublishedChecked(), this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.authFrame.isAutoPublishChecked(), this);
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
@@ -381,7 +381,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		String login = this.authFrame.getLogin().getText();
 		String host = this.authFrame.getHost().getText();
 		String sessionMode = this.authFrame.getSessionMode();
-		boolean autoPublish = this.authFrame.isPublishedChecked();
+		boolean autoPublish = this.authFrame.isAutoPublishChecked();
 		int screensize = this.authFrame.getResBar().getValue();
 
 		ProfileIni ini = new ProfileIni();
@@ -411,9 +411,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.authFrame.setLogin(properties.getLogin());
 		this.authFrame.setHost(properties.getHost());
 		this.authFrame.setSessionMode(properties.getSessionMode());
-		this.authFrame.setAutoPublish(properties.getAutoPublish());
+		this.authFrame.setAutoPublishChecked(properties.getAutoPublish());
 		this.authFrame.setResolution(properties.getScreenSize());
 
-		this.authFrame.setChecked(true);
+		this.authFrame.setRememberMeChecked(true);
 	}
 }

@@ -94,8 +94,6 @@ public class AuthFrame {
 	private JComboBox keyboardBox = new JComboBox();
 	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
 	private JCheckBox autoPublish = new JCheckBox(I18n._("Auto-publish shortcuts"));
-	private boolean checkedRemember = false;
-	private boolean checkedPublished = false;
 	private ActionListener optionListener = null;
 	
 	private ActionListener obj = null;
@@ -172,22 +170,6 @@ public class AuthFrame {
 					mainFrame.add(autoPublish, gbc);
 					mainFrame.pack();
 				}
-			}
-		});
-		
-		rememberMe.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				checkedRemember = (checkedRemember) ? false : true;
-			}
-		});
-		
-		autoPublish.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				checkedPublished = (checkedPublished) ? false : true;
 			}
 		});
 		
@@ -504,19 +486,19 @@ public class AuthFrame {
 		this.desktopLaunched = desktopLaunched;
 	}
 	
-	public boolean isChecked() {
-		return checkedRemember;
+	public boolean isRememberMeChecked() {
+		return this.rememberMe.isSelected();
 	}
 
-	public void setChecked(boolean checked_) {
+	public void setRememberMeChecked(boolean checked_) {
 		this.rememberMe.setSelected(checked_);
 	}
 	
-	public boolean isPublishedChecked() {
-		return checkedPublished;
+	public boolean isAutoPublishChecked() {
+		return this.autoPublish.isSelected();
 	}
 
-	public void setAutoPublish(boolean autoPublish_) {
+	public void setAutoPublishChecked(boolean autoPublish_) {
 		this.autoPublish.setSelected(autoPublish_);
 	}
 	
