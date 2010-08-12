@@ -129,8 +129,17 @@ function show_default() {
 	  echo display_loadbar($s->getCpuUsage());
 	  echo _('RAM usage').': '.$s->getRamUsage().'%<br />';
 	  echo display_loadbar($s->getRamUsage());
-	  echo _('Sessions usage').': '.$s->getSessionUsage().'%<br />';
-	  echo display_loadbar((($s->getSessionUsage() > 100)?100:$s->getSessionUsage()));
+	  foreach ($s->roles as $role => $enabled) {
+	    if ($enabled === false)
+	      continue;
+
+	    switch ($role) {
+	      case 'aps':
+	        echo _('Sessions usage').': '.$s->getSessionUsage().'%<br />';
+	        echo display_loadbar((($s->getSessionUsage() > 100)?100:$s->getSessionUsage()));
+	        break;
+	    }
+	  }
 	}
 	echo '</td>';
       }
@@ -399,8 +408,17 @@ function show_manage($fqdn) {
         echo display_loadbar($server->getCpuUsage());
         echo _('RAM usage').': '.$server->getRamUsage().'%<br />';
         echo display_loadbar($server->getRamUsage());
-        echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
-        echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
+        foreach ($server->roles as $role => $enabled) {
+          if ($enabled === false)
+            continue;
+
+          switch ($role) {
+            case 'aps':
+              echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
+              echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
+              break;
+          }
+        }
     echo '</td>';
   }
 
