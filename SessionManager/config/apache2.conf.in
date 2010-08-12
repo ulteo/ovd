@@ -11,6 +11,10 @@ Alias /ovd/client @DATADIR@/ulteo/sessionmanager/client
 </Directory>
 
 Alias /ovd/admin/base.tar.gz /var/cache/ulteo/sessionmanager/base.tar.gz
+<Location /ovd/admin/base.tar.gz>
+    Order allow,deny
+    allow from all
+</Location>
 
 Alias /ovd/admin @DATADIR@/ulteo/sessionmanager/admin
 <Directory @DATADIR@/ulteo/sessionmanager/admin>
