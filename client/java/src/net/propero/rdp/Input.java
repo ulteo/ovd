@@ -392,22 +392,6 @@ public abstract class Input {
 			if(pressed) ((RdesktopFrame_Localised) canvas.getParent()).toggleMenu();
 			break; */
 		
-		case KeyEvent.VK_ENTER:
-            sendScancode(time, RDP_KEYRELEASE, 0x38);
-            altDown = false;
-            ((RdesktopFrame_Localised) canvas.getParent()).toggleFullScreen();
-			break;
-
-			/*
-			 * The below case block handles "real" ALT+TAB events. Once the TAB in
-			 * an ALT+TAB combination has been pressed, the TAB is sent to the
-			 * server with the quiet flag on, as is the subsequent ALT-up.
-			 * 
-			 * This ensures that the initial ALT press is "undone" by the server.
-			 * 
-			 * --- Tom Elliott, 7/04/05
-			 */
-			
 		case KeyEvent.VK_TAB: // Alt+Tab received, quiet combination
 
 			sendScancode(time, (pressed ? RDP_KEYPRESS : RDP_KEYRELEASE)
