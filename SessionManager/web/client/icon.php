@@ -21,11 +21,13 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 function return_error($errno_, $errstr_) {
+	header('Content-Type: text/xml; charset=utf-8');
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
 	$node->setAttribute('id', $errno_);
 	$node->setAttribute('message', $errstr_);
 	$dom->appendChild($node);
+	Logger::error('main', "(client/icon) return_error($errno_, $errstr_)");
 	return $dom->saveXML();
 }
 
@@ -35,18 +37,18 @@ if (! array_key_exists('id', $_GET)) {
 }
 
 if (! array_key_exists('session_id', $_SESSION)) {
-	echo return_error(1, 'Usage: missing "session_id" $_SESSION parameter');
+	echo return_error(2, 'Usage: missing "session_id" $_SESSION parameter');
 	die();
 }
 
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (! $session) {
-	echo return_error(1, 'No such session "'.$_SESSION['session_id'].'"');
+	echo return_error(3, 'No such session "'.$_SESSION['session_id'].'"');
 	die();
 }
 
 /*if (! in_array($_GET['id'], $session->applications)) {
-	echo return_error(1, 'Unauthorized application');
+	echo return_error(4, 'Unauthorized application');
 	die();
 }*/
 
@@ -54,13 +56,13 @@ $applicationDB = ApplicationDB::getInstance();
 
 $app = $applicationDB->import($_GET['id']);
 if (! is_object($app)) {
-	echo return_error(1, 'No such application "'.$_GET['id'].'"');
+	echo return_error(5, 'No such application "'.$_GET['id'].'"');
 	die();
 }
 
 $path = $app->getIconPath();
 if (! file_exists($path)) {
-	echo return_error(1, 'No icon available for application "'.$_GET['id'].'"');
+	echo return_error(6, 'No icon available for application "'.$_GET['id'].'"');
 	die();
 }
 

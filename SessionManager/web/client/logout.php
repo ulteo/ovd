@@ -21,11 +21,13 @@
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
 function return_error($errno_, $errstr_) {
+	header('Content-Type: text/xml; charset=utf-8');
 	$dom = new DomDocument('1.0', 'utf-8');
 	$node = $dom->createElement('error');
 	$node->setAttribute('id', $errno_);
 	$node->setAttribute('message', $errstr_);
 	$dom->appendChild($node);
+	Logger::error('main', "(client/logout) return_error($errno_, $errstr_)");
 	return $dom->saveXML();
 }
 
