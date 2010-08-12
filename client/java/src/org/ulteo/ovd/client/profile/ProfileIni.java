@@ -30,6 +30,7 @@ import org.ulteo.ovd.integrated.Constants;
 public class ProfileIni {
 	private static final String INI_SECTION_USER = "user";
 	private static final String INI_FIELD_LOGIN = "login";
+	private static final String INI_FIELD_LOCALCREDENTIALS = "use-local-credentials";
 
 	private static final String INI_SECTION_SERVER = "server";
 	private static final String INI_FIELD_HOST = "host";
@@ -97,6 +98,7 @@ public class ProfileIni {
 		Ini ini = new Ini(this.file);
 
 		ini.put(INI_SECTION_USER, INI_FIELD_LOGIN, properties.getLogin());
+		ini.put(INI_SECTION_USER, INI_FIELD_LOCALCREDENTIALS, properties.getUseLocalCredentials()?INI_VALUE_TRUE:INI_VALUE_FALSE);
 
 		ini.put(INI_SECTION_SERVER, INI_FIELD_HOST, properties.getHost());
 
@@ -106,6 +108,7 @@ public class ProfileIni {
 			ini.put(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH, INI_VALUE_TRUE);
 		else
 			ini.put(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH, INI_VALUE_FALSE);
+		
 
 		switch (properties.getScreenSize()) {
 			case 0 :
@@ -141,6 +144,11 @@ public class ProfileIni {
 		value = ini.get(INI_SECTION_USER, INI_FIELD_LOGIN);
 		if (value != null)
 			properties.setLogin(value);
+		
+		value = ini.get(INI_SECTION_USER, INI_FIELD_LOCALCREDENTIALS);
+		if (value != null) {
+			properties.setUseLocalCredentials(value.equals(INI_VALUE_TRUE));
+		}
 
 		value = ini.get(INI_SECTION_SERVER, INI_FIELD_HOST);
 		if (value != null)

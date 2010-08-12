@@ -33,15 +33,17 @@ public class ProfileProperties {
 	private String host = null;
 	private String sessionMode = null;
 	private boolean autoPublish = false;
+	private boolean useLocalCredentials = false;
 	private int screensize = 0;
-
+	
 	public ProfileProperties() {}
 
-	public ProfileProperties(String login_, String host_, String sessionMode_, boolean autoPublish_, int screensize_) {
+	public ProfileProperties(String login_, String host_, String sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, int screensize_) {
 		this.login = login_;
 		this.host = host_;
 		this.sessionMode = sessionMode_;
 		this.autoPublish = autoPublish_;
+		this.useLocalCredentials = useLocalCredentials_;
 		this.screensize = screensize_;
 	}
 
@@ -74,6 +76,14 @@ public class ProfileProperties {
 
 	public boolean getAutoPublish() {
 		return this.autoPublish;
+	}
+
+	public void setUseLocalCredentials(boolean useLocalCredentials_) {
+		this.useLocalCredentials = useLocalCredentials_;
+	}
+	
+	public boolean getUseLocalCredentials() {
+		return this.useLocalCredentials;
 	}
 
 	public void setAutoPublish(boolean autoPublish_) {

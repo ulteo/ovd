@@ -61,6 +61,7 @@ public class AuthFrame {
 	private JLabel host = new JLabel(I18n._("Host"));
 	private JTextField loginTextField = new JTextField();
 	private JPasswordField passwordTextField = new JPasswordField();
+	private String loginStr = null;
 	
 	private JTextField hostTextField = new JTextField();
 	private JButton startButton = new JButton(I18n._("Start !"));
@@ -94,6 +95,8 @@ public class AuthFrame {
 	private JComboBox keyboardBox = new JComboBox();
 	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
 	private JCheckBox autoPublish = new JCheckBox(I18n._("Auto-publish shortcuts"));
+	private JCheckBox useLocalCredentials = new JCheckBox(I18n._("Use local creadentials"));
+	private boolean displayUserLocalCredentials = (System.getProperty("os.name").startsWith("Windows"));
 	private ActionListener optionListener = null;
 	
 	private ActionListener obj = null;
@@ -170,6 +173,13 @@ public class AuthFrame {
 					mainFrame.add(autoPublish, gbc);
 					mainFrame.pack();
 				}
+			}
+		});
+		
+		this.useLocalCredentials.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				toggleLocalCredentials();
 			}
 		});
 		
@@ -327,9 +337,14 @@ public class AuthFrame {
 		gbc.gridy = 4;
 		mainFrame.add(passwordLogoLabel, gbc);
 		
-		gbc.gridy = 5;
+		int pos = 5;
+		if (this.displayUserLocalCredentials)
+			pos++;
+		
+		gbc.gridy = pos;
 		mainFrame.add(hostLogoLabel, gbc);
 		
+		pos = 1;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.insets.left = 5;
 		gbc.gridx = 1;
@@ -339,7 +354,11 @@ public class AuthFrame {
 		gbc.gridy = 4;
 		mainFrame.add(password, gbc);      
 		
-		gbc.gridy = 5;
+		pos = 5;
+		if (this.displayUserLocalCredentials)
+			pos++;
+		
+		gbc.gridy = pos;
 		mainFrame.add(host, gbc);
 		
 		gbc.gridwidth = GridBagConstraints.REMAINDER;;
@@ -364,15 +383,21 @@ public class AuthFrame {
 		gbc.gridy = 4;
 		mainFrame.add(passwordTextField, gbc);
 		
-		gbc.gridy = 5;
+		pos = 5;
+		if (this.displayUserLocalCredentials) {
+			gbc.gridy = pos++;
+			mainFrame.add(this.useLocalCredentials, gbc);
+		}
+		
+		gbc.gridy = pos++;
 		mainFrame.add(hostTextField, gbc);
 		
-		gbc.gridy = 6;
+		gbc.gridy = pos++;
 		gbc.anchor = GridBagConstraints.CENTER;
 		mainFrame.add(rememberMe, gbc);
 		
 		gbc.gridx = 3;
-		gbc.gridy = 7;
+		gbc.gridy = pos++;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.NONE;
@@ -402,10 +427,34 @@ public class AuthFrame {
 		this.showWindow();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
+	
+	protected void toggleLocalCredentials() {
+		if (this.useLocalCredentials.isSelected()) {
+			this.loginStr = this.loginTextField.getText();
+			this.loginTextField.setText(System.getProperty("user.name"));
+			this.loginTextField.setEnabled(false);
+			this.login.setEnabled(false);
+			this.passwordTextField.setEnabled(false);
+			this.password.setEnabled(false);
+			this.userLogoLabel.setEnabled(false);
+			this.passwordLogoLabel.setEnabled(false);
+		}
+		else {
+			if (this.loginStr != null)
+				this.loginTextField.setText(this.loginStr);
+			this.loginTextField.setEnabled(true);
+			this.login.setEnabled(true);
+			this.passwordTextField.setEnabled(true);
+			this.password.setEnabled(true);
+			this.userLogoLabel.setEnabled(true);
+			this.passwordLogoLabel.setEnabled(true);
+		}
+	}
+	
 	public void showWindow() {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		this.startButtonClicked = false;
+		this.toggleLocalCredentials();
 		mainFrame.setVisible(true);
 	}
 	
@@ -500,6 +549,14 @@ public class AuthFrame {
 
 	public void setAutoPublishChecked(boolean autoPublish_) {
 		this.autoPublish.setSelected(autoPublish_);
+	}
+	
+	public void setUseLocalCredentials(boolean useLocalCredentials_) {
+		this.useLocalCredentials.setSelected(useLocalCredentials_);
+	}
+	
+	public boolean isUseLocalCredentials() {
+		return this.useLocalCredentials.isSelected();
 	}
 	
 	public JButton getOptionButton() {

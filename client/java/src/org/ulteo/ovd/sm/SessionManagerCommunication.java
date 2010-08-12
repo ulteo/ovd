@@ -27,6 +27,7 @@ import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -181,6 +182,29 @@ public class SessionManagerCommunication {
  		return this.parseStartSessionResponse(response);
 	}
 
+	/**
+	 * If using Apache auth module (NTLM, Kerberos, ...), Java use directly Windows credentials
+	 */
+	public boolean askForSession(Properties request) throws SessionManagerException {
+		if (request == null || this.requestProperties != null)
+			return false;
+
+		this.requestProperties = request;
+
+		HashMap<String,String> params = new HashMap<String,String>();
+		if (request.getMode() == Properties.MODE_DESKTOP)
+			params.put(FIELD_SESSION_MODE, SESSION_MODE_DESKTOP);
+		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
+			params.put(FIELD_SESSION_MODE, SESSION_MODE_REMOTEAPPS);
+
+		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
+
+		if (response == null)
+			return false;
+
+ 		return this.parseStartSessionResponse(response);
+	}
+	
 	public boolean askForExternalAppsSession(String token, Properties request) throws SessionManagerException {
 		if (token == null || request == null || this.requestProperties != null)
 			return false;
@@ -345,6 +369,14 @@ public class SessionManagerCommunication {
 					Image img = Toolkit.getDefaultToolkit().createImage(imgSrc);
 					obj = new ImageIcon(img);
 				}
+				else {
+					BufferedInputStream d = new BufferedInputStream(in);
+					String buffer = "";
+					for( int c = d.read(); c !=-1; c = d.read())
+						buffer+=(char)c;
+					
+					System.out.println("Unknown content-type: "+contentType+"buffer: \n"+buffer+"==\n");
+				}
 
 				String headerName=null;
 				for (int i=1; (headerName = connexion.getHeaderFieldKey(i))!=null; i++) {
@@ -360,6 +392,10 @@ public class SessionManagerCommunication {
 							this.cookies.add(cookie);
 					}
 				}
+			}
+			else if (r == HttpURLConnection.HTTP_UNAUTHORIZED) {
+				for (Callback c : this.callbacks)
+					c.reportUnauthorizedHTTPResponse();
 			}
 			else {
 				System.err.println("Invalid response:\n\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType);

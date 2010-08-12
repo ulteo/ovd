@@ -292,14 +292,28 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		String host = this.authFrame.getHost().getText();
 		int mode = (this.authFrame.getDesktopButton().isSelected()) ? Properties.MODE_DESKTOP : Properties.MODE_REMOTEAPPS;
 		int resolution = this.authFrame.getResBar().getValue();
+		boolean localCredential = (this.authFrame.isUseLocalCredentials());
 
 		String password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
 		
-		if (host.equals("") || username.equals("") || password.equals("")) {
-			JOptionPane.showMessageDialog(null, I18n._("You must specify all the fields !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+		if (host.equals("")) {
+			JOptionPane.showMessageDialog(null, I18n._("You must specify the host field !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 			this.disableLoadingMode();
 			return exit;
+		}
+		
+		if (localCredential == false) {
+			if (username.equals("")) {
+				JOptionPane.showMessageDialog(null, I18n._("You must specify a username !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+				this.disableLoadingMode();
+				return exit;
+			}
+			if (password.equals("")) {
+				JOptionPane.showMessageDialog(null, I18n._("You must specify a password !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
+				this.disableLoadingMode();
+				return exit;
+			}
 		}
 		
 		// Backup entries
@@ -317,7 +331,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		Properties request = new Properties(mode);
 		try {
-			if (!dialog.askForSession(username, password, request)) {
+			boolean ret = false;
+			if (localCredential)
+				ret= dialog.askForSession(request);
+			else
+				ret= dialog.askForSession(username, password, request);
+			
+			if (ret == false) {
 				this.disableLoadingMode();
 				return exit;
 			}
@@ -367,6 +387,11 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.reportBadXml(code);
 	}
 
+	@Override
+	public void reportUnauthorizedHTTPResponse() {
+		JOptionPane.showMessageDialog(null, I18n._("Authentication error"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+	}
+
 	public void sessionConnected() {
 		if (this.loadingFrame.isVisible() || this.authFrame.getMainFrame().isVisible()) {
 			this.disableLoadingMode();
@@ -376,6 +401,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 	private void saveProfile() throws IOException {
 		String login = this.authFrame.getLogin().getText();
+		boolean useLocalCredentials = this.authFrame.isUseLocalCredentials();
 		String host = this.authFrame.getHost().getText();
 		String sessionMode = this.authFrame.getSessionMode();
 		boolean autoPublish = this.authFrame.isAutoPublishChecked();
@@ -383,7 +409,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		ProfileIni ini = new ProfileIni();
 		ini.setProfile(null);
-		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, screensize));
+		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, useLocalCredentials, screensize));
 	}
 
 	private void loadProfile() {
@@ -406,6 +432,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			return;
 
 		this.authFrame.setLogin(properties.getLogin());
+		this.authFrame.setUseLocalCredentials(properties.getUseLocalCredentials());
 		this.authFrame.setHost(properties.getHost());
 		this.authFrame.setSessionMode(properties.getSessionMode());
 		this.authFrame.setAutoPublishChecked(properties.getAutoPublish());
