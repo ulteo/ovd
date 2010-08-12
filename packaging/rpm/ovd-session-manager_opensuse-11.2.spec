@@ -44,6 +44,79 @@ install -m 0644 examples/ulteo-sm.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/sess
 # hack to not provide /usr/bin/php (zypper)
 sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.php*)
 
+%post
+A2CONFDIR=/etc/apache2/conf.d
+CONFDIR=/usr/share/ulteo/sessionmanager
+a2enmod php5 > /dev/null
+
+# VHost server config
+if [ ! -e $A2CONFDIR/sessionmanager-vhost-server ]; then
+    ln -sf $CONFDIR/apache2-vhost-server.conf \
+        $A2CONFDIR/sessionmanager-vhost-server.conf
+    a2enmod rewrite >/dev/null
+fi
+
+# VHost SSL config
+if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl ]; then
+    serverName=$(hostname -f 2>/dev/null || true)
+    if [ -z "$serverName" ]; then
+        # Bad /etc/hosts configuration
+        serverName=$(hostname)
+    fi
+    sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
+        $CONFDIR/apache2-vhost-ssl.conf
+    ln -sf $CONFDIR/apache2-vhost-ssl.conf \
+        $A2CONFDIR/sessionmanager-vhost-ssl.conf
+    a2enflag SSL > /dev/null
+    a2enmod ssl > /dev/null
+fi
+
+# SSL self-signed key generation
+if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
+    || [ ! -f $CONFDIR/ovd.crt ]; then
+
+    echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
+    openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
+    openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
+    openssl x509 -req -days 3650 -in $CONFDIR/ovd.csr \
+        -signkey $CONFDIR/ovd.key -out $CONFDIR/ovd.crt 2> /dev/null
+    chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+fi
+
+
+# restart apache server
+if apache2ctl configtest 2>/dev/null; then
+    service apache2 restart || true
+else
+    echo << EOF
+"Apache configuration error after enable OVD virtual hosts. Please remove your
+old SSL configuration or be sure that the following URL are valid:
+https://hostname/ovd/admin, https://hostname/ovd/client.
+If you don't change anything, you won't start OVD sessions."
+EOF
+fi
+
+# set samba conf
+CRON_DIR=/etc/cron.hourly
+chmod a+x $CONFDIR/cron.php
+if [ -d "$CRON_DIR" ] && [ ! -e "$CRON_DIR/sessionmanager" ]; then
+    ln -sf $CRON_SCRIPT $CRON_DIR/session-manager.php
+fi
+
+%postun
+A2CONFDIR=/etc/apache2/conf.d
+rm -f $A2CONFDIR/sessionmanager-vhost-server.conf
+rm -f $A2CONFDIR/sessionmanager-vhost-ssl.conf
+rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+
+# restart apache2
+if apache2ctl configtest 2>/dev/null; then
+    service apache2 restart || true
+else
+    echo "Apache configuration broken: correct the issue and restart the apache2 server"
+fi
+
 %clean -n ulteo-ovd-session-manager
 rm -rf $RPM_BUILD_ROOT
 
