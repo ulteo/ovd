@@ -117,7 +117,7 @@ public class StartTokenAuth {
 		
 		Properties request = new Properties(Properties.MODE_REMOTEAPPS);
 		try {
-			if (!dialog.askForSession(token, request)) {
+			if (!dialog.askForExternalAppsSession(token, request)) {
 				return;
 			}
 		} catch (SessionManagerException ex) {

@@ -181,7 +181,7 @@ public class SessionManagerCommunication {
  		return this.parseStartSessionResponse(response);
 	}
 
-	public boolean askForSession(String token, Properties request) throws SessionManagerException {
+	public boolean askForExternalAppsSession(String token, Properties request) throws SessionManagerException {
 		if (token == null || request == null || this.requestProperties != null)
 			return false;
 
