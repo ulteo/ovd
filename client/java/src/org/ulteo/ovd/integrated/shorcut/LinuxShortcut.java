@@ -32,10 +32,10 @@ public class LinuxShortcut extends Shortcut {
 
 	@Override
 	public void create(Application app) {
-		File xfceShorcuts = new File(Constants.xfceMenuEntriesPath);
+		File xfceShorcuts = new File(Constants.PATH_XFCE_MENU_ENTRIES);
 		xfceShorcuts.mkdirs();
 
-		File shortcut = new File(Constants.xfceMenuEntriesPath+Constants.separator+app.getId()+".desktop");
+		File shortcut = new File(Constants.PATH_XFCE_MENU_ENTRIES+Constants.FILE_SEPARATOR+app.getId()+".desktop");
 		try {
 			boolean first = true;
 			PrintWriter pw = new PrintWriter(shortcut);
@@ -44,8 +44,8 @@ public class LinuxShortcut extends Shortcut {
 			pw.println("Encoding=UTF-8");
 			pw.println("StartupNotify=false");
 			pw.println("Name="+app.getName());
-			pw.println("Exec="+Constants.launcher+" "+this.token+" "+app.getId());
-			pw.println("Icon="+Constants.iconsPath+Constants.separator+app.getIconName()+".png");
+			pw.println("Exec="+Constants.FILENAME_LAUNCHER+" "+this.token+" "+app.getId());
+			pw.println("Icon="+Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 			pw.print("MimeType=");
 			for (String mime : app.getSupportedMimeTypes()) {
 				if (first)
@@ -63,11 +63,11 @@ public class LinuxShortcut extends Shortcut {
 
 	@Override
 	public void remove(Application app) {
-		File shortcut = new File(Constants.xfceMenuEntriesPath+Constants.separator+app.getId()+".desktop");
+		File shortcut = new File(Constants.PATH_XFCE_MENU_ENTRIES+Constants.FILE_SEPARATOR+app.getId()+".desktop");
 		if (shortcut.exists())
 			shortcut.delete();
 
-		File icon = new File(Constants.xfceMenuEntriesPath+Constants.separator+app.getIconName()+".png");
+		File icon = new File(Constants.PATH_XFCE_MENU_ENTRIES+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 		if (icon.exists())
 			icon.delete();
 		

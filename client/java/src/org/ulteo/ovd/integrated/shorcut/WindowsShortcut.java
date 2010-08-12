@@ -46,30 +46,30 @@ public class WindowsShortcut extends Shortcut {
 		appName = app.getName();
 		replaceForbiddenChars(appName);
 
-		JShellLink shortcut = new JShellLink(Constants.clientShortcutsPath, appName);
+		JShellLink shortcut = new JShellLink(Constants.PATH_SHORTCUTS, appName);
 		shortcut.setWorkingDirectory("");
-		shortcut.setPath(System.getProperty("user.dir")+Constants.separator+Constants.launcher);
+		shortcut.setPath(System.getProperty("user.dir")+Constants.FILE_SEPARATOR+Constants.FILENAME_LAUNCHER);
 		shortcut.setArguments(""+this.token+" "+app.getId());
-		shortcut.setIconLocation(Constants.iconsPath+Constants.separator+app.getIconName()+".ico");
+		shortcut.setIconLocation(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
 		shortcut.setIconIndex(0);
 		shortcut.save();
 	}
 
 	@Override
 	public void remove(Application app) {
-		File icon = new File(Constants.iconsPath+Constants.separator+app.getIconName()+".ico");
+		File icon = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
 		if (icon.exists())
 			icon.delete();
 
-		File shortcut = new File(Constants.desktopPath+Constants.separator+app.getName()+".lnk");
+		File shortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getName()+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
 
-		shortcut = new File(Constants.startmenuPath+Constants.separator+app.getName()+".lnk");
+		shortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+app.getName()+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
 		
-		shortcut = new File(Constants.clientShortcutsPath+Constants.separator+app.getName()+".lnk");
+		shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getName()+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
 	}

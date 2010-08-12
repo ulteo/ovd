@@ -25,7 +25,7 @@ import org.ulteo.ovd.integrated.Constants;
 public class WindowsPaths {
 	static{
 		if (System.getProperty("os.name").startsWith("Windows"))
-			System.load(System.getProperty("user.dir")+Constants.separator+"libWindowsPaths.dll");
+			System.load(System.getProperty("user.dir")+Constants.FILE_SEPARATOR+"libWindowsPaths.dll");
 	}
 
 	public static native String getStartMenuPath();

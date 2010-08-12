@@ -49,22 +49,22 @@ public class Spool implements Runnable {
 		this.client = client_;
 		this.appInstances = new ArrayList<ApplicationInstance>();
 		this.instance = this.randomString();
-		this.baseDirectory = new File(Constants.confRemoteAppsPath+Constants.separator+this.instance);
+		this.baseDirectory = new File(Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+this.instance);
 	}
 
 	public void createIconsDir() {
-		new File(Constants.iconsPath).mkdirs();
+		new File(Constants.PATH_ICONS).mkdirs();
 	}
 
 	public void createShortcutDir() {
-		new File(Constants.clientShortcutsPath).mkdirs();
+		new File(Constants.PATH_SHORTCUTS).mkdirs();
 	}
 
 	public void createTree() {
-		this.instancesDir = new File(this.baseDirectory.getAbsolutePath()+Constants.separator+Constants.instancesPath);
+		this.instancesDir = new File(this.baseDirectory.getAbsolutePath()+Constants.FILE_SEPARATOR+Constants.DIRNAME_INSTANCES);
 		this.instancesDir.mkdirs();
 
-		this.toLaunchDir = new File(this.baseDirectory.getAbsolutePath()+Constants.separator+Constants.toLaunchPath);
+		this.toLaunchDir = new File(this.baseDirectory.getAbsolutePath()+Constants.FILE_SEPARATOR+Constants.DIRNAME_TO_LAUNCH);
 		this.toLaunchDir.mkdirs();
 	}
 
@@ -91,7 +91,7 @@ public class Spool implements Runnable {
 			}
 		}
 
-		File iconsDir = new File(Constants.iconsPath);
+		File iconsDir = new File(Constants.PATH_ICONS);
 		if (iconsDir.exists()) {
 			try {
 				this.delete(iconsDir);
@@ -133,7 +133,7 @@ public class Spool implements Runnable {
 						this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
 					}
 
-					File instance = new File(this.instancesDir.getAbsolutePath()+Constants.separator+todo.getName());
+					File instance = new File(this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
 					try {
 						instance.createNewFile();
 					} catch (IOException ex) {
@@ -198,13 +198,13 @@ public class Spool implements Runnable {
 	}
 
 	public void destroyInstance(int token) {
-		File instanceFile = new File(this.instancesDir.getAbsolutePath()+Constants.separator+token);
+		File instanceFile = new File(this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+token);
 		if (! instanceFile.exists()) {
-			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.separator+token+") : does not exist");
+			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+token+") : does not exist");
 			return;
 		}
 		if (! instanceFile.isFile()) {
-			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.separator+token+") : is not a file");
+			this.logger.error("Unable to remove instance file ("+this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+token+") : is not a file");
 			return;
 		}
 

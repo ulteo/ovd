@@ -185,14 +185,14 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	public void publish(Application app) {
 		String shortcutName = WindowsShortcut.replaceForbiddenChars(app.getName()).concat(".lnk");
 
-		if (new File(Constants.clientShortcutsPath+Constants.separator+shortcutName).exists())
+		if (new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcutName).exists())
 			this.copyShortcut(shortcutName);
 		else
 			this.logger.error("Unable to copy "+shortcutName+": The shortcut does not exist.");
 	}
 
 	public void publish() {
-		File shortcut = new File(Constants.clientShortcutsPath);
+		File shortcut = new File(Constants.PATH_SHORTCUTS);
 		String[] shortcutList = shortcut.list();
 		if (shortcutList != null) {
 			for (String each : shortcutList) {
@@ -204,15 +204,15 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	}
 
 	public void unpublish() {
-		File shortcut = new File(Constants.clientShortcutsPath);
+		File shortcut = new File(Constants.PATH_SHORTCUTS);
 		String[] shortcutList = shortcut.list();
 		for (String each : shortcutList) {
-			File desktopShortcut = new File(Constants.desktopPath+Constants.separator+each);
+			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+each);
 			if (desktopShortcut.exists()) {
 				desktopShortcut.delete();
 			}
 			
-			File startMenuShortcut = new File(Constants.startmenuPath+Constants.separator+each);
+			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+each);
 			if (startMenuShortcut.exists()) {
 				startMenuShortcut.delete();
 			}
@@ -223,9 +223,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	public void copyShortcut(String shortcut) {
 		try {
-			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(Constants.clientShortcutsPath+Constants.separator+shortcut), 4096);
-			File desktopShortcut = new File(Constants.desktopPath+Constants.separator+shortcut);
-			File startMenuShortcut = new File(Constants.startmenuPath+Constants.separator+shortcut);
+			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcut), 4096);
+			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcut);
+			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcut);
 			
 			BufferedOutputStream desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
 			BufferedOutputStream startMenuStream = new BufferedOutputStream(new FileOutputStream(startMenuShortcut), 4096);

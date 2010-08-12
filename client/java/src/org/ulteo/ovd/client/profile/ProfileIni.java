@@ -58,14 +58,14 @@ public class ProfileIni {
 	private File file = null;
 
 	public ProfileIni() {
-		this.confDir = new File(Constants.clientConfigFilePath);
+		this.confDir = new File(Constants.PATH_NATIVE_CLIENT_CONF);
 	}
 
 	public void setProfile(String profile) {
 		if (profile == null) {
 			profile = DEFAULT_PROFILE;
 		}
-		this.file = new File(Constants.clientConfigFilePath+Constants.separator+profile+PROFILE_EXT);
+		this.file = new File(Constants.PATH_NATIVE_CLIENT_CONF+Constants.FILE_SEPARATOR+profile+PROFILE_EXT);
 	}
 
 	public List<String> listProfiles() {

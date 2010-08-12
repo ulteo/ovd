@@ -21,26 +21,25 @@
 package org.ulteo.ovd.integrated;
 
 public final class Constants {
-	public static final String separator = System.getProperty("file.separator");
-	public static final String homedir = System.getProperty("user.home");
-	public static final String startmenuPath = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
-	// ToDo: find a better way (XDG) to get the desktop path on linux
-	public static final String desktopPath = (OSTools.isWindows()) ? WindowsPaths.getDesktopPath() : Constants.homedir+Constants.separator+"Desktop";
+	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	public static final String SHORTCUTS_EXTENSION = (OSTools.isWindows() ? ".lnk" : ".desktop");
 
-	public static final String installPath = (OSTools.isWindows()) ? "Y:" : Constants.homedir+Constants.separator+"svn/ovd-lab/rdp-applet/dist";
-	public static final String launcher = "UlteoOVDIntegratedLauncher"+((OSTools.isWindows()) ? ".exe" : "");
-	public static final String launcherPath = Constants.installPath+Constants.separator+Constants.launcher;
- 
-	public static final String confPath = Constants.homedir+Constants.separator+((OSTools.isWindows()) ? "Application Data"+Constants.separator : ".")+"ulteo";
-	public static final String confRemoteAppsPath = Constants.confPath+Constants.separator+"remoteApps";
-	public static final String iconsPath = Constants.confRemoteAppsPath+Constants.separator+"icons";
+	public static final String HOMEDIR = System.getProperty("user.home");
+	public static final String PATH_STARTMENU = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
+	public static final String PATH_XFCE_MENU_ENTRIES = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/applications";
+	// ToDo: find a better way (XDG) to get the desktop path on linux
+	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? WindowsPaths.getDesktopPath() : Constants.HOMEDIR+Constants.FILE_SEPARATOR+"Desktop";
+
+	public static final String FILENAME_LAUNCHER = "UlteoOVDIntegratedLauncher"+((OSTools.isWindows()) ? ".exe" : "");
 	
-	public static final String instancesPath = "instances";
-	public static final String toLaunchPath = "to_launch";
+	public static final String PATH_CONF = Constants.HOMEDIR+Constants.FILE_SEPARATOR+((OSTools.isWindows()) ? "Application Data"+Constants.FILE_SEPARATOR : ".")+"ulteo";
+	public static final String PATH_OVD_CONF = Constants.PATH_CONF+Constants.FILE_SEPARATOR+"ovd";
+	public static final String PATH_NATIVE_CLIENT_CONF = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"client";
+
+	public static final String PATH_REMOTE_APPS = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"remoteApps";
+	public static final String PATH_ICONS = Constants.PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+"icons";
+	public static final String PATH_SHORTCUTS = PATH_REMOTE_APPS+Constants.FILE_SEPARATOR+"Shortcuts";
 	
-	public static final String xfceMenuEntriesPath = Constants.homedir+Constants.separator+".local/share/applications";
-	
-	public static final String clientConfigFilePath = Constants.homedir+Constants.separator+".ulteo"+Constants.separator+"ovd"+Constants.separator+"client";
-	public static final String clientShortcutsPath = clientConfigFilePath+Constants.separator+"Shortcuts";
-	public static final String shortcutExtension = (OSTools.isWindows() ? ".lnk" : ".desktop");
+	public static final String DIRNAME_INSTANCES = "instances";
+	public static final String DIRNAME_TO_LAUNCH = "to_launch";
 }
