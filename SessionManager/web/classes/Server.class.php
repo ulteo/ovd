@@ -542,6 +542,16 @@ class Server {
 		return round(($used_sessions/$max_sessions)*100);
 	}
 
+	public function getDiskUsage() {
+		$total_disk = (float)($this->getAttribute('disk_total'));
+		$used_disk = (float)($this->getAttribute('disk_free'));
+
+		if ($total_disk == 0)
+			return false;
+
+		return round(($used_disk/$total_disk)*100);
+	}
+
 	public function orderDeletion() {
 		Logger::debug('main', 'Starting Server::orderDeletion for \''.$this->fqdn.'\'');
 

@@ -138,6 +138,10 @@ function show_default() {
 	        echo _('Sessions usage').': '.$s->getSessionUsage().'%<br />';
 	        echo display_loadbar((($s->getSessionUsage() > 100)?100:$s->getSessionUsage()));
 	        break;
+	      case 'fs':
+	        echo _('Disk usage').': '.$s->getDiskUsage().'%<br />';
+	        echo display_loadbar((($s->getDiskUsage() > 100)?100:$s->getDiskUsage()));
+	        break;
 	    }
 	  }
 	}
@@ -416,6 +420,10 @@ function show_manage($fqdn) {
             case 'aps':
               echo _('Sessions usage').': '.$server->getSessionUsage().'%<br />';
               echo display_loadbar((($server->getSessionUsage() > 100)?100:$server->getSessionUsage()));
+              break;
+            case 'fs':
+              echo _('Disk usage').': '.$server->getDiskUsage().'%<br />';
+              echo display_loadbar((($server->getDiskUsage() > 100)?100:$server->getDiskUsage()));
               break;
           }
         }
