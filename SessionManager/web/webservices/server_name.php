@@ -57,7 +57,7 @@ if (! $server) {
 	$server->external_name = $server->fqdn;
 
 	$server->max_sessions = 20;
-
+/*
 	if (! $server->isAuthorized()) {
 		echo return_error(1, 'Server is not authorized');
 		die();
@@ -72,7 +72,7 @@ if (! $server) {
 		echo return_error(3, 'Server is not online');
 		die();
 	}
-
+*/
 	Abstract_Server::save($server);
 }
 
