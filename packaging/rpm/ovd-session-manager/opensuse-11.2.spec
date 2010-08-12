@@ -46,7 +46,7 @@ sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.p
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
-CONFDIR=/usr/share/ulteo/sessionmanager
+CONFDIR=/etc/ulteo/sessionmanager
 
 a2enmod php5 > /dev/null
 
