@@ -130,6 +130,9 @@ public class PortalFrame extends JFrame implements WindowListener {
 		return runningAppsPanel;
 	}
 
+	public void enableIconsButton() {
+		this.sep.toggleIconsButton(true);
+	}
 
 	@Override
 	public void windowActivated(WindowEvent arg0) {}

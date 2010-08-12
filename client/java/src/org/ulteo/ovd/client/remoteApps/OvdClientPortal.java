@@ -153,6 +153,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 				}
 			}
 		}
+
+		if (this.availableConnections.size() == this.connections.size())
+			this.portal.enableIconsButton();
 	}
 
 	@Override

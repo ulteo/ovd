@@ -55,6 +55,8 @@ public class SouthEastPanel extends JPanel {
 				publishingButton.setText((((OvdClientPortal)actions).togglePublications()) ? HIDE : DISPLAY);
 			}
 		});
+		this.toggleIconsButton(false);
+
 		this.gbc.anchor = GridBagConstraints.LINE_END;
 		this.gbc.gridx = this.gbc.gridy = 0;
 		this.add(publishingButton, gbc);
@@ -62,5 +64,8 @@ public class SouthEastPanel extends JPanel {
 		this.gbc.gridx = 1;
 		this.add(disconnect, gbc);
 	}
-	
+
+	public void toggleIconsButton(boolean enable) {
+		this.publishingButton.setEnabled(enable);
+	}
 }
