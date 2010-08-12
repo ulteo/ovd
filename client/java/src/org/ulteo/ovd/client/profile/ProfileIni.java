@@ -69,7 +69,7 @@ public class ProfileIni {
 	}
 
 	public List<String> listProfiles() {
-		if (! this.confDir.exists() && this.confDir.isDirectory())
+		if ((! this.confDir.exists()) || (! this.confDir.isDirectory()))
 			return null;
 
 		List<String> profilesList = new ArrayList<String>();
