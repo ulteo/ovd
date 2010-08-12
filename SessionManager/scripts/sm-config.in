@@ -117,7 +117,7 @@ while true; do
         echo
     done
 
-    if [ "$PASS1" = "$PASS2" ]
+    if [ "$PASS1" = "$PASS2" ]; then
         PASS=$(echo -n $PASS1 | md5sum | cut -d " " -f 1)
         unset PASS1
         unset PASS2
