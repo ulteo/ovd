@@ -44,9 +44,10 @@ install -m 0644 examples/ulteo-sm.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/sess
 # hack to not provide /usr/bin/php (zypper)
 sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.php*)
 
-%post
+%post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
 CONFDIR=/usr/share/ulteo/sessionmanager
+
 a2enmod php5 > /dev/null
 
 # VHost server config
@@ -83,7 +84,6 @@ if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
     chown root:root $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
     chmod 600       $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
 fi
-
 
 # restart apache server
 if apache2ctl configtest 2>/dev/null; then
