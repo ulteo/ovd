@@ -264,6 +264,14 @@ function show_page($mode_) {
 	$t2 = strtotime($mode_->get_next(), $t1);
 
 	/* General system */
+	if (! is_writable(TMP_DIR)) {
+		popup_error(sprintf(_("%s is not writable"), TMP_DIR));
+		page_header();
+		echo '<h1>'._('Reporting').'</h1>';
+		page_footer();
+		die();
+	}
+
 	list($session_number, $result, $res_server) = get_session_history($t0, $t2, $mode_);
 		$info2 = get_server_history($t0, $t2, $mode_);
 
