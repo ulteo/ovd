@@ -105,13 +105,13 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void runSessionTerminated() {
-		this.spool.deleteTree();
 		this.spoolThread.interrupt();
 		while (this.spoolThread.isAlive()) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException ex) {}
 		}
+		this.spool.deleteTree();
 		this.spool = null;
 		
 		this.portal.setVisible(false);

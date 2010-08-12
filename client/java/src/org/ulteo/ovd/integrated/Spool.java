@@ -76,27 +76,21 @@ public class Spool implements Runnable {
 			for (int i=0; children != null && i<children.length; i++)
 				this.delete(children[i]);
 			if (!path.delete())
-				throw new IOException("No delete path '" + path.getAbsolutePath() + "'");
+				throw new IOException("Could not delete folder '" + path.getAbsolutePath() + "'");
 		}
 		else if (!path.delete())
-			throw new IOException("No delete file '" + path.getAbsolutePath() + "'");
+			throw new IOException("Could not delete file '" + path.getAbsolutePath() + "'");
 	}
 
 	public void deleteTree() {
-		if (this.baseDirectory.exists()) {
-			try {
-				this.delete(this.baseDirectory);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-
-		File iconsDir = new File(Constants.PATH_ICONS);
-		if (iconsDir.exists()) {
-			try {
-				this.delete(iconsDir);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
+		File[] toDelete = {this.baseDirectory, new File(Constants.PATH_ICONS), new File(Constants.PATH_SHORTCUTS)};
+		for (File each : toDelete) {
+			if (each.exists()) {
+				try {
+					this.delete(each);
+				} catch (IOException ioe) {
+					this.logger.error(ioe.getMessage());
+				}
 			}
 		}
 	}
