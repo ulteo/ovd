@@ -131,7 +131,7 @@ while true; do
 done
 
 if [ -z "$NODOWNLOAD" ]; then
-    PROPOSED_URL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=2.0'
+    PROPOSED_URL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
     PROPOSED_TARGET=$BASEDIR/base.tar.gz
     if [ -z "$URI" ]; then
         echo -n "Chroot download url [$PROPOSED_URL]: "
