@@ -293,10 +293,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		int mode = (this.authFrame.getDesktopButton().isSelected()) ? Properties.MODE_DESKTOP : Properties.MODE_REMOTEAPPS;
 		int resolution = this.authFrame.getResBar().getValue();
 
-		String password = "";
-		for (char each : this.authFrame.getPassword().getPassword()) {
-			password = password+each;
-		}
+		String password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
 		
 		if (host.equals("") || username.equals("") || password.equals("")) {
