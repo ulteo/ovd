@@ -35,8 +35,11 @@ public class ProfileIni {
 	private static final String INI_SECTION_SERVER = "server";
 	private static final String INI_FIELD_HOST = "host";
 
-	private static final String INI_SECTION_SESSION_MODE = "sessionMode";
-	private static final String INI_FIELD_OVD_SESSION_MODE = "ovdSessionMode";
+	private static final String INI_SECTION_SESSION = "sessionMode";
+	private static final String INI_FIELD_MODE = "ovdSessionMode";
+	private static final String INI_VALUE_MODE_APPLICATIONS = "applications";
+	private static final String INI_VALUE_MODE_AUTO = "auto";
+	private static final String INI_VALUE_MODE_DESKTOP = "desktop";
 
 	private static final String INI_SECTION_PUBLICATION = "publication";
 	private static final String INI_FIELD_AUTOPUBLISH = "auto-publish";
@@ -101,8 +104,15 @@ public class ProfileIni {
 		ini.put(INI_SECTION_USER, INI_FIELD_LOCALCREDENTIALS, properties.getUseLocalCredentials()?INI_VALUE_TRUE:INI_VALUE_FALSE);
 
 		ini.put(INI_SECTION_SERVER, INI_FIELD_HOST, properties.getHost());
-
-		ini.put(INI_SECTION_SESSION_MODE, INI_FIELD_OVD_SESSION_MODE, properties.getSessionMode());
+		
+		String mode = INI_VALUE_MODE_AUTO;
+		if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
+			mode = INI_VALUE_MODE_DESKTOP;
+		else if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
+			mode = INI_VALUE_MODE_APPLICATIONS;
+		else
+			mode = INI_VALUE_MODE_AUTO;
+		ini.put(INI_SECTION_SESSION, INI_FIELD_MODE, mode);
 		
 		if (properties.getAutoPublish())
 			ini.put(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH, INI_VALUE_TRUE);
@@ -154,9 +164,19 @@ public class ProfileIni {
 		if (value != null)
 			properties.setHost(value);
 
-		value = ini.get(INI_SECTION_SESSION_MODE, INI_FIELD_OVD_SESSION_MODE);
-		if (value != null)
-			properties.setSessionMode(value);
+		value = ini.get(INI_SECTION_SESSION, INI_FIELD_MODE);
+		if (value != null) {
+			int mode = ProfileProperties.MODE_AUTO;
+			
+			if (value.equals(INI_VALUE_MODE_AUTO))
+				mode = ProfileProperties.MODE_AUTO;
+			else if (value.equals(INI_VALUE_MODE_APPLICATIONS)) 
+				mode = ProfileProperties.MODE_APPLICATIONS;
+			else if (value.equals(INI_VALUE_MODE_DESKTOP))
+				mode = ProfileProperties.MODE_DESKTOP;
+
+			properties.setSessionMode(mode);
+		}
 		
 		value = ini.get(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH);
 		if (value != null) {

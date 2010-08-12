@@ -290,7 +290,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		// Get form values
 		String username = this.authFrame.getLogin().getText();
 		String host = this.authFrame.getHost().getText();
-		int mode = (this.authFrame.getDesktopButton().isSelected()) ? Properties.MODE_DESKTOP : Properties.MODE_REMOTEAPPS;
+		int mode =  Properties.MODE_ANY;
+		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
+			mode = Properties.MODE_REMOTEAPPS;
+		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
+			mode = Properties.MODE_DESKTOP;
+				
+		
 		int resolution = this.authFrame.getResBar().getValue();
 		boolean localCredential = (this.authFrame.isUseLocalCredentials());
 
@@ -403,7 +409,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		String login = this.authFrame.getLogin().getText();
 		boolean useLocalCredentials = this.authFrame.isUseLocalCredentials();
 		String host = this.authFrame.getHost().getText();
-		String sessionMode = this.authFrame.getSessionMode();
+
+		int sessionMode = ProfileProperties.MODE_AUTO;
+		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
+			sessionMode = ProfileProperties.MODE_APPLICATIONS;
+		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
+			sessionMode = ProfileProperties.MODE_DESKTOP;
+		
 		boolean autoPublish = this.authFrame.isAutoPublishChecked();
 		int screensize = this.authFrame.getResBar().getValue();
 
@@ -438,7 +450,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.authFrame.setLogin(properties.getLogin());
 		this.authFrame.setUseLocalCredentials(properties.getUseLocalCredentials());
 		this.authFrame.setHost(properties.getHost());
-		this.authFrame.setSessionMode(properties.getSessionMode());
+		
+		Object item = this.authFrame.getItemModeAuto();
+		if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
+			item = this.authFrame.getItemModeApplication();
+		else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
+			item = this.authFrame.getItemModeDesktop();
+		this.authFrame.getSessionModeBox().setSelectedItem(item);
+		
 		this.authFrame.setAutoPublishChecked(properties.getAutoPublish());
 		this.authFrame.setResolution(properties.getScreenSize());
 

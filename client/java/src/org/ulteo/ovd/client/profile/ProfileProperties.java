@@ -20,25 +20,27 @@
 
 package org.ulteo.ovd.client.profile;
 
-import org.ulteo.ovd.sm.SessionManagerCommunication;
-
 public class ProfileProperties {
 	public static final int SCREENSIZE_800X600 = 0;
 	public static final int SCREENSIZE_1024X768 = 1;
 	public static final int SCREENSIZE_1280X678 = 2;
 	public static final int MAXIMIZED = 3;
 	public static final int FULLSCREEN = 4;
+	
+	public static final int MODE_AUTO = 0;
+	public static final int MODE_DESKTOP = 1;
+	public static final int MODE_APPLICATIONS = 2;
 
 	private String login = System.getProperty("user.name");
 	private String host = null;
-	private String sessionMode = null;
+	private int sessionMode = 0;
 	private boolean autoPublish = false;
 	private boolean useLocalCredentials = false;
 	private int screensize = 0;
 	
 	public ProfileProperties() {}
 
-	public ProfileProperties(String login_, String host_, String sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, int screensize_) {
+	public ProfileProperties(String login_, String host_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, int screensize_) {
 		this.login = login_;
 		this.host = host_;
 		this.sessionMode = sessionMode_;
@@ -63,14 +65,11 @@ public class ProfileProperties {
 		this.host = host_;
 	}
 
-	public String getSessionMode() {
+	public int getSessionMode() {
 		return this.sessionMode;
 	}
 
-	public void setSessionMode(String sessionMode_) {
-		if (! (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_DESKTOP) || sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)))
-			return;
-		
+	public void setSessionMode(int sessionMode_) {
 		this.sessionMode = sessionMode_;
 	}
 

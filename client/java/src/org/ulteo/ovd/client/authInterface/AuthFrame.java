@@ -33,8 +33,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -42,16 +40,14 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ulteo.ovd.client.I18n;
-import org.ulteo.ovd.sm.SessionManagerCommunication;
 
-public class AuthFrame {
+public class AuthFrame implements ActionListener {
 	
 	private JFrame mainFrame = new JFrame();
 	private boolean desktopLaunched = false;
@@ -79,16 +75,16 @@ public class AuthFrame {
 	private JLabel userLogoLabel = new JLabel();
 	private JLabel passwordLogoLabel = new JLabel();
 	private JLabel hostLogoLabel = new JLabel();
-	private boolean desktopMode = true;
 	private boolean optionClicked;
 	private JLabel optionLogoLabel = new JLabel();
 	private JLabel mode = new JLabel(I18n._("Mode"));
 	private JLabel resolution = new JLabel(I18n._("Resolution"));
 	private JLabel language = new JLabel(I18n._("Language"));
 	private JLabel keyboard = new JLabel(I18n._("Keyboard"));
-	private JRadioButton desktopButton = new JRadioButton(I18n._("Desktop"));
-	private JRadioButton portalButton = new JRadioButton(I18n._("Applications"));
-	private ButtonGroup radioGroup = new ButtonGroup();
+	private JComboBox sessionModeBox = null;
+	private JComboBoxItem itemModeAuto = new JComboBoxItem(I18n._("Auto"));
+	private JComboBoxItem itemModeApplication = new JComboBoxItem(I18n._("Application"));
+	private JComboBoxItem itemModeDesktop = new JComboBoxItem(I18n._("Desktop"));
 	private JSlider resBar = new JSlider(0, 4, 4);
 	private JLabel resolutionValue = new JLabel(I18n._("Fullscreen"));
 	private JComboBox languageBox = new JComboBox();
@@ -105,6 +101,14 @@ public class AuthFrame {
 	
 	public AuthFrame(ActionListener obj_) {
 		this.obj = obj_;
+		
+		Object[] items = new Object[3];
+		items[0] = this.itemModeAuto;
+		items[1] = this.itemModeApplication;
+		items[2] = this.itemModeDesktop;
+		this.sessionModeBox = new JComboBox(items);
+		this.sessionModeBox.setRenderer(new JComboBoxItem(""));
+		this.sessionModeBox.addActionListener(this);
 		
 		this.init();
 	}
@@ -135,46 +139,6 @@ public class AuthFrame {
 		
 		moreOption.setIcon(showOption);
 		moreOption.setText(I18n._("More options ..."));
-		
-		desktopButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (! desktopMode) {
-					desktopMode = true;
-					mainFrame.remove(autoPublish);
-					gbc.gridx = 2;
-					gbc.gridy = 10;
-					gbc.gridwidth = 2;
-					mainFrame.add(resBar, gbc);
-					
-					gbc.gridy = 11;
-					gbc.anchor = GridBagConstraints.CENTER;
-					mainFrame.add(resolutionValue, gbc);
-					mainFrame.pack();
-				}
-				
-			}
-		});
-		
-		portalButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (desktopMode) {
-					desktopMode = false;
-					mainFrame.remove(resolutionValue);
-					mainFrame.remove(resolution);
-					mainFrame.remove(resBar);
-					gbc.gridx = 2;
-					gbc.gridy = 10;
-					gbc.anchor = GridBagConstraints.CENTER;
-					gbc.fill = GridBagConstraints.NONE;
-					mainFrame.add(autoPublish, gbc);
-					mainFrame.pack();
-				}
-			}
-		});
 		
 		this.useLocalCredentials.addActionListener(new ActionListener() {
 			@Override
@@ -212,10 +176,6 @@ public class AuthFrame {
 			}
 		});
 		
-		radioGroup.add(desktopButton);
-		radioGroup.add(portalButton);
-		radioGroup.setSelected(desktopButton.getModel(), true);
-		
 		optionListener = new ActionListener() {
 			
 			@Override
@@ -234,12 +194,6 @@ public class AuthFrame {
 					gbc.gridy = 9;
 					mainFrame.add(mode, gbc);
 					
-					if (desktopMode) {
-						gbc.gridx = 1;
-						gbc.gridy = 10;
-						mainFrame.add(resolution, gbc);
-					}
-					
 					/*gbc.gridy = 12;
 					mainFrame.add(language, gbc);
 					
@@ -249,30 +203,8 @@ public class AuthFrame {
 					gbc.gridwidth = 1;
 					gbc.gridx = 2;
 					gbc.gridy = 9;
-					mainFrame.add(desktopButton,gbc);
 					
-					gbc.gridx = 3;
-					mainFrame.add(portalButton,gbc);
-					
-					
-					if(desktopMode) {
-						gbc.gridx = 2;
-						gbc.gridwidth = 2;
-						gbc.gridy = 10;
-						mainFrame.add(resBar, gbc);
-
-						gbc.gridy = 11;
-						gbc.anchor = GridBagConstraints.CENTER;
-						mainFrame.add(resolutionValue, gbc);
-					}
-					else {
-						gbc.gridx = 2;
-						gbc.gridy = 10;
-						gbc.gridwidth = 2;
-						gbc.fill = GridBagConstraints.NONE;
-						gbc.anchor = GridBagConstraints.CENTER;
-						mainFrame.add(autoPublish, gbc);
-					}
+					mainFrame.add(sessionModeBox, gbc);
 					
 					/*gbc.gridx = 2;
 					gbc.gridwidth = 2;
@@ -288,6 +220,7 @@ public class AuthFrame {
 					moreOption.setText(I18n._("Fewer options"));
 					mainFrame.pack();
 					optionClicked = true;
+					toggleSessionMode();
 					
 				} else {
 					mainFrame.remove(optionLogoLabel);
@@ -295,8 +228,7 @@ public class AuthFrame {
 					mainFrame.remove(resolution);
 					mainFrame.remove(language);
 					mainFrame.remove(keyboard);
-					mainFrame.remove(desktopButton);
-					mainFrame.remove(portalButton);
+					mainFrame.remove(sessionModeBox);
 					mainFrame.remove(resBar);
 					mainFrame.remove(resolutionValue);
 					mainFrame.remove(languageBox);
@@ -451,11 +383,59 @@ public class AuthFrame {
 		}
 	}
 	
+	public void toggleSessionMode() {
+		if (! this.optionClicked)
+			return;
+		
+		this.mainFrame.remove(this.autoPublish);
+		this.mainFrame.remove(this.resolutionValue);
+		this.mainFrame.remove(this.resolution);
+		this.mainFrame.remove(this.resBar);
+		
+		this.gbc.anchor = GridBagConstraints.LINE_START;
+		this.gbc.insets.left = 0;
+		
+		if (this.sessionModeBox.getSelectedItem() == this.itemModeApplication) {	
+			this.gbc.gridx = 2;
+			this.gbc.gridy = 10;
+			this.gbc.anchor = GridBagConstraints.CENTER;
+			this.gbc.fill = GridBagConstraints.NONE;
+			this.mainFrame.add(autoPublish, gbc);
+		}
+		
+		else if (this.sessionModeBox.getSelectedItem() == this.itemModeDesktop) {
+			this.gbc.insets.left = 0;
+			this.gbc.gridx = 1;
+			this.gbc.gridy = 10;
+			this.mainFrame.add(resolution, gbc);
+			
+			this.gbc.anchor = GridBagConstraints.CENTER;
+			this.gbc.insets.left = 10;
+			this.gbc.gridx = 2;
+			this.gbc.gridy = 10;
+			this.gbc.gridwidth = 2;
+			this.mainFrame.add(resBar, gbc);
+			
+			this.gbc.insets.left = 0;
+			this.gbc.gridy = 11;
+			
+			this.mainFrame.add(resolutionValue, gbc);
+		}
+		
+		this.mainFrame.pack();
+	}
+	
 	public void showWindow() {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		this.startButtonClicked = false;
 		this.toggleLocalCredentials();
 		mainFrame.setVisible(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent ev) {
+		if (ev.getSource() == this.sessionModeBox)
+			this.toggleSessionMode();
 	}
 	
 	public void hideWindow() {
@@ -488,10 +468,6 @@ public class AuthFrame {
 		this.hostTextField.setText(host_);
 	}
 
-	public JRadioButton getDesktopButton() {
-		return desktopButton;
-	}
-	
 	public JSlider getResBar() {
 		return resBar;
 	}
@@ -500,27 +476,17 @@ public class AuthFrame {
 		this.resBar.setValue(resolution_);
 	}
 
-	public String getSessionMode() {
-		return (this.desktopButton.isSelected()) ? SessionManagerCommunication.SESSION_MODE_DESKTOP : SessionManagerCommunication.SESSION_MODE_REMOTEAPPS;
+	public JComboBox getSessionModeBox() {
+		return this.sessionModeBox;
 	}
-
-	public void setSessionMode(String sessionMode_) {
-		if (sessionMode_ == null)
-			return;
-
-		ButtonModel model = null;
-		if (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_DESKTOP)) {
-			model = this.desktopButton.getModel();
-			this.desktopMode = true;
-		}
-		else if (sessionMode_.equals(SessionManagerCommunication.SESSION_MODE_REMOTEAPPS)) {
-			model = this.portalButton.getModel();
-			this.desktopMode = false;
-		}
-		else {
-			return;
-		}
-		this.radioGroup.setSelected(model, true);
+	public JLabel getItemModeApplication() {
+		return this.itemModeApplication;
+	}
+	public JLabel getItemModeAuto() {
+		return this.itemModeAuto;
+	}
+	public JLabel getItemModeDesktop() {
+		return this.itemModeDesktop;
 	}
 	
 	public JFrame getMainFrame() {
