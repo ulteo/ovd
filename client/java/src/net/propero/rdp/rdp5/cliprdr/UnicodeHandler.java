@@ -17,6 +17,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import net.propero.rdp.RdpPacket;
 import net.propero.rdp.RdpPacket_Localised;
@@ -37,11 +39,10 @@ public class UnicodeHandler extends TypeHandler {
 	}
 
 	public void handleData(RdpPacket data, int length, ClipInterface c) {
-		String thingy = "";
-		for(int i = 0; i < length; i+=2){
-			int aByte = data.getLittleEndian16();
-			if(aByte != 0) thingy += (char) (aByte);
-		}
+		byte[] array = new byte[length];
+		data.copyToByteArray(array, 0, data.getPosition(), length);
+		String thingy = new String(array, Charset.forName("UTF-16LE"));
+
 		c.copyToClipboard(new StringSelection(thingy));
 		//return(new StringSelection(thingy));
 	}
@@ -65,15 +66,16 @@ public class UnicodeHandler extends TypeHandler {
 			s = s.replace('\n',(char) 0x0a);
 			//s = s.replaceAll("" + (char) 0x0a, "" + (char) 0x0d + (char) 0x0a);
 			s = Utilities_Localised.strReplaceAll(s, "" + (char) 0x0a, "" + (char) 0x0d + (char) 0x0a);
-			byte[] sBytes = s.getBytes();
-			int length = sBytes.length;
-			int lengthBy2 = length*2;
-			RdpPacket p = new RdpPacket_Localised(lengthBy2);
-			for(int i = 0; i < sBytes.length; i++){
-				p.setLittleEndian16(sBytes[i]);
+			byte[] sBytes = null;
+			try {
+				sBytes = s.getBytes("UTF-16LE");
+			} catch (UnsupportedEncodingException e) {
+				logger.debug(e.getMessage());
+				if (TypeHandler.isOk) {
+					TypeHandler.isOk = false;
+					logger.info("UTF-16LE is not supported by your JVM");
+				}				
 			}
-			sBytes = new byte[length*2];
-			p.copyToByteArray(sBytes,0,0,lengthBy2);
 			return sBytes;
 		}
 		return null;

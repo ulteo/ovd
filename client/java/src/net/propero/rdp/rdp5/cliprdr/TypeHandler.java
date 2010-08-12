@@ -15,9 +15,13 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 
+import org.apache.log4j.Logger;
+
 import net.propero.rdp.RdpPacket;
 
 public abstract class TypeHandler {
+	protected static Logger logger = Logger.getLogger(TypeHandler.class);
+	protected static boolean isOk = true;
 	
 	protected int hash = 0;
 	/* Clipboard constants, "borrowed" from GCC system headers in 

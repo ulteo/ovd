@@ -76,7 +76,10 @@ public class TextHandler extends TypeHandler {
 		String thingy = "";
 		for(int i = 0; i < length; i++){
 			int aByte = data.get8();
-			if(aByte != 0) thingy += (char) (aByte & 0xFF);
+			if(aByte == 0) {
+				break;
+			}
+			thingy += (char) (aByte & 0xFF);
 		}
 		c.copyToClipboard (new StringSelection(thingy));
 	}

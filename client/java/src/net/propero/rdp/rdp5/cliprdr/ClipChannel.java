@@ -207,18 +207,27 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 		
 	private void handle_clip_format_announce(RdpPacket data, int length) throws RdesktopException, IOException, CryptoException {
 		TypeHandlerList serverTypeList = new TypeHandlerList();
+		boolean hasUnicode = false;
+		byte[] array = new byte[length];
 		
 		//System.out.print("Available types: ");
+		data.copyToByteArray(array, 0, data.getPosition(), length);
 		for(int c = length; c >= 36; c-=36){
 			int typeCode = data.getLittleEndian32();
 			//if(typeCode < types.length) System.out.print(types[typeCode] + " ");
 			data.incrementPosition(32);
+			if (typeCode == TypeHandler.CF_UNICODETEXT)
+				hasUnicode = true;
 			serverTypeList.add(allHandlers.getHandlerForFormat(typeCode));
 		}
 		//System.out.println();
 				
 		send_null(CLIPRDR_FORMAT_ACK, CLIPRDR_RESPONSE);
+		//if Unicode is supported, Unicode is preferred 
 		currentHandler = serverTypeList.getFirst();
+		if (hasUnicode) {
+			currentHandler = allHandlers.getHandlerForFormat(TypeHandler.CF_UNICODETEXT);
+		}
 		
 		if(currentHandler != null) request_clipboard_data(currentHandler.preferredFormat());
 	}
