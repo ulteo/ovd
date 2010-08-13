@@ -1,5 +1,7 @@
 #!/bin/sh -e
 
+A2CONFDIR=/etc/apache2/conf.d
+
 if [ "$1" = "remove" ]; then
     # remove apache2 link
     rm -f /etc/apache2/conf.d/webinterface
