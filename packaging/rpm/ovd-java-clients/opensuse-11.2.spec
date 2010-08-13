@@ -1,6 +1,6 @@
 Name: ovd-java-clients
-Version: 99.99+svn04150
-Release: 1
+Version: @VERSION@
+Release: @RELEASE@
 
 Summary: Ulteo Open Virtual Desktop - desktop applet
 License: GPL2
@@ -12,7 +12,7 @@ Distribution: OpenSUSE 11.2
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: ulteo-ovd-cert, default-jdk, ant, ant-optional
+Buildrequires: ulteo-ovd-cert, java-1.6.0-openjdk-devel, ant
 
 %description
 This applet is used in the Open Virtual Desktop to display the user session in
