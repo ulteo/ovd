@@ -104,7 +104,7 @@ if [ -d "$CRON_DIR" ] && [ ! -e "$CRON_DIR/sessionmanager" ]; then
     ln -sf $CRON_SCRIPT $CRON_DIR/session-manager.php
 fi
 
-%postun
+%postun -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
 rm -f $A2CONFDIR/sessionmanager-vhost-server.conf
 rm -f $A2CONFDIR/sessionmanager-vhost-ssl.conf
