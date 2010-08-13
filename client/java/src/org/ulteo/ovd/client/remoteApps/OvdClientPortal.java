@@ -85,6 +85,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
 		this.unpublish();
+		this.publicated = this.autoPublish;
 	}
 
 	@Override
