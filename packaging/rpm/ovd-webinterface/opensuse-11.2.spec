@@ -46,7 +46,7 @@ a2enmod php5 > /dev/null
 if [ ! -e /etc/apache2/conf.d/webinterface ]; then
     ln -s $CONFDIR/apache2.conf $A2CONFDIR/webinterface
     if apache2ctl configtest 2>/dev/null; then
-        invoke-rc.d apache2 reload || true
+        service apache2 reload || true
     else
         echo << EOF
 "Your apache configuration is broken!
@@ -60,7 +60,7 @@ A2CONFDIR=/etc/apache2/conf.d
 if [ -e /etc/apache2/conf.d/webinterface ]; then
     rm -f $A2CONFDIR/webinterface
     if apache2ctl configtest 2>/dev/null; then
-        invoke-rc.d apache2 reload || true
+        service apache2 reload || true
     else
         echo << EOF
 "Your apache configuration is broken!
