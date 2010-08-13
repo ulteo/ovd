@@ -1,5 +1,5 @@
 Name: genjcert
-Version: 1.0
+Version: 0.1
 Release: 1
 
 Summary: Ulteo Open Virtual Desktop - signed certificate generator
@@ -44,9 +44,6 @@ install -m 644 password $OVDCERTDIR
 %files -n ulteo-ovd-cert
 %defattr(-,root,root)
 /
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %changelog -n ulteo-ovd-cert
 * Fri Aug 13 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4145
