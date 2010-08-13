@@ -7,7 +7,6 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 
 JAVA_HOME = /usr/lib/jvm/java-6-sun
 DEB_ANT_INSTALL_TARGET = applet.install ovdExternalAppsClient.install vdi.install
-DEB_ANT_BUILD_TARGET = applet ovdExternalAppsClient vdi
 DEB_ANT_ARGS += -Dprefix=/usr -Dbuild.type=stripped -Ddestdir=$(DEB_DESTDIR)
 DEB_JARS += $(ANT_HOME)/lib/ant-nodeps.jar # debian bug #420287
 
