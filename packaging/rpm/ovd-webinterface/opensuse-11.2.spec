@@ -14,6 +14,9 @@ Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: intltool
 
+%description -n ulteo-ovd-webinterface
+This interface is a web client for Ulteo OVD.
+
 ###########################################
 %package -n ulteo-ovd-webinterface
 ###########################################
