@@ -33,8 +33,10 @@ function do_login() {
 	$userDB = new $mod_user_name();
 
 	$auth_methods = $prefs->get('AuthMethod', 'enable');
-	if (! is_array($auth_methods))
+	if (! is_array($auth_methods)) {
+		Logger::error('main', 'No valid AuthMethod are enabled', __FILE__, __LINE__);
 		return false;
+	}
 
 	foreach ($auth_methods as $auth_method) {
 		$mod_authmethod_name = 'AuthMethod_'.$auth_method;
@@ -45,10 +47,8 @@ function do_login() {
 			continue;
 
 		$user = $userDB->import($user_login);
-		if (! is_object($user)) {
-			Logger::error('main', 'User importation failed for login "'.$user_login.'" with auth "'.$auth_method.'"',__FILE__,__LINE__);
-			return false;
-		}
+		if (! is_object($user))
+			continue;
 
 		$buf = $authmethod->authenticate($user);
 		if ($buf === true) {
@@ -57,5 +57,6 @@ function do_login() {
 		}
 	}
 
+	Logger::error('main', 'Authentication failed', __FILE__, __LINE__);
 	return false;
 }
