@@ -1,0 +1,13 @@
+Source: genjcert
+Section: utils
+Priority: optional
+Maintainer: Gauvain Pocentek <gauvain@ulteo.com>
+Build-Depends: debhelper (>= 5), cdbs, pwgen, default-jre
+Standards-Version: 3.8.2
+
+Package: ulteo-ovd-cert
+Architecture: all
+Depends: ${misc:Depends}
+Description: Signed certificate for the Ulteo OVD java applet
+ This package provides an Ulteo certificate used to signed the Open Virtual
+ Desktop java applet.

@@ -1,0 +1,35 @@
+#!/usr/bin/make -f
+
+build: build-stamp
+build-stamp:
+	dh_testdir
+	./genkeystore.sh -d "cn=Ulteo OVD,ou=Ulteo,o=Ulteo,c=FR" -a Ulteo > password
+	touch $@
+
+clean: #PATCH_CLEAN#
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp
+	rm -f keystore passwd
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+
+binary-arch: install
+binary-indep: install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs
+	dh_installdocs
+	dh_install
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install #PHONY_CONFIGURE#
