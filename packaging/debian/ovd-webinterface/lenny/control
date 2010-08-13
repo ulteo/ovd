@@ -2,7 +2,7 @@ Source: ovd-webinterface
 Section: net
 Priority: extra
 Maintainer: Samuel Bovée <samuel@ulteo.com>
-Build-Depends: cdbs, debhelper (>= 6), intltool, ulteo-ovd-applets
+Build-Depends: cdbs, debhelper (>= 6), intltool
 Standards-Version: 3.7.2
 
 Package: ulteo-ovd-webinterface

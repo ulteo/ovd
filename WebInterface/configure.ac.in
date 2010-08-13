@@ -48,43 +48,26 @@ fi
 
 #################################################
 ###                 ulteo-applet              ###
-AC_ARG_WITH([ulteo-applet],
-    [AC_HELP_STRING([--with-ulteo-applet],
-        [where is installed the ulteo OVD applet])], ,
-    [with_ulteo_applet=])
-if test -z "$with_ulteo_applet"; then
-    for p in /usr /usr/local /opt; do
-        if test -e $p/share/ulteo/applets/ulteo-applet.jar; then
-            with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
-        fi
-    done
+AC_ARG_WITH([ulteo-applets],
+    [AC_HELP_STRING([--without-ulteo-applets],
+        [where is installed ulteo OVD appleits])],
+    [without_ulteo_applets=yes], )
+for p in /usr /usr/local /opt; do
+    APPLETSDIR=$p/share/ulteo/applets
+    if test -e $APPLETSDIR/ulteo-applet.jar -a -e $APPLETSDIR/CheckJava.jar; then
+        break
+    fi
+    unset APPLETSDIR
+done
+if test -z $APPLETSDIR; then
+    if test "$without_ulteo_applets" = "yes"; then
+        AC_MSG_WARN([no ulteo applet found])
+        APPLETSDIR=/usr/share/ulteo/applets
+    else
+        AC_MSG_ERROR([no ulteo applet found. Install it first or unpass this error with the --with-ulteo-applet option])
+    fi
 fi
-if test -z "$with_ulteo_applet"; then
-    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
-else
-    ULTEOAPPLET="$with_ulteo_applet"
-fi
-AC_SUBST(ULTEOAPPLET)
-
-#################################################
-###               check-applet                ###
-AC_ARG_WITH([check-applet],
-    [AC_HELP_STRING([--with-check-applet],
-        [where is installed the java test applet])], ,
-    [with_check_applet=])
-if test -z "$with_check_applet"; then
-    for p in /usr /usr/local /opt; do
-        if test -e $p/share/ulteo/applets/CheckJava.jar; then
-            with_check_applet=$p/share/ulteo/applets/CheckJava.jar
-        fi
-    done
-fi
-if test -z "$with_check_applet"; then
-    AC_MSG_ERROR([No java test applet found. Install it first or specify its path with the --with-check-applet option])
-else
-    CHECKAPPLET="$with_check_applet"
-fi
-AC_SUBST(CHECKAPPLET)
+AC_SUBST(APPLETSDIR)
 
 
 AC_CONFIG_FILES([
