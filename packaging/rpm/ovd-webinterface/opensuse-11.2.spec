@@ -12,7 +12,7 @@ Distribution: OpenSUSE 11.2
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: intltool
+Buildrequires: intltool, ulteo-ovd-applets
 
 %description
 This interface is a web client for Ulteo OVD.

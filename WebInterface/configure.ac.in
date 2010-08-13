@@ -56,11 +56,11 @@ if test -z "$with_ulteo_applet"; then
     for p in /usr /usr/local /opt; do
         if test -e $p/share/ulteo/applets/ulteo-applet.jar; then
             with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
-        fi  
+        fi
     done
 fi
 if test -z "$with_ulteo_applet"; then
-    AC_MSG_WARN([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
+    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
 else
     ULTEOAPPLET="$with_ulteo_applet"
 fi
@@ -76,11 +76,11 @@ if test -z "$with_check_applet"; then
     for p in /usr /usr/local /opt; do
         if test -e $p/share/ulteo/applets/CheckJava.jar; then
             with_check_applet=$p/share/ulteo/applets/CheckJava.jar
-        fi  
+        fi
     done
 fi
 if test -z "$with_check_applet"; then
-    AC_MSG_WARN([No java test applet found. Install it first or specify its path with the --with-check-applet option])
+    AC_MSG_ERROR([No java test applet found. Install it first or specify its path with the --with-check-applet option])
 else
     CHECKAPPLET="$with_check_applet"
 fi
