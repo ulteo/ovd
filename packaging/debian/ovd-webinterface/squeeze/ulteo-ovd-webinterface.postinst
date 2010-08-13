@@ -3,28 +3,26 @@
 . /usr/share/debconf/confmodule
 db_version 2.0
 
-CONFFILE="/etc/ulteo/webinterface/config.inc.php"
-DEFAULTDIR="/usr/share/ulteo/webinterface/default"
-DEFAULT_CONFFILE="$DEFAULTDIR/config.inc.php"
+CONFDIR=/etc/ulteo/webinterface
+A2CONFDIR=/etc/apache2/conf.d
 
-cp $DEFAULT_CONFFILE $CONFFILE
+db_get ulteo-ovd-webinterface/session_manager_ip && SM_IP=$RET
+[ "$SM_IP" != "127.0.0.1" ] && \
+    sed -i "/SESSIONMANAGER_HOST/ s/'127.0.0.1'/$SM_IP/" $CONFDIR/config.inc.php
 
-db_get ulteo-ovd-webinterface/session_manager_ip || true
-sed -r -i "s,@SESSION_MANAGER@,$RET," $CONFFILE
-
-db_get ulteo-ovd-webinterface/link_session_manager
-if [ $RET = 'false' ]; then
-     sed -i '/SESSIONMANAGER_HOST/ s/^/\/\//' $CONFFILE
-fi
+db_get ulteo-ovd-webinterface/link_session_manager && TOLINK=$RET
+[ $TOLINK = 'false' ] && \
+    sed -i '/SESSIONMANAGER_HOST/ s,^,\/\/,' $CONFDIR/config.inc.php
 
 if [ ! -e /etc/apache2/conf.d/webinterface ]; then
-    ln -s /etc/ulteo/webinterface/apache2.conf \
-        /etc/apache2/conf.d/webinterface
-
+    ln -s $CONFDIR/apache2.conf $A2CONFDIR/webinterface
     if apache2ctl configtest 2>/dev/null; then
         invoke-rc.d apache2 reload || true
     else
-        echo "Your apache2 configuration is broken, so we're not restarting it for you."
+        echo << EOF
+Your apache configuration is broken!
+Correct it and restart apache.
+EOF
     fi
 fi
 
