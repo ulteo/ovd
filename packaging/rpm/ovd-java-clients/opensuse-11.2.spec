@@ -12,7 +12,7 @@ Distribution: OpenSUSE 11.2
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
-Buildrequires: ulteo-ovd-cert, java-1.6.0-openjdk-devel, ant
+Buildrequires: ulteo-ovd-cert, java-1.6.0-openjdk-devel, ant, ant-nodeps
 
 %description
 This applet is used in the Open Virtual Desktop to display the user session in
