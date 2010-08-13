@@ -160,6 +160,8 @@ function server_display_role_preparation_aps($server) {
 	$ret['server_online'] = $server_online;
 	$ret['sessions'] = $sessions;
 	$ret['has_sessions'] = $has_sessions;
+	$ret['total_sessions'] = $total;
+	$ret['pagechanger'] = $pagechanger;
 	$ret['applications'] = $applications;
 	$ret['applications_available'] = $applications_available;
 	$ret['applications_all'] = $applications_all;
@@ -180,6 +182,8 @@ function server_display_role_aps($server, $var) {
 	$servers_replication = $var['servers_replication'];
 	$has_sessions = $var['has_sessions'];
 	$sessions = $var['sessions'];
+	$total = $var['total_sessions'];
+	$pagechanger = $var['pagechanger'];
 	
 	$tasks = array();
 	$apps_in_remove = array();
