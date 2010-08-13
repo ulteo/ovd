@@ -40,6 +40,7 @@ import org.apache.log4j.Logger;
 import org.ini4j.Wini;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
+import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.profile.ProfileProperties;
@@ -185,7 +186,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
-
+	private DisconnectionFrame discFrame = null;
+	
 	private Thread thread = null;
 
 	private HashMap<String, String> responseHandler = null;
@@ -203,6 +205,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.responseHandler.put("user_with_active_session", I18n._("You already have an active session. Please close it before to launch another one."));
 
 		this.loadingFrame = new LoadingFrame(this);
+		this.discFrame = new DisconnectionFrame();
 		this.authFrame = new AuthFrame(this);
 		this.loadProfile();
 		this.authFrame.showWindow();
@@ -231,7 +234,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			int job = this.getJobMainThread();
 
 			if (job == JOB_DISCONNECT_CLI)
-				this.client.disconnectAll();
+				this.client.performDisconnectAll();
 
 			else {
 				try {
@@ -283,6 +286,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.loadingFrame.setVisible(false);
 	}
 
+	public void disableDisconnectingMode() {
+		this.discFrame.setVisible(false);
+	}
 
 	public boolean launchConnection() {
 		boolean exit = false;
@@ -339,9 +345,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		try {
 			boolean ret = false;
 			if (localCredential)
-				ret= dialog.askForSession(request);
+				ret = dialog.askForSession(request);
 			else
-				ret= dialog.askForSession(username, password, request);
+				ret = dialog.askForSession(username, password, request);
 			
 			if (ret == false) {
 				this.disableLoadingMode();
@@ -374,7 +380,15 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		exit = this.client.perform();
 		this.client = null;
 
+		this.disableDisconnectingMode();
+		
 		return exit;
+	}
+	
+	@Override
+	public void sessionDisconnecting() {
+		this.setJobMainThread(JOB_DISCONNECT_CLI);
+		this.discFrame.setVisible(true);
 	}
 
 	@Override

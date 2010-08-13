@@ -34,6 +34,7 @@ import org.ulteo.rdp.RdpActions;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClient extends Thread implements Runnable, RdpListener, RdpActions {
+	
 	public static final String productName = "OVD Client";
 	
 	private static final long REQUEST_TIME_FREQUENTLY = 2000;
@@ -191,7 +192,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			this.continueSessionStatusMonitoringThread = false;
 			this.sessionStatusMonitoringThread = null;
 		}
-
+		
 		this.runSessionTerminated();
 
 		this.connectionIsActive = false;
@@ -285,8 +286,12 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public void seamlessEnabled(RdpConnection co) {}
 
 	public void disconnectAll() {
-		this.isCancelled = true;
+		this.obj.sessionDisconnecting();
+	}
 
+	public void performDisconnectAll() {
+		this.isCancelled = true;
+		
 		boolean logoutRet;
 		try {
 			logoutRet = this.smComm.askForLogout();
@@ -299,7 +304,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 			this.cleanConnections();
 		}
 	}
-
+	
 	public void exit(int return_code) {
 		this.exitAfterLogout = true;
 
