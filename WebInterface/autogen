@@ -14,4 +14,4 @@ fi
 
 sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
 
-autoreconf -vfi && ./configure $@
+autoreconf -vfi && ./configure --without-ulteo-applets $@
