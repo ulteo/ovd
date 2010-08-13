@@ -11,6 +11,7 @@
  */
 package net.propero.rdp.rdp5.cliprdr;
 
+import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.io.FileNotFoundException;
@@ -129,9 +130,7 @@ public class MetafilepictHandler extends TypeHandler {
 		c.send_null(ClipChannel.CLIPRDR_DATA_RESPONSE,ClipChannel.CLIPRDR_ERROR);
 	}
 
-	@Override
-	public Boolean hasNewData() {
-		// TODO Auto-generated method stub
+	public Boolean hasNewData(Clipboard clip) {
 		return false;
 	}
 
