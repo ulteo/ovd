@@ -67,6 +67,8 @@ if test -z $APPLETSDIR; then
         AC_MSG_ERROR([no ulteo applet found. Install it first or unpass this error with the --with-ulteo-applet option])
     fi
 fi
+DISTCHECK_CONFIGURE_FLAGS="--without-ulteo-applets"
+AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 AC_SUBST(APPLETSDIR)
 
 
