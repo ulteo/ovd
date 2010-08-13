@@ -8,7 +8,7 @@ Group: Applications/System
 Vendor: Ulteo SAS
 URL: http://www.ulteo.com
 Packager: Samuel Bovée <samuel@ulteo.com>
-Distribution: OpenSUSE 11.3
+Distribution: OpenSUSE 11.2
 
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
