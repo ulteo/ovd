@@ -35,11 +35,20 @@ public class JComboBoxItem extends JLabel implements ListCellRenderer {
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		this.setText(((JLabel)value).getText());
-		
-		if (isSelected)
-			this.setBackground(Color.BLACK);
-		if (cellHasFocus)
-			this.setBackground(Color.GRAY);
+
+		Color background = list.getBackground();
+		Color foreground = list.getForeground();
+
+		if (isSelected) {
+			background = list.getSelectionBackground();
+			foreground = list.getSelectionForeground();
+		}
+
+		this.setBackground(background);
+		this.setForeground(foreground);
+		this.setEnabled(list.isEnabled());
+		this.setFont(list.getFont());
+		this.setOpaque(true);
 		
 		return this;
 	}
