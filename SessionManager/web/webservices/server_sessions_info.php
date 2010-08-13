@@ -93,6 +93,8 @@ if (! $server->isAuthorized()) {
 	die();
 }
 
+Abstract_Server::save($server); //update Server cache timestamp
+
 foreach ($ret['sessions'] as $session) {
 	$buf = Abstract_Session::load($session['id']);
 	if (! $buf)
@@ -101,5 +103,5 @@ foreach ($ret['sessions'] as $session) {
 	$buf->setStatus($session['status']);
 	$buf->setRunningApplications($ret['server'], $session['instances']);
 
-	Abstract_Session::save($buf);
+	Abstract_Session::save($buf); //update Session cache timestamp
 }
