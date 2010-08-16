@@ -91,7 +91,7 @@ public class AuthFrame implements ActionListener {
 	private JComboBox keyboardBox = new JComboBox();
 	private JCheckBox rememberMe = new JCheckBox(I18n._("Remember me"));
 	private JCheckBox autoPublish = new JCheckBox(I18n._("Auto-publish shortcuts"));
-	private JCheckBox useLocalCredentials = new JCheckBox(I18n._("Use local creadentials"));
+	private JCheckBox useLocalCredentials = new JCheckBox(I18n._("Use local credentials"));
 	private boolean displayUserLocalCredentials = (System.getProperty("os.name").startsWith("Windows"));
 	private ActionListener optionListener = null;
 	

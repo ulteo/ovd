@@ -200,9 +200,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.responseHandler = new HashMap<String, String>();
 		this.responseHandler.put("auth_failed", I18n._("Authentication error. Please check your login and password"));
 		this.responseHandler.put("in_maintenance", I18n._("The system is in maintenance, please contact your administrator"));
-		this.responseHandler.put("internal_error", I18n._("The system is broken, please contact your administratord"));
+		this.responseHandler.put("internal_error", I18n._("The system is broken, please contact your administrator"));
 		this.responseHandler.put("invalid_user", I18n._("This user don't have privileges to start a session"));
-		this.responseHandler.put("service_not_available", I18n._("This user don't have privileges to start a session"));
+		this.responseHandler.put("service_not_available", I18n._("The service is not available"));
 		this.responseHandler.put("unauthorized_session_mode", I18n._("You cannot force that session type. Please change the requested type."));
 		this.responseHandler.put("user_with_active_session", I18n._("You already have an active session. Please close it before to launch another one."));
 
