@@ -34,6 +34,7 @@ package net.propero.rdp.rdp5.seamless;
 
 import java.awt.Frame;
 import java.awt.Cursor;
+import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
@@ -95,6 +96,14 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 	public void setCursor(Cursor cursor) {
 		for(SeamlessWindow sf : this.windows.values()) {
 			sf.sw_setCursor(cursor);
+		}
+	}
+
+	public void closeAllWindows() {
+		for (String w : this.windows.keySet()) {
+			Window wnd = (Window) this.windows.get(w);
+			wnd.setVisible(false);
+			wnd.dispose();
 		}
 	}
 
