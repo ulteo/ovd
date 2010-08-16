@@ -23,7 +23,8 @@ package org.ulteo.ovd.sm;
 public interface Callback {
 	public void reportErrorStartSession(String code);
 	public void reportBadXml(String data);
-	public void reportUnauthorizedHTTPResponse();
+	public void reportUnauthorizedHTTPResponse(String moreInfos);
+	public void reportNotFoundHTTPResponse(String moreInfos);
 	public void sessionConnected();
 	public void sessionDisconnecting();
 }

@@ -183,6 +183,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		System.exit(0);
 	}
 
+	private static final String ERROR_AUTHENTICATION_FAILED = "auth_failed";
+	private static final String ERROR_IN_MAINTENANCE = "in_maintenance";
+	private static final String ERROR_INTERNAL = "internal_error";
+	private static final String ERROR_INVALID_USER = "invalid_user";
+	private static final String ERROR_SERVICE_NOT_AVAILABLE = "service_not_available";
+	private static final String ERROR_UNAUTHORIZED_SESSION_MODE = "unauthorized_session_mode";
+	private static final String ERROR_ACTIVE_SESSION = "user_with_active_session";
+	private static final String ERROR_DEFAULT = "default";
 
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
@@ -198,13 +206,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public StartConnection() {
 
 		this.responseHandler = new HashMap<String, String>();
-		this.responseHandler.put("auth_failed", I18n._("Authentication error. Please check your login and password"));
-		this.responseHandler.put("in_maintenance", I18n._("The system is in maintenance, please contact your administrator"));
-		this.responseHandler.put("internal_error", I18n._("The system is broken, please contact your administrator"));
-		this.responseHandler.put("invalid_user", I18n._("This user don't have privileges to start a session"));
-		this.responseHandler.put("service_not_available", I18n._("The service is not available"));
-		this.responseHandler.put("unauthorized_session_mode", I18n._("You cannot force that session type. Please change the requested type."));
-		this.responseHandler.put("user_with_active_session", I18n._("You already have an active session. Please close it before to launch another one."));
+		this.responseHandler.put("auth_failed", I18n._("Authentication failed, please double-check your password and try again"));
+		this.responseHandler.put("in_maintenance", I18n._("The system is in maintenance mode, please contact your administrator for more information"));
+		this.responseHandler.put("internal_error", I18n._("An internal error occured, please contact your administrator"));
+		this.responseHandler.put("invalid_user", I18n._("You specified an invalid login, please double-check and try again"));
+		this.responseHandler.put("service_not_available", I18n._("The service is not available, please contact your administrator for more information"));
+		this.responseHandler.put("unauthorized_session_mode", I18n._("You are not authorized to launch a session in this mode"));
+		this.responseHandler.put("user_with_active_session", I18n._("You already have an active session"));
+		this.responseHandler.put("default", I18n._("An error occured, please contact your administrator"));
 
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
@@ -426,8 +435,17 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	@Override
-	public void reportUnauthorizedHTTPResponse() {
-		JOptionPane.showMessageDialog(null, I18n._("Authentication error"), I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+	public void reportUnauthorizedHTTPResponse(String moreInfos) {
+		String error = this.responseHandler.get(ERROR_AUTHENTICATION_FAILED);
+		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		org.ulteo.Logger.error(error + "\n" + moreInfos);
+	}
+
+	@Override
+	public void reportNotFoundHTTPResponse(String moreInfos) {
+		String error = this.responseHandler.get(ERROR_DEFAULT);
+		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		org.ulteo.Logger.error(error+ "\n" + moreInfos);
 	}
 
 	public void sessionConnected() {

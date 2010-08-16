@@ -111,6 +111,8 @@ public class SessionManagerCommunication {
 
 	private List<String> cookies = null;
 
+	private String moreInfos_lastResponse = "no more information";
+
 	public SessionManagerCommunication(String host_, boolean use_https_) {
 		this.servers = new  ArrayList<ServerAccess>();
 		this.callbacks = new CopyOnWriteArrayList<Callback>();
@@ -349,6 +351,8 @@ public class SessionManagerCommunication {
 			if (showLog)
 				System.out.println("Response "+r+ " ==> "+res+ " type: "+contentType);
 
+			this.moreInfos_lastResponse = "\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType;
+
 			if (r == HttpURLConnection.HTTP_OK) {
 				InputStream in = connexion.getInputStream();
 
@@ -395,10 +399,14 @@ public class SessionManagerCommunication {
 			}
 			else if (r == HttpURLConnection.HTTP_UNAUTHORIZED) {
 				for (Callback c : this.callbacks)
-					c.reportUnauthorizedHTTPResponse();
+					c.reportUnauthorizedHTTPResponse(this.getMoreInfos());
+			}
+			else if (r == HttpURLConnection.HTTP_NOT_FOUND) {
+				for (Callback c : this.callbacks)
+					c.reportNotFoundHTTPResponse(this.getMoreInfos());
 			}
 			else {
-				System.err.println("Invalid response:\n\tResponse code: "+ r +"\n\tResponse message: "+ res +"\n\tContent type: "+ contentType);
+				System.err.println("Invalid response:\n" + this.getMoreInfos());
 			}
 		}
 		catch (Exception e) {
@@ -557,5 +565,9 @@ public class SessionManagerCommunication {
 
 	public List<ServerAccess> getServers() {
 		return this.servers;
+	}
+
+	public String getMoreInfos() {
+		return this.moreInfos_lastResponse;
 	}
 }
