@@ -19,6 +19,8 @@ import net.propero.rdp.keymapping.KeyMapException;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+
+import java.awt.Component;
 import java.awt.event.*;
 import java.util.Vector;
 
@@ -323,7 +325,6 @@ public abstract class Input {
          * Handle a keyTyped event, sending any relevant keypresses to the server
          */
 		public void keyTyped(KeyEvent e) {
-			lastKeyEvent = e;
 			modifiersValid = true;
 			long time = getTime();
 
@@ -336,8 +337,17 @@ public abstract class Input {
 					+ ((char) e.getKeyCode()) + "'");
 
 			if (rdp != null) {
-				if (!handleSpecialKeys(time, e, true))
-					sendKeyPresses(newKeyMapper.getKeyStrokes(e));
+				if (!handleSpecialKeys(time, e, true)) {
+					String keySeq = newKeyMapper.getKeyStrokes(e);
+					if (keySeq.length() != 0) {
+						sendKeyPresses(keySeq);
+					}
+					else if (lastKeyEvent.getKeyChar() != ((char)-1)) {
+						KeyEvent ev = new KeyEvent((Component)lastKeyEvent.getSource(), KeyEvent.KEY_TYPED, lastKeyEvent.getWhen(), lastKeyEvent.getModifiers(), 0, lastKeyEvent.getKeyChar());
+						sendKeyPresses(newKeyMapper.getKeyStrokes(ev));
+					}
+				}
+				lastKeyEvent = e;
 				// sendScancode(time, RDP_KEYPRESS, keys.getScancode(e));
 			}
 		}
@@ -351,7 +361,15 @@ public abstract class Input {
 			// it
 			Integer keycode = new Integer(e.getKeyCode());
 			if (!pressedKeys.contains(keycode)) {
-				this.keyPressed(e);
+				if (rdp != null) {
+					KeyEvent ev = new KeyEvent((Component)e.getSource(), KeyEvent.KEY_PRESSED, e.getWhen(), e.getModifiers(), e.getKeyCode(), e.getKeyChar());
+					this.keyPressed(ev);
+					if (e.getKeyChar() != ((char)-1)) {
+						ev = new KeyEvent((Component)e.getSource(), KeyEvent.KEY_TYPED, e.getWhen(), e.getModifiers(), 0, e.getKeyChar());
+						this.keyTyped(ev);
+					}
+					pressedKeys.removeElement(keycode);
+				}
 			}
 
 			pressedKeys.removeElement(keycode);
