@@ -277,8 +277,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 			this.thread = new Thread(this);
 			this.thread.start();
-
+			System.out.println("SETVISIBLE");
 			this.loadingFrame.setVisible(true);
+			System.out.println("ACTION PERFORMED");
 		}
 	}
 
@@ -380,7 +381,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		exit = this.client.perform();
 		this.client = null;
 
-		this.disableDisconnectingMode();
+		this.checkDisconnectionSource();
 		
 		return exit;
 	}
@@ -390,7 +391,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.setJobMainThread(JOB_DISCONNECT_CLI);
 		this.discFrame.setVisible(true);
 	}
-
+	
+	public void checkDisconnectionSource() {
+		if (! this.discFrame.isVisible())
+			JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
+		else
+			this.disableDisconnectingMode();
+	}
+	
 	@Override
 	public void reportBadXml(String data) {
 		JOptionPane.showMessageDialog(null, I18n._("Protocol xml error: ")+data, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
