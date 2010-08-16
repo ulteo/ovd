@@ -277,9 +277,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 			this.thread = new Thread(this);
 			this.thread.start();
-			System.out.println("SETVISIBLE");
 			this.loadingFrame.setVisible(true);
-			System.out.println("ACTION PERFORMED");
 		}
 	}
 
