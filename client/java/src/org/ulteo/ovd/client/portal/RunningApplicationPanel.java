@@ -55,6 +55,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 	private GridBagConstraints gbc = null;
 	
 	public RunningApplicationPanel() {
+		this.listPanel.setBackground(Color.white);
 		this.runningApps = new ArrayList<ApplicationInstance>();
 		this.components = new ArrayList<Component>();
 		

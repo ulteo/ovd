@@ -46,6 +46,7 @@ public class MyApplicationPanel extends JPanel {
 	
 	public MyApplicationPanel(RunningApplicationPanel runningApps) {
 		this.buttonPan = new JPanel();
+		this.buttonPan.setBackground(Color.WHITE);
 		this.runningApps = runningApps;
 		this.setLayout(new BorderLayout());
 		this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
