@@ -206,14 +206,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public StartConnection() {
 
 		this.responseHandler = new HashMap<String, String>();
-		this.responseHandler.put("auth_failed", I18n._("Authentication failed, please double-check your password and try again"));
-		this.responseHandler.put("in_maintenance", I18n._("The system is in maintenance mode, please contact your administrator for more information"));
-		this.responseHandler.put("internal_error", I18n._("An internal error occured, please contact your administrator"));
-		this.responseHandler.put("invalid_user", I18n._("You specified an invalid login, please double-check and try again"));
-		this.responseHandler.put("service_not_available", I18n._("The service is not available, please contact your administrator for more information"));
-		this.responseHandler.put("unauthorized_session_mode", I18n._("You are not authorized to launch a session in this mode"));
-		this.responseHandler.put("user_with_active_session", I18n._("You already have an active session"));
-		this.responseHandler.put("default", I18n._("An error occured, please contact your administrator"));
+		this.responseHandler.put(ERROR_AUTHENTICATION_FAILED, I18n._("Authentication failed, please double-check your password and try again"));
+		this.responseHandler.put(ERROR_IN_MAINTENANCE, I18n._("The system is in maintenance mode, please contact your administrator for more information"));
+		this.responseHandler.put(ERROR_INTERNAL, I18n._("An internal error occured, please contact your administrator"));
+		this.responseHandler.put(ERROR_INVALID_USER, I18n._("You specified an invalid login, please double-check and try again"));
+		this.responseHandler.put(ERROR_SERVICE_NOT_AVAILABLE, I18n._("The service is not available, please contact your administrator for more information"));
+		this.responseHandler.put(ERROR_UNAUTHORIZED_SESSION_MODE, I18n._("You are not authorized to launch a session in this mode"));
+		this.responseHandler.put(ERROR_ACTIVE_SESSION, I18n._("You already have an active session"));
+		this.responseHandler.put(ERROR_DEFAULT, I18n._("An error occured, please contact your administrator"));
 
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
