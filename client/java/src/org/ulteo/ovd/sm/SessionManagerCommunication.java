@@ -412,7 +412,8 @@ public class SessionManagerCommunication {
 	}
 
 	private boolean parseLogoutResponse(Document in) {
-		
+		if (in == null)
+			return false;
 
 		return true;
 	}

@@ -187,6 +187,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
 	private DisconnectionFrame discFrame = null;
+
+	private boolean isCancelled = false;
 	
 	private Thread thread = null;
 
@@ -245,6 +247,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void run() {
+		this.isCancelled = false;
+
 		if (this.launchConnection()) {
 			this.continueMainThread = false;
 		}
@@ -262,8 +266,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				System.err.println("Very weird: thread should exist !");
 			}
 			else {
-				System.out.println("this.setJobMainThread(JOB_DISCONNECT_CLI);");
-				this.setJobMainThread(JOB_DISCONNECT_CLI);
+				this.isCancelled = true;
+				
+				if (this.client != null)
+					this.client.disconnectAll();
 			}
 
 			this.loadingFrame.getCancelButton().setEnabled(false);
@@ -357,6 +363,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.disableLoadingMode();
 			return exit;
 		}
+		this.loadingFrame.getCancelButton().setEnabled(true);
+		
 		Properties response = dialog.getResponseProperties();
 
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
@@ -376,7 +384,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				return exit;
 		}
 
-		exit = this.client.perform();
+		if (! this.isCancelled)
+			exit = this.client.perform();
+		else
+			this.client.disconnectAll();
 		this.client = null;
 
 		this.checkDisconnectionSource();
@@ -387,6 +398,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	@Override
 	public void sessionDisconnecting() {
 		this.setJobMainThread(JOB_DISCONNECT_CLI);
+		this.loadingFrame.setVisible(false);
 		this.discFrame.setVisible(true);
 	}
 	

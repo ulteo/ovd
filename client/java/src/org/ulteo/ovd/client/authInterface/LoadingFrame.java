@@ -43,6 +43,7 @@ public class LoadingFrame extends JDialog {
 
 		this.cancel = new JButton(I18n._("Cancel"));
 		this.cancel.setPreferredSize(new Dimension(120, 10));
+		this.cancel.setEnabled(false);
 		this.cancel.addActionListener(this.obj);
 
 		this.logo = getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));

@@ -57,7 +57,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected boolean graphic = false;
 
 	protected Callback obj = null;
-	protected boolean isCancelled = false;
 
 	protected SessionManagerCommunication smComm = null;
 	protected Thread getStatus = null;
@@ -126,6 +125,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 					else {
 						if (isActive) {
 							isActive = false;
+							this.sessionTerminated();
+						}
+						else if (status.equals(SessionManagerCommunication.SESSION_STATUS_UNKNOWN)) {
 							this.sessionTerminated();
 						}
 					}
@@ -290,8 +292,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void performDisconnectAll() {
-		this.isCancelled = true;
-		
 		boolean logoutRet;
 		try {
 			logoutRet = this.smComm.askForLogout();
