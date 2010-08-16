@@ -110,27 +110,19 @@ public class TextHandler extends TypeHandler {
 	}
 
 	@Override
-	public Boolean hasNewData(Clipboard clip) {
+	public Boolean hasNewData(Clipboard clip) throws UnsupportedFlavorException, IOException {
 		if (! clip.isDataFlavorAvailable(DataFlavor.stringFlavor))
 			return false;
 		int newHash;
-		try {
-			String text = (String)clip.getData(DataFlavor.stringFlavor);
-			newHash = text.hashCode();
-			if (newHash == this.hash) {
-				return false;
-			}
-			else {
-				this.hash = newHash;
-				return true;
-			}
-		} catch (UnsupportedFlavorException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		String text = (String)clip.getData(DataFlavor.stringFlavor);
+		newHash = text.hashCode();
+		if (newHash == this.hash) {
+			return false;
 		}
-		
-		return false;
+		else {
+			this.hash = newHash;
+			return true;
+		}
 	}
 
 }

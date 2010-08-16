@@ -100,28 +100,20 @@ public class DIBHandler extends TypeHandler implements ImageObserver {
 	}
 
 	@Override
-	public Boolean hasNewData(Clipboard clip) {
+	public Boolean hasNewData(Clipboard clip) throws UnsupportedFlavorException, IOException {
 		if (! clip.isDataFlavorAvailable(DataFlavor.imageFlavor))
 			return false;
 		int newHash;
-		try {
-			Image img = (Image)clip.getData(DataFlavor.imageFlavor);
-			//TODO find better method to get hash for the img
-			newHash = img.getHeight(null) + 1000*img.getWidth(null);
-			if (newHash == this.hash) {
-				return false;
-			}
-			else {
-				this.hash = newHash;
-				return true;
-			}
-		} catch (UnsupportedFlavorException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		Image img = (Image)clip.getData(DataFlavor.imageFlavor);
+		//TODO find better method to get hash for the img
+		newHash = img.getHeight(null) + 1000*img.getWidth(null);
+		if (newHash == this.hash) {
+			return false;
 		}
-		
-		return false;
+		else {
+			this.hash = newHash;
+			return true;
+		}
 	}
 
 }

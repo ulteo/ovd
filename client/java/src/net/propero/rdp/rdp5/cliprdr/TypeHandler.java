@@ -14,6 +14,8 @@ package net.propero.rdp.rdp5.cliprdr;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
@@ -60,7 +62,7 @@ public abstract class TypeHandler {
 	public abstract int preferredFormat();
 	public abstract boolean formatValid(int format);
 	public abstract boolean mimeTypeValid(String mimeType);
-	public abstract Boolean hasNewData(Clipboard clip);
+	public abstract Boolean hasNewData(Clipboard clip) throws UnsupportedFlavorException, IOException;
 
 	public abstract void send_data(Transferable in, ClipInterface c);	
 	

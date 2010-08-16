@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import net.propero.rdp.RdpPacket;
-import net.propero.rdp.RdpPacket_Localised;
 import net.propero.rdp.Utilities_Localised;
 
 public class UnicodeHandler extends TypeHandler {
@@ -91,27 +90,19 @@ public class UnicodeHandler extends TypeHandler {
 
 
 	@Override
-	public Boolean hasNewData(Clipboard clip) {
+	public Boolean hasNewData(Clipboard clip) throws IOException, UnsupportedFlavorException {
 		if (! clip.isDataFlavorAvailable(DataFlavor.stringFlavor))
 			return false;
 		int newHash;
-		try {
-			String text = (String)clip.getData(DataFlavor.stringFlavor);
-			newHash = text.hashCode();
-			if (newHash == this.hash) {
-				return false;
-			}
-			else {
-				this.hash = newHash;
-				return true;
-			}
-		} catch (UnsupportedFlavorException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		String text = (String)clip.getData(DataFlavor.stringFlavor);
+		newHash = text.hashCode();
+		if (newHash == this.hash) {
+			return false;
 		}
-		
-		return false;
+		else {
+			this.hash = newHash;
+			return true;
+		}
 	}
 
 
