@@ -167,17 +167,23 @@ public class SessionManagerCommunication {
 		
 		this.requestProperties = request;
 
-		HashMap<String,String> params = new HashMap<String,String>();
+		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
+		Document doc = domImpl.createDocument(null, "session", null);
+
+		Element session = doc.getDocumentElement();
+
 		if (request.getMode() == Properties.MODE_DESKTOP)
-			params.put(FIELD_SESSION_MODE, SESSION_MODE_DESKTOP);
+			session.setAttribute("mode", SESSION_MODE_DESKTOP);
 		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
-			params.put(FIELD_SESSION_MODE, SESSION_MODE_REMOTEAPPS);
+			session.setAttribute("mode", SESSION_MODE_REMOTEAPPS);
 
-		params.put(FIELD_LOGIN, login);
-		params.put(FIELD_PASSWORD, password);
-		// todo : other options
+		Element user = doc.createElementNS(null, "user");
+		user.setAttribute("login", login);
+		user.setAttribute("password", password);
 
- 		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
+		session.appendChild(user);
+
+ 		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
  		if (response == null)
  			return false;
 
@@ -193,13 +199,17 @@ public class SessionManagerCommunication {
 
 		this.requestProperties = request;
 
-		HashMap<String,String> params = new HashMap<String,String>();
-		if (request.getMode() == Properties.MODE_DESKTOP)
-			params.put(FIELD_SESSION_MODE, SESSION_MODE_DESKTOP);
-		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
-			params.put(FIELD_SESSION_MODE, SESSION_MODE_REMOTEAPPS);
+		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
+		Document doc = domImpl.createDocument(null, "session", null);
 
-		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
+		Element session = doc.getDocumentElement();
+
+		if (request.getMode() == Properties.MODE_DESKTOP)
+			session.setAttribute("mode", SESSION_MODE_DESKTOP);
+		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
+			session.setAttribute("mode", SESSION_MODE_REMOTEAPPS);
+		
+		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
 
 		if (response == null)
 			return false;

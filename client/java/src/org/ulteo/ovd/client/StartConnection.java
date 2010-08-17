@@ -144,6 +144,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				}
 
 				Properties response = dialog.getResponseProperties();
+				
+				if (response.getMode() != request.getMode()) {
+					System.err.println("Error: No valid session mode received");
+					usage();
+					System.exit(1);
+				}
 
 				OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 
@@ -313,7 +319,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		int mode =  Properties.MODE_ANY;
 		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
 			mode = Properties.MODE_REMOTEAPPS;
-		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
+		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
 			mode = Properties.MODE_DESKTOP;
 				
 		
@@ -375,6 +381,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.loadingFrame.getCancelButton().setEnabled(true);
 		
 		Properties response = dialog.getResponseProperties();
+		
+		if ((mode != Properties.MODE_ANY) && (response.getMode() != request.getMode())) {
+			this.disableLoadingMode();
+			JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
+			System.err.println("Error: No valid session mode received");
+
+			return exit;
+		}
 
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 		

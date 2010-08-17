@@ -127,14 +127,13 @@ public class StartTokenAuth {
 
 		Properties response = dialog.getResponseProperties();
 
-		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
-
-
 		if (response.getMode() != Properties.MODE_REMOTEAPPS) {
 			System.err.println("Error: No valid session mode received");
 			usage();
 			System.exit(1);
 		}
+
+		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 
 		OvdClient cli = new OvdClientIntegrated(dialog);
 		cli.perform();
