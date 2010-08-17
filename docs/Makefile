@@ -15,6 +15,7 @@ SRC=AccountsIntegration.xml \
 	Installation_RedHat.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
+	StartASession.xml \
 	SystemUpgrade.xml \
 	Vpn.xml
 
