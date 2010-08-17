@@ -3,6 +3,7 @@
 SRC=AccountsIntegration.xml \
 	AdminConsole.xml \
 	AD_Primary_Authentication.xml \
+	Architecture.xml \
 	Easy_Installation.xml \
 	FAQ.xml \
 	Installation.xml \
