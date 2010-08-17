@@ -263,7 +263,7 @@ class Session(AbstractSession):
 		try:
 			Reg.UpdateActiveSetup(self.user.name, hiveName, r"Software\Microsoft\Active Setup")
 			# On 64 bits architecture, Active Setup is already present in path "Software\Wow6432Node\Microsoft\Active Setup"
-			if "PROGRAMW6432" in os.environ.keys():	
+			if "PROGRAMW6432" in os.environ.keys():
 				Reg.UpdateActiveSetup(self.user.name, hiveName, r"Software\Wow6432Node\Microsoft\Active Setup")
 			
 		except Exception, err:
