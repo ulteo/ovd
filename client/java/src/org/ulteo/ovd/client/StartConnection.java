@@ -145,12 +145,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 				Properties response = dialog.getResponseProperties();
 				
-				if (response.getMode() != request.getMode()) {
-					System.err.println("Error: No valid session mode received");
-					usage();
-					System.exit(1);
-				}
-
 				OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 
 				OvdClient cli = null;
