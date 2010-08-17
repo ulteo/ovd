@@ -1,7 +1,7 @@
 #!/bin/sh
 
 PASSWD=$(pwgen -1)
-DNAME="cn=Gauvain Pocentek, ou=Ulteo, o=Ulteo, c=FR"
+DNAME="@DNAME@"
 ALIAS="ulteo"
 KEYSTORE=keystore
 VALIDITY=180
