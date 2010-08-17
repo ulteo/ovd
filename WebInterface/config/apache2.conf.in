@@ -1,6 +1,6 @@
 # Ulteo webinterface alias
 
-Alias /webinterface @DATADIR@/ulteo/webinterface
+Alias /ovd @DATADIR@/ulteo/webinterface
 <Directory @DATADIR@/ulteo/webinterface>
     Options FollowSymLinks
     AllowOverride None
