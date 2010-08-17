@@ -181,40 +181,49 @@ public class AuthFrame implements ActionListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (! optionClicked) {
-					gbc.anchor = GridBagConstraints.LINE_START;
-					gbc.insets.left = 25;
+					gbc.anchor = GridBagConstraints.CENTER;
+					gbc.gridwidth = 2;
+					gbc.weightx = 1;
+					gbc.weighty = 1;
 					gbc.gridx = 0;
-					gbc.gridy = 8;
+					gbc.gridy = 9;
 					gbc.insets.top = 30;
 					mainFrame.add(optionLogoLabel, gbc);
 					
+					gbc.anchor = GridBagConstraints.LINE_START;
+					gbc.weightx = 0;
+					gbc.weighty = 0;
+					gbc.gridwidth = 1;
 					gbc.insets.top = 0;
 					gbc.insets.left = 0;
 					gbc.gridx = 1;
-					gbc.gridy = 9;
+					gbc.gridy = 10;
 					mainFrame.add(mode, gbc);
 					
-					/*gbc.gridy = 12;
+					/*gbc.gridy = 13;
 					mainFrame.add(language, gbc);
 					
-					gbc.gridy = 13;
+					gbc.gridy = 14;
 					mainFrame.add(keyboard, gbc);*/
 					
-					gbc.gridwidth = 1;
+					gbc.gridwidth = 2;
 					gbc.gridx = 2;
-					gbc.gridy = 9;
-					
+					gbc.gridy = 10;
+					gbc.fill = GridBagConstraints.HORIZONTAL;
 					mainFrame.add(sessionModeBox, gbc);
+					
+					sessionModeBox.validate();
 					
 					/*gbc.gridx = 2;
 					gbc.gridwidth = 2;
-					gbc.gridy = 12;
+					gbc.gridy = 13;
 					gbc.fill = GridBagConstraints.HORIZONTAL;
 					mainFrame.add(languageBox, gbc);
 					
-					gbc.gridy = 13;
+					gbc.gridy = 14;
 					mainFrame.add(keyboardBox, gbc);*/
 					
+					gbc.gridwidth = 1;
 					gbc.fill = GridBagConstraints.NONE;
 					moreOption.setIcon(hideOption);
 					moreOption.setText(I18n._("Fewer options"));
@@ -328,7 +337,7 @@ public class AuthFrame implements ActionListener {
 		gbc.anchor = GridBagConstraints.CENTER;
 		mainFrame.add(rememberMe, gbc);
 		
-		gbc.gridx = 3;
+		gbc.gridx = 2;
 		gbc.gridy = pos++;
 		gbc.anchor = GridBagConstraints.LINE_START;
 		gbc.gridwidth = 1;
@@ -394,11 +403,13 @@ public class AuthFrame implements ActionListener {
 		
 		this.gbc.anchor = GridBagConstraints.LINE_START;
 		this.gbc.insets.left = 0;
+		this.gbc.gridwidth = 1;
 		
 		if (this.sessionModeBox.getSelectedItem() == this.itemModeApplication) {	
 			this.gbc.gridx = 2;
-			this.gbc.gridy = 10;
-			this.gbc.anchor = GridBagConstraints.CENTER;
+			this.gbc.gridy = 11;
+			this.gbc.gridwidth = 2;
+			this.gbc.anchor = GridBagConstraints.LINE_START;
 			this.gbc.fill = GridBagConstraints.NONE;
 			this.mainFrame.add(autoPublish, gbc);
 		}
@@ -406,22 +417,24 @@ public class AuthFrame implements ActionListener {
 		else if (this.sessionModeBox.getSelectedItem() == this.itemModeDesktop) {
 			this.gbc.insets.left = 0;
 			this.gbc.gridx = 1;
-			this.gbc.gridy = 10;
+			this.gbc.gridy = 11;
 			this.mainFrame.add(resolution, gbc);
 			
-			this.gbc.anchor = GridBagConstraints.CENTER;
-			this.gbc.insets.left = 10;
+			this.gbc.anchor = GridBagConstraints.LINE_START;
 			this.gbc.gridx = 2;
-			this.gbc.gridy = 10;
-			this.gbc.gridwidth = 2;
+			this.gbc.gridy = 11;
+			this.gbc.gridwidth = 1;
+			this.gbc.fill = GridBagConstraints.NONE;
+			this.resBar.setSize(new Dimension(sessionModeBox.getWidth(), 33));
+			this.resBar.setPreferredSize(new Dimension(sessionModeBox.getWidth(), 33));
 			this.mainFrame.add(resBar, gbc);
 			
 			this.gbc.insets.left = 0;
-			this.gbc.gridy = 11;
+			this.gbc.gridy = 12;
 			
+			this.gbc.anchor = GridBagConstraints.CENTER;
 			this.mainFrame.add(resolutionValue, gbc);
 		}
-		
 		this.mainFrame.pack();
 	}
 	
