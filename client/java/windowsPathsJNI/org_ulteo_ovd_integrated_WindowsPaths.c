@@ -53,3 +53,13 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getDesktopP
     printf("Desktop path: %s\n", path);
     return ret;
 }
+
+JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getAppDataPath(JNIEnv *env, jclass class) {
+    jstring ret = NULL;
+    TCHAR path[MAX_PATH];
+
+    if (getPath(CSIDL_APPDATA, path) == TRUE)
+        ret = (*env)->NewStringUTF(env, path);
+    printf("AppData path: %s\n", path);
+    return ret;
+}

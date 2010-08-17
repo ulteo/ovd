@@ -20,8 +20,6 @@
 
 package org.ulteo.ovd.integrated;
 
-import org.ulteo.ovd.integrated.Constants;
-
 public class WindowsPaths {
 	static{
 		if (System.getProperty("os.name").startsWith("Windows"))
@@ -30,4 +28,5 @@ public class WindowsPaths {
 
 	public static native String getStartMenuPath();
 	public static native String getDesktopPath();
+	public static native String getAppDataPath();
 }

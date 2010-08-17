@@ -32,7 +32,7 @@ public final class Constants {
 
 	public static final String FILENAME_LAUNCHER = "UlteoOVDIntegratedLauncher"+((OSTools.isWindows()) ? ".exe" : "");
 	
-	public static final String PATH_CONF = Constants.HOMEDIR+Constants.FILE_SEPARATOR+((OSTools.isWindows()) ? "Application Data"+Constants.FILE_SEPARATOR : ".")+"ulteo";
+	public static final String PATH_CONF = ((OSTools.isWindows()) ? WindowsPaths.getAppDataPath()+Constants.FILE_SEPARATOR : Constants.HOMEDIR+Constants.FILE_SEPARATOR+".") + "ulteo";
 	public static final String PATH_OVD_CONF = Constants.PATH_CONF+Constants.FILE_SEPARATOR+"ovd";
 	public static final String PATH_NATIVE_CLIENT_CONF = Constants.PATH_OVD_CONF+Constants.FILE_SEPARATOR+"client";
 
