@@ -129,7 +129,7 @@ class Session {
 		} elseif ($status_ == Session::SESSION_STATUS_INACTIVE) {
 			if (! array_key_exists('persistent', $this->settings) || $this->settings['persistent'] == 0)
 				return $this->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
-		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY || $status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
+		} elseif ($status_ == Session::SESSION_STATUS_WAIT_DESTROY) {
 			Logger::info('main', 'Session end : \''.$this->id.'\'');
 
 			$plugins = new Plugins();
@@ -140,8 +140,10 @@ class Session {
 				'session'	=>	$this->id
 			));
 
-			if (! $this->orderDeletion((($status_ == Session::SESSION_STATUS_WAIT_DESTROY)?true:false)))
+			if (! $this->orderDeletion())
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
+		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
+			Logger::info('main', 'Session purge : \''.$this->id.'\'');
 
 			Abstract_Session::delete($this->id);
 
@@ -278,8 +280,6 @@ class Session {
 					Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
 			}
 		}
-
-		Abstract_Session::delete($this->id);
 
 		return true;
 	}
