@@ -62,26 +62,19 @@ function parse_client_XML($xml_) {
 	if (is_null($session_node))
 		return false;
 
-	if (! $session_node->hasAttribute('mode'))
-		return false;
-
-	if (! $session_node->hasAttribute('language'))
-		return false;
-
-	$_SESSION['mode'] = $session_node->getAttribute('mode');
+	if ($session_node->hasAttribute('mode'))
+		$_SESSION['mode'] = $session_node->getAttribute('mode');
 
 	if ($session_node->hasAttribute('language'))
 		$_REQUEST['language'] = $session_node->getAttribute('language');
 
 	$user_node = $dom->getElementsByTagname('user')->item(0);
-	if (is_null($user_node))
-		return false;
-
-	if (! $user_node->hasAttribute('login') || ! $user_node->hasAttribute('password'))
-		return false;
-
-	$_POST['login'] = $user_node->getAttribute('login');
-	$_POST['password'] = $user_node->getAttribute('password');
+	if (! is_null($user_node)) {
+		if ($user_node->hasAttribute('login'))
+			$_POST['login'] = $user_node->getAttribute('login');
+		if ($user_node->hasAttribute('password'))
+			$_POST['password'] = $user_node->getAttribute('password');
+	}
 
 	return true;
 }
@@ -127,6 +120,10 @@ if ($system_in_maintenance == '1') {
 }
 
 $ret = parse_client_XML(@file_get_contents('php://input'));
+if (! $ret) {
+	Logger::error('main', '(startsession) Client does not send a valid XML');
+	throw_response(INTERNAL_ERROR);
+}
 
 if (! isset($_SESSION['login'])) {
 	$ret = do_login();
