@@ -117,6 +117,9 @@ class Session {
 	}
 
 	public function setStatus($status_) {
+		if ($status_ == $this->getAttribute('status'))
+			return false; // status is already the same...
+
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
 		if ($status_ == Session::SESSION_STATUS_INITED) {
