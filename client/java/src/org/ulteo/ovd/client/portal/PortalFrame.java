@@ -34,6 +34,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;
 
 public class PortalFrame extends JFrame implements WindowListener {
@@ -48,12 +50,14 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private SouthEastPanel sep = null;	
 	private Image frameLogo = null;
 	private Font font = new Font("Dialog", 1, 12);
+	private IntegratedTrayIcon systray = null;
 	
 	public PortalFrame(String username) {
 		if (username == null)
 			username = "";
 		String displayName = I18n._("Welcome {user}");
 		displayName = displayName.replaceAll("\\{user\\}", username);
+		this.systray = new IntegratedTrayIcon(this);
 		this.addWindowListener(this);
 		this.user = new JLabel(displayName);
 		this.init();
@@ -61,7 +65,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	
 	public void init() {
-		
 		this.setTitle("OVD Remote Applications");
 		this.setSize(700,400);
 		this.setResizable(false);
@@ -108,6 +111,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 		gbc.insets.bottom = 20;
 		gbc.insets.right = 5;
 		this.add(runningAppsPanel, gbc);
+		this.systray.addSysTray();
 		this.validate();
 	}
 	
@@ -128,6 +132,10 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	public RunningApplicationPanel getRunningApplicationPanel() {
 		return runningAppsPanel;
+	}
+	
+	public IntegratedTrayIcon getSystray() {
+		return this.systray;
 	}
 
 	public void enableIconsButton() {
@@ -166,7 +174,12 @@ public class PortalFrame extends JFrame implements WindowListener {
 
 
 	@Override
-	public void windowIconified(WindowEvent arg0) {}
+	public void windowIconified(WindowEvent arg0) {
+		if (OSTools.isWindows())
+			this.setVisible(false);
+		/* Bug on linux, when frame is iconified,
+		 * it will never be deiconified by clicking on systray icon */
+	}
 
 
 	@Override

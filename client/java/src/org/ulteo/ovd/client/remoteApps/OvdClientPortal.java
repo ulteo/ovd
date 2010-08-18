@@ -116,6 +116,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.spool = null;
 		
 		this.portal.setVisible(false);
+		this.portal.getSystray().removeSysTray();
 		this.portal.dispose();
 	}
 
