@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2010 
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -495,10 +496,18 @@ public class SessionManagerCommunication {
 
 			Properties response = new Properties(mode);
 
-			if (rootNode.hasAttribute("multimedia"))
-				response.setMultimedia(true);
-			if (rootNode.hasAttribute("redirect_client_printers"))
-				response.setMultimedia(true);
+			if (rootNode.hasAttribute("multimedia")) {
+				if (rootNode.getAttribute("multimedia").equals("1"))
+					response.setMultimedia(true);
+				else 
+					response.setMultimedia(false);
+			}
+			if (rootNode.hasAttribute("redirect_client_printers")) {
+				if (rootNode.getAttribute("redirect_client_printers").equals("1"))
+					response.setPrinters(true);
+				else
+					response.setPrinters(false);
+			}
 
 			NodeList usernameNodeList = rootNode.getElementsByTagName("user");
 			if (usernameNodeList.getLength() == 1) {
