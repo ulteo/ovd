@@ -345,7 +345,7 @@ public class SessionManagerCommunication {
 				serializer.serialize(request);
 
 				if (showLog)
-					this.dumpXML(request, "Receiving XML:");
+					this.dumpXML(request, "Sending XML:");
 			}
 			else if (data != null) {
 				System.err.println("Cannot send "+ data.getClass().getName() +" data to session manager webservices");
