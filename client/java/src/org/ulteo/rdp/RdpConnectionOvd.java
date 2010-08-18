@@ -219,6 +219,16 @@ public class RdpConnectionOvd extends RdpConnection {
 		this.mapFile = this.mapFile.replace('_', '-');
 	}
 
+	@Override
+	public void stop() {
+		super.stop();
+
+		if (this.diskManager != null) {
+			this.diskManager.stop();
+			this.diskManager = null;
+		}
+	}
+
 	public void addApp(Application app_) {
 		this.appsList.add(app_);
 	}

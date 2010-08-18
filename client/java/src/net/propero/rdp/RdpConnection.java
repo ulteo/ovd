@@ -30,6 +30,7 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import net.propero.rdp.keymapping.KeyCode_FileBased;
 import net.propero.rdp.keymapping.KeyMapException;
@@ -67,6 +68,8 @@ public class RdpConnection implements SeamListener, Runnable{
 	private Logger logger = Logger.getLogger(RdpConnection.class);
 
 	private boolean keep_running = false;
+
+	private JFrame backstoreFrame = null;
 	
 	public RdpConnection(Options opt_, Common common_) {
 		this.common = common_;
@@ -350,10 +353,10 @@ public class RdpConnection implements SeamListener, Runnable{
 		}
 
 		if (this.opt.seamlessEnabled) {
-			JFrame f = new JFrame();
-			f.setVisible(false);
-			f.add(this.canvas);
-			f.pack();
+			this.backstoreFrame = new JFrame();
+			this.backstoreFrame.setVisible(false);
+			this.backstoreFrame.add(this.canvas);
+			this.backstoreFrame.pack();
 		}
 		
 		this.fireConnecting();
@@ -435,6 +438,19 @@ public class RdpConnection implements SeamListener, Runnable{
 			} else
 				System.out.println("The communications layer could not be initiated!");
 		}
+
+		if (this.backstoreFrame != null) {
+			SwingUtilities.invokeLater(new Runnable() {
+
+				public void run() {
+					backstoreFrame.setVisible(false);
+					backstoreFrame.removeAll();
+					backstoreFrame.dispose();
+					backstoreFrame = null;
+				}
+			});
+		}
+
 		exit(exit);
 	}
 
@@ -486,6 +502,9 @@ public class RdpConnection implements SeamListener, Runnable{
 		if (this.opt.seamlessEnabled && this.seamChannel != null) {
 			this.seamChannel.closeAllWindows();
 		}
+
+		if (this.soundChannel != null)
+			this.soundChannel.stopPlayThread();
 	}
 	
 	private void exit(int n) {

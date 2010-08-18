@@ -41,17 +41,21 @@ public abstract class DiskManager {
 		this.rdpdrChannel = diskChannel;
 		this.staticShares = new ArrayList<String>();
 		this.directoryToInspect = new ArrayList<String>();
-		this.diskAction = new Timer();
 	}
 	
 	/**************************************************************************/
 	public void launch() {
+		diskAction = new Timer();
 		diskAction.schedule(new DiskUpdater(this), 0, 5000);
 		
 	}
 	
 	public void stop() {
+		if (diskAction == null)
+			return;
+		
 		diskAction.cancel();
+		diskAction = null;
 	}
 
 	/**************************************************************************/

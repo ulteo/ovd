@@ -91,6 +91,15 @@ public class SoundChannel extends VChannel {
 		return "rdpsnd";
 	}
 
+	public void stopPlayThread() {
+		this.ps.interrupt();
+		while (this.ps.isAlive()) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException ex) {}
+		}
+	}
+
 	public void process( RdpPacket data ) throws RdesktopException, IOException, CryptoException {
 		int type, length;
 
@@ -309,18 +318,18 @@ public class SoundChannel extends VChannel {
 	 * */
 	public class playThread extends Thread{
 		public void run(){
-			while(true){
-				while(!soundDriver.isDspBusy()){
-					synchronized(this) {
-						try {
-	            			wait();
-	            		} catch(InterruptedException e) {
-	            			e.printStackTrace();
-	            		}
-	            	}
-	            }
-	            soundDriver.waveOutPlay();
-			 }
+			try {
+				while(true){
+					while(!soundDriver.isDspBusy()){
+						synchronized(this) {
+							wait();
+						}
+					}
+					soundDriver.waveOutPlay();
+				}
+			} catch(InterruptedException e) {
+				logger.info("Sound thread stopped");
+			}
 		}
 	}
 	

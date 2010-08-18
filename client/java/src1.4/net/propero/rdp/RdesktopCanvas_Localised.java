@@ -44,11 +44,9 @@ public class RdesktopCanvas_Localised extends RdesktopCanvas {
         g.dispose();
     }    
         
-    BufferedImage apex_backstore = null;
     
 	RdesktopCanvas_Localised(Options opt_, Common common_){
 		super(opt_,common_);
-        apex_backstore = new BufferedImage(opt_.width, opt_.height, BufferedImage.TYPE_INT_RGB);
 	}
 	
 	public void movePointer(int x, int y){

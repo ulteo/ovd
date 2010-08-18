@@ -1719,7 +1719,6 @@ public class Rdp {
 
     public void registerDrawingSurface(RdesktopCanvas canvas) {
         this.surface = canvas;
-        net.propero.rdp.applet.RdpApplet.refApplet.backstore = canvas.backstore;
         orders.registerDrawingSurface(canvas);
     }
 
