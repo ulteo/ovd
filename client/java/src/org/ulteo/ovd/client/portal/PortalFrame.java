@@ -48,7 +48,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private RunningApplicationPanel runningAppsPanel = null;
 	private GridBagConstraints gbc = null;
 	private SouthEastPanel sep = null;	
-	private Image frameLogo = null;
 	private Font font = new Font("Dialog", 1, 12);
 	private IntegratedTrayIcon systray = null;
 	
@@ -57,7 +56,6 @@ public class PortalFrame extends JFrame implements WindowListener {
 			username = "";
 		String displayName = I18n._("Welcome {user}");
 		displayName = displayName.replaceAll("\\{user\\}", username);
-		this.systray = new IntegratedTrayIcon(this);
 		this.addWindowListener(this);
 		this.user = new JLabel(displayName);
 		this.init();
@@ -65,13 +63,15 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	
 	public void init() {
+		Image frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		this.systray = new IntegratedTrayIcon(this, frameLogo);
+		
+		this.setIconImage(frameLogo);
 		this.setTitle("OVD Remote Applications");
 		this.setSize(700,400);
 		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
-		this.setIconImage(frameLogo);
 		
 		this.user.setFont(new Font("Dialog", 1, 18));
 		this.user.setForeground(new Color(97, 99, 102));

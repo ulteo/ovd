@@ -21,26 +21,24 @@
 package org.ulteo.ovd.client.remoteApps;
 
 import java.awt.AWTException;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 
-import org.ulteo.ovd.client.portal.PortalFrame;
 
 
 public class IntegratedTrayIcon extends TrayIcon implements ActionListener {
-	private PortalFrame portal = null;
+	private Frame portal = null;
 	private SystemTray systemTray = null;
 
 
-	public IntegratedTrayIcon(PortalFrame portal) {
-		super(null, "Open Virtual Desktop");
-		Image logo = Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+	public IntegratedTrayIcon(Frame portal, Image logo) {
+		super(logo, "Open Virtual Desktop");
 		this.setImage(logo);
 		this.portal = portal;
 		this.setImageAutoSize(true);
