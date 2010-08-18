@@ -96,9 +96,10 @@ public class SoundDriver {
 	}
 
 	public void waveOutClose() {
-		while( queueLo != queueHi ) {
-			soundChannel.sendCompletion( packetQueue[ queueLo ].tick, packetQueue[ queueLo ].index );
-			queueLo = ( queueLo + 1 ) % MAX_QUEUE;
+		int queueLo2 = queueLo;
+		while( queueLo2 != queueHi ) {
+			soundChannel.sendCompletion( packetQueue[ queueLo2 ].tick, packetQueue[ queueLo2 ].index );
+			queueLo2 = ( queueLo2 + 1 ) % MAX_QUEUE;
 		}
 		if( oDevice != null ) {
 			oDevice.stop();
