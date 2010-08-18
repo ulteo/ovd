@@ -47,37 +47,38 @@ while [ ! -e "$CHROOTCONF" ]; do
     db_go
 done
 
-mkdir -p $CONFDIR
-set_conf $CONFDIR/subsystem.conf "CHROOT" $CHROOTPATH
 
-# stop the postinst if there is no chroot conf file
-if [ ! -e "$CHROOTCONF" ]; then
+if [ -e "$CHROOTCONF" ]; then
+    # set timezone
+    if [ -f /etc/timezone ]; then
+        HOSTTZ=$(head -n 1 /etc/timezone)
+    fi
+    if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
+        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
+        echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
+    fi
+
+    # if we reinstall the ApS and the chroot is already there, the configs need to
+    # be written again
+    set_conf $CHROOTCONF "ROLES" "aps"
+    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
+
+    # session manager url
+    db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
+    set_conf $CHROOTCONF "session_manager" "$URL"
+
+    # resolv.conf
+    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
+    [ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
+
+else
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
     db_go
-    exit 0
+    CHROOTPATH=""
 fi
 
-# set timezone
-if [ -f /etc/timezone ]; then
-    HOSTTZ=$(head -n 1 /etc/timezone)
-fi
-if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
-    cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
-    echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
-fi
-
-# if we reinstall the ApS and the chroot is already there, the configs need to
-# be written again
-set_conf $CHROOTCONF "ROLES" "aps"
-set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
-
-# session manager url
-db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
-set_conf $CHROOTCONF "session_manager" "$URL"
-
-# resolv.conf
-[ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
-[ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
+mkdir -p $CONFDIR
+set_conf $CONFDIR/subsystem.conf "CHROOT" $CHROOTPATH
 
 db_stop
 

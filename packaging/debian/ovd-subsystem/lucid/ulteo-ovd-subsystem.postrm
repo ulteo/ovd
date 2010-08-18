@@ -2,6 +2,8 @@
 
 . /usr/share/debconf/confmodule
 
+rm -f /etc/ulteo/subsystem.conf
+
 if [ "$1" = "purge" ]; then
 
     # ask the user if he wants to remove the chroot
