@@ -1,0 +1,147 @@
+#!/bin/sh
+# Copyright (C) 2008 Ulteo SAS
+# Author: Gauvain Pocentek <gauvain@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, version 2
+# of the License.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+PROGRAM=$(basename $0)
+
+CHROOTURL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
+CHROOTDIR=/opt/ulteo
+CONFDIR=/etc/ulteo
+
+set_conf () {
+    # $1: configfile
+    # $2: field
+    # $3: value
+    touch $1
+    if grep -q "^$2 *=" $1 2>/dev/null; then
+        sed -i "s#^$2 *=.*#$2=$3#" $1
+    else
+        echo "$2=$3" >> $1
+    fi
+}
+
+
+die () {
+    echo "$@"
+    exit 1
+}
+
+usage ()
+{
+    echo << EOF
+Usage: $PROGRAM [--chroot-uri uri] [--copy] [--chroot-dir dir] [--version|-v] [--help|-h]
+Configure an Ulteo Subsystem (Open Virtual Desktop)
+
+  --chroot-uri <uri>   get the chroot from 'uri'
+                       recognised protocoles are http://, ftp:// and file://
+                       (default: $CHROOTURL)
+  --chroot-dir <dir>   download and extract the chroot in this directory
+                       (default: $CHROOTDIR)
+  --sm-address         Ulteo OVD Session Manager addresse
+  --force              force to write the chroot in the selected directory
+  --help|-h            display this help
+  --version|-v         display version informations
+EOF
+}
+
+unset URI
+unset TARGET
+unset SM
+FORCE="false"
+while [ -n "$1" ]; do
+    case $1 in
+        --chroot-url|--chroot-uri)
+            URI="$2"
+            shift;;
+        --chroot-dir)
+            TARGET="$2"
+            shift;;
+        --sm-address)
+            SM="$2"
+            shift;;
+        --force)
+            FORCE="true"
+            shift;;
+        --help|-h)
+            usage
+            exit 0;;
+        --version|-h)
+            echo $PROGRAM @PKG_VERSION@
+            exit 0;;
+        *)
+            usage
+            exit 1;;
+    esac
+    shift
+done
+
+[ -z "$TARGET" ] && echo -n "Chroot destination [$CHROOTDIR]: " && read TARGET
+[ -z "$TARGET" ] && TARGET=$CHROOTDIR
+[ "$TARGET" != "/" ] && [ "$FORCE" = "true" ] && rm -rf $TARGET
+[ -d "$TARGET" ] && die "The chroot target '$TARGET' already exists.
+Change it or use the option --force to delete the old chroot."
+
+[ -z "$URI" ] && echo -n "Chroot download uri [$CHROOTURL]: " && read URI
+[ -z "$URI" ] && URI=$CHROOTURL
+
+# test the URI
+[ $(echo $URI | cut -c 1) = '/' ] && URI="file://$URI"
+CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
+curl $CURLOPTS -f -s -I "$URI" > /dev/null || die "Cannot have access to the chroot tarball"
+
+# get the chroot
+echo "Retrieving and uncompressing the chroot tarball..."
+mkdir -p $TARGET
+curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$TARGET" -f -
+if [ $? != 0 ]; then
+    rm -rf $TARGET
+    die "Chroot download failed, try again later"
+fi
+
+CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
+[ -e "$CHROOTCONF" ] || die "Chroot download is corrupt ; download it again"
+
+# set timezone
+[ -f /etc/timezone ] && HOSTTZ=$(head -n 1 /etc/timezone)
+if [ -n "$HOSTTZ" -a -f $TARGET/usr/share/zoneinfo/$HOSTTZ ]; then
+    cp /usr/share/zoneinfo/$HOSTTZ $TARGET/etc/localtime
+    echo "$HOSTTZ" > $TARGET/etc/timezone
+fi
+
+# the configs need to be written again
+set_conf $CHROOTCONF "ROLES" "aps"
+set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
+
+# session manager url
+[ -z "$SM" ] && echo -n "Session Manager address : " && read SM
+set_conf $CHROOTCONF "session_manager" "$URL"
+
+# resolv.conf
+[ -f /etc/resolv.conf ] && cp /etc/resolv.conf $TARGET/etc/resolv.conf
+[ -f /etc/hosts ] && cp /etc/hosts $TARGET/etc/hosts
+
+mkdir -p $CONFDIR
+set_conf $CONFDIR/subsystem.conf "CHROOT" $TARGET
+
+
+if which chkconfig > /dev/null; then
+    chkconfig --add ulteo-ovd-subsystem
+elif which update-rc.d > /dev/null; then
+    update-rc.d ulteo-ovd-subsystem defaults
+fi
+
+exit 0
