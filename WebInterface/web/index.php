@@ -25,6 +25,8 @@ $languages = get_available_languages();
 $keymaps = get_available_keymaps();
 
 $wi_sessionmanager_host = '';
+if (defined('SESSIONMANAGER_HOST'))
+	$wi_sessionmanager_host	= SESSIONMANAGER_HOST;
 if (isset($_COOKIE['webinterface']['sessionmanager_host']))
 	$wi_sessionmanager_host = (string)$_COOKIE['webinterface']['sessionmanager_host'];
 
@@ -377,7 +379,7 @@ checkLogin();
 													<strong><?php echo _('Session Manager'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_host" value="<?php echo ((defined('SESSIONMANAGER_HOST'))?'null':$wi_sessionmanager_host) ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
+													<input type="text" id="sessionmanager_host" value="<?php echo ((defined('SESSIONMANAGER_HOST'))?$wi_sessionmanager_host:'') ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<script type="text/javascript">Event.observe(window, 'load', function() {
 														setTimeout(function() {
 															var sessionmanager_host_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
