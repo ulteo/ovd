@@ -420,8 +420,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 	
 	public void checkDisconnectionSource() {
-		if (! this.discFrame.isVisible())
+		if (! this.discFrame.isVisible()) {
+			if (loadingFrame.isVisible())
+				disableLoadingMode();
 			JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
+			
+		}
 		else
 			this.disableDisconnectingMode();
 	}
