@@ -78,11 +78,12 @@ public class RdpdrChannel extends VChannel {
 	
 	public int g_num_devices = 0;
 	LinkedList g_iorequest = new LinkedList();
-	public static RdpdrDevice[] g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
+	public static RdpdrDevice[] g_rdpdr_device;
 	protected static Logger logger = Logger.getLogger(RdpdrChannel.class);
 	
 	public RdpdrChannel(Options opt, Common common) {
 		super(opt, common);
+		g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
 	}
 	
 	public int flags() {
