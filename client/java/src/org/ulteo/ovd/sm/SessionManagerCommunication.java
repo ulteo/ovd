@@ -184,11 +184,11 @@ public class SessionManagerCommunication {
 
 		session.appendChild(user);
 
- 		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
- 		if (response == null)
- 			return false;
-
- 		return this.parseStartSessionResponse(response);
+		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
+		if (! (obj instanceof Document) || obj == null)
+			return false;
+ 		
+ 		return this.parseStartSessionResponse((Document) obj);
 	}
 
 	/**
@@ -210,12 +210,11 @@ public class SessionManagerCommunication {
 		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
 			session.setAttribute("mode", SESSION_MODE_REMOTEAPPS);
 		
-		Document response = (Document) this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
-
-		if (response == null)
+		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
+		if (! (obj instanceof Document) || obj == null)
 			return false;
 
- 		return this.parseStartSessionResponse(response);
+ 		return this.parseStartSessionResponse((Document) obj);
 	}
 	
 	public boolean askForExternalAppsSession(String token, Properties request) throws SessionManagerException {
@@ -232,12 +231,11 @@ public class SessionManagerCommunication {
 
 		params.put(FIELD_TOKEN, token);
 
-		Document response = (Document) this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
-
-		if (response == null)
+		Object obj = this.askWebservice(WEBSERVICE_EXTERNAL_APPS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, concatParams(params), true);
+		if (! (obj instanceof Document) || obj == null)
 			return false;
 
- 		return this.parseStartSessionResponse(response);
+ 		return this.parseStartSessionResponse((Document) obj);
 	}
 
 	public boolean askForLogout() throws SessionManagerException {
@@ -247,12 +245,11 @@ public class SessionManagerCommunication {
 		Element logout = request.getDocumentElement();
 		logout.setAttribute("mode", "logout");
 
-		Document response = (Document) this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, true);
-
-		if (response == null)
+		Object obj = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, true);
+		if (! (obj instanceof Document) || obj == null)
 			return false;
 
-		return this.parseLogoutResponse(response);
+ 		return this.parseLogoutResponse((Document) obj);
 	}
 
 	public String askForSessionStatus() throws SessionManagerException {
@@ -263,19 +260,22 @@ public class SessionManagerCommunication {
 		session.setAttribute("id", "");
 		session.setAttribute("status", "");
 
-		Document response = (Document) this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, false);
-
-		if (response == null)
+		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, false);
+		if (! (obj instanceof Document) || obj == null)
 			return null;
 
-		return this.parseSessionStatusResponse(response);
+ 		return this.parseSessionStatusResponse((Document) obj);
 	}
 
 	public ImageIcon askForIcon(String appId) throws SessionManagerException {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(FIELD_ICON_ID, appId);
 
-		return (ImageIcon) this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, false);
+		Object obj = this.askWebservice(WEBSERVICE_ICON+"?"+concatParams(params), CONTENT_TYPE_FORM, REQUEST_METHOD_GET, null, true);
+		if (! (obj instanceof ImageIcon) || obj == null)
+			return null;
+
+		return (ImageIcon) obj;
 	}
 
 	private Object askWebservice(String webservice, String content_type, String method, Object data, boolean showLog) throws SessionManagerException {
@@ -374,7 +374,16 @@ public class SessionManagerCommunication {
 					parser.parse(source);
 					in.close();
 
-					obj = parser.getDocument();
+					Document doc = parser.getDocument();
+					Element rootNode = doc.getDocumentElement();
+					if (rootNode.getNodeName().equalsIgnoreCase("error")) {
+						for (Callback each : this.callbacks) {
+							each.reportError(Integer.parseInt(rootNode.getAttribute("id")), rootNode.getAttribute("message"));
+						}
+					}
+					else {
+						obj = doc;
+					}
 
 					if (showLog)
 						this.dumpXML((Document) obj, "Receiving XML:");

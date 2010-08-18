@@ -21,6 +21,7 @@
 package org.ulteo.ovd.sm;
 
 public interface Callback {
+	public void reportError(int code, String msg);
 	public void reportErrorStartSession(String code);
 	public void reportBadXml(String data);
 	public void reportUnauthorizedHTTPResponse(String moreInfos);

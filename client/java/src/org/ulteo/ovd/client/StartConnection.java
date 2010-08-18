@@ -448,6 +448,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	@Override
+	public void reportError(int code, String message) {
+		String error = this.responseHandler.get(ERROR_DEFAULT);
+		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
+		org.ulteo.Logger.error(error+ " (code: "+code+"):\n" + message);
+	}
+
+	@Override
 	public void reportUnauthorizedHTTPResponse(String moreInfos) {
 		String error = this.responseHandler.get(ERROR_AUTHENTICATION_FAILED);
 		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
