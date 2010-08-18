@@ -14,14 +14,15 @@
 [ -f /etc/default/ulteo-ovd-subsystem ] && . /etc/default/ulteo-ovd-subsystem
 [ "$START" = no ] && exit 0
 
-CHROOT=/opt/ulteo
 
-CNF=/etc/ulteo/subsystem.conf
-[ -f "$CNF" ] && . $CNF
+CONF=/etc/ulteo/subsystem.conf
+[ -f "$CONF" ] && . $CONF
+[ -z "$CHROOT" ] && CHROOT=/opt/ulteo
 
 do_start() {
-	mount -t proc none $CHROOT/proc
-	mount -t devpts none $CHROOT/dev/pts
+    [ -d "$CHROOT" ] || return 1
+    mount -t proc none $CHROOT/proc
+    mount -t devpts none $CHROOT/dev/pts
 
     chroot $CHROOT /etc/init.d/cups start
     chroot $CHROOT /etc/init.d/xrdp start
@@ -29,6 +30,7 @@ do_start() {
 }
 
 do_stop() {
+    [ -d "$CHROOT" ] || return 1
     chroot $CHROOT /etc/init.d/ulteo-ovd-slaveserver stop
     chroot $CHROOT /etc/init.d/xrdp stop
     chroot $CHROOT /etc/init.d/cups stop
@@ -41,19 +43,17 @@ case $1 in
     start)
         log_daemon_msg "Starting Ulteo OVD subsystem"
         do_start
-        log_end_msg 0
+        log_end_msg $?
         ;;
     stop)
         log_daemon_msg "Stopping Ulteo OVD subsystem"
         do_stop
-        log_end_msg 0
+        log_end_msg $?
         ;;
     restart|reload|force-reload)
         log_daemon_msg "Re-starting Ulteo OVD subsystem"
-        do_stop
-        sleep 1
-        do_start
-        log_end_msg 0
+        do_stop && sleep 1 && do_start
+        log_end_msg $?
         ;;
     *)
         log_action_msg "Usage: /etc/init.d/ulteo-ovd-subsystem {start|stop|reload|restart}"
