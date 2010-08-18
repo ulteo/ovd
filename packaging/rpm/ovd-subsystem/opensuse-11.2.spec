@@ -1,6 +1,6 @@
 Name: ovd-subsystem
-Version: 1.0
-Release: 1
+Version: @VERSION@
+Release: @RELEASE@
 
 Summary: Ulteo Open Virtual Desktop - Subsystem
 License: GPL2
@@ -10,7 +10,6 @@ URL: http://www.ulteo.com
 Packager: Samuel Bovée <samuel@ulteo.com>
 Distribution: OpenSUSE 11.2
 
-Source: sub-config.sh
 BuildArch: noarch
 
 %description
@@ -27,24 +26,20 @@ Requires: curl
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
 
 %prep -n ulteo-ovd-subsystem
-pwd
 svn co https://svn.ulteo.com/ovd/trunk/utils/subsystem script
 svn co https://svn.ulteo.com/ovd/trunk/packaging/debian/ovd-subsystem/lucid init
 cp init/ulteo-ovd-subsystem.init %_builddir
 cp script/sub-config %_builddir
 
 %install -n ulteo-ovd-subsystem
-pwd
 BINDIR=%buildroot/usr/bin
 INITDIR=%buildroot/etc/init.d
 mkdir -p $BINDIR $INITDIR
 cp sub-config $BINDIR/sub-config
 cp ulteo-ovd-subsystem.init $INITDIR/ulteo-ovd-subsystem
 
-%preun -n ulteo-ovd-subsystem
-chkconfig --del ulteo-ovd-subsystem
-
 %postun -n ulteo-ovd-subsystem
+rm -f /etc/ulteo/subsystem.conf
 rm -rf /opt/ulteo
 
 %clean -n ulteo-ovd-subsystem
