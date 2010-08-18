@@ -162,7 +162,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 				cli.start();
 			} catch (IOException ioe) {
-				ioe.printStackTrace();
+				System.out.println("The configuration file "+profile+" does not exist.");
+				System.exit(0);
 			}
 		}
 		else {
