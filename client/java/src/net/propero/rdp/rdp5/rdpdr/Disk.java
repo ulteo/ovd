@@ -745,6 +745,7 @@ public class Disk extends RdpdrDevice{
 			n = raf.read(data, 0, length);
 			if(n==-1){
 				n = 0;
+				raf.close();
 				return STATUS_SUCCESS;
 			}
 			raf.close();
