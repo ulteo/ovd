@@ -4,7 +4,8 @@
 
 CHROOTPATH="/opt/ulteo"
 CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd/slaveserver.conf
-HOSTCONF=/etc/ulteo/subsystem.conf
+
+CONFDIR=/etc/ulteo
 
 set_conf () {
     # $1: configfile
@@ -46,7 +47,8 @@ while [ ! -e "$CHROOTCONF" ]; do
     db_go
 done
 
-set_conf $HOSTCONF "CHROOT" $CHROOTPATH
+mkdir -p $CONFDIR
+set_conf $CONFDIR/subsystem.conf "CHROOT" $CHROOTPATH
 
 # stop the postinst if there is no chroot conf file
 if [ ! -e "$CHROOTCONF" ]; then
