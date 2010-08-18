@@ -10,6 +10,7 @@ set_conf () {
     # $1: configfile
     # $2: field
     # $3: value
+    touch $1
     if grep -q "^$2 *=" $1 2>/dev/null; then
         sed -i "s#^$2 *=.*#$2=$3#" $1
     else
@@ -45,35 +46,36 @@ while [ ! -e "$CHROOTCONF" ]; do
     db_go
 done
 
-if [ -e "$CHROOTCONF" ]; then
+set_conf $HOSTCONF "CHROOT" $CHROOTPATH
 
-    # set timezone
-    if [ -f /etc/timezone ]; then
-        HOSTTZ=$(head -n 1 /etc/timezone)
-    fi
-    if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
-        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
-        echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
-    fi
-
-    # if we reinstall the ApS and the chroot is already there, the configs need to
-    # be written again
-    set_conf $CHROOTCONF "ROLES" "aps"
-    set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
-
-    # session manager url
-    db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
-    set_conf $CHROOTCONF "session_manager" "$URL"
-
-    # resolv.conf
-    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
-    [ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
-
-    set_conf $HOSTCONF "CHROOT" $CHROOTPATH
-else
+# stop the postinst if there is no chroot conf file
+if [ ! -e "$CHROOTCONF" ]; then
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
     db_go
+    exit 0
 fi
+
+# set timezone
+if [ -f /etc/timezone ]; then
+    HOSTTZ=$(head -n 1 /etc/timezone)
+fi
+if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
+    cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
+    echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
+fi
+
+# if we reinstall the ApS and the chroot is already there, the configs need to
+# be written again
+set_conf $CHROOTCONF "ROLES" "aps"
+set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
+
+# session manager url
+db_get ulteo-ovd-subsystem/sm_address && URL="$RET"
+set_conf $CHROOTCONF "session_manager" "$URL"
+
+# resolv.conf
+[ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
+[ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
 
 db_stop
 
