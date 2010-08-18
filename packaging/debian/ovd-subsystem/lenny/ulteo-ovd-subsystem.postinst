@@ -2,8 +2,8 @@
 
 . /usr/share/debconf/confmodule
 
-CHROOTPATH="/opt/ulteo"
-CHROOTCONF=$CHROOTPATH/etc/ulteo/ovd/slaveserver.conf
+CHROOTDIR="/opt/ulteo"
+CHROOTCONF=$CHROOTDIR/etc/ulteo/ovd/slaveserver.conf
 
 CONFDIR=/etc/ulteo
 
@@ -23,24 +23,27 @@ set_conf () {
 while [ ! -e "$CHROOTCONF" ]; do
 
     # get the tarball uri and quit if empty
-    db_get ulteo-ovd-subsystem/tarball_uri && URI=$RET
-    [ -z $URI ] && break
+    db_get ulteo-ovd-subsystem/tarball_uri && URI="$RET"
+    [ -z "$URI" ] && break
 
     # curl needs file://, make sure we have it if we deal with a file path
-    [ $(echo $URI | cut -c 1) = '/' ] && URI="file://$URI"
+    [ $(echo "$URI" | cut -c 1) = '/' ] && URI="file://$URI"
 
     # get the chroot
     CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
-    if curl $CURLOPTS -f -s -I "$URI" > /dev/null; then
+    if curl $CURLOPTS -f -s -I $URI > /dev/null; then
         echo "Retrieving and uncompressing the chroot tarball..."
-        mkdir -p "$CHROOTPATH"
-        curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTPATH" -f - && continue
+        mkdir -p "$CHROOTDIR"
+        curl $CURLOPTS "$URI" | tar zx --numeric-owner -p -s -C "$CHROOTDIR" -f - && continue
     fi
 
     # chroot download failed
+    db_subst ulteo-ovd-subsystem/download_error URI "$URI"
+    db_subst ulteo-ovd-subsystem/download_error CHROOTDIR "$CHROOTDIR"
     db_input critical ulteo-ovd-subsystem/download_error || true
     db_go
-    rm -rf $CHROOTPATH
+    db_reset ulteo-ovd-subsystem/download_error
+    rm -rf $CHROOTDIR
 
     db_fset ulteo-ovd-subsystem/tarball_uri seen false || true
     db_input high ulteo-ovd-subsystem/tarball_uri || true
@@ -53,9 +56,9 @@ if [ -e "$CHROOTCONF" ]; then
     if [ -f /etc/timezone ]; then
         HOSTTZ=$(head -n 1 /etc/timezone)
     fi
-    if [ -n "$HOSTTZ" -a -f $CHROOTPATH/usr/share/zoneinfo/$HOSTTZ ]; then
-        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTPATH/etc/localtime
-        echo "$HOSTTZ" > $CHROOTPATH/etc/timezone
+    if [ -n "$HOSTTZ" -a -f $CHROOTDIR/usr/share/zoneinfo/$HOSTTZ ]; then
+        cp /usr/share/zoneinfo/$HOSTTZ $CHROOTDIR/etc/localtime
+        echo "$HOSTTZ" > $CHROOTDIR/etc/timezone
     fi
 
     # if we reinstall the ApS and the chroot is already there, the configs need to
@@ -68,17 +71,19 @@ if [ -e "$CHROOTCONF" ]; then
     set_conf $CHROOTCONF "session_manager" "$URL"
 
     # resolv.conf
-    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTPATH/etc/resolv.conf
-    [ -f /etc/hosts ] && cp /etc/hosts $CHROOTPATH/etc/hosts
+    [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $CHROOTDIR/etc/resolv.conf
+    [ -f /etc/hosts ] && cp /etc/hosts $CHROOTDIR/etc/hosts
 
 else
+    db_subst ulteo-ovd-subsystem/no_chroot_conf CHROOTCONF "$CHROOTCONF"
     db_input high ulteo-ovd-subsystem/no_chroot_conf || true
     db_go
-    CHROOTPATH=""
+    db_fset ulteo-ovd-subsystem/no_chroot_conf seen false || true
+    CHROOTDIR=""
 fi
 
 mkdir -p $CONFDIR
-set_conf $CONFDIR/subsystem.conf "CHROOT" $CHROOTPATH
+set_conf $CONFDIR/subsystem.conf "CHROOT" $CHROOTDIR
 
 db_stop
 

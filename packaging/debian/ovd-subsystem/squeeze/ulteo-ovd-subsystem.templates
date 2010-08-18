@@ -27,13 +27,11 @@ Template: ulteo-ovd-subsystem/download_error
 Type: error
 _Description: Subsystem download error!
  An error occured while downloading and installing the chroot from this address
- %URL% to this location (/opt/ulteo), the session manager may not ready to be
+ ${URI} to this location (${CHROOTDIR}), the session manager may not ready to be
  used.
- .
- You can reconfigure this package to get the subsystem tarball later.
 
 Template: ulteo-ovd-subsystem/no_chroot_conf
 Type: note
-_Description: No chroot config
+_Description: No chroot config found !
  Warning: the chroot configuration file is missing, the configuration will
- have to be done manually in /opt/ulteo/etc/ulteo/ovd/slaveserver.conf
+ have to be done manually in ${CHROOTCONF}
