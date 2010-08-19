@@ -131,7 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/*
 /etc/*
 %config /etc/ulteo/sessionmanager/apache2.conf
-%config /etc/ulteo/sessionmanager/apache2-config.conf
+%config /etc/ulteo/sessionmanager/apache2-admin.conf
 %config /etc/ulteo/sessionmanager/cron.php
 %config /etc/logrotate.d/sessionmanager
 %defattr(0660,wwwrun,root)
