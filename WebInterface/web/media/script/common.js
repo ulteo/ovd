@@ -11,6 +11,15 @@ function refresh_body_size() {
 	}
 }
 
+var i18n = new Hash();
+i18n.set('auth_failed', 'Authentication failed, please double-check your password and try again');
+i18n.set('in_maintenance', 'The system is in maintenance mode, please contact your administrator for more information');
+i18n.set('internal_error', 'An internal error occured, please contact your administrator');
+i18n.set('invalid_user', 'You specified an invalid login, please double-check and try again');
+i18n.set('service_not_available', 'The service is not available, please contact your administrator for more information');
+i18n.set('unauthorized_session_mode', 'You are not authorized to launch a session in this mode');
+i18n.set('user_with_active_session', 'You already have an active session');
+
 var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
@@ -41,28 +50,34 @@ function startSession() {
 	session_mode = $('session_mode').value;
 	session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
 
-	var ret = new Ajax.Request(
-		'ajax/login.php',
-		{
-			method: 'post',
-			parameters: {
-				sessionmanager_host: $('sessionmanager_host').value,
-				login: $('user_login').value,
-				password: $('user_password').value,
-				mode: $('session_mode').value,
-				language: $('session_language').value,
-				keymap: $('session_keymap').value,
-				use_popup: ((use_popup)?1:0),
-				debug: ((debug)?1:0)
-			},
-			asynchronous: false,
-			onSuccess: onStartSessionSuccess,
-			onFailure: onStartSessionFailure
-		}
-	);
-
-	if (parseInt(ret.getStatus()) != 200)
+	if (! $('use_local_credentials_true') || ! $('use_local_credentials_true').checked) {
+		new Ajax.Request(
+			'ajax/login.php',
+			{
+				method: 'post',
+				parameters: {
+					sessionmanager_host: $('sessionmanager_host').value,
+					login: $('user_login').value,
+					password: $('user_password').value,
+					mode: $('session_mode').value,
+					language: $('session_language').value,
+					keymap: $('session_keymap').value,
+					use_popup: ((use_popup)?1:0),
+					debug: ((debug)?1:0)
+				},
+				asynchronous: false,
+				onSuccess: function(transport) {
+					onStartSessionSuccess(transport.responseXML);
+				},
+				onFailure: function() {
+					onStartSessionFailure();
+				}
+			}
+		);
+	} else {
+		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, 'onStartSessionJavaRequest');
 		return false;
+	}
 
 	if (! startsession)
 		return false;
@@ -93,11 +108,11 @@ function showEnd() {
 }
 
 function hideLogin() {
-	new Effect.Move($('loginBox'), { x: 0, y: -500 });
+	new Effect.Move($('loginBox'), { x: 0, y: -1000 });
 }
 
 function showLogin() {
-	new Effect.Move($('loginBox'), { x: 0, y: 500 });
+	new Effect.Move($('loginBox'), { x: 0, y: 1000 });
 
 	if (debug) {
 		$('debugContainer').hide();
@@ -116,8 +131,17 @@ function enableLogin() {
 	$('submitLoader').hide();
 }
 
-function onStartSessionSuccess(transport) {
-	var xml = transport.responseXML;
+function onStartSessionSuccess(xml_) {
+	var xml = xml_;
+
+	var buffer = xml.getElementsByTagName('response');
+	if (buffer.length == 1) {
+		try {
+			showError(i18n.get(buffer[0].getAttribute('code')));
+		} catch(e) {}
+		enableLogin();
+		return false;
+	}
 
 	var buffer = xml.getElementsByTagName('error');
 	if (buffer.length == 1) {
@@ -208,12 +232,60 @@ function onStartSessionSuccess(transport) {
 	return true;
 }
 
-function onStartSessionFailure(transport) {
+function onStartSessionFailure() {
+	showError(i18n.get('internal_error'));
+
 	enableLogin();
 
 	startsession = false;
 
 	return false;
+}
+
+function onStartSessionJavaRequest(http_code_, content_type_, data_, cookies_) {
+	if (http_code_ != 200) {
+		onStartSessionFailure();
+		return false;
+	}
+
+	try {
+		if (window.DOMParser) {
+			parser = new DOMParser();
+			xml = parser.parseFromString(data_, 'text/xml');
+		} else { // Internet Explorer
+			xml = new ActiveXObject('Microsoft.XMLDOM');
+			xml.async = 'false';
+			xml.loadXML(data_);
+		}
+	} catch(e) {
+		showError(i18n.get('internal_error'));
+		enableLogin();
+		return false;
+	}
+
+	try {
+		var sm_session_cookie;
+		for (var i = 0; i < cookies_.length; i++)
+			sm_session_cookie = cookies_[i];
+	} catch(e) {}
+
+	synchronize(data_, sm_session_cookie);
+
+	onStartSessionSuccess(xml);
+}
+
+function synchronize(data_, cookie_) {
+	new Ajax.Request(
+		'synchronize.php',
+		{
+			method: 'post',
+			asynchronous: false,
+			parameters: {
+				xml: data_
+			},
+			requestHeaders: new Array('Forward-Cookie', cookie_)
+		}
+	);
 }
 
 function popupOpen(rand_) {
@@ -510,7 +582,21 @@ function setCaretPosition(ctrl, pos) {
 }
 
 function checkLogin() {
-	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != sessionmanager_host_example && $('user_login').value != '')
+	if ($('use_local_credentials_true') && $('use_local_credentials_true').checked) {
+		$('use_popup_true').disabled = true;
+		$('use_popup_false').disabled = true;
+		$('user_login').disabled = true;
+		if ($('user_password'))
+			$('user_password').disabled = true;
+	} else {
+		$('use_popup_true').disabled = false;
+		$('use_popup_false').disabled = false;
+		$('user_login').disabled = false;
+		if ($('user_password'))
+			$('user_password').disabled = false;
+	}
+
+	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != sessionmanager_host_example && ($('user_login').value != '' || ($('use_local_credentials_true') && $('use_local_credentials_true').checked)))
 		$('submitLogin').disabled = false;
 	else
 		$('submitLogin').disabled = true;

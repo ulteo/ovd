@@ -6,7 +6,8 @@ scripts_DATA = apps.php \
                launch.php \
                logout.php \
                servers.php \
-               session_status.php
+               session_status.php \
+               synchronize.php
 
 scriptsdir = $(datadir)/ulteo/webinterface
 

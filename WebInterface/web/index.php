@@ -34,6 +34,10 @@ $wi_user_login = '';
 if (isset($_COOKIE['webinterface']['user_login']))
 	$wi_user_login = (string)$_COOKIE['webinterface']['user_login'];
 
+$wi_use_local_credentials = 0;
+if (isset($_COOKIE['webinterface']['use_local_credentials']))
+	$wi_use_local_credentials = (int)$_COOKIE['webinterface']['use_local_credentials'];
+
 $wi_session_mode = 'desktop';
 if (isset($_COOKIE['webinterface']['session_mode']))
 	$wi_session_mode = (string)$_COOKIE['webinterface']['session_mode'];
@@ -460,6 +464,18 @@ checkLogin();
 ?>
 										<div id="advanced_settings" style="display: none;">
 											<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="5">
+												<tr>
+													<td style="text-align: right; vertical-align: middle;">
+														<img src="media/image/icons/use_local_credentials.png" alt="" title="" />
+													</td>
+													<td style="text-align: left; vertical-align: middle;">
+														<strong><?php echo _('Use local credentials'); ?></strong>
+													</td>
+													<td style="text-align: right; vertical-align: middle;">
+														<input class="input_radio" type="radio" id="use_local_credentials_true" name="use_local_credentials" value="1"<?php if ($wi_use_local_credentials == 1) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <?php echo _('Yes'); ?>
+														<input class="input_radio" type="radio" id="use_local_credentials_false" name="use_local_credentials" value="0"<?php if ($wi_use_local_credentials == 0) echo ' checked="checked"'; ?> onchange="checkLogin();" onclick="checkLogin();" /> <?php echo _('No'); ?>
+													</td>
+												</tr>
 												<tr>
 													<td style="width: 22px; text-align: right; vertical-align: middle;">
 														<img src="media/image/icons/session_mode.png" alt="" title="" />

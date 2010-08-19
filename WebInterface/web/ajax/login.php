@@ -189,6 +189,7 @@ $_SESSION['xml'] = $xml;
 
 setcookie('webinterface[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
 setcookie('webinterface[user_login]', $_POST['login'], (time()+(60*60*24*7)));
+setcookie('webinterface[use_local_credentials]', 0, (time()+(60*60*24*7)));
 setcookie('webinterface[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_language]', $_POST['language'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_keymap]', $_POST['keymap'], (time()+(60*60*24*7)));

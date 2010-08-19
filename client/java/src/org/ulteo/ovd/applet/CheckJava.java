@@ -2,6 +2,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author David LECHEVALIER <david@ulteo.com>
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -27,22 +28,30 @@ public class CheckJava extends Applet {
 	private String jsCallBack_onSuccess = null;
 	private String jsCallBack_onFailure = null;
 	private boolean hasCallbacks = false;
-
+	
+	private RequestForwarder ajax = null;
+	private Thread ajaxThread = null;
+	
 	@Override
 	public void init() {
 		this.jsCallBack_onSuccess = this.getParameter("onSuccess");
 		this.jsCallBack_onFailure = this.getParameter("onFailure");
-
+		
 		if (this.jsCallBack_onSuccess != null && this.jsCallBack_onSuccess.length() >0 &&
 			this.jsCallBack_onFailure != null && this.jsCallBack_onFailure.length() >0)
 			this.hasCallbacks = true;
+		
+		if (this.hasCallbacks) {
+			this.ajax = new RequestForwarder(this);
+			this.ajaxThread = new Thread(this.ajax);
+		}
 	}
-
+	
 	@Override
 	public void start() {
 		if (this.hasCallbacks) {
 			String callback = this.jsCallBack_onFailure;
-
+			
 			try {
 				System.getProperty("user.home");
 				callback = this.jsCallBack_onSuccess;
@@ -59,6 +68,21 @@ public class CheckJava extends Applet {
 			catch (netscape.javascript.JSException e) {
 				System.err.println(this.getClass()+" error while execute javascript function '"+callback+"' =>"+e.getMessage());
 			}
+			
+			this.ajaxThread.start();
 		}
+	}
+	
+	@Override
+	public void stop() {
+		if (this.ajax != null) {
+			this.ajax.setDisable();
+			this.ajax = null;
+			this.ajaxThread = null;
+		}
+	}
+	
+	public void ajaxRequest(String sm, String mode, String language, String callback) {
+		this.ajax.pushOrder(new AjaxOrder(sm, mode, language, callback));
 	}
 }

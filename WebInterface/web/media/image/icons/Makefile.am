@@ -3,6 +3,7 @@ scripts_DATA = debug.png \
                session_language.png \
                session_mode.png \
                sessionmanager.png \
+               use_local_credentials.png \
                use_popup.png \
                user_login.png \
                user_password.png
