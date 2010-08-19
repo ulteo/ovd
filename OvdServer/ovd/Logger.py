@@ -141,7 +141,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.INFO != Logger.INFO:
 			return
 		
-		Logger._instance.process(Logger.log_info, message)
+		Logger._instance.process(Logger._instance.__class__.log_info, message)
 	
 	@staticmethod
 	def warn(message):
@@ -151,7 +151,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.WARN != Logger.WARN:
 			return
 		
-		Logger._instance.process(Logger.log_warn, message)
+		Logger._instance.process(Logger._instance.__class__.log_warn, message)
 	
 	@staticmethod
 	def error(message):
@@ -161,7 +161,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.ERROR != Logger.ERROR:
 			return
 		
-		Logger._instance.process(Logger.log_error, message)
+		Logger._instance.process(Logger._instance.__class__.log_error, message)
 	
 	
 	@staticmethod
@@ -172,7 +172,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG != Logger.DEBUG:
 			return
 		
-		Logger._instance.process(Logger.log_debug, message)
+		Logger._instance.process(Logger._instance.__class__.log_debug, message)
 	
 	
 	@staticmethod
@@ -183,7 +183,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG_2 != Logger.DEBUG_2:
 			return
 		
-		Logger._instance.process(Logger.log_debug2, message)
+		Logger._instance.process(Logger._instance.__class__.log_debug2, message)
 	
 	
 	@staticmethod
@@ -194,7 +194,7 @@ class Logger:
 		if Logger._instance.loglevel&Logger.DEBUG_3 != Logger.DEBUG_3:
 			return
 		
-		Logger._instance.process(Logger.log_debug3, message)
+		Logger._instance.process(Logger._instance.__class__.log_debug3, message)
 	
 	
 	def get_time_from_line(self, line):
