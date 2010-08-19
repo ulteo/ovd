@@ -22,8 +22,8 @@ package org.ulteo.ovd.sm;
 
 public class Properties {
 	public static final int MODE_ANY = 0;
-	public static final int MODE_REMOTEAPPS = 1;
-	public static final int MODE_DESKTOP = 2;
+	public static final int MODE_DESKTOP = 1;
+	public static final int MODE_REMOTEAPPS = 2;
 	
 	private int mode = 0;
 	private String lang = null;

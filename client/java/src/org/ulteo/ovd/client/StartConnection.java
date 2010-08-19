@@ -96,78 +96,15 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (profile == null && password != null)
 			usage();
 
+		StartConnection s = null;
+		
 		if (profile != null) {
-			try {
-				String username = null;
-				String ovdServer = null;
-				String initMode = null;
-				int mode = 0;
-				String initRes = null;
-				int resolution = 0;
-				String token = null;
-
-				Wini ini = new Wini(new File(profile));
-				username = ini.get("user", "login");
-				ovdServer = ini.get("server", "host");
-				initMode = ini.get("sessionMode", "ovdSessionMode");
-				if (initMode.equals("desktop"))
-					mode = 0;
-				else if (initMode.equals("portal"))
-					mode = 1;
-				else
-					mode = 2;
-
-				initRes = ini.get("screen", "size");
-				if(initRes.equals("800x600"))
-					resolution=0;
-				else if(initRes.equals("1024x768"))
-					resolution=1;
-				else if(initRes.equals("1280x678"))
-					resolution=2;
-				else if(initRes.equals("maximized"))
-					resolution=3;
-				else
-					resolution=4;				
-
-				token = ini.get("token", "token");
-
-				SessionManagerCommunication dialog = new SessionManagerCommunication(ovdServer, true);
-
-				Properties request = new Properties((mode == Properties.MODE_ANY) ? Properties.MODE_DESKTOP : Properties.MODE_REMOTEAPPS);
-				try {
-					if (!dialog.askForSession(username, password, request)) {
-						return;
-					}
-				} catch (SessionManagerException ex) {
-					System.err.println(ex.getMessage());
-					return;
-				}
-
-				Properties response = dialog.getResponseProperties();
-				
-				OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
-
-				OvdClient cli = null;
-
-				switch (response.getMode()) {
-					case Properties.MODE_DESKTOP:
-						cli = new OvdClientDesktop(dialog, resolution);
- 						break;
-					case Properties.MODE_REMOTEAPPS:
-						cli = new OvdClientPortal(dialog);
- 						break;
- 					default:
-						throw new UnsupportedOperationException("mode "+response.getMode()+" is not supported");
- 				}
-
-				cli.start();
-			} catch (IOException ioe) {
-				System.out.println("The configuration file "+profile+" does not exist.");
-				System.exit(0);
-			}
+			s = new StartConnection(profile, password);
+			s.startThread();
+			s.waitThread();
 		}
 		else {
-			StartConnection s = new StartConnection();
+			s = new StartConnection();
 			s.waitThread();
 		}
 		System.gc();
@@ -196,6 +133,15 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private LoadingFrame loadingFrame = null;
 	private AuthFrame authFrame = null;
 	private DisconnectionFrame discFrame = null;
+	private String profile = null;
+	private boolean command = false;
+	private String password = null;
+	private int mode = 0;
+	private int resolution = 0;
+	private boolean localCredential = false;
+	private String host = null;
+	private String username = null;
+	private boolean autoPublicated = false;
 
 	private boolean isCancelled = false;
 	
@@ -205,7 +151,22 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private OvdClient client = null;
 
 	public StartConnection() {
+		this.init();
+		this.authFrame = new AuthFrame(this);
+		this.loadProfile(null);
+		this.authFrame.showWindow();
+		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+	}
 
+	public StartConnection(String profile, String password) {
+		this.init();
+		this.profile = profile;
+		this.password = password;
+		this.command = true;
+		this.loadingFrame.setLocationRelativeTo(null);
+	}
+	
+	public void init() {
 		this.responseHandler = new HashMap<String, String>();
 		this.responseHandler.put(ERROR_AUTHENTICATION_FAILED, I18n._("Authentication failed, please double-check your password and try again"));
 		this.responseHandler.put(ERROR_IN_MAINTENANCE, I18n._("The system is in maintenance mode, please contact your administrator for more information"));
@@ -215,16 +176,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.responseHandler.put(ERROR_UNAUTHORIZED_SESSION_MODE, I18n._("You are not authorized to launch a session in this mode"));
 		this.responseHandler.put(ERROR_ACTIVE_SESSION, I18n._("You already have an active session"));
 		this.responseHandler.put(ERROR_DEFAULT, I18n._("An error occured, please contact your administrator"));
-
 		this.loadingFrame = new LoadingFrame(this);
 		this.discFrame = new DisconnectionFrame();
-		this.authFrame = new AuthFrame(this);
-		this.loadProfile();
-		this.authFrame.showWindow();
-		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 	}
-
-
+	
 	public static int JOB_NOTHING = 0;
 	public static int JOB_DISCONNECT_CLI = 1;
 
@@ -263,12 +218,25 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.continueMainThread = false;
 		}
 		else {
-			this.authFrame.showWindow();
+			if(! command)
+				this.authFrame.showWindow();
 		}
 		this.thread = null;
 	}
 
+	public void startThread() {
+		if (this.thread != null) {
+			System.err.println("Very weird: thread should not exist anymore !");
+			this.thread.interrupt();
+			this.thread = null;
+		}
 
+		this.thread = new Thread(this);
+		this.thread.start();
+		
+		this.loadingFrame.setVisible(true);
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == this.loadingFrame.getCancelButton()) {
@@ -285,15 +253,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.loadingFrame.getCancelButton().setEnabled(false);
 		}
 		else if (e.getSource() == this.authFrame.GetStartButton()) {
-			if (this.thread != null) {
-				System.err.println("Very weird: thread should not exist anymore !");
-				this.thread.interrupt();
-				this.thread = null;
-			}
-
-			this.thread = new Thread(this);
-			this.thread.start();
-			this.loadingFrame.setVisible(true);
+			this.startThread();
 		}
 	}
 
@@ -305,45 +265,75 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.discFrame.setVisible(false);
 	}
 
-	public boolean launchConnection() {
-		boolean exit = false;
-
-		// Get form values
-		String username = this.authFrame.getLogin().getText();
-		String host = this.authFrame.getHost().getText();
-		int mode =  Properties.MODE_ANY;
+	public boolean getFormValuesFromGui() {
+		this.username = this.authFrame.getLogin().getText();
+		this.host = this.authFrame.getHost().getText();
+		this.mode =  Properties.MODE_ANY;
 		if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeApplication())
-			mode = Properties.MODE_REMOTEAPPS;
+			this.mode = Properties.MODE_REMOTEAPPS;
 		else if (this.authFrame.getSessionModeBox().getSelectedItem() == this.authFrame.getItemModeDesktop())
-			mode = Properties.MODE_DESKTOP;
+			this.mode = Properties.MODE_DESKTOP;
 				
 		
-		int resolution = this.authFrame.getResBar().getValue();
-		boolean localCredential = (this.authFrame.isUseLocalCredentials());
+		this.resolution = this.authFrame.getResBar().getValue();
+		this.localCredential = (this.authFrame.isUseLocalCredentials());
 
-		String password = new String(this.authFrame.getPassword().getPassword());
+		this.autoPublicated = this.authFrame.isAutoPublishChecked();
+			
+		this.password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
 		
-		if (host.equals("")) {
+		if (this.host.equals("")) {
 			JOptionPane.showMessageDialog(null, I18n._("You must specify the host field !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 			this.disableLoadingMode();
-			return exit;
+			return false;
 		}
 		
-		if (localCredential == false) {
-			if (username.equals("")) {
+		if (this.localCredential == false) {
+			if (this.username.equals("")) {
 				JOptionPane.showMessageDialog(null, I18n._("You must specify a username !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
-				return exit;
+				return false;
 			}
-			if (password.equals("")) {
+			if (this.password.equals("")) {
 				JOptionPane.showMessageDialog(null, I18n._("You must specify a password !"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
 				this.disableLoadingMode();
-				return exit;
+				return false;
 			}
 		}
+		return true;
+	}
+	
+	public void getFormValuesFromFile() {
+		ProfileProperties properties = getProfile(profile);
+		if (properties == null) {
+			System.out.println("The configuration file \""+profile+"\" doesn't exist.");
+			return;
+		}
 		
-		// Backup entries
+		this.mode = properties.getSessionMode();
+
+		this.username = properties.getLogin();
+		this.host = properties.getHost();
+		this.localCredential = properties.getUseLocalCredentials();
+		this.autoPublicated = properties.getAutoPublish();
+		
+		if (this.host.equals("")) {
+			System.err.println("You must specifiy the host field !");
+			this.disableLoadingMode();
+			return;
+		}
+		
+		if (properties.getUseLocalCredentials() == false) {
+			if (this.username.equals("")) {
+				System.err.println("You must specify a username !");
+				this.disableLoadingMode();
+				return;
+			}
+		}
+	}
+	
+	public void getBackupEntries() {
 		if (this.authFrame.isRememberMeChecked()) {
 			try {
 				this.saveProfile();
@@ -351,10 +341,24 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				System.err.println("Unable to save profile: "+ex.getMessage());
 			}
 		}
+	}
+	
+	public boolean launchConnection() {
+		boolean exit = false;
+
+		if (! command) {
+			if (! this.getFormValuesFromGui())
+				return exit;
+			this.getBackupEntries();
+		}
+		else {
+			this.getFormValuesFromFile();
+		}
 
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(host, true);
-		dialog.addCallbackListener(this);
+		if (! command)
+			dialog.addCallbackListener(this);
 
 		Properties request = new Properties(mode);
 		try {
@@ -394,7 +398,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.client = new OvdClientDesktop(dialog, resolution, this);
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.authFrame.isAutoPublishChecked(), this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.autoPublicated, this);
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
@@ -424,11 +428,19 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! this.discFrame.isVisible()) {
 			if (loadingFrame.isVisible())
 				disableLoadingMode();
-			JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
-			
+			if(! command)
+				JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
+			else {
+				System.err.println("You have been disconnected");
+				System.exit(0);
+			}
 		}
-		else
+		else {
 			this.disableDisconnectingMode();
+			
+			if (command)
+				System.exit(0);
+		}
 	}
 	
 	@Override
@@ -471,7 +483,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public void sessionConnected() {
 		if (this.loadingFrame.isVisible() || this.authFrame.getMainFrame().isVisible()) {
 			this.disableLoadingMode();
-			this.authFrame.hideWindow();
+			if (! command)
+				this.authFrame.hideWindow();
 		}
 	}
 
@@ -490,29 +503,44 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		int screensize = this.authFrame.getResBar().getValue();
 
 		ProfileIni ini = new ProfileIni();
-		ini.setProfile(null);
+		ini.setProfile(null, null);
 		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, useLocalCredentials, screensize));
 	}
 
-	private void loadProfile() {
+	public static ProfileProperties getProfile(String path) {
 		ProfileIni ini = new ProfileIni();
-		List<String> profiles = ini.listProfiles();
+		String profile = "";
 
-		if (profiles == null)
-			return;
+		if (path == null) {
+			List<String> profiles = ini.listProfiles();
 
-		String profile = ProfileIni.DEFAULT_PROFILE;
-		
-		if (! profiles.contains(profile))
-			return;
+			if (profiles == null)
+				return null;
+
+			profile = ProfileIni.DEFAULT_PROFILE;
+			
+			if (! profiles.contains(profile))
+				return null;
+		}
+		else {
+			File file = new File(path);
+			profile = file.getName();
+			path = file.getParent();
+		}
 		
 		ProfileProperties properties = null;
 		try {
-			properties = ini.loadProfile(profile);
+			properties = ini.loadProfile(profile, path);
 		} catch (IOException ex) {
 			System.err.println("Unable to load \""+profile+"\" profile: "+ex.getMessage());
-			return;
+			return null;
 		}
+		
+		return properties;
+	}
+	
+	private void loadProfile(String path) {
+		ProfileProperties properties = getProfile(path);
 
 		if (properties == null)
 			return;

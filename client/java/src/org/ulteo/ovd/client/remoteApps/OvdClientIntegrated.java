@@ -21,12 +21,7 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;

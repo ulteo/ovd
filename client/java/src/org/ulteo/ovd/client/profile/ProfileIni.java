@@ -64,11 +64,16 @@ public class ProfileIni {
 		this.confDir = new File(Constants.PATH_NATIVE_CLIENT_CONF);
 	}
 
-	public void setProfile(String profile) {
-		if (profile == null) {
-			profile = DEFAULT_PROFILE;
+	public void setProfile(String profile, String path) {
+		if (path == null) {
+			if (profile == null) {
+				profile = DEFAULT_PROFILE;
+			}
+			this.file = new File(Constants.PATH_NATIVE_CLIENT_CONF+Constants.FILE_SEPARATOR+profile+PROFILE_EXT);
 		}
-		this.file = new File(Constants.PATH_NATIVE_CLIENT_CONF+Constants.FILE_SEPARATOR+profile+PROFILE_EXT);
+		else {
+			this.file = new File(path+System.getProperty("file.separator")+profile);
+		}
 	}
 
 	public List<String> listProfiles() {
@@ -140,11 +145,17 @@ public class ProfileIni {
 		ini.store();
 	}
 
-	public ProfileProperties loadProfile(String profile) throws IOException {
-		if (! this.listProfiles().contains(profile))
-			return null;
-
-		this.setProfile(profile);
+	public ProfileProperties loadProfile(String profile, String path) throws IOException {
+		if (path == null) {
+			if (! this.listProfiles().contains(profile))
+				return null;
+		}
+		else {
+			if (! new File(path+System.getProperty("file.separator")+profile).exists())
+				return null;
+		}
+			
+		this.setProfile(profile, path);
 
 		ProfileProperties properties = new ProfileProperties();
 
