@@ -38,8 +38,10 @@ cp ovd-subsystem-config $SBINDIR
 cp ulteo-ovd-subsystem $INITDIR
 
 %postun -n ulteo-ovd-subsystem
-rm -f /etc/ulteo/subsystem.conf
-rm -rf /opt/ulteo
+SUBCONF=/etc/ulteo/subsystem.conf
+. $SUBCONF
+rm -rf $CHROOT
+rm -f $SUBCONF
 
 %clean -n ulteo-ovd-subsystem
 rm -rf %buildroot
