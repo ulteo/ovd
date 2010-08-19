@@ -16,6 +16,7 @@ SRC=AccountsIntegration.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
 	StartASession.xml \
+	Support_Ubuntu_Lucid.xml \
 	SystemUpgrade.xml \
 	Vpn.xml
 

@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Ubuntu 10.04 (Lucid Lynx) support</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2010</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+
+  <para>
+    The purpose of this document is to describe how the different
+    pieces of Ulteo OVD are supported on Ubuntu 10.04 (Lucid Lynx)
+    system.
+  </para>
+
+  <section>
+    <title>Prerequisites: Ubuntu 10.04 (Lucid Lynx)</title>
+
+    <para>
+      Ubuntu 10.04 (Lucid Lynx) is the latest LTS version of
+      Ubuntu. There are several edition: desktop/server, 32/64
+      bits. This documentation has been done for the server edition
+      (32/64 bits) but it should also work for desktop edition. Ubuntu
+      system can be downloaded <ulink url="http://releases.ubuntu.com/10.04">here</ulink>.
+    </para>
+
+    <simplesect>
+      <title>sudo</title>
+
+      <para>
+        On Ubuntu system, we are not using the <emphasis>super
+        user</emphasis> (root) to log in and install packages. It is
+        recomended to use <emphasis role="strong">sudo</emphasis>.
+      </para>
+
+      <para>
+        So there are two alternatives: either you think about adding sudo before each command you launch or you log in as root
+      </para>
+
+      <para>To log in as root:
+	<screen><![CDATA[$ sudo -s]]></screen>
+      </para>
+    </simplesect>
+
+    <simplesect>
+      <title>Repository</title>
+
+      <para>
+        Ubuntu is a Debian based system which use the same
+        packaging system and tools: apt-get. So you need to have an
+        internet connexion on your Ubuntu system and add an Ulteo
+        Debian repository into your system.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+	    Edit
+	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd</emphasis>
+	    file and put these lines:
+          </para>
+          <screen>
+	  <![CDATA[
+deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
+          </screen>
+        </listitem>
+
+        <listitem>
+          <para>
+	    Update the package database:
+          </para>
+          <screen>
+	    <![CDATA[
+# apt-get update]]>
+          </screen>
+          <note>
+            <para>
+	      GPG errors given by the previous command will be fixed
+              in the next installation steps. They won't prevent the
+              installation to be successful.
+            </para>
+          </note>
+        </listitem>
+
+        <listitem>
+          <para>
+            Install the keyring package to validate the repository
+            using gpg:
+          </para>
+          <screen>
+            <![CDATA[
+# apt-get install ulteo-keyring
+# apt-get update]]>
+          </screen>
+        </listitem>
+      </itemizedlist>
+    </simplesect>
+
+    <important>
+      <para>
+        In this document, we are using
+        <emphasis>sm.ulteo.com</emphasis> for the Session Manager
+        address, <emphasis>aps.ulteo.com</emphasis> for the
+        Application Server and <emphasis>wi.ulteo.com</emphasis> for
+        the Web Interface.
+      </para>
+      
+      <para>
+        You need to set those names according to your own domain names.
+      </para>
+    </important>
+  </section>
+
+  <section>
+    <title>Session Manager installation and configuration</title>
+
+    <para>
+      The Session Manager is a LAMP (Linux Apache MySQL PHP) system
+      and could be used in an exising LAMP server.
+    </para>
+
+    <section id="pre_mysql">
+      <title id="sql_title">Installation of MySQL</title>
+
+      <para>
+        The Session Manager needs access to a MySQL database. We
+        advice you to setup the MySQL server on the same machine as
+        the Session Manager to minimize access time.
+      </para>
+
+      <itemizedlist>
+	<listitem>
+	  <para>Install the <emphasis>mysql-server</emphasis> package:</para>
+          <screen># apt-get install mysql-server</screen>
+          <para>A password for <literal>root</literal> will be asked.</para>
+        </listitem>
+        <listitem>
+	  <para id="mysql_db_create">
+	    Now log in mysql and create a database:
+	  <screen><![CDATA[
+# mysql -u root -p
+Enter password:
+mysql> create database ovd;
+ Query OK, 1 row affected (0.02 sec)
+mysql> exit]]>
+          </screen>
+          <!--
+Should be replaced by something like that:
+CREATE USER 'ovd'@'%' IDENTIFIED BY  '***';
+GRANT USAGE ON * . * TO  'ovd'@'%' IDENTIFIED BY  '***' WITH MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0 ;
+CREATE DATABASE IF NOT EXISTS  `ovd` ;
+GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
+            -->
+	  </para>
+        </listitem>
+      </itemizedlist>
+    </section>
+
+    <section id="sm-install">
+      <title>Package installation</title>
+      
+      <itemizedlist>
+        <listitem>
+	  <para>Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
+          <screen>
+	    <![CDATA[
+# apt-get install ulteo-ovd-session-manager]]>
+	  </screen>
+        </listitem>
+        
+        <listitem>
+	  <para>
+	    The installer asks for an admin login
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/sm_install_admin_login.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>Session Manager installation admin login</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+        </listitem>
+        
+        <listitem>
+	  <para>
+	    And a password:
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/sm_install_admin_password.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>Session Manager installation admin password</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+        </listitem>
+        
+        <listitem>
+	  <para>
+	    which have to be confirmed:
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/sm_install_admin_confirm_password.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>Session Manager installation admin password confirmation</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+	</listitem>
+        
+        <listitem>
+	  <para>
+            According to the <emphasis>Archictecture</emphasis>
+            documentation,
+            a <emphasis role="strong">Susbsystem</emphasis> archive
+            can be installed on the SM to simplify the deployement of
+            Application Servers.
+	  </para>
+    	  <para>
+	    <inlinemediaobject>
+	      <imageobject>
+                <imagedata fileref="img/sm_install_chroot_location.png"/>
+	      </imageobject>
+	      <textobject>
+	        <phrase>Session Manager installation application system archive</phrase>
+	      </textobject>
+	    </inlinemediaobject>
+	  </para>
+	  <para>
+	    If you don't have access to Internet or do not want to use
+	    Subsystems, keep this field empty.
+	  </para>
+        </listitem>
+      </itemizedlist>
+
+      <para id="sm_install_browse">
+        The server is now installed but not configured yet. You have
+        to open <ulink url="https://sm.ulteo.com/ovd/admin" /> with a
+        web browser. It should display this page:
+      </para>
+
+      <para id="sm_install_browse_pic">
+        <inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_www_admin_before_login.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager into a web browser</phrase>
+	  </textobject>
+        </inlinemediaobject>
+      </para>
+    </section>
+  
+
+    <section id="sm-config">
+      <title>Configuration</title>
+
+      <para>
+        The first step is to go to
+                                      <ulink url="https://sm.ulteo.com/ovd/admin"/>
+                                      and autenticate yourself with
+                                      the login and password you
+                                      provided during the
+                                      installation.
+      </para>
+      <para>
+        <inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_www_admin_login.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager admin login</phrase>
+	  </textobject>
+        </inlinemediaobject>
+      </para>
+
+      <para>
+        For the first time you log in, the system detects that it is not
+        well configured so you are redirected to a basic setup page
+        which will save a default configuration.
+      </para>
+      <para>
+        You have to set the MySQL configuration. For instance, if you
+        install MySQL on the same host as described previously, here
+        is the configuration:
+      </para>
+    
+      <para>
+        <inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_install_admin_config_init.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager admin init configuration</phrase>
+	  </textobject>
+        </inlinemediaobject>
+      </para>
+
+      <para>
+        Then, you should be redirected to the main page:
+      </para>
+      <para>
+        <inlinemediaobject>
+	  <imageobject>
+	    <imagedata fileref="img/sm_admin_main.png"/>
+	  </imageobject>
+	  <textobject>
+	    <phrase>Session Manager admin main page</phrase>
+	  </textobject>
+        </inlinemediaobject>
+      </para>
+    </section>
+
+    <para>
+      The Session Manager is now installed. Please read other
+      documentations to join servers or start sessions.
+    </para>
+  </section>
+
+
+  <section>
+    <title>Application Server and File Server installation (using Subsystem)</title>
+    
+    <itemizedlist>
+      <listitem>
+        <para>
+	  Install the package <emphasis>ulteo-ovd-subsystem</emphasis>:
+        </para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-ovd-subsystem]]>
+	</screen>
+      </listitem>
+
+      <listitem>
+        <para>
+	  The only question is about the host/IP address where the
+	  session manager can be accessed. (we use
+	  <ulink url="sm.ulteo.com" /> here for the example, but of
+	  course, you have to set your own domain name).
+	</para>
+
+	<important>
+	  <para>
+	    If you are going to install an Application Server on the
+	    same machine as your Session Manager, it is recommended to use
+	    <emphasis role="strong"><ulink
+	    url="127.0.0.1" /></emphasis> as
+	    host.
+	  </para>
+	</important>
+
+	<para>
+          <inlinemediaobject>
+            <imageobject>
+              <imagedata fileref="img/subsystem_install_sm_host.png"/>
+            </imageobject>
+            <textobject>
+              <phrase>debconf Session Manager host/address</phrase>
+            </textobject>
+          </inlinemediaobject>
+        </para>
+      </listitem> 
+    </itemizedlist>
+
+    <para>
+      The configuration is now done. The system is going to donwload
+      and uncompress the application system archive from the Session
+      Manager your registered.
+    </para>
+    <para>
+      Once done, you just have to restart the service:
+    </para>
+    <screen>
+      <![CDATA[
+# /etc/init.d/ulteo-ovd-subsystem restart]]>
+    </screen>
+
+    <para>
+      Your server should appear in the <emphasis
+	                                  role="strong">Unregistered server</emphasis> page.
+    </para>
+
+    <screenshot>
+      <screeninfo>Session Manager - server page</screeninfo>
+      <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
+    </screenshot>
+  </section>
+
+  <section id="wi">
+    <title id="wi_title">
+      Web Interface installation (wi.ulteo.com)
+    </title>
+      
+    <para>
+      The Ulteo OVD Web client is no longer installed with the Session
+      Manager as it was on previous version (&lt; v3.0). So you have
+      to install it manually on any server you want. Of course, it's
+      possible to install it on the same machine as the Session Manager.
+    </para>
+    <para>
+      In this example, we are using <emphasis>wi.ulteo.com</emphasis>
+    </para>
+
+    <itemizedlist>
+      <listitem>
+        <para>
+	  Install the package <emphasis>ulteo-ovd-webinterface</emphasis>:
+        </para>
+        <screen>
+	  <![CDATA[
+# apt-get install ulteo-ovd-webinterface]]>
+        </screen>
+      </listitem>
+
+      <listitem>
+	<para>
+	  The installer asks if you want to plug the Web Interface with
+	  an existing Session Manager. I depends if you want to use
+	  this Web Interface in a specific Ulteo OVD farm or if you
+	  want a generic web client.
+	</para>
+    	<para>
+	  <inlinemediaobject>
+	    <imageobject>
+              <imagedata fileref="img/wi_install_plug_sm.png"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>WebInterface install question #1</phrase>
+	    </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+      
+      <listitem>
+	<para>
+	  If you answered yes at the previous question, you now have
+	  to give the Session Manager host/IP address. In our
+	  example: <ulink url="sm.ulteo.com" />.
+	</para>
+    	<para>
+	  <inlinemediaobject>
+	    <imageobject>
+              <imagedata fileref="img/wi_install_sm_host.png"/>
+	    </imageobject>
+	    <textobject>
+	      <phrase>WebInterface install question #2</phrase>
+	    </textobject>
+	  </inlinemediaobject>
+	</para>
+      </listitem>
+    </itemizedlist>
+    
+    <para>
+      Using you web browser, go to
+      <ulink url="http://wi.ulteo.com/webinterface/" />, you should
+      see a login page:
+    </para>
+    <para>
+      <inlinemediaobject>
+        <imageobject>
+	  <imagedata fileref="img/wi_login.png"/>
+        </imageobject>
+        <textobject>
+	  <phrase>WebInterface login</phrase>
+        </textobject>
+      </inlinemediaobject>
+    </para>
+  </section>
+</article>
