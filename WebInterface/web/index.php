@@ -355,7 +355,9 @@ function get_users_list() {
 							</td>
 							<td style="text-align: center; vertical-align: top;">
 								<div id="loginForm" class="rounded">
-									<script type="text/javascript">Event.observe(window, 'load', function() {
+									<script type="text/javascript">
+									var sessionmanager_host_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
+									Event.observe(window, 'load', function() {
 										setTimeout(function() {
 <?php
 if (! defined('SESSIONMANAGER_HOST') && (! isset($wi_sessionmanager_host) || $wi_sessionmanager_host == ''))
@@ -382,7 +384,6 @@ checkLogin();
 													<input type="text" id="sessionmanager_host" value="<?php echo ((defined('SESSIONMANAGER_HOST'))?$wi_sessionmanager_host:'') ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<script type="text/javascript">Event.observe(window, 'load', function() {
 														setTimeout(function() {
-															var sessionmanager_host_example = '<?php echo _('Example: sm.ulteo.com'); ?>';
 															if ($('sessionmanager_host').value == '') {
 																$('sessionmanager_host').style.color = 'grey';
 																$('sessionmanager_host').value = sessionmanager_host_example;

@@ -510,7 +510,7 @@ function setCaretPosition(ctrl, pos) {
 }
 
 function checkLogin() {
-	if ($('sessionmanager_host').value != '' && $('user_login').value != '')
+	if ($('sessionmanager_host').value != '' && $('sessionmanager_host').value != sessionmanager_host_example && $('user_login').value != '')
 		$('submitLogin').disabled = false;
 	else
 		$('submitLogin').disabled = true;
