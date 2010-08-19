@@ -36,4 +36,10 @@ foreach ($client_headers as $k => $v) {
 
 $_SESSION['xml'] = $_POST['xml'];
 
+setcookie('webinterface[sessionmanager_host]', $_POST['sessionmanager_host'], (time()+(60*60*24*7)));
 setcookie('webinterface[use_local_credentials]', 1, (time()+(60*60*24*7)));
+setcookie('webinterface[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
+setcookie('webinterface[session_language]', $_POST['language'], (time()+(60*60*24*7)));
+setcookie('webinterface[session_keymap]', $_POST['keymap'], (time()+(60*60*24*7)));
+setcookie('webinterface[use_popup]', $_POST['use_popup'], (time()+(60*60*24*7)));
+setcookie('webinterface[debug]', $_POST['debug'], (time()+(60*60*24*7)));

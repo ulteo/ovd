@@ -75,6 +75,7 @@ function startSession() {
 			}
 		);
 	} else {
+		use_popup = false;
 		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, 'onStartSessionJavaRequest');
 		return false;
 	}
@@ -281,6 +282,12 @@ function synchronize(data_, cookie_) {
 			method: 'post',
 			asynchronous: false,
 			parameters: {
+				sessionmanager_host: $('sessionmanager_host').value,
+				mode: $('session_mode').value,
+				language: $('session_language').value,
+				keymap: $('session_keymap').value,
+				use_popup: ((use_popup)?1:0),
+				debug: ((debug)?1:0),
 				xml: data_
 			},
 			requestHeaders: new Array('Forward-Cookie', cookie_)
