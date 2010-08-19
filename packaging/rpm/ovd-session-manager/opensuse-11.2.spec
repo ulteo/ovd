@@ -51,14 +51,14 @@ CONFDIR=/etc/ulteo/sessionmanager
 a2enmod php5 > /dev/null
 
 # VHost server config
-if [ ! -e $A2CONFDIR/sessionmanager-vhost-server ]; then
+if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
     ln -sf $CONFDIR/apache2-vhost-server.conf \
         $A2CONFDIR/sessionmanager-vhost-server.conf
     a2enmod rewrite >/dev/null
 fi
 
 # VHost SSL config
-if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl ]; then
+if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl.conf ]; then
     serverName=$(hostname -f 2>/dev/null || true)
     if [ -z "$serverName" ]; then
         # Bad /etc/hosts configuration

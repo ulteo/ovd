@@ -43,7 +43,7 @@ CONFDIR=/etc/ulteo/webinterface
 
 a2enmod php5 > /dev/null
 
-if [ ! -e /etc/apache2/conf.d/webinterface ]; then
+if [ ! -e $A2CONFDIR/webinterface.conf ]; then
     ln -sf $CONFDIR/apache2.conf $A2CONFDIR/webinterface.conf
     if apache2ctl configtest 2>/dev/null; then
         service apache2 reload || true
