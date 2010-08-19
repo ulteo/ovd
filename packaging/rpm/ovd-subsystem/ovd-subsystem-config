@@ -18,7 +18,6 @@
 
 PROGRAM=$(basename $0)
 
-CHROOTURL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
 CHROOTDIR=/opt/ulteo
 CONFDIR=/etc/ulteo
 
@@ -89,19 +88,29 @@ while [ -n "$1" ]; do
     shift
 done
 
+while [ -z "$SM" ]; do
+    echo -n "Session Manager address : " && read SM
+done
+
+[ -z "$URI" ] && CHROOTURL="https://$SM/ovd/admin/base.tar.gz"
+
 [ -z "$TARGET" ] && echo -n "Chroot destination [$CHROOTDIR]: " && read TARGET
 [ -z "$TARGET" ] && TARGET=$CHROOTDIR
 [ "$TARGET" != "/" ] && [ "$FORCE" = "true" ] && rm -rf $TARGET
 [ -d "$TARGET" ] && die "The chroot target '$TARGET' already exists.
 Change it or use the option --force to delete the old chroot."
 
-[ -z "$URI" ] && echo -n "Chroot download uri [$CHROOTURL]: " && read URI
-[ -z "$URI" ] && URI=$CHROOTURL
-
-# test the URI
-[ $(echo $URI | cut -c 1) = '/' ] && URI="file://$URI"
-CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
-curl $CURLOPTS -f -s -I "$URI" > /dev/null || die "Cannot have access to the chroot tarball"
+# get the URI
+while true; do
+    [ -z "$URI" ] && echo -n "Chroot download uri [$CHROOTURL]: " && read URI
+    [ -z "$URI" ] && URI=$CHROOTURL
+    [ $(echo $URI | cut -c 1) = '/' ] && URI="file://$URI"
+    CURLOPTS="--retry 3 --connect-timeout 60 --insecure -L"
+    curl $CURLOPTS -f -s -I "$URI" > /dev/null && break
+    echo "Cannot have access to the chroot tarball"
+    CHROOTURL='http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0'
+    unset URI
+done
 
 # get the chroot
 echo "Retrieving and uncompressing the chroot tarball..."
@@ -122,13 +131,10 @@ if [ -n "$HOSTTZ" -a -f $TARGET/usr/share/zoneinfo/$HOSTTZ ]; then
     echo "$HOSTTZ" > $TARGET/etc/timezone
 fi
 
-# the configs need to be written again
+# write config in chroot
 set_conf $CHROOTCONF "ROLES" "aps"
 set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
-
-# session manager url
-[ -z "$SM" ] && echo -n "Session Manager address : " && read SM
-set_conf $CHROOTCONF "session_manager" "$URL"
+set_conf $CHROOTCONF "session_manager" "$URI"
 
 # resolv.conf
 [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $TARGET/etc/resolv.conf
