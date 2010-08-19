@@ -22,16 +22,13 @@
 
 package org.ulteo.ovd.sm;
 
-import com.sun.org.apache.xerces.internal.dom.DOMImplementationImpl;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -52,20 +49,24 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.swing.ImageIcon;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
 import sun.awt.image.URLImageSource;
 
 
-public class SessionManagerCommunication {
+public class SessionManagerCommunication implements HostnameVerifier, X509TrustManager {
 	public static final String SESSION_MODE_REMOTEAPPS = "applications";
 	public static final String SESSION_MODE_DESKTOP = "desktop";
 
@@ -161,18 +162,54 @@ public class SessionManagerCommunication {
 
 		return makeStringForPost(listParameter);
 	}
+	
+	public static Document getNewDocument() {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return builder.newDocument();
+	}
+	
+	public static String Document2String(Document document) {
+		DOMSource domSource = new DOMSource(document);
+		StringWriter writer = new StringWriter();
+		StreamResult result = new StreamResult(writer);
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer;
+		try {
+			transformer = tf.newTransformer();
+			transformer.transform(domSource, result);
+		} catch (TransformerConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return writer.toString(); 
+	}
+	
 
 	public boolean askForSession(String login, String password, Properties request) throws SessionManagerException {
 		if (login == null || password == null || request == null || this.requestProperties != null)
  			return false;
 		
 		this.requestProperties = request;
-
-		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
-		Document doc = domImpl.createDocument(null, "session", null);
-
-		Element session = doc.getDocumentElement();
-
+		
+		Document doc = getNewDocument();
+		if (doc == null)
+			return false;
+		
+		Element session = doc.createElement("session");
+		doc.appendChild(session);
+		
 		if (request.getMode() == Properties.MODE_DESKTOP)
 			session.setAttribute("mode", SESSION_MODE_DESKTOP);
 		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
@@ -183,8 +220,12 @@ public class SessionManagerCommunication {
 		user.setAttribute("password", password);
 
 		session.appendChild(user);
-
-		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
+		
+		String data = Document2String(doc);
+		if (data == null)
+			return false;
+		
+		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, true);
 		if (! (obj instanceof Document) || obj == null)
 			return false;
  		
@@ -199,18 +240,24 @@ public class SessionManagerCommunication {
 			return false;
 
 		this.requestProperties = request;
-
-		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
-		Document doc = domImpl.createDocument(null, "session", null);
-
-		Element session = doc.getDocumentElement();
-
+		
+		Document doc = getNewDocument();
+		if (doc == null)
+			return false;
+		
+		Element session = doc.createElement("session");
+		doc.appendChild(session);
+		
 		if (request.getMode() == Properties.MODE_DESKTOP)
 			session.setAttribute("mode", SESSION_MODE_DESKTOP);
 		else if (request.getMode() == Properties.MODE_REMOTEAPPS)
 			session.setAttribute("mode", SESSION_MODE_REMOTEAPPS);
 		
-		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, doc, true);
+		String data = Document2String(doc);
+		if (data == null)
+			return false;
+			
+		Object obj = this.askWebservice(WEBSERVICE_START_SESSION, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, true);
 		if (! (obj instanceof Document) || obj == null)
 			return false;
 
@@ -239,13 +286,19 @@ public class SessionManagerCommunication {
 	}
 
 	public boolean askForLogout() throws SessionManagerException {
-		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
-		Document request = domImpl.createDocument(null, "logout", null);
-
-		Element logout = request.getDocumentElement();
+		Document doc = getNewDocument();
+		if (doc == null)
+			return false;
+		
+		Element logout = doc.createElement("logout");
 		logout.setAttribute("mode", "logout");
-
-		Object obj = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, true);
+		doc.appendChild(logout);
+		
+		String data = Document2String(doc);
+		if (data == null)
+			return false;
+		
+		Object obj = this.askWebservice(WEBSERVICE_LOGOUT, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, true);
 		if (! (obj instanceof Document) || obj == null)
 			return false;
 
@@ -253,14 +306,21 @@ public class SessionManagerCommunication {
 	}
 
 	public String askForSessionStatus() throws SessionManagerException {
-		DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
-		Document request = domImpl.createDocument(null, "session", null);
-
-		Element session = request.getDocumentElement();
+		Document doc = getNewDocument();
+		if (doc == null)
+			return null;
+		
+		Element session = doc.createElement("session");
+		doc.appendChild(session);
+		
 		session.setAttribute("id", "");
 		session.setAttribute("status", "");
-
-		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, request, false);
+		
+		String data = Document2String(doc);
+		if (data == null)
+			return null;
+		
+		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, false);
 		if (! (obj instanceof Document) || obj == null)
 			return null;
 
@@ -278,7 +338,7 @@ public class SessionManagerCommunication {
 		return (ImageIcon) obj;
 	}
 
-	private Object askWebservice(String webservice, String content_type, String method, Object data, boolean showLog) throws SessionManagerException {
+	private Object askWebservice(String webservice, String content_type, String method, String data, boolean showLog) throws SessionManagerException {
 		Object obj = null;
 		HttpURLConnection connexion = null;
 
@@ -293,35 +353,13 @@ public class SessionManagerCommunication {
 				System.out.println("Connecting URL ... "+url);
 			connexion = (HttpURLConnection) url.openConnection();
 
-			if (this.use_https) {
-				// An all-trusting TrustManager for SSL URL validation
-				TrustManager[] trustAllCerts = new TrustManager[] {
-					new X509TrustManager() {
-						public X509Certificate[] getAcceptedIssuers() {
-							return null;
-						}
-						public void checkServerTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-							return;
-						}
-						public void checkClientTrusted(X509Certificate[] certs, String authType) throws CertificateException {
-							return;
-						}
-					}
-				};
-
-				// An all-trusting HostnameVerifier for SSL URL validation
-				HostnameVerifier trustAllHosts = new HostnameVerifier() {
-					public boolean verify(String hostname, SSLSession session) {
-						return true;
-					}
-				};
-				
+			if (this.use_https) {		
 				SSLContext sc = SSLContext.getInstance("SSL");
-				sc.init(null, trustAllCerts, null);
+				sc.init(null, new TrustManager[] { this }, null);
 				SSLSocketFactory factory = sc.getSocketFactory();
 				((HttpsURLConnection)connexion).setSSLSocketFactory(factory);
 
-				((HttpsURLConnection)connexion).setHostnameVerifier(trustAllHosts);
+				((HttpsURLConnection)connexion).setHostnameVerifier(this);
 			}
 			connexion.setDoInput(true);
 			connexion.setDoOutput(true);
@@ -332,28 +370,14 @@ public class SessionManagerCommunication {
 
 			connexion.setAllowUserInteraction(true);
 			connexion.setRequestMethod(method);
-			OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
-
-			if (data instanceof String) {
-				out.write((String) data);
+			if (data != null) {
+				OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
+				out.write(data);
+				out.flush();
+				out.close();
+				System.out.println("Send: "+data);
 			}
-			else if (data instanceof Document) {
-				Document request = (Document) data;
-
-				OutputFormat outFormat = new OutputFormat(request);
-				XMLSerializer serializer = new XMLSerializer(out, outFormat);
-				serializer.serialize(request);
-
-				if (showLog)
-					this.dumpXML(request, "Sending XML:");
-			}
-			else if (data != null) {
-				System.err.println("Cannot send "+ data.getClass().getName() +" data to session manager webservices");
-				return obj;
-			}
-
-			out.flush();
-			out.close();
+			
 
 			int r = connexion.getResponseCode();
 			String res = connexion.getResponseMessage();
@@ -368,13 +392,14 @@ public class SessionManagerCommunication {
 				InputStream in = connexion.getInputStream();
 
 				if (contentType.startsWith(CONTENT_TYPE_XML)) {
-					DOMParser parser = new DOMParser();
+					DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+					DocumentBuilder domBuilder = domFactory.newDocumentBuilder();
+					
 					InputSource source = new InputSource(in);
-
-					parser.parse(source);
+					Document doc = domBuilder.parse(source);
+					
 					in.close();
-
-					Document doc = parser.getDocument();
+					
 					Element rootNode = doc.getDocumentElement();
 					if (rootNode.getNodeName().equalsIgnoreCase("error")) {
 						for (Callback each : this.callbacks) {
@@ -529,20 +554,19 @@ public class SessionManagerCommunication {
 			if (serverNodes.getLength() == 0)
 				throw new Exception("bad xml: no server node");
 
-
 			for (int i = 0; i < serverNodes.getLength(); i++) {
 				Element serverNode = (Element) serverNodes.item(i);
 
 				ServerAccess server = new ServerAccess(serverNode.getAttribute("fqdn"), 3389,
 							serverNode.getAttribute("login"), serverNode.getAttribute("password"));
-
+				
 				NodeList applicationsNodes = serverNode.getElementsByTagName("application");
 				for (int j = 0; j < applicationsNodes.getLength(); j++) {
 					Element applicationNode = (Element) applicationsNodes.item(j);
 
 					Application application = new Application(Integer.parseInt(applicationNode.getAttribute("id")),
 							applicationNode.getAttribute("name"));
-
+					
 					NodeList mimeNodes = applicationNode.getElementsByTagName("mime");
 					for (int k = 0; k < mimeNodes.getLength(); k++) {
 						Element mimeNode = (Element) mimeNodes.item(k);
@@ -597,5 +621,27 @@ public class SessionManagerCommunication {
 
 	public String getMoreInfos() {
 		return this.moreInfos_lastResponse;
+	}
+
+	@Override
+	public boolean verify(String hostname, SSLSession session) {
+		return true;
+	}
+
+	@Override
+	public void checkClientTrusted(X509Certificate[] arg0, String arg1)
+			throws CertificateException {
+		return;
+	}
+
+	@Override
+	public void checkServerTrusted(X509Certificate[] arg0, String arg1)
+			throws CertificateException {
+		return;		
+	}
+
+	@Override
+	public X509Certificate[] getAcceptedIssuers() {
+		return null;
 	}
 }
