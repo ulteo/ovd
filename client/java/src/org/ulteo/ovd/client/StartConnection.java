@@ -93,12 +93,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 		}
 
-		if (profile == null && password != null)
+		if (profile == null)
 			usage();
 
 		StartConnection s = null;
 		
 		if (profile != null) {
+			System.out.println("PROFILED");
 			s = new StartConnection(profile, password);
 			s.startThread();
 			s.waitThread();
@@ -304,11 +305,11 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		return true;
 	}
 	
-	public void getFormValuesFromFile() {
+	public boolean getFormValuesFromFile() {
 		ProfileProperties properties = getProfile(profile);
 		if (properties == null) {
 			System.out.println("The configuration file \""+profile+"\" doesn't exist.");
-			return;
+			return false;
 		}
 		
 		this.mode = properties.getSessionMode();
@@ -321,16 +322,22 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (this.host.equals("")) {
 			System.err.println("You must specifiy the host field !");
 			this.disableLoadingMode();
-			return;
+			return false;
 		}
 		
 		if (properties.getUseLocalCredentials() == false) {
 			if (this.username.equals("")) {
 				System.err.println("You must specify a username !");
 				this.disableLoadingMode();
-				return;
+				return false;
+			}
+			
+			if (this.password == null) {
+				usage();
+				return false;
 			}
 		}
+		return true;
 	}
 	
 	public void getBackupEntries() {
@@ -352,7 +359,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.getBackupEntries();
 		}
 		else {
-			this.getFormValuesFromFile();
+			if (! this.getFormValuesFromFile())
+				return exit;
 		}
 
 		// Start OVD session
