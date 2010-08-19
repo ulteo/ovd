@@ -21,9 +21,9 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
 fi
 
 # Alias admin
-if [ ! -e $A2SITESDIR/ovd-admin.conf ]; then
+if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
     ln -sf $CONFDIR/apache2-admin.conf \
-        $A2SITESDIR/ovd-admin.conf
+        $A2CONFDIR/ovd-admin.conf
 fi
 
 # VHost SSL config
