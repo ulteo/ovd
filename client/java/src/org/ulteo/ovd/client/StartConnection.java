@@ -92,10 +92,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				use_https = (opt.getOptarg().equalsIgnoreCase("off")) ? false : true;
 			}
 		}
-
-		if (profile == null)
-			usage();
-
+		
 		StartConnection s = null;
 		
 		if (profile != null) {
@@ -113,7 +110,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 	public static void usage() {
 		System.err.println(StartConnection.productName);
-		System.err.println("Usage: java -jar OVDIntegratedClient.jar [options]");
+		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
 		System.err.println("	-c CONFIGFILE");
 		System.err.println("	-p PASSWORD");
 		System.err.println("Example: java -jar OVDNativeClient.jar -c config.ovd -p password");
