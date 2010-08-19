@@ -99,7 +99,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		StartConnection s = null;
 		
 		if (profile != null) {
-			System.out.println("PROFILED");
 			s = new StartConnection(profile, password);
 			s.startThread();
 			s.waitThread();
