@@ -20,6 +20,12 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
     a2enmod rewrite >/dev/null
 fi
 
+# Alias admin
+if [ ! -e $A2SITESDIR/ovd-admin.conf ]; then
+    ln -sf $CONFDIR/apache2-admin.conf \
+        $A2SITESDIR/ovd-admin.conf
+fi
+
 # VHost SSL config
 if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
     serverName=$(hostname -f 2>/dev/null || true)

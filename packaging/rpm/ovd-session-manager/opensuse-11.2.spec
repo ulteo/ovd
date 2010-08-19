@@ -57,6 +57,12 @@ if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
     a2enmod rewrite >/dev/null
 fi
 
+# Alias admin
+if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
+    ln -sf $CONFDIR/apache2-admin.conf \
+        $A2CONFDIR/ovd-admin.conf
+fi
+
 # VHost SSL config
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl.conf ]; then
     serverName=$(hostname -f 2>/dev/null || true)
@@ -125,6 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 /usr/*
 /etc/*
 %config /etc/ulteo/sessionmanager/apache2.conf
+%config /etc/ulteo/sessionmanager/apache2-config.conf
 %config /etc/ulteo/sessionmanager/cron.php
 %config /etc/logrotate.d/sessionmanager
 %defattr(0660,wwwrun,root)
