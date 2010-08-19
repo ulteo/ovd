@@ -1,2 +1,0 @@
-Requirements for make:
-	xmlto
