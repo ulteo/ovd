@@ -21,6 +21,7 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.BufferedInputStream;
@@ -103,6 +104,13 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void runExit() {}
+	
+	@Override
+	protected void runDisconnecting() {
+		ActionListener[] action = this.portal.getSystray().getActionListeners();
+		for (ActionListener each : action)
+			this.portal.getSystray().removeActionListener(each);
+	}
 
 	@Override
 	protected void runSessionTerminated() {

@@ -72,6 +72,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	}
 
 	protected abstract void uncustomizeRemoteAppsConnection(RdpConnectionOvd co);
+	
+	@Override
+	protected void runDisconnecting() {}
 
 	public abstract void ovdInited(OvdAppChannel o);
 

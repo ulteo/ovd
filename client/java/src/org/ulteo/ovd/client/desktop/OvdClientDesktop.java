@@ -174,4 +174,7 @@ public class OvdClientDesktop extends OvdClient {
 		co.getCanvas().validate();
 		this.desktop.pack();
 	}
+
+	@Override
+	protected void runDisconnecting() {}
 }

@@ -205,6 +205,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected abstract void runInit();
 
 	protected abstract void runExit();
+	
+	protected abstract void runDisconnecting();
 
 	private void stopAllRDPConnections() {
 		if (this.connections == null)
@@ -292,6 +294,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	}
 
 	public void performDisconnectAll() {
+		this.runDisconnecting();
 		boolean logoutRet;
 		try {
 			logoutRet = this.smComm.askForLogout();
