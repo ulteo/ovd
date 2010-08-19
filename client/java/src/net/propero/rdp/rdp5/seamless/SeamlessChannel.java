@@ -40,6 +40,7 @@ import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Hashtable;
@@ -401,7 +402,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		//TODO: ui_seamless_destroy_group(id, flags);
 		Set <String> keys = this.windows.keySet();
 
-		for(String key: keys)
+		for(String key: new HashSet<String>(keys))
 		{
 			try
 			{
@@ -409,7 +410,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				if(sf.sw_getGroup() == id)
 				{
 					sf.sw_destroy();
-					keys.remove(key);
+					this.windows.remove(key);
 				}
 			} catch (Exception e) {
 				logger.error("Couldn't remove the window " + key + ".", e);
