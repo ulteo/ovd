@@ -134,6 +134,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			co.addOvdAppListener(this.portal.getRunningApplicationPanel());
 		} catch (OvdException ex) {
 			this.logger.error(ex);
+			ex.printStackTrace();
 		}
 
 		for (Application app : co.getAppsList()) {

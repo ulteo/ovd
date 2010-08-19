@@ -126,6 +126,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
 					rc.addApp(app);
 				} catch (SessionManagerException ex) {
+					ex.printStackTrace();
 					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
 				}
 			}
