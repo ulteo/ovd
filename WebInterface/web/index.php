@@ -385,7 +385,7 @@ checkLogin();
 													<strong><?php echo _('Session Manager'); ?></strong>
 												</td>
 												<td style="text-align: right; vertical-align: middle;">
-													<input type="text" id="sessionmanager_host" value="<?php echo ((defined('SESSIONMANAGER_HOST'))?$wi_sessionmanager_host:'') ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
+													<input type="text" id="sessionmanager_host" value="<?php echo $wi_sessionmanager_host; ?>" onchange="checkLogin();" onkeyup="checkLogin();" />
 													<script type="text/javascript">Event.observe(window, 'load', function() {
 														setTimeout(function() {
 															if ($('sessionmanager_host').value == '') {
