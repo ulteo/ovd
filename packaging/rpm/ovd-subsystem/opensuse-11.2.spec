@@ -37,6 +37,9 @@ mkdir -p $SBINDIR $INITDIR
 cp ovd-subsystem-config $SBINDIR
 cp ulteo-ovd-subsystem $INITDIR
 
+%preun
+service ulteo-ovd-subsystem stop
+
 %postun -n ulteo-ovd-subsystem
 SUBCONF=/etc/ulteo/subsystem.conf
 . $SUBCONF

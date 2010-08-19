@@ -134,7 +134,7 @@ fi
 # write config in chroot
 set_conf $CHROOTCONF "ROLES" "aps"
 set_conf $CHROOTCONF "LOG_LEVEL" "warn error info debug"
-set_conf $CHROOTCONF "session_manager" "$URI"
+set_conf $CHROOTCONF "session_manager" "$SM"
 
 # resolv.conf
 [ -f /etc/resolv.conf ] && cp /etc/resolv.conf $TARGET/etc/resolv.conf
