@@ -505,7 +505,12 @@ var Daemon = Class.create({
 	},
 
 	load_printing_applet: function() {
-		if (! $('ulteoapplet') || ! $('ulteoapplet').isActive()) {
+		try {
+			if (! $('ulteoapplet') || ! $('ulteoapplet').isActive()) {
+				setTimeout(this.load_printing_applet.bind(this), 5000);
+				return false;
+			}
+		} catch(e) {
 			setTimeout(this.load_printing_applet.bind(this), 5000);
 			return false;
 		}
