@@ -41,7 +41,7 @@ die () {
 
 usage ()
 {
-    echo << EOF
+    echo << EOF "\
 Usage: $PROGRAM [--chroot-uri uri] [--copy] [--chroot-dir dir] [--version|-v] [--help|-h]
 Configure an Ulteo Subsystem (Open Virtual Desktop)
 
@@ -53,7 +53,7 @@ Configure an Ulteo Subsystem (Open Virtual Desktop)
   --sm-address         Ulteo OVD Session Manager addresse
   --force              force to write the chroot in the selected directory
   --help|-h            display this help
-  --version|-v         display version informations
+  --version|-v         display version informations"
 EOF
 }
 
