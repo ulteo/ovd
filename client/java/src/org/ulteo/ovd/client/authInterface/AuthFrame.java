@@ -261,9 +261,9 @@ public class AuthFrame implements ActionListener {
 		startButton.addActionListener(this.obj);
 		
 		gbc.gridx = gbc.gridy = 0;
-		gbc.insets = new Insets(0, 0, 25, 0);
+		gbc.insets = new Insets(7, 7, 25, 0);
 		gbc.gridwidth = 2;
-		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
 		mainFrame.add(logoLabel, gbc);
@@ -272,6 +272,8 @@ public class AuthFrame implements ActionListener {
 		gbc.anchor = GridBagConstraints.LINE_END;
 		gbc.gridx = 0;
 		gbc.gridy = 3;
+		gbc.insets.left = 0;
+		gbc.insets.top = 0;
 		gbc.insets.bottom = 5;
 		mainFrame.add(userLogoLabel, gbc);
 		
