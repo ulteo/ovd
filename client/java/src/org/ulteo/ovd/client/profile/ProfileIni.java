@@ -35,8 +35,8 @@ public class ProfileIni {
 	private static final String INI_SECTION_SERVER = "server";
 	private static final String INI_FIELD_HOST = "host";
 
-	private static final String INI_SECTION_SESSION = "sessionMode";
-	private static final String INI_FIELD_MODE = "ovdSessionMode";
+	private static final String INI_SECTION_SESSION = "session";
+	private static final String INI_FIELD_MODE = "mode";
 	private static final String INI_VALUE_MODE_APPLICATIONS = "applications";
 	private static final String INI_VALUE_MODE_AUTO = "auto";
 	private static final String INI_VALUE_MODE_DESKTOP = "desktop";
