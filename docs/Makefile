@@ -6,14 +6,9 @@ SRC=AccountsIntegration.xml \
 	Architecture.xml \
 	Easy_Installation.xml \
 	FAQ.xml \
-	Installation.xml \
 	Installation_ApS_Lenny.xml \
 	Installation_ApS_Lucid.xml \
 	Installation_ApS_Windows.xml \
-	Installation_Iso.xml \
-	Installation_Suse.xml \
-	Installation_RedHat.xml \
-	Installation_Sources.xml \
 	Protocol.xml \
 	StartASession.xml \
 	Support_Debian_Lenny.xml \
@@ -39,16 +34,6 @@ ANW=$(SRC:.xml=.anw)
 all: $(DST) $(PDF)
 
 # Add the depends between sources
-Installation_RedHat.html: Installation.xml
-Installation_RedHat.anw:  Installation.xml
-Installation_RedHat.pdf:  Installation.xml
-Installation_Suse.pdf:  Installation.xml
-Installation_Sources.html: Installation_RedHat.xml Installation.xml
-Installation_Sources.anw:  Installation_RedHat.xml Installation.xml
-Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
-Installation_Iso.html: Installation.xml
-Installation_Iso.anw: Installation.xml
-Installation_Iso.pdf: Installation.xml
 Support_Debian_Lenny.xml: Support_Ubuntu_Lucid.xml
 Support_Debian_Squeeze.xml: Support_Ubuntu_Lucid.xml
 Support_openSUSE_11.2.xml: Support_Ubuntu_Lucid.xml
