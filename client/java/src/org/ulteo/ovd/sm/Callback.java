@@ -28,4 +28,5 @@ public interface Callback {
 	public void reportNotFoundHTTPResponse(String moreInfos);
 	public void sessionConnected();
 	public void sessionDisconnecting();
+	public void updateProgress(int status, int substatus);
 }

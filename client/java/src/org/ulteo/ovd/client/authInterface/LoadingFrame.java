@@ -28,6 +28,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 import org.ulteo.ovd.client.I18n;
@@ -37,12 +38,15 @@ public class LoadingFrame extends JDialog {
 	private Image logo = null;
 	private ActionListener obj = null;
 	private JButton cancel = null;
+	private JProgressBar aJProgressBar = null;
+	private JLabel jlabel = null;
 
 	public LoadingFrame(ActionListener obj_) {
 		this.obj = obj_;
 
 		this.cancel = new JButton(I18n._("Cancel"));
 		this.cancel.setPreferredSize(new Dimension(120, 10));
+		this.cancel.setSize(new Dimension(120, 10));
 		this.cancel.setEnabled(false);
 		this.cancel.addActionListener(this.obj);
 
@@ -50,23 +54,36 @@ public class LoadingFrame extends JDialog {
 		this.setIconImage(this.logo);
 		this.setTitle(I18n._("Now loading"));
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		this.setSize(300, 80);
-		this.setPreferredSize(new Dimension(300,80));
+		this.setSize(400, 100);
+		this.setPreferredSize(new Dimension(400,100));
 		this.setResizable(false);
 		this.setModal(true);
 
-		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
-		aJProgressBar.setIndeterminate(true);
+		aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL, 100);
+		aJProgressBar.setIndeterminate(false);
+		aJProgressBar.setValue(0);
+		aJProgressBar.setStringPainted(true);
 		aJProgressBar.setPreferredSize(new Dimension(280, 20));
 		aJProgressBar.setLocation(10,45);
-		
+		jlabel = new JLabel(LoadingStatus.STATUS_SM_START_STRING);
 		this.add(BorderLayout.NORTH, aJProgressBar);
 		this.add(BorderLayout.EAST, this.cancel);
-		
+		this.add(BorderLayout.SOUTH, jlabel);
 		this.pack();
 	}
 
 	public JButton getCancelButton() {
 		return this.cancel;
+	}
+	
+	public void updateProgression(int status, int subStatus) {
+		if (! this.isVisible()) {
+			return;
+		}
+		int loadingValue = LoadingStatus.getIncrement(status, subStatus);
+		String msg = LoadingStatus.getMsg(status);
+		
+		this.aJProgressBar.setValue(loadingValue);
+		this.jlabel.setText(msg);
 	}
 }

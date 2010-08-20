@@ -41,6 +41,7 @@ import org.apache.log4j.Logger;
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
+import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
@@ -379,6 +380,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (! command)
 			dialog.addCallbackListener(this);
 
+		this.updateProgress(LoadingStatus.STATUS_SM_CONNECTION, 0);
 		Properties request = new Properties(mode);
 		try {
 			boolean ret = false;
@@ -396,6 +398,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.disableLoadingMode();
 			return exit;
 		}
+		this.updateProgress(LoadingStatus.STATUS_SM_START, 0);
 		this.loadingFrame.getCancelButton().setEnabled(true);
 		
 		Properties response = dialog.getResponseProperties();
@@ -497,6 +500,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		String error = this.responseHandler.get(ERROR_DEFAULT);
 		JOptionPane.showMessageDialog(null, error, I18n._("Error"), JOptionPane.ERROR_MESSAGE);
 		org.ulteo.Logger.error(error+ "\n" + moreInfos);
+	}
+
+	public void updateProgress(int status, int subStatus) {
+		this.loadingFrame.updateProgression(status, subStatus);
 	}
 
 	public void sessionConnected() {

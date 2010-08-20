@@ -29,6 +29,7 @@ import net.propero.rdp.RdesktopException;
 import org.ulteo.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.OvdClient;
+import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.Properties;
@@ -97,7 +98,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		if (properties.isPrinters())
 			flags |= RdpConnectionOvd.MOUNT_PRINTERS;
 		
-		
+		int numberOfServer = this.smComm.getServers().size();
+		int serverIncrement = (int)100/numberOfServer;
+		int serverIndex = 0;
+		int status = 0;
 		for (ServerAccess server : this.smComm.getServers()) {
 			RdpConnectionOvd rc = null;
 			
@@ -121,18 +125,28 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			// not divisible by 4
 			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
 
+			int numberOfApplication = server.getApplications().size();
+			int ApplicationIncrement = (int)serverIncrement/numberOfApplication;
+			int ApplicationIndex = 0;
 			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
 				try {
+					int subStatus = (int)(status + ApplicationIndex * ApplicationIncrement); 
+					this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
+					
 					Application app = new Application(rc, appItem.getId(), appItem.getName(), appItem.getMimes(), this.smComm.askForIcon(Integer.toString(appItem.getId())));
 					rc.addApp(app);
 				} catch (SessionManagerException ex) {
 					ex.printStackTrace();
 					Logger.warn("Cannot get the \""+appItem.getName()+"\" icon: "+ex.getMessage());
 				}
+				ApplicationIndex++;
 			}
+			status+=serverIndex * serverIncrement;
+			serverIndex++;
 			
 			this.connections.add(rc);
 		}
+		this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, 100);
 		
 		return true;
 	}

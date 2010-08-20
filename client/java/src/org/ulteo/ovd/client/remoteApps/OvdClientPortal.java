@@ -36,6 +36,7 @@ import java.util.List;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.OvdException;
+import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.integrated.Constants;
@@ -136,6 +137,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 			this.logger.error(ex);
 			ex.printStackTrace();
 		}
+		this.obj.updateProgress(LoadingStatus.STATUS_CLIENT_WAITING_SERVER, 0);
 
 		for (Application app : co.getAppsList()) {
 			this.appsList.add(app);
@@ -162,6 +164,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 					if (this.autoPublish)
 						this.publish(app);
 				}
+			}
+			if (this.obj != null ) {
+				this.obj.sessionConnected();
 			}
 		}
 
