@@ -319,7 +319,11 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			return false;
 		}
 		
-		this.mode = properties.getSessionMode();
+		this.mode =  Properties.MODE_ANY;
+		if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
+			this.mode = Properties.MODE_REMOTEAPPS;
+		else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
+			this.mode = Properties.MODE_DESKTOP;
 
 		this.username = properties.getLogin();
 		this.host = properties.getHost();
