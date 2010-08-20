@@ -37,7 +37,6 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.ini4j.Wini;
 
 import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
@@ -90,6 +89,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 			else if (c == 's') {
 				use_https = (opt.getOptarg().equalsIgnoreCase("off")) ? false : true;
+			}
+			else {
+				usage();
+				System.exit(0);
 			}
 		}
 		
