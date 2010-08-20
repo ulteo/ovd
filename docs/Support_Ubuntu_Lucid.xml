@@ -119,17 +119,17 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
   </section>
 
   <section id="sm">
-    <title>Session Manager installation and configuration</title>
+    <title id="sm_title">Session Manager installation and configuration</title>
 
-    <para>
+    <para id="sm_first_para">
       The Session Manager is a LAMP (Linux Apache MySQL PHP) system
       and could be used in an exising LAMP server.
     </para>
 
-    <section id="pre_mysql">
+    <section id="sql">
       <title id="sql_title">Installation of MySQL</title>
 
-      <para>
+      <para id="sql_para">
         The Session Manager needs access to a MySQL database. We
         advice you to setup the MySQL server on the same machine as
         the Session Manager to minimize access time.
@@ -141,8 +141,8 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           <screen># apt-get install mysql-server</screen>
           <para>A password for <literal>root</literal> will be asked.</para>
         </listitem>
-        <listitem>
-	  <para id="mysql_db_create">
+        <listitem id="mysql_createdb">
+	  <para>
 	    Now log in mysql and create a database:
 	  <screen><![CDATA[
 # mysql -u root -p
@@ -163,12 +163,12 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       </itemizedlist>
     </section>
 
-    <section id="sm-install">
-      <title>Package installation</title>
+    <section id="sm_install">
+      <title id="sm_install_title">Package installation</title>
       
       <itemizedlist>
         <listitem>
-	  <para>Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
+	  <para id="sm_install_package">Install the <emphasis>ulteo-ovd-session-manager</emphasis> package:</para>
           <screen>
 	    <![CDATA[
 # apt-get install ulteo-ovd-session-manager]]>
@@ -272,11 +272,9 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 
       <para>
         The first step is to go to
-                                      <ulink url="https://sm.ulteo.com/ovd/admin"/>
-                                      and autenticate yourself with
-                                      the login and password you
-                                      provided during the
-                                      installation.
+        <ulink url="https://sm.ulteo.com/ovd/admin"/> and autenticate
+        yourself with the login and password you provided during the
+        installation.
       </para>
       <para>
         <inlinemediaobject>
@@ -334,11 +332,11 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 
 
   <section id="subsystem">
-    <title>Application Server and File Server installation (using Subsystem)</title>
+    <title id="subsystem_title">Application Server and File Server installation (using Subsystem)</title>
     
     <itemizedlist>
       <listitem>
-        <para>
+        <para id="subsystem_package">
 	  Install the package <emphasis>ulteo-ovd-subsystem</emphasis>:
         </para>
         <screen>
@@ -355,7 +353,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 	  course, you have to set your own domain name).
 	</para>
 
-	<important>
+	<important id="subsystem-sm-warning">
 	  <para>
 	    If you are going to install an Application Server on the
 	    same machine as your Session Manager, it is recommended to use
@@ -391,12 +389,12 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
 # /etc/init.d/ulteo-ovd-subsystem restart]]>
     </screen>
 
-    <para>
+    <para id="subsystem_last_para">
       Your server should appear in the <emphasis
 	                                  role="strong">Unregistered server</emphasis> page.
     </para>
 
-    <screenshot>
+    <screenshot id="subsystem_last_screenshot">
       <screeninfo>Session Manager - server page</screeninfo>
       <graphic fileref="img/sm_admin_server_unregistered.png"></graphic>
     </screenshot>
@@ -407,19 +405,19 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       Web Interface installation (wi.ulteo.com)
     </title>
       
-    <para>
+    <para id="wi_para_1">
       The Ulteo OVD Web client is no longer installed with the Session
       Manager as it was on previous version (&lt; v3.0). So you have
       to install it manually on any server you want. Of course, it's
       possible to install it on the same machine as the Session Manager.
     </para>
-    <para>
+    <para id="wi_para_2">
       In this example, we are using <emphasis>wi.ulteo.com</emphasis>
     </para>
 
     <itemizedlist>
       <listitem>
-        <para>
+        <para id="wi_package">
 	  Install the package <emphasis>ulteo-ovd-webinterface</emphasis>:
         </para>
         <screen>
@@ -466,12 +464,12 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
       </listitem>
     </itemizedlist>
     
-    <para>
+    <para id="wi_last_1">
       Using you web browser, go to
       <ulink url="http://wi.ulteo.com/webinterface/" />, you should
       see a login page:
     </para>
-    <para>
+    <para id="wi_last_2">
       <inlinemediaobject>
         <imageobject>
 	  <imagedata fileref="img/wi_login.png"/>

@@ -18,6 +18,7 @@ SRC=AccountsIntegration.xml \
 	StartASession.xml \
 	Support_Debian_Lenny.xml \
 	Support_Debian_Squeeze.xml \
+	Support_openSUSE_11.2.xml \
 	Support_Ubuntu_Hardy.xml \
 	Support_Ubuntu_Lucid.xml \
 	SystemUpgrade.xml \
@@ -50,6 +51,7 @@ Installation_Iso.anw: Installation.xml
 Installation_Iso.pdf: Installation.xml
 Support_Debian_Lenny.xml: Support_Ubuntu_Lucid.xml
 Support_Debian_Squeeze.xml: Support_Ubuntu_Lucid.xml
+Support_openSUSE_11.2.xml: Support_Ubuntu_Lucid.xml
 Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
 
 
