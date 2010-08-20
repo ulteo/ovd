@@ -101,6 +101,14 @@ public class StartTokenAuth {
 			}
 		}
 		
+		// Init Ulteo Logger instance
+		String tempdir = System.getProperty("java.io.tmpdir");
+		if (! tempdir.endsWith(System.getProperty("file.separator"))) 
+			tempdir+= System.getProperty("file.separator");
+		if (! org.ulteo.Logger.initInstance(true, tempdir+"ulteo-ovd-"+org.ulteo.Logger.getDate()+".log", true))
+			System.err.println("Unable to iniatialize logger instance");
+		
+		
 		if (ovdServer == null) {
 			System.err.println("Error: No SM host specified");
 			usage();

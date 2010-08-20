@@ -29,6 +29,8 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
+
+import org.ulteo.Logger;
 import org.ulteo.ovd.printer.OVDAppletPrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
@@ -55,6 +57,15 @@ public class Desktop extends Applet implements RdpListener {
 	
 	@Override
 	public void init() {
+		String tempdir = System.getProperty("java.io.tmpdir");
+		if (! tempdir.endsWith(System.getProperty("file.separator"))) 
+			tempdir+= System.getProperty("file.separator");
+		
+		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
+			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");
+			Logger.initInstance(true, null, true);
+		}
+		
 		System.out.println(this.getClass().toString() +"  init");
 		boolean status = this.checkSecurity();
 		if (! status) {

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
  * Author David LECHEVALIER <david@ulteo.com> 2009 
  *
  * This program is free software; you can redistribute it and/or 
@@ -22,45 +22,102 @@
 package org.ulteo;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.Calendar;
 
+
+class LoggingOutputStream extends ByteArrayOutputStream { 
+    private String lineSeparator = null; 
+    private Logger logger = null;
+
+    public LoggingOutputStream(Logger logger) { 
+        super(); 
+        this.logger = logger; 
+        this.lineSeparator = System.getProperty("line.separator"); 
+    } 
+    
+    public void flush() throws IOException { 
+        String record; 
+        synchronized(this) { 
+            super.flush(); 
+            record = this.toString(); 
+            super.reset(); 
+ 
+            if (record.length() == 0 || record.equals(lineSeparator)) { 
+                // avoid empty records 
+                return; 
+            } 
+ 
+            logger.write(record);
+        } 
+    } 
+}
+
+
 public class Logger {
-//	private static String filename = null;
 	private static Logger instance = null;
 	
+	private boolean dump_stdout = false;
 	private String filename = null;
-	private boolean stdout = false;
+	private boolean redirectOut = false;
+	private BufferedWriter fileStream = null;
+	private String lineSeparator = null;
 	
-	public Logger(boolean stdout, String filename) {
-		this.stdout = stdout;
+	private PrintStream stdout = null;                                        
+	
+	public Logger(boolean dump_stdout, String filename, boolean redirectOut) throws Exception{
+		this.lineSeparator = System.getProperty("line.separator"); 
+		this.dump_stdout = dump_stdout;
 		this.filename = filename;
-		System.out.println("org.ulteo.Logger init '"+this.filename+"'");
-		write("org.ulteo.Logger init '"+this.filename+"'", "info");
+		this.redirectOut = redirectOut;
+		
+		this.stdout = System.out;                                        
+		
+		if (this.filename != null) {
+			FileWriter fstream = new FileWriter(this.filename, true);
+			this.fileStream = new BufferedWriter(fstream);
+		}
+		
+		if (this.redirectOut) {
+			LoggingOutputStream los = new LoggingOutputStream(this);
+			System.setOut(new PrintStream(los, true));
+		    System.setErr(new PrintStream(los, true));
+		}
+	}
+	
+	public synchronized void write(String message) {
+		if (this.dump_stdout) 
+			this.stdout.println(message);
+		
+		if (this.fileStream != null) {
+			try{
+				this.fileStream.write(message+this.lineSeparator);
+				this.fileStream.flush();
+			}
+			catch (Exception e){
+				//e.printStackTrace();
+			}
+		}
 	}
 	
 	public void write(String msg, String type) {
-		String buffer = getTime()+" ["+type.toUpperCase()+"] "+msg+"\n";
-		try{
-			FileWriter fstream = new FileWriter(this.filename, true);
-			BufferedWriter out = new BufferedWriter(fstream);
-			out.write(buffer);
-			out.close();
-		}catch (Exception e){
-			System.err.println("org.ulteo.Logger error: " + e.getMessage());
-		}
+		String buffer = getTime()+" ["+type.toUpperCase()+"] "+msg;
+		this.write(buffer);
 	}
 
-	private static String getDate() {
+	public static String getDate() {
 		Calendar rightNow = Calendar.getInstance();
 		int d = rightNow.get(Calendar.DAY_OF_MONTH);
-		int M = rightNow.get(Calendar.MONTH);
+		int M = rightNow.get(Calendar.MONTH)+1;
 		int y = rightNow.get(Calendar.YEAR);
 
 		return ""+y+"-"+((M<10)?"0":"")+M+"-"+((d<10)?"0":"")+d;
 	}
 
-	private static String getTime() {
+	public static String getTime() {
 		Calendar rightNow = Calendar.getInstance();
 
 		int h = rightNow.get(Calendar.HOUR_OF_DAY);
@@ -70,32 +127,39 @@ public class Logger {
 		return ""+((h<10)?"0":"")+h+":"+((m<10)?"0":"")+m+":"+((s<10)?"0":"")+s;
 	}
 
-	public static Logger getInstance() {
-		if (instance == null) {
-			String tempdir = System.getProperty("java.io.tmpdir");
-			if ( !(tempdir.endsWith("/") || tempdir.endsWith("\\")) )
-				tempdir = tempdir + System.getProperty("file.separator");
-			
-			instance = new Logger(true, tempdir+"ulteo-ovd-"+getDate()+".log");
+	public static boolean initInstance(boolean stdout, String filename, boolean redirectOut) {
+		try {
+			instance = new Logger(stdout, filename, redirectOut);
 		}
-
-		return instance;
+		catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
 	}
 
 	public static void info(String msg) {
-		getInstance().write(msg, "info");
+		if (instance == null)
+			return;
+		instance.write(msg, "info");
 	}
 
 	public static void warn(String msg) {
-		getInstance().write(msg, "warn");
+		if (instance == null)
+			return;
+		instance.write(msg, "warn");
 	}
 
 	public static void error(String msg) {
-		getInstance().write(msg, "error");
+		if (instance == null)
+			return;
+		instance.write(msg, "error");
 	}
 
 	public static void debug(String msg) {
-		getInstance().write(msg, "debug");
+		if (instance == null)
+			return;
+		instance.write(msg, "debug");
 	}
-
 }

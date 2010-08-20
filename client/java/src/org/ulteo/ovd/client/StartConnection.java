@@ -44,6 +44,7 @@ import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
+import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -72,6 +73,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		
 		I18n.init();
 		BasicConfigurator.configure();
+		
 		Logger.getRootLogger().setLevel(Level.INFO);
 
 		boolean use_https = true;
@@ -95,6 +97,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				System.exit(0);
 			}
 		}
+		
+		// Init Ulteo Logger instance
+		String log_dir = Constants.PATH_NATIVE_CLIENT_CONF + Constants.FILE_SEPARATOR + "logs";
+		(new File(log_dir)).mkdirs();
+		if (! org.ulteo.Logger.initInstance(true, log_dir+Constants.FILE_SEPARATOR +org.ulteo.Logger.getDate()+".log", true))
+			System.err.println("Unable to iniatialize logger instance");
 		
 		StartConnection s = null;
 		
