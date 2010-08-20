@@ -63,7 +63,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import sun.awt.image.URLImageSource;
 
 
 public class SessionManagerCommunication implements HostnameVerifier, X509TrustManager {
@@ -414,9 +413,15 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 						this.dumpXML((Document) obj, "Receiving XML:");
 				}
 				else if (contentType.startsWith(CONTENT_TYPE_PNG)) {
-					URLImageSource imgSrc = (URLImageSource) connexion.getContent();
-					Image img = Toolkit.getDefaultToolkit().createImage(imgSrc);
-					obj = new ImageIcon(img);
+					int length = connexion.getContentLength();
+					byte[] buffer = new byte[length];
+					
+					BufferedInputStream stream = new BufferedInputStream(in);
+					int readed = stream.read(buffer);
+					if (readed != length)
+						System.err.println("askWebservice: Content-Length return "+length+" but read "+readed+" bytes");					
+					
+					obj = new ImageIcon(buffer);
 				}
 				else {
 					BufferedInputStream d = new BufferedInputStream(in);
