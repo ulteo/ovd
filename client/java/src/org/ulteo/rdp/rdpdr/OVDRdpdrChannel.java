@@ -110,7 +110,6 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		s.out_uint8p(magic, 4);
 		s.setLittleEndian32(1);		/* number of device */
 		
-		System.out.println("ID : "+id);
 		s.setLittleEndian32(id);
 		s.markEnd();
 		try {
