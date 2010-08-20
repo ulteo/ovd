@@ -16,6 +16,9 @@ SRC=AccountsIntegration.xml \
 	Installation_Sources.xml \
 	Protocol.xml \
 	StartASession.xml \
+	Support_Debian_Lenny.xml \
+	Support_Debian_Squeeze.xml \
+	Support_Ubuntu_Hardy.xml \
 	Support_Ubuntu_Lucid.xml \
 	SystemUpgrade.xml \
 	Vpn.xml
@@ -45,6 +48,9 @@ Installation_Sources.pdf:  Installation_RedHat.xml Installation.xml
 Installation_Iso.html: Installation.xml
 Installation_Iso.anw: Installation.xml
 Installation_Iso.pdf: Installation.xml
+Support_Debian_Lenny.xml: Support_Ubuntu_Lucid.xml
+Support_Debian_Squeeze.xml: Support_Ubuntu_Lucid.xml
+Support_Ubuntu_Hardy.xml: Support_Ubuntu_Lucid.xml
 
 
 %.html: %.xml

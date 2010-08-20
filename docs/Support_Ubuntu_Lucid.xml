@@ -30,7 +30,7 @@
       system can be downloaded <ulink url="http://releases.ubuntu.com/10.04">here</ulink>.
     </para>
 
-    <simplesect>
+    <simplesect id="sudo">
       <title>sudo</title>
 
       <para>
@@ -40,7 +40,8 @@
       </para>
 
       <para>
-        So there are two alternatives: either you think about adding sudo before each command you launch or you log in as root
+        So there are two alternatives: either you think about adding
+        sudo before each command you launch or you log in as root
       </para>
 
       <para>To log in as root:
@@ -49,9 +50,9 @@
     </simplesect>
 
     <simplesect>
-      <title>Repository</title>
+      <title id="repository_title">Repository</title>
 
-      <para>
+      <para id="repository_para">
         Ubuntu is a Debian based system which use the same
         packaging system and tools: apt-get. So you need to have an
         internet connexion on your Ubuntu system and add an Ulteo
@@ -59,7 +60,7 @@
       </para>
 
       <itemizedlist>
-        <listitem>
+        <listitem id="repository_step1">
           <para>
 	    Edit
 	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd</emphasis>
@@ -71,7 +72,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </screen>
         </listitem>
 
-        <listitem>
+        <listitem id="repository_step2">
           <para>
 	    Update the package database:
           </para>
@@ -88,7 +89,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
           </note>
         </listitem>
 
-        <listitem>
+        <listitem id="repository_step3">
           <para>
             Install the keyring package to validate the repository
             using gpg:
@@ -102,7 +103,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
       </itemizedlist>
     </simplesect>
 
-    <important>
+    <important id="warning_name_examples">
       <para>
         In this document, we are using
         <emphasis>sm.ulteo.com</emphasis> for the Session Manager
@@ -117,7 +118,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
     </important>
   </section>
 
-  <section>
+  <section id="sm">
     <title>Session Manager installation and configuration</title>
 
     <para>
@@ -332,7 +333,7 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
   </section>
 
 
-  <section>
+  <section id="subsystem">
     <title>Application Server and File Server installation (using Subsystem)</title>
     
     <itemizedlist>
