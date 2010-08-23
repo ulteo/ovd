@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
 <project name="ulteo" default="applet">
-  <property name="build.cert" value="/usr/share/ulteo/ovd-cert/"/>
-  <property name="keystore.password" value="123456"/>
+  <property name="build.cert" value="certificate"/>
+  <property name="keystore.password" value=""/>
   <property name="version" value="@VERSION@" />
 
   <property name="compile.debug" value="false"/>
