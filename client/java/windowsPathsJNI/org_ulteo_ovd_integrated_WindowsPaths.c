@@ -63,3 +63,13 @@ JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getAppDataP
     printf("AppData path: %s\n", path);
     return ret;
 }
+
+JNIEXPORT jstring JNICALL Java_org_ulteo_ovd_integrated_WindowsPaths_getPersonalDataPath(JNIEnv *env, jclass class) {
+    jstring ret = NULL;
+    TCHAR path[MAX_PATH];
+
+    if (getPath(CSIDL_PERSONAL, path) == TRUE)
+        ret = (*env)->NewStringUTF(env, path);
+    printf("PersonalData path: %s\n", path);
+    return ret;
+}
