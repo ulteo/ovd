@@ -29,10 +29,11 @@ EXEC=libWindowsPaths.dll
 all: $(EXEC)
 
 $(EXEC): org_ulteo_ovd_integrated_WindowsPaths.o org_ulteo_ovd_integrated_WindowsPaths.def 
-	$(CC) $(LDFLAGS) -shared -o $@ $^ 
+	$(CC) $(LDFLAGS) -shared -o $@ $^
 
 org_ulteo_ovd_integrated_WindowsPaths.h:
-	javah -classpath ../classes/ -d . org.ulteo.ovd.integrated.WindowsPaths
+	javac -classpath ../src -d . ../src/org/ulteo/ovd/integrated/WindowsPaths.java
+	javah org.ulteo.ovd.integrated.WindowsPaths
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c -o $@ $<

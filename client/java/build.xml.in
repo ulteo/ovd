@@ -268,10 +268,13 @@
         <pathelement location="required_libraries/plugin.jar" />
       </classpath>
     </javac>
+    <exec executable="make" failonerror="true" dir="windowsPathsJNI"/>
   </target>
 
   <target name="applet.jar" description="sign jar applets" depends="applet" >
     <antcall target="classes2jar" />
+    <copy file="windowsPathsJNI/libWindowsPaths.dll"
+          todir="jar/ressources/WindowsLibs" />
     <jar destfile="libs/ulteo-applet-${compile.release}.jar" basedir="jar/">
       <include name="**" />
     </jar>
