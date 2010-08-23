@@ -25,7 +25,7 @@ chown ovd-fs:ovd-fs $SPOOLDIR
 # override samba config and restart it
 ID=$(< /dev/urandom tr -dc _A-Za-z0-9 | head -c12)
 sed -e "s/@RANDOM@/$ID/" $CONFDIR/samba.conf > /etc/samba/smb.conf
-service smbd restart
+service smbd restart || true
 
 # override apache2 config and restart it
 A2CONFDIR=/etc/apache2/conf.d
