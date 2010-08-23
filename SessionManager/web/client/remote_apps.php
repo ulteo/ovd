@@ -37,16 +37,27 @@ if (! array_key_exists('token', $_REQUEST)) {
 	die();
 }
 
-$session = Abstract_Session::load($_REQUEST['token']);
+$token = Abstract_Token::load($_REQUEST['token']);
+if (! $token) {
+	echo return_error(2, 'No such token: '.$_REQUEST['token']);
+	die();
+}
+
+if ($token->type != 'external_apps') {
+	echo return_error(3, 'Token "'.$_REQUEST['token'].'" is invalid');
+	die();
+}
+
+$session = Abstract_Session::load($token->link_to);
 if (! $session) {
-	echo return_error(2, 'No such session: '.$_REQUEST['token']);
+	echo return_error(4, 'No such session: '.$token->link_to);
 	die();
 }
 
 $userDB = UserDB::getInstance();
 $user = $userDB->import($session->user_login);
 if (! is_object($user)) {
-	echo return_error(3, 'No such user: '.$session->user_login);
+	echo return_error(5, 'No such user: '.$session->user_login);
 	die();
 }
 
