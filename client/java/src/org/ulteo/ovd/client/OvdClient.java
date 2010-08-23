@@ -83,6 +83,48 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.graphic = graphic_;
 
 		this.availableConnections = new ArrayList<RdpConnectionOvd>();
+		
+		this.obj = new Callback() {
+				@Override
+				public void reportBadXml(String data) {
+					org.ulteo.Logger.error("Callback::reportBadXml: "+data);
+				}
+
+				@Override
+				public void reportError(int code, String msg) {
+					org.ulteo.Logger.error("Callback::reportError: "+code+" => "+msg);
+				}
+
+				@Override
+				public void reportErrorStartSession(String code) {
+					org.ulteo.Logger.error("Callback::reportErrorStartSession: "+code);
+				}
+
+				@Override
+				public void reportNotFoundHTTPResponse(String moreInfos) {
+					org.ulteo.Logger.error("Callback::reportNotFoundHTTPResponse: "+moreInfos);
+				}
+
+				@Override
+				public void reportUnauthorizedHTTPResponse(String moreInfos) {
+					org.ulteo.Logger.error("Callback::reportUnauthorizedHTTPResponse: "+moreInfos);
+				}
+
+				@Override
+				public void sessionConnected() {
+					org.ulteo.Logger.info("Callback::sessionConnected");
+				}
+
+				@Override
+				public void sessionDisconnecting() {
+					org.ulteo.Logger.info("Callback::sessionDisconnected");
+				}
+
+				@Override
+				public void updateProgress(int status, int substatus) {
+					org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
+				}
+			};
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
