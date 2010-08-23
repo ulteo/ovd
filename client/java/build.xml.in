@@ -346,6 +346,7 @@
         <include name="icons/*" />
         <include name="po/*" />
         <include name="misc/*" />
+        <include name="windowsPathsJNI/*" />
       </fileset>
     </copy>
     <tar destfile="${distdir}/${sdist.name}.tar" longfile="gnu"
