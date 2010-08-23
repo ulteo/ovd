@@ -94,10 +94,11 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		String magic = "rDMD";
 		int id = -1;
 
-		for (int i = 0 ; i< g_num_devices ; i++) {
+		for (int i = 0 ; i< RDPDR_MAX_DEVICES ; i++) {
 			RdpdrDevice dev = g_rdpdr_device[i];
 			if (dev.name.equals(name) && dev.local_path.equals(path)) {
 				id = i;
+				break;
 			}
 		}
 		if (id == -1) {
@@ -120,17 +121,20 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 			return false;
 		}
 		g_rdpdr_device[id].slotIsFree = true;
+		g_rdpdr_device[id].set_name("");
+		g_rdpdr_device[id].set_local_path("");
+
 		return true;
 	}
 
 	private int getNextFreeSlot() {
-		for (int i=0; i< g_num_devices ; i++) {
+		for (int i=0; i< RDPDR_MAX_DEVICES ; i++) {
 			if (g_rdpdr_device[i] == null)
-				return g_num_devices;
+				return i;
 			if (g_rdpdr_device[i].slotIsFree)
 				return i;
 		}
-		return g_num_devices;
+		return -1;
 	}
 
 	public void rdpdr_send_available() {
@@ -139,10 +143,12 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 	}
 	
  	public boolean register(RdpdrDevice v) {
-		OVDRdpdrChannel.g_rdpdr_device[g_num_devices] = v;
-		//this.g_rdpdr_device[g_num_devices].set_local_path("c:\\temp\\");
-		//this.g_rdpdr_device[g_num_devices].set_name("fo");
-		g_num_devices++;
+ 		int index = getNextFreeSlot();
+ 		if (index == -1) {
+ 			logger.warn("the max number of device is reached");
+ 			return false;
+ 		}
+		OVDRdpdrChannel.g_rdpdr_device[index] = v;
 		return true;
  	}
 
