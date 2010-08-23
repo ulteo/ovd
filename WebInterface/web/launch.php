@@ -45,6 +45,8 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 		<link rel="stylesheet" type="text/css" href="media/style/common.css" />
 		<script type="text/javascript" src="media/script/common.js?<?php echo time(); ?>" charset="utf-8"></script>
 
+		<script type="text/javascript" src="media/script/i18n.js.php?<?php echo time(); ?>" charset="utf-8"></script>
+
 		<script type="text/javascript" src="media/script/daemon.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/daemon_<?php echo $_SESSION['session_mode']; ?>.js?<?php echo time(); ?>" charset="utf-8"></script>
 		<script type="text/javascript" src="media/script/server.js?<?php echo time(); ?>" charset="utf-8"></script>

@@ -11,15 +11,6 @@ function refresh_body_size() {
 	}
 }
 
-var i18n = new Hash();
-i18n.set('auth_failed', 'Authentication failed, please double-check your password and try again');
-i18n.set('in_maintenance', 'The system is in maintenance mode, please contact your administrator for more information');
-i18n.set('internal_error', 'An internal error occured, please contact your administrator');
-i18n.set('invalid_user', 'You specified an invalid login, please double-check and try again');
-i18n.set('service_not_available', 'The service is not available, please contact your administrator for more information');
-i18n.set('unauthorized_session_mode', 'You are not authorized to launch a session in this mode');
-i18n.set('user_with_active_session', 'You already have an active session');
-
 var date = new Date();
 var rand = Math.round(Math.random()*100)+date.getTime();
 var window_;
