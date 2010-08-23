@@ -619,21 +619,10 @@ else {
 	throw_response(INTERNAL_ERROR);
 }
 
-$token = new Token(gen_unique_string());
-$token->type = $session_type;
-$token->link_to = $session->id;
-$token->valid_until = (time()+(60*5));
-$save_token = Abstract_Token::save($token);
-if ($save_token === false) {
-	Logger::error('main', '(startsession) failed to save token \''.$token.'\' for session \''.$session->id.'\'');
-	throw_response(INTERNAL_ERROR);
-}
-
 $ev->setAttributes(array(
 	'ok'	=> true,
 	'server'	=>	$session->server,
 	'resume'	=>	$session->isSuspended(),
-	'token'	=>	$token->id,
 	'sessid'	=>	$session->id
 ));
 $ev->emit();
