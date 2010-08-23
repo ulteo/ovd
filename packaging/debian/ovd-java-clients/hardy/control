@@ -3,7 +3,7 @@ Section: utils
 Priority: optional
 Maintainer: Samuel Bovée <samuel@ulteo.com>
 Build-Depends: debhelper (>= 6), cdbs, ulteo-ovd-cert,
- sun-java6-jdk, ant, ant-optional
+ sun-java6-jdk, ant, ant-optional, mingw32
 Standards-Version: 3.8.2
 
 Package: ulteo-ovd-applets
