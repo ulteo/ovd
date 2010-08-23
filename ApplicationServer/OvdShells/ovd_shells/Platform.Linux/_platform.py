@@ -70,7 +70,7 @@ def launchIntegratedClient(configuration_file_):
 	if os.path.exists(configuration_file_) == False:
 		return False
 	
-	launch("ovdclient -c %s"%(configuration_file_))
+	launch("OVDExternalAppsClient -c %s"%(configuration_file_))
 	return True
 
 def launch(cmd, wait=False):
