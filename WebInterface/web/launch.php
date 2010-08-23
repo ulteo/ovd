@@ -81,15 +81,15 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 				daemon.multimedia = <?php echo (($_SESSION['multimedia'] == 1)?'true':'false'); ?>;
 				daemon.redirect_client_printers = <?php echo (($_SESSION['redirect_client_printers'] == 1)?'true':'false'); ?>;
 
-				daemon.i18n['session_close_unexpected'] = '<?php echo str_replace("'", "\'", _('Server: session closed unexpectedly')); ?>';
-				daemon.i18n['session_end_ok'] = '<?php echo str_replace("'", "\'", _('Your session has ended, you can now close the window')); ?>';
-				daemon.i18n['session_end_unexpected'] = '<?php echo str_replace("'", "\'", _('Your session has ended unexpectedly')); ?>';
-				daemon.i18n['error_details'] = '<?php echo str_replace("'", "\'", _('error details')); ?>';
-				daemon.i18n['close_this_window'] = '<?php echo str_replace("'", "\'", _('Close this window')); ?>';
-				daemon.i18n['start_another_session'] = '<?php printf(str_replace("'", "\'", _('Click %shere%s to start a new session')), '<a href="index.php">', '</a>'); ?>';
+				daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
+				daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
+				daemon.i18n['session_end_unexpected'] = i18n.get('session_end_unexpected');
+				daemon.i18n['error_details'] = i18n.get('error_details');
+				daemon.i18n['close_this_window'] = i18n.get('close_this_window');
+				daemon.i18n['start_another_session_popup'] = i18n.get('start_another_session');
 
-				daemon.i18n['suspend'] = '<?php echo str_replace("'", "\'", _('suspend')); ?>';
-				daemon.i18n['resume'] = '<?php echo str_replace("'", "\'", _('resume')); ?>';
+				daemon.i18n['suspend'] = i18n.get('suspend');
+				daemon.i18n['resume'] = i18n.get('resume');
 
 				setTimeout(function() {
 					daemon.loop();

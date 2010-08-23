@@ -186,15 +186,15 @@ function onStartSessionSuccess(xml_) {
 			daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 			daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
 
-			daemon.i18n['session_close_unexpected'] = 'Server: session closed unexpectedly';
-			daemon.i18n['session_end_ok'] = 'Your session has ended, you can now close the window';
-			daemon.i18n['session_end_unexpected'] = 'Your session has ended unexpectedly';
-			daemon.i18n['error_details'] = 'error details';
-			daemon.i18n['close_this_window'] = 'Close this window';
-			daemon.i18n['start_another_session'] = 'Click <a href="javascript:;" onclick="hideEnd(); showLogin(); return false;">here</a> to start a new session';
+			daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
+			daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
+			daemon.i18n['session_end_unexpected'] = i18n.get('session_end_unexpected');
+			daemon.i18n['error_details'] = i18n.get('error_details');
+			daemon.i18n['close_this_window'] = i18n.get('close_this_window');
+			daemon.i18n['start_another_session'] = i18n.get('start_another_session');
 
-			daemon.i18n['suspend'] = 'suspend';
-			daemon.i18n['resume'] = 'resume';
+			daemon.i18n['suspend'] = i18n.get('suspend');
+			daemon.i18n['resume'] = i18n.get('resume');
 
 			if (debug) {
 				if (session_mode == 'Desktop')
