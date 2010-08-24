@@ -88,6 +88,14 @@ public class WindowsDiskManager extends DiskManager {
 	}
 
 	/**************************************************************************/
+	//http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4939819
+	public boolean testDir(String directoryName) {
+		File directory = new File(directoryName);
+		return (directory.isDirectory() && 
+				directory.canRead());
+	}
+	
+	/**************************************************************************/
 	public String getShareName(String path) {
 		String share = super.getShareName(path);
 		if (path.length() == 3) {
