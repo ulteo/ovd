@@ -103,10 +103,10 @@ function server_display_role_preparation_aps($server) {
 		popup_error($server->fqdn.': '._('redirection name cannot be empty!'));
 	
 	if ($server_online) {
-	//     $buf = $server->updateApplications();
-	//     if ($buf === false)
-	//       popup_error(_('Cannot list available applications'));
-	//   }
+		$buf = $server->updateApplications();
+		if (! $buf)
+			popup_error(_('Cannot list available applications'));
+
 		//FIX ME ?
 		$tm = new Tasks_Manager();
 		$tm->load_from_server($server->fqdn);
