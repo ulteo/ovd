@@ -30,11 +30,10 @@ a browser
 
 %prep -n ulteo-ovd-applets
 %setup -q
-PASSWD=$(cat /usr/share/ulteo/ovd-cert/password)
-sed -i "s/123456/$PASSWD/" build.xml
 
 %install -n ulteo-ovd-applets
-ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT
+OVD_CERT_DIR=/usr/share/ulteo/ovd-cert/
+ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT -Dbuild.cert=$OVD_CERT_DIR -Dkeystore.password=$(cat $OVD_CERT_DIR/password)
 
 %files -n ulteo-ovd-applets
 %defattr(-,root,root)
