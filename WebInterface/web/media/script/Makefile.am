@@ -6,7 +6,8 @@ scripts_DATA = application.js \
                daemon_applications.js \
                daemon_desktop.js \
                i18n.js.php \
-               server.js
+               server.js \
+               timezones.js
 
 scriptsdir = $(datadir)/ulteo/webinterface/media/script
 

@@ -74,6 +74,7 @@ $dom = new DomDocument('1.0', 'utf-8');
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('mode', $_POST['mode']);
 $session_node->setAttribute('language', $_POST['language']);
+$session_node->setAttribute('timezone', $_POST['timezone']);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('login', $_POST['login']);
 $user_node->setAttribute('password', $_POST['password']);
