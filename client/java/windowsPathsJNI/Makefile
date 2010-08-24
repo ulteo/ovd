@@ -16,10 +16,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-PREFIX?=i586-mingw32msvc-
-CC=$(PREFIX)gcc
-#JAVAHOME="C:\Program Files\Java\jdk1.6.0_18"
-#CFLAGS=-Wall -I${JAVAHOME}\include -I${JAVAHOME}\include\win32
+BINPREFIX?=i586-mingw32msvc-
+CC=$(BINPREFIX)gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
 CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux
 LDFLAGS=
