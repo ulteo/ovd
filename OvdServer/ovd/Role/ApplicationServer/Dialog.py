@@ -143,6 +143,10 @@ class Dialog(AbstractDialog):
 			session["id"] = sessionNode.getAttribute("id")
 			session["mode"] = sessionNode.getAttribute("mode")
 			
+			external_apps_token = None
+			if sessionNode.hasAttribute("external_apps_token"):
+				external_apps_token = sessionNode.getAttribute("external_apps_token")
+			
 			if len(session["id"])==0:
 				raise Exception("Missing attribute id")
 			
@@ -205,6 +209,9 @@ class Dialog(AbstractDialog):
 			user.infos["locale"] = session["parameters"]["locale"]
 		
 		session = Platform.Session(session["id"], session["mode"], user, session["parameters"], session["applications"])
+		if external_apps_token is not None:
+			session.setExternalAppsToken(external_apps_token)
+		
 		session.init()
 		
 		if profileNode is not None:

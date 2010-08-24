@@ -51,6 +51,7 @@ class Session:
 		self.applications = applications_
 		self.instanceDirectory = None
 		self.used_applications = {}
+		self.external_apps_token = None
 		
 		self.log = []
 		self.switch_status(Session.SESSION_STATUS_INIT)
@@ -94,15 +95,17 @@ class Session:
 			
 			self.install_shortcut(final_file)
 		
-		
-		f = open(os.path.join(self.user_session_dir, "sm"), "w")
-		f.write(Config.session_manager+"\n")
-		f.close()
-		
-		f = open(os.path.join(self.user_session_dir, "token"), "w")
-		f.write(self.id+"\n")
-		f.close()
+		if self.external_apps_token is not None:
+			f = open(os.path.join(self.user_session_dir, "sm"), "w")
+			f.write(Config.session_manager+"\n")
+			f.close()
+			
+			f = open(os.path.join(self.user_session_dir, "token"), "w")
+			f.write(self.external_apps_token+"\n")
+			f.close()
 	
+	def setExternalAppsToken(self, external_apps_token):
+		self.external_apps_token = external_apps_token
 	
 	def install_client(self):
 		pass
