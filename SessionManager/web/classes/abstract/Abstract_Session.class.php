@@ -157,6 +157,10 @@ class Abstract_Session {
 
 		Abstract_Liaison::delete('ServerSession', NULL, $id_);
 
+		$tokens = Abstract_Token::load_by_session($id_);
+		foreach ($tokens as $token)
+			Abstract_Token::delete($token->id);
+
 		return true;
 	}
 

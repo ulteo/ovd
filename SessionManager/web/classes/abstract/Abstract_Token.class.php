@@ -172,4 +172,24 @@ class Abstract_Token {
 
 		return $tokens;
 	}
+
+	public static function load_by_session($ssesion_id_) {
+		Logger::debug('main', 'Starting Abstract_Token::load_by_session('.$ssesion_id_.')');
+
+		$SQL = SQL::getInstance();
+
+		$SQL->DoQuery('SELECT * FROM @1 WHERE @2 = %3', $SQL->prefix.'tokens', 'link_to', $ssesion_id_);
+		$rows = $SQL->FetchAllResults();
+
+		$tokens = array();
+		foreach ($rows as $row) {
+			$token = self::generateFromRow($row);
+			if (! is_object($token))
+				continue;
+
+			$tokens[] = $token;
+		}
+
+		return $tokens;
+	}
 }
