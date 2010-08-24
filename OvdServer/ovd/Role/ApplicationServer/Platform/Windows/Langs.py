@@ -31,8 +31,16 @@ def getLCID(lang_):
 			return mappings[key]
 	
 	return mappings["en_US"]
+
+
+def getWinTimezone(tzid_):
+	mappings = getTimezoneMapping()
 	
+	if mappings.has_key(tzid_):
+		return mappings[tzid_]
 	
+	return mappings["Europe/London"]
+
 
 def getMapping():
 	array = {}
@@ -309,5 +317,101 @@ def getMapping():
 	array["ii_CN"] = 0x0478	# Yi PRC
 	array["yo_NG"] = 0x046a	# Yoruba Nigeria
 	array["zu_ZA"] = 0x0435	# Zulu/isiZulu South Afric
+	
+	return array
+
+
+def getTimezoneMapping():
+	# Windows tzid matching, ref http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/zone_tzid.html
+	
+	array = {}
+	array["Africa/Cairo"] = "Egypt Standard Time"
+	array["Africa/Casablanca"] = "Greenwich Standard Time"
+	array["Africa/Johannesburg"] = "South Africa Standard Time"
+	array["Africa/Lagos"] = "W. Central Africa Standard Time"
+	array["Africa/Nairobi"] = "E. Africa Standard Time"
+	array["Africa/Windhoek"] = "Namibia Standard Time"
+	array["America/Anchorage"] = "Alaskan Standard Time"
+	array["America/Bogota"] = "SA Pacific Standard Time"
+	array["America/Buenos_Aires"] = "Argentina Standard Time"
+	array["America/Caracas"] = "Venezuela Standard Time"
+	array["America/Chicago"] = "Central Standard Time"
+	array["America/Chihuahua"] = "Mexico Standard Time 2"
+	array["America/Chihuahua"] = "Mountain Standard Time (Mexico)"
+	array["America/Denver"] = "Mountain Standard Time"
+	array["America/Godthab"] = "Greenland Standard Time"
+	array["America/Guatemala"] = "Central America Standard Time"
+	array["America/Halifax"] = "Atlantic Standard Time"
+	array["America/La_Paz"] = "SA Western Standard Time"
+	array["America/Los_Angeles"] = "Pacific Standard Time"
+	array["America/Mexico_City"] = "Central Standard Time (Mexico)"
+	array["America/Mexico_City"] = "Mexico Standard Time"
+	array["America/Montevideo"] = "Montevideo Standard Time"
+	array["America/New_York"] = "Eastern Standard Time"
+	array["America/Phoenix"] = "US Mountain Standard Time"
+	array["America/Regina"] = "Canada Central Standard Time"
+	array["America/Santiago"] = "Pacific SA Standard Time"
+	array["America/Sao_Paulo"] = "E. South America Standard Time"
+	array["America/St_Johns"] = "Newfoundland Standard Time"
+	array["America/Tijuana"] = "Pacific Standard Time (Mexico)"
+	array["Asia/Amman"] = "Jordan Standard Time"
+	array["Asia/Baghdad"] = "Arabic Standard Time"
+	array["Asia/Baku"] = "Azerbaijan Standard Time"
+	array["Asia/Bangkok"] = "SE Asia Standard Time"
+	array["Asia/Beirut"] = "Middle East Standard Time"
+	array["Asia/Calcutta"] = "India Standard Time"
+	array["Asia/Colombo"] = "Sri Lanka Standard Time"
+	array["Asia/Dhaka"] = "Central Asia Standard Time"
+	array["Asia/Dubai"] = "Arabian Standard Time"
+	array["Asia/Irkutsk"] = "North Asia East Standard Time"
+	array["Asia/Jerusalem"] = "Israel Standard Time"
+	array["Asia/Kabul"] = "Afghanistan Standard Time"
+	array["Asia/Karachi"] = "West Asia Standard Time"
+	array["Asia/Katmandu"] = "Nepal Standard Time"
+	array["Asia/Krasnoyarsk"] = "North Asia Standard Time"
+	array["Asia/Novosibirsk"] = "N. Central Asia Standard Time"
+	array["Asia/Rangoon"] = "Myanmar Standard Time"
+	array["Asia/Riyadh"] = "Arab Standard Time"
+	array["Asia/Seoul"] = "Korea Standard Time"
+	array["Asia/Shanghai"] = "China Standard Time"
+	array["Asia/Singapore"] = "Singapore Standard Time"
+	array["Asia/Taipei"] = "Taipei Standard Time"
+	array["Asia/Tbilisi"] = "Caucasus Standard Time"
+	array["Asia/Tehran"] = "Iran Standard Time"
+	array["Asia/Tokyo"] = "Tokyo Standard Time"
+	array["Asia/Vladivostok"] = "Vladivostok Standard Time"
+	array["Asia/Yakutsk"] = "Yakutsk Standard Time"
+	array["Asia/Yekaterinburg"] = "Ekaterinburg Standard Time"
+	array["Asia/Yerevan"] = "Armenian Standard Time"
+	array["Atlantic/Azores"] = "Azores Standard Time"
+	array["Atlantic/Cape_Verde"] = "Cape Verde Standard Time"
+	array["Atlantic/South_Georgia"] = "Mid-Atlantic Standard Time"
+	array["Australia/Adelaide"] = "Cen. Australia Standard Time"
+	array["Australia/Brisbane"] = "E. Australia Standard Time"
+	array["Australia/Darwin"] = "AUS Central Standard Time"
+	array["Australia/Hobart"] = "Tasmania Standard Time"
+	array["Australia/Perth"] = "W. Australia Standard Time"
+	array["Australia/Sydney"] = "AUS Eastern Standard Time"
+	array["Etc/GMT+12"] = "Dateline Standard Time"
+	array["Etc/GMT-3"] = "Georgian Standard Time"
+	array["Etc/GMT+3"] = "SA Eastern Standard Time"
+	array["Etc/GMT+4"] = "Central Brazilian Standard Time"
+	array["Etc/GMT+5"] = "US Eastern Standard Time"
+	array["Europe/Berlin"] = "W. Europe Standard Time"
+	array["Europe/Budapest"] = "Central Europe Standard Time"
+	array["Europe/Istanbul"] = "GTB Standard Time"
+	array["Europe/Kiev"] = "FLE Standard Time"
+	array["Europe/London"] = "GMT Standard Time"
+	array["Europe/Minsk"] = "E. Europe Standard Time"
+	array["Europe/Moscow"] = "Russian Standard Time"
+	array["Europe/Paris"] = "Romance Standard Time"
+	array["Europe/Warsaw"] = "Central European Standard Time"
+	array["Pacific/Apia"] = "Samoa Standard Time"
+	array["Pacific/Auckland"] = "New Zealand Standard Time"
+	array["Pacific/Fiji"] = "Fiji Standard Time"
+	array["Pacific/Guadalcanal"] = "Central Pacific Standard Time"
+	array["Pacific/Honolulu"] = "Hawaiian Standard Time"
+	array["Pacific/Port_Moresby"] = "West Pacific Standard Time"
+	array["Pacific/Tongatapu"] = "Tonga Standard Time"
 	
 	return array

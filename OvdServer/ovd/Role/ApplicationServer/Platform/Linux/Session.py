@@ -70,6 +70,14 @@ class Session(AbstractSession):
 			env_file_lines.append("LC_ALL=%s.UTF-8\n"%(self.parameters["locale"]))
 			env_file_lines.append("LANGUAGE=%s.UTF-8\n"%(self.parameters["locale"]))
 		
+		if self.parameters.has_key("timezone"):
+			tz_file = "/usr/share/zoneinfo/" + self.parameters["timezone"]
+			if not os.path.exists(tz_file):
+				Logger.warn("Unsupported timezone '%s'"%(self.parameters["timezone"]))
+				Logger.debug("Unsupported timezone '%s'. File '%s' does not exists"%(self.parameters["timezone"], tz_file))
+			else:
+				env_file_lines.append("TZ=%s\n"%(tz_file))
+		
 		f = file(os.path.join(d, "env"), "w")
 		f.writelines(env_file_lines)
 		f.close()

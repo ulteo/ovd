@@ -21,6 +21,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import os
+import struct
 import win32api
 import win32con
 import win32security
@@ -351,3 +352,49 @@ def disableActiveSetup22(rootPath):
 		hkey = win32api.RegOpenKey(win32con.HKEY_USERS, path, 0, win32con.KEY_ALL_ACCESS)
 		win32api.RegSetValueEx(hkey, "Version", 0, win32con.REG_SZ, version)
 		win32api.RegCloseKey(hkey)
+
+
+def setTimezone(rootPath, tz):
+	# http://www.windowsitpro.com/article/registry2/jsi-tip-0398-how-to-set-the-time-zone-by-editing-the-registry-.aspx
+	
+	path = r"Software\Microsoft\Windows NT\CurrentVersion\Time Zones\%s"%(tz)
+	hkey = None
+	try:
+		hkey = win32api.RegOpenKey(win32con.HKEY_LOCAL_MACHINE, path, 0, win32con.KEY_QUERY_VALUE)
+		(std, _) = win32api.RegQueryValueEx(hkey, "std")
+		(dlt, _) = win32api.RegQueryValueEx(hkey, "dlt")
+		(tzi, _) = win32api.RegQueryValueEx(hkey, "TZI")
+	except Exception, err:
+		Logger.error("setTimezone, Registry error "+str(err))
+		return False
+	finally:
+		if hkey is not None:
+			win32api.RegCloseKey(hkey)
+	
+	if len(tzi)<44:
+		Logger.error("setTimezone, bad TZI len "+len(tzi))
+		return False
+	
+	Bias = struct.unpack('<I', tzi[:4])[0]
+	StandardBias = struct.unpack('<I', tzi[4:8])[0]
+	DaylightBias = struct.unpack('<I', tzi[8:12])[0]
+	StandardStart = tzi[12:28]
+	DaylightStart = tzi[28:44]
+	
+	path = r"%s\SYSTEM\CurrentControlSet\Control\TimeZoneInformation"%(rootPath)
+	hkey = OpenKeyCreateIfDoesntExist(win32con.HKEY_USERS, path)
+	if hkey is None:
+		Logger.error("setTimezone, unable to open "+path)
+		return False
+	
+	win32api.RegSetValueEx(hkey, "ActiveTimeBias", 0, win32con.REG_DWORD, Bias)
+	win32api.RegSetValueEx(hkey, "Bias", 0, win32con.REG_DWORD, Bias)
+	win32api.RegSetValueEx(hkey, "StandardBias", 0, win32con.REG_DWORD, StandardBias)
+	win32api.RegSetValueEx(hkey, "StandardStart", 0, win32con.REG_BINARY, StandardStart)
+	win32api.RegSetValueEx(hkey, "DaylightStart", 0, win32con.REG_BINARY, DaylightStart)
+	
+	win32api.RegSetValueEx(hkey, "StandardName", 0, win32con.REG_SZ, std)
+	win32api.RegSetValueEx(hkey, "DaylightName", 0, win32con.REG_SZ, dlt)
+	win32api.RegCloseKey(hkey)
+	
+	return True

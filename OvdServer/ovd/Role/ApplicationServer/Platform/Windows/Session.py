@@ -274,6 +274,15 @@ class Session(AbstractSession):
 			self.profile.overrideRegistry(hiveName)
 		
 		
+		# Timezone override
+		if self.parameters.has_key("timezone"):
+			tz_name = Langs.getWinTimezone(self.parameters["timezone"])
+			
+			ret = Reg.setTimezone(hiveName, tz_name)
+			if ret is False:
+				Logger.warn("Unable to set TimeZone (%s, %s)"%(self.parameters["timezone"], tz_name))
+		
+		
 		# Unload the hive
 		win32api.RegUnLoadKey(win32con.HKEY_USERS, hiveName)
 
