@@ -30,6 +30,9 @@
     <delete dir="classes"/>
     <delete dir="jar"/>
     <delete dir="libs"/>
+    <exec executable="make" failonerror="true" dir="windowsPathsJNI" >
+      <arg value="clean" />
+    </exec>
   </target>
 
   <target name="precompile">
@@ -268,7 +271,9 @@
         <pathelement location="required_libraries/plugin.jar" />
       </classpath>
     </javac>
-    <exec executable="make" failonerror="true" dir="windowsPathsJNI"/>
+    <exec executable="make" failonerror="true" dir="windowsPathsJNI">
+       <env key="JAVAHOME" path="${java.home}/.." />
+    </exec>
   </target>
 
   <target name="applet.jar" description="sign jar applets" depends="applet" >
