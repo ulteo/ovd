@@ -32,6 +32,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -44,10 +48,20 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.ulteo.ovd.client.gui.GUIActions;
+import org.ulteo.ovd.client.gui.SwingTools;
 
 import org.ulteo.ovd.client.I18n;
 
-public class AuthFrame implements ActionListener {
+public class AuthFrame implements ActionListener, Runnable {
+
+	private static final int JOB_NOTHING = -1;
+	private static final int JOB_LOCAL_CREDENTIALS = 0;
+	private static final int JOB_RESOLUTION_BAR = 1;
+	private static final int JOB_OPTIONS = 2;
+	private static final int JOB_START = 3;
+
+	private List<Integer> jobsList = null;
 	
 	private JFrame mainFrame = new JFrame();
 	private boolean desktopLaunched = false;
@@ -97,10 +111,10 @@ public class AuthFrame implements ActionListener {
 	
 	private ActionListener obj = null;
 	
-	private GridBagConstraints gbc = null;
-	
 	public AuthFrame(ActionListener obj_) {
 		this.obj = obj_;
+
+		this.jobsList = new CopyOnWriteArrayList();
 		
 		Object[] items = new Object[3];
 		items[0] = this.itemModeAuto;
@@ -143,7 +157,7 @@ public class AuthFrame implements ActionListener {
 		this.useLocalCredentials.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				toggleLocalCredentials();
+				startJob(JOB_LOCAL_CREDENTIALS);
 			}
 		});
 		
@@ -154,25 +168,7 @@ public class AuthFrame implements ActionListener {
 			
 			@Override
 			public void stateChanged(ChangeEvent ce) {
-				int value = resBar.getValue();
-				
-				switch(value) {
-				case 0 :
-					resolutionValue.setText("800x600");
-					break;
-				case 1 :
-					resolutionValue.setText("1024x768");
-					break;
-				case 2 :
-					resolutionValue.setText("1280x678");
-					break;
-				case 3 :
-					resolutionValue.setText(I18n._("Maximized"));
-					break;
-				case 4 :
-					resolutionValue.setText(I18n._("Fullscreen"));
-					break;
-				}
+				startJob(JOB_RESOLUTION_BAR);
 			}
 		});
 		
@@ -180,83 +176,14 @@ public class AuthFrame implements ActionListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (! optionClicked) {
-					gbc.anchor = GridBagConstraints.CENTER;
-					gbc.gridwidth = 2;
-					gbc.weightx = 1;
-					gbc.weighty = 1;
-					gbc.gridx = 0;
-					gbc.gridy = 9;
-					gbc.insets.top = 30;
-					mainFrame.add(optionLogoLabel, gbc);
-					
-					gbc.anchor = GridBagConstraints.LINE_START;
-					gbc.weightx = 0;
-					gbc.weighty = 0;
-					gbc.gridwidth = 1;
-					gbc.insets.top = 0;
-					gbc.insets.left = 0;
-					gbc.gridx = 1;
-					gbc.gridy = 10;
-					mainFrame.add(mode, gbc);
-					
-					/*gbc.gridy = 13;
-					mainFrame.add(language, gbc);
-					
-					gbc.gridy = 14;
-					mainFrame.add(keyboard, gbc);*/
-					
-					gbc.gridwidth = 2;
-					gbc.gridx = 2;
-					gbc.gridy = 10;
-					gbc.fill = GridBagConstraints.HORIZONTAL;
-					mainFrame.add(sessionModeBox, gbc);
-					
-					sessionModeBox.validate();
-					
-					/*gbc.gridx = 2;
-					gbc.gridwidth = 2;
-					gbc.gridy = 13;
-					gbc.fill = GridBagConstraints.HORIZONTAL;
-					mainFrame.add(languageBox, gbc);
-					
-					gbc.gridy = 14;
-					mainFrame.add(keyboardBox, gbc);*/
-					
-					gbc.gridwidth = 1;
-					gbc.fill = GridBagConstraints.NONE;
-					moreOption.setIcon(hideOption);
-					moreOption.setText(I18n._("Fewer options"));
-					mainFrame.pack();
-					optionClicked = true;
-					toggleSessionMode();
-					
-				} else {
-					mainFrame.remove(optionLogoLabel);
-					mainFrame.remove(mode);
-					mainFrame.remove(resolution);
-					mainFrame.remove(language);
-					mainFrame.remove(keyboard);
-					mainFrame.remove(sessionModeBox);
-					mainFrame.remove(resBar);
-					mainFrame.remove(resolutionValue);
-					mainFrame.remove(languageBox);
-					mainFrame.remove(keyboardBox);
-					mainFrame.remove(autoPublish);
-					
-					moreOption.setIcon(showOption);
-					moreOption.setText(I18n._("More options ..."));
-					mainFrame.pack();
-					optionClicked = false;
-				}
-				
+				startJob(JOB_OPTIONS);
 			}
 		};
 		
 		moreOption.addActionListener(optionListener);
 		
 		mainFrame.setLayout(new GridBagLayout());
-		gbc = new GridBagConstraints();
+		GridBagConstraints gbc = new GridBagConstraints();
 		startButton.setPreferredSize(new Dimension(150, 25));
 		startButton.addActionListener(this.obj);
 		
@@ -304,7 +231,7 @@ public class AuthFrame implements ActionListener {
 		gbc.gridy = pos;
 		mainFrame.add(host, gbc);
 		
-		gbc.gridwidth = GridBagConstraints.REMAINDER;;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbc.gridheight = GridBagConstraints.REMAINDER;
 		gbc.insets.top = 25;
 		gbc.gridx = 0;
@@ -350,8 +277,7 @@ public class AuthFrame implements ActionListener {
 
 			public synchronized void keyTyped(KeyEvent ke) {
 				if ((ke.getKeyChar() == KeyEvent.VK_ENTER) && (! startButtonClicked)) {
-					startButtonClicked = true;
-					startButton.doClick();
+					startJob(JOB_START);
 				}
 			}
 
@@ -367,84 +293,150 @@ public class AuthFrame implements ActionListener {
 		
 		mainFrame.pack();
 		mainFrame.setLocationRelativeTo(null);
-		this.showWindow();
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.showWindow();
+	}
+
+	private void startJob(int job) {
+		this.jobsList.add(new Integer(job));
+		new Thread(this).start();
+	}
+
+	private synchronized int getJob() {
+		if (this.jobsList.isEmpty())
+			return JOB_NOTHING;
+
+		Integer job = this.jobsList.get(0);
+		this.jobsList.remove(job);
+
+		return job.intValue();
+	}
+
+	public void run() {
+		int job = this.getJob();
+		
+		if (job == JOB_NOTHING)
+			return;
+
+		switch(job) {
+			case JOB_LOCAL_CREDENTIALS:
+				this.toggleLocalCredentials();
+				break;
+			case JOB_RESOLUTION_BAR:
+				int value = this.resBar.getValue();
+				String[] strs = {"800x600", "1024x768", "1280x678", I18n._("Maximized"), I18n._("Fullscreen")};
+
+				if (value >= strs.length)
+					return;
+
+				SwingTools.invokeLater(GUIActions.setLabelText(this.resolutionValue, strs[value]));
+				break;
+			case JOB_OPTIONS:
+				if (! this.optionClicked) {
+					try {
+						SwingTools.invokeAndWait(moreOptionsAction(this));
+						this.optionClicked = true;
+						this.toggleSessionMode();
+					} catch (InterruptedException ex) {
+						org.ulteo.Logger.error("More options components adding was interrupted: "+ex.getMessage());
+					} catch (InvocationTargetException ex) {
+						org.ulteo.Logger.error("Failed to add more options components: "+ex.getMessage());
+					}
+				} else {
+					try {
+						SwingTools.invokeAndWait(fewerOptionsAction(this));
+						this.optionClicked = false;
+					} catch (InterruptedException ex) {
+						org.ulteo.Logger.error("More options components removing was interrupted: "+ex.getMessage());
+					} catch (InvocationTargetException ex) {
+						org.ulteo.Logger.error("Failed to remove more options components: "+ex.getMessage());
+					}
+				}
+				break;
+			case JOB_START:
+				this.startButtonClicked = true;
+				SwingTools.invokeLater(GUIActions.doClick(this.startButton));
+				break;
+		}
+
 	}
 	
 	protected void toggleLocalCredentials() {
-		if (this.useLocalCredentials.isSelected()) {
+		boolean isSelected = this.useLocalCredentials.isSelected();
+		if (isSelected)
 			this.loginStr = this.loginTextField.getText();
-			this.loginTextField.setText(System.getProperty("user.name"));
-			this.loginTextField.setEnabled(false);
-			this.login.setEnabled(false);
-			this.passwordTextField.setEnabled(false);
-			this.password.setEnabled(false);
-			this.userLogoLabel.setEnabled(false);
-			this.passwordLogoLabel.setEnabled(false);
-		}
-		else {
-			if (this.loginStr != null)
-				this.loginTextField.setText(this.loginStr);
-			this.loginTextField.setEnabled(true);
-			this.login.setEnabled(true);
-			this.passwordTextField.setEnabled(true);
-			this.password.setEnabled(true);
-			this.userLogoLabel.setEnabled(true);
-			this.passwordLogoLabel.setEnabled(true);
-		}
+
+		SwingTools.invokeLater(enableLocalCredentials(this, isSelected));
 	}
 	
 	public void toggleSessionMode() {
 		if (! this.optionClicked)
 			return;
+
+		ArrayList<Component> componentList = new ArrayList<Component>();
+		componentList.add(this.autoPublish);
+		componentList.add(this.resolutionValue);
+		componentList.add(this.resolution);
+		componentList.add(this.resBar);
+		try {
+			SwingTools.invokeAndWait(GUIActions.removeComponents(this.mainFrame, componentList));
+		} catch (InterruptedException ex) {
+			org.ulteo.Logger.error("Session mode components cleaner was interrupted: "+ex.getMessage());
+		} catch (InvocationTargetException ex) {
+			org.ulteo.Logger.error("Failed to remove session mode components: "+ex.getMessage());
+		}
+		componentList = null;
 		
-		this.mainFrame.remove(this.autoPublish);
-		this.mainFrame.remove(this.resolutionValue);
-		this.mainFrame.remove(this.resolution);
-		this.mainFrame.remove(this.resBar);
-		
-		this.gbc.anchor = GridBagConstraints.LINE_START;
-		this.gbc.insets.left = 0;
-		this.gbc.gridwidth = 1;
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.LINE_START;
+		gbc.insets.left = 0;
+		gbc.gridwidth = 1;
+
+		componentList = new ArrayList<Component>();
+		List<GridBagConstraints> gbcToAdd = new ArrayList<GridBagConstraints>();
 		
 		if (this.sessionModeBox.getSelectedItem() == this.itemModeApplication) {	
-			this.gbc.gridx = 2;
-			this.gbc.gridy = 11;
-			this.gbc.gridwidth = 2;
-			this.gbc.anchor = GridBagConstraints.LINE_START;
-			this.gbc.fill = GridBagConstraints.NONE;
-			this.mainFrame.add(autoPublish, gbc);
+			gbc.gridx = 2;
+			gbc.gridy = 11;
+			gbc.gridwidth = 2;
+			gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.fill = GridBagConstraints.NONE;
+			componentList.add(this.autoPublish);
+			gbcToAdd.add((GridBagConstraints) gbc.clone());
 		}
 		
 		else if (this.sessionModeBox.getSelectedItem() == this.itemModeDesktop) {
-			this.gbc.insets.left = 0;
-			this.gbc.gridx = 1;
-			this.gbc.gridy = 11;
-			this.mainFrame.add(resolution, gbc);
+			gbc.insets.left = 0;
+			gbc.gridx = 1;
+			gbc.gridy = 11;
+			componentList.add(this.resolution);
+			gbcToAdd.add((GridBagConstraints) gbc.clone());
 			
-			this.gbc.anchor = GridBagConstraints.LINE_START;
-			this.gbc.gridx = 2;
-			this.gbc.gridy = 11;
-			this.gbc.gridwidth = 1;
-			this.gbc.fill = GridBagConstraints.NONE;
+			gbc.anchor = GridBagConstraints.LINE_START;
+			gbc.gridx = 2;
+			gbc.gridy = 11;
+			gbc.gridwidth = 1;
+			gbc.fill = GridBagConstraints.NONE;
 			this.resBar.setSize(new Dimension(sessionModeBox.getWidth(), 33));
 			this.resBar.setPreferredSize(new Dimension(sessionModeBox.getWidth(), 33));
-			this.mainFrame.add(resBar, gbc);
+			componentList.add(this.resBar);
+			gbcToAdd.add((GridBagConstraints) gbc.clone());
 			
-			this.gbc.insets.left = 0;
-			this.gbc.gridy = 12;
+			gbc.insets.left = 0;
+			gbc.gridy = 12;
 			
-			this.gbc.anchor = GridBagConstraints.CENTER;
-			this.mainFrame.add(resolutionValue, gbc);
+			gbc.anchor = GridBagConstraints.CENTER;
+			componentList.add(this.resolutionValue);
+			gbcToAdd.add((GridBagConstraints) gbc.clone());
 		}
-		this.mainFrame.pack();
+		SwingTools.invokeLater(GUIActions.addComponentsAndPack(this.mainFrame, componentList, gbcToAdd));
 	}
 	
 	public void showWindow() {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		this.startButtonClicked = false;
 		this.toggleLocalCredentials();
-		mainFrame.setVisible(true);
+		SwingTools.invokeLater(GUIActions.setVisible(this.mainFrame, true));
 	}
 	
 	@Override
@@ -454,7 +446,7 @@ public class AuthFrame implements ActionListener {
 	}
 	
 	public void hideWindow() {
-		mainFrame.setVisible(false);
+		SwingTools.invokeLater(GUIActions.setVisible(this.mainFrame, false));
 	}
 	
 	public JTextField getLogin() {
@@ -465,7 +457,7 @@ public class AuthFrame implements ActionListener {
 		if (login_ == null)
 			return;
 
-		this.loginTextField.setText(login_);
+		SwingTools.invokeLater(GUIActions.customizeTextComponent(this.loginTextField, login_));
 	}
 
 	public JPasswordField getPassword() {
@@ -480,7 +472,7 @@ public class AuthFrame implements ActionListener {
 		if (host_ == null)
 			return;
 		
-		this.hostTextField.setText(host_);
+		SwingTools.invokeLater(GUIActions.customizeTextComponent(this.hostTextField, host_));
 	}
 
 	public JSlider getResBar() {
@@ -489,6 +481,7 @@ public class AuthFrame implements ActionListener {
 
 	public void setResolution(int resolution_) {
 		this.resBar.setValue(resolution_);
+		SwingTools.invokeLater(GUIActions.customizeSlider(this.resBar, resolution_));
 	}
 
 	public JComboBox getSessionModeBox() {
@@ -521,7 +514,7 @@ public class AuthFrame implements ActionListener {
 	}
 
 	public void setRememberMeChecked(boolean checked_) {
-		this.rememberMe.setSelected(checked_);
+		SwingTools.invokeLater(GUIActions.setBoxChecked(this.rememberMe, checked_));
 	}
 	
 	public boolean isAutoPublishChecked() {
@@ -530,10 +523,12 @@ public class AuthFrame implements ActionListener {
 
 	public void setAutoPublishChecked(boolean autoPublish_) {
 		this.autoPublish.setSelected(autoPublish_);
+		SwingTools.invokeLater(GUIActions.setBoxChecked(this.autoPublish, autoPublish_));
 	}
 	
 	public void setUseLocalCredentials(boolean useLocalCredentials_) {
 		this.useLocalCredentials.setSelected(useLocalCredentials_);
+		SwingTools.invokeLater(GUIActions.setBoxChecked(this.useLocalCredentials, useLocalCredentials_));
 	}
 	
 	public boolean isUseLocalCredentials() {
@@ -546,5 +541,171 @@ public class AuthFrame implements ActionListener {
 	
 	public JButton GetStartButton() {
 		return this.startButton;
+	}
+
+	/* MoreOptionsAction */
+	public static Runnable moreOptionsAction(AuthFrame authFrame_) {
+		return authFrame_.new MoreOptionsAction(authFrame_);
+
+	}
+
+	private class MoreOptionsAction implements Runnable {
+		private JFrame wnd = null;
+		private List<Component> components = null;
+		private List<GridBagConstraints> gbcs = null;
+		private JButton button = null;
+		private ImageIcon img = null;
+		private String buttonLabel = null;
+		
+		public MoreOptionsAction(AuthFrame authFrame_) {
+			this.wnd = authFrame_.mainFrame;
+			this.button = authFrame_.moreOption;
+			this.img = authFrame_.hideOption;
+			this.buttonLabel = I18n._("Fewer options");
+
+			this.init(authFrame_);
+		}
+
+		private void init(AuthFrame authFrame_) {
+			GridBagConstraints constraints = new GridBagConstraints();
+			this.components = new ArrayList<Component>();
+			this.gbcs = new ArrayList<GridBagConstraints>();
+
+			constraints.anchor = GridBagConstraints.CENTER;
+			constraints.gridwidth = 2;
+			constraints.weightx = 1;
+			constraints.weighty = 1;
+			constraints.gridx = 0;
+			constraints.gridy = 9;
+			constraints.insets.top = 30;
+			this.components.add(authFrame_.optionLogoLabel);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
+
+			constraints.anchor = GridBagConstraints.LINE_START;
+			constraints.weightx = 0;
+			constraints.weighty = 0;
+			constraints.gridwidth = 1;
+			constraints.insets.top = 0;
+			constraints.insets.left = 0;
+			constraints.gridx = 1;
+			constraints.gridy = 10;
+			this.components.add(authFrame_.mode);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
+
+			/*constraints.gridy = 13;
+			componentList.add(this.language);
+			gbcList.add((GridBagConstraints) constraints.clone());
+
+			constraints.gridy = 14;
+			componentList.add(this.keyboard);
+			gbcList.add((GridBagConstraints) constraints.clone());*/
+
+			constraints.gridwidth = 2;
+			constraints.gridx = 2;
+			constraints.gridy = 10;
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			this.components.add(authFrame_.sessionModeBox);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
+
+			/*constraints.gridx = 2;
+			constraints.gridwidth = 2;
+			constraints.gridy = 13;
+			constraints.fill = GridBagConstraints.HORIZONTAL;
+			componentList.add(this.languageBox);
+			gbcList.add((GridBagConstraints) constraints.clone());
+
+			constraints.gridy = 14;
+			componentList.add(this.keyboardBox);
+			gbcList.add((GridBagConstraints) constraints.clone());*/
+		}
+
+		public void run() {
+			GUIActions.addComponents(this.wnd, this.components, this.gbcs).run();
+			GUIActions.customizeButton(this.button, this.img, this.buttonLabel).run();
+			GUIActions.packWindow(this.wnd).run();
+		}
+	}
+
+	/* FewerOptionsAction */
+	public static Runnable fewerOptionsAction(AuthFrame authFrame_) {
+		return authFrame_.new FewerOptionsAction(authFrame_);
+	}
+
+	private class FewerOptionsAction implements Runnable {
+		private JFrame wnd = null;
+		private List<Component> components = null;
+		private JButton button = null;
+		private ImageIcon img = null;
+		private String buttonLabel = null;
+
+		public FewerOptionsAction(AuthFrame authFrame_) {
+			this.wnd = authFrame_.mainFrame;
+			this.button = authFrame_.moreOption;
+			this.img = authFrame_.showOption;
+			this.buttonLabel = I18n._("More options ...");
+
+			this.init(authFrame_);
+		}
+
+		private void init(AuthFrame authFrame_) {
+			this.components = new ArrayList<Component>();
+
+			this.components.add(authFrame_.optionLogoLabel);
+			this.components.add(authFrame_.mode);
+			this.components.add(authFrame_.resolution);
+			/*this.components.add(authFrame_.language);
+			this.components.add(authFrame_.keyboard);*/
+			this.components.add(authFrame_.sessionModeBox);
+			this.components.add(authFrame_.resBar);
+			this.components.add(authFrame_.resolutionValue);
+			this.components.add(authFrame_.languageBox);
+			this.components.add(authFrame_.keyboardBox);
+			this.components.add(authFrame_.autoPublish);
+		}
+
+		public void run() {
+			GUIActions.removeComponents(this.wnd, this.components).run();
+			GUIActions.customizeButton(this.button, this.img, this.buttonLabel).run();
+			GUIActions.packWindow(this.wnd).run();
+		}
+	}
+
+	/* EnableLocalCredentials */
+	public static Runnable enableLocalCredentials(AuthFrame authFrame_, boolean enabled_) {
+		return authFrame_.new EnableLocalCredentials(authFrame_, enabled_);
+	}
+
+	private class EnableLocalCredentials implements Runnable {
+		private JTextField loginField = null;
+		private String username = null;
+
+		private List<Component> components = null;
+		private boolean enabled;
+		
+		public EnableLocalCredentials(AuthFrame authFrame_, boolean enabled_) {
+			this.loginField = authFrame_.loginTextField;
+			this.username = authFrame_.loginStr;
+			this.enabled = enabled_;
+
+			this.init(authFrame_);
+		}
+
+		private void init(AuthFrame authFrame_) {
+			this.components = new ArrayList<Component>();
+
+			this.components.add(authFrame_.loginTextField);
+			this.components.add(authFrame_.login);
+			this.components.add(authFrame_.userLogoLabel);
+
+			this.components.add(authFrame_.passwordTextField);
+			this.components.add(authFrame_.password);
+			this.components.add(authFrame_.passwordLogoLabel);
+		}
+
+		public void run() {
+			GUIActions.customizeTextComponent(this.loginField, (this.enabled) ? System.getProperty("user.name") : ((this.username != null) ? this.username : this.loginField.getText())).run();
+			GUIActions.setEnabledComponents(this.components, ! this.enabled).run();
+		}
+
 	}
 }
