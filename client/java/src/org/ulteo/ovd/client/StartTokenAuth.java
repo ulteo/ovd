@@ -25,7 +25,9 @@ import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 import org.ini4j.Wini;
+import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.remoteApps.OvdClientIntegrated;
+import org.ulteo.ovd.integrated.OSTools;
 
 import gnu.getopt.Getopt;
 import gnu.getopt.LongOpt;
@@ -108,6 +110,9 @@ public class StartTokenAuth {
 		if (! org.ulteo.Logger.initInstance(true, tempdir+"ulteo-ovd-"+org.ulteo.Logger.getDate()+".log", true))
 			System.err.println("Unable to iniatialize logger instance");
 		
+		if (OSTools.isWindows()) {
+			LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+		}
 		
 		if (ovdServer == null) {
 			System.err.println("Error: No SM host specified");

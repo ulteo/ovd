@@ -27,12 +27,13 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.LinuxPaths;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
 public class LinuxDiskManager extends DiskManager {
 	private static Logger logger = Logger.getLogger(LinuxDiskManager.class);
-	private Properties xdgProperties = null;
 	
 	
 	/**************************************************************************/
@@ -42,45 +43,12 @@ public class LinuxDiskManager extends DiskManager {
 	
 	/**************************************************************************/
 	public boolean init() {
-		if (!xdgOpen()) {
-			logger.warn("Xdg is absent, the system use default value");
-		}
-		addStaticDirectory(getXdgDir("XDG_DOCUMENTS_DIR", "Documents"));
-		addStaticDirectory(getXdgDir("XDG_DESKTOP_DIR", "Desktop"));
+		addStaticDirectory(Constants.PATH_DOCUMENT);
+		addStaticDirectory(Constants.PATH_DESKTOP);
 		addDirectoryToInspect("/media");
 		addDirectoryToInspect("/mnt");
 		return true;
 	}
-
-	/**************************************************************************/
-	private boolean xdgOpen() {
-		String xdgFile = System.getProperty("user.home")+"/.config/user-dirs.dirs";
-		xdgProperties = new Properties();
-		try {
-			xdgProperties.load(new FileInputStream(xdgFile));
-		} catch (FileNotFoundException e) {
-			logger.warn("Unable to find the xdg file: "+xdgFile);
-			return false;
-		} catch (IOException e) {
-			logger.warn("Unable to read xdg file: "+xdgFile);
-			return false;
-		}
-		return true;
-	}
-	
-	/**************************************************************************/
-	private String getXdgDir(String value, String defaultValue) {
-		String homeDir = System.getProperty("user.home");
-		String xdgValue = defaultValue;
-		if (xdgProperties != null) {
-			xdgValue = xdgProperties.getProperty(value, defaultValue);
-		}
-		if (xdgValue.startsWith("/"))
-			return xdgValue;
-		xdgValue = xdgValue.replace("$HOME/", "");
-		return homeDir+"/"+xdgValue.replaceAll("\"", "");
-	}
-
 
 	/**************************************************************************/
 	public ArrayList<String> getNewDrive() {

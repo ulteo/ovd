@@ -2,6 +2,7 @@
  * Copyright (C) 2009 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author David LECHEVALIER <david@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,12 +22,9 @@
 package org.ulteo.ovd.integrated;
 
 public class WindowsPaths {
-	static{
-		if (System.getProperty("os.name").startsWith("Windows"))
-			System.load(System.getProperty("user.dir")+Constants.FILE_SEPARATOR+"libWindowsPaths.dll");
-	}
 
 	public static native String getStartMenuPath();
 	public static native String getDesktopPath();
 	public static native String getAppDataPath();
+	public static native String getPersonalDataPath();
 }

@@ -21,6 +21,7 @@
 
 package org.ulteo.ovd.client;
 
+import org.ulteo.ovd.applet.LibraryLoader;
 import org.ulteo.ovd.client.profile.ProfileIni;
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,7 @@ import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.ovd.integrated.Constants;
+import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDStandalonePrinterThread;
 import org.ulteo.ovd.sm.Properties;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -77,6 +79,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		
 		Logger.getRootLogger().setLevel(Level.INFO);
 
+		if (OSTools.isWindows()) {
+			LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
+		}
 		boolean use_https = true;
 		String profile = null;
 		String password = null;

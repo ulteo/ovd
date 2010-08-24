@@ -27,8 +27,8 @@ public final class Constants {
 	public static final String HOMEDIR = System.getProperty("user.home");
 	public static final String PATH_STARTMENU = (OSTools.isWindows()) ? WindowsPaths.getStartMenuPath() : "";
 	public static final String PATH_XFCE_MENU_ENTRIES = Constants.HOMEDIR+Constants.FILE_SEPARATOR+".local/share/applications";
-	// ToDo: find a better way (XDG) to get the desktop path on linux
-	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? WindowsPaths.getDesktopPath() : Constants.HOMEDIR+Constants.FILE_SEPARATOR+"Desktop";
+	public static final String PATH_DESKTOP = (OSTools.isWindows()) ? WindowsPaths.getDesktopPath() : LinuxPaths.getDesktopPath();
+	public static final String PATH_DOCUMENT = (OSTools.isWindows()) ? WindowsPaths.getPersonalDataPath() : LinuxPaths.getDocumentPath();
 
 	public static final String FILENAME_LAUNCHER = "UlteoOVDIntegratedLauncher"+((OSTools.isWindows()) ? ".exe" : "");
 	

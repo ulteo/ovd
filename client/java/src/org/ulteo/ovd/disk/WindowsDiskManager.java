@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 
@@ -36,9 +37,8 @@ public class WindowsDiskManager extends DiskManager {
 
 	/**************************************************************************/
 	public boolean init() {
-		String homeDir = System.getProperty("user.home");
-		addStaticDirectory(homeDir+"\\Desktop");
-		addStaticDirectory(homeDir+"\\Mes Documents");
+		addStaticDirectory(Constants.PATH_DESKTOP);
+		addStaticDirectory(Constants.PATH_DOCUMENT);
 		return true;		
 	}
 	
