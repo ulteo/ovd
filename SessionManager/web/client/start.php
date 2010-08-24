@@ -635,6 +635,14 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	if (! $server)
 		continue;
 
+	if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1) {
+		$external_apps_token = new Token(gen_unique_string());
+		$external_apps_token->type = 'external_apps';
+		$external_apps_token->link_to = $session->id;
+		$external_apps_token->valid_until = 0;
+		Abstract_Token::save($external_apps_token);
+	}
+
 	$server_applications = $server->getApplications();
 	if (! is_array($server_applications))
 		$server_applications = array();
@@ -648,6 +656,8 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$session_node = $dom->createElement('session');
 	$session_node->setAttribute('id', $session->id);
 	$session_node->setAttribute('mode', Session::MODE_DESKTOP);
+	if (isset($external_apps_token))
+		$session_node->setAttribute('external_apps_token', $external_apps_token->id);
 	foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
 		if (! isset($$parameter))
 			continue;
@@ -726,14 +736,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 }
 
 if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
-	if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1) {
-		$external_apps_token = new Token(gen_unique_string());
-		$external_apps_token->type = 'external_apps';
-		$external_apps_token->link_to = $session->id;
-		$external_apps_token->valid_until = 0;
-		Abstract_Token::save($external_apps_token);
-	}
-
 	foreach ($session->servers as $server) {
 		$server = Abstract_Server::load($server);
 		if (! $server)
@@ -755,8 +757,6 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 		$session_node = $dom->createElement('session');
 		$session_node->setAttribute('id', $session->id);
 		$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
-		if (isset($external_apps_token))
-			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
 		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
 			if (! isset($$parameter))
 				continue;
