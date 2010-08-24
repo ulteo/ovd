@@ -43,7 +43,7 @@ import org.ulteo.rdp.RdpConnectionOvd;
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
-		super(smComm);
+		super(smComm, null);
 	}
 
 	public OvdClientRemoteApps(SessionManagerCommunication smComm, Callback obj) {

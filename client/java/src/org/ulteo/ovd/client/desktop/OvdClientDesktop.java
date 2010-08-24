@@ -24,13 +24,11 @@ package org.ulteo.ovd.client.desktop;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Toolkit;
-import java.awt.Window;
 
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.client.OvdClient;
-import org.ulteo.ovd.client.authInterface.AuthFrame;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.Properties;
@@ -50,12 +48,6 @@ public class OvdClientDesktop extends OvdClient {
 
 	public OvdClientDesktop(SessionManagerCommunication smComm, int resolution, Callback obj) {
 		super(smComm, obj);
-
-		this.init(resolution);
-	}
-
-	public OvdClientDesktop(SessionManagerCommunication smComm, AuthFrame frame_, int resolution, Window loadingWindow_) {
-		super(smComm);
 
 		this.init(resolution);
 	}

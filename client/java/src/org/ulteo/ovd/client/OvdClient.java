@@ -69,22 +69,14 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	private boolean connectionIsActive = true;
 	private boolean exitAfterLogout = false;
 
-	public OvdClient(SessionManagerCommunication smComm) {
-		this.initMembers(smComm, false);
-	}
-
 	public OvdClient(SessionManagerCommunication smComm, Callback obj_) {
-		this.obj = obj_;
 		this.initMembers(smComm, true);
-	}
-
-	private void initMembers(SessionManagerCommunication smComm, boolean graphic_) {
-		this.smComm = smComm;
-		this.graphic = graphic_;
-
-		this.availableConnections = new ArrayList<RdpConnectionOvd>();
 		
-		this.obj = new Callback() {
+		if (obj_ != null) {
+			this.obj = obj_;
+		}
+		else {
+			this.obj = new Callback() {
 				@Override
 				public void reportBadXml(String data) {
 					org.ulteo.Logger.error("Callback::reportBadXml: "+data);
@@ -125,6 +117,14 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 					org.ulteo.Logger.info("Callback::updateProgress "+status+","+substatus);
 				}
 			};
+		}
+	}
+
+	private void initMembers(SessionManagerCommunication smComm, boolean graphic_) {
+		this.smComm = smComm;
+		this.graphic = graphic_;
+
+		this.availableConnections = new ArrayList<RdpConnectionOvd>();
 	}
 
 	private void addAvailableConnection(RdpConnectionOvd rc) {
