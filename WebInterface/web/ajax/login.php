@@ -73,8 +73,7 @@ $dom = new DomDocument('1.0', 'utf-8');
 
 $session_node = $dom->createElement('session');
 $session_node->setAttribute('mode', $_POST['mode']);
-if (array_key_exists('language', $_POST))
-	$session_node->setAttribute('language', $_POST['language']);
+$session_node->setAttribute('language', $_POST['language']);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('login', $_POST['login']);
 $user_node->setAttribute('password', $_POST['password']);
