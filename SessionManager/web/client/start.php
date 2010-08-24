@@ -68,6 +68,9 @@ function parse_client_XML($xml_) {
 	if ($session_node->hasAttribute('language'))
 		$_REQUEST['language'] = $session_node->getAttribute('language');
 
+	if ($session_node->hasAttribute('timezone'))
+		$_REQUEST['timezone'] = $session_node->getAttribute('timezone');
+
 	$user_node = $dom->getElementsByTagname('user')->item(0);
 	if (! is_null($user_node)) {
 		if ($user_node->hasAttribute('login'))
@@ -645,7 +648,10 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$session_node = $dom->createElement('session');
 	$session_node->setAttribute('id', $session->id);
 	$session_node->setAttribute('mode', Session::MODE_DESKTOP);
-	foreach (array('desktop_icons', 'locale') as $parameter) {
+	foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
+		if (! isset($$parameter))
+			continue;
+
 		$parameter_node = $dom->createElement('parameter');
 		$parameter_node->setAttribute('name', $parameter);
 		$parameter_node->setAttribute('value', $$parameter);
@@ -751,7 +757,10 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 		$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
 		if (isset($external_apps_token))
 			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
-		foreach (array('desktop_icons', 'locale') as $parameter) {
+		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
+			if (! isset($$parameter))
+				continue;
+
 			$parameter_node = $dom->createElement('parameter');
 			$parameter_node->setAttribute('name', $parameter);
 			$parameter_node->setAttribute('value', $$parameter);
