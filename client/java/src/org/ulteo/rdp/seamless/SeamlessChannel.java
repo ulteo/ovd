@@ -1,10 +1,10 @@
 /* SeamlessChannel.java
  * Component: UlteoRDP
  * 
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  * 
  * Revision: $Revision: 0.2 $
  * Author: $Author: arnauvp $
@@ -42,11 +42,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 import net.propero.rdp.Common;
 import net.propero.rdp.Options;
-import net.propero.rdp.RdesktopException;
-import net.propero.rdp.crypto.CryptoException;
 import net.propero.rdp.rdp5.seamless.SeamlessWindow;
 
 
@@ -55,6 +54,10 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	public static final int WINDOW_CREATE_TOPMOST	= 0x0002;
 	public static final int WINDOW_CREATE_POPUP	= 0x0004;
 	public static final int WINDOW_CREATE_FIXEDSIZE	= 0x0008;
+
+	private static final long CLICK_DELAY = 100;
+
+	private Timer clickTimer = null;
 
 	public SeamlessChannel(Options opt_, Common common_) {
 		super(opt_, common_);
@@ -156,38 +159,12 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			return;
 		}
 
-		if ((((SeamlessWindow)sw).sw_getExtendedState() != Frame.MAXIMIZED_BOTH) && ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)) {
-			int xClick = e.getX();
-			int yClick = e.getY();
-			Rectangle bounds = ((Window)sw).getBounds();
-			RectWindow rw = sw.getRectWindow();
+		if (e.getClickCount() == 1) {
+			if ((((SeamlessWindow)sw).sw_getExtendedState() != Frame.MAXIMIZED_BOTH) && ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)) {
+				this.cancelClickTimer();
 
-			if (	xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
-				xClick > (bounds.width - RectWindow.SEAMLESS_BORDER_SIZE) ||
-				yClick < RectWindow.SEAMLESS_BORDER_SIZE ||
-				yClick > (bounds.height - RectWindow.SEAMLESS_BORDER_SIZE)
-			) {
-				if (sw._isResizable()) {
-					rw.setResizeClick(e);
-					int corner = this.detectCorner(e, bounds);
-					rw.setCorner(corner);
-
-					rw.offsetsResize(e, bounds);
-					rw.resize();
-					sw.lockMouseEvents();
-				}
-			}
-			else if (
-				yClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
-				yClick <= (RectWindow.SEAMLESS_BORDER_SIZE + RectWindow.SEAMLESS_TOP_BORDER_SIZE) &&
-				xClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
-				xClick <= (((Window)sw).getWidth() - RectWindow.SEAMLESS_BORDER_SIZE)
-			) {
-				rw.setOffsets((e.getXOnScreen() - bounds.x), (e.getYOnScreen() - bounds.y));
-				rw.setBounds(bounds);
-				rw.setMoveClick(e);
-
-				sw.lockMouseEvents();
+				this.clickTimer = new Timer();
+				this.clickTimer.schedule(new CheckClickTask(sw, e), CLICK_DELAY);
 			}
 		}
 
@@ -195,6 +172,8 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	}
 
 	public void mouseReleased(MouseEvent e) {
+		this.cancelClickTimer();
+		
 		String name = e.getComponent().getName();
 		SeamlessMovingResizing sw = null;
 		if (this.windows.containsKey(name))
@@ -204,26 +183,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			return;
 		}
 
-		if (sw.isMouseEventsLocked()) {
-			sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_RELEASED);
-			sw.unlockMouseEvents();
-
-			RectWindow rw = sw.getRectWindow();
-			Rectangle r = rw.getBounds();
-			if (! ((Window)sw).getBounds().equals(r)) {
-				try {
-					this.send_position(((SeamlessWindow)sw).sw_getId(), r.x, r.y, r.width, r.height, 0);
-				} catch (RdesktopException ex) {
-					logger.error(ex);
-				} catch (IOException ex) {
-					logger.error(ex);
-				} catch (CryptoException ex) {
-					logger.error(ex);
-				}
-			}
-			return;
-		}
-
+		sw.unlockMouseEvents();
 		sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_RELEASED);
 	}
 
@@ -282,4 +242,66 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 	public void mouseEntered(MouseEvent me) {}
 	public void mouseExited(MouseEvent me) {}
 	public void mouseClicked(MouseEvent me) {}
+
+	private void cancelClickTimer() {
+		if (this.clickTimer != null) {
+			this.clickTimer.cancel();
+			this.clickTimer.purge();
+			this.clickTimer = null;
+		}
+	}
+
+
+	private class CheckClickTask extends TimerTask {
+		private MouseEvent evt = null;
+		private SeamlessMovingResizing sw = null;
+		private Rectangle wndBounds = null;
+
+		CheckClickTask(SeamlessMovingResizing sw_, MouseEvent evt_) {
+			super();
+
+			this.sw = sw_;
+			this.evt = evt_;
+
+			this.wndBounds = ((Window) this.sw).getBounds();
+		}
+
+		@Override
+		public void run() {
+			MouseEvent me = new MouseEvent(this.evt.getComponent(), this.evt.getID(), this.evt.getWhen(), this.evt.getModifiers(), this.evt.getX(), this.evt.getY(), this.evt.getClickCount(), this.evt.isPopupTrigger(), this.evt.getButton());
+			me.translatePoint(-this.wndBounds.x, -this.wndBounds.y);
+
+			int xClick = me.getX();
+			int yClick = me.getY();
+			RectWindow rw = this.sw.getRectWindow();
+
+			if (	xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
+				xClick > (this.wndBounds.width - RectWindow.SEAMLESS_BORDER_SIZE) ||
+				yClick < RectWindow.SEAMLESS_BORDER_SIZE ||
+				yClick > (this.wndBounds.height - RectWindow.SEAMLESS_BORDER_SIZE)
+			) {
+				if (this.sw._isResizable()) {
+					rw.setResizeClick(this.evt);
+					int corner = detectCorner(me, this.wndBounds);
+					System.out.println("CORNER: "+corner);
+					rw.setCorner(corner);
+
+					rw.offsetsResize(this.evt, this.wndBounds);
+					rw.resize();
+					this.sw.lockMouseEvents();
+				}
+			}
+			else if (
+				yClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
+				yClick <= (RectWindow.SEAMLESS_BORDER_SIZE + RectWindow.SEAMLESS_TOP_BORDER_SIZE) &&
+				xClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
+				xClick <= (((Window) this.sw).getWidth() - RectWindow.SEAMLESS_BORDER_SIZE)
+			) {
+				rw.setOffsets((this.evt.getXOnScreen() - this.wndBounds.x), (this.evt.getYOnScreen() - this.wndBounds.y));
+				rw.setBounds(this.wndBounds);
+				rw.setMoveClick(this.evt);
+				this.sw.lockMouseEvents();
+			}
+		}
+	}
 }

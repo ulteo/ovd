@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
@@ -137,14 +137,14 @@ public class RectWindow extends Component {
 				break;
 			case RectWindow.CORNER_BOTTOM_LEFT:
 				x = bounds.x - me.getXOnScreen();
-				y = bounds.height - me.getY();
+				y = bounds.height + bounds.y - me.getYOnScreen();
 				break;
 			case RectWindow.CORNER_BOTTOM_RIGHT:
-				x = bounds.width - me.getX();
-				y = bounds.height - me.getY();
+				x = bounds.width + bounds.x - me.getXOnScreen();
+				y = bounds.height + bounds.y - me.getYOnScreen();
 				break;
 			case RectWindow.CORNER_TOP_RIGHT:
-				x = bounds.width - me.getX();
+				x = bounds.width + bounds.x - me.getXOnScreen();
 				y = bounds.y - me.getYOnScreen();
 				break;
 			default:

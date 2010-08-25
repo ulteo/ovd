@@ -1,10 +1,10 @@
 /* SeamlessChannel.java
  * Component: UlteoRDP
  * 
- * Copyright (C) 2009 Ulteo SAS
+ * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Julien LANGLOIS <julien@ulteo.com> 2009
- * Author Thomas MOUTON <thomas@ulteo.com> 2009
+ * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  * 
  * Revision: $Revision: 0.2 $
  * Author: $Author: arnauvp $
@@ -476,8 +476,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				break;
 			case SeamlessChannel.WINDOW_MAXIMIZED:
 				frame_state = Frame.MAXIMIZED_BOTH;
+				break;
 			default: //this.WINDOW_NORMAL
 				frame_state = Frame.NORMAL;
+				break;
 		}
 
 		f.sw_setExtendedState(frame_state);
