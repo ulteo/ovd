@@ -221,6 +221,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		session.appendChild(user);
 		
 		session.setAttribute("language", request.getLang());
+		session.setAttribute("timezone", request.getTimeZone());
 		
 		String data = Document2String(doc);
 		if (data == null)

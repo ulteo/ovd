@@ -32,6 +32,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import gnu.getopt.Getopt;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -393,6 +394,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.updateProgress(LoadingStatus.STATUS_SM_CONNECTION, 0);
 		Properties request = new Properties(mode);
 		request.setLang(language);
+		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
+		
 		try {
 			boolean ret = false;
 			if (localCredential)

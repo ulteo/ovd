@@ -28,6 +28,7 @@ public class Properties {
 	private int mode = 0;
 	private String lang = null;
 	private String username = null;
+	private String timeZone = null;
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
@@ -50,6 +51,14 @@ public class Properties {
 	
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+	
+	public String getTimeZone() {
+		return this.timeZone;
+	}
+	
+	public void setTimeZone(String timeZone) {
+		this.timeZone = timeZone;
 	}
 
 	public String getUsername() {
