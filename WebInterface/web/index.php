@@ -46,10 +46,12 @@ if (isset($_COOKIE['webinterface']['session_language']) && $_COOKIE['webinterfac
 	$wi_session_language = (string)$_COOKIE['webinterface']['session_language'];
 	$user_language = $wi_session_language;
 }
+if (strlen($user_language) == 2)
+		$user_language = $user_language.'-'.$user_language;
 
 if (isset($_COOKIE['webinterface']['session_keymap']) && $_COOKIE['webinterface']['session_keymap'] != $user_keymap) {
 	$wi_session_keymap = (string)$_COOKIE['webinterface']['session_keymap'];
-	$user_language = $wi_session_keymap;
+	$user_keymap = $wi_session_keymap;
 }
 
 $wi_use_popup = 0;
