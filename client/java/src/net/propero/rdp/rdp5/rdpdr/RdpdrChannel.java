@@ -31,6 +31,7 @@
 package net.propero.rdp.rdp5.rdpdr;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
@@ -94,6 +95,29 @@ public class RdpdrChannel extends VChannel {
 		return "rdpdr";
 	}
 	int sequence_count = 0;
+
+	public byte[] getUnicodeDriveName(String str) {
+		byte[] sByte = null;
+		byte[] unicodeStr = null;
+		int unicodeStrLength = 0;
+		
+		try {
+			sByte = str.getBytes("UTF-16LE");
+		} catch (UnsupportedEncodingException e) {
+			logger.debug(e.getMessage());
+			logger.info("UTF-16LE is not supported by your JVM");
+			return null;
+		}
+		unicodeStrLength = 0;
+		unicodeStr = new byte[sByte.length];
+		for (int i = 0 ; i < sByte.length ; i++) {
+			if (sByte[i] != 0) {
+				unicodeStr[unicodeStrLength] = sByte[i] ;
+				unicodeStrLength++;
+			}
+		}
+		return unicodeStr;
+	}
 	
 	public void process( RdpPacket data ) throws RdesktopException, IOException, CryptoException {
 		int handle;
