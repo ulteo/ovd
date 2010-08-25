@@ -69,5 +69,5 @@ function getTimezoneName() {
 	if (765 == so && 825 == wo) return 'Pacific/Chatham';
 	if (780 == so && 780 == wo) return 'Pacific/Enderbury'
 	if (840 == so && 840 == wo) return 'Pacific/Kiritimati';
-	return '';
+	return 'UTC';
 }
