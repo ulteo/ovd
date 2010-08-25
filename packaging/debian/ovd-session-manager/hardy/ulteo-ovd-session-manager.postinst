@@ -105,9 +105,12 @@ if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); the
 
         # chroot download failed
         rm -f $CHROOT
+
+        db_subst ulteo-ovd-session-manager/download_error URL "$URL"
         db_input critical ulteo-ovd-session-manager/download_error || true
         db_go
-        db_fset ulteo-session-manager/tarball_url seen false || true
+
+        db_fset ulteo-ovd-session-manager/tarball_url seen false || true
         db_input high ulteo-ovd-session-manager/tarball_url || true
         db_go
     done
