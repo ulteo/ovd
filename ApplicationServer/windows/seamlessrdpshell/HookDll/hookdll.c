@@ -803,6 +803,9 @@ SafeMoveWindow(unsigned int serial, HWND hwnd, int x, int y, int width, int heig
 {
 	RECT rect;
 
+	if (IsZoomed(hwnd))
+		return;
+
 	WaitForSingleObject(g_mutex, INFINITE);
 	g_block_move_hwnd = hwnd;
 	g_block_move_serial = serial;
