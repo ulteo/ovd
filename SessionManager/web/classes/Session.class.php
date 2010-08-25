@@ -142,6 +142,8 @@ class Session {
 
 			if (! $this->orderDeletion())
 				Logger::error('main', 'Unable to order session deletion for session \''.$this->id.'\'');
+			else
+				return false;
 		} elseif ($status_ == Session::SESSION_STATUS_DESTROYED || $status_ == Session::SESSION_STATUS_ERROR || $status_ == Session::SESSION_STATUS_UNKNOWN) {
 			Logger::info('main', 'Session purge : \''.$this->id.'\'');
 
@@ -266,20 +268,21 @@ class Session {
 	public function orderDeletion($request_aps_=true) {
 		Logger::debug('main', 'Starting Session::orderDeletion for \''.$this->id.'\'');
 
-		foreach ($this->servers as $server) {
-			$session_server = Abstract_Server::load($server);
-			if (! $session_server) {
-				Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server.'\'');
-				return false;
-			}
+		if ($request_aps_) {
+			foreach ($this->servers as $server) {
+				$session_server = Abstract_Server::load($server);
+				if (! $session_server) {
+					Logger::error('main', 'Session::orderDeletion Unable to load server \''.$server.'\'');
+					return false;
+				}
 
-			if ($request_aps_) {
 				$buf = $session_server->orderSessionDeletion($this->id);
-
 				if (! $buf)
 					Logger::warning('main', 'Session::orderDeletion Session \''.$this->id.'\' already destroyed on server \''.$server.'\'');
 			}
 		}
+
+		$this->setStatus(Session::SESSION_STATUS_DESTROYED);
 
 		return true;
 	}
