@@ -25,7 +25,8 @@ class SessionStatusChangedReport extends EventCallback {
     public function run () {
 		switch ($this->ev->status) {
 			/* session starts */
-			case 2:
+			case Session::SESSION_STATUS_INITED:
+			case Session::SESSION_STATUS_ACTIVE:
 				$token = $this->ev->id;
 				$sql_sessions = get_from_cache ('reports', 'sessids');
 				if (! is_array ($sql_sessions))
@@ -40,7 +41,9 @@ class SessionStatusChangedReport extends EventCallback {
 				break;
 
 			/* session ended */
-			case 4:
+			case Session::SESSION_STATUS_INACTIVE:
+			case Session::SESSION_STATUS_WAIT_DESTROY:
+			case Session::SESSION_STATUS_DESTROYED:
 				$token = $this->ev->id;
 				$sql_sessions = get_from_cache ('reports', 'sessids');
 				if (! is_array($sql_sessions) ||
