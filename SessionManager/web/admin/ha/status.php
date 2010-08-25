@@ -224,7 +224,7 @@ function show_default($cib) {
 	}
 	page_header();
 	echo '<link rel="stylesheet" type="text/css" href="media/style/media-ha.css" />';
-	echo '<script type="text/javascript" charset="utf-8">Event.observe(window, \'load\', function() { setTimeout(location.reload(), 5000); });</script>';
+	echo '<script type="text/javascript" charset="utf-8">Event.observe(window, \'load\', function() { setTimeout(function() { location.reload(true); }, 5000); });</script>';
 	echo '<div>';
 	echo '<h1>'._('High Availability Status').'</h1>';
 	echo '<table cellpadding="0" cellspacing="0" border="0" width="100%" id="ha_main">';
