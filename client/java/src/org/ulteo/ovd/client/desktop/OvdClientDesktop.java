@@ -39,7 +39,7 @@ public class OvdClientDesktop extends OvdClient {
 	private DesktopFrame desktop = null;
 	private boolean desktopLaunched = false;
 	private int resolution = 0;
-
+	
 	public OvdClientDesktop(SessionManagerCommunication smComm, int resolution) {
 		super(smComm, null);
 
@@ -152,6 +152,8 @@ public class OvdClientDesktop extends OvdClient {
 		// not divisible by 4
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+		if (this.keymap != null)
+			rc.setKeymap(this.keymap);
 		
 		this.connections.add(rc);
 		

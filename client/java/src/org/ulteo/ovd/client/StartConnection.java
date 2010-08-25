@@ -156,6 +156,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private String host = null;
 	private String username = null;
 	private boolean autoPublicated = false;
+	private String language = null;
+	private String keymap = null;
 
 	private boolean isCancelled = false;
 	
@@ -293,6 +295,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.localCredential = (this.authFrame.isUseLocalCredentials());
 
 		this.autoPublicated = this.authFrame.isAutoPublishChecked();
+		
+		this.language = Language.languageList[this.authFrame.getLanguageBox().getSelectedIndex()][2];
+		this.keymap = Language.keymapList[this.authFrame.getKeyboardBox().getSelectedIndex()][1];
 			
 		this.password = new String(this.authFrame.getPassword().getPassword());
 		this.authFrame.getPassword().setText("");
@@ -387,6 +392,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		this.updateProgress(LoadingStatus.STATUS_SM_CONNECTION, 0);
 		Properties request = new Properties(mode);
+		request.setLang(language);
 		try {
 			boolean ret = false;
 			if (localCredential)
@@ -432,6 +438,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.disableLoadingMode();
 				return exit;
 		}
+		this.client.setKeymap(this.keymap);
 
 		if (! this.isCancelled)
 			exit = this.client.perform();
@@ -532,10 +539,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		
 		boolean autoPublish = this.authFrame.isAutoPublishChecked();
 		int screensize = this.authFrame.getResBar().getValue();
+		String lang = this.language;
+		String keymap = this.keymap;
 
 		ProfileIni ini = new ProfileIni();
 		ini.setProfile(null, null);
-		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, useLocalCredentials, screensize));
+		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, useLocalCredentials, screensize, lang, keymap));
 	}
 
 	public static ProfileProperties getProfile(String path) {
@@ -591,7 +600,21 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.authFrame.setResolution(properties.getScreenSize());
 
 		this.authFrame.setRememberMeChecked(true);
-
+		
+		for (int i = 0; i < Language.languageList.length; i++) {
+			if (properties.getLang().equalsIgnoreCase(Language.languageList[i][2])) {
+				this.authFrame.getLanguageBox().setSelectedIndex(i);
+				break;
+			}
+		}
+		
+		for (int i = 0; i < Language.keymapList.length; i++) {
+			if (properties.getKeymap().equals(Language.keymapList[i][1])) {
+				this.authFrame.getKeyboardBox().setSelectedIndex(i);
+				break;
+			}
+		}
+		
 		this.authFrame.getPassword().requestFocus();
 	}
 }

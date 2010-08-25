@@ -40,6 +40,8 @@ public class ProfileIni {
 	private static final String INI_VALUE_MODE_APPLICATIONS = "applications";
 	private static final String INI_VALUE_MODE_AUTO = "auto";
 	private static final String INI_VALUE_MODE_DESKTOP = "desktop";
+	private static final String INI_FIELD_LANG = "language";
+	private static final String INI_FIELD_KEYMAP = "keymap";
 
 	private static final String INI_SECTION_PUBLICATION = "publication";
 	private static final String INI_FIELD_AUTOPUBLISH = "auto-publish";
@@ -53,7 +55,7 @@ public class ProfileIni {
 	private static final String INI_VALUE_1280X678 = "1280x678";
 	private static final String INI_VALUE_MAXIMIZED = "maximized";
 	private static final String INI_VALUE_FULLSCREEN = "fullscreen";
-
+	
 	private static final String PROFILE_EXT = ".conf";
 	public static final String DEFAULT_PROFILE = "default";
 
@@ -142,6 +144,10 @@ public class ProfileIni {
 				ini.put(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE, INI_VALUE_FULLSCREEN);
 				break;
 		}
+		
+		ini.put(INI_SECTION_SESSION, INI_FIELD_LANG, properties.getLang());
+		ini.put(INI_SECTION_SESSION, INI_FIELD_KEYMAP, properties.getKeymap());
+		
 		ini.store();
 	}
 
@@ -210,6 +216,14 @@ public class ProfileIni {
 			else
 				properties.setScreenSize(ProfileProperties.FULLSCREEN);
 		}
+		
+		value = ini.get(INI_SECTION_SESSION, INI_FIELD_LANG);
+		if (value != null)
+			properties.setLang(value);
+		
+		value = ini.get(INI_SECTION_SESSION, INI_FIELD_KEYMAP);
+		if (value != null)
+			properties.setKeymap(value);
 
 
 		return properties;

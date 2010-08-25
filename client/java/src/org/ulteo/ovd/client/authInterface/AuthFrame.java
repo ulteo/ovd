@@ -52,6 +52,7 @@ import org.ulteo.ovd.client.gui.GUIActions;
 import org.ulteo.ovd.client.gui.SwingTools;
 
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.Language;
 
 public class AuthFrame implements ActionListener, Runnable {
 
@@ -123,6 +124,12 @@ public class AuthFrame implements ActionListener, Runnable {
 		this.sessionModeBox = new JComboBox(items);
 		this.sessionModeBox.setRenderer(new JComboBoxItem(""));
 		this.sessionModeBox.addActionListener(this);
+		
+		this.keyboardBox.setRenderer(new JComboBoxItem(""));
+		this.initKeyboardBox();
+		
+		this.languageBox.setRenderer(new JComboLanguage(null, ""));
+		this.initLanguageBox();
 		
 		this.init();
 	}
@@ -235,7 +242,7 @@ public class AuthFrame implements ActionListener, Runnable {
 		gbc.gridheight = GridBagConstraints.REMAINDER;
 		gbc.insets.top = 25;
 		gbc.gridx = 0;
-		gbc.gridy = 14;
+		gbc.gridy = 15;
 		mainFrame.add(moreOption, gbc);
 		
 		gbc.gridwidth = 0;
@@ -432,6 +439,56 @@ public class AuthFrame implements ActionListener, Runnable {
 		SwingTools.invokeLater(GUIActions.addComponentsAndPack(this.mainFrame, componentList, gbcToAdd));
 	}
 	
+	public void initLanguageBox() {
+		int size = Language.languageList.length;
+		int sysLang = 0;
+		
+		
+		for (int i = 0; i < size; i++) {			
+			String local = Language.languageList[i][0]+((! Language.languageList[i][1].equals("")) ? " - "+Language.languageList[i][1] : "");
+			ImageIcon img = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/flags/"+Language.languageList[i][2]+".png")));
+			JComboLanguage lang = new JComboLanguage(img, local);
+			
+			if (Language.languageList[i][2].contains(System.getProperty("user.language")) && Language.languageList[i][2].contains("-")) {
+				if (Language.languageList[i][2].equalsIgnoreCase(System.getProperty("user.language")+"-"+System.getProperty("user.country"))) {
+					sysLang = i;
+				}
+			}
+			else {
+				if (Language.languageList[i][2].equals(System.getProperty("user.language"))) {
+					sysLang = i;
+				}
+			}
+			
+			languageBox.addItem(lang);
+		}
+		
+		languageBox.setSelectedIndex(sysLang);
+	}
+	
+	public void initKeyboardBox() {
+		int size = Language.keymapList.length;
+		JComboBoxItem item = null;
+		int sysKeymap = 0;
+		
+		for (int i = 0; i < size; i++) {
+			item = new JComboBoxItem(Language.keymapList[i][0]);
+			if (Language.keymapList[i][1].contains(System.getProperty("user.language")) && Language.keymapList[i][1].contains("-")) {
+				if (Language.keymapList[i][1].equalsIgnoreCase(System.getProperty("user.language")+"-"+System.getProperty("user.country"))) {
+					sysKeymap = i;
+				}
+			}
+			else {
+				if (Language.keymapList[i][1].equals(System.getProperty("user.language"))) {
+					sysKeymap = i;
+				}
+			}
+			keyboardBox.addItem(item);
+		}
+		
+		keyboardBox.setSelectedIndex(sysKeymap);
+	}
+	
 	public void showWindow() {
 		KeyboardFocusManager.setCurrentKeyboardFocusManager(null);
 		this.startButtonClicked = false;
@@ -542,6 +599,14 @@ public class AuthFrame implements ActionListener, Runnable {
 	public JButton GetStartButton() {
 		return this.startButton;
 	}
+	
+	public JComboBox getLanguageBox() {
+		return this.languageBox;
+	}
+	
+	public JComboBox getKeyboardBox() {
+		return this.keyboardBox;
+	}
 
 	/* MoreOptionsAction */
 	public static Runnable moreOptionsAction(AuthFrame authFrame_) {
@@ -585,38 +650,39 @@ public class AuthFrame implements ActionListener, Runnable {
 			constraints.weightx = 0;
 			constraints.weighty = 0;
 			constraints.gridwidth = 1;
-			constraints.insets.top = 0;
+			constraints.insets.top = 5;
 			constraints.insets.left = 0;
 			constraints.gridx = 1;
 			constraints.gridy = 10;
 			this.components.add(authFrame_.mode);
 			this.gbcs.add((GridBagConstraints) constraints.clone());
 
-			/*constraints.gridy = 13;
-			componentList.add(this.language);
-			gbcList.add((GridBagConstraints) constraints.clone());
+			constraints.gridy = 13;
+			this.components.add(language);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
 
 			constraints.gridy = 14;
-			componentList.add(this.keyboard);
-			gbcList.add((GridBagConstraints) constraints.clone());*/
+			this.components.add(keyboard);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
 
 			constraints.gridwidth = 2;
 			constraints.gridx = 2;
 			constraints.gridy = 10;
 			constraints.fill = GridBagConstraints.HORIZONTAL;
+			constraints.insets.right = 15;
 			this.components.add(authFrame_.sessionModeBox);
 			this.gbcs.add((GridBagConstraints) constraints.clone());
 
-			/*constraints.gridx = 2;
+			constraints.gridx = 2;
 			constraints.gridwidth = 2;
 			constraints.gridy = 13;
 			constraints.fill = GridBagConstraints.HORIZONTAL;
-			componentList.add(this.languageBox);
-			gbcList.add((GridBagConstraints) constraints.clone());
+			this.components.add(languageBox);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
 
 			constraints.gridy = 14;
-			componentList.add(this.keyboardBox);
-			gbcList.add((GridBagConstraints) constraints.clone());*/
+			this.components.add(keyboardBox);
+			this.gbcs.add((GridBagConstraints) constraints.clone());
 		}
 
 		public void run() {
@@ -653,8 +719,8 @@ public class AuthFrame implements ActionListener, Runnable {
 			this.components.add(authFrame_.optionLogoLabel);
 			this.components.add(authFrame_.mode);
 			this.components.add(authFrame_.resolution);
-			/*this.components.add(authFrame_.language);
-			this.components.add(authFrame_.keyboard);*/
+			this.components.add(authFrame_.language);
+			this.components.add(authFrame_.keyboard);
 			this.components.add(authFrame_.sessionModeBox);
 			this.components.add(authFrame_.resBar);
 			this.components.add(authFrame_.resolutionValue);

@@ -41,7 +41,7 @@ import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
-
+	
 	public OvdClientRemoteApps(SessionManagerCommunication smComm) {
 		super(smComm, null);
 	}
@@ -124,7 +124,10 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			// Prevent artifact on screen with a with resolution
 			// not divisible by 4
 			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
-
+			
+			if (this.keymap != null)
+				rc.setKeymap(this.keymap);
+						
 			int numberOfApplication = server.getApplications().size();
 			int ApplicationIncrement = (int)serverIncrement/numberOfApplication;
 			int ApplicationIndex = 0;

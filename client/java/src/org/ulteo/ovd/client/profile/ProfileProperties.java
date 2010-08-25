@@ -37,16 +37,20 @@ public class ProfileProperties {
 	private boolean autoPublish = false;
 	private boolean useLocalCredentials = false;
 	private int screensize = 0;
+	private String lang = null;
+	private String keymap = null;
 	
 	public ProfileProperties() {}
 
-	public ProfileProperties(String login_, String host_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, int screensize_) {
+	public ProfileProperties(String login_, String host_, int sessionMode_, boolean autoPublish_, boolean useLocalCredentials_, int screensize_, String lang, String keymap) {
 		this.login = login_;
 		this.host = host_;
 		this.sessionMode = sessionMode_;
 		this.autoPublish = autoPublish_;
 		this.useLocalCredentials = useLocalCredentials_;
 		this.screensize = screensize_;
+		this.lang = lang;
+		this.keymap = keymap;
 	}
 
 	public String getLogin() {
@@ -105,5 +109,21 @@ public class ProfileProperties {
 				screenSize_ = FULLSCREEN;
 		}
 		this.screensize = screenSize_;
+	}
+	
+	public String getLang() {
+		return this.lang;
+	}
+	
+	public void setLang(String lang) {
+		this.lang = lang;
+	}
+	
+	public String getKeymap() {
+		return this.keymap;
+	}
+	
+	public void setKeymap(String keymap) {
+		this.keymap = keymap;
 	}
 }

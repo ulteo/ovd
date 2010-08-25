@@ -62,7 +62,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected Thread getStatus = null;
 	protected ArrayList<RdpConnectionOvd> connections = null;
 	protected ArrayList<RdpConnectionOvd> availableConnections = null;
-
+	protected String keymap = null;
+	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
 	
@@ -354,5 +355,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.exitAfterLogout = true;
 
 		this.disconnectAll();
+	}
+	
+	public void setKeymap(String keymap) {
+		this.keymap = keymap;
 	}
 }
