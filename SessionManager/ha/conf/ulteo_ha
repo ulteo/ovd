@@ -1,0 +1,283 @@
+#! /bin/bash
+
+# Copyright (C) 2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Arnaud LEGRAND <arnaud@ulteo.com>
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+unset LANG
+
+export PATH=$PATH/usr/local/bin:/usr/sbin:/sbin:/bin:/usr/bin
+
+SERVICE_BIN=`which service`
+LOSETUP_BIN=`which losetup`
+NTPDATE_BIN=`which ntpdate`
+DRBD_BIN=`which drbdadm`
+
+DRBD_LOOP=`${LOSETUP_BIN} -f`
+
+INIT_DIR=/etc/init.d
+ULTEO_HA_DIR=/etc/ulteo/ovd/ha
+CIB_DIR=/var/lib/heartbeat/crm
+VBD_BIN=$ULTEO_HA_DIR/vbd0.bin
+FILE_IP_FORWARD=/proc/sys/net/ipv4/ip_forward
+TIME_SLEEP=5
+NTP_URL="0.pool.ntp.org"
+DRBD_RESOURCE="sm0"
+AUTHKEY=`date '+%m%d%y%H%M%S'`
+
+
+############################################################
+## HA CONTROLS
+function valid_ip()
+{
+    local  ip=$1
+    local  stat=1
+
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+        OIFS=$IFS
+        IFS='.'
+        ip=($ip)
+        IFS=$OIFS
+        [[ ${ip[0]} -le 255 && ${ip[1]} -le 255 \
+            && ${ip[2]} -le 255 && ${ip[3]} -le 255 ]]
+        stat=$?
+    fi
+    return $stat
+}
+# Masters only
+ha_make_configurations() {
+	#unset LANG
+	#########################################################################################################
+	HEARTBEAT_HA_CONF=/etc/ha.d/ha.cf
+	HEARTBEAT_AUTHKEYS_CONF=/etc/ha.d/authkeys
+	DRBD_CONF=/etc/drbd.d/sm0.res
+	#HEARTBEAT_HA_CONF=/tmp/ha.cf
+	#HEARTBEAT_AUTHKEYS_CONF=/tmp/authkeys
+	#DRBD_CONF=/tmp/sm0.res
+	IFCONFIG_BIN=`which ifconfig`
+	ROUTE_BIN=`which route`
+	RESOURCE_FILE=/etc/ulteo/ovd/ha/resources.conf
+
+	#########################################################################################################
+	# DEFAULT VALUES
+	###
+	logfile=/var/log/ulteo/sessionmanager/ha-hb.log
+	debugfile=/var/log/ulteo/sessionmanager/ha-debug-hb.log
+	UDPPORT=694
+	KEEPALIVE=1
+	WARNTIME=15
+	DEADTIME=3
+	INITDEAD=30
+	RATE=10M
+	
+	GATEWAY=`${ROUTE_BIN} -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}'`
+
+	NIC_NAME="eth0"
+	
+	device=/dev/drbd0;
+	disk=/dev/loop0;
+
+	#########################################################################################################
+	# VARIABLE ATTRIBUTION
+	##
+	# LOAD DYN VARS
+	. $RESOURCE_FILE
+
+	NIC_ADDR=`$IFCONFIG_BIN $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
+	
+	echo ""> $HEARTBEAT_HA_CONF
+	echo ""> $HEARTBEAT_AUTHKEYS_CONF
+	echo ""> $DRBD_CONF
+
+	#########################################################################################################
+	# AUTHKEYS FILE
+	##
+	cat > $HEARTBEAT_AUTHKEYS_CONF << EOF
+auth 1
+1 sha1 $AUTHKEY
+EOF
+
+	#########################################################################################################
+	# HA.CF FILE
+	##
+
+	cat > $HEARTBEAT_HA_CONF << EOF
+autojoin none
+use_logd off
+logfile $logfile
+debugfile $debugfile
+logfacility local0
+udpport $UDPPORT
+keepalive $KEEPALIVE
+warntime $WARNTIME
+deadtime $DEADTIME
+initdead $INITDEAD
+ping $GATEWAY
+EOF
+
+	echo "ucast $NIC_NAME $NIC_ADDR" >> $HEARTBEAT_HA_CONF
+	if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
+		echo "ucast $NIC_NAME $OTHER_IP" >> $HEARTBEAT_HA_CONF
+	fi
+	echo "node $HOSTNAME" >> $HEARTBEAT_HA_CONF
+	if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
+		echo "node $OTHER_HOSTNAME" >> $HEARTBEAT_HA_CONF
+	fi
+	echo "crm yes" >> $HEARTBEAT_HA_CONF
+
+	#########################################################################################################
+	# SM0.RES FILE
+	##
+	cat > $DRBD_CONF << EOF
+resource sm0 {
+	device    $device;
+	disk      $disk;
+	meta-disk internal;
+
+	disk {
+		on-io-error   detach;
+	}
+
+	startup {
+		wfc-timeout  10;
+		degr-wfc-timeout 5;
+	}
+
+	syncer {
+		# rate after al-extents use-rle cpu-mask verify-alg csums-alg
+		rate $RATE;
+		verify-alg sha1;
+	}
+
+	net {
+		cram-hmac-alg sha1;
+		shared-secret "$AUTHKEY";
+		after-sb-0pri discard-older-primary;
+		after-sb-1pri call-pri-lost-after-sb;
+		after-sb-2pri call-pri-lost-after-sb;
+		#allow-two-primaries;
+	}
+	
+	on $HOSTNAME {
+		address   $NIC_ADDR:7788;
+	}
+EOF
+
+	if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
+		echo "on $OTHER_HOSTNAME {" >> $DRBD_CONF
+		echo "address   $OTHER_IP:7788;" >> $DRBD_CONF
+		echo "}" >> $DRBD_CONF
+	fi
+	echo "}" >> $DRBD_CONF
+
+	#########################################################################################################
+	# SPECIALS
+	##
+
+	chmod 660 $HEARTBEAT_HA_CONF
+	chmod 600 $HEARTBEAT_AUTHKEYS_CONF
+	chmod 660 $DRBD_CONF
+	return 0
+
+}
+
+
+ha_reload_master() {
+		$SERVICE_BIN heartbeat stop
+		ha_make_configurations
+		if [ $? -eq 2 ]; then
+			#echo "An error occured in script" $MAKE_RESOURCE_SCRIPT $OTHER_IP $OTHER_HOSTNAME > /tmp/log
+			exit 2;
+		fi
+        sleep $TIME_SLEEP
+        $SERVICE_BIN heartbeat start
+}
+#Slaves only
+ha_start_slave() {
+        $SERVICE_BIN mysql stop
+        $SERVICE_BIN apache2 stop
+        $SERVICE_BIN heartbeat stop
+        rm -f $CIB_DIR/*
+        ha_make_configurations
+        if [ $? -eq 2 ]; then
+			#echo "An error occured in script" $MAKE_RESOURCE_SCRIPT $OTHER_IP $OTHER_HOSTNAME > /tmp/log.txt
+			exit 2;
+		fi
+        $SERVICE_BIN heartbeat restart
+}
+
+
+case $1 in
+        reload_master)
+        	if [ -n "$2" ] && [ -n "$3" ] && [ -n "$4" ]; then
+        		OTHER_IP=$2
+				OTHER_HOSTNAME=$3
+				AUTHKEY=$4
+				ha_reload_master
+        	fi
+        ;;
+        reload_master_excl)
+        	if [ "$2" -eq "0" ] && [ "$3" -eq "0" ] && [ -n "$4" ]; then
+        		AUTHKEY=$4
+        		OTHER_IP=""
+				OTHER_HOSTNAME=""
+        		ha_reload_master
+        	fi
+        ;;
+        reload_vip)
+			
+			if [ -n "$2" ]; then
+				VIP=$2
+				valid_ip $VIP
+				if [[ $? == "0" ]]; then
+					crm_resource --resource vip --set-parameter ip --parameter-value $VIP
+	        	fi
+        	fi
+        ;;
+        register)
+        	if [ -n "$2" ] && [ -n "$3" ] && [ -n "$4" ]; then
+        		OTHER_IP=$2
+				OTHER_HOSTNAME=$3
+				AUTHKEY=$4
+				ha_start_slave
+        	fi 
+        ;;
+        start)
+        	$SERVICE_BIN mysql stop
+        	$SERVICE_BIN apache2 stop
+        	$LOSETUP_BIN $DRBD_LOOP $VBD_BIN
+        	exit 0
+        ;;
+        stop)
+        	$LOSETUP_BIN -d $DRBD_LOOP
+        	$SERVICE_BIN mysql restart
+        	$SERVICE_BIN apache2 restart
+        	exit 0
+        ;;
+        status)
+        	echo "Status can not be performed !"
+        	exit 0
+        ;;
+        *)
+			echo "Usage: ./ulteo_ha {start|stop|status|restart}"
+            echo "Please, don't use it manually !"
+            exit 2
+        ;;
+esac
+sleep 120 # Do not delete this line
+exit 0
+

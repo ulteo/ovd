@@ -1,0 +1,57 @@
+
+Copyright (C) 2008-2010 Ulteo SAS
+http://www.ulteo.com
+Author Arnaud LEGRAND <arnaud@ulteo.com>
+ *
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; version 2
+of the License.
+ *
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+ *
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+===================================================================================
+
+This package installs the necessary components to the module High Availability Session Manager.
+
+It is based on DRBD and hearbeat, it will install the Web module management business module HA Ulteo Session Manager.
+
+1) DRBD
+
+DRBD (Distributed Replicated Block Device) is an open-source tool that lets you synchronize (through replication) storage devices (hard disk, partition, logical volume, etc..) Between two computers over the network.
+
+This synchronization is done:
+
+    * Real time: it is broadcast, while the data is changed
+    * Transparently, so applications that record their data on the replicated storage device, do not even know that this is a special unit of storage.
+    * Synchronously or asynchronously: in synchronous operation, the writing is declared over when the data are written locally AND the synchronization is complete. Operating asynchronous writing is declared
+    
+A virtual disk image (VBD) is designed to synchronize the MySQL database of Session Manager and it is transparent to the system administrator. You will find this binary /etc/ulteo/ovd/ha/vbd0.bin
+
+The server synchronizes the data with a SHA1 key that you give to the facility that will generate a configuration file resource /etc/drbd.d/sm0.res This key will be used as well for communication between servers heartbeat (/etc/ha.d/authkeys).
+
+2) Heartbeat
+Heartbeat can manage different services High Availability (High Availability: HA) within a cluster of two session manager. Open-source, monitor the services necessary for the latter. It will fall when a session manager for one reason or another that the slave SQL database containing the replicated take over. The session manager is contacted via a virtual IP address, one IP for the relay is done transparently to the user. A new script OCF was established to eliminate bugs OCF script: mysql incompatible with version 5.1 of MySQL server (/usr/lib/OCF/resource.d/heartbeat/mysql-Ulteo).
+
+3) /etc/init.d/ulteo_ha
+Init script which performs losetup command, mount /dev/loop0 to the file vbd0.bin (for DRBD)
+It disable mysql and apache on start
+START PRIORITY : must be started at last
+END   PRIORITY : must be end at last
+
+4) HAshell
+A program: HAshell is installed to execute commands as root ds needed to the web interface (/usr/bin/HAshell). Only the www-user can run this command (see configuration file /etc/ulteo-ovd.conf)
+
+5) User Interface Shell
+To use DRBD and Heartbeat command line interface, refer to the respective man page "drbdadm" and "crm".
+
+-
+
+This module is compatible Ulteo for Lucid Lynx distribution Ubuntu.
