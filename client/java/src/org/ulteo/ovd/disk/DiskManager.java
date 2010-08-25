@@ -29,6 +29,7 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 public abstract class DiskManager {
 	private static Logger logger = Logger.getLogger(DiskManager.class);
+	private static String invalidCharacter = "()[]:\\//|";
 
 	protected OVDRdpdrChannel rdpdrChannel;
 	protected ArrayList<String> staticShares;
@@ -63,6 +64,14 @@ public abstract class DiskManager {
 	abstract public ArrayList<String> getNewDrive();
 	
 
+	public String getValidName(String name) {
+		char[] characters = invalidCharacter.toCharArray();
+		for (int i=0 ; i< characters.length ; i++) {
+			name = name.replace(""+characters[i], "");
+		}
+		return name;
+	}
+	
 	/**************************************************************************/	
 	public boolean testDir(String directoryName) {
 		File directory = new File(directoryName);
@@ -74,7 +83,8 @@ public abstract class DiskManager {
 	/**************************************************************************/
 	public String getShareName(String path) {
 		File file = new File(path);
-		return file.getName();
+		String shareName = this.getValidName(file.getName());
+		return shareName;
 	}	
 	
 	/**************************************************************************/

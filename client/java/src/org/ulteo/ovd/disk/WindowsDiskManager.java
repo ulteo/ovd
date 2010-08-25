@@ -22,6 +22,8 @@ package org.ulteo.ovd.disk;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.filechooser.FileSystemView;
+
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
@@ -99,7 +101,13 @@ public class WindowsDiskManager extends DiskManager {
 	public String getShareName(String path) {
 		String share = super.getShareName(path);
 		if (path.length() == 3) {
-			return path.replace("\\", "");
+			File drive = new File(path);
+			String driveDisplayName = FileSystemView.getFileSystemView().getSystemDisplayName(drive);
+			driveDisplayName = this.getValidName(driveDisplayName);
+			if (driveDisplayName.equals(""))
+				return this.getValidName(path);
+			else
+				return driveDisplayName;
 		}
 		return share; 
 	}
