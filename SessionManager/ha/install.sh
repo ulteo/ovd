@@ -508,7 +508,7 @@ function heartbeat_cib_install()
 	crm node standby
 	sleep 10 
 
-	echo 'property \$id="cib-bootstrap-options" no-quorum-policy="ignore" stonith-enabled="false" cluster-infrastructure="Heartbeat"' > /tmp/_cib.xml
+	echo 'property \$id="cib-bootstrap-options" no-quorum-policy="ignore" stonith-enabled="false" cluster-infrastructure="Heartbeat" symmetric-cluster="true"' > /tmp/_cib.xml
 	echo 'rsc_defaults \$id="rsc-options" resource-stickiness="0"' >> /tmp/_cib.xml
 	
 	
@@ -523,7 +523,7 @@ function heartbeat_cib_install()
 	echo 'primitive vip ocf:heartbeat:IPaddr2 params ip="'$VIP'" cidr_netmask="32" op monitor interval="10s"' >> /tmp/_cib.xml
 	echo 'group group_applis mount_sm0 mount_sm0_databases mount_sm0_spool r-sql r-web vip params colocated="true" ordered="true" meta target-role="Started"' >> /tmp/_cib.xml
 	echo 'ms ms_sm0 sm0 meta master-max="1" clone-max="2" clone-node-max="1" master-clone-max="1" notify="true" target-role="Master"' >> /tmp/_cib.xml
-	echo 'colocation coloc_ms_gr_applis inf: ms_sm0:Master group_applis' >> /tmp/_cib.xml
+	echo 'colocation coloc_ms_gr_applis inf: group_applis ms_sm0:Master' >> /tmp/_cib.xml
 	echo 'order order_ms_fs inf: ms_sm0:promote mount_sm0:start' >> /tmp/_cib.xml
 	echo 'commit' >> /tmp/_cib.xml
 
