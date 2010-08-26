@@ -2,7 +2,6 @@
 
 . /usr/share/debconf/confmodule
 
-
 CHROOTDIR=/var/cache/ulteo/sessionmanager
 CONFDIR=/etc/ulteo/sessionmanager
 CHROOT=$CHROOTDIR/base.tar.gz
@@ -21,18 +20,13 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-server ]; then
 fi
 
 # Alias admin
-if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
-    ln -sf $CONFDIR/apache2-admin.conf \
-        $A2CONFDIR/ovd-admin.conf
-fi
+[ ! -e $A2CONFDIR/ovd-admin.conf ] && \
+    ln -sf $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
 
 # VHost SSL config
 if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
     serverName=$(hostname -f 2>/dev/null || true)
-    if [ -z "$serverName" ]; then
-        # Bad /etc/hosts configuration
-        serverName=$(hostname)
-    fi
+    [ -z "$serverName" ] && serverName=$(hostname) #Bad /etc/hosts configuration
     sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
         $CONFDIR/apache2-vhost-ssl.conf
     ln -s /etc/ulteo/sessionmanager/apache2-vhost-ssl.conf \
@@ -42,8 +36,9 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
 fi
 
 # SSL self-signed key generation
-if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
-    || [ ! -f $CONFDIR/ovd.crt ]; then
+if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] || \
+   [ ! -f $CONFDIR/ovd.crt ]
+then
     echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
     openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
     openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
@@ -61,10 +56,10 @@ else
     db_go
 fi
 
-############################ / APACHE CONFIGURATION ############################
+############################### FIRST INSTALL #################################
 
-if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); then
-
+if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ])
+then
     # set the configuration
     CONFFILE=$CONFDIR/config.inc.php
     db_get ulteo-ovd-session-manager/admin_login && LOGIN="$RET"
@@ -78,10 +73,11 @@ if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); the
              /var/log/ulteo/sessionmanager
 
     # change user and group permission folders
-    chown www-data:www-data /var/spool/ulteo/sessionmanager \
-                            /var/spool/ulteo/sessionmanager/reporting \
-                            /var/log/ulteo/sessionmanager \
-                            $CONFFILE
+    chown www-data:www-data \
+        /var/spool/ulteo/sessionmanager \
+        /var/spool/ulteo/sessionmanager/reporting \
+        /var/log/ulteo/sessionmanager \
+        $CONFFILE
 
     # clear the password
     unset RET
@@ -114,7 +110,6 @@ if [ "$1" = "configure" ] && ([ -z "$2" ] || [ -n "$DEBCONF_RECONFIGURE" ]); the
         db_input high ulteo-ovd-session-manager/tarball_url || true
         db_go
     done
-
 fi
 
 db_stop

@@ -1,18 +1,15 @@
 #!/bin/sh -e
 
-
 A2CONFDIR=/etc/apache2/conf.d
 A2SITESDIR=/etc/apache2/sites-available
 
 # remove apache2 config link
+rm -f $A2CONFDIR/ovd-admin.conf \
+      $A2SITESDIR/sessionmanager-vhost-server \
+      $A2SITESDIR/sessionmanager-vhost-ssl
+
 a2dissite sessionmanager-vhost-server > /dev/null 2>&1 || true
-rm -f $A2SITESDIR/sessionmanager-vhost-server
-if [ -e $A2CONFDIR/sessionmanager ]; then
-    rm -f $A2CONFDIR/sessionmanager
-else
-    a2dissite sessionmanager-vhost-ssl > /dev/null 2>&1 || true
-    rm -f $A2SITESDIR/sessionmanager-vhost-ssl
-fi
+a2dissite sessionmanager-vhost-ssl > /dev/null 2>&1 || true
 
 # reload apache
 if apache2ctl configtest 2>/dev/null; then
