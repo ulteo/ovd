@@ -381,9 +381,6 @@ class Preferences {
 		$c = new ConfigElement_select('testapplet', _('SSH/ping applet test'), _('SSH/ping applet test'), _('SSH/ping applet test'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement_select('allow_proxy', _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), _('Allow connections through proxy (SSH/ping applet test required)'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','web_interface_settings');
 		$c = new ConfigElement_select('use_popup', _('Launch session in a popup'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');

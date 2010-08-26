@@ -177,28 +177,6 @@ function badPing() { //errCode
 	}
 }
 
-function haveProxy(prxType, prxHost, prxPort, prxUser, prxPassword) {
-	if (prxHost !== '') {
-		$('proxy_type').value = prxType;
-		$('proxy_host').value = prxHost;
-		$('proxy_port').value = prxPort;
-		$('proxy_username').value = prxUser;
-		$('proxy_password').value = prxPassword;
-		$('enable_proxy').value = 1;
-		//$('remember_proxy').checked = 'checked';
-		//$('proxy_settings').style.display = 'block';
-	} else {
-		//$('proxy_settings').style.display = 'none';
-		$('proxy_type').value = '';
-		$('proxy_host').value = '';
-		$('proxy_port').value = '';
-		$('proxy_username').value = '';
-		$('proxy_password').value = '';
-		$('enable_proxy').value = 0;
-		//$('remember_proxy').checked = 'none';
-	}
-}
-
 function sessionLock() {
 	if (!testDone) {
 		testDone = true;

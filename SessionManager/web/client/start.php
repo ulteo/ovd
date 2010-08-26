@@ -170,7 +170,6 @@ $start_without_all_sharedfolders = $default_settings['start_without_all_sharedfo
 $debug = 0;
 
 $default_settings = $prefs->get('general', 'web_interface_settings');
-$allow_proxy = $default_settings['allow_proxy'];
 $popup = $default_settings['use_popup'];
 
 $advanced_settings = array();
@@ -568,21 +567,6 @@ if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 if (isset($allow_shell) && $allow_shell != '0')
 	$optional_args['allow_shell'] = 1;
-if (isset($allow_proxy) && $allow_proxy != '0') {
-	if (isset($_REQUEST['proxy_host']) && $_REQUEST['proxy_host'] != '') {
-		$optional_args['enable_proxy'] = 1;
-		if (isset($_REQUEST['proxy_type']))
-			$optional_args['proxy_type'] = $_REQUEST['proxy_type'];
-		if (isset($_REQUEST['proxy_host']))
-			$optional_args['proxy_host'] = $_REQUEST['proxy_host'];
-		if (isset($_REQUEST['proxy_port']))
-			$optional_args['proxy_port'] = $_REQUEST['proxy_port'];
-		if (isset($_REQUEST['proxy_username']))
-			$optional_args['proxy_username'] = $_REQUEST['proxy_username'];
-		if (isset($_REQUEST['proxy_password']))
-			$optional_args['proxy_password'] = $_REQUEST['proxy_password'];
-	}
-}
 
 $plugins->doStartsession(array(
 	'fqdn'	=>	$session->server,
