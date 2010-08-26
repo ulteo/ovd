@@ -67,11 +67,12 @@ function server_display_role_preparation_aps($server) {
 	foreach($servers_replication as $k => $v) {
 		if ($v->fqdn == $server->fqdn)
 			unset($servers_replication[$k]);
-		else {
-			if ( $v->type != $server->getAttribute('type')) {
-				unset($servers_replication[$k]);
-			}
-		}
+
+		if ($v->type != $server->getAttribute('type'))
+			unset($servers_replication[$k]);
+
+		if (! array_key_exists('aps', $v->roles) || $v->roles['aps'] !== true)
+			unset($servers_replication[$k]);
 	}
 	$sessions = array();
 	$total = Abstract_Session::countByServer($_GET['fqdn']);
