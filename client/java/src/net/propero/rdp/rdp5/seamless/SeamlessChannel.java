@@ -36,6 +36,7 @@ import java.awt.Frame;
 import java.awt.Cursor;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -58,7 +59,7 @@ import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
 
-public class SeamlessChannel extends VChannel implements WindowStateListener {
+public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener {
 
 	// Seamless RDP constants
 	public static final int WINDOW_NOTYETMAPPED=-1;
@@ -371,6 +372,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 
 	protected void addFrame(SeamlessWindow f, String name) {
 		f.sw_addWindowStateListener(this);
+		f.sw_addWindowListener(this);
 		if (this.clipChannel != null)
 			f.sw_addFocusListener(this.clipChannel);
 		else
@@ -724,6 +726,11 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 				height + "," +
 				"0x" + Integer.toHexString(flags));
 	}
+
+	public void send_destroy(int id) throws RdesktopException, IOException, CryptoException
+	{
+		seamless_send("DESTROY", "0x" + Integer.toHexString(id));
+	}
 	
 	//TODO: select_timeout
 //	public void select_timeout(struct timeval *tv)
@@ -805,5 +812,22 @@ public class SeamlessChannel extends VChannel implements WindowStateListener {
 		for(SeamListener list : listener)
 			list.ackHello(this);
 	}
+
+	public void windowClosing(WindowEvent we) {
+		SeamlessWindow sw = (SeamlessWindow) we.getWindow();
+		
+		try {
+			this.send_destroy(sw.sw_getId());
+		} catch (Exception ex) {
+			System.err.println("Send Destroy failed: "+ex.getMessage());
+		}
+	}
+
+	public void windowClosed(WindowEvent we) {}
+	public void windowOpened(WindowEvent we) {}
+	public void windowIconified(WindowEvent we) {}
+	public void windowDeiconified(WindowEvent we) {}
+	public void windowActivated(WindowEvent we) {}
+	public void windowDeactivated(WindowEvent we) {}
 	
 }

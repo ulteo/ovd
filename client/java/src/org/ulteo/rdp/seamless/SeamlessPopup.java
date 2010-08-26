@@ -36,6 +36,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 import javax.swing.JDialog;
 import net.propero.rdp.Common;
@@ -189,6 +190,9 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	}
 	public void sw_addWindowStateListener(WindowStateListener l) {
 		this.addWindowStateListener(l);
+	}
+	public void sw_addWindowListener(WindowListener l) {
+		this.addWindowListener(l);
 	}
 	public void sw_addFocusListener(FocusListener l) {
 		this.addFocusListener(l);

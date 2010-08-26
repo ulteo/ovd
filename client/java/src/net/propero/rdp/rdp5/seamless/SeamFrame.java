@@ -326,6 +326,9 @@ public class SeamFrame extends Frame
 	public void sw_addWindowStateListener(WindowStateListener l) {
 		this.addWindowStateListener(l);
 	}
+	public void sw_addWindowListener(WindowListener l) {
+		this.addWindowListener(l);
+	}
 	public void sw_addFocusListener(FocusListener l) {
 		this.addFocusListener(l);
 	}

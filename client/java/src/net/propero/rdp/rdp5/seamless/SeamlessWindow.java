@@ -23,6 +23,7 @@ package net.propero.rdp.rdp5.seamless;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.event.FocusListener;
+import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
 
 public interface SeamlessWindow {
@@ -54,5 +55,6 @@ public interface SeamlessWindow {
 	void sw_setExtendedState(int state);
 	void sw_setIconImage(Image image);
 	void sw_addWindowStateListener(WindowStateListener l);
+	void sw_addWindowListener(WindowListener l);
 	void sw_addFocusListener(FocusListener l);
 }
