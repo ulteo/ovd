@@ -450,17 +450,25 @@ static void create_window(HWND hwnd){
 		HICON icon;
 		LONG exstyle;
 		LONG style;
+		HWND parent;
 		style = GetWindowLong(hwnd, GWL_STYLE);
 		vchannel_write("DEBUG","NEW WINDOWS");
 
 		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 		GetWindowThreadProcessId(hwnd, &pid);
 
+		parent = get_parent(hwnd);
+		if (getHWNDFromHistory(parent) == NULL)
+			parent = 0;
+
 		flags = 0;
 		if (style & DS_MODALFRAME)
 			flags |= SEAMLESS_CREATE_MODAL;
-		if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW))
+		if ((style & WS_POPUP) || (exstyle & WS_EX_TOOLWINDOW)) {
 			flags |= SEAMLESS_CREATE_POPUP;
+			if (! parent)
+				parent = 0xffffffffL;
+		}
 		if (! (style & WS_SIZEBOX))
 			flags |= SEAMLESS_CREATE_FIXEDSIZE;
 
@@ -469,8 +477,7 @@ static void create_window(HWND hwnd){
 			flags |= SEAMLESS_CREATE_TOPMOST;
 
 		vchannel_write("CREATE", "0x%08lx,0x%08lx,0x%08lx,0x%08x",
-					   (long) hwnd, (long) pid,
-					   (long) get_parent(hwnd), flags);
+					   (long) hwnd, (long) pid, (long) parent, flags);
 
 		GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
 
