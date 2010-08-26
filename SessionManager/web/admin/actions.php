@@ -1185,6 +1185,9 @@ if ($_REQUEST['name'] == 'Server') {
 			$servers_fqdn = $_REQUEST['servers'];
 			foreach($servers_fqdn as $server_fqdn) {
 				$server_to = Abstract_Server::load($server_fqdn);
+				if (! array_key_exists('aps', $server_to->roles) || $server_to->roles['aps'] !== true)
+					continue;
+
 				$applications_to = $server_to->getApplications();
 		
 				$to_delete = array();
@@ -1198,15 +1201,7 @@ if ($_REQUEST['name'] == 'Server') {
 					if (! in_array($app, $applications_to))
 						$to_install[]= $app;
 				}
-				/*
-				echo 'replicate '.$_REQUEST['fqdn'].' on '.$server_fqdn.'<br>';
-				echo 'to_install: ';
-				var_dump($to_install);
-				echo '<br>to remove: ';
-				var_dump($to_delete);
-				echo '<hr/>';
-				die();
-				*/
+
 				//FIX ME ?
 				$tm = new Tasks_Manager();
 				if (count($to_delete) > 0) {
