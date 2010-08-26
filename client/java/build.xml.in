@@ -27,11 +27,7 @@
   <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
                                 required_libraries/gnu-getopt.jar"/>
 
-  <condition property="jni.exist">
-    <resourceexists>
-      <file file="windowsPathsJNI/Makefile"/>
-    </resourceexists>
-  </condition>
+  <available file="windowsPathsJNI/Makefile" property="jni.exist"/>
 
   <target name="clean.jni" if="jni.exist" >
     <exec executable="make" failonerror="true" dir="windowsPathsJNI" >
