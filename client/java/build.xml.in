@@ -27,13 +27,23 @@
   <path id="minimal.path" path="required_libraries/log4j-1.2.jar:
                                 required_libraries/gnu-getopt.jar"/>
 
+  <condition property="jni.exist">
+    <resourceexists>
+      <file file="windowsPathsJNI/Makefile"/>
+    </resourceexists>
+  </condition>
+
+  <target name="clean.jni" if="jni.exist" >
+    <exec executable="make" failonerror="true" dir="windowsPathsJNI" >
+      <arg value="clean" />
+    </exec>
+  </target>
+
   <target name="clean" description="clean files">
     <delete dir="classes"/>
     <delete dir="jar"/>
     <delete dir="libs"/>
-    <exec executable="make" failonerror="true" dir="windowsPathsJNI" >
-      <arg value="clean" />
-    </exec>
+    <antcall target="clean.jni" />
   </target>
 
   <target name="precompile">
