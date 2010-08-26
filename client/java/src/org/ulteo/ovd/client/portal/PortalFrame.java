@@ -29,6 +29,7 @@ import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -64,6 +65,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 	
 	public void init() {
 		Image frameLogo = this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/ulteo.png"));
+		
+		JLabel ulteoLogo = new JLabel(new ImageIcon(this.getToolkit().getImage(getClass().getClassLoader().getResource("pics/logo_small.png"))));
 		this.systray = new IntegratedTrayIcon(this, frameLogo);
 		
 		this.setIconImage(frameLogo);
