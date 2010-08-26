@@ -132,9 +132,9 @@ public class Spool implements Runnable {
 						this.logger.error("No read file '" + todo.getAbsolutePath() + "'");
 					}
 
-					File instance = new File(this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
+					File instanceFile = new File(this.instancesDir.getAbsolutePath()+Constants.FILE_SEPARATOR+todo.getName());
 					try {
-						instance.createNewFile();
+						instanceFile.createNewFile();
 					} catch (IOException ex) {
 						this.logger.error(ex);
 					}
