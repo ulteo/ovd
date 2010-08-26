@@ -466,7 +466,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			if (loadingFrame.isVisible())
 				disableLoadingMode();
 			if(! command)
-				JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Error"), JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, I18n._("You have been disconnected"), I18n._("Your session has ended"), JOptionPane.INFORMATION_MESSAGE);
 			else {
 				System.err.println("You have been disconnected");
 				System.exit(0);
