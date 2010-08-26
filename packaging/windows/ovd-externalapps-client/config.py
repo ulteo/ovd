@@ -25,7 +25,7 @@ def pre_sources_commads():
 	return ["python autogen"]
 
 def source_remove_files():
-	return ["autogen", "build.xml.in", "Makefile.OVDIntegrated", "windowsPathsJNI", "OVDIntegratedLauncher"]
+	return ["autogen", "build.xml.in", "windowsPathsJNI"]
 
 def compile_commands():
 	return ["ant ovdExternalAppsClient.jar"]
