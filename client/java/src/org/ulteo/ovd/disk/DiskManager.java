@@ -29,7 +29,7 @@ import org.ulteo.rdp.rdpdr.OVDRdpdrChannel;
 
 public abstract class DiskManager {
 	private static Logger logger = Logger.getLogger(DiskManager.class);
-	private static String invalidCharacter = "()[]:\\/|*?<>";
+	private static String invalidCharacter = ":\\/|*?<>";
 
 	protected OVDRdpdrChannel rdpdrChannel;
 	protected ArrayList<String> staticShares;
