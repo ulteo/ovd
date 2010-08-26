@@ -109,8 +109,13 @@ public class Spool implements Runnable {
 
 		this.logger.info("Spool thread started");
 
-		while (true) {
-			try {
+		try {
+			while (true) {
+				Thread.sleep(100);
+
+				if (this.toLaunchDir == null)
+					continue;
+
 				File[] children = this.toLaunchDir.listFiles();
 				for (File todo : children) {
 					try {
@@ -143,12 +148,44 @@ public class Spool implements Runnable {
 						return;
 					}
 				}
+			} 
+		} catch (InterruptedException ex) {
+			this.logger.info("Spool thread stopped");
+			return;
+		}
+	}
+	
+	private Thread spoolThread = null;
+
+	public void start() {
+		this.spoolThread = new Thread(this);
+		this.spoolThread.start();
+	}
+
+	public void waitThreadEnd() {
+		while (this.spoolThread != null && this.spoolThread.isAlive()) {
+			try {
 				Thread.sleep(100);
 			} catch (InterruptedException ex) {
-				this.logger.info("Spool thread stopped");
-				return;
+				this.logger.error(ex);
 			}
 		}
+	}
+
+	public void stop() {
+		new Thread(new Runnable() {
+			public void run() {
+				spoolThread.interrupt();
+
+				while (spoolThread.isAlive()) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException ex) {}
+				}
+				
+				spoolThread = null;
+			}
+		}).start();
 	}
 
 	private Application findAppById(long id_) {

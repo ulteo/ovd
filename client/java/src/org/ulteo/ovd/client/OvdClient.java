@@ -23,6 +23,8 @@ package org.ulteo.ovd.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import org.apache.log4j.Logger;
@@ -39,6 +41,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	private static final long REQUEST_TIME_FREQUENTLY = 2000;
 	private static final long REQUEST_TIME_OCCASIONALLY = 5000;
+
+	private static final long DISCONNECTION_MAX_DELAY = 3500;
 	
 	protected String sessionStatus = SessionManagerCommunication.SESSION_STATUS_INIT;
 	
@@ -204,7 +208,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		
 		while (this.connectionIsActive) {
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(100);
 			} catch (InterruptedException ex) {}
 		}
 
@@ -229,18 +233,21 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	protected abstract void runSessionReady();
 
 	public void sessionTerminated() {
-		org.ulteo.Logger.info("Session is terminated");
+		if (! this.connectionIsActive)
+			return;
 
-		this.cleanConnections();
+		org.ulteo.Logger.info("Session is terminated");
+		
+		this.runSessionTerminated();
+
+		this.connectionIsActive = false;
 
 		if (this.sessionStatusMonitoringThread != null) {
 			this.continueSessionStatusMonitoringThread = false;
 			this.sessionStatusMonitoringThread = null;
 		}
-		
-		this.runSessionTerminated();
 
-		this.connectionIsActive = false;
+		this.cleanConnections();
 	}
 
 	protected abstract void runSessionTerminated();
@@ -338,17 +345,31 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 	public void performDisconnectAll() {
 		this.runDisconnecting();
-		boolean logoutRet;
-		try {
-			logoutRet = this.smComm.askForLogout();
-		} catch (SessionManagerException ex) {
-			this.logger.error(ex.getMessage());
-			logoutRet = false;
-		}
 
-		if (! logoutRet) {
-			this.cleanConnections();
-		}
+		final Timer forceDisconnectionTimer = new Timer();
+
+		final TimerTask forceDisconnectionTask = new TimerTask() {
+			@Override
+			public void run() {
+				sessionTerminated();
+			}
+		};
+
+		Thread disconnectThread = new Thread(new Runnable() {
+			public void run() {
+				try {
+					smComm.askForLogout();
+				} catch (SessionManagerException ex) {
+					org.ulteo.Logger.error("Disconnection error: "+ex.getMessage());
+				}
+
+				forceDisconnectionTimer.cancel();
+				forceDisconnectionTask.run();
+			}
+		});
+
+		forceDisconnectionTimer.schedule(forceDisconnectionTask, DISCONNECTION_MAX_DELAY);
+		disconnectThread.start();
 	}
 	
 	public void exit(int return_code) {

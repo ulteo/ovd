@@ -92,12 +92,16 @@ public class SoundChannel extends VChannel {
 	}
 
 	public void stopPlayThread() {
-		this.ps.interrupt();
-		while (this.ps.isAlive()) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {}
-		}
+		new Thread(new Runnable() {
+			public void run() {
+				ps.interrupt();
+				while (ps.isAlive()) {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException ex) {}
+				}
+			}
+		}).start();
 	}
 
 	public void process( RdpPacket data ) throws RdesktopException, IOException, CryptoException {

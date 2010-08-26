@@ -78,15 +78,8 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 
 	@Override
 	protected void runExit() {
-		Thread fileListener = new Thread(this.spool);
-		fileListener.start();
-		while (fileListener.isAlive()) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException ex) {
-				this.logger.error(ex);
-			}
-		}
+		this.spool.start();
+		this.spool.waitThreadEnd();
 		this.exit(0);
 	}
 

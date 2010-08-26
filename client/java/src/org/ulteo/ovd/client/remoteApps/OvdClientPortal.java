@@ -55,7 +55,6 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private boolean publicated = false;
 	private SystemAbstract system = null;
 	private Spool spool = null;
-	private Thread spoolThread = null;
 	private List<Application> appsList = null;
 	private boolean autoPublish = false;
 	
@@ -81,8 +80,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.spool.createIconsDir();
 		this.spool.createShortcutDir();
 		this.system.setShortcutArgumentInstance(this.spool.getInstanceName());
-		this.spoolThread = new Thread(this.spool);
-		this.spoolThread.start();
+		this.spool.start();
 		this.portal = new PortalFrame(this.username);
 		this.portal.addComponentListener(this);
 		this.portal.getRunningApplicationPanel().setSpool(spool);
@@ -115,12 +113,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	protected void runSessionTerminated() {
-		this.spoolThread.interrupt();
-		while (this.spoolThread.isAlive()) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException ex) {}
-		}
+		this.spool.stop();
 		this.spool.deleteTree();
 		this.spool = null;
 		
