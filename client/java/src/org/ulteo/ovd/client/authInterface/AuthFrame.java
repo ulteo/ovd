@@ -32,7 +32,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -444,9 +446,19 @@ public class AuthFrame implements ActionListener, Runnable {
 		int sysLang = 0;
 		
 		
-		for (int i = 0; i < size; i++) {			
+		for (int i = 0; i < size; i++) {
 			String local = Language.languageList[i][0]+((! Language.languageList[i][1].equals("")) ? " - "+Language.languageList[i][1] : "");
-			ImageIcon img = new ImageIcon(mainFrame.getToolkit().getImage(getClass().getClassLoader().getResource("pics/flags/"+Language.languageList[i][2]+".png")));
+			
+			ImageIcon img = null;
+			
+			URL imgUrl = getClass().getClassLoader().getResource("pics/flags/"+Language.languageList[i][2]+".png");
+			
+			if (imgUrl != null) {
+				img = new ImageIcon(mainFrame.getToolkit().getImage(imgUrl));
+			}
+			else {
+				System.err.println("Missing file: "+Language.languageList[i][2]+".png");
+			}
 			JComboLanguage lang = new JComboLanguage(img, local);
 			
 			if (Language.languageList[i][2].contains(System.getProperty("user.language")) && Language.languageList[i][2].contains("-")) {
