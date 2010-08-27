@@ -92,6 +92,11 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 						rdpdr_send_available();
 						return;
 					}
+					if ((magic[2] == 'L') && (magic[3] == 'U')) {
+						Logger.info("Ready to send disk drive");
+						rdpdr_send_available();
+						return;
+					}
 				}
 				if ((magic[0] == 'R') && (magic[1] == 'P')) {
 					if ((magic[2] == 'C') && (magic[3] == 'P')){
@@ -121,7 +126,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		s.setLittleEndian16(0x0a);   /* protocol version minor */
 		s.setLittleEndian32(0xFFFF); /* ioCode1 */
 		s.setLittleEndian32(0);      /* ioCode2 */
-		s.setLittleEndian32(RDPDR_DEVICE_REMOVE_PDUS| RDPDR_CLIENT_DISPLAY_NAME_PDU );      /* extendedPDU */
+		s.setLittleEndian32(RDPDR_DEVICE_REMOVE_PDUS| RDPDR_CLIENT_DISPLAY_NAME_PDU|RDPDR_USER_LOGGEDON_PDU );      /* extendedPDU */
 		s.setLittleEndian32(0);      /* Extraflags1 */
 		s.setLittleEndian32(0);      /* Extraflags2 */
 		s.setLittleEndian32(0);      /* special caps */
