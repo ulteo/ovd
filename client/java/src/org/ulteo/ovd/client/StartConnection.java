@@ -604,17 +604,21 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		this.authFrame.setRememberMeChecked(true);
 		
-		for (int i = 0; i < Language.languageList.length; i++) {
-			if (properties.getLang().equalsIgnoreCase(Language.languageList[i][2])) {
-				this.authFrame.getLanguageBox().setSelectedIndex(i);
-				break;
+		if (properties.getLang() != null) {
+			for (int i = 0; i < Language.languageList.length; i++) {
+				System.out.println("kikoo");
+				if (properties.getLang().equalsIgnoreCase(Language.languageList[i][2])) {
+					this.authFrame.getLanguageBox().setSelectedIndex(i);
+					break;
+				}
 			}
 		}
-		
-		for (int i = 0; i < Language.keymapList.length; i++) {
-			if (properties.getKeymap().equals(Language.keymapList[i][1])) {
-				this.authFrame.getKeyboardBox().setSelectedIndex(i);
-				break;
+		if (properties.getKeymap() != null) {
+			for (int i = 0; i < Language.keymapList.length; i++) {
+				if (properties.getKeymap().equals(Language.keymapList[i][1])) {
+					this.authFrame.getKeyboardBox().setSelectedIndex(i);
+					break;
+				}
 			}
 		}
 		
