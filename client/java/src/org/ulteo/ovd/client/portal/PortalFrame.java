@@ -35,6 +35,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.authInterface.LogoutPopup;
 import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;
@@ -155,16 +156,10 @@ public class PortalFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-		if (this.rdpActions != null) {
-			int option = JOptionPane.showConfirmDialog(null, I18n._("Do you really want to close the window ?"), I18n._("Warning !"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-			if(option == JOptionPane.OK_OPTION) {
-				this.rdpActions.exit(0);
-			}
-			else {
-				this.setVisible(true);
-			}
-		}
+		if (this.rdpActions != null)
+			new LogoutPopup(this, this.rdpActions);
+		else
+			System.err.println("can't manage disconnection request: rdpAction is null");
 	}
 
 

@@ -30,9 +30,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
-import org.ulteo.ovd.client.I18n;
+import org.ulteo.ovd.client.authInterface.LogoutPopup;
 import org.ulteo.rdp.RdpActions;
 
 public class DesktopFrame extends JFrame implements WindowListener {
@@ -73,15 +72,11 @@ public class DesktopFrame extends JFrame implements WindowListener {
 	public void windowClosed(WindowEvent arg0) {}
 
 	@Override
-	public void windowClosing(WindowEvent arg0) {			
-		int option = JOptionPane.showConfirmDialog(null, I18n._("Do you really want to close the window ?"), I18n._("Warning !"), JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-		if(option == JOptionPane.OK_OPTION) {
-			this.actions.exit(0);
-		}
-		else {
-			this.setVisible(true);
-		}
+	public void windowClosing(WindowEvent arg0) {
+		if (this.actions != null)
+			new LogoutPopup(this, this.actions);
+		else
+			System.err.println("Can't manage disconnection request: rdpAction is null");
 	}
 
 	@Override
