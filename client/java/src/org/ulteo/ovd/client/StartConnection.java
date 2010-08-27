@@ -606,7 +606,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		
 		if (properties.getLang() != null) {
 			for (int i = 0; i < Language.languageList.length; i++) {
-				System.out.println("kikoo");
 				if (properties.getLang().equalsIgnoreCase(Language.languageList[i][2])) {
 					this.authFrame.getLanguageBox().setSelectedIndex(i);
 					break;
