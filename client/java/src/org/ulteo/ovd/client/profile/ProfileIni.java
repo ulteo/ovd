@@ -27,34 +27,12 @@ import java.util.List;
 import org.ini4j.Ini;
 import org.ulteo.ovd.integrated.Constants;
 
-public class ProfileIni {
+public class ProfileIni extends Profile {
 	private static final String INI_SECTION_USER = "user";
-	private static final String INI_FIELD_LOGIN = "login";
-	private static final String INI_FIELD_LOCALCREDENTIALS = "use-local-credentials";
-
 	private static final String INI_SECTION_SERVER = "server";
-	private static final String INI_FIELD_HOST = "host";
-
 	private static final String INI_SECTION_SESSION = "session";
-	private static final String INI_FIELD_MODE = "mode";
-	private static final String INI_VALUE_MODE_APPLICATIONS = "applications";
-	private static final String INI_VALUE_MODE_AUTO = "auto";
-	private static final String INI_VALUE_MODE_DESKTOP = "desktop";
-	private static final String INI_FIELD_LANG = "language";
-	private static final String INI_FIELD_KEYMAP = "keymap";
-
 	private static final String INI_SECTION_PUBLICATION = "publication";
-	private static final String INI_FIELD_AUTOPUBLISH = "auto-publish";
-	private static final String INI_VALUE_TRUE = "true";
-	private static final String INI_VALUE_FALSE = "false";
-
 	private static final String INI_SECTION_SCREEN = "screen";
-	private static final String INI_FIELD_SCREENSIZE = "size";
-	private static final String INI_VALUE_800X600 = "800x600";
-	private static final String INI_VALUE_1024X768 = "1024x768";
-	private static final String INI_VALUE_1280X678 = "1280x678";
-	private static final String INI_VALUE_MAXIMIZED = "maximized";
-	private static final String INI_VALUE_FULLSCREEN = "fullscreen";
 	
 	private static final String PROFILE_EXT = ".conf";
 	public static final String DEFAULT_PROFILE = "default";
@@ -107,46 +85,46 @@ public class ProfileIni {
 
 		Ini ini = new Ini(this.file);
 
-		ini.put(INI_SECTION_USER, INI_FIELD_LOGIN, properties.getLogin());
-		ini.put(INI_SECTION_USER, INI_FIELD_LOCALCREDENTIALS, properties.getUseLocalCredentials()?INI_VALUE_TRUE:INI_VALUE_FALSE);
+		ini.put(INI_SECTION_USER, FIELD_LOGIN, properties.getLogin());
+		ini.put(INI_SECTION_USER, FIELD_LOCALCREDENTIALS, properties.getUseLocalCredentials()?VALUE_TRUE:VALUE_FALSE);
 
-		ini.put(INI_SECTION_SERVER, INI_FIELD_HOST, properties.getHost());
+		ini.put(INI_SECTION_SERVER, FIELD_HOST, properties.getHost());
 		
-		String mode = INI_VALUE_MODE_AUTO;
+		String mode = VALUE_MODE_AUTO;
 		if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
-			mode = INI_VALUE_MODE_DESKTOP;
+			mode = VALUE_MODE_DESKTOP;
 		else if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
-			mode = INI_VALUE_MODE_APPLICATIONS;
+			mode = VALUE_MODE_APPLICATIONS;
 		else
-			mode = INI_VALUE_MODE_AUTO;
-		ini.put(INI_SECTION_SESSION, INI_FIELD_MODE, mode);
+			mode = VALUE_MODE_AUTO;
+		ini.put(INI_SECTION_SESSION, FIELD_MODE, mode);
 		
 		if (properties.getAutoPublish())
-			ini.put(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH, INI_VALUE_TRUE);
+			ini.put(INI_SECTION_PUBLICATION, FIELD_AUTOPUBLISH, VALUE_TRUE);
 		else
-			ini.put(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH, INI_VALUE_FALSE);
+			ini.put(INI_SECTION_PUBLICATION, FIELD_AUTOPUBLISH, VALUE_FALSE);
 		
 
 		switch (properties.getScreenSize()) {
 			case 0 :
-				ini.put(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE, INI_VALUE_800X600);
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_800X600);
 				break;
 			case 1 :
-				ini.put(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE, INI_VALUE_1024X768);
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_1024X768);
 				break;
 			case 2 :
-				ini.put(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE, INI_VALUE_1280X678);
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_1280X678);
 				break;
 			case 3 :
-				ini.put(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE, INI_VALUE_MAXIMIZED);
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_MAXIMIZED);
 				break;
 			case 4 :
-				ini.put(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE, INI_VALUE_FULLSCREEN);
+				ini.put(INI_SECTION_SCREEN, FIELD_SCREENSIZE, VALUE_FULLSCREEN);
 				break;
 		}
 		
-		ini.put(INI_SECTION_SESSION, INI_FIELD_LANG, properties.getLang());
-		ini.put(INI_SECTION_SESSION, INI_FIELD_KEYMAP, properties.getKeymap());
+		ini.put(INI_SECTION_SESSION, FIELD_LANG, properties.getLang());
+		ini.put(INI_SECTION_SESSION, FIELD_KEYMAP, properties.getKeymap());
 		
 		ini.store();
 	}
@@ -168,60 +146,60 @@ public class ProfileIni {
 		Ini ini = new Ini(this.file);
 		String value = null;
 		
-		value = ini.get(INI_SECTION_USER, INI_FIELD_LOGIN);
+		value = ini.get(INI_SECTION_USER, FIELD_LOGIN);
 		if (value != null)
 			properties.setLogin(value);
 		
-		value = ini.get(INI_SECTION_USER, INI_FIELD_LOCALCREDENTIALS);
+		value = ini.get(INI_SECTION_USER, FIELD_LOCALCREDENTIALS);
 		if (value != null) {
-			properties.setUseLocalCredentials(value.equals(INI_VALUE_TRUE));
+			properties.setUseLocalCredentials(value.equals(VALUE_TRUE));
 		}
 
-		value = ini.get(INI_SECTION_SERVER, INI_FIELD_HOST);
+		value = ini.get(INI_SECTION_SERVER, FIELD_HOST);
 		if (value != null)
 			properties.setHost(value);
 
-		value = ini.get(INI_SECTION_SESSION, INI_FIELD_MODE);
+		value = ini.get(INI_SECTION_SESSION, FIELD_MODE);
 		if (value != null) {
 			int mode = ProfileProperties.MODE_AUTO;
 			
-			if (value.equals(INI_VALUE_MODE_AUTO))
+			if (value.equals(VALUE_MODE_AUTO))
 				mode = ProfileProperties.MODE_AUTO;
-			else if (value.equals(INI_VALUE_MODE_APPLICATIONS)) 
+			else if (value.equals(VALUE_MODE_APPLICATIONS))
 				mode = ProfileProperties.MODE_APPLICATIONS;
-			else if (value.equals(INI_VALUE_MODE_DESKTOP))
+			else if (value.equals(VALUE_MODE_DESKTOP))
 				mode = ProfileProperties.MODE_DESKTOP;
 
 			properties.setSessionMode(mode);
 		}
 		
-		value = ini.get(INI_SECTION_PUBLICATION, INI_FIELD_AUTOPUBLISH);
+		value = ini.get(INI_SECTION_PUBLICATION, FIELD_AUTOPUBLISH);
 		if (value != null) {
-			if (value.equals(INI_VALUE_TRUE))
+			if (value.equals(VALUE_TRUE))
 				properties.setAutoPublish(true);
 			else
 				properties.setAutoPublish(false);
 		}
 		
-		value = ini.get(INI_SECTION_SCREEN, INI_FIELD_SCREENSIZE);
+		value = ini.get(INI_SECTION_SCREEN, FIELD_SCREENSIZE);
 		if (value != null) {
-			if(value.equals(INI_VALUE_800X600))
+			if(value.equals(VALUE_800X600))
 				properties.setScreenSize(ProfileProperties.SCREENSIZE_800X600);
-			else if(value.equals(INI_VALUE_1024X768))
+			else if(value.equals(VALUE_1024X768))
 				properties.setScreenSize(ProfileProperties.SCREENSIZE_1024X768);
-			else if(value.equals(INI_VALUE_1280X678))
+			else if(value.equals(VALUE_1280X678))
 				properties.setScreenSize(ProfileProperties.SCREENSIZE_1280X678);
-			else if(value.equals(INI_VALUE_MAXIMIZED))
+			else if(value.equals(VALUE_MAXIMIZED))
 				properties.setScreenSize(ProfileProperties.MAXIMIZED);
 			else
 				properties.setScreenSize(ProfileProperties.FULLSCREEN);
 		}
 		
-		value = ini.get(INI_SECTION_SESSION, INI_FIELD_LANG);
+		value = ini.get(INI_SECTION_SESSION, FIELD_LANG);
 		if (value != null)
 			properties.setLang(value);
 		
-		value = ini.get(INI_SECTION_SESSION, INI_FIELD_KEYMAP);
+		value = ini.get(INI_SECTION_SESSION, FIELD_KEYMAP);
 		if (value != null)
 			properties.setKeymap(value);
 

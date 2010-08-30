@@ -56,7 +56,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	private SystemAbstract system = null;
 	private Spool spool = null;
 	private List<Application> appsList = null;
+	private List<Application> appsListToEnable = null;
 	private boolean autoPublish = false;
+	private boolean hiddenAtStart = false;
 	
 	public OvdClientPortal(SessionManagerCommunication smComm) {
 		super(smComm);
@@ -64,10 +66,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		this.init();
 	}
 
-	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, Callback obj) {
+	public OvdClientPortal(SessionManagerCommunication smComm, String login_, boolean autoPublish, boolean hiddenAtStart_, Callback obj) {
 		super(smComm, obj);
 		this.username = login_;
 		this.autoPublish = autoPublish;
+		this.hiddenAtStart = hiddenAtStart_;
 		
 		this.init();
 	}
@@ -98,7 +101,7 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		if (this.portal.getApplicationPanel().isScollerInited())
 			this.portal.getApplicationPanel().addScroller();
 		
-		this.portal.setVisible(true);
+		this.portal.setVisible(! this.hiddenAtStart);
 	}
 
 	@Override
@@ -153,9 +156,16 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 				for (Application app : rc.getAppsList()) {
 					this.logger.info("Installing application \""+app.getName()+"\"");
 					this.system.install(app);
-					this.portal.getApplicationPanel().toggleAppButton(app, true);
 					if (this.autoPublish)
 						this.publish(app);
+
+					if (! this.portal.isVisible()) {
+						if (this.appsListToEnable == null)
+							this.appsListToEnable = new ArrayList<Application>();
+						this.appsListToEnable.add(app);
+					}
+					else
+						this.portal.getApplicationPanel().toggleAppButton(app, true);
 				}
 			}
 			if (this.obj != null ) {
@@ -264,6 +274,11 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 		if (ce.getComponent() == this.portal) {
 			Collections.sort(this.appsList);
 			this.portal.getApplicationPanel().initButtons(this.appsList);
+		}
+
+		if (this.appsListToEnable != null) {
+			for (Application app : this.appsListToEnable)
+				this.portal.getApplicationPanel().toggleAppButton(app, true);
 		}
 	}
 

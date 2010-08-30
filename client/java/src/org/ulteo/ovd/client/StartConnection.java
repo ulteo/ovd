@@ -30,6 +30,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import gnu.getopt.Getopt;
+import gnu.getopt.LongOpt;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
@@ -46,6 +47,7 @@ import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
 import org.ulteo.ovd.client.profile.ProfileProperties;
+import org.ulteo.ovd.client.profile.ProfileRegistry;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
@@ -84,24 +86,33 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
 		}
 		boolean use_https = true;
+		boolean regProfile = false;
 		String profile = null;
 		String password = null;
-		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:s:");
+
+		LongOpt[] alo = new LongOpt[1];
+		alo[0] = new LongOpt("reg", LongOpt.NO_ARGUMENT, null, 0);
+		Getopt opt = new Getopt(OvdClient.productName, args, "c:p:s:", alo);
 
 		int c;
 		while ((c = opt.getopt()) != -1) {
-			if(c == 'c') {
-				profile = new String(opt.getOptarg());
-			}
-			else if(c == 'p') {
-				password = new String(opt.getOptarg());
-			}
-			else if (c == 's') {
-				use_https = (opt.getOptarg().equalsIgnoreCase("off")) ? false : true;
-			}
-			else {
-				usage();
-				System.exit(0);
+			switch (c) {
+				case 0: //--reg
+					regProfile = true;
+					break;
+				case 'c':
+					profile = new String(opt.getOptarg());
+					break;
+				case 'p':
+					password = new String(opt.getOptarg());
+					break;
+				case 's':
+					use_https = (opt.getOptarg().equalsIgnoreCase("off")) ? false : true;
+					break;
+				default:
+					usage();
+					System.exit(0);
+					break;
 			}
 		}
 		
@@ -112,8 +123,13 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			System.err.println("Unable to iniatialize logger instance");
 		
 		StartConnection s = null;
-		
-		if (profile != null) {
+
+		if (regProfile) {
+			s = new StartConnection(regProfile);
+			s.startThread();
+			s.waitThread();
+		}
+		else if (profile != null) {
 			s = new StartConnection(profile, password);
 			s.startThread();
 			s.waitThread();
@@ -150,6 +166,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private DisconnectionFrame discFrame = null;
 	private String profile = null;
 	private boolean command = false;
+	private boolean regProfile = false;
 	private String password = null;
 	private int mode = 0;
 	private int resolution = 0;
@@ -173,6 +190,14 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.loadProfile(null);
 		this.authFrame.showWindow();
 		this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+	}
+
+	//Auto-start constructor
+	public StartConnection(boolean regProfile_) {
+		this.init();
+		this.command = true;
+		this.regProfile = regProfile_;
+		this.loadingFrame.setLocationRelativeTo(null);
 	}
 
 	public StartConnection(String profile, String password) {
@@ -235,7 +260,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.continueMainThread = false;
 		}
 		else {
-			if(! command)
+			if(! command || this.regProfile)
 				this.authFrame.showWindow();
 		}
 		this.thread = null;
@@ -323,11 +348,51 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		}
 		return true;
 	}
-	
+
 	public boolean getFormValuesFromFile() {
-		ProfileProperties properties = getProfile(profile);
+		ProfileProperties properties = getProfileFromIni(profile);
 		if (properties == null) {
 			System.out.println("The configuration file \""+profile+"\" doesn't exist.");
+			return false;
+		}
+
+		this.mode =  Properties.MODE_ANY;
+		if (properties.getSessionMode() == ProfileProperties.MODE_APPLICATIONS)
+			this.mode = Properties.MODE_REMOTEAPPS;
+		else if (properties.getSessionMode() == ProfileProperties.MODE_DESKTOP)
+			this.mode = Properties.MODE_DESKTOP;
+
+		this.username = properties.getLogin();
+		this.host = properties.getHost();
+		this.localCredential = properties.getUseLocalCredentials();
+		this.autoPublicated = properties.getAutoPublish();
+
+		if (this.host.equals("")) {
+			System.err.println("You must specifiy the host field !");
+			this.disableLoadingMode();
+			return false;
+		}
+
+		if (properties.getUseLocalCredentials() == false) {
+			if (this.username.equals("")) {
+				System.err.println("You must specify a username !");
+				this.disableLoadingMode();
+				return false;
+			}
+
+			if (this.password == null) {
+				usage();
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean getFormValuesFromRegistry() {
+		ProfileProperties properties = ProfileRegistry.loadProfile();
+		if (properties == null) {
+			System.out.println("Cannot find configuration in registry.");
+			this.disableLoadingMode();
 			return false;
 		}
 		
@@ -341,22 +406,24 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.host = properties.getHost();
 		this.localCredential = properties.getUseLocalCredentials();
 		this.autoPublicated = properties.getAutoPublish();
+		this.language = properties.getLang();
+		this.keymap = properties.getKeymap();
 		
-		if (this.host.equals("")) {
-			System.err.println("You must specifiy the host field !");
+		if (this.host == null || this.host.length() == 0) {
+			System.err.println("Cannot find the host field in the registry");
 			this.disableLoadingMode();
 			return false;
 		}
 		
 		if (properties.getUseLocalCredentials() == false) {
-			if (this.username.equals("")) {
-				System.err.println("You must specify a username !");
+			if (this.username == null || this.username.length() == 0) {
+				System.err.println("Cannot find the username field in the registry");
 				this.disableLoadingMode();
 				return false;
 			}
 			
 			if (this.password == null) {
-				usage();
+				System.err.println("No password used");
 				return false;
 			}
 		}
@@ -382,8 +449,22 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.getBackupEntries();
 		}
 		else {
-			if (! this.getFormValuesFromFile())
-				return exit;
+			if (this.regProfile) {
+				if (! this.getFormValuesFromRegistry()) {
+					this.disableLoadingMode();
+					JOptionPane.showMessageDialog(null, I18n._("This configuration is not allowed, please contact your administrator or try manually"), I18n._("Bad configuration"), JOptionPane.WARNING_MESSAGE);
+					this.regProfile = false;
+					this.command = false;
+					this.authFrame = new AuthFrame(this);
+					this.loadProfile(null);
+					this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+					return exit;
+				}
+			}
+			else {
+				if (! this.getFormValuesFromFile())
+					return exit;
+			}
 		}
 
 		// Start OVD session
@@ -434,7 +515,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.client = new OvdClientDesktop(dialog, resolution, this);
 				break;
 			case Properties.MODE_REMOTEAPPS:
-				this.client = new OvdClientPortal(dialog, response.getUsername(), this.autoPublicated, this);
+				this.client = new OvdClientPortal(dialog, response.getUsername(), this.autoPublicated, this.regProfile, this);
 				break;
 			default:
 				JOptionPane.showMessageDialog(null, I18n._("Internal error: unsupported session mode"), I18n._("Warning !"), JOptionPane.WARNING_MESSAGE);
@@ -450,7 +531,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.client = null;
 
 		this.checkDisconnectionSource();
-		
+
 		return exit;
 	}
 	
@@ -550,7 +631,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		ini.saveProfile(new ProfileProperties(login, host, sessionMode, autoPublish, useLocalCredentials, screensize, lang, keymap));
 	}
 
-	public static ProfileProperties getProfile(String path) {
+	public static ProfileProperties getProfileFromIni(String path) {
 		ProfileIni ini = new ProfileIni();
 		String profile = "";
 
@@ -583,7 +664,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 	
 	private void loadProfile(String path) {
-		ProfileProperties properties = getProfile(path);
+		ProfileProperties properties = getProfileFromIni(path);
 
 		if (properties == null)
 			return;
