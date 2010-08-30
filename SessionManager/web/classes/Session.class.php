@@ -209,6 +209,9 @@ class Session {
 			case Session::SESSION_STATUS_ERROR:
 				return 'error';
 				break;
+			case Session::SESSION_STATUS_CREATED:
+				return 'warn';
+				break;
 			case Session::SESSION_STATUS_INIT:
 				return 'warn';
 				break;
