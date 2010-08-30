@@ -36,7 +36,7 @@ if [ ! -e $A2SITESDIR/sessionmanager-vhost-ssl ]; then
 fi
 
 # SSL self-signed key generation
-if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] || [ ! -f $CONFDIR/ovd.crt ]
+if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] || [ ! -f $CONFDIR/ovd.crt ]
 then
     echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
     openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
