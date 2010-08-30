@@ -92,8 +92,8 @@ class Share:
 		try:
 			f = file(path, "w")
 		except IOError, err:
-			Logger.error("FS: unable to wrtite .htaccess")
-			Logger.debug("FS: unable to wrtite .htaccess '%s' return: %s"%(path, str(err)))
+			Logger.error("FS: unable to write .htaccess")
+			Logger.debug("FS: unable to write .htaccess '%s' return: %s"%(path, str(err)))
 			return False
 		for user in self.users:
 			f.write("Require user %s\n"%(user))
@@ -180,7 +180,7 @@ class Share:
 		cmd = "userdel -f %s"%(user)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
-			Logger.error("FS: unable to create user")
+			Logger.error("FS: unable to del user")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			ret = False
 		

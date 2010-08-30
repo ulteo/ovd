@@ -120,7 +120,7 @@ class Role(AbstractRole):
 			cmd = "userdel -f %s"%(user)
 			s,o = commands.getstatusoutput(cmd)
 			if s != 0:
-				Logger.error("FS: unable to create user")
+				Logger.error("FS: unable to del user")
 				Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 				ret =  False
 		
