@@ -21,8 +21,8 @@
 
 package org.ulteo.ovd.client.remoteApps;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 
 import net.propero.rdp.RdesktopException;
 
@@ -87,7 +87,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	@Override
 	protected boolean createRDPConnections() {
 		Properties properties = this.smComm.getResponseProperties();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Rectangle screenSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		
 		byte flags = 0x00;
 		flags |= RdpConnectionOvd.MODE_APPLICATION;
