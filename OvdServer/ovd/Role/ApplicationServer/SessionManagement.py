@@ -100,6 +100,8 @@ class SessionManagement(Thread):
 		if sessid is not None:
 			session.user.infos["tsid"] = sessid
 		
+		self.logoff_user(session.user)
+		
 		session.uninstall_client()
 		
 		self.destroy_user(session.user)
@@ -107,10 +109,33 @@ class SessionManagement(Thread):
 		if self.aps_instance.sessions.has_key(session.id):
 			del(self.aps_instance.sessions[session.id])
 		self.aps_instance.session_switch_status(session, RolePlatform.Session.SESSION_STATUS_DESTROYED)
+
+	def logoff_user(self, user):
+		Logger.info("SessionManagement::logoff_user %s"%(user.name))
+
+		if user.infos.has_key("tsid"):
+			sessid = user.infos["tsid"]
+
+			try:
+				status = RolePlatform.TS.getState(sessid)
+			except Exception,err:
+				Logger.error("RDP server dialog failed ... ")
+				Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+				return
+
+			if status in [RolePlatform.TS.STATUS_LOGGED, RolePlatform.TS.STATUS_DISCONNECTED]:
+				Logger.info("must log off ts session %s user %s"%(sessid, user.name))
+
+				try:
+					RolePlatform.TS.logoff(sessid)
+				except Exception,err:
+					Logger.error("RDP server dialog failed ... ")
+					Logger.debug("SessionManagement::logoff_user: %s"%(str(err)))
+					return
 	
 	
 	def destroy_user(self, user):
-		Logger.info("SessionManagement::logoff_user %s"%(user.name))
+		Logger.info("SessionManagement::destroy_user %s"%(user.name))
 		
 		if user.infos.has_key("tsid"):
 			sessid = user.infos["tsid"]
