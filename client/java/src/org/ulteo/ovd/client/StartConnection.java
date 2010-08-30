@@ -522,7 +522,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void sessionConnected() {
-		if (this.loadingFrame.isVisible() || this.authFrame.getMainFrame().isVisible()) {
+		if (this.loadingFrame.isVisible() || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
 			this.disableLoadingMode();
 			if (! command)
 				this.authFrame.hideWindow();
