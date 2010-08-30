@@ -295,7 +295,7 @@ public class AuthFrame implements ActionListener, Runnable {
 
 		};
 		for (Component c : this.mainFrame.getContentPane().getComponents()) {
-			if (c.getClass() != JLabel.class) {
+			if (c.getClass() != JLabel.class && c != this.startButton) {
 				c.addKeyListener(keyListener);
 			}
 		}
