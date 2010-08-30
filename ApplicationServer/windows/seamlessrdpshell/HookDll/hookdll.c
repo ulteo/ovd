@@ -202,10 +202,21 @@ update_position(HWND hwnd)
 
 	vchannel_block();
 
-	if (!GetWindowRect(hwnd, &rect))
+	if (IsZoomed(hwnd))
 	{
-		debug("GetWindowRect failed!\n");
-		goto end;
+		if (!GetClientRect(hwnd, &rect))
+		{
+			debug("GetClientRect failed!\n");
+			goto end;
+		}
+	}
+	else
+	{
+		if (!GetWindowRect(hwnd, &rect))
+		{
+			debug("GetWindowRect failed!\n");
+			goto end;
+		}
 	}
 
 	if ((hwnd == blocked_hwnd) && (rect.left == blocked.left) && (rect.top == blocked.top)
