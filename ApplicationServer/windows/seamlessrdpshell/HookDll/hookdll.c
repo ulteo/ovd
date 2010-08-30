@@ -549,11 +549,8 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 				if (wp->flags & SWP_SHOWWINDOW)
 				{
-					LONG exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
-					if (exstyle & WS_EX_TOPMOST){
-						addHWDNToHistory(hwnd);
-						create_window(hwnd);
-					}
+					addHWDNToHistory(hwnd);
+					create_window(hwnd);
 				}
 
 				if (wp->flags & SWP_HIDEWINDOW)
