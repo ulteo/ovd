@@ -177,7 +177,7 @@ class Share:
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			ret = False
 		
-		cmd = "userdel %s"%(user)
+		cmd = "userdel -f %s"%(user)
 		s,o = commands.getstatusoutput(cmd)
 		if s != 0:
 			Logger.error("FS: unable to create user")
