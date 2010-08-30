@@ -115,14 +115,18 @@ class Dialog:
 
     def doStartSession(self, args = {}):
         url = self.base_url+"/start.php"
-        values = {"session_mode":"desktop", 'login'  : self.conf['login'], 'password' : self.conf['password']}
-        for (k,v) in args.items():
-            if not values.has_key(k):
-                values[k] = v
-            else:
-                Logger.warn("Cannot overwrite option '%s' to '%s'"%(k, v))
- 
-        request = urllib2.Request(url, urllib.urlencode(values))
+        
+        doc = Document()
+        sessionNode = doc.createElement('session')
+        sessionNode.setAttribute("mode", "desktop")
+        userNode = doc.createElement("user")
+        userNode.setAttribute("login", self.conf["login"])
+        userNode.setAttribute("password", self.conf["password"])
+        sessionNode.appendChild(userNode)
+        doc.appendChild(sessionNode)
+        
+        print "type ",type(doc.toxml()), doc.toxml()
+        request = urllib2.Request(url, doc.toxml())
               
         try:
             url = self.urlOpener.open(request)
