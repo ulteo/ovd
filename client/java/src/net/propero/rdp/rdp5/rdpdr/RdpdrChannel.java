@@ -85,6 +85,7 @@ public class RdpdrChannel extends VChannel {
 	public RdpdrChannel(Options opt, Common common) {
 		super(opt, common);
 		g_rdpdr_device = new RdpdrDevice[RDPDR_MAX_DEVICES];
+		g_num_devices = 0;
 	}
 	
 	public int flags() {

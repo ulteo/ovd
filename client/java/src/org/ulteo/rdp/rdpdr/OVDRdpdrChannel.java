@@ -294,6 +294,8 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 		for (int i=0; i< RDPDR_MAX_DEVICES ; i++) {
 			if (g_rdpdr_device[i] == null)
 				return i;
+			if (g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_PRINTER) 
+				continue;
 			if (g_rdpdr_device[i].slotIsFree)
 				return i;
 		}
@@ -312,6 +314,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
  			return false;
  		}
 		OVDRdpdrChannel.g_rdpdr_device[index] = v;
+		g_num_devices++;
 		return true;
  	}
 
