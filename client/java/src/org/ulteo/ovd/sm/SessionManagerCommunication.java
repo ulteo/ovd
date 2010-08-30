@@ -459,7 +459,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					c.reportNotFoundHTTPResponse(this.getMoreInfos());
 			}
 			else {
-				System.err.println("Invalid response:\n" + this.getMoreInfos());
+				for (Callback c : this.callbacks)
+					c.reportError(r, res);
 			}
 		}
 		catch (Exception e) {
