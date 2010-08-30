@@ -260,6 +260,15 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.continueMainThread = false;
 		}
 		else {
+			if (this.regProfile) {
+				this.disableLoadingMode();
+				JOptionPane.showMessageDialog(null, I18n._("This configuration is not allowed, please contact your administrator or try manually"), I18n._("Bad configuration"), JOptionPane.WARNING_MESSAGE);
+				this.regProfile = false;
+				this.command = false;
+				this.authFrame = new AuthFrame(this);
+				this.loadProfile(null);
+				this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+			}
 			if(! command || this.regProfile)
 				this.authFrame.showWindow();
 		}
@@ -450,16 +459,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		}
 		else {
 			if (this.regProfile) {
-				if (! this.getFormValuesFromRegistry()) {
-					this.disableLoadingMode();
-					JOptionPane.showMessageDialog(null, I18n._("This configuration is not allowed, please contact your administrator or try manually"), I18n._("Bad configuration"), JOptionPane.WARNING_MESSAGE);
-					this.regProfile = false;
-					this.command = false;
-					this.authFrame = new AuthFrame(this);
-					this.loadProfile(null);
-					this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+				if (! this.getFormValuesFromRegistry())
 					return exit;
-				}
 			}
 			else {
 				if (! this.getFormValuesFromFile())
