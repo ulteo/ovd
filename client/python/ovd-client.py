@@ -125,7 +125,6 @@ class Dialog:
         sessionNode.appendChild(userNode)
         doc.appendChild(sessionNode)
         
-        print "type ",type(doc.toxml()), doc.toxml()
         request = urllib2.Request(url, doc.toxml())
               
         try:
