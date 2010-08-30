@@ -175,6 +175,9 @@ class Session {
 			case Session::SESSION_STATUS_ERROR:
 				return _('Error');
 				break;
+			case Session::SESSION_STATUS_CREATED:
+				return _('Created');
+				break;
 			case Session::SESSION_STATUS_INIT:
 				return _('Initializing');
 				break;
