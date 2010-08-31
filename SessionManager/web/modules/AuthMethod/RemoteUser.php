@@ -39,7 +39,7 @@ class AuthMethod_RemoteUser extends AuthMethod {
 		if (! isset($this->login))
 			return false;
 
-		return ($this->login == $user_->getAttribute('login'));
+		return (strtolower($this->login) == strtolower($user_->getAttribute('login')));
 	}
 
 
