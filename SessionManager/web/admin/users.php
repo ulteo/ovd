@@ -96,8 +96,8 @@ function show_default($userDB) {
 
       echo '<tr class="'.$content.'">';
       if ($userdb_rw and $can_manage_users and $total_us > 1)
-        echo '<td><input class="input_checkbox" type="checkbox" name="checked_users[]" value="'.$u->getAttribute('login').'" /></td>';
-      echo '<td><a href="users.php?action=manage&id='.$u->getAttribute('login').'">';
+        echo '<td><input class="input_checkbox" type="checkbox" name="checked_users[]" value="'.htmlentities($u->getAttribute('login')).'" /></td>';
+      echo '<td><a href="users.php?action=manage&id='.htmlentities($u->getAttribute('login')).'">';
       echo $u->getAttribute('login');
       echo '</a></td>';
       echo '<td>'.$u->getAttribute('displayname').'</td>';
@@ -106,7 +106,7 @@ function show_default($userDB) {
       echo '<td><form action="users.php">';
       echo '<input type="submit" value="'._('Manage').'"/>';
       echo '<input type="hidden" name="action" value="manage" />';
-      echo '<input type="hidden" name="id" value="'.$u->getAttribute('login').'" />';
+      echo '<input type="hidden" name="id" value="'.htmlentities($u->getAttribute('login')).'" />';
       echo '</form></td>';
 
       if ($userdb_rw and $can_manage_users) {
@@ -114,7 +114,7 @@ function show_default($userDB) {
 	echo '<input type="submit" value="'._('Delete').'"/>';
 	echo '<input type="hidden" name="name" value="User" />';
 	echo '<input type="hidden" name="action" value="del" />';
-	echo '<input type="hidden" name="checked_users[]" value="'.$u->getAttribute('login').'" />';
+	echo '<input type="hidden" name="checked_users[]" value="'.htmlentities($u->getAttribute('login')).'" />';
 	echo '</form></td>';
       }
       echo '</tr>';
@@ -281,7 +281,7 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<input type="submit" value="'._('Delete this user').'"/>';
     echo '<input type="hidden" name="name" value="User" />';
     echo '<input type="hidden" name="action" value="del" />';
-    echo '<input type="hidden" name="checked_users[]" value="'.$login.'" />';
+    echo '<input type="hidden" name="checked_users[]" value="'.htmlentities($login).'" />';
     echo '</form>';
     echo '</div>';
     echo '<br/><br/>';
@@ -290,14 +290,14 @@ function show_manage($login, $userDB, $userGroupDB) {
     echo '<form action="actions.php" method="post">';
     echo '<input type="hidden" name="name" value="User" />';
     echo '<input type="hidden" name="action" value="modify" />';
-    echo '<input type="hidden" name="id" value="'.$login.'" />';
+    echo '<input type="hidden" name="id" value="'.htmlentities($login).'" />';
     echo '<table class="main_sub" border="0" cellspacing="1" cellpadding="5">';
 
     $count = 0;
     $content = 'content'.(($count++%2==0)?1:2);
     echo '<tr class="'.$content.'">';
     echo '<th>'._('Display name').'</th>';
-    echo '<td><input type="text" name="displayname" value="'.$u->getAttribute('displayname').'" /></td>';
+    echo '<td><input type="text" name="displayname" value="'.htmlentities($u->getAttribute('displayname')).'" /></td>';
     echo '</tr>';
 
     if ($u->hasAttribute('password')) {
@@ -351,7 +351,7 @@ function show_manage($login, $userDB, $userGroupDB) {
         echo '<input type="hidden" name="name" value="User_UserGroup" />';
         echo '<input type="hidden" name="action" value="del" />';
         echo '<input type="hidden" name="group" value="'.$group->getUniqueID().'" />';
-        echo '<input type="hidden" name="element" value="'.$login.'" />';
+        echo '<input type="hidden" name="element" value="'.htmlentities($login).'" />';
         echo '<input type="submit" value="'._('Delete from this group').'" />';
         echo '</form></td>';
       }
@@ -362,7 +362,7 @@ function show_manage($login, $userDB, $userGroupDB) {
       echo '<tr><form action="actions.php" method="post"><td>';
       echo '<input type="hidden" name="action" value="add" />';
       echo '<input type="hidden" name="name" value="User_UserGroup" />';
-      echo '<input type="hidden" name="element" value="'.$login.'" />';
+      echo '<input type="hidden" name="element" value="'.htmlentities($login).'" />';
       echo '<select name="group">';
       foreach($groups_available as $group)
         echo '<option value="'.$group->getUniqueID().'" >'.$group->name.'</option>';
