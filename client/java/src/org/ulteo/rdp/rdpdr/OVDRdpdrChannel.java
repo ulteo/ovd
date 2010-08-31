@@ -89,7 +89,7 @@ public class OVDRdpdrChannel extends RdpdrChannel {
 						/* server capability */
 						rdpdr_process_server_capability(data);
 						rdpdr_send_clientcapabilty();
-						rdpdr_send_available();
+						//rdpdr_send_available();
 						return;
 					}
 					if ((magic[2] == 'L') && (magic[3] == 'U')) {

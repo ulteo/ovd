@@ -294,6 +294,8 @@ public class RdpdrChannel extends VChannel {
 		s.setLittleEndian32(g_num_devices);
 
 		for (i = 0; i < g_num_devices; i++){
+			if (g_rdpdr_device[i].get_device_type() == DEVICE_TYPE_DISK)
+				continue;
 			s.setLittleEndian32(g_rdpdr_device[i].device_type);
 			System.out.println("device_type:"+g_rdpdr_device[i].device_type);
 			s.setLittleEndian32(i); /* RDP Device ID */
