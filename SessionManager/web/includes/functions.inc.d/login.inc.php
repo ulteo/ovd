@@ -34,7 +34,7 @@ function do_login() {
 
 	$auth_methods = $prefs->get('AuthMethod', 'enable');
 	if (! is_array($auth_methods)) {
-		Logger::error('main', 'No valid AuthMethod are enabled', __FILE__, __LINE__);
+		Logger::error('main', 'No valid AuthMethod enabled', __FILE__, __LINE__);
 		return false;
 	}
 
