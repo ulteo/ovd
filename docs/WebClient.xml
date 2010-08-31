@@ -42,6 +42,15 @@
     </screenshot>
 
     <para>
+      If the test fails, you will see this window, it means that your web browser does not have a working Java support, or no Java support at all.
+    </para>
+
+    <screenshot>
+	  <screeninfo>Web Client - Test failed</screeninfo>
+	  <graphic fileref="img/wi_test_failed.png"></graphic>
+    </screenshot>
+
+    <para>
       When the tests are done and successful, you have access to the login window that you will use to launch your session.
     </para>
 
