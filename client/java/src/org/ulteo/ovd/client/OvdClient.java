@@ -70,7 +70,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
-	
+
+	protected boolean isCancelled = false;
 	private boolean connectionIsActive = true;
 	private boolean exitAfterLogout = false;
 
@@ -196,15 +197,16 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.runInit();
 
 		this.connections = new ArrayList<RdpConnectionOvd>();
-		this.createRDPConnections();
-		for (RdpConnectionOvd rc : this.connections) {
-			this.customizeConnection(rc);
-			rc.addRdpListener(this);
-		}
+		if (this.createRDPConnections()) {
+			for (RdpConnectionOvd rc : this.connections) {
+				this.customizeConnection(rc);
+				rc.addRdpListener(this);
+			}
 
-		this.sessionStatusMonitoringThread = new Thread(this);
-		this.continueSessionStatusMonitoringThread = true;
-		this.sessionStatusMonitoringThread.start();
+			this.sessionStatusMonitoringThread = new Thread(this);
+			this.continueSessionStatusMonitoringThread = true;
+			this.sessionStatusMonitoringThread.start();
+		}
 		
 		while (this.connectionIsActive) {
 			try {
@@ -340,6 +342,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public void seamlessEnabled(RdpConnection co) {}
 
 	public void disconnectAll() {
+		this.isCancelled = true;
 		this.obj.sessionDisconnecting();
 	}
 

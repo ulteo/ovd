@@ -103,6 +103,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 		int serverIndex = 0;
 		int status = 0;
 		for (ServerAccess server : this.smComm.getServers()) {
+			if (this.isCancelled)
+				return false;
+
 			RdpConnectionOvd rc = null;
 			
 			try {
@@ -132,6 +135,9 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			int ApplicationIncrement = (int)serverIncrement/numberOfApplication;
 			int ApplicationIndex = 0;
 			for (org.ulteo.ovd.sm.Application appItem : server.getApplications()) {
+				if (this.isCancelled)
+					return false;
+				
 				try {
 					int subStatus = (int)(status + ApplicationIndex * ApplicationIncrement); 
 					this.obj.updateProgress(LoadingStatus.STATUS_SM_GET_APPLICATION, subStatus);
