@@ -9,6 +9,7 @@ SRC=AccountsIntegration.xml \
 	Installation_ApS_Lenny.xml \
 	Installation_ApS_Lucid.xml \
 	Installation_ApS_Windows.xml \
+	NativeClient.xml \
 	Protocol.xml \
 	StartASession.xml \
 	Support_Debian_Lenny.xml \

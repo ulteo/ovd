@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
+	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <title>Ulteo Open Virtual Desktop</title>
+    <subtitle>Native Client</subtitle>
+    <graphic fileref="img/ovd.png" align="center"/>
+
+    <copyright>
+      <year>2010</year>
+      <holder>Ulteo SAS - <ulink url="http://www.ulteo.com" /></holder>
+    </copyright>
+  </articleinfo>
+  
+  
+  <section id="intro">
+    <title id="intro_title">Introduction</title>
+
+    <para>
+	  This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+    </para>
+
+  </section>
+
+  <section>
+    <title>Prerequisites: Microsoft Windows</title>
+
+    <para>
+      The OVD Native client can be installed on Microsoft Windows XP or newer.
+    </para>
+    <para>
+      Sun java must be installed.
+    </para>
+  </section>
+  
+  <section id="userinterface">
+    <title id="userinterface_title">User interface</title>
+
+
+
+    <para>
+      When you start the Native Client, you have access to the login window that you will use to launch your session.
+    </para>
+
+    <screenshot>
+	  <screeninfo>Native Client - Login window</screeninfo>
+	  <graphic fileref="img/native/authentication.png"></graphic>
+    </screenshot>
+
+    <para>
+      You just have to type your login and password, click the "Start!" button and voilà!
+    </para>
+     <screenshot>
+	  <screeninfo>Native Client - User session</screeninfo>
+	  <graphic fileref="img/native/started.png"></graphic>
+    </screenshot>
+  </section>
+   
+
+  <section>
+    <title>Advanced settings</title>
+
+    <para>
+      At the login window, you can set advanced parameters by clicking the "More options ..." button.
+    </para>
+
+    <screenshot>
+	  <screeninfo>Native Client - Advanced login window</screeninfo>
+	  <graphic fileref="img/native/more_options_auto.png"></graphic>
+    </screenshot>
+
+    <para>
+
+      As you can see, you now have more available options, each one is described below.
+    </para>
+
+    <simplesect id="advanced_settings">
+      <title>Advanced settings description</title>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            <emphasis>Use local credentials:</emphasis> When enabled, the Web Client will request the Session Manager with your current machine's credentials, using for example Kerberos or NTLM. When disabled, the Web Client will request the Session Manager with the login and password entered in the login window.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis>Mode:</emphasis> This option allows you to pick which session mode you want to use.
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <emphasis>Auto:</emphasis> It is the Session Manager who will choose between a desktop session or an Application session.
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  <emphasis>Application:</emphasis> Launch a window with a list of application available. Applications are launched seamlessly.
+                </para>
+              </listitem>
+              <listitem>
+                <para>
+                  <emphasis>Desktop:</emphasis> Launch a full desktop with applications integrated inside it.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis>Resolution:</emphasis> Choose which resolution will be used, it applies only on desktop sessions.
+          </para>
+        </listitem>
+         <listitem>
+          <para>
+            <emphasis>Auto-publish shorcuts:</emphasis> Choose if you want to have shorcuts on your actual desktop at the session start, it applies only on application sessions.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis>Language:</emphasis> This option allows you to pick which language your OVD session will use.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <emphasis>Keyboard layout:</emphasis> This option allows you to select which keyboard layout your local keyboard is using.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </simplesect>
+  </section>
+
+  <section>
+    <title>Start a session</title>
+
+    <para>
+      When you start a session, a loading splash appears.
+    </para>
+
+    <screenshot>
+	  <screeninfo>Native Client - Session loading</screeninfo>
+	  <graphic fileref="img/native/loading.png"></graphic>
+    </screenshot>
+
+    <para>
+      Below you will find screenshots for both Desktop and Application mode.
+    </para>
+
+    <simplesect>
+      <title>Desktop session</title>
+
+      <para>
+        When the session is ready, your Desktop is available and you can launch applications, explore your files...
+      </para>
+
+      <screenshot>
+	    <screeninfo>Native Client - Desktop session</screeninfo>
+
+	    <graphic fileref="img/native/desktop.png"></graphic>
+      </screenshot>
+    </simplesect>
+
+    <simplesect>
+      <title>Application session</title>
+
+      <para>
+        When the session is ready, your Application session is available and you can launch applications seamlessly.
+      </para>
+
+      <screenshot>
+	    <screeninfo>Native Client - Application session</screeninfo>
+	    <graphic fileref="img/native/started.png"></graphic>
+      </screenshot>
+      
+      <para>
+        You can launch applications by clicking on the arrow button. You can also choose to integrate the applications shorcuts to your desktop by clicking on <emphasis>Display icons</emphasis>.
+      </para>
+      
+    </simplesect>
+  </section>
+  
+</article>
