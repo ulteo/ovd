@@ -819,14 +819,21 @@ if ($_REQUEST['name'] == 'User') {
 	if ($_REQUEST['action'] == 'del') {
 		if (isset($_REQUEST['checked_users']) && is_array($_REQUEST['checked_users'])) {
 			foreach ($_REQUEST['checked_users'] as $user_login) {
-				$u = $userDB->import($user_login);
-				$res = $userDB->remove($u);
-				
-				if (! $res) {
-					die_error(sprintf(_("Unable to delete user '%s'"), $user_login), __FILE__, __LINE__);
+				$sessions = Abstract_Session::getByUser($user_login);
+				$has_sessions = count($sessions);
+				if ($has_sessions) {
+					popup_error(sprintf(_("Unable to delete user '%s' because he have an active session"), $user_login));
 				}
 				else {
-					popup_info(sprintf(_("User '%s' successfully deleted"), $user_login));
+					$u = $userDB->import($user_login);
+					$res = $userDB->remove($u);
+					
+					if (! $res) {
+						die_error(sprintf(_("Unable to delete user '%s'"), $user_login), __FILE__, __LINE__);
+					}
+					else {
+						popup_info(sprintf(_("User '%s' successfully deleted"), $user_login));
+					}
 				}
 			}
 		}
