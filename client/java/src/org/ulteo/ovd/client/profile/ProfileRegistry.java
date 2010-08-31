@@ -34,6 +34,9 @@ public class ProfileRegistry extends Profile {
 		RegistryKey confKey = Registry.openSubkey(Registry.HKEY_LOCAL_MACHINE, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
 
 		if (confKey == null)
+			confKey = Registry.openSubkey(Registry.HKEY_CURRENT_USER, "Software\\Ulteo\\OVD\\NativeClient", RegistryKey.ACCESS_READ);
+
+		if (confKey == null)
 			return properties;
 
 		properties = new ProfileProperties();
