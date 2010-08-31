@@ -202,5 +202,11 @@
       
     </simplesect>
   </section>
-  
+ <section id="advance_use">
+    <title id="advance_use_title">Advance use</title>
+
+    <para>When you use the Ulteo Open Virtual Desktop "Native Client" from a <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> operating system, you have access to more options.</para>
+    <para>One of these is the <emphasis>--reg</emphasis> command-line option which provides a way to automatically start the Ulteo OVD session without the authentication window, either using local credentials (NTLM, Kerberos...) or pre-configured login/password classic authentication.</para>
+    <para>This option can be used as a way to automatically starts an Ulteo OVD session and integrate remote applications into the local desktop in a transparent way, the user does not have to do a single thing and can access his OVD applications without even knowing it!</para>
+    </section>
 </article>
