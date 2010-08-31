@@ -17,7 +17,8 @@ SRC=AccountsIntegration.xml \
 	Support_Ubuntu_Hardy.xml \
 	Support_Ubuntu_Lucid.xml \
 	SystemUpgrade.xml \
-	Vpn.xml
+	Vpn.xml \
+	WebClient.xml
 
 DIRS=xsl2 \
      media \
