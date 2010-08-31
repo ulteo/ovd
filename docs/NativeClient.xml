@@ -24,14 +24,38 @@
   </section>
 
   <section>
-    <title>Prerequisites: Microsoft Windows</title>
+    <title>Prerequisites: <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark></title>
 
     <para>
-      The OVD Native client can be installed on Microsoft Windows XP or newer.
+      The OVD Native client can be installed on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> XP or newer.
     </para>
     <para>
       Sun java must be installed.
     </para>
+  </section>
+  
+  <section id="installation">
+     <title id="installation_title">Installation</title>
+     
+     <para>You have to install Oracle Java 1.6 before using the OVD Native Client. Go on <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's web site</ulink>, download and install the Java JRE.</para>
+     
+     <para>Download and execute the Ulteo OVD Native Client installer.</para>
+     <screenshot>
+       <screeninfo>Native Client - Installation step 01</screeninfo>
+       <graphic fileref="img/native/install01.png"></graphic>
+     </screenshot>
+
+     <para>Select where you want to copy the client's files</para>
+       <screenshot>
+       <screeninfo>Native Client - Installation step 03</screeninfo>
+       <graphic fileref="img/native/install03.png"></graphic>
+     </screenshot>
+
+     <para>The client installation is finished. You can now launch a session.</para>
+     <screenshot>
+       <screeninfo>Native Client - Installation step 04</screeninfo>
+       <graphic fileref="img/native/install04.png"></graphic>
+     </screenshot>
   </section>
   
   <section id="userinterface">
