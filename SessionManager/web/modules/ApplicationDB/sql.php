@@ -30,7 +30,6 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 
 	public function import($id_){
-		Logger::debug('main', "ApplicationDB_sql::import($id_)");
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE,'id',$id_);
 		if ($res !== false){
