@@ -37,7 +37,7 @@ function field_increase(id, number) {
 
 function field_check_integer(field) {
   var p = parseInt($(field).value);
-  if ((! isNaN(p)) && p>0 && p<1000)
+  if ((! isNaN(p)) && p>0)
     return true;
 
   $(field).value = $(field).defaultValue;
