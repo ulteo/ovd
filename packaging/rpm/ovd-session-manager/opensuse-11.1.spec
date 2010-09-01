@@ -13,6 +13,7 @@ Distribution: OpenSUSE 11.1
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: intltool
+Buildroot: %{buildroot}
 
 %description
 This source package provides the Session Manager web services for the Ulteo
@@ -130,17 +131,13 @@ rm -rf %{buildroot}
 %files -n ulteo-ovd-session-manager
 %defattr(-,root,root)
 /usr/*
-/etc/*
-%config /etc/ulteo/sessionmanager/apache2.conf
-%config /etc/ulteo/sessionmanager/apache2-admin.conf
+%config /etc/ulteo/sessionmanager/*.conf
 %config /etc/ulteo/sessionmanager/cron.php
 %config /etc/logrotate.d/sessionmanager
 %defattr(0660,wwwrun,root)
 %config /etc/ulteo/sessionmanager/config.inc.php
 %defattr(2770,wwwrun,root)
-/var/log/ulteo/*
-/var/spool/ulteo/*
-/var/cache/ulteo/*
+/var/*
 
 %changelog -n ulteo-ovd-session-manager
  * Wed Sep 01 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4362
