@@ -29,7 +29,7 @@ function field_increase(id, number) {
   var p = parseInt($(id).value);
   p+= number;
 
-  if (! (p>0 & p<1000))
+  if (! (p>0))
     return false;
 
   $(id).value = p;
