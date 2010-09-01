@@ -105,14 +105,28 @@ class UserDB_sql extends UserDB  {
 	}
 	
 	public function getUsersContains($contains_, $attributes_=array('login', 'displayname'), $limit_=0) {
+		$sql2 = SQL::getInstance();
+		
+		$contains = str_replace('*', '%', $contains_);
+		$contains = "%$contains%";
+		$sep = " OR ";
+		$search = '';
+		foreach ($attributes_ as $attribute) {
+			$search .= " ".$attribute." LIKE ".$sql2->Quote($contains);
+			$search .= $sep;
+		}
+		if (count($attributes_) > 0) {
+			$search = substr($search, 0, -1*strlen($sep)); // remove the last sep
+		}
+		
 		$users = array();
 		$sizelimit_exceeded = false;
 		$count = 0;
 		$limit = '';
 		if ($limit_ != 0)
 			$limit = 'LIMIT '.(int)($limit_+1); // SQL do not have a status sizelimit_exceeded
-		$sql2 = SQL::getInstance();
-		$res = $sql2->DoQuery('SELECT * FROM @1 '.$limit, $this->table);
+		
+		$res = $sql2->DoQuery('SELECT * FROM '.$this->table.' WHERE '.$search.' '.$limit);
 		if ($res === false) {
 			Logger::error('main', 'USERDB::MYSQL::getUsersContains failed (sql query failed)');
 			return NULL;
@@ -121,16 +135,11 @@ class UserDB_sql extends UserDB  {
 		foreach ($rows as $row){
 			$a_user = $this->generateUserFromRow($row);
 			if ($this->isOK($a_user)) {
-				foreach ($attributes_ as $an_attribute) {
-					if ($contains_ == '' or is_string(strstr($a_user->getAttribute($an_attribute), $contains_))) {
-						$users []= $a_user;
-						$count++;
-						if ($limit_ > 0 && $count >= $limit_) {
-							$sizelimit_exceeded = next($rows) !== false; // is it the last element ?
-							return array($users, $sizelimit_exceeded);
-						}
-						break;
-					}
+				$users []= $a_user;
+				$count++;
+				if ($limit_ > 0 && $count >= $limit_) {
+					$sizelimit_exceeded = next($rows) !== false; // is it the last element ?
+					return array($users, $sizelimit_exceeded);
 				}
 			}
 			else {
