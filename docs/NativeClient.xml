@@ -20,7 +20,6 @@
     <para>
 	  This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
     </para>
-
   </section>
 
   <section>
@@ -29,58 +28,78 @@
     <para>
       The OVD Native client can be installed on <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> XP or newer.
     </para>
+
     <para>
       Sun java must be installed.
     </para>
   </section>
   
   <section id="installation">
-     <title id="installation_title">Installation</title>
+    <title id="installation_title">Installation</title>
      
-     <para>You have to install Oracle Java 1.6 before using the OVD Native Client. Go on <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's web site</ulink>, download and install the Java JRE.</para>
+    <para>
+      You have to install Oracle Java 1.6 before using the OVD Native Client. Go on <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's web site</ulink>, download and install the Java JRE.
+    </para>
      
-     <para>Download and execute the Ulteo OVD Native Client installer.</para>
-     <screenshot>
-       <screeninfo>Native Client - Installation step 01</screeninfo>
-       <graphic fileref="img/native/install01.png"></graphic>
-     </screenshot>
+    <para>
+      Download and execute the Ulteo OVD Native Client installer.
+    </para>
 
-     <para>Select where you want to copy the client's files</para>
-       <screenshot>
-       <screeninfo>Native Client - Installation step 03</screeninfo>
-       <graphic fileref="img/native/install03.png"></graphic>
-     </screenshot>
+    <para>
+      <screenshot>
+        <screeninfo>Native Client - Installation step 01</screeninfo>
+        <graphic fileref="img/native/install01.png"></graphic>
+      </screenshot>
+    </para>
 
-     <para>The client installation is finished. You can now launch a session.</para>
-     <screenshot>
-       <screeninfo>Native Client - Installation step 04</screeninfo>
-       <graphic fileref="img/native/install04.png"></graphic>
-     </screenshot>
+    <para>
+      Select where you want to copy the client's files
+    </para>
+
+    <para>
+      <screenshot>
+        <screeninfo>Native Client - Installation step 03</screeninfo>
+        <graphic fileref="img/native/install03.png"></graphic>
+      </screenshot>
+    </para>
+
+    <para>
+      The client installation is finished. You can now launch a session.
+    </para>
+
+    <para>
+      <screenshot>
+        <screeninfo>Native Client - Installation step 04</screeninfo>
+        <graphic fileref="img/native/install04.png"></graphic>
+      </screenshot>
+    </para>
   </section>
   
   <section id="userinterface">
     <title id="userinterface_title">User interface</title>
 
-
-
     <para>
       When you start the Native Client, you have access to the login window that you will use to launch your session.
     </para>
 
-    <screenshot>
-	  <screeninfo>Native Client - Login window</screeninfo>
-	  <graphic fileref="img/native/authentication.png"></graphic>
-    </screenshot>
+    <para>
+      <screenshot>
+  	  <screeninfo>Native Client - Login window</screeninfo>
+	    <graphic fileref="img/native/authentication.png"></graphic>
+      </screenshot>
+    </para>
 
     <para>
       You just have to type your login and password, click the "Start!" button and voilà!
     </para>
-     <screenshot>
-	  <screeninfo>Native Client - User session</screeninfo>
-	  <graphic fileref="img/native/started.png"></graphic>
-    </screenshot>
+
+    <para>
+      <screenshot>
+        <screeninfo>Native Client - User session</screeninfo>
+        <graphic fileref="img/native/started.png"></graphic>
+	  </screenshot>
+    </para>
   </section>
-   
 
   <section>
     <title>Advanced settings</title>
@@ -89,13 +108,14 @@
       At the login window, you can set advanced parameters by clicking the "More options ..." button.
     </para>
 
-    <screenshot>
-	  <screeninfo>Native Client - Advanced login window</screeninfo>
-	  <graphic fileref="img/native/more_options_auto.png"></graphic>
-    </screenshot>
+    <para>
+      <screenshot>
+        <screeninfo>Native Client - Advanced login window</screeninfo>
+        <graphic fileref="img/native/more_options_auto.png"></graphic>
+      </screenshot>
+    </para>
 
     <para>
-
       As you can see, you now have more available options, each one is described below.
     </para>
 
@@ -161,10 +181,12 @@
       When you start a session, a loading splash appears.
     </para>
 
-    <screenshot>
-	  <screeninfo>Native Client - Session loading</screeninfo>
-	  <graphic fileref="img/native/loading.png"></graphic>
-    </screenshot>
+    <para>
+      <screenshot>
+        <screeninfo>Native Client - Session loading</screeninfo>
+        <graphic fileref="img/native/loading.png"></graphic>
+      </screenshot>
+    </para>
 
     <para>
       Below you will find screenshots for both Desktop and Application mode.
@@ -177,11 +199,12 @@
         When the session is ready, your Desktop is available and you can launch applications, explore your files...
       </para>
 
-      <screenshot>
-	    <screeninfo>Native Client - Desktop session</screeninfo>
-
-	    <graphic fileref="img/native/desktop.png"></graphic>
-      </screenshot>
+      <para>
+        <screenshot>
+          <screeninfo>Native Client - Desktop session</screeninfo>
+          <graphic fileref="img/native/desktop.png"></graphic>
+        </screenshot>
+      </para>
     </simplesect>
 
     <simplesect>
@@ -191,22 +214,28 @@
         When the session is ready, your Application session is available and you can launch applications seamlessly.
       </para>
 
-      <screenshot>
-	    <screeninfo>Native Client - Application session</screeninfo>
-	    <graphic fileref="img/native/started.png"></graphic>
-      </screenshot>
+      <para>
+        <screenshot>
+          <screeninfo>Native Client - Application session</screeninfo>
+          <graphic fileref="img/native/started.png"></graphic>
+        </screenshot>
+      </para>
       
       <para>
         You can launch applications by clicking on the arrow button. You can also choose to integrate the applications shorcuts to your desktop by clicking on <emphasis>Display icons</emphasis>.
       </para>
-      
     </simplesect>
   </section>
- <section id="advanced_options">
+
+  <section id="advanced_options">
     <title id="advanced_options_title">Advanced options</title>
 
-    <para>When you use the Ulteo Open Virtual Desktop "Native Client" from a <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> operating system, you have access to more options.</para>
-    <para>One of these is the <emphasis>--reg</emphasis> command-line option which provides a way to automatically start the Ulteo OVD session without the authentication window, either using local credentials (NTLM, Kerberos...) or pre-configured login/password classic authentication.</para>
-    <para>This option can be used as a way to automatically starts an Ulteo OVD session and integrate remote applications into the local desktop in a transparent way, the user does not have to do a single thing and can access his OVD applications without even knowing it!</para>
-    </section>
+    <para>
+      When you use the Ulteo Open Virtual Desktop "Native Client" from a <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> operating system, you have access to more options.
+
+      One of these is the <emphasis>--reg</emphasis> command-line option which provides a way to automatically start the Ulteo OVD session without the authentication window, either using local credentials (NTLM, Kerberos...) or pre-configured login/password classic authentication.
+
+      This option can be used as a way to automatically starts an Ulteo OVD session and integrate remote applications into the local desktop in a transparent way, the user does not have to do a single thing and can access his OVD applications without even knowing it!
+    </para>
+  </section>
 </article>
