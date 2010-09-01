@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008,2009 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2008
  * Author Laurent CLOUET <laurent@ulteo.com> 2009
@@ -257,5 +257,10 @@ class SQL {
 			
 			return true;
 		}
+	}
+	
+	public function Quote($string_) {
+		$this->CheckLink();
+		return $this->pdo->quote($string_);
 	}
 }
