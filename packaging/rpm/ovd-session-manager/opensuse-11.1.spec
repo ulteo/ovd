@@ -38,12 +38,12 @@ Open Virtual Desktop.
 make
 
 %install -n ulteo-ovd-session-manager
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
 # install the logrotate example
-mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
-install -m 0644 examples/ulteo-sm.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/sessionmanager
+mkdir -p %{buildroot}/etc/logrotate.d
+install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
 # hack to not provide /usr/bin/php (zypper)
-sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.php*)
+sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*)
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
@@ -125,7 +125,7 @@ else
 fi
 
 %clean -n ulteo-ovd-session-manager
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -n ulteo-ovd-session-manager
 %defattr(-,root,root)
