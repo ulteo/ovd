@@ -134,7 +134,11 @@ class Share:
 	def add_user(self, user, password):
 		cmd = "useradd -d /dev/null -s /bin/false -G %s %s"%(Config.group, user)
 		s,o = commands.getstatusoutput(cmd)
-		if s != 0:
+		if s == 2304:
+			Logger.warn("FS: unable to create user: already exists")
+			self.users.append(user)
+			return True
+		elif s != 0:
 			Logger.error("FS: unable to create user")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
 			return False
