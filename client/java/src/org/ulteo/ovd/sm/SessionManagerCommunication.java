@@ -2,6 +2,7 @@
  * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2010 
  *
@@ -312,20 +313,10 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		if (doc == null)
 			return null;
 		
-		Element session = doc.createElement("session");
-		doc.appendChild(session);
-		
-		session.setAttribute("id", "");
-		session.setAttribute("status", "");
-		
-		String data = Document2String(doc);
-		if (data == null)
-			return null;
-		
-		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, false);
+		Object obj = this.askWebservice(WEBSERVICE_SESSION_STATUS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, null, false);
 		if (! (obj instanceof Document) || obj == null)
 			return null;
-
+		
  		return this.parseSessionStatusResponse((Document) obj);
 	}
 
