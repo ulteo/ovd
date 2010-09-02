@@ -3,6 +3,7 @@
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
+# Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -146,6 +147,11 @@ class Share:
 		
 		cmd = 'echo "%s\\n%s" | smbpasswd -s -a %s'%(password, password, user)
 		s,o = commands.getstatusoutput(cmd)
+		if s == 256:
+			# "echo" is different between bash and dash
+			cmd = 'echo -e "%s\\n%s" | smbpasswd -s -a %s'%(password, password, user)
+			s,o = commands.getstatusoutput(cmd)
+		
 		if s != 0:
 			Logger.error("FS: unable to set samba password")
 			Logger.debug("FS: command '%s' return %d: %s"%(cmd, s, o.decode("UTF-8")))
