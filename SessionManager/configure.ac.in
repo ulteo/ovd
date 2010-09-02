@@ -89,21 +89,18 @@ AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
 
 #################################################
 ###                 libchart                  ###
-AC_ARG_WITH([libchartdir],
-    [AC_HELP_STRING([--with-libchartdir],
-        [use a local installation of the libchart PHP library])], ,
-    [with_libchartdir=no])
-if test x"$with_libchartdir" != xno; then
-    if test -f "$with_libchartdir/classes/libchart.php"; then
-        LIBCHARTDIR="$with_libchartdir"
-        AC_SUBST(LIBCHARTDIR)
-        echo "Using $LIBCHARTDIR for libchart library."
-    else
-        AC_MSG_WARN([$with_libchartdir/classes/libchart.php doesn't exist; charts on reports won't be available.])
-        LIBCHARTDIR=
-    fi
+AC_ARG_WITH([libchart],
+    [AC_HELP_STRING([--without-libchart],
+        [use a local installation of the libchart PHP library])],
+    [libchart=yes],
+    [libchart=no])
+if test "$libchart" = "no"; then
+    LIBCHARTDIR=/usr/share/php/libchart/classes/libchart.php
+    test -e $LIBCHARDIR && AC_MSG_ERROR([$LIBCHARTDIR not found ; deploy PHP libchart library.])
+else
+    DISTCHECK_CONFIGURE_FLAGS=$DISTCHECK_CONFIGURE_FLAGS" --without-libchart"
+    AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 fi
-AM_CONDITIONAL(LIBCHART, [test -n "$LIBCHARTDIR"])
 
 
 AC_CONFIG_FILES([
@@ -163,6 +160,5 @@ web/events/callbacks/SessionStatusChanged/Makefile
 web/events/callbacks/ServerStatusChanged/Makefile
 web/events/callbacks/SqlFailure/Makefile
 examples/Makefile
-extra/Makefile
 ])
 AC_OUTPUT

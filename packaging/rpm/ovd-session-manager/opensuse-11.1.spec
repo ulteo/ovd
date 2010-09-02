@@ -35,7 +35,7 @@ Open Virtual Desktop.
 %setup -q
 
 %build -n ulteo-ovd-session-manager
-./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --without-libchart
 make
 
 %install -n ulteo-ovd-session-manager

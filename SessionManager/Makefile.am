@@ -1,4 +1,4 @@
-SUBDIRS = web po config scripts extra examples
+SUBDIRS = web po config scripts examples
 
 clean-local:
 	rm -f $(noinst_DATA)
