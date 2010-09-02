@@ -19,6 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
+import Queue
 from threading import Thread
 
 from ovd.Logger import Logger
@@ -37,7 +38,10 @@ class SessionManagement(Thread):
 	def run(self):
 		while True:
 			#Logger.debug("%s wait job"%(str(self)))
-			(request, obj) = self.queue.get()
+			try:
+				(request, obj) = self.queue.get(True, 4)
+			except Queue.Empty, e:
+				continue
 			
 			if request == "create":
 				session = obj
