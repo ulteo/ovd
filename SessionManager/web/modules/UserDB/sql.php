@@ -367,8 +367,6 @@ class UserDB_sql extends UserDB  {
 		$user_table_structure = array(
 			'login' => 'varchar(100) NOT NULL',
 			'displayname' => 'varchar(100) NOT NULL',
-			'homedir' => 'varchar(200) NOT NULL',
-			'fileserver' => 'varchar(250) NOT NULL',
 			'password' => 'varchar(50) NOT NULL');
 		
 		$ret = $sql2->buildTable($table, $user_table_structure, array('login'));
