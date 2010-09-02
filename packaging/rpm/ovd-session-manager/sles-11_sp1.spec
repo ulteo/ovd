@@ -13,6 +13,7 @@ Distribution: SLES 11 SP1
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: intltool
+Buildroot: %{buildroot}
 
 %description
 This source package provides the Session Manager web services for the Ulteo
