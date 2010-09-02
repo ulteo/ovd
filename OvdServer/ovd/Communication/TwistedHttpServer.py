@@ -3,6 +3,7 @@
 # Copyright (C) 2008,2009 Ulteo SAS
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
+# Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -104,7 +105,7 @@ class HttpRequestHandler(resource.Resource):
 		req["args"] = {}
 		
 		try:
-			length = int(request.requestHeaders.getRawHeaders("content-length")[-1])
+			length = int(request.received_headers["content-length"])
 		except:
 			length = 0
 		if length > 0:
