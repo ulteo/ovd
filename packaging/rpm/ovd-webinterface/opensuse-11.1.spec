@@ -13,6 +13,7 @@ Distribution: OpenSUSE 11.1
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: intltool, ulteo-ovd-applets
+Buildroot: %{buildroot}
 
 %description
 This interface is a web client for Ulteo OVD.
@@ -22,6 +23,7 @@ This interface is a web client for Ulteo OVD.
 ###########################################
 
 Summary: Ulteo Open Virtual Desktop - web interface
+Group: Applications/System
 Requires: apache2-mod_php5, php5, php5-curl, ulteo-ovd-applets
 
 %description -n ulteo-ovd-webinterface

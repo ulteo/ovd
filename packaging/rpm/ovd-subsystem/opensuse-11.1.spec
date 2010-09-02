@@ -11,6 +11,7 @@ Packager: Samuel Bovée <samuel@ulteo.com>
 Distribution: OpenSUSE 11.1
 
 BuildArch: noarch
+Buildroot: %{buildroot}
 
 %description
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
@@ -20,6 +21,7 @@ This package provides the subsystem for the Ulteo Open Virtual Desktop.
 ###########################################
 
 Summary: Ulteo Open Virtual Desktop - Session Manager
+Group: Applications/System
 Requires: curl
 
 %description -n ulteo-ovd-subsystem

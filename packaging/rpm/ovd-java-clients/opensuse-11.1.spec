@@ -13,6 +13,7 @@ Distribution: OpenSUSE 11.1
 Source: %{name}-%{version}.tar.gz
 BuildArch: noarch
 Buildrequires: ulteo-ovd-cert, java-1_6_0-openjdk-devel, ant, ant-nodeps, mingw32-cross-gcc
+Buildroot: %{buildroot}
 
 %description
 This applet is used in the Open Virtual Desktop to display the user session in
@@ -23,6 +24,7 @@ a browser
 ###########################################
 
 Summary: Ulteo Open Virtual Desktop - desktop applet
+Group: Applications/System
 
 %description -n ulteo-ovd-applets
 This applet is used in the Open Virtual Desktop to display the user session in
