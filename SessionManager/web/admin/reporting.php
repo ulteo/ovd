@@ -32,7 +32,7 @@
 
 require_once(dirname(__FILE__).'/includes/core.inc.php');
 require_once(dirname(__FILE__).'/includes/page_template.php');
-include(SESSIONMANAGER_ROOT.'/extra/libchart/classes/libchart.php');
+include('libchart/classes/libchart.php');
 
 if (! checkAuthorization('viewStatus'))
 	redirect('index.php');
