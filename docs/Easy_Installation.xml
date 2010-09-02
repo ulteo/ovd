@@ -62,7 +62,7 @@
 	</para>
         <screen>
 	  <![CDATA[
-# echo "deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main" >> /etc/apt/sources.list
+# echo "deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main" >> /etc/apt/sources.list.d/01-ulteo-ovd.list
 # apt-get update]]>
 	</screen>
         <note>

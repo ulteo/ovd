@@ -38,7 +38,7 @@
         <listitem>
           <para>
 	    Edit
-	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd</emphasis>
+	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd.list</emphasis>
 	    file and put these lines:
           </para>
           <screen>
