@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  *
@@ -491,6 +492,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 		} catch (SessionManagerException ex) {
 			System.err.println(ex.getMessage());
+
+			String errormsg = I18n._("Unable to reach a Session Manager!");
+			if (ex.getMessage().equals("Host is unreachable"))
+				errormsg = I18n._("Host is unreachable!");
+			JOptionPane.showMessageDialog(null, errormsg, I18n._("Warning!"), JOptionPane.WARNING_MESSAGE);
+
 			this.disableLoadingMode();
 			return exit;
 		}
