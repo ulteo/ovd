@@ -23,6 +23,7 @@ Open Virtual Desktop.
 ###########################################
 
 Summary: Ulteo Open Virtual Desktop - Session Manager
+Group: Applications/System
 Requires: apache2, apache2-mod_php5, php5, php5-ldap, php5-curl, php5-dom, php5-mysql, php5-mbstring, php5-gettext, php5-pear, php5-ldap, php5-libchart, php5-imagick, curl, openssl
 
 %description -n ulteo-ovd-session-manager
@@ -37,12 +38,12 @@ Open Virtual Desktop.
 make
 
 %install -n ulteo-ovd-session-manager
-make DESTDIR=$RPM_BUILD_ROOT install
+make DESTDIR=%{buildroot} install
 # install the logrotate example
-mkdir -p $RPM_BUILD_ROOT/etc/logrotate.d
-install -m 0644 examples/ulteo-sm.logrotate $RPM_BUILD_ROOT/etc/logrotate.d/sessionmanager
+mkdir -p %{buildroot}/etc/logrotate.d
+install -m 0644 examples/ulteo-sm.logrotate %{buildroot}/etc/logrotate.d/sessionmanager
 # hack to not provide /usr/bin/php (zypper)
-sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find $RPM_BUILD_ROOT -name *.php*)
+sed -i -e 's,^#!/usr/bin/php$,#!/usr/bin/php5,' $(find %{buildroot} -name *.php*)
 
 %post -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
@@ -124,7 +125,7 @@ else
 fi
 
 %clean -n ulteo-ovd-session-manager
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files -n ulteo-ovd-session-manager
 %defattr(-,root,root)
@@ -138,5 +139,5 @@ rm -rf $RPM_BUILD_ROOT
 /var/*
 
 %changelog -n ulteo-ovd-session-manager
-* Thu Sep 02 2010 Samuel Bovee <samuel@ulteo.com> 3.0+svn04389-1
+* Thu Sep 02 2010 Samuel Bovée <samuel@ulteo.com> 3.0+svn04389-1
 - Initial release
