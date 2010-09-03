@@ -253,7 +253,7 @@ function show_error() {
 	page_header();
 	echo '<div>';
 	echo '<link rel="stylesheet" type="text/css" href="media/style/media-ha.css" />';
-	echo '<div class="ha_error_cib"><div class="ha_error_txt_block"><h2>'._('Error').'</h2><div class="ha_error_loader"><p><b>'._("Waiting for Heartbeat's CIB...").'</b><br />'._('Please check permissions on ulteo-ovd.conf or if "cibadmin -Q" works fine ! Apache could be started by an othor user than www-data.').'</p><div><img src="media/image/loader.gif" /></div></div></div></div>';
+	echo '<div class="ha_error_cib"><div class="ha_error_txt_block"><h2>'._('Error').'</h2><div class="ha_error_loader"><p><b>'._("Waiting for Heartbeat's CIB...").'</b><br />'._('Please check permissions on ulteo-ovd.conf or if "cibadmin -Q" works fine ! Apache could have been started by another user than www-data.').'</p><div><img src="media/image/loader.gif" /></div></div></div></div>';
 	echo '<script type="text/javascript" charset="utf-8">Event.observe(window, \'load\', function() { setTimeout(function() { location.reload(true); }, 5000); });</script>';
 	echo '</div>';
 	page_footer();
