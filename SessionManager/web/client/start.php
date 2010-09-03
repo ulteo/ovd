@@ -504,14 +504,13 @@ $default_args = array(
 	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
-	'locale'			=>	$locale
+	'locale'			=>	$locale,
+	'timeout'			=>	$timeout
 );
 
 $optional_args = array();
 if (isset($timezone))
 	$optional_args['timezone'] = $timezone;
-if (isset($timeout) && $timeout != -1)
-	$optional_args['timeout'] = (time()+$timeout);
 if (isset($start_app) && $start_app != '') {
 	$applicationDB = ApplicationDB::getInstance();
 	$app = $applicationDB->import($start_app);
@@ -810,6 +809,7 @@ $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
 $session_node->setAttribute('multimedia', $multimedia);
 $session_node->setAttribute('redirect_client_printers', $redirect_client_printers);
+$session_node->setAttribute('timeout', $timeout);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
