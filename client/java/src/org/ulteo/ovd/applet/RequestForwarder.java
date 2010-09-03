@@ -20,6 +20,8 @@
 
 package org.ulteo.ovd.applet;
 
+import org.ulteo.ovd.sm.SessionManagerCommunication;
+
 import java.applet.Applet;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -42,10 +44,6 @@ import javax.net.ssl.X509TrustManager;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import com.sun.org.apache.xerces.internal.dom.DOMImplementationImpl;
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 import netscape.javascript.JSObject;
 
@@ -114,10 +112,15 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 			
 			boolean success = false;
 			if (url != null && o.sm != null) {
-				DOMImplementation domImpl = DOMImplementationImpl.getDOMImplementation();
-				Document document = domImpl.createDocument(null, "session", null);
+				Document doc = SessionManagerCommunication.getNewDocument();
+				if (doc == null) {
+					System.err.println("Unable to create XML document");
+					continue;
+				}
 				
-				Element session = document.getDocumentElement();
+				Element session = doc.createElement("session");
+				doc.appendChild(session);
+				
 				if (o.mode != null)
 					session.setAttribute("mode", o.mode);
 				if (o.language != null)
@@ -125,7 +128,13 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 				if (o.timezone != null)
 					session.setAttribute("timezone", o.timezone);
 				
-				success = this.askWebservice(url, CONTENT_TYPE_XML, REQUEST_METHOD_POST, document, o.callback);
+				String data = SessionManagerCommunication.Document2String(doc);
+				if (data == null) {
+					System.err.println("Unable to transform xml document to string");
+					continue;
+				}
+				
+				success = this.askWebservice(url, CONTENT_TYPE_XML, REQUEST_METHOD_POST, data, o.callback);
 			}
 			
 			if (success == false)
@@ -144,7 +153,7 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 		this.spool.add(o);
 	}
 	
-	private boolean askWebservice(URL url, String content_type, String method, Object data, String callback) {
+	private boolean askWebservice(URL url, String content_type, String method, String data, String callback) {
 		HttpURLConnection connexion = null;
 		
 		int http_code = 0;
@@ -173,20 +182,8 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 			OutputStreamWriter out = new OutputStreamWriter(connexion.getOutputStream());
 			
 			
-			if (data instanceof String) {
-				out.write((String) data);
-			}
-			else if (data instanceof Document) {
-				Document request = (Document) data;
-
-				OutputFormat outFormat = new OutputFormat(request);
-				XMLSerializer serializer = new XMLSerializer(out, outFormat);
-				serializer.serialize(request);
-			}
-			else if (data != null) {
-				System.err.println("Cannot send "+ data.getClass().getName() +" data to session manager webservices");
-				return false;
-			}
+			if (data != null)
+				out.write(data);
 			
 			out.flush();
 			out.close();
