@@ -114,8 +114,8 @@ class SQL {
 
 		$query = $args[0];
 
-		$query = preg_replace('/@([0-9]+)/se', '((! isset($args[\\1]))?\'@\\1\':(is_null($args[\\1])?\'NULL\':\'`\'.$args[\\1].\'`\'))', $query);
-		$query = preg_replace('/%([0-9]+)/se', '((! isset($args[\\1]))?\'%\\1\':(is_null($args[\\1])?\'NULL\':\'"\'.substr($this->pdo->quote($args[\\1]), 1, -1).\'"\'))', $query);
+		$query = preg_replace('/@([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'@\\1\':(is_null($args[\\1])?\'NULL\':\'`\'.$args[\\1].\'`\'))', $query);
+		$query = preg_replace('/%([0-9]+)/se', '((! array_key_exists(\\1, $args))?\'%\\1\':(is_null($args[\\1])?\'NULL\':\'"\'.substr($this->pdo->quote($args[\\1]), 1, -1).\'"\'))', $query);
 
 		if (is_resource($this->statement)) {
 			$this->statement->closeCursor();
