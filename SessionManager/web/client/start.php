@@ -153,7 +153,7 @@ if (! is_object($user)) {
 
 $default_settings = $user->getSessionSettings();
 $session_mode = $default_settings['session_mode'];
-$desktop_timeout = $default_settings['timeout'];
+$timeout = $default_settings['timeout'];
 $start_app = '';
 $start_app_args = '';
 //$persistent = $default_settings['persistent'];
@@ -510,8 +510,8 @@ $default_args = array(
 $optional_args = array();
 if (isset($timezone))
 	$optional_args['timezone'] = $timezone;
-if (isset($desktop_timeout) && $desktop_timeout != -1)
-	$optional_args['timeout'] = (time()+$desktop_timeout);
+if (isset($timeout) && $timeout != -1)
+	$optional_args['timeout'] = (time()+$timeout);
 if (isset($start_app) && $start_app != '') {
 	$applicationDB = ApplicationDB::getInstance();
 	$app = $applicationDB->import($start_app);
