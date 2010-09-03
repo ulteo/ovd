@@ -204,6 +204,10 @@ function onStartSessionSuccess(xml_) {
 			daemon.explorer = explorer;
 
 			daemon.keymap = $('session_keymap').value;
+			try {
+				daemon.duration = parseInt(session_node.getAttribute('duration'));
+			} catch(e) {}
+			daemon.duration = parseInt(session_node.getAttribute('duration'));
 			daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 			daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
 
@@ -224,6 +228,7 @@ function onStartSessionSuccess(xml_) {
 					$('applicationsModeContainer').style.height = daemon.my_height+'px';
 			}
 
+			daemon.prepare();
 			daemon.loop();
 		}, 2500);
 

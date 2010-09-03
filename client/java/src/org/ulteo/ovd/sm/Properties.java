@@ -29,6 +29,7 @@ public class Properties {
 	private String lang = null;
 	private String username = null;
 	private String timeZone = null;
+	private int duration = 0;
 	
 	private boolean multimedia = false;
 	private boolean printers = false;
@@ -83,5 +84,13 @@ public class Properties {
 	
 	public void setPrinters(boolean printers) {
 		this.printers = printers;
+	}
+	
+	public int getDuration() {
+		return this.duration;
+	}
+
+	public void setDuration(int duration_) {
+		this.duration = duration_;
 	}
 }

@@ -155,6 +155,7 @@ $_SESSION['session_language'] = $_POST['language'];
 $_SESSION['keyboard_layout'] = $_POST['keymap'];
 $_SESSION['multimedia'] = $session_node->getAttribute('multimedia');
 $_SESSION['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
+$_SESSION['timeout'] = $session_node->getAttribute('timeout');
 
 $user_node = $session_node->getElementsByTagName('user');
 if (count($user_node) != 1) {

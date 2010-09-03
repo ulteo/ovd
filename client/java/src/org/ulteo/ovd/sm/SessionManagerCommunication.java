@@ -543,6 +543,9 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					response.setPrinters(false);
 			}
 
+			if (rootNode.hasAttribute("duration"))
+				response.setDuration(Integer.parseInt(rootNode.getAttribute("duration")));
+			
 			NodeList usernameNodeList = rootNode.getElementsByTagName("user");
 			if (usernameNodeList.getLength() == 1) {
 				response.setUsername(((Element) usernameNodeList.item(0)).getAttribute("displayName"));

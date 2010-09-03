@@ -38,6 +38,7 @@ var Daemon = Class.create({
 
 	mode: '',
 	keymap: 'en-us',
+	duration: -1,
 
 	multimedia: true,
 	redirect_client_printers: true,
@@ -185,6 +186,25 @@ var Daemon = Class.create({
 
 		if (this.progressbar_value < 100)
 			setTimeout(this.progressBar.bind(this), 500);
+	},
+
+	warn_expire: function() {
+		if (! this.is_stopped()) {
+			this.push_log('warning', '[daemon] warn_expire() - Session will expire in 3 minutes');
+
+			alert(i18n.get('session_expire_in_3_minutes'));
+		}
+	},
+
+	prepare: function() {
+		this.push_log('debug', '[daemon] prepare()');
+
+		if (this.duration != -1) {
+			if (this.duration > 180)
+				setTimeout(this.warn_expire.bind(this), (this.duration-180)*1000);
+			else
+				this.warn_expire();
+		}
 	},
 
 	loop: function() {

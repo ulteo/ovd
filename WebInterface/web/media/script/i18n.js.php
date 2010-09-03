@@ -30,6 +30,8 @@ echo "i18n.set('service_not_available', '"._('The service is not available, plea
 echo "i18n.set('unauthorized_session_mode', '"._('You are not authorized to launch a session in this mode')."');\n";
 echo "i18n.set('user_with_active_session', '"._('You already have an active session')."');\n";
 
+echo "i18n.set('session_expire_in_3_minutes', '"._('Your session is going to end in 3 minutes, please save all your data now!')."');\n";
+
 echo "i18n.set('session_close_unexpected', '"._('Server: session closed unexpectedly')."');\n";
 echo "i18n.set('session_end_ok', '"._('Your session has ended, you can now close the window')."');\n";
 echo "i18n.set('session_end_unexpected', '"._('Your session has ended unexpectedly')."');\n";

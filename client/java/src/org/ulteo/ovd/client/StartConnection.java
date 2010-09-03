@@ -37,6 +37,9 @@ import java.awt.event.ActionListener;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.JOptionPane;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
@@ -513,6 +516,20 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 			return exit;
 		}
+		
+		// Session timeout management
+		Timer timeout = new Timer();
+		if (response.getDuration() > 0) {
+			long duration = (response.getDuration() - 3*60) * 1000;
+			if (duration < 0)
+				duration = 100;
+			
+			timeout.schedule(new TimerTask() {
+				public void run() {
+					JOptionPane.showMessageDialog(null, I18n._("Your session is going to end in 3 minutes, please save all your data now!"), I18n._("Session is going to end"), JOptionPane.INFORMATION_MESSAGE);
+				}
+			}, duration);
+		}
 
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 		
@@ -538,6 +555,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			this.client.disconnectAll();
 		this.client = null;
 
+		timeout.cancel();
+		
 		this.checkDisconnectionSource();
 
 		return exit;
