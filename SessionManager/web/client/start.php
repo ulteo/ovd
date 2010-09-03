@@ -153,7 +153,6 @@ if (! is_object($user)) {
 
 $default_settings = $user->getSessionSettings();
 $session_mode = $default_settings['session_mode'];
-$desktop_size = 'auto';
 $desktop_timeout = $default_settings['timeout'];
 $start_app = '';
 $start_app_args = '';
