@@ -1,4 +1,4 @@
-%define php_apiver %((echo %{default_apiver}; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
+%define php_ver %((echo %{default_apiver}; php -i 2>/dev/null | sed -n 's/^PHP Version => //p') | tail -1)
 %{!?php_extdir: %{expand: %%global php_extdir %(php-config --extension-dir)}}
 
 %define pecl_name imagick
@@ -21,7 +21,7 @@ BuildRequires: php5-devel >= 5.1.3, php5-pear, ImageMagick-devel >= 6.2.4
 Requires:      php(zend-abi) = %{php_zend_api}
 Requires:      php(api) = %{php_core_api}
 %else
-Requires:      php-api = %{php_apiver}
+Requires:      php = %{php_ver}
 %endif
 Provides:      php-pecl(%{pecl_name}) = %{version}
 
