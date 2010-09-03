@@ -53,17 +53,19 @@ class AjaxOrder {
 	public String sm;
 	public String mode;
 	public String language;
+	public String timezone;
 	public String callback;
 	
-	public AjaxOrder(String sm, String mode, String language, String callback) {
+	public AjaxOrder(String sm, String mode, String language, String timezone, String callback) {
 		this.sm = sm;
 		this.mode = mode;
 		this.language = language;
+		this.timezone = timezone;
 		this.callback = callback;
 	}
 	
 	public String toString() {
-		return "AjaxOrder("+this.sm+", "+this.mode+", "+this.language+", "+this.callback+")";
+		return "AjaxOrder("+this.sm+", "+this.mode+", "+this.language+", "+this.timezone+", "+this.callback+")";
 	}
 }
 
@@ -120,6 +122,8 @@ public class RequestForwarder implements Runnable, HostnameVerifier, X509TrustMa
 					session.setAttribute("mode", o.mode);
 				if (o.language != null)
 					session.setAttribute("language", o.language);
+				if (o.timezone != null)
+					session.setAttribute("timezone", o.timezone);
 				
 				success = this.askWebservice(url, CONTENT_TYPE_XML, REQUEST_METHOD_POST, document, o.callback);
 			}

@@ -88,7 +88,7 @@ function startSession() {
 		);
 	} else {
 		use_popup = false;
-		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, 'onStartSessionJavaRequest');
+		$('CheckSignedJava').ajaxRequest($('sessionmanager_host').value, $('session_mode').value, $('session_language').value, $('timezone').value, 'onStartSessionJavaRequest');
 		return false;
 	}
 

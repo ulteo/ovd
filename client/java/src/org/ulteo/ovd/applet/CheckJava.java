@@ -82,7 +82,7 @@ public class CheckJava extends Applet {
 		}
 	}
 	
-	public void ajaxRequest(String sm, String mode, String language, String callback) {
-		this.ajax.pushOrder(new AjaxOrder(sm, mode, language, callback));
+	public void ajaxRequest(String sm, String mode, String language, String timezone, String callback) {
+		this.ajax.pushOrder(new AjaxOrder(sm, mode, language, timezone, callback));
 	}
 }
