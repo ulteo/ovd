@@ -155,7 +155,6 @@ $default_settings = $user->getSessionSettings();
 $session_mode = $default_settings['session_mode'];
 $desktop_size = 'auto';
 $desktop_timeout = $default_settings['timeout'];
-$timeout_message = $default_settings['session_timeout_msg'];
 $start_app = '';
 $start_app_args = '';
 //$persistent = $default_settings['persistent'];
@@ -523,10 +522,8 @@ $default_args = array(
 $optional_args = array();
 if (isset($timezone))
 	$optional_args['timezone'] = $timezone;
-if (isset($desktop_timeout) && $desktop_timeout != -1) {
+if (isset($desktop_timeout) && $desktop_timeout != -1)
 	$optional_args['timeout'] = (time()+$desktop_timeout);
-	$optional_args['timeout_message'] = $timeout_message;
-}
 if (isset($start_app) && $start_app != '') {
 	$applicationDB = ApplicationDB::getInstance();
 	$app = $applicationDB->import($start_app);
