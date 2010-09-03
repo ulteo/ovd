@@ -298,6 +298,7 @@ function synchronize(data_, cookie_) {
 				mode: $('session_mode').value,
 				language: $('session_language').value,
 				keymap: $('session_keymap').value,
+				timezone: $('timezone').value,
 				use_popup: ((use_popup)?1:0),
 				debug: ((debug)?1:0),
 				xml: data_
