@@ -376,12 +376,6 @@ class Preferences {
 		$c = new ConfigElement_select('show_list_users', _('Display users list'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), _('Display the list of users from the corporate directory in the login box. If the list is not displayed, the user must enter his login name.'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement_select('use_popup', _('Launch session in a popup'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), _('When set to yes, the session will start in a new browser window, and when set to no, the session will start in the current browser window'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','web_interface_settings');
-		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array());
-		$c->setContentAvailable(array('popup' => _('popup'), 'debug' => _('debug')));
-		$this->add($c,'general','web_interface_settings');
 
 		$this->getPrefsModules();
 		$this->getPrefsPlugins();

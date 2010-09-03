@@ -166,22 +166,11 @@ $redirect_client_printers = $default_settings['redirect_client_printers'];
 $auto_create_profile = $default_settings['auto_create_profile'];
 $start_without_profile = $default_settings['start_without_profile'];
 $start_without_all_sharedfolders = $default_settings['start_without_all_sharedfolders'];
-$debug = 0;
-
-$default_settings = $prefs->get('general', 'web_interface_settings');
-$popup = $default_settings['use_popup'];
 
 $advanced_settings = array();
 $buf = $prefs->get('general', 'session_settings_defaults');
 foreach ($buf['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
-
-$buf = $prefs->get('general', 'web_interface_settings');
-foreach ($buf['advanced_settings_startsession'] as $v)
-	$advanced_settings[] = $v;
-
-if (! is_array($advanced_settings))
-	$advanced_settings = array();
 
 $remote_desktop_settings = $prefs->get('general', 'remote_desktop_settings');
 $remote_applications_settings = $prefs->get('general', 'remote_applications_settings');
@@ -209,7 +198,7 @@ if (isset($_SESSION['mode'])) {
 
 $locale = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent', 'shareable', */'desktop_icons', 'popup', 'debug');
+$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent', 'shareable', */'desktop_icons');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '') {
 		switch ($protocol_var) {
@@ -552,10 +541,6 @@ if (isset($start_app) && $start_app != '') {
 }
 if (isset($start_app_args) && $start_app_args != '')
 	$optional_args['start_app_args'] = $start_app_args;
-if (isset($popup))
-	$optional_args['popup'] = (int)$popup;
-if (isset($debug) && $debug != '0')
-	$optional_args['debug'] = 1;
 /*if (isset($persistent) && $persistent != '0')
 	$optional_args['persistent'] = 1;
 if (isset($shareable) && $shareable != '0')
