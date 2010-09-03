@@ -809,7 +809,8 @@ $session_node->setAttribute('id', $session->id);
 $session_node->setAttribute('mode', $session->mode);
 $session_node->setAttribute('multimedia', $multimedia);
 $session_node->setAttribute('redirect_client_printers', $redirect_client_printers);
-$session_node->setAttribute('timeout', $timeout);
+if ($timeout > 0)
+	$session_node->setAttribute('duration', $timeout);
 $user_node = $dom->createElement('user');
 $user_node->setAttribute('displayName', $user->getAttribute('displayname'));
 $session_node->appendChild($user_node);
