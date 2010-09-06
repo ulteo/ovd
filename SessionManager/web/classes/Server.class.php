@@ -1119,7 +1119,7 @@ class Server {
 			foreach ($ls as $l) {
 				$a = $applicationDB->import($l->element);
 				if (is_object($a))
-					$res []= $a;
+					$res[$a->getAttribute('id')] = $a;
 			}
 			return $res;
 		} else {
