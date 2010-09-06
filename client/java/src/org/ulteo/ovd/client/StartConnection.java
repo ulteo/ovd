@@ -91,7 +91,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		if (OSTools.isWindows()) {
 			LibraryLoader.LoadLibrary(LibraryLoader.LIB_WINDOW_PATH_NAME);
 		}
-		boolean use_https = true;
 		boolean regProfile = false;
 		String profile = null;
 		String password = null;
@@ -111,9 +110,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 					break;
 				case 'p':
 					password = new String(opt.getOptarg());
-					break;
-				case 's':
-					use_https = (opt.getOptarg().equalsIgnoreCase("off")) ? false : true;
 					break;
 				default:
 					usage();
