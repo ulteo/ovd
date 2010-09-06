@@ -204,11 +204,7 @@ update_position(HWND hwnd)
 
 	if (IsZoomed(hwnd))
 	{
-		if (!GetClientRect(hwnd, &rect))
-		{
-			debug("GetClientRect failed!\n");
-			goto end;
-		}
+		goto end;
 	}
 	else
 	{
