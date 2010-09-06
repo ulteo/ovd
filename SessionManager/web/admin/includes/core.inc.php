@@ -52,7 +52,11 @@ define('ROOT_ADMIN_URL', get_root_admin_url());
 
 if (in_admin() && !isset($_SESSION['admin_login']) && basename($_SERVER['PHP_SELF']) != 'login.php') {
 	$_SESSION['redirect'] = base64_encode($_SERVER['REQUEST_URI']);
-	redirect('login.php');
+
+	if (basename(dirname($_SERVER['PHP_SELF'])) != 'admin')
+		redirect('../login.php');
+	else
+		redirect('login.php');
 }
 
 $prefs = Preferences::getInstance();
