@@ -92,9 +92,9 @@ AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
 AC_ARG_WITH([libchart],
     [AC_HELP_STRING([--without-libchart],
         [use a local installation of the libchart PHP library])],
-    [libchart=yes],
-    [libchart=no])
-if test "$libchart" = "no"; then
+    [libchart=no],
+    [libchart=yes])
+if test "$libchart" = "yes"; then
     LIBCHARTDIR=/usr/share/php/libchart/classes/libchart.php
     test -e $LIBCHARDIR && AC_MSG_ERROR([$LIBCHARTDIR not found ; deploy PHP libchart library.])
 else
