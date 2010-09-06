@@ -147,9 +147,16 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	public static void usage() {
 		System.err.println(StartConnection.productName);
 		System.err.println("Usage: java -jar OVDNativeClient.jar [options]");
-		System.err.println("	-c CONFIGFILE");
-		System.err.println("	-p PASSWORD");
-		System.err.println("Example: java -jar OVDNativeClient.jar -c config.ovd -p password");
+		System.err.println("\t-c file		Load configuration from `file`");
+		System.err.println("\t-p		Password");
+		System.err.println("\t--reg		Load configuration from registry");
+		System.err.println("Examples:");
+		System.err.println("\tClassic use:");
+		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd -p password");
+		System.err.println("\tLoad configuration from file and use NTLM authentication:");
+		System.err.println("\t\tjava -jar OVDNativeClient.jar -c config.ovd");
+		System.err.println("\tLoad configuration from registry");
+		System.err.println("\t\tjava -jar OVDNativeClient.jar --reg");
 
 		System.exit(0);
 	}
