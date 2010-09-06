@@ -11,6 +11,7 @@ Packager: Samuel Bovée <samuel@ulteo.com>
 Distribution: OpenSUSE 11.2
 
 BuildArch: noarch
+Buildrequires: subversion
 
 %description
 This package provides the subsystem for the Ulteo Open Virtual Desktop.

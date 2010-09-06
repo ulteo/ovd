@@ -12,6 +12,7 @@ Distribution: SLES 11 SP1
 
 BuildArch: noarch
 Buildroot: %{buildroot}
+Buildrequires: subversion
 
 %description
 This package provides the subsystem for the Ulteo Open Virtual Desktop.
