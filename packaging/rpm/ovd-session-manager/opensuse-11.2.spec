@@ -59,8 +59,7 @@ fi
 
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
-    ln -sf $CONFDIR/apache2-admin.conf \
-        $A2CONFDIR/ovd-admin.conf
+    ln -sf $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
 fi
 
 # VHost SSL config
@@ -112,9 +111,13 @@ fi
 
 %postun -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
+CONFDIR=/etc/ulteo/sessionmanager
 rm -f $A2CONFDIR/sessionmanager-vhost-server.conf
 rm -f $A2CONFDIR/sessionmanager-vhost-ssl.conf
 rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+rm -rf /var/spool/ulteo/sessionmanager \
+       /var/cache/ulteo/sessionmanager \
+       /var/log/ulteo/sessionmanager
 
 # restart apache2
 if apache2ctl configtest 2>/dev/null; then

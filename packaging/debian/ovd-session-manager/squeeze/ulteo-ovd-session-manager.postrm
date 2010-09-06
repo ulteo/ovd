@@ -5,7 +5,7 @@
 CONFDIR=/etc/ulteo/sessionmanager
 SPOOLDIR=/var/spool/ulteo/sessionmanager
 LOGDIR=/var/log/ulteo/sessionmanager
-CHROOT=/var/cache/ulteo/sessionmanager/base.tar.gz
+CACHEDIR=/var/cache/ulteo/sessionmanager
 
 if [ "$1" = "purge" ]
 then
@@ -13,14 +13,14 @@ then
     rm -rf $LOGDIR $SPOOLDIR
 
     # remove keys and certificates SSL files generated
-    rm -rf $CONFDIR/ovd.*
+    rm -f $CONFDIR/ovd.*
 
     # ask the user if he wants to remove base.tar.gz (if it's there)
-    if [ -e $CHROOT ]; then
+    if [ -e $CACHEDIR/base.tar.gz ]; then
         db_input high ulteo-ovd-session-manager/postrm_remove_tarball || true
         db_go || true
         db_get ulteo-ovd-session-manager/postrm_remove_tarball
-        [ "$RET" = "true" ] && rm -f $CHROOT
+        [ "$RET" = "true" ] && rm -rf $CACHEDIR
     fi
 fi
 
