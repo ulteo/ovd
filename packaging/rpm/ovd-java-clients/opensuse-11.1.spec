@@ -41,6 +41,9 @@ ant applet.install -Dbuild.type=stripped -Dprefix=/usr -Ddestdir=$RPM_BUILD_ROOT
 %defattr(-,root,root)
 /usr/share/ulteo/applets/*
 
+%clean -n ulteo-ovd-applets
+rm -rf %{buildroot}
+
 %changelog -n ulteo-ovd-applets
 * Wed Sep 01 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4362
 - Initial release
