@@ -92,7 +92,7 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			sf = new SeamlessPopup((int)id, (int)group, sf_parent, (int)flags, this.common);
 		}
 		else
-			sf = new SeamlessFrame((int)id, (int)group, (int)flags, this.common);
+			sf = new SeamlessFrame((int)id, (int)group, this.getMaximumWindowSize(), (int)flags, this.common);
 		
 		sf.setName(name);
 		sf.addMouseListener(this);

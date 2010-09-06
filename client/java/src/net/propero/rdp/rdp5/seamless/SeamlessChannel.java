@@ -34,6 +34,7 @@ package net.propero.rdp.rdp5.seamless;
 
 import java.awt.Frame;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -107,6 +108,10 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			wnd.setVisible(false);
 			wnd.dispose();
 		}
+	}
+
+	public Dimension getMaximumWindowSize() {
+		return new Dimension(this.opt.width, this.opt.height);
 	}
 
 	public boolean processLine(String line)
@@ -365,7 +370,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		    return false;
 		}
 
-		this.addFrame(new SeamFrame((int)id, (int)group, this.common), name);
+		this.addFrame(new SeamFrame((int)id, (int)group, this.getMaximumWindowSize(), this.common), name);
 
 		return true;
 	}

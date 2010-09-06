@@ -31,8 +31,8 @@ public class SeamlessFrame extends SeamFrame implements SeamlessMovingResizing {
 	protected boolean lockMouseEvents = false;
 	protected RectWindow rw = null;
 
-	public SeamlessFrame(int id_, int group_, int flags, Common common_) {
-		super(id_, group_, common_);
+	public SeamlessFrame(int id_, int group_, Dimension maxSize_, int flags, Common common_) {
+		super(id_, group_, maxSize_, common_);
 		
 		this.parseFlags(flags);
 		

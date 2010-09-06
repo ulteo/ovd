@@ -67,12 +67,13 @@ public class SeamFrame extends Frame
 	protected WrappedImage backstore;
 	protected Input input;
 	protected Common common = null;
+	protected Dimension maxSize = null;
 
-
-	public SeamFrame(int id_, int group_, Common common_) {
+	public SeamFrame(int id_, int group_, Dimension maxSize_, Common common_) {
 		this.common = common_;
 		this.id = id_;
 		this.group = group_;
+		this.maxSize = maxSize_;
 		this.icon_size = 0;
 		this.icon_buffer = new byte[32 * 32 * 4];
 
@@ -142,6 +143,17 @@ public class SeamFrame extends Frame
 		this.setSize((int)width, (int)height);
 		this.setLocation((int)x, (int)y);
 		this.repaint();
+	}
+
+
+	@Override
+	public void setExtendedState(int state) {
+		if (state == Frame.MAXIMIZED_BOTH) {
+			this.sw_setMyPosition(0, 0, this.maxSize.width, this.maxSize.height);
+			return;
+		}
+
+		super.setExtendedState(state);
 	}
 
 	public void setParams(int id,int x,int y,int width,int height) {
