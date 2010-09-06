@@ -7,7 +7,7 @@
 
 Summary:       Extension to create and modify images using ImageMagick
 Name:          php5-%{pecl_name}
-Version:       2.3.0
+Version:       3.0.0
 Release:       1
 License:       PHP
 Group:         Development/Languages
@@ -86,8 +86,10 @@ fi
 %config(noreplace) %{_sysconfdir}/php.d/%{name}.ini
 %{php_extdir}/%{pecl_name}.so
 %{pecl_xmldir}/%{name}.xml
+/usr/include/php5/ext/imagick/*.h
 
 %changelog
+* Mon Sep 06 2010 Samuel Bovée <samuel@ulteo.com> 3.0.0-1
 * Mon Aug 09 2010 Samuel Bovée <samuel@ulteo.com> 2.3.0-1
 * Sat Dec 13 2008 Remi Collet <rpms@famillecollet.com> 2.2.1-1.fc#.remi.1
 - rebuild with php 5.3.0-dev
