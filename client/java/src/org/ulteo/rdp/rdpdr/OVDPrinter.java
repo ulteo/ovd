@@ -121,7 +121,7 @@ public class OVDPrinter extends Printer {
 		logger.debug("Close action on "+file);
 		UUID uuid = null;
 		try {
-			uuid = (UUID)OVDPrinter.jobs.get(file);
+			uuid = (UUID)OVDPrinter.jobs.remove(file);
 		}
 		catch (IndexOutOfBoundsException e) {
 			logger.warn("The job with the handle " + handle + " dis not exist");
@@ -133,7 +133,6 @@ public class OVDPrinter extends Printer {
 			return RdpdrChannel.STATUS_CANCELLED;
 		}
 		OVDPrinter.printerThread.printPages(this.printer_name, pdfFilename);
-		OVDPrinter.jobs.remove(file);
 		return RdpdrChannel.STATUS_SUCCESS;
 	}
 }
