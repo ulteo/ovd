@@ -15,6 +15,7 @@ SRC=AccountsIntegration.xml \
 	Support_Debian_Lenny.xml \
 	Support_Debian_Squeeze.xml \
 	Support_openSUSE_11.2.xml \
+	Support_SLES_11.SP1.xml \
 	Support_Ubuntu_Hardy.xml \
 	Support_Ubuntu_Lucid.xml \
 	SystemUpgrade.xml \

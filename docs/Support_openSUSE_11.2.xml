@@ -41,17 +41,7 @@
       </para>
 
       <itemizedlist>
-        <listitem>
-          <para>
-	    Edit
-	    the <emphasis>/etc/apt/sources.list.d/01-ulteo-ovd</emphasis>
-	    file and put these lines:
-          </para>
-          <screen>
-	  <![CDATA[
-zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
-          </screen>
-        </listitem>
+        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_1" />
 
         <listitem>
           <para>
@@ -63,182 +53,17 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
 # rpm --import http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
           </screen>
         </listitem>
-
-        <listitem>
-          <para>
-	    Update the package database:
-          </para>
-          <screen>
-	    <![CDATA[
-# zypper refresh]]>
-          </screen>
-        </listitem>
+        
+        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_3" />
       </itemizedlist>
     </simplesect>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="warning_name_examples" />
-
-    <simplesect>
-      <title>SELinux</title>
-      <para>
-        Ulteo OVD is not compatible with SELinux yet.
-      </para>
-      <para>
-        So please disable SELinux support:
-      </para>
-      <screen>
-        <![CDATA[
-# zypper remove selinux-policy]]>
-      </screen>
-    </simplesect>
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="warning_name_examples" />
+    <xi:include href="Support_SLES_11.SP1.xml" xpointer="seLinux" />
   </section>
 
-  <section id="sm">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_first_para" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="sm" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="subsystem" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="wi" />
 
-    <section id="sql">
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sql_title" />
-      <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sql_para" />
-
-      <itemizedlist>
-	<listitem>
-	  <para>
-	    Install the <emphasis>mysql</emphasis> package:
-	  </para>
-          <screen>
-            <![CDATA[
-# zypper install mysql]]>
-          </screen>
-        </listitem>
-
-	<listitem>
-	  <para>
-	    To start automatically MySQL when the system boots up
-	  </para>
-	  <screen>
-	    <![CDATA[
-# chkconfig mysql on]]>
-	  </screen>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Start the service
-	  </para>
-	  <screen>
-	    <![CDATA[
-# service mysql start]]>
-	  </screen>
-	</listitem>
-
-	<listitem>
-	  <para>
-	    Define the root mysql password
-	  </para>
-	  <screen>
-	    <![CDATA[
-# mysqladmin -u root password 'mysql_root_password']]>
-	  </screen>
-	</listitem>
-
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="mysql_createdb" />
-      </itemizedlist>
-   </section>
-   
-   <section id="sm_install">
-     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_install_title" />
-
-     <itemizedlist>
-       <listitem>
-         <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm_install_package" />
-         <screen><![CDATA[
-# zypper install ulteo-ovd-session-manager]]>
-         </screen>
-       </listitem>
-
-       <listitem>
-         <para>Launch the configuration tool</para>
-         <screen><![CDATA[
-# sm-config
-Admin login: admin
-Password: 
-Retype password: 
-Chroot download url [http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0]: 
-Chroot destination [/var/cache/ulteo/sessionmanager/base.tar.gz]: 
-
-Options:
-* chroot download:  yes
-* chroot URI:       http://www.ulteo.com/main/downloads/ulteo-ovd.php?suite=3.0
-* chroot directory: /var/cache/ulteo/sessionmanager/base.tar.gz
-
-Is this correct? [Y/n]]]>
-         </screen>
-       </listitem>
-
-       <listitem>
-         <para>Configure and start apache service</para>
-         <screen><![CDATA[
-# chkconfig apache2 on
-# service apache2 restart]]>
-         </screen>
-       </listitem>
-     </itemizedlist>
-     
-     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="sm-config" />
-   </section>
-  </section>
-
-  <section id="subsystem">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_title" />
-
-    <itemizedlist>
-      <listitem>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_package" />
-        <screen><![CDATA[
-# zypper install ulteo-ovd-subsystem]]>
-        </screen>
-      </listitem>
-
-      <listitem>
-        <para>Launch the configuration tool</para>
-        <screen><![CDATA[
-# ovd-subsystem-config 
-Session Manager address : sm.ulteo.com
-Chroot destination [/opt/ulteo]:]]>
-        </screen>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem-sm-warning" />
-      </listitem>
-
-       <listitem>
-         <para>Configure and start apache service</para>
-         <screen><![CDATA[
-# chkconfig ulteo-ovd-subsystem on
-# service ulteo-ovd-subsystem restart]]>
-         </screen>
-       </listitem>
-    </itemizedlist>
-
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_para" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_screenshot" />
-  </section>
-
-  <section id="wi">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_para_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_para_2" />
-
-    <itemizedlist>
-      <listitem>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_package" />
-        <screen>
-	  <![CDATA[
-# zypper install ulteo-ovd-webinterface]]>
-        </screen>
-      </listitem>
-    </itemizedlist>
-
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_last_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_last_2" />
-  </section>
 </article>
