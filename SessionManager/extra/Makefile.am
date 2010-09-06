@@ -12,7 +12,7 @@ install-libchart:
 
 link-libchart:
 	mkdir -p $(DESTDIR)$(datadir)/ulteo/sessionmanager/extra
-	ln -s $(LIBCHARTDIR) \
+	ln -sf $(LIBCHARTDIR) \
 		$(DESTDIR)$(datadir)/ulteo/sessionmanager/extra/libchart
 
 install-exec-hook: $(HOOKS)

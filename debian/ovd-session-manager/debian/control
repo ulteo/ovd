@@ -2,7 +2,7 @@ Source: ovd-session-manager
 Section: net
 Priority: optional
 Maintainer: Samuel Bovée <samuel@ulteo.com>
-Build-Depends: debhelper (>= 5), cdbs, po-debconf, intltool, libphp-chart, ulteo-ovd-applets (>= 2.0~beta2)
+Build-Depends: debhelper (>= 5), cdbs, po-debconf, intltool
 Standards-Version: 3.7.3
 
 Package: ulteo-ovd-session-manager

@@ -54,6 +54,7 @@ AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS=$(sed -r -e "/^#/d" -e "s/#.*//" "po/LINGUAS")
 AC_SUBST(ALL_LINGUAS)
 
+
 # Allow use of already installed javascript libraries
 AC_ARG_WITH([prototypedir],
     [AC_HELP_STRING([--with-prototypedir],
@@ -72,10 +73,10 @@ if test x"$with_prototypedir" != xno; then
 fi
 AM_CONDITIONAL(PROTOTYPE, [test -n "$PROTOTYPEDIR"])
 
+
 AC_ARG_WITH([scriptaculousdir],
     [AC_HELP_STRING([--with-scriptaculousdir],
-        [use a local installation of the Scriptaculous javascript library])],
-    ,
+        [use a local installation of the Scriptaculous javascript library])], ,
     [with_scriptaculousdir=no])
 if test x"$with_scriptaculousdir" != xno; then
     if test -f "$with_scriptaculousdir/scriptaculous.js"; then
@@ -89,12 +90,12 @@ if test x"$with_scriptaculousdir" != xno; then
 fi
 AM_CONDITIONAL(SCRIPTACULOUS, [test -n "$SCRIPTACULOUSDIR"])
 
+
 AC_ARG_WITH([libchartdir],
     [AC_HELP_STRING([--with-libchartdir],
-        [use a local installation of the libchart PHP library])],
-    ,
+        [use a local installation of the libchart PHP library])], ,
     [with_libchartdir=no])
-if test x"$with_libchartdir" != xno; then
+if test "$with_libchartdir" != no; then
     if test -f "$with_libchartdir/classes/libchart.php"; then
         LIBCHARTDIR="$with_libchartdir"
         AC_SUBST(LIBCHARTDIR)
@@ -106,42 +107,46 @@ if test x"$with_libchartdir" != xno; then
 fi
 AM_CONDITIONAL(LIBCHART, [test -n "$LIBCHARTDIR"])
 
+
 AC_ARG_WITH([ulteo-applet],
     [AC_HELP_STRING([--with-ulteo-applet],
-        [where is installed the ulteo OVD applet])],
-    ,
-    [with_ulteo_applet=])
-if test x"$with_ulteo_applet" = x""; then
-    for p in /usr /usr/local /opt; do
-        if test -e $p/share/ulteo/applets/ulteo-applet.jar; then
-            with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
+        [where is installed the ulteo OVD applet)])], , )
+if test -n "$with_ulteo_applet"; then
+    if test ! -f "$with_ulteo_applet"; then
+        AC_MSG_WARN([No ulteo applet found at $with_ulteo_applet])
+    fi
+else
+    for p in /usr/local /opt /usr; do
+        with_ulteo_applet=$p/share/ulteo/applets/ulteo-applet.jar
+        if test -f $with_ulteo_applet; then
+            AC_MSG_NOTICE([Ulteo applet found at $with_check_applet])
+            break;
         fi
     done
+    AC_MSG_WARN([No Ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
 fi
-if test x"$with_ulteo_applet" = x""; then
-    AC_MSG_ERROR([No ulteo applet found. Install it first or specify its path with the --with-ulteo-applet option])
-else
-    ULTEOAPPLET="$with_ulteo_applet"
-fi
+ULTEOAPPLET=$with_ulteo_applet
 AC_SUBST(ULTEOAPPLET)
+
 
 AC_ARG_WITH([check-applet],
     [AC_HELP_STRING([--with-check-applet],
-        [where is installed the java test applet])],
-    ,
-    [with_check_applet=])
-if test x"$with_check_applet" = x""; then
-    for p in /usr /usr/local /opt; do
-        if test -e $p/share/ulteo/applets/CheckJava.jar; then
-            with_check_applet=$p/share/ulteo/applets/CheckJava.jar
+        [where is installed the java test applet)])], , )
+if test -n "$with_check_applet"; then
+    if test ! -f "$with_check_applet"; then
+        AC_MSG_WARN([No java test applet found at $with_check_applet])
+    fi
+else
+    for p in /usr/local /opt /usr; do
+        with_check_applet=$p/share/ulteo/applets/CheckJava.jar
+        if test -f $with_check_applet; then
+            AC_MSG_NOTICE([Java test applet found at $with_check_applet])
+            break;
         fi
     done
+    AC_MSG_WARN([No java test applet found. Install it first or specify its path with the --with-check-applet option])
 fi
-if test x"$with_check_applet" = x""; then
-    AC_MSG_ERROR([No java test applet found. Install it first or specify its path with the --with-check-applet option])
-else
-    CHECKAPPLET="$with_check_applet"
-fi
+CHECKAPPLET="$with_check_applet"
 AC_SUBST(CHECKAPPLET)
 
 

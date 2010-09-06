@@ -1,8 +1,8 @@
 install-exec-hook:
 	mkdir -p $(DESTDIR)$(datadir)/ulteo/sessionmanager/applet
-	ln -sf $(ULTEOAPPLET) \
+	ln -sfT $(ULTEOAPPLET) \
 		$(DESTDIR)$(datadir)/ulteo/sessionmanager/applet/ulteo-applet.jar
-	ln -sf $(CHECKAPPLET) \
+	ln -sfT $(CHECKAPPLET) \
 		$(DESTDIR)$(datadir)/ulteo/sessionmanager/applet/CheckJava.jar
 
 uninstall-hook:

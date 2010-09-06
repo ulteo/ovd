@@ -1,10 +1,10 @@
 install-exec-hook:
 	mkdir -p $(DESTDIR)$(datadir)/ulteo/applicationserver/applet
-	ln -sf $(ULTEOAPPLET) \
+	ln -sfT $(ULTEOAPPLET) \
 		$(DESTDIR)$(datadir)/ulteo/applicationserver/applet/ulteo-applet.jar
-	ln -sf $(PRINTINGAPPLET) \
+	ln -sfT $(PRINTINGAPPLET) \
 		$(DESTDIR)$(datadir)/ulteo/applicationserver/applet/ulteo-printing.jar
 
 uninstall-hook:
-	rm -rf $(DESTDIR)$(datadir)/ulteo/applicationserver/applet
+    :x
 
