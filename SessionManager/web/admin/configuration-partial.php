@@ -108,6 +108,11 @@ else {
 				if (array_key_exists('events',$prefs->elements))
 					print_prefs4($prefs, 'events');
 				break;
+			case 'session_settings':
+				print_prefs5($prefs, 'general', 'session_settings_defaults');
+				print_prefs5($prefs, 'general', 'remote_desktop_settings');
+				print_prefs5($prefs, 'general', 'remote_applications_settings');
+				break;
 			default:
 				print_prefs5($prefs, 'general', $_GET['mode']);
 				break;

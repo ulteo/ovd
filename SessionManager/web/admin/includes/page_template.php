@@ -176,7 +176,7 @@ if (isAuthorized('viewConfiguration')) {
 	$menu['configuration_sessions'] = 
 		array('id' => 'configuration_sessions',
 			  'name' => _('Session settings'),
-			  'page' => 'configuration-partial.php?mode=session_settings_defaults',
+			  'page' => 'configuration-partial.php?mode=session_settings',
 			  'parent' => array('configuration'));
 
 	$menu['configuration_events'] = 
