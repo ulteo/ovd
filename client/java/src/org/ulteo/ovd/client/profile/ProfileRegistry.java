@@ -23,7 +23,6 @@ package org.ulteo.ovd.client.profile;
 import com.ice.jni.registry.Registry;
 import com.ice.jni.registry.RegistryException;
 import com.ice.jni.registry.RegistryKey;
-import java.io.IOException;
 import java.util.Enumeration;
 import org.ulteo.Logger;
 
@@ -80,6 +79,14 @@ public class ProfileRegistry extends Profile {
 						autoPublish = true;
 
 					properties.setAutoPublish(autoPublish);
+				}
+				else if (field.equalsIgnoreCase(FIELD_SHOW_PROGRESSBAR)) {
+					boolean showProgressBar = false;
+
+					if (value.equalsIgnoreCase(VALUE_TRUE))
+						showProgressBar = true;
+
+					properties.setShowProgressbar(showProgressBar);
 				}
 				else if (field.equalsIgnoreCase(FIELD_SCREENSIZE)) {
 					if(value.equalsIgnoreCase(VALUE_800X600))

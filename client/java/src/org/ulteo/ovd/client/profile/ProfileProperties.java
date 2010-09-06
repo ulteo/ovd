@@ -39,6 +39,7 @@ public class ProfileProperties {
 	private int screensize = 0;
 	private String lang = null;
 	private String keymap = null;
+	private boolean showProgressbar = true;
 	
 	public ProfileProperties() {}
 
@@ -125,5 +126,13 @@ public class ProfileProperties {
 	
 	public void setKeymap(String keymap) {
 		this.keymap = keymap;
+	}
+
+	public boolean getShowProgressbar() {
+		return this.showProgressbar;
+	}
+
+	public void setShowProgressbar(boolean showProgressbar_) {
+		this.showProgressbar = showProgressbar_;
 	}
 }

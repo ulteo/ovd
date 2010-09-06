@@ -50,6 +50,8 @@ import org.ulteo.ovd.client.authInterface.DisconnectionFrame;
 import org.ulteo.ovd.client.authInterface.LoadingFrame;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.desktop.OvdClientDesktop;
+import org.ulteo.ovd.client.gui.GUIActions;
+import org.ulteo.ovd.client.gui.SwingTools;
 import org.ulteo.ovd.client.profile.ProfileProperties;
 import org.ulteo.ovd.client.profile.ProfileRegistry;
 import org.ulteo.ovd.client.remoteApps.OvdClientPortal;
@@ -180,6 +182,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	private boolean autoPublicated = false;
 	private String language = null;
 	private String keymap = null;
+	private boolean showProgressbar = true;
 
 	private boolean isCancelled = false;
 	
@@ -201,7 +204,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.init();
 		this.command = true;
 		this.regProfile = regProfile_;
-		this.loadingFrame.setLocationRelativeTo(null);
 	}
 
 	public StartConnection(String profile, String password) {
@@ -271,7 +273,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.command = false;
 				this.authFrame = new AuthFrame(this);
 				this.loadProfile(null);
-				this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
+				if (this.showProgressbar)
+					this.loadingFrame.setLocationRelativeTo(this.authFrame.getMainFrame());
 			}
 			if(! command || this.regProfile)
 				this.authFrame.showWindow();
@@ -288,8 +291,6 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 
 		this.thread = new Thread(this);
 		this.thread.start();
-		
-		this.loadingFrame.setVisible(true);
 	}
 	
 	@Override
@@ -313,7 +314,8 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void disableLoadingMode() {
-		this.loadingFrame.setVisible(false);
+		if (this.showProgressbar)
+			this.loadingFrame.setVisible(false);
 	}
 
 	public void disableDisconnectingMode() {
@@ -379,6 +381,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.host = properties.getHost();
 		this.localCredential = properties.getUseLocalCredentials();
 		this.autoPublicated = properties.getAutoPublish();
+		this.showProgressbar = properties.getShowProgressbar();
 
 		if (this.host.equals("")) {
 			System.err.println("You must specifiy the host field !");
@@ -421,6 +424,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		this.autoPublicated = properties.getAutoPublish();
 		this.language = properties.getLang();
 		this.keymap = properties.getKeymap();
+		this.showProgressbar = properties.getShowProgressbar();
 		
 		if (this.host == null || this.host.length() == 0) {
 			System.err.println("Cannot find the host field in the registry");
@@ -472,6 +476,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			}
 		}
 
+		if (this.showProgressbar)
+			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, true));
+
 		// Start OVD session
 		SessionManagerCommunication dialog = new SessionManagerCommunication(host, true);
 		if (! command)
@@ -481,7 +488,7 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		Properties request = new Properties(mode);
 		request.setLang(language);
 		request.setTimeZone(Calendar.getInstance().getTimeZone().getID());
-		
+
 		try {
 			boolean ret = false;
 			if (localCredential)
@@ -505,7 +512,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 			return exit;
 		}
 		this.updateProgress(LoadingStatus.STATUS_SM_START, 0);
-		this.loadingFrame.getCancelButton().setEnabled(true);
+		
+		if (this.showProgressbar)
+			this.loadingFrame.getCancelButton().setEnabled(true);
 		
 		Properties response = dialog.getResponseProperties();
 		
@@ -565,7 +574,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	@Override
 	public void sessionDisconnecting() {
 		this.setJobMainThread(JOB_DISCONNECT_CLI);
-		this.loadingFrame.setVisible(false);
+
+		if (this.showProgressbar)
+			SwingTools.invokeLater(GUIActions.setVisible(this.loadingFrame, false));
 		this.discFrame.setVisible(true);
 	}
 	
@@ -626,11 +637,12 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 	}
 
 	public void updateProgress(int status, int subStatus) {
-		this.loadingFrame.updateProgression(status, subStatus);
+		if (this.showProgressbar)
+			this.loadingFrame.updateProgression(status, subStatus);
 	}
 
 	public void sessionConnected() {
-		if (this.loadingFrame.isVisible() || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
+		if ((this.loadingFrame != null && this.loadingFrame.isVisible()) || (this.authFrame != null && this.authFrame.getMainFrame().isVisible())) {
 			this.disableLoadingMode();
 			if (! command)
 				this.authFrame.hideWindow();

@@ -39,6 +39,8 @@ public abstract class Profile {
 	protected static final String VALUE_TRUE = "true";
 	protected static final String VALUE_FALSE = "false";
 
+	protected static final String FIELD_SHOW_PROGRESSBAR = "show-progressbar";
+
 	protected static final String FIELD_SCREENSIZE = "size";
 	protected static final String VALUE_800X600 = "800x600";
 	protected static final String VALUE_1024X768 = "1024x768";

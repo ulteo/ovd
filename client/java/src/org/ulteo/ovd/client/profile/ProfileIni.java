@@ -180,6 +180,14 @@ public class ProfileIni extends Profile {
 			else
 				properties.setAutoPublish(false);
 		}
+
+		value = ini.get(INI_SECTION_SESSION, FIELD_SHOW_PROGRESSBAR);
+		if (value != null) {
+			if (value.equals(VALUE_TRUE))
+				properties.setShowProgressbar(true);
+			else
+				properties.setShowProgressbar(false);
+		}
 		
 		value = ini.get(INI_SECTION_SCREEN, FIELD_SCREENSIZE);
 		if (value != null) {
