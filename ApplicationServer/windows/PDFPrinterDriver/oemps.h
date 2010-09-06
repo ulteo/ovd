@@ -60,9 +60,10 @@ typedef struct _OEMPDEV {
     // This test DLL hooks out every drawing DDI. So it needs to remember
     // PS's hook function pointer so it call back.
     //
-    PFN     pfnPS[MAX_DDI_HOOKS];
-    DWORD   jobId;
-    wchar_t* spoolDir;
+    PFN       pfnPS[MAX_DDI_HOOKS];
+    wchar_t*  spoolPSFileName;
+    wchar_t*  spoolPDFFileName;
+
     //
     // define whatever needed, such as working buffers, tracking information,
     // etc.

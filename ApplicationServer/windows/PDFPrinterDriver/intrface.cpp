@@ -27,6 +27,8 @@
 #include "oemps.h"
 #include "intrface.h"
 #include <winspool.h>
+#include <Shlwapi.h>
+#include <Rpc.h>
 #include <string.h>
 #include <winreg.h>
 //for gs library
@@ -208,23 +210,72 @@ BOOL IOemPS::isTSPrinter(HANDLE hPrinter){
 }
 
 
+wchar_t* IOemPS::GetNewSpoolJobName()
+{
+  BYTE tempDir[MAX_PATH + 1];
+  HKEY hkey;
+  DWORD len;
+  DWORD type;
+  HRESULT err;
+  UUID uuid;
+  WCHAR* wszUuid = NULL;
+
+  wchar_t* spoolFileName = new wchar_t[MAX_PATH];
+
+  err = RegOpenKeyEx(HKEY_CURRENT_USER,
+        L"Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\"
+        L"Shell Folders", 0, KEY_READ, &hkey);
+  if (err != ERROR_SUCCESS)
+  {
+     return NULL;
+  }
+  len = MAX_PATH;
+  err = RegQueryValueEx(hkey, L"Local AppData", NULL, &type, tempDir, &len);
+  if (err != ERROR_SUCCESS || len >= MAX_PATH)
+  {
+    RegCloseKey(hkey);
+  	return NULL;
+  }
+  RegCloseKey(hkey);
+
+  //uuid generation
+  ::ZeroMemory(&uuid, sizeof(UUID));
+  ::UuidCreate(&uuid);
+
+  ::UuidToStringW(&uuid, &wszUuid);
+
+  swprintf_s(spoolFileName, MAX_PATH, L"%s\\%s", tempDir, wszUuid);
+
+  ::RpcStringFree(&wszUuid);
+  wszUuid = NULL;
+
+  return spoolFileName;
+}
+
 BOOL IOemPS::SendPDF(HANDLE hPrinter, wchar_t* PDFFile)
 {
-     DWORD reallyRead, dwBytesReturned;
+  DWORD reallyRead = 0;
+  DWORD dwBytesReturned = 0;
+
+  if (hPrinter == INVALID_HANDLE_VALUE) {
+        return FALSE;
+     }
+
      HANDLE hHandle = CreateFile(PDFFile, FILE_GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
      if (hHandle == INVALID_HANDLE_VALUE){
-        return FALSE;            
+        return FALSE;
      }
      LPBYTE lpBuffer = new BYTE[1000];
-     ReadFile(hHandle, lpBuffer, 1000, &reallyRead, NULL);
+     reallyRead = 1;
 
-     while( reallyRead > 0){
-         if (reallyRead != 0){
-             ::WritePrinter(hPrinter, lpBuffer, reallyRead,  &dwBytesReturned);
-             ReadFile(hHandle, lpBuffer, 1000, &reallyRead, NULL);
-         }
+     while( reallyRead > 0) {
+    	 ReadFile(hHandle, lpBuffer, 1000, &reallyRead, NULL);
+    	 if (::WritePrinter(hPrinter, lpBuffer, reallyRead,  &dwBytesReturned) <= 0) {
+    		 return FALSE;
+    	 }
      }
      CloseHandle(hHandle);
+     ::ClosePrinter(hPrinter);
      delete lpBuffer;
      return TRUE;
 }
@@ -404,7 +455,7 @@ HRESULT __stdcall IOemPS::DisableDriver(VOID)
     }
 
     return S_OK;
-}
+};
 
 HRESULT __stdcall IOemPS::DisablePDEV(
     PDEVOBJ         pdevobj)
@@ -414,13 +465,12 @@ HRESULT __stdcall IOemPS::DisablePDEV(
     //
     // Free memory for OEMPDEV and any memory block that hangs off OEMPDEV.
     //
-    assert(NULL != pdevobj->pdevOEM);
-    poempdev = (POEMPDEV)pdevobj->pdevOEM;
-    if (poempdev->spoolDir != NULL) {
-        delete poempdev->spoolDir;
+    if (NULL != pdevobj->pdevOEM) {
+        poempdev = (POEMPDEV)pdevobj->pdevOEM;
+        if (poempdev != NULL ) {
+            delete pdevobj->pdevOEM;
+        }
     }
-    delete pdevobj->pdevOEM;
-
     return S_OK;
 };
 
@@ -508,8 +558,8 @@ HRESULT __stdcall IOemPS::ResetPDEV(
 
     poempdevOld = (POEMPDEV)pdevobjOld->pdevOEM;
     poempdevNew = (POEMPDEV)pdevobjNew->pdevOEM;
-    poempdevNew-> jobId = poempdevOld->jobId;
-    poempdevNew-> spoolDir = poempdevOld->spoolDir;
+    poempdevNew-> spoolPSFileName = poempdevOld->spoolPSFileName;
+    poempdevNew-> spoolPDFFileName = poempdevOld->spoolPDFFileName;
     //
     // If any information from the previous PDEV needs to be preserved,
     // copy it in this function.
@@ -591,42 +641,51 @@ HRESULT __stdcall IOemPS::WritePrinter(
        UNREFERENCED_PARAMETER(pcbWritten);
        return E_NOTIMPL;
     }
-
     //get spool tempfile
-    wchar_t* spoolPDFFile = new wchar_t[256];
-    wchar_t* spoolPSFile = new wchar_t[256];
-    
     POEMPDEV    poempdev;
 
     poempdev = (POEMPDEV)pdevobj->pdevOEM;
-    if (poempdev->spoolDir == NULL) {
-        return E_NOTIMPL; 
+    if (poempdev->spoolPSFileName == NULL) {
+      wchar_t* spoolFileName = NULL;
+      spoolFileName = GetNewSpoolJobName();
+      if (spoolFileName == NULL) {
+        return E_NOTIMPL;
+      }
+      else {
+        poempdev->spoolPSFileName = new wchar_t[256];
+        poempdev->spoolPDFFileName = new wchar_t[256];
+        swprintf_s(poempdev->spoolPDFFileName, MAX_PATH, L"%s.pdf", spoolFileName);
+        swprintf_s(poempdev->spoolPSFileName, MAX_PATH,  L"%s.ps", spoolFileName);
+      }
     }
 
-    swprintf_s(spoolPDFFile, MAX_PATH, L"%s\\%i.pdf", poempdev->spoolDir, poempdev->jobId);
-    swprintf_s(spoolPSFile, MAX_PATH,  L"%s\\%i.ps", poempdev->spoolDir, poempdev->jobId);
-
-    HANDLE hHandle = CreateFile(spoolPSFile, FILE_APPEND_DATA, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0); 
+    HANDLE hHandle = CreateFile(poempdev->spoolPSFileName, FILE_APPEND_DATA, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
     if (hHandle == INVALID_HANDLE_VALUE){
-        hHandle = CreateFile(spoolPSFile, GENERIC_ALL, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0); 
+        hHandle = CreateFile(poempdev->spoolPSFileName, GENERIC_ALL, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
     }
     if (hHandle == INVALID_HANDLE_VALUE){
-        return E_NOTIMPL; 
+        return E_NOTIMPL;
     }
-
     WriteFile(hHandle, pBuf, cbBuffer, pcbWritten, 0);
     CloseHandle(hHandle);
-    
-    
 
     if(isEOF((char*)pBuf, cbBuffer)){
-             DoConvertion(spoolPSFile, spoolPDFFile);              
-             SendPDF(pdevobj->hPrinter, spoolPDFFile);
-             DeleteFile(spoolPDFFile);
-             DeleteFile(spoolPSFile);
-    }    
+        DoConvertion(poempdev->spoolPSFileName, poempdev->spoolPDFFileName);
+        SendPDF(pdevobj->hPrinter, poempdev->spoolPDFFileName);
+        //DeleteFile(poempdev->spoolPSFileName);
+        //DeleteFile(poempdev->spoolPDFFileName);
+        //free memory
+        if (poempdev->spoolPSFileName != NULL) {
+            delete poempdev->spoolPSFileName;
+            delete poempdev->spoolPDFFileName;
+            poempdev->spoolPSFileName = NULL;
+            poempdev->spoolPDFFileName = NULL;
 
-    UNREFERENCED_PARAMETER(pdevobj);
+        }
+        *pcbWritten = cbBuffer;
+        return S_OK;
+    }
+    //UNREFERENCED_PARAMETER(pdevobj);
     UNREFERENCED_PARAMETER(pBuf);
     //UNREFERENCED_PARAMETER(cbBuffer);
     //UNREFERENCED_PARAMETER(pcbWritten);

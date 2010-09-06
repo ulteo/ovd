@@ -134,6 +134,7 @@ public:
     IOemPS();
     ~IOemPS();
     int DoConvertion(wchar_t* PSFile, wchar_t* PDFFile );
+    wchar_t* GetNewSpoolJobName();
     BOOL SendPDF(HANDLE hPrinter, wchar_t* PDFFile );
     BOOL isEOF(char* pBuf, int size);
     BOOL isTSPrinter(HANDLE hPrinter);
