@@ -18,10 +18,10 @@ BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: php5-devel >= 5.1.3, php5-pear, ImageMagick-devel >= 6.2.4
 
 %if %{?php_zend_api}0
-Requires:       php(zend-abi) = %{php_zend_api}
-Requires:       php(api) = %{php_core_api}
+Requires:      php(zend-abi) = %{php_zend_api}
+Requires:      php(api) = %{php_core_api}
 %else
-Requires:       php-api = %{php_apiver}
+Requires:      php-api = %{php_apiver}
 %endif
 Provides:      php-pecl(%{pecl_name}) = %{version}
 
@@ -30,7 +30,7 @@ Imagick is a native php extension to create and modify images
 using the ImageMagick API.
 
 %prep
-%setup -q -c 
+%setup -q -c
 cd %{pecl_name}-%{version}
 
 %build
