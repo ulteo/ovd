@@ -7,8 +7,22 @@ fi
 CONFFILE=/etc/ulteo/ovd/slaveserver.conf
 CACHEOVDFS=/var/lib/ovd/fs
 
+############################# APACHE CONFIGURATION #############################
+
+A2SITESDIR=/etc/apache2/sites-available
+A2SITESENABLEDDIR=/etc/apache2/sites-enabled
+
 if grep -q "^ROLES.*fs" $CONFFILE; then
     sed -i -r "s/^ROLES *= *(.*)fs(.*)$/ROLES = \1 \2/" $CONFFILE
+fi
+
+# VHost webdav config
+if [ -e $A2SITESENABLEDDIR/slaveserver-fs ]; then
+    a2dissite slaveserver-fs > /dev/null
+fi
+
+if [ -e $A2SITESDIR/slaveserver-fs ]; then
+   rm $A2SITESDIR/slaveserver-fs
 fi
 
 if [ "$1" = "purge" ] ; then
