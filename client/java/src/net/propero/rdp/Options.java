@@ -34,6 +34,8 @@ public class Options {
 	public String windowTitle = "UlteoRDP"; // -T windowTitle
 	public int width = 800; // -g widthxheight
 	public int height = 600; // -g widthxheight
+	public int x_offset= 0;
+	public int y_offset = 0;
 	public int port = 3389; // -t port
 	public boolean fullscreen = false;
 	public boolean built_in_licence = false;

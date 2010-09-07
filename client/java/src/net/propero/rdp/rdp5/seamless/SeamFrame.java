@@ -67,13 +67,13 @@ public class SeamFrame extends Frame
 	protected WrappedImage backstore;
 	protected Input input;
 	protected Common common = null;
-	protected Dimension maxSize = null;
+	protected Rectangle maxBounds = null;
 
-	public SeamFrame(int id_, int group_, Dimension maxSize_, Common common_) {
+	public SeamFrame(int id_, int group_, Rectangle maxBounds_, Common common_) {
 		this.common = common_;
 		this.id = id_;
 		this.group = group_;
-		this.maxSize = maxSize_;
+		this.maxBounds = maxBounds_;
 		this.icon_size = 0;
 		this.icon_buffer = new byte[32 * 32 * 4];
 
@@ -140,8 +140,8 @@ public class SeamFrame extends Frame
 		this.width = width;
 		this.height = height;
 
-		this.setSize((int)width, (int)height);
-		this.setLocation((int)x, (int)y);
+		this.setSize(width, height);
+		this.setLocation(x + this.maxBounds.x, y + this.maxBounds.y);
 		this.repaint();
 	}
 
@@ -149,7 +149,7 @@ public class SeamFrame extends Frame
 	@Override
 	public void setExtendedState(int state) {
 		if (state == Frame.MAXIMIZED_BOTH) {
-			this.sw_setMyPosition(0, 0, this.maxSize.width, this.maxSize.height);
+			this.sw_setMyPosition(0, 0, this.maxBounds.width, this.maxBounds.height);
 			return;
 		}
 
@@ -180,8 +180,8 @@ public class SeamFrame extends Frame
 		int y = Math.max(this.y,0);
 		int w = Math.min(width,this.backstore.getWidth()-x);
 		int h = Math.min(height,this.backstore.getHeight()-y);
-		int dx = (this.x<0?-this.x:0);
-		int dy = (this.y<0?-this.y:0);
+		int dx = ((this.x + this.maxBounds.x) < 0) ? -(this.x + this.maxBounds.x) : 0;
+		int dy = ((this.y + this.maxBounds.y) < 0) ? -(this.y + this.maxBounds.y) : 0;
 
 		if (w>0 && h>0)
 			g.drawImage(this.backstore.getSubimage(x,y,w,h), dx , dy,null);

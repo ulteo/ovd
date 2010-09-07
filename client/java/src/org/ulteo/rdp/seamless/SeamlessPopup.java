@@ -53,6 +53,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private int y;
 	private int width;
 	private int height;
+	protected Rectangle maxBounds = null;
 	private Input input = null;
 	private WrappedImage backstore = null;
 
@@ -61,13 +62,14 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 	private boolean lockMouseEvents = false;
 	private RectWindow rw = null;
 
-	public SeamlessPopup(int id_, int group_, Window parent_, int flags, Common common_) {
+	public SeamlessPopup(int id_, int group_, Window parent_, Rectangle maxBounds_, int flags, Common common_) {
 		super(parent_);
 		
 		this.common = common_;
 		this.id = id_;
 		this.group = group_;
 		this.parent = parent_;
+		this.maxBounds = maxBounds_;
 
 		this.input = this.common.canvas.getInput();
 		this.backstore = this.common.canvas.backstore;
@@ -78,7 +80,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.common.canvas.addComponentListener(this);
 
 		Dimension dim = new Dimension(this.backstore.getWidth(), this.backstore.getHeight());
-		this.rw = new RectWindow(this, dim);
+		this.rw = new RectWindow(this, dim, this.maxBounds);
 
 		this.parseFlags(flags);
 
@@ -127,7 +129,7 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 		this.height = height;
 
 		this.setSize(this.width, this.height);
-		this.setLocation(this.x, this.y);
+		this.setLocation(this.x + this.maxBounds.x, this.y + this.maxBounds.y);
 		this.repaint();
 	}
 

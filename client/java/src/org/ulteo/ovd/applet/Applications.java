@@ -275,6 +275,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				// Prevent artifact on screen with a with resolution
 				// not divisible by 4
 				rc.setGraphic(dim.width & ~3, dim.height, RdpConnectionOvd.DEFAULT_BPP);
+				rc.setGraphicOffset(dim.x, dim.y);
 				rc.setKeymap(keymap);
 
 				rc.addRdpListener(this);

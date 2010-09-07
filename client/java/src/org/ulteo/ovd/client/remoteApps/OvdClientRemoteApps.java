@@ -127,6 +127,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 			// Prevent artifact on screen with a with resolution
 			// not divisible by 4
 			rc.setGraphic((int) screenSize.width & ~3, (int) screenSize.height, RdpConnectionOvd.DEFAULT_BPP);
+			rc.setGraphicOffset(screenSize.x, screenSize.y);
 			
 			if (this.keymap != null)
 				rc.setKeymap(this.keymap);

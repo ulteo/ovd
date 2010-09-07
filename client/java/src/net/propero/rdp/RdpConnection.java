@@ -151,6 +151,11 @@ public class RdpConnection implements SeamListener, Runnable{
 		this.opt.set_bpp(bpp);
 	}
 
+	public void setGraphicOffset(int x, int y) {
+		this.opt.x_offset = x;
+		this.opt.y_offset = y;
+	}
+
 	private void initCanvas() throws RdesktopException {
 		if (this.opt.width <= 0 || this.opt.height <= 0)
 			throw new RdesktopException("Unable to init canvas: The desktop size is negative or nil");

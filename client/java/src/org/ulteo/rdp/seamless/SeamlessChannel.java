@@ -89,10 +89,10 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			else
 				sf_parent = (Window)this.windows.get(parentName);
 			
-			sf = new SeamlessPopup((int)id, (int)group, sf_parent, (int)flags, this.common);
+			sf = new SeamlessPopup((int)id, (int)group, sf_parent, this.getMaximumWindowBounds(), (int)flags, this.common);
 		}
 		else
-			sf = new SeamlessFrame((int)id, (int)group, this.getMaximumWindowSize(), (int)flags, this.common);
+			sf = new SeamlessFrame((int)id, (int)group, this.getMaximumWindowBounds(), (int)flags, this.common);
 		
 		sf.setName(name);
 		sf.addMouseListener(this);
@@ -271,8 +271,8 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			MouseEvent me = new MouseEvent(this.evt.getComponent(), this.evt.getID(), this.evt.getWhen(), this.evt.getModifiers(), this.evt.getX(), this.evt.getY(), this.evt.getClickCount(), this.evt.isPopupTrigger(), this.evt.getButton());
 			me.translatePoint(-this.wndBounds.x, -this.wndBounds.y);
 
-			int xClick = me.getX();
-			int yClick = me.getY();
+			int xClick = me.getX() + opt.x_offset;
+			int yClick = me.getY() + opt.y_offset;
 			RectWindow rw = this.sw.getRectWindow();
 
 			if (	xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
@@ -283,7 +283,6 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 				if (this.sw._isResizable()) {
 					rw.setResizeClick(this.evt);
 					int corner = detectCorner(me, this.wndBounds);
-					System.out.println("CORNER: "+corner);
 					rw.setCorner(corner);
 
 					rw.offsetsResize(this.evt, this.wndBounds);

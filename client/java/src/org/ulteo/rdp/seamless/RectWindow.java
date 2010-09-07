@@ -69,14 +69,16 @@ public class RectWindow extends Component {
 	
 	private Window refWindow = null;
 
-	public RectWindow(Window f, Dimension dim) {
+	public RectWindow(Window f, Dimension dim, Rectangle maxBounds_) {
 		this.left = new LineWindow(f);
 		this.right = new LineWindow(f);
 		this.top = new LineWindow(f);
 		this.bottom = new LineWindow(f);
 
-		this.maxX = dim.width;
-		this.maxY = dim.height;
+		this.minX = maxBounds_.x;
+		this.minY = maxBounds_.y;
+		this.maxX = this.minX + dim.width;
+		this.maxY = this.minY + dim.height;
 		this.refWindow = f;
 		
 		this.minWidth = 2*RectWindow.BORDER_SIZE;
