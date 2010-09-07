@@ -247,28 +247,6 @@ if ($sessions > 0) {
 				Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 				throw_response(USER_WITH_ACTIVE_SESSION);
 			}
-			/*elseif ($buf == 1) {
-				$invite = new Invite(gen_unique_string());
-				$invite->session = $session->id;
-				$invite->settings = array(
-					'invite_email'	=>	$user->getAttribute('displayname'),
-					'view_only'		=>	0,
-					'access_id'		=>	Session::MODE_DESKTOP
-				);
-				$invite->email = 'none';
-				$invite->valid_until = (time()+(60*30));
-				Abstract_Invite::save($invite);
-
-				$token = new Token(gen_unique_string());
-				$token->type = 'invite';
-				$token->link_to = $invite->id;
-				$token->valid_until = (time()+(60*30));
-				Abstract_Token::save($token);
-
-				$server = Abstract_Server::load($session->server);
-
-				redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
-			}*/
 
 			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
