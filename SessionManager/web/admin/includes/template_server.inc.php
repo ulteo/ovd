@@ -556,4 +556,17 @@ function server_display_role_fs($server_, $var_) {
 			echo '<br />';
 		}
 	}
+	
+	if ($server_->isOnline()) {
+		echo '<h3>'._('Action').'</h3>';
+		echo '<table>';
+		echo '<tr><form action="actions.php" method="post"><td>';
+		echo '<input type="hidden" name="name" value="SharedFolder" />';
+		echo '<input type="hidden" name="action" value="add" />';
+		echo '<input type="text" name="sharedfolder_name" value="" />';
+		echo '<input type="hidden" name="sharedfolder_server" value="'.$server_->fqdn.'" />';
+		echo '</td><td><input type="submit" value="'._('Create this shared folder').'" /></td>';
+		echo '</form></tr>';
+		echo '</table>';
+	}
 }

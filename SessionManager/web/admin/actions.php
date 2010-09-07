@@ -1282,7 +1282,12 @@ function action_add_sharedfolder() {
 	$buf = new NetworkFolder();
 	$buf->name = $sharedfolder_name;
 	
-	$a_server = $buf->chooseFileServer();
+	if (array_key_exists('sharedfolder_server', $_REQUEST)) {
+		$a_server = Abstract_Server::load($_REQUEST['sharedfolder_server']);
+	}
+	else {
+		$a_server = $buf->chooseFileServer();
+	}
 	if (is_object($a_server) === false) {
 		popup_error(_('No server avalaible for sharedFolder'));
 		return false;
