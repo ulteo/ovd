@@ -26,38 +26,7 @@ if (! checkAuthorization('viewStatus'))
 	redirect('index.php');
 
 
-if (isset($_POST['join'])) {
-	$session = Abstract_Session::load($_POST['join']);
-
-	if (! $session)
-		redirect($_SERVER['HTTP_REFERER']);
-
-	$view_only = 'Yes';
-	if (isset($_POST['active']))
-		$view_only = 'No';
-
-	$invite = new Invite(gen_unique_string());
-	$invite->session = $session->id;
-	$invite->settings = array(
-		'invite_email'	=>	'admin',
-		'view_only'		=>	($view_only == 'Yes')?1:0,
-		'access_id'		=>	((isset($_POST['access_id']) && $_POST['access_id'] != '')?$_POST['access_id']:Session::MODE_DESKTOP),
-		'client'		=>	'browser'
-	);
-	$invite->email = 'none';
-	$invite->valid_until = (time()+(60*30));
-	Abstract_Invite::save($invite);
-
-	$token = new Token(gen_unique_string());
-	$token->type = 'invite';
-	$token->link_to = $invite->id;
-	$token->valid_until = (time()+(60*30));
-	Abstract_Token::save($token);
-
-	$server = Abstract_Server::load($session->server);
-
-	redirect($server->getBaseURL(true).'/index.php?token='.$token->id);
-} elseif (isset($_GET['info'])) {
+if (isset($_GET['info'])) {
 	$session = Abstract_Session::load($_GET['info']);
 
 	if (! $session)
@@ -132,34 +101,12 @@ if (isset($_POST['join'])) {
 				echo '<tr><td>';
 				echo '<img src="media/image/cache.php?id='.$myapp->getAttribute('id').'" alt="" title="" /> <a href="applications.php?action=manage&id='.$myapp->getAttribute('id').'">'.$myapp->getAttribute('name').'</a>';
 				echo '</td><td>';
-				/*if ($session->getAttribute('mode') == Session::MODE_APPLICATIONS && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
-					echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
-					echo '	<input type="hidden" id="desktop_size" value="auto" />';
-					echo '	<input type="hidden" id="session_debug_true" value="0" />';
-					echo '	<input type="hidden" name="join" value="'.$session->id.'" />';
-					echo '	<input type="hidden" name="access_id" value="'.$access_id.'" />';
-					echo '	<input type="submit" name="passive" value="'._('Observe this application').'" />';
-					echo '	<input type="submit" name="active" value="'._('Join this application').'" />';
-					echo '</form>';
-				}*/
 				echo '</td></tr>';
 			}
 			echo '</table>';
 			echo '</ul>';
 		}
 	}
-
-	/*if ($session->getAttribute('mode') == Session::MODE_DESKTOP && $session->getAttribute('status') == Session::SESSION_STATUS_ACTIVE) {
-		echo '<h2>'._('Connect to or observe this session').'</h2>';
-		echo '<form action="sessions.php" method="post" onsubmit="popupOpen2(this)">';
-		echo '	<input type="hidden" id="desktop_size" value="auto" />';
-		echo '	<input type="hidden" id="session_debug_true" value="0" />';
-		echo '	<input type="hidden" name="join" value="'.$session->id.'" />';
-		echo '	<input type="hidden" name="access_id" value="'.Session::MODE_DESKTOP.'" />';
-		echo '	<input type="submit" name="passive" value="'._('Observe this session').'" />';
-		echo '	<input type="submit" name="active" value="'._('Join this session').'" />';
-		echo '</form>';
-	}*/
 
 	echo '<h2>'._('Kill this session').'</h2>';
 	echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to kill this session?').'\');">';

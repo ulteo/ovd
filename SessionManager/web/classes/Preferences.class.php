@@ -339,9 +339,6 @@ class Preferences {
 		$c = new ConfigElement_select('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
-		/*$c = new ConfigElement_select('shareable', _('Session owner can share his session'), _('Session owner can share his session'), _('Session owner can share his session'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');*/
 		$c = new ConfigElement_select('allow_shell', _('User can use a console in the session'), _('User can use a console in the session'), _('User can use a console in the session'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');

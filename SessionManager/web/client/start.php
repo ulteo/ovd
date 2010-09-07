@@ -157,7 +157,6 @@ $timeout = $default_settings['timeout'];
 $start_app = '';
 $start_app_args = '';
 //$persistent = $default_settings['persistent'];
-//$shareable = $default_settings['shareable'];
 $desktop_icons = $default_settings['desktop_icons'];
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
@@ -197,7 +196,7 @@ if (isset($_SESSION['mode'])) {
 
 $locale = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent', 'shareable', */'desktop_icons');
+$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent', */'desktop_icons');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '') {
 		switch ($protocol_var) {
@@ -540,9 +539,7 @@ if (isset($start_app) && $start_app != '') {
 if (isset($start_app_args) && $start_app_args != '')
 	$optional_args['start_app_args'] = $start_app_args;
 /*if (isset($persistent) && $persistent != '0')
-	$optional_args['persistent'] = 1;
-if (isset($shareable) && $shareable != '0')
-	$optional_args['shareable'] = 1;*/
+	$optional_args['persistent'] = 1;*/
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 if (isset($allow_shell) && $allow_shell != '0')
