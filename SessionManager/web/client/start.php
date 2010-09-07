@@ -156,7 +156,6 @@ $session_mode = $default_settings['session_mode'];
 $timeout = $default_settings['timeout'];
 $start_app = '';
 $start_app_args = '';
-//$persistent = $default_settings['persistent'];
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
@@ -170,7 +169,9 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
 
 $remote_desktop_settings = $prefs->get('general', 'remote_desktop_settings');
+$persistent = $remote_desktop_settings['persistent'];
 $desktop_icons = $remote_desktop_settings['desktop_icons'];
+
 $remote_applications_settings = $prefs->get('general', 'remote_applications_settings');
 
 $enabled_session_modes = array();
@@ -196,7 +197,7 @@ if (isset($_SESSION['mode'])) {
 
 $locale = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent'*/);
+$protocol_vars = array('session_mode', 'language', 'timeout', 'persistent');
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '') {
 		switch ($protocol_var) {
@@ -230,14 +231,15 @@ Logger::debug('main', '(startsession) Now checking for old session');
 
 $ev = new SessionStart(array('user' => $user));
 
-$already_online = 0;
 $sessions = Abstract_Session::getByUser($user->getAttribute('login'));
 if ($sessions > 0) {
 	foreach ($sessions as $session) {
-		/*if ($session->isSuspended()) {
+		if ($session->mode == Session::MODE_DESKTOP && $session->isSuspended()) {
 			$old_session_id = $session->id;
-			$old_session_server = $session->server;
-		} else*/if ($session->isAlive()) {
+
+			$user_login = $session->settings['aps_access_login'];
+			$user_password = $session->settings['aps_access_password'];
+		} elseif ($session->isAlive()) {
 			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
 		} else {
@@ -247,200 +249,202 @@ if ($sessions > 0) {
 	}
 }
 
-$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
-$user_password = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-
-$buf_servers = $user->getAvailableServers();
-if (is_null($buf_servers) || count($buf_servers) == 0) {
-	$ev->setAttribute('ok', false);
-	$ev->setAttribute('error', _('No available server'));
-	$ev->emit();
-	Logger::error('main', '(startsession) no server found for \''.$user->getAttribute('login').'\' -> abort');
-	throw_response(SERVICE_NOT_AVAILABLE);
-}
-
-$servers = array();
-foreach ($buf_servers as $buf_server)
-	$servers[] = $buf_server->fqdn;
-$random_server = false;
-if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
-	switch ($remote_desktop_settings['desktop_type']) {
-		case 'linux':
-			foreach ($servers as $k => $server) {
-				$server = Abstract_Server::load($server);
-				if (! $server)
-					continue;
-
-				if ($server->getAttribute('type') == 'linux') {
-					$random_server = $servers[$k];
-					break;
-				}
-			}
-			if (! $random_server) {
-				Logger::error('main', '(startsession) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
-				throw_response(SERVICE_NOT_AVAILABLE);
-			}
-			break;
-		case 'windows':
-			foreach ($servers as $k => $server) {
-				$server = Abstract_Server::load($server);
-				if (! $server)
-					continue;
-
-				if ($server->getAttribute('type') == 'windows') {
-					$random_server = $servers[$k];
-					break;
-				}
-			}
-			if (! $random_server) {
-				Logger::error('main', '(startsession) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
-				throw_response(SERVICE_NOT_AVAILABLE);
-			}
-			break;
-		case 'any':
-		default:
-			$random_server = $servers[0];
-			break;
-	}
-} else
-	$random_server = $servers[0];
-
-$fileservers = Servers::getAvailableByRole(Servers::$role_fs);
-if (count($fileservers) > 0) {
-	$netfolders = $user->getNetworkFolders();
-
-	if (! is_array($netfolders)) {
-		Logger::error('main', '(startsession) User::getNetworkFolders() failed');
-		throw_response(INTERNAL_ERROR);
-	}
-
-	$profile_available = false;
-	if (count($netfolders) == 1) {
-		Logger::debug('main', '(startsession) User "'.$user_login.'" already have a profile, using it');
-
-		$netfolder = array_pop($netfolders);
-
-		foreach ($fileservers as $fileserver) {
-			if ($fileserver->fqdn != $netfolder->server)
-				continue;
-
-			$profile_available = true;
-
-			if (! $netfolder->delUser($user)) {
-				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 1)');
-				throw_response(INTERNAL_ERROR);
-			}
-			if (! $fileserver->delUserFromNetworkFolder($netfolder->id, $user_login)) {
-				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
-				throw_response(INTERNAL_ERROR);
-			}
-
-			if (! $netfolder->addUser($user)) {
-				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 3)');
-				throw_response(INTERNAL_ERROR);
-			}
-			if (! $fileserver->addUserToNetworkFolder($netfolder->id, $user_login, $user_password)) {
-				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 4)');
-				throw_response(INTERNAL_ERROR);
-			}
-
-			$profile_server = $netfolder->server;
-			$profile_name = $netfolder->id;
-		}
-	} else {
-		Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
-
-		if (isset($auto_create_profile) && $auto_create_profile == 1) {
-			Logger::debug('main', '(startsession) User "'.$user_login.'" profile will be auto-created, and used');
-
-			$fileserver = array_pop($fileservers);
-			$profile = new NetworkFolder();
-			$profile->server = $fileserver->getAttribute('fqdn');
-			Abstract_NetworkFolder::save($profile);
-
-			if (! $fileserver->createNetworkFolder($profile->id)) {
-				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
-				throw_response(INTERNAL_ERROR);
-			}
-
-			if (! $profile->addUser($user)) {
-				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
-				throw_response(INTERNAL_ERROR);
-			}
-			if (! $fileserver->addUserToNetworkFolder($profile->id, $user_login, $user_password)) {
-				Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 3)');
-				throw_response(INTERNAL_ERROR);
-			}
-
-			$profile_available = true;
-			$profile_server = $profile->server;
-			$profile_name = $profile->id;
-		} else {
-			Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
-
-			if (isset($start_without_profile) && $start_without_profile == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
-
-				$profile_available = false;
-			} else {
-				Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
-
-				throw_response(INTERNAL_ERROR);
-			}
-		}
-	}
-} else {
-	Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login.'", checking for session without profile');
-
-	if (isset($start_without_profile) && $start_without_profile == 1) {
-		Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
-
-		$profile_available = false;
-	} else {
-		Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
-
-		throw_response(INTERNAL_ERROR);
-	}
-}
-
-$sharedfolders = $user->getSharedFolders();
-$netshares = array();
-if (is_array($sharedfolders) && count($sharedfolders) > 0) {
-	foreach ($sharedfolders as $sharedfolder) {
-		$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
-		if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
-			Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
-
-			if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
-				Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without all shared folders available, proceeding');
-
-				continue;
-			} else {
-				Logger::error('main', '(startsession) User "'.$user_login.'" does not have all shared folders available, aborting');
-
-				throw_response(INTERNAL_ERROR);
-			}
-		}
-
-		$sharedfolder_server->delUserFromNetworkFolder($sharedfolder->id, $user_login);
-		if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $user_login, $user_password)) {
-			Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" on shared folder "'.$sharedfolder->id.'" failed');
-			throw_response(INTERNAL_ERROR);
-		}
-
-		$netshares[] = $sharedfolder;
-	}
-}
-
-/*if (isset($old_session_id) && isset($old_session_server)) {
+if (isset($old_session_id)) {
 	$session = Abstract_Session::load($old_session_id);
 
 	$session_type = 'resume';
 
+	$session->setStatus(Session::SESSION_STATUS_INITED);
+
 	$ret = true;
 
-	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$old_session_server.')');
-} else {*/
+	Logger::info('main', '(startsession) Resuming session for '.$user->getAttribute('login').' ('.$old_session_id.' => '.$session->server.')');
+} else {
+	$user_login = $user->getAttribute('login').'_OVD'; //hardcoded
+	$user_password = gen_string(3, 'abcdefghijklmnopqrstuvwxyz').gen_string(2, '0123456789').gen_string(3, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+	$buf_servers = $user->getAvailableServers();
+	if (is_null($buf_servers) || count($buf_servers) == 0) {
+		$ev->setAttribute('ok', false);
+		$ev->setAttribute('error', _('No available server'));
+		$ev->emit();
+		Logger::error('main', '(startsession) no server found for \''.$user->getAttribute('login').'\' -> abort');
+		throw_response(SERVICE_NOT_AVAILABLE);
+	}
+
+	$servers = array();
+	foreach ($buf_servers as $buf_server)
+		$servers[] = $buf_server->fqdn;
+	$random_server = false;
+	if ($session_mode == Session::MODE_DESKTOP && (isset($remote_desktop_settings) && array_key_exists('desktop_type', $remote_desktop_settings))) {
+		switch ($remote_desktop_settings['desktop_type']) {
+			case 'linux':
+				foreach ($servers as $k => $server) {
+					$server = Abstract_Server::load($server);
+					if (! $server)
+						continue;
+
+					if ($server->getAttribute('type') == 'linux') {
+						$random_server = $servers[$k];
+						break;
+					}
+				}
+				if (! $random_server) {
+					Logger::error('main', '(startsession) no "linux" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
+					throw_response(SERVICE_NOT_AVAILABLE);
+				}
+				break;
+			case 'windows':
+				foreach ($servers as $k => $server) {
+					$server = Abstract_Server::load($server);
+					if (! $server)
+						continue;
+
+					if ($server->getAttribute('type') == 'windows') {
+						$random_server = $servers[$k];
+						break;
+					}
+				}
+				if (! $random_server) {
+					Logger::error('main', '(startsession) no "windows" desktop server found for \''.$user->getAttribute('login').'\' -> abort');
+					throw_response(SERVICE_NOT_AVAILABLE);
+				}
+				break;
+			case 'any':
+			default:
+				$random_server = $servers[0];
+				break;
+		}
+	} else
+		$random_server = $servers[0];
+
+	$fileservers = Servers::getAvailableByRole(Servers::$role_fs);
+	if (count($fileservers) > 0) {
+		$netfolders = $user->getNetworkFolders();
+
+		if (! is_array($netfolders)) {
+			Logger::error('main', '(startsession) User::getNetworkFolders() failed');
+			throw_response(INTERNAL_ERROR);
+		}
+
+		$profile_available = false;
+		if (count($netfolders) == 1) {
+			Logger::debug('main', '(startsession) User "'.$user_login.'" already have a profile, using it');
+
+			$netfolder = array_pop($netfolders);
+
+			foreach ($fileservers as $fileserver) {
+				if ($fileserver->fqdn != $netfolder->server)
+					continue;
+
+				$profile_available = true;
+
+				if (! $netfolder->delUser($user)) {
+					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 1)');
+					throw_response(INTERNAL_ERROR);
+				}
+				if (! $fileserver->delUserFromNetworkFolder($netfolder->id, $user_login)) {
+					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 2)');
+					throw_response(INTERNAL_ERROR);
+				}
+
+				if (! $netfolder->addUser($user)) {
+					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 3)');
+					throw_response(INTERNAL_ERROR);
+				}
+				if (! $fileserver->addUserToNetworkFolder($netfolder->id, $user_login, $user_password)) {
+					Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" profile failed (step 4)');
+					throw_response(INTERNAL_ERROR);
+				}
+
+				$profile_server = $netfolder->server;
+				$profile_name = $netfolder->id;
+			}
+		} else {
+			Logger::debug('main', '(startsession) User "'.$user_login.'" does not have a profile for now, checking for auto-creation');
+
+			if (isset($auto_create_profile) && $auto_create_profile == 1) {
+				Logger::debug('main', '(startsession) User "'.$user_login.'" profile will be auto-created, and used');
+
+				$fileserver = array_pop($fileservers);
+				$profile = new NetworkFolder();
+				$profile->server = $fileserver->getAttribute('fqdn');
+				Abstract_NetworkFolder::save($profile);
+
+				if (! $fileserver->createNetworkFolder($profile->id)) {
+					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 1)');
+					throw_response(INTERNAL_ERROR);
+				}
+
+				if (! $profile->addUser($user)) {
+					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 2)');
+					throw_response(INTERNAL_ERROR);
+				}
+				if (! $fileserver->addUserToNetworkFolder($profile->id, $user_login, $user_password)) {
+					Logger::error('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" failed (step 3)');
+					throw_response(INTERNAL_ERROR);
+				}
+
+				$profile_available = true;
+				$profile_server = $profile->server;
+				$profile_name = $profile->id;
+			} else {
+				Logger::debug('main', '(startsession) Auto-creation of profile for User "'.$user_login.'" disabled, checking for session without profile');
+
+				if (isset($start_without_profile) && $start_without_profile == 1) {
+					Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+
+					$profile_available = false;
+				} else {
+					Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+
+					throw_response(INTERNAL_ERROR);
+				}
+			}
+		}
+	} else {
+		Logger::debug('main', '(startsession) FileServer not available for User "'.$user_login.'", checking for session without profile');
+
+		if (isset($start_without_profile) && $start_without_profile == 1) {
+			Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without a valid profile, proceeding');
+
+			$profile_available = false;
+		} else {
+			Logger::error('main', '(startsession) User "'.$user_login.'" does not have a valid profile, aborting');
+
+			throw_response(INTERNAL_ERROR);
+		}
+	}
+
+	$sharedfolders = $user->getSharedFolders();
+	$netshares = array();
+	if (is_array($sharedfolders) && count($sharedfolders) > 0) {
+		foreach ($sharedfolders as $sharedfolder) {
+			$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
+			if (! $sharedfolder_server || ! $sharedfolder_server->isOnline()) {
+				Logger::error('main', '(startsession) Server "'.$sharedfolder->server.'" for shared folder "'.$sharedfolder->id.'" is not available');
+
+				if (isset($start_without_all_sharedfolders) && $start_without_all_sharedfolders == 1) {
+					Logger::debug('main', '(startsession) User "'.$user_login.'" can start a session without all shared folders available, proceeding');
+
+					continue;
+				} else {
+					Logger::error('main', '(startsession) User "'.$user_login.'" does not have all shared folders available, aborting');
+
+					throw_response(INTERNAL_ERROR);
+				}
+			}
+
+			$sharedfolder_server->delUserFromNetworkFolder($sharedfolder->id, $user_login);
+			if (! $sharedfolder_server->addUserToNetworkFolder($sharedfolder->id, $user_login, $user_password)) {
+				Logger::error('main', '(startsession) Access creation for User "'.$user_login.'" on shared folder "'.$sharedfolder->id.'" failed');
+				throw_response(INTERNAL_ERROR);
+			}
+
+			$netshares[] = $sharedfolder;
+		}
+	}
+
 	$random_session_id = gen_unique_string();
 
 	$session_type = 'start';
@@ -457,7 +461,7 @@ if (is_array($sharedfolders) && count($sharedfolders) > 0) {
 	$ret = true;
 
 	Logger::info('main', '(startsession) Creating new session for '.$user->getAttribute('login').' ('.$random_session_id.' => '.$random_server.')');
-//}
+}
 
 if ($ret === false)
 	throw_response(INTERNAL_ERROR);
@@ -506,8 +510,8 @@ if (isset($start_app) && $start_app != '') {
 }
 if (isset($start_app_args) && $start_app_args != '')
 	$optional_args['start_app_args'] = $start_app_args;
-/*if (isset($persistent) && $persistent != '0')
-	$optional_args['persistent'] = 1;*/
+if (isset($persistent) && $persistent != '0')
+	$optional_args['persistent'] = 1;
 if (isset($desktop_icons) && $desktop_icons != '0')
 	$optional_args['desktop_icons'] = 1;
 if (isset($allow_shell) && $allow_shell != '0')
@@ -559,119 +563,19 @@ $ev->setAttributes(array(
 ));
 $ev->emit();
 
-if ($session->mode == Session::MODE_DESKTOP) {
-	$server = Abstract_Server::load($session->server);
-	if (! $server)
-		continue;
-
-	if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1) {
-		$external_apps_token = new Token(gen_unique_string());
-		$external_apps_token->type = 'external_apps';
-		$external_apps_token->link_to = $session->id;
-		$external_apps_token->valid_until = 0;
-		Abstract_Token::save($external_apps_token);
-	}
-
-	$server_applications = $server->getApplications();
-	if (! is_array($server_applications))
-		$server_applications = array();
-
-	$available_applications = array();
-	foreach ($server_applications as $server_application)
-		$available_applications[] = $server_application->getAttribute('id');
-
-	$dom = new DomDocument('1.0', 'utf-8');
-
-	$session_node = $dom->createElement('session');
-	$session_node->setAttribute('id', $session->id);
-	$session_node->setAttribute('mode', Session::MODE_DESKTOP);
-	if (isset($external_apps_token))
-		$session_node->setAttribute('external_apps_token', $external_apps_token->id);
-	foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
-		if (! isset($$parameter))
-			continue;
-
-		$parameter_node = $dom->createElement('parameter');
-		$parameter_node->setAttribute('name', $parameter);
-		$parameter_node->setAttribute('value', $$parameter);
-		$session_node->appendChild($parameter_node);
-	}
-	$user_node = $dom->createElement('user');
-	$user_node->setAttribute('login', $user_login);
-	$user_node->setAttribute('password', $user_password);
-	$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
-	$session_node->appendChild($user_node);
-
-	if (isset($profile_available) && $profile_available === true) {
-		$profile_fileserver = Abstract_Server::load($profile_server);
-		$profile_node = $dom->createElement('profile');
-		$profile_node->setAttribute('server', $profile_fileserver->external_name);
-		$profile_node->setAttribute('dir', $profile_name);
-		$profile_node->setAttribute('login', $user_login);
-		$profile_node->setAttribute('password', $user_password);
-		$session_node->appendChild($profile_node);
-	}
-
-	if (isset($netshares) && count($netshares) > 0) {
-		$sharedfolders_node = $dom->createElement('sharedfolders');
-		$session_node->appendChild($sharedfolders_node);
-
-		foreach ($netshares as $netshare) {
-			$netshare_fileserver = Abstract_Server::load($netshare->server);
-			$sharedfolder_node = $dom->createElement('sharedfolder');
-			$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
-			$sharedfolder_node->setAttribute('dir', $netshare->id);
-			$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
-			$sharedfolder_node->setAttribute('password', $user_password);
-			$sharedfolders_node->appendChild($sharedfolder_node);
-		}
-	}
-
-	foreach ($user->applications() as $application) {
-		if ($application->getAttribute('static'))
-			continue;
-
-		if ($application->getAttribute('type') != $server->getAttribute('type'))
-			continue;
-
-		if (! in_array($application->getAttribute('id'), $available_applications))
-			continue;
-
-		$application_node = $dom->createElement('application');
-		$application_node->setAttribute('id', $application->getAttribute('id'));
-		$application_node->setAttribute('mode', 'local');
-		$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
-
-		$session_node->appendChild($application_node);
-	}
-
-	$dom->appendChild($session_node);
-
-	$xml = $dom->saveXML();
-
-	$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
-	if (! $ret) {
-		header('Content-Type: text/xml; charset=utf-8');
-		$dom = new DomDocument('1.0', 'utf-8');
-
-		$node = $dom->createElement('error');
-		$node->setAttribute('id', 1);
-		$node->setAttribute('message', 'Server does not send a valid XML');
-		$dom->appendChild($node);
-
-		echo $dom->saveXML();
-		exit(1);
-	}
-}
-
-if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
-	foreach ($session->servers as $server) {
-		$server = Abstract_Server::load($server);
+if (! isset($old_session_id)) {
+	if ($session->mode == Session::MODE_DESKTOP) {
+		$server = Abstract_Server::load($session->server);
 		if (! $server)
 			continue;
 
-		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $server->fqdn == $session->server)
-			continue;
+		if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1) {
+			$external_apps_token = new Token(gen_unique_string());
+			$external_apps_token->type = 'external_apps';
+			$external_apps_token->link_to = $session->id;
+			$external_apps_token->valid_until = 0;
+			Abstract_Token::save($external_apps_token);
+		}
 
 		$server_applications = $server->getApplications();
 		if (! is_array($server_applications))
@@ -685,7 +589,9 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 
 		$session_node = $dom->createElement('session');
 		$session_node->setAttribute('id', $session->id);
-		$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
+		$session_node->setAttribute('mode', Session::MODE_DESKTOP);
+		if (isset($external_apps_token))
+			$session_node->setAttribute('external_apps_token', $external_apps_token->id);
 		foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
 			if (! isset($$parameter))
 				continue;
@@ -760,6 +666,106 @@ if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::
 
 			echo $dom->saveXML();
 			exit(1);
+		}
+	}
+
+	if ($session->mode == Session::MODE_APPLICATIONS || ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1)) {
+		foreach ($session->servers as $server) {
+			$server = Abstract_Server::load($server);
+			if (! $server)
+				continue;
+
+			if ($session->mode == Session::MODE_DESKTOP && isset($remote_desktop_settings) && array_key_exists('allow_external_applications', $remote_desktop_settings) && $remote_desktop_settings['allow_external_applications'] == 1 && $server->fqdn == $session->server)
+				continue;
+
+			$server_applications = $server->getApplications();
+			if (! is_array($server_applications))
+				$server_applications = array();
+
+			$available_applications = array();
+			foreach ($server_applications as $server_application)
+				$available_applications[] = $server_application->getAttribute('id');
+
+			$dom = new DomDocument('1.0', 'utf-8');
+
+			$session_node = $dom->createElement('session');
+			$session_node->setAttribute('id', $session->id);
+			$session_node->setAttribute('mode', Session::MODE_APPLICATIONS);
+			foreach (array('desktop_icons', 'locale', 'timezone') as $parameter) {
+				if (! isset($$parameter))
+					continue;
+
+				$parameter_node = $dom->createElement('parameter');
+				$parameter_node->setAttribute('name', $parameter);
+				$parameter_node->setAttribute('value', $$parameter);
+				$session_node->appendChild($parameter_node);
+			}
+			$user_node = $dom->createElement('user');
+			$user_node->setAttribute('login', $user_login);
+			$user_node->setAttribute('password', $user_password);
+			$user_node->setAttribute('displayName', $user->getAttribute('displayname'));
+			$session_node->appendChild($user_node);
+
+			if (isset($profile_available) && $profile_available === true) {
+				$profile_fileserver = Abstract_Server::load($profile_server);
+				$profile_node = $dom->createElement('profile');
+				$profile_node->setAttribute('server', $profile_fileserver->external_name);
+				$profile_node->setAttribute('dir', $profile_name);
+				$profile_node->setAttribute('login', $user_login);
+				$profile_node->setAttribute('password', $user_password);
+				$session_node->appendChild($profile_node);
+			}
+
+			if (isset($netshares) && count($netshares) > 0) {
+				$sharedfolders_node = $dom->createElement('sharedfolders');
+				$session_node->appendChild($sharedfolders_node);
+
+				foreach ($netshares as $netshare) {
+					$netshare_fileserver = Abstract_Server::load($netshare->server);
+					$sharedfolder_node = $dom->createElement('sharedfolder');
+					$sharedfolder_node->setAttribute('server', $netshare_fileserver->external_name);
+					$sharedfolder_node->setAttribute('dir', $netshare->id);
+					$sharedfolder_node->setAttribute('login', $user_login.'_'.$netshare->id);
+					$sharedfolder_node->setAttribute('password', $user_password);
+					$sharedfolders_node->appendChild($sharedfolder_node);
+				}
+			}
+
+			foreach ($user->applications() as $application) {
+				if ($application->getAttribute('static'))
+					continue;
+
+				if ($application->getAttribute('type') != $server->getAttribute('type'))
+					continue;
+
+				if (! in_array($application->getAttribute('id'), $available_applications))
+					continue;
+
+				$application_node = $dom->createElement('application');
+				$application_node->setAttribute('id', $application->getAttribute('id'));
+				$application_node->setAttribute('mode', 'local');
+				$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+
+				$session_node->appendChild($application_node);
+			}
+
+			$dom->appendChild($session_node);
+
+			$xml = $dom->saveXML();
+
+			$ret = parse_session_create_XML(query_url_post_xml($server->getBaseURL().'/aps/session/create', $xml));
+			if (! $ret) {
+				header('Content-Type: text/xml; charset=utf-8');
+				$dom = new DomDocument('1.0', 'utf-8');
+
+				$node = $dom->createElement('error');
+				$node->setAttribute('id', 1);
+				$node->setAttribute('message', 'Server does not send a valid XML');
+				$dom->appendChild($node);
+
+				echo $dom->saveXML();
+				exit(1);
+			}
 		}
 	}
 }

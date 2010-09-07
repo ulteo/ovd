@@ -186,6 +186,10 @@ class Role(AbstractRole):
 				if session.status == Session.SESSION_STATUS_ACTIVE and ts_status is RolePlatform.TS.STATUS_DISCONNECTED:
 					self.session_switch_status(session, Session.SESSION_STATUS_INACTIVE)
 					continue
+				
+				if session.status == Session.SESSION_STATUS_INACTIVE and ts_status is RolePlatform.TS.STATUS_LOGGED:
+					self.session_switch_status(session, Session.SESSION_STATUS_ACTIVE)
+					continue
 			
 			
 			t1 = time.time()

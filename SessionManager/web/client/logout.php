@@ -67,7 +67,7 @@ if (! $ret)
 
 $session = Abstract_Session::load($_SESSION['session_id']);
 if (is_object($session))
-	$session->orderDeletion();
+	$session->setStatus(Session::SESSION_STATUS_INACTIVE);
 
 header('Content-Type: text/xml; charset=utf-8');
 
