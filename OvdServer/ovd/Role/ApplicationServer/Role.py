@@ -203,17 +203,21 @@ class Role(AbstractRole):
 	
 	
 	def purgeGroup(self):
-		users = Platform.System.groupMember(self.ovd_group_name)
-		if users is None:
-			return False
-		
-		for user in users:
-			# todo : check if the users is connected, if yes logoff his session
+		while True:
+			users = Platform.System.groupMember(self.ovd_group_name)
 			
-			if not Platform.System.userRemove(user):
+			if users is None:
 				return False
-		
-		return True
+			
+			if users == []:
+				return True
+			
+			for user in users:
+				# todo : check if the users is connected, if yes logoff his session
+				if not Platform.System.userRemove(user):
+					return False
+			
+		return False
 	
 	
 	@staticmethod
