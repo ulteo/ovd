@@ -32,7 +32,7 @@ if (!isset($_REQUEST['name']))
 if (!isset($_REQUEST['action']))
 	redirect();
 
-if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'enable_dav_fs', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules')))
+if (! in_array($_REQUEST['action'], array('add', 'del', 'change', 'modify', 'register', 'install_line', 'upgrade', 'replication', 'maintenance', 'available_sessions', 'external_name', 'rename', 'populate', 'publish', 'del_icon', 'unset_default', 'set_default', 'modify_rules')))
 	redirect();
 
 if ($_REQUEST['name'] == 'System') {
@@ -943,22 +943,6 @@ if ($_REQUEST['name'] == 'SharedFolder') {
 			}
 			redirect('sharedfolders.php?action=manage&id='.$id);
 		}
-	}
-	
-	if ($_REQUEST['action'] == 'enable_dav_fs') {
-		if (! checkAuthorization('manageConfiguration'))
-			redirect('index.php');
-		
-		$prefs = new Preferences_admin();
-		if (! $prefs)
-			die_error('get Preferences failed', __FILE__, __LINE__);
-		
-		$prefs->set('plugins', 'FS', 'dav');
-		$ret = $prefs->backup();
-		if ($ret == true)
-			popup_info(_('Configuration successfully saved'));
-		
-		redirect('sharedfolders.php');
 	}
 }
 
