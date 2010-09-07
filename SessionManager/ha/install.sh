@@ -47,39 +47,17 @@ AUTH_KEY=`date '+%m%d%y%H%M%S'`
 GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}'`
 
 # load util functions
-. utils.sh
+. ./utils.sh
 
 
 function drbd_install()
 {
-	########################
-	# [OLD VERSION OF LUCID]
-	# drbd8-source drbd8-module-source build-essential module-assistant
-	# Performed kernel module drbd
-	#echo -e "\033[36;1m[INFO] \033[0m module-assistant auto-install drbd8"
-	#module-assistant auto-install drbd8
-	#echo -e "\033[36;1m[INFO] \033[0m m-a -f get drbd8-module-source."
-	#m-a -f get drbd8-module-source
-	########################
-
 	modprobe drbd
 
 	# Stopping all services
 	service mysql stop &> /dev/null
 	service apache2 stop &> /dev/null
 	service heartbeat stop &> /dev/null
-
-	########################
-	# [OLD VERSION OF LUCID]
-	# verify install modprobe drbd in /etc/modprobes.d/drbd.conf
-	# insert in /etc/module drbd
-    #NIC_NAME=0
-	#if [ -e $MODULES ] && [ -w $MODULES ]; then
-	#	cat $MODULES | awk ' NF > 0 {if ( $1 != "drbd" ) {print}}' > /tmp/tmp_etc-modules.txt
-	#	echo "drbd" >> /tmp/tmp_etc-modules.txt
-	#	mv /tmp/tmp_etc-modules.txt $MODULES
-	#fi
-	########################
 
 	# Create a virtual block device of 250M
 	echo -e "\033[36;1m[INFO] \033[0m Create a virtual block device of 250 MBytes"
@@ -261,7 +239,7 @@ echo -e "\033[31;1m[REQUIRE] \033[0m Package ulteo-ovd-session-manager must be i
 [ -z "$GATEWAY" ] && echo -e "\033[31;1m[FAILED] \033[0m No gateway found !" && exit 2
 
 set_netlink
-set_virtual_ip
+set_virtual_ip $NIC_MASK $NIC_ADDR
 
 # choose MASTER/SLAVE
 while true; do

@@ -40,9 +40,10 @@ function set_netlink()
         exit 2;
     fi
 
-    for i in {0..$len}; do
-        tmp=`ifconfig ${NICS[$i]} | grep "inet addr" | tr -s ' '| cut -d' ' -f3-`
-        echo -e "\t\a[$i] ${NICS[$i]} ("$tmp")"
+    for i in $(seq 1 $len); do
+        local nic="${NICS[$i-1]}"
+        tmp=`ifconfig $nic | grep "inet addr" | tr -s ' '| cut -d' ' -f3-`
+        [ -n "$tmp" ] && echo -e "\t\a[$i] $nic ("$tmp")"
     done
 
     unset NIC_INFOS
@@ -50,9 +51,10 @@ function set_netlink()
         echo -n "Choose nic number: "
         read var_nic
         [ -z "$var_nic" ] && continue
-        [[ $var_nic != [0-9] ]] && \
+
+        [[ $var_nic == [0-9] ]] && \
             [ $var_nic -ge 0 -a $var_nic -le $len ] && \
-            NIC_INFOS=${NICS[$var_nic]}
+            NIC_INFOS="${NICS[$var_nic-1]}"
     done
 
     NIC_NAME=${NICS[$NIC_INFOS]}
@@ -68,54 +70,24 @@ function set_netlink()
 
 function set_virtual_ip()
 {
-    var_mask=`echo "$NIC_MASK" | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`
-    var_addr=`echo "$NIC_ADDR" | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`
+    local nic_mask=(`echo $1 | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
+    local nic_addr=(`echo $2 | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
 
-    i=0
-    for n in $var_addr; do
-        tab_ip[$i]=$n
-        let i++
-    done
+    while [ -z "$VIP" ]; do
+        echo -n "Please, give the virtual IP you want: " && read vip
+        ([ -z "$vip" ] || ! valid_ip "$vip") && continue
 
-    # Determine Address class of VIP
-    i=0
-    for n in $var_mask; do
-        if [ $n == "0" ]; then
-            tab_ip[$i]=-1
-            break;
-        fi
-        let i++
-    done
+        vip=(`echo $vip | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
+        [ ${#vip[*]} != 4 ] && continue
 
-    # Select a VIP
-    while [ 1 ]; do
-        echo -n "Please, give the virtual IP you want: "
-        read var_vip
-        if [ -z "$var_vip" ]; then
-            continue;
-        fi
-        valid_ip $var_vip
-        if [[ $? == "0" ]]; then
-            var_vip2=`echo "$var_vip" | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`
-            i=0
-            for n in $var_vip2; do
-                if [ "${tab_ip[$i]} " -eq "-1" ]; then
-                    tab_vip[$i]=$n
-                elif [ "${tab_ip[$i]}" -eq "$n" ]; then
-                    tab_vip[$i]=$n
-                else
-                    break;
-                fi
-                let i++
-            done
-            let i--
-            if [ "$i" == "3" ]; then
-                VIP=`echo ${tab_vip[0]}"."${tab_vip[1]}"."${tab_vip[2]}"."${tab_vip[3]}`
-                [ "$VIP" != "$NIC_ADDR" ] && break
+        for i in {0..3}; do
+            if [ $(expr ${nic_addr[$i]} \& ${nic_mask[$i]}) != \
+                 $(expr ${vip[$i]} \& ${nic_mask[$i]}) ]; then
+                echo "The ip address you have submit is forbidden !"
+                unset vip && break
             fi
-        fi
-        echo "The ip address you have submit is forbidden !"
+        done
+        [ -n "$vip" ] && VIP=${vip[0]}.${vip[1]}.${vip[2]}.${vip[3]}
     done
-
     echo "You have selected" $VIP "as virtual IP"
 }
