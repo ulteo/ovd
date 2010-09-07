@@ -343,10 +343,6 @@ class Preferences {
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
 
-		$c = new ConfigElement_select('action_when_active_session', _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), _('Action to do when an user already have an active session'), 0);
-		$c->setContentAvailable(array(0=>_('Forbid access')));
-		$this->add($c,'general','session_settings_defaults');
-
 		$c = new ConfigElement_select('multimedia', _('Multimedia'), _('Multimedia'), _('Multimedia'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');

@@ -238,16 +238,6 @@ if ($sessions > 0) {
 			$old_session_id = $session->id;
 			$old_session_server = $session->server;
 		} else*/if ($session->isAlive()) {
-			$already_online = 1;
-
-			$buf = $prefs->get('general', 'session_settings_defaults');
-			$buf = $buf['action_when_active_session'];
-
-			if ($buf == 0) {
-				Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
-				throw_response(USER_WITH_ACTIVE_SESSION);
-			}
-
 			Logger::error('main', '(startsession) User \''.$user->getAttribute('login').'\' already have an active session');
 			throw_response(USER_WITH_ACTIVE_SESSION);
 		} else {
