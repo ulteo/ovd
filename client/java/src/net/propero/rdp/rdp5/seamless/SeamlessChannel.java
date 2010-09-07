@@ -76,7 +76,8 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	protected int seamlessSerial = 0;
 	
     protected Hashtable<String, SeamlessWindow> windows;
-
+	protected Hashtable<String, Integer> stateOrdersHistory = null;
+	
 	protected static Logger logger = Logger.getLogger("net.propero.rdp");
 
 	private Frame main_window = null;
@@ -87,6 +88,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 		super(opt_, common_);
 		logger.debug("Seamless Channel created");		
 		this.windows = new Hashtable<String, SeamlessWindow>();
+		this.stateOrdersHistory = new Hashtable<String, Integer>();
 	}
 	public void setMainFrame(Frame f_) {
 		this.main_window = f_;
@@ -489,6 +491,9 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 				break;
 		}
 
+		if (frame_state == Frame.ICONIFIED)
+			this.stateOrdersHistory.put(name, new Integer(frame_state));
+
 		f.sw_setExtendedState(frame_state);
 
 		return true;
@@ -799,7 +804,23 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 			try {
 				this.send_state(f.sw_getId(), state, 0);
 			} catch(Exception e) {
-				System.out.println("send failed: "+e);
+				System.err.println("send new state failed: "+e);
+			}
+			return;
+		}
+
+		if (ev.getNewState() == Frame.ICONIFIED) {
+			String name = "w_"+f.sw_getId();
+
+			if (this.stateOrdersHistory.containsKey(name) && this.stateOrdersHistory.get(name).intValue() == Frame.ICONIFIED) {
+				this.stateOrdersHistory.remove(name);
+				return;
+			}
+
+			try {
+				this.send_state(f.sw_getId(), SeamlessChannel.WINDOW_MINIMIZED, 0);
+			} catch(Exception e) {
+				System.err.println("send new state failed: "+e);
 			}
 		}
 	}
