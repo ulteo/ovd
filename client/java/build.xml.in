@@ -249,10 +249,6 @@
     </jar>
   </target>
 
-  <target name="ovdNativeClient.install" depends="ovdNativeClient.jar">
-    <antcall target="ovdNativeClient_install" />
-  </target>
-
   <target name="ovdNativeClient.debian" depends="ovdNativeClient">
     <unjar src="required_libraries/ini4j.jar" dest="jar" />
     <antcall target="ovdNativeClient_jar" />
@@ -263,6 +259,10 @@
                                             /usr/share/java/log4j-1.2.jar"/>
       </manifest>
     </jar>
+    <antcall target="ovdNativeClient_install" />
+  </target>
+
+  <target name="ovdNativeClient.install" depends="ovdNativeClient.jar">
     <antcall target="ovdNativeClient_install" />
   </target>
 
@@ -356,7 +356,7 @@
         <include name="required_libraries/*" />
         <include name="keymaps/*" />
         <include name="scripts/*" />
-        <include name="icons/*" />
+        <include name="icons/**" />
         <include name="po/*" />
         <include name="misc/*" />
         <include name="windowsPathsJNI/*" />
