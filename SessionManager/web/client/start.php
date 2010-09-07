@@ -157,7 +157,6 @@ $timeout = $default_settings['timeout'];
 $start_app = '';
 $start_app_args = '';
 //$persistent = $default_settings['persistent'];
-$desktop_icons = $default_settings['desktop_icons'];
 $allow_shell = $default_settings['allow_shell'];
 $multimedia = $default_settings['multimedia'];
 $redirect_client_printers = $default_settings['redirect_client_printers'];
@@ -171,6 +170,7 @@ foreach ($buf['advanced_settings_startsession'] as $v)
 	$advanced_settings[] = $v;
 
 $remote_desktop_settings = $prefs->get('general', 'remote_desktop_settings');
+$desktop_icons = $remote_desktop_settings['desktop_icons'];
 $remote_applications_settings = $prefs->get('general', 'remote_applications_settings');
 
 $enabled_session_modes = array();
@@ -196,7 +196,7 @@ if (isset($_SESSION['mode'])) {
 
 $locale = $user->getLocale();
 
-$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent', */'desktop_icons');
+$protocol_vars = array('session_mode', 'language', 'timeout', /*'persistent'*/);
 foreach ($protocol_vars as $protocol_var) {
 	if (in_array($protocol_var, $advanced_settings) && isset($_REQUEST[$protocol_var]) && $_REQUEST[$protocol_var] != '') {
 		switch ($protocol_var) {

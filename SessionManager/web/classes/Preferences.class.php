@@ -305,6 +305,9 @@ class Preferences {
 		$c = new ConfigElement_select('enabled', _('Enable Remote Desktop'), _('Enable Remote Desktop'), _('Enable Remote Desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','remote_desktop_settings');
+		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
+		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
+		$this->add($c,'general','remote_desktop_settings');
 		$c = new ConfigElement_select('allow_external_applications', _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), _('Allow external applications in Desktop'), 1);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','remote_desktop_settings');
@@ -333,9 +336,6 @@ class Preferences {
 		/*$c = new ConfigElement_select('persistent', _('Sessions are persistent'), _('Sessions are persistent'), _('Sessions are persistent'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');*/
-		$c = new ConfigElement_select('desktop_icons', _('Show icons on user desktop'), _('Show icons on user desktop'), _('Show icons on user desktop'), 1);
-		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
-		$this->add($c,'general','session_settings_defaults');
 		$c = new ConfigElement_select('launch_without_apps', _('User can launch a session with no application'), _('User can launch a session with no application'), _('User can launch a session with no application'), 0);
 		$c->setContentAvailable(array(0=>_('no'),1=>_('yes')));
 		$this->add($c,'general','session_settings_defaults');
@@ -365,7 +365,7 @@ class Preferences {
 		$this->add($c,'general','session_settings_defaults');
 
 		$c = new ConfigElement_multiselect('advanced_settings_startsession', _('Forceable paramaters by users'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), _('Choose Advanced Settings options you want to make available to users before they launch a session.'), array('session_mode', 'language'));
-		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), /*'persistent' => _('persistent'), 'shareable' => _('shareable'), */'desktop_icons' => _('desktop icons')));
+		$c->setContentAvailable(array('session_mode' => _('session mode'), 'language' => _('language'), 'server' => _('server'), 'timeout' => _('timeout'), /*'persistent' => _('persistent'), 'shareable' => _('shareable')*/));
 		$this->add($c,'general','session_settings_defaults');
 
 		$this->addPrettyName('web_interface_settings',_('Web interface settings'));
