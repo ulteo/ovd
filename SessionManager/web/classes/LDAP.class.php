@@ -177,7 +177,12 @@ class LDAP {
 
 	public function search($filter_, $attribs_=NULL, $limit_=0) {
 		$this->check_link();
-		$searchbase =$this->userbranch.','.$this->suffix;
+		if ($this->userbranch == '') {
+			$searchbase = $this->suffix;
+		}
+		else {
+			$searchbase = $this->userbranch.','.$this->suffix;
+		}
 		Logger::debug('main', 'LDAP - search(\''.$filter_.'\',\''.$attribs_.'\',\''.$searchbase.'\')');
 
 		if (is_null($attribs_))
@@ -251,7 +256,13 @@ class LDAP {
 	
 	public function branch_exists($branch) {
 		$this->check_link();
-		$ret = @ldap_read($this->link, $branch.','.$this->suffix,"(objectclass=*)");
+		if ($branch == '') {
+			$dn = $this->suffix;
+		}
+		else {
+			$dn = $branch.','.$this->suffix;
+		}
+		$ret = @ldap_read($this->link, $dn, "(objectclass=*)");
 		if (is_resource($ret))
 			return true;
 		return false;
