@@ -114,8 +114,14 @@ class Abstract_Liaison_ldap_memberof {
 		if (isset($buf['member']) && is_array($buf['member'])) {
 			foreach ($buf['member'] as $member) {
 				$u = $userDBldap->importFromDN($member);
-				$l = new Liaison($u->getAttribute('login'), $group->id);
-				$elements[$l->element] = $l;
+				if (is_object($u) == false) {
+					Logger::error('main', "Abstract_Liaison_ldap_memberof::loadElements ($type_,$group_) failed to import ".$member);
+					continue;
+				}
+				else {
+					$l = new Liaison($u->getAttribute('login'), $group->id);
+					$elements[$l->element] = $l;
+				}
 			}
 		}
 		return $elements;
