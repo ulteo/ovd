@@ -1,0 +1,15 @@
+autojoin any
+use_logd off
+logfile %LOGDIR%/ha-hb.log
+debugfile %LOGDIR%/ha-debug-hb.log
+logfacility local0
+udpport 694
+keepalive 1
+warntime 15
+deadtime 3
+initdead 30
+ping %GATEWAY%
+
+ucast %NIC_NAME% %NIC_ADDR%
+node %HOSTNAME%
+crm yes
