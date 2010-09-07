@@ -220,8 +220,7 @@ foreach ($protocol_vars as $protocol_var) {
 	}
 }
 
-$client = 'unknown';
-$other_vars = array('timezone', 'client');
+$other_vars = array('timezone');
 foreach ($other_vars as $other_var) {
 	if (isset($_REQUEST[$other_var]) && $_REQUEST[$other_var] != '')
 		$$other_var = $_REQUEST[$other_var];
@@ -472,7 +471,6 @@ if (is_null($fs))
 $module_fs = $fs;
 
 $default_args = array(
-	'client'			=>	$client,
 	'user_login'		=>	$user->getAttribute('login'),
 	'user_displayname'	=>	$user->getAttribute('displayname'),
 	'locale'			=>	$locale,
