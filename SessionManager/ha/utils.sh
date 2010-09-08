@@ -19,7 +19,7 @@ function execute()
 {
     $1 2> /dev/null
     ret=$?
-    if $ret; then
+    if [ $ret -eq 0 ]; then
         echo -e "\033[34;1m[OK] \033[0m $1";
     else
         echo -e "\033[31;1m[FAILED] \033[0m $1";

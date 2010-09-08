@@ -8,7 +8,7 @@ resource %RESOURCE% {
   }
 
   startup {
-    ufc-timeout  10;
+    wfc-timeout  10;
     degr-wfc-timeout 5;
   }
 
@@ -29,4 +29,5 @@ resource %RESOURCE% {
   on %HOSTNAME% {
     address   %NIC_ADDR%:7788;
   }
+
 }

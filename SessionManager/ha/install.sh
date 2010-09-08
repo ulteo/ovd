@@ -55,32 +55,33 @@ function drbd_install()
 	modprobe drbd
 
 	# Stopping all services
-	service mysql stop &> /dev/null
-	service apache2 stop &> /dev/null
-	service heartbeat stop &> /dev/null
+	service mysql stop || true
+	service apache2 stop || true
+	service heartbeat stop || true
 
 	# Create a virtual block device of 250M
 	echo -e "\033[36;1m[INFO] \033[0m Create a virtual block device of 250 MBytes"
-	mkdir -p $HA_CONF_DIR
+	# TEST
+	rm -rf /var/lib/ulteo
+	mkdir -p $HA_CONF_DIR /var/lib/ulteo/ovd
 
 	# Create virtual block device
 	dd if=/dev/zero of=$HA_VBD_BIN count=500k # 260MB
-    DRBD_LOOP=$(losetup -f)
+        DRBD_LOOP=$(losetup -f)
 	losetup $DRBD_LOOP $HA_VBD_BIN
 
 	# Create conf /etc/drbd.d/sm0.res
 	echo -e "\033[36;1m[INFO] \033[0m Create conf $DRBD_CONF"
     sed "s/%RESOURCE%/$DRBD_RESOURCE/" conf/$DRBD_RESOURCE.res | \
-        sed "s/%DEVICE%/$DRBD_DEVICE/" | sed "s/%LOOP%/$DRBD_LOOP/" | \
+        sed "s,%DEVICE%,$DRBD_DEVICE," | sed "s,%LOOP%,$DRBD_LOOP," | \
         sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
         sed "s/%NIC_ADDR%/$NIC_ADDR/"  > $DRBD_CONF
 
 	mkdir -p $DRBD_MOUNT_DIR
 	if [ $1 == "M" ]; then
 		# Initialize vbd0 with drbd
-		execute "drbdadm down $DRBD_RESOURCE"
 		execute "drbdadm create-md $DRBD_RESOURCE"
-		execute "drbdadm up $DRBD_RESOURCE"
+		execute "drbdadm up $DRBD_RESOURCE" || true
 
 		# Check if overwrite of peer is necessary
 		execute "drbdadm -- --overwrite-data-of-peer primary $DRBD_RESOURCE"
@@ -90,7 +91,7 @@ function drbd_install()
 
 		# Copy MySQL DB to VDB0
 		execute "mount $DRBD_DEVICE $DRBD_MOUNT_DIR"
-		cp -prf $MYSQL_DB $SM_SPOOL_DIR $DRBD_MOUNT_DIR
+		cp -a $MYSQL_DB $SM_SPOOL_DIR $DRBD_MOUNT_DIR
 		umount $DRBD_MOUNT_DIR
 
 		execute "drbdadm down $DRBD_RESOURCE"
@@ -123,14 +124,14 @@ function heartbeat_install()
 	echo -e "\033[36;1m[INFO] \033[0m Creating logs..."
 	mkdir -p $SM_LOG_DIR
 	touch $SM_LOG_DIR/ha.log $SM_LOG_DIR/ha-hb.log $SM_LOG_DIR/ha-debug-hb.log
-	chown www-data:www-data $ULTEO_LOG_HA
+	chown www-data:www-data  $SM_LOG_DIR/ha.log
 	chown hacluster:haclient $SM_LOG_DIR/ha-hb.log $SM_LOG_DIR/ha-debug-hb.log
 
 	# Copy of ha.cf [HEARTBEAT]
 	echo -e "\033[36;1m[INFO] \033[0m Copy of ha.cf [HEARTBEAT]"
     sed "s/%GATEWAY%/$GATEWAY/" conf/ha.cf | \
         sed "s/%NIC_NAME%/$NIC_NAME/" | sed "s/%NIC_ADDR%/$NIC_ADDR/" | \
-        sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s/%LOGDIR%/$SM_LOG_DIR/" \
+        sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s,%LOGDIR%,$SM_LOG_DIR," \
             > $HEARTBEAT_HA_CONF
 
 	# Copy of authkeys [HEARTBEAT]
