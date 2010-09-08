@@ -56,6 +56,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 
 		$buf = $config_ldap['match'];
 		$buf['id'] = $id_;
+		$buf['name'] = '';
 		$buf['description'] = '';
 		$ldap = new LDAP($config_ldap);
 		$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
@@ -76,6 +77,10 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 					unset($info[$match_ldap]['count']);
 				$extras[$attribut] = $info[$match_ldap];
 			}
+		}
+		if ($buf['name'] == '') {
+			Logger::error('main', "UserGroupDB::activedirectory::import($id_) error group name is empty");
+			return NULL;
 		}
 		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
 		$ug->extras = $extras;
