@@ -120,6 +120,23 @@ class Session {
 		if ($status_ == $this->getAttribute('status'))
 			return false; // status is already the same...
 
+		$states = array(
+			Session::SESSION_STATUS_CREATED			=>	0,
+			Session::SESSION_STATUS_INIT			=>	1,
+			Session::SESSION_STATUS_INITED			=>	2,
+			Session::SESSION_STATUS_ACTIVE			=>	3,
+			Session::SESSION_STATUS_INACTIVE		=>	4,
+			Session::SESSION_STATUS_WAIT_DESTROY	=>	5,
+			Session::SESSION_STATUS_DESTROYED		=>	6,
+			Session::SESSION_STATUS_ERROR			=>	7,
+			Session::SESSION_STATUS_UNKNOWN			=>	8
+		);
+
+		if (array_key_exists($status_, $states) && array_key_exists($this->getAttribute('status'), $states)) {
+			if ($states[$status_] < $states[$this->getAttribute('status')])
+				return false; // avoid switching Session to a previous status...
+		}
+
 		Logger::debug('main', 'Starting Session::setStatus for \''.$this->id.'\'');
 
 		if ($status_ == Session::SESSION_STATUS_INITED) {
