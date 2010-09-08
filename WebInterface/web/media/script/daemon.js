@@ -427,6 +427,7 @@ var Daemon = Class.create({
 
 		if ($(this.mode+'AppletContainer').visible())
 			$(this.mode+'AppletContainer').hide();
+		$(this.mode+'AppletContainer').innerHTML = '';
 
 		if ($(this.mode+'ModeContainer').visible())
 			$(this.mode+'ModeContainer').hide();
