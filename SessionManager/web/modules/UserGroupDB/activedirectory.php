@@ -70,7 +70,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 			if (isset($info[$match_ldap][0])) {
 				$buf[$attribut] = $info[$match_ldap][0];
 			}
-			if (is_array($info[$match_ldap])) {
+			if (array_key_exists($match_ldap, $info) && is_array($info[$match_ldap])) {
 				if (isset($info[$match_ldap]['count']))
 					unset($info[$match_ldap]['count']);
 				$extras[$attribut] = $info[$match_ldap];
