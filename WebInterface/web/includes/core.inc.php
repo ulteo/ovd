@@ -31,7 +31,7 @@ if (file_exists(WEBINTERFACE_CONF_FILE))
 
 require_once(dirname(__FILE__).'/functions.inc.php');
 
-session_start();
+@session_start();
 
 $sessionmanager_url = NULL;
 if (defined('SESSIONMANAGER_HOST'))
