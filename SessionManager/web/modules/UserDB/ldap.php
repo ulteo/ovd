@@ -223,6 +223,10 @@ class UserDB_ldap  extends UserDB {
 				}
 			}
 		}
+		if ($u->hasAttribute('displayname') == false) {
+			Logger::debug('main', 'UserDB::ldap::generateUserFromRow user '.$u->getAttribute('login').' does not have a displayname, generate one');
+			$u->setAttribute('displayname', $u->getAttribute('login'));
+		}
 		return $u;
 	}
 	
