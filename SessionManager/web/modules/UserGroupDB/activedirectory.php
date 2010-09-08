@@ -56,6 +56,7 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 
 		$buf = $config_ldap['match'];
 		$buf['id'] = $id_;
+		$buf['description'] = '';
 		$ldap = new LDAP($config_ldap);
 		$sr = $ldap->search($expl[0], array_keys($config_ldap['match']));
 		if ($sr === false) {
