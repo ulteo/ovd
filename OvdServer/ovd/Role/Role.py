@@ -20,9 +20,15 @@
 
 
 class Role:
+	STATUS_INIT    = 0
+	STATUS_RUNNING = 1
+	STATUS_STOP    = 2
+	STATUS_ERROR   = 3
+	
 	def __init__(self, main_instance):
 		self.main_instance = main_instance
-		
+		self.status = Role.STATUS_INIT
+	
 	def init(self):
 		raise NotImplementedError()
 	
@@ -35,3 +41,6 @@ class Role:
 	@staticmethod
 	def getName():
 		raise NotImplementedError()
+	
+	def getStatus(self):
+		return self.status

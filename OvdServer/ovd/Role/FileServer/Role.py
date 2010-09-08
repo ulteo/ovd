@@ -76,10 +76,11 @@ class Role(AbstractRole):
 	def run(self):
 		self.has_run = True
 		self.inotify.start()
-		
+		self.status = Role.STATUS_RUNNING
 		while 1:
 			time.sleep(30)
 			Logger.debug("FileServer run loop")
+		self.status = Role.STATUS_STOP
 	
 	
 	

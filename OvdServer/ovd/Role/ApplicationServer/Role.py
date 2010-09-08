@@ -150,6 +150,8 @@ class Role(AbstractRole):
 		
 		t0_update_app = time.time()
 		
+		self.status = Role.STATUS_RUNNING
+		
 		while 1:
 			for session in self.sessions.values():
 				try:
@@ -204,6 +206,7 @@ class Role(AbstractRole):
 				time.sleep(1)
 			
 			#Logger.debug("ApplicationServer run loop")
+		self.status = Role.STATUS_STOP
 	
 	
 	def purgeGroup(self):

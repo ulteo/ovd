@@ -121,6 +121,7 @@ def main():
 		ret = server.init()
 		if not ret:
 			print >> sys.stderr, "Server initialization failed"
+			server.stop()
 			if pidFile is not None and os.path.exists(pidFile):
 				os.remove(pidFile)
 			sys.exit(3)

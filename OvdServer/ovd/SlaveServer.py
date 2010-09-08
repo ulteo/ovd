@@ -87,8 +87,8 @@ class SlaveServer:
 			Logger.error("SlaveServer: unable to initialize communication class")
 			return False
 		
-		self.threads.append(threading.Thread(target=self.communication.run))
-		
+		self.communication.ovd_thread = threading.Thread(target=self.communication.run)
+		self.threads.append(self.communication.ovd_thread)
 		
 		for role in self.roles:
 			try:
@@ -97,13 +97,35 @@ class SlaveServer:
 			except Exception, e:
 				Logger.error("SlaveServer: unable to initialize role '%s' %s"%(role.getName(), str(e)))
 				return False
-				
-			self.threads.append(threading.Thread(target=role.run))
+			
+			role.thread = threading.Thread(target=role.run)
+			self.threads.append(role.thread)
 		
 		# Start 
 		for thread in self.threads:
 			thread.start()
 		
+		# Check each thread has started correctly (communication + roles)
+		t0 = time.time()
+		while self.communication.getStatus() is not self.communication.STATUS_RUNNING:
+			t1 = time.time()
+			
+			if (t1-t0 > 20) or (not self.communication.ovd_thread.isAlive()) or self.communication.getStatus() is self.communication.STATUS_ERROR:
+				Logger.warn("SlaveServer::init communication thread error")
+				return False
+			
+			Logger.info("Waiting for communication status running")
+			time.sleep(1)
+		for role in self.roles:
+			while role.getStatus() is not role.STATUS_RUNNING:
+				t1 = time.time()
+				
+				if (t1-t0 > 20) or (not role.thread.isAlive()) or role.getStatus() is role.STATUS_ERROR:
+					Logger.warn("SlaveServer::init role %s error"%(role.getName()))
+					return False
+				
+				Logger.info("Waiting for role %s status running"%(role.getName()))
+				time.sleep(1)
 		
 		if not self.dialog.send_server_status():
 			Logger.warn("SlaveServer::loop unable to send status ready")

@@ -51,8 +51,11 @@ class HttpServer(AbstractCommunication):
 		return True
 	
 	def run(self):
+		self.status = AbstractCommunication.STATUS_RUNNING
 		self.webserver.serve_forever()
-		
+		self.status = AbstractCommunication.STATUS_STOP
+	
+	
 	def stop(self):
 		if self.webserver is not None:
 			self.webserver.server_close()

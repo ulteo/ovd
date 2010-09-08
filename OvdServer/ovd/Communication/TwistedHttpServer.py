@@ -23,6 +23,7 @@
 
 from twisted.web import server, resource
 from twisted.internet import reactor
+from twisted.internet.error import BindError
 
 from BaseHTTPServer import HTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
@@ -52,9 +53,18 @@ class TwistedHttpServer(AbstractCommunication):
 		return True
 	
 	def run(self):
-		reactor.listenTCP(self.tcp_port, self.site)
-		reactor.run(installSignalHandlers=0)
+		try:
+			reactor.listenTCP(self.tcp_port, self.site)
+		except BindError, exc:
+			Logger.error("Unable to bind port %d, system is going to stop"%(self.tcp_port))
+			Logger.debug("Unable to bind port %d: "+str(exc))
+			self.status = AbstractCommunication.STATUS_ERROR
+			return
 		
+		self.status = AbstractCommunication.STATUS_RUNNING
+		reactor.run(installSignalHandlers=0)
+		self.status = AbstractCommunication.STATUS_STOP
+	
 	def stop(self):
 		if reactor.running:
 			reactor.stop()

@@ -25,9 +25,15 @@ from ovd.Logger import Logger
 from ovd import util
 
 class Communication:
+	STATUS_INIT    = 0
+	STATUS_RUNNING = 1
+	STATUS_STOP    = 2
+	STATUS_ERROR   = 3
+	
 	def __init__(self, dialogInterfaces):
 		self.dialogInterfaces = dialogInterfaces
 		self.session_manager = Config.session_manager
+		self.status = Communication.STATUS_INIT
 	
 	def run(self):
 		pass
@@ -67,3 +73,7 @@ class Communication:
 				return False
 		
 		return  request["client"] == buffer
+	
+	def getStatus(self):
+		return self.status
+
