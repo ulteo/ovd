@@ -66,8 +66,12 @@ if (! $ret)
 	return_error(2, 'Client does not send a valid XML');
 
 $session = Abstract_Session::load($_SESSION['session_id']);
-if (is_object($session))
-	$session->setStatus(Session::SESSION_STATUS_INACTIVE);
+if (is_object($session)) {
+	if ($ret == 'suspend')
+		$session->setStatus(Session::SESSION_STATUS_INACTIVE);
+	else
+		$session->setStatus(Session::SESSION_STATUS_WAIT_DESTROY);
+}
 
 header('Content-Type: text/xml; charset=utf-8');
 
