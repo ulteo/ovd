@@ -71,9 +71,9 @@ class UserGroupDB_activedirectory extends UserGroupDB_ldap_memberof {
 				$buf[$attribut] = $info[$match_ldap][0];
 			}
 			if (is_array($info[$match_ldap])) {
-					if (isset($info[$match_ldap]['count']))
-						unset($info[$match_ldap]['count']);
-					$extras[$attribut] = $info[$match_ldap];
+				if (isset($info[$match_ldap]['count']))
+					unset($info[$match_ldap]['count']);
+				$extras[$attribut] = $info[$match_ldap];
 			}
 		}
 		$ug = new UsersGroup($buf['id'], $buf['name'], $buf['description'], true);
