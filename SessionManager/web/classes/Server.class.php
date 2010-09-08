@@ -262,6 +262,11 @@ class Server {
 	}
 
 	public function isOnline() {
+		if ($this->getAttribute('status') != 'ready') {
+			Logger::debug('main', 'Server::isOnline server "'.$this->fqdn.':'.$this->web_port.'" is not "ready"');
+			return false;
+		}
+
 		$warn = false;
 
 		if (! $this->hasAttribute('status') || ! $this->uptodateAttribute('status')) {
@@ -350,7 +355,7 @@ class Server {
 
 	public function getStatus() {
 		if ($this->getAttribute('status') != 'ready') {
-			$this->isNotReady();
+			Logger::debug('main', 'Server::getStatus server "'.$this->fqdn.':'.$this->web_port.'" is not "ready"');
 			return false;
 		}
 
