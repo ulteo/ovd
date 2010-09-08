@@ -49,7 +49,7 @@ if (isset($_GET['info'])) {
 
 	page_header();
 
-	echo '<h1>'._('Sessions').'</h1>';
+	echo '<h1>'.str_replace('%ID%', $session->getAttribute('id'), _('Session - %ID%')).'</h1>';
 
 	echo '<h2>'._('Information').'</h2>';
 
