@@ -538,14 +538,16 @@ var Daemon = Class.create({
 
 		this.push_log('debug', '[daemon] load_printing_applet()');
 
-		setTimeout(function() {
-			if (this.stopped)
-				return;
+		setTimeout(this.do_load_printing_applet.bind(this), 20000);
+	},
 
-			var applet = buildAppletNode('PrinterApplet', 'org.ulteo.ovd.printer.PrinterApplet', 'PDFPrinter.jar', new Hash());
-			applet.setAttribute('id', 'PrinterApplet');
-			$('printingAppletContainer').show();
-			$('printingAppletContainer').appendChild(applet);
-		}, 20000);
+	do_load_printing_applet: function() {
+		if (this.stopped)
+			return;
+
+		var applet = buildAppletNode('PrinterApplet', 'org.ulteo.ovd.printer.PrinterApplet', 'PDFPrinter.jar', new Hash());
+		applet.setAttribute('id', 'PrinterApplet');
+		$('printingAppletContainer').show();
+		$('printingAppletContainer').appendChild(applet);
 	}
 });
