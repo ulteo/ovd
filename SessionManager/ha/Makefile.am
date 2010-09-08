@@ -12,9 +12,9 @@ ocf_DATA = ocf/mysql-ulteo
 
 HAshell = shell/Makefile \
 		  shell/main.cpp \
-		  Action.h \
-		  Action.cpp \
-		  Utils.h \
-		  Utils.cpp
+		  shell/Action.h \
+		  shell/Action.cpp \
+		  shell/Utils.h \
+		  shell/Utils.cpp
 
 EXTRA_DIST = $(ha_DATA) $(conf_DATA) $(ocf_DATA) $(HAshell)

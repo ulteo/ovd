@@ -105,7 +105,7 @@ fi
 AC_ARG_WITH([ha], [AC_HELP_STRING([--with-ha], [add the module HA to the SM])],
             [ha=yes], )
 AM_CONDITIONAL(HA, [test -n "$ha"])
-
+AM_COND_IF([HA], AC_CONFIG_FILES([ha/Makefile web/admin/ha/Makefile]) )
 
 AC_CONFIG_FILES([
 Makefile
@@ -127,7 +127,6 @@ web/modules/ApplicationsGroupDB/Makefile
 web/admin/Makefile
 web/admin/ajax/Makefile
 web/admin/classes/Makefile
-web/admin/ha/Makefile
 web/admin/includes/Makefile
 web/admin/init/Makefile
 web/admin/media/script/Makefile
@@ -164,7 +163,6 @@ web/events/callbacks/SessionStart/Makefile
 web/events/callbacks/SessionStatusChanged/Makefile
 web/events/callbacks/ServerStatusChanged/Makefile
 web/events/callbacks/SqlFailure/Makefile
-ha/Makefile
 examples/Makefile
 ])
 AC_OUTPUT
