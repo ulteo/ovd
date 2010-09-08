@@ -26,4 +26,4 @@ classes_DATA = classes/GRNode.class.php \
           classes/MSNode.class.php \
           classes/ShellExec.class.php
 
-EXTRA_DIST = $(ha_DATA)
+EXTRA_DIST = $(ha_DATA) $(image_DATA) $(style_DATA) $(classes_DATA)

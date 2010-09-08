@@ -98,7 +98,7 @@ if test "$libchart" = "yes"; then
     LIBCHARTDIR=/usr/share/php/libchart/classes/libchart.php
     test -e $LIBCHARDIR && AC_MSG_ERROR([$LIBCHARTDIR not found ; deploy PHP libchart library.])
 else
-    DISTCHECK_CONFIGURE_FLAGS=$DISTCHECK_CONFIGURE_FLAGS" --without-libchart"
+    DISTCHECK_CONFIGURE_FLAGS+=" --without-libchart"
     AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 fi
 
@@ -106,6 +106,7 @@ AC_ARG_WITH([ha], [AC_HELP_STRING([--with-ha], [add the module HA to the SM])],
             [ha=yes], )
 AM_CONDITIONAL(HA, [test -n "$ha"])
 AM_COND_IF([HA], AC_CONFIG_FILES([ha/Makefile web/admin/ha/Makefile]) )
+AM_COND_IF([HA], DISTCHECK_CONFIGURE_FLAGS+=" --with-ha")
 
 AC_CONFIG_FILES([
 Makefile

@@ -11,4 +11,4 @@ hadir=$(datadir)/ulteo/sessionmanager/modules/HA
 ha_DATA = HA/high_availability.php
 endif
 
-EXTRA_DIST = $(scripts_DATA)
+EXTRA_DIST = $(scripts_DATA) $(ha_DATA)
