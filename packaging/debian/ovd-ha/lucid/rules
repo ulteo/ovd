@@ -1,0 +1,13 @@
+#!/usr/bin/make -f
+
+include /usr/share/cdbs/1/class/autotools.mk
+include /usr/share/cdbs/1/rules/debhelper.mk
+
+DEB_CONFIGURE_EXTRA_FLAGS = --without-libchart --with-ha
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+DEB_DH_INSTALLINIT_ARGS_ulteo-ovd-ha = --name=ulteo_ha
+
+install/ulteo-ovd-ha::
+	pwd
+	cd ha/shell && make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
+	cp ha/ulteo_ha debian/ulteo-ovd-ha.ulteo_ha.init

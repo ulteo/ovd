@@ -1,0 +1,18 @@
+Source: ovd-ha
+Section: net
+Priority: optional
+Maintainer: Samuel Bovée <samuel@ulteo.com>
+Build-Depends: debhelper (>= 6), cdbs
+Standards-Version: 3.7.3
+
+Package: ulteo-ovd-ha
+Architecture: any
+Depends: drbd8-utils, heartbeat, ulteo-ovd-session-manager-ha, ${shlibs:Depends}
+Description: Ulteo Open Virtual Desktop - High Avaibility data
+ blablabla
+
+Package: ulteo-ovd-session-manager-ha
+Architecture: all
+Depends: ulteo-ovd-session-manager
+Description: Ulteo Open Virtual Desktop - High Avaibility module for SM
+ blabla

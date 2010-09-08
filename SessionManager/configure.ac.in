@@ -102,6 +102,10 @@ else
     AC_SUBST(DISTCHECK_CONFIGURE_FLAGS)
 fi
 
+AC_ARG_WITH([ha], [AC_HELP_STRING([--with-ha], [add the module HA to the SM])],
+            [ha=yes], )
+AM_CONDITIONAL(HA, [test -n "$ha"])
+
 
 AC_CONFIG_FILES([
 Makefile
@@ -120,7 +124,11 @@ web/modules/UserGroupDB/Makefile
 web/modules/UserDB/Makefile
 web/modules/ApplicationDB/Makefile
 web/modules/ApplicationsGroupDB/Makefile
+web/admin/Makefile
 web/admin/ajax/Makefile
+web/admin/classes/Makefile
+web/admin/ha/Makefile
+web/admin/includes/Makefile
 web/admin/init/Makefile
 web/admin/media/script/Makefile
 web/admin/media/script/ajax/Makefile
@@ -134,9 +142,6 @@ web/admin/media/image/loadbalancing/Makefile
 web/admin/media/image/menu/Makefile
 web/admin/media/image/Makefile
 web/admin/media/Makefile
-web/admin/includes/Makefile
-web/admin/classes/Makefile
-web/admin/Makefile
 web/includes/Makefile
 web/includes/functions.inc.d/Makefile
 web/classes/Makefile
@@ -159,6 +164,7 @@ web/events/callbacks/SessionStart/Makefile
 web/events/callbacks/SessionStatusChanged/Makefile
 web/events/callbacks/ServerStatusChanged/Makefile
 web/events/callbacks/SqlFailure/Makefile
+ha/Makefile
 examples/Makefile
 ])
 AC_OUTPUT

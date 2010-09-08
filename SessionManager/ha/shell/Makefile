@@ -8,9 +8,12 @@ EXE = HAshell
 all: $(OBJ)
 	$(CXX) -o $(EXE) $(OBJ) $(LDFLAGS)
 
-install:
-	cp $(EXE) /usr/bin
-	chmod 4755 /usr/bin/$(EXE)
+$(EXE): all
+
+install: $(EXE)
+	mkdir -p $(DESTDIR)/usr/bin
+	cp $(EXE) $(DESTDIR)/usr/bin
+	chmod 4755 $(DESTDIR)/usr/bin/$(EXE)
 
 clean:
 	$(RM) *~

@@ -1,5 +1,9 @@
 SUBDIRS = ajax media includes init classes
 
+if HA
+SUBDIRS += ha
+endif
+
 scripts_DATA = actions.php \
                applications.php \
                applications_static.php \
@@ -27,4 +31,5 @@ scripts_DATA = actions.php \
 
 scriptsdir = $(datadir)/ulteo/sessionmanager/admin
 
+DIST_SUBDIRS=$(SUBDIRS)
 EXTRA_DIST = $(scripts_DATA)

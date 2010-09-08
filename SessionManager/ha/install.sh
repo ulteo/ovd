@@ -33,8 +33,7 @@ HEARTBEAT_OCF_ROOT=/usr/lib/ocf/resource.d/heartbeat
 HEARTBEAT_CIB_LOCATION=/var/lib/heartbeat/crm
 
 HA_CONF_DIR=/etc/ulteo/ovd/ha
-HA_RES_CONF=$HA_CONF_DIR/resources.conf
-HA_VBD_BIN=/var/lib/ulteo/ovd/vbd0.bin
+HA_VARLIB_DIR=/var/lib/ulteo/ovd
 
 SM_LOG_DIR=/var/log/ulteo/sessionmanager
 SM_SPOOL_DIR=/var/spool/ulteo/sessionmanager
@@ -49,6 +48,8 @@ GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9
 # load util functions
 . ./utils.sh
 
+rm -rf $HA_CONF_DIR $HA_VARLIB_DIR
+mkdir -p $HA_CONF_DIR $HA_VARLIB_DIR
 
 function drbd_install()
 {
@@ -61,21 +62,16 @@ function drbd_install()
 
 	# Create a virtual block device of 250M
 	echo -e "\033[36;1m[INFO] \033[0m Create a virtual block device of 250 MBytes"
-	# TEST
-	rm -rf /var/lib/ulteo
-	mkdir -p $HA_CONF_DIR /var/lib/ulteo/ovd
-
-	# Create virtual block device
-	dd if=/dev/zero of=$HA_VBD_BIN count=500k # 260MB
-        DRBD_LOOP=$(losetup -f)
-	losetup $DRBD_LOOP $HA_VBD_BIN
+	dd if=/dev/zero of=$HA_VARLIB_DIR/vbd0.bin count=500k # 260MB
+	DRBD_LOOP=$(losetup -f)
+	losetup $DRBD_LOOP $HA_VARLIB_DIR/vbd0.bin
 
 	# Create conf /etc/drbd.d/sm0.res
 	echo -e "\033[36;1m[INFO] \033[0m Create conf $DRBD_CONF"
-    sed "s/%RESOURCE%/$DRBD_RESOURCE/" conf/$DRBD_RESOURCE.res | \
-        sed "s,%DEVICE%,$DRBD_DEVICE," | sed "s,%LOOP%,$DRBD_LOOP," | \
-        sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
-        sed "s/%NIC_ADDR%/$NIC_ADDR/"  > $DRBD_CONF
+	sed "s/%RESOURCE%/$DRBD_RESOURCE/" conf/$DRBD_RESOURCE.res | \
+		sed "s,%DEVICE%,$DRBD_DEVICE," | sed "s,%LOOP%,$DRBD_LOOP," | \
+		sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
+		sed "s/%NIC_ADDR%/$NIC_ADDR/"  > $DRBD_CONF
 
 	mkdir -p $DRBD_MOUNT_DIR
 	if [ $1 == "M" ]; then
@@ -188,9 +184,9 @@ function heartbeat_cib_install()
 function set_conf_and_script()
 {
 	echo -e "\033[36;1m[INFO] \033[0m INIT SCRIPT not installed !";
-	echo "WWW_USER=www-data" > $HA_RES_CONF;
-	echo "NIC_NAME=$NIC_NAME" >> $HA_RES_CONF;
-	[ $1 == "M" ] && echo "VIP=$VIP" >> $HA_RES_CONF;
+	echo "WWW_USER=www-data" > $HA_CONF_DIR/resources.conf;
+	echo "NIC_NAME=$NIC_NAME" >> $HA_CONF_DIR/resources.conf;
+	[ $1 == "M" ] && echo "VIP=$VIP" >> $HA_CONF_DIR/resources.conf;
 }
 
 
