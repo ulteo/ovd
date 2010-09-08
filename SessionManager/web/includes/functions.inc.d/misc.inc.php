@@ -231,18 +231,30 @@ function get_needed_attributes_user_from_module_plugin() {
 }
 
 function user_cmp($o1, $o2) {
+	if (!is_object($o1) || !is_object($o2))
+		return 0;
+	
 	return strcmp($o1->getAttribute('login'), $o2->getAttribute('login'));
 }
 
 function usergroup_cmp($o1, $o2) {
+	if (!is_object($o1) || !is_object($o2))
+		return 0;
+	
 	return strcmp($o1->name, $o2->name);
 }
 
 function application_cmp($o1, $o2) {
+	if (!is_object($o1) || !is_object($o2))
+		return 0;
+	
 	return strcmp($o1->getAttribute('name'), $o2->getAttribute('name'));
 }
 
 function appsgroup_cmp($o1, $o2) {
+	if (!is_object($o1) || !is_object($o2))
+		return 0;
+	
 	return strcmp($o1->name, $o2->name);
 }
 
