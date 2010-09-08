@@ -458,6 +458,12 @@ static void create_window(HWND hwnd){
 		LONG exstyle;
 		LONG style;
 		HWND parent;
+		
+		if (getHWNDFromHistory(hwnd) != NULL)
+			return;
+
+		addHWDNToHistory(hwnd);
+
 		style = GetWindowLong(hwnd, GWL_STYLE);
 		vchannel_write("DEBUG","NEW WINDOWS");
 
@@ -546,7 +552,6 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 	{
 		case WM_SHOWWINDOW:
 			{
-				addHWDNToHistory(hwnd);
 				create_window(hwnd);
 				break;
 			}
@@ -556,7 +561,6 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 				if (wp->flags & SWP_SHOWWINDOW)
 				{
-					addHWDNToHistory(hwnd);
 					create_window(hwnd);
 				}
 
@@ -676,7 +680,6 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 				/* We cannot use the string in lparam because
 				   we need unicode. */
 				if (getHWNDFromHistory(hwnd) == NULL){
-					addHWDNToHistory(hwnd);
 					create_window(hwnd);
 				}
 				else{
