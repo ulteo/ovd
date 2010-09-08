@@ -2,8 +2,6 @@ AC_INIT([ovd-session-manager], [@VERSION@], [http://bugs.ulteo.com])
 
 # Init automake
 AM_INIT_AUTOMAKE([1.9 tar-pax])
-
-# Checks for programs.
 AC_PROG_INSTALL
 
 # Intl (borrowed from intltool.m4)
@@ -105,8 +103,10 @@ fi
 AC_ARG_WITH([ha], [AC_HELP_STRING([--with-ha], [add the module HA to the SM])],
             [ha=yes], )
 AM_CONDITIONAL(HA, [test -n "$ha"])
-AM_COND_IF([HA], AC_CONFIG_FILES([ha/Makefile web/admin/ha/Makefile]) )
-AM_COND_IF([HA], DISTCHECK_CONFIGURE_FLAGS+=" --with-ha")
+if test -n "$ha"; then
+    AC_CONFIG_FILES([ha/Makefile web/admin/ha/Makefile])
+    DISTCHECK_CONFIGURE_FLAGS+=" --with-ha"
+fi
 
 AC_CONFIG_FILES([
 Makefile
