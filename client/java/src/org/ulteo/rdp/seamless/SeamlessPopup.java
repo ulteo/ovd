@@ -159,23 +159,40 @@ public class SeamlessPopup extends JDialog implements SeamlessWindow, SeamlessMo
 			g.drawImage(this.backstore.getSubimage(x_pos, y_pos, w, h), dx , dy, null);
 	}
 
-	/* Ignore Icons methods for Popups */
+	/* Icons support for Popups */
+	protected int icon_size, icon_offset;
+	protected byte[] icon_buffer = new byte[32 * 32 * 4];;
+
 	public int sw_getIconSize() {
-		return 0;
+		return this.icon_size;
 	}
-	public boolean sw_setIconSize(int size) {
+
+	public boolean sw_setIconSize(int icon_size_) {
+		if(icon_size_ > 32 * 32 * 4) {
+			this.icon_size = 0;
+			return false;
+		}
+
+		this.icon_size = icon_size_;
 		return true;
 	}
+
 	public int sw_getIconOffset() {
-		return 0;
+		return this.icon_offset;
 	}
-	public void sw_setIconOffset(int offset) {}
+
+	public void sw_setIconOffset(int icon_offset_) {
+		if(icon_offset_ >= 0)
+			this.icon_offset = icon_offset_;
+	}
+
 	public byte[] sw_getIconBuffer() {
-		return null;
+		return this.icon_buffer;
 	}
-	public void sw_setIconBuffer(byte[] buffer) {}
 
-
+	public void sw_setIconBuffer(byte[] icon_buffer_) {
+		this.icon_buffer = icon_buffer_;
+	}
 
 	public void sw_setCursor(Cursor cursor) {
 		this.setCursor(cursor);
