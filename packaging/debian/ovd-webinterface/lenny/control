@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 Package: ulteo-ovd-webinterface
 Architecture: all
 Pre-depends: debconf
-Depends: ulteo-ovd-applets, php5, php5-curl
+Depends: ulteo-ovd-applets, php5, php5-curl, php5-gd
 Recommends: ulteo-ovd-webinterface-ajaxplorer
 Description: Ulteo Open Virtual Desktop - web interface
  This interface is a web client for Ulteo OVD.
