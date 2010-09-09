@@ -7,6 +7,14 @@ Standards-Version: 3.7.2
 
 Package: ulteo-ovd-webinterface
 Architecture: all
-Depends: libapache2-mod-php5, php5, php5-curl, ulteo-ovd-applets, debconf
+Pre-depends: debconf
+Depends: ulteo-ovd-applets, php5, php5-curl
+Recommends: ulteo-ovd-webinterface-ajaxplorer
 Description: Ulteo Open Virtual Desktop - web interface
  This interface is a web client for Ulteo OVD.
+
+Package: ulteo-ovd-webinterface-ajaxplorer
+Architecture: all
+Depends: ulteo-ovd-webinterface
+Description: Ulteo Open Virtual Desktop - Ajaxplorer portal
+ Ajaxplorer portal for Ulteo OVD web interface
