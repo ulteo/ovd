@@ -176,14 +176,57 @@ if (count($server_nodes) < 1) {
 }
 
 $_SESSION['explorer'] = false;
+
 $profile_node = $session_node->getElementsByTagName('profile')->item(0);
 if (is_object($profile_node)) {
 	$_SESSION['explorer'] = true;
-	$_SESSION['profile'] = array();
-	$_SESSION['profile']['server'] = $profile_node->getAttribute('server');
-	$_SESSION['profile']['dir'] = $profile_node->getAttribute('dir');
-	$_SESSION['profile']['login'] = $profile_node->getAttribute('login');
-	$_SESSION['profile']['password'] = $profile_node->getAttribute('password');
+
+	$_SESSION['ajxp'] = array();
+	$_SESSION['ajxp']['repositories'] = array();
+	$_SESSION['ajxp']['repositories'][] = array(
+		'DISPLAY'					=>	_('Profile'),
+		'DRIVER'					=>	'fs',
+		'DRIVER_OPTIONS'			=>	array(
+			'PATH'					=>	'webdav://'.$profile_node->getAttribute('login').':'.$profile_node->getAttribute('password').'@'.$profile_node->getAttribute('server').':1113/ovd/fs/'.$profile_node->getAttribute('dir').'/',
+			'CREATE'				=>	false,
+			'RECYCLE_BIN'			=>	'',
+			'CHMOD_VALUE'			=>	'0660',
+			'DEFAULT_RIGHTS'		=>	'',
+			'PAGINATION_THRESHOLD'	=>	500,
+			'PAGINATION_NUMBER'		=>	200
+		),
+	);
+}
+
+$sharedfolders_node = $session_node->getElementsByTagName('sharedfolders')->item(0);
+if (is_object($sharedfolders_node)) {
+	$_SESSION['explorer'] = true;
+
+	if (! array_key_exists('ajxp', $_SESSION))
+		$_SESSION['ajxp'] = array();
+
+	if (! array_key_exists('repositories', $_SESSION['ajxp']))
+		$_SESSION['ajxp']['repositories'] = array();
+
+	$sharedfolder_nodes = $sharedfolders_node->getElementsByTagName('sharedfolder');
+	foreach ($sharedfolder_nodes as $sharedfolder_node) {
+		if (! is_object($sharedfolder_node))
+			continue;
+
+		$_SESSION['ajxp']['repositories'][] = array(
+			'DISPLAY'					=>	$sharedfolder_node->getAttribute('name'),
+			'DRIVER'					=>	'fs',
+			'DRIVER_OPTIONS'			=>	array(
+				'PATH'					=>	'webdav://'.$sharedfolder_node->getAttribute('login').':'.$sharedfolder_node->getAttribute('password').'@'.$sharedfolder_node->getAttribute('server').':1113/ovd/fs/'.$sharedfolder_node->getAttribute('dir').'/',
+				'CREATE'				=>	false,
+				'RECYCLE_BIN'			=>	'',
+				'CHMOD_VALUE'			=>	'0660',
+				'DEFAULT_RIGHTS'		=>	'',
+				'PAGINATION_THRESHOLD'	=>	500,
+				'PAGINATION_NUMBER'		=>	200
+			),
+		);
+	}
 }
 
 $_SESSION['xml'] = $xml;
