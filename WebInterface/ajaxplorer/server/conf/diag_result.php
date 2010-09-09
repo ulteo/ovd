@@ -1,0 +1,2 @@
+<?php
+$diagResults = array();
