@@ -4,12 +4,12 @@ args="--without-libchart"
 
 # get module
 module=ovd-session-manager
-set -- $(getopt -l ha m: "$@")
+set -- $(getopt -u -l ha m: "$@")
 [ $# -lt 1 ] && exit 1
 while [ $# -gt 0 ]
 do
     case "$1" in
-        -m) module="$2" ;;
+        -m) module="$2" ; shift ;;
         --ha) args+=" --with-ha" ;;
         --) shift; break ;;
         *)  break ;;
