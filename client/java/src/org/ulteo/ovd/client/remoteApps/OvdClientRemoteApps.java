@@ -39,6 +39,7 @@ import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
+import java.net.UnknownHostException;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 	
@@ -119,6 +120,26 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 				rc.initSecondaryChannels();
 			} catch (RdesktopException ex) {
 				Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
+			}
+
+			if (server.getModeGateway()) {
+
+				if (server.getToken().equals("")) {
+						Logger.error("Server need a token to be identified on gateway, so token is empty !");
+						return false;
+				} else {
+					rc.setCookieElement("token", server.getToken());
+				}
+
+				try {
+					rc.useSSLWrapper(server.getHost(), server.getPort());
+				} catch(OvdException ex) {
+					Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+					return false;
+				} catch(UnknownHostException ex) {
+					Logger.error("Undefine error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+					return false;
+				}
 			}
 			
 			rc.setServer(server.getHost());

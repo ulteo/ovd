@@ -86,13 +86,4 @@ public class ISO_Localised extends ISO {
 		return s;
 		
 	}*/
-	
-
-protected void doSocketConnect(InetAddress host, int port)throws IOException{
-	int timeout_ms = 3000; // timeout in milliseconds
-	
-	rdpsock = new Socket();
-	rdpsock.connect(new InetSocketAddress(host,port),timeout_ms);
-}
-
 }

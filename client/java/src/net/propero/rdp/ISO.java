@@ -22,7 +22,7 @@ public abstract class ISO {
 	protected Socket rdpsock = null;
 	private DataInputStream in = null;
 	private DataOutputStream out = null;
-	private Options opt = null;
+	protected Options opt = null;
 	private Common common = null;
 	
 	/* this for the ISO Layer */
@@ -61,13 +61,24 @@ public abstract class ISO {
 	}*/
 
 	/**
-	 * Create a socket for this ISO object
+	 * Create a socket from SocketFactoryInterface
 	 * @param host Address of server
 	 * @param port Port on which to connect socket
 	 * @throws IOException
 	 */
-	protected void doSocketConnect(InetAddress host, int port)throws IOException {
-		this.rdpsock = new Socket(host, port);
+
+	protected void doSocketConnect(InetAddress host, int port) throws IOException, RdesktopException {
+		
+		if (this.opt.socketFactory == null) {
+			this.opt.socketFactory = new TCPSocketFactory(host, port);
+		}
+		
+		try {
+			this.rdpsock = (Socket) this.opt.socketFactory.createSocket();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RdesktopException("Creating socket failed: " + e.getMessage());
+		}
 	}
 
 	/**
@@ -82,7 +93,7 @@ public abstract class ISO {
 	public void connect(InetAddress host, int port) throws IOException, RdesktopException, OrderException, CryptoException {
 		int[] code = new int[1];
 		doSocketConnect(host, port);
-		rdpsock.setTcpNoDelay(this.opt.low_latency);
+		this.rdpsock.setTcpNoDelay(this.opt.low_latency);
 		this.in = new DataInputStream(new BufferedInputStream(rdpsock.getInputStream()));
 		this.out= new DataOutputStream(new BufferedOutputStream(rdpsock.getOutputStream()));
 		send_connection_request();
@@ -304,10 +315,14 @@ public abstract class ISO {
 	*/
 	void send_connection_request() throws IOException {
 		String uname = this.opt.username;
+		String cookietail = this.opt.rdpCookie.getFormatedCookie();
+		
+		if (uname.length() == 0)
+			uname = "user"; // Default username
 		
 		if(uname.length() > 9) uname = uname.substring(0,9);
-		
-		int length = 11 + (this.opt.username.length() > 0 ? ("Cookie: mstshash=".length() + uname.length() + 2) : 0) + 8;
+
+		int length = 21 + "Cookie: mstshash=".length() + uname.length() + cookietail.length();
 		
 		RdpPacket_Localised buffer = new RdpPacket_Localised(length);
 		byte[] packet=new byte[length];
@@ -319,15 +334,12 @@ public abstract class ISO {
 		buffer.setBigEndian16(0); // Destination reference ( 0 at CC and DR)
 		buffer.setBigEndian16(0); // source reference should be a reasonable address we use 0
 		buffer.set8(0); //service class
-		
-		if(this.opt.username.length() > 0) {
-			logger.debug("Including username");
-			buffer.out_uint8p("Cookie: mstshash=","Cookie: mstshash=".length());
-			buffer.out_uint8p(uname,uname.length());
-			buffer.set8(0x0d); // unknown
-			buffer.set8(0x0a); // unknown
-		}
-		
+		logger.debug("Including username");
+		buffer.out_uint8p("Cookie: mstshash=", "Cookie: mstshash=".length());
+		buffer.out_uint8p(uname + cookietail, uname.length() + cookietail.length());
+		buffer.set8(0x0d); // unknown
+		buffer.set8(0x0a); // unknown
+
 		/*
 		// Authentication request?
 		buffer.setLittleEndian16(0x01);

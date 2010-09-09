@@ -1,0 +1,60 @@
+# Copyright (C) 2010 Ulteo SAS
+# http://www.ulteo.com
+# Author Arnaud Legrand <arnaud@ulteo.com> 2010
+#
+# This program is free software; you can redistribute it and/or 
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
+
+OVDServer Gateway need a certificate located to fpem directory :
+
+
+Generate key and CSR
+
+First up is to create a certificate key and a certificate signing request (CSR). This can be done with OpenSSL.
+
+apt-get update
+apt-get install openssl
+
+# replace bold type with your info
+openssl req -new -newkey rsa:2048 -nodes -out www_example_com.csr -keyout www_example_com.key -subj "/C=US/ST=Arizona/L=Scottsdale/O=Example Company Inc./CN=www.example.com"
+
+Submit the CSR
+
+The above will generate two files, www_example_com.key and www_example.com.csr.
+
+Once you have signed up for an authoritatively signed certificate, you will be requested to upload the CSR file or its contents.
+
+Verify the request
+
+The signing authority will need to verify the validity of the request and that it was submitted by the entity to which the domain in the request is registered, usually done by contacting the administrative contact for the domain.
+
+Further steps may be required when requesting an Extended Validation (EV) certificate, which color the address bar green in recent browsers.
+
+Download signed certificate
+
+After validation, your signed certificate (crt) will be available for download. Most likely your signing authority will include an intermediate CA certificate bundle (trust chain).
+
+Note: you should make a backup of all SSL related files.
+
+Generate PEM and placement
+
+Generate the pem from the key and crt
+
+cat www_example_com.key www.example.com.crt > cert.pem
+
+Place the generated pem and intermediate bundle (eg. bundle.crt) in pem directory, and make them read-only to root.
+
+chown root:root *.pem *.crt
+chmod 400 *pem *.crt
+

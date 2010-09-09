@@ -25,9 +25,11 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Toolkit;
 
+import java.net.UnknownHostException;
 import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
+import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.OvdClient;
 import org.ulteo.ovd.sm.Callback;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
@@ -145,6 +147,26 @@ public class OvdClientDesktop extends OvdClient {
 			Logger.error("Unable to init channels of RdpConnectionOvd object: "+ex.getMessage());
 		}
 		
+		if (server.getModeGateway()) {
+
+			if (server.getToken().equals("")) {
+				Logger.error("Server need a token to be identified on gateway, so token is empty !");
+				return false;
+			} else {
+				rc.setCookieElement("token", server.getToken());
+			}
+
+			try {
+				rc.useSSLWrapper(server.getHost(), server.getPort());
+			} catch(OvdException ex) {
+				Logger.error("Unable to create RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+				return false;
+			} catch(UnknownHostException ex) {
+				Logger.error("Undefine error during creation of RdpConnectionOvd SSLWrapper: " + ex.getMessage());
+				return false;
+			}
+		}
+
 		rc.setServer(server.getHost());
 		rc.setCredentials(server.getLogin(), server.getPassword());
 		// Ensure that width is multiple of 4

@@ -5,6 +5,7 @@
  * Author: $Author: suvarov $
  * Author: tomqq <hekong@gmail.com> 2009
  * Author: Julien LANGLOIS <julien@ulteo.com> 2009
+ * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  * Date: $Date: 2007/03/08 00:26:14 $
  *
  * Copyright (c) 2005 Propero Limited
@@ -129,4 +130,6 @@ public class Options {
 	public boolean server_enc_salted_checksum = false;
 	public boolean server_support_refresh_rect = false;
 	public boolean server_support_suppress_output = false;
+	public SocketFactory socketFactory = null;
+	public CookieManager rdpCookie = new CookieManager();
 }

@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -563,5 +564,9 @@ public class RdpConnection implements SeamListener, Runnable{
 
 	public void ackHello(SeamlessChannel channel) {
 		this.fireSeamlessEnabled();
+	}
+
+	public void setCookieElement(String fieldName, String fieldValue) {
+		this.opt.rdpCookie.addCookieElement(fieldName, fieldValue);
 	}
 }

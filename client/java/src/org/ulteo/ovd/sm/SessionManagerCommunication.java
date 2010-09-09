@@ -5,6 +5,7 @@
  * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  * Author Julien LANGLOIS <julien@ulteo.com> 2010
  * Author David LECHEVALIER <david@ulteo.com> 2010 
+ * Author Arnaud LEGRAND <arnaud@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -497,6 +498,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 	private boolean parseStartSessionResponse(Document document) throws SessionManagerException {
 		Element rootNode = document.getDocumentElement();
+		int serverPort = 3389;
 
 		if (! rootNode.getNodeName().equals("session")) {
 			if (rootNode.getNodeName().equals("response")) {
@@ -521,6 +523,8 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 		try {
 			int mode = Properties.MODE_ANY;
+			boolean mode_gateway = false;
+
 			if (rootNode.getAttribute("mode").equals(SESSION_MODE_DESKTOP))
 				mode = Properties.MODE_DESKTOP;
 			else if (rootNode.getAttribute("mode").equals(SESSION_MODE_REMOTEAPPS))
@@ -543,6 +547,12 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 					response.setPrinters(false);
 			}
 
+			if (rootNode.hasAttribute("mode_gateway")) {
+				if (rootNode.getAttribute("mode_gateway").equals("on"))
+					mode_gateway = true;
+					serverPort = 443;
+			}
+
 			if (rootNode.hasAttribute("duration"))
 				response.setDuration(Integer.parseInt(rootNode.getAttribute("duration")));
 			
@@ -559,10 +569,20 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 
 			for (int i = 0; i < serverNodes.getLength(); i++) {
 				Element serverNode = (Element) serverNodes.item(i);
-
-				ServerAccess server = new ServerAccess(serverNode.getAttribute("fqdn"), 3389,
+				String server_host = this.host;
+				
+				if (! mode_gateway) {
+					server_host = serverNode.getAttribute("fqdn");
+				}
+				
+				ServerAccess server = new ServerAccess(server_host, serverPort,
 							serverNode.getAttribute("login"), serverNode.getAttribute("password"));
 				
+				if (mode_gateway) {
+					server.setToken(serverNode.getAttribute("token"));
+					server.setModeGateway(true);
+				}
+
 				NodeList applicationsNodes = serverNode.getElementsByTagName("application");
 				for (int j = 0; j < applicationsNodes.getLength(); j++) {
 					Element applicationNode = (Element) applicationsNodes.item(j);
