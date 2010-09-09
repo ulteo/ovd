@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<driver name="remote_fs">
+	<actions>
+		<action name="next_to_remote">
+			<processing>
+				<serverCallback methodName="uploadActions"></serverCallback>
+			</processing>
+		</action>
+		<action name="trigger_remote_copy">
+			<processing>
+				<serverCallback methodName="uploadActions"></serverCallback>
+			</processing>
+		</action>
+		<action name="upload">
+			<gui text="27" title="27" src="yast_backup.png" accessKey="upload_access_key" hasAccessKey="true">
+				<context selection="false" dir="true" recycle="hidden"
+					actionBar="true" contextMenu="true" infoPanel="false"
+					actionBarGroup="put">
+				</context></gui>
+			<rightsContext noUser="true" userLogged="only" read="true" write="true" adminOnly=""></rightsContext>
+			<processing>
+				<clientCallback prepareModal="true"><![CDATA[
+				if(ajaxplorer.actionBar.getFlashVersion() >= 8 && document.location.href.substring(0,5)!='https')
+				{
+					modal.setCloseAction(function(){
+						$('closeFlashUploadBox').disabled=false;
+						var bgManager = ajaxplorer.actionBar.bgManager;
+						bgManager.queueAction("trigger_remote_copy", new Hash(), "Copying files to server");
+						bgManager.next();
+					});
+					modal.showDialogForm('Upload', 
+										'flash_upload_form', 
+										null, 
+										function(){
+											hideLightBox();
+											return false;
+										}, 
+										null, 
+										true, true);				
+				}
+				else
+				{
+					modal.showDialogForm('Upload', 
+										'originalUploadForm', 
+										function(oForm){
+											ajaxplorer.actionBar.multi_selector = new MultiUploader(oForm, '6' );
+										}, 
+										null, 
+										null, 
+										true, true);					
+					
+					modal.setCloseAction(function(){						
+						ajaxplorer.filesList.reload();
+						var bgManager = ajaxplorer.actionBar.bgManager;
+						bgManager.queueAction("trigger_remote_copy", new Hash(), "Copying files to server");
+						bgManager.next();
+					});
+					modal.showDialogForm('Upload', 'originalUploadForm', onLoadFunction, function(){ajaxplorer.actionBar.multi_selector.submitMainForm();return false;});
+				}				
+					]]></clientCallback>
+				<clientForm id="flash_upload_form"><![CDATA[
+					<!-- UPLOAD FORM -->
+					<form action="AJXP_SERVER_ACCESS" target="hidden_iframe" enctype="multipart/form-data" method="POST" id="originalUploadForm" style="text-align:left; display:none;" box_width="470">					
+					<table>
+						<tr>	
+							<td id="fileInputContainer" valign="top" align="right">
+								<input type="file" name="userfile_1" class="dialogFocus">
+								<div id="uploadBrowseButton" class="fakeUploadButton" align="center"><img src="AJXP_CLIENT_RESOURCES_FOLDER/images/crystal/actions/22/view_list_details.png"><br/>AJXP_MESSAGE[171]</div>
+								<div id="uploadSendButton" class="fakeUploadButton" align="center"><img src="AJXP_CLIENT_RESOURCES_FOLDER/images/crystal/actions/22/yast_backup.png"><br/>AJXP_MESSAGE[77]</div>
+							</td>
+							<td rowspan="2" id="uploadFilesListContainer" valign="top">
+								<div id="upload_files_list" class="uploadFilesList"></div>
+							</td>
+						</tr>
+						<tr>	
+							<td valign="bottom" align="right">
+								<div class="fakeUploadButton fakeOptionButton" id="uploadOptionsButton" align="center">AJXP_MESSAGE[310]</div>
+								<div class="fakeUploadButton fakeOptionButton" id="uploadCloseButton" align="center">AJXP_MESSAGE[86]</div>
+							</td>
+						</tr>
+					</table>
+					<input type="hidden" name="get_action" value="upload">	
+					</form>
+					
+					<!-- FLEX UPLOAD FORM -->
+					<div id="flash_upload_form" box_width="470">
+					<div id="flashscreen">
+					<iframe id="flashframe" frameborder="0" src="AJXP_SERVER_ACCESS?get_action=get_template&template_name=flash_tpl.html&encode=false"></iframe>
+					</div>
+					<div class="dialogButtons"><input type="button" class="dialogButton" onclick="hideLightBox(true);" value="AJXP_MESSAGE[86]" id="closeFlashUploadBox"></div>
+					</div>
+					<script language="javascript">$('originalUploadForm').hide();</script>
+				]]></clientForm>
+				<serverCallback methodName="uploadActions"></serverCallback>
+				</processing>
+		</action>		
+	</actions>
+</driver>
