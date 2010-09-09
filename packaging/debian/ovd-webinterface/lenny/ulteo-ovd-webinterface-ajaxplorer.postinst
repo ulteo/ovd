@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+AJAXPLORERDIR=/usr/share/ulteo/webinterface/ajaxplorer
+
+chown www-data:www-data $AJAXPLORERDIR/server/logs
