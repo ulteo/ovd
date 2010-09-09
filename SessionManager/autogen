@@ -1,5 +1,20 @@
 #!/bin/sh
 
+# get module
+module=ovd-session-manager
+set -- $(getopt m: "$@")
+[ $# -lt 1 ] && exit 1
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        -m) module="$2" ;;
+        --) shift; break ;;
+        -*) echo >&2 "usage: $0 [-m module] ..." ; exit 1 ;;
+        *)  break ;;
+    esac
+    shift
+done
+
 # get version
 if [ -n "$OVD_VERSION" ]; then
     version="$OVD_VERSION"
@@ -12,6 +27,7 @@ else
     version="99.99+svn$revison"
 fi
 
-sed -e "s/@VERSION@/${version}/g" < configure.ac.in > configure.ac
+sed "s/@MODULE@/${module}/g" < configure.ac.in | \
+sed "s/@VERSION@/${version}/g" > configure.ac
 
 autoreconf -vfi && ./configure --without-libchart $@

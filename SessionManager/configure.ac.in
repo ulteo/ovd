@@ -1,4 +1,4 @@
-AC_INIT([ovd-session-manager], [@VERSION@], [http://bugs.ulteo.com])
+AC_INIT([@MODULE@], [@VERSION@], [http://bugs.ulteo.com])
 
 # Init automake
 AM_INIT_AUTOMAKE([1.9 tar-pax])
