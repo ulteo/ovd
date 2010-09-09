@@ -41,11 +41,11 @@ if sys.platform == "win32":
 	# Force the include of ApS because of dynamic imports
 	sys.argv.append("-p")
 	sys.argv.append("ovd.Role.ApplicationServer")
-	
+
 	# Force to use twisted ...
 	sys.argv.append("-i")
 	sys.argv.append("twisted.web.resource")
-	
+
 	try:
 		import modulefinder
 		import win32com,sys
@@ -76,17 +76,17 @@ if sys.platform == "win32":
 
 
 elif sys.platform == "linux2":
-	setup_args["packages"] = ['ovd', 'ovd.Communication', 'ovd.Role',
-			'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
-			'ovd.Role.ApplicationServer.Platform',
-			'ovd.Role.ApplicationServer.Platform.Linux',
-			'ovd.Platform', 'ovd.Platform.Linux']
+	setup_args["packages"] = [
+		'ovd', 'ovd.Communication', 'ovd.Role',
+		'ovd.Role.FileServer', 'ovd.Role.ApplicationServer',
+		'ovd.Role.ApplicationServer.Platform',
+		'ovd.Role.ApplicationServer.Platform.Linux',
+		'ovd.Platform', 'ovd.Platform.Linux']
 	setup_args["data_files"] = [
 		('/usr/bin',['ulteo-ovd-slaveserver']),
 		('/etc/ulteo/ovd',['examples/slaveserver.conf']),
-		('/usr/share/ulteo/slaveserver',
-            ['examples/samba.conf', 'examples/apache2.conf']),
-	]
+		('/usr/share/ulteo/ovd/slaveserver',
+			['examples/samba.conf', 'examples/apache2.conf'])]
 
 
 else:

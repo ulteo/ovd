@@ -38,19 +38,19 @@ class System(AbstractSystem):
 	
 	@staticmethod
 	def get_default_config_dir():
-		return "/etc/ulteo/ovd"
+		return "/etc/ulteo/ovd/slaveserver"
 	
 	@staticmethod
 	def get_default_spool_dir():
-		return "/var/spool/ulteo/ovd"
+		return "/var/spool/ulteo/ovd/slaveserver"
 	
 	@staticmethod
 	def get_default_data_dir():
-		return "/var/lib/ulteo/ovd"
+		return "/var/lib/ulteo/ovd/slaveserver"
 	
 	@staticmethod
 	def get_default_log_dir():
-		return "/var/log/ulteo/ovd"
+		return "/var/log/ulteo/ovd/slaveserver"
 	
 	@staticmethod
 	def getVersion():
