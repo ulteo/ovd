@@ -71,28 +71,11 @@ function show_default($userDB) {
       echo '<th class="unsortable"></th>';
     echo '<th>'._('Login').'</th>';
     echo '<th>'._('Display name').'</th>';
-    echo '<th>'._('Others').'</th>';
     echo '</tr>';
 
     $count = 0;
     foreach($us as $u){
       $content = 'content'.(($count++%2==0)?1:2);
-
-      $keys = array();
-      foreach($u->getAttributesList() as $attr)
-	if (! in_array($attr, array('login', 'displayname','password')))
-	  $keys[]= $attr;
-
-      $extra = array();
-      foreach($keys as $key) {
-	if (is_array($u->getAttribute($key)))
-	  $buf = implode(", ", $u->getAttribute($key));
-	else
-	  $buf = $u->getAttribute($key);
-
-	$extra[]= '<b>'.$key.':</b> '.$buf;
-      }
-      asort($extra);
 
       echo '<tr class="'.$content.'">';
       if ($userdb_rw and $can_manage_users and $total_us > 1)
@@ -101,7 +84,6 @@ function show_default($userDB) {
       echo $u->getAttribute('login');
       echo '</a></td>';
       echo '<td>'.$u->getAttribute('displayname').'</td>';
-      echo '<td>'.implode(", ", $extra).'</td>';
 
       echo '<td><form action="users.php">';
       echo '<input type="submit" value="'._('Manage').'"/>';
@@ -123,7 +105,7 @@ function show_default($userDB) {
       $content = 'content'.(($count++%2==0)?1:2);
       echo '<tfoot>';
       echo '<tr class="'.$content.'">';
-      echo '<td colspan="5">';
+      echo '<td colspan="4">';
       echo '<a href="javascript:;" onclick="markAllRows(\'user_list_table\'); return false">'._('Mark all').'</a>';
       echo ' / <a href="javascript:;" onclick="unMarkAllRows(\'user_list_table\'); return false">'._('Unmark all').'</a>';
       echo '</td>';
