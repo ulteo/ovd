@@ -33,6 +33,9 @@
  * 
  * Description : The most used and standard plugin : FileSystem access
  */
+require_once(dirname(__FILE__).'/../../../includes/core.inc.php');
+require "HTTP/WebDAV/Client.php";
+
 class fsAccessDriver extends AbstractAccessDriver 
 {
 	/**
@@ -46,24 +49,24 @@ class fsAccessDriver extends AbstractAccessDriver
 	
 	function initRepository(){
 		$create = $this->repository->getOption("CREATE");
-		$path = $this->repository->getOption("PATH");
+		$path = $this->getPath();
 		$recycle = $this->repository->getOption("RECYCLE_BIN");
 		if($recycle != ""){
 			RecycleBinManager::init($path, "/".$recycle);
 		}
 		if($create == true){
-			if(!is_dir($path)) @mkdir($path);
-			if(!is_dir($path)){
+			if(!$this->isDir($path)) @mkdir($path);
+			if(!$this->isDir($path)){
 				return new AJXP_Exception("Cannot create root path for repository. Please check repository configuration or that your folder is writeable!");
 			}
-			if($recycle!= "" && !is_dir($path."/".$recycle)){
+			if($recycle!= "" && !$this->isDir($path."/".$recycle)){
 				@mkdir($path."/".$recycle);
-				if(!is_dir($path."/".$recycle)){
+				if(!$this->isDir($path."/".$recycle)){
 					return new AJXP_Exception("Cannot create recycle bin folder. Please check repository configuration or that your folder is writeable!");
 				}
 			}
 		}else{
-			if(!is_dir($path)){
+			if(!$this->isDir($path)){
 				return new AJXP_Exception("Cannot find base path for your repository! Please check the configuration!");
 			}
 		}
@@ -82,9 +85,11 @@ class fsAccessDriver extends AbstractAccessDriver
 		if(isSet($dest)) $dest = SystemTextEncoding::fromUTF8($dest);
 		$mess = ConfService::getMessages();
 		
-		$newArgs = RecycleBinManager::filterActions($action, $selection, $dir);
-		foreach ($newArgs as $argName => $argValue){
-			$$argName = $argValue;
+		if(RecycleBinManager::recycleEnabled()){
+			$newArgs = RecycleBinManager::filterActions($action, $selection, $dir);
+			foreach ($newArgs as $argName => $argValue){
+				$$argName = $argValue;
+			}
 		}
 		// FILTER DIR PAGINATION ANCHOR
 		if(isSet($dir) && strstr($dir, "#")!==false){
@@ -111,7 +116,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				}
 				$zip = false;
 				if($selection->isUnique()){
-					if(is_dir($this->getPath()."/".$selection->getUniqueFile())) {
+					if($this->isDir($this->getPath()."/".$selection->getUniqueFile())) {
 						$zip = true;
 						$dir .= "/".basename($selection->getUniqueFile());
 					}
@@ -204,9 +209,9 @@ class fsAccessDriver extends AbstractAccessDriver
 					$code=stripslashes($code);
 					$code=str_replace("&lt;","<",$code);
 					$fileName = $this->getPath().SystemTextEncoding::fromUTF8("/$file");
-					if(!is_file($fileName) || !is_writable($fileName)){
+					if(!$this->isFile($fileName) || !$this->isWriteable($fileName)){
 						header("Content-Type:text/plain");
-						print((!is_writable($fileName)?"1001":"1002"));
+						print((!$this->isWriteable($fileName)?"1001":"1002"));
 						exit(1);
 					}
 					$fp=fopen($fileName,"w");
@@ -237,7 +242,7 @@ class fsAccessDriver extends AbstractAccessDriver
 					$tmpDir = dirname($selection->getZipPath())."/.tmpExtractDownload";
 					@mkdir($this->getPath()."/".$tmpDir);					
 					$this->convertSelectionToTmpFiles($tmpDir, $selection);
-					if(is_dir($tmpDir))	$this->deldir($this->getPath()."/".$tmpDir);					
+					if($this->isDir($tmpDir))	$this->deldir($this->getPath()."/".$tmpDir);
 				}
 				$success = $error = array();
 				
@@ -480,7 +485,7 @@ class fsAccessDriver extends AbstractAccessDriver
 							$is_image = Utils::is_image(basename($zipEntry["stored_filename"]));
 							$atts[] = "is_image=\"".$is_image."\"";
 							if($is_image){
-								if(!is_dir($tmpDir)) mkdir($tmpDir);
+								if(!$this->isDir($tmpDir)) mkdir($tmpDir);
 								$currentFile = $tmpDir."/".basename($zipEntry["stored_filename"]);								
 								$data = $zip->extract(PCLZIP_OPT_BY_NAME, $zipEntry["stored_filename"], PCLZIP_OPT_REMOVE_ALL_PATH, PCLZIP_OPT_PATH, $tmpDir);
 								list($width, $height, $type, $attr) = @getimagesize($currentFile);
@@ -496,7 +501,7 @@ class fsAccessDriver extends AbstractAccessDriver
 						}						
 						print("<tree ".join(" ", $atts)."/>");
 					}
-					if(is_dir($tmpDir)){
+					if($this->isDir($tmpDir)){
 						rmdir($tmpDir);
 					}
 					AJXP_XMLWriter::close();
@@ -549,13 +554,13 @@ class fsAccessDriver extends AbstractAccessDriver
 					$attributes = "";
 					if($searchMode)
 					{
-						if(is_file($nom_rep."/".$repIndex)) {$attributes = "is_file=\"true\" icon=\"$repName\""; $repName = $repIndex;}
+						if($this->isFile($nom_rep."/".$repIndex)) {$attributes = "is_file=\"true\" icon=\"$repName\""; $repName = $repIndex;}
 					}
 					else if($fileListMode)
 					{
 						$currentFile = $nom_rep."/".$repIndex;			
 						$atts = array();
-						$atts[] = "is_file=\"".(is_file($currentFile)?"1":"0")."\"";
+						$atts[] = "is_file=\"".($this->isFile($currentFile)?"1":"0")."\"";
 						$atts[] = "is_image=\"".Utils::is_image($currentFile)."\"";
 						$fGroup = @filegroup($currentFile) || "unknown";
 						$atts[] = "file_group=\"".$fGroup."\"";
@@ -563,7 +568,7 @@ class fsAccessDriver extends AbstractAccessDriver
 						$atts[] = "file_owner=\"".$fOwner."\"";
 						$fPerms = @fileperms($currentFile);
 						if($fPerms !== false){
-							$fPerms = substr(decoct( $fPerms ), (is_file($currentFile)?2:1));
+							$fPerms = substr(decoct( $fPerms ), ($this->isFile($currentFile)?2:1));
 						}else{
 							$fPerms = '0000';
 						}
@@ -575,7 +580,7 @@ class fsAccessDriver extends AbstractAccessDriver
 							$atts[] = "image_width=\"$width\"";
 							$atts[] = "image_height=\"$height\"";
 						}
-						$atts[] = "mimestring=\"".Utils::mimetype($currentFile, "type", is_dir($currentFile))."\"";
+						$atts[] = "mimestring=\"".Utils::mimetype($currentFile, "type", $this->isDir($currentFile))."\"";
 						$datemodif = $this->date_modif($currentFile);
 						$atts[] = "ajxp_modiftime=\"".($datemodif ? $datemodif : "0")."\"";
 						$bytesize = @filesize($currentFile) or 0;
@@ -583,7 +588,7 @@ class fsAccessDriver extends AbstractAccessDriver
 						$atts[] = "filesize=\"".Utils::roundSize($bytesize)."\"";
 						$atts[] = "bytesize=\"".$bytesize."\"";
 						$atts[] = "filename=\"".Utils::xmlEntities( SystemTextEncoding::toUTF8($dir."/".$repIndex))."\"";
-						$atts[] = "icon=\"".(is_file($currentFile)?SystemTextEncoding::toUTF8($repName):(is_dir($currentFile) ? "folder.png" : "mime-empty.png"))."\"";
+						$atts[] = "icon=\"".($this->isFile($currentFile)?SystemTextEncoding::toUTF8($repName):($this->isDir($currentFile) ? "folder.png" : "mime-empty.png"))."\"";
 						
 						$attributes = join(" ", $atts);
 						$repName = $repIndex;
@@ -608,14 +613,14 @@ class fsAccessDriver extends AbstractAccessDriver
 					print("</tree>");
 				}
 				// ADD RECYCLE BIN TO THE LIST
-				if($nom_rep == $this->repository->getOption("PATH") && RecycleBinManager::recycleEnabled() && !$completeMode && !$skipZip)
+				if($nom_rep == $this->getPath() && RecycleBinManager::recycleEnabled() && !$completeMode && !$skipZip)
 				{
 					$recycleBinOption = $this->repository->getOption("RECYCLE_BIN");
-					if(is_dir($this->repository->getOption("PATH")."/".$recycleBinOption)){
-						$recycleIcon = ($this->countFiles($this->repository->getOption("PATH")."/".$recycleBinOption, false, true)>0?"trashcan_full.png":"trashcan.png");
+					if($this->isDir($this->getPath()."/".$recycleBinOption)){
+						$recycleIcon = ($this->countFiles($this->getPath()."/".$recycleBinOption, false, true)>0?"trashcan_full.png":"trashcan.png");
 						if($fileListMode)
 						{
-							print("<tree text=\"".Utils::xmlEntities($mess[122])."\" filesize=\"-\" is_file=\"0\" is_recycle=\"1\" mimestring=\"Trashcan\" ajxp_modiftime=\"".$this->date_modif($this->repository->getOption("PATH")."/".$recycleBinOption)."\" filename=\"/".$recycleBinOption."\" icon=\"$recycleIcon\"></tree>");
+							print("<tree text=\"".Utils::xmlEntities($mess[122])."\" filesize=\"-\" is_file=\"0\" is_recycle=\"1\" mimestring=\"Trashcan\" ajxp_modiftime=\"".$this->date_modif($this->getPath()."/".$recycleBinOption)."\" filename=\"/".$recycleBinOption."\" icon=\"$recycleIcon\"></tree>");
 						}
 						else 
 						{						
@@ -728,7 +733,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		{
 			return new AJXP_Exception(72);
 		}
-		if(!is_dir($nom_rep))
+		if(!$this->isDir($nom_rep))
 		{
 			return new AJXP_Exception(100);
 		}
@@ -736,37 +741,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	}
 
 	function getTrueSize($file) {
-		if (!(strtoupper(substr(PHP_OS, 0, 3)) == 'WIN')){
-			$cmd = "stat -L -c%s \"".$file."\"";
-			$val = trim(`$cmd`);
-			if (strlen($val) == 0 || floatval($val) == 0)
-			{
-				// No stat on system
-				$cmd = "ls -1s --block-size=1 \"".$file."\"";
-				$val = trim(`$cmd`);
-			}
-			if (strlen($val) == 0 || floatval($val) == 0)
-			{
-				// No block-size on system (probably busybox), try long output
-				$cmd = "ls -l \"".$file."\"";
-
-				$arr = explode("/[\s]+/", `$cmd`);
-				$val = trim($arr[4]);
-			}
-			if (strlen($val) == 0 || floatval($val) == 0){
-				// Still not working, get a value at least, not 0...
-				$val = sprintf("%u", filesize($file));
-			}
-			return floatval($val);
-		}else if (class_exists("COM")){
-			$fsobj = new COM("Scripting.FileSystemObject");
-			$f = $fsobj->GetFile($file);
-			return floatval($f->Size);
-		}
-		else if (is_file($file)){
-			return exec('FOR %A IN ("'.$file.'") DO @ECHO %~zA');
-		}
-		else return sprintf("%u", filesize($file));
+		return (float)filesize($file);
 	}
 
 	function readFile($filePathOrData, $headerType="plain", $localName="", $data=false, $gzip=GZIP_DOWNLOAD)
@@ -895,13 +870,13 @@ class fsAccessDriver extends AbstractAccessDriver
 	}
 
 	function countFiles($dirName, $foldersOnly = false, $nonEmptyCheckOnly = false){
-		$handle=opendir($dirName);
+		$handle=opendir($dirName.'/');
 		$count = 0;
 		while (strlen($file = readdir($handle)) > 0)
 		{
 			if($file != "." && $file !=".." 
 				&& !(Utils::isHidden($file) && !$this->driverConf["SHOW_HIDDEN_FILES"])
-				&& !($foldersOnly && is_file($dirName."/".$file)) ){
+				&& !($foldersOnly && $this->isFile($dirName."/".$file)) ){
 				$count++;
 				if($nonEmptyCheckOnly) return 1;
 			}			
@@ -916,11 +891,13 @@ class fsAccessDriver extends AbstractAccessDriver
 		$size_unit = $mess["byte_unit_symbol"];
 		$orderDir = 0;
 		$orderBy = "filename";
-		$handle=opendir($nom_rep);
+		$handle=opendir($nom_rep.'/');
 		$recycle = $this->repository->getOption("RECYCLE_BIN");
 		$cursor = 0;
 		while (strlen($file = readdir($handle)) > 0)
 		{
+			if($file==basename($this->getPath())) continue;
+			if(substr($file, 0, 5) == 'conf.') continue;
 			if($file!="." && $file!=".." && !(Utils::isHidden($file) && !$this->driverConf["SHOW_HIDDEN_FILES"]))
 			{
 				if($offset > 0 && $cursor < $offset){
@@ -932,12 +909,12 @@ class fsAccessDriver extends AbstractAccessDriver
 				}
 				$cursor ++;
 				if($recycle != "" 
-					&& $nom_rep == $this->repository->getOption("PATH")."/".$recycle 
+					&& $nom_rep == $this->getPath()."/".$recycle 
 					&& $file == RecycleBinManager::getCacheFileName()){
 					continue;
 				}
 				$poidsfic=@filesize("$nom_rep/$file") or 0;
-				if(is_dir("$nom_rep/$file"))
+				if($this->isDir("$nom_rep/$file"))
 				{	
 					if($this->filterFolder($file)) continue;				
 					if($recycle != "" && $this->getPath()."/".$recycle == "$nom_rep/$file")
@@ -952,11 +929,11 @@ class fsAccessDriver extends AbstractAccessDriver
 					if($this->filterFile($file)) continue;
 					if(!$dir_only)
 					{
-						if($orderBy=="filename") {$liste_fic[$file]=Utils::mimetype("$nom_rep/$file","image", is_dir("$nom_rep/$file"));}
+						if($orderBy=="filename") {$liste_fic[$file]=Utils::mimetype("$nom_rep/$file","image", $this->isDir("$nom_rep/$file"));}
 						else if($orderBy=="filesize") {$liste_fic[$file]=$poidsfic;}
 						else if($orderBy=="mod") {$liste_fic[$file]=filemtime("$nom_rep/$file");}
-						else if($orderBy=="filetype") {$liste_fic[$file]=Utils::mimetype("$nom_rep/$file","type",is_dir("$nom_rep/$file"));}
-						else {$liste_fic[$file]=Utils::mimetype("$nom_rep/$file","image", is_dir("$nom_rep/$file"));}
+						else if($orderBy=="filetype") {$liste_fic[$file]=Utils::mimetype("$nom_rep/$file","type",$this->isDir("$nom_rep/$file"));}
+						else {$liste_fic[$file]=Utils::mimetype("$nom_rep/$file","image", $this->isDir("$nom_rep/$file"));}
 					}
 					else if(preg_match("/\.zip$/",$file) && ConfService::zipEnabled()){
 						if(!isSet($liste_zip)) $liste_zip = array();
@@ -1012,6 +989,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	
 	function changeMode($filePath)
 	{
+		return; // chmod not allowed
 		$chmodValue = $this->repository->getOption("CHMOD_VALUE");
 		if(isSet($chmodValue) && $chmodValue != "")
 		{
@@ -1022,7 +1000,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	function copyOrMove($destDir, $selectedFiles, &$error, &$success, $move = false)
 	{
 		$mess = ConfService::getMessages();
-		if(!is_writable($this->getPath()."/".$destDir))
+		if(!$this->isWriteable($this->getPath()."/".$destDir))
 		{
 			$error[] = $mess[38]." ".$destDir." ".$mess[99];
 			return ;
@@ -1030,7 +1008,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				
 		foreach ($selectedFiles as $selectedFile)
 		{
-			if($move && !is_writable(dirname($this->getPath()."/".$selectedFile)))
+			if($move && !$this->isWriteable(dirname($this->getPath()."/".$selectedFile)))
 			{
 				$error[] = "\n".$mess[38]." ".dirname($selectedFile)." ".$mess[99];
 				continue;
@@ -1052,7 +1030,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		$mess = ConfService::getMessages();
 		$filename_new=Utils::processFileName($filename_new);
 		$old=$this->getPath()."/$filePath";
-		if(!is_writable($old))
+		if(!$this->isWriteable($old))
 		{
 			return $mess[34]." ".$nom_fic." ".$mess[99];
 		}
@@ -1074,7 +1052,7 @@ class fsAccessDriver extends AbstractAccessDriver
 	}
 	
 	function autoRenameForDest($destination, $fileName){
-		if(!is_file($destination."/".$fileName)) return $fileName;
+		if(!$this->isFile($destination."/".$fileName)) return $fileName;
 		$i = 1;
 		$ext = "";
 		$name = "";
@@ -1086,7 +1064,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		}else{
 			$name = $fileName;
 		}
-		while (is_file($destination."/".$name."-$i".$ext)) {
+		while ($this->isFile($destination."/".$name."-$i".$ext)) {
 			$i++; // increment i until finding a non existing file.
 		}
 		return $name."-$i".$ext;
@@ -1103,7 +1081,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		{
 			return "$mess[40]"; 
 		}
-		if(!is_writable($this->getPath()."/$crtDir"))
+		if(!$this->isWriteable($this->getPath()."/$crtDir"))
 		{
 			return $mess[38]." $crtDir ".$mess[99];
 		}
@@ -1132,7 +1110,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		{
 			return "$mess[71]";
 		}
-		if(!is_writable($this->getPath()."/$crtDir"))
+		if(!$this->isWriteable($this->getPath()."/$crtDir"))
 		{
 			return "$mess[38] $crtDir $mess[99]";
 		}
@@ -1171,7 +1149,7 @@ class fsAccessDriver extends AbstractAccessDriver
 				continue;
 			}		
 			$this->deldir($fileToDelete);
-			if(is_dir($fileToDelete))
+			if($this->isDir($fileToDelete))
 			{
 				$logMessages[]="$mess[38] ".SystemTextEncoding::toUTF8($selectedFile)." $mess[44].";
 			}
@@ -1188,8 +1166,8 @@ class fsAccessDriver extends AbstractAccessDriver
 	function copyOrMoveFile($destDir, $srcFile, &$error, &$success, $move = false)
 	{
 		$mess = ConfService::getMessages();		
-		$destFile = $this->repository->getOption("PATH").$destDir."/".basename($srcFile);
-		$realSrcFile = $this->repository->getOption("PATH")."$srcFile";
+		$destFile = $this->getPath().$destDir."/".basename($srcFile);
+		$realSrcFile = $this->getPath()."$srcFile";
 		$recycle = $this->repository->getOption("RECYCLE_BIN");		
 		if(!file_exists($realSrcFile))
 		{
@@ -1204,7 +1182,7 @@ class fsAccessDriver extends AbstractAccessDriver
 			}else{
 				$base = basename($srcFile);
 				$i = 1;
-				if(is_file($realSrcFile)){
+				if($this->isFile($realSrcFile)){
 					$dotPos = strrpos($base, ".");
 					if($dotPos>-1){
 						$radic = substr($base, 0, $dotPos);
@@ -1214,21 +1192,21 @@ class fsAccessDriver extends AbstractAccessDriver
 				// auto rename file
 				$i = 1;
 				$newName = $base;
-				while (file_exists($this->repository->getOption("PATH").$destDir."/".$newName)) {
+				while (file_exists($this->getPath().$destDir."/".$newName)) {
 					$suffix = "-$i";
 					if(isSet($radic)) $newName = $radic . $suffix . $ext;
 					else $newName = $base.$suffix;
 					$i++;
 				}
-				$destFile = $this->repository->getOption("PATH").$destDir."/".$newName;
+				$destFile = $this->getPath().$destDir."/".$newName;
 			}
 		}
-		if(is_dir($realSrcFile))
+		if($this->isDir($realSrcFile))
 		{
 			$errors = array();
 			$succFiles = array();
 			if($move){
-				if(is_file($destFile)) unlink($destFile);
+				if($this->isFile($destFile)) unlink($destFile);
 				$res = rename($realSrcFile, $destFile);
 			}else{
 				$dirRes = $this->dircopy($realSrcFile, $destFile, $errors, $succFiles);
@@ -1242,7 +1220,7 @@ class fsAccessDriver extends AbstractAccessDriver
 		else 
 		{
 			if($move){
-				if(is_file($destFile)) unlink($destFile);
+				if($this->isFile($destFile)) unlink($destFile);
 				$res = rename($realSrcFile, $destFile);
 			}else{
 				$res = copy($realSrcFile,$destFile);
@@ -1300,8 +1278,8 @@ class fsAccessDriver extends AbstractAccessDriver
 	function dircopy($srcdir, $dstdir, &$errors, &$success, $verbose = false) 
 	{
 		$num = 0;
-		if(!is_dir($dstdir)) mkdir($dstdir);
-		if($curdir = opendir($srcdir)) 
+		if(!$this->isDir($dstdir)) mkdir($dstdir);
+		if($curdir = opendir($srcdir.'/')) 
 		{
 			while($file = readdir($curdir)) 
 			{
@@ -1309,9 +1287,9 @@ class fsAccessDriver extends AbstractAccessDriver
 				{
 					$srcfile = $srcdir . DIRECTORY_SEPARATOR . $file;
 					$dstfile = $dstdir . DIRECTORY_SEPARATOR . $file;
-					if(is_file($srcfile)) 
+					if($this->isFile($srcfile))
 					{
-						if(is_file($dstfile)) $ow = filemtime($srcfile) - filemtime($dstfile); else $ow = 1;
+						if($this->isFile($dstfile)) $ow = filemtime($srcfile) - filemtime($dstfile); else $ow = 1;
 						if($ow > 0) 
 						{
 							if($verbose) echo "Copying '$srcfile' to '$dstfile'...";
@@ -1327,7 +1305,7 @@ class fsAccessDriver extends AbstractAccessDriver
 							}
 						}
 					}
-					else if(is_dir($srcfile)) 
+					else if($this->isDir($srcfile))
 					{
 						$num += $this->dircopy($srcfile, $dstfile, $errors, $success, $verbose);
 					}
@@ -1345,17 +1323,17 @@ class fsAccessDriver extends AbstractAccessDriver
 	
 	function isWriteable($dir)
 	{
-		return is_writable($dir);
+		return (is_writable($dir) || is_writable($dir.'/'));
 	}
 	
 	function deldir($location)
 	{
-		if(is_dir($location))
+		if($this->isDir($location))
 		{
-			$all=opendir($location);
+			$all=opendir($location.'/');
 			while ($file=readdir($all))
 			{
-				if (is_dir("$location/$file") && $file !=".." && $file!=".")
+				if ($this->isDir("$location/$file") && $file !=".." && $file!=".")
 				{
 					$this->deldir("$location/$file");
 					if(file_exists("$location/$file")){
@@ -1363,7 +1341,7 @@ class fsAccessDriver extends AbstractAccessDriver
 					}
 					unset($file);
 				}
-				elseif (!is_dir("$location/$file"))
+				elseif (!$this->isDir("$location/$file"))
 				{
 					if(file_exists("$location/$file")){
 						unlink("$location/$file"); 
@@ -1399,16 +1377,16 @@ class fsAccessDriver extends AbstractAccessDriver
 	function chmod($path, $chmodValue, $recursive=false, $nodeType="both", &$changedFiles)
 	{
 	    $chmodValue = octdec(ltrim($chmodValue, "0"));
-		if(is_file($path) && ($nodeType=="both" || $nodeType=="file")){
+		if($this->isFile($path) && ($nodeType=="both" || $nodeType=="file")){
 			chmod($path, $chmodValue);
 			$changedFiles[] = $path;
-		}else if(is_dir($path)){
+		}else if($this->isDir($path)){
 			if($nodeType=="both" || $nodeType=="dir"){
 				chmod($path, $chmodValue);				
 				$changedFiles[] = $path;
 			}
 			if($recursive){
-				$handler = opendir($path);
+				$handler = opendir($path.'/');
 				while ($child=readdir($handler)) {
 					if($child == "." || $child == "..") continue;
 					$this->chmod($path."/".$child, $chmodValue, $recursive, $nodeType, $changedFiles);
@@ -1469,6 +1447,24 @@ class fsAccessDriver extends AbstractAccessDriver
         return $this->writePubliclet($data);
      }
     
+    function isDir($filePath)
+    {
+        if ($filePath == $this->getPath())
+            return true;
+
+        if (! @filetype($filePath))
+            return true;
+
+        return false;
+    }
+    
+    function isFile($filePath)
+    {
+        if (! @filetype($filePath))
+            return false;
+
+        return true;
+    }
 }
 
 ?>
