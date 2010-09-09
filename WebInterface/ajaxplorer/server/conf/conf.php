@@ -36,9 +36,9 @@
 define("AJXP_VERSION", "2.6");
 define("AJXP_VERSION_DATE", "2010/04/04");
 
-define("ENABLE_USERS", 1);
+define("ENABLE_USERS", 0);
 define("ADMIN_PASSWORD", "admin");
-define("ALLOW_GUEST_BROWSING", 0);
+define("ALLOW_GUEST_BROWSING", 1);
 
 // If you want to allow public URL to uploaded file please do the following : 
 // + Create this folder.
@@ -117,28 +117,16 @@ $AUTH_DRIVER = array(
 /* Use the GUI to add new repositories to explore!
 /*   + Log in as "admin" and open the "Settings" Repository
 /*********************************************************/
-$REPOSITORIES[0] = array(
-	"DISPLAY"		=>	"Default Files", 
-	"DRIVER"		=>	"fs", 
-	"DRIVER_OPTIONS"=> array(
-		"PATH"			=>	realpath(dirname(__FILE__)."/../../files"), 
-		"CREATE"		=>	true,
-		"RECYCLE_BIN" 	=> 	'recycle_bin',
-		"CHMOD_VALUE"   =>  '0600',
-		"DEFAULT_RIGHTS"=>  "",
-		"PAGINATION_THRESHOLD" => 500,
-		"PAGINATION_NUMBER" => 200
-	),
-	
-);
+@session_start();
+$REPOSITORIES = $_SESSION['ajxp']['repositories'];
 
 // DO NOT REMOVE THIS!
 // ADMIN REPOSITORY
-$REPOSITORIES[1] = array(
+/*$REPOSITORIES[1] = array(
 	"DISPLAY"		=>	"Settings", 
 	"DRIVER"		=>	"ajxp_conf", 
 	"DRIVER_OPTIONS"=> array()	
-);
+);*/
 
 /**
  * Specific config for wordpress plugin, still experimental, do not touch if you are not sure!
