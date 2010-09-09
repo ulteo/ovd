@@ -41,8 +41,8 @@ require_once("server/classes/class.AbstractDriver.php");
 ConfService::init("server/conf/conf.php");
 $confStorageDriver = ConfService::getConfStorageImpl();
 include_once($confStorageDriver->getUserClassFileName());
-session_name("AjaXplorer");
-session_start();
+//session_name("AjaXplorer");
+@session_start();
 
 $outputArray = array();
 $testedParams = array();
