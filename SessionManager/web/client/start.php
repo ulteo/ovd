@@ -417,6 +417,7 @@ if (isset($old_session_id)) {
 
 	$sharedfolders = $user->getSharedFolders();
 	$netshares = array();
+	$sharedfolders_available = false;
 	if (is_array($sharedfolders) && count($sharedfolders) > 0) {
 		foreach ($sharedfolders as $sharedfolder) {
 			$sharedfolder_server = Abstract_Server::load($sharedfolder->server);
@@ -442,6 +443,9 @@ if (isset($old_session_id)) {
 
 			$netshares[] = $sharedfolder;
 		}
+
+		if (count($netshares) > 0)
+			$sharedfolders_available = true;
 	}
 
 	$random_session_id = gen_unique_string();
@@ -791,6 +795,20 @@ if (isset($profile_available) && $profile_available === true) {
 	$profile_node->setAttribute('login', $user_login);
 	$profile_node->setAttribute('password', $user_password);
 	$session_node->appendChild($profile_node);
+}
+
+if (isset($sharedfolders_available) && $sharedfolders_available === true) {
+	$sharedfolders_node = $dom->createElement('sharedfolders');
+	foreach ($netshares as $netshare) {
+		$sharedfolder_node = $dom->createElement('sharedfolder');
+		$sharedfolder_node->setAttribute('server', $netshare->server);
+		$sharedfolder_node->setAttribute('dir', $netshare->id);
+		$sharedfolder_node->setAttribute('name', $netshare->name);
+		$sharedfolder_node->setAttribute('login', $user_login);
+		$sharedfolder_node->setAttribute('password', $user_password);
+		$sharedfolders_node->appendChild($sharedfolder_node);
+	}
+	$session_node->appendChild($sharedfolders_node);
 }
 
 if ($session->mode == Session::MODE_DESKTOP) {
