@@ -38,7 +38,7 @@ class System(AbstractSystem):
 	
 	@staticmethod
 	def get_default_config_dir():
-		return "/etc/ulteo/ovd/slaveserver"
+		return "/etc/ulteo/ovd"
 	
 	@staticmethod
 	def get_default_spool_dir():
