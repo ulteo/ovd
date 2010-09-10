@@ -75,46 +75,55 @@ static HINSTANCE g_instance = NULL;
 
 static HANDLE g_mutex = NULL;
 
+#define TITLE_SIZE 150
+
 typedef struct node_{
 	HWND windows;
+	unsigned short *title;
 	struct node_* next;
 }node;
 
 static node* hwdHistory = NULL;
 
-static HWND getHWNDFromHistory(HWND hwnd){
+static node* getWindowFromHistory(HWND hwnd){
 	node* currentNode = hwdHistory;
 	if (currentNode == NULL){
-		return (HWND)NULL;
+		return (node*)NULL;
 	}
 	while(currentNode){
 		if( currentNode->windows == hwnd)
-			return hwnd;
+			return currentNode;
 		currentNode = currentNode->next;
 	}
-	return (HWND)NULL;
+	return (node*)NULL;
 }
 
-static void addHWDNToHistory(HWND hwnd){
-	node* currentNode = hwdHistory;
+static node* addHWDNToHistory(HWND hwnd){
+	node* currentNode = NULL;
 	node* newNode = hwdHistory;
-
-	if( getHWNDFromHistory(hwnd) == hwnd){
-		return;
+	
+	currentNode = getWindowFromHistory(hwnd);
+	if(currentNode != NULL && currentNode->windows == hwnd){
+		return (node*) NULL;
 	}
+
 	if (hwdHistory == NULL){
 		hwdHistory = malloc(sizeof(node));
 		hwdHistory->windows = hwnd;
 		hwdHistory->next = NULL;
-		return;
+		return hwdHistory;
 	}
+	
+	currentNode = hwdHistory;
 	while(currentNode->next){
 		currentNode = currentNode->next;
 	}
 	newNode = malloc(sizeof(node));
 	newNode->windows = hwnd;
+	newNode->title = NULL;
 	newNode->next = NULL;
 	currentNode->next = newNode;
+	return newNode;
 }
 
 static void removeHWNDFromHistory(HWND hwnd){
@@ -131,6 +140,9 @@ static void removeHWNDFromHistory(HWND hwnd){
 		hwdHistory = currentNode->next;
 	else
 		previousNode->next = currentNode->next;
+
+	if (currentNode->title != NULL)
+		free(currentNode->title);
 	free(currentNode);
 }
 
@@ -450,7 +462,7 @@ update_icon(HWND hwnd, HICON icon, int large)
 }
 
 static void create_window(HWND hwnd){
-		unsigned short title[150];
+		unsigned short *title;
 		int state;
 		DWORD pid;
 		int flags;
@@ -458,11 +470,16 @@ static void create_window(HWND hwnd){
 		LONG exstyle;
 		LONG style;
 		HWND parent;
-		
-		if (getHWNDFromHistory(hwnd) != NULL)
-			return;
+		node* window;
 
-		addHWDNToHistory(hwnd);
+		if (getWindowFromHistory(hwnd) != NULL) {
+			return;
+		}
+		
+		window = addHWDNToHistory(hwnd);
+		if (window == NULL) {
+			return;
+		}
 
 		style = GetWindowLong(hwnd, GWL_STYLE);
 		vchannel_write("DEBUG","NEW WINDOWS");
@@ -471,7 +488,7 @@ static void create_window(HWND hwnd){
 		GetWindowThreadProcessId(hwnd, &pid);
 
 		parent = get_parent(hwnd);
-		if (getHWNDFromHistory(parent) == NULL)
+		if (getWindowFromHistory(parent) == NULL)
 			parent = 0;
 
 		flags = 0;
@@ -492,10 +509,17 @@ static void create_window(HWND hwnd){
 		vchannel_write("CREATE", "0x%08lx,0x%08lx,0x%08lx,0x%08x",
 					   (long) hwnd, (long) pid, (long) parent, flags);
 
-		GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
+		title = malloc(sizeof(unsigned short) * TITLE_SIZE);
+		if (title != NULL) {
+			GetWindowTextW(hwnd, title, TITLE_SIZE);
 
-		vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd,
-				   vchannel_strfilter_unicode(title), 0);
+			vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd, vchannel_strfilter_unicode(title), 0);
+		}
+		if (window->title) {
+			free(window->title);
+			window->title = NULL;
+		}
+		window->title = title;
 
 		icon = get_icon(hwnd, 1);
 		if (icon)
@@ -674,18 +698,52 @@ wndprocret_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 
 		case WM_SETTEXT:
 			{
-				unsigned short title[150];
 				if (!(style & WS_VISIBLE))
 					break;
 				/* We cannot use the string in lparam because
 				   we need unicode. */
-				if (getHWNDFromHistory(hwnd) == NULL){
+				if (getWindowFromHistory(hwnd) == NULL){
 					create_window(hwnd);
 				}
 				else{
-					GetWindowTextW(hwnd, title, sizeof(title) / sizeof(*title));
-					vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd,
-						     vchannel_strfilter_unicode(title), 0);
+					BOOLEAN titleIsTheSame = TRUE;
+					int i = 0;
+					unsigned short *title;
+					node* window = getWindowFromHistory(hwnd);
+					if (window == NULL) {
+						break;
+					}
+
+					title = malloc(sizeof(unsigned short) * TITLE_SIZE);
+					if (title == NULL)
+						break;
+
+					GetWindowTextW(hwnd, title, TITLE_SIZE);
+
+					if (window->title != NULL) {
+						for (i = 0; i < TITLE_SIZE; i++) {
+							if (title[i] != window->title[i]) {
+								titleIsTheSame = FALSE;
+								break;
+							}
+						}
+					}
+					else {
+						titleIsTheSame = FALSE;
+					}
+
+					if (titleIsTheSame) {
+						free(title);
+						break;
+					}
+
+					vchannel_write("TITLE", "0x%08lx,%s,0x%08x", hwnd, vchannel_strfilter_unicode(title), 0);
+
+					if (window->title) {
+						free(window->title);
+						window->title;
+					}
+					window->title = title;
 				}
 				break;
 			}
