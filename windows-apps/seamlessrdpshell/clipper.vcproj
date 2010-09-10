@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="9,00"
+	Version="9.00"
 	Name="ServerExe"
 	ProjectGUID="{4C27EA74-3453-4222-BDD2-37C3B90438D2}"
 	RootNamespace="ServerExe"
@@ -74,7 +74,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wtsapi32.lib"
+				AdditionalDependencies="wtsapi32.lib Release\vchannel.lib"
 				OutputFile="Debug/seamlessrdpshell.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -166,7 +166,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="wtsapi32.lib"
+				AdditionalDependencies="wtsapi32.lib Release\vchannel.lib"
 				OutputFile=".\Release/seamlessrdpshell.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
