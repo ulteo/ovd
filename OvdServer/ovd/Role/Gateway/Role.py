@@ -34,7 +34,6 @@ class Role(AbstractRole):
 		self.REMOTE_SM_FQDN = ""
 		self.HTTPS_PORT = 443
 		self.RDP_PORT = 3389
-		self.FPEM_LOCATION = '/root/ovdserver/ovd/Role/Gateway/pem/gateway.pem'
 
 	def init(self):
 		Logger.info("Initiate Gateway")
@@ -62,7 +61,11 @@ class Role(AbstractRole):
 	def run(self):
 		self.has_run = True
 		self.REMOTE_SM_FQDN = self.session_manager
-		ReverseProxy(self.FPEM_LOCATION, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
-		Logger.info('Gateway is running !')
-		asyncore.loop()
+		pem = os.path.join(Config.spool, "gateway.pem")
+		if os.path.exists(pem):
+			ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
+			Logger.info('Gateway is running !')
+			asyncore.loop()
+		else:
+			Logger.error("Role %s need a certificate at %s !"%(self.getName(), pem))
 		Logger.info('Closing gateway...')
