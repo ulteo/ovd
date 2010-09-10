@@ -24,7 +24,7 @@ import sys
 from distutils.core import setup
 
 setup_args = {}
-setup_args["name"] = "ovd-slaveserver"
+setup_args["name"] = "@NAME@"
 setup_args["description"] = "OVD slaveserver"
 setup_args["author"] = "Julien Langlois"
 setup_args["author_email"] = "julient@ulteo.com"

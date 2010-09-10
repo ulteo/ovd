@@ -3,6 +3,7 @@
 import os, sys, pysvn
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
+name = "ovd-slaveserver"
 extra_modules = ""
 
 # Detect the version
@@ -29,8 +30,10 @@ content = f.read()
 f.close()
 
 if "--gateway" in sys.argv:
+	name = "ovd-slaveserver-gateway"
 	extra_modules = "	setup_args['packages'] += ['ovd.Role.Gateway']"
 
+content = content.replace("@NAME@", name)
 content = content.replace("@VERSION@", str(version))
 content = content.replace("@EXTRA_MODULES@", extra_modules)
 
