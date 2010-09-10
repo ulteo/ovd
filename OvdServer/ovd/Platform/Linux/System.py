@@ -50,7 +50,7 @@ class System(AbstractSystem):
 	
 	@staticmethod
 	def get_default_log_dir():
-		return "/var/log/ulteo/ovd/slaveserver"
+		return "/var/log/ulteo/ovd"
 	
 	@staticmethod
 	def getVersion():
