@@ -36,6 +36,8 @@ import java.awt.Frame;
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.event.WindowStateListener;
@@ -60,7 +62,7 @@ import net.propero.rdp.rdp5.VChannel;
 import net.propero.rdp.rdp5.VChannels;
 
 
-public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener {
+public class SeamlessChannel extends VChannel implements WindowStateListener, WindowListener, FocusListener {
 
 	// Seamless RDP constants
 	public static final int WINDOW_NOTYETMAPPED=-1;
@@ -380,6 +382,7 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	protected void addFrame(SeamlessWindow f, String name) {
 		f.sw_addWindowStateListener(this);
 		f.sw_addWindowListener(this);
+		f.sw_addFocusListener(this);
 		if (this.clipChannel != null)
 			f.sw_addFocusListener(this.clipChannel);
 		else
@@ -855,5 +858,30 @@ public class SeamlessChannel extends VChannel implements WindowStateListener, Wi
 	public void windowDeiconified(WindowEvent we) {}
 	public void windowActivated(WindowEvent we) {}
 	public void windowDeactivated(WindowEvent we) {}
+	public void focusLost(FocusEvent fe) {}
 	
+	public void focusGained(FocusEvent fe) {
+		SeamlessWindow c = (SeamlessWindow) fe.getComponent();
+		for (SeamlessWindow sw : this.windows.values()) {
+			if (c == sw) {
+				int state = -1;
+				switch (sw.sw_getExtendedState()) {
+					case Frame.NORMAL:
+						state = WINDOW_NORMAL;
+						break;
+					case Frame.MAXIMIZED_BOTH:
+						state = WINDOW_MAXIMIZED;
+				}
+				if (state == -1)
+					return;
+
+				try {
+					this.send_focus(sw.sw_getId(), 0);
+				} catch (Exception ex) {
+					logger.error("Send focus on focus gained failed: "+ex.getMessage());
+				}
+				return;
+			}
+		}
+	}
 }
