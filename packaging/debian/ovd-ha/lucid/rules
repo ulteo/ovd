@@ -8,6 +8,5 @@ DEB_DH_INSTALL_SOURCEDIR = debian/tmp
 DEB_DH_INSTALLINIT_ARGS_ulteo-ovd-ha = --name=ulteo_ha
 
 install/ulteo-ovd-ha::
-	pwd
 	cd ha/shell && make install DESTDIR=$(CURDIR)/$(DEB_DH_INSTALL_SOURCEDIR)
 	cp ha/ulteo_ha debian/ulteo-ovd-ha.ulteo_ha.init
