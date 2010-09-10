@@ -6,7 +6,7 @@ DATADIR=/usr/share/ulteo/ovd/slaveserver
 SPOOLDIR=/var/spool/ulteo/ovd/slaverser
 HOMEDIR=/var/lib/ulteo/ovd/slaverver/fs
 
-A2SITESDIR=/etc/apache2/sites-available
+A2SITESAVDIR=/etc/apache2/sites-available
 
 # update slavesever config file
 ovd-slaveserver-role add FileServer
@@ -25,8 +25,8 @@ sed -e "s/@RANDOM@/$ID/" $DATADIR/samba.conf > /etc/samba/smb.conf
 service samba restart
 
 # VHost webdav config
-if [ ! -e $A2SITESDIR/slaveserver-fs ]; then
-    ln -s $DATADIR/apache2.conf $A2SITESDIR/slaveserver-fs
+if [ ! -e $A2SITESAVDIR/slaveserver-fs ]; then
+    ln -s $DATADIR/apache2.conf $A2SITESAVDIR/slaveserver-fs
     a2ensite slaveserver-fs > /dev/null
     a2enmod dav_fs dav  >/dev/null
     
