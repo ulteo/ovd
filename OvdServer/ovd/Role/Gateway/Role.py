@@ -63,5 +63,6 @@ class Role(AbstractRole):
 		self.has_run = True
 		self.REMOTE_SM_FQDN = self.session_manager
 		ReverseProxy(self.FPEM_LOCATION, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
-		asyncore.loop()
 		Logger.info('Gateway is running !')
+		asyncore.loop()
+		Logger.info('Closing gateway...')
