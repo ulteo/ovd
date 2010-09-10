@@ -1,0 +1,11 @@
+--- a/seamless.c
++++ b/seamless.c
+@@ -580,7 +580,7 @@
+ 	if(strcmp(startup_id, "") == 0)
+ 		sa->startup_id = NULL;
+ 	else
+-		sa->startup_id = startup_id;
++		sa->startup_id = strdup(startup_id);
+         sa->dis = dis;
+ 	sa->token = token;
+ 	sa->next = NULL;
