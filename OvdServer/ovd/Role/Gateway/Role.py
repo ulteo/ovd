@@ -2,6 +2,7 @@
 
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
@@ -65,6 +66,7 @@ class Role(AbstractRole):
 		if os.path.exists(pem):
 			ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
 			Logger.info('Gateway is running !')
+			self.status = Role.STATUS_RUNNING
 			asyncore.loop()
 		else:
 			Logger.error("Role %s need a certificate at %s !"%(self.getName(), pem))
