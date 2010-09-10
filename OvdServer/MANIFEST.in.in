@@ -1,4 +1,4 @@
-include MANIFEST.in ulteo-ovd-slaveserver
+include ulteo-ovd-slaveserver
 include *.py
 include manpages/*
 include examples/*

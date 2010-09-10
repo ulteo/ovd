@@ -35,7 +35,7 @@ class Dialog(AbstractDialog):
 	
 	@staticmethod
 	def getName():
-		return "Gateway"
+		return "gateway"
 	
 	def process(self, request):
 		path = request["path"]

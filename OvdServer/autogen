@@ -3,6 +3,7 @@
 import os, sys, pysvn
 
 path = os.path.dirname( os.path.realpath( __file__ ) )
+extra_modules = ""
 
 # Detect the version
 if os.environ.has_key("OVD_VERSION"):
@@ -22,12 +23,30 @@ else:
 	raise Exception("No supported platform")
 
 
+# generate setup.py
 f = file(os.path.join(path, "setup.py.in"), "r")
 content = f.read()
 f.close()
 
+if "--gateway" in sys.argv:
+	extra_modules = "	setup_args['packages'] += ['ovd.Role.Gateway']"
+
 content = content.replace("@VERSION@", str(version))
+content = content.replace("@EXTRA_MODULES@", extra_modules)
 
 f = file(os.path.join(path, "setup.py"), "w")
+f.write(content)
+f.close()
+
+
+# generate Manifest.in
+f = file(os.path.join(path, "MANIFEST.in.in"), "r")
+content = f.read()
+f.close()
+
+if not "--gateway" in sys.argv:
+	content += "purge ovd.Role.Gateway"
+
+f = file(os.path.join(path, "MANIFEST.in"), "w")
 f.write(content)
 f.close()

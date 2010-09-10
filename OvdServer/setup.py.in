@@ -82,6 +82,9 @@ elif sys.platform == "linux2":
 		'ovd.Role.ApplicationServer.Platform',
 		'ovd.Role.ApplicationServer.Platform.Linux',
 		'ovd.Platform', 'ovd.Platform.Linux']
+
+@EXTRA_MODULES@
+
 	setup_args["data_files"] = [
 		('/usr/bin',['ulteo-ovd-slaveserver']),
 		('/etc/ulteo/ovd',['examples/slaveserver.conf']),
