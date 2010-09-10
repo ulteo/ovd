@@ -2,6 +2,7 @@
 
 # Copyright (C) 2008,2009 Ulteo SAS
 # http://www.ulteo.com
+# Author Samuel BOVEE <samuel@ulteo.com> 2010
 # Author Laurent CLOUET <laurent@ulteo.com> 2008-2010
 # Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2009, 2010
@@ -22,7 +23,7 @@
 
 
 from twisted.web import server, resource
-from twisted.internet import reactor
+from twisted.internet import reactor, threads
 from twisted.internet.error import BindError
 
 from BaseHTTPServer import HTTPServer
@@ -82,6 +83,20 @@ class HttpRequestHandler(resource.Resource):
 		return ""
 	
 	def render_GET(self, request):
+		def render_GET_internal(response):
+			if response is None:
+				return self.send_error(request, httplib.NOT_FOUND)
+			if response is False:
+				return self.send_error(request, httplib.UNAUTHORIZED)
+				
+			request.setResponseCode(httplib.OK)
+			request.setHeader("content-type", response["Content-Type"])
+			request.write(response["data"])
+			try:
+				request.finish()
+			except:
+				pass
+			
 		req = {}
 		req["client"] = request.client.host
 		req["method"] = "GET"
@@ -92,21 +107,28 @@ class HttpRequestHandler(resource.Resource):
 		
 		for (k,v) in request.args.items():
 			req["args"][k] = v[-1]
+			
+		d = threads.deferToThread(self.comm_instance.process, req)
+		d.addCallback(render_GET_internal)
+		return server.NOT_DONE_YET
 	
 	
-		response = self.comm_instance.process(req)
-		if response is None:
-			return self.send_error(request, httplib.NOT_FOUND)
-		
-		if response is False:
-			return self.send_error(request, httplib.UNAUTHORIZED)
-		
-		request.setResponseCode(httplib.OK)
-		request.setHeader("content-type", response["Content-Type"])
-		return response["data"]
 	
 	
 	def render_POST(self, request):
+		def render_POST_internal(response):
+			if response is None:
+				self.send_error(request, httplib.NOT_FOUND)
+				return
+			
+			request.setResponseCode(httplib.OK)
+			request.setHeader("content-type", response["Content-Type"])
+			request.write(response["data"])
+			try:
+				request.finish()
+			except:
+				pass
+		
 		req = {}
 		req["client"] = request.client.host
 		req["method"] = "POST"
@@ -121,12 +143,6 @@ class HttpRequestHandler(resource.Resource):
 		if length > 0:
 			req["data"] = request.content.read(length)
 		
-		response = self.comm_instance.process(req)
-		if response is None:
-			self.send_error(request, httplib.NOT_FOUND)
-			return
-		
-		request.setResponseCode(httplib.OK)
-		request.setHeader("content-type", response["Content-Type"])
-		return response["data"]
-
+		d = threads.deferToThread(self.comm_instance.process, req)
+		d.addCallback(render_POST_internal)
+		return server.NOT_DONE_YET
