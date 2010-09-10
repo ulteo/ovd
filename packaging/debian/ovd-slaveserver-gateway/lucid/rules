@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+DEB_PYTHON_SYSTEM := pycentral
+DEB_PYTHON_COMPILE_VERSION = 2.6
+
+DEB_PYTHON_DESTDIR = debian/tmp
+DEB_DH_INSTALL_SOURCEDIR = debian/tmp
+
+include /usr/share/cdbs/1/rules/debhelper.mk
+include /usr/share/cdbs/1/class/python-distutils.mk
+
