@@ -126,6 +126,10 @@ update_position(HWND hwnd)
 	HWND blocked_hwnd;
 	unsigned int serial;
 
+	if (IsZoomed(hwnd)) {
+		return;
+	}
+
 	WaitForSingleObject(g_mutex, INFINITE);
 	blocked_hwnd = g_block_move_hwnd;
 	serial = g_block_move_serial;
