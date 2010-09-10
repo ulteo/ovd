@@ -2,7 +2,6 @@
 
 . /usr/share/debconf/confmodule
 
-SLAVECONF=/etc/ulteo/ovd/slaveserver.conf
 DATADIR=/usr/share/ulteo/ovd/slaveserver
 SPOOLDIR=/var/spool/ulteo/ovd/slaverser
 HOMEDIR=/var/lib/ulteo/ovd/slaverver/fs
@@ -10,11 +9,7 @@ HOMEDIR=/var/lib/ulteo/ovd/slaverver/fs
 A2SITESDIR=/etc/apache2/sites-available
 
 # update slavesever config file
-if ! grep -q 'ROLES' $SLAVECONF; then
-    echo "ROLES = fs" >> $SLAVECONF
-elif ! grep -q "^ROLES.*fs" $SLAVECONF; then
-    sed -i -r "s/^ROLES *= *(.*)/ROLES = \1 fs/" $SLAVECONF
-fi
+ovd-slaveserver-role add FileServer
 
 # add user ovd-fs
 getent passwd ovd-fs >/dev/null || adduser --system --group --home $HOMEDIR ovd-fs 2> /dev/null

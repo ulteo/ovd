@@ -1,0 +1,54 @@
+#!/bin/sh
+
+CONFFILE="/etc/ulteo/ovd/slaveserver.conf"
+
+add_role() {
+    local ROLE="$1"
+    [ -z "$ROLE" ] && usage
+    if ! grep -q 'ROLES' $CONFFILE; then
+        echo "ROLES = ${ROLE}" >> $CONFFILE
+    elif ! grep -q "^ROLES.*${ROLE}" $CONFFILE; then
+        sed -i -r "s/^ROLES *= *(.*)/${ROLE} = \1 ${ROLE}/" $CONFFILE
+    fi
+}
+
+del_role() {
+    local ROLE="$1"
+    [ -z "$ROLE" ] && usage
+    if grep -q "^ROLES.*${ROLE}" $CONFFILE; then
+        sed -i -r "s/^ROLES *= *(.*)${ROLE}(.*)$/ROLES = \1 \2/" $CONFFILE
+    fi
+}
+
+ls_role() {
+    echo Roles: $(grep ROLE $CONFFILE | tr -s ' ' | sed -r 's/.*= ?(.*) ?/\1/')
+}
+
+usage() {
+    local bin=$(basename $0)
+    echo "Usage: $bin [-m <conffile>] <add|del> <role>" 1>&2
+    echo "       $bin [-m <conffile>] ls" 1>&2
+    exit 127
+}
+
+set -- $(getopt c: "$@")
+while [ $# -gt 0 ]; do
+    case "$1" in
+        (-c) CONFFILE="$2"; shift;;
+        (--) shift; break;;
+        (-*) echo "$0: error - unrecognized option $1" 1>&2; exit 127;;
+        (*)  break;;
+    esac
+    shift
+done
+
+[ $# -eq 0 ] && usage
+
+[ -e "$CONFFILE" ] || (echo "Configuration file '$CONFFILE' not found" && exit 1)
+
+case "$1" in
+    "add") add_role "$2" ;;
+    "del") del_role "$2" ;;
+    "ls") ls_role ;;
+    "*") usage ;;
+esac

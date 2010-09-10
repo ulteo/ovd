@@ -2,15 +2,11 @@
 
 . /usr/share/debconf/confmodule
 
-CONFFILE=/etc/ulteo/ovd/slaveserver.conf
 FSCACHEDIR=/var/lib/ulteo/ovd/slaveserver/fs
-
 A2SITESDIR=/etc/apache2/sites-available
 A2SITESENABLEDDIR=/etc/apache2/sites-enabled
 
-if grep -q "^ROLES.*fs" $CONFFILE; then
-    sed -i -r "s/^ROLES *= *(.*)fs(.*)$/ROLES = \1 \2/" $CONFFILE
-fi
+ovd-slaveserver-role del FileServer
 
 # VHost webdav config
 if [ -e $A2SITESENABLEDDIR/slaveserver-fs ]; then
