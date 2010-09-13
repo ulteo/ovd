@@ -8,7 +8,7 @@ add_role() {
     if ! grep -q 'ROLES' $CONFFILE; then
         echo "ROLES = ${ROLE}" >> $CONFFILE
     elif ! grep -q "^ROLES.*${ROLE}" $CONFFILE; then
-        sed -i -r "s/^ROLES *= *(.*)/${ROLE} = \1 ${ROLE}/" $CONFFILE
+        sed -i -r "s/^ROLES *= *(.*)/ROLES = \1 ${ROLE}/" $CONFFILE
     fi
 }
 
