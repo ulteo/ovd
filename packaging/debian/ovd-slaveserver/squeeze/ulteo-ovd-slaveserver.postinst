@@ -2,12 +2,15 @@
 
 . /usr/share/debconf/confmodule
 
-SLAVECONF=/etc/ulteo/ovd/slaveserver.conf
+CONFDIR=/etc/ulteo/ovd
+LOGDIR=/var/log/ulteo/ovd
+
+mkdir -p $LOGDIR
 
 if [ "$1" = "configure" ] && [ -z "$2" ] || [ "$1" = "reconfigure" ]
 then
     db_get ulteo-ovd-slaveserver/session_manager && SM=$RET
-    sed -i "s/^session_manager.*/session_manager = $SM/" $SLAVECONF
+    sed -i "s/^session_manager.*/session_manager = $SM/" $CONFDIR/slaveserver.conf
 fi
 
 #DEBHELPER#
