@@ -105,7 +105,7 @@ chmod a+x $CONFDIR/cron.php
 ln -sfT $CONFDIR/cron.php /etc/cron.hourly/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
-if [ "$1" = "2" ]; then
+if [ "$1" = "0" ]; then
     A2CONFDIR=/etc/apache2/conf.d
     CONFDIR=/etc/ulteo/sessionmanager
     rm -f $A2CONFDIR/sessionmanager-vhost-server.conf \
