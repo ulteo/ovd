@@ -41,18 +41,17 @@
       </para>
 
       <itemizedlist>
-        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_1" />
-
-        <listitem>
+        <listitem id="repo_step_1">
           <para>
-            Install the keyring package to validate the repository
-            using gpg:
+            Add the ovd repository:
           </para>
           <screen>
             <![CDATA[
-# rpm --import http://archive.ulteo.com/ulteo/rpm/ulteo-archive.key]]>
+zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
           </screen>
         </listitem>
+        
+        <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_2" />
         
         <xi:include href="Support_SLES_11.SP1.xml" xpointer="repo_step_3" />
       </itemizedlist>
