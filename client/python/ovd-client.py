@@ -145,6 +145,7 @@ class Dialog:
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
             Logger.warn("Invalid response format")
+            Logger.debug('response format %s'%(headers['Content-Type']))
             return False
 
         data = url.read()
@@ -236,6 +237,7 @@ class Dialog:
         headers = url.info()
         if not headers['Content-Type'].startswith('text/xml'):
             Logger.warn("Invalid response format")
+            Logger.debug(" * format: %s"%(str(headers['Content-Type'])))
             return False
 
         data = url.read()
