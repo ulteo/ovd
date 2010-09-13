@@ -24,6 +24,7 @@ from ovd.Config import Config
 from ovd.Logger import Logger
 from Dialog import Dialog
 from reverseproxy import *
+import os
 
 class Role(AbstractRole):
 	session_manager = None
@@ -62,7 +63,7 @@ class Role(AbstractRole):
 	def run(self):
 		self.has_run = True
 		self.REMOTE_SM_FQDN = self.session_manager
-		pem = os.path.join(Config.spool, "gateway.pem")
+		pem = os.path.join(Config.spool_dir, "gateway.pem")
 		if os.path.exists(pem):
 			ReverseProxy(pem, self.HTTPS_PORT, self.REMOTE_SM_FQDN, self.HTTPS_PORT, self.RDP_PORT)
 			Logger.info('Gateway is running !')
