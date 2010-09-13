@@ -54,35 +54,31 @@ a2enmod php5 > /dev/null
 
 # VHost server config
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-server.conf ]; then
-    ln -sf $CONFDIR/apache2-vhost-server.conf \
+    ln -sfT $CONFDIR/apache2-vhost-server.conf \
         $A2CONFDIR/sessionmanager-vhost-server.conf
     a2enmod rewrite >/dev/null
 fi
 
 # Alias admin
 if [ ! -e $A2CONFDIR/ovd-admin.conf ]; then
-    ln -sf $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
+    ln -sfT $CONFDIR/apache2-admin.conf $A2CONFDIR/ovd-admin.conf
 fi
 
 # VHost SSL config
 if [ ! -e $A2CONFDIR/sessionmanager-vhost-ssl.conf ]; then
     serverName=$(hostname -f 2>/dev/null || true)
-    if [ -z "$serverName" ]; then
-        # Bad /etc/hosts configuration
-        serverName=$(hostname)
-    fi
+    [ -z "$serverName" ] && serverName=$(hostname) # Bad /etc/hosts configuration
     sed -i -r "s/^( *ServerName).*$/\1 ${serverName}/" \
         $CONFDIR/apache2-vhost-ssl.conf
-    ln -sf $CONFDIR/apache2-vhost-ssl.conf \
+    ln -sfT $CONFDIR/apache2-vhost-ssl.conf \
         $A2CONFDIR/sessionmanager-vhost-ssl.conf
     a2enflag SSL > /dev/null
     a2enmod ssl > /dev/null
 fi
 
 # SSL self-signed key generation
-if [ ! -f $CONFDIR/ovd.key ] || [ ! -f $CONFDIR/ovd.csr ] \
-    || [ ! -f $CONFDIR/ovd.crt ]; then
-
+if [ ! -f $CONFDIR/ovd.key -o ! -f $CONFDIR/ovd.csr -o ! -f $CONFDIR/ovd.crt ]
+then
     echo "Auto-generate SSL configuration for Apache2 with self-signed certificate."
     openssl genrsa -out $CONFDIR/ovd.key 1024 2> /dev/null
     openssl req -new -key $CONFDIR/ovd.key -out $CONFDIR/ovd.csr -batch
@@ -105,27 +101,27 @@ EOF
 fi
 
 # set samba conf
-CRON_DIR=/etc/cron.hourly
 chmod a+x $CONFDIR/cron.php
-if [ -d "$CRON_DIR" ] && [ ! -e "$CRON_DIR/sessionmanager" ]; then
-    ln -sf $CRON_SCRIPT $CRON_DIR/session-manager.php
-fi
+ln -sfT $CONFDIR/cron.php /etc/cron.hourly/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
-A2CONFDIR=/etc/apache2/conf.d
-CONFDIR=/etc/ulteo/sessionmanager
-rm -f $A2CONFDIR/sessionmanager-vhost-server.conf
-rm -f $A2CONFDIR/sessionmanager-vhost-ssl.conf
-rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
-rm -rf /var/spool/ulteo/sessionmanager \
-       /var/cache/ulteo/sessionmanager \
-       /var/log/ulteo/sessionmanager
+if [ "$1" = "2" ]; then
+    A2CONFDIR=/etc/apache2/conf.d
+    CONFDIR=/etc/ulteo/sessionmanager
+    rm -f $A2CONFDIR/sessionmanager-vhost-server.conf \
+          $A2CONFDIR/sessionmanager-vhost-ssl.conf \
+          $A2CONFDIR/ovd-admin.conf
+    rm -f $CONFDIR/ovd.key $CONFDIR/ovd.csr $CONFDIR/ovd.crt
+    rm -f /etc/cron.hourly/sessionmanager
+    rm -rf /var/spool/ulteo/sessionmanager \
+           /var/cache/ulteo/sessionmanager \
+           /var/log/ulteo/sessionmanager
 
-# restart apache2
-if apache2ctl configtest 2>/dev/null; then
-    service apache2 restart || true
-else
-    echo "Apache configuration broken: correct the issue and restart the apache2 server"
+    if apache2ctl configtest 2>/dev/null; then
+        service apache2 restart || true
+    else
+        echo "Apache configuration broken: correct the issue and restart the apache2 server"
+    fi
 fi
 
 %clean -n ulteo-ovd-session-manager
