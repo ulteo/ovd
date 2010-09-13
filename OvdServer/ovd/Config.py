@@ -48,6 +48,7 @@ class Config:
 	log_level = Logger.INFO | Logger.WARN | Logger.ERROR | Logger.DEBUG
 	log_file = os.path.join(Platform.System.get_default_log_dir(), "slaveserver.log")
 	
+	conf_dir = Platform.System.get_default_config_dir()
 	spool_dir = Platform.System.get_default_spool_dir()
 	
 	# OVD servers communication
