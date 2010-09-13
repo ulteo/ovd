@@ -26,6 +26,7 @@ import datetime
 import getopt
 import getpass
 import os
+import signal
 import sys
 import threading
 import time
@@ -414,6 +415,8 @@ class Dialog:
         Logger.debug("end")
         return True
 
+def handler_signal(signum, frame):
+    d.do_call_exit() # d is the client (global variable)
 
 def usage():
     print "Usage: %s [options] ovd_sm_host"%(sys.argv[0])
@@ -527,6 +530,8 @@ d = Dialog(conf)
 if not d.doStartSession(extra_args):
     Logger.error("Unable to startsession")
     sys.exit(2)
+
+signal.signal(signal.SIGTERM, handler_signal)
 
 Logger.debug("Session properties: %s"%(str(d.sessionProperties)))
 if d.sessionProperties["mode"] != 'desktop':
