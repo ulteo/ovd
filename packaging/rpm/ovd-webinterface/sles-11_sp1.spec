@@ -34,10 +34,10 @@ This interface is a web client for Ulteo OVD.
 
 %build -n ulteo-ovd-webinterface
 ./configure --prefix=/usr --sysconfdir=/etc --without-ulteo-applets
-make
 
 %install -n ulteo-ovd-webinterface
 make DESTDIR=$RPM_BUILD_ROOT install
+cp -a ajaxplorer $RPM_BUILD_ROOT/usr/share/ulteo/webinterface
 
 %post -n ulteo-ovd-webinterface
 A2CONFDIR=/etc/apache2/conf.d
@@ -84,3 +84,22 @@ rm -rf $RPM_BUILD_ROOT
 %changelog -n ulteo-ovd-webinterface
 * Wed Sep 01 2010 Samuel Bovée <samuel@ulteo.com> 99.99.svn4395
 - Initial release
+
+##############################################
+%package -n ulteo-ovd-webinterface-ajaxplorer
+##############################################
+
+Summary: Ulteo Open Virtual Desktop - Ajaxplorer portal
+Group: Applications/System
+Requires: ulteo-ovd-webinterface
+
+%description -n ulteo-ovd-webinterface-ajaxplorer
+This interface is a web client for Ulteo OVD.
+
+%post -n ulteo-ovd-webinterface-ajaxplorer
+AJAXPLORERDIR=/usr/share/ulteo/webinterface/ajaxplorer
+chown wwwrun:wwwrun $AJAXPLORERDIR/server/logs
+
+%files -n ulteo-ovd-webinterface-ajaxplorer
+%defattr(-,root,root)
+/usr/share/ulteo/webinterface/ajaxplorer
