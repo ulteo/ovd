@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" 
-	  "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <article xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <title>Ulteo Open Virtual Desktop</title>
@@ -18,7 +18,7 @@
     <title id="intro_title">Introduction</title>
 
     <para>
-	  This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
+      This documentation aims to describe the usage of Ulteo Open Virtual Desktop "Native Client" in its capabilities and how to launch Ulteo OVD sessions with it.
     </para>
   </section>
 
@@ -36,11 +36,11 @@
   
   <section id="installation">
     <title id="installation_title">Installation</title>
-     
+    
     <para>
       You have to install Oracle Java 1.6 before using the OVD Native Client. Go on <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle's web site</ulink>, download and install the Java JRE.
     </para>
-     
+    
     <para>
       Download and execute the Ulteo OVD Native Client installer.
     </para>
@@ -84,8 +84,8 @@
 
     <para>
       <screenshot>
-  	  <screeninfo>Native Client - Login window</screeninfo>
-	    <graphic fileref="img/native/authentication.png"></graphic>
+        <screeninfo>Native Client - Login window</screeninfo>
+        <graphic fileref="img/native/authentication.png"></graphic>
       </screenshot>
     </para>
 
@@ -97,7 +97,7 @@
       <screenshot>
         <screeninfo>Native Client - User session</screeninfo>
         <graphic fileref="img/native/started.png"></graphic>
-	  </screenshot>
+      </screenshot>
     </para>
   </section>
 
@@ -155,7 +155,7 @@
             <emphasis>Resolution:</emphasis> Choose which resolution will be used, it applies only on desktop sessions.
           </para>
         </listitem>
-         <listitem>
+        <listitem>
           <para>
             <emphasis>Auto-publish shorcuts:</emphasis> Choose if you want to have shorcuts on your actual desktop at the session start, it applies only on application sessions.
           </para>
@@ -228,14 +228,223 @@
   </section>
 
   <section id="advanced_options">
-    <title id="advanced_options_title">Advanced options</title>
+    <title id="advanced_options_title">Advanced features</title>
 
-    <para>
-      When you use the Ulteo Open Virtual Desktop "Native Client" from a <trademark class="registered">Microsoft</trademark> <trademark>Windows</trademark> operating system, you have access to more options.
+    <section id="config-file">
+      <title>Default configuration</title>
 
-      One of these is the <emphasis>--reg</emphasis> command-line option which provides a way to automatically start the Ulteo OVD session without the authentication window, either using local credentials (NTLM, Kerberos...) or pre-configured login/password classic authentication.
+      <para>
+        When enable the <emphasis>Remember me</emphasis> checkbox, the
+        current configuration is saved in a configuration file. This
+        file is named <emphasis>default.conf</emphasis> and uses the INI
+        syntax.
+      </para>
+      <para>
+        The directory used to store the configuration file depends on the system:
+        <itemizedlist>
+          <listitem>
+            <para>On <trademark class="registered">Microsoft Windows</trademark> systems, it's <emphasis>Application Data\ulteo\ovd</emphasis></para>
+          </listitem>
+          <listitem>
+            <para>On Linux systems, it's <emphasis>~/.ulteo/ovd</emphasis></para>
+          </listitem>
+        </itemizedlist>
+      </para>
 
-      This option can be used as a way to automatically starts an Ulteo OVD session and integrate remote applications into the local desktop in a transparent way, the user does not have to do a single thing and can access his OVD applications without even knowing it!
-    </para>
+      <para>
+        Here is the recognized INI tree:
+        <itemizedlist>
+          <listitem>
+            <para>Section <emphasis role="strong">server</emphasis></para>
+            <itemizedlist>
+              <listitem>
+                <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Section <emphasis role="strong">user</emphasis></para>
+            <itemizedlist>
+              <listitem>
+                <para><emphasis role="strong">login</emphasis>, the login you want to use</para>
+              </listitem>
+              <listitem>
+                <para>
+                  <emphasis role="strong">use-local-credentials</emphasis>, Can be
+                  <emphasis>true</emphasis> or
+                  <emphasis>false</emphasis> (default).
+                </para>
+                <para>
+                  When this option is used, the <emphasis>login</emphasis>
+                  attribute is useless.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Section <emphasis role="strong">session</emphasis></para>
+            <itemizedlist>
+              <listitem>
+                <para><emphasis role="strong">language</emphasis>, using the IETF lang code</para>
+              </listitem>
+
+              <listitem>
+                <para><emphasis role="strong">keymap</emphasis>, using the IETF lang code</para>
+              </listitem>
+
+              <listitem>
+                <para>
+                  <emphasis role="strong">mode</emphasis>, the session mode,
+                  can be <emphasis>applications</emphasis>,
+                  <emphasis>auto</emphasis> or <emphasis>desktop</emphasis>
+                </para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+          
+          <listitem>
+            <para>Section <emphasis role="strong">publication</emphasis></para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <emphasis role="strong">auto-publish</emphasis>, for
+                  applications mode only, add the application shortcuts on
+                  the Desktop and perform file associations. Can be
+                  <emphasis>true</emphasis> (default) or
+                  <emphasis>false</emphasis>.
+                </para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+
+          <listitem>
+            <para>Section <emphasis role="strong">screen</emphasis></para>
+            <itemizedlist>
+              <listitem>
+                <para>
+                  <emphasis role="strong">size</emphasis>, for desktop mode
+                  only. Can be <emphasis>800x600</emphasis>,
+                  <emphasis>1024x768</emphasis> (default),
+                  <emphasis>1280x678</emphasis>,
+                  <emphasis>maximized</emphasis> or
+                  <emphasis>fullscreen</emphasis>
+                </para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </para>
+
+      <simplesect>
+        <title><trademark class="registered">Microsoft Windows</trademark> registry</title>
+        
+        <para>
+          On <trademark class="registered">Microsoft Windows</trademark>
+          systems, it's also possible to read the default configuration
+          from the registry by use the option <emphasis>--reg</emphasis>
+        </para>
+
+        <para>
+          The Native Client read the HKEY_LOCAL_MACHINE first and then,
+          the HKEY_CURRENT_USER tree. The readed path is
+          <emphasis>Software\Ulteo\OVD\NativeClient</emphasis>.
+        </para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis role="strong">login</emphasis>, the login you want to use</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="strong">host</emphasis>, the server to connect to</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="strong">language</emphasis>, using the IETF lang code</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis role="strong">keymap</emphasis>, using the IETF lang code</para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis role="strong">mode</emphasis>, the session mode,
+              can be <emphasis>applications</emphasis>,
+              <emphasis>auto</emphasis> or <emphasis>desktop</emphasis>
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis role="strong">size</emphasis>, for desktop mode
+              only. Can be <emphasis>800x600</emphasis>,
+              <emphasis>1024x768</emphasis> (default),
+              <emphasis>1280x678</emphasis>,
+              <emphasis>maximized</emphasis> or
+              <emphasis>fullscreen</emphasis>
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis role="strong">auto-publish</emphasis>, for
+              applications mode only, add the application shortcuts on
+              the Desktop and perform file associations. Can be
+              <emphasis>true</emphasis> (default) or
+              <emphasis>false</emphasis>.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis role="strong">use-local-credentials</emphasis>, Can be
+              <emphasis>true</emphasis> or
+              <emphasis>false</emphasis> (default).
+            </para>
+            <para>
+              When this option is used, the <emphasis>login</emphasis>
+              attribute is useless.
+            </para>
+          </listitem>
+
+          <listitem>
+            <para>
+              <emphasis role="strong">show-progressbar</emphasis>, Can be
+              <emphasis>true</emphasis> (default) or
+              <emphasis>false</emphasis>.
+            </para>
+          </listitem>
+        </itemizedlist>
+      </simplesect>
+    </section>
+
+    <section id="sso">
+      <title>Single Sign-On</title>
+
+      <para>
+        On <trademark class="registered">Microsoft Windows</trademark>
+        system, it's possible to perform SSO connection using the
+        local credentials.
+      </para>
+      <para>
+        To enable this feature, you have to check the "Use local
+        creadential" checkbox or define it in the configuration (file
+        or registry).
+      </para>
+
+      <important>
+        <para>
+          That feature requires a server side configuration.
+        </para>
+        <para>
+          You have to use a Apache authentication module (Kerberos or
+          NTLM) and enable the "Apache auth module" into the
+          Administration Console.
+        </para>
+      </important>
+    </section>
   </section>
 </article>
