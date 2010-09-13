@@ -3,7 +3,7 @@
 LOGDIR=/var/log/ulteo/ovd
 
 if [ "$1" = "purge" ]; then
-    rm -rf $LOGDIR
+    rm -f $LOGDIR/slaveserver.log
 fi
 
 #DEBHELPER#
