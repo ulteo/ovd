@@ -115,7 +115,7 @@ class Preferences {
 			return array();
 		}
 		
-		$ret = @unserialize(@file_get_contents($this->conf_file));
+		$ret = @unserialize(@file_get_contents($this->conf_file, LOCK_EX));
 		if ($ret === false) {
 			return array();
 		}

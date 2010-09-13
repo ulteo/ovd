@@ -410,7 +410,7 @@ function checkAuthorization($policy_) {
 }
 
 function change_admin_password($new_password_) {
-	$contents_conf = file_get_contents(SESSIONMANAGER_CONF_FILE);
+	$contents_conf = file_get_contents(SESSIONMANAGER_CONF_FILE, LOCK_EX);
 	$contents = explode("\n", $contents_conf);
 	
 	foreach ($contents as $k => $line) {
@@ -423,5 +423,5 @@ function change_admin_password($new_password_) {
 	}
 	
 	$implode = implode("\n", $contents);
-	return file_put_contents(SESSIONMANAGER_CONF_FILE, $implode);
+	return file_put_contents(SESSIONMANAGER_CONF_FILE, $implode, LOCK_EX);
 }

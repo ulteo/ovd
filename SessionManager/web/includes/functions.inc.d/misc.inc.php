@@ -263,7 +263,7 @@ function get_from_cache($subdir_, $id_) {
 	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;
 
 	if (is_readable($file))
-		$ret = unserialize(file_get_contents($file));
+		$ret = unserialize(file_get_contents($file, LOCK_EX));
 	else
 		$ret = NULL;
 
@@ -277,7 +277,7 @@ function set_cache($data_, $subdir_, $id_) {
 
 	$file = CACHE_DIR.'/'.$subdir_.'/'.$id_;
 	$tmp = serialize($data_);
-	return file_put_contents($file, $tmp);
+	return file_put_contents($file, $tmp, LOCK_EX);
 }
 
 function domain2suffix($domain_) {

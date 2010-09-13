@@ -78,7 +78,7 @@ class Preferences_admin extends Preferences {
 				$filecontents[$key1] = $buf->content;
 			}
 		}
-		return file_put_contents($this->conf_file,serialize($filecontents));
+		return file_put_contents($this->conf_file,serialize($filecontents), LOCK_EX);
 	}
 
 	public function isValid() {
