@@ -64,9 +64,7 @@ var Server = Class.create({
 			this.ready = false;
 			this.connected = false;
 
-			var session_status = daemon.get_session_status();
-			if (session_status == 'unknown')
-				daemon.do_ended();
+			daemon.check_status();
 		}
 
 		var applications = daemon.liaison_server_applications.get(this.id);

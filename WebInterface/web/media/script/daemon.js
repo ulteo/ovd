@@ -302,14 +302,6 @@ var Daemon = Class.create({
 		}
 	},
 
-	get_session_status: function() {
-		this.push_log('debug', '[daemon] get_session_status()');
-
-		this.check_status();
-
-		return this.session_status;
-	},
-
 	check_status: function() {
 		this.push_log('debug', '[daemon] check_status()');
 
