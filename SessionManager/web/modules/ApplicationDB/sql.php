@@ -21,15 +21,31 @@
 require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 
 class ApplicationDB_sql extends ApplicationDB {
+	protected $cache;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		$sql_conf = $prefs->get('general', 'sql');
 		if (is_array($sql_conf)) {
 			@define('APPLICATION_TABLE', $sql_conf['prefix'].'application');
 		}
+		$this->cache = array();
+	}
+	
+	public function import($id_) {
+		if (array_key_exists($id_, $this->cache)) {
+			return $this->cache[$id_];
+		}
+		else {
+			$app = $this->import_nocache($id_);
+			if (is_object($app)) {
+				$this->cache[$app->getAttribute('id')] = $app;
+				return $app;
+			}
+			return $app;
+		}
 	}
 
-	public function import($id_){
+	protected function import_nocache($id_){
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT * FROM @1 WHERE @2=%3',APPLICATION_TABLE,'id',$id_);
 		if ($res !== false){
@@ -200,6 +216,9 @@ class ApplicationDB_sql extends ApplicationDB {
 
 	}
 	public function remove($a){
+		if (array_key_exists($a->getAttribute('id'), $this->cache)) {
+			unset($this->cache[$a->getAttribute('id')]);
+		}
 		// TODO remove also all liasons
 		if (is_object($a) && $a->hasAttribute('id') && is_numeric($a->getAttribute('id'))) {
 			$icon_path = $a->getIconPathRW();
@@ -216,6 +235,9 @@ class ApplicationDB_sql extends ApplicationDB {
 	}
 //htmlspecialchars($data_, ENT_QUOTES);
 	public function update($a){
+		if (array_key_exists($a->getAttribute('id'), $this->cache)) {
+			unset($this->cache[$a->getAttribute('id')]);
+		}
 		if ($this->isOK($a)){
 			$query = 'UPDATE `'.APPLICATION_TABLE.'` SET ';
 			$attributes = $a->getAttributesList();
