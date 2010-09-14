@@ -29,6 +29,13 @@ foreach ($sessions as $session) {
 			$session->orderDeletion();
 		}
 	}
+
+	if ($session->start_time == 0 || in_array($session->status, array(Session::SESSION_STATUS_CREATED, Session::SESSION_STATUS_INIT, Session::SESSION_STATUS_INITED))) {
+		if ($session->timestamp < time()+600) {
+			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' was never used, ending...');
+			$session->orderDeletion();
+		}
+	}
 }
 //END Sessions expiration
 
