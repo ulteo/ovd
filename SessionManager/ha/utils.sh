@@ -17,7 +17,7 @@ valid_ip()
 
 execute()
 {
-    $1 2> /tmp/ha.log
+    $1 >> /tmp/ha.log 2>&1
     ret=$?
     if [ $ret -eq 0 ]; then
         echo -e "\033[34;1m[OK] \033[0m $1";
@@ -27,6 +27,18 @@ execute()
     return $?
 }
 
+info()
+{
+	echo -e "\033[36;1m[INFO] \033[0m" "$1"
+}
+
+
+die()
+{
+	echo -e "\033[31;1m[ERROR] \033[0m" "$1"
+	exit 1
+}
+
 # LIST NETWORK INTERFACES & CHOOSE ONE
 set_netlink()
 {
@@ -34,10 +46,9 @@ set_netlink()
     len=${#NICS[*]}
 
     if [ $len != 0 ]; then
-        echo -e "\nNIC detected :";
+        echo -e "NIC detected :";
     else
-        echo -e "\033[31;1m[FAILED] \033[0m No nic detected, please configure your network";
-        exit 2;
+        die "no nic detected, please configure your network";
     fi
 
     for i in $(seq 1 $len); do
@@ -59,13 +70,8 @@ set_netlink()
 
     NIC_NAME=${NICS[$NIC_INFOS]}
     NIC_ADDR=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
-    NIC_BCAST=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $6}'`
     NIC_MASK=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $8}'`
-
-    echo -e "\033[36;1m[INFO] \033[0m You have selected NIC $NIC_NAME"
-    echo "Addr:" $NIC_ADDR
-    echo "Mask:" $NIC_MASK
-    echo "Broadcast:" $NIC_BCAST
+    info "NIC $NIC_NAME selected"
 }
 
 set_virtual_ip()
@@ -89,5 +95,5 @@ set_virtual_ip()
         done
         [ -n "$vip" ] && VIP=${vip[0]}.${vip[1]}.${vip[2]}.${vip[3]}
     done
-    echo "You have selected" $VIP "as virtual IP"
+    info "Virtual IP: $VIP"
 }
