@@ -23,6 +23,7 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 	protected $table;
 	public static $prefixless_tablename = 'gapplication';
+	protected $cache;
 	
 	public function __construct() {
 		$prefs = Preferences::getInstance();
@@ -34,6 +35,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			else
 				$this->table = NULL;
 		}
+		$this->cache = array();
 	}
 	
 	public function __toString() {
@@ -62,7 +64,20 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 	}
 	
 	public function import($id_) {
-		Logger::debug('main', "ApplicationsGroupDB::sql::import (id = $id_)");
+		if (array_key_exists($id_, $this->cache)) {
+			return $this->cache[$id_];
+		}
+		else {
+			$group = $this->import_nocache($id_);
+			if (is_object($group)) {
+				$this->cache[$group->id] = $group;
+			}
+			return $group;
+		}
+	}
+	
+	public function import_nocache($id_) {
+		Logger::debug('main', "ApplicationsGroupDB::sql::import_nocache (id = $id_)");
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_);
 			
@@ -73,7 +88,7 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 				return $group;
 		}
 		
-		Logger::error('main' ,"ApplicationsGroupDB::sql::import import group '$id_' failed");
+		Logger::error('main' ,"ApplicationsGroupDB::sql::import import_nocache group '$id_' failed");
 		return NULL;
 	}
 	
@@ -171,6 +186,9 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 	
 	public function add($group_) {
 		Logger::debug('main', "ApplicationsGroupDB::sql::add($group_)");
+		if (array_key_exists($group_->id, $this->cache)) {
+			unset($this->cache[$group_->id]);
+		}
 		$sql2 = SQL::getInstance();
 		// group already exists ?
 		$res = $sql2->DoQuery('SELECT 1 FROM @1 WHERE @2 = %3 AND @4 = %5', $this->table, 'name', $group_->name, 'description', $group_->description);
@@ -196,6 +214,9 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			Logger::error('main', "ApplicationsGroupDB::sql::remove($group_) the parameter is not a object");
 			return false;
 		}
+		if (array_key_exists($group_->id, $this->cache)) {
+			unset($this->cache[$group_->id]);
+		}
 		// first we delete liaison
 		$sql2 = SQL::getInstance();
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', NULL, $group_->id);
@@ -217,6 +238,9 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 		if (! is_object($group_)) {
 			Logger::error('main', "ApplicationsGroupDB::sql::update($group_) the parameter is not an object");
 			return false;
+		}
+		if (array_key_exists($group_->getAttribute('id'), $this->cache)) {
+			unset($this->cache[$group_->getAttribute('id')]);
 		}
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $group_->published, 'name', $group_->name, 'description', $group_->description, 'id', $group_->id);
