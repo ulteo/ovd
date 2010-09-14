@@ -40,7 +40,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public static final String productName = "OVD Client";
 	
 	private static final long REQUEST_TIME_FREQUENTLY = 2000;
-	private static final long REQUEST_TIME_OCCASIONALLY = 5000;
+	private static final long REQUEST_TIME_OCCASIONALLY = 60000;
 
 	private static final long DISCONNECTION_MAX_DELAY = 3500;
 	
@@ -167,6 +167,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 					if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
 						if (! isActive) {
 							isActive = true;
+							t = REQUEST_TIME_OCCASIONALLY;
 							this.sessionReady();
 						}
 					}
@@ -324,6 +325,11 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 		this.hide(co);
 		this.removeAvailableConnection((RdpConnectionOvd)co);
 		this.logger.info("Disconnected from "+co.getServer());
+
+		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
+			// Break session status monitoring sleep to check with SessionManager ASAP
+			this.sessionStatusMonitoringThread.interrupt();
+		}
 	}
 
 	public void failed(RdpConnection co) {
