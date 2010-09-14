@@ -210,52 +210,16 @@ var Daemon = Class.create({
 	loop: function() {
 		this.push_log('debug', '[daemon] loop()');
 
-		if (! this.is_stopped())
-			this.check_status();
+		if (! this.is_stopped()) {
+			this.check_status(true);
+			this.check_status_post();
 
-		if (! this.is_ready()) {
-			if (this.ready_lock) {
-				this.push_log('debug', '[daemon] loop() - Already in "is_ready" state');
-				return;
-			}
-			this.ready_lock = true;
+			var timeout = 2000;
+			if (this.session_status == 'logged')
+				timeout = 60000;
 
-			this.push_log('info', '[daemon] loop() - Now preparing session');
-
-			this.list_servers();
-		} else if (! this.is_started()) {
-			if (this.started_lock) {
-				this.push_log('debug', '[daemon] loop() - Already in "is_started" state');
-				return;
-			}
-			this.started_lock = true;
-
-			this.push_log('info', '[daemon] loop() - Now starting session');
-
-			this.start();
-
-			this.started = true;
-		} else if (this.is_stopped()) {
-			if (this.stopped_lock) {
-				this.push_log('debug', '[daemon] loop() - Already in "is_stopped" state');
-				return;
-			}
-			this.stopped_lock = true;
-
-			this.push_log('info', '[daemon] loop() - Now ending session');
-
-			if (! this.is_started()) {
-				this.push_log('warning', '[daemon] loop() - Session end is unexpected (session was never started)');
-				this.error_message = this.i18n['session_close_unexpected'];
-			}
-
-			this.do_ended();
-
-			this.stopped = true;
+			setTimeout(this.loop.bind(this), timeout);
 		}
-
-		if (! this.is_stopped())
-			setTimeout(this.loop.bind(this), 2000);
 	},
 
 	suspend: function() {
@@ -302,19 +266,23 @@ var Daemon = Class.create({
 		}
 	},
 
-	check_status: function() {
+	check_status: function(async_) {
 		this.push_log('debug', '[daemon] check_status()');
 
 		new Ajax.Request(
 			'session_status.php',
 			{
 				method: 'get',
+				asynchronous: async_,
 				parameters: {
 					differentiator: Math.floor(Math.random()*50000)
 				},
 				onSuccess: this.parse_check_status.bind(this)
 			}
 		);
+
+		if (! async_)
+			this.check_status_post();
 	},
 
 	parse_check_status: function(transport) {
@@ -342,6 +310,49 @@ var Daemon = Class.create({
 		} catch(e) {
 			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Invalid XML (Missing argument for "session" node)');
 			return;
+		}
+	},
+
+	check_status_post: function() {
+		if (! this.is_ready()) {
+			if (this.ready_lock) {
+				this.push_log('debug', '[daemon] check_status_post() - Already in "is_ready" state');
+				return;
+			}
+			this.ready_lock = true;
+
+			this.push_log('info', '[daemon] check_status_post() - Now preparing session');
+
+			this.list_servers();
+		} else if (! this.is_started()) {
+			if (this.started_lock) {
+				this.push_log('debug', '[daemon] check_status_post() - Already in "is_started" state');
+				return;
+			}
+			this.started_lock = true;
+
+			this.push_log('info', '[daemon] check_status_post() - Now starting session');
+
+			this.start();
+
+			this.started = true;
+		} else if (this.is_stopped()) {
+			if (this.stopped_lock) {
+				this.push_log('debug', '[daemon] check_status_post() - Already in "is_stopped" state');
+				return;
+			}
+			this.stopped_lock = true;
+
+			this.push_log('info', '[daemon] check_status_post() - Now ending session');
+
+			if (! this.is_started()) {
+				this.push_log('warning', '[daemon] check_status_post() - Session end is unexpected (session was never started)');
+				this.error_message = this.i18n['session_close_unexpected'];
+			}
+
+			this.do_ended();
+
+			this.stopped = true;
 		}
 	},
 
