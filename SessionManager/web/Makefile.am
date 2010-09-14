@@ -1,6 +1,7 @@
 SUBDIRS = admin \
           classes \
           client \
+          crons \
           events \
           includes \
           modules \

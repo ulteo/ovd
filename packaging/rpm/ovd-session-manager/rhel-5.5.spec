@@ -31,7 +31,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 /usr/*
 %config /etc/ulteo/sessionmanager/apache2.conf
-%config /etc/ulteo/sessionmanager/cron.php
+%config /etc/ulteo/sessionmanager/sessionmanager.cron
 %config /etc/logrotate.d/sessionmanager
 %defattr(0660,apache,root)
 %config /etc/ulteo/sessionmanager/config.inc.php

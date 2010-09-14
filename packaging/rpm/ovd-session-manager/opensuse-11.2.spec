@@ -102,12 +102,9 @@ If you don't change anything, you won't start OVD sessions."
 EOF
 fi
 
-# set samba conf
-CRON_DIR=/etc/cron.hourly
-chmod a+x $CONFDIR/cron.php
-if [ -d "$CRON_DIR" ] && [ ! -e "$CRON_DIR/sessionmanager" ]; then
-    ln -sf $CRON_SCRIPT $CRON_DIR/session-manager.php
-fi
+# link crons
+chmod a+x $CONFDIR/sessionmanager.cron
+ln -sfT $CONFDIR/sessionmanager.cron /etc/cron.d/sessionmanager
 
 %postun -n ulteo-ovd-session-manager
 A2CONFDIR=/etc/apache2/conf.d
@@ -133,7 +130,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 /usr/*
 %config /etc/ulteo/sessionmanager/*.conf
-%config /etc/ulteo/sessionmanager/cron.php
+%config /etc/ulteo/sessionmanager/sessionmanager.cron
 %config /etc/logrotate.d/sessionmanager
 %defattr(0660,wwwrun,root)
 %config /etc/ulteo/sessionmanager/config.inc.php

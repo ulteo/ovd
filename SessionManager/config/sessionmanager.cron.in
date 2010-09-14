@@ -1,0 +1,4 @@
+# /etc/cron.d/sessionmanager: crontab fragment for ulteo-ovd-sessionmanager
+
+ * * * * * root /usr/bin/php @DATADIR@/ulteo/sessionmanager/crons/minutely.php >/dev/null 2>&1
+00 * * * * root /usr/bin/php @DATADIR@/ulteo/sessionmanager/crons/hourly.php >/dev/null 2>&1

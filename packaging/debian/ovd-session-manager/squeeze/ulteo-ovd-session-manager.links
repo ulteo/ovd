@@ -1,1 +1,1 @@
-etc/ulteo/sessionmanager/cron.php etc/cron.hourly/sessionmanager
+etc/ulteo/sessionmanager/sessionmanager.cron etc/cron.d/sessionmanager

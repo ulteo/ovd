@@ -115,6 +115,7 @@ config/Makefile
 scripts/Makefile
 web/Makefile
 web/client/Makefile
+web/crons/Makefile
 web/webservices/admin/Makefile
 web/webservices/Makefile
 web/plugins/Makefile
