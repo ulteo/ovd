@@ -1,10 +1,10 @@
-
-function valid_ip()
+valid_ip()
 {
     local ip=$1
     local _ifs=$IFS
 
-    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
+    if [[ $ip =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]
+    then
         IFS='.'
         ip=($ip)
         IFS=$_ifs
@@ -15,9 +15,9 @@ function valid_ip()
     return 1
 }
 
-function execute()
+execute()
 {
-    $1 2> /dev/null
+    $1 2> /tmp/ha.log
     ret=$?
     if [ $ret -eq 0 ]; then
         echo -e "\033[34;1m[OK] \033[0m $1";
@@ -28,7 +28,7 @@ function execute()
 }
 
 # LIST NETWORK INTERFACES & CHOOSE ONE
-function set_netlink()
+set_netlink()
 {
     NICS=(`ifconfig -s | tr -s ' ' | cut -d' ' -f1 | grep -E "eth[0-9]"`)
     len=${#NICS[*]}
@@ -68,7 +68,7 @@ function set_netlink()
     echo "Broadcast:" $NIC_BCAST
 }
 
-function set_virtual_ip()
+set_virtual_ip()
 {
     local nic_mask=(`echo $1 | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
     local nic_addr=(`echo $2 | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
