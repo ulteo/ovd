@@ -3,11 +3,14 @@ require_once(dirname(__FILE__).'/../../includes/core.inc.php');
 class HA_high_availability  extends HA {
 	public function __construct () {}
 	public function getConfiguration() {
+		exec("which HAshell", $test);
+		if (strlen($test) == 0)
+			return "";
 		exec("HAshell get_conf_file x", $res);
 		return $res;
 	}
 	public function extractVarsFromConfFile() {
-		$vars= array("VIP"=>"","WWW_USER"=>"","NIC_NAME"=>"");
+		$vars= array("VIP"=>"");
 		$content =  HA_high_availability::getConfiguration();
 		foreach ($content as $v){
 			$tmp=explode("=",$v);
