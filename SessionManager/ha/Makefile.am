@@ -5,10 +5,8 @@ confdir = $(hadir)/conf
 conf_DATA = conf/authkeys \
 			conf/crm.conf \
 			conf/ha.cf \
+			conf/mysql-ocf \
 			conf/sm0.res
-
-ocfdir = $(hadir)/ocf
-ocf_DATA = ocf/mysql-ulteo
 
 HAshell = shell/Makefile \
 		  shell/main.cpp \
@@ -17,4 +15,4 @@ HAshell = shell/Makefile \
 		  shell/Utils.h \
 		  shell/Utils.cpp
 
-EXTRA_DIST = $(ha_DATA) $(conf_DATA) $(ocf_DATA) $(HAshell)
+EXTRA_DIST = $(ha_DATA) $(conf_DATA) $(HAshell)
