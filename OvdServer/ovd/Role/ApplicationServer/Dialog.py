@@ -106,10 +106,10 @@ class Dialog(AbstractDialog):
 	
 	def req_icon(self, app_id):
 		if self.role_instance.applications is None:
-			return None
+			return self.req_unauthorized()
 		
 		if not self.role_instance.applications.has_key(app_id):
-			return None
+			return self.req_unauthorized()
 		
 		app =  self.role_instance.applications[app_id]
 		
@@ -117,7 +117,7 @@ class Dialog(AbstractDialog):
 		appsdetect = Platform.ApplicationsDetection()
 		data = appsdetect.getIcon(app["filename"])
 		if data is None:
-			return None
+			return self.req_not_found()
 		
 		response = {}
 		response["code"] = httplib.OK

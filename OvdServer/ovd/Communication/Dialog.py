@@ -44,3 +44,27 @@ class Dialog:
 		response["data"] = content
 		
 		return response
+
+	def req_unauthorized(self):
+		response = {}
+		response["code"] = httplib.UNAUTHORIZED
+		response["Content-Type"] = "text/plain"
+		response["data"] = "Unauthorized"
+		
+		return response
+
+	def req_forbidden(self):
+		response = {}
+		response["code"] = httplib.FORBIDDEN
+		response["Content-Type"] = "text/plain"
+		response["data"] = "Forbidden"
+		
+		return response
+
+	def req_not_found(self):
+		response = {}
+		response["code"] = httplib.NOT_FOUND
+		response["Content-Type"] = "text/plain"
+		response["data"] = "Not Found"
+		
+		return response
