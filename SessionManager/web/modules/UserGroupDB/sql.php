@@ -20,6 +20,7 @@
  **/
 class UserGroupDB_sql {
 	protected $table;
+	protected $cache;
 	public function __construct(){
 		$prefs = Preferences::getInstance();
 		if ($prefs) {
@@ -30,6 +31,7 @@ class UserGroupDB_sql {
 			else
 				$this->table = NULL;
 		}
+		$this->cache = array();
 	}
 	public function __toString() {
 		return get_class($this).'(table \''.$this->table.'\')';
@@ -53,8 +55,22 @@ class UserGroupDB_sql {
 		else
 			return false;
 	}
+	
 	public function import($id_) {
-		Logger::debug('main', "USERGROUPDB::sql::import (id = $id_)");
+		if (array_key_exists($id_, $this->cache)) {
+			return $this->cache[$id_];
+		}
+		else {
+			$ug = $this->import_nocache($id_);
+			if (is_object($ug)) {
+				$this->cache[$ug->id] = $ug;
+			}
+			return $ug;
+		}
+	}
+	
+	public function import_nocache($id_) {
+		Logger::debug('main', "USERGROUPDB::sql::import_noche (id = $id_)");
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('SELECT @1, @2, @3, @4 FROM @5 WHERE @1 = %6', 'id', 'name', 'description', 'published', $this->table, $id_);
 			
@@ -65,7 +81,7 @@ class UserGroupDB_sql {
 				return $ug;
 		}
 		else {
-			Logger::error('main' ,"USERGROUPDB::sql::import import group '$id_' failed");
+			Logger::error('main' ,"USERGROUPDB::sql::import import_nocache group '$id_' failed");
 			return NULL;
 		}
 	}
@@ -179,6 +195,9 @@ class UserGroupDB_sql {
 	
 	public function remove($usergroup_){
 		Logger::debug('main', "USERGROUPDB::remove($usergroup_)");
+		if (array_key_exists($usergroup_->id, $this->cache)) {
+			unset($this->cache[$usergroup_->id]);
+		}
 		// first we delete liaisons
 		$sql2 = SQL::getInstance();
 		$liaisons = Abstract_Liaison::load('UsersGroupApplicationsGroup', $usergroup_->id, NULL);
@@ -205,6 +224,9 @@ class UserGroupDB_sql {
 	
 	public function update($usergroup_){
 		Logger::debug('main',"USERGROUPDB::update($usergroup_)");
+		if (array_key_exists($usergroup_->id, $this->cache)) {
+			unset($this->cache[$usergroup_->id]);
+		}
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $usergroup_->published, 'name', $usergroup_->name, 'description', $usergroup_->description, 'id', $usergroup_->id);
 		return ($res !== false);
