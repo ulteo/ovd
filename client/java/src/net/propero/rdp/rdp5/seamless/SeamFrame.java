@@ -255,7 +255,7 @@ public class SeamFrame extends Frame
 				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON2
 						| MOUSE_FLAG_DOWN, e.getX(), e.getY());
 			} else if ((e.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-			//	middleButtonPressed(e);
+				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON3 | MOUSE_FLAG_DOWN, e.getX(), e.getY());
 			}
 		}
 	}
@@ -271,7 +271,7 @@ public class SeamFrame extends Frame
 				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON2, e
 						.getX(), e.getY());
 			} else if ((e.getModifiers() & InputEvent.BUTTON2_MASK) == InputEvent.BUTTON2_MASK) {
-			//	middleButtonReleased(e);
+				this.common.rdp.sendInput(time, RDP_INPUT_MOUSE, MOUSE_FLAG_BUTTON3, e.getX(), e.getY());
 			}
 		}
 	}
