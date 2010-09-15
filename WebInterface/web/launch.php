@@ -114,7 +114,7 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 				<div id="newsWrapCont" class="rounded">
 					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
 						<tr>
-							<td style="text-align: left; vertical-align: top;">
+							<td style="width: 100%; text-align: left; vertical-align: top;">
 								<div id="newsWrap_title"></div>
 							</td>
 							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top; margin-bottom: 15px;">
