@@ -26,6 +26,8 @@ var Applications = Class.create(Daemon, {
 	running_applications: new Hash(),
 	runningApplicationsPanel: null,
 
+	news: new Hash(),
+
 	liaison_runningapplicationtoken_application: new Hash(),
 
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
@@ -66,6 +68,7 @@ var Applications = Class.create(Daemon, {
 		this.list_apps();
 
 		this.load_explorer();
+		this.display_news();
 
 		Daemon.prototype.do_started.apply(this);
 
@@ -218,6 +221,58 @@ var Applications = Class.create(Daemon, {
 			return;
 
 		$('fileManagerContainer').innerHTML = '<iframe style="width: 100%; height: 100%; border: none;" src="ajaxplorer/"></iframe>';
+	},
+
+	display_news: function() {
+		new Ajax.Request(
+			'news.php',
+			{
+				method: 'get',
+				onSuccess: this.parse_display_news.bind(this)
+			}
+		);
+
+		setTimeout(this.display_news.bind(this), 300000);
+	},
+
+	parse_display_news: function(transport) {
+		this.push_log('debug', '[applications] parse_display_news(transport@display_news())');
+
+		var xml = transport.responseXML;
+
+		var buffer = xml.getElementsByTagName('news');
+
+		if (buffer.length != 1) {
+			this.push_log('error', '[applications] parse_display_news(transport@display_news()) - Invalid XML (No "news" node)');
+			return;
+		}
+
+		var html = '';
+		html += '<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="0" cellpadding="3">';
+		var new_nodes = xml.getElementsByTagName('new');
+		for (var i=0; i<new_nodes.length; i++) {
+			this.news.set(''+new_nodes[i].getAttribute('id'), new_nodes[i]);
+
+			var date = new Date();
+			date.setTime(new_nodes[i].getAttribute('timestamp')*1000);
+
+			html += '<tr><td style="text-align: left;">';
+			html += '<span style="font-size: 1.1em; color: black;">';
+			html += '<em>'+date.toLocaleString()+'</em> - <strong><a href="javascript:;" onclick="daemon.show_new('+new_nodes[i].getAttribute('id')+'); return false;">'+new_nodes[i].getAttribute('title')+'</a></strong>';
+			html += '</span>';
+			html += '</td></tr>';
+		}
+		html += '</table>';
+
+		$('newsContainer').innerHTML = html;
+	},
+
+	show_new: function(i_) {
+		var new_ = this.news.get(''+i_);
+		var title = new_.getAttribute('title');
+		var content = new_.firstChild.nodeValue;
+
+		showInfo('<strong>'+title+'</strong><br /><pre>'+content+'</pre>');
 	}
 });
 

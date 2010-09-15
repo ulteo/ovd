@@ -26,6 +26,11 @@ a:hover {
 	color: #963;
 }
 
+pre {
+	font-family: Arial;
+	font-size: 1em;
+}
+
 div.spacer {
 	margin-top: 10px;
 	margin-bottom: 10px;
