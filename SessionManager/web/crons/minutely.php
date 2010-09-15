@@ -23,7 +23,7 @@ require_once(dirname(__FILE__).'/../admin/includes/core-minimal.inc.php');
 //BEGIN Sessions expiration
 $sessions = Abstract_Session::load_all();
 foreach ($sessions as $session) {
-	if ($session->start_time != 0 && array_key_exists('timeout', $session->settings) && $session->settings['timeout'] != 0) {
+	if ($session->start_time != 0 && array_key_exists('timeout', $session->settings) && $session->settings['timeout'] > 0) {
 		if ($session->start_time+$session->settings['timeout'] < time()) {
 			Logger::info('main', '(minutely cron) Session \''.$session->id.'\' has expired, ending...');
 			$session->orderDeletion();
