@@ -199,7 +199,7 @@ var Daemon = Class.create({
 	prepare: function() {
 		this.push_log('debug', '[daemon] prepare()');
 
-		if (this.duration != -1) {
+		if (this.duration > 0) {
 			if (this.duration > 180)
 				setTimeout(this.warn_expire.bind(this), (this.duration-180)*1000);
 			else
