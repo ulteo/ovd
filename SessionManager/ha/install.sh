@@ -49,6 +49,62 @@ GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9
 rm -rf $HA_CONF_DIR $HA_VARLIB_DIR
 mkdir -p $HA_CONF_DIR $HA_VARLIB_DIR
 
+set_netlink()
+{
+    NICS=(`ifconfig -s | tr -s ' ' | cut -d' ' -f1 | grep -E "eth[0-9]"`)
+    len=${#NICS[*]}
+
+    if [ $len != 0 ]; then
+        echo -e "NIC detected :";
+    else
+        die "no nic detected, please configure your network";
+    fi
+
+    for i in $(seq 1 $len); do
+        local nic="${NICS[$i-1]}"
+        tmp=`ifconfig $nic | grep "inet addr" | tr -s ' '| cut -d' ' -f3-`
+        [ -n "$tmp" ] && echo -e "\t\a[$i] $nic ("$tmp")"
+    done
+
+    unset NIC_INFOS
+    while [ -z "$NIC_INFOS" ]; do
+        echo -n "Choose nic number: " && read var_nic
+        [ -n "$var_nic" ] \
+        	&& [[ $var_nic == [0-9] ]] \
+            && [ $var_nic -ge 0 -a $var_nic -le $len ] \
+            && NIC_INFOS="${NICS[$var_nic-1]}"
+    done
+
+    NIC_NAME=${NICS[$NIC_INFOS]}
+    NIC_ADDR=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
+    NIC_MASK=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $8}'`
+
+	sed "s/%NIC_NAME%/$NIC_NAME/" conf/resources.conf > $HA_CONF_DIR/resources.conf
+    info "NIC $NIC_NAME selected"
+}
+
+
+set_virtual_ip()
+{
+    while [ -z "$VIP" ]; do
+        echo -n "Give the virtual IP: " && read vip
+        [ -n "$vip" ] && valid_vip $NIC_MASK $NIC_ADDR $vip && VIP=$vip
+    done
+	sed -i "s/^.*VIP.*$/VIP=${VIP}/" $HA_CONF_DIR/resources.conf;
+    info "Virtual IP: $VIP"
+}
+
+
+function set_master_ip()
+{
+	while [ -z "$MIP" ]; do
+		echo -n "Give the master host IP: " && read mip
+		[ -n "$mip" ] && valid_ip "$mip" && MIP=$mip
+	done
+	info "Master IP: $mip"
+}
+
+
 function drbd_install()
 {
 	modprobe drbd
@@ -214,7 +270,7 @@ while true; do
 			info "the host will become the master"
 
 			set_netlink
-			set_virtual_ip $NIC_MASK $NIC_ADDR
+			set_virtual_ip
 			drbd_install "M"
 			heartbeat_install
 			heartbeat_cib_install
