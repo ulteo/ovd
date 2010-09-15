@@ -89,7 +89,8 @@ class User(AbstractUser):
 			if getattr(sys, "getwindowsversion", None) is not None:
 				osVersion = sys.getwindowsversion()[0]
 			if osVersion > 5:
-				shell = "cmd /c \"start %s --NoExplorer & start explorer \""%(self.infos["shell"])
+				if "OvdDesktop" in shell:
+					shell = "cmd /c \"start %s --NoExplorer & start explorer \""%(self.infos["shell"])
 
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigInitialProgram, shell)
 			win32ts.WTSSetUserConfig(None, self.name , win32ts.WTSUserConfigfInheritInitialProgram, False)
