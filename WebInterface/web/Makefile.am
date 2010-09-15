@@ -5,6 +5,7 @@ scripts_DATA = apps.php \
                index.php \
                launch.php \
                logout.php \
+               news.php \
                servers.php \
                session_status.php \
                synchronize.php
