@@ -239,8 +239,8 @@ class ApplicationsGroupDB_sql extends ApplicationsGroupDB {
 			Logger::error('main', "ApplicationsGroupDB::sql::update($group_) the parameter is not an object");
 			return false;
 		}
-		if (array_key_exists($group_->getAttribute('id'), $this->cache)) {
-			unset($this->cache[$group_->getAttribute('id')]);
+		if (array_key_exists($group_->id, $this->cache)) {
+			unset($this->cache[$group_->id]);
 		}
 		$sql2 = SQL::getInstance();
 		$res = $sql2->DoQuery('UPDATE @1  SET @2 = %3 , @4 = %5 , @6 = %7  WHERE @8 = %9', $this->table, 'published', $group_->published, 'name', $group_->name, 'description', $group_->description, 'id', $group_->id);
