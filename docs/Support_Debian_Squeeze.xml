@@ -43,7 +43,7 @@
           </para>
           <screen>
 	  <![CDATA[
-deb http://archive.ulteo.com/ovd/3.0/ubuntu squeeze main]]>
+deb http://archive.ulteo.com/ovd/3.0/debian squeeze main]]>
           </screen>
         </listitem>
 
