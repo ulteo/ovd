@@ -31,7 +31,7 @@ import org.ulteo.ovd.integrated.Constants;
 public class LinuxShortcut extends Shortcut {
 
 	@Override
-	public void create(Application app) {
+	public String create(Application app) {
 		File xfceShorcuts = new File(Constants.PATH_XFCE_MENU_ENTRIES);
 		xfceShorcuts.mkdirs();
 
@@ -59,6 +59,8 @@ public class LinuxShortcut extends Shortcut {
 		} catch (FileNotFoundException ex) {
 			Logger.getLogger(LinuxShortcut.class.getName()).log(Level.SEVERE, null, ex);
 		}
+
+		return shortcut.getName();
 	}
 
 	@Override

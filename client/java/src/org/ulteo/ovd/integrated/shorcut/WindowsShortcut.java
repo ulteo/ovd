@@ -42,9 +42,17 @@ public class WindowsShortcut extends Shortcut {
 	private String appName = null;
 
 	@Override
-	public void create(Application app) {
+	public String create(Application app) {
+		if (app == null)
+			return null;
+
 		appName = app.getName();
 		replaceForbiddenChars(appName);
+
+		File shorcutDirectory = new File(Constants.PATH_SHORTCUTS);
+		if (! shorcutDirectory.exists())
+			shorcutDirectory.mkdirs();
+		shorcutDirectory = null;
 
 		JShellLink shortcut = new JShellLink(Constants.PATH_SHORTCUTS, appName);
 		shortcut.setWorkingDirectory("");
@@ -52,7 +60,13 @@ public class WindowsShortcut extends Shortcut {
 		shortcut.setArguments(""+this.token+" "+app.getId());
 		shortcut.setIconLocation(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
 		shortcut.setIconIndex(0);
-		shortcut.save();
+		try {
+			shortcut.save();
+		} catch (RuntimeException re) {
+			return null;
+		}
+
+		return this.appName+".lnk";
 	}
 
 	@Override

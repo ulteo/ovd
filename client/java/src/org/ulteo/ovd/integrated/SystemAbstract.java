@@ -28,7 +28,7 @@ public abstract class SystemAbstract {
 	protected Shortcut shortcut = null;
 	protected FileAssociate fileAssociate = null;
 
-	public abstract void install(Application app);
+	public abstract String install(Application app);
 
 	public abstract void uninstall(Application app);
 

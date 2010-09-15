@@ -25,7 +25,7 @@ import org.ulteo.ovd.Application;
 public abstract class Shortcut {
 	protected String token = null;
 	
-	public abstract void create(Application app);
+	public abstract String create(Application app);
 	public abstract void remove(Application app);
 	
 	public final void setToken(String token) {

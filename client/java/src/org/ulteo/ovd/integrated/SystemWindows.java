@@ -41,10 +41,10 @@ public class SystemWindows extends SystemAbstract {
 	}
 
 	@Override
-	public void install(Application app) {
+	public String install(Application app) {
 		this.saveIcon(app);
 		this.fileAssociate.createAppAction(app);
-		this.shortcut.create(app);
+		return this.shortcut.create(app);
 	}
 
 	@Override
