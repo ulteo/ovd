@@ -18,15 +18,15 @@ valid_ip()
 execute()
 {
 	set +e
-    $1 >> /tmp/ha.log 2>&1
-	set -e
+    $1 >> $HA_LOG 2>&1
     ret=$?
+	set -e
     if [ $ret -eq 0 ]; then
         echo -e "\033[34;1m[OK] \033[0m $1";
     else
         echo -e "\033[31;1m[FAILED] \033[0m $1";
     fi
-    return $?
+    return $ret
 }
 
 info()

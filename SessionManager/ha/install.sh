@@ -53,9 +53,14 @@ function drbd_install()
 {
 	modprobe drbd
 
+	info "stop all services"
+	service mysql stop >> $HA_LOG 2>&1 || true
+	service apache2 stop >> $HA_LOG 2>&1 || true
+	service heartbeat stop >> $HA_LOG 2>&1 || true
+
 	# Create a virtual block device of 250M
 	info "Create a virtual block device of 250 MBytes"
-	dd if=/dev/zero of=$HA_VARLIB_DIR/vbd0.bin count=500k 2> $HA_LOG
+	dd if=/dev/zero of=$HA_VARLIB_DIR/vbd0.bin count=500k 2>> $HA_LOG
 
 	DRBD_LOOP=$(losetup -f)
 	losetup $DRBD_LOOP $HA_VARLIB_DIR/vbd0.bin
@@ -69,7 +74,7 @@ function drbd_install()
 		sed "s/%NIC_ADDR%/$NIC_ADDR/" > $DRBD_CONF
 
 	# prepare and clean drbd
-	umount $DRBD_DEVICE 2> $HA_LOG || true
+	umount $DRBD_DEVICE 2>> $HA_LOG || true
 	execute "drbdadm down $DRBD_RESOURCE"
 
 	# create drbd resource
@@ -90,7 +95,7 @@ function drbd_install()
 		umount $DRBD_MOUNT_DIR
 
 	elif [ $1 == "S" ]; then
-		execute "drbdadm adjust $DRBD_RESOURCE" || true
+		execute "drbdadm adjust $DRBD_RESOURCE" || true
 
 		#Synchronize data
 		var_role=`drbdadm role $DRBD_RESOURCE | grep -E 'Secondary/Primary|Secondary/Secondary' || true`
@@ -112,11 +117,6 @@ function drbd_install()
 
 function heartbeat_install()
 {
-	info "stop all services"
-	service mysql stop > $HA_LOG 2>&1 || true
-	service apache2 stop > $HA_LOG 2>&1 || true
-	service heartbeat stop > $HA_LOG 2>&1 || true
-
 	# create logs files
 	mkdir -p $SM_LOG_DIR
 	touch $SM_LOG_DIR/ha.log $SM_LOG_DIR/ha-hb.log $SM_LOG_DIR/ha-debug-hb.log
@@ -139,7 +139,7 @@ function heartbeat_install()
 	# Delete old cibs [HEARTBEAT]
 	[ -e $HEARTBEAT_CRM_DIR/cib.xml ] && rm -f $HEARTBEAT_CRM_DIR/*
 
-	service heartbeat start > $HA_LOG 2>&1
+	service heartbeat start >> $HA_LOG 2>&1
 }
 
 
@@ -162,14 +162,14 @@ function heartbeat_cib_install()
 	sed "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," conf/crm.conf | \
 		sed "s,%MYSQL_DB%,$MYSQL_DB," | sed "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," | \
 		sed "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" | sed "s/%VIP%/$VIP/" | \
-		crm configure 2> $HA_LOG
+		crm configure 2>> $HA_LOG
 }
 
 
 function hashell_install()
 {
 	info "install HAshell"
-	make install -C shell > $HA_LOG
+	make install -C shell >> $HA_LOG
 }
 
 
@@ -178,7 +178,7 @@ function set_init_script()
 {
 	info "install init script"
 	cp ulteo_ha /etc/init.d/
-	update-rc.d ulteo_ha defaults > $HA_LOG
+	update-rc.d ulteo_ha defaults >> $HA_LOG
 }
 
 
@@ -186,9 +186,10 @@ function set_init_script()
 function set_ha_register_to_master()
 {
 	info "register server to the SM"
-	response=$(wget --no-check-certificate https://$MASTER_IP/ovd/admin/ha/registration.php \
-					--post-data="action=register&hostname=$HOSTNAME" -O -)
-	[ -n "$response" -o "$response" -ne 2 ] && die "request corrupted"
+	tmp=$(mktemp)
+	execute "wget --no-check-certificate -O $tmp --post-data='action=register&hostname=$HOSTNAME' https://$MIP/ovd/admin/ha/registration.php"
+	response=$(cat $tmp)
+	[ -z "$response" -o "$response" = "2" ] && die "request to master refused"
 }
 
 ###############################################################################
