@@ -354,6 +354,7 @@ Event.observe(window, 'load', function() {
 	$('errorWrap').hide();
 	$('okWrap').hide();
 	$('infoWrap').hide();
+	$('newsWrap').hide();
 
 	Event.observe($('lockWrap'), 'click', function() {
 		if ($('errorWrap').visible())
@@ -364,6 +365,9 @@ Event.observe(window, 'load', function() {
 
 		if ($('infoWrap').visible())
 			hideInfo();
+
+		if ($('newsWrap').visible())
+			hideNews();
 	});
 
 	testJava();
@@ -561,6 +565,36 @@ function hideInfo() {
 	$('infoWrap').innerHTML = '';
 	$('infoWrap').style.width = '';
 	$('infoWrap').style.height = '';
+}
+
+function showNews(title_, content_) {
+	hideNews();
+
+	hideInfo();
+	hideError();
+	hideOk();
+
+	showLock();
+
+	$('newsWrap_title').innerHTML = title_;
+	refresh_body_size();
+	var reg = new RegExp("\n", "g");
+	$('newsWrap_content').innerHTML = '<div style="width: 100%; height: '+parseInt(my_height*(75/100))+'px; overflow: auto;">'+content_.replace(reg, '<br />')+'</div>';
+
+	new Effect.Center($('newsWrap'));
+
+	new Effect.Appear($('newsWrap'));
+}
+
+function hideNews() {
+	$('newsWrap').hide();
+
+	hideLock();
+
+	$('newsWrap_title').innerHTML = '';
+	$('newsWrap_content').innerHTML = '';
+	$('newsWrap').style.width = '750px';
+	$('newsWrap').style.height = '';
 }
 
 function updateFlag(id_) {

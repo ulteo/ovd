@@ -7,6 +7,7 @@ scripts_DATA = cross.png \
                hide.png \
                loader.gif \
                logout.png \
+               news.png \
                rotate.gif \
                show.png \
                suspend.png \

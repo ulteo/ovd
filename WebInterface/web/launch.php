@@ -109,6 +109,33 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 		<div id="infoWrap" style="display: none;">
 		</div>
 
+		<div style="background: #2c2c2c; width: 0px; height: 0px;">
+			<div id="newsWrap" class="rounded" style="display: none;">
+				<div id="newsWrapCont" class="rounded">
+					<table style="width: 100%; margin-left: auto; margin-right: auto;" border="0" cellspacing="1" cellpadding="3">
+						<tr>
+							<td style="text-align: left; vertical-align: top;">
+								<div id="newsWrap_title"></div>
+							</td>
+							<td style="width: 32px; height: 32px; text-align: right; vertical-align: top; margin-bottom: 15px;">
+								<img src="media/image/news.png" width="32" height="32" alt="" title="" />
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; vertical-align: top; margin-bottom: 15px;" colspan="2">
+								<div id="newsWrap_content"></div>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: right; vertical-align: bottom; margin: 10px;" colspan="2">
+								<a href="javascript:;" onclick="hideNews(); return false;"><?php echo _('close'); ?></a>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
 		<div id="splashContainer">
 			<table style="width: 100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>

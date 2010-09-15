@@ -272,7 +272,7 @@ var Applications = Class.create(Daemon, {
 		var title = new_.getAttribute('title');
 		var content = new_.firstChild.nodeValue;
 
-		showInfo('<strong>'+title+'</strong><br /><pre>'+content+'</pre>');
+		showNews(title, content);
 	}
 });
 
