@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2008-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Jeremy DESVAGES <jeremy@ulteo.com>
  *
@@ -20,20 +20,11 @@
  **/
 require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
 
-Logger::debug('main', 'Starting webservices/get_news.php');
-
-if (! isset($_GET['fqdn'])) {
-	Logger::error('main', '(webservices/get_news) Missing parameter : fqdn');
-	die('ERROR - NO $_GET[\'fqdn\']');
-}
-
-header('Content-Type: text/xml; charset=utf-8');
+$news = Abstract_News::load_all();
 
 $dom = new DomDocument('1.0', 'utf-8');
-$news_node = $dom->createElement('news');
-$dom->appendChild($news_node);
 
-$news = Abstract_News::load_all();
+$news_node = $dom->createElement('news');
 foreach ($news as $new) {
 	$new_node = $dom->createElement('new');
 	$new_node->setAttribute('title', $new->getAttribute('title'));
@@ -42,7 +33,8 @@ foreach ($news as $new) {
 	$new_node->appendChild($new_textnode);
 	$news_node->appendChild($new_node);
 }
+$dom->appendChild($news_node);
 
-$xml = $dom->saveXML();
-
-echo $xml;
+header('Content-Type: text/xml; charset=utf-8');
+echo $dom->saveXML();
+die();

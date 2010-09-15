@@ -1,5 +1,6 @@
 scripts_DATA = icon.php \
                logout.php \
+               news.php \
                remote_apps.php \
                session_status.php \
                start.php \

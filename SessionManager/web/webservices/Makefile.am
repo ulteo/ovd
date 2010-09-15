@@ -2,7 +2,6 @@ SUBDIRS =  admin
 
 scripts_DATA =  configuration.php \
                 domain.php \
-                get_news.php \
                 server_monitoring.php \
                 server_name.php \
                 session_status.php \
