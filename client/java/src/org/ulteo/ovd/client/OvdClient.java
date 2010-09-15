@@ -350,6 +350,9 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public void seamlessEnabled(RdpConnection co) {}
 
 	public void disconnectAll() {
+		if (! this.connectionIsActive)
+			return;
+
 		this.isCancelled = true;
 		this.obj.sessionDisconnecting();
 	}
