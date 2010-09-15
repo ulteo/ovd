@@ -30,9 +30,6 @@ foreach ($news as $new) {
 	$new_node->setAttribute('id', $new->getAttribute('id'));
 	$new_node->setAttribute('title', $new->getAttribute('title'));
 	$new_node->setAttribute('timestamp', (int)$new->getAttribute('timestamp'));
-	$new_node->setAttribute('day', date('d', (int)$new->getAttribute('timestamp')));
-	$new_node->setAttribute('month', date('m', (int)$new->getAttribute('timestamp')));
-	$new_node->setAttribute('year', date('Y', (int)$new->getAttribute('timestamp')));
 	$new_textnode = $dom->createTextNode($new->getAttribute('content'));
 	$new_node->appendChild($new_textnode);
 	$news_node->appendChild($new_node);
