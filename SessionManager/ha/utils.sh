@@ -17,7 +17,9 @@ valid_ip()
 
 execute()
 {
+	set +e
     $1 >> /tmp/ha.log 2>&1
+	set -e
     ret=$?
     if [ $ret -eq 0 ]; then
         echo -e "\033[34;1m[OK] \033[0m $1";
@@ -71,6 +73,8 @@ set_netlink()
     NIC_NAME=${NICS[$NIC_INFOS]}
     NIC_ADDR=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
     NIC_MASK=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $8}'`
+
+	sed "s/%NIC_NAME%/$NIC_NAME/" conf/resources.conf > $HA_CONF_DIR/resources.conf
     info "NIC $NIC_NAME selected"
 }
 
@@ -80,7 +84,7 @@ set_virtual_ip()
     local nic_addr=(`echo $2 | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
 
     while [ -z "$VIP" ]; do
-        echo -n "Please, give the virtual IP you want: " && read vip
+        echo -n "Give the virtual IP: " && read vip
         ([ -z "$vip" ] || ! valid_ip "$vip") && continue
 
         vip=(`echo $vip | awk '{for(i=1;i<=NF;i++) printf " " $i}' FS=.`)
@@ -95,5 +99,15 @@ set_virtual_ip()
         done
         [ -n "$vip" ] && VIP=${vip[0]}.${vip[1]}.${vip[2]}.${vip[3]}
     done
+	sed -i "s/^.*VIP.*$/VIP=${VIP}/" $HA_CONF_DIR/resources.conf;
     info "Virtual IP: $VIP"
+}
+
+function set_master_ip()
+{
+	while [ -z "$MIP" ]; do
+		echo -n "Give the master host IP: " && read mip
+		([ -z "$mip" ] || ! valid_ip "$vip") && MIP=$mip
+	done
+	info "Master IP: $mip"
 }

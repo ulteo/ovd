@@ -68,10 +68,13 @@ function drbd_install()
 		sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
 		sed "s/%NIC_ADDR%/$NIC_ADDR/" > $DRBD_CONF
 
-	# create drbd resource
+	# prepare and clean drbd
 	umount $DRBD_DEVICE 2> $HA_LOG || true
+	execute "drbdadm down $DRBD_RESOURCE"
+
+	# create drbd resource
 	execute "drbdadm create-md $DRBD_RESOURCE"
-	drbdadm up $DRBD_RESOURCE 2> $HA_LOG || true
+	execute "drbdadm up $DRBD_RESOURCE" || true
 
 	if [ $1 == "M" ]; then
 		# Check if overwrite of peer is necessary
@@ -87,7 +90,7 @@ function drbd_install()
 		umount $DRBD_MOUNT_DIR
 
 	elif [ $1 == "S" ]; then
-		execute "drbdadm adjust $DRBD_RESOURCE"
+		execute "drbdadm adjust $DRBD_RESOURCE" || true
 
 		#Synchronize data
 		var_role=`drbdadm role $DRBD_RESOURCE | grep -E 'Secondary/Primary|Secondary/Secondary' || true`
@@ -109,6 +112,11 @@ function drbd_install()
 
 function heartbeat_install()
 {
+	info "stop all services"
+	service mysql stop > $HA_LOG 2>&1 || true
+	service apache2 stop > $HA_LOG 2>&1 || true
+	service heartbeat stop > $HA_LOG 2>&1 || true
+
 	# create logs files
 	mkdir -p $SM_LOG_DIR
 	touch $SM_LOG_DIR/ha.log $SM_LOG_DIR/ha-hb.log $SM_LOG_DIR/ha-debug-hb.log
@@ -178,11 +186,9 @@ function set_init_script()
 function set_ha_register_to_master()
 {
 	info "register server to the SM"
-	response=$(wget --no-check-certificate https://$MASTER_IP/ovd/admin/ha/registration.php
-         			--post-data="action=register&hostname=$HOSTNAME" -O -)
-	if [ -n "$response" -o "$response" -ne 2 ]; then
-		die "request corrupted"
-	fi
+	response=$(wget --no-check-certificate https://$MASTER_IP/ovd/admin/ha/registration.php \
+					--post-data="action=register&hostname=$HOSTNAME" -O -)
+	[ -n "$response" -o "$response" -ne 2 ] && die "request corrupted"
 }
 
 ###############################################################################
@@ -197,18 +203,6 @@ dpkg -l ulteo-ovd-session-manager > $HA_LOG
 [ -z "$HOSTNAME" ] && die "No Hostname found"
 [ -z "$GATEWAY" ] && die "No gateway found"
 
-set_netlink
-set_virtual_ip $NIC_MASK $NIC_ADDR
-
-info "stop all services"
-service mysql stop > $HA_LOG 2>&1 || true
-service apache2 stop > $HA_LOG 2>&1 || true
-service heartbeat stop > $HA_LOG 2>&1 || true
-
-# set generic HA conf
-echo "NIC_NAME=$NIC_NAME" >> $HA_CONF_DIR/resources.conf;
-echo "WWW_USER=www-data" > $HA_CONF_DIR/resources.conf;
-
 # choose MASTER/SLAVE
 while true; do
 	echo -n "Install this session manager as master or slave [m/s]: " && read CHOICE
@@ -218,6 +212,8 @@ while true; do
 		master | m)
 			info "the host will become the master"
 
+			set_netlink
+			set_virtual_ip $NIC_MASK $NIC_ADDR
 			drbd_install "M"
 			heartbeat_install
 			heartbeat_cib_install
@@ -225,26 +221,27 @@ while true; do
 			set_init_script
 			crm_attribute --type nodes --node $HOSTNAME --name standby --update off
 
-			echo -e "\033[37;1mYou You must enable the HA module in configuration before !\033[0m"
-			echo -e "\033[37;1mThen you can get web interface at: https://$VIP/ovd/admin/ha/status.php\033[0m\n"
-			break
+			echo -e "\n\033[37;1mYou You must enable the HA module in configuration before !\033[0m"
+			echo -e "\033[37;1mThen you can get web interface at: https://$VIP/ovd/admin/ha/status.php\033[0m"
 		;;
 
 		slave | s)
 			info "the host will become a slave"
-			echo "VIP=$VIP" >> $HA_CONF_DIR/resources.conf;
 
+			set_netlink
+			set_master_ip
 			drbd_install "S"
 			heartbeat_install
 			hashell_install
 			set_ha_register_to_master
 			set_init_script
-			break
 		;;
 
 		*)
 			echo -e "\033[31;1mYour response is not valid\033[0m"
+			continue
 		;;
 	esac
+	break
 done
 echo -e "\n\033[31;1mINSTALLATION SUCCESSFULL\033[0m\n"
