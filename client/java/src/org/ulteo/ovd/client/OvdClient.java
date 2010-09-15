@@ -70,6 +70,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	
 	protected Thread sessionStatusMonitoringThread = null;
 	protected boolean continueSessionStatusMonitoringThread = false;
+	protected long sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
 
 	protected boolean isCancelled = false;
 	private boolean connectionIsActive = true;
@@ -153,7 +154,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	@Override
 	public void run() {
 		// session status monitoring
-		long t = REQUEST_TIME_FREQUENTLY;
+		this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
 		boolean isActive = false;
 		
 		while (this.continueSessionStatusMonitoringThread) {
@@ -167,7 +168,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 					if (this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_INITED) || this.sessionStatus.equalsIgnoreCase(SessionManagerCommunication.SESSION_STATUS_ACTIVE)) {
 						if (! isActive) {
 							isActive = true;
-							t = REQUEST_TIME_OCCASIONALLY;
+							this.sessionStatusSleepingTime = REQUEST_TIME_OCCASIONALLY;
 							this.sessionReady();
 						}
 					}
@@ -187,7 +188,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 				org.ulteo.Logger.error("Session status monitoring: "+ex.getMessage());
 			}
 			try {
-					Thread.sleep(t);
+					Thread.sleep(this.sessionStatusSleepingTime);
 			}
 			catch (InterruptedException ex) {
 			}
@@ -328,6 +329,7 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 
 		if (this.sessionStatusMonitoringThread != null && this.sessionStatusMonitoringThread.isAlive()) {
 			// Break session status monitoring sleep to check with SessionManager ASAP
+			this.sessionStatusSleepingTime = REQUEST_TIME_FREQUENTLY;
 			this.sessionStatusMonitoringThread.interrupt();
 		}
 	}
