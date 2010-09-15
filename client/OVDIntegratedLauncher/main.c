@@ -85,7 +85,7 @@ int main(int argc, LPSTR argv[]) {
     }
 
     instance = spool_instance_create(spool, argv[2], NULL);
-    if (instance <= 0) {
+    if (instance == -1) {
         fprintf(stderr, "Internal error 2\n");
         return 2;
     }

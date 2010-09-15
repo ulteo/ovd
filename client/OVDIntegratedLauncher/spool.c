@@ -221,6 +221,10 @@ int spool_build_unique_id(P_SPOOL spool) {
 BOOL spool_id_used(P_SPOOL spool, int id) {
     TCHAR path[MAX_PATH];
     TCHAR id_str[32];
+
+    // -1 is used as an error code
+    if (id == -1)
+	    return TRUE;
     
     sprintf(id_str, "%d", id);
     
