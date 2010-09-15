@@ -149,6 +149,7 @@ public class StartTokenAuth {
 		OVDPrinter.setPrinterThread(new OVDStandalonePrinterThread());
 
 		OvdClient cli = new OvdClientIntegrated(dialog);
+		Runtime.getRuntime().addShutdownHook(new ShutdownTask(cli));
 		cli.perform();
 	}
 }

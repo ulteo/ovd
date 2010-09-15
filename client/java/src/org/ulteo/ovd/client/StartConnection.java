@@ -561,8 +561,10 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 		}
 		this.client.setKeymap(this.keymap);
 
-		if (! this.isCancelled)
+		if (! this.isCancelled) {
+			Runtime.getRuntime().addShutdownHook(new ShutdownTask(this.client));
 			exit = this.client.perform();
+		}
 		else
 			this.client.disconnectAll();
 		this.client = null;
