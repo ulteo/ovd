@@ -28,51 +28,44 @@
 
 set -e
 unset LANG
-export PATH=$PATH/usr/local/bin:/usr/sbin:/sbin:/bin:/usr/bin
 
-CONFDIR=/etc/ulteo/ovd/ha
-DATADIR=/usr/share/ulteo/ovd/ha
-LOGDIR=/var/log/ulteo/sessionmanager
+HA_CONF_DIR=/etc/ulteo/ovd/ha
+HA_DATA_DIR=/usr/share/ulteo/ovd/ha
+HA_VARLIB_DIR=/var/lib/ulteo/ovd
 
-VBD_BIN=$CONFDIR/vbd0.bin
+DRBD_RESOURCE="sm0"
+DRBD_CONF=/etc/drbd.d/$DRBD_RESOURCE.res
+HEARTBEAT_CONF_DIR=/etc/ha.d
+SM_LOG_DIR=/var/log/ulteo/sessionmanager
 
-# load HA utils functions
-. $DATADIR/scripts/utils.sh
+. $HA_DATA_DIR/scripts/utils.sh
 
 ha_make_configurations() {
     OTHER_IP=$2
 	OTHER_HOSTNAME=$3
 	AUTHKEY=$4
 
-	HEARTBEAT_HA_CONF=/etc/ha.d/ha.cf
-	HEARTBEAT_AUTHKEYS_CONF=/etc/ha.d/authkeys
-    DRBD_RESOURCE="sm0"
-	DRBD_CONF=/etc/drbd.d/$DRBD_RESOURCE.res
-
-	GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}'`
-	NIC_NAME="eth0"
-	NIC_ADDR=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
-
-	# load dynamic values
-	. $CONFDIR/resources.conf
+    NIC_NAME=$(grep -E "^NIC_NAME" $HA_CONF_DIR/resources.conf | sed -r "s/^NIC_NAME *= *([a-zA-Z0-9]*) ?.*$/\1/")
+	GATEWAY=$(route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}')
+	NIC_ADDR=$(ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}')
 
     # Heartbeat authkeys conf
-    sed "s/%AUTHKEY%/$AUTHKEY/" $DATADIR/conf/authkeys > $HEARTBEAT_AUTHKEYS_CONF
+    sed "s/%AUTHKEY%/$AUTHKEY/" $HA_DATA_DIR/conf/authkeys > $HEARTBEAT_CONF_DIR/authkeys
 
     # Heartbeat conf
-    sed "s/%GATEWAY%/$GATEWAY/" $DATADIR/conf/ha.cf | \
+    sed "s/%GATEWAY%/$GATEWAY/" $HA_DATA_DIR/conf/ha.cf | \
         sed "s/%NIC_NAME%/$NIC_NAME/" | sed "s/%NIC_ADDR%/$NIC_ADDR/" | \
-        sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s/%LOGDIR%/$SM_LOGDIR/" \
-            > $HEARTBEAT_HA_CONF
+        sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s/%SM_LOG_DIR%/$SM_LOG_DIR/" \
+            > $HEARTBEAT_CONF_DIR/ha.cf
 	if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
-        sed -i "/ucast/ a\ucast $NIC_NAME $OTHER_IP" $HEARTBEAT_HA_CONF
-        sed -i "/node/ a\node $OTHER_HOSTNAME" $HEARTBEAT_HA_CONF
+        sed -i "/ucast/ a\ucast $NIC_NAME $OTHER_IP" $HEARTBEAT_CONF_DIR/ha.cf
+        sed -i "/node/ a\node $OTHER_HOSTNAME" $HEARTBEAT_CONF_DIR/ha.cf
 	fi
 
     # DRBD conf
 	local device=/dev/drbd0;
 	local disk=/dev/loop0;
-    sed "s/%RESOURCE%/$DRBD_RESOURCE/" $DATADIR/conf/$DRBD_RESOURCE.res | \
+    sed "s/%RESOURCE%/$DRBD_RESOURCE/" $HA_DATA_DIR/conf/$DRBD_RESOURCE.res | \
         sed "s/%DEVICE%/$device/" | sed "s/%LOOP%/$disk/" | \
         sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
         sed "s/%NIC_ADDR%/$NIC_ADDR/"  > $DRBD_CONF
@@ -83,7 +76,7 @@ ha_make_configurations() {
 	fi
 	echo "}" >> $DRBD_CONF
 
-	chmod 660 $HEARTBEAT_HA_CONF $HEARTBEAT_AUTHKEYS_CONF $DRBD_CONF
+	chmod 660 $HEARTBEAT_CONF_DIR/ha.cf $HEARTBEAT_CONF_DIR/authkeys $DRBD_CONF
 }
 
 
@@ -109,7 +102,7 @@ case $1 in
 
     reload_master|reload_master_excl)
         if [ -n "$2" ] && [ -n "$3" ] && [ -n "$4" ]; then
-		    $1 "$2" "$3" "$4"
+		    ha_reload_master "$2" "$3" "$4"
             sleep 120
         else
             echo "$1 <IP> <HOSTNAME> <AUTHKEY>"
@@ -119,7 +112,7 @@ case $1 in
 
     register)
         if [ -n "$4" ]; then
-		    register "$4"
+		    ha_start_slave "$4"
             sleep 120
         else
             echo "$1 <AUTHKEY>"
@@ -128,8 +121,8 @@ case $1 in
     ;;
 
     reload_vip)
-		if [ -n "$2" ]; then
-		    VIP=$2
+        VIP="$2"
+		if [ -n $VIP ]; then
 		    valid_ip $VIP && \
 			    crm_resource --resource vip --set-parameter ip --parameter-value $VIP
             sleep 120
@@ -142,11 +135,10 @@ case $1 in
     start)
         service mysql stop
         service apache2 stop
-        losetup $(losetup -f) $VBD_BIN
+        losetup $(losetup -f) $HA_VARLIB_DIR/vbd0.bin
     ;;
 
     stop)
-        #TODO: error -> wrong loop
         losetup -d $DRBD_LOOP
         service mysql restart
         service apache2 restart
