@@ -22,7 +22,7 @@
 
 class ShellExec {
 	public static function exec_cmd($cmd) {
-		exec("HAshell ".$cmd, $res);
+		exec('PATH=$PATH:/usr/sbin HAshell '.$cmd, $res, $val);
 		return $res;
 	}
 
