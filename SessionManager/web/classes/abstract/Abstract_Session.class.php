@@ -179,6 +179,7 @@ class Abstract_Session {
 		$buf->servers = unserialize($servers);
 		$buf->applications = unserialize($applications);
 		$buf->start_time = (string)$start_time;
+		$buf->timestamp = (int)$timestamp;
 
 		return $buf;
 	}
