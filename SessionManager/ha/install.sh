@@ -234,10 +234,9 @@ function set_init_script()
 function set_ha_register_to_master()
 {
 	info "register server to the SM"
-	local tmp=$(mktemp)
-	execute "wget --no-check-certificate -O $tmp --post-data='action=register&hostname=$HOSTNAME' https://$MIP/ovd/admin/ha/registration.php"
-	response=$(cat $tmp)
-	[ -z "$response" -o "$response" = "2" ] && die "request to master refused"
+	response=$(wget --no-check-certificate --post-data="action=register&hostname=$HOSTNAME" \
+		https://$MIP/ovd/admin/ha/registration.php -O -)
+	[ "$response" != "ok" ] && die "request to master refused"
 }
 
 ###############################################################################

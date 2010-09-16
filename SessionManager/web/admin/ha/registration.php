@@ -70,13 +70,12 @@ unset($_POST["hostname"]);
 if (isset($action)) {
 	switch ($action) {
 		case "register":
-			if (isset($hostname) && isset($client_ip)) {
-				if (secure_insert($SQL,$table,$hostname,$client_ip)) {
-					echo 1;
-					break;
-				}
+			if (isset($hostname) && isset($client_ip) &&
+				secure_insert($SQL,$table,$hostname,$client_ip)) {
+				echo "ok";
+			} else {
+				echo "error";
 			}
-			echo 2;
 			break;
 		case "enable":
 			if (isset($hostname) && isset($client_ip) && isset($passwd)) {
