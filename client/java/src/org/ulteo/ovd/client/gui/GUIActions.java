@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,6 +23,7 @@ package org.ulteo.ovd.client.gui;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.Window;
 import java.util.List;
@@ -57,6 +59,28 @@ public class GUIActions {
 			this.component.setVisible(this.visible);
 		}
 
+	}
+	
+	/* SetCursor */
+	public static Runnable setCursor(Component component_, Cursor cursor_) {
+		return Actions.new SetCursor(component_, cursor_);
+	}
+	
+	private class SetCursor implements Runnable {
+		private Component component = null;
+		private Cursor cursor = null;
+		
+		public SetCursor(Component component_, Cursor cursor_) {
+			this.component = component_;
+			this.cursor = cursor_;
+		}
+		
+		public void run() {
+			if (this.component == null)
+				return;
+			
+			this.component.setCursor(this.cursor);
+		}
 	}
 
 	/* SetEnabledComponents */
@@ -221,6 +245,26 @@ public class GUIActions {
 		}
 	}
 
+	/* validate */
+	public static Runnable validate(Container container_) {
+		return Actions.new Validate(container_);
+	}
+	
+	private class Validate implements Runnable {
+		private Container container = null;
+		
+		public Validate(Container container_) {
+			this.container = container_;
+		}
+		
+		public void run() {
+			if (this.container == null)
+				return;
+			
+			this.container.validate();
+		}
+	}
+		
 	/* RemoveComponents */
 	public static Runnable removeComponents(Container container_, List<Component> componentList_) {
 		return Actions.new RemoveComponents(container_, componentList_);
@@ -241,6 +285,28 @@ public class GUIActions {
 
 			for (Component each : this.componentList)
 				this.container.remove(each);
+		}
+	}
+	
+	/* RemoveAll */
+	public static Runnable removeAll(Container container_) {
+		return Actions.new RemoveAll(container_);
+	}
+	
+	private class RemoveAll implements Runnable {
+		private Container container = null;
+		
+		public RemoveAll(Container container_) {
+			this.container = container_;
+		}
+		
+		public void run() {
+			if (this.container == null)
+				return;
+			
+			this.container.removeAll();
+			this.container.validate();
+			this.container.repaint();
 		}
 	}
 

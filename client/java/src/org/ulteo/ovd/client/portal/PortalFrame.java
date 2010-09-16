@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -21,6 +22,7 @@
 package org.ulteo.ovd.client.portal;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -28,6 +30,8 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -36,6 +40,8 @@ import javax.swing.JOptionPane;
 
 import org.ulteo.ovd.client.I18n;
 import org.ulteo.ovd.client.authInterface.LogoutPopup;
+import org.ulteo.ovd.client.gui.GUIActions;
+import org.ulteo.ovd.client.gui.SwingTools;
 import org.ulteo.ovd.client.remoteApps.IntegratedTrayIcon;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.rdp.RdpActions;
@@ -48,6 +54,8 @@ public class PortalFrame extends JFrame implements WindowListener {
 	private JLabel runningApps = new JLabel(I18n._("Running applications"));
 	private MyApplicationPanel appsPanel = null;
 	private RunningApplicationPanel runningAppsPanel = null;
+	private NewsPanel newsPanel = null;
+	private boolean newPanelAdded = false;
 	private GridBagConstraints gbc = null;
 	private SouthEastPanel sep = null;	
 	private Font font = new Font("Dialog", 1, 12);
@@ -61,6 +69,7 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.addWindowListener(this);
 		this.user = new JLabel(displayName);
 		this.init();
+		this.newsPanel = new NewsPanel();
 	}
 	
 	
@@ -146,6 +155,49 @@ public class PortalFrame extends JFrame implements WindowListener {
 		this.sep.toggleIconsButton(true);
 	}
 
+	
+	public NewsPanel getNewsPanel() {
+		return this.newsPanel;
+	}
+	
+	public boolean containsNewsPanel() {
+		return this.newPanelAdded;
+	}
+	
+	public void addNewsPanel() {
+		GridBagConstraints gbc = new GridBagConstraints();
+		
+		gbc.anchor = GridBagConstraints.SOUTHWEST;
+		gbc.gridheight = 1;
+		gbc.gridy = 4;
+		gbc.gridx = 0;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.insets = new Insets(0, 0, 5, 20);
+		gbc.insets.bottom = 5;
+		gbc.insets.right = 5;
+		
+		List<Component> list1 = new ArrayList<Component>();
+		List<GridBagConstraints> list2 = new ArrayList<GridBagConstraints>();
+		
+		list1.add(this.newsPanel);
+		list2.add(gbc);
+		
+		SwingTools.invokeLater(GUIActions.addComponents(this, list1, list2));
+		
+		this.newPanelAdded = true;
+	}
+	
+	public void removeNewsPanel() {
+		List<Component> list1 = new ArrayList<Component>();
+		list1.add(this.newsPanel);
+		
+		SwingTools.invokeLater(GUIActions.removeComponents(this, list1));
+		SwingTools.invokeLater(GUIActions.validate(this));
+		
+		this.newPanelAdded = false;
+	}
+	
+	
 	@Override
 	public void windowActivated(WindowEvent arg0) {}
 

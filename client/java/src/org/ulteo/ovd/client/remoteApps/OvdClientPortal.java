@@ -3,6 +3,7 @@
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2010
  * Author Guillaume DUPAS <guillaume@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,6 +40,7 @@ import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
+import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
@@ -288,5 +290,19 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 	
 	public boolean isAutoPublish() {
 		return this.autoPublish;
+	}
+
+	public void updateNews(List<News> newsList) {
+		if (newsList.size() == 0) {
+			if (this.portal.containsNewsPanel()) {
+				this.portal.removeNewsPanel();
+			}
+		}
+		else {
+			if (! this.portal.containsNewsPanel())
+				this.portal.addNewsPanel();
+			
+			this.portal.getNewsPanel().updateNewsLinks(newsList);
+		}
 	}
 }

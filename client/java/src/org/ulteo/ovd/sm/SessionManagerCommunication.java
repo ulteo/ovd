@@ -75,6 +75,7 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 	private static final String WEBSERVICE_START_SESSION = "start.php";
 	private static final String WEBSERVICE_EXTERNAL_APPS = "remote_apps.php";
 	private static final String WEBSERVICE_SESSION_STATUS = "session_status.php";
+	private static final String WEBSERVICE_NEWS = "news.php";
 	private static final String WEBSERVICE_LOGOUT = "logout.php";
 
 	public static final String FIELD_LOGIN = "login";
@@ -321,6 +322,14 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
  		return this.parseSessionStatusResponse((Document) obj);
 	}
 
+	public List<News> askForNews() throws SessionManagerException {
+		Object obj = this.askWebservice(WEBSERVICE_NEWS, CONTENT_TYPE_FORM, REQUEST_METHOD_POST, null, false);
+		if (! (obj instanceof Document) || obj == null)
+			return null;
+		
+		return this.parseNewsResponse((Document) obj);
+	}
+
 	public ImageIcon askForIcon(String appId) throws SessionManagerException {
 		HashMap<String, String> params = new HashMap<String, String>();
 		params.put(FIELD_ICON_ID, appId);
@@ -494,6 +503,30 @@ public class SessionManagerCommunication implements HostnameVerifier, X509TrustM
 		}
 
 		return status;
+	}
+
+	private List<News> parseNewsResponse(Document in) throws SessionManagerException {
+		List<News> newsList = new ArrayList<News>();
+		
+		Element rootNode = in.getDocumentElement();
+		
+		if (! rootNode.getNodeName().equals("news")) {
+			for (Callback c : this.callbacks)
+				c.reportBadXml("");
+			
+			throw new SessionManagerException("bad xml");
+		}
+		
+		NodeList newNodes = rootNode.getElementsByTagName("new");
+		for (int j = 0; j < newNodes.getLength(); j++) {
+			Element newNode = (Element) newNodes.item(j);
+			
+			News n = new News(Integer.parseInt(newNode.getAttribute("id")), newNode.getAttribute("title"), newNode.getFirstChild().getTextContent(), Integer.parseInt(newNode.getAttribute("timestamp")));
+			
+			newsList.add(n);
+		}
+		
+		return newsList;
 	}
 
 	private boolean parseStartSessionResponse(Document document) throws SessionManagerException {

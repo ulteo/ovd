@@ -23,6 +23,7 @@ package org.ulteo.ovd.client;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import net.propero.rdp.RdpConnection;
@@ -30,6 +31,7 @@ import net.propero.rdp.RdpListener;
 import org.apache.log4j.Logger;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.sm.Callback;
+import org.ulteo.ovd.sm.News;
 import org.ulteo.ovd.sm.SessionManagerCommunication;
 import org.ulteo.ovd.sm.SessionManagerException;
 import org.ulteo.rdp.RdpActions;
@@ -183,6 +185,8 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 					}
 				}
 				
+				List<News> newsList = this.smComm.askForNews();
+				this.updateNews(newsList);
 			}
 			catch (SessionManagerException ex) {
 				org.ulteo.Logger.error("Session status monitoring: "+ex.getMessage());
@@ -395,4 +399,6 @@ public abstract class OvdClient extends Thread implements Runnable, RdpListener,
 	public void setKeymap(String keymap) {
 		this.keymap = keymap;
 	}
+	
+	public void updateNews(List<News> newsList) {}
 }
