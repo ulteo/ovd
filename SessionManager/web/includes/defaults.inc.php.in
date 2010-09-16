@@ -32,5 +32,6 @@ define('DEFAULT_LOGO_URL', '/ovd/admin/media/image/header.png');
 define('DEFAULT_REQUEST_TIMEOUT', 10);
 
 define('DEFAULT_CACHE_DURATION', 60);
+define('DEFAULT_UNUSED_SESSION_DURATION', 600);
 
 define('LOCALE_DIR', '@LOCALE_DIR@');
