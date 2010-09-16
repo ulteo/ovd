@@ -135,6 +135,12 @@ class Session(AbstractSession):
 		xdg_app_d = os.path.join(self.user_session_dir, "xdg", "applications")
 		if not os.path.isdir(xdg_app_d):
 			os.makedirs(xdg_app_d)
+			ret = self.user.getUIDs()
+			if ret is None:
+				Logger.warn("Unable to get uid/gid for user %s"%(self.user.name))
+			else:
+				(uid, gid) = ret
+				os.chown(xdg_app_d, uid, gid)
 		
 		dstFile = os.path.join(xdg_app_d, os.path.basename(shortcut))
 		if os.path.exists(dstFile):

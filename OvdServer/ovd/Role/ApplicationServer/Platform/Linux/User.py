@@ -71,6 +71,15 @@ class User(AbstractUser):
 		return True
 	
 	
+	def getUIDs(self):
+		try:
+			user = pwd.getpwnam(self.name)
+		except KeyError:
+			return None
+		
+		return (user[2], user[3])
+	
+	
 	def destroy(self):
 		cmd = "userdel --force  --remove %s"%(self.name)
 		
