@@ -64,7 +64,8 @@ var Server = Class.create({
 			this.ready = false;
 			this.connected = false;
 
-			daemon.check_status(false);
+			daemon.sessionmanager_request_time = 2000;
+			daemon.loop();
 		}
 
 		var applications = daemon.liaison_server_applications.get(this.id);

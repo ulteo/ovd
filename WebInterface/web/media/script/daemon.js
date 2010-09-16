@@ -50,6 +50,7 @@ var Daemon = Class.create({
 
 	session_status: '',
 	session_status_old: '',
+	sessionmanager_request_time: 2000,
 
 	ready: false,
 	ready_lock: false,
@@ -210,15 +211,14 @@ var Daemon = Class.create({
 	loop: function() {
 		this.push_log('debug', '[daemon] loop()');
 
+		this.check_status(true);
+		this.check_status_post();
+
 		if (! this.is_stopped()) {
-			this.check_status(true);
-			this.check_status_post();
+			if (this.session_status == 'logged' && this.session_status_old != 'logged')
+				this.sessionmanager_request_time = 60000;
 
-			var timeout = 2000;
-			if (this.session_status == 'logged')
-				timeout = 60000;
-
-			setTimeout(this.loop.bind(this), timeout);
+			setTimeout(this.loop.bind(this), this.sessionmanager_request_time);
 		}
 	},
 
