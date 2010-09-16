@@ -358,7 +358,7 @@ class Abstract_Server {
 
 		$row = $SQL->FetchResult();
 
-		if ((int)$row['timestamp'] < time()-60)
+		if ((int)$row['timestamp'] < time()-DEFAULT_CACHE_DURATION)
 			return false;
 
 		return true;
