@@ -126,7 +126,7 @@ static node* addHWDNToHistory(HWND hwnd){
 	return newNode;
 }
 
-static void removeHWNDFromHistory(HWND hwnd){
+static BOOL removeHWNDFromHistory(HWND hwnd){
 	node* currentNode = hwdHistory;
 	node* previousNode = NULL;
 
@@ -135,7 +135,7 @@ static void removeHWNDFromHistory(HWND hwnd){
 		currentNode = currentNode->next;
 	}
 	if (! currentNode)
-		return;
+		return FALSE;
 	if (previousNode == NULL)
 		hwdHistory = currentNode->next;
 	else
@@ -144,6 +144,8 @@ static void removeHWNDFromHistory(HWND hwnd){
 	if (currentNode->title != NULL)
 		free(currentNode->title);
 	free(currentNode);
+
+	return TRUE;
 }
 
 static int g_screen_width = 0;
@@ -547,6 +549,14 @@ static void create_window(HWND hwnd){
 				   state, 0);
 }
 
+static void destroy_window(HWND hwnd)
+{
+	if (! removeHWNDFromHistory(hwnd))
+		return;
+
+	vchannel_write("DESTROY", "0x%08lx,0x%08x", hwnd, 0);
+}
+
 static LRESULT CALLBACK
 wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 {
@@ -589,7 +599,7 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 				}
 
 				if (wp->flags & SWP_HIDEWINDOW)
-					vchannel_write("DESTROY", "0x%08lx,0x%08x", hwnd, 0);
+					destroy_window(hwnd);
 
 				if (!(style & WS_VISIBLE) || (style & WS_MINIMIZE))
 					break;
@@ -642,8 +652,7 @@ wndproc_hook_proc(int code, WPARAM cur_thread, LPARAM details)
 		case WM_DESTROY:
 			if (!(style & WS_VISIBLE))
 				break;
-			removeHWNDFromHistory(hwnd);
-			vchannel_write("DESTROY", "0x%08lx,0x%08x", hwnd, 0);
+			destroy_window(hwnd);
 			break;
 
 		default:
