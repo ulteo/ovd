@@ -211,8 +211,7 @@ var Daemon = Class.create({
 	loop: function() {
 		this.push_log('debug', '[daemon] loop()');
 
-		this.check_status(true);
-		this.check_status_post();
+		this.check_status();
 
 		if (! this.is_stopped()) {
 			if (this.session_status == 'logged' && this.session_status_old != 'logged')
@@ -266,23 +265,19 @@ var Daemon = Class.create({
 		}
 	},
 
-	check_status: function(async_) {
+	check_status: function() {
 		this.push_log('debug', '[daemon] check_status()');
 
 		new Ajax.Request(
 			'session_status.php',
 			{
 				method: 'get',
-				asynchronous: async_,
 				parameters: {
 					differentiator: Math.floor(Math.random()*50000)
 				},
 				onSuccess: this.parse_check_status.bind(this)
 			}
 		);
-
-		if (! async_)
-			this.check_status_post();
 	},
 
 	parse_check_status: function(transport) {
@@ -307,6 +302,8 @@ var Daemon = Class.create({
 				this.push_log('info', '[daemon] parse_check_status(transport@check_status()) - Session status is now "'+this.session_status+'"');
 			else
 				this.push_log('debug', '[daemon] parse_check_status(transport@check_status()) - Session status is "'+this.session_status+'"');
+
+			this.check_status_post();
 		} catch(e) {
 			this.push_log('error', '[daemon] parse_check_status(transport@check_status()) - Invalid XML (Missing argument for "session" node)');
 			return;
