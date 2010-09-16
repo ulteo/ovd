@@ -36,12 +36,10 @@ HA_LOG=/var/log/ha_install.log
 
 SM_LOG_DIR=/var/log/ulteo/sessionmanager
 SM_SPOOL_DIR=/var/spool/ulteo/sessionmanager
-SM_DATA_DIR=/usr/share/ulteo/sessionmanager
 
 MYSQL_DB=/var/lib/mysql
 
 AUTH_KEY=`date '+%m%d%y%H%M%S'`
-GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}'`
 
 # load util functions
 . ./utils.sh
@@ -51,47 +49,46 @@ mkdir -p $HA_CONF_DIR $HA_VARLIB_DIR
 
 set_netlink()
 {
-    NICS=(`ifconfig -s | tr -s ' ' | cut -d' ' -f1 | grep -E "eth[0-9]"`)
-    len=${#NICS[*]}
+	NICS=(`ifconfig -s | tr -s ' ' | cut -d' ' -f1 | grep -E "eth[0-9]"`)
+	len=${#NICS[*]}
 
-    if [ $len != 0 ]; then
-        echo -e "NIC detected :";
-    else
-        die "no nic detected, please configure your network";
-    fi
+	if [ $len != 0 ]; then
+		echo -e "NIC detected :";
+	else
+		die "no nic detected, please configure your network";
+	fi
 
-    for i in $(seq 1 $len); do
-        local nic="${NICS[$i-1]}"
-        tmp=`ifconfig $nic | grep "inet addr" | tr -s ' '| cut -d' ' -f3-`
-        [ -n "$tmp" ] && echo -e "\t\a[$i] $nic ("$tmp")"
-    done
+	for i in $(seq 1 $len); do
+		nic=$(ifconfig ${NICS[$i-1]} | grep "inet addr" | tr -s ' '| cut -d' ' -f3-)
+		[ -n "$nic" ] && echo -e "\t\a[$i] ${NICS[$i-1]} (${nic})"
+	done
 
-    unset NIC_INFOS
-    while [ -z "$NIC_INFOS" ]; do
-        echo -n "Choose nic number: " && read var_nic
-        [ -n "$var_nic" ] \
-        	&& [[ $var_nic == [0-9] ]] \
-            && [ $var_nic -ge 0 -a $var_nic -le $len ] \
-            && NIC_INFOS="${NICS[$var_nic-1]}"
-    done
+	unset NIC_INFOS
+	while [ -z "$NIC_INFOS" ]; do
+		echo -n "Choose nic number: " && read var_nic
+		[ -n "$var_nic" ] \
+			&& [[ $var_nic == [0-9] ]] \
+			&& [ $var_nic -ge 0 -a $var_nic -le $len ] \
+			&& NIC_INFOS="${NICS[$var_nic-1]}"
+	done
 
-    NIC_NAME=${NICS[$NIC_INFOS]}
-    NIC_ADDR=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
-    NIC_MASK=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $8}'`
+	NIC_NAME=${NICS[$NIC_INFOS]}
+	NIC_ADDR=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}'`
+	NIC_MASK=`ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $8}'`
 
 	sed "s/%NIC_NAME%/$NIC_NAME/" conf/resources.conf > $HA_CONF_DIR/resources.conf
-    info "NIC $NIC_NAME selected"
+	info "NIC $NIC_NAME selected"
 }
 
 
 set_virtual_ip()
 {
-    while [ -z "$VIP" ]; do
-        echo -n "Give the virtual IP: " && read vip
-        [ -n "$vip" ] && valid_vip $NIC_MASK $NIC_ADDR $vip && VIP=$vip
-    done
-	sed -i "s/^.*VIP.*$/VIP=${VIP}/" $HA_CONF_DIR/resources.conf;
-    info "Virtual IP: $VIP"
+	while [ -z "$VIP" ]; do
+		echo -n "Give the virtual IP: " && read vip
+		[ -n "$vip" ] && valid_vip $NIC_MASK $NIC_ADDR $vip && VIP=$vip
+	done
+	sed -i "s/^.*VIP.*$/VIP=${VIP}/" $HA_CONF_DIR/resources.conf
+	info "Virtual IP: $VIP"
 }
 
 
@@ -111,21 +108,20 @@ function drbd_install()
 
 	info "stop all services"
 	service mysql stop >> $HA_LOG 2>&1 || true
-	service apache2 stop >> $HA_LOG 2>&1 || true
-	service heartbeat stop >> $HA_LOG 2>&1 || true
+	service apache2 stop >> $HA_LOG
+	service heartbeat stop >> $HA_LOG
 
-	# Create a virtual block device of 250M
 	info "Create a virtual block device of 250 MBytes"
 	dd if=/dev/zero of=$HA_VARLIB_DIR/vbd0.bin count=500k 2>> $HA_LOG
 
-	DRBD_LOOP=$(losetup -f)
-	losetup $DRBD_LOOP $HA_VARLIB_DIR/vbd0.bin
-	info "Connect $HA_VARLIB_DIR/vbd0.bin to $DRBD_LOOP"
+	local drbd_loop=$(losetup -f)
+	losetup $drbd_loop $HA_VARLIB_DIR/vbd0.bin
+	info "Connect $HA_VARLIB_DIR/vbd0.bin to $drbd_loop"
 
 	# Create conf /etc/drbd.d/sm0.res
 	info "Create conf $DRBD_CONF"
 	sed "s/%RESOURCE%/$DRBD_RESOURCE/" conf/$DRBD_RESOURCE.res | \
-		sed "s,%DEVICE%,$DRBD_DEVICE," | sed "s,%LOOP%,$DRBD_LOOP," | \
+		sed "s,%DEVICE%,$DRBD_DEVICE," | sed "s,%LOOP%,$drbd_loop," | \
 		sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
 		sed "s/%NIC_ADDR%/$NIC_ADDR/" > $DRBD_CONF
 
@@ -153,17 +149,14 @@ function drbd_install()
 	elif [ $1 == "S" ]; then
 		execute "drbdadm adjust $DRBD_RESOURCE" || true
 
-		#Synchronize data
+		# Synchronize data
 		var_role=`drbdadm role $DRBD_RESOURCE | grep -E 'Secondary/Primary|Secondary/Secondary' || true`
 		if [ -n "$var_role" ]; then
 			info "Master connected, synchronizing $DRBD_RESOURCE data..."
 			execute "drbdadm invalidate-remote $DRBD_RESOURCE"
-			local t=0
-			while [ $t -lt 120 ]; do
-				var_isfinish=`drbdadm dstate $DRBD_RESOURCE`
-				[ "$var_isfinish" -eq "UpToDate/UpToDate" ] && break
-				let t++
-				sleep 2
+			for i in $(seq 0 60); do
+				[ $(drbdadm dstate $DRBD_RESOURCE) -eq "UpToDate/UpToDate" ] && break
+				sleep 1
 			done
 		fi
 	fi
@@ -192,7 +185,7 @@ function heartbeat_install()
 	# Copy resource for OCF manager
 	cp conf/mysql-ocf /usr/lib/ocf/resource.d/heartbeat
 
-	# Delete old cibs [HEARTBEAT]
+	# Delete old cibs
 	[ -e $HEARTBEAT_CRM_DIR/cib.xml ] && rm -f $HEARTBEAT_CRM_DIR/*
 
 	service heartbeat start >> $HA_LOG 2>&1
@@ -201,16 +194,13 @@ function heartbeat_install()
 
 function heartbeat_cib_install()
 {
-	echo -ne "\033[36;1m[INFO] \033[0m Waiting connection to CRM. It may take some time."
-	local t=0
-	while [ -z "$var_cib_node" ]; do
-		var_cib_node=`crm_mon -1 | grep -E "[1-9] Nodes configured" || true`
-		[ $t -gt 360 ] && die "Connection timeout to the cluster"
-		echo -n "."
-		let t+=5
-		sleep 5
+	echo -ne "\033[36;1m[INFO] \033[0m Waiting connection to CRM. It may take some time"
+	for i in $(seq 1 60); do
+		[ $i -eq 60 ] && die "Connection timeout to the cluster"
+		crm_mon -1 | grep -E "[1-9] Nodes configured" && break || true
+		echo -n "." && sleep 5
 	done
-	echo -e "\n\033[34;1m[OK] \033[0m Connection to CRM done."
+	info "Connection to CRM done."
 
 	execute "crm node standby"
 
@@ -219,6 +209,8 @@ function heartbeat_cib_install()
 		sed "s,%MYSQL_DB%,$MYSQL_DB," | sed "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," | \
 		sed "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" | sed "s/%VIP%/$VIP/" | \
 		crm configure 2>> $HA_LOG
+
+	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update off"
 }
 
 
@@ -242,7 +234,7 @@ function set_init_script()
 function set_ha_register_to_master()
 {
 	info "register server to the SM"
-	tmp=$(mktemp)
+	local tmp=$(mktemp)
 	execute "wget --no-check-certificate -O $tmp --post-data='action=register&hostname=$HOSTNAME' https://$MIP/ovd/admin/ha/registration.php"
 	response=$(cat $tmp)
 	[ -z "$response" -o "$response" = "2" ] && die "request to master refused"
@@ -257,11 +249,14 @@ dpkg -l ulteo-ovd-session-manager > $HA_LOG
 [ -x $(which mysql) ] || die "mysql is required"
 [ -x $(which drbdadm) ] || die "drbd is required"
 [ -e /etc/init.d/heartbeat ] || die "hearbeat is required"
-[ -z "$HOSTNAME" ] && die "No Hostname found"
+
+# TODO: demander les infos manquantes !
+GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}'`
 [ -z "$GATEWAY" ] && die "No gateway found"
+[ -z "$HOSTNAME" ] && die "No Hostname found"
 
 # choose MASTER/SLAVE
-while true; do
+while :; do
 	echo -n "Install this session manager as master or slave [m/s]: " && read CHOICE
 	CHOICE=$(echo $CHOICE | tr 'A-Z' 'a-z')
 
@@ -276,7 +271,6 @@ while true; do
 			heartbeat_cib_install
 			hashell_install
 			set_init_script
-			crm_attribute --type nodes --node $HOSTNAME --name standby --update off
 
 			echo -e "\n\033[37;1mYou You must enable the HA module in configuration before !\033[0m"
 			echo -e "\033[37;1mThen you can get web interface at: https://$VIP/ovd/admin/ha/status.php\033[0m"
@@ -289,8 +283,8 @@ while true; do
 			set_master_ip
 			drbd_install "S"
 			heartbeat_install
-			hashell_install
 			set_ha_register_to_master
+			hashell_install
 			set_init_script
 		;;
 
