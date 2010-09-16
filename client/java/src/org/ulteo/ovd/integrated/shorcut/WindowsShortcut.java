@@ -74,17 +74,11 @@ public class WindowsShortcut extends Shortcut {
 		File icon = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".ico");
 		if (icon.exists())
 			icon.delete();
+		icon = null;
 
-		File shortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+app.getName()+".lnk");
+		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getName()+".lnk");
 		if (shortcut.exists())
 			shortcut.delete();
-
-		shortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+app.getName()+".lnk");
-		if (shortcut.exists())
-			shortcut.delete();
-		
-		shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getName()+".lnk");
-		if (shortcut.exists())
-			shortcut.delete();
+		shortcut = null;
 	}
 }

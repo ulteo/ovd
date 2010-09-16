@@ -23,8 +23,7 @@ package org.ulteo.ovd.integrated.shorcut;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
 import org.ulteo.ovd.integrated.Constants;
 
@@ -32,10 +31,18 @@ public class LinuxShortcut extends Shortcut {
 
 	@Override
 	public String create(Application app) {
-		File xfceShorcuts = new File(Constants.PATH_XFCE_MENU_ENTRIES);
-		xfceShorcuts.mkdirs();
+		if (app == null) {
+			Logger.error("Invalid application: null");
+			return null;
+		}
 
-		File shortcut = new File(Constants.PATH_XFCE_MENU_ENTRIES+Constants.FILE_SEPARATOR+app.getId()+".desktop");
+		File xfceShorcuts = new File(Constants.PATH_SHORTCUTS);
+		if (! xfceShorcuts.exists()) {
+			xfceShorcuts.mkdirs();
+		}
+		xfceShorcuts = null;
+
+		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+".desktop");
 		try {
 			boolean first = true;
 			PrintWriter pw = new PrintWriter(shortcut);
@@ -57,7 +64,8 @@ public class LinuxShortcut extends Shortcut {
 			pw.println();
 			pw.close();
 		} catch (FileNotFoundException ex) {
-			Logger.getLogger(LinuxShortcut.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.error("This file does not exist: "+ex.getMessage());
+			return null;
 		}
 
 		return shortcut.getName();
@@ -65,11 +73,11 @@ public class LinuxShortcut extends Shortcut {
 
 	@Override
 	public void remove(Application app) {
-		File shortcut = new File(Constants.PATH_XFCE_MENU_ENTRIES+Constants.FILE_SEPARATOR+app.getId()+".desktop");
+		File shortcut = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+app.getId()+".desktop");
 		if (shortcut.exists())
 			shortcut.delete();
 
-		File icon = new File(Constants.PATH_XFCE_MENU_ENTRIES+Constants.FILE_SEPARATOR+app.getIconName()+".png");
+		File icon = new File(Constants.PATH_ICONS+Constants.FILE_SEPARATOR+app.getIconName()+".png");
 		if (icon.exists())
 			icon.delete();
 		

@@ -22,16 +22,10 @@
 package org.ulteo.ovd.client.remoteApps;
 
 import java.awt.SystemTray;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 import net.propero.rdp.RdpConnection;
 import org.ulteo.Logger;
 import org.ulteo.ovd.Application;
-import org.ulteo.ovd.integrated.Constants;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.integrated.Spool;
 import org.ulteo.ovd.integrated.SystemAbstract;
@@ -113,40 +107,7 @@ public class OvdClientIntegrated extends OvdClientRemoteApps {
 					Logger.error("The "+app.getName()+" shortcut could not be created");
 					continue;
 				}
-				this.copyShortcut(shortcutName);
 			}
-		}
-	}
-
-	private void copyShortcut(String shortcut) {
-		if (shortcut == null)
-			return;
-
-		File f = new File(Constants.PATH_SHORTCUTS+Constants.FILE_SEPARATOR+shortcut);
-		if (! f.exists()) {
-			Logger.error("Cannot copy the '"+shortcut+"' shortcut: The file does not exist ("+f.getName()+")");
-			return;
-		}
-
-		try {
-			BufferedInputStream shortcutReader = new BufferedInputStream(new FileInputStream(f), 4096);
-			File desktopShortcut = new File(Constants.PATH_DESKTOP+Constants.FILE_SEPARATOR+shortcut);
-			File startMenuShortcut = new File(Constants.PATH_STARTMENU+Constants.FILE_SEPARATOR+shortcut);
-
-			BufferedOutputStream desktopStream = new BufferedOutputStream(new FileOutputStream(desktopShortcut), 4096);
-			BufferedOutputStream startMenuStream = new BufferedOutputStream(new FileOutputStream(startMenuShortcut), 4096);
-
-			int currentChar;
-			while ((currentChar = shortcutReader.read()) != -1) {
-				desktopStream.write(currentChar);
-				startMenuStream.write(currentChar);
-			}
-
-			desktopStream.close();
-			startMenuStream.close();
-			shortcutReader.close();
-		} catch(Exception e) {
-			Logger.error("An error occured during the shortcut '"+shortcut+"' copy: "+e.getMessage());
 		}
 	}
 
