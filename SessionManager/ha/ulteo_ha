@@ -1,5 +1,13 @@
 #!/bin/bash
-
+### BEGIN INIT INFO
+# Provides:          ulteo_ha
+# Required-Start:    $remote_fs $syslog $network drbd mysql apache2 heartbeat
+# Required-Stop:     $remote_fs $syslog $network drbd mysql apache2 heartbeat
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start/Stop Ulteo Session Manager high availability service.
+# Description:       This script is used to manage Session Manager cluster nodes (registration/unregistration). It generates configuration files.
+### END INIT INFO
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud LEGRAND <arnaud@ulteo.com>
