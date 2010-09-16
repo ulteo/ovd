@@ -1,6 +1,7 @@
 hadir = $(datadir)/ulteo/sessionmanager/admin/ha
 ha_DATA = configuration.php \
           logs.php \
+          menu.inc.php \
           status.php \
           registration.php
 
