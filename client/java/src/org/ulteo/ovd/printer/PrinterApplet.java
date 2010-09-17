@@ -33,10 +33,11 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 
 
-public class PrinterApplet extends Applet {
+public class PrinterApplet extends Applet implements Runnable {
 	private static final long serialVersionUID = 1L;
 	private BlockingQueue<OVDJob> spool;
-	private boolean running = true;
+	private boolean running = false;
+	private Thread thread = null;
 
 	public void init() {
 		System.out.println("Initilise PDF Printer");
@@ -48,7 +49,17 @@ public class PrinterApplet extends Applet {
 	
 	public void start() {
 		System.out.println("Start PDF Printer");
-		while (running) {
+		
+		if (! this.isRunning()) {
+			this.setRunning(true);
+			this.thread = new Thread(this);
+			this.thread.start();
+		}
+	}
+	
+	@Override
+	public void run() {
+		while (this.isRunning()) {
 			OVDJob job = null;
 			try {
 				job = (OVDJob)spool.take();
@@ -86,13 +97,23 @@ public class PrinterApplet extends Applet {
 	
 	public void stop() {
 		System.out.println("Stopping the applet");
-		this.running = false;
+		
+		this.setRunning(false);
+		if (this.thread != null && this.thread.isAlive()) {
+			this.thread.interrupt();
+			this.thread = null;
+		}
 	}
 		
 	public void spoolJob(String printerName, String pdfFilename) {
 		this.spool.add(new OVDJob(pdfFilename, printerName));
 	}
 	
+	private synchronized boolean isRunning() {
+		return this.running;
+	}
 	
-	
+	public synchronized void setRunning(boolean running_) {
+		this.running = running_;
+	}
 }
