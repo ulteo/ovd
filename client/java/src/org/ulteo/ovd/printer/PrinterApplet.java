@@ -2,6 +2,7 @@
  * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
  * Author David Lechevalier <david@ulteo.com> 2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +28,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.print.DocFlavor;
-import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
@@ -38,10 +38,10 @@ public class PrinterApplet extends Applet implements Runnable {
 	private BlockingQueue<OVDJob> spool;
 	private boolean running = false;
 	private Thread thread = null;
-
+	
 	public void init() {
 		System.out.println("Initilise PDF Printer");
-		spool = new LinkedBlockingQueue<OVDJob>() ;
+		this.spool = new LinkedBlockingQueue<OVDJob>() ;
 		DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
 		PrintRequestAttributeSet pras = new HashPrintRequestAttributeSet();
 		PrintServiceLookup.lookupPrintServices(flavor, pras);
@@ -54,6 +54,16 @@ public class PrinterApplet extends Applet implements Runnable {
 			this.setRunning(true);
 			this.thread = new Thread(this);
 			this.thread.start();
+		}
+	}
+	
+	public void stop() {
+		System.out.println("Stopping the applet");
+		
+		this.setRunning(false);
+		if (this.thread != null && this.thread.isAlive()) {
+			this.thread.interrupt();
+			this.thread = null;
 		}
 	}
 	
@@ -75,13 +85,12 @@ public class PrinterApplet extends Applet implements Runnable {
 		}
 	}
 	
-
 	//it is the only method, we can use for inter-applet communication
 	public Component add(String spoolPath, Component component) {
 		if(component != null) {
 			return super.add(spoolPath, component);
 		}
-			
+		
 		File spoolFile = new File(spoolPath);
 		if (! spoolFile.exists()) {
 			System.out.println("The spool file ["+spoolPath+"] can not be found");
@@ -95,16 +104,6 @@ public class PrinterApplet extends Applet implements Runnable {
 		return null;
 	}
 	
-	public void stop() {
-		System.out.println("Stopping the applet");
-		
-		this.setRunning(false);
-		if (this.thread != null && this.thread.isAlive()) {
-			this.thread.interrupt();
-			this.thread = null;
-		}
-	}
-		
 	public void spoolJob(String printerName, String pdfFilename) {
 		this.spool.add(new OVDJob(pdfFilename, printerName));
 	}
