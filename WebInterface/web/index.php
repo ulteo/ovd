@@ -59,8 +59,8 @@ if (isset($_COOKIE['webinterface']['desktop_fullscreen']))
 	$wi_desktop_fullscreen = (int)$_COOKIE['webinterface']['desktop_fullscreen'];
 
 $wi_use_popup = 0;
-if (isset($_COOKIE['webinterface']['use_popup']))
-	$wi_use_popup = (int)$_COOKIE['webinterface']['use_popup'];
+// if (isset($_COOKIE['webinterface']['use_popup']))
+// 	$wi_use_popup = (int)$_COOKIE['webinterface']['use_popup'];
 
 $wi_debug = 1;
 if (isset($_COOKIE['webinterface']['debug']))
@@ -578,7 +578,7 @@ checkSessionMode();
 														</select>
 													</td>
 												</tr>
-												<tr>
+												<tr style="display: none;">
 													<td style="text-align: right; vertical-align: middle;">
 														<img src="media/image/icons/use_popup.png" alt="" title="" />
 													</td>
