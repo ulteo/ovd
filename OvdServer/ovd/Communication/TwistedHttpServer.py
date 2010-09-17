@@ -58,7 +58,7 @@ class TwistedHttpServer(AbstractCommunication):
 			reactor.listenTCP(self.tcp_port, self.site)
 		except BindError, exc:
 			Logger.error("Unable to bind port %d, system is going to stop"%(self.tcp_port))
-			Logger.debug("Unable to bind port %d: "+str(exc))
+			Logger.debug("Unable to bind port %d: "%(self.tcp_port)+str(exc))
 			self.status = AbstractCommunication.STATUS_ERROR
 			return
 		
