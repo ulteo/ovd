@@ -21,6 +21,8 @@
 var Desktop = Class.create(Daemon, {
 	mode: 'desktop',
 
+	fullscreen: false,
+
 	initialize: function(applet_version_, applet_main_class_, in_popup_, debug_) {
 		Daemon.prototype.initialize.apply(this, [applet_version_, applet_main_class_, in_popup_, debug_]);
 
@@ -52,6 +54,8 @@ var Desktop = Class.create(Daemon, {
 			applet_params.set('keymap', this.keymap);
 			applet_params.set('multimedia', this.multimedia);
 			applet_params.set('redirect_client_printers', this.redirect_client_printers);
+			if (this.fullscreen)
+				applet_params.set('fullscreen', 1);
 
 			var applet = buildAppletNode('ulteoapplet', this.applet_main_class, 'log4j-1.2.jar,'+this.applet_version, applet_params);
 			applet.setAttribute('width', applet_width);

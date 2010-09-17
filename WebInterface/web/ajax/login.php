@@ -155,6 +155,8 @@ $_SESSION['session_language'] = $_POST['language'];
 $_SESSION['keyboard_layout'] = $_POST['keymap'];
 $_SESSION['multimedia'] = $session_node->getAttribute('multimedia');
 $_SESSION['redirect_client_printers'] = $session_node->getAttribute('redirect_client_printers');
+if ($_SESSION['session_mode'] == 'desktop')
+	$_SESSION['desktop_fullscreen'] = $_POST['desktop_fullscreen'];
 $_SESSION['timeout'] = $session_node->getAttribute('timeout');
 
 $user_node = $session_node->getElementsByTagName('user');
@@ -237,6 +239,7 @@ setcookie('webinterface[use_local_credentials]', 0, (time()+(60*60*24*7)));
 setcookie('webinterface[session_mode]', $_POST['mode'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_language]', $_POST['language'], (time()+(60*60*24*7)));
 setcookie('webinterface[session_keymap]', $_POST['keymap'], (time()+(60*60*24*7)));
+setcookie('webinterface[desktop_fullscreen]', $_POST['desktop_fullscreen'], (time()+(60*60*24*7)));
 setcookie('webinterface[use_popup]', $_POST['use_popup'], (time()+(60*60*24*7)));
 setcookie('webinterface[debug]', $_POST['debug'], (time()+(60*60*24*7)));
 

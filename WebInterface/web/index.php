@@ -54,6 +54,10 @@ if (isset($_COOKIE['webinterface']['session_keymap']) && $_COOKIE['webinterface'
 	$user_keymap = $wi_session_keymap;
 }
 
+$wi_desktop_fullscreen = 0;
+if (isset($_COOKIE['webinterface']['desktop_fullscreen']))
+	$wi_desktop_fullscreen = (int)$_COOKIE['webinterface']['desktop_fullscreen'];
+
 $wi_use_popup = 0;
 if (isset($_COOKIE['webinterface']['use_popup']))
 	$wi_use_popup = (int)$_COOKIE['webinterface']['use_popup'];
@@ -410,6 +414,7 @@ else
 ?>
 
 checkLogin();
+checkSessionMode();
 										}, 1500);
 									});</script>
 									<form id="startsession" action="launch.php" method="post" onsubmit="return startSession();">
@@ -523,10 +528,22 @@ checkLogin();
 														<strong><?php echo _('Mode'); ?></strong>
 													</td>
 													<td style="text-align: right; vertical-align: middle;">
-														<select id="session_mode">
+														<select id="session_mode" onchange="checkSessionMode();" onclick="checkSessionMode();">
 															<option value="desktop"<?php if ($wi_session_mode == 'desktop') echo ' selected="selected"'; ?>><?php echo _('Desktop'); ?></option>
 															<option value="applications"<?php if ($wi_session_mode == 'applications') echo ' selected="selected"'; ?>><?php echo _('Portal'); ?></option>
 														</select>
+													</td>
+												</tr>
+												<tr id="advanced_settings_desktop">
+													<td style="text-align: right; vertical-align: middle;">
+														<img src="media/image/icons/settings_desktop_fullscreen.png" alt="" title="" />
+													</td>
+													<td style="text-align: left; vertical-align: middle;">
+														<strong><?php echo _('Fullscreen'); ?></strong>
+													</td>
+													<td style="text-align: right; vertical-align: middle;">
+														<input class="input_radio" type="radio" id="desktop_fullscreen_true" name="desktop_fullscreen" value="1"<?php if ($wi_desktop_fullscreen == 1) echo ' checked="checked"'; ?> /> <?php echo _('Yes'); ?>
+														<input class="input_radio" type="radio" id="desktop_fullscreen_false" name="desktop_fullscreen" value="0"<?php if ($wi_desktop_fullscreen == 0) echo ' checked="checked"'; ?> /> <?php echo _('No'); ?>
 													</td>
 												</tr>
 												<tr>

@@ -80,6 +80,10 @@ require_once(dirname(__FILE__).'/includes/core.inc.php');
 				daemon.keymap = '<?php echo $_SESSION['keyboard_layout']; ?>';
 				daemon.multimedia = <?php echo (($_SESSION['multimedia'] == 1)?'true':'false'); ?>;
 				daemon.redirect_client_printers = <?php echo (($_SESSION['redirect_client_printers'] == 1)?'true':'false'); ?>;
+				<?php
+					if ($_SESSION['session_mode'] == 'desktop')
+						echo 'daemon.fullscreen = '.(($_SESSION['desktop_fullscreen'] == 1)?'true':'false').';';
+				?>
 
 				daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
 				daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');

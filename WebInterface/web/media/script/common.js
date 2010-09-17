@@ -43,6 +43,8 @@ var startsession = false;
 
 var session_mode = false;
 
+var desktop_fullscreen = false;
+
 function startSession() {
 	disableLogin();
 
@@ -61,6 +63,10 @@ function startSession() {
 	session_mode = $('session_mode').value;
 	session_mode = session_mode.substr(0, 1).toUpperCase()+session_mode.substr(1, session_mode.length-1);
 
+	desktop_fullscreen = false;
+	if ($('desktop_fullscreen_true') && $('desktop_fullscreen_true').checked)
+		desktop_fullscreen = true;
+
 	if (! $('use_local_credentials_true') || ! $('use_local_credentials_true').checked) {
 		new Ajax.Request(
 			'ajax/login.php',
@@ -74,6 +80,7 @@ function startSession() {
 					language: $('session_language').value,
 					keymap: $('session_keymap').value,
 					timezone: $('timezone').value,
+					desktop_fullscreen: desktop_fullscreen,
 					use_popup: ((use_popup)?1:0),
 					debug: ((debug)?1:0)
 				},
@@ -210,6 +217,8 @@ function onStartSessionSuccess(xml_) {
 			daemon.duration = parseInt(session_node.getAttribute('duration'));
 			daemon.multimedia = ((session_node.getAttribute('multimedia') == 1)?true:false);
 			daemon.redirect_client_printers = ((session_node.getAttribute('redirect_client_printers') == 1)?true:false);
+			if (session_mode == 'Desktop' && desktop_fullscreen)
+				daemon.fullscreen = true;
 
 			daemon.i18n['session_close_unexpected'] = i18n.get('session_close_unexpected');
 			daemon.i18n['session_end_ok'] = i18n.get('session_end_ok');
@@ -659,6 +668,20 @@ function checkLogin() {
 		$('submitLogin').disabled = false;
 	else
 		$('submitLogin').disabled = true;
+}
+
+function checkSessionMode() {
+	if ($('session_mode').value == 'desktop') {
+		if ($('advanced_settings_applications'))
+			$('advanced_settings_applications').hide();
+		if ($('advanced_settings_desktop'))
+			$('advanced_settings_desktop').show();
+	} else if ($('session_mode').value == 'applications') {
+		if ($('advanced_settings_desktop'))
+			$('advanced_settings_desktop').hide();
+		if ($('advanced_settings_applications'))
+			$('advanced_settings_applications').show();
+	}
 }
 
 function buildAppletNode(name, code, archive, extra_params) {
