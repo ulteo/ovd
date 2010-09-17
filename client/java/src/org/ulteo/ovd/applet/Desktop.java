@@ -2,6 +2,7 @@
  * Copyright (C) 2009-2010 Ulteo SAS
  * http://www.ulteo.com
  * Author Thomas MOUTON <thomas@ulteo.com> 2009-2010
+ * Author Julien LANGLOIS <julien@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License
@@ -31,6 +32,7 @@ import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
 
 import org.ulteo.Logger;
+import org.ulteo.ovd.FullscreenWindow;
 import org.ulteo.ovd.integrated.OSTools;
 import org.ulteo.ovd.printer.OVDAppletPrinterThread;
 import org.ulteo.rdp.RdpConnectionOvd;
@@ -38,6 +40,9 @@ import org.ulteo.rdp.rdpdr.OVDPrinter;
 
 public class Desktop extends Applet implements RdpListener {
 
+	private boolean fullscreenMode = false;
+	private FullscreenWindow externalWindow = null;
+	
 	private String server = null;
 	private String username = null;
 	private String password = null;
@@ -115,7 +120,13 @@ public class Desktop extends Applet implements RdpListener {
 		// Ensure that width is multiple of 4
 		// Prevent artifact on screen with a with resolution
 		// not divisible by 4
-		this.rc.setGraphic(this.getWidth() & ~3, this.getHeight(), RdpConnectionOvd.DEFAULT_BPP);
+		int w = this.getWidth();
+		int h = this.getHeight();
+		if (this.fullscreenMode) {
+			w = FullscreenWindow.getScreenSize().width;
+			h = FullscreenWindow.getScreenSize().height;
+		}
+		this.rc.setGraphic(w & ~3, h, RdpConnectionOvd.DEFAULT_BPP);
 		
 		this.finished_init = true;
 		
@@ -152,7 +163,16 @@ public class Desktop extends Applet implements RdpListener {
 			}
 		}
 		
-		this.removeAll();
+		if (this.fullscreenMode) {
+			if (this.externalWindow != null) {
+				this.externalWindow.unFullscreen();
+				this.externalWindow.setVisible(false);
+				this.externalWindow = null;
+			}
+		}
+		else {
+			this.removeAll();
+		}
 	}
 	
 	@Override
@@ -219,15 +239,27 @@ public class Desktop extends Applet implements RdpListener {
 		if (buf != null)
 			this.map_local_printers = buf.equalsIgnoreCase("true");
 		
+		buf = this.getParameter("fullscreen");
+		if (buf != null)
+			this.fullscreenMode = true;
+		
 		return true;
     }
 	
 	private void switch2session() {
-		this.removeAll();
 		RdesktopCanvas canvas = this.rc.getCanvas();
 		canvas.setLocation(0, 0);
-		this.add(canvas);
-		this.validate();
+		
+		if (this.fullscreenMode) {
+			this.externalWindow = new FullscreenWindow();
+			this.externalWindow.add(canvas);
+			this.externalWindow.setFullscreen();
+		}
+		else {
+			this.removeAll();
+			this.add(canvas);
+			this.validate();
+		}
 	}
 	
 
