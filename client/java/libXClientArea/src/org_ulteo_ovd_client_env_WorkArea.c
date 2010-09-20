@@ -67,7 +67,7 @@ Rectangle* getWorkAreaRect() {
 
 	rect = malloc(sizeof(Rectangle));
 	if (rect == NULL) {
-		fprintf(stderr, "Not enough memory: need %u bytes", sizeof(Rectangle));
+		fprintf(stderr, "Not enough memory: need %lu bytes", sizeof(Rectangle));
 		return NULL;
 	}
 
