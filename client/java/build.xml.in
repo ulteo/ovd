@@ -368,6 +368,7 @@
         <include name="po/*" />
         <include name="misc/*" />
         <include name="windowsPathsJNI/*" />
+        <include name="libXClientArea/**" />
       </fileset>
     </copy>
     <tar destfile="${distdir}/${sdist.name}.tar" longfile="gnu"
