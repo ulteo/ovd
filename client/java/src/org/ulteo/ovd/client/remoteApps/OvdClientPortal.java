@@ -36,6 +36,7 @@ import java.util.List;
 
 import net.propero.rdp.RdpConnection;
 import org.ulteo.ovd.Application;
+import org.ulteo.ovd.ApplicationInstance;
 import org.ulteo.ovd.OvdException;
 import org.ulteo.ovd.client.authInterface.LoadingStatus;
 import org.ulteo.ovd.client.portal.PortalFrame;
@@ -181,7 +182,9 @@ public class OvdClientPortal extends OvdClientRemoteApps implements ComponentLis
 
 	@Override
 	public void ovdInstanceStopped(int instance_) {
-		this.spool.destroyInstance(instance_);
+		ApplicationInstance ai = this.portal.getRunningApplicationPanel().findApplicationInstanceByToken(instance_);
+		if (ai.isLaunchedFromShortcut())
+			this.spool.destroyInstance(instance_);
 	}
 
 	@Override

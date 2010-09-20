@@ -35,6 +35,7 @@ public class ApplicationInstance {
 	private Application app = null;
 	private int token = -1;
 	private int state = STOPPED;
+	private boolean launchedFromShortcut = false;
 
 	public ApplicationInstance(Application app_, int token_) {
 		this.app = app_;
@@ -55,6 +56,14 @@ public class ApplicationInstance {
 			return;
 		}
 		this.state = state_;
+	}
+
+	public boolean isLaunchedFromShortcut() {
+		return this.launchedFromShortcut;
+	}
+
+	public void setLaunchedFromShortcut(boolean launchedFromShortcut_) {
+		this.launchedFromShortcut = launchedFromShortcut_;
 	}
 
 	public void startApp() throws RdesktopException, IOException, CryptoException {

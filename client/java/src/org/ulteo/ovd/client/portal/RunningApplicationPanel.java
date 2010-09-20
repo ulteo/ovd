@@ -124,7 +124,7 @@ public class RunningApplicationPanel extends JPanel implements OvdAppListener {
 		this.repaint();
 	}
 
-	private ApplicationInstance findApplicationInstanceByToken(int token) {
+	public ApplicationInstance findApplicationInstanceByToken(int token) {
 		for (ApplicationInstance ai : this.runningApps) {
 			if (ai.getToken() == token)
 				return ai;

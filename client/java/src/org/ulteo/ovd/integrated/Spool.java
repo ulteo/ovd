@@ -216,6 +216,7 @@ public class Spool implements Runnable {
 			return;
 		}
 		ApplicationInstance ai = new ApplicationInstance(app, Integer.parseInt(token_));
+		ai.setLaunchedFromShortcut(true);
 		this.appInstances.add(ai);
 		try {
 			ai.startApp();
