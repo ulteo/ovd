@@ -92,7 +92,7 @@ ha_start_slave() {
     service mysql stop
     service apache2 stop
     service heartbeat stop
-    rm -f /var/lib/heartbeat/crm
+    rm -f /var/lib/heartbeat/crm/*
     ha_make_configurations "" "" "$2"
     service heartbeat restart
 }
