@@ -236,7 +236,7 @@ function set_ha_register_to_master()
 	info "register server to the SM"
 	response=$(wget --no-check-certificate --post-data="action=register&hostname=$HOSTNAME" \
 		https://$MIP/ovd/admin/ha/registration.php -O - 2>> $HA_LOG || true)
-	[ "$response" != "ok" ] && die "request to master failed"
+	[ "$response" = "ok" ] || die "request to master failed"
 }
 
 ###############################################################################
