@@ -41,13 +41,13 @@ SM_LOG_DIR=/var/log/ulteo/sessionmanager
 . $HA_DATA_DIR/scripts/utils.sh
 
 ha_make_configurations() {
-    OTHER_IP=$2
-	OTHER_HOSTNAME=$3
-	AUTHKEY=$4
+    OTHER_IP=$1
+    OTHER_HOSTNAME=$2
+    AUTHKEY=$3
 
     NIC_NAME=$(grep -E "^NIC_NAME" $HA_CONF_DIR/resources.conf | sed -r "s/^NIC_NAME *= *([a-zA-Z0-9]*) ?.*$/\1/")
-	GATEWAY=$(route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}')
-	NIC_ADDR=$(ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}')
+    GATEWAY=$(route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}')
+    NIC_ADDR=$(ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}')
 
     # Heartbeat authkeys conf
     sed "s/%AUTHKEY%/$AUTHKEY/" $HA_DATA_DIR/conf/authkeys > $HEARTBEAT_CONF_DIR/authkeys
@@ -55,45 +55,44 @@ ha_make_configurations() {
     # Heartbeat conf
     sed "s/%GATEWAY%/$GATEWAY/" $HA_DATA_DIR/conf/ha.cf | \
         sed "s/%NIC_NAME%/$NIC_NAME/" | sed "s/%NIC_ADDR%/$NIC_ADDR/" | \
-        sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s/%SM_LOG_DIR%/$SM_LOG_DIR/" \
+        sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s,%LOGDIR%,$SM_LOG_DIR," \
             > $HEARTBEAT_CONF_DIR/ha.cf
-	if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
+    if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
         sed -i "/ucast/ a\ucast $NIC_NAME $OTHER_IP" $HEARTBEAT_CONF_DIR/ha.cf
         sed -i "/node/ a\node $OTHER_HOSTNAME" $HEARTBEAT_CONF_DIR/ha.cf
-	fi
+    fi
 
     # DRBD conf
-	local device=/dev/drbd0;
-	local disk=/dev/loop0;
+    local device=/dev/drbd0;
+    local disk=/dev/loop0;
     sed "s/%RESOURCE%/$DRBD_RESOURCE/" $HA_DATA_DIR/conf/$DRBD_RESOURCE.res | \
-        sed "s/%DEVICE%/$device/" | sed "s/%LOOP%/$disk/" | \
-        sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
+        sed "s,%DEVICE%,$device," | sed "s,%LOOP%,$disk," | \
+        sed "s/%AUTH_KEY%/$AUTHKEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
         sed "s/%NIC_ADDR%/$NIC_ADDR/"  > $DRBD_CONF
-	if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
-		echo "on $OTHER_HOSTNAME {" >> $DRBD_CONF
-		echo "address   $OTHER_IP:7788;" >> $DRBD_CONF
-		echo "}" >> $DRBD_CONF
-	fi
-	echo "}" >> $DRBD_CONF
+    if [ -n "$OTHER_IP" ] && [ -n "$OTHER_HOSTNAME" ]; then
+        echo "on $OTHER_HOSTNAME {" >> $DRBD_CONF
+        echo "address   $OTHER_IP:7788;" >> $DRBD_CONF
+        echo "}" >> $DRBD_CONF
+    fi
+    echo "}" >> $DRBD_CONF
 
-	chmod 660 $HEARTBEAT_CONF_DIR/ha.cf $HEARTBEAT_CONF_DIR/authkeys $DRBD_CONF
+    chmod 600 $HEARTBEAT_CONF_DIR/authkeys
 }
 
 
 ha_reload_master() {
     service heartbeat stop
-	ha_make_configurations "$2" "$3" "$4"
-    sleep 5
+    ha_make_configurations "$1" "$2" "$3"
     service heartbeat start
 }
 
 
 ha_start_slave() {
-    service mysql stop
+    service mysql stop || true
     service apache2 stop
     service heartbeat stop
     rm -f /var/lib/heartbeat/crm/*
-    ha_make_configurations "" "" "$2"
+    ha_make_configurations "$1" "$2" "$3"
     service heartbeat restart
 }
 
@@ -102,7 +101,7 @@ case $1 in
 
     reload_master|reload_master_excl)
         if [ -n "$2" ] && [ -n "$3" ] && [ -n "$4" ]; then
-		    ha_reload_master "$2" "$3" "$4"
+            ha_reload_master "$2" "$3" "$4"
             sleep 120
         else
             echo "$1 <IP> <HOSTNAME> <AUTHKEY>"
@@ -111,20 +110,20 @@ case $1 in
     ;;
 
     register)
-        if [ -n "$4" ]; then
-		    ha_start_slave "$4"
+        if  [ -n "$2" ] && [ -n "$3" ] && [ -n "$4" ]; then
+            ha_start_slave  "$2" "$3" "$4"
             sleep 120
         else
-            echo "$1 <AUTHKEY>"
+            echo "$1 <IP> <HOSTNAME> <AUTHKEY>"
             exit 2
         fi
     ;;
 
     reload_vip)
         VIP="$2"
-		if [ -n $VIP ]; then
-		    valid_ip $VIP && \
-			    crm_resource --resource vip --set-parameter ip --parameter-value $VIP
+        if [ -n $VIP ]; then
+            valid_ip $VIP && \
+                crm_resource --resource vip --set-parameter ip --parameter-value $VIP
             sleep 120
         else
             echo "reload_vip <VIP>"
@@ -133,14 +132,14 @@ case $1 in
     ;;
 
     start)
-        service mysql stop
+        service mysql stop || true
         service apache2 stop
         losetup $(losetup -f) $HA_VARLIB_DIR/vbd0.bin
     ;;
 
     stop)
         losetup -d $DRBD_LOOP
-        service mysql restart
+        service mysql restart || true
         service apache2 restart
     ;;
 
@@ -149,7 +148,7 @@ case $1 in
     ;;
 
     *)
-		echo "Usage: ./ulteo_ha {start|stop|restart}"
+        echo "Usage: ./ulteo_ha {start|stop|restart}"
         echo "Please, don't use it manually !"
         exit 2
     ;;
