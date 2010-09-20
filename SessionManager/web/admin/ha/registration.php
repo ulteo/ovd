@@ -31,6 +31,7 @@ function set_response_xml($id,$msg) {
 	header('Content-Type: text/xml; charset=utf-8');
 	$dom = new DomDocument('1.0', 'utf-8');
 	$response_node = $dom->createElement('response');
+	$dom->appendChild($response_node);
 	$response_node->setAttribute('id', $id);
 	$response_node->setAttribute('message', $msg);
 	echo $dom->saveXML();
@@ -79,17 +80,12 @@ if (isset($action)) {
 			break;
 		case "enable":
 			if (isset($hostname) && isset($client_ip) && isset($passwd)) {
-				if (true){
-					Logger::warning('ha', "Configuration files has been written !");
-					set_response_xml(0,_("Host activation has been done successfully !"));
-					$ret=ShellExec::exec_init_agent("register",$client_ip,$hostname,$passwd);
-					break;
-				}
-				Logger::error('ha', "An has occured when wrote the configuration files !");
-				set_response_xml(1,_("An error occured in host activation !"));
-				break;
+				Logger::warning('ha', "Configuration files has been written !");
+				set_response_xml(0,_("Host activation has been done successfully !"));
+				$ret=ShellExec::exec_init_agent("register",$client_ip,$hostname,$passwd);
+			} else {
+				set_response_xml(1,_("An error occured in POST request activation !"));
 			}
-			set_response_xml(1,_("An error occured in POST request activation !"));
 			break;
 		case "disable":
 			$ret=ShellExec::exec_init_agent("unregister","0","0","0");
