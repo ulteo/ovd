@@ -33,6 +33,9 @@
     <exec executable="make" failonerror="true" dir="windowsPathsJNI" >
       <arg value="clean" />
     </exec>
+    <exec executable="make" failonerror="true" dir="libXClientArea" >
+      <arg value="clean" />
+    </exec>
   </target>
 
   <target name="clean" description="clean files">
@@ -282,12 +285,17 @@
        <env key="JAVAHOME"  path="${java.home}/.." />
        <env key="BINPREFIX" value="${mingw32.prefix}" />
     </exec>
+    <exec executable="make" failonerror="true" dir="libXClientArea">
+       <env key="JAVAHOME"  path="${java.home}/.." />
+    </exec>
   </target>
 
   <target name="applet.jar" description="sign jar applets" depends="applet" >
     <antcall target="classes2jar" />
     <copy file="windowsPathsJNI/libWindowsPaths.dll"
           todir="jar/ressources/WindowsLibs" />
+    <copy file="libXClientArea/libXClientArea.so"
+          todir="jar/ressources/LinuxLibs" />
     <jar destfile="libs/ulteo-applet-${compile.release}.jar" basedir="jar/">
       <include name="**" />
     </jar>

@@ -1,15 +1,48 @@
+# Copyright (C) 2009 Ulteo SAS
+# http://www.ulteo.com
+# Author Thomas MOUTON <thomas@ulteo.com> 2010
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 2
+# of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
 CC=gcc
-JAVAHOME=/usr/lib/jvm/java-6-sun
-CFLAGS=-Wall
-LDFLAGS=-I${JAVAHOME}/include -I${JAVAHOME}/include/linux
+JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
+CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux
+LDFLAGS=-lX11
 EXEC=libXClientArea.so
+DIST?=/usr/lib/
+
 
 all: $(EXEC)
+
 $(EXEC): src/org_ulteo_ovd_client_env_WorkArea.o
-	$(CC) src/org_ulteo_ovd_client_env_WorkArea.o $(LDFLAGS) -shared -o ${EXEC}
-src/org_ulteo_ovd_client_env_WorkArea.o: src/org_ulteo_ovd_client_env_WorkArea.c
-	$(CC) -c -o src/org_ulteo_ovd_client_env_WorkArea.o $(CFLAGS) $(LDFLAGS) src/org_ulteo_ovd_client_env_WorkArea.c
+	$(CC) $(LDFLAGS) -shared -o $@ $^
+
+src/org_ulteo_ovd_client_env_WorkArea.h:
+	javac -classpath ../src -d . ../src/org/ulteo/ovd/client/env/WorkArea.java
+	javah -d ./src/ org.ulteo.ovd.client.env.WorkArea
+
+src/%.o: src/%.c src/%.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
 clean:
-	rm -rf src/*.o
-mrproper: clean
-	rm -rf $(EXEC)
+	$(RM) src/*.o $(EXEC)
+	$(RM) *~
+	$(RM) src/org_ulteo_ovd_client_env_WorkArea.h
+
+install: all
+	install $(EXEC) $(DIST)
+
+uninstall:
+	$(RM) $(DIST)/$(EXEC)
