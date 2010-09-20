@@ -552,6 +552,9 @@ public class StartConnection implements ActionListener, Runnable, org.ulteo.ovd.
 				this.client = new OvdClientDesktop(dialog, resolution, this);
 				break;
 			case Properties.MODE_REMOTEAPPS:
+				if (OSTools.isLinux())
+					LibraryLoader.LoadLibrary(LibraryLoader.LIB_X_CLIENT_AREA);
+				
 				this.client = new OvdClientPortal(dialog, response.getUsername(), this.autoPublicated, this.regProfile, this);
 				break;
 			default:

@@ -11,6 +11,8 @@ import org.ulteo.ovd.integrated.WindowsPaths;
 public class LibraryLoader {
 	public static final String RESOURCE_LIBRARY_DIRECTORY = "/ressources/WindowsLibs";
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
+	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "/ressources/LinuxLibs";
+	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 	
 	//This method is called from an applet
 	public static void LoadLibrary(String ressourceDirectory, String DLLName) {

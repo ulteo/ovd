@@ -40,6 +40,7 @@ import org.ulteo.rdp.OvdAppChannel;
 import org.ulteo.rdp.OvdAppListener;
 import org.ulteo.rdp.RdpConnectionOvd;
 import java.net.UnknownHostException;
+import org.ulteo.ovd.client.env.WorkArea;
 
 public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppListener {
 	
@@ -88,7 +89,7 @@ public abstract class OvdClientRemoteApps extends OvdClient implements OvdAppLis
 	@Override
 	protected boolean createRDPConnections() {
 		Properties properties = this.smComm.getResponseProperties();
-		Rectangle screenSize = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		Rectangle screenSize = WorkArea.getWorkAreaSize();
 		
 		byte flags = 0x00;
 		flags |= RdpConnectionOvd.MODE_APPLICATION;
