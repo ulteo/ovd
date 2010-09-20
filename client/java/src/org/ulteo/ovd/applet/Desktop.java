@@ -68,7 +68,7 @@ public class Desktop extends Applet implements RdpListener {
 			tempdir+= System.getProperty("file.separator");
 		
 		if (OSTools.isWindows()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
 		}
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
 			System.err.println(this.getClass().toString()+" Unable to iniatialize logger instance");

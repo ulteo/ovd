@@ -6,17 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.ulteo.ovd.integrated.WindowsPaths;
-
 public class LibraryLoader {
-	public static final String RESOURCE_LIBRARY_DIRECTORY = "/ressources/WindowsLibs";
+	public static final String RESOURCE_LIBRARY_DIRECTORY_WINDOWS = "/ressources/WindowsLibs";
 	public static final String LIB_WINDOW_PATH_NAME = "libWindowsPaths.dll";
 	public static final String RESOURCE_LIBRARY_DIRECTORY_LINUX = "/ressources/LinuxLibs";
 	public static final String LIB_X_CLIENT_AREA = "libXClientArea.so";
 	
 	//This method is called from an applet
 	public static void LoadLibrary(String ressourceDirectory, String DLLName) {
-		InputStream dllResource = WindowsPaths.class.getResourceAsStream(ressourceDirectory+"/"+DLLName);
+		InputStream dllResource = LibraryLoader.class.getResourceAsStream(ressourceDirectory+"/"+DLLName);
 		String fileSeparator= System.getProperty("file.separator");
 		//test the resource in order to know if client is started in applet mode
 		if (dllResource != null) {

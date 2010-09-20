@@ -40,6 +40,7 @@ import net.propero.rdp.RdesktopException;
 import net.propero.rdp.RdpConnection;
 import net.propero.rdp.RdpListener;
 import netscape.javascript.JSObject;
+import org.ulteo.ovd.client.env.WorkArea;
 
 import org.ulteo.rdp.RdpConnectionOvd;
 import org.ulteo.rdp.rdpdr.OVDPrinter;
@@ -115,7 +116,10 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 			tempdir+= System.getProperty("file.separator");
 		
 		if (OSTools.isWindows()) {
-			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY, LibraryLoader.LIB_WINDOW_PATH_NAME);
+			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_WINDOWS, LibraryLoader.LIB_WINDOW_PATH_NAME);
+		}
+		else if (OSTools.isLinux()) {
+			LibraryLoader.LoadLibrary(LibraryLoader.RESOURCE_LIBRARY_DIRECTORY_LINUX, LibraryLoader.LIB_X_CLIENT_AREA);
 		}
 		
 		if (! Logger.initInstance(true, tempdir+"ulteo-ovd-"+Logger.getDate()+".log", true)) {
@@ -246,7 +250,7 @@ public class Applications extends Applet implements Runnable, RdpListener, OvdAp
 				OrderServer order = (OrderServer)o;
 				System.out.println("job "+order.host);
 				
-				Rectangle dim = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();	
+				Rectangle dim = WorkArea.getWorkAreaSize();
 				System.out.println("Width: "+dim.width);
 				System.out.println("Height: "+dim.height);
 
