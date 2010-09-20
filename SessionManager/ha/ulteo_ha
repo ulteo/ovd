@@ -38,7 +38,7 @@ DRBD_CONF=/etc/drbd.d/$DRBD_RESOURCE.res
 HEARTBEAT_CONF_DIR=/etc/ha.d
 SM_LOG_DIR=/var/log/ulteo/sessionmanager
 
-. $HA_DATA_DIR/scripts/utils.sh
+. $HA_DATA_DIR/utils.sh
 
 ha_make_configurations() {
     OTHER_IP=$1
