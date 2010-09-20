@@ -235,7 +235,7 @@ function set_ha_register_to_master()
 {
 	info "register server to the SM"
 	response=$(wget --no-check-certificate --post-data="action=register&hostname=$HOSTNAME" \
-		https://$MIP/ovd/admin/ha/registration.php -O - 2> /dev/null)
+		https://$MIP/ovd/admin/ha/registration.php -O - 2>> $HA_LOG)
 	[ "$response" != "ok" ] && die "request to master refused"
 }
 
@@ -247,7 +247,7 @@ dpkg -l ulteo-ovd-session-manager > $HA_LOG
 [ $? -eq 0 ] || die "package ulteo-ovd-session-manager is required"
 [ -x $(which mysql) ] || die "mysql is required"
 [ -x $(which drbdadm) ] || die "drbd is required"
-[ -e /etc/init.d/heartbeat ] || die "hearbeat is required"
+[ -e /etc/init.d/heartbeat ] || die "hearbeat is required"
 
 # TODO: demander les infos manquantes !
 GATEWAY=`route -n | grep '^0\.0\.\0\.0[ \t]\+[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]*\.[1-9][0-9]\+[ \t]\+0\.0\.0\.0[ \t]\+[^ \t]*G[^ \t]*[ \t]' | awk '{print $2}'`
