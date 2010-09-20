@@ -183,7 +183,7 @@ function heartbeat_install()
 	chmod 600 $HEARTBEAT_CONF_DIR/authkeys
 
 	# Copy resource for OCF manager
-	cp conf/mysql-ocf /usr/lib/ocf/resource.d/heartbeat
+	cp conf/mysql-ocf /usr/lib/ocf/resource.d/heartbeat/mysql-ulteo
 
 	# Delete old cibs
 	[ -e $HEARTBEAT_CRM_DIR/cib.xml ] && rm -f $HEARTBEAT_CRM_DIR/*
