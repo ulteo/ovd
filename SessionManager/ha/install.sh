@@ -285,6 +285,8 @@ while :; do
 			set_ha_register_to_master
 			hashell_install
 			set_init_script
+			service mysql start || true
+			service apache2 start
 		;;
 
 		*)
