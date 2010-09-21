@@ -202,8 +202,8 @@ function heartbeat_cib_install()
 		echo -n "." && sleep 5
 	done
 	info "Connection to CRM done."
-
-	execute "crm node standby"
+	sleep 5
+	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update on"
 
 	info " submit resource configurations"
 	sed "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," conf/crm.conf | \
