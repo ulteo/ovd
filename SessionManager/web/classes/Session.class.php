@@ -314,8 +314,10 @@ class Session {
 	public function getRunningApplications() {
 		$running_apps = array();
 		foreach ($this->applications as $server => $running_app) {
-			foreach ($running_app as $k => $v)
-				$running_apps[$k] = $v;
+			if (is_array($running_app)) {
+				foreach ($running_app as $k => $v)
+					$running_apps[$k] = $v;
+			}
 		}
 
 		return $running_apps;
