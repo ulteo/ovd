@@ -1,6 +1,7 @@
 SUBDIRS =  admin
 
-scripts_DATA =  configuration.php \
+scripts_DATA =  application_icon.php \
+                configuration.php \
                 domain.php \
                 server_monitoring.php \
                 server_name.php \
