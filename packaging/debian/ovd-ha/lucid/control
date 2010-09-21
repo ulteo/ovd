@@ -9,10 +9,10 @@ Package: ulteo-ovd-ha
 Architecture: any
 Depends: drbd8-utils, heartbeat, ulteo-ovd-session-manager-ha, ${shlibs:Depends}
 Description: Ulteo Open Virtual Desktop - High Avaibility data
- blablabla
+ High Avaibility data and tools for OVD
 
 Package: ulteo-ovd-session-manager-ha
 Architecture: all
 Depends: ulteo-ovd-session-manager
 Description: Ulteo Open Virtual Desktop - High Avaibility module for SM
- blabla
+ Module High-Avaibility for OVD Session Manager
