@@ -83,7 +83,6 @@ case $1 in
             make_default_conf "$4"
             service heartbeat start
         else
-        else
             echo "$1 <AUTHKEY>"
             exit 2
         fi
@@ -97,7 +96,6 @@ case $1 in
             rm -f /var/lib/heartbeat/crm/*
             make_default_conf "$2" "$3" "$4"
             service heartbeat start
-        else
         else
             echo "$1 <IP> <HOSTNAME> <AUTHKEY>"
             exit 2
