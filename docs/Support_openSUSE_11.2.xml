@@ -63,6 +63,6 @@ zypper ar http://archive.ulteo.com/ovd/3.0/opensuse/11.2 ovd]]>
 
   <xi:include href="Support_SLES_11.SP1.xml" xpointer="sm" />
   <xi:include href="Support_SLES_11.SP1.xml" xpointer="subsystem" />
-  <xi:include href="Support_SLES_11.SP1.xml" xpointer="wi" />
+  <xi:include href="Support_SLES_11.SP1.xml" xpointer="wc" />
 
 </article>

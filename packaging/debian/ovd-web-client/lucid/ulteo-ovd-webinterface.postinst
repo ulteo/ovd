@@ -1,0 +1,32 @@
+#! /bin/sh -e
+
+. /usr/share/debconf/confmodule
+
+CONFDIR=/etc/ulteo/webclient
+A2CONFDIR=/etc/apache2/conf.d
+
+db_get ulteo-ovd-web-client/session_manager_ip && SM_IP=$RET
+[ "$SM_IP" != "127.0.0.1" ] && \
+    sed -i "/SESSIONMANAGER_HOST/ s/'127.0.0.1'/$SM_IP/" $CONFDIR/config.inc.php
+
+db_get ulteo-ovd-web-client/link_session_manager && TOLINK=$RET
+[ $TOLINK = 'false' ] && \
+    sed -i '/SESSIONMANAGER_HOST/ s,^,\/\/,' $CONFDIR/config.inc.php
+
+if [ ! -e /etc/apache2/conf.d/webclient ]; then
+    ln -s $CONFDIR/apache2.conf $A2CONFDIR/webclient
+    if apache2ctl configtest 2>/dev/null; then
+        invoke-rc.d apache2 reload || true
+    else
+        echo << EOF
+Your apache configuration is broken!
+Correct it and restart apache.
+EOF
+    fi
+fi
+
+#DEBHELPER#
+
+db_stop
+
+exit 0

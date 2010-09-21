@@ -109,7 +109,7 @@ deb http://archive.ulteo.com/ovd/3.0/ubuntu lucid main]]>
         <emphasis>sm.ulteo.com</emphasis> for the Session Manager
         address, <emphasis>aps.ulteo.com</emphasis> for the
         Application Server and <emphasis>wi.ulteo.com</emphasis> for
-        the Web Interface.
+        the Web Client.
       </para>
       
       <para>
@@ -400,46 +400,46 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
     </screenshot>
   </section>
 
-  <section id="wi">
-    <title id="wi_title">
-      Web Interface installation (wi.ulteo.com)
+  <section id="wc">
+    <title id="wc_title">
+      Web Client installation (web.ulteo.com)
     </title>
       
-    <para id="wi_para_1">
-      The Ulteo OVD Web client is no longer installed with the Session
+    <para id="wc_para_1">
+      The Ulteo OVD Web client is no longer installed wcth the Session
       Manager as it was on previous version (&lt; v3.0). So you have
       to install it manually on any server you want. Of course, it's
       possible to install it on the same machine as the Session Manager.
     </para>
-    <para id="wi_para_2">
-      In this example, we are using <emphasis>wi.ulteo.com</emphasis>
+    <para id="wc_para_2">
+      In this example, we are using <emphasis>web.ulteo.com</emphasis>
     </para>
 
     <itemizedlist>
       <listitem>
-        <para id="wi_package">
-	  Install the package <emphasis>ulteo-ovd-webinterface</emphasis>:
+        <para id="wc_package">
+	  Install the package <emphasis>ulteo-ovd-web-client</emphasis>:
         </para>
         <screen>
 	  <![CDATA[
-# apt-get install ulteo-ovd-webinterface]]>
+# apt-get install ulteo-ovd-web-client]]>
         </screen>
       </listitem>
 
       <listitem>
 	<para>
-	  The installer asks if you want to plug the Web Interface with
+	  The installer asks if you want to plug the Web Client with
 	  an existing Session Manager. I depends if you want to use
-	  this Web Interface in a specific Ulteo OVD farm or if you
+	  this Web Client in a specific Ulteo OVD farm or if you
 	  want a generic web client.
 	</para>
     	<para>
 	  <inlinemediaobject>
 	    <imageobject>
-              <imagedata fileref="img/wi_install_plug_sm.png"/>
+              <imagedata fileref="img/wc_install_plug_sm.png"/>
 	    </imageobject>
 	    <textobject>
-	      <phrase>WebInterface install question #1</phrase>
+	      <phrase>Web Client install question #1</phrase>
 	    </textobject>
 	  </inlinemediaobject>
 	</para>
@@ -454,28 +454,28 @@ GRANT ALL PRIVILEGES ON  `ovd` . * TO  'ovd'@'%';
     	<para>
 	  <inlinemediaobject>
 	    <imageobject>
-              <imagedata fileref="img/wi_install_sm_host.png"/>
+              <imagedata fileref="img/wc_install_sm_host.png"/>
 	    </imageobject>
 	    <textobject>
-	      <phrase>WebInterface install question #2</phrase>
+	      <phrase>Web Client install question #2</phrase>
 	    </textobject>
 	  </inlinemediaobject>
 	</para>
       </listitem>
     </itemizedlist>
     
-    <para id="wi_last_1">
+    <para id="wc_last_1">
       Using you web browser, go to
-      <ulink url="http://wi.ulteo.com/webinterface/" />, you should
+      <ulink url="http://web.ulteo.com/ovd/" />, you should
       see a login page:
     </para>
-    <para id="wi_last_2">
+    <para id="wc_last_2">
       <inlinemediaobject>
         <imageobject>
-	  <imagedata fileref="img/wi_login.png"/>
+	  <imagedata fileref="img/wc_login.png"/>
         </imageobject>
         <textobject>
-	  <phrase>WebInterface login</phrase>
+	  <phrase>Web Client login</phrase>
         </textobject>
       </inlinemediaobject>
     </para>

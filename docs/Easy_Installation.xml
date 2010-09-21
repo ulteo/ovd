@@ -304,9 +304,8 @@
     <title>Launch a session</title>
 
     <para>
-      To start a session, we are going to use the Ulteo OVD Web client
-      called WebInterface. You just have to use you web browser to
-      connect to.
+      To start a session, we are going to use the Ulteo OVD Web
+      client. You just have to use you web browser to connect to.
     </para>
 
     <important>
@@ -326,7 +325,7 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  Back to <ulink url="http://localhost/webinterface/" /> with
+	  Back to <ulink url="http://localhost/ovd/" /> with
 	  your web browser.
 	</para>
         <note>
@@ -343,7 +342,7 @@
 	      <imagedata fileref="img/wi_login.png"/>
             </imageobject>
             <textobject>
-	      <phrase>WebInterface login</phrase>
+	      <phrase>Web Client login</phrase>
             </textobject>
 	  </inlinemediaobject>
 	</para>

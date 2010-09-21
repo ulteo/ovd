@@ -1,0 +1,11 @@
+# Ulteo web client alias
+
+Alias /ovd @DATADIR@/ulteo/ovd-client
+<Directory @DATADIR@/ulteo/ovd-client>
+    Options FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    allow from all
+    DirectoryIndex index.php
+    php_admin_flag magic_quotes_gpc Off
+</Directory>

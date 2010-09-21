@@ -216,22 +216,22 @@ Chroot destination [/opt/ulteo]:]]>
     <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="subsystem_last_screenshot" />
   </section>
 
-  <section id="wi">
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_title" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_para_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_para_2" />
+  <section id="wc">
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_title" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_1" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_para_2" />
 
     <itemizedlist>
       <listitem>
-        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_package" />
+        <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_package" />
         <screen>
 	  <![CDATA[
-# zypper install ulteo-ovd-webinterface]]>
+# zypper install ulteo-ovd-web-client]]>
         </screen>
       </listitem>
     </itemizedlist>
 
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_last_1" />
-    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wi_last_2" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_1" />
+    <xi:include href="Support_Ubuntu_Lucid.xml" xpointer="wc_last_2" />
   </section>
 </article>

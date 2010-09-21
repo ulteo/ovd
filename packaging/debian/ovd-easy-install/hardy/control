@@ -15,6 +15,6 @@ Package: ulteo-ovd-easy-install
 Architecture: all
 Pre-Depends: debconf, ulteo-ovd-debconf-database
 Depends: mysql-server, wwwconfig-common,
- ulteo-ovd-session-manager, ulteo-ovd-webinterface, ulteo-ovd-subsystem
+ ulteo-ovd-session-manager, ulteo-ovd-web-client, ulteo-ovd-subsystem
 Description: Ulteo Open Virtual Desktop: easy install
  Install quickly and easily the Ulteo OVD with a chroot system.

@@ -162,12 +162,12 @@
   </section>
 
   <section>
-    <title>Start a session using the Web Interface</title>
+    <title>Start a session using the Web Client</title>
 
     <para>
       If you don't want to install anything on the client and just
       want to use your web browser, you need to install
-      the <emphasis>Web Interface</emphasis> as explained on the
+      the <emphasis>Web Client</emphasis> as explained on the
       installation documentations.
     </para>
 
@@ -188,7 +188,7 @@
     <itemizedlist>
       <listitem>
 	<para>
-	  Back to <ulink url="http://localhost/webinterface/" /> with
+	  Back to <ulink url="http://localhost/ovd/" /> with
 	  your web browser.
 	</para>
         <note>
@@ -205,7 +205,7 @@
 	      <imagedata fileref="img/wi_login.png"/>
             </imageobject>
             <textobject>
-	      <phrase>WebInterface login</phrase>
+	      <phrase>Web Client login</phrase>
             </textobject>
 	  </inlinemediaobject>
 	</para>

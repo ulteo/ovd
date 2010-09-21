@@ -29,7 +29,7 @@ clean:
 	$(RM) POTFILES.in
 
 update-pot:
-	find ../../WebInterface/web -name "*.php" >POTFILES.in
+	find ../../client/web/web -name "*.php" >POTFILES.in
 	find ../../client/java/src/org/ulteo/ovd/client -name "*.java" >>POTFILES.in
 
 	$(XGETTEXT) --files-from=POTFILES.in  --output=en.pot 
