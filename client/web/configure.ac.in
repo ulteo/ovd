@@ -1,4 +1,4 @@
-AC_INIT([ovd-ovd-client], [@VERSION@], [http://bugs.ulteo.com])
+AC_INIT([ovd-web-client], [@VERSION@], [http://bugs.ulteo.com])
 
 # Init automake
 AM_INIT_AUTOMAKE([1.9 tar-pax])
