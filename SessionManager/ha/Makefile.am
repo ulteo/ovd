@@ -6,6 +6,7 @@ conf_DATA = conf/authkeys \
 			conf/crm.conf \
 			conf/ha.cf \
 			conf/mysql-ocf \
+			conf/resources.conf \
 			conf/sm0.res
 
 HAshell = shell/Makefile \
