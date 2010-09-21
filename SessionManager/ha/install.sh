@@ -121,10 +121,10 @@ function drbd_install()
 
 	# Create conf /etc/drbd.d/sm0.res
 	info "Create conf $DRBD_CONF"
-	sed "s/%RESOURCE%/$DRBD_RESOURCE/" conf/$DRBD_RESOURCE.res | \
-		sed "s,%DEVICE%,$DRBD_DEVICE," | sed "s,%LOOP%,$drbd_loop," | \
-		sed "s/%AUTH_KEY%/$AUTH_KEY/"  | sed "s/%HOSTNAME%/$HOSTNAME/" | \
-		sed "s/%NIC_ADDR%/$NIC_ADDR/" > $DRBD_CONF
+	sed -e "s/%RESOURCE%/$DRBD_RESOURCE/" -e "s,%DEVICE%,$DRBD_DEVICE," \
+		-e "s,%LOOP%,$drbd_loop," -e "s/%AUTH_KEY%/$AUTH_KEY/"  \
+		-e "s/%HOSTNAME%/$HOSTNAME/" -e "s/%NIC_ADDR%/$NIC_ADDR/" \
+		conf/$DRBD_RESOURCE.res > $DRBD_CONF
 
 	# prepare and clean drbd
 	umount $DRBD_DEVICE 2>> $HA_LOG || true
@@ -174,10 +174,9 @@ function heartbeat_install()
 	chown hacluster:haclient $SM_LOG_DIR/ha-hb.log $SM_LOG_DIR/ha-debug-hb.log
 
 	info "generate ha.cf file"
-	sed "s/%GATEWAY%/$GATEWAY/" conf/ha.cf | \
-		sed "s/%NIC_NAME%/$NIC_NAME/" | sed "s/%NIC_ADDR%/$NIC_ADDR/" | \
-		sed "s/%HOSTNAME%/$HOSTNAME/" | sed "s,%LOGDIR%,$SM_LOG_DIR," \
-		    > $HEARTBEAT_CONF_DIR/ha.cf
+	sed -e "s/%GATEWAY%/$GATEWAY/" -e "s/%NIC_NAME%/$NIC_NAME/" \
+		-e "s/%NIC_ADDR%/$NIC_ADDR/" -e "s/%HOSTNAME%/$HOSTNAME/" \
+		-e "s,%LOGDIR%,$SM_LOG_DIR," conf/ha.cf > $HEARTBEAT_CONF_DIR/ha.cf
 
 	info "generate authkeys file"
 	echo -e "auth 1\n1 sha1 $AUTH_KEY" > $HEARTBEAT_CONF_DIR/authkeys
@@ -206,10 +205,9 @@ function heartbeat_cib_install()
 	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update on"
 
 	info " submit resource configurations"
-	sed "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," conf/crm.conf | \
-		sed "s,%MYSQL_DB%,$MYSQL_DB," | sed "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," | \
-		sed "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" | sed "s/%VIP%/$VIP/" | \
-		crm configure 2>> $HA_LOG
+	sed -e "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," -e "s,%MYSQL_DB%,$MYSQL_DB," \
+		-e "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," -e "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" \
+		-e "s/%VIP%/$VIP/" conf/crm.conf | crm configure 2>> $HA_LOG
 
 	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update off"
 }
