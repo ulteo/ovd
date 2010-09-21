@@ -18,7 +18,7 @@
 
 CC=gcc
 JAVAHOME?=/usr/lib/jvm/java-1.6.0-openjdk
-CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux
+CFLAGS=-Wall -I${JAVAHOME}/include -I${JAVAHOME}/include/linux -fPIC
 LDFLAGS=-lX11
 EXEC=libXClientArea.so
 DIST?=/usr/lib/
