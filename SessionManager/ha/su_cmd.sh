@@ -55,21 +55,25 @@ make_default_conf() {
             $HA_DATA_DIR/conf/$DRBD_RESOURCE.res > $DRBD_CONF
 }
 
+add_node() {
+    OTHER_IP=$1
+    OTHER_HOSTNAME=$2
+
+    sed -i "/^}/i \\
+    on $OTHER_HOSTNAME {\n\
+        address $OTHER_IP:7788;\n\
+    }" $DRBD_CONF
+    sed -e "/ucast/ a\ucast $NIC_NAME $OTHER_IP" \
+        -e "/node/ a\node $OTHER_HOSTNAME" -i $HEARTBEAT_CONF_DIR/ha.cf
+}
+
 case $1 in
 
     reload_master)
         if [ -n "$2" ] && [ -n "$3" ] && [ -n "$4" ]; then
-            OTHER_IP=$2
-            OTHER_HOSTNAME=$3
-
             service heartbeat stop
-            make_default_conf "$4"
-            sed -i "/^}/i \\
-    on $OTHER_HOSTNAME {\n\
-        address $OTHER_IP:7788;\n\
-    }" $DRBD_CONF
-            sed -e "/ucast/ a\ucast $NIC_NAME $OTHER_IP" \
-                -e "/node/ a\node $OTHER_HOSTNAME" -i $HEARTBEAT_CONF_DIR/ha.cf
+            make_default_conf $4
+            add_node $2 $3
             service heartbeat start
         else
             echo "$1 <IP> <HOSTNAME> <AUTHKEY>"
@@ -80,7 +84,7 @@ case $1 in
     reload_master_excl)
         if [ -n "$4" ]; then
             service heartbeat stop
-            make_default_conf "$4"
+            make_default_conf $4
             service heartbeat start
         else
             echo "$1 <AUTHKEY>"
@@ -94,7 +98,8 @@ case $1 in
             service apache2 stop
             service heartbeat stop
             rm -f /var/lib/heartbeat/crm/*
-            make_default_conf "$2" "$3" "$4"
+            make_default_conf $4
+            add_node $2 $3
             service heartbeat start
         else
             echo "$1 <IP> <HOSTNAME> <AUTHKEY>"
