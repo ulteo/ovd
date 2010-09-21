@@ -113,8 +113,8 @@ Action * getAction(const std::string& name) {
         return new Action_get_content_from_file();
     if (name == "set_conf_file")
         return new Action_put_content_to_file();
-	if (name == "init_agent")
-        return new Action_init_agent();
+	if (name == "shell_cmd")
+        return new Action_shell_cmd();
     return NULL;
 }
 

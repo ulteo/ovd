@@ -392,7 +392,7 @@ if (isset($action)) {
 						$s_hostname = $row["hostname"];
 						if (isset($s_ip) && isset($s_hostname) && query_slave($action,$m_hostname,$passwd,$s_ip)) {
 							makeConfiguration($s_ip,$s_hostname);
-							$ret=ShellExec::exec_init_agent("reload_master",$s_ip,$s_hostname,$passwd);
+							$ret=ShellExec::exec_shell_cmd("reload_master",$s_ip,$s_hostname,$passwd);
 							enable_hostDB($SQL, $table, $id_host);
 							popup_info(sprintf(_('Host %s at address %s has been notifyed succesfully !'),$s_hostname,$s_ip));	
 							$upd_slave=true;
@@ -419,7 +419,7 @@ if (isset($action)) {
 							disable_hostDB($SQL, $table, $id_host);
 							popup_info(sprintf(_('Host %s has been set in standby and master %s will restart Heartbeat !'),$s_hostname,$m_hostname));	
 							$ret=ShellExec::exec_action_to_host($s_hostname,"on");
-							$ret=ShellExec::exec_init_agent("reload_master_excl","0","0",$passwd);
+							$ret=ShellExec::exec_shell_cmd("reload_master_excl","0","0",$passwd);
 							$upd_slave=true;
 							break;
 						} else {
@@ -436,7 +436,7 @@ if (isset($action)) {
 			$prefs = Preferences::getInstance();
 			$all_prefs = $prefs->get('HA','high_availability');
 			if (isset($all_prefs["VIP"])) {
-				$ret=ShellExec::exec_init_agent("reload_vip",$all_prefs["VIP"],"0","0");
+				$ret=ShellExec::exec_shell_cmd("reload_vip",$all_prefs["VIP"],"0","0");
 				checkConfigurationHasChanged(true);
 				popup_info(_('Changing configuration... Please wait few seconds'));
 			}

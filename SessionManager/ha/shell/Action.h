@@ -105,13 +105,13 @@ class Action_cleanup_logs: public Action {
     }
 };
 
-class Action_init_agent: public Action {
+class Action_shell_cmd: public Action {
  public:
     unsigned int nb_args() {
         return 4;
     }
     void build_cmd() {
-        command = "screen -dmS ulteolauncher /etc/init.d/ulteo_ha "+args[0]+" "+args[1]+" "+args[2]+" "+args[3];
+        command = "screen -dmS ulteolauncher /usr/share/ulteo/ovd/ha/su_cmd.sh "+args[0]+" "+args[1]+" "+args[2]+" "+args[3];
     }
 };
 

@@ -1,5 +1,5 @@
 hadir = $(datadir)/ulteo/ovd/ha
-ha_DATA = install.sh utils.sh ulteo_ha README
+ha_DATA = install.sh utils.sh su_cmd.sh ulteo_ha README
 
 confdir = $(hadir)/conf
 conf_DATA = conf/authkeys \

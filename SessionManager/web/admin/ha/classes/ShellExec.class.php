@@ -56,8 +56,8 @@ class ShellExec {
 		 return ShellExec::exec_cmd($cmd);
 	}
 
-	public static function exec_init_agent($cmd,$other_ip,$other_hostname, $authkey) {
-		 $cmd='init_agent '.$cmd." ".$other_ip." ".$other_hostname." ". $authkey;
+	public static function exec_shell_cmd($cmd, $other_ip, $other_hostname, $authkey) {
+		 $cmd='shell_cmd '.$cmd." ".$other_ip." ".$other_hostname." ". $authkey;
 		 return ShellExec::exec_cmd($cmd);
 	}
 

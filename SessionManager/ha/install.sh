@@ -4,6 +4,7 @@ set -e
 # Copyright (C) 2010 Ulteo SAS
 # http://www.ulteo.com
 # Author Arnaud LEGRAND <arnaud@ulteo.com>
+#        Samuel BOVEE <samuel@ulteo.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License

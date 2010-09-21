@@ -82,13 +82,13 @@ if (isset($action)) {
 			if (isset($hostname) && isset($client_ip) && isset($passwd)) {
 				Logger::warning('ha', "Configuration files has been written !");
 				set_response_xml(0,_("Host activation has been done successfully !"));
-				$ret=ShellExec::exec_init_agent("register",$client_ip,$hostname,$passwd);
+				$ret=ShellExec::exec_shell_cmd("register",$client_ip,$hostname,$passwd);
 			} else {
 				set_response_xml(1,_("An error occured in POST request activation !"));
 			}
 			break;
 		case "disable":
-			$ret=ShellExec::exec_init_agent("unregister","0","0","0");
+			$ret=ShellExec::exec_shell_cmd("unregister","0","0","0");
 			set_response_xml(0,_("Deleting host has been done successfully !"));
 			break;
 		default:
