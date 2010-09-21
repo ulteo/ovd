@@ -34,6 +34,9 @@ function query_url_request($url_, $log_returned_data_=true, $data_in_file_=false
 		curl_setopt($socket, CURLOPT_FILE, $fp);
 	}
 	$data = curl_exec($socket);
+	if ($data === false) {
+		Logger::error('main', "query_url_request($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+	}
 	$code = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	$content_type=curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
 	if ( $data_in_file_ === true) {
@@ -81,6 +84,9 @@ function query_url_post_xml($url_, $xml_, $log_returned_data_=true) {
 	curl_setopt($socket, CURLOPT_POSTFIELDS, $xml_);
 	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close', 'Content-Type: text/xml'));
 	$data = curl_exec($socket);
+	if ($data === false) {
+		Logger::error('main', "query_url_post_xml($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+	}
 
 	curl_close($socket);
 
@@ -97,6 +103,9 @@ function query_url_post($url_, $string_=NULL, $log_returned_data_=true) {
 	curl_setopt($socket, CURLOPT_POSTFIELDS, $string_);
 	curl_setopt($socket, CURLOPT_HTTPHEADER, array('Connection: close'));
 	$data = curl_exec($socket);
+	if ($data === false) {
+		Logger::error('main', "query_url_post($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+	}
 
 	curl_close($socket);
 
