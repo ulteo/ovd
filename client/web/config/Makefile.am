@@ -1,8 +1,8 @@
 default_DATA = config.inc.php
-defaultdir = $(datadir)/ulteo/ovd-client/default
+defaultdir = $(datadir)/ulteo/webclient/default
 
 conf_DATA = config.inc.php apache2.conf
-confdir = $(sysconfdir)/ulteo/ovd-client
+confdir = $(sysconfdir)/ulteo/webclient
 
 apache2.conf: apache2.conf.in
 	sed "s,@DATADIR@,$(datadir)," < $(srcdir)/apache2.conf.in > $@
