@@ -338,7 +338,7 @@ function show_manage($id, $applicationDB) {
 
 	if ($is_rw and $can_manage_applications) {
 		echo '<td>';
-		echo '<form action="" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
+		echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to delete this application?').'\');">';
 		echo '<input type="hidden" name="name" value="Application_static" />';
 		echo '<input type="hidden" name="action" value="del" />';
 		echo '<input type="hidden" name="checked_applications[]" value="'.$app->getAttribute('id').'" />';
