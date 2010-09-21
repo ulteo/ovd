@@ -160,7 +160,6 @@ if ($_REQUEST['name'] == 'Application_static') {
 	}
 	
 	if ($_REQUEST['action'] == 'add') {
-		Logger::critical('main', '100');
 		if (isset($_REQUEST['attributes_send']) && is_array($_REQUEST['attributes_send'])) {
 			$data = array();
 			foreach ($_REQUEST['attributes_send'] as $attrib_name) {
