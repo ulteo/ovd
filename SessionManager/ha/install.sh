@@ -197,18 +197,16 @@ function heartbeat_cib_install()
 	echo -ne "\033[36;1m[INFO] \033[0m Waiting connection to CRM. It may take some time"
 	for i in $(seq 1 60); do
 		[ $i -eq 60 ] && die "Connection timeout to the cluster"
-		crm_mon -1 | grep -E "[1-9] Nodes configured" && break || true
 		echo -n "." && sleep 5
+		crm_mon -1 | grep -E "[1-9] Nodes configured" && break || true
 	done
 	info "Connection to CRM done."
-	sleep 5
-	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update on"
 
-	info " submit resource configurations"
+	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update on"
+	info "submit resource configurations"
 	sed -e "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," -e "s,%MYSQL_DB%,$MYSQL_DB," \
 		-e "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," -e "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" \
 		-e "s/%VIP%/$VIP/" conf/crm.conf | crm configure 2>> $HA_LOG
-
 	execute "crm_attribute --type nodes --node $HOSTNAME --name standby --update off"
 }
 
