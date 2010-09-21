@@ -198,9 +198,6 @@ class Role(AbstractRole):
 			if t1-t0_update_app > 30:
 				self.updateApplications()
 				
-				datas = self.rebuildReporting()
-				self.main_instance.dialog.send_packet("/server/sessions_info", datas)
-				
 				t0_update_app = time.time()
 			else:
 				time.sleep(1)
@@ -280,9 +277,8 @@ class Role(AbstractRole):
 		self.applicationsXML = doc
 	
 	
-	def rebuildReporting(self):
+	def getReporting(self, node):
 		doc = Document()
-		rootNode = doc.createElement('sessions')
 		
 		for (sid, session) in self.sessions.items():
 			sessionNode = doc.createElement("session")
@@ -298,7 +294,4 @@ class Role(AbstractRole):
 				appNode.setAttribute("application", app_id)
 				sessionNode.appendChild(appNode)
 			
-			rootNode.appendChild(sessionNode)
-			
-		doc.appendChild(rootNode)
-		return doc
+			node.appendChild(sessionNode)

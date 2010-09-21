@@ -39,6 +39,7 @@ class SlaveServer:
 		self.roles = []
 		self.threads = []
 		self.monitoring = None
+		self.time_last_send_monitoring = 0
 		
 		self.ulteo_system = False
 		if os.path.exists("/etc/debian_chroot"):
@@ -142,6 +143,16 @@ class SlaveServer:
 				return False
 			
 			self.updateMonitoring()
+			
+		
+		t1 = time.time()
+		if t1-self.time_last_send_monitoring > 30:
+			self.time_last_send_monitoring = t1
+			
+			doc = self.getMonitoring()
+			self.dialog.send_server_monitoring(doc)
+			
+			self.time_last_send_monitoring = time.time()
 	
 	
 	def stop(self, Signum=None, Frame=None):
@@ -176,8 +187,20 @@ class SlaveServer:
 				break
 			i+= 1
 			time.sleep(0.2)
+		
+		rootNode = self.monitoring
+		rootNode.setAttribute("name", self.dialog.name)
+		
+		doc = Document()
+		for role in self.roles:
+			node = doc.createElement("role")
 			
-		return self.monitoring
+			role.getReporting(node)
+			node.setAttribute("name", role.getName())
+			rootNode.appendChild(node)
+		  
+		doc.appendChild(rootNode)
+		return doc
 	
 	
 	def updateMonitoring(self):
@@ -185,7 +208,7 @@ class SlaveServer:
 		ram_used = Platform.System.getRAMUsed()
 
 		doc = Document()
-		monitoring = doc.createElement('monitoring')
+		monitoring = doc.createElement('server')
 		
 		cpu = doc.createElement('cpu')
 		cpu.setAttribute('load', str(cpu_load))
@@ -196,6 +219,4 @@ class SlaveServer:
 		ram.setAttribute('used', str(ram_used))
 		monitoring.appendChild(ram)
 		
-		doc.appendChild(monitoring)
-		
-		self.monitoring = doc
+		self.monitoring = monitoring

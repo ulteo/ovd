@@ -44,3 +44,6 @@ class Role:
 	
 	def getStatus(self):
 		return self.status
+	
+	def getReporting(self, node):
+		raise NotImplementedError()

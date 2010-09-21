@@ -4,6 +4,7 @@
 # http://www.ulteo.com
 # Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Arnaud Legrand <arnaud@ulteo.com> 2010
+# Author Julien LANGLOIS <julien@ulteo.com> 2010
 #
 # This program is free software; you can redistribute it and/or 
 # modify it under the terms of the GNU General Public License
@@ -72,3 +73,7 @@ class Role(AbstractRole):
 		else:
 			Logger.error("Role %s need a certificate at %s !"%(self.getName(), pem))
 		Logger.info('Closing gateway...')
+	
+	
+	def getReporting(self, node):
+		pass

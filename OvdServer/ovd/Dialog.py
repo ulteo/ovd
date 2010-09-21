@@ -190,6 +190,28 @@ class Dialog(AbstractDialog):
 		return True
 	
 	
+	def send_server_monitoring(self, doc):
+		response = self.send_packet("/server/monitoring", doc)
+		if response is False:
+			return False
+		
+		document = self.get_response_xml(response)
+		if document is None:
+			Logger.warn("Dialog::send_server_status response not XML")
+			return False
+		
+		rootNode = document.documentElement
+		if rootNode.nodeName != "server":
+			Logger.error("Dialog::send_server_monitoring response not valid %s"%(rootNode.toxml()))
+			return False
+		
+		if not rootNode.hasAttribute("name") or rootNode.getAttribute("name") != self.name:
+			Logger.error("Dialog::send_server_monitoring response invalid name")
+			return False
+		
+		return True
+	
+	
 	def response_error(self, code):
 		self.send_response(code)
 		self.send_header('Content-Type', 'text/html')

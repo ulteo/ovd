@@ -57,6 +57,10 @@ class ServerReportItem {
 
 	/* private methods */
 	private function compute_load() {
+		$server = Abstract_Server::load($this->fqdn);
+		if ($server === false)
+			return;
+
 		if (! is_object($this->dom))
 			return;
 
@@ -68,7 +72,7 @@ class ServerReportItem {
 
 		$node = $this->dom->getElementsByTagName('ram');
 		if ($node->length > 0) {
-			$total = (float) ($node->item(0)->getAttribute('total'));
+			$total = (float) ($server->ram_total);
 			$used = (float) ($node->item(0)->getAttribute('used'));
 			$this->ram = round (($used / $total) * 100, 2);
 		} else {
@@ -92,12 +96,10 @@ class ServerReportItem {
 		}
 		$apps_link = application_desktops_to_ids();
 
-		/* the interesting <sessions> node of the xml is like:
-		     <session id="token">
-			   <user login="someone">
-			     <pid desktop="/usr/share/..." />
-			   </user>
-			 </session>
+		/* the interesting <session> nodes of the xml are like:
+		     <session id="ID" mode="MODE" status="STATUS" user="LOGIN">
+				<instance application="APP_ID" id="ApS_ID"/>
+			</session>
 		*/
 		foreach ($sessions as $session) {
 			$local_sessid = $session->getAttribute('id');
@@ -107,29 +109,19 @@ class ServerReportItem {
 				/* FIXME: for now we're screwed */
 				$sessid = $local_sessid;
 
-			foreach ($session->childNodes as $session_child) {
-				if ($session_child->nodeType != XML_ELEMENT_NODE)
-					continue;
+			$this->sessions[$sessid] = $session->getAttribute('user');
 
-				if ($session_child->tagName == 'user') {
-					$this->sessions[$sessid] = $session_child->getAttribute('login');
+			foreach ($session->childNodes as $instance_node) {
+				if ($instance_node->tagName == 'instance') {
+					$desktop = $instance_node->getAttribute('application');
+					if (! array_key_exists($desktop, $apps_link))
+						continue;
 
-					foreach ($session_child->childNodes as $user_child) {
-						if ($user_child->nodeType != XML_ELEMENT_NODE)
-							continue;
+					$id = $apps_link[$desktop];
+					if (! array_key_exists($id, $this->applications))
+						$this->applications[$id] = array();
 
-						if ($user_child->tagName == 'application') {
-							$desktop = $user_child->getAttribute('app_id');
-							if (! array_key_exists($desktop, $apps_link))
-								continue;
-
-							$id = $apps_link[$desktop];
-							if (! array_key_exists($id, $this->applications))
-								$this->applications[$id] = array();
-
-							$this->applications[$id][] = $sessid;
-						}
-					}
+					$this->applications[$id][] = $sessid;
 				}
 			}
 		}

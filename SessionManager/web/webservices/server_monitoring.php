@@ -1,10 +1,8 @@
 <?php
 /**
- * Copyright (C) 2008 Ulteo SAS
+ * Copyright (C) 2010 Ulteo SAS
  * http://www.ulteo.com
- * Author Julien LANGLOIS <julien@ulteo.com>
- * Author Jeremy DESVAGES <jeremy@ulteo.com>
- * Author Laurent CLOUET <laurent@ulteo.com>
+ * Author Jeremy DESVAGES <jeremy@ulteo.com> 2010
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,95 +18,158 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
-require_once(dirname(__FILE__).'/../includes/core-minimal.inc.php');
+require_once(dirname(__FILE__).'/../includes/core.inc.php');
 
-Logger::debug('main', '(webservices/server_monitoring) Starting webservices/server_monitoring.php');
-
-if (! isset($_POST['fqdn'])) {
-	Logger::error('main', '(webservices/server_monitoring) Missing parameter : fqdn');
-	die('ERROR - NO $_POST[\'fqdn\']');
+function return_error($errno_, $errstr_) {
+	header('Content-Type: text/xml; charset=utf-8');
+	$dom = new DomDocument('1.0', 'utf-8');
+	$node = $dom->createElement('error');
+	$node->setAttribute('id', $errno_);
+	$node->setAttribute('message', $errstr_);
+	$dom->appendChild($node);
+	Logger::error('main', "(webservices/server_monitoring) return_error($errno_, $errstr_)");
+	return $dom->saveXML();
 }
 
-$server = Abstract_Server::load($_POST['fqdn']);
+function parse_monitoring_XML($xml_) {
+	if (! $xml_ || strlen($xml_) == 0)
+		return false;
+
+	$dom = new DomDocument('1.0', 'utf-8');
+
+	$buf = @$dom->loadXML($xml_);
+	if (! $buf)
+		return false;
+
+	if (! $dom->hasChildNodes())
+		return false;
+
+	$server_node = $dom->getElementsByTagName('server')->item(0);
+	if (is_null($server_node))
+		return false;
+
+	if (! $server_node->hasAttribute('name'))
+		return false;
+
+	$ret = array(
+		'server'	=>	$server_node->getAttribute('name')
+	);
+
+	$cpu_node = $dom->getElementsByTagName('cpu')->item(0);
+	if (is_null($cpu_node))
+		return false;
+
+	if (! $cpu_node->hasAttribute('load'))
+		return false;
+
+	$ret['cpu_load'] = $cpu_node->getAttribute('load');
+
+	$ram_node = $dom->getElementsByTagName('ram')->item(0);
+	if (is_null($ram_node))
+		return false;
+
+	if (! $ram_node->hasAttribute('used'))
+		return false;
+
+	$ret['ram_used'] = $ram_node->getAttribute('used');
+
+	$role_nodes = $dom->getElementsByTagName('role');
+	foreach ($role_nodes as $role_node) {
+		if (! $role_node->hasAttribute('name'))
+			return false;
+
+		switch ($role_node->getAttribute('name')) {
+			case 'ApplicationServer':
+				$sql_sessions = get_from_cache('reports', 'sessids');
+				if (! is_array($sql_sessions))
+					$sql_sessions = array();
+
+				$tmp = array();
+
+				$ret['sessions'] = array();
+
+				$session_nodes = $dom->getElementsByTagName('session');
+				foreach ($session_nodes as $session_node) {
+					$ret['sessions'][$session_node->getAttribute('id')] = array(
+						'id'		=>	$session_node->getAttribute('id'),
+						'status'	=>	$session_node->getAttribute('status'),
+						'instances'	=>	array()
+					);
+
+					$childnodes = $session_node->childNodes;
+					foreach ($childnodes as $childnode) {
+						if ($childnode->nodeName != 'instance')
+							continue;
+
+						$ret['sessions'][$session_node->getAttribute('id')]['instances'][$childnode->getAttribute('id')] = $childnode->getAttribute('application');
+					}
+
+					$token = $session_node->getAttribute('id');
+					$tmp[] = $token;
+
+					if (array_key_exists($token, $sql_sessions))
+						$sql_sessions[$token]->update($session_node);
+				}
+
+				foreach ($sql_sessions as $token => $session) {
+					if (! in_array($token, $tmp))
+						unset($sql_sessions[$token]);
+				}
+
+				set_cache($sql_sessions, 'reports', 'sessids');
+
+				$sri = new ServerReportItem($ret['server'], $xml_);
+				$sri->save();
+				break;
+		}
+	}
+
+	return $ret;
+}
+
+$ret = parse_monitoring_XML(@file_get_contents('php://input'));
+if (! $ret) {
+	echo return_error(1, 'Server does not send a valid XML');
+	die();
+}
+
+$server = Abstract_Server::load($ret['server']);
 if (! $server) {
-	Logger::error('main', '(webservices/server_monitoring) Server "'.$_POST['fqdn'].'" does NOT exist');
-	die('Server does not exist');
+	echo return_error(2, 'Server does not exist');
+	die();
 }
 
 if (! $server->isAuthorized()) {
-	Logger::error('main', '(webservices/server_monitoring) Server "'.$_POST['fqdn'].'" NOT authorized');
-	die('Server not authorized');
+	echo return_error(3, 'Server is not authorized');
+	die();
 }
 
-Logger::debug('main', '(webservices/server_monitoring) Security check OK');
+$server->setAttribute('cpu_load', $ret['cpu_load']);
+$server->setAttribute('ram_used', $ret['ram_used']);
 
-if (! $_FILES['xml']) {
-	Logger::error('main', '(webservices/server_monitoring) No XML sent : '.$_POST['fqdn']);
-	die('No XML sent');
+Abstract_Server::save($server); //update Server cache timestamp
+
+if (is_array($ret['sessions'])) {
+	foreach ($ret['sessions'] as $session) {
+		$buf = Abstract_Session::load($session['id']);
+		if (! $buf)
+			continue;
+
+		$buf->setStatus($session['status']);
+		$buf->setRunningApplications($ret['server'], $session['instances']);
+
+		Abstract_Session::save($buf); //update Session cache timestamp
+	}
 }
 
-$xml = trim(@file_get_contents($_FILES['xml']['tmp_name'], LOCK_EX));
+header('Content-Type: text/xml; charset=utf-8');
 
 $dom = new DomDocument('1.0', 'utf-8');
-$buf = @$dom->loadXML($xml);
-if (! $buf) {
-	Logger::error('main', '(webservices/server_monitoring) Invalid XML for server \''.$server->fqdn.'\'');
-	die();
-}
+$server_node = $dom->createElement('server');
+$server_node->setAttribute('name', $ret['server']);
+$dom->appendChild($server_node);
 
-if (! $dom->hasChildNodes()) {
-	Logger::error('main', '(webservices/server_monitoring) Invalid XML for server \''.$server->fqdn.'\'');
-	die();
-}
+$xml = $dom->saveXML();
 
-$server_keys = array();
-
-$cpu_node = $dom->getElementsByTagname('cpu')->item(0);
-if (is_null($cpu_node)) {
-	Logger::error('main', '(webservices/server_monitoring) Missing element \'cpu_node\' for server \''.$server->fqdn.'\'');
-	die();
-}
-$server_keys['cpu_model'] = $cpu_node->firstChild->nodeValue;
-$server_keys['cpu_nb_cores'] = $cpu_node->getAttribute('nb_cores');
-$server_keys['cpu_load'] = $cpu_node->getAttribute('load');
-
-$ram_node = $dom->getElementsByTagname('ram')->item(0);
-if (is_null($ram_node)) {
-	Logger::error('main', '(webservices/server_monitoring) Missing element \'ram_node\' for server \''.$server->fqdn.'\'');
-	die();
-}
-$server_keys['ram_total'] = $ram_node->getAttribute('total');
-$server_keys['ram_used'] = $ram_node->getAttribute('used');
-
-foreach ($server_keys as $k => $v)
-	$server->setAttribute($k, trim($v));
-Abstract_Server::save($server);
-
-if ($server->getAttribute('type') != 'windows') {
-	/* session + server history */
-	$sql_sessions = get_from_cache('reports', 'sessids');
-	if (! is_array($sql_sessions))
-		$sql_sessions = array();
-
-	$sessions = $dom->getElementsByTagname('session');
-	$tmp = array();
-	foreach ($sessions as $session_node) {
-		$token = $session_node->getAttribute('id');
-		$tmp[] = $token;
-
-		if (array_key_exists($token, $sql_sessions))
-			$sql_sessions[$token]->update($session_node);
-	}
-
-	/* cleanup sessions that disappeared */
-	foreach ($sql_sessions as $token => $session) {
-		if (! in_array($token, $tmp))
-			unset($sql_sessions[$token]);
-	}
-	unset($tmp);
-
-	set_cache($sql_sessions, 'reports', 'sessids');
-}
-
-$sr = new ServerReportItem($_POST['fqdn'], $xml);
-$sr->save();
+echo $xml;
+die();

@@ -169,4 +169,7 @@ class Role(AbstractRole):
 		total_bytes = stats[statvfs.F_BSIZE] * stats[statvfs.F_BLOCKS]
 		
 		return (total_bytes/1024, free_bytes/1024)
-
+	
+	
+	def getReporting(self, node):
+		pass

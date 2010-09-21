@@ -56,50 +56,23 @@ class SessionReportItem {
 	public function update($session_node_) {
 		$sessid = $session_node_->getAttribute('id');
 		$session = Abstract_Session::load($sessid);
+		if (! $session)
+			return;
 
 		//$apps_link = application_desktops_to_ids();
-		$user_node = null;
 		/* reset the current apps data */
 		$this->current_apps = array();
 
-		foreach ($session_node_->childNodes as $tmp) {
-			if ($tmp->nodeType != XML_ELEMENT_NODE ||
-				$tmp->tagName != 'user')
-					continue;
-			$user_node = $tmp;
-			break;
-		}
-
-		/* in case the xml is not as expected */
-		if ($user_node == null) {
-			$this->current_apps = array();
-			return;
-		}
-
 		/* get the running apps for a start */
 		$tmp = array();
-		foreach ($user_node->childNodes as $pid_node) {
-			if ($pid_node->nodeType != XML_ELEMENT_NODE ||
-				$pid_node->tagName != 'application')
-					continue;
+		foreach ($session_node_->childNodes as $instance_node) {
+			if ($instance_node->tagName != 'instance')
+				continue;
 
-			$app_pid = $pid_node->getAttribute('pid');
-			$app_id = $pid_node->getAttribute('app_id');
-			$this->current_apps[] = $app_id;
+			$app_pid = $instance_node->getAttribute('id');
+			$app_id = $instance_node->getAttribute('application');
+			$this->current_apps[$sessid] = $app_id;
 			$tmp[$app_pid] = $app_id;
-		}
-
-		if ($session->getAttribute('mode') == Session::MODE_APPLICATIONS) {
-			$this->current_apps = array();
-			foreach ($user_node->childNodes as $sid_node) {
-				if ($sid_node->nodeType != XML_ELEMENT_NODE ||
-					$sid_node->tagName != 'session')
-						continue;
-
-				$session_id = $sid_node->getAttribute('id');
-				$app_id = $sid_node->getAttribute('app_id');
-				$this->current_apps[$session_id] = $app_id;
-			}
 		}
 
 		/* for each app that was already active, we check if it's still there
