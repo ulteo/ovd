@@ -111,7 +111,7 @@ class Action_shell_cmd: public Action {
         return 4;
     }
     void build_cmd() {
-        command = "screen -dmS ulteolauncher /usr/share/ulteo/ovd/ha/su_cmd.sh "+args[0]+" "+args[1]+" "+args[2]+" "+args[3];
+        command = "screen -dmS ulteolauncher bash /usr/share/ulteo/ovd/ha/su_cmd.sh "+args[0]+" "+args[1]+" "+args[2]+" "+args[3];
     }
 };
 
