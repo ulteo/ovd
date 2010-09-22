@@ -7,7 +7,8 @@ Standards-Version: 3.7.3
 
 Package: ulteo-ovd-ha
 Architecture: any
-Depends: drbd8-utils, heartbeat, ulteo-ovd-session-manager-ha, ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ulteo-ovd-session-manager-ha, mysql-server,
+ drbd8-utils, heartbeat
 Description: Ulteo Open Virtual Desktop - High Avaibility data
  High Avaibility data and tools for OVD
 

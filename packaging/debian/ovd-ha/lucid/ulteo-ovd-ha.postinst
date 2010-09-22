@@ -53,15 +53,15 @@ drbd_install()
     drbdadm down $DRBD_RESOURCE
 
     # create drbd resource
-    drbdadm create-md $DRBD_RESOURCE
-    drbdadm up $DRBD_RESOURCE || true
+    drbdadm create-md $DRBD_RESOURCE >> $HA_LOG 2>&1
+    drbdadm up $DRBD_RESOURCE 2>> $HA_LOG || true
 
     if [ $1 == "M" ]; then
         # Check if overwrite of peer is necessary
         drbdadm -- --overwrite-data-of-peer primary $DRBD_RESOURCE
 
         # Create ext3 FS
-        mkfs.ext3 $DRBD_DEVICE
+        mkfs.ext3 $DRBD_DEVICE >> $HA_LOG 2>&1
 
         # Copy MySQL DB to VDB0
         mkdir -p $DRBD_MOUNT_DIR
@@ -115,13 +115,12 @@ heartbeat_install()
 
 heartbeat_cib_install()
 {
-    echo "Waiting connection to CRM. It may take some time"
+    echo -n "Waiting connection to CRM. It may take some time"
     for i in $(seq 1 60); do
         [ $i -eq 60 ] && echo "Connection timeout to the cluster" && break
         echo -n "." && sleep 5
         crm_mon -1 | grep -E "[1-9] Nodes configured" && break || true
     done
-
 
     crm_attribute --type nodes --node $HOSTNAME --name standby --update on
     db_get ulteo-ovd-ha/vip && VIP="$RET"
