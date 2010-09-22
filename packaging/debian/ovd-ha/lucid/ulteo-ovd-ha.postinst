@@ -122,11 +122,15 @@ heartbeat_cib_install()
         crm_mon -1 | grep -E "[1-9] Nodes configured" && break || true
     done
 
+    # change VIP in HA conf file
+    db_get ulteo-ovd-ha/vip && local vip="$RET"
+    sed -i "s/^.*vip.*$/vip=${vip}/" $HA_CONF_DIR/resources.conf
+
+    # configure the CRM
     crm_attribute --type nodes --node $HOSTNAME --name standby --update on
-    db_get ulteo-ovd-ha/vip && VIP="$RET"
     sed -e "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," -e "s,%MYSQL_DB%,$MYSQL_DB," \
         -e "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," -e "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" \
-        -e "s/%VIP%/$VIP/" $HA_DEFAULTCONF_DIR/crm.conf | crm configure 2>> $HA_LOG
+        -e "s/%vip%/$vip/" $HA_DEFAULTCONF_DIR/crm.conf | crm configure 2>> $HA_LOG
     crm_attribute --type nodes --node $HOSTNAME --name standby --update off
 }
 
@@ -144,6 +148,8 @@ db_get ulteo-ovd-ha/hostname && HOSTAME="$RET"
 db_get ulteo-ovd-ha/gateway && GATEWAY="$RET"
 
 db_get ulteo-ovd-ha/nic && NIC_NAME="$RET"
+sed "s/%NIC_NAME%/$NIC/" $HA_DEFAULTCONF_DIR/resources.conf \
+    > $HA_CONF_DIR/resources.conf
 NIC_ADDR=$(ifconfig $NIC_NAME | awk -F":| +" '/inet addr/{print $4}')
 
 db_get ulteo-ovd-ha/mode && MODE="$RET"
