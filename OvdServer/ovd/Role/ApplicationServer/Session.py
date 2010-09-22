@@ -91,6 +91,7 @@ class Session:
 			
 			ret = self.clone_shortcut(application["file"], final_file, "startovdapp", [application["id"]])
 			if not ret:
+				Logger.warn("Unable to clone shortcut '%s' to '%s'"%(application["file"], final_file))
 				continue
 			
 			self.install_shortcut(final_file)
