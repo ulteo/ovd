@@ -31,4 +31,4 @@ def compile_commands():
 	return ["ant ovdNativeClient.jar"]
 
 def binary_files():
-	return [r"libs\OVDNativeClient.jar", r"required_libraries\*.dll"]
+	return [r"jars\OVDNativeClient.jar", r"required_libraries\*.dll"]

@@ -31,4 +31,4 @@ def compile_commands():
 	return ["ant ovdExternalAppsClient.jar"]
 
 def binary_files():
-	return [r"libs\OVDExternalAppsClient.jar", r"required_libraries\*.dll"]
+	return [r"jars\OVDExternalAppsClient.jar", r"required_libraries\*.dll"]
