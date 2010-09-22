@@ -1,7 +1,7 @@
 # Ulteo web client alias
 
-Alias /ovd @DATADIR@/ulteo/ovd-client
-<Directory @DATADIR@/ulteo/ovd-client>
+Alias /ovd @DATADIR@/ulteo/webclient
+<Directory @DATADIR@/ulteo/webclient>
     Options FollowSymLinks
     AllowOverride None
     Order allow,deny
