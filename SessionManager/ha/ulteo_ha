@@ -42,7 +42,7 @@ case $1 in
     ;;
 
     *)
-        echo "Usage: ./ulteo_ha {start|stop}"
+        echo "Usage: ulteo_ha {start|stop}"
         exit 2
     ;;
 
