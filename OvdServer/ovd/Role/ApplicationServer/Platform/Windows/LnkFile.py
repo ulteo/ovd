@@ -35,14 +35,14 @@ def clone(srcFile, dstFile, path, args):
 		iconLocation = shortcut_src.GetPath(0)[0]
 	
 	workingDirectory = shortcut_src.GetWorkingDirectory()
-	description = shortcut_src.GetDescription()	
+	description = shortcut_src.GetDescription()
 	
 	
 	shortcut_dst = pythoncom.CoCreateInstance(shell.CLSID_ShellLink, None, pythoncom.CLSCTX_INPROC_SERVER, shell.IID_IShellLink)
 	try:
 		shortcut_dst.SetPath(path)
 	except:
-		Logger.warn("LnkFile::clone: unable to setPath. Check that the following command is available on the system: '%s'"%(path))	
+		Logger.warn("LnkFile::clone: unable to setPath. Check that the following command is available on the system: '%s'"%(path))
 		return False
 	
 	shortcut_dst.SetArguments(args)
