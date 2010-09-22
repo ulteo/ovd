@@ -33,7 +33,6 @@ I. Software dependencies
 
 
 II. Download the code and binaries
-	lftp -e "mirror bmp2png; quit" http://devel.ulteo.com/~laurent/OVD/windows/
         Setup gs-x86 and gs-amd64 using ghostscript according ro the README in ApplicationServer/Windows/Printer
 
 

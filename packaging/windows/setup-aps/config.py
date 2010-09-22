@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 def getArch():
-	plusNode = ["plus",["ovd-icon-extractor", "ovd-externalapps-client", "ovd-integrated-launcher", "ovd-java-jni", "ovd-shells", "seamlessrdpshell"], ["bmp2png"], []]
+	plusNode = ["plus",["ovd-icon-extractor", "ovd-externalapps-client", "ovd-integrated-launcher", "ovd-java-jni", "ovd-shells", "seamlessrdpshell"], ["pngutils"], []]
 	
 	printerx86Node = ["i386", ["pdf-printer-driver-x86"], ["gs-x86"], []]
 	printeramd64Node = ["amd64", ["pdf-printer-driver-amd64"], ["gs-amd64"], []]
