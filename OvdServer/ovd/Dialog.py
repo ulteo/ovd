@@ -140,6 +140,21 @@ class Dialog(AbstractDialog):
 		return rootNode
 	
 	
+	def get(self, path):
+		url = "%s%s"%(self.url, path)
+		Logger.debug("Dialog::send_packet url %s"%(url))
+		
+		req = urllib2.Request(url)
+		
+		try:
+			stream = urllib2.urlopen(req)
+		except IOError, e:
+			Logger.debug("Dialog::send_packet error"+str(e))
+			return None
+		
+		return stream
+	
+	
 	def send_packet(self, path, document):
 		rootNode = document.documentElement
 		rootNode.setAttribute("name", self.name)

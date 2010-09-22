@@ -635,9 +635,6 @@ if (! isset($old_session_id)) {
 		}
 
 		foreach ($user->applications() as $application) {
-			if ($application->getAttribute('static'))
-				continue;
-
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
 				continue;
 
@@ -646,8 +643,12 @@ if (! isset($old_session_id)) {
 
 			$application_node = $dom->createElement('application');
 			$application_node->setAttribute('id', $application->getAttribute('id'));
-			$application_node->setAttribute('mode', 'local');
-			$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+			$application_node->setAttribute('name', $application->getAttribute('name'));
+			if (! $application->getAttribute('static')) {
+				$application_node->setAttribute('mode', 'local');
+				$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+			} else
+				$application_node->setAttribute('mode', 'static');
 
 			$session_node->appendChild($application_node);
 		}
@@ -734,9 +735,6 @@ if (! isset($old_session_id)) {
 			}
 
 			foreach ($user->applications() as $application) {
-				if ($application->getAttribute('static'))
-					continue;
-
 				if ($application->getAttribute('type') != $server->getAttribute('type'))
 					continue;
 
@@ -745,8 +743,12 @@ if (! isset($old_session_id)) {
 
 				$application_node = $dom->createElement('application');
 				$application_node->setAttribute('id', $application->getAttribute('id'));
-				$application_node->setAttribute('mode', 'local');
-				$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+				$application_node->setAttribute('name', $application->getAttribute('name'));
+				if (! $application->getAttribute('static')) {
+					$application_node->setAttribute('mode', 'local');
+					$application_node->setAttribute('desktopfile', $application->getAttribute('desktopfile'));
+				} else
+					$application_node->setAttribute('mode', 'static');
 
 				$session_node->appendChild($application_node);
 			}
@@ -829,9 +831,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 	$server_node->setAttribute('login', $user_login);
 	$server_node->setAttribute('password', $user_password);
 	foreach ($user->applications() as $application) {
-		if ($application->getAttribute('static'))
-			continue;
-
 		if ($application->getAttribute('type') != $server->getAttribute('type'))
 			continue;
 
@@ -872,9 +871,6 @@ if ($session->mode == Session::MODE_DESKTOP) {
 		$server_node->setAttribute('login', $user_login);
 		$server_node->setAttribute('password', $user_password);
 		foreach ($user->applications() as $application) {
-			if ($application->getAttribute('static'))
-				continue;
-
 			if ($application->getAttribute('type') != $server->getAttribute('type'))
 				continue;
 

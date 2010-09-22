@@ -1116,21 +1116,34 @@ class Server {
 			return NULL;
 		}
 
+		$res = array();
+
 		$applicationDB = ApplicationDB::getInstance();
 
 		$ls = Abstract_Liaison::load('ApplicationServer', NULL, $this->fqdn);
-		if (is_array($ls)) {
-			$res = array();
-			foreach ($ls as $l) {
-				$a = $applicationDB->import($l->element);
-				if (is_object($a))
-					$res[$a->getAttribute('id')] = $a;
-			}
-			return $res;
-		} else {
+		if (! is_array($ls)) {
 			Logger::error('main', 'SERVER::getApplications elements is not array');
 			return NULL;
 		}
+
+		foreach ($ls as $l) {
+			$a = $applicationDB->import($l->element);
+			if (is_object($a))
+				$res[$a->getAttribute('id')] = $a;
+		}
+
+		$applications = $applicationDB->getList(true);
+		foreach ($applications as $app) {
+			if (! $app->getAttribute('static'))
+				continue;
+
+			if ($app->getAttribute('type') != $this->getAttribute('type'))
+				continue;
+
+			$res[$app->getAttribute('id')] = $app;
+		}
+
+		return $res;
 	}
 
 	public function updateApplications(){
@@ -1259,6 +1272,25 @@ class Server {
 					Abstract_Liaison::delete('ApplicationServer', $key, $this->fqdn);
 			}
 		}
+		return true;
+	}
+	
+	public function syncStaticApplications() {
+		if (! is_array($this->roles) || ! array_key_exists(Servers::$role_aps, $this->roles)) {
+			Logger::critical('main', 'Server::syncStaticApplications - Not an ApS');
+			return false;
+		}
+
+		if (! $this->isOnline()) {
+			Logger::debug('main', 'Server::syncStaticApplications server "'.$this->fqdn.':'.$this->web_port.'" is not online');
+			return false;
+		}
+
+		if (! query_url($this->getBaseURL().'/aps/applications/static/sync')) {
+			Logger::error('main', 'Server::syncStaticApplications - Unable to ask for synchronization');
+			return false;
+		}
+
 		return true;
 	}
 	

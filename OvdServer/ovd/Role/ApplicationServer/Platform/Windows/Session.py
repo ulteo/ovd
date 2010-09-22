@@ -112,8 +112,8 @@ class Session(AbstractSession):
 			win32file.CopyFile(shortcut, dstFile, True)
 	
 	
-	def get_target_file(self, app_id, app_target):
-		return os.path.basename(app_target)
+	def get_target_file(self, application):
+		return application["name"]+".lnk"
 	
 	
 	def clone_shortcut(self, src, dst, command, args):

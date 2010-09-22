@@ -274,7 +274,9 @@ class ApplicationDB_sql extends ApplicationDB {
 			'desktopfile' => 'text default NULL',
 			'mimetypes' => 'text default NULL',
 			'published' => 'tinyint(1) default \'0\'',
-			'static' => 'tinyint(1) default \'0\'');
+			'static' => 'tinyint(1) default \'0\'',
+			'revision' => 'int(8) default \'0\''
+		);
 
 		$ret = $sql2->buildTable($sql_conf['prefix'].'application', $APPLICATION_table_structure, array('id'));
 

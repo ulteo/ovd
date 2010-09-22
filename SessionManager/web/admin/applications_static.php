@@ -374,7 +374,7 @@ function show_manage($id, $applicationDB) {
 		$app->unsetAttribute('name');
 		$attr_list = $app->getAttributesList();
 		foreach ($attr_list as $k => $v) {
-			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'icon_path')))
+			if (in_array($v, array('id', 'type', 'static', 'published', 'desktopfile', 'package', 'icon_path', 'revision')))
 				unset($attr_list[$k]);
 		}
 

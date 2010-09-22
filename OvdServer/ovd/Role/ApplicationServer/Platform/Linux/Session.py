@@ -103,8 +103,8 @@ class Session(AbstractSession):
 		if os.path.exists(d):
 			shutil.rmtree(d)
 	
-	def get_target_file(self, app_id, app_target):
-		  return "%s.desktop"%(str(app_id))
+	def get_target_file(self, application):
+		return "%s.desktop"%(str(application["id"]))
 	
 	
 	

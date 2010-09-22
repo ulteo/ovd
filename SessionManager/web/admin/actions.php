@@ -180,10 +180,15 @@ if ($_REQUEST['name'] == 'Application_static') {
 			}
 			$a->unsetAttribute('id');
 			
+			$a->setAttribute('revision', 1);
 			$ret = $applicationDB->add($a);
 			if (! $ret) {
 				popup_error(sprintf(_("Failed to add application '%s'"), $a->getAttribute('name')));
 			}
+			
+			$servers = Servers::getAvailableType($a->getAttribute('type'));
+			foreach ($servers as $server)
+				$server->syncStaticApplications();
 			
 			popup_info(sprintf(_("Application '%s' successfully added"), $a->getAttribute('name')));
 			redirect('applications_static.php?action=manage&id='.$a->getAttribute('id'));
@@ -202,6 +207,9 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if (! $ret) {
 					popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
 				}
+				$servers = Servers::getAvailableType($app->getAttribute('type'));
+				foreach ($servers as $server)
+					$server->syncStaticApplications();
 				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
 			}
 			redirect('applications_static.php');
@@ -214,6 +222,9 @@ if ($_REQUEST['name'] == 'Application_static') {
 				$app = $applicationDB->import($id);
 				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 				$app->delIcon();
+				$servers = Servers::getAvailableType($app->getAttribute('type'));
+				foreach ($servers as $server)
+					$server->syncStaticApplications();
 				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
 				redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
 			}
@@ -244,10 +255,14 @@ if ($_REQUEST['name'] == 'Application_static') {
 					$app->setAttribute($k, $v);
 				}
 			}
+			$app->setAttribute('revision', ($app->getAttribute('revision')+1));
 			$ret = $applicationDB->update($app);
 			if (! $ret) {
 				popup_error(sprintf(_("Failed to modify application '%s'"), $app->getAttribute('name')));
 			}
+			$servers = Servers::getAvailableType($app->getAttribute('type'));
+			foreach ($servers as $server)
+				$server->syncStaticApplications();
 			popup_info(sprintf(_("Application '%s' successfully modified"), $app->getAttribute('name')));
 			
 			if (array_key_exists('file_icon', $_FILES)) {

@@ -54,6 +54,9 @@ class Dialog(AbstractDialog):
 				app_id = path[len("/application/icon/"):]
 				return self.req_icon(app_id)
 			
+			elif  path == "/applications/static/sync":
+				return self.req_sync_static_applications(request)
+			
 			elif path.startswith("/session/status/"):
 				buf = path[len("/session/status/"):]
 				return self.req_session_status(buf)
@@ -170,10 +173,18 @@ class Dialog(AbstractDialog):
 			session["applications"] = []
 			applicationNodes = sessionNode.getElementsByTagName("application")
 			for node in applicationNodes:
-				app_id = node.getAttribute("id")
-				app_target = node.getAttribute("desktopfile")
+				application = {}
 				
-				session["applications"].append((app_id, app_target))
+				application["id"] = node.getAttribute("id")
+				application["name"] = node.getAttribute("name")
+				
+				application["type"] = node.getAttribute("mode")
+				if application["type"] == "local":
+					application["file"] = node.getAttribute("desktopfile")
+				else:
+					application["file"] = self.role_instance.static_apps.getApplicationPath(application["id"])
+				
+				session["applications"].append(application)
 			
 			session["parameters"] = {}
 			for node in sessionNode.getElementsByTagName("parameter"):
@@ -399,8 +410,18 @@ class Dialog(AbstractDialog):
 			rootNode.setAttribute("id", "usage")
 			doc.appendChild(rootNode)
 			return self.req_answer(doc)
-
-
+	
+	
+	def req_sync_static_applications(self, request):
+		self.role_instance.setStaticAppsMustBeSync(True)
+		
+		doc = Document()
+		rootNode = doc.createElement('applications')
+		doc.appendChild(rootNode)
+		
+		return self.req_answer(doc)
+	
+	
 	@staticmethod
 	def debian_request2xml(rid, status):
 		doc = Document()

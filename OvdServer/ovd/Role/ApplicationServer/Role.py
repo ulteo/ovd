@@ -21,6 +21,7 @@
 
 from Queue import Queue
 import time
+import threading
 from xml.dom.minidom import Document
 
 from ovd.Role.Role import Role as AbstractRole
@@ -54,6 +55,10 @@ class Role(AbstractRole):
 		self.applicationsXML = None
 		
 		self.has_run = False
+		
+		self.static_apps = RolePlatform.ApplicationsStatic(self.main_instance.dialog)
+		self.static_apps_must_synced = False
+		self.static_apps_lock = threading.Lock()
 	
 	
 	def init(self):
@@ -89,6 +94,8 @@ class Role(AbstractRole):
 			self.apt = Apt()
 			self.apt.init()
 			self.threads.append(self.apt)
+		
+		self.static_apps.synchronize()
 		
 		return True
 	
@@ -194,6 +201,11 @@ class Role(AbstractRole):
 					continue
 			
 			
+			if self.isStaticAppsMustBeSync():
+				self.static_apps.synchronize()
+				self.setStaticAppsMustBeSync(False)
+			
+			
 			t1 = time.time()
 			if t1-t0_update_app > 30:
 				self.updateApplications()
@@ -231,6 +243,30 @@ class Role(AbstractRole):
 			return False
 		
 		return login_ in members
+	
+	
+	def setStaticAppsMustBeSync(self, value):
+		try:
+			self.static_apps_lock.acquire()
+			
+			self.static_apps_must_synced = (value is True)
+		except:
+			Logger.warn("Unable to lock mutex static apps")
+		finally:
+			self.static_apps_lock.release()
+	
+	
+	def isStaticAppsMustBeSync(self):
+		try:
+			self.static_apps_lock.acquire()
+			
+			return self.static_apps_must_synced
+		except:
+			Logger.warn("Unable to lock mutex static apps")
+			return False
+		finally:
+			self.static_apps_lock.release()
+	
 	
 	def getApplications(self):
 		i = 0
