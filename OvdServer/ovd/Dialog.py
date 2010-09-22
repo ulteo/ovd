@@ -126,7 +126,6 @@ class Dialog(AbstractDialog):
 			Logger.debug("SessionManagerRequest::server_status error"+str(e))
 			return None
 		
-		
 		document = self.get_response_xml(f)
 		if document is None:
 			Logger.warn("Dialog::send_server_name not XML response")
@@ -142,14 +141,14 @@ class Dialog(AbstractDialog):
 	
 	def get(self, path):
 		url = "%s%s"%(self.url, path)
-		Logger.debug("Dialog::send_packet url %s"%(url))
+		Logger.debug("Dialog::get url %s"%(url))
 		
 		req = urllib2.Request(url)
 		
 		try:
 			stream = urllib2.urlopen(req)
 		except IOError, e:
-			Logger.debug("Dialog::send_packet error"+str(e))
+			Logger.debug("Dialog::get error"+str(e))
 			return None
 		
 		return stream
@@ -182,7 +181,10 @@ class Dialog(AbstractDialog):
 		doc.appendChild(rootNode)
 		
 		response = self.send_packet("/server/status", doc)
-	
+		if response is False:
+			Logger.warn("Dialog::send_server_status Unable to send packet")
+			return False
+		
 		document = self.get_response_xml(response)
 		if document is None:
 			Logger.warn("Dialog::send_server_status response not XML")

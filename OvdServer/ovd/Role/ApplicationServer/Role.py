@@ -133,6 +133,8 @@ class Role(AbstractRole):
 		
 		response = self.main_instance.dialog.send_packet("/session/status", doc)
 		Logger.debug2("ApplicationServer: send_session_status: %s"%(response))
+		if response is False:
+			Logger.warn("ApplicationServer: unable to send session status")
 	
 	
 	def get_session_from_login(self, login_):
