@@ -125,6 +125,9 @@ class Dialog(AbstractDialog):
 		except IOError, e:
 			Logger.debug("SessionManagerRequest::server_status error"+str(e))
 			return None
+		except httplib.BadStatusLine, err:
+			Logger.debug("SessionManagerRequest::server_name not receive HTTP response"+str(err))
+			return None
 		
 		document = self.get_response_xml(f)
 		if document is None:
@@ -150,6 +153,9 @@ class Dialog(AbstractDialog):
 		except IOError, e:
 			Logger.debug("Dialog::get error"+str(e))
 			return None
+		except httplib.BadStatusLine, err:
+			Logger.debug("Dialog::get not receive HTTP response"+str(err))
+			return None
 		
 		return stream
 	
@@ -169,6 +175,9 @@ class Dialog(AbstractDialog):
 			stream = urllib2.urlopen(req)
 		except IOError, e:
 			Logger.debug("Dialog::send_packet error"+str(e))
+			return False
+		except httplib.BadStatusLine, err:
+			Logger.debug("Dialog::send_packet not receive HTTP response"+str(err))
 			return False
 		
 		return stream
