@@ -262,7 +262,7 @@
     <jar destfile="jars/ulteo-applet-${compile.release}.jar" basedir="build">
       <include name="**" />
     </jar>
-    <jar destfile="jars/CheckJava-${compile.release}.jar" basedir="classes/">
+    <jar destfile="jars/CheckJava-${compile.release}.jar" basedir="build/">
       <include name="org/ulteo/ovd/applet/CheckJava.class"/>
       <manifest>
         <attribute name="Main-Class" value="org.ulteo.ovd.applet.CheckJava"/>
@@ -295,14 +295,13 @@
     <copy todir="build/org/jpedal/res">
       <fileset dir="src/org/jpedal/res"/>
     </copy>
-    <javac srcdir="src:src1.4" destdir="classes" encoding="UTF8"
+    <javac srcdir="src:src1.4" destdir="build" encoding="UTF8"
            target="1.5" source="1.5" includes="org/ulteo/vdi/Client.java">
       <classpath refid="minimal.path" />
     </javac>
   </target>
 
   <target name="vdi.jar" depends="vdi">
-    <antcall target="classes2jar" />
     <jar destfile="jars/UlteoVDI.jar"  basedir="build">
       <include name="**" />
       <manifest>
