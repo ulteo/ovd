@@ -50,13 +50,13 @@ class HA_high_availability  extends HA {
 		}
 		$table = $sql_conf['prefix'].'ha';
 		$sql2 = SQL::newInstance($sql_conf);
-		$user_table_structure = array(
+		$ha_table_structure = array(
 			'id_host' => 'int(5) NOT NULL AUTO_INCREMENT',
 			'hostname' => 'VARCHAR(255) NOT NULL',
 			'address' => 'VARCHAR(255) NOT NULL',
 			'timestamp' => 'TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP',
 			'register' => 'ENUM( "yes", "no" ) NOT NULL');
-		$ret = $sql2->buildTable($table, $user_table_structure, array('id_host'));
+		$ret = $sql2->buildTable($table, $ha_table_structure, array('id_host'));
 		if ( $ret === false) {
 			return false;
 		}
