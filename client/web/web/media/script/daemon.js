@@ -522,6 +522,11 @@ var Daemon = Class.create({
 				$('endMessage').innerHTML = this.i18n['session_end_ok'];
 		}
 
+		if ($('progressBar') && $('progressBarContent')) {
+			$('progressBarContent').style.width = '0px';
+			this.progressbar_value = 0;
+		}
+
 		this.stopped = true;
 	},
 
