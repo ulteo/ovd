@@ -204,6 +204,11 @@ public class RdpConnection implements SeamListener, Runnable{
 			return;
 
 		this.clipChannel = new ClipChannel(this.common, this.opt);
+		if (! this.clipChannel.isSupported()) {
+			this.clipChannel = null;
+			return;
+		}
+
 		if (! this.addChannel(this.clipChannel))
 			throw new RdesktopException("Unable to add clip channel");
 		if (this.seamChannel != null)

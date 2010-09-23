@@ -104,6 +104,17 @@ public class ClipChannel extends VChannel implements ClipInterface, ClipboardOwn
 		return VChannels.CHANNEL_OPTION_INITIALIZED | VChannels.CHANNEL_OPTION_ENCRYPT_RDP |
 		 VChannels.CHANNEL_OPTION_COMPRESS_RDP | VChannels.CHANNEL_OPTION_SHOW_PROTOCOL;
 	}
+
+	public boolean isSupported() {
+		try {
+			this.clipboard.getContents(this.clipboard);
+		} catch (Exception ex) {
+			logger.warn("Clipboard is not supported: "+ex.getMessage());
+			return false;
+		}
+		logger.info("Clipboard is supported");
+		return true;
+	}
 	
 	/*
 	 * Data processing methods
