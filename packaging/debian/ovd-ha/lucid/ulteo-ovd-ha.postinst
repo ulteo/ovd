@@ -115,13 +115,16 @@ heartbeat_cib_install()
     echo -n "Waiting connection to CRM. It may take some time"
     for i in $(seq 1 60); do
         [ $i -eq 60 ] && echo "Connection timeout to the cluster" && break
-        echo -n "." && sleep 5
         crm_mon -1 | grep -E "[1-9] Nodes configured" && break || true
+        echo -n "." && sleep 5
     done
+
+    # prevent current CIB modifications
+    echo "" && sleep 5
 
     # change VIP in HA conf file
     db_get ulteo-ovd-ha/vip && local vip="$RET"
-    sed -i "s/^.*VIP/VIP=${vip}/" $HA_CONF_DIR/resources.conf
+    sed -i "/VIP/c VIP=${vip}" $HA_CONF_DIR/resources.conf
 
     # configure the CRM
     crm_attribute --type nodes --node $HOSTNAME --name standby --update on
