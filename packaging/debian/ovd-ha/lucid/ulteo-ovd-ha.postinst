@@ -104,7 +104,7 @@ heartbeat_install()
     chmod 600 $HEARTBEAT_CONF_DIR/authkeys
 
     # Copy resource for OCF manager
-    cp $HA_DEFAULTCONF_DIR/mysql-ocf /usr/lib/ocf/resource.d/heartbeat
+    cp $HA_DEFAULTCONF_DIR/mysql-ocf /usr/lib/ocf/resource.d/heartbeat/mysql-ulteo
 
     # Delete old cibs
     [ -e $HEARTBEAT_CRM_DIR/cib.xml ] && rm -f $HEARTBEAT_CRM_DIR/*
@@ -130,7 +130,7 @@ heartbeat_cib_install()
     crm_attribute --type nodes --node $HOSTNAME --name standby --update on
     sed -e "s,%MOUNT_DIR%,$DRBD_MOUNT_DIR," -e "s,%MYSQL_DB%,$MYSQL_DB," \
         -e "s,%SM_SPOOL_DIR%,$SM_SPOOL_DIR," -e "s/%DRBD_RESOURCE%/$DRBD_RESOURCE/" \
-        -e "s/%vip%/$vip/" $HA_DEFAULTCONF_DIR/crm.conf | crm configure 2>> $HA_LOG
+        -e "s/%VIP%/$vip/" $HA_DEFAULTCONF_DIR/crm.conf | crm configure 2>> $HA_LOG
     crm_attribute --type nodes --node $HOSTNAME --name standby --update off
 }
 
