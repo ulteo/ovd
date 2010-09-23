@@ -71,8 +71,19 @@ def launchIntegratedClient(configuration_file_):
 	
 	java_cmd = detectJavaw()
 	if java_cmd is None:
-		print "No java installed on the system"
-		return False
+		dirs = os.environ["PATH"].split(";")
+		dirs.insert(0, os.path.abspath(os.path.curdir))
+		
+		for d in dirs:
+			path = os.path.join(d, r"jre\bin\javaw.exe")
+			if os.path.exists(path):
+				print "Found java in '%s'"%(path)
+				java_cmd = '"'+path+'" -jar "%1" %*'
+				break
+		
+		if java_cmd is None:
+			print "No JRE available from registry nor in $PATH"
+			return False
 	
 	
 	jar_location = r"OVDExternalAppsClient.jar"
