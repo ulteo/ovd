@@ -42,6 +42,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import net.propero.rdp.Common;
@@ -163,11 +164,11 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 			if ((((SeamlessWindow)sw).sw_getExtendedState() != Frame.MAXIMIZED_BOTH) && ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK)) {
 				this.cancelClickTimer();
 
+				MouseEvent me = new MouseEvent(e.getComponent(), e.getID(), new Date().getTime(), e.getModifiers(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton());
 				this.clickTimer = new Timer();
-				this.clickTimer.schedule(new CheckClickTask(sw, e), CLICK_DELAY);
+				this.clickTimer.schedule(new CheckClickTask(sw, me), CLICK_DELAY);
 			}
 		}
-
 		sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_PRESSED);
 	}
 
@@ -175,16 +176,24 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 		this.cancelClickTimer();
 		
 		String name = e.getComponent().getName();
-		SeamlessMovingResizing sw = null;
+		Window sw = null;
 		if (this.windows.containsKey(name))
-			sw = (SeamlessMovingResizing)this.windows.get(name);
+			sw = (Window) this.windows.get(name);
 		if (sw == null) {
 			System.err.println("Bad window ("+name+")");
 			return;
 		}
-
-		sw.unlockMouseEvents();
-		sw.processMouseEvent(e, SeamlessMovingResizing.MOUSE_RELEASED);
+		if (((SeamlessMovingResizing) sw).isMouseEventsLocked()) {
+			Rectangle bounds = ((SeamlessMovingResizing) sw).getRectWindow().getBounds();
+			try {
+				this.send_position(((SeamlessWindow) sw).sw_getId(), bounds.x, bounds.y, bounds.width, bounds.height, 0);
+			} catch (Exception ex) {
+				org.ulteo.Logger.error("Position message not sent: "+ex.getMessage());
+			}
+			((SeamlessMovingResizing) sw).unlockMouseEvents();
+			return;
+		}
+		((SeamlessMovingResizing) sw).processMouseEvent(e, SeamlessMovingResizing.MOUSE_RELEASED);
 	}
 
 	public void mouseDragged(MouseEvent e) {
@@ -268,27 +277,22 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 
 		@Override
 		public void run() {
-			MouseEvent me = new MouseEvent(this.evt.getComponent(), this.evt.getID(), this.evt.getWhen(), this.evt.getModifiers(), this.evt.getX(), this.evt.getY(), this.evt.getClickCount(), this.evt.isPopupTrigger(), this.evt.getButton());
-			me.translatePoint(-this.wndBounds.x, -this.wndBounds.y);
-
-			int xClick = me.getX() + opt.x_offset;
-			int yClick = me.getY() + opt.y_offset;
+			int xClick = this.evt.getX() + opt.x_offset;
+			int yClick = this.evt.getY() + opt.y_offset;
 			RectWindow rw = this.sw.getRectWindow();
 
-			if (	xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
+			if (	(xClick < RectWindow.SEAMLESS_BORDER_SIZE ||
 				xClick > (this.wndBounds.width - RectWindow.SEAMLESS_BORDER_SIZE) ||
 				yClick < RectWindow.SEAMLESS_BORDER_SIZE ||
-				yClick > (this.wndBounds.height - RectWindow.SEAMLESS_BORDER_SIZE)
+				yClick > (this.wndBounds.height - RectWindow.SEAMLESS_BORDER_SIZE))
+				&& this.sw._isResizable()
 			) {
-				if (this.sw._isResizable()) {
-					rw.setResizeClick(this.evt);
-					int corner = detectCorner(me, this.wndBounds);
-					rw.setCorner(corner);
+				rw.setResizeClick(this.evt);
+				int corner = detectCorner(this.evt, this.wndBounds);
+				rw.setCorner(corner);
 
-					rw.offsetsResize(this.evt, this.wndBounds);
-					rw.resize();
-					this.sw.lockMouseEvents();
-				}
+				rw.offsetsResize(this.evt, this.wndBounds);
+				rw.resize();
 			}
 			else if (
 				yClick >= RectWindow.SEAMLESS_BORDER_SIZE &&
@@ -299,8 +303,13 @@ public class SeamlessChannel extends net.propero.rdp.rdp5.seamless.SeamlessChann
 				rw.setOffsets((this.evt.getXOnScreen() - this.wndBounds.x), (this.evt.getYOnScreen() - this.wndBounds.y));
 				rw.setBounds(this.wndBounds);
 				rw.setMoveClick(this.evt);
-				this.sw.lockMouseEvents();
 			}
+			else
+				return;
+
+			MouseEvent me = new MouseEvent(this.evt.getComponent(), this.evt.getID(), new Date().getTime(), this.evt.getModifiers(), this.evt.getX(), this.evt.getY(), this.evt.getClickCount(), this.evt.isPopupTrigger(), this.evt.getButton());
+			this.sw.processMouseEvent(me, SeamlessMovingResizing.MOUSE_RELEASED);
+			this.sw.lockMouseEvents();
 		}
 	}
 }
