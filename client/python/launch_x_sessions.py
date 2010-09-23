@@ -1,8 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# Copyright (C) 2008 Ulteo SAS
+# Copyright (C) 2008-2010 Ulteo SAS
 # http://www.ulteo.com
+# Author Laurent CLOUET <laurent@ulteo.com> 2010
 # Author Julien LANGLOIS <julien@ulteo.com> 2008
 #
 # This program is free software; you can redistribute it and/or 
@@ -31,7 +32,7 @@ from xml.parsers.expat import ExpatError
 
 
 def launch_client(user, password, host):
-    cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py -l %s -p \"%s\" %s; sleep 1h"%(user, password, host)]
+    cmd_args = ["/usr/bin/xterm", "-e", "./ovd-client.py --verbose -l %s -p \"%s\" %s; sleep 1h"%(user, password, host)]
 
     # Fork a child process, using a new pseudo-terminal as the child's controlling terminal.
     pid =  os.fork()
