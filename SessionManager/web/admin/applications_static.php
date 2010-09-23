@@ -304,6 +304,27 @@ function show_manage($id, $applicationDB) {
 			$groups_available[]= $group;
 	}
 
+	$servers_all = Servers::getAll();
+	$liaisons = Abstract_Liaison::load('ApplicationServer', $app->getAttribute('id'), NULL);
+	$servers_id = array();
+	foreach ($liaisons as $liaison)
+		$servers_id[] = $liaison->group;
+
+	$servers = array();
+	$servers_available = array();
+	foreach($servers_all as $server) {
+		if (in_array($server->fqdn, $servers_id))
+			$servers[]= $server;
+		elseif (! $server->isOnline())
+			continue;
+		elseif ( $server->type != $app->getAttribute('type'))
+			continue;
+		else
+			$servers_available[]= $server;
+	}
+
+	$can_manage_server = isAuthorized('manageServers');
+
 	page_header();
 
 	echo '<div>';
@@ -428,6 +449,46 @@ function show_manage($id, $applicationDB) {
 
 		echo '</form>'; // form A
 		echo '</div>'; // application_modify
+	}
+
+	if (count($servers) + count($servers_available) > 0) {
+		echo '<div>';
+		echo '<h2>'._('Servers with this application').'</h2>';
+		echo '<table border="0" cellspacing="1" cellpadding="3">';
+		foreach($servers as $server) {
+			echo '<tr><td>';
+			echo '<a href="servers.php?action=manage&fqdn='.$server->fqdn.'">'.$server->fqdn.'</a>';
+			echo '</td>';
+			echo '<td>';
+			if ($server->isOnline() and $can_manage_server) {
+				echo '<form action="actions.php" method="post" onsubmit="return confirm(\''._('Are you sure you want to remove this application from this server?').'\');">';
+				echo '<input type="hidden" name="action" value="del" />';
+				echo '<input type="hidden" name="name" value="Application_Server" />';
+				echo '<input type="hidden" name="application" value="'.$id.'" />';
+				echo '<input type="hidden" name="server" value="'.$server->fqdn.'" />';
+				echo '<input type="submit" value="'._('Remove from this server').'"/>';
+				echo '</form>';
+			}
+			echo '</td>';
+			echo '</tr>';
+		}
+
+		if (count($servers_available) > 0 and $can_manage_server) {
+			echo '<tr>';
+			echo '<form action="actions.php" method="post"><td>';
+			echo '<input type="hidden" name="name" value="Application_Server" />';
+			echo '<input type="hidden" name="action" value="add" />';
+			echo '<input type="hidden" name="application" value="'.$id.'" />';
+			echo '<select name="server">';
+			foreach ($servers_available as $server)
+			echo '<option value="'.$server->fqdn.'">'.$server->fqdn.'</option>';
+			echo '</select>';
+			echo '</td><td><input type="submit" value="'._('Add to this server').'" /></td>';
+			echo '</form>';
+			echo '</tr>';
+		}
+		echo '</table>';
+		echo "<div>\n";
 	}
 
 	if (count($appgroups) > 0) {

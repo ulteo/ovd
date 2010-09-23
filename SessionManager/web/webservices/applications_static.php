@@ -42,14 +42,12 @@ if (! $server->isAuthorized()) {
 	die();
 }
 
-$applicationDB = ApplicationDB::getInstance();
-
 header('Content-Type: text/xml; charset=utf-8');
 $dom = new DomDocument('1.0', 'utf-8');
 
 $node = $dom->createElement('applications');
 
-$applications = $applicationDB->getList(true);
+$applications = $server->getApplications();
 foreach ($applications as $app) {
 	if (! $app->getAttribute('static'))
 		continue;

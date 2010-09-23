@@ -563,8 +563,6 @@ class Server {
 	public function orderDeletion() {
 		Logger::debug('main', 'Starting Server::orderDeletion for \''.$this->fqdn.'\'');
 
-		Abstract_Liaison::delete('StaticApplicationServer', NULL, $this->fqdn);
-
 		return true;
 	}
 
@@ -1130,17 +1128,6 @@ class Server {
 			$a = $applicationDB->import($l->element);
 			if (is_object($a))
 				$res[$a->getAttribute('id')] = $a;
-		}
-
-		$applications = $applicationDB->getList(true);
-		foreach ($applications as $app) {
-			if (! $app->getAttribute('static'))
-				continue;
-
-			if ($app->getAttribute('type') != $this->getAttribute('type'))
-				continue;
-
-			$res[$app->getAttribute('id')] = $app;
 		}
 
 		return $res;

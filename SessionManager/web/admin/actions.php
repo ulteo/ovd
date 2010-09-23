@@ -67,23 +67,41 @@ if ($_REQUEST['name'] == 'Application_Server') {
 	$applicationDB = ApplicationDB::getInstance();
 
 	$apps = array();
-	foreach($_REQUEST['application'] as $id)
-		$apps[]= $applicationDB->import($id);
+	foreach($_REQUEST['application'] as $id) {
+		$app = $applicationDB->import($id);
+		if (! $app)
+			continue;
 
-	if ($_REQUEST['action'] == 'add')
-		$t = new Task_install(0, $_REQUEST['server'], $apps);
-	else
-		$t = new Task_remove(0, $_REQUEST['server'], $apps);
+		if ($app->getAttribute('static') == false) {
+			if ($_REQUEST['action'] == 'add') {
+				$tm = new Tasks_Manager();
+				$t = new Task_install(0, $_REQUEST['server'], $app);
+				$tm->add($t);
 
-	$tm = new Tasks_Manager();
-	$tm->add($t);
-	if ($_REQUEST['action'] == 'add')
-		popup_info(_('Task successfully added'));
-	else if ($_REQUEST['action'] == 'del')
-		popup_info(_('Task successfully deleted'));
+				popup_info(sprintf(_('Task to add application \'%s\' on server \'%s\' successfully added'), $id, $_REQUEST['server']));
+			} elseif ($_REQUEST['action'] == 'del') {
+				$tm = new Tasks_Manager();
+				$t = new Task_remove(0, $_REQUEST['server'], $app);
+				$tm->add($t);
+
+				popup_info(sprintf(_('Task to remove application \'%s\' from server \'%s\' successfully added'), $id, $_REQUEST['server']));
+			}
+		} else {
+			if ($_REQUEST['action'] == 'add') {
+				Abstract_Liaison::save('ApplicationServer', $id, $_REQUEST['server']);
+
+				popup_info(sprintf(_('Application \'%s\' successfully added to server \'%s\''), $id, $_REQUEST['server']));
+			} elseif ($_REQUEST['action'] == 'del') {
+				Abstract_Liaison::delete('ApplicationServer', $id, $_REQUEST['server']);
+
+				popup_info(sprintf(_('Application \'%s\' successfully deleted from server \'%s\''), $id, $_REQUEST['server']));
+			}
+		}
+	}
+
 	redirect();
-
 }
+
 /*
 if ($_REQUEST['name'] == 'ApplicationGroup_Server') {
 	if (!isset($_REQUEST['server']) || !isset($_REQUEST['group']))
@@ -186,10 +204,6 @@ if ($_REQUEST['name'] == 'Application_static') {
 				popup_error(sprintf(_("Failed to add application '%s'"), $a->getAttribute('name')));
 			}
 			
-			$servers = Servers::getAvailableType($a->getAttribute('type'));
-			foreach ($servers as $server)
-				$server->syncStaticApplications();
-			
 			popup_info(sprintf(_("Application '%s' successfully added"), $a->getAttribute('name')));
 			redirect('applications_static.php?action=manage&id='.$a->getAttribute('id'));
 		}
@@ -202,7 +216,7 @@ if ($_REQUEST['name'] == 'Application_static') {
 				if (! is_object($app)) {
 					die_error(sprintf(_("Unable to import application '%s'"), $id), __FILE__, __LINE__);
 				}
-				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
+				Abstract_Liaison::delete('ApplicationServer', $app->getAttribute('id'), NULL);
 				$ret = $applicationDB->remove($app);
 				if (! $ret) {
 					popup_error(sprintf(_("Failed to delete application '%s'"), $app->getAttribute('name')));
@@ -220,12 +234,8 @@ if ($_REQUEST['name'] == 'Application_static') {
 		if (isset($_REQUEST['checked_applications']) && is_array($_REQUEST['checked_applications'])) {
 			foreach ($_REQUEST['checked_applications'] as $id) {
 				$app = $applicationDB->import($id);
-				Abstract_Liaison::delete('StaticApplicationServer', $app->getAttribute('id'), NULL);
 				$app->delIcon();
-				$servers = Servers::getAvailableType($app->getAttribute('type'));
-				foreach ($servers as $server)
-					$server->syncStaticApplications();
-				popup_info(sprintf(_("Application '%s' successfully deleted"), $app->getAttribute('name')));
+				popup_info(sprintf(_("Application '%s' icon successfully deleted"), $app->getAttribute('name')));
 				redirect('applications_static.php?action=manage&id='.$app->getAttribute('id'));
 			}
 		}
