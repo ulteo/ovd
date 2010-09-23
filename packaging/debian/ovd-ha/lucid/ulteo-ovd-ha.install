@@ -2,3 +2,4 @@
 /usr/share/ulteo/ovd/ha/utils.sh
 /usr/share/ulteo/ovd/ha/su_cmd.sh
 /usr/share/ulteo/ovd/ha/conf
+/usr/lib

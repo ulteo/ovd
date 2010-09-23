@@ -103,9 +103,6 @@ heartbeat_install()
     echo -e "auth 1\n1 sha1 $AUTH_KEY" > $HEARTBEAT_CONF_DIR/authkeys
     chmod 600 $HEARTBEAT_CONF_DIR/authkeys
 
-    # Copy resource for OCF manager
-    cp $HA_DEFAULTCONF_DIR/mysql-ocf /usr/lib/ocf/resource.d/heartbeat/mysql-ulteo
-
     # Delete old cibs
     [ -e $HEARTBEAT_CRM_DIR/cib.xml ] && rm -f $HEARTBEAT_CRM_DIR/*
 
