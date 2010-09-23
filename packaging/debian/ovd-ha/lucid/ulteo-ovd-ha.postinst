@@ -121,7 +121,7 @@ heartbeat_cib_install()
 
     # change VIP in HA conf file
     db_get ulteo-ovd-ha/vip && local vip="$RET"
-    sed -i "s/^.*VIP.*$/vip=${vip}/" $HA_CONF_DIR/resources.conf
+    sed -i "s/^.*VIP/VIP=${vip}/" $HA_CONF_DIR/resources.conf
 
     # configure the CRM
     crm_attribute --type nodes --node $HOSTNAME --name standby --update on
