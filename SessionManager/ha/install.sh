@@ -1,4 +1,4 @@
-#!/bin/bash
+!/bin/bash
 set -e
 
 # Copyright (C) 2010 Ulteo SAS
@@ -183,7 +183,7 @@ function heartbeat_install()
 	chmod 600 $HEARTBEAT_CONF_DIR/authkeys
 
 	# Copy resource for OCF manager
-	cp conf/mysql-ocf /usr/lib/ocf/resource.d/heartbeat/mysql-ulteo
+	cp conf/mysql-ovd /usr/lib/ocf/resource.d/heartbeat/
 
 	# Delete old cibs
 	[ -e $HEARTBEAT_CRM_DIR/cib.xml ] && rm -f $HEARTBEAT_CRM_DIR/*

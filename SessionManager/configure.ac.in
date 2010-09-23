@@ -30,6 +30,9 @@ AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS=$(sed -r -e "/^#/d" -e "s/#.*//" "po/LINGUAS")
 AC_SUBST(ALL_LINGUAS)
 
+# change libdir for HA OCF resource
+libdir='${prefix}/lib'
+
 #################################################
 ###             INTLTOOL_PERL                 ###
 AC_PATH_PROG(INTLTOOL_PERL, [perl])
