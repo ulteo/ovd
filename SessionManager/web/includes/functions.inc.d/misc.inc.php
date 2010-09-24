@@ -139,28 +139,28 @@ function plugin_error($errno_, $errstr_, $errfile_, $errline_, $errcontext_) {
 
 function conf_is_valid() {
 	if (! defined('SESSIONMANAGER_SPOOL'))
-		return _('SESSIONMANAGER_SPOOL is not defined');
+		return 'SESSIONMANAGER_SPOOL is not defined';
 
 	if (! defined('SESSIONMANAGER_LOGS'))
-		return _('SESSIONMANAGER_LOGS is not defined');
+		return 'SESSIONMANAGER_LOGS is not defined';
 
 	if (! defined('SESSIONMANAGER_CONFFILE_SERIALIZED'))
-		return _('SESSIONMANAGER_CONFFILE_SERIALIZED is not defined');
+		return 'SESSIONMANAGER_CONFFILE_SERIALIZED is not defined';
 
 	if (! defined('SESSIONMANAGER_ADMIN_LOGIN'))
-		return _('SESSIONMANAGER_ADMIN_LOGIN is not defined');
+		return 'SESSIONMANAGER_ADMIN_LOGIN is not defined';
 
 	if (! defined('SESSIONMANAGER_ADMIN_PASSWORD'))
-		return _('SESSIONMANAGER_ADMIN_PASSWORD is not defined');
+		return 'SESSIONMANAGER_ADMIN_PASSWORD is not defined';
 
 	if (! is_writable2(SESSIONMANAGER_SPOOL))
-		return _('SESSIONMANAGER_SPOOL is not writable').' : '.SESSIONMANAGER_SPOOL;
+		return 'SESSIONMANAGER_SPOOL is not writable : '.SESSIONMANAGER_SPOOL;
 
 	if (! is_writable2(SESSIONMANAGER_LOGS))
-		return _('SESSIONMANAGER_LOGS is not writable').' : '.SESSIONMANAGER_LOGS;
+		return 'SESSIONMANAGER_LOGS is not writable : '.SESSIONMANAGER_LOGS;
 
 	if (! is_writable2(SESSIONMANAGER_CONFFILE_SERIALIZED))
-		return _('SESSIONMANAGER_CONFFILE_SERIALIZED is not writable').' : '.SESSIONMANAGER_CONFFILE_SERIALIZED;
+		return 'SESSIONMANAGER_CONFFILE_SERIALIZED is not writable : '.SESSIONMANAGER_CONFFILE_SERIALIZED;
 
 	return true;
 }

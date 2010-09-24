@@ -23,7 +23,7 @@ define('OVD_SM_VERSION', '@OVD_VERSION@');
 
 define('SESSIONMANAGER_CONF_FILE', '@SYSCONFDIR@/ulteo/sessionmanager/config.inc.php');
 
-define('DEFAULT_PAGE_TITLE', _('Open Virtual Desktop'));
+define('DEFAULT_PAGE_TITLE', 'Open Virtual Desktop');
 
 $base_url = str_replace('/admin', '', dirname($_SERVER['PHP_SELF'])).'/';
 

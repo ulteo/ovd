@@ -57,14 +57,14 @@ if (! in_admin()) {
 }
 
 if (! file_exists(SESSIONMANAGER_CONF_FILE))
-	die_error(_('Configuration file missing'),__FILE__,__LINE__);
+	die_error('Configuration file missing',__FILE__,__LINE__);
 
 @include_once(SESSIONMANAGER_CONF_FILE);
 
 $buf = conf_is_valid();
 if ($buf !== true) {
 	Logger::critical('main', 'Configuration not valid : '.$buf);
-	die_error(_('Configuration not valid').' : '.$buf,__FILE__,__LINE__);
+	die_error('Configuration not valid : '.$buf,__FILE__,__LINE__);
 }
 
 function __autoload($class_name) { //what about NameSpaces ?

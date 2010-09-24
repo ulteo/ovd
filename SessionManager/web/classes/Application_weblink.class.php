@@ -35,7 +35,7 @@ class Application_weblink extends Application{
 		
 		$mods_enable = $prefs->get('general','module_enable');
 		if (!in_array('ApplicationDB',$mods_enable)){
-			die_error(_('Module ApplicationDB must be enabled'),__FILE__,__LINE__);
+			die_error('Module ApplicationDB must be enabled',__FILE__,__LINE__);
 		}
 		
 		$default_browser = $prefs->get('general','default_browser');
