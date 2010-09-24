@@ -40,6 +40,7 @@ clean:
 	$(RM) src/*.o $(EXEC)
 	$(RM) *~
 	$(RM) src/org_ulteo_ovd_client_env_WorkArea.h
+	$(RM) -rf org
 
 install: all
 	install $(EXEC) $(DIST)
