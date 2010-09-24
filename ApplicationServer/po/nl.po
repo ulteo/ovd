@@ -1,0 +1,171 @@
+# Dutch translations for ovd package.
+# Copyright (C) 2010 Ulteo SAS
+# This file is distributed under the same license as the Ulteo OVD software (http://www.ulteo.com).
+# Automatically generated, 2010.
+# Author: Jan Piet KUIT <jpkuit@kpnmail.nl>, 2010.
+# Author: Sibo Attema <sibo.attema@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-19 09:06+0200\n"
+"PO-Revision-Date: 2010-08-22 21:44+0200\n"
+"Last-Translator: Sibo Attema <sibo.attema@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.1.0\n"
+
+#: ../web/portal/share_app.php:27
+msgid "Application sharing"
+msgstr "Toepassing delen"
+
+#: ../web/desktop/index.php:61 ../web/portal/resume.php:58
+#: ../web/portal/index.php:75 ../web/portal/external_app.php:89
+#: ../web/external/index.php:99
+msgid "Close this window"
+msgstr "Sluit dit venster"
+
+#: ../web/desktop/index.php:91
+msgid "Desktop sharing"
+msgstr "Desktop delen"
+
+# Als het gaat om elektronische post, is e-mail de juiste schrijfwijze.
+#: ../web/desktop/index.php:96 ../web/portal/share_app.php:31
+msgid "Email address"
+msgstr "E-mail adres"
+
+#: ../web/desktop/index.php:62 ../web/portal/index.php:76
+#: ../web/error/index.php:54
+#, php-format
+msgid "If you want to start another session, click <a href=\"%s\">here</a>"
+msgstr "Als u een andere sessie wilt starten, klik u dan <a href=\"%s\">hier</a>"
+
+#: ../web/desktop/index.php:99 ../web/portal/share_app.php:32
+msgid "Invite"
+msgstr "Uitnodigen"
+
+#: ../web/portal/external_app.php:122 ../web/external/index.php:132
+#, php-format
+msgid "Loading %s"
+msgstr "Laden %s"
+
+#: ../web/portal/resume.php:75
+msgid "Loading Application"
+msgstr "Toepassing laden"
+
+#: ../web/desktop/index.php:119
+msgid "Loading Desktop"
+msgstr "Desktop laden"
+
+#: ../web/error/index.php:71
+msgid "Loading Error"
+msgstr "Fout bij het laden"
+
+#: ../web/portal/index.php:179
+msgid "Loading Portal"
+msgstr "Portal laden"
+
+#: ../web/share/index.php:74
+msgid "Loading Share"
+msgstr "Gedeelde map laden"
+
+#: ../web/portal/index.php:118
+msgid "Logout"
+msgstr "Uitloggen"
+
+#: ../web/portal/index.php:134
+msgid "My applications"
+msgstr "Mijn toepassingen"
+
+#: ../web/portal/index.php:158
+msgid "My files"
+msgstr "Mijn bestanden"
+
+#: ../web/portal/index.php:146
+msgid "Running applications"
+msgstr "Actieve toepassingen"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/error/index.php:51
+msgid "Server: invalid token"
+msgstr "Server: ongeldige token"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/desktop/index.php:57 ../web/portal/resume.php:54
+#: ../web/portal/index.php:71 ../web/portal/external_app.php:84
+#: ../web/external/index.php:94 ../web/share/index.php:54
+msgid "Server: session closed unexpectedly"
+msgstr "Server: sessie is onverwacht gestopt"
+
+#: ../web/portal/external_app.php:85 ../web/external/index.php:95
+msgid "Server: unable to start application"
+msgstr "Server: de toepassing kan niet worden gestart"
+
+#: ../web/desktop/index.php:77
+msgid "Share desktop"
+msgstr "Desktop delen"
+
+#: ../web/share/index.php:56
+msgid "Shared application has ended unexpectedly"
+msgstr "Gedeelde toepassing is onverwacht beëindigd"
+
+#: ../web/share/index.php:55
+msgid "Shared application has ended, you can now close the window"
+msgstr "Gedeelde toepassing is beëindigd, u kunt nu het venster sluiten"
+
+#: ../web/portal/index.php:114
+msgid "Suspend"
+msgstr "Onderbreek"
+
+#: ../web/portal/index.php:102
+#, php-format
+msgid "Welcome %s!"
+msgstr "Welkom %s!"
+
+#: ../web/portal/resume.php:56 ../web/portal/external_app.php:87
+#: ../web/external/index.php:97
+msgid "Your application has ended unexpectedly"
+msgstr "Uw toepassing is onverwacht beëindigd"
+
+#: ../web/portal/resume.php:55 ../web/portal/external_app.php:86
+#: ../web/external/index.php:96
+msgid "Your application has ended, you can now close the window"
+msgstr "Uw toepassing is beëindigd, u kunt nu het venster sluiten"
+
+#: ../web/desktop/index.php:59 ../web/portal/index.php:73
+#: ../web/error/index.php:52
+msgid "Your session has ended unexpectedly"
+msgstr "Uw toepassing is onverwacht beëindigd"
+
+#: ../web/desktop/index.php:58 ../web/portal/index.php:72
+msgid "Your session has ended, you can now close the window"
+msgstr "Uw toepassing is beëindigd, u kunt nu het venster sluiten"
+
+#: ../web/desktop/index.php:97 ../web/portal/share_app.php:31
+msgid "active mode"
+msgstr "actieve modus"
+
+#: ../web/desktop/index.php:60 ../web/portal/resume.php:57
+#: ../web/portal/index.php:74 ../web/portal/external_app.php:88
+#: ../web/error/index.php:53 ../web/external/index.php:98
+#: ../web/share/index.php:57
+msgid "error details"
+msgstr "details over de fout"
+
+#: ../web/portal/index.php:70
+msgid "resume"
+msgstr "hervat"
+
+#. <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+#: ../web/portal/index.php:68
+msgid "share"
+msgstr "delen"
+
+#: ../web/portal/index.php:69
+msgid "suspend"
+msgstr "onderbreek"
