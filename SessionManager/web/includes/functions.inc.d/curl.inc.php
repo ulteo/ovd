@@ -36,6 +36,13 @@ function query_url_request($url_, $log_returned_data_=true, $data_in_file_=false
 	$data = curl_exec($socket);
 	if ($data === false) {
 		Logger::error('main', "query_url_request($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+		if (curl_errno($socket) == CURLE_GOT_NOTHING) { // http://curl.haxx.se/mail/lib-2004-02/0384.html http://curl.haxx.se/mail/archive-2007-02/0114.html
+			usleep(rand(1000000, 3000000));
+			$data = curl_exec($socket);
+			if ($data === false) {
+				Logger::error('main', "query_url_request($url_) error (2) code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+			}
+		}
 	}
 	$code = curl_getinfo($socket, CURLINFO_HTTP_CODE);
 	$content_type=curl_getinfo($socket, CURLINFO_CONTENT_TYPE);
@@ -86,6 +93,13 @@ function query_url_post_xml($url_, $xml_, $log_returned_data_=true) {
 	$data = curl_exec($socket);
 	if ($data === false) {
 		Logger::error('main', "query_url_post_xml($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+		if (curl_errno($socket) == CURLE_GOT_NOTHING) { // http://curl.haxx.se/mail/lib-2004-02/0384.html http://curl.haxx.se/mail/archive-2007-02/0114.html
+			usleep(rand(1000000, 3000000));
+			$data = curl_exec($socket);
+			if ($data === false) {
+				Logger::error('main', "query_url_post_xml($url_) error (2) code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+			}
+		}
 	}
 
 	curl_close($socket);
@@ -105,6 +119,13 @@ function query_url_post($url_, $string_=NULL, $log_returned_data_=true) {
 	$data = curl_exec($socket);
 	if ($data === false) {
 		Logger::error('main', "query_url_post($url_) error code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+		if (curl_errno($socket) == CURLE_GOT_NOTHING) { // http://curl.haxx.se/mail/lib-2004-02/0384.html http://curl.haxx.se/mail/archive-2007-02/0114.html
+			usleep(rand(1000000, 3000000));
+			$data = curl_exec($socket);
+			if ($data === false) {
+				Logger::error('main', "query_url_post($url_) error (2) code: ".curl_errno($socket). " text: '".curl_error($socket)."'");
+			}
+		}
 	}
 
 	curl_close($socket);
