@@ -54,12 +54,12 @@ public class LibraryLoader {
 
 		List<String> paths = new ArrayList<String>();
 		paths.add(System.getProperty("user.dir"));
-		for (String each : libraryPaths.split(":"))
+		for (String each : libraryPaths.split(System.getProperty("path.separator")))
 			paths.add(each);
 
 		for (String each : paths) {
 			int len = each.length();
-			if (each.substring((len - 1), len).equals(fileSeparator))
+			if (! each.substring((len - fileSeparator.length()), len).equals(fileSeparator))
 				each += fileSeparator;
 			each += LibName;
 
