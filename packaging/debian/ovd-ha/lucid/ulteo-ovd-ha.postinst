@@ -163,6 +163,8 @@ case $MODE in
         drbd_install "S"
         heartbeat_install
         set_ha_register_to_master
+        service mysql start || true
+        service apache2 start
     ;;
 esac
 
